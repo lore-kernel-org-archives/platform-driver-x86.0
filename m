@@ -8,84 +8,88 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F380C433E7
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 11:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0640AC433E7
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 11:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 167EB22269
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 11:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D1222256
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 11:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKx6a2xT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UEJvPhkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgJILP4 (ORCPT
+        id S2388131AbgJILeC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Oct 2020 07:15:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53010 "EHLO
+        Fri, 9 Oct 2020 07:34:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45364 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731972AbgJILP4 (ORCPT
+        by vger.kernel.org with ESMTP id S2388127AbgJILdz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Oct 2020 07:15:56 -0400
+        Fri, 9 Oct 2020 07:33:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602242153;
+        s=mimecast20190719; t=1602243233;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aOx27e9wVhFSVHOPPW00xTwH7iIIer8HNd6UYJS5k/U=;
-        b=fKx6a2xT0tUjonI8VYH/vd+xG4kaFft66KV1tC6a8ZnQna9nfk0Vco4vWIWBrP10TbxwbA
-        04DUy5QoAbsalA8BFM1rijTmcM5H0u5JAWCxdCP+ibzQR1UxDZLwyHxnDuOf8xm4TdwmgQ
-        Dcm4nAwshpjKQ8PEWaBnY/hkDsSlmLE=
+        bh=PZRmIEX+5coj1lckLNFd6QB/eWw8ns4LBmqZd7pHr2I=;
+        b=UEJvPhkjeEeMXTTThDpavR9wYh1oJfXCeapetu0/JXEkRBJlhmylZqxOENbkLZ9Vb4x2ZE
+        nNL4a6WVe3aE/ZtU5zImPndWvV1WtsfkNjFfFltaGTw2pAcUBtZF6rDSTQfS7oWMCGJbl5
+        r+x4S68rQzTwTWiNKc+//od84MmoXXw=
 Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
  [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-Djn5fP6KNOOU_X8E0ylW5w-1; Fri, 09 Oct 2020 07:15:51 -0400
-X-MC-Unique: Djn5fP6KNOOU_X8E0ylW5w-1
-Received: by mail-ej1-f69.google.com with SMTP id c10so3493626ejm.15
-        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Oct 2020 04:15:51 -0700 (PDT)
+ us-mta-149-SSRJYEPmOEmy-SGyGMKgPg-1; Fri, 09 Oct 2020 07:33:49 -0400
+X-MC-Unique: SSRJYEPmOEmy-SGyGMKgPg-1
+Received: by mail-ej1-f69.google.com with SMTP id j7so3484304ejy.7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 09 Oct 2020 04:33:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=aOx27e9wVhFSVHOPPW00xTwH7iIIer8HNd6UYJS5k/U=;
-        b=bBtk1sX/8bXfNjjPSFgAoOIn05cC1K5phQvN2Z3tCdRngi10/mTrb3AijVWjCwANwm
-         vwuh9yEA6nDmIXWE/eMM/IjH/Ids6v/zNIK4bgsj+hSGWB8zvQ46bohyrrIb/ZmKPvbT
-         FSEuUmqruYp0jPqaS8AaHE1VxOwd4RJJd0AonosVkQEu5ghva8tM1SrEJ+AtMLaW6NRs
-         nOYifOt4VXTbJnrCFLJpwZbIlYs3YWY0tq02qhjS97ySuMYEPoGKm9UF1iBRDIgqOG6G
-         lc5T6nYynKpa7siHjwLFaxdCR8IYdgy5VeYD8LRHs3NRxjkd7Qzp5Ka1URn5ofr/woXk
-         3jCA==
-X-Gm-Message-State: AOAM531gOrDKA1RNAKyCxN+28svJGmlDMJVQqWGElb6YMjO/bcQyZCWO
-        xVGWO4353FQ8GNqFtLaDx24+0BbiHrsITfynCt30gkjoC+pDc9vBsZBJDFN9Rg4uxmrMWnuD1Lo
-        PAfvg2M6ALkqV98Ji27XmVsMJDJuYHAOhXA==
-X-Received: by 2002:a17:906:1c0f:: with SMTP id k15mr13326649ejg.343.1602242150541;
-        Fri, 09 Oct 2020 04:15:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzycqa7sZhno3JTiSgNP0vyp13nEUdVKQhdrfTioZ5Ad6OmiITn8VCxrCRTTkd1qkGFGC1nfg==
-X-Received: by 2002:a17:906:1c0f:: with SMTP id k15mr13326626ejg.343.1602242150254;
-        Fri, 09 Oct 2020 04:15:50 -0700 (PDT)
+        bh=PZRmIEX+5coj1lckLNFd6QB/eWw8ns4LBmqZd7pHr2I=;
+        b=fVtPy9Uxc19x9gGVR5dmnax4j/Wsx9zeYKKRh3A7IRnHARPOu6ud57EHmx0Mcwqu/K
+         sGbZ02K/gejsbxfZq3qyZAoeY6WVky39IsmOTg2uTpg1lDKZHE+zZrGo7su6L0CxEAsx
+         CJX7w15Fr1zmFHarX9JOZI2+4YeFO6NbiRA/ERd1YRXFra06rzxODcmXQf4GBek+GipV
+         l/Cs+O3z4s8DI3ej/hIDbjLciEbjff6LRYYC7CliX2LQ9jjLk2BON71QzvW6Kr8AT41Z
+         8Udq0d9SLdRztE9CD3TNv/bIQTremtJ8aSUz21kE3+pCXK+/PDcjpz/P20mRSdaUu3l9
+         gnNA==
+X-Gm-Message-State: AOAM5323Z5NXuBfnKihR5uLeDEh6d4vQ84cZOWDHYGwlgUBdZpipU7rN
+        FGCbR9A3ivtNo1zfTtFIU41524yFI5DHr2NUg7vo9Ks5Y8GIHh+53xdWp4AhKErhEz4WAhu2vcm
+        brLHKbKunTny+EteFv9c8+SUpbAFguhRihA==
+X-Received: by 2002:a17:906:1914:: with SMTP id a20mr13378294eje.425.1602243228255;
+        Fri, 09 Oct 2020 04:33:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwUpPqn4/BzN1UKwHf8EhXhi8gQQP/FiIe93a8JlxOVrgBQgzNUBLvR6AThQkC3hr6K4V1VZA==
+X-Received: by 2002:a17:906:1914:: with SMTP id a20mr13378271eje.425.1602243227968;
+        Fri, 09 Oct 2020 04:33:47 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id e5sm6350213ejb.26.2020.10.09.04.15.49
+        by smtp.gmail.com with ESMTPSA id i14sm6066775edu.40.2020.10.09.04.33.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Oct 2020 04:15:49 -0700 (PDT)
+        Fri, 09 Oct 2020 04:33:47 -0700 (PDT)
 Subject: Re: [RFC] Documentation: Add documentation for new
  performance_profile sysfs class
-To:     Benjamin Berg <bberg@redhat.com>,
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
         Mark Gross <mgross@linux.intel.com>
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Mark Pearson <mpearson@lenovo.com>,
+Cc:     Mark Pearson <mpearson@lenovo.com>,
         Elia Devito <eliadevito@gmail.com>,
-        Bastien Nocera <hadess@hadess.net>, linux-pm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mark Pearson <markpearson@lenovo.com>
+        Bastien Nocera <hadess@hadess.net>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>
 References: <20201003131938.9426-1-hdegoede@redhat.com>
  <20201003131938.9426-2-hdegoede@redhat.com>
- <c464996fb3e0e23958c01196fe45f79cafce6cf4.camel@redhat.com>
+ <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cb0593b7-d597-dc32-365c-1a30a77d6cf3@redhat.com>
-Date:   Fri, 9 Oct 2020 13:15:49 +0200
+Message-ID: <809a45c7-735d-52e8-edfc-f3e74058063e@redhat.com>
+Date:   Fri, 9 Oct 2020 13:33:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <c464996fb3e0e23958c01196fe45f79cafce6cf4.camel@redhat.com>
+In-Reply-To: <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,17 +99,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 10/5/20 3:13 PM, Benjamin Berg wrote:
-> Hi,
-> 
-> seems reasonable to me. Quite simple, but likely good enough as we are
-> sticking to only use well known names.
-> 
-> Just found a small typo.
-> 
-> Benjamin
-> 
-> On Sat, 2020-10-03 at 15:19 +0200, Hans de Goede wrote:
+On 10/5/20 2:58 PM, Limonciello, Mario wrote:
 >> On modern systems CPU/GPU/... performance is often dynamically configurable
 >> in the form of e.g. variable clock-speeds and TPD. The performance is often
 >> automatically adjusted to the load by some automatic-mechanism (which may
@@ -119,6 +113,63 @@ On 10/5/20 3:13 PM, Benjamin Berg wrote:
 >> Introduce a new performance_profile class/sysfs API which offers a generic
 >> API for selecting the performance-profile of these automatic-mechanisms.
 >>
+> 
+> If introducing an API for this - let me ask the question, why even let each
+> driver offer a class interface and userspace need to change "each" driver's
+> performance setting?
+> 
+> I would think that you could just offer something kernel-wide like
+> /sys/power/performance-profile
+> 
+> Userspace can read and write to a single file.  All drivers can get notified
+> on this sysfs file changing.
+
+In the case of the currently intended users of this API there will be
+only 1 provider (using the system type). So that pretty much does what
+you suggest.
+
+But I can see there being multiple components in a system which
+each can have their own performance-profile. E.g. in some desktop
+cases the CPU and GPU may be in separate compartments of the case
+which each have their own independent airflow (and thus cooling budget).
+
+Some components may even have their own air cooling with their own
+external radiator.
+
+So given the (potential) case with multiple components with each
+their own thermal-profile. Then exporting only a single setting
+for all components combined has 2 problems:
+
+That would mean either some complicated policy in the kernel
+for this, or a simple one where we set them all to the same level.
+
+The simple policy has a number of issues:
+
+1. Setting all components to the same level assume they have
+identical profile options, but one component might offer low-power,
+while another component does not offer that (the other component
+could instead e.g. only offer quiet which is not 100% the same).
+
+2. It is a given that some power users will be wanting to be able
+to control the profiles of different components separately, so
+having just a simply/naive policy in the kernel for this is not going
+to work for all use-cases.
+
+That leaves doing some complex policy mechanism, but in general
+where possible the kernel tries to stay out of enforcing policies,
+instead (where possible) it is greatly preferred to only offer a
+mechanism to allow the functionality and then let userspace handle
+any policy decisions.
+
+So I believe that having 1 class device for each component
+which offers selectable performance profiles is best.
+
+Note that something like the performance-profile-daemon Bastien
+is working on might very will choice to implement a KISS policy
+where all components get configured with a similar performance-profile,
+resulting in what you are suggesting. But at least this way
+leaves the possibility to do things differently open.
+
 >> Cc: Mark Pearson <markpearson@lenovo.com>
 >> Cc: Elia Devito <eliadevito@gmail.com>
 >> Cc: Bastien Nocera <hadess@hadess.net>
@@ -131,19 +182,36 @@ On 10/5/20 3:13 PM, Benjamin Berg wrote:
 >>   1 file changed, 104 insertions(+)
 >>   create mode 100644 Documentation/ABI/testing/sysfs-class-performance_profile
 >>
->> diff --git a/Documentation/ABI/testing/sysfs-class-performance_profile b/Documentation/ABI/testing/sysfs-class-performance_profile
+>> diff --git a/Documentation/ABI/testing/sysfs-class-performance_profile
+>> b/Documentation/ABI/testing/sysfs-class-performance_profile
 >> new file mode 100644
 >> index 000000000000..9c67cae39600
 >> --- /dev/null
 >> +++ b/Documentation/ABI/testing/sysfs-class-performance_profile
 >> @@ -0,0 +1,104 @@
->> +Performance-profile selection (e.g. /sys/class/performance_profile/thinkpad_acpi/)
+>> +Performance-profile selection (e.g.
+>> /sys/class/performance_profile/thinkpad_acpi/)
 >> +
 >> +On modern systems CPU/GPU/... performance is often dynamically configurable
 >> +in the form of e.g. variable clock-speeds and TPD. The performance is often
 >> +automatically adjusted to the load by some automatic-mechanism (which may
 >> +very well live outside the kernel).
->> +
+> 
+> Are you intending to word this specifically to cover both firmware and userspace
+> implementations?  Or were you really meaning firmware implementations?
+
+What I'm trying to cover here is both firmware (run by say some microcontroller/EC)
+implementations as well and in-kernel implementations like cpufreq and possible
+support for controlling GPU frequencies. Note this is intended to future proof
+things in case e.g. a GPU driver, where freq. control is done inside the kernel.
+would like to use this API. This scenario might never materialize.
+
+Userspace implementations (which seems to likely become a thing on at least ARM)
+I would expect to have their own API (e.g. dbus / configfile) to configure their
+behavior rather then making a round trip through kernel space with some virtual
+device exporting this sysfs API.
+
+
 >> +These auto performance-adjustment mechanisms often can be configured with
 >> +one of several performance-profiles, with either a bias towards low-power
 >> +consumption (and cool and quiet) or towards performance (and higher power
@@ -156,102 +224,27 @@ On 10/5/20 3:13 PM, Benjamin Berg wrote:
 >> +NOT a goal of this API to allow monitoring the resulting performance
 >> +characteristics. Monitoring performance is best done with device/vendor
 >> +specific tools such as e.g. turbostat.
->> +
->> +Specifically when selecting a high-performance profile the actual achieved
->> +performance may be limited by various factors such as: the heat generated by
->> +other components, room temperature, free air flow at the bottom of a laptop,
->> +etc. It is explicitly NOT a goal of this API to let userspace know about
->> +any sub-optimal conditions which are impeding reaching the requested
->> +performance level.
->> +
->> +Since numbers are a rather meaningless way to describe performance-profiles
->> +this API uses strings to describe the various profiles. To make sure that
->> +userspace gets a consistent experience when using this API this API document
->> +defines a fixed set of profile-names. Drivers *must* map their internal
->> +profile representation/names onto this fixed set.
->> +
->> +If for some reason there is no good match when mapping then a new profile-name
->> +may be added. Drivers which wish to introduce new profile-names must:
->> +1. Have very good reasons to do so.
->> +2. Add the new profile-name to this document, so that future drivers which also
->> +   have a similar problem can use the same new. Usually new profile-names will
 > 
-> Typo, "new" -> "name" I suppose.
+> Another thought that comes to mind (which is completely separate from my previous
+> idea):
+> 
+> Why not make this register to firmware-attributes class as being discussed in the
+> new Dell driver?
+> 
+> It seems like it could easily be read as:
+> /sys/class/firmware-attributes/thinkpad-foo/attributes/PerformanceProfile/current_value
+> /sys/class/firmware-attributes/thinkpad-foo/attributes/PerformanceProfile/possible_values
 
-Ack, fixed in my local tree.
+That would be mixing boot-time settings with runtime settings under the same
+API. At least some Thinkpads already have firmware attributes for selecting
+the performance profile but that just sets the profile at boot.
 
-Thx.
+More in general we could put pretty much anything which can be expressed as
+a key=value pair inside that API, but doing so feels like abusing the API.
+The firmware-attributes API really is intended only for setting values which
+are stored in some nvram by the firmware, not for runtime changes.
 
 Regards,
 
 Hans
-
-
-> 
->> +   be added to the "extra profile-names" section of this document. But in some
->> +   cases the set of standard profile-names may be extended.
->> +
->> +What:		/sys/class/performance_profile/<device>/available_profiles
->> +Date:		October 2020
->> +Contact:	Hans de Goede <hdegoede@redhat.com>
->> +Description:
->> +		Reading this file gives a space separated list of profiles
->> +		supported for this device.
->> +
->> +		Drivers must use the following standard profile-names whenever
->> +		possible:
->> +
->> +		low-power:		Emphasises low power consumption
->> +					(and also cool and quiet)
->> +		balanced-low-power:	Balances between low power consumption
->> +					and performance with a slight bias
->> +					towards low power
->> +		balanced:		Balance between low power consumption
->> +					and performance
->> +		balanced-performance:	Balances between performance and low
->> +					power consumption with a slight bias
->> +					towards performance
->> +		performance:		Emphasises performance (and may lead to
->> +					higher temperatures and fan speeds)
->> +
->> +		Userspace may expect drivers to offer at least several of these
->> +		standard profile-names! If none of the above are a good match
->> +		for some of the drivers profiles, then drivers may use one of
->> +		these extra profile-names:
->> +		<reserved for future use>
->> +
->> +What:		/sys/class/performance_profile/<device>/current_profile
->> +Date:		October 2020
->> +Contact:	Hans de Goede <hdegoede@redhat.com>
->> +Description:
->> +		Reading this file gives the current selected profile for this
->> +		device. Writing this file with one of the strings from
->> +		available_profiles changes the profile to the new value.
->> +
->> +		Reading this file may also return "custom". This is intended for
->> +		drivers which have and export multiple knobs influencing
->> +		performance. Such drivers may very well still want to offer a
->> +		set of profiles for easy of use and to be able to offer a
->> +		consistent standard API (this API) to userspace for configuring
->> +		their performance. The "custom" value is intended for when a
->> +		user has directly configured the knobs (through e.g. some
->> +		advanced control-panel for a GPU) and the knob values do not
->> +		match any of the presets represented by the
->> +		performance-profiles. In this case writing this file will
->> +		override the modifications and restore the selected presets.
->> +
->> +What:		/sys/class/performance_profile/<device>/type
->> +Date:		October 2020
->> +Contact:	Hans de Goede <hdegoede@redhat.com>
->> +Description:
->> +		Performance-profiles may be system-wide, or for a specific
->> +		device (e.g. CPU / GPU). System-wide profiles are typically
->> +		used on devices where where a single cooling solution is
->> +		shared between all components, such as laptops and NUCs.
->> +
->> +		Reading this file indicates the type of the device for which
->> +		the thermal-profile is being configured.
->> +
->> +		Valid values: "system"
->> +		Reserved for future use values: "cpu", "gpu"
 
