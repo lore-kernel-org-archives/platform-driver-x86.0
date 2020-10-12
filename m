@@ -4,42 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63E2C4363D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 358E8C433DF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB7172073A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F004C2073A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602529534;
-	bh=al8to7U6I0P4qOAXSQzkEDMUQu67lNVAh5a1h+QqPKU=;
+	s=default; t=1602529557;
+	bh=8tpl7nTbL/sffME+THBKL/cvNYCPaqY+xXrwG7DaRhk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=M61zoBt5ifFSc1GRPq5M3CD0JBlYELEp41oBNiMElXeOifrGFo+nDltz405pOqlGm
-	 sp65HyT9/TFr9A4LLdyaIrCovR1b+VJvSMf2EnbZ15WrNocRR0tNX9rM1vxsSmEq5X
-	 Oigsg5rK87tHt9jrXG2RfUXFYLh7XBOS5s6El664=
+	b=s2NSgHgYbA0RDEXE/joiP85+rt5AeHhzvGslv7rFNjjYNr4QzKq2OaNuSE5IcV0wt
+	 eimPT4HmGl1cVH+B8k54Jms6ZFkgpYWzvY+a4OSiGgwoNbr7bGhkWTV1jdaK8pAGZS
+	 /0N0ERpLk/7qdGLw8DWJ9XgCOQ/tkOwuHU0JnLbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391529AbgJLTFV (ORCPT
+        id S2388321AbgJLTF4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Oct 2020 15:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54370 "EHLO mail.kernel.org"
+        Mon, 12 Oct 2020 15:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391358AbgJLTEZ (ORCPT
+        id S2391318AbgJLTEY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Oct 2020 15:04:25 -0400
+        Mon, 12 Oct 2020 15:04:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C6A32222A;
-        Mon, 12 Oct 2020 19:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EDC521D7F;
+        Mon, 12 Oct 2020 19:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1602529460;
-        bh=al8to7U6I0P4qOAXSQzkEDMUQu67lNVAh5a1h+QqPKU=;
+        s=default; t=1602529451;
+        bh=8tpl7nTbL/sffME+THBKL/cvNYCPaqY+xXrwG7DaRhk=;
         h=From:To:Cc:Subject:Date:From;
-        b=tAf8cwaStb1ooB+5EnR7g2NkH8QO7ZqtJ3/knYgiPIGMjSJEueGBuND0ITbEL7Xoz
-         4Jw3XE+BScm0dvJXbXprNWyeaoTsbzY8ngcplZ7DBANVu5Ht7G29pxF2q0QiZMLviB
-         Wko50CZlbXjLapilfayavi/u2qTQnfI9UTyyBnoI=
+        b=dLwPWqj2CygRwXiGnkvKv13UTCPu7vfoaRJ66/7WzxBqcQvOf7lUPPLomXClQ5WbR
+         w+A75KIwvkqCYTbOw4Q1aqjoUOyebhYRe7sg3uIFnh33DomuSylAuaLcnVfzhJBqQl
+         0BC9CIN1kz988bDUJfKZNH+haEUEoNimcokLhr08=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -47,9 +47,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/6] platform/x86: asus-nb-wmi: Revert "Do not load on Asus T100TA and T200TA"
-Date:   Mon, 12 Oct 2020 15:04:13 -0400
-Message-Id: <20201012190418.3279866-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 1/6] platform/x86: asus-nb-wmi: Revert "Do not load on Asus T100TA and T200TA"
+Date:   Mon, 12 Oct 2020 15:04:03 -0400
+Message-Id: <20201012190408.3279779-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 X-stable: review
@@ -88,10 +88,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 24 deletions(-)
 
 diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index ee64c9512a3a9..cccf250cd1e33 100644
+index 8137aa3437068..0fd7e40b86a0d 100644
 --- a/drivers/platform/x86/asus-nb-wmi.c
 +++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -551,33 +551,9 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+@@ -561,33 +561,9 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
  	.detect_quirks = asus_nb_wmi_quirks,
  };
  
