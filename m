@@ -2,109 +2,162 @@ Return-Path: <SRS0=Q59L=DT=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165C6C433E7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C319CC433E7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3A41207BB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 658C320878
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:59:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbgJLTjk (ORCPT
+        id S1730562AbgJLT7O (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Oct 2020 15:39:40 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:59519 "EHLO
+        Mon, 12 Oct 2020 15:59:14 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52841 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbgJLTjk (ORCPT
+        with ESMTP id S1726648AbgJLT7N (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Oct 2020 15:39:40 -0400
+        Mon, 12 Oct 2020 15:59:13 -0400
 Received: from [192.168.1.155] ([77.2.5.48]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MLAF0-1kkHGz2KfK-00IBSC; Mon, 12 Oct 2020 21:39:31 +0200
-Subject: Re: [PATCH 1/2] x86: Remove led/gpio setup from pcengines platform
- driver
-To:     Ed W <lists@wildgooses.com>, linux-kernel@vger.kernel.org
-Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
+ 1MOQyE-1kplnT1Rb4-00PuLl; Mon, 12 Oct 2020 21:58:57 +0200
+Subject: Re: [PATCH] gpio: gpio-amd-fch: Fix typo on define of
+ AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ed W <lists@wildgooses.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Eckert <fe@dev.tdt.de>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20200921215919.3072-1-lists@wildgooses.com>
- <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200920203207.25696-1-lists@wildgooses.com>
+ <CAHp75Vd2uz-QrEFshUr=e719VBX2zYzvOhVC07BpHfvi0WDgOA@mail.gmail.com>
+ <deb07bad-2d84-723a-7237-2b625a3c4de8@wildgooses.com>
+ <815ff3a6-8941-573d-36c0-36639f47dc04@wildgooses.com>
+ <CAHp75Ve3APYLKzH9KvmTueEcTP-CZJS9MmLC+ZsHRT9brOxsEQ@mail.gmail.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <8058a804-a793-a5f8-d086-0bb0f600aef9@metux.net>
-Date:   Mon, 12 Oct 2020 21:39:30 +0200
+Message-ID: <8e28d798-c429-fb1c-8b6f-f271f694cfd3@metux.net>
+Date:   Mon, 12 Oct 2020 21:58:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
+In-Reply-To: <CAHp75Ve3APYLKzH9KvmTueEcTP-CZJS9MmLC+ZsHRT9brOxsEQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2ccd+HPdvvkssdLpfI7hV7NC7mJ+qYRLJuKjRhJ2yCkArI0+JFV
- yMd4q8+LVMp1g0WJmARd0aqQQC1ht8gWS0VaUP4psg+XnUjPYl6VjBY5cI+dKHJGSZkdj3r
- /B7LKh2i5U1tEMGpa30ILEcVx5ysMwvmUnnuINTjKqRyOf66fiLW/g//rqYbi0DI+8dc/Uo
- Yfyhnu/l9nbhAfyZdbbMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uEtuSCtEiJY=:frRXq3Gq8VuA7Hhyq5PjRN
- /o7ka3UW2Qc3Ls4//UaRqX2HKeY+RphLZ/XSsTpO8grsZZ0NLPCQaz0iDfEWu+IhBRs2Q+A3y
- 0+OwuHhG3MiRzC80C7jERrqAMVnC6wHF5DeRXZ5WSTKCukwFWTMgyixm5YEhuje4tfhy89e9N
- dV2rM3MITRv8ltuVhXP2byF4aHg8A95Bn8hNs2O1Bhg/YxRnX53rcx9XhCDt3s21F3vFTFpHR
- PEuGKvDgXEvh6sDU9ispAE81CBzvJC424DXXYe86Y7ZDiGj1cU3voK8T7maxSIO0+gvpl+3qS
- wDieo04YYfRijcatrFYnwtz3vRLt1O3TxEDC/I4fJyJGRtjLjO3K7lABqwBBWsTT5ibKn8/EZ
- O2HgAJa7yfORdCx97x5s3rjPJj07/VIsAtiQMGfjOSTnHgezEX/bvvWkMjaPQWcLU7z1b+2qj
- TQ5KTqhWOBHgQ7BLEGgjGmAzrxwCLnfBDLVoslOLqCGdChUGZ/mDtxbR0Sy1BEEATGrdgDzb8
- jTqYwXyjjQLArlxT3Dt1vvcLDObGbBuFnabacfUsvrn6dVo4EUpUsaYAf1d52zLUePM/PL7lf
- AzljI49MTHOe6cJtNxKRhzao0pxW06k0yTW+/XBUdZtNh/0/Fr7hRwTmNZxajLlG4YeL0MGFo
- aA0n2oa9p+vHh9jy9yCVsPXwPZYv6DSKMYMI0yGoC+Y6v21sE6nx4o+098NttaJ2hlIE4c9zS
- nezcPaIfARIVVw5M7fJz7P1Xp8/HchSx/ghGuSIOPvRVEHtokbs3YnxdHNolJEiBGrbIXnV7P
- dkK+e05SZFwpWOUN5hDFk6XwwiLXAa8zt86HIew3xs2oYNfPTOKoduYeuqI6S79HsFCRJws
+X-Provags-ID: V03:K1:1OCHnEmxT6HKaEDcG9/t/pkL4s0iEx2M7MzJ6h97VAOPM4VLsGv
+ nc2Fsb2Ub+37My/omxUVmCbR70skZpbnRNOz1IuZKaf1Zwws4xx1XwlACISvC5PD+Xkgx5M
+ RrMIfaGkfICDMKYno37ekMSMIFR0856HJzq8bSeUZPyESNag52KUsH8htGqLl/pAXUTL13f
+ QZrODSor/RmgbbXGIgEhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Lc9Xpg21jmM=:6w8wQGrHdkVxzAaoQj+Ufz
+ bhfCSKSdYY5kexwZpoVd/V5vxMJxI7yVx3BIjQrxGVYrZQho/Sw+321jOHMst2n0Vy7TOnebR
+ bHtwVpb9yiU9yHHZ+3bfik9OkORGoyL1Xy+lD/i7wDPpqt87weu6hQHokNjKIPcL0aBtQohDH
+ wadpY9wpKV2cfMcSvLqXgeOkCSPYC3VyQnY8JPgbrx+/BpVv9wYq1d+Ox+QJlY2Y0H7Vya9Lq
+ R+1zXwh8DZkFsgQ+1T97fkH+V8w8ZD+EA8XvBdjhpewlaZzs52uHHyLKP6WihNZjZxmtacuMd
+ Nb5T/gUbiDwbRjG1BSzo7/YJcWlMR8yrpgPBMEFyLVzLGn0VBkvhuj0vGTvGWHiheJpFL7ov/
+ Lu0eHo3nUvnUzFfil7oHpa1m4tHUwDJ7GVapxKvi43nT5J9pzbXVID6R6Sw4FR/eoHxrUk5TX
+ W5M9IHj94SfrEJr13MpBTtafZdE46xXedsys1YAt2fdxkWiyGELLWqjia6eSUqTX3YPi9VmdD
+ I0cLF98orMukhgX7aqPJr+EWZ7QVfGXeKYJpnmZk91m4NaSNzylbOPimSa31W47te/RsVXxiy
+ SZQv8D/26O0yY/hjcNS4wwLz/vWAFROUD6iQ0izHBc/lp7xJQMjc5xhgt9jJmYcWSGA1mDbwI
+ y4HJTrxlunkGXzFZuK+y+2FKRl9rwWq4GT3LI+SZo9G57EBDrtl6ucHB1iTPaSQwculBjZ1o7
+ JSBFicKdsVw2d2WZ5BHdM/T7HJ80uWUibN1aWW9GdhtE75AkJ7wTmFjdjizIYoFujOIioH0Kr
+ SW9kcjb43CthbxbZkSB0XC9wJ8MIa5Qde28e4P4TWKodpMhj0V/TgTxrZUG+cGKh83mihWW
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 22.09.20 00:17, Ed W wrote:
-> Hi, I've been adding support for the PC Engines APU5 board, which is a variant of the APU 2-4 boards
-> with some nice features. The current platform driver for pcengines boards has some redundant
-> features with regards to recent bios/firmware packages for the board as they now set the ACPI tables
-> to indicate GPIOs for keys and leds. 
-
-NAK. Breaks existing userlands in the field (literally field), forcing
-users to fw upgrade is not an option (field roll would be realy expensive).
-
-> So I've submitted a patch to eliminate this. It could be argued
-> that it's useful to support older firmware versions, but there is also a 'leds-apu' driver which a)
-> probably ought to be marked deprecated with a view to removing it and b) implements the leds even on
-> antique firmware versions.
-
-leds-apu is only for *OLD* apu1 - it does *not* work with v2/3/4,
-completely different chipset.
-
-> In implementing the APU5 I changed some of the exported gpio names to make them more closely match
-> functionality across all the boards. > For example APU2 vs APU4 both support 2x LTE options, but in
-> different mpcie slots and this affects the numbering of options, but not the sense of them (so I
-> renamed them based on the intention of the option). This is particularly true on APU5 which supports
-> 3x LTE cards
-
-Dont break existing userlands.
-
-> Can I get some advice: It would be helpful if the kernel would export the GPIOs to user-space
-> automatically since toggling SIM slots is fairly useful task in userspace. 
-
-This is planned to be moved to either an own subsystem or into rfkill
-(which would have to be extended for such things).
-
-Using raw gpio's isn't a good idea - it's not portable.
-
-> At least for me the gpio
-> numbers seem to jump around depending on the order of module loading, so doing something involving
-> /sys/class/gpio/export isn't obviously an easy process. 
-
-Exactly. That's why they should be bound to more high level drivers.
-Gpio numbers are anything but stable.
+Acked-by: Enrico Weigelt <info@metux.net>
 
 
 --mtx
+
+On 28.09.20 13:45, Andy Shevchenko wrote:
+> On Mon, Sep 28, 2020 at 1:33 PM Ed W <lists@wildgooses.com> wrote:
+>>
+>> Hi
+>>
+>> Could I get a final opinion (or signoff) on this patch please?
+>>
+>> The significant typo is the reference to "59", when the GPIO is actually 55
+>>
+>> According to the PCEngines schematic the names of two similar GPIOs are
+>>     G59/DEVSLP1
+>>     G55/DEVSLP
+>>
+>> The original developer named the second GPIO with a trailing 0, which doesn't seem unreasonable,
+>> hence I just corrected the name to:
+>>     AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+>> However another acceptable name could be:
+>>     AMD_FCH_GPIO_REG_GPIO55_DEVSLP
+>>
+>> If I could ask for some guidance and if necessary I will resubmit this patch? Enrico, do you have an
+>> opinion?
+>>
+>> However, perhaps it's already acceptable as is?
+> 
+> It's being accepted, and will be sent later to Linus.
+> 
+>>
+>> Kind regards
+>>
+>> Ed W
+>>
+>>
+>> On 21/09/2020 09:40, Ed W wrote:
+>>> On 21/09/2020 08:55, Andy Shevchenko wrote:
+>>>> On Sun, Sep 20, 2020 at 11:33 PM Ed Wildgoose <lists@wildgooses.com> wrote:
+>>>>> Schematics show that the GPIO number is 55 (not 59). Trivial typo.
+>>>> Does it still DEVSLP0? Perhaps you need to drop that part as well.
+>>>>
+>>>> ...
+>>>
+>>>
+>>> In the PCEngines schematic it's labelled as "G55/DEVSLP" (no 0)
+>>>
+>>> (In contrast G59 is labelled "G59/DEVSLP1")
+>>>
+>>> What is the quorum opinion on name?
+>>>
+>>> Thanks
+>>>
+>>> Ed W
+>>>
+>>>
+>>>>
+>>>>>   #define APU2_GPIO_REG_LED3             AMD_FCH_GPIO_REG_GPIO59_DEVSLP1
+>>>>>   #define APU2_GPIO_REG_MODESW           AMD_FCH_GPIO_REG_GPIO32_GE1
+>>>>>   #define APU2_GPIO_REG_SIMSWAP          AMD_FCH_GPIO_REG_GPIO33_GE2
+>>>>> -#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO59_DEVSLP0
+>>>>> +#define APU2_GPIO_REG_MPCIE2           AMD_FCH_GPIO_REG_GPIO55_DEVSLP0
+>>>>>   #define APU2_GPIO_REG_MPCIE3           AMD_FCH_GPIO_REG_GPIO51
+>>>>>
+>>>>>   /* Order in which the GPIO lines are defined in the register list */
+>>>>> diff --git a/include/linux/platform_data/gpio/gpio-amd-fch.h
+>>>>> b/include/linux/platform_data/gpio/gpio-amd-fch.h
+>>>>> index 9e46678ed..255d51c9d 100644
+>>>>> --- a/include/linux/platform_data/gpio/gpio-amd-fch.h
+>>>>> +++ b/include/linux/platform_data/gpio/gpio-amd-fch.h
+>>>>> @@ -19,7 +19,7 @@
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO49                0x40
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO50                0x41
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO51                0x42
+>>>>> -#define AMD_FCH_GPIO_REG_GPIO59_DEVSLP0        0x43
+>>>>> +#define AMD_FCH_GPIO_REG_GPIO55_DEVSLP0        0x43
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO57                0x44
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO58                0x45
+>>>>>   #define AMD_FCH_GPIO_REG_GPIO59_DEVSLP1        0x46
+>>>>
+>>>
+>>
+> 
+> 
 
 -- 
 ---
