@@ -2,209 +2,91 @@ Return-Path: <SRS0=Q59L=DT=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15B0C43467
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 16:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C447C433DF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EED52076D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 16:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD0E2087D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 19:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1602520975;
-	bh=lr25i5gzgSHd51VzOxP20T/nFgcDUwkIoAEPj1OUdiM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lSahg7uymANjRHnWi1Ur7VeCgngSA2bqSgp7PF7TtZUCWz2Tb1dgps8biUZcw8/ZM
-	 7rHSOlCQHhjWlltIme2SQ9HmINq+oOdhg9N05L90fHjyKchMwHzNRdMUlAAm6M2YLe
-	 dvRyFgXzGPUxa4fVVFL5tIgjecMSWgkVspqEr178=
+	s=default; t=1602529369;
+	bh=URv2glGwW/5+G+L7PGGVNp4yf/hXb5zvbwQ7zUwUQdM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tQtHKJSuSoCEV/ljAHvIxmKd8dVa6n16RjGUVFz9y0ItEU8Xuq2KCnOXLOL/+tgCK
+	 SDn8jjPlItasdH3ll+mySt8hjN2P9bVwJIGPi5BjTq/leV8p1VqFRhWwaA0S+7Od8i
+	 emGPR/OjTQT+4oBspk6dhorZUoZVjLKcExjHcRj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403861AbgJLQmw (ORCPT
+        id S1730880AbgJLTCt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Oct 2020 12:42:52 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:41526 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390257AbgJLQmw (ORCPT
+        Mon, 12 Oct 2020 15:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730850AbgJLTCq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Oct 2020 12:42:52 -0400
-Received: by mail-oo1-f67.google.com with SMTP id o184so602871ooo.8;
-        Mon, 12 Oct 2020 09:42:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N7U2QovlXoAUmOW3ls2XQIumCSQJr3uUb2npc8xY5T4=;
-        b=I0FiJlRMrDLPRMevZKtJMDfUjNclXjL6vZZ/1WJcCEc8ipFan/uNR+KlFo1iCq1SSp
-         fIVtWjOpmDHlooqUOd3awTmKli5kf9fhtn7Plq2Vv3Wkswpexay6UgfOTzCmp6cMWhXZ
-         qt3co693TganlI2WkPC7d/+M5Tz+gd+OPn6GWqrNrE25A1UoKCLF0FV10ReDKdUuTd82
-         5klFR4EQkm3pHUkBLI70nG05J8m1SNz2HsPHsA3WSl0HQHQj+v2bqBHYDlZNMXzO1JDE
-         13Vv2KNMXKJeAXTqayUbbDpMsA5uHnEU/Xxg89rswswqB5sZ+qMtkq61k88nM4z3PL+O
-         sgSA==
-X-Gm-Message-State: AOAM5318N3HxkiQ6c5qp8Giq4smN8K2SarJsOSho3Clh6Jk2gA3y74vR
-        cyEX7GaWlfeZaLSA7M6l32JcnsI89mg9UfDFdkM=
-X-Google-Smtp-Source: ABdhPJzpl9k9CPunKp7hPHiVc1Wk3vDvRo2pGsL5isaQKjvj7VGy8tOKpBZhot1+oXSGCjF961IFri2MTy+iHC+PRxY=
-X-Received: by 2002:a4a:d44:: with SMTP id 65mr19170928oob.44.1602520970989;
- Mon, 12 Oct 2020 09:42:50 -0700 (PDT)
+        Mon, 12 Oct 2020 15:02:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCCD321D6C;
+        Mon, 12 Oct 2020 19:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602529365;
+        bh=URv2glGwW/5+G+L7PGGVNp4yf/hXb5zvbwQ7zUwUQdM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BNGrJ7DqaAo02YA7EKGks2azeymkkme34r3qdoi9iEvUtQLlqDy7psuAlcjUDMn+q
+         QgabHQxG1fy7xqHK6p+WtnUkcbLWnReWq15phV44eg9uMTdBNBylyZYEqYcLXol6uM
+         2LcaBLPokC6YmtWSUEuqJEfB4FXVNENAkMxYlZ9Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marius Iacob <themariusus@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 04/24] platform/x86: asus-wmi: Add BATC battery name to the list of supported
+Date:   Mon, 12 Oct 2020 15:02:19 -0400
+Message-Id: <20201012190239.3279198-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201012190239.3279198-1-sashal@kernel.org>
+References: <20201012190239.3279198-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20201003131938.9426-1-hdegoede@redhat.com> <20201003131938.9426-2-hdegoede@redhat.com>
- <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
- <85a36eb58cb9774f1907582dfc75295ed847200c.camel@hadess.net>
- <DM6PR19MB26364E6AA2F51981F592CE58FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
- <c73ffad8fd6bff8ff20d91930b097bff82be1c8f.camel@hadess.net> <DM6PR19MB2636B067186B08B744EA2163FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
-In-Reply-To: <DM6PR19MB2636B067186B08B744EA2163FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 12 Oct 2020 18:42:39 +0200
-Message-ID: <CAJZ5v0jBJBTTb3qBGH0UWOAfvY24gWqJQA=MahnhaTdMu-w0Bw@mail.gmail.com>
-Subject: Re: [RFC] Documentation: Add documentation for new
- performance_profile sysfs class
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
-Cc:     Bastien Nocera <hadess@hadess.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Oct 7, 2020 at 8:41 PM Limonciello, Mario
-<Mario.Limonciello@dell.com> wrote:
->
-> > On Wed, 2020-10-07 at 15:58 +0000, Limonciello, Mario wrote:
-> > >
-> > > > On Mon, 2020-10-05 at 12:58 +0000, Limonciello, Mario wrote:
-> > > > > > On modern systems CPU/GPU/... performance is often dynamically
-> > > > > > configurable
-> > > > > > in the form of e.g. variable clock-speeds and TPD. The
-> > > > > > performance
-> > > > > > is often
-> > > > > > automatically adjusted to the load by some automatic-mechanism
-> > > > > > (which may
-> > > > > > very well live outside the kernel).
-> > > > > >
-> > > > > > These auto performance-adjustment mechanisms often can be
-> > > > > > configured with
-> > > > > > one of several performance-profiles, with either a bias towards
-> > > > > > low-power
-> > > > > > consumption (and cool and quiet) or towards performance (and
-> > > > > > higher
-> > > > > > power
-> > > > > > consumption and thermals).
-> > > > > >
-> > > > > > Introduce a new performance_profile class/sysfs API which
-> > > > > > offers a
-> > > > > > generic
-> > > > > > API for selecting the performance-profile of these automatic-
-> > > > > > mechanisms.
-> > > > > >
-> > > > >
-> > > > > If introducing an API for this - let me ask the question, why
-> > > > > even let each
-> > > > > driver offer a class interface and userspace need to change
-> > > > > "each" driver's
-> > > > > performance setting?
-> > > > >
-> > > > > I would think that you could just offer something kernel-wide
-> > > > > like
-> > > > > /sys/power/performance-profile
-> > > > >
-> > > > > Userspace can read and write to a single file.  All drivers can
-> > > > > get notified
-> > > > > on this sysfs file changing.
-> > > > >
-> > > > > The systems that react in firmware (such as the two that prompted
-> > > > > this discussion) can change at that time.  It leaves the
-> > > > > possibility for a
-> > > > > more open kernel implementation that can do the same thing though
-> > > > > too by
-> > > > > directly modifying device registers instead of ACPI devices.
-> > > >
-> > > > The problem, as I've mentioned in previous discussions we had about
-> > > > this, is that, as you've seen in replies to this mail, this would
-> > > > suddenly be making the kernel apply policy.
-> > > >
-> > > > There's going to be pushback as soon as policy is enacted in the
-> > > > kernel, and you take away the different knobs for individual
-> > > > components
-> > > > (or you can control them centrally as well as individually). As
-> > > > much as
-> > > > I hate the quantity of knobs[1], I don't think that trying to
-> > > > reduce
-> > > > the number of knobs in the kernel is a good use of our time, and
-> > > > easier
-> > > > to enact, coordinated with design targets, in user-space.
-> > > >
-> > > > Unless you can think of a way to implement this kernel wide setting
-> > > > without adding one more exponent on the number of possibilities for
-> > > > the
-> > > > testing matrix, I'll +1 Hans' original API.
-> > > >
-> > > Actually I offered two proposals in my reply.  So are you NAKing
-> > > both?
-> >
-> > No, this is only about the first portion of the email, which I quoted.
-> > And I'm not NAK'ing it, but I don't see how it can work without being
-> > antithetical to what kernel "users" expect, or what the folks consuming
-> > those interfaces (presumably us both) would expect to be able to test
-> > and maintain.
-> >
->
-> (Just so others are aware, Bastien and I had a previous discussion on this topic
-> that he alluded to here: https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/issues/1)
->
-> In general I agree that we shouldn't be offering 100's of knobs to change
-> things and protect users from themselves where possible.
->
-> Whether the decisions are made in the kernel or in userspace you still have a matrix once
-> you're letting someone change 2 different kernel devices that offer policy.  I'd argue it's
-> actually worse if you let userspace change it though.
->
-> Let's go back to the my GPU and platform example and lets say both offer the new knob here
-> for both.  Userspace software such as your PPD picks performance.  Both the platform device
-> and GPU device get changed, hopefully no conflicts.
-> Then user decides no, I don't want my GPU in performance mode, I only want my platform.
-> So they change the knob for the GPU manually, and now you have a new config in your matrix.
->
-> However if you left it to a single kernel knob, both GPU and platform get moved together and
-> you don't have these extra configs in your matrix anymore.
->
-> The other point I mentioned, that platform might also do something to GPU via a sideband and
-> you race, you can solve it with kernel too by modifying the ordering the kernel handles it.
->
-> Userspace however, you give two knobs and now you have to worry about them getting it right
-> and supporting them doing them in the wrong order.
->
-> > > The other one suggested to use the same firmware attributes class
-> > > being
-> > > introduced by the new Dell driver (
-> > > https://patchwork.kernel.org/patch/11818343/)
-> > > since this is actually a knob to a specific firmware setting.
-> >
-> > This seemed to me like an implementation detail (eg. the same metadata
-> > is being exported, but in a different way), and I don't feel strongly
-> > about it either way.
->
-> OK thanks.
+From: Marius Iacob <themariusus@gmail.com>
 
-IMV there are two choices here:  One is between exposing the low-level
-interfaces verbatim to user space and wrapping them up into a certain
-"translation" layer allowing user space to use a unified interface (I
-think that is what everybody wants) and the other  boils down to how
-the unified interface between the kernel and user space will look
-like.
+[ Upstream commit 1d2dd379bd99ee4356ae4552fd1b8e43c7ca02cd ]
 
-Personally, I think that something line /sys/power/profile allowing
-drivers (and other kernel entities) to register callbacks might work
-(as stated in my last reply to Hans).
+The Intel Atom Cherry Trail platform reports a new battery
+name (BATC). Tested on ASUS Transformer Mini T103HAF.
 
-Cheers!
+Signed-off-by: Marius Iacob <themariusus@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/asus-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 8f4acdc06b134..fa39ff030bd7c 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -442,6 +442,7 @@ static int asus_wmi_battery_add(struct power_supply *battery)
+ 	 */
+ 	if (strcmp(battery->desc->name, "BAT0") != 0 &&
+ 	    strcmp(battery->desc->name, "BAT1") != 0 &&
++	    strcmp(battery->desc->name, "BATC") != 0 &&
+ 	    strcmp(battery->desc->name, "BATT") != 0)
+ 		return -ENODEV;
+ 
+-- 
+2.25.1
+
