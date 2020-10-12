@@ -1,180 +1,92 @@
-Return-Path: <SRS0=ZlNf=DQ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=Q59L=DT=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34BBC433DF
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E13C433E7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 14:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672712222F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Oct 2020 14:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF2E20870
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Oct 2020 14:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBBVCTAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVxIyWCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388835AbgJIOZN (ORCPT
+        id S1728269AbgJLOe7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Oct 2020 10:25:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
+        Mon, 12 Oct 2020 10:34:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388833AbgJIOZM (ORCPT
+        with ESMTP id S1726963AbgJLOe6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Oct 2020 10:25:12 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B1BC0613D2;
-        Fri,  9 Oct 2020 07:25:12 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id w21so1773550plq.3;
-        Fri, 09 Oct 2020 07:25:12 -0700 (PDT)
+        Mon, 12 Oct 2020 10:34:58 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E09C7C0613D0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2020 07:34:58 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id q21so3226116pgi.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Oct 2020 07:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=J7qE0GUuBpfv8UjMVWbZ0ncuDXglYrJh0hxvzENiZ/8=;
-        b=JBBVCTAcdPeVOeY24OObzt1FQFK/0dbrwcz8o15piYCM9wKumNVa25e+K0WRk1e38l
-         ldSw2BR8PbjpUuRJA2Bz36JvLnVrD7Vq7M1VCM+u8LrI4KpeenlEYs07H1+hecgnPaGz
-         oNeuxVJXAu9t2auQq9G9byyqlxa/0cLVweaCDuXYvi1AeUQJdmpjRfArYEzilqd8AQxX
-         t3kEw7+I1XyQ3SqSXCrb6yy2M290azWEdz1Qr2Il9Etl16bTsXMvxv35YJb8wDcNgNrK
-         c4Y19lv4jWcQWSzQpv8IfvLn3pqf9h9NrHPkk4iyHuj6bi09kdCVJvOnIjSGPX8fRdv9
-         K1JA==
+        bh=pU8op+aZFHU0HmvcRZrAn/iPq4oRm10+1moFcSn13OQ=;
+        b=HVxIyWCnSG6OFN6uHHuZMv4pcQHb9tDCT0evHqkUPXUgNktRj8iKzNXXk7Kc23O1HS
+         68haNLdOXXiMYqM2HmISaZZmsZmpb5x77hlcydmlT2shwHsJY/7PsIzCj+irRtUJsj1i
+         xVI9vP3zZn1pbo43Kony8YM254ggAfRhXDvLK43CvyDKbhgLmDrHWlBwQtNNQzhQwuxM
+         CeZtSYw+O9tlHBUrUwAMiJod90k81t77ETa3R9zLM9QrzBwjnc30buDq8k38xv066ScI
+         /Mdqon8VBGlkxvm4fDzuxFahXDpKCAq0N42HPVSnkqjYYDSiMO+ORqedyJbUonulfRKJ
+         cALg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=J7qE0GUuBpfv8UjMVWbZ0ncuDXglYrJh0hxvzENiZ/8=;
-        b=mG9+neVyh54J1Rw54bEivJCVg4lNToIlpB1I7svC92upJmQkEiBts6+e1mGW3EVaRQ
-         +ruUbAXwmv51xhWbH3RinsA/59YxsIIf4HKr+ldYsZaAW3oWwJCRgYCoORNg+Zc5PWzN
-         9aR1Qdd1LXHr8TNTX0H7pmAhDoIIixd55CQJyVwYH/QLa75IXWfWrws6qrPcFeykdLNz
-         iaNfm7mcob4MBIHqFJ9zZA9sa+iy4/S9Gri4Yrv/H7u4h8UVTpkY9T6ySUxoFzqtl1s4
-         emsvai3uwZwxCIPjyy6YggQH50t8ZyVhiC/KfBjV0J9JEjr8dYFHEhv3ZR5joXaJNkJ2
-         CCtw==
-X-Gm-Message-State: AOAM533LeG/St1bekbW9NGnTLk/AkW3bIbA+CZ1LYr5KBzi1CXO/WDLH
-        JgcnWnN/M9SRmHk/ULbVOx3fpBLNYry6W73dx6M=
-X-Google-Smtp-Source: ABdhPJyZg/PkK/hjqy/5vVWSOS1AXfLxmeEoMXE0Id1GSJWLrjE5E8Me834jLrcvXmHmwLx7Zy17XZG174r1FC4GYVw=
-X-Received: by 2002:a17:902:aa8a:b029:d3:c9dd:77d1 with SMTP id
- d10-20020a170902aa8ab02900d3c9dd77d1mr12650563plr.0.1602253512112; Fri, 09
- Oct 2020 07:25:12 -0700 (PDT)
+        bh=pU8op+aZFHU0HmvcRZrAn/iPq4oRm10+1moFcSn13OQ=;
+        b=nMJkZuksTMWA9GMKgi6CQh1VKzyejFya1UjxI/Xeh7+kvMBDKPywFyAbaiuYnKMbUU
+         OEg1fzxOWar/5pM0UwOcK/MmQ81eTGNZZzePh94IjkDHh8o+XjGBR/7gYdPfvrMZrmtk
+         3Uc6aUtCHUaz63psmM6RZiu9FY4Z1GbhKecUyaEWMbsxeGx/Lp/f1nVw0sh99uh/yHaJ
+         YexJ5+EhT/9Ugodx7QF9WsOau1YOh122rGDvzqJeB5EDyb7wFXHb4EHun7WCoOjtyOOF
+         5l4o8ZO1c4kyZzDClWHpFMUT1IyG0q5XTpQltslg6MhzThFXDq0hDDhTNKVMkJ3Jubjo
+         BqXQ==
+X-Gm-Message-State: AOAM531TpLv7DsRREIQGFggaNY1Uijy8K104AWfYAuj54iOlb5o09Vlc
+        Ny5nP0vxeaC7C4RVpOITF4bvCiyvNRtebidzdQU=
+X-Google-Smtp-Source: ABdhPJxfsbIZOEXgc/WDmpp3ZdNWGc8rkDdgFcEG2XT/r3smtuVcsrLENcH3xmEe7SuR5bQeFxeZebyXQdSLMQaxgJo=
+X-Received: by 2002:a17:90b:305:: with SMTP id ay5mr20379310pjb.129.1602513298392;
+ Mon, 12 Oct 2020 07:34:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201009141128.683254-1-luzmaximilian@gmail.com> <20201009141128.683254-3-luzmaximilian@gmail.com>
-In-Reply-To: <20201009141128.683254-3-luzmaximilian@gmail.com>
+References: <bug-196819-6418@https.bugzilla.kernel.org/> <bug-196819-6418-Ze8OWcGS0v@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-196819-6418-Ze8OWcGS0v@https.bugzilla.kernel.org/>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 9 Oct 2020 17:26:01 +0300
-Message-ID: <CAHp75VfJNrJs3PFuH4+Cw5wZ8MB+hoeuZc-+2s1YD2wHYzf8pg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] platform/surface: Move Surface 3 WMI driver to platform/surface
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        =?UTF-8?Q?Bla=C5=BE_Hrastnik?= <blaz@mxxn.io>,
-        Stephen Just <stephenjust@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 12 Oct 2020 17:35:47 +0300
+Message-ID: <CAHp75VcEkCGm=Vi==t1T6b0MYHyyk8yvVyJe3NZhFXX7h8NVvQ@mail.gmail.com>
+Subject: Re: [Bug 196819] ASUS X SERIES X553MA-BING-SX451B does not boot anymore
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Oct 9, 2020 at 5:11 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
+On Mon, Oct 12, 2020 at 5:32 PM <bugzilla-daemon@bugzilla.kernel.org> wrote:
 >
-> Move the Surface 3 WMI driver from platform/x86 to the newly created
-> platform/surface directory.
+> https://bugzilla.kernel.org/show_bug.cgi?id=196819
+>
+> Andy Shevchenko (andy.shevchenko@gmail.com) changed:
+>
+>            What    |Removed                     |Added
+> ----------------------------------------------------------------------------
+>              Status|NEEDINFO                    |RESOLVED
+>          Resolution|---                         |CODE_FIX
+>
+> --- Comment #5 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+> Closing now, thanks!
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
-> ---
->  drivers/platform/surface/Kconfig                 | 16 ++++++++++++++++
->  drivers/platform/surface/Makefile                |  2 ++
->  drivers/platform/{x86 => surface}/surface3-wmi.c |  0
->  drivers/platform/x86/Kconfig                     | 12 ------------
->  drivers/platform/x86/Makefile                    |  1 -
->  5 files changed, 18 insertions(+), 13 deletions(-)
->  rename drivers/platform/{x86 => surface}/surface3-wmi.c (100%)
->
-> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-> index b67926ece95f..326f7bbf83d7 100644
-> --- a/drivers/platform/surface/Kconfig
-> +++ b/drivers/platform/surface/Kconfig
-> @@ -12,3 +12,19 @@ menuconfig SURFACE_PLATFORMS
->           kernel code.
->
->           If you say N, all options in this submenu will be skipped and disabled.
-> +
-> +if SURFACE_PLATFORMS
-> +
-> +config SURFACE3_WMI
-> +       tristate "Surface 3 WMI Driver"
-> +       depends on ACPI_WMI
-> +       depends on DMI
-> +       depends on INPUT
-> +       depends on SPI
-> +       help
-> +         Say Y here if you have a Surface 3.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called surface3-wmi.
-> +
-> +endif # SURFACE_PLATFORMS
-> diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
-> index 3700f9e84299..f889d521420f 100644
-> --- a/drivers/platform/surface/Makefile
-> +++ b/drivers/platform/surface/Makefile
-> @@ -3,3 +3,5 @@
->  # Makefile for linux/drivers/platform/surface
->  # Microsoft Surface Platform-Specific Drivers
->  #
-> +
-> +obj-$(CONFIG_SURFACE3_WMI)             += surface3-wmi.o
-> diff --git a/drivers/platform/x86/surface3-wmi.c b/drivers/platform/surface/surface3-wmi.c
-> similarity index 100%
-> rename from drivers/platform/x86/surface3-wmi.c
-> rename to drivers/platform/surface/surface3-wmi.c
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 0d91d136bc3b..0759913c9846 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -870,18 +870,6 @@ config INTEL_VBTN
->           To compile this driver as a module, choose M here: the module will
->           be called intel_vbtn.
->
-> -config SURFACE3_WMI
-> -       tristate "Surface 3 WMI Driver"
-> -       depends on ACPI_WMI
-> -       depends on DMI
-> -       depends on INPUT
-> -       depends on SPI
-> -       help
-> -         Say Y here if you have a Surface 3.
-> -
-> -         To compile this driver as a module, choose M here: the module will
-> -         be called surface3-wmi.
-> -
->  config SURFACE_3_BUTTON
->         tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
->         depends on ACPI && KEYBOARD_GPIO && I2C
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 5f823f7eff45..29563a32b3e3 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -82,7 +82,6 @@ obj-$(CONFIG_INTEL_OAKTRAIL)          += intel_oaktrail.o
->  obj-$(CONFIG_INTEL_VBTN)               += intel-vbtn.o
->
->  # Microsoft
-> -obj-$(CONFIG_SURFACE3_WMI)             += surface3-wmi.o
->  obj-$(CONFIG_SURFACE_3_BUTTON)         += surface3_button.o
->  obj-$(CONFIG_SURFACE_3_POWER_OPREGION) += surface3_power.o
->  obj-$(CONFIG_SURFACE_PRO3_BUTTON)      += surfacepro3_button.o
-> --
-> 2.28.0
->
+This bug is simply an example of one registered to Platform_x86 component.
+Should PDx86 ask bugzilla admin to default the assignee to this
+mailing list, for example?
 
 
 -- 
