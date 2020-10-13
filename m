@@ -4,83 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5233DC433DF
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Oct 2020 08:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D909AC43467
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Oct 2020 13:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5AD12137B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Oct 2020 08:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C3E22E03
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Oct 2020 13:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d1Wp+q8P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U6gaj6dA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403985AbgJMIsr (ORCPT
+        id S1728394AbgJMNJg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Oct 2020 04:48:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28298 "EHLO
+        Tue, 13 Oct 2020 09:09:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37690 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403976AbgJMIsr (ORCPT
+        by vger.kernel.org with ESMTP id S1728387AbgJMNJf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Oct 2020 04:48:47 -0400
+        Tue, 13 Oct 2020 09:09:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602578926;
+        s=mimecast20190719; t=1602594573;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=L/QWwyJCZVVi79Fpwwugg94L9LWczQbwfUHt0ZL/p3g=;
-        b=d1Wp+q8PTl6yPfn1UQ7Bvc7feEkyfqGDjPnVqpaY0x/ITl8Ayk4b0M2d25lztin6010uzI
-        hfvjkwcos1Qq/7IniPc1tTs4jdKOhL5XcNqWHybjkZkQwmWSy1FooThaoS/4WpK1OLFiH/
-        NEKV9c3G5BdIpD2oMu1dsLKNtCd+NME=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-djzjL_iWN0ypWraJhO5Bxw-1; Tue, 13 Oct 2020 04:48:44 -0400
-X-MC-Unique: djzjL_iWN0ypWraJhO5Bxw-1
-Received: by mail-ej1-f71.google.com with SMTP id c10so7379977ejm.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2020 01:48:44 -0700 (PDT)
+        bh=pYoLERdYqiwrge/RFON654uxOf57ox4XJoSTutIfBEg=;
+        b=U6gaj6dAq28b62jh4h3RoLCfewOqgIFR526ZQK/5FICMyRK5B13LsZlRWQE0XnL4e3pzg6
+        0o6U9h9arxmXNE/Ezze1S+S+ks6XzzAhFdiMp+acatFyF/NnbtNDs+0oYAuTtj7VvveB9u
+        k9C03NMs25ZohANByzxSrL/BxXNV8dM=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-275-DMz4ZQn1N7SWSd9yZfi6vg-1; Tue, 13 Oct 2020 09:09:30 -0400
+X-MC-Unique: DMz4ZQn1N7SWSd9yZfi6vg-1
+Received: by mail-ed1-f70.google.com with SMTP id h6so4938364edt.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Oct 2020 06:09:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=L/QWwyJCZVVi79Fpwwugg94L9LWczQbwfUHt0ZL/p3g=;
-        b=US4Fe+IB0CAwSE9C//0KQwSBd5Q134tqmZZQRgcIONPg1Ff2Xdrv3ycNGjgTBR/tKY
-         WsiLgjhUB7YBUobQ2FBu1gaHkB+v4fFEOWK/x0ZrZM5elTlcOiFFRmmEufMkM01P+3Hj
-         jTdPn8KhtGYzfhTGoue7DZCCeMdbXfZdzceNGq2I0/GKYLyfhuPK0do2iJLVuv4vQpY1
-         rygBIh61xBliRKxwRRjfCI9ABul0yMm8l0l8/IDsQFCuCWUHbJiqBqm9CgmV7jGWPBHw
-         xoakl4+AKE/APzEKn8rNeaALBkKd2h4NjBiGn5GoUarb4BoNDg3nnw3pPwxYD+8eoMys
-         W9rg==
-X-Gm-Message-State: AOAM5317pd3PR5WEJRjeC0+BtZAi4o33/sIIsAdxyyTD4aw2NiiCgrpG
-        Wdw/0PNqk7D/V32amqo31t8ZB+4N//rMlz/v3ifJ1XPYon1/BW7r280z/iRGuiHr2uk55F7jKy2
-        fWX6ibWDtLcTamIsafZJnLYVt12mbAJWLEw==
-X-Received: by 2002:aa7:d4d8:: with SMTP id t24mr19434263edr.247.1602578922897;
-        Tue, 13 Oct 2020 01:48:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzkImKSu++3puTyZJwJQzVLd6jKat579AuQM33hTsdLksyUK9sskK1mHYSCtX/CgETiRSSYEQ==
-X-Received: by 2002:aa7:d4d8:: with SMTP id t24mr19434238edr.247.1602578922662;
-        Tue, 13 Oct 2020 01:48:42 -0700 (PDT)
+        bh=pYoLERdYqiwrge/RFON654uxOf57ox4XJoSTutIfBEg=;
+        b=dfo2m0VKi9AyCQ2hazVgZ/cdH5y8a06L+sCuSMFduud7ttDWwC8+iLbFLETcW33LTE
+         +BODapZZv3IdXIIQRJcW2vutPJbW2FRjwdulwpOOl5TrkYIIUe7tbfP/5vs8GH4OK05u
+         9pwhemT5snwLkF0hvc4GLkcWKl1+zobinvmJ7AJ+KEFG39F4PwvWx9rSRPdqY8vDD2+D
+         sl2CIP2WlzQ+OeVMvYJIbqsvjTI/q4Ecm5H9mgBNG2vIZ3wWH1F3NNs2J/e0OK5xEgbo
+         SrDZB7hgjyHcBgThwsxUuvqE0GH40NubwZfMku+FTsS5nitlkiTpBI/UmUO9Yvq6Fq88
+         9UBw==
+X-Gm-Message-State: AOAM5314jXE0aJ9FuD0ZP7kikkUrEDDnX1ZShCF4jZAap21jkyO+wc4K
+        wH256VEq33RsHWJd2yc29SB3h8BWDXGQq5ZC2rC4ThKbLnFtFFvZJuMV0IXmM8Uvh5JLKVNXhCu
+        a3Zo7ni4TV5l/UNv0xCgejkXA84jhgfCGRQ==
+X-Received: by 2002:a17:906:118f:: with SMTP id n15mr34324098eja.394.1602594568842;
+        Tue, 13 Oct 2020 06:09:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyFofbCot5FjJJsFvPWfb0b6xBdK/KZ7WESdzyrT4ROUQd91ZTi1Jm0bhyA7VHl9b2jiU1qjQ==
+X-Received: by 2002:a17:906:118f:: with SMTP id n15mr34324068eja.394.1602594568470;
+        Tue, 13 Oct 2020 06:09:28 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id m25sm11908739edp.36.2020.10.13.01.48.41
+        by smtp.gmail.com with ESMTPSA id sd18sm12116119ejb.24.2020.10.13.06.09.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Oct 2020 01:48:42 -0700 (PDT)
-Subject: Re: [PATCH 1/2] x86: Remove led/gpio setup from pcengines platform
- driver
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Ed W <lists@wildgooses.com>, linux-kernel@vger.kernel.org
-Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Tue, 13 Oct 2020 06:09:27 -0700 (PDT)
+Subject: Re: [RFC] Documentation: Add documentation for new
+ performance_profile sysfs class
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>
+Cc:     Bastien Nocera <hadess@hadess.net>,
         Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-References: <20200921215919.3072-1-lists@wildgooses.com>
- <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
- <8058a804-a793-a5f8-d086-0bb0f600aef9@metux.net>
+        Mark Gross <mgross@linux.intel.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>
+References: <20201003131938.9426-1-hdegoede@redhat.com>
+ <20201003131938.9426-2-hdegoede@redhat.com>
+ <DM6PR19MB263669227D122BB7699951E6FA0C0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <85a36eb58cb9774f1907582dfc75295ed847200c.camel@hadess.net>
+ <DM6PR19MB26364E6AA2F51981F592CE58FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <c73ffad8fd6bff8ff20d91930b097bff82be1c8f.camel@hadess.net>
+ <DM6PR19MB2636B067186B08B744EA2163FA0A0@DM6PR19MB2636.namprd19.prod.outlook.com>
+ <CAJZ5v0jBJBTTb3qBGH0UWOAfvY24gWqJQA=MahnhaTdMu-w0Bw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9fb836bc-7d8a-b6e2-8d73-8e74a8f2e38b@redhat.com>
-Date:   Tue, 13 Oct 2020 10:48:41 +0200
+Message-ID: <394f897a-4dac-7016-ea17-c37b67589e07@redhat.com>
+Date:   Tue, 13 Oct 2020 15:09:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <8058a804-a793-a5f8-d086-0bb0f600aef9@metux.net>
+In-Reply-To: <CAJZ5v0jBJBTTb3qBGH0UWOAfvY24gWqJQA=MahnhaTdMu-w0Bw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,32 +102,216 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Enrico and Ed W,
+Hi,
 
-Quick self intro: I have take over drivers/platform/x86
-maintainership from Andy; and I'm working my way through
-the backlog of old patches in patchwork:
-https://patchwork.kernel.org/project/platform-driver-x86/list/
-
-On 10/12/20 9:39 PM, Enrico Weigelt, metux IT consult wrote:
-> On 22.09.20 00:17, Ed W wrote:
->> Hi, I've been adding support for the PC Engines APU5 board, which is a variant of the APU 2-4 boards
->> with some nice features. The current platform driver for pcengines boards has some redundant
->> features with regards to recent bios/firmware packages for the board as they now set the ACPI tables
->> to indicate GPIOs for keys and leds.
+On 10/12/20 6:42 PM, Rafael J. Wysocki wrote:
+> On Wed, Oct 7, 2020 at 8:41 PM Limonciello, Mario
+> <Mario.Limonciello@dell.com> wrote:
+>>
+>>> On Wed, 2020-10-07 at 15:58 +0000, Limonciello, Mario wrote:
+>>>>
+>>>>> On Mon, 2020-10-05 at 12:58 +0000, Limonciello, Mario wrote:
+>>>>>>> On modern systems CPU/GPU/... performance is often dynamically
+>>>>>>> configurable
+>>>>>>> in the form of e.g. variable clock-speeds and TPD. The
+>>>>>>> performance
+>>>>>>> is often
+>>>>>>> automatically adjusted to the load by some automatic-mechanism
+>>>>>>> (which may
+>>>>>>> very well live outside the kernel).
+>>>>>>>
+>>>>>>> These auto performance-adjustment mechanisms often can be
+>>>>>>> configured with
+>>>>>>> one of several performance-profiles, with either a bias towards
+>>>>>>> low-power
+>>>>>>> consumption (and cool and quiet) or towards performance (and
+>>>>>>> higher
+>>>>>>> power
+>>>>>>> consumption and thermals).
+>>>>>>>
+>>>>>>> Introduce a new performance_profile class/sysfs API which
+>>>>>>> offers a
+>>>>>>> generic
+>>>>>>> API for selecting the performance-profile of these automatic-
+>>>>>>> mechanisms.
+>>>>>>>
+>>>>>>
+>>>>>> If introducing an API for this - let me ask the question, why
+>>>>>> even let each
+>>>>>> driver offer a class interface and userspace need to change
+>>>>>> "each" driver's
+>>>>>> performance setting?
+>>>>>>
+>>>>>> I would think that you could just offer something kernel-wide
+>>>>>> like
+>>>>>> /sys/power/performance-profile
+>>>>>>
+>>>>>> Userspace can read and write to a single file.  All drivers can
+>>>>>> get notified
+>>>>>> on this sysfs file changing.
+>>>>>>
+>>>>>> The systems that react in firmware (such as the two that prompted
+>>>>>> this discussion) can change at that time.  It leaves the
+>>>>>> possibility for a
+>>>>>> more open kernel implementation that can do the same thing though
+>>>>>> too by
+>>>>>> directly modifying device registers instead of ACPI devices.
+>>>>>
+>>>>> The problem, as I've mentioned in previous discussions we had about
+>>>>> this, is that, as you've seen in replies to this mail, this would
+>>>>> suddenly be making the kernel apply policy.
+>>>>>
+>>>>> There's going to be pushback as soon as policy is enacted in the
+>>>>> kernel, and you take away the different knobs for individual
+>>>>> components
+>>>>> (or you can control them centrally as well as individually). As
+>>>>> much as
+>>>>> I hate the quantity of knobs[1], I don't think that trying to
+>>>>> reduce
+>>>>> the number of knobs in the kernel is a good use of our time, and
+>>>>> easier
+>>>>> to enact, coordinated with design targets, in user-space.
+>>>>>
+>>>>> Unless you can think of a way to implement this kernel wide setting
+>>>>> without adding one more exponent on the number of possibilities for
+>>>>> the
+>>>>> testing matrix, I'll +1 Hans' original API.
+>>>>>
+>>>> Actually I offered two proposals in my reply.  So are you NAKing
+>>>> both?
+>>>
+>>> No, this is only about the first portion of the email, which I quoted.
+>>> And I'm not NAK'ing it, but I don't see how it can work without being
+>>> antithetical to what kernel "users" expect, or what the folks consuming
+>>> those interfaces (presumably us both) would expect to be able to test
+>>> and maintain.
+>>>
+>>
+>> (Just so others are aware, Bastien and I had a previous discussion on this topic
+>> that he alluded to here: https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/issues/1)
+>>
+>> In general I agree that we shouldn't be offering 100's of knobs to change
+>> things and protect users from themselves where possible.
+>>
+>> Whether the decisions are made in the kernel or in userspace you still have a matrix once
+>> you're letting someone change 2 different kernel devices that offer policy.  I'd argue it's
+>> actually worse if you let userspace change it though.
+>>
+>> Let's go back to the my GPU and platform example and lets say both offer the new knob here
+>> for both.  Userspace software such as your PPD picks performance.  Both the platform device
+>> and GPU device get changed, hopefully no conflicts.
+>> Then user decides no, I don't want my GPU in performance mode, I only want my platform.
+>> So they change the knob for the GPU manually, and now you have a new config in your matrix.
+>>
+>> However if you left it to a single kernel knob, both GPU and platform get moved together and
+>> you don't have these extra configs in your matrix anymore.
+>>
+>> The other point I mentioned, that platform might also do something to GPU via a sideband and
+>> you race, you can solve it with kernel too by modifying the ordering the kernel handles it.
+>>
+>> Userspace however, you give two knobs and now you have to worry about them getting it right
+>> and supporting them doing them in the wrong order.
+>>
+>>>> The other one suggested to use the same firmware attributes class
+>>>> being
+>>>> introduced by the new Dell driver (
+>>>> https://patchwork.kernel.org/patch/11818343/)
+>>>> since this is actually a knob to a specific firmware setting.
+>>>
+>>> This seemed to me like an implementation detail (eg. the same metadata
+>>> is being exported, but in a different way), and I don't feel strongly
+>>> about it either way.
+>>
+>> OK thanks.
 > 
-> NAK. Breaks existing userlands in the field (literally field), forcing
-> users to fw upgrade is not an option (field roll would be realy expensive).
+> IMV there are two choices here:  One is between exposing the low-level
+> interfaces verbatim to user space and wrapping them up into a certain
+> "translation" layer allowing user space to use a unified interface (I
+> think that is what everybody wants) and the other  boils down to how
+> the unified interface between the kernel and user space will look
+> like.
+> 
+> Personally, I think that something line /sys/power/profile allowing
+> drivers (and other kernel entities) to register callbacks might work
+> (as stated in my last reply to Hans).
 
-Thank you Enrico, I was wondering the same (what about userspace breakage)
-when I was looking at this patch. It is good to have confirmation that
-userspace breakage is a real issue here.
+Note to others reading along I pointed to this thread in this thread:
+https://lore.kernel.org/linux-pm/20201006122024.14539-1-daniel.lezcano@linaro.org/T/#t
+and Rafael's "last reply" above refers to his reply in that thread.
 
-And I completely agree with Enrico, we cannot go and break userspace,
-so some other solution will need to be found here.
+For the sake of people reading along I'm reproducing my reply
+there below.
 
-I'm marking this series as changes requested in patchwork, please submit
-a new version which does not break existing userspace.
+Rafael, it seems more appropriate to continue this discussion
+in this thread, so lets discuss this further here ?
+
+My reply to Rafael from the other thread:
+
+First of all thank you for your input, with your expertise in this
+area your input is very much appreciated, after all we only get
+one chance to get the userspace API for this right.
+
+Your proposal to have a single sysfs file for userspace to talk
+to and then use an in kernel subscription mechanism for drivers
+to get notified of writes to this file is interesting.
+
+But I see 2 issues with it:
+
+1. How will userspace know which profiles are actually available ?
+
+An obvious solution is to pick a set of standard names and let
+subscribers map those as close to their own settings as possible,
+the most often mentioned set of profile names in this case seems to be:
+
+low_power
+balanced_power
+balanced
+balanced_performance
+performance
+
+Which works fine for the thinkpad_acpi case, but not so much for
+the hp-wmi case. In the HP case what happens is that a WMI call
+is made which sets a bunch of ACPI variables which influence
+the DPTF code (this assumes we have some sort of DPTF support
+such as mjg59's reverse engineered support) but the profile-names
+under Windows are: "Performance", "HP recommended", "Cool" and
+"Quiet".  If you read the discussion from the
+"[RFC] Documentation: Add documentation for new performance_profile sysfs class"
+thread you will see this was brought up as an issue there.
+
+The problem here is that both "cool" and "quiet" could be
+interpreted as low-power. But it seems that they actually mean
+what they say, cool focuses on keeping temps low, which can
+also be done by making the fan-profile more aggressive. And quiet
+is mostly about keeping fan speeds down, at the cost of possible
+higher temperatures.
+
+<edit in this version of the reply:>
+I wonder if the HP profiles are actually just fan speed profiles ?
+Elia do you know ?
+</edit>
+
+IOW we don't really have a 1 dimensional axis.
+My class proposal fixes this by having a notion of both
+standardized names (because anything else would suck) combined
+with a way for drivers to advertise which standardized names
+the support. So in my proposal I simply add quiet and cool
+to the list of standard profile names, and then the HP-wmi
+driver can list those as supported, while not listing
+low_power as a supported profile.  This way we export the
+hardware interface to userspace as is (as much as possible)
+while still offering a standardized interface for userspace
+to consume.  Granted if userspace now actually want to set
+a low_power profile, we have just punted the problem to userspace
+but I really do not see a better solution.
+
+
+2. This only works assuming that all performance-profiles
+are system wide. But given a big desktop case there might
+be very well be separate cooling zones for e.g. the CPU
+and the GPU and I can imagine both having separate
+performance-profile settings and some users will doubtlessly
+want to be able to control these separately ...
 
 Regards,
 
