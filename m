@@ -2,237 +2,115 @@ Return-Path: <SRS0=x/JX=DW=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BF4C433E7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Oct 2020 13:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84943C433DF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Oct 2020 19:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1502223F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Oct 2020 13:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25914206DD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Oct 2020 19:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WWsN7z+Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgJON6H (ORCPT
+        id S1730621AbgJOTtz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Oct 2020 09:58:07 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:58952 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730142AbgJON6G (ORCPT
+        Thu, 15 Oct 2020 15:49:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60883 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727865AbgJOTtz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Oct 2020 09:58:06 -0400
-Received: from [100.112.7.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-c.us-east-1.aws.symcld.net id 05/55-63275-C65588F5; Thu, 15 Oct 2020 13:58:04 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRWlGSWpSXmKPExsWSLveKTTcntCP
-  e4ECPoMWhcweYLQ4vesFo8fXbbXaLN8enM1mcub2QyeLmp2+sFqv3vGB2YPeY1dDL5rFz1l12
-  j1/b1rB4LD84jcnj/b6rbB6fN8kFsEWxZuYl5VcksGZM3nuIreCcasWdyRsYGxivy3cxcnEIC
-  fxnlPhwayEzhPOaUaLh9FP2LkZODjYBbYktW36xdTFycIgIyEh8WOsJUsMscJtR4vmuBrC4sI
-  CZxMUb9SDlLAKqEv8ndIC18grYSLzZv5kFxJYQkJd42rucGcTmFLCVePfwOitIq5BAmMTrTek
-  Q5YISJ2c+AStnBipv3jqbGcKWkDj44gUzzJi/T56wQtgJEste3mGewCgwC0n7LCTts5C0L2Bk
-  XsVollSUmZ5RkpuYmaNraGCga2hopGuma2RgopdYpZusV1qsm5pYXKJrqJdYXqxXXJmbnJOil
-  5dasokRGCUpBWxndjBuf/NB7xCjJAeTkihvdFBHvBBfUn5KZUZicUZ8UWlOavEhRhkODiUJXv
-  FgoJxgUWp6akVaZg4wYmHSEhw8SiK8h0KA0rzFBYm5xZnpEKlTjIpS4ryzQBICIImM0jy4Nli
-  SuMQoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmDcIZApPZl4J3PRXQIuZgBbbL2kBWVySiJCS
-  amBiuvJ/wsRDGllZb1f/max6gDln2ekP165NixPInFXfO00g2/yVg6SO24TDts77t3bEzj4Zm
-  3pT9cgE5XTjDypfhPxtvjfJxC4waHOvKLeZIvzn2apzVrrfjdiXMJx3e1g+a5/PbcVvvfNyH/
-  IZf/zSXSDw976c02NDg9fJKjtTS5+Fhz3cVnS0w/ffvCmSfQ8W3nwyoSGn4bdl3qEPrM93nyr
-  8e8Thvoplenr/zIsNEzIeLzteV2ry19vQumbx4bTfKmkJ/LbB3E8ezXkSbvXkubmD9qGWVTEH
-  Th99wu8s8sqolsnF2HXRfEv9y1P8q3XuT7GIP5/YfbP8+QOfhHsiH15m/djpIW67Nmv5jIvVS
-  izFGYmGWsxFxYkAgp2t0Y0DAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-11.tower-415.messagelabs.com!1602770281!158452!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 32675 invoked from network); 15 Oct 2020 13:58:04 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-11.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 15 Oct 2020 13:58:04 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        Thu, 15 Oct 2020 15:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602791394;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=tcZdT8IOATsQ7N3p+AN/gNAmf+a8lRkv1vF0EhdKOTY=;
+        b=WWsN7z+YHdAlb3A2MWI+JTvQ5vd0s/q5E1cXX8YxPAHRr0Bkb0KxybN2zmJy6PjO9DROyY
+        wRkTfGMfKYVmsn1hhhIbHjQaVIFsFRFRT7aoOEBdCPGkaVLvHk1H9YlHDs3RJrmlVFhcfA
+        /A/oPC40JGtVGJ/WKSTzCieFZeDnOTA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-BR_Ys24xN8Onw3mZofgNFg-1; Thu, 15 Oct 2020 15:49:52 -0400
+X-MC-Unique: BR_Ys24xN8Onw3mZofgNFg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id A7B7E8A2CCC0E6A83FC8;
-        Thu, 15 Oct 2020 21:57:59 +0800 (CST)
-Received: from localhost.localdomain.com (10.64.83.59) by
- reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2044.4; Thu, 15 Oct 2020 06:57:56 -0700
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <njoshi1@lenovo.com>, <hdegoede@redhat.com>,
-        <dmitry.torokhov@gmail.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <jeff@labundy.com>,
-        <anthony.wong@canonical.com>, <hadess@hadess.net>
-Subject: [PATCH 3/3] Add support for Lenovo lap sensor
-Date:   Thu, 15 Oct 2020 09:57:17 -0400
-Message-ID: <20201015135717.384610-4-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201015135717.384610-1-markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
- <20201015135717.384610-1-markpearson@lenovo.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61834107ACF7;
+        Thu, 15 Oct 2020 19:49:51 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-150.ams2.redhat.com [10.36.112.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 633805C1BB;
+        Thu, 15 Oct 2020 19:49:50 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Predia Basic tablet
+Date:   Thu, 15 Oct 2020 21:49:49 +0200
+Message-Id: <20201015194949.50566-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.83.59]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This adds the Lenovo lap sensor to the input_sw_dev event sensor
-alongside the previously added palmsensor.
+Add touchscreen info for the Predia Basic tablet.
 
-Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 75 ++++++++++++++++++++++------
- 1 file changed, 59 insertions(+), 16 deletions(-)
+ drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5ddf2775fb06..c20b9902270b 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4013,7 +4013,7 @@ static bool hotkey_notify_usrevent(const u32 hkey,
- }
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index dda60f89c951..26cbf7cc8129 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -623,6 +623,23 @@ static const struct ts_dmi_data pov_mobii_wintab_p1006w_v10_data = {
+ 	.properties	= pov_mobii_wintab_p1006w_v10_props,
+ };
  
- static void thermal_dump_all_sensors(void);
--static void proxsensor_refresh(void);
-+static void proxsensor_refresh(bool palm, bool lap);
- 
- static bool hotkey_notify_6xxx(const u32 hkey,
- 				 bool *send_acpi_ev,
-@@ -4081,7 +4081,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 	case TP_HKEY_EV_PALM_DETECTED:
- 	case TP_HKEY_EV_PALM_UNDETECTED:
- 		/* palm detected  - pass on to event handler */
--		proxsensor_refresh();
-+		proxsensor_refresh(true /* palm */, false /* lap */);
- 		return true;
- 
- 	default:
-@@ -9929,6 +9929,23 @@ static struct ibm_struct dytc_driver_data = {
- struct input_dev *tpacpi_sw_dev;
- bool has_palmsensor;
- bool palmsensor_state;
-+bool has_lapsensor;
-+bool lapsensor_state;
++static const struct property_entry predia_basic_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1144),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-predia-basic.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,home-button"),
++	{ }
++};
 +
-+static int lapsensor_get(bool *present, bool *state)
-+{
-+	acpi_handle dytc_handle;
-+	int output;
++static const struct ts_dmi_data predia_basic_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= predia_basic_props,
++};
 +
-+	*present = false;
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle)))
-+		return -ENODEV;
-+	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", DYTC_CMD_GET))
-+		return -EIO;
-+	*present = true; /* If we get his far, we have lapmode support */
-+	*state = output & BIT(DYTC_GET_LAPMODE_BIT) ? true : false;
-+	return 0;
-+}
- 
- static int palmsensor_get(bool *present, bool *state)
- {
-@@ -9945,36 +9962,56 @@ static int palmsensor_get(bool *present, bool *state)
- 	return 0;
- }
- 
--static void proxsensor_refresh(void)
-+static void proxsensor_refresh(bool palm, bool lap)
- {
- 	bool new_state;
- 	int err;
- 
--	if (has_palmsensor) {
-+	if (palm && has_palmsensor) {
- 		err = palmsensor_get(&has_palmsensor, &new_state);
--		if (err)
--			return;
--		if (new_state != palmsensor_state) {
-+		if (!err && (new_state != palmsensor_state)) {
- 			input_report_switch(tpacpi_sw_dev, SW_PALMREST_PROXIMITY, new_state);
- 			input_sync(tpacpi_sw_dev);
- 			palmsensor_state = new_state;
- 		}
- 	}
-+
-+	if (lap && has_lapsensor) {
-+		err = lapsensor_get(&has_lapsensor, &new_state);
-+		if (!err && (new_state != lapsensor_state)) {
-+			input_report_switch(tpacpi_sw_dev, SW_LAP_PROXIMITY, new_state);
-+			input_sync(tpacpi_sw_dev);
-+			lapsensor_state = new_state;
-+		}
-+	}
- }
- 
- static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
- {
--	int palm_err;
-+	int palm_err, lap_err, err;
- 
-+	/* Make sure globals are set to a sensible initial value */
-+	has_palmsensor = false;
-+	has_lapsensor = false;
- 	palm_err = palmsensor_get(&has_palmsensor, &palmsensor_state);
-+	lap_err = lapsensor_get(&has_lapsensor, &lapsensor_state);
-+
- 	/* If support isn't available (ENODEV) then don't return an error */
--	if (palm_err == -ENODEV)
-+	if ((palm_err == -ENODEV) && (lap_err == -ENODEV))
- 		return 0;
--	/* For all other errors we can flag the failure */
-+	/* If both sensors error out - return an error */
-+	if (palm_err && lap_err)
-+		return palm_err ? palm_err : lap_err;
-+	/*
-+	 * If just one sensor not available, we still want the input device,
-+	 * so just flag it and carry on
-+	 */
- 	if (palm_err)
--		return palm_err;
-+		pr_info("Palm sensor returned error %d", palm_err);
-+	if (lap_err)
-+		pr_info("Lap sensor returned error %d", lap_err);
- 
--	if (has_palmsensor) {
-+	if (has_palmsensor || has_lapsensor) {
- 		tpacpi_sw_dev = input_allocate_device();
- 		if (!tpacpi_sw_dev)
- 			return -ENOMEM;
-@@ -9990,10 +10027,14 @@ static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
- 			input_set_capability(tpacpi_sw_dev, EV_SW, SW_PALMREST_PROXIMITY);
- 			input_report_switch(tpacpi_sw_dev, SW_PALMREST_PROXIMITY, palmsensor_state);
- 		}
--		palm_err = input_register_device(tpacpi_sw_dev);
--		if (palm_err) {
-+		if (has_lapsensor) {
-+			input_set_capability(tpacpi_sw_dev, EV_SW, SW_LAP_PROXIMITY);
-+			input_report_switch(tpacpi_sw_dev, SW_LAP_PROXIMITY, lapsensor_state);
-+		}
-+		err = input_register_device(tpacpi_sw_dev);
-+		if (err) {
- 			input_free_device(tpacpi_sw_dev);
--			return palm_err;
-+			return err;
- 		}
- 	}
- 	return 0;
-@@ -10057,8 +10098,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		mutex_unlock(&kbdlight_mutex);
- 	}
- 
--	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-+	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
- 		dytc_lapmode_refresh();
-+		proxsensor_refresh(false /* palm */, true /* lap */);
-+	}
- 
- }
- 
+ static const struct property_entry schneider_sct101ctm_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
+@@ -1109,6 +1126,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_DATE, "10/24/2014"),
+ 		},
+ 	},
++	{
++		/* Predia Basic tablet) */
++		.driver_data = (void *)&predia_basic_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "CherryTrail"),
++			/* Above matches are too generic, add bios-version match */
++			DMI_MATCH(DMI_BIOS_VERSION, "Mx.WT107.KUBNGEA"),
++		},
++	},
+ 	{
+ 		/* Point of View mobii wintab p800w (v2.1) */
+ 		.driver_data = (void *)&pov_mobii_wintab_p800w_v21_data,
 -- 
 2.28.0
 
