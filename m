@@ -2,72 +2,188 @@ Return-Path: <SRS0=IKsn=DX=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_05,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6865AC433E7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Oct 2020 07:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E998C43467
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Oct 2020 11:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC80F207F7
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Oct 2020 07:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0902084C
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Oct 2020 11:11:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastestway24.com header.i=@fastestway24.com header.b="gzKLyUZv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BgyFuUhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404681AbgJPHlq (ORCPT
+        id S2406784AbgJPLLB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Oct 2020 03:41:46 -0400
-Received: from mail.fastestway24.com ([5.249.159.217]:49306 "EHLO
-        mail.fastestway24.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404615AbgJPHlq (ORCPT
+        Fri, 16 Oct 2020 07:11:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53910 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406705AbgJPLLB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Oct 2020 03:41:46 -0400
-Received: by mail.fastestway24.com (Postfix, from userid 1001)
-        id 8EC49A350B; Fri, 16 Oct 2020 08:41:27 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fastestway24.com;
-        s=mail; t=1602834104;
-        bh=YGOlxoddnI3PXnh41XMWUfU0z9xsorZLZcAPNbcZr/c=;
-        h=Date:From:To:Subject:From;
-        b=gzKLyUZvwqviFZss5V/pd5hNEd4Rp3f7tzf/HktR3M5bTwsXAiJleIE8X4fwnxjAe
-         dbD9ZZBbjAyQjW1O3988irFILs2x4du+n/FJrN4hLa5jYl0+u/1piXzeWcUmWEjCWr
-         7qeYD8UeyCVihn9aWrpTVqj8Yn6ONiOMJkmzdhAGgD/nkZl76UUcWYmGI78E6MRAGH
-         PkveZiv0eYUU55iOQ9A8BHDFyrPfWPWVP383UHfuF+FEuadeJ5tWKt6gtEyHWpp8jP
-         HKGPjB2edIMw7801TJAX8dRjOzzN2hxrCp0yUEl4yaHfKC4vNAxv1SD3nQSkUdWFMO
-         J9kzoz4hsCR4A==
-Received: by mail.fastestway24.com for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2020 07:41:13 GMT
-Message-ID: <20201016074501-0.1.4g.9znw.0.jnng980684@fastestway24.com>
-Date:   Fri, 16 Oct 2020 07:41:13 GMT
-From:   "William Jones" <william.jones@fastestway24.com>
-To:     <platform-driver-x86@vger.kernel.org>
-Subject: Disinfectant
-X-Mailer: mail.fastestway24.com
+        Fri, 16 Oct 2020 07:11:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1602846659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kOERbbEx7nVCNHLlMb3rSnmIO9vt1UAO946lTC4L+xc=;
+        b=BgyFuUhGCHc+CNlaVEuKhwjT5d+oq5e8MTD/j4q+KNLi+COldA4ou1ihtHMRfISDioVEFZ
+        ozf+8GaCS2DUDa7rFRyl90hzpPSvzdlg96QTJfMplNCUC0jXZEj3eUBmDlPNWjMmw5W3V3
+        xzBZXaRIttxh6m4X1U9D8oL0WWeyI7w=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-TmKlHgIPMiKMvJLb8o7h6g-1; Fri, 16 Oct 2020 07:10:57 -0400
+X-MC-Unique: TmKlHgIPMiKMvJLb8o7h6g-1
+Received: by mail-ed1-f71.google.com with SMTP id s21so849025edi.6
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Oct 2020 04:10:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kOERbbEx7nVCNHLlMb3rSnmIO9vt1UAO946lTC4L+xc=;
+        b=dkDiuV9LfXg0Suh1S74k6rtrl7HREBhTQqIJDN9JBlSDi54BCYWlGZo5rfxZd7GFwL
+         Zy1RUQj6F2HUSgbMELncBF0keQyutNVBFfDY55CTDmXTFQY0dziojkHY945k2Hpeuxij
+         ZXKBB7GfDWvXTnXVlKC+tinLS0VrsXBKd6mA8f2uVg9up4RKtohoadlP7AZ3oH1CyEVQ
+         fV0umTTwMdWOX4sYq054jAICeCudw71w6yMRDgOiyso606Ffl07uVid9wV7ixdQsIHvr
+         2CBBi6Nawl5jM/GZIUzeEBd5WJ91y0AwsldvuWFBN2ckoVTEww5KQR1gzm6/mbIzYEfv
+         zmjg==
+X-Gm-Message-State: AOAM533VYE26Vn3hG5OYljoUi0/ELg84yntuP7zMv30KojGKqOYI8Uak
+        SCF/bIhP5F11KI9ue8yrWgtZlQaurIsAiAvhebi8x+z+j6loC85VMk3Ypx9FVP9sIvquJzhjoeP
+        4s9/I4Mlb1z5vi+f6jgfLQLbrpPM4s2XUbg==
+X-Received: by 2002:a50:c309:: with SMTP id a9mr3223882edb.199.1602846656282;
+        Fri, 16 Oct 2020 04:10:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx+iD0vQ3CWmW+0Tj/Lolks366zfvPUxo3S7eFXQ4IACS8Nha9I/OIrD7KLkJUTlI56BBzdlw==
+X-Received: by 2002:a50:c309:: with SMTP id a9mr3223845edb.199.1602846655995;
+        Fri, 16 Oct 2020 04:10:55 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id 11sm1321247ejy.19.2020.10.16.04.10.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Oct 2020 04:10:55 -0700 (PDT)
+Subject: Re: [RFC] Documentation: Add documentation for new
+ performance_profile sysfs class (Also Re: [PATCH 0/4] powercap/dtpm: Add the
+ DTPM framework)
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Mark Pearson <mpearson@lenovo.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20201006122024.14539-1-daniel.lezcano@linaro.org>
+ <eb26a00d-eee0-a4d1-ed25-61a661ad5683@redhat.com>
+ <8be66efd-7833-2c8a-427d-b0055c2f6ec1@linaro.org>
+ <97e5368b-228d-eca1-85a5-b918dfcfd336@redhat.com>
+ <CAJZ5v0gwc_d1vnwDVWXY+i4f0T2r0tAz8xuWV7oS_afsy7OocQ@mail.gmail.com>
+ <63dfa6a1-0424-7985-7803-756c0c5cc4a5@redhat.com>
+ <CAJZ5v0jpYpu3Tk7qq_MCVs0wUr-Dw0rY5EZELrVbQta0NZaoVA@mail.gmail.com>
+ <87d9a808-39d6-4949-c4f9-6a80d14a3768@redhat.com>
+ <CAJZ5v0iWmmu5WV7cX7uNb61NMYQ7s0dnhg1K+T0x90b3sBfU9w@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <943531a7-74d6-7c7f-67bc-2645b3ba7b8a@redhat.com>
+Date:   Fri, 16 Oct 2020 13:10:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJZ5v0iWmmu5WV7cX7uNb61NMYQ7s0dnhg1K+T0x90b3sBfU9w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Good morning,
+<note folding the 2 threads we are having on this into one, adding every one from both threads to the Cc>
 
-looking for companies interested in raising additional capital by diversi=
-fying their offer in soaps, liquids and gels for hand disinfection and co=
-smetics for body and hair care.
+Hi,
 
-The distribution of innovative products corresponding to the current pref=
-erences of customers in the field of hygiene and preventive healthcare al=
-lows our partners to gain new markets and achieve better economic results=
-=2E
+On 10/14/20 5:42 PM, Rafael J. Wysocki wrote:
+> On Wed, Oct 14, 2020 at 4:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 10/14/20 3:33 PM, Rafael J. Wysocki wrote:
 
-In addition to products with bactericidal action, our range includes show=
-er gels, shampoos and hair conditioners, as well as efficient, concentrat=
-ed detergents.
+<snip>
 
-The versatility (suitable for all skin types) combined with an affordable=
- price means that customers make an informed choice of a product among ot=
-hers available on the market.
+>>> First, a common place to register a DPTF system profile seems to be
+>>> needed and, as I said above, I wouldn't expect more than one such
+>>> thing to be present in the system at any given time, so it may be
+>>> registered along with the list of supported profiles and user space
+>>> will have to understand what they mean.
+>>
+>> Mostly Ack, I would still like to have an enum for DPTF system
+>> profiles in the kernel and have a single piece of code map that
+>> enum to profile names. This enum can then be extended as
+>> necessary, but I want to avoid having one driver use
+>> "Performance" and the other "performance" or one using
+>> "performance-balanced" and the other "balanced-performance", etc.
+>>
+>> With the goal being that new drivers use existing values from
+>> the enum as much as possible, but we extend it where necessary.
+> 
+> IOW, just a table of known profile names with specific indices assigned to them.
 
-Are you interested in cooperation?
+Yes.
 
+> This sounds reasonable.
+> 
+>>> Second, irrespective of the above, it may be useful to have a
+>>> consistent way to pass performance-vs-power preference information
+>>> from user space to different parts of the kernel so as to allow them
+>>> to adjust their operation and this could be done with a system-wide
+>>> power profile attribute IMO.
+>>
+>> I agree, which is why I tried to tackle both things in one go,
+>> but as you said doing both in 1 API is probably not the best idea.
+>> So I believe we should park this second issue for now and revisit it
+>> when we find a need for it.
+> 
+> Agreed.
+> 
+>> Do you have any specific userspace API in mind for the
+>> DPTF system profile selection?
+> 
+> Not really.
 
-William Jones
+So before /sys/power/profile was mentioned, but that seems more like
+a thing which should have a set of fixed possible values, iow that is
+out of scope for this discussion.
+
+Since we all seem to agree that this is something which we need
+specifically for DPTF profiles maybe just add:
+
+/sys/power/dptf_current_profile    (rw)
+/sys/power/dptf_available_profiles (ro)
+
+(which will only be visible if a dptf-profile handler
+ has been registered) ?
+
+Or more generic and thus better (in case other platforms
+later need something similar) I think, mirror the:
+
+/sys/bus/cpu/devices/cpu#/cpufreq/energy_performance_* bits
+for a system-wide energy-performance setting, so we get:
+
+/sys/power/energy_performance_preference
+/sys/power/energy_performance_available_preferences
+
+(again only visible when applicable) ?
+
+I personally like the second option best.
+
+Regards,
+
+Hans
+
