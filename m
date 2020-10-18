@@ -2,275 +2,227 @@ Return-Path: <SRS0=yilX=DZ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0437FC433E7
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 09:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8E6C433DF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 12:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9A7921582
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 09:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="FkGBiXUU";
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="FkGBiXUU"
+	by mail.kernel.org (Postfix) with ESMTP id 84EB9207FF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 12:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1603024312;
+	bh=YRWITZjgmdA1hITQI0tHQoXN3GB8hLRjmYKH8YOzAtI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eI1SU5dcxPQZ+wemKqNIzFoxAQ9eYbPMKQqSrDVEY9FJFKL5+e8/yxUH87xLErf78
+	 DWKew3L2aIcBwsskgtZHKdNhe4seYD7/IrT/myh8bERmNmpnECLWELnvICvnaZFWtl
+	 S/dMmcqsoWloW9eOluRCclJWbl98uwfj9NyNKBOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbgJRJ4r (ORCPT
+        id S1726601AbgJRMbs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 18 Oct 2020 05:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgJRJ4r (ORCPT
+        Sun, 18 Oct 2020 08:31:48 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45123 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbgJRMbr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Oct 2020 05:56:47 -0400
-X-Greylist: delayed 37384 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 18 Oct 2020 02:56:46 PDT
-Received: from lithium.sammserver.com (lithium.sammserver.com [IPv6:2a01:4f8:c2c:b7df::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE3FC061755;
-        Sun, 18 Oct 2020 02:56:46 -0700 (PDT)
-Received: from mail.sammserver.com (sammserver.wg [10.32.40.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by lithium.sammserver.com (Postfix) with ESMTPS id 51890312B5AC;
-        Sun, 18 Oct 2020 11:56:45 +0200 (CEST)
-Received: by mail.sammserver.com (Postfix, from userid 5011)
-        id 109991123FBC; Sun, 18 Oct 2020 11:56:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1603015005; bh=/Y8S0iNnABP3lTvPIoWQLs96TfGgH1L1OBxrFRTYpWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FkGBiXUUC08SKSJhgmIn7ZZi5EtTsCCXxiB3xT8CJcjnzmk1fimdGGsOBxBx52ufu
-         fDWYhtW944Ax283QSuS3BiHvqKrJHOjX9wSquKvQZO4oUXK4tmM3fR5p3+V+Dw1Mft
-         czkzT3Bep1nRVoNzXyx3sDE4tP+EH/sUbG9yQqhQ=
-Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
-        by mail.sammserver.com (Postfix) with ESMTP id 9D45A1123FB9;
-        Sun, 18 Oct 2020 11:56:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1603015005; bh=/Y8S0iNnABP3lTvPIoWQLs96TfGgH1L1OBxrFRTYpWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FkGBiXUUC08SKSJhgmIn7ZZi5EtTsCCXxiB3xT8CJcjnzmk1fimdGGsOBxBx52ufu
-         fDWYhtW944Ax283QSuS3BiHvqKrJHOjX9wSquKvQZO4oUXK4tmM3fR5p3+V+Dw1Mft
-         czkzT3Bep1nRVoNzXyx3sDE4tP+EH/sUbG9yQqhQ=
-Received: by fastboi.localdomain (Postfix, from userid 1000)
-        id 8CE071420A90; Sun, 18 Oct 2020 11:56:44 +0200 (CEST)
-Date:   Sun, 18 Oct 2020 11:56:44 +0200
-From:   Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add support for
- SW_TABLET_MODE on UX360
-Message-ID: <20201018095644.wmvgkoomwf7yh5dy@fastboi.localdomain>
-References: <20200917133425.168310-1-samuel@cavoj.net>
- <20201017233339.v4th6wyej3a25ved@fastboi.localdomain>
- <be5ea0b1-1a29-609e-d1a1-933344653f76@redhat.com>
+        Sun, 18 Oct 2020 08:31:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id f37so7815068otf.12;
+        Sun, 18 Oct 2020 05:31:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BR4bAT5Vr/PxycFS8TzpSfye3h+0S0snmDQBRj/kypQ=;
+        b=GbXYEiQrEGUzPDXWKoY73aRBVZey6zasOM1YRbP4RKZcRR+/nBibNbloRvBr9IQwx7
+         H+CwwUZ/VJpDeE2i3iUpA/5lVcry506VgzX+19tZSJ+3MlkNVIgfiRONCAiusmI1iy9B
+         noivx+7WAj0436D+r0FySC0bLxxqLPSUiT+LhtSNvsft5aFFY3qGka62l2eo6EcxmLNN
+         ezWz2Cm2KZewvk50DGHxofWl80OusXebXOiUxoZr8qs5qoGtfbgcY5UCIsWY3KVKLArP
+         4XufTe1Tf8h1Qp7HK92DasGBSv8eCFlaf5MonJt8llDRcdbMoR0Uaab1Hh2sYUuB+5nN
+         dUeA==
+X-Gm-Message-State: AOAM532x0edtYClci/xLPYnXc6KJAOChS8r0dRTzlfSLpGyTZVTUmK+4
+        6VlPrqb+oJutendXQ490G609QIE0kFtko20bKa8khsNW
+X-Google-Smtp-Source: ABdhPJydK+ylUpkMXBo0SnSQz0xN3pQu9JLoCvAtgjkW9DHhkIty1cxnjT4bn0aaXMIGFa3h121MVjVaDdd35f1lN70=
+X-Received: by 2002:a05:6830:18cd:: with SMTP id v13mr5082968ote.206.1603024306315;
+ Sun, 18 Oct 2020 05:31:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be5ea0b1-1a29-609e-d1a1-933344653f76@redhat.com>
+References: <20201006122024.14539-1-daniel.lezcano@linaro.org>
+ <eb26a00d-eee0-a4d1-ed25-61a661ad5683@redhat.com> <8be66efd-7833-2c8a-427d-b0055c2f6ec1@linaro.org>
+ <97e5368b-228d-eca1-85a5-b918dfcfd336@redhat.com> <CAJZ5v0gwc_d1vnwDVWXY+i4f0T2r0tAz8xuWV7oS_afsy7OocQ@mail.gmail.com>
+ <63dfa6a1-0424-7985-7803-756c0c5cc4a5@redhat.com> <CAJZ5v0jpYpu3Tk7qq_MCVs0wUr-Dw0rY5EZELrVbQta0NZaoVA@mail.gmail.com>
+ <87d9a808-39d6-4949-c4f9-6a80d14a3768@redhat.com> <CAJZ5v0iWmmu5WV7cX7uNb61NMYQ7s0dnhg1K+T0x90b3sBfU9w@mail.gmail.com>
+ <943531a7-74d6-7c7f-67bc-2645b3ba7b8a@redhat.com> <CAJZ5v0j8o5Ot-4U0HmUtckUUBSNqC+TRB6CCRzqdjeE0p_XfvA@mail.gmail.com>
+ <25d000cc-0c00-3b17-50f7-ca8de8b7a65b@redhat.com>
+In-Reply-To: <25d000cc-0c00-3b17-50f7-ca8de8b7a65b@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Sun, 18 Oct 2020 14:31:36 +0200
+Message-ID: <CAJZ5v0jC=rrTEtqoTvjw5vi=OH7i5OGC-KFuJgjCaXaDsKhUeQ@mail.gmail.com>
+Subject: Re: [RFC] Documentation: Add documentation for new
+ performance_profile sysfs class (Also Re: [PATCH 0/4] powercap/dtpm: Add the
+ DTPM framework)
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Mark Pearson <mpearson@lenovo.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 18.10.2020 11:26, Hans de Goede wrote:
+On Sun, Oct 18, 2020 at 11:41 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
 > Hi,
-> 
-> On 10/18/20 1:33 AM, Samuel Čavoj wrote:
-> > Hello everyone.
-> > 
-> > On 17.09.2020 15:34, Samuel Čavoj wrote:
-> >> The UX360CA has a WMI device id 0x00060062, which reports whether the
-> >> lid is flipped in tablet mode (1) or in normal laptop mode (0).
+>
+> On 10/16/20 4:51 PM, Rafael J. Wysocki wrote:
+> > On Fri, Oct 16, 2020 at 1:11 PM Hans de Goede <hdegoede@redhat.com> wrote:
 > >>
-> >> This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
-> >> which this WMI device should be used to figure out the SW_TABLET_MODE
-> >> state, as opposed to the quirk_asus_use_kbd_dock_devid.
+> >> <note folding the 2 threads we are having on this into one, adding every one from both threads to the Cc>
 > >>
-> >> It is assumed other UX360* models have the same WMI device. As such, the
-> >> quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
-> >> More devices with this feature need to be tested and added accordingly.
+> >> Hi,
 > >>
-> >> The reason for using a whitelist via the quirk mechanism is that the new
-> >> WMI device (0x00060062) is also present on some models which do not have
-> >> a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
-> >> collection) and therefore its presence cannot be relied on.
+> >> On 10/14/20 5:42 PM, Rafael J. Wysocki wrote:
+> >>> On Wed, Oct 14, 2020 at 4:06 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>> On 10/14/20 3:33 PM, Rafael J. Wysocki wrote:
 > >>
-> >> This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
-> >> always reporting 1 on many different models" by Hans de Goede.
+> >> <snip>
 > >>
-> >> Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
-> >> Cc: Hans de Goede <hdegoede@redhat.com>
-> >> ---
+> >>>>> First, a common place to register a DPTF system profile seems to be
+> >>>>> needed and, as I said above, I wouldn't expect more than one such
+> >>>>> thing to be present in the system at any given time, so it may be
+> >>>>> registered along with the list of supported profiles and user space
+> >>>>> will have to understand what they mean.
+> >>>>
+> >>>> Mostly Ack, I would still like to have an enum for DPTF system
+> >>>> profiles in the kernel and have a single piece of code map that
+> >>>> enum to profile names. This enum can then be extended as
+> >>>> necessary, but I want to avoid having one driver use
+> >>>> "Performance" and the other "performance" or one using
+> >>>> "performance-balanced" and the other "balanced-performance", etc.
+> >>>>
+> >>>> With the goal being that new drivers use existing values from
+> >>>> the enum as much as possible, but we extend it where necessary.
+> >>>
+> >>> IOW, just a table of known profile names with specific indices assigned to them.
 > >>
-> >> v1 -> v2:
-> >>   - inherit wmi_backlight_set_devstate from default quirk
-> > 
-> > I have realised that one shortcoming still remains: If the laptop is
-> > suspended while in tablet mode, flipped to normal mode during sleep and
-> > then awoken, no event is generated by the firmware. The SW_TABLET_MODE
-> > switch then stays enabled, with inputs not working until the user tries
-> > flipping it once again.
-> > 
-> > I suppose a simple check on resume would suffice. However, I am not sure
-> > if this is worth implementing as an update to this patch (i would like
-> > it to make the 5.10 merge window after all) or as a separate patch, if
-> > at all.
-> 
-> First, in case you did not know I've taken over PDx86 maintainership
-> from Andy starting this merge-window.
+> >> Yes.
+> >>
+> >>> This sounds reasonable.
+> >>>
+> >>>>> Second, irrespective of the above, it may be useful to have a
+> >>>>> consistent way to pass performance-vs-power preference information
+> >>>>> from user space to different parts of the kernel so as to allow them
+> >>>>> to adjust their operation and this could be done with a system-wide
+> >>>>> power profile attribute IMO.
+> >>>>
+> >>>> I agree, which is why I tried to tackle both things in one go,
+> >>>> but as you said doing both in 1 API is probably not the best idea.
+> >>>> So I believe we should park this second issue for now and revisit it
+> >>>> when we find a need for it.
+> >>>
+> >>> Agreed.
+> >>>
+> >>>> Do you have any specific userspace API in mind for the
+> >>>> DPTF system profile selection?
+> >>>
+> >>> Not really.
+> >>
+> >> So before /sys/power/profile was mentioned, but that seems more like
+> >> a thing which should have a set of fixed possible values, iow that is
+> >> out of scope for this discussion.
+> >
+> > Yes.
+> >
+> >> Since we all seem to agree that this is something which we need
+> >> specifically for DPTF profiles maybe just add:
+> >>
+> >> /sys/power/dptf_current_profile    (rw)
+> >> /sys/power/dptf_available_profiles (ro)
+> >>
+> >> (which will only be visible if a dptf-profile handler
+> >>  has been registered) ?
+> >>
+> >> Or more generic and thus better (in case other platforms
+> >> later need something similar) I think, mirror the:
+> >>
+> >> /sys/bus/cpu/devices/cpu#/cpufreq/energy_performance_* bits
+> >> for a system-wide energy-performance setting, so we get:
+> >>
+> >> /sys/power/energy_performance_preference
+> >> /sys/power/energy_performance_available_preferences
+> >
+> > But this is not about energy vs performance only in general, is it?
+> >
+> >> (again only visible when applicable) ?
+> >>
+> >> I personally like the second option best.
+> >
+> > But I would put it under /sys/firmware/ instead of /sys/power/ and I
+> > would call it something like platform_profile (and
+> > platform_profile_choices or similar).
+>
+> Currently we only have dirs under /sys/firmware:
+>
+> [hans@x1 ~]$ ls /sys/firmware
+> acpi  dmi  efi  memmap
+>
+> But we do have /sys/firmware/apci/pm_profile:
+>
+> Documentation/ABI/stable/sysfs-acpi-pmprofile
+>
+> What:           /sys/firmware/acpi/pm_profile
+> Date:           03-Nov-2011
+> KernelVersion:  v3.2
+> Contact:        linux-acpi@vger.kernel.org
+> Description:    The ACPI pm_profile sysfs interface exports the platform
+>                 power management (and performance) requirement expectations
+>                 as provided by BIOS. The integer value is directly passed as
+>                 retrieved from the FADT ACPI table.
+> Values:         For possible values see ACPI specification:
+>                 5.2.9 Fixed ACPI Description Table (FADT)
+>                 Field: Preferred_PM_Profile
+>
+>                 Currently these values are defined by spec:
+>                 0 Unspecified
+>                 1 Desktop
+>                 2 Mobile
+>                 3 Workstation
+>                 4 Enterprise Server
+>                 ...
+>
+> Since all platforms which we need this for are ACPI based
+> (and the involved interfaces are also all ACPI interfaces)
+> how about:
+>
+> /sys/firmware/acpi/platform_profile
+> /sys/firmware/acpi/platform_profile_choices
+>
+> ?
+>
+> I think this goes nice together with /sys/firmware/acpi/pm_profile
+> although that is read-only and this is a read/write setting.
+>
+> Rafel, would:
+>
+> /sys/firmware/acpi/platform_profile
+> /sys/firmware/acpi/platform_profile_choices
+>
+> work for you ?
 
-Oh, I didn't catch that. I'm not really in the loop about things like
-this. And I somehow missed the [GIT PULL] when I went searching the
-lists for what the status is.
+Yes, it would.
 
-> I'm afraid that it is too late for 5.10 anyways as the merge window for
-> that is already open and I already sent out the pull-req. I'm sorry
-> that your patch did not make it, but even though I knew the handover
-
-That's alright, it's not that important to me, I don't really use the
-tablet mode at all. I'm glad your patch made it to 5.9 and -stable, as
-that's what fixed the issue in this case.
-
-> from Andy to me was coming I still ended up having not a whole lot
-> of time to deal with the merge window, so some patches did not make it.
-> 
-> > Opinions?
-> 
-> Since this is not going to make 5.10 anyways it would be nice if
-> you can post a new version which fixes the issue which you have
-> found, so that we can get this supported (without the issue) in 5.11.
-> As you point out yourself the correct thing to do here
-> obviously is to re-check the state on resume.
-
-Yeah, I will see what I can do.
-
-Regards,
-Sam
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> >> ---
-> >>  drivers/platform/x86/asus-nb-wmi.c         | 15 +++++++++++++++
-> >>  drivers/platform/x86/asus-wmi.c            | 22 ++++++++++++++++++++++
-> >>  drivers/platform/x86/asus-wmi.h            |  1 +
-> >>  include/linux/platform_data/x86/asus-wmi.h |  1 +
-> >>  4 files changed, 39 insertions(+)
-> >>
-> >> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> >> index 345bd224494b..5019b03b2c95 100644
-> >> --- a/drivers/platform/x86/asus-nb-wmi.c
-> >> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> >> @@ -119,6 +119,11 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
-> >>  	.use_kbd_dock_devid = true,
-> >>  };
-> >>  
-> >> +static struct quirk_entry quirk_asus_use_lid_flip_devid = {
-> >> +	.wmi_backlight_set_devstate = true,
-> >> +	.use_lid_flip_devid = true,
-> >> +};
-> >> +
-> >>  static int dmi_matched(const struct dmi_system_id *dmi)
-> >>  {
-> >>  	pr_info("Identified laptop model '%s'\n", dmi->ident);
-> >> @@ -520,6 +525,16 @@ static const struct dmi_system_id asus_quirks[] = {
-> >>  		},
-> >>  		.driver_data = &quirk_asus_use_kbd_dock_devid,
-> >>  	},
-> >> +	{
-> >> +		.callback = dmi_matched,
-> >> +		.ident = "ASUS ZenBook Flip UX360",
-> >> +		.matches = {
-> >> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> >> +			/* Match UX360* */
-> >> +			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
-> >> +		},
-> >> +		.driver_data = &quirk_asus_use_lid_flip_devid,
-> >> +	},
-> >>  	{},
-> >>  };
-> >>  
-> >> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> >> index ae6289d37faf..e5066248e83a 100644
-> >> --- a/drivers/platform/x86/asus-wmi.c
-> >> +++ b/drivers/platform/x86/asus-wmi.c
-> >> @@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
-> >>  #define NOTIFY_KBD_BRTTOGGLE		0xc7
-> >>  #define NOTIFY_KBD_FBM			0x99
-> >>  #define NOTIFY_KBD_TTP			0xae
-> >> +#define NOTIFY_LID_FLIP			0xfa
-> >>  
-> >>  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
-> >>  
-> >> @@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
-> >>  		}
-> >>  	}
-> >>  
-> >> +	if (asus->driver->quirks->use_lid_flip_devid) {
-> >> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-> >> +		if (result >= 0) {
-> >> +			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
-> >> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> >> +		} else if (result == -ENODEV) {
-> >> +			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
-> >> +		} else {
-> >> +			pr_err("Error checking for lid-flip: %d\n", result);
-> >> +		}
-> >> +	}
-> >> +
-> >>  	err = input_register_device(asus->inputdev);
-> >>  	if (err)
-> >>  		goto err_free_dev;
-> >> @@ -2127,6 +2140,15 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
-> >>  		return;
-> >>  	}
-> >>  
-> >> +	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
-> >> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-> >> +		if (result >= 0) {
-> >> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> >> +			input_sync(asus->inputdev);
-> >> +		}
-> >> +		return;
-> >> +	}
-> >> +
-> >>  	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
-> >>  		fan_boost_mode_switch_next(asus);
-> >>  		return;
-> >> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> >> index 1a95c172f94b..b302415bf1d9 100644
-> >> --- a/drivers/platform/x86/asus-wmi.h
-> >> +++ b/drivers/platform/x86/asus-wmi.h
-> >> @@ -34,6 +34,7 @@ struct quirk_entry {
-> >>  	bool wmi_backlight_set_devstate;
-> >>  	bool wmi_force_als_set;
-> >>  	bool use_kbd_dock_devid;
-> >> +	bool use_lid_flip_devid;
-> >>  	int wapf;
-> >>  	/*
-> >>  	 * For machines with AMD graphic chips, it will send out WMI event
-> >> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> >> index 897b8332a39f..2f274cf52805 100644
-> >> --- a/include/linux/platform_data/x86/asus-wmi.h
-> >> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> >> @@ -62,6 +62,7 @@
-> >>  
-> >>  /* Misc */
-> >>  #define ASUS_WMI_DEVID_CAMERA		0x00060013
-> >> +#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
-> >>  
-> >>  /* Storage */
-> >>  #define ASUS_WMI_DEVID_CARDREADER	0x00080013
-> >> -- 
-> >> 2.28.0
-> >>
-> > 
-> 
+Cheers!
