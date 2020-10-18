@@ -1,231 +1,100 @@
-Return-Path: <SRS0=8ERt=DY=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=yilX=DZ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ACFC433DF
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Oct 2020 23:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1AAC388CE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 05:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF6220878
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Oct 2020 23:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="WEiLcCX1";
-	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="WEiLcCX1"
+	by mail.kernel.org (Postfix) with ESMTP id 34B6821D47
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Oct 2020 05:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1602999821;
+	bh=xQx4tam510oViG0aS6IAIECEgE6lGctfYht63oAFTjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rsfBbzcfkY2CZeQd4fUUQyYp3iv8vpG+N6a/5iNgXNH6lvkYrBtdgeanUtnsiRU26
+	 sXGx4OQq1MuKwTk16nH56wU6dHqC6lfgZIFtVhpukkABNUD4d35ZVx6bHAK7Eh+h9O
+	 55QC2xyFvgNGDPPgAEwHNRj7ZIlMRyqDdp4w6Xww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439914AbgJQXjT (ORCPT
+        id S1726344AbgJRFni (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 17 Oct 2020 19:39:19 -0400
-Received: from lithium.sammserver.com ([168.119.122.30]:33556 "EHLO
-        lithium.sammserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439872AbgJQXjS (ORCPT
+        Sun, 18 Oct 2020 01:43:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgJRFng (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Oct 2020 19:39:18 -0400
-X-Greylist: delayed 349 seconds by postgrey-1.27 at vger.kernel.org; Sat, 17 Oct 2020 19:39:17 EDT
-Received: from mail.sammserver.com (sammserver.wg [10.32.40.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by lithium.sammserver.com (Postfix) with ESMTPS id 85F9A312B5AC;
-        Sun, 18 Oct 2020 01:33:40 +0200 (CEST)
-Received: by mail.sammserver.com (Postfix, from userid 5011)
-        id 3BB061120B24; Sun, 18 Oct 2020 01:33:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1602977620; bh=hSLyJwAfXMOvw2hrxJI7fB18l0bxx3UdgjaZb3hqi+0=;
+        Sun, 18 Oct 2020 01:43:36 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 781412080D;
+        Sun, 18 Oct 2020 05:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1602999815;
+        bh=xQx4tam510oViG0aS6IAIECEgE6lGctfYht63oAFTjQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WEiLcCX1JzZJxz1o6di1ivvMGIC/j60ZXyr2gWN4SkO9hjkUA6JKfmeld6AFTHGRo
-         yxeCNJBL884RwTw42BeNuM+ZR1eTFfwMbUhUmqSEZFw7h7gwwDyMvdQKUbokpK3o36
-         vtM2I4YtYWrEO+DexKUI0FpYgFuWiot8a913Wmcs=
-Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
-        by mail.sammserver.com (Postfix) with ESMTP id E4CF61120B21;
-        Sun, 18 Oct 2020 01:33:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
-        t=1602977620; bh=hSLyJwAfXMOvw2hrxJI7fB18l0bxx3UdgjaZb3hqi+0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WEiLcCX1JzZJxz1o6di1ivvMGIC/j60ZXyr2gWN4SkO9hjkUA6JKfmeld6AFTHGRo
-         yxeCNJBL884RwTw42BeNuM+ZR1eTFfwMbUhUmqSEZFw7h7gwwDyMvdQKUbokpK3o36
-         vtM2I4YtYWrEO+DexKUI0FpYgFuWiot8a913Wmcs=
-Received: by fastboi.localdomain (Postfix, from userid 1000)
-        id CD1091420A90; Sun, 18 Oct 2020 01:33:39 +0200 (CEST)
-Date:   Sun, 18 Oct 2020 01:33:39 +0200
-From:   Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2] platform/x86: asus-wmi: Add support for
- SW_TABLET_MODE on UX360
-Message-ID: <20201017233339.v4th6wyej3a25ved@fastboi.localdomain>
-References: <20200917133425.168310-1-samuel@cavoj.net>
+        b=w5E1+nGVmBfju9sqafA7RNAyWyGXNV3glWIi0a1uVAyl5PpHYhnZwSlrCnlNiRfzs
+         cfV4uO4ZitYRPtno4rRqk/s62SY+Vkk0iEk8aerfp+YXmT6bAocVlLg03Vxy6aXm6p
+         C7/g4QRFCPJ09/zXowenG6SzN/MQpYZKW+T/2i1s=
+Date:   Sun, 18 Oct 2020 07:43:32 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     trix@redhat.com
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org, clang-built-linux@googlegroups.com
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+Message-ID: <20201018054332.GB593954@kroah.com>
+References: <20201017160928.12698-1-trix@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200917133425.168310-1-samuel@cavoj.net>
+In-Reply-To: <20201017160928.12698-1-trix@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello everyone.
+On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> This is a upcoming change to clean up a new warning treewide.
+> I am wondering if the change could be one mega patch (see below) or
+> normal patch per file about 100 patches or somewhere half way by collecting
+> early acks.
 
-On 17.09.2020 15:34, Samuel Čavoj wrote:
-> The UX360CA has a WMI device id 0x00060062, which reports whether the
-> lid is flipped in tablet mode (1) or in normal laptop mode (0).
-> 
-> This commit adds a quirk (quirk_asus_use_lid_flip_devid) for devices on
-> which this WMI device should be used to figure out the SW_TABLET_MODE
-> state, as opposed to the quirk_asus_use_kbd_dock_devid.
-> 
-> It is assumed other UX360* models have the same WMI device. As such, the
-> quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
-> More devices with this feature need to be tested and added accordingly.
-> 
-> The reason for using a whitelist via the quirk mechanism is that the new
-> WMI device (0x00060062) is also present on some models which do not have
-> a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
-> collection) and therefore its presence cannot be relied on.
-> 
-> This patch is a followup to "platform/x86: asus-wmi: Fix SW_TABLET_MODE
-> always reporting 1 on many different models" by Hans de Goede.
-> 
-> Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> ---
-> 
-> v1 -> v2:
->   - inherit wmi_backlight_set_devstate from default quirk
+Please break it up into one-patch-per-subsystem, like normal, and get it
+merged that way.
 
-I have realised that one shortcoming still remains: If the laptop is
-suspended while in tablet mode, flipped to normal mode during sleep and
-then awoken, no event is generated by the firmware. The SW_TABLET_MODE
-switch then stays enabled, with inputs not working until the user tries
-flipping it once again.
+Sending us a patch, without even a diffstat to review, isn't going to
+get you very far...
 
-I suppose a simple check on resume would suffice. However, I am not sure
-if this is worth implementing as an update to this patch (i would like
-it to make the 5.10 merge window after all) or as a separate patch, if
-at all.
+thanks,
 
-Opinions?
-
-Thanks,
-Sam
-> 
-> ---
->  drivers/platform/x86/asus-nb-wmi.c         | 15 +++++++++++++++
->  drivers/platform/x86/asus-wmi.c            | 22 ++++++++++++++++++++++
->  drivers/platform/x86/asus-wmi.h            |  1 +
->  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  4 files changed, 39 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-> index 345bd224494b..5019b03b2c95 100644
-> --- a/drivers/platform/x86/asus-nb-wmi.c
-> +++ b/drivers/platform/x86/asus-nb-wmi.c
-> @@ -119,6 +119,11 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
->  	.use_kbd_dock_devid = true,
->  };
->  
-> +static struct quirk_entry quirk_asus_use_lid_flip_devid = {
-> +	.wmi_backlight_set_devstate = true,
-> +	.use_lid_flip_devid = true,
-> +};
-> +
->  static int dmi_matched(const struct dmi_system_id *dmi)
->  {
->  	pr_info("Identified laptop model '%s'\n", dmi->ident);
-> @@ -520,6 +525,16 @@ static const struct dmi_system_id asus_quirks[] = {
->  		},
->  		.driver_data = &quirk_asus_use_kbd_dock_devid,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "ASUS ZenBook Flip UX360",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-> +			/* Match UX360* */
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
-> +		},
-> +		.driver_data = &quirk_asus_use_lid_flip_devid,
-> +	},
->  	{},
->  };
->  
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index ae6289d37faf..e5066248e83a 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
->  #define NOTIFY_KBD_BRTTOGGLE		0xc7
->  #define NOTIFY_KBD_FBM			0x99
->  #define NOTIFY_KBD_TTP			0xae
-> +#define NOTIFY_LID_FLIP			0xfa
->  
->  #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
->  
-> @@ -375,6 +376,18 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
->  		}
->  	}
->  
-> +	if (asus->driver->quirks->use_lid_flip_devid) {
-> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-> +		if (result >= 0) {
-> +			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
-> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> +		} else if (result == -ENODEV) {
-> +			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
-> +		} else {
-> +			pr_err("Error checking for lid-flip: %d\n", result);
-> +		}
-> +	}
-> +
->  	err = input_register_device(asus->inputdev);
->  	if (err)
->  		goto err_free_dev;
-> @@ -2127,6 +2140,15 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
->  		return;
->  	}
->  
-> +	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
-> +		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
-> +		if (result >= 0) {
-> +			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
-> +			input_sync(asus->inputdev);
-> +		}
-> +		return;
-> +	}
-> +
->  	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
->  		fan_boost_mode_switch_next(asus);
->  		return;
-> diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
-> index 1a95c172f94b..b302415bf1d9 100644
-> --- a/drivers/platform/x86/asus-wmi.h
-> +++ b/drivers/platform/x86/asus-wmi.h
-> @@ -34,6 +34,7 @@ struct quirk_entry {
->  	bool wmi_backlight_set_devstate;
->  	bool wmi_force_als_set;
->  	bool use_kbd_dock_devid;
-> +	bool use_lid_flip_devid;
->  	int wapf;
->  	/*
->  	 * For machines with AMD graphic chips, it will send out WMI event
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 897b8332a39f..2f274cf52805 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -62,6 +62,7 @@
->  
->  /* Misc */
->  #define ASUS_WMI_DEVID_CAMERA		0x00060013
-> +#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
->  
->  /* Storage */
->  #define ASUS_WMI_DEVID_CARDREADER	0x00080013
-> -- 
-> 2.28.0
-> 
+greg k-h
