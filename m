@@ -2,142 +2,111 @@ Return-Path: <SRS0=1m0M=D2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71D4C433DF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 13:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA8C433DF
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 14:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A77D20747
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 13:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LiRqxkWb"
+	by mail.kernel.org (Postfix) with ESMTP id A8C35222C3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 14:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgJSNcW (ORCPT
+        id S1728913AbgJSO2d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Oct 2020 09:32:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42428 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727297AbgJSNcW (ORCPT
+        Mon, 19 Oct 2020 10:28:33 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:60449 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgJSO2c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Oct 2020 09:32:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603114341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=D2hS302BQIxFqkZJYdUZZRcM72hDYJNZ0L302XD6ZGk=;
-        b=LiRqxkWbCLLWFVkWX/XKjoRrJU8zL5g+LgM55uvRpYFZaRSJzWSHVpvtX93YqPW3xECUgS
-        HvtI/bh/SpLnzkRkVziLwzPOMNAAMo/Bhsse5R6se1sPqcREexIQcAqe30+KlDoWJlFGxQ
-        x/uQ0UmZfj+jj1X0nb740/9+nUFZwSw=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-1YIjBqCLODOUrbaqi4pkUg-1; Mon, 19 Oct 2020 09:32:19 -0400
-X-MC-Unique: 1YIjBqCLODOUrbaqi4pkUg-1
-Received: by mail-qk1-f199.google.com with SMTP id f126so7198147qke.17
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2020 06:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D2hS302BQIxFqkZJYdUZZRcM72hDYJNZ0L302XD6ZGk=;
-        b=f4o0UwkdQuOZ3qgQs8zwp8Nh89QrJGlcw9f4c4fu06BO5AjbcBcKJfYIH8DQXm+Vx9
-         mKFi9G2EAdEB8cmg9GAmQpvltBr+gQHyr8koQWak0+0dZ2YOHAOS6thAiIoUSfTYgMNl
-         BaLXqLZobGnbLoUkxv/q+l07KRRd4RtCcFaR2DlwPPvNZ43InpJqXJxuUKYC66rW5zJL
-         e0L35JMjKb5YQ5pGuEeempUk1e0PF9NBbPJ+eiE0ugGSlF/R4gOJcDnTwOfJ91AlwCiT
-         X3uQqaQY0/FbZ2tyzCmeBzsDk7J+iox+8fOfHQYst16ljExxF4tK1Zd0lbTT/AlZMUks
-         7mHw==
-X-Gm-Message-State: AOAM532Kaga7FPPklRiVQX9IcN07l4xnnZT0QKz9Tdfj1NYoe8p3sJcY
-        6iXEr73pZO1gmhhsCdELYLLKmZ5vSiL+8MsLicoc9+W3/1eMV0jowaEMc6uEm1INes1XwdzgEKm
-        vqZWfLNpmG04lA0TVb1kWLD1VmcyIyvKZ6w==
-X-Received: by 2002:ac8:4313:: with SMTP id z19mr3069624qtm.44.1603114339020;
-        Mon, 19 Oct 2020 06:32:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwHb8SJ6O+i94TVTF66NpsJNTNc2ZYIp7y9RbXT/7XfCFdh5MzP4tfoLDA6mUyCEN0mfn5mCg==
-X-Received: by 2002:ac8:4313:: with SMTP id z19mr3069601qtm.44.1603114338713;
-        Mon, 19 Oct 2020 06:32:18 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id r62sm13097qkd.80.2020.10.19.06.32.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 06:32:18 -0700 (PDT)
-From:   trix@redhat.com
-To:     jlee@suse.com, hdegoede@redhat.com, mgross@linux.intel.com,
-        malattia@linux.it
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] platform/x86: remove unneeded break
-Date:   Mon, 19 Oct 2020 06:32:12 -0700
-Message-Id: <20201019133212.12671-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 19 Oct 2020 10:28:32 -0400
+Received: from [192.168.1.155] ([77.2.107.242]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mdvyi-1judMc4BMc-00b5lp; Mon, 19 Oct 2020 16:28:17 +0200
+Subject: Re: [PATCH 1/2] x86: Remove led/gpio setup from pcengines platform
+ driver
+To:     Ed W <lists@wildgooses.com>, Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+References: <20200921215919.3072-1-lists@wildgooses.com>
+ <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
+ <8058a804-a793-a5f8-d086-0bb0f600aef9@metux.net>
+ <9fb836bc-7d8a-b6e2-8d73-8e74a8f2e38b@redhat.com>
+ <2ecbe677-8f80-17a1-dbf9-dfffa867805c@wildgooses.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <4a6fe2bc-a4a5-c214-e7fd-2a429dc960e1@metux.net>
+Date:   Mon, 19 Oct 2020 16:28:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <2ecbe677-8f80-17a1-dbf9-dfffa867805c@wildgooses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xbMRXUpzFNUkny2+TfTzHE8Qceb1YpYmx4n0gU6SRm/g5vXt+8P
+ zLJ+FWd2UgGo6omcanyBbHMEQY7N4f57h6zKt/6V+yrsmhyS6a57P1/hK8WiEP5lfDXgHNA
+ EF6a/Tl05mGQeoiziC+15NiMeNWVXXPeiiFEbIB2fZd1tIxa68nZoV/vCrJ/Ztz1PXmJo37
+ Wxs+y39iAkglUVF1UBAow==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EwAfrfpyJe4=:ZrtqEuBAJTBH22ouQPfFql
+ mJMSys2lfwL7cc3rYBF4as2x9lkp2T9mg4UJoacgOHfL02EtfP1liFQnnhRiGbpAAelbIF4dR
+ VFeq1fkvr0uXVKXbyfkoh/GdtAhR6nhmuuNHDqsoFROnCbTW09iyn7zeYJ6aqobxO2WVnXKiA
+ bjUnvg0vi53Aew2h4OyT+vVwYwfQxdIl+P2bkqr0SpOw9/e+UZu2yyT2+d+qiAff619r1JDXl
+ xDPi86OJPTagfPcExHtQLtv5IO/DgVHKXgYQzq8th187DHjMm8aQ6juQeOe5c0w9LK437+FiR
+ XJZ9LodBZLlHAjrrDjPL5mh20EoWgc5m0/YKKTfE+GCpDSbzfNJKnNSKO8XEVQiTf7J9rR3aO
+ QAWjrwA6GdwwsTwDkW8lPeE7KDCFNV8U3wdSUdgyhIrvDFykYIZs8zX+0lVcA
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On 13.10.20 23:46, Ed W wrote:
 
-A break is not needed if it is preceded by a return
+> The original naming was board specific. Then Enrico (not unreasonably - I actually prefer his
+> naming) changed the naming to be non board specific. Then within 2 months PC Engines introduced ACPI
+> based config using the old names.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/platform/x86/acer-wmi.c    | 1 -
- drivers/platform/x86/sony-laptop.c | 3 ---
- drivers/platform/x86/wmi.c         | 3 ---
- 3 files changed, 7 deletions(-)
+Which "old names" are you referring to ?
+The really old apuv1 led-only driver ?
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 49f4b73be513..1c2084c74a57 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -792,7 +792,6 @@ static acpi_status AMW0_set_u32(u32 value, u32 cap)
- 		switch (quirks->brightness) {
- 		default:
- 			return ec_write(0x83, value);
--			break;
- 		}
- 	default:
- 		return AE_ERROR;
-diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
-index e5a1b5533408..704813374922 100644
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -2467,13 +2467,11 @@ static int __sony_nc_gfx_switch_status_get(void)
- 		 * 0: integrated GFX (stamina)
- 		 */
- 		return result & 0x1 ? SPEED : STAMINA;
--		break;
- 	case 0x015B:
- 		/* 0: discrete GFX (speed)
- 		 * 1: integrated GFX (stamina)
- 		 */
- 		return result & 0x1 ? STAMINA : SPEED;
--		break;
- 	case 0x0128:
- 		/* it's a more elaborated bitmask, for now:
- 		 * 2: integrated GFX (stamina)
-@@ -2482,7 +2480,6 @@ static int __sony_nc_gfx_switch_status_get(void)
- 		dprintk("GFX Status: 0x%x\n", result);
- 		return result & 0x80 ? AUTO :
- 			result & 0x02 ? STAMINA : SPEED;
--		break;
- 	}
- 	return -EINVAL;
- }
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index d88f388a3450..44e802f9f1b4 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1260,13 +1260,10 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
- 	switch (result) {
- 	case -EINVAL:
- 		return AE_BAD_PARAMETER;
--		break;
- 	case -ENODEV:
- 		return AE_NOT_FOUND;
--		break;
- 	case -ETIME:
- 		return AE_TIME;
--		break;
- 	default:
- 		return AE_OK;
- 	}
+> So if we are holding "userspace breakage" as the gold standard, then the original (also the current)
+> names have actually been around longest and likely cause the least userspace breakage.
+
+Exactly. Linus often stated "dont break userland" as a primary goal, and
+that with really good reasons: the kernel is *the* hardware abstraction
+layer. Having userland to deal with thousands of hardware details in
+userland would cause extreme management complexity.
+
+> Also, some other pieces of this module have already been removed (SIM Swap), so there is an existing
+> precedent for "userspace breakage" and trimming down this platform driver.
+
+Not quite. SIM swap hasn't been actually used in the field (at least as
+far as I know). And we're planning to put it into different subsystem
+(probably rfkill) anyways.
+
+> In big picture terms, changing the name of the LED device doesn't seem a huge concern to me... A
+> udev rule can setup compatibility forwards/backwards quite trivially I think?
+
+Small kernel update causes existing applications to FAIL. Applications
+now have to be changed to deal with *different* configuration, based on
+factors like BIOS version.
+
+We're dealing with embedded applications. There is no operator of these
+boxes. Maybe some times an operator of the machinary comes around - and
+needs to rely on the LEDs. Not as critial as an direction indicator in
+a car, but still important.
+
+
+--mtx
+
 -- 
-2.18.1
-
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
