@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA8C433DF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 14:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D359BC433E7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C35222C3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 14:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D2722282
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 15:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgJSO2d (ORCPT
+        id S1730404AbgJSPok (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Oct 2020 10:28:33 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:60449 "EHLO
+        Mon, 19 Oct 2020 11:44:40 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:45553 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgJSO2c (ORCPT
+        with ESMTP id S1730388AbgJSPok (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Oct 2020 10:28:32 -0400
+        Mon, 19 Oct 2020 11:44:40 -0400
 Received: from [192.168.1.155] ([77.2.107.242]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mdvyi-1judMc4BMc-00b5lp; Mon, 19 Oct 2020 16:28:17 +0200
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MBE3k-1kaYgU0oYg-00Ckb9; Mon, 19 Oct 2020 17:44:28 +0200
 Subject: Re: [PATCH 1/2] x86: Remove led/gpio setup from pcengines platform
  driver
-To:     Ed W <lists@wildgooses.com>, Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>, Ed W <lists@wildgooses.com>,
         linux-kernel@vger.kernel.org
 Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
         Darren Hart <dvhart@infradead.org>,
@@ -35,68 +35,73 @@ Cc:     fe@dev.tdt.de, "Enrico Weigelt, metux IT consult" <info@metux.net>,
 References: <20200921215919.3072-1-lists@wildgooses.com>
  <d4b2045c-769b-4998-64cc-682c01c105fb@wildgooses.com>
  <8058a804-a793-a5f8-d086-0bb0f600aef9@metux.net>
- <9fb836bc-7d8a-b6e2-8d73-8e74a8f2e38b@redhat.com>
- <2ecbe677-8f80-17a1-dbf9-dfffa867805c@wildgooses.com>
+ <65efe44a-bbef-f982-462a-385fffe493a0@wildgooses.com>
+ <0de126c4-f2aa-a817-0a38-32bf3ede84d1@redhat.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <4a6fe2bc-a4a5-c214-e7fd-2a429dc960e1@metux.net>
-Date:   Mon, 19 Oct 2020 16:28:15 +0200
+Message-ID: <e727d039-8dea-1a40-48b9-792b6053807c@metux.net>
+Date:   Mon, 19 Oct 2020 17:44:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <2ecbe677-8f80-17a1-dbf9-dfffa867805c@wildgooses.com>
+In-Reply-To: <0de126c4-f2aa-a817-0a38-32bf3ede84d1@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xbMRXUpzFNUkny2+TfTzHE8Qceb1YpYmx4n0gU6SRm/g5vXt+8P
- zLJ+FWd2UgGo6omcanyBbHMEQY7N4f57h6zKt/6V+yrsmhyS6a57P1/hK8WiEP5lfDXgHNA
- EF6a/Tl05mGQeoiziC+15NiMeNWVXXPeiiFEbIB2fZd1tIxa68nZoV/vCrJ/Ztz1PXmJo37
- Wxs+y39iAkglUVF1UBAow==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EwAfrfpyJe4=:ZrtqEuBAJTBH22ouQPfFql
- mJMSys2lfwL7cc3rYBF4as2x9lkp2T9mg4UJoacgOHfL02EtfP1liFQnnhRiGbpAAelbIF4dR
- VFeq1fkvr0uXVKXbyfkoh/GdtAhR6nhmuuNHDqsoFROnCbTW09iyn7zeYJ6aqobxO2WVnXKiA
- bjUnvg0vi53Aew2h4OyT+vVwYwfQxdIl+P2bkqr0SpOw9/e+UZu2yyT2+d+qiAff619r1JDXl
- xDPi86OJPTagfPcExHtQLtv5IO/DgVHKXgYQzq8th187DHjMm8aQ6juQeOe5c0w9LK437+FiR
- XJZ9LodBZLlHAjrrDjPL5mh20EoWgc5m0/YKKTfE+GCpDSbzfNJKnNSKO8XEVQiTf7J9rR3aO
- QAWjrwA6GdwwsTwDkW8lPeE7KDCFNV8U3wdSUdgyhIrvDFykYIZs8zX+0lVcA
+X-Provags-ID: V03:K1:dXpUIHRfWT5BcBULeI6C3vO+0OYCk7YAbl0tD+Ga1iGSzCkFhdH
+ bzPyS5WuDKman6O01IM2eCaulW1iS2zj7dpI1OjC6XCnW5vV2tHyAIYojHH0FWVHKUx1Q3E
+ /2oSPKIf3Y+Yw7hs5fJkPyPYueLm41VrKQ4DNAG3zcVwohlqly5TUtA3+O1oU+hrImDQGdG
+ QkoZ4tya3l1VD9/Nezkzw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oi9ueL6afnM=:l/JGmFuLohUNZ5OkGYAQz4
+ kocRukoezDLcXg5WFzU+t+FY5AEsjWdCA980yc6MD/sUuopivybknohnp3jKFnl0jytPk3yQV
+ n7T5kmzCW5PyMcl4fe1NWPIUCT92P1YTMmrrclaAoDmKZnfGRc0uHOZfwbUO4/D36XUe2E/Qk
+ RfojzivK3wYRyqQbKJ6ae8PlIH3UfKehmLWqZvmXuebRaEVyeCabayzPq7ihgqwp4PbHGmOR4
+ sW9cw28I1BoTQ9MlK/TfmWbeiEiBLVlGci9BY3e8aheb+aXGepZpSfjMHYez9k2k8MPc0dJBN
+ ug0NDP4ZSeWMpKIoLQ25inGmCV8CMu5VK/esdYNsub/L6JxDPwTPSnuDOeT/J+WwQPbgfVd+K
+ AJnj8KEvIXIOMGfSqx8KehEsXoceHcd4snG+lYcWFrQMvDGkEcnfpLYxD0C9/
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 13.10.20 23:46, Ed W wrote:
+On 14.10.20 10:41, Hans de Goede wrote:
 
-> The original naming was board specific. Then Enrico (not unreasonably - I actually prefer his
-> naming) changed the naming to be non board specific. Then within 2 months PC Engines introduced ACPI
-> based config using the old names.
+Hi,
 
-Which "old names" are you referring to ?
-The really old apuv1 led-only driver ?
+> Keep the current LED/gpio setup code, but make executing it conditional
+> on the BIOS version and skip the LED/gpio setup when the new BIOS is
+> present to avoid having duplicate LED entries, etc. in that case.
+> 
+> I guess this would still break userspace because if I understand things
+> correctly the new ACPI based setup uses different LED names ? That
+> seems unfortunate, but I guess that from the kernel pov we can just
+> blame the BIOS for this, and since we definitely do not want duplicate
+> LED entries for the same LED, this seems the least bad choice.
 
-> So if we are holding "userspace breakage" as the gold standard, then the original (also the current)
-> names have actually been around longest and likely cause the least userspace breakage.
+Sorry, but not fine. When a newer box is taken from storage into
+production (eg. replacement or new installation), application breaks.
+LED isn't the only problem, also affects buttons.
 
-Exactly. Linus often stated "dont break userland" as a primary goal, and
-that with really good reasons: the kernel is *the* hardware abstraction
-layer. Having userland to deal with thousands of hardware details in
-userland would cause extreme management complexity.
+The whole reaons why I invested all the time for writing general
+purpose drivers (fch-gpio is separate from board driver) and bringing
+it to mainline was having clean and generic support for these boards,
+instead of having to carry around special patch queues forever and
+in near future just using stock distro kernel. I guess that's the
+main reason for very most mainlined drivers. This will be defeated
+as soon as the whole thing becomes board/bios specific again.
 
-> Also, some other pieces of this module have already been removed (SIM Swap), so there is an existing
-> precedent for "userspace breakage" and trimming down this platform driver.
+I purposely slept ofter the naming several times, to make sure it's
+future proof and tells exactly what these leds are for. Otherwise I
+could just have picked numbers and fruits.
 
-Not quite. SIM swap hasn't been actually used in the field (at least as
-far as I know). And we're planning to put it into different subsystem
-(probably rfkill) anyways.
+Please don't change the names. Field relies on them.
 
-> In big picture terms, changing the name of the LED device doesn't seem a huge concern to me... A
-> udev rule can setup compatibility forwards/backwards quite trivially I think?
+Actually, I've already considered adding another workaround for removing
+the ACPI gpio/leds. Haven't had the time for a close analysis the acpi
+bytecode actually does, and what the kernel actually makes out of it.
+As soon as I encounter an conflict (eg. locks the iomem from gpio-amd
+fch, messes up gpio states, etc), I'll have to go that route. There
+already have been bug reports in that direction (eg. simsw and reset
+issues), which I could not yet reproduce (on the older bios versions).
 
-Small kernel update causes existing applications to FAIL. Applications
-now have to be changed to deal with *different* configuration, based on
-factors like BIOS version.
-
-We're dealing with embedded applications. There is no operator of these
-boxes. Maybe some times an operator of the machinary comes around - and
-needs to rely on the LEDs. Not as critial as an direction indicator in
-a car, but still important.
 
 
 --mtx
