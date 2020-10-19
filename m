@@ -2,113 +2,151 @@ Return-Path: <SRS0=1m0M=D2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBC3C433E7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 18:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5959CC433E7
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 19:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922BD223BF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 18:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45ED222EA
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 19:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J0i5Id6s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vqIoQqfP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgJSS5S (ORCPT
+        id S1731340AbgJSTp3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Oct 2020 14:57:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37466 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730830AbgJSS5S (ORCPT
+        Mon, 19 Oct 2020 15:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731248AbgJSTm3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Oct 2020 14:57:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603133837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D2aJa92rorA3S8kA0kbjkBURuLRVxUH7wiMyKvwfmLU=;
-        b=J0i5Id6sos8yQH9KjagvunI1H7DaZGzhU9n6f/okmE3KKBhRoaDnIdJ0P31YMRcOlWXpLd
-        zEOlHWJa6oJdMH+ZK4a5t/bS+h+wdZRicUMM3cR1asd2qDhn+oE8UfeftAhhF1Bf2sgb8u
-        EJqGtu7j+E6YgFgtZJ4V7qjxox08z6k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-570-AHtUB8ViP6K2vipEwOC67Q-1; Mon, 19 Oct 2020 14:57:12 -0400
-X-MC-Unique: AHtUB8ViP6K2vipEwOC67Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 17F891005E75;
-        Mon, 19 Oct 2020 18:56:34 +0000 (UTC)
-Received: from x1.localdomain (ovpn-114-62.ams2.redhat.com [10.36.114.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F383060DA0;
-        Mon, 19 Oct 2020 18:56:32 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>, Lee Chun-Yi <jlee@suse.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH 2/6] platform/x86: acer-wmi: Cleanup ACER_CAP_FOO defines
-Date:   Mon, 19 Oct 2020 20:56:24 +0200
-Message-Id: <20201019185628.264473-2-hdegoede@redhat.com>
-In-Reply-To: <20201019185628.264473-1-hdegoede@redhat.com>
-References: <20201019185628.264473-1-hdegoede@redhat.com>
+        Mon, 19 Oct 2020 15:42:29 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B479C0613E1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2020 12:42:28 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id gv6so367034pjb.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2020 12:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=no6WOfZDuAXhTDfVia9Vunkz4L7BthY0F8m0jo4//vs=;
+        b=vqIoQqfPtCUD7ceHGEmbvFqqUZd/9dE0IpLQQ4p4nyONBXQMSFxBG5OzgCaJfT8eu8
+         Ez0DMwUntzcU9c2WJzs/WqMvxG3bzlj0mstlcz+E4fW0gt02sZNjrL1HdU6SHVwmCE5R
+         WFeHYzJRJuPZspqj8YJ2wlUmUN4Mc8MNrI6kLekCJ8yejCepkvkgEUeb7TbpDze1NnEh
+         TP2SjhqdakZDUedR00qYjd62k5W2m7FgfHIpcuS/rhjqMGxVL3Apppn+UDRO/ftdIfoh
+         duvoKavmXDacw9mysFV+xdp1Tg4QxCPiDxNSeCeZyO+34Y2S1kYSdX61NJzSKhmGsX5T
+         HLpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=no6WOfZDuAXhTDfVia9Vunkz4L7BthY0F8m0jo4//vs=;
+        b=jLmdDM6/ZU17Y4GTdKwE59CZ/6BtcllKOA9MkktMaEH1L3ZTJ5wZUInN/cyOlNBA1h
+         G0AjjSfKxuiO34u+KeCp+DG268pFhCont/1oNlX4ofo+V0oc8VsLVSbxya7W+tfyukYg
+         0DIHil8s+hYwb59V7DxfbjaeowMy3EDkFWCbz7AD72spBB8fxCMVbo9T0CbIu00BEf9P
+         0aYFApP8rmZcTyc+rRLsUI4+ub0C7KwtagyEhfmkF8PkiuyjIlFCXIMuTU5D89ARh2Af
+         mpq1FxsQgMZguUw+3x7PfiRDcHXf+OPLJ9GHUiU2orKxOge4ec/7FyhoHnVYjGQ6cNoq
+         ROAQ==
+X-Gm-Message-State: AOAM533RnHjBRipSjRwkDC/55nBhvJnWqG+EcJ9SUhbwkXihrpzsOoob
+        8gZJWHG91H2pLauURFZzTYXxHRhsTmJVfvpFZmiF7g==
+X-Google-Smtp-Source: ABdhPJxy4K+2uRaBuhFTeTSlHPetqrP1uAAP7dKvm6UBZz10SCa23PJUxb54E5JJmlle9J/y892Qp+TTrKvO4GeNXIk=
+X-Received: by 2002:a17:90a:ee87:: with SMTP id i7mr921476pjz.25.1603136546933;
+ Mon, 19 Oct 2020 12:42:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20201017160928.12698-1-trix@redhat.com> <20201018054332.GB593954@kroah.com>
+In-Reply-To: <20201018054332.GB593954@kroah.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 19 Oct 2020 12:42:15 -0700
+Message-ID: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+Subject: Re: [RFC] treewide: cleanup unreachable breaks
+To:     Tom Rix <trix@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
+        storagedev@microchip.com, devel@driverdev.osuosl.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        George Burgess <gbiv@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Cleanup the ACER_CAP_FOO defines:
--Switch to using BIT() macro.
--The ACER_CAP_RFBTN flag is set, but it is never checked anywhere, drop it.
--Drop the unused ACER_CAP_ANY define.
+On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
+> > From: Tom Rix <trix@redhat.com>
+> >
+> > This is a upcoming change to clean up a new warning treewide.
+> > I am wondering if the change could be one mega patch (see below) or
+> > normal patch per file about 100 patches or somewhere half way by collecting
+> > early acks.
+>
+> Please break it up into one-patch-per-subsystem, like normal, and get it
+> merged that way.
+>
+> Sending us a patch, without even a diffstat to review, isn't going to
+> get you very far...
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/acer-wmi.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+Tom,
+If you're able to automate this cleanup, I suggest checking in a
+script that can be run on a directory.  Then for each subsystem you
+can say in your commit "I ran scripts/fix_whatever.py on this subdir."
+ Then others can help you drive the tree wide cleanup.  Then we can
+enable -Wunreachable-code-break either by default, or W=2 right now
+might be a good idea.
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index db6167a10981..2f69d418ed3b 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -205,14 +205,12 @@ struct hotkey_function_type_aa {
- /*
-  * Interface capability flags
-  */
--#define ACER_CAP_MAILLED		(1<<0)
--#define ACER_CAP_WIRELESS		(1<<1)
--#define ACER_CAP_BLUETOOTH		(1<<2)
--#define ACER_CAP_BRIGHTNESS		(1<<3)
--#define ACER_CAP_THREEG			(1<<4)
--#define ACER_CAP_ACCEL			(1<<5)
--#define ACER_CAP_RFBTN			(1<<6)
--#define ACER_CAP_ANY			(0xFFFFFFFF)
-+#define ACER_CAP_MAILLED		BIT(0)
-+#define ACER_CAP_WIRELESS		BIT(1)
-+#define ACER_CAP_BLUETOOTH		BIT(2)
-+#define ACER_CAP_BRIGHTNESS		BIT(3)
-+#define ACER_CAP_THREEG			BIT(4)
-+#define ACER_CAP_ACCEL			BIT(5)
- 
- /*
-  * Interface type flags
-@@ -1247,10 +1245,8 @@ static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
- 		interface->capability |= ACER_CAP_THREEG;
- 	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
- 		interface->capability |= ACER_CAP_BLUETOOTH;
--	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN) {
--		interface->capability |= ACER_CAP_RFBTN;
-+	if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN)
- 		commun_func_bitmap &= ~ACER_WMID3_GDS_RFBTN;
--	}
- 
- 	commun_fn_key_number = type_aa->commun_fn_key_number;
- }
+Ah, George (gbiv@, cc'ed), did an analysis recently of
+`-Wunreachable-code-loop-increment`, `-Wunreachable-code-break`, and
+`-Wunreachable-code-return` for Android userspace.  From the review:
+```
+Spoilers: of these, it seems useful to turn on
+-Wunreachable-code-loop-increment and -Wunreachable-code-return by
+default for Android
+...
+While these conventions about always having break arguably became
+obsolete when we enabled -Wfallthrough, my sample turned up zero
+potential bugs caught by this warning, and we'd need to put a lot of
+effort into getting a clean tree. So this warning doesn't seem to be
+worth it.
+```
+Looks like there's an order of magnitude of `-Wunreachable-code-break`
+than the other two.
+
+We probably should add all 3 to W=2 builds (wrapped in cc-option).
+I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
+follow up on.
 -- 
-2.28.0
-
+Thanks,
+~Nick Desaulniers
