@@ -1,149 +1,143 @@
-Return-Path: <SRS0=1m0M=D2=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=42+Y=D3=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1AFC433E7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 23:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DCFC433DF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 00:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB19A2242A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Oct 2020 23:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="R0THCPfe"
+	by mail.kernel.org (Postfix) with ESMTP id CC75020637
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 00:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388881AbgJSXFu (ORCPT
+        id S2389223AbgJTAPP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Oct 2020 19:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgJSXFt (ORCPT
+        Mon, 19 Oct 2020 20:15:15 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:19844 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726791AbgJTAPP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Oct 2020 19:05:49 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB8FC0613D5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2020 16:05:49 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z5so84267iob.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Oct 2020 16:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KZcwJitFojA7RhzeD/UU8gbzehCBdvf6g5ia0ZYCrq4=;
-        b=R0THCPfeT+NjRv5n7wRuWr3+iQQVH5mYQugrcFEorv7jMlZOJpq4gWO8x2sltRZ1S3
-         8+uXkfK+0xraFRPc7RLEyC+L1Eqn+lwfgcQ60rCu3Ir6T0iqCUlHxkXPI8IxQxljNihW
-         MxA7dERE+Fo0B6yhfEPLGm6gbjuMrGvt0ee7i4ozPAa6C0OwTV1SJBaz+sj8rzyyiIix
-         DQ1LhxNguLsVQ2r9xWcmCur9QDHoeimXQtC/UVpN+4Yl8O9ZbpYKUwlrKFZtzYHwjpgZ
-         iC+kREvCZvwgmOBCIm7DmgxG6/6ncKrp6QDCnbxkp/qIzrhuMyauJsg53LWTp//HSslk
-         z+3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KZcwJitFojA7RhzeD/UU8gbzehCBdvf6g5ia0ZYCrq4=;
-        b=UrMHmSc42ztSWn9ug9uaKT2lBIYeJdWLxNFseAbVwY3YRr4cemNEo/LHIqarfZ7kEw
-         x9g+dg4uAy/BuuvIGpwTOy341oCimisGLsRwRXPcUmlnhvkyAuSR4n5ncugDTQI7genC
-         Rt45MLcEuViZvV5hzSoqVJP0o/Zstdlj0w/iDXvDo79K0WwUycVJr30sNfa0zYOAr55n
-         xIPImbYzSvaZxclHWK5v06lUPxMI3Sd8qubnURT9TuwUv1LSnpnNx00FhPv6ItK2IIJi
-         Z3f+63/JBf9XiTjaEgFXXwPah/7VKJc0cuW51n+3pdWKxnnhjohBH8Rdg8iP04PgzTRk
-         T7NA==
-X-Gm-Message-State: AOAM530BAmoYQ+rQYr8nop44450xSvKqK2sqB6mKHgrk6+gaXq4L22tH
-        tYGrkAYkaRBcZoZ5t+j+9j49cQ==
-X-Google-Smtp-Source: ABdhPJwE/qhLAedndnNRaUrUDMs331Onaq8Iz+VDEVRJN+4h4B5ckC67pNXDnvS9MRF/DxLJjNlnIQ==
-X-Received: by 2002:a6b:5019:: with SMTP id e25mr44377iob.123.1603148748578;
-        Mon, 19 Oct 2020 16:05:48 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id u8sm7938ilm.36.2020.10.19.16.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 16:05:47 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kUeDq-002hRf-LL; Mon, 19 Oct 2020 20:05:46 -0300
-Date:   Mon, 19 Oct 2020 20:05:46 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Tom Rix <trix@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-pm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-power@fi.rohmeurope.com, linux-gpio@vger.kernel.org,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        spice-devel@lists.freedesktop.org, linux-iio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-can@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        intel-wired-lan@lists.osuosl.org, ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com, linux-nfc@lists.01.org,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        storagedev@microchip.com, devel@driverdev.osuosl.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        usb-storage@lists.one-eyed-alien.net,
-        linux-watchdog@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        bpf <bpf@vger.kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        George Burgess <gbiv@google.com>
-Subject: Re: [RFC] treewide: cleanup unreachable breaks
-Message-ID: <20201019230546.GH36674@ziepe.ca>
-References: <20201017160928.12698-1-trix@redhat.com>
- <20201018054332.GB593954@kroah.com>
- <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+        Mon, 19 Oct 2020 20:15:15 -0400
+Received: from [100.112.1.102] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 72/01-19530-11C2E8F5; Tue, 20 Oct 2020 00:15:13 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMKsWRWlGSWpSXmKPExsWSLveKTVdQpy/
+  eYOoOJYtD5w4wWxxe9ILR4uu32+wWb45PZ7I4c3shk8XNT99YLVbvecHswO4xq6GXzWPnrLvs
+  Hr+2rWHxWH5wGpPH+31X2Tw+b5ILYItizcxLyq9IYM14NvUwa8F1gYqOg83sDYyHeLsYOTmEB
+  P4zSnxZp9fFyAVkv2CUOHLsExtIQljAS6L72iQmEFtEQF1iakcPG0gRs8ARRolFc84xQnR0Mk
+  rcuvOZBaSKTUBbYsuWX0BVHBy8ArYSF5bZgIRZBFQlzrY2gw0SFQiX6LixA8zmFRCUODnzCVg
+  rp4CdxMyFq8FsZgELiZnzzzNC2OISt57MZ4Kw5SW2v53DDGJLCChILOz8xwZhJ0gse3mHeQKj
+  4CwkY2chGTULyahZSEYtYGRZxWiaVJSZnlGSm5iZo2toYKBraGika6hrYamXWKWbpFdarJuaW
+  Fyia6iXWF6sV1yZm5yTopeXWrKJERhXKQWMkTsY973+oHeIUZKDSUmUd4t6X7wQX1J+SmVGYn
+  FGfFFpTmrxIUYZDg4lCV5pbaCcYFFqempFWmYOMMZh0hIcPEoivDlaQGne4oLE3OLMdIjUKUZ
+  FKXFef5A+AZBERmkeXBssrVxilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMx7HGQ8T2ZeCdz0
+  V0CLmYAW2/b3gCwuSURISTUwGbgUGTvN21rj85bTdZV/pt6b49Jh9/r72W0Nu9Y0VD3uE/g36
+  6om35Lzt7V2y7LYKdnddD4SVOX85q7hbbGlD8L6Lsc8lrmvea/+FGMP7/Yt000enZv8dD7D7Z
+  4dBY2hCd+u94owvVxiu3PPMoPArV01b5fMr5E9G6Nb9tU83PCSF1snU7jLScnPXa1HzktcXDn
+  n9/yFp5+XrKu0/BfTuSaxROuFT+OyoG3aQTzLtp7586JhasDf+jDRnPlTPodLnq58b8l+uM7l
+  h7WbWYSjXhzHI2XXdQG2TvUrX0178GlvlEtp9t4H3uqfp7C++v5+0ffG2v0lC97MWed/ZopdW
+  nfzvvtSjCVL4m/1mPS7K7EUZyQaajEXFScCAEWiOxSmAwAA
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-16.tower-395.messagelabs.com!1603152911!349945!1
+X-Originating-IP: [103.30.234.6]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 23711 invoked from network); 20 Oct 2020 00:15:13 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-16.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 20 Oct 2020 00:15:13 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id A9FBD56AB61561B8150B;
+        Tue, 20 Oct 2020 08:15:09 +0800 (CST)
+Received: from localhost.localdomain (10.46.57.111) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Mon, 19 Oct
+ 2020 17:15:05 -0700
+Subject: Re: [External] Re: [PATCH 0/3] Lenovo lap and palm sensor support
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     <njoshi1@lenovo.com>, <dmitry.torokhov@gmail.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-input@vger.kernel.org>, <jeff@labundy.com>,
+        <anthony.wong@canonical.com>, <hadess@hadess.net>
+References: <markpearson@lenovo.com>
+ <20201015135717.384610-1-markpearson@lenovo.com>
+ <c49d5d8a-4c20-f130-8218-1928beb3b565@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <66b2ded0-44bc-759a-339b-91c25bf30b7f@lenovo.com>
+Date:   Mon, 19 Oct 2020 20:15:03 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+In-Reply-To: <c49d5d8a-4c20-f130-8218-1928beb3b565@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.46.57.111]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 12:42:15PM -0700, Nick Desaulniers wrote:
-> On Sat, Oct 17, 2020 at 10:43 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sat, Oct 17, 2020 at 09:09:28AM -0700, trix@redhat.com wrote:
-> > > From: Tom Rix <trix@redhat.com>
-> > >
-> > > This is a upcoming change to clean up a new warning treewide.
-> > > I am wondering if the change could be one mega patch (see below) or
-> > > normal patch per file about 100 patches or somewhere half way by collecting
-> > > early acks.
-> >
-> > Please break it up into one-patch-per-subsystem, like normal, and get it
-> > merged that way.
-> >
-> > Sending us a patch, without even a diffstat to review, isn't going to
-> > get you very far...
+On 19/10/2020 14:49, Hans de Goede wrote:
+> Hi,
 > 
-> Tom,
-> If you're able to automate this cleanup, I suggest checking in a
-> script that can be run on a directory.  Then for each subsystem you
-> can say in your commit "I ran scripts/fix_whatever.py on this subdir."
->  Then others can help you drive the tree wide cleanup.  Then we can
-> enable -Wunreachable-code-break either by default, or W=2 right now
-> might be a good idea.
+> On 10/15/20 3:57 PM, Mark Pearson wrote:
+>> This patch series is to add support for the Lenovo lap and palm sensors.
+>> The original lap sensor implementation used a sysfs API but after
+>> consultation with the kernel maintainers we agreed on using the input
+>> subsystem instead.
+>> The first patch just adds the new defines needed.
+>> The second patch adds the implementation needed for the palm sensor.
+>> The third patch adds the implementation needed for the lap sensor.
+>>
+>> This means currently thinkpad_acpi.c has both the sysfs and input dev
+>> implementations. I will add a follow-on patch to remove the sysfs
+>> interface once I've confirmed this is OK with the few people who are
+>> using this in user space and given them some time to migrate to the
+>> input dev implementation.
+>>
+>> Mark Pearson (3):
+>>    Adding event codes for Lenovo lap and palm sensors
+>>    Add support for Lenovo palm sensor.
+>>    Add support for Lenovo lap sensor
+> 
+> Not a full review, but one short remark, all your patch
+> subjects e.g. "Adding event codes for Lenovo lap and palm sensors"
+> are missing subsystem prefixes, if you do e.g.
+> 
+> git log include/uapi/linux/input-event-codes.h
+> 
+> You see subjects like "Input: allocate keycode for Fn + right shift",
+> etc. and for the the thinkpad_acpi.c code you get:
+> "platform/x86: thinkpad_acpi: Map Clipping tool hotkey to KEY_SELECTIVE_SCREENSHOT"
+> 
+> So your patch subjects should look something like this:
+> 
+> "Input: add event codes for lap and palmrest proximity switches"
+> (note I fixed more here then just the missing prefix)
+> 
+> "platform/x86: thinkpad_acpi: Add support for Lenovo palm sensor"
+> (note no . at the end)
+> 
+> "platform/x86: thinkpad_acpi: Add support for Lenovo lap sensor"
+> 
+> If you can send out a v2 with this fixed, that might help to
+> go Dmitry's attention for the first patch.
+> 
+> Regards,
+> 
+> Hans
+> 
+Thanks Hans,
+I knew about that too detail, so slap on the wrist for me. I was too 
+focused on doing a series of patches for the first time...
 
-I remember using clang-modernize in the past to fix issues very
-similar to this, if clang machinery can generate the warning, can't
-something like clang-tidy directly generate the patch?
+Updated version coming out shortly.
 
-You can send me a patch for drivers/infiniband/* as well
-
-Thanks,
-Jason
+Mark
+Mark
