@@ -2,114 +2,246 @@ Return-Path: <SRS0=42+Y=D3=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB9C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 21:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B764C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 22:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB1E222C8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 21:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7DEB22256
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 22:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eepUgAzS"
+	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="P6bxgFWE";
+	dkim=pass (1024-bit key) header.d=cavoj.net header.i=@cavoj.net header.b="P6bxgFWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438651AbgJTVJE (ORCPT
+        id S2410382AbgJTWJ4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Oct 2020 17:09:04 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:56324 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2438622AbgJTVJD (ORCPT
+        Tue, 20 Oct 2020 18:09:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410337AbgJTWJ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Oct 2020 17:09:03 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09KKwrjU013545;
-        Tue, 20 Oct 2020 21:08:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=nh681FgzSi6oU3Xbp75yVtQG/3W2/FQH6CYlF5jtYf0=;
- b=eepUgAzSpkW9EzoJcrzPut6HNrhPDiYKERrZi3WC1dGOZgTdqQEMIZnflgQHRKkF7Tj8
- 6iwYdVZPVcJqr7ga33iyf8VpJXjdNB7Njuq2FnswMMOsZpo8crM29Ns52e1HrD8bIy36
- CVAEY9gps/GmOTKYx+9b+2cP9raVx9FE9beksAWwCTznBT21+5BJcXPhAf+UJ/VSnU0o
- tcgb5Zwm/IDu0XZ3D+I+KmoNVPaLaJUIfyw/Blr+q7lokPO/bIonV7Oe6l3j1rEv6P+M
- ZGEd8I79k0KbrmfYZnifxdGAu6QtVUzEcvszUbyEFSszwAhVGq0Mo5oVHkeRSRsIguQT 4Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 347p4awhyn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 20 Oct 2020 21:08:29 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09KL06tG120550;
-        Tue, 20 Oct 2020 21:06:28 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 348a6nn1wn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Oct 2020 21:06:28 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09KL6RoO028303;
-        Tue, 20 Oct 2020 21:06:27 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Oct 2020 14:06:26 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 97D8C6A00D6; Tue, 20 Oct 2020 17:08:08 -0400 (EDT)
-Date:   Tue, 20 Oct 2020 17:08:08 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     eric.snowberg@oracle.com, john.haxby@oracle.com,
-        todd.vierling@oracle.com
-Cc:     David Howells <dhowells@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Greg KH <greg@kroah.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        James Morris <jmorris@namei.org>
-Subject: Re: [PATCH RFC UEK5 5/7] debugfs: Restrict debugfs when the kernel
- is locked down
-Message-ID: <20201020210808.GB21080@char.us.oracle.com>
-References: <20201020210004.18977-1-konrad.wilk@oracle.com>
- <20201020210004.18977-6-konrad.wilk@oracle.com>
+        Tue, 20 Oct 2020 18:09:56 -0400
+Received: from lithium.sammserver.com (lithium.sammserver.com [IPv6:2a01:4f8:c2c:b7df::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA07EC0613CE;
+        Tue, 20 Oct 2020 15:09:55 -0700 (PDT)
+Received: from mail.sammserver.com (sammserver.wg [10.32.40.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by lithium.sammserver.com (Postfix) with ESMTPS id AC979312B5A9;
+        Wed, 21 Oct 2020 00:09:53 +0200 (CEST)
+Received: by mail.sammserver.com (Postfix, from userid 5011)
+        id 6ADE11131A2F; Wed, 21 Oct 2020 00:09:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
+        t=1603231793; bh=ScXfsn7DKD+h9XykNzeXRwR/8NwVOc6Xb7EsCRwcLnc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P6bxgFWElAsgU/wCkou6Rpsdet73BakcN3KfOQnj4rsv33cFQ1W7l/y4P6hEcrlka
+         7Io4tEDfRjwPrxUju3WmXa+9C9issDXCdTrNRQx5Lwg5md48fjw4aiR7HYEjU3J62r
+         QDXsQEpDspbX9qbwRewyvbHvPrcoI4drV6fkJcoo=
+Received: from fastboi.localdomain (fastboi.wg [10.32.40.5])
+        by mail.sammserver.com (Postfix) with ESMTP id 1798B1131A2C;
+        Wed, 21 Oct 2020 00:09:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cavoj.net; s=email;
+        t=1603231793; bh=ScXfsn7DKD+h9XykNzeXRwR/8NwVOc6Xb7EsCRwcLnc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P6bxgFWElAsgU/wCkou6Rpsdet73BakcN3KfOQnj4rsv33cFQ1W7l/y4P6hEcrlka
+         7Io4tEDfRjwPrxUju3WmXa+9C9issDXCdTrNRQx5Lwg5md48fjw4aiR7HYEjU3J62r
+         QDXsQEpDspbX9qbwRewyvbHvPrcoI4drV6fkJcoo=
+Received: by fastboi.localdomain (Postfix, from userid 1000)
+        id F383F14209CF; Wed, 21 Oct 2020 00:09:52 +0200 (CEST)
+From:   =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Samuel=20=C4=8Cavoj?= <samuel@cavoj.net>
+Subject: [PATCH v3] platform/x86: asus-wmi: Add support for SW_TABLET_MODE on UX360
+Date:   Wed, 21 Oct 2020 00:09:44 +0200
+Message-Id: <20201020220944.1075530-1-samuel@cavoj.net>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201020210004.18977-6-konrad.wilk@oracle.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9780 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=927
- bulkscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010200143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9780 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 adultscore=0 mlxlogscore=947 impostorscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010200143
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Oct 20, 2020 at 05:00:02PM -0400, Konrad Rzeszutek Wilk wrote:
-> Disallow opening of debugfs files that might be used to muck around when
+The UX360CA has a WMI device id 0x00060062, which reports whether the
+lid is flipped in tablet mode (1) or in normal laptop mode (0).
 
-..snip..
+Add a quirk (quirk_asus_use_lid_flip_devid) for devices on which this
+WMI device should be used to figure out the SW_TABLET_MODE state, as
+opposed to the quirk_asus_use_kbd_dock_devid.
 
-> [Backport:
->  Since UEK5 by default is confidentiality we have to outright
->  disallow debugfs if the default mode is selected. Hence the
->  call to __kernel_is_confidentiality_mode to help us.
-> 
->  If we are in integrity lockdown mode, we can enable debugfs
->  IF they match with the above 1-3 criteria]
+Additionally, the device needs to be queried on resume and restore
+because the firmware does not generate an event if the laptop is put to
+sleep while in tablet mode, flipped to normal mode, and later awoken.
 
-<sigh>
+It is assumed other UX360* models have the same WMI device. As such, the
+quirk is applied to devices with DMI_MATCH(DMI_PRODUCT_NAME, "UX360").
+More devices with this feature need to be tested and added accordingly.
 
-And that is what I get for _not_ doing --suppress-cc=all
+The reason for using an allowlist via the quirk mechanism is that the new
+WMI device (0x00060062) is also present on some models which do not have
+a 360 degree hinge (at least FX503VD and GL503VD from Hans' DSTS
+collection) and therefore its presence cannot be relied on.
 
-My apologies for spamming you all!
+Signed-off-by: Samuel Čavoj <samuel@cavoj.net>
+Cc: Hans de Goede <hdegoede@redhat.com>
+---
+changed v2 -> v3:
+    - added check on resume from sleep and restore
+---
+ drivers/platform/x86/asus-nb-wmi.c         | 15 +++++++++
+ drivers/platform/x86/asus-wmi.c            | 38 ++++++++++++++++++++++
+ drivers/platform/x86/asus-wmi.h            |  1 +
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 4 files changed, 55 insertions(+)
 
-<goes to hide in the corner of shame>
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index 1d9fbabd02fb..d41d7ad14be0 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -119,6 +119,11 @@ static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
+ 	.use_kbd_dock_devid = true,
+ };
+ 
++static struct quirk_entry quirk_asus_use_lid_flip_devid = {
++	.wmi_backlight_set_devstate = true,
++	.use_lid_flip_devid = true,
++};
++
+ static int dmi_matched(const struct dmi_system_id *dmi)
+ {
+ 	pr_info("Identified laptop model '%s'\n", dmi->ident);
+@@ -520,6 +525,16 @@ static const struct dmi_system_id asus_quirks[] = {
+ 		},
+ 		.driver_data = &quirk_asus_use_kbd_dock_devid,
+ 	},
++	{
++		.callback = dmi_matched,
++		.ident = "ASUS ZenBook Flip UX360",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			/* Match UX360* */
++			DMI_MATCH(DMI_PRODUCT_NAME, "UX360"),
++		},
++		.driver_data = &quirk_asus_use_lid_flip_devid,
++	},
+ 	{},
+ };
+ 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 39e1a6396e08..864c608ad569 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -63,6 +63,7 @@ MODULE_LICENSE("GPL");
+ #define NOTIFY_KBD_BRTTOGGLE		0xc7
+ #define NOTIFY_KBD_FBM			0x99
+ #define NOTIFY_KBD_TTP			0xae
++#define NOTIFY_LID_FLIP			0xfa
+ 
+ #define ASUS_WMI_FNLOCK_BIOS_DISABLED	BIT(0)
+ 
+@@ -375,6 +376,20 @@ static int asus_wmi_input_init(struct asus_wmi *asus)
+ 		}
+ 	}
+ 
++	if (asus->driver->quirks->use_lid_flip_devid) {
++		result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
++        if (result < 0)
++			asus->driver->quirks->use_lid_flip_devid = 0;
++		if (result >= 0) {
++			input_set_capability(asus->inputdev, EV_SW, SW_TABLET_MODE);
++			input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++		} else if (result == -ENODEV) {
++			pr_err("This device has lid_flip quirk but got ENODEV checking it. This is a bug.");
++		} else {
++			pr_err("Error checking for lid-flip: %d\n", result);
++		}
++	}
++
+ 	err = input_register_device(asus->inputdev);
+ 	if (err)
+ 		goto err_free_dev;
+@@ -394,6 +409,16 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ 	asus->inputdev = NULL;
+ }
+ 
++/* Tablet mode ****************************************************************/
++
++static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus) {
++	int result = asus_wmi_get_devstate_simple(asus, ASUS_WMI_DEVID_LID_FLIP);
++	if (result >= 0) {
++		input_report_switch(asus->inputdev, SW_TABLET_MODE, result);
++		input_sync(asus->inputdev);
++	}
++}
++
+ /* Battery ********************************************************************/
+ 
+ /* The battery maximum charging percentage */
+@@ -2128,6 +2153,11 @@ static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
+ 		return;
+ 	}
+ 
++	if (asus->driver->quirks->use_lid_flip_devid && code == NOTIFY_LID_FLIP) {
++		lid_flip_tablet_mode_get_state(asus);
++		return;
++	}
++
+ 	if (asus->fan_boost_mode_available && code == NOTIFY_KBD_FBM) {
+ 		fan_boost_mode_switch_next(asus);
+ 		return;
+@@ -2719,6 +2749,10 @@ static int asus_hotk_resume(struct device *device)
+ 
+ 	if (asus_wmi_has_fnlock_key(asus))
+ 		asus_wmi_fnlock_update(asus);
++
++	if (asus->driver->quirks->use_lid_flip_devid)
++		lid_flip_tablet_mode_get_state(asus);
++
+ 	return 0;
+ }
+ 
+@@ -2757,6 +2791,10 @@ static int asus_hotk_restore(struct device *device)
+ 
+ 	if (asus_wmi_has_fnlock_key(asus))
+ 		asus_wmi_fnlock_update(asus);
++
++	if (asus->driver->quirks->use_lid_flip_devid)
++		lid_flip_tablet_mode_get_state(asus);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/platform/x86/asus-wmi.h b/drivers/platform/x86/asus-wmi.h
+index 1a95c172f94b..b302415bf1d9 100644
+--- a/drivers/platform/x86/asus-wmi.h
++++ b/drivers/platform/x86/asus-wmi.h
+@@ -34,6 +34,7 @@ struct quirk_entry {
+ 	bool wmi_backlight_set_devstate;
+ 	bool wmi_force_als_set;
+ 	bool use_kbd_dock_devid;
++	bool use_lid_flip_devid;
+ 	int wapf;
+ 	/*
+ 	 * For machines with AMD graphic chips, it will send out WMI event
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 897b8332a39f..2f274cf52805 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -62,6 +62,7 @@
+ 
+ /* Misc */
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
++#define ASUS_WMI_DEVID_LID_FLIP		0x00060062
+ 
+ /* Storage */
+ #define ASUS_WMI_DEVID_CARDREADER	0x00080013
+-- 
+2.29.0
 
