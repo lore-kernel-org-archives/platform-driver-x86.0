@@ -2,236 +2,160 @@ Return-Path: <SRS0=42+Y=D3=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA6C433E7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 00:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D561C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 08:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FCB20637
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 00:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA4322282
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Oct 2020 08:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q8gn83IP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389315AbgJTAQj (ORCPT
+        id S2392148AbgJTItK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Oct 2020 20:16:39 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:61265 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbgJTAQj (ORCPT
+        Tue, 20 Oct 2020 04:49:10 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41530 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389490AbgJTItF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Oct 2020 20:16:39 -0400
-Received: from [100.112.1.203] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 6B/76-19530-56C2E8F5; Tue, 20 Oct 2020 00:16:37 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRWlGSWpSXmKPExsWSLveKTTdFpy/
-  eoHGhkcWhcweYLQ4vesFo8fXbbXaLN8enM1mcub2QyeLmp2+sFqv3vGB2YPeY1dDL5rFz1l12
-  j1/b1rB4LD84jcnj/b6rbB6fN8kFsEWxZuYl5VcksGb8XtfBVNCpWrHlglYD4yz5LkYuDiGB/
-  4wSCyddYIFw3jBKvFw8l62LkZODTUBbYsuWX0A2B4eIgIzEh7WeIDXMArcZJZ7vagCrERYIkz
-  iwZzcziM0ioCpxufEhI4jNK2Ajse3CJiYQW0JAXuJp73JmkDmcArYSHxZ7g4SFgFqPH7nPDlE
-  uKHFy5hMWEJsZqLx562xmCFtC4uCLF8wQYxQk3s69zwZhJ0gse3mHeQKjwCwk7bOQtM9C0r6A
-  kXkVo1lSUWZ6RkluYmaOrqGBga6hoZGuka6hsaleYpVukl5psW5qYnGJrqFeYnmxXnFlbnJOi
-  l5easkmRmCUpBQwte9gbH3zQe8QoyQHk5Io7xb1vnghvqT8lMqMxOKM+KLSnNTiQ4wyHBxKEr
-  zS2kA5waLU9NSKtMwcYMTCpCU4eJREeHO0gNK8xQWJucWZ6RCpU4yKUuK8LzWBEgIgiYzSPLg
-  2WJK4xCgrJczLyMDAIMRTkFqUm1mCKv+KUZyDUUmY9zjIeJ7MvBK46a+AFjMBLbbt7wFZXJKI
-  kJJqYPJJyO/5euZ1puQkVcaZps3X1GZ/aXAWZDz3VMZv70/brfvONKwRUZfu320cyt9Qf+zi1
-  hpBBRV/xtmThBxm/9D/HeGun2sSsO75v+v6/75OLFz84n0bf42h8c3kLonZ6xeXXrsx8ff5XP
-  an/LwtuyU+2u/KMFpfluD5Wjd9xuQMy235HCZhCkr2okLnvffUVgXmbi7uqOrNeyeur5uYvWW
-  DQWPYpduXaizPl5yYek3mVEhEgWa4hZ3E08tfPsmIOrl//Di1Jivpj87Wz6fSNl0xu1K87LVg
-  7Evt1J+KNp+r+37t3LlbiFljl5VNSVbnnyZZTuf/KtviLyfz6pp2b/trZL2IsVnrgJNR8smpS
-  izFGYmGWsxFxYkAIPzOFI0DAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-29.tower-386.messagelabs.com!1603152994!280886!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8827 invoked from network); 20 Oct 2020 00:16:36 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-29.tower-386.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 20 Oct 2020 00:16:36 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id E3913BDF76B17A0CCB25;
-        Tue, 20 Oct 2020 08:16:32 +0800 (CST)
-Received: from localhost.localdomain.com (10.64.93.219) by
- reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2044.4; Mon, 19 Oct 2020 17:16:28 -0700
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <njoshi1@lenovo.com>, <hdegoede@redhat.com>,
-        <dmitry.torokhov@gmail.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-input@vger.kernel.org>, <jeff@labundy.com>,
-        <anthony.wong@canonical.com>, <hadess@hadess.net>
-Subject: [PATCH v2 3/3] platform/x86: thinkpad_acpi: Add support for Lenovo lap sensor
-Date:   Mon, 19 Oct 2020 20:15:56 -0400
-Message-ID: <20201020001556.388099-3-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201020001556.388099-1-markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
- <20201020001556.388099-1-markpearson@lenovo.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.93.219]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+        Tue, 20 Oct 2020 04:49:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09K8i7rI188082;
+        Tue, 20 Oct 2020 08:48:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : message-id :
+ content-type : mime-version : subject : date : in-reply-to : cc : to :
+ references; s=corp-2020-01-29;
+ bh=UBSvDuZX45rcdCwz1yIzvCzCqfd2joSCizhea4x+Xao=;
+ b=q8gn83IPPWdFm1HT3taLhd9DUF/VTUU+yXtsd8f9nD6wriupB19ul4FsqzWGdtIZMcde
+ GW+G9oeRVHaGmJfZ8muagtVwvuWLE6AywXuhak+OXkSgdFP6EIR2H2OqKDUhR7yIW2Vz
+ zpamQMFlTWRfwdWHBA7I0p8HYGgPlEg7NOi5pNpKeOCI5/Zqu82RI3DyvlSb3YeNhNvu
+ 1nAbi2LxPOnr/RtC4QoVHdNGHfdCdQB+x9xvmqx+BqjtbEr8lrxt1aMjIali/bjhTn7W
+ dzqjxrXdOv4FjsFo2kwRKNjQX5RScYby9/qqSUitUFXIKeMy4YBvXYVTZYkhax1TMfnU 0w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 347s8msmp0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Oct 2020 08:48:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09K8is45150623;
+        Tue, 20 Oct 2020 08:48:12 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 348ahw07cp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Oct 2020 08:48:12 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 09K8mAEe159753;
+        Tue, 20 Oct 2020 08:48:10 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 348ahw07bh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Oct 2020 08:48:10 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09K8lvTX021447;
+        Tue, 20 Oct 2020 08:47:58 GMT
+Received: from [10.175.164.120] (/10.175.164.120)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 20 Oct 2020 01:47:57 -0700
+From:   John Haxby <john.haxby@oracle.com>
+Message-Id: <27A23102-A7F5-48C5-8972-48CE4C283C6E@oracle.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
+Subject: Re: [Ocfs2-devel] [RFC] treewide: cleanup unreachable breaks
+Date:   Tue, 20 Oct 2020 09:47:45 +0100
+In-Reply-To: <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+Cc:     Tom Rix <trix@redhat.com>, alsa-devel@alsa-project.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, nouveau@lists.freedesktop.org,
+        storagedev@microchip.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        virtualization@lists.linux-foundation.org,
+        keyrings@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ath10k@lists.infradead.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-samsung-soc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        linux-acpi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-pci@vger.kernel.org, spice-devel@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-nfc@lists.01.org, linux-pm@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-gpio@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-amlogic@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, George Burgess <gbiv@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-usb@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, patches@opensource.cirrus.com,
+        bpf <bpf@vger.kernel.org>, ocfs2-devel@oss.oracle.com,
+        linux-power@fi.rohmeurope.com
+To:     Nick Desaulniers <ndesaulniers@google.com>
+References: <20201017160928.12698-1-trix@redhat.com>
+ <20201018054332.GB593954@kroah.com>
+ <CAKwvOdkR_Ttfo7_JKUiZFVqr=Uh=4b05KCPCSuzwk=zaWtA2_Q@mail.gmail.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.4)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9779 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 impostorscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010200059
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use input device event support for notifying userspace of lap mode sensor
-state changes.
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 75 ++++++++++++++++++++++------
- 1 file changed, 59 insertions(+), 16 deletions(-)
+--Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 5ddf2775fb06..c20b9902270b 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4013,7 +4013,7 @@ static bool hotkey_notify_usrevent(const u32 hkey,
- }
- 
- static void thermal_dump_all_sensors(void);
--static void proxsensor_refresh(void);
-+static void proxsensor_refresh(bool palm, bool lap);
- 
- static bool hotkey_notify_6xxx(const u32 hkey,
- 				 bool *send_acpi_ev,
-@@ -4081,7 +4081,7 @@ static bool hotkey_notify_6xxx(const u32 hkey,
- 	case TP_HKEY_EV_PALM_DETECTED:
- 	case TP_HKEY_EV_PALM_UNDETECTED:
- 		/* palm detected  - pass on to event handler */
--		proxsensor_refresh();
-+		proxsensor_refresh(true /* palm */, false /* lap */);
- 		return true;
- 
- 	default:
-@@ -9929,6 +9929,23 @@ static struct ibm_struct dytc_driver_data = {
- struct input_dev *tpacpi_sw_dev;
- bool has_palmsensor;
- bool palmsensor_state;
-+bool has_lapsensor;
-+bool lapsensor_state;
-+
-+static int lapsensor_get(bool *present, bool *state)
-+{
-+	acpi_handle dytc_handle;
-+	int output;
-+
-+	*present = false;
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle)))
-+		return -ENODEV;
-+	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", DYTC_CMD_GET))
-+		return -EIO;
-+	*present = true; /*If we get his far, we have lapmode support*/
-+	*state = output & BIT(DYTC_GET_LAPMODE_BIT) ? true : false;
-+	return 0;
-+}
- 
- static int palmsensor_get(bool *present, bool *state)
- {
-@@ -9945,36 +9962,56 @@ static int palmsensor_get(bool *present, bool *state)
- 	return 0;
- }
- 
--static void proxsensor_refresh(void)
-+static void proxsensor_refresh(bool palm, bool lap)
- {
- 	bool new_state;
- 	int err;
- 
--	if (has_palmsensor) {
-+	if (palm && has_palmsensor) {
- 		err = palmsensor_get(&has_palmsensor, &new_state);
--		if (err)
--			return;
--		if (new_state != palmsensor_state) {
-+		if (!err && (new_state != palmsensor_state)) {
- 			input_report_switch(tpacpi_sw_dev, SW_PALMREST_PROXIMITY, new_state);
- 			input_sync(tpacpi_sw_dev);
- 			palmsensor_state = new_state;
- 		}
- 	}
-+
-+	if (lap && has_lapsensor) {
-+		err = lapsensor_get(&has_lapsensor, &new_state);
-+		if (!err && (new_state != lapsensor_state)) {
-+			input_report_switch(tpacpi_sw_dev, SW_LAP_PROXIMITY, new_state);
-+			input_sync(tpacpi_sw_dev);
-+			lapsensor_state = new_state;
-+		}
-+	}
- }
- 
- static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
- {
--	int palm_err;
-+	int palm_err, lap_err, err;
- 
-+	/* Make sure globals are set to a sensible initial value */
-+	has_palmsensor = false;
-+	has_lapsensor = false;
- 	palm_err = palmsensor_get(&has_palmsensor, &palmsensor_state);
-+	lap_err = lapsensor_get(&has_lapsensor, &lapsensor_state);
-+
- 	/* If support isn't available (ENODEV) then don't return an error */
--	if (palm_err == -ENODEV)
-+	if ((palm_err == -ENODEV) && (lap_err == -ENODEV))
- 		return 0;
--	/* For all other errors we can flag the failure */
-+	/* If both sensors error out - return an error */
-+	if (palm_err && lap_err)
-+		return palm_err ? palm_err : lap_err;
-+	/*
-+	 * If just one sensor not available, we still want the input device,
-+	 * so just flag it and carry on
-+	 */
- 	if (palm_err)
--		return palm_err;
-+		pr_info("Palm sensor returned error %d", palm_err);
-+	if (lap_err)
-+		pr_info("Lap sensor returned error %d", lap_err);
- 
--	if (has_palmsensor) {
-+	if (has_palmsensor || has_lapsensor) {
- 		tpacpi_sw_dev = input_allocate_device();
- 		if (!tpacpi_sw_dev)
- 			return -ENOMEM;
-@@ -9990,10 +10027,14 @@ static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
- 			input_set_capability(tpacpi_sw_dev, EV_SW, SW_PALMREST_PROXIMITY);
- 			input_report_switch(tpacpi_sw_dev, SW_PALMREST_PROXIMITY, palmsensor_state);
- 		}
--		palm_err = input_register_device(tpacpi_sw_dev);
--		if (palm_err) {
-+		if (has_lapsensor) {
-+			input_set_capability(tpacpi_sw_dev, EV_SW, SW_LAP_PROXIMITY);
-+			input_report_switch(tpacpi_sw_dev, SW_LAP_PROXIMITY, lapsensor_state);
-+		}
-+		err = input_register_device(tpacpi_sw_dev);
-+		if (err) {
- 			input_free_device(tpacpi_sw_dev);
--			return palm_err;
-+			return err;
- 		}
- 	}
- 	return 0;
-@@ -10057,8 +10098,10 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		mutex_unlock(&kbdlight_mutex);
- 	}
- 
--	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-+	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
- 		dytc_lapmode_refresh();
-+		proxsensor_refresh(false /* palm */, true /* lap */);
-+	}
- 
- }
- 
--- 
-2.28.0
 
+
+> On 19 Oct 2020, at 20:42, Nick Desaulniers <ndesaulniers@google.com> =
+wrote:
+>=20
+> We probably should add all 3 to W=3D2 builds (wrapped in cc-option).
+> I've filed https://github.com/ClangBuiltLinux/linux/issues/1180 to
+> follow up on.
+
+It looks as though the URL mangling has been fixed.   If anyone sees =
+that specific URL mangled, please let me know.
+
+jch
+
+--Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iHUEAREIAB0WIQT+pxvb11CFWUkNSOVFC7t+lC+jyAUCX46kMQAKCRBFC7t+lC+j
+yBKiAP90JVXdPzuAwtRGkROpw1eVCo7wCaZ5nOa8Oo0sN6gC9gD/S0eGTqQhmg+n
+sXPJxPYqQsg09qmS6k/HX+AP5Oz2AMo=
+=xx66
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_9F9749E9-79EA-41AB-B516-003ECE07BEE3--
