@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D642C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C1CC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C68DA2224A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA93F2222C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:14:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHpkHWrU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kluEBCtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1783243AbgJZPJd (ORCPT
+        id S1783502AbgJZPO6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Oct 2020 11:09:33 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35425 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1783109AbgJZPJc (ORCPT
+        Mon, 26 Oct 2020 11:14:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33208 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1783148AbgJZPO6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Oct 2020 11:09:32 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f38so6238908pgm.2
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 08:09:32 -0700 (PDT)
+        Mon, 26 Oct 2020 11:14:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id l18so6260937pgg.0
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 08:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2dGRXdJVnzW6urkZcDVmJMG8iTthDxPgDTGqLINPe4Y=;
-        b=IHpkHWrUS53J9oUCe2fKP+IJYNY4Pgc5kaxh3Be5eDsks8Q+Y5T4+CAp+ZYqKBDnCI
-         fMjsfM6RY4faT9NQwlmtPg6oSfwH/meuPdbLTWaiOS18ETE4/uZLD4QMqmEM4VK2+I5+
-         anQ/rb850FM3FeHv7E1qte5pXqqXHedU0vYAsddzkskmycIlX+Ntvoq6gAXzacW43C0T
-         I2JXNzyxI0oD8ls0YkDntKXbKeiJmVDr1mV6D46IKlJLlRUZZRRWA27GOPhPzMRaWmoL
-         InP353N1UwLcxmB/szojJBIOkMEcjs8g/DYovKT9VocRUTNIWjpEg9itQAAtaxMwpjaG
-         mkvQ==
+        bh=8j38Iju7n+T751hoL1D6EB4bwi/dc7imtRdkYa5mvDk=;
+        b=kluEBCtUcBFI7/Q+U+d4Wnsvjtp8iX8yQaelAlcvfG833VFCR2PSYPH6yjMysHaOEq
+         lVfo3wizC+3gLSlMqhSqBPdGAOQem/fQ6Dv4Xt8CAKiN+QUXWAIQCSjJ/OHgZTdOXiLB
+         XVRGqjTqYyqkgKkhDhaRBzPzNkVQPCvAA8HXNA85yW5vqvdhKbvTvdWxEMyRosaayxD1
+         s0nRFOjg9zvpsCg5rKX0GnxE1rYvf9rcWSmA41JLCfzK5xn20mOT6pKVOlaD8ir0I98z
+         USFcFNfz9MwTx1/JinGThMBJKFOsr0WZM2m/co82KV6YvuY9PosuZD8sw8+do7MltzE9
+         AtqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2dGRXdJVnzW6urkZcDVmJMG8iTthDxPgDTGqLINPe4Y=;
-        b=lm/eF259e/QQh42Ssgp6g1jj4prorv7iQSvyx5ueU8FisIVe9Cxj6Yr4mkzB66AUfD
-         LFDSDRjmuHMUWT2tpdLT2fK1OrNF34dkPgL5uTZStwlAdiKg5sG+YezqIDVGcxnbyAto
-         nO6ZJn19/6GzPVtBCRp65fvlMSrtfFV3Tws7YSPZOUib/3Fu3SlS6GHLeM/YmqxgOEd3
-         uHreMXBlUUkmTr6Wc4bi/V0fFRSyEjCZrpSPpq5XCYPcDWY4bdZ+MrYfWBF5R3GPFL0E
-         rAr5b0cfxoI0f6GhklJwvbY+F6X7jHkuABC9ElnWhY47orRXSGkGFhHzpWFvi4YCfDnk
-         sAkg==
-X-Gm-Message-State: AOAM5308pW4jmhhA0q+FR3QCjNBCXBrgCuxzrTlqejxKzQiqSxR6hguh
-        16soFkKPHHw5d5wFABqp5xLvP8DaIMBCxffmNTk=
-X-Google-Smtp-Source: ABdhPJyLUZgoEevVpox7xIjCUFLPBxdUdhn//bzMN+hFFLRpo4oyxRrEdMFbrexA5Jysh6I5RXTtVh581Hq3eDh1v08=
-X-Received: by 2002:a63:1e02:: with SMTP id e2mr13628952pge.74.1603724971885;
- Mon, 26 Oct 2020 08:09:31 -0700 (PDT)
+        bh=8j38Iju7n+T751hoL1D6EB4bwi/dc7imtRdkYa5mvDk=;
+        b=JO/ziaLqScoMAFKN1qyBVpqbHkdmEtKlIoMZVAsf9pXlr8nbsQvrJxZb5CCARz2TOz
+         8T7v0eKzhFZzBvXuoFAgUAT7aY0nnTbZIeqpRH4mg56dRijEcfi26tH7kJ4F28pCnMHe
+         V8O7++w3a0dzpn0O4DuX7h2xeI3UC0ponYgga6UXb5Rl4uMCdx3sWn8dGrtrTYNm2G8y
+         kROtPQ5WTOZc5o84QYQR4M5yL9KLTpKjeHMzeHmtmSxrrpQ9nLiXPU08A73p1p5b9z3L
+         iPUFUWkPmKqJjGpc6ZfHrUKnm5xbsd2aOH1Zt9dnH2kmC2oS9tKapESkGWjFBOR/J4/T
+         FADg==
+X-Gm-Message-State: AOAM5318zxkhvSt4F7PkFhXoORDK6rJi/e4PUs/YBcv14Z96GdJhFc1G
+        doKoDEu4YlS8wnDJycHNg9BtuflqV1O+66dkqVXzMJlhR1k=
+X-Google-Smtp-Source: ABdhPJy3ho48vSZjIm0IGE68q68wtd5XHzUyiqNTWerr/1szxi30KGpxywTGfJUcuEuIvvLBgfD49TcNXAqXUGkvOhA=
+X-Received: by 2002:a63:d54e:: with SMTP id v14mr16330095pgi.203.1603725297465;
+ Mon, 26 Oct 2020 08:14:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20201019185628.264473-1-hdegoede@redhat.com> <20201019185628.264473-2-hdegoede@redhat.com>
-In-Reply-To: <20201019185628.264473-2-hdegoede@redhat.com>
+References: <20201019185628.264473-1-hdegoede@redhat.com>
+In-Reply-To: <20201019185628.264473-1-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 17:10:21 +0200
-Message-ID: <CAHp75VcshaqjoT4JJKxHbXFqn6Qr8LNMc1x=D=5j_wJevTzrfQ@mail.gmail.com>
-Subject: Re: [PATCH 2/6] platform/x86: acer-wmi: Cleanup ACER_CAP_FOO defines
+Date:   Mon, 26 Oct 2020 17:15:46 +0200
+Message-ID: <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] platform/x86: acer-wmi: Drop no-op set_quirks call
+ from find_quirks
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <mgross@linux.intel.com>, Lee Chun-Yi <jlee@suse.com>,
         Andy Shevchenko <andy@infradead.org>,
@@ -68,58 +69,50 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 9:57 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Mon, Oct 19, 2020 at 9:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Cleanup the ACER_CAP_FOO defines:
-> -Switch to using BIT() macro.
-> -The ACER_CAP_RFBTN flag is set, but it is never checked anywhere, drop it.
-> -Drop the unused ACER_CAP_ANY define.
+> set_quirks has a "if (!interface) return;" check at its beginning and
+> interface always is NULL when set_quirks is called from find_quirks,
+> so it is a no-op and we can drop it.
 >
+> This also allows dropping the "if (!interface) return;" from set_quirks
+> since set_quirks now always is called with interface != NULL.
+
+Is there any cover letter for this?
+
+In any case, LGTM, you may use my tag
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+I'm not sure about ACPI_EXCEPTION() use, though.
+
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/platform/x86/acer-wmi.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
+>  drivers/platform/x86/acer-wmi.c | 5 -----
+>  1 file changed, 5 deletions(-)
 >
 > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index db6167a10981..2f69d418ed3b 100644
+> index 49f4b73be513..db6167a10981 100644
 > --- a/drivers/platform/x86/acer-wmi.c
 > +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -205,14 +205,12 @@ struct hotkey_function_type_aa {
-
-Should't we add bits.h as well?
-
->  /*
->   * Interface capability flags
->   */
-> -#define ACER_CAP_MAILLED               (1<<0)
-> -#define ACER_CAP_WIRELESS              (1<<1)
-> -#define ACER_CAP_BLUETOOTH             (1<<2)
-> -#define ACER_CAP_BRIGHTNESS            (1<<3)
-> -#define ACER_CAP_THREEG                        (1<<4)
-> -#define ACER_CAP_ACCEL                 (1<<5)
-> -#define ACER_CAP_RFBTN                 (1<<6)
-> -#define ACER_CAP_ANY                   (0xFFFFFFFF)
-> +#define ACER_CAP_MAILLED               BIT(0)
-> +#define ACER_CAP_WIRELESS              BIT(1)
-> +#define ACER_CAP_BLUETOOTH             BIT(2)
-> +#define ACER_CAP_BRIGHTNESS            BIT(3)
-> +#define ACER_CAP_THREEG                        BIT(4)
-> +#define ACER_CAP_ACCEL                 BIT(5)
+> @@ -302,9 +302,6 @@ static struct quirk_entry *quirks;
 >
->  /*
->   * Interface type flags
-> @@ -1247,10 +1245,8 @@ static void __init type_aa_dmi_decode(const struct dmi_header *header, void *d)
->                 interface->capability |= ACER_CAP_THREEG;
->         if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_BLUETOOTH)
->                 interface->capability |= ACER_CAP_BLUETOOTH;
-> -       if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN) {
-> -               interface->capability |= ACER_CAP_RFBTN;
-> +       if (type_aa->commun_func_bitmap & ACER_WMID3_GDS_RFBTN)
->                 commun_func_bitmap &= ~ACER_WMID3_GDS_RFBTN;
-> -       }
+>  static void __init set_quirks(void)
+>  {
+> -       if (!interface)
+> -               return;
+> -
+>         if (quirks->mailled)
+>                 interface->capability |= ACER_CAP_MAILLED;
 >
->         commun_fn_key_number = type_aa->commun_fn_key_number;
+> @@ -648,8 +645,6 @@ static void __init find_quirks(void)
+>
+>         if (quirks == NULL)
+>                 quirks = &quirk_unknown;
+> -
+> -       set_quirks();
 >  }
+>
+>  /*
 > --
 > 2.28.0
 >
