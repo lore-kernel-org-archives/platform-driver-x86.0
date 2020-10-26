@@ -2,122 +2,155 @@ Return-Path: <SRS0=KVMw=EB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C1CC2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE81C2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA93F2222C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE4722250
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kluEBCtU"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="n1iGmsjV";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="Irff9QBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1783502AbgJZPO6 (ORCPT
+        id S1783858AbgJZP36 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Oct 2020 11:14:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33208 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1783148AbgJZPO6 (ORCPT
+        Mon, 26 Oct 2020 11:29:58 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:1286 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1782957AbgJZP35 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Oct 2020 11:14:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l18so6260937pgg.0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 08:14:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8j38Iju7n+T751hoL1D6EB4bwi/dc7imtRdkYa5mvDk=;
-        b=kluEBCtUcBFI7/Q+U+d4Wnsvjtp8iX8yQaelAlcvfG833VFCR2PSYPH6yjMysHaOEq
-         lVfo3wizC+3gLSlMqhSqBPdGAOQem/fQ6Dv4Xt8CAKiN+QUXWAIQCSjJ/OHgZTdOXiLB
-         XVRGqjTqYyqkgKkhDhaRBzPzNkVQPCvAA8HXNA85yW5vqvdhKbvTvdWxEMyRosaayxD1
-         s0nRFOjg9zvpsCg5rKX0GnxE1rYvf9rcWSmA41JLCfzK5xn20mOT6pKVOlaD8ir0I98z
-         USFcFNfz9MwTx1/JinGThMBJKFOsr0WZM2m/co82KV6YvuY9PosuZD8sw8+do7MltzE9
-         AtqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8j38Iju7n+T751hoL1D6EB4bwi/dc7imtRdkYa5mvDk=;
-        b=JO/ziaLqScoMAFKN1qyBVpqbHkdmEtKlIoMZVAsf9pXlr8nbsQvrJxZb5CCARz2TOz
-         8T7v0eKzhFZzBvXuoFAgUAT7aY0nnTbZIeqpRH4mg56dRijEcfi26tH7kJ4F28pCnMHe
-         V8O7++w3a0dzpn0O4DuX7h2xeI3UC0ponYgga6UXb5Rl4uMCdx3sWn8dGrtrTYNm2G8y
-         kROtPQ5WTOZc5o84QYQR4M5yL9KLTpKjeHMzeHmtmSxrrpQ9nLiXPU08A73p1p5b9z3L
-         iPUFUWkPmKqJjGpc6ZfHrUKnm5xbsd2aOH1Zt9dnH2kmC2oS9tKapESkGWjFBOR/J4/T
-         FADg==
-X-Gm-Message-State: AOAM5318zxkhvSt4F7PkFhXoORDK6rJi/e4PUs/YBcv14Z96GdJhFc1G
-        doKoDEu4YlS8wnDJycHNg9BtuflqV1O+66dkqVXzMJlhR1k=
-X-Google-Smtp-Source: ABdhPJy3ho48vSZjIm0IGE68q68wtd5XHzUyiqNTWerr/1szxi30KGpxywTGfJUcuEuIvvLBgfD49TcNXAqXUGkvOhA=
-X-Received: by 2002:a63:d54e:: with SMTP id v14mr16330095pgi.203.1603725297465;
- Mon, 26 Oct 2020 08:14:57 -0700 (PDT)
+        Mon, 26 Oct 2020 11:29:57 -0400
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09QFKvIG022455;
+        Mon, 26 Oct 2020 11:29:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=AV9fS3sSoWT+V0VmQkybykJykyXorBDVj9NVF293NHI=;
+ b=n1iGmsjVVPqOCTo6sSQ/eOBBJV6vYv6TSdu3MFxoz0VrhfqFrG4Fx5+TCMkB6kh9iEdT
+ AKHlLCajI185KmKglB2/BU41oTzs32FksM/NdMnDZb4kNN8BxULYUnLRx73fAYg89NFj
+ wJnNpxY9JtHketQEq9x5TEZGj+SaU2gmFkA5VVs6YhDGeaPeKiMsYakKRixiqVc1mziD
+ jfXUUn+yMYuSC338wXPkinttXI9kQRUIVRH+KbUhsyo7U/SQhNAyU2Qt0Rk/SjKS1Sh8
+ RyG+CrJXGtRkNEnPHogjzqCgSXm8/PNKLBu6gX0X9TpHKBzWTKPyvMW6KiDF1kKOtvRB PQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 34ceu5q1xg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 26 Oct 2020 11:29:48 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09QFTef6163370;
+        Mon, 26 Oct 2020 11:29:47 -0400
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
+        by mx0a-00154901.pphosted.com with ESMTP id 34e10c83gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Oct 2020 11:29:40 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mDpYI2nXaMXCWv0DwI+QJOY/oESgETzMbmT2HEe9vO0dg+qcezORVxe9/fTc3rDpT0ztuWAwHaxYw2nqDJNjmTLbtM9BZ9z8RmfH/Aw+p6MWwtfUOB3NSJTogBwAOr/xZ3+vIsGu6L3GFZ/6uD6yYcznZL1OdRrevMZCbLJExfCVEGrPE7EZB8gImkym155XDcGUCTzwKQBVeryyyf484ywJ31xwTMEuHzgpCXxVqD+gbdnU1y9AmQ3jiFIlWdpa0+zw1wHQq0sPmSFFrDXSTgenqJrJrhaC/Ikr0ZpER/j06VY4eefzJb8e0U6f/sIz+0D/BdTlJQszLdY2O/8Leg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV9fS3sSoWT+V0VmQkybykJykyXorBDVj9NVF293NHI=;
+ b=RTsIvU/9oQjKNFCyb2dWikReM1AE8SLTtkjL+GWc3RBTBWjNYp/ikzA01T5Br7G3r9momp0dvxPt6JTZXtE1Np1hNoR70zp5ln9kTyduJ58JvYYCJjgCOl+pcQQ6wsrkXQzlGvxk8HZbDffvXhw8X0wTx8TV/Uz3U5OA5X2T5F39AJyJPU5rjhNtMEoi8KPSiTkP1Zs5RR5cyXNkXvcuFP9QSNSBjV9DG21d44zzEYen4/URiJVUpUybdO4+eXcGEtYQSKofhD12O2l2UYmhqQchcwXwRf5Xd2Yk0H4m2IBq2AxVx1DYRAzzyMsHUnyGxzV2ZnyuYMorTCdv91GBSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
+ s=selector1-Dell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AV9fS3sSoWT+V0VmQkybykJykyXorBDVj9NVF293NHI=;
+ b=Irff9QBrd8y4ZiRmPikYjVrybvZjGTA6WkDf8RBlDXalWaafJfLOlJriCElDOuyZyXm/n3xB4BnOJodQeA58W+Nl7SR5ZEqtc1kylxCUJA94Rt609fEEQlzTgEUqBWacO+tCAu0TBTEZmXglu4QYbeVOQVOyQX5plR89crGwslo=
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
+ by DM6PR19MB3963.namprd19.prod.outlook.com (2603:10b6:5:24a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.19; Mon, 26 Oct
+ 2020 15:25:15 +0000
+Received: from DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2]) by DM6PR19MB2636.namprd19.prod.outlook.com
+ ([fe80::a4b8:d5c9:29da:39b2%4]) with mapi id 15.20.3477.029; Mon, 26 Oct 2020
+ 15:25:15 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Divya Bharathi <divya27392@gmail.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        mark gross <mgross@linux.intel.com>,
+        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
+Subject: RE: [PATCH v6] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+Thread-Topic: [PATCH v6] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+Thread-Index: AQHWm7qb+Fl+xPp0qE6t08FS2LR06KmqE3oAgAAMApA=
+Date:   Mon, 26 Oct 2020 15:25:15 +0000
+Message-ID: <DM6PR19MB2636A7CAF82D8CB7DEEF7B2DFA190@DM6PR19MB2636.namprd19.prod.outlook.com>
+References: <20201006082618.209287-1-divya.bharathi@dell.com>
+ <101db8e3-70f0-4e85-b4b9-008995939b1a@redhat.com>
+In-Reply-To: <101db8e3-70f0-4e85-b4b9-008995939b1a@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-10-26T15:20:50.5578503Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=6c09e18f-da97-4be7-bc4a-9dea062cae73;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [76.251.167.31]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c9b0fd9-794c-4b67-dd2d-08d879c356f0
+x-ms-traffictypediagnostic: DM6PR19MB3963:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR19MB3963010B2B4116D9A5E8726BFA190@DM6PR19MB3963.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FW4Jwx3dLql264yHkqrTi3GiUn4tf2ROmMS7y0w+CYqBh62OkkMZIm4UyRe+w4z6hroX5Jge6xpX4NEMhXQ3VF1VPilX0WhBUcvNMgIxPD3OhQ1MYSHRzV5QsT6wuTF8+vqNfr4Ecry+J4onq1nYZS+ne36X61RPWBKLlN8/a+A8ghiiPH0GEdLem7RgoMsGuA88/u1G/6vJ0KL9BYlf42OKWh6ByrYVZQ7ww+6NJ37Vr6WIF+1UnglzsGUPNDRsVjaIQwvZ7FwkaStKzvr1P8uBoWgNaE8A7wnvU9nzrCgXkbB4qub/Ae7KNDS5UmwJ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8936002)(2906002)(66476007)(64756008)(66946007)(66556008)(9686003)(33656002)(8676002)(66446008)(76116006)(6506007)(4326008)(52536014)(7696005)(54906003)(5660300002)(86362001)(55016002)(26005)(110136005)(186003)(498600001)(558084003)(107886003)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: MH0W+hpwTrDgoeRWso58Whl7uJ9+YBiNtH3TGbQzqJbSPqr8EIyjRQgLN5A/TIDJ09HAJK/aftAck073C+2LCl5o5FytemY7j+Wt1BItcDjesgRa1yRw3hSHgGXT5p58EqRu9pnHTObo55otltNMoejLisyi7sbmdC0UCr2afBNeAf/N6DWK5fUWwh/zk0P+YsqY7vOQxUZ6vCWVByRPeom58fRtORXIxPE3SnS2E70kHTPzpPlMXsPKK7Bpo3AiKeuXxSFEMhGM7jZLvWd5cShU/Y2FYNx9d588hJKXC1Vw2naQcIIZiWhP1r2ew4qrFyn7kvxznqYjjVU8mj5eyA4nAGskvmYUuC54hqNJt9MW6zYV7WPU19P04tpIX6UQmYFw1xcSBlHtgY/ESv3WveaPYBptyAQEuRhgu2CC5JXanzxj0zvc5C3Y0wdqSLFU9qg8033+JNbca5zMPolMNuunIhjmbSUc4C3mbz7tDfhYAUWN4zau4q4bKrHZ/hczMu7TSQczf1iZ4vXGraybzUwKF9gK78x84gYtyW8PkvTR8ahgLGvmWrz4xXFKjn+/H9EQusTcJOCwldffK9MiJJ1bPysk56lkNEB4TeQqhKVfRLdcXUotFQ1B+k081sV1w/tuCGbiEvq3Jue321qVBw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20201019185628.264473-1-hdegoede@redhat.com>
-In-Reply-To: <20201019185628.264473-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 17:15:46 +0200
-Message-ID: <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
-Subject: Re: [PATCH 1/6] platform/x86: acer-wmi: Drop no-op set_quirks call
- from find_quirks
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>, Lee Chun-Yi <jlee@suse.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9b0fd9-794c-4b67-dd2d-08d879c356f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Oct 2020 15:25:15.6315
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hry/3PM5TIk17qP3iqeWZ9xgWmIV7gDrfIjERCWtMV5YGH/Q/ga8AiIgLv0xPphIKRi6ynhskUpzUhgEJEy5M+/naeoLZBf5HuATiqhetww=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB3963
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.737
+ definitions=2020-10-26_08:2020-10-26,2020-10-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ adultscore=0 spamscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=595
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010260108
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=711 malwarescore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010260108
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 19, 2020 at 9:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> set_quirks has a "if (!interface) return;" check at its beginning and
-> interface always is NULL when set_quirks is called from find_quirks,
-> so it is a no-op and we can drop it.
->
-> This also allows dropping the "if (!interface) return;" from set_quirks
-> since set_quirks now always is called with interface != NULL.
-
-Is there any cover letter for this?
-
-In any case, LGTM, you may use my tag
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-I'm not sure about ACPI_EXCEPTION() use, though.
-
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/acer-wmi.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 49f4b73be513..db6167a10981 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -302,9 +302,6 @@ static struct quirk_entry *quirks;
->
->  static void __init set_quirks(void)
->  {
-> -       if (!interface)
-> -               return;
-> -
->         if (quirks->mailled)
->                 interface->capability |= ACER_CAP_MAILLED;
->
-> @@ -648,8 +645,6 @@ static void __init find_quirks(void)
->
->         if (quirks == NULL)
->                 quirks = &quirk_unknown;
-> -
-> -       set_quirks();
->  }
->
->  /*
-> --
-> 2.28.0
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+PiA+ICsNCj4gPiArCXByaW50X2hleF9kdW1wX2J5dGVzKCJzZXQgYXR0cmlidXRlIGRhdGE6ICIs
+IERVTVBfUFJFRklYX05PTkUsIGJ1ZmZlciwNCj4gYnVmZmVyX3NpemUpOw0KPiANCj4gVGhpcyBz
+ZWVtcyB0byBiZSBhIGRlYnVnZ2luZyBsZWZ0LW92ZXI/DQoNClllcyBpdCB3YXMgZm9yIGRlYnVn
+Z2luZywgYnV0IGl0cyBjb25maWd1cmFibGUgdG8gdHVybiBvbiBieSBkeW5hbWljDQpkZWJ1ZyBh
+cyBJIGNhbiB0ZWxsLiAgSXMgdGhhdCBub3QgY29ycmVjdD8NCg0KDQo=
