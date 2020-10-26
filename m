@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D4DC388F9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 18:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57775C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 18:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51952223AB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 18:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36EC2231B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 18:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rcqff6T6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emae8Xe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1789769AbgJZSdf (ORCPT
+        id S1789880AbgJZSdk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Oct 2020 14:33:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55550 "EHLO
+        Mon, 26 Oct 2020 14:33:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43589 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1789863AbgJZSdf (ORCPT
+        by vger.kernel.org with ESMTP id S1789875AbgJZSdj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Oct 2020 14:33:35 -0400
+        Mon, 26 Oct 2020 14:33:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603737212;
+        s=mimecast20190719; t=1603737217;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
         bh=5rzN8xtO7O+TraWbLdrWrZIHELIhUQEP4fjr6CDKufA=;
-        b=Rcqff6T6/Ehf8oNhPWoc2CIeWJw8DhPMBbEYg5MYl5NhW50RZkUuQb+Pc5Gb817vi9cpLX
-        vpLBhUwaEuy0jAy1ropQmRxBEmhInPhKvMDy7O1bndlXrCweb3hBDDXK0LY4o4wVKQxRUV
-        CjCpV1g35keiKD9LDs/CDfDsQcF9lWc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-519-LBthifryOFeUdnKm5RZ3wQ-1; Mon, 26 Oct 2020 14:33:31 -0400
-X-MC-Unique: LBthifryOFeUdnKm5RZ3wQ-1
-Received: by mail-ed1-f70.google.com with SMTP id cb27so5087258edb.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 11:33:30 -0700 (PDT)
+        b=emae8Xe4NZ9DEXmQE3JchuAQyGfTifoOwm5HYsj2m9lDI3aV6bnMlrLl7Cvk9DJwXZupmU
+        C/+EdNo2trRyOYFbytMhIOj3eEqjP6ASW5HdOdWWMQCoKm0tkBbwZqxUJg1LLy8/2xy2yx
+        d11XviJWbcyg2mzC0OqS3xQusEWRj1I=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-Z0duVyVLOfOd8cFxVH3Q_Q-1; Mon, 26 Oct 2020 14:33:35 -0400
+X-MC-Unique: Z0duVyVLOfOd8cFxVH3Q_Q-1
+Received: by mail-ej1-f69.google.com with SMTP id p18so5768068ejl.14
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 11:33:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=5rzN8xtO7O+TraWbLdrWrZIHELIhUQEP4fjr6CDKufA=;
-        b=UnC5APl3WXxXdo24rsPCb5HTVpWMY+uAyA7Ety1B/56S7kXv+1vjK0zGCaWvSsBvBi
-         p3L2SX8PU/QcuiLvCdseTCFQZfuvwLMJ/oFX1335TAiK7nb2clI5WWCryPjX0GAs7Y4/
-         xgUsLloqMyuP9B6awAblcljyZk+IPAJqjpNvNUIko80lfsuFft3cCN7wMNnpZ9gM2Exb
-         cNFs35S96Kjkh/jXoQep8SmVX74km9jnQrV8rjjgKULtXoEWIwDU0lHISKbN+6OGZ9tI
-         e8RrbUjveEHN/JfaE+whTo6WdouMcIqqLcQaZfYYNWpFMOO5F07xNHQgqG5CJRM0aWgt
-         WbfQ==
-X-Gm-Message-State: AOAM531uJjgYXSADTjMJSEEFrntZ0HbPT9gBkgMuCUYxOqJUuj/KnGp0
-        gSfyIRyN8E9nmsuFIhdP16Rst0PgGzG0I7dGI+Otot59VnWiHgrCZA61H3eu+RpQGOJOAWq+nF8
-        u8LFsL/EwCZKuTEd+dNcSEDHKfmdrv9WluQ==
-X-Received: by 2002:aa7:c4cc:: with SMTP id p12mr384469edr.77.1603737209495;
-        Mon, 26 Oct 2020 11:33:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxc7yieirk6V4fyLFmVp4QgXtXwAqn7MqgB2uT437fmfWnfpIjeCn56kJSZr7QmP/n7KXA+vg==
-X-Received: by 2002:aa7:c4cc:: with SMTP id p12mr384438edr.77.1603737209193;
-        Mon, 26 Oct 2020 11:33:29 -0700 (PDT)
+        b=GtRscR3nC0PT4SzveYGVSlcLllDJCCvxec4veRWEPZbh83CxkyGh4BHVvuMbn7t15Q
+         R2tUyLXBVV8pxi36CbtmptZOsFrNsMc68TT1dtqrPBinVSKGSDq0krpVgxzn7OsKf7I9
+         XLj45dHAuVcoNvH/38CQbvZ/zCPUVqjoMwT2MRAeFqf4naIOix6vO4IaLF0wW1vXJadD
+         q1TXIdOwjjekpSQ53t6VfTlt5ze/5DP5vgBd7za2FNQv4S2yZwx7zXvl4jqCVH8c7dbQ
+         Fku3npvNph3j8A28gqCgFy+D/mkPIOADpjkdz0ax7uBosbDJjZi6Fm1t+cISwqGb8xGB
+         a/bA==
+X-Gm-Message-State: AOAM532OaBXJrkGHI4FyllzRIOIdTVw9iFBZEk8LtpGWopiz+O0uXAAU
+        TjhIR70nJ97gY0RtgueJ+hD1DUzsqED9QPOls1GAH6XJgjV5KirPevow2949cGivuPSy7BuKt+S
+        UU/rOixECIZ+LBgXr6JxFv+oDRv+aFZ9Eyw==
+X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr17381980edb.7.1603737213425;
+        Mon, 26 Oct 2020 11:33:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzgs/35k+Brq5u2rCEN7QCpoBhRml+MyHEqCOWMYIC3NLU3vtjWplyuJHBtZKOX0+eErQdY/A==
+X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr17381949edb.7.1603737213185;
+        Mon, 26 Oct 2020 11:33:33 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id b25sm5625353eds.66.2020.10.26.11.33.28
+        by smtp.gmail.com with ESMTPSA id mc4sm6333155ejb.61.2020.10.26.11.33.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2020 11:33:28 -0700 (PDT)
+        Mon, 26 Oct 2020 11:33:32 -0700 (PDT)
 Subject: Re: [PATCH] [RFC] Documentation: Add documentation for new
  platform_profile sysfs attribute
 To:     Mark Pearson <markpearson@lenovo.com>
@@ -75,8 +75,8 @@ Cc:     dvhart@infradead.org, mgross@linux.intel.com,
 References: <markpearson@lenovo.com>
  <20201026174444.866545-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <23f52638-274d-b474-1fd7-38c75760e35e@redhat.com>
-Date:   Mon, 26 Oct 2020 19:33:27 +0100
+Message-ID: <3c850d5a-75e6-4238-74fe-610ed9860abc@redhat.com>
+Date:   Mon, 26 Oct 2020 19:33:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
