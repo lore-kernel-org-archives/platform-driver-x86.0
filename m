@@ -2,156 +2,86 @@ Return-Path: <SRS0=KVMw=EB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75252C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A866C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 16:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F5322400
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 15:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 248232224A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 16:54:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DDeY1bGu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FghhvEU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1784355AbgJZPn7 (ORCPT
+        id S1786649AbgJZQy5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Oct 2020 11:43:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34686 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1784354AbgJZPn7 (ORCPT
+        Mon, 26 Oct 2020 12:54:57 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36789 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1786648AbgJZQy5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Oct 2020 11:43:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603727037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UkkSlBpzl8ZbgLanW23WOmGlofYpyc9dPTQMHVQx1zM=;
-        b=DDeY1bGu2+vm44bdXeqKPredKB0POHTB+DNI2iWS73DvmuYuxAqw7hUG4LuXwE1Aj3psOG
-        8TVYCrCnOrZKonfSMPyQ/7MrMtlIo2lkseAsM4zYfFvBNw6LyIMnH9ICkkI13t00JHAWJu
-        jKlDPIeonG//Azr9MJYk0gEbVcQMZSk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-DL1fBvblP2WkXkzLJFiAow-1; Mon, 26 Oct 2020 11:43:56 -0400
-X-MC-Unique: DL1fBvblP2WkXkzLJFiAow-1
-Received: by mail-ed1-f72.google.com with SMTP id j6so4613651edh.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 08:43:55 -0700 (PDT)
+        Mon, 26 Oct 2020 12:54:57 -0400
+Received: by mail-pj1-f68.google.com with SMTP id d22so2034532pjz.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 09:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qSeLDtHBsdoZhENg+AHxbghVmFv6wgHPX7p9S7FGXIQ=;
+        b=FghhvEU1j7RXdnKgDSbxaVui+VTy+4mt0HBlMGd+JjqM7bpzSg/QKg8COqjOOkPepi
+         /PfDj7nk1kXlgxzRnTRrhR0WuXjMWrJu+6ia9kfiYE/PYNZUi9ZcWXCKql/o+UJs9HDn
+         KIIiit92gKUffWi/R/gO19o6TtvY4oC4zcG6ovpgltT4CgdpK688BeSrweClSAqYpbUp
+         fqOvpqDqo5AdwQyjAwc21Tz77mhoEF23etQT0TyYkSSaPxnBnYHKWeQYa29AxCrxeuie
+         Qie/4TrwuAtFRF8tigsHxpHAry3Ggjq4NwCdGGT2238lkFTVCP2xokMxeIkLvnNf0Obx
+         c9vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UkkSlBpzl8ZbgLanW23WOmGlofYpyc9dPTQMHVQx1zM=;
-        b=CjEgPe9NuVpJlv4OutqNu/5nA7mx23u6K3Xm7emoKmeYKsasys89wcV7KWnYUwCT+D
-         IQ8tXDIcLnx/Xd881ez5kV9VlY9FeKoG4y6iHkB0wpprpZX5ACg5HDl61sYZ0LEwrx8D
-         tBRX3xxCPsI/Iv/Yw0y+YULKvEJryFDLMjD2f42VXG5DXZV2RCwIZV6l7z74AI2w6Qlh
-         1f87XFJjQ/xpvKm+IjBpKuuJQGUmwz1r/KCfGD+4YCus/HtskaScSPi10EbbuS5pwsh5
-         dhjf8u2v5HiGVRQcoJ+GCOYczL+lPHWOKT4iyYh6pFfqAPb885aDtWZ8azFiFqd0UFO0
-         PAuw==
-X-Gm-Message-State: AOAM530lcG82BMrFMYnJiBqqi/S1yFoh5WB4IIfLdcs+1GuRCc9bDym0
-        LnulRGjVlh26uBy7tD9Cm8WxD502Gze80zNhbGfagZp7USj16OU1ClbVmcM2H6+KVEIsJ2JRh1e
-        OcBNr1h9nLbeN+3QirpghCgtno7jDCLQEpg==
-X-Received: by 2002:a17:906:383:: with SMTP id b3mr15930064eja.351.1603727034678;
-        Mon, 26 Oct 2020 08:43:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzIOML01mnCZuw1dS1rM8IZ95Joxj/x+lwVLD52oYIi3TYgc0ba/boLje3pOtEhpwdZUlxREw==
-X-Received: by 2002:a17:906:383:: with SMTP id b3mr15930040eja.351.1603727034356;
-        Mon, 26 Oct 2020 08:43:54 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id dn20sm5565621ejc.63.2020.10.26.08.43.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Oct 2020 08:43:53 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qSeLDtHBsdoZhENg+AHxbghVmFv6wgHPX7p9S7FGXIQ=;
+        b=edaE9SQZfuTSzrqClAAPBawoJwP9zys730lQDhTVNfRQlZ/wuBsI9jMUqigtbPgOHK
+         uELiy4d1X5TZrCZzs+hcbZ+OGd0xDaflnQXbMaR+Im0j3U+MJcrFst/QOnwgJK0C2OP6
+         lyvRPrcH9K+oBV5DDDsZp3vHSXkhuKm1yuiQjpOPKTot8mBpe02nMLsHm4qHtZrfvN52
+         t/kZl0FJB4OFcZspa5aGRWeUlAOshkoW1f+Jc3/wAovRET+5bhdA0CWuqKIkyXztytgR
+         NaRyzCpT/CGd8TkDuvdWpn881unT/5KsrsOAimWYMDoGI8q7/lwoj2ZxC7QQTwLbxSnX
+         NeOw==
+X-Gm-Message-State: AOAM5324zdnG+zEiZH6KILGlXQhuYCPtpJXv7TapVyl8yCh8Cf5STf7V
+        ZHT9HxwfnYfp5/azkk0FoofnS7QzdT5WHk5a3JQ=
+X-Google-Smtp-Source: ABdhPJy9EV70s55/8jxVCLpzhmwF1R+xcMTn2eHvk3Wsg7J9wcZ72jV7D8qg+74kasd7jERkW64y+EF9SsbiNZ36PbY=
+X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
+ m8-20020a1709026bc8b02900d60d9df28cmr9456321plt.17.1603731296966; Mon, 26 Oct
+ 2020 09:54:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20201019185628.264473-1-hdegoede@redhat.com> <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
+ <1cb8c938-df6d-2c99-1160-27b389b1f198@redhat.com>
+In-Reply-To: <1cb8c938-df6d-2c99-1160-27b389b1f198@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 26 Oct 2020 18:55:46 +0200
+Message-ID: <CAHp75VeH5h7fQ6amth=Wc9WpunXZOVArxr38nc9Y1ESqBuaqzg@mail.gmail.com>
 Subject: Re: [PATCH 1/6] platform/x86: acer-wmi: Drop no-op set_quirks call
  from find_quirks
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <mgross@linux.intel.com>, Lee Chun-Yi <jlee@suse.com>,
         Andy Shevchenko <andy@infradead.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20201019185628.264473-1-hdegoede@redhat.com>
- <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1cb8c938-df6d-2c99-1160-27b389b1f198@redhat.com>
-Date:   Mon, 26 Oct 2020 16:43:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Mon, Oct 26, 2020 at 5:43 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 10/26/20 4:15 PM, Andy Shevchenko wrote:
+> > On Mon, Oct 19, 2020 at 9:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-On 10/26/20 4:15 PM, Andy Shevchenko wrote:
-> On Mon, Oct 19, 2020 at 9:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> set_quirks has a "if (!interface) return;" check at its beginning and
->> interface always is NULL when set_quirks is called from find_quirks,
->> so it is a no-op and we can drop it.
->>
->> This also allows dropping the "if (!interface) return;" from set_quirks
->> since set_quirks now always is called with interface != NULL.
-> 
-> Is there any cover letter for this?
+> > In any case, LGTM, you may use my tag
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> Thank you, I assume that applies to the entire series ?
 
-Nope, in hindsight I should have probably added one. The intention was
-to only write patch 6/6 the rest is all prep work / cleanups to make
-patch 6/6 possible.
+Yes.
 
-> In any case, LGTM, you may use my tag
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thank you, I assume that applies to the entire series ?
-
-> I'm not sure about ACPI_EXCEPTION() use, though.
-
-That is the only way I could find to easily print a sensible
-error message given an acpi status code return...
-
-Regards,
-
-Hans
-
-
-
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/platform/x86/acer-wmi.c | 5 -----
->>  1 file changed, 5 deletions(-)
->>
->> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
->> index 49f4b73be513..db6167a10981 100644
->> --- a/drivers/platform/x86/acer-wmi.c
->> +++ b/drivers/platform/x86/acer-wmi.c
->> @@ -302,9 +302,6 @@ static struct quirk_entry *quirks;
->>
->>  static void __init set_quirks(void)
->>  {
->> -       if (!interface)
->> -               return;
->> -
->>         if (quirks->mailled)
->>                 interface->capability |= ACER_CAP_MAILLED;
->>
->> @@ -648,8 +645,6 @@ static void __init find_quirks(void)
->>
->>         if (quirks == NULL)
->>                 quirks = &quirk_unknown;
->> -
->> -       set_quirks();
->>  }
->>
->>  /*
->> --
->> 2.28.0
->>
-> 
-> 
-
+-- 
+With Best Regards,
+Andy Shevchenko
