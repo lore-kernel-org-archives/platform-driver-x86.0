@@ -2,86 +2,200 @@ Return-Path: <SRS0=KVMw=EB=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A866C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 16:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9374C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 248232224A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 16:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FghhvEU1"
+	by mail.kernel.org (Postfix) with ESMTP id 93D9C22265
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Oct 2020 17:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1786649AbgJZQy5 (ORCPT
+        id S1788326AbgJZRpT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 26 Oct 2020 12:54:57 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36789 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1786648AbgJZQy5 (ORCPT
+        Mon, 26 Oct 2020 13:45:19 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.4]:46198 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2437239AbgJZRpS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 26 Oct 2020 12:54:57 -0400
-Received: by mail-pj1-f68.google.com with SMTP id d22so2034532pjz.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 26 Oct 2020 09:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qSeLDtHBsdoZhENg+AHxbghVmFv6wgHPX7p9S7FGXIQ=;
-        b=FghhvEU1j7RXdnKgDSbxaVui+VTy+4mt0HBlMGd+JjqM7bpzSg/QKg8COqjOOkPepi
-         /PfDj7nk1kXlgxzRnTRrhR0WuXjMWrJu+6ia9kfiYE/PYNZUi9ZcWXCKql/o+UJs9HDn
-         KIIiit92gKUffWi/R/gO19o6TtvY4oC4zcG6ovpgltT4CgdpK688BeSrweClSAqYpbUp
-         fqOvpqDqo5AdwQyjAwc21Tz77mhoEF23etQT0TyYkSSaPxnBnYHKWeQYa29AxCrxeuie
-         Qie/4TrwuAtFRF8tigsHxpHAry3Ggjq4NwCdGGT2238lkFTVCP2xokMxeIkLvnNf0Obx
-         c9vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qSeLDtHBsdoZhENg+AHxbghVmFv6wgHPX7p9S7FGXIQ=;
-        b=edaE9SQZfuTSzrqClAAPBawoJwP9zys730lQDhTVNfRQlZ/wuBsI9jMUqigtbPgOHK
-         uELiy4d1X5TZrCZzs+hcbZ+OGd0xDaflnQXbMaR+Im0j3U+MJcrFst/QOnwgJK0C2OP6
-         lyvRPrcH9K+oBV5DDDsZp3vHSXkhuKm1yuiQjpOPKTot8mBpe02nMLsHm4qHtZrfvN52
-         t/kZl0FJB4OFcZspa5aGRWeUlAOshkoW1f+Jc3/wAovRET+5bhdA0CWuqKIkyXztytgR
-         NaRyzCpT/CGd8TkDuvdWpn881unT/5KsrsOAimWYMDoGI8q7/lwoj2ZxC7QQTwLbxSnX
-         NeOw==
-X-Gm-Message-State: AOAM5324zdnG+zEiZH6KILGlXQhuYCPtpJXv7TapVyl8yCh8Cf5STf7V
-        ZHT9HxwfnYfp5/azkk0FoofnS7QzdT5WHk5a3JQ=
-X-Google-Smtp-Source: ABdhPJy9EV70s55/8jxVCLpzhmwF1R+xcMTn2eHvk3Wsg7J9wcZ72jV7D8qg+74kasd7jERkW64y+EF9SsbiNZ36PbY=
-X-Received: by 2002:a17:902:6bc8:b029:d6:d9d:f28c with SMTP id
- m8-20020a1709026bc8b02900d60d9df28cmr9456321plt.17.1603731296966; Mon, 26 Oct
- 2020 09:54:56 -0700 (PDT)
+        Mon, 26 Oct 2020 13:45:18 -0400
+Received: from [100.112.131.148] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.us-west-2.aws.symcld.net id 10/91-27161-A2B079F5; Mon, 26 Oct 2020 17:45:14 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAKsWRWlGSWpSXmKPExsWS8eIhj64W9/R
+  4g4lLVSz2X5ew6FpoYLHw/ilWi6/fbrNbvDk+ncli+b5+RovLu+awWXzuPcJo0dTZBGR1TGax
+  WL3nBbMDt8ekmTOYPXbOusvu8WvbGhaPzSu0POadDPR4v+8qm8fnTXIB7FGsmXlJ+RUJrBl73
+  /5mKpiuVfHswjO2Bsazyl2MXBxCAv8ZJU7u+MgG4bxhlJj57wZzFyMnB5uAtsSWLb+AEhwcIg
+  IyEh/WeoKEmQX2Mkns+JsCYgsLJEjsuXmHFcRmEVCVuPp4F5jNK2Aj8fTQJzBbQkBe4mnvcrC
+  RnEA1Z7oes4DYQgIqEvcfLGGDqBeUODnzCQvEfHmJ5q2zmSFsCYmDL14wg5wgIaAg8eAKM8TI
+  BIllL+8wT2AUmIWkexaS7llIuhcwMq9iNE8qykzPKMlNzMzRNTQw0DU0NNI1NDbUNTPRS6zST
+  dQrLdYtTy0u0TXSSywv1iuuzE3OSdHLSy3ZxAiMqJSCZocdjLvffNA7xCjJwaQkyjuFa3q8EF
+  9SfkplRmJxRnxRaU5q8SFGGQ4OJQlePpCcYFFqempFWmYOMLph0hIcPEoivDUgad7igsTc4sx
+  0iNQpRkUpcd6LnEAJAZBERmkeXBssoVxilJUS5mVkYGAQ4ilILcrNLEGVf8UozsGoJMw7A2Q8
+  T2ZeCdz0V0CLmYAWt1VMAVlckoiQkmpg2i1yc9czexXttSpW52epKOsZrGa//5mFJ+367odTH
+  566K99VqzMnyeMLT56TcbVsXeTmRF/D4wqSj1jDI+dZnxU4GPflfrbE8bwZ/YeY+g+1z/T8Gf
+  2jVzza5dIHq8Pf77oULpEULjj5Yont/F8takffZSmKeaQyTK/qb5mwT+9t32G2SsU9U5zL1Xe
+  ffiP3LK1EY5fXzjvBmdVbj//fZ8eacUF4pu4ljrzd89zi+Sp/fvDbtryuR8ln63pb0aj2T0bL
+  2ZM69uZMEtnDGHP78e8Ldr75N17I5vhl3AtbdCj71Rfbl6vOhqTvXxzs+FVTdG2utmecg+H7K
+  6VHc0tO/f+q1Onzs2L6prqlWvUHlFiKMxINtZiLihMB1+rsrqMDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-14.tower-326.messagelabs.com!1603734313!14205!1
+X-Originating-IP: [104.232.225.12]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26498 invoked from network); 26 Oct 2020 17:45:14 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.12)
+  by server-14.tower-326.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Oct 2020 17:45:14 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 1CF99C1806C424018A59;
+        Mon, 26 Oct 2020 13:45:13 -0400 (EDT)
+Received: from localhost.localdomain.com (10.64.83.193) by
+ reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2044.4; Mon, 26 Oct 2020 10:45:09 -0700
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <dvhart@infradead.org>, <mgross@linux.intel.com>,
+        <mario.limonciello@dell.com>, <eliadevito@gmail.com>,
+        <hadess@hadess.net>, <bberg@redhat.com>,
+        <linux-pm@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] [RFC] Documentation: Add documentation for new platform_profile sysfs attribute
+Date:   Mon, 26 Oct 2020 13:44:44 -0400
+Message-ID: <20201026174444.866545-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-References: <20201019185628.264473-1-hdegoede@redhat.com> <CAHp75Vcrghf330j_6P5iSxcxJYa_LvDvN3OGBBJWFpUXBPMRJQ@mail.gmail.com>
- <1cb8c938-df6d-2c99-1160-27b389b1f198@redhat.com>
-In-Reply-To: <1cb8c938-df6d-2c99-1160-27b389b1f198@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 26 Oct 2020 18:55:46 +0200
-Message-ID: <CAHp75VeH5h7fQ6amth=Wc9WpunXZOVArxr38nc9Y1ESqBuaqzg@mail.gmail.com>
-Subject: Re: [PATCH 1/6] platform/x86: acer-wmi: Drop no-op set_quirks call
- from find_quirks
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>, Lee Chun-Yi <jlee@suse.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.64.83.193]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 5:43 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 10/26/20 4:15 PM, Andy Shevchenko wrote:
-> > On Mon, Oct 19, 2020 at 9:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
+From: Hans de Goede <hdegoede@redhat.com>
 
-> > In any case, LGTM, you may use my tag
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
-> Thank you, I assume that applies to the entire series ?
+On modern systems the platform performance, temperature, fan and other
+hardware related characteristics are often dynamically configurable. The
+profile is often automatically adjusted to the load by somei
+automatic-mechanism (which may very well live outside the kernel).
 
-Yes.
+These auto platform-adjustment mechanisms often can be configured with
+one of several 'platform-profiles', with either a bias towards low-power
+consumption or towards performance (and higher power consumption and
+thermals).
 
+Introduce a new platform_profile sysfs API which offers a generic API for
+selecting the performance-profile of these automatic-mechanisms.
+
+Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ .../ABI/testing/sysfs-platform_profile        | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
+
+diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
+new file mode 100644
+index 000000000000..37cb6275946c
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform_profile
+@@ -0,0 +1,85 @@
++Platform-profile selection (e.g. /sys/firmware/acpi/platform_profile)
++
++On modern systems the platform performance, temperature, fan and other
++hardware related characteristics are often dynamically configurable. The
++profile is often automatically adjusted to the load by some
++automatic-mechanism (which may very well live outside the kernel).
++
++These auto platform-adjustment mechanisms often can be configured with
++one of several 'platform-profiles', with either a bias towards low-power
++consumption or towards performance (and higher power consumption and
++thermals).
++
++The purpose of the platform_profile attribute is to offer a generic sysfs
++API for selecting the platform-profile of these automatic-mechanisms.
++
++Note that this API is only for selecting the platform-profile, it is
++NOT a goal of this API to allow monitoring the resulting performance
++characteristics. Monitoring performance is best done with device/vendor
++specific tools such as e.g. turbostat.
++
++Specifically when selecting a high-performance profile the actual achieved
++performance may be limited by various factors such as: the heat generated
++by other components, room temperature, free air flow at the bottom of a
++laptop, etc. It is explicitly NOT a goal of this API to let userspace know
++about any sub-optimal conditions which are impeding reaching the requested
++performance level.
++
++Since numbers are a rather meaningless way to describe platform-profiles
++this API uses strings to describe the various profiles. To make sure that
++userspace gets a consistent experience when using this API this API
++document defines a fixed set of profile-names. Drivers *must* map their
++internal profile representation/names onto this fixed set.
++
++If for some reason there is no good match when mapping then a new profile-name
++may be added. Drivers which wish to introduce new profile-names must:
++1. Have very good reasons to do so.
++2. Add the new profile-name to this document, so that future drivers which also
++   have a similar problem can use the same new. Usually new profile-names will
++   be added to the "extra profile-names" section of this document. But in some
++   cases the set of standard profile-names may be extended.
++
++What:		/sys/firmware/acpi/platform_profile_choices
++Date:		October 2020
++Contact:	Hans de Goede <hdegoede@redhat.com>
++Description:
++		Reading this file gives a space separated list of profiles
++		supported for this device.
++
++		Drivers must use the following standard profile-names whenever
++		possible:
++
++		low-power:		Emphasises low power consumption
++		quiet:			Offers quieter operation (lower fan
++					speed but with higher performance and
++					temperatures then seen in low-power
++		balanced:		Balance between low power consumption
++					and performance
++		performance:		Emphasises performance (and may lead to
++					higher temperatures and fan speeds)
++
++		Userspace may expect drivers to offer at least several of these
++		standard profile-names! If none of the above are a good match
++		for some of the drivers profiles, then drivers may use one of
++		these extra profile-names:
++		<reserved for future use>
++
++What:		/sys/firmware/acpi/platform_profile
++Date:		October 2020
++Contact:	Hans de Goede <hdegoede@redhat.com>
++Description:
++		Reading this file gives the current selected profile for this
++		device. Writing this file with one of the strings from
++		available_profiles changes the profile to the new value.
++
++		Reading this file may also return "custom". This is intended for
++		drivers which have and export multiple knobs. Such drivers may
++		very well still want to offer a set of profiles for easy of use
++		and to be able to offer a consistent standard API (this API) to
++		userspace for configuring their performance. The "custom" value
++		is intended for when ai user has directly configured the knobs
++		(through e.g. some advanced control-panel for a GPU) and the
++		knob values do not match any of the presets represented by the
++		platform-profiles. In this case writing this file will
++		override the modifications and restore the selected presets.
++
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
