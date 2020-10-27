@@ -2,116 +2,145 @@ Return-Path: <SRS0=wg3L=EC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6620CC5DF9E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 14:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B9C5517A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 15:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1848A20732
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 14:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bd0+siwa"
+	by mail.kernel.org (Postfix) with ESMTP id 9624D20715
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 15:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1773085AbgJ0Owg (ORCPT
+        id S1783588AbgJ0PBy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Oct 2020 10:52:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28293 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1762828AbgJ0Ooc (ORCPT
+        Tue, 27 Oct 2020 11:01:54 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.116]:43674 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1789270AbgJ0PBx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Oct 2020 10:44:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603809870;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1hPHK44hVY/XA7nzTS4W+w6X6ee8nTzZEg58p2fgtMc=;
-        b=bd0+siwaQvFTtodmDSgU+x76lg8fLYI/4N9uG3Jro8eoceXhV4u+bY2EPuzZ+OES5PphL3
-        3xoACH66t4Aj23hM4qPGZDU+/qzFE4Jy18oyzqWLZoxdd677CsHwLPhfcyYcyCBf8dUGFZ
-        mRAkUc/jPnt7UoxtG75RyJE4g5RhadI=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-sjZ981SBPkKO0IufbHzMgw-1; Tue, 27 Oct 2020 10:44:29 -0400
-X-MC-Unique: sjZ981SBPkKO0IufbHzMgw-1
-Received: by mail-ed1-f72.google.com with SMTP id dc23so771277edb.13
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2020 07:44:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1hPHK44hVY/XA7nzTS4W+w6X6ee8nTzZEg58p2fgtMc=;
-        b=SGnSH6AGcebQJFkzImrlRd9xMswFd39HG8t6d0inCKZm+JQbcozDph94sXMsRk8SZG
-         x+k7mcVYzYbgWbVA2FAU3RO/dCtVq5beM5JMu4bdJ6NhfBAJGq6n74RduGxqKCZ+dOtp
-         bHmPkFD+WS2VATH+flkOQJwK5ubKo92fWyUZeYnhoGr1Q5Fbc7CirNFmDNkT3SeL6dM4
-         d94xvQcvN7th/VwacbsKkbgzF28lHPZrt6Ux2TNB0kSbzWiU3aMSCftl+zy4sWGVmOLo
-         tIDWl6oTtyoqUpAYfNtgFSXTmDVyvpv7iDmjl9EP0+zIQegeBmozZ9sivzkNpCFJ+I58
-         wVFg==
-X-Gm-Message-State: AOAM532meuPmCMjoHO9HsP4lZ4tpFkkCqXc4PUzQdcflXrFQqGElXzlM
-        l75XJeiGIMpCIGIuR0lgBx+7fyeDA2MAZ/Z+y80fYR/agIsPMXQmzCWYpsZKNSHEyNCJrqIFPRy
-        mXlGny8CZVZYoxKuIA8wsJ7VLz6JEMAXvJA==
-X-Received: by 2002:a05:6402:1653:: with SMTP id s19mr2755170edx.124.1603809867617;
-        Tue, 27 Oct 2020 07:44:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw4H1K+7JMfclTLd6nYQ+qpvsWZSeM351qSFwjzInubFfTNi2HgRB7fsMZx4iNCHwKR/66L3A==
-X-Received: by 2002:a05:6402:1653:: with SMTP id s19mr2755155edx.124.1603809867398;
-        Tue, 27 Oct 2020 07:44:27 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id d1sm1244538ejo.17.2020.10.27.07.44.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Oct 2020 07:44:26 -0700 (PDT)
-Subject: Re: [Bug 196819] ASUS X SERIES X553MA-BING-SX451B does not boot
- anymore
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <bug-196819-6418@https.bugzilla.kernel.org/>
- <bug-196819-6418-Ze8OWcGS0v@https.bugzilla.kernel.org/>
- <CAHp75VcEkCGm=Vi==t1T6b0MYHyyk8yvVyJe3NZhFXX7h8NVvQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d03f9fca-8012-e78e-9eb0-f7ef798e01ba@redhat.com>
-Date:   Tue, 27 Oct 2020 15:44:25 +0100
+        Tue, 27 Oct 2020 11:01:53 -0400
+Received: from [100.112.135.1] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-b.us-west-2.aws.symcld.net id 70/E8-42875-956389F5; Tue, 27 Oct 2020 15:01:45 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRWlGSWpSXmKPExsWS8eIhr66p2Yx
+  4g9uzFS32X5ew6FpoYLHw/ilWi6/fbrNbvDk+ncli+b5+RovLu+awWXzuPcJo0dTZBGR1TGax
+  WL3nBbMDt8ekmTOYPXbOusvu8WvbGhaPzSu0POadDPR4v+8qm8fnTXIB7FGsmXlJ+RUJrBkLN
+  mxlKTjCU9H/p421gfEvZxcjF4eQwH9GiZZvt1kgnBeMEnNvN7J3MbJzCAuUSBxM6mLk5BAR8J
+  Y4vnUFWAkzSH3vlilsIAkhgS4mif2b6kFsNgFtiS1bfoHFeQVsJZ4deswCYrMIqEqsO/KVGcQ
+  WFQiX6LixgwmiRlDi5MwnYDWcAnYSb7edZwexmQUsJGbOP88IYYtL3HoynwnClpdo3jobbI6E
+  gILEncM32CHsBIllL+8wT2AUnIVk7Cwko2YhGTULyagFjCyrGC2SijLTM0pyEzNzdA0NDHQND
+  Y10DY1NdA3NTPQSq3ST9EqLdctTi0t0jfQSy4v1iitzk3NS9PJSSzYxAqMwpaBtyQ7GXW8+6B
+  1ilORgUhLlXb9rerwQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCd4DJjPihQSLUtNTK9Iyc4AJASY
+  twcGjJMK7DyTNW1yQmFucmQ6ROsWoKCXOq2UKlBAASWSU5sG1wZLQJUZZKWFeRgYGBiGegtSi
+  3MwSVPlXjOIcjErCvJUg43ky80rgpr8CWswEtLitYgrI4pJEhJRUA1O+14vVawqXPjhWk7JlX
+  eYOfbeUMnNe2RU+/gwHpx+tyl20/+IPMyvtlDifV2E2oQ351R/Xr8z58nzP2+ybj8w6f9zVnL
+  PQqDXq33pfkRM7XmQbn1P/9euZ7wfPrN9Xbgdc2mj95EDQ1CtZiqwrdf3s9941VV3SYbrB4VN
+  bzPkw+V0/viZEs99OfFJRJf58ldp67/wFc2MfO/tr/8la59V67+zXDanmLH/ez1Qp6clxvSZx
+  V+Hp0q1Xsv4cPmr6NdW4NG3yv2tBQTkHXU7wp/tZNHgpiN41fbl/z6ngaZt/TuDdqJx52Lydd
+  19nYHyQRpm4Bdffuxczb2a/ezPv7a9lXk+572yO3ukb/PEIb4mtEktxRqKhFnNRcSIABCslsr
+  0DAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-26.tower-355.messagelabs.com!1603810868!1936!1
+X-Originating-IP: [104.232.225.13]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 22287 invoked from network); 27 Oct 2020 15:01:09 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.13)
+  by server-26.tower-355.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Oct 2020 15:01:09 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 165E9F4B40D3F6AD8445;
+        Tue, 27 Oct 2020 11:01:08 -0400 (EDT)
+Received: from localhost.localdomain (10.46.59.124) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Tue, 27 Oct
+ 2020 08:01:06 -0700
+Subject: Re: [External] Re: [PATCH] [RFC] Documentation: Add documentation for
+ new platform_profile sysfs attribute
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Elia Devito <eliadevito@gmail.com>
+CC:     <dvhart@infradead.org>, <mgross@linux.intel.com>,
+        <mario.limonciello@dell.com>, <hadess@hadess.net>,
+        <bberg@redhat.com>, <linux-pm@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <ef9b93a0-636f-9b96-9d5b-fee1e5738af7@lenovo.com>
+ <1fbaf1fa-47c6-afe7-ca9e-41b3ad6a4556@redhat.com> <12633630.uLZWGnKmhe@pce>
+ <1bddcede-5e12-6089-8920-26dd5f534b44@lenovo.com>
+ <255af791-e456-7299-d355-fe4f3cea7d63@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <c40d0916-a61b-3376-fedd-de815f501827@lenovo.com>
+Date:   Tue, 27 Oct 2020 11:01:04 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcEkCGm=Vi==t1T6b0MYHyyk8yvVyJe3NZhFXX7h8NVvQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <255af791-e456-7299-d355-fe4f3cea7d63@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.46.59.124]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 10/12/20 4:35 PM, Andy Shevchenko wrote:
-> On Mon, Oct 12, 2020 at 5:32 PM <bugzilla-daemon@bugzilla.kernel.org> wrote:
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=196819
->>
->> Andy Shevchenko (andy.shevchenko@gmail.com) changed:
->>
->>            What    |Removed                     |Added
->> ----------------------------------------------------------------------------
->>              Status|NEEDINFO                    |RESOLVED
->>          Resolution|---                         |CODE_FIX
->>
->> --- Comment #5 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
->> Closing now, thanks!
+
+On 27/10/2020 09:41, Hans de Goede wrote:
+> Hi Mark,
 > 
-> This bug is simply an example of one registered to Platform_x86 component.
-> Should PDx86 ask bugzilla admin to default the assignee to this
-> mailing list, for example?
+> On 10/27/20 1:28 PM, Mark Pearson wrote:
+>> Hi Elia
+>>
+>> On 27/10/2020 05:19, Elia Devito wrote:
+>>> Hi to all,
+>>>
+>>> In data martedì 27 ottobre 2020 08:54:44 CET, Hans de Goede ha scritto:
+<snip>
+>>>
+>>> This look good,
+>>> only thing is that hp-wmi driver need a cool profile (Emphasises the computer
+>>> cool to touch), if you can add it would be perfect.
+>>>
+>>> Regards
+>>> Elia
+>>>
+>>>
+>>>
+>> Is low-power is different to cool? I figured low-power was going to be cool so combined them.
+>> I could call it low-power-cool if that helps? It seems a little clunky but not too bad. I'm sure the user space folks can put sunglasses on it or something ;)
+> 
+> IIRC we already had this discussion, cool means cool-to-touch, so could be done by
+> e.g. extra aggressive ramping up of the fans, so this is not necessarily the same
+> as low-power.
+> 
+> Yes this is all somewhat confusing. Luckily (for us kernel folks) we have already
+> sorta decided to just use the profile-names from the vendors more or less as is and
+> leave figuring this out further to userspace.
+> 
+> The reason to use the enum + try to have a fixed list of choices is to try and
+> limit the proliferation of profile-names to keep things somewhat manageable.
+> 
+> But as I discussed previously with Elia (*) we really need all 3 of low-power
+> cool and quiet.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> *) I was coming at this discussion from the same angle you (Mark) are
+> 
+OK, I can add a cool option.
 
-Changing the default assignee to the mailinglist seems like a good idea.
+I'll get that out later today (unless Elia corrects me :))
 
-Can you take care of getting this changed (or do you want me to
-request the change) ?
-
-Regards,
-
-Hans
-
+Thanks all
+Mark
