@@ -2,186 +2,154 @@ Return-Path: <SRS0=wg3L=EC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82343C55179
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 16:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12AFC388F9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 17:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8B920727
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 16:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ECD020878
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 17:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A/Lt2v9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1811851AbgJ0Qmw (ORCPT
+        id S1820624AbgJ0Rgo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Oct 2020 12:42:52 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.116]:24365 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1811836AbgJ0Qmu (ORCPT
+        Tue, 27 Oct 2020 13:36:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34177 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1760832AbgJ0Ogk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Oct 2020 12:42:50 -0400
-Received: from [100.112.135.1] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.us-west-2.aws.symcld.net id 06/B9-42875-70E489F5; Tue, 27 Oct 2020 16:42:47 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleJIrShJLcpLzFFi42JJl3vFpsvuNyP
-  eYMFWUYv91yUsuhYaWCy8f4rV4uu32+wWb45PZ7JYvq+f0eLyrjlsFp97jzBaNHU2AVkdk1ks
-  Vu95wezA7TFp5gxmj52z7rJ7/Nq2hsVj8wotj3knAz3e77vK5vF5k1wAexRrZl5SfkUCa8aZs
-  5IFX5UqFt7KamB8ItvFyMUhJPCfUeLZ8cWMXYycQM4bRomXG4tAbDYBbYktW36xdTFycIgIyE
-  h8WOsJEmYW2MskseNvCogtLBAl8f1JDwuIzSKgKvFt2142EJtXwEbi0KxnYCMlBOQlnvYuZwa
-  xOYFqznQ9ZoFYpSJx/8ESqHpBiZMzn7BAzJeXaN46mxnClpA4+OIFM8QcBYlvd78xQdgJEste
-  3mGewCgwC0n7LCTts5C0L2BkXsVollSUmZ5RkpuYmaNraGCga2hopGtobKRroZdYpZukV1qsW
-  55aXKJrpJdYXqxXXJmbnJOil5dasokRGEspBS0cOxgPv/6gd4hRkoNJSZR3iceMeCG+pPyUyo
-  zE4oz4otKc1OJDjDIcHEoSvNo+QDnBotT01Iq0zBxgXMOkJTh4lER4J4KkeYsLEnOLM9MhUqc
-  YFaXEedeDJARAEhmleXBtsFRyiVFWSpiXkYGBQYinILUoN7MEVf4VozgHo5Iw73uQKTyZeSVw
-  018BLWYCWtxWMQVkcUkiQkqqgcn59Gm9FSua+vveO7mYvo+/91DQvyVvwZTpfzdl/X74vu/vr
-  Orgx6mu6+pPy37e3RMQuXj73KVfHi3dXrA2ZbHR5mlJz84//3krcR/7jC1PD15u3K5boKJ5Me
-  Dt0nPXplsozH9WMslVuZt9ckdOgO2NS+ImqQcebKqcnsE2w1xJbM5m17Cj8615Drkff6GUFVh
-  4efKqlVz9+huuMczfV/coQyPy+ppXU2bPU883U8na5tHQ9G3Ts2W/qx7l+keazb+b5lSZ7xv+
-  Iz1Xx1sgMGOn16Uz+otM3gt+XVlf8P7bPkapCdk5V3e/f8grV+sQHige5vFvsUSE5dqwhF0tK
-  1j177qv3PM04lVuKZPn5CUiSizFGYmGWsxFxYkA1pxFwqADAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-3.tower-355.messagelabs.com!1603816965!7460!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 16068 invoked from network); 27 Oct 2020 16:42:47 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-3.tower-355.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 Oct 2020 16:42:47 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 7B7A14184040F8AEE639;
-        Wed, 28 Oct 2020 00:42:42 +0800 (CST)
-Received: from localhost.localdomain.com (10.64.85.148) by
- reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2044.4; Tue, 27 Oct 2020 09:42:37 -0700
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <dvhart@infradead.org>, <mgross@linux.intel.com>,
-        <mario.limonciello@dell.com>, <eliadevito@gmail.com>,
-        <hadess@hadess.net>, <bberg@redhat.com>,
-        <linux-pm@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] Documentation: Add documentation for new platform_profile sysfs attribute
-Date:   Tue, 27 Oct 2020 12:42:19 -0400
-Message-ID: <20201027164219.868839-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+        Tue, 27 Oct 2020 10:36:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603809399;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ug8vzX663gR3NE8oqRQHPCaGbnO8Nn0snBXYCYT+1IE=;
+        b=A/Lt2v9BgRVEvmmUjQZWmZCoXItX8UxEfNgs3ubH+Q6JZlrz7sFhsdFwdDyUa5uMHj+fvO
+        Pk0p8prwLUEP6n0R+OMpqvSzof42XYmWX0KakNauCiogiYzsT1Ra+VTALZfqChxKzLd6PA
+        GTxf9baTQEf6iB8eiZGch8xKCeXY9DA=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-548-f9c2qwexPUijtbnuRbrqKg-1; Tue, 27 Oct 2020 10:36:37 -0400
+X-MC-Unique: f9c2qwexPUijtbnuRbrqKg-1
+Received: by mail-ed1-f72.google.com with SMTP id a15so758130eda.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2020 07:36:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ug8vzX663gR3NE8oqRQHPCaGbnO8Nn0snBXYCYT+1IE=;
+        b=ASQgWIAIm147agq8w1QQPG22IccIWtqHqwhXMtFwm1w5V05QTG17x+pDIxSU5BoBM/
+         zX7YSy+3JlocoWnULxftnxSnVTJRRhzebEUSk4+hj8jxP9Kn19MRMl6FaqCJbdPG3rYH
+         52VjxI+iJKsbcxwevFSDYY2QJf0mC0j0r9avC4fNs6+XyaiG2igYpJZTKsOnlpdqkatc
+         o9vbRH4GBdvoNY4acpNcSzlvEaOpR/Z3tmZQ/UnZ714AQ0eFrI4u2RyUbXL8qBpITDCy
+         qzepv3QZS0ADTcL+1Gb173UPMkYdpncLDOvhWbEIBmc4TND7RqTfN+m6GGrhfxq+VYmL
+         ooJQ==
+X-Gm-Message-State: AOAM531PoI+4HkXGM84gWhp0eV6leRdmHgM/HHZZR9ADvvq1EbjSOap4
+        rxfyNCeqCrmGBGHWbOHn2HCFAy64xJHcJydNGht1KiAEJRGIvG4pnPAz5+oHGihAt93kzc22YFb
+        ncZow77F2B39bhbUOT/sUdb8h1BH2onjcZg==
+X-Received: by 2002:aa7:c815:: with SMTP id a21mr2531641edt.166.1603809395207;
+        Tue, 27 Oct 2020 07:36:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyaYi64qtz7uB4mxOVc/QA3cIK6821annqrLaJPpuMj3ZGZl0sXWYqOFXnLYNdfauqIPbwfnw==
+X-Received: by 2002:aa7:c815:: with SMTP id a21mr2531620edt.166.1603809395007;
+        Tue, 27 Oct 2020 07:36:35 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id dm8sm1121656edb.57.2020.10.27.07.36.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2020 07:36:34 -0700 (PDT)
+Subject: Re: [PATCH] Revert "platform/x86: wmi: Destroy on cleanup rather than
+ unregister"
+To:     Yongxin Liu <yongxin.liu@windriver.com>, andy@infradead.org,
+        dvhart@infradead.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     mario.limonciello@dell.com
+References: <20191115052710.46880-1-yongxin.liu@windriver.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ee964f27-e038-931d-803a-dbcb9e0566dd@redhat.com>
+Date:   Tue, 27 Oct 2020 15:36:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.85.148]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+In-Reply-To: <20191115052710.46880-1-yongxin.liu@windriver.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+Hi,
 
-On modern systems the platform performance, temperature, fan and other
-hardware related characteristics are often dynamically configurable. The
-profile is often automatically adjusted to the load by somei
-automatic-mechanism (which may very well live outside the kernel).
+Quick self intro: I have take over drivers/platform/x86
+maintainership from Andy; and I'm working my way through
+the backlog of old patches in patchwork:
+https://patchwork.kernel.org/project/platform-driver-x86/list/
 
-These auto platform-adjustment mechanisms often can be configured with
-one of several 'platform-profiles', with either a bias towards low-power
-consumption or towards performance (and higher power consumption and
-thermals).
+On 11/15/19 6:27 AM, Yongxin Liu wrote:
+> This reverts commit 7b11e8989618581bc0226ad313264cdc05d48d86.
+> 
+> Consider the following hardware setting.
+> 
+> |-PNP0C14:00
+> |  |-- device #1
+> |-PNP0C14:01
+> |  |-- device #2
+> 
+> When unloading wmi driver module, device #2 will be first unregistered.
+> But device_destroy() using MKDEV(0, 0) will locate PNP0C14:00 first
+> and unregister it. This is incorrect. Should use device_unregister() to
+> unregister the real parent device.
+> 
+> Signed-off-by: Yongxin Liu <yongxin.liu@windriver.com>
 
-Introduce a new platform_profile sysfs API which offers a generic API for
-selecting the performance-profile of these automatic-mechanisms.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Co-developed-by: Mark Pearson <markpearson@lenovo.com>
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in V1:
- - Moved from RFC to proposed patch
- - Added cool profile as requested
- - removed extra-profiles as no longer relevant
+Note it will show up there once I've pushed my local branch there,
+which might take a while.
 
- .../ABI/testing/sysfs-platform_profile        | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
-new file mode 100644
-index 000000000000..240bd3d7532b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform_profile
-@@ -0,0 +1,66 @@
-+Platform-profile selection (e.g. /sys/firmware/acpi/platform_profile)
-+
-+On modern systems the platform performance, temperature, fan and other
-+hardware related characteristics are often dynamically configurable. The
-+profile is often automatically adjusted to the load by some
-+automatic-mechanism (which may very well live outside the kernel).
-+
-+These auto platform-adjustment mechanisms often can be configured with
-+one of several 'platform-profiles', with either a bias towards low-power
-+consumption or towards performance (and higher power consumption and
-+thermals).
-+
-+The purpose of the platform_profile attribute is to offer a generic sysfs
-+API for selecting the platform-profile of these automatic-mechanisms.
-+
-+Note that this API is only for selecting the platform-profile, it is
-+NOT a goal of this API to allow monitoring the resulting performance
-+characteristics. Monitoring performance is best done with device/vendor
-+specific tools such as e.g. turbostat.
-+
-+Specifically when selecting a high-performance profile the actual achieved
-+performance may be limited by various factors such as: the heat generated
-+by other components, room temperature, free air flow at the bottom of a
-+laptop, etc. It is explicitly NOT a goal of this API to let userspace know
-+about any sub-optimal conditions which are impeding reaching the requested
-+performance level.
-+
-+Since numbers are a rather meaningless way to describe platform-profiles
-+this API uses strings to describe the various profiles. To make sure that
-+userspace gets a consistent experience when using this API this API
-+document defines a fixed set of profile-names. Drivers *must* map their
-+internal profile representation/names onto this fixed set.
-+
-+If for some reason there is no good match when mapping then a new profile-name
-+may be added. Drivers which wish to introduce new profile-names must:
-+1. Have very good reasons to do so.
-+2. Add the new profile-name to this document, so that future drivers which also
-+   have a similar problem can use the same name.
-+
-+What:		/sys/firmware/acpi/platform_profile_choices
-+Date:		October 2020
-+Contact:	Hans de Goede <hdegoede@redhat.com>
-+Description:
-+		Reading this file gives a space separated list of profiles
-+		supported for this device.
-+
-+		Drivers must use the following standard profile-names:
-+
-+		low-power:		Emphasises low power consumption
-+		cool:			Emphasises cooler operation
-+		quiet:			Emphasises quieter operation
-+		balanced:		Balance between low power consumption
-+					and performance
-+		performance:		Emphasises performance (and may lead to
-+					higher temperatures and fan speeds)
-+
-+		Userspace may expect drivers to offer at least several of these
-+		standard profile-names.
-+
-+What:		/sys/firmware/acpi/platform_profile
-+Date:		October 2020
-+Contact:	Hans de Goede <hdegoede@redhat.com>
-+Description:
-+		Reading this file gives the current selected profile for this
-+		device. Writing this file with one of the strings from
-+		available_profiles changes the profile to the new value.
--- 
-2.28.0
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/x86/wmi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index 59e9aa0f9643..e16f660aa117 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1347,7 +1347,7 @@ static int acpi_wmi_remove(struct platform_device *device)
+>  	acpi_remove_address_space_handler(acpi_device->handle,
+>  				ACPI_ADR_SPACE_EC, &acpi_wmi_ec_space_handler);
+>  	wmi_free_devices(acpi_device);
+> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
+> +	device_unregister((struct device *)dev_get_drvdata(&device->dev));
+>  
+>  	return 0;
+>  }
+> @@ -1401,7 +1401,7 @@ static int acpi_wmi_probe(struct platform_device *device)
+>  	return 0;
+>  
+>  err_remove_busdev:
+> -	device_destroy(&wmi_bus_class, MKDEV(0, 0));
+> +	device_unregister(wmi_bus_dev);
+>  
+>  err_remove_notify_handler:
+>  	acpi_remove_notify_handler(acpi_device->handle, ACPI_DEVICE_NOTIFY,
+> 
 
