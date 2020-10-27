@@ -2,217 +2,154 @@ Return-Path: <SRS0=wg3L=EC=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C48BC4363A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 09:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993B5C388F9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 11:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D81E822284
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 09:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162332072D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Oct 2020 11:28:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EfibJUiW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CYexGtVJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411637AbgJ0JTU (ORCPT
+        id S1749901AbgJ0L2M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Oct 2020 05:19:20 -0400
-Received: from mail-wr1-f44.google.com ([209.85.221.44]:36849 "EHLO
-        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387859AbgJ0JTT (ORCPT
+        Tue, 27 Oct 2020 07:28:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36607 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1749896AbgJ0L2L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Oct 2020 05:19:19 -0400
-Received: by mail-wr1-f44.google.com with SMTP id x7so1029134wrl.3;
-        Tue, 27 Oct 2020 02:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+OOfjhuhTD9zQyQKa367WJYfNXLO5sju7NGsP+LncHg=;
-        b=EfibJUiWTOmw1OAgBReOF9qT+M2VDkU6Smvd2+iVxdSy8OqnMwJOpi4J107Dex99oB
-         NX2UvZ3g5Xi0/X2lDsPc6wQ1pKzR3ayklDOAebOb2Rr+v0XZR2jYXQ7Lj3pqATLIBPz+
-         +PsLmjLmuUmttB3vSWSnPpS7P9ZqNJEeww7k1LgTIFebFEEd2INV5i7BQwZNfmo5ZS+6
-         VZnsW8802co1MNN9M9da9w31SZL2bbNifHmw+3c3B47Qvd1T6zXHTe6H4ovRxygNjS2E
-         oKORkS2dRnJfhu6sG4FuGYOLym6BoQnrdzmWDuu42DCfG7q2h1PxZoz2pFm63+PhMpgQ
-         zRhA==
+        Tue, 27 Oct 2020 07:28:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603798089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
+        b=CYexGtVJsdZJD7HMAzLaQmv7ZRr2jOjbbyMwK6ht0uDWCG7ziY+wJj0hEilCoNyep+kWl1
+        n1t+wJvBwEwrEei8HkNPCKzPg0HNqxXu1JY0VPCDpVByBg5stmVLG8SysHG2bDi1XWnnt5
+        4otomaR6OZOrQc0KXsQKXdUYfq6DZfg=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-UAP1HZXLMYSEIK_MXx0eNw-1; Tue, 27 Oct 2020 07:28:07 -0400
+X-MC-Unique: UAP1HZXLMYSEIK_MXx0eNw-1
+Received: by mail-ej1-f70.google.com with SMTP id d12so729636ejr.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Oct 2020 04:28:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+OOfjhuhTD9zQyQKa367WJYfNXLO5sju7NGsP+LncHg=;
-        b=AY+bh08/HZeNVM9AZnXA2EUtSHn4kbZtEgoCXntERf+DKD9DzAbrcDjaK6Xd5D6cVt
-         0+xMUwko3+bpi0hCmFo3ECqHAyiQeqxa8BORWgYR2Itmw5W0Kw3rGtg10v7ecHmXlw/9
-         iygXUDSKZbr5rmBdG1YvmJjuZZ3SCPzx5KXGELL02gxAk+bsSoYmMt0L5qbXGFUzSBkd
-         Cj7CxL5kwU9pOCLTN8OCgJ6sWQoz3WxgmMO0B0HR0z9MpaP8qVZDfFH/ZEm4QN9a5dbT
-         D313XbtnfETyHXJIY31oD4TkcEiRicvcAzQ+pm8pWYAEa+4Nk7KOOnBDd8GHj5ER87wp
-         2apQ==
-X-Gm-Message-State: AOAM5333t4gFsC02AE7ZrVxCnhjFeyj5uuqowqrarYeOjnOB9iu6K/8o
-        ESKMdebICysuE9S2MVOHocw=
-X-Google-Smtp-Source: ABdhPJzelJGygDhpfTD4K7Y5hLTcBYoUOdTRtidWUuS8SAfNUXBwHVLsL+KZ9XT82ccJOtlkNRfYjg==
-X-Received: by 2002:adf:d84e:: with SMTP id k14mr1745123wrl.251.1603790355966;
-        Tue, 27 Oct 2020 02:19:15 -0700 (PDT)
-Received: from pce.localnet (host-80-117-125-178.pool80117.interbusiness.it. [80.117.125.178])
-        by smtp.gmail.com with ESMTPSA id x10sm1160524wrp.62.2020.10.27.02.19.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Oct 2020 02:19:15 -0700 (PDT)
-From:   Elia Devito <eliadevito@gmail.com>
-To:     Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     dvhart@infradead.org, mgross@linux.intel.com,
-        mario.limonciello@dell.com, hadess@hadess.net, bberg@redhat.com,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] [RFC] Documentation: Add documentation for new platform_profile sysfs attribute
-Date:   Tue, 27 Oct 2020 10:19:12 +0100
-Message-ID: <12633630.uLZWGnKmhe@pce>
-In-Reply-To: <1fbaf1fa-47c6-afe7-ca9e-41b3ad6a4556@redhat.com>
-References: <markpearson@lenovo.com> <ef9b93a0-636f-9b96-9d5b-fee1e5738af7@lenovo.com> <1fbaf1fa-47c6-afe7-ca9e-41b3ad6a4556@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=688aZm0PD/3SiVRwK7iawCj1jbJr07QWKg/+VEWty/w=;
+        b=S0YSjRlaF3IV37nMO44tvwNWL9Nz5QQ7K8T9tTyVonCnRbYufiYovr7W/Gi+qkU77J
+         DNn28LzY/EKEaz+dYoDBtjC4FU82VwQJYfbtAfb4ZGPVSOCkPxLPqqxr0gfOWVRe8TG9
+         Zqsp1cUCHGHaStKrTtvpibvu/6y455Wvl1bZfRiynEQS4Itq+XbdpzVjti+cBS5iVrQ+
+         F9Q08HqC6/XHL8W4KLmiPd402knXMCrsPYy90T7VLSGF+ayAb0cl2qEtmrNL75P4upMt
+         7OVUSXQhROg+LHic0mb6SVOJPVS8lYroTN4nQ3bPkxzgQYzrVFBeJtJOYSOnSSxqOals
+         GxIw==
+X-Gm-Message-State: AOAM5306j6dktxX6PaktzOI7yA+nMK+Wj4xr04Vf71wlI6Iq/FDs3ahx
+        UdrWTvnmjUDMOaUQRtIIkzVWSMlQYOCw7gE/bVA3AikECMZUw8ylRDnM12ag9xPibLuWMPeVi7+
+        cO6awO9FiyHC40dak8eNjkT7W7gk3wQI1rQ==
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706688edr.265.1603798086279;
+        Tue, 27 Oct 2020 04:28:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNks/irBNquuX2qqWze7N1uU8iJmXriG2IIP0ADY1uAEjDy9xgloHTRusFL49PMuOlbI5UNg==
+X-Received: by 2002:aa7:c358:: with SMTP id j24mr1706652edr.265.1603798085964;
+        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id yw17sm856915ejb.97.2020.10.27.04.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Oct 2020 04:28:05 -0700 (PDT)
+Subject: Re: [PATCH V8 0/5] Intel Platform Monitoring Technology
+To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
+        alexey.budankov@linux.intel.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2f17db4b-2988-7f0d-fd0e-9e5b621d24ec@redhat.com>
+Date:   Tue, 27 Oct 2020 12:28:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <20201003013123.20269-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi to all,
+Hi,
 
-In data marted=EC 27 ottobre 2020 08:54:44 CET, Hans de Goede ha scritto:
-> Hi,
->=20
-> On 10/26/20 8:55 PM, Mark Pearson wrote:
-> > Thanks Hans
-> >=20
-> > On 26/10/2020 14:33, Hans de Goede wrote:
-> >> Hi Mark,
-> >>=20
-> >> Thank you for this new version.
-> >>=20
-> >> On 10/26/20 6:44 PM, Mark Pearson wrote:
-> >>> From: Hans de Goede <hdegoede@redhat.com>
-> >=20
-> > <snip>
-> >=20
-> >>> +
-> >>> +If for some reason there is no good match when mapping then a new
-> >>> profile-name +may be added. Drivers which wish to introduce new
-> >>> profile-names must: +1. Have very good reasons to do so.
-> >>> +2. Add the new profile-name to this document, so that future drivers
-> >>> which also +   have a similar problem can use the same new.
-> >>=20
-> >> s/same new/same name/
-> >=20
-> > I've read this document so many times...I'm not sure how I missed that
-> > one. Thanks.>=20
-> >>> + Usually new profile-names will
-> >>> +   be added to the "extra profile-names" section of this document. B=
-ut
-> >>> in some +   cases the set of standard profile-names may be extended.
-> >>=20
-> >> With the change from a more generic API to this new one more targeted
-> >> towards DPTF I would drop this part.
-> >=20
-> > OK - I have some questions then related to this change, below
-> >=20
-> >>> +
-> >>> +What:        /sys/firmware/acpi/platform_profile_choices
-> >>> +Date:        October 2020
-> >>> +Contact:    Hans de Goede <hdegoede@redhat.com>
-> >>> +Description:
-> >>> +        Reading this file gives a space separated list of profiles
-> >>> +        supported for this device.
-> >>> +
-> >>> +        Drivers must use the following standard profile-names whenev=
-er
-> >>> +        possible:
-> >>> +
-> >>> +        low-power:        Emphasises low power consumption
-> >>> +        quiet:            Offers quieter operation (lower fan
-> >>> +                    speed but with higher performance and
-> >>> +                    temperatures then seen in low-power
-> >>=20
-> >> I think the description here is a bit too specific, this may cause
-> >> userspace to have expectations which are not necessary true. I would
-> >> describe this as just:
-> >>=20
-> >>         quiet:            Emphasises quieter operation
-> >=20
-> > Agreed. I'll update
-> >=20
-> >>> +        balanced:        Balance between low power consumption
-> >>> +                    and performance
-> >>> +        performance:        Emphasises performance (and may lead to
-> >>> +                    higher temperatures and fan speeds)
-> >>> +
-> >>> +        Userspace may expect drivers to offer at least several of th=
-ese
-> >>> +        standard profile-names! If none of the above are a good match
-> >>> +        for some of the drivers profiles, then drivers may use one of
-> >>> +        these extra profile-names:
-> >>> +        <reserved for future use>
-> >>> +
-> >=20
-> > If we remove the extra profile-names section above then I think it shou=
-ld
-> > be removed here too. If someone wants to add a new 'mode' then it would
-> > be added to the list of 'standard names', and becomes a new option.
-> > Wanted to check I'm not missing something important.
-> You are completely right, any references to an extra profile-names section
-> should be removed here too. I did intend to add that it should be removed
-> here too, but I forgot.
->=20
-> >>> +What:        /sys/firmware/acpi/platform_profile
-> >>> +Date:        October 2020
-> >>> +Contact:    Hans de Goede <hdegoede@redhat.com>
-> >>> +Description:
-> >>> +        Reading this file gives the current selected profile for this
-> >>> +        device. Writing this file with one of the strings from
-> >>> +        available_profiles changes the profile to the new value.
-> >>=20
-> >> The part about custom profiles below may be dropped. That was intended
-> >> for use with e.g. GPUs but since this now strictly is a system-level
-> >> profile API, the part below can be dropped now.
-> >=20
-> > Agreed
-> >=20
-> >>> +
-> >>> +        Reading this file may also return "custom". This is intended
-> >>> for
-> >>> +        drivers which have and export multiple knobs. Such drivers m=
-ay
-> >>> +        very well still want to offer a set of profiles for easy of =
-use
-> >>> +        and to be able to offer a consistent standard API (this API)=
- to
-> >>> +        userspace for configuring their performance. The "custom" va=
-lue
-> >>> +        is intended for when ai user has directly configured the kno=
-bs
-> >>> +        (through e.g. some advanced control-panel for a GPU) and the
-> >>> +        knob values do not match any of the presets represented by t=
-he
-> >>> +        platform-profiles. In this case writing this file will
-> >>> +        override the modifications and restore the selected presets.
-> >>> +
-> >>=20
-> >> Regards,
-> >>=20
-> >> Hans
-> >=20
-> > Thanks!
-> > mark
->=20
-> Regards,
->=20
-> Hans
+On 10/3/20 3:31 AM, David E. Box wrote:
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring capabilities on a device.
+> With customers increasingly asking for hardware telemetry, engineers not
+> only have to figure out how to measure and collect data, but also how to
+> deliver it and make it discoverable. The latter may be through some device
+> specific method requiring device specific tools to collect the data. This
+> in turn requires customers to manage a suite of different tools in order to
+> collect the differing assortment of monitoring data on their systems.  Even
+> when such information can be provided in kernel drivers, they may require
+> constant maintenance to update register mappings as they change with
+> firmware updates and new versions of hardware. PMT provides a solution for
+> discovering and reading telemetry from a device through a hardware agnostic
+> framework that allows for updates to systems without requiring patches to
+> the kernel or software tools.
+> 
+> PMT defines several capabilities to support collecting monitoring data from
+> hardware. All are discoverable as separate instances of the PCIE Designated
+> Vendor extended capability (DVSEC) with the Intel vendor code. The DVSEC ID
+> field uniquely identifies the capability. Each DVSEC also provides a BAR
+> offset to a header that defines capability-specific attributes, including
+> GUID, feature type, offset and length, as well as configuration settings
+> where applicable. The GUID uniquely identifies the register space of any
+> monitor data exposed by the capability. The GUID is associated with an XML
+> file from the vendor that describes the mapping of the register space along
+> with properties of the monitor data. This allows vendors to perform
+> firmware updates that can change the mapping (e.g. add new metrics) without
+> requiring any changes to drivers or software tools. The new mapping is
+> confirmed by an updated GUID, read from the hardware, which software uses
+> with a new XML.
+> 
+> The current capabilities defined by PMT are Telemetry, Watcher, and
+> Crashlog.  The Telemetry capability provides access to a continuous block
+> of read only data. The Watcher capability provides access to hardware
+> sampling and tracing features. Crashlog provides access to device crash
+> dumps.  While there is some relationship between capabilities (Watcher can
+> be configured to sample from the Telemetry data set) each exists as stand
+> alone features with no dependency on any other. The design therefore splits
+> them into individual, capability specific drivers. MFD is used to create
+> platform devices for each capability so that they may be managed by their
+> own driver. The PMT architecture is (for the most part) agnostic to the
+> type of device it can collect from. Software can determine which devices
+> support a PMT feature by searching through each device node entry in the
+> sysfs class folder. It can additionally determine if a particular device
+> supports a PMT feature by checking for a PMT class folder in the device
+> folder.
+> 
+> This patch set provides support for the PMT framework, along with support
+> for Telemetry on Tiger Lake.
 
-This look good,
-only thing is that hp-wmi driver need a cool profile (Emphasises the comput=
-er=20
-cool to touch), if you can add it would be perfect.
+The entire series looks good to me, so you may add my:
 
-Regards
-Elia
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
+To the entire series.
 
+Lee, in the discussion about previous versions you indicated that you
+would be happy to merge the entire series through the MFD tree.
+
+From my pov this is ready for merging, so if you can pick up the entire
+series and then provide me with an immutable branch to merge into the
+pdx86 tree that would be great.
+
+Regards,
+
+Hans
 
