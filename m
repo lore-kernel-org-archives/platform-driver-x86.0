@@ -2,88 +2,91 @@ Return-Path: <SRS0=JE7e=ED=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A34C56202
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 21:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 013EDC388F7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 21:40:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA25624864
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 21:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD6F24680
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 21:40:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STLAEU3X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HP3Kjra6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726849AbgJ1VhF (ORCPT
+        id S1727219AbgJ1VkZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Oct 2020 17:37:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60413 "EHLO
+        Wed, 28 Oct 2020 17:40:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52425 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726851AbgJ1VhE (ORCPT
+        by vger.kernel.org with ESMTP id S1725957AbgJ1VkX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:37:04 -0400
+        Wed, 28 Oct 2020 17:40:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603921021;
+        s=mimecast20190719; t=1603921222;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3PN8li90MQEODpG7uKAlxNFFjh3wZGx6qB1VA0YAdTY=;
-        b=STLAEU3XcaJALN5ShQPxpH6YHzJS44qfrjxl+4nEqf4KfTjKak7XAzSwRYuwM1v3B3PS8W
-        C+ULVCK2eJkh1CA1G92v5v1urHJZ0KNs0WmaLHwpEm96JmyNXFGtg/dKfAdgOv4cT45RDR
-        XHsDdq76tMtocVM2z9m4SISQZRaYeFA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-Wz9oQs7QPAWw0df3LAOnIQ-1; Wed, 28 Oct 2020 16:35:13 -0400
-X-MC-Unique: Wz9oQs7QPAWw0df3LAOnIQ-1
-Received: by mail-ed1-f71.google.com with SMTP id dc23so275850edb.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2020 13:35:13 -0700 (PDT)
+        bh=wymB3yaPxNZhMixMCniEaWx/seo/S8VnG8VWpq2zAJg=;
+        b=HP3Kjra6HE6FnF7YtPoYQJd9rHCP4EteP1Y8pkjrapj7JonFf4ar6H6dtLxbdsNbwZh9kY
+        LBCvem5UUREYcDKAT/gIUdR7d3O13S8sgiRSy+eANjMtA2JEY8MfjHtVCKCThF/Vr64IXi
+        gW06P+TT10p94+JbzUfBEWCda4qVmVQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-xOq5n5crMmGWubkFpAtbvw-1; Wed, 28 Oct 2020 07:37:38 -0400
+X-MC-Unique: xOq5n5crMmGWubkFpAtbvw-1
+Received: by mail-ed1-f69.google.com with SMTP id dm20so2019142edb.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2020 04:37:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3PN8li90MQEODpG7uKAlxNFFjh3wZGx6qB1VA0YAdTY=;
-        b=U+aiwWyZz62NR0KVREHPbHMMZR2XFNJVufjQatIAJWe+BikgQRiMO4k8wyS7OIAq7t
-         iZswEWyZvb42JNLOQ2tqaKddjpVthIRh42EE7oMUwAddkYdI3DX6n0Ov2TzBhcJMGvG4
-         B0Cx6sKw0VEqfAeb9gH4cOajQyjagFbjbi3/ATFjhW4/VlMDxFWHLm1w00ZnEFCdHs68
-         cbU8S6OPpTgAZiL4Fnt2svoHcIGarXkt1SuexdBRbk3qGEuK0/Fpw6sG0uJEa8DiJ1gH
-         puKTlx7va09YxtTV4dy1niXbdtA+VYNnd4PX2eBnU/CMgDfccpmi891blhNyfMB17dyl
-         w5Aw==
-X-Gm-Message-State: AOAM532YNKhRWoqrUm9lsYpD7UbLllUpsCCg5zGTrJ0pY0C7pLfW+DJc
-        ehIU7idrg6uW0YdVir8ZVkvZP1NREgtbZ/UeaoXsH0hgsn7P5FWKSmfRlle1jyAvtxMK5q3Nikd
-        CVH1fFAf9W4pIRgxwMCq0u5c0Rk/vaM14EA==
-X-Received: by 2002:a50:fd17:: with SMTP id i23mr727352eds.50.1603917312283;
-        Wed, 28 Oct 2020 13:35:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxQpVmMC85/uYP4ywhmAg3+8R38d2cO03kqeV9fRLbZDvJODVlNFcG/q/XwN/ngYqbeqRwSnQ==
-X-Received: by 2002:a50:fd17:: with SMTP id i23mr727328eds.50.1603917311967;
-        Wed, 28 Oct 2020 13:35:11 -0700 (PDT)
+        bh=wymB3yaPxNZhMixMCniEaWx/seo/S8VnG8VWpq2zAJg=;
+        b=lqy1v9QP8NcIyCUFoU64uio3VoKru2qNhjXgLqcoBWN8HiMiIgx761M4qQ8epkXsu6
+         3zPnunATbRrWhECvmfCo52UDwdwkVU34upuEU05g1AqPpkBkHp5mWye24oAg35ZYfR5u
+         J5nK8+xDFHGvpjsX1NZsEA0MK1DW/qpfckGNNyBCdtslStEOrAapUSgDm8snKaEWu6V2
+         QStIevGoILMoBqxsyUN4jRwb69sYteZvCJ6dgcn26Wh+xJs925Db9IvFpEss3ZH8d810
+         aOg+J0MauKTtWphYauSYKxRlkoj6huhyee/6QyzsAHcRQeZ67fIBiwEoch/6T0XFwCCk
+         MsJg==
+X-Gm-Message-State: AOAM533ZXEpuqCivlzM/IZbRazRpBX7nKWKmwTiqQfq/7vNHgeVCgCNz
+        /kaoAOLig8pzfEz6pyd1KhPdWIHSk5kKnliy7YprSDe/mHaWdJ+FgDihkv9W4z8BzFCJGpzuYQc
+        7lFueBnehW11Y0RmOpWYKUSpb3LQnr5CwcQ==
+X-Received: by 2002:a17:906:e42:: with SMTP id q2mr7137368eji.261.1603885057600;
+        Wed, 28 Oct 2020 04:37:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzNZoLFVFBOzkGDPJhBxYcOCfgBnPyO7i9zQqi6i5oTS4GzU6wBqoehZtloAJ818WnkGjra5g==
+X-Received: by 2002:a17:906:e42:: with SMTP id q2mr7137352eji.261.1603885057417;
+        Wed, 28 Oct 2020 04:37:37 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id a1sm421062edk.52.2020.10.28.13.35.10
+        by smtp.gmail.com with ESMTPSA id h13sm2756203edz.43.2020.10.28.04.37.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Oct 2020 13:35:11 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] Input: i8042 - Prevent intermixing i8042 commands
-To:     Raul E Rangel <rrangel@chromium.org>, linux-input@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, Shirish.S@amd.com,
-        Andy Shevchenko <andy@infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Rajat Jain <rajatja@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20200827144112.v2.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+        Wed, 28 Oct 2020 04:37:36 -0700 (PDT)
+Subject: Re: [PATCH RFC UEK5 5/7] debugfs: Restrict debugfs when the kernel is
+ locked down
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        eric.snowberg@oracle.com, john.haxby@oracle.com,
+        todd.vierling@oracle.com
+Cc:     David Howells <dhowells@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Greg KH <greg@kroah.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        James Morris <jmorris@namei.org>
+References: <20201020210004.18977-1-konrad.wilk@oracle.com>
+ <20201020210004.18977-6-konrad.wilk@oracle.com>
+ <20201020210808.GB21080@char.us.oracle.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <00524d2b-b734-ffd4-0d99-e8cbda8510b3@redhat.com>
-Date:   Wed, 28 Oct 2020 21:35:09 +0100
+Message-ID: <cd3f2a50-685a-c4a9-606a-939d02f84ea3@redhat.com>
+Date:   Wed, 28 Oct 2020 12:37:35 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200827144112.v2.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+In-Reply-To: <20201020210808.GB21080@char.us.oracle.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -93,233 +96,33 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-Quick self intro: I have take over drivers/platform/x86
-maintainership from Andy; and I'm working my way through
-the backlog of old patches in patchwork:
-https://patchwork.kernel.org/project/platform-driver-x86/list/
-
-On 8/27/20 10:41 PM, Raul E Rangel wrote:
-> The i8042_mutex must be held by writers of the AUX and KBD ports, as
-> well as users of i8042_command. There were a lot of users of
-> i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
-> This resulted in i8042_commands being issues in between PS/2
-> transactions.
+On 10/20/20 11:08 PM, Konrad Rzeszutek Wilk wrote:
+> On Tue, Oct 20, 2020 at 05:00:02PM -0400, Konrad Rzeszutek Wilk wrote:
+>> Disallow opening of debugfs files that might be used to muck around when
 > 
-> This change moves the mutex lock into i8042_command and removes the
-> burden of locking the mutex from the callers.
+> ..snip..
 > 
-> It is expected that the i8042_mutex is locked before calling
-> i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
-> layer via ps2_begin_command and ps2_end_command. Other modules
-> (serio_raw) do not currently lock the mutex, so there is still a
-> possibility for intermixed commands.
+>> [Backport:
+>>  Since UEK5 by default is confidentiality we have to outright
+>>  disallow debugfs if the default mode is selected. Hence the
+>>  call to __kernel_is_confidentiality_mode to help us.
+>>
+>>  If we are in integrity lockdown mode, we can enable debugfs
+>>  IF they match with the above 1-3 criteria]
 > 
-> Link: https://lore.kernel.org/linux-input/CAHQZ30ANTeM-pgdYZ4AbgxsnevBJnJgKZ1Kg+Uy8oSXZUvz=og@mail.gmail.com
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> <sigh>
+> 
+> And that is what I get for _not_ doing --suppress-cc=all
+> 
+> My apologies for spamming you all!
 
-Patch looks good to me, you can add my:
+Actually I find this a quite interesting patch, I think it would be
+good to get something like this done upstream, rather then relying
+on a downstream distro specific patch.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-(for both the drivers/platform/x86 bits and in general).
-
-Dmitry, feel free to merge this through the input tree, I don't
-expect the touched pdx86 parts to see any changes this cycle.
+Are there any plans to submit this upstream ?
 
 Regards,
 
 Hans
-
-
-
-
-
-> ---
-> Tested this on a device with only a PS/2 keyboard. I was able to do
-> 1200+ suspend/resume cycles.
-> 
-> Also tested this on a device with a PS/2 keyboard and a PS/2 mouse.
-> I was able to do 250+ iterations with out problems.
-> 
-> Changes in v2:
-> - Fixed bad indent
-> - Added Link: tag
-> - Removed left over rc variable
-> 
->  drivers/input/serio/i8042.c         | 29 ++++++++++++++---------------
->  drivers/leds/leds-clevo-mail.c      |  9 ---------
->  drivers/platform/x86/acer-wmi.c     |  2 --
->  drivers/platform/x86/amilo-rfkill.c |  6 +-----
->  include/linux/i8042.h               | 10 ----------
->  5 files changed, 15 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-> index 0dddf273afd94..65ca6b47f41e8 100644
-> --- a/drivers/input/serio/i8042.c
-> +++ b/drivers/input/serio/i8042.c
-> @@ -137,8 +137,7 @@ static DEFINE_SPINLOCK(i8042_lock);
->  
->  /*
->   * Writers to AUX and KBD ports as well as users issuing i8042_command
-> - * directly should acquire i8042_mutex (by means of calling
-> - * i8042_lock_chip() and i8042_unlock_ship() helpers) to ensure that
-> + * directly should acquire i8042_mutex to ensure that
->   * they do not disturb each other (unfortunately in many i8042
->   * implementations write to one of the ports will immediately abort
->   * command that is being processed by another port).
-> @@ -173,18 +172,6 @@ static irqreturn_t i8042_interrupt(int irq, void *dev_id);
->  static bool (*i8042_platform_filter)(unsigned char data, unsigned char str,
->  				     struct serio *serio);
->  
-> -void i8042_lock_chip(void)
-> -{
-> -	mutex_lock(&i8042_mutex);
-> -}
-> -EXPORT_SYMBOL(i8042_lock_chip);
-> -
-> -void i8042_unlock_chip(void)
-> -{
-> -	mutex_unlock(&i8042_mutex);
-> -}
-> -EXPORT_SYMBOL(i8042_unlock_chip);
-> -
->  int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
->  					struct serio *serio))
->  {
-> @@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
->  	unsigned long flags;
->  	int retval;
->  
-> +	mutex_lock(&i8042_mutex);
-> +
->  	spin_lock_irqsave(&i8042_lock, flags);
->  	retval = __i8042_command(param, command);
->  	spin_unlock_irqrestore(&i8042_lock, flags);
->  
-> +	mutex_unlock(&i8042_mutex);
-> +
->  	return retval;
->  }
->  EXPORT_SYMBOL(i8042_command);
-> @@ -379,10 +370,18 @@ static int i8042_kbd_write(struct serio *port, unsigned char c)
->  static int i8042_aux_write(struct serio *serio, unsigned char c)
->  {
->  	struct i8042_port *port = serio->port_data;
-> +	unsigned long flags;
-> +	int retval = 0;
-> +
-> +	spin_lock_irqsave(&i8042_lock, flags);
->  
-> -	return i8042_command(&c, port->mux == -1 ?
-> +	retval = __i8042_command(&c, port->mux == -1 ?
->  					I8042_CMD_AUX_SEND :
->  					I8042_CMD_MUX_SEND + port->mux);
-> +
-> +	spin_unlock_irqrestore(&i8042_lock, flags);
-> +
-> +	return retval;
->  }
->  
->  
-> diff --git a/drivers/leds/leds-clevo-mail.c b/drivers/leds/leds-clevo-mail.c
-> index f512e99b976b1..6c3d7e54f95cf 100644
-> --- a/drivers/leds/leds-clevo-mail.c
-> +++ b/drivers/leds/leds-clevo-mail.c
-> @@ -95,17 +95,12 @@ MODULE_DEVICE_TABLE(dmi, clevo_mail_led_dmi_table);
->  static void clevo_mail_led_set(struct led_classdev *led_cdev,
->  				enum led_brightness value)
->  {
-> -	i8042_lock_chip();
-> -
->  	if (value == LED_OFF)
->  		i8042_command(NULL, CLEVO_MAIL_LED_OFF);
->  	else if (value <= LED_HALF)
->  		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_0_5HZ);
->  	else
->  		i8042_command(NULL, CLEVO_MAIL_LED_BLINK_1HZ);
-> -
-> -	i8042_unlock_chip();
-> -
->  }
->  
->  static int clevo_mail_led_blink(struct led_classdev *led_cdev,
-> @@ -114,8 +109,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
->  {
->  	int status = -EINVAL;
->  
-> -	i8042_lock_chip();
-> -
->  	if (*delay_on == 0 /* ms */ && *delay_off == 0 /* ms */) {
->  		/* Special case: the leds subsystem requested us to
->  		 * chose one user friendly blinking of the LED, and
-> @@ -142,8 +135,6 @@ static int clevo_mail_led_blink(struct led_classdev *led_cdev,
->  		       *delay_on, *delay_off);
->  	}
->  
-> -	i8042_unlock_chip();
-> -
->  	return status;
->  }
->  
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 60c18f21588dd..6cb6f800503b2 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -1044,9 +1044,7 @@ static acpi_status WMID_set_u32(u32 value, u32 cap)
->  			return AE_BAD_PARAMETER;
->  		if (quirks->mailled == 1) {
->  			param = value ? 0x92 : 0x93;
-> -			i8042_lock_chip();
->  			i8042_command(&param, 0x1059);
-> -			i8042_unlock_chip();
->  			return 0;
->  		}
->  		break;
-> diff --git a/drivers/platform/x86/amilo-rfkill.c b/drivers/platform/x86/amilo-rfkill.c
-> index 493e169c8f615..c981c6e07ff94 100644
-> --- a/drivers/platform/x86/amilo-rfkill.c
-> +++ b/drivers/platform/x86/amilo-rfkill.c
-> @@ -28,12 +28,8 @@
->  static int amilo_a1655_rfkill_set_block(void *data, bool blocked)
->  {
->  	u8 param = blocked ? A1655_WIFI_OFF : A1655_WIFI_ON;
-> -	int rc;
->  
-> -	i8042_lock_chip();
-> -	rc = i8042_command(&param, A1655_WIFI_COMMAND);
-> -	i8042_unlock_chip();
-> -	return rc;
-> +	return i8042_command(&param, A1655_WIFI_COMMAND);
->  }
->  
->  static const struct rfkill_ops amilo_a1655_rfkill_ops = {
-> diff --git a/include/linux/i8042.h b/include/linux/i8042.h
-> index 0261e2fb36364..1c081081c161d 100644
-> --- a/include/linux/i8042.h
-> +++ b/include/linux/i8042.h
-> @@ -55,8 +55,6 @@ struct serio;
->  
->  #if defined(CONFIG_SERIO_I8042) || defined(CONFIG_SERIO_I8042_MODULE)
->  
-> -void i8042_lock_chip(void);
-> -void i8042_unlock_chip(void);
->  int i8042_command(unsigned char *param, int command);
->  int i8042_install_filter(bool (*filter)(unsigned char data, unsigned char str,
->  					struct serio *serio));
-> @@ -65,14 +63,6 @@ int i8042_remove_filter(bool (*filter)(unsigned char data, unsigned char str,
->  
->  #else
->  
-> -static inline void i8042_lock_chip(void)
-> -{
-> -}
-> -
-> -static inline void i8042_unlock_chip(void)
-> -{
-> -}
-> -
->  static inline int i8042_command(unsigned char *param, int command)
->  {
->  	return -ENODEV;
-> 
 
