@@ -2,118 +2,173 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7335DC388F7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 02:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215CFC55179
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 02:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1803B20738
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 02:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4362076B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 02:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="aVTFnJoI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EFZBLLoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbgJ2CLd (ORCPT
+        id S1726700AbgJ2COq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Oct 2020 22:11:33 -0400
-Received: from mail-mw2nam10on2079.outbound.protection.outlook.com ([40.107.94.79]:3616
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbgJ1VhW (ORCPT
+        Wed, 28 Oct 2020 22:14:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43459 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbgJ1Vfh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Oct 2020 17:37:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HORoQoikw8+Xq+OIkaPrGYkVjwWa7+FpGz4D05uKdaS3iU502LIgyGXO6JtTHCKihbfoYdNndVJEGnN4lGIwMFgC6rDFMTkEfIxhFrzszkuLFv6dVMmMZS838UwYDijqOfU/mMmvPZUcCPdB1f8DtujgemleaFYWAbVzymhjA2nJz/2vTN1O+xRK/JaU9NgetrOPyoH1GzM2dOXAtEE6+5Yw9Xq4mXNz5mC2UNscnZo4wAKbIC1Rr4QXwUsoFonpKLZsiG6oGzUOKJ2u0j/efnFJhr17vAvVI/CKjTTtnQnrACe1SJa4fPOp0NVJfR0T6hriOAasznBxuDTObW/o5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hfQlmjDDCDrFEL0P/4mD1RDLL81H8LLhsqP23JcD6b4=;
- b=CyqTorojBTTlrLsluY3cHAp6sdoFWsOAroJmRHz23S/uzRXdQlFzeCbhjf+ManyhP69y0jv6Xr8WENlE0NJTqcRE3sQJwTP71sHL2Vdlt1Tt5pdZqx8FCB3LGL8TDrw0fw4zgl6CNW4NteSa0X7og+H7WOUgO1g7BoAj7oDEhpBI87xCSpj5hTZzpJU+L+0jPBjTyyDZNbp9EdMUvHt1a7XfvIq9BXvx8QNdSJPK1dpYWo+e3eB/mTiF05dohno/BklWR6ixhS9bEsnnH0Ov1Zc93rbvUqNJf6EguM9VDAsPODbKiUyWYIZV1PjV3BvySIA3su5HkwH2c67axTKvkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hfQlmjDDCDrFEL0P/4mD1RDLL81H8LLhsqP23JcD6b4=;
- b=aVTFnJoIB8hNWJ3IVGXBcnBCVXYMiPBhm//rGrjrtNJsKWpOkGKv8ZVjUQwCfQexPII5KtmqAylCyNb2FW1ZgtZureql22r+JXZJs0HqqONxcTJR/m6S0qVLXuEwBKCRUkIJ+td2CkcG0vIcRn5wEfJJbtFm88+laf29bByMYRI=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from BN6PR1201MB0004.namprd12.prod.outlook.com
- (2603:10b6:404:ac::23) by BN8PR12MB3249.namprd12.prod.outlook.com
- (2603:10b6:408:68::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.25; Wed, 28 Oct
- 2020 19:04:08 +0000
-Received: from BN6PR1201MB0004.namprd12.prod.outlook.com
- ([fe80::e8ab:4ae2:8e36:dfc9]) by BN6PR1201MB0004.namprd12.prod.outlook.com
- ([fe80::e8ab:4ae2:8e36:dfc9%5]) with mapi id 15.20.3477.029; Wed, 28 Oct 2020
- 19:04:08 +0000
-Subject: Re: [PATCH] platform/x86: amd-pmc: Add AMD platform support for
- S2Idle
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
-Cc:     Alexander.Deucher@amd.com
-References: <20201023080410.458629-1-Shyam-sundar.S-k@amd.com>
- <9c38b017-edec-9c1b-3dfc-18a6a2000998@redhat.com>
- <afe22192-b9c3-5562-fc30-fbc6c90e655d@amd.com>
- <5d997a4e-faa3-1321-7360-9807bec56ada@redhat.com>
-From:   Shyam Sundar S K <ssundark@amd.com>
-Message-ID: <f84ac58c-2b03-524d-8d25-4052c8ff6ae0@amd.com>
-Date:   Thu, 29 Oct 2020 00:33:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
-In-Reply-To: <5d997a4e-faa3-1321-7360-9807bec56ada@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Originating-IP: [165.204.158.249]
-X-ClientProxiedBy: BM1PR01CA0139.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:40::33) To BN6PR1201MB0004.namprd12.prod.outlook.com
- (2603:10b6:404:ac::23)
+        Wed, 28 Oct 2020 17:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603920935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QJHhfZ2V2kb0ESkGQZCAib+1qqkooRbQR95yCbytl7s=;
+        b=EFZBLLoFENA5ieRplqxCSfzhUzYAHdUhuFnztpG3/I+HOaIOZvKdFBrar1dsvK/Fy8S6oW
+        GmAASkgGdqgguknAhyLsQuDUeI0Qt3TIrEes2vaYCQ6Pp2hyXvcW2BWHC7pa5KNAtLC0yB
+        0KHtRt9QumE53cCL/aY8Htike29JoC4=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-HhcSagUWODOM78PWYNc9Lw-1; Wed, 28 Oct 2020 07:33:42 -0400
+X-MC-Unique: HhcSagUWODOM78PWYNc9Lw-1
+Received: by mail-ed1-f70.google.com with SMTP id w24so2004522edl.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2020 04:33:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QJHhfZ2V2kb0ESkGQZCAib+1qqkooRbQR95yCbytl7s=;
+        b=YnzdeKWvTZ3Sx2RjwMh7dcxrZGEhKuB5uHeIBb1mPc7Mr72nPFEGJZYhcecuT3mOnW
+         1XOzXr5yWW3cZF+XTZwlPGRoJYTgtoZUCVyAYUxJ8c4GY2vzBQGwT922Qytq6QZkj8L4
+         W+fIHJAvbdxrZ8YWTnJeFWo+f+nCgaZdSEsdExXoOPj7l3uZWCXNVcI4Cz/Jile+eboN
+         hbkHR87jxgV0/Lfvgn4RhZuqS6zSxfw7OTjwz+a4/TMI/a76515DCE7Ph/bUlyOCBI7a
+         JR6xtL629aghEY6k7v/4H1T6i9JKUc4IY4y6qvHx7hb0zj5MqwbOC3uQnAyZXH8I1tlW
+         yRXg==
+X-Gm-Message-State: AOAM531qfAIns1VydNbImv6jGPywOCeTtTZlBBkUiim8I4MqHMpoyyZ7
+        6gQw2WFO7X5BlPIubtG7PScaGXxXO7mQ31yLo4rYBLtu2o1sICxoyp0CczPyNUeX1obonQIZA4x
+        jYZn8op5VtClTq8DtNZhomBDq3htJhL1yBg==
+X-Received: by 2002:a17:906:402:: with SMTP id d2mr3293510eja.165.1603884820789;
+        Wed, 28 Oct 2020 04:33:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxIKV5nnNTcNuopRKBG+aVCqjxcweo+pTjYRN//cyr5S9Wkk3HlbZG1Mt+zdaQ2EMO5feyEGA==
+X-Received: by 2002:a17:906:402:: with SMTP id d2mr3293495eja.165.1603884820534;
+        Wed, 28 Oct 2020 04:33:40 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
+        by smtp.gmail.com with ESMTPSA id k18sm2651040edx.54.2020.10.28.04.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Oct 2020 04:33:39 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: remove unneeded break
+To:     trix@redhat.com, jlee@suse.com, mgross@linux.intel.com,
+        malattia@linux.it
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201019133212.12671-1-trix@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <dd06e057-7ca8-972b-3d71-8e06aa68961f@redhat.com>
+Date:   Wed, 28 Oct 2020 12:33:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.157.208] (165.204.158.249) by BM1PR01CA0139.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:40::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Wed, 28 Oct 2020 19:04:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 55065528-4302-463f-8eae-08d87b743f6e
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3249:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB32492D4800A3579EFC2978019A170@BN8PR12MB3249.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1OAoUDMPIs/i5Hk/sbVu5Uy/0PJV6LENMMLhD2CkCkBefgNaAOYHT9u/NEtEWEdIUpPD+z9JSIOMc9OM999akWQSaW32ERw0pl1cGEMceLf3ifrigJdd+eDLOEOamEiN3bVNQzPZ+2N7dyGAfyP6cQZJmb5uGSB0OQzULRu66ZLYcq5zzvBPVZ94GegnjJ0g/cdTvhGXZjKoh6hdI4rmXzldCdw+WyCshwFlKBE7JXPdOnYIZkEZPoL5G4Qsw/HAb5MxtIWRvfaCHY/CMyVhOG+wrbUOzY/GzCKL1iRbuJVJt7zk5P/yca5HuiscYV6bgo3ZJxtqPUyh+EJUnjgdPUnwxIVjr6lpIw5T3JSHhs4JefQzlmV9deRsyB+x+6YmQNOf+QUUYM87p73o1y1RHxXa6N3o362juAu+QlaUjo4ec2wzMRwZ0uSAh/VTKiyO9oyf+OFVy4PTZeFqwI3y+g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB0004.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(2616005)(83380400001)(4326008)(6486002)(186003)(110136005)(16576012)(31696002)(16526019)(478600001)(31686004)(45080400002)(5660300002)(36756003)(966005)(6666004)(4744005)(8676002)(53546011)(52116002)(2906002)(8936002)(26005)(66946007)(66476007)(956004)(316002)(66556008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: MOhX0KwAVWGZxzlCpEHY4bWdSn4inO+IVXtD3DinuNfgJK4NC1i5n5SUdffznCnhdDy8mEnsivVqjxShCLvXU5zRPeUvevqPEGU7q+y+VHAxTE3JJxGBBCxkT4CTznbP8qKKi57nMpn3Ghz8UZq1RKPE767EvBLwn5233ZOOqQKlZSrGQiMSgTJdtUuKA+yBiWTtjEN57Pzg/VRsL0dE2IVq+/L4fIRK1j4gaGNao1KdKQ9OYgE+oboCeRXASXBSOJx6C74+4wlr9qYnrX2haMMMcDVWA/CZwH29GZkJQRrUI0xYqDdkFig5jMQAG+popOfmbYcyKfNcNWpOeKpEWn7mtNgbt01BPU6/izWLydoGbo4tj46ur8HItfu5so4qEUIGUT50pCR/dpCgMM7VGrF2ZSOiXkVLgBk9gxv3xtiBrMMVJXDGJHIfmA6r+ZtUt+vKQpTThnI//iIK+YZs5duhHvs5pXz1lCOk/eSMhNLsdrjczFQGHnkWWlkvZm/MGiY+e390p5RLV7UXqCAF4HJeNmPR2I32L2XjiZ2Eb+xSg5UGLitI12MmOp4IOJ2dDqUxpfBJWn6fkTWdVxqP7f43PKA/kX6gF0sbAsrGKEs40W94ynQycdNCJFsyeaunr/G9nUTg7+Da6nUwPi1Ozw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55065528-4302-463f-8eae-08d87b743f6e
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR1201MB0004.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2020 19:04:08.7316
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HFyjSeRMyylPuLJHKqg4Aj/Ef5lzoxWy62N82NwC5GaR46e/kYh3+5IorSw5h2LWbm5BNz4iQpvhWsY39IY2OA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3249
+In-Reply-To: <20201019133212.12671-1-trix@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-On 10/28/2020 10:48 PM, Hans de Goede wrote:
-> It looks like something went wrong with the sending of the v2, I do not
-> see it in my inbox, nor is it in patchwork:
->
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatchwork.kernel.org%2Fproject%2Fplatform-driver-x86%2Flist%2F&amp;data=04%7C01%7Cshyam-sundar.s-k%40amd.com%7Ca870bd81264340ff371d08d87b6571d2%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637395022917438402%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=KY%2F1aeuUNgcg%2BPyCzv%2BEbPJIeXCGn2lftA%2Byp4rBNIY%3D&amp;reserved=0
+On 10/19/20 3:32 PM, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> A break is not needed if it is preceded by a return
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-Not sure what's going wrong. Most likely AMD smtp servers are playing a 
-bit. Just resent it again. Can you kindly help to check?
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Thanks,
+Note it will show up there once I've pushed my local branch there,
+which might take a while.
 
-Shyam
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/x86/acer-wmi.c    | 1 -
+>  drivers/platform/x86/sony-laptop.c | 3 ---
+>  drivers/platform/x86/wmi.c         | 3 ---
+>  3 files changed, 7 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 49f4b73be513..1c2084c74a57 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -792,7 +792,6 @@ static acpi_status AMW0_set_u32(u32 value, u32 cap)
+>  		switch (quirks->brightness) {
+>  		default:
+>  			return ec_write(0x83, value);
+> -			break;
+>  		}
+>  	default:
+>  		return AE_ERROR;
+> diff --git a/drivers/platform/x86/sony-laptop.c b/drivers/platform/x86/sony-laptop.c
+> index e5a1b5533408..704813374922 100644
+> --- a/drivers/platform/x86/sony-laptop.c
+> +++ b/drivers/platform/x86/sony-laptop.c
+> @@ -2467,13 +2467,11 @@ static int __sony_nc_gfx_switch_status_get(void)
+>  		 * 0: integrated GFX (stamina)
+>  		 */
+>  		return result & 0x1 ? SPEED : STAMINA;
+> -		break;
+>  	case 0x015B:
+>  		/* 0: discrete GFX (speed)
+>  		 * 1: integrated GFX (stamina)
+>  		 */
+>  		return result & 0x1 ? STAMINA : SPEED;
+> -		break;
+>  	case 0x0128:
+>  		/* it's a more elaborated bitmask, for now:
+>  		 * 2: integrated GFX (stamina)
+> @@ -2482,7 +2480,6 @@ static int __sony_nc_gfx_switch_status_get(void)
+>  		dprintk("GFX Status: 0x%x\n", result);
+>  		return result & 0x80 ? AUTO :
+>  			result & 0x02 ? STAMINA : SPEED;
+> -		break;
+>  	}
+>  	return -EINVAL;
+>  }
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index d88f388a3450..44e802f9f1b4 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1260,13 +1260,10 @@ acpi_wmi_ec_space_handler(u32 function, acpi_physical_address address,
+>  	switch (result) {
+>  	case -EINVAL:
+>  		return AE_BAD_PARAMETER;
+> -		break;
+>  	case -ENODEV:
+>  		return AE_NOT_FOUND;
+> -		break;
+>  	case -ETIME:
+>  		return AE_TIME;
+> -		break;
+>  	default:
+>  		return AE_OK;
+>  	}
+> 
 
