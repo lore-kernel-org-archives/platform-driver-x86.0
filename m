@@ -2,164 +2,233 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A66C4363A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 01:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39FEC388F7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 01:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2639F208C7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 01:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6820206D5
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 01:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbgJ2BvB (ORCPT
+        id S1728702AbgJ2BxG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Oct 2020 21:51:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29254 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729139AbgJ2BuQ (ORCPT
+        Wed, 28 Oct 2020 21:53:06 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:46990 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728701AbgJ1V5n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Oct 2020 21:50:16 -0400
-IronPort-SDR: NLXl/uXU5rXfatNKBQZ+IkJVFGAhFrb90s2PEsn0baIqkp6nqcDsyPaiIyQLMdh6dktnsPszeu
- P25Pe8J16n+g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9788"; a="148223352"
-X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
-   d="scan'208";a="148223352"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2020 18:50:16 -0700
-IronPort-SDR: a/1YpQpkjMfBOpev4qFBdcqtkHKgowerUWj6XMMgryi8Z36+NdWLLaUlJPP+eTLsvl+HIaKXp6
- mHYRP20rMCbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,428,1596524400"; 
-   d="scan'208";a="334942495"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 28 Oct 2020 18:50:16 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 37581580718;
-        Wed, 28 Oct 2020 18:50:16 -0700 (PDT)
-Message-ID: <bc5f059c5bae957daebde699945c80808286bf45.camel@linux.intel.com>
-Subject: Re: [PATCH V8 0/5] Intel Platform Monitoring Technology
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>, lee.jones@linaro.org,
-        dvhart@infradead.org, andy@infradead.org, bhelgaas@google.com,
-        alexey.budankov@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Wed, 28 Oct 2020 18:50:16 -0700
-In-Reply-To: <2f17db4b-2988-7f0d-fd0e-9e5b621d24ec@redhat.com>
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
-         <2f17db4b-2988-7f0d-fd0e-9e5b621d24ec@redhat.com>
-Organization: David E. Box
+        Wed, 28 Oct 2020 17:57:43 -0400
+Received: from relay4-d.mail.gandi.net (unknown [217.70.183.196])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id E55933A5707;
+        Wed, 28 Oct 2020 13:45:40 +0000 (UTC)
+X-Originating-IP: 82.255.60.242
+Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
+        (Authenticated sender: hadess@hadess.net)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id EA179E0004;
+        Wed, 28 Oct 2020 13:45:15 +0000 (UTC)
+Message-ID: <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
+Subject: Re: [PATCH] Documentation: Add documentation for new
+ platform_profile sysfs attribute
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     dvhart@infradead.org, mgross@linux.intel.com,
+        mario.limonciello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
+        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>
+Date:   Wed, 28 Oct 2020 14:45:15 +0100
+In-Reply-To: <20201027164219.868839-1-markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
+         <20201027164219.868839-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, 2020-10-27 at 12:28 +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 10/3/20 3:31 AM, David E. Box wrote:
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring capabilities on a
-> > device.
-> > With customers increasingly asking for hardware telemetry,
-> > engineers not
-> > only have to figure out how to measure and collect data, but also
-> > how to
-> > deliver it and make it discoverable. The latter may be through some
-> > device
-> > specific method requiring device specific tools to collect the
-> > data. This
-> > in turn requires customers to manage a suite of different tools in
-> > order to
-> > collect the differing assortment of monitoring data on their
-> > systems.  Even
-> > when such information can be provided in kernel drivers, they may
-> > require
-> > constant maintenance to update register mappings as they change
-> > with
-> > firmware updates and new versions of hardware. PMT provides a
-> > solution for
-> > discovering and reading telemetry from a device through a hardware
-> > agnostic
-> > framework that allows for updates to systems without requiring
-> > patches to
-> > the kernel or software tools.
-> > 
-> > PMT defines several capabilities to support collecting monitoring
-> > data from
-> > hardware. All are discoverable as separate instances of the PCIE
-> > Designated
-> > Vendor extended capability (DVSEC) with the Intel vendor code. The
-> > DVSEC ID
-> > field uniquely identifies the capability. Each DVSEC also provides
-> > a BAR
-> > offset to a header that defines capability-specific attributes,
-> > including
-> > GUID, feature type, offset and length, as well as configuration
-> > settings
-> > where applicable. The GUID uniquely identifies the register space
-> > of any
-> > monitor data exposed by the capability. The GUID is associated with
-> > an XML
-> > file from the vendor that describes the mapping of the register
-> > space along
-> > with properties of the monitor data. This allows vendors to perform
-> > firmware updates that can change the mapping (e.g. add new metrics)
-> > without
-> > requiring any changes to drivers or software tools. The new mapping
-> > is
-> > confirmed by an updated GUID, read from the hardware, which
-> > software uses
-> > with a new XML.
-> > 
-> > The current capabilities defined by PMT are Telemetry, Watcher, and
-> > Crashlog.  The Telemetry capability provides access to a continuous
-> > block
-> > of read only data. The Watcher capability provides access to
-> > hardware
-> > sampling and tracing features. Crashlog provides access to device
-> > crash
-> > dumps.  While there is some relationship between capabilities
-> > (Watcher can
-> > be configured to sample from the Telemetry data set) each exists as
-> > stand
-> > alone features with no dependency on any other. The design
-> > therefore splits
-> > them into individual, capability specific drivers. MFD is used to
-> > create
-> > platform devices for each capability so that they may be managed by
-> > their
-> > own driver. The PMT architecture is (for the most part) agnostic to
-> > the
-> > type of device it can collect from. Software can determine which
-> > devices
-> > support a PMT feature by searching through each device node entry
-> > in the
-> > sysfs class folder. It can additionally determine if a particular
-> > device
-> > supports a PMT feature by checking for a PMT class folder in the
-> > device
-> > folder.
-> > 
-> > This patch set provides support for the PMT framework, along with
-> > support
-> > for Telemetry on Tiger Lake.
-> 
-> The entire series looks good to me, so you may add my:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Hey Hans, Mark,
 
-Thanks. I did send out a V9 after rebasing and noticing that I
-accidentally dropped a change in the MFD driver between V7 and V8. This
-was added back. I also took the opportunity to get rid of a nuisance
-dev_warn.
+On Tue, 2020-10-27 at 12:42 -0400, Mark Pearson wrote:
+> From: Hans de Goede <hdegoede@redhat.com>
+> 
+> On modern systems the platform performance, temperature, fan and
+> other
+> hardware related characteristics are often dynamically configurable.
+> The
+> profile is often automatically adjusted to the load by somei
+> automatic-mechanism (which may very well live outside the kernel).
+> 
+> These auto platform-adjustment mechanisms often can be configured
+> with
+> one of several 'platform-profiles', with either a bias towards low-
+> power
 
-David
+Can you please make sure to quote 'platform-profile' and 'profile-name'
+this way all through the document? They're not existing words, and
+quoting them shows that they're attribute names, rather than English.
+
+> consumption or towards performance (and higher power consumption and
+> thermals).
+
+s/thermal/temperature/
+
+"A thermal" is something else (it's seasonal underwear for me ;)
+
+> Introduce a new platform_profile sysfs API which offers a generic API
+> for
+> selecting the performance-profile of these automatic-mechanisms.
+> 
+> Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in V1:
+>  - Moved from RFC to proposed patch
+>  - Added cool profile as requested
+>  - removed extra-profiles as no longer relevant
+> 
+>  .../ABI/testing/sysfs-platform_profile        | 66
+> +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform_profile
+> b/Documentation/ABI/testing/sysfs-platform_profile
+> new file mode 100644
+> index 000000000000..240bd3d7532b
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform_profile
+> @@ -0,0 +1,66 @@
+> +Platform-profile selection (e.g.
+> /sys/firmware/acpi/platform_profile)
+> +
+> +On modern systems the platform performance, temperature, fan and
+> other
+> +hardware related characteristics are often dynamically configurable.
+> The
+> +profile is often automatically adjusted to the load by some
+> +automatic-mechanism (which may very well live outside the kernel).
+> +
+> +These auto platform-adjustment mechanisms often can be configured
+> with
+> +one of several 'platform-profiles', with either a bias towards low-
+> power
+> +consumption or towards performance (and higher power consumption and
+> +thermals).
+> +
+> +The purpose of the platform_profile attribute is to offer a generic
+> sysfs
+> +API for selecting the platform-profile of these automatic-
+> mechanisms.
+> +
+> +Note that this API is only for selecting the platform-profile, it is
+> +NOT a goal of this API to allow monitoring the resulting performance
+> +characteristics. Monitoring performance is best done with
+> device/vendor
+> +specific tools such as e.g. turbostat.
+> +
+> +Specifically when selecting a high-performance profile the actual
+> achieved
+> +performance may be limited by various factors such as: the heat
+> generated
+> +by other components, room temperature, free air flow at the bottom
+> of a
+> +laptop, etc. It is explicitly NOT a goal of this API to let
+> userspace know
+> +about any sub-optimal conditions which are impeding reaching the
+> requested
+> +performance level.
+> +
+> +Since numbers are a rather meaningless way to describe platform-
+> profiles
+
+It's not meaningless, but rather ambiguous. For a range of 1 to 5, is 1
+high performance, and 5 low power, or vice-versa?
+
+> +this API uses strings to describe the various profiles. To make sure
+> that
+> +userspace gets a consistent experience when using this API this API
+
+you can remove "when using this API".
+
+> +document defines a fixed set of profile-names. Drivers *must* map
+> their
+> +internal profile representation/names onto this fixed set.
+> +
+> +If for some reason there is no good match when mapping then a new
+> profile-name
+> +may be added.
+
+"for some reason" can be removed.
+
+>  Drivers which wish to introduce new profile-names must:
+> +1. Have very good reasons to do so.
+
+"1. Explain why the existing 'profile-names' cannot be used"
+
+> +2. Add the new profile-name to this document, so that future drivers
+> which also
+> +   have a similar problem can use the same name.
+
+"2. Add the new 'profile-name' to the documentation so that other
+drivers can use it, as well as user-space knowing clearly what
+behaviour the 'profile-name' corresponds to"
+
+> +
+> +What:          /sys/firmware/acpi/platform_profile_choices
+> +Date:          October 2020
+> +Contact:       Hans de Goede <hdegoede@redhat.com>
+> +Description:
+> +               Reading this file gives a space separated list of
+> profiles
+> +               supported for this device.
+
+"This file contains a space-separated list of profiles..."
+
+> +
+> +               Drivers must use the following standard profile-
+> names:
+> +
+> +               low-power:              Emphasises low power
+> consumption
+> +               cool:                   Emphasises cooler operation
+> +               quiet:                  Emphasises quieter operation
+> +               balanced:               Balance between low power
+> consumption
+> +                                       and performance
+> +               performance:            Emphasises performance (and
+> may lead to
+> +                                       higher temperatures and fan
+> speeds)
+
+I'd replace "Emphasises" with either "Focus on" or the US English
+spelling of "Emphasizes".
+
+> +               Userspace may expect drivers to offer at least
+> several of these
+> +               standard profile-names.
+
+Replce "at least several" with "more than one".
+
+> +
+> +What:          /sys/firmware/acpi/platform_profile
+> +Date:          October 2020
+> +Contact:       Hans de Goede <hdegoede@redhat.com>
+> +Description:
+> +               Reading this file gives the current selected profile
+> for this
+> +               device. Writing this file with one of the strings
+> from
+> +               available_profiles changes the profile to the new
+> value.
+
+Is there another file which explains whether those sysfs value will
+contain a trailing linefeed?
+
+Cheers
 
