@@ -2,288 +2,133 @@ Return-Path: <SRS0=JE7e=ED=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FCFC388F7
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 22:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81260C388F7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 22:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA919206F4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 22:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C3A2070E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Oct 2020 22:29:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJMfoN4o"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="T3s4+qCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730802AbgJ1WZT (ORCPT
+        id S2387559AbgJ1W3l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Oct 2020 18:25:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54435 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732805AbgJ1WZG (ORCPT
+        Wed, 28 Oct 2020 18:29:41 -0400
+Received: from mail-co1nam11on2065.outbound.protection.outlook.com ([40.107.220.65]:44865
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387545AbgJ1W3j (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Oct 2020 18:25:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603923903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sq1B8u8NLUEB8OJpFZ9ZPM/0L4/ZYp1FVYQZCWkCea0=;
-        b=QJMfoN4oYHNnQCMpewagHKJbpwrphefKQ/4+CPvqMsnYceFMPgxNivIkuhjt1p1AYxLyfz
-        y5Az/LxE7nNQIBdyvip6zZlyeKvxatq+Hf5B3uS2Hn35/ha8L+C2SSy3mMhH1SrrOC+6Tn
-        F1BmyrQAoY2w332xVa7ix5BnRZDVSfU=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-Dk7ary6NOOCVRgI3F54Gdg-1; Wed, 28 Oct 2020 13:23:16 -0400
-X-MC-Unique: Dk7ary6NOOCVRgI3F54Gdg-1
-Received: by mail-ej1-f71.google.com with SMTP id t1so95858ejb.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Oct 2020 10:23:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sq1B8u8NLUEB8OJpFZ9ZPM/0L4/ZYp1FVYQZCWkCea0=;
-        b=YyW90nadgxPWeKqrl2TqOGqHSrVSlBlCztkGbs/8q5ut6GssN+VuAV7IvoPFXaddP5
-         DDLrmOyC6EMD4FAykpizlOo/MUC85VeCB5MmJtPOIntRbKrKsy7xoJxVco26Yc4Byl7q
-         6PyHeZVOyPNqSf8N/tt8GMoh92h/NYb17sVNlOO6NVPsruDf0qXVCnIrdfQ0HkUEp/EV
-         wGoJHV9pcDOj2mrpApO9SProhfbkgA4SYCsAoXDl1YO5e9T4MunhfQprX1GE6CrZ2HKB
-         FBTSM3G+/kc/a1qNlm+XnQsn7fovtJPPXdP1lDWWHYok3rxayezv9aTbc8/B0cuwYy1p
-         eWSQ==
-X-Gm-Message-State: AOAM531y6M6fhZug/qa++Svm1kJ/QwCshpWKh/4NVO37i9hf9bLPMGet
-        0X76QcYsHAgD3NE/wuP1jprwD20wFHg2qgi67dX88O5f2pVXqOZ0OAwYsUTbe2krNsQl6NRMxCt
-        470A8ZAmH21NkFd4GEWh2jgmETatqFCY/ZQ==
-X-Received: by 2002:a17:906:6453:: with SMTP id l19mr125873ejn.366.1603905794985;
-        Wed, 28 Oct 2020 10:23:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzREE5X9JMuMW0uT+945/sNIo/Jw2GIPaYjye6jFS3w2G6zpJDNsvl2GTmVFhYI71fL0HiW4A==
-X-Received: by 2002:a17:906:6453:: with SMTP id l19mr125853ejn.366.1603905794640;
-        Wed, 28 Oct 2020 10:23:14 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id l17sm112230eji.14.2020.10.28.10.23.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Oct 2020 10:23:13 -0700 (PDT)
-Subject: Re: [PATCH] Documentation: Add documentation for new platform_profile
- sysfs attribute
-To:     Bastien Nocera <hadess@hadess.net>,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     dvhart@infradead.org, mgross@linux.intel.com,
-        mario.limonciello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20201027164219.868839-1-markpearson@lenovo.com>
- <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d5f0bcba-5366-87da-d199-a85d59ba6c1c@redhat.com>
-Date:   Wed, 28 Oct 2020 18:23:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Wed, 28 Oct 2020 18:29:39 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tpt2iHstfBj2oWcVNPy/fIIgrq6H2/dfPT2/wa5LbfExi07Ru5VHCLTDdG3kTEuC+4Zs1pTV0ZtAa6s1frW3UQteNZChn6iDhSet5WPHvU1cINGvKsqUGd7LFz33ULJ7TCxiVH2WO51TJ4eEuD6u8/LuTDOyIJVR7aWyt2p29l/4ni5pMG6h1jTeqKIdb79a87B76/Hl6jG3+v/lM2mx1wzSPBzBJdgDdJaWJt4Hp9QtbvOljivXdHWq7iU87mviHg7wn91BqOZdXRgx2mta2FZXfu4otWj4hmqJgwY2a5mqAFfllgt+apUy5UsJv8XrH/TgFhw7vclcfOiugtjwXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oRk27dkPrFe19FO7RWgDAJEO+MFznPhf43pneIgMKgY=;
+ b=f8D4H1LvuYoiHpffeHtr+Pqr+iD531LfyrcWlEaSpFFPn1wHOOUAFEIJilBRZHC5ylrV5I1iEUbr6pWKu0O9wpP2GZLPpiik86M3AgDt6C4RWZm895A4CPX/Vp3oeiGffQ45CwPdY04VUFuwklPjYyfaNCSt+DZcDfEYW4T2rsBM2U96s+MfwGcI0pt6g1BRThnLTtAP7XvjX52SfLFTOzP96EEdA1/+iE0o1MSpb0nsPHEsfBXZtJfwr+tAlccSuf9RIEIbdnAeKJOwJpMqkPkBDgXIASRSCqutFG/qqT8zQX7Dgb8GbQJ5Furr6MfBWLmu7128wq/ekWNuQngbNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oRk27dkPrFe19FO7RWgDAJEO+MFznPhf43pneIgMKgY=;
+ b=T3s4+qClw8s3XMyE8UFbM9rzKPcls5NXsKbiCdoo28xGqNlmO/7QStdzjkkbV66LoJsubYG/QbGSZvtWchP1iPFzCQKnfsmisDbFOAcmOe0ckoJ1NxX5OJ/pdxkLEjsKF3KOBQaatH5s8p4UzXLbrlt7qwIXvgiVKUDgEvSeFGo=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from BN6PR1201MB0004.namprd12.prod.outlook.com
+ (2603:10b6:404:ac::23) by BN8PR12MB3348.namprd12.prod.outlook.com
+ (2603:10b6:408:47::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.25; Wed, 28 Oct
+ 2020 15:55:34 +0000
+Received: from BN6PR1201MB0004.namprd12.prod.outlook.com
+ ([fe80::e8ab:4ae2:8e36:dfc9]) by BN6PR1201MB0004.namprd12.prod.outlook.com
+ ([fe80::e8ab:4ae2:8e36:dfc9%5]) with mapi id 15.20.3477.029; Wed, 28 Oct 2020
+ 15:55:34 +0000
+Subject: Re: [PATCH] platform/x86: amd-pmc: Add AMD platform support for
+ S2Idle
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+References: <20201023080410.458629-1-Shyam-sundar.S-k@amd.com>
+ <9c38b017-edec-9c1b-3dfc-18a6a2000998@redhat.com>
+Cc:     Alexander.Deucher@amd.com
+From:   Shyam Sundar S K <ssundark@amd.com>
+Message-ID: <afe22192-b9c3-5562-fc30-fbc6c90e655d@amd.com>
+Date:   Wed, 28 Oct 2020 21:24:55 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
+In-Reply-To: <9c38b017-edec-9c1b-3dfc-18a6a2000998@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [165.204.159.242]
+X-ClientProxiedBy: BM1PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:68::20) To BN6PR1201MB0004.namprd12.prod.outlook.com
+ (2603:10b6:404:ac::23)
 MIME-Version: 1.0
-In-Reply-To: <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.89.180] (165.204.159.242) by BM1PR01CA0150.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:68::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Wed, 28 Oct 2020 15:55:31 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 01a5126f-d31c-4d88-e5af-08d87b59e7c1
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3348:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB33488F6D5667A6CA93E0FFAD9A170@BN8PR12MB3348.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 15olNmgTlzZi62gPmeHdoFsBKNIzrO/F4DYuZKTz54Z072X7KLZa9halbhNtqukl0dgZs4UL0jLX22Aq5utWINt/o+hu2dBSkSSq8h+oVIkoExwSZh3G4RhEzybUHFrM5BUk9l0MVJI0Of2w2e6kQoekyoT/XBNmItsFiDkIgN2ELrdnohjQG6NjEDTeEGiQT/w1AhZTe9oeKAJrIl+IyZ3ihfQDf7OhzPLl7vGWRiQF+Q9aPBsy/TuIYrmDJsna5X7M2PvPBpGIFxuS3Mdmrp5f8z7+RsyxkDGE6Vd5eL7xJFCQqArPGKCuEz3Ec+Gh8m/FIRzbi52HUzutxCA/uCJtFBRSL01DSeC7eeK3djohLi2Hv6NyaDx3VoBSe7PQ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR1201MB0004.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(396003)(346002)(366004)(39860400002)(66476007)(36756003)(16526019)(16576012)(316002)(2906002)(66556008)(6666004)(8936002)(110136005)(6486002)(31686004)(52116002)(26005)(31696002)(53546011)(2616005)(956004)(66946007)(8676002)(5660300002)(4744005)(83380400001)(186003)(478600001)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: XYLGOhMqRqICkKLSGoEmXCl7EFkcrEYtR4wCRgbvN69Uj2UKuYkjBhVJePcDMoMf2bShiosZfyKiyMPoB941KUx97AL25mm9vJGatN0p97kHaNClcKChZ4wceFhZJcSB7S32MN6E5XxWjEr6yo7J591+Q+nWoAZpDcW4jVVGYpbPzDW6ThNsNsR7uZ6RownYB+hJb8fZnTqkWg0QDxTYIIvHb0YPGg7ZNBtuNhY07XoKuPRANkIbOArqlam1ZvwmVEPZ8Ls3py6enDlGtFRYLOJgKvBogZeEWMkBIbrjqiRbRiBFuWsXHGVIdYm4alDsbqdn2AL39IHTiPb59HI/I/ohbx/f1m7b5wMXsQlGtZvW/b8VpByTU4LYdke5u1FMla/P3fVK1HeEOTaZH8Y9dHGI5zDvmqxUm90XW705gLtfFywTwT+iUFmmR7gjCu3zng3ZAs0xtHeqANDOQt/+qnStmBp3HQKKmsUUBVvYsgLeVkp3MPzjRlYXjesq9OBoFuM7dayZ0U7r+82xpO0cd6W0HjkLe1O13p/WSLryMB42h1zW/Mg4lA307l5EHNGAERiAaEgRc31Q/wQ1SBCtykwEc8BbW1mTIfh6GNVVx5E9zgzGIiu/fdMN+q4+Ys9RJBn7B2FnoqiWYpN3U4aa9A==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01a5126f-d31c-4d88-e5af-08d87b59e7c1
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR1201MB0004.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Oct 2020 15:55:34.7463
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T313LFy3PoC2w4nI5bTXlunvJBN2F5q2tX70kFBWWmSawLHNRyfkXVdyC7hdzDwSxJl6iUfKrEHzjkfXjTO/7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3348
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Hans,
 
-On 10/28/20 2:45 PM, Bastien Nocera wrote:
-> Hey Hans, Mark,
-> 
-> On Tue, 2020-10-27 at 12:42 -0400, Mark Pearson wrote:
->> From: Hans de Goede <hdegoede@redhat.com>
+On 10/28/2020 5:48 PM, Hans de Goede wrote:
+> [CAUTION: External Email]
+>
+> Hi,
+>
+> On 10/23/20 10:04 AM, Shyam Sundar S K wrote:
+>> AMD Power Management Controller driver aka. amd-pmc driver is the
+>> controller which is meant for final S2Idle transaction that goes to the
+>> PMFW running on the AMD SMU (System Management Unit) responsible for
+>> tuning of the VDD.
 >>
->> On modern systems the platform performance, temperature, fan and
->> other
->> hardware related characteristics are often dynamically configurable.
->> The
->> profile is often automatically adjusted to the load by somei
->> automatic-mechanism (which may very well live outside the kernel).
+>> Once all the monitored list or the idle constraints are met, this driver
+>> would go and set the OS_HINT (meaning all the devices have reached to
+>> their lowest state possible) via the SMU mailboxes.
 >>
->> These auto platform-adjustment mechanisms often can be configured
->> with
->> one of several 'platform-profiles', with either a bias towards low-
->> power
-> 
-> Can you please make sure to quote 'platform-profile' and 'profile-name'
-> this way all through the document? They're not existing words, and
-> quoting them shows that they're attribute names, rather than English.
-> 
->> consumption or towards performance (and higher power consumption and
->> thermals).
-> 
-> s/thermal/temperature/
-> 
-> "A thermal" is something else (it's seasonal underwear for me ;)
-> 
->> Introduce a new platform_profile sysfs API which offers a generic API
->> for
->> selecting the performance-profile of these automatic-mechanisms.
+>> This driver would also provide some debug capabilities via debugfs.
 >>
->> Co-developed-by: Mark Pearson <markpearson@lenovo.com>
->> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in V1:
->>  - Moved from RFC to proposed patch
->>  - Added cool profile as requested
->>  - removed extra-profiles as no longer relevant
->>
->>  .../ABI/testing/sysfs-platform_profile        | 66
->> +++++++++++++++++++
->>  1 file changed, 66 insertions(+)
->>  create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
->>
->> diff --git a/Documentation/ABI/testing/sysfs-platform_profile
->> b/Documentation/ABI/testing/sysfs-platform_profile
->> new file mode 100644
->> index 000000000000..240bd3d7532b
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-platform_profile
->> @@ -0,0 +1,66 @@
->> +Platform-profile selection (e.g.
->> /sys/firmware/acpi/platform_profile)
->> +
->> +On modern systems the platform performance, temperature, fan and
->> other
->> +hardware related characteristics are often dynamically configurable.
->> The
->> +profile is often automatically adjusted to the load by some
->> +automatic-mechanism (which may very well live outside the kernel).
->> +
->> +These auto platform-adjustment mechanisms often can be configured
->> with
->> +one of several 'platform-profiles', with either a bias towards low-
->> power
->> +consumption or towards performance (and higher power consumption and
->> +thermals).
->> +
->> +The purpose of the platform_profile attribute is to offer a generic
->> sysfs
->> +API for selecting the platform-profile of these automatic-
->> mechanisms.
->> +
->> +Note that this API is only for selecting the platform-profile, it is
->> +NOT a goal of this API to allow monitoring the resulting performance
->> +characteristics. Monitoring performance is best done with
->> device/vendor
->> +specific tools such as e.g. turbostat.
->> +
->> +Specifically when selecting a high-performance profile the actual
->> achieved
->> +performance may be limited by various factors such as: the heat
->> generated
->> +by other components, room temperature, free air flow at the bottom
->> of a
->> +laptop, etc. It is explicitly NOT a goal of this API to let
->> userspace know
->> +about any sub-optimal conditions which are impeding reaching the
->> requested
->> +performance level.
->> +
->> +Since numbers are a rather meaningless way to describe platform-
->> profiles
-> 
-> It's not meaningless, but rather ambiguous. For a range of 1 to 5, is 1
-> high performance, and 5 low power, or vice-versa?
+>> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Thank you for your patch, I have various review remarks, see my
+> comments inline.
 
-It is meaningless because the space we are trying to describe with the
-profile-names is not 1 dimensional. E.g. as discussed before cool and
-low-power are not necessarily the same thing. If you have a better way
-to word this I'm definitely in favor of improving the text here.
+Adding Alex..
 
-> 
->> +this API uses strings to describe the various profiles. To make sure
->> that
->> +userspace gets a consistent experience when using this API this API
-> 
-> you can remove "when using this API".
-> 
->> +document defines a fixed set of profile-names. Drivers *must* map
->> their
->> +internal profile representation/names onto this fixed set.
->> +
->> +If for some reason there is no good match when mapping then a new
->> profile-name
->> +may be added.
-> 
-> "for some reason" can be removed.
-> 
->>  Drivers which wish to introduce new profile-names must:
->> +1. Have very good reasons to do so.
-> 
-> "1. Explain why the existing 'profile-names' cannot be used"
-> 
->> +2. Add the new profile-name to this document, so that future drivers
->> which also
->> +   have a similar problem can use the same name.
-> 
-> "2. Add the new 'profile-name' to the documentation so that other
-> drivers can use it, as well as user-space knowing clearly what
-> behaviour the 'profile-name' corresponds to"
-> 
->> +
->> +What:          /sys/firmware/acpi/platform_profile_choices
->> +Date:          October 2020
->> +Contact:       Hans de Goede <hdegoede@redhat.com>
->> +Description:
->> +               Reading this file gives a space separated list of
->> profiles
->> +               supported for this device.
-> 
-> "This file contains a space-separated list of profiles..."
-> 
->> +
->> +               Drivers must use the following standard profile-
->> names:
->> +
->> +               low-power:              Emphasises low power
->> consumption
->> +               cool:                   Emphasises cooler operation
->> +               quiet:                  Emphasises quieter operation
->> +               balanced:               Balance between low power
->> consumption
->> +                                       and performance
->> +               performance:            Emphasises performance (and
->> may lead to
->> +                                       higher temperatures and fan
->> speeds)
-> 
-> I'd replace "Emphasises" with either "Focus on" or the US English
-> spelling of "Emphasizes".
-> 
->> +               Userspace may expect drivers to offer at least
->> several of these
->> +               standard profile-names.
-> 
-> Replce "at least several" with "more than one".
-> 
->> +
->> +What:          /sys/firmware/acpi/platform_profile
->> +Date:          October 2020
->> +Contact:       Hans de Goede <hdegoede@redhat.com>
->> +Description:
->> +               Reading this file gives the current selected profile
->> for this
->> +               device. Writing this file with one of the strings
->> from
->> +               available_profiles changes the profile to the new
->> value.
-> 
-> Is there another file which explains whether those sysfs value will
-> contain a trailing linefeed?
+Thank you Hans for the feedback. I have sent a v2, can you please review it.
 
-sysfs APIs are typically created so that they can be used from the shell,
-so on read a newline will be added. On write a newline at the end
-typically is allowed, but ignored. There are even special helper functions
-to deal with properly ignoring the newline on write.
+Thanks,
 
-Regards,
-
-Hans
-
+Shyam
 
