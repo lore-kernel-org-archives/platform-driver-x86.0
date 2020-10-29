@@ -2,128 +2,105 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16613C2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59422C55178
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B188F2076E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LK9phlxH"
+	by mail.kernel.org (Postfix) with ESMTP id 05A722076A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1603965745;
+	bh=9kcfotFFJ47rYdLC6ZxzdCDBa1k7PeFD878Gh2iRMYw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=h/bdYB170Tom+dVcHdXoquHwT5dq5gj+QsQ3/agVzlLbvgSe63467Hw1qb7j0I80Q
+	 fwPx1d/HBXR4ZioLzw9joRROSJSDM3Zvvo0Sy8DRsvu7ZVN8z4kJ78wA+XMB11wQhB
+	 lEjENmXvW/CG4C6NQxftyVaBXnPUFcsDAbs9jniA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgJ2Jqr (ORCPT
+        id S1725909AbgJ2KCY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 05:46:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26902 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726830AbgJ2Jqp (ORCPT
+        Thu, 29 Oct 2020 06:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgJ2KCX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 05:46:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603964803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v4juQfAx3LxBzTcqekjK+MOSoDZx1NTXS/wKZYQGOXo=;
-        b=LK9phlxHhIvI3B603Us6mzSVBuplg1RWGtGfKwCvMEtUptCOkedY1hkoGm5yrQRU1KVEP2
-        nK3Hv+AtDfly1She7KLOmtJ1b+TM6XAk5blBfq2BbXaK4YPF0XsGRY/jxZ2W+ee1BFOAeN
-        i0n15t7KH2zucFCYYYDdZMcl//V3q/k=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-ircjxTa3Nd-bPGHYyEnuuA-1; Thu, 29 Oct 2020 05:46:42 -0400
-X-MC-Unique: ircjxTa3Nd-bPGHYyEnuuA-1
-Received: by mail-ej1-f72.google.com with SMTP id z25so963444ejd.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Oct 2020 02:46:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v4juQfAx3LxBzTcqekjK+MOSoDZx1NTXS/wKZYQGOXo=;
-        b=Y4Rl4YNVJBe8pSQ7TMISbXXeL4gvULiT8sebuKgkAtCx67D4o7WMpw83XxLH2pBgHm
-         NX2Q/Owb9IQEjE28kyktV5Xa+8ANb2C4NcL4dBHsiKjc0G9kbOC4+6VsQ63NABzje8g/
-         9oWuLCWLEBGqccHKL4Cp0yfQxkC1DOkb83P+wisEXou2B2yhaFwvSInMaXXVpjaTTamz
-         BPWl6UanvgrcbivgDhDXGP1cNBWo4yYhYu+bjvnI0cukQ7OSWbnDRFFoukvVr6H+qDwU
-         tTb8V/4u/NM28OlxWf2ygM1XLP4Gn6CyemmWrQU38c/jeAmKnFzHlyomaS+j/hFaJGy+
-         a+OA==
-X-Gm-Message-State: AOAM532RlQF+eQp/HZBu0UE2fcRDm5F08shPRzCaLlG72ebl6HvUPHBy
-        wyA+we+gATNsprnd8+eKG+jft4q1ciXCIqGd70OBYGkImIzFNwHYJoDgQSA4gRNSlx2lHEOldlp
-        gSGwMbEXN2ppSLKSTJ8HYaA+h8OUwDqvaXw==
-X-Received: by 2002:a05:6402:1691:: with SMTP id a17mr2984358edv.264.1603964800378;
-        Thu, 29 Oct 2020 02:46:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzKE7w0otUI+gbsHiZO1jXP8ILglLHS0/NREeyAFavkgmdFK4zjz2UD5PtGB/B2pPdy0w21NQ==
-X-Received: by 2002:a05:6402:1691:: with SMTP id a17mr2984338edv.264.1603964800185;
-        Thu, 29 Oct 2020 02:46:40 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id p20sm1140405ejd.78.2020.10.29.02.46.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 29 Oct 2020 02:46:39 -0700 (PDT)
-Subject: Re: [External] Re: [PATCH] Documentation: Add documentation for new
- platform_profile sysfs attribute
-To:     Mark Pearson <markpearson@lenovo.com>,
-        Bastien Nocera <hadess@hadess.net>
-Cc:     dvhart@infradead.org, mgross@linux.intel.com,
-        mario.limonciello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20201027164219.868839-1-markpearson@lenovo.com>
- <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
- <d5f0bcba-5366-87da-d199-a85d59ba6c1c@redhat.com>
- <b3e61ee4-3fca-ce06-2216-977586baae4e@lenovo.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ebeec472-3310-c560-e8bf-2b33c480333b@redhat.com>
-Date:   Thu, 29 Oct 2020 10:46:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Thu, 29 Oct 2020 06:02:23 -0400
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB54215A4;
+        Thu, 29 Oct 2020 09:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1603965098;
+        bh=9kcfotFFJ47rYdLC6ZxzdCDBa1k7PeFD878Gh2iRMYw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vMd1WTw46NmbdjDfGERZXE49CkIxTu62Lo98SE3sftOXo2ak1wjE9ZykA5QSCJ4f6
+         RDyWIZLY0FUMnquHbcpT2wuFgnwMWGJcElPYN/dCVDOBDKjwtw6POjOBjpvi7Bxxzs
+         IPD7rWkW0qA5Zp3lwpn5CoP9SOsl9SQ1SBIW0R2s=
+Received: by mail-qv1-f54.google.com with SMTP id b11so1072516qvr.9;
+        Thu, 29 Oct 2020 02:51:38 -0700 (PDT)
+X-Gm-Message-State: AOAM531iPFjBDH77Fzh6gQbCnPxvw2RSjiH09W81ktIs33bDifYtZd2Z
+        iZ9fVclvnvl4DqzGCkdGa0d2BHxI6WBsCG1nBpw=
+X-Google-Smtp-Source: ABdhPJxaZEntygitIVQOXS85Gb8nGw1osAMMJulsU6ZeD1uTGkc5sotJk4c97dNCIKL6ORL8v2BjlIfOh3rRL6d2/zw=
+X-Received: by 2002:ad4:4203:: with SMTP id k3mr2986180qvp.8.1603965097361;
+ Thu, 29 Oct 2020 02:51:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b3e61ee4-3fca-ce06-2216-977586baae4e@lenovo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20201028212417.3715575-1-arnd@kernel.org> <ea34f1d3-ed54-a2de-79d9-5cc8decc0ab3@redhat.com>
+In-Reply-To: <ea34f1d3-ed54-a2de-79d9-5cc8decc0ab3@redhat.com>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Thu, 29 Oct 2020 10:51:21 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
+Message-ID: <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
+Subject: Re: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-hyperv@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Thu, Oct 29, 2020 at 8:04 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 28/10/20 22:20, Arnd Bergmann wrote:
+> > Avoid this by renaming the global 'apic' variable to the more descriptive
+> > 'x86_system_apic'. It was originally called 'genapic', but both that
+> > and the current 'apic' seem to be a little overly generic for a global
+> > variable.
+>
+> The 'apic' affects only the current CPU, so one of 'x86_local_apic',
+> 'x86_lapic' or 'x86_apic' is probably preferrable.
 
-On 10/29/20 1:55 AM, Mark Pearson wrote:
-> Thanks Hans and Bastien,
-> 
-> On 28/10/2020 13:23, Hans de Goede wrote:
+Ok, I'll change it to x86_local_apic then, unless someone else has
+a preference between them.
 
-<big snip>
+> I don't have huge objections to renaming 'apic' variables and arguments
+> in KVM to 'lapic'.  I do agree with Sean however that it's going to
+> break again very soon.
 
->>> Is there another file which explains whether those sysfs value will
->>> contain a trailing linefeed?
->>
->> sysfs APIs are typically created so that they can be used from the shell,
->> so on read a newline will be added. On write a newline at the end
->> typically is allowed, but ignored. There are even special helper functions
->> to deal with properly ignoring the newline on write.
->>
->> Regards,
->>
->> Hans
->>
->>
-> OK - does that need to actually be specified here? Or is that just something I keep in mind for the implementation?
+I think ideally there would be no global variable, withall accesses
+encapsulated in function calls, possibly using static_call() optimizations
+if any of them are performance critical.
 
-IMHO it does not belong in the sysfs API docs for the platform_profile
-stuff. But I guess it would be good to document it somewhere in some
-generic syfs API rules/expectations document (with a note that their
-might be exceptions).
+It doesn't seem hard to do, but I'd rather leave that change to
+an x86 person ;-)
 
-Ideally we would already have such a file somewhere, but I don't know
-if we do (I did not look). So if you feel like it (and such a file does
-not exist yet) then I guess a patch adding such a doc file would be good.
-
-Regards,
-
-Hans
-
+      Arnd
