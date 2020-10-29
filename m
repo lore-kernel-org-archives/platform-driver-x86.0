@@ -2,116 +2,89 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00A9C2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D195EC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2868020780
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5538020796
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XrOLgCfq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbTdGARb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725379AbgJ2Lot (ORCPT
+        id S1725554AbgJ2LwF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 07:44:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39720 "EHLO
+        Thu, 29 Oct 2020 07:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725300AbgJ2Lot (ORCPT
+        with ESMTP id S1725385AbgJ2LwE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 07:44:49 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0419BC0613CF;
-        Thu, 29 Oct 2020 04:44:49 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dk16so2776370ejb.12;
-        Thu, 29 Oct 2020 04:44:48 -0700 (PDT)
+        Thu, 29 Oct 2020 07:52:04 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61728C0613CF;
+        Thu, 29 Oct 2020 04:52:04 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id e15so2134805pfh.6;
+        Thu, 29 Oct 2020 04:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LKpRS+J3S4zW7SsBfByGoHcVAvgpeitHzH7HZNlxGe0=;
-        b=XrOLgCfqm30w4SIyLTVie2fXWr3o5oTqTkamg/t53md3H3edriKLdjk6e77/pUklE6
-         +YB47rDOLuakBUBm4gMDOhExApuC5idkou2FfzjB1b0G1rJrYRCD61kieHRADAi9Rh9A
-         GO5t6xcCLnCEtpvh+GSJZ63nvhkNuV4qG5w4zvCKrSejSMDoj+saxEHvyL6Hfd86Tkh7
-         IOxfQ0uk03nrlSt5z/LgqVx3nv4f7q8Ok2Lc+DTPgG22s21+cv7ycCtvzGRupDhBXN3z
-         GtEtbm3jJhVPIPZ5TZQKosSBwUgKkSI9KSpM/OjTgPrVhWzqh8/JR2IRsKGR3NTNnCvL
-         WQfg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U3m1CrvhBF5ZSjmNj0DT84Tf4MllZuPLAp7rAxUIIvk=;
+        b=QbTdGARbBTH/u8+FxoM+algkxX8+k9z37QEV7DSMGJfl/VPaZif1EZtmt1UPut11q3
+         EVWLS4R53NN8MF8GXNC9B53c/zMgekULAhUJDxQcaP9OhOl6hs07H/rolO1r1S8LTb6L
+         U9F+u8KsQORfQ8vk5gBSX+VyhXQR+aPOP8Xfe7sqlaL/YGd74cGwFuMp5mLQI9iNPUDK
+         fl8rz6zWLVtrUO2NvrehBMxmypFHFhpbeTUuExptjP2+7zm69V3jh6vgxL3cp6x3rzMq
+         OhlaBmJaLka7PZD6znS+RFKyKdCHMJvxhywJci0czrWINe3bKzaJi11Gfi/QnluAy5Jj
+         Qalg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LKpRS+J3S4zW7SsBfByGoHcVAvgpeitHzH7HZNlxGe0=;
-        b=bPt1qnarE3R5NP9xMRFU/NfKROs/75O7mE/T3bvjIpSOHi9OUKHPE4Fmp8N7+m8ibn
-         F/C98HsFNtTLWh6lBa9vFw1UNaOthL0SIK4lqXRgSTTgeyViZu1joOPbaoTHIxuXzzF8
-         zFskC83rKSjsBxER4/3eysk3CzldOb3sXw55jU2fxR1OCw7art6mA7uIYqzZrqE3Duad
-         Aj1f/zz9i/MfMT6twR9E09ZCDhObVVU5z5qgfKBivXxxx3xnBvmCy1Cdk965P2CJ7dtm
-         1a7gqMOCY82hTwRPKVMAhzy+eh5cRgTgwrEmEJ2iTeG7pTI2oTpYBf5QJbkof37kgUWa
-         dFbQ==
-X-Gm-Message-State: AOAM531ErLUWXKkRHXXsSdgfaIICOnTtjd3VamulwhQATCfWhttuFQ+t
-        NbAXCEr4nvgY1uXkaAPtmP0=
-X-Google-Smtp-Source: ABdhPJwPIGKw5qbd87rBfffccrIvL3vijxnbjkvfgcNESlYp8KnsyxxBfxvX5n5wgaBgcHM0wVLAwA==
-X-Received: by 2002:a17:906:444:: with SMTP id e4mr3917154eja.218.1603971887632;
-        Thu, 29 Oct 2020 04:44:47 -0700 (PDT)
-Received: from felia.fritz.box (mue-88-130-59-025.dsl.tropolys.de. [88.130.59.25])
-        by smtp.gmail.com with ESMTPSA id x2sm1385593edr.65.2020.10.29.04.44.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Oct 2020 04:44:46 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Divya Bharathi <divya.bharathi@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Prasanth KSR <prasanth.ksr@dell.com>,
-        Joe Perches <joe@perches.com>,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify DELL WMI SYSMAN DRIVERS section
-Date:   Thu, 29 Oct 2020 12:44:25 +0100
-Message-Id: <20201029114425.22520-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U3m1CrvhBF5ZSjmNj0DT84Tf4MllZuPLAp7rAxUIIvk=;
+        b=nRNcpD2v/4L06ATsBDxBpBx8dbS/0nR85LXyqy49s6cw5BRipnuatxIJxmSaRwHyB5
+         +C/6QmuXkx3hqtg1fxCgAoxucyzPx0U8bYgm9IKbmJFDwTgCy4xaVSaJTRPYyXXaO2sh
+         fBJAjYJmF2ZKNlmQY3ft9eIgBYZXNbKAMksDiUmO0gPuWmanfjAr1uqXshnwltPuU8Gd
+         Hhrxvk18ShkE78TWHBOQ6Nqg8Q/tCfE/ikGManS+Xhzi7Crh182o5U4nJEFNKqNiLNpF
+         b/NYo68vhIW6vH3kq5CttdSmbaf9kijJqTIncXVeBSBxAA0p7XgXDkBnNA8gHpn3NZYR
+         ck6w==
+X-Gm-Message-State: AOAM532btieDmoDCzyCzFpKH7f9jPzCjxY8yS17VYx2VpRihxgAyrLi3
+        8EJ8+BgNaEOCf1s6aQWKPXBV01422sD1NTx2PNg=
+X-Google-Smtp-Source: ABdhPJyaBf39lMSO0TPYNh2S8KAa85eKhsXcVTmuCiVl5I8J3IMkHJ2lCrVhNke2Ju0R+sUHXoOSMyJmKC8jFQRHUBM=
+X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr3907925pjs.181.1603972323962;
+ Thu, 29 Oct 2020 04:52:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <1603972048-64271-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1603972048-64271-1-git-send-email-zou_wei@huawei.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 29 Oct 2020 13:52:53 +0200
+Message-ID: <CAHp75Ve64EvD7_H8h2MW39dpimWbPcANZC3-zgF__yA6C7BGQA@mail.gmail.com>
+Subject: Re: [PATCH -next] platform/surface: remove status assignment without reading
+To:     Zou Wei <zou_wei@huawei.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Commit e8a60aa7404b ("platform/x86: Introduce support for Systems
-Management Driver over WMI for Dell Systems") added a new section
-DELL WMI SYSMAN DRIVERS in MAINTAINERS, but slipped in a typo.
+On Thu, Oct 29, 2020 at 1:36 PM Zou Wei <zou_wei@huawei.com> wrote:
+>
+> The status local variable is assigned but never read:
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+...
 
-  warning: no file matches    F:    drivers/platform/x86/dell-wmi-syman/*
+>         mutex_lock(&s3_wmi_lock);
+> -       status = wmi_query_block(guid, instance, &output);
 
-Point the file entry to the right location and add an entry for its
-Documentation while at it.
+What are you doing?!
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Divya, please ack.
 
-Hans, please pick this minor non-urgent patch into your -next x86 platform
-driver tree on top of commit mentioned above.
-
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b8a905354ee9..a0a86daa9c51 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4974,7 +4974,8 @@ M:	Mario Limonciello <mario.limonciello@dell.com>
- M:	Prasanth Ksr <prasanth.ksr@dell.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/dell-wmi-syman/*
-+F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
-+F:	drivers/platform/x86/dell-wmi-sysman/
- 
- DELL WMI NOTIFICATIONS DRIVER
- M:	Matthew Garrett <mjg59@srcf.ucam.org>
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
