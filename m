@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D195EC2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62F3C2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5538020796
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852E220782
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 11:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbTdGARb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R/UxXVqN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725554AbgJ2LwF (ORCPT
+        id S1725894AbgJ2Lxd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 07:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
+        Thu, 29 Oct 2020 07:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgJ2LwE (ORCPT
+        with ESMTP id S1725843AbgJ2Lxc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 07:52:04 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61728C0613CF;
-        Thu, 29 Oct 2020 04:52:04 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id e15so2134805pfh.6;
-        Thu, 29 Oct 2020 04:52:04 -0700 (PDT)
+        Thu, 29 Oct 2020 07:53:32 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CD8C0613CF;
+        Thu, 29 Oct 2020 04:53:30 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id e7so2108241pfn.12;
+        Thu, 29 Oct 2020 04:53:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=U3m1CrvhBF5ZSjmNj0DT84Tf4MllZuPLAp7rAxUIIvk=;
-        b=QbTdGARbBTH/u8+FxoM+algkxX8+k9z37QEV7DSMGJfl/VPaZif1EZtmt1UPut11q3
-         EVWLS4R53NN8MF8GXNC9B53c/zMgekULAhUJDxQcaP9OhOl6hs07H/rolO1r1S8LTb6L
-         U9F+u8KsQORfQ8vk5gBSX+VyhXQR+aPOP8Xfe7sqlaL/YGd74cGwFuMp5mLQI9iNPUDK
-         fl8rz6zWLVtrUO2NvrehBMxmypFHFhpbeTUuExptjP2+7zm69V3jh6vgxL3cp6x3rzMq
-         OhlaBmJaLka7PZD6znS+RFKyKdCHMJvxhywJci0czrWINe3bKzaJi11Gfi/QnluAy5Jj
-         Qalg==
+        bh=8Jxchq7sCXMiWwVgsGg6TDfLEzPFFR+3USmaiSFuWJc=;
+        b=R/UxXVqNgzuEvy9FEU7T22/1vP52mU1PCwePPqXXMSTpgN6sG3AOzIS8zMX35CqsD4
+         qjMZFGGRpJgMGj9Ltcy9dk/iQMoTk5CLg0QATjsBUmYp+QgigGv92n/Wdzy2pb/+HIQH
+         qaJSp1hCkwa9hhkENXgpvMDRoEddtf43EMSk5CAFFm+rLXFD2WL7ZssjE857lHW53d/f
+         F3Q6bS3VJmMdAmqhsvp4y+X4koDE46B0w/yb8uFZ1ahK+2g0DJHc0Bqq9hrpTWGKWsuA
+         odKT6M8jmFHxeAYoyb6DNPWKkvoGCcLng3w9i84KeYn5YYL9tJRtUfUqB+k1lUgt+fUY
+         HG+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U3m1CrvhBF5ZSjmNj0DT84Tf4MllZuPLAp7rAxUIIvk=;
-        b=nRNcpD2v/4L06ATsBDxBpBx8dbS/0nR85LXyqy49s6cw5BRipnuatxIJxmSaRwHyB5
-         +C/6QmuXkx3hqtg1fxCgAoxucyzPx0U8bYgm9IKbmJFDwTgCy4xaVSaJTRPYyXXaO2sh
-         fBJAjYJmF2ZKNlmQY3ft9eIgBYZXNbKAMksDiUmO0gPuWmanfjAr1uqXshnwltPuU8Gd
-         Hhrxvk18ShkE78TWHBOQ6Nqg8Q/tCfE/ikGManS+Xhzi7Crh182o5U4nJEFNKqNiLNpF
-         b/NYo68vhIW6vH3kq5CttdSmbaf9kijJqTIncXVeBSBxAA0p7XgXDkBnNA8gHpn3NZYR
-         ck6w==
-X-Gm-Message-State: AOAM532btieDmoDCzyCzFpKH7f9jPzCjxY8yS17VYx2VpRihxgAyrLi3
-        8EJ8+BgNaEOCf1s6aQWKPXBV01422sD1NTx2PNg=
-X-Google-Smtp-Source: ABdhPJyaBf39lMSO0TPYNh2S8KAa85eKhsXcVTmuCiVl5I8J3IMkHJ2lCrVhNke2Ju0R+sUHXoOSMyJmKC8jFQRHUBM=
-X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr3907925pjs.181.1603972323962;
- Thu, 29 Oct 2020 04:52:03 -0700 (PDT)
+        bh=8Jxchq7sCXMiWwVgsGg6TDfLEzPFFR+3USmaiSFuWJc=;
+        b=SbXjnrrERHTmYTJxOZRr2OgCaKmwfumGLMBQGxz+q1yKkAskPSGZFF8uSCYiz3jSjJ
+         gmZXI3Zd6uSkakwC4KWbNDZbmuC4N8z20QzKfjMaN5YrvMinJvbxqMK5HB+gQx6cnbEy
+         egtPs/o4CfbgO3tpT2TPQj0JV+iFmLWyL3kacayBuhkm1eG0OSIP9uIXx+fmHb16L6eI
+         HY9ZiOwYzEyVzzTwRAdnysDFZE75SXSWIC8S62gBAfHGmAAzUWnf0xQdoN/BFN98W3x8
+         BTAZLgfNY18Vh5ENR1jLLVIq2g+LZx1uDgL7K6ylvgP2upr3d5KNDUAczN7NYGNn1pOz
+         Wyhg==
+X-Gm-Message-State: AOAM530kw9ZH/nBzwSx6LS7KHCg3/EldCgGWWfKWoTQT9aUZx73+xy3p
+        zZjk9ocqa3pf/DE6zLPOHXqakq2evKRVX+JJerI=
+X-Google-Smtp-Source: ABdhPJzOuWEOsKhl3x4cJJOs0Mf2T3Q+nd6qlZRxnXUrgntCEabtk2oR9XYT8Iez7oBb/cXC0wfzVOMMTG+N9FuQHGo=
+X-Received: by 2002:a17:90b:305:: with SMTP id ay5mr4124931pjb.129.1603972410379;
+ Thu, 29 Oct 2020 04:53:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <1603972048-64271-1-git-send-email-zou_wei@huawei.com>
-In-Reply-To: <1603972048-64271-1-git-send-email-zou_wei@huawei.com>
+References: <1603971249-64044-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1603971249-64044-1-git-send-email-zou_wei@huawei.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Oct 2020 13:52:53 +0200
-Message-ID: <CAHp75Ve64EvD7_H8h2MW39dpimWbPcANZC3-zgF__yA6C7BGQA@mail.gmail.com>
-Subject: Re: [PATCH -next] platform/surface: remove status assignment without reading
+Date:   Thu, 29 Oct 2020 13:54:19 +0200
+Message-ID: <CAHp75VcbXEQ7YVEOMsB2cy50HoBaH9eb6rgN=7ou-UMrH62TRQ@mail.gmail.com>
+Subject: Re: [PATCH -next] platform/x86/dell-wmi-sysman: Make some symbols static
 To:     Zou Wei <zou_wei@huawei.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -73,16 +72,38 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 1:36 PM Zou Wei <zou_wei@huawei.com> wrote:
+On Thu, Oct 29, 2020 at 1:22 PM Zou Wei <zou_wei@huawei.com> wrote:
 >
-> The status local variable is assigned but never read:
+> Fix the following sparse warnings:
+>
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:38:23:
+> warning: symbol 'po_is_pass_set' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:70:23: warning:
+> symbol 'po_current_password' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:99:23:
+> warning: symbol 'po_new_password' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:103:23:
+> warning: symbol 'po_min_pass_length' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:107:23:
+> warning: symbol 'po_max_pass_length' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:116:23:
+> warning: symbol 'po_mechanism' was not declared. Should it be static?
+> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:129:23:
+> warning: symbol 'po_role' was not declared. Should it be static?
+>
+> po_is_pass_set, po_current_password, po_new_password,
+> po_min_pass_length, po_max_pass_length, po_mechanism and po_role
+> have only call within passobj-attributes.c
+> They should be static
+
+I think at the same time you may put all of them in a way that each
+occupies only a single line.
 
 ...
 
->         mutex_lock(&s3_wmi_lock);
-> -       status = wmi_query_block(guid, instance, &output);
-
-What are you doing?!
+> -struct kobj_attribute po_role =
+> +static struct kobj_attribute po_role =
+>         __ATTR_RO(role);
 
 
 -- 
