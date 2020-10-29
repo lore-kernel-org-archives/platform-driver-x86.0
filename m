@@ -2,105 +2,171 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59422C55178
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1161DC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05A722076A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DECF20790
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 10:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1603965745;
-	bh=9kcfotFFJ47rYdLC6ZxzdCDBa1k7PeFD878Gh2iRMYw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=h/bdYB170Tom+dVcHdXoquHwT5dq5gj+QsQ3/agVzlLbvgSe63467Hw1qb7j0I80Q
-	 fwPx1d/HBXR4ZioLzw9joRROSJSDM3Zvvo0Sy8DRsvu7ZVN8z4kJ78wA+XMB11wQhB
-	 lEjENmXvW/CG4C6NQxftyVaBXnPUFcsDAbs9jniA=
+	s=default; t=1603965842;
+	bh=lsFw3OOqgVhP+yvjAUcffFTse7k37g09prNTuvTfXMA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZptBL+aadBJqNGnJhx4w7JNydJuMuQjTMIVWOQWzvTQtwhIWFY35vg3lm5IuIcUYW
+	 VKGlS1kpAnJCzJPNG5n3qhdTmW9xBzGlbZ0NiXaANOrPnjJkstlRisL8LquoGJ2tYF
+	 Bz5qUs0Vi/vK1vg3cF6q0iyy62/uYTFDDJrRIk0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbgJ2KCY (ORCPT
+        id S1725769AbgJ2KEC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 06:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44760 "EHLO mail.kernel.org"
+        Thu, 29 Oct 2020 06:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgJ2KCX (ORCPT
+        id S1725765AbgJ2KEC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 06:02:23 -0400
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 29 Oct 2020 06:04:02 -0400
+Received: from coco.lan (ip5f5ad5de.dynamic.kabel-deutschland.de [95.90.213.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB54215A4;
-        Thu, 29 Oct 2020 09:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C955206E3;
+        Thu, 29 Oct 2020 10:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603965098;
-        bh=9kcfotFFJ47rYdLC6ZxzdCDBa1k7PeFD878Gh2iRMYw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vMd1WTw46NmbdjDfGERZXE49CkIxTu62Lo98SE3sftOXo2ak1wjE9ZykA5QSCJ4f6
-         RDyWIZLY0FUMnquHbcpT2wuFgnwMWGJcElPYN/dCVDOBDKjwtw6POjOBjpvi7Bxxzs
-         IPD7rWkW0qA5Zp3lwpn5CoP9SOsl9SQ1SBIW0R2s=
-Received: by mail-qv1-f54.google.com with SMTP id b11so1072516qvr.9;
-        Thu, 29 Oct 2020 02:51:38 -0700 (PDT)
-X-Gm-Message-State: AOAM531iPFjBDH77Fzh6gQbCnPxvw2RSjiH09W81ktIs33bDifYtZd2Z
-        iZ9fVclvnvl4DqzGCkdGa0d2BHxI6WBsCG1nBpw=
-X-Google-Smtp-Source: ABdhPJxaZEntygitIVQOXS85Gb8nGw1osAMMJulsU6ZeD1uTGkc5sotJk4c97dNCIKL6ORL8v2BjlIfOh3rRL6d2/zw=
-X-Received: by 2002:ad4:4203:: with SMTP id k3mr2986180qvp.8.1603965097361;
- Thu, 29 Oct 2020 02:51:37 -0700 (PDT)
+        s=default; t=1603965841;
+        bh=lsFw3OOqgVhP+yvjAUcffFTse7k37g09prNTuvTfXMA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EIRZlzcK0Ha52CG9CUUqZCCnW21XlR1KefcFtyDGms+ygaOAPTnebxZK5GYE867ps
+         nEHNsHoGiuLnQIuQRUWMI3qHLBBpiNfWpMJq/k74zHThwDntICO9NbgZasJ4SiO3jV
+         oaFfZfWRjKuyDh4oICuaviZsGxygwwHozLARW8D4=
+Date:   Thu, 29 Oct 2020 11:03:53 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Divya Bharathi <divya27392@gmail.com>
+Cc:     dvhart@infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        mark gross <mgross@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Prasanth KSR <prasanth.ksr@dell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v7] Introduce support for Systems Management Driver over
+ WMI for Dell Systems
+Message-ID: <20201029110353.6c8dfb61@coco.lan>
+In-Reply-To: <20201029090114.64daf4e3@coco.lan>
+References: <20201027134944.316730-1-divya.bharathi@dell.com>
+        <20201029090114.64daf4e3@coco.lan>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20201028212417.3715575-1-arnd@kernel.org> <ea34f1d3-ed54-a2de-79d9-5cc8decc0ab3@redhat.com>
-In-Reply-To: <ea34f1d3-ed54-a2de-79d9-5cc8decc0ab3@redhat.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Thu, 29 Oct 2020 10:51:21 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
-Message-ID: <CAK8P3a0e0YAkh_9S1ZG5FW3QozZnp1CwXUfWx9VHWkY=h+FVxw@mail.gmail.com>
-Subject: Re: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-hyperv@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Oct 29, 2020 at 8:04 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 28/10/20 22:20, Arnd Bergmann wrote:
-> > Avoid this by renaming the global 'apic' variable to the more descriptive
-> > 'x86_system_apic'. It was originally called 'genapic', but both that
-> > and the current 'apic' seem to be a little overly generic for a global
-> > variable.
->
-> The 'apic' affects only the current CPU, so one of 'x86_local_apic',
-> 'x86_lapic' or 'x86_apic' is probably preferrable.
+Em Thu, 29 Oct 2020 09:01:14 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-Ok, I'll change it to x86_local_apic then, unless someone else has
-a preference between them.
+> Em Tue, 27 Oct 2020 19:19:44 +0530
+> Divya Bharathi <divya27392@gmail.com> escreveu:
+> 
+> > The Dell WMI Systems Management Driver provides a sysfs
+> > interface for systems management to enable BIOS configuration
+> > capability on certain Dell Systems.
+> > 
+> > This driver allows user to configure Dell systems with a
+> > uniform common interface. To facilitate this, the patch
+> > introduces a generic way for driver to be able to create
+> > configurable BIOS Attributes available in Setup (F2) screen.
+> > 
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: mark gross <mgross@linux.intel.com>
+> > 
+> > Co-developed-by: Mario Limonciello <mario.limonciello@dell.com>
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > Co-developed-by: Prasanth KSR <prasanth.ksr@dell.com>
+> > Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
+> > Signed-off-by: Divya Bharathi <divya.bharathi@dell.com>
+> > ---  
+> 
+> 
+> > +What:		/sys/class/firmware-attributes/*/authentication/
+> > +Date:		February 2021
+> > +KernelVersion:	5.11
+> > +Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
+> > +		Mario Limonciello <mario.limonciello@dell.com>,
+> > +		Prasanth KSR <prasanth.ksr@dell.com>
+> > +
+> > +		Devices support various authentication mechanisms which can be exposed
+> > +		as a separate configuration object.
+> > +
+> > +		For example a "BIOS Admin" password and "System" Password can be set,
+> > +		reset or cleared using these attributes.
+> > +		- An "Admin" password is used for preventing modification to the BIOS
+> > +		  settings.
+> > +		- A "System" password is required to boot a machine.
+> > +  
+> 
+> This is adding a new warning:
+> 
+> 	$ ./scripts/get_abi.pl validate
+> 	Warning: file Documentation/ABI/testing/sysfs-class-firmware-attributes#172:
+> 		What '/sys/class/firmware-attributes/*/authentication/' doesn't have a description
+> 
+> Because you forgot to add a Description: tag.
+> 
+> Feel free to either add the enclosed tag to the tree which added this into
+> linux-next, or to fold id with the original patch.
+> 
+> Thanks,
+> Mauro
+> 
+> ABI: docs: sysfs-class-firmware-attributes: add a missing tag
+>     
+> The Description:  tag is missing, causing this warning with
+> scripts/get_abi.pl:
+>     
+> 	Warning: file Documentation/ABI/testing/sysfs-class-firmware-attributes#172:
+> 		 What '/sys/class/firmware-attributes/*/authentication/' doesn't have a description
+>     
+> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 04a15c72e883..ea1837f1f3c2 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -113,7 +113,7 @@ KernelVersion:	5.11
+>  Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
+>  		Mario Limonciello <mario.limonciello@dell.com>,
+>  		Prasanth KSR <prasanth.ksr@dell.com>
+> -
+> +Description:
+>  		Devices support various authentication mechanisms which can be exposed
+>  		as a separate configuration object.
+>  
+> 
 
-> I don't have huge objections to renaming 'apic' variables and arguments
-> in KVM to 'lapic'.  I do agree with Sean however that it's going to
-> break again very soon.
+There are a few other warnings produced by it, when generating the
+ABI output, so, I sent a new patch covering all warnings.
 
-I think ideally there would be no global variable, withall accesses
-encapsulated in function calls, possibly using static_call() optimizations
-if any of them are performance critical.
+If you want to test the ABI file generation, the patchset is at:
 
-It doesn't seem hard to do, but I'd rather leave that change to
-an x86 person ;-)
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=abi_patches_v7
 
-      Arnd
+You can easily build just the sysfs firmware attribute class ABI with
+something like this:
+
+	$ mkdir -p fodir && cp Documentation/ABI/testing/sysfs-class-firmware-attributes fodir/ && ./scripts/get_abi.pl rest -dir fodir/ --rst-source >Documentation/foo/abi.rst && make SPHINXDIRS=foo htmldocs
+
+You can also see it at:
+
+	http://www.infradead.org/~mchehab/kernel_docs/foo/abi.html
+
+
+Thanks,
+Mauro
