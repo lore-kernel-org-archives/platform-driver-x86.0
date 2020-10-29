@@ -2,373 +2,128 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E35C55178
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16613C2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03AF220738
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1603963965;
-	bh=LZwqyd2b2TXMNj90cWzNiiPkCzJ7iq4s4B7ElCgcLpI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LoIlyBVwmmTDcYPWR5IJiwC3vC+7KT0b/Yud4dFOH3u39ks/6hR9pLS9bZUEDTmUu
-	 vmReREICD+DNKzWTNSGSqbMYPN7tAFaTeA2j5ir9GWyttS9OCJpTyGTM+xIS9g/0Me
-	 tQeiZPKalQI7XvTazmiTvmeRVifDWAuraA1GKzqM=
+	by mail.kernel.org (Postfix) with ESMTP id B188F2076E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 09:46:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LK9phlxH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725781AbgJ2Jcl (ORCPT
+        id S1726829AbgJ2Jqr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 05:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgJ2Jcl (ORCPT
+        Thu, 29 Oct 2020 05:46:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26902 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726830AbgJ2Jqp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 05:32:41 -0400
-Received: from mail.kernel.org (ip5f5ad5de.dynamic.kabel-deutschland.de [95.90.213.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A26AB2076B;
-        Thu, 29 Oct 2020 09:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603963903;
-        bh=LZwqyd2b2TXMNj90cWzNiiPkCzJ7iq4s4B7ElCgcLpI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yK9sPmK1IrXJ9rH9hPnDuBLlBH87pLpAO7LV2/RHYO16f9ZhfFaFERyCx/KeVu4dg
-         l7RiAlWWLXTw/lR1Ar1qj8Wo6002y7gbd1QQl7eBtm9qjWb18XTL8H8j3tnsfqSVZx
-         qRFZ0Rvt8wwUbmHvwTkCNZ0Z2M4ttW1H3jqhw4Fw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kY4HT-004Di3-RC; Thu, 29 Oct 2020 10:31:39 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Divya Bharathi <divya27392@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>,
-        "Divya Bharathi" <divya.bharathi@dell.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Mario Limonciello" <mario.limonciello@dell.com>,
-        "Prasanth KSR" <prasanth.ksr@dell.com>,
-        "mark gross" <mgross@linux.intel.com>, dvhart@infradead.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] docs: ABI: sysfs-class-firmware-attributes: solve some warnings
-Date:   Thu, 29 Oct 2020 10:31:23 +0100
-Message-Id: <44b4181b4f772fcc5ec676e72b295c10df35121b.1603963862.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201029090114.64daf4e3@coco.lan>
-References: <20201029090114.64daf4e3@coco.lan>
+        Thu, 29 Oct 2020 05:46:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603964803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=v4juQfAx3LxBzTcqekjK+MOSoDZx1NTXS/wKZYQGOXo=;
+        b=LK9phlxHhIvI3B603Us6mzSVBuplg1RWGtGfKwCvMEtUptCOkedY1hkoGm5yrQRU1KVEP2
+        nK3Hv+AtDfly1She7KLOmtJ1b+TM6XAk5blBfq2BbXaK4YPF0XsGRY/jxZ2W+ee1BFOAeN
+        i0n15t7KH2zucFCYYYDdZMcl//V3q/k=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-ircjxTa3Nd-bPGHYyEnuuA-1; Thu, 29 Oct 2020 05:46:42 -0400
+X-MC-Unique: ircjxTa3Nd-bPGHYyEnuuA-1
+Received: by mail-ej1-f72.google.com with SMTP id z25so963444ejd.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Oct 2020 02:46:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v4juQfAx3LxBzTcqekjK+MOSoDZx1NTXS/wKZYQGOXo=;
+        b=Y4Rl4YNVJBe8pSQ7TMISbXXeL4gvULiT8sebuKgkAtCx67D4o7WMpw83XxLH2pBgHm
+         NX2Q/Owb9IQEjE28kyktV5Xa+8ANb2C4NcL4dBHsiKjc0G9kbOC4+6VsQ63NABzje8g/
+         9oWuLCWLEBGqccHKL4Cp0yfQxkC1DOkb83P+wisEXou2B2yhaFwvSInMaXXVpjaTTamz
+         BPWl6UanvgrcbivgDhDXGP1cNBWo4yYhYu+bjvnI0cukQ7OSWbnDRFFoukvVr6H+qDwU
+         tTb8V/4u/NM28OlxWf2ygM1XLP4Gn6CyemmWrQU38c/jeAmKnFzHlyomaS+j/hFaJGy+
+         a+OA==
+X-Gm-Message-State: AOAM532RlQF+eQp/HZBu0UE2fcRDm5F08shPRzCaLlG72ebl6HvUPHBy
+        wyA+we+gATNsprnd8+eKG+jft4q1ciXCIqGd70OBYGkImIzFNwHYJoDgQSA4gRNSlx2lHEOldlp
+        gSGwMbEXN2ppSLKSTJ8HYaA+h8OUwDqvaXw==
+X-Received: by 2002:a05:6402:1691:: with SMTP id a17mr2984358edv.264.1603964800378;
+        Thu, 29 Oct 2020 02:46:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzKE7w0otUI+gbsHiZO1jXP8ILglLHS0/NREeyAFavkgmdFK4zjz2UD5PtGB/B2pPdy0w21NQ==
+X-Received: by 2002:a05:6402:1691:: with SMTP id a17mr2984338edv.264.1603964800185;
+        Thu, 29 Oct 2020 02:46:40 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
+        by smtp.gmail.com with ESMTPSA id p20sm1140405ejd.78.2020.10.29.02.46.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Oct 2020 02:46:39 -0700 (PDT)
+Subject: Re: [External] Re: [PATCH] Documentation: Add documentation for new
+ platform_profile sysfs attribute
+To:     Mark Pearson <markpearson@lenovo.com>,
+        Bastien Nocera <hadess@hadess.net>
+Cc:     dvhart@infradead.org, mgross@linux.intel.com,
+        mario.limonciello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
+        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20201027164219.868839-1-markpearson@lenovo.com>
+ <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
+ <d5f0bcba-5366-87da-d199-a85d59ba6c1c@redhat.com>
+ <b3e61ee4-3fca-ce06-2216-977586baae4e@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <ebeec472-3310-c560-e8bf-2b33c480333b@redhat.com>
+Date:   Thu, 29 Oct 2020 10:46:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+In-Reply-To: <b3e61ee4-3fca-ce06-2216-977586baae4e@lenovo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Description: tag is missing on some places, causing
-scripts/get_abi.pl warnings:
+Hi,
 
-	Warning: file Documentation/ABI/testing/sysfs-class-firmware-attributes#172:
-		What '/sys/class/firmware-attributes/*/authentication/' doesn't have a description
+On 10/29/20 1:55 AM, Mark Pearson wrote:
+> Thanks Hans and Bastien,
+> 
+> On 28/10/2020 13:23, Hans de Goede wrote:
 
-Also, some warnings are produced when generating html documentation:
+<big snip>
 
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:2: WARNING: Title underline too short.
+>>> Is there another file which explains whether those sysfs value will
+>>> contain a trailing linefeed?
+>>
+>> sysfs APIs are typically created so that they can be used from the shell,
+>> so on read a newline will be added. On write a newline at the end
+>> typically is allowed, but ignored. There are even special helper functions
+>> to deal with properly ignoring the newline on write.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+> OK - does that need to actually be specified here? Or is that just something I keep in mind for the implementation?
 
-	Dell specific class extensions
-	--------------------------
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:2: WARNING: Unexpected indentation.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:2: WARNING: Unexpected indentation.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:2: WARNING: Block quote ends without a blank line; unexpected unindent.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:173: WARNING: Unexpected indentation.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:173: WARNING: Unexpected indentation.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:173: WARNING: Block quote ends without a blank line; unexpected unindent.
-	.../Documentation/ABI/testing/sysfs-class-firmware-attributes:111: WARNING: Inline emphasis start-string without end-string.
+IMHO it does not belong in the sysfs API docs for the platform_profile
+stuff. But I guess it would be good to document it somewhere in some
+generic syfs API rules/expectations document (with a note that their
+might be exceptions).
 
-Address the warnings, making it to produce the expected
-output for the documentation ABI.
+Ideally we would already have such a file somewhere, but I don't know
+if we do (I did not look). So if you feel like it (and such a file does
+not exist yet) then I guess a patch adding such a doc file would be good.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../testing/sysfs-class-firmware-attributes   | 138 +++++++++++-------
- 1 file changed, 86 insertions(+), 52 deletions(-)
+Regards,
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 04a15c72e883..8ea59fea4709 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -12,17 +12,20 @@ Description:
- 		Unless otherwise specified in an attribute description all attributes are optional
- 		and will accept UTF-8 input.
- 
--		type: A file that can be read to obtain the type of attribute.  This attribute is
--			mandatory.
-+		type:
-+		    A file that can be read to obtain the type of attribute.
-+		    This attribute is mandatory.
- 
- 		The following are known types:
-+
- 			- enumeration: a set of pre-defined valid values
- 			- integer: a range of numerical values
- 			- string
- 
- 		All attribute types support the following values:
- 
--		current_value:	A file that can be read to obtain the current
-+		current_value:
-+				A file that can be read to obtain the current
- 				value of the <attr>.
- 
- 				This file can also be written to in order to update the value of a
-@@ -30,59 +33,71 @@ Description:
- 
- 				This attribute is mandatory.
- 
--		default_value:	A file that can be read to obtain the default
-+		default_value:
-+				A file that can be read to obtain the default
- 				value of the <attr>
- 
--		display_name:	A file that can be read to obtain a user friendly
-+		display_name:
-+				A file that can be read to obtain a user friendly
- 				description of the at <attr>
- 
--		display_name_language_code:	A file that can be read to obtain
-+		display_name_language_code:
-+						A file that can be read to obtain
- 						the IETF language tag corresponding to the
- 						"display_name" of the <attr>
- 
- 		"enumeration"-type specific properties:
- 
--		possible_values:	A file that can be read to obtain the possible
-+		possible_values:
-+					A file that can be read to obtain the possible
- 					values of the <attr>. Values are separated using
- 					semi-colon (``;``).
- 
- 		"integer"-type specific properties:
- 
--		min_value:	A file that can be read to obtain the lower
-+		min_value:
-+				A file that can be read to obtain the lower
- 				bound value of the <attr>
- 
--		max_value:	A file that can be read to obtain the upper
-+		max_value:
-+				A file that can be read to obtain the upper
- 				bound value of the <attr>
- 
--		scalar_increment:	A file that can be read to obtain the scalar value used for
-+		scalar_increment:
-+					A file that can be read to obtain the scalar value used for
- 					increments of current_value this attribute accepts.
- 
- 		"string"-type specific properties:
- 
--		max_length:	A file that can be read to obtain the maximum
-+		max_length:
-+				A file that can be read to obtain the maximum
- 				length value of the <attr>
- 
--		min_length:	A file that can be read to obtain the minimum
-+		min_length:
-+				A file that can be read to obtain the minimum
- 				length value of the <attr>
- 
- 		Dell specific class extensions
--		--------------------------
-+		------------------------------
- 
- 		On Dell systems the following additional attributes are available:
- 
--		dell_modifier:	A file that can be read to obtain attribute-level
-+		dell_modifier:
-+				A file that can be read to obtain attribute-level
- 				dependency rule. It says an attribute X will become read-only or
- 				suppressed, if/if-not attribute Y is configured.
- 
--				modifier rules can be in following format:
--				[ReadOnlyIf:<attribute>=<value>]
--				[ReadOnlyIfNot:<attribute>=<value>]
--				[SuppressIf:<attribute>=<value>]
--				[SuppressIfNot:<attribute>=<value>]
-+				modifier rules can be in following format::
- 
--				For example:
--				AutoOnFri/dell_modifier has value,
--					[SuppressIfNot:AutoOn=SelectDays]
-+				    [ReadOnlyIf:<attribute>=<value>]
-+				    [ReadOnlyIfNot:<attribute>=<value>]
-+				    [SuppressIf:<attribute>=<value>]
-+				    [SuppressIfNot:<attribute>=<value>]
-+
-+				For example::
-+
-+				    AutoOnFri/dell_modifier has value,
-+					    [SuppressIfNot:AutoOn=SelectDays]
- 
- 				This means AutoOnFri will be suppressed in BIOS setup if AutoOn
- 				attribute is not "SelectDays" and its value will not be effective
-@@ -90,18 +105,22 @@ Description:
- 
- 		Enumeration attributes also support the following:
- 
--		dell_value_modifier:	A file that can be read to obtain value-level dependency.
-+		dell_value_modifier:
-+					A file that can be read to obtain value-level dependency.
- 					This file is similar to dell_modifier but here,	an
- 					attribute's current value will be forcefully changed based
- 					dependent attributes value.
- 
--					dell_value_modifier rules can be in following format:
--					<value>[ForceIf:<attribute>=<value>]
--					<value>[ForceIfNot:<attribute>=<value>]
-+					dell_value_modifier rules can be in following format::
-+
-+					    <value>[ForceIf:<attribute>=<value>]
-+					    <value>[ForceIfNot:<attribute>=<value>]
-+
-+					For example:
-+
-+					    LegacyOrom/dell_value_modifier has value:
-+						    Disabled[ForceIf:SecureBoot=Enabled]
- 
--					For example,
--					LegacyOrom/dell_value_modifier has value:
--						Disabled[ForceIf:SecureBoot=Enabled]
- 					This means LegacyOrom's current value will be forced to
- 					"Disabled" in BIOS setup if SecureBoot is Enabled and its
- 					value will not be effective through sysfs until this rule is
-@@ -113,12 +132,13 @@ KernelVersion:	5.11
- Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
- 		Mario Limonciello <mario.limonciello@dell.com>,
- 		Prasanth KSR <prasanth.ksr@dell.com>
--
-+Description:
- 		Devices support various authentication mechanisms which can be exposed
- 		as a separate configuration object.
- 
- 		For example a "BIOS Admin" password and "System" Password can be set,
- 		reset or cleared using these attributes.
-+
- 		- An "Admin" password is used for preventing modification to the BIOS
- 		  settings.
- 		- A "System" password is required to boot a machine.
-@@ -126,39 +146,50 @@ Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
- 		Change in any of these two authentication methods will also generate an
- 		uevent KOBJ_CHANGE.
- 
--		is_enabled:		A file that can be read to obtain a 0/1 flag to see if
-+		is_enabled:
-+					A file that can be read to obtain a 0/1 flag to see if
- 					<attr> authentication is enabled.
- 					This attribute is mandatory.
- 
--		role:			The type of authentication used.
-+		role:
-+					The type of authentication used.
- 					This attribute is mandatory.
-+
- 					Known types:
--						bios-admin: Representing BIOS administrator password
--						power-on: Representing a password required to use
--							  the system
-+						bios-admin:
-+							Representing BIOS administrator password
-+						power-on:
-+							Representing a password required to use
-+							the system
- 
--		mechanism:		The means of authentication.  This attribute is mandatory.
-+		mechanism:
-+					The means of authentication.  This attribute is mandatory.
- 					Only supported type currently is "password".
- 
--		max_password_length:	A file that can be read to obtain the
-+		max_password_length:
-+					A file that can be read to obtain the
- 					maximum length of the Password
- 
--		min_password_length:	A file that can be read to obtain the
-+		min_password_length:
-+					A file that can be read to obtain the
- 					minimum length of the Password
- 
--		current_password:	A write only value used for privileged access such as
-+		current_password:
-+					A write only value used for privileged access such as
- 					setting	attributes when a system or admin password is set
- 					or resetting to a new password
- 
- 					This attribute is mandatory when mechanism == "password".
- 
--		new_password:		A write only value that when used in tandem with
-+		new_password:
-+					A write only value that when used in tandem with
- 					current_password will reset a system or admin password.
- 
- 		Note, password management is session specific. If Admin password is set,
- 		same password must be written into current_password file (required for
- 		password-validation) and must be cleared once the session is over.
--		For example:
-+		For example::
-+
- 			echo "password" > current_password
- 			echo "disabled" > TouchScreen/current_value
- 			echo "" > current_password
-@@ -180,12 +211,15 @@ Description:
- 		pending BIOS attribute changes. Also, an uevent_KOBJ_CHANGE is
- 		generated when it changes to 1.
- 
--			0:	All BIOS attributes setting are current
--			1:	A reboot is necessary to get pending BIOS attribute changes
--				applied
-+			==	=========================================
-+			0	All BIOS attributes setting are current
-+			1	A reboot is necessary to get pending BIOS
-+			        attribute changes applied
-+			==	=========================================
- 
- 		Note, userspace applications need to follow below steps for efficient
- 		BIOS management,
-+
- 		1.	Check if admin password is set. If yes, follow session method for
- 			password management as briefed under authentication section above.
- 		2.	Before setting any attribute, check if it has any modifiers
-@@ -208,17 +242,17 @@ Description:
- 
- 		Reading from it returns a list of supported options encoded as:
- 
--			'builtinsafe' (Built in safe configuration profile)
--			'lastknowngood' (Last known good saved configuration profile)
--			'factory' (Default factory settings configuration profile)
--			'custom' (Custom saved configuration profile)
-+			- 'builtinsafe' (Built in safe configuration profile)
-+			- 'lastknowngood' (Last known good saved configuration profile)
-+			- 'factory' (Default factory settings configuration profile)
-+			- 'custom' (Custom saved configuration profile)
- 
- 		The currently selected option is printed in square brackets as
--		shown below:
-+		shown below::
- 
--		# echo "factory" > /sys/class/firmware-attributes/*/device/attributes/reset_bios
--		# cat /sys/class/firmware-attributes/*/device/attributes/reset_bios
--		# builtinsafe lastknowngood [factory] custom
-+		    # echo "factory" > /sys/class/firmware-attributes/*/device/attributes/reset_bios
-+		    # cat /sys/class/firmware-attributes/*/device/attributes/reset_bios
-+		    # builtinsafe lastknowngood [factory] custom
- 
- 		Note that any changes to this attribute requires a reboot
- 		for changes to take effect.
--- 
-2.26.2
+Hans
 
