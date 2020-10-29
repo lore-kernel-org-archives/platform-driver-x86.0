@@ -2,72 +2,152 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3FEC4363A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 14:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78677C2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 15:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C66720780
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 14:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD4A2076E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 15:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbgJ2OXa (ORCPT
+        id S1727913AbgJ2PFk convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 10:23:30 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42195 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgJ2OWf (ORCPT
+        Thu, 29 Oct 2020 11:05:40 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:56565 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728036AbgJ2PFg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 10:22:35 -0400
-X-Originating-IP: 82.255.60.242
-Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
-        (Authenticated sender: hadess@hadess.net)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A47666000A;
-        Thu, 29 Oct 2020 14:21:43 +0000 (UTC)
-Message-ID: <fb95dc5b8d9cee5a66759adc268e284cb1f1a3bd.camel@hadess.net>
-Subject: Re: [External] Re: [PATCH] Documentation: Add documentation for new
- platform_profile sysfs attribute
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     dvhart@infradead.org, mgross@linux.intel.com,
-        mario.limonciello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 29 Oct 2020 15:21:43 +0100
-In-Reply-To: <ebeec472-3310-c560-e8bf-2b33c480333b@redhat.com>
-References: <markpearson@lenovo.com>
-         <20201027164219.868839-1-markpearson@lenovo.com>
-         <5ca1ae238b23a611b8a490c244fd93cdcc36ef79.camel@hadess.net>
-         <d5f0bcba-5366-87da-d199-a85d59ba6c1c@redhat.com>
-         <b3e61ee4-3fca-ce06-2216-977586baae4e@lenovo.com>
-         <ebeec472-3310-c560-e8bf-2b33c480333b@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+        Thu, 29 Oct 2020 11:05:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-56-P6lCnI4YNLSev_eoOtq5HQ-1; Thu, 29 Oct 2020 15:05:32 +0000
+X-MC-Unique: P6lCnI4YNLSev_eoOtq5HQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 29 Oct 2020 15:05:31 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 29 Oct 2020 15:05:31 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Vitaly Kuznetsov" <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Jim Mattson" <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: RE: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
+Thread-Topic: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
+Thread-Index: AQHWrZenJpzBwTRfbE+Uihb7XQWTqKmurjkg
+Date:   Thu, 29 Oct 2020 15:05:31 +0000
+Message-ID: <38b11ed3fec64ebd82d6a92834a4bebe@AcuMS.aculab.com>
+References: <20201028212417.3715575-1-arnd@kernel.org>
+In-Reply-To: <20201028212417.3715575-1-arnd@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 2020-10-29 at 10:46 +0100, Hans de Goede wrote:
-> <
-> <snip>
-
-> IMHO it does not belong in the sysfs API docs for the
-> platform_profile
-> stuff. But I guess it would be good to document it somewhere in some
-> generic syfs API rules/expectations document (with a note that their
-> might be exceptions).
+From: Arnd Bergmann
+> Sent: 28 October 2020 21:21
 > 
-> Ideally we would already have such a file somewhere, but I don't know
-> if we do (I did not look). So if you feel like it (and such a file
-> does
-> not exist yet) then I guess a patch adding such a doc file would be
-> good.
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> There are hundreds of warnings in a W=2 build about a local
+> variable shadowing the global 'apic' definition:
+> 
+> arch/x86/kvm/lapic.h:149:65: warning: declaration of 'apic' shadows a global declaration [-Wshadow]
+> 
+> Avoid this by renaming the global 'apic' variable to the more descriptive
+> 'x86_system_apic'. It was originally called 'genapic', but both that
+> and the current 'apic' seem to be a little overly generic for a global
+> variable.
+> 
+> Fixes: c48f14966cc4 ("KVM: inline kvm_apic_present() and kvm_lapic_enabled()")
+> Fixes: c8d46cf06dc2 ("x86: rename 'genapic' to 'apic'")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: rename the global instead of the local variable in the header
+...
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 284e73661a18..33e2dc78ca11 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -259,14 +259,14 @@ void __init hv_apic_init(void)
+>  		/*
+>  		 * Set the IPI entry points.
+>  		 */
+> -		orig_apic = *apic;
+> -
+> -		apic->send_IPI = hv_send_ipi;
+> -		apic->send_IPI_mask = hv_send_ipi_mask;
+> -		apic->send_IPI_mask_allbutself = hv_send_ipi_mask_allbutself;
+> -		apic->send_IPI_allbutself = hv_send_ipi_allbutself;
+> -		apic->send_IPI_all = hv_send_ipi_all;
+> -		apic->send_IPI_self = hv_send_ipi_self;
+> +		orig_apic = *x86_system_apic;
+> +
+> +		x86_system_apic->send_IPI = hv_send_ipi;
+> +		x86_system_apic->send_IPI_mask = hv_send_ipi_mask;
+> +		x86_system_apic->send_IPI_mask_allbutself = hv_send_ipi_mask_allbutself;
+> +		x86_system_apic->send_IPI_allbutself = hv_send_ipi_allbutself;
+> +		x86_system_apic->send_IPI_all = hv_send_ipi_all;
+> +		x86_system_apic->send_IPI_self = hv_send_ipi_self;
+>  	}
+> 
+>  	if (ms_hyperv.hints & HV_X64_APIC_ACCESS_RECOMMENDED) {
+> @@ -285,10 +285,10 @@ void __init hv_apic_init(void)
+>  		 */
+>  		apic_set_eoi_write(hv_apic_eoi_write);
+>  		if (!x2apic_enabled()) {
+> -			apic->read      = hv_apic_read;
+> -			apic->write     = hv_apic_write;
+> -			apic->icr_write = hv_apic_icr_write;
+> -			apic->icr_read  = hv_apic_icr_read;
+> +			x86_system_apic->read      = hv_apic_read;
+> +			x86_system_apic->write     = hv_apic_write;
+> +			x86_system_apic->icr_write = hv_apic_icr_write;
+> +			x86_system_apic->icr_read  = hv_apic_icr_read;
+>  		}
 
-I don't know enough about the helpers and the code around it to know
-whether documenting this would be needed, but I'm fine with knowing
-that we're not breaking new ground here.
+For those two just add:
+	struct apic *apic = x86_system_apic;
+before all the assignments.
+Less churn and much better code.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
