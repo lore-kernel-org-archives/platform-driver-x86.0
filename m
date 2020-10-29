@@ -2,154 +2,181 @@ Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2368C55179
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 13:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2614CC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 14:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EEDF2076E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 13:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB61E2076B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 14:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="GhYdYFLX";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="nrqyXZ8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdeWbCIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgJ2Nfi (ORCPT
+        id S1725828AbgJ2ORN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 09:35:38 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:33676 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726139AbgJ2Nfh (ORCPT
+        Thu, 29 Oct 2020 10:17:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbgJ2ORN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 09:35:37 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09TDW97M018927;
-        Thu, 29 Oct 2020 09:35:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=QDh8Qm89exH9mh8deZsTCrC4lpPwSIr/9wW7eGoqbQM=;
- b=GhYdYFLXFJXh5zSkyxbtaOLdL2Mv6d5vu79p5tIymsm2h8nz38K8VjOfYzmMIlt2v2RB
- iypJ1URsuj3Vi6HjlgiruS6IvNOjJyte9A3yODp9E0bRNtlrufAZYVuSSSIs101gfszd
- UjA+HOgyjnY39k2qTuJyLvU1MOpGAaGXb112odFFn0v1eZ0mXB6Am/oJ42y9gyyvbCuI
- bHIvhYy2z8/O7rJWPNx45+UuTxuGH091vwGgjVKd0PAJ/WM1BL5WA8hd9A+iwjJ5V4T/
- cOWr21zZciVQZDlf7iwjyehsZfq1mo9N2Iboo7aiomWDOiZI8bBibBJjDLlyEEhq+BQw CQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 34cfb2tj5h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Oct 2020 09:35:21 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09TDTqpL131704;
-        Thu, 29 Oct 2020 09:35:21 -0400
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2045.outbound.protection.outlook.com [104.47.73.45])
-        by mx0a-00154901.pphosted.com with ESMTP id 34fuadbc05-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Oct 2020 09:35:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LPnYP9LZ82mhr0o0jot+bO3xbtGG6tsBqR8UWtJFKYDCbZfmiPftQziuc5cG7eiN5qmEyh31GTzYO9A9wyENXiJLnPQH0J7Ei0VkFpgDg1yCMGA0QGh2hO5PCKm9955oOwib2IthJhuklf6WOfwcMcX6N85VwQtsmuDdf8czRAbOTKZubYk4x0ERSZgHYlwvYcdJu4DEZ14nHvMPHs8oSGgrA86diR7FKIv4rAlO0+wm8bCr3nHN6u6qVkhKO3bDS4tFdtcR8j4/gx/EW0ZfKIWg2dMwKZo3X2SuiuIyBmx1QlY8/20gMDRF2+rBNqn9RfoFV7YbVFLp4nxsYf7yTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QDh8Qm89exH9mh8deZsTCrC4lpPwSIr/9wW7eGoqbQM=;
- b=LtfCTCZZZ4l7hu6NQ+t9+jJC8RYqYUDu5hBZTorDd2uejDJc4flWeNiOSQYXyqQdIHnZ0K7JKNS28G4dsXYNHw68H64XpJ0r+SQ901NEGint4QMXZkkzNUqZ75J+Qwnkx/RqwUWhanXeUA0TtNvrbx22fQ6Iht3AcwwsJsLRnb4Zw7EL9nZq1EbPDhwbqgM610veu9V1dQ/NZDBfxm+Xro+scxf7tANrbdqJDd61tiskFZR2RTHm28YahWDd/3T9ipqXzn7/YafGB+1ZKI9yOq+TCpZ+K9W/xnO9+FkEc5XW0eGbRGfcx3Q/tynO01WBqISdRYimyEtW0p4R5CJDPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QDh8Qm89exH9mh8deZsTCrC4lpPwSIr/9wW7eGoqbQM=;
- b=nrqyXZ8KuDIBMl8qi7iK/KXoydMWi5UpcJWy1YwYGbWqF4F77jNz2Ezx9oiDMxaajjK0auRs+VxXQyi1rP5fd7Qtab5mmM/M86g85vCyTtFTF81R4grZsCsJ4ugluOVoio8AFb+ZUbDK9DQy9xSOS9VfwUSLFcNuGNJ+hZ6bx+k=
-Received: from CY4PR19MB1254.namprd19.prod.outlook.com (2603:10b6:903:109::19)
- by CY4PR19MB1080.namprd19.prod.outlook.com (2603:10b6:903:a5::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.25; Thu, 29 Oct
- 2020 13:35:19 +0000
-Received: from CY4PR19MB1254.namprd19.prod.outlook.com
- ([fe80::c14:9bc6:d9e5:4e45]) by CY4PR19MB1254.namprd19.prod.outlook.com
- ([fe80::c14:9bc6:d9e5:4e45%5]) with mapi id 15.20.3499.027; Thu, 29 Oct 2020
- 13:35:19 +0000
-From:   "Bharathi, Divya" <Divya.Bharathi@Dell.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-CC:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
-        Joe Perches <joe@perches.com>,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: rectify DELL WMI SYSMAN DRIVERS section
-Thread-Topic: [PATCH] MAINTAINERS: rectify DELL WMI SYSMAN DRIVERS section
-Thread-Index: AQHWrejsNlpIp2ND6U+aEJwEujM7sqmulEfg
-Date:   Thu, 29 Oct 2020 13:35:19 +0000
-Message-ID: <CY4PR19MB125445B8D71FFEF6E234D40285140@CY4PR19MB1254.namprd19.prod.outlook.com>
-References: <20201029114425.22520-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20201029114425.22520-1-lukas.bulwahn@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [223.186.128.92]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d1434a05-b76c-4254-699a-08d87c0f7ac8
-x-ms-traffictypediagnostic: CY4PR19MB1080:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR19MB1080201A794756778B0D36EC85140@CY4PR19MB1080.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y17C/u3qes+TcUmyzU+5MOxhORLlUAGeGQnW0h4YXtGctasPerQwbC/1vju/qTdr7jPfqw7vYCs89dxCrj1vLX8tHr3Et5UxNwuqs+2FaeCYkjLNAus5OWoB6V7pAWQoInaXlb2GIMNbDZwRTkRRORv21RzJhDQl/eiHrLBic3pp4bxlV3AwTLqRMoFZ4745Ka/gWLr0qCbnwj04HFdVQi6K1e/aUT4duD8rGZEBEm+myF7EqXTjYC0k/1/CBSUG8oZk4vmo+xO7TDn90LG+aae4Xchq44n50h3zjdAqSA/aa/f+X/K+Hel/JI0f6kOe
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR19MB1254.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(366004)(346002)(376002)(86362001)(2906002)(8676002)(186003)(26005)(4326008)(7696005)(6506007)(83380400001)(33656002)(54906003)(110136005)(52536014)(55016002)(786003)(5660300002)(316002)(76116006)(66946007)(64756008)(66556008)(9686003)(8936002)(478600001)(66446008)(4744005)(66476007)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: cArUtInWFS3Rq0lKT7dgXcBKVj36uRpqs58fMozHRZIUY3ZWr6vX9bG8wMaFMHN5N8AaDbNqQVZePfwn3Ghao7edeiGKljaqoOt+Q4A36qnRzHwBtLH0FPtvM8iH2u7aAVmJTY+cOSE32ZsevMnFSKflfvydCo68aAMVSjdB93HDfPmdiFq57OSJUJ8eAJh3as8JjrJTUCVXUlhAEt33UY6E2VgU8cDDAI2hW3o3TDBn6oNDLkeqH2x0spFs15h4I+LFhPLsNewbLEEjQJhL7Qu+KkbvQjJ7ckL2L4ZGZn9CwM+jZfSg2b8sxea6qs2flMQFBPzUqWn0c/F3udKpQmUpXm8qJ+Bg2aUSSsJqp3T49//kjJuEZ9iimik2hiv2YJBjp0Xq+xjHRvikGvnVQZ4hjtz25iLIep/YSNqlmboy1rhbsz/nDrBEr3lDrmqRSxf1IR+jr1/SUu4pthOHxgGI6U7iW3XPVHgwlFlUUg/N9aEutdcP2nAJbS584HCscASQIemjawIi+g04uPCVzVgK9sb4IXM3wDCstWaevP5wgZdkY3Qdm9ZBSw9hiHF+IfWZC5xa/Ua3VsDkFOMcs7DKYQ/Nfyqmb0vx8YivjuqwMhuTJaL4XKNeiD3CwAwTblvb73E62gf7oRvS1vv3Lg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 29 Oct 2020 10:17:13 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41402C0613CF;
+        Thu, 29 Oct 2020 07:17:13 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 10so2452702pfp.5;
+        Thu, 29 Oct 2020 07:17:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ytuRxNZdgkLGRPxJF2rw5mbT3gFpajw5TIm3gHQqiJo=;
+        b=XdeWbCINGEdba7uOVNQRHfMZTA/odLv9Vz2tMDkoYRg31MmAn/59gMfJ3zt0/Dlnsk
+         HUO+H5HxfA7KTbKcDiY5peD/9jK7g4dx4oeoeKUtyCMaHyDlHOyYawSc9fRSXxu+NLqg
+         de/v9oWgrEf42xpQ21vUklfHPw36NDNZU18c1/3apPOEwObLF5GyHq5n6HDWwULxV6q4
+         wTXCUKFL5MhxZEAMibi4dc4fKwT99bg498D6xq+lUqAlHQaZsu5psNSdD8dhJ81txKZs
+         /7u5A3nPojhTQV7s3MS0sBn6QVCZBCF1YLTnsh686Wegi8SssUuAaJgXKNFCMZv5zYap
+         whAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ytuRxNZdgkLGRPxJF2rw5mbT3gFpajw5TIm3gHQqiJo=;
+        b=NY7JHLXa/a3fkB7BUCzb1gr6kwPtbRqxzaJrXfZxC+AEEIde46VEL36VmdpxljcMPS
+         Uv+lk2PGTqKK45LvRF6Vhx2Ncs8A+yT+X67N3p8K5xPaFn+UE4/EZBfm4BHFZHCxkhzk
+         rIixr5+47LVItKpzeBG09bXEq7q9XGI51Fj5n/lltcB3AesaEKmf0XGiXAJt6TUJFyIn
+         sHAjKOamX6TkOrK8GdxysNAPZjrUgxsVo+Rwaa+HDzFejSSCYilPtFQn5gY9/cyUnUwL
+         vMeobHwXmUg3wK2QOzUMoyUcmj8tz1+JgGvIWVsfk5idtMqjwZewiyRMJOrf2tGtyBQz
+         TxLg==
+X-Gm-Message-State: AOAM532eQUHgsyPluGVBsBRBaDkXsOhWogyO52JM61ZIiO5A9aqRTjJo
+        qnqtEdRJS2CMa5CEPI9xNN8=
+X-Google-Smtp-Source: ABdhPJwCGILq8MQ3I5UteyhOUkF5GConTgqZyol3WJBV6tL1ZERZzAWxHE6rJdTdiYqFECUGvLPTBA==
+X-Received: by 2002:a62:585:0:b029:163:b618:92c1 with SMTP id 127-20020a6205850000b0290163b61892c1mr4622866pff.41.1603981032659;
+        Thu, 29 Oct 2020 07:17:12 -0700 (PDT)
+Received: from localhost ([2409:8a28:3c42:6840:9efc:e8ff:fef2:1cdc])
+        by smtp.gmail.com with ESMTPSA id a11sm3153820pfn.125.2020.10.29.07.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Oct 2020 07:17:12 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Thu, 29 Oct 2020 22:16:46 +0800
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Darren Hart <dvhart@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "open list:X86 PLATFORM DRIVERS - ARCH" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] power: supply: olpc_battery: remove unnecessary
+ CONFIG_PM_SLEEP
+Message-ID: <20201029141646.sijo6iuj44ekytg7@Rk>
+References: <20201029074100.225806-1-coiby.xu@gmail.com>
+ <5350ef53-cf70-c4b6-cdf8-5738e9d4b10a@redhat.com>
+ <20201029105941.i2kr2424wnrgtvz5@Rk>
+ <2c09e34a-3312-628e-c9cd-518e9f58efb4@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR19MB1254.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1434a05-b76c-4254-699a-08d87c0f7ac8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Oct 2020 13:35:19.7764
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KsOkCWF/HN8RIfaTcwgUxO0deSoUjyLMlyibKGRQTwCfkV0/n/++PRQQ7tc2MyS5DOtHz5CQMlJ65x2sH8Ba9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR19MB1080
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-29_06:2020-10-29,2020-10-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- clxscore=1011 bulkscore=0 spamscore=0 phishscore=0 suspectscore=0
- mlxlogscore=497 lowpriorityscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010290098
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=613
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010290098
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c09e34a-3312-628e-c9cd-518e9f58efb4@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->=20
-> Commit e8a60aa7404b ("platform/x86: Introduce support for Systems
-> Management Driver over WMI for Dell Systems") added a new section DELL
-> WMI SYSMAN DRIVERS in MAINTAINERS, but slipped in a typo.
->=20
-> Hence, ./scripts/get_maintainer.pl --self-test=3Dpatterns complains:
->=20
->   warning: no file matches    F:    drivers/platform/x86/dell-wmi-syman/*
->=20
-> Point the file entry to the right location and add an entry for its
-> Documentation while at it.
->=20
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+On Thu, Oct 29, 2020 at 12:09:23PM +0100, Hans de Goede wrote:
+>Hi,
+>
+>On 10/29/20 11:59 AM, Coiby Xu wrote:
+>> Hi Hans,
+>>
+>> Thank you for reviewing this patch!
+>>
+>> On Thu, Oct 29, 2020 at 11:04:36AM +0100, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 10/29/20 8:41 AM, Coiby Xu wrote:
+>>>> SIMPLE_DEV_PM_OPS has already took good care of CONFIG_PM_CONFIG.
+>>>
+>>> No it does not, when CONFIG_PM_SLEEP is not set then the
+>>> SET_SYSTEM_SLEEP_PM_OPS macro which SIMPLE_DEV_PM_OPS uses
+>>> is a no-op, so nothing will reference xo15_sci_resume leading to
+>>> a compiler warning when CONFIG_PM_SLEEP is not set.
+>>>
+>>> You could drop the ifdef and add __maybe_unused to the definition
+>>> of xo15_sci_resume, but that feels like needless churn, best to
+>>> just keep this as is IMHO.
+>>>
+>>
+>> Actually, this is a tree-wide change by some semi-automation scripts.
+>> Thank you for pointing out the issue to prevent me from releasing
+>> another ~150 emails to flood other mailing lists.
+>>
+>> Currently there are 929 drivers has device PM callbacks,
+>>
+>> $ grep -rI "\.pm = &" --include=*.c  ./|wc -l
+>> 929
+>>
+>> I put all files having device PM callbacks into four categories
+>> based on weather a file has CONFIG_PM_SLEEP or PM macro like
+>> SET_SYSTEM_SLEEP_PM_OPS, here are the statistics,
+>>   1. have both CONFIG_PM_SLEEP and PM_OPS macro: 213
+>>   2. have CONFIG_PM_SLEEP but no PM_OPS macro: 19
+>>   3. have PM macro but not CONFIG_PM_SLEEP: 347
+>>   4. no PM macro or CONFIG_PM_SLEEP: 302
+>>
+>> Some drivers which have PM macro but not CONFIG_PM_SLEEP like
+>> sound/x86/intel_hdmi_audio.c indeed use __maybe_unused to eliminate
+>> the compiling warning. In 2011, there's a patch proposing to remove
+>> ONFIG_PM altogether but an objection was turning CONFIG_PM on would
+>> increase the kernel size [1]. So __maybe_unused also have this issue.
+>
+>I would expect the compiler to remove the unused function, it knows
+>it is unused, that is why __maybe_unused is necessary to suppress
+>the warning and compilers are pretty smart and agressive wrt remove
+>unnecessary code these days.
+>
+Then __maybe_unused is a good solution and there's also convincing
+reason to prefer __maybe_unused over CONFIG_PM_SLEEP according to
+Arnd Bergmann [2],
 
-Acked-by: Divya Bharathi <divya.bharathi@dell.com>
+> > By and large, drivers handle this by using a CONFIG_PM_SLEEP ifdef.
+> >
+> > Unless you can make an extremely convincing argument why not to do
+> > so here, I'd like you to handle it that way instead.
+>
+> [adding linux-pm to Cc]
+>
+> The main reason is that everyone gets the #ifdef wrong, I run into
+> half a dozen new build regressions with linux-next every week on
+> average, the typical problems being:
+>
+> - testing CONFIG_PM_SLEEP instead of CONFIG_PM, leading to an unused
+>   function warning
+> - testing CONFIG_PM instead of CONFIG_PM_SLEEP, leading to a build
+>   failure
+> - calling a function outside of the #ifdef only from inside an
+>   otherwise correct #ifdef, again leading to an unused function
+>   warning
+> - causing a warning inside of the #ifdef but only testing if that
+>   is disabled, leading to a problem if the macro is set (this is
+>   rare these days for CONFIG_PM as that is normally enabled)
+>
+> Using __maybe_unused avoids all of the above.
+
+>Regards,
+>
+>Hans
+>
+
+[2] https://lore.kernel.org/patchwork/comment/919944/
+
+--
+Best regards,
+Coiby
