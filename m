@@ -1,117 +1,125 @@
-Return-Path: <SRS0=eM/Q=EE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=hdUH=EF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE49EC2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 22:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFB1C4363A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Oct 2020 02:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82DD2206CA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Oct 2020 22:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114C320756
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Oct 2020 02:36:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgJ2WNF (ORCPT
+        id S1726124AbgJ3Cgu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Oct 2020 18:13:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26137 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725802AbgJ2WNE (ORCPT
+        Thu, 29 Oct 2020 22:36:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:6990 "EHLO
+        szxga06-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgJ3Cgu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Oct 2020 18:13:04 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-27-qEwyl-1dPLWnmCDyyUncBw-1; Thu, 29 Oct 2020 22:13:00 +0000
-X-MC-Unique: qEwyl-1dPLWnmCDyyUncBw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 29 Oct 2020 22:12:59 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 29 Oct 2020 22:12:59 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Arvind Sankar' <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        'Arnd Bergmann' <arnd@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: RE: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
-Thread-Topic: [PATCH] [v2] x86: apic: avoid -Wshadow warning in header
-Thread-Index: AQHWrZenJpzBwTRfbE+Uihb7XQWTqKmurjkggABtZPaAAAkikA==
-Date:   Thu, 29 Oct 2020 22:12:59 +0000
-Message-ID: <ad73f56e79d249b1b3614bccc85e2ca5@AcuMS.aculab.com>
-References: <20201028212417.3715575-1-arnd@kernel.org>
- <38b11ed3fec64ebd82d6a92834a4bebe@AcuMS.aculab.com>
- <20201029165611.GA2557691@rani.riverdale.lan>
- <93180c2d-268c-3c33-7c54-4221dfe0d7ad@redhat.com>
- <87v9esojdi.fsf@nanos.tec.linutronix.de>
- <20201029213512.GA34524@rani.riverdale.lan>
-In-Reply-To: <20201029213512.GA34524@rani.riverdale.lan>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 29 Oct 2020 22:36:50 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4CMmfR0FTpzhd3h;
+        Fri, 30 Oct 2020 10:36:47 +0800 (CST)
+Received: from linux-lmwb.huawei.com (10.175.103.112) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 30 Oct 2020 10:36:37 +0800
+From:   Zou Wei <zou_wei@huawei.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, "Zou Wei" <zou_wei@huawei.com>
+Subject: [PATCH -next v2] platform/x86/dell-wmi-sysman: Make some symbols static
+Date:   Fri, 30 Oct 2020 10:48:34 +0800
+Message-ID: <1604026114-9038-1-git-send-email-zou_wei@huawei.com>
+X-Mailer: git-send-email 2.6.2
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-Originating-IP: [10.175.103.112]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-RnJvbTogQXJ2aW5kIFNhbmthcg0KPiBTZW50OiAyOSBPY3RvYmVyIDIwMjAgMjE6MzUNCj4gDQo+
-IE9uIFRodSwgT2N0IDI5LCAyMDIwIGF0IDA5OjQxOjEzUE0gKzAxMDAsIFRob21hcyBHbGVpeG5l
-ciB3cm90ZToNCj4gPiBPbiBUaHUsIE9jdCAyOSAyMDIwIGF0IDE3OjU5LCBQYW9sbyBCb256aW5p
-IHdyb3RlOg0KPiA+ID4gT24gMjkvMTAvMjAgMTc6NTYsIEFydmluZCBTYW5rYXIgd3JvdGU6DQo+
-ID4gPj4+IEZvciB0aG9zZSB0d28ganVzdCBhZGQ6DQo+ID4gPj4+IAlzdHJ1Y3QgYXBpYyAqYXBp
-YyA9IHg4Nl9zeXN0ZW1fYXBpYzsNCj4gPiA+Pj4gYmVmb3JlIGFsbCB0aGUgYXNzaWdubWVudHMu
-DQo+ID4gPj4+IExlc3MgY2h1cm4gYW5kIG11Y2ggYmV0dGVyIGNvZGUuDQo+ID4gPj4+DQo+ID4g
-Pj4gV2h5IHdvdWxkIGl0IGJlIGJldHRlciBjb2RlPw0KPiA+ID4+DQo+ID4gPg0KPiA+ID4gSSB0
-aGluayBoZSBtZWFucyB0aGUgY29tcGlsZXIgcHJvZHVjZXMgYmV0dGVyIGNvZGUsIGJlY2F1c2Ug
-aXQgd29uJ3QNCj4gPiA+IHJlYWQgdGhlIGdsb2JhbCB2YXJpYWJsZSByZXBlYXRlZGx5LiAgTm90
-IHN1cmUgaWYgdGhhdCdzIHRydWUsKCopIGJ1dCBJDQo+ID4gPiB0aGluayBJIGRvIHByZWZlciB0
-aGF0IHZlcnNpb24gaWYgQXJuZCB3YW50cyB0byBkbyB0aGF0IHR3ZWFrLg0KPiA+DQo+ID4gSXQn
-cyBub3QgdHJ1ZS4NCj4gPg0KPiA+ICAgICAgZm9vICpwID0gYmFyOw0KPiA+DQo+ID4gICAgICBw
-LT5hID0gMTsNCj4gPiAgICAgIHAtPmIgPSAyOw0KPiA+DQo+ID4gVGhlIGNvbXBpbGVyIGlzIGZy
-ZWUgdG8gcmVsb2FkIGJhciBhZnRlciBhY2Nlc3NpbmcgcC0+YSBhbmQgd2l0aA0KPiA+DQo+ID4g
-ICAgIGJhci0+YSA9IDE7DQo+ID4gICAgIGJhci0+YiA9IDE7DQo+ID4NCj4gPiBpdCBjYW4gZWl0
-aGVyIGNhY2hlIGJhciBpbiBhIHJlZ2lzdGVyIG9yIHJlcmVhZCBpdCBhZnRlciBiYXItPmENCj4g
-Pg0KPiA+IFRoZSBnZW5lcmF0ZWQgY29kZSBpcyB0aGUgc2FtZSBhcyBsb25nIGFzIHRoZXJlIGlz
-IG5vIHJlYXNvbiB0byByZWxvYWQsDQo+ID4gZS5nLiByZWdpc3RlciBwcmVzc3VyZS4NCj4gPg0K
-PiA+IFRoYW5rcywNCj4gPg0KPiA+ICAgICAgICAgdGdseA0KPiANCj4gSXQncyBub3QgcXVpdGUg
-dGhlIHNhbWUuDQo+IA0KPiBodHRwczovL2dvZGJvbHQub3JnL3ovNGR6UGJNDQo+IA0KPiBXaXRo
-IC1mbm8tc3RyaWN0LWFsaWFzaW5nLCB0aGUgY29tcGlsZXIgcmVsb2FkcyB0aGUgcG9pbnRlciBp
-ZiB5b3Ugd3JpdGUNCj4gdG8gdGhlIHN0YXJ0IG9mIHdoYXQgaXQgcG9pbnRzIHRvLCBidXQgbm90
-IGlmIHlvdSB3cml0ZSB0byBsYXRlcg0KPiBlbGVtZW50cy4NCg0KSSBndWVzcyBpdCBhc3N1bWVz
-IHRoYXQgZ2xvYmFsIGRhdGEgZG9lc24ndCBvdmVybGFwLg0KDQpCdXQgaW4gZ2VuZXJhbCB0aGV5
-IGFyZSBzb3J0IG9mIG9wcG9zaXRlczoNCg0KV2l0aCB0aGUgbG9jYWwgdmFyaWFibGUgaXQgY2Fu
-IHJlbG9hZCBpZiBpdCBrbm93cyB0aGUgd3JpdGUNCmNhbm5vdCBoYXZlIGFmZmVjdGVkIHRoZSBn
-bG9iYWwgLSBidXQgaXMgdW5saWtlbHkgdG8gZG8gc28uDQoNClVzaW5nIHRoZSBnbG9iYWwgaXQg
-bXVzdCByZWxvYWQgaWYgaXQgaXMgcG9zc2libGUgdGhlIHdyaXRlDQptaWdodCBoYXZlIGFmZmVj
-dGVkIHRoZSBnbG9iYWwuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNp
-ZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsN
-ClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Fix the following sparse warnings:
+
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:38:23: warning: symbol 'po_is_pass_set' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:70:23: warning: symbol 'po_current_password' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:99:23: warning: symbol 'po_new_password' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:103:23: warning: symbol 'po_min_pass_length' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:107:23: warning: symbol 'po_max_pass_length' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:116:23: warning: symbol 'po_mechanism' was not declared. Should it be static?
+drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:129:23: warning: symbol 'po_role' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zou Wei <zou_wei@huawei.com>
+---
+v2:
+- put all of them in a way that each occupies only a single line
+ drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
+index e6199fb..81562b1 100644
+--- a/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
++++ b/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
+@@ -35,7 +35,7 @@ static ssize_t is_enabled_show(struct kobject *kobj, struct kobj_attribute *attr
+ 	return ret;
+ }
+ 
+-struct kobj_attribute po_is_pass_set =
++static struct kobj_attribute po_is_pass_set =
+ 		__ATTR_RO(is_enabled);
+ 
+ static ssize_t current_password_store(struct kobject *kobj,
+@@ -67,7 +67,7 @@ static ssize_t current_password_store(struct kobject *kobj,
+ 	return count;
+ }
+ 
+-struct kobj_attribute po_current_password =
++static struct kobj_attribute po_current_password =
+ 		__ATTR_WO(current_password);
+ 
+ static ssize_t new_password_store(struct kobject *kobj,
+@@ -96,15 +96,15 @@ static ssize_t new_password_store(struct kobject *kobj,
+ 	return ret ? ret : count;
+ }
+ 
+-struct kobj_attribute po_new_password =
++static struct kobj_attribute po_new_password =
+ 		__ATTR_WO(new_password);
+ 
+ attribute_n_property_show(min_password_length, po);
+-struct kobj_attribute po_min_pass_length =
++static struct kobj_attribute po_min_pass_length =
+ 		__ATTR_RO(min_password_length);
+ 
+ attribute_n_property_show(max_password_length, po);
+-struct kobj_attribute po_max_pass_length =
++static struct kobj_attribute po_max_pass_length =
+ 		__ATTR_RO(max_password_length);
+ 
+ static ssize_t mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
+@@ -113,7 +113,7 @@ static ssize_t mechanism_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 	return sprintf(buf, "password\n");
+ }
+ 
+-struct kobj_attribute po_mechanism =
++static struct kobj_attribute po_mechanism =
+ 	__ATTR_RO(mechanism);
+ 
+ static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
+@@ -126,7 +126,7 @@ static ssize_t role_show(struct kobject *kobj, struct kobj_attribute *attr,
+ 	return -EIO;
+ }
+ 
+-struct kobj_attribute po_role =
++static struct kobj_attribute po_role =
+ 	__ATTR_RO(role);
+ 
+ static struct attribute *po_attrs[] = {
+-- 
+2.6.2
 
