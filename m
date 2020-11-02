@@ -2,737 +2,1333 @@ Return-Path: <SRS0=Yj9h=EI=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E3C00A89
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Nov 2020 05:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274F1C388F9
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Nov 2020 05:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62A42225E
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Nov 2020 05:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4A922275
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Nov 2020 05:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="ZARK21Vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726012AbgKBFQm (ORCPT
+        id S1727730AbgKBFvL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 Nov 2020 00:16:42 -0500
-Received: from mga04.intel.com ([192.55.52.120]:61376 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbgKBFQl (ORCPT
+        Mon, 2 Nov 2020 00:51:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgKBFvJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Nov 2020 00:16:41 -0500
-IronPort-SDR: ycQyBCmEwCWzAl6dqzqzFfhQZP+ZvU1473J6163VnW6MICP04Ua9dAf12igAWrscPLKd5g3lP3
- +j3LLUylnD3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9792"; a="166245367"
-X-IronPort-AV: E=Sophos;i="5.77,444,1596524400"; 
-   d="gz'50?scan'50,208,50";a="166245367"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2020 21:16:38 -0800
-IronPort-SDR: skEtrdzpeeAQHBxDdcx2FUpTtYUZlTljlo4wqC2saD8sddhcRri2CdD8PZpAzOUJh9ljn+BDQt
- fX+kAHsmwSvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,444,1596524400"; 
-   d="gz'50?scan'50,208,50";a="396095247"
-Received: from lkp-server02.sh.intel.com (HELO 5575c2e0dde6) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 01 Nov 2020 21:16:35 -0800
-Received: from kbuild by 5575c2e0dde6 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kZSCp-00008L-03; Mon, 02 Nov 2020 05:16:35 +0000
-Date:   Mon, 2 Nov 2020 13:15:35 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Divya Bharathi <divya.bharathi@dell.com>
-Cc:     kbuild-all@lists.01.org, Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Prasanth KSR <prasanth.ksr@dell.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [linux-platform-drivers-x86:for-next 7/7]
- drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:38:23: sparse:
- sparse: symbol 'po_is_pass_set' was not declared. Should it be
-Message-ID: <202011021321.WZVoG5Tr-lkp@intel.com>
+        Mon, 2 Nov 2020 00:51:09 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B53C0617A6
+        for <platform-driver-x86@vger.kernel.org>; Sun,  1 Nov 2020 21:51:08 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id l24so13105453edj.8
+        for <platform-driver-x86@vger.kernel.org>; Sun, 01 Nov 2020 21:51:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=mfXBkU4q5bwFdxoPkDgpCRrqoTTL828rZFuCA+z9scw=;
+        b=ZARK21VhYbHKsK5NEuPMcZdpcWQSTJZleuxs5c+v22Fgek+ntpFPtUJLk7mFZlUFLD
+         cQTOXR4aJvJM86J1frrKZii6Q96mdQPInF1mstdSvIxFfoEMsSgVVXZEXktdwevUyMLp
+         MvIYVv3Knll8wjPeoPAaBQUWQIConeutIpU9hU6dDD3mVRHlQmMCp/ufC6z83q/9OHYd
+         pPLTIuq17rtgmJp0jXgfbFUtTs5nBjg25TBsLCsG643VNf3scNf35ymHaMp8II1KE5qW
+         kn9NC+HRylQMPcG+OF/hyi5HYwQWw+q+eIQDTmAuITaogkBoJmjBkHpTFOxAypezasCG
+         pG7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=mfXBkU4q5bwFdxoPkDgpCRrqoTTL828rZFuCA+z9scw=;
+        b=OgnneTmkmAe2/2cVJ0KDob1dV6gztxdYXKhSBtJoBIP+ltog5iAxpjiionJT1CN1HE
+         BLOTT2wn8JWmH35wqqmAK9W9kgdf/SQnbpGDlMr84h9nOxKL2unJ3MPQLYKqQ/p5a43x
+         IKdqfI90sjyyNwq2eIclCGlGxX9G5Baj60Gzr38yBmdIuPTltD5HAsAGGjqta0V2gtqJ
+         tlalfhR7+hLo6EoNhzG8T8VqqtIQqPAAKrI1erftADHjHmI2bate/26dR8kMWROgxceF
+         dNytinM3p+RO92HHjER4zeewADneu9jRX7T4xfQf7ocXkGH2DdQ7JRUfYR5heuJDL06Q
+         6yxA==
+X-Gm-Message-State: AOAM533MfuSt471FQVCsdMXXmW25j7zHRpsT+GFHMveXlzLF9kkpU4gR
+        x1b4lLXSmtWeaZNYXvJaKwQIXGbkHON1V7zqNkOx5w==
+X-Google-Smtp-Source: ABdhPJypgAQrUpp6HONlELmFgnyiHEsTKRbk0GVsqKbK5m0VoNk1nMfujYPhCegsxIOSeLUfbsw1CH+/Og6yiftSvxw=
+X-Received: by 2002:a05:6402:290:: with SMTP id l16mr13528631edv.104.1604296264394;
+ Sun, 01 Nov 2020 21:51:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1604042072.git.mchehab+huawei@kernel.org> <55a89f423cf122982c462d257722e44d6ece4b36.1604042072.git.mchehab+huawei@kernel.org>
+In-Reply-To: <55a89f423cf122982c462d257722e44d6ece4b36.1604042072.git.mchehab+huawei@kernel.org>
+From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
+Date:   Mon, 2 Nov 2020 06:50:53 +0100
+Message-ID: <CAMGffEk14z2EfDx+_srY83+UeH6jJTepAEFGW3h-0BTBy7uXzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 28/39] docs: ABI: fix syntax to be parsed using ReST notation
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Akira Shimahara <akira215corp@gmail.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Christian Gromm <christian.gromm@microchip.com>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Ivan Zaentsev <ivan.zaentsev@wirenboard.ru>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kamil Konieczny <k.konieczny@samsung.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Luwei Kang <luwei.kang@intel.com>,
+        Marek Behun <marek.behun@nic.cz>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Philippe Bergheaud <felix@linux.ibm.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Tejas Patel <tejas.patel@xilinx.com>,
+        Vadim Pasternak <vadimp@nvidia.com>,
+        Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-tree:   git://git.infradead.org/linux-platform-drivers-x86 for-next
-head:   e8a60aa7404bfef37705da5607c97737073ac38d
-commit: e8a60aa7404bfef37705da5607c97737073ac38d [7/7] platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems
-config: i386-randconfig-s001-20201101 (attached as .config)
-compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.3-76-gf680124b-dirty
-        git remote add linux-platform-drivers-x86 git://git.infradead.org/linux-platform-drivers-x86
-        git fetch --no-tags linux-platform-drivers-x86 for-next
-        git checkout e8a60aa7404bfef37705da5607c97737073ac38d
-        # save the attached .config to linux build tree
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=i386 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-"sparse warnings: (new ones prefixed by >>)"
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:38:23: sparse: sparse: symbol 'po_is_pass_set' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:70:23: sparse: sparse: symbol 'po_current_password' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:99:23: sparse: sparse: symbol 'po_new_password' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:103:23: sparse: sparse: symbol 'po_min_pass_length' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:107:23: sparse: sparse: symbol 'po_max_pass_length' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:116:23: sparse: sparse: symbol 'po_mechanism' was not declared. Should it be static?
->> drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c:129:23: sparse: sparse: symbol 'po_role' was not declared. Should it be static?
---
->> drivers/platform/x86/dell-wmi-sysman/sysman.c:258:24: sparse: sparse: symbol 'wmi_sysman_kobj_sysfs_ops' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---DocE+STaALJfprDB
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---DocE+STaALJfprDB--
+On Fri, Oct 30, 2020 at 8:41 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> There are a number of new changes at the ABI files that cause
+> them to produce warnings when generating ABI output.
+>
+> Fix them.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../ABI/stable/sysfs-driver-firmware-zynqmp   | 62 ++++++++-----
+>  Documentation/ABI/testing/debugfs-moxtet      | 28 ++++--
+>  .../ABI/testing/debugfs-turris-mox-rwtm       |  6 +-
+>  .../sysfs-bus-event_source-devices-dfl_fme    | 14 +--
+>  Documentation/ABI/testing/sysfs-bus-most      |  6 +-
+>  Documentation/ABI/testing/sysfs-class-devfreq |  6 +-
+>  Documentation/ABI/testing/sysfs-class-ocxl    | 14 +--
+>  .../ABI/testing/sysfs-class-power-wilco       | 18 ++--
+>  .../ABI/testing/sysfs-class-rnbd-client       | 93 ++++++++++---------
+>  .../ABI/testing/sysfs-class-rtrs-client       | 23 +++--
+For rnbd/rtrs, looks good to me, thanks!
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+>  .../sysfs-devices-platform-stratix10-rsu      | 10 ++
+>  .../ABI/testing/sysfs-driver-w1_therm         | 75 ++++++++++-----
+>  .../ABI/testing/sysfs-platform-dfl-fme        | 14 ++-
+>  Documentation/ABI/testing/sysfs-platform-dptf | 11 ++-
+>  .../sysfs-platform-intel-wmi-sbl-fw-update    |  1 +
+>  .../testing/sysfs-platform-mellanox-bootctl   | 50 ++++++----
+>  .../ABI/testing/sysfs-platform-wilco-ec       |  1 +
+>  17 files changed, 271 insertions(+), 161 deletions(-)
+>
+> diff --git a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp b/Docu=
+mentation/ABI/stable/sysfs-driver-firmware-zynqmp
+> index 00fa04c76ff3..f5724bb5b462 100644
+> --- a/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
+> +++ b/Documentation/ABI/stable/sysfs-driver-firmware-zynqmp
+> @@ -12,13 +12,15 @@ Description:
+>                 resets. Three registers are used by the FSBL and
+>                 other Xilinx software products: GLOBAL_GEN_STORAGE{4:6}.
+>
+> -               Usage:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs=
+0
+> -               # echo <value> > /sys/devices/platform/firmware\:zynqmp-f=
+irmware/ggs0
+> +               Usage::
+>
+> -               Example:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/ggs=
+0
+> -               # echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqm=
+p-firmware/ggs0
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/ggs0
+> +                   # echo <value> > /sys/devices/platform/firmware\:zynq=
+mp-firmware/ggs0
+> +
+> +               Example::
+> +
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/ggs0
+> +                   # echo 0x1234ABCD > /sys/devices/platform/firmware\:z=
+ynqmp-firmware/ggs0
+>
+>  Users:         Xilinx
+>
+> @@ -39,13 +41,15 @@ Description:
+>                 software products: PERS_GLOB_GEN_STORAGE{4:7}.
+>                 Register is reset only by a POR reset.
+>
+> -               Usage:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/pgg=
+s0
+> -               # echo <value> > /sys/devices/platform/firmware\:zynqmp-f=
+irmware/pggs0
+> +               Usage::
+>
+> -               Example:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/pgg=
+s0
+> -               # echo 0x1234ABCD > /sys/devices/platform/firmware\:zynqm=
+p-firmware/pggs0
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/pggs0
+> +                   # echo <value> > /sys/devices/platform/firmware\:zynq=
+mp-firmware/pggs0
+> +
+> +               Example::
+> +
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/pggs0
+> +                   # echo 0x1234ABCD > /sys/devices/platform/firmware\:z=
+ynqmp-firmware/pggs0
+>
+>  Users:         Xilinx
+>
+> @@ -61,23 +65,28 @@ Description:
+>
+>                 Following are available shutdown scopes(subtypes):
+>
+> -               subsystem:      Only the APU along with all of its periph=
+erals
+> +               subsystem:
+> +                               Only the APU along with all of its periph=
+erals
+>                                 not used by other processing units will b=
+e
+>                                 shut down. This may result in the FPD pow=
+er
+>                                 domain being shut down provided that no o=
+ther
+>                                 processing unit uses FPD peripherals or D=
+RAM.
+> -               ps_only:        The complete PS will be shut down, includ=
+ing the
+> +               ps_only:
+> +                               The complete PS will be shut down, includ=
+ing the
+>                                 RPU, PMU, etc.  Only the PL domain (FPGA)
+>                                 remains untouched.
+> -               system:         The complete system/device is shut down.
+> +               system:
+> +                               The complete system/device is shut down.
+>
+> -               Usage:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/shu=
+tdown_scope
+> -               # echo <scope> > /sys/devices/platform/firmware\:zynqmp-f=
+irmware/shutdown_scope
+> +               Usage::
+>
+> -               Example:
+> -               # cat /sys/devices/platform/firmware\:zynqmp-firmware/shu=
+tdown_scope
+> -               # echo "subsystem" > /sys/devices/platform/firmware\:zynq=
+mp-firmware/shutdown_scope
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/shutdown_scope
+> +                   # echo <scope> > /sys/devices/platform/firmware\:zynq=
+mp-firmware/shutdown_scope
+> +
+> +               Example::
+> +
+> +                   # cat /sys/devices/platform/firmware\:zynqmp-firmware=
+/shutdown_scope
+> +                   # echo "subsystem" > /sys/devices/platform/firmware\:=
+zynqmp-firmware/shutdown_scope
+>
+>  Users:         Xilinx
+>
+> @@ -94,10 +103,13 @@ Description:
+>                 system restart.
+>
+>                 Usage:
+> -               Set healthy bit
+> -               # echo 1 > /sys/devices/platform/firmware\:zynqmp-firmwar=
+e/health_status
+>
+> -               Unset healthy bit
+> -               # echo 0 > /sys/devices/platform/firmware\:zynqmp-firmwar=
+e/health_status
+> +               Set healthy bit::
+> +
+> +                   # echo 1 > /sys/devices/platform/firmware\:zynqmp-fir=
+mware/health_status
+> +
+> +               Unset healthy bit::
+> +
+> +                   # echo 0 > /sys/devices/platform/firmware\:zynqmp-fir=
+mware/health_status
+>
+>  Users:         Xilinx
+> diff --git a/Documentation/ABI/testing/debugfs-moxtet b/Documentation/ABI=
+/testing/debugfs-moxtet
+> index 67b1717794d8..15dfaecb2892 100644
+> --- a/Documentation/ABI/testing/debugfs-moxtet
+> +++ b/Documentation/ABI/testing/debugfs-moxtet
+> @@ -5,10 +5,16 @@ Contact:      Marek Beh=C3=BAn <marek.behun@nic.cz>
+>  Description:   (R) Read input from the shift registers, in hexadecimal.
+>                 Returns N+1 bytes, where N is the number of Moxtet connec=
+ted
+>                 modules. The first byte is from the CPU board itself.
+> -               Example: 101214
+> -                        10: CPU board with SD card
+> -                        12: 2 =3D PCIe module, 1 =3D IRQ not active
+> -                        14: 4 =3D Peridot module, 1 =3D IRQ not active
+> +
+> +               Example::
+> +
+> +                       101214
+> +
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               10  CPU board with SD card
+> +               12  2 =3D PCIe module, 1 =3D IRQ not active
+> +               14  4 =3D Peridot module, 1 =3D IRQ not active
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/kernel/debug/moxtet/output
+>  Date:          March 2019
+> @@ -17,7 +23,13 @@ Contact:     Marek Beh=C3=BAn <marek.behun@nic.cz>
+>  Description:   (RW) Read last written value to the shift registers, in
+>                 hexadecimal, or write values to the shift registers, also
+>                 in hexadecimal.
+> -               Example: 0102
+> -                        01: 01 was last written, or is to be written, to=
+ the
+> -                            first module's shift register
+> -                        02: the same for second module
+> +
+> +               Example::
+> +
+> +                   0102
+> +
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> +               01  01 was last written, or is to be written, to the
+> +                   first module's shift register
+> +               02  the same for second module
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/Documentation/ABI/testing/debugfs-turris-mox-rwtm b/Document=
+ation/ABI/testing/debugfs-turris-mox-rwtm
+> index 2b3255ee68fd..c8f7dadd591c 100644
+> --- a/Documentation/ABI/testing/debugfs-turris-mox-rwtm
+> +++ b/Documentation/ABI/testing/debugfs-turris-mox-rwtm
+> @@ -2,8 +2,10 @@ What:          /sys/kernel/debug/turris-mox-rwtm/do_sign
+>  Date:          Jun 2020
+>  KernelVersion: 5.8
+>  Contact:       Marek Beh=C3=BAn <marek.behun@nic.cz>
+> -Description:   (W) Message to sign with the ECDSA private key stored in
+> +Description:   (W)
+> +                   Message to sign with the ECDSA private key stored in
+>                     device's OTP. The message must be exactly 64 bytes (s=
+ince
+>                     this is intended for SHA-512 hashes).
+> -               (R) The resulting signature, 136 bytes. This contains the=
+ R and
+> +               (R)
+> +                   The resulting signature, 136 bytes. This contains the=
+ R and
+>                     S values of the ECDSA signature, both in big-endian f=
+ormat.
+> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl=
+_fme b/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+> index c9278a3b3df1..63a32ddcb95e 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-dfl_fme
+> @@ -8,13 +8,13 @@ Description:  Read-only. Attribute group to describe th=
+e magic bits
+>
+>                 Each attribute under this group defines a bit range of th=
+e
+>                 perf_event_attr.config. All supported attributes are list=
+ed
+> -               below.
+> +               below::
+>
+>                     event  =3D "config:0-11"  - event ID
+>                     evtype =3D "config:12-15" - event type
+>                     portid =3D "config:16-23" - event source
+>
+> -               For example,
+> +               For example::
+>
+>                     fab_mmio_read =3D "event=3D0x06,evtype=3D0x02,portid=
+=3D0xff"
+>
+> @@ -40,11 +40,11 @@ Description:        Read-only. Attribute group to des=
+cribe performance monitoring
+>
+>                 All supported performance monitoring events are listed be=
+low.
+>
+> -               Basic events (evtype=3D0x00)
+> +               Basic events (evtype=3D0x00)::
+>
+>                     clock =3D "event=3D0x00,evtype=3D0x00,portid=3D0xff"
+>
+> -               Cache events (evtype=3D0x01)
+> +               Cache events (evtype=3D0x01)::
+>
+>                     cache_read_hit      =3D "event=3D0x00,evtype=3D0x01,p=
+ortid=3D0xff"
+>                     cache_read_miss     =3D "event=3D0x01,evtype=3D0x01,p=
+ortid=3D0xff"
+> @@ -59,7 +59,7 @@ Description:  Read-only. Attribute group to describe pe=
+rformance monitoring
+>                     cache_rx_req_stall  =3D "event=3D0x09,evtype=3D0x01,p=
+ortid=3D0xff"
+>                     cache_eviction      =3D "event=3D0x0a,evtype=3D0x01,p=
+ortid=3D0xff"
+>
+> -               Fabric events (evtype=3D0x02)
+> +               Fabric events (evtype=3D0x02)::
+>
+>                     fab_pcie0_read       =3D "event=3D0x00,evtype=3D0x02,=
+portid=3D0xff"
+>                     fab_pcie0_write      =3D "event=3D0x01,evtype=3D0x02,=
+portid=3D0xff"
+> @@ -78,7 +78,7 @@ Description:  Read-only. Attribute group to describe pe=
+rformance monitoring
+>                     fab_port_mmio_read   =3D "event=3D0x06,evtype=3D0x02,=
+portid=3D?"
+>                     fab_port_mmio_write  =3D "event=3D0x07,evtype=3D0x02,=
+portid=3D?"
+>
+> -               VTD events (evtype=3D0x03)
+> +               VTD events (evtype=3D0x03)::
+>
+>                     vtd_port_read_transaction  =3D "event=3D0x00,evtype=
+=3D0x03,portid=3D?"
+>                     vtd_port_write_transaction =3D "event=3D0x01,evtype=
+=3D0x03,portid=3D?"
+> @@ -88,7 +88,7 @@ Description:  Read-only. Attribute group to describe pe=
+rformance monitoring
+>                     vtd_port_devtlb_2m_fill    =3D "event=3D0x05,evtype=
+=3D0x03,portid=3D?"
+>                     vtd_port_devtlb_1g_fill    =3D "event=3D0x06,evtype=
+=3D0x03,portid=3D?"
+>
+> -               VTD SIP events (evtype=3D0x04)
+> +               VTD SIP events (evtype=3D0x04)::
+>
+>                     vtd_sip_iotlb_4k_hit  =3D "event=3D0x00,evtype=3D0x04=
+,portid=3D0xff"
+>                     vtd_sip_iotlb_2m_hit  =3D "event=3D0x01,evtype=3D0x04=
+,portid=3D0xff"
+> diff --git a/Documentation/ABI/testing/sysfs-bus-most b/Documentation/ABI=
+/testing/sysfs-bus-most
+> index ec0a603d804b..38cc03e408e7 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-most
+> +++ b/Documentation/ABI/testing/sysfs-bus-most
+> @@ -235,7 +235,8 @@ KernelVersion:      4.15
+>  Contact:       Christian Gromm <christian.gromm@microchip.com>
+>  Description:
+>                 This is to read back the configured direction of the chan=
+nel.
+> -               The following strings will be accepted:
+> +               The following strings will be accepted::
+> +
+>                         'tx',
+>                         'rx'
+>  Users:
+> @@ -246,7 +247,8 @@ KernelVersion:      4.15
+>  Contact:       Christian Gromm <christian.gromm@microchip.com>
+>  Description:
+>                 This is to read back the configured data type of the chan=
+nel.
+> -               The following strings will be accepted:
+> +               The following strings will be accepted::
+> +
+>                         'control',
+>                         'async',
+>                         'sync',
+> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentatio=
+n/ABI/testing/sysfs-class-devfreq
+> index 67af3f31e17c..386bc230a33d 100644
+> --- a/Documentation/ABI/testing/sysfs-class-devfreq
+> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
+> @@ -48,7 +48,8 @@ Description:
+>                 driver should provide the list of available frequencies
+>                 with its profile. If need to reset the statistics of devf=
+req
+>                 behavior on a specific device, enter 0(zero) to 'trans_st=
+at'
+> -               as following:
+> +               as following::
+> +
+>                         echo 0 > /sys/class/devfreq/.../trans_stat
+>
+>  What:          /sys/class/devfreq/.../available_frequencies
+> @@ -124,7 +125,8 @@ Description:
+>                 This work timer is used by devfreq workqueue in order to
+>                 monitor the device status such as utilization. The user
+>                 can change the work timer on runtime according to their d=
+emand
+> -               as following:
+> +               as following::
+> +
+>                         echo deferrable > /sys/class/devfreq/.../timer
+>                         echo delayed > /sys/class/devfreq/.../timer
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-ocxl b/Documentation/A=
+BI/testing/sysfs-class-ocxl
+> index bf33f4fda58f..847a7edc3113 100644
+> --- a/Documentation/ABI/testing/sysfs-class-ocxl
+> +++ b/Documentation/ABI/testing/sysfs-class-ocxl
+> @@ -13,8 +13,8 @@ Description:  read only
+>                 where:
+>
+>                         =3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> -                       n:      number of currently active contexts, for =
+debug
+> -                       max:    maximum number of contexts supported by t=
+he AFU
+> +                       n       number of currently active contexts, for =
+debug
+> +                       max     maximum number of contexts supported by t=
+he AFU
+>                         =3D=3D=3D=3D    =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/class/ocxl/<afu name>/pp_mmio_size
+> @@ -43,7 +43,9 @@ Contact:      linuxppc-dev@lists.ozlabs.org
+>  Description:   read/write
+>                 Control whether the FPGA is reloaded on a link reset. Ena=
+bled
+>                 through a vendor-specific logic block on the FPGA.
+> -                       0       Do not reload FPGA image from flash
+> -                       1       Reload FPGA image from flash
+> -                       unavailable
+> -                               The device does not support this capabili=
+ty
+> +
+> +                       =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +                       0            Do not reload FPGA image from flash
+> +                       1            Reload FPGA image from flash
+> +                       unavailable  The device does not support this cap=
+ability
+> +                       =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/Documentation/ABI/testing/sysfs-class-power-wilco b/Document=
+ation/ABI/testing/sysfs-class-power-wilco
+> index 84fde1d0ada0..82af180fcaab 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power-wilco
+> +++ b/Documentation/ABI/testing/sysfs-class-power-wilco
+> @@ -4,17 +4,23 @@ KernelVersion:        5.2
+>  Description:
+>                 What charging algorithm to use:
+>
+> -               Standard: Fully charges battery at a standard rate.
+> -               Adaptive: Battery settings adaptively optimized based on
+> +               Standard:
+> +                       Fully charges battery at a standard rate.
+> +               Adaptive:
+> +                       Battery settings adaptively optimized based on
+>                         typical battery usage pattern.
+> -               Fast: Battery charges over a shorter period.
+> -               Trickle: Extends battery lifespan, intended for users who
+> +               Fast:
+> +                       Battery charges over a shorter period.
+> +               Trickle:
+> +                       Extends battery lifespan, intended for users who
+>                         primarily use their Chromebook while connected to=
+ AC.
+> -               Custom: A low and high threshold percentage is specified.
+> +               Custom:
+> +                       A low and high threshold percentage is specified.
+>                         Charging begins when level drops below
+>                         charge_control_start_threshold, and ceases when
+>                         level is above charge_control_end_threshold.
+> -               Long Life: Customized charge rate for last longer battery=
+ life.
+> +               Long Life:
+> +                       Customized charge rate for last longer battery li=
+fe.
+>                         On Wilco device this mode is pre-configured in th=
+e factory
+>                         through EC's private PID. Swiching to a different=
+ mode will
+>                         be denied by Wilco EC when Long Life mode is enab=
+led.
+> diff --git a/Documentation/ABI/testing/sysfs-class-rnbd-client b/Document=
+ation/ABI/testing/sysfs-class-rnbd-client
+> index c084f203b41e..00c0286733d4 100644
+> --- a/Documentation/ABI/testing/sysfs-class-rnbd-client
+> +++ b/Documentation/ABI/testing/sysfs-class-rnbd-client
+> @@ -5,62 +5,70 @@ Contact:      Jack Wang <jinpu.wang@cloud.ionos.com> Da=
+nil Kipnis <danil.kipnis@cloud
+>  Description:   Provide information about RNBD-client.
+>                 All sysfs files that are not read-only provide the usage =
+information on read:
+>
+> -               Example:
+> -               # cat /sys/class/rnbd-client/ctl/map_device
+> +               Example::
+>
+> -               > Usage: echo "sessname=3D<name of the rtrs session> path=
+=3D<[srcaddr,]dstaddr>
+> -               > [path=3D<[srcaddr,]dstaddr>] device_path=3D<full path o=
+n remote side>
+> -               > [access_mode=3D<ro|rw|migration>] > map_device
+> -               >
+> -               > addr ::=3D [ ip:<ipv4> | ip:<ipv6> | gid:<gid> ]
+> +                   # cat /sys/class/rnbd-client/ctl/map_device
+> +
+> +                   > Usage: echo "sessname=3D<name of the rtrs session> =
+path=3D<[srcaddr,]dstaddr>
+> +                   > [path=3D<[srcaddr,]dstaddr>] device_path=3D<full pa=
+th on remote side>
+> +                   > [access_mode=3D<ro|rw|migration>] > map_device
+> +                   >
+> +                   > addr ::=3D [ ip:<ipv4> | ip:<ipv6> | gid:<gid> ]
+>
+>  What:          /sys/class/rnbd-client/ctl/map_device
+>  Date:          Feb 2020
+>  KernelVersion: 5.7
+>  Contact:       Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <dani=
+l.kipnis@cloud.ionos.com>
+> -Description:   Expected format is the following:
+> +Description:   Expected format is the following::
+>
+> -               sessname=3D<name of the rtrs session>
+> -               path=3D<[srcaddr,]dstaddr> [path=3D<[srcaddr,]dstaddr> ..=
+.]
+> -               device_path=3D<full path on remote side>
+> -               [access_mode=3D<ro|rw|migration>]
+> +                   sessname=3D<name of the rtrs session>
+> +                   path=3D<[srcaddr,]dstaddr> [path=3D<[srcaddr,]dstaddr=
+> ...]
+> +                   device_path=3D<full path on remote side>
+> +                   [access_mode=3D<ro|rw|migration>]
+>
+>                 Where:
+>
+> -               sessname: accepts a string not bigger than 256 chars, whi=
+ch identifies
+> -               a given session on the client and on the server.
+> -               I.e. "clt_hostname-srv_hostname" could be a natural choic=
+e.
+> +               sessname:
+> +                   accepts a string not bigger than 256 chars, which ide=
+ntifies
+> +                   a given session on the client and on the server.
+> +                   I.e. "clt_hostname-srv_hostname" could be a natural c=
+hoice.
+>
+> -               path:     describes a connection between the client and t=
+he server by
+> -               specifying destination and, when required, the source add=
+ress.
+> -               The addresses are to be provided in the following format:
+> +               path:
+> +                   describes a connection between the client and the ser=
+ver by
+> +                   specifying destination and, when required, the source=
+ address.
+> +                   The addresses are to be provided in the following for=
+mat::
+>
+> -               ip:<IPv6>
+> -               ip:<IPv4>
+> -               gid:<GID>
+> +                       ip:<IPv6>
+> +                       ip:<IPv4>
+> +                       gid:<GID>
+>
+> -               for example:
+> +               for example::
+> +
+> +                   path=3Dip:10.0.0.66
+>
+> -               path=3Dip:10.0.0.66
+>                 The single addr is treated as the destination.
+>                 The connection will be established to this server from an=
+y client IP address.
+>
+> -               path=3Dip:10.0.0.66,ip:10.0.1.66
+> +               ::
+> +
+> +                   path=3Dip:10.0.0.66,ip:10.0.1.66
+> +
+>                 First addr is the source address and the second is the de=
+stination.
+>
+>                 If multiple "path=3D" options are specified multiple conn=
+ection
+>                 will be established and data will be sent according to
+>                 the selected multipath policy (see RTRS mp_policy sysfs e=
+ntry description).
+>
+> -               device_path: Path to the block device on the server side.=
+ Path is specified
+> -               relative to the directory on server side configured in th=
+e
+> -               'dev_search_path' module parameter of the rnbd_server.
+> -               The rnbd_server prepends the <device_path> received from =
+client
+> -               with <dev_search_path> and tries to open the
+> -               <dev_search_path>/<device_path> block device.  On success=
+,
+> -               a /dev/rnbd<N> device file, a /sys/block/rnbd_client/rnbd=
+<N>/
+> -               directory and an entry in /sys/class/rnbd-client/ctl/devi=
+ces
+> -               will be created.
+> +               device_path:
+> +                   Path to the block device on the server side. Path is =
+specified
+> +                   relative to the directory on server side configured i=
+n the
+> +                   'dev_search_path' module parameter of the rnbd_server=
+.
+> +                   The rnbd_server prepends the <device_path> received f=
+rom client
+> +                   with <dev_search_path> and tries to open the
+> +                   <dev_search_path>/<device_path> block device.  On suc=
+cess,
+> +                   a /dev/rnbd<N> device file, a /sys/block/rnbd_client/=
+rnbd<N>/
+> +                   directory and an entry in /sys/class/rnbd-client/ctl/=
+devices
+> +                   will be created.
+>
+>                 If 'dev_search_path' contains '%SESSNAME%', then each ses=
+sion can
+>                 have different devices namespace, e.g. server was configu=
+red with
+> @@ -68,11 +76,12 @@ Description:        Expected format is the following:
+>                 client has this string "sessname=3Dblya device_path=3Dsda=
+", then server
+>                 will try to open: /run/rnbd-devs/blya/sda.
+>
+> -               access_mode: the access_mode parameter specifies if the d=
+evice is to be
+> -               mapped as "ro" read-only or "rw" read-write. The server a=
+llows
+> -               a device to be exported in rw mode only once. The "migrat=
+ion"
+> -               access mode has to be specified if a second mapping in re=
+ad-write
+> -               mode is desired.
+> +               access_mode:
+> +                   the access_mode parameter specifies if the device is =
+to be
+> +                   mapped as "ro" read-only or "rw" read-write. The serv=
+er allows
+> +                   a device to be exported in rw mode only once. The "mi=
+gration"
+> +                   access mode has to be specified if a second mapping i=
+n read-write
+> +                   mode is desired.
+>
+>                 By default "rw" is used.
+>
+> @@ -91,7 +100,7 @@ Description: Expected format is the following:
+>                 is the same as the device name.  By extracting the last p=
+art of the
+>                 path the path to the device /dev/<dev-name> can be build.
+>
+> -               o /dev/block/$(cat /sys/class/rnbd-client/ctl/devices/<de=
+vice_id>/dev)
+> +               * /dev/block/$(cat /sys/class/rnbd-client/ctl/devices/<de=
+vice_id>/dev)
+>
+>                 How to find the <device_id> of the device is described on=
+ the next
+>                 section.
+> @@ -106,6 +115,6 @@ Description:        For each device mapped on the cli=
+ent a new symbolic link is created
+>                 The <device_id> of each device is created as follows:
+>
+>                 - If the 'device_path' provided during mapping contains s=
+lashes ("/"),
+> -               they are replaced by exclamation mark ("!") and used as a=
+s the
+> -               <device_id>. Otherwise, the <device_id> will be the same =
+as the
+> -               "device_path" provided.
+> +                 they are replaced by exclamation mark ("!") and used as=
+ as the
+> +                 <device_id>. Otherwise, the <device_id> will be the sam=
+e as the
+> +                 "device_path" provided.
+> diff --git a/Documentation/ABI/testing/sysfs-class-rtrs-client b/Document=
+ation/ABI/testing/sysfs-class-rtrs-client
+> index e7e718db8941..0f7165aab251 100644
+> --- a/Documentation/ABI/testing/sysfs-class-rtrs-client
+> +++ b/Documentation/ABI/testing/sysfs-class-rtrs-client
+> @@ -10,10 +10,10 @@ Date:               Feb 2020
+>  KernelVersion: 5.7
+>  Contact:       Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <dani=
+l.kipnis@cloud.ionos.com>
+>  Description:   RW, adds a new path (connection) to an existing session. =
+Expected format is the
+> -               following:
+> +               following::
+>
+> -               <[source addr,]destination addr>
+> -               *addr ::=3D [ ip:<ipv4|ipv6> | gid:<gid> ]
+> +                   <[source addr,]destination addr>
+> +                   *addr ::=3D [ ip:<ipv4|ipv6> | gid:<gid> ]
+>
+>  What:          /sys/class/rtrs-client/<session-name>/max_reconnect_attem=
+pts
+>  Date:          Feb 2020
+> @@ -29,10 +29,10 @@ Contact:    Jack Wang <jinpu.wang@cloud.ionos.com> Da=
+nil Kipnis <danil.kipnis@cloud
+>  Description:   Multipath policy specifies which path should be selected =
+on each IO:
+>
+>                 round-robin (0):
+> -               select path in per CPU round-robin manner.
+> +                   select path in per CPU round-robin manner.
+>
+>                 min-inflight (1):
+> -               select path with minimum inflights.
+> +                   select path with minimum inflights.
+>
+>  What:          /sys/class/rtrs-client/<session-name>/paths/
+>  Date:          Feb 2020
+> @@ -109,8 +109,11 @@ Description:       RTRS expects that each HCA IRQ is=
+ pinned to a separate CPU. If it's
+>                 not the case, the processing of an I/O response could be =
+processed on a
+>                 different CPU than where it was originally submitted.  Th=
+is file shows
+>                 how many interrupts where generated on a non expected CPU=
+.
+> -               "from:" is the CPU on which the IRQ was expected, but not=
+ generated.
+> -               "to:" is the CPU on which the IRQ was generated, but not =
+expected.
+> +
+> +               "from:"
+> +                   is the CPU on which the IRQ was expected, but not gen=
+erated.
+> +               "to:"
+> +                   is the CPU on which the IRQ was generated, but not ex=
+pected.
+>
+>  What:          /sys/class/rtrs-client/<session-name>/paths/<src@dst>/sta=
+ts/reconnects
+>  Date:          Feb 2020
+> @@ -125,7 +128,7 @@ Date:               Feb 2020
+>  KernelVersion: 5.7
+>  Contact:       Jack Wang <jinpu.wang@cloud.ionos.com> Danil Kipnis <dani=
+l.kipnis@cloud.ionos.com>
+>  Description:   Contains statistics regarding rdma operations and infligh=
+t operations.
+> -               The output consists of 6 values:
+> +               The output consists of 6 values::
+>
+> -               <read-count> <read-total-size> <write-count> <write-total=
+-size> \
+> -               <inflights> <failovered>
+> +                   <read-count> <read-total-size> <write-count> \
+> +                   <write-total-size> <inflights> <failovered>
+> diff --git a/Documentation/ABI/testing/sysfs-devices-platform-stratix10-r=
+su b/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+> index a8daceb4a956..ee253b033280 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+> +++ b/Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
+> @@ -102,6 +102,8 @@ Description:
+>                 b[15:0]
+>                         inform firmware the current software execution
+>                         stage.
+> +
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>                         0       the first stage bootloader didn't run or
+>                                 didn't reach the point of launching secon=
+d
+>                                 stage bootloader.
+> @@ -111,21 +113,29 @@ Description:
+>                         2       both first and second stage bootloader ra=
+n
+>                                 and the operating system launch was
+>                                 attempted.
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>
+>                 b[16]
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>                         1       firmware to reset current image retry
+>                                 counter.
+>                         0       no action.
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>
+>                 b[17]
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>                         1       firmware to clear RSU log
+>                         0       no action.
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>
+>                 b[18]
+>                         this is negative logic
+> +
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>                         1       no action
+>                         0       firmware record the notify code defined
+>                                 in b[15:0].
+> +                       =3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/devices/platform/stratix10-rsu.0/dcmf0
+>  Date:          June 2020
+> diff --git a/Documentation/ABI/testing/sysfs-driver-w1_therm b/Documentat=
+ion/ABI/testing/sysfs-driver-w1_therm
+> index 8873bbb075cb..6a37dc33ffdb 100644
+> --- a/Documentation/ABI/testing/sysfs-driver-w1_therm
+> +++ b/Documentation/ABI/testing/sysfs-driver-w1_therm
+> @@ -22,8 +22,10 @@ Description:
+>                 device data to its embedded EEPROM, either restore data
+>                 embedded in device EEPROM. Be aware that devices support
+>                 limited EEPROM writing cycles (typical 50k)
+> +
+>                         * 'save': save device RAM to EEPROM
+>                         * 'restore': restore EEPROM data in device RAM
+> +
+>  Users:         any user space application which wants to communicate wit=
+h
+>                 w1_term device
+>
+> @@ -33,9 +35,11 @@ Date:                May 2020
+>  Contact:       Akira Shimahara <akira215corp@gmail.com>
+>  Description:
+>                 (RO) return the power status by asking the device
+> +
+>                         * '0': device parasite powered
+>                         * '1': device externally powered
+>                         * '-xx': xx is kernel error when reading power st=
+atus
+> +
+>  Users:         any user space application which wants to communicate wit=
+h
+>                 w1_term device
+>
+> @@ -49,10 +53,12 @@ Description:
+>                 will be changed only in device RAM, so it will be cleared=
+ when
+>                 power is lost. Trigger a 'save' to EEPROM command to keep
+>                 values after power-on. Read or write are :
+> +
+>                         * '9..14': device resolution in bit
+> -                       or resolution to set in bit
+> +                         or resolution to set in bit
+>                         * '-xx': xx is kernel error when reading the reso=
+lution
+>                         * Anything else: do nothing
+> +
+>                 Some DS18B20 clones are fixed in 12-bit resolution, so th=
+e
+>                 actual resolution is read back from the chip and verified=
+. Error
+>                 is reported if the results differ.
+> @@ -65,16 +71,18 @@ Date:               May 2020
+>  Contact:       Akira Shimahara <akira215corp@gmail.com>
+>  Description:
+>                 (RO) return the temperature in 1/1000 degC.
+> +
+>                         * If a bulk read has been triggered, it will dire=
+ctly
+> -                       return the temperature computed when the bulk rea=
+d
+> -                       occurred, if available. If not yet available, not=
+hing
+> -                       is returned (a debug kernel message is sent), you
+> -                       should retry later on.
+> +                         return the temperature computed when the bulk r=
+ead
+> +                         occurred, if available. If not yet available, n=
+othing
+> +                         is returned (a debug kernel message is sent), y=
+ou
+> +                         should retry later on.
+>                         * If no bulk read has been triggered, it will tri=
+gger
+> -                       a conversion and send the result. Note that the
+> -                       conversion duration depend on the resolution (if
+> -                       device support this feature). It takes 94ms in 9b=
+its
+> -                       resolution, 750ms for 12bits.
+> +                         a conversion and send the result. Note that the
+> +                         conversion duration depend on the resolution (i=
+f
+> +                         device support this feature). It takes 94ms in =
+9bits
+> +                         resolution, 750ms for 12bits.
+> +
+>  Users:         any user space application which wants to communicate wit=
+h
+>                 w1_term device
+>
+> @@ -86,12 +94,14 @@ Description:
+>                 (RW) return the temperature in 1/1000 degC.
+>                 *read*: return 2 lines with the hexa output data sent on =
+the
+>                 bus, return the CRC check and temperature in 1/1000 degC
+> -               *write* :
+> +               *write*:
+> +
+>                         * '0' : save the 2 or 3 bytes to the device EEPRO=
+M
+> -                       (i.e. TH, TL and config register)
+> +                         (i.e. TH, TL and config register)
+>                         * '9..14' : set the device resolution in RAM
+> -                       (if supported)
+> +                         (if supported)
+>                         * Anything else: do nothing
+> +
+>                 refer to Documentation/w1/slaves/w1_therm.rst for detaile=
+d
+>                 information.
+>  Users:         any user space application which wants to communicate wit=
+h
+> @@ -103,14 +113,21 @@ Date:             May 2020
+>  Contact:       Akira Shimahara <akira215corp@gmail.com>
+>  Description:
+>                 (RW) trigger a bulk read conversion. read the status
+> +
+>                 *read*:
+> -                       * '-1': conversion in progress on at least 1 sens=
+or
+> -                       * '1' : conversion complete but at least one sens=
+or
+> +                       * '-1':
+> +                               conversion in progress on at least 1 sens=
+or
+> +                       * '1' :
+> +                               conversion complete but at least one sens=
+or
+>                                 value has not been read yet
+> -                       * '0' : no bulk operation. Reading temperature wi=
+ll
+> +                       * '0' :
+> +                               no bulk operation. Reading temperature wi=
+ll
+>                                 trigger a conversion on each device
+> -               *write*: 'trigger': trigger a bulk read on all supporting
+> +
+> +               *write*:
+> +                       'trigger': trigger a bulk read on all supporting
+>                         devices on the bus
+> +
+>                 Note that if a bulk read is sent but one sensor is not re=
+ad
+>                 immediately, the next access to temperature on this devic=
+e
+>                 will return the temperature measured at the time of issue
+> @@ -128,14 +145,19 @@ Description:
+>                 reset to default (datasheet) conversion time for a new
+>                 resolution.
+>
+> -               *read*: Actual conversion time in milliseconds. *write*:
+> -                       '0': Set the default conversion time from the dat=
+asheet.
+> -                       '1': Measure and set the conversion time. Make a =
+single
+> +               *read*:
+> +                       Actual conversion time in milliseconds.
+> +
+> +               *write*:
+> +                       * '0':
+> +                            Set the default conversion time from the dat=
+asheet.
+> +                       * '1':
+> +                            Measure and set the conversion time. Make a =
+single
+>                              temperature conversion, measure an actual va=
+lue.
+>                              Increase it by 20% for temperature range. A =
+new
+>                              conversion time can be obtained by reading t=
+his
+>                              same attribute.
+> -                       other positive value:
+> +                       * other positive value:
+>                              Set the conversion time in milliseconds.
+>
+>  Users:         An application using the w1_term device
+> @@ -148,16 +170,21 @@ Description:
+>                 (RW) Control optional driver settings.
+>                 Bit masks to read/write (bitwise OR):
+>
+> -                1: Enable check for conversion success. If byte 6 of
+> +               =3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +                 1 Enable check for conversion success. If byte 6 of
+>                     scratchpad memory is 0xC after conversion, and
+>                     temperature reads 85.00 (powerup value) or 127.94
+>                     (insufficient power) - return a conversion error.
+>
+> -                2: Enable poll for conversion completion. Generate read =
+cycles
+> +                2  Enable poll for conversion completion. Generate read =
+cycles
+>                     after the conversion start and wait for 1's. In paras=
+ite
+>                     power mode this feature is not available.
+> +               =3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> -               *read*:  Currently selected features.
+> -               *write*: Select features.
+> +               *read*:
+> +                   Currently selected features.
+> +
+> +               *write*:
+> +                   Select features.
+>
+>  Users:         An application using the w1_term device
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dfl-fme b/Documenta=
+tion/ABI/testing/sysfs-platform-dfl-fme
+> index 3683cb1cdc3d..d6ab34e81b9b 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> +++ b/Documentation/ABI/testing/sysfs-platform-dfl-fme
+> @@ -113,8 +113,11 @@ KernelVersion:     5.5
+>  Contact:       Wu Hao <hao.wu@intel.com>
+>  Description:   Read-Only. Read this file to get the name of hwmon device=
+, it
+>                 supports values:
+> -                   'dfl_fme_thermal' - thermal hwmon device name
+> -                   'dfl_fme_power'   - power hwmon device name
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               'dfl_fme_thermal'  thermal hwmon device name
+> +               'dfl_fme_power'    power hwmon device name
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/temp1_in=
+put
+>  Date:          October 2019
+> @@ -169,8 +172,11 @@ KernelVersion:     5.5
+>  Contact:       Wu Hao <hao.wu@intel.com>
+>  Description:   Read-Only. Read this file to get the policy of hardware t=
+hreshold1
+>                 (see 'temp1_max'). It only supports two values (policies)=
+:
+> -                   0 - AP2 state (90% throttling)
+> -                   1 - AP1 state (50% throttling)
+> +
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +                0  AP2 state (90% throttling)
+> +                1  AP1 state (50% throttling)
+> +               =3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/dfl-fme.0/hwmon/hwmonX/power1_i=
+nput
+>  Date:          October 2019
+> diff --git a/Documentation/ABI/testing/sysfs-platform-dptf b/Documentatio=
+n/ABI/testing/sysfs-platform-dptf
+> index 2cbc660d163b..141834342a4d 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-dptf
+> +++ b/Documentation/ABI/testing/sysfs-platform-dptf
+> @@ -27,12 +27,15 @@ KernelVersion:      v4.10
+>  Contact:       linux-acpi@vger.kernel.org
+>  Description:
+>                 (RO) Display the platform power source
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>                 bits[3:0] Current power source
+> -                       0x00 =3D DC
+> -                       0x01 =3D AC
+> -                       0x02 =3D USB
+> -                       0x03 =3D Wireless Charger
+> +                         - 0x00 =3D DC
+> +                         - 0x01 =3D AC
+> +                         - 0x02 =3D USB
+> +                         - 0x03 =3D Wireless Charger
+>                 bits[7:4] Power source sequence number
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/INT3407:00/dptf_power/battery_s=
+teady_power
+>  Date:          Jul, 2016
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-up=
+date b/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
+> index 5aa618987cad..02ae1e9bbfc8 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-sbl-fw-update
+> @@ -8,5 +8,6 @@ Description:
+>                 of 0 and userspace can signal SBL to update firmware,
+>                 on next reboot, by writing a value of 1.
+>                 There are two available states:
+> +
+>                     * 0 -> Skip firmware update while rebooting
+>                     * 1 -> Attempt firmware update on next reboot
+> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/=
+Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> index 401d202f478b..e79ca22e2f45 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> @@ -5,10 +5,13 @@ Contact:      "Liming Sun <lsun@mellanox.com>"
+>  Description:
+>                 The Life-cycle state of the SoC, which could be one of th=
+e
+>                 following values.
+> -                 Production - Production state and can be updated to sec=
+ure
+> -                 GA Secured - Secure chip and not able to change state
+> -                 GA Non-Secured - Non-Secure chip and not able to change=
+ state
+> -                 RMA - Return Merchandise Authorization
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               Production      Production state and can be updated to se=
+cure
+> +               GA Secured      Secure chip and not able to change state
+> +               GA Non-Secured  Non-Secure chip and not able to change st=
+ate
+> +               RMA             Return Merchandise Authorization
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/MLNXBF04:00/post_reset_wdog
+>  Date:          Oct 2019
+> @@ -25,10 +28,13 @@ KernelVersion:      5.5
+>  Contact:       "Liming Sun <lsun@mellanox.com>"
+>  Description:
+>                 The source of the boot stream for the next reset. It coul=
+d be
+> -               one of the following values.
+> -                 external - boot from external source (USB or PCIe)
+> -                 emmc - boot from the onchip eMMC
+> -                 emmc_legacy - boot from the onchip eMMC in legacy (slow=
+) mode
+> +               one of the following values:
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               external     boot from external source (USB or PCIe)
+> +               emmc         boot from the onchip eMMC
+> +               emmc_legacy  boot from the onchip eMMC in legacy (slow) m=
+ode
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/MLNXBF04:00/second_reset_action
+>  Date:          Oct 2019
+> @@ -38,11 +44,14 @@ Description:
+>                 Update the source of the boot stream after next reset. It=
+ could
+>                 be one of the following values and will be applied after =
+next
+>                 reset.
+> -                 external - boot from external source (USB or PCIe)
+> -                 emmc - boot from the onchip eMMC
+> -                 emmc_legacy - boot from the onchip eMMC in legacy (slow=
+) mode
+> -                 swap_emmc - swap the primary / secondary boot partition
+> -                 none - cancel the action
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               external     boot from external source (USB or PCIe)
+> +               emmc         boot from the onchip eMMC
+> +               emmc_legacy  boot from the onchip eMMC in legacy (slow) m=
+ode
+> +               swap_emmc    swap the primary / secondary boot partition
+> +               none         cancel the action
+> +               =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>  What:          /sys/bus/platform/devices/MLNXBF04:00/secure_boot_fuse_st=
+ate
+>  Date:          Oct 2019
+> @@ -50,9 +59,12 @@ KernelVersion:       5.5
+>  Contact:       "Liming Sun <lsun@mellanox.com>"
+>  Description:
+>                 The state of eFuse versions with the following values.
+> -                 InUse - burnt, valid and currently in use
+> -                 Used - burnt and valid
+> -                 Free - not burnt and free to use
+> -                 Skipped - not burnt but not free (skipped)
+> -                 Wasted - burnt and invalid
+> -                 Invalid - not burnt but marked as valid (error state).
+> +
+> +               =3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +               InUse    burnt, valid and currently in use
+> +               Used     burnt and valid
+> +               Free     not burnt and free to use
+> +               Skipped  not burnt but not free (skipped)
+> +               Wasted   burnt and invalid
+> +               Invalid  not burnt but marked as valid (error state).
+> +               =3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Document=
+ation/ABI/testing/sysfs-platform-wilco-ec
+> index 5f60b184a5a5..4439d0644091 100644
+> --- a/Documentation/ABI/testing/sysfs-platform-wilco-ec
+> +++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
+> @@ -39,6 +39,7 @@ Description:
+>                 which affects charging via the special USB PowerShare por=
+t
+>                 (marked with a small lightning bolt or battery icon) when=
+ in
+>                 low power states:
+> +
+>                 - In S0, the port will always provide power.
+>                 - In S0ix, if usb_charge is enabled, then power will be
+>                   supplied to the port when on AC or if battery is > 50%.
+> --
+> 2.26.2
+>
