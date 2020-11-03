@@ -2,925 +2,331 @@ Return-Path: <SRS0=a5Ee=EJ=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9FEC388F2
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Nov 2020 19:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A26DC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Nov 2020 22:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C070922226
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Nov 2020 19:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3718320735
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Nov 2020 22:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="hyWjC4F4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YowSrbER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgKCTOs (ORCPT
+        id S1730690AbgKCWuA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Nov 2020 14:14:48 -0500
-Received: from mail-40141.protonmail.ch ([185.70.40.141]:42140 "EHLO
-        mail-40141.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729170AbgKCTOs (ORCPT
+        Tue, 3 Nov 2020 17:50:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730639AbgKCWuA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Nov 2020 14:14:48 -0500
-X-Greylist: delayed 33671 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Nov 2020 14:14:42 EST
-Date:   Tue, 03 Nov 2020 19:14:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1604430880;
-        bh=l/cjlpXMkEkYBaau1T1zaSzewV7fGa0lfZO68wXNBns=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=hyWjC4F4WL7OP+bH4LKL/IoMOrCVa993sdFtmAdrkpoH6Pi+KDRT8KgGCvmkd/ooI
-         ZOkIduPuWsuCrjg+NfOLVmr7/HkWhtgYll4bgMN7wxWtwx5qQsL7w/lmTrOJmE5tuA
-         tzVJGyuVHtFXslyOmjbejkPIKSXqzxTn4/DAG5Xg=
-To:     Perry Yuan <Perry.Yuan@dell.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "mjg59@srcf.ucam.org" <mjg59@srcf.ucam.org>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Limonciello Mario <Mario.Limonciello@dell.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH]  platform/x86: dell-privacy: Add support for new privacy driver
-Message-ID: <HyOaD6eXLsDlTnnZPyQgvsr60w02MsxxgRqhKOyaFtM6LwKcVfAGkkNsHGOh-ObHKxCwIKCmxQVkRypV_7FfS3f6VZWJ0K8FdjRd8bNxt_c=@protonmail.com>
-In-Reply-To: <20201103125542.8572-1-Perry_Yuan@Dell.com>
-References: <20201103125542.8572-1-Perry_Yuan@Dell.com>
+        Tue, 3 Nov 2020 17:50:00 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E336C0613D1
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Nov 2020 14:49:59 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id 133so15615059pfx.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Nov 2020 14:49:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QYMXX8Mv9+Hh13Oa3p3q+eHnSYsEgEDKETeBqpeIz2g=;
+        b=YowSrbERTIhawaQviw8I7K4G2C3MeAh6zHoIMR7uqO16sqyJgB2pjbyvD5Z07yR+KQ
+         b2unRlxcD08sKKPvV8gZJvDgiDM00iSOVJYzzu0I7mEc8otyWHvUEjhVuDHXQlbZyI+6
+         9XqdBrVFpaGm/yLNuVp4I7OUhLoXRNgzD+ufozMe/Mh8A351GoRGcJJnOVgOilxUwKgn
+         SsTUo7Wt/yRVhToGXX7nkMxZgpw9pBzeARRSRYFwyEQJDGEcaDMGtG6ySIsd5+7vAyF9
+         oyAGRDcnb24J7sk9kEzXpkgM02xsN1CLmhWp3zMMLrmXQRV1rsF2Ks8rL2DRqjh4T7JW
+         8b9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QYMXX8Mv9+Hh13Oa3p3q+eHnSYsEgEDKETeBqpeIz2g=;
+        b=MzweclP0m5hkoWvMfbrEkPdYUUiU6NxMPOdJ8t/dY5VPx8BX5kX/it4ebQt7gNse5j
+         TpSFsCA/JJi40DpfYKQwaip72S47geWBG680HiaJQSHMRvL3VPwd5/5P+z9CuW60rDd4
+         SWaUgSs5M6AW5UlRV/yuQwzowJu1c05m9Z3KjO3R3Qtizu8RCAzoXZ+mS2rJJZaxqI5x
+         9r1iag5vdPzY1icB2JZiKrLDEDPmQWY+1qEVkcIF6sIsevqDEWld6nfrxvY1YAAqjtQM
+         Ur2f/r6494EHPojA+8SiD9AHrUaPj8zwobbE5QBBwCnIWjcoO9C+NOypLFZTiFyFzkrd
+         ssiA==
+X-Gm-Message-State: AOAM533PFZ/nPDwBA+ZENoNI2VNeDTIjJnVi0wQeNokUGDJfB9J8ezv9
+        mVyaFk+QZ32gzchtZVRVyRVDfvcqs7kqX96Y4Gk=
+X-Google-Smtp-Source: ABdhPJzo05Bl33weywraRFYtXPHTD0obWhwYnfocvfGUauSo6ivKZ5KVEY5j8hWo489DmutV86AsgO2fnMVgcu1VJMQ=
+X-Received: by 2002:a17:90a:be11:: with SMTP id a17mr1395972pjs.181.1604443798614;
+ Tue, 03 Nov 2020 14:49:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20201028185654.2692118-1-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20201028185654.2692118-1-Shyam-sundar.S-k@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Nov 2020 00:49:42 +0200
+Message-ID: <CAHp75VdzK_Uu5hrjSHbX_aRA9xOvcDhh91WNMx+3Ova6Y3jFig@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: amd-pmc: Add AMD platform support for S2Idle
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Alex Deucher <Alexander.Deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
-
-(I really hope Hans and Mark won't get mad at me for writing some thoughts =
-about
-this patch.)
-
-First of all, indentation should be tabs (=3D 8 spaces), not spaces. If I s=
-ee it
-correctly, the two are mixed here.
-
-And please make the printed messages consistent (capitalization, etc.),
-I believe punctuation at the end is not necessary, and don't leave whitespa=
-ces
-between the text and newline character. Please always run `checkpatch` on t=
-he patch
-to see what can/needs to be improved.
-
-There are also parts in the code (variables not actually used, etc.) that m=
-ake me
-feel like it's somewhat unfinished, or rather, incomplete.
-
-Both `dell-privacy-acpi` and `dell-privacy-wmi` have the same comment:
-"Dell privacy notification driver", but surely they are not the same thing?
-
-I have also added a couple comments inline.
-
-
-> From: perry_yuan <perry_yuan@dell.com>
+On Thu, Oct 29, 2020 at 10:57 AM Shyam Sundar S K
+<Shyam-sundar.S-k@amd.com> wrote:
 >
->  add support for dell privacy driver for the dell units equipped
->  hardware privacy design, which protect users privacy
->  of audio and camera from hardware level. once the audio or camera
->  privacy mode enabled, any applications will not get any audio or
->  video stream.
->  when user pressed ctrl+F4 hotkey, audio privacy mode will be enabled
->  and camera mute hotkey is ctrl+F9.
+> AMD Power Management Controller driver aka. amd-pmc driver is the
+
+aka. -> a.k.a. or AKA
+
+> controller which is meant for final S2Idle transaction that goes to the
+
+for the final
+
+> PMFW running on the AMD SMU (System Management Unit) responsible for
+> tuning of the VDD.
 >
-> Signed-off-by: Perry Yuan  <perry_yuan@dell.com>
-> Signed-off-by: Limonciello Mario <mario_limonciello@dell.com>
-> ---
->  drivers/platform/x86/Kconfig             |  12 ++
->  drivers/platform/x86/Makefile            |   4 +-
->  drivers/platform/x86/dell-laptop.c       |  41 ++--
->  drivers/platform/x86/dell-privacy-acpi.c | 139 ++++++++++++
->  drivers/platform/x86/dell-privacy-wmi.c  | 259 +++++++++++++++++++++++
->  drivers/platform/x86/dell-privacy-wmi.h  |  23 ++
->  drivers/platform/x86/dell-wmi.c          |  90 ++++----
->  7 files changed, 513 insertions(+), 55 deletions(-)
->  create mode 100644 drivers/platform/x86/dell-privacy-acpi.c
->  create mode 100644 drivers/platform/x86/dell-privacy-wmi.c
->  create mode 100644 drivers/platform/x86/dell-privacy-wmi.h
+> Once all the monitored list or the idle constraints are met, this driver
+> would go and set the OS_HINT (meaning all the devices have reached to
+> their lowest state possible) via the SMU mailboxes.
 >
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 40219bba6801..0cb6bf5a9565 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -454,6 +454,18 @@ config DELL_WMI_LED
->  =09  This adds support for the Latitude 2100 and similar
->  =09  notebooks that have an external LED.
->
-> +config DELL_PRIVACY
-> +        tristate "Dell Hardware Privacy Support"
-> +        depends on ACPI
-> +        depends on ACPI_WMI
-> +        depends on INPUT
-> +        depends on DELL_LAPTOP
-> +        select DELL_WMI
-> +        help
-> +          This driver provides a driver to support messaging related to =
-the
-
-I'm not a native English speaker, but "messaging" seems a strange choice of
-words to me here.
-
-
-> +          privacy button presses on applicable Dell laptops from 2021 an=
-d
-> +          newer.
-
-I have the same feeling about "from 2021 and newer".
-
-
-> +
->  config AMILO_RFKILL
->  =09tristate "Fujitsu-Siemens Amilo rfkill support"
->  =09depends on RFKILL
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
-e
-> index 5f823f7eff45..111f7215db2f 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -47,7 +47,9 @@ obj-$(CONFIG_DELL_WMI)=09=09=09+=3D dell-wmi.o
->  obj-$(CONFIG_DELL_WMI_DESCRIPTOR)=09+=3D dell-wmi-descriptor.o
->  obj-$(CONFIG_DELL_WMI_AIO)=09=09+=3D dell-wmi-aio.o
->  obj-$(CONFIG_DELL_WMI_LED)=09=09+=3D dell-wmi-led.o
-> -
-> +obj-$(CONFIG_DELL_PRIVACY)              +=3D dell-privacy.o
-> +dell-privacy-objs                       :=3D dell-privacy-wmi.o \
-> +=09                                   dell-privacy-acpi.o
->  # Fujitsu
->  obj-$(CONFIG_AMILO_RFKILL)=09+=3D amilo-rfkill.o
->  obj-$(CONFIG_FUJITSU_LAPTOP)=09+=3D fujitsu-laptop.o
-> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
-ll-laptop.c
-> index 5e9c2296931c..12b91de09356 100644
-> -- a/drivers/platform/x86/dell-laptop.c
-> ++ b/drivers/platform/x86/dell-laptop.c
-> @@ -30,6 +30,7 @@
-> #include <acpi/video.h>
-> #include "dell-rbtn.h"
-> #include "dell-smbios.h"
-> #include "dell-privacy-wmi.h"
->
-> struct quirk_entry {
-> =09bool touchpad_led;
-> @@ -90,6 +91,7 @@ static struct rfkill *wifi_rfkill;
-> static struct rfkill *bluetooth_rfkill;
-> static struct rfkill *wwan_rfkill;
-> static bool force_rfkill;
-> static bool privacy_valid;
->
-> module_param(force_rfkill, bool, 0444);
-> MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models")=
-;
-> @@ -2202,20 +2204,25 @@ static int __init dell_init(void)
-> =09debugfs_create_file("rfkill", 0444, dell_laptop_dir, NULL,
-> =09=09=09    &dell_debugfs_fops);
->
-> =09dell_laptop_register_notifier(&dell_laptop_notifier);
->
-> =09if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
-> =09    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> =09=09micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE=
-);
-> =09=09ret =3D led_classdev_register(&platform_device->dev, &micmute_led_c=
-dev);
-> =09=09if (ret < 0)
-> =09=09=09goto fail_led;
-> =09}
->
-> =09if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
-> =09=09return 0;
->
-> =09token =3D dell_smbios_find_token(BRIGHTNESS_TOKEN);
->     dell_laptop_register_notifier(&dell_laptop_notifier);
->
->     if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
->             dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
-> #if IS_ENABLED(CONFIG_DELL_PRIVACY)
->         privacy_valid =3D dell_privacy_valid() =3D=3D -ENODEV;
-
-`dell_privacy_valid()` returns `bool`.
-
-
-> #endif
->         if (!privacy_valid) {
->             micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_M=
-ICMUTE);
->             ret =3D led_classdev_register(&platform_device->dev, &micmute=
-_led_cdev);
->             if (ret < 0)
->                 goto fail_led;
->         }
->     }
->
->     if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
->         return 0;
->
->     token =3D dell_smbios_find_token(BRIGHTNESS_TOKEN);
-> =09if (token) {
-> =09=09struct calling_interface_buffer buffer;
->
-> @@ -2257,7 +2264,8 @@ static int __init dell_init(void)
-> fail_get_brightness:
-> =09backlight_device_unregister(dell_backlight_device);
-> fail_backlight:
-> =09led_classdev_unregister(&micmute_led_cdev);
->     if (!privacy_valid)
->         led_classdev_unregister(&micmute_led_cdev);
-> fail_led:
-> =09dell_cleanup_rfkill();
-> fail_rfkill:
-> @@ -2278,7 +2286,8 @@ static void __exit dell_exit(void)
-> =09=09touchpad_led_exit();
-> =09kbd_led_exit();
-> =09backlight_device_unregister(dell_backlight_device);
-> =09led_classdev_unregister(&micmute_led_cdev);
->     if (!privacy_valid)
->         led_classdev_unregister(&micmute_led_cdev);
-> =09dell_cleanup_rfkill();
-> =09if (platform_device) {
-> =09=09platform_device_unregister(platform_device);
-> diff --git a/drivers/platform/x86/dell-privacy-acpi.c b/drivers/platform/=
-x86/dell-privacy-acpi.c
-> new file mode 100644
-> index 000000000000..516cd99167c3
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell-privacy-acpi.c
-> @@ -0,0 +1,139 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Dell privacy notification driver
-> + *
-> + * Copyright (C) 2021 Dell Inc. All Rights Reserved.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/string.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/types.h>
-> +#include <linux/wmi.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include "dell-privacy-wmi.h"
-> +
-> +#define PRIVACY_PlATFORM_NAME  "dell-privacy-acpi"
-                    ^
-should be upper case
-
-
-> +#define ACPI_PRIVACY_DEVICE=09"\\_SB.PC00.LPCB.ECDV"
-> +#define ACPI_PRIVACY_EC_ACK=09ACPI_PRIVACY_DEVICE ".ECAK"
-> +
-> +static struct platform_device *privacy_acpi_pdev;
-> +
-> +struct privacy_acpi_priv {
-> +    struct device *dev;
-> +    struct acpi_device *acpi_dev;
-> +    struct input_dev *input_dev;
-> +    struct platform_device *platform_device;
-> +};
-> +
-> +static int micmute_led_set(struct led_classdev *led_cdev,
-> +               enum led_brightness brightness)
-> +{
-> +    acpi_status status;
-> +
-> +    status =3D acpi_evaluate_object(NULL, ACPI_PRIVACY_EC_ACK, NULL, NUL=
-L);
-
-The handle of "ACPI_PRIVACY_DEVICE" is queried in `privacy_acpi_probe()`. W=
-hy
-is that not used here?
-
-
-> +    if (ACPI_FAILURE(status)) {
-> +        dev_err(led_cdev->dev, "Error setting privacy audio EC ack value=
-: %d\n",status);
-                                                                           =
-        ^
-                                                                   missing =
-space -/
-
-I think `acpi_format_exception()` could be used here.
-
-I don't quite see why brightness is completely ignored? Does this just togg=
-le
-the LED state? Even in that case I think something should be done to avoid =
-the
-sysfs attribute showing brightness=3D1 while the LED is actually off.
-
-Does the `ACPI_PRIVACY_EC_ACK` method (?) acknowledge something? If so, wha=
-t? And
-why is it called in the brightness setting method of a LED class device?
-
-
-> +        return -EIO;
-> +    }
-> +    return 0;
-> +}
-> +
-> +static struct led_classdev micmute_led_cdev =3D {
-> +    .name =3D "platform::micmute",
-> +    .max_brightness =3D 1,
-> +    .brightness_set_blocking =3D micmute_led_set,
-> +    .default_trigger =3D "audio-micmute",
-> +};
-
-There is also the exact same `micmute_led_cdev` is in dell-laptop.c. Both a=
-re
-valid? What's the difference? Why can't the LED be handled in just a single=
- place?
-
-
-> [...]
-> +static const struct acpi_device_id privacy_acpi_device_ids[] =3D {
-> +    {"PNP0C09", 0},
-> +    {"", 0},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, privacy_acpi_device_ids);
-> +
-> +static struct platform_driver privacy_platform_driver =3D {
-> +    .driver     =3D {
-> +        .name   =3D PRIVACY_PlATFORM_NAME,
-> +        .acpi_match_table =3D ACPI_PTR(privacy_acpi_device_ids),
-> +    },
-> +    .probe      =3D privacy_acpi_probe,
-> +    .remove     =3D privacy_acpi_remove,
-> +};
-> +
-> +int privacy_acpi_init(void)
-> +{
-> +    int err;
-> +
-> +    err =3D platform_driver_register(&privacy_platform_driver);
-> +    if (err)
-> +        return err;
-> +
-> +    privacy_acpi_pdev =3D platform_device_register_simple(
-> +            PRIVACY_PlATFORM_NAME, -1, NULL, 0);
-> +    if (IS_ERR(privacy_acpi_pdev)) {
-> +        err =3D PTR_ERR(privacy_acpi_pdev);
-> +        goto err_platform;
-> +    }
-> +    return 0;
-> +
-> +err_platform:
-> +    platform_driver_unregister(&privacy_platform_driver);
-> +    return err;
-> +}
-
-Maybe I'm missing something obvious, but I do believe this is overly compli=
-cated.
-I don't see why you cannot check the ACPI path, if it exists, register
-a platform device, and then register the led to that device? The whole plat=
-form driver
-part could've been avoided as far as I see.
-
-I'm also wondering if the ACPI path is enough to decide undoubtedly that th=
-is
-is indeed a compatible device.
-
-
-> +
-> +void privacy_acpi_cleanup(void)
-> +{
-> +    platform_driver_unregister(&privacy_platform_driver);
-> +}
-
-The platform device is not cleaned up.
-
-
-> +
-> +MODULE_AUTHOR("Perry Yuan <perry_yuan@dell.com>");
-> +MODULE_DESCRIPTION("DELL Privacy ACPI Driver");
-> +MODULE_LICENSE("GPL");
-> +
-> diff --git a/drivers/platform/x86/dell-privacy-wmi.c b/drivers/platform/x=
-86/dell-privacy-wmi.c
-> new file mode 100644
-> index 000000000000..6c36b7ec44c6
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell-privacy-wmi.c
-> @@ -0,0 +1,259 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Dell privacy notification driver
-> + *
-> + * Copyright (C) 2021 Dell Inc. All Rights Reserved.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/input.h>
-> +#include <linux/input/sparse-keymap.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
-> +#include "dell-privacy-wmi.h"
-> +
-> +#define DELL_PRIVACY_GUID "6932965F-1671-4CEB-B988-D3AB0A901919"
-> +#define MICROPHONE_STATUS=09=09    BIT(0)
-> +#define CAMERA_STATUS=09=09        BIT(1)
-> +#define PRIVACY_SCREEN_STATUS=09=09BIT(2)
-
-`#include <linux/bits.h>`?
-
-
-> +
-> +static int privacy_valid =3D -EPROBE_DEFER;
-> +static LIST_HEAD(wmi_list);
-> +static DEFINE_MUTEX(list_mutex);
-
-What is the purpose of this list? At the moment I can't really see it.
-
-
-> +
-> +struct privacy_wmi_data {
-> +    struct input_dev *input_dev;
-> +    struct wmi_device *wdev;
-> +    struct list_head list;
-> +    u32 features_present;
-> +    u32 last_status;
-
-`last_status` and `features_present` are there for no actual benefit.
-
-
-> +};
-> +
-> +/*
-> + * Keymap for WMI Privacy events of type 0x0012
-> + */
-> +static const struct key_entry dell_wmi_keymap_type_0012[] =3D {
-> +    /* Privacy MIC Mute */
-> +    { KE_KEY, 0x0001, { KEY_MICMUTE } },
-> +    /* Privacy Camera Mute */
-> +    { KE_SW,  0x0002, { SW_CAMERA_LENS_COVER } },
-
-I see the calloc trick later to avoid writing KE_END, but I still think it'=
-d be
-better if there was an explicit KE_END entry.
-
-
-> +};
-> +
-> +bool dell_privacy_valid(void)
-> +{
-> +    bool ret;
-> +
-> +    mutex_lock(&list_mutex);
-> +    ret =3D wmi_has_guid(DELL_PRIVACY_GUID);
-> +    if (!ret){
-> +        return -ENODEV;
-
-The functions returns `bool`.
-
-
-> +    }
-> +    ret =3D privacy_valid;
-
-I'm not sure if it's a good idea to just plainly assign an `int` to a `bool=
-`.
-
-
-> +    mutex_unlock(&list_mutex);
-> +
-> +    return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(dell_privacy_valid);
-
-Instead of always querying for the presence of the WMI GUID, wouldn't a sin=
-gle
-atomic_t or similar be sufficient?
-
-
-> +
-> +void dell_privacy_process_event(int type, int code, int status)
-> +{
-> +    struct privacy_wmi_data *priv;
-> +    const struct key_entry *key;
-> +
-> +    mutex_lock(&list_mutex);
-> +    priv =3D list_first_entry_or_null(&wmi_list,
-> +            struct privacy_wmi_data,
-> +            list);
-> +    if (priv =3D=3D NULL) {
-
-`if (!priv)`
-
-
-> +        pr_err("dell privacy priv is NULL\n");
-> +        goto error;
-> +    }
-> +
-> +    key =3D sparse_keymap_entry_from_scancode(priv->input_dev, (type << =
-16)|code);
-> +    if (!key) {
-> +        dev_dbg(&priv->wdev->dev, "Unknown key with type 0x%04x and code=
- 0x%04x pressed\n",
-> +                type, code);
-> +        goto error;
-> +    }
-> +
-> +    switch (code) {
-> +        case DELL_PRIVACY_TYPE_AUDIO: /* Mic mute */
-> +            priv->last_status =3D status;
-> +            sparse_keymap_report_entry(priv->input_dev, key, 1, true);
-> +            break;
-> +        case DELL_PRIVACY_TYPE_CAMERA: /* Camera mute */
-> +            priv->last_status =3D status;
-> +            sparse_keymap_report_entry(priv->input_dev, key, 1, true);
-> +            break;
-> +        default:
-> +            dev_dbg(&priv->wdev->dev, "unknown event type %u /%u",
-
-A couple lines above hexadecimal format and capitalization is used.
-
-
-> +                    type, code);
-> +    }
-> +error:
-> +    mutex_unlock(&list_mutex);
-> +    return;
-> +}
-> +EXPORT_SYMBOL_GPL(dell_privacy_process_event);
-> [...]
-> +static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *c=
-ontext)
-> +{
-> +    struct privacy_wmi_data *priv;
-> +    struct key_entry *keymap;
-> +    int ret, i, pos =3D 0;
-> +
-> +    priv =3D devm_kzalloc(&wdev->dev, sizeof(struct privacy_wmi_data),
-> +            GFP_KERNEL);
-
-`sizeof(*priv)`
-
-
-> +    if (!priv)
-> +        return -ENOMEM;
-> +
-> +    /* create evdev passing interface */
-> +    priv->input_dev =3D devm_input_allocate_device(&wdev->dev);
-> +    if (!priv->input_dev)
-> +        return -ENOMEM;
-> +
-> +    __set_bit(EV_KEY, priv->input_dev->evbit);
-> +    __set_bit(KEY_MICMUTE, priv->input_dev->keybit);
-> +    __set_bit(EV_MSC, priv->input_dev->evbit);
-> +    __set_bit(MSC_SCAN, priv->input_dev->mscbit);
-
-`sparse_keymap_setup()` takes care of this.
-
-
-> +    keymap =3D kcalloc(
-> +            ARRAY_SIZE(dell_wmi_keymap_type_0012) +
-> +            1,
-> +            sizeof(struct key_entry), GFP_KERNEL);
-> +    if (!keymap) {
-> +        ret =3D -ENOMEM;
-> +        goto err_free_dev;
-> +    }
-> +    for (i =3D 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
-> +        keymap[pos] =3D dell_wmi_keymap_type_0012[i];
-> +        keymap[pos].code |=3D (0x0012 << 16);
-> +        pos++;
-> +    }
-
-I can't quite see why you need a copy of the entries. If the key codes are =
-initialized
-to the "correct" values, this can be avoided altogether.
-
-
-> +    ret =3D sparse_keymap_setup(priv->input_dev, keymap, NULL);
-> +    if (ret)
-> +        return ret;
-> +
-> +    priv->input_dev->dev.parent =3D &wdev->dev;
-> +    priv->input_dev->name =3D "Dell Privacy Driver";
-> +    priv->input_dev->id.bustype =3D BUS_HOST;
-> +
-> +    if (input_register_device(priv->input_dev)) {
-> +        pr_debug("input_register_device failed to register! \n");
-> +        return -ENODEV;
-
-`keymap` is leaked here.
-
-
-> +    }
-> +
-> +    priv->wdev =3D wdev;
-> +    dev_set_drvdata(&wdev->dev, priv);
-> +    mutex_lock(&list_mutex);
-> +    list_add_tail(&priv->list, &wmi_list);
-> +    privacy_valid =3D true;
-> +    if (get_current_status(wdev)) {
-> +        goto err_free_dev;
-
-Mutex is not unlocked. And some steps are not undone.
-
-
-> +    }
-> +    mutex_unlock(&list_mutex);
-> +    kfree(keymap);
-> +    return 0;
-> +
-> +err_free_dev:
-> +    input_free_device(priv->input_dev);
-> +    kfree(keymap);
-> +    return ret;
-> +}
-> +
-> +static int dell_privacy_wmi_remove(struct wmi_device *wdev)
-> +{
-> +    struct privacy_wmi_data *priv =3D dev_get_drvdata(&wdev->dev);
-> +
-> +    mutex_lock(&list_mutex);
-> +    list_del(&priv->list);
-> +    privacy_valid =3D -ENODEV;
-> +    mutex_unlock(&list_mutex);
-> +    return 0;
-> +}
-> +
-> +static const struct wmi_device_id dell_wmi_privacy_wmi_id_table[] =3D {
-> +    { .guid_string =3D DELL_PRIVACY_GUID },
-> +    { },
-> +};
-> +
-> +static struct wmi_driver dell_privacy_wmi_driver =3D {
-> +    .driver =3D {
-> +        .name =3D "dell-privacy",
-> +    },
-> +    .probe =3D dell_privacy_wmi_probe,
-> +    .remove =3D dell_privacy_wmi_remove,
-> +    .id_table =3D dell_wmi_privacy_wmi_id_table,
-> +};
-> +
-> +static int __init init_dell_privacy(void)
-> +{
-> +    int ret, wmi, acpi;
-
-`int ret;` would've been enough. The preferred and prevalent style is:
-
-```
-int ret;
-
-ret =3D step_1();
-if (ret) {
-  pr_err(...);
-  goto undo_step_1;
-}
-
-ret =3D step_2();
-if (ret) {
-  pr_err(...);
-  goto undo_step_2;
-}
+> This driver would also provide some debug capabilities via debugfs.
 
 ...
 
-return 0;
+> +F:     drivers/platform/x86/amd-pmc.c
+> +F:     drivers/platform/x86/amd-pmc.h
 
+Can be one entry.
 
-undo_step_2:
-  ...
-undo_step_1:
-  ....
+...
 
-return ret;
-```
+> +       help
+> +         The driver provides support for AMD Power Management Controller
+> +         primarily responsible for S2Idle transactions that are driven from
+> +         a platform firmware running on SMU. This driver also provides debug
 
+a debug
 
-> +
-> +    wmi =3D wmi_driver_register(&dell_privacy_wmi_driver);
-> +    if (wmi) {
-> +        pr_debug("Failed to initialize privacy wmi driver: %d\n", wmi);
-> +        return wmi;
-> +    }
-> +
-> +    acpi =3D privacy_acpi_init();
-> +    if (acpi) {
-> +        pr_debug("failed to initialize privacy wmi acpi driver: %d\n", a=
-cpi);
-> +        return acpi;
-> +    }
-> +
-> +    return 0;
-> +}
+> +         mechanism to investigate the S2Idle transactions and failures.
 
-Even ignoring stylistic questions, the WMI driver is not unregistered if
-`privacy_acpi_init()` fails, which is a bigger problem.
+How will the module be called?
 
-Even ignoring that, I'm not sure it's a good idea that a module that export=
-s
-symbols for others to use can fail to load.
+...
 
-
-> +
-> +void exit_dell_privacy_wmi(void)
+> +static void amd_pmc_dbgfs_register(struct amd_pmc_dev *dev)
 > +{
-> +    wmi_driver_unregister(&dell_privacy_wmi_driver);
+> +       struct dentry *dir;
+
+What is the point of having the temporary variable?
+
+> +       dir = debugfs_create_dir("amd_pmc", NULL);
+> +       dev->dbgfs_dir = dir;
+> +       debugfs_create_file("smu_fw_info", 0644, dir, dev, &smu_fw_info_fops);
 > +}
 
-At the moment I can't quite see the purpose of this function.
+...
 
-
-> +
-> +static void __exit exit_dell_privacy(void)
+> +static int amd_pmc_poll_smu_response(struct amd_pmc_dev *dev)
 > +{
-> +    privacy_acpi_cleanup();
-> +    exit_dell_privacy_wmi();
+> +       int rc = 0, index;
+
+Redundant assignment.
+
+> +       for (index = 0; index < RESPONSE_REGISTER_LOOP_MAX; index++) {
+> +               rc = amd_pmc_reg_read(dev, AMD_PMC_REGISTER_RESPONSE);
+
+> +               if (rc != 0)
+> +                       break;
+
+if (rc)
+  return rc;
+
+> +
+> +               usleep_range(PMC_MSG_DELAY_MIN, PMC_MSG_DELAY_MAX);
+> +       }
+> +
+> +       return rc;
+> +}
+
+Seems like home grown readx_poll_timeout().
+
+...
+
+> +       int rc = 0;
+
+Redundant assignment.
+
+...
+
+> +       /* Wait until the response register is non-zero */
+
+This comment is confusing.
+
+I guess you rather need to return an error code from the called function...
+
+> +       rc = amd_pmc_poll_smu_response(dev);
+> +       if (!rc) {
+> +               dev_err(dev->dev, "failed to talk to SMU\n");
+
+> +               return -EIO;
+
+...and propagate it here.
+
+> +       }
+
+...
+
+> +       if (arg) {
+> +               /* Wait until the response register is non-zero */
+> +               rc = amd_pmc_poll_smu_response(dev);
+
+> +               if (!rc) {
+
+As above. This is an unusual pattern in the kernel.
+
+> +                       dev_err(dev->dev, "failed to talk to SMU\n");
+> +                       return -EIO;
+> +               }
+
+> +               /* If message register is OK, then SMU has finished processing
+> +                * the message, and then read back from AMD_PMC_REGISTER_ARGUMENT
+> +                */
+
+Comment style!
+
+> +               rc = amd_pmc_reg_read(dev, AMD_PMC_REGISTER_ARGUMENT);
+
+And where is rc going?
+
+> +       }
+> +
+> +       return 0;
+
+...
+
+> +#ifdef CONFIG_PM_SLEEP
+
+__maybe_unused is slightly better.
+
+...
+
+> +static int amd_pmc_suspend(struct device *dev)
+> +{
+> +       struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
+
+> +       int rc = 0;
+
+What is the point?
+
+> +       rc = amd_pmc_send_cmd(pdev, 1, 0);
+> +       if (rc)
+> +               dev_err(pdev->dev, "suspend failed\n");
+> +
+> +       amd_pmc_dump_registers(pdev);
+> +
+> +       return 0;
 > +}
 > +
-> +module_init(init_dell_privacy);
-> +module_exit(exit_dell_privacy);
+> +static int amd_pmc_resume(struct device *dev)
+> +{
+> +       struct amd_pmc_dev *pdev = dev_get_drvdata(dev);
+
+> +       int rc = 0;
+
+Ditto.
+
+> +       rc = amd_pmc_send_cmd(pdev, 0, 0);
+> +       if (rc)
+> +               dev_err(pdev->dev, "resume failed\n");
 > +
-> +MODULE_DEVICE_TABLE(wmi, dell_wmi_privacy_wmi_id_table);
-
-A couple lines above the `MODULE_DEVICE_TABLE` macro was invoked right afte=
-r
-the device table.
-
-
-> +MODULE_AUTHOR("Perry Yuan <perry_yuan@dell.com>");
-> +MODULE_DESCRIPTION("Dell Privacy WMI Driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/platform/x86/dell-privacy-wmi.h b/drivers/platform/x=
-86/dell-privacy-wmi.h
-> new file mode 100644
-> index 000000000000..94af81d76e44
-> --- /dev/null
-> +++ b/drivers/platform/x86/dell-privacy-wmi.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Dell privacy notification driver
-> + *
-> + * Copyright (C) 2021 Dell Inc. All Rights Reserved.
-> + */
+> +       amd_pmc_dump_registers(pdev);
 > +
-> +#ifndef _DELL_PRIVACY_WMI_H_
-> +#define _DELL_PRIVACY_WMI_H_
-> +#include <linux/wmi.h>
+> +       return 0;
+> +}
+> +#endif
 
-This include is not needed.
+...
 
+> +       rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
+> +       if (!rdev || (!(rdev->vendor == PCI_VENDOR_ID_AMD) &&
+> +                     (rdev->device == AMD_CPU_ID_PCO ||
+> +                       rdev->device == AMD_CPU_ID_RN))) {
+> +               return -ENODEV;
+> +       }
+
+Can you rather create an additional PCI ID table and simple use pci_match_id()?
+
+> +       err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
+> +       if (err) {
+> +               dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+> +               return err;
+> +       }
+
+Returning positive error codes?!
+
+...
+
+> +       dev->smu_base = ioremap(base_addr, AMD_PMC_MAPPING_SIZE);
+
+devm_ioremap()?
+
+> +       if (!dev->smu_base)
+> +               return -ENOMEM;
+> +
+> +       dev->regbase = ioremap(base_addr + AMD_PMC_BASE_ADDR_OFFSET, AMD_PMC_MAPPING_SIZE);
+
+Ditto.
+
+> +       if (!dev->regbase) {
+> +               iounmap(dev->smu_base);
+> +               return -ENOMEM;
+> +       }
+
+...
+
+> +               .acpi_match_table = ACPI_PTR(amd_pmc_acpi_ids),
+
+It depends on ACPI. What is the point of ACPI_PTR?
+
+...
 
 > +
-> +bool dell_privacy_valid(void);
-> +void dell_privacy_process_event(int type, int code, int status);
-> +int  privacy_acpi_init(void);
-> +void privacy_acpi_cleanup(void);
 
-These aren't prefixed by `dell_`?
+Redundant blank line
 
+> +module_platform_driver(amd_pmc_driver);
 
-> +
-> +/* DELL Privacy Type */
-> +enum {
-> +=09DELL_PRIVACY_TYPE_UNKNOWN =3D 0x0,
-> +=09DELL_PRIVACY_TYPE_AUDIO,
-> +=09DELL_PRIVACY_TYPE_CAMERA,
+...
+
+> +++ b/drivers/platform/x86/amd-pmc.h
+
+Who is going to use this file?
+
+...
+
+> +#define AMD_PMC_BASE_ADDR_HI_MASK      0xFFF00000L
+> +#define AMD_PMC_BASE_ADDR_LO_MASK      0x0000FFFFL
+
+You included bits.h and not using it, why?
+
+...
+
+> +#define PMC_MSG_DELAY_MIN              100
+> +#define PMC_MSG_DELAY_MAX              200
+
+Units?
+
+...
+
+> +enum amd_pmc_def {
+> +       msg_test = 0x01,
+> +       msg_os_hint_pco,
+> +       msg_os_hint_rn,
 > +};
-> +#endif
-> diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell-=
-wmi.c
-> index bbdb3e860892..44bb74e4df86 100644
-> --- a/drivers/platform/x86/dell-wmi.c
-> +++ b/drivers/platform/x86/dell-wmi.c
-> @@ -27,6 +27,7 @@
->  #include <acpi/video.h>
->  #include "dell-smbios.h"
->  #include "dell-wmi-descriptor.h"
-> +#include "dell-privacy-wmi.h"
->
->  MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
->  MODULE_AUTHOR("Pali Roh=C3=A1r <pali@kernel.org>");
-> @@ -410,44 +411,57 @@ static void dell_wmi_notify(struct wmi_device *wdev=
-,
->  =09=09if (buffer_end > buffer_entry + buffer_entry[0] + 1)
->  =09=09=09buffer_end =3D buffer_entry + buffer_entry[0] + 1;
->
-> -=09while (buffer_entry < buffer_end) {
-> -
-> -=09=09len =3D buffer_entry[0];
-> -=09=09if (len =3D=3D 0)
-> -=09=09=09break;
-> -
-> -=09=09len++;
-> -
-> -=09=09if (buffer_entry + len > buffer_end) {
-> -=09=09=09pr_warn("Invalid length of WMI event\n");
-> -=09=09=09break;
-> -=09=09}
-> -
-> -=09=09pr_debug("Process buffer (%*ph)\n", len*2, buffer_entry);
-> -
-> -=09=09switch (buffer_entry[1]) {
-> -=09=09case 0x0000: /* One key pressed or event occurred */
-> -=09=09case 0x0012: /* Event with extended data occurred */
-> -=09=09=09if (len > 2)
-> -=09=09=09=09dell_wmi_process_key(wdev, buffer_entry[1],
-> -=09=09=09=09=09=09     buffer_entry[2]);
-> -=09=09=09/* Extended data is currently ignored */
-> -=09=09=09break;
-> -=09=09case 0x0010: /* Sequence of keys pressed */
-> -=09=09case 0x0011: /* Sequence of events occurred */
-> -=09=09=09for (i =3D 2; i < len; ++i)
-> -=09=09=09=09dell_wmi_process_key(wdev, buffer_entry[1],
-> -=09=09=09=09=09=09     buffer_entry[i]);
-> -=09=09=09break;
-> -=09=09default: /* Unknown event */
-> -=09=09=09pr_info("Unknown WMI event type 0x%x\n",
-> -=09=09=09=09(int)buffer_entry[1]);
-> -=09=09=09break;
-> -=09=09}
-> -
-> -=09=09buffer_entry +=3D len;
-> -
-> -=09}
-> +    while (buffer_entry < buffer_end) {
-> +
-> +        len =3D buffer_entry[0];
-> +        if (len =3D=3D 0)
-> +            break;
-> +
-> +        len++;
-> +
-> +        if (buffer_entry + len > buffer_end) {
-> +            pr_warn("Invalid length of WMI event\n");
-> +            break;
-> +        }
-> +
-> +        pr_debug("Process buffer (%*ph)\n", len*2, buffer_entry);
-> +
-> +        switch (buffer_entry[1]) {
-> +            case 0x0000: /* One key pressed or event occurred */
-> +                if (len > 2)
-> +                    dell_wmi_process_key(wdev, buffer_entry[1],
-> +                            buffer_entry[2]);
-> +                break;
-> +            case 0x0010: /* Sequence of keys pressed */
-> +            case 0x0011: /* Sequence of events occurred */
-> +                for (i =3D 2; i < len; ++i)
-> +                    dell_wmi_process_key(wdev, buffer_entry[1],
-> +                            buffer_entry[i]);
-> +                break;
-> +            case 0x0012:
-> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
-> +                if (dell_privacy_valid()) {
-> +                    dell_privacy_process_event(buffer_entry[1], buffer_e=
-ntry[3],
-> +                            buffer_entry[4]);
-> +                } else {
-> +                    if (len > 2)
-> +                        dell_wmi_process_key(wdev, buffer_entry[1], buff=
-er_entry[2]);
-> +                }
-> +#else
-> +                /* Extended data is currently ignored */
-> +                if (len > 2)
-> +                    dell_wmi_process_key(wdev, buffer_entry[1], buffer_e=
-ntry[2]);
-> +#endif
 
-Wouldn't it be better if the header file provided a static inline definitio=
-ns
-for `dell_privacy_valid()` and `dell_privacy_process_event()` - if CONFIG_D=
-ELL_PRIVACY
-is not enabled - that return false and do nothing, respectively? The same w=
-ay
-it's done in dell-smbios.h.
+Hmm... Perhaps capital letters?
 
-
-> +                break;
-> +            default: /* Unknown event */
-> +                pr_info("Unknown WMI event type 0x%x\n",
-> +                        (int)buffer_entry[1]);
-> +                break;
-> +        }
-> +
-> +        buffer_entry +=3D len;
-> +
-> +    }
->
->  }
-> [...]
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+-- 
+With Best Regards,
+Andy Shevchenko
