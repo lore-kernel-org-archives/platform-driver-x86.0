@@ -2,127 +2,134 @@ Return-Path: <SRS0=FuY/=EL=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E695C00A89
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 10:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA4BC388F7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 11:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110FF2073A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 10:38:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UakB0SDE"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2DC20756
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 11:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgKEKiI (ORCPT
+        id S1729263AbgKELFd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Nov 2020 05:38:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgKEKiI (ORCPT
+        Thu, 5 Nov 2020 06:05:33 -0500
+Received: from mga14.intel.com ([192.55.52.115]:51420 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730099AbgKELFd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Nov 2020 05:38:08 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F55C0613CF;
-        Thu,  5 Nov 2020 02:38:08 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id z3so1161019pfz.6;
-        Thu, 05 Nov 2020 02:38:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GWxaLuXzL3PLFAORGmERE44LXlHr7AcLztN/re0GyoQ=;
-        b=UakB0SDE4yRFkhDdnv2m/kiDOTVGmF5Kd3B2rrUR8wbRYOH4yf/UH3c4lsg8/RGIhr
-         bLrW2jv6Qz97gJxis8o3f71NEHpBsZnMvbRdoqzLrinD6pXgLcNB9dD/VcOYjCp/KZOZ
-         ysdA9wIs8Fvd0yclcFSfDH5HQkkuJfAwYZQUZX6L7NsGgm1ix6tl5nGXBFFGtJ7CUQG0
-         WZcg4DV2OfyLFVclBuUpSuCquDUMl4p/Y/yJ7Kdau0mUlnkGh7Pb9B+Ivwgp0d0bK9vQ
-         T9pKV4b+e+SCm1FRfKRCRzdzGObVIWneNnUqt7wYo1rNfkIEEqaKG4cpuvu02YeGEQLy
-         lJ4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GWxaLuXzL3PLFAORGmERE44LXlHr7AcLztN/re0GyoQ=;
-        b=EDWzsU6Aohm0sggyASODSw+ST1Xb8brv5jZCDJSW+GYSvSuMSX/KRMEM7TwqxxCmUg
-         xmy3I8di3XbXbJLtMTbTfy8j+fjItY5gbP0M+w86BRLmi0yNE/4FafXrjqI8uBXZU4rd
-         Q3VrZhC7HPnPX6mQUp9X3FSP/3Et2DCfX0Fbtj2WQo4s4n8zaZIDcr36kq3NR35ah0GL
-         M957Bei76odXqLu5hrWkIvD3pkrUxRa/Zm+gbG0Lg+zHNULGc1rMyxTpF/E7O56cpZAn
-         dSJyJX64hnb6X2OliDa8fa2kvXFwOt+0RZFD7H40ktIPmYGg+bKNZkQGYPiltjOnOhex
-         xF/g==
-X-Gm-Message-State: AOAM531fe3hwFkX1AT8QWVYKCCH+z+k1RBL0yc9YeTWBrtAjpntx82dr
-        8VAIOgTZwkCs8u1gX953tsXkd9pn4jaQp/By+wQ=
-X-Google-Smtp-Source: ABdhPJxW2QrwtfuKsNVHB2pi5vmaHBZB3oMye2xd8WDdBWNP+1tjJ67XmfFFCIc52CDILHi+fMYkW3fuU24E7tuHzDY=
-X-Received: by 2002:a63:d54e:: with SMTP id v14mr1846791pgi.203.1604572687941;
- Thu, 05 Nov 2020 02:38:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20201105080014.45410-1-hdegoede@redhat.com>
-In-Reply-To: <20201105080014.45410-1-hdegoede@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Nov 2020 12:38:56 +0200
-Message-ID: <CAHp75Vdm4PuQpAMj98wJZoNMwV2tFGPj-r9ezvXyWCYj2cSuaA@mail.gmail.com>
-Subject: Re: [RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
- to instantiated i2c-clients
+        Thu, 5 Nov 2020 06:05:33 -0500
+IronPort-SDR: QdnzVZOPclHqC5sMyUVc8USrzfaLm6gXbVQh3kLf0Hhf79gKniZZk2aqAktMl7Fg9rIJRVeo2M
+ hxK1sL9r20bA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9795"; a="168582718"
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="168582718"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2020 03:05:33 -0800
+IronPort-SDR: Ck0pj+sH+1dtxccwao/yXh/2LysUX3QTkqFwxsgTj/giFRUM1uDYhR8XDzQnPj8IUNd8mB12YM
+ GmwNUk6MDfrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,453,1596524400"; 
+   d="scan'208";a="354238261"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Nov 2020 03:05:31 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 190D1386; Thu,  5 Nov 2020 13:05:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
-        "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/4] platform/x86: i2c-multi-instantiate: Make number of clients unsigned
+Date:   Thu,  5 Nov 2020 13:05:29 +0200
+Message-Id: <20201105110530.27888-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201105110530.27888-1-andriy.shevchenko@linux.intel.com>
+References: <20201105110530.27888-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Nov 5, 2020 at 10:00 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi All,
->
-> As the subject says this series is mostly about passing the ACPI fwnode to
-> i2c-clients instantiated by the i2c-multi-instantiate code.
->
-> As discussed here:
-> https://bugzilla.kernel.org/show_bug.cgi?id=198671
->
-> BOSC0200 ACPI devices may sometimes describe 2 accelerometers in a single
-> ACPI device, while working on this I noticed that BOSC0200 ACPI nodes
-> contain ACCEL_MOUNT_MATRIX info (unlike all the other ACPI ids for bmc150
-> accelerometers). Which is why I wanted to pass the fwnode so that we
-> could use this info in the bmc150-accel driver.
->
-> The plan was to use i2c-multi-instantiate for this, but doing so will
-> change the modalias and /lib/udev/hwdb.d/60-sensor.hwdb matches on
-> the modalias for various quirks setting ACCEL_MOUNT_MATRIX. So then the
-> plan became to first add support for the mount-matrix provided inside
-> the BOSC0200 ACPI node, making the udev info unnecessary. But for at
-> least 1 model (and probably more) the BOSC0200 ACPI node and hwdb info
-> does not match and since the hwdb info is added by users of the actual
-> devices we can assume it is correct, so it seems that we cannot always
-> trust the ACPI provided info.  This is ok, the hwdb info overrides it
-> (iio-sensor-proxy prefers the udev provided mount-matrix over the
-> one provided by the driver) but this means that we MUST keep the
-> existing hwdb matches working, which means that we cannot use
-> i2c-multi-instantiate for this.
->
-> Instead I will dust of an old patch for this from Jeremy Cline:
-> https://patchwork.kernel.org/project/linux-iio/patch/010001602cf53153-39ad69f1-1b39-4e6d-a748-9455a16c2fbd-000000@email.amazonses.com/
->
-> Which deals with there being 2 accelerometers inside the bmc150-accel
-> driver.
->
-> But before coming to the conclusion that i2c-multi-instantiate
-> would not work I had already written this series. Since this might
-> be useful for some other case in the future I'm sending this out
-> as a RFC now, mostly so that it gets added to the archives.
+There is no need to use signed type for number of clients. Moreover,
+it's cleaner to show that we never go negative there.
 
-I think they are in pretty good shape (only the 4th required a bit of
-attention).
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/i2c-multi-instantiate.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Please, send as non-RFC and also Cc Heikki (just in case if he has
-comments wrt INT3515).
-
+diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+index ce4d921c3301..422fa88da643 100644
+--- a/drivers/platform/x86/i2c-multi-instantiate.c
++++ b/drivers/platform/x86/i2c-multi-instantiate.c
+@@ -27,7 +27,7 @@ struct i2c_inst_data {
+ };
+ 
+ struct i2c_multi_inst_data {
+-	int num_clients;
++	unsigned int num_clients;
+ 	struct i2c_client *clients[];
+ };
+ 
+@@ -64,8 +64,9 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 	struct i2c_board_info board_info = {};
+ 	struct device *dev = &pdev->dev;
+ 	struct acpi_device *adev;
++	unsigned int i;
+ 	char name[32];
+-	int i, ret;
++	int ret;
+ 
+ 	match = acpi_match_device(dev->driver->acpi_match_table, dev);
+ 	if (!match) {
+@@ -90,7 +91,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 	for (i = 0; i < multi->num_clients && inst_data[i].type; i++) {
+ 		memset(&board_info, 0, sizeof(board_info));
+ 		strlcpy(board_info.type, inst_data[i].type, I2C_NAME_SIZE);
+-		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
++		snprintf(name, sizeof(name), "%s-%s.%u", dev_name(dev),
+ 			 inst_data[i].type, i);
+ 		board_info.dev_name = name;
+ 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+@@ -119,12 +120,12 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 		multi->clients[i] = i2c_acpi_new_device(dev, i, &board_info);
+ 		if (IS_ERR(multi->clients[i])) {
+ 			ret = dev_err_probe(dev, PTR_ERR(multi->clients[i]),
+-					    "Error creating i2c-client, idx %d\n", i);
++					    "Error creating i2c-client, idx %u\n", i);
+ 			goto error;
+ 		}
+ 	}
+ 	if (i < multi->num_clients) {
+-		dev_err(dev, "Error finding driver, idx %d\n", i);
++		dev_err(dev, "Error finding driver, idx %u\n", i);
+ 		ret = -ENODEV;
+ 		goto error;
+ 	}
+@@ -133,7 +134,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ error:
+-	while (--i >= 0)
++	while (i--)
+ 		i2c_unregister_device(multi->clients[i]);
+ 
+ 	return ret;
+@@ -142,7 +143,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+ static int i2c_multi_inst_remove(struct platform_device *pdev)
+ {
+ 	struct i2c_multi_inst_data *multi = platform_get_drvdata(pdev);
+-	int i;
++	unsigned int i;
+ 
+ 	for (i = 0; i < multi->num_clients; i++)
+ 		i2c_unregister_device(multi->clients[i]);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.28.0
+
