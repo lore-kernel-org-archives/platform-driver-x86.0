@@ -2,105 +2,127 @@ Return-Path: <SRS0=FuY/=EL=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D229C4742C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 08:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EF9C4741F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 400C72151B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 08:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49EA721734
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Nov 2020 10:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dIgv5Fn+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFGg0rmd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbgKEIA3 (ORCPT
+        id S1726715AbgKEKaY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Nov 2020 03:00:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50817 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729779AbgKEIA2 (ORCPT
+        Thu, 5 Nov 2020 05:30:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726152AbgKEKaX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Nov 2020 03:00:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604563227;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cSCL9O0sLp/tw6Tt9q5kxfE0ulUwEY7xVodcysoHvLQ=;
-        b=dIgv5Fn+1Tg2hmkvW4KD/T4jicv9eUWDXMvXyxO4n7YYCLjMxIvNsKAVA42GsVRmEDumcM
-        Wkbdw8VzEytwjn48/TUTf0V5e4sLGoZFd1mYrwdqTiy2KFywRl3p3QlINGdkln7o8GxuIG
-        GalEOxXS0Zza/Z2ulFW87vePei1vAOo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-4_1wsY_CMy-4x2OLGkP7XA-1; Thu, 05 Nov 2020 03:00:24 -0500
-X-MC-Unique: 4_1wsY_CMy-4x2OLGkP7XA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A15486414C;
-        Thu,  5 Nov 2020 08:00:22 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-113-73.ams2.redhat.com [10.36.113.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37CF75DA76;
-        Thu,  5 Nov 2020 08:00:21 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [RFC 3/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode to instantiated I2C-clients
-Date:   Thu,  5 Nov 2020 09:00:13 +0100
-Message-Id: <20201105080014.45410-4-hdegoede@redhat.com>
-In-Reply-To: <20201105080014.45410-1-hdegoede@redhat.com>
-References: <20201105080014.45410-1-hdegoede@redhat.com>
+        Thu, 5 Nov 2020 05:30:23 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB5EC0613CF;
+        Thu,  5 Nov 2020 02:30:23 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id z3so1130647pfb.10;
+        Thu, 05 Nov 2020 02:30:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GOJzhBi9qk3xmG5fix9DYsoSpE+r8wExY1ctyU+UTJw=;
+        b=ZFGg0rmd+NKsGP1OyIASx8mTbwh3Uu9BXu9U9MBP05Phu2doDelMHVRmPYn8vlzUfR
+         Y8tK+NG7V8RxS5aepcBdOXe9cf0BVv73NTKHvZcEjdU9s43r4bHrKw5u49ZFdVxGU9f3
+         7Lp6jphMm0UMK/LgTl+1jp3bQvz9Vkci9PB5etaia9b1oHO6+LgFlbaxVSYH1LO49o/L
+         x6ChJEXbwDR1a4ivvi9Z2zInT97h4iU5+i9t46Gp1Kq+mhnv0+RifV2bqYR7MH0UQf59
+         C2JmQ0oFy0YbqeKeQl9bkNMAuJylnoPvpju+/IFdgrisGnLq9i4g64eNwRr05gAjr2U4
+         s4yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GOJzhBi9qk3xmG5fix9DYsoSpE+r8wExY1ctyU+UTJw=;
+        b=fY69zfoHe3wd6kB0nRUh2RNhZAftHL+T9lw07yCVFtfxqsAd8y8W8sZiKiXHXh6BJY
+         w74p2D4FrdPDBIdnAgiAURWeaV2HEM7RJ6wl94AH+O3EySnTKJiZnhAX4j8s55Fp3Qb2
+         oZcsiPT2HCrArF2FTie4/qatpnLcgoh23jfLSqE/7hV2wLbr8zu9ioVUrLbPWJoH9UBW
+         n+lMuQQWODyh1wABLhrBrxKH3cgFVY7h85hPc/ngGE9EHqO9aXofkHEc5woRnMSDG+Dj
+         N6wezR6rXVb7q3alMxdNVnSlfZ1tRRttIgP1qYl187t97xx/PMi5nZGPwLvvoU7MsF+p
+         xqjQ==
+X-Gm-Message-State: AOAM530VZLHyG98UmrTx0mi+d3NZp5sLfF1UEz8iaRnxT9PKlhDZK0JA
+        gy/m6yUe9oDJY4n5eDmnEdSEyMn4KV71MAUPRhIEvx/Q3No=
+X-Google-Smtp-Source: ABdhPJwJkM5ITRaW0VukHEqhnAv7SD57QZo8ePx8R1HuR9klGopkfrnTCFDRouchicBXA3GDS0sDV9SkORsLh/99smE=
+X-Received: by 2002:a17:90b:1107:: with SMTP id gi7mr1724697pjb.181.1604572223128;
+ Thu, 05 Nov 2020 02:30:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20201105080014.45410-1-hdegoede@redhat.com> <20201105080014.45410-4-hdegoede@redhat.com>
+In-Reply-To: <20201105080014.45410-4-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 5 Nov 2020 12:31:11 +0200
+Message-ID: <CAHp75VfspJRRyKd1_K+akZXPHC=k91fnbGTs4SOK8NmPr20bLw@mail.gmail.com>
+Subject: Re: [RFC 3/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
+ to instantiated I2C-clients
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The ACPI fwnode may contain additional info which is useful for the
-I2C-driver. E.g. some accelerometer ACPI fwnode's contain an ACPI method
-providing rotation/mount matrix info.
+On Thu, Nov 5, 2020 at 10:00 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> The ACPI fwnode may contain additional info which is useful for the
+> I2C-driver. E.g. some accelerometer ACPI fwnode's contain an ACPI method
+> providing rotation/mount matrix info.
+>
+> Pass the ACPI-fwnode to the instantiated I2C-clients by setting
+> i2c_board_info.fwnode, so that the I2C-drivers can access this info.
+>
+> Now that we set i2c_board_info.irq to -ENOENT if there is no IRQ,
+> avoiding the I2C-core assigning the first IRQ described in the ACPI
+> resources to the client, this is safe to do.
+>
+> Setting the fwnode also influences acpi_device_[uevent_]modalias and
+> acpi_dev_pm_attach, but these both call acpi_device_is_first_physical_node
+> and are a no-op if this returns false.
 
-Pass the ACPI-fwnode to the instantiated I2C-clients by setting
-i2c_board_info.fwnode, so that the I2C-drivers can access this info.
+Perhaps add () to the mentioned function calls.
 
-Now that we set i2c_board_info.irq to -ENOENT if there is no IRQ,
-avoiding the I2C-core assigning the first IRQ described in the ACPI
-resources to the client, this is safe to do.
+> The first physical node for the ACPI fwnode is actually the ACPI core
+> instantiated platform-device to which the I2C-multi-instantiate driver
+> binds, so acpi_device_is_first_physical_node always returns false for
+> the instantiated I2C-clients and thus we can safely pass the fwnode.
 
-Setting the fwnode also influences acpi_device_[uevent_]modalias and
-acpi_dev_pm_attach, but these both call acpi_device_is_first_physical_node
-and are a no-op if this returns false.
+Ditto.
 
-The first physical node for the ACPI fwnode is actually the ACPI core
-instantiated platform-device to which the I2C-multi-instantiate driver
-binds, so acpi_device_is_first_physical_node always returns false for
-the instantiated I2C-clients and thus we can safely pass the fwnode.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/i2c-multi-instantiate.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
+> index cb4688bdd6b6..cbccfcbed44c 100644
+> --- a/drivers/platform/x86/i2c-multi-instantiate.c
+> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
+> @@ -93,6 +93,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
+>                 snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
+>                          inst_data[i].type, i);
+>                 board_info.dev_name = name;
+> +               board_info.fwnode = dev->fwnode;
+>                 switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
+>                 case IRQ_RESOURCE_GPIO:
+>                         ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
+> --
+> 2.28.0
+>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/i2c-multi-instantiate.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-index cb4688bdd6b6..cbccfcbed44c 100644
---- a/drivers/platform/x86/i2c-multi-instantiate.c
-+++ b/drivers/platform/x86/i2c-multi-instantiate.c
-@@ -93,6 +93,7 @@ static int i2c_multi_inst_probe(struct platform_device *pdev)
- 		snprintf(name, sizeof(name), "%s-%s.%d", dev_name(dev),
- 			 inst_data[i].type, i);
- 		board_info.dev_name = name;
-+		board_info.fwnode = dev->fwnode;
- 		switch (inst_data[i].flags & IRQ_RESOURCE_TYPE) {
- 		case IRQ_RESOURCE_GPIO:
- 			ret = acpi_dev_gpio_irq_get(adev, inst_data[i].irq_idx);
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
