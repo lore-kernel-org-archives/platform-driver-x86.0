@@ -2,117 +2,123 @@ Return-Path: <SRS0=t3ea=EM=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609A4C55178
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Nov 2020 14:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAACC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Nov 2020 16:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE8D2071A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Nov 2020 14:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GzcYSmQN"
+	by mail.kernel.org (Postfix) with ESMTP id B95FF2151B
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Nov 2020 16:33:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgKFOBj (ORCPT
+        id S1726891AbgKFQdM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Nov 2020 09:01:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36558 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727338AbgKFOBj (ORCPT
+        Fri, 6 Nov 2020 11:33:12 -0500
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.112]:59897 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgKFQdM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Nov 2020 09:01:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604671298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=S00aK9fNTqlK7mSJ9g7X1HE/gjrKeLDzQAXdMZ1JGdw=;
-        b=GzcYSmQN6bqBj6M/E2mZNTDUQHutGjjHzA6/nfHyM0vf2KhzH6KUZ2PRC2528OF5hxOxPd
-        F+lx5OzLH7E2XYrnTu7RT5Wdk+U2OZimqnOuzVXZs6r73thrhkCe+PKB2ZRImLwTqnwV72
-        OgelKoaQoSv1MJYwUTccDEw04Tn5X50=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-1h2p-XBwOlSVFC2VbMdyKw-1; Fri, 06 Nov 2020 09:01:34 -0500
-X-MC-Unique: 1h2p-XBwOlSVFC2VbMdyKw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 6 Nov 2020 11:33:12 -0500
+Received: from [100.112.4.31] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-c.us-east-1.aws.symcld.net id 7F/DB-40322-1CA75AF5; Fri, 06 Nov 2020 16:33:05 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjleJIrShJLcpLzFFi42JJl3vFrnuwamm
+  8wYVjMhYvJxxmtJg04z+zxcuVN9ks3hyfzmTxuWMyi8XqPS+YHdg8ds66y+6xeYWWx7yTgR7v
+  911l8/i8SS6ANYo1My8pvyKBNWPf068sBa1cFS+e/WBqYNzB0cXIxSEk8J9R4vnOY2xdjJxAz
+  nNGielbuUBsYQFHiU2z57CBFIkILGOU6PixhBUkwSyQILHrzFkmiIZtjBKdR81AbDYBbYktW3
+  6BDeIVsJW4f3M7C4jNIqAicWNbN1ivqEC4RMeNHUwQNYISJ2c+Aarh4OAUCJQ4/SwGYryFxMz
+  55xkhbHGJW0/mM0HY8hLb385hBrElBBQkjr0+yARhJ0gse3mHeQKj4CwkU2chGTULyahZSEYt
+  YGRZxWiaVJSZnlGSm5iZo2toYKBraGika6JrbKKXWKWbrFdarJuaWFyia6iXWF6sV1yZm5yTo
+  peXWrKJERg9KQUsSjsYm9980DvEKMnBpCTK+9ZhabwQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCd
+  4TFUA5waLU9NSKtMwcYCTDpCU4eJREeJMrgdK8xQWJucWZ6RCpU4yKUuK8eSB9AiCJjNI8uDZ
+  Y8rjEKCslzMvIwMAgxFOQWpSbWYIq/4pRnINRSZiXE2QKT2ZeCdz0V0CLmYAW8/ksAVlckoiQ
+  kmpg8s4wdpZ3l5yz4ZJI/aKtP393pYZNar01vbeP+6BrR1zS91/Tz2dtFqtcr7Un58KqzEUes
+  m0K5QpmvCVVW5W9Z3x2+7CzZ1qN1dFnVgzsU7b+Fpdq47Eq0LLdKyA/KZXhtpWOicDqmu1TRO
+  KelB/2nnlLXfrj15jVj9UyDvk/7Aw5nBRWLzb/4tzT3Ft+Pz+npX1x8YH8230HBNk6G4O4gxT
+  dnWPjt8+w+qJ15/Hj2Tqe/8rapqncv+ZUwHkuZNI6Aw/1mROEZdf+2n7iWaoNS6HgArs3Uf43
+  tBddTfbJ/snE6zkj02Hq7Fcmex7n7TKveflS6H/Bhuzrxg2LXx2LENf/KqTBxqruYXd7ygxhJ
+  ZbijERDLeai4kQASmCegpkDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-10.tower-416.messagelabs.com!1604680383!80172!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 21436 invoked from network); 6 Nov 2020 16:33:05 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-10.tower-416.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 6 Nov 2020 16:33:05 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E432D5F9F4;
-        Fri,  6 Nov 2020 14:01:32 +0000 (UTC)
-Received: from x1.localdomain (ovpn-113-52.ams2.redhat.com [10.36.113.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 644A71007615;
-        Fri,  6 Nov 2020 14:01:31 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user@lists.sourceforge.net, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Do not report SW_TABLET_MODE on Yoga 11e
-Date:   Fri,  6 Nov 2020 15:01:30 +0100
-Message-Id: <20201106140130.46820-1-hdegoede@redhat.com>
+        by Forcepoint Email with ESMTPS id 613E677A2CE6DC89554E;
+        Sat,  7 Nov 2020 00:33:01 +0800 (CST)
+Received: from localhost.localdomain (10.46.60.237) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 6 Nov 2020
+ 08:32:58 -0800
+Subject: Re: [External] Re: [PATCH] drivers/x86: add thinkpad-wmi
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+CC:     Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20170904082110.30925-1-corentin.chary@gmail.com>
+ <20171021064102.15166-1-corentin.chary@gmail.com>
+ <CAHp75VeJyXHZZ=ZeYQtbica1QC-=xZEaqWFv1KSvnJ=1UXTvGg@mail.gmail.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <6200cbb6-7b66-c3a1-fa59-5472b0599f63@lenovo.com>
+Date:   Fri, 6 Nov 2020 11:32:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CAHp75VeJyXHZZ=ZeYQtbica1QC-=xZEaqWFv1KSvnJ=1UXTvGg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.46.60.237]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Yoga 11e series has 2 accelerometers described by a BOSC0200 ACPI node.
-This setup relies on a Windows service which reads both accelerometers and
-then calculates the angle between the 2 halves to determine laptop / tent /
-tablet mode and then reports the calculated mode back to the EC by calling
-special ACPI methods on the BOSC0200 node.
+Thanks Andy,
 
-The bmc150 iio driver does not support this (it involves double
-calculations requiring sqrt and arccos so this really needs to be done
-in userspace), as a result of this on the Yoga 11e the thinkpad_acpi
-code always reports SW_TABLET_MODE=0, starting with GNOME 3.38 reporting
-SW_TABLET_MODE=0 causes GNOME to:
+On 05/11/2020 11:44, Andy Shevchenko wrote:
+> Just a heads up. Hans and Mark took maintenance for PDx86 and they may
+> look at this contribution.
+> 
+> It seems full discussion is available [1] on lore. So, I removed the
+> rest of the message.
+> 
+> [1]: https://lore.kernel.org/lkml/20170904082110.30925-1-corentin.chary@gmail.com/
+> 
+> On Sat, Oct 21, 2017 at 9:41 AM Corentin Chary <corentin.chary@gmail.com> wrote:
+>>
+>> This driver has been available on
+>> https://github.com/iksaif/thinkpad-wmi for
+>> a few year and is already deployed on large
+>> fleets of thinkpad laptops.
+>>
+>> The WMI interface is documented here:
+>> http://download.lenovo.com/ibmdl/pub/pc/pccbbs/thinkcentre_pdf/hrdeploy_en.pdf
+>>
+>> It mostly focused on changing BIOS/Firmware settings.
+> 
+As a note for anybody interested in this topic - we've been working on 
+an updated version:
+https://github.com/lenovo/thinklmi
 
-1. Not show the onscreen keyboard when a text-input field is focussed
-   with the touchscreen.
-2. Disable accelerometer based auto display-rotation.
+We do plan to contribute this upstream, but after initial review it was 
+determined that our approach of using an ioctl was not going to be 
+accepted. We also need to integrate with the new sysfs 
+firmware-attributes class that has been implemented. That work is ongoing :)
 
-This makes sense when in laptop-mode but not when in tablet-mode. But
-since for the Yoga 11e the thinkpad_acpi code always reports
-SW_TABLET_MODE=0, GNOME does not know when the device is in tablet-mode.
+Once we've updated we'll be looking at contributing this to the 
+community properly.
 
-Stop reporting the broken (always 0) SW_TABLET_MODE on Yoga 11e models
-to fix this.
-
-Note there are plans for userspace to support 360 degree hinges style
-2-in-1s with 2 accelerometers and figure out the mode by itself, see:
-https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/-/issues/216
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 7fc779cd652a..08d5bb3104f9 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -3220,7 +3220,14 @@ static int hotkey_init_tablet_mode(void)
- 
- 		in_tablet_mode = hotkey_gmms_get_tablet_mode(res,
- 							     &has_tablet_mode);
--		if (has_tablet_mode)
-+		/*
-+		 * The Yoga 11e series has 2 accelerometers described by a
-+		 * BOSC0200 ACPI node. This setup relies on a Windows service
-+		 * which calls special ACPI methods on this node to report
-+		 * the laptop/tent/tablet mode to the EC. The bmc150 iio driver
-+		 * does not support this, so skip the hotkey on these models.
-+		 */
-+		if (has_tablet_mode && !acpi_dev_present("BOSC0200", "1", -1))
- 			tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_GMMS;
- 		type = "GMMS";
- 	} else if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
--- 
-2.28.0
-
+Thanks
+Mark
