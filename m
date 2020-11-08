@@ -2,114 +2,120 @@ Return-Path: <SRS0=uF4I=EO=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2E3C388F9
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Nov 2020 09:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B42C388F9
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Nov 2020 09:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08F3206E3
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Nov 2020 09:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71399206E3
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  8 Nov 2020 09:23:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GDHgyjdU"
+	dkim=pass (2048-bit key) header.d=usc-edu.20150623.gappssmtp.com header.i=@usc-edu.20150623.gappssmtp.com header.b="Ld6LXYml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbgKHJCf (ORCPT
+        id S1726099AbgKHJXh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 8 Nov 2020 04:02:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44004 "EHLO
+        Sun, 8 Nov 2020 04:23:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726099AbgKHJCf (ORCPT
+        with ESMTP id S1726178AbgKHJXd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Nov 2020 04:02:35 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87E2C0613CF
-        for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2020 01:02:34 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id g12so4366020pgm.8
-        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2020 01:02:34 -0800 (PST)
+        Sun, 8 Nov 2020 04:23:33 -0500
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C3BC0613CF
+        for <platform-driver-x86@vger.kernel.org>; Sun,  8 Nov 2020 01:23:33 -0800 (PST)
+Received: by mail-lj1-x243.google.com with SMTP id p15so6326576ljj.8
+        for <platform-driver-x86@vger.kernel.org>; Sun, 08 Nov 2020 01:23:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PWtnylFX0q/w+cDB8JfKaNEr/g9LAE5i9sce9MU6VD0=;
-        b=GDHgyjdUdklFdDfng7KXoHlEv99CBlfHdDc+Wtv/7vwJDANHGSaHemOfF4sMFgZMOL
-         eMhBIyz8L3X0E/Nfa/iUtSIUs40kdsZimXlGJSpvfZwe98ByKRZvHxv6+wTd8r0lZ5T0
-         7atL6UGTANYsa1ArLsURyPlIblUNcYzIEUfNEa4hsVSskl8aGpfLG4+0nZDfKdUaM7HK
-         e3VhBxRyTJ/3JdkuoWPkyjMNzAoRzAeke+I9s/hCZVhTIaLqMjbWqPqk9bzygzNWbbLF
-         Kmo/ox3lVF8Vi0yFEkW82/BV+P7Id88KUKRimb3MMZgmnXSl5LDa5YaVjVpFCo3GK4rq
-         I+rA==
+        d=usc-edu.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=VV98yuV7QKd03t9slDB1Wv6Hk+UzS5rqGDaCNqqreAc=;
+        b=Ld6LXYmlH50trc+6gBH7ayVSlnQuPQuhTbCDV3VRQqlczPcnHHvGOEPcrmDAcfTI25
+         baFquE4YCfrq/IIdzfwGzucW1vNAHIZRp/5xcMlMQX8w6UicMFPt99DJFxEELnaTlyR/
+         a6z0LewUGNlloXV/HJBd5d62dXcHSOPg7k8s67x2Xc9Wrqxr7+EEkSyKCkxvMIKA5GGj
+         sNv7isOwz8XwI/og+hnzDgR/IYzlW+HRyLaDKcnehkv6WpNZU1zmC8Uc/0kAm11ffFK+
+         P7gNIW6P1NXv4XDL4dGj/zXdl5JepctIrMJWg03CDLoYjT2stZrzWGiZxhEjs+iNz5TR
+         bGFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PWtnylFX0q/w+cDB8JfKaNEr/g9LAE5i9sce9MU6VD0=;
-        b=ilLmbuVqudN8P+pwHYF2zZLtHLiavjm35rpB75p8yepUbCzaNvxqxjBGquoYl6s6N2
-         Lqf9YGL6yZdKCyrUGB7lQG8O02q7HkDA4Q4qjNj47R4EZxU7K/hwJBkaWg4tQjtHPEz2
-         7dtHOtqSBITh8Tcg1hw6tiVd2UZL6prt+Z7KdRr8A5BuxiR/HPdwMAd2dSycBCMMDH5g
-         5gNC1To2V+ycw88ls0UzYmge6iRIU/22cGiyAxad7QL3mBtlq/Mtz8fzmYv6vktaGfZg
-         shg1aofqE6TF4p1w1ScYklP3uBq9HpT+Kt3BtfTFjnGTmnIv5K93wmeG9tH5UQEtDmV2
-         FGIw==
-X-Gm-Message-State: AOAM530VDEdhsFUrRqJPAaHvtGh5AMN16HR47yBQEEsXZkLWlzRq0deh
-        hank2MijfnWDtm9/8KSUzJPa5mqHBrNlup5uKIA=
-X-Google-Smtp-Source: ABdhPJwmOmrQ9nPoa9j105kqubpEQ8ZVY0IfmGQOEZwTK74c06yDCgjIjzUK70GL32o2WWDUOJGjr1IwK+F/FwCjgLA=
-X-Received: by 2002:a63:d54e:: with SMTP id v14mr8857947pgi.203.1604826154148;
- Sun, 08 Nov 2020 01:02:34 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=VV98yuV7QKd03t9slDB1Wv6Hk+UzS5rqGDaCNqqreAc=;
+        b=EIFeI/FPEMqsQ4oF1lAOgNrnIJXr3Y55hVAi5dmKIx1qc/qHgmx71R5tuB21N87lFC
+         K7Y+tW+weOpuzxnVCDnT2m4iboUDpAe+ldce8qa5JQn2lWOw8VXczAxHMlOS2Qm/Da34
+         woB3DVUURTiTVMIHMgS8SeUpF70W3ggEqDj1cq5BxXBT4qTGpB+RmJXG2OEK7WNBYOzC
+         qPkKdRBczSrxLvQy087EU6odcesdiyvPw6pLZjRODoOnGn+nXMqZ/w6gs3oD1AuGOUWU
+         YKOf7cfoLJSqukVWQmaiHDOIkrgD4hL3x4ZxBZZ/rVz2S66pijwm2jHHbs+sX4l23LNk
+         m+wQ==
+X-Gm-Message-State: AOAM530uUVsApL8+Hk1NwBgq1P3bNL1GBPxIghA5CufOmwWQk9RlM+7M
+        t6W39IrSxWIj/zUfCPTTigly3Ihkvag/2mmV7MKMYg==
+X-Google-Smtp-Source: ABdhPJwPtclt89+GnQWAfj61hf3Dov2z7JopahyPBKykDAu8er80I6OuYkp7wlhyiU7Iu+qtAHZbzrg8SCkwmPCiLPs=
+X-Received: by 2002:a2e:b0f8:: with SMTP id h24mr4100716ljl.2.1604827411977;
+ Sun, 08 Nov 2020 01:23:31 -0800 (PST)
 MIME-Version: 1.0
-References: <1604753621-7387-1-git-send-email-kaixuxia@tencent.com>
-In-Reply-To: <1604753621-7387-1-git-send-email-kaixuxia@tencent.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 8 Nov 2020 11:02:17 +0200
-Message-ID: <CAHp75VfuuoqZvV22JPJghUVFtixM=HD2L9S=2WFfEo1tVKRF_w@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Assign boolean values to a
- bool variable
-To:     xiakaixu1987@gmail.com, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     irenic.rajneesh@gmail.com, "Box, David E" <david.e.box@intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Kaixu Xia <kaixuxia@tencent.com>
+From:   Zhen Gong <zhengong@usc.edu>
+Date:   Sun, 8 Nov 2020 01:23:19 -0800
+Message-ID: <CAJCLVRCyp0ASdWTx-PxsrDC9zFBPw0U2AtPip+_Hpj2r5gUPwA@mail.gmail.com>
+Subject: [PATCH RESEND] platform/x86: intel-hid: fix _DSM function index handling
+To:     Alex Hung <alex.hung@canonical.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, Zhen Gong <zhengong@usc.edu>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Nov 7, 2020 at 2:57 PM <xiakaixu1987@gmail.com> wrote:
->
-> From: Kaixu Xia <kaixuxia@tencent.com>
->
-> Fix the following coccinelle warnings:
->
-> ./drivers/platform/x86/intel_pmc_core.c:932:1-16: WARNING: Assignment of 0/1 to bool variable
+According to the ACPI spec 9.1.1 _DSM (Device Specific Method),
+intel_hid_dsm_fn_mask, acquired from function index 0, is "a buffer
+containing one bit for each function index". When validitaing fn_index,
+it should be compared with corresponding bit.
 
-Thanks for the patch! Looks good to me.
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+This buffer is usually longer than a byte. Depending on whether
+INTEL_HID_DSM_HEBC_V2_FN exist, it could be either
+"Buffer (0x02) { 0xFF, 0x01 }" or "Buffer (0x02) { 0xFF, 0x03 }".
+Probably it won't grow larger according to the description. On older
+platforms, available functions could be fewer or not supported at all,
+i.e., "Buffer (One) { 0x00 }".
 
-P.S. Don't forget to include subsystem maintainers.
+Signed-off-by: Zhen Gong <zhengong@usc.edu>
+---
+ drivers/platform/x86/intel-hid.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
->
-> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 3e5fe66333f1..ee2f757515b0 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -929,7 +929,7 @@ static void pmc_core_slps0_dbg_latch(struct pmc_dev *pmcdev, bool reset)
->                 fd |= CNP_PMC_LATCH_SLPS0_EVENTS;
->         pmc_core_reg_write(pmcdev, map->slps0_dbg_offset, fd);
->
-> -       slps0_dbg_latch = 0;
-> +       slps0_dbg_latch = false;
->
->  out_unlock:
->         mutex_unlock(&pmcdev->lock);
-> --
-> 2.20.0
->
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 86261970bd8f..9a52e56f75da 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -141,7 +141,7 @@ static bool intel_hid_execute_method(acpi_handle handle,
 
+  method_name = (char *)intel_hid_dsm_fn_to_method[fn_index];
+
+- if (!(intel_hid_dsm_fn_mask & fn_index))
++ if (!(intel_hid_dsm_fn_mask & BIT(fn_index)))
+  goto skip_dsm_exec;
+
+  /* All methods expects a package with one integer element */
+@@ -214,7 +214,19 @@ static void intel_hid_init_dsm(acpi_handle handle)
+  obj = acpi_evaluate_dsm_typed(handle, &intel_dsm_guid, 1, 0, NULL,
+       ACPI_TYPE_BUFFER);
+  if (obj) {
+- intel_hid_dsm_fn_mask = *obj->buffer.pointer;
++ switch (obj->buffer.length) {
++ default:
++ case 2:
++ intel_hid_dsm_fn_mask = *(u16 *)obj->buffer.pointer;
++ break;
++ case 1:
++ intel_hid_dsm_fn_mask = *obj->buffer.pointer;
++ break;
++ case 0:
++ acpi_handle_warn(handle, "intel_hid_dsm_fn_mask length is zero\n");
++ intel_hid_dsm_fn_mask = 0;
++ break;
++ }
+  ACPI_FREE(obj);
+  }
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.29.1
