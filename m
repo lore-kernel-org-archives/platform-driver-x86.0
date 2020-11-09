@@ -2,83 +2,82 @@ Return-Path: <SRS0=xf+z=EP=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E79C2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 12:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A548C388F7
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C5B20789
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 12:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD6A20867
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:37:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2nZxUHg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TNYgpL8i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgKIMn7 (ORCPT
+        id S1730887AbgKINhf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Nov 2020 07:43:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56211 "EHLO
+        Mon, 9 Nov 2020 08:37:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28264 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727077AbgKIMn6 (ORCPT
+        by vger.kernel.org with ESMTP id S1731924AbgKINhe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Nov 2020 07:43:58 -0500
+        Mon, 9 Nov 2020 08:37:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604925834;
+        s=mimecast20190719; t=1604929053;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=roGuckojUjKyUrAWkLO97EqWqEYJgMQUYn44G4h1rRY=;
-        b=D2nZxUHgPNNhU6c/sm+c9a5qpOSR2iEFQNftyR/KN+wju60pZGaW4nsMBdyCRS71rJ3Gtg
-        IO0hecgCdJMtRaiaD9Xz1N2Dut1nerkmAe1pVwChLVdBu1aqO0MalbvHzfQrhbUy1BoiIg
-        MWhaZDg4Cal1ZImPNKac0J2WJFlgoJo=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-547-W-ku4MyvNlGN7WpoCHLkCQ-1; Mon, 09 Nov 2020 07:43:53 -0500
-X-MC-Unique: W-ku4MyvNlGN7WpoCHLkCQ-1
-Received: by mail-ej1-f72.google.com with SMTP id g2so1372346ejj.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2020 04:43:52 -0800 (PST)
+        bh=Vo+cO/LNGoPT1bsa0vhqVm/6CFvb1OA4fjV8AjbaH64=;
+        b=TNYgpL8ihqBnejk5Dovpku9SmO72rb8ArrAoaHdBhZ6Zrd8hoRXPcP3yNNhVDMrlg+bCTK
+        99VpBPswyjlgceWvtdeqp6BCHSpCk6ZRfNo/Z5DuYIZWgzz9Y6XRsHUn/qW1lHBHd/1GTu
+        48Q/FTgt2l1WQlVg8jSXaVGC3dvEgfg=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-583-dJQbXSqXP0qF_-ynH-LGpA-1; Mon, 09 Nov 2020 08:37:31 -0500
+X-MC-Unique: dJQbXSqXP0qF_-ynH-LGpA-1
+Received: by mail-ed1-f71.google.com with SMTP id bc27so2700691edb.18
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2020 05:37:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=roGuckojUjKyUrAWkLO97EqWqEYJgMQUYn44G4h1rRY=;
-        b=FJB5re5aVQoEwviFmG+uUHJ+1Ta0GF5HIiofbXc4Stqp/GT7SbLLTCcbGIeBOYNW3f
-         VhoYybFOkF1m0KBdMGuDOTqHl+pw+VzxP9w3vHehlN0jtypXCKaKdXuyrKgD5nve2whY
-         WujKCrnIQRyK72BN4DiB6v2JVQN4B4UkQp/bygszgwZYa98hnlWErGs26WrFMDqV155l
-         5n3lJS1lGmsA/+zOs1looUJlxTqxnKJVMCVaWeGhJEe7dDgGNUS4VyjUnfDtdPyD5X5p
-         c1D56s6nco7oxbUdkfJCq4fhD/BXurEWMF3O7caMw8YEL8wKfAzD2Aa3vJo4TooNPh3G
-         4yDQ==
-X-Gm-Message-State: AOAM530t2iOvkaCQvv4Pj30S0G7EgI5EJACnC26411NXmILtF49yGmBl
-        OBrlejPJpPjdJTTSCtIyswhUSDEVznNW1qbGmrcu76/QFDIWMk7vmC2qWjCI2HOdKcj+hB+a8aN
-        vXf0ZV6kj8LOpWh1koCafCZD/m8lhlGPC9w==
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr14434555ejw.94.1604925831683;
-        Mon, 09 Nov 2020 04:43:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz5Ep0EEMMB5kiQrm926+RfDssRZ7cfplTnjXw4/xDdg0IbUARVTLZ1EXkdRT/xVyhoLPKRsQ==
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr14434537ejw.94.1604925831462;
-        Mon, 09 Nov 2020 04:43:51 -0800 (PST)
+        bh=Vo+cO/LNGoPT1bsa0vhqVm/6CFvb1OA4fjV8AjbaH64=;
+        b=etccmcP0tyJ2UeRWMQNbvTFJ2HiRf56qBrxQLMldDwbgEUgjT31XaCHxQOUdJm3/ag
+         8nyEFbeFFy5AmHc/GrjN8Mm/mB6C75emtqyfkj076FTW4o4ouxVhfF1dSF4lcSFyMAVO
+         jmrvYK/J4CHjKFDVjCFwUgu0ZlAwcC+VQbVxBl2iE1Eon4OMmj7m1f3LT0S7mA1pMbHi
+         G7FVXk15ISQwFZguggdzuE572PKlYknzm4aGPwwN9PVbRAeOvksnNLVm7cjuSgnjn8Er
+         HKFgg5IFEnIiWwePNg9zmEG+jnmVWuhI/W/vJ4Ns0tOrvGi1q1FBQo5Qn+PqTmWSWoWw
+         yG2Q==
+X-Gm-Message-State: AOAM530OTwKyiPbgGdFG6doo1robFfQEX62Y/Se1iG0sF8ayXprN7phR
+        EPcIsi2jA1cWmqkOQvzT+sv1idUqjOOP+IHcef86nJHAxW0xcRU/cuPqmmHTXY42Ct94iiyB4XB
+        +Q/yQukniKkVeP2fgONOlxkoBsO8SaudNKw==
+X-Received: by 2002:a05:6402:141:: with SMTP id s1mr14869280edu.87.1604929050157;
+        Mon, 09 Nov 2020 05:37:30 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxuQ6FsIO36mhFnvxPw7RhYbSoCdxR7tjK6DBJFPoceOlCj5Tl6mBAK5aRnLvzv5GT7qzlxPw==
+X-Received: by 2002:a05:6402:141:: with SMTP id s1mr14869256edu.87.1604929049864;
+        Mon, 09 Nov 2020 05:37:29 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id cn8sm8702418edb.18.2020.11.09.04.43.50
+        by smtp.gmail.com with ESMTPSA id a10sm8889799edn.77.2020.11.09.05.37.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2020 04:43:50 -0800 (PST)
-Subject: Re: [PATCH v1 3/4] platform/x86: i2c-multi-instantiate: Make number
- of clients unsigned
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Mon, 09 Nov 2020 05:37:29 -0800 (PST)
+Subject: Re: [PATCH] thinkpad_acpi: add P1 gen3 second fan support
+To:     Iakov 'Jake' Kirilenko <jake.kirilenko@gmail.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
 Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20201105110530.27888-1-andriy.shevchenko@linux.intel.com>
- <20201105110530.27888-3-andriy.shevchenko@linux.intel.com>
- <f1ca37a0-85db-0edd-7f4c-14143254ebfe@redhat.com>
- <20201109115316.GA4077@smile.fi.intel.com>
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201105152556.34073-1-jake.kirilenko@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1abf0d37-9689-cd37-9983-1bec6f7081d0@redhat.com>
-Date:   Mon, 9 Nov 2020 13:43:50 +0100
+Message-ID: <1b5ec9ac-a587-2b6e-83da-f3b3c18efd43@redhat.com>
+Date:   Mon, 9 Nov 2020 14:37:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201109115316.GA4077@smile.fi.intel.com>
+In-Reply-To: <20201105152556.34073-1-jake.kirilenko@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,74 +87,44 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/9/20 12:53 PM, Andy Shevchenko wrote:
-> On Mon, Nov 09, 2020 at 12:39:45PM +0100, Hans de Goede wrote:
->> On 11/5/20 12:05 PM, Andy Shevchenko wrote:
->>> There is no need to use signed type for number of clients. Moreover,
->>> it's cleaner to show that we never go negative there.
->>>
->>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>
->> I'm not a big fan of this change, it feels like needless churn to me.
+On 11/5/20 4:25 PM, Iakov 'Jake' Kirilenko wrote:
+> Tested on my P1 gen3, works fine with `thinkfan`. Since thinkpad_acpi fan
+> control is off by default, it is safe to add 2nd fan control for brave
+> overclockers
 > 
-> Feel free to not apply it. I think I don't need to resend w/o it (IIRC the rest
-> pretty much independent of this change). But if you need a v2, tell me.
+> Signed-off-by: Iakov 'Jake' Kirilenko <jake.kirilenko@gmail.com>
 
-No need for a v2.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
->> Integers are signed by default and just because a value cannot become
->> negative is not really a reason to make it unsigned. E.g. your typical
->> "int i" is often used as an array index so it cannot go negative, still
->> it almost always is an "int i" not an "unsigned int i".
->>
->> IMHO good reasons for deviating from the default signedness and
->> making a value unsigned are:
->>
->> 1. Because the value cannot go negative and we need more range.
->> 2. To avoid sign-extension when upcasting it to a larger integer type.
->>
->> Neither is the case here.
-> 
-> I consider one more, i.e. if we know that value may not be negative the
-> unsigned type gives a hint. I always stumbled over signed integers used for
-> loop counters since they confuse me (Q in mind: "should I read code carefully
-> and check if it may or may not be signed? Why it's signed?").
-> 
-> That's why I like the idea of be a bit stricter about types.
-> 
-> Hope this explains my motivation.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-It does and I understand your point of view here.
-
->> I do like the other 3 patches, thank you for those. I'm going to wait
->> a bit with applying them though, to see where things go with the
->> "[RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode to instantiated i2c-clients"
->>
->> Merging them now may get in the way with merging that series if
->> Wolfram wants to pick up the entire series (since it also involves
->> an i2c-core change).
-> 
-> Usually I expect that RFC has less priority than normal series> and I wouldn't
-> expect any maintainer (with some rare exceptions) to take series marked as RFC.
-
-Right, but you suggested resending it as a non RFC, and then there is some
-cross tree coordination which needs to happen to merge it; and since
-this series is just cleanups with no functional changes I would prefer to
-delay this one a bit to make the cross tree coordination simpler
-(iow keeps i2c-multi-instatiate.c unmodified from rc1 for now).
-
-I hope this explains why I'm delaying your cleanups a bit.
-
-> And TBH I was wondering why you marked them as such, to me that was fine to
-> send as normal one.
-
-As I tried to explain in my reaction to the RFC cover-letter I'm not sure we
-should apply those patches right now as there is no immediate need for
-passing the fwnode and a non 0 chance of regressions. But lets discuss that
-in that thread. If we decide to not apply that series for now then I'll apply
-this series (minus patch 3) right away.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index e38106750..4d64ba291 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8776,6 +8776,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+>  	TPACPI_Q_LNV3('N', '2', 'C', TPACPI_FAN_2CTL),	/* P52 / P72 */
+>  	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
+>  	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+> +	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
+>  };
+>  
+>  static int __init fan_init(struct ibm_init_struct *iibm)
+> 
 
