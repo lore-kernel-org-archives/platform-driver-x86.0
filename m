@@ -7,76 +7,76 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C5C388F7
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0579EC2D0A3
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2185A206B2
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCB9206B2
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Nov 2020 13:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZGpyXqF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bQZ6wAne"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbgKINn2 (ORCPT
+        id S1730056AbgKINoP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Nov 2020 08:43:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27364 "EHLO
+        Mon, 9 Nov 2020 08:44:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34032 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732416AbgKINn1 (ORCPT
+        by vger.kernel.org with ESMTP id S1733109AbgKINoP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Nov 2020 08:43:27 -0500
+        Mon, 9 Nov 2020 08:44:15 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1604929406;
+        s=mimecast20190719; t=1604929453;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Vce1Gg489mZi+X0b9BvAN5GDGA26gvP3AGrUiBkCWqo=;
-        b=PZGpyXqFBq/+gywAz1Pca0BhYy6YcsvJwrz3F/KPA7yH5pPLhrykzRRxsbXymUQLtrM66S
-        NYi067WvDNrrWB0uuRTQk7ldDL6MYouzw0YJhVxA5EBj2nfDQqu1PZMCMMaljxfGaex8cm
-        +twcHkLCiPDuvFSGTwQMLMOfvlbWiv4=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-496-N_H25WjOMIualLZU-Aqf5w-1; Mon, 09 Nov 2020 08:43:20 -0500
-X-MC-Unique: N_H25WjOMIualLZU-Aqf5w-1
-Received: by mail-ej1-f71.google.com with SMTP id 27so3412404ejy.8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2020 05:43:20 -0800 (PST)
+        bh=EhLrlZR750q/TJAy3g5kRmGJZZN0qTggRIpS7NO20xM=;
+        b=bQZ6wAneTKxHKSKkuaNDI9TTCic0gUQdUU4h/aSbdSkyt4wIrtiUrtcf5qRN6qy1aBG4fO
+        3tGJS/U/cRqyNyPxdw9/xSRSM+Bj/xu+cqe8qQdJX90iR416wzm+sI6MlV7EerfwhoxbPU
+        NeLwRNcPxhTbwdE9Uf8/eu40030+1TE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-543-dAIifHkbP5ydR1T9er0zYg-1; Mon, 09 Nov 2020 08:44:10 -0500
+X-MC-Unique: dAIifHkbP5ydR1T9er0zYg-1
+Received: by mail-ej1-f69.google.com with SMTP id v21so3441320ejy.3
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Nov 2020 05:44:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Vce1Gg489mZi+X0b9BvAN5GDGA26gvP3AGrUiBkCWqo=;
-        b=Ex9bAxUOs9/B87WYp2BOWbmheiyePdxcUVm4j9S/UFYV9QzDVmgj/Hmh8v8QzQTYmH
-         ubDrk0lRj079NbSikmKjjFXgVAB36T9/oXozTqUl/8U0BmyDosJ/+vnOCanKHwiqRl83
-         BJopL1T67lKw797zQr+o7syfpNfc5w3++5icKhpCt8eUWYOguluClxTApQaeKu9fMgqj
-         R3p86ykQIPnlizr7hC/PTAHmZyiWG5ckDm5Lv8MAQ9Th0WXmMp3/odEEuunRkq7hyQSs
-         hTukFhauWRmZMfFZD58c18pMTVgeHYTjLNSBKFSbZ5yQaKv6NUeTM2/5tF37wUW958FG
-         ATFQ==
-X-Gm-Message-State: AOAM533fRCB6irlpAposBlHQ8KMBstfFOtRDCBXwHgz5ZPwPHI8l560P
-        BFeA23+qf6QdghiRy2zFwbBQsUaGtYwN+IR2ag7ch+8BQay1gZRbmAIaB5Oz8KHumq3W7krvnat
-        vSo2LXJH98GlJjj0JYjIT+/kGwUz4UpgOKw==
-X-Received: by 2002:a17:907:2175:: with SMTP id rl21mr14934412ejb.59.1604929399637;
-        Mon, 09 Nov 2020 05:43:19 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxbClbzRC4BJ7kWwDqqu5hv6m/I/QHanvigGc0lLGxwEyos+9Ojp8IiRMnzkthgpBWz5fTRRQ==
-X-Received: by 2002:a17:907:2175:: with SMTP id rl21mr14934397ejb.59.1604929399478;
-        Mon, 09 Nov 2020 05:43:19 -0800 (PST)
+        bh=EhLrlZR750q/TJAy3g5kRmGJZZN0qTggRIpS7NO20xM=;
+        b=LV4Moc+L/AemrhwlSfzJtbQima54080RIh8QsnR7p3UUOGHfJNuNj2TlbEX3U6Ouj5
+         Fevbz2a15Louidar4dZIV1jSFsMPDbuP8a9DeezXAcP7stb62lAIGdRtn13aI8zxRrpR
+         wUUI012KfNEJ10oV56QUjra/PxofKVuL3MrjJhmH67xifiW6qLp/uiTuVnNl4vS9kO8o
+         8iOwqhhAx22O2muKXhDlCupio8AMMoZNPArMlzVQuIhswW9jbmGM05NEE2xdTF0q/4l7
+         KIdjLTICREBhEsrbKAl3jzXIqZ/wMwVA5tuGSpPDfecJ/t8pL+Udrw8EVQrWMMddtXKZ
+         2M5w==
+X-Gm-Message-State: AOAM533cf9cPZvQ613ZcW+w8hizhU9/RQhfmp8Wa7dSvmLaXkfPb07mR
+        R1e52bNsiJUdPEorbx9zRyAqCqLLKG9keVtPA267ADs6LbfVUHJQg7ku8ia3N5H+KqNM5dASjSn
+        p2fCiasTO1eZYChU7XCAc40qw9sLtEw/eqg==
+X-Received: by 2002:a17:906:b294:: with SMTP id q20mr14952202ejz.234.1604929449337;
+        Mon, 09 Nov 2020 05:44:09 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxtLJ8fLGj7WpNaYj9YSHYnbBMcrUDZjsvQkW9EkOEgkioHsLjLqrLsV04Fu48WZxOR21DDmA==
+X-Received: by 2002:a17:906:b294:: with SMTP id q20mr14952194ejz.234.1604929449184;
+        Mon, 09 Nov 2020 05:44:09 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id b1sm8720967edw.27.2020.11.09.05.43.18
+        by smtp.gmail.com with ESMTPSA id re10sm33509ejb.45.2020.11.09.05.44.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Nov 2020 05:43:18 -0800 (PST)
-Subject: Re: Brightness hotkeys on HP laptop
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Gmail <rhysperry111@gmail.com>
+        Mon, 09 Nov 2020 05:44:08 -0800 (PST)
+Subject: Re: HP Zbook studio G5 Brightness and mic mute keys give same
+ scancode
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>, thestroyer@cock.li
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Mark Gross <mgross@linux.intel.com>
-References: <2UUF9Q.RGK6EP27Y6W73@gmail.com>
- <CAHp75VdKMsPuDOappFTqY6FqX+7zcQqrvdYMGSZZo1ZG6-cM+g@mail.gmail.com>
+References: <d2753cb4ca4d0d819d5a76b0a076e281@cock.li>
+ <CAHp75VfTXieJws5gB70L5grsc0f_SFo+sNv1ySmt37aOUa6TmA@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9963d333-37c7-8eae-3512-b170debce07e@redhat.com>
-Date:   Mon, 9 Nov 2020 14:43:18 +0100
+Message-ID: <97c507c1-21a9-2b77-5d07-09cfcd93ca39@redhat.com>
+Date:   Mon, 9 Nov 2020 14:44:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdKMsPuDOappFTqY6FqX+7zcQqrvdYMGSZZo1ZG6-cM+g@mail.gmail.com>
+In-Reply-To: <CAHp75VfTXieJws5gB70L5grsc0f_SFo+sNv1ySmt37aOUa6TmA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,33 +86,28 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/5/20 5:45 PM, Andy Shevchenko wrote:
+On 11/5/20 5:47 PM, Andy Shevchenko wrote:
 > +Cc: subsystem maintainers
 > 
-> On Mon, Apr 27, 2020 at 11:44 AM Gmail <rhysperry111@gmail.com> wrote:
+> On Sun, May 17, 2020 at 2:24 PM <thestroyer@cock.li> wrote:
 >>
->> Hi, I am using a HP Pavillion 15-cx0598na.
->>
->> I am having trouble getting my brightness keys to be registered. It
->> should also be noted that my wireless toggle key does not work either -
->> I assume that is a seperate issue as it is handled by a different
->> module.
->>
->> Nothing is detected through acpi_listen, xev or showkey. However, in
->> the journal I get this error (same when pressing both keys):
->> ```
->> Apr 26 15:50:05 archlinux-laptop kernel: atkbd serio0: Unknown key
->> pressed (translated set 2, code 0xab on isa0060/serio0).
->> Apr 26 15:50:05 archlinux-laptop kernel: atkbd serio0: Use 'setkeycodes
->> e02b <keycode>' to make it known.
->> ```
->> Here is a link to acpidump: https://termbin.com/2l2x
->>
->> I have already tried to contact the author of `hp_wmi` (the module for
->> handling some hotkeys) but he could not solve the issue so suggested
->> contacting this email.
+>> Hi,
+>> On my HP Zbook studio G5 a few keys on my keyboard give the same
+>> scancodes. Most notably, the brightness and mute function keys all give
+>> the scan code sequence 0xe0 0x20 0xe0 0xa0 as reported by showkey
+>> --scancodes. It only produces a scancode when pressed, not when
+>> released. I found another very similar issue in this mailing list found
+>> in https://www.spinics.net/lists/platform-driver-x86/msg16791.html. The
+>> issue in that mail was solved by a bios update. I'm running the latest
+>> bios, but I still have the issue.
+>> I tried the kernels: Manjaro 5.7rc4-1, Manjaro 5.6.11-1 and Manjaro
+>> 5.4.39-1
+>> I also tried a few other distributions, but they all have the same
+>> issue.
+>> I'm happy to provide more information about this issue if needed.
 
-So for the archives, this has already been discussed in another thread.
+So this already came in another thread for another HP laptop model,
+this seems to be a common issue on some (newer?) HP laptop models.
 
 It seems that we need to make some special WMI calls for this, either
 to figure out which key is actually pressed when receiving the
