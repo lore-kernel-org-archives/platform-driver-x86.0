@@ -2,287 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4E9C388F7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 10:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70308C388F7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 10:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62859206B2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 10:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="im83aAxN"
+	by mail.kernel.org (Postfix) with ESMTP id 212F620795
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 10:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgKJKZe (ORCPT
+        id S1729630AbgKJKjv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Nov 2020 05:25:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726219AbgKJKZd (ORCPT
+        Tue, 10 Nov 2020 05:39:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40702 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbgKJKju (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Nov 2020 05:25:33 -0500
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A4FC0613CF;
-        Tue, 10 Nov 2020 02:25:32 -0800 (PST)
-Received: by mail-pf1-x444.google.com with SMTP id 10so11028827pfp.5;
-        Tue, 10 Nov 2020 02:25:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=niga6ecIez4/CTrWY1D2m+YLWeUqIwGeKCtJmF4vVAg=;
-        b=im83aAxNXiHZ9xQwNtMnvw2gsF/qjGRyH0HZUb1KVsLLl/1oLUwlTXaE9pRe2z2lbZ
-         FYthwjEVnVN5i8cTaoB0iZ81qKrdWbgN1sNqosS3FtvAc8Vlv7EQDQSaXOAEFk7V2dkj
-         9rxFaEpbNqwVTuHKnlfHevxaFiuU21hydEmk/62k4JlxASd6CV9BYT64hzX/SdBBxoSw
-         jXQTG9uORIE9wAEf6945w4mMlkP6rbt66OX2umMrOCZutltj4eTVfSfeBzU9D6D+QreW
-         IRybS/9Gbe0RCUl/0pUhEmPkkNiTV0C+RxjwKWHkj9GwsgRau1KrR4fVEC/ziEHZ+x3g
-         lrMA==
+        Tue, 10 Nov 2020 05:39:50 -0500
+Received: by mail-oi1-f193.google.com with SMTP id m143so13779956oig.7;
+        Tue, 10 Nov 2020 02:39:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=niga6ecIez4/CTrWY1D2m+YLWeUqIwGeKCtJmF4vVAg=;
-        b=G5MOyNYPj55vvwBz8DacPvygqSu5UjNGAu2HT1BkjmxGjRSj6GHsGQKYMfdPvGLIYN
-         MQ+BB3xyCvtaWErBrGZVR7k8Mvqy9FDAwKb04liBufvnrDt8jiBduKhOQ3oyQKM5Hi3P
-         F9puzrj3WuGfqKECHVWkcGUG2IZrXTYSRtSSDXqP3dXk0v1PNAAIaYLEZjRIWAfgfev3
-         5QdCXZ9sgRbViXvL625EuK1aTB7CGlN9npjjpvW57bJ0ky8UJsPBXNWHQKjvMO+04Lj7
-         B2PxuUZ4g2r34bsi6U4XuFKroIs27t/PyiK7niSntIpVeox/au5ycrarzp6PPl/mDo3A
-         oEng==
-X-Gm-Message-State: AOAM533xq3zGqdGTavSZ5f6/yAYmjRElT5NDudfBpgWjGLyCD39wJXN4
-        BOKRGlAzvj0ibWhUNQxhRpj3Z0mDqYh+eHJXwsY=
-X-Google-Smtp-Source: ABdhPJzrJcuOzfxnFaHZJ+6DkRZv3ZN+jklVWsy9pTAhqOXiz8ZzpIleRahQjFiK/KBX1KuOcdrUHhYXou9M/tR5R4g=
-X-Received: by 2002:a62:343:0:b029:15c:e33c:faff with SMTP id
- 64-20020a6203430000b029015ce33cfaffmr17171093pfd.7.1605003931630; Tue, 10 Nov
- 2020 02:25:31 -0800 (PST)
+        bh=PLlsEGFO+UNJyfsrDQkvwYBM++LmH/sVJXHnxUOe2bI=;
+        b=NcMnBdrL65nIlh3wiaKqYV8yvknAy7rrYbgKcBuBEVCmaOd7Zo0jhiWyj23+23Oopa
+         7+vBlbA/ngh2P4inkrrr7SpCZCF6AjffbbgTpmxR+rHCO4lyCIHPg4C5v8vkwQ29tBZz
+         zDYR5Cw1qGGPkJ3qiPexMgK0xoNq4ZT38ypPqEF7gibGzA4dB9q6L63Il02h96tWE3x0
+         D50vfXR4jrQLZAXHNCVj6RXKJx02QDXj0PubkPf6bDprykLnue9dyeMLMcundAgOsQhU
+         T89PROXNRmAdYGlOKUdHZfJdVExwC7BzdHwhnNMEfYJWmIrxtWfJGpLXA+qqHhpGJoK0
+         Yr9A==
+X-Gm-Message-State: AOAM530nT47Q+RXvVpgtcme1U8gQ4SXexisdGnTdxtBurSZEjaucxoMz
+        Z91QnrHns1gtd9x8JHitf9lOCv7zov17l7owjQM=
+X-Google-Smtp-Source: ABdhPJwwKwNbQN1n31gBUed38kgWS04gn0L+J3MkMXf4pM/Ttl8CIVudwz/GsuGTgJomiwwMiiUIQ1OR3y+KTv2H2gQ=
+X-Received: by 2002:aca:52c9:: with SMTP id g192mr2439496oib.54.1605004788072;
+ Tue, 10 Nov 2020 02:39:48 -0800 (PST)
 MIME-Version: 1.0
-References: <markpearson@lenovo.com> <20201110033124.3211-1-markpearson@lenovo.com>
- <20201110033124.3211-3-markpearson@lenovo.com>
-In-Reply-To: <20201110033124.3211-3-markpearson@lenovo.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 12:26:16 +0200
-Message-ID: <CAHp75VcPaZu3S6Sb-Zr3GFokxASWrD7hcOhBA0UA4frC1C5XAg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ACPI: platform-profile: Add platform profile support
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+References: <20201003013123.20269-1-david.e.box@linux.intel.com> <20201003013123.20269-3-david.e.box@linux.intel.com>
+In-Reply-To: <20201003013123.20269-3-david.e.box@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 10 Nov 2020 11:39:37 +0100
+Message-ID: <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
+Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Benjamin Berg <bberg@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>
+        alexey.budankov@linux.intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 5:35 AM Mark Pearson <markpearson@lenovo.com> wrote:
->
-> This is the initial implementation of the platform-profile feature.
-> It provides the details discussed and outlined in the
-> sysfs-platform_profile document.
->
-> Many modern systems have the ability to modify the operating profile to
-> control aspects like fan speed, temperature and power levels. This
-> module provides a common sysfs interface that platform modules can register
-> against to control their individual profile options.
+Hi David,
 
-...
+On Sat, Oct 3, 2020 at 3:32 AM David E. Box <david.e.box@linux.intel.com> wrote:
+> Intel Platform Monitoring Technology (PMT) is an architecture for
+> enumerating and accessing hardware monitoring facilities. PMT supports
+> multiple types of monitoring capabilities. This driver creates platform
+> devices for each type so that they may be managed by capability specific
+> drivers (to be introduced). Capabilities are discovered using PCIe DVSEC
+> ids. Support is included for the 3 current capability types, Telemetry,
+> Watcher, and Crashlog. The features are available on new Intel platforms
+> starting from Tiger Lake for which support is added. This patch adds
+> support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band Management
+> Services Module (OOBMSM).
+>
+> Also add a quirk mechanism for several early hardware differences and bugs.
+> For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
+> capabilities since they will not be compatible with future product. Also,
+> fix use a quirk to fix the discovery table offset.
+>
+> Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> +config ACPI_PLATFORM_PROFILE
-> +       tristate "ACPI Platform Profile Driver"
-> +       default y
+Thanks for your patch, which is now commit 4f8217d5b0ca8ace ("mfd: Intel
+Platform Monitoring Technology support") in the mfd/for-mfd-next.
+
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
+>           Register and P-unit access. In addition this creates devices
+>           for iTCO watchdog and telemetry that are part of the PMC.
+>
+> +config MFD_INTEL_PMT
+> +       tristate "Intel Platform Monitoring Technology (PMT) support"
+> +       depends on PCI
+
+Does this need a "depend on X86 || COMPILE_TEST", to prevent the
+question from showing up on platforms where the PMT cannot be present?
+
+I see the TGL and ADL PCI IDs are also referenced from
+drivers/platform/x86/intel_pmt_telemetry.c, which suggests this is X86-only.
+Perhaps the OOBMSM is a PCI device that can be used on non-X86 platforms?
+
+> +       select MFD_CORE
 > +       help
-> +         This driver adds support for platform-profiles on platforms that
-> +         support it.
-> +
-> +         Platform-profiles can be used to control the platform behaviour. For
-> +         example whether to operate in a lower power mode, in a higher
-> +         power performance mode or between the two.
-> +
-> +         This driver provides the sysfs interface and is used as the registration
-> +         point for platform specific drivers.
-> +
-> +         Which profiles are supported is determined on a per-platform basis and
-> +         should be obtained from the platform specific driver.
-
-> +
+> +         The Intel Platform Monitoring Technology (PMT) is an interface that
+> +         provides access to hardware monitor registers. This driver supports
+> +         Telemetry, Watcher, and Crashlog PMT capabilities/devices for
+> +         platforms starting from Tiger Lake.
 > +
 
-None of the blank lines is enough. But can you consider to find
-perhaps better place (I imply some logical group of options in the
-file).
+Gr{oetje,eeting}s,
 
-...
-
->  obj-$(CONFIG_ACPI_SPCR_TABLE)  += spcr.o
->  obj-$(CONFIG_ACPI_DEBUGGER_USER) += acpi_dbg.o
->  obj-$(CONFIG_ACPI_PPTT)        += pptt.o
-> +obj-$(CONFIG_ACPI_PLATFORM_PROFILE)    += platform_profile.o
-
-...yes, and this becomes consistent with the above.
-
-...
-
-> +/*
-> + *  platform_profile.c - Platform profile sysfs interface
-> + */
-
-One line. PLease, don't put the file name into the file. If we want to
-rename it, it will give additional churn and as shown in practice
-people often forget this change to follow.
-
-...
-
-> +#include <linux/module.h>
-> +#include <linux/printk.h>
-> +#include <linux/kobject.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/init.h>
-> +#include <linux/fs.h>
-> +#include <linux/string.h>
-> +#include <linux/device.h>
-> +#include <linux/acpi.h>
-> +#include <linux/mutex.h>
-> +#include <acpi/acpi_bus.h>
-> +#include <linux/platform_profile.h>
-
-Perhaps sorted?
-Why do you need a specific acpi_bus.h? I thought acpi.h includes it already, no?
-
-...
-
-> +struct platform_profile *cur_profile;
-
-Better naming since it's a global variable.
-Is it supposed to be exported to modules?
-
-...
-
-> +DEFINE_MUTEX(profile_lock);
-
-No static?
-
-...
-
-> +/* Ensure the first char of each profile is unique */
-> +static char *profile_str[] = {
-
-static const char * const profile_names[]
-
-Also naming (perhaps like I proposed above?).
-
-> +       "Low-power",
-> +       "Cool",
-> +       "Quiet",
-> +       "Balance",
-> +       "Performance",
-
-> +       "Unknown"
-
-Leave the comma here.
-
-> +};
-
-...
-
-> +       int i;
-> +       int ret, count = 0;
-
-count AFAICS should be size_t (or ssize_t).
-Can you make them in reversed xmas tree order?
-
-...
-
-> +       return snprintf(buf, PAGE_SIZE, "%s", profile_str[profile]);
-
-Nowadays we have sysfs_emit(), use it.
-
-...
-
-> +       /* Scan for a matching profile */
-> +       for (profile = profile_low; profile < profile_unknown; profile++) {
-> +               if (toupper(buf[0]) == profile_str[profile][0])
-> +                       break;
-> +       }
-
-match_string() / sysfs_match_string() ?
-
-...
-
-> +static struct attribute *platform_profile_attributes[] = {
-> +       &dev_attr_platform_profile_choices.attr,
-> +       &dev_attr_platform_profile.attr,
-
-> +       NULL,
-
-Drop comma in terminator line.
-
-> +};
-
-...
-
-> +module_init(platform_profile_init);
-> +module_exit(platform_profile_exit);
-
-Attach them to respective functions.
-
-...
-
-> +/*
-> + * platform_profile.h - platform profile sysfs interface
-
-No file name.
-
-> + *
-> + * See Documentation/ABI/testing/sysfs-platform_profile for more information.
-> + */
-
-...
-
-> +/*
-> + * If more options are added please update profile_str
-> + * array in platform-profile.c
-> + */
-
-Kernel doc?
-
-> +enum profile_option {
-> +       profile_low,
-> +       profile_cool,
-> +       profile_quiet,
-> +       profile_balance,
-> +       profile_perform,
-
-> +       profile_unknown /* Must always be last */
-
-Comment is semi-useless. Comma at the end (or its absence) is usually
-enough to give a clue, but okay, comment makes this explicit.
-
-...
-
-> +struct platform_profile {
-> +       unsigned int choices; /* bitmap of available choices */
-> +       int cur_profile;      /* Current active profile */
-
-Kernel doc?
-
-> +       int (*profile_get)(void);
-> +       int (*profile_set)(int profile);
-> +};
-
-...
-
-> +extern int platform_profile_register(struct platform_profile *pprof);
-> +extern int platform_profile_unregister(void);
-> +extern int platform_profile_notify(void);
-
-extern is not needed.
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
