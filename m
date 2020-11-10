@@ -2,100 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8EC55ABD
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 14:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B07C388F7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 18:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9638621741
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 14:46:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vb0RgcDz"
+	by mail.kernel.org (Postfix) with ESMTP id A1EF520797
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 18:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbgKJOqW (ORCPT
+        id S1726688AbgKJSHA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Nov 2020 09:46:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730200AbgKJOqV (ORCPT
+        Tue, 10 Nov 2020 13:07:00 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56468 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbgKJSHA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Nov 2020 09:46:21 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3933C0613CF;
-        Tue, 10 Nov 2020 06:46:21 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id v12so11604022pfm.13;
-        Tue, 10 Nov 2020 06:46:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KITGRMBYhTUWHO+ezTykdgzNgM9ljTy95ViqgbyHuDQ=;
-        b=vb0RgcDzrG+Z0XhNvhZ0EEKcPWfQwUiDzsG5GnDh7YiaOPnrIM/yyWTyVKY30l+4JJ
-         2So3b/4gnBs+Gi2/VPB4mk72c52rEWzel8oYnPYQgKz5VtO0KDGvVuvXev1aqRlGMs4V
-         f1lmnpZAoHznDkzNdhtJrawy7+xp/BjZme/gLXtQMfg7SHNDH/g74Vze3YkdbnhbXyhV
-         vtnHn2vFco2DzIA0OsvIl/fdGy/+uTVMk0u+t9SWOcoN4WGpTKkzFQCForM5z7euocbi
-         sL+1H/ZJJMwyl6akpNxK5kniXXneTYtHohj3AYowDumJChiq0s7lI562G2oYnfyfyYBC
-         w6GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KITGRMBYhTUWHO+ezTykdgzNgM9ljTy95ViqgbyHuDQ=;
-        b=HmK6DTJd+5tZlKu6/KtrS2AseKBsWYcjTOavdOipiaYQ+Qt8SEWAq7SG4xLvU7C977
-         DPPPUgS7K3IcgfkDqJk2OL1eW265A/rtHkSd4cDVXJWhenLuqm9y580dbJ7sG5weCAq1
-         oGtJ9PGcIZlfOBvEnFFBLy9YW6VMdcyeWIQ/ML9Rq41nTuDdH3GqIaBwNUIeEqKqsMY6
-         q+8KD0eiJkBzCxddWx9o2qrmTjWD07fQCnmU+SFxobUuxUPXj9llpGg0NXwZWFrU75My
-         uUxrY8Aw+heOzbep1T7UABL58yWxeXkc3VBC2XPvwoaXb0msMCteTWxcAcQejTkucupE
-         2R7w==
-X-Gm-Message-State: AOAM533dD1kQ904wPWD6ANc//DQigjr0fN1JiMP8O424FfRGvm8VyJKA
-        SFU+lS3J1b7CFVDploiXtEiZ0HlfV0dB95RNoQM=
-X-Google-Smtp-Source: ABdhPJx0BQailDKwRbiTPH2sIvEGj9yDJ58vlJbH6q+HVXBy1YexuaN+u5JSPS4YAu3/D825gIRWpDsOE/iS2s2IgMg=
-X-Received: by 2002:aa7:8c4f:0:b029:18b:f361:4aa3 with SMTP id
- e15-20020aa78c4f0000b029018bf3614aa3mr1263957pfd.73.1605019581399; Tue, 10
- Nov 2020 06:46:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20201105080014.45410-1-hdegoede@redhat.com> <CAHp75Vdm4PuQpAMj98wJZoNMwV2tFGPj-r9ezvXyWCYj2cSuaA@mail.gmail.com>
- <81343662-aaac-a5e8-af86-1370951ff646@redhat.com> <CAHp75VdbHPwnOAUWjSN+HuVsWVb=8EUwfWNR1onL9QNrX8yU0w@mail.gmail.com>
- <6345eeb9-8416-3e7c-e619-632b5d4abbbd@redhat.com>
-In-Reply-To: <6345eeb9-8416-3e7c-e619-632b5d4abbbd@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 16:47:10 +0200
-Message-ID: <CAHp75VdcG_qDpJoppc3Ri8y0rjL9m07r9Xb4JPu30HE6TYf9zQ@mail.gmail.com>
-Subject: Re: [RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
- to instantiated i2c-clients
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        Tue, 10 Nov 2020 13:07:00 -0500
+IronPort-SDR: 0zA6zNcxjRvIP9M/4krLs9m7neNw04/+fTgIKdBKSaXViF9b+dMJqsxOPiGTbERfAf0vWlOzEc
+ 6lR0o25MobfQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="234189632"
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="234189632"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 10:06:53 -0800
+IronPort-SDR: /nfePAnqjQMI6cF0FnQ+JBblmL1nP/m91B+IUFee3M202qcuN6NkaC3M+Qu5UeYCMuh2ZRuiBn
+ qeJw7PPWPwCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
+   d="scan'208";a="356252584"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2020 10:06:53 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 86B9F58088D;
+        Tue, 10 Nov 2020 10:06:53 -0800 (PST)
+Message-ID: <c8b880d6ff609c79b18afd3d0b5a317b6d36f05f.camel@linux.intel.com>
+Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        alexey.budankov@linux.intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 10 Nov 2020 10:06:53 -0800
+In-Reply-To: <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
+References: <20201003013123.20269-1-david.e.box@linux.intel.com>
+         <20201003013123.20269-3-david.e.box@linux.intel.com>
+         <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
+Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 10, 2020 at 1:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/10/20 11:10 AM, Andy Shevchenko wrote:
-> > On Mon, Nov 9, 2020 at 1:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+Hi Geert,
 
-...
+On Tue, 2020-11-10 at 11:39 +0100, Geert Uytterhoeven wrote:
+> Hi David,
+> 
+> On Sat, Oct 3, 2020 at 3:32 AM David E. Box <
+> david.e.box@linux.intel.com> wrote:
+> > Intel Platform Monitoring Technology (PMT) is an architecture for
+> > enumerating and accessing hardware monitoring facilities. PMT
+> > supports
+> > multiple types of monitoring capabilities. This driver creates
+> > platform
+> > devices for each type so that they may be managed by capability
+> > specific
+> > drivers (to be introduced). Capabilities are discovered using PCIe
+> > DVSEC
+> > ids. Support is included for the 3 current capability types,
+> > Telemetry,
+> > Watcher, and Crashlog. The features are available on new Intel
+> > platforms
+> > starting from Tiger Lake for which support is added. This patch
+> > adds
+> > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
+> > Management
+> > Services Module (OOBMSM).
+> > 
+> > Also add a quirk mechanism for several early hardware differences
+> > and bugs.
+> > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
+> > capabilities since they will not be compatible with future product.
+> > Also,
+> > fix use a quirk to fix the discovery table offset.
+> > 
+> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
+> > >
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> Thanks for your patch, which is now commit 4f8217d5b0ca8ace ("mfd:
+> Intel
+> Platform Monitoring Technology support") in the mfd/for-mfd-next.
+> 
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
+> >           Register and P-unit access. In addition this creates
+> > devices
+> >           for iTCO watchdog and telemetry that are part of the PMC.
+> > 
+> > +config MFD_INTEL_PMT
+> > +       tristate "Intel Platform Monitoring Technology (PMT)
+> > support"
+> > +       depends on PCI
+> 
+> Does this need a "depend on X86 || COMPILE_TEST", to prevent the
+> question from showing up on platforms where the PMT cannot be
+> present?
 
-> > I think in general the direction to switch to fwnode is a good one. I
-> > was thinking about moving i2c core to use swnodes in which case they
-> > will utilize fwnode pointer. But it might have complications, you are
-> > right.
->
-> So do you agree to just keep this series in the archives (in case we need
-> it later) for now ? Or would you still like me to post a non RFC version ?
+Though not currently available on non X86 hardware it is not
+restricted. The use of PCIE Designated Vendor Specific Capability
+(DVSEC) was to specifically allow use of this IP by other vendors.
 
-If nobody else has a different opinion (Heikki, Wolfram, Rafael?), I'm
-fine with it to be in archives for the time being.
+> 
+> I see the TGL and ADL PCI IDs are also referenced from
+> drivers/platform/x86/intel_pmt_telemetry.c, which suggests this is
+> X86-only.
+> Perhaps the OOBMSM is a PCI device that can be used on non-X86
+> platforms?
 
--- 
-With Best Regards,
-Andy Shevchenko
+TGL and AGL are only referenced in this driver because they require
+quirks.
+
+Thanks
+
+David
+
