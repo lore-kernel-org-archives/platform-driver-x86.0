@@ -2,145 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B07C388F7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 18:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9A5C388F7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 23:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1EF520797
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 18:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8918820809
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Nov 2020 23:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="wG38k1ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbgKJSHA (ORCPT
+        id S1731657AbgKJXtB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Nov 2020 13:07:00 -0500
-Received: from mga07.intel.com ([134.134.136.100]:56468 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbgKJSHA (ORCPT
+        Tue, 10 Nov 2020 18:49:01 -0500
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:41981 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730254AbgKJXtA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Nov 2020 13:07:00 -0500
-IronPort-SDR: 0zA6zNcxjRvIP9M/4krLs9m7neNw04/+fTgIKdBKSaXViF9b+dMJqsxOPiGTbERfAf0vWlOzEc
- 6lR0o25MobfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9801"; a="234189632"
-X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
-   d="scan'208";a="234189632"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2020 10:06:53 -0800
-IronPort-SDR: /nfePAnqjQMI6cF0FnQ+JBblmL1nP/m91B+IUFee3M202qcuN6NkaC3M+Qu5UeYCMuh2ZRuiBn
- qeJw7PPWPwCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,467,1596524400"; 
-   d="scan'208";a="356252584"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2020 10:06:53 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 86B9F58088D;
-        Tue, 10 Nov 2020 10:06:53 -0800 (PST)
-Message-ID: <c8b880d6ff609c79b18afd3d0b5a317b6d36f05f.camel@linux.intel.com>
-Subject: Re: [PATCH V8 2/5] mfd: Intel Platform Monitoring Technology support
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alexey.budankov@linux.intel.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Nov 2020 10:06:53 -0800
-In-Reply-To: <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
-References: <20201003013123.20269-1-david.e.box@linux.intel.com>
-         <20201003013123.20269-3-david.e.box@linux.intel.com>
-         <CAMuHMdXPMNGtnvZKRVofQ7KhuveTadfp+V0Q73YOWkdTgr0aZQ@mail.gmail.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 10 Nov 2020 18:49:00 -0500
+X-Greylist: delayed 48682 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Nov 2020 18:48:58 EST
+Date:   Tue, 10 Nov 2020 23:48:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1605052137;
+        bh=QCQEYvzS954DA1XtnRB6bcr/J8KYUGWKdH/2S6xgIus=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=wG38k1ef0WfvbQFc5EvZn0IHciJJcF0BKD6GUAjYVy9mX/uA/xZwFS55phVo2YHp4
+         SebKqUtOX18cLo34PDUcWr7Ctt+gOtupqnVXTvZ4aZGI1PEq9vG5HJPGVjKw7k/5UJ
+         QHctJLjjuBY0b2Idm1ZZnSpiNWzUUpwrAGSO6a7U=
+To:     Mark Pearson <markpearson@lenovo.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "hadess@hadess.net" <hadess@hadess.net>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [External] Re: [PATCH 2/3] ACPI: platform-profile: Add platform profile support
+Message-ID: <uaE8WMqn_yPjB2GzTz-7JGy2CdMlfz9r2Hy_oQ_cg_fvvNw1mkTQERLWS9Q3m9LI-ohJyOCC4wHDmm5X_qtWwUVW7XKlU--gVN3GWHms2zE=@protonmail.com>
+In-Reply-To: <72b0fb0a-8007-d795-8b1a-68fa58231c23@lenovo.com>
+References: <markpearson@lenovo.com> <20201110033124.3211-1-markpearson@lenovo.com> <20201110033124.3211-3-markpearson@lenovo.com> <2gY5rkKaKLKayk0DYW0lvZ_aIAs8vSf9FOy2obdGvph_7XcpyHlkafBTpW8RHKC5nEcEz_eY-s4pJtuR2ebltW2Fu10GRssTmMxKMuS4PU8=@protonmail.com> <72b0fb0a-8007-d795-8b1a-68fa58231c23@lenovo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Geert,
+Hi
 
-On Tue, 2020-11-10 at 11:39 +0100, Geert Uytterhoeven wrote:
-> Hi David,
-> 
-> On Sat, Oct 3, 2020 at 3:32 AM David E. Box <
-> david.e.box@linux.intel.com> wrote:
-> > Intel Platform Monitoring Technology (PMT) is an architecture for
-> > enumerating and accessing hardware monitoring facilities. PMT
-> > supports
-> > multiple types of monitoring capabilities. This driver creates
-> > platform
-> > devices for each type so that they may be managed by capability
-> > specific
-> > drivers (to be introduced). Capabilities are discovered using PCIe
-> > DVSEC
-> > ids. Support is included for the 3 current capability types,
-> > Telemetry,
-> > Watcher, and Crashlog. The features are available on new Intel
-> > platforms
-> > starting from Tiger Lake for which support is added. This patch
-> > adds
-> > support for Tiger Lake (TGL), Alder Lake (ADL), and Out-of-Band
-> > Management
-> > Services Module (OOBMSM).
-> > 
-> > Also add a quirk mechanism for several early hardware differences
-> > and bugs.
-> > For Tiger Lake and Alder Lake, do not support Watcher and Crashlog
-> > capabilities since they will not be compatible with future product.
-> > Also,
-> > fix use a quirk to fix the discovery table offset.
-> > 
-> > Co-developed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com
-> > >
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> 
-> Thanks for your patch, which is now commit 4f8217d5b0ca8ace ("mfd:
-> Intel
-> Platform Monitoring Technology support") in the mfd/for-mfd-next.
-> 
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -670,6 +670,16 @@ config MFD_INTEL_PMC_BXT
-> >           Register and P-unit access. In addition this creates
-> > devices
-> >           for iTCO watchdog and telemetry that are part of the PMC.
-> > 
-> > +config MFD_INTEL_PMT
-> > +       tristate "Intel Platform Monitoring Technology (PMT)
-> > support"
-> > +       depends on PCI
-> 
-> Does this need a "depend on X86 || COMPILE_TEST", to prevent the
-> question from showing up on platforms where the PMT cannot be
-> present?
 
-Though not currently available on non X86 hardware it is not
-restricted. The use of PCIE Designated Vendor Specific Capability
-(DVSEC) was to specifically allow use of this IP by other vendors.
+> [...]
+> >> +static char *profile_str[] =3D {
+> >
+> > Why is it not `const`?
+> My mistake. I will fix
+> >
+> >
+> >> +=09"Low-power",
+> >> +=09"Cool",
+> >> +=09"Quiet",
+> >> +=09"Balance",
+> >> +=09"Performance",
+> >> +=09"Unknown"
+> >
+> > "unknown" is not documented, yet it may be returned to userspace.
+> Ack - I'll look into if it's really needed, but it seemed sensible to
+> have it whilst doing the implementation.
 
-> 
-> I see the TGL and ADL PCI IDs are also referenced from
-> drivers/platform/x86/intel_pmt_telemetry.c, which suggests this is
-> X86-only.
-> Perhaps the OOBMSM is a PCI device that can be used on non-X86
-> platforms?
+I don't advocate for its removal, just that it be documented if it may be
+returned to userspace.
 
-TGL and AGL are only referenced in this driver because they require
-quirks.
 
-Thanks
+> >
+> >
+> >> +};
+> [...]
+> >> +#ifndef _PLATFORM_PROFILE_H_
+> >> +#define _PLATFORM_PROFILE_H_
+> >> +
+> >> +/*
+> >> + * If more options are added please update profile_str
+> >> + * array in platform-profile.c
+> >> + */
+> >> +
+> >> +enum profile_option {
+> >> +=09profile_low,
+> >> +=09profile_cool,
+> >> +=09profile_quiet,
+> >> +=09profile_balance,
+> >> +=09profile_perform,
+> >> +=09profile_unknown /* Must always be last */
+> >> +};
+> >
+> > Shouldn't these be prefixed by `platform_`? And I think it'd be better =
+to have
+> > `profile_unknown` as the first value in the enumeration.
+> I can add 'platform_'
+> I liked having profile_unknown as the last value as it makes scanning
+> from 'low' to 'unknown' more future proof if other profiles get added
+> (e.g in platform_profile_choices_show).
+> Is this something you feel strongly about?
 
-David
+I don't feel strongly about it, just that right now, for all practical purp=
+oses
+`profile_unknown` feels like a first-class profile option in the current fo=
+rm of
+the patch, and it didn't seem right that it can just change. I'd do somethi=
+ng like
+```
+enum performance_profile_option {
+  performance_profile_unknown,
+  performance_profile_low,
+  ...
+  performance_profile_max, /* must be last */
+};
+```
 
+But I don't have a strong preference for either one of them. Maybe someone
+could chime in and tell us which one is more prevalent/preferred.
+
+And as a side note, I think you could put something like
+`static_assert(ARRAY_SIZE(profile_str) =3D=3D performance_profile_max);`
+in the code somewhere to make sure there are as many strings in the array a=
+s
+profile options.
+
+You might actually do the following as well:
+```
+static const char *profile_str[] =3D {
+  [performance_profile_unknown] =3D "unknown",
+  [performance_profile_low]     =3D "low",
+  ...
+};
+```
+
+I realize I might be a bit too paranoid here. :-) But if you do these three=
+ things,
+or something similar, then the chances of the enum and the array being out =
+of
+sync (by accident) will be very slim.
+
+
+> [...]
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
