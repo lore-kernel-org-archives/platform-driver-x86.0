@@ -2,171 +2,481 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF240C2D0A3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Nov 2020 15:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10163C55ABD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Nov 2020 18:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD76221E9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Nov 2020 15:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937E522241
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Nov 2020 18:53:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="xO6ubptq";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=Dell.onmicrosoft.com header.i=@Dell.onmicrosoft.com header.b="hQxqBvJc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cm+/77aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgKLP6M (ORCPT
+        id S1726418AbgKLSxV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Nov 2020 10:58:12 -0500
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:12386 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728327AbgKLP6I (ORCPT
+        Thu, 12 Nov 2020 13:53:21 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3795 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgKLSxU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Nov 2020 10:58:08 -0500
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0ACFWFPK018931;
-        Thu, 12 Nov 2020 10:57:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=UaaE6y9XajS74w/O95Ys6NB/3STF93D2Muvvx1/F9aQ=;
- b=xO6ubptqMOQkOhrHPmqDmw3iVm7OZHufN3R3ypllOxI8vnznzN4gCFFVisiHrmZziALR
- xQBf6XxGeoiuXEo0FKtrcrKLEQZT5uCcLsKf+jn8xAm840aDkdSvC0EUno0c/k15iby0
- 1SJCsqv5XFKW6cBQyORiydDqP6JFlZ0VBB4IjSDmrjYwMNZYQJxEyBm3Q3GVgbASFPKH
- ULshvufdVVi/r5+srLMaz2aLToXeWgQKZ/eBc2aKCH6FuBw3kTXMzlttDkgrN9Dq5u1y
- HRSOt1xZTRXgULtzr0xafqadpFVXIdS/BZsiI/A1Ly3s8KLF1MCzGCNOFmlmdDFUjzxB Fw== 
-Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 34rtwhjx6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Nov 2020 10:57:58 -0500
-Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0ACFmB9X193753;
-        Thu, 12 Nov 2020 10:57:57 -0500
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-        by mx0b-00154901.pphosted.com with ESMTP id 34rarmk49c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Nov 2020 10:57:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j03wQrxDb1hGvM/g0bx+LInuSe59jVgr9svuhaa0n2TfHuD+/IgqVpuk3Wbxq608tLTmvV+OaeoTH73ev/Hj5/BljJM7n6R01Zo302yDQBgkWRIciHsLSHQ0APkcGhxLP8OCL07VhK2LzdgD5UCP+7S6CcWXr2zLu8YdUSZJPqjam8WBwylGWSyrxB38GQay/JRS2V+Tpir8XmWBdKX6Zfd7Vb0eCm5582YgNRDw9dKhkQ2KEPCrU8kw55/CsnzfoxaECyUM5Stmz246d+2pTymyR2LoT+Bq1fLGPz7DqyEE3h+Y63jkCl84uike7xctQEYN0uLFoVyREAn2S5zdrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UaaE6y9XajS74w/O95Ys6NB/3STF93D2Muvvx1/F9aQ=;
- b=ln029rFjg5afcO7oNxZKoCZL6XW13Vam1f14OtqzFOdABS4WwsghMWAb2hcNYHhPNI4CytiDorXYaUnYwjxlm69/1APjGEDDLmYIk44y6YmojdlKRpLyY2fFfZJAnfRXl1JBAq8S0ckeLgl2fTsQtIerzWLcm10gNx2+5uv2G2+pX8VTd0tsZSeySbdpS0BrLPEoWwy+FYBFKzKy90x7KQ3cZZPLGXW2ccsthDre3RH9fzcTUKRcxq3/tlDoUaz5LG+QZuR1fybp34+6MzhTnFGl/KvrL0RO7Bj8VlAho0aqP4XmjX+Dx/YIODoHaB1Nj9/Atg48s93+U01ag6OY7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UaaE6y9XajS74w/O95Ys6NB/3STF93D2Muvvx1/F9aQ=;
- b=hQxqBvJcOTTqWTzX/ML8JHyeipARvXDsUp5U3+vekr94jp44OiDOuICKQp0a+FmirO+FTJMQyFIYP42quBTRKMBlIH2XuXiVukM1iK7Z9q/6kjOfeV5l29yGM6OyxNupkVGKbVZJoBS73cC/GCutc5FDPCJhSUUmO13UuHmEmYA=
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com (2603:10b6:5:15f::15)
- by DM6PR19MB2443.namprd19.prod.outlook.com (2603:10b6:5:15e::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3541.23; Thu, 12 Nov
- 2020 15:57:55 +0000
-Received: from DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a8ff:e803:ee80:e59a]) by DM6PR19MB2636.namprd19.prod.outlook.com
- ([fe80::a8ff:e803:ee80:e59a%3]) with mapi id 15.20.3541.025; Thu, 12 Nov 2020
- 15:57:55 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+        Thu, 12 Nov 2020 13:53:20 -0500
+Received: from hqmail.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, AES256-SHA)
+        id <B5fad849a0000>; Thu, 12 Nov 2020 10:53:14 -0800
+Received: from [10.20.23.185] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Nov
+ 2020 18:53:18 +0000
+Subject: Re: [PATCH v4] platform/x86: Add new vga-switcheroo gmux driver for
+ ACPI-driven muxes
 To:     Hans de Goede <hdegoede@redhat.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "Yuan, Perry" <Perry.Yuan@dell.com>
-CC:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: RE: [PATCH] platform/x86: dell-privacy: Add support for new privacy
- driver
-Thread-Topic: [PATCH] platform/x86: dell-privacy: Add support for new privacy
- driver
-Thread-Index: AQHWuQVotUSjecTwXUm8CCIPHIWS6qnEmNyQgAANe4CAAAAxIA==
-Date:   Thu, 12 Nov 2020 15:57:55 +0000
-Message-ID: <DM6PR19MB2636C714D1EE520F98617018FAE70@DM6PR19MB2636.namprd19.prod.outlook.com>
-References: <20201103125542.8572-1-Perry_Yuan@Dell.com>
- <20201104014915.45tbmnrqvccbrd2k@srcf.ucam.org>
- <SJ0PR19MB4528E93631DA5FD8BE1D6E8D84E80@SJ0PR19MB4528.namprd19.prod.outlook.com>
- <20201111072456.tkwdzuq2wa7zvbod@srcf.ucam.org>
- <DM6PR19MB2636956DB58B0E4ECAD43549FAE80@DM6PR19MB2636.namprd19.prod.outlook.com>
- <e8e06aca-c3f1-d833-c766-01f05dfa0f37@metux.net>
- <DM6PR19MB2636D792A7CCEE8937579EA6FAE70@DM6PR19MB2636.namprd19.prod.outlook.com>
- <544bc53f-c260-9e46-15a9-2ec2ea41343c@redhat.com>
-In-Reply-To: <544bc53f-c260-9e46-15a9-2ec2ea41343c@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-11-12T15:57:52.9613471Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=e5de38ac-daef-4948-b45e-1fdb5b9b18af;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c3e0afd3-a8e1-421d-3213-08d88723b855
-x-ms-traffictypediagnostic: DM6PR19MB2443:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR19MB2443EC041BE1F27040BAFDF2FAE70@DM6PR19MB2443.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i2f2aYYkNCfaeBgNfHTR7358cUwUNieZEfvyjyIF2xyb5s+WTBRRRiq5UOGLQVd3h6JVK2Muf8X7TNrcjMCt4dIOg5HyjMCqq/kP4GLAJEeCmSXeUXZH6uCceYfS3sZNQkaGLecBfBzEo0HJ/wjetEZFqLnvwZCCXV2Rfh2KoJeA9VPi5lItGuxT17vx3PpQ3OT9HKxmUrKYfxPI1kBPuYyCMubGrqRyj3Jw+KNvCgZftiHiITLBTJnIV2VdHnPnwpALF9Z++d8AF6XNK0S7fIAmj2OeM67QrPdj45/w6SGFSUJjwROSQ7uYYJM2OUvRUnFzADHznev/S0myR5EFzg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR19MB2636.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(39860400002)(376002)(396003)(346002)(5660300002)(66476007)(4744005)(55016002)(478600001)(26005)(64756008)(2906002)(66946007)(8936002)(9686003)(54906003)(316002)(83380400001)(4326008)(110136005)(86362001)(7696005)(186003)(76116006)(786003)(66556008)(8676002)(6636002)(71200400001)(52536014)(6506007)(66446008)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: c7UdBoVJXsh6boVBz0doQ2uI/TuybqQjEVVnltPkLKr57GsFctKV5+RyTMspSYhvt6BCGM2js6EbaMQVElgrFaSEK353vieQK1d6MABlJy8udR2eKSgBidW32nFsiGL+yBNeW6Df+exnX27I5utW3s69Yiy336/b0pz3tJp6x0E6sWX7yyJrENgDAQQeSCg9u0k6Sm4x8MgQ6eBmX9H/ViV3U2u3DWfRGfOBTO3vRZfLbKxSTqWOrY4VNembpMZ7z5rwI6ExvRM+74U4CZI7OlPVDWVWQDly/sbiVvg7fqa44DK1/P2fdXd4AnKNTkojGLYzQYqEE2a62sWXbqA68JbbMz04se5TkbroMQDflYaf6z/L2gLmx3z/waHcG69IYoBTbH2vUKnXHh5cA0ycBeQwmMBASTS4XG8hhMcETOiQN1cWNEWN7vFCubnQwBhZwV5kdCX2YQqCafMVCN1zc62jAt4ek8NMNvr0Jk1AqNKmauP0LQKwe02LktHuIoyMtP4L5bLRYAIgVHX3lILWeUfHa3RwyhNgvNKgpOB1NDPLNCzG7JDf4IVrkln4tD8HnuvFrrXTyDL/CLHQr5nMXuv7hmzL8Fxm4E+QUn+PtU7MPCJFgHI4E1lyKggWpsV/4i6CCrDBbZvjDxwtPbGvSg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+CC:     <andy@infradead.org>, <dvhart@infradead.org>, <lukas@wunner.de>,
+        <pobrn@protonmail.com>, <dri-devel@lists.freedesktop.org>,
+        <peter@lekensteyn.nl>
+References: <c7dcb052-0ccf-dae3-49dd-1518f5ab182e@nvidia.com>
+ <20200902173851.224368-1-ddadap@nvidia.com>
+ <92f0b784-a931-2c45-a98c-789430d4c6e9@redhat.com>
+From:   Daniel Dadap <ddadap@nvidia.com>
+Message-ID: <35147557-4fc1-be3f-8edc-ce6393144165@nvidia.com>
+Date:   Thu, 12 Nov 2020 12:53:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR19MB2636.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e0afd3-a8e1-421d-3213-08d88723b855
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2020 15:57:55.8291
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mp53PaSiD66cHmAWxnrh9FNGufVFf1MgtIvRGPet0IjN7SlEYsYzIoqR4ghL9HxvHcwhJ5xn0xok4R08ncaMh3W80fxd+sVIvRJrVgAiWIo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR19MB2443
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-12_06:2020-11-12,2020-11-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- mlxlogscore=999 suspectscore=0 lowpriorityscore=0 malwarescore=0
- impostorscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2011120093
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 adultscore=0 malwarescore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011120093
+In-Reply-To: <92f0b784-a931-2c45-a98c-789430d4c6e9@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1605207194; bh=vV9FLwyqX1AYWXt1/AYYw2ce2CINl2FFRj/lWhUbeUU=;
+        h=Subject:To:CC:References:From:Message-ID:Date:User-Agent:
+         MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+         Content-Language:X-Originating-IP:X-ClientProxiedBy;
+        b=cm+/77aEPUbBLTagxEXwnp422Rizq1VniJsGyodlDSiTUms6FbfKY9Bok4VD2yZh+
+         HZ7NG0PVtY7/ruqkgvIwmY+xsqBWixZ70gHY3rOZ5KirAD5uUQGFuiSOHynOUxQL/h
+         KOXWK7TruSG5yBpfhHpKuURdQgDg09MW4V633yMb4mIvDt0F94JqwvdzSKSfneF4xY
+         66iBvWfqiKtspyOx5KF+sPiCAAyCNxHHXypRQxti/Vrm2rM7YosP/AIF5GVrrbtcy+
+         q1NYom93euwCn8CM+J8PvGh+FKXZpDzuUPj5wxkRbzItY5w/VhiMM2tmcCrZdE0UfP
+         JddrnGGOzsvAA==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiA+DQo+ID4gQWdhaW4sIGlmIGFueXRoaW5nIGluIHRoaXMgZmxvdyBkb2Vzbid0IGhhcHBlbiBI
-VyBtaWMgbXV0ZSBpcyBzdGlsbA0KPiBhY3RpdmF0ZWQsDQo+ID4ganVzdCB3aWxsIHRha2UgbG9u
-Z2VyIChmb3IgZHVyYXRpb24gb2YgdGltZW91dCkgYW5kIGhhdmUgcG9wcGluZyBub2lzZS4NCj4g
-DQo+IFRoYW5rIHlvdSwgY2FuIHdlIHB1dCB0aGlzIGluIGEgY29tbWVudCBpbiB0aGUgZHJpdmVy
-IHBsZWFzZSA/DQoNClllcywgSSBhZ3JlZS4gIEkgc3VnZ2VzdGVkIHRvIFBlcnJ5IHRoYXQgaGlz
-IG5leHQgc3VibWlzc2lvbiBvZiB0aGlzIGRyaXZlcg0KbmVlZHMgYSBsb3QgbW9yZSBjb250ZXh0
-IGluIGNvbW1pdCBtZXNzYWdlIChhbmQgaXQgc291bmRzIGxpa2UgcHJvYmFibHkNCmNvZGUgY29t
-bWVudHMgdG9vKS4NCg0KPiANCj4gSSBndWVzcyB0aGlzIGFsc28gbWVhbnMgdGhhdCB0aGUgbGVk
-X2NsYXNzIGRldmljZSBpcyBqdXN0IHRoZXJlIHRvDQo+IGNhdGNoIHRoZSBsZWR0cmlnX2F1ZGlv
-X3NldCgpIGNhbGwgc28gdGhhdCBkZWxsLWZpcm13YXJlIGNhbiB0ZWxsIHRoZQ0KPiBFQyB0aGF0
-IHRoZSBzdy1tdXRlIGlzIGRvbmUgYW5kIHRoYXQgaXQgY2FuIG1vdmUgYWhlYWQgd2l0aCB0aGUg
-aHctbXV0ZS4NCj4gDQo+IFdoaWxlIHRoZSByZWFsLCBwaHlzaWNhbCBMRUQgaXMgZnVsbHkgdW5k
-ZXIgaGFyZHdhcmUgY29udHJvbCwgcmlnaHQgPw0KPiANCj4gVGhhdCBzaG91bGQgcHJvYmFibHkg
-YWxzbyBiZSBpbiB0aGUgc2FtZSBjb21tZW50IGluIHRoZSBkcml2ZXINCj4gKGZlZWwgZnJlZSB0
-byByZS11c2UgcGFydCBvZiBteSB3b3JkaW5nIGZvciB0aGF0IGlmIHRoYXQgaGVscHMpLg0KPiAN
-Cj4gUmVnYXJkcywNCj4gDQo+IEhhbnMNCg0KWWVzIC0gZXhhY3RseS4NCg==
+
+On 11/10/20 3:29 AM, Hans de Goede wrote:
+> Hi Daniel,
+
+
+Hi Hans,
+
+
+> Quick self intro: I have take over drivers/platform/x86
+> maintainership from Andy; and I'm working my way through
+> the backlog of old patches in patchwork:
+> https://patchwork.kernel.org/project/platform-driver-x86/list/
+
+
+Thanks for the introduction. I believe we have corresponded in the past=20
+regarding other issues. Thank you for following up on this patch set.
+
+
+> On 9/2/20 7:38 PM, Daniel Dadap wrote:
+>> Some upcoming notebook designs utilize display muxes driven by a
+>> pair of ACPI methods, MXDM to query and configure the operational
+>> mode of the mux (integrated only, discrete only, hybrid non-muxed,
+>> hybrid with dynamic mux switching), and MXDS to query and set the
+>> mux state when running in dynamic switch mode.
+>>
+>> Add a vga-switcheroo driver to support switching the mux on systems
+>> with the ACPI MXDM/MXDS interface. The mux mode cannot be changed
+>> dynamically (calling MXDM to change the mode won't have effect until
+>> the next boot, and calling MXDM to read the mux mode returns the
+>> active mode, not the mode that will be enabled on next boot), and
+>> MXDS only works when the mux mode is set to dynamic switch, so this
+>> driver will fail to load when MXDM reports any non-dynamic mode.
+>>
+>> This driver currently only supports systems with Intel integrated
+>> graphics and NVIDIA discrete graphics. It will need to be updated if
+>> designs are developed using the same interfaces which utilize GPUs
+>> from other vendors.
+>>
+>> v2,v3: misc. fixes suggested by Barnab=C3=A1s P=C5=91cze <pobrn@protonma=
+il.com>
+>> v4: misc. changes suggested by Lukas Wunner <lukas@wunner.de>
+> According to the discussion archived here:
+> https://patchwork.kernel.org/project/platform-driver-x86/patch/2020090217=
+3851.224368-1-ddadap@nvidia.com/
+>
+> Andy did a review and you promised a new version, but I don't see
+> a newer version in patchwork. Can you please submit a new version
+> addressing Andy's remarks ? Then I will review and merge the new
+> version.
+>
+> In that discussion you also promised a new version of this patch:
+> https://patchwork.kernel.org/project/platform-driver-x86/patch/2020073120=
+2154.11382-1-ddadap@nvidia.com/
+>
+> So please also submit a new version of that series.
+
+
+You are right. I do have updated versions of those patches, but enough=20
+time has passed that I do not recall if I tested them and failed to=20
+follow up on the e-mail threads, or had yet to test them. So I will test=20
+the updated patches and get them to you. Thanks.
+
+
+> Thanks & Regards,
+>
+> Hans
+>
+>
+>
+>
+>
+>> Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+>> ---
+>>   MAINTAINERS                      |   6 +
+>>   drivers/platform/x86/Kconfig     |   9 ++
+>>   drivers/platform/x86/Makefile    |   2 +
+>>   drivers/platform/x86/mxds-gmux.c | 265 +++++++++++++++++++++++++++++++
+>>   4 files changed, 282 insertions(+)
+>>   create mode 100644 drivers/platform/x86/mxds-gmux.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index eeff55560759..636c9259b345 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -11510,6 +11510,12 @@ L:   linux-usb@vger.kernel.org
+>>   S:   Maintained
+>>   F:   drivers/usb/musb/
+>>
+>> +MXDS GMUX DRIVER
+>> +M:   Daniel Dadap <ddadap@nvidia.com>
+>> +L:   platform-driver-x86@vger.kernel.org
+>> +S:   Supported
+>> +F:   drivers/platform/x86/mxds-gmux.c
+>> +
+>>   MXL301RF MEDIA DRIVER
+>>   M:   Akihiro Tsukada <tskd08@gmail.com>
+>>   L:   linux-media@vger.kernel.org
+>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>> index 0ad7ad8cf8e1..5d00ad1ffc0e 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -1368,6 +1368,15 @@ config INTEL_TELEMETRY
+>>          directly via debugfs files. Various tools may use
+>>          this interface for SoC state monitoring.
+>>
+>> +config MXDS_GMUX
+>> +     tristate "ACPI MXDS Gmux Driver"
+>> +     depends on ACPI_WMI
+>> +     depends on ACPI
+>> +     depends on VGA_SWITCHEROO
+>> +     help
+>> +       This driver provides support for ACPI-driven gmux devices which =
+are
+>> +       present on some notebook designs with hybrid graphics.
+>> +
+>>   endif # X86_PLATFORM_DEVICES
+>>
+>>   config PMC_ATOM
+>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefi=
+le
+>> index 53408d965874..b79000733fae 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -146,3 +146,5 @@ obj-$(CONFIG_INTEL_TELEMETRY)             +=3D intel=
+_telemetry_core.o \
+>>                                           intel_telemetry_pltdrv.o \
+>>                                           intel_telemetry_debugfs.o
+>>   obj-$(CONFIG_PMC_ATOM)                       +=3D pmc_atom.o
+>> +
+>> +obj-$(CONFIG_MXDS_GMUX)                      +=3D mxds-gmux.o
+>> diff --git a/drivers/platform/x86/mxds-gmux.c b/drivers/platform/x86/mxd=
+s-gmux.c
+>> new file mode 100644
+>> index 000000000000..dd7f6edaf0f3
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/mxds-gmux.c
+>> @@ -0,0 +1,265 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * mxds-gmux: vga_switcheroo mux handler for ACPI MXDS muxes
+>> + *
+>> + * Copyright (C) 2020 NVIDIA Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify=
+ it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful, but =
+WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY o=
+r
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licens=
+e for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program; if not, see <http://www.gnu.org/licenses>.
+>> + *
+>> + */
+>> +
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/acpi.h>
+>> +#include <linux/pci.h>
+>> +#include <linux/vga_switcheroo.h>
+>> +#include <linux/delay.h>
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("vga_switcheroo mux handler for ACPI MXDS muxes");
+>> +MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
+>> +
+>> +/*
+>> + * The mux doesn't have its own ACPI HID/CID, or WMI wrapper, so key of=
+f of
+>> + * the WMI wrapper for the related WMAA method for backlight control.
+>> + */
+>> +MODULE_ALIAS("wmi:603E9613-EF25-4338-A3D0-C46177516DB7");
+>> +
+>> +static struct pci_dev *ig_dev, *dg_dev;
+>> +static acpi_handle internal_mux_handle;
+>> +static acpi_handle external_mux_handle;
+>> +
+>> +enum acpi_method {
+>> +     MXDM =3D 0,
+>> +     MXDS,
+>> +     NUM_ACPI_METHODS
+>> +};
+>> +
+>> +static char *acpi_methods[NUM_ACPI_METHODS] =3D {
+>> +     [MXDM] =3D "MXDM",
+>> +     [MXDS] =3D "MXDS",
+>> +};
+>> +
+>> +enum mux_mode_command {
+>> +     MUX_MODE_GET =3D 0,
+>> +};
+>> +
+>> +enum mux_mode {
+>> +     MUX_MODE_DGPU_ONLY =3D 1,
+>> +     MUX_MODE_IGPU_ONLY =3D 2,
+>> +     MUX_MODE_MSHYBRID =3D 3,  /* Dual GPU, mux switched to iGPU */
+>> +     MUX_MODE_DYNAMIC =3D 4,   /* Dual GPU, dynamic mux switching */
+>> +};
+>> +
+>> +/*
+>> + * Call MXDS with argument value 0 to read the current state.
+>> + * When reading, a return value of 1 means iGPU and 2 means dGPU.
+>> + * Call MXDS with bit 0 set to change the current state.
+>> + * When changing state, clear bit 4 for iGPU and set bit 4 for dGPU.
+>> + */
+>> +
+>> +enum mux_state {
+>> +     MUX_STATE_IGPU =3D 1,
+>> +     MUX_STATE_DGPU =3D 2,
+>> +};
+>> +
+>> +enum mux_state_command {
+>> +     MUX_STATE_GET =3D 0,
+>> +     MUX_STATE_SET_IGPU =3D BIT(0),
+>> +     MUX_STATE_SET_DGPU =3D BIT(4) | BIT(0),
+>> +};
+>> +
+>> +static acpi_integer acpi_helper(acpi_handle handle, enum acpi_method me=
+thod,
+>> +                             acpi_integer action)
+>> +{
+>> +     union acpi_object arg =3D {
+>> +             .integer =3D { .type =3D ACPI_TYPE_INTEGER, .value =3D act=
+ion }
+>> +     };
+>> +     struct acpi_object_list in =3D {.count =3D 1, .pointer =3D &arg};
+>> +     acpi_integer ret;
+>> +     acpi_status status;
+>> +
+>> +     status =3D acpi_evaluate_integer(handle, acpi_methods[method], &in=
+, &ret);
+>> +
+>> +     if (ACPI_FAILURE(status)) {
+>> +             pr_err("ACPI %s failed: %s\n", acpi_methods[method],
+>> +                     acpi_format_exception(status));
+>> +             return 0;
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static acpi_integer get_mux_mode(acpi_handle handle)
+>> +{
+>> +     return acpi_helper(handle, MXDM, MUX_MODE_GET);
+>> +}
+>> +
+>> +static acpi_integer get_mux_state(acpi_handle handle)
+>> +{
+>> +     return acpi_helper(handle, MXDS, MUX_STATE_GET);
+>> +}
+>> +
+>> +static void set_mux_state(acpi_handle handle, enum mux_state state)
+>> +{
+>> +     enum mux_state_command command;
+>> +
+>> +     switch (state) {
+>> +     case MUX_STATE_IGPU:
+>> +             command =3D MUX_STATE_SET_IGPU;
+>> +             break;
+>> +     case MUX_STATE_DGPU:
+>> +             command =3D MUX_STATE_SET_DGPU;
+>> +             break;
+>> +     default:
+>> +             return;
+>> +     }
+>> +
+>> +     acpi_helper(handle, MXDS, command);
+>> +}
+>> +
+>> +static int mxds_gmux_switchto(enum vga_switcheroo_client_id id)
+>> +{
+>> +     enum mux_state state;
+>> +
+>> +     switch (id) {
+>> +     case VGA_SWITCHEROO_IGD:
+>> +             state =3D MUX_STATE_IGPU;
+>> +             break;
+>> +     case VGA_SWITCHEROO_DIS:
+>> +             state =3D MUX_STATE_DGPU;
+>> +             break;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     if (internal_mux_handle) {
+>> +             set_mux_state(internal_mux_handle, state);
+>> +             if (get_mux_state(internal_mux_handle) !=3D state)
+>> +                     return -EAGAIN;
+>> +     }
+>> +
+>> +     if (external_mux_handle) {
+>> +             set_mux_state(external_mux_handle, state);
+>> +             if (get_mux_state(external_mux_handle) !=3D state)
+>> +                     return -EAGAIN;
+>> +     }
+>> +
+>> +     /* DP AUX can take up to 100ms to settle after mux switch */
+>> +     mdelay(100);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static enum vga_switcheroo_client_id mxds_gmux_get_client_id(
+>> +     struct pci_dev *dev)
+>> +{
+>> +     if (dev =3D=3D ig_dev)
+>> +             return VGA_SWITCHEROO_IGD;
+>> +     if (dev =3D=3D dg_dev)
+>> +             return VGA_SWITCHEROO_DIS;
+>> +
+>> +     return VGA_SWITCHEROO_UNKNOWN_ID;
+>> +}
+>> +
+>> +static const struct vga_switcheroo_handler handler =3D {
+>> +     .switchto =3D mxds_gmux_switchto,
+>> +     .get_client_id =3D mxds_gmux_get_client_id,
+>> +};
+>> +
+>> +static acpi_status find_acpi_methods(
+>> +     acpi_handle object, u32 nesting_level, void *context,
+>> +     void **return_value)
+>> +{
+>> +     acpi_handle search;
+>> +
+>> +     /* If either MXDM or MXDS is missing, we can't use this object */
+>> +     if (acpi_get_handle(object, "MXDM", &search))
+>> +             return AE_OK;
+>> +     if (acpi_get_handle(object, "MXDS", &search))
+>> +             return AE_OK;
+>> +
+>> +     /* MXDS only works when MXDM indicates dynamic mode */
+>> +     if (get_mux_mode(object) !=3D MUX_MODE_DYNAMIC)
+>> +             return AE_OK;
+>> +
+>> +     /* Internal display has _BCL; external does not */
+>> +     if (acpi_get_handle(object, "_BCL", &search))
+>> +             external_mux_handle =3D object;
+>> +     else
+>> +             internal_mux_handle =3D object;
+>> +
+>> +     return AE_OK;
+>> +}
+>> +
+>> +static int __init mxds_gmux_init(void)
+>> +{
+>> +     int ret =3D 0;
+>> +     struct pci_dev *dev =3D NULL;
+>> +
+>> +     /* Currently only supports Intel integrated and NVIDIA discrete GP=
+Us */
+>> +     while ((dev =3D pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, dev))) {
+>> +             /* Ignore eGPU */
+>> +             if (pci_is_thunderbolt_attached(dev))
+>> +                     continue;
+>> +
+>> +             switch (dev->vendor) {
+>> +             case PCI_VENDOR_ID_INTEL:
+>> +                     pci_dev_put(ig_dev);
+>> +                     ig_dev =3D pci_dev_get(dev);
+>> +                     break;
+>> +             case PCI_VENDOR_ID_NVIDIA:
+>> +                     pci_dev_put(dg_dev);
+>> +                     dg_dev =3D pci_dev_get(dev);
+>> +                     break;
+>> +             default:
+>> +                     break;
+>> +             }
+>> +     }
+>> +
+>> +     /* Require both integrated and discrete GPUs */
+>> +     if (!ig_dev || !dg_dev) {
+>> +             ret =3D -ENODEV;
+>> +             goto done;
+>> +     }
+>> +
+>> +     acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT, ACPI_UINT3=
+2_MAX,
+>> +             find_acpi_methods, NULL, NULL, NULL);
+>> +
+>> +     /* Require at least one mux */
+>> +     if (!internal_mux_handle && !external_mux_handle) {
+>> +             ret =3D -ENODEV;
+>> +             goto done;
+>> +     }
+>> +
+>> +     ret =3D vga_switcheroo_register_handler(&handler, 0);
+>> +
+>> +done:
+>> +
+>> +     if (ret) {
+>> +             pci_dev_put(ig_dev);
+>> +             pci_dev_put(dg_dev);
+>> +     }
+>> +
+>> +     return ret;
+>> +}
+>> +module_init(mxds_gmux_init);
+>> +
+>> +static void __exit mxds_gmux_exit(void)
+>> +{
+>> +     vga_switcheroo_unregister_handler();
+>> +     pci_dev_put(ig_dev);
+>> +     pci_dev_put(dg_dev);
+>> +}
+>> +module_exit(mxds_gmux_exit);
+>>
