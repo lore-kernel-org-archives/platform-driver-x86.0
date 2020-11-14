@@ -2,112 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01069C4742C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Nov 2020 22:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931B7C5519F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Nov 2020 15:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8558D22252
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Nov 2020 22:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N1ZBOw79"
+	by mail.kernel.org (Postfix) with ESMTP id 5525D20639
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Nov 2020 15:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgKMWkO (ORCPT
+        id S1726853AbgKNPB2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Nov 2020 17:40:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgKMWkM (ORCPT
+        Sat, 14 Nov 2020 10:01:28 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.116]:53539 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726522AbgKNPB1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Nov 2020 17:40:12 -0500
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0B9C0613D1;
-        Fri, 13 Nov 2020 14:40:11 -0800 (PST)
-Received: by mail-wr1-x444.google.com with SMTP id p1so11828257wrf.12;
-        Fri, 13 Nov 2020 14:40:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xKudFHJ7NTrvGxc8c99xpuNccdIUwDTSbaq60DduiFo=;
-        b=N1ZBOw79eZcRy9yLNVufX01Tp2tRSMnkLMiOJczGcWdWGyQGKB98D4yoS68T2Cyalu
-         C8/hp3slDiCr2I8BSf5TzV/unPaZKk2/bLY9DpZXVdmbEKFyPX7cLTPPqF0KvGAZI6MY
-         RozxM5tXfirncUayHRoRS6RiVgtjCfcl5FUjH93zmoHwVkm8k2Gdf4QVLj1t0orGTSlh
-         BcF3mX0LOuJIJOB/LhQR2OmjOnVSWcEgSuBcEVnrl7NrIp3b10P6UNkl3o7tawqeCEHt
-         sxgAI6foPa2cXSX7wj8By5HaVy8w5HtRQh58nmSYqv4xQ8mOhZP4vw+dHsczyvH6p11Y
-         ZdAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xKudFHJ7NTrvGxc8c99xpuNccdIUwDTSbaq60DduiFo=;
-        b=FSgfLwMKPd/65cseq2U58CIReyq5mn6NoRtennaoukdxuDtnxDsdn0FS9qHAOUPCpW
-         rv67ebtMDSNKkES0W2DcOUjgKZmjcl9NWAzt4iZyRb9+DuaZU3ahteH43EUhvYQHP005
-         DYsAmTyvqZtg+0b0Pzilo3BldmFWTGtc911zOqBPlXI2CMhkiFX9RpcGoxancVUUuodV
-         0DolhN6pwA7xFSGv2HIjHuhTsrdY0TQe5woCogCTIUFdFfk5pozh5+e3tyKGh3SgChDi
-         GxxveVQpZnvZ34vG8ko7vfL435311Lt4SFFx4akFmkGOBs4midQ5i9dyt8e573nGueBw
-         +WWg==
-X-Gm-Message-State: AOAM5300gFLrZDo2rRp9buy9cvaRkM+MrF2LD/mfpsdwknALz3faj8L6
-        AacFmQJ3TqOckTYMhLyeT3PIQHNh8fc=
-X-Google-Smtp-Source: ABdhPJyoO9AB1J+eCna4qFKpfFnA1J/Ce5QK8vXg7CpeJi+5cmx4Wrj7eHP73keYeTu2R8TgdSI8uA==
-X-Received: by 2002:a5d:690c:: with SMTP id t12mr6038033wru.405.1605307210115;
-        Fri, 13 Nov 2020 14:40:10 -0800 (PST)
-Received: from xws.fritz.box (pd9e5a945.dip0.t-ipconnect.de. [217.229.169.69])
-        by smtp.gmail.com with ESMTPSA id f23sm11206558wmb.43.2020.11.13.14.40.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 14:40:09 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] platform/surface: gpe: Add support for 15" Intel version of Surface Laptop 3
-Date:   Fri, 13 Nov 2020 23:39:35 +0100
-Message-Id: <20201113223935.2073847-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        Sat, 14 Nov 2020 10:01:27 -0500
+Received: from [100.112.133.178] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-b.us-west-2.aws.symcld.net id D2/BF-18625-341FFAF5; Sat, 14 Nov 2020 15:01:23 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleJIrShJLcpLzFFi42JJl3vFpuv8cX2
+  8wcMTkhb7r0tYdC00sFh4/xSrxddvt9kt3hyfzmSxfF8/o0VTZxObxeeOySwWq/e8YLY4c/oS
+  qwOXx6SZM5g9ds66y+7xa9saFo/NK7Q85p0M9Hi/7yqbx5ar7SwenzfJBXBEsWbmJeVXJLBmv
+  Fs5i7Vgt3LFxZ1/2BoYN8l2MXJxCAn8Z5S4MmE+O4Tzg1HixL1m1i5GTg42AW2JLVt+sXUxcn
+  CICMhIfFjrCVLDLNDOJLH62GM2kBphgUSJ2+vus4DUsAioSmw/yQIS5hWwkVj/Yg3YGAkBeYm
+  Zl76zg9icQCVnuh6D1QgJqEjcf7CEDaJeUOLkzCdgcWag+uats5khbAmJgy9eMIOMlxBQkLgz
+  oxBiZILEspd3mCcwCsxC0j0LSfcsJN0LGJlXMZolFWWmZ5TkJmbm6BoaGOgaGhrpGhob6VroJ
+  VbpJumVFuuWpxaX6BrpJZYX6xVX5ibnpOjlpZZsYgTGU0pBC8cOxsOvP+gdYpTkYFIS5f2wen
+  28EF9SfkplRmJxRnxRaU5q8SFGGQ4OJQneCR+AcoJFqempFWmZOcDYhklLcPAoifCygaR5iws
+  Sc4sz0yFSpxgVpcR520ASAiCJjNI8uDZYOrnEKCslzMvIwMAgxFOQWpSbWYIq/4pRnINRSZhX
+  BWQKT2ZeCdz0V0CLmYAWfzBbA7K4JBEhJdXAFFR55HqwQqSdwa7cLw3LinOLZ06+wX1/zXnfi
+  RnXXVrtVufFsbDn7pFW+bvz68+InI3PZ3m8E68qkctfwhjJd63F/8wJJ7fjpfy1s+af0Gk1Nj
+  vg514l2vBIuNG7LdUhYZKGv/jG/2UnHuYuCXgjKvW07ca0/j2bmf9rpV++5vRu+VGZ1XMt+Z1
+  e3Q7b/L0hkNmicVP21qmP7to6ti3zvJAr88WLoWxDgH8CI/9z92m3eDbN5XNTev2MxUZLb+mO
+  /28eLb1mksTZfdg4uHv//4IXtXnpwVZrYmcqnFJYZXCkKMTz9xSDkPOWa68/mB/51p/nvZtAx
+  /nVN4sUX7odlHQ8aTQv2Nr151ob/8llSizFGYmGWsxFxYkABPbfTqIDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-30.tower-346.messagelabs.com!1605366080!52312!1
+X-Originating-IP: [103.30.234.6]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 768 invoked from network); 14 Nov 2020 15:01:23 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-30.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 14 Nov 2020 15:01:23 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 46EE988AE034C2D8B4FC;
+        Sat, 14 Nov 2020 23:01:18 +0800 (CST)
+Received: from banther-ThinkPad-X1-Carbon-Gen-8.home (10.38.56.206) by
+ reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2044.4; Sat, 14 Nov 2020 07:01:15 -0800
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <rjw@rjwysocki.net>, <hdegoede@redhat.com>,
+        <mgross@linux.intel.com>, <linux-acpi@vger.kernel.org>,
+        <mario.limonciello@dell.com>, <eliadevito@gmail.com>,
+        <hadess@hadess.net>, <bberg@redhat.com>,
+        <platform-driver-x86@vger.kernel.org>, <dvhart@infradead.org>
+Subject: [PATCH v2 1/3] Documentation: Add documentation for new platform_profile sysfs attribute
+Date:   Sat, 14 Nov 2020 10:01:00 -0500
+Message-ID: <20201114150102.340618-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.38.56.206]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In addition to a 13" version, there is also a 15" (business) version of
-the Surface Laptop 3 based on Intel CPUs. This version also handles
-wakeup by lid via (unmarked) GPEs, so add support for it as well.
+On modern systems the platform performance, temperature, fan and other
+hardware related characteristics are often dynamically configurable. The
+profile is often automatically adjusted to the load by somei
+automatic-mechanism (which may very well live outside the kernel).
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+These auto platform-adjustment mechanisms often can be configured with
+one of several 'platform-profiles', with either a bias towards low-power
+consumption or towards performance (and higher power consumption and
+thermals).
+
+Introduce a new platform_profile sysfs API which offers a generic API for
+selecting the performance-profile of these automatic-mechanisms.
+
+Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/surface/surface_gpe.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Changes in v2:
+ - updated to rst format
 
-diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
-index 0f44a52d3a9b..e49e5d6d5d4e 100644
---- a/drivers/platform/surface/surface_gpe.c
-+++ b/drivers/platform/surface/surface_gpe.c
-@@ -146,6 +146,18 @@ static const struct dmi_system_id dmi_lid_device_table[] = {
- 		},
- 		.driver_data = (void *)lid_device_props_l4D,
- 	},
-+	{
-+		.ident = "Surface Laptop 3 (Intel 15\")",
-+		.matches = {
-+			/*
-+			 * We match for SKU here due to different variants: The
-+			 * AMD (15") version does not rely on GPEs.
-+			 */
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Laptop_3_1872"),
-+		},
-+		.driver_data = (void *)lid_device_props_l4D,
-+	},
- 	{ }
- };
- 
+ .../ABI/testing/sysfs-platform_profile.rst    | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform_profile.rst
+
+diff --git a/Documentation/ABI/testing/sysfs-platform_profile.rst b/Documentation/ABI/testing/sysfs-platform_profile.rst
+new file mode 100644
+index 000000000000..5f7b2a94409b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform_profile.rst
+@@ -0,0 +1,66 @@
++=======================================================================
++ Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)
++=======================================================================
++
++
++On modern systems the platform performance, temperature, fan and other
++hardware related characteristics are often dynamically configurable. The
++profile is often automatically adjusted to the load by some
++automatic mechanism (which may very well live outside the kernel).
++
++These auto platform adjustment mechanisms often can be configured with
++one of several platform profiles, with either a bias towards low power
++operation or towards performance.
++
++The purpose of the platform_profile attribute is to offer a generic sysfs
++API for selecting the platform profile of these automatic mechanisms.
++
++Note that this API is only for selecting the platform profile, it is
++NOT a goal of this API to allow monitoring the resulting performance
++characteristics. Monitoring performance is best done with device/vendor
++specific tools such as e.g. turbostat.
++
++Specifically when selecting a high performance profile the actual achieved
++performance may be limited by various factors such as: the heat generated
++by other components, room temperature, free air flow at the bottom of a
++laptop, etc. It is explicitly NOT a goal of this API to let userspace know
++about any sub-optimal conditions which are impeding reaching the requested
++performance level.
++
++Since numbers on their own cannot represent the multiple variables that a
++profile will adjust (power consumption, heat generation, etc) this API
++uses strings to describe the various profiles. To make sure that userspace
++gets a consistent experience this API document defines a fixed set of
++profile names. Drivers *must* map their internal profile representation
++onto this fixed set.
++
++
++If there is no good match when mapping then a new profile name may be
++added. Drivers which wish to introduce new profile names must:
++
++ 1. Explain why the existing profile names canot be used.
++ 2. Add the new profile name, along with a clear description of the
++    expected behaviour, to the documentation.
++
++:What:        /sys/firmware/acpi/platform_profile_choices
++:Date:        October 2020
++:Contact:     Hans de Goede <hdegoede@redhat.com>
++:Description: This file contains a space-separated list of profiles supported for this device.
++
++              Drivers must use the following standard profile-names::
++
++         		 low-power:     Low power consumption
++         		 cool:          Cooler operation
++		         quiet:         Quieter operation
++		         balanced:      Balance between low power consumption and performance
++		         performance:   High performance operation
++
++              Userspace may expect drivers to offer more than one of these
++              standard profile names.
++
++:What:        /sys/firmware/acpi/platform_profile
++:Date:        October 2020
++:Contact:     Hans de Goede <hdegoede@redhat.com>
++:Description: Reading this file gives the current selected profile for this
++              device. Writing this file with one of the strings from
++              available_profiles changes the profile to the new value.
 -- 
-2.29.2
+2.25.1
 
