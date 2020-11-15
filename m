@@ -2,64 +2,64 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4586AC63699
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF0DC63777
 	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Nov 2020 19:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 086E722450
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Nov 2020 19:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8782417E
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Nov 2020 19:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yc+wgqVB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhiLO+sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbgKOTWB (ORCPT
+        id S1727731AbgKOTWH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 15 Nov 2020 14:22:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
+        Sun, 15 Nov 2020 14:22:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgKOTWA (ORCPT
+        with ESMTP id S1727669AbgKOTWG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 15 Nov 2020 14:22:00 -0500
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A57C0613CF;
-        Sun, 15 Nov 2020 11:21:59 -0800 (PST)
-Received: by mail-wm1-x344.google.com with SMTP id 19so21897213wmf.1;
-        Sun, 15 Nov 2020 11:21:59 -0800 (PST)
+        Sun, 15 Nov 2020 14:22:06 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB25C0613D1;
+        Sun, 15 Nov 2020 11:22:06 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id s8so16452027wrw.10;
+        Sun, 15 Nov 2020 11:22:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wc51ToP9rIJLdE4S264aWwV+0F/rJ9b6GGconRzHNdc=;
-        b=Yc+wgqVBueyUw7r8XNWRa2Z4anTRRsNIOTia306jrfJNSeM8fCt5F5QTqksZ8Q/MJ/
-         7vLoZ7BcBSPBsuCXlGTJ7NZVCndBljuPqVqRQYet3OEUgrCgr3xyMnx4FRpB/7aPrjRI
-         W6c0oPrN1faY/YRtbp9bNd2odBWRCbrCP1zmZjsNwiNzEZwnwwObxliHWT2baFlN5GYo
-         Zq1ITr8tWwUS0o5tMtCcxIC/ymbX6VElf1P05DrUfWJaAQ5/b90jcY8s5j5u0TRGdxlV
-         7AEB0k0CLk3V8XTuZmXiAkN7ONzemSzW2d2Mrqa9xwwCiATywHTCFUE13VfdSJG+jfxt
-         W8Gw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hmke5hD5ixk6/oJQn6iEQf5E+iJzWp8ycd7dsyeT46o=;
+        b=ZhiLO+sPnZ9sX0b2Ib8QXU9k1bP7EGPYbGDJo9XtPpX/IPWT+1oIBPR2tg1fvUXrDJ
+         RKKVqeZuLSyPt3KbGUmxzvrhywIdBoRy0Dvo1ArwdWao5b4jG228XwEeaol3VsL4omom
+         wftnBXFCoQ3xJ+GzaZ6sH6TdHoh/SJ+8/KmhJlN2FAngSicUpnY5VobKzTIbXgqQI0pJ
+         QhgO8H8/dqseWuk1PJGHBjty1zQhQ7uFwgake7RTJxAXL+TWMoNuKDAMWdwf6OzeFPRH
+         +YjopWkEoMSb3KPgJC/10GxpPAB7W3RXv1McFlyP9016pUmfB6+ivXk0mQZdg2m3WBxJ
+         w9YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Wc51ToP9rIJLdE4S264aWwV+0F/rJ9b6GGconRzHNdc=;
-        b=NjfTA2nqZ00IAFtv3m5pGCvZ6s53+AD9uIBIK5dFWIEchs2z15Yhv25ujHSVSy7ixj
-         74mlbr4XfdqKKUscH6XtN4FYu99u0v2wuGjGUN0h4Pe6rszaCmli83iPohpoJXxINmrF
-         u3KoMtdQWk5gPMkcHn/feJt3UF7OwT1Eqr6XOEJvCj+PIpULBZu6vaM3nqtfrb8AV7WY
-         l2eep1EjWNeD5wWt9gu/0lFFRhzhyoXzG0kMgUGYHl7c5UKzPycsp4i5F7bSe71XPxuC
-         K7QCUlo0UHd/lK6EgopWs4tRbrKYwI9sF7r+nZ/U1tlq0lmwPxqMto8wC+TwIq6mpwaf
-         q8HA==
-X-Gm-Message-State: AOAM531vPTjhWy8iKRq1q+aNW0OY5hRcVb6lRd54+8TqqRptyBnnIjvv
-        wfPIp2PINUCCeFftBSPXX/Xwmd7xWiI=
-X-Google-Smtp-Source: ABdhPJxVgS/7ba9gw4kOXX8JdVearoD6aRgcW5CelbZTgwpkkaIwTjCHNvY1xN1mBqiBN/A/eYWTog==
-X-Received: by 2002:a05:600c:210:: with SMTP id 16mr11736650wmi.122.1605468117865;
-        Sun, 15 Nov 2020 11:21:57 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Hmke5hD5ixk6/oJQn6iEQf5E+iJzWp8ycd7dsyeT46o=;
+        b=XupGh+GTqa3Y5gmHwhG3HTAMdSm7IRnt25lq06RWHhP88jAcDpdsIhs0lcozXJKz0i
+         xvwhsgF6+l8Aj8ZJwg65vonSHIuGWfzEQGioj+xUUuZ++qR2vokczIgJuk17su4OTmqI
+         wXR7l7rxMjYGdLXj7Gk4Hvr2B9wUJxOx0UnahhzNnNhGHz+mZ41WJaqAsPEjIaXK0VBQ
+         wCZ75oIv560jl2oC6WGQDIp/sAJqjQGrEU6ehX1GTwe+Ce90McmpDmvGsmbbxbr7hsof
+         bg1vn0QYJyjefezHp9W6AI6ZiIKaZMUz2MEzO5SI39WVVs75umqCtYmEqzNNVq14dW6t
+         J82Q==
+X-Gm-Message-State: AOAM532fsnQmJadFHX7S6ydAsEU49D5X8gjEys98P1TC38Ntyg4SFpE3
+        jMsLIyJddh0+C161dkKO1CSrBFvlzxg=
+X-Google-Smtp-Source: ABdhPJyCY8ANAD0p8S1GqvjGMUQYPEwHwYN2qBaEXBgUJOnD1QkdUs74DImRSnk7pqpPWcx51uhSIg==
+X-Received: by 2002:a5d:5446:: with SMTP id w6mr15410212wrv.122.1605468124830;
+        Sun, 15 Nov 2020 11:22:04 -0800 (PST)
 Received: from xws.fritz.box (p5487b28b.dip0.t-ipconnect.de. [84.135.178.139])
-        by smtp.gmail.com with ESMTPSA id u8sm17106600wmg.6.2020.11.15.11.21.55
+        by smtp.gmail.com with ESMTPSA id u8sm17106600wmg.6.2020.11.15.11.22.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Nov 2020 11:21:57 -0800 (PST)
+        Sun, 15 Nov 2020 11:22:04 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
@@ -67,281 +67,227 @@ Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
         Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 0/9] Add support for Microsoft Surface System Aggregator Module
-Date:   Sun, 15 Nov 2020 20:21:34 +0100
-Message-Id: <20201115192143.21571-1-luzmaximilian@gmail.com>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 3/9] platform/surface: aggregator: Add event item allocation caching
+Date:   Sun, 15 Nov 2020 20:21:37 +0100
+Message-Id: <20201115192143.21571-4-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201115192143.21571-1-luzmaximilian@gmail.com>
+References: <20201115192143.21571-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello,
+Event items are used for completing Surface Aggregator EC events, i.e.
+placing event command data and payload on a workqueue for later
+processing to avoid doing said processing directly on the receiver
+thread. This means that event items are allocated for each incoming
+event, regardless of that event being transmitted via sequenced or
+unsequenced packets.
 
-  N.B.: the following text is mostly a repeat of cover letter from the
-  previous RFC for the uninitiated, which can be found at
+On the Surface Book 3 and Surface Laptop 3, touchpad HID input events
+(unsequenced), can constitute a larger amount of traffic, and therefore
+allocation of event items. This warrants caching event items to reduce
+memory fragmentation. The size of the cached objects is specifically
+tuned to accommodate keyboard and touchpad input events and their
+payloads on those devices. As a result, this effectively also covers
+most other event types. In case of a larger event payload, event item
+allocation will fall back to kzalloc().
 
-  https://lore.kernel.org/linux-serial/20200923151511.3842150-1-luzmaximilian@gmail.com/
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ .../platform/surface/aggregator/controller.c  | 84 +++++++++++++++++--
+ .../platform/surface/aggregator/controller.h  |  9 ++
+ drivers/platform/surface/aggregator/core.c    | 16 +++-
+ 3 files changed, 100 insertions(+), 9 deletions(-)
 
-  See "Changes" below for an overview of differences between the RFC and
-  this patchset. I hope I have addressed all comments from that in this
-  version, thank you again for those.
-
-The Surface System Aggregator Module (we'll refer to it as Surface
-Aggregator or SAM below) is an embedded controller (EC) found on various
-Microsoft Surface devices. Specifically, all 4th and later generation
-Surface devices, i.e. Surface Pro 4, Surface Book 1 and later, with the
-exception of the Surface Go series and the Surface Duo. Notably, it
-seems like this EC can also be found on the ARM-based Surface Pro X [1].
-
-Functionality provided by this EC depends on the Surface model and can
-(roughly) be broken down by their generations: Starting with 5th
-generation devices (Surface Pro 2017/5, Surface Book 2, Surface Laptop
-1, and later), the EC provides battery and thermal readings, as well as
-access to the real-time clock. On 5th and 6th generations, these
-features, specifically, are provided via the ACPI interface of the EC,
-referred to as Surface ACPI Notify (SAN), i.e. they act as standard ACPI
-devices of that type, but require a driver translating requests written
-to an ACPI operation region to requests to the EC. On 7th generation
-devices, the ACPI interface is (largely) gone, and has been replaced
-with custom battery and thermal drivers, directly querying the EC.
-
-Additionally, HID keyboard and touchpad input for Surface models with
-these devices built in can be handled via the EC: On the Surface Laptops
-1 and 2, this includes only the keyboard, while on the Surface Laptop 3
-and Book 3, this includes both touchpad and keyboard. In this case,
-actual input is provided as HID data and the EC connection acts as HID
-transport, thus requiring a special transport driver for those devices
-to work.
-
-Further, all known devices (5th and later generations) also support
-changing of performance/cooling modes, which can influence cooling
-capabilities of the device (e.g. prefer silent operation over
-performance), and may influence power limits (e.g. of the discrete GPU
-found on Surface Books).
-
-While this constitutes all major functionality, some more device
-specific functionality is also handled by the EC. For example, on the
-Surface Books, the EC handles detaching of the clipboard (i.e. the upper
-part with screen and CPU) from the base (the lower part with keyboard
-and optional discrete GPU) and can influence its behavior (i.e. it
-provides an interface via which detachment can be requested, aborted, or
-confirmed). It can also be used to detect if there has been a base
-attached to the clipboard, and if so what type.
-
-This patch-series adds the basis for supporting this EC and the features
-provided by it, by, first, implementing a communication driver providing
-a fundamental API for client drivers, handling specific aspects of the
-EC. Additionally, it builds on top of that to provide a dedicated bus
-and device type to better manage EC clients (and break it down pseudo-
-device-wise), especially in the case when these client devices are not
-described in ACPI, i.e. cannot be discovered by conventional means.
-Furthermore, it provides support for debugging and prototyping via an
-optional user-space interface, and, lastly, also support for the
-aforementioned ACPI interface, allowing ACPI to communicate with the EC
-directly.
-
-This series only addresses 5th and later generation Surface models as
-the communication interface has changed substantially from 4th to 5th
-generation, and the 4th generation interface has not been reverse-
-engineered yet. Specifically, the underlying transport has been changed
-from HID feature and input-/output-reports to serial communication via
-an UART and a custom protocol. Support for 4th generation devices may be
-added in the future, but as currently not much is known about 4th
-generation SAM, it yet remains to be seen if this can happen as addition
-to this subsystem, or if it will be easier to implement this as separate
-platform driver. Especially as the 4th generation EC does not seem to
-provide much of the functionality found on 5th and later generations
-(e.g. no battery status reporting, no thermal reporting, ..., we assume
-it's just clipboard detachment on the Surface Book 1 and performance
-mode setting).
-
-In more detail, this series adds a driver for the Surface Serial Hub
-(SSH), the 5th- and later-generation communication channel to the EC, a
-pseudo-device and driver exposing a misc-device that can be used to
-communicate with the EC from user-space, intended for debugging,
-testing, and prototyping, as well as a driver for the Surface ACPI
-Notify (SAN) device, i.e. the interface between ACPI and EC. Some more
-details on those can be found on the individual commit messages.
-
-This series, apart from the SAN and user-space drivers, does not add any
-client drivers. This will be handled via future patches once the core
-has been accepted (and the other client drivers have been cleaned up a
-bit).
-
-On the top level, EC communication via the SSH driver can be broken down
-into requests (sent from host to EC), corresponding responses (sent from
-EC to host, associated with and triggered by a request), and events
-(sent from EC to host without association to a request). The SSH driver
-manages all communication (i.e. matches responses to requests, enables
-and disables events, and manages event handlers/notifiers installed by
-client drivers). On the lower levels, SSH communication is packet-based,
-and described in more detail in the documentation added in this series
-(specifically ssh.rst).
-
-This set of modules and drivers has been developed out of tree at [2]
-and used/tested in the kernel we provide at [3] pretty much since its
-beginnings. It has been developed by reverse-engineering the SSH
-protocol, mostly through the ACPI interface, communication dumps
-obtained from listening in on Windows, and deduction. So things may be
-wrong. There have been some attempts at reverse-engineering existing
-drivers, which also gave a bit of insight for development, however, I
-haven't gotten very far on that front beyond some more higher-level
-concepts and detecting a couple of new EC commands/confirming the
-functionality of already known commands.
-
-Driver and module names have been chosen to align with Windows driver
-names, some field, variable, and concept names have been chosen to align
-with ACPI code (or at least with what I think some of the more cryptic
-names could mean and make sense in the respective context, e.g. IID ->
-Instance ID, TC -> Target Category).
-
-This patch-set can also be found at the following repository and
-reference, if you prefer to look at a kernel tree instead of these
-emails:
-
-  https://github.com/linux-surface/kernel tags/s/surface-aggregator/v1
-
-Thanks,
-Max
-
-[1]: The Surface Pro X is, however, currently considered unsupported due
-     to a lack of test candidates and, as it seems, general lack of
-     Linux support on other parts. AFAIK there is an issue preventing
-     serial devices from being registered, on which the core driver in
-     this series is build on, thus there is no way to even test that at
-     this point. I'd be happy to work out any issues regarding SAM on
-     the Pro X at some point in the future, provided someone can/wants
-     to actually test it.
-
-[2]: https://github.com/linux-surface/surface-aggregator-module
-[3]: https://github.com/linux-surface/linux-surface
-
-
-Note: This patch depends on
-
-  [PATCH v4] platform/surface: Create a platform subdirectory for
-             Microsoft Surface devices
-
-which can be found at
-
-  https://lore.kernel.org/platform-driver-x86/20201009141128.683254-1-luzmaximilian@gmail.com/
-
-and is currently in platform-drivers-x86/for-next.
-
-
-Changes from the previous RFC (overview):
- - move to platform/surface
- - add copyright lines
- - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
- - change user-space interface from debugfs to misc-device
- - address issues in user-space interface
- - fix typos in commit messages and documentation
- - fix some bugs, address other issues
-
-Changes regarding specific patches (and more details) can be found on
-the individual patch.
-
-
-Maximilian Luz (9):
-  platform/surface: Add Surface Aggregator subsystem
-  platform/surface: aggregator: Add control packet allocation caching
-  platform/surface: aggregator: Add event item allocation caching
-  platform/surface: aggregator: Add trace points
-  platform/surface: aggregator: Add error injection capabilities
-  platform/surface: aggregator: Add dedicated bus and device type
-  docs: driver-api: Add Surface Aggregator subsystem documentation
-  platform/surface: Add Surface Aggregator user-space interface
-  platform/surface: Add Surface ACPI Notify driver
-
- Documentation/driver-api/index.rst            |    1 +
- .../surface_aggregator/client-api.rst         |   38 +
- .../driver-api/surface_aggregator/client.rst  |  394 +++
- .../surface_aggregator/clients/cdev.rst       |   85 +
- .../surface_aggregator/clients/index.rst      |   21 +
- .../surface_aggregator/clients/san.rst        |   44 +
- .../driver-api/surface_aggregator/index.rst   |   21 +
- .../surface_aggregator/internal-api.rst       |   67 +
- .../surface_aggregator/internal.rst           |   50 +
- .../surface_aggregator/overview.rst           |   76 +
- .../driver-api/surface_aggregator/ssh.rst     |  343 +++
- MAINTAINERS                                   |   13 +
- drivers/platform/surface/Kconfig              |   39 +
- drivers/platform/surface/Makefile             |    3 +
- drivers/platform/surface/aggregator/Kconfig   |   65 +
- drivers/platform/surface/aggregator/Makefile  |   17 +
- drivers/platform/surface/aggregator/bus.c     |  424 +++
- drivers/platform/surface/aggregator/bus.h     |   27 +
- .../platform/surface/aggregator/controller.c  | 2557 +++++++++++++++++
- .../platform/surface/aggregator/controller.h  |  288 ++
- drivers/platform/surface/aggregator/core.c    |  831 ++++++
- .../platform/surface/aggregator/ssh_msgb.h    |  201 ++
- .../surface/aggregator/ssh_packet_layer.c     | 2009 +++++++++++++
- .../surface/aggregator/ssh_packet_layer.h     |  175 ++
- .../platform/surface/aggregator/ssh_parser.c  |  229 ++
- .../platform/surface/aggregator/ssh_parser.h  |  157 +
- .../surface/aggregator/ssh_request_layer.c    | 1254 ++++++++
- .../surface/aggregator/ssh_request_layer.h    |  142 +
- drivers/platform/surface/aggregator/trace.h   |  625 ++++
- .../platform/surface/surface_acpi_notify.c    |  884 ++++++
- .../surface/surface_aggregator_cdev.c         |  299 ++
- include/linux/mod_devicetable.h               |   18 +
- include/linux/surface_acpi_notify.h           |   39 +
- include/linux/surface_aggregator/controller.h |  832 ++++++
- include/linux/surface_aggregator/device.h     |  430 +++
- include/linux/surface_aggregator/serial_hub.h |  659 +++++
- include/uapi/linux/surface_aggregator/cdev.h  |   58 +
- scripts/mod/devicetable-offsets.c             |    8 +
- scripts/mod/file2alias.c                      |   23 +
- 39 files changed, 13446 insertions(+)
- create mode 100644 Documentation/driver-api/surface_aggregator/client-api.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/client.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/clients/cdev.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/clients/index.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/clients/san.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/index.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/internal-api.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/internal.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/overview.rst
- create mode 100644 Documentation/driver-api/surface_aggregator/ssh.rst
- create mode 100644 drivers/platform/surface/aggregator/Kconfig
- create mode 100644 drivers/platform/surface/aggregator/Makefile
- create mode 100644 drivers/platform/surface/aggregator/bus.c
- create mode 100644 drivers/platform/surface/aggregator/bus.h
- create mode 100644 drivers/platform/surface/aggregator/controller.c
- create mode 100644 drivers/platform/surface/aggregator/controller.h
- create mode 100644 drivers/platform/surface/aggregator/core.c
- create mode 100644 drivers/platform/surface/aggregator/ssh_msgb.h
- create mode 100644 drivers/platform/surface/aggregator/ssh_packet_layer.c
- create mode 100644 drivers/platform/surface/aggregator/ssh_packet_layer.h
- create mode 100644 drivers/platform/surface/aggregator/ssh_parser.c
- create mode 100644 drivers/platform/surface/aggregator/ssh_parser.h
- create mode 100644 drivers/platform/surface/aggregator/ssh_request_layer.c
- create mode 100644 drivers/platform/surface/aggregator/ssh_request_layer.h
- create mode 100644 drivers/platform/surface/aggregator/trace.h
- create mode 100644 drivers/platform/surface/surface_acpi_notify.c
- create mode 100644 drivers/platform/surface/surface_aggregator_cdev.c
- create mode 100644 include/linux/surface_acpi_notify.h
- create mode 100644 include/linux/surface_aggregator/controller.h
- create mode 100644 include/linux/surface_aggregator/device.h
- create mode 100644 include/linux/surface_aggregator/serial_hub.h
- create mode 100644 include/uapi/linux/surface_aggregator/cdev.h
-
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index fed5b069489c..1c7d2d7b29f7 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -535,14 +535,74 @@ static void ssam_nf_destroy(struct ssam_nf *nf)
+ 
+ #define SSAM_CPLT_WQ_NAME	"ssam_cpltq"
+ 
++/*
++ * SSAM_EVENT_ITEM_CACHE_PAYLOAD_LEN - Maximum payload length for a cached
++ * &struct ssam_event_item.
++ *
++ * This length has been chosen to be accommodate standard touchpad and
++ * keyboard input events. Events with larger payloads will be allocated
++ * separately.
++ */
++#define SSAM_EVENT_ITEM_CACHE_PAYLOAD_LEN	32
++
++static struct kmem_cache *ssam_event_item_cache;
++
++/**
++ * ssam_event_item_cache_init() - Initialize the event item cache.
++ */
++int ssam_event_item_cache_init(void)
++{
++	const unsigned int size = sizeof(struct ssam_event_item)
++				  + SSAM_EVENT_ITEM_CACHE_PAYLOAD_LEN;
++	const unsigned int align = __alignof__(struct ssam_event_item);
++	struct kmem_cache *cache;
++
++	cache = kmem_cache_create("ssam_event_item", size, align, 0, NULL);
++	if (!cache)
++		return -ENOMEM;
++
++	ssam_event_item_cache = cache;
++	return 0;
++}
++
++/**
++ * ssam_event_item_cache_destroy() - Deinitialize the event item cache.
++ */
++void ssam_event_item_cache_destroy(void)
++{
++	kmem_cache_destroy(ssam_event_item_cache);
++	ssam_event_item_cache = NULL;
++}
++
++static void __ssam_event_item_free_cached(struct ssam_event_item *item)
++{
++	kmem_cache_free(ssam_event_item_cache, item);
++}
++
++static void __ssam_event_item_free_generic(struct ssam_event_item *item)
++{
++	kfree(item);
++}
++
++/**
++ * ssam_event_item_free() - Free the provided event item.
++ * @item: The event item to free.
++ */
++static void ssam_event_item_free(struct ssam_event_item *item)
++{
++	item->ops.free(item);
++}
++
+ /**
+  * ssam_event_item_alloc() - Allocate an event item with the given payload size.
+  * @len:   The event payload length.
+  * @flags: The flags used for allocation.
+  *
+- * Allocate an event item with the given payload size. Sets the item
+- * operations and payload length values. The item free callback (``ops.free``)
+- * should not be overwritten after this call.
++ * Allocate an event item with the given payload size, preferring allocation
++ * from the event item cache if the payload is small enough (i.e. smaller than
++ * %SSAM_EVENT_ITEM_CACHE_PAYLOAD_LEN). Sets the item operations and payload
++ * length values. The item free callback (``ops.free``) should not be
++ * overwritten after this call.
+  *
+  * Return: Returns the newly allocated event item.
+  */
+@@ -550,9 +610,19 @@ static struct ssam_event_item *ssam_event_item_alloc(size_t len, gfp_t flags)
+ {
+ 	struct ssam_event_item *item;
+ 
+-	item = kzalloc(sizeof(*item) + len, GFP_KERNEL);
+-	if (!item)
+-		return NULL;
++	if (len <= SSAM_EVENT_ITEM_CACHE_PAYLOAD_LEN) {
++		item = kmem_cache_alloc(ssam_event_item_cache, GFP_KERNEL);
++		if (!item)
++			return NULL;
++
++		item->ops.free = __ssam_event_item_free_cached;
++	} else {
++		item = kzalloc(sizeof(*item) + len, GFP_KERNEL);
++		if (!item)
++			return NULL;
++
++		item->ops.free = __ssam_event_item_free_generic;
++	}
+ 
+ 	item->event.length = len;
+ 	return item;
+@@ -714,7 +784,7 @@ static void ssam_event_queue_work_fn(struct work_struct *work)
+ 			return;
+ 
+ 		ssam_nf_call(nf, dev, item->rqid, &item->event);
+-		kfree(item);
++		ssam_event_item_free(item);
+ 	}
+ 
+ 	if (!ssam_event_queue_is_empty(queue))
+diff --git a/drivers/platform/surface/aggregator/controller.h b/drivers/platform/surface/aggregator/controller.h
+index 7688cbc7d0ae..96e2b87a25d9 100644
+--- a/drivers/platform/surface/aggregator/controller.h
++++ b/drivers/platform/surface/aggregator/controller.h
+@@ -81,12 +81,18 @@ struct ssam_cplt;
+  * struct ssam_event_item - Struct for event queuing and completion.
+  * @node:     The node in the queue.
+  * @rqid:     The request ID of the event.
++ * @ops:      Instance specific functions.
++ * @ops.free: Callback for freeing this event item.
+  * @event:    Actual event data.
+  */
+ struct ssam_event_item {
+ 	struct list_head node;
+ 	u16 rqid;
+ 
++	struct {
++		void (*free)(struct ssam_event_item *event);
++	} ops;
++
+ 	struct ssam_event event;	// must be last
+ };
+ 
+@@ -276,4 +282,7 @@ int ssam_ctrl_notif_d0_entry(struct ssam_controller *ctrl);
+ int ssam_controller_suspend(struct ssam_controller *ctrl);
+ int ssam_controller_resume(struct ssam_controller *ctrl);
+ 
++int ssam_event_item_cache_init(void);
++void ssam_event_item_cache_destroy(void);
++
+ #endif /* _SURFACE_AGGREGATOR_CONTROLLER_H */
+diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+index 5c01d598a479..733a7d46ee07 100644
+--- a/drivers/platform/surface/aggregator/core.c
++++ b/drivers/platform/surface/aggregator/core.c
+@@ -782,12 +782,23 @@ static int __init ssam_core_init(void)
+ 
+ 	status = ssh_ctrl_packet_cache_init();
+ 	if (status)
+-		return status;
++		goto err_cpkg;
++
++	status = ssam_event_item_cache_init();
++	if (status)
++		goto err_evitem;
+ 
+ 	status = serdev_device_driver_register(&ssam_serial_hub);
+ 	if (status)
+-		ssh_ctrl_packet_cache_destroy();
++		goto err_register;
+ 
++	return 0;
++
++err_register:
++	ssam_event_item_cache_destroy();
++err_evitem:
++	ssh_ctrl_packet_cache_destroy();
++err_cpkg:
+ 	return status;
+ }
+ module_init(ssam_core_init);
+@@ -795,6 +806,7 @@ module_init(ssam_core_init);
+ static void __exit ssam_core_exit(void)
+ {
+ 	serdev_device_driver_unregister(&ssam_serial_hub);
++	ssam_event_item_cache_destroy();
+ 	ssh_ctrl_packet_cache_destroy();
+ }
+ module_exit(ssam_core_exit);
 -- 
 2.29.2
 
