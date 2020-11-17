@@ -2,198 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88687C2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 17:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF85C5519F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 18:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19C7E2083E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 17:42:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cn9yXj7C"
+	by mail.kernel.org (Postfix) with ESMTP id D90342467A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 18:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgKQRm0 (ORCPT
+        id S1730927AbgKQS34 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Nov 2020 12:42:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbgKQRmZ (ORCPT
+        Tue, 17 Nov 2020 13:29:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:38826 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727552AbgKQS34 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Nov 2020 12:42:25 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DB3C0613CF;
-        Tue, 17 Nov 2020 09:42:25 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id u12so16822661wrt.0;
-        Tue, 17 Nov 2020 09:42:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KDI7lr583mEBfJf9QwRjZPAan5mYy9Q2XyrZiSclGR4=;
-        b=cn9yXj7COy/0rOXG9U778HpQ8za2IqSo9OK7YaILh62R7kukeYpNSipaI0EvqDrSX4
-         zVlAgygDbzBCGI6l0I2/o9qE4Xn1dyz0f8FZbHfoky9on5QWB52rIBnUnxf443ueMRZ+
-         8mMJepDFFd5cNKxpNbosxG8oNheRhfQX7+P7eyDZQFdD9+z5tfVP80Gxn/bmdUx0KObE
-         aCim7TTMw+E3oGVGoibOmmruKhQm48AFbxz6MqbcjEzt5DxOb3aV6jZzkl0p2VZm4by2
-         FPCZ4AzjWa5c6SLnUznXoV0M7wHVbjQkx5Bq42iyDSVAqP7GG7Z+p4f7YVePcLsrJHB2
-         wXSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KDI7lr583mEBfJf9QwRjZPAan5mYy9Q2XyrZiSclGR4=;
-        b=DCCYKbakt9fNG7Wq0xtpukwzRQNfkacv5YkXVKFcpZLB+IX61mJAVgPiFBpWc+xJEz
-         kNh3C1XKeRWfqXFSapAwMTazcge/Od02kTbnLNebFpkH5KStHcrP7sC/igvNvPpqsI5t
-         XA0qPug7wA8JMWvw/VRz4mFD81Bnu+/5XdDW1wKu47SVy8QBg4K55djxFIaRo2nq6QFm
-         HUmTrH93Fc/BQQB3LggmrtO91XrR2wDbzPNfvZw0D2Mlv7oOgFJe9VQnu2xuipQhd893
-         492Eo0341f4Nr87Fdhgx6pKK1f1RQ53xKZL3moo/HXbVQKHNtHKT3FlNGMoN1rkDm3Jy
-         ugZw==
-X-Gm-Message-State: AOAM530b2vB9SxvMFEDCgS2/sZ2vFoXSyfrGFNOi3WxXRE0dJ+Tg5yHj
-        R/G9fm0n9QSTb35rvjZQZjNOfvaV8rs=
-X-Google-Smtp-Source: ABdhPJwr9nFlQK6RGzbHlL+BMvLqCz0Hd1zz9xmu/gsRrg3rJdczZFszfl0ONfLpG1YgLOzfB74URw==
-X-Received: by 2002:a5d:6a83:: with SMTP id s3mr614903wru.397.1605634943556;
-        Tue, 17 Nov 2020 09:42:23 -0800 (PST)
-Received: from [192.168.2.202] (pd9e5afac.dip0.t-ipconnect.de. [217.229.175.172])
-        by smtp.gmail.com with ESMTPSA id a18sm4427352wme.18.2020.11.17.09.42.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Nov 2020 09:42:22 -0800 (PST)
-Subject: Re: [PATCH 4/9] platform/surface: aggregator: Add trace points
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Tue, 17 Nov 2020 13:29:56 -0500
+IronPort-SDR: clbDYXNjeA//uF0zpld3OH2bgnuWR1IquFYlhA2/8udJ3BdbVh/lhcFLyiU+Sec1edR/TWv/+V
+ RYxmeXC73nWQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9808"; a="158013858"
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="158013858"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 10:29:52 -0800
+IronPort-SDR: cEInBk2OrWdvd1dUPcjaL7srNnC/CGuisYnaZJjoAGdvqMaAuPAX+K78AOJbfxoLoAPNby5txb
+ ESW0SvKoDkgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
+   d="scan'208";a="532317905"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Nov 2020 10:29:51 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
+        by linux.intel.com (Postfix) with ESMTP id 59CD15801CF;
+        Tue, 17 Nov 2020 10:29:51 -0800 (PST)
+Message-ID: <ed41e77dd19971faf01b3062c5e25e7ed8ed69db.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: pmt: Fix a potential Oops on error in
+ probe
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org
-References: <20201115192143.21571-1-luzmaximilian@gmail.com>
- <20201115192143.21571-5-luzmaximilian@gmail.com>
- <20201117114411.30af7078@gandalf.local.home>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <cff66ef4-9a26-69df-ee03-b6b36ab6943b@gmail.com>
-Date:   Tue, 17 Nov 2020 18:42:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Lee Jones <lee.jones@linaro.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Tue, 17 Nov 2020 10:29:51 -0800
+In-Reply-To: <20201117072251.GC1111239@mwanda>
+References: <20201117072251.GC1111239@mwanda>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20201117114411.30af7078@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/17/20 5:44 PM, Steven Rostedt wrote:
-> On Sun, 15 Nov 2020 20:21:38 +0100
-> Maximilian Luz <luzmaximilian@gmail.com> wrote:
+Thanks Dan.
 
-[...]
+Reviewed-by: David E. Box <david.e.box@linux.intel.com>
 
->>   	/*
->>   	 * Lock packet and commit with memory barrier. If this packet has
->>   	 * already been locked, it's going to be removed and completed by
->> @@ -1154,6 +1167,8 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
->>   	ktime_t next = KTIME_MAX;
->>   	bool resub = false;
->>   
->> +	trace_ssam_ptl_timeout_reap("pending", atomic_read(&ptl->pending.count));
+On Tue, 2020-11-17 at 10:22 +0300, Dan Carpenter wrote:
+> The "ns->attr_grp" pointer can be NULL so this error handling code
+> needs
+> to check for that to avoid an Oops.
 > 
-> I noticed that the only two places that use timeout_reap, both have
-> "pending" as a string. Is this necessary to save? Would an enum work?
-
-I think its probably cleaner to declare an event class for those.
-Currently they are using the GENERIC_UINT_EVENT class, which I intended
-as mapping with string to uint, but I'm only using that in three places,
-two of which are for the timeout. So dropping the GENERIC_UINT_EVENT
-class is probably the best solution(?).
-
-[...]
-
->> +/**
->> + * ssam_trace_ptr_uid() - Convert the pointer to a non-pointer UID string.
->> + * @ptr: The pointer to convert.
->> + * @uid_str: A buffer of length SSAM_PTR_UID_LEN where the UID will be stored.
->> + *
->> + * Converts the given pointer into a UID string that is safe to be shared
->> + * with userspace and logs, i.e. doesn't give away the real memory location.
->> + */
->> +static inline void ssam_trace_ptr_uid(const void *ptr, char *uid_str)
->> +{
->> +	char buf[2 * sizeof(void *) + 1];
->> +
->> +	snprintf(buf, ARRAY_SIZE(buf), "%p", ptr);
->> +	memcpy(uid_str, &buf[ARRAY_SIZE(buf) - SSAM_PTR_UID_LEN],
->> +	       SSAM_PTR_UID_LEN);
+> Fixes: e2729113ce66 ("platform/x86: Intel PMT class driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/platform/x86/intel_pmt_class.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Is the above snprintf() to have the ptr turn into a hash?
-> 
-> Otherwise, couldn't you just truncate the value of ptr?
+> diff --git a/drivers/platform/x86/intel_pmt_class.c
+> b/drivers/platform/x86/intel_pmt_class.c
+> index aa88dc23bbde..c8939fba4509 100644
+> --- a/drivers/platform/x86/intel_pmt_class.c
+> +++ b/drivers/platform/x86/intel_pmt_class.c
+> @@ -225,7 +225,8 @@ static int intel_pmt_dev_register(struct
+> intel_pmt_entry *entry,
+>  		return 0;
+>  
+>  fail_ioremap:
+> -	sysfs_remove_group(entry->kobj, ns->attr_grp);
+> +	if (ns->attr_grp)
+> +		sysfs_remove_group(entry->kobj, ns->attr_grp);
+>  fail_sysfs:
+>  	device_unregister(dev);
+>  fail_dev_create:
 
-Yes, the idea is to generate the same output for a pointer as a normal
-printk message would generate, i.e. generate a (truncated) hash of the
-pointer. While the trace points should be enough on their own, I prefer
-to have the output lining up with the kernel log, so that we can match
-packets across both if ever necessary.
-
-> In any case, you want to make sure that ARRAY_SIZE(buf) is always bigger
-> than, or equal to, SSAM_PTR_UID_LEN, and you should probably stick a:
-> 
-> 	BUILD_BUG_ON(ARRAY_SIZE(buf) < SSAM_PTR_UID_LEN);
-> 
-> in there, which would cause the build to fail if that was ever the case.
-
-Thanks! That is a good idea.
-
-[...]
-
->> +#define ssam_trace_get_command_field_u8(packet, field) \
->> +	((!packet || packet->data.len < SSH_COMMAND_MESSAGE_LENGTH(0)) \
->> +	 ? 0 : p->data.ptr[SSH_MSGOFFSET_COMMAND(field)])
-> 
-> I think you want the above to be:
-> 
-> 	? 0 : packet->data.ptr[SSH_MSGOFFSET_COMMAND(field)])
-> 
-> The only reason it worked, is because the caller passed in "p".
-
-Oh, right!
-
->> +DECLARE_EVENT_CLASS(ssam_packet_class,
->> +	TP_PROTO(const struct ssh_packet *packet),
->> +
->> +	TP_ARGS(packet),
->> +
->> +	TP_STRUCT__entry(
->> +		__field(unsigned long, state)
->> +		__array(char, uid, SSAM_PTR_UID_LEN)
->> +		__field(u8, priority)
->> +		__field(u16, length)
->> +		__field(u16, seq)
->> +	),
->> +
->> +	TP_fast_assign(
->> +		__entry->state = READ_ONCE(packet->state);
->> +		ssam_trace_ptr_uid(packet, __entry->uid);
->> +		__entry->priority = READ_ONCE(packet->priority);
-> 
-> I'm curious about the need for the read once here.
-
-I generally prefer to be explicit when accessing values that can be
-changed concurrently by other parties. In the very least, this should
-guarantee that the value will be read as a whole in one instruction and
-the compiler does not do anything unexpected (like reading it in
-multiple instructions, which could lead to invalid state or priority
-values).
-
-Arguably, the latter will very likely never happen even without the
-READ_ONCE, but I prefer to be on the safe side.
-
-> The rest seems fine.
-
-Thanks,
-Max
