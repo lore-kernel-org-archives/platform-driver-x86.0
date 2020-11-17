@@ -2,96 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF85C5519F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 18:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BEAC2D0E4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 20:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D90342467A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 18:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F9F204EC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Nov 2020 20:09:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="afKce7tG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbgKQS34 (ORCPT
+        id S1730196AbgKQUJU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Nov 2020 13:29:56 -0500
-Received: from mga02.intel.com ([134.134.136.20]:38826 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727552AbgKQS34 (ORCPT
+        Tue, 17 Nov 2020 15:09:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgKQUJU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Nov 2020 13:29:56 -0500
-IronPort-SDR: clbDYXNjeA//uF0zpld3OH2bgnuWR1IquFYlhA2/8udJ3BdbVh/lhcFLyiU+Sec1edR/TWv/+V
- RYxmeXC73nWQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9808"; a="158013858"
-X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
-   d="scan'208";a="158013858"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2020 10:29:52 -0800
-IronPort-SDR: cEInBk2OrWdvd1dUPcjaL7srNnC/CGuisYnaZJjoAGdvqMaAuPAX+K78AOJbfxoLoAPNby5txb
- ESW0SvKoDkgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.77,486,1596524400"; 
-   d="scan'208";a="532317905"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Nov 2020 10:29:51 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.7.201.137])
-        by linux.intel.com (Postfix) with ESMTP id 59CD15801CF;
-        Tue, 17 Nov 2020 10:29:51 -0800 (PST)
-Message-ID: <ed41e77dd19971faf01b3062c5e25e7ed8ed69db.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: pmt: Fix a potential Oops on error in
- probe
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Dan Carpenter <dan.carpenter@oracle.com>
+        Tue, 17 Nov 2020 15:09:20 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022A8C0613CF;
+        Tue, 17 Nov 2020 12:09:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=oprj9F/K15BrPLDWenEHIh2OqJBVOGuDKraGGJLvwiM=; b=afKce7tGM8AXOADzvc4lOH7R3F
+        BfjPKbabBxgatd4Ip247FXifpkmLTsgHQf5+zotjxBqun5XVkTjjoOtwPg/ClahA+KvO39lEIRRBT
+        iR1Y2twoFFqRqtHHA/HKch0cZchCsuBAdOqVX+T20U56NGPDe7/trm91pvzw67694Fv1sdQosR+in
+        2IumeTEA6quIrm2/gCJjtsXTCzDn6oMqC0y3Spn1+44Zbzrxzu6IRgQqpnOuqQEjPVlUrdd3DPw+b
+        BMpXVRg6ZEOg4pu0Dc86Iq3n3w1fadFC9xjkrzxcCGsHayRef39B1RNn5y2I67dcVLEs9P52I8uhA
+        4dObGCvQ==;
+Received: from [2601:1c0:6280:3f0::bcc4]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kf7Hw-0008C2-8B; Tue, 17 Nov 2020 20:09:16 +0000
+Subject: Re: [PATCH 9/9] platform/surface: Add Surface ACPI Notify driver
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Date:   Tue, 17 Nov 2020 10:29:51 -0800
-In-Reply-To: <20201117072251.GC1111239@mwanda>
-References: <20201117072251.GC1111239@mwanda>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20201115192143.21571-1-luzmaximilian@gmail.com>
+ <20201115192143.21571-10-luzmaximilian@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4ad59722-6834-a0f9-8d7a-16b8f22a1f26@infradead.org>
+Date:   Tue, 17 Nov 2020 12:09:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <20201115192143.21571-10-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Dan.
-
-Reviewed-by: David E. Box <david.e.box@linux.intel.com>
-
-On Tue, 2020-11-17 at 10:22 +0300, Dan Carpenter wrote:
-> The "ns->attr_grp" pointer can be NULL so this error handling code
-> needs
-> to check for that to avoid an Oops.
-> 
-> Fixes: e2729113ce66 ("platform/x86: Intel PMT class driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/platform/x86/intel_pmt_class.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmt_class.c
-> b/drivers/platform/x86/intel_pmt_class.c
-> index aa88dc23bbde..c8939fba4509 100644
-> --- a/drivers/platform/x86/intel_pmt_class.c
-> +++ b/drivers/platform/x86/intel_pmt_class.c
-> @@ -225,7 +225,8 @@ static int intel_pmt_dev_register(struct
-> intel_pmt_entry *entry,
->  		return 0;
+On 11/15/20 11:21 AM, Maximilian Luz wrote:
+> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+> index cecad7a0cb7b..3b0da86546fa 100644
+> --- a/drivers/platform/surface/Kconfig
+> +++ b/drivers/platform/surface/Kconfig
+> @@ -40,6 +40,26 @@ config SURFACE_3_POWER_OPREGION
+>  	  This driver provides support for ACPI operation
+>  	  region of the Surface 3 battery platform driver.
 >  
->  fail_ioremap:
-> -	sysfs_remove_group(entry->kobj, ns->attr_grp);
-> +	if (ns->attr_grp)
-> +		sysfs_remove_group(entry->kobj, ns->attr_grp);
->  fail_sysfs:
->  	device_unregister(dev);
->  fail_dev_create:
+> +config SURFACE_ACPI_NOTIFY
+> +	tristate "Surface ACPI Notify Driver"
+> +	depends on ACPI
+> +	depends on SURFACE_AGGREGATOR
+> +	help
+> +	  Surface ACPI Notify (SAN) driver for Microsoft Surface devices.
+
+Drop "depends on ACPI" since SURFACE_AGGREGATOR already depends on ACPI.
+
+-- 
+~Randy
 
