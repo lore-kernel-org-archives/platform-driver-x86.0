@@ -2,68 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7616C56201
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 16:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F423C63697
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 16:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D5DB2220B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 16:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB89F22242
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 16:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgKSQiA (ORCPT
+        id S1729274AbgKSQqa convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Nov 2020 11:38:00 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49661 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728202AbgKSQh7 (ORCPT
+        Thu, 19 Nov 2020 11:46:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729266AbgKSQq3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Nov 2020 11:37:59 -0500
-X-Originating-IP: 82.255.60.242
-Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
-        (Authenticated sender: hadess@hadess.net)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 312D71BF210;
-        Thu, 19 Nov 2020 16:37:55 +0000 (UTC)
-Message-ID: <c86f894d29189980709a905df0855fdf731ade29.camel@hadess.net>
-Subject: Re: [PATCH 0/3] Platform Profile support
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     rjw@rjwysocki.net, hdegoede@redhat.com, mgross@linux.intel.com,
-        linux-acpi@vger.kernel.org, mario.limonciello@dell.com,
-        eliadevito@gmail.com, bberg@redhat.com,
-        platform-driver-x86@vger.kernel.org, dvhart@infradead.org
-Date:   Thu, 19 Nov 2020 17:37:55 +0100
-In-Reply-To: <20201110033124.3211-1-markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
-         <20201110033124.3211-1-markpearson@lenovo.com>
+        Thu, 19 Nov 2020 11:46:29 -0500
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 210269] Tablet mode not correctly reported after wake-up from
+ hibernate
+Date:   Thu, 19 Nov 2020 16:46:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: benjamin@sipsolutions.net
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-210269-215701-Fo6eXoLsQh@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-210269-215701@https.bugzilla.kernel.org/>
+References: <bug-210269-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2020-11-09 at 22:31 -0500, Mark Pearson wrote:
-> This patch series is for the implementation of the platform-profile
-> feature - the ability to determine which mode the platform is in and
-> to change the mode using a sysfs entry.
-> 
-> The first patch is an update of the document I've been working on
-> with
-> review and help from the kernel community. Thank you to everybody for
-> their input.
-> 
-> The second patch implements the platform-profile sysfs and API's
-> needed.
-> 
-> The third patch has Lenovo specific changes in thinkpad_acpi.c to use
-> the new platform-profile implementation and be able to switch between
-> low, medium and high power modes.
+https://bugzilla.kernel.org/show_bug.cgi?id=210269
 
-I've implemented this in power-profiles-daemon:
-https://gitlab.freedesktop.org/hadess/power-profiles-daemon/-/merge_requests/41
+Benjamin Berg (benjamin@sipsolutions.net) changed:
 
-Was pretty straight forward to implement, so good job :)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |benjamin@sipsolutions.net
 
+--- Comment #1 from Benjamin Berg (benjamin@sipsolutions.net) ---
+Yeah, the only thing that is missing here should be a call to
+dytc_lapmode_refresh at resume time.
+
+i.e. should be as simple as:
+ * Adding a resume handler into dytc_driver_data
+ * Add a call to dytc_lapmode_refresh there
+
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
