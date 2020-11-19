@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E321EC388F9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 19:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9EEC388F9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 20:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737FE22261
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 19:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E1C7208FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Nov 2020 20:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgKST77 convert rfc822-to-8bit (ORCPT
+        id S1727266AbgKSUDX convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Nov 2020 14:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44714 "EHLO mail.kernel.org"
+        Thu, 19 Nov 2020 15:03:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgKST77 (ORCPT
+        id S1727195AbgKSUDX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Nov 2020 14:59:59 -0500
+        Thu, 19 Nov 2020 15:03:23 -0500
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 210269] Tablet mode not correctly reported after wake-up from
  hibernate
-Date:   Thu, 19 Nov 2020 19:59:58 +0000
+Date:   Thu, 19 Nov 2020 20:03:22 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -40,7 +40,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-210269-215701-RRbVwNWhrp@https.bugzilla.kernel.org/>
+Message-ID: <bug-210269-215701-uVTVfVXwBY@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-210269-215701@https.bugzilla.kernel.org/>
 References: <bug-210269-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -54,8 +54,9 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=210269
 
---- Comment #6 from Julian (j.r@jugendhacker.de) ---
-Yeah Benjamin I could test a patch
+--- Comment #7 from Julian (j.r@jugendhacker.de) ---
+Just checked it and the sysfs file does contain a 0 after wakeup as you said
+Benjamin.
 
 -- 
 You are receiving this mail because:
