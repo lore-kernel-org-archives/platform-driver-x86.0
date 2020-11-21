@@ -2,119 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC12C64E75
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Nov 2020 18:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0196C388F9
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Nov 2020 21:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5590422253
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Nov 2020 18:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1AA92158C
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 21 Nov 2020 21:19:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="HmRQT9Fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgKUSC2 (ORCPT
+        id S1728456AbgKUVS7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 21 Nov 2020 13:02:28 -0500
-Received: from smtprelay0210.hostedemail.com ([216.40.44.210]:53086 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726556AbgKUSC0 (ORCPT
+        Sat, 21 Nov 2020 16:18:59 -0500
+Received: from mail-03.mail-europe.com ([91.134.188.129]:57694 "EHLO
+        mail-03.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728403AbgKUVS7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 21 Nov 2020 13:02:26 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id AF7D7181D3025;
-        Sat, 21 Nov 2020 18:02:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: uncle36_3402e8c27356
-X-Filterd-Recvd-Size: 3937
-Received: from XPS-9350.home (unknown [47.151.128.180])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Sat, 21 Nov 2020 18:02:18 +0000 (UTC)
-Message-ID: <f7643c9cb0a896f3ead65e86084b7c143e21ef43.camel@perches.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-From:   Joe Perches <joe@perches.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        trix@redhat.com, clang-built-linux@googlegroups.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Date:   Sat, 21 Nov 2020 10:02:17 -0800
-In-Reply-To: <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
-References: <20201121165058.1644182-1-trix@redhat.com>
-         <5843ef910b0e86c00d9c0143dec20f93823b016b.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Sat, 21 Nov 2020 16:18:59 -0500
+Date:   Sat, 21 Nov 2020 21:18:49 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1605993535;
+        bh=yC9/J00wsdt87zvT5U4ngG4KDAlRMwKTW87Bo/OMRzM=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=HmRQT9Fm0k769ReZnIqDDSw00xoQyB9QEW7zxfcQ5GKDvsBQ/LeEJCocNBkaXr4AV
+         /eAlxOVbKq88EPq0qVUINl7bLZcEG7GM8eemmGK0R66lxUFJQXTTXiyXAeDVRkWkO0
+         nlX++SVj9Vvza9VRAwEz5DVMJPZFrZis93n3Qw50=
+To:     Hans de Goede <hdegoede@redhat.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Mark Pearson <markpearson@lenovo.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "hadess@hadess.net" <hadess@hadess.net>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH v3] ACPI: platform-profile: Add platform profile support
+Message-ID: <8c3pjwAeJVjl5ZLmnajCVHjcyBjoQeQTupHqZZostKJt3YZ0seAAvD-UIcBYFAFUNjsi0iWrEBNfX1l0tqN-4x07TGQbsiOMEqCpPAxgqJQ=@protonmail.com>
+In-Reply-To: <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
+References: <markpearson@lenovo.com> <20201115004402.342838-1-markpearson@lenovo.com> <nRyY5CKaU6WrkbMiM25gTT_bJlrQjTY_UCcQkj8ty-2mPEMVZd4BB9KwrRp7z4GaE3TTOFCXuXnt0_7J_Tj50syusBxTmS5yNZAvYX02X74=@protonmail.com> <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 2020-11-21 at 09:18 -0800, James Bottomley wrote:
-> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
-> > A difficult part of automating commits is composing the subsystem
-> > preamble in the commit log.  For the ongoing effort of a fixer
-> > producing one or two fixes a release the use of 'treewide:' does
-> > not seem appropriate.
-> > 
-> > It would be better if the normal prefix was used.  Unfortunately
-> > normal is not consistent across the tree.
-> > 
-> > 	D: Commit subsystem prefix
-> > 
-> > ex/ for FPGA DFL DRIVERS
-> > 
-> > 	D: fpga: dfl:
-> 
-> I've got to bet this is going to cause more issues than it solves. 
-> SCSI uses scsi: <driver>: for drivers but not every driver has a
-> MAINTAINERS entry.  We use either scsi: or scsi: core: for mid layer
-> things, but we're not consistent.  Block uses blk-<something>: for all
-> of it's stuff but almost no <somtehing>s have a MAINTAINERS entry.  So
-> the next thing you're going to cause is an explosion of suggested
-> MAINTAINERs entries.
+2020. november 21., szombat 15:27 keltez=C3=A9ssel, Hans de Goede =C3=ADrta=
+:
 
-As well as some changes require simultaneous changes across
-multiple subsystems.
+> [...]
+> > I just realized that the sysfs attributes are only created if a profile=
+ provider
+> > is registered, and it is removed when the provide unregisters itself. I=
+ believe
+> > it would be easier for system daemons if those attributes existed from =
+module load
+> > to module unload since they can just just open the file and watch it us=
+ing poll,
+> > select, etc. If it goes away when the provider unregisters itself, then=
+ I believe
+> > a more complicated mechanism (like inotify) would need to be implemente=
+d in the
+> > daemons to be notified when a new provider is registered. Thus my sugge=
+stion
+> > for the next iteration is to create the sysfs attributes on module load=
+,
+> > and delete them on unload.
+> >
+> > What do you think?
+>
+> Actually I asked Mark to move this to the register / unregister time sinc=
+e
+> having a non functioning files in sysfs is a bit weird.
+> [...]
 
-> Has anyone actually complained about treewide:?
+Ahh, I didn't know that, sorry. If a non-functioning sysfs attribute is a p=
+roblem,
+then there is another option: `platform_profile_choices` is always present;
+if no provider is registered, it's empty. If a provider is (un)registered,
+then `platform_profile_choices` is sysfs_notify()-ed. `platform_profile`
+only exists while a provider is registered, so it is created on provider
+registration and unregistered on provider unregistration.
 
-It depends on what you mean by treewide:
 
-If a treewide: patch is applied by some "higher level" maintainer,
-then generally, no.
-
-If the treewide patch is also cc'd to many individual maintainers,
-then yes, many many times.
-
-Mostly because patches cause what is in their view churn or that
-changes are not specific to their subsystem grounds.
-
-The treewide patch is sometimes dropped, sometimes broken up and
-generally not completely applied.
-
-What would be useful in many cases like this is for a pre and post
-application of the treewide patch to be compiled and the object
-code verified for lack of any logic change.
-
-Unfortunately, gcc does not guarantee deterministic compilation so
-this isn't feasible with at least gcc.  Does clang guarantee this?
-
-I'm not sure it's possible:
-https://blog.llvm.org/2019/11/deterministic-builds-with-clang-and-lld.html
-
+Regards,
+Barnab=C3=A1s P=C5=91cze
 
