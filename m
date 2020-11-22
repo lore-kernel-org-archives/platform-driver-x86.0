@@ -7,133 +7,116 @@ X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FDBC63777
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Nov 2020 09:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D0C64E75
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Nov 2020 14:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F418120936
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Nov 2020 09:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6D52076B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 22 Nov 2020 14:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ggJNNHFn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XA3Bdia/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727396AbgKVJcT (ORCPT
+        id S1727881AbgKVOrK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 22 Nov 2020 04:32:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46878 "EHLO
+        Sun, 22 Nov 2020 09:47:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43813 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727373AbgKVJcR (ORCPT
+        by vger.kernel.org with ESMTP id S1727860AbgKVOq5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 22 Nov 2020 04:32:17 -0500
+        Sun, 22 Nov 2020 09:46:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606037535;
+        s=mimecast20190719; t=1606056416;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1Y7q9k7HD5zOPOSswO36/j6lKCNPhQl+mLKkjPEYqto=;
-        b=ggJNNHFnAc7DFeEkDxf6XxmLW83mumoRrKU3ZhLS/xpI4hRYwUTn0a72CCU1CuLjwWwU+e
-        lqc3ERu4ZNU3beCfRBQ6/t8GG0hMyGnRV5e2SseJKuxPTylZOeZ81KjpOq3NY3kEPIkNz7
-        w4xnxnT7OTQLpLAzE5T33ZhE0XLoEdI=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-111-TO3dGW7FN1a1i0YKleQudA-1; Sun, 22 Nov 2020 04:32:13 -0500
-X-MC-Unique: TO3dGW7FN1a1i0YKleQudA-1
-Received: by mail-ej1-f69.google.com with SMTP id r2so1948779ejx.9
-        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2020 01:32:13 -0800 (PST)
+        bh=apju6gP6XSpkYwp4WdL57a/nFAvNI/QCKhQkuBxc3S8=;
+        b=XA3Bdia/xK9rtALsHLhdMXNkl5EWPz83+inaq5KZnxbZp/pqE7ot4cuq9wfEbTWVu1jCkd
+        fkI/qAlh4sU3l8dOrlq7C5hNdTdH0le7t+rDrYZ5+jjUTJP5ekv3G25710udgF6Q97joi/
+        ih3DR460gM+B9YwlFm0ND3pgcFfhizQ=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-VUMpaSj2Nw6aTTPAgYDwxQ-1; Sun, 22 Nov 2020 09:46:52 -0500
+X-MC-Unique: VUMpaSj2Nw6aTTPAgYDwxQ-1
+Received: by mail-qt1-f199.google.com with SMTP id b10so11585327qtb.16
+        for <platform-driver-x86@vger.kernel.org>; Sun, 22 Nov 2020 06:46:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Y7q9k7HD5zOPOSswO36/j6lKCNPhQl+mLKkjPEYqto=;
-        b=am/MACjRrvSDK4Q+f/kCssHbWu7Xpfue+lsqPECq19NlFyE0pRZ+fT+f5HyNxgrSff
-         CThNiprl4u9g/NQqLUi0Suk/V8+wvYSO8tp0jOaljVuNFzFDidbJdstXwyK8b/KYmv5f
-         NGYxQMOszAZEZnwjL9zzUXCGpzDEp7m/FGP95gAMNINMGtyRc8JbhDNMnhj5ZckiNbxj
-         FXNc0PzXOm5cIe2ObDIpjtskVH444DCodKTpywE/XjwmpDTQrCDJG8a05GenIq1VD0Dd
-         c/2j64zGlo+TpEElz3Le0io+sWtrM/s7y9RLNIOpjwbxLHE18pIV6OFkpxMW02KdCR8W
-         yKWA==
-X-Gm-Message-State: AOAM531JhzlrS5J32aalgtVNINFh/xeuIagT5b4r+MGpslfL/wjuSqPw
-        QP9hDr/04CtZKDUo+8zIeiv0Uh7f6hXrxoHhFWRJkaWWTQcIcNKUhhuWiFwy41tenUxKZa2iRGM
-        74jMASZXiu5hWu/MQDUjStXaTYUG1PXJZxg==
-X-Received: by 2002:a05:6402:b3b:: with SMTP id bo27mr41629836edb.376.1606037532094;
-        Sun, 22 Nov 2020 01:32:12 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwEvLOCCbG7eHL42EU8Bi65ubd6FTNy/yzZ+p0DfU6/bVD3GvNQ+FC3LPZuV5BWpCH1Wa/GhA==
-X-Received: by 2002:a05:6402:b3b:: with SMTP id bo27mr41629814edb.376.1606037531812;
-        Sun, 22 Nov 2020 01:32:11 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id c30sm3394001edd.68.2020.11.22.01.32.10
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=apju6gP6XSpkYwp4WdL57a/nFAvNI/QCKhQkuBxc3S8=;
+        b=gIFygmMIlIsgO94i/LB3w7GgxBnyfK5guDiu2d+BOs9iVyagnBf5upbpACN79bZA7T
+         M6Yh2FftVpUDuyAnerHS0Swbuk+aVi3I1jK/c3E8ZXdANSJwwwD3/UHO2yV/7JKgqod0
+         UeDI2p8KiXsGSvMNeq2rPiIRziOyn+TVdOLBX4oiLaLjtlMyK4YZihzPwDgVVW3c5LZA
+         G303PplV6zvj6c2WJmCwkDY3Qbckkm1cLqTAahaLgZ23E/T2/9/KMcKnWYojqi8ESp2/
+         dx9uaI9MjOOU8aeT1NFcEPMo0y78dwGvNEFSIdyu2vaf+hFI3etgxnND4Lz+rvN1HI3e
+         LbdA==
+X-Gm-Message-State: AOAM533SzMgxVskv9JRkoet/wmit08YPP2IhXynojfHbMKvt4wn46Dk7
+        3dbh67fKGLS13HYbc4mbNt7zcad6aTJqhCgsaTWO9BwcfXgvh/nGNf20HbNmcfUG2v+/W4Et/1u
+        Qkvrb7cSKprCGGwj1IhjOXs6JMhDr5zKruQ==
+X-Received: by 2002:ad4:476b:: with SMTP id d11mr26026161qvx.57.1606056412427;
+        Sun, 22 Nov 2020 06:46:52 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyPQ8vJIBgyJxmgPlUVzOaStXFRaD0Z+d8VDmnR7kdLyNkvwByAGPov006wc7+pJBCcgj+/zw==
+X-Received: by 2002:ad4:476b:: with SMTP id d11mr26026152qvx.57.1606056412222;
+        Sun, 22 Nov 2020 06:46:52 -0800 (PST)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id x72sm6888242qkb.90.2020.11.22.06.46.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Nov 2020 01:32:11 -0800 (PST)
-Subject: Re: [PATCH v3] ACPI: platform-profile: Add platform profile support
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
-        "eliadevito@gmail.com" <eliadevito@gmail.com>,
-        "hadess@hadess.net" <hadess@hadess.net>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-References: <markpearson@lenovo.com>
- <20201115004402.342838-1-markpearson@lenovo.com>
- <nRyY5CKaU6WrkbMiM25gTT_bJlrQjTY_UCcQkj8ty-2mPEMVZd4BB9KwrRp7z4GaE3TTOFCXuXnt0_7J_Tj50syusBxTmS5yNZAvYX02X74=@protonmail.com>
- <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
- <8c3pjwAeJVjl5ZLmnajCVHjcyBjoQeQTupHqZZostKJt3YZ0seAAvD-UIcBYFAFUNjsi0iWrEBNfX1l0tqN-4x07TGQbsiOMEqCpPAxgqJQ=@protonmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <41f3e41a-07be-3276-40fe-5675a19f36ae@redhat.com>
-Date:   Sun, 22 Nov 2020 10:32:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Sun, 22 Nov 2020 06:46:51 -0800 (PST)
+Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     joe@perches.com, clang-built-linux@googlegroups.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
+        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
+        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, alsa-devel@alsa-project.org,
+        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
+References: <20201121165058.1644182-1-trix@redhat.com>
+ <20201122032304.GE4327@casper.infradead.org>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <ddb08a27-3ca1-fb2e-d51f-4b471f1a56a3@redhat.com>
+Date:   Sun, 22 Nov 2020 06:46:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <8c3pjwAeJVjl5ZLmnajCVHjcyBjoQeQTupHqZZostKJt3YZ0seAAvD-UIcBYFAFUNjsi0iWrEBNfX1l0tqN-4x07TGQbsiOMEqCpPAxgqJQ=@protonmail.com>
+In-Reply-To: <20201122032304.GE4327@casper.infradead.org>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 11/21/20 10:18 PM, Barnabás Pőcze wrote:
-> 2020. november 21., szombat 15:27 keltezéssel, Hans de Goede írta:
-> 
->> [...]
->>> I just realized that the sysfs attributes are only created if a profile provider
->>> is registered, and it is removed when the provide unregisters itself. I believe
->>> it would be easier for system daemons if those attributes existed from module load
->>> to module unload since they can just just open the file and watch it using poll,
->>> select, etc. If it goes away when the provider unregisters itself, then I believe
->>> a more complicated mechanism (like inotify) would need to be implemented in the
->>> daemons to be notified when a new provider is registered. Thus my suggestion
->>> for the next iteration is to create the sysfs attributes on module load,
->>> and delete them on unload.
->>>
->>> What do you think?
+On 11/21/20 7:23 PM, Matthew Wilcox wrote:
+> On Sat, Nov 21, 2020 at 08:50:58AM -0800, trix@redhat.com wrote:
+>> The fixer review is
+>> https://reviews.llvm.org/D91789
 >>
->> Actually I asked Mark to move this to the register / unregister time since
->> having a non functioning files in sysfs is a bit weird.
->> [...]
-> 
-> Ahh, I didn't know that, sorry. If a non-functioning sysfs attribute is a problem,
-> then there is another option: `platform_profile_choices` is always present;
-> if no provider is registered, it's empty. If a provider is (un)registered,
-> then `platform_profile_choices` is sysfs_notify()-ed. `platform_profile`
-> only exists while a provider is registered, so it is created on provider
-> registration and unregistered on provider unregistration.
+>> A run over allyesconfig for x86_64 finds 62 issues, 5 are false positives.
+>> The false positives are caused by macros passed to other macros and by
+>> some macro expansions that did not have an extra semicolon.
+>>
+>> This cleans up about 1,000 of the current 10,000 -Wextra-semi-stmt
+>> warnings in linux-next.
+> Are any of them not false-positives?  It's all very well to enable
+> stricter warnings, but if they don't fix any bugs, they're just churn.
+>
+While enabling additional warnings may be a side effect of this effort
 
-TBH, I don't like this suggestion. I would like to either want both of
-them be present and report "none" (and -ENODEV on write in case of platform_profile),
-or neither of them be present.
+the primary goal is to set up a cleaning robot. After that a refactoring robot.
 
-Note I do agree with you that userspace probably needs a way to find out when a
-provider shows up. Which means we should probably go with always having both of
-them present. But it would also be good to get some input from Bastien here,
-as he is working on a userspace daemon using this API.
-
-Regards,
-
-Hans
+Tom
 
