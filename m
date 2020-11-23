@@ -2,106 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD6CC64E69
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2D0C6379F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 22:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCED206B2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiN4n7s5"
+	by mail.kernel.org (Postfix) with ESMTP id A4F7D206D8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 22:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390529AbgKWR6m (ORCPT
+        id S1733020AbgKWWn0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Nov 2020 12:58:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388608AbgKWR6m (ORCPT
+        Mon, 23 Nov 2020 17:43:26 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:41317 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733018AbgKWWnZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Nov 2020 12:58:42 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E45C061A4D;
-        Mon, 23 Nov 2020 09:58:41 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id p6so6842260plr.7;
-        Mon, 23 Nov 2020 09:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EXfywewSoFveR+0OC9ZxMay758XK3N5yEGcBXziyF2o=;
-        b=uiN4n7s5o7zhZyGInB+xYTrYhacuDEQZ1At27ZdqXzJEk4Gk0UlG7qUdYZMYaPAR4L
-         WjSlGDALjiUcDYOiZXfRpWuWmcnvcZInq6uzIElguRiW2svZZX0f1OcQKeqBIJMk8Hi7
-         6xtkIegJNR7lWKqsC0O1KIb7Kt/2cCOP9wGuBJYivheJcuEjPYTAQftTCwJO+Wej8hnT
-         WGR81uu7vfhqPXgkiF/lfVMX2BCxyLvPokIOQDSqPcqT+uTmWl+Oivkh6rZZwNBX59ue
-         iuKCpV3SJu2+nL2LODIY+z7OeZEV+DoOCCmc8uTRWU52OcS/faI1JsObMm31O9lrxeli
-         S9hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EXfywewSoFveR+0OC9ZxMay758XK3N5yEGcBXziyF2o=;
-        b=Xz2F3XphkrMDuH7TfODqFWQVpmz8d/Vm/fM/Py+mXBjyRHZlVf+JJyrVNsvCSC9DoF
-         DzVQT9ZhuUCKWNklceRbzk+NKgIYKBDwpIMcxq9gFKavKl5kEEK8Vln1zVthT1oulAg9
-         rA+Mj5L//orsgYFhLJfa6MTUBdVo0BVBacb4krykOxcRWiyjk7iwVrOxIqLHnjtF7RSJ
-         Uiam94hUAXAnmal7Vn+V8DjuU2Z9kSrvgPoiQjW7XJfrVn6M4OvYbyCiQ8rgZjTLF+0i
-         AA1xJLstROvZmyZYtWzR7K+ez/i0ik7ePyn6owtIjmac85Xus0EPpioSlbFHAQzq03FZ
-         LKHg==
-X-Gm-Message-State: AOAM5326L2RD+TqdNP7dM3RdCCCIJHLur6mDFTPJzxXBmN6IBYbHfmrM
-        WhDEM8pmTDocgG4ai4WMR4pGiVJJywxYjsaXRXUhcG+V31Y=
-X-Google-Smtp-Source: ABdhPJyiGUmkqCL02LsCJ3o69dBYzv5aN8rhsnesF1+qxIzvcRwfECVuanURYY63pp5NVsCLwaI7r/UmIA95LpPDtjo=
-X-Received: by 2002:a17:902:ec01:b029:da:13f5:1aaa with SMTP id
- l1-20020a170902ec01b02900da13f51aaamr650312pld.0.1606154321407; Mon, 23 Nov
- 2020 09:58:41 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
-In-Reply-To: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 23 Nov 2020 19:59:29 +0200
-Message-ID: <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com>
-Subject: Re: Request for pre-review of pending MID removal patch series
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 23 Nov 2020 17:43:25 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id AEBD219EB;
+        Mon, 23 Nov 2020 17:43:24 -0500 (EST)
+Received: from imap21 ([10.202.2.71])
+  by compute1.internal (MEProxy); Mon, 23 Nov 2020 17:43:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=NT16Y3xFmHkzsu1heWBCAUz9Sw0TeQG
+        9bm7wWJEv3EU=; b=C5Ir+XalNmweFz/nNDFVWGRZr7DJuTmflMuk0iNuRY4g9u6
+        q8lEhTafKg5LnOA0iTt3eDNKOFffW9tzC+p+CQtTbaZ+TlWyI8x99qM4coqt8Bq5
+        J/qYjR86P+pMtwiRjNn4OfnbTNJJUQ2nZGrV8WDnSGX64N+VIbruiMU1Diy5358r
+        jHJR5xbXC+DMPFXbBUsyLaFPaYjYoACLxvL6CUL1txFpYY8PZUEhMn1gRJuTJ8FK
+        SPqlCl6mHPvSUp4Qt7TfNRTqzTxZnhV4XEsk9NdBe6fuBEGst174oBkkZK8vF+7P
+        qxo9Zz+7GPOL+4jKQ1WiWzEYpO+D/DeuHUu1Cuw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=NT16Y3
+        xFmHkzsu1heWBCAUz9Sw0TeQG9bm7wWJEv3EU=; b=R+pXXFMZDbFwpWNUWmZxZ1
+        ajBx3c7vbGt+tXS1jxX7mD7oyY2cJN+oE4OvDahimOeji/wycRl3skCasRDAClDV
+        HPtN/zmuxGUx05sUe9n2LquK82DBTUpHczgaQqTY7/pmpqMHktOeKUAEXpcSpNf8
+        ebHVadKwMh0WJh7PEfK7JLKzheiqF6lK2J7g6i8Y11/Cjpt/HplpJTZHN47P8jGv
+        kveeLZ6ajMCDO7mOiR+nHzcLCbEiTidVFog8ghAGihrNtAKdSUFrAWLX/CUw2AOv
+        yUe+81POP4nI3Ya8BaYmAK/klktVriHf6X98EL1JVBfMGQvMzIPlmeLbi/eQ8UsQ
+        ==
+X-ME-Sender: <xms:Czu8X7E786cMvfHeXKAO0q1H6ZtjKULGvL1c2jl42h8zeRWpW8MRvQ>
+    <xme:Czu8X4WMU9cSvhdRdcLINWwwd5wlLL6mh38a7S8fkMsZ01W_CfCZWFDVMAdY0qjua
+    9SbFYYDMHjZEA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrudegjedgfedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepihgsmhdq
+    rggtphhisehhmhhhrdgvnhhgrdgsrhenucggtffrrghtthgvrhhnpeduieekhfefhfdtle
+    fgteeljedvheffgfeifeelgeeguefgkeeukedtfeeivdfhteenucffohhmrghinhepkhgv
+    rhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepihgsmhdqrggtphhisehhmhhhrdgvnhhgrdgsrh
+X-ME-Proxy: <xmx:Czu8X9KqzpYGAJao5JdjVT2y2vywOahJU3B_i_D0MdKUGwY3c5t5EA>
+    <xmx:Czu8X5HT8r2iFTbNpCG_w7-RTQ5eR_smpjnTjOHz8BzuC2hUFRzfiQ>
+    <xmx:Czu8XxUfaA7PbUMRvGHCFrdL3V_AsNH7NM-kMdpIus-PXjxyMd5Nyw>
+    <xmx:DDu8XwdgAAynFIUXfT0t-YxWRMaqlXNIZmaIojela-UuJXyXYB-85g>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 8021466006F; Mon, 23 Nov 2020 17:43:11 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.3.0-622-g4a97c0b-fm-20201115.001-g4a97c0b3
+Mime-Version: 1.0
+Message-Id: <adced236-c18e-40da-bc43-9f8d9e0dd757@www.fastmail.com>
+In-Reply-To: <20201123132157.866303-1-benjamin@sipsolutions.net>
+References: <20201123132157.866303-1-benjamin@sipsolutions.net>
+Date:   Mon, 23 Nov 2020 19:43:02 -0300
+From:   ibm-acpi@hmh.eng.br
+To:     "Benjamin Berg" <benjamin@sipsolutions.net>,
+        "Hans de Goede" <hdegoede@redhat.com>
+Cc:     "Thinkpad-acpi devel ML" <ibm-acpi-devel@lists.sourceforge.net>,
+        platform-driver-x86@vger.kernel.org,
+        "Benjamin Berg" <bberg@redhat.com>
+Subject: =?UTF-8?Q?Re:_[PATCH]_platform/x86:_thinkpad=5Facpi:_Send_tablet_mode_sw?=
+ =?UTF-8?Q?itch_at_wakeup_time?=
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-+Cc: Mika
 
-On Fri, Oct 23, 2020 at 8:07 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> Hi!
->
-> There is a pending patch series [1] to remove a lot of legacy code
-> related to old Intel MID platforms. (Note, not all of them, since we
-> have an ACPI based Intel Edison edition which continue working nicely
-> after this)
->
-> Most of the code is shuffling arch/x86 and the series is quite
-> dependent on the contents of that folder (for the sake of
-> bisectability). Since that the only way it would be integrated is
-> through the tip tree I would like to have your preliminary review on
-> other contents =E2=80=94 #3 and #4 are PDx86 and GPIO subsystems. In this=
- case
-> I won't resend this many times.
->
-> I have a preliminary offline agreement with Len Brown on SFI removal
-> (#2 in the list).
->
-> [1]: https://gitlab.com/andy-shev/next/-/commits/topic/mid-removal/
+Acked-by: Henrique de Moraes Holschuh <hnh@hmh.eng.br>
 
---=20
-With Best Regards,
-Andy Shevchenko
+On Mon, Nov 23, 2020, at 10:21, Benjamin Berg wrote:
+> From: Benjamin Berg <bberg@redhat.com>
+> 
+> The lid state may change while the machine is suspended. As such, we may
+> need to re-check the state at wake-up time (at least when waking up from
+> hibernation).
+> Add the appropriate call to the resume handler in order to sync the
+> SW_TABLET_MODE switch state with the hardware state.
+> 
+> Fixes: dda3ec0aa631 ("platform/x86: thinkpad_acpi: Implement tablet 
+> mode using GMMS method")
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210269
+> Signed-off-by: Benjamin Berg <bberg@redhat.com>
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c 
+> b/drivers/platform/x86/thinkpad_acpi.c
+> index e3810675090a..9104e0ee37cd 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -4228,6 +4228,7 @@ static void hotkey_resume(void)
+>  		pr_err("error while attempting to reset the event firmware 
+> interface\n");
+>  
+>  	tpacpi_send_radiosw_update();
+> +	tpacpi_input_send_tabletsw();
+>  	hotkey_tablet_mode_notify_change();
+>  	hotkey_wakeup_reason_notify_change();
+>  	hotkey_wakeup_hotunplug_complete_notify_change();
+> -- 
+> 2.26.2
+> 
+>
