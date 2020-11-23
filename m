@@ -2,161 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9821FC63798
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD6CC64E69
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B08C20756
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCED206B2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 17:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BtEofZ03"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uiN4n7s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbgKWRGQ (ORCPT
+        id S2390529AbgKWR6m (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Nov 2020 12:06:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44177 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388118AbgKWRGN (ORCPT
+        Mon, 23 Nov 2020 12:58:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388608AbgKWR6m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Nov 2020 12:06:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606151171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
-        b=BtEofZ03By1sp6OyH8lSI6IT4Bb/Q48OsWV2XnBXmdgQcceGh9rKSaQV86czSHO4W4CJHn
-        vUaUaH4n0l1WmtKl1NY4JjZQEtZdHR6F0okj/kLdyZp+LnqjvTzaYPmjipu9+IS6RcbTNg
-        lanzsvwsZXvmVS2IMlU/0SstZMlkjqs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-Fc5j0MRyMS-44fLFfx_rkQ-1; Mon, 23 Nov 2020 12:06:09 -0500
-X-MC-Unique: Fc5j0MRyMS-44fLFfx_rkQ-1
-Received: by mail-qt1-f198.google.com with SMTP id o1so14079935qtp.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2020 09:06:09 -0800 (PST)
+        Mon, 23 Nov 2020 12:58:42 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E45C061A4D;
+        Mon, 23 Nov 2020 09:58:41 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id p6so6842260plr.7;
+        Mon, 23 Nov 2020 09:58:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EXfywewSoFveR+0OC9ZxMay758XK3N5yEGcBXziyF2o=;
+        b=uiN4n7s5o7zhZyGInB+xYTrYhacuDEQZ1At27ZdqXzJEk4Gk0UlG7qUdYZMYaPAR4L
+         WjSlGDALjiUcDYOiZXfRpWuWmcnvcZInq6uzIElguRiW2svZZX0f1OcQKeqBIJMk8Hi7
+         6xtkIegJNR7lWKqsC0O1KIb7Kt/2cCOP9wGuBJYivheJcuEjPYTAQftTCwJO+Wej8hnT
+         WGR81uu7vfhqPXgkiF/lfVMX2BCxyLvPokIOQDSqPcqT+uTmWl+Oivkh6rZZwNBX59ue
+         iuKCpV3SJu2+nL2LODIY+z7OeZEV+DoOCCmc8uTRWU52OcS/faI1JsObMm31O9lrxeli
+         S9hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=ETdBmUCF01QVQJOZ+sQu9TUGQeVKu9xOEmE1E5gBvfU=;
-        b=HKNv8dKJ+UJ8MwXU1hTQcq7N8pfj3FF8U3XT7FFyT97RID6psddXUIXb1Wah8eaYJZ
-         i4vTSKM73poLFIpCott0izhoLIKYjhEa/T1AQIgxwOykILZPDIDFua9/2fIWxl1h6ez3
-         ha+BNph7ABKf8BUPpOsOCUgBP3armHzMVCMuxR6Apheph7OYnRs3JIJ2rAuCkj9i65DN
-         7zf4VeBnpqrb5LbQb0HIIxFSRKSvx+85Y4+pL6nubP1jKQKsmhY1Lqn0yNrdxK6fiH/B
-         6uSTiiecFx8CcW2ENDeS1wztY6TTbh6Z4MgbvB0XivaRFfyBwj75E90gH/EZ6+t1IwQO
-         NN9Q==
-X-Gm-Message-State: AOAM530fZwbA4T9lzHWvgdrrLmVsKpVyh5+eJAd7gFPuDUsv8XhVvGbL
-        54idbwb7NlAfhhlt8MgXJ1XZl/CpjD8Td1sko+wpPuJBBO3yD1C32i6n5Ubt/BIqCmCSLiKJ307
-        Ma13aOQSTOtHLhBjYI9YAhBfmPxSI8V3EWQ==
-X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70873qtx.354.1606151168818;
-        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwHR8oVpP3xv7xpCkK6lH4mawBfXgRI3GL2dEiLGp13/vfLrDKV7SBtsWnvpv2iFDtHltekRw==
-X-Received: by 2002:ac8:5d53:: with SMTP id g19mr70839qtx.354.1606151168572;
-        Mon, 23 Nov 2020 09:06:08 -0800 (PST)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id o187sm10226153qkb.120.2020.11.23.09.06.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Nov 2020 09:06:07 -0800 (PST)
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-To:     Joe Perches <joe@perches.com>, clang-built-linux@googlegroups.com
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org, tboot-devel@lists.sourceforge.net,
-        kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-References: <20201121165058.1644182-1-trix@redhat.com>
- <2105f0c05e9eae8bee8e17dcc5314474b3c0bc73.camel@perches.com>
- <6e8c1926-4209-8f10-d0f9-72c875a85a88@redhat.com>
- <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <88eeba27-ee36-df63-8cd9-3cccbe5e0850@redhat.com>
-Date:   Mon, 23 Nov 2020 09:06:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EXfywewSoFveR+0OC9ZxMay758XK3N5yEGcBXziyF2o=;
+        b=Xz2F3XphkrMDuH7TfODqFWQVpmz8d/Vm/fM/Py+mXBjyRHZlVf+JJyrVNsvCSC9DoF
+         DzVQT9ZhuUCKWNklceRbzk+NKgIYKBDwpIMcxq9gFKavKl5kEEK8Vln1zVthT1oulAg9
+         rA+Mj5L//orsgYFhLJfa6MTUBdVo0BVBacb4krykOxcRWiyjk7iwVrOxIqLHnjtF7RSJ
+         Uiam94hUAXAnmal7Vn+V8DjuU2Z9kSrvgPoiQjW7XJfrVn6M4OvYbyCiQ8rgZjTLF+0i
+         AA1xJLstROvZmyZYtWzR7K+ez/i0ik7ePyn6owtIjmac85Xus0EPpioSlbFHAQzq03FZ
+         LKHg==
+X-Gm-Message-State: AOAM5326L2RD+TqdNP7dM3RdCCCIJHLur6mDFTPJzxXBmN6IBYbHfmrM
+        WhDEM8pmTDocgG4ai4WMR4pGiVJJywxYjsaXRXUhcG+V31Y=
+X-Google-Smtp-Source: ABdhPJyiGUmkqCL02LsCJ3o69dBYzv5aN8rhsnesF1+qxIzvcRwfECVuanURYY63pp5NVsCLwaI7r/UmIA95LpPDtjo=
+X-Received: by 2002:a17:902:ec01:b029:da:13f5:1aaa with SMTP id
+ l1-20020a170902ec01b02900da13f51aaamr650312pld.0.1606154321407; Mon, 23 Nov
+ 2020 09:58:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <859bae8ddae3238116824192f6ddf1c91a381913.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
+In-Reply-To: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 23 Nov 2020 19:59:29 +0200
+Message-ID: <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com>
+Subject: Re: Request for pre-review of pending MID removal patch series
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
++Cc: Mika
 
-On 11/22/20 10:22 AM, Joe Perches wrote:
-> On Sun, 2020-11-22 at 08:33 -0800, Tom Rix wrote:
->> On 11/21/20 9:10 AM, Joe Perches wrote:
->>> On Sat, 2020-11-21 at 08:50 -0800, trix@redhat.com wrote:
->>>> A difficult part of automating commits is composing the subsystem
->>>> preamble in the commit log.  For the ongoing effort of a fixer producing
->>>> one or two fixes a release the use of 'treewide:' does not seem appropriate.
->>>>
->>>> It would be better if the normal prefix was used.  Unfortunately normal is
->>>> not consistent across the tree.
->>>>
->>>> So I am looking for comments for adding a new tag to the MAINTAINERS file
->>>>
->>>> 	D: Commit subsystem prefix
->>>>
->>>> ex/ for FPGA DFL DRIVERS
->>>>
->>>> 	D: fpga: dfl:
->>> I'm all for it.  Good luck with the effort.  It's not completely trivial.
->>>
->>> From a decade ago:
->>>
->>> https://lore.kernel.org/lkml/1289919077.28741.50.camel@Joe-Laptop/
->>>
->>> (and that thread started with extra semicolon patches too)
->> Reading the history, how about this.
->>
->> get_maintainer.pl outputs a single prefix, if multiple files have the
->> same prefix it works, if they don't its an error.
->>
->> Another script 'commit_one_file.sh' does the call to get_mainainter.pl
->> to get the prefix and be called by run-clang-tools.py to get the fixer
->> specific message.
-> It's not whether the script used is get_maintainer or any other script,
-> the question is really if the MAINTAINERS file is the appropriate place
-> to store per-subsystem patch specific prefixes.
+On Fri, Oct 23, 2020 at 8:07 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> It is.
+> Hi!
 >
-> Then the question should be how are the forms described and what is the
-> inheritance priority.  My preference would be to have a default of
-> inherit the parent base and add basename(subsystem dirname).
+> There is a pending patch series [1] to remove a lot of legacy code
+> related to old Intel MID platforms. (Note, not all of them, since we
+> have an ACPI based Intel Edison edition which continue working nicely
+> after this)
 >
-> Commit history seems to have standardized on using colons as the separator
-> between the commit prefix and the subject.
+> Most of the code is shuffling arch/x86 and the series is quite
+> dependent on the contents of that folder (for the sake of
+> bisectability). Since that the only way it would be integrated is
+> through the tip tree I would like to have your preliminary review on
+> other contents =E2=80=94 #3 and #4 are PDx86 and GPIO subsystems. In this=
+ case
+> I won't resend this many times.
 >
-> A good mechanism to explore how various subsystems have uses prefixes in
-> the past might be something like:
+> I have a preliminary offline agreement with Len Brown on SFI removal
+> (#2 in the list).
 >
-> $ git log --no-merges --pretty='%s' -<commit_count> <subsystem_path> | \
->   perl -n -e 'print substr($_, 0, rindex($_, ":") + 1) . "\n";' | \
->   sort | uniq -c | sort -rn
+> [1]: https://gitlab.com/andy-shev/next/-/commits/topic/mid-removal/
 
-Thanks, I have shamelessly stolen this line and limited the commits to the maintainer.
-
-I will post something once the generation of the prefixes is done.
-
-Tom
-
+--=20
+With Best Regards,
+Andy Shevchenko
