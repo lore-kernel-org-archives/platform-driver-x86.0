@@ -2,96 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF77C64E75
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 00:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FFEC6379F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 13:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C862168B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 00:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAA12075A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Nov 2020 13:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgKWAyJ (ORCPT
+        id S1732432AbgKWNWN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 22 Nov 2020 19:54:09 -0500
-Received: from smtprelay0002.hostedemail.com ([216.40.44.2]:50256 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725782AbgKWAyH (ORCPT
+        Mon, 23 Nov 2020 08:22:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35596 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388856AbgKWNWM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 22 Nov 2020 19:54:07 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2D37318029125;
-        Mon, 23 Nov 2020 00:54:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: steam95_4513bd127361
-X-Filterd-Recvd-Size: 3177
-Received: from XPS-9350.home (unknown [47.151.128.180])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 23 Nov 2020 00:53:59 +0000 (UTC)
-Message-ID: <21826b6d513c4d9ccc795179c1edb0df2361d870.camel@perches.com>
-Subject: Re: [RFC] MAINTAINERS tag for cleanup robot
-From:   Joe Perches <joe@perches.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Tom Rix <trix@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        clang-built-linux@googlegroups.com, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        tboot-devel@lists.sourceforge.net, kvm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-media@vger.kernel.org,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-wireless@vger.kernel.org,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cluster-devel@redhat.com, linux-mtd@lists.infradead.org,
-        keyrings@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, alsa-devel@alsa-project.org,
-        bpf@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-nfs@vger.kernel.org, patches@opensource.cirrus.com
-Date:   Sun, 22 Nov 2020 16:53:58 -0800
-In-Reply-To: <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-References: <20201121165058.1644182-1-trix@redhat.com>
-                 <20201122032304.GE4327@casper.infradead.org>
-                 <ddb08a27-3ca1-fb2e-d51f-4b471f1a56a3@redhat.com>
-                 <20201122145635.GG4327@casper.infradead.org>
-                 <0819ce06-c462-d4df-d3d9-14931dc5aefc@redhat.com>
-         <751803306cd957d0e7ef6a4fc3dbf12ebceaba92.camel@HansenPartnership.com>
-         <dec07021e7fc11a02b14c98b713ae2c6e2a4ca00.camel@perches.com>
-         <alpine.LNX.2.23.453.2011230810210.7@nippy.intranet>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Mon, 23 Nov 2020 08:22:12 -0500
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC91C0613CF
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Nov 2020 05:22:11 -0800 (PST)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94)
+        (envelope-from <benjamin@sipsolutions.net>)
+        id 1khBnB-00DBRV-Hd; Mon, 23 Nov 2020 14:22:05 +0100
+From:   Benjamin Berg <benjamin@sipsolutions.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Benjamin Berg <bberg@redhat.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Send tablet mode switch at wakeup time
+Date:   Mon, 23 Nov 2020 14:21:57 +0100
+Message-Id: <20201123132157.866303-1-benjamin@sipsolutions.net>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2020-11-23 at 09:33 +1100, Finn Thain wrote:
-> On Sun, 22 Nov 2020, Joe Perches wrote:
+From: Benjamin Berg <bberg@redhat.com>
 
-> > But provably correct conversions IMO _should_ be done and IMO churn 
-> > considerations should generally have less importance.
-[]
-> Moreover, the patch review workload for skilled humans is being generated 
-> by the automation, which is completely backwards: the machine is supposed 
-> to be helping.
+The lid state may change while the machine is suspended. As such, we may
+need to re-check the state at wake-up time (at least when waking up from
+hibernation).
+Add the appropriate call to the resume handler in order to sync the
+SW_TABLET_MODE switch state with the hardware state.
 
-Which is why the provably correct matters.
+Fixes: dda3ec0aa631 ("platform/x86: thinkpad_acpi: Implement tablet mode using GMMS method")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210269
+Signed-off-by: Benjamin Berg <bberg@redhat.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-coccinelle transforms can be, but are not necessarily, provably correct.
-
-The _show transforms done via the sysfs_emit_dev.cocci script are correct
-as in commit aa838896d87a ("drivers core: Use sysfs_emit and sysfs_emit_at
-for show(device *...) functions")
-
-Worthwhile?  A different question, but I think yes as it reduces the
-overall question space of the existing other sprintf overrun possibilities.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e3810675090a..9104e0ee37cd 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -4228,6 +4228,7 @@ static void hotkey_resume(void)
+ 		pr_err("error while attempting to reset the event firmware interface\n");
+ 
+ 	tpacpi_send_radiosw_update();
++	tpacpi_input_send_tabletsw();
+ 	hotkey_tablet_mode_notify_change();
+ 	hotkey_wakeup_reason_notify_change();
+ 	hotkey_wakeup_hotunplug_complete_notify_change();
+-- 
+2.26.2
 
