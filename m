@@ -2,111 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BF3C56201
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF6DC56202
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676932076B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A2B2075A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utswucX/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qie0VHmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732523AbgKXLfF (ORCPT
+        id S1732523AbgKXLoP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 06:35:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730158AbgKXLfF (ORCPT
+        Tue, 24 Nov 2020 06:44:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33915 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731524AbgKXLoP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 06:35:05 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215ECC0613D6;
-        Tue, 24 Nov 2020 03:35:05 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id n137so8197915pfd.3;
-        Tue, 24 Nov 2020 03:35:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cW/ptNFbyubYTVlLmkH+6Zzywp/+iQxPtreJHO5qxG8=;
-        b=utswucX/NMJSC7Ug9Go1731F74lTp+lOSox8mk2K3LcwPavQdMJom5hJ5i9GGnqB+s
-         O/ZVy4xI5we3l93wdPq9PRaXF5di0AHwCHcjX2qxCs9rX/U5C0wiemCivx9xeQaUfMdA
-         ummBWVE2TTEKSKV5I8zpPOz70lVZntCg5OeIERgnCjxPlztyILTDVb+Rt+GaAxpdgUPH
-         mgYvaikTUqfVPbWbM+QKZ1TsJBWjaFmufRkNHuDAmSefEzlUj9U92MThdFhnkdPswRwq
-         8SNH9Eq9403Cmf7bQfbVpkEoJD5RnGWAOlNsUW/Apjz2UGlvT1cUNyNVUYwxm75gE5xF
-         7CqQ==
+        Tue, 24 Nov 2020 06:44:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606218253;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4NrSc8wihaHmFWeUfPDKBxbk/YM1ofsoDJ23X2QLggQ=;
+        b=Qie0VHmMOEtT2D7a5b6ZuOc6pYhiutDsfnw87BkEzj5F+29OEJAQOgRxBIhEbU3tMWSwDZ
+        xh7NaNvs6tzLABZ54Y02+VcaJPTRDmMI+8+5yjm5IMWyjiweBECKWGj2GmTlGaNDf38K5q
+        qm4aGxdiqyuZBdM0PenJg9vJw8lwyGY=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-I0e_D1TAOQCLuzC8TAl9kw-1; Tue, 24 Nov 2020 06:44:11 -0500
+X-MC-Unique: I0e_D1TAOQCLuzC8TAl9kw-1
+Received: by mail-ej1-f69.google.com with SMTP id gr9so6763063ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 03:44:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cW/ptNFbyubYTVlLmkH+6Zzywp/+iQxPtreJHO5qxG8=;
-        b=i945hI07wFG4aTmnYun3BPIwD2+kPxcHa+bPMkQVZHEilMpsonK2Z3l2oHf5SRvMvZ
-         uNM5xOtHYl8CUWp1gXvhy9sZrqcJ+7uaYXO9ox04XbGIL3VvZe06oQIVY4pEx0mvh+6A
-         Dt/75Sq5Ec8zQ1wvtKqQqDhfKdj04Dwf5iXHv7KmQRVCZZZL8VbMg2clks9qmShTYQxU
-         DPJ1Hc6lcuy94dyW/J1994s4U6UB8/UiQjIjFVse5d5Lq5u4Yzp5zORIHK9Hgrjs5UJW
-         SPzKsGhTTcUSDJTifEREcEhpc9R518ZXK69zfG0ehxsR/993PoHy+3tPqhzwzuySHE7r
-         5qFA==
-X-Gm-Message-State: AOAM531VrI1hP5SGfn7bvEipn11sbfEC8CNrCd5creo3j1iwQJSzj1yG
-        lUuAPVhvTK5xmHPI85BJxqKLN+WGhROuHWoe9OU=
-X-Google-Smtp-Source: ABdhPJx8EHx3Q5Tc0KAdTDCpH3gvhep/beyCO4T3G3g3v8aUj93MI9Zf25rDj5EUYnAH2K3rrxsvPDEeT5h5n8AUx5Q=
-X-Received: by 2002:a17:90a:34cb:: with SMTP id m11mr882961pjf.181.1606217704723;
- Tue, 24 Nov 2020 03:35:04 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4NrSc8wihaHmFWeUfPDKBxbk/YM1ofsoDJ23X2QLggQ=;
+        b=BmBHbMTWf7gZB12BDcUVpB1ar2xPGDDYXKOsq0UNjbN8BkfcbbONqH8XyNiaX9Qhqa
+         TcL7hTYMfIurbufEe8V458G51F4doyziZQfiOnmC5/O5zQCPY4ZBHy/SPhl8xK7h/25E
+         L3K9G0MXJj9sYG28ptKTgaJUy34JJEAdAE5uXQmwK+29Ye9bVV6SfxhNbhI3Mpphyl1j
+         RatNLmuIFcStYSdV72IHE1KdimnIkfDzBWu6yPFDxN5AVEsKFPxQBnS+8E5ZJAWrB/Ec
+         DNhmcBE3hGnreNMUvbGiA0T3YXHc+kaimtFB9UvUjYtYB1C20CsEK6aNYEvrL2kdldRn
+         T0DQ==
+X-Gm-Message-State: AOAM533B5pVOVaT78ntxIHxR4T7OPc63oadQsgipdNYTsKFbvQRD3X1l
+        2MB4CzEhHghqAoMskS9E+/b94ghnX0THR7UPbHb8PKPcuL0flw7J6yr9RFvyS+gcZgMaQgYW2Xo
+        CvU2F+upu8g2jyFUFZChTplGhM0PplusWnQ==
+X-Received: by 2002:a17:906:6c93:: with SMTP id s19mr3903946ejr.544.1606218250335;
+        Tue, 24 Nov 2020 03:44:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyqeAEBo8mx23ukw9XW1uC+amQFfgZkj7hPg4gx5bQ2PGxT2SPXRHV2NUknaBSKxNMUIpb6Ug==
+X-Received: by 2002:a17:906:6c93:: with SMTP id s19mr3903927ejr.544.1606218250181;
+        Tue, 24 Nov 2020 03:44:10 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
+        by smtp.gmail.com with ESMTPSA id p25sm4272540eju.63.2020.11.24.03.44.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Nov 2020 03:44:09 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: pmt: Fix a potential Oops on error in probe
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20201117072251.GC1111239@mwanda>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3a84cc88-25d2-7265-6183-41337109df87@redhat.com>
+Date:   Tue, 24 Nov 2020 12:44:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-References: <20201105080014.45410-1-hdegoede@redhat.com> <CAHp75Vdm4PuQpAMj98wJZoNMwV2tFGPj-r9ezvXyWCYj2cSuaA@mail.gmail.com>
- <81343662-aaac-a5e8-af86-1370951ff646@redhat.com> <CAHp75VdbHPwnOAUWjSN+HuVsWVb=8EUwfWNR1onL9QNrX8yU0w@mail.gmail.com>
- <6345eeb9-8416-3e7c-e619-632b5d4abbbd@redhat.com> <CAHp75VdcG_qDpJoppc3Ri8y0rjL9m07r9Xb4JPu30HE6TYf9zQ@mail.gmail.com>
- <5f9b0957-fd18-3ad3-79e0-2124edd7d434@redhat.com>
-In-Reply-To: <5f9b0957-fd18-3ad3-79e0-2124edd7d434@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Nov 2020 13:35:53 +0200
-Message-ID: <CAHp75VfVyV4Z+FqQJve8ozOK-MasBFSL1Psh+O41hhTxox6Hdw@mail.gmail.com>
-Subject: Re: [RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
- to instantiated i2c-clients
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201117072251.GC1111239@mwanda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 12:35 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 11/10/20 3:47 PM, Andy Shevchenko wrote:
-> > On Tue, Nov 10, 2020 at 1:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 11/10/20 11:10 AM, Andy Shevchenko wrote:
-> >>> On Mon, Nov 9, 2020 at 1:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > ...
-> >
-> >>> I think in general the direction to switch to fwnode is a good one. I
-> >>> was thinking about moving i2c core to use swnodes in which case they
-> >>> will utilize fwnode pointer. But it might have complications, you are
-> >>> right.
-> >>
-> >> So do you agree to just keep this series in the archives (in case we need
-> >> it later) for now ? Or would you still like me to post a non RFC version ?
-> >
-> > If nobody else has a different opinion (Heikki, Wolfram, Rafael?), I'm
-> > fine with it to be in archives for the time being.
->
-> Since no-one else has responded, lets just keep this series for the
-> archives.
->
-> Andy, that also means that there no longer is a reason to hold of merging
-> your i2c-multi-instantiate cleanup series (minus patch 3 as discussed),
-> so I've merged that into my review-hans branch now.
+Hi,
 
-Cool, thanks!
+On 11/17/20 8:22 AM, Dan Carpenter wrote:
+> The "ns->attr_grp" pointer can be NULL so this error handling code needs
+> to check for that to avoid an Oops.
+> 
+> Fixes: e2729113ce66 ("platform/x86: Intel PMT class driver")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/x86/intel_pmt_class.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/intel_pmt_class.c b/drivers/platform/x86/intel_pmt_class.c
+> index aa88dc23bbde..c8939fba4509 100644
+> --- a/drivers/platform/x86/intel_pmt_class.c
+> +++ b/drivers/platform/x86/intel_pmt_class.c
+> @@ -225,7 +225,8 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+>  		return 0;
+>  
+>  fail_ioremap:
+> -	sysfs_remove_group(entry->kobj, ns->attr_grp);
+> +	if (ns->attr_grp)
+> +		sysfs_remove_group(entry->kobj, ns->attr_grp);
+>  fail_sysfs:
+>  	device_unregister(dev);
+>  fail_dev_create:
+> 
+
