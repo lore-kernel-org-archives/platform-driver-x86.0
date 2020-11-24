@@ -5,78 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968DAC56201
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7205C56201
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1722076B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614AF2067C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WGDxhVps"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUtCCsfa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733236AbgKXMHh (ORCPT
+        id S1732987AbgKXMHu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 07:07:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30698 "EHLO
+        Tue, 24 Nov 2020 07:07:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39685 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729172AbgKXMHg (ORCPT
+        by vger.kernel.org with ESMTP id S1733254AbgKXMHu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 07:07:36 -0500
+        Tue, 24 Nov 2020 07:07:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606219655;
+        s=mimecast20190719; t=1606219669;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jUepnH/BY2weycp09UNa2ieOA6E5qsUEEiisaW54yy4=;
-        b=WGDxhVpsNn54JKS+9qmcajLMEXBVb1VjV8MiRCuWBIMRSfDQslwcs4fFTA1CUZugWwKyx0
-        496tB2dXmoZ/4JcLL9/frFnW1hmqkC0/yLiSFkowgnrffa/ZCuKZGepEZxoShee1nmovFK
-        BUniZwTugDbm+kYyNOK8DuvKOm5Dnf0=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-556-iwcBy7VkOla1T3rCXD4m-g-1; Tue, 24 Nov 2020 07:07:33 -0500
-X-MC-Unique: iwcBy7VkOla1T3rCXD4m-g-1
-Received: by mail-ej1-f72.google.com with SMTP id dx19so6740891ejb.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:07:33 -0800 (PST)
+        bh=SOMM6/UKvaAowB9/50O0goOjLqACWA2H3QoKxNezUPg=;
+        b=PUtCCsfaP/LPrn2ogeU1KHqlinH2jviuiR4yv5QYJE2TrIvJ/fpmU5+mouNd9qxk4Smxo1
+        Q6Fe1UHmbHrHWshw0Zq+V0ZOkK+Pre2bj/ZhJeQDS6L1HiKQHhlOx4lG99rDF2fHsFsc2e
+        X6iVmHc/UVy21TFRC81OszfTigp9TEk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-HsPFCvJmPxCgUBWYkafbOg-1; Tue, 24 Nov 2020 07:07:47 -0500
+X-MC-Unique: HsPFCvJmPxCgUBWYkafbOg-1
+Received: by mail-ej1-f70.google.com with SMTP id 2so6848142ejv.4
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:07:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jUepnH/BY2weycp09UNa2ieOA6E5qsUEEiisaW54yy4=;
-        b=nQUOXGOv9T9sabHkZvZcfl/+XfRtl0Eb1e2rq69YwQ7ucSCkM9Xl0Y6EjXkCkvvMEf
-         xSFsuWgSRNL6FmnurBlqdFWbsZ71J/Tg+ANKOhDaK/5YcNZYNDnQvUYWwttsIOsPawr9
-         3WO3v/2uz5j13MVNgfqP76a8a6e2ybtMaUUbX7PStUiNqzTQd0/tVUn/8wQgfLPONGcw
-         Bg3gsd7McisWWVUnvdJKODzqO6qM+5j0jDphGNTuj/6h7ljweOfuafUyZQEr2GzemieW
-         V0bNkhy9cXLppW1XbbjMc9PSmUYU55SlyzTFBe6yy9tzE5SuB7ImPQjnAw/PXWVkjPsY
-         CsQQ==
-X-Gm-Message-State: AOAM532oSQhwn986dLlHtN2uS6EJCtcBcUV1h1gqf8TTjkRc/kumHOXD
-        7csdh0UZqP1TZwaSdzzOnPyC94av4QmjrC6u2B1E1L14lkEO20i1ZaIWVRk6BrFdQNZwIreqbDU
-        1tpkbOVYHNY4QXdueGwiFjBz7HvJRjrmzVg==
-X-Received: by 2002:aa7:d801:: with SMTP id v1mr3507233edq.252.1606219651924;
-        Tue, 24 Nov 2020 04:07:31 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyoJogVcFvQbdPqObhJFAsKvlWD4bs/ji5r0zZThKsuDDMBWN5+EhaXd9jsoqJ8+JF7NrcKKA==
-X-Received: by 2002:aa7:d801:: with SMTP id v1mr3507213edq.252.1606219651736;
-        Tue, 24 Nov 2020 04:07:31 -0800 (PST)
+        bh=SOMM6/UKvaAowB9/50O0goOjLqACWA2H3QoKxNezUPg=;
+        b=UDmvdsIN4qeppWzhYKSB4stq9/wRRQ1DHHTQPXCYCFq/pPlrjK4eoliFRZ2XPleNdL
+         Kg1ykR6FgmiOW0+TS730qrExcyFxA2IDGsi4z2HmhyAF4K2W4xN2yCmm4Nu2bSi4L42L
+         Pf5YUv/GBx5DPcTBNKotxkAQJUN1VLsxSAtTgKm87T0l3jCwPSwxvxoZOuEco+mmff1D
+         gSpm8i8MuF5pdAmtuunCySi0cPyF3N3T+ItShUItw9lxOf53JSIdz5B+whJQ/wq6NoW/
+         kz1ydoV6Qm9lslqGRSEUfl9BBs95evj2wnmoz87Tu/2vPuS8xLf/EcAfplaDJicIU98W
+         3hKA==
+X-Gm-Message-State: AOAM5336Xn0iGrdkKPbgTO6958FOZkDNkgB1OKDNz6CGzGQnP+Wosui8
+        SJQPNTrM0bBQiyiHt/Zgh9VfiNa7aUmTpAomkHF5rukCHk4/8eCR19uD/M5AQXSXIn+qbWBqiUy
+        dOU+K532PrtnL0m2DYkihUj9iGlcRxXwdKg==
+X-Received: by 2002:a17:906:c24b:: with SMTP id bl11mr3826252ejb.3.1606219665925;
+        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz98Nk2zSdgqN22qWsD6rq4DWW82NG8CBkl8i2giR8popap81e2BivxoWCtDL/2k5dHWhluMA==
+X-Received: by 2002:a17:906:c24b:: with SMTP id bl11mr3826239ejb.3.1606219665759;
+        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id j9sm6690121ejf.105.2020.11.24.04.07.30
+        by smtp.gmail.com with ESMTPSA id c6sm6380279edy.62.2020.11.24.04.07.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 04:07:31 -0800 (PST)
-Subject: Re: [PATCH] platform/surface: gpe: Add support for 15" Intel version
- of Surface Laptop 3
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>, linux-kernel@vger.kernel.org
-References: <20201113223935.2073847-1-luzmaximilian@gmail.com>
+        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: toshiba_acpi: Fix the wrong variable
+ assignment
+To:     xiakaixu1987@gmail.com, coproscefalo@gmail.com,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kaixu Xia <kaixuxia@tencent.com>
+References: <1606024177-16481-1-git-send-email-kaixuxia@tencent.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <265fc25c-c6f8-e1df-ccc5-fa4f55c42f39@redhat.com>
-Date:   Tue, 24 Nov 2020 13:07:30 +0100
+Message-ID: <543af665-bec9-3407-73cb-0e5b614de810@redhat.com>
+Date:   Tue, 24 Nov 2020 13:07:44 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201113223935.2073847-1-luzmaximilian@gmail.com>
+In-Reply-To: <1606024177-16481-1-git-send-email-kaixuxia@tencent.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,12 +87,18 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/13/20 11:39 PM, Maximilian Luz wrote:
-> In addition to a 13" version, there is also a 15" (business) version of
-> the Surface Laptop 3 based on Intel CPUs. This version also handles
-> wakeup by lid via (unmarked) GPEs, so add support for it as well.
+On 11/22/20 6:49 AM, xiakaixu1987@gmail.com wrote:
+> From: Kaixu Xia <kaixuxia@tencent.com>
 > 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> The commit 78429e55e4057 ("platform/x86: toshiba_acpi: Clean up
+> variable declaration") cleans up variable declaration in
+> video_proc_write(). Seems it does the variable assignment in the
+> wrong place, this results in dead code and changes the source code
+> logic. Fix it by doing the assignment at the beginning of the funciton.
+> 
+> Fixes: 78429e55e4057 ("platform/x86: toshiba_acpi: Clean up variable declaration")
+> Reported-by: Tosk Robot <tencent_os_robot@tencent.com>
+> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -110,31 +117,29 @@ Regards,
 Hans
 
 > ---
->  drivers/platform/surface/surface_gpe.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  drivers/platform/x86/toshiba_acpi.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/drivers/platform/surface/surface_gpe.c b/drivers/platform/surface/surface_gpe.c
-> index 0f44a52d3a9b..e49e5d6d5d4e 100644
-> --- a/drivers/platform/surface/surface_gpe.c
-> +++ b/drivers/platform/surface/surface_gpe.c
-> @@ -146,6 +146,18 @@ static const struct dmi_system_id dmi_lid_device_table[] = {
->  		},
->  		.driver_data = (void *)lid_device_props_l4D,
->  	},
-> +	{
-> +		.ident = "Surface Laptop 3 (Intel 15\")",
-> +		.matches = {
-> +			/*
-> +			 * We match for SKU here due to different variants: The
-> +			 * AMD (15") version does not rely on GPEs.
-> +			 */
-> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
-> +			DMI_EXACT_MATCH(DMI_PRODUCT_SKU, "Surface_Laptop_3_1872"),
-> +		},
-> +		.driver_data = (void *)lid_device_props_l4D,
-> +	},
->  	{ }
->  };
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index e557d757c647..fa7232ad8c39 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -1478,7 +1478,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+>  	struct toshiba_acpi_dev *dev = PDE_DATA(file_inode(file));
+>  	char *buffer;
+>  	char *cmd;
+> -	int lcd_out, crt_out, tv_out;
+> +	int lcd_out = -1, crt_out = -1, tv_out = -1;
+>  	int remain = count;
+>  	int value;
+>  	int ret;
+> @@ -1510,7 +1510,6 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
 >  
+>  	kfree(cmd);
+>  
+> -	lcd_out = crt_out = tv_out = -1;
+>  	ret = get_video_status(dev, &video_out);
+>  	if (!ret) {
+>  		unsigned int new_video_out = video_out;
 > 
 
