@@ -5,80 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE89C2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B79C2D0E4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7FA52076B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085542076E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:12:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtNRvz8C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUMLn53S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbgKXMKO (ORCPT
+        id S1732987AbgKXMM2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 07:10:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54292 "EHLO
+        Tue, 24 Nov 2020 07:12:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25188 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729173AbgKXMKO (ORCPT
+        by vger.kernel.org with ESMTP id S1732523AbgKXMM2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 07:10:14 -0500
+        Tue, 24 Nov 2020 07:12:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606219812;
+        s=mimecast20190719; t=1606219946;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wUnv+IHMDftcQjA0JBjF2MFD6nD9bm1oMfaBL/SXijg=;
-        b=RtNRvz8Cl1VDqfnj3SEzWVZLg7KGEx9FNl6O1LmMaTNOV3Mk8BIYovV2Cz/NRtYLVHf2E1
-        8Ynnik99ik4d4u1/JdzcVfulD/BLHnGIKtWBGTFNV84THh+HD2WKbg9oM4AgcbvmFu2lyo
-        ePODCmebAWJzlyqaLv5P96lk8wnJyAE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-RY7sOOM9NKioBxXYe2VPrg-1; Tue, 24 Nov 2020 07:10:11 -0500
-X-MC-Unique: RY7sOOM9NKioBxXYe2VPrg-1
-Received: by mail-ej1-f69.google.com with SMTP id gx12so6727317ejb.18
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:10:11 -0800 (PST)
+        bh=QYtm4WS/VKbRUCOq0XLPYf6Vll9ag4HN6eyUxZktLK0=;
+        b=hUMLn53SOOxKyNamTEU8aqOvfZELcZc1a972Gsg2Y34cHeA3QM40E/gx22jlAJkfgfwMjx
+        qWjB1F8fPNxNrbA4B3x06hQ9/hIAdot8tTsr6kpuWLF1xihHkP1LzQgtUXlt4v4PHDhEcH
+        zlnlVDHERSc4qVR7JZpZle6DsRs4ThI=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-y-rjmfPsPTu1_JR03DdtOw-1; Tue, 24 Nov 2020 07:12:25 -0500
+X-MC-Unique: y-rjmfPsPTu1_JR03DdtOw-1
+Received: by mail-ed1-f70.google.com with SMTP id bm10so7914543edb.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:12:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wUnv+IHMDftcQjA0JBjF2MFD6nD9bm1oMfaBL/SXijg=;
-        b=Q3aAAsbgp9M0WWeNZfNIl0zMMradPzwsdNfC7oXM+sm5VI4v3x/aXltR+VJxRPw4yw
-         FITtBIhOXDYbjAsNREySYUH90WjHQ4cAVnsDMmlSx8jorcV49qNwBJ+ADEQatEPgYnbW
-         GujLKoyXZ+dkM3BzGsX/6Je8s5aUSyiyJb+8O7Hsrml7yZLQWuw+yl4hTkmZzfcnJ3gK
-         cQEfPLGi+xAWdHYU09XuZrab72MuObBKDUiQi6/sI82HJBXrrOMy1WkKv7tw9j520wMF
-         LMp5QtRtMhgMPb4rkapg7NRabvyI3MSCDJIeawEvj6PQVZLB08MGeJGkz8A11ENe4uN3
-         vwlg==
-X-Gm-Message-State: AOAM531Z7rXO0raV7dzOfZYn5ttxRXSqTgRZsa1H/52SMBZPvFepUCHU
-        ZQzB5BZf1F3j++Mha6YaXkC72lEBkMsaSDG204puH6LVl8tK3027za1WxZDVGejYD4Bq1nCVhWA
-        BG6z8z1xy+KFcIc9eDg0MGHTmnybdbd/Shw==
-X-Received: by 2002:a05:6402:1a31:: with SMTP id be17mr3404492edb.377.1606219809299;
-        Tue, 24 Nov 2020 04:10:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyE7c3L5xWKutv3UZyQAC4urY5anoXWIxZDDJPTstxAzpfazN3NYht7FbOiT552ww6h44SJvg==
-X-Received: by 2002:a05:6402:1a31:: with SMTP id be17mr3404476edb.377.1606219809151;
-        Tue, 24 Nov 2020 04:10:09 -0800 (PST)
+        bh=QYtm4WS/VKbRUCOq0XLPYf6Vll9ag4HN6eyUxZktLK0=;
+        b=sYqhFQJ6D8vpqvU/3M/e+ltaEFYuNv5dILqWgduBAP4hYzmncy4pQEiJqor1qKy9ze
+         mH/W/YDUe/45mAeoT/profdmBV8l+Ur8VukMbFK2wMBh06kJjeeKfLNkxlif5Z0IsdcE
+         uqcfEQkYhC04+nqCHMtiMi3Ku0bILneQrLNQnZ+I69vxsyAdutdAwOmuPhZXI6CPJH5C
+         HiuxkkcV/n6Pd71Z/r3JpQ3dP/zGSYjFkR+xRvrIXnJuXhZFy0vvG8lXeRvhR5+pSerR
+         h/s+FhqBgPIRnqP8euj2pOrgx6q1AqbrcbHdSS+UDJs48KzCqZ8XcSNfUwgPiixTMvc8
+         tW5g==
+X-Gm-Message-State: AOAM530OT6mAEksHYWsVOqSqc7lQu08nPKG6HRANpa7mf2iql6kHKWSi
+        sru1je3V1Hnz4A9phIbxelC4BcZFI+dv/f4BGeJ1lDg1ggCtOGWxnrm8k9YcIOLfvpisp76yAs/
+        47VpjsjUGJ9nNhERNQLi7ULeYqIM/hOWbLA==
+X-Received: by 2002:a17:906:1183:: with SMTP id n3mr3751835eja.188.1606219943570;
+        Tue, 24 Nov 2020 04:12:23 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxk/PTwzMP+ErI6EGlqY2qYdUTtV53aR0KLZ94Bj3nBwadWAvcZpZNWLEJ5MKudenQ/xcOiPw==
+X-Received: by 2002:a17:906:1183:: with SMTP id n3mr3751822eja.188.1606219943366;
+        Tue, 24 Nov 2020 04:12:23 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id n15sm6906438eje.112.2020.11.24.04.10.08
+        by smtp.gmail.com with ESMTPSA id j7sm6742345ejk.14.2020.11.24.04.12.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 04:10:08 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Send tablet mode switch at
- wakeup time
-To:     Benjamin Berg <benjamin@sipsolutions.net>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Benjamin Berg <bberg@redhat.com>
-References: <20201123132157.866303-1-benjamin@sipsolutions.net>
+        Tue, 24 Nov 2020 04:12:22 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Support for tablet mode on HP
+ Pavilion 13 x360 PC
+To:     Max Verevkin <me@maxverevkin.tk>
+Cc:     AceLan Kao <acelan.kao@canonical.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201124131652.11165-1-me@maxverevkin.tk>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c8deaf95-6b49-d8d7-6f09-1845ad70f40d@redhat.com>
-Date:   Tue, 24 Nov 2020 13:10:07 +0100
+Message-ID: <a7efc180-be37-8058-465a-5e334e131b48@redhat.com>
+Date:   Tue, 24 Nov 2020 13:12:22 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201123132157.866303-1-benjamin@sipsolutions.net>
+In-Reply-To: <20201124131652.11165-1-me@maxverevkin.tk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,18 +87,8 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/23/20 2:21 PM, Benjamin Berg wrote:
-> From: Benjamin Berg <bberg@redhat.com>
-> 
-> The lid state may change while the machine is suspended. As such, we may
-> need to re-check the state at wake-up time (at least when waking up from
-> hibernation).
-> Add the appropriate call to the resume handler in order to sync the
-> SW_TABLET_MODE switch state with the hardware state.
-> 
-> Fixes: dda3ec0aa631 ("platform/x86: thinkpad_acpi: Implement tablet mode using GMMS method")
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210269
-> Signed-off-by: Benjamin Berg <bberg@redhat.com>
+On 11/24/20 2:16 PM, Max Verevkin wrote:
+> Signed-off-by: Max Verevkin <me@maxverevkin.tk>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -118,20 +107,25 @@ Regards,
 Hans
 
 > ---
->  drivers/platform/x86/thinkpad_acpi.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/platform/x86/intel-vbtn.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index e3810675090a..9104e0ee37cd 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -4228,6 +4228,7 @@ static void hotkey_resume(void)
->  		pr_err("error while attempting to reset the event firmware interface\n");
+> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> index f5901b0b07cd..0419c8001fe3 100644
+> --- a/drivers/platform/x86/intel-vbtn.c
+> +++ b/drivers/platform/x86/intel-vbtn.c
+> @@ -206,6 +206,12 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "HP Stream x360 Convertible PC 11"),
+>  		},
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion 13 x360 PC"),
+> +		},
+> +	},
+>  	{} /* Array terminator */
+>  };
 >  
->  	tpacpi_send_radiosw_update();
-> +	tpacpi_input_send_tabletsw();
->  	hotkey_tablet_mode_notify_change();
->  	hotkey_wakeup_reason_notify_change();
->  	hotkey_wakeup_hotunplug_complete_notify_change();
 > 
 
