@@ -2,147 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FA6C83014
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38CDC83020
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A484A208C3
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2AF206F9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VGkGEFqn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sDlm1X3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbgKXN2a (ORCPT
+        id S2388125AbgKXN2i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 08:28:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33058 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388097AbgKXN23 (ORCPT
+        Tue, 24 Nov 2020 08:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388014AbgKXN2i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 08:28:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606224507;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hoVQsGPeYMPg55a/CIpD3Pwyw+YZDv743HAsIiOzXBw=;
-        b=VGkGEFqnCwSPFzr1nwSzOmfUdNFYGlhDyBWKch/u9pdY03pIz6qZDST1K3R+mZd0J85P5p
-        0Y3IIwvJMdUL15hExRWJuICrDbw/SogNraaGFuNPbyBpbTqxy0HD8U+24xxvylHBQrh+1E
-        MCotc/La4NSUx1xI8zZiO0qHvt51c1A=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-MKP7T9glOX-O_5FL_hnjcw-1; Tue, 24 Nov 2020 08:28:24 -0500
-X-MC-Unique: MKP7T9glOX-O_5FL_hnjcw-1
-Received: by mail-ej1-f72.google.com with SMTP id p18so6905618ejl.14
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 05:28:24 -0800 (PST)
+        Tue, 24 Nov 2020 08:28:38 -0500
+Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763EDC0613D6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 05:28:36 -0800 (PST)
+Received: by mail-ua1-x930.google.com with SMTP id y26so2920197uan.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 05:28:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s97CehM6t58x+FIlA/9XzWv/MyJk7cJIVfL91dOa3nY=;
+        b=sDlm1X3o82hqWm4S6DW8+9xQ9bUnbkZlNszFngeyjwq8Hasq/Z81IWu92LtfK34xJE
+         J6yj1yVcsQQSGoDivHD5ls3xcIe9S+D0qI4+V5l733FympIiNq8cnkT4TuDlKgev1m8q
+         DqiGOXzDrDVNxtv9H3I8VQNK5CPxvjfBzU4jqTl9qaCCNf4cNqn2xfL+q4HyVCZH9vI+
+         APd6Jk+XKvoc0XJOwOHthN0paUvWox6u4RGNdbiJLEEJTTQV8gc1T8uwEk1iQNaPDRgB
+         eL5GQo/3kU7w1Um3f45E0Cv3ymOT+kwZ8nX0reFwjp33GOFU2TNfXGhQzrQtRhWkdmgh
+         oKBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hoVQsGPeYMPg55a/CIpD3Pwyw+YZDv743HAsIiOzXBw=;
-        b=GNWIyAempfIN4f0q9r2cNLHCnA2UZPLxxzTfrPf6xUufjurZJRe+G4djOwqEpaYd32
-         BdjPnBhq9Z+VqFNG9pfW1yiX/SuhHqHNMu3VOknA4E/kCa1cdOB7mETjnWg5bfUtOfLq
-         6focD8hcNS5RV/ezm2lXb+eZ/WLAHday41SfqIZKSib9MVsOrlApWx2CzYMtpfzluwN6
-         PZQEQbIBJY6Rjxhfvbn+7rkwPOLWSaVDHLkTUAP58psuhjYheh1W+tF9mQ9ixBbgW36s
-         x4CLY5C0Wn0Gi4jZXzDsfsIy3UPTQLOMqQ7xdEbMTQZMpelwRMl0QZ1K9IwLQMjP4kvj
-         bkrA==
-X-Gm-Message-State: AOAM531M2EVXAYMSBABxJKnkOrB6LmyfiR2YM0LLpzE81D6H6CJqbKnh
-        HZOniwrSNyL8IoArqctJP37W0vJkS+Ur8/EYdhJKoq8jfNxQcEohEv5DyJ6aIcZdeEgQ4U/Jtmi
-        v49RAM4WFzUKnORzcpeF3es+lqMclmxQ1uw==
-X-Received: by 2002:a50:e786:: with SMTP id b6mr3807353edn.242.1606224503658;
-        Tue, 24 Nov 2020 05:28:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyiOTsKnrd5EVrA/8Cw7tRFpmDTYAleAZiY1oHxMLmMUuCRkwTGTiradXiqU871AuVkFJoXqg==
-X-Received: by 2002:a50:e786:: with SMTP id b6mr3807344edn.242.1606224503423;
-        Tue, 24 Nov 2020 05:28:23 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id x15sm7020012edj.91.2020.11.24.05.28.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 05:28:22 -0800 (PST)
-Subject: Re: Asus Zephyrus G14 GA401IH-HE003 problem with sound and fan
-To:     Mamchyts Dmitry <mamchyts@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     andriy.shevchenko@linux.intel.com
-References: <CAC+zXp_w2T5BYvzC+rF+7LGsgn64+9rLt8BT-=X2XE7qKqG=QQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0c2fd9aa-7af4-5adb-ae6d-923c5eefb0b8@redhat.com>
-Date:   Tue, 24 Nov 2020 14:28:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s97CehM6t58x+FIlA/9XzWv/MyJk7cJIVfL91dOa3nY=;
+        b=dHuqgS93UZt6zkfdK33Z2LUXfZDFM3av0bMIJJ4HrtwhQPToSqvYom2uBgS9zU0buw
+         AeJpJpe/1q8kyE8TLI6MriZSudC3MXncLKkUW6xbljLeex3CVcvbnd/mcDR/OQ95ccoX
+         DUhq//gRzd+No0Xm5qmluzHG+IDRONmoUym9wScVSvLML2FUs/qd+UlKt8FQbGAFLTv+
+         4jWlWY2pwgzMDbhfrhwVjdmP4eSSIe87rvHd5aItdi1VxPc/aOheSdpGb0cmJWVQdLls
+         1rSOxD+fx2l14yA7nIwXWnMImGzdPlQMOIWd0nUn8xVk941LC7eKl9L9MauxpKE5gPDL
+         FqKg==
+X-Gm-Message-State: AOAM530KKP4N0N9dihJirhcH/YyGT/RVrkMDxNoynJUuCMjG/f3X3BDS
+        V0U9ric6bkFqRqeG4Mu3jhLs+dBtoLyo600Tdj7U6YKipgE=
+X-Google-Smtp-Source: ABdhPJw6fnSgzxdv+wzTP8p7HKnceR7uYX5lH3a6XTaPo97TqzzhT7kB+csfM0qmtiPl27ZkHuZIiMz63REaic1g+3Q=
+X-Received: by 2002:ab0:224f:: with SMTP id z15mr1248816uan.70.1606224515597;
+ Tue, 24 Nov 2020 05:28:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAC+zXp_w2T5BYvzC+rF+7LGsgn64+9rLt8BT-=X2XE7qKqG=QQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <Q5ZWCQ.DX8TK304ORAI@gmail.com> <CAGTBY+sgwYrDPtQgJV=TcXJ73n8TGf9Nw=arCfWMUrVFzAsEVQ@mail.gmail.com>
+ <HTSPI6-Ba3MfCgVG7q_YbRF6mUqskmyRdtSb_7eE2G7oCi_rSo5UP1ZKRK-qVfzSZ1zm_5sNp5hUorvgRz3VF8RM8b8361CLzbq4X5z59hw=@protonmail.com>
+ <CAGTBY+vQ+UMPqFCwKMS0L5=F3eqQ21UtGETgmE+Le=SXcaWS2w@mail.gmail.com>
+ <bjucdDbwHvavLvYVkhboo_jhvKC6ccqAslFPuuYO0ZZcgTZZaICda3WMFZhw_zS1o1m7VanyCmaJ4HZMqgyXwsCfqJFDGxb_1A4pdNCe8Bw=@protonmail.com>
+ <CAGTBY+tso9BKJwe5F5bBU_RAo0yrwtYf=kGm1UvMpTJurS00MQ@mail.gmail.com>
+ <A3oiTx-vaeJfCMZHt3dL_jvvIWiEDWGcOZxpZCVSzWYHr94r7jmHVKP01ApdKc1mZdcKsmwrr0O4e_L5MBSgU_LcsyOpGLx9xbZjX1q900Y=@protonmail.com>
+ <CAGTBY+t9fh6P-iCcvKNm4S2==SgGMCrQL5kh00n=_G4WpzFNOw@mail.gmail.com> <f7786f2f-b770-4875-26be-9e48b4cb914c@redhat.com>
+In-Reply-To: <f7786f2f-b770-4875-26be-9e48b4cb914c@redhat.com>
+From:   Rhys Perry <rhysperry111@gmail.com>
+Date:   Tue, 24 Nov 2020 13:28:09 +0000
+Message-ID: <CAGTBY+t+QpPTeW9NnEnRP1eF==AEdKAcCAmtWfCmnjK1ZOgL3A@mail.gmail.com>
+Subject: Re: [hp_wmi] Recieving same keycode from two keys
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+>
+> Hi Rhys,
+>
+> I just heard from another HP user that updating his BIOS fixed this for him,
+> are you at the latest BIOS for your machine?
+>
 
-On 11/12/20 8:19 PM, Mamchyts Dmitry wrote:
-> I got an Asus Zephyrus G14 GA401IH-HE003 with AMD Ryzen 7 4800HS and a
-> NVIDIA GeForce GTX 1650.
-> I am use 5.9.8-050908-generic kernel from
-> (kernel.ubuntu.com/~kernel-ppa/mainline/v5.9.8/)
-> 
->     dmamchyts@ga401ih:~$ cat /etc/os-release
->     NAME="Ubuntu"
->     VERSION="20.10 (Groovy Gorilla)"
-> 
-> I have some problem with sound and fan:
-> The first problem is a sound from notebook speakers: when I use
-> headphones via 3.5 jack - all works fine. I can control sound level
-> (from low to high). But when I try to listen to any sounds from
-> notebook speakers - volume always has a high level (I think it's a max
-> level of notebook speakers sound). I am using KDE, and I hear a sound
-> level of 5% the same as 100%.
+Thanks for notifing me, I just checked the HP website and there *is* a
+bios update available for my laptop (released on Jul 7th). However, as
+HP does not provide BIOS updates for my model through the LVFS
+(desptite being a member), I am going to have to reinstall Windows -
+which, as I am sure you can appreciate, is not an enjoyable task.
+Especially trying to stop it messing with my pure Linux install.
 
-Next time please try reporting 1 issue per bug report. The
-platform-driver-x86@vger.kernel.org mailinglist is the right address
-for the fan issue, but for the sound issue you really should send
-a separate bug report to the sound/alsa developers.
-
-> The second problem is a fan speed.
-
-What exactly is the problem with the fan speed ?
-
-<snip>
-
->     xxx@ga401ih:~/downloads$ ll /sys/class/hwmon/hwmon6/
->     total 0
->     drwxr-xr-x 3 root root    0 Nov 12 20:33 ./
->     drwxr-xr-x 3 root root    0 Nov 12 20:33 ../
->     lrwxrwxrwx 1 root root    0 Nov 12 20:34 device -> ../../../asus-nb-wmi/
->     -r--r--r-- 1 root root 4096 Nov 12 20:34 fan1_input
->     -r--r--r-- 1 root root 4096 Nov 12 20:34 fan1_label
->     -r--r--r-- 1 root root 4096 Nov 12 20:34 name
->     drwxr-xr-x 2 root root    0 Nov 12 21:30 power/
->     -rw-r--r-- 1 root root 4096 Nov 12 21:30 pwm1_enable
->     lrwxrwxrwx 1 root root    0 Nov 12 21:30 subsystem ->
-> ../../../../../class/hwmon/
->     -rw-r--r-- 1 root root 4096 Nov 12 20:33 uevent
-
-Ok, so pwmconfig will not work here because there only is a
-pwm1_enable file and not a pwm1 file for controlling the actual
-fan-speed.
-
-This is normal on most newer Asus models you can sat the fan
-to 1 of 2 modes:
-
-1. fullspeed:
-
-echo 0 > /sys/class/hwmon/hwmon6/pwm1_enable
-
-2. automatic speed control (the default)
-
-echo 2 > /sys/class/hwmon/hwmon6/pwm1_enable
+>
+> Regards,
+>
+> Hans
+>
 
 Regards,
-
-Hans
-
+Rhys Perry
