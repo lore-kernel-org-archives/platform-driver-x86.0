@@ -2,136 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE11C2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BF3C56201
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FDAA206B2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676932076B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XID1RQAP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="utswucX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgKXLep (ORCPT
+        id S1732523AbgKXLfF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 06:34:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44244 "EHLO
+        Tue, 24 Nov 2020 06:35:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbgKXLeo (ORCPT
+        with ESMTP id S1730158AbgKXLfF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 06:34:44 -0500
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A53C0613D6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 03:34:44 -0800 (PST)
-Received: by mail-pf1-x442.google.com with SMTP id 131so18229404pfb.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 03:34:44 -0800 (PST)
+        Tue, 24 Nov 2020 06:35:05 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215ECC0613D6;
+        Tue, 24 Nov 2020 03:35:05 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id n137so8197915pfd.3;
+        Tue, 24 Nov 2020 03:35:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xU3HdMgBQvOq2QujVAbV1qhQyM0L9pa6DmkGBzS94VQ=;
-        b=XID1RQAP0vDYlf5oRRdPv5XceqWnyH/VNXq0miJT7kK7mPdtVbxtt4o+yBFw1dsdSG
-         aYewyCUg/v5oARopTPOWJxCDp/3CiBnHJfogAaBzWi2qKr+0c5UZr41OcYOCOwEAotRV
-         ujmt867VoRCjzVF1rr8Uk6046/iHDC+3fZpozs7iLZx1Ec/9ESuxZSicybpnQoGZfhIb
-         cD5GAVxtadHByq/TDqX3jV3Mkuu1+Vo6GPBsBR9AZiJ+zxNLcfcRR8/j0aQir9hRjpON
-         8GzBmR3cXSgYessmoGNNQIZjLQBm+yNcx6FLD5YzaWYzDnAwOle6Yp665lDeFXckGkMy
-         yo+Q==
+        bh=cW/ptNFbyubYTVlLmkH+6Zzywp/+iQxPtreJHO5qxG8=;
+        b=utswucX/NMJSC7Ug9Go1731F74lTp+lOSox8mk2K3LcwPavQdMJom5hJ5i9GGnqB+s
+         O/ZVy4xI5we3l93wdPq9PRaXF5di0AHwCHcjX2qxCs9rX/U5C0wiemCivx9xeQaUfMdA
+         ummBWVE2TTEKSKV5I8zpPOz70lVZntCg5OeIERgnCjxPlztyILTDVb+Rt+GaAxpdgUPH
+         mgYvaikTUqfVPbWbM+QKZ1TsJBWjaFmufRkNHuDAmSefEzlUj9U92MThdFhnkdPswRwq
+         8SNH9Eq9403Cmf7bQfbVpkEoJD5RnGWAOlNsUW/Apjz2UGlvT1cUNyNVUYwxm75gE5xF
+         7CqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xU3HdMgBQvOq2QujVAbV1qhQyM0L9pa6DmkGBzS94VQ=;
-        b=iutHaZsmBmtga1YYSkeyHltWw2eikFvqmPt7j1cL0vmozTPpgUhNOLr1FIQB1dijVH
-         zD/sNbRNb+aoOv2vEzup4Ewur10w3ZGEpzceFt9nRwxmNkd0MxX/A/76yi2ctW+pCWaz
-         Q60vYH9P73z6IylQ/vovbTv1TX2WUlcWQ0p2eo/vYnLcQ3G0OKUf+6jIPhnn9cQw9R6N
-         oyLCdYUWXNrh1r/PCyzexnMNQ23RJ8DajC41yNlmcay2/mnWZ+5UZmYPTmKbxgWuO/Vw
-         pEDaAB/j8z9g6D9n7FA/jPawDIMAKgPlrdKdLodEUuSCCWxNC/p7GJvPt+dyplDJv2qI
-         k0IA==
-X-Gm-Message-State: AOAM531onFC5HcIm7jddakqlTfTLDLl1FjywvAdESmwbQzamVMnoqeFn
-        bX1H8r5UTYOvwaT9+GqIn5/uSQvX7g1xQyqLXPc=
-X-Google-Smtp-Source: ABdhPJxQnaMFXiPn0OG4dQ0S/i6FLdhIjhx6l9ttdxarBvlJmAQzdaoO2WZ+8AlDrXs5807v/oVfi24OW/hpsu9GgM4=
-X-Received: by 2002:a62:55c6:0:b029:197:f982:e980 with SMTP id
- j189-20020a6255c60000b0290197f982e980mr3620138pfb.40.1606217683958; Tue, 24
- Nov 2020 03:34:43 -0800 (PST)
+        bh=cW/ptNFbyubYTVlLmkH+6Zzywp/+iQxPtreJHO5qxG8=;
+        b=i945hI07wFG4aTmnYun3BPIwD2+kPxcHa+bPMkQVZHEilMpsonK2Z3l2oHf5SRvMvZ
+         uNM5xOtHYl8CUWp1gXvhy9sZrqcJ+7uaYXO9ox04XbGIL3VvZe06oQIVY4pEx0mvh+6A
+         Dt/75Sq5Ec8zQ1wvtKqQqDhfKdj04Dwf5iXHv7KmQRVCZZZL8VbMg2clks9qmShTYQxU
+         DPJ1Hc6lcuy94dyW/J1994s4U6UB8/UiQjIjFVse5d5Lq5u4Yzp5zORIHK9Hgrjs5UJW
+         SPzKsGhTTcUSDJTifEREcEhpc9R518ZXK69zfG0ehxsR/993PoHy+3tPqhzwzuySHE7r
+         5qFA==
+X-Gm-Message-State: AOAM531VrI1hP5SGfn7bvEipn11sbfEC8CNrCd5creo3j1iwQJSzj1yG
+        lUuAPVhvTK5xmHPI85BJxqKLN+WGhROuHWoe9OU=
+X-Google-Smtp-Source: ABdhPJx8EHx3Q5Tc0KAdTDCpH3gvhep/beyCO4T3G3g3v8aUj93MI9Zf25rDj5EUYnAH2K3rrxsvPDEeT5h5n8AUx5Q=
+X-Received: by 2002:a17:90a:34cb:: with SMTP id m11mr882961pjf.181.1606217704723;
+ Tue, 24 Nov 2020 03:35:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20201124110454.114286-1-hdegoede@redhat.com>
-In-Reply-To: <20201124110454.114286-1-hdegoede@redhat.com>
+References: <20201105080014.45410-1-hdegoede@redhat.com> <CAHp75Vdm4PuQpAMj98wJZoNMwV2tFGPj-r9ezvXyWCYj2cSuaA@mail.gmail.com>
+ <81343662-aaac-a5e8-af86-1370951ff646@redhat.com> <CAHp75VdbHPwnOAUWjSN+HuVsWVb=8EUwfWNR1onL9QNrX8yU0w@mail.gmail.com>
+ <6345eeb9-8416-3e7c-e619-632b5d4abbbd@redhat.com> <CAHp75VdcG_qDpJoppc3Ri8y0rjL9m07r9Xb4JPu30HE6TYf9zQ@mail.gmail.com>
+ <5f9b0957-fd18-3ad3-79e0-2124edd7d434@redhat.com>
+In-Reply-To: <5f9b0957-fd18-3ad3-79e0-2124edd7d434@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Nov 2020 13:35:32 +0200
-Message-ID: <CAHp75Vfxs0H+AsKZApsd_-7FD7riTFqv9Bx05pq6gxS7MVVvmg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Irbis
- TW118 tablet
+Date:   Tue, 24 Nov 2020 13:35:53 +0200
+Message-ID: <CAHp75VfVyV4Z+FqQJve8ozOK-MasBFSL1Psh+O41hhTxox6Hdw@mail.gmail.com>
+Subject: Re: [RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
+ to instantiated i2c-clients
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
+Cc:     "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Andy Shevchenko <andy@infradead.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        russianneuromancer <russianneuromancer@ya.ru>
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 1:05 PM Hans de Goede <hdegoede@redhat.com> wrote:
+On Tue, Nov 24, 2020 at 12:35 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 11/10/20 3:47 PM, Andy Shevchenko wrote:
+> > On Tue, Nov 10, 2020 at 1:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 11/10/20 11:10 AM, Andy Shevchenko wrote:
+> >>> On Mon, Nov 9, 2020 at 1:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > ...
+> >
+> >>> I think in general the direction to switch to fwnode is a good one. I
+> >>> was thinking about moving i2c core to use swnodes in which case they
+> >>> will utilize fwnode pointer. But it might have complications, you are
+> >>> right.
+> >>
+> >> So do you agree to just keep this series in the archives (in case we need
+> >> it later) for now ? Or would you still like me to post a non RFC version ?
+> >
+> > If nobody else has a different opinion (Heikki, Wolfram, Rafael?), I'm
+> > fine with it to be in archives for the time being.
 >
-> Add touchscreen info for the Irbis TW118 tablet.
+> Since no-one else has responded, lets just keep this series for the
+> archives.
+>
+> Andy, that also means that there no longer is a reason to hold of merging
+> your i2c-multi-instantiate cleanup series (minus patch 3 as discussed),
+> so I've merged that into my review-hans branch now.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> index 26cbf7cc8129..5783139d0a11 100644
-> --- a/drivers/platform/x86/touchscreen_dmi.c
-> +++ b/drivers/platform/x86/touchscreen_dmi.c
-> @@ -295,6 +295,21 @@ static const struct ts_dmi_data irbis_tw90_data = {
->         .properties     = irbis_tw90_props,
->  };
->
-> +static const struct property_entry irbis_tw118_props[] = {
-> +       PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
-> +       PROPERTY_ENTRY_U32("touchscreen-min-y", 30),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-x", 1960),
-> +       PROPERTY_ENTRY_U32("touchscreen-size-y", 1510),
-> +       PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-irbis-tw118.fw"),
-> +       PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-> +       { }
-> +};
-> +
-> +static const struct ts_dmi_data irbis_tw118_data = {
-> +       .acpi_name      = "MSSL1680:00",
-> +       .properties     = irbis_tw118_props,
-> +};
-> +
->  static const struct property_entry itworks_tw891_props[] = {
->         PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
->         PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-> @@ -953,6 +968,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
->                         DMI_MATCH(DMI_PRODUCT_NAME, "TW90"),
->                 },
->         },
-> +       {
-> +               /* Irbis TW118 */
-> +               .driver_data = (void *)&irbis_tw118_data,
-> +               .matches = {
-> +                       DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
-> +                       DMI_MATCH(DMI_PRODUCT_NAME, "TW118"),
-> +               },
-> +       },
->         {
->                 /* I.T.Works TW891 */
->                 .driver_data = (void *)&itworks_tw891_data,
-> --
-> 2.28.0
->
-
+Cool, thanks!
 
 -- 
 With Best Regards,
