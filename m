@@ -2,125 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2623DC2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 10:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9EBC56201
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2EFB20708
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 10:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DF2076B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 11:05:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FiC3VW9e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy/QDYx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbgKXKfP (ORCPT
+        id S1732277AbgKXLFB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 05:35:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58944 "EHLO
+        Tue, 24 Nov 2020 06:05:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49024 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731859AbgKXKfO (ORCPT
+        by vger.kernel.org with ESMTP id S1731810AbgKXLFB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 05:35:14 -0500
+        Tue, 24 Nov 2020 06:05:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606214113;
+        s=mimecast20190719; t=1606215900;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ncyxnNig+ZEOG1TiXd1E2PXEyV1aiFvSS2DGZ2RVKgo=;
-        b=FiC3VW9ejNZ5x2Yq0gnkweW2GjTdlutc5vF+ssmywNQk3FBzxZMfsjSrIkq5kg5gLIx3cU
-        gNIgZ73fieg5pEzkabfPB1Q89TSivlgyymukkqsAVtKxm2107OmHfYg2xcpiJ04RmLHIep
-        ZM7+C9PmleG8UVtYpwvgPGAX535shf8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-305-lO9OC5mXMNSne2h7ZeOvew-1; Tue, 24 Nov 2020 05:35:11 -0500
-X-MC-Unique: lO9OC5mXMNSne2h7ZeOvew-1
-Received: by mail-ej1-f71.google.com with SMTP id k15so3789266ejg.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 02:35:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ncyxnNig+ZEOG1TiXd1E2PXEyV1aiFvSS2DGZ2RVKgo=;
-        b=kNqfmXywpAC0oV+1R9IOVAQWb1MebYLf18DJHX7YZmDtSgqRCllfFsjBows8SsMMwO
-         RYdOn9Yq/nCOFTGaVAlB6qrq3YKp1hl4pBAaHqvDW3/x83CzsYgeFKZqLyyFGwFO5/Ad
-         MjEelmq9W533XpUGr+e69RnNEn+TSO/McQ45jNUsEdjzfnil2eM002Q9w775T9hE62dR
-         u8ydskLB5PWMAJi2e2JMLCY/hWysHDsJa0PxCgmigsOFRQ21fGixu7dXzTPexgxzmsS0
-         eUboumBl+J6Ry5SRE2KhZZQVN/x2JM8hL2wfDqbmdoVqjaSD1R5DnihZTLKzSxnuHDMT
-         uiRg==
-X-Gm-Message-State: AOAM5307ZyKaZp9oi9WBP1SP0kpXsIOoFuTUeF5uIaM9MeoXCVuNkMy0
-        3I1dGztsZKGliN2ibc8oNrqHDIx4aPCPJvXLBJfzvW3dDUxvWhK4W7BFKplVhLTR+X2+lT2O/ot
-        GIiLEla6KclyM/ryZUESm9Wbwxpuxs9EqHA==
-X-Received: by 2002:a05:6402:b28:: with SMTP id bo8mr3374330edb.57.1606214109777;
-        Tue, 24 Nov 2020 02:35:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJww75UcJuDu23/qq8PN8EPlsRe/LUlPntcUDLlzHy7PQOmwrc9s7a8WlK+zwyeTKw3R7j9JyQ==
-X-Received: by 2002:a05:6402:b28:: with SMTP id bo8mr3374314edb.57.1606214109627;
-        Tue, 24 Nov 2020 02:35:09 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id lr17sm5262571ejb.43.2020.11.24.02.35.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 02:35:08 -0800 (PST)
-Subject: Re: [RFC 0/4] platform/x86: i2c-multi-instantiate: Pass ACPI fwnode
- to instantiated i2c-clients
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Krogerus, Heikki" <heikki.krogerus@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <20201105080014.45410-1-hdegoede@redhat.com>
- <CAHp75Vdm4PuQpAMj98wJZoNMwV2tFGPj-r9ezvXyWCYj2cSuaA@mail.gmail.com>
- <81343662-aaac-a5e8-af86-1370951ff646@redhat.com>
- <CAHp75VdbHPwnOAUWjSN+HuVsWVb=8EUwfWNR1onL9QNrX8yU0w@mail.gmail.com>
- <6345eeb9-8416-3e7c-e619-632b5d4abbbd@redhat.com>
- <CAHp75VdcG_qDpJoppc3Ri8y0rjL9m07r9Xb4JPu30HE6TYf9zQ@mail.gmail.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FrQqxrPtgBIK2bE5v01z0bKgWYbtih3qYfbey435iq0=;
+        b=Gy/QDYx7NEgvQ3QWpLa1JTS2lr9Fg5z33/IiiPk5zJ69Co9SM2NV8l9sqgY2+g9UI91Keu
+        GgbYQm4XiABIFwfailInYTapxHi/pywxJFJy3mNi9xrX0l0s/Ll1Ovem3wYN5ADnGDGIz4
+        2gklL9uzfrkDbZcEElU0Tk6SzMywIlA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-iV6q1_4UMBeW9j3Vh7YVvA-1; Tue, 24 Nov 2020 06:04:57 -0500
+X-MC-Unique: iV6q1_4UMBeW9j3Vh7YVvA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 507761009B85;
+        Tue, 24 Nov 2020 11:04:56 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-45.ams2.redhat.com [10.36.112.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 295A110016FE;
+        Tue, 24 Nov 2020 11:04:55 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5f9b0957-fd18-3ad3-79e0-2124edd7d434@redhat.com>
-Date:   Tue, 24 Nov 2020 11:35:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        russianneuromancer <russianneuromancer@ya.ru>
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Irbis TW118 tablet
+Date:   Tue, 24 Nov 2020 12:04:54 +0100
+Message-Id: <20201124110454.114286-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdcG_qDpJoppc3Ri8y0rjL9m07r9Xb4JPu30HE6TYf9zQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Add touchscreen info for the Irbis TW118 tablet.
 
-On 11/10/20 3:47 PM, Andy Shevchenko wrote:
-> On Tue, Nov 10, 2020 at 1:14 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 11/10/20 11:10 AM, Andy Shevchenko wrote:
->>> On Mon, Nov 9, 2020 at 1:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> 
-> ...
-> 
->>> I think in general the direction to switch to fwnode is a good one. I
->>> was thinking about moving i2c core to use swnodes in which case they
->>> will utilize fwnode pointer. But it might have complications, you are
->>> right.
->>
->> So do you agree to just keep this series in the archives (in case we need
->> it later) for now ? Or would you still like me to post a non RFC version ?
-> 
-> If nobody else has a different opinion (Heikki, Wolfram, Rafael?), I'm
-> fine with it to be in archives for the time being.
+Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Since no-one else has responded, lets just keep this series for the
-archives.
-
-Andy, that also means that there no longer is a reason to hold of merging
-your i2c-multi-instantiate cleanup series (minus patch 3 as discussed),
-so I've merged that into my review-hans branch now.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 26cbf7cc8129..5783139d0a11 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -295,6 +295,21 @@ static const struct ts_dmi_data irbis_tw90_data = {
+ 	.properties	= irbis_tw90_props,
+ };
+ 
++static const struct property_entry irbis_tw118_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 30),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1960),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1510),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-irbis-tw118.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data irbis_tw118_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= irbis_tw118_props,
++};
++
+ static const struct property_entry itworks_tw891_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
+@@ -953,6 +968,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "TW90"),
+ 		},
+ 	},
++	{
++		/* Irbis TW118 */
++		.driver_data = (void *)&irbis_tw118_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW118"),
++		},
++	},
+ 	{
+ 		/* I.T.Works TW891 */
+ 		.driver_data = (void *)&itworks_tw891_data,
+-- 
+2.28.0
 
