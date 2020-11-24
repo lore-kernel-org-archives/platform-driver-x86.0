@@ -2,122 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291D1C64E75
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 15:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1621C63777
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 15:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0CC120870
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 15:01:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="smGIZTDg"
+	by mail.kernel.org (Postfix) with ESMTP id 8C07120679
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 15:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387744AbgKXPBZ (ORCPT
+        id S2389696AbgKXPa5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 10:01:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731164AbgKXPBY (ORCPT
+        Tue, 24 Nov 2020 10:30:57 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:60725 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389670AbgKXPa4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 10:01:24 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A54C0613D6;
-        Tue, 24 Nov 2020 07:01:24 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id v21so9564141plo.12;
-        Tue, 24 Nov 2020 07:01:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=e3cDrG679ihqpisNhP/stj2I962GpQ7amV8CNs8/PaQ=;
-        b=smGIZTDgXcM6Jyu631FZoO91xmcTi16ubvE6AprWkirHNLx5TzD5S3wKvstwo0732s
-         mZiopWnEsz/wcF3AOVkyWv/MVjzIJESUOq9yQE1moZM+73upBDzMayx7KpgFqbyEKU0i
-         BdyL8siDS0BL/LW79RtvO6fjrwOtyoGBAv4ougj2hr8m3qYM5435R5vHT1IIJWtIbmRz
-         bVtooDbORU0K+hwZHkVy/V87Ozz3cD5TzLEdl3Y6OYp3gSR2rCEFpIzEy4r1cXm890kL
-         tIJLAhZJkQ5ohADKXNza0h6x3N5CqSYvCatTP8xpSaToIqkS8wxk/o98XRGLrIgq/9qq
-         X2mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e3cDrG679ihqpisNhP/stj2I962GpQ7amV8CNs8/PaQ=;
-        b=SZBVxrRHyGxCO+QOcagnwGLQiXNi+UDZ/j2muOIG51Y3PZqMpyXwAIajLcQJtVkuHt
-         UzPaGGOQlvy7Sdm5izhLsqqFIA4/0+JDwB+TgRmPPs7COS8Lx/k2QrmaLuQVgxGxRgTM
-         M6pz0htK+k4ojU6BUTyeOICJUtfBiDB+2BauQtUI5H2FY7JfhCGMbuwu82YVUTEWvy4y
-         3+2/PBrm6Erlkbmv20CyqJtFzSS/AacmxGQ+8mMt4PvgVJhHLf3Tpcsx5/gGt0ELhRkn
-         PnenO0/cYH+SOthFbvkJh1kOaVAmJHFHSCyBuk3gx61dGbwwhRf7I8gTWOnyoFOf0eP/
-         NR8w==
-X-Gm-Message-State: AOAM532LynqNWzP0Sjye2Ja4LVPxD2iwl5VIGeq2jQTlHmFgDFEbBn2P
-        ph9oAHPWtSrQHYi5kn93qE8mWLuQjqAJ2QM645Y=
-X-Google-Smtp-Source: ABdhPJwRVslghkzivG9spVlq4JaFv1qAFKbeNSMKmoKNRE7VjMwKy2VrolHb9GNSCdYPl91dnM6lScdO0JkY+T48azA=
-X-Received: by 2002:a17:902:bc4a:b029:d6:7ef9:689c with SMTP id
- t10-20020a170902bc4ab02900d67ef9689cmr4269486plz.21.1606230084391; Tue, 24
- Nov 2020 07:01:24 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHp75Ve8ncybbLB7hCb0Qxh=JjJr8e1tVrXXiJhwFt9=2b3AYg@mail.gmail.com>
- <CAHp75VfpxvGgTyHFA6p1fmqpAu9ok3=ztGp3USviAHY6m8y=7g@mail.gmail.com> <20201124144300.GM2532@lahna.fi.intel.com>
-In-Reply-To: <20201124144300.GM2532@lahna.fi.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Nov 2020 17:02:13 +0200
-Message-ID: <CAHp75Vd6HJpt0DgE3ugB-qXGT5FL2tzg=CCKn9a-PeAYY+n+ow@mail.gmail.com>
-Subject: Re: Request for pre-review of pending MID removal patch series
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>
+        Tue, 24 Nov 2020 10:30:56 -0500
+Received: from [192.168.0.28] (lns-bzn-39-82-255-60-242.adsl.proxad.net [82.255.60.242])
+        (Authenticated sender: hadess@hadess.net)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6969C200010;
+        Tue, 24 Nov 2020 15:30:51 +0000 (UTC)
+Message-ID: <27a41e3d678f9d7fc889a3a77df87f9ed408887d.camel@hadess.net>
+Subject: Re: [PATCH v3] ACPI: platform-profile: Add platform profile support
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Date:   Tue, 24 Nov 2020 16:30:50 +0100
+In-Reply-To: <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
+References: <markpearson@lenovo.com>
+         <20201115004402.342838-1-markpearson@lenovo.com>
+         <nRyY5CKaU6WrkbMiM25gTT_bJlrQjTY_UCcQkj8ty-2mPEMVZd4BB9KwrRp7z4GaE3TTOFCXuXnt0_7J_Tj50syusBxTmS5yNZAvYX02X74=@protonmail.com>
+         <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Nov 24, 2020 at 4:43 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Mon, Nov 23, 2020 at 07:59:29PM +0200, Andy Shevchenko wrote:
-> > +Cc: Mika
-> >
-> > On Fri, Oct 23, 2020 at 8:07 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > Hi!
-> > >
-> > > There is a pending patch series [1] to remove a lot of legacy code
-> > > related to old Intel MID platforms. (Note, not all of them, since we
-> > > have an ACPI based Intel Edison edition which continue working nicely
-> > > after this)
-> > >
-> > > Most of the code is shuffling arch/x86 and the series is quite
-> > > dependent on the contents of that folder (for the sake of
-> > > bisectability). Since that the only way it would be integrated is
-> > > through the tip tree I would like to have your preliminary review on
-> > > other contents =E2=80=94 #3 and #4 are PDx86 and GPIO subsystems. In =
-this case
-> > > I won't resend this many times.
-> > >
-> > > I have a preliminary offline agreement with Len Brown on SFI removal
-> > > (#2 in the list).
-> > >
-> > > [1]: https://gitlab.com/andy-shev/next/-/commits/topic/mid-removal/
->
-> Looks pretty good to me.
+On Sat, 2020-11-21 at 15:27 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/20/20 8:50 PM, Barnabás Pőcze wrote:
+> > Hi
+> > 
+> > 
+> > 2020. november 15., vasárnap 1:44 keltezéssel, Mark Pearson írta:
+> > 
+> > > [...]
+> > > +int platform_profile_register(struct platform_profile_handler
+> > > *pprof)
+> > > +{
+> > > +       mutex_lock(&profile_lock);
+> > > +       /* We can only have one active profile */
+> > > +       if (cur_profile) {
+> > > +               mutex_unlock(&profile_lock);
+> > > +               return -EEXIST;
+> > > +       }
+> > > +
+> > > +       cur_profile = pprof;
+> > > +       mutex_unlock(&profile_lock);
+> > > +       return sysfs_create_group(acpi_kobj,
+> > > &platform_profile_group);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(platform_profile_register);
+> > > +
+> > > +int platform_profile_unregister(void)
+> > > +{
+> > > +       mutex_lock(&profile_lock);
+> > > +       sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> > > +       cur_profile = NULL;
+> > > +       mutex_unlock(&profile_lock);
+> > > +       return 0;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(platform_profile_unregister);
+> > > [...]
+> > 
+> > 
+> > I just realized that the sysfs attributes are only created if a
+> > profile provider
+> > is registered, and it is removed when the provide unregisters
+> > itself. I believe
+> > it would be easier for system daemons if those attributes existed
+> > from module load
+> > to module unload since they can just just open the file and watch
+> > it using poll,
+> > select, etc. If it goes away when the provider unregisters itself,
+> > then I believe
+> > a more complicated mechanism (like inotify) would need to be
+> > implemented in the
+> > daemons to be notified when a new provider is registered. Thus my
+> > suggestion
+> > for the next iteration is to create the sysfs attributes on module
+> > load,
+> > and delete them on unload.
+> > 
+> > What do you think?
+> 
+> Actually I asked Mark to move this to the register / unregister time
+> since
+> having a non functioning files in sysfs is a bit weird.
+> 
+> You make a good point about userspace having trouble figuring when
+> this will
+> show up though (I'm not worried about removal that will normally
+> never happen).
+> 
+> I would expect all modules to be loaded before any interested daemons
+> load,
+> but that is an assumption and I must admit that that is a bit racy.
+> 
+> Bastien, what do you think about Barnabás' suggestion to always have
+> the
+> files present and use poll (POLL_PRI) on it to see when it changes,
+> listing
+> maybe "none" as available profiles when there is no provider?
 
-Thanks! Can I use your tag (which is better?) for some patches (which ones?=
-)?
+Whether the file exists or doesn't, we have ways to monitor it
+appearing or disappearing. I can monitor the directory with inotify to
+see the file appearing or disappearing, or I can monitor the file with
+inotify to see whether it changes. But that doesn't solve the
+challenges from user-space.
 
-> I wonder it is possible to remove gma500 also
-> or it is used in Edison?
+How do I know whether the computer will have this facility at any
+point? Is "none" a placeholder, or a definite answer as to whether the
+computer will have support for "platform profile"?
 
-It can be used on other platforms based on not-going-to-be-removed
-Merrifield and possibly Moorefield.
-Hence I would like to leave it for now.
+How am I supposed to handle fallbacks, eg. how can I offer support for,
+say, changing the "energy performance preference" from the Intel p-
+state driver if ACPI platform profile isn't available?
 
---=20
-With Best Regards,
-Andy Shevchenko
+I'm fine with throwing more code at fixing that race, so whatever's
+easier for you, it'll be a pain for user-space either way.
+
