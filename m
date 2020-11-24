@@ -2,158 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69B9C64E75
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57340C63798
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B6D20866
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8482067D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 13:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hHwfboIs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbQXIJ5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387698AbgKXNkc (ORCPT
+        id S2388538AbgKXNnf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 08:40:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46742 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388344AbgKXNka (ORCPT
+        Tue, 24 Nov 2020 08:43:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388527AbgKXNnS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 08:40:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606225228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=375AcZQRIbngaOkTsEbs6TrLV3kscOAMnPTc3x+vtv4=;
-        b=hHwfboIsVmWNSIAPu0NdhKHpFhHbQ+ZFJJ54ZtbfbpRaAQZ7k16VoQXGmLTuiolKAfGSA+
-        DWGkloncqimEWHOt3U+E3ABnnQNCSyqg1k7Q2cw+BsdDLyu8RtECo4Bw0QbgE1+PS5lkBj
-        poUKRlzWm6QwiF6SCJ3nEpPpBFfWsFA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-536-7S8iP046M2ydNMpYjuc-dw-1; Tue, 24 Nov 2020 08:40:26 -0500
-X-MC-Unique: 7S8iP046M2ydNMpYjuc-dw-1
-Received: by mail-ed1-f72.google.com with SMTP id l24so7922894edt.16
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 05:40:26 -0800 (PST)
+        Tue, 24 Nov 2020 08:43:18 -0500
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DBD6C0613D6;
+        Tue, 24 Nov 2020 05:43:18 -0800 (PST)
+Received: by mail-ed1-x541.google.com with SMTP id cq7so20902499edb.4;
+        Tue, 24 Nov 2020 05:43:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ctRbS11BgFmifUEFq2VQXHr3JxOfCOKEQgfEbTr9MN0=;
+        b=IbQXIJ5ipOWYlxa4NICpwlQaJnL3WpTzfaLXhKO6rfPPiUTxNDcfHrjpWsihNLoowm
+         R7C/RraZRBeQCcUGXKY7IeBEiK4cS9bIJKdXnnVsSdfofoMHxYNIpAY4/IR0RtNPgT9p
+         b1/GyYxse9KodHSyQSRQgYJTSYnlHem0HQgN/Do93KSQQo+0aqqlyNCrxW+qoewSQ6Cb
+         JVikUX/EFcBAEM8jid33E220rM0GeRbXyUI+Dojb5ZdFLFdIaRpo2kBsXTJleytq7Gr0
+         NMNlM1/pHH3iD8TlVljKWYruDhiAQHGzqrzF7j3CK3I2xgVjBe3Fb/4zd+FzL11Js42B
+         MA8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=375AcZQRIbngaOkTsEbs6TrLV3kscOAMnPTc3x+vtv4=;
-        b=mJUnNs4oquRSqDUGkOQJ4oz/K4dzcJdA9YsDAL9vzbu4wvBcjata80tfmmts/+RHCt
-         vV1NDoaF91VVihPeCN3b5UbGVE6hXCRsvuF7N2W5vf5YXB5Q6tvwd3dkqDWjxqlo8XDD
-         x5pqRkJeYTU79mr7HkanEd4VYOuwEPtcI5/UB8RibMlURsyfK5z53DGMh7Y44ylsiNIV
-         u9Ccrf4WhMfaw3dvUbkue0ydAx1COjHZeNfaQf/B1g+mPBqT+w+TEaH5wqkA3KOnbFz5
-         4n1IlnUBz4/C1FNGiv0el5TKMQUe72rF0mGVuvh7zYelNIOq64kLfm3FmvI/L/0COnqc
-         ecCw==
-X-Gm-Message-State: AOAM530qJC0e5lmL3ZZbLM/tQohgit/vNjH+rWtwunN/sJlVss1KmmDa
-        EHf0bS5S77Wo9J8/EduYKHRZ/ODlAgSkxEVUINudPJ0hjfkXilN9m/Drh2gttj0FrRMwyD4p0z7
-        tF5UN++9WF5t7X00sZAIZ3VGQlX9yhag1pLWlbHZdDa315cQBtVgcV8Nqdb41p+pe4O1CRdGAwr
-        +92zjluTtVfg==
-X-Received: by 2002:a50:e68b:: with SMTP id z11mr3947606edm.25.1606225225266;
-        Tue, 24 Nov 2020 05:40:25 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJy+/HKENKzmOsUAtxIixvP7SR0lBhGGdv9A5NpI7IGnM1NCr06rEGIQW35E8FHjDT3pJ0b1cw==
-X-Received: by 2002:a50:e68b:: with SMTP id z11mr3947583edm.25.1606225224997;
-        Tue, 24 Nov 2020 05:40:24 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id rp28sm6987230ejb.77.2020.11.24.05.40.24
+        bh=ctRbS11BgFmifUEFq2VQXHr3JxOfCOKEQgfEbTr9MN0=;
+        b=DeVsrHRLuyDE95ObSKvq2Hs/J/Gz3n4RdLf3VVnRc5x2JcczAKtPh801CZTwWsFJcv
+         DTkiKtVlDd3KI4sYOHCscPgL+fafwp/klvLk8hk18+idZ4HdtgjCV6EYGp2UHGDcZgDz
+         k5HFRxL4H6LEcykIB5IN72BDybxxAjcRFSvxU8R4U6/FcmoCKScfjpv0V647cYV9/PiC
+         r94OdSSfk0v05uvT28bXFrsxBaBvtgO9tnTCIg/HZNx9Yu/CPC2dpEPSlq3ALBa/vBfo
+         6il1Xv3aCnUnjLNT06/vplf2x/a9Gd6rtb2Oh7vqEYZtJd0ankRrdmiN+0uQvmQSm74D
+         SoTQ==
+X-Gm-Message-State: AOAM533537ulOkAADXpdNy6nfibNzxsXMlQ15gEjvrulR33jfgVo8uqd
+        lKnR7YpvhKbP0vth7wsH4oT2bC315t0=
+X-Google-Smtp-Source: ABdhPJxWR9HjOYFpydOK8KY8l6vqAJU6DdBK50fePfrUG+pRzPoEwIaXFKbwO70cbXierpKS775+1Q==
+X-Received: by 2002:a50:a40a:: with SMTP id u10mr3896586edb.16.1606225396556;
+        Tue, 24 Nov 2020 05:43:16 -0800 (PST)
+Received: from [192.168.2.202] (pd9e5aead.dip0.t-ipconnect.de. [217.229.174.173])
+        by smtp.gmail.com with ESMTPSA id n14sm6950875edw.38.2020.11.24.05.43.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 05:40:24 -0800 (PST)
-Subject: Re: [PATCH 1/3] platform/x86: asus-wmi: Add userspace notification
- for performance mode change
-To:     Vasiliy Kupriakov <rublag-ns@yandex.ru>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20200828214932.20866-1-rublag-ns@yandex.ru>
- <20200828214932.20866-2-rublag-ns@yandex.ru>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <6d603515-e906-6f4f-3053-6343746f1486@redhat.com>
-Date:   Tue, 24 Nov 2020 14:40:23 +0100
+        Tue, 24 Nov 2020 05:43:15 -0800 (PST)
+Subject: Re: [PATCH 0/9] Add support for Microsoft Surface System Aggregator
+ Module
+To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20201115192143.21571-1-luzmaximilian@gmail.com>
+ <059069df-c972-5060-1b26-2ddcc842810d@redhat.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <d1a781d9-6433-e1b5-5683-4de15efde686@gmail.com>
+Date:   Tue, 24 Nov 2020 14:43:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+ Thunderbird/78.4.3
 MIME-Version: 1.0
-In-Reply-To: <20200828214932.20866-2-rublag-ns@yandex.ru>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <059069df-c972-5060-1b26-2ddcc842810d@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-Quick self intro: I have take over drivers/platform/x86
-maintainership from Andy; and I'm working my way through
-the backlog of old patches in patchwork:
-https://patchwork.kernel.org/project/platform-driver-x86/list/
-
-On 8/28/20 11:49 PM, Vasiliy Kupriakov wrote:
-> When user presses Fn-F5, the driver automatically changes throttle
-> thermal policy (or fan boost mode, depending on laptop model).
+On 11/24/20 12:59 PM, Hans de Goede wrote:
+> Hi,
 > 
-> It would be convenient for userspace software to be able to poll on
-> corresponding sysfs variable. For example, to show a notification about
-> mode change.
+> On 11/15/20 8:21 PM, Maximilian Luz wrote:
+>> Hello,
+>>
+>>    N.B.: the following text is mostly a repeat of cover letter from the
+>>    previous RFC for the uninitiated, which can be found at
+>>
+>>    https://lore.kernel.org/linux-serial/20200923151511.3842150-1-luzmaximilian@gmail.com/
+>>
+>>    See "Changes" below for an overview of differences between the RFC and
+>>    this patchset. I hope I have addressed all comments from that in this
+>>    version, thank you again for those.
+>>
+>> The Surface System Aggregator Module (we'll refer to it as Surface
+>> Aggregator or SAM below) is an embedded controller (EC) found on various
+>> Microsoft Surface devices. Specifically, all 4th and later generation
+>> Surface devices, i.e. Surface Pro 4, Surface Book 1 and later, with the
+>> exception of the Surface Go series and the Surface Duo. Notably, it
+>> seems like this EC can also be found on the ARM-based Surface Pro X [1].
 > 
-> Note that there is currently no way to handle Fn-F5 from userspace
-> directly, driver does not pass it.
+> <snip>
 > 
-> Signed-off-by: Vasiliy Kupriakov <rublag-ns@yandex.ru>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/platform/x86/asus-wmi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>> This patch-set can also be found at the following repository and
+>> reference, if you prefer to look at a kernel tree instead of these
+>> emails:
+>>
+>>    https://github.com/linux-surface/kernel tags/s/surface-aggregator/v1
+>>
+>> Thanks,
+>> Max
 > 
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-> index 8f4acdc06b13..71559d429ba0 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -1660,6 +1660,10 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
->  	pr_info("Set fan boost mode: %u\n", value);
->  	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_FAN_BOOST_MODE, value,
->  				    &retval);
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> +			"fan_boost_mode");
-> +
->  	if (err) {
->  		pr_warn("Failed to set fan boost mode: %d\n", err);
->  		return err;
-> @@ -1771,6 +1775,10 @@ static int throttle_thermal_policy_write(struct asus_wmi *asus)
->  
->  	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY,
->  				    value, &retval);
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> +			"throttle_thermal_policy");
-> +
->  	if (err) {
->  		pr_warn("Failed to set throttle thermal policy: %d\n", err);
->  		return err;
+> Thank you for your work on this. It would be great if we can get better
+> support for the Surface line in the mainline kernel.
 > 
+> Since a lot of people have already commented on this series I think that
+> you have enough feedback to do a v2 addressing that feedback right?
 
+Yes, I'm already working on it.
+
+> For now I'm going to assume that you will do a v2 addressing the
+> initial round of comments and not review this myself (IOW I'll review
+> this when v2 is posted).
+
+Sure, no need for you to review v1 at this point.
+  
+> Let me know if you see things differently.
+
+Thanks,
+Max
