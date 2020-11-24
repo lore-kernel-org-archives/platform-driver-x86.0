@@ -5,79 +5,80 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7205C56201
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE89C2D0E4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 614AF2067C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FA52076B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 12:10:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PUtCCsfa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RtNRvz8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732987AbgKXMHu (ORCPT
+        id S1733072AbgKXMKO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 07:07:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39685 "EHLO
+        Tue, 24 Nov 2020 07:10:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54292 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733254AbgKXMHu (ORCPT
+        by vger.kernel.org with ESMTP id S1729173AbgKXMKO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 07:07:50 -0500
+        Tue, 24 Nov 2020 07:10:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606219669;
+        s=mimecast20190719; t=1606219812;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SOMM6/UKvaAowB9/50O0goOjLqACWA2H3QoKxNezUPg=;
-        b=PUtCCsfaP/LPrn2ogeU1KHqlinH2jviuiR4yv5QYJE2TrIvJ/fpmU5+mouNd9qxk4Smxo1
-        Q6Fe1UHmbHrHWshw0Zq+V0ZOkK+Pre2bj/ZhJeQDS6L1HiKQHhlOx4lG99rDF2fHsFsc2e
-        X6iVmHc/UVy21TFRC81OszfTigp9TEk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-HsPFCvJmPxCgUBWYkafbOg-1; Tue, 24 Nov 2020 07:07:47 -0500
-X-MC-Unique: HsPFCvJmPxCgUBWYkafbOg-1
-Received: by mail-ej1-f70.google.com with SMTP id 2so6848142ejv.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:07:47 -0800 (PST)
+        bh=wUnv+IHMDftcQjA0JBjF2MFD6nD9bm1oMfaBL/SXijg=;
+        b=RtNRvz8Cl1VDqfnj3SEzWVZLg7KGEx9FNl6O1LmMaTNOV3Mk8BIYovV2Cz/NRtYLVHf2E1
+        8Ynnik99ik4d4u1/JdzcVfulD/BLHnGIKtWBGTFNV84THh+HD2WKbg9oM4AgcbvmFu2lyo
+        ePODCmebAWJzlyqaLv5P96lk8wnJyAE=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-486-RY7sOOM9NKioBxXYe2VPrg-1; Tue, 24 Nov 2020 07:10:11 -0500
+X-MC-Unique: RY7sOOM9NKioBxXYe2VPrg-1
+Received: by mail-ej1-f69.google.com with SMTP id gx12so6727317ejb.18
+        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 04:10:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=SOMM6/UKvaAowB9/50O0goOjLqACWA2H3QoKxNezUPg=;
-        b=UDmvdsIN4qeppWzhYKSB4stq9/wRRQ1DHHTQPXCYCFq/pPlrjK4eoliFRZ2XPleNdL
-         Kg1ykR6FgmiOW0+TS730qrExcyFxA2IDGsi4z2HmhyAF4K2W4xN2yCmm4Nu2bSi4L42L
-         Pf5YUv/GBx5DPcTBNKotxkAQJUN1VLsxSAtTgKm87T0l3jCwPSwxvxoZOuEco+mmff1D
-         gSpm8i8MuF5pdAmtuunCySi0cPyF3N3T+ItShUItw9lxOf53JSIdz5B+whJQ/wq6NoW/
-         kz1ydoV6Qm9lslqGRSEUfl9BBs95evj2wnmoz87Tu/2vPuS8xLf/EcAfplaDJicIU98W
-         3hKA==
-X-Gm-Message-State: AOAM5336Xn0iGrdkKPbgTO6958FOZkDNkgB1OKDNz6CGzGQnP+Wosui8
-        SJQPNTrM0bBQiyiHt/Zgh9VfiNa7aUmTpAomkHF5rukCHk4/8eCR19uD/M5AQXSXIn+qbWBqiUy
-        dOU+K532PrtnL0m2DYkihUj9iGlcRxXwdKg==
-X-Received: by 2002:a17:906:c24b:: with SMTP id bl11mr3826252ejb.3.1606219665925;
-        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz98Nk2zSdgqN22qWsD6rq4DWW82NG8CBkl8i2giR8popap81e2BivxoWCtDL/2k5dHWhluMA==
-X-Received: by 2002:a17:906:c24b:: with SMTP id bl11mr3826239ejb.3.1606219665759;
-        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
+        bh=wUnv+IHMDftcQjA0JBjF2MFD6nD9bm1oMfaBL/SXijg=;
+        b=Q3aAAsbgp9M0WWeNZfNIl0zMMradPzwsdNfC7oXM+sm5VI4v3x/aXltR+VJxRPw4yw
+         FITtBIhOXDYbjAsNREySYUH90WjHQ4cAVnsDMmlSx8jorcV49qNwBJ+ADEQatEPgYnbW
+         GujLKoyXZ+dkM3BzGsX/6Je8s5aUSyiyJb+8O7Hsrml7yZLQWuw+yl4hTkmZzfcnJ3gK
+         cQEfPLGi+xAWdHYU09XuZrab72MuObBKDUiQi6/sI82HJBXrrOMy1WkKv7tw9j520wMF
+         LMp5QtRtMhgMPb4rkapg7NRabvyI3MSCDJIeawEvj6PQVZLB08MGeJGkz8A11ENe4uN3
+         vwlg==
+X-Gm-Message-State: AOAM531Z7rXO0raV7dzOfZYn5ttxRXSqTgRZsa1H/52SMBZPvFepUCHU
+        ZQzB5BZf1F3j++Mha6YaXkC72lEBkMsaSDG204puH6LVl8tK3027za1WxZDVGejYD4Bq1nCVhWA
+        BG6z8z1xy+KFcIc9eDg0MGHTmnybdbd/Shw==
+X-Received: by 2002:a05:6402:1a31:: with SMTP id be17mr3404492edb.377.1606219809299;
+        Tue, 24 Nov 2020 04:10:09 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyE7c3L5xWKutv3UZyQAC4urY5anoXWIxZDDJPTstxAzpfazN3NYht7FbOiT552ww6h44SJvg==
+X-Received: by 2002:a05:6402:1a31:: with SMTP id be17mr3404476edb.377.1606219809151;
+        Tue, 24 Nov 2020 04:10:09 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id c6sm6380279edy.62.2020.11.24.04.07.44
+        by smtp.gmail.com with ESMTPSA id n15sm6906438eje.112.2020.11.24.04.10.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 04:07:45 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: toshiba_acpi: Fix the wrong variable
- assignment
-To:     xiakaixu1987@gmail.com, coproscefalo@gmail.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kaixu Xia <kaixuxia@tencent.com>
-References: <1606024177-16481-1-git-send-email-kaixuxia@tencent.com>
+        Tue, 24 Nov 2020 04:10:08 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Send tablet mode switch at
+ wakeup time
+To:     Benjamin Berg <benjamin@sipsolutions.net>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        Benjamin Berg <bberg@redhat.com>
+References: <20201123132157.866303-1-benjamin@sipsolutions.net>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <543af665-bec9-3407-73cb-0e5b614de810@redhat.com>
-Date:   Tue, 24 Nov 2020 13:07:44 +0100
+Message-ID: <c8deaf95-6b49-d8d7-6f09-1845ad70f40d@redhat.com>
+Date:   Tue, 24 Nov 2020 13:10:07 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <1606024177-16481-1-git-send-email-kaixuxia@tencent.com>
+In-Reply-To: <20201123132157.866303-1-benjamin@sipsolutions.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,18 +88,18 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/22/20 6:49 AM, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
+On 11/23/20 2:21 PM, Benjamin Berg wrote:
+> From: Benjamin Berg <bberg@redhat.com>
 > 
-> The commit 78429e55e4057 ("platform/x86: toshiba_acpi: Clean up
-> variable declaration") cleans up variable declaration in
-> video_proc_write(). Seems it does the variable assignment in the
-> wrong place, this results in dead code and changes the source code
-> logic. Fix it by doing the assignment at the beginning of the funciton.
+> The lid state may change while the machine is suspended. As such, we may
+> need to re-check the state at wake-up time (at least when waking up from
+> hibernation).
+> Add the appropriate call to the resume handler in order to sync the
+> SW_TABLET_MODE switch state with the hardware state.
 > 
-> Fixes: 78429e55e4057 ("platform/x86: toshiba_acpi: Clean up variable declaration")
-> Reported-by: Tosk Robot <tencent_os_robot@tencent.com>
-> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
+> Fixes: dda3ec0aa631 ("platform/x86: thinkpad_acpi: Implement tablet mode using GMMS method")
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=210269
+> Signed-off-by: Benjamin Berg <bberg@redhat.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -117,29 +118,20 @@ Regards,
 Hans
 
 > ---
->  drivers/platform/x86/toshiba_acpi.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/platform/x86/thinkpad_acpi.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index e557d757c647..fa7232ad8c39 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -1478,7 +1478,7 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
->  	struct toshiba_acpi_dev *dev = PDE_DATA(file_inode(file));
->  	char *buffer;
->  	char *cmd;
-> -	int lcd_out, crt_out, tv_out;
-> +	int lcd_out = -1, crt_out = -1, tv_out = -1;
->  	int remain = count;
->  	int value;
->  	int ret;
-> @@ -1510,7 +1510,6 @@ static ssize_t video_proc_write(struct file *file, const char __user *buf,
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index e3810675090a..9104e0ee37cd 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -4228,6 +4228,7 @@ static void hotkey_resume(void)
+>  		pr_err("error while attempting to reset the event firmware interface\n");
 >  
->  	kfree(cmd);
->  
-> -	lcd_out = crt_out = tv_out = -1;
->  	ret = get_video_status(dev, &video_out);
->  	if (!ret) {
->  		unsigned int new_video_out = video_out;
+>  	tpacpi_send_radiosw_update();
+> +	tpacpi_input_send_tabletsw();
+>  	hotkey_tablet_mode_notify_change();
+>  	hotkey_wakeup_reason_notify_change();
+>  	hotkey_wakeup_hotunplug_complete_notify_change();
 > 
 
