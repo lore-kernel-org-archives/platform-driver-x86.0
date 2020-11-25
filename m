@@ -2,360 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE5C56201
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5613EC56201
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 19:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB27206F9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:56:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mcuB3g8i"
+	by mail.kernel.org (Postfix) with ESMTP id E5D922075A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 19:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbgKYR4P (ORCPT
+        id S1729768AbgKYTlU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Nov 2020 12:56:15 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:64508 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730774AbgKYR4P (ORCPT
+        Wed, 25 Nov 2020 14:41:20 -0500
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.3]:21381 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729696AbgKYTlU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Nov 2020 12:56:15 -0500
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APHWYvL031759;
-        Wed, 25 Nov 2020 17:54:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=aLlyJsRgM9IAkjFWt7kHPcGXoPXJll2ieBo0r9AGW30=;
- b=mcuB3g8ie7TK9djuVWevn+t61KR98Ks9JNSeKv42RrJsIe+7jACemfpEpH7HwlpMTLO8
- jSO+20qun/bjUHACj3Ucsr+Xr0YdzZ1YZUXSHkpSQDZa3npr+vvvlimnnHr/fHQfFRHI
- ivUl9KnRk+Tscj9td7EU1humDPudHtsXIBf7ZULbK1rlw1l3GETOlk3aQwIX49YfdOhE
- RDjJl3oZLPDLn0SIpjLOyqSIqt9JaqTy3YiHTRun5gPXtDp7H75ZKPFrX5MHk6Tg/0Fr
- A5YP0FeKa2/MEi/bJtNpK/+/6dS2TK6RFe9HQbXkASwXhdpWpZ1e4Vsr8c+ZML2Tzdng Dw== 
-Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
-        by mx0b-002e3701.pphosted.com with ESMTP id 351hp455y7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Nov 2020 17:54:55 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3427.houston.hpe.com (Postfix) with ESMTP id D3CA457;
-        Wed, 25 Nov 2020 17:54:54 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 8E07E49;
-        Wed, 25 Nov 2020 17:54:54 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 605001)
-        id 4786C302F4806; Wed, 25 Nov 2020 11:54:54 -0600 (CST)
-From:   Justin Ernst <justin.ernst@hpe.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>
-Subject: [PATCH v3 2/5] x86/platform/uv: Add and export uv_bios_* functions
-Date:   Wed, 25 Nov 2020 11:54:41 -0600
-Message-Id: <20201125175444.279074-3-justin.ernst@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20201125175444.279074-1-justin.ernst@hpe.com>
-References: <20201125175444.279074-1-justin.ernst@hpe.com>
+        Wed, 25 Nov 2020 14:41:20 -0500
+Received: from [100.112.3.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.us-east-1.aws.symcld.net id 36/68-29643-D53BEBF5; Wed, 25 Nov 2020 19:41:17 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRWlGSWpSXmKPExsWSLveKXTd2875
+  4g+a34hb7r0tYdC00sFh4/xSrxddvt9kt3hyfzmSxfF8/o0VTZxObxeeOySwWq/e8YLZY+2Ue
+  m8WZ05dYHbg9Js2cweyxc9Zddo9f29aweGxeoeUx72SgR0/bJiaP9/uusnlsudrO4vF5k1wAZ
+  xRrZl5SfkUCa0bLSe+CXt6Kvb17mRoYj3F1MXJxCAn8Z5Q4Ofs5I4TzglFi1dK/zF2MnBzCAj
+  ESP/ZOZgFJiAh0Mkp8vbyFHcRhFljDLDHhWxsTRMsPJon294/AWtgEtCW2bPnFBmLzCthKzN7
+  YygRiswioSlz42QcWFxUIl1i/ZCUjRI2gxMmZT1hAbE4BO4nlyzaD1TALWEjMnH+eEcIWl7j1
+  ZD4ThC0v0bx1NtAuDg4JAQWJ1xM8QcISAgkSy17eYZ7AKDgLydRZSCbNQjJpFpJJCxhZVjGaJ
+  hVlpmeU5CZm5ugaGhjoGhoa6RrpGlvqJVbpJumVFuumJhaX6BrqJZYX6xVX5ibnpOjlpZZsYg
+  TGZUoBk/oOxsuvP+gdYpTkYFIS5W2fuS9eiC8pP6UyI7E4I76oNCe1+BCjDAeHkgTvlY1AOcG
+  i1PTUirTMHGCKgElLcPAoifD2bQJK8xYXJOYWZ6ZDpE4xKkqJ8waAJARAEhmleXBtsLR0iVFW
+  SpiXkYGBQYinILUoN7MEVf4VozgHo5IwbxHIFJ7MvBK46a+AFjMBLZ7OuQdkcUkiQkqqgckzf
+  ZdKjMyxCVq6ia9s3k78c7bwo9HNKo5JXxc5/K3l6NO90hld/D/0yivFDxUHPHoUchtr8p99e1
+  n+UCFouqvvnMDe6T+fvj7zejJv5yLD5/9qOqcFHfr4kvnLnd8LNRYJqpyePlP90O2X9evWRt+
+  9Z5rsuXxdRcSLg9aV/PLT/kRM2lD2rb3R0CwxeanYpSvzcqt/eO267uFRFH37fFxIrdaROPXz
+  r9lUTrxUTdgaOlfVn2/x7OnqCrY/rA42r1H4defN5HLFtvIDLOHTTV7Ke3/aHLY0cHf/UnuuF
+  J1zW3QV0/W/djxdaeHu5NL40SSv+tfVRoVr+7MjWpZOn8lrkLui+buyf0ZEtK66+l8lluKMRE
+  Mt5qLiRAC1svg2xgMAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-5.tower-396.messagelabs.com!1606333275!1195891!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 20935 invoked from network); 25 Nov 2020 19:41:17 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-5.tower-396.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 25 Nov 2020 19:41:17 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 62399DDFE75BB47CDDE2;
+        Thu, 26 Nov 2020 03:41:12 +0800 (CST)
+Received: from localhost.localdomain (10.38.110.35) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Wed, 25 Nov
+ 2020 11:41:09 -0800
+Subject: Re: [External] Re: [PATCH v3] ACPI: platform-profile: Add platform
+ profile support
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "mario.limonciello@dell.com" <mario.limonciello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+References: <markpearson@lenovo.com>
+ <20201115004402.342838-1-markpearson@lenovo.com>
+ <nRyY5CKaU6WrkbMiM25gTT_bJlrQjTY_UCcQkj8ty-2mPEMVZd4BB9KwrRp7z4GaE3TTOFCXuXnt0_7J_Tj50syusBxTmS5yNZAvYX02X74=@protonmail.com>
+ <761671b3-ad26-230b-e709-05ce3bd69498@redhat.com>
+ <27a41e3d678f9d7fc889a3a77df87f9ed408887d.camel@hadess.net>
+ <92a564fa-686f-455d-a0cb-962d4d87a8c7@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <4e82d54f-33c2-e880-c5f8-beb9d3460cdb@lenovo.com>
+Date:   Wed, 25 Nov 2020 14:41:09 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
+In-Reply-To: <92a564fa-686f-455d-a0cb-962d4d87a8c7@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-25_10:2020-11-25,2020-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- clxscore=1015 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011250110
+X-Originating-IP: [10.38.110.35]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add additional uv_bios_call variant functions to expose information
-needed by the new uv_sysfs driver. This includes the addition of several
-new data types defined by UV BIOS and used in the new functions.
+On 25/11/2020 11:42, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/24/20 4:30 PM, Bastien Nocera wrote:
+>> On Sat, 2020-11-21 at 15:27 +0100, Hans de Goede wrote:
+>>> Hi,
+>>> On 11/20/20 8:50 PM, Barnabás Pőcze wrote:
+>>>> Hi
+>>>> 2020. november 15., vasárnap 1:44 keltezéssel, Mark Pearson
+>>>> írta:
+>>>> 
+>>> Bastien, what do you think about Barnabás' suggestion to always
+>>> have the files present and use poll (POLL_PRI) on it to see when
+>>> it changes, listing maybe "none" as available profiles when there
+>>> is no provider?
+>> 
+>> Whether the file exists or doesn't, we have ways to monitor it 
+>> appearing or disappearing. I can monitor the directory with inotify
+>> to see the file appearing or disappearing, or I can monitor the
+>> file with inotify to see whether it changes.
+> 
+> Ok, do you have a preference either way? I personally think having
+> the file only appear if its functional is a bit cleaner. So if it
+> does not matter much for userspace either way then I suggest we go
+> that route.
+> 
+My (limited) vote is having the file appear when the profile is loaded 
+seems nicer (and to disappear if the profile is unloaded). No profile, 
+no interface just seems elegant.
 
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/include/asm/uv/bios.h   |  49 +++++++++++++++
- arch/x86/include/asm/uv/uv_geo.h | 103 +++++++++++++++++++++++++++++++
- arch/x86/platform/uv/bios_uv.c   |  55 +++++++++++++++++
- 3 files changed, 207 insertions(+)
- create mode 100644 arch/x86/include/asm/uv/uv_geo.h
+I pretty much have v4 of the patches ready to go (I wanted to rebase on 
+the update for the palm sensor and finished that today). I'm happy to 
+hold off on them until we're ready if that helps. Bastien - let me know 
+if it would be useful to have a version to test against to see what will 
+work best for you, or if you need something different. Definitely want 
+to make sure user space gets the best option as my understanding is 
+changing this later becomes a pain :)
 
-diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
-index 08b3d810dfba..01ba080887b3 100644
---- a/arch/x86/include/asm/uv/bios.h
-+++ b/arch/x86/include/asm/uv/bios.h
-@@ -28,6 +28,20 @@ enum uv_bios_cmd {
- 	UV_BIOS_SET_LEGACY_VGA_TARGET
- };
- 
-+#define UV_BIOS_EXTRA			    0x10000
-+#define UV_BIOS_GET_PCI_TOPOLOGY	    0x10001
-+#define UV_BIOS_GET_GEOINFO		    0x10003
-+
-+#define UV_BIOS_EXTRA_OP_MEM_COPYIN	    0x1000
-+#define UV_BIOS_EXTRA_OP_MEM_COPYOUT	    0x2000
-+#define UV_BIOS_EXTRA_OP_MASK		    0x0fff
-+#define UV_BIOS_EXTRA_GET_HEAPSIZE	    1
-+#define UV_BIOS_EXTRA_INSTALL_HEAP	    2
-+#define UV_BIOS_EXTRA_MASTER_NASID	    3
-+#define UV_BIOS_EXTRA_OBJECT_COUNT	    (10|UV_BIOS_EXTRA_OP_MEM_COPYOUT)
-+#define UV_BIOS_EXTRA_ENUM_OBJECTS	    (12|UV_BIOS_EXTRA_OP_MEM_COPYOUT)
-+#define UV_BIOS_EXTRA_ENUM_PORTS	    (13|UV_BIOS_EXTRA_OP_MEM_COPYOUT)
-+
- /*
-  * Status values returned from a BIOS call.
-  */
-@@ -109,6 +123,32 @@ struct uv_systab {
- 	} entry[1];		/* additional entries follow */
- };
- extern struct uv_systab *uv_systab;
-+
-+#define UV_BIOS_MAXSTRING	      128
-+struct uv_bios_hub_info {
-+	unsigned int id;
-+	union {
-+		struct {
-+			unsigned long long this_part:1;
-+			unsigned long long is_shared:1;
-+			unsigned long long is_disabled:1;
-+		} fields;
-+		struct {
-+			unsigned long long flags;
-+			unsigned long long reserved;
-+		} b;
-+	} f;
-+	char name[UV_BIOS_MAXSTRING];
-+	char location[UV_BIOS_MAXSTRING];
-+	unsigned int ports;
-+};
-+
-+struct uv_bios_port_info {
-+	unsigned int port;
-+	unsigned int conn_id;
-+	unsigned int conn_port;
-+};
-+
- /* (... end of definitions from UV BIOS ...) */
- 
- enum {
-@@ -142,6 +182,15 @@ extern s64 uv_bios_change_memprotect(u64, u64, enum uv_memprotect);
- extern s64 uv_bios_reserved_page_pa(u64, u64 *, u64 *, u64 *);
- extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
- 
-+extern s64 uv_bios_get_master_nasid(u64 sz, u64 *nasid);
-+extern s64 uv_bios_get_heapsize(u64 nasid, u64 sz, u64 *heap_sz);
-+extern s64 uv_bios_install_heap(u64 nasid, u64 sz, u64 *heap);
-+extern s64 uv_bios_obj_count(u64 nasid, u64 sz, u64 *objcnt);
-+extern s64 uv_bios_enum_objs(u64 nasid, u64 sz, u64 *objbuf);
-+extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 sz, u64 *portbuf);
-+extern s64 uv_bios_get_geoinfo(u64 nasid, u64 sz, u64 *geo);
-+extern s64 uv_bios_get_pci_topology(u64 sz, u64 *buf);
-+
- extern int uv_bios_init(void);
- extern unsigned long get_uv_systab_phys(bool msg);
- 
-diff --git a/arch/x86/include/asm/uv/uv_geo.h b/arch/x86/include/asm/uv/uv_geo.h
-new file mode 100644
-index 000000000000..f241451035fb
---- /dev/null
-+++ b/arch/x86/include/asm/uv/uv_geo.h
-@@ -0,0 +1,103 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Copyright (C) 2020 Hewlett Packard Enterprise Development LP. All rights reserved.
-+ */
-+
-+#ifndef _ASM_UV_GEO_H
-+#define _ASM_UV_GEO_H
-+
-+/* Type declaractions */
-+
-+/* Size of a geoid_s structure (must be before decl. of geoid_u) */
-+#define GEOID_SIZE	8
-+
-+/* Fields common to all substructures */
-+struct geo_common_s {
-+	unsigned char type;		/* What type of h/w is named by this geoid_s */
-+	unsigned char blade;
-+	unsigned char slot;		/* slot is IRU */
-+	unsigned char upos;
-+	unsigned char rack;
-+};
-+
-+/* Additional fields for particular types of hardware */
-+struct geo_node_s {
-+	struct geo_common_s common;		/* No additional fields needed */
-+};
-+
-+struct geo_rtr_s {
-+	struct geo_common_s common;		/* No additional fields needed */
-+};
-+
-+struct geo_iocntl_s {
-+	struct geo_common_s common;		/* No additional fields needed */
-+};
-+
-+struct geo_pcicard_s {
-+	struct geo_iocntl_s common;
-+	char bus;				/* Bus/widget number */
-+	char slot;				/* PCI slot number */
-+};
-+
-+/* Subcomponents of a node */
-+struct geo_cpu_s {
-+	struct geo_node_s node;
-+	unsigned char	socket:4,	/* Which CPU on the node */
-+			thread:4;
-+	unsigned char	core;
-+};
-+
-+struct geo_mem_s {
-+	struct geo_node_s node;
-+	char membus;			/* The memory bus on the node */
-+	char memslot;			/* The memory slot on the bus */
-+};
-+
-+union geoid_u {
-+	struct geo_common_s common;
-+	struct geo_node_s node;
-+	struct geo_iocntl_s iocntl;
-+	struct geo_pcicard_s pcicard;
-+	struct geo_rtr_s rtr;
-+	struct geo_cpu_s cpu;
-+	struct geo_mem_s mem;
-+	char padsize[GEOID_SIZE];
-+};
-+
-+/* Defined constants */
-+
-+#define GEO_MAX_LEN	48
-+
-+#define GEO_TYPE_INVALID	0
-+#define GEO_TYPE_MODULE		1
-+#define GEO_TYPE_NODE		2
-+#define GEO_TYPE_RTR		3
-+#define GEO_TYPE_IOCNTL		4
-+#define GEO_TYPE_IOCARD		5
-+#define GEO_TYPE_CPU		6
-+#define GEO_TYPE_MEM		7
-+#define GEO_TYPE_MAX		(GEO_TYPE_MEM+1)
-+
-+static inline int geo_rack(union geoid_u g)
-+{
-+	return (g.common.type == GEO_TYPE_INVALID) ?
-+		-1 : g.common.rack;
-+}
-+
-+static inline int geo_slot(union geoid_u g)
-+{
-+	return (g.common.type == GEO_TYPE_INVALID) ?
-+		-1 : g.common.upos;
-+}
-+
-+static inline int geo_blade(union geoid_u g)
-+{
-+	return (g.common.type == GEO_TYPE_INVALID) ?
-+		-1 : g.common.blade * 2 + g.common.slot;
-+}
-+
-+#endif /* _ASM_UV_GEO_H */
-diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-index 54511eaccf4d..bf31af3d32d6 100644
---- a/arch/x86/platform/uv/bios_uv.c
-+++ b/arch/x86/platform/uv/bios_uv.c
-@@ -72,6 +72,7 @@ static s64 uv_bios_call_irqsave(enum uv_bios_cmd which, u64 a1, u64 a2, u64 a3,
- long sn_partition_id;
- EXPORT_SYMBOL_GPL(sn_partition_id);
- long sn_coherency_id;
-+EXPORT_SYMBOL_GPL(sn_coherency_id);
- long sn_region_size;
- EXPORT_SYMBOL_GPL(sn_region_size);
- long system_serial_number;
-@@ -171,6 +172,60 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
- 				(u64)decode, (u64)domain, (u64)bus, 0, 0);
- }
- 
-+extern s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, 0, UV_BIOS_EXTRA_MASTER_NASID, 0,
-+				size, (u64)master_nasid);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_get_master_nasid);
-+
-+extern s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_GET_HEAPSIZE,
-+				0, size, (u64)heap_size);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_get_heapsize);
-+
-+extern s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_INSTALL_HEAP,
-+				0, heap_size, (u64)bios_heap);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_install_heap);
-+
-+extern s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_OBJECT_COUNT,
-+				0, size, (u64)objcnt);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_obj_count);
-+
-+extern s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_OBJECTS,
-+				0, size, (u64)objbuf);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_enum_objs);
-+
-+extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
-+{
-+	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_PORTS,
-+				obj_id, size, (u64)portbuf);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_enum_ports);
-+
-+extern s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
-+{
-+	return uv_bios_call(UV_BIOS_GET_GEOINFO, nasid, (u64)buf, size, 0, 0);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_get_geoinfo);
-+
-+extern s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
-+{
-+	return uv_bios_call(UV_BIOS_GET_PCI_TOPOLOGY, (u64)buf, size, 0, 0, 0);
-+}
-+EXPORT_SYMBOL_GPL(uv_bios_get_pci_topology);
-+
- unsigned long get_uv_systab_phys(bool msg)
- {
- 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
--- 
-2.26.2
-
+Thanks
+Mark
