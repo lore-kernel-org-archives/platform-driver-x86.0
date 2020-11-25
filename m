@@ -8,44 +8,44 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5E2C64E7A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D87C64E7D
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 028E820B1F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 838A620B1F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="lzJq54GC"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Ki9P8BBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732862AbgKYRaB (ORCPT
+        id S1732842AbgKYR37 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Nov 2020 12:30:01 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:37626 "EHLO
+        Wed, 25 Nov 2020 12:29:59 -0500
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:30420 "EHLO
         mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732839AbgKYRaA (ORCPT
+        by vger.kernel.org with ESMTP id S1731911AbgKYR37 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Nov 2020 12:30:00 -0500
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APHS3vE005417;
-        Wed, 25 Nov 2020 17:29:41 GMT
+        Wed, 25 Nov 2020 12:29:59 -0500
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APHNm3H000954;
+        Wed, 25 Nov 2020 17:29:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pps0720;
- bh=YigZqEC/I0cyKmhNEyT4SOhl7g9ARpOKi+XCmmQh28I=;
- b=lzJq54GC4HvGUbTKIBCgm3S6wjYUQZZv28RzuYPTcVMbWYhlw1WEmwPYZ3OzKUxBnc/B
- yFn4HgYyfVi0YLCmxBeAOQnySZ/Z2fq+SFsCx6f6OcTkL0lLrUHFZ+Tw9WIUy0OsglMb
- YqoeYmFKX1klECnuBlFWGIg5JCExe9VY9MfjVnwMRw1wv9Is9tZy62ekcJCz3YB7pnQz
- 3aeDKDdkgpe35BTkEGVV27MldgfTcU3JYrZdjsCoAXZmr8UGwOYxwqPNq8By+u7bvlz2
- pwYt4o+BIGb8aJcP48WM6IFgKShHgGJnH0gZy+NTcrXcF+bu3AFoiUBY2mWArNJhHD1P Nw== 
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0b-002e3701.pphosted.com with ESMTP id 351gycdfdg-1
+ bh=+oQ5tDT0s75+3qBxLOfxh0HLP+klCcDrGLxiwEJJ1bs=;
+ b=Ki9P8BBTIFMwIo/NTZSkgfSf/7nz/sh/HtDxnD/riulbLyzpK9X9yDP1NgN2WZUUGnVn
+ oSrjvlMn6kMnfgqriYCIfPqKE3EqGh6nhZie41QJVA5K4Ej6jlvJF7oJSRb71z16bbMB
+ 5kcmLhIwNJASFvPJOwJPipKUXJM0+7glAim4hekKHeGp2cDbJUwJLiM9VStL+/nJ/ZRf
+ dMVxrBjjTRIgvAeXaq4cSYaLMSV0WzCbkIKYL8E+tQuL4xtAoMuJ6pC1NMTNHfNiuf+N
+ H2elAA674cwtj+mcR1SgmYZmSz3bw+TXQBrOr6ldBrfT+dw8o+Lt//TATagrEg/PM8Ir YQ== 
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0b-002e3701.pphosted.com with ESMTP id 3517pqs84m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Nov 2020 17:29:41 +0000
+        Wed, 25 Nov 2020 17:29:38 +0000
 Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 03F0390;
-        Wed, 25 Nov 2020 17:29:41 +0000 (UTC)
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 0958CC7;
+        Wed, 25 Nov 2020 17:29:38 +0000 (UTC)
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 143DF39;
-        Wed, 25 Nov 2020 17:29:40 +0000 (UTC)
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 1718837;
+        Wed, 25 Nov 2020 17:29:37 +0000 (UTC)
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Justin Ernst <justin.ernst@hpe.com>,
@@ -61,9 +61,9 @@ Cc:     Mike Travis <mike.travis@hpe.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ilya Dryomov <idryomov@gmail.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 4/5] x86/platform/uv: Add deprecated messages to /proc info leaves
-Date:   Wed, 25 Nov 2020 11:29:06 -0600
-Message-Id: <20201125172907.240996-5-mike.travis@hpe.com>
+Subject: [PATCH 1/5] x86/platform/uv: Add kernel interfaces for obtaining system info.
+Date:   Wed, 25 Nov 2020 11:29:03 -0600
+Message-Id: <20201125172907.240996-2-mike.travis@hpe.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20201125172907.240996-1-mike.travis@hpe.com>
 References: <20201125172907.240996-1-mike.travis@hpe.com>
@@ -72,74 +72,61 @@ Content-Transfer-Encoding: 8bit
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-11-25_10:2020-11-25,2020-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- spamscore=0 priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015
- lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011250110
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
+ phishscore=0 spamscore=0 malwarescore=0 adultscore=0 mlxlogscore=965
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011250109
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add "deprecated" message to any access to old /proc/sgi_uv/* leaves.
+Add kernel interfaces used to obtain info for the uv_sysfs driver
+to display.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/uv/bios.h     |  2 ++
+ arch/x86/kernel/apic/x2apic_uv_x.c | 12 ++++++++++++
+ 2 files changed, 14 insertions(+)
 
+diff --git a/arch/x86/include/asm/uv/bios.h b/arch/x86/include/asm/uv/bios.h
+index 01ba080887b3..1b6455f881f9 100644
+--- a/arch/x86/include/asm/uv/bios.h
++++ b/arch/x86/include/asm/uv/bios.h
+@@ -200,6 +200,8 @@ extern long sn_partition_id;
+ extern long sn_coherency_id;
+ extern long sn_region_size;
+ extern long system_serial_number;
++extern ssize_t uv_get_archtype(char *buf, int len);
++extern int uv_get_hubless_system(void);
+ 
+ extern struct kobject *sgi_uv_kobj;	/* /sys/firmware/sgi_uv */
+ 
 diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 48746031b39a..bfd77a00c2a1 100644
+index 1b98f8c12b96..48746031b39a 100644
 --- a/arch/x86/kernel/apic/x2apic_uv_x.c
 +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -1615,21 +1615,45 @@ static void check_efi_reboot(void)
- 		reboot_type = BOOT_ACPI;
+@@ -502,6 +502,18 @@ enum uv_system_type get_uv_system_type(void)
+ 	return uv_system_type;
  }
  
--/* Setup user proc fs files */
-+/*
-+ * User proc fs file handling now deprecated.
-+ * Recommend using /sys/firmware/sgi_uv/... instead.
-+ */
-+static void proc_print_msg(int *flag, char *what, char *which)
++int uv_get_hubless_system(void)
 +{
-+	if (*flag)
-+		return;
-+
-+	pr_notice(
-+		"%s: using deprecated /proc/sgi_uv/%s, use /sys/firmware/sgi_uv/%s\n",
-+		current->comm, what, which ? which : what);
-+
-+	*flag = 1;
++	return uv_hubless_system;
 +}
++EXPORT_SYMBOL_GPL(uv_get_hubless_system);
 +
- static int __maybe_unused proc_hubbed_show(struct seq_file *file, void *data)
++ssize_t uv_get_archtype(char *buf, int len)
++{
++	return scnprintf(buf, len, "%s/%s", uv_archtype, oem_table_id);
++}
++EXPORT_SYMBOL_GPL(uv_get_archtype);
++
+ int is_uv_system(void)
  {
-+	static int flag;
-+
-+	proc_print_msg(&flag, "hubbed", "hub_type");
- 	seq_printf(file, "0x%x\n", uv_hubbed_system);
- 	return 0;
- }
- 
- static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
- {
-+	static int flag;
-+
-+	proc_print_msg(&flag, "hubless", NULL);
- 	seq_printf(file, "0x%x\n", uv_hubless_system);
- 	return 0;
- }
- 
- static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
- {
-+	static int flag;
-+
-+	proc_print_msg(&flag, "archtype", NULL);
- 	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
- 	return 0;
- }
+ 	return uv_system_type != UV_NONE;
 -- 
 2.21.0
 
