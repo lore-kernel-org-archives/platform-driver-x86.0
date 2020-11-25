@@ -2,51 +2,52 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C0CC56201
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B74C64E7B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988C7206F9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41DB521534
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 17:55:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="YhmEQ8uE"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="cYuBddiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgKYRzQ (ORCPT
+        id S1731836AbgKYRzR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Nov 2020 12:55:16 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:19422 "EHLO
+        Wed, 25 Nov 2020 12:55:17 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:59988 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
         by vger.kernel.org with ESMTP id S1730749AbgKYRzQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Wed, 25 Nov 2020 12:55:16 -0500
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APHsfn0032308;
-        Wed, 25 Nov 2020 17:54:54 GMT
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0APHss8s003665;
+        Wed, 25 Nov 2020 17:55:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pps0720;
- bh=RYdHdbxJgpSC+EDUO3rGG9C+dpg42FB+WNdi+TFBkN8=;
- b=YhmEQ8uEl9ES1jboU0KbI4CcSPWWBqOlZ1k72JW6RiK68sP+WHqLLm3S5VcffDIqVVVb
- ELuo62GMdO38cFAjeDdGiSqXfcYhz6xliYPjMzg2Lzuv17Nr3ZF1P4CmzfqzRQ32wMRF
- 6XeTjvw/KdirV/unE7RUn3B708nL45zxFtU7Ei/9+yCWSonbiVW9/bvv+4g1Atjlc1xZ
- TG0BmthQ6/FRlmq1Cnzx9zHEIH7ephMr2gikmWYvEsdQfjeJmGUQICtdMKIxGqr2iuL8
- N69hXy88uoIWxx9II3+v/ZNldJVMPLEl6HnQJ77CREc3vfP4xYvOri2PxdZn26uBn7CE 5g== 
-Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
-        by mx0a-002e3701.pphosted.com with ESMTP id 351r3kt8p5-1
+ bh=EcHFVilktMF2E05oaED2Dz/I7Xyg++eV/cmoU4aUmog=;
+ b=cYuBddiUxJiv++WcIsl/VhxbLf2r7xUxZBskiAUVYo2dGKNtVYwxWrfc6bH1zPtJsDEl
+ PmrngL+pU8usbZbtMgBNTMuMz/Euoz/OXIMcjl6/i3NCxXj0B76h8CDC4bp+pFfYPtYu
+ Re4B9kDII8u34UMVpkB7mPtGU+UA4QZi1kakUweWwhgRJsK7hQJoA5plYidkV3vJsqPd
+ r102Or5wX/wOJ4mzP73F1wAe20eTqN865bAzFvXZIwTvCGLONyejTzEhv7b4teMOrg8o
+ K0sTQJ2GDO4Z7zRROrsT9C9HSWKDHUVlY7vQONOG4kmhorLMND014GenWthFN8RMq9xx fA== 
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0a-002e3701.pphosted.com with ESMTP id 350bbqe8ac-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Nov 2020 17:54:54 +0000
+        Wed, 25 Nov 2020 17:55:02 +0000
 Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 096F76A;
-        Wed, 25 Nov 2020 17:54:53 +0000 (UTC)
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id EE95F8D;
+        Wed, 25 Nov 2020 17:55:00 +0000 (UTC)
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id A398F49;
-        Wed, 25 Nov 2020 17:54:52 +0000 (UTC)
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id B9F2947;
+        Wed, 25 Nov 2020 17:55:00 +0000 (UTC)
 Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 605001)
-        id 5D628302F4806; Wed, 25 Nov 2020 11:54:52 -0600 (CST)
+        id 72CE8302F4806; Wed, 25 Nov 2020 11:55:00 -0600 (CST)
 From:   Justin Ernst <justin.ernst@hpe.com>
 To:     Borislav Petkov <bp@alien8.de>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -67,9 +68,9 @@ Cc:     Andy Shevchenko <andy@infradead.org>,
         Vaibhav Jain <vaibhav@linux.ibm.com>,
         Mike Travis <mike.travis@hpe.com>,
         Justin Ernst <justin.ernst@hpe.com>
-Subject: [PATCH v3 1/5] x86/platform/uv: Remove existing /sys/firmware/sgi_uv/ interface
-Date:   Wed, 25 Nov 2020 11:54:40 -0600
-Message-Id: <20201125175444.279074-2-justin.ernst@hpe.com>
+Subject: [PATCH v3 5/5] x86/platform/uv: Update MAINTAINERS for uv_sysfs driver
+Date:   Wed, 25 Nov 2020 11:54:44 -0600
+Message-Id: <20201125175444.279074-6-justin.ernst@hpe.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20201125175444.279074-1-justin.ernst@hpe.com>
 References: <20201125175444.279074-1-justin.ernst@hpe.com>
@@ -78,110 +79,41 @@ Content-Transfer-Encoding: 8bit
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-11-25_11:2020-11-25,2020-11-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 adultscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
- phishscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011250111
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=833
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011250111
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Remove existing interface at /sys/firmware/sgi_uv/, created by
-arch/x86/platform/uv/uv_sysfs.c
-
-This interface includes:
-/sys/firmware/sgi_uv/coherence_id
-/sys/firmware/sgi_uv/partition_id
-
-Both coherence_id and partition_id will be re-introduced via a
-new uv_sysfs driver.
+Add an entry and email address for the new uv_sysfs driver and
+its maintainer.
 
 Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Acked-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/platform/uv/Makefile   |  2 +-
- arch/x86/platform/uv/uv_sysfs.c | 63 ---------------------------------
- 2 files changed, 1 insertion(+), 64 deletions(-)
- delete mode 100644 arch/x86/platform/uv/uv_sysfs.c
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/platform/uv/Makefile b/arch/x86/platform/uv/Makefile
-index 224ff0504890..1441dda8edf7 100644
---- a/arch/x86/platform/uv/Makefile
-+++ b/arch/x86/platform/uv/Makefile
-@@ -1,2 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_X86_UV)		+= bios_uv.o uv_irq.o uv_sysfs.o uv_time.o uv_nmi.o
-+obj-$(CONFIG_X86_UV)		+= bios_uv.o uv_irq.o uv_time.o uv_nmi.o
-diff --git a/arch/x86/platform/uv/uv_sysfs.c b/arch/x86/platform/uv/uv_sysfs.c
-deleted file mode 100644
-index 266773e2fb37..000000000000
---- a/arch/x86/platform/uv/uv_sysfs.c
-+++ /dev/null
-@@ -1,63 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * This file supports the /sys/firmware/sgi_uv interfaces for SGI UV.
-- *
-- *  Copyright (c) 2008 Silicon Graphics, Inc.  All Rights Reserved.
-- *  Copyright (c) Russ Anderson
-- */
--
--#include <linux/device.h>
--#include <asm/uv/bios.h>
--#include <asm/uv/uv.h>
--
--struct kobject *sgi_uv_kobj;
--
--static ssize_t partition_id_show(struct kobject *kobj,
--			struct kobj_attribute *attr, char *buf)
--{
--	return snprintf(buf, PAGE_SIZE, "%ld\n", sn_partition_id);
--}
--
--static ssize_t coherence_id_show(struct kobject *kobj,
--			struct kobj_attribute *attr, char *buf)
--{
--	return snprintf(buf, PAGE_SIZE, "%ld\n", sn_coherency_id);
--}
--
--static struct kobj_attribute partition_id_attr =
--	__ATTR(partition_id, S_IRUGO, partition_id_show, NULL);
--
--static struct kobj_attribute coherence_id_attr =
--	__ATTR(coherence_id, S_IRUGO, coherence_id_show, NULL);
--
--
--static int __init sgi_uv_sysfs_init(void)
--{
--	unsigned long ret;
--
--	if (!is_uv_system())
--		return -ENODEV;
--
--	if (!sgi_uv_kobj)
--		sgi_uv_kobj = kobject_create_and_add("sgi_uv", firmware_kobj);
--	if (!sgi_uv_kobj) {
--		printk(KERN_WARNING "kobject_create_and_add sgi_uv failed\n");
--		return -EINVAL;
--	}
--
--	ret = sysfs_create_file(sgi_uv_kobj, &partition_id_attr.attr);
--	if (ret) {
--		printk(KERN_WARNING "sysfs_create_file partition_id failed\n");
--		return ret;
--	}
--
--	ret = sysfs_create_file(sgi_uv_kobj, &coherence_id_attr.attr);
--	if (ret) {
--		printk(KERN_WARNING "sysfs_create_file coherence_id failed\n");
--		return ret;
--	}
--
--	return 0;
--}
--
--device_initcall(sgi_uv_sysfs_init);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b43b59542d15..f693d2d97203 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18361,6 +18361,12 @@ F:	include/uapi/linux/uuid.h
+ F:	lib/test_uuid.c
+ F:	lib/uuid.c
+ 
++UV SYSFS DRIVER
++M:	Justin Ernst <justin.ernst@hpe.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/x86/uv_sysfs.c
++
+ UVESAFB DRIVER
+ M:	Michal Januszewski <spock@gentoo.org>
+ L:	linux-fbdev@vger.kernel.org
 -- 
 2.26.2
 
