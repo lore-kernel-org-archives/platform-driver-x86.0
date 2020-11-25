@@ -2,132 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91296C2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 21:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15766C5519F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 06:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39551206E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Nov 2020 21:35:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XvdJmcGr"
+	by mail.kernel.org (Postfix) with ESMTP id A8B762067D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Nov 2020 06:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732626AbgKXVf3 (ORCPT
+        id S1725836AbgKYGqS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Nov 2020 16:35:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53287 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731366AbgKXVf2 (ORCPT
+        Wed, 25 Nov 2020 01:46:18 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8032 "EHLO
+        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgKYGqR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Nov 2020 16:35:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606253727;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Rkctz2It/LN7Uw8BGDVC+OZbVS5mvvHr+t0p7TbnkyU=;
-        b=XvdJmcGrs2oU4Y8betS/mUydF7YrtJuwSlOe8oE5jFbomXB07mTFRlozACA1sMqYN7rbGd
-        9+ANyFbTQ4U5HAuoA7NMkGpZBGEM22ezQRRtUloOpayPlODCh9pMin6afjQJdgQ1HL+3p7
-        LFQpOeUMWfZute7KVN2I+Y9wQQPE5sw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-520-mxQP4uHzP-G5uBaYAF68gQ-1; Tue, 24 Nov 2020 16:35:24 -0500
-X-MC-Unique: mxQP4uHzP-G5uBaYAF68gQ-1
-Received: by mail-ed1-f70.google.com with SMTP id y11so168434edv.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Nov 2020 13:35:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rkctz2It/LN7Uw8BGDVC+OZbVS5mvvHr+t0p7TbnkyU=;
-        b=gw95n5oEy9nQCj24vAOKdVtI93s6/6smLK6EOGWpTXMdeMJYOEsB5+MfToEm+RyT8Q
-         NAuDPlWempMerKw590fR0BHapjjk9phOg1tZBdJsffbmC6AbfHEREj78fxxRENEUVOy7
-         zMojbGqFCrneAb6AjGeo27UaCIThUmvDvZPwj7+hHRzzZc5z+GKwjft1VcD4dASHpqnK
-         +nXhhVyidjhFp4w1y+1JoJNgvc4T/78p1w2crJs7DVOg/OKs1fyR1Op+R1gbv/avDsUN
-         +s+/rhKT6EbPfGNIyMFJjQZpOnks9TZfV9V4hwG5TwQe0CNtXp+zZwTh6MBIgcEYOHq5
-         YdJA==
-X-Gm-Message-State: AOAM530hVygGOnjQ54ozL1UQUr7K2UQVVgtJoTmHkKrqrp40uNCVdVmw
-        qCnvI3/gsK5Hgbvo+OrASNK1EL8oiXnOXtSZgIbgbuxz6Nz+upu6o6Dxn6mKr2Fg2dBuaA0j+vI
-        mAXxize8y41fbLNKgY9qbKMQ++3KA4Ye+7A==
-X-Received: by 2002:a50:bc04:: with SMTP id j4mr505749edh.316.1606253722684;
-        Tue, 24 Nov 2020 13:35:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzqH8hvVEeNPHZ0m+XqragjupNN/2ZNoKAoANhhm/gTM0uSLGL+hEHPlfECuHiTws2AdjpiPQ==
-X-Received: by 2002:a50:bc04:: with SMTP id j4mr505734edh.316.1606253722453;
-        Tue, 24 Nov 2020 13:35:22 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-6c10-fbf3-14c4-884c.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:6c10:fbf3:14c4:884c])
-        by smtp.gmail.com with ESMTPSA id z2sm72007edr.47.2020.11.24.13.35.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Nov 2020 13:35:21 -0800 (PST)
-Subject: Re: Asus Zephyrus G14 GA401IH-HE003 problem with sound and fan
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mamchyts Dmitry <mamchyts@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     andriy.shevchenko@linux.intel.com
-References: <CAC+zXp_w2T5BYvzC+rF+7LGsgn64+9rLt8BT-=X2XE7qKqG=QQ@mail.gmail.com>
- <0c2fd9aa-7af4-5adb-ae6d-923c5eefb0b8@redhat.com>
- <dd32369a-f85e-45f2-dbc3-97721a253de1@redhat.com>
-Message-ID: <6b34e486-69bc-4d1d-5217-44936cc57de7@redhat.com>
-Date:   Tue, 24 Nov 2020 22:35:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Wed, 25 Nov 2020 01:46:17 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Cgrxt41PHzhcQl;
+        Wed, 25 Nov 2020 14:45:54 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 25 Nov 2020 14:46:08 +0800
+From:   Qinglang Miao <miaoqinglang@huawei.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>
+Subject: [PATCH] platform/x86: dell-smbios-base: Fix error return code in dell_smbios_init
+Date:   Wed, 25 Nov 2020 14:50:32 +0800
+Message-ID: <20201125065032.154125-1-miaoqinglang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <dd32369a-f85e-45f2-dbc3-97721a253de1@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Fix to return the error code -ENODEV when fails to init wmi and
+smm.
 
-On 11/24/20 10:34 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 11/24/20 2:28 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 11/12/20 8:19 PM, Mamchyts Dmitry wrote:
->>> I got an Asus Zephyrus G14 GA401IH-HE003 with AMD Ryzen 7 4800HS and a
->>> NVIDIA GeForce GTX 1650.
->>> I am use 5.9.8-050908-generic kernel from
->>> (kernel.ubuntu.com/~kernel-ppa/mainline/v5.9.8/)
->>>
->>>     dmamchyts@ga401ih:~$ cat /etc/os-release
->>>     NAME="Ubuntu"
->>>     VERSION="20.10 (Groovy Gorilla)"
->>>
->>> I have some problem with sound and fan:
->>> The first problem is a sound from notebook speakers: when I use
->>> headphones via 3.5 jack - all works fine. I can control sound level
->>> (from low to high). But when I try to listen to any sounds from
->>> notebook speakers - volume always has a high level (I think it's a max
->>> level of notebook speakers sound). I am using KDE, and I hear a sound
->>> level of 5% the same as 100%.
->>
->> Next time please try reporting 1 issue per bug report. The
->> platform-driver-x86@vger.kernel.org mailinglist is the right address
->> for the fan issue, but for the sound issue you really should send
->> a separate bug report to the sound/alsa developers.
-> 
-> I asked the sound devs what they best place is to report a bug for
-> this and they told me the best place is:
-> 
-> https://bugzilla.kernel.org/ - category Sound(ALSA)
+Fixes: 41e36f2f85af ("platform/x86: dell-smbios: Link all dell-smbios-* modules together")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+---
+ drivers/platform/x86/dell-smbios-base.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-p.s. they also said:
-
-> Usually, the first request to reporter is to provide the the output from
-> the alsa-info.sh script (in alsa-utils) to see the sound specific information.
-
-So please attach alsa-info.sh output to the bug when you file it.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell-smbios-base.c
+index 2e2cd5659..3a1dbf199 100644
+--- a/drivers/platform/x86/dell-smbios-base.c
++++ b/drivers/platform/x86/dell-smbios-base.c
+@@ -594,6 +594,7 @@ static int __init dell_smbios_init(void)
+ 	if (wmi && smm) {
+ 		pr_err("No SMBIOS backends available (wmi: %d, smm: %d)\n",
+ 			wmi, smm);
++		ret = -ENODEV;
+ 		goto fail_create_group;
+ 	}
+ 
+-- 
+2.23.0
 
