@@ -2,85 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1FBC64E75
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FE2C56202
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75BBA20679
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADD9221E2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZyRZS4P1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCbdhyfV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390791AbgKZOY4 (ORCPT
+        id S2390176AbgKZO2e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Nov 2020 09:24:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48277 "EHLO
+        Thu, 26 Nov 2020 09:28:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60631 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390200AbgKZOY4 (ORCPT
+        by vger.kernel.org with ESMTP id S2389951AbgKZO2d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Nov 2020 09:24:56 -0500
+        Thu, 26 Nov 2020 09:28:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606400694;
+        s=mimecast20190719; t=1606400912;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BbHoCyvudt62ZkkISRhenW8Ojg8BXwiU9Z0Idwssffg=;
-        b=ZyRZS4P15aeD8wzbMXSHugjzLLtupARuKxX7X9TeChxpuoFPI/7PCs+5laFFYfdQ3iQLeN
-        NFc2rmLUJzHxfWOvkzll+IhMoCdCxQKV2GzpbFGYf5que8ok1PpRvhSXoIoWr6X2uO8D47
-        LMYJMZa+ndRB9zDXvm66VFTly3rv8UU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-SE768DxDPdCqVjf-Q9yMDg-1; Thu, 26 Nov 2020 09:24:52 -0500
-X-MC-Unique: SE768DxDPdCqVjf-Q9yMDg-1
-Received: by mail-ed1-f71.google.com with SMTP id dj19so1153975edb.13
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2020 06:24:52 -0800 (PST)
+        bh=CVu3B75nitNrQbGb0VNkttik9wWLapdR6+icCVXpoc8=;
+        b=gCbdhyfVzAy8pTHOBprduuuBgSLYAYjs3oYZoajSOPk1lb+v/eXEwzEuTMqEmoTElRxkxL
+        5wXBQ7WX6QPYOGGYZS/Nizt6D0FpWYUE3wsssZBLNpq2ZYsKqN8tOpF3/bsrzlCXs1C3DY
+        Xn9UphCv18RYAJKHmEj2iSLDeMNPgDk=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-AL0mfRDbMIe8XIE-LI5PQg-1; Thu, 26 Nov 2020 09:28:30 -0500
+X-MC-Unique: AL0mfRDbMIe8XIE-LI5PQg-1
+Received: by mail-ej1-f69.google.com with SMTP id dc13so928040ejb.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2020 06:28:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=BbHoCyvudt62ZkkISRhenW8Ojg8BXwiU9Z0Idwssffg=;
-        b=Xl/521lqVY9FyaYly24HlREZEwN8trnl2T/PHAjmZCdIU5hKbXiHKHDaWBddwUh++Z
-         XBPyf4SKFr7ByzUhf/E+7QnlYmhSUAhfoVKUkNNeJC6ST9DGiJ6rJjnIBu6263La+Hq4
-         v2Lwk/nBFbYpp0Vz0OcFOY5bEzsNUMgt0XFO8QdSqCspEcYuh98Hk1QUY8rgVvC53KoT
-         NZQ+6XsJciYduosv/0p0K2Uwy61rN3OmRNC8IF2YFjiOWOkGik2ifN+ym3FPKnScGPQ3
-         Ov73F4nSb1IaSVmgQDbDnzZswICZWRkdO9PFvDGc9YpqFWQ4+DVgF5hHMuKTrtUXIUyX
-         a10w==
-X-Gm-Message-State: AOAM533RR861hPFXJFmCH3vzMEwya9Tk9goTboFdBhwEYI9OvC8A1mxl
-        YAPfH1fRWb35hmURlaJSbPbUT24VpITbvr4zPCN6VQVsjn9As9ScnzdZ3LD1QQJI8gOZV5dh9dX
-        kaM9mNQPhBmCM+MHl3wMDceIMftAUiZuYVg==
-X-Received: by 2002:a17:906:3b5b:: with SMTP id h27mr2835136ejf.450.1606400691780;
-        Thu, 26 Nov 2020 06:24:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwujo+TSYRx3Wxrd8lMKSCm/JrLVj3wVB3r8fXh8O49dG945RciIJn0TxlJz4kZtMwU8JXZPg==
-X-Received: by 2002:a17:906:3b5b:: with SMTP id h27mr2835128ejf.450.1606400691586;
-        Thu, 26 Nov 2020 06:24:51 -0800 (PST)
+        bh=CVu3B75nitNrQbGb0VNkttik9wWLapdR6+icCVXpoc8=;
+        b=T56Mb3JaNu0U7ci/YHMo7lIeNJogxmS4ncHZZEEEWMaLo9P/cH0ieaxH7NZKI4SL8i
+         pfly84332qozwt3LsdrZnX1wDkeYphhDVbZ3/tb86/pUita4QBsExiXYXuC0gnBuVd+/
+         y3FlP7NDmzMhmXqA9IVAJe/atrYLicguoyRxbn+2i83/xy8m5riqH+XpPdfBvC6vtAlb
+         VnviNtkfng+1XnH9cKumU5hg2FHGjwmwkHqHo+0WzRH9NgKd0S70T2gaNp8KlXm/zlVd
+         v66iMngfYXZxxGdpeQqr1NrG71OFFdECimxHiagLw4PPb/RmVYFJscUQLlVyYLe/qYJk
+         Xiuw==
+X-Gm-Message-State: AOAM5308rgZxGhz7G1Q3GYCI+WnkbConJPG2QFlKR1ijVZY/KPAiC53r
+        HzPrsrmjPgApLzStBSV3Q1HT2RUtxKfouVu1aGfBATnavyIxiga28+rC4nOuUfTdcvyYfYaHHWB
+        aycA3AD6iN4YCCQorbs6Yx7/KKRIdc5eF8Q==
+X-Received: by 2002:aa7:db0c:: with SMTP id t12mr2893202eds.41.1606400908922;
+        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzAmkD6Jl8VPfHLuK9ob/oKbSpy43wrhhffWo2LKoRhoXvGymEwOD6XcD+RHHITmdBeul3Zqw==
+X-Received: by 2002:aa7:db0c:: with SMTP id t12mr2893189eds.41.1606400908783;
+        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id lm11sm2340921ejb.52.2020.11.26.06.24.50
+        by smtp.gmail.com with ESMTPSA id n15sm3302152eje.112.2020.11.26.06.28.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Nov 2020 06:24:50 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Whitelist P15 firmware for
- dual fan control
-To:     tamiko-ibm-acpi-devel@43-1.org,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Matthias Maier <tamiko@43-1.org>
-References: <20201126000416.2459645-1-tamiko-ibm-acpi-devel@43-1.org>
- <20201126000416.2459645-2-tamiko-ibm-acpi-devel@43-1.org>
+        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
+Subject: Re: [PATCH platform 0/2] platform/x86: mlx-platform: Remove PSU
+ EEPROM configuration
+To:     Vadim Pasternak <vadimp@nvidia.com>, andy@infradead.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201125101056.174708-1-vadimp@nvidia.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a3c31b49-0cd5-9383-9ad6-e65d0f9834aa@redhat.com>
-Date:   Thu, 26 Nov 2020 15:24:50 +0100
+Message-ID: <82e98646-1269-ce44-e573-67f2b852f822@redhat.com>
+Date:   Thu, 26 Nov 2020 15:28:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201126000416.2459645-2-tamiko-ibm-acpi-devel@43-1.org>
+In-Reply-To: <20201125101056.174708-1-vadimp@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,16 +84,25 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 11/26/20 1:04 AM, tamiko-ibm-acpi-devel@43-1.org wrote:
-> From: Matthias Maier <tamiko@43-1.org>
+On 11/25/20 11:10 AM, Vadim Pasternak wrote:
+> Remove PSU EEPROM configuration for systems MSN2700, MSN2100, MSN274x
+> to support the requirement of power unit replacement by "off the shelf"
+> device, matching electrical required parameters. Such device can be
+> equipped with different EEPROM types or even could be not equipped with
+> EEPROM.
 > 
-> This commit enables dual fan control for the following new Lenovo
-> models: P15, P15v.
+> Patch set contains two bug fixes:
+> - For MSN2700 and MSN2100 system types.
+> - For MSN274x system types.
 > 
-> Signed-off-by: Matthias Maier <tamiko@43-1.org>
+> Vadim Pasternak (2):
+>   platform/x86: mlx-platform: Remove PSU EEPROM from default platform
+>     configuration
+>   platform/x86: mlx-platform: Remove PSU EEPROM from MSN274x platform
+>     configuration
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
 https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
 Note it will show up in my review-hans branch once I've pushed my
@@ -113,22 +116,4 @@ merge-window.
 Regards,
 
 Hans
-
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 5ad06fd98515..26b1502f9bbe 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8786,6 +8786,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
->  	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
->  	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
->  	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
-> +	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
->  };
->  
->  static int __init fan_init(struct ibm_init_struct *iibm)
-> 
 
