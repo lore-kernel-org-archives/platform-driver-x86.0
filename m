@@ -2,69 +2,71 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4F1C56202
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 10:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF31C64E75
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 10:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600E1208CA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 10:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA60520B80
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 10:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CtQ3Up2Y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kd6JjWNu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbgKZKov (ORCPT
+        id S2388180AbgKZKp7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Nov 2020 05:44:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57517 "EHLO
+        Thu, 26 Nov 2020 05:45:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29649 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729386AbgKZKov (ORCPT
+        by vger.kernel.org with ESMTP id S1726321AbgKZKp6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Nov 2020 05:44:51 -0500
+        Thu, 26 Nov 2020 05:45:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606387489;
+        s=mimecast20190719; t=1606387556;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=f74I7B0oYWxV5Wlbe91BOc7t2kit6ZIk87Mc2GruqJ0=;
-        b=CtQ3Up2Ypm+fNJg37OeQ4uJgJlERZvNOrCAGohgNibmAyxsxLufjPpCx6C44KBwC8sfKN6
-        sX3wrXOwLchvcso9I2WK+5J75YPrO8bzlx+5c0FQLztQ0+hoTGuDg+HWn+g4y82pzTzvIy
-        XH2AxRSouF9y8ZdXMrW1kr3n64Y6PPA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-4E97NfvsMTSc6BzpSWerKQ-1; Thu, 26 Nov 2020 05:44:47 -0500
-X-MC-Unique: 4E97NfvsMTSc6BzpSWerKQ-1
-Received: by mail-ed1-f70.google.com with SMTP id s7so877737eds.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2020 02:44:47 -0800 (PST)
+        bh=XMFsV6J4cYnv0icJ5WDcZXl06565syo1zevHWnWoHSI=;
+        b=Kd6JjWNuyeuuARjxLJpk1UNxFViXkC8AvnaZ/ZS2f47wuW+8zPEqQu5WtXZbyg22vFcCLc
+        b1q06JnCZd2kusz0W5R1BoJQCxYuuJwUQ3cWlLzkkvafJykr2lSdU7p6NrtY6ZU9aDzfd9
+        qVdUOzAbdyrVxKs7Z4GmNcBXPY0r1rQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-1hEhsLm0PKeLCwwaGx9uIg-1; Thu, 26 Nov 2020 05:45:54 -0500
+X-MC-Unique: 1hEhsLm0PKeLCwwaGx9uIg-1
+Received: by mail-ed1-f69.google.com with SMTP id o11so884264edq.5
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2020 02:45:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=f74I7B0oYWxV5Wlbe91BOc7t2kit6ZIk87Mc2GruqJ0=;
-        b=Op7byq/XlKEqZs3pcv06AGn+IBw41aBU7fR1QCNo48sKaBHWTF0EWJWRPiiwdli984
-         GEqXSOi8R5xhuomPEB6VKgpEKZYbfjUSWLRwfXgTfpyu4MOfRNEk6cUPFNunaVSId5eA
-         l4qTz8TXqMs6DEciEuCX6aYrtO1Y3BN0Kq3ih6coCrfI6gXs15BehUJYMf2eidNZPchE
-         gGsThsmGaiFNET44H1gnzLQXLCyT7x2o2juIZAvFHIGgbeydjSMBzUrCPCCTrClwFPu2
-         KqYF5bHtkQQVyvLE0b5LOE1xZ4Fc1dOnAkiBme4p+VRQsYRBfsaBWoZDJS8VCR5Or8sF
-         lXNw==
-X-Gm-Message-State: AOAM531+3oXJFR+MbvvILOfmye6PM5F/eXkBZ2mdTetEq2fXQkx6gp0V
-        edMZnl3/JzEwrfiH8Fj8dc4wwfzPTI52rYWtSXR0sTAukjhuJazTMW2GNRrm8bHn6ViLhp3hwV2
-        crxOMvRvF+om5uvtrBrmWrXg6OA9v/+relf4ioeq/8x1AWk4tNGerWo7Nn1idLr76/jE5cROdRw
-        dgCwhvkzQFGw==
-X-Received: by 2002:a17:907:94c6:: with SMTP id dn6mr2104470ejc.13.1606387486415;
-        Thu, 26 Nov 2020 02:44:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxPnOJBMgWd0HEVl9SUT3jmZ1HXa/sGHf5+sS9raCr0gVbh2sGuByEK0SG8QghzbMibd/LupA==
-X-Received: by 2002:a17:907:94c6:: with SMTP id dn6mr2104441ejc.13.1606387486155;
-        Thu, 26 Nov 2020 02:44:46 -0800 (PST)
+        bh=XMFsV6J4cYnv0icJ5WDcZXl06565syo1zevHWnWoHSI=;
+        b=criYWa2t+EUzlwVL7sne0de3Uj6lGu7nreQjhmOo1FBBJgrKxVLB/8vmHFBVqomjkV
+         gWC3QeCwI/sVIijVs2VdWBTUjDvLN3MGmYyONkwe1goprRGsB7D7x7ra07W50NDy5/En
+         iEbT/NSG4TCk5MN2rMWDgmjE79OJ7YHgHS21uXbFBbjw/ComMZxPnMgvqixu1P7alF+x
+         UbQgU5ypfQzOyXa3eCsFfwqW065uJh2Z9v3qonqkHcLtAD5nRkOwfCXKh33MdVB65x6E
+         7hNvWORRyiOJKv3t1sokOx6TAHw6SjGzDNuyPB5lS/ZzEvBZjXrklnwhrZ3N1AibI7ee
+         W/LQ==
+X-Gm-Message-State: AOAM533bTBfiIRCqyPo/hveyu+ML8bwl2MxxijdiAZsxTIJcr5NgvkUL
+        csWdh74Tyfa1Yc/tf2wa8DcADvZBd6X1bP3e2zNOY3QrZC9CxYMVRaZe6hM6/gKK9z2b0LRM0D/
+        AeRKaOFRpwhX9erE7hFVvTYS8GB8zJQDf/iAUYwJX0gRhDPE5IVFD4PzeAb/iLJAwBSFTyxJI1K
+        padBX8cT2Xuw==
+X-Received: by 2002:a17:906:4c82:: with SMTP id q2mr1986970eju.285.1606387553038;
+        Thu, 26 Nov 2020 02:45:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxH8NOeignej3q+i+UEpdi3N/tpkCIRdvzf1FEQPgvSmaiPQtiOA1QaUEJPPdzLJRVRe2qmwA==
+X-Received: by 2002:a17:906:4c82:: with SMTP id q2mr1986939eju.285.1606387552837;
+        Thu, 26 Nov 2020 02:45:52 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id o17sm2939501edz.10.2020.11.26.02.44.45
+        by smtp.gmail.com with ESMTPSA id w16sm2875826eds.81.2020.11.26.02.45.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Nov 2020 02:44:45 -0800 (PST)
-Subject: Re: [PATCH 0/5] x86/platform/uv: Move UV procfs leaves to sysfs
+        Thu, 26 Nov 2020 02:45:52 -0800 (PST)
+Subject: Re: [PATCH 4/5] x86/platform/uv: Add deprecated messages to /proc
+ info leaves
 To:     Mike Travis <mike.travis@hpe.com>,
         Justin Ernst <justin.ernst@hpe.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -79,13 +81,14 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Ilya Dryomov <idryomov@gmail.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20201125172907.240996-1-mike.travis@hpe.com>
+ <20201125172907.240996-5-mike.travis@hpe.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <815f9d40-6c17-9bd3-f3c8-626d007b8597@redhat.com>
-Date:   Thu, 26 Nov 2020 11:44:44 +0100
+Message-ID: <b0339696-049a-e46e-bcd4-079f1b13d725@redhat.com>
+Date:   Thu, 26 Nov 2020 11:45:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201125172907.240996-1-mike.travis@hpe.com>
+In-Reply-To: <20201125172907.240996-5-mike.travis@hpe.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -96,46 +99,75 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 11/25/20 6:29 PM, Mike Travis wrote:
+> Add "deprecated" message to any access to old /proc/sgi_uv/* leaves.
 > 
-> Duplicate the current UV procfs leaves to the uv_sysfs driver so they show
-> up under /sys/firmware/sgi_uv.  Show a 'deprecated' warning message if
-> any of the old /proc/sgi_uv leaves are used.
+> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+> ---
+>  arch/x86/kernel/apic/x2apic_uv_x.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
 > 
-> These patches depend on the prior set sent by Justin Ernst <justin.ernst@hpe.com>
-> 	x86/platform/uv: Remove existing /sys/firmware/sgi_uv/ interface
-> 	x86/platform/uv: Add and export uv_bios_* functions
-> 	x86/platform/uv: Add new uv_sysfs platform driver
-> 	x86/platform/uv: Update ABI documentation of /sys/firmware/sgi_uv/
-> 	x86/platform/uv: Update MAINTAINERS for uv_sysfs driver
-> 
-> Mike Travis (5):
->   x86/platform/uv: Add kernel interfaces for obtaining system info.
->   x86/platform/uv: Add sysfs leaves to replace those in procfs
->   x86/platform/uv: Add sysfs hubless leaves
->   x86/platform/uv: Add deprecated messages to /proc info leaves
->   x86/platform/uv: Update sysfs document file
-> 
->  .../ABI/testing/sysfs-firmware-sgi_uv         | 16 +++++
->  arch/x86/include/asm/uv/bios.h                |  2 +
->  arch/x86/kernel/apic/x2apic_uv_x.c            | 38 +++++++++-
->  drivers/platform/x86/uv_sysfs.c               | 70 ++++++++++++++++++-
->  4 files changed, 123 insertions(+), 3 deletions(-)
+> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+> index 48746031b39a..bfd77a00c2a1 100644
+> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
+> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+> @@ -1615,21 +1615,45 @@ static void check_efi_reboot(void)
+>  		reboot_type = BOOT_ACPI;
+>  }
+>  
+> -/* Setup user proc fs files */
+> +/*
+> + * User proc fs file handling now deprecated.
+> + * Recommend using /sys/firmware/sgi_uv/... instead.
+> + */
+> +static void proc_print_msg(int *flag, char *what, char *which)
+> +{
+> +	if (*flag)
+> +		return;
+> +
+> +	pr_notice(
+> +		"%s: using deprecated /proc/sgi_uv/%s, use /sys/firmware/sgi_uv/%s\n",
+> +		current->comm, what, which ? which : what);
+> +
+> +	*flag = 1;
+> +}
+> +
 
-This series depends on the:
-
-[PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver
-
-Series, next time when such a thing is the case, please add a note
-about this to the cover letter.
-
-Like with the "[PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver" series,
-this series too should be merged in its entirety through the x86/tip tree (once the
-other series is merged). Please also add this info to the cover letter.
-
-I've one remark to patch 4 (which I send in a reply to that). So a v2 is going
-to be necessary. Please include the above bits in the v2 cover-letter.
+You have just re-invented pr_notice_once, please just use pr_notice_once
+directly in the _show functions.
 
 Regards,
 
 Hans
+
+
+
+
+>  static int __maybe_unused proc_hubbed_show(struct seq_file *file, void *data)
+>  {
+> +	static int flag;
+> +
+> +	proc_print_msg(&flag, "hubbed", "hub_type");
+>  	seq_printf(file, "0x%x\n", uv_hubbed_system);
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
+>  {
+> +	static int flag;
+> +
+> +	proc_print_msg(&flag, "hubless", NULL);
+>  	seq_printf(file, "0x%x\n", uv_hubless_system);
+>  	return 0;
+>  }
+>  
+>  static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
+>  {
+> +	static int flag;
+> +
+> +	proc_print_msg(&flag, "archtype", NULL);
+>  	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
+>  	return 0;
+>  }
+> 
 
