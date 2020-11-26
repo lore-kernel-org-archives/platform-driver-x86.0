@@ -2,118 +2,184 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FE2C56202
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53EDC56202
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 16:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADD9221E2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 14:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCbdhyfV"
+	by mail.kernel.org (Postfix) with ESMTP id 7C92C221EB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Nov 2020 16:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390176AbgKZO2e (ORCPT
+        id S2391588AbgKZQwR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Nov 2020 09:28:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60631 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389951AbgKZO2d (ORCPT
+        Thu, 26 Nov 2020 11:52:17 -0500
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.4]:19790 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391549AbgKZQwQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Nov 2020 09:28:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606400912;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CVu3B75nitNrQbGb0VNkttik9wWLapdR6+icCVXpoc8=;
-        b=gCbdhyfVzAy8pTHOBprduuuBgSLYAYjs3oYZoajSOPk1lb+v/eXEwzEuTMqEmoTElRxkxL
-        5wXBQ7WX6QPYOGGYZS/Nizt6D0FpWYUE3wsssZBLNpq2ZYsKqN8tOpF3/bsrzlCXs1C3DY
-        Xn9UphCv18RYAJKHmEj2iSLDeMNPgDk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-AL0mfRDbMIe8XIE-LI5PQg-1; Thu, 26 Nov 2020 09:28:30 -0500
-X-MC-Unique: AL0mfRDbMIe8XIE-LI5PQg-1
-Received: by mail-ej1-f69.google.com with SMTP id dc13so928040ejb.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Nov 2020 06:28:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CVu3B75nitNrQbGb0VNkttik9wWLapdR6+icCVXpoc8=;
-        b=T56Mb3JaNu0U7ci/YHMo7lIeNJogxmS4ncHZZEEEWMaLo9P/cH0ieaxH7NZKI4SL8i
-         pfly84332qozwt3LsdrZnX1wDkeYphhDVbZ3/tb86/pUita4QBsExiXYXuC0gnBuVd+/
-         y3FlP7NDmzMhmXqA9IVAJe/atrYLicguoyRxbn+2i83/xy8m5riqH+XpPdfBvC6vtAlb
-         VnviNtkfng+1XnH9cKumU5hg2FHGjwmwkHqHo+0WzRH9NgKd0S70T2gaNp8KlXm/zlVd
-         v66iMngfYXZxxGdpeQqr1NrG71OFFdECimxHiagLw4PPb/RmVYFJscUQLlVyYLe/qYJk
-         Xiuw==
-X-Gm-Message-State: AOAM5308rgZxGhz7G1Q3GYCI+WnkbConJPG2QFlKR1ijVZY/KPAiC53r
-        HzPrsrmjPgApLzStBSV3Q1HT2RUtxKfouVu1aGfBATnavyIxiga28+rC4nOuUfTdcvyYfYaHHWB
-        aycA3AD6iN4YCCQorbs6Yx7/KKRIdc5eF8Q==
-X-Received: by 2002:aa7:db0c:: with SMTP id t12mr2893202eds.41.1606400908922;
-        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzAmkD6Jl8VPfHLuK9ob/oKbSpy43wrhhffWo2LKoRhoXvGymEwOD6XcD+RHHITmdBeul3Zqw==
-X-Received: by 2002:aa7:db0c:: with SMTP id t12mr2893189eds.41.1606400908783;
-        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id n15sm3302152eje.112.2020.11.26.06.28.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Nov 2020 06:28:28 -0800 (PST)
-Subject: Re: [PATCH platform 0/2] platform/x86: mlx-platform: Remove PSU
- EEPROM configuration
-To:     Vadim Pasternak <vadimp@nvidia.com>, andy@infradead.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20201125101056.174708-1-vadimp@nvidia.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <82e98646-1269-ce44-e573-67f2b852f822@redhat.com>
-Date:   Thu, 26 Nov 2020 15:28:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Thu, 26 Nov 2020 11:52:16 -0500
+Received: from [100.112.1.102] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-b.us-east-1.aws.symcld.net id 9D/00-42660-93DDFBF5; Thu, 26 Nov 2020 16:52:09 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRWlGSWpSXmKPExsWS8eIhj67l3f3
+  xBvcuMFvsvy5h0bXQwGLh/VOsFl+/3Wa3eHN8OpPF8n39jBYfl3FYfO6YzGKxes8LZou1X+ax
+  WZw5fYnVgdtj0swZzB47Z91l9/i1bQ2Lx+YVWh7zTgZ69LRtYvJ4v+8qm8eWq+0sHp83yQVwR
+  rFm5iXlVySwZtw6/ICp4J9yRc/8VvYGxmeyXYxcHEIC/xklPjd0MUI4Dxklzl3+xt7FyMnBJq
+  AtsWXLL7YuRg4OEQEZiQ9rPUFqmAUWMEl8ub6GFaRGWCBR4s+S94wgNouAqsSansVg9bwC1hJ
+  bXouAhCUE5CWe9i5nBrE5gUrOdD1mAbGFBFQk7j9YwgZi8woISpyc+QQszgxU37x1NjOELSFx
+  8MULZog5ChKTF1xlgrATJJa9vMM8gVFgFpL2WUjaZyFpX8DIvIrRLKkoMz2jJDcxM0fX0MBA1
+  9DQSNcAxNJLrNJN0ist1k1NLC7RNdRLLC/WK67MTc5J0ctLLdnECIyxlAKGlB2Md19/0DvEKM
+  nBpCTKu2TP/nghvqT8lMqMxOKM+KLSnNTiQ4wyHBxKErzH7wDlBItS01Mr0jJzgPEOk5bg4FE
+  S4f19GyjNW1yQmFucmQ6ROsWoKCXOuw0kIQCSyCjNg2uDpZhLjLJSwryMDAwMQjwFqUW5mSWo
+  8q8YxTkYlYR5t4Ns58nMK4Gb/gpoMRPQ4umce0AWlyQipKQamJweGMyP49Js62Z6f16gabvND
+  Dalww62c8Ujf+XdvT1tceGBPQcU/1g+va/h809ns5PWhUsWOmtuf3rfFH510+ZD1lwLz8/Y22
+  iis2a2+yfFu9y9uozvu+KX7/A19N8m+2pjZ8ZkLdWYq+fszjDGLhMWiS9ZOdGlzV4r+e9V56I
+  pC0IXT63VO8/fx/rlpfvVmVLpj1fo/lTaG7OzoO6CHJMk7w1LtcYFyj9LHi6f5/04eU981R3B
+  bQZSbL/nx5yO26GUNXOyfSZ3YHjRNdt1Tz3L8s/sFIyUm6rMaSX70COrWdJtf23Q2Y6e65NPL
+  Hq4VKsuvmR/ZmHlfD/XDRpc0ia3Ek1F9avZbr5/mD2hXomlOCPRUIu5qDgRAGL6ThqsAwAA
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-13.tower-395.messagelabs.com!1606409528!181385!1
+X-Originating-IP: [104.232.225.12]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 8530 invoked from network); 26 Nov 2020 16:52:09 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.12)
+  by server-13.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 Nov 2020 16:52:09 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id C987F99A393690D97FF3;
+        Thu, 26 Nov 2020 11:52:08 -0500 (EST)
+Received: from localhost.home (10.64.80.205) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Thu, 26 Nov
+ 2020 08:52:05 -0800
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <hadess@hadess.net>, <pobrn@protonmail.com>,
+        <mario.limnociello@dell.com>, <eliadevito@gmail.com>,
+        <bberg@redhat.com>, <dvhart@infradead.org>
+Subject: [PATCH v4 1/3] Documentation: Add documentation for new platform_profile sysfs attribute
+Date:   Thu, 26 Nov 2020 11:51:41 -0500
+Message-ID: <20201126165143.32776-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-In-Reply-To: <20201125101056.174708-1-vadimp@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.64.80.205]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On modern systems the platform performance, temperature, fan and other
+hardware related characteristics are often dynamically configurable. The
+profile is often automatically adjusted to the load by some
+automatic-mechanism (which may very well live outside the kernel).
 
-On 11/25/20 11:10 AM, Vadim Pasternak wrote:
-> Remove PSU EEPROM configuration for systems MSN2700, MSN2100, MSN274x
-> to support the requirement of power unit replacement by "off the shelf"
-> device, matching electrical required parameters. Such device can be
-> equipped with different EEPROM types or even could be not equipped with
-> EEPROM.
-> 
-> Patch set contains two bug fixes:
-> - For MSN2700 and MSN2100 system types.
-> - For MSN274x system types.
-> 
-> Vadim Pasternak (2):
->   platform/x86: mlx-platform: Remove PSU EEPROM from default platform
->     configuration
->   platform/x86: mlx-platform: Remove PSU EEPROM from MSN274x platform
->     configuration
+These auto platform-adjustment mechanisms often can be configured with
+one of several 'platform-profiles', with either a bias towards low-power
+consumption or towards performance (and higher power consumption and
+thermals).
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Introduce a new platform_profile sysfs API which offers a generic API for
+selecting the performance-profile of these automatic-mechanisms.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+ - updated to rst format
+Changes in v3 & v4:
+ - version bump along with rest of patch series
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+ .../ABI/testing/sysfs-platform_profile.rst    | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform_profile.rst
 
-Regards,
-
-Hans
+diff --git a/Documentation/ABI/testing/sysfs-platform_profile.rst b/Documentation/ABI/testing/sysfs-platform_profile.rst
+new file mode 100644
+index 000000000000..5f7b2a94409b
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform_profile.rst
+@@ -0,0 +1,66 @@
++=======================================================================
++ Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)
++=======================================================================
++
++
++On modern systems the platform performance, temperature, fan and other
++hardware related characteristics are often dynamically configurable. The
++profile is often automatically adjusted to the load by some
++automatic mechanism (which may very well live outside the kernel).
++
++These auto platform adjustment mechanisms often can be configured with
++one of several platform profiles, with either a bias towards low power
++operation or towards performance.
++
++The purpose of the platform_profile attribute is to offer a generic sysfs
++API for selecting the platform profile of these automatic mechanisms.
++
++Note that this API is only for selecting the platform profile, it is
++NOT a goal of this API to allow monitoring the resulting performance
++characteristics. Monitoring performance is best done with device/vendor
++specific tools such as e.g. turbostat.
++
++Specifically when selecting a high performance profile the actual achieved
++performance may be limited by various factors such as: the heat generated
++by other components, room temperature, free air flow at the bottom of a
++laptop, etc. It is explicitly NOT a goal of this API to let userspace know
++about any sub-optimal conditions which are impeding reaching the requested
++performance level.
++
++Since numbers on their own cannot represent the multiple variables that a
++profile will adjust (power consumption, heat generation, etc) this API
++uses strings to describe the various profiles. To make sure that userspace
++gets a consistent experience this API document defines a fixed set of
++profile names. Drivers *must* map their internal profile representation
++onto this fixed set.
++
++
++If there is no good match when mapping then a new profile name may be
++added. Drivers which wish to introduce new profile names must:
++
++ 1. Explain why the existing profile names canot be used.
++ 2. Add the new profile name, along with a clear description of the
++    expected behaviour, to the documentation.
++
++:What:        /sys/firmware/acpi/platform_profile_choices
++:Date:        October 2020
++:Contact:     Hans de Goede <hdegoede@redhat.com>
++:Description: This file contains a space-separated list of profiles supported for this device.
++
++              Drivers must use the following standard profile-names::
++
++         		 low-power:     Low power consumption
++         		 cool:          Cooler operation
++		         quiet:         Quieter operation
++		         balanced:      Balance between low power consumption and performance
++		         performance:   High performance operation
++
++              Userspace may expect drivers to offer more than one of these
++              standard profile names.
++
++:What:        /sys/firmware/acpi/platform_profile
++:Date:        October 2020
++:Contact:     Hans de Goede <hdegoede@redhat.com>
++:Description: Reading this file gives the current selected profile for this
++              device. Writing this file with one of the strings from
++              available_profiles changes the profile to the new value.
+-- 
+2.28.0
 
