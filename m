@@ -2,50 +2,52 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B4C2D0E4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB9DC2D0E4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBE820B1F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A7A221EB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="oLiLp0/d"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="dPH0TafQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgK0OmD (ORCPT
+        id S1730741AbgK0O6k (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Nov 2020 09:42:03 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:1088 "EHLO
+        Fri, 27 Nov 2020 09:58:40 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:12340 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727653AbgK0OmD (ORCPT
+        by vger.kernel.org with ESMTP id S1729913AbgK0O6k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Nov 2020 09:42:03 -0500
-Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AREafeF009256;
-        Fri, 27 Nov 2020 14:41:35 GMT
+        Fri, 27 Nov 2020 09:58:40 -0500
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AREu134028481;
+        Fri, 27 Nov 2020 14:58:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pps0720;
- bh=9jmo7taftnySMyGHhJ7mEYoDjdfBXZTyj1fL7vlCtMg=;
- b=oLiLp0/dfMV54r9/0BeQTHS4Kge1kv6r7fqgwxtRZViR25u6NBtR4hB7nPbHiCH4SV3u
- wjOZqb4nzznI1zMmsM+OmRzNNMtPkTjYdyLEpoz13199ffqSE7VrP/+febpL+N0R2ezO
- Hi/GsCQnHK0wOkTqUOoShtmtasfbIVts2YrxGkfSb+JWzeQcZryAdLSwmrPModvhDzWr
- F7uEfm4l/qXjUBKYbzVEdDJweAFvVXH0v1z9wX0QJsNYYSV79Kdpoulh0cffN9GSO5eA
- q104sZ+R1y0LSI3iFS7PPih5WnR9bq0hxqBs6rsQxqRXdxsJQ0D53/S6bjOuPG26QxuB 2A== 
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 351hp4mkxm-1
+ bh=P78eiXI2l6YSBMrsOcqwG8GAu1JGBCWoQ88M2ehrAjc=;
+ b=dPH0TafQGCUM7TRKVbFzsIQhhY9xWodzsa1AjvLGLFGO90nxlj5/I2A8K7MLIhx9TwCS
+ ET136Zei20ZLxNP9vn29zVBvmxzFTG3jO0Gv9jiREy7wWvCOxFXSMTHOlhqg1Vyb9pSH
+ sRWLe10QYbANeTGGnB/aESZqv6mK5QeEoI9GV9cGD+MFVFL4n4nf5yKNiLnOrYldVOJb
+ SX47jcYV36ZR2z7EPwAsaBKkpl2I4vZ3TKkPtCNit8hDanDFAZzOJ5rT4IJ5R5P7+aAh
+ TckmErAWwv22a7F/Jlt7bfo+E5zWbHiwjeuv8GO3bpKK1+Oi8q8CP+ZtO9cpSOn0ZQ1p yw== 
+Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
+        by mx0b-002e3701.pphosted.com with ESMTP id 352fm3qh5e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Nov 2020 14:41:35 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id A1BAD9A;
-        Fri, 27 Nov 2020 14:41:34 +0000 (UTC)
+        Fri, 27 Nov 2020 14:58:25 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 5980C54;
+        Fri, 27 Nov 2020 14:58:24 +0000 (UTC)
 Received: from [16.99.208.125] (unknown [16.99.208.125])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 9480A4C;
-        Fri, 27 Nov 2020 14:41:32 +0000 (UTC)
-Subject: Re: [PATCH 0/5] x86/platform/uv: Move UV procfs leaves to sysfs
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id CF33B4B;
+        Fri, 27 Nov 2020 14:58:22 +0000 (UTC)
+Subject: Re: [PATCH 4/5] x86/platform/uv: Add deprecated messages to /proc
+ info leaves
 To:     Hans de Goede <hdegoede@redhat.com>,
         Justin Ernst <justin.ernst@hpe.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -60,80 +62,129 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Ilya Dryomov <idryomov@gmail.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 References: <20201125172907.240996-1-mike.travis@hpe.com>
- <815f9d40-6c17-9bd3-f3c8-626d007b8597@redhat.com>
+ <20201125172907.240996-5-mike.travis@hpe.com>
+ <b0339696-049a-e46e-bcd4-079f1b13d725@redhat.com>
 From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <2acf6156-7bae-7817-4cc6-902798c7af4e@hpe.com>
-Date:   Fri, 27 Nov 2020 06:41:32 -0800
+Message-ID: <ebd8451a-5910-1da5-4792-2a3d2f59b348@hpe.com>
+Date:   Fri, 27 Nov 2020 06:58:22 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <815f9d40-6c17-9bd3-f3c8-626d007b8597@redhat.com>
+In-Reply-To: <b0339696-049a-e46e-bcd4-079f1b13d725@redhat.com>
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
  definitions=2020-11-27_08:2020-11-26,2020-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- clxscore=1015 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011270086
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 suspectscore=0 impostorscore=0 adultscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011270088
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 
-On 11/26/2020 2:44 AM, Hans de Goede wrote:
+On 11/26/2020 2:45 AM, Hans de Goede wrote:
 > Hi,
 > 
 > On 11/25/20 6:29 PM, Mike Travis wrote:
+>> Add "deprecated" message to any access to old /proc/sgi_uv/* leaves.
 >>
->> Duplicate the current UV procfs leaves to the uv_sysfs driver so they show
->> up under /sys/firmware/sgi_uv.  Show a 'deprecated' warning message if
->> any of the old /proc/sgi_uv leaves are used.
+>> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+>> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+>> ---
+>>   arch/x86/kernel/apic/x2apic_uv_x.c | 26 +++++++++++++++++++++++++-
+>>   1 file changed, 25 insertions(+), 1 deletion(-)
 >>
->> These patches depend on the prior set sent by Justin Ernst <justin.ernst@hpe.com>
->> 	x86/platform/uv: Remove existing /sys/firmware/sgi_uv/ interface
->> 	x86/platform/uv: Add and export uv_bios_* functions
->> 	x86/platform/uv: Add new uv_sysfs platform driver
->> 	x86/platform/uv: Update ABI documentation of /sys/firmware/sgi_uv/
->> 	x86/platform/uv: Update MAINTAINERS for uv_sysfs driver
->>
->> Mike Travis (5):
->>    x86/platform/uv: Add kernel interfaces for obtaining system info.
->>    x86/platform/uv: Add sysfs leaves to replace those in procfs
->>    x86/platform/uv: Add sysfs hubless leaves
->>    x86/platform/uv: Add deprecated messages to /proc info leaves
->>    x86/platform/uv: Update sysfs document file
->>
->>   .../ABI/testing/sysfs-firmware-sgi_uv         | 16 +++++
->>   arch/x86/include/asm/uv/bios.h                |  2 +
->>   arch/x86/kernel/apic/x2apic_uv_x.c            | 38 +++++++++-
->>   drivers/platform/x86/uv_sysfs.c               | 70 ++++++++++++++++++-
->>   4 files changed, 123 insertions(+), 3 deletions(-)
+>> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+>> index 48746031b39a..bfd77a00c2a1 100644
+>> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
+>> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+>> @@ -1615,21 +1615,45 @@ static void check_efi_reboot(void)
+>>   		reboot_type = BOOT_ACPI;
+>>   }
+>>   
+>> -/* Setup user proc fs files */
+>> +/*
+>> + * User proc fs file handling now deprecated.
+>> + * Recommend using /sys/firmware/sgi_uv/... instead.
+>> + */
+>> +static void proc_print_msg(int *flag, char *what, char *which)
+>> +{
+>> +	if (*flag)
+>> +		return;
+>> +
+>> +	pr_notice(
+>> +		"%s: using deprecated /proc/sgi_uv/%s, use /sys/firmware/sgi_uv/%s\n",
+>> +		current->comm, what, which ? which : what);
+>> +
+>> +	*flag = 1;
+>> +}
+>> +
 > 
-> This series depends on the:
-> 
-> [PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver
-> 
-> Series, next time when such a thing is the case, please add a note
-> about this to the cover letter.
-> 
-> Like with the "[PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver" series,
-> this series too should be merged in its entirety through the x86/tip tree (once the
-> other series is merged). Please also add this info to the cover letter.
-> 
-> I've one remark to patch 4 (which I send in a reply to that). So a v2 is going
-> to be necessary. Please include the above bits in the v2 cover-letter.
+> You have just re-invented pr_notice_once, please just use pr_notice_once
+> directly in the _show functions.
 
-I was just about to send a notice that Justin changed the underlying 
-patch that these depend on.  (I was gone late Wednesday and all day 
-yesterday).  That will be done later today, thanks!
+I tried it both ways (actually with rate limiting as well).  The problem 
+with using a static check in the error print function it will only print 
+the first instance it encounters, not all of the references.
+
+If I move it to the final output I need to replicate the verbiage of the 
+format for every instance as you can't seem to combine the KERN_* level 
+of printing and the pr_fmt reference of the format string.  I tried a 
+few ways including just putting everything into a format character list. 
+  But what used to work (indirect format pointer) doesn't any more.  Or 
+I didn't hit on the correct combination of KERN_* level and indirect 
+format string.
+
+The last combination was no print limiting which caused of course the 
+error message to be output on every occurrence.  (NASA has 35,000 
+customers for their big systems, that's a lot of potential console 
+messages.)  This really annoys them and we would get calls from those 
+that don't have any means of changing this so they ask us.
+
+So I just chose this method of accomplishing all goals, except of course 
+using the higher level of print function (pr_notice_once).  But if you 
+think method two ("use pr_notice_once directly in the _show function") 
+is most favorable I will switch to that.  Thanks.
 
 > 
 > Regards,
 > 
 > Hans
+> 
+> 
+> 
+> 
+>>   static int __maybe_unused proc_hubbed_show(struct seq_file *file, void *data)
+>>   {
+>> +	static int flag;
+>> +
+>> +	proc_print_msg(&flag, "hubbed", "hub_type");
+>>   	seq_printf(file, "0x%x\n", uv_hubbed_system);
+>>   	return 0;
+>>   }
+>>   
+>>   static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
+>>   {
+>> +	static int flag;
+>> +
+>> +	proc_print_msg(&flag, "hubless", NULL);
+>>   	seq_printf(file, "0x%x\n", uv_hubless_system);
+>>   	return 0;
+>>   }
+>>   
+>>   static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
+>>   {
+>> +	static int flag;
+>> +
+>> +	proc_print_msg(&flag, "archtype", NULL);
+>>   	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
+>>   	return 0;
+>>   }
+>>
 > 
