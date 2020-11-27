@@ -2,166 +2,138 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE48C64E7C
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 09:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6B4C2D0E4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF80C21527
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 09:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBE820B1F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Nov 2020 14:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NN//e77+"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="oLiLp0/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgK0Jl0 (ORCPT
+        id S1729913AbgK0OmD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Nov 2020 04:41:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49048 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729194AbgK0JlY (ORCPT
+        Fri, 27 Nov 2020 09:42:03 -0500
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:1088 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727653AbgK0OmD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Nov 2020 04:41:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606470082;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=IMBFuW1kwZcIfsQ9CTbuIBKuzaXOT1XTMro+WzbTZV8=;
-        b=NN//e77+7T4dcW6bT9JkWg0JeJbtcgY311+oNoisXflluXwn0d4yCEPeaMvb6eI+3RdeGT
-        u8rh7NQgfkqAffR9N7M3i7mzLmitTV7JhMrQeTy8sx0bZiO+rRfuuFTxjOmxCOaoHPaDyM
-        3yIqb2b+tuXEIuWZE7MmdmE9mCqqUvE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-iwLC9QjoOcmh-8Hf3fv4eA-1; Fri, 27 Nov 2020 04:41:20 -0500
-X-MC-Unique: iwLC9QjoOcmh-8Hf3fv4eA-1
-Received: by mail-ed1-f72.google.com with SMTP id bt2so2226547edb.12
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2020 01:41:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=IMBFuW1kwZcIfsQ9CTbuIBKuzaXOT1XTMro+WzbTZV8=;
-        b=rMNxfVE9fw3amE0kWS+07QomjdBLkmYwNMsV9y1qMYyDfOFReHaHmCLj63Gyncy/im
-         VGRnCNFGi3Afcjb6pb31aXKZTOFjWa3VgzETvpEjGFEstciDI7lLNfLPDB/a5CxsZl1J
-         7CMCCKdjMQcvmjtxkNFy8VjrKNYDjgB3mtkaWFufIoNf+uMc5Rk9c9gY/GaspsjqUfro
-         DbU7x1jJ5NEs/R074Fql7VSbxm///Jyb3ikerv5/gw4JU6Ew9hBXtFpVmmZNMv/UwRVw
-         vm+lFScSeDMmKTj9HJPpjXTwOLtQRhuuQndk38OWX5F3lGbyzmsqx+K0sYcYPiAUvWXv
-         Dnkw==
-X-Gm-Message-State: AOAM533oxem3ugSDD/OGuMyooQFj0n+v40YUm2MJ92p80ljJMt2zAGpf
-        mqlv6IyFD9U2xq9Ks6kEv0A7k3vid+zZHdEqFxiCKZLLYHM/S1pr6EdDPF8oba3xk6ap24Wecle
-        I/CrNG6sH0Hef1WOPWFNWrvkgWRhUl5O/SrZk3K3mFEwgPy35eAZlyuKqhxHuzMEOtcvAKpy0nf
-        gMRHLpzRXIeg==
-X-Received: by 2002:a17:906:2e55:: with SMTP id r21mr7093046eji.46.1606470079298;
-        Fri, 27 Nov 2020 01:41:19 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx1xcarjDCPCwzOKQRTlgF7I4yVz7qP0linSSpUxXJJBapznj0WdjI5PL2RriCwJz+eTWeiRg==
-X-Received: by 2002:a17:906:2e55:: with SMTP id r21mr7093026eji.46.1606470079062;
-        Fri, 27 Nov 2020 01:41:19 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id a3sm2514842edf.23.2020.11.27.01.41.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Nov 2020 01:41:18 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.10-2
-Message-ID: <7fadb4fc-4e7f-e335-4c90-c09ee6aafeac@redhat.com>
-Date:   Fri, 27 Nov 2020 10:41:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Fri, 27 Nov 2020 09:42:03 -0500
+Received: from pps.filterd (m0134422.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AREafeF009256;
+        Fri, 27 Nov 2020 14:41:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pps0720;
+ bh=9jmo7taftnySMyGHhJ7mEYoDjdfBXZTyj1fL7vlCtMg=;
+ b=oLiLp0/dfMV54r9/0BeQTHS4Kge1kv6r7fqgwxtRZViR25u6NBtR4hB7nPbHiCH4SV3u
+ wjOZqb4nzznI1zMmsM+OmRzNNMtPkTjYdyLEpoz13199ffqSE7VrP/+febpL+N0R2ezO
+ Hi/GsCQnHK0wOkTqUOoShtmtasfbIVts2YrxGkfSb+JWzeQcZryAdLSwmrPModvhDzWr
+ F7uEfm4l/qXjUBKYbzVEdDJweAFvVXH0v1z9wX0QJsNYYSV79Kdpoulh0cffN9GSO5eA
+ q104sZ+R1y0LSI3iFS7PPih5WnR9bq0hxqBs6rsQxqRXdxsJQ0D53/S6bjOuPG26QxuB 2A== 
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0b-002e3701.pphosted.com with ESMTP id 351hp4mkxm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Nov 2020 14:41:35 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id A1BAD9A;
+        Fri, 27 Nov 2020 14:41:34 +0000 (UTC)
+Received: from [16.99.208.125] (unknown [16.99.208.125])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 9480A4C;
+        Fri, 27 Nov 2020 14:41:32 +0000 (UTC)
+Subject: Re: [PATCH 0/5] x86/platform/uv: Move UV procfs leaves to sysfs
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20201125172907.240996-1-mike.travis@hpe.com>
+ <815f9d40-6c17-9bd3-f3c8-626d007b8597@redhat.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <2acf6156-7bae-7817-4cc6-902798c7af4e@hpe.com>
+Date:   Fri, 27 Nov 2020 06:41:32 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <815f9d40-6c17-9bd3-f3c8-626d007b8597@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-27_08:2020-11-26,2020-11-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ clxscore=1015 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011270086
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
-
-Here is a set of small, straight-forward fixes for platform-drivers-x86 for 5.10:
- - thinkpad_acpi fixes: 2 bug-fixes and 3 model specific quirks
- - fixes for misc. other drivers: 2 bug-fixes and 3 model specific quirks
-
-Regards,
-
-Hans
 
 
-The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
+On 11/26/2020 2:44 AM, Hans de Goede wrote:
+> Hi,
+> 
+> On 11/25/20 6:29 PM, Mike Travis wrote:
+>>
+>> Duplicate the current UV procfs leaves to the uv_sysfs driver so they show
+>> up under /sys/firmware/sgi_uv.  Show a 'deprecated' warning message if
+>> any of the old /proc/sgi_uv leaves are used.
+>>
+>> These patches depend on the prior set sent by Justin Ernst <justin.ernst@hpe.com>
+>> 	x86/platform/uv: Remove existing /sys/firmware/sgi_uv/ interface
+>> 	x86/platform/uv: Add and export uv_bios_* functions
+>> 	x86/platform/uv: Add new uv_sysfs platform driver
+>> 	x86/platform/uv: Update ABI documentation of /sys/firmware/sgi_uv/
+>> 	x86/platform/uv: Update MAINTAINERS for uv_sysfs driver
+>>
+>> Mike Travis (5):
+>>    x86/platform/uv: Add kernel interfaces for obtaining system info.
+>>    x86/platform/uv: Add sysfs leaves to replace those in procfs
+>>    x86/platform/uv: Add sysfs hubless leaves
+>>    x86/platform/uv: Add deprecated messages to /proc info leaves
+>>    x86/platform/uv: Update sysfs document file
+>>
+>>   .../ABI/testing/sysfs-firmware-sgi_uv         | 16 +++++
+>>   arch/x86/include/asm/uv/bios.h                |  2 +
+>>   arch/x86/kernel/apic/x2apic_uv_x.c            | 38 +++++++++-
+>>   drivers/platform/x86/uv_sysfs.c               | 70 ++++++++++++++++++-
+>>   4 files changed, 123 insertions(+), 3 deletions(-)
+> 
+> This series depends on the:
+> 
+> [PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver
+> 
+> Series, next time when such a thing is the case, please add a note
+> about this to the cover letter.
+> 
+> Like with the "[PATCH v3 0/5] x86/platform/uv: Add uv_sysfs platform driver" series,
+> this series too should be merged in its entirety through the x86/tip tree (once the
+> other series is merged). Please also add this info to the cover letter.
+> 
+> I've one remark to patch 4 (which I send in a reply to that). So a v2 is going
+> to be necessary. Please include the above bits in the v2 cover-letter.
 
-  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+I was just about to send a notice that Justin changed the underlying 
+patch that these depend on.  (I was gone late Wednesday and all day 
+yesterday).  That will be done later today, thanks!
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.10-2
-
-for you to fetch changes up to c9aa128080cbce92f8715a9328f88d8ca3134279:
-
-  platform/x86: touchscreen_dmi: Add info for the Irbis TW118 tablet (2020-11-26 15:49:16 +0100)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.10-2
-
-Highlights:
- - thinkpad_acpi fixes: 2 bug-fixes and 3 model specific quirks
- - fixes for misc. other drivers: 2 bug-fixes and 3 model specific quirks
-
-The following is an automated git shortlog grouped by driver:
-
-acer-wmi:
- -  add automatic keyboard background light toggle key as KEY_LIGHTS_TOGGLE
-
-intel-vbtn:
- -  Support for tablet mode on HP Pavilion 13 x360 PC
-
-thinkpad_acpi:
- -  Whitelist P15 firmware for dual fan control
- -  Send tablet mode switch at wakeup time
- -  Add BAT1 is primary battery quirk for Thinkpad Yoga 11e 4th gen
- -  Do not report SW_TABLET_MODE on Yoga 11e
- -  add P1 gen3 second fan support
-
-toshiba_acpi:
- -  Fix the wrong variable assignment
-
-touchscreen_dmi:
- -  Add info for the Irbis TW118 tablet
- -  Add info for the Predia Basic tablet
-
-----------------------------------------------------------------
-Benjamin Berg (1):
-      platform/x86: thinkpad_acpi: Send tablet mode switch at wakeup time
-
-Hans de Goede (4):
-      platform/x86: thinkpad_acpi: Do not report SW_TABLET_MODE on Yoga 11e
-      platform/x86: thinkpad_acpi: Add BAT1 is primary battery quirk for Thinkpad Yoga 11e 4th gen
-      platform/x86: touchscreen_dmi: Add info for the Predia Basic tablet
-      platform/x86: touchscreen_dmi: Add info for the Irbis TW118 tablet
-
-Iakov 'Jake' Kirilenko (1):
-      platform/x86: thinkpad_acpi: add P1 gen3 second fan support
-
-Kaixu Xia (1):
-      platform/x86: toshiba_acpi: Fix the wrong variable assignment
-
-Matthias Maier (1):
-      platform/x86: thinkpad_acpi: Whitelist P15 firmware for dual fan control
-
-Max Verevkin (1):
-      platform/x86: intel-vbtn: Support for tablet mode on HP Pavilion 13 x360 PC
-
-Timo Witte (1):
-      platform/x86: acer-wmi: add automatic keyboard background light toggle key as KEY_LIGHTS_TOGGLE
-
- drivers/platform/x86/acer-wmi.c        |  1 +
- drivers/platform/x86/intel-vbtn.c      |  6 ++++
- drivers/platform/x86/thinkpad_acpi.c   | 13 ++++++++-
- drivers/platform/x86/toshiba_acpi.c    |  3 +-
- drivers/platform/x86/touchscreen_dmi.c | 50 ++++++++++++++++++++++++++++++++++
- 5 files changed, 70 insertions(+), 3 deletions(-)
-
+> 
+> Regards,
+> 
+> Hans
+> 
