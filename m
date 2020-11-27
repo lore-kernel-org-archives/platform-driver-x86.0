@@ -2,110 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CCCC3E8C5
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 02:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC5C8C3E8C5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093E22222A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 02:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C622222A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:19:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAhIanVi"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="p6rEVoVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgK1C4X (ORCPT
+        id S1730194AbgK1DS0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Nov 2020 21:56:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35828 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728294AbgK1Cz6 (ORCPT
+        Fri, 27 Nov 2020 22:18:26 -0500
+Received: from mail-41104.protonmail.ch ([185.70.41.104]:52956 "EHLO
+        mail-41104.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730776AbgK0Tzy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Nov 2020 21:55:58 -0500
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122B1C0613D1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2020 18:55:58 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id f93so4506342qtb.10
-        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2020 18:55:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ojW+gpdC6j8zEXMfnHbaSEMLdrF/Nw/fREzZcvwn4Ew=;
-        b=SAhIanViIOiQNMALOE9bjkTemrnuP8rd9LElrm0bQQKT0YbbPEsBvq6Ir9aAJJJFif
-         z6AIwFsIqbA2nOMfO6M80toJ1Wbh7JTANSlcMC1xP6CyrdVFUlyg5GLGRihX1XzW+EOx
-         TsCgW/FVbb6IkneiIm+8NTYmfwq1wrzZEwEYvI4hXmCWU82oHE8hMiUp7Povt66Zdwa/
-         iGs4JOiof4f6hwRvoSxU6xGQpLneG4QHtROiT2Q+iUbhu7CiL1WR+p3P1CIhOWMOtrs2
-         XcVi4EDpWrjq5CCwZyLiZUwrOBd/9AvlZChGOpyQwbsv5EcRn3aiid87dRzfwapxzAwn
-         HS6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ojW+gpdC6j8zEXMfnHbaSEMLdrF/Nw/fREzZcvwn4Ew=;
-        b=ZfrlizcZmia+F18Y282kpEkHXc9hc4xH1Ai8LbFALMU9CV8iIscwnKYMwP0ssOssPv
-         mr26F0x+UiOi5Ko1HXY5Bde9zMjjK5gpqsig4A3kxP/qPj9HDaKFuYJxZlW691h3Rgys
-         oHBtIpoSa2jbkBD/uHcsDQpZRAUsw6bIVqXmHDPzSV3D9//RIbM5t60p67tM7+VTYeQc
-         iAi2E9fVAHQDY8aWHXUOBeBQepxzbyobTBqoJh2RE9QZMuAhHaI+MirHC754VXvjiPZR
-         LA1YRg4ztSTVV1s1g0MxPDkNrZcSzqJ/h59jyJM5o10L0ULWCxy8bflylbE5HOpScJcT
-         dw1w==
-X-Gm-Message-State: AOAM530yPmJ84ew/fBV8/FDWf8IhdK59yVjkTJMg4ISdS/ZPzAK+BToO
-        mJ3i5Iz5nEOWjsW21Uz7E34PXNgfx3aqnw==
-X-Google-Smtp-Source: ABdhPJzFlihm4oF/H9G/AkM91qo6vEcQQo7XHka99E5M/rvoG6WMnvrcgRcYTPE4YMPaBt5GBSu/rg==
-X-Received: by 2002:a05:622a:301:: with SMTP id q1mr11358093qtw.237.1606532156771;
-        Fri, 27 Nov 2020 18:55:56 -0800 (PST)
-Received: from ?IPv6:2600:6c52:7b00:d590:a3ac:9fea:75d0:42e5? ([2600:6c52:7b00:d590:a3ac:9fea:75d0:42e5])
-        by smtp.gmail.com with ESMTPSA id y189sm8689857qka.30.2020.11.27.18.55.55
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Nov 2020 18:55:56 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: hp-wmi: Add support for home in HP OMEN
- laptops
-From:   Dana Goyette <danagoyette@gmail.com>
-To:     platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-References: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
- <cad5f2ab-e319-b6fd-360d-5beb62d6899f@redhat.com>
- <b8c32747-2704-8a2d-dc32-b6154128d295@gmail.com>
-Message-ID: <9ca5bc3c-807c-3dbc-41a9-741a3407c66c@gmail.com>
-Date:   Fri, 27 Nov 2020 18:55:54 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 27 Nov 2020 14:55:54 -0500
+Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        by mail-41104.protonmail.ch (Postfix) with ESMTPS id 396722001BE3
+        for <platform-driver-x86@vger.kernel.org>; Fri, 27 Nov 2020 19:25:04 +0000 (UTC)
+Authentication-Results: mail-41104.protonmail.ch;
+        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="p6rEVoVz"
+Date:   Fri, 27 Nov 2020 19:22:52 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1606504981;
+        bh=JA3R5kNZdeDaHj0Hz7a5oZ95EFWkeaJZqlDY0+PxPXU=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=p6rEVoVzdm57x+PHGSfKeTEp6AMvESTLYZxoP78SjXsn0PLJ+LRqurWKSy0CuoseF
+         XvvVdm6B8+EH7zYyvIrmeOuoO3z8jqvw+FtDjz7MXHfbflzh1XEaqWsvUx93GdAbEC
+         VVc1sAkT7VP9zjxPgXaxoA3+cq5zzWSh4S97JT3w=
+To:     Mark Pearson <markpearson@lenovo.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "hadess@hadess.net" <hadess@hadess.net>,
+        "mario.limnociello@dell.com" <mario.limnociello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH v4 3/3] platform/x86: thinkpad_acpi: Add platform profile support
+Message-ID: <ioprVbNER4h0HTVvyj2ElXiuNaSPjl8ycgp4XtOtj-Iwe4_6qnNRLYuvxIJKE2ULGPTRURY-1Dr9plCocTnx2S_ugBn7INWZScnn4-pTq4c=@protonmail.com>
+In-Reply-To: <20201126165143.32776-3-markpearson@lenovo.com>
+References: <markpearson@lenovo.com> <20201126165143.32776-1-markpearson@lenovo.com> <20201126165143.32776-3-markpearson@lenovo.com>
 MIME-Version: 1.0
-In-Reply-To: <b8c32747-2704-8a2d-dc32-b6154128d295@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi
 
 
- > On 11/27/20 6:19 PM, Dana Goyette wrote:
-> 
-> FYI, the HP Omen 15 2020 has a different keyboard, where Home is a 
-> proper separate key.  The India model has yet another layout, with a 
-> full numeric keypad that also includes Home.  So unless we want to get 
-> into DMI matching, it's safest to map the key to something distinct.
-> 
-> Layout on the US model:
-> 
-> [Omen]   [Calc] [PrtScr]
-> [Insert] [Home] [PgUp]
-> [Pause]  [End]  [PgDn]
-> 
-> Layout on the India model:
-> [Omen]    [Calc] [Insert] [PrtScr]
-> [NumLock] [/]    [*]      [-]
-> [7/Home]  [8]    [9/PgUp] [+]
-> 
-> (Where's Delete?  Above Backspace.)
+2020. november 26., cs=C3=BCt=C3=B6rt=C3=B6k 17:51 keltez=C3=A9ssel, Mark P=
+earson =C3=ADrta:
 
-Upon looking at the driver's source, the 2020 model won't be 
-encountering that path, so "home" may be okay after all.  When I press 
-that key, the event is different (it's not HPWMI_BEZEL_BUTTON).
+> [...]
+> +static bool dytc_ignore_next_event;
 
-hp_wmi: Unknown event_id - 29 - 0x21a5
+As a sidenote: can the profile switching be triggered by means that's not t=
+he
+`/sys/firmware/acpi/platform_profile` attribute (e.g. a physical button)?
+Because if so, then I'm not sure if `dytc_ignore_next_event` achieves its p=
+urpose
+robustly, although I believe it won't cause issues in practice. I think it =
+could
+be made more robust using a mutex to serialize and synchronize access to th=
+e DYTC
+interface, but I'm not sure if the effort is worth it.
 
+
+> +static bool dytc_profile_available;
+> +static enum platform_profile_option dytc_current_profile;
+> [...]
+> +static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+> +{
+> +=09int err, output;
+> +
+> +=09dytc_profile_available =3D false;
+> +=09dytc_ignore_next_event =3D false;
+> +
+> +=09err =3D dytc_command(DYTC_CMD_QUERY, &output);
+> +=09/*
+> +=09 * If support isn't available (ENODEV) then don't return an error
+> +=09 * and don't create the sysfs group
+> +=09 */
+> +=09if (err =3D=3D -ENODEV)
+> +=09=09return 0;
+> +=09/* For all other errors we can flag the failure */
+> +=09if (err)
+> +=09=09return err;
+> +
+> +=09/* Check DYTC is enabled and supports mode setting */
+> +=09if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
+> +=09=09/* Only DYTC v5.0 and later has this feature. */
+> +=09=09int dytc_version;
+> +
+> +=09=09dytc_version =3D (output >> DYTC_QUERY_REV_BIT) & 0xF;
+> +=09=09if (dytc_version >=3D 5) {
+> +=09=09=09dbg_printk(TPACPI_DBG_INIT,
+> +=09=09=09=09   "DYTC version %d: thermal mode available\n", dytc_version=
+);
+> +=09=09=09/* Create platform_profile structure and register */
+> +=09=09=09do {
+> +=09=09=09=09err =3D platform_profile_register(&dytc_profile);
+> +=09=09=09} while (err =3D=3D -EINTR);
+> [...]
+
+I'm wondering if this loop is really necessary?
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
