@@ -2,108 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A6FC64E8A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A4CC64E7D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1370222240
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4379B221FD
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fPfWrljI"
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="V4O4unyV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388928AbgK1Vtr (ORCPT
+        id S2388880AbgK1Vtq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 28 Nov 2020 16:49:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733311AbgK1SSS (ORCPT
+        Sat, 28 Nov 2020 16:49:46 -0500
+Received: from mail-41104.protonmail.ch ([185.70.41.104]:14932 "EHLO
+        mail-41104.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731107AbgK1SGS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 28 Nov 2020 13:18:18 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F58DC0254B5;
-        Sat, 28 Nov 2020 08:59:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=3Noat+yyK6D08TvzV/W7gvzzSdlFSLHu5xt9LycWN3E=; b=fPfWrljI0oWmXaKdMSjVP21uos
-        QMvZUiAe0aSYKKY6k+NIJ9rSZUE3cTagJ6S/SyMghCIhm3RI13nGca9vRrxEkiV47kRZlcoVVwF2I
-        BbsF37hvIdwSery8ikXSRVMpvwELfZzrzKMKQRCFiO1tYW5nTqXMBMvZ3Lb86XRxHZFbrUOc0DdmW
-        eudwOqPbjemOxLB2q2GQWGpc0UDoNHEt7dWObCDJJmtl/tW70my3aVZ4e96APukIehPSB0fXUKM47
-        V9zy06enjSWi6auAt1JRn/k8avvFldQ5IHdn+maau5+Zr8ZBwBx0iZEtA9CCLBXGzfEkUQ+JE1p35
-        I5CrtOVQ==;
-Received: from [2601:1c0:6280:3f0::cc1f]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kj3ZT-0005f2-J2; Sat, 28 Nov 2020 16:59:39 +0000
-Subject: Re: [PATCH v2 5/5] x86/platform/uv: Update sysfs document file
-To:     Mike Travis <mike.travis@hpe.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>
-Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20201128034227.120869-1-mike.travis@hpe.com>
- <20201128034227.120869-6-mike.travis@hpe.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b28fbb49-6b25-97d6-7e33-7f5e2ced9699@infradead.org>
-Date:   Sat, 28 Nov 2020 08:59:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Sat, 28 Nov 2020 13:06:18 -0500
+Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        by mail-41104.protonmail.ch (Postfix) with ESMTPS id 5792F2004168
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Nov 2020 15:37:56 +0000 (UTC)
+Authentication-Results: mail-41104.protonmail.ch;
+        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="V4O4unyV"
+Date:   Sat, 28 Nov 2020 15:37:44 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1606577873;
+        bh=B+V4mS7J4ue7BMs1VbspTddvELqxycTImgNdKUYU1zg=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=V4O4unyV6CK4jnkLr2SQOPI3RQnWZHMbEIihmflTV7D8g67R9wSlBUClMMOOu2g0l
+         oVEWGJipvK8GdfiCREjUY8UHd/Nywl9Tg+3ZbibLEXJmy6JiBVz1NZSvQiSK+6TzLJ
+         ZldUjeM2brLFlTDFpm//QqMlaIXtNYrUfMtfOr+g=
+To:     Hans de Goede <hdegoede@redhat.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Mark Pearson <markpearson@lenovo.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "hadess@hadess.net" <hadess@hadess.net>,
+        "mario.limnociello@dell.com" <mario.limnociello@dell.com>,
+        "eliadevito@gmail.com" <eliadevito@gmail.com>,
+        "bberg@redhat.com" <bberg@redhat.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH v4 2/3] ACPI: platform-profile: Add platform profile support
+Message-ID: <tvhsHrDOOP32PZfdoiajK4HUiE7pV3yfxAjHkied_GvQd3tPUQXxfPAI0P84ovCJjmNYib68twP2_ESRc-fyoUzUAJkTvWsobXdWfJGW74s=@protonmail.com>
+In-Reply-To: <faa32924-f53f-b3fd-3f24-3848f45b67e1@redhat.com>
+References: <markpearson@lenovo.com> <20201126165143.32776-1-markpearson@lenovo.com> <20201126165143.32776-2-markpearson@lenovo.com> <faa32924-f53f-b3fd-3f24-3848f45b67e1@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20201128034227.120869-6-mike.travis@hpe.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 11/27/20 7:42 PM, Mike Travis wrote:
-> Update sysfs Document file to include moved /proc leaves.
-> 
-> Signed-off-by: Mike Travis <mike.travis@hpe.com>
-> ---
->  Documentation/ABI/testing/sysfs-firmware-sgi_uv | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-sgi_uv b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-> index 50e25ce80fa2..b377f1470ba2 100644
-> --- a/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-> +++ b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-> @@ -7,10 +7,25 @@ Description:
->  
->  		Under that directory are a number of read-only attributes:
->  
-> +			archtype
-> +			hub_type
-> +			hubless
->  			partition_id
->  			coherence_id
->  			uv_type
->  
-> +		The archtype entry contains the UV architecture type that
-> +		is used to select arch-dependent addresses and features.
-> +		If can be set via the OEM_ID in the ACPI MADT table or by
-
-		It
-
-> +		UVsystab entry both passed from UV BIOS.
-> +
+Hi
 
 
-thanks.
--- 
-~Randy
+2020. november 28., szombat 15:08 keltez=C3=A9ssel, Hans de Goede =C3=ADrta=
+:
 
+> [...]
+> > +static_assert(ARRAY_SIZE(profile_names) =3D=3D platform_profile_perfor=
+m+1);
+>
+> It would be better to add an extra member/entry at the end of the enum
+> named platform_profile_no_profiles; and then use that instead of
+> platform_profile_perform+1. Also see below where I use this too.
+>
+
+I'm not sure if it's just me, but when I read "no_profiles", then "number o=
+f probiles"
+is not the first thing that comes to mind, maybe _end, _last, _max, etc.
+would be harder to mistake for something else? What do you think?
+
+
+> > +
+> > +static ssize_t platform_profile_choices_show(struct device *dev,
+> > +=09=09=09=09=09struct device_attribute *attr,
+> > +=09=09=09=09=09char *buf)
+> > +{
+> > +=09int len =3D 0;
+> > +=09int err, i;
+> > +
+> > +=09err =3D mutex_lock_interruptible(&profile_lock);
+> > +=09if (err)
+> > +=09=09return err;
+> > +
+> > +=09if (!cur_profile) {
+> > +=09=09mutex_unlock(&profile_lock);
+> > +=09=09return -ENODEV;
+> > +=09}
+> > +
+> > +=09if (!cur_profile->choices) {
+> > +=09=09mutex_unlock(&profile_lock);
+> > +=09=09return sysfs_emit(buf, "\n");
+> > +=09}
+>
+> If choices is empty, the for below will never print anything and
+> the end result is still just emitting "\n", so this whole if
+> block is unnecessary and can be removed.
+>
+> > +
+> > +=09for (i =3D 0; i < ARRAY_SIZE(profile_names); i++) {
+> > +=09=09if (cur_profile->choices & BIT(i)) {
+>
+> Please change the type of choices to an unsigned long array, like this:
+>
+> =09unsigned long choices[BITS_TO_LONGS(platform_profile_no_profiles)];
+>
+
+Sorry for the ignorant question, but does this play well with initializatio=
+n?
+Can something like this be done easily?
+```
+struct platform_profile_handler pph =3D {
+  .choices =3D BIT(...) | BIT(...) | etc.
+};
+```
+Or do you need to use something like `__set_bit()` in a function?
+
+
+> [...]
+> > +int platform_profile_register(const struct platform_profile_handler *p=
+prof)
+> > +{
+> > +=09int err;
+>
+> Maybe sanity check the platform_profile_handler a bit here,
+> I think it would be ok to check that choices, profile_set and profile_get
+> are all not 0 / NULL here and otherwise just return -EINVAL; Doing so
+> allows making the code above a bit simpler, also removing some exit
+> paths which require an unlock before exiting.
+>
+> > +
+> > +=09err =3D mutex_lock_interruptible(&profile_lock);
+> > +=09if (err)
+> > +=09=09return err;
+>
+> Please use a regular mutex_lock here, this is called during
+> driver probing, so no need to handle Ctrl+C and other signals.
+> [...]
+
+I believe insmod/modprobe can be interrupted,
+but I agree that's not really of any concern here.
+
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
