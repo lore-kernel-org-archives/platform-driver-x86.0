@@ -2,129 +2,581 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C6DC56201
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 04:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86CCC64E90
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 18:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B1621534
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 04:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A097424688
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 18:01:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="MfrParZg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jEzhylJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732673AbgK1EkM (ORCPT
+        id S1732653AbgK1SBa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Nov 2020 23:40:12 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:62980 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732638AbgK1Ei7 (ORCPT
+        Sat, 28 Nov 2020 13:01:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35032 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727810AbgK1R6f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Nov 2020 23:38:59 -0500
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AS3bvQA009187;
-        Sat, 28 Nov 2020 03:42:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=FWpz/L2QkNHyC0k3/MK2OtHHRD2xULsRooOrzezouaM=;
- b=MfrParZgxd9Ywu9MQY9g1syz7nBYZk5NBvqM8PIzRDLcR1rkZCALJz5aiUsiiTKx185j
- VbE1Zv/nBWhU2lZnNvRO43FsqmJQn1RW0nGjeueEmAaKhFEEUvR5cEs3r6vY+lMYK9hb
- Y1kp5nfk90bkeyup5JPVPIeXLainZloiN6mjxwzkH/QZeeJKAAoTu1YfJH6jFtRM7ciq
- uyjL8fHglYrBl59iL6oC3OXHFuQqiSiIz0WlFnTLvwXSIACChPOOkvDrTNjfUOzwaFzW
- cjZ+fXIKuTXGzE5GM68t/xv2bmKDMezgRwS5/sX7YaBAqXgfnp2T1KtPxaoPe1NLL6nZ qw== 
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 3532m2m0dh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 28 Nov 2020 03:42:58 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id 2702565;
-        Sat, 28 Nov 2020 03:42:58 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 2983A48;
-        Sat, 28 Nov 2020 03:42:57 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>
-Cc:     Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 5/5] x86/platform/uv: Update sysfs document file
-Date:   Fri, 27 Nov 2020 21:42:27 -0600
-Message-Id: <20201128034227.120869-6-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20201128034227.120869-1-mike.travis@hpe.com>
-References: <20201128034227.120869-1-mike.travis@hpe.com>
+        Sat, 28 Nov 2020 12:58:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606586224;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gREVyIci02ha2OdO2WbVEyW9Oca9cl0cY3PT2z/a1A8=;
+        b=jEzhylJLNAInJsP93qhhCKI4CZ3qRELMIUgg0CeEQ0F51oabEaEBfsMt9aPq0UKBJwAjSp
+        ZyZvugAckfN02rG0EUzFjM7c6h+JEp8/ghS/p15ixYr1T4luZL4dg+BwmjIk+sVahyzWpX
+        PhMPLGOsj7VFGLyf74UExhqKkgS6tZM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-517-3T15uyQ7NqOtc7cibHvhTw-1; Sat, 28 Nov 2020 09:55:19 -0500
+X-MC-Unique: 3T15uyQ7NqOtc7cibHvhTw-1
+Received: by mail-ej1-f70.google.com with SMTP id p18so3281938ejl.14
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Nov 2020 06:55:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gREVyIci02ha2OdO2WbVEyW9Oca9cl0cY3PT2z/a1A8=;
+        b=JhThLThe07C+MRuBVb8xCfuHJ+5t4XDNYoscpIiZn2Ts7T8KBAb7s0sG9LtLtFAZGB
+         mZQCJuFGlStqC7hi9jZ9jDiZXcHvcd8lZgV36MW0FlDZylqgrDOGV0f7lDDQ+zOMjhhE
+         9bavLJuIWeOa3wlmRnBZrBoj7HXC57g2tr3dS3mWusd+DuDVyJD3Dd2t5isxcIgpboOW
+         WGIY83MjpE2NvUDtR1ZseybCII91ySAH15XqlsquEPpR+Ihl4WOax5p3dra74QHOUNlX
+         tuXOAsgg7VvuFUbs3DySO8tiusKuw3KLl0qzOKzmzL/X1zdL5YSrqQJd4HcIgxe6tUKV
+         m1/Q==
+X-Gm-Message-State: AOAM531O2OxGbT7kPDvqq2r7Bhi72nFdWz5LF4uQzZaejnk5wobmUGwU
+        ATAVRKmjBv/JKDhH/aCaSaqmFEhWl+t5Mz1TlAoy3iJL0mr6AlubCVxANEmE5eKcnfhSUAf3W/X
+        pMlquo4BS3Pjzx/mZpOwmcIKqH17bY83K3w==
+X-Received: by 2002:a17:906:314f:: with SMTP id e15mr12555017eje.496.1606575317120;
+        Sat, 28 Nov 2020 06:55:17 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz0LaxVugC1hcl7sdvuJq3ifd5L3N6UdZLHDO7zMRnfbYx0EDXi6Xqjdy0UIU/3mlJIKBBAeg==
+X-Received: by 2002:a17:906:314f:: with SMTP id e15mr12554992eje.496.1606575316785;
+        Sat, 28 Nov 2020 06:55:16 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id z2sm6571504edr.47.2020.11.28.06.55.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Nov 2020 06:55:16 -0800 (PST)
+Subject: Re: [PATCH v4 3/3] platform/x86: thinkpad_acpi: Add platform profile
+ support
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, rjw@rjwysocki.net,
+        hadess@hadess.net, pobrn@protonmail.com,
+        mario.limnociello@dell.com, eliadevito@gmail.com, bberg@redhat.com,
+        dvhart@infradead.org
+References: <markpearson@lenovo.com>
+ <20201126165143.32776-1-markpearson@lenovo.com>
+ <20201126165143.32776-3-markpearson@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e8dee4f7-3559-71a3-51d4-0b93b004715a@redhat.com>
+Date:   Sat, 28 Nov 2020 15:55:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-11-28_02:2020-11-26,2020-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999 adultscore=0
- lowpriorityscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011280025
+In-Reply-To: <20201126165143.32776-3-markpearson@lenovo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update sysfs Document file to include moved /proc leaves.
+Hi,
 
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
----
- Documentation/ABI/testing/sysfs-firmware-sgi_uv | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On 11/26/20 5:51 PM, Mark Pearson wrote:
+> Add support to thinkpad_acpi for Lenovo platforms that have DYTC
+> version 5 support or newer to use the platform profile feature.
+> 
+> This will allow users to determine and control the platform modes
+> between low-power, balanced operation and performance modes.
+> 
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> ---
+> Changes in v2:
+>  Address (hopefully) all recommendations from review including:
+>  - use IS_ENABLED instead of IS_DEFINED
+>  - update driver to work with all the fixes in platform_profile update
+>  - improve error handling for invalid inputs
+>  - move tracking of current profile mode into this driver
+> 
+> Changes in v3:
+>  - version update for patch series
+> 
+> Changes in v4:
+>  - Rebase on top of palm sensor patch which led to a little bit of file
+>    restructuring/clean up
+>  - Use BIT macro where applicable
+>  - Formatting fixes
+>  - Check sysfs node created on exit function
+>  - implement and use DYTC_SET_COMMAND macro
+>  - in case of failure setting performance mode make sure CQL mode is
+>    enabled again before returning.
+>  - Clean up initialisation and error handling code
+> 
+>   drivers/platform/x86/thinkpad_acpi.c | 306 ++++++++++++++++++++++++++-
+>  1 file changed, 305 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 6a4c54db38fb..8463170391f5 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -72,6 +72,7 @@
+>  #include <linux/uaccess.h>
+>  #include <acpi/battery.h>
+>  #include <acpi/video.h>
+> +#include <linux/platform_profile.h>
 
-diff --git a/Documentation/ABI/testing/sysfs-firmware-sgi_uv b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-index 50e25ce80fa2..b377f1470ba2 100644
---- a/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-+++ b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
-@@ -7,10 +7,25 @@ Description:
- 
- 		Under that directory are a number of read-only attributes:
- 
-+			archtype
-+			hub_type
-+			hubless
- 			partition_id
- 			coherence_id
- 			uv_type
- 
-+		The archtype entry contains the UV architecture type that
-+		is used to select arch-dependent addresses and features.
-+		If can be set via the OEM_ID in the ACPI MADT table or by
-+		UVsystab entry both passed from UV BIOS.
-+
-+		The hub_type entry is used to select the type of hub which is
-+		similar to uv_type but encoded in a binary format.  Include
-+		the file uv_hub.h to get the definitions.
-+
-+		The hubless entry basically is present and set only if there
-+		is no hub.  In this case the hub_type entry is not present.
-+
- 		The partition_id entry contains the partition id.
- 		UV systems can be partitioned into multiple physical
- 		machines, which each partition running a unique copy
-@@ -24,6 +39,7 @@ Description:
- 
- 		The uv_type entry contains the hub revision number.
- 		This value can be used to identify the UV system version:
-+			"0.*" = Hubless UV ('*' is subtype)
- 			"3.0" = UV2
- 			"5.0" = UV3
- 			"7.0" = UV4
--- 
-2.21.0
+Please group this together with the other linux/foo.h includes.
+
+>  
+>  /* ThinkPad CMOS commands */
+>  #define TP_CMOS_VOLUME_DOWN	0
+> @@ -9971,6 +9972,296 @@ static struct ibm_struct proxsensor_driver_data = {
+>  	.exit = proxsensor_exit,
+>  };
+>  
+> +#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
+> +
+> +/*************************************************************************
+> + * DYTC Platform Profile interface
+> + */
+> +
+> +#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
+> +#define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
+> +#define DYTC_CMD_RESET    0x1ff /* To reset back to default */
+> +
+> +#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
+> +#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
+> +#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
+> +
+> +#define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+> +#define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
+> +
+> +#define DYTC_SET_FUNCTION_BIT 12 /* Bits 12-15 - function setting */
+> +#define DYTC_SET_MODE_BIT     16 /* Bits 16-19 - mode setting */
+> +#define DYTC_SET_VALID_BIT    20 /* Bit     20 - 1 = on, 0 = off */
+> +
+> +#define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
+> +#define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
+> +#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
+> +
+> +#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
+> +#define DYTC_MODE_QUIET       3  /* Low power mode aka quiet */
+> +#define DYTC_MODE_BALANCE   0xF  /* Default mode aka balance */
+> +
+> +#define DYTC_SET_COMMAND(function, mode, on) \
+> +	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
+> +	 (mode) << DYTC_SET_MODE_BIT | \
+> +	 (on) << DYTC_SET_VALID_BIT)
+> +
+> +#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 0)
+> +#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 1)
+> +
+> +static bool dytc_ignore_next_event;
+> +static bool dytc_profile_available;
+> +static enum platform_profile_option dytc_current_profile;
+> +
+> +static int dytc_command(int command, int *output)
+> +{
+> +	acpi_handle dytc_handle;
+> +
+> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
+> +		/* Platform doesn't support DYTC */
+> +		return -ENODEV;
+> +	}
+> +	if (!acpi_evalf(dytc_handle, output, NULL, "dd", command))
+> +		return -EIO;
+> +	return 0;
+> +}
+> +
+> +static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
+> +{
+> +	switch (dytcmode) {
+> +	case DYTC_MODE_QUIET:
+> +		*profile = platform_profile_low;
+> +		break;
+> +	case DYTC_MODE_BALANCE:
+> +		*profile =  platform_profile_balance;
+> +		break;
+> +	case DYTC_MODE_PERFORM:
+> +		*profile =  platform_profile_perform;
+> +		break;
+> +	default: /* Unknown mode */
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int convert_profile_to_dytc(enum platform_profile_option profile, int *perfmode)
+> +{
+> +	switch (profile) {
+> +	case platform_profile_low:
+> +		*perfmode = DYTC_MODE_QUIET;
+> +		break;
+> +	case platform_profile_balance:
+> +		*perfmode = DYTC_MODE_BALANCE;
+> +		break;
+> +	case platform_profile_perform:
+> +		*perfmode = DYTC_MODE_PERFORM;
+> +		break;
+> +	default: /* Unknown profile */
+> +		return -EOPNOTSUPP;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int dytc_perfmode_get(int *perfmode, int *funcmode)
+> +{
+> +	int output, err, cmd_err;
+> +
+> +	if (!dytc_profile_available)
+> +		return -ENODEV;
+> +
+> +	err = dytc_command(DYTC_CMD_GET, &output);
+> +	if (err)
+> +		return err;
+> +
+> +	*funcmode = (output >> DYTC_GET_FUNCTION_BIT) & 0xF;
+> +	if (*funcmode == DYTC_FUNCTION_CQL) {
+> +		int dummy;
+> +		/*
+> +		 * We can't get the mode when in CQL mode - so we disable CQL
+> +		 * mode retrieve the mode and then enable it again.
+> +		 * As disabling/enabling CQL triggers an event we set a flag to
+> +		 * ignore these events. This will be cleared by the event handler
+> +		 */
+> +		dytc_ignore_next_event = true;
+> +		err = dytc_command(DYTC_DISABLE_CQL, &dummy);
+> +		if (err)
+> +			return err;
+> +
+> +		cmd_err = dytc_command(DYTC_CMD_GET, &output);
+> +		/* Check return condition after we've restored CQL state */
+> +
+> +		/* Again ignore this event */
+> +		dytc_ignore_next_event = true;
+
+Are we sure the event-handler will have run before we do this second
+setting of the ignore_next_event bool? Maybe make it an atomic integer
+and increment / decrement the variable ?
+
+E.g.:
+
+Declaration:
+
+static atomic_t dytc_ignore_next_event = ATOMIC_INIT();
+
+Ignore next event:
+		atomic_inc(&dytc_ignore_next_event);
+		
+Check if event should be ignored:
+
+		if (!atomic_add_unless(&dytc_ignore_next_event, -1, 0))
+			dytc_profile_refresh();
+
+Note atomic_add_unless may needs some explanation, it adds -1 unless
+the atomic_t already contains 0. And it returns true if the addition
+was done. so if it returns true then dytc_ignore_next_event was not 0
+(it might be zero afterwards).
+
+IOW if atomic_add_unless returns true then dytc_ignore_next_event was true,
+so then we should NOT continue with the refresh.
+
+
+
+
+> +		err = dytc_command(DYTC_ENABLE_CQL, &dummy);
+> +		if (err)
+> +			return err;
+> +		if (cmd_err)
+> +			return cmd_err;
+> +	}
+> +	*perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
+> +	return 0;
+> +}
+> +
+> +/*
+> + * dytc_profile_get: Function to register with platform_profile
+> + * handler. Returns current platform profile.
+> + */
+> +int dytc_profile_get(enum platform_profile_option *profile)
+> +{
+> +	int funcmode, perfmode;
+> +	int err;
+> +
+> +	err = dytc_perfmode_get(&perfmode, &funcmode);
+> +	if (err)
+> +		return err;
+
+Can't we used a cached value here ? I presume we get an
+event when this is changed by the hotkey ? Esp. with the
+whole enable/disable CQL dance getting the value seems a
+bit expensive, so using a cached value might be better?
+
+> +
+> +	/* Convert Lenovo DYTC profile to platform_profile */
+> +	err = convert_dytc_to_profile(perfmode, profile);
+> +	if (err)
+> +		return err;
+> +
+> +	dytc_current_profile = *profile;
+> +	return 0;
+> +}
+> +
+> +/*
+> + * dytc_profile_set: Function to register with platform_profile
+> + * handler. Sets current platform profile.
+> + */
+> +int dytc_profile_set(enum platform_profile_option profile)
+> +{
+> +	int cur_perfmode, cur_funcmode;
+> +	int output;
+> +	int err;
+> +
+> +	if (!dytc_profile_available)
+> +		return -ENODEV;
+> +
+> +	if (profile == platform_profile_balance) {
+> +		/* To get back to balance mode we just issue a reset command */
+> +		err = dytc_command(DYTC_CMD_RESET, &output);
+> +		if (err)
+> +			return err;
+> +	} else {
+> +		int perfmode;
+> +		int cmd_err;
+> +
+> +		err = convert_profile_to_dytc(profile, &perfmode);
+> +		if (err)
+> +			return err;
+> +
+> +		/* Determine if we are in CQL mode. This alters the commands we do */
+> +		err = dytc_perfmode_get(&cur_perfmode, &cur_funcmode);
+> +		if (err)
+> +			return err;
+> +
+> +		if (cur_funcmode == DYTC_FUNCTION_CQL) {
+> +			/* To set the mode we need to disable CQL first*/
+> +			dytc_ignore_next_event = true; /* Ignore event */
+> +			err = dytc_command(DYTC_DISABLE_CQL, &output);
+> +			if (err)
+> +				return err;
+> +		}
+
+This seems somewhat duplicated from the get() code-path. Also you already doing
+a DYTC_DISABLE_CQL and DYTC_ENABLE_CQL in dytc_perfmode_get, which is not necessary
+to just get the funcmode which is all you need here AFAICT.
+
+IOW it seems that when CQL is active you are now doing:
+
+1. dytc_perfmode_get() calls DYTC_CMD_GET
+2. dytc_perfmode_get() calls DYTC_DISABLE_CQL
+3. dytc_perfmode_get() calls DYTC_CMD_GET again, result is ignored (not used by dytc_profile_set)
+4. dytc_perfmode_get() calls DYTC_ENABLE_CQL
+5. dytc_profile_set() calls DYTC_DISABLE_CQL
+6. dytc_profile_set() calls DYTC_SET_COMMAND
+7. dytc_profile_set() calls DYTC_ENABLE_CQL
+
+And you can really skip step 2-4 here.
+
+I think it would be good to add a bunch of helpers:
+
+1. dytc_get_modes() -> DYTC_CMD_GET wrapper gets both modes, sets perfmode
+to -1 when funcmode is CQL
+2. dytc_disable_cql_if_necessary() which takes funcmode as argument and is
+a no-op when funcmode != CQL
+3. dytc_re_enable_cql_if_necessary() idem.
+
+And then the flow in dytc_perfmode_get could look something like this
+(pseudo code minus error handling):
+
+	dytc_get_modes(&funcmode, &perfmode)
+	if (funcmode != CQL) /* or alternatively check for perfmode != -1 */
+		return success;
+
+	dytc_disable_cql_if_necessary(funcmode);
+	dytc_get_modes(NULL, &perfmode);
+	dytc_disable_cql_if_necessary(funcmode);
+
+And in the non-balanced path of dytc_profile_set:
+
+	dytc_get_modes(&funcmode, NULL)
+
+	dytc_disable_cql_if_necessary(funcmode);
+	dytc_set_mode(...);
+	dytc_disable_cql_if_necessary(funcmode);
+
+Note the NULL could be a dummy, but I find NULL a bit cleaner
+(at the cost of having to check for it in dytc_get_modes).
+
+This is is just from a quick peek, when you implement this
+it might turn out to be less then ideal, IOW this is just
+a suggestion, feel free to deviate.
+
+###
+
+Since this will require a bit of work, timing wise (wrt the 5.11 merge-window)
+it might be best to just keep this patch as is for v5, and only change
+patch 1 and 2 of the set, so that those will hopefully be ready for
+merging in time for the 5.11 window. I plan to pick this one up
+once 5.11-rc1 is out (and has the necessary ACPI bits) so we have some
+more time to get this one in shape.
+
+For patch 1/2 the most important thing is to have a consumer of the
+new internal APIs (almost) ready and this code fulfills that in
+its current form.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+
+
+> +		cmd_err = dytc_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
+> +				&output);
+> +		/* Check return condition after we've restored CQL state */
+> +
+> +		if (cur_funcmode == DYTC_FUNCTION_CQL) {
+> +			dytc_ignore_next_event = true; /* Ignore event */
+> +			err = dytc_command(DYTC_ENABLE_CQL, &output);
+> +			if (err)
+> +				return err;
+> +		}
+> +		if (cmd_err)
+> +			return cmd_err;
+> +	}
+> +	/* Success - update current profile */
+> +	dytc_current_profile = profile;
+> +	return 0;
+> +}
+> +
+> +static void dytc_profile_refresh(void)
+> +{
+> +	enum platform_profile_option profile;
+> +	int perfmode, funcmode;
+> +	int err;
+> +
+> +	err = dytc_perfmode_get(&perfmode, &funcmode);
+> +	if (err)
+> +		return;
+> +
+> +	err = convert_dytc_to_profile(perfmode, &profile);
+> +	if (profile != dytc_current_profile) {
+> +		dytc_current_profile = profile;
+> +		platform_profile_notify();
+> +	}
+> +}
+> +
+> +static struct platform_profile_handler dytc_profile = {
+> +	.choices = BIT(platform_profile_low) |
+> +		BIT(platform_profile_balance) |
+> +		BIT(platform_profile_perform),
+> +	.profile_get = dytc_profile_get,
+> +	.profile_set = dytc_profile_set,
+> +};
+> +
+> +static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+> +{
+> +	int err, output;
+> +
+> +	dytc_profile_available = false;
+> +	dytc_ignore_next_event = false;
+> +
+> +	err = dytc_command(DYTC_CMD_QUERY, &output);
+> +	/*
+> +	 * If support isn't available (ENODEV) then don't return an error
+> +	 * and don't create the sysfs group
+> +	 */
+> +	if (err == -ENODEV)
+> +		return 0;
+> +	/* For all other errors we can flag the failure */
+> +	if (err)
+> +		return err;
+> +
+> +	/* Check DYTC is enabled and supports mode setting */
+> +	if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
+> +		/* Only DYTC v5.0 and later has this feature. */
+> +		int dytc_version;
+> +
+> +		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
+> +		if (dytc_version >= 5) {
+> +			dbg_printk(TPACPI_DBG_INIT,
+> +				   "DYTC version %d: thermal mode available\n", dytc_version);
+> +			/* Create platform_profile structure and register */
+> +			do {
+> +				err = platform_profile_register(&dytc_profile);
+> +			} while (err == -EINTR);
+> +			/*
+> +			 * If for some reason platform_profiles aren't enabled
+> +			 * don't quit terminally.
+> +			 */
+> +			if (err)
+> +				return 0;
+> +			dytc_profile_available = true;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void dytc_profile_exit(void)
+> +{
+> +	if (dytc_profile_available) {
+> +		dytc_profile_available = false;
+> +		platform_profile_unregister();
+> +	}
+> +}
+> +
+> +static struct ibm_struct  dytc_profile_driver_data = {
+> +	.name = "dytc-profile",
+> +	.exit = dytc_profile_exit,
+> +};
+> +#endif /* CONFIG_ACPI_PLATFORM_PROFILE */
+> +
+>  /****************************************************************************
+>   ****************************************************************************
+>   *
+> @@ -10019,8 +10310,15 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
+>  		mutex_unlock(&kbdlight_mutex);
+>  	}
+>  
+> -	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
+> +	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
+>  		lapsensor_refresh();
+> +#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
+> +		if (dytc_ignore_next_event)
+> +			dytc_ignore_next_event = false; /*clear setting*/
+> +		else
+> +			dytc_profile_refresh();
+> +#endif
+> +	}
+>  }
+>  
+>  static void hotkey_driver_event(const unsigned int scancode)
+> @@ -10463,6 +10761,12 @@ static struct ibm_init_struct ibms_init[] __initdata = {
+>  		.init = tpacpi_proxsensor_init,
+>  		.data = &proxsensor_driver_data,
+>  	},
+> +#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
+> +	{
+> +		.init = tpacpi_dytc_profile_init,
+> +		.data = &dytc_profile_driver_data,
+> +	},
+> +#endif
+>  };
+>  
+>  static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
+> 
 
