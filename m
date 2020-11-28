@@ -5,47 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E47BC56201
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC9AC63697
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E061721973
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FFF72224A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 03:59:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="VLEHYa8f"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Ve3MwMhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbgK1DrF (ORCPT
+        id S1731071AbgK1D7K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Nov 2020 22:47:05 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:13710 "EHLO
+        Fri, 27 Nov 2020 22:59:10 -0500
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:43890 "EHLO
         mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731486AbgK1Dnu (ORCPT
+        by vger.kernel.org with ESMTP id S1730991AbgK1Dnu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 27 Nov 2020 22:43:50 -0500
 Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AS3cGPL009688;
-        Sat, 28 Nov 2020 03:42:56 GMT
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AS3cpFT011940;
+        Sat, 28 Nov 2020 03:42:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pps0720;
- bh=+goaEceT8gHIrp4fdfliMHkFZeekO0OtEE+BxP3MIA4=;
- b=VLEHYa8fEgo9F1YHURg0YOwkuet9DlJuwX2XiRZ2mSQeqv8AzRTX1zaT/xoCofs8OGeb
- ZH4ae6xabxm9YNNoxPL+3l8wK8/FbRWmRluqRciqBplucA8Kdl7D9jGehpuB5GDfaR3p
- e7gfKPoWgUo/HIE9WQ1qQ5B4+GIRzPu4fIO4zkAf3XBSdQmb+lHp+Tm+bTn6P3U2ioE4
- D+3qmwpdGhIbMHvgH4LxPJKSFDAGs4nzcoris3WpR7+70QkZMwYBXxbnxmLY8DNdhoLn
- rQBNgAN9QlnCnb19fCNKUvnGMRu8AJzQ+1/Kji9McJqNeq8h8lgqnuCVovx8aS4FI35D yw== 
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 3532m2m0df-1
+ bh=24akV8Ya8RoKe3CU3rPNfvY3ectYNJNlA27cMRIlZKw=;
+ b=Ve3MwMhFi+0IRIWU7HJo7wg9e7J7Qj412TGMoC8zQZPH53IiphYDziwMX7Jabu5AEyiz
+ vzZ4WbOy/Lrrlz5OdNkup+VPg/fH+2EbhW4q2K2lfuW6KR1KK1r7gtlRYi+eKkmDyaXL
+ h7La55UmPRovWoCFrLgNsKADEUygRHYE/98J6i22rKk6VN3yNOF6xLtoJ7n7hvGUKwym
+ 3mAyXoUaC9flpEwy7X6yinjtFaNftMTu+167ITmXMDwvd4ze/QJ7afPh4iLh0i0f3pke
+ 1sfJbVl/UVuv4aEFOXoqDLdbthARkoVU0wNhLQCt2rcjfdWQR/E4CNfmCKHRdz0K5bUq ZQ== 
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 3532m2m0dg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 28 Nov 2020 03:42:56 +0000
+        Sat, 28 Nov 2020 03:42:57 +0000
 Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 0B57E9D;
-        Sat, 28 Nov 2020 03:42:56 +0000 (UTC)
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 1950766;
+        Sat, 28 Nov 2020 03:42:57 +0000 (UTC)
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 0F5EF48;
-        Sat, 28 Nov 2020 03:42:55 +0000 (UTC)
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 1BCA84A;
+        Sat, 28 Nov 2020 03:42:56 +0000 (UTC)
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Justin Ernst <justin.ernst@hpe.com>,
@@ -61,9 +60,9 @@ Cc:     Mike Travis <mike.travis@hpe.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Ilya Dryomov <idryomov@gmail.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 3/5] x86/platform/uv: Add sysfs hubless leaves
-Date:   Fri, 27 Nov 2020 21:42:25 -0600
-Message-Id: <20201128034227.120869-4-mike.travis@hpe.com>
+Subject: [PATCH v2 4/5] x86/platform/uv: Add deprecated messages to /proc info leaves
+Date:   Fri, 27 Nov 2020 21:42:26 -0600
+Message-Id: <20201128034227.120869-5-mike.travis@hpe.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20201128034227.120869-1-mike.travis@hpe.com>
 References: <20201128034227.120869-1-mike.travis@hpe.com>
@@ -81,119 +80,53 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add uv_sysfs hubless leaves for UV hubless systems.
+Add "deprecated" message to any access to old /proc/sgi_uv/* leaves.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- drivers/platform/x86/uv_sysfs.c | 52 +++++++++++++++++++++++++++++++--
- 1 file changed, 50 insertions(+), 2 deletions(-)
+ arch/x86/kernel/apic/x2apic_uv_x.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/uv_sysfs.c b/drivers/platform/x86/uv_sysfs.c
-index 115754cdcd89..913559797ba4 100644
---- a/drivers/platform/x86/uv_sysfs.c
-+++ b/drivers/platform/x86/uv_sysfs.c
-@@ -44,6 +44,8 @@ static const char *uv_type_string(void)
- 		return "5.0";
- 	else if (is_uv2_hub())
- 		return "3.0";
-+	else if (uv_get_hubless_system())
-+		return "0.1";
- 	else
- 		return "unknown";
- }
-@@ -747,6 +749,12 @@ static ssize_t uv_hub_type_show(struct kobject *kobj,
- 	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_hub_type());
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index 48746031b39a..4248579825fb 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -1615,21 +1615,33 @@ static void check_efi_reboot(void)
+ 		reboot_type = BOOT_ACPI;
  }
  
-+static ssize_t uv_hubless_show(struct kobject *kobj,
-+			struct kobj_attribute *attr, char *buf)
-+{
-+	return scnprintf(buf, PAGE_SIZE, "0x%x\n", uv_get_hubless_system());
-+}
-+
- static struct kobj_attribute partition_id_attr =
- 	__ATTR(partition_id, 0444, partition_id_show, NULL);
- static struct kobj_attribute coherence_id_attr =
-@@ -757,6 +765,8 @@ static struct kobj_attribute uv_archtype_attr =
- 	__ATTR(archtype, 0444, uv_archtype_show, NULL);
- static struct kobj_attribute uv_hub_type_attr =
- 	__ATTR(hub_type, 0444, uv_hub_type_show, NULL);
-+static struct kobj_attribute uv_hubless_attr =
-+	__ATTR(hubless, 0444, uv_hubless_show, NULL);
- 
- static struct attribute *base_attrs[] = {
- 	&partition_id_attr.attr,
-@@ -804,11 +814,36 @@ static int initial_bios_setup(void)
+-/* Setup user proc fs files */
++/*
++ * User proc fs file handling now deprecated.
++ * Recommend using /sys/firmware/sgi_uv/... instead.
++ */
+ static int __maybe_unused proc_hubbed_show(struct seq_file *file, void *data)
+ {
++	pr_notice_once(
++		"%s: using deprecated /proc/sgi_uv/hubbed, use /sys/firmware/sgi_uv/hub_type\n",
++		current->comm);
+ 	seq_printf(file, "0x%x\n", uv_hubbed_system);
  	return 0;
  }
  
-+static struct attribute *hubless_base_attrs[] = {
-+	&partition_id_attr.attr,
-+	&uv_type_attr.attr,
-+	&uv_archtype_attr.attr,
-+	&uv_hubless_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group hubless_base_attr_group = {
-+	.attrs = hubless_base_attrs
-+};
-+
-+
-+static int __init uv_sysfs_hubless_init(void)
-+{
-+	int ret;
-+
-+	ret = sysfs_create_group(sgi_uv_kobj, &hubless_base_attr_group);
-+	if (ret) {
-+		pr_warn("sysfs_create_group hubless_base_attr_group failed\n");
-+		kobject_put(sgi_uv_kobj);
-+	}
-+	return ret;
-+}
-+
- static int __init uv_sysfs_init(void)
+ static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
  {
- 	int ret = 0;
- 
--	if (!is_uv_system())
-+	if (!is_uv_system() && !uv_get_hubless_system())
- 		return -ENODEV;
- 
- 	num_cnodes = uv_num_possible_blades();
-@@ -819,6 +854,10 @@ static int __init uv_sysfs_init(void)
- 		pr_warn("kobject_create_and_add sgi_uv failed\n");
- 		return -EINVAL;
- 	}
-+
-+	if (uv_get_hubless_system())
-+		return uv_sysfs_hubless_init();
-+
- 	ret = sysfs_create_group(sgi_uv_kobj, &base_attr_group);
- 	if (ret) {
- 		pr_warn("sysfs_create_group base_attr_group failed\n");
-@@ -856,10 +895,19 @@ static int __init uv_sysfs_init(void)
- 	return ret;
++	pr_notice_once(
++		"%s: using deprecated /proc/sgi_uv/hubless, use /sys/firmware/sgi_uv/hubless\n",
++		current->comm);
+ 	seq_printf(file, "0x%x\n", uv_hubless_system);
+ 	return 0;
  }
  
-+static void __exit uv_sysfs_hubless_exit(void)
-+{
-+	sysfs_remove_group(sgi_uv_kobj, &hubless_base_attr_group);
-+	kobject_put(sgi_uv_kobj);
-+}
-+
- static void __exit uv_sysfs_exit(void)
+ static int __maybe_unused proc_archtype_show(struct seq_file *file, void *data)
  {
--	if (!is_uv_system())
-+	if (!is_uv_system()) {
-+		if (uv_get_hubless_system())
-+			uv_sysfs_hubless_exit();
- 		return;
-+	}
- 
- 	pci_topology_exit();
- 	uv_ports_exit();
++	pr_notice_once(
++		"%s: using deprecated /proc/sgi_uv/archtype, use /sys/firmware/sgi_uv/archtype\n",
++		current->comm);
+ 	seq_printf(file, "%s/%s\n", uv_archtype, oem_table_id);
+ 	return 0;
+ }
 -- 
 2.21.0
 
