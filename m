@@ -2,121 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B8FC8302B
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A6FC64E8A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C41422256
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1370222240
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 28 Nov 2020 22:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="jf3/AZVL"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fPfWrljI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388942AbgK1Vtr (ORCPT
+        id S2388928AbgK1Vtr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sat, 28 Nov 2020 16:49:47 -0500
-Received: from mail-41104.protonmail.ch ([185.70.41.104]:33290 "EHLO
-        mail-41104.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729344AbgK1S0T (ORCPT
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733311AbgK1SSS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 28 Nov 2020 13:26:19 -0500
-Received: from mail-03.mail-europe.com (mail-03.mail-europe.com [91.134.188.129])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail-41104.protonmail.ch (Postfix) with ESMTPS id 916C82004166;
-        Sat, 28 Nov 2020 15:59:55 +0000 (UTC)
-Authentication-Results: mail-41104.protonmail.ch;
-        dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="jf3/AZVL"
-Date:   Sat, 28 Nov 2020 15:59:50 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1606579191;
-        bh=nCw14+eeRE2dWy7T+MmkCMBCycxMTZVyvYRhCJzD/Sg=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=jf3/AZVLT3/Ws+H7k03k9RHrcl4g6ZiznjMjIK9RbTVHSq5FpgmbzXaPlLfYkBMZ7
-         1wGsdyIHUWmk3zouyx+1cv/iIxV8VKN/alU4Ut6r+Gt1FFGtq7JcJZAQlzwYwQiqRc
-         sotrnH5tE3Gj/Yf7n5aR2QCavl5QaGfMuWk9ukfo=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "hadess@hadess.net" <hadess@hadess.net>,
-        "mario.limnociello@dell.com" <mario.limnociello@dell.com>,
-        "eliadevito@gmail.com" <eliadevito@gmail.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v4 3/3] platform/x86: thinkpad_acpi: Add platform profile support
-Message-ID: <TdKdryhtwENRgSeQDP9Wa26xQkjONAjw8_sG43rTWK-z30pshFInUWuucPKhaX3qI7yirOqIbyMCMpRnA6sDJewK0b1VJP3z3vy9eBeI2n0=@protonmail.com>
-In-Reply-To: <8e738a62-2d1b-0357-7ef6-fb080d365064@redhat.com>
-References: <markpearson@lenovo.com> <20201126165143.32776-1-markpearson@lenovo.com> <20201126165143.32776-3-markpearson@lenovo.com> <ioprVbNER4h0HTVvyj2ElXiuNaSPjl8ycgp4XtOtj-Iwe4_6qnNRLYuvxIJKE2ULGPTRURY-1Dr9plCocTnx2S_ugBn7INWZScnn4-pTq4c=@protonmail.com> <8e738a62-2d1b-0357-7ef6-fb080d365064@redhat.com>
+        Sat, 28 Nov 2020 13:18:18 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F58DC0254B5;
+        Sat, 28 Nov 2020 08:59:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=3Noat+yyK6D08TvzV/W7gvzzSdlFSLHu5xt9LycWN3E=; b=fPfWrljI0oWmXaKdMSjVP21uos
+        QMvZUiAe0aSYKKY6k+NIJ9rSZUE3cTagJ6S/SyMghCIhm3RI13nGca9vRrxEkiV47kRZlcoVVwF2I
+        BbsF37hvIdwSery8ikXSRVMpvwELfZzrzKMKQRCFiO1tYW5nTqXMBMvZ3Lb86XRxHZFbrUOc0DdmW
+        eudwOqPbjemOxLB2q2GQWGpc0UDoNHEt7dWObCDJJmtl/tW70my3aVZ4e96APukIehPSB0fXUKM47
+        V9zy06enjSWi6auAt1JRn/k8avvFldQ5IHdn+maau5+Zr8ZBwBx0iZEtA9CCLBXGzfEkUQ+JE1p35
+        I5CrtOVQ==;
+Received: from [2601:1c0:6280:3f0::cc1f]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kj3ZT-0005f2-J2; Sat, 28 Nov 2020 16:59:39 +0000
+Subject: Re: [PATCH v2 5/5] x86/platform/uv: Update sysfs document file
+To:     Mike Travis <mike.travis@hpe.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20201128034227.120869-1-mike.travis@hpe.com>
+ <20201128034227.120869-6-mike.travis@hpe.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b28fbb49-6b25-97d6-7e33-7f5e2ced9699@infradead.org>
+Date:   Sat, 28 Nov 2020 08:59:32 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
+In-Reply-To: <20201128034227.120869-6-mike.travis@hpe.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+On 11/27/20 7:42 PM, Mike Travis wrote:
+> Update sysfs Document file to include moved /proc leaves.
+> 
+> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> ---
+>  Documentation/ABI/testing/sysfs-firmware-sgi_uv | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-firmware-sgi_uv b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
+> index 50e25ce80fa2..b377f1470ba2 100644
+> --- a/Documentation/ABI/testing/sysfs-firmware-sgi_uv
+> +++ b/Documentation/ABI/testing/sysfs-firmware-sgi_uv
+> @@ -7,10 +7,25 @@ Description:
+>  
+>  		Under that directory are a number of read-only attributes:
+>  
+> +			archtype
+> +			hub_type
+> +			hubless
+>  			partition_id
+>  			coherence_id
+>  			uv_type
+>  
+> +		The archtype entry contains the UV architecture type that
+> +		is used to select arch-dependent addresses and features.
+> +		If can be set via the OEM_ID in the ACPI MADT table or by
+
+		It
+
+> +		UVsystab entry both passed from UV BIOS.
+> +
 
 
-2020. november 28., szombat 16:00 keltez=C3=A9ssel, Hans de Goede <hdegoede=
-@redhat.com> =C3=ADrta:
+thanks.
+-- 
+~Randy
 
-> [...]
-> >> +static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
-> >> +{
-> >> +=09int err, output;
-> >> +
-> >> +=09dytc_profile_available =3D false;
-> >> +=09dytc_ignore_next_event =3D false;
-> >> +
-> >> +=09err =3D dytc_command(DYTC_CMD_QUERY, &output);
-> >> +=09/*
-> >> +=09 * If support isn't available (ENODEV) then don't return an error
-> >> +=09 * and don't create the sysfs group
-> >> +=09 */
-> >> +=09if (err =3D=3D -ENODEV)
-> >> +=09=09return 0;
-> >> +=09/* For all other errors we can flag the failure */
-> >> +=09if (err)
-> >> +=09=09return err;
-> >> +
-> >> +=09/* Check DYTC is enabled and supports mode setting */
-> >> +=09if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
-> >> +=09=09/* Only DYTC v5.0 and later has this feature. */
-> >> +=09=09int dytc_version;
-> >> +
-> >> +=09=09dytc_version =3D (output >> DYTC_QUERY_REV_BIT) & 0xF;
-> >> +=09=09if (dytc_version >=3D 5) {
-> >> +=09=09=09dbg_printk(TPACPI_DBG_INIT,
-> >> +=09=09=09=09   "DYTC version %d: thermal mode available\n", dytc_vers=
-ion);
-> >> +=09=09=09/* Create platform_profile structure and register */
-> >> +=09=09=09do {
-> >> +=09=09=09=09err =3D platform_profile_register(&dytc_profile);
-> >> +=09=09=09} while (err =3D=3D -EINTR);
-> >> [...]
-> >
-> > I'm wondering if this loop is really necessary?
->
-> It is the result of using mutex_interruptible inside platform_profile_reg=
-ister(),
-> once that is fixed (as I just requested in my review of patch 2/3) then t=
-his loop
-> can go away.
->
-
-Thank you, I see that, my question should've been "why not simply fail and
-return the error?", but with your requested change the question is moot.
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
