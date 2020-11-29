@@ -2,125 +2,201 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A58C63777
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Nov 2020 01:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A370AC3E8C5
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Nov 2020 05:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F06220809
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Nov 2020 01:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A66E207FF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Nov 2020 05:39:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2TLtbuc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgK2Bjg (ORCPT
+        id S1725849AbgK2FjT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 28 Nov 2020 20:39:36 -0500
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.116]:35436 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726472AbgK2Bjg (ORCPT
+        Sun, 29 Nov 2020 00:39:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgK2FjT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 28 Nov 2020 20:39:36 -0500
-Received: from [100.112.133.223] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.us-west-2.aws.symcld.net id F0/D2-25369-CBAF2CF5; Sun, 29 Nov 2020 01:34:52 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRWlGSWpSXmKPExsWSLveKTXfPr0P
-  xBsvuC1jsvy5h0bXQwGLh/VOsFl+/3Wa3eHN8OpPF8n39jBafOyazWKze84LZYu2XeWwWZ05f
-  YnXg8tg56y67x69ta1g8Nq/Q8ph3MtCjp20Tk8f7fVfZPLZcbWfx+LxJLoAjijUzLym/IoE14
-  9/OjSwFyzgrHq7czdTAeJi9i5GLQ0jgP6PEhzlHmCGcF4wShzd1snQxcnIIC6RK/N41FyjBwS
-  EiYC/x4kkQSA2zwHFmif0XvrFCNLQySdzYOoEZpIFNQFtiy5ZfbCA2r4CtxPvWaWCDWARUJVZ
-  3PAezRQXCJdYvWckIUSMocXLmE7A4p0AXo8TxpgAQm1nAQmLm/POMELa4xK0n85kgbHmJ5q2z
-  wXZJCChIrLxzmA3CTpBY9vIO8wRGwVlIxs5CMmoWklGzkIxawMiyitE8qSgzPaMkNzEzR9fQw
-  EDX0NBI19DYWNfMQi+xSjdJr7RYtzy1uETXSC+xvFivuDI3OSdFLy+1ZBMjMA5TClpddjD+f/
-  1B7xCjJAeTkiiv1/VD8UJ8SfkplRmJxRnxRaU5qcWHGGU4OJQkeBf8AMoJFqWmp1akZeYAUwJ
-  MWoKDR0mEV+UnUJq3uCAxtzgzHSJ1ilFRSpxXFiQhAJLIKM2Da4OloUuMslLCvIwMDAxCPAWp
-  RbmZJajyrxjFORiVhHmvgGznycwrgZv+CmgxE9Bil//7QRaXJCKkpBqY7gdMuMX8X52fhU3ui
-  J9vovz35r7/WruFiu3628zdFx9pU9+i51qZbZJ66s+Ki0zO8bl792uGmN2I5Ln5w8/Ssf5Cft
-  WXv/5mxnf+r5/iskD5gWyAVvGz7xLbql4HpIeWiyvJbRQ657C8aq9GW0LfRqc7M/fdltXa/eT
-  xr9Zlct9LFtZdv/Eigmnv4r+n5WuWKT2abcjYWy7u+utewEwDE9tnL7esqNTewbVwr0z84skZ
-  hTb714TxbeC5zdvqa7eGwWzBC6/YpVXli/dIz3TKMN98ozLJOc2dO+ywgb72nhPnUruW3LMtX
-  LL257fK1OcTeSQ9s16o/O+43Ptmmu7VlX/ltn/w3HZMwPLr8+chSizFGYmGWsxFxYkAacqbzr
-  4DAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-10.tower-356.messagelabs.com!1606613690!57407!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 28018 invoked from network); 29 Nov 2020 01:34:52 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-10.tower-356.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 29 Nov 2020 01:34:52 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id A35C8EB7E4FC0B96B1E7;
-        Sun, 29 Nov 2020 09:34:47 +0800 (CST)
-Received: from localhost.localdomain (10.64.84.236) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Sat, 28 Nov
- 2020 17:34:43 -0800
-Subject: Re: [External] Re: [PATCH v4 3/3] platform/x86: thinkpad_acpi: Add
- platform profile support
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "hadess@hadess.net" <hadess@hadess.net>,
-        "eliadevito@gmail.com" <eliadevito@gmail.com>,
-        "bberg@redhat.com" <bberg@redhat.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>
-References: <markpearson@lenovo.com>
- <20201126165143.32776-1-markpearson@lenovo.com>
- <20201126165143.32776-3-markpearson@lenovo.com>
- <ioprVbNER4h0HTVvyj2ElXiuNaSPjl8ycgp4XtOtj-Iwe4_6qnNRLYuvxIJKE2ULGPTRURY-1Dr9plCocTnx2S_ugBn7INWZScnn4-pTq4c=@protonmail.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <26f5118a-2bbd-d5c6-a1ff-c9fb80e5f5f7@lenovo.com>
-Date:   Sat, 28 Nov 2020 20:34:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Sun, 29 Nov 2020 00:39:19 -0500
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51274C0613D1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Nov 2020 21:38:39 -0800 (PST)
+Received: by mail-qk1-x744.google.com with SMTP id b144so8018267qkc.13
+        for <platform-driver-x86@vger.kernel.org>; Sat, 28 Nov 2020 21:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=nb6zt1LeAckqKrJh4uabjLB5MDj/++2P8/+UsZ7wjaQ=;
+        b=i2TLtbucSBdM5/rtZqwvuu4nmbyl5X6jUcFsMMYI/DgOwKCPQY2P+pkRSWQOMRPMnG
+         5lyc/B35uP28sCGgtSeF91L2moRFbvJmw7+8orlEc0VC5Z1urP6bCUYAVzyXo7PcqPGV
+         04e4lytUnOJp5Sy+vKYyF/+1CNAAV40QSUJAAsGFG4ES8kl2z0L4+kz73XOY1GLAnQrh
+         LtnXSnSxyaPtvsAIEr2375qShIKlSsuNqeN6H9BF4VLFPE1JNa/eZG96IxOnuBxMIu8g
+         RnqmZZUJ3z6NDALMiuNvSzDVYutNOBziU2QGF/wYMkHFI4QyyTMpZXqSNXKMcmCmaocO
+         ZPkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nb6zt1LeAckqKrJh4uabjLB5MDj/++2P8/+UsZ7wjaQ=;
+        b=YQ88TEXVBQWxSBYFay+GgFwCCzPqKVVl35BHVOH0ioFlgtEznlEImhblwvi/p3loFS
+         Kk08oTpP4ED4i6JUovPRwX8k40IWXRKrIa70SclcJOS3p4ex3vrLjheH8skb7mEwupbn
+         VWdEA7ERENNhiGp4P6ClrpGBqjknWqot0kA5m4wdcfj/kUFw1ot2qoqIjsyT52BQWC1Q
+         d+LWXpi06Bfr+baMcvDvvL7aZbWtk6kkk20e/DeaKnPCwAB6lBS21qt3xH8gvnp9dcXa
+         Ny5843uPyF2U8KDX5GrzwBmiXwEaKunIoDQm1qL44Qr6Phz3cUIGCFpvrTK7+Q0B8lgV
+         k3Yg==
+X-Gm-Message-State: AOAM533lithVjCXFNhBXOyTjMKfqkk2Rqxe+Yv6LGgXm/hUsjl19Eu8F
+        jLzjBVU+ClG3QeA14fpKp/GqIKJCtsFyTQ==
+X-Google-Smtp-Source: ABdhPJwOGFIaxfysVk3pfUfMxhUxeKEI/6CptcFfUQHV6BrSIV5zIhsQo6Rx7MMSRXqplmvBfm3cQA==
+X-Received: by 2002:a37:6546:: with SMTP id z67mr16674761qkb.22.1606628317976;
+        Sat, 28 Nov 2020 21:38:37 -0800 (PST)
+Received: from ?IPv6:2600:6c52:7c00:284:e93f:9434:7c3d:367e? ([2600:6c52:7c00:284:e93f:9434:7c3d:367e])
+        by smtp.gmail.com with ESMTPSA id r1sm6361266qta.32.2020.11.28.21.38.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Nov 2020 21:38:37 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: hp-wmi: Add support for home in HP OMEN
+ laptops
+To:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86 <platform-driver-x86@vger.kernel.org>
+References: <174c79fb794.120dada4b39603.5369737602791060462@sidsun.com>
+ <cad5f2ab-e319-b6fd-360d-5beb62d6899f@redhat.com>
+ <b8c32747-2704-8a2d-dc32-b6154128d295@gmail.com>
+ <9ca5bc3c-807c-3dbc-41a9-741a3407c66c@gmail.com>
+ <2853bc2b-be49-9ff7-3f9e-6caca8162b26@redhat.com>
+From:   Dana Goyette <danagoyette@gmail.com>
+Message-ID: <b0acdbd5-6f0e-5b3b-1682-1be551d48c20@gmail.com>
+Date:   Sat, 28 Nov 2020 21:38:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <ioprVbNER4h0HTVvyj2ElXiuNaSPjl8ycgp4XtOtj-Iwe4_6qnNRLYuvxIJKE2ULGPTRURY-1Dr9plCocTnx2S_ugBn7INWZScnn4-pTq4c=@protonmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <2853bc2b-be49-9ff7-3f9e-6caca8162b26@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.64.84.236]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Barnabas,
-
-On 2020-11-27 2:22 p.m., Barnabás Pőcze wrote:
-> Hi
+On 11/28/20 3:13 AM, Hans de Goede wrote:
+> Hi,
 > 
+> On 11/28/20 3:55 AM, Dana Goyette wrote:
+>>
+>>
+>>> On 11/27/20 6:19 PM, Dana Goyette wrote:
+>>>
+>>> FYI, the HP Omen 15 2020 has a different keyboard, where Home is a proper separate key.  The India model has yet another layout, with a full numeric keypad that also includes Home.  So unless we want to get into DMI matching, it's safest to map the key to something distinct.
+>>>
+>>> Layout on the US model:
+>>>
+>>> [Omen]   [Calc] [PrtScr]
+>>> [Insert] [Home] [PgUp]
+>>> [Pause]  [End]  [PgDn]
+>>>
+>>> Layout on the India model:
+>>> [Omen]    [Calc] [Insert] [PrtScr]
+>>> [NumLock] [/]    [*]      [-]
+>>> [7/Home]  [8]    [9/PgUp] [+]
+>>>
+>>> (Where's Delete?  Above Backspace.)
+>>
+>> Upon looking at the driver's source, the 2020 model won't be encountering that path, so "home" may be okay after all.  When I press that key, the event is different (it's not HPWMI_BEZEL_BUTTON).
+>>
+>> hp_wmi: Unknown event_id - 29 - 0x21a5
 > 
-> 2020. november 26., csütörtök 17:51 keltezéssel, Mark Pearson írta:
+> Hmm, but the event_data is the same as before, so maybe event-id 29 is simply
+> the new HPWMI_BEZEL_BUTTON... I wonder if other keys generate this event-id too,
+> and if they also use the same event_data values is before.
 > 
->> [...]
->> +static bool dytc_ignore_next_event;
+> Or IOW I wonder if we can / want to re-use the hp_wmi_keymap (and the existing
+> input_dev) for the new event-id 29, or if we want a new input_dev and sparse-keymap
+> for the new event-id.
 > 
-> As a sidenote: can the profile switching be triggered by means that's not the
-> `/sys/firmware/acpi/platform_profile` attribute (e.g. a physical button)?
-> Because if so, then I'm not sure if `dytc_ignore_next_event` achieves its purpose
-> robustly, although I believe it won't cause issues in practice. I think it could
-> be made more robust using a mutex to serialize and synchronize access to the DYTC
-> interface, but I'm not sure if the effort is worth it.
+> My initial feeling is to re-use the existing input_dev and keymap at which point
+> the event-id being different does not help us. We should probably just assign
+> KEY_CONFIG to it.  Users who want it to send home can then remap that,
+> either through hwdb, so that it gets re-mapped to KEY_HOME at the kernel level,
+> or at some higher level.
+> 
+> Note in my original reply I said to use KEY_CONTROL_PANEL, but that has the
+> disadvantage that its keycode is above 247 which is not supported under X11.
+> Looking at this again I wonder why we have KEY_CONTROL_PANEL at all, since
+> the comments on KEY_CONFIG pretty much over opening the control-panel:
+> 
+> #define KEY_CONFIG              171     /* AL Consumer Control Configuration */
+> 
+> Alternatives which are also under 247 are:
+> 
+> KEY_COMPUTER
+> KEY_HOMEPAGE
+> KEY_DASHBOARD
+> KEY_MEDIA
+> 
+> I see that despite me reviewing this, the patch never landed, so we are free to
+> do what we want here with having to worry about breaking existing setups.
+> 
+> Regards,
+> 
+> Hans
 > 
 
-A user can do FN+L, FN+M, FN+H to switch mode (though hopefully with 
-this API and the support in user space they won't need to do that any more).
+I tried various keys in xdotool, and `xdotool key XF86Tools` opens 
+Gnome's Settings application.  From what I can tell, KEY_CONFIG is 
+mapped to that: https://bugs.freedesktop.org/show_bug.cgi?id=12228
 
-So I think you're right about this area having issues, and Hans picks up 
-on this too. I had avoided a mutex as I thought that would cause 
-problems in the event handler. In Han's email he suggests an atomic int 
-and I think that could work nicely but will have to try it out and see.
+There's also precedent in the Huawei laptop driver for using KEY_CONFIG:
+https://lore.kernel.org/patchwork/patch/1024465/
 
-Regardless - I agree this area needs some work and I'll look into it
+For completeness, I'm adding further information about the hotkeys on 
+the HP Omen 15 2020 (AMD), though the other keys are probably out of the 
+scope of this patch.
 
-Thanks!
-Mark
+---
 
+
+Omen key:
+* On Windows, brings up Omen command center
+* hp-wmi: Unknown event_id - 29 - 0x21a5
+* Since it's an unknown event, it's not sent via the event device.
+
+
+Fn-Escape (unmarked):
+* On Windows, triggers a small HP system info window.
+* hp_wmi: Unknown event_id - 29 - 0x21a7
+* My last HP (EliteBook 8530w from 2008) had Fn-Escape too, but I don't 
+recall what it did in Linux.
+
+
+Fn-F2 / Fn-F3 (backlight down/up):
+* Sends proper events via ACPI Video. but also does something on atkbd:
+* atkbd serio0: Unknown key released (translated set 2, code 0xab on 
+isa0060/serio0).
+* atkbd serio0: Use 'setkeycodes e02b <keycode>' to make it known.
+
+
+Fn-F4 (keyboard backlight toggle):
+* Toggle seems to happen in firmware
+* Nothing on hp-wmi
+* Nothing on any event devices
+
+
+Fn-F11 (touchpad lock):
+* Locking works (touchpad is frozen while LED is on)
+* From unlocked: hp-wmi: Unknown key code - 0x21a9.  (LED turns on.)
+* From locked:   hp-wmi: Unknown key code - 0x121a9  (LED turns off.)
+* Sends EV_MSC/MSC_SCAN (value 0x21a9 or 0x121a9) to userspace.
+* Sends EV_KEY/KEY_UNKNOWN down and up immediately (no hold or repeat).
+
+
+Fn-F12 (windows key lock):
+* No LED, but the lock works.
+* From unlocked: hp-wmi: Unknown key code - 0x21a4  (Now locked.)
+* From locked:   hp-wmi: Unknown key code - 0x121a4 (Now unlocked.)
+* Sends EV_MSC/MSC_SCAN (value 0x21a4 or 0x121a4) to userspace.
+* Sends EV_KEY/KEY_UNKNOWN down and up immediately (no hold or repeat).
