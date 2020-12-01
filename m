@@ -6,69 +6,69 @@ X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
 	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81F2C71155
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Dec 2020 19:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BA7C64E7A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Dec 2020 19:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63ED52168B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Dec 2020 19:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EAF2151B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Dec 2020 19:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ot4IvDNV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HyTp/jNA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgLAT4u (ORCPT
+        id S1727229AbgLAT5e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Dec 2020 14:56:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40568 "EHLO
+        Tue, 1 Dec 2020 14:57:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727866AbgLAT4t (ORCPT
+        with ESMTP id S1726148AbgLAT5e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Dec 2020 14:56:49 -0500
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9E3C0617A6;
-        Tue,  1 Dec 2020 11:56:09 -0800 (PST)
-Received: by mail-wr1-x443.google.com with SMTP id 64so4626749wra.11;
-        Tue, 01 Dec 2020 11:56:09 -0800 (PST)
+        Tue, 1 Dec 2020 14:57:34 -0500
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97912C0613D4;
+        Tue,  1 Dec 2020 11:56:53 -0800 (PST)
+Received: by mail-wm1-x342.google.com with SMTP id e25so8955329wme.0;
+        Tue, 01 Dec 2020 11:56:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qZPmocJICJR3oELxasb3551i3Wyrk+d2+OY5hSssNeg=;
-        b=Ot4IvDNVFAKwFIXaxeGR1/l64g7ZqoVacAdwZ08j6rh3MSt4HwnFcf0ndrp0NAnL61
-         nldOeRMNl3NS8EbS9TAWFEL7+lgjXKEzuIS9hYd9xLYFqQzqsOVklFbsq1R5arwyp47Y
-         WeJhHa3E01QmiwUPgy61ZBUomoaGUlNKeoJeyj3u5gUzt6IWFXBNloLq4Jeq5ydFBZV4
-         Jpd54bLPgGJcCiHyDkOear2R7hlVCqDFqk5Zo2YPUX+fDuO1kV5ej3PjMsC/vx+yO6Lx
-         Ys4No0w5spwnqUFbaTVlBvoVqy1DQIXaKCSfe/2/EAZkziZwXnhQa24w75blEnzPqhw0
-         QPFw==
+        bh=Qxaxg65nan58qHlFqPugD7TW0lW2OpFi76k39sX/L6s=;
+        b=HyTp/jNA+4GyqidnMug+lWzvDdFRq1bShCqMp0ctawW+500N2Y1EaThkY2OmrbCNP/
+         3ZOdYJDTg3ZkLRtaesN9WRTcOIDJrNUblzHlcs0tdZwWm5Fd1c5GsuP0tqiVDs8YqlzK
+         yQmZfde2tSZx1i+w1r55jI3oQNhv2TuaiugbM3YBHf6wSPGKXEBx5P0Hp/YcoC91RxjD
+         wp07UFBk6jJuUPhVVTg3xo6lgHTDI76M+/PP1cOkyZJE9ZdfogVi5SNrRyyqfoYSv0GI
+         cHfAfle7ngtmXkminqrgDuNy0+8FHqFhZ6M8g9ewzG6OPZHJoLKicY8xcV/5pK5ON0Mi
+         c0nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qZPmocJICJR3oELxasb3551i3Wyrk+d2+OY5hSssNeg=;
-        b=IczQgrvrZmYeiRJtOeeYfcfTb61ax+wNJJfQZWBWw5tSd8qFLhTjnjAfeqAkUKo3QW
-         F+cgcWsQxdV1Ub+S/JNPAr9FtdI34+cpTS0UePg015IrXcsIauuLruRI6ZvOp0XvexlS
-         n4yX2VlpZuOUaavDyWzWfFhGkxxq6jmitpGqusQYd74ls9cYXfAII1YVGPSob1ZK2N/N
-         fdmSl01CY334skOZ+R1+OxaoZMz8mR2UqGFOBVThAH9vn395q0EDlkbMEBFVRDhcWWCE
-         8JzvQGFWy0PmBwV1rOL+1ZMf2abR0BbWFrz+S+3CqHxz/g0Ypdberu9ewKkbTVG7J7A+
-         BKwA==
-X-Gm-Message-State: AOAM5332A7anbIFRR6MXoETsY3RRrmRjU0xfvm9be4fpNfN4EeRgiPa1
-        J8yt3/hZjuB86S1N1mLUmSg=
-X-Google-Smtp-Source: ABdhPJygRVmcYQRorSqoK7Rk+6lPYcG4g+OIm+nZv+lYWMtEdFyDAwINjGt8zqtS0sH15wA4Znfjkg==
-X-Received: by 2002:a05:6000:11c2:: with SMTP id i2mr5986981wrx.21.1606852568060;
-        Tue, 01 Dec 2020 11:56:08 -0800 (PST)
+        bh=Qxaxg65nan58qHlFqPugD7TW0lW2OpFi76k39sX/L6s=;
+        b=kZmNk4Y7oZ29v9D8NvzQIgehE/pBB9UpXgDyIa3FdeGbbakxRvQ2N2O/KTLcFtuCBl
+         SC/4ZztPgiPOzYxEjo5SZtjg6u5aHy4CPUtD4hmUgfr4d1cLOCeAwtfUVoxYZv+8ufTQ
+         973F5y1fwNUErKYLAzTmEt6hW3UPRQ9fOCgOzzwUDa540XFGNCZDd8vl2/c0nXpEK+1Z
+         oD0Ti0yZkS0hHKA3QakMZTNHkkPScHf8z0HqGAFevkwWIgS1UJmXpQBPPJOAV1ZdfTwK
+         oPXD3oEVxbydFTZ+xhE827fxsJ8spKM7QXHSoEbrQmF06KZQZ45b2NIOwGd+ZCdCTIr6
+         jA+w==
+X-Gm-Message-State: AOAM532n5OePH4606Zoc6vVHi6M/96Q2DcGyKp1ZtnC8tOd5iBgAyB+e
+        3kJpf22WXTjDFWraYldmBYk=
+X-Google-Smtp-Source: ABdhPJy9lXWDKuWiFqyLddO5hXPgadNjvP0CxtlhQZCF48DTf04Ba93vHe+QDlt286KHfkQCswBDxQ==
+X-Received: by 2002:a1c:6205:: with SMTP id w5mr4352268wmb.26.1606852612302;
+        Tue, 01 Dec 2020 11:56:52 -0800 (PST)
 Received: from localhost.localdomain (host-79-13-10-171.retail.telecomitalia.it. [79.13.10.171])
-        by smtp.gmail.com with ESMTPSA id z22sm1253681wml.1.2020.12.01.11.56.06
+        by smtp.gmail.com with ESMTPSA id w3sm1435409wma.3.2020.12.01.11.56.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Dec 2020 11:56:07 -0800 (PST)
+        Tue, 01 Dec 2020 11:56:51 -0800 (PST)
 From:   Elia Devito <eliadevito@gmail.com>
 Cc:     mario.limonciello@dell.com, Elia Devito <eliadevito@gmail.com>,
         Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] intel-hid: add support for SW_TABLET_MODE
-Date:   Tue,  1 Dec 2020 20:55:05 +0100
-Message-Id: <20201201195504.22296-1-eliadevito@gmail.com>
+Subject: [PATCH 2/3] intel-hid: add option to enable/disable switches
+Date:   Tue,  1 Dec 2020 20:56:16 +0100
+Message-Id: <20201201195615.22461-1-eliadevito@gmail.com>
 X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,188 +77,44 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support for SW_TABLET_MODE for convertibles notebook.
-
-Exactly as intel-vbtn driver, the event code 0xcc is emitted by
-convertibles when entering tablet mode and 0xcd when return to
-laptop mode.
+Add option to force enable/disable switches support.
 
 Signed-off-by: Elia Devito <eliadevito@gmail.com>
 ---
-more info: https://bugzilla.kernel.org/show_bug.cgi?id=207433
- 
- drivers/platform/x86/intel-hid.c | 84 ++++++++++++++++++++++++++++++--
- 1 file changed, 80 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel-hid.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 86261970bd8f..5093c57102cf 100644
+index 5093c57102cf..54f5cbfd2189 100644
 --- a/drivers/platform/x86/intel-hid.c
 +++ b/drivers/platform/x86/intel-hid.c
-@@ -15,6 +15,9 @@
- #include <linux/platform_device.h>
- #include <linux/suspend.h>
+@@ -147,6 +147,10 @@ static const char *intel_hid_dsm_fn_to_method[INTEL_HID_DSM_FN_MAX] = {
  
-+/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-+#define TABLET_MODE_FLAG 0x40
+ static unsigned long long intel_hid_dsm_fn_mask;
+ static guid_t intel_dsm_guid;
++static int tablet_mode_switch = -1;
 +
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
++module_param(tablet_mode_switch, int, 0444);
++MODULE_PARM_DESC(tablet_mode_switch, "Enable/Disable tablet mode switch (0:disable, 1:enable)");
  
-@@ -61,7 +64,11 @@ static const struct key_entry intel_array_keymap[] = {
- 	{ KE_IGNORE, 0xC9, { KEY_ROTATE_LOCK_TOGGLE } },      /* Release */
- 	{ KE_KEY,    0xCE, { KEY_POWER } },                   /* Press */
- 	{ KE_IGNORE, 0xCF, { KEY_POWER } },                   /* Release */
--	{ KE_END },
-+};
-+
-+static const struct key_entry intel_array_switches[] = {
-+	{ KE_SW, 0xCC, { .sw = { SW_TABLET_MODE, 1 } } },  /* Tablet */
-+	{ KE_SW, 0xCD, { .sw = { SW_TABLET_MODE, 0 } } },  /* Laptop */
- };
+ static bool intel_hid_execute_method(acpi_handle handle,
+ 				     enum intel_hid_dsm_fn_codes fn_index,
+@@ -507,9 +511,14 @@ static bool intel_button_array_has_switches(struct platform_device *device)
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+ 	unsigned long long vgbs;
  
- static const struct dmi_system_id button_array_table[] = {
-@@ -89,9 +96,23 @@ static const struct dmi_system_id button_array_table[] = {
- 	{ }
- };
+-	if (!dmi_check_system(button_array_switches_table))
++	if (tablet_mode_switch == 0)
+ 		return false;
  
-+static const struct dmi_system_id button_array_switches_table[] = {
-+	{
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_CHASSIS_TYPE, "31" /* Convertible */),
-+		},
-+	},
-+	{ }
-+};
-+
-+#define KEYMAP_LEN \
-+	(ARRAY_SIZE(intel_array_keymap) + ARRAY_SIZE(intel_array_switches) + 1)
-+
- struct intel_hid_priv {
-+	struct key_entry keymap[KEYMAP_LEN];
- 	struct input_dev *input_dev;
- 	struct input_dev *array;
-+	bool has_switches;
- 	bool wakeup_mode;
- };
- 
-@@ -327,23 +348,54 @@ static int intel_hid_input_setup(struct platform_device *device)
- 	return input_register_device(priv->input_dev);
- }
- 
-+static void detect_tablet_mode(struct platform_device *device)
-+{
-+	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
-+	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+	unsigned long long vgbs;
-+	int m;
-+
-+	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_VGBS_FN, &vgbs))
-+		return;
-+
-+	m = !(vgbs & TABLET_MODE_FLAG);
-+	input_report_switch(priv->array, SW_TABLET_MODE, m);
-+}
-+
- static int intel_button_array_input_setup(struct platform_device *device)
- {
- 	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
--	int ret;
-+	int ret, keymap_len = 0;
- 
- 	/* Setup input device for 5 button array */
- 	priv->array = devm_input_allocate_device(&device->dev);
- 	if (!priv->array)
- 		return -ENOMEM;
- 
--	ret = sparse_keymap_setup(priv->array, intel_array_keymap, NULL);
-+	memcpy(&priv->keymap[keymap_len], intel_array_keymap,
-+		       ARRAY_SIZE(intel_array_keymap) *
-+		       sizeof(struct key_entry));
-+	keymap_len += ARRAY_SIZE(intel_array_keymap);
-+
-+	if (priv->has_switches) {
-+		memcpy(&priv->keymap[keymap_len], intel_array_switches,
-+		       ARRAY_SIZE(intel_array_switches) *
-+		       sizeof(struct key_entry));
-+		keymap_len += ARRAY_SIZE(intel_array_switches);
++	if (tablet_mode_switch != 1) {
++		if (!dmi_check_system(button_array_switches_table))
++			return false;
 +	}
 +
-+	priv->keymap[keymap_len].type = KE_END;
-+
-+	ret = sparse_keymap_setup(priv->array, priv->keymap, NULL);
- 	if (ret)
- 		return ret;
+ 	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_VGBS_FN, &vgbs))
+ 		return false;
  
- 	priv->array->name = "Intel HID 5 button array";
- 	priv->array->id.bustype = BUS_HOST;
- 
-+	if (priv->has_switches)
-+		detect_tablet_mode(device);
-+
- 	return input_register_device(priv->array);
- }
- 
-@@ -352,7 +404,10 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned long long ev_index;
-+	unsigned int val = !(event & 1); /* Even=press, Odd=release */
-+	const struct key_entry *ke;
- 
-+	dev_info(&device->dev, "event 0x%x\n", event);
- 	if (priv->wakeup_mode) {
- 		/*
- 		 * Needed for wakeup from suspend-to-idle to work on some
-@@ -367,13 +422,19 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 		if (event == 0xc0 || !priv->array)
- 			return;
- 
--		if (!sparse_keymap_entry_from_scancode(priv->array, event)) {
-+		ke = sparse_keymap_entry_from_scancode(priv->array, event);
-+		if (!ke) {
- 			dev_info(&device->dev, "unknown event 0x%x\n", event);
- 			return;
- 		}
- 
- wakeup:
- 		pm_wakeup_hard_event(&device->dev);
-+
-+		/* report the new switch position to the input subsystem. */
-+		if (ke && ke->type == KE_SW)
-+			sparse_keymap_report_event(priv->array, event, val, 0);
-+
- 		return;
- 	}
- 
-@@ -441,6 +502,20 @@ static bool button_array_present(struct platform_device *device)
- 	return false;
- }
- 
-+static bool intel_button_array_has_switches(struct platform_device *device)
-+{
-+	acpi_handle handle = ACPI_HANDLE(&device->dev);
-+	unsigned long long vgbs;
-+
-+	if (!dmi_check_system(button_array_switches_table))
-+		return false;
-+
-+	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_VGBS_FN, &vgbs))
-+		return false;
-+
-+	return true;
-+}
-+
- static int intel_hid_probe(struct platform_device *device)
- {
- 	acpi_handle handle = ACPI_HANDLE(&device->dev);
-@@ -479,6 +554,7 @@ static int intel_hid_probe(struct platform_device *device)
- 
- 	/* Setup 5 button array */
- 	if (button_array_present(device)) {
-+		priv->has_switches = intel_button_array_has_switches(device);
- 		dev_info(&device->dev, "platform supports 5 button array\n");
- 		err = intel_button_array_input_setup(device);
- 		if (err)
 -- 
 2.28.0
 
