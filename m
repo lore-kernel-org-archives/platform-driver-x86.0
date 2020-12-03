@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D53C84463
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F97CC84468
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B588920637
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D077120657
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436672AbgLCNat (ORCPT
+        id S2436761AbgLCNav (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:30:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 08:30:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436738AbgLCNas (ORCPT
+        id S2436755AbgLCNau (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:30:48 -0500
+        Thu, 3 Dec 2020 08:30:50 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Verevkin <me@maxverevkin.tk>,
+Cc:     Matthias Maier <tamiko@43-1.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 35/39] platform/x86: intel-vbtn: Support for tablet mode on HP Pavilion 13 x360 PC
-Date:   Thu,  3 Dec 2020 08:28:29 -0500
-Message-Id: <20201203132834.930999-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.9 33/39] platform/x86: thinkpad_acpi: Whitelist P15 firmware for dual fan control
+Date:   Thu,  3 Dec 2020 08:28:27 -0500
+Message-Id: <20201203132834.930999-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20201203132834.930999-1-sashal@kernel.org>
 References: <20201203132834.930999-1-sashal@kernel.org>
@@ -41,39 +42,33 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Max Verevkin <me@maxverevkin.tk>
+From: Matthias Maier <tamiko@43-1.org>
 
-[ Upstream commit 8b205d3e1bf52ab31cdd5c55f87c87a227793d84 ]
+[ Upstream commit 80a8c3185f5047dc7438ed226b72385bf93b4071 ]
 
-The Pavilion 13 x360 PC has a chassis-type which does not indicate it is
-a convertible, while it is actually a convertible. Add it to the
-dmi_switches_allow_list.
+This commit enables dual fan control for the following new Lenovo
+models: P15, P15v.
 
-Signed-off-by: Max Verevkin <me@maxverevkin.tk>
-Link: https://lore.kernel.org/r/20201124131652.11165-1-me@maxverevkin.tk
+Signed-off-by: Matthias Maier <tamiko@43-1.org>
+Link: https://lore.kernel.org/r/20201126000416.2459645-2-tamiko-ibm-acpi-devel@43-1.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-vbtn.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/platform/x86/thinkpad_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index f5901b0b07cd8..0419c8001fe33 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -206,6 +206,12 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Stream x360 Convertible PC 11"),
- 		},
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion 13 x360 PC"),
-+		},
-+	},
- 	{} /* Array terminator */
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index c7e9c0d29ed93..55a94a2dc562e 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8777,6 +8777,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+ 	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
+ 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+ 	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
++	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
  };
  
+ static int __init fan_init(struct ibm_init_struct *iibm)
 -- 
 2.27.0
 
