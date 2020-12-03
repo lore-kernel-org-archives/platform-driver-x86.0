@@ -2,67 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8716C6369E
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Dec 2020 22:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16ABC83012
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 06:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B22221F7
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Dec 2020 22:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824682085B
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 06:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgLBWnv convert rfc822-to-8bit (ORCPT
+        id S1729236AbgLCG0m (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Dec 2020 17:43:51 -0500
-Received: from piie.net ([80.82.223.85]:45304 "EHLO piie.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbgLBWnu (ORCPT
+        Thu, 3 Dec 2020 01:26:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgLCG0l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Dec 2020 17:43:50 -0500
-X-Greylist: delayed 620 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Dec 2020 17:43:50 EST
-Received: from mail.piie.net (_gateway [172.17.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (Client did not present a certificate)
-        by piie.net (Postfix) with ESMTPSA id 541412A18F0;
-        Wed,  2 Dec 2020 23:32:48 +0100 (CET)
+        Thu, 3 Dec 2020 01:26:41 -0500
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC21C061A4E;
+        Wed,  2 Dec 2020 22:26:01 -0800 (PST)
+Received: by mail-pg1-x544.google.com with SMTP id m9so797202pgb.4;
+        Wed, 02 Dec 2020 22:26:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=a5Hleron+HNO6OSGaVm7+jn0hTolWYgraVmhaIHqv7U=;
+        b=U+Y6zDIhpIkQd0/XkPnsWOx3ty2znoP8t4ISlhFWptNuMbr5LJSUMsW+RTtd0M4x9K
+         zkXL5+4LAq4x//bXrJWzpP34A+rpYm0BEV+gvvB+NvDg8g3Ppup7PuLwiRepugDodQb4
+         IeDv1J0rX0QSTAaUbFsT4RMfXp6C/1AdjuAe9+WX4ydwHoVVaNSpjnpDGw8TqKH/qBxj
+         SFELS12okZcCLgFwMxLX1CdG+AnoH5VLLr3bNMVPRRk2vl+KM5WV2pKelrDbtRPajdey
+         ebvLpD8CW2hjzgstxv63BBMYAENN85quML6Mb//RxXN/Yp/6f77xIF0cuNxsS15D55Ap
+         2BjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=a5Hleron+HNO6OSGaVm7+jn0hTolWYgraVmhaIHqv7U=;
+        b=Q6JHKsqa17UP3L7EnspzitZ0iETOyNP96Gsg5XmdMrn8Ak3XYi5oi3rRXEZGjn8jSh
+         upDk2zen+5+5cuFojf4iKXG1Lo4Wfk2iXnKoI/6Pmsr3eSO6NcSVLhqbCY4yfKO0DR8I
+         JOnBIoZ5pO3xXXwHEMvQ5WXkZe2nwecrcjhR3ZZyuc5Om+f7eSBrAo9YgS2oULjZVIVm
+         1FIldu2pp6Augexb6anpLUBzlaZVqUYHmEKJmPfNIvmpk0at+AJgnL/BFCb14ptH7RDl
+         PXLavGBOQ87x9qXDjQgQmwpcjeEZywYosRULJvKugi+xWvfwJVuiCwiabH9aDOVmJ8rJ
+         K6cw==
+X-Gm-Message-State: AOAM533lj6WbLWetQEluhxksV25z0E/2YhN2OpII49OtdguXdyTl48nl
+        ZryiAGApu3sSKfK/u5paKeI=
+X-Google-Smtp-Source: ABdhPJx+P2i1MS4WKP5k78TX7vozpZ6k242noGJ71q6yL4YO0XpxjV8ai5M/byvI+Lbmw/bWUNXyTQ==
+X-Received: by 2002:a65:44c2:: with SMTP id g2mr1824908pgs.256.1606976760622;
+        Wed, 02 Dec 2020 22:26:00 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id 6sm495218pfb.22.2020.12.02.22.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Dec 2020 22:25:59 -0800 (PST)
+Date:   Wed, 2 Dec 2020 22:25:55 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com
+Subject: Re: [PATCH v4 1/7] Input: add input_device_enabled()
+Message-ID: <X8iE81mbK6NVhd0e@google.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-2-andrzej.p@collabora.com>
 MIME-Version: 1.0
-Date:   Wed, 02 Dec 2020 22:32:48 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: RainLoop/1.14.0
-From:   "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
-Message-ID: <d702f364c3bd1b31858ef5bd6d714867@piie.net>
-Subject: Re: [PATCH 2/2] platform/x86/drivers/acerhdf: Check the interval
- value when it is set
-To:     "Daniel Lezcano" <daniel.lezcano@linaro.org>
-Cc:     "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20201202222212.2313242-2-daniel.lezcano@linaro.org>
-References: <20201202222212.2313242-2-daniel.lezcano@linaro.org>
- <20201202222212.2313242-1-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200608112211.12125-2-andrzej.p@collabora.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2. Dezember 2020 23:22, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+On Mon, Jun 08, 2020 at 01:22:05PM +0200, Andrzej Pietrasiewicz wrote:
+> A helper function for drivers to decide if the device is used or not.
+> A lockdep check is introduced as inspecting ->users should be done under
+> input device's mutex.
+> 
+> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
 
-> Currently the code checks the interval value when the temperature is
-> read which is bad for two reasons:
-> 
-> - checking and setting the interval in the get_temp callback is
-> inaccurate and awful, that can be done when changing the value.
-> 
-> - Changing the thermal zone structure internals is an abuse of the
-> exported structure, moreover no lock is taken here.
-> 
-> The goal of this patch is to solve the first item by using the 'set'
-> function called when changing the interval. The check is done there
-> and removed from the get_temp function. If the thermal zone was not
-> initialized yet, the interval is not updated in this case as that will
-> happen in the init function when registering the thermal zone device.
-> 
-> I don't have any hardware to test the changes.
+Applied, thank you.
 
-Thanks for this patch, I'll test it in upcoming days.
+-- 
+Dmitry
