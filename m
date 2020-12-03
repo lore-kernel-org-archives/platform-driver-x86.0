@@ -3,36 +3,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75E6C64E7A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A90C8301D
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A47C2051A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35F1420449
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389146AbgLCNdF (ORCPT
+        id S2436539AbgLCNeC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:33:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 08:34:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436903AbgLCNbN (ORCPT
+        id S2436828AbgLCNbB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:31:13 -0500
+        Thu, 3 Dec 2020 08:31:01 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
+        russianneuromancer <russianneuromancer@ya.ru>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/14] platform/x86: thinkpad_acpi: Add BAT1 is primary battery quirk for Thinkpad Yoga 11e 4th gen
-Date:   Thu,  3 Dec 2020 08:30:08 -0500
-Message-Id: <20201203133010.931600-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 21/23] platform/x86: touchscreen_dmi: Add info for the Irbis TW118 tablet
+Date:   Thu,  3 Dec 2020 08:29:33 -0500
+Message-Id: <20201203132935.931362-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201203133010.931600-1-sashal@kernel.org>
-References: <20201203133010.931600-1-sashal@kernel.org>
+In-Reply-To: <20201203132935.931362-1-sashal@kernel.org>
+References: <20201203132935.931362-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,42 +43,59 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit c986a7024916c92a775fc8d853fba3cae1d5fde4 ]
+[ Upstream commit c9aa128080cbce92f8715a9328f88d8ca3134279 ]
 
-The Thinkpad Yoga 11e 4th gen with the N3450 / Celeron CPU only has
-one battery which is named BAT1 instead of the expected BAT0, add a
-quirk for this. This fixes not being able to set the charging tresholds
-on this model; and this alsoe fixes the following errors in dmesg:
+Add touchscreen info for the Irbis TW118 tablet.
 
-ACPI: \_SB_.PCI0.LPCB.EC__.HKEY: BCTG evaluated but flagged as error
-thinkpad_acpi: Error probing battery 2
-battery: extension failed to load: ThinkPad Battery Extension
-battery: extension unregistered: ThinkPad Battery Extension
-
-Note that the added quirk is for the "R0K" BIOS versions which are
-used on the Thinkpad Yoga 11e 4th gen's with a Celeron CPU, there
-is a separate "R0L" BIOS for the i3/i5 based versions. This may also
-need the same quirk, but if that really is necessary is unknown.
-
+Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20201109103550.16265-1-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20201124110454.114286-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 79ac62d8ff7ba..a6e69f2495d23 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9697,6 +9697,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
- 	TPACPI_Q_LNV3('R', '0', 'C', true), /* Thinkpad 13 */
- 	TPACPI_Q_LNV3('R', '0', 'J', true), /* Thinkpad 13 gen 2 */
-+	TPACPI_Q_LNV3('R', '0', 'K', true), /* Thinkpad 11e gen 4 celeron BIOS */
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 1c7d8324ff5c2..1e072dbba30d6 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -264,6 +264,21 @@ static const struct ts_dmi_data irbis_tw90_data = {
+ 	.properties	= irbis_tw90_props,
  };
  
- static int __init tpacpi_battery_init(struct ibm_init_struct *ibm)
++static const struct property_entry irbis_tw118_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 30),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 1960),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1510),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-irbis-tw118.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	{ }
++};
++
++static const struct ts_dmi_data irbis_tw118_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= irbis_tw118_props,
++};
++
+ static const struct property_entry itworks_tw891_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
+@@ -758,6 +773,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "TW90"),
+ 		},
+ 	},
++	{
++		/* Irbis TW118 */
++		.driver_data = (void *)&irbis_tw118_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW118"),
++		},
++	},
+ 	{
+ 		/* I.T.Works TW891 */
+ 		.driver_data = (void *)&itworks_tw891_data,
 -- 
 2.27.0
 
