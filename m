@@ -2,104 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AAAC63777
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA643C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED5320637
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B3122262
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:18:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389136AbgLCNhB (ORCPT
+        id S1726071AbgLCVSk convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:37:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47782 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 16:18:40 -0500
+Received: from piie.net ([80.82.223.85]:57192 "EHLO piie.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436609AbgLCNaa (ORCPT
+        id S1725885AbgLCVSk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:30:30 -0500
-From:   Sasha Levin <sashal@kernel.org>
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 36/39] platform/x86: touchscreen_dmi: Add info for the Predia Basic tablet
-Date:   Thu,  3 Dec 2020 08:28:30 -0500
-Message-Id: <20201203132834.930999-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201203132834.930999-1-sashal@kernel.org>
-References: <20201203132834.930999-1-sashal@kernel.org>
+        Thu, 3 Dec 2020 16:18:40 -0500
+Received: from mail.piie.net (_gateway [172.17.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
+        (Client did not present a certificate)
+        by piie.net (Postfix) with ESMTPSA id 967AB2A18F0;
+        Thu,  3 Dec 2020 22:17:58 +0100 (CET)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Date:   Thu, 03 Dec 2020 21:17:58 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Mailer: RainLoop/1.14.0
+From:   "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
+Message-ID: <973e8be431d60986e8257320d9acf997@piie.net>
+Subject: Re: [PATCH v2 1/2] platform/x86/drivers/acerhdf: Use
+ module_param_cb to set/get polling interval
+To:     "Daniel Lezcano" <daniel.lezcano@linaro.org>, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20201203071738.2363701-1-daniel.lezcano@linaro.org>
+References: <20201203071738.2363701-1-daniel.lezcano@linaro.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+3. Dezember 2020 08:17, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
 
-[ Upstream commit 0f511edc6ac12f1ccf1c6c2d4412f5ed7ba426a6 ]
+> The module parameter can be set by using ops to get and set the
+> values. The change will allow to check the correctness of the interval
+> value everytime it is changed instead of checking in the get_temp
+> function.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Add touchscreen info for the Predia Basic tablet.
+Acked-by: Peter Kaestle <peter@piie.net>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Link: https://lore.kernel.org/r/20201015194949.50566-1-hdegoede@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index dda60f89c9512..26cbf7cc8129c 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -623,6 +623,23 @@ static const struct ts_dmi_data pov_mobii_wintab_p1006w_v10_data = {
- 	.properties	= pov_mobii_wintab_p1006w_v10_props,
- };
- 
-+static const struct property_entry predia_basic_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 3),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1728),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1144),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-predia-basic.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data predia_basic_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= predia_basic_props,
-+};
-+
- static const struct property_entry schneider_sct101ctm_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1715),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1140),
-@@ -1109,6 +1126,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BIOS_DATE, "10/24/2014"),
- 		},
- 	},
-+	{
-+		/* Predia Basic tablet) */
-+		.driver_data = (void *)&predia_basic_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Insyde"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "CherryTrail"),
-+			/* Above matches are too generic, add bios-version match */
-+			DMI_MATCH(DMI_BIOS_VERSION, "Mx.WT107.KUBNGEA"),
-+		},
-+	},
- 	{
- 		/* Point of View mobii wintab p800w (v2.1) */
- 		.driver_data = (void *)&pov_mobii_wintab_p800w_v21_data,
--- 
-2.27.0
-
+> ---
+> drivers/platform/x86/acerhdf.c | 10 ++++++++--
+> 1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index 44b6bfbd32df..19fc8ff2225c 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -84,8 +84,6 @@ static struct platform_device *acerhdf_dev;
+> 
+> module_param(kernelmode, uint, 0);
+> MODULE_PARM_DESC(kernelmode, "Kernel mode fan control on / off");
+> -module_param(interval, uint, 0600);
+> -MODULE_PARM_DESC(interval, "Polling interval of temperature check");
+> module_param(fanon, uint, 0600);
+> MODULE_PARM_DESC(fanon, "Turn the fan on above this temperature");
+> module_param(fanoff, uint, 0600);
+> @@ -824,3 +822,11 @@ MODULE_ALIAS("dmi:*:*Acer*:pnExtensa*5420*:");
+> 
+> module_init(acerhdf_init);
+> module_exit(acerhdf_exit);
+> +
+> +static const struct kernel_param_ops interval_ops = {
+> + .set = param_set_uint,
+> + .get = param_get_uint,
+> +};
+> +
+> +module_param_cb(interval, &interval_ops, &interval, 0600);
+> +MODULE_PARM_DESC(interval, "Polling interval of temperature check");
+> -- 
+> 2.25.1
