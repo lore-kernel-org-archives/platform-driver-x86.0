@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A90C8301D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA4C83012
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F1420449
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58677206D6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436539AbgLCNeC (ORCPT
+        id S2436825AbgLCNeM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:34:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47782 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 08:34:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436828AbgLCNbB (ORCPT
+        id S2436812AbgLCNa7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:31:01 -0500
+        Thu, 3 Dec 2020 08:30:59 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        russianneuromancer <russianneuromancer@ya.ru>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/23] platform/x86: touchscreen_dmi: Add info for the Irbis TW118 tablet
-Date:   Thu,  3 Dec 2020 08:29:33 -0500
-Message-Id: <20201203132935.931362-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 17/23] platform/x86: thinkpad_acpi: Do not report SW_TABLET_MODE on Yoga 11e
+Date:   Thu,  3 Dec 2020 08:29:29 -0500
+Message-Id: <20201203132935.931362-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20201203132935.931362-1-sashal@kernel.org>
 References: <20201203132935.931362-1-sashal@kernel.org>
@@ -43,59 +43,62 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit c9aa128080cbce92f8715a9328f88d8ca3134279 ]
+[ Upstream commit f2eae1888cf22590c38764b8fa3c989c0283870e ]
 
-Add touchscreen info for the Irbis TW118 tablet.
+The Yoga 11e series has 2 accelerometers described by a BOSC0200 ACPI node.
+This setup relies on a Windows service which reads both accelerometers and
+then calculates the angle between the 2 halves to determine laptop / tent /
+tablet mode and then reports the calculated mode back to the EC by calling
+special ACPI methods on the BOSC0200 node.
 
-Reported-and-tested-by: russianneuromancer <russianneuromancer@ya.ru>
+The bmc150 iio driver does not support this (it involves double
+calculations requiring sqrt and arccos so this really needs to be done
+in userspace), as a result of this on the Yoga 11e the thinkpad_acpi
+code always reports SW_TABLET_MODE=0, starting with GNOME 3.38 reporting
+SW_TABLET_MODE=0 causes GNOME to:
+
+1. Not show the onscreen keyboard when a text-input field is focussed
+   with the touchscreen.
+2. Disable accelerometer based auto display-rotation.
+
+This makes sense when in laptop-mode but not when in tablet-mode. But
+since for the Yoga 11e the thinkpad_acpi code always reports
+SW_TABLET_MODE=0, GNOME does not know when the device is in tablet-mode.
+
+Stop reporting the broken (always 0) SW_TABLET_MODE on Yoga 11e models
+to fix this.
+
+Note there are plans for userspace to support 360 degree hinges style
+2-in-1s with 2 accelerometers and figure out the mode by itself, see:
+https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/-/issues/216
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20201124110454.114286-1-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20201106140130.46820-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/platform/x86/thinkpad_acpi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 1c7d8324ff5c2..1e072dbba30d6 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -264,6 +264,21 @@ static const struct ts_dmi_data irbis_tw90_data = {
- 	.properties	= irbis_tw90_props,
- };
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 5081048f2356e..f196a3313690f 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -3232,7 +3232,14 @@ static int hotkey_init_tablet_mode(void)
  
-+static const struct property_entry irbis_tw118_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 30),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1960),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1510),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-irbis-tw118.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data irbis_tw118_data = {
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= irbis_tw118_props,
-+};
-+
- static const struct property_entry itworks_tw891_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 1),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 5),
-@@ -758,6 +773,14 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TW90"),
- 		},
- 	},
-+	{
-+		/* Irbis TW118 */
-+		.driver_data = (void *)&irbis_tw118_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "IRBIS"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TW118"),
-+		},
-+	},
- 	{
- 		/* I.T.Works TW891 */
- 		.driver_data = (void *)&itworks_tw891_data,
+ 		in_tablet_mode = hotkey_gmms_get_tablet_mode(res,
+ 							     &has_tablet_mode);
+-		if (has_tablet_mode)
++		/*
++		 * The Yoga 11e series has 2 accelerometers described by a
++		 * BOSC0200 ACPI node. This setup relies on a Windows service
++		 * which calls special ACPI methods on this node to report
++		 * the laptop/tent/tablet mode to the EC. The bmc150 iio driver
++		 * does not support this, so skip the hotkey on these models.
++		 */
++		if (has_tablet_mode && !acpi_dev_present("BOSC0200", "1", -1))
+ 			tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_GMMS;
+ 		type = "GMMS";
+ 	} else if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
 -- 
 2.27.0
 
