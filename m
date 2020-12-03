@@ -2,113 +2,235 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470E5C4361A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EABC4361A
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E749922225
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAEB22225
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgLCVW4 (ORCPT
+        id S1729050AbgLCV1o (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 16:22:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47888 "EHLO
+        Thu, 3 Dec 2020 16:27:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgLCVW4 (ORCPT
+        with ESMTP id S1728496AbgLCV1n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 16:22:56 -0500
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1C5C061A4F;
-        Thu,  3 Dec 2020 13:22:15 -0800 (PST)
-Received: by mail-wr1-x441.google.com with SMTP id t4so3306560wrr.12;
-        Thu, 03 Dec 2020 13:22:15 -0800 (PST)
+        Thu, 3 Dec 2020 16:27:43 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F14FC061A52;
+        Thu,  3 Dec 2020 13:27:03 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id qw4so5611202ejb.12;
+        Thu, 03 Dec 2020 13:27:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=zIwz4kMfc7t6lpkiBG3igVGFEHaTI3leni+rbGlAWBA=;
-        b=aSZwLsCbG02upmomplwSwSwedmZwwjJ2J87bLrAIO2GcFJzaQG+0Wb01avh4sbV1aX
-         JfvWpiwdBCQcMxEvBPoxM/0LuYCwrVhKqlbgu96pCocW9svi2FZLekGsHO3eHpKB/K2g
-         aav//ckZ9MWBuzXHVjzeKEVHsaEua3v4ncxjzReJp/Cx4WGRI4yR7ckO2MMvmUwENBmr
-         cSfLo3HFhIAlIp9sTbwcJPpl4mMnO1ojInMvdGkKmFJVdtchjmv/LzgXTYx6blA+9Nle
-         tc9ddsfdFUAdZ+qJAhFyREKHi9kxaJ5YprVQ4X0/MlaiqPeoYlqsYcy9EZemEHr6YK83
-         9sNw==
+        bh=caVWfVVH6dJ8obRbPhyh/U+sXvPqd/kznJTcICC3wMY=;
+        b=BXtnbt3ConAnHi1cI918sScurMqDRB/DWoEU1AHCQbTeDUD16cO20Ph4hpWUgU0qCi
+         eCJPTbZ9CMm0WdxEuVenx6BBkWfEPpLc/Q5Der2XcGzaz3+FgUSvRuV9ThBXLFAKk+7S
+         52y4BJsU2ruBGmi5h68ZEvcHNqBGUmrpxE4erWYBFjKWuUUm/di58EHgQcXan40n4yHl
+         MMeV4IpANV0CIv8K0qmVklWBY7Cro2k7NeTn6hT5uw06kwFwAaPsU/lIJDObLstN/XUT
+         0c9xzJX6GrO92lh5nQM2FJDdKsXnBKUL+1c4WmaX1rXJSKhin0dC/ufZrzau++gdgo6Q
+         jQUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zIwz4kMfc7t6lpkiBG3igVGFEHaTI3leni+rbGlAWBA=;
-        b=pnuegFjuHOWRdz7tw5wSdqpUcXexxe85TCpZHfIzx9xLn2ZOpk4i6mZeEI3/a6PMec
-         TYKczmlPxPr3L/O0B+aRvkd2dvqSJBrX+qSs/GT7O267V08H6p9YmPMfqQ96v2I0t3vx
-         5np1D/FDyMT6f7ifBi2DWUWQtcnHSEb/Bjpgz5dmw6GotFZCCilqVJhMOjEq3C+8irhZ
-         c3r4S8uNyyuUUEJN5tG1T8eEvXRjYXEH9Fku7TDd6ZvmXFRvC8x2DHJbiTtF/Gd8OVbQ
-         b4PZtWjc5FTFKMXvwDNUIQDtGsBwDxAgkEuUXBAM1D3b4QFk2XKCpOGPDkb90Fr6msJu
-         /srA==
-X-Gm-Message-State: AOAM530Aqlkn6KsLg63357AW+TGWud20/+8nC7OPgABXPFwe1HgnhxrN
-        6M5Mejq+ytN0AB+k9/K0q8U=
-X-Google-Smtp-Source: ABdhPJxEMlsjN43WtUPneFgokIswrABxZVUkEZcg7hyOpI93SFaEgx8MPhjl9LgAeabPO6eB45gY7Q==
-X-Received: by 2002:a5d:60cb:: with SMTP id x11mr1307927wrt.0.1607030534225;
-        Thu, 03 Dec 2020 13:22:14 -0800 (PST)
-Received: from localhost.localdomain (host-79-13-10-171.retail.telecomitalia.it. [79.13.10.171])
-        by smtp.gmail.com with ESMTPSA id g78sm633649wme.33.2020.12.03.13.22.13
+        bh=caVWfVVH6dJ8obRbPhyh/U+sXvPqd/kznJTcICC3wMY=;
+        b=SmlPSYIHaR/bgNPHTVX27PKgIyZ1mUzyBz/JQ9LD1wHtrWsQHby38VgqixcZzHDFSf
+         xXmcAYX+VC8zM8PE5tqZLjVNPwMM81Hev1M4jGi3dXskn7olqOrR931amgXlTTEnDZuH
+         GsCA+Q/Lbyxr8WjkSHwOu8JrEjszUVZi6DuE1dDj0vSYn5vArSBu5ArjhBajQuU+vlx1
+         PS2uT4JTt4/a077Q0vcWp5olVJZaLRdmKIxguf3rpDoziOvy7zZYxHDVtYmqXXbhc+Ei
+         FBu8K+MzXO9xAkEPgGO7rn8M/9IC/emUP3kEe8cWM7kVKgBfaCSNhKW4zTeQQagjIqrL
+         ECKw==
+X-Gm-Message-State: AOAM532YnxcffNEBKsYxZGs55nIRf+1mfANRo4MDw3l9AQykfmZI0Oz7
+        MhwSeITLfk5r1x+4X9crHVDsV4OLhg0=
+X-Google-Smtp-Source: ABdhPJxRfFgPm5mgJ6SBB1fhTKi1290wsLk01+F0pURQ3mdjhJWxNpqoRHuy2X6mM1tU5mYg1y5/Sw==
+X-Received: by 2002:a17:906:12cf:: with SMTP id l15mr4263386ejb.540.1607030821644;
+        Thu, 03 Dec 2020 13:27:01 -0800 (PST)
+Received: from xws.fritz.box (pd9e5a6ef.dip0.t-ipconnect.de. [217.229.166.239])
+        by smtp.gmail.com with ESMTPSA id e3sm1656169ejq.96.2020.12.03.13.27.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Dec 2020 13:22:13 -0800 (PST)
-From:   Elia Devito <eliadevito@gmail.com>
-Cc:     Elia Devito <eliadevito@gmail.com>,
-        Alex Hung <alex.hung@canonical.com>,
+        Thu, 03 Dec 2020 13:27:00 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] intel-hid: add alternative method to enable switches
-Date:   Thu,  3 Dec 2020 22:21:49 +0100
-Message-Id: <20201203212148.36039-1-eliadevito@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <69f340f6-4301-6546-f14a-47d90208d44b@redhat.com>
-References: <69f340f6-4301-6546-f14a-47d90208d44b@redhat.com>
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 2/9] platform/surface: aggregator: Add control packet allocation caching
+Date:   Thu,  3 Dec 2020 22:26:33 +0100
+Message-Id: <20201203212640.663931-3-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20201203212640.663931-1-luzmaximilian@gmail.com>
+References: <20201203212640.663931-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some convertible have unreliable VGBS return, in these cases we enable
-support when receiving the first event.
+Surface Serial Hub communication is, in its core, packet based. Each
+sequenced packet requires to be acknowledged, via an ACK-type control
+packet. In case invalid data has been received by the driver, a NAK-type
+(not-acknowledge/negative acknowledge) control packet is sent,
+triggering retransmission.
 
-Signed-off-by: Elia Devito <eliadevito@gmail.com>
+Control packets are therefore a core communication primitive and used
+frequently enough (with every sequenced packet transmission sent by the
+embedded controller, including events and request responses) that it may
+warrant caching their allocations to reduce possible memory
+fragmentation.
+
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
- drivers/platform/x86/intel-hid.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/platform/surface/aggregator/core.c    | 27 ++++++++++-
+ .../surface/aggregator/ssh_packet_layer.c     | 47 +++++++++++++++----
+ .../surface/aggregator/ssh_packet_layer.h     |  3 ++
+ 3 files changed, 67 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index fed24d4f28b8..3cc8f8ac48b2 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -404,6 +404,19 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
- 	struct platform_device *device = context;
- 	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
- 	unsigned long long ev_index;
-+	int err;
+diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+index ec6c7f40ad36..77bc4c87541b 100644
+--- a/drivers/platform/surface/aggregator/core.c
++++ b/drivers/platform/surface/aggregator/core.c
+@@ -774,7 +774,32 @@ static struct serdev_device_driver ssam_serial_hub = {
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ };
+-module_serdev_device_driver(ssam_serial_hub);
 +
-+	/*
-+	 * Some convertible have unreliable VGBS return which could cause incorrect
-+	 * SW_TABLET_MODE report, in these cases we enable support when receiving
-+	 * the first event instead of during driver setup.
-+	 */
-+	if (!priv->switches && (event == 0xcc || event == 0xcd)) {
-+		dev_info(&device->dev, "switch event received, enable switches supports\n");
-+		err = intel_hid_switches_setup(device);
-+		if (err)
-+			pr_err("Failed to setup Intel HID switches\n");
-+	}
- 
- 	if (priv->wakeup_mode) {
- 		/*
--- 
-2.28.0
++
++/* -- Module setup. --------------------------------------------------------- */
++
++static int __init ssam_core_init(void)
++{
++	int status;
++
++	status = ssh_ctrl_packet_cache_init();
++	if (status)
++		return status;
++
++	status = serdev_device_driver_register(&ssam_serial_hub);
++	if (status)
++		ssh_ctrl_packet_cache_destroy();
++
++	return status;
++}
++module_init(ssam_core_init);
++
++static void __exit ssam_core_exit(void)
++{
++	serdev_device_driver_unregister(&ssam_serial_hub);
++	ssh_ctrl_packet_cache_destroy();
++}
++module_exit(ssam_core_exit);
+
+ MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+ MODULE_DESCRIPTION("Subsystem and Surface Serial Hub driver for Surface System Aggregator Module");
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+index 237d28c90e4b..8bc19837cde0 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+@@ -302,24 +302,53 @@ void ssh_packet_init(struct ssh_packet *packet, unsigned long type,
+ 	packet->ops = ops;
+ }
+
++static struct kmem_cache *ssh_ctrl_packet_cache;
++
++/**
++ * ssh_ctrl_packet_cache_init() - Initialize the control packet cache.
++ */
++int ssh_ctrl_packet_cache_init(void)
++{
++	const unsigned int size = sizeof(struct ssh_packet) + SSH_MSG_LEN_CTRL;
++	const unsigned int align = __alignof__(struct ssh_packet);
++	struct kmem_cache *cache;
++
++	cache = kmem_cache_create("ssam_ctrl_packet", size, align, 0, NULL);
++	if (!cache)
++		return -ENOMEM;
++
++	ssh_ctrl_packet_cache = cache;
++	return 0;
++}
++
++/**
++ * ssh_ctrl_packet_cache_destroy() - Deinitialize the control packet cache.
++ */
++void ssh_ctrl_packet_cache_destroy(void)
++{
++	kmem_cache_destroy(ssh_ctrl_packet_cache);
++	ssh_ctrl_packet_cache = NULL;
++}
++
+ /**
+- * ssh_ctrl_packet_alloc() - Allocate control packet.
++ * ssh_ctrl_packet_alloc() - Allocate packet from control packet cache.
+  * @packet: Where the pointer to the newly allocated packet should be stored.
+  * @buffer: The buffer corresponding to this packet.
+  * @flags:  Flags used for allocation.
+  *
+- * Allocates a packet and corresponding transport buffer. Sets the packet's
+- * buffer reference to the allocated buffer. The packet must be freed via
+- * ssh_ctrl_packet_free(), which will also free the corresponding buffer. The
+- * corresponding buffer must not be freed separately. Intended to be used with
+- * %ssh_ptl_ctrl_packet_ops as packet operations.
++ * Allocates a packet and corresponding transport buffer from the control
++ * packet cache. Sets the packet's buffer reference to the allocated buffer.
++ * The packet must be freed via ssh_ctrl_packet_free(), which will also free
++ * the corresponding buffer. The corresponding buffer must not be freed
++ * separately. Intended to be used with %ssh_ptl_ctrl_packet_ops as packet
++ * operations.
+  *
+  * Return: Returns zero on success, %-ENOMEM if the allocation failed.
+  */
+ static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
+ 				 struct ssam_span *buffer, gfp_t flags)
+ {
+-	*packet = kzalloc(sizeof(**packet) + SSH_MSG_LEN_CTRL, flags);
++	*packet = kmem_cache_alloc(ssh_ctrl_packet_cache, flags);
+ 	if (!*packet)
+ 		return -ENOMEM;
+
+@@ -330,12 +359,12 @@ static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
+ }
+
+ /**
+- * ssh_ctrl_packet_free() - Free control packet.
++ * ssh_ctrl_packet_free() - Free packet allocated from control packet cache.
+  * @p: The packet to free.
+  */
+ static void ssh_ctrl_packet_free(struct ssh_packet *p)
+ {
+-	kfree(p);
++	kmem_cache_free(ssh_ctrl_packet_cache, p);
+ }
+
+ static const struct ssh_packet_ops ssh_ptl_ctrl_packet_ops = {
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.h b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+index 058f111292ca..e8757d03f279 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.h
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+@@ -184,4 +184,7 @@ static inline void ssh_ptl_tx_wakeup_transfer(struct ssh_ptl *ptl)
+ void ssh_packet_init(struct ssh_packet *packet, unsigned long type,
+ 		     u8 priority, const struct ssh_packet_ops *ops);
+
++int ssh_ctrl_packet_cache_init(void);
++void ssh_ctrl_packet_cache_destroy(void);
++
+ #endif /* _SURFACE_AGGREGATOR_SSH_PACKET_LAYER_H */
+--
+2.29.2
 
