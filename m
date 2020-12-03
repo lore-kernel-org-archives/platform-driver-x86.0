@@ -2,62 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-20.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFA0C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9041C19437
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB9802223E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76D522225
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 21:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388464AbgLCV2I (ORCPT
+        id S2389352AbgLCV2Z (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 16:28:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48688 "EHLO
+        Thu, 3 Dec 2020 16:28:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388412AbgLCV2I (ORCPT
+        with ESMTP id S1729417AbgLCV2Y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 16:28:08 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3144EC061A55;
-        Thu,  3 Dec 2020 13:27:07 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id bo9so5584795ejb.13;
-        Thu, 03 Dec 2020 13:27:07 -0800 (PST)
+        Thu, 3 Dec 2020 16:28:24 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEAB4C08E860;
+        Thu,  3 Dec 2020 13:27:17 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id jx16so5617049ejb.10;
+        Thu, 03 Dec 2020 13:27:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=17ft4aXXuAHhW1Sk08y5+HZPRua2/s46JHy7W6egiCA=;
-        b=GdT9gt4PCQygC6l0p+rJJ3VVqUasutlHkNKJNXMtPBmKqLKI9Kv8AjNgrXjU09KCqO
-         ILJ2ya8rJVWBdVW+O+axIaTekKDSGdC7+yHfpkTB7ohkKW9JlygJpBYRz7k7y0mwATGs
-         m6UZnA80WWrG77FAhmixWaB1BS3/wkZm0idPhTM7ltqPbivO7vjZS3wROU6dQP+OBVjO
-         pZuMTsuSOZ5xAWyu16t+zD8IdhnTjcSmN9V0IwsrXxTCjpozOydAnClRCZ7mocwOx/gq
-         v8zq6ADHQCjD62pHwQUHCRpdTdrUm+m6aMouqGReBPaBd+VMcJkWHlnidkA00vov2+mp
-         IAAw==
+        bh=NczJj1XXm19GLhtHeBu8zvTVB9GktIVi/dzg1IHsPTs=;
+        b=hJI1v63FpdaefjR9Z8iZQbP2AlHd1U1SZ8dmburd8sB7R2gR5V2QJicP4v+ie0sN3R
+         fK72oC+fO5QzQ+wlCrX3dwsDjwsyNy9mosufD/ah1U9YdRten43ml7qIAspV6PdJ5gJQ
+         VTPwLSr/Qja8OmquyP1p7PeIrdB1Kd8SXV67sug8M4v25BGQDLQrS2CmrpxNCez14Dv5
+         04st70GAGcBc0Fa+x+5mzUhZuO8tGQzReFZJfSpO+aISE+af1AN73SY6PT3lH9aqBGPy
+         XpJQeKHgxhdG2Eo9Z+5KdwavSWax6wxEXhVYpc9dlQaD8W0wD6mVKG4FCabZgcjsbJ2a
+         sS7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=17ft4aXXuAHhW1Sk08y5+HZPRua2/s46JHy7W6egiCA=;
-        b=BWe+Woteuq7WRj7SrVY7+EzD3GAy3cgtjrViIZonwj0LtIYLk79i2VpekFOGQeheiR
-         qIMjwxOAxXXhQO+/V+1TN6h07pKFmF4OVwq1JE+9XvjYCAAnkoJRB5i4NuTn4gpfhYma
-         IFC5MkkLbrkzX2WP0GKTi7hVrLAod1lZhLZ4nGh9GgnSVXfNm8lHJR2PCivhg6unhRv8
-         R+6wTdmkGROZ0pL4TYK1kh9JxRm7KzgKcII1JfSrS3tRvyiejKXdsNpxGagLUcyoQXvO
-         qLge9QUwsWew4ZawBZ1ZBXSZFBEx7Fkd5nsjeCBCLCBDtGpmIEnCGWvXXTuZcryjKH0e
-         5RsA==
-X-Gm-Message-State: AOAM531SGQ/wRZ9ZolhgEVeHn1M4DLoFOc9EU/07GX+Tc1yvvOEsHK4+
-        tYQ9tdDb/evtatu8voekbP/LK16maBI=
-X-Google-Smtp-Source: ABdhPJw36y9QeqP/pkuP0zsDuuHevlhiAOes06fOakFN248HqPYlWxF6pbrG0G+UIfueLjIisZDyNg==
-X-Received: by 2002:a17:906:6546:: with SMTP id u6mr4468440ejn.36.1607030824916;
-        Thu, 03 Dec 2020 13:27:04 -0800 (PST)
+        bh=NczJj1XXm19GLhtHeBu8zvTVB9GktIVi/dzg1IHsPTs=;
+        b=s/biyesh+NcCRl+OimwjCiOvvCcbXFuwCAWy/JiSviJMQQLWWx8c/DwqfjXej/GPlc
+         neZs/bLxnCR4/D72s54SFgfYV+yEklVuiKqBS7cL19TjcoNJ/vcU3NgOZko7Rar6pMIw
+         jKo8VrjFR2F7l3tXlT705j6gtnq1EE7+NPJI56Yc+E5Tpkpvqire7Hug6GfJBKAkWuLU
+         Smj4Xo0UlxdN7HBwLRZKUvQVhMac/ciTLXDbv61d6DJGQr0kk1edOxXLumbBuq2ZBBST
+         tPl4eQFPu7z2IVq5VfzC86WHX6wsu3/bCU+I0XVic7F3iVTG3/Ntqsu4HbCxE1Bjt9Ja
+         OpQg==
+X-Gm-Message-State: AOAM530pHjV8mojBMy6UnnY2XtX6UX+225imknzIUc81GSQaWH9n3PSO
+        /UOyhRp3M/h2zRM+QSedg3idYTNkcFc=
+X-Google-Smtp-Source: ABdhPJyJa0Ar6zhwTzpXPgu+dQti0rQ4UmUdMJFm394s0u5cnXNripBnDUz2KRlG+nvrUOlcfC7Xiw==
+X-Received: by 2002:a17:906:d101:: with SMTP id b1mr4392215ejz.80.1607030835270;
+        Thu, 03 Dec 2020 13:27:15 -0800 (PST)
 Received: from xws.fritz.box (pd9e5a6ef.dip0.t-ipconnect.de. [217.229.166.239])
-        by smtp.gmail.com with ESMTPSA id e3sm1656169ejq.96.2020.12.03.13.27.03
+        by smtp.gmail.com with ESMTPSA id e3sm1656169ejq.96.2020.12.03.13.27.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Dec 2020 13:27:04 -0800 (PST)
+        Thu, 03 Dec 2020 13:27:14 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
@@ -67,14 +67,15 @@ Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
         Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 4/9] platform/surface: aggregator: Add trace points
-Date:   Thu,  3 Dec 2020 22:26:35 +0100
-Message-Id: <20201203212640.663931-5-luzmaximilian@gmail.com>
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH v2 9/9] platform/surface: Add Surface ACPI Notify driver
+Date:   Thu,  3 Dec 2020 22:26:40 +0100
+Message-Id: <20201203212640.663931-10-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20201203212640.663931-1-luzmaximilian@gmail.com>
 References: <20201203212640.663931-1-luzmaximilian@gmail.com>
@@ -84,902 +85,1125 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add trace points to the Surface Aggregator subsystem core. These trace
-points can be used to track packets, requests, and allocations. They are
-further intended for debugging and testing/validation, specifically in
-combination with the error injection capabilities introduced in the
-subsequent commit.
+The Surface ACPI Notify (SAN) device provides an ACPI interface to the
+Surface Aggregator EC, specifically the Surface Serial Hub interface.
+This interface allows EC requests to be made from ACPI code and can
+convert a subset of EC events back to ACPI notifications.
+
+Specifically, this interface provides a GenericSerialBus operation
+region ACPI code can execute a request by writing the request command
+data and payload to this operation region and reading back the
+corresponding response via a write-then-read operation. Furthermore,
+this interface provides a _DSM method to be called when certain events
+from the EC have been received, essentially turning them into ACPI
+notifications.
+
+The driver provided in this commit essentially takes care of translating
+the request data written to the operation region, executing the request,
+waiting for it to finish, and finally writing and translating back the
+response (if the request has one). Furthermore, this driver takes care
+of enabling the events handled via ACPI _DSM calls. Lastly, this driver
+also exposes an interface providing discrete GPU (dGPU) power-on
+notifications on the Surface Book 2, which are also received via the
+operation region interface (but not handled by the SAN driver directly),
+making them accessible to other drivers (such as a dGPU hot-plug driver
+that may be added later on).
+
+On 5th and 6th generation Surface devices (Surface Pro 5/2017, Pro 6,
+Book 2, Laptop 1 and 2), the SAN interface provides full battery and
+thermal subsystem access, as well as other EC based functionality. On
+those models, battery and thermal sensor devices are implemented as
+standard ACPI devices of that type, however, forward ACPI calls to the
+corresponding Surface Aggregator EC request via the SAN interface and
+receive corresponding notifications (e.g. battery information change)
+from it. This interface is therefore required to provide said
+functionality on those devices.
 
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
 
 Changes in v1 (from RFC):
- - add copyright line
+ - add copyright lines
  - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
- - pack tracing structs
+ - fix invalid pointer calculation in san_evt_tmp
+ - add explicit dependency on CONFIG_ACPI
+ - remove default in Kconfig
 
 Changes in v2:
- - add compiletime check on SSAM_PTR_UID_LEN
- - fix ssam_trace_get_command_field_u8() macro
- - use dedicated trace event class for timeout reaper
+ - drop explicit dependency on ACPI in Kconfig
  - use printk specifier for hex prefix instead of hard-coding it
+ - spell check comments and strings, fix typos
  - unify comment style
  - run checkpatch --strict, fix warnings and style issues
 
 ---
- drivers/platform/surface/aggregator/Makefile  |   3 +
- .../platform/surface/aggregator/controller.c  |   5 +
- drivers/platform/surface/aggregator/core.c    |   3 +
- .../surface/aggregator/ssh_packet_layer.c     |  26 +-
- .../surface/aggregator/ssh_request_layer.c    |  18 +
- drivers/platform/surface/aggregator/trace.h   | 601 ++++++++++++++++++
- 6 files changed, 655 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/surface/aggregator/trace.h
+ .../surface_aggregator/clients/index.rst      |   1 +
+ .../surface_aggregator/clients/san.rst        |  44 +
+ MAINTAINERS                                   |   2 +
+ drivers/platform/surface/Kconfig              |  19 +
+ drivers/platform/surface/Makefile             |   1 +
+ .../platform/surface/surface_acpi_notify.c    | 886 ++++++++++++++++++
+ include/linux/surface_acpi_notify.h           |  39 +
+ 7 files changed, 992 insertions(+)
+ create mode 100644 Documentation/driver-api/surface_aggregator/clients/san.rst
+ create mode 100644 drivers/platform/surface/surface_acpi_notify.c
+ create mode 100644 include/linux/surface_acpi_notify.h
 
-diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
-index faad18d4a7f2..b8b24c8ec310 100644
---- a/drivers/platform/surface/aggregator/Makefile
-+++ b/drivers/platform/surface/aggregator/Makefile
-@@ -1,6 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0+
- # Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
+diff --git a/Documentation/driver-api/surface_aggregator/clients/index.rst b/Documentation/driver-api/surface_aggregator/clients/index.rst
+index ab260ec82cfb..3ccabce23271 100644
+--- a/Documentation/driver-api/surface_aggregator/clients/index.rst
++++ b/Documentation/driver-api/surface_aggregator/clients/index.rst
+@@ -11,6 +11,7 @@ This is the documentation for client drivers themselves. Refer to
+    :maxdepth: 1
 
-+# For include/trace/define_trace.h to include trace.h
-+CFLAGS_core.o = -I$(src)
-+
- obj-$(CONFIG_SURFACE_AGGREGATOR) += surface_aggregator.o
+    cdev
++   san
 
- surface_aggregator-objs := core.o
-diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-index 89ffd8e45787..09302bfba530 100644
---- a/drivers/platform/surface/aggregator/controller.c
-+++ b/drivers/platform/surface/aggregator/controller.c
-@@ -31,6 +31,8 @@
- #include "ssh_msgb.h"
- #include "ssh_request_layer.h"
+ .. only::  subproject and html
 
-+#include "trace.h"
-+
-
- /* -- Safe counters. -------------------------------------------------------- */
-
-@@ -569,6 +571,7 @@ static void __ssam_event_item_free_generic(struct ssam_event_item *item)
-  */
- static void ssam_event_item_free(struct ssam_event_item *item)
- {
-+	trace_ssam_event_item_free(item);
- 	item->ops.free(item);
- }
-
-@@ -604,6 +607,8 @@ static struct ssam_event_item *ssam_event_item_alloc(size_t len, gfp_t flags)
- 	}
-
- 	item->event.length = len;
-+
-+	trace_ssam_event_item_alloc(item, len);
- 	return item;
- }
-
-diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
-index 1a53d7ce66a1..b5d44ab61f06 100644
---- a/drivers/platform/surface/aggregator/core.c
-+++ b/drivers/platform/surface/aggregator/core.c
-@@ -24,6 +24,9 @@
- #include <linux/surface_aggregator/controller.h>
- #include "controller.h"
-
-+#define CREATE_TRACE_POINTS
-+#include "trace.h"
-+
-
- /* -- Static controller reference. ------------------------------------------ */
-
-diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-index 8bc19837cde0..f5ec58a1faa2 100644
---- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
-+++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-@@ -25,6 +25,8 @@
- #include "ssh_packet_layer.h"
- #include "ssh_parser.h"
-
-+#include "trace.h"
-+
- /*
-  * To simplify reasoning about the code below, we define a few concepts. The
-  * system below is similar to a state-machine for packets, however, there are
-@@ -227,6 +229,8 @@ static void __ssh_ptl_packet_release(struct kref *kref)
- {
- 	struct ssh_packet *p = container_of(kref, struct ssh_packet, refcnt);
-
-+	trace_ssam_packet_release(p);
-+
- 	ptl_dbg_cond(p->ptl, "ptl: releasing packet %p\n", p);
- 	p->ops->release(p);
- }
-@@ -355,6 +359,7 @@ static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
- 	buffer->ptr = (u8 *)(*packet + 1);
- 	buffer->len = SSH_MSG_LEN_CTRL;
-
-+	trace_ssam_ctrl_packet_alloc(*packet, buffer->len);
- 	return 0;
- }
-
-@@ -364,6 +369,7 @@ static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
-  */
- static void ssh_ctrl_packet_free(struct ssh_packet *p)
- {
-+	trace_ssam_ctrl_packet_free(p);
- 	kmem_cache_free(ssh_ctrl_packet_cache, p);
- }
-
-@@ -395,7 +401,12 @@ static void ssh_packet_next_try(struct ssh_packet *p)
- 	u8 base = ssh_packet_priority_get_base(p->priority);
- 	u8 try = ssh_packet_priority_get_try(p->priority);
-
--	p->priority = __SSH_PACKET_PRIORITY(base, try + 1);
-+	/*
-+	 * Ensure that we write the priority in one go via WRITE_ONCE() so we
-+	 * can access it via READ_ONCE() for tracing. Note that other access
-+	 * is guarded by the queue lock, so no need to use READ_ONCE() there.
-+	 */
-+	WRITE_ONCE(p->priority, __SSH_PACKET_PRIORITY(base, try + 1));
- }
-
- /* Must be called with queue lock held. */
-@@ -553,6 +564,7 @@ static void __ssh_ptl_complete(struct ssh_packet *p, int status)
- {
- 	struct ssh_ptl *ptl = READ_ONCE(p->ptl);
-
-+	trace_ssam_packet_complete(p, status);
- 	ptl_dbg_cond(ptl, "ptl: completing packet %p (status: %d)\n", p, status);
-
- 	if (p->ops->complete)
-@@ -1007,6 +1019,8 @@ int ssh_ptl_submit(struct ssh_ptl *ptl, struct ssh_packet *p)
- 	struct ssh_ptl *ptl_old;
- 	int status;
-
-+	trace_ssam_packet_submit(p);
-+
- 	/* Validate packet fields. */
- 	if (test_bit(SSH_PACKET_TY_FLUSH_BIT, &p->state)) {
- 		if (p->data.ptr || test_bit(SSH_PACKET_TY_SEQUENCED_BIT, &p->state))
-@@ -1056,6 +1070,8 @@ static int __ssh_ptl_resubmit(struct ssh_packet *packet)
- 	int status;
- 	u8 try;
-
-+	trace_ssam_packet_resubmit(packet);
-+
- 	spin_lock(&packet->ptl->queue.lock);
-
- 	/* Check if the packet is out of tries. */
-@@ -1139,6 +1155,8 @@ void ssh_ptl_cancel(struct ssh_packet *p)
- 	if (test_and_set_bit(SSH_PACKET_SF_CANCELED_BIT, &p->state))
- 		return;
-
-+	trace_ssam_packet_cancel(p);
-+
- 	/*
- 	 * Lock packet and commit with memory barrier. If this packet has
- 	 * already been locked, it's going to be removed and completed by
-@@ -1191,6 +1209,8 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
- 	bool resub = false;
- 	int status;
-
-+	trace_ssam_ptl_timeout_reap(atomic_read(&ptl->pending.count));
-+
- 	/*
- 	 * Mark reaper as "not pending". This is done before checking any
- 	 * packets to avoid lost-update type problems.
-@@ -1213,6 +1233,8 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
- 			continue;
- 		}
-
-+		trace_ssam_packet_timeout(p);
-+
- 		status = __ssh_ptl_resubmit(p);
-
- 		/*
-@@ -1405,6 +1427,8 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
- 	if (!frame)	/* Not enough data. */
- 		return aligned.ptr - source->ptr;
-
-+	trace_ssam_rx_frame_received(frame);
-+
- 	switch (frame->type) {
- 	case SSH_FRAME_TYPE_ACK:
- 		ssh_ptl_acknowledge(ptl, frame->seq);
-diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
-index 80bea8e781d3..e91d2ed4c173 100644
---- a/drivers/platform/surface/aggregator/ssh_request_layer.c
-+++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
-@@ -22,6 +22,8 @@
- #include "ssh_packet_layer.h"
- #include "ssh_request_layer.h"
-
-+#include "trace.h"
-+
- /*
-  * SSH_RTL_REQUEST_TIMEOUT - Request timeout.
-  *
-@@ -144,6 +146,8 @@ static void ssh_rtl_complete_with_status(struct ssh_request *rqst, int status)
- {
- 	struct ssh_rtl *rtl = ssh_request_rtl(rqst);
-
-+	trace_ssam_request_complete(rqst, status);
-+
- 	/* rtl/ptl may not be set if we're canceling before submitting. */
- 	rtl_dbg_cond(rtl, "rtl: completing request (rqid: %#06x, status: %d)\n",
- 		     ssh_request_get_rqid_safe(rqst), status);
-@@ -157,6 +161,8 @@ static void ssh_rtl_complete_with_rsp(struct ssh_request *rqst,
- {
- 	struct ssh_rtl *rtl = ssh_request_rtl(rqst);
-
-+	trace_ssam_request_complete(rqst, 0);
-+
- 	rtl_dbg(rtl, "rtl: completing request with response (rqid: %#06x)\n",
- 		ssh_request_get_rqid(rqst));
-
-@@ -329,6 +335,8 @@ static void ssh_rtl_tx_work_fn(struct work_struct *work)
-  */
- int ssh_rtl_submit(struct ssh_rtl *rtl, struct ssh_request *rqst)
- {
-+	trace_ssam_request_submit(rqst);
-+
- 	/*
- 	 * Ensure that requests expecting a response are sequenced. If this
- 	 * invariant ever changes, see the comment in ssh_rtl_complete() on what
-@@ -439,6 +447,8 @@ static void ssh_rtl_complete(struct ssh_rtl *rtl,
- 	struct ssh_request *p, *n;
- 	u16 rqid = get_unaligned_le16(&command->rqid);
-
-+	trace_ssam_rx_response_received(command, command_data->len);
-+
- 	/*
- 	 * Get request from pending based on request ID and mark it as response
- 	 * received and locked.
-@@ -688,6 +698,8 @@ bool ssh_rtl_cancel(struct ssh_request *rqst, bool pending)
- 	if (test_and_set_bit(SSH_REQUEST_SF_CANCELED_BIT, &rqst->state))
- 		return true;
-
-+	trace_ssam_request_cancel(rqst);
-+
- 	if (pending)
- 		canceled = ssh_rtl_cancel_pending(rqst);
- 	else
-@@ -779,6 +791,8 @@ static void ssh_rtl_timeout_reap(struct work_struct *work)
- 	ktime_t timeout = rtl->rtx_timeout.timeout;
- 	ktime_t next = KTIME_MAX;
-
-+	trace_ssam_rtl_timeout_reap(atomic_read(&rtl->pending.count));
-+
- 	/*
- 	 * Mark reaper as "not pending". This is done before checking any
- 	 * requests to avoid lost-update type problems.
-@@ -822,6 +836,8 @@ static void ssh_rtl_timeout_reap(struct work_struct *work)
-
- 	/* Cancel and complete the request. */
- 	list_for_each_entry_safe(r, n, &claimed, node) {
-+		trace_ssam_request_timeout(r);
-+
- 		/*
- 		 * At this point we've removed the packet from pending. This
- 		 * means that we've obtained the last (only) reference of the
-@@ -849,6 +865,8 @@ static void ssh_rtl_timeout_reap(struct work_struct *work)
- static void ssh_rtl_rx_event(struct ssh_rtl *rtl, const struct ssh_command *cmd,
- 			     const struct ssam_span *data)
- {
-+	trace_ssam_rx_event_received(cmd, data->len);
-+
- 	rtl_dbg(rtl, "rtl: handling event (rqid: %#06x)\n",
- 		get_unaligned_le16(&cmd->rqid));
-
-diff --git a/drivers/platform/surface/aggregator/trace.h b/drivers/platform/surface/aggregator/trace.h
+diff --git a/Documentation/driver-api/surface_aggregator/clients/san.rst b/Documentation/driver-api/surface_aggregator/clients/san.rst
 new file mode 100644
-index 000000000000..dcca8007d876
+index 000000000000..38c2580e7758
 --- /dev/null
-+++ b/drivers/platform/surface/aggregator/trace.h
-@@ -0,0 +1,601 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/Documentation/driver-api/surface_aggregator/clients/san.rst
+@@ -0,0 +1,44 @@
++.. SPDX-License-Identifier: GPL-2.0+
++
++.. |san_client_link| replace:: :c:func:`san_client_link`
++.. |san_dgpu_notifier_register| replace:: :c:func:`san_dgpu_notifier_register`
++.. |san_dgpu_notifier_unregister| replace:: :c:func:`san_dgpu_notifier_unregister`
++
++===================
++Surface ACPI Notify
++===================
++
++The Surface ACPI Notify (SAN) device provides the bridge between ACPI and
++SAM controller. Specifically, ACPI code can execute requests and handle
++battery and thermal events via this interface. In addition to this, events
++relating to the discrete GPU (dGPU) of the Surface Book 2 can be sent from
++ACPI code (note: the Surface Book 3 uses a different method for this). The
++only currently known event sent via this interface is a dGPU power-on
++notification. While this driver handles the former part internally, it only
++relays the dGPU events to any other driver interested via its public API and
++does not handle them.
++
++The public interface of this driver is split into two parts: Client
++registration and notifier-block registration.
++
++A client to the SAN interface can be linked as consumer to the SAN device
++via |san_client_link|. This can be used to ensure that the a client
++receiving dGPU events does not miss any events due to the SAN interface not
++being set up as this forces the client driver to unbind once the SAN driver
++is unbound.
++
++Notifier-blocks can be registered by any device for as long as the module is
++loaded, regardless of being linked as client or not. Registration is done
++with |san_dgpu_notifier_register|. If the notifier is not needed any more, it
++should be unregistered via |san_dgpu_notifier_unregister|.
++
++Consult the API documentation below for more details.
++
++
++API Documentation
++=================
++
++.. kernel-doc:: include/linux/surface_acpi_notify.h
++
++.. kernel-doc:: drivers/platform/surface/surface_acpi_notify.c
++    :export:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f5a788f445a4..894c9ef1b8d6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11699,7 +11699,9 @@ W:	https://github.com/linux-surface/surface-aggregator-module
+ C:	irc://chat.freenode.net/##linux-surface
+ F:	Documentation/driver-api/surface_aggregator/
+ F:	drivers/platform/surface/aggregator/
++F:	drivers/platform/surface/surface_acpi_notify.c
+ F:	drivers/platform/surface/surface_aggregator_cdev.c
++F:	include/linux/surface_acpi_notify.h
+ F:	include/linux/surface_aggregator/
+ F:	include/uapi/linux/surface_aggregator/
+
+diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+index cecad7a0cb7b..88818320105e 100644
+--- a/drivers/platform/surface/Kconfig
++++ b/drivers/platform/surface/Kconfig
+@@ -40,6 +40,25 @@ config SURFACE_3_POWER_OPREGION
+ 	  This driver provides support for ACPI operation
+ 	  region of the Surface 3 battery platform driver.
+
++config SURFACE_ACPI_NOTIFY
++	tristate "Surface ACPI Notify Driver"
++	depends on SURFACE_AGGREGATOR
++	help
++	  Surface ACPI Notify (SAN) driver for Microsoft Surface devices.
++
++	  This driver provides support for the ACPI interface (called SAN) of
++	  the Surface System Aggregator Module (SSAM) EC. This interface is used
++	  on 5th- and 6th-generation Microsoft Surface devices (including
++	  Surface Pro 5 and 6, Surface Book 2, Surface Laptops 1 and 2, and in
++	  reduced functionality on the Surface Laptop 3) to execute SSAM
++	  requests directly from ACPI code, as well as receive SSAM events and
++	  turn them into ACPI notifications. It essentially acts as a
++	  translation layer between the SSAM controller and ACPI.
++
++	  Specifically, this driver may be needed for battery status reporting,
++	  thermal sensor access, and real-time clock information, depending on
++	  the Surface device in question.
++
+ config SURFACE_AGGREGATOR_CDEV
+ 	tristate "Surface System Aggregator Module User-Space Interface"
+ 	depends on SURFACE_AGGREGATOR
+diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
+index 161f0ad05795..3eb971006877 100644
+--- a/drivers/platform/surface/Makefile
++++ b/drivers/platform/surface/Makefile
+@@ -7,6 +7,7 @@
+ obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
+ obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
+ obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
++obj-$(CONFIG_SURFACE_ACPI_NOTIFY)	+= surface_acpi_notify.o
+ obj-$(CONFIG_SURFACE_AGGREGATOR)	+= aggregator/
+ obj-$(CONFIG_SURFACE_AGGREGATOR_CDEV)	+= surface_aggregator_cdev.o
+ obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
+diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+new file mode 100644
+index 000000000000..8cd67a669c86
+--- /dev/null
++++ b/drivers/platform/surface/surface_acpi_notify.c
+@@ -0,0 +1,886 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * Trace points for SSAM/SSH.
++ * Driver for the Surface ACPI Notify (SAN) interface/shim.
 + *
-+ * Copyright (C) 2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Translates communication from ACPI to Surface System Aggregator Module
++ * (SSAM/SAM) requests and back, specifically SAM-over-SSH. Translates SSAM
++ * events back to ACPI notifications. Allows handling of discrete GPU
++ * notifications sent from ACPI via the SAN interface by providing them to any
++ * registered external driver.
++ *
++ * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
 + */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM surface_aggregator
-+
-+#if !defined(_SURFACE_AGGREGATOR_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _SURFACE_AGGREGATOR_TRACE_H
-+
-+#include <linux/surface_aggregator/serial_hub.h>
 +
 +#include <asm/unaligned.h>
-+#include <linux/tracepoint.h>
++#include <linux/acpi.h>
++#include <linux/delay.h>
++#include <linux/jiffies.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/notifier.h>
++#include <linux/platform_device.h>
++#include <linux/rwsem.h>
 +
-+TRACE_DEFINE_ENUM(SSH_FRAME_TYPE_DATA_SEQ);
-+TRACE_DEFINE_ENUM(SSH_FRAME_TYPE_DATA_NSQ);
-+TRACE_DEFINE_ENUM(SSH_FRAME_TYPE_ACK);
-+TRACE_DEFINE_ENUM(SSH_FRAME_TYPE_NAK);
++#include <linux/surface_aggregator/controller.h>
++#include <linux/surface_acpi_notify.h>
 +
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_LOCKED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_QUEUED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_PENDING_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_TRANSMITTING_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_TRANSMITTED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_ACKED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_CANCELED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_SF_COMPLETED_BIT);
++struct san_data {
++	struct device *dev;
++	struct ssam_controller *ctrl;
 +
-+TRACE_DEFINE_ENUM(SSH_PACKET_TY_FLUSH_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_TY_SEQUENCED_BIT);
-+TRACE_DEFINE_ENUM(SSH_PACKET_TY_BLOCKING_BIT);
++	struct acpi_connection_info info;
 +
-+TRACE_DEFINE_ENUM(SSH_PACKET_FLAGS_SF_MASK);
-+TRACE_DEFINE_ENUM(SSH_PACKET_FLAGS_TY_MASK);
++	struct ssam_event_notifier nf_bat;
++	struct ssam_event_notifier nf_tmp;
++};
 +
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_LOCKED_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_QUEUED_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_PENDING_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_TRANSMITTING_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_TRANSMITTED_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_RSPRCVD_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_CANCELED_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_SF_COMPLETED_BIT);
++#define to_san_data(ptr, member) \
++	container_of(ptr, struct san_data, member)
 +
-+TRACE_DEFINE_ENUM(SSH_REQUEST_TY_FLUSH_BIT);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_TY_HAS_RESPONSE_BIT);
 +
-+TRACE_DEFINE_ENUM(SSH_REQUEST_FLAGS_SF_MASK);
-+TRACE_DEFINE_ENUM(SSH_REQUEST_FLAGS_TY_MASK);
++/* -- dGPU notifier interface. ---------------------------------------------- */
 +
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SAM);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_BAT);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_TMP);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_PMC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_FAN);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_PoM);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_DBG);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_KBD);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_FWU);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_UNI);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_LPC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_TCL);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SFL);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_KIP);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_EXT);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_BLD);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_BAS);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SEN);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SRQ);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_MCU);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_HID);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_TCH);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_BKL);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_TAM);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_ACC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_UFI);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_USC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_PEN);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_VID);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_AUD);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_SMC);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_KPD);
-+TRACE_DEFINE_ENUM(SSAM_SSH_TC_REG);
++struct san_rqsg_if {
++	struct rw_semaphore lock;
++	struct device *dev;
++	struct blocking_notifier_head nh;
++};
 +
-+#define SSAM_PTR_UID_LEN		9
-+#define SSAM_U8_FIELD_NOT_APPLICABLE	((u16)-1)
-+#define SSAM_SEQ_NOT_APPLICABLE		((u16)-1)
-+#define SSAM_RQID_NOT_APPLICABLE	((u32)-1)
-+#define SSAM_SSH_TC_NOT_APPLICABLE	0
++static struct san_rqsg_if san_rqsg_if = {
++	.lock = __RWSEM_INITIALIZER(san_rqsg_if.lock),
++	.dev = NULL,
++	.nh = BLOCKING_NOTIFIER_INIT(san_rqsg_if.nh),
++};
 +
-+#ifndef _SURFACE_AGGREGATOR_TRACE_HELPERS
-+#define _SURFACE_AGGREGATOR_TRACE_HELPERS
-+
-+/**
-+ * ssam_trace_ptr_uid() - Convert the pointer to a non-pointer UID string.
-+ * @ptr: The pointer to convert.
-+ * @uid_str: A buffer of length SSAM_PTR_UID_LEN where the UID will be stored.
-+ *
-+ * Converts the given pointer into a UID string that is safe to be shared
-+ * with userspace and logs, i.e. doesn't give away the real memory location.
-+ */
-+static inline void ssam_trace_ptr_uid(const void *ptr, char *uid_str)
++static int san_set_rqsg_interface_device(struct device *dev)
 +{
-+	char buf[2 * sizeof(void *) + 1];
++	int status = 0;
 +
-+	BUILD_BUG_ON(ARRAY_SIZE(buf) < SSAM_PTR_UID_LEN);
++	down_write(&san_rqsg_if.lock);
++	if (!san_rqsg_if.dev && dev)
++		san_rqsg_if.dev = dev;
++	else
++		status = -EBUSY;
++	up_write(&san_rqsg_if.lock);
 +
-+	snprintf(buf, ARRAY_SIZE(buf), "%p", ptr);
-+	memcpy(uid_str, &buf[ARRAY_SIZE(buf) - SSAM_PTR_UID_LEN],
-+	       SSAM_PTR_UID_LEN);
++	return status;
 +}
 +
 +/**
-+ * ssam_trace_get_packet_seq() - Read the packet's sequence ID.
-+ * @p: The packet.
++ * san_client_link() - Link client as consumer to SAN device.
++ * @client: The client to link.
 + *
-+ * Return: Returns the packet's sequence ID (SEQ) field if present, or
-+ * %SSAM_SEQ_NOT_APPLICABLE if not (e.g. flush packet).
++ * Sets up a device link between the provided client device as consumer and
++ * the SAN device as provider. This function can be used to ensure that the
++ * SAN interface has been set up and will be set up for as long as the driver
++ * of the client device is bound. This guarantees that, during that time, all
++ * dGPU events will be received by any registered notifier.
++ *
++ * The link will be automatically removed once the client device's driver is
++ * unbound.
++ *
++ * Return: Returns zero on success, %-ENXIO if the SAN interface has not been
++ * set up yet, and %-ENOMEM if device link creation failed.
 + */
-+static inline u16 ssam_trace_get_packet_seq(const struct ssh_packet *p)
++int san_client_link(struct device *client)
 +{
-+	if (!p->data.ptr || p->data.len < SSH_MESSAGE_LENGTH(0))
-+		return SSAM_SEQ_NOT_APPLICABLE;
++	const u32 flags = DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_CONSUMER;
++	struct device_link *link;
 +
-+	return p->data.ptr[SSH_MSGOFFSET_FRAME(seq)];
++	down_read(&san_rqsg_if.lock);
++
++	if (!san_rqsg_if.dev) {
++		up_read(&san_rqsg_if.lock);
++		return -ENXIO;
++	}
++
++	link = device_link_add(client, san_rqsg_if.dev, flags);
++	if (!link) {
++		up_read(&san_rqsg_if.lock);
++		return -ENOMEM;
++	}
++
++	if (READ_ONCE(link->status) == DL_STATE_SUPPLIER_UNBIND) {
++		up_read(&san_rqsg_if.lock);
++		return -ENXIO;
++	}
++
++	up_read(&san_rqsg_if.lock);
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(san_client_link);
 +
 +/**
-+ * ssam_trace_get_request_id() - Read the packet's request ID.
-+ * @p: The packet.
++ * san_dgpu_notifier_register() - Register a SAN dGPU notifier.
++ * @nb: The notifier-block to register.
 + *
-+ * Return: Returns the packet's request ID (RQID) field if the packet
-+ * represents a request with command data, or %SSAM_RQID_NOT_APPLICABLE if not
-+ * (e.g. flush request, control packet).
++ * Registers a SAN dGPU notifier, receiving any new SAN dGPU events sent from
++ * ACPI. The registered notifier will be called with &struct san_dgpu_event
++ * as notifier data and the command ID of that event as notifier action.
 + */
-+static inline u32 ssam_trace_get_request_id(const struct ssh_packet *p)
++int san_dgpu_notifier_register(struct notifier_block *nb)
 +{
-+	if (!p->data.ptr || p->data.len < SSH_COMMAND_MESSAGE_LENGTH(0))
-+		return SSAM_RQID_NOT_APPLICABLE;
-+
-+	return get_unaligned_le16(&p->data.ptr[SSH_MSGOFFSET_COMMAND(rqid)]);
++	return blocking_notifier_chain_register(&san_rqsg_if.nh, nb);
 +}
++EXPORT_SYMBOL_GPL(san_dgpu_notifier_register);
 +
 +/**
-+ * ssam_trace_get_request_tc() - Read the packet's request target category.
-+ * @p: The packet.
-+ *
-+ * Return: Returns the packet's request target category (TC) field if the
-+ * packet represents a request with command data, or %SSAM_TC_NOT_APPLICABLE
-+ * if not (e.g. flush request, control packet).
++ * san_dgpu_notifier_unregister() - Unregister a SAN dGPU notifier.
++ * @nb: The notifier-block to unregister.
 + */
-+static inline u32 ssam_trace_get_request_tc(const struct ssh_packet *p)
++int san_dgpu_notifier_unregister(struct notifier_block *nb)
 +{
-+	if (!p->data.ptr || p->data.len < SSH_COMMAND_MESSAGE_LENGTH(0))
-+		return SSAM_SSH_TC_NOT_APPLICABLE;
++	return blocking_notifier_chain_unregister(&san_rqsg_if.nh, nb);
++}
++EXPORT_SYMBOL_GPL(san_dgpu_notifier_unregister);
 +
-+	return get_unaligned_le16(&p->data.ptr[SSH_MSGOFFSET_COMMAND(tc)]);
++static int san_dgpu_notifier_call(struct san_dgpu_event *evt)
++{
++	int ret;
++
++	ret = blocking_notifier_call_chain(&san_rqsg_if.nh, evt->command, evt);
++	return notifier_to_errno(ret);
 +}
 +
-+#endif /* _SURFACE_AGGREGATOR_TRACE_HELPERS */
-+
-+#define ssam_trace_get_command_field_u8(packet, field) \
-+	((!(packet) || (packet)->data.len < SSH_COMMAND_MESSAGE_LENGTH(0)) \
-+	 ? 0 : (packet)->data.ptr[SSH_MSGOFFSET_COMMAND(field)])
-+
-+#define ssam_show_generic_u8_field(value)				\
-+	__print_symbolic(value,						\
-+		{ SSAM_U8_FIELD_NOT_APPLICABLE,		"N/A" }		\
-+	)
-+
-+#define ssam_show_frame_type(ty)					\
-+	__print_symbolic(ty,						\
-+		{ SSH_FRAME_TYPE_DATA_SEQ,		"DSEQ" },	\
-+		{ SSH_FRAME_TYPE_DATA_NSQ,		"DNSQ" },	\
-+		{ SSH_FRAME_TYPE_ACK,			"ACK"  },	\
-+		{ SSH_FRAME_TYPE_NAK,			"NAK"  }	\
-+	)
-+
-+#define ssam_show_packet_type(type)					\
-+	__print_flags(flags & SSH_PACKET_FLAGS_TY_MASK, "",		\
-+		{ BIT(SSH_PACKET_TY_FLUSH_BIT),		"F" },		\
-+		{ BIT(SSH_PACKET_TY_SEQUENCED_BIT),	"S" },		\
-+		{ BIT(SSH_PACKET_TY_BLOCKING_BIT),	"B" }		\
-+	)
-+
-+#define ssam_show_packet_state(state)					\
-+	__print_flags(flags & SSH_PACKET_FLAGS_SF_MASK, "",		\
-+		{ BIT(SSH_PACKET_SF_LOCKED_BIT),	"L" },		\
-+		{ BIT(SSH_PACKET_SF_QUEUED_BIT),	"Q" },		\
-+		{ BIT(SSH_PACKET_SF_PENDING_BIT),	"P" },		\
-+		{ BIT(SSH_PACKET_SF_TRANSMITTING_BIT),	"S" },		\
-+		{ BIT(SSH_PACKET_SF_TRANSMITTED_BIT),	"T" },		\
-+		{ BIT(SSH_PACKET_SF_ACKED_BIT),		"A" },		\
-+		{ BIT(SSH_PACKET_SF_CANCELED_BIT),	"C" },		\
-+		{ BIT(SSH_PACKET_SF_COMPLETED_BIT),	"F" }		\
-+	)
-+
-+#define ssam_show_packet_seq(seq)					\
-+	__print_symbolic(seq,						\
-+		{ SSAM_SEQ_NOT_APPLICABLE,		"N/A" }		\
-+	)
-+
-+#define ssam_show_request_type(flags)					\
-+	__print_flags((flags) & SSH_REQUEST_FLAGS_TY_MASK, "",		\
-+		{ BIT(SSH_REQUEST_TY_FLUSH_BIT),	"F" },		\
-+		{ BIT(SSH_REQUEST_TY_HAS_RESPONSE_BIT),	"R" }		\
-+	)
-+
-+#define ssam_show_request_state(flags)					\
-+	__print_flags((flags) & SSH_REQUEST_FLAGS_SF_MASK, "",		\
-+		{ BIT(SSH_REQUEST_SF_LOCKED_BIT),	"L" },		\
-+		{ BIT(SSH_REQUEST_SF_QUEUED_BIT),	"Q" },		\
-+		{ BIT(SSH_REQUEST_SF_PENDING_BIT),	"P" },		\
-+		{ BIT(SSH_REQUEST_SF_TRANSMITTING_BIT),	"S" },		\
-+		{ BIT(SSH_REQUEST_SF_TRANSMITTED_BIT),	"T" },		\
-+		{ BIT(SSH_REQUEST_SF_RSPRCVD_BIT),	"A" },		\
-+		{ BIT(SSH_REQUEST_SF_CANCELED_BIT),	"C" },		\
-+		{ BIT(SSH_REQUEST_SF_COMPLETED_BIT),	"F" }		\
-+	)
-+
-+#define ssam_show_request_id(rqid)					\
-+	__print_symbolic(rqid,						\
-+		{ SSAM_RQID_NOT_APPLICABLE,		"N/A" }		\
-+	)
-+
-+#define ssam_show_ssh_tc(rqid)						\
-+	__print_symbolic(rqid,						\
-+		{ SSAM_SSH_TC_NOT_APPLICABLE,		"N/A" },	\
-+		{ SSAM_SSH_TC_SAM,			"SAM" },	\
-+		{ SSAM_SSH_TC_BAT,			"BAT" },	\
-+		{ SSAM_SSH_TC_TMP,			"TMP" },	\
-+		{ SSAM_SSH_TC_PMC,			"PMC" },	\
-+		{ SSAM_SSH_TC_FAN,			"FAN" },	\
-+		{ SSAM_SSH_TC_PoM,			"PoM" },	\
-+		{ SSAM_SSH_TC_DBG,			"DBG" },	\
-+		{ SSAM_SSH_TC_KBD,			"KBD" },	\
-+		{ SSAM_SSH_TC_FWU,			"FWU" },	\
-+		{ SSAM_SSH_TC_UNI,			"UNI" },	\
-+		{ SSAM_SSH_TC_LPC,			"LPC" },	\
-+		{ SSAM_SSH_TC_TCL,			"TCL" },	\
-+		{ SSAM_SSH_TC_SFL,			"SFL" },	\
-+		{ SSAM_SSH_TC_KIP,			"KIP" },	\
-+		{ SSAM_SSH_TC_EXT,			"EXT" },	\
-+		{ SSAM_SSH_TC_BLD,			"BLD" },	\
-+		{ SSAM_SSH_TC_BAS,			"BAS" },	\
-+		{ SSAM_SSH_TC_SEN,			"SEN" },	\
-+		{ SSAM_SSH_TC_SRQ,			"SRQ" },	\
-+		{ SSAM_SSH_TC_MCU,			"MCU" },	\
-+		{ SSAM_SSH_TC_HID,			"HID" },	\
-+		{ SSAM_SSH_TC_TCH,			"TCH" },	\
-+		{ SSAM_SSH_TC_BKL,			"BKL" },	\
-+		{ SSAM_SSH_TC_TAM,			"TAM" },	\
-+		{ SSAM_SSH_TC_ACC,			"ACC" },	\
-+		{ SSAM_SSH_TC_UFI,			"UFI" },	\
-+		{ SSAM_SSH_TC_USC,			"USC" },	\
-+		{ SSAM_SSH_TC_PEN,			"PEN" },	\
-+		{ SSAM_SSH_TC_VID,			"VID" },	\
-+		{ SSAM_SSH_TC_AUD,			"AUD" },	\
-+		{ SSAM_SSH_TC_SMC,			"SMC" },	\
-+		{ SSAM_SSH_TC_KPD,			"KPD" },	\
-+		{ SSAM_SSH_TC_REG,			"REG" }		\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_frame_class,
-+	TP_PROTO(const struct ssh_frame *frame),
-+
-+	TP_ARGS(frame),
-+
-+	TP_STRUCT__entry(
-+		__field(u8, type)
-+		__field(u8, seq)
-+		__field(u16, len)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->type = frame->type;
-+		__entry->seq = frame->seq;
-+		__entry->len = get_unaligned_le16(&frame->len);
-+	),
-+
-+	TP_printk("ty=%s, seq=%#04x, len=%u",
-+		ssam_show_frame_type(__entry->type),
-+		__entry->seq,
-+		__entry->len
-+	)
-+);
-+
-+#define DEFINE_SSAM_FRAME_EVENT(name)				\
-+	DEFINE_EVENT(ssam_frame_class, ssam_##name,		\
-+		TP_PROTO(const struct ssh_frame *frame),	\
-+		TP_ARGS(frame)					\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_command_class,
-+	TP_PROTO(const struct ssh_command *cmd, u16 len),
-+
-+	TP_ARGS(cmd, len),
-+
-+	TP_STRUCT__entry(
-+		__field(u16, rqid)
-+		__field(u16, len)
-+		__field(u8, tc)
-+		__field(u8, cid)
-+		__field(u8, iid)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->rqid = get_unaligned_le16(&cmd->rqid);
-+		__entry->tc = cmd->tc;
-+		__entry->cid = cmd->cid;
-+		__entry->iid = cmd->iid;
-+		__entry->len = len;
-+	),
-+
-+	TP_printk("rqid=%#06x, tc=%s, cid=%#04x, iid=%#04x, len=%u",
-+		__entry->rqid,
-+		ssam_show_ssh_tc(__entry->tc),
-+		__entry->cid,
-+		__entry->iid,
-+		__entry->len
-+	)
-+);
-+
-+#define DEFINE_SSAM_COMMAND_EVENT(name)					\
-+	DEFINE_EVENT(ssam_command_class, ssam_##name,			\
-+		TP_PROTO(const struct ssh_command *cmd, u16 len),	\
-+		TP_ARGS(cmd, len)					\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_packet_class,
-+	TP_PROTO(const struct ssh_packet *packet),
-+
-+	TP_ARGS(packet),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, state)
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+		__field(u8, priority)
-+		__field(u16, length)
-+		__field(u16, seq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->state = READ_ONCE(packet->state);
-+		ssam_trace_ptr_uid(packet, __entry->uid);
-+		__entry->priority = READ_ONCE(packet->priority);
-+		__entry->length = packet->data.len;
-+		__entry->seq = ssam_trace_get_packet_seq(packet);
-+	),
-+
-+	TP_printk("uid=%s, seq=%s, ty=%s, pri=%#04x, len=%u, sta=%s",
-+		__entry->uid,
-+		ssam_show_packet_seq(__entry->seq),
-+		ssam_show_packet_type(__entry->state),
-+		__entry->priority,
-+		__entry->length,
-+		ssam_show_packet_state(__entry->state)
-+	)
-+);
-+
-+#define DEFINE_SSAM_PACKET_EVENT(name)				\
-+	DEFINE_EVENT(ssam_packet_class, ssam_##name,		\
-+		TP_PROTO(const struct ssh_packet *packet),	\
-+		TP_ARGS(packet)					\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_packet_status_class,
-+	TP_PROTO(const struct ssh_packet *packet, int status),
-+
-+	TP_ARGS(packet, status),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, state)
-+		__field(int, status)
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+		__field(u8, priority)
-+		__field(u16, length)
-+		__field(u16, seq)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->state = READ_ONCE(packet->state);
-+		__entry->status = status;
-+		ssam_trace_ptr_uid(packet, __entry->uid);
-+		__entry->priority = READ_ONCE(packet->priority);
-+		__entry->length = packet->data.len;
-+		__entry->seq = ssam_trace_get_packet_seq(packet);
-+	),
-+
-+	TP_printk("uid=%s, seq=%s, ty=%s, pri=%#04x, len=%u, sta=%s, status=%d",
-+		__entry->uid,
-+		ssam_show_packet_seq(__entry->seq),
-+		ssam_show_packet_type(__entry->state),
-+		__entry->priority,
-+		__entry->length,
-+		ssam_show_packet_state(__entry->state),
-+		__entry->status
-+	)
-+);
-+
-+#define DEFINE_SSAM_PACKET_STATUS_EVENT(name)				\
-+	DEFINE_EVENT(ssam_packet_status_class, ssam_##name,		\
-+		TP_PROTO(const struct ssh_packet *packet, int status),	\
-+		TP_ARGS(packet, status)					\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_request_class,
-+	TP_PROTO(const struct ssh_request *request),
-+
-+	TP_ARGS(request),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, state)
-+		__field(u32, rqid)
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+		__field(u8, tc)
-+		__field(u16, cid)
-+		__field(u16, iid)
-+	),
-+
-+	TP_fast_assign(
-+		const struct ssh_packet *p = &request->packet;
-+
-+		/* Use packet for UID so we can match requests to packets. */
-+		__entry->state = READ_ONCE(request->state);
-+		__entry->rqid = ssam_trace_get_request_id(p);
-+		ssam_trace_ptr_uid(p, __entry->uid);
-+		__entry->tc = ssam_trace_get_request_tc(p);
-+		__entry->cid = ssam_trace_get_command_field_u8(p, cid);
-+		__entry->iid = ssam_trace_get_command_field_u8(p, iid);
-+	),
-+
-+	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tc=%s, cid=%s, iid=%s",
-+		__entry->uid,
-+		ssam_show_request_id(__entry->rqid),
-+		ssam_show_request_type(__entry->state),
-+		ssam_show_request_state(__entry->state),
-+		ssam_show_ssh_tc(__entry->tc),
-+		ssam_show_generic_u8_field(__entry->cid),
-+		ssam_show_generic_u8_field(__entry->iid)
-+	)
-+);
-+
-+#define DEFINE_SSAM_REQUEST_EVENT(name)				\
-+	DEFINE_EVENT(ssam_request_class, ssam_##name,		\
-+		TP_PROTO(const struct ssh_request *request),	\
-+		TP_ARGS(request)				\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_request_status_class,
-+	TP_PROTO(const struct ssh_request *request, int status),
-+
-+	TP_ARGS(request, status),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, state)
-+		__field(u32, rqid)
-+		__field(int, status)
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+		__field(u8, tc)
-+		__field(u16, cid)
-+		__field(u16, iid)
-+	),
-+
-+	TP_fast_assign(
-+		const struct ssh_packet *p = &request->packet;
-+
-+		/* Use packet for UID so we can match requests to packets. */
-+		__entry->state = READ_ONCE(request->state);
-+		__entry->rqid = ssam_trace_get_request_id(p);
-+		__entry->status = status;
-+		ssam_trace_ptr_uid(p, __entry->uid);
-+		__entry->tc = ssam_trace_get_request_tc(p);
-+		__entry->cid = ssam_trace_get_command_field_u8(p, cid);
-+		__entry->iid = ssam_trace_get_command_field_u8(p, iid);
-+	),
-+
-+	TP_printk("uid=%s, rqid=%s, ty=%s, sta=%s, tc=%s, cid=%s, iid=%s, status=%d",
-+		__entry->uid,
-+		ssam_show_request_id(__entry->rqid),
-+		ssam_show_request_type(__entry->state),
-+		ssam_show_request_state(__entry->state),
-+		ssam_show_ssh_tc(__entry->tc),
-+		ssam_show_generic_u8_field(__entry->cid),
-+		ssam_show_generic_u8_field(__entry->iid),
-+		__entry->status
-+	)
-+);
-+
-+#define DEFINE_SSAM_REQUEST_STATUS_EVENT(name)				\
-+	DEFINE_EVENT(ssam_request_status_class, ssam_##name,		\
-+		TP_PROTO(const struct ssh_request *request, int status),\
-+		TP_ARGS(request, status)				\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_alloc_class,
-+	TP_PROTO(void *ptr, size_t len),
-+
-+	TP_ARGS(ptr, len),
-+
-+	TP_STRUCT__entry(
-+		__field(size_t, len)
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->len = len;
-+		ssam_trace_ptr_uid(ptr, __entry->uid);
-+	),
-+
-+	TP_printk("uid=%s, len=%zu", __entry->uid, __entry->len)
-+);
-+
-+#define DEFINE_SSAM_ALLOC_EVENT(name)					\
-+	DEFINE_EVENT(ssam_alloc_class, ssam_##name,			\
-+		TP_PROTO(void *ptr, size_t len),			\
-+		TP_ARGS(ptr, len)					\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_free_class,
-+	TP_PROTO(void *ptr),
-+
-+	TP_ARGS(ptr),
-+
-+	TP_STRUCT__entry(
-+		__array(char, uid, SSAM_PTR_UID_LEN)
-+	),
-+
-+	TP_fast_assign(
-+		ssam_trace_ptr_uid(ptr, __entry->uid);
-+	),
-+
-+	TP_printk("uid=%s", __entry->uid)
-+);
-+
-+#define DEFINE_SSAM_FREE_EVENT(name)					\
-+	DEFINE_EVENT(ssam_free_class, ssam_##name,			\
-+		TP_PROTO(void *ptr),					\
-+		TP_ARGS(ptr)						\
-+	)
-+
-+DECLARE_EVENT_CLASS(ssam_pending_class,
-+	TP_PROTO(unsigned int pending),
-+
-+	TP_ARGS(pending),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, pending)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->pending = pending;
-+	),
-+
-+	TP_printk("pending=%u", __entry->pending)
-+);
-+
-+#define DEFINE_SSAM_PENDING_EVENT(name)					\
-+	DEFINE_EVENT(ssam_pending_class, ssam_##name,			\
-+		TP_PROTO(unsigned int pending),				\
-+		TP_ARGS(pending)					\
-+	)
-+
-+DEFINE_SSAM_FRAME_EVENT(rx_frame_received);
-+DEFINE_SSAM_COMMAND_EVENT(rx_response_received);
-+DEFINE_SSAM_COMMAND_EVENT(rx_event_received);
-+
-+DEFINE_SSAM_PACKET_EVENT(packet_release);
-+DEFINE_SSAM_PACKET_EVENT(packet_submit);
-+DEFINE_SSAM_PACKET_EVENT(packet_resubmit);
-+DEFINE_SSAM_PACKET_EVENT(packet_timeout);
-+DEFINE_SSAM_PACKET_EVENT(packet_cancel);
-+DEFINE_SSAM_PACKET_STATUS_EVENT(packet_complete);
-+DEFINE_SSAM_PENDING_EVENT(ptl_timeout_reap);
-+
-+DEFINE_SSAM_REQUEST_EVENT(request_submit);
-+DEFINE_SSAM_REQUEST_EVENT(request_timeout);
-+DEFINE_SSAM_REQUEST_EVENT(request_cancel);
-+DEFINE_SSAM_REQUEST_STATUS_EVENT(request_complete);
-+DEFINE_SSAM_PENDING_EVENT(rtl_timeout_reap);
-+
-+DEFINE_SSAM_ALLOC_EVENT(ctrl_packet_alloc);
-+DEFINE_SSAM_FREE_EVENT(ctrl_packet_free);
-+
-+DEFINE_SSAM_ALLOC_EVENT(event_item_alloc);
-+DEFINE_SSAM_FREE_EVENT(event_item_free);
-+
-+#endif /* _SURFACE_AGGREGATOR_TRACE_H */
-+
-+/* This part must be outside protection */
-+#undef TRACE_INCLUDE_PATH
-+#undef TRACE_INCLUDE_FILE
-+
-+#define TRACE_INCLUDE_PATH .
-+#define TRACE_INCLUDE_FILE trace
-+
-+#include <trace/define_trace.h>
++
++/* -- ACPI _DSM event relay. ------------------------------------------------ */
++
++#define SAN_DSM_REVISION	0
++
++/* 93b666c5-70c6-469f-a215-3d487c91ab3c */
++static const guid_t SAN_DSM_UUID =
++	GUID_INIT(0x93b666c5, 0x70c6, 0x469f, 0xa2, 0x15, 0x3d,
++		  0x48, 0x7c, 0x91, 0xab, 0x3c);
++
++enum san_dsm_event_fn {
++	SAN_DSM_EVENT_FN_BAT1_STAT = 0x03,
++	SAN_DSM_EVENT_FN_BAT1_INFO = 0x04,
++	SAN_DSM_EVENT_FN_ADP1_STAT = 0x05,
++	SAN_DSM_EVENT_FN_ADP1_INFO = 0x06,
++	SAN_DSM_EVENT_FN_BAT2_STAT = 0x07,
++	SAN_DSM_EVENT_FN_BAT2_INFO = 0x08,
++	SAN_DSM_EVENT_FN_THERMAL   = 0x09,
++	SAN_DSM_EVENT_FN_DPTF      = 0x0a,
++};
++
++enum sam_event_cid_bat {
++	SAM_EVENT_CID_BAT_BIX  = 0x15,
++	SAM_EVENT_CID_BAT_BST  = 0x16,
++	SAM_EVENT_CID_BAT_ADP  = 0x17,
++	SAM_EVENT_CID_BAT_PROT = 0x18,
++	SAM_EVENT_CID_BAT_DPTF = 0x4f,
++};
++
++enum sam_event_cid_tmp {
++	SAM_EVENT_CID_TMP_TRIP = 0x0b,
++};
++
++struct san_event_work {
++	struct delayed_work work;
++	struct device *dev;
++	struct ssam_event event;	/* must be last */
++};
++
++static int san_acpi_notify_event(struct device *dev, u64 func,
++				 union acpi_object *param)
++{
++	acpi_handle san = ACPI_HANDLE(dev);
++	union acpi_object *obj;
++	int status = 0;
++
++	if (!acpi_check_dsm(san, &SAN_DSM_UUID, SAN_DSM_REVISION, 1 << func))
++		return 0;
++
++	dev_dbg(dev, "notify event %#04llx\n", func);
++
++	obj = acpi_evaluate_dsm_typed(san, &SAN_DSM_UUID, SAN_DSM_REVISION,
++				      func, param, ACPI_TYPE_BUFFER);
++	if (!obj)
++		return -EFAULT;
++
++	if (obj->buffer.length != 1 || obj->buffer.pointer[0] != 0) {
++		dev_err(dev, "got unexpected result from _DSM\n");
++		status = -EPROTO;
++	}
++
++	ACPI_FREE(obj);
++	return status;
++}
++
++static int san_evt_bat_adp(struct device *dev, const struct ssam_event *event)
++{
++	int status;
++
++	status = san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_ADP1_STAT, NULL);
++	if (status)
++		return status;
++
++	/*
++	 * Ensure that the battery states get updated correctly. When the
++	 * battery is fully charged and an adapter is plugged in, it sometimes
++	 * is not updated correctly, instead showing it as charging.
++	 * Explicitly trigger battery updates to fix this.
++	 */
++
++	status = san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_BAT1_STAT, NULL);
++	if (status)
++		return status;
++
++	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_BAT2_STAT, NULL);
++}
++
++static int san_evt_bat_bix(struct device *dev, const struct ssam_event *event)
++{
++	enum san_dsm_event_fn fn;
++
++	if (event->instance_id == 0x02)
++		fn = SAN_DSM_EVENT_FN_BAT2_INFO;
++	else
++		fn = SAN_DSM_EVENT_FN_BAT1_INFO;
++
++	return san_acpi_notify_event(dev, fn, NULL);
++}
++
++static int san_evt_bat_bst(struct device *dev, const struct ssam_event *event)
++{
++	enum san_dsm_event_fn fn;
++
++	if (event->instance_id == 0x02)
++		fn = SAN_DSM_EVENT_FN_BAT2_STAT;
++	else
++		fn = SAN_DSM_EVENT_FN_BAT1_STAT;
++
++	return san_acpi_notify_event(dev, fn, NULL);
++}
++
++static int san_evt_bat_dptf(struct device *dev, const struct ssam_event *event)
++{
++	union acpi_object payload;
++
++	/*
++	 * The Surface ACPI expects a buffer and not a package. It specifically
++	 * checks for ObjectType (Arg3) == 0x03. This will cause a warning in
++	 * acpica/nsarguments.c, but that warning can be safely ignored.
++	 */
++	payload.type = ACPI_TYPE_BUFFER;
++	payload.buffer.length = event->length;
++	payload.buffer.pointer = (u8 *)&event->data[0];
++
++	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_DPTF, &payload);
++}
++
++static unsigned long san_evt_bat_delay(u8 cid)
++{
++	switch (cid) {
++	case SAM_EVENT_CID_BAT_ADP:
++		/*
++		 * Wait for battery state to update before signaling adapter
++		 * change.
++		 */
++		return msecs_to_jiffies(5000);
++
++	case SAM_EVENT_CID_BAT_BST:
++		/* Ensure we do not miss anything important due to caching. */
++		return msecs_to_jiffies(2000);
++
++	default:
++		return 0;
++	}
++}
++
++static bool san_evt_bat(const struct ssam_event *event, struct device *dev)
++{
++	int status;
++
++	switch (event->command_id) {
++	case SAM_EVENT_CID_BAT_BIX:
++		status = san_evt_bat_bix(dev, event);
++		break;
++
++	case SAM_EVENT_CID_BAT_BST:
++		status = san_evt_bat_bst(dev, event);
++		break;
++
++	case SAM_EVENT_CID_BAT_ADP:
++		status = san_evt_bat_adp(dev, event);
++		break;
++
++	case SAM_EVENT_CID_BAT_PROT:
++		/*
++		 * TODO: Implement support for battery protection status change
++		 *       event.
++		 */
++		return true;
++
++	case SAM_EVENT_CID_BAT_DPTF:
++		status = san_evt_bat_dptf(dev, event);
++		break;
++
++	default:
++		return false;
++	}
++
++	if (status) {
++		dev_err(dev, "error handling power event (cid = %#04x)\n",
++			event->command_id);
++	}
++
++	return true;
++}
++
++static void san_evt_bat_workfn(struct work_struct *work)
++{
++	struct san_event_work *ev;
++
++	ev = container_of(work, struct san_event_work, work.work);
++	san_evt_bat(&ev->event, ev->dev);
++	kfree(ev);
++}
++
++static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
++			  const struct ssam_event *event)
++{
++	struct san_data *d = to_san_data(nf, nf_bat);
++	struct san_event_work *work;
++	unsigned long delay = san_evt_bat_delay(event->command_id);
++
++	if (delay == 0)
++		return san_evt_bat(event, d->dev) ? SSAM_NOTIF_HANDLED : 0;
++
++	work = kzalloc(sizeof(*work) + event->length, GFP_KERNEL);
++	if (!work)
++		return ssam_notifier_from_errno(-ENOMEM);
++
++	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
++	work->dev = d->dev;
++
++	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
++
++	schedule_delayed_work(&work->work, delay);
++	return SSAM_NOTIF_HANDLED;
++}
++
++static int san_evt_tmp_trip(struct device *dev, const struct ssam_event *event)
++{
++	union acpi_object param;
++
++	/*
++	 * The Surface ACPI expects an integer and not a package. This will
++	 * cause a warning in acpica/nsarguments.c, but that warning can be
++	 * safely ignored.
++	 */
++	param.type = ACPI_TYPE_INTEGER;
++	param.integer.value = event->instance_id;
++
++	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_THERMAL, &param);
++}
++
++static bool san_evt_tmp(const struct ssam_event *event, struct device *dev)
++{
++	int status;
++
++	switch (event->command_id) {
++	case SAM_EVENT_CID_TMP_TRIP:
++		status = san_evt_tmp_trip(dev, event);
++		break;
++
++	default:
++		return false;
++	}
++
++	if (status) {
++		dev_err(dev, "error handling thermal event (cid = %#04x)\n",
++			event->command_id);
++	}
++
++	return true;
++}
++
++static u32 san_evt_tmp_nf(struct ssam_event_notifier *nf,
++			  const struct ssam_event *event)
++{
++	struct san_data *d = to_san_data(nf, nf_tmp);
++
++	return san_evt_tmp(event, d->dev) ? SSAM_NOTIF_HANDLED : 0;
++}
++
++
++/* -- ACPI GSB OperationRegion handler -------------------------------------- */
++
++struct gsb_data_in {
++	u8 cv;
++} __packed;
++
++struct gsb_data_rqsx {
++	u8 cv;				/* Command value (san_gsb_request_cv). */
++	u8 tc;				/* Target category. */
++	u8 tid;				/* Target ID. */
++	u8 iid;				/* Instance ID. */
++	u8 snc;				/* Expect-response-flag. */
++	u8 cid;				/* Command ID. */
++	u16 cdl;			/* Payload length. */
++	u8 pld[];			/* Payload. */
++} __packed;
++
++struct gsb_data_etwl {
++	u8 cv;				/* Command value (should be 0x02). */
++	u8 etw3;			/* Unknown. */
++	u8 etw4;			/* Unknown. */
++	u8 msg[];			/* Error message (ASCIIZ). */
++} __packed;
++
++struct gsb_data_out {
++	u8 status;			/* _SSH communication status. */
++	u8 len;				/* _SSH payload length. */
++	u8 pld[];			/* _SSH payload. */
++} __packed;
++
++union gsb_buffer_data {
++	struct gsb_data_in   in;	/* Common input. */
++	struct gsb_data_rqsx rqsx;	/* RQSX input. */
++	struct gsb_data_etwl etwl;	/* ETWL input. */
++	struct gsb_data_out  out;	/* Output. */
++};
++
++struct gsb_buffer {
++	u8 status;			/* GSB AttribRawProcess status. */
++	u8 len;				/* GSB AttribRawProcess length. */
++	union gsb_buffer_data data;
++} __packed;
++
++#define SAN_GSB_MAX_RQSX_PAYLOAD  (U8_MAX - 2 - sizeof(struct gsb_data_rqsx))
++#define SAN_GSB_MAX_RESPONSE	  (U8_MAX - 2 - sizeof(struct gsb_data_out))
++
++#define SAN_GSB_COMMAND		0
++
++enum san_gsb_request_cv {
++	SAN_GSB_REQUEST_CV_RQST = 0x01,
++	SAN_GSB_REQUEST_CV_ETWL = 0x02,
++	SAN_GSB_REQUEST_CV_RQSG = 0x03,
++};
++
++#define SAN_REQUEST_NUM_TRIES	5
++
++static acpi_status san_etwl(struct san_data *d, struct gsb_buffer *b)
++{
++	struct gsb_data_etwl *etwl = &b->data.etwl;
++
++	if (b->len < sizeof(struct gsb_data_etwl)) {
++		dev_err(d->dev, "invalid ETWL package (len = %d)\n", b->len);
++		return AE_OK;
++	}
++
++	dev_err(d->dev, "ETWL(%#04x, %#04x): %.*s\n", etwl->etw3, etwl->etw4,
++		(unsigned int)(b->len - sizeof(struct gsb_data_etwl)),
++		(char *)etwl->msg);
++
++	/* Indicate success. */
++	b->status = 0x00;
++	b->len = 0x00;
++
++	return AE_OK;
++}
++
++static
++struct gsb_data_rqsx *san_validate_rqsx(struct device *dev, const char *type,
++					struct gsb_buffer *b)
++{
++	struct gsb_data_rqsx *rqsx = &b->data.rqsx;
++
++	if (b->len < sizeof(struct gsb_data_rqsx)) {
++		dev_err(dev, "invalid %s package (len = %d)\n", type, b->len);
++		return NULL;
++	}
++
++	if (get_unaligned(&rqsx->cdl) != b->len - sizeof(struct gsb_data_rqsx)) {
++		dev_err(dev, "bogus %s package (len = %d, cdl = %d)\n",
++			type, b->len, get_unaligned(&rqsx->cdl));
++		return NULL;
++	}
++
++	if (get_unaligned(&rqsx->cdl) > SAN_GSB_MAX_RQSX_PAYLOAD) {
++		dev_err(dev, "payload for %s package too large (cdl = %d)\n",
++			type, get_unaligned(&rqsx->cdl));
++		return NULL;
++	}
++
++	return rqsx;
++}
++
++static void gsb_rqsx_response_error(struct gsb_buffer *gsb, int status)
++{
++	gsb->status = 0x00;
++	gsb->len = 0x02;
++	gsb->data.out.status = (u8)(-status);
++	gsb->data.out.len = 0x00;
++}
++
++static void gsb_rqsx_response_success(struct gsb_buffer *gsb, u8 *ptr, size_t len)
++{
++	gsb->status = 0x00;
++	gsb->len = len + 2;
++	gsb->data.out.status = 0x00;
++	gsb->data.out.len = len;
++
++	if (len)
++		memcpy(&gsb->data.out.pld[0], ptr, len);
++}
++
++static acpi_status san_rqst_fixup_suspended(struct san_data *d,
++					    struct ssam_request *rqst,
++					    struct gsb_buffer *gsb)
++{
++	if (rqst->target_category == SSAM_SSH_TC_BAS && rqst->command_id == 0x0D) {
++		u8 base_state = 1;
++
++		/* Base state quirk:
++		 * The base state may be queried from ACPI when the EC is still
++		 * suspended. In this case it will return '-EPERM'. This query
++		 * will only be triggered from the ACPI lid GPE interrupt, thus
++		 * we are either in laptop or studio mode (base status 0x01 or
++		 * 0x02). Furthermore, we will only get here if the device (and
++		 * EC) have been suspended.
++		 *
++		 * We now assume that the device is in laptop mode (0x01). This
++		 * has the drawback that it will wake the device when unfolding
++		 * it in studio mode, but it also allows us to avoid actively
++		 * waiting for the EC to wake up, which may incur a notable
++		 * delay.
++		 */
++
++		dev_dbg(d->dev, "rqst: fixup: base-state quirk\n");
++
++		gsb_rqsx_response_success(gsb, &base_state, sizeof(base_state));
++		return AE_OK;
++	}
++
++	gsb_rqsx_response_error(gsb, -ENXIO);
++	return AE_OK;
++}
++
++static acpi_status san_rqst(struct san_data *d, struct gsb_buffer *buffer)
++{
++	u8 rspbuf[SAN_GSB_MAX_RESPONSE];
++	struct gsb_data_rqsx *gsb_rqst;
++	struct ssam_request rqst;
++	struct ssam_response rsp;
++	int status = 0;
++
++	gsb_rqst = san_validate_rqsx(d->dev, "RQST", buffer);
++	if (!gsb_rqst)
++		return AE_OK;
++
++	rqst.target_category = gsb_rqst->tc;
++	rqst.target_id = gsb_rqst->tid;
++	rqst.command_id = gsb_rqst->cid;
++	rqst.instance_id = gsb_rqst->iid;
++	rqst.flags = gsb_rqst->snc ? SSAM_REQUEST_HAS_RESPONSE : 0;
++	rqst.length = get_unaligned(&gsb_rqst->cdl);
++	rqst.payload = &gsb_rqst->pld[0];
++
++	rsp.capacity = ARRAY_SIZE(rspbuf);
++	rsp.length = 0;
++	rsp.pointer = &rspbuf[0];
++
++	/* Handle suspended device. */
++	if (d->dev->power.is_suspended) {
++		dev_warn(d->dev, "rqst: device is suspended, not executing\n");
++		return san_rqst_fixup_suspended(d, &rqst, buffer);
++	}
++
++	status = __ssam_retry(ssam_request_sync_onstack, SAN_REQUEST_NUM_TRIES,
++			      d->ctrl, &rqst, &rsp, SAN_GSB_MAX_RQSX_PAYLOAD);
++
++	if (!status) {
++		gsb_rqsx_response_success(buffer, rsp.pointer, rsp.length);
++	} else {
++		dev_err(d->dev, "rqst: failed with error %d\n", status);
++		gsb_rqsx_response_error(buffer, status);
++	}
++
++	return AE_OK;
++}
++
++static acpi_status san_rqsg(struct san_data *d, struct gsb_buffer *buffer)
++{
++	struct gsb_data_rqsx *gsb_rqsg;
++	struct san_dgpu_event evt;
++	int status;
++
++	gsb_rqsg = san_validate_rqsx(d->dev, "RQSG", buffer);
++	if (!gsb_rqsg)
++		return AE_OK;
++
++	evt.category = gsb_rqsg->tc;
++	evt.target = gsb_rqsg->tid;
++	evt.command = gsb_rqsg->cid;
++	evt.instance = gsb_rqsg->iid;
++	evt.length = get_unaligned(&gsb_rqsg->cdl);
++	evt.payload = &gsb_rqsg->pld[0];
++
++	status = san_dgpu_notifier_call(&evt);
++	if (!status) {
++		gsb_rqsx_response_success(buffer, NULL, 0);
++	} else {
++		dev_err(d->dev, "rqsg: failed with error %d\n", status);
++		gsb_rqsx_response_error(buffer, status);
++	}
++
++	return AE_OK;
++}
++
++static acpi_status san_opreg_handler(u32 function, acpi_physical_address command,
++				     u32 bits, u64 *value64, void *opreg_context,
++				     void *region_context)
++{
++	struct san_data *d = to_san_data(opreg_context, info);
++	struct gsb_buffer *buffer = (struct gsb_buffer *)value64;
++	int accessor_type = (function & 0xFFFF0000) >> 16;
++
++	if (command != SAN_GSB_COMMAND) {
++		dev_warn(d->dev, "unsupported command: %#04llx\n", command);
++		return AE_OK;
++	}
++
++	if (accessor_type != ACPI_GSB_ACCESS_ATTRIB_RAW_PROCESS) {
++		dev_err(d->dev, "invalid access type: %#04x\n", accessor_type);
++		return AE_OK;
++	}
++
++	/* Buffer must have at least contain the command-value. */
++	if (buffer->len == 0) {
++		dev_err(d->dev, "request-package too small\n");
++		return AE_OK;
++	}
++
++	switch (buffer->data.in.cv) {
++	case SAN_GSB_REQUEST_CV_RQST:
++		return san_rqst(d, buffer);
++
++	case SAN_GSB_REQUEST_CV_ETWL:
++		return san_etwl(d, buffer);
++
++	case SAN_GSB_REQUEST_CV_RQSG:
++		return san_rqsg(d, buffer);
++
++	default:
++		dev_warn(d->dev, "unsupported SAN0 request (cv: %#04x)\n",
++			 buffer->data.in.cv);
++		return AE_OK;
++	}
++}
++
++
++/* -- Driver setup. --------------------------------------------------------- */
++
++static int san_events_register(struct platform_device *pdev)
++{
++	struct san_data *d = platform_get_drvdata(pdev);
++	int status;
++
++	d->nf_bat.base.priority = 1;
++	d->nf_bat.base.fn = san_evt_bat_nf;
++	d->nf_bat.event.reg = SSAM_EVENT_REGISTRY_SAM;
++	d->nf_bat.event.id.target_category = SSAM_SSH_TC_BAT;
++	d->nf_bat.event.id.instance = 0;
++	d->nf_bat.event.mask = SSAM_EVENT_MASK_TARGET;
++	d->nf_bat.event.flags = SSAM_EVENT_SEQUENCED;
++
++	d->nf_tmp.base.priority = 1;
++	d->nf_tmp.base.fn = san_evt_tmp_nf;
++	d->nf_tmp.event.reg = SSAM_EVENT_REGISTRY_SAM;
++	d->nf_tmp.event.id.target_category = SSAM_SSH_TC_TMP;
++	d->nf_tmp.event.id.instance = 0;
++	d->nf_tmp.event.mask = SSAM_EVENT_MASK_TARGET;
++	d->nf_tmp.event.flags = SSAM_EVENT_SEQUENCED;
++
++	status = ssam_notifier_register(d->ctrl, &d->nf_bat);
++	if (status)
++		return status;
++
++	status = ssam_notifier_register(d->ctrl, &d->nf_tmp);
++	if (status)
++		ssam_notifier_unregister(d->ctrl, &d->nf_bat);
++
++	return status;
++}
++
++static void san_events_unregister(struct platform_device *pdev)
++{
++	struct san_data *d = platform_get_drvdata(pdev);
++
++	ssam_notifier_unregister(d->ctrl, &d->nf_bat);
++	ssam_notifier_unregister(d->ctrl, &d->nf_tmp);
++}
++
++#define san_consumer_printk(level, dev, handle, fmt, ...)			\
++do {										\
++	char *path = "<error getting consumer path>";				\
++	struct acpi_buffer buffer = {						\
++		.length = ACPI_ALLOCATE_BUFFER,					\
++		.pointer = NULL,						\
++	};									\
++										\
++	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_FULL_PATHNAME, &buffer)))	\
++		path = buffer.pointer;						\
++										\
++	dev_##level(dev, "[%s]: " fmt, path, ##__VA_ARGS__);			\
++	kfree(buffer.pointer);							\
++} while (0)
++
++#define san_consumer_dbg(dev, handle, fmt, ...) \
++	san_consumer_printk(dbg, dev, handle, fmt, ##__VA_ARGS__)
++
++#define san_consumer_warn(dev, handle, fmt, ...) \
++	san_consumer_printk(warn, dev, handle, fmt, ##__VA_ARGS__)
++
++static bool is_san_consumer(struct platform_device *pdev, acpi_handle handle)
++{
++	struct acpi_handle_list dep_devices;
++	acpi_handle supplier = ACPI_HANDLE(&pdev->dev);
++	acpi_status status;
++	int i;
++
++	if (!acpi_has_method(handle, "_DEP"))
++		return false;
++
++	status = acpi_evaluate_reference(handle, "_DEP", NULL, &dep_devices);
++	if (ACPI_FAILURE(status)) {
++		san_consumer_dbg(&pdev->dev, handle, "failed to evaluate _DEP\n");
++		return false;
++	}
++
++	for (i = 0; i < dep_devices.count; i++) {
++		if (dep_devices.handles[i] == supplier)
++			return true;
++	}
++
++	return false;
++}
++
++static acpi_status san_consumer_setup(acpi_handle handle, u32 lvl,
++				      void *context, void **rv)
++{
++	const u32 flags = DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_SUPPLIER;
++	struct platform_device *pdev = context;
++	struct acpi_device *adev;
++	struct device_link *link;
++
++	if (!is_san_consumer(pdev, handle))
++		return AE_OK;
++
++	/* Ignore ACPI devices that are not present. */
++	if (acpi_bus_get_device(handle, &adev) != 0)
++		return AE_OK;
++
++	san_consumer_dbg(&pdev->dev, handle, "creating device link\n");
++
++	/* Try to set up device links, ignore but log errors. */
++	link = device_link_add(&adev->dev, &pdev->dev, flags);
++	if (!link) {
++		san_consumer_warn(&pdev->dev, handle, "failed to create device link\n");
++		return AE_OK;
++	}
++
++	return AE_OK;
++}
++
++static int san_consumer_links_setup(struct platform_device *pdev)
++{
++	acpi_status status;
++
++	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
++				     ACPI_UINT32_MAX, san_consumer_setup, NULL,
++				     pdev, NULL);
++
++	return status ? -EFAULT : 0;
++}
++
++static int san_probe(struct platform_device *pdev)
++{
++	acpi_handle san = ACPI_HANDLE(&pdev->dev);
++	struct ssam_controller *ctrl;
++	struct san_data *data;
++	acpi_status astatus;
++	int status;
++
++	ctrl = ssam_client_bind(&pdev->dev);
++	if (IS_ERR(ctrl))
++		return PTR_ERR(ctrl) == -ENODEV ? -EPROBE_DEFER : PTR_ERR(ctrl);
++
++	status = san_consumer_links_setup(pdev);
++	if (status)
++		return status;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->dev = &pdev->dev;
++	data->ctrl = ctrl;
++
++	platform_set_drvdata(pdev, data);
++
++	astatus = acpi_install_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
++						     &san_opreg_handler, NULL,
++						     &data->info);
++	if (ACPI_FAILURE(astatus))
++		return -ENXIO;
++
++	status = san_events_register(pdev);
++	if (status)
++		goto err_enable_events;
++
++	status = san_set_rqsg_interface_device(&pdev->dev);
++	if (status)
++		goto err_install_dev;
++
++	acpi_walk_dep_device_list(san);
++	return 0;
++
++err_install_dev:
++	san_events_unregister(pdev);
++err_enable_events:
++	acpi_remove_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
++					  &san_opreg_handler);
++	return status;
++}
++
++static int san_remove(struct platform_device *pdev)
++{
++	acpi_handle san = ACPI_HANDLE(&pdev->dev);
++
++	san_set_rqsg_interface_device(NULL);
++	acpi_remove_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
++					  &san_opreg_handler);
++	san_events_unregister(pdev);
++
++	/*
++	 * We have unregistered our event sources. Now we need to ensure that
++	 * all delayed works they may have spawned are run to completion.
++	 */
++	flush_scheduled_work();
++
++	return 0;
++}
++
++static const struct acpi_device_id san_match[] = {
++	{ "MSHW0091" },
++	{ },
++};
++MODULE_DEVICE_TABLE(acpi, san_match);
++
++static struct platform_driver surface_acpi_notify = {
++	.probe = san_probe,
++	.remove = san_remove,
++	.driver = {
++		.name = "surface_acpi_notify",
++		.acpi_match_table = san_match,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++};
++module_platform_driver(surface_acpi_notify);
++
++MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
++MODULE_DESCRIPTION("Surface ACPI Notify driver for Surface System Aggregator Module");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/surface_acpi_notify.h b/include/linux/surface_acpi_notify.h
+new file mode 100644
+index 000000000000..8e3e86c7d78c
+--- /dev/null
++++ b/include/linux/surface_acpi_notify.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Interface for Surface ACPI Notify (SAN) driver.
++ *
++ * Provides access to discrete GPU notifications sent from ACPI via the SAN
++ * driver, which are not handled by this driver directly.
++ *
++ * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ */
++
++#ifndef _LINUX_SURFACE_ACPI_NOTIFY_H
++#define _LINUX_SURFACE_ACPI_NOTIFY_H
++
++#include <linux/notifier.h>
++#include <linux/types.h>
++
++/**
++ * struct san_dgpu_event - Discrete GPU ACPI event.
++ * @category: Category of the event.
++ * @target:   Target ID of the event source.
++ * @command:  Command ID of the event.
++ * @instance: Instance ID of the event source.
++ * @length:   Length of the event's payload data (in bytes).
++ * @payload:  Pointer to the event's payload data.
++ */
++struct san_dgpu_event {
++	u8 category;
++	u8 target;
++	u8 command;
++	u8 instance;
++	u16 length;
++	u8 *payload;
++};
++
++int san_client_link(struct device *client);
++int san_dgpu_notifier_register(struct notifier_block *nb);
++int san_dgpu_notifier_unregister(struct notifier_block *nb);
++
++#endif /* _LINUX_SURFACE_ACPI_NOTIFY_H */
 --
 2.29.2
 
