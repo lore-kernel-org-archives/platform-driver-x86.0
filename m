@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15109C83022
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F642C83022
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7399206D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDFB920637
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437132AbgLCNeN (ORCPT
+        id S2436572AbgLCNa0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:34:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 08:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436814AbgLCNa7 (ORCPT
+        id S2436463AbgLCNaX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:30:59 -0500
+        Thu, 3 Dec 2020 08:30:23 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
@@ -27,12 +27,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/23] platform/x86: thinkpad_acpi: Add BAT1 is primary battery quirk for Thinkpad Yoga 11e 4th gen
-Date:   Thu,  3 Dec 2020 08:29:30 -0500
-Message-Id: <20201203132935.931362-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.9 32/39] platform/x86: thinkpad_acpi: Add BAT1 is primary battery quirk for Thinkpad Yoga 11e 4th gen
+Date:   Thu,  3 Dec 2020 08:28:26 -0500
+Message-Id: <20201203132834.930999-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201203132935.931362-1-sashal@kernel.org>
-References: <20201203132935.931362-1-sashal@kernel.org>
+In-Reply-To: <20201203132834.930999-1-sashal@kernel.org>
+References: <20201203132834.930999-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index f196a3313690f..8c54d3707fba3 100644
+index cd7e782791c71..c7e9c0d29ed93 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9697,6 +9697,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
+@@ -9704,6 +9704,7 @@ static const struct tpacpi_quirk battery_quirk_table[] __initconst = {
  	TPACPI_Q_LNV3('R', '0', 'B', true), /* Thinkpad 11e gen 3 */
  	TPACPI_Q_LNV3('R', '0', 'C', true), /* Thinkpad 13 */
  	TPACPI_Q_LNV3('R', '0', 'J', true), /* Thinkpad 13 gen 2 */
