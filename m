@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE00C8302A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5860C83014
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB202051A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9973720754
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 13:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437026AbgLCNb5 (ORCPT
+        id S2437048AbgLCNcr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 08:31:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
+        Thu, 3 Dec 2020 08:32:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436942AbgLCNbU (ORCPT
+        id S2436918AbgLCNbP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 08:31:20 -0500
+        Thu, 3 Dec 2020 08:31:15 -0500
 From:   Sasha Levin <sashal@kernel.org>
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Timo Witte <timo.witte@gmail.com>, "Lee, Chun-Yi" <jlee@suse.com>,
+Cc:     Max Verevkin <me@maxverevkin.tk>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 9/9] platform/x86: acer-wmi: add automatic keyboard background light toggle key as KEY_LIGHTS_TOGGLE
-Date:   Thu,  3 Dec 2020 08:30:31 -0500
-Message-Id: <20201203133031.931763-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 14/14] platform/x86: intel-vbtn: Support for tablet mode on HP Pavilion 13 x360 PC
+Date:   Thu,  3 Dec 2020 08:30:10 -0500
+Message-Id: <20201203133010.931600-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20201203133031.931763-1-sashal@kernel.org>
-References: <20201203133031.931763-1-sashal@kernel.org>
+In-Reply-To: <20201203133010.931600-1-sashal@kernel.org>
+References: <20201203133010.931600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -41,35 +41,39 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Timo Witte <timo.witte@gmail.com>
+From: Max Verevkin <me@maxverevkin.tk>
 
-[ Upstream commit 9e7a005ad56aa7d6ea5830c5ffcc60bf35de380b ]
+[ Upstream commit 8b205d3e1bf52ab31cdd5c55f87c87a227793d84 ]
 
-Got a dmesg message on my AMD Renoir based Acer laptop:
-"acer_wmi: Unknown key number - 0x84" when toggling keyboard
-background light
+The Pavilion 13 x360 PC has a chassis-type which does not indicate it is
+a convertible, while it is actually a convertible. Add it to the
+dmi_switches_allow_list.
 
-Signed-off-by: Timo Witte <timo.witte@gmail.com>
-Reviewed-by: "Lee, Chun-Yi" <jlee@suse.com>
-Link: https://lore.kernel.org/r/20200804001423.36778-1-timo.witte@gmail.com
+Signed-off-by: Max Verevkin <me@maxverevkin.tk>
+Link: https://lore.kernel.org/r/20201124131652.11165-1-me@maxverevkin.tk
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel-vbtn.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 1be71f956d5c2..29f6f2bbb5fff 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -124,6 +124,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
- 	{KE_IGNORE, 0x81, {KEY_SLEEP} },
- 	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad Toggle */
-+	{KE_IGNORE, 0x84, {KEY_KBDILLUMTOGGLE} }, /* Automatic Keyboard background light toggle */
- 	{KE_KEY, KEY_TOUCHPAD_ON, {KEY_TOUCHPAD_ON} },
- 	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 1e6b4661c7645..3aba207ee1745 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -197,6 +197,12 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Stream x360 Convertible PC 11"),
+ 		},
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion 13 x360 PC"),
++		},
++	},
+ 	{} /* Array terminator */
+ };
+ 
 -- 
 2.27.0
 
