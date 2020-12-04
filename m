@@ -2,60 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077B2C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 23:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386EAC4361A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 01:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD02A2076D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Dec 2020 23:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F98224F9
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 01:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbgLCXxo (ORCPT
+        id S1726151AbgLDB7i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 18:53:44 -0500
-Received: from mail4.protonmail.ch ([185.70.40.27]:31159 "EHLO
-        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726924AbgLCXxo (ORCPT
+        Thu, 3 Dec 2020 20:59:38 -0500
+Received: from mga04.intel.com ([192.55.52.120]:63510 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgLDB7i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 18:53:44 -0500
-X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Dec 2020 18:53:43 EST
-Date:   Thu, 03 Dec 2020 23:52:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1607039582;
-        bh=76cnCDcbV+bVOdYRaXnr4zF98Zu9UULsK0fglJwpWlQ=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=WzERO6BYSIsKO3lezFEOihwh3Ru+D1+tvnT3ptqi28Uqn0Mb4wE+XvLLF+3x8FrNZ
-         7sYKKCP9jcyKH1cVoLkQhSqAbJDifVD7IRHLS/ywMWXKwqk1K4NHfLDm7FYv9C1wHe
-         oPYMeLCCfVL+og6+mRxG29hWmJkHTzPwojmiS3mI=
-To:     Elia Devito <eliadevito@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 2/2] intel-hid: add alternative method to enable switches
-Message-ID: <dZOYAwID-kLArecWZIijmPEsGIBufXoFhTl6ueCv-rXqxZow2klBtVhCB6b9OQhjTsb5zRSSBE7tlB25Za1A_VUBlzlk-vlMQb6SzBeVkzY=@protonmail.com>
-In-Reply-To: <u_tIRoW7nG4DQc7H_wcr9yn8oIc5rO9SsWKfOoJz4c9KKDJtUsYore_4tyNYxn3r0OpEOI5rsyrE__1Y2hbIc8lnS5cJKeeFmqyPdRjDVyU=@protonmail.com>
-References: <69f340f6-4301-6546-f14a-47d90208d44b@redhat.com> <20201203212148.36039-1-eliadevito@gmail.com> <u_tIRoW7nG4DQc7H_wcr9yn8oIc5rO9SsWKfOoJz4c9KKDJtUsYore_4tyNYxn3r0OpEOI5rsyrE__1Y2hbIc8lnS5cJKeeFmqyPdRjDVyU=@protonmail.com>
+        Thu, 3 Dec 2020 20:59:38 -0500
+IronPort-SDR: Gz14yc5xXlFNMV8OlI4dXZHmsP61ZKHta39QAANLThsrVnxdagaO0BbWjp8KQ7YNAphcal4Ldl
+ pQ7YjzpfVJoQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9824"; a="170745349"
+X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
+   d="scan'208";a="170745349"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 17:57:57 -0800
+IronPort-SDR: qaZVTzFz2rq/pkc+r11h5R/ogOEs12fSqr7bvnUCbos+zQgCFm5aJzGXPTMOvHl2QAu+zvyzFC
+ todbiBzBgx7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
+   d="scan'208";a="331053755"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by orsmga003.jf.intel.com with ESMTP; 03 Dec 2020 17:57:57 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/3] platform/x86: ISST: Check for unaligned mmio address
+Date:   Thu,  3 Dec 2020 17:57:44 -0800
+Message-Id: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2020. december 4., p=C3=A9ntek 0:45 keltez=C3=A9ssel, Barnab=C3=A1s P=C5=
-=91cze =C3=ADrta:
+The address should be aligned to 4 byte boundary. So send an error for
+unaligned address.
 
-> Hi
->
-> [...]
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+index aa17fd7817f8..e7e9808a1aed 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
+@@ -42,6 +42,9 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
+ 	if (io_reg->reg < 0x04 || io_reg->reg > 0xD0)
+ 		return -EINVAL;
+ 
++	if (io_reg->reg % 4)
++		return -EINVAL;
++
+ 	if (io_reg->read_write && !capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-- 
+2.25.4
 
-Oh well, I replied to the wrong email, apologies. :-(
