@@ -2,275 +2,250 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B47FC4361A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 15:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A89C4361A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 16:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CBD22B42
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 15:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8720C22B40
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 16:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgLDPXE (ORCPT
+        id S1727570AbgLDQDH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Dec 2020 10:23:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45682 "EHLO
+        Fri, 4 Dec 2020 11:03:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730570AbgLDPXE (ORCPT
+        with ESMTP id S1725923AbgLDQDG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Dec 2020 10:23:04 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C89C0613D1;
-        Fri,  4 Dec 2020 07:22:23 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id g25so4918052wmh.1;
-        Fri, 04 Dec 2020 07:22:23 -0800 (PST)
+        Fri, 4 Dec 2020 11:03:06 -0500
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83169C0613D1;
+        Fri,  4 Dec 2020 08:02:26 -0800 (PST)
+Received: by mail-wr1-x442.google.com with SMTP id s8so5806545wrw.10;
+        Fri, 04 Dec 2020 08:02:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2L4E4JEtOePK6yPQS0Wp/iPNaHfjX21E9yHOBlaREgI=;
-        b=bYjT7SE18PsWAzANz5aR9lKwWkyIo4uWpi+0bVx7fe/+HDU8YIKCyPqRrM6majo9RH
-         gNGcyp3teOLT5WazQUAHTCOxCyQcF/Vyk3BEGQsvW5/sNl5jJH8+nCLSX/THBDvBrtox
-         WdP0z3aBeplOm7oscC6hEE6Ock7blLtqbPEj9gqyYrrHsjVeV2e0jiYnNHKF8mUtXQ0h
-         uLprd7FNaFe3FM7ZGieBgAcbA1FtgdW1XzhTUHm7viQnw2ZEXKg9i8GOclip5zor5O81
-         lW9Wj55zs74Wi648bWjYr9SPn0Bo0DDbjErjyi2KP7yixNRtJb/+jq2m6arjEaGw/nyN
-         9KLg==
+        bh=pp1a+ATF8qiN53BuxdEhpfs3MjoKxfuQK/6++DNLsoo=;
+        b=s78IOj/k4aMRKel+zVIMQoHqdbO8BZaMQaaXMRnnLT+DifP8nO4swGagH7jeX6Z0o4
+         5VN+DJsbZurHiIMLZQgdQy5Eu/VwJEmbKhMTDIWHlE1nQ67Vd1qS5iOc0UEspDGho6X8
+         8Yhpc1D+dNhzLGGcog+os02u0/SwGg9B458uIFUX64TGBCfITQ1ACF6FjlDdHpEPmxu/
+         hgpwdQikPXUq5ymo7vieMI+NENa9YPJR7egdUr7rzcUDgaEOGmi0o1xatFtxOzD4GgeD
+         1ULqS10WYbZik6Rqi5/gR5ktDuuCZxHrlwxv9OZoqwCBqajcTjh7MUtiXnPn1k6bwRUT
+         X/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2L4E4JEtOePK6yPQS0Wp/iPNaHfjX21E9yHOBlaREgI=;
-        b=Q6TBqc+UL8BG9GnWbnI4P2sg4OCVGwoHidqpGKt6UR+x3vSPHx38+uyRN9RystTpaq
-         4lPYPEwDkLgZ9Yiy7mS95gFjIi0K4hmiEsNc19SUNXFY1EUYhVfftF0O5pglBtjR9pFY
-         bfzAnoSAqUzxZRnI8KhTGKvfmilZStRWpRml75707w3BTG62fkhoTn3XG98j/o9GJxr9
-         dxxx0AXkn34Mq5RaQH/twpEIQ5VxYMv7uTW49iQWLoUnB1riD8PTdBH7z6gem61cfXye
-         KtlcX/sfmKFsbJQkIA5pMVqiOV578sfANq4ZUXSshIly9iAVDZ2C/xIfnECxwUx79Y/R
-         5iNw==
-X-Gm-Message-State: AOAM533EBgAi8qKoezHAZfhff6pW+ohL4vbYCypozCN6GJdq8ZkP0sfm
-        YQRoargFjXlxBetXBHoB7fA=
-X-Google-Smtp-Source: ABdhPJwsOTPHrbwbor8/0xNE2TE1FP/kW3syTfxM2ifeeE9343cUjIHTiP56RdTapHVvsjJAahcN0A==
-X-Received: by 2002:a1c:9e41:: with SMTP id h62mr4852541wme.51.1607095342063;
-        Fri, 04 Dec 2020 07:22:22 -0800 (PST)
-Received: from pce.localnet (host-79-13-10-171.retail.telecomitalia.it. [79.13.10.171])
-        by smtp.gmail.com with ESMTPSA id k11sm3892364wrv.88.2020.12.04.07.22.20
+        bh=pp1a+ATF8qiN53BuxdEhpfs3MjoKxfuQK/6++DNLsoo=;
+        b=njq+LNkDJM+9C1a/SfxO5dzr/diI1XdTG12o8tN3nEwL6nyAC4hJ4a1gP+zCUsP72J
+         PKAH43FD3YoMyn63vM5aYrljZ2xkcXz7aOrAg4CxUE3G48aosvhOUxuCfukuMZQXwh9i
+         phcGShhq23yzU2NPT2Rkd1UskK5FNUAtAa9ii/Ja4sjeI22XkTftUzlLev1ToKpPMHSr
+         jwiWRP0KQvpJutnvlllhJgllBuNP8Qu9nSJjqsOsrrAVGqY2G7B7GY6++CNUmzyt9t9t
+         MexwYL+Y4zu8/IlPYB9kMFYKjGsXToAK76royzL6Oe1+uFMPZPmBYF3jFs2k3+NuHHLq
+         DS0g==
+X-Gm-Message-State: AOAM533/Ss1X0Js0VaA0Bq3GOMsBbgZLDR3MZSxjjN6O7ZRJH+5HF5+K
+        1ypEbrna54faPnNZiAyZylk=
+X-Google-Smtp-Source: ABdhPJxY6hYNv1daWsxdQShqXONB2ryneXzwQGO5LUgJY0eDjkuF2SkMqpTx7avUdQGhQPIXZ6hiQA==
+X-Received: by 2002:a5d:4e87:: with SMTP id e7mr5894290wru.352.1607097745217;
+        Fri, 04 Dec 2020 08:02:25 -0800 (PST)
+Received: from localhost.localdomain (host-79-13-10-171.retail.telecomitalia.it. [79.13.10.171])
+        by smtp.gmail.com with ESMTPSA id v4sm4115565wru.12.2020.12.04.08.02.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Dec 2020 07:22:21 -0800 (PST)
+        Fri, 04 Dec 2020 08:02:24 -0800 (PST)
 From:   Elia Devito <eliadevito@gmail.com>
-To:     =?utf-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
+X-Google-Original-From: Elia Devito <elia@xvalue.it>
+Cc:     Elia Devito <eliadevito@gmail.com>,
+        Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] intel-hid: add alternative method to enable switches
-Date:   Fri, 04 Dec 2020 16:22:18 +0100
-Message-ID: <2204197.ElGaqSPkdT@pce>
-In-Reply-To: <u_tIRoW7nG4DQc7H_wcr9yn8oIc5rO9SsWKfOoJz4c9KKDJtUsYore_4tyNYxn3r0OpEOI5rsyrE__1Y2hbIc8lnS5cJKeeFmqyPdRjDVyU=@protonmail.com>
-References: <69f340f6-4301-6546-f14a-47d90208d44b@redhat.com> <20201203212148.36039-1-eliadevito@gmail.com> <u_tIRoW7nG4DQc7H_wcr9yn8oIc5rO9SsWKfOoJz4c9KKDJtUsYore_4tyNYxn3r0OpEOI5rsyrE__1Y2hbIc8lnS5cJKeeFmqyPdRjDVyU=@protonmail.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] intel-hid: add support for SW_TABLET_MODE
+Date:   Fri,  4 Dec 2020 17:01:22 +0100
+Message-Id: <20201204160121.36703-1-elia@xvalue.it>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201203212000.35898-1-eliadevito@gmail.com>
+References: <20201203212000.35898-1-eliadevito@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Barnab=C3=A1s
+From: Elia Devito <eliadevito@gmail.com>
 
-In data venerd=C3=AC 4 dicembre 2020 00:45:10 CET, Barnab=C3=A1s P=C5=91cze=
- ha scritto:
-> Hi
->=20
-> 2020. december 3., cs=C3=BCt=C3=B6rt=C3=B6k 22:21 keltez=C3=A9ssel, Elia =
-Devito =C3=ADrta:
-> > [...]
-> > diff --git a/drivers/platform/x86/intel-hid.c
-> > b/drivers/platform/x86/intel-hid.c index 86261970bd8f..fed24d4f28b8
-> > 100644
-> > --- a/drivers/platform/x86/intel-hid.c
-> > +++ b/drivers/platform/x86/intel-hid.c
-> > @@ -15,6 +15,9 @@
-> >=20
-> >  #include <linux/platform_device.h>
-> >  #include <linux/suspend.h>
-> >=20
-> > +/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
-> > +#define TABLET_MODE_FLAG 0x40
->=20
-> I think `BIT(6)` would be better (linux/bits.h).
->=20
-Okay,  I will change it
+Some convertible use the intel-hid ACPI interface to report SW_TABLET_MODE,
+implement this with DMI based allow-list to be sure to activate support
+only on models that effectively have it.
 
-> > +
-> >=20
-> >  MODULE_LICENSE("GPL");
-> >  MODULE_AUTHOR("Alex Hung");
-> >=20
-> > @@ -89,9 +92,26 @@ static const struct dmi_system_id button_array_table=
-[]
-> > =3D {>=20
-> >  	{ }
-> > =20
-> >  };
-> >=20
-> > [...]
-> > +static void detect_tablet_mode(struct platform_device *device)
->=20
-> I believe `report_tablet_mode_state()` or something similar would be a mo=
-re
-> apt name.
-Sound good,  I will rename it.
+Signed-off-by: Elia Devito <eliadevito@gmail.com>
+---
+v2:
+ patch reworked according to received feedbacks
+  
+v3:
+ improved code according to received feedbacks
 
-> > +{
-> > +	struct intel_hid_priv *priv =3D dev_get_drvdata(&device->dev);
-> > +	acpi_handle handle =3D ACPI_HANDLE(&device->dev);
-> > +	unsigned long long vgbs;
-> > +	int m;
-> > +
-> > +	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_VGBS_FN,=20
-&vgbs))
-> > +		return;
-> > +
-> > +	m =3D !(vgbs & TABLET_MODE_FLAG);
-> > +	input_report_switch(priv->switches, SW_TABLET_MODE, m);
-> > +	input_sync(priv->switches);
-> > +}
-> > +
-> >=20
-> >  static void notify_handler(acpi_handle handle, u32 event, void *contex=
-t)
-> >  {
-> > =20
-> >  	struct platform_device *device =3D context;
-> >=20
-> > @@ -363,6 +415,13 @@ static void notify_handler(acpi_handle handle, u32
-> > event, void *context)>=20
-> >  		if (event =3D=3D 0xce)
-> >  	=09
-> >  			goto wakeup;
-> >=20
-> > +		/*
-> > +		 * Switch events will wake the device and report the=20
-new switch
-> > +		 * position to the input subsystem.
-> > +		 */
-> > +		if (priv->switches && (event =3D=3D 0xcc || event =3D=3D 0xcd))
-> > +			goto wakeup;
-> > +
-> >=20
-> >  		/* Wake up on 5-button array events only. */
-> >  		if (event =3D=3D 0xc0 || !priv->array)
-> >  	=09
-> >  			return;
-> >=20
-> > @@ -374,6 +433,21 @@ static void notify_handler(acpi_handle handle, u32
-> > event, void *context)>=20
-> >  wakeup:
-> >  		pm_wakeup_hard_event(&device->dev);
-> >=20
-> > +
-> > +		if (priv->switches) {
-> > +			if (event =3D=3D 0xcc) {
-> > +				input_report_switch(priv-
->switches, SW_TABLET_MODE, 1);
-> > +				input_sync(priv->switches);
-> > +				return;
-> > +			}
-> > +
-> > +			if (event =3D=3D 0xcd) {
-> > +				input_report_switch(priv-
->switches, SW_TABLET_MODE, 0);
-> > +				input_sync(priv->switches);
-> > +				return;
-> > +			}
-> > +		}
-> > +
-> >=20
-> >  		return;
-> >  =09
-> >  	}
-> >=20
-> > @@ -398,6 +472,20 @@ static void notify_handler(acpi_handle handle, u32
-> > event, void *context)>=20
-> >  		}
-> >  =09
-> >  	}
-> >=20
-> > +	if (priv->switches) {
-> > +		if (event =3D=3D 0xcc) {
-> > +			input_report_switch(priv->switches,=20
-SW_TABLET_MODE, 1);
-> > +			input_sync(priv->switches);
-> > +			return;
-> > +		}
-> > +
-> > +		if (event =3D=3D 0xcd) {
-> > +			input_report_switch(priv->switches,=20
-SW_TABLET_MODE, 0);
-> > +			input_sync(priv->switches);
-> > +			return;
-> > +		}
-> > +	}
->=20
-> Wouldn't be better to create a new function `bool
-> report_tablet_mode_event()` which would basically contain the above `if` =
-or
-> better, a `switch`, and then you could use it here and in the wake-up path
-> like the following:
->=20
-> ```
-> if (report_tablet_mode_event(priv->switches, event))
->   return;
-> ```
-> (or similarly)
->=20
-Looks more clean, I will do.
+ drivers/platform/x86/intel-hid.c | 95 ++++++++++++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
 
-> > +
-> >=20
-> >  	/* 0xC0 is for HID events, other values are for 5 button array */
-> >  	if (event !=3D 0xc0) {
-> >  =09
-> >  		if (!priv->array ||
-> >=20
-> > @@ -485,6 +573,16 @@ static int intel_hid_probe(struct platform_device
-> > *device)>=20
-> >  			pr_err("Failed to setup Intel 5 button array=20
-hotkeys\n");
-> >  =09
-> >  	}
-> >=20
-> > +	/* Setup switches for devices that we know VGBS return correctly=20
-*/
-> > +	if (dmi_check_system(dmi_vgbs_allow_list)) {
-> > +		dev_info(&device->dev, "platform supports switches\n");
-> > +		err =3D intel_hid_switches_setup(device);
-> > +		if (err)
-> > +			pr_err("Failed to setup Intel HID=20
-switches\n");
-> > +		else
-> > +			detect_tablet_mode(device);
-> > +	}
-> > +
-> >=20
-> >  	status =3D acpi_install_notify_handler(handle,
-> >  =09
-> >  					    =20
-ACPI_DEVICE_NOTIFY,
-> >  					     notify_handler,
-> >=20
-> > --
-> > 2.28.0
->=20
-> Regards,
-> Barnab=C3=A1s P=C5=91cze
-
-Thank you for the review
-
-Regards
-Elia
-
-
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 86261970bd8f..d2f892665ec6 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -15,6 +15,9 @@
+ #include <linux/platform_device.h>
+ #include <linux/suspend.h>
+ 
++/* When NOT in tablet mode, VGBS returns with the flag 0x40 */
++#define TABLET_MODE_FLAG BIT(6)
++
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Alex Hung");
+ 
+@@ -89,9 +92,26 @@ static const struct dmi_system_id button_array_table[] = {
+ 	{ }
+ };
+ 
++/*
++ * Some convertible use the intel-hid ACPI interface to report SW_TABLET_MODE,
++ * these need to be compared via a DMI based authorization list because some
++ * models have unreliable VGBS return which could cause incorrect
++ * SW_TABLET_MODE report.
++ */
++static const struct dmi_system_id dmi_vgbs_allow_list[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x360 Convertible 15-df0xxx"),
++		},
++	},
++	{ }
++};
++
+ struct intel_hid_priv {
+ 	struct input_dev *input_dev;
+ 	struct input_dev *array;
++	struct input_dev *switches;
+ 	bool wakeup_mode;
+ };
+ 
+@@ -347,6 +367,57 @@ static int intel_button_array_input_setup(struct platform_device *device)
+ 	return input_register_device(priv->array);
+ }
+ 
++static int intel_hid_switches_setup(struct platform_device *device)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
++
++	/* Setup input device for switches */
++	priv->switches = devm_input_allocate_device(&device->dev);
++	if (!priv->switches)
++		return -ENOMEM;
++
++	__set_bit(EV_SW, priv->switches->evbit);
++	__set_bit(SW_TABLET_MODE, priv->switches->swbit);
++
++	priv->switches->name = "Intel HID switches";
++	priv->switches->id.bustype = BUS_HOST;
++	return input_register_device(priv->switches);
++}
++
++static void report_tablet_mode_state(struct platform_device *device)
++{
++	struct intel_hid_priv *priv = dev_get_drvdata(&device->dev);
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	unsigned long long vgbs;
++	int m;
++
++	if (!intel_hid_evaluate_method(handle, INTEL_HID_DSM_VGBS_FN, &vgbs))
++		return;
++
++	m = !(vgbs & TABLET_MODE_FLAG);
++	input_report_switch(priv->switches, SW_TABLET_MODE, m);
++	input_sync(priv->switches);
++}
++
++static bool report_tablet_mode_event(struct input_dev *input_dev, u32 event)
++{
++	if (!input_dev)
++		return false;
++
++	switch (event) {
++	case 0xcc:
++		input_report_switch(input_dev, SW_TABLET_MODE, 1);
++		input_sync(input_dev);
++		return true;
++	case 0xcd:
++		input_report_switch(input_dev, SW_TABLET_MODE, 0);
++		input_sync(input_dev);
++		return true;
++	default:
++		return false;
++	}
++}
++
+ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ {
+ 	struct platform_device *device = context;
+@@ -363,6 +434,13 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 		if (event == 0xce)
+ 			goto wakeup;
+ 
++		/*
++		 * Switch events will wake the device and report the new switch
++		 * position to the input subsystem.
++		 */
++		if (priv->switches && (event == 0xcc || event == 0xcd))
++			goto wakeup;
++
+ 		/* Wake up on 5-button array events only. */
+ 		if (event == 0xc0 || !priv->array)
+ 			return;
+@@ -374,6 +452,10 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 
+ wakeup:
+ 		pm_wakeup_hard_event(&device->dev);
++
++		if (report_tablet_mode_event(priv->switches, event))
++			return;
++
+ 		return;
+ 	}
+ 
+@@ -398,6 +480,9 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 		}
+ 	}
+ 
++	if (report_tablet_mode_event(priv->switches, event))
++		return;
++
+ 	/* 0xC0 is for HID events, other values are for 5 button array */
+ 	if (event != 0xc0) {
+ 		if (!priv->array ||
+@@ -485,6 +570,16 @@ static int intel_hid_probe(struct platform_device *device)
+ 			pr_err("Failed to setup Intel 5 button array hotkeys\n");
+ 	}
+ 
++	/* Setup switches for devices that we know VGBS return correctly */
++	if (dmi_check_system(dmi_vgbs_allow_list)) {
++		dev_info(&device->dev, "platform supports switches\n");
++		err = intel_hid_switches_setup(device);
++		if (err)
++			pr_err("Failed to setup Intel HID switches\n");
++		else
++			report_tablet_mode_state(device);
++	}
++
+ 	status = acpi_install_notify_handler(handle,
+ 					     ACPI_DEVICE_NOTIFY,
+ 					     notify_handler,
+-- 
+2.28.0
 
