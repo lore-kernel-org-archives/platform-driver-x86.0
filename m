@@ -7,72 +7,114 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386EAC4361A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 01:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E71C4361A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 02:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4F98224F9
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 01:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EA022509
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Dec 2020 02:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbgLDB7i (ORCPT
+        id S1726689AbgLDCAx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Dec 2020 20:59:38 -0500
+        Thu, 3 Dec 2020 21:00:53 -0500
 Received: from mga04.intel.com ([192.55.52.120]:63510 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbgLDB7i (ORCPT
+        id S1725960AbgLDCAx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Dec 2020 20:59:38 -0500
-IronPort-SDR: Gz14yc5xXlFNMV8OlI4dXZHmsP61ZKHta39QAANLThsrVnxdagaO0BbWjp8KQ7YNAphcal4Ldl
- pQ7YjzpfVJoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9824"; a="170745349"
+        Thu, 3 Dec 2020 21:00:53 -0500
+IronPort-SDR: wqWFzC+ua0sg7QexOOFVnWbKWAR+kbnTelc1VzEt6QCU+qaNRNFe9tV4L7i7YM1qOsb8BrYt76
+ VlU20Lh15W1g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9824"; a="170745350"
 X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
-   d="scan'208";a="170745349"
+   d="scan'208";a="170745350"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 17:57:57 -0800
-IronPort-SDR: qaZVTzFz2rq/pkc+r11h5R/ogOEs12fSqr7bvnUCbos+zQgCFm5aJzGXPTMOvHl2QAu+zvyzFC
- todbiBzBgx7g==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2020 17:57:58 -0800
+IronPort-SDR: zW4iQQqtMalF1xbouHLefHqqTSEVDJHOv7nrXaPT2Y6qfu0aaFKbfDqAZRtKIbWz30eeoCzWAY
+ L1A60KguthZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.78,390,1599548400"; 
-   d="scan'208";a="331053755"
+   d="scan'208";a="331053757"
 Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
   by orsmga003.jf.intel.com with ESMTP; 03 Dec 2020 17:57:57 -0800
 From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 To:     hdegoede@redhat.com, mgross@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/3] platform/x86: ISST: Check for unaligned mmio address
-Date:   Thu,  3 Dec 2020 17:57:44 -0800
-Message-Id: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 3/3] platform/x86: ISST: Change PCI device macros
+Date:   Thu,  3 Dec 2020 17:57:46 -0800
+Message-Id: <20201204015746.1168941-3-srinivas.pandruvada@linux.intel.com>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
+References: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The address should be aligned to 4 byte boundary. So send an error for
-unaligned address.
+Use PCI_VDEVICE and PCI_DEVICE_DATA macros. No functional changes are
+expected.
 
 Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 ---
- drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../platform/x86/intel_speed_select_if/isst_if_common.h   | 8 ++++----
+ .../platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 4 ++--
+ drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 6 ++----
+ 3 files changed, 8 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+index 4f6f7f0761fc..fdecdae248d7 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
+@@ -10,11 +10,11 @@
+ #ifndef __ISST_IF_COMMON_H
+ #define __ISST_IF_COMMON_H
+ 
+-#define INTEL_RAPL_PRIO_DEVID_0	0x3451
+-#define INTEL_CFG_MBOX_DEVID_0	0x3459
++#define PCI_DEVICE_ID_INTEL_RAPL_PRIO_DEVID_0	0x3451
++#define PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_0	0x3459
+ 
+-#define INTEL_RAPL_PRIO_DEVID_1 0x3251
+-#define INTEL_CFG_MBOX_DEVID_1  0x3259
++#define PCI_DEVICE_ID_INTEL_RAPL_PRIO_DEVID_1	0x3251
++#define PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_1	0x3259
+ 
+ /*
+  * Validate maximum commands in a single request.
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+index 95f01e7a87d5..a2a2d923e60c 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+@@ -146,8 +146,8 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
+ }
+ 
+ static const struct pci_device_id isst_if_mbox_ids[] = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_0)},
++	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
 diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index aa17fd7817f8..e7e9808a1aed 100644
+index c4bf8dea32ca..2906cfee5d9c 100644
 --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
 +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -42,6 +42,9 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
- 	if (io_reg->reg < 0x04 || io_reg->reg > 0xD0)
- 		return -EINVAL;
+@@ -82,10 +82,8 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
+ }
  
-+	if (io_reg->reg % 4)
-+		return -EINVAL;
-+
- 	if (io_reg->read_write && !capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
+ static const struct pci_device_id isst_if_ids[] = {
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0),
+-		.driver_data = (kernel_ulong_t)&mmio_range_devid_0},
+-	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1),
+-		.driver_data = (kernel_ulong_t)&mmio_range_devid_1},
++	{ PCI_DEVICE_DATA(INTEL, RAPL_PRIO_DEVID_0, &mmio_range_devid_0)},
++	{ PCI_DEVICE_DATA(INTEL, RAPL_PRIO_DEVID_1, &mmio_range_devid_1)},
+ 	{ 0 },
+ };
+ MODULE_DEVICE_TABLE(pci, isst_if_ids);
 -- 
 2.25.4
 
