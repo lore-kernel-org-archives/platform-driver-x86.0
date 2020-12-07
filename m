@@ -2,340 +2,270 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124D6C197BF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 13:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8598CC4361B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 13:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A892337F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 13:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58305233EA
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 13:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbgLGNdj (ORCPT
+        id S1726415AbgLGNmH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 08:33:39 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:33541 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgLGNdi (ORCPT
+        Mon, 7 Dec 2020 08:42:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40671 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726096AbgLGNmG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 08:33:38 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20201207133243euoutp02a07eaff1232f3828b35d363c2d162b88~OcnTwTsL90185601856euoutp02d;
-        Mon,  7 Dec 2020 13:32:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20201207133243euoutp02a07eaff1232f3828b35d363c2d162b88~OcnTwTsL90185601856euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1607347963;
-        bh=ljQ0v3Ar0KYP2q9/GRtPG9FJKYzmsBEMPJYT7bas0xM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=YXnyfI3nXv1DhFtGBhw8rjlj6OWDgzzqG6ggdFQv6tUUzN+M3UpHev4Lt5w3dDEeq
-         JsY5rsqNM4QlBu8xSwpaGb6jN+Unr+zoWvEul+H0F5kLgpcw0eew3NnzrXCdwSiqr5
-         8/gkKlmm/vhkZki1ZiEurX6kzTnv6KS7IUhhgWLQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20201207133237eucas1p19e9329c72365b51bdbaafba28239f22c~OcnOVcZch0957309573eucas1p1O;
-        Mon,  7 Dec 2020 13:32:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id D4.52.44805.5FE2ECF5; Mon,  7
-        Dec 2020 13:32:37 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28~OcnNreb_Q1175011750eucas1p2A;
-        Mon,  7 Dec 2020 13:32:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20201207133237eusmtrp22a886004009ed21a7d1310c91ddd5534~OcnNp8qpM0370603706eusmtrp2Q;
-        Mon,  7 Dec 2020 13:32:37 +0000 (GMT)
-X-AuditID: cbfec7f4-b4fff7000000af05-d5-5fce2ef51212
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 2B.33.21957.4FE2ECF5; Mon,  7
-        Dec 2020 13:32:36 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20201207133234eusmtip21bd44750aa26b3a6918e1852376589e6~OcnLrilqA0874408744eusmtip2c;
-        Mon,  7 Dec 2020 13:32:34 +0000 (GMT)
-Subject: Re: [PATCH v4 2/7] Input: use input_device_enabled()
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <27ce1176-6318-45aa-4e22-3dec9f3df15d@samsung.com>
-Date:   Mon, 7 Dec 2020 14:32:34 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0)
-        Gecko/20100101 Thunderbird/78.5.1
+        Mon, 7 Dec 2020 08:42:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1607348438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pIW7jnn+qvNT81H7Fude+j/idrprK4rYKqu5djeQ+v4=;
+        b=egCOE5dRGDWEntEXuWCIi9PZrETwQBtHl9PxYtzMOGKZAbqaKPywUv6jhf90y8dASb4Wx7
+        sYemisLNroZkdYsLuA7B+l+HLBiMvO5nxyvfGEWoQoGPdSxUq2tzLHMxHzc/oxK4kuE6ak
+        widvCsWYRc0nPqg2GPNY/B59Dynbw7I=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-578-w6uE-63JMqK_S55jlrSOqQ-1; Mon, 07 Dec 2020 08:40:36 -0500
+X-MC-Unique: w6uE-63JMqK_S55jlrSOqQ-1
+Received: by mail-ed1-f72.google.com with SMTP id d12so3479552edx.23
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 05:40:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pIW7jnn+qvNT81H7Fude+j/idrprK4rYKqu5djeQ+v4=;
+        b=HXc+3QDPTuD+CyYt/HTfqLy/aIT8lIBuCo+HX1QnC6XB4b6/mJbRLpBW+I6jW3Wjie
+         aOpE0y4Ln3kWrjLE4AEZBAPRws407KO23YDkugywze/dO3ZISvaDbwLy+gRYIQIgx6lM
+         ZuawwKMLeF39QkTR+gr4hasxLUvma3V4Qkz1v91fuytKhumH3EOnJlvliNux4kCBHrKB
+         Vy2G3TqCJndCbj6oGuMhUdEtXl+0d2bUQlQ2JED+eQOMfqmOSV6VEI6CWEVW69J5pXB+
+         gVYMNHxPoajpJ6UdZo6clqZUHGVZjRPfced96HXsGwD2rUPFl5AfkuYkBfoLbCyYq2Oa
+         1lYA==
+X-Gm-Message-State: AOAM5315t6r85gXuq9e6/jO5BgRDBdX5iyh/hesTAWBsgWqnW2r71aAq
+        f2ipTLL7/wSM9qR9wrBVEjqU8XucNsHBNAMgYQHmt4LtT/FIP4RuPh5W0d4BWH6xW13IlZf1kHz
+        23143RBUlIrvEd/tHAZG97CjXIyDFzihKjD7F3ek5elF9CIzPYv8zfx23/Q1BlKB3SzhmojCjJR
+        6+zdibABtuvg==
+X-Received: by 2002:a50:d4cd:: with SMTP id e13mr20023406edj.117.1607348434963;
+        Mon, 07 Dec 2020 05:40:34 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwa2gJkTcFP01/ZLmFZg1lVM2MQwOVtYV/y/TsDOiKJLIY+54KDliw3oWHUKT/TmyJtbyskYA==
+X-Received: by 2002:a50:d4cd:: with SMTP id e13mr20023386edj.117.1607348434654;
+        Mon, 07 Dec 2020 05:40:34 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id g9sm13481858edw.67.2020.12.07.05.40.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Dec 2020 05:40:33 -0800 (PST)
+Subject: Re: HP Zbook studio G5 Brightness and mic mute keys give same
+ scancode
+To:     Friso Smit <thestroyer@cock.li>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <d2753cb4ca4d0d819d5a76b0a076e281@cock.li>
+ <CAHp75VfTXieJws5gB70L5grsc0f_SFo+sNv1ySmt37aOUa6TmA@mail.gmail.com>
+ <97c507c1-21a9-2b77-5d07-09cfcd93ca39@redhat.com>
+ <1dbe090f-03c4-f003-6c38-c139c38313e2@cock.li>
+ <52f754d9-f4c4-9a5b-82b4-6d6878a94eec@redhat.com>
+ <0270fc83-7142-917b-f4bb-0ee214de9dcd@cock.li>
+ <66bfa5e2-df5f-c004-f50e-4894bfdd3c46@redhat.com>
+ <d5d7a276-c897-8951-9502-e8c2b49b63c2@cock.li>
+ <bd23588b-7c3e-b5e2-3ce6-74c92ec5a9bd@redhat.com>
+ <230c6976-c3f8-865f-f2b9-82d7de03e07f@cock.li>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e403834f-352f-438c-135e-7ca063bbf3b0@redhat.com>
+Date:   Mon, 7 Dec 2020 14:40:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200608112211.12125-3-andrzej.p@collabora.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <230c6976-c3f8-865f-f2b9-82d7de03e07f@cock.li>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1BUZRj223PZA7VyuCTfYMQMGjOQsVKN81lmkFhnyJnITBumCdc4XAqQ
-        diXDmZKLoWwwayiw7hIoLRcXBVmuu8htl2RkYQloI0UoAnFDwLjIXYjlYPHved/3ed7nfb6Z
-        j8IcJkkXKiL6BCuOFkW6k7Z41a1508uPvU3BO5Myt6GCwX4clclLCTSkT8OQIc8CUPOEAUcD
-        5vfRaEsWDykNe1D28HWAzv6VQqA/E9U8dEaRh6NyUyqB1BlaHMkGH2JItzKKoY6OG3ykupBL
-        oPz6YhxpB8ZIVFgvA0gz+BuBcprHcSRduIqhO5MzBOrWZZNoKq0ZIHlHPQ+lTCtIdN5Qzkdd
-        l77H0NSjBgJV1zXwUPFNC4YWdbf4qM3YRaAn1RocWSqcUbpejOZ1OThaWUjCfD2ZEbMfU9On
-        AkxyYgSjVfTxmX8mPmUWGwGjUaeQTLnqNFN7eYrHzMrbAKMa1RPM8pWLOJOWNE4yZeM1PCYr
-        ewUwsic7A7cE2e4JYSMjvmLFwr1HbcMzagNjDAe+VpfQ8UDrLwUUBenXYFtriBTYUA50EYAp
-        TQc5PA1gZg0tBbareArAny7c5VsHVn5VrZzkSIUAmnujONIEgLMjM4R1qSP9Jsy+uN/ad6KV
-        GPw7vRJYC4yOt4GVvWdwq5qkfaB0TLq2SUDvhd26ojWM09uhqq6OsOLn6GOwVDq3zrGHty8N
-        rWltVg0eylrWMEa7waRKJcZhZ3h3KJdnNYP0uWdg3lUDzp3tD8f7zYDDjnCkpWI9zvNwRftU
-        kATggOk6nytSAexOlK8r3oD3TAukNRtGe8JSnZBr+8F7xRqCe8fN8Pcxe+6IzTC9Kgvj2gJ4
-        LtmBY3tARUvJf7ZNv3Rh54G7YkM0xYY4ig1xFP/7Xga4GjizsZKoMFbySjR70lsiipLERod5
-        f3Y8SgNWv4VxuWW6BhSOTHjrAY8CegApzN1J4OHSHuwgCBHFnWLFx4PFsZGsRA+2Uri7s+BY
-        xbVgBzpMdIL9gmVjWPHTKY+ycYnnSXs+ESUY5FvNJQnONz/f5Cg28fdPxShDk384mnpox5cB
-        2S7z9uzIs66V41d63v75oDoqf16YMCAfatok69l9f1E2/O2D3W5dXsb35o1u4j8yam/Ej+o+
-        bF4S5IU9yNznOvajb31OropKEH5ATRYHbd8RUH07ThbS+86Bfvv05V2pRTXyMEvi6fylXX1+
-        9ebidkuo8mSMk1eBbu5XxfSRPrXv2cPGvi0fVe5b+jhuOSu10S5I8yijMTC8IS4ix8X/pWVl
-        byvZdFhotAgfFxwpi3E9JfhG275t9t1DMM/jrRc1ps7OUs+ezlcDJOZhqdDu2swLPqFdPq/P
-        YRV37O5/19rpmL/ijkvCRT5emFgi+heBzm97hQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0xTdxTH/d1HHxrMpYDcNWNznTNxjtoCZYcFiC4+rmyJbslMHNOu4OWR
-        QWtaMG7JHCsOpELwwcvCAFmZWqfDVh4FoVvLQALI0ECEQFfkMQYFZXQzKNDxWsJ/n5xzPt+T
-        kxweLviOI+QlKlNYtVKRJOJsJNoXWx2BbvEDucSsDYUfhx0E3Cn6mYQRWw4O9opxBM0zdgKG
-        eg6Bq7UQg2J7OJSM3UKQ+SSLBKfWiMFZfQUB5gfZJBjzLQTkDk/iUO9x4dDVVcUFw+UyEiqb
-        bhJgGZriwLWmXASm4V4SSpunCdC9uIFD39//kvCovoQDsznNCIq6mjDIcus5cMFu5sLDK+dx
-        mH1qJaG20YrBzXvjOLysb+FCR/tDEhZqTQSM3/WHSzY1zNWXEuB5kY7v3sFM9Oxh6gYNiMnQ
-        JjIW/SCXeTZznHn5C2JMxiwOYzZ8wzSUz2LM86IOxBhcNpJZvJpHMDnp0xzmznQdxhSWeBCT
-        uyA5vOVTcbhalZrCbk1QaVIiRNFSCBJLw0AcFBImlga/e+y9IJloV2T4CTYp8RSr3hX5uTgh
-        v+HwSfuHp423qTRk2atDfB5NhdA1DUUcHdrIE1CViB6rshCrjVfptoI0cpV96Ple3drQU0Tn
-        deQhHeLxfKgIuiRv33LdlyrGac+3v63IOJXBp6cmdi6zgPoB0f0N/GXmUFJaN7UcxOd5UZH0
-        o/rrK0xQ22hDYyO5nOlHxdCd7d6rI95025WRlUj+0qrJ3Na1+FC61DyEr/LrdHp18Rr70/0j
-        ZdgFJNCv0/XrFP06Rb9OKUeEEfmyqZrk+GSNVKxRJGtSlfHiWFWyCS39Y03LnLkOlU7MiG0I
-        4yEbonm4yNdru7BTLvA6ofjyK1atkqtTk1iNDcmWzrmIC/1iVUsPrUyRS0MlMmlIaJhEFhYa
-        LPL3qv7+J7mAileksF+w7ElW/b+H8fjCNMx0V0aMxZt+v6HPDkRx9/dap0yjaTPJ/KSMY85N
-        m6OqWiqm/xyQQIzH50jE/lq3t49vd6GjN/CU6o1L7bfbRI/fmXRynmRqPpg6vnP7wOZKKH1W
-        95oyaceZRP1gX/nWoz1+vSNVRr5PPnf/XxvaDgjOmx5HBVHuAKf3uc732fzoy7eQ5OvRoIt5
-        Z8cPOhuiDwqvtwlFwbHaAPqMy2nNcec2/mogs1u9A6LIyCOT1oCY4eru4U8KZOe0b5bNj8qf
-        438ciBO+dW+3clOUdHbuH7PScX/wWt+A47RpA0S3H21+pebjQy6PJM6duUVv3TP/Uc9iYUVn
-        Wkd/WIHR0P3ZvgVMRGgSFNK3cbVG8R+NMNSPGAQAAA==
-X-CMS-MailID: 20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
-        <20200608112211.12125-1-andrzej.p@collabora.com>
-        <20200608112211.12125-3-andrzej.p@collabora.com>
-        <CGME20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28@eucas1p2.samsung.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andrzej,
+Hi,
 
-On 08.06.2020 13:22, Andrzej Pietrasiewicz wrote:
-> Use the newly added helper in relevant input drivers.
->
-> Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+On 12/7/20 2:23 PM, Friso Smit wrote:
+> On 12/5/20 7:50 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 12/5/20 7:21 PM, Friso Smit wrote:
+>>> Hi,
+>>>
+>>>
+>>>> On 12/4/20 2:05 PM, TheStroyer wrote:
+>>>>> So we're back where we started I guess.
+>>> Correction, there is something different this time around. Last time there
+>>>
+>>> were other keys that had the same scan codes as each other. They are still
+>>>
+>>> working now. This results in a win of four keys, yay.
+>>>
+>>>> Interesting, this sounds as if Windows is doing something which causes them to
+>>>> all send the same scancode.
+>>> Yeah, but I still cannot say with confidence it's not something else.
+>>>> If the device has a removable battery, or an option in the BIOS to disable the
+>>>> internal battery for long term storage (it will get re-enabled when you plug
+>>>> in a charger then), it would be good if you can either remove the battery or
+>>>> use the BIOS option; and then after that boot directly into Linux. I'm guessing /
+>>>> hoping that that will fix things.
+>>>>
+>>>> This is not really a good / usable workaround but it would be in interesting
+>>>> data point.
+>>>>
+>>>> If the battery is not removable; and there is no BIOS option, you could disable
+>>>> the emergency shutdown on low battery behavior on Linux and let the battery be
+>>>> drained until the battery-management-controller turns the machine off, that
+>>>> hopefully has the same result.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Hans
+>>> Sound like an interesting workaround. Unfortunately there is no BIOS
+>>>
+>>> option for this and the battery is not easily removable.  I do not want
+>>>
+>>> to risk damaging my battery as this is a very expensive laptop.
+>> Discharging your battery till the hardware shuts itself off should never
+>> harm the battery, the battery-management-controller will turn off all
+>> power (simulating removing the battery) before the battery discharges
+>> to a level where it can be damaged.  So unless there is some very bad
+>> bug in the hw of your laptop this should be safe to do. Otherwise
+>> the OS hanging while the battery is already low and you are not
+>> present to detect this could also damage the hardware.
+>>
+>> With recent Linux distributions you need to disable the upower daemon
+>> (you probably need to mask it in systemd to avoid it being autostarted)
+>> to avoid the auto-shutdown.
+>>
+>> Note I completely understand if you still do not want to do this,
+>> I'm just saying that it is not *that* dangerous.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> Thanks
+>>>
+>>> for the help though. I will update when something interesting happens
+>>>
+>>>
+>>> Regards,
+>>>
+>>> Friso
+>>>
+>>>>> Best regards,
+>>>>>
+>>>>> Friso
+>>>>>
+>>>>> On 24/11/2020 12:14, Hans de Goede wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 11/12/20 7:25 PM, Friso Smit wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> I'm not sure if you have read the previous mails in this thread, but the
+>>>>>>> problem is solved, at least for me, with a bios update.
+>>>>>> At that is good to know.
+>>>>>>
+>>>>>>> I don't know how
+>>>>>>> it works exactly, but all keys produce different scan codes now. Are there
+>>>>>>> still some models where this is a problem?
+>>>>>> Yes this is till a problem on at least the hp-pavilion-cx-0598na, see
+>>>>>> the mail thread starting here:
+>>>>>>
+>>>>>> https://lore.kernel.org/platform-driver-x86/CAGTBY+sgwYrDPtQgJV=TcXJ73n8TGf9Nw=arCfWMUrVFzAsEVQ@mail.gmail.com/
+>>>>>>
+>>>>>> I've just asked the reported of that problem to check if there is a BIOS
+>>>>>> update for his system.
+>>>>>>
+>>>>>> Regards,
+>>>>>>
+>>>>>> Hans
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>> On 11/9/20 2:44 PM, Hans de Goede wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On 11/5/20 5:47 PM, Andy Shevchenko wrote:
+>>>>>>>>> +Cc: subsystem maintainers
+>>>>>>>>>
+>>>>>>>>> On Sun, May 17, 2020 at 2:24 PM<thestroyer@cock.li>  wrote:
+>>>>>>>>>> Hi,
+>>>>>>>>>> On my HP Zbook studio G5 a few keys on my keyboard give the same
+>>>>>>>>>> scancodes. Most notably, the brightness and mute function keys all give
+>>>>>>>>>> the scan code sequence 0xe0 0x20 0xe0 0xa0 as reported by showkey
+>>>>>>>>>> --scancodes. It only produces a scancode when pressed, not when
+>>>>>>>>>> released. I found another very similar issue in this mailing list found
+>>>>>>>>>> inhttps://www.spinics.net/lists/platform-driver-x86/msg16791.html. The
+>>>>>>>>>> issue in that mail was solved by a bios update. I'm running the latest
+>>>>>>>>>> bios, but I still have the issue.
+>>>>>>>>>> I tried the kernels: Manjaro 5.7rc4-1, Manjaro 5.6.11-1 and Manjaro
+>>>>>>>>>> 5.4.39-1
+>>>>>>>>>> I also tried a few other distributions, but they all have the same
+>>>>>>>>>> issue.
+>>>>>>>>>> I'm happy to provide more information about this issue if needed.
+>>>>>>>> So this already came in another thread for another HP laptop model,
+>>>>>>>> this seems to be a common issue on some (newer?) HP laptop models.
+>>>>>>>>
+>>>>>>>> It seems that we need to make some special WMI calls for this, either
+>>>>>>>> to figure out which key is actually pressed when receiving the
+>>>>>>>> PS/2 scancode which is shared between multiple keys. Or to get the
+>>>>>>>> device to send different scancodes.
+>>>>>>>>
+>>>>>>>> This will require someone with some knowledge of ACPI/WMI as well
+>>>>>>>> as of writing kernel code to get physical access to an affected HP
+>>>>>>>> laptop to figure out what is going on and write some code to deal with
+>>>>>>>> this special setup.
+>>>>>>>>
+>>>>>>>> Regards,
+>>>>>>>>
+>>>>>>>> Hans
+>>>>>>>>
+> 
+> Hi,
+> 
+> It worked! I looked up a video online and apparently it's not that hard to remove the
+> battery. For those reading this who will never boot windows again, just remove the
+> battery and re-insert it. In my case (HP Zbook Studio G5) I had to remove the battery
+> screws as well to make room for disconnecting the battery. I waited a few minutes for
+> any remaining energy to drain and reconnected the battery.
+> 
+> I booted straight to Linux (with Grub). I noticed the keyboard backlight was turned on
+> because of the power disconnect, so that's probably a sign to look if it worked.
+> Now my brightness keys work again, and the other special keys still work as well.
 
-This patch landed recently in linux-next as commit d69f0a43c677 ("Input: 
-use input_device_enabled()"). Sadly it causes following warning during 
-system suspend/resume cycle on ARM 32bit Samsung Exynos5250-based Snow 
-Chromebook with kernel compiled from exynos_defconfig:
+Good, so now we know that it is some embedded-controller setting which Windows
+(or likely some HP specific sw/drivers under Windows) enables, which is causing
+this problem.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1777 at drivers/input/input.c:2230 
-input_device_enabled+0x68/0x6c
-Modules linked in: cmac bnep mwifiex_sdio mwifiex sha256_generic 
-libsha256 sha256_arm cfg80211 btmrvl_sdio btmrvl bluetooth s5p_mfc 
-exynos_gsc v4l2_mem2mem videob
-CPU: 0 PID: 1777 Comm: rtcwake Not tainted 
-5.10.0-rc6-next-20201207-00001-g49a0dc04c46d-dirty #9902
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0111718>] (unwind_backtrace) from [<c010d050>] (show_stack+0x10/0x14)
-[<c010d050>] (show_stack) from [<c0b32810>] (dump_stack+0xb4/0xd4)
-[<c0b32810>] (dump_stack) from [<c0126e24>] (__warn+0xd8/0x11c)
-[<c0126e24>] (__warn) from [<c0126f18>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0126f18>] (warn_slowpath_fmt) from [<c07fa2fc>] 
-(input_device_enabled+0x68/0x6c)
-[<c07fa2fc>] (input_device_enabled) from [<c080a0f8>] 
-(cyapa_gen3_set_power_mode+0x128/0x1cc)
-[<c080a0f8>] (cyapa_gen3_set_power_mode) from [<c0807894>] 
-(cyapa_suspend+0x74/0x114)
-[<c0807894>] (cyapa_suspend) from [<c06ae924>] (dpm_run_callback+0xb0/0x3c8)
-[<c06ae924>] (dpm_run_callback) from [<c06aefe4>] 
-(__device_suspend+0x104/0x784)
-[<c06aefe4>] (__device_suspend) from [<c06b2994>] (dpm_suspend+0x184/0x540)
-[<c06b2994>] (dpm_suspend) from [<c06b369c>] (dpm_suspend_start+0x98/0xa0)
-[<c06b369c>] (dpm_suspend_start) from [<c01a0a10>] 
-(suspend_devices_and_enter+0xec/0xbd4)
-[<c01a0a10>] (suspend_devices_and_enter) from [<c01a180c>] 
-(pm_suspend+0x314/0x42c)
-[<c01a180c>] (pm_suspend) from [<c019f6f8>] (state_store+0x6c/0xc8)
-[<c019f6f8>] (state_store) from [<c0387b04>] (kernfs_fop_write+0x10c/0x228)
-[<c0387b04>] (kernfs_fop_write) from [<c02dbd48>] (vfs_write+0xc8/0x530)
-[<c02dbd48>] (vfs_write) from [<c02dc2ec>] (ksys_write+0x60/0xd8)
-[<c02dc2ec>] (ksys_write) from [<c0100060>] (ret_fast_syscall+0x0/0x2c)
-Exception stack(0xc45bffa8 to 0xc45bfff0)
-...
-irq event stamp: 14101
-hardirqs last  enabled at (14109): [<c01a567c>] vprintk_emit+0x2d8/0x32c
-hardirqs last disabled at (14116): [<c01a5640>] vprintk_emit+0x29c/0x32c
-softirqs last  enabled at (13264): [<c01017a8>] __do_softirq+0x528/0x684
-softirqs last disabled at (13253): [<c01304c4>] irq_exit+0x1ec/0x1f8
----[ end trace 6687a21e6b7e94a9 ]---
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1777 at drivers/input/input.c:2230 
-input_device_enabled+0x68/0x6c
-Modules linked in: cmac bnep mwifiex_sdio mwifiex sha256_generic 
-libsha256 sha256_arm cfg80211 btmrvl_sdio btmrvl bluetooth s5p_mfc 
-exynos_gsc v4l2_mem2mem videob
-CPU: 1 PID: 1777 Comm: rtcwake Tainted: G        W 
-5.10.0-rc6-next-20201207-00001-g49a0dc04c46d-dirty #9902
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0111718>] (unwind_backtrace) from [<c010d050>] (show_stack+0x10/0x14)
-[<c010d050>] (show_stack) from [<c0b32810>] (dump_stack+0xb4/0xd4)
-[<c0b32810>] (dump_stack) from [<c0126e24>] (__warn+0xd8/0x11c)
-[<c0126e24>] (__warn) from [<c0126f18>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0126f18>] (warn_slowpath_fmt) from [<c07fa2fc>] 
-(input_device_enabled+0x68/0x6c)
-[<c07fa2fc>] (input_device_enabled) from [<c080a0f8>] 
-(cyapa_gen3_set_power_mode+0x128/0x1cc)
-[<c080a0f8>] (cyapa_gen3_set_power_mode) from [<c08088b4>] 
-(cyapa_reinitialize+0xcc/0x154)
-[<c08088b4>] (cyapa_reinitialize) from [<c0808984>] (cyapa_resume+0x48/0x98)
-[<c0808984>] (cyapa_resume) from [<c06ae924>] (dpm_run_callback+0xb0/0x3c8)
-[<c06ae924>] (dpm_run_callback) from [<c06aecf8>] (device_resume+0xbc/0x260)
-[<c06aecf8>] (device_resume) from [<c06b10d8>] (dpm_resume+0x14c/0x51c)
-[<c06b10d8>] (dpm_resume) from [<c06b1cac>] (dpm_resume_end+0xc/0x18)
-[<c06b1cac>] (dpm_resume_end) from [<c01a0ad8>] 
-(suspend_devices_and_enter+0x1b4/0xbd4)
-[<c01a0ad8>] (suspend_devices_and_enter) from [<c01a180c>] 
-(pm_suspend+0x314/0x42c)
-[<c01a180c>] (pm_suspend) from [<c019f6f8>] (state_store+0x6c/0xc8)
-[<c019f6f8>] (state_store) from [<c0387b04>] (kernfs_fop_write+0x10c/0x228)
-[<c0387b04>] (kernfs_fop_write) from [<c02dbd48>] (vfs_write+0xc8/0x530)
-[<c02dbd48>] (vfs_write) from [<c02dc2ec>] (ksys_write+0x60/0xd8)
-[<c02dc2ec>] (ksys_write) from [<c0100060>] (ret_fast_syscall+0x0/0x2c)
-Exception stack(0xc45bffa8 to 0xc45bfff0)
-...
-irq event stamp: 55479
-hardirqs last  enabled at (55487): [<c01a567c>] vprintk_emit+0x2d8/0x32c
-hardirqs last disabled at (55494): [<c01a5640>] vprintk_emit+0x29c/0x32c
-softirqs last  enabled at (53552): [<c01017a8>] __do_softirq+0x528/0x684
-softirqs last disabled at (53541): [<c01304c4>] irq_exit+0x1ec/0x1f8
----[ end trace 6687a21e6b7e94aa ]---
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1777 at drivers/input/input.c:2230 
-input_device_enabled+0x68/0x6c
-Modules linked in: cmac bnep mwifiex_sdio mwifiex sha256_generic 
-libsha256 sha256_arm cfg80211 btmrvl_sdio btmrvl bluetooth s5p_mfc 
-exynos_gsc v4l2_mem2mem videob
-CPU: 1 PID: 1777 Comm: rtcwake Tainted: G        W 
-5.10.0-rc6-next-20201207-00001-g49a0dc04c46d-dirty #9902
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0111718>] (unwind_backtrace) from [<c010d050>] (show_stack+0x10/0x14)
-[<c010d050>] (show_stack) from [<c0b32810>] (dump_stack+0xb4/0xd4)
-[<c0b32810>] (dump_stack) from [<c0126e24>] (__warn+0xd8/0x11c)
-[<c0126e24>] (__warn) from [<c0126f18>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0126f18>] (warn_slowpath_fmt) from [<c07fa2fc>] 
-(input_device_enabled+0x68/0x6c)
-[<c07fa2fc>] (input_device_enabled) from [<c0808834>] 
-(cyapa_reinitialize+0x4c/0x154)
-[<c0808834>] (cyapa_reinitialize) from [<c0808984>] (cyapa_resume+0x48/0x98)
-[<c0808984>] (cyapa_resume) from [<c06ae924>] (dpm_run_callback+0xb0/0x3c8)
-[<c06ae924>] (dpm_run_callback) from [<c06aecf8>] (device_resume+0xbc/0x260)
-[<c06aecf8>] (device_resume) from [<c06b10d8>] (dpm_resume+0x14c/0x51c)
-[<c06b10d8>] (dpm_resume) from [<c06b1cac>] (dpm_resume_end+0xc/0x18)
-[<c06b1cac>] (dpm_resume_end) from [<c01a0ad8>] 
-(suspend_devices_and_enter+0x1b4/0xbd4)
-[<c01a0ad8>] (suspend_devices_and_enter) from [<c01a180c>] 
-(pm_suspend+0x314/0x42c)
-[<c01a180c>] (pm_suspend) from [<c019f6f8>] (state_store+0x6c/0xc8)
-[<c019f6f8>] (state_store) from [<c0387b04>] (kernfs_fop_write+0x10c/0x228)
-[<c0387b04>] (kernfs_fop_write) from [<c02dbd48>] (vfs_write+0xc8/0x530)
-[<c02dbd48>] (vfs_write) from [<c02dc2ec>] (ksys_write+0x60/0xd8)
-[<c02dc2ec>] (ksys_write) from [<c0100060>] (ret_fast_syscall+0x0/0x2c)
-Exception stack(0xc45bffa8 to 0xc45bfff0)
-...
-irq event stamp: 55829
-hardirqs last  enabled at (55837): [<c01a567c>] vprintk_emit+0x2d8/0x32c
-hardirqs last disabled at (55844): [<c01a5640>] vprintk_emit+0x29c/0x32c
-softirqs last  enabled at (53552): [<c01017a8>] __do_softirq+0x528/0x684
-softirqs last disabled at (53541): [<c01304c4>] irq_exit+0x1ec/0x1f8
----[ end trace 6687a21e6b7e94ab ]---
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1777 at drivers/input/input.c:2230 
-input_device_enabled+0x68/0x6c
-Modules linked in: cmac bnep mwifiex_sdio mwifiex sha256_generic 
-libsha256 sha256_arm cfg80211 btmrvl_sdio btmrvl bluetooth s5p_mfc 
-exynos_gsc v4l2_mem2mem videob
-CPU: 1 PID: 1777 Comm: rtcwake Tainted: G        W 
-5.10.0-rc6-next-20201207-00001-g49a0dc04c46d-dirty #9902
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0111718>] (unwind_backtrace) from [<c010d050>] (show_stack+0x10/0x14)
-[<c010d050>] (show_stack) from [<c0b32810>] (dump_stack+0xb4/0xd4)
-[<c0b32810>] (dump_stack) from [<c0126e24>] (__warn+0xd8/0x11c)
-[<c0126e24>] (__warn) from [<c0126f18>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0126f18>] (warn_slowpath_fmt) from [<c07fa2fc>] 
-(input_device_enabled+0x68/0x6c)
-[<c07fa2fc>] (input_device_enabled) from [<c080a0f8>] 
-(cyapa_gen3_set_power_mode+0x128/0x1cc)
-[<c080a0f8>] (cyapa_gen3_set_power_mode) from [<c0808890>] 
-(cyapa_reinitialize+0xa8/0x154)
-[<c0808890>] (cyapa_reinitialize) from [<c0808984>] (cyapa_resume+0x48/0x98)
-[<c0808984>] (cyapa_resume) from [<c06ae924>] (dpm_run_callback+0xb0/0x3c8)
-[<c06ae924>] (dpm_run_callback) from [<c06aecf8>] (device_resume+0xbc/0x260)
-[<c06aecf8>] (device_resume) from [<c06b10d8>] (dpm_resume+0x14c/0x51c)
-[<c06b10d8>] (dpm_resume) from [<c06b1cac>] (dpm_resume_end+0xc/0x18)
-[<c06b1cac>] (dpm_resume_end) from [<c01a0ad8>] 
-(suspend_devices_and_enter+0x1b4/0xbd4)
-[<c01a0ad8>] (suspend_devices_and_enter) from [<c01a180c>] 
-(pm_suspend+0x314/0x42c)
-[<c01a180c>] (pm_suspend) from [<c019f6f8>] (state_store+0x6c/0xc8)
-[<c019f6f8>] (state_store) from [<c0387b04>] (kernfs_fop_write+0x10c/0x228)
-[<c0387b04>] (kernfs_fop_write) from [<c02dbd48>] (vfs_write+0xc8/0x530)
-[<c02dbd48>] (vfs_write) from [<c02dc2ec>] (ksys_write+0x60/0xd8)
-[<c02dc2ec>] (ksys_write) from [<c0100060>] (ret_fast_syscall+0x0/0x2c)
-Exception stack(0xc45bffa8 to 0xc45bfff0)
-...
-irq event stamp: 56143
-hardirqs last  enabled at (56151): [<c01a567c>] vprintk_emit+0x2d8/0x32c
-hardirqs last disabled at (56158): [<c01a5640>] vprintk_emit+0x29c/0x32c
-softirqs last  enabled at (53552): [<c01017a8>] __do_softirq+0x528/0x684
-softirqs last disabled at (53541): [<c01304c4>] irq_exit+0x1ec/0x1f8
----[ end trace 6687a21e6b7e94ac ]---
+> At some point I will probably have to boot into windows again, so can I do something
+> before that to get some data out of this?
 
-Let me know how I can help debugging this issue.
+Nothing comes to mind, but maybe others have some good ideas ?  One thing which you
+could do is contact HP about this and see if they are willing to provide some help.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+If they can just tell us which WMI method (I'm guessing it is a WMI method) Windows
+is calling and what we can do to undo that; or how to receive the events in the same
+way Windows is receiving them then that would be helpful.
+
+The other options is some kernel-dev with some ACPI/WMI experience getting their
+hands on an affected device and then poke around a bit and hopefully figure out
+a solution.
+
+Regards,
+
+Hans
 
