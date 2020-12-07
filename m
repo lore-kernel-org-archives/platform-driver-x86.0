@@ -2,148 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B14AC197BF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 06:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67492C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 06:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33B8E227C3
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 06:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E091227C3
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 06:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgLGGlX (ORCPT
+        id S1726091AbgLGGoz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 01:41:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+        Mon, 7 Dec 2020 01:44:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgLGGlW (ORCPT
+        with ESMTP id S1725681AbgLGGoz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 01:41:22 -0500
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD76BC0613D0;
-        Sun,  6 Dec 2020 22:40:36 -0800 (PST)
-Received: by mail-pg1-x541.google.com with SMTP id f17so8077505pge.6;
-        Sun, 06 Dec 2020 22:40:36 -0800 (PST)
+        Mon, 7 Dec 2020 01:44:55 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C931C061A51
+        for <platform-driver-x86@vger.kernel.org>; Sun,  6 Dec 2020 22:43:56 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id q22so8804873pfk.12
+        for <platform-driver-x86@vger.kernel.org>; Sun, 06 Dec 2020 22:43:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Nst2sbdvR9A2joKvbm5iRIPSSamR5cjpmMutrZgXWuE=;
-        b=BBhb+gHY/v594+7w5xZMW0Vx6+jo64Vf7QlAwFBywKj8V9JZ0UqtC6/dXamNMQtuhI
-         BzJakTQKRRUwVba3FQFQkfG+gOrfHHAE4b3f38bqspqDFHcCaHcVF00ZOdI7nn7rMVlh
-         Y25ApKBw1evE/in0+NF7GpI/4drzEr8iI/sTWqCGgdmZvAc2Vwpbt5b6HlAF96J0sv/K
-         E7Wb3gvbWAH3d2+0y03kdO/HpUQlUzUEEHAf7Wx2dO5sdXA9WUZ2bnODVRjGHMclhzaI
-         WKzFNL9ltGpK9W619eMfdm7ScERddPcncpvHr7WsjAmZ7z34+DtsmvPN1ErbP4dh71hb
-         GGhQ==
+        d=endlessos.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8MzWU26NA6WzGVu02R2++Pobfkc6wq7hjaCWSX9ojMc=;
+        b=pcmgLXzy36HZaEATgxETcWogWAyO2mZ4FTMmpgTaX4L+oj4LW5Kb+zMnGBeHj4Cy5s
+         nNyjB4FESSefsd+7agRvbSP7xOob/FNjzm4v0Uu+cQOeGULFb/+95ExGv8x5GzJyW5YD
+         dBRZVhR0qSI9sryog4rURcCBXSsRFfcosaM2xT8SnQyExtvOEMgMj5PXq7k3d8oBxKc7
+         DZBnw0sONT26YXMdlowx62kWDVjTG8HZytG8ZrH3+No3eHTJxtcrv8Hz9fALYkZDX90k
+         ZmU9m3NsPMHAh7Cr4oWxlCzEMVzjltif1JS+948BtuGYJX76WPkVLkQ+oAYIfiFDZ7H9
+         4M+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nst2sbdvR9A2joKvbm5iRIPSSamR5cjpmMutrZgXWuE=;
-        b=NR3DzL9cu4rvu+uwCKc2Ke/zWh80Z3qEbPMyzikAWorogh1lcqxY1XA3YvkHwK2RIU
-         cyjA64WnYdB7aG1/cKxj85Kn0L3kZrfOl7Zzp1YKl1nsh25bTy1YnnvtIoVELWfjcwvC
-         Qdg6CJizHXh1uxZh9IxrUzNWtr78lENGbJi8ftTwmvqAyodM5vP0CtECTsRKOCe3dFWx
-         nXDMsaemA2r3uBv88827d3BDdyUMQp90bE+Is1m0YvOA4C/w2byBRGtPooB4dSfhfslf
-         ToLmwVx7aVRRlWHRanS34LO0Ln2BIQ14xSwaxN6E2q1K4YpVeHzWCphfZhRuK+TscJ1V
-         1f5w==
-X-Gm-Message-State: AOAM532Xn0bJ0UMeX4/JS8En0OPxuod+PPs2z5cwMO2g+Jx3qJsvWZwt
-        489Xl/En5Ibwgrl2AD1cBH0=
-X-Google-Smtp-Source: ABdhPJxBhCwvs4f6nnR2aF2ZFzOS3Bkv+UbCZXKSAlusmN+5H9F7vOpSRrSDGaSvj0DAfXAe/4UbGA==
-X-Received: by 2002:a17:902:bc88:b029:da:f94c:dcd1 with SMTP id bb8-20020a170902bc88b02900daf94cdcd1mr3179339plb.81.1607323236192;
-        Sun, 06 Dec 2020 22:40:36 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id x23sm12786597pfo.209.2020.12.06.22.40.34
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8MzWU26NA6WzGVu02R2++Pobfkc6wq7hjaCWSX9ojMc=;
+        b=j+nfw5NjJhs7tlOdcfJBrDy3jEIq8zxlBKeaV2lUMK0kIF3kJq3djoOw1/XBeHYmpK
+         c17LoVjmCFN4ipye8dho6d6lGwEm+xePv1qSe8ouBmeLXJkO2J6lxuh49ucFfi/DUKo0
+         rbRDUA+VcK812VDqi/WT/12gG+9iAstppn0nIKTFM9Vqvjsv/1TwYfYIUnDl9phwBZrk
+         rOiof1G9Da9Yl+ezKqWGX3yQ205erMXmos+C2grMwdPalQk/vitNH9GLYJw6YdV+WVrp
+         5rKZZcTNXo2Sqkt3ditlvPB2G5eg653l+3ijJwh4mXrMxq5n/6vQu/LOIGeVSTYN8Or0
+         Bb6A==
+X-Gm-Message-State: AOAM531/thBFR3+okTZxzR75VSPl8swwN0e8GGYLXDJD6KpNbfxpY8gq
+        RGKsVd5aedE0VxlqBGYsP6JIyA==
+X-Google-Smtp-Source: ABdhPJyL9fd9WGzslRmf14Luh5pVxh/d5EGWPI1fNAbgfIKcSBsaPibZqKtAc8hLEI0/0e1jd7ejNQ==
+X-Received: by 2002:a62:1dd5:0:b029:19d:fc87:5f45 with SMTP id d204-20020a621dd50000b029019dfc875f45mr4817465pfd.63.1607323435367;
+        Sun, 06 Dec 2020 22:43:55 -0800 (PST)
+Received: from localhost.localdomain (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.googlemail.com with ESMTPSA id js9sm22865087pjb.2.2020.12.06.22.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Dec 2020 22:40:35 -0800 (PST)
-Date:   Sun, 6 Dec 2020 22:40:32 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-input@vger.kernel.org, Shirish.S@amd.com,
-        Andy Shevchenko <andy@infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>, Pavel Machek <pavel@ucw.cz>,
-        Rajat Jain <rajatja@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Input: i8042 - Prevent intermixing i8042 commands
-Message-ID: <X83OYA0TaUszBD1y@google.com>
-References: <20200827144112.v2.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+        Sun, 06 Dec 2020 22:43:54 -0800 (PST)
+From:   Chris Chiu <chiu@endlessos.org>
+To:     dvhart@infradead.org, andy@infradead.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessos.org, Daniel Drake <drake@endlessos.org>,
+        Chris Chiu <chiu@endlessos.org>
+Subject: [PATCH] acer-wireless: send an EV_SYN/SYN_REPORT between state changes
+Date:   Mon,  7 Dec 2020 14:43:22 +0800
+Message-Id: <20201207064322.13992-1-chiu@endlessos.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827144112.v2.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Raul,
+From: Daniel Drake <drake@endlessos.org>
 
-On Thu, Aug 27, 2020 at 02:41:53PM -0600, Raul E Rangel wrote:
-> The i8042_mutex must be held by writers of the AUX and KBD ports, as
-> well as users of i8042_command. There were a lot of users of
-> i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
-> This resulted in i8042_commands being issues in between PS/2
-> transactions.
-> 
-> This change moves the mutex lock into i8042_command and removes the
-> burden of locking the mutex from the callers.
+Sending the switch state change twice within the same frame is invalid
+evdev protocol and only works if the client handles keys immediately as
+well. Processing events immediately is incorrect, it forces a fake
+order of events that does not exist on the device.
 
-I think there is a benefit for allowing users issue a sequence of
-commands to i8042 without interruptions, so I would prefer keeping
-i8042_[un]lock_chip() in place.
+Recent versions of libinput changed to only process the device state and
+SYN_REPORT time, so now the key event is lost.
 
-Given that the issue you were observing was caused by i8042_port_close()
-interfering with probing, maybe we could do something like this:
+Same fix as 'commit <bff5bf9db1c94> ("platform/x86: asus-wireless: send
+an EV_SYN/SYN_REPORT between state changes")'
 
+Signed-off-by: Daniel Drake <drake@endlessos.org>
+Signed-off-by: Chris Chiu <chiu@endlessos.org>
+---
+ drivers/platform/x86/acer-wireless.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-index abae23af0791..aff871001eda 100644
---- a/drivers/input/serio/i8042.c
-+++ b/drivers/input/serio/i8042.c
-@@ -344,6 +344,8 @@ int i8042_command(unsigned char *param, int command)
- 	unsigned long flags;
- 	int retval;
- 
-+	lockdep_assert_held(&i8042_mutex);
-+
- 	if (!i8042_present)
- 		return -1;
- 
-@@ -364,6 +366,8 @@ static int i8042_kbd_write(struct serio *port, unsigned char c)
- 	unsigned long flags;
- 	int retval = 0;
- 
-+	lockdep_assert_held(&i8042_mutex);
-+
- 	spin_lock_irqsave(&i8042_lock, flags);
- 
- 	if (!(retval = i8042_wait_write())) {
-@@ -411,6 +415,8 @@ static void i8042_port_close(struct serio *serio)
- 		port_name = "KBD";
+diff --git a/drivers/platform/x86/acer-wireless.c b/drivers/platform/x86/acer-wireless.c
+index e0976180532a..1b5d935d085a 100644
+--- a/drivers/platform/x86/acer-wireless.c
++++ b/drivers/platform/x86/acer-wireless.c
+@@ -28,6 +28,7 @@ static void acer_wireless_notify(struct acpi_device *adev, u32 event)
+ 		return;
  	}
- 
-+	i8042_lock_chip();
-+
- 	i8042_ctr &= ~irq_bit;
- 	if (i8042_command(&i8042_ctr, I8042_CMD_CTL_WCTR))
- 		pr_warn("Can't write CTR while closing %s port\n", port_name);
-@@ -422,6 +428,8 @@ static void i8042_port_close(struct serio *serio)
- 	if (i8042_command(&i8042_ctr, I8042_CMD_CTL_WCTR))
- 		pr_err("Can't reactivate %s port\n", port_name);
- 
-+	i8042_unlock_chip();
-+
- 	/*
- 	 * See if there is any data appeared while we were messing with
- 	 * port state.
-
-
-Thanks.
-
+ 	input_report_key(idev, KEY_RFKILL, 1);
++	input_sync(idev);
+ 	input_report_key(idev, KEY_RFKILL, 0);
+ 	input_sync(idev);
+ }
 -- 
-Dmitry
+2.20.1
+
