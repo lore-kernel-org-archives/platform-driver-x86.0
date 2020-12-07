@@ -2,117 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD21C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 18:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EB1C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 19:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A002389F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 18:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A83DC238E3
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 19:30:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgLGSUH (ORCPT
+        id S1725814AbgLGTaA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 13:20:07 -0500
-Received: from mga09.intel.com ([134.134.136.24]:55724 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgLGSUH (ORCPT
+        Mon, 7 Dec 2020 14:30:00 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41797 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbgLGTaA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 13:20:07 -0500
-IronPort-SDR: lo6XuVK1zllT1PnO3OONmNo0Sw5/tcwieWa0tVwyKzHbJ4S1uIfKIOxATrfkY025MiHKfWYIZk
- R58hPt/crxvg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="173896498"
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="173896498"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2020 10:15:39 -0800
-IronPort-SDR: x5x4cUParmVdquYlNS0w4VNIzH4LHbVH9uGn8v9nPmS1slwFKZt/xx7cShIYp4ZjOyknSTBlNj
- 3v2a8mIyU3Og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.78,400,1599548400"; 
-   d="scan'208";a="539892869"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Dec 2020 10:15:39 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     hdegoede@redhat.com, mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v2 3/3] platform/x86: ISST: Change PCI device macros
-Date:   Mon,  7 Dec 2020 10:15:31 -0800
-Message-Id: <20201207181531.1718148-4-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20201207181531.1718148-1-srinivas.pandruvada@linux.intel.com>
-References: <20201207181531.1718148-1-srinivas.pandruvada@linux.intel.com>
+        Mon, 7 Dec 2020 14:30:00 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 15so5488066oix.8;
+        Mon, 07 Dec 2020 11:29:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7zKVYyE2btS5Zmt/3JSRrYr9q8pHZIlvwA2xtZ/GJ7o=;
+        b=ZCmkWmWurt16WBFVjdOG73fhlZC4rAm5kquMUXYodIYJ66GIjpBBEjK9eA/Crs0SX/
+         AfPpjt9OxqKkoFCuAgzo1BOnn1nbL2j8mt1pkr4jpXWbCFmh3xOnDdfPcwHdgWy/ec1i
+         2tDWN0YSF4uCB9k6fC/iXz/i1ZzuCUIGJ5IBu6Lhw6uPWUyUuMXk8ewwiCr0t5i3BhJ1
+         nW5nryiF4pasbvmXuinTf6gIY4lpMP8fHJf7LDQY5zqZpbEn4EtIyNIJyDEru1vALy73
+         t3GXAcCDKzIbLWljOAmWEWU53bAvsTJgLKp7wdHM8WVwLDEww1qtLdjqf5vAQfl/G/f9
+         gFjg==
+X-Gm-Message-State: AOAM530xwREFFt00+1Thyo8ipL5GiYICbZYqC/afpX5Yqd+Q6Pkdmmjf
+        wauh34fPiaPLKwQHANG9EsvCphPfdEKUwKnAMqA=
+X-Google-Smtp-Source: ABdhPJxZzsT8tSxR91QcuQmS+PlJfB/5CunQOGdydGFfrIuLTUKa0BO4zDIgOzmexb1XqHRtW0IO+KfN6dOed/+D1dY=
+X-Received: by 2002:aca:5a42:: with SMTP id o63mr261202oib.69.1607369359070;
+ Mon, 07 Dec 2020 11:29:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <markpearson@lenovo.com> <20201202171120.65269-1-markpearson@lenovo.com>
+ <74b6ef2c-ac13-bffe-edda-478512950d22@redhat.com>
+In-Reply-To: <74b6ef2c-ac13-bffe-edda-478512950d22@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 7 Dec 2020 20:29:08 +0100
+Message-ID: <CAJZ5v0iWD5Ej-1oCfMAskvQoovMRVc5TkpST1t9brsJirx+5zQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Documentation: Add documentation for new
+ platform_profile sysfs attribute
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Pearson <markpearson@lenovo.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mark Gross <mgross@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Darren Hart <dvhart@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use PCI_VDEVICE and PCI_DEVICE_DATA macros. No functional changes are
-expected.
+On Thu, Dec 3, 2020 at 10:46 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 12/2/20 6:11 PM, Mark Pearson wrote:
+> > On modern systems the platform performance, temperature, fan and other
+> > hardware related characteristics are often dynamically configurable. The
+> > profile is often automatically adjusted to the load by some
+> > automatic-mechanism (which may very well live outside the kernel).
+> >
+> > These auto platform-adjustment mechanisms often can be configured with
+> > one of several 'platform-profiles', with either a bias towards low-power
+> > consumption or towards performance (and higher power consumption and
+> > thermals).
+> >
+> > Introduce a new platform_profile sysfs API which offers a generic API for
+> > selecting the performance-profile of these automatic-mechanisms.
+> >
+> > Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+> > Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Thank you, patches 1 and 2 look good to me now, you may add my:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> To patch 2 (since I'm co-author of patch 1 it would be a bit weird
+> to add it there too).
+>
+> Rafael, it would be great if you pick up patches 1 and 2 for merging
+> into 5.11 (assuming that you agree that they are ready) then I will merge
+> patch 3 once 5.11-rc1 is out.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../platform/x86/intel_speed_select_if/isst_if_common.h   | 8 ++++----
- .../platform/x86/intel_speed_select_if/isst_if_mbox_pci.c | 4 ++--
- drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 6 ++----
- 3 files changed, 8 insertions(+), 10 deletions(-)
+I've applied patch [1/2] (as 5.11-rc material) for now, but I still
+needed to fix it up somewhat.  Please check the result in my
+bleeding-edge branch.
 
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-index 4f6f7f0761fc..fdecdae248d7 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-@@ -10,11 +10,11 @@
- #ifndef __ISST_IF_COMMON_H
- #define __ISST_IF_COMMON_H
- 
--#define INTEL_RAPL_PRIO_DEVID_0	0x3451
--#define INTEL_CFG_MBOX_DEVID_0	0x3459
-+#define PCI_DEVICE_ID_INTEL_RAPL_PRIO_DEVID_0	0x3451
-+#define PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_0	0x3459
- 
--#define INTEL_RAPL_PRIO_DEVID_1 0x3251
--#define INTEL_CFG_MBOX_DEVID_1  0x3259
-+#define PCI_DEVICE_ID_INTEL_RAPL_PRIO_DEVID_1	0x3251
-+#define PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_1	0x3259
- 
- /*
-  * Validate maximum commands in a single request.
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-index 95f01e7a87d5..a2a2d923e60c 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-@@ -146,8 +146,8 @@ static long isst_if_mbox_proc_cmd(u8 *cmd_ptr, int *write_only, int resume)
- }
- 
- static const struct pci_device_id isst_if_mbox_ids[] = {
--	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_0)},
--	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_CFG_MBOX_DEVID_1)},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_0)},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CFG_MBOX_DEVID_1)},
- 	{ 0 },
- };
- MODULE_DEVICE_TABLE(pci, isst_if_mbox_ids);
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-index 4c9020249989..ff49025ec085 100644
---- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-+++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-@@ -82,10 +82,8 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
- }
- 
- static const struct pci_device_id isst_if_ids[] = {
--	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_0),
--		.driver_data = (kernel_ulong_t)&mmio_range_devid_0},
--	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, INTEL_RAPL_PRIO_DEVID_1),
--		.driver_data = (kernel_ulong_t)&mmio_range_devid_1},
-+	{ PCI_DEVICE_DATA(INTEL, RAPL_PRIO_DEVID_0, &mmio_range_devid_0)},
-+	{ PCI_DEVICE_DATA(INTEL, RAPL_PRIO_DEVID_1, &mmio_range_devid_1)},
- 	{ 0 },
- };
- MODULE_DEVICE_TABLE(pci, isst_if_ids);
--- 
-2.25.4
+I'll get to the other patch tomorrow.
 
+Thanks!
