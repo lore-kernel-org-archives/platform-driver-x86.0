@@ -5,79 +5,77 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B8FC0018C
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6129C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BD1235E4
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D4023447
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725822AbgLGOHY (ORCPT
+        id S1726708AbgLGOHq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 09:07:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24606 "EHLO
+        Mon, 7 Dec 2020 09:07:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30451 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725917AbgLGOHY (ORCPT
+        by vger.kernel.org with ESMTP id S1726638AbgLGOHp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 09:07:24 -0500
+        Mon, 7 Dec 2020 09:07:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607349957;
+        s=mimecast20190719; t=1607349979;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=afa9i0Bef4Cb3mOnPuAfy6fMFqpa+/My9xmYdxXU/TQ=;
-        b=Je4Qnlb5UV1uNBOBZfZCtxoLXZedsdLvEFE479HKbCBH6z4Y19xbhR+g/bMJpPtjgHjWX7
-        uN+tCli/Rh1DvXc3eae6URzETAZ7iXsARaXX4agyKkffggGWC0WH7g7I8D7/hUZtvZI3V3
-        Q5gPGfPjwGqUqaquqz44Xk10GuMgnVA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-K8VzEiknM7a5lVnB3vH-Kw-1; Mon, 07 Dec 2020 09:05:55 -0500
-X-MC-Unique: K8VzEiknM7a5lVnB3vH-Kw-1
-Received: by mail-ed1-f72.google.com with SMTP id d12so3509691edx.23
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 06:05:55 -0800 (PST)
+        bh=oIQEZStG8ElOQdQ6wrva4lMkvQcBMuWnarU5vOcVQdQ=;
+        b=Le9oCxg1lOldRkdj5Cf2WcnTCXQCimk0niJPsM3cdePEBUmX+XTEvwEtit14229GhidAvM
+        7mCScHGZg11iw86T4JeJ7XlSviU1uojBpg/DsEV7OKU63HyLA5ZOLjgzy161DjWrdI9kEC
+        5BW/TBAq2/HRXTbbLQsLZGAlaltI7/0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-J6CPNDdlO9qrn8TwgGBcQQ-1; Mon, 07 Dec 2020 09:06:17 -0500
+X-MC-Unique: J6CPNDdlO9qrn8TwgGBcQQ-1
+Received: by mail-ej1-f69.google.com with SMTP id ny19so3069145ejb.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 06:06:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=afa9i0Bef4Cb3mOnPuAfy6fMFqpa+/My9xmYdxXU/TQ=;
-        b=U3IfJSHtuMsEsGXtn1Nsf4EjurFAvj+hwknnl47k6kKyWERn0ZEMOLYPtlste9zDok
-         qQ8YpA8XVW9fxCEro8qP+i7ufdfW7OYoobThsqlr/vpxv9h/5UChlDR3aY9AMcO9Ojqz
-         V0hWqregNRn66kPYsIxXqMob95IcPc/eyVH2rirKe//CsTjowwPP7mFSKupk4jF4JzAt
-         YzbJM3ZON2og+3HJXRai1zto1LzSQvv4Bw6l9n82Fxb/f7+LPXk7XILRlzuYG6t2EnPz
-         VzwWbo/vDfpx6wQZiDQC43Z1CJ04vx5WP8vsxYk8s8ICoRerqWHfzgHgBS+UP/qngCkl
-         J0lg==
-X-Gm-Message-State: AOAM532i9fK+eNMfTpTu4S5QXjvSDzilzmO+PLQHHclFOvHR3Hb1jHdf
-        15MEkSOs+bFaAL1C1vkcGqYbR26zt8v+HPauthPp1EoXKRDYLB5LGtkC5+SnhCq/MasNuyPhbQN
-        1ZKn90FFvKSlVvLW2qnpRDYIcYY+78u+fYg==
-X-Received: by 2002:a17:906:1199:: with SMTP id n25mr18736559eja.293.1607349954377;
-        Mon, 07 Dec 2020 06:05:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwraVwT1JcG9eO2qX/pyTXO58k7gNNbrJ+XGPs1jOdznikQXAjUUeHwWvUuK1v++EvFYzp4fg==
-X-Received: by 2002:a17:906:1199:: with SMTP id n25mr18736540eja.293.1607349954217;
-        Mon, 07 Dec 2020 06:05:54 -0800 (PST)
+        bh=oIQEZStG8ElOQdQ6wrva4lMkvQcBMuWnarU5vOcVQdQ=;
+        b=sZHwZo3jNWJEJ748a5p95Fgy8vLjfHXktRLtTxPkY32DpI8boSUtAG9dO4iN9rLwA4
+         9puhsOxP+y+Dxl7ZfRNygfu8twr3X/A2HxFJbSf69PvrpjADTmQz7fQ0QC6N5UltLaZs
+         Tmo6Y+VfoS6q+aiEkZKHSsSUCsMAGM2RQ1GtftTN2UWcuCJw1Eoxx64fhaKsuBkDNyk2
+         LFxjHb5716MkluJ/eP4e/KPxghQnC/EERJt2yWxIAQEKnVNFsA9FdtNeOI3CciqR9KkB
+         4e0z5J5yijzeRlOzVpJ2e9IX5en/PNz6gCmPLPzTiLPTgfLph07RX4+wBN4W3Q1I6zZV
+         2e1w==
+X-Gm-Message-State: AOAM531l33JFEw0CVI5n4WY4CA1AK4iD9/OTYQ6+u8hhpEBi/gqXJ8C/
+        qBBIRAdif6aTdnrajw+o9tcKVf5+ROp2ILuvfc/TaAx44yvqReO1my7ol48yR//zaEUoyxQWc/5
+        bSEVS/qat45V00T4ByC3vpDB8+vWXstP/vg==
+X-Received: by 2002:a50:d4d9:: with SMTP id e25mr9795399edj.243.1607349976283;
+        Mon, 07 Dec 2020 06:06:16 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxghHQqy/Z3ozF+KzW4FFZXQMPRBxJdF5q4jLTmTzZsCzyRG416H05Zx7Uf+lIDd6n13A8Z5w==
+X-Received: by 2002:a50:d4d9:: with SMTP id e25mr9795374edj.243.1607349976078;
+        Mon, 07 Dec 2020 06:06:16 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id cb21sm13461039edb.57.2020.12.07.06.05.53
+        by smtp.gmail.com with ESMTPSA id v24sm13606696edw.23.2020.12.07.06.06.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Dec 2020 06:05:53 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: work around for BIOS bug
-To:     Divya Bharathi <divya27392@gmail.com>, dvhart@infradead.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Divya Bharathi <divya.bharathi@dell.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Prasanth KSR <prasanth.ksr@dell.com>
-References: <20201202131935.307372-1-divya.bharathi@dell.com>
+        Mon, 07 Dec 2020 06:06:15 -0800 (PST)
+Subject: Re: [PATCH] acer-wireless: send an EV_SYN/SYN_REPORT between state
+ changes
+To:     Chris Chiu <chiu@endlessos.org>, dvhart@infradead.org,
+        andy@infradead.org
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@endlessos.org, Daniel Drake <drake@endlessos.org>
+References: <20201207064322.13992-1-chiu@endlessos.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <39f8a3a5-88ff-7e1d-8ce3-ebec8c01427e@redhat.com>
-Date:   Mon, 7 Dec 2020 15:05:52 +0100
+Message-ID: <ce1eaef4-c804-c956-ce24-fa1333100060@redhat.com>
+Date:   Mon, 7 Dec 2020 15:06:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201202131935.307372-1-divya.bharathi@dell.com>
+In-Reply-To: <20201207064322.13992-1-chiu@endlessos.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,15 +85,22 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/2/20 2:19 PM, Divya Bharathi wrote:
-> BIOS sets incorrect value (zero) when SET value passed for integer attribute
-> with + sign. Added workaround to remove + sign before passing input to BIOS
+On 12/7/20 7:43 AM, Chris Chiu wrote:
+> From: Daniel Drake <drake@endlessos.org>
 > 
-> Co-developed-by: Mario Limonciello <mario.limonciello@dell.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> Co-developed-by: Prasanth KSR <prasanth.ksr@dell.com>
-> Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
-> Signed-off-by: Divya Bharathi <divya.bharathi@dell.com>
+> Sending the switch state change twice within the same frame is invalid
+> evdev protocol and only works if the client handles keys immediately as
+> well. Processing events immediately is incorrect, it forces a fake
+> order of events that does not exist on the device.
+> 
+> Recent versions of libinput changed to only process the device state and
+> SYN_REPORT time, so now the key event is lost.
+> 
+> Same fix as 'commit <bff5bf9db1c94> ("platform/x86: asus-wireless: send
+> an EV_SYN/SYN_REPORT between state changes")'
+> 
+> Signed-off-by: Daniel Drake <drake@endlessos.org>
+> Signed-off-by: Chris Chiu <chiu@endlessos.org>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -113,35 +118,23 @@ Regards,
 
 Hans
 
+
+
 > ---
->  drivers/platform/x86/dell-wmi-sysman/int-attributes.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  drivers/platform/x86/acer-wireless.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/platform/x86/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-> index ea773d8e8d3a..75aedbb733be 100644
-> --- a/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-> +++ b/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-> @@ -39,7 +39,7 @@ static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *a
->   * @instance_id: The instance on which input is validated
->   * @buf: Input value
->   */
-> -static int validate_integer_input(int instance_id, const char *buf)
-> +static int validate_integer_input(int instance_id, char *buf)
->  {
->  	int in_val;
->  	int ret;
-> @@ -51,6 +51,12 @@ static int validate_integer_input(int instance_id, const char *buf)
->  			in_val > wmi_priv.integer_data[instance_id].max_value)
->  		return -EINVAL;
->  
-> +	/* workaround for BIOS error.
-> +	 * validate input to avoid setting 0 when integer input passed with + sign
-> +	 */
-> +	if (*buf == '+')
-> +		memmove(buf, (buf + 1), strlen(buf + 1) + 1);
-> +
->  	return ret;
+> diff --git a/drivers/platform/x86/acer-wireless.c b/drivers/platform/x86/acer-wireless.c
+> index e0976180532a..1b5d935d085a 100644
+> --- a/drivers/platform/x86/acer-wireless.c
+> +++ b/drivers/platform/x86/acer-wireless.c
+> @@ -28,6 +28,7 @@ static void acer_wireless_notify(struct acpi_device *adev, u32 event)
+>  		return;
+>  	}
+>  	input_report_key(idev, KEY_RFKILL, 1);
+> +	input_sync(idev);
+>  	input_report_key(idev, KEY_RFKILL, 0);
+>  	input_sync(idev);
 >  }
->  
 > 
 
