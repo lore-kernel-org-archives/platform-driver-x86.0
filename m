@@ -2,112 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBF8C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 15:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F54C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 16:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F79623358
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 15:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31ADD23731
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 16:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgLGPxw (ORCPT
+        id S1726504AbgLGQAM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 10:53:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726920AbgLGPxv (ORCPT
+        Mon, 7 Dec 2020 11:00:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgLGQAL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 10:53:51 -0500
-Date:   Mon, 7 Dec 2020 16:53:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1607356391;
-        bh=noShnSv1v7gr2opTKTK2wimVs4+6xqO0hr9+Euwoe28=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DRk1r4HVNufN4wYTYgC28bhII4ixN07S5JfoZBYHfb0dmqXUKDZNkmprxII96/s37
-         fj4B+dIM4NlRyzBwVPbC8KZqYBQ4Q2Bgl3h23U9lbCdwELk40VoOlG8JKgAF408X9q
-         QVW8DDJnE6QRDzJavSCUu7OxfU7E+VtSbvDIRXXZaUIEbo2gtnhtyZU/US9jDijpFy
-         SHKe3kyt6MbyjzpjGZxQDdQGPHbtHwVtYbCK1GwExWunOvqBLeY680EkMQDnH5J4Rq
-         GHgeqv4AAeG3YN0omGUKxqzqmRZYztMXrATkgb1OoIZgurYRsMKVjbslBNcd9e93Yb
-         GkH3UL5cg7C6w==
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: dell-driver: Backlight access slow
-Message-ID: <20201207155309.3eyjjyyl6xq4u622@pali>
-References: <d2d1074d-a342-35ce-1e0d-5300b4803f33@molgen.mpg.de>
+        Mon, 7 Dec 2020 11:00:11 -0500
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947B5C061793
+        for <platform-driver-x86@vger.kernel.org>; Mon,  7 Dec 2020 07:59:25 -0800 (PST)
+Received: by mail-wr1-x444.google.com with SMTP id a12so6454853wrv.8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 07:59:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TsbR/ygYxyXFNxTWS+rlq87PYRq6NOfsyxwkN1nkloE=;
+        b=Bsbi60AptI1vCJOxzvRvBbaEKPAazGs9IEdCxKhzFzQREOIMVOxK/5D4TcbhHl968t
+         gmU7bHFSKllntii/SUXLSDINSRLe9zYtzjuqy8kMXaxCarhOunVii2BEwuBUbfpJLg3l
+         ni/IaIbbbofOVXhCPSyK6RDKyoD5EZ/9n4nEtinLJE94xlg+0UCfpNoNJFHp+lSJJyrl
+         mY0ptoOYtLWZzA8LjxvxeeshAPcGFcUggO9W9Vp+7tJruGyHafRFbxADiuh3FXS/ksyr
+         jvzB1gi53Bk8J9U93Qb9S4JomZTrgXGsB0DKpkvQv+8yfcTXH822m7KMH9p8ByG/+aM1
+         XoXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TsbR/ygYxyXFNxTWS+rlq87PYRq6NOfsyxwkN1nkloE=;
+        b=hQj6E9hlUmyyeEA9iD9wfCMufisunwfFHgp4fpwbml5Fp5h873ZA3aLY9IDhCcBhfj
+         n4QNb+kgnPeIGVfT7Sw9Xc7gf6xbzNF4ryUzwMCWIyN+TdD517SyZKAT7V1tHIsvfzsJ
+         VLbTQDlmQEdAFacvwhKQCvVNqsMImxyKZpx59atcFFQSFMi0DqwbbDg5TJ90Nu3sBaaF
+         ll8xA+oSszwE9tLH7Z18r8KtDK9dBAWBfh32EzO8QsNvRk8bKbw5/F6tk1Qr5WnEIj5O
+         65OT14BcGopwChPBV/0cOw9Hd0qTpGx7XLc6G4VDFB8QL5hLYiaUDnk+dzAmURh7p3WF
+         5TuA==
+X-Gm-Message-State: AOAM533KUI853E+kd6HcoH32RQHRwIQ8F9Vl29INEvXGk3hDGod8JkjB
+        HFE1UxSmiqkMchEB+RmIPs/00Q==
+X-Google-Smtp-Source: ABdhPJzYlkkV9y15L7sZt8a7Aq3G0pyggpPyg/Q7eQW9JtvvXF7bANlqEB6ECjgdqyaNMQ8sIzIulg==
+X-Received: by 2002:adf:f347:: with SMTP id e7mr20465446wrp.183.1607356764149;
+        Mon, 07 Dec 2020 07:59:24 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:797d:a1c3:5539:208e? ([2a01:e34:ed2f:f020:797d:a1c3:5539:208e])
+        by smtp.googlemail.com with ESMTPSA id s63sm7041541wms.18.2020.12.07.07.59.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Dec 2020 07:59:23 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] platform/x86/drivers/acerhdf: Check the interval
+ value when it is set
+To:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?Q?Peter_K=c3=a4stle?= <peter@piie.net>,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201203071738.2363701-2-daniel.lezcano@linaro.org>
+ <20201203071738.2363701-1-daniel.lezcano@linaro.org>
+ <92e330ff28a10b1fb92d91c083fa3cac@piie.net>
+ <bf62927f-972b-b4c3-ff97-179af6d53882@linaro.org>
+ <771a76da-bdd3-54b2-3661-e9db918ee00d@redhat.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <b42f067e-aebf-4e6a-0adb-ccc1b8bfc8ba@linaro.org>
+Date:   Mon, 7 Dec 2020 16:59:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <771a76da-bdd3-54b2-3661-e9db918ee00d@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d2d1074d-a342-35ce-1e0d-5300b4803f33@molgen.mpg.de>
-User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Monday 07 December 2020 16:37:04 Paul Menzel wrote:
-> Dear Linux folks,
+On 07/12/2020 15:54, Hans de Goede wrote:
+> Hi,
 > 
+> On 12/4/20 12:43 PM, Daniel Lezcano wrote:
+>> On 03/12/2020 22:22, Peter Kästle wrote:
+>>> 3. Dezember 2020 08:17, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+>>>
+>>>> Currently the code checks the interval value when the temperature is
+>>>> read which is bad for two reasons:
+>>>>
+>>>> - checking and setting the interval in the get_temp callback is
+>>>> inaccurate and awful, that can be done when changing the value.
+>>>>
+>>>> - Changing the thermal zone structure internals is an abuse of the
+>>>> exported structure, moreover no lock is taken here.
+>>>>
+>>>> The goal of this patch is to solve the first item by using the 'set'
+>>>> function called when changing the interval. The check is done there
+>>>> and removed from the get_temp function. If the thermal zone was not
+>>>> initialized yet, the interval is not updated in this case as that will
+>>>> happen in the init function when registering the thermal zone device.
+>>>
+>>> Thanks for your effort.  This improves the code, good finding.
+>>>
+>>>  
+>>>> I don't have any hardware to test the changes.
+>>>
+>>> Tests successfully executed on my good old AOA110.
+>>>
+>>>
+>>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>
+>>> Acked-by: Peter Kaestle <peter@piie.net>
+>>
+>> Thanks for testing the changes.
+>>
+>> Shall pick the patches through the thermal tree ?
 > 
-> On a Dell Precision 3540/0M14W7 with Debian sid/unstable restoring the
-> keyboard backlight takes over 100 ms according to `systemd-analyze
-> critical-chain` [1].
+> I can take them through the drivers/platform/x86 (pdx86) tree,
+> but if you prefer to take them upstream through the thermal tree,
+> then that is fine too...
 > 
-> ```
-> $ systemd-analyze critical-chain
-> […]
->             └─sysinit.target @887ms
->               └─systemd-backlight@leds:dell::kbd_backlight.service @1.295s
-> +114ms
->                 └─system-systemd\x2dbacklight.slice @1.294s
->                   └─system.slice @291ms
->                     └─-.slice @291ms
-> ```
+> Here is my ack (as pdx86 maintainer) for taking them through
+> the thermal tree:
 > 
-> I have to run the program [2] under strace to know for sure, that the delay
-> is caused by accessing the backlight device.
+> Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-Hello!
+Thanks. I'll take them through the thermal tree.
 
-If it is really truth that the 100 ms delay is in the kernel then you
-can use e.g. perf tool to trace where in the kernel happens that delay.
+  -- Daniel
 
-Kernel driver for keyboard backlight just calls Dell's SMBIOS API which
-issues SMM call. After that processor enters into privileged x86 SMM
-mode into Dell's SMM hook installed by the Dell firmware during machine
-boot and do appropriate keyboard backlight change call. During this
-procedure is normal execution of x86 processor stopped and even kernel
-does not have control over it.
 
-I already saw that people reported similar issues to Dell's SMM API for
-temperature and fan control and measured that processor stays in Dell's
-SMM code for a long time. So I can imagine that there could be a similar
-issue also with keyboard. But I can be completely wrong.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-I'm not sure if that keyboard backlight is related to SMM or not (this
-needs to be debugged) but basically kernel cannot do anything with
-Dell's SMM code. If problem is really in Dell SMM you can just report
-issue to Dell. If problem is somewhere else in kernel we need to know
-more details (e.g. in which function kernel spends lot of time) and then
-we can look how to optimize it.
-
-> Unfortunately, the device is
-> already in use by somebody else, so debugging is not easy. Maybe you have
-> some hint, how to approach analysis from the Linux kernel side.
-
-I understand that in this case it is harder to debug this issue. I know
-only perf tool for doing these analysis but maybe somebody else can help
-how it can be debugged in other way?
-
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> [1]: https://github.com/systemd/systemd/issues/17885
-> [2]: https://github.com/systemd/systemd/blob/5acd143259068c8959d7823b178ffbca3269db30/src/backlight/backlight.c
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
