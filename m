@@ -2,134 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCCEC4361B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC42CC4361B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C140235F9
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 813172360D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Dec 2020 14:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgLGOS1 (ORCPT
+        id S1726182AbgLGOzk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Dec 2020 09:18:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22818 "EHLO
+        Mon, 7 Dec 2020 09:55:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45111 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726412AbgLGOS0 (ORCPT
+        by vger.kernel.org with ESMTP id S1725772AbgLGOzj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Dec 2020 09:18:26 -0500
+        Mon, 7 Dec 2020 09:55:39 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607350619;
+        s=mimecast20190719; t=1607352853;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=s53RZYILsGtwM83jxx1xgqBZlFTvrwRxd01Lxzro7PM=;
-        b=hkkBDe0AFrrPx2NK7E4Q+ymENtv6QGWUrjADhOSaT2erPXQ5BZk6ceyvBgjZm+0PUp53cX
-        WiW4MBcEsLz1e5Q8W8H+8600jQa/s4dwLERID6Q9qmqLwMn0VpSdlFdGXrWsEO6rf9/9mL
-        G1Jw/HLpDe8qtHnyZAVPgV1jszu/ZfE=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-8CUGiIghPUaB2IhXmtYANw-1; Mon, 07 Dec 2020 09:16:57 -0500
-X-MC-Unique: 8CUGiIghPUaB2IhXmtYANw-1
-Received: by mail-ej1-f70.google.com with SMTP id n17so3905195eja.23
-        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 06:16:57 -0800 (PST)
+        bh=ZY9alcaJwbCVcJul/NI3QBrRiFsddnsGdax2/APiTVA=;
+        b=Z9GZvlSPzSHEl+iNjE0h/baToJ4LhpnSiTAixwueWwKjBcxLJV7Ml+F0BX0glTjWY/63I6
+        zrwx9gzl9g6fvLdBs1Et2DNPOBrbIlyjoyoM4uWayVvsm1rho85h5S2JbAKqvHxsyHoIr/
+        CX/tjx0FEs9f5/co/GItmc7XFbttUx4=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-JZUkxHsgPIeUvf3ltZZmtA-1; Mon, 07 Dec 2020 09:54:11 -0500
+X-MC-Unique: JZUkxHsgPIeUvf3ltZZmtA-1
+Received: by mail-ej1-f71.google.com with SMTP id rl11so1077810ejb.22
+        for <platform-driver-x86@vger.kernel.org>; Mon, 07 Dec 2020 06:54:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=s53RZYILsGtwM83jxx1xgqBZlFTvrwRxd01Lxzro7PM=;
-        b=nVT6gkMKKH7vZmzBDID+gbtKEeUsRFDpRy6pGYXIpPBINVhkcNHr9kvQ1ovbDzIRIT
-         60LqcEMKWxkKgeEdq5FXAREjGA+2Qv7s62e6AY5DAi6sLX8X+s9SmMqf2QWmQ4zIzG7X
-         0fypkbMD/6bNWjjh1H5ORQuzATzayEusJoVssXx+NMXNyDiyMHjMoU3PtWRFwHO7wu5w
-         eb/7xsZYpoVXjADkZOHlDy5m8zfQV5Pqk1ON+neYUcY4t+R03rP0dhJjQKHWjZ+Gi3BR
-         wCmAN2k8HgWR+mjnOVfLb48EQAipeQP7LezpIIxvbIgd7uHxhf1Jn9HshhjcTZ8btkj8
-         TjhQ==
-X-Gm-Message-State: AOAM530Rggf5Bc9NJFiwqBU7ZNttzbRre0KPUSc3qeNZMN4Qu5igNhJp
-        +BfY8Z1rqB/pDLteO5raVU7orcUehb2lmrohpmDBN4EJizvlxsbdNNit6Wl5FLSxJSSN1DwUx2h
-        gzmCEr3gxElbXrf93Y+fUDypfw5dZZFzEbQ==
-X-Received: by 2002:a17:906:b143:: with SMTP id bt3mr19227274ejb.318.1607350616410;
-        Mon, 07 Dec 2020 06:16:56 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzuQwbVhuYI/1XHG55Js/DNsfUhgSclENPUQ9U+GNFJ8u84Voy3So1uMAHP/3H5mVOpNV0AUw==
-X-Received: by 2002:a17:906:b143:: with SMTP id bt3mr19227252ejb.318.1607350616149;
-        Mon, 07 Dec 2020 06:16:56 -0800 (PST)
+        bh=ZY9alcaJwbCVcJul/NI3QBrRiFsddnsGdax2/APiTVA=;
+        b=eGvPCquf0pZhciZXQLWjFn9wvWGvzslyg/vnF3uQtlRn4XkPKMuTWdAQw4ejvv3bMa
+         wArcg570WHDUhTbZi1ioNlVYW8rcHN6XztNWH0kjTjVvAo3rxLvVM5LDdwoL2+SDiaBI
+         AHRvanZk99bBdRaMcta7/O99b6Zg8/AMwR1oMr+4bwJ2Pmxpg5wQ0hq3InJvipSnF3tA
+         YyTReZrBbW6LmF08mPQRIzDBHAeNNoiWbYZfpiyG5hueAI1/85R8xEY/s4BJ4z7BSFVv
+         E0FlAJ/oFDWNoAaYK5zFI7UGDY9pd74obK7phA2EajW89nVqSrcR/t5fqPyidmSqQvbp
+         UrmQ==
+X-Gm-Message-State: AOAM532evkEPpCNf493LKEP3g/uRQNzVG5Ekd0AjeRRn/fd7ULMPQPvl
+        uZE4uosk1tAIJ2klPxHY+F3UKMtccl8OrxyAu5tXXzQG2NKg03wllFd+xWObMoXUxbdfl3MTh1Z
+        Zy7L1r0z4sPuIeJuiBNWrnjhdxoB2mgdPkQ==
+X-Received: by 2002:a50:998d:: with SMTP id m13mr19773426edb.119.1607352850526;
+        Mon, 07 Dec 2020 06:54:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJybvxtqBPfHFtpim+Hnhr9mhb51+yZcFZIaYdxT1fb4tmHWVW6GNTQRpZiN6fS1x3dyQf7Elw==
+X-Received: by 2002:a50:998d:: with SMTP id m13mr19773417edb.119.1607352850355;
+        Mon, 07 Dec 2020 06:54:10 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id f18sm13423408edt.60.2020.12.07.06.16.55
+        by smtp.gmail.com with ESMTPSA id rh2sm12520011ejb.68.2020.12.07.06.54.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Dec 2020 06:16:55 -0800 (PST)
-Subject: Re: [PATCH 1/3] platform/x86: ISST: Check for unaligned mmio address
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Mon, 07 Dec 2020 06:54:09 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] platform/x86/drivers/acerhdf: Check the interval
+ value when it is set
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        =?UTF-8?Q?Peter_K=c3=a4stle?= <peter@piie.net>,
         mgross@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
+References: <20201203071738.2363701-2-daniel.lezcano@linaro.org>
+ <20201203071738.2363701-1-daniel.lezcano@linaro.org>
+ <92e330ff28a10b1fb92d91c083fa3cac@piie.net>
+ <bf62927f-972b-b4c3-ff97-179af6d53882@linaro.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <535e4198-4244-2650-b1d4-4d81262c3198@redhat.com>
-Date:   Mon, 7 Dec 2020 15:16:54 +0100
+Message-ID: <771a76da-bdd3-54b2-3661-e9db918ee00d@redhat.com>
+Date:   Mon, 7 Dec 2020 15:54:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201204015746.1168941-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <bf62927f-972b-b4c3-ff97-179af6d53882@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/4/20 2:57 AM, Srinivas Pandruvada wrote:
-> The address should be aligned to 4 byte boundary. So send an error for
-> unaligned address.
+On 12/4/20 12:43 PM, Daniel Lezcano wrote:
+> On 03/12/2020 22:22, Peter Kästle wrote:
+>> 3. Dezember 2020 08:17, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+>>
+>>> Currently the code checks the interval value when the temperature is
+>>> read which is bad for two reasons:
+>>>
+>>> - checking and setting the interval in the get_temp callback is
+>>> inaccurate and awful, that can be done when changing the value.
+>>>
+>>> - Changing the thermal zone structure internals is an abuse of the
+>>> exported structure, moreover no lock is taken here.
+>>>
+>>> The goal of this patch is to solve the first item by using the 'set'
+>>> function called when changing the interval. The check is done there
+>>> and removed from the get_temp function. If the thermal zone was not
+>>> initialized yet, the interval is not updated in this case as that will
+>>> happen in the init function when registering the thermal zone device.
+>>
+>> Thanks for your effort.  This improves the code, good finding.
+>>
+>>  
+>>> I don't have any hardware to test the changes.
+>>
+>> Tests successfully executed on my good old AOA110.
+>>
+>>
+>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>
+>> Acked-by: Peter Kaestle <peter@piie.net>
 > 
-> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Thanks for testing the changes.
+> 
+> Shall pick the patches through the thermal tree ?
 
-Thank you for your patch-series.
+I can take them through the drivers/platform/x86 (pdx86) tree,
+but if you prefer to take them upstream through the thermal tree,
+then that is fine too...
 
-One thing which still seems to be missing after this series is a check for
-attempting to read/write the hole between the 2 ranges. Can you please
-provide a follow-up patch adding such a check?
+Here is my ack (as pdx86 maintainer) for taking them through
+the thermal tree:
 
-###
-
-I've applied the series to my review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
-
-
-> ---
->  drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> index aa17fd7817f8..e7e9808a1aed 100644
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> @@ -42,6 +42,9 @@ static long isst_if_mmio_rd_wr(u8 *cmd_ptr, int *write_only, int resume)
->  	if (io_reg->reg < 0x04 || io_reg->reg > 0xD0)
->  		return -EINVAL;
->  
-> +	if (io_reg->reg % 4)
-> +		return -EINVAL;
-> +
->  	if (io_reg->read_write && !capable(CAP_SYS_ADMIN))
->  		return -EPERM;
->  
-> 
 
