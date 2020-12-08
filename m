@@ -2,134 +2,435 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9BAC4361B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 15:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBEAC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 18:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E26323A79
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 15:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F8323B46
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 18:27:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbgLHPcy (ORCPT
+        id S1730894AbgLHS1L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Dec 2020 10:32:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58549 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730072AbgLHPcx (ORCPT
+        Tue, 8 Dec 2020 13:27:11 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35779 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730424AbgLHS1L (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Dec 2020 10:32:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607441486;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+FMZUGLEZ8IR+pc7weB+jF6Ts3wWL1ODG+l+6NkEMl0=;
-        b=KNwoYCI78sIK64UBxBu4NxjHkKk7nWnckyb/QSfiCNoTv6GkgCU2xfv2Sv0pThFQZ5qMaF
-        gXScTHwQUe/pSt/LYtzZJTSFeB+m2U6u29nNojRWAdrB17hjngmw1k3MomqYCLmoVmzgCi
-        Y1NuRsrx3vRB3MOYaSJSxd0UJ19pIcI=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-nBkJtWjTNnClLXwwFJO81Q-1; Tue, 08 Dec 2020 10:31:24 -0500
-X-MC-Unique: nBkJtWjTNnClLXwwFJO81Q-1
-Received: by mail-ed1-f70.google.com with SMTP id bo22so2620622edb.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 08 Dec 2020 07:31:24 -0800 (PST)
+        Tue, 8 Dec 2020 13:27:11 -0500
+Received: by mail-oi1-f193.google.com with SMTP id s2so10932077oij.2;
+        Tue, 08 Dec 2020 10:26:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+FMZUGLEZ8IR+pc7weB+jF6Ts3wWL1ODG+l+6NkEMl0=;
-        b=RZx/q4wBKxU9XdZ6NDX4njYVDX91WMjGXLQP4KrY149FjweDBDr/viNmDreBYv/jB3
-         ro2hgrNFAuv/fUO8WiW3wrBWCZikFvQSB71CrTCj8CjYkN8tyew8lSUB/dUbjuQCNKOz
-         aJWt9CLH885SI0NfqsV8MUJk8KwjsL1s61mbnK/gfdHG0McVElywtjDnmhclR5Qj7i1C
-         /ZasY9S85rthnoTwZcvFHlFV2inDAgqVnWCWP7X8gSFcpfqACQKh+tjBWmq/aC5pEuDU
-         PHqHhypJ3sv5muMa4PbYp/qim8INL2FU3Qi3KKNVS1zrarhpkvV79h1I4s2Fia0orFqa
-         mmtg==
-X-Gm-Message-State: AOAM533yPNMRILnoPqvDsjuL+K1zCxx47HI9jFYK2Hgp5LH3tw1rHn0d
-        VnZ3l3epwUNFd4CkikWk42nWIuXlVSHd//OfTFnT8nylHW9oSgA7HHOmEtvYKz4V2aSnbNdDllf
-        tT4AB0KrAlQ3xPLx6jpcg5EUzu4XUsPNpjw==
-X-Received: by 2002:a50:f0dc:: with SMTP id a28mr25458357edm.291.1607441483384;
-        Tue, 08 Dec 2020 07:31:23 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxtQU0RezIwC9tzXq31kmgXqVciy5sBw5mSMcppCnQP7N2IaRcQFo26XwXC19JRgWUuXan+jw==
-X-Received: by 2002:a50:f0dc:: with SMTP id a28mr25458346edm.291.1607441483238;
-        Tue, 08 Dec 2020 07:31:23 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id oq7sm6098333ejb.63.2020.12.08.07.31.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Dec 2020 07:31:22 -0800 (PST)
-Subject: Re: [PATCH -next] platform/x86: ISST: Mark mmio_range_devid_0 and
- mmio_range_devid_1 with static keyword
-To:     Zou Wei <zou_wei@huawei.com>, srinivas.pandruvada@linux.intel.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1607430489-116200-1-git-send-email-zou_wei@huawei.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f9e29a7e-f5eb-afaf-1d29-4665be99046a@redhat.com>
-Date:   Tue, 8 Dec 2020 16:31:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ha0B2GBtINlEoN0/FZ3EByF0Em5gRquGZB5Qd3Pg3uY=;
+        b=dlQ7YKVE2RNnkDCR9TCGSk2E0QUpZM0tihkUbKghBkgy8unjxmX0gSwoAsI/BFglSp
+         x8Y9ajDkwOVTCf1f8MFSt/fQzn4UZaE5T6lfiUHp5tuRkwWlsk6D+8CkdvHcUbO2d/ZU
+         sZYCSC8QttjKlZiomGwo8wFmUoEF10XGiYAbjfrtZlsdviTQYIlu4ybvYqi4/OUDdBdN
+         odThUhd3tV8d2OXO0NPxmRzxBezrgkkJCBfuEdbcj6L+hioYEpldkEdGSYBiG4W2snGB
+         My33ZwrAZL+j1TEQq3IDhqJ8G8xtw5Qg8YEwZWHx07qLwpBw8OhmxzQvW0wQ5bU0iHYJ
+         Eh1A==
+X-Gm-Message-State: AOAM53301UadyLkC+OYb/fcuyhOZp1a86zhkA2o8PlIOP5aajt748IPL
+        vk+srJvtcJWIuhNG1VSZRT4+QlOc1y4ZU7tpk3S6xYNI
+X-Google-Smtp-Source: ABdhPJx5mKWbjiz5wxajipld5FVdx1fR1NXymEtqIh3hOoiTzlcHkb4YQ64THmIl1pnmRAcirTikdmjcOUTl72Ego9U=
+X-Received: by 2002:aca:cf4a:: with SMTP id f71mr3898109oig.157.1607451989423;
+ Tue, 08 Dec 2020 10:26:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1607430489-116200-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <markpearson@lenovo.com> <20201202171120.65269-1-markpearson@lenovo.com>
+ <20201202171120.65269-2-markpearson@lenovo.com>
+In-Reply-To: <20201202171120.65269-2-markpearson@lenovo.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 8 Dec 2020 19:26:17 +0100
+Message-ID: <CAJZ5v0j9jZBoyvr4=2mTq1A8dc+rbUaf=Woy3PnpKh8Bbg=-RQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] ACPI: platform-profile: Add platform profile support
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Elia Devito <eliadevito@gmail.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 12/8/20 1:28 PM, Zou Wei wrote:
-> Fix the following sparse warnings:
-> 
-> drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c:23:24: warning: symbol 'mmio_range_devid_0' was not declared. Should it be static?
-> drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c:28:24: warning: symbol 'mmio_range_devid_1' was not declared. Should it be static?
-> 
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
+On Wed, Dec 2, 2020 at 6:16 PM Mark Pearson <markpearson@lenovo.com> wrote:
+>
+> This is the initial implementation of the platform-profile feature.
+> It provides the details discussed and outlined in the
+> sysfs-platform_profile document.
+>
+> Many modern systems have the ability to modify the operating profile to
+> control aspects like fan speed, temperature and power levels. This
+> module provides a common sysfs interface that platform modules can register
+> against to control their individual profile options.
+>
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 > ---
->  drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> index 2906cfe..ff49025 100644
-> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-> @@ -20,12 +20,12 @@ struct isst_mmio_range {
->  	int end;
->  };
->  
-> -struct isst_mmio_range mmio_range_devid_0[] = {
-> +static struct isst_mmio_range mmio_range_devid_0[] = {
->  	{0x04, 0x14},
->  	{0x20, 0xD0},
->  };
->  
-> -struct isst_mmio_range mmio_range_devid_1[] = {
-> +static struct isst_mmio_range mmio_range_devid_1[] = {
->  	{0x04, 0x14},
->  	{0x20, 0x11C},
->  };
-> 
+> Changes in v2:
+>  Address (hopefully) all recommendations from review including:
+>  - reorder includes list alphabetically
+>  - make globals statics and use const as required
+>  - change profile name scanning to use full string
+>  - clean up profile name lists to remove unwanted additions
+>  - use sysfs_emit and sysfs_emit_at appropriately (much nicer!)
+>  - improve error handling. Return errors to user in all cases and use
+>    better error codes where appropriate (ENOOPSUPP)
+>  - clean up sysfs output for better readability
+>  - formatting fixes where needed
+>  - improve structure and enum names to be clearer
+>  - remove cur_profile field from structure. It is now local to the
+>    actual platform driver file (patch 3 in series)
+>  - improve checking so if future profile options are added profile_names
+>    will be updated as well.
+>  - move CONFIG option next to ACPI_THERMAL as it seemed slightly related
+>  - removed MAINTAINERS update as not appropriate (note warning message
+>    is seen when running checkpatch)
+>
+> Changes in v3:
+>  - Add missed platform_profile.h file
+>
+> Changes in v4:
+>  - Clean up duplicate entry in Kconfig file
+>  - Add linux/bits.h to include list
+>  - Remove unnecessary items from include list
+>  - Make cur_profile const
+>  - Clean up comments
+>  - formatting clean-ups
+>  - add checking of profile return value to show function
+>  - add checking to store to see if it's a supported profile
+>  - revert ENOTSUPP change in store function
+>  - improved error checking in profile registration
+>  - improved profile naming (now platform_profile_*)
+>
+> Changes in v5:
+>  - correct 'balance' to 'balanced' to be consistent with documentation
+>  - add WARN_ON when checking profile index in show function
+>  - switch mutex_lock_interruptible back to mutex_lock where appropriate
+>  - add 'platform_profile_last' as final entry in profile entry. Update
+>    implementation to use this appropriately
+>  - Use BITS_TO_LONG and appropriate access functions for choices field
+>  - Correct error handling as recommended
+>  - Sanity check profile fields on registration
+>  - Remove unnecessary init and exit functions
+>
+>  drivers/acpi/Kconfig             |  14 +++
+>  drivers/acpi/Makefile            |   1 +
+>  drivers/acpi/platform_profile.c  | 181 +++++++++++++++++++++++++++++++
+>  include/linux/platform_profile.h |  39 +++++++
+>  4 files changed, 235 insertions(+)
+>  create mode 100644 drivers/acpi/platform_profile.c
+>  create mode 100644 include/linux/platform_profile.h
+>
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index edf1558c1105..c1ca6255ff85 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -326,6 +326,20 @@ config ACPI_THERMAL
+>           To compile this driver as a module, choose M here:
+>           the module will be called thermal.
+>
+> +config ACPI_PLATFORM_PROFILE
+> +       tristate "ACPI Platform Profile Driver"
+> +       default y
 
+default m
+
+> +       help
+> +         This driver adds support for platform-profiles on platforms that
+> +         support it.
+
+Empty line here, please.
+
+> +         Platform-profiles can be used to control the platform behaviour. For
+> +         example whether to operate in a lower power mode, in a higher
+> +         power performance mode or between the two.
+
+And here.
+
+> +         This driver provides the sysfs interface and is used as the registration
+> +         point for platform specific drivers.
+
+And here.
+
+> +         Which profiles are supported is determined on a per-platform basis and
+> +         should be obtained from the platform specific driver.
+> +
+>  config ACPI_CUSTOM_DSDT_FILE
+>         string "Custom DSDT Table file to include"
+>         default ""
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index 44e412506317..c64a8af106c0 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -78,6 +78,7 @@ obj-$(CONFIG_ACPI_PCI_SLOT)   += pci_slot.o
+>  obj-$(CONFIG_ACPI_PROCESSOR)   += processor.o
+>  obj-$(CONFIG_ACPI)             += container.o
+>  obj-$(CONFIG_ACPI_THERMAL)     += thermal.o
+> +obj-$(CONFIG_ACPI_PLATFORM_PROFILE)    += platform_profile.o
+>  obj-$(CONFIG_ACPI_NFIT)                += nfit/
+>  obj-$(CONFIG_ACPI_NUMA)                += numa/
+>  obj-$(CONFIG_ACPI)             += acpi_memhotplug.o
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> new file mode 100644
+> index 000000000000..1bc092359e35
+> --- /dev/null
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -0,0 +1,181 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +/* Platform profile sysfs interface */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/bits.h>
+> +#include <linux/init.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_profile.h>
+> +#include <linux/sysfs.h>
+> +
+> +static const struct platform_profile_handler *cur_profile;
+> +static DEFINE_MUTEX(profile_lock);
+> +
+> +static const char * const profile_names[] = {
+> +       [platform_profile_low] = "low-power",
+> +       [platform_profile_cool] = "cool",
+> +       [platform_profile_quiet] = "quiet",
+> +       [platform_profile_balanced] = "balanced",
+> +       [platform_profile_perform] = "performance",
+
+The enum values in upper case, please.
+
+> +};
+> +static_assert(ARRAY_SIZE(profile_names) == platform_profile_last);
+> +
+> +static ssize_t platform_profile_choices_show(struct device *dev,
+> +                                       struct device_attribute *attr,
+> +                                       char *buf)
+> +{
+> +       int len = 0;
+> +       int err, i;
+> +
+> +       err = mutex_lock_interruptible(&profile_lock);
+
+Why interruptible?
+
+And why is the lock needed in the first place?
+
+> +       if (err)
+> +               return err;
+> +
+> +       if (!cur_profile) {
+> +               mutex_unlock(&profile_lock);
+> +               return -ENODEV;
+> +       }
+> +
+> +       for_each_set_bit(i, cur_profile->choices, platform_profile_last) {
+> +               if (len == 0)
+> +                       len += sysfs_emit_at(buf, len, "%s", profile_names[i]);
+> +               else
+> +                       len += sysfs_emit_at(buf, len, " %s", profile_names[i]);
+> +       }
+> +       len += sysfs_emit_at(buf, len, "\n");
+> +       mutex_unlock(&profile_lock);
+> +       return len;
+> +}
+> +
+> +static ssize_t platform_profile_show(struct device *dev,
+> +                                       struct device_attribute *attr,
+> +                                       char *buf)
+> +{
+> +       enum platform_profile_option profile = platform_profile_balanced;
+> +       int err;
+> +
+> +       err = mutex_lock_interruptible(&profile_lock);
+> +       if (err)
+> +               return err;
+> +
+> +       if (!cur_profile) {
+> +               mutex_unlock(&profile_lock);
+> +               return -ENODEV;
+> +       }
+> +
+> +       err = cur_profile->profile_get(&profile);
+
+In which cases this can fail?
+
+> +       mutex_unlock(&profile_lock);
+> +       if (err)
+> +               return err;
+> +
+> +       /* Check that profile is valid index */
+> +       if (WARN_ON((profile < 0) || (profile >= ARRAY_SIZE(profile_names))))
+> +               return -EIO;
+> +
+> +       return sysfs_emit(buf, "%s\n", profile_names[profile]);
+> +}
+> +
+> +static ssize_t platform_profile_store(struct device *dev,
+> +                           struct device_attribute *attr,
+> +                           const char *buf, size_t count)
+> +{
+> +       int err, i;
+> +
+> +       err = mutex_lock_interruptible(&profile_lock);
+> +       if (err)
+> +               return err;
+> +
+> +       if (!cur_profile) {
+> +               mutex_unlock(&profile_lock);
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* Scan for a matching profile */
+> +       i = sysfs_match_string(profile_names, buf);
+> +       if (i < 0) {
+> +               mutex_unlock(&profile_lock);
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Check that platform supports this profile choice */
+> +       if (!test_bit(i, cur_profile->choices)) {
+> +               mutex_unlock(&profile_lock);
+> +               return -EOPNOTSUPP;
+> +       }
+> +
+> +       err = cur_profile->profile_set(i);
+
+What if this gets a signal in the middle of the ->profile_set()
+execution?  Is this always guaranteed to work?
+
+> +       mutex_unlock(&profile_lock);
+> +       if (err)
+> +               return err;
+> +       return count;
+> +}
+> +
+> +static DEVICE_ATTR_RO(platform_profile_choices);
+> +static DEVICE_ATTR_RW(platform_profile);
+> +
+> +static struct attribute *platform_profile_attrs[] = {
+> +       &dev_attr_platform_profile_choices.attr,
+> +       &dev_attr_platform_profile.attr,
+> +       NULL
+> +};
+> +
+> +static const struct attribute_group platform_profile_group = {
+> +       .attrs = platform_profile_attrs
+> +};
+> +
+> +void platform_profile_notify(void)
+> +{
+> +       if (!cur_profile)
+> +               return;
+> +       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +}
+> +EXPORT_SYMBOL_GPL(platform_profile_notify);
+> +
+> +int platform_profile_register(const struct platform_profile_handler *pprof)
+> +{
+> +       int err;
+> +
+> +       mutex_lock(&profile_lock);
+> +       /* We can only have one active profile */
+> +       if (cur_profile) {
+> +               mutex_unlock(&profile_lock);
+> +               return -EEXIST;
+> +       }
+> +
+> +       /* Sanity check the profile handler field are set */
+> +       if (!pprof || !pprof->choices || !pprof->profile_set ||
+> +                       !pprof->profile_get) {
+> +               mutex_unlock(&profile_lock);
+> +               return -EINVAL;
+> +       }
+> +
+> +       err = sysfs_create_group(acpi_kobj, &platform_profile_group);
+> +       if (err) {
+> +               mutex_unlock(&profile_lock);
+> +               return err;
+> +       }
+> +
+> +       cur_profile = pprof;
+> +       mutex_unlock(&profile_lock);
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_profile_register);
+> +
+> +int platform_profile_unregister(void)
+
+"Unregister" functions typically take an argument pointing to the
+target object, so something like platform_profile_remove() may be a
+better choice here.
+
+> +{
+> +       mutex_lock(&profile_lock);
+> +       if (!cur_profile) {
+> +               mutex_unlock(&profile_lock);
+> +               return -ENODEV;
+> +       }
+> +
+> +       sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> +       cur_profile = NULL;
+> +       mutex_unlock(&profile_lock);
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(platform_profile_unregister);
+> +
+> +MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> new file mode 100644
+> index 000000000000..f2e1b1c90482
+> --- /dev/null
+> +++ b/include/linux/platform_profile.h
+> @@ -0,0 +1,39 @@
+> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> +/*
+> + * Platform profile sysfs interface
+> + *
+> + * See Documentation/ABI/testing/sysfs-platform_profile.rst for more
+> + * information.
+> + */
+> +
+> +#ifndef _PLATFORM_PROFILE_H_
+> +#define _PLATFORM_PROFILE_H_
+> +
+> +#include <linux/bitops.h>
+> +
+> +/*
+> + * If more options are added please update profile_names
+> + * array in platform-profile.c and sysfs-platform-profile.rst
+> + * documentation.
+> + */
+> +
+> +enum platform_profile_option {
+> +       platform_profile_low,
+> +       platform_profile_cool,
+> +       platform_profile_quiet,
+> +       platform_profile_balanced,
+> +       platform_profile_perform,
+> +       platform_profile_last, /*must always be last */
+> +};
+> +
+> +struct platform_profile_handler {
+> +       unsigned long choices[BITS_TO_LONGS(platform_profile_last)];
+> +       int (*profile_get)(enum platform_profile_option *profile);
+> +       int (*profile_set)(enum platform_profile_option profile);
+> +};
+> +
+> +int platform_profile_register(const struct platform_profile_handler *pprof);
+> +int platform_profile_unregister(void);
+> +void platform_profile_notify(void);
+> +
+> +#endif  /*_PLATFORM_PROFILE_H_*/
+> --
