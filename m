@@ -2,176 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E545C4167B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 14:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B60AC433FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 15:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29E5E23A7A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 14:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4630323A7B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Dec 2020 15:23:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgLHOzD (ORCPT
+        id S1730057AbgLHPWr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Dec 2020 09:55:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgLHOzD (ORCPT
+        Tue, 8 Dec 2020 10:22:47 -0500
+Received: from mga14.intel.com ([192.55.52.115]:45503 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729929AbgLHPWr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Dec 2020 09:55:03 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3892C0613D6;
-        Tue,  8 Dec 2020 06:54:22 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id c7so17858238edv.6;
-        Tue, 08 Dec 2020 06:54:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JsWjwoYEgAbELe13CUoCOO68+RuWkKxn3fV23mNX3vU=;
-        b=WzoFlR+1Wl6dnE5qW/Yq32zVEL3eblUGt6N9zW3IyPFozPs3eMxbyFvW9nuX2qbtDZ
-         22NwV0MjDtw+2o0260aJpquknaxeSuX0dbIP3bTsPfZVuotOrTR8FQgEHZIo232Na9e3
-         IeQt8sMpOQf7R4MX+tCNd2ydER/Vbj8zm6lC0pwi5Ik1UbdyY3y685xlWYYNKBG5EClc
-         HAwII2t4O0eiUgKFxNV/N/t2yIVYhnc5bFbLx6RGyvTkbwjhAP/elaBGjlJL29Wrk3Tf
-         g2FkTSqCZkf1D0UCVuOiwx6GY7eT84gcQ3Ic0ZzB7LXldsTHG8KxJ96o3OKMFtlrtLDR
-         y9aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JsWjwoYEgAbELe13CUoCOO68+RuWkKxn3fV23mNX3vU=;
-        b=MiRAFNyNl1EdzKAIeUwp1+pzh7PtuEBOjzsFbAw/hW35AwOSvWqKQwBw+gOBa6DmK7
-         LgFbYYJXyzBMLVGbUL331jtJXzmEBomzCoY9UJbjg//gPI0DYkIkJ3nhE++E98x+Gv97
-         lzNeown28s7qrWjzYS8AWY80hkB4Y573rOKFg8zW8tEMhhA/5Om6lA7HnIVqsm1PkX6O
-         g6XIHcjePknMT0vqd/a04fZsf+YGwDuIRWDZNdo5rwr1HO6FRKh0QaNMboXrfWL3uYXR
-         CJmxRd4YBvk+t2qz8PFFztMR5HTkzy+ZKGtoH71NoCboOaObDgaU294pUPStUtR4gBk3
-         Sj/A==
-X-Gm-Message-State: AOAM530B07UbAl0ASKJmLBGJNk0/jwMRxegS3uf5NJ6bKXUSf9U1LuxH
-        BDlTHjbiugt0IJrSHuQg/SRy8vKS4sY=
-X-Google-Smtp-Source: ABdhPJxAxwIONKKlT41YQVw5zrtg7UmpONATTyuwBGEhqTDt71BnKRdiNWs5dzar2lnyLJm5hg5l/A==
-X-Received: by 2002:aa7:d6d8:: with SMTP id x24mr25369803edr.105.1607439261216;
-        Tue, 08 Dec 2020 06:54:21 -0800 (PST)
-Received: from [192.168.2.202] (pd9e5a486.dip0.t-ipconnect.de. [217.229.164.134])
-        by smtp.gmail.com with ESMTPSA id be6sm17603929edb.29.2020.12.08.06.54.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Dec 2020 06:54:20 -0800 (PST)
-Subject: Re: [PATCH v2 1/9] platform/surface: Add Surface Aggregator subsystem
-To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
-        Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-References: <20201203212640.663931-1-luzmaximilian@gmail.com>
- <20201203212640.663931-2-luzmaximilian@gmail.com>
- <fd24d99a-e4f4-2030-e9bb-bcd549ce4bb9@redhat.com>
- <ac50a0c7-806e-d949-6440-620ec966099a@gmail.com>
- <9748d778-b5e9-c80c-5968-a77b3203d769@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <b77b74d2-b854-7e8f-fd8e-abee6cdd22ff@gmail.com>
-Date:   Tue, 8 Dec 2020 15:54:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
-MIME-Version: 1.0
-In-Reply-To: <9748d778-b5e9-c80c-5968-a77b3203d769@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 8 Dec 2020 10:22:47 -0500
+IronPort-SDR: epdtQP32HAMrnaDBik3cKDiiPyAPAv9tiIhLfr+hOMLZ/YDgjMaNVkFBD3vYbtxr9/KwqDuQ+Y
+ EXV8d04QlslA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9828"; a="173143611"
+X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
+   d="scan'208";a="173143611"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2020 07:22:06 -0800
+IronPort-SDR: y5nw9Tc3jMQGZcq5o6QLTDHd90SYx4twMJ64d3nKoQ+fOFzvsfMULiHImqkL1/i5Ea2Fzv+kv9
+ DDRAacyVFmfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,402,1599548400"; 
+   d="scan'208";a="407657274"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by orsmga001.jf.intel.com with ESMTP; 08 Dec 2020 07:22:05 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Dec 2020 07:22:05 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Dec 2020 07:22:05 -0800
+Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
+ ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.1713.004;
+ Tue, 8 Dec 2020 07:22:05 -0800
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "zou_wei@huawei.com" <zou_wei@huawei.com>
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] platform/x86: ISST: Mark mmio_range_devid_0 and
+ mmio_range_devid_1 with static keyword
+Thread-Topic: [PATCH -next] platform/x86: ISST: Mark mmio_range_devid_0 and
+ mmio_range_devid_1 with static keyword
+Thread-Index: AQHWzXXi1lycwfu5hEyc2e0GCUwWdA==
+Date:   Tue, 8 Dec 2020 15:22:04 +0000
+Message-ID: <194d5a3c2c0f99345454004eb81c08d94181b7d7.camel@intel.com>
+References: <1607430489-116200-1-git-send-email-zou_wei@huawei.com>
+In-Reply-To: <1607430489-116200-1-git-send-email-zou_wei@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.1 (3.38.1-1.fc33) 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8E7951488161AB4CBDD929FE1CDE8E0F@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-
-
-On 12/8/20 3:43 PM, Hans de Goede wrote:
-> Hi,
-> 
-> On 12/8/20 3:37 PM, Maximilian Luz wrote:
-> 
-> <snip>
-> 
->>>> +
->>>> +    obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
->>>> +                      SSAM_SSH_DSM_REVISION, func, NULL,
->>>> +                      ACPI_TYPE_INTEGER);
->>>> +    if (!obj)
->>>> +        return -EIO;
->>>> +
->>>> +    val = obj->integer.value;
->>>> +    ACPI_FREE(obj);
->>>> +
->>>> +    if (val > U32_MAX)
->>>> +        return -ERANGE;
->>>> +
->>>> +    *ret = val;
->>>> +    return 0;
->>>> +}
->>
->> [...]
->>
->>>> +/**
->>>> + * ssam_controller_start() - Start the receiver and transmitter threads of the
->>>> + * controller.
->>>> + * @ctrl: The controller.
->>>> + *
->>>> + * Note: When this function is called, the controller should be properly
->>>> + * hooked up to the serdev core via &struct serdev_device_ops. Please refer
->>>> + * to ssam_controller_init() for more details on controller initialization.
->>>> + *
->>>> + * This function must be called from an exclusive context with regards to the
->>>> + * state, if necessary, by locking the controller via ssam_controller_lock().
->>>
->>> Again you are being a bit hand-wavy (I assume you know what I mean by that)
->>> wrt the locking requirements. If possible I would prefer clearly spelled out
->>> locking requirements in the form of "this and that lock must be held when
->>> calling this function". Preferably backed-up by lockdep_assert-s asserting
->>> these conditions.
->>
->> The reason for this is that this function specifically is currently only
->> called during initialization, when the controller has not been published
->> yet, i.e. when we have an exclusive reference to the controller.
->>
->> I'll change this to fully enforce locking (with lockdep_assert).
->>
->>> And maybe if you are a bit stricter with always holding the lock when
->>> calling this, you can also drop the WRITE_ONCE and the comment about it
->>> (in all places where you do this).
->>
->> The WRITE_ONCE is only there to ensure that the basic test in
->> ssam_request_sync_submit() can be done. I always try to be explicit
->> about access that can happen without the respective locks being held.
-> 
-> Yes I saw the matching READ_ONCE later on (as the comment indicated
-> I would), which made it more obvious to me why the WRITE_ONCE is here,'
-> so maybe I should have gone back and updated this comment.
-
-No worries, always good to have another look at these kinds of things.
-
-> Anyways, keeping the WRITE_ONCE + READ_ONCE for this is fine.
-> 
->> Unfortunately it's not feasible to hold the reader lock in
->> ssam_request_sync_submit() due to reentrancy. Specifically, as the lock,
->> if at all (i.e. if this is not a client driver bound to the controller),
->> must be held not only during submission but until the request has been
->> completed. Note that if we would hold the lock during submission, this
->> is just a smoke-test.
-> 
-> Ack.
-> 
-> <more snip>
-> 
-> Regards,
-> 
-> Hans
-> 
+T24gVHVlLCAyMDIwLTEyLTA4IGF0IDIwOjI4ICswODAwLCBab3UgV2VpIHdyb3RlOg0KPiBGaXgg
+dGhlIGZvbGxvd2luZyBzcGFyc2Ugd2FybmluZ3M6DQo+IA0KPiBkcml2ZXJzL3BsYXRmb3JtL3g4
+Ni9pbnRlbF9zcGVlZF9zZWxlY3RfaWYvaXNzdF9pZl9tbWlvLmM6MjM6MjQ6DQo+IHdhcm5pbmc6
+IHN5bWJvbCAnbW1pb19yYW5nZV9kZXZpZF8wJyB3YXMgbm90IGRlY2xhcmVkLiBTaG91bGQgaXQg
+YmUNCj4gc3RhdGljPw0KPiBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9zcGVlZF9zZWxlY3Rf
+aWYvaXNzdF9pZl9tbWlvLmM6Mjg6MjQ6DQo+IHdhcm5pbmc6IHN5bWJvbCAnbW1pb19yYW5nZV9k
+ZXZpZF8xJyB3YXMgbm90IGRlY2xhcmVkLiBTaG91bGQgaXQgYmUNCj4gc3RhdGljPw0KPiANClll
+c3RlcmRheSBJIHNlbnQgYSBwYXRjaCAiW1BBVENIIHYyIDIvM10gcGxhdGZvcm0veDg2OiBJU1NU
+OiBBbGxvdw0KY29uZmlndXJhYmxlIG9mZnNldCByYW5nZSIgdG8gZml4Lg0KDQpUaGFua3MsDQpT
+cmluaXZhcw0KDQo+IFNpZ25lZC1vZmYtYnk6IFpvdSBXZWkgPHpvdV93ZWlAaHVhd2VpLmNvbT4N
+Cj4gLS0tDQo+IMKgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfc3BlZWRfc2VsZWN0X2lmL2lz
+c3RfaWZfbW1pby5jIHwgNCArKy0tDQo+IMKgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL3BsYXRmb3Jt
+L3g4Ni9pbnRlbF9zcGVlZF9zZWxlY3RfaWYvaXNzdF9pZl9tbWlvLmMNCj4gYi9kcml2ZXJzL3Bs
+YXRmb3JtL3g4Ni9pbnRlbF9zcGVlZF9zZWxlY3RfaWYvaXNzdF9pZl9tbWlvLmMNCj4gaW5kZXgg
+MjkwNmNmZS4uZmY0OTAyNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50
+ZWxfc3BlZWRfc2VsZWN0X2lmL2lzc3RfaWZfbW1pby5jDQo+ICsrKyBiL2RyaXZlcnMvcGxhdGZv
+cm0veDg2L2ludGVsX3NwZWVkX3NlbGVjdF9pZi9pc3N0X2lmX21taW8uYw0KPiBAQCAtMjAsMTIg
+KzIwLDEyIEBAIHN0cnVjdCBpc3N0X21taW9fcmFuZ2Ugew0KPiDCoMKgwqDCoMKgwqDCoMKgaW50
+IGVuZDsNCj4gwqB9Ow0KPiDCoA0KPiAtc3RydWN0IGlzc3RfbW1pb19yYW5nZSBtbWlvX3Jhbmdl
+X2RldmlkXzBbXSA9IHsNCj4gK3N0YXRpYyBzdHJ1Y3QgaXNzdF9tbWlvX3JhbmdlIG1taW9fcmFu
+Z2VfZGV2aWRfMFtdID0gew0KPiDCoMKgwqDCoMKgwqDCoMKgezB4MDQsIDB4MTR9LA0KPiDCoMKg
+wqDCoMKgwqDCoMKgezB4MjAsIDB4RDB9LA0KPiDCoH07DQo+IMKgDQo+IC1zdHJ1Y3QgaXNzdF9t
+bWlvX3JhbmdlIG1taW9fcmFuZ2VfZGV2aWRfMVtdID0gew0KPiArc3RhdGljIHN0cnVjdCBpc3N0
+X21taW9fcmFuZ2UgbW1pb19yYW5nZV9kZXZpZF8xW10gPSB7DQo+IMKgwqDCoMKgwqDCoMKgwqB7
+MHgwNCwgMHgxNH0sDQo+IMKgwqDCoMKgwqDCoMKgwqB7MHgyMCwgMHgxMUN9LA0KPiDCoH07DQoN
+Cg==
