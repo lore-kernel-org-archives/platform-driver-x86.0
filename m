@@ -2,151 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78469C2BB9A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 08:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33ED6C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 20:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAA623C17
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 08:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3BD823BCD
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 20:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388527AbgLKIck (ORCPT
+        id S2391288AbgLKTEm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Dec 2020 03:32:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45966 "EHLO
+        Fri, 11 Dec 2020 14:04:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387455AbgLKIcC (ORCPT
+        with ESMTP id S2388371AbgLKTEZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Dec 2020 03:32:02 -0500
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BD0C0613D3;
-        Fri, 11 Dec 2020 00:31:22 -0800 (PST)
-Received: by mail-pj1-x1041.google.com with SMTP id m5so1972886pjv.5;
-        Fri, 11 Dec 2020 00:31:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4zPFRNJq7ChgGn6x1xRHPz16KRlRzGnYElHimU2a+ik=;
-        b=mB3B90PTK0IhVY1R2bpq5cXTcrpAgnpH7bH9MG5eYBLl9ySVrfD34JwfyKv86oVOO2
-         cDIzStmOtmsKsvdG/iT4i6wekuMnWgB0ranqUq0eQRQorGNfi+etBI5781L0QT2XMr+E
-         QHUK6op8ediMKZPm1gkI8HweBBQgTulyamv0PeJIXE5L9/6n1b+OiSRoIaFDrfmpP/bT
-         DatGLglQJixZuub99A6SS+6aVNzm+GJNEd29b6D5D1qYuUxQKWj3kwtINrbvAmOSjRrf
-         weN9ctehM3LgNCf4J7Bd6hxMJWju4rk83bU7dSq62a9hPpBWlCfvVZF0aS/Fl1vYhjEB
-         PXag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4zPFRNJq7ChgGn6x1xRHPz16KRlRzGnYElHimU2a+ik=;
-        b=SJTAm2h3M7qH5MF9OqS2BgnMS54p0YPOJIof+w6IqMsJ4caHZNYGnlJCA/M+xzJK94
-         MhD2Kw2PImBcE30OIQoSYgxCC9zltzMuZBaMMm5K9/rYj6QyfJLf8EzYIGdQrIi//D1K
-         Al61JspK9ks45G5/Jchiz98NPSBkiRK0O4kqJ0heqru2HP7xnHtvl0HWsPbb3YbQx5y+
-         y9IeMkXe/OcemoFjGoGsaX+IhSyr1gPxf7z4wjywSuMnW4/oLupCgDyUs8y2TOSXfMhG
-         0cD2O9uVKUBLs39cK8UBW+yZYcFglQZdvB3rk/5JuR53Xc5ZcAl4u4exne2rFokr2eHZ
-         rFHA==
-X-Gm-Message-State: AOAM531jNfNOwy2s4ifZC3KUzRZmk2gw/uQBIXWZ4kFNlNgCH6I/JJEC
-        ve+b1cFElBmwpbHpfNNJ3L0=
-X-Google-Smtp-Source: ABdhPJy5hbCygYTmShS5aFbZ1YVPeTgb8RVJaseat9jLQIAFHFQ+8RbQ/NYOYxQFRvRqk+3sJqx0Pg==
-X-Received: by 2002:a17:902:fe02:b029:db:c7fd:3c2c with SMTP id g2-20020a170902fe02b02900dbc7fd3c2cmr10050492plj.31.1607675481748;
-        Fri, 11 Dec 2020 00:31:21 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id u4sm9029469pgg.48.2020.12.11.00.31.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 00:31:20 -0800 (PST)
-Date:   Fri, 11 Dec 2020 00:31:16 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Barry Song <baohua@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Nick Dyer <nick@shmanahar.org>,
+        Fri, 11 Dec 2020 14:04:25 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AA6C061793;
+        Fri, 11 Dec 2020 11:03:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=S+jtij8QKdcMrVXPjy1P0lRBwGZKK+vNiu+x7dVZf5I=; b=Vgt1XqSgW2nruy+iDjzPSXHeh7
+        Mijl75nBMZZXOaFiolCNDwOOz7rL+AuW1E6KYBkzUXrBL+zZ2Xne6MUXtqp6i4AVsKY0sSXB66+za
+        8sUErxMwE4ha4FNO7azlR4CS7g5J5UJ4EgsFb8RhYxW05/NJ53Pu59xNZS4wta4Wm4hs2bS5+nyfF
+        Et5L+Fre+WZ0tzZ426vB7kQgjyfBwEMb8evL8g8gicZBnSlyRNmjROyRNLuPQE3IyODYVofk2yrmS
+        wvnnVXTuggmV4ogceYZF9Jb9aDq8nsiKO26dRYjHmHEXZfKM9QDb2PlK2mqQ18A+im7juE+Awp4W3
+        a4+KW0wQ==;
+Received: from [2601:1c0:6280:3f0::1494] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1knnhe-0003qV-2f; Fri, 11 Dec 2020 19:03:43 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Ferruh Yigit <fery@cypress.com>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        kernel@collabora.com,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] Input: cyapa - do not call input_device_enabled from
- power mode handler
-Message-ID: <X9MuVAaRhv/D7vYU@google.com>
-References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
- <20200608112211.12125-1-andrzej.p@collabora.com>
- <20200608112211.12125-3-andrzej.p@collabora.com>
- <CGME20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28@eucas1p2.samsung.com>
- <27ce1176-6318-45aa-4e22-3dec9f3df15d@samsung.com>
- <9c784a23-eade-eacd-3e67-d344a5758b83@collabora.com>
- <ad093ba3-7b17-18f3-6bb5-d8133c3da89a@samsung.com>
- <X9BwtHs9XriwR8gL@google.com>
- <X9MbMja+TEfbKkmJ@google.com>
- <fa0e07b1-dee7-9b44-897d-66095f2eab90@samsung.com>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH -next] platform: surface: fix non-PM_SLEEP build warnings
+Date:   Fri, 11 Dec 2020 11:03:35 -0800
+Message-Id: <20201211190335.16501-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fa0e07b1-dee7-9b44-897d-66095f2eab90@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Dec 11, 2020 at 09:22:44AM +0100, Marek Szyprowski wrote:
-> 
-> On 11.12.2020 08:09, Dmitry Torokhov wrote:
-> > Input device's user counter is supposed to be accessed only while holding
-> > input->mutex.  Commit d69f0a43c677 ("Input: use input_device_enabled()")
-> > recently switched cyapa to using the dedicated API and it uncovered the
-> > fact that cyapa driver violated this constraint.
-> >
-> > This patch removes checks whether the input device is open when clearing
-> > device queues when changing device's power mode as there is no harm in
-> > sending input events through closed input device - the events will simply
-> > be dropped by the input core.
-> >
-> > Note that there are more places in cyapa driver that call
-> > input_device_enabled() without holding input->mutex, those are left
-> > unfixed for now.
-> >
-> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > ---
-> >
-> > Marek, could you please try this one?
-> 
-> The warning is still there:
+Fix build warnings when CONFIG_PM_SLEEP is not enabled and these
+functions are not used:
 
-Ah, yes, we are hitting another instance right after setting power mode.
-I need to think more how to handle that one.
+../drivers/platform/surface/surface_gpe.c:189:12: warning: ‘surface_gpe_resume’ defined but not used [-Wunused-function]
+ static int surface_gpe_resume(struct device *dev)
+            ^~~~~~~~~~~~~~~~~~
+../drivers/platform/surface/surface_gpe.c:184:12: warning: ‘surface_gpe_suspend’ defined but not used [-Wunused-function]
+ static int surface_gpe_suspend(struct device *dev)
+            ^~~~~~~~~~~~~~~~~~~
 
-Thanks.
+Fixes: 274335f1c557 ("platform/surface: Add Driver to set up lid GPEs on MS Surface device")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Maximilian Luz <luzmaximilian@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: platform-driver-x86@vger.kernel.org
+---
+ drivers/platform/surface/surface_gpe.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
--- 
-Dmitry
+--- linux-next-20201210.orig/drivers/platform/surface/surface_gpe.c
++++ linux-next-20201210/drivers/platform/surface/surface_gpe.c
+@@ -181,6 +181,7 @@ static int surface_lid_enable_wakeup(str
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
+ static int surface_gpe_suspend(struct device *dev)
+ {
+ 	return surface_lid_enable_wakeup(dev, true);
+@@ -190,6 +191,7 @@ static int surface_gpe_resume(struct dev
+ {
+ 	return surface_lid_enable_wakeup(dev, false);
+ }
++#endif
+ 
+ static SIMPLE_DEV_PM_OPS(surface_gpe_pm, surface_gpe_suspend, surface_gpe_resume);
+ 
