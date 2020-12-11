@@ -2,468 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E175FC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 02:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B8DC1B0E3
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 07:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C7323117
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 02:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DDCB23F2A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 07:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389455AbgLKCP5 (ORCPT
+        id S2436724AbgLKHKu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Dec 2020 21:15:57 -0500
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.114]:46880 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387840AbgLKCP3 (ORCPT
+        Fri, 11 Dec 2020 02:10:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730799AbgLKHKY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Dec 2020 21:15:29 -0500
-Received: from [100.112.133.223] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.us-west-2.aws.symcld.net id E8/8A-33082-8F4D2DF5; Fri, 11 Dec 2020 02:10:00 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRWlGSWpSXmKPExsWSLveKXffHlUv
-  xBqs3yVvsvy5h0bXQwGLh/VOsFl+/3Wa3eHN8OpPF8n39jBZNnU1sFp87JrNYrN7zgtli7Zd5
-  bBZnTl9ideD2mDRzBrPHzll32T1+bVvD4rF5hZbHvJOBHj1tm5g83u+7yuax5Wo7i8fnTXIBn
-  FGsmXlJ+RUJrBmHm3+yFlyMqJjbvZq9gXGGVxcjF4eQwH9GiXXP/rJAOA8YJb7u38/axcjJwS
-  agLbFlyy+2LkYODhEBGYkPaz1BapgFtjJJnNy3E6xGWCBQYvrV70wgNouAqsSB69OYQWxeARu
-  J+81zwWokBOQlnvYuB4tzCthK3H90mRHEFhIIk3j0sosdol5Q4uTMJywgNjNQffPW2cwQtoTE
-  wRcvmGHmzLk4FcpOkFj28g7zBEaBWUjaZyFpn4WkfQEj8ypGi6SizPSMktzEzBxdQwMDXUNDI
-  11DYyNdIxMjvcQq3SS90mLd8tTiEl0gt7xYr7gyNzknRS8vtWQTIzDWUgpaPu1gbHjzQe8Qoy
-  QHk5Io7+PJl+KF+JLyUyozEosz4otKc1KLDzHKcHAoSfCqXwbKCRalpqdWpGXmAOMeJi3BwaM
-  kwpsDkuYtLkjMLc5Mh0idYlSUEudVBkkIgCQySvPg2mCp5hKjrJQwLyMDA4MQT0FqUW5mCar8
-  K0ZxDkYlYV5uYOIS4snMK4Gb/gpoMRPQYp5L50EWlyQipKQamNIXmiTLz4wxWH1uW/vm2JD9i
-  vFhprbJc578TzvwsbP32aXUjS8fZ7XumJSZlfDHNsmtNlFHx0khsvma3H6F4yHrXpy9OtF3RU
-  yNlHMtR3CKr/4sw9rIXdsNnH5v16/TvKCqmW7W2GVsXDH1xO43LmILWcpe5luvi3pqmnUjyaT
-  2+2eJdnEd+S1XbH4e6iq/uLRyhdp2zz8btE7tn/ZX99PLzrNdEzLuf7jk1emyftqxn6e/dJYc
-  +z9h6c3u2zOX+04p9/3UoRaUIVy09uD8lW998pZ88F2+VvnVKy+vB7eO/iifMX2b2v1T0yZL9
-  VtvKGm/l9RteNpKKFsy5M5f/TZh5YBldwsV9rLM8Ql6HqbEUpyRaKjFXFScCAA0iEPmsAMAAA
-  ==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-30.tower-356.messagelabs.com!1607652597!26756!1
-X-Originating-IP: [103.30.234.7]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 23147 invoked from network); 11 Dec 2020 02:10:00 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.7)
-  by server-30.tower-356.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 11 Dec 2020 02:10:00 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id C15A74FD58166321ED9A;
-        Fri, 11 Dec 2020 10:09:54 +0800 (CST)
-Received: from localhost.home (10.64.86.16) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Thu, 10 Dec
- 2020 18:09:48 -0800
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <hadess@hadess.net>,
-        <pobrn@protonmail.com>, <mario.limonciello@dell.com>,
-        <eliadevito@gmail.com>, <bberg@redhat.com>, <dvhart@infradead.org>,
-        <njosh1@lenovo.com>
-Subject: [PATCH v6 3/3] platform/x86: thinkpad_acpi: Add platform profile support
-Date:   Thu, 10 Dec 2020 21:06:30 -0500
-Message-ID: <20201211020630.305905-3-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201211020630.305905-1-markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
- <20201211020630.305905-1-markpearson@lenovo.com>
+        Fri, 11 Dec 2020 02:10:24 -0500
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548B7C0613CF;
+        Thu, 10 Dec 2020 23:09:44 -0800 (PST)
+Received: by mail-pg1-x541.google.com with SMTP id w16so6508660pga.9;
+        Thu, 10 Dec 2020 23:09:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=agSZMQdvaCGV7hdnrq9aTuJTFu3GU2xvnWahrOKp2Jc=;
+        b=iaCwlxTDrUkLZaR2IE70DXZlzMvfp14eegDu7lsHhJVqA94v1rPO5Tw4Re0cXWzUs5
+         tTdmMAeE833iUuG2ImjX+nRar2krQmwfag0rFEsw5K4ZZDSsw9fPPIUx1J2XQU6rwbnH
+         Kz55ev9L7xh0UTnBPP41ch7Fo9bpfKhtijuuRjlbCoQIPm6fHPuAydEfkg/7WaDcnUw2
+         KrX/PojTaAYfFOJojhEJH0JOWh5+06NYveWE7iDEGwTmJRic5BIrac7SqUas4AAAIZYJ
+         M0gohUFiRGvu59MmoW09LRLN4qrmmTOMEwyEoyc9qQHocn+A30QS9pv/UEmoXPeSjRD6
+         JYkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=agSZMQdvaCGV7hdnrq9aTuJTFu3GU2xvnWahrOKp2Jc=;
+        b=dqWcGVMx6IB8U9g6alO7K1sU0PMOKrfe81K+1noR5utrQcHIYWRGLVmEDYq704aFgV
+         OxIAvtHeAuYlI2OS/mEk/U47vrzcJVVmw7lBK978XBwOe6bqplXKbaNuCA2FEEqCBElA
+         ATFNTQHNyPJ7cupDjc48mqAVd/pvU0rZUX8QnyaLzz3AVG45GoJbC0WayihkDEI7oaSX
+         ik3LG6RpifogWt1Nngg03d2xFNU2FtXpWWVlV9Da1Kx3dogpjH1c1nU6207u9l3pL+fQ
+         zm3TsSck8qBkTCHlY9R9Hldy0cJ/NBphlABeGl0NkbMYq0xs9oW9auTgz2For8tFUBO9
+         vAgQ==
+X-Gm-Message-State: AOAM533KvSO0UuBaJXzT/q33ms2fGMpBm16Ovc4Djj6vefd4jgHC/8PQ
+        XgEZvGH1g+Kp4/Kov6OgHss=
+X-Google-Smtp-Source: ABdhPJxv8+WMAsqzX+/A7wLGk5FIrmzTZ6C65bUsZXxoEOBEVQ55NlCjhr48qYKwqGs7+RH4FmPorQ==
+X-Received: by 2002:a63:4d5c:: with SMTP id n28mr10516947pgl.88.1607670583820;
+        Thu, 10 Dec 2020 23:09:43 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id j3sm8846830pjs.50.2020.12.10.23.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Dec 2020 23:09:43 -0800 (PST)
+Date:   Thu, 10 Dec 2020 23:09:38 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-tegra@vger.kernel.org, patches@opensource.cirrus.com,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Barry Song <baohua@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Nick Dyer <nick@shmanahar.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ferruh Yigit <fery@cypress.com>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        kernel@collabora.com,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH] Input: cyapa - do not call input_device_enabled from power
+ mode handler
+Message-ID: <X9MbMja+TEfbKkmJ@google.com>
+References: <2336e15d-ff4b-bbb6-c701-dbf3aa110fcd@redhat.com>
+ <20200608112211.12125-1-andrzej.p@collabora.com>
+ <20200608112211.12125-3-andrzej.p@collabora.com>
+ <CGME20201207133237eucas1p26f8484944760a14e51dc7353ed33cd28@eucas1p2.samsung.com>
+ <27ce1176-6318-45aa-4e22-3dec9f3df15d@samsung.com>
+ <9c784a23-eade-eacd-3e67-d344a5758b83@collabora.com>
+ <ad093ba3-7b17-18f3-6bb5-d8133c3da89a@samsung.com>
+ <X9BwtHs9XriwR8gL@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.86.16]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <X9BwtHs9XriwR8gL@google.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support to thinkpad_acpi for Lenovo platforms that have DYTC
-version 5 support or newer to use the platform profile feature.
+Input device's user counter is supposed to be accessed only while holding
+input->mutex.  Commit d69f0a43c677 ("Input: use input_device_enabled()")
+recently switched cyapa to using the dedicated API and it uncovered the
+fact that cyapa driver violated this constraint.
 
-This will allow users to determine and control the platform modes
-between low-power, balanced operation and performance modes.
+This patch removes checks whether the input device is open when clearing
+device queues when changing device's power mode as there is no harm in
+sending input events through closed input device - the events will simply
+be dropped by the input core.
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Note that there are more places in cyapa driver that call
+input_device_enabled() without holding input->mutex, those are left
+unfixed for now.
+
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
-Changes in v2:
- Address (hopefully) all recommendations from review including:
- - use IS_ENABLED instead of IS_DEFINED
- - update driver to work with all the fixes in platform_profile update
- - improve error handling for invalid inputs
- - move tracking of current profile mode into this driver
 
-Changes in v3:
- - version update for patch series
+Marek, could you please try this one?
 
-Changes in v4:
- - Rebase on top of palm sensor patch which led to a little bit of file
-   restructuring/clean up
- - Use BIT macro where applicable
- - Formatting fixes
- - Check sysfs node created on exit function
- - implement and use DYTC_SET_COMMAND macro
- - in case of failure setting performance mode make sure CQL mode is
-   enabled again before returning.
- - Clean up initialisation and error handling code
+ drivers/input/mouse/cyapa_gen3.c |    5 +----
+ drivers/input/mouse/cyapa_gen5.c |    3 +--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-Changes in v5:
- - Use atomic_int with ignoring events
- - Add mutex when accessing ACPI information 
- - Clean up registration code
- - Use cached value in profile_get function
- - Add dytc_cql_command function to clean up and provide common handler
- - Update to work with changes in platform_profile implementation
-
-Changes in v6:
- - Update file to build against update in v6 platform_profile
-
- drivers/platform/x86/thinkpad_acpi.c | 292 ++++++++++++++++++++++++++-
- 1 file changed, 286 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 6a4c54db38fb..e08b3548afd1 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -66,6 +66,7 @@
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include <linux/power_supply.h>
-+#include <linux/platform_profile.h>
- #include <sound/core.h>
- #include <sound/control.h>
- #include <sound/initval.h>
-@@ -9843,16 +9844,27 @@ static bool has_lapsensor;
- static bool palm_state;
- static bool lap_state;
- 
--static int lapsensor_get(bool *present, bool *state)
-+static int dytc_command(int command, int *output)
+diff --git a/drivers/input/mouse/cyapa_gen3.c b/drivers/input/mouse/cyapa_gen3.c
+index a97f4acb6452..4a9022faf945 100644
+--- a/drivers/input/mouse/cyapa_gen3.c
++++ b/drivers/input/mouse/cyapa_gen3.c
+@@ -907,7 +907,6 @@ static u16 cyapa_get_wait_time_for_pwr_cmd(u8 pwr_mode)
+ static int cyapa_gen3_set_power_mode(struct cyapa *cyapa, u8 power_mode,
+ 		u16 always_unused, enum cyapa_pm_stage pm_stage)
  {
- 	acpi_handle dytc_handle;
--	int output;
+-	struct input_dev *input = cyapa->input;
+ 	u8 power;
+ 	int tries;
+ 	int sleep_time;
+@@ -953,7 +952,6 @@ static int cyapa_gen3_set_power_mode(struct cyapa *cyapa, u8 power_mode,
+ 	 * depending on the command's content.
+ 	 */
+ 	if (cyapa->operational &&
+-	    input && input_device_enabled(input) &&
+ 	    (pm_stage == CYAPA_PM_RUNTIME_SUSPEND ||
+ 	     pm_stage == CYAPA_PM_RUNTIME_RESUME)) {
+ 		/* Try to polling in 120Hz, read may fail, just ignore it. */
+@@ -1223,8 +1221,7 @@ static int cyapa_gen3_try_poll_handler(struct cyapa *cyapa)
+ 	    (data.finger_btn & OP_DATA_VALID) != OP_DATA_VALID)
+ 		return -EINVAL;
  
--	*present = false;
--	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle)))
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
-+		/* Platform doesn't support DYTC */
- 		return -ENODEV;
--	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", DYTC_CMD_GET))
-+	}
-+	if (!acpi_evalf(dytc_handle, output, NULL, "dd", command))
- 		return -EIO;
-+	return 0;
-+}
-+
-+static int lapsensor_get(bool *present, bool *state)
-+{
-+	int output, err;
-+
-+	*present = false;
-+	err = dytc_command(DYTC_CMD_GET, &output);
-+	if (err)
-+		return err;
- 
- 	*present = true; /*If we get his far, we have lapmode support*/
- 	*state = output & BIT(DYTC_GET_LAPMODE_BIT) ? true : false;
-@@ -9971,6 +9983,262 @@ static struct ibm_struct proxsensor_driver_data = {
- 	.exit = proxsensor_exit,
- };
- 
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+
-+/*************************************************************************
-+ * DYTC Platform Profile interface
-+ */
-+
-+#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
-+#define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
-+#define DYTC_CMD_RESET    0x1ff /* To reset back to default */
-+
-+#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
-+#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
-+#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
-+
-+#define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
-+#define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
-+
-+#define DYTC_SET_FUNCTION_BIT 12 /* Bits 12-15 - function setting */
-+#define DYTC_SET_MODE_BIT     16 /* Bits 16-19 - mode setting */
-+#define DYTC_SET_VALID_BIT    20 /* Bit     20 - 1 = on, 0 = off */
-+
-+#define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
-+#define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
-+#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
-+
-+#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
-+#define DYTC_MODE_QUIET       3  /* Low power mode aka quiet */
-+#define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
-+
-+#define DYTC_SET_COMMAND(function, mode, on) \
-+	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
-+	 (mode) << DYTC_SET_MODE_BIT | \
-+	 (on) << DYTC_SET_VALID_BIT)
-+
-+#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 0)
-+
-+#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 1)
-+
-+static bool dytc_profile_available;
-+static enum platform_profile_option dytc_current_profile;
-+static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
-+static DEFINE_MUTEX(dytc_mutex);
-+
-+static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
-+{
-+	switch (dytcmode) {
-+	case DYTC_MODE_QUIET:
-+		*profile = PLATFORM_PROFILE_LOW;
-+		break;
-+	case DYTC_MODE_BALANCE:
-+		*profile =  PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case DYTC_MODE_PERFORM:
-+		*profile =  PLATFORM_PROFILE_PERFORM;
-+		break;
-+	default: /* Unknown mode */
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int convert_profile_to_dytc(enum platform_profile_option profile, int *perfmode)
-+{
-+	switch (profile) {
-+	case PLATFORM_PROFILE_QUIET:
-+		*perfmode = DYTC_MODE_QUIET;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		*perfmode = DYTC_MODE_BALANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORM:
-+		*perfmode = DYTC_MODE_PERFORM;
-+		break;
-+	default: /* Unknown profile */
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * dytc_profile_get: Function to register with platform_profile
-+ * handler. Returns current platform profile.
-+ */
-+int dytc_profile_get(enum platform_profile_option *profile)
-+{
-+	*profile = dytc_current_profile;
-+	return 0;
-+}
-+
-+/*
-+ * Helper function - check if we are in CQL mode and if we are
-+ *  -  disable CQL,
-+ *  - run the command
-+ *  - enable CQL
-+ *  If not in CQL mode, just run the command
-+ */
-+int dytc_cql_command(int command, int *output)
-+{
-+	int err, cmd_err, dummy;
-+	int cur_funcmode;
-+
-+	/* Determine if we are in CQL mode. This alters the commands we do */
-+	err = dytc_command(DYTC_CMD_GET, output);
-+	if (err)
-+		return err;
-+
-+	cur_funcmode = (*output >> DYTC_GET_FUNCTION_BIT) & 0xF;
-+	/* Check if we're OK to return immediately */
-+	if ((command == DYTC_CMD_GET) && (cur_funcmode != DYTC_FUNCTION_CQL))
-+		return 0;
-+
-+	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-+		atomic_inc(&dytc_ignore_event);
-+		err = dytc_command(DYTC_DISABLE_CQL, &dummy);
-+		if (err)
-+			return err;
-+	}
-+
-+	cmd_err = dytc_command(command,	output);
-+	/* Check return condition after we've restored CQL state */
-+
-+	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-+		err = dytc_command(DYTC_ENABLE_CQL, &dummy);
-+		if (err)
-+			return err;
-+	}
-+
-+	return cmd_err;
-+}
-+
-+/*
-+ * dytc_profile_set: Function to register with platform_profile
-+ * handler. Sets current platform profile.
-+ */
-+int dytc_profile_set(enum platform_profile_option profile)
-+{
-+	int output;
-+	int err;
-+
-+	if (!dytc_profile_available)
-+		return -ENODEV;
-+
-+	err = mutex_lock_interruptible(&dytc_mutex);
-+	if (err)
-+		return err;
-+
-+	if (profile == PLATFORM_PROFILE_BALANCED) {
-+		/* To get back to balanced mode we just issue a reset command */
-+		err = dytc_command(DYTC_CMD_RESET, &output);
-+		if (err)
-+			goto unlock;
-+	} else {
-+		int perfmode;
-+
-+		err = convert_profile_to_dytc(profile, &perfmode);
-+		if (err)
-+			goto unlock;
-+
-+		/* Determine if we are in CQL mode. This alters the commands we do */
-+		err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1), &output);
-+		if (err)
-+			goto unlock;
-+	}
-+	/* Success - update current profile */
-+	dytc_current_profile = profile;
-+unlock:
-+	mutex_unlock(&dytc_mutex);
-+	return err;
-+}
-+
-+static void dytc_profile_refresh(void)
-+{
-+	enum platform_profile_option profile;
-+	int output, err;
-+	int perfmode;
-+
-+	mutex_lock(&dytc_mutex);
-+	err = dytc_cql_command(DYTC_CMD_GET, &output);
-+	mutex_unlock(&dytc_mutex);
-+	if (err)
-+		return;
-+
-+	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
-+	convert_dytc_to_profile(perfmode, &profile);
-+	if (profile != dytc_current_profile) {
-+		dytc_current_profile = profile;
-+		platform_profile_notify();
-+	}
-+}
-+
-+static struct platform_profile_handler dytc_profile = {
-+	.profile_get = dytc_profile_get,
-+	.profile_set = dytc_profile_set,
-+};
-+
-+static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
-+{
-+	int err, output;
-+
-+	/* Setup supported modes */
-+	set_bit(PLATFORM_PROFILE_LOW,      dytc_profile.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, dytc_profile.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORM,  dytc_profile.choices);
-+
-+	dytc_profile_available = false;
-+	err = dytc_command(DYTC_CMD_QUERY, &output);
-+	/*
-+	 * If support isn't available (ENODEV) then don't return an error
-+	 * and don't create the sysfs group
-+	 */
-+	if (err == -ENODEV)
-+		return 0;
-+	/* For all other errors we can flag the failure */
-+	if (err)
-+		return err;
-+
-+	/* Check DYTC is enabled and supports mode setting */
-+	if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
-+		/* Only DYTC v5.0 and later has this feature. */
-+		int dytc_version;
-+
-+		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
-+		if (dytc_version >= 5) {
-+			dbg_printk(TPACPI_DBG_INIT,
-+				   "DYTC version %d: thermal mode available\n", dytc_version);
-+			/* Create platform_profile structure and register */
-+			err = platform_profile_register(&dytc_profile);
-+			/*
-+			 * If for some reason platform_profiles aren't enabled
-+			 * don't quit terminally.
-+			 */
-+			if (err)
-+				return 0;
-+
-+			dytc_profile_available = true;
-+			/* Ensure initial values are correct */
-+			dytc_profile_refresh();
-+		}
-+	}
-+	return 0;
-+}
-+
-+static void dytc_profile_exit(void)
-+{
-+	if (dytc_profile_available) {
-+		dytc_profile_available = false;
-+		platform_profile_remove();
-+	}
-+}
-+
-+static struct ibm_struct  dytc_profile_driver_data = {
-+	.name = "dytc-profile",
-+	.exit = dytc_profile_exit,
-+};
-+#endif /* CONFIG_ACPI_PLATFORM_PROFILE */
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -10019,8 +10287,14 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		mutex_unlock(&kbdlight_mutex);
- 	}
- 
--	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-+	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
- 		lapsensor_refresh();
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+		/* If we are already accessing DYTC then skip dytc update */
-+		if (!atomic_add_unless(&dytc_ignore_event, -1, 0))
-+			dytc_profile_refresh();
-+#endif
-+	}
+-	return cyapa_gen3_event_process(cyapa, &data);
+-
++	return cyapa->input ? cyapa_gen3_event_process(cyapa, &data) : 0;
  }
  
- static void hotkey_driver_event(const unsigned int scancode)
-@@ -10463,6 +10737,12 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_proxsensor_init,
- 		.data = &proxsensor_driver_data,
- 	},
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+	{
-+		.init = tpacpi_dytc_profile_init,
-+		.data = &dytc_profile_driver_data,
-+	},
-+#endif
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
--- 
-2.28.0
-
+ static int cyapa_gen3_initialize(struct cyapa *cyapa) { return 0; }
+diff --git a/drivers/input/mouse/cyapa_gen5.c b/drivers/input/mouse/cyapa_gen5.c
+index abf42f77b4c5..afc5aa4dcf47 100644
+--- a/drivers/input/mouse/cyapa_gen5.c
++++ b/drivers/input/mouse/cyapa_gen5.c
+@@ -518,8 +518,7 @@ int cyapa_empty_pip_output_data(struct cyapa *cyapa,
+ 			*len = length;
+ 			/* Response found, success. */
+ 			return 0;
+-		} else if (cyapa->operational &&
+-			   input && input_device_enabled(input) &&
++		} else if (cyapa->operational && input &&
+ 			   (pm_stage == CYAPA_PM_RUNTIME_RESUME ||
+ 			    pm_stage == CYAPA_PM_RUNTIME_SUSPEND)) {
+ 			/* Parse the data and report it if it's valid. */
