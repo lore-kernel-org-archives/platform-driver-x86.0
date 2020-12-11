@@ -2,130 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1806C433FE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 21:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5A6C433FE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 21:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF97122B47
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 21:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D4223EF2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 11 Dec 2020 21:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404134AbgLKUYQ (ORCPT
+        id S2389277AbgLKUmY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 11 Dec 2020 15:24:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42844 "EHLO
+        Fri, 11 Dec 2020 15:42:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391314AbgLKUYF (ORCPT
+        with ESMTP id S1731017AbgLKUly (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 11 Dec 2020 15:24:05 -0500
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C76AC0613CF;
-        Fri, 11 Dec 2020 12:23:25 -0800 (PST)
-Received: by mail-wm1-x341.google.com with SMTP id d3so8557438wmb.4;
-        Fri, 11 Dec 2020 12:23:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9nnnWY6Cv1HMP5rItObgN0uMtCD8ZN5Mm5DFgwbY0m8=;
-        b=d4blJ14dKzGvpdne61L4L3j5c8V29B/Eay1MN8TFIbJ/tu1cINAqdVrhHyAt1Sb7+O
-         fT/nKJheUPwLlyG6O5fblU/joCKchKjoF1RKcsq5eXBn3TqcHa/dcHNv657lzX4i1GFm
-         cIgI0s2krlK0QHbuj6fyE+FMyJQH7R7xyUYdkcetCC5I8GJ9Mlr8bonIhXKx7MTJAFr5
-         VUQ5ZIA60PwjjiI5KVhtiRLTW8MVj4nefP6ohusqt1UobVBTJU3gQRIQvXW2OpWiiSCM
-         UBdSjYZ8Ru7au4poS6Al/0ao9HJCwHGSuUx6XpzM04GG8eOdEM9YJIO0fPRlXh4g+7nO
-         hOzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=9nnnWY6Cv1HMP5rItObgN0uMtCD8ZN5Mm5DFgwbY0m8=;
-        b=g+qgl7On0KHrSdN0XXpYjFEei2q6zcLlXDbJ4vm4eLetkh+Uc0MyKN3BZGE5G1mTbC
-         Qksa8DdwiAwQ+R0tb8OXPNnMKc2a8BMAl1Gv9HdbW5BFtM+SbGWDVoNGsvFu34twQSfj
-         Zn/qT+8qGQfKxCIBxRllymIvt+G4fba70jCf4er/P0/LDiCr0UXUuWbjUJjz/xugWQEh
-         85LgaODQ84NS+OFnC9nGz7ncUt8dxgO/b7tyzg4PzxiksjtuYthZgVLdkjy+HkqyUjQn
-         H0o+VtLIF8wRCU3f72TD8/NHhHpG69CXLyUJjM3IeSrQAZesjroinek+V9oOPc8t3frb
-         kJqw==
-X-Gm-Message-State: AOAM532td2VIf7rW5vRbInIwQdC725fmxA+UW4ctNtQovjs+ofyr2ajP
-        iFQGbPIhipP54dGnkhUuYuPfvtOqdXo=
-X-Google-Smtp-Source: ABdhPJyWY27SrDWF63KiE/7gZ1K0CX5oa+VZAp+79eWVc/0LL3tsZ1rbtqaN0mKuU3ELXYFaWQ/grg==
-X-Received: by 2002:a1c:7217:: with SMTP id n23mr14926639wmc.167.1607718203903;
-        Fri, 11 Dec 2020 12:23:23 -0800 (PST)
-Received: from [192.168.2.202] (pd9e5a2a8.dip0.t-ipconnect.de. [217.229.162.168])
-        by smtp.gmail.com with ESMTPSA id a62sm17251743wmh.40.2020.12.11.12.23.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 11 Dec 2020 12:23:22 -0800 (PST)
+        Fri, 11 Dec 2020 15:41:54 -0500
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3904C0613D3;
+        Fri, 11 Dec 2020 12:41:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=6knrEQCXntsvK6+oBQBU88owhBmoCN500ay3MRFs9Ko=; b=y1oaq5OFwNRVrMS/k4g5kzuHXy
+        XpXuBMOlEXrB0j4TWDl24eUR8m4kug6Kiy580Qu8rbWpQwIk5iQQIll4YBdDLhqML7hcuyEB+7Njs
+        RTwbANKlIwijDuQsV8xGsMaWzyDfSvkDag8oSG7cwrv+mD6ONsJ5NIrItOSlen6bxc31jYj8lPok7
+        JGJHSadg1rVZjm1bZ0ZSZpTS+VZuLOwZxuAlhjcCJ5iQkI67NLior/6QUz7pL/4SkmEUPZtCxRUpJ
+        WfwPoO177OuqB+DpYFbNnNrLgg+I+I2cfDIi55Y8GImfnaKVjvhtvHUHJOqDu0/vdaOwSacYmFTJc
+        b68get1g==;
+Received: from [2601:1c0:6280:3f0::1494]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1knpDz-0002w9-G5; Fri, 11 Dec 2020 20:41:11 +0000
 Subject: Re: [PATCH -next] platform: surface: fix non-PM_SLEEP build warnings
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
 References: <20201211190335.16501-1-rdunlap@infradead.org>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <3705938f-6f82-88ef-455b-e0f7459989e3@gmail.com>
-Date:   Fri, 11 Dec 2020 21:23:21 +0100
+ <3705938f-6f82-88ef-455b-e0f7459989e3@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c9e708d4-f4c5-01e2-d003-7f5d92a533e9@infradead.org>
+Date:   Fri, 11 Dec 2020 12:41:07 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.3
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201211190335.16501-1-rdunlap@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3705938f-6f82-88ef-455b-e0f7459989e3@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/11/20 8:03 PM, Randy Dunlap wrote:
-> Fix build warnings when CONFIG_PM_SLEEP is not enabled and these
-> functions are not used:
+On 12/11/20 12:23 PM, Maximilian Luz wrote:
+> On 12/11/20 8:03 PM, Randy Dunlap wrote:
+>> Fix build warnings when CONFIG_PM_SLEEP is not enabled and these
+>> functions are not used:
+>>
+>> ../drivers/platform/surface/surface_gpe.c:189:12: warning: ‘surface_gpe_resume’ defined but not used [-Wunused-function]
+>>   static int surface_gpe_resume(struct device *dev)
+>>              ^~~~~~~~~~~~~~~~~~
+>> ../drivers/platform/surface/surface_gpe.c:184:12: warning: ‘surface_gpe_suspend’ defined but not used [-Wunused-function]
+>>   static int surface_gpe_suspend(struct device *dev)
+>>              ^~~~~~~~~~~~~~~~~~~
+>>
+>> Fixes: 274335f1c557 ("platform/surface: Add Driver to set up lid GPEs on MS Surface device")
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Maximilian Luz <luzmaximilian@gmail.com>
+>> Cc: Hans de Goede <hdegoede@redhat.com>
+>> Cc: platform-driver-x86@vger.kernel.org
+>> ---
+>>   drivers/platform/surface/surface_gpe.c |    2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> --- linux-next-20201210.orig/drivers/platform/surface/surface_gpe.c
+>> +++ linux-next-20201210/drivers/platform/surface/surface_gpe.c
+>> @@ -181,6 +181,7 @@ static int surface_lid_enable_wakeup(str
+>>       return 0;
+>>   }
+>>   +#ifdef CONFIG_PM_SLEEP
+>>   static int surface_gpe_suspend(struct device *dev)
+>>   {
+>>       return surface_lid_enable_wakeup(dev, true);
+>> @@ -190,6 +191,7 @@ static int surface_gpe_resume(struct dev
+>>   {
+>>       return surface_lid_enable_wakeup(dev, false);
+>>   }
+>> +#endif
+>>     static SIMPLE_DEV_PM_OPS(surface_gpe_pm, surface_gpe_suspend, surface_gpe_resume);
+>>  
 > 
-> ../drivers/platform/surface/surface_gpe.c:189:12: warning: ‘surface_gpe_resume’ defined but not used [-Wunused-function]
->   static int surface_gpe_resume(struct device *dev)
->              ^~~~~~~~~~~~~~~~~~
-> ../drivers/platform/surface/surface_gpe.c:184:12: warning: ‘surface_gpe_suspend’ defined but not used [-Wunused-function]
->   static int surface_gpe_suspend(struct device *dev)
->              ^~~~~~~~~~~~~~~~~~~
+> Right, thanks.
 > 
-> Fixes: 274335f1c557 ("platform/surface: Add Driver to set up lid GPEs on MS Surface device")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
->   drivers/platform/surface/surface_gpe.c |    2 ++
->   1 file changed, 2 insertions(+)
+> I assume this covers all instances of this warning in platform/surface?
+> Otherwise, a "platform: surface: gpe: ..." subject would make more sense.
+
+It should cover all of surface/. It was an allmodconfig and then I disabled
+CONFIG_PM and CONFIG_PM_SLEEP etc.
+
+As for prefixes, how many levels do we want to use?
+(that's mostly rhetorical, although I would read answers :)
+
+> As for the rest:
 > 
-> --- linux-next-20201210.orig/drivers/platform/surface/surface_gpe.c
-> +++ linux-next-20201210/drivers/platform/surface/surface_gpe.c
-> @@ -181,6 +181,7 @@ static int surface_lid_enable_wakeup(str
->   	return 0;
->   }
->   
-> +#ifdef CONFIG_PM_SLEEP
->   static int surface_gpe_suspend(struct device *dev)
->   {
->   	return surface_lid_enable_wakeup(dev, true);
-> @@ -190,6 +191,7 @@ static int surface_gpe_resume(struct dev
->   {
->   	return surface_lid_enable_wakeup(dev, false);
->   }
-> +#endif
->   
->   static SIMPLE_DEV_PM_OPS(surface_gpe_pm, surface_gpe_suspend, surface_gpe_resume);
->   
-> 
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Right, thanks.
+thanks.
+-- 
+~Randy
 
-I assume this covers all instances of this warning in platform/surface?
-Otherwise, a "platform: surface: gpe: ..." subject would make more sense.
-
-As for the rest:
-
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-Regards,
-Max
