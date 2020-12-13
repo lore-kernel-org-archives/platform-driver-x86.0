@@ -2,94 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=BAYES_05,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F0DC433FE
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Dec 2020 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BC4C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Dec 2020 14:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A2E22257
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 12 Dec 2020 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697C622D2C
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Dec 2020 14:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439856AbgLLTJC (ORCPT
+        id S2405998AbgLMOL0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 12 Dec 2020 14:09:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42130 "EHLO
+        Sun, 13 Dec 2020 09:11:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2439851AbgLLTIx (ORCPT
+        with ESMTP id S2405924AbgLMOLP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 12 Dec 2020 14:08:53 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39D21C0613CF;
-        Sat, 12 Dec 2020 11:08:13 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id 11so9328897pfu.4;
-        Sat, 12 Dec 2020 11:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5d5sPO8wx8zg1h0wCHE+9bPaBcmdRWM6UrfrsupVMMc=;
-        b=I4OSGFP7adVI2ndfGQCPd0SwsK0rx+RD89j2Ej0NhjJdJZxcAtOfopLm9JNrPX+Dkn
-         ULhDz9H0HMmyR9xWD9vYPYzjXnipk/Cls0Z4BVJqYrdD9wj/4UN5+I0h/wc07o1GfloE
-         VQfdIZYS60dMNRNWobU9VT1kbU8EgufZsOGmzaUCguaP2UlLQLp7U13i6o2sLABR3iMr
-         CpmQHjBPytw4zv54by5HyL3KkhBCwXTcWUbCkAZrZSdNsoAKwuS9x0nIh5n8W69SFU+w
-         8rLdxSYwZe3GiGLgoFQZDgdInSANtr8BeQ8OILsT91okbprBNJIPFQVGHFKPitaKnXHc
-         QRsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5d5sPO8wx8zg1h0wCHE+9bPaBcmdRWM6UrfrsupVMMc=;
-        b=oCkURlSdQk0+6PrO8Up/3D37KlocvwPqJgFowqPAKYF2+g3zWoWR21Jq/FudAv1vQD
-         fmDiXPIBDK7P33YVmuXGLafyvxY5zotj5ZvnKqxKsE2wrec4CBECI6iYAFnaHvNvtSXX
-         nPX57LrCDfVq3GSi35415NYaBTNUtU9bQ3sd2y60f4lb5QHoeQYfSDD1BuiXAibYgi9s
-         jAz8kCM6U85sC0pfj9z/lTIaBL0wLsOGej/ftRuuXRv4RlOskzwpLJ8/4lpzEv/2fPfj
-         IoeEIeH98KeJFI7P0Lr7xe2Edr8mDDkv86/Bsv+ZtA1H2oqIhhQvBIarvHrbAqt6WKV8
-         Qxsw==
-X-Gm-Message-State: AOAM531+6h6yl0pH+UK/RSYWsOAvvQ/nhz1z4bjnpBwFvnKwytt14zpe
-        w1ofUkaL12iVJka1z/1diwDj90DJm+KbaePHs7Dp7QeOvmlFfw==
-X-Google-Smtp-Source: ABdhPJwIo8+CSrfwuqpfmjq9ZWxFW0pVBxXGpMsZYdRxEl6zmWBOcTi2FNyscHh9XJZPIEcWp3lP/mMKjZvjTlDD6nY=
-X-Received: by 2002:a62:19cc:0:b029:19e:321b:a22e with SMTP id
- 195-20020a6219cc0000b029019e321ba22emr9954366pfz.73.1607800092741; Sat, 12
- Dec 2020 11:08:12 -0800 (PST)
+        Sun, 13 Dec 2020 09:11:15 -0500
+X-Greylist: delayed 495 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 13 Dec 2020 06:10:35 PST
+Received: from www5035gi.sakura.ne.jp (153.120.62.49.v6.sakura.ne.jp [IPv6:2401:2500:102:2a05:153:120:62:49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72927C0613CF
+        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Dec 2020 06:10:35 -0800 (PST)
+Received: by www5035gi.sakura.ne.jp (Postfix, from userid 48)
+        id 27EB9EF26C; Sun, 13 Dec 2020 23:02:18 +0900 (JST)
+To:     platform-driver-x86@vger.kernel.org
+Subject: ? Secret meetings and single girls are waiting for you. Answer me here: https://datinghome.page.link/free?k24 ?
+X-PHP-Originating-Script: 48:class-phpmailer.php
+Date:   Sun, 13 Dec 2020 14:02:18 +0000
+From:   "? Secret meetings and single girls are waiting for you. Answer me here:
+        https://datinghome.page.link/free?k24 ?" 
+        <platform-driver-x86@vger.kernel.org>
+Message-ID: <11cd3b04465e2ac2aedbe271e9ad1045@line-gamen.com>
+X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
 MIME-Version: 1.0
-References: <20201211190335.16501-1-rdunlap@infradead.org> <CAHp75Vcckb5NA=tc5s5p_qzYE2qhJOT0vhCtfKhT_eqZe+PgXw@mail.gmail.com>
- <ec8e703f-e1ea-1253-edc9-311f0ee3e8fd@infradead.org>
-In-Reply-To: <ec8e703f-e1ea-1253-edc9-311f0ee3e8fd@infradead.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 12 Dec 2020 21:07:56 +0200
-Message-ID: <CAHp75Vf-QcdL+FOd=8fUUQ0+ORC-RVKG+3Yqrar1J7wZMSDF+A@mail.gmail.com>
-Subject: Re: [PATCH -next] platform: surface: fix non-PM_SLEEP build warnings
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-2022-JP
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Dec 12, 2020 at 7:05 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 12/12/20 5:24 AM, Andy Shevchenko wrote:
-> > On Fri, Dec 11, 2020 at 9:20 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+メッセージ本文:
+? Secret meetings and single girls are waiting for you. Answer me here: https://datinghome.page.link/free?k24 ?
 
-...
+--
+このメールは LINE(ライン)のやり取り画像&amp;画面を集めました。 (http://line-gamen.com) のお問い合わせフォームから送信されました
 
-> >> +#ifdef CONFIG_PM_SLEEP
-> >>  static int surface_gpe_suspend(struct device *dev)
-> >
-> > Perhaps __maybe_unused ?
->
-> Yes, I am aware of that option.
-> I don't know why it would be preferred though.
-
-Here [1] is the rationale behind annotation vs. ifdeffery.
-
-[1]: https://lore.kernel.org/patchwork/patch/732981/
-
--- 
-With Best Regards,
-Andy Shevchenko
