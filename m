@@ -2,94 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57318C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 11:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A3EC2BB48
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 20:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0483F229C6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 11:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7F5224B0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 20:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437505AbgLNLU6 (ORCPT
+        id S2503453AbgLNUyb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Dec 2020 06:20:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
+        Mon, 14 Dec 2020 15:54:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437219AbgLNLUu (ORCPT
+        with ESMTP id S2503439AbgLNUxs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Dec 2020 06:20:50 -0500
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1076DC0613CF;
-        Mon, 14 Dec 2020 03:20:10 -0800 (PST)
-Received: by mail-pj1-x1043.google.com with SMTP id z12so6112108pjn.1;
-        Mon, 14 Dec 2020 03:20:09 -0800 (PST)
+        Mon, 14 Dec 2020 15:53:48 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6209CC06179C
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Dec 2020 12:53:08 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id g25so9739857wmh.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 14 Dec 2020 12:53:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ETJkm2h9mUdQRDtcG4X/2MD3yrQCIlxA3Hfl870jwj4=;
-        b=r25mGmNkMaVymoukJdYxFlGJGfK3XkU1Ny6frMPmg1Fdb4iaEVZVO5QJxKuLBsNJCd
-         9XIjrmInI0sKFHvqhJeTasbCPeKoST0dYXVhh4kAwaiDpK3laTHnDD+5gjnjupU8Mzwe
-         JLq3IWBkN+fpgnsUsbkaGyuzOcZhMzCkaWWU0/f/zXhUnxzXpa89XE5mmqtgUXmywH2O
-         1ElETGTCZHt/SjBNRVeHXfxYwdu5YNvQMXijPywj125EwbqRD7balLvykrWwlfNoQg6j
-         sQyhCi1yW6GLYyDZA2T4UUiKctuaj0MJDVQL9YFMTS/kBY2AQQGLnYxqG9bbWAIj9TUP
-         KShg==
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=1r8mWX3dO5bIXJteVLwnQJfsBR/x5H9vpG4TpnJRsTM=;
+        b=emsdinqsft+oUmZgElqgUrxICpGBt4a4re39vhYVYex9X1twjpZUmJDg9YBvHQ20Mz
+         mmFLLRkIEAoFzuFaJCqXB7WHsUF3AX1hpvpqq/SgtPwuDGCiCjYGvQaYLo2lQcWZrSb2
+         MqVll5pxr+2M/2jUBTK9UkLEcDTC3uABbvqSDp8vurJW1OfIo/SIhmceaJI+Rably4hi
+         +FtZCer88GS1OpmfWidseaUNZlHAGL8z5CFr5XlrNgvz2fmbC/ayOMoiKm55aWlBWyVR
+         4uq6lJT4MfaRRhLyIoeKz9zPTEklqpBDjgj2Sq/KsUTPz/ROMJYLFmClwGhIzrWZvHiO
+         6wyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ETJkm2h9mUdQRDtcG4X/2MD3yrQCIlxA3Hfl870jwj4=;
-        b=m4EH+dIxDKEWHj/OugtKAY/Z4bfqdtDUHusT6fVYTtMaJZm2TTu6ECsz4csH9x2ff/
-         B4k/+kw7fxl7KsWwL83QjNsil1ayHDtRZMwfXM4g80y1+z6aVQtcMSiyot1sWQ1fDYBp
-         vkcCcMquiRUtvUu8VjNyBmf+AWKxga+z+8IMtogATNPNiFmiWdPcfmHf9b2rLfeQUDZM
-         h3k5lRT4iK/1athnIv4sqP8GzyXKllvoTO3t1ZoEaO5sIr7aEwkEzu4qEAJsNEGjmdv0
-         vz3oKYrwyPh619W2BQFYSqZDSUBp7noMR9p0Qxn9oq/ISTfhYLXBi0jidPU+bM2sq4CB
-         Ga0Q==
-X-Gm-Message-State: AOAM532V3EMtO6zpD+iXij95fSxEli161w13K7lwo6O8W3e0D0Z/A7t+
-        otxXp8+WkYT5u1jGgDxw9dT6nz6FkrgRRhTKJyo=
-X-Google-Smtp-Source: ABdhPJxx632u2IOxtU3Khq37YXRxCyhybqvc7sZw19fW3k6MMlCDyqHRfIJROCTqqmNg6nOj9Dnnq1qLiQh0tpkR8Rw=
-X-Received: by 2002:a17:90b:a17:: with SMTP id gg23mr25511515pjb.129.1607944809447;
- Mon, 14 Dec 2020 03:20:09 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=1r8mWX3dO5bIXJteVLwnQJfsBR/x5H9vpG4TpnJRsTM=;
+        b=Qu5cTkshUS5RC80L14MMBJrnCcrI2qEVGygcFKeIyP0LfulUicOayrefjb5Wd7p+X5
+         52QOpeBBxyzkNumaAJn+6ZmLJO8+Rw/L+SlVHxsb8Og1ar9X3JbJnbxRvNAQckJAAuCW
+         I2815WpPm10WhCyQjDPDYUTiRiDQPC8LMspCrKQV1CTEw4hgfrFtCjkqQts7iUy/HblX
+         hkFyPAqy8pb/9VVqzkEYif1rnQlCDUFsIR6HQOGDBDDzT3HM5KQoUTFgF1R5K8WpTyif
+         NRbyhAVKr0MQnOa69JjSM0PcyURVnXiJOs9uvkQubvriXoOFD69WreGJHJRBPO5U5IRL
+         l2WQ==
+X-Gm-Message-State: AOAM533WUQAw6Ou36gcqAVAcg2CjGsKSIOJPkiIiiChRKAOWnsnqTmje
+        r289cugjQmrSOfsb6tt/6nTYQIiyaScOSQaSeZuvDA==
+X-Google-Smtp-Source: ABdhPJyvVs4v89b/SyxICWRDRZG8sXVVnHPGF2JCyUroyIb4NQ0+nWAl3nWKfUtOU73TUYtqQv3Orx5/yy2kX9MV8/I=
+X-Received: by 2002:a7b:cc12:: with SMTP id f18mr30013651wmh.110.1607979186711;
+ Mon, 14 Dec 2020 12:53:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20201211190335.16501-1-rdunlap@infradead.org> <CAHp75Vcckb5NA=tc5s5p_qzYE2qhJOT0vhCtfKhT_eqZe+PgXw@mail.gmail.com>
- <ec8e703f-e1ea-1253-edc9-311f0ee3e8fd@infradead.org> <CAHp75Vf-QcdL+FOd=8fUUQ0+ORC-RVKG+3Yqrar1J7wZMSDF+A@mail.gmail.com>
- <3d5a5c8f-4bb1-6205-ae76-354473d59a18@infradead.org>
-In-Reply-To: <3d5a5c8f-4bb1-6205-ae76-354473d59a18@infradead.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 14 Dec 2020 13:19:52 +0200
-Message-ID: <CAHp75Vc3_ye3Ph0uVYdcsKr0QY5RGSaHmCgU1A2q-U2GCAafsQ@mail.gmail.com>
-Subject: Re: [PATCH -next] platform: surface: fix non-PM_SLEEP build warnings
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd.bergmann@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
+From:   "Hyunwook (Wooky) Baek" <baekhw@google.com>
+Date:   Mon, 14 Dec 2020 12:52:55 -0800
+Message-ID: <CABMWKFCCd=DiruUr3W8DGGozexW-gmeFWVEg2OmuJLuTJXFr_g@mail.gmail.com>
+Subject: MOK variable config table: Kernel Panic in SEV-enabled VMs
+To:     Lenny Szubowicz <lszubowi@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     pjones@redhat.com, dhowells@redhat.com, prarit@redhat.com,
+        Peter Gonda <pgonda@google.com>,
+        Rachit Mathur <rachitmathur@google.com>,
+        Zach Marano <zmarano@google.com>,
+        Jianxiong Gao <jxgao@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        David Rientjes <rientjes@google.com>, keescook@chromium.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Dec 14, 2020 at 2:53 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 12/12/20 11:07 AM, Andy Shevchenko wrote:
-> > On Sat, Dec 12, 2020 at 7:05 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+Hello,
 
-...
+We found SEV-enabled VMs crash with the latest CentOS and Rhel images in Google
+Cloud (centos-8-v20201112 and rhel-8-v20201112), because the MOK var table patch
+(https://lkml.org/lkml/2020/8/25/1344) is making a #GP with SEV-enabled VMs,
+but the patch is backported to those images. It looks like the patch
+is also included in
+the v5.10 release candidate.
 
-> > Here [1] is the rationale behind annotation vs. ifdeffery.
-> >
-> > [1]: https://lore.kernel.org/patchwork/patch/732981/
-> >
-> Thanks for the link.  I'll send a v2.
->
-> Could we add that to the Linux BKP (Best Known Practices)
-> document?
+The SEV-enabled VMs work fine with the previous Rhel-8 and Centos-8 images
+(centos-8-v20201014 and rhel-8-v20201014).
 
-Perhaps. The author of that is Arnd, maybe he has something to add.
+The following is the kernel log messages that show the VM crashes while
+running efi_mokvar_sysfs_init() with the rhel image (the centos kernel log is
+almost identical):
 
--- 
-With Best Regards,
-Andy Shevchenko
+[    1.720049] EFI Variables Facility v0.08 2004-May-17
+[    1.943612] input: AT Translated Set 2 keyboard as
+/devices/platform/i8042/serio0/input/input2
+[    2.480607] general protection fault: 0000 [#1] SMP NOPTI
+[    2.481549] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+4.18.0-193.28.1.el8_2.x86_64 #1
+[    2.481549] Hardware name: Google Google Compute Engine/Google
+Compute Engine, BIOS Google 01/01/2011
+[    2.481549] RIP: 0010:efi_mokvar_sysfs_init+0xa9/0x19d
+[    2.481549] Code: 4b 00 48 85 c0 0f 85 be 00 00 00 48 c7 c7 d8 a8
+12 9b bd f4 ff ff ff e8 a4 ba 73 fe e9 f0 00 00 00 48 85 d2 0f 85 b1
+00 00 00 <41> 80 3c 24 00 0f 84 bf 00 00 00 4d 85 e4 0f 84 b6 00 00 00
+48 8b
+[    2.481549] RSP: 0018:ffffa6d7c0c67df8 EFLAGS: 00010282
+[    2.481549] RAX: 0df68117d0b79f0b RBX: ffff96fe32837720 RCX: 0000000000000000
+[    2.481549] RDX: ffffa6d7c0c81000 RSI: ffffffff9b3934c0 RDI: ffff96fe32837758
+[    2.481549] RBP: ffffffff9b3934c0 R08: ffffffff9b3934c0 R09: 0000000000000228
+[    2.481549] R10: 0000000000000007 R11: 0000000000000008 R12: 0df627ef917fb013
+[    2.481549] R13: ffffffff9b3934c0 R14: ffffffff9a6b3da0 R15: ffff96fe32837758
+[    2.481549] FS:  0000000000000000(0000) GS:ffff96fe37b00000(0000)
+knlGS:0000000000000000
+[    2.481549] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.481549] CR2: 00007f0508d7c000 CR3: 0000800232ff8000 CR4: 0000000000340ee0
+[    2.481549] Call Trace:
+[    2.481549]  ? efi_rci2_sysfs_init+0x26d/0x26d
+[    2.481549]  ? do_early_param+0x91/0x91
+[    2.481549]  do_one_initcall+0x46/0x1c3
+[    2.481549]  ? do_early_param+0x91/0x91
+[    2.481549]  kernel_init_freeable+0x1af/0x258
+[    2.481549]  ? rest_init+0xaa/0xaa
+[    2.481549]  kernel_init+0xa/0xff
+[    2.481549]  ret_from_fork+0x22/0x40
+[    2.481549] Modules linked in:
+[    2.511520] ---[ end trace 24709f23c20e9cd9 ]---
+[    2.512376] RIP: 0010:efi_mokvar_sysfs_init+0xa9/0x19d
+[    2.513249] Code: 4b 00 48 85 c0 0f 85 be 00 00 00 48 c7 c7 d8 a8
+12 9b bd f4 ff ff ff e8 a4 ba 73 fe e9 f0 00 00 00 48 85 d2 0f 85 b1
+00 00 00 <41> 80 3c 24 00 0f 84 bf 00 00 00 4d 85 e4 0f 84 b6 00 00 00
+48 8b
+[    2.516876] RSP: 0018:ffffa6d7c0c67df8 EFLAGS: 00010282
+[    2.517844] RAX: 0df68117d0b79f0b RBX: ffff96fe32837720 RCX: 0000000000000000
+[    2.519128] RDX: ffffa6d7c0c81000 RSI: ffffffff9b3934c0 RDI: ffff96fe32837758
+[    2.520328] RBP: ffffffff9b3934c0 R08: ffffffff9b3934c0 R09: 0000000000000228
+[    2.521771] R10: 0000000000000007 R11: 0000000000000008 R12: 0df627ef917fb013
+[    2.523025] R13: ffffffff9b3934c0 R14: ffffffff9a6b3da0 R15: ffff96fe32837758
+[    2.524218] FS:  0000000000000000(0000) GS:ffff96fe37b00000(0000)
+knlGS:0000000000000000
+[    2.525591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.528401] CR2: 00007f0508d7c000 CR3: 0000800232ff8000 CR4: 0000000000340ee0
+[    2.530155] Kernel panic - not syncing: Fatal exception
+[    2.531145] Kernel Offset: 0x19000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[    2.531145] ---[ end Kernel panic - not syncing: Fatal exception ]---
+
+Regards,
+Wooky
