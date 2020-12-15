@@ -8,62 +8,63 @@ X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DE4C47434
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 14:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B71C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 15:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F41A2251E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 14:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A5C2073C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 15:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgLOOvE (ORCPT
+        id S1729584AbgLOOo7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Dec 2020 09:51:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23384 "EHLO
+        Tue, 15 Dec 2020 09:44:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53792 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730057AbgLOOvA (ORCPT
+        by vger.kernel.org with ESMTP id S1729150AbgLOOow (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Dec 2020 09:51:00 -0500
+        Tue, 15 Dec 2020 09:44:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608043771;
+        s=mimecast20190719; t=1608043404;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=g82W2NDlb3F/2nkwu09WA/WIdR3504dMkGJCwJPAUrc=;
-        b=Oe1hBmI6lR+aDrHWNvm3mlRF54cLCCNZVZAOmUV2yIyAbAYmdhaBg3ha6vrNxeoQp+GY64
-        C5RdC6TBTyWZtlt1WcR/miqVP5EEFvcTnN1eMLDj8PA/UjshV7xG9KXFYpBf8YNh4NieLq
-        ZneYUrUjJTCRGSn1myhSWf8suRH/QAc=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-99-G8MSeC3OMySsChPSNZfGjw-1; Tue, 15 Dec 2020 09:49:29 -0500
-X-MC-Unique: G8MSeC3OMySsChPSNZfGjw-1
-Received: by mail-ej1-f71.google.com with SMTP id t17so6132731ejd.12
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2020 06:49:29 -0800 (PST)
+        bh=WP4MHFK276He1ovS56JmuJGYPtk2hckli9gFlvFjohc=;
+        b=XimuJpBJKNBPj7sWW3TOPe3wJicFmYmrNGH5mMyxWd1DOKH68ikQ87OXm/cW3+TTA16zKK
+        I7NK9LZPmxz9V5awKPTOS0lsIFpyrSblX2yBb6D48m8vMLlnET/Pew13O24YcaglG9Nrsq
+        /RODZG6lEEt5Pbb3rIRBPEi4V5OZQ5w=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-175-tLcKWGqiPlKpYiWLHv4jgQ-1; Tue, 15 Dec 2020 09:43:21 -0500
+X-MC-Unique: tLcKWGqiPlKpYiWLHv4jgQ-1
+Received: by mail-ed1-f72.google.com with SMTP id r16so10084770eds.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2020 06:43:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=g82W2NDlb3F/2nkwu09WA/WIdR3504dMkGJCwJPAUrc=;
-        b=VLP8AgU7eHIjXr/Wl+uaSnfJ/BEZetwycH9SaXTBznrI3qw+L8S9zWRQrb+f1lPDbI
-         fAmjhdGccH+5xjq7Y5czF14ScF2m14hu0liLwt+ucPRCTslZKyLAcf9FSDcxzWgTmutV
-         9SJue+7X1g2+KVYM4hhlaV5f2UnY8GrH02uxKTMjKAZGOYZm/rL9V8C28YA8QpiL81/d
-         1E7zSyMh7sBJ/hXBQpOvVxRrDsCGOcOE7EPv+3w0JQzlt0Vo1vKnfE0xTcqQzjjHz6y+
-         A5Gl45HD8s8TBzP9E+PxaRloD7OPjCvalxNb+Ws0cUB8w5NY/J8xq1YyWWe03t0v5b97
-         RqNw==
-X-Gm-Message-State: AOAM5302TIWpLD6VwUPzhGNzGvU91JO/ixPTEf1rlam8WCpmgIlZ3OiD
-        1MhhxNhy1az/peklx5xj/+UeBhg068+/mRy8mC6bwAKGExS7LHxNkcTxePHQQEWdN1/ss4ZyoQW
-        I0eRTd+Trwrp3UgtU9RB69afNVWTtYf8bKw==
-X-Received: by 2002:a17:906:52d9:: with SMTP id w25mr26439204ejn.504.1608043766409;
-        Tue, 15 Dec 2020 06:49:26 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJynqyujrPnrTPV5tSo4rm+iAKS1BPy6QptDeHUniBMDvhMDAyyjVVCGGP97a0aElN4Sm1ZK7A==
-X-Received: by 2002:a17:906:52d9:: with SMTP id w25mr26439139ejn.504.1608043765534;
-        Tue, 15 Dec 2020 06:49:25 -0800 (PST)
+        bh=WP4MHFK276He1ovS56JmuJGYPtk2hckli9gFlvFjohc=;
+        b=hg3QiDw1sI4U1wDFXesXliUC79jwN4tPoUsEnyLnm3GC5jxbClyQtkkNAJ75L/m8QG
+         IHsmWBR2SM/414Fz2EvNK4WAoff5kZhl7bsnTKPdWogCZT5eCODQ1x2N9uaqsXca/qE4
+         rrbaqeoohu4/GVpGj+SHotdRytDNtbgoUDTyBpH4YH75a1qVXWIwIdh6yUHVu6LRfs7R
+         DE5k/EGP1u855q6QZzuDik829Gxni7CR/s4RpneOhmrJNntjFx32SAAQGiCZDcflK5Dt
+         Jr+VLcMMINI+50H1KfETt0akMurS6QLHkkHzELhV2dSIRN0QJ8z0ZDrcURedcih4RtaY
+         v7+A==
+X-Gm-Message-State: AOAM5336gVT6eWmtH8g9ag2h8pLvFksk3+q4kBuBa3c3IB//NWz4CSLR
+        3YqKslTrG3+Voks4IkHQKKmfMVqTjQ8wkazUAtPQv2zPgzquKjdLyy1GgZtY+MAsCHz+tLyQ7q/
+        eRDTjqQ4XZO5JkzoHDMaSEoNfQokkq4bNEnLInq4T+jwexE43B7Fw7YoFWICYD9ysST95WO9rHo
+        /7r89ebQfLzw==
+X-Received: by 2002:a17:906:3513:: with SMTP id r19mr26782374eja.445.1608043399339;
+        Tue, 15 Dec 2020 06:43:19 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxF3qlIRB3gorLRtSdSEBKbHQHSSunXjraEY9IoJTi+d44zpWNUBzelgCpx16jOAWmwiG5eTQ==
+X-Received: by 2002:a17:906:3513:: with SMTP id r19mr26782338eja.445.1608043398925;
+        Tue, 15 Dec 2020 06:43:18 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id j7sm19166716edp.52.2020.12.15.06.49.24
+        by smtp.gmail.com with ESMTPSA id i13sm9295669edu.22.2020.12.15.06.43.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Dec 2020 06:49:24 -0800 (PST)
-Subject: Re: [PATCH v2 6/9] platform/surface: aggregator: Add dedicated bus
- and device type
+        Tue, 15 Dec 2020 06:43:18 -0800 (PST)
+Subject: Re: [PATCH v2 5/9] platform/surface: aggregator: Add error injection
+ capabilities
 To:     Maximilian Luz <luzmaximilian@gmail.com>,
         linux-kernel@vger.kernel.org
 Cc:     Mark Gross <mgross@linux.intel.com>,
@@ -71,20 +72,20 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
         =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
         Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org, linux-kbuild@vger.kernel.org
+        platform-driver-x86@vger.kernel.org
 References: <20201203212640.663931-1-luzmaximilian@gmail.com>
- <20201203212640.663931-7-luzmaximilian@gmail.com>
+ <20201203212640.663931-6-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c6b47bf5-a15b-acc0-f4be-799bda0cd36f@redhat.com>
-Date:   Tue, 15 Dec 2020 15:49:24 +0100
+Message-ID: <e6293b33-163f-87a0-7420-6c3cae40de18@redhat.com>
+Date:   Tue, 15 Dec 2020 15:43:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201203212640.663931-7-luzmaximilian@gmail.com>
+In-Reply-To: <20201203212640.663931-6-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,20 +96,19 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 12/3/20 10:26 PM, Maximilian Luz wrote:
-> The Surface Aggregator EC provides varying functionality, depending on
-> the Surface device. To manage this functionality, we use dedicated
-> client devices for each subsystem or virtual device of the EC. While
-> some of these clients are described as standard devices in ACPI and the
-> corresponding client drivers can be implemented as platform drivers in
-> the kernel (making use of the controller API already present), many
-> devices, especially on newer Surface models, cannot be found there.
+> This commit adds error injection hooks to the Surface Serial Hub
+> communication protocol implementation, to:
 > 
-> To simplify management of these devices, we introduce a new bus and
-> client device type for the Surface Aggregator subsystem. The new device
-> type takes care of managing the controller reference, essentially
-> guaranteeing its validity for as long as the client device exists, thus
-> alleviating the need to manually establish device links for that purpose
-> in the client driver (as has to be done with the platform devices).
+>  - simulate simple serial transmission errors,
+> 
+>  - drop packets, requests, and responses, simulating communication
+>    failures and potentially trigger retransmission timeouts, as well as
+> 
+>  - inject invalid data into submitted and received packets.
+> 
+> Together with the trace points introduced in the previous commit, these
+> facilities are intended to aid in testing, validation, and debugging of
+> the Surface Aggregator communication layer.
 > 
 > Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
@@ -120,1094 +120,497 @@ Regards,
 
 Hans
 
-
-
 > ---
 > 
 > Changes in v1 (from RFC):
->  - add copyright lines
->  - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
->  - remove unnecessary READ_ONCE on multiple occasions
->  - improve documentation of special values for SSAM_DEVICE()
->  - add NULL checks for ssam_device_get, ssam_device_put
+>  - remove unnecessary default in Kconfig entry
 > 
 > Changes in v2:
->  - return ENODEV instead of ENXIO if controller is not present
->  - use sysfs_emit for sysfs attributes
+>  - use dedicated trace event class for data error injection
 >  - spell check comments and strings, fix typos
 >  - unify comment style
 >  - run checkpatch --strict, fix warnings and style issues
 > 
 > ---
->  drivers/platform/surface/aggregator/Kconfig  |  12 +
->  drivers/platform/surface/aggregator/Makefile |   4 +
->  drivers/platform/surface/aggregator/bus.c    | 415 ++++++++++++++++++
->  drivers/platform/surface/aggregator/bus.h    |  27 ++
->  drivers/platform/surface/aggregator/core.c   |  12 +
->  include/linux/mod_devicetable.h              |  18 +
->  include/linux/surface_aggregator/device.h    | 423 +++++++++++++++++++
->  scripts/mod/devicetable-offsets.c            |   8 +
->  scripts/mod/file2alias.c                     |  23 +
->  9 files changed, 942 insertions(+)
->  create mode 100644 drivers/platform/surface/aggregator/bus.c
->  create mode 100644 drivers/platform/surface/aggregator/bus.h
->  create mode 100644 include/linux/surface_aggregator/device.h
+>  drivers/platform/surface/aggregator/Kconfig   |  14 +
+>  .../surface/aggregator/ssh_packet_layer.c     | 296 +++++++++++++++++-
+>  .../surface/aggregator/ssh_request_layer.c    |  35 +++
+>  drivers/platform/surface/aggregator/trace.h   |  31 ++
+>  4 files changed, 375 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/platform/surface/aggregator/Kconfig b/drivers/platform/surface/aggregator/Kconfig
-> index 48f40c345e29..44c2493706bc 100644
+> index ce34941ef91b..48f40c345e29 100644
 > --- a/drivers/platform/surface/aggregator/Kconfig
 > +++ b/drivers/platform/surface/aggregator/Kconfig
-> @@ -42,6 +42,18 @@ menuconfig SURFACE_AGGREGATOR
+> @@ -41,3 +41,17 @@ menuconfig SURFACE_AGGREGATOR
+>  	  Choose m if you want to build the SAM subsystem core and SSH driver as
 >  	  module, y if you want to build it into the kernel and n if you don't
 >  	  want it at all.
-> 
-> +config SURFACE_AGGREGATOR_BUS
-> +	bool "Surface System Aggregator Module Bus"
+> +
+> +config SURFACE_AGGREGATOR_ERROR_INJECTION
+> +	bool "Surface System Aggregator Module Error Injection Capabilities"
 > +	depends on SURFACE_AGGREGATOR
-> +	default y
+> +	depends on FUNCTION_ERROR_INJECTION
 > +	help
-> +	  Expands the Surface System Aggregator Module (SSAM) core driver by
-> +	  providing a dedicated bus and client-device type.
+> +	  Provides error-injection capabilities for the Surface System
+> +	  Aggregator Module subsystem and Surface Serial Hub driver.
 > +
-> +	  This bus and device type are intended to provide and simplify support
-> +	  for non-platform and non-ACPI SSAM devices, i.e. SSAM devices that are
-> +	  not auto-detectable via the conventional means (e.g. ACPI).
-> +
->  config SURFACE_AGGREGATOR_ERROR_INJECTION
->  	bool "Surface System Aggregator Module Error Injection Capabilities"
->  	depends on SURFACE_AGGREGATOR
-> diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
-> index b8b24c8ec310..c112e2c7112b 100644
-> --- a/drivers/platform/surface/aggregator/Makefile
-> +++ b/drivers/platform/surface/aggregator/Makefile
-> @@ -11,3 +11,7 @@ surface_aggregator-objs += ssh_parser.o
->  surface_aggregator-objs += ssh_packet_layer.o
->  surface_aggregator-objs += ssh_request_layer.o
->  surface_aggregator-objs += controller.o
-> +
-> +ifeq ($(CONFIG_SURFACE_AGGREGATOR_BUS),y)
-> +surface_aggregator-objs += bus.o
-> +endif
-> diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
-> new file mode 100644
-> index 000000000000..9f7b4f91a87e
-> --- /dev/null
-> +++ b/drivers/platform/surface/aggregator/bus.c
-> @@ -0,0 +1,415 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Surface System Aggregator Module bus and device integration.
-> + *
-> + * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/surface_aggregator/controller.h>
-> +#include <linux/surface_aggregator/device.h>
-> +
-> +#include "bus.h"
-> +#include "controller.h"
-> +
-> +static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	struct ssam_device *sdev = to_ssam_device(dev);
-> +
-> +	return sysfs_emit(buf, "ssam:d%02Xc%02Xt%02Xi%02Xf%02X\n",
-> +			sdev->uid.domain, sdev->uid.category, sdev->uid.target,
-> +			sdev->uid.instance, sdev->uid.function);
-> +}
-> +static DEVICE_ATTR_RO(modalias);
-> +
-> +static struct attribute *ssam_device_attrs[] = {
-> +	&dev_attr_modalias.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(ssam_device);
-> +
-> +static int ssam_device_uevent(struct device *dev, struct kobj_uevent_env *env)
-> +{
-> +	struct ssam_device *sdev = to_ssam_device(dev);
-> +
-> +	return add_uevent_var(env, "MODALIAS=ssam:d%02Xc%02Xt%02Xi%02Xf%02X",
-> +			      sdev->uid.domain, sdev->uid.category,
-> +			      sdev->uid.target, sdev->uid.instance,
-> +			      sdev->uid.function);
-> +}
-> +
-> +static void ssam_device_release(struct device *dev)
-> +{
-> +	struct ssam_device *sdev = to_ssam_device(dev);
-> +
-> +	ssam_controller_put(sdev->ctrl);
-> +	kfree(sdev);
-> +}
-> +
-> +const struct device_type ssam_device_type = {
-> +	.name    = "surface_aggregator_device",
-> +	.groups  = ssam_device_groups,
-> +	.uevent  = ssam_device_uevent,
-> +	.release = ssam_device_release,
-> +};
-> +EXPORT_SYMBOL_GPL(ssam_device_type);
+> +	  Specifically, exports error injection hooks to be used with the
+> +	  kernel's function error injection capabilities to simulate underlying
+> +	  transport and communication problems, such as invalid data sent to or
+> +	  received from the EC, dropped data, and communication timeouts.
+> +	  Intended for development and debugging.
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index f5ec58a1faa2..0205be9380bf 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -7,6 +7,7 @@
+> 
+>  #include <asm/unaligned.h>
+>  #include <linux/atomic.h>
+> +#include <linux/error-injection.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kfifo.h>
+>  #include <linux/kref.h>
+> @@ -225,6 +226,286 @@
+>   */
+>  #define SSH_PTL_RX_FIFO_LEN			4096
+> 
+> +#ifdef CONFIG_SURFACE_AGGREGATOR_ERROR_INJECTION
 > +
 > +/**
-> + * ssam_device_alloc() - Allocate and initialize a SSAM client device.
-> + * @ctrl: The controller under which the device should be added.
-> + * @uid:  The UID of the device to be added.
+> + * ssh_ptl_should_drop_ack_packet() - Error injection hook to drop ACK packets.
 > + *
-> + * Allocates and initializes a new client device. The parent of the device
-> + * will be set to the controller device and the name will be set based on the
-> + * UID. Note that the device still has to be added via ssam_device_add().
-> + * Refer to that function for more details.
-> + *
-> + * Return: Returns the newly allocated and initialized SSAM client device, or
-> + * %NULL if it could not be allocated.
+> + * Useful to test detection and handling of automated re-transmits by the EC.
+> + * Specifically of packets that the EC considers not-ACKed but the driver
+> + * already considers ACKed (due to dropped ACK). In this case, the EC
+> + * re-transmits the packet-to-be-ACKed and the driver should detect it as
+> + * duplicate/already handled. Note that the driver should still send an ACK
+> + * for the re-transmitted packet.
 > + */
-> +struct ssam_device *ssam_device_alloc(struct ssam_controller *ctrl,
-> +				      struct ssam_device_uid uid)
+> +static noinline bool ssh_ptl_should_drop_ack_packet(void)
 > +{
-> +	struct ssam_device *sdev;
-> +
-> +	sdev = kzalloc(sizeof(*sdev), GFP_KERNEL);
-> +	if (!sdev)
-> +		return NULL;
-> +
-> +	device_initialize(&sdev->dev);
-> +	sdev->dev.bus = &ssam_bus_type;
-> +	sdev->dev.type = &ssam_device_type;
-> +	sdev->dev.parent = ssam_controller_device(ctrl);
-> +	sdev->ctrl = ssam_controller_get(ctrl);
-> +	sdev->uid = uid;
-> +
-> +	dev_set_name(&sdev->dev, "%02x:%02x:%02x:%02x:%02x",
-> +		     sdev->uid.domain, sdev->uid.category, sdev->uid.target,
-> +		     sdev->uid.instance, sdev->uid.function);
-> +
-> +	return sdev;
+> +	return false;
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_alloc);
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_drop_ack_packet, TRUE);
 > +
 > +/**
-> + * ssam_device_add() - Add a SSAM client device.
-> + * @sdev: The SSAM client device to be added.
+> + * ssh_ptl_should_drop_nak_packet() - Error injection hook to drop NAK packets.
 > + *
-> + * Added client devices must be guaranteed to always have a valid and active
-> + * controller. Thus, this function will fail with %-ENODEV if the controller
-> + * of the device has not been initialized yet, has been suspended, or has been
-> + * shut down.
-> + *
-> + * The caller of this function should ensure that the corresponding call to
-> + * ssam_device_remove() is issued before the controller is shut down. If the
-> + * added device is a direct child of the controller device (default), it will
-> + * be automatically removed when the controller is shut down.
-> + *
-> + * By default, the controller device will become the parent of the newly
-> + * created client device. The parent may be changed before ssam_device_add is
-> + * called, but care must be taken that a) the correct suspend/resume ordering
-> + * is guaranteed and b) the client device does not outlive the controller,
-> + * i.e. that the device is removed before the controller is being shut down.
-> + * In case these guarantees have to be manually enforced, please refer to the
-> + * ssam_client_link() and ssam_client_bind() functions, which are intended to
-> + * set up device-links for this purpose.
-> + *
-> + * Return: Returns zero on success, a negative error code on failure.
+> + * Useful to test/force automated (timeout-based) re-transmit by the EC.
+> + * Specifically, packets that have not reached the driver completely/with valid
+> + * checksums. Only useful in combination with receival of (injected) bad data.
 > + */
-> +int ssam_device_add(struct ssam_device *sdev)
+> +static noinline bool ssh_ptl_should_drop_nak_packet(void)
 > +{
-> +	int status;
-> +
-> +	/*
-> +	 * Ensure that we can only add new devices to a controller if it has
-> +	 * been started and is not going away soon. This works in combination
-> +	 * with ssam_controller_remove_clients to ensure driver presence for the
-> +	 * controller device, i.e. it ensures that the controller (sdev->ctrl)
-> +	 * is always valid and can be used for requests as long as the client
-> +	 * device we add here is registered as child under it. This essentially
-> +	 * guarantees that the client driver can always expect the preconditions
-> +	 * for functions like ssam_request_sync (controller has to be started
-> +	 * and is not suspended) to hold and thus does not have to check for
-> +	 * them.
-> +	 *
-> +	 * Note that for this to work, the controller has to be a parent device.
-> +	 * If it is not a direct parent, care has to be taken that the device is
-> +	 * removed via ssam_device_remove(), as device_unregister does not
-> +	 * remove child devices recursively.
-> +	 */
-> +	ssam_controller_statelock(sdev->ctrl);
-> +
-> +	if (sdev->ctrl->state != SSAM_CONTROLLER_STARTED) {
-> +		ssam_controller_stateunlock(sdev->ctrl);
-> +		return -ENODEV;
-> +	}
-> +
-> +	status = device_add(&sdev->dev);
-> +
-> +	ssam_controller_stateunlock(sdev->ctrl);
-> +	return status;
+> +	return false;
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_add);
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_drop_nak_packet, TRUE);
 > +
 > +/**
-> + * ssam_device_remove() - Remove a SSAM client device.
-> + * @sdev: The device to remove.
+> + * ssh_ptl_should_drop_dsq_packet() - Error injection hook to drop sequenced
+> + * data packet.
 > + *
-> + * Removes and unregisters the provided SSAM client device.
+> + * Useful to test re-transmit timeout of the driver. If the data packet has not
+> + * been ACKed after a certain time, the driver should re-transmit the packet up
+> + * to limited number of times defined in SSH_PTL_MAX_PACKET_TRIES.
 > + */
-> +void ssam_device_remove(struct ssam_device *sdev)
+> +static noinline bool ssh_ptl_should_drop_dsq_packet(void)
 > +{
-> +	device_unregister(&sdev->dev);
+> +	return false;
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_remove);
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_drop_dsq_packet, TRUE);
 > +
 > +/**
-> + * ssam_device_id_compatible() - Check if a device ID matches a UID.
-> + * @id:  The device ID as potential match.
-> + * @uid: The device UID matching against.
+> + * ssh_ptl_should_fail_write() - Error injection hook to make
+> + * serdev_device_write() fail.
 > + *
-> + * Check if the given ID is a match for the given UID, i.e. if a device with
-> + * the provided UID is compatible to the given ID following the match rules
-> + * described in its &ssam_device_id.match_flags member.
-> + *
-> + * Return: Returns %true iff the given UID is compatible to the match rule
-> + * described by the given ID, %false otherwise.
+> + * Hook to simulate errors in serdev_device_write when transmitting packets.
 > + */
-> +static bool ssam_device_id_compatible(const struct ssam_device_id *id,
-> +				      struct ssam_device_uid uid)
+> +static noinline int ssh_ptl_should_fail_write(void)
 > +{
-> +	if (id->domain != uid.domain || id->category != uid.category)
+> +	return 0;
+> +}
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_fail_write, ERRNO);
+> +
+> +/**
+> + * ssh_ptl_should_corrupt_tx_data() - Error injection hook to simulate invalid
+> + * data being sent to the EC.
+> + *
+> + * Hook to simulate corrupt/invalid data being sent from host (driver) to EC.
+> + * Causes the packet data to be actively corrupted by overwriting it with
+> + * pre-defined values, such that it becomes invalid, causing the EC to respond
+> + * with a NAK packet. Useful to test handling of NAK packets received by the
+> + * driver.
+> + */
+> +static noinline bool ssh_ptl_should_corrupt_tx_data(void)
+> +{
+> +	return false;
+> +}
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_corrupt_tx_data, TRUE);
+> +
+> +/**
+> + * ssh_ptl_should_corrupt_rx_syn() - Error injection hook to simulate invalid
+> + * data being sent by the EC.
+> + *
+> + * Hook to simulate invalid SYN bytes, i.e. an invalid start of messages and
+> + * test handling thereof in the driver.
+> + */
+> +static noinline bool ssh_ptl_should_corrupt_rx_syn(void)
+> +{
+> +	return false;
+> +}
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_corrupt_rx_syn, TRUE);
+> +
+> +/**
+> + * ssh_ptl_should_corrupt_rx_data() - Error injection hook to simulate invalid
+> + * data being sent by the EC.
+> + *
+> + * Hook to simulate invalid data/checksum of the message frame and test handling
+> + * thereof in the driver.
+> + */
+> +static noinline bool ssh_ptl_should_corrupt_rx_data(void)
+> +{
+> +	return false;
+> +}
+> +ALLOW_ERROR_INJECTION(ssh_ptl_should_corrupt_rx_data, TRUE);
+> +
+> +static bool __ssh_ptl_should_drop_ack_packet(struct ssh_packet *packet)
+> +{
+> +	if (likely(!ssh_ptl_should_drop_ack_packet()))
 > +		return false;
 > +
-> +	if ((id->match_flags & SSAM_MATCH_TARGET) && id->target != uid.target)
-> +		return false;
-> +
-> +	if ((id->match_flags & SSAM_MATCH_INSTANCE) && id->instance != uid.instance)
-> +		return false;
-> +
-> +	if ((id->match_flags & SSAM_MATCH_FUNCTION) && id->function != uid.function)
-> +		return false;
+> +	trace_ssam_ei_tx_drop_ack_packet(packet);
+> +	ptl_info(packet->ptl, "packet error injection: dropping ACK packet %p\n",
+> +		 packet);
 > +
 > +	return true;
 > +}
 > +
-> +/**
-> + * ssam_device_id_is_null() - Check if a device ID is null.
-> + * @id: The device ID to check.
-> + *
-> + * Check if a given device ID is null, i.e. all zeros. Used to check for the
-> + * end of ``MODULE_DEVICE_TABLE(ssam, ...)`` or similar lists.
-> + *
-> + * Return: Returns %true if the given ID represents a null ID, %false
-> + * otherwise.
-> + */
-> +static bool ssam_device_id_is_null(const struct ssam_device_id *id)
+> +static bool __ssh_ptl_should_drop_nak_packet(struct ssh_packet *packet)
 > +{
-> +	return id->match_flags == 0 &&
-> +		id->domain == 0 &&
-> +		id->category == 0 &&
-> +		id->target == 0 &&
-> +		id->instance == 0 &&
-> +		id->function == 0 &&
-> +		id->driver_data == 0;
+> +	if (likely(!ssh_ptl_should_drop_nak_packet()))
+> +		return false;
+> +
+> +	trace_ssam_ei_tx_drop_nak_packet(packet);
+> +	ptl_info(packet->ptl, "packet error injection: dropping NAK packet %p\n",
+> +		 packet);
+> +
+> +	return true;
 > +}
 > +
-> +/**
-> + * ssam_device_id_match() - Find the matching ID table entry for the given UID.
-> + * @table: The table to search in.
-> + * @uid:   The UID to matched against the individual table entries.
-> + *
-> + * Find the first match for the provided device UID in the provided ID table
-> + * and return it. Returns %NULL if no match could be found.
-> + */
-> +const struct ssam_device_id *ssam_device_id_match(const struct ssam_device_id *table,
-> +						  const struct ssam_device_uid uid)
+> +static bool __ssh_ptl_should_drop_dsq_packet(struct ssh_packet *packet)
 > +{
-> +	const struct ssam_device_id *id;
+> +	if (likely(!ssh_ptl_should_drop_dsq_packet()))
+> +		return false;
 > +
-> +	for (id = table; !ssam_device_id_is_null(id); ++id)
-> +		if (ssam_device_id_compatible(id, uid))
-> +			return id;
+> +	trace_ssam_ei_tx_drop_dsq_packet(packet);
+> +	ptl_info(packet->ptl,
+> +		 "packet error injection: dropping sequenced data packet %p\n",
+> +		 packet);
 > +
-> +	return NULL;
+> +	return true;
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_id_match);
 > +
-> +/**
-> + * ssam_device_get_match() - Find and return the ID matching the device in the
-> + * ID table of the bound driver.
-> + * @dev: The device for which to get the matching ID table entry.
-> + *
-> + * Find the fist match for the UID of the device in the ID table of the
-> + * currently bound driver and return it. Returns %NULL if the device does not
-> + * have a driver bound to it, the driver does not have match_table (i.e. it is
-> + * %NULL), or there is no match in the driver's match_table.
-> + *
-> + * This function essentially calls ssam_device_id_match() with the ID table of
-> + * the bound device driver and the UID of the device.
-> + *
-> + * Return: Returns the first match for the UID of the device in the device
-> + * driver's match table, or %NULL if no such match could be found.
-> + */
-> +const struct ssam_device_id *ssam_device_get_match(const struct ssam_device *dev)
+> +static bool ssh_ptl_should_drop_packet(struct ssh_packet *packet)
 > +{
-> +	const struct ssam_device_driver *sdrv;
+> +	/* Ignore packets that don't carry any data (i.e. flush). */
+> +	if (!packet->data.ptr || !packet->data.len)
+> +		return false;
 > +
-> +	sdrv = to_ssam_device_driver(dev->dev.driver);
-> +	if (!sdrv)
-> +		return NULL;
+> +	switch (packet->data.ptr[SSH_MSGOFFSET_FRAME(type)]) {
+> +	case SSH_FRAME_TYPE_ACK:
+> +		return __ssh_ptl_should_drop_ack_packet(packet);
 > +
-> +	if (!sdrv->match_table)
-> +		return NULL;
+> +	case SSH_FRAME_TYPE_NAK:
+> +		return __ssh_ptl_should_drop_nak_packet(packet);
 > +
-> +	return ssam_device_id_match(sdrv->match_table, dev->uid);
+> +	case SSH_FRAME_TYPE_DATA_SEQ:
+> +		return __ssh_ptl_should_drop_dsq_packet(packet);
+> +
+> +	default:
+> +		return false;
+> +	}
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_get_match);
 > +
-> +/**
-> + * ssam_device_get_match_data() - Find the ID matching the device in the
-> + * ID table of the bound driver and return its ``driver_data`` member.
-> + * @dev: The device for which to get the match data.
-> + *
-> + * Find the fist match for the UID of the device in the ID table of the
-> + * corresponding driver and return its driver_data. Returns %NULL if the
-> + * device does not have a driver bound to it, the driver does not have
-> + * match_table (i.e. it is %NULL), there is no match in the driver's
-> + * match_table, or the match does not have any driver_data.
-> + *
-> + * This function essentially calls ssam_device_get_match() and, if any match
-> + * could be found, returns its ``struct ssam_device_id.driver_data`` member.
-> + *
-> + * Return: Returns the driver data associated with the first match for the UID
-> + * of the device in the device driver's match table, or %NULL if no such match
-> + * could be found.
-> + */
-> +const void *ssam_device_get_match_data(const struct ssam_device *dev)
+> +static int ssh_ptl_write_buf(struct ssh_ptl *ptl, struct ssh_packet *packet,
+> +			     const unsigned char *buf, size_t count)
 > +{
-> +	const struct ssam_device_id *id;
+> +	int status;
 > +
-> +	id = ssam_device_get_match(dev);
-> +	if (!id)
-> +		return NULL;
+> +	status = ssh_ptl_should_fail_write();
+> +	if (unlikely(status)) {
+> +		trace_ssam_ei_tx_fail_write(packet, status);
+> +		ptl_info(packet->ptl,
+> +			 "packet error injection: simulating transmit error %d, packet %p\n",
+> +			 status, packet);
 > +
-> +	return (const void *)id->driver_data;
+> +		return status;
+> +	}
+> +
+> +	return serdev_device_write_buf(ptl->serdev, buf, count);
 > +}
-> +EXPORT_SYMBOL_GPL(ssam_device_get_match_data);
 > +
-> +static int ssam_bus_match(struct device *dev, struct device_driver *drv)
+> +static void ssh_ptl_tx_inject_invalid_data(struct ssh_packet *packet)
 > +{
-> +	struct ssam_device_driver *sdrv = to_ssam_device_driver(drv);
-> +	struct ssam_device *sdev = to_ssam_device(dev);
+> +	/* Ignore packets that don't carry any data (i.e. flush). */
+> +	if (!packet->data.ptr || !packet->data.len)
+> +		return;
 > +
-> +	if (!is_ssam_device(dev))
+> +	/* Only allow sequenced data packets to be modified. */
+> +	if (packet->data.ptr[SSH_MSGOFFSET_FRAME(type)] != SSH_FRAME_TYPE_DATA_SEQ)
+> +		return;
+> +
+> +	if (likely(!ssh_ptl_should_corrupt_tx_data()))
+> +		return;
+> +
+> +	trace_ssam_ei_tx_corrupt_data(packet);
+> +	ptl_info(packet->ptl,
+> +		 "packet error injection: simulating invalid transmit data on packet %p\n",
+> +		 packet);
+> +
+> +	/*
+> +	 * NB: The value 0xb3 has been chosen more or less randomly so that it
+> +	 * doesn't have any (major) overlap with the SYN bytes (aa 55) and is
+> +	 * non-trivial (i.e. non-zero, non-0xff).
+> +	 */
+> +	memset(packet->data.ptr, 0xb3, packet->data.len);
+> +}
+> +
+> +static void ssh_ptl_rx_inject_invalid_syn(struct ssh_ptl *ptl,
+> +					  struct ssam_span *data)
+> +{
+> +	struct ssam_span frame;
+> +
+> +	/* Check if there actually is something to corrupt. */
+> +	if (!sshp_find_syn(data, &frame))
+> +		return;
+> +
+> +	if (likely(!ssh_ptl_should_corrupt_rx_syn()))
+> +		return;
+> +
+> +	trace_ssam_ei_rx_corrupt_syn(data->len);
+> +
+> +	data->ptr[1] = 0xb3;	/* Set second byte of SYN to "random" value. */
+> +}
+> +
+> +static void ssh_ptl_rx_inject_invalid_data(struct ssh_ptl *ptl,
+> +					   struct ssam_span *frame)
+> +{
+> +	size_t payload_len, message_len;
+> +	struct ssh_frame *sshf;
+> +
+> +	/* Ignore incomplete messages, will get handled once it's complete. */
+> +	if (frame->len < SSH_MESSAGE_LENGTH(0))
+> +		return;
+> +
+> +	/* Ignore incomplete messages, part 2. */
+> +	payload_len = get_unaligned_le16(&frame->ptr[SSH_MSGOFFSET_FRAME(len)]);
+> +	message_len = SSH_MESSAGE_LENGTH(payload_len);
+> +	if (frame->len < message_len)
+> +		return;
+> +
+> +	if (likely(!ssh_ptl_should_corrupt_rx_data()))
+> +		return;
+> +
+> +	sshf = (struct ssh_frame *)&frame->ptr[SSH_MSGOFFSET_FRAME(type)];
+> +	trace_ssam_ei_rx_corrupt_data(sshf);
+> +
+> +	/*
+> +	 * Flip bits in first byte of payload checksum. This is basically
+> +	 * equivalent to a payload/frame data error without us having to worry
+> +	 * about (the, arguably pretty small, probability of) accidental
+> +	 * checksum collisions.
+> +	 */
+> +	frame->ptr[frame->len - 2] = ~frame->ptr[frame->len - 2];
+> +}
+> +
+> +#else /* CONFIG_SURFACE_AGGREGATOR_ERROR_INJECTION */
+> +
+> +static inline bool ssh_ptl_should_drop_packet(struct ssh_packet *packet)
+> +{
+> +	return false;
+> +}
+> +
+> +static inline int ssh_ptl_write_buf(struct ssh_ptl *ptl,
+> +				    struct ssh_packet *packet,
+> +				    const unsigned char *buf,
+> +				    size_t count)
+> +{
+> +	return serdev_device_write_buf(ptl->serdev, buf, count);
+> +}
+> +
+> +static inline void ssh_ptl_tx_inject_invalid_data(struct ssh_packet *packet)
+> +{
+> +}
+> +
+> +static inline void ssh_ptl_rx_inject_invalid_syn(struct ssh_ptl *ptl,
+> +						 struct ssam_span *data)
+> +{
+> +}
+> +
+> +static inline void ssh_ptl_rx_inject_invalid_data(struct ssh_ptl *ptl,
+> +						  struct ssam_span *frame)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_SURFACE_AGGREGATOR_ERROR_INJECTION */
+> +
+>  static void __ssh_ptl_packet_release(struct kref *kref)
+>  {
+>  	struct ssh_packet *p = container_of(kref, struct ssh_packet, refcnt);
+> @@ -769,6 +1050,13 @@ static int ssh_ptl_tx_packet(struct ssh_ptl *ptl, struct ssh_packet *packet)
+>  	if (unlikely(!packet->data.ptr))
+>  		return 0;
+> 
+> +	/* Error injection: drop packet to simulate transmission problem. */
+> +	if (ssh_ptl_should_drop_packet(packet))
 > +		return 0;
 > +
-> +	return !!ssam_device_id_match(sdrv->match_table, sdev->uid);
-> +}
+> +	/* Error injection: simulate invalid packet data. */
+> +	ssh_ptl_tx_inject_invalid_data(packet);
 > +
-> +static int ssam_bus_probe(struct device *dev)
-> +{
-> +	return to_ssam_device_driver(dev->driver)
-> +		->probe(to_ssam_device(dev));
-> +}
-> +
-> +static int ssam_bus_remove(struct device *dev)
-> +{
-> +	struct ssam_device_driver *sdrv = to_ssam_device_driver(dev->driver);
-> +
-> +	if (sdrv->remove)
-> +		sdrv->remove(to_ssam_device(dev));
-> +
-> +	return 0;
-> +}
-> +
-> +struct bus_type ssam_bus_type = {
-> +	.name   = "surface_aggregator",
-> +	.match  = ssam_bus_match,
-> +	.probe  = ssam_bus_probe,
-> +	.remove = ssam_bus_remove,
-> +};
-> +EXPORT_SYMBOL_GPL(ssam_bus_type);
-> +
-> +/**
-> + * __ssam_device_driver_register() - Register a SSAM client device driver.
-> + * @sdrv:  The driver to register.
-> + * @owner: The module owning the provided driver.
-> + *
-> + * Please refer to the ssam_device_driver_register() macro for the normal way
-> + * to register a driver from inside its owning module.
-> + */
-> +int __ssam_device_driver_register(struct ssam_device_driver *sdrv,
-> +				  struct module *owner)
-> +{
-> +	sdrv->driver.owner = owner;
-> +	sdrv->driver.bus = &ssam_bus_type;
-> +
-> +	/* force drivers to async probe so I/O is possible in probe */
-> +	sdrv->driver.probe_type = PROBE_PREFER_ASYNCHRONOUS;
-> +
-> +	return driver_register(&sdrv->driver);
-> +}
-> +EXPORT_SYMBOL_GPL(__ssam_device_driver_register);
-> +
-> +/**
-> + * ssam_device_driver_unregister - Unregister a SSAM device driver.
-> + * @sdrv: The driver to unregister.
-> + */
-> +void ssam_device_driver_unregister(struct ssam_device_driver *sdrv)
-> +{
-> +	driver_unregister(&sdrv->driver);
-> +}
-> +EXPORT_SYMBOL_GPL(ssam_device_driver_unregister);
-> +
-> +static int ssam_remove_device(struct device *dev, void *_data)
-> +{
-> +	struct ssam_device *sdev = to_ssam_device(dev);
-> +
-> +	if (is_ssam_device(dev))
-> +		ssam_device_remove(sdev);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ssam_controller_remove_clients() - Remove SSAM client devices registered as
-> + * direct children under the given controller.
-> + * @ctrl: The controller to remove all direct clients for.
-> + *
-> + * Remove all SSAM client devices registered as direct children under the
-> + * given controller. Note that this only accounts for direct children of the
-> + * controller device. This does not take care of any client devices where the
-> + * parent device has been manually set before calling ssam_device_add. Refer
-> + * to ssam_device_add()/ssam_device_remove() for more details on those cases.
-> + *
-> + * To avoid new devices being added in parallel to this call, the main
-> + * controller lock (not statelock) must be held during this (and if
-> + * necessary, any subsequent deinitialization) call.
-> + */
-> +void ssam_controller_remove_clients(struct ssam_controller *ctrl)
-> +{
-> +	struct device *dev;
-> +
-> +	dev = ssam_controller_device(ctrl);
-> +	device_for_each_child_reverse(dev, NULL, ssam_remove_device);
-> +}
-> +
-> +/**
-> + * ssam_bus_register() - Register and set-up the SSAM client device bus.
-> + */
-> +int ssam_bus_register(void)
-> +{
-> +	return bus_register(&ssam_bus_type);
-> +}
-> +
-> +/**
-> + * ssam_bus_unregister() - Unregister the SSAM client device bus.
-> + */
-> +void ssam_bus_unregister(void)
-> +{
-> +	return bus_unregister(&ssam_bus_type);
-> +}
-> diff --git a/drivers/platform/surface/aggregator/bus.h b/drivers/platform/surface/aggregator/bus.h
-> new file mode 100644
-> index 000000000000..7712baaed6a5
-> --- /dev/null
-> +++ b/drivers/platform/surface/aggregator/bus.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Surface System Aggregator Module bus and device integration.
-> + *
-> + * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
-> + */
-> +
-> +#ifndef _SURFACE_AGGREGATOR_BUS_H
-> +#define _SURFACE_AGGREGATOR_BUS_H
-> +
-> +#include <linux/surface_aggregator/controller.h>
-> +
-> +#ifdef CONFIG_SURFACE_AGGREGATOR_BUS
-> +
-> +void ssam_controller_remove_clients(struct ssam_controller *ctrl);
-> +
-> +int ssam_bus_register(void);
-> +void ssam_bus_unregister(void);
-> +
-> +#else /* CONFIG_SURFACE_AGGREGATOR_BUS */
-> +
-> +static inline void ssam_controller_remove_clients(struct ssam_controller *ctrl) {}
-> +static inline int ssam_bus_register(void) { return 0; }
-> +static inline void ssam_bus_unregister(void) {}
-> +
-> +#endif /* CONFIG_SURFACE_AGGREGATOR_BUS */
-> +#endif /* _SURFACE_AGGREGATOR_BUS_H */
-> diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
-> index b5d44ab61f06..cde66c497d3e 100644
-> --- a/drivers/platform/surface/aggregator/core.c
-> +++ b/drivers/platform/surface/aggregator/core.c
-> @@ -22,6 +22,8 @@
->  #include <linux/sysfs.h>
+>  	ptl_dbg(ptl, "tx: sending data (length: %zu)\n", packet->data.len);
+>  	print_hex_dump_debug("tx: ", DUMP_PREFIX_OFFSET, 16, 1,
+>  			     packet->data.ptr, packet->data.len, false);
+> @@ -780,7 +1068,7 @@ static int ssh_ptl_tx_packet(struct ssh_ptl *ptl, struct ssh_packet *packet)
+>  		buf = packet->data.ptr + offset;
+>  		len = packet->data.len - offset;
 > 
->  #include <linux/surface_aggregator/controller.h>
-> +
-> +#include "bus.h"
->  #include "controller.h"
+> -		status = serdev_device_write_buf(ptl->serdev, buf, len);
+> +		status = ssh_ptl_write_buf(ptl, packet, buf, len);
+>  		if (status < 0)
+>  			return status;
 > 
->  #define CREATE_TRACE_POINTS
-> @@ -733,6 +735,9 @@ static void ssam_serial_hub_remove(struct serdev_device *serdev)
->  	sysfs_remove_group(&serdev->dev.kobj, &ssam_sam_group);
->  	ssam_controller_lock(ctrl);
-> 
-> +	/* Remove all client devices. */
-> +	ssam_controller_remove_clients(ctrl);
-> +
->  	/* Act as if suspending to silence events. */
->  	status = ssam_ctrl_notif_display_off(ctrl);
->  	if (status) {
-> @@ -785,6 +790,10 @@ static int __init ssam_core_init(void)
->  {
+> @@ -1389,6 +1677,9 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
+>  	bool syn_found;
 >  	int status;
 > 
-> +	status = ssam_bus_register();
-> +	if (status)
-> +		goto err_bus;
+> +	/* Error injection: Modify data to simulate corrupt SYN bytes. */
+> +	ssh_ptl_rx_inject_invalid_syn(ptl, source);
 > +
->  	status = ssh_ctrl_packet_cache_init();
->  	if (status)
->  		goto err_cpkg;
-> @@ -804,6 +813,8 @@ static int __init ssam_core_init(void)
->  err_evitem:
->  	ssh_ctrl_packet_cache_destroy();
->  err_cpkg:
-> +	ssam_bus_unregister();
-> +err_bus:
->  	return status;
->  }
->  module_init(ssam_core_init);
-> @@ -813,6 +824,7 @@ static void __exit ssam_core_exit(void)
->  	serdev_device_driver_unregister(&ssam_serial_hub);
->  	ssam_event_item_cache_destroy();
->  	ssh_ctrl_packet_cache_destroy();
-> +	ssam_bus_unregister();
->  }
->  module_exit(ssam_core_exit);
+>  	/* Find SYN. */
+>  	syn_found = sshp_find_syn(source, &aligned);
 > 
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-> index 5b08a473cdba..0b8f1feefe0e 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -838,4 +838,22 @@ struct mhi_device_id {
->  	kernel_ulong_t driver_data;
->  };
+> @@ -1419,6 +1710,9 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
+>  	if (unlikely(!syn_found))
+>  		return aligned.ptr - source->ptr;
 > 
-> +/* Surface System Aggregator Module */
+> +	/* Error injection: Modify data to simulate corruption. */
+> +	ssh_ptl_rx_inject_invalid_data(ptl, &aligned);
 > +
-> +#define SSAM_MATCH_TARGET	0x1
-> +#define SSAM_MATCH_INSTANCE	0x2
-> +#define SSAM_MATCH_FUNCTION	0x4
-> +
-> +struct ssam_device_id {
-> +	__u8 match_flags;
-> +
-> +	__u8 domain;
-> +	__u8 category;
-> +	__u8 target;
-> +	__u8 instance;
-> +	__u8 function;
-> +
-> +	kernel_ulong_t driver_data;
-> +};
-> +
->  #endif /* LINUX_MOD_DEVICETABLE_H */
-> diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
-> new file mode 100644
-> index 000000000000..7221d4a9c1c1
-> --- /dev/null
-> +++ b/include/linux/surface_aggregator/device.h
-> @@ -0,0 +1,423 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ */
-> +/*
-> + * Surface System Aggregator Module (SSAM) bus and client-device subsystem.
-> + *
-> + * Main interface for the surface-aggregator bus, surface-aggregator client
-> + * devices, and respective drivers building on top of the SSAM controller.
-> + * Provides support for non-platform/non-ACPI SSAM clients via dedicated
-> + * subsystem.
-> + *
-> + * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
-> + */
-> +
-> +#ifndef _LINUX_SURFACE_AGGREGATOR_DEVICE_H
-> +#define _LINUX_SURFACE_AGGREGATOR_DEVICE_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/surface_aggregator/controller.h>
-> +
-> +
-> +/* -- Surface System Aggregator Module bus. --------------------------------- */
-> +
-> +/**
-> + * enum ssam_device_domain - SAM device domain.
-> + * @SSAM_DOMAIN_VIRTUAL:   Virtual device.
-> + * @SSAM_DOMAIN_SERIALHUB: Physical device connected via Surface Serial Hub.
-> + */
-> +enum ssam_device_domain {
-> +	SSAM_DOMAIN_VIRTUAL   = 0x00,
-> +	SSAM_DOMAIN_SERIALHUB = 0x01,
-> +};
-> +
-> +/**
-> + * enum ssam_virtual_tc - Target categories for the virtual SAM domain.
-> + * @SSAM_VIRTUAL_TC_HUB: Device hub category.
-> + */
-> +enum ssam_virtual_tc {
-> +	SSAM_VIRTUAL_TC_HUB = 0x00,
-> +};
-> +
-> +/**
-> + * struct ssam_device_uid - Unique identifier for SSAM device.
-> + * @domain:   Domain of the device.
-> + * @category: Target category of the device.
-> + * @target:   Target ID of the device.
-> + * @instance: Instance ID of the device.
-> + * @function: Sub-function of the device. This field can be used to split a
-> + *            single SAM device into multiple virtual subdevices to separate
-> + *            different functionality of that device and allow one driver per
-> + *            such functionality.
-> + */
-> +struct ssam_device_uid {
-> +	u8 domain;
-> +	u8 category;
-> +	u8 target;
-> +	u8 instance;
-> +	u8 function;
-> +};
-> +
-> +/*
-> + * Special values for device matching.
-> + *
-> + * These values are intended to be used with SSAM_DEVICE(), SSAM_VDEV(), and
-> + * SSAM_SDEV() exclusively. Specifically, they are used to initialize the
-> + * match_flags member of the device ID structure. Do not use them directly
-> + * with struct ssam_device_id or struct ssam_device_uid.
-> + */
-> +#define SSAM_ANY_TID		0xffff
-> +#define SSAM_ANY_IID		0xffff
-> +#define SSAM_ANY_FUN		0xffff
-> +
-> +/**
-> + * SSAM_DEVICE() - Initialize a &struct ssam_device_id with the given
-> + * parameters.
-> + * @d:   Domain of the device.
-> + * @cat: Target category of the device.
-> + * @tid: Target ID of the device.
-> + * @iid: Instance ID of the device.
-> + * @fun: Sub-function of the device.
-> + *
-> + * Initializes a &struct ssam_device_id with the given parameters. See &struct
-> + * ssam_device_uid for details regarding the parameters. The special values
-> + * %SSAM_ANY_TID, %SSAM_ANY_IID, and %SSAM_ANY_FUN can be used to specify that
-> + * matching should ignore target ID, instance ID, and/or sub-function,
-> + * respectively. This macro initializes the ``match_flags`` field based on the
-> + * given parameters.
-> + *
-> + * Note: The parameters @d and @cat must be valid &u8 values, the parameters
-> + * @tid, @iid, and @fun must be either valid &u8 values or %SSAM_ANY_TID,
-> + * %SSAM_ANY_IID, or %SSAM_ANY_FUN, respectively. Other non-&u8 values are not
-> + * allowed.
-> + */
-> +#define SSAM_DEVICE(d, cat, tid, iid, fun)					\
-> +	.match_flags = (((tid) != SSAM_ANY_TID) ? SSAM_MATCH_TARGET : 0)	\
-> +		     | (((iid) != SSAM_ANY_IID) ? SSAM_MATCH_INSTANCE : 0)	\
-> +		     | (((fun) != SSAM_ANY_FUN) ? SSAM_MATCH_FUNCTION : 0),	\
-> +	.domain   = d,								\
-> +	.category = cat,							\
-> +	.target   = ((tid) != SSAM_ANY_TID) ? (tid) : 0,			\
-> +	.instance = ((iid) != SSAM_ANY_IID) ? (iid) : 0,			\
-> +	.function = ((fun) != SSAM_ANY_FUN) ? (fun) : 0				\
-> +
-> +/**
-> + * SSAM_VDEV() - Initialize a &struct ssam_device_id as virtual device with
-> + * the given parameters.
-> + * @cat: Target category of the device.
-> + * @tid: Target ID of the device.
-> + * @iid: Instance ID of the device.
-> + * @fun: Sub-function of the device.
-> + *
-> + * Initializes a &struct ssam_device_id with the given parameters in the
-> + * virtual domain. See &struct ssam_device_uid for details regarding the
-> + * parameters. The special values %SSAM_ANY_TID, %SSAM_ANY_IID, and
-> + * %SSAM_ANY_FUN can be used to specify that matching should ignore target ID,
-> + * instance ID, and/or sub-function, respectively. This macro initializes the
-> + * ``match_flags`` field based on the given parameters.
-> + *
-> + * Note: The parameter @cat must be a valid &u8 value, the parameters @tid,
-> + * @iid, and @fun must be either valid &u8 values or %SSAM_ANY_TID,
-> + * %SSAM_ANY_IID, or %SSAM_ANY_FUN, respectively. Other non-&u8 values are not
-> + * allowed.
-> + */
-> +#define SSAM_VDEV(cat, tid, iid, fun) \
-> +	SSAM_DEVICE(SSAM_DOMAIN_VIRTUAL, SSAM_VIRTUAL_TC_##cat, tid, iid, fun)
-> +
-> +/**
-> + * SSAM_SDEV() - Initialize a &struct ssam_device_id as physical SSH device
-> + * with the given parameters.
-> + * @cat: Target category of the device.
-> + * @tid: Target ID of the device.
-> + * @iid: Instance ID of the device.
-> + * @fun: Sub-function of the device.
-> + *
-> + * Initializes a &struct ssam_device_id with the given parameters in the SSH
-> + * domain. See &struct ssam_device_uid for details regarding the parameters.
-> + * The special values %SSAM_ANY_TID, %SSAM_ANY_IID, and %SSAM_ANY_FUN can be
-> + * used to specify that matching should ignore target ID, instance ID, and/or
-> + * sub-function, respectively. This macro initializes the ``match_flags``
-> + * field based on the given parameters.
-> + *
-> + * Note: The parameter @cat must be a valid &u8 value, the parameters @tid,
-> + * @iid, and @fun must be either valid &u8 values or %SSAM_ANY_TID,
-> + * %SSAM_ANY_IID, or %SSAM_ANY_FUN, respectively. Other non-&u8 values are not
-> + * allowed.
-> + */
-> +#define SSAM_SDEV(cat, tid, iid, fun) \
-> +	SSAM_DEVICE(SSAM_DOMAIN_SERIALHUB, SSAM_SSH_TC_##cat, tid, iid, fun)
-> +
-> +/**
-> + * struct ssam_device - SSAM client device.
-> + * @dev:  Driver model representation of the device.
-> + * @ctrl: SSAM controller managing this device.
-> + * @uid:  UID identifying the device.
-> + */
-> +struct ssam_device {
-> +	struct device dev;
-> +	struct ssam_controller *ctrl;
-> +
-> +	struct ssam_device_uid uid;
-> +};
-> +
-> +/**
-> + * struct ssam_device_driver - SSAM client device driver.
-> + * @driver:      Base driver model structure.
-> + * @match_table: Match table specifying which devices the driver should bind to.
-> + * @probe:       Called when the driver is being bound to a device.
-> + * @remove:      Called when the driver is being unbound from the device.
-> + */
-> +struct ssam_device_driver {
-> +	struct device_driver driver;
-> +
-> +	const struct ssam_device_id *match_table;
-> +
-> +	int  (*probe)(struct ssam_device *sdev);
-> +	void (*remove)(struct ssam_device *sdev);
-> +};
-> +
-> +extern struct bus_type ssam_bus_type;
-> +extern const struct device_type ssam_device_type;
-> +
-> +/**
-> + * is_ssam_device() - Check if the given device is a SSAM client device.
-> + * @d: The device to test the type of.
-> + *
-> + * Return: Returns %true iff the specified device is of type &struct
-> + * ssam_device, i.e. the device type points to %ssam_device_type, and %false
-> + * otherwise.
-> + */
-> +static inline bool is_ssam_device(struct device *d)
-> +{
-> +	return d->type == &ssam_device_type;
-> +}
-> +
-> +/**
-> + * to_ssam_device() - Casts the given device to a SSAM client device.
-> + * @d: The device to cast.
-> + *
-> + * Casts the given &struct device to a &struct ssam_device. The caller has to
-> + * ensure that the given device is actually enclosed in a &struct ssam_device,
-> + * e.g. by calling is_ssam_device().
-> + *
-> + * Return: Returns a pointer to the &struct ssam_device wrapping the given
-> + * device @d.
-> + */
-> +static inline struct ssam_device *to_ssam_device(struct device *d)
-> +{
-> +	return container_of(d, struct ssam_device, dev);
-> +}
-> +
-> +/**
-> + * to_ssam_device_driver() - Casts the given device driver to a SSAM client
-> + * device driver.
-> + * @d: The driver to cast.
-> + *
-> + * Casts the given &struct device_driver to a &struct ssam_device_driver. The
-> + * caller has to ensure that the given driver is actually enclosed in a
-> + * &struct ssam_device_driver.
-> + *
-> + * Return: Returns the pointer to the &struct ssam_device_driver wrapping the
-> + * given device driver @d.
-> + */
-> +static inline
-> +struct ssam_device_driver *to_ssam_device_driver(struct device_driver *d)
-> +{
-> +	return container_of(d, struct ssam_device_driver, driver);
-> +}
-> +
-> +const struct ssam_device_id *ssam_device_id_match(const struct ssam_device_id *table,
-> +						  const struct ssam_device_uid uid);
-> +
-> +const struct ssam_device_id *ssam_device_get_match(const struct ssam_device *dev);
-> +
-> +const void *ssam_device_get_match_data(const struct ssam_device *dev);
-> +
-> +struct ssam_device *ssam_device_alloc(struct ssam_controller *ctrl,
-> +				      struct ssam_device_uid uid);
-> +
-> +int ssam_device_add(struct ssam_device *sdev);
-> +void ssam_device_remove(struct ssam_device *sdev);
-> +
-> +/**
-> + * ssam_device_get() - Increment reference count of SSAM client device.
-> + * @sdev: The device to increment the reference count of.
-> + *
-> + * Increments the reference count of the given SSAM client device by
-> + * incrementing the reference count of the enclosed &struct device via
-> + * get_device().
-> + *
-> + * See ssam_device_put() for the counter-part of this function.
-> + *
-> + * Return: Returns the device provided as input.
-> + */
-> +static inline struct ssam_device *ssam_device_get(struct ssam_device *sdev)
-> +{
-> +	return sdev ? to_ssam_device(get_device(&sdev->dev)) : NULL;
-> +}
-> +
-> +/**
-> + * ssam_device_put() - Decrement reference count of SSAM client device.
-> + * @sdev: The device to decrement the reference count of.
-> + *
-> + * Decrements the reference count of the given SSAM client device by
-> + * decrementing the reference count of the enclosed &struct device via
-> + * put_device().
-> + *
-> + * See ssam_device_get() for the counter-part of this function.
-> + */
-> +static inline void ssam_device_put(struct ssam_device *sdev)
-> +{
-> +	if (sdev)
-> +		put_device(&sdev->dev);
-> +}
-> +
-> +/**
-> + * ssam_device_get_drvdata() - Get driver-data of SSAM client device.
-> + * @sdev: The device to get the driver-data from.
-> + *
-> + * Return: Returns the driver-data of the given device, previously set via
-> + * ssam_device_set_drvdata().
-> + */
-> +static inline void *ssam_device_get_drvdata(struct ssam_device *sdev)
-> +{
-> +	return dev_get_drvdata(&sdev->dev);
-> +}
-> +
-> +/**
-> + * ssam_device_set_drvdata() - Set driver-data of SSAM client device.
-> + * @sdev: The device to set the driver-data of.
-> + * @data: The data to set the device's driver-data pointer to.
-> + */
-> +static inline void ssam_device_set_drvdata(struct ssam_device *sdev, void *data)
-> +{
-> +	dev_set_drvdata(&sdev->dev, data);
-> +}
-> +
-> +int __ssam_device_driver_register(struct ssam_device_driver *d, struct module *o);
-> +void ssam_device_driver_unregister(struct ssam_device_driver *d);
-> +
-> +/**
-> + * ssam_device_driver_register() - Register a SSAM client device driver.
-> + * @drv: The driver to register.
-> + */
-> +#define ssam_device_driver_register(drv) \
-> +	__ssam_device_driver_register(drv, THIS_MODULE)
-> +
-> +/**
-> + * module_ssam_device_driver() - Helper macro for SSAM device driver
-> + * registration.
-> + * @drv: The driver managed by this module.
-> + *
-> + * Helper macro to register a SSAM device driver via module_init() and
-> + * module_exit(). This macro may only be used once per module and replaces the
-> + * aforementioned definitions.
-> + */
-> +#define module_ssam_device_driver(drv)			\
-> +	module_driver(drv, ssam_device_driver_register,	\
-> +		      ssam_device_driver_unregister)
-> +
-> +
-> +/* -- Helpers for client-device requests. ----------------------------------- */
-> +
-> +/**
-> + * SSAM_DEFINE_SYNC_REQUEST_CL_N() - Define synchronous client-device SAM
-> + * request function with neither argument nor return value.
-> + * @name: Name of the generated function.
-> + * @spec: Specification (&struct ssam_request_spec_md) defining the request.
-> + *
-> + * Defines a function executing the synchronous SAM request specified by
-> + * @spec, with the request having neither argument nor return value. Device
-> + * specifying parameters are not hard-coded, but instead are provided via the
-> + * client device, specifically its UID, supplied when calling this function.
-> + * The generated function takes care of setting up the request struct, buffer
-> + * allocation, as well as execution of the request itself, returning once the
-> + * request has been fully completed. The required transport buffer will be
-> + * allocated on the stack.
-> + *
-> + * The generated function is defined as ``int name(struct ssam_device *sdev)``,
-> + * returning the status of the request, which is zero on success and negative
-> + * on failure. The ``sdev`` parameter specifies both the target device of the
-> + * request and by association the controller via which the request is sent.
-> + *
-> + * Refer to ssam_request_sync_onstack() for more details on the behavior of
-> + * the generated function.
-> + */
-> +#define SSAM_DEFINE_SYNC_REQUEST_CL_N(name, spec...)			\
-> +	SSAM_DEFINE_SYNC_REQUEST_MD_N(__raw_##name, spec)		\
-> +	int name(struct ssam_device *sdev)				\
-> +	{								\
-> +		return __raw_##name(sdev->ctrl, sdev->uid.target,	\
-> +				    sdev->uid.instance);		\
-> +	}
-> +
-> +/**
-> + * SSAM_DEFINE_SYNC_REQUEST_CL_W() - Define synchronous client-device SAM
-> + * request function with argument.
-> + * @name:  Name of the generated function.
-> + * @atype: Type of the request's argument.
-> + * @spec:  Specification (&struct ssam_request_spec_md) defining the request.
-> + *
-> + * Defines a function executing the synchronous SAM request specified by
-> + * @spec, with the request taking an argument of type @atype and having no
-> + * return value. Device specifying parameters are not hard-coded, but instead
-> + * are provided via the client device, specifically its UID, supplied when
-> + * calling this function. The generated function takes care of setting up the
-> + * request struct, buffer allocation, as well as execution of the request
-> + * itself, returning once the request has been fully completed. The required
-> + * transport buffer will be allocated on the stack.
-> + *
-> + * The generated function is defined as ``int name(struct ssam_device *sdev,
-> + * const atype *arg)``, returning the status of the request, which is zero on
-> + * success and negative on failure. The ``sdev`` parameter specifies both the
-> + * target device of the request and by association the controller via which
-> + * the request is sent. The request's argument is specified via the ``arg``
-> + * pointer.
-> + *
-> + * Refer to ssam_request_sync_onstack() for more details on the behavior of
-> + * the generated function.
-> + */
-> +#define SSAM_DEFINE_SYNC_REQUEST_CL_W(name, atype, spec...)		\
-> +	SSAM_DEFINE_SYNC_REQUEST_MD_W(__raw_##name, atype, spec)	\
-> +	int name(struct ssam_device *sdev, const atype *arg)		\
-> +	{								\
-> +		return __raw_##name(sdev->ctrl, sdev->uid.target,	\
-> +				    sdev->uid.instance, arg);		\
-> +	}
-> +
-> +/**
-> + * SSAM_DEFINE_SYNC_REQUEST_CL_R() - Define synchronous client-device SAM
-> + * request function with return value.
-> + * @name:  Name of the generated function.
-> + * @rtype: Type of the request's return value.
-> + * @spec:  Specification (&struct ssam_request_spec_md) defining the request.
-> + *
-> + * Defines a function executing the synchronous SAM request specified by
-> + * @spec, with the request taking no argument but having a return value of
-> + * type @rtype. Device specifying parameters are not hard-coded, but instead
-> + * are provided via the client device, specifically its UID, supplied when
-> + * calling this function. The generated function takes care of setting up the
-> + * request struct, buffer allocation, as well as execution of the request
-> + * itself, returning once the request has been fully completed. The required
-> + * transport buffer will be allocated on the stack.
-> + *
-> + * The generated function is defined as ``int name(struct ssam_device *sdev,
-> + * rtype *ret)``, returning the status of the request, which is zero on
-> + * success and negative on failure. The ``sdev`` parameter specifies both the
-> + * target device of the request and by association the controller via which
-> + * the request is sent. The request's return value is written to the memory
-> + * pointed to by the ``ret`` parameter.
-> + *
-> + * Refer to ssam_request_sync_onstack() for more details on the behavior of
-> + * the generated function.
-> + */
-> +#define SSAM_DEFINE_SYNC_REQUEST_CL_R(name, rtype, spec...)		\
-> +	SSAM_DEFINE_SYNC_REQUEST_MD_R(__raw_##name, rtype, spec)	\
-> +	int name(struct ssam_device *sdev, rtype *ret)			\
-> +	{								\
-> +		return __raw_##name(sdev->ctrl, sdev->uid.target,	\
-> +				    sdev->uid.instance, ret);		\
-> +	}
-> +
-> +#endif /* _LINUX_SURFACE_AGGREGATOR_DEVICE_H */
-> diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-> index 27007c18e754..4339377ad929 100644
-> --- a/scripts/mod/devicetable-offsets.c
-> +++ b/scripts/mod/devicetable-offsets.c
-> @@ -243,5 +243,13 @@ int main(void)
->  	DEVID(mhi_device_id);
->  	DEVID_FIELD(mhi_device_id, chan);
+>  	/* Parse and validate frame. */
+>  	status = sshp_parse_frame(&ptl->serdev->dev, &aligned, &frame, &payload,
+>  				  SSH_PTL_RX_BUF_LEN);
+> diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
+> index e91d2ed4c173..bf1782c85063 100644
+> --- a/drivers/platform/surface/aggregator/ssh_request_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
+> @@ -8,6 +8,7 @@
+>  #include <asm/unaligned.h>
+>  #include <linux/atomic.h>
+>  #include <linux/completion.h>
+> +#include <linux/error-injection.h>
+>  #include <linux/ktime.h>
+>  #include <linux/limits.h>
+>  #include <linux/list.h>
+> @@ -58,6 +59,30 @@
+>   */
+>  #define SSH_RTL_TX_BATCH		10
 > 
-> +	DEVID(ssam_device_id);
-> +	DEVID_FIELD(ssam_device_id, match_flags);
-> +	DEVID_FIELD(ssam_device_id, domain);
-> +	DEVID_FIELD(ssam_device_id, category);
-> +	DEVID_FIELD(ssam_device_id, target);
-> +	DEVID_FIELD(ssam_device_id, instance);
-> +	DEVID_FIELD(ssam_device_id, function);
+> +#ifdef CONFIG_SURFACE_AGGREGATOR_ERROR_INJECTION
 > +
->  	return 0;
->  }
-> diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-> index 2417dd1dee33..5b79fdc42641 100644
-> --- a/scripts/mod/file2alias.c
-> +++ b/scripts/mod/file2alias.c
-> @@ -1368,6 +1368,28 @@ static int do_mhi_entry(const char *filename, void *symval, char *alias)
->  	return 1;
->  }
-> 
-> +/*
-> + * Looks like: ssam:dNcNtNiNfN
+> +/**
+> + * ssh_rtl_should_drop_response() - Error injection hook to drop request
+> + * responses.
 > + *
-> + * N is exactly 2 digits, where each is an upper-case hex digit.
+> + * Useful to cause request transmission timeouts in the driver by dropping the
+> + * response to a request.
 > + */
-> +static int do_ssam_entry(const char *filename, void *symval, char *alias)
+> +static noinline bool ssh_rtl_should_drop_response(void)
 > +{
-> +	DEF_FIELD(symval, ssam_device_id, match_flags);
-> +	DEF_FIELD(symval, ssam_device_id, domain);
-> +	DEF_FIELD(symval, ssam_device_id, category);
-> +	DEF_FIELD(symval, ssam_device_id, target);
-> +	DEF_FIELD(symval, ssam_device_id, instance);
-> +	DEF_FIELD(symval, ssam_device_id, function);
+> +	return false;
+> +}
+> +ALLOW_ERROR_INJECTION(ssh_rtl_should_drop_response, TRUE);
 > +
-> +	sprintf(alias, "ssam:d%02Xc%02X", domain, category);
-> +	ADD(alias, "t", match_flags & SSAM_MATCH_TARGET, target);
-> +	ADD(alias, "i", match_flags & SSAM_MATCH_INSTANCE, instance);
-> +	ADD(alias, "f", match_flags & SSAM_MATCH_FUNCTION, function);
+> +#else
 > +
-> +	return 1;
+> +static inline bool ssh_rtl_should_drop_response(void)
+> +{
+> +	return false;
 > +}
 > +
->  /* Does namelen bytes of name exactly match the symbol? */
->  static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+> +#endif
+> +
+>  static u16 ssh_request_get_rqid(struct ssh_request *rqst)
 >  {
-> @@ -1442,6 +1464,7 @@ static const struct devtable devtable[] = {
->  	{"tee", SIZE_tee_client_device_id, do_tee_entry},
->  	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
->  	{"mhi", SIZE_mhi_device_id, do_mhi_entry},
-> +	{"ssam", SIZE_ssam_device_id, do_ssam_entry},
->  };
+>  	return get_unaligned_le16(rqst->packet.data.ptr
+> @@ -459,6 +484,16 @@ static void ssh_rtl_complete(struct ssh_rtl *rtl,
+>  		if (unlikely(ssh_request_get_rqid(p) != rqid))
+>  			continue;
 > 
->  /* Create MODULE_ALIAS() statements.
+> +		/* Simulate response timeout. */
+> +		if (ssh_rtl_should_drop_response()) {
+> +			spin_unlock(&rtl->pending.lock);
+> +
+> +			trace_ssam_ei_rx_drop_response(p);
+> +			rtl_info(rtl, "request error injection: dropping response for request %p\n",
+> +				 &p->packet);
+> +			return;
+> +		}
+> +
+>  		/*
+>  		 * Mark as "response received" and "locked" as we're going to
+>  		 * complete it.
+> diff --git a/drivers/platform/surface/aggregator/trace.h b/drivers/platform/surface/aggregator/trace.h
+> index dcca8007d876..eb332bb53ae4 100644
+> --- a/drivers/platform/surface/aggregator/trace.h
+> +++ b/drivers/platform/surface/aggregator/trace.h
+> @@ -565,6 +565,28 @@ DECLARE_EVENT_CLASS(ssam_pending_class,
+>  		TP_ARGS(pending)					\
+>  	)
+> 
+> +DECLARE_EVENT_CLASS(ssam_data_class,
+> +	TP_PROTO(size_t length),
+> +
+> +	TP_ARGS(length),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(size_t, length)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->length = length;
+> +	),
+> +
+> +	TP_printk("length=%zu", __entry->length)
+> +);
+> +
+> +#define DEFINE_SSAM_DATA_EVENT(name)					\
+> +	DEFINE_EVENT(ssam_data_class, ssam_##name,			\
+> +		TP_PROTO(size_t length),				\
+> +		TP_ARGS(length)						\
+> +	)
+> +
+>  DEFINE_SSAM_FRAME_EVENT(rx_frame_received);
+>  DEFINE_SSAM_COMMAND_EVENT(rx_response_received);
+>  DEFINE_SSAM_COMMAND_EVENT(rx_event_received);
+> @@ -583,6 +605,15 @@ DEFINE_SSAM_REQUEST_EVENT(request_cancel);
+>  DEFINE_SSAM_REQUEST_STATUS_EVENT(request_complete);
+>  DEFINE_SSAM_PENDING_EVENT(rtl_timeout_reap);
+> 
+> +DEFINE_SSAM_PACKET_EVENT(ei_tx_drop_ack_packet);
+> +DEFINE_SSAM_PACKET_EVENT(ei_tx_drop_nak_packet);
+> +DEFINE_SSAM_PACKET_EVENT(ei_tx_drop_dsq_packet);
+> +DEFINE_SSAM_PACKET_STATUS_EVENT(ei_tx_fail_write);
+> +DEFINE_SSAM_PACKET_EVENT(ei_tx_corrupt_data);
+> +DEFINE_SSAM_DATA_EVENT(ei_rx_corrupt_syn);
+> +DEFINE_SSAM_FRAME_EVENT(ei_rx_corrupt_data);
+> +DEFINE_SSAM_REQUEST_EVENT(ei_rx_drop_response);
+> +
+>  DEFINE_SSAM_ALLOC_EVENT(ctrl_packet_alloc);
+>  DEFINE_SSAM_FREE_EVENT(ctrl_packet_free);
+> 
 > --
 > 2.29.2
 > 
