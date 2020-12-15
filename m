@@ -2,134 +2,188 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D027C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 19:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D74C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 20:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F25FA22A99
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 19:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9889A22B47
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 20:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbgLOT4j (ORCPT
+        id S1726022AbgLOUBF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Dec 2020 14:56:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36514 "EHLO
+        Tue, 15 Dec 2020 15:01:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgLOT4h (ORCPT
+        with ESMTP id S1725850AbgLOUBB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Dec 2020 14:56:37 -0500
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B05DC06179C;
-        Tue, 15 Dec 2020 11:55:56 -0800 (PST)
-Received: by mail-ej1-x644.google.com with SMTP id n26so29458972eju.6;
-        Tue, 15 Dec 2020 11:55:56 -0800 (PST)
+        Tue, 15 Dec 2020 15:01:01 -0500
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCE51C06179C;
+        Tue, 15 Dec 2020 12:00:20 -0800 (PST)
+Received: by mail-ej1-x642.google.com with SMTP id ga15so29475413ejb.4;
+        Tue, 15 Dec 2020 12:00:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hgbpczhIgWcJ9kOmJE2lzKhI3+pU/J6Ah3rCJFwnT/Y=;
-        b=IqwmJpwZ5jYDClMOQqOWIPApxnNEK2fsdac6O5WqsZx8sFJU1gwBYMHKPrzInF7drE
-         jfQPwixTKwA1kyv2nBnj6h9LZ4kEdQlCfw1BEsgMV0pbc1o/DUNbcS0zSk2EdZWLf6Gk
-         NOvu+0/KycCPMjPf4hyZOdKNw7TK3c8HH+HQIIx/IJlXjQerv+3cX9/s7qW/qxxl232b
-         U/encgjr3nvds77wreBOHfdmmHoTMmuUGI1JeliaGzArTloFrp0QMX4YYhtzTSZxnUhA
-         Pv0O4m3DMy7IdQMAUcUwaC8ZEwuLEEZrSHm81yRGN+t6nC/1cBZZXYBUjiWtbEtWoqmD
-         LgQQ==
+        bh=7Vz7t0MFC5aymielea2K5QZe7zJV0QES4cE9gABPJn8=;
+        b=Q4WCrOW0+BY8Ove2ALhxmDuJVAc1mFBZuFCThWib4oaGHMmFPkgDPObVMf76WTi07I
+         IhNCaPJm3waAuoEeTclzo/JBGEEa4WmyVEY+cDM15y+YgfNn33gVXL9f1Dskvk+Orddy
+         A68zbuF7OpPektmYs9hmJoQTK2bF+ZVxlxvjLcNIc/Y3xwhoOMf1GWhm14HugifuDgXn
+         uSIgFgDnktItru/DC/u+7vZYj8pRUKXhlLPvubwhdFgIQrkhBCYTww3cVPwOjHDHlwSq
+         Jj6U37dgXWwb5AzDNaGN0rlBcGylkAHmoDsdl9PzfU8KeWPDsVB6A7oB9EHQWv1OTuII
+         dnSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=hgbpczhIgWcJ9kOmJE2lzKhI3+pU/J6Ah3rCJFwnT/Y=;
-        b=Hrmy+C/8h3mOX+hFzdqbn4raWKloITFVckkCd+Kq2/wbByPCBpHYQMeVC1Du1zNTN1
-         liJ6i8YX3kP8V+GfMDhj0V/A1iOM4to9X8qbEHW5YxQlojhXzBa8sQWV1v+epIZRFI+P
-         pm6fXFl+7eK/XKCDPyRIyAayOrm32LAGbQhj3vy82a1r7Xgg5lzztSz9FhBmWg3XxkTA
-         uLvuSls0AZdCg0keVix0Rrh1X+48OWZKybtHGrZxEZQNjQJ0Zh59800d6jh20yIPflrY
-         E92NGT+vVzt9nGJTCjYa0SpjFk920awxd++jS0lN7rEHgsUp6tFUaKGwr3vxbuhFRXd7
-         9j3A==
-X-Gm-Message-State: AOAM5329UAH1FlOzmm/jiqU0xM1bN5UHRy7lOsctg5DTTaKtkRlyolN2
-        CDj2YkW/GOvC6LAT2jPFUp7SDxlPESkXVw==
-X-Google-Smtp-Source: ABdhPJxtMaw1aQXNeyC3jAQyljCTgGN2KiTagUSIRKg0rzT0SCXxyJXclp9JCDz8X23CnrmupFScYQ==
-X-Received: by 2002:a17:906:7b8d:: with SMTP id s13mr28093936ejo.479.1608062154895;
-        Tue, 15 Dec 2020 11:55:54 -0800 (PST)
+        bh=7Vz7t0MFC5aymielea2K5QZe7zJV0QES4cE9gABPJn8=;
+        b=OccsZ+VD8MeEZUBY3xDnDbl8PNAGABGw1GC92nrQKy//iYL6zIXrQtL7+DmGgZXbY9
+         3+CbC8rapsiODVw6Q3FCtswCvAWirPSaM1xLy2zqbmbb2P/bG9x4cmB7FreCHukMA5D9
+         eFC/RYW8oI70u88Tg8HHeN6oHCHJMs5MYczaia/rKRWXgtzCuKqBO3S5q7HA4fJgOgFW
+         pSkSUIC3kQBMf0/2dlJB9n/h3MIDPTfHloh4HoUVSSLHAY+YsYxM+AuEuqWNQyVrOcV2
+         mtfNpYqq0rBXKqlMHMyOFyKIg5fgz7HCK2yJC/axUOxqX40g9M5O5o7KgjnRXNjv/3XK
+         t/Zg==
+X-Gm-Message-State: AOAM5331ERhOlnwjPFajXYIMhemxpKb27b6qvwXebqS2ETG7ke5b42Ex
+        wqH12PBkzkHwkot/q8XC+jEvwYbdo9K4Ag==
+X-Google-Smtp-Source: ABdhPJyE0ZZRr6wCpsJqhDlJwTci5gPOadVCpJgoWjoG3kVB+gBjuaIYxDhxfbFJJtDUPr9M+I2bfw==
+X-Received: by 2002:a17:906:7243:: with SMTP id n3mr27611178ejk.246.1608062419143;
+        Tue, 15 Dec 2020 12:00:19 -0800 (PST)
 Received: from [192.168.2.202] (pd9e5a7aa.dip0.t-ipconnect.de. [217.229.167.170])
-        by smtp.gmail.com with ESMTPSA id a6sm19209575edv.74.2020.12.15.11.55.53
+        by smtp.gmail.com with ESMTPSA id q5sm2117746ejr.89.2020.12.15.12.00.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Dec 2020 11:55:53 -0800 (PST)
-Subject: Re: [PATCH v2 -next] platform: surface: fix non-PM_SLEEP build
- warnings
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20201214233336.19782-1-rdunlap@infradead.org>
+        Tue, 15 Dec 2020 12:00:18 -0800 (PST)
+Subject: Re: [PATCH v2 8/9] platform/surface: Add Surface Aggregator
+ user-space interface
+To:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20201203212640.663931-1-luzmaximilian@gmail.com>
+ <20201203212640.663931-9-luzmaximilian@gmail.com>
+ <13b24eb0-e60f-e1d6-fcea-a19f62c40b4f@redhat.com>
 From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <5fd70f29-2795-5b46-4bc9-e60a26efee88@gmail.com>
-Date:   Tue, 15 Dec 2020 20:55:52 +0100
+Message-ID: <a22def75-a4e5-4ae4-f527-7695630be1ee@gmail.com>
+Date:   Tue, 15 Dec 2020 21:00:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.3
 MIME-Version: 1.0
-In-Reply-To: <20201214233336.19782-1-rdunlap@infradead.org>
+In-Reply-To: <13b24eb0-e60f-e1d6-fcea-a19f62c40b4f@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/15/20 12:33 AM, Randy Dunlap wrote:
-> Fix build warnings when CONFIG_PM_SLEEP is not enabled and these
-> functions are not used:
+On 12/15/20 5:35 PM, Hans de Goede wrote:
+> Hi,
 > 
-> ../drivers/platform/surface/surface_gpe.c:189:12: warning: ‘surface_gpe_resume’ defined but not used [-Wunused-function]
->   static int surface_gpe_resume(struct device *dev)
->              ^~~~~~~~~~~~~~~~~~
-> ../drivers/platform/surface/surface_gpe.c:184:12: warning: ‘surface_gpe_suspend’ defined but not used [-Wunused-function]
->   static int surface_gpe_suspend(struct device *dev)
->              ^~~~~~~~~~~~~~~~~~~
+> On 12/3/20 10:26 PM, Maximilian Luz wrote:
+>> Add a misc-device providing user-space access to the Surface Aggregator
+>> EC, mainly intended for debugging, testing, and reverse-engineering.
+>> This interface gives user-space applications the ability to send
+>> requests to the EC and receive the corresponding responses.
+>>
+>> The device-file is managed by a pseudo platform-device and corresponding
+>> driver to avoid dependence on the dedicated bus, allowing it to be
+>> loaded in a minimal configuration.
+>>
+>> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 > 
-> Fixes: 274335f1c557 ("platform/surface: Add Driver to set up lid GPEs on MS Surface device")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Maximilian Luz <luzmaximilian@gmail.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
-> v2: dropped Maximilian's RVB tag since the patch changed
->      use preferred __maybe_unused instead of ifdeffery:
->        https://lore.kernel.org/patchwork/patch/732981/
-> 
->   drivers/platform/surface/surface_gpe.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> --- linux-next-20201214.orig/drivers/platform/surface/surface_gpe.c
-> +++ linux-next-20201214/drivers/platform/surface/surface_gpe.c
-> @@ -181,12 +181,12 @@ static int surface_lid_enable_wakeup(str
->   	return 0;
->   }
->   
-> -static int surface_gpe_suspend(struct device *dev)
-> +static int __maybe_unused surface_gpe_suspend(struct device *dev)
->   {
->   	return surface_lid_enable_wakeup(dev, true);
->   }
->   
-> -static int surface_gpe_resume(struct device *dev)
-> +static int __maybe_unused surface_gpe_resume(struct device *dev)
->   {
->   	return surface_lid_enable_wakeup(dev, false);
->   }
-> 
+> 1 review comment inline:
+>
 
-Code looks good to me.
+[...]
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+>> +static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
+>> +{
+>> +	struct ssam_cdev_request __user *r;
+>> +	struct ssam_cdev_request rqst;
+>> +	struct ssam_request spec;
+>> +	struct ssam_response rsp;
+>> +	const void __user *plddata;
+>> +	void __user *rspdata;
+>> +	int status = 0, ret = 0, tmp;
+>> +
+>> +	r = (struct ssam_cdev_request __user *)arg;
+>> +	ret = copy_struct_from_user(&rqst, sizeof(rqst), r, sizeof(*r));
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	plddata = u64_to_user_ptr(rqst.payload.data);
+>> +	rspdata = u64_to_user_ptr(rqst.response.data);
+>> +
+>> +	/* Setup basic request fields. */
+>> +	spec.target_category = rqst.target_category;
+>> +	spec.target_id = rqst.target_id;
+>> +	spec.command_id = rqst.command_id;
+>> +	spec.instance_id = rqst.instance_id;
+>> +	spec.flags = rqst.flags;
+>> +	spec.length = rqst.payload.length;
+>> +	spec.payload = NULL;
+>> +
+>> +	rsp.capacity = rqst.response.length;
+>> +	rsp.length = 0;
+>> +	rsp.pointer = NULL;
+>> +
+>> +	/* Get request payload from user-space. */
+>> +	if (spec.length) {
+>> +		if (!plddata) {
+>> +			ret = -EINVAL;
+>> +			goto out;
+>> +		}
+>> +
+>> +		spec.payload = kzalloc(spec.length, GFP_KERNEL);
+>> +		if (!spec.payload) {
+>> +			status = -ENOMEM;
+>> +			ret = -EFAULT;
+>> +			goto out;
+>> +		}
+>> +
+>> +		if (copy_from_user((void *)spec.payload, plddata, spec.length)) {
+>> +			ret = -EFAULT;
+>> +			goto out;
+>> +		}
+>> +	}
+>> +
+>> +	/* Allocate response buffer. */
+>> +	if (rsp.capacity) {
+>> +		if (!rspdata) {
+>> +			ret = -EINVAL;
+>> +			goto out;
+>> +		}
+>> +
+>> +		rsp.pointer = kzalloc(rsp.capacity, GFP_KERNEL);
+>> +		if (!rsp.pointer) {
+>> +			status = -ENOMEM;
+>> +			ret = -EFAULT;
+> 
+> This is weird, -EFAULT should only be used if a SEGFAULT
+> would have been raised if the code was running in
+> userspace rather then in kernelspace, IOW if userspace
+> has provided an invalid pointer (or a too small buffer,
+> causing the pointer to become invalid at some point in
+> the buffer).
 
-As already mentioned before, I'd prefer the subject line to be
-"platform/surface: gpe: ...", or at least "platform/surface: ..." for
-consistency with other commits. May just be a personal preference
-though, so nothing that should prevent it from being applied.
+Oh, right.
+
+> IMHO you should simply do ret = -ENOMEM here.
+
+Yes. that looks better. I will change that as suggested.
+> Otherwise this looks good to me.
 
 Thanks,
 Max
