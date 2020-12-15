@@ -2,61 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFDAC4361B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 23:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A32C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 13:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEEF20731
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Dec 2020 23:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03B0224B8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 13:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgLNXuU (ORCPT
+        id S1728010AbgLONoW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Dec 2020 18:50:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgLNXuT (ORCPT
+        Tue, 15 Dec 2020 08:44:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21284 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728300AbgLONoK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Dec 2020 18:50:19 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF37BC06179C;
-        Mon, 14 Dec 2020 15:49:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=vucjdQCLyAd3Q0AdZs6xHlknqACs9Tp5nQldv2CB1TU=; b=qIr4fpcCqB3zbFi3ySlzcZp0ZX
-        vD0DiVNJsS3n6o6Xl4V+jBmK1kPukdAjKZN62wYsz98OY2WGnDVcAeGcTgb8GIP9LAPhuOfG+I16J
-        YEnhGQjNWYf3UdkPzpdF5TbDMJPcHkGPxXArzYo/Qugm/RTSAqpBbZtiQbUHt7s0NlHae7qYBlVi3
-        CGzdUhoR6HmBuale0d4+F/kxOGff1i3/I4xwP14uo9EUke4r6564WhGx5t8pXvj0RGcpnphNVEaU+
-        WgdsfmFMolAR5Qk3paKUBOX6n65O8ZyXsXrA8i5BDGQeHGrivK5/NHwqH8HAMGepLSwG8KU+XtyNv
-        iO8kOqlA==;
-Received: from [2601:1c0:6280:3f0::1494]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1koxay-0008LS-K6; Mon, 14 Dec 2020 23:49:36 +0000
-Subject: Re: [PATCH -next] platform: surface: fix non-PM_SLEEP build warnings
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd.bergmann@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20201211190335.16501-1-rdunlap@infradead.org>
- <CAHp75Vcckb5NA=tc5s5p_qzYE2qhJOT0vhCtfKhT_eqZe+PgXw@mail.gmail.com>
- <ec8e703f-e1ea-1253-edc9-311f0ee3e8fd@infradead.org>
- <CAHp75Vf-QcdL+FOd=8fUUQ0+ORC-RVKG+3Yqrar1J7wZMSDF+A@mail.gmail.com>
- <3d5a5c8f-4bb1-6205-ae76-354473d59a18@infradead.org>
- <CAHp75Vc3_ye3Ph0uVYdcsKr0QY5RGSaHmCgU1A2q-U2GCAafsQ@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0f07d6b8-6a28-ba31-9cfa-53abffb0c0ff@infradead.org>
-Date:   Mon, 14 Dec 2020 15:49:33 -0800
+        Tue, 15 Dec 2020 08:44:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608039762;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pGrSzYbdNZZ1+G29igFKQHJ2u19ucKb6OhDvDyYMVwc=;
+        b=H0r2KAgEdlBXd3bqniUIuFZNtiSTj0RwWwE6KIOozRpoGW3CP9t2FG7lirGVTnTpuk0sxe
+        dNVkQy/KMEfwHUHBGvnJf5v2anWEV3+JiW9gHCRJic6ZlmHo68t9sj1q9+5RWlxNTovLDw
+        t9eog94fCnj7JBPRJMxTB/+v8Ju/bk8=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-fZwsYO7uNg6TJ3vlknI6Xg-1; Tue, 15 Dec 2020 08:42:41 -0500
+X-MC-Unique: fZwsYO7uNg6TJ3vlknI6Xg-1
+Received: by mail-ed1-f70.google.com with SMTP id cm4so10003854edb.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2020 05:42:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pGrSzYbdNZZ1+G29igFKQHJ2u19ucKb6OhDvDyYMVwc=;
+        b=QKvvbQD/lkSUoO9qh+1B8xD8MVt6wNYray/gmCCcyH9B+AlW5Li/vT9jjnfpa7PnF4
+         2G8+fa1+r0XDQTiXbS4yIWe+RZOI7WVGihh2NMdhHg4m5fbhs1dBsven1PRVJXpCxfmN
+         kpEXBYm2tCAIWT1W21tVCJtUCFSQF48Iuet8h4IoKpnQFdFcgozRiedJLOmJXFqjXVR9
+         g/jP6S4PJ9zct8sM1Zd81NDyChyrjQ3GidrcXwGKuoilOF2DjU3r2Go1S870RWc7hCjD
+         lt0Jl5XCz+IP1KxVW8ywJn+H4l9FUi512FrfI+jW8yzLKDJHoivXZwL3uNUrUGaRUmix
+         K/Uw==
+X-Gm-Message-State: AOAM531Id5rWcNypZZwn2kPT3Ino61rxzvYY1dPHITZKaYQ19lHhTnY7
+        fpF/d4+QnhF6wroh68gxqI3UKR3hMquVD6bwEDvVUChSsRwKm9/eLW9TyMa3/m7Rpw3ZoMFnY0f
+        Rj3Rof5aw7ewLtuyA1gF1gwA4t9vHs9pDoSpAVYpFp3S+K+Pnl4ow6fr9t4f8bV414MySTpL4uc
+        rTnOphAqQltw==
+X-Received: by 2002:a50:9b58:: with SMTP id a24mr2431657edj.22.1608039759938;
+        Tue, 15 Dec 2020 05:42:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzh0pkhjxlNYWjeE1lMCU0uFaNcSBzxclbFbiJ5wJjUGJnr+bwASuGoLApDJ8DpPqWxam0KJg==
+X-Received: by 2002:a50:9b58:: with SMTP id a24mr2431636edj.22.1608039759679;
+        Tue, 15 Dec 2020 05:42:39 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id h16sm1378289eji.110.2020.12.15.05.42.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Dec 2020 05:42:38 -0800 (PST)
+Subject: Re: [PATCH v2 2/9] platform/surface: aggregator: Add control packet
+ allocation caching
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Bla=c5=be_Hrastn?= =?UTF-8?Q?ik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org
+References: <20201203212640.663931-1-luzmaximilian@gmail.com>
+ <20201203212640.663931-3-luzmaximilian@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <879bdec2-3efd-8eac-c19e-cd8282367bef@redhat.com>
+Date:   Tue, 15 Dec 2020 14:42:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vc3_ye3Ph0uVYdcsKr0QY5RGSaHmCgU1A2q-U2GCAafsQ@mail.gmail.com>
+In-Reply-To: <20201203212640.663931-3-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,27 +91,168 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 12/14/20 3:19 AM, Andy Shevchenko wrote:
-> On Mon, Dec 14, 2020 at 2:53 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 12/12/20 11:07 AM, Andy Shevchenko wrote:
->>> On Sat, Dec 12, 2020 at 7:05 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+Hi,
+
+On 12/3/20 10:26 PM, Maximilian Luz wrote:
+> Surface Serial Hub communication is, in its core, packet based. Each
+> sequenced packet requires to be acknowledged, via an ACK-type control
+> packet. In case invalid data has been received by the driver, a NAK-type
+> (not-acknowledge/negative acknowledge) control packet is sent,
+> triggering retransmission.
 > 
-> ...
+> Control packets are therefore a core communication primitive and used
+> frequently enough (with every sequenced packet transmission sent by the
+> embedded controller, including events and request responses) that it may
+> warrant caching their allocations to reduce possible memory
+> fragmentation.
 > 
->>> Here [1] is the rationale behind annotation vs. ifdeffery.
->>>
->>> [1]: https://lore.kernel.org/patchwork/patch/732981/
->>>
->> Thanks for the link.  I'll send a v2.
->>
->> Could we add that to the Linux BKP (Best Known Practices)
->> document?
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/surface/aggregator/core.c    | 27 ++++++++++-
+>  .../surface/aggregator/ssh_packet_layer.c     | 47 +++++++++++++++----
+>  .../surface/aggregator/ssh_packet_layer.h     |  3 ++
+>  3 files changed, 67 insertions(+), 10 deletions(-)
 > 
-> Perhaps. The author of that is Arnd, maybe he has something to add.
+> diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+> index ec6c7f40ad36..77bc4c87541b 100644
+> --- a/drivers/platform/surface/aggregator/core.c
+> +++ b/drivers/platform/surface/aggregator/core.c
+> @@ -774,7 +774,32 @@ static struct serdev_device_driver ssam_serial_hub = {
+>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+>  };
+> -module_serdev_device_driver(ssam_serial_hub);
+> +
+> +
+> +/* -- Module setup. --------------------------------------------------------- */
+> +
+> +static int __init ssam_core_init(void)
+> +{
+> +	int status;
+> +
+> +	status = ssh_ctrl_packet_cache_init();
+> +	if (status)
+> +		return status;
+> +
+> +	status = serdev_device_driver_register(&ssam_serial_hub);
+> +	if (status)
+> +		ssh_ctrl_packet_cache_destroy();
+> +
+> +	return status;
+> +}
+> +module_init(ssam_core_init);
+> +
+> +static void __exit ssam_core_exit(void)
+> +{
+> +	serdev_device_driver_unregister(&ssam_serial_hub);
+> +	ssh_ctrl_packet_cache_destroy();
+> +}
+> +module_exit(ssam_core_exit);
+> 
+>  MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+>  MODULE_DESCRIPTION("Subsystem and Surface Serial Hub driver for Surface System Aggregator Module");
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 237d28c90e4b..8bc19837cde0 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -302,24 +302,53 @@ void ssh_packet_init(struct ssh_packet *packet, unsigned long type,
+>  	packet->ops = ops;
+>  }
+> 
+> +static struct kmem_cache *ssh_ctrl_packet_cache;
+> +
+> +/**
+> + * ssh_ctrl_packet_cache_init() - Initialize the control packet cache.
+> + */
+> +int ssh_ctrl_packet_cache_init(void)
+> +{
+> +	const unsigned int size = sizeof(struct ssh_packet) + SSH_MSG_LEN_CTRL;
+> +	const unsigned int align = __alignof__(struct ssh_packet);
+> +	struct kmem_cache *cache;
+> +
+> +	cache = kmem_cache_create("ssam_ctrl_packet", size, align, 0, NULL);
+> +	if (!cache)
+> +		return -ENOMEM;
+> +
+> +	ssh_ctrl_packet_cache = cache;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ssh_ctrl_packet_cache_destroy() - Deinitialize the control packet cache.
+> + */
+> +void ssh_ctrl_packet_cache_destroy(void)
+> +{
+> +	kmem_cache_destroy(ssh_ctrl_packet_cache);
+> +	ssh_ctrl_packet_cache = NULL;
+> +}
+> +
+>  /**
+> - * ssh_ctrl_packet_alloc() - Allocate control packet.
+> + * ssh_ctrl_packet_alloc() - Allocate packet from control packet cache.
+>   * @packet: Where the pointer to the newly allocated packet should be stored.
+>   * @buffer: The buffer corresponding to this packet.
+>   * @flags:  Flags used for allocation.
+>   *
+> - * Allocates a packet and corresponding transport buffer. Sets the packet's
+> - * buffer reference to the allocated buffer. The packet must be freed via
+> - * ssh_ctrl_packet_free(), which will also free the corresponding buffer. The
+> - * corresponding buffer must not be freed separately. Intended to be used with
+> - * %ssh_ptl_ctrl_packet_ops as packet operations.
+> + * Allocates a packet and corresponding transport buffer from the control
+> + * packet cache. Sets the packet's buffer reference to the allocated buffer.
+> + * The packet must be freed via ssh_ctrl_packet_free(), which will also free
+> + * the corresponding buffer. The corresponding buffer must not be freed
+> + * separately. Intended to be used with %ssh_ptl_ctrl_packet_ops as packet
+> + * operations.
+>   *
+>   * Return: Returns zero on success, %-ENOMEM if the allocation failed.
+>   */
+>  static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
+>  				 struct ssam_span *buffer, gfp_t flags)
+>  {
+> -	*packet = kzalloc(sizeof(**packet) + SSH_MSG_LEN_CTRL, flags);
+> +	*packet = kmem_cache_alloc(ssh_ctrl_packet_cache, flags);
+>  	if (!*packet)
+>  		return -ENOMEM;
+> 
+> @@ -330,12 +359,12 @@ static int ssh_ctrl_packet_alloc(struct ssh_packet **packet,
+>  }
+> 
+>  /**
+> - * ssh_ctrl_packet_free() - Free control packet.
+> + * ssh_ctrl_packet_free() - Free packet allocated from control packet cache.
+>   * @p: The packet to free.
+>   */
+>  static void ssh_ctrl_packet_free(struct ssh_packet *p)
+>  {
+> -	kfree(p);
+> +	kmem_cache_free(ssh_ctrl_packet_cache, p);
+>  }
+> 
+>  static const struct ssh_packet_ops ssh_ptl_ctrl_packet_ops = {
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.h b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+> index 058f111292ca..e8757d03f279 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.h
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+> @@ -184,4 +184,7 @@ static inline void ssh_ptl_tx_wakeup_transfer(struct ssh_ptl *ptl)
+>  void ssh_packet_init(struct ssh_packet *packet, unsigned long type,
+>  		     u8 priority, const struct ssh_packet_ops *ops);
+> 
+> +int ssh_ctrl_packet_cache_init(void);
+> +void ssh_ctrl_packet_cache_destroy(void);
+> +
+>  #endif /* _SURFACE_AGGREGATOR_SSH_PACKET_LAYER_H */
+> --
+> 2.29.2
 > 
 
-Where is it located?  My search foo could not find it.
-
-thanks.
--- 
-~Randy
