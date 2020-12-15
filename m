@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD493C2BB48
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 16:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FA5C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 17:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A25E522581
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 16:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26586229C5
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 15 Dec 2020 17:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725878AbgLOQgk (ORCPT
+        id S1729768AbgLORT7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Dec 2020 11:36:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43429 "EHLO
+        Tue, 15 Dec 2020 12:19:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50492 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725901AbgLOQgk (ORCPT
+        by vger.kernel.org with ESMTP id S1729005AbgLORTv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Dec 2020 11:36:40 -0500
+        Tue, 15 Dec 2020 12:19:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608050111;
+        s=mimecast20190719; t=1608052692;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XMu5qAATsB6a+wngWhSRuFy6gX+2mNvLnzWa4e2OaYA=;
-        b=SrqAWgy++Kt0LMyu/SILHPMR8vDzQxHmbPkY3Zo9PN0RIfJ9hTrSG+MP/oAh3LDdSHN/bA
-        lQJlKu9wbkI81n62RvnIE2iywK7B9BHmcC+j3zUq4WqkYYIsIuunjFa3pPKrCKMebXAICM
-        GieeaUVZJZnYFUiBmR9jnUDN2KhQVyw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-I75unU04OwCElBdis1njxg-1; Tue, 15 Dec 2020 11:35:07 -0500
-X-MC-Unique: I75unU04OwCElBdis1njxg-1
-Received: by mail-ed1-f70.google.com with SMTP id cm4so10249069edb.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2020 08:35:06 -0800 (PST)
+        bh=6KWpteQGzAQ8LCkjo/9BFHmajc/2jKBheTKPvBZROQc=;
+        b=IBs0tCfD6E261wn/LthRKQttZeLUKPjDEDEt+cE7ZYTERJro6pt9TCY6FajN6brAMxUYsE
+        ZJ9uTpSy5nBz6zR3dIsWWQkIre0bUTiWq6ZTQFx3AVx1I+TbLG0doV38yJcdxn7H8ZTE5P
+        TOX3nsLTljmi+i9Qykbo6YTR3/tQZ9Y=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-589-HugHwCicOS6Vio0P8WA1Og-1; Tue, 15 Dec 2020 12:18:08 -0500
+X-MC-Unique: HugHwCicOS6Vio0P8WA1Og-1
+Received: by mail-ed1-f72.google.com with SMTP id dh21so10283678edb.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 15 Dec 2020 09:18:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=XMu5qAATsB6a+wngWhSRuFy6gX+2mNvLnzWa4e2OaYA=;
-        b=tyUgMfuxe+KQRqTJ4sFw6NWDf/Xb99enMwowiWWDUVDHG3rHbHlZPHCNLvBtY0BB0z
-         INQhkAJvlJBmwjSDugIFXEFF5D4hatOwWQ2fyeAXfF+fk1ywEUwacFiUUBEUI0oQ6LK4
-         QtNTWGr/9SgfV1cYlZeNoaxmnRC0Vo6WvwedrM5WWExfredusYiTqpLXOHuh52ZwdVae
-         KBgLv/zI8cTprSn4+pigry2Ad4gBzMlmSgNv1nWFTmD4Gu+HBC3ck3kN3r3rYXy6yyP6
-         ufxHRAbpg3rnSS/QoOfLmPMgJK+dz40xjhoC7IGnI9ofJNGz2zBVu0dMw0Ps9N/7VfVz
-         85HQ==
-X-Gm-Message-State: AOAM532ZOnk6h4LmIfBh+DaPIIKzj0BVutZb8c72CfqG/DT03ZgjYeys
-        t1Q4H1/zVzyNo8ii0LwSOZ0EO9G0ICbT0pc3Ck1dDJpf93RlpUJ2hK/4fZX8GBSCvQJdaUU4lGv
-        EmnRxhWDuZnxdtvwuIG799uCDuVmN/JiHWg==
-X-Received: by 2002:aa7:dacf:: with SMTP id x15mr29901352eds.134.1608050105627;
-        Tue, 15 Dec 2020 08:35:05 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz9xMqqDLVAAW/3QCr1FaQn0jXKYChaN//6kkIkPsqu0Gzio7ni2F5bVMtnNFdoWQGh4yROxg==
-X-Received: by 2002:aa7:dacf:: with SMTP id x15mr29901291eds.134.1608050105141;
-        Tue, 15 Dec 2020 08:35:05 -0800 (PST)
+        bh=6KWpteQGzAQ8LCkjo/9BFHmajc/2jKBheTKPvBZROQc=;
+        b=ESQ9mLgQ3FJ6etFIJSF5KxCdvWcAu10R4PgiQzqVLVrWbEHIpUCul+LsTtJzZfqPi5
+         C+KbypPAcxrewzGJkENSMKQK5T5btEWrEFef2Qu3PiU/pIqu6L5B7pWtWfGZ0gfTgylu
+         G9qY680H/RevKZ7w3ZT8xoh4QlVOj5CuZ6j+5nzj/NtvNtHVTUODfD036H+vfaYJmZu7
+         TPu9JFRJWb+ilTSYFd4x8cuUNQD2/G4+Vqcd9hsJnH8CabgE+KK91VdFqHVSXivg/nyc
+         NKkeoh1+p/xOm6rkF1t8+XmButucgw2LNsmf82QdncLia/VDxbnkrW/8PVlCX+dItF3Y
+         QRVA==
+X-Gm-Message-State: AOAM531ImfXYEnutQQPX49jLIXo+BbOT6hTv9Aobm7jwEn7dNUEVzBbe
+        Ce/6YbU1aZ2eZjyy4h/bg8oVPt52oof2N8zcxMycG6R/UqZPYDZu57nlHuSl0M8teOXUN+WPOfO
+        rScSSOcCyaRpPRjuBjCwEctsrR4LrkuEZ5Q==
+X-Received: by 2002:a17:906:3b5b:: with SMTP id h27mr27503991ejf.450.1608052686699;
+        Tue, 15 Dec 2020 09:18:06 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyoYsBsb3jsLaZXA7fg22B4F2lw2AyuRQ8hOoZ9nS5k3Z0rqymqb7LDglJkA8Qm/gorptAfEQ==
+X-Received: by 2002:a17:906:3b5b:: with SMTP id h27mr27503946ejf.450.1608052686121;
+        Tue, 15 Dec 2020 09:18:06 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id f17sm18526884edv.5.2020.12.15.08.35.03
+        by smtp.gmail.com with ESMTPSA id z10sm1842106ejl.30.2020.12.15.09.18.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Dec 2020 08:35:04 -0800 (PST)
-Subject: Re: [PATCH v2 8/9] platform/surface: Add Surface Aggregator
- user-space interface
+        Tue, 15 Dec 2020 09:18:05 -0800 (PST)
+Subject: Re: [PATCH v2 9/9] platform/surface: Add Surface ACPI Notify driver
 To:     Maximilian Luz <luzmaximilian@gmail.com>,
         linux-kernel@vger.kernel.org
 Cc:     Mark Gross <mgross@linux.intel.com>,
@@ -71,19 +70,21 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
         Dorian Stoll <dorian.stoll@tmsp.io>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-doc@vger.kernel.org
 References: <20201203212640.663931-1-luzmaximilian@gmail.com>
- <20201203212640.663931-9-luzmaximilian@gmail.com>
+ <20201203212640.663931-10-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <13b24eb0-e60f-e1d6-fcea-a19f62c40b4f@redhat.com>
-Date:   Tue, 15 Dec 2020 17:35:03 +0100
+Message-ID: <532d26f8-40b2-05d8-d253-a8b9e5c31446@redhat.com>
+Date:   Tue, 15 Dec 2020 18:18:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201203212640.663931-9-luzmaximilian@gmail.com>
+In-Reply-To: <20201203212640.663931-10-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -94,619 +95,1135 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 12/3/20 10:26 PM, Maximilian Luz wrote:
-> Add a misc-device providing user-space access to the Surface Aggregator
-> EC, mainly intended for debugging, testing, and reverse-engineering.
-> This interface gives user-space applications the ability to send
-> requests to the EC and receive the corresponding responses.
+> The Surface ACPI Notify (SAN) device provides an ACPI interface to the
+> Surface Aggregator EC, specifically the Surface Serial Hub interface.
+> This interface allows EC requests to be made from ACPI code and can
+> convert a subset of EC events back to ACPI notifications.
 > 
-> The device-file is managed by a pseudo platform-device and corresponding
-> driver to avoid dependence on the dedicated bus, allowing it to be
-> loaded in a minimal configuration.
+> Specifically, this interface provides a GenericSerialBus operation
+> region ACPI code can execute a request by writing the request command
+> data and payload to this operation region and reading back the
+> corresponding response via a write-then-read operation. Furthermore,
+> this interface provides a _DSM method to be called when certain events
+> from the EC have been received, essentially turning them into ACPI
+> notifications.
+> 
+> The driver provided in this commit essentially takes care of translating
+> the request data written to the operation region, executing the request,
+> waiting for it to finish, and finally writing and translating back the
+> response (if the request has one). Furthermore, this driver takes care
+> of enabling the events handled via ACPI _DSM calls. Lastly, this driver
+> also exposes an interface providing discrete GPU (dGPU) power-on
+> notifications on the Surface Book 2, which are also received via the
+> operation region interface (but not handled by the SAN driver directly),
+> making them accessible to other drivers (such as a dGPU hot-plug driver
+> that may be added later on).
+> 
+> On 5th and 6th generation Surface devices (Surface Pro 5/2017, Pro 6,
+> Book 2, Laptop 1 and 2), the SAN interface provides full battery and
+> thermal subsystem access, as well as other EC based functionality. On
+> those models, battery and thermal sensor devices are implemented as
+> standard ACPI devices of that type, however, forward ACPI calls to the
+> corresponding Surface Aggregator EC request via the SAN interface and
+> receive corresponding notifications (e.g. battery information change)
+> from it. This interface is therefore required to provide said
+> functionality on those devices.
 > 
 > Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-1 review comment inline:
+Thanks, patch looks good to me:
 
-> ---
-> 
-> Changes in v1 (from RFC):
->  - add copyright lines
->  - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
->  - move from debugfs to proper misc-device
->  - move interface definitions to uapi header
->  - remove versioning
->  - allocate platform device dynamically
->  - prioritize EFAULT error in IOCTL return
->  - use ENOTTY error for unknown IOCTLs
->  - fix IOCTL compatibility for 32-bit user-space on 64-bit kernels
->  - mark request struct as __attribute__((__packed__))
->  - address issues when driver is unbound while file still open
-> 
-> Changes in v2:
->  - add ioctl-number.rst entry
->  - improve documentation
->  - spell check comments and strings, fix typos
->  - unify comment style
->  - run checkpatch --strict, fix warnings and style issues
-> 
-> ---
->  .../surface_aggregator/clients/cdev.rst       |  85 +++++
->  .../surface_aggregator/clients/index.rst      |  12 +-
->  .../userspace-api/ioctl/ioctl-number.rst      |   2 +
->  MAINTAINERS                                   |   2 +
->  drivers/platform/surface/Kconfig              |  17 +
->  drivers/platform/surface/Makefile             |   1 +
->  .../surface/surface_aggregator_cdev.c         | 299 ++++++++++++++++++
->  include/uapi/linux/surface_aggregator/cdev.h  |  58 ++++
->  8 files changed, 475 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/driver-api/surface_aggregator/clients/cdev.rst
->  create mode 100644 drivers/platform/surface/surface_aggregator_cdev.c
->  create mode 100644 include/uapi/linux/surface_aggregator/cdev.h
-> 
-> diff --git a/Documentation/driver-api/surface_aggregator/clients/cdev.rst b/Documentation/driver-api/surface_aggregator/clients/cdev.rst
-> new file mode 100644
-> index 000000000000..f30e77def838
-> --- /dev/null
-> +++ b/Documentation/driver-api/surface_aggregator/clients/cdev.rst
-> @@ -0,0 +1,85 @@
-> +.. SPDX-License-Identifier: GPL-2.0+
-> +
-> +.. |u8| replace:: :c:type:`u8 <u8>`
-> +.. |u16| replace:: :c:type:`u16 <u16>`
-> +.. |ssam_cdev_request| replace:: :c:type:`struct ssam_cdev_request <ssam_cdev_request>`
-> +.. |ssam_request_flags| replace:: :c:type:`enum ssam_request_flags <ssam_request_flags>`
-> +
-> +==============================
-> +User-Space EC Interface (cdev)
-> +==============================
-> +
-> +The ``surface_aggregator_cdev`` module provides a misc-device for the SSAM
-> +controller to allow for a (more or less) direct connection from user-space to
-> +the SAM EC. It is intended to be used for development and debugging, and
-> +therefore should not be used or relied upon in any other way. Note that this
-> +module is not loaded automatically, but instead must be loaded manually.
-> +
-> +The provided interface is accessible through the ``/dev/surface/aggregator``
-> +device-file. All functionality of this interface is provided via IOCTLs.
-> +These IOCTLs and their respective input/output parameter structs are defined in
-> +``include/uapi/linux/surface_aggregator/cdev.h``.
-> +
-> +
-> +Controller IOCTLs
-> +=================
-> +
-> +The following IOCTLs are provided:
-> +
-> +.. flat-table:: Controller IOCTLs
-> +   :widths: 1 1 1 1 4
-> +   :header-rows: 1
-> +
-> +   * - Type
-> +     - Number
-> +     - Direction
-> +     - Name
-> +     - Description
-> +
-> +   * - ``0xA5``
-> +     - ``1``
-> +     - ``WR``
-> +     - ``REQUEST``
-> +     - Perform synchronous SAM request.
-> +
-> +
-> +``REQUEST``
-> +-----------
-> +
-> +Defined as ``_IOWR(0xA5, 1, struct ssam_cdev_request)``.
-> +
-> +Executes a synchronous SAM request. The request specification is passed in
-> +as argument of type |ssam_cdev_request|, which is then written to/modified
-> +by the IOCTL to return status and result of the request.
-> +
-> +Request payload data must be allocated separately and is passed in via the
-> +``payload.data`` and ``payload.length`` members. If a response is required,
-> +the response buffer must be allocated by the caller and passed in via the
-> +``response.data`` member. The ``response.length`` member must be set to the
-> +capacity of this buffer, or if no response is required, zero. Upon
-> +completion of the request, the call will write the response to the response
-> +buffer (if its capacity allows it) and overwrite the length field with the
-> +actual size of the response, in bytes.
-> +
-> +Additionally, if the request has a response, this must be indicated via the
-> +request flags, as is done with in-kernel requests. Request flags can be set
-> +via the ``flags`` member and the values correspond to the values found in
-> +|ssam_request_flags|.
-> +
-> +Finally, the status of the request itself is returned in the ``status``
-> +member (a negative errno value indicating failure). Note that failure
-> +indication of the IOCTL is separated from failure indication of the request:
-> +The IOCTL returns a negative status code if anything failed during setup of
-> +the request (``-EFAULT``) or if the provided argument or any of its fields
-> +are invalid (``-EINVAL``). In this case, the status value of the request
-> +argument may be set, providing more detail on what went wrong (e.g.
-> +``-ENOMEM`` for out-of-memory), but this value may also be zero. The IOCTL
-> +will return with a zero status code in case the request has been set up,
-> +submitted, and completed (i.e. handed back to user-space) successfully from
-> +inside the IOCTL, but the request ``status`` member may still be negative in
-> +case the actual execution of the request failed after it has been submitted.
-> +
-> +A full definition of the argument struct is provided below:
-> +
-> +.. kernel-doc:: include/uapi/linux/surface_aggregator/cdev.h
-> +   :functions: ssam_cdev_request
-> diff --git a/Documentation/driver-api/surface_aggregator/clients/index.rst b/Documentation/driver-api/surface_aggregator/clients/index.rst
-> index 31e026d96102..ab260ec82cfb 100644
-> --- a/Documentation/driver-api/surface_aggregator/clients/index.rst
-> +++ b/Documentation/driver-api/surface_aggregator/clients/index.rst
-> @@ -7,4 +7,14 @@ Client Driver Documentation
->  This is the documentation for client drivers themselves. Refer to
->  :doc:`../client` for documentation on how to write client drivers.
-> 
-> -.. Place documentation for individual client drivers here.
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   cdev
-> +
-> +.. only::  subproject and html
-> +
-> +   Indices
-> +   =======
-> +
-> +   * :ref:`genindex`
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index 55a2d9b2ce33..a98895da62b3 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -323,6 +323,8 @@ Code  Seq#    Include File                                           Comments
->                                                                       <mailto:tlewis@mindspring.com>
->  0xA3  90-9F  linux/dtlk.h
->  0xA4  00-1F  uapi/linux/tee.h                                        Generic TEE subsystem
-> +0xA5  01     linux/surface_aggregator/cdev.h                         Microsoft Surface Platform System Aggregator
-> +                                                                     <mailto:luzmaximilian@gmail.com>
->  0xAA  00-3F  linux/uapi/linux/userfaultfd.h
->  0xAB  00-1F  linux/nbd.h
->  0xAC  00-1F  linux/raw.h
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ff5d60875cec..f5a788f445a4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11699,7 +11699,9 @@ W:	https://github.com/linux-surface/surface-aggregator-module
->  C:	irc://chat.freenode.net/##linux-surface
->  F:	Documentation/driver-api/surface_aggregator/
->  F:	drivers/platform/surface/aggregator/
-> +F:	drivers/platform/surface/surface_aggregator_cdev.c
->  F:	include/linux/surface_aggregator/
-> +F:	include/uapi/linux/surface_aggregator/
-> 
->  MICROTEK X6 SCANNER
->  M:	Oliver Neukum <oliver@neukum.org>
-> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-> index 5af22f5141ff..cecad7a0cb7b 100644
-> --- a/drivers/platform/surface/Kconfig
-> +++ b/drivers/platform/surface/Kconfig
-> @@ -40,6 +40,23 @@ config SURFACE_3_POWER_OPREGION
->  	  This driver provides support for ACPI operation
->  	  region of the Surface 3 battery platform driver.
-> 
-> +config SURFACE_AGGREGATOR_CDEV
-> +	tristate "Surface System Aggregator Module User-Space Interface"
-> +	depends on SURFACE_AGGREGATOR
-> +	help
-> +	  Provides a misc-device interface to the Surface System Aggregator
-> +	  Module (SSAM) controller.
-> +
-> +	  This option provides a module (called surface_aggregator_cdev), that,
-> +	  when loaded, will add a client device (and its respective driver) to
-> +	  the SSAM controller. Said client device manages a misc-device
-> +	  interface (/dev/surface/aggregator), which can be used by user-space
-> +	  tools to directly communicate with the SSAM EC by sending requests and
-> +	  receiving the corresponding responses.
-> +
-> +	  The provided interface is intended for debugging and development only,
-> +	  and should not be used otherwise.
-> +
->  config SURFACE_GPE
->  	tristate "Surface GPE/Lid Support Driver"
->  	depends on ACPI
-> diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
-> index 034134fe0264..161f0ad05795 100644
-> --- a/drivers/platform/surface/Makefile
-> +++ b/drivers/platform/surface/Makefile
-> @@ -8,5 +8,6 @@ obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
->  obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
->  obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
->  obj-$(CONFIG_SURFACE_AGGREGATOR)	+= aggregator/
-> +obj-$(CONFIG_SURFACE_AGGREGATOR_CDEV)	+= surface_aggregator_cdev.o
->  obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
->  obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
-> diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
-> new file mode 100644
-> index 000000000000..40c30627f33a
-> --- /dev/null
-> +++ b/drivers/platform/surface/surface_aggregator_cdev.c
-> @@ -0,0 +1,299 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Provides user-space access to the SSAM EC via the /dev/surface/aggregator
-> + * misc device. Intended for debugging and development.
-> + *
-> + * Copyright (C) 2020 Maximilian Luz <luzmaximilian@gmail.com>
-> + */
-> +
-> +#include <linux/fs.h>
-> +#include <linux/kernel.h>
-> +#include <linux/kref.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rwsem.h>
-> +#include <linux/slab.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include <linux/surface_aggregator/cdev.h>
-> +#include <linux/surface_aggregator/controller.h>
-> +
-> +#define SSAM_CDEV_DEVICE_NAME	"surface_aggregator_cdev"
-> +
-> +struct ssam_cdev {
-> +	struct kref kref;
-> +	struct rw_semaphore lock;
-> +	struct ssam_controller *ctrl;
-> +	struct miscdevice mdev;
-> +};
-> +
-> +static void __ssam_cdev_release(struct kref *kref)
-> +{
-> +	kfree(container_of(kref, struct ssam_cdev, kref));
-> +}
-> +
-> +static struct ssam_cdev *ssam_cdev_get(struct ssam_cdev *cdev)
-> +{
-> +	if (cdev)
-> +		kref_get(&cdev->kref);
-> +
-> +	return cdev;
-> +}
-> +
-> +static void ssam_cdev_put(struct ssam_cdev *cdev)
-> +{
-> +	if (cdev)
-> +		kref_put(&cdev->kref, __ssam_cdev_release);
-> +}
-> +
-> +static int ssam_cdev_device_open(struct inode *inode, struct file *filp)
-> +{
-> +	struct miscdevice *mdev = filp->private_data;
-> +	struct ssam_cdev *cdev = container_of(mdev, struct ssam_cdev, mdev);
-> +
-> +	filp->private_data = ssam_cdev_get(cdev);
-> +	return stream_open(inode, filp);
-> +}
-> +
-> +static int ssam_cdev_device_release(struct inode *inode, struct file *filp)
-> +{
-> +	ssam_cdev_put(filp->private_data);
-> +	return 0;
-> +}
-> +
-> +static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
-> +{
-> +	struct ssam_cdev_request __user *r;
-> +	struct ssam_cdev_request rqst;
-> +	struct ssam_request spec;
-> +	struct ssam_response rsp;
-> +	const void __user *plddata;
-> +	void __user *rspdata;
-> +	int status = 0, ret = 0, tmp;
-> +
-> +	r = (struct ssam_cdev_request __user *)arg;
-> +	ret = copy_struct_from_user(&rqst, sizeof(rqst), r, sizeof(*r));
-> +	if (ret)
-> +		goto out;
-> +
-> +	plddata = u64_to_user_ptr(rqst.payload.data);
-> +	rspdata = u64_to_user_ptr(rqst.response.data);
-> +
-> +	/* Setup basic request fields. */
-> +	spec.target_category = rqst.target_category;
-> +	spec.target_id = rqst.target_id;
-> +	spec.command_id = rqst.command_id;
-> +	spec.instance_id = rqst.instance_id;
-> +	spec.flags = rqst.flags;
-> +	spec.length = rqst.payload.length;
-> +	spec.payload = NULL;
-> +
-> +	rsp.capacity = rqst.response.length;
-> +	rsp.length = 0;
-> +	rsp.pointer = NULL;
-> +
-> +	/* Get request payload from user-space. */
-> +	if (spec.length) {
-> +		if (!plddata) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		spec.payload = kzalloc(spec.length, GFP_KERNEL);
-> +		if (!spec.payload) {
-> +			status = -ENOMEM;
-> +			ret = -EFAULT;
-> +			goto out;
-> +		}
-> +
-> +		if (copy_from_user((void *)spec.payload, plddata, spec.length)) {
-> +			ret = -EFAULT;
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	/* Allocate response buffer. */
-> +	if (rsp.capacity) {
-> +		if (!rspdata) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +		}
-> +
-> +		rsp.pointer = kzalloc(rsp.capacity, GFP_KERNEL);
-> +		if (!rsp.pointer) {
-> +			status = -ENOMEM;
-> +			ret = -EFAULT;
-
-This is weird, -EFAULT should only be used if a SEGFAULT
-would have been raised if the code was running in
-userspace rather then in kernelspace, IOW if userspace
-has provided an invalid pointer (or a too small buffer,
-causing the pointer to become invalid at some point in
-the buffer).
-
-IMHO you should simply do ret = -ENOMEM here.
-
-Otherwise this looks good to me.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
 
 Hans
 
 
-
-> +			goto out;
-> +		}
-> +	}
+> ---
+> 
+> Changes in v1 (from RFC):
+>  - add copyright lines
+>  - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
+>  - fix invalid pointer calculation in san_evt_tmp
+>  - add explicit dependency on CONFIG_ACPI
+>  - remove default in Kconfig
+> 
+> Changes in v2:
+>  - drop explicit dependency on ACPI in Kconfig
+>  - use printk specifier for hex prefix instead of hard-coding it
+>  - spell check comments and strings, fix typos
+>  - unify comment style
+>  - run checkpatch --strict, fix warnings and style issues
+> 
+> ---
+>  .../surface_aggregator/clients/index.rst      |   1 +
+>  .../surface_aggregator/clients/san.rst        |  44 +
+>  MAINTAINERS                                   |   2 +
+>  drivers/platform/surface/Kconfig              |  19 +
+>  drivers/platform/surface/Makefile             |   1 +
+>  .../platform/surface/surface_acpi_notify.c    | 886 ++++++++++++++++++
+>  include/linux/surface_acpi_notify.h           |  39 +
+>  7 files changed, 992 insertions(+)
+>  create mode 100644 Documentation/driver-api/surface_aggregator/clients/san.rst
+>  create mode 100644 drivers/platform/surface/surface_acpi_notify.c
+>  create mode 100644 include/linux/surface_acpi_notify.h
+> 
+> diff --git a/Documentation/driver-api/surface_aggregator/clients/index.rst b/Documentation/driver-api/surface_aggregator/clients/index.rst
+> index ab260ec82cfb..3ccabce23271 100644
+> --- a/Documentation/driver-api/surface_aggregator/clients/index.rst
+> +++ b/Documentation/driver-api/surface_aggregator/clients/index.rst
+> @@ -11,6 +11,7 @@ This is the documentation for client drivers themselves. Refer to
+>     :maxdepth: 1
+> 
+>     cdev
+> +   san
+> 
+>  .. only::  subproject and html
+> 
+> diff --git a/Documentation/driver-api/surface_aggregator/clients/san.rst b/Documentation/driver-api/surface_aggregator/clients/san.rst
+> new file mode 100644
+> index 000000000000..38c2580e7758
+> --- /dev/null
+> +++ b/Documentation/driver-api/surface_aggregator/clients/san.rst
+> @@ -0,0 +1,44 @@
+> +.. SPDX-License-Identifier: GPL-2.0+
 > +
-> +	/* Perform request. */
-> +	status = ssam_request_sync(cdev->ctrl, &spec, &rsp);
-> +	if (status)
-> +		goto out;
+> +.. |san_client_link| replace:: :c:func:`san_client_link`
+> +.. |san_dgpu_notifier_register| replace:: :c:func:`san_dgpu_notifier_register`
+> +.. |san_dgpu_notifier_unregister| replace:: :c:func:`san_dgpu_notifier_unregister`
 > +
-> +	/* Copy response to user-space. */
-> +	if (rsp.length && copy_to_user(rspdata, rsp.pointer, rsp.length))
-> +		ret = -EFAULT;
+> +===================
+> +Surface ACPI Notify
+> +===================
 > +
-> +out:
-> +	/* Always try to set response-length and status. */
-> +	tmp = put_user(rsp.length, &r->response.length);
-> +	if (tmp)
-> +		ret = tmp;
+> +The Surface ACPI Notify (SAN) device provides the bridge between ACPI and
+> +SAM controller. Specifically, ACPI code can execute requests and handle
+> +battery and thermal events via this interface. In addition to this, events
+> +relating to the discrete GPU (dGPU) of the Surface Book 2 can be sent from
+> +ACPI code (note: the Surface Book 3 uses a different method for this). The
+> +only currently known event sent via this interface is a dGPU power-on
+> +notification. While this driver handles the former part internally, it only
+> +relays the dGPU events to any other driver interested via its public API and
+> +does not handle them.
 > +
-> +	tmp = put_user(status, &r->status);
-> +	if (tmp)
-> +		ret = tmp;
+> +The public interface of this driver is split into two parts: Client
+> +registration and notifier-block registration.
 > +
-> +	/* Cleanup. */
-> +	kfree(spec.payload);
-> +	kfree(rsp.pointer);
+> +A client to the SAN interface can be linked as consumer to the SAN device
+> +via |san_client_link|. This can be used to ensure that the a client
+> +receiving dGPU events does not miss any events due to the SAN interface not
+> +being set up as this forces the client driver to unbind once the SAN driver
+> +is unbound.
 > +
-> +	return ret;
-> +}
+> +Notifier-blocks can be registered by any device for as long as the module is
+> +loaded, regardless of being linked as client or not. Registration is done
+> +with |san_dgpu_notifier_register|. If the notifier is not needed any more, it
+> +should be unregistered via |san_dgpu_notifier_unregister|.
 > +
-> +static long __ssam_cdev_device_ioctl(struct ssam_cdev *cdev, unsigned int cmd,
-> +				     unsigned long arg)
+> +Consult the API documentation below for more details.
+> +
+> +
+> +API Documentation
+> +=================
+> +
+> +.. kernel-doc:: include/linux/surface_acpi_notify.h
+> +
+> +.. kernel-doc:: drivers/platform/surface/surface_acpi_notify.c
+> +    :export:
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f5a788f445a4..894c9ef1b8d6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11699,7 +11699,9 @@ W:	https://github.com/linux-surface/surface-aggregator-module
+>  C:	irc://chat.freenode.net/##linux-surface
+>  F:	Documentation/driver-api/surface_aggregator/
+>  F:	drivers/platform/surface/aggregator/
+> +F:	drivers/platform/surface/surface_acpi_notify.c
+>  F:	drivers/platform/surface/surface_aggregator_cdev.c
+> +F:	include/linux/surface_acpi_notify.h
+>  F:	include/linux/surface_aggregator/
+>  F:	include/uapi/linux/surface_aggregator/
+> 
+> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+> index cecad7a0cb7b..88818320105e 100644
+> --- a/drivers/platform/surface/Kconfig
+> +++ b/drivers/platform/surface/Kconfig
+> @@ -40,6 +40,25 @@ config SURFACE_3_POWER_OPREGION
+>  	  This driver provides support for ACPI operation
+>  	  region of the Surface 3 battery platform driver.
+> 
+> +config SURFACE_ACPI_NOTIFY
+> +	tristate "Surface ACPI Notify Driver"
+> +	depends on SURFACE_AGGREGATOR
+> +	help
+> +	  Surface ACPI Notify (SAN) driver for Microsoft Surface devices.
+> +
+> +	  This driver provides support for the ACPI interface (called SAN) of
+> +	  the Surface System Aggregator Module (SSAM) EC. This interface is used
+> +	  on 5th- and 6th-generation Microsoft Surface devices (including
+> +	  Surface Pro 5 and 6, Surface Book 2, Surface Laptops 1 and 2, and in
+> +	  reduced functionality on the Surface Laptop 3) to execute SSAM
+> +	  requests directly from ACPI code, as well as receive SSAM events and
+> +	  turn them into ACPI notifications. It essentially acts as a
+> +	  translation layer between the SSAM controller and ACPI.
+> +
+> +	  Specifically, this driver may be needed for battery status reporting,
+> +	  thermal sensor access, and real-time clock information, depending on
+> +	  the Surface device in question.
+> +
+>  config SURFACE_AGGREGATOR_CDEV
+>  	tristate "Surface System Aggregator Module User-Space Interface"
+>  	depends on SURFACE_AGGREGATOR
+> diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
+> index 161f0ad05795..3eb971006877 100644
+> --- a/drivers/platform/surface/Makefile
+> +++ b/drivers/platform/surface/Makefile
+> @@ -7,6 +7,7 @@
+>  obj-$(CONFIG_SURFACE3_WMI)		+= surface3-wmi.o
+>  obj-$(CONFIG_SURFACE_3_BUTTON)		+= surface3_button.o
+>  obj-$(CONFIG_SURFACE_3_POWER_OPREGION)	+= surface3_power.o
+> +obj-$(CONFIG_SURFACE_ACPI_NOTIFY)	+= surface_acpi_notify.o
+>  obj-$(CONFIG_SURFACE_AGGREGATOR)	+= aggregator/
+>  obj-$(CONFIG_SURFACE_AGGREGATOR_CDEV)	+= surface_aggregator_cdev.o
+>  obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
+> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
+> new file mode 100644
+> index 000000000000..8cd67a669c86
+> --- /dev/null
+> +++ b/drivers/platform/surface/surface_acpi_notify.c
+> @@ -0,0 +1,886 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Driver for the Surface ACPI Notify (SAN) interface/shim.
+> + *
+> + * Translates communication from ACPI to Surface System Aggregator Module
+> + * (SSAM/SAM) requests and back, specifically SAM-over-SSH. Translates SSAM
+> + * events back to ACPI notifications. Allows handling of discrete GPU
+> + * notifications sent from ACPI via the SAN interface by providing them to any
+> + * registered external driver.
+> + *
+> + * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
+> + */
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/acpi.h>
+> +#include <linux/delay.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/notifier.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rwsem.h>
+> +
+> +#include <linux/surface_aggregator/controller.h>
+> +#include <linux/surface_acpi_notify.h>
+> +
+> +struct san_data {
+> +	struct device *dev;
+> +	struct ssam_controller *ctrl;
+> +
+> +	struct acpi_connection_info info;
+> +
+> +	struct ssam_event_notifier nf_bat;
+> +	struct ssam_event_notifier nf_tmp;
+> +};
+> +
+> +#define to_san_data(ptr, member) \
+> +	container_of(ptr, struct san_data, member)
+> +
+> +
+> +/* -- dGPU notifier interface. ---------------------------------------------- */
+> +
+> +struct san_rqsg_if {
+> +	struct rw_semaphore lock;
+> +	struct device *dev;
+> +	struct blocking_notifier_head nh;
+> +};
+> +
+> +static struct san_rqsg_if san_rqsg_if = {
+> +	.lock = __RWSEM_INITIALIZER(san_rqsg_if.lock),
+> +	.dev = NULL,
+> +	.nh = BLOCKING_NOTIFIER_INIT(san_rqsg_if.nh),
+> +};
+> +
+> +static int san_set_rqsg_interface_device(struct device *dev)
 > +{
-> +	switch (cmd) {
-> +	case SSAM_CDEV_REQUEST:
-> +		return ssam_cdev_request(cdev, arg);
+> +	int status = 0;
 > +
-> +	default:
-> +		return -ENOTTY;
-> +	}
-> +}
+> +	down_write(&san_rqsg_if.lock);
+> +	if (!san_rqsg_if.dev && dev)
+> +		san_rqsg_if.dev = dev;
+> +	else
+> +		status = -EBUSY;
+> +	up_write(&san_rqsg_if.lock);
 > +
-> +static long ssam_cdev_device_ioctl(struct file *file, unsigned int cmd,
-> +				   unsigned long arg)
-> +{
-> +	struct ssam_cdev *cdev = file->private_data;
-> +	long status;
-> +
-> +	/* Ensure that controller is valid for as long as we need it. */
-> +	if (down_read_killable(&cdev->lock))
-> +		return -ERESTARTSYS;
-> +
-> +	if (!cdev->ctrl) {
-> +		up_read(&cdev->lock);
-> +		return -ENODEV;
-> +	}
-> +
-> +	status = __ssam_cdev_device_ioctl(cdev, cmd, arg);
-> +
-> +	up_read(&cdev->lock);
 > +	return status;
 > +}
 > +
-> +static const struct file_operations ssam_controller_fops = {
-> +	.owner          = THIS_MODULE,
-> +	.open           = ssam_cdev_device_open,
-> +	.release        = ssam_cdev_device_release,
-> +	.unlocked_ioctl = ssam_cdev_device_ioctl,
-> +	.compat_ioctl   = ssam_cdev_device_ioctl,
-> +	.llseek         = noop_llseek,
+> +/**
+> + * san_client_link() - Link client as consumer to SAN device.
+> + * @client: The client to link.
+> + *
+> + * Sets up a device link between the provided client device as consumer and
+> + * the SAN device as provider. This function can be used to ensure that the
+> + * SAN interface has been set up and will be set up for as long as the driver
+> + * of the client device is bound. This guarantees that, during that time, all
+> + * dGPU events will be received by any registered notifier.
+> + *
+> + * The link will be automatically removed once the client device's driver is
+> + * unbound.
+> + *
+> + * Return: Returns zero on success, %-ENXIO if the SAN interface has not been
+> + * set up yet, and %-ENOMEM if device link creation failed.
+> + */
+> +int san_client_link(struct device *client)
+> +{
+> +	const u32 flags = DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_CONSUMER;
+> +	struct device_link *link;
+> +
+> +	down_read(&san_rqsg_if.lock);
+> +
+> +	if (!san_rqsg_if.dev) {
+> +		up_read(&san_rqsg_if.lock);
+> +		return -ENXIO;
+> +	}
+> +
+> +	link = device_link_add(client, san_rqsg_if.dev, flags);
+> +	if (!link) {
+> +		up_read(&san_rqsg_if.lock);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	if (READ_ONCE(link->status) == DL_STATE_SUPPLIER_UNBIND) {
+> +		up_read(&san_rqsg_if.lock);
+> +		return -ENXIO;
+> +	}
+> +
+> +	up_read(&san_rqsg_if.lock);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(san_client_link);
+> +
+> +/**
+> + * san_dgpu_notifier_register() - Register a SAN dGPU notifier.
+> + * @nb: The notifier-block to register.
+> + *
+> + * Registers a SAN dGPU notifier, receiving any new SAN dGPU events sent from
+> + * ACPI. The registered notifier will be called with &struct san_dgpu_event
+> + * as notifier data and the command ID of that event as notifier action.
+> + */
+> +int san_dgpu_notifier_register(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&san_rqsg_if.nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(san_dgpu_notifier_register);
+> +
+> +/**
+> + * san_dgpu_notifier_unregister() - Unregister a SAN dGPU notifier.
+> + * @nb: The notifier-block to unregister.
+> + */
+> +int san_dgpu_notifier_unregister(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&san_rqsg_if.nh, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(san_dgpu_notifier_unregister);
+> +
+> +static int san_dgpu_notifier_call(struct san_dgpu_event *evt)
+> +{
+> +	int ret;
+> +
+> +	ret = blocking_notifier_call_chain(&san_rqsg_if.nh, evt->command, evt);
+> +	return notifier_to_errno(ret);
+> +}
+> +
+> +
+> +/* -- ACPI _DSM event relay. ------------------------------------------------ */
+> +
+> +#define SAN_DSM_REVISION	0
+> +
+> +/* 93b666c5-70c6-469f-a215-3d487c91ab3c */
+> +static const guid_t SAN_DSM_UUID =
+> +	GUID_INIT(0x93b666c5, 0x70c6, 0x469f, 0xa2, 0x15, 0x3d,
+> +		  0x48, 0x7c, 0x91, 0xab, 0x3c);
+> +
+> +enum san_dsm_event_fn {
+> +	SAN_DSM_EVENT_FN_BAT1_STAT = 0x03,
+> +	SAN_DSM_EVENT_FN_BAT1_INFO = 0x04,
+> +	SAN_DSM_EVENT_FN_ADP1_STAT = 0x05,
+> +	SAN_DSM_EVENT_FN_ADP1_INFO = 0x06,
+> +	SAN_DSM_EVENT_FN_BAT2_STAT = 0x07,
+> +	SAN_DSM_EVENT_FN_BAT2_INFO = 0x08,
+> +	SAN_DSM_EVENT_FN_THERMAL   = 0x09,
+> +	SAN_DSM_EVENT_FN_DPTF      = 0x0a,
 > +};
 > +
-> +static int ssam_dbg_device_probe(struct platform_device *pdev)
+> +enum sam_event_cid_bat {
+> +	SAM_EVENT_CID_BAT_BIX  = 0x15,
+> +	SAM_EVENT_CID_BAT_BST  = 0x16,
+> +	SAM_EVENT_CID_BAT_ADP  = 0x17,
+> +	SAM_EVENT_CID_BAT_PROT = 0x18,
+> +	SAM_EVENT_CID_BAT_DPTF = 0x4f,
+> +};
+> +
+> +enum sam_event_cid_tmp {
+> +	SAM_EVENT_CID_TMP_TRIP = 0x0b,
+> +};
+> +
+> +struct san_event_work {
+> +	struct delayed_work work;
+> +	struct device *dev;
+> +	struct ssam_event event;	/* must be last */
+> +};
+> +
+> +static int san_acpi_notify_event(struct device *dev, u64 func,
+> +				 union acpi_object *param)
 > +{
+> +	acpi_handle san = ACPI_HANDLE(dev);
+> +	union acpi_object *obj;
+> +	int status = 0;
+> +
+> +	if (!acpi_check_dsm(san, &SAN_DSM_UUID, SAN_DSM_REVISION, 1 << func))
+> +		return 0;
+> +
+> +	dev_dbg(dev, "notify event %#04llx\n", func);
+> +
+> +	obj = acpi_evaluate_dsm_typed(san, &SAN_DSM_UUID, SAN_DSM_REVISION,
+> +				      func, param, ACPI_TYPE_BUFFER);
+> +	if (!obj)
+> +		return -EFAULT;
+> +
+> +	if (obj->buffer.length != 1 || obj->buffer.pointer[0] != 0) {
+> +		dev_err(dev, "got unexpected result from _DSM\n");
+> +		status = -EPROTO;
+> +	}
+> +
+> +	ACPI_FREE(obj);
+> +	return status;
+> +}
+> +
+> +static int san_evt_bat_adp(struct device *dev, const struct ssam_event *event)
+> +{
+> +	int status;
+> +
+> +	status = san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_ADP1_STAT, NULL);
+> +	if (status)
+> +		return status;
+> +
+> +	/*
+> +	 * Ensure that the battery states get updated correctly. When the
+> +	 * battery is fully charged and an adapter is plugged in, it sometimes
+> +	 * is not updated correctly, instead showing it as charging.
+> +	 * Explicitly trigger battery updates to fix this.
+> +	 */
+> +
+> +	status = san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_BAT1_STAT, NULL);
+> +	if (status)
+> +		return status;
+> +
+> +	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_BAT2_STAT, NULL);
+> +}
+> +
+> +static int san_evt_bat_bix(struct device *dev, const struct ssam_event *event)
+> +{
+> +	enum san_dsm_event_fn fn;
+> +
+> +	if (event->instance_id == 0x02)
+> +		fn = SAN_DSM_EVENT_FN_BAT2_INFO;
+> +	else
+> +		fn = SAN_DSM_EVENT_FN_BAT1_INFO;
+> +
+> +	return san_acpi_notify_event(dev, fn, NULL);
+> +}
+> +
+> +static int san_evt_bat_bst(struct device *dev, const struct ssam_event *event)
+> +{
+> +	enum san_dsm_event_fn fn;
+> +
+> +	if (event->instance_id == 0x02)
+> +		fn = SAN_DSM_EVENT_FN_BAT2_STAT;
+> +	else
+> +		fn = SAN_DSM_EVENT_FN_BAT1_STAT;
+> +
+> +	return san_acpi_notify_event(dev, fn, NULL);
+> +}
+> +
+> +static int san_evt_bat_dptf(struct device *dev, const struct ssam_event *event)
+> +{
+> +	union acpi_object payload;
+> +
+> +	/*
+> +	 * The Surface ACPI expects a buffer and not a package. It specifically
+> +	 * checks for ObjectType (Arg3) == 0x03. This will cause a warning in
+> +	 * acpica/nsarguments.c, but that warning can be safely ignored.
+> +	 */
+> +	payload.type = ACPI_TYPE_BUFFER;
+> +	payload.buffer.length = event->length;
+> +	payload.buffer.pointer = (u8 *)&event->data[0];
+> +
+> +	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_DPTF, &payload);
+> +}
+> +
+> +static unsigned long san_evt_bat_delay(u8 cid)
+> +{
+> +	switch (cid) {
+> +	case SAM_EVENT_CID_BAT_ADP:
+> +		/*
+> +		 * Wait for battery state to update before signaling adapter
+> +		 * change.
+> +		 */
+> +		return msecs_to_jiffies(5000);
+> +
+> +	case SAM_EVENT_CID_BAT_BST:
+> +		/* Ensure we do not miss anything important due to caching. */
+> +		return msecs_to_jiffies(2000);
+> +
+> +	default:
+> +		return 0;
+> +	}
+> +}
+> +
+> +static bool san_evt_bat(const struct ssam_event *event, struct device *dev)
+> +{
+> +	int status;
+> +
+> +	switch (event->command_id) {
+> +	case SAM_EVENT_CID_BAT_BIX:
+> +		status = san_evt_bat_bix(dev, event);
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_BST:
+> +		status = san_evt_bat_bst(dev, event);
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_ADP:
+> +		status = san_evt_bat_adp(dev, event);
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_PROT:
+> +		/*
+> +		 * TODO: Implement support for battery protection status change
+> +		 *       event.
+> +		 */
+> +		return true;
+> +
+> +	case SAM_EVENT_CID_BAT_DPTF:
+> +		status = san_evt_bat_dptf(dev, event);
+> +		break;
+> +
+> +	default:
+> +		return false;
+> +	}
+> +
+> +	if (status) {
+> +		dev_err(dev, "error handling power event (cid = %#04x)\n",
+> +			event->command_id);
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static void san_evt_bat_workfn(struct work_struct *work)
+> +{
+> +	struct san_event_work *ev;
+> +
+> +	ev = container_of(work, struct san_event_work, work.work);
+> +	san_evt_bat(&ev->event, ev->dev);
+> +	kfree(ev);
+> +}
+> +
+> +static u32 san_evt_bat_nf(struct ssam_event_notifier *nf,
+> +			  const struct ssam_event *event)
+> +{
+> +	struct san_data *d = to_san_data(nf, nf_bat);
+> +	struct san_event_work *work;
+> +	unsigned long delay = san_evt_bat_delay(event->command_id);
+> +
+> +	if (delay == 0)
+> +		return san_evt_bat(event, d->dev) ? SSAM_NOTIF_HANDLED : 0;
+> +
+> +	work = kzalloc(sizeof(*work) + event->length, GFP_KERNEL);
+> +	if (!work)
+> +		return ssam_notifier_from_errno(-ENOMEM);
+> +
+> +	INIT_DELAYED_WORK(&work->work, san_evt_bat_workfn);
+> +	work->dev = d->dev;
+> +
+> +	memcpy(&work->event, event, sizeof(struct ssam_event) + event->length);
+> +
+> +	schedule_delayed_work(&work->work, delay);
+> +	return SSAM_NOTIF_HANDLED;
+> +}
+> +
+> +static int san_evt_tmp_trip(struct device *dev, const struct ssam_event *event)
+> +{
+> +	union acpi_object param;
+> +
+> +	/*
+> +	 * The Surface ACPI expects an integer and not a package. This will
+> +	 * cause a warning in acpica/nsarguments.c, but that warning can be
+> +	 * safely ignored.
+> +	 */
+> +	param.type = ACPI_TYPE_INTEGER;
+> +	param.integer.value = event->instance_id;
+> +
+> +	return san_acpi_notify_event(dev, SAN_DSM_EVENT_FN_THERMAL, &param);
+> +}
+> +
+> +static bool san_evt_tmp(const struct ssam_event *event, struct device *dev)
+> +{
+> +	int status;
+> +
+> +	switch (event->command_id) {
+> +	case SAM_EVENT_CID_TMP_TRIP:
+> +		status = san_evt_tmp_trip(dev, event);
+> +		break;
+> +
+> +	default:
+> +		return false;
+> +	}
+> +
+> +	if (status) {
+> +		dev_err(dev, "error handling thermal event (cid = %#04x)\n",
+> +			event->command_id);
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +static u32 san_evt_tmp_nf(struct ssam_event_notifier *nf,
+> +			  const struct ssam_event *event)
+> +{
+> +	struct san_data *d = to_san_data(nf, nf_tmp);
+> +
+> +	return san_evt_tmp(event, d->dev) ? SSAM_NOTIF_HANDLED : 0;
+> +}
+> +
+> +
+> +/* -- ACPI GSB OperationRegion handler -------------------------------------- */
+> +
+> +struct gsb_data_in {
+> +	u8 cv;
+> +} __packed;
+> +
+> +struct gsb_data_rqsx {
+> +	u8 cv;				/* Command value (san_gsb_request_cv). */
+> +	u8 tc;				/* Target category. */
+> +	u8 tid;				/* Target ID. */
+> +	u8 iid;				/* Instance ID. */
+> +	u8 snc;				/* Expect-response-flag. */
+> +	u8 cid;				/* Command ID. */
+> +	u16 cdl;			/* Payload length. */
+> +	u8 pld[];			/* Payload. */
+> +} __packed;
+> +
+> +struct gsb_data_etwl {
+> +	u8 cv;				/* Command value (should be 0x02). */
+> +	u8 etw3;			/* Unknown. */
+> +	u8 etw4;			/* Unknown. */
+> +	u8 msg[];			/* Error message (ASCIIZ). */
+> +} __packed;
+> +
+> +struct gsb_data_out {
+> +	u8 status;			/* _SSH communication status. */
+> +	u8 len;				/* _SSH payload length. */
+> +	u8 pld[];			/* _SSH payload. */
+> +} __packed;
+> +
+> +union gsb_buffer_data {
+> +	struct gsb_data_in   in;	/* Common input. */
+> +	struct gsb_data_rqsx rqsx;	/* RQSX input. */
+> +	struct gsb_data_etwl etwl;	/* ETWL input. */
+> +	struct gsb_data_out  out;	/* Output. */
+> +};
+> +
+> +struct gsb_buffer {
+> +	u8 status;			/* GSB AttribRawProcess status. */
+> +	u8 len;				/* GSB AttribRawProcess length. */
+> +	union gsb_buffer_data data;
+> +} __packed;
+> +
+> +#define SAN_GSB_MAX_RQSX_PAYLOAD  (U8_MAX - 2 - sizeof(struct gsb_data_rqsx))
+> +#define SAN_GSB_MAX_RESPONSE	  (U8_MAX - 2 - sizeof(struct gsb_data_out))
+> +
+> +#define SAN_GSB_COMMAND		0
+> +
+> +enum san_gsb_request_cv {
+> +	SAN_GSB_REQUEST_CV_RQST = 0x01,
+> +	SAN_GSB_REQUEST_CV_ETWL = 0x02,
+> +	SAN_GSB_REQUEST_CV_RQSG = 0x03,
+> +};
+> +
+> +#define SAN_REQUEST_NUM_TRIES	5
+> +
+> +static acpi_status san_etwl(struct san_data *d, struct gsb_buffer *b)
+> +{
+> +	struct gsb_data_etwl *etwl = &b->data.etwl;
+> +
+> +	if (b->len < sizeof(struct gsb_data_etwl)) {
+> +		dev_err(d->dev, "invalid ETWL package (len = %d)\n", b->len);
+> +		return AE_OK;
+> +	}
+> +
+> +	dev_err(d->dev, "ETWL(%#04x, %#04x): %.*s\n", etwl->etw3, etwl->etw4,
+> +		(unsigned int)(b->len - sizeof(struct gsb_data_etwl)),
+> +		(char *)etwl->msg);
+> +
+> +	/* Indicate success. */
+> +	b->status = 0x00;
+> +	b->len = 0x00;
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static
+> +struct gsb_data_rqsx *san_validate_rqsx(struct device *dev, const char *type,
+> +					struct gsb_buffer *b)
+> +{
+> +	struct gsb_data_rqsx *rqsx = &b->data.rqsx;
+> +
+> +	if (b->len < sizeof(struct gsb_data_rqsx)) {
+> +		dev_err(dev, "invalid %s package (len = %d)\n", type, b->len);
+> +		return NULL;
+> +	}
+> +
+> +	if (get_unaligned(&rqsx->cdl) != b->len - sizeof(struct gsb_data_rqsx)) {
+> +		dev_err(dev, "bogus %s package (len = %d, cdl = %d)\n",
+> +			type, b->len, get_unaligned(&rqsx->cdl));
+> +		return NULL;
+> +	}
+> +
+> +	if (get_unaligned(&rqsx->cdl) > SAN_GSB_MAX_RQSX_PAYLOAD) {
+> +		dev_err(dev, "payload for %s package too large (cdl = %d)\n",
+> +			type, get_unaligned(&rqsx->cdl));
+> +		return NULL;
+> +	}
+> +
+> +	return rqsx;
+> +}
+> +
+> +static void gsb_rqsx_response_error(struct gsb_buffer *gsb, int status)
+> +{
+> +	gsb->status = 0x00;
+> +	gsb->len = 0x02;
+> +	gsb->data.out.status = (u8)(-status);
+> +	gsb->data.out.len = 0x00;
+> +}
+> +
+> +static void gsb_rqsx_response_success(struct gsb_buffer *gsb, u8 *ptr, size_t len)
+> +{
+> +	gsb->status = 0x00;
+> +	gsb->len = len + 2;
+> +	gsb->data.out.status = 0x00;
+> +	gsb->data.out.len = len;
+> +
+> +	if (len)
+> +		memcpy(&gsb->data.out.pld[0], ptr, len);
+> +}
+> +
+> +static acpi_status san_rqst_fixup_suspended(struct san_data *d,
+> +					    struct ssam_request *rqst,
+> +					    struct gsb_buffer *gsb)
+> +{
+> +	if (rqst->target_category == SSAM_SSH_TC_BAS && rqst->command_id == 0x0D) {
+> +		u8 base_state = 1;
+> +
+> +		/* Base state quirk:
+> +		 * The base state may be queried from ACPI when the EC is still
+> +		 * suspended. In this case it will return '-EPERM'. This query
+> +		 * will only be triggered from the ACPI lid GPE interrupt, thus
+> +		 * we are either in laptop or studio mode (base status 0x01 or
+> +		 * 0x02). Furthermore, we will only get here if the device (and
+> +		 * EC) have been suspended.
+> +		 *
+> +		 * We now assume that the device is in laptop mode (0x01). This
+> +		 * has the drawback that it will wake the device when unfolding
+> +		 * it in studio mode, but it also allows us to avoid actively
+> +		 * waiting for the EC to wake up, which may incur a notable
+> +		 * delay.
+> +		 */
+> +
+> +		dev_dbg(d->dev, "rqst: fixup: base-state quirk\n");
+> +
+> +		gsb_rqsx_response_success(gsb, &base_state, sizeof(base_state));
+> +		return AE_OK;
+> +	}
+> +
+> +	gsb_rqsx_response_error(gsb, -ENXIO);
+> +	return AE_OK;
+> +}
+> +
+> +static acpi_status san_rqst(struct san_data *d, struct gsb_buffer *buffer)
+> +{
+> +	u8 rspbuf[SAN_GSB_MAX_RESPONSE];
+> +	struct gsb_data_rqsx *gsb_rqst;
+> +	struct ssam_request rqst;
+> +	struct ssam_response rsp;
+> +	int status = 0;
+> +
+> +	gsb_rqst = san_validate_rqsx(d->dev, "RQST", buffer);
+> +	if (!gsb_rqst)
+> +		return AE_OK;
+> +
+> +	rqst.target_category = gsb_rqst->tc;
+> +	rqst.target_id = gsb_rqst->tid;
+> +	rqst.command_id = gsb_rqst->cid;
+> +	rqst.instance_id = gsb_rqst->iid;
+> +	rqst.flags = gsb_rqst->snc ? SSAM_REQUEST_HAS_RESPONSE : 0;
+> +	rqst.length = get_unaligned(&gsb_rqst->cdl);
+> +	rqst.payload = &gsb_rqst->pld[0];
+> +
+> +	rsp.capacity = ARRAY_SIZE(rspbuf);
+> +	rsp.length = 0;
+> +	rsp.pointer = &rspbuf[0];
+> +
+> +	/* Handle suspended device. */
+> +	if (d->dev->power.is_suspended) {
+> +		dev_warn(d->dev, "rqst: device is suspended, not executing\n");
+> +		return san_rqst_fixup_suspended(d, &rqst, buffer);
+> +	}
+> +
+> +	status = __ssam_retry(ssam_request_sync_onstack, SAN_REQUEST_NUM_TRIES,
+> +			      d->ctrl, &rqst, &rsp, SAN_GSB_MAX_RQSX_PAYLOAD);
+> +
+> +	if (!status) {
+> +		gsb_rqsx_response_success(buffer, rsp.pointer, rsp.length);
+> +	} else {
+> +		dev_err(d->dev, "rqst: failed with error %d\n", status);
+> +		gsb_rqsx_response_error(buffer, status);
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static acpi_status san_rqsg(struct san_data *d, struct gsb_buffer *buffer)
+> +{
+> +	struct gsb_data_rqsx *gsb_rqsg;
+> +	struct san_dgpu_event evt;
+> +	int status;
+> +
+> +	gsb_rqsg = san_validate_rqsx(d->dev, "RQSG", buffer);
+> +	if (!gsb_rqsg)
+> +		return AE_OK;
+> +
+> +	evt.category = gsb_rqsg->tc;
+> +	evt.target = gsb_rqsg->tid;
+> +	evt.command = gsb_rqsg->cid;
+> +	evt.instance = gsb_rqsg->iid;
+> +	evt.length = get_unaligned(&gsb_rqsg->cdl);
+> +	evt.payload = &gsb_rqsg->pld[0];
+> +
+> +	status = san_dgpu_notifier_call(&evt);
+> +	if (!status) {
+> +		gsb_rqsx_response_success(buffer, NULL, 0);
+> +	} else {
+> +		dev_err(d->dev, "rqsg: failed with error %d\n", status);
+> +		gsb_rqsx_response_error(buffer, status);
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static acpi_status san_opreg_handler(u32 function, acpi_physical_address command,
+> +				     u32 bits, u64 *value64, void *opreg_context,
+> +				     void *region_context)
+> +{
+> +	struct san_data *d = to_san_data(opreg_context, info);
+> +	struct gsb_buffer *buffer = (struct gsb_buffer *)value64;
+> +	int accessor_type = (function & 0xFFFF0000) >> 16;
+> +
+> +	if (command != SAN_GSB_COMMAND) {
+> +		dev_warn(d->dev, "unsupported command: %#04llx\n", command);
+> +		return AE_OK;
+> +	}
+> +
+> +	if (accessor_type != ACPI_GSB_ACCESS_ATTRIB_RAW_PROCESS) {
+> +		dev_err(d->dev, "invalid access type: %#04x\n", accessor_type);
+> +		return AE_OK;
+> +	}
+> +
+> +	/* Buffer must have at least contain the command-value. */
+> +	if (buffer->len == 0) {
+> +		dev_err(d->dev, "request-package too small\n");
+> +		return AE_OK;
+> +	}
+> +
+> +	switch (buffer->data.in.cv) {
+> +	case SAN_GSB_REQUEST_CV_RQST:
+> +		return san_rqst(d, buffer);
+> +
+> +	case SAN_GSB_REQUEST_CV_ETWL:
+> +		return san_etwl(d, buffer);
+> +
+> +	case SAN_GSB_REQUEST_CV_RQSG:
+> +		return san_rqsg(d, buffer);
+> +
+> +	default:
+> +		dev_warn(d->dev, "unsupported SAN0 request (cv: %#04x)\n",
+> +			 buffer->data.in.cv);
+> +		return AE_OK;
+> +	}
+> +}
+> +
+> +
+> +/* -- Driver setup. --------------------------------------------------------- */
+> +
+> +static int san_events_register(struct platform_device *pdev)
+> +{
+> +	struct san_data *d = platform_get_drvdata(pdev);
+> +	int status;
+> +
+> +	d->nf_bat.base.priority = 1;
+> +	d->nf_bat.base.fn = san_evt_bat_nf;
+> +	d->nf_bat.event.reg = SSAM_EVENT_REGISTRY_SAM;
+> +	d->nf_bat.event.id.target_category = SSAM_SSH_TC_BAT;
+> +	d->nf_bat.event.id.instance = 0;
+> +	d->nf_bat.event.mask = SSAM_EVENT_MASK_TARGET;
+> +	d->nf_bat.event.flags = SSAM_EVENT_SEQUENCED;
+> +
+> +	d->nf_tmp.base.priority = 1;
+> +	d->nf_tmp.base.fn = san_evt_tmp_nf;
+> +	d->nf_tmp.event.reg = SSAM_EVENT_REGISTRY_SAM;
+> +	d->nf_tmp.event.id.target_category = SSAM_SSH_TC_TMP;
+> +	d->nf_tmp.event.id.instance = 0;
+> +	d->nf_tmp.event.mask = SSAM_EVENT_MASK_TARGET;
+> +	d->nf_tmp.event.flags = SSAM_EVENT_SEQUENCED;
+> +
+> +	status = ssam_notifier_register(d->ctrl, &d->nf_bat);
+> +	if (status)
+> +		return status;
+> +
+> +	status = ssam_notifier_register(d->ctrl, &d->nf_tmp);
+> +	if (status)
+> +		ssam_notifier_unregister(d->ctrl, &d->nf_bat);
+> +
+> +	return status;
+> +}
+> +
+> +static void san_events_unregister(struct platform_device *pdev)
+> +{
+> +	struct san_data *d = platform_get_drvdata(pdev);
+> +
+> +	ssam_notifier_unregister(d->ctrl, &d->nf_bat);
+> +	ssam_notifier_unregister(d->ctrl, &d->nf_tmp);
+> +}
+> +
+> +#define san_consumer_printk(level, dev, handle, fmt, ...)			\
+> +do {										\
+> +	char *path = "<error getting consumer path>";				\
+> +	struct acpi_buffer buffer = {						\
+> +		.length = ACPI_ALLOCATE_BUFFER,					\
+> +		.pointer = NULL,						\
+> +	};									\
+> +										\
+> +	if (ACPI_SUCCESS(acpi_get_name(handle, ACPI_FULL_PATHNAME, &buffer)))	\
+> +		path = buffer.pointer;						\
+> +										\
+> +	dev_##level(dev, "[%s]: " fmt, path, ##__VA_ARGS__);			\
+> +	kfree(buffer.pointer);							\
+> +} while (0)
+> +
+> +#define san_consumer_dbg(dev, handle, fmt, ...) \
+> +	san_consumer_printk(dbg, dev, handle, fmt, ##__VA_ARGS__)
+> +
+> +#define san_consumer_warn(dev, handle, fmt, ...) \
+> +	san_consumer_printk(warn, dev, handle, fmt, ##__VA_ARGS__)
+> +
+> +static bool is_san_consumer(struct platform_device *pdev, acpi_handle handle)
+> +{
+> +	struct acpi_handle_list dep_devices;
+> +	acpi_handle supplier = ACPI_HANDLE(&pdev->dev);
+> +	acpi_status status;
+> +	int i;
+> +
+> +	if (!acpi_has_method(handle, "_DEP"))
+> +		return false;
+> +
+> +	status = acpi_evaluate_reference(handle, "_DEP", NULL, &dep_devices);
+> +	if (ACPI_FAILURE(status)) {
+> +		san_consumer_dbg(&pdev->dev, handle, "failed to evaluate _DEP\n");
+> +		return false;
+> +	}
+> +
+> +	for (i = 0; i < dep_devices.count; i++) {
+> +		if (dep_devices.handles[i] == supplier)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+> +static acpi_status san_consumer_setup(acpi_handle handle, u32 lvl,
+> +				      void *context, void **rv)
+> +{
+> +	const u32 flags = DL_FLAG_PM_RUNTIME | DL_FLAG_AUTOREMOVE_SUPPLIER;
+> +	struct platform_device *pdev = context;
+> +	struct acpi_device *adev;
+> +	struct device_link *link;
+> +
+> +	if (!is_san_consumer(pdev, handle))
+> +		return AE_OK;
+> +
+> +	/* Ignore ACPI devices that are not present. */
+> +	if (acpi_bus_get_device(handle, &adev) != 0)
+> +		return AE_OK;
+> +
+> +	san_consumer_dbg(&pdev->dev, handle, "creating device link\n");
+> +
+> +	/* Try to set up device links, ignore but log errors. */
+> +	link = device_link_add(&adev->dev, &pdev->dev, flags);
+> +	if (!link) {
+> +		san_consumer_warn(&pdev->dev, handle, "failed to create device link\n");
+> +		return AE_OK;
+> +	}
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static int san_consumer_links_setup(struct platform_device *pdev)
+> +{
+> +	acpi_status status;
+> +
+> +	status = acpi_walk_namespace(ACPI_TYPE_DEVICE, ACPI_ROOT_OBJECT,
+> +				     ACPI_UINT32_MAX, san_consumer_setup, NULL,
+> +				     pdev, NULL);
+> +
+> +	return status ? -EFAULT : 0;
+> +}
+> +
+> +static int san_probe(struct platform_device *pdev)
+> +{
+> +	acpi_handle san = ACPI_HANDLE(&pdev->dev);
 > +	struct ssam_controller *ctrl;
-> +	struct ssam_cdev *cdev;
+> +	struct san_data *data;
+> +	acpi_status astatus;
 > +	int status;
 > +
 > +	ctrl = ssam_client_bind(&pdev->dev);
 > +	if (IS_ERR(ctrl))
 > +		return PTR_ERR(ctrl) == -ENODEV ? -EPROBE_DEFER : PTR_ERR(ctrl);
 > +
-> +	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
-> +	if (!cdev)
+> +	status = san_consumer_links_setup(pdev);
+> +	if (status)
+> +		return status;
+> +
+> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
 > +		return -ENOMEM;
 > +
-> +	kref_init(&cdev->kref);
-> +	init_rwsem(&cdev->lock);
-> +	cdev->ctrl = ctrl;
+> +	data->dev = &pdev->dev;
+> +	data->ctrl = ctrl;
 > +
-> +	cdev->mdev.parent   = &pdev->dev;
-> +	cdev->mdev.minor    = MISC_DYNAMIC_MINOR;
-> +	cdev->mdev.name     = "surface_aggregator";
-> +	cdev->mdev.nodename = "surface/aggregator";
-> +	cdev->mdev.fops     = &ssam_controller_fops;
+> +	platform_set_drvdata(pdev, data);
 > +
-> +	status = misc_register(&cdev->mdev);
-> +	if (status) {
-> +		kfree(cdev);
-> +		return status;
-> +	}
+> +	astatus = acpi_install_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
+> +						     &san_opreg_handler, NULL,
+> +						     &data->info);
+> +	if (ACPI_FAILURE(astatus))
+> +		return -ENXIO;
 > +
-> +	platform_set_drvdata(pdev, cdev);
+> +	status = san_events_register(pdev);
+> +	if (status)
+> +		goto err_enable_events;
+> +
+> +	status = san_set_rqsg_interface_device(&pdev->dev);
+> +	if (status)
+> +		goto err_install_dev;
+> +
+> +	acpi_walk_dep_device_list(san);
 > +	return 0;
+> +
+> +err_install_dev:
+> +	san_events_unregister(pdev);
+> +err_enable_events:
+> +	acpi_remove_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
+> +					  &san_opreg_handler);
+> +	return status;
 > +}
 > +
-> +static int ssam_dbg_device_remove(struct platform_device *pdev)
+> +static int san_remove(struct platform_device *pdev)
 > +{
-> +	struct ssam_cdev *cdev = platform_get_drvdata(pdev);
+> +	acpi_handle san = ACPI_HANDLE(&pdev->dev);
 > +
-> +	misc_deregister(&cdev->mdev);
+> +	san_set_rqsg_interface_device(NULL);
+> +	acpi_remove_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
+> +					  &san_opreg_handler);
+> +	san_events_unregister(pdev);
 > +
 > +	/*
-> +	 * The controller is only guaranteed to be valid for as long as the
-> +	 * driver is bound. Remove controller so that any lingering open files
-> +	 * cannot access it any more after we're gone.
+> +	 * We have unregistered our event sources. Now we need to ensure that
+> +	 * all delayed works they may have spawned are run to completion.
 > +	 */
-> +	down_write(&cdev->lock);
-> +	cdev->ctrl = NULL;
-> +	up_write(&cdev->lock);
+> +	flush_scheduled_work();
 > +
-> +	ssam_cdev_put(cdev);
 > +	return 0;
 > +}
 > +
-> +static struct platform_device *ssam_cdev_device;
+> +static const struct acpi_device_id san_match[] = {
+> +	{ "MSHW0091" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, san_match);
 > +
-> +static struct platform_driver ssam_cdev_driver = {
-> +	.probe = ssam_dbg_device_probe,
-> +	.remove = ssam_dbg_device_remove,
+> +static struct platform_driver surface_acpi_notify = {
+> +	.probe = san_probe,
+> +	.remove = san_remove,
 > +	.driver = {
-> +		.name = SSAM_CDEV_DEVICE_NAME,
+> +		.name = "surface_acpi_notify",
+> +		.acpi_match_table = san_match,
 > +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 > +	},
 > +};
-> +
-> +static int __init ssam_debug_init(void)
-> +{
-> +	int status;
-> +
-> +	ssam_cdev_device = platform_device_alloc(SSAM_CDEV_DEVICE_NAME,
-> +						 PLATFORM_DEVID_NONE);
-> +	if (!ssam_cdev_device)
-> +		return -ENOMEM;
-> +
-> +	status = platform_device_add(ssam_cdev_device);
-> +	if (status)
-> +		goto err_device;
-> +
-> +	status = platform_driver_register(&ssam_cdev_driver);
-> +	if (status)
-> +		goto err_driver;
-> +
-> +	return 0;
-> +
-> +err_driver:
-> +	platform_device_del(ssam_cdev_device);
-> +err_device:
-> +	platform_device_put(ssam_cdev_device);
-> +	return status;
-> +}
-> +module_init(ssam_debug_init);
-> +
-> +static void __exit ssam_debug_exit(void)
-> +{
-> +	platform_driver_unregister(&ssam_cdev_driver);
-> +	platform_device_unregister(ssam_cdev_device);
-> +}
-> +module_exit(ssam_debug_exit);
+> +module_platform_driver(surface_acpi_notify);
 > +
 > +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
-> +MODULE_DESCRIPTION("User-space interface for Surface System Aggregator Module");
+> +MODULE_DESCRIPTION("Surface ACPI Notify driver for Surface System Aggregator Module");
 > +MODULE_LICENSE("GPL");
-> diff --git a/include/uapi/linux/surface_aggregator/cdev.h b/include/uapi/linux/surface_aggregator/cdev.h
+> diff --git a/include/linux/surface_acpi_notify.h b/include/linux/surface_acpi_notify.h
 > new file mode 100644
-> index 000000000000..1a8bc0249f8e
+> index 000000000000..8e3e86c7d78c
 > --- /dev/null
-> +++ b/include/uapi/linux/surface_aggregator/cdev.h
-> @@ -0,0 +1,58 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +++ b/include/linux/surface_acpi_notify.h
+> @@ -0,0 +1,39 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
 > +/*
-> + * Surface System Aggregator Module (SSAM) user-space EC interface.
+> + * Interface for Surface ACPI Notify (SAN) driver.
 > + *
-> + * Definitions, structs, and IOCTLs for the /dev/surface/aggregator misc
-> + * device. This device provides direct user-space access to the SSAM EC.
-> + * Intended for debugging and development.
+> + * Provides access to discrete GPU notifications sent from ACPI via the SAN
+> + * driver, which are not handled by this driver directly.
 > + *
-> + * Copyright (C) 2020 Maximilian Luz <luzmaximilian@gmail.com>
+> + * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
 > + */
 > +
-> +#ifndef _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H
-> +#define _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H
+> +#ifndef _LINUX_SURFACE_ACPI_NOTIFY_H
+> +#define _LINUX_SURFACE_ACPI_NOTIFY_H
 > +
-> +#include <linux/ioctl.h>
+> +#include <linux/notifier.h>
 > +#include <linux/types.h>
 > +
 > +/**
-> + * struct ssam_cdev_request - Controller request IOCTL argument.
-> + * @target_category: Target category of the SAM request.
-> + * @target_id:       Target ID of the SAM request.
-> + * @command_id:      Command ID of the SAM request.
-> + * @instance_id:     Instance ID of the SAM request.
-> + * @flags:           SAM Request flags.
-> + * @status:          Request status (output).
-> + * @payload:         Request payload (input data).
-> + * @payload.data:    Pointer to request payload data.
-> + * @payload.length:  Length of request payload data (in bytes).
-> + * @response:        Request response (output data).
-> + * @response.data:   Pointer to response buffer.
-> + * @response.length: On input: Capacity of response buffer (in bytes).
-> + *                   On output: Length of request response (number of bytes
-> + *                   in the buffer that are actually used).
+> + * struct san_dgpu_event - Discrete GPU ACPI event.
+> + * @category: Category of the event.
+> + * @target:   Target ID of the event source.
+> + * @command:  Command ID of the event.
+> + * @instance: Instance ID of the event source.
+> + * @length:   Length of the event's payload data (in bytes).
+> + * @payload:  Pointer to the event's payload data.
 > + */
-> +struct ssam_cdev_request {
-> +	__u8 target_category;
-> +	__u8 target_id;
-> +	__u8 command_id;
-> +	__u8 instance_id;
-> +	__u16 flags;
-> +	__s16 status;
+> +struct san_dgpu_event {
+> +	u8 category;
+> +	u8 target;
+> +	u8 command;
+> +	u8 instance;
+> +	u16 length;
+> +	u8 *payload;
+> +};
 > +
-> +	struct {
-> +		__u64 data;
-> +		__u16 length;
-> +		__u8 __pad[6];
-> +	} payload;
+> +int san_client_link(struct device *client);
+> +int san_dgpu_notifier_register(struct notifier_block *nb);
+> +int san_dgpu_notifier_unregister(struct notifier_block *nb);
 > +
-> +	struct {
-> +		__u64 data;
-> +		__u16 length;
-> +		__u8 __pad[6];
-> +	} response;
-> +} __attribute__((__packed__));
-> +
-> +#define SSAM_CDEV_REQUEST	_IOWR(0xA5, 1, struct ssam_cdev_request)
-> +
-> +#endif /* _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H */
+> +#endif /* _LINUX_SURFACE_ACPI_NOTIFY_H */
 > --
 > 2.29.2
 > 
