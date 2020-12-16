@@ -8,36 +8,36 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45EFC2BB48
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F0DC2BBCF
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 01:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3B6230FC
+	by mail.kernel.org (Postfix) with ESMTP id C783422D75
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 01:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725287AbgLPBlm (ORCPT
+        id S1725786AbgLPBls (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 15 Dec 2020 20:41:42 -0500
-Received: from mail2.protonmail.ch ([185.70.40.22]:62151 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbgLPBlm (ORCPT
+        Tue, 15 Dec 2020 20:41:48 -0500
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:18514 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgLPBls (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 15 Dec 2020 20:41:42 -0500
-Date:   Wed, 16 Dec 2020 01:40:53 +0000
+        Tue, 15 Dec 2020 20:41:48 -0500
+Date:   Wed, 16 Dec 2020 01:40:45 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1608082859;
-        bh=a6ezRSEkPZZDlI1kU1jtxHxCet1zV+SE0ulPf/JjXx0=;
+        s=protonmail; t=1608082851;
+        bh=m/4mDecNAFwWp4FOVItvUsnlVzJlQgrHmWND0EIwl34=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=pVWXvx6LCvlCbIfqXbVXmSYT79U2vNwiEs+CQk5DPe7hS1FZWycsq/3XtgJbZL0bV
-         11WNzs6J1QuI2PIWHxpIBm4U5UvmlDvwcFu+CszAe/TLaV8Az93zSfubKZq774zPQI
-         r4UHCIkihL/+AptNrzC2Abw3yE0aMWdn+FLkbPp4=
+        b=VXKc8pZ/c/J7TiSMwqBse3cMyA4ND0/H6R3Pt4ACg33ftYsDSAL7e07gnEh3jKo1x
+         /l0Z/Wgd7k4Q/jsc3ATfp+40HmSDuhU9fMLiJvhTzp9Y30T9OPVf30PPsqgosuId7K
+         gNdzUOxf7QUc6uUICWppzNBIxdHYrIi13UXbKDT8=
 To:     platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Ike Panhc <ike.pan@canonical.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH 23/24] Documentation/ABI: sysfs-platform-ideapad-laptop: update device attribute paths
-Message-ID: <20201216013857.360987-24-pobrn@protonmail.com>
+Subject: [PATCH 22/24] platform/x86: ideapad-laptop: add "always on USB charging" control support
+Message-ID: <20201216013857.360987-23-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -45,49 +45,137 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The documentation referred to non-existent device attributes under a non-ex=
-istent
-platform device. Update it with the current location of the attributes.
+Certain models have a so-called "always on USB charging" feature, which
+enables USB charging even when the computer is turned off or suspended,
+and which may be controlled/queried using the SALS/HALS ACPI methods.
+Expose this functionality via a new device attribute (usb_charging).
+Tested on: Lenovo YOGA 520-14IKB 80X8
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Docu=
-mentation/ABI/testing/sysfs-platform-ideapad-laptop
-index fd2ac02bc5bd..e024678947c8 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -1,11 +1,11 @@
--What:=09=09/sys/devices/platform/ideapad/camera_power
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/camera_power
- Date:=09=09Dec 2010
- KernelVersion:=092.6.37
- Contact:=09"Ike Panhc <ike.pan@canonical.com>"
- Description:
- =09=09Control the power of camera module. 1 means on, 0 means off.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
+deapad-laptop.c
+index a43574e65f61..5f7883e59f21 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -58,18 +58,22 @@ enum {
+ };
 =20
--What:=09=09/sys/devices/platform/ideapad/fan_mode
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/fan_mode
- Date:=09=09June 2012
- KernelVersion:=093.6
- Contact:=09"Maxim Mikityanskiy <maxtram95@gmail.com>"
-@@ -18,7 +18,7 @@ Description:
- =09=09=09* 2 -> Dust Cleaning
- =09=09=09* 4 -> Efficient Thermal Dissipation Mode
+ enum {
+-=09HALS_KBD_BL_SUPPORT_BIT  =3D 4,
+-=09HALS_KBD_BL_STATE_BIT    =3D 5,
+-=09HALS_FNLOCK_SUPPORT_BIT  =3D 9,
+-=09HALS_FNLOCK_STATE_BIT    =3D 10,
+-=09HALS_HOTKEYS_PRIMARY_BIT =3D 11,
++=09HALS_KBD_BL_SUPPORT_BIT       =3D 4,
++=09HALS_KBD_BL_STATE_BIT         =3D 5,
++=09HALS_USB_CHARGING_SUPPORT_BIT =3D 6,
++=09HALS_USB_CHARGING_STATE_BIT   =3D 7,
++=09HALS_FNLOCK_SUPPORT_BIT       =3D 9,
++=09HALS_FNLOCK_STATE_BIT         =3D 10,
++=09HALS_HOTKEYS_PRIMARY_BIT      =3D 11,
+ };
 =20
--What:=09=09/sys/devices/platform/ideapad/touchpad
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/touchpad
- Date:=09=09May 2017
- KernelVersion:=094.13
- Contact:=09"Ritesh Raj Sarraf <rrs@debian.org>"
-@@ -27,7 +27,7 @@ Description:
- =09=09=09* 1 -> Switched On
- =09=09=09* 0 -> Switched Off
+ enum {
+-=09SALS_KBD_BL_ON  =3D 0x8,
+-=09SALS_KBD_BL_OFF =3D 0x9,
+-=09SALS_FNLOCK_ON  =3D 0xe,
+-=09SALS_FNLOCK_OFF =3D 0xf,
++=09SALS_KBD_BL_ON        =3D 0x8,
++=09SALS_KBD_BL_OFF       =3D 0x9,
++=09SALS_USB_CHARGING_ON  =3D 0xa,
++=09SALS_USB_CHARGING_OFF =3D 0xb,
++=09SALS_FNLOCK_ON        =3D 0xe,
++=09SALS_FNLOCK_OFF       =3D 0xf,
+ };
 =20
--What:=09=09/sys/bus/pci/devices/<bdf>/<device>/VPC2004:00/fn_lock
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/fn_lock
- Date:=09=09May 2018
- KernelVersion:=094.18
- Contact:=09"Oleg Keri <ezhi99@gmail.com>"
+ enum {
+@@ -118,6 +122,7 @@ struct ideapad_private {
+ =09=09bool fan_mode          : 1,
+ =09=09     conservation_mode : 1,
+ =09=09     fn_lock           : 1,
++=09=09     usb_charging      : 1,
+ =09=09     hw_rfkill_switch  : 1;
+ =09} features;
+ =09struct {
+@@ -581,12 +586,50 @@ static ssize_t fn_lock_store(struct device *dev,
+=20
+ static DEVICE_ATTR_RW(fn_lock);
+=20
++static ssize_t usb_charging_show(struct device *dev,
++=09=09=09=09 struct device_attribute *attr,
++=09=09=09=09 char *buf)
++{
++=09struct ideapad_private *priv =3D dev_get_drvdata(dev);
++=09unsigned long hals;
++=09int err;
++
++=09err =3D eval_hals(priv->adev->handle, &hals);
++=09if (err)
++=09=09return err;
++
++=09return sysfs_emit(buf, "%u\n", test_bit(HALS_USB_CHARGING_STATE_BIT, &h=
+als));
++}
++
++static ssize_t usb_charging_store(struct device *dev,
++=09=09=09=09  struct device_attribute *attr,
++=09=09=09=09  const char *buf, size_t count)
++{
++=09struct ideapad_private *priv =3D dev_get_drvdata(dev);
++=09bool state;
++=09int err;
++
++=09err =3D kstrtobool(buf, &state);
++=09if (err)
++=09=09return err;
++
++=09err =3D eval_sals(priv->adev->handle,
++=09=09=09state ? SALS_USB_CHARGING_ON : SALS_USB_CHARGING_OFF);
++=09if (err)
++=09=09return err;
++
++=09return count;
++}
++
++static DEVICE_ATTR_RW(usb_charging);
++
+ static struct attribute *ideapad_attributes[] =3D {
+ =09&dev_attr_camera_power.attr,
+ =09&dev_attr_fan_mode.attr,
+ =09&dev_attr_touchpad.attr,
+ =09&dev_attr_conservation_mode.attr,
+ =09&dev_attr_fn_lock.attr,
++=09&dev_attr_usb_charging.attr,
+ =09NULL
+ };
+=20
+@@ -608,6 +651,8 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+ =09=09supported =3D priv->features.conservation_mode;
+ =09else if (attr =3D=3D &dev_attr_fn_lock.attr)
+ =09=09supported =3D priv->features.fn_lock;
++=09else if (attr =3D=3D &dev_attr_usb_charging.attr)
++=09=09supported =3D priv->features.usb_charging;
+=20
+ =09return supported ? attr->mode : 0;
+ }
+@@ -1175,9 +1220,13 @@ static void ideapad_check_features(struct ideapad_pr=
+ivate *priv)
+ =09=09priv->features.conservation_mode =3D true;
+=20
+ =09if (acpi_has_method(handle, "HALS") && acpi_has_method(handle, "SALS"))=
+ {
+-=09=09if (!eval_hals(handle, &val))
++=09=09if (!eval_hals(handle, &val)) {
+ =09=09=09if (test_bit(HALS_FNLOCK_SUPPORT_BIT, &val))
+ =09=09=09=09priv->features.fn_lock =3D true;
++
++=09=09=09if (test_bit(HALS_USB_CHARGING_SUPPORT_BIT, &val))
++=09=09=09=09priv->features.usb_charging =3D true;
++=09=09}
+ =09}
+ }
+=20
 --=20
 2.29.2
 
