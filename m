@@ -2,182 +2,228 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC50C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 21:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F12FC1B0D8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 22:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AAF23602
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 21:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6300A23442
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 22:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725788AbgLPVlz (ORCPT
+        id S1730082AbgLPWFR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Dec 2020 16:41:55 -0500
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.1]:30753 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725601AbgLPVlz (ORCPT
+        Wed, 16 Dec 2020 17:05:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727771AbgLPWFR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Dec 2020 16:41:55 -0500
-Received: from [100.112.2.115] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-b.us-east-1.aws.symcld.net id F9/33-44756-ADD7ADF5; Wed, 16 Dec 2020 21:36:26 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDKsWRWlGSWpSXmKPExsWSLveKXfdW7a1
-  4g3Pd/Bb7r0tYdC00sFh4/xSrxddvt9kt3hyfzmSxfF8/o0VTZxObxeeOySwWq/e8YLZY+2Ue
-  m8XcL1OZLc6cvsTqwOMxaeYMZo+ds+6ye/zatobFY/MKLY9NqzrZPOadDPToadvE5PF+31U2j
-  y1X21k8Pm+SC+CKYs3MS8qvSGDNWPswrGCbZEX/2tuMDYzTRbsYuTiEBP4zSqxq+80I4bxglL
-  izvoe1i5GTQ1ggQeLImUWMILaIgLbEkkVXmUGKmAV6WCQebr7NCtEB5Fz91gHWwQZUtWXLLzY
-  Qm1fAVmLN5PVMIDaLgKrEsi3PwGpEBcIl1i9ZyQhRIyhxcuYTFhCbUyBQ4v/haUD1HEAbNCXW
-  79IHCTMLiEvcejKfCcKWl2jeOpsZxJYQUJD4++sqC4SdILHs5R3mCYyCs5BMnYUwaRaSSbOQT
-  FrAyLKK0SypKDM9oyQ3MTNH19DAQNfQ0EjXWNfIwFgvsUo3Sa+0WDc1sbhE11AvsbxYr7gyNz
-  knRS8vtWQTIzBSUwqYT+9gXPrmg94hRkkOJiVR3iLvW/FCfEn5KZUZicUZ8UWlOanFhxhlODi
-  UJHirqoBygkWp6akVaZk5wKQBk5bg4FES4X1fDZTmLS5IzC3OTIdInWJUlBLnvQ2SEABJZJTm
-  wbXBEtUlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8x2uApvBk5pXATX8FtJgJaPHqPddBF
-  pckIqSkGpgcRNcKHp11fd+9Ql2nvlsfPrDmaogyq1506LISlf3Invk444fm+39msw22yR1dW8
-  XV8CdJzsbCpfFSxJS8946+1UIZ4k957WZmREftYLU+lX9IqzTye+Hhzc6BLx9JOb+ZNE1BdtK
-  Ks3HTT3/IENn5+7ZJUG/rm9we0+O3KnWPuIhuK14yIXyG6Fzl57vLp6tm3bt7Ylu05Ls7QRqh
-  c39InnJoW3hLfm7vj/T1EvHfL71wbNDWZe8Q12u/eyvycs2W1a+9bp3++PGncPPEQ/vmS27e9
-  Km1VlJnA3tc4Q2VGsGF7NfCeXQYnqa/qbE9HDNny/kz/G6SB6W7lLgVpu846XSw9+Zy2Tt6zG
-  aiRROVWIozEg21mIuKEwHnc5LhzwMAAA==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-23.tower-395.messagelabs.com!1608154584!26216!1
-X-Originating-IP: [103.30.234.7]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13275 invoked from network); 16 Dec 2020 21:36:26 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.7)
-  by server-23.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 16 Dec 2020 21:36:26 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id A602C3DEC105BA942B96;
-        Thu, 17 Dec 2020 05:36:20 +0800 (CST)
-Received: from localhost.localdomain (10.38.108.33) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Wed, 16 Dec
- 2020 13:36:17 -0800
-Subject: Re: [External] Re: [PATCH v6 2/3] ACPI: platform-profile: Add
- platform profile support
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Wed, 16 Dec 2020 17:05:17 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E34C06138C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Dec 2020 14:03:59 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id y17so24607709wrr.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Dec 2020 14:03:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uFgXPJfjD7GeFy7r1aNbCblOGwmVkP2fCvjV5sFWQVs=;
+        b=N//iL0qvMkM0Utn3XGW/DDwZKo1Pqhsxj9g55/jjA6eTsq7OWprE1A+hlwObC3j4YG
+         UKVth+jr8dLa5rF1NxXgceugn+T5E+bQYE7q3D0Mm1Hmm99B4cERmLM2o2OSV3sc5wV9
+         LDl3HsMnQKOtpKfK8kppLwXLSmwTE5gAxfdU9WrwzkAjF8mKC2TC7sUCsjEoNnUmBN6+
+         YQy+oWS256SpX3G2qY9gG+Qu4xLVEOFplbZNmNrPoAatRZsruVky6bdvVZgOFMQnLDlT
+         u0Nnmdrm1W9vfyPS5pkdTjYlmbQ3IQYKUiS6uXdECDYKSzKuJBY9hp/XJ+pAsXPwjmeN
+         X+5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uFgXPJfjD7GeFy7r1aNbCblOGwmVkP2fCvjV5sFWQVs=;
+        b=O2wkVRRZQ0jFW4j2IeD2xsJJhLFuxV3V6G5X6rosaeazGII+Ar8x0VAhGEWOzR4iVz
+         sIGACwGWRXplwIryKtw7dsqkQOCYTRfIKIuf8fmWYTDH6X0Jdc7GMB9B9US3intFg/cQ
+         NQZWvkFwKtCtkH0iUEZOjdN3ZT7htGYWnnlttZeddUIcprLP0YYo4Zpp/BZBS5kTM59j
+         tAx1BArsHPaFMtBLKW46qdz/NRLtNnsDdnnfnxW/iTKThjxaXD2Mk3KichdpL8Pp8piQ
+         it4L6lEtVIObkOlc/PgpUxDc6MB1PAolOHfpbcTRsVpKoHBar+7PCcLRkEST0B6QlG85
+         qa9g==
+X-Gm-Message-State: AOAM5338M3EppqRSw4/lQU2IO03N8B+vlK7X8Qe9oliifegkBbS3Vg1k
+        QGbNkgSZmJD2TEWj1nxephTSsA==
+X-Google-Smtp-Source: ABdhPJzRlBrP1Gt6pfGYHMtTrFWaZBlGy41UgcCO9oorV/UieHGo5rhYF50u8hVIgHR0SKfY8v7o+A==
+X-Received: by 2002:adf:e443:: with SMTP id t3mr4687971wrm.366.1608156238097;
+        Wed, 16 Dec 2020 14:03:58 -0800 (PST)
+Received: from mai.imgcgcw.net ([2a01:e34:ed2f:f020:601a:58a2:ee98:f8a1])
+        by smtp.gmail.com with ESMTPSA id a17sm5277933wrs.20.2020.12.16.14.03.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Dec 2020 14:03:57 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rui.zhang@intel.com
+Cc:     amitk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Peter Kaestle <peter@piie.net>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        "njosh1@lenovo.com" <njosh1@lenovo.com>
-References: <markpearson@lenovo.com>
- <20201211020630.305905-1-markpearson@lenovo.com>
- <20201211020630.305905-2-markpearson@lenovo.com>
- <CAJZ5v0hMnRizowg-FeS0ON9eJOD7ootqdTVyCPFRr6VCz7aS5g@mail.gmail.com>
- <l-Nzteqdz9SbINiwW0w4kFnKwknGoh5DH7VXqvkb23SZPwhvNyna0FRV9z2IZ18T0S9-a4n3LGBR1pMZYKX4FcxNTOma7vIuya66CY_Mkpc=@protonmail.com>
- <CAJZ5v0hHoScy18FE_Aj+zoWpr-vUhGq-vO+8AjO7RxmOvZBYMA@mail.gmail.com>
- <00993237-eb24-6038-3a85-bb76f96f679d@lenovo.com>
- <CAJZ5v0ji_+BbCrJo=3TB1Cytb8eV-tGE_m6R35UYfwmpUs6MAg@mail.gmail.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <e682cdbd-41fe-065e-5912-d0fb94879dc9@lenovo.com>
-Date:   Wed, 16 Dec 2020 16:36:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        Support Opensource <support.opensource@diasemi.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        platform-driver-x86@vger.kernel.org (open list:ACER ASPIRE ONE
+        TEMPERATURE AND FAN DRIVER),
+        linux-omap@vger.kernel.org (open list:TI BANDGAP AND THERMAL DRIVER)
+Subject: [PATCH v2 3/3] thermal/core: Remove ms based delay fields
+Date:   Wed, 16 Dec 2020 23:03:37 +0100
+Message-Id: <20201216220337.839878-3-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201216220337.839878-1-daniel.lezcano@linaro.org>
+References: <20201216220337.839878-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0ji_+BbCrJo=3TB1Cytb8eV-tGE_m6R35UYfwmpUs6MAg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.38.108.33]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The code does no longer use the ms unit based fields to set the
+delays as they are replaced by the jiffies.
 
-On 16/12/2020 14:50, Rafael J. Wysocki wrote:
-> On Wed, Dec 16, 2020 at 8:19 PM Mark Pearson <markpearson@lenovo.com> wrote:
->>
->> Hi Rafael,
->>
->> On 16/12/2020 13:47, Rafael J. Wysocki wrote:
->>> On Wed, Dec 16, 2020 at 7:42 PM Barnabás Pőcze <pobrn@protonmail.com> wrote:
->>>>
->>>> 2020. december 16., szerda 19:13 keltezéssel, Rafael J. Wysocki írta:
->>>>
->>>>> On Fri, Dec 11, 2020 at 3:15 AM Mark Pearson <markpearson@lenovo.com> wrote:
->>>>>>
->>>>>> This is the initial implementation of the platform-profile feature.
->>>>>> It provides the details discussed and outlined in the
->>>>>> sysfs-platform_profile document.
->>>>>>
->>>>>> Many modern systems have the ability to modify the operating profile to
->>>>>> control aspects like fan speed, temperature and power levels. This
->>>>>> module provides a common sysfs interface that platform modules can register
->>>>>> against to control their individual profile options.
->>>>>>
->>>>>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
->>>>> [...]
->>>>>> +enum platform_profile_option {
->>>>>> +       PLATFORM_PROFILE_LOW,
->>>>>> +       PLATFORM_PROFILE_COOL,
->>>>>> +       PLATFORM_PROFILE_QUIET,
->>>>>> +       PLATFORM_PROFILE_BALANCED,
->>>>>> +       PLATFORM_PROFILE_PERFORM,
->>>>>> +       PLATFORM_PROFILE_LAST, /*must always be last */
->>>>>> +};
->>>>>> +
->>>>>> +struct platform_profile_handler {
->>>>>> +       unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
->>>>>> +       int (*profile_get)(enum platform_profile_option *profile);
->>>>>
->>>>> I'm not sure why this callback is necessary and, provided that there
->>>>> is a good enough reason, why it cannot return an enum
->>>>> platform_profile_option value.
->>>>>
->>>>> In principle, if ->profile_set() returns 0, the requested profile can
->>>>> be saved in a static var and then returned by subsequent "read"
->>>>> operations.
->>>>>
->>>>
->>>> It is possible that the platform profile can be changed with (e.g.) a dedicated
->>>> button (commonly found on laptops), in which case there needs to be a mechanism
->>>> to retrieve the new profile, which would not be possible without introducing
->>>> something else in place of that getter - unless I'm missing something obvious.
->>>
->>> Fair enough.
->>>
->>> The other question remains, then.
->>>
->> My thinking here that I shouldn't make assumptions for future platform
->> implementations - there may be valid cases in the future where being
->> able to return an error condition if there was an error would be useful.
->>
->> Just trying to keep this somewhat future proof. Returning an error
->> condition seemed a useful thing to have available.
-> 
-> You can still return an error while returning a platform_profile_option value.
-> 
-> Just add a special value representing an error to that set.
-> 
-I'd like to understand what is better about that approach than having an
-error and a returnable parameter?
+Remove them and replace their user to use the jiffies version instead.
 
-I'm probably missing something obvious but if I add an extra
-platform_profile option (e.g PLATFORM_PROFILE_ERROR) to be used in an
-error case (and return just an enum platform_profile_option) it seems I
-lose the granularity of being able to return a specific error condition.
-It doesn't feel like an improvement.
+Cc: Thara Gopinath <thara.gopinath@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+---
+ drivers/platform/x86/acerhdf.c                     | 3 ++-
+ drivers/thermal/da9062-thermal.c                   | 4 ++--
+ drivers/thermal/gov_power_allocator.c              | 2 +-
+ drivers/thermal/thermal_core.c                     | 4 +---
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 ++++--
+ include/linux/thermal.h                            | 7 -------
+ 6 files changed, 10 insertions(+), 16 deletions(-)
 
-Let me know what I'm missing.
-
-Thanks
-Mark
-
-
+diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+index b6aa6e5514f4..6b8b3ab8db48 100644
+--- a/drivers/platform/x86/acerhdf.c
++++ b/drivers/platform/x86/acerhdf.c
+@@ -336,7 +336,8 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+ 			pr_notice("interval changed to: %d\n", interval);
+ 
+ 		if (thermal)
+-			thermal->polling_delay = interval*1000;
++			thermal->polling_delay_jiffies =
++				round_jiffies(msecs_to_jiffies(interval * 1000));
+ 
+ 		prev_interval = interval;
+ 	}
+diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
+index 4d74994f160a..180edec34e07 100644
+--- a/drivers/thermal/da9062-thermal.c
++++ b/drivers/thermal/da9062-thermal.c
+@@ -95,7 +95,7 @@ static void da9062_thermal_poll_on(struct work_struct *work)
+ 		thermal_zone_device_update(thermal->zone,
+ 					   THERMAL_EVENT_UNSPECIFIED);
+ 
+-		delay = msecs_to_jiffies(thermal->zone->passive_delay);
++		delay = thermal->zone->passive_delay_jiffies;
+ 		queue_delayed_work(system_freezable_wq, &thermal->work, delay);
+ 		return;
+ 	}
+@@ -245,7 +245,7 @@ static int da9062_thermal_probe(struct platform_device *pdev)
+ 
+ 	dev_dbg(&pdev->dev,
+ 		"TJUNC temperature polling period set at %d ms\n",
+-		thermal->zone->passive_delay);
++		jiffies_to_msecs(thermal->zone->passive_delay_jiffies));
+ 
+ 	ret = platform_get_irq_byname(pdev, "THERMAL");
+ 	if (ret < 0) {
+diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+index 7a4170a0b51f..f8c3d1e40b86 100644
+--- a/drivers/thermal/gov_power_allocator.c
++++ b/drivers/thermal/gov_power_allocator.c
+@@ -258,7 +258,7 @@ static u32 pid_controller(struct thermal_zone_device *tz,
+ 	 * power being applied, slowing down the controller)
+ 	 */
+ 	d = mul_frac(tz->tzp->k_d, err - params->prev_err);
+-	d = div_frac(d, tz->passive_delay);
++	d = div_frac(d, jiffies_to_msecs(tz->passive_delay_jiffies));
+ 	params->prev_err = err;
+ 
+ 	power_range = p + i + d;
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index d96c515af3cb..b2615449b18f 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -313,7 +313,7 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+ 
+ 	if (!stop && tz->passive)
+ 		thermal_zone_device_set_polling(tz, tz->passive_delay_jiffies);
+-	else if (!stop && tz->polling_delay)
++	else if (!stop && tz->polling_delay_jiffies)
+ 		thermal_zone_device_set_polling(tz, tz->polling_delay_jiffies);
+ 	else
+ 		thermal_zone_device_set_polling(tz, 0);
+@@ -1307,8 +1307,6 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+ 	tz->device.class = &thermal_class;
+ 	tz->devdata = devdata;
+ 	tz->trips = trips;
+-	tz->passive_delay = passive_delay;
+-	tz->polling_delay = polling_delay;
+ 
+ 	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
+ 	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
+diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+index 2ce4b19f312a..f84375865c97 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
++++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+@@ -166,6 +166,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 			     char *domain)
+ {
+ 	struct ti_thermal_data *data;
++	int interval;
+ 
+ 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 
+@@ -183,9 +184,10 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+ 		return PTR_ERR(data->ti_thermal);
+ 	}
+ 
++	interval = jiffies_to_msecs(data->ti_thermal->polling_delay_jiffies);
++
+ 	ti_bandgap_set_sensor_data(bgp, id, data);
+-	ti_bandgap_write_update_interval(bgp, data->sensor_id,
+-					data->ti_thermal->polling_delay);
++	ti_bandgap_write_update_interval(bgp, data->sensor_id, interval);
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index d1b82c70de69..1e686404951b 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -115,13 +115,8 @@ struct thermal_cooling_device {
+  * @devdata:	private pointer for device private data
+  * @trips:	number of trip points the thermal zone supports
+  * @trips_disabled;	bitmap for disabled trips
+- * @passive_delay:	number of milliseconds to wait between polls when
+- *			performing passive cooling.
+  * @passive_delay_jiffies: number of jiffies to wait between polls when
+  *			performing passive cooling.
+- * @polling_delay:	number of milliseconds to wait between polls when
+- *			checking whether trip points have been crossed (0 for
+- *			interrupt driven systems)
+  * @polling_delay_jiffies: number of jiffies to wait between polls when
+  *			checking whether trip points have been crossed (0 for
+  *			interrupt driven systems)
+@@ -162,8 +157,6 @@ struct thermal_zone_device {
+ 	unsigned long trips_disabled;	/* bitmap for disabled trips */
+ 	unsigned long passive_delay_jiffies;
+ 	unsigned long polling_delay_jiffies;
+-	int passive_delay;
+-	int polling_delay;
+ 	int temperature;
+ 	int last_temperature;
+ 	int emul_temperature;
+-- 
+2.25.1
 
