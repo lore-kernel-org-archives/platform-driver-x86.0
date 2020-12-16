@@ -5,69 +5,110 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAECC4361B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 13:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FF3C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 13:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA457233A2
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 13:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D8623105
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 13:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725550AbgLPNLd (ORCPT
+        id S1726137AbgLPNig (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Dec 2020 08:11:33 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9215 "EHLO
-        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725274AbgLPNLd (ORCPT
+        Wed, 16 Dec 2020 08:38:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725550AbgLPNig (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Dec 2020 08:11:33 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4CwwTP1qRyzkWVQ;
-        Wed, 16 Dec 2020 21:10:01 +0800 (CST)
-Received: from ubuntu.network (10.175.138.68) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.498.0; Wed, 16 Dec 2020 21:10:39 +0800
-From:   Zheng Yongjun <zhengyongjun3@huawei.com>
-To:     <dvhart@infradead.org>, <andy@infradead.org>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Zheng Yongjun <zhengyongjun3@huawei.com>
-Subject: [PATCH -next] platform: intel-mid: device_libs: convert comma to semicolon
-Date:   Wed, 16 Dec 2020 21:11:07 +0800
-Message-ID: <20201216131107.14339-1-zhengyongjun3@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 16 Dec 2020 08:38:36 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA75C061794
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Dec 2020 05:37:56 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id 51du2400L4C55Sk011du1E; Wed, 16 Dec 2020 14:37:54 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kpX06-00BB0f-Aw; Wed, 16 Dec 2020 14:37:54 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kpX05-005Xv1-R3; Wed, 16 Dec 2020 14:37:53 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] platform/surface: SURFACE_PLATFORMS should depend on ACPI
+Date:   Wed, 16 Dec 2020 14:37:52 +0100
+Message-Id: <20201216133752.1321978-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.138.68]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Replace a comma between expression statements by a semicolon.
+All Microsoft Surface platform-specific device drivers depend on ACPI,
+but the gatekeeper symbol SURFACE_PLATFORMS does not.  Hence when the
+user is configuring a kernel without ACPI support, he is still asked
+about Microsoft Surface drivers, even though this question is
+irrelevant.
 
-Signed-off-by: Zheng Yongjun <zhengyongjun3@huawei.com>
+Fix this by moving the dependency on ACPI from the individual driver
+symbols to SURFACE_PLATFORMS.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- arch/x86/platform/intel-mid/device_libs/platform_bt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/platform/surface/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/platform/intel-mid/device_libs/platform_bt.c b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-index 31dda18bb370..2930b6e9473e 100644
---- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-+++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-@@ -88,8 +88,8 @@ static int __init bt_sfi_init(void)
- 	memset(&info, 0, sizeof(info));
- 	info.fwnode	= ddata->dev->fwnode;
- 	info.parent	= ddata->dev;
--	info.name	= ddata->name,
--	info.id		= PLATFORM_DEVID_NONE,
-+	info.name	= ddata->name;
-+	info.id		= PLATFORM_DEVID_NONE;
+diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+index 33040b0b3b799c2d..2c941cdac9eedc6f 100644
+--- a/drivers/platform/surface/Kconfig
++++ b/drivers/platform/surface/Kconfig
+@@ -5,6 +5,7 @@
  
- 	pdev = platform_device_register_full(&info);
- 	if (IS_ERR(pdev))
+ menuconfig SURFACE_PLATFORMS
+ 	bool "Microsoft Surface Platform-Specific Device Drivers"
++	depends on ACPI
+ 	default y
+ 	help
+ 	  Say Y here to get to see options for platform-specific device drivers
+@@ -29,20 +30,19 @@ config SURFACE3_WMI
+ 
+ config SURFACE_3_BUTTON
+ 	tristate "Power/home/volume buttons driver for Microsoft Surface 3 tablet"
+-	depends on ACPI && KEYBOARD_GPIO && I2C
++	depends on KEYBOARD_GPIO && I2C
+ 	help
+ 	  This driver handles the power/home/volume buttons on the Microsoft Surface 3 tablet.
+ 
+ config SURFACE_3_POWER_OPREGION
+ 	tristate "Surface 3 battery platform operation region support"
+-	depends on ACPI && I2C
++	depends on I2C
+ 	help
+ 	  This driver provides support for ACPI operation
+ 	  region of the Surface 3 battery platform driver.
+ 
+ config SURFACE_GPE
+ 	tristate "Surface GPE/Lid Support Driver"
+-	depends on ACPI
+ 	depends on DMI
+ 	help
+ 	  This driver marks the GPEs related to the ACPI lid device found on
+@@ -52,7 +52,7 @@ config SURFACE_GPE
+ 
+ config SURFACE_PRO3_BUTTON
+ 	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
+-	depends on ACPI && INPUT
++	depends on INPUT
+ 	help
+ 	  This driver handles the power/home/volume buttons on the Microsoft Surface Pro 3/4 tablet.
+ 
 -- 
-2.22.0
+2.25.1
 
