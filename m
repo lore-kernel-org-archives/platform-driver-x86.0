@@ -2,133 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9027C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 15:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A695DC2BBCD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 18:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9924423976
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 15:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83E5D239D1
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 18:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgLQPUx convert rfc822-to-8bit (ORCPT
+        id S1730261AbgLQSdn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Dec 2020 10:20:53 -0500
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:37223 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbgLQPUx (ORCPT
+        Thu, 17 Dec 2020 13:33:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60748 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728684AbgLQSdm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Dec 2020 10:20:53 -0500
-Received: by mail-ot1-f51.google.com with SMTP id o11so27600140ote.4;
-        Thu, 17 Dec 2020 07:20:37 -0800 (PST)
+        Thu, 17 Dec 2020 13:33:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1608229934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4H+T4/ehKqHlXqfjsULM9/21wYN2wzFe2ggxW0HinS4=;
+        b=SSiwGvoZw8pRFgaJw/CybXDxONLjn85FeSUbQoRn9faiW/z7Iu8MdRWX5+e2U4TmxgRwHI
+        8maglSLHz0OleQEaUXjzVhpHp9zIQhuy5ikzxjF0GFiTTKCMizFL64SJCgtDU6L4VrHPjI
+        r3zT8cYSNCtHe33sP2mcfh0V6mv9+O4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-376-gpw__9pHNX-HS4iiH6sAOA-1; Thu, 17 Dec 2020 13:32:13 -0500
+X-MC-Unique: gpw__9pHNX-HS4iiH6sAOA-1
+Received: by mail-ej1-f70.google.com with SMTP id u15so8977628ejg.17
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Dec 2020 10:32:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jSDEFM7dZmRw/OpMRHKYf12NdjPTesgd4CgHpbI7LGg=;
-        b=hleZ05mn7F7uby6eUcNUcZVggVmWNp5arpeLw2pbF7JFj6I+vOuPQlFKjDiZDJZzwC
-         wq5TWbtg/rkB3rD0cK7eTuL++M/eSZGZuNj1BhMZd/YFVldcRLPPj+MBJbrTBRpfPDjJ
-         5gsx9P0WznA4XuipRTaOo0V1mw/yqMNtUacRjNdbv8FwrCJoplSiLCkNmoOhCkS3qvLI
-         93kWTpRLXguESFIB4dD9C42+FarkwN9fEkPea5XXMuuI27/x9pScGvocFq9wC7y2x8oY
-         BzSaHj4RQ8Fl6wxs2iIX3K3qnyHX0PLfjwya2cLoIN8nNUeq8vgBXMOGcd8VOw6h42dI
-         tGfw==
-X-Gm-Message-State: AOAM530i7rrA/wmsO8cF0kbel/LfvLTp3EeXjIRAcAUqcv1qAhw5KnEj
-        mbTKdhWCYV2qCBKDOlSLsBLXTYr3CGSYys3WOF4=
-X-Google-Smtp-Source: ABdhPJwnSTwHLmDwKSjH13YE6MNaQeX5rSDuuL8+LTkBNJ4N1LPnRzrWJuL6K/0/NmuQTROMY10zlXOPOjHkOnMZr2o=
-X-Received: by 2002:a9d:67da:: with SMTP id c26mr30260902otn.321.1608218411887;
- Thu, 17 Dec 2020 07:20:11 -0800 (PST)
-MIME-Version: 1.0
-References: <markpearson@lenovo.com> <20201211020630.305905-1-markpearson@lenovo.com>
- <20201211020630.305905-2-markpearson@lenovo.com> <CAJZ5v0hMnRizowg-FeS0ON9eJOD7ootqdTVyCPFRr6VCz7aS5g@mail.gmail.com>
- <l-Nzteqdz9SbINiwW0w4kFnKwknGoh5DH7VXqvkb23SZPwhvNyna0FRV9z2IZ18T0S9-a4n3LGBR1pMZYKX4FcxNTOma7vIuya66CY_Mkpc=@protonmail.com>
- <CAJZ5v0hHoScy18FE_Aj+zoWpr-vUhGq-vO+8AjO7RxmOvZBYMA@mail.gmail.com>
- <00993237-eb24-6038-3a85-bb76f96f679d@lenovo.com> <CAJZ5v0ji_+BbCrJo=3TB1Cytb8eV-tGE_m6R35UYfwmpUs6MAg@mail.gmail.com>
- <e682cdbd-41fe-065e-5912-d0fb94879dc9@lenovo.com> <CAJZ5v0gMo_22OJvjrufJy6uQsMjh+AT_mYQyFD-LpNzAwhkimA@mail.gmail.com>
- <lz2i0N6rCGcqra4IF0bl9Q0ke6btCg4-uW4fwI4PCnjsfLvhF2hm3SgqjCtUBybLzZTKDMmleu123UylZDfAjZ_jsayppN-X0PnSaaNwK6c=@protonmail.com>
- <CAJZ5v0gzXrft6x03tEtpn492StzSH=8jJbOmS6ncpVRRvscNKg@mail.gmail.com> <aa65eb2a-5b0a-26de-e667-d9c68f2341a5@gmail.com>
-In-Reply-To: <aa65eb2a-5b0a-26de-e667-d9c68f2341a5@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 17 Dec 2020 16:20:00 +0100
-Message-ID: <CAJZ5v0j2Od-WWhJg8pEcn42sY=ifQ6X7xrBQMR9KAh=vc9Q9qQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v6 2/3] ACPI: platform-profile: Add
- platform profile support
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4H+T4/ehKqHlXqfjsULM9/21wYN2wzFe2ggxW0HinS4=;
+        b=ZIkix25kWnk/kp3Lw7biD1ebKbUtmKaFFPewoRzM434ukeCRI5hG5j6NsKGf0mB5hC
+         lcaSRdhFBY9PnLw/WB0/NHxvhjdjF3SsLVLdTE2ffQyHVD+xkE/NcZt3iqwtH88b5jHG
+         kYhKJnODycYQWqqO65JryJ+l8uhLc5OFVaUtU8qX1HvVSj6+IfPY6oSCWt5oLgX/n2PW
+         gvJJS9DJXj6s6TmFpr8Cpotwzn3UQaWY6xYbblOkc50AY0yFaYHdmj4fFxVNWb5lHMF7
+         uKs6V3kBfh1vDioFef8j7Za/TJ9QxXbaURTRhc5zLLd9UktID4PCGyYo/5KKbWe7+Is7
+         9W8Q==
+X-Gm-Message-State: AOAM530MPBcpcrCDGR9u5MNXycqDgUvUNqkKyQD33U8g9Y/XJRbL93JW
+        WSEBd/RqAXvgoDRb0yMTz4SBtgXMSGrPyY4B9N/CZg+83mbqGPcVIx5MgrbFz0OW5RYabG8njJ9
+        xVc2gSs3a6dZqC4HQF5fcnUQ557zalUrKgQ==
+X-Received: by 2002:a17:906:d28f:: with SMTP id ay15mr281975ejb.327.1608229931312;
+        Thu, 17 Dec 2020 10:32:11 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxYNmNzi4ooXQlZs0+dHUSydf+1N5hkD/y0UInohgkrdZRIo0iBrrKbj1RMZ8Nu7pCC+u4qsw==
+X-Received: by 2002:a17:906:d28f:: with SMTP id ay15mr281966ejb.327.1608229931158;
+        Thu, 17 Dec 2020 10:32:11 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id b17sm4403946eju.76.2020.12.17.10.32.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Dec 2020 10:32:10 -0800 (PST)
+Subject: Re: [PATCH v2 3/3] thermal/core: Remove ms based delay fields
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+Cc:     amitk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Peter Kaestle <peter@piie.net>,
         Mark Gross <mgross@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Elia Devito <eliadevito@gmail.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        "njosh1@lenovo.com" <njosh1@lenovo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Support Opensource <support.opensource@diasemi.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
+        <platform-driver-x86@vger.kernel.org>,
+        "open list:TI BANDGAP AND THERMAL DRIVER" 
+        <linux-omap@vger.kernel.org>
+References: <20201216220337.839878-1-daniel.lezcano@linaro.org>
+ <20201216220337.839878-3-daniel.lezcano@linaro.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c575c7bc-cf53-bfdf-ea42-e8661d714699@redhat.com>
+Date:   Thu, 17 Dec 2020 19:32:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+MIME-Version: 1.0
+In-Reply-To: <20201216220337.839878-3-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Dec 17, 2020 at 4:18 PM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->
->
->
-> On 12/17/20 4:09 PM, Rafael J. Wysocki wrote:
-> > On Thu, Dec 17, 2020 at 4:02 PM Barnabás Pőcze <pobrn@protonmail.com> wrote:
-> >>
-> >> 2020. december 17., csütörtök 14:36 keltezéssel, Rafael J. Wysocki <rafael@kernel.org> írta:
-> >>
-> >>> [...]
-> >>>>>> My thinking here that I shouldn't make assumptions for future platform
-> >>>>>> implementations - there may be valid cases in the future where being
-> >>>>>> able to return an error condition if there was an error would be useful.
-> >>>>>>
-> >>>>>> Just trying to keep this somewhat future proof. Returning an error
-> >>>>>> condition seemed a useful thing to have available.
-> >>>>>
-> >>>>> You can still return an error while returning a platform_profile_option value.
-> >>>>>
-> >>>>> Just add a special value representing an error to that set.
-> >>>>>
-> >>>> I'd like to understand what is better about that approach than having an
-> >>>> error and a returnable parameter?
-> >>>>
-> >>>> I'm probably missing something obvious but if I add an extra
-> >>>> platform_profile option (e.g PLATFORM_PROFILE_ERROR) to be used in an
-> >>>> error case (and return just an enum platform_profile_option) it seems I
-> >>>> lose the granularity of being able to return a specific error condition.
-> >>>> It doesn't feel like an improvement.
-> >>>
-> >>> And what's the user expected to do about the different error codes
-> >>> that can be returned?
-> >>
-> >> Even assuming the users of the API cannot or will not handle different errors
-> >> differently, who would benefit from getting rid of this information which may be
-> >> an aid in debugging for those who know what they're looking at?
-> >>
-> >> And if a new enum value is introduced to signal an error condition, how is that
-> >> going to be communicated to the users? A magic string like "error" or "-1"?
-> >> Or under a single errno like -EIO?
-> >
-> > Yes.
-> >
-> >> Personally, I believe neither of these two
-> >> solutions are better than returning the actual errno which is deemed most
-> >> appropriate by the platform profile handler. Or am I missing a third way?
-> >
-> > Can we please defer this until we actually have a driver needing to
-> > return different error values from ->get_profile() (and I find it hard
-> > to believe that there will be any drivers like that)?
->
-> I can maybe give an example. On Microsoft Surface devices, the
-> performance mode / platform profile is set via a request to the embedded
-> controller and can be queried the same way. This request can fail (most
-> notably with ETIMEDOUT and EREMOTEIO). I think at least being able to
-> show users an error in this case would be helpful.
+Hi Daniel,
 
-OK, fair enough, let's keep it the way it is.
+On 12/16/20 11:03 PM, Daniel Lezcano wrote:
+> The code does no longer use the ms unit based fields to set the
+> delays as they are replaced by the jiffies.
+> 
+> Remove them and replace their user to use the jiffies version instead.
+> 
+> Cc: Thara Gopinath <thara.gopinath@linaro.org>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+
+I assume that you will merge this through the thermal tree,
+here is my ack for doing so for the pdx86 bits:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/x86/acerhdf.c                     | 3 ++-
+>  drivers/thermal/da9062-thermal.c                   | 4 ++--
+>  drivers/thermal/gov_power_allocator.c              | 2 +-
+>  drivers/thermal/thermal_core.c                     | 4 +---
+>  drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 ++++--
+>  include/linux/thermal.h                            | 7 -------
+>  6 files changed, 10 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
+> index b6aa6e5514f4..6b8b3ab8db48 100644
+> --- a/drivers/platform/x86/acerhdf.c
+> +++ b/drivers/platform/x86/acerhdf.c
+> @@ -336,7 +336,8 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
+>  			pr_notice("interval changed to: %d\n", interval);
+>  
+>  		if (thermal)
+> -			thermal->polling_delay = interval*1000;
+> +			thermal->polling_delay_jiffies =
+> +				round_jiffies(msecs_to_jiffies(interval * 1000));
+>  
+>  		prev_interval = interval;
+>  	}
+> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
+> index 4d74994f160a..180edec34e07 100644
+> --- a/drivers/thermal/da9062-thermal.c
+> +++ b/drivers/thermal/da9062-thermal.c
+> @@ -95,7 +95,7 @@ static void da9062_thermal_poll_on(struct work_struct *work)
+>  		thermal_zone_device_update(thermal->zone,
+>  					   THERMAL_EVENT_UNSPECIFIED);
+>  
+> -		delay = msecs_to_jiffies(thermal->zone->passive_delay);
+> +		delay = thermal->zone->passive_delay_jiffies;
+>  		queue_delayed_work(system_freezable_wq, &thermal->work, delay);
+>  		return;
+>  	}
+> @@ -245,7 +245,7 @@ static int da9062_thermal_probe(struct platform_device *pdev)
+>  
+>  	dev_dbg(&pdev->dev,
+>  		"TJUNC temperature polling period set at %d ms\n",
+> -		thermal->zone->passive_delay);
+> +		jiffies_to_msecs(thermal->zone->passive_delay_jiffies));
+>  
+>  	ret = platform_get_irq_byname(pdev, "THERMAL");
+>  	if (ret < 0) {
+> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+> index 7a4170a0b51f..f8c3d1e40b86 100644
+> --- a/drivers/thermal/gov_power_allocator.c
+> +++ b/drivers/thermal/gov_power_allocator.c
+> @@ -258,7 +258,7 @@ static u32 pid_controller(struct thermal_zone_device *tz,
+>  	 * power being applied, slowing down the controller)
+>  	 */
+>  	d = mul_frac(tz->tzp->k_d, err - params->prev_err);
+> -	d = div_frac(d, tz->passive_delay);
+> +	d = div_frac(d, jiffies_to_msecs(tz->passive_delay_jiffies));
+>  	params->prev_err = err;
+>  
+>  	power_range = p + i + d;
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index d96c515af3cb..b2615449b18f 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -313,7 +313,7 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+>  
+>  	if (!stop && tz->passive)
+>  		thermal_zone_device_set_polling(tz, tz->passive_delay_jiffies);
+> -	else if (!stop && tz->polling_delay)
+> +	else if (!stop && tz->polling_delay_jiffies)
+>  		thermal_zone_device_set_polling(tz, tz->polling_delay_jiffies);
+>  	else
+>  		thermal_zone_device_set_polling(tz, 0);
+> @@ -1307,8 +1307,6 @@ thermal_zone_device_register(const char *type, int trips, int mask,
+>  	tz->device.class = &thermal_class;
+>  	tz->devdata = devdata;
+>  	tz->trips = trips;
+> -	tz->passive_delay = passive_delay;
+> -	tz->polling_delay = polling_delay;
+>  
+>  	thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
+>  	thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> index 2ce4b19f312a..f84375865c97 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
+> @@ -166,6 +166,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+>  			     char *domain)
+>  {
+>  	struct ti_thermal_data *data;
+> +	int interval;
+>  
+>  	data = ti_bandgap_get_sensor_data(bgp, id);
+>  
+> @@ -183,9 +184,10 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+>  		return PTR_ERR(data->ti_thermal);
+>  	}
+>  
+> +	interval = jiffies_to_msecs(data->ti_thermal->polling_delay_jiffies);
+> +
+>  	ti_bandgap_set_sensor_data(bgp, id, data);
+> -	ti_bandgap_write_update_interval(bgp, data->sensor_id,
+> -					data->ti_thermal->polling_delay);
+> +	ti_bandgap_write_update_interval(bgp, data->sensor_id, interval);
+>  
+>  	return 0;
+>  }
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index d1b82c70de69..1e686404951b 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -115,13 +115,8 @@ struct thermal_cooling_device {
+>   * @devdata:	private pointer for device private data
+>   * @trips:	number of trip points the thermal zone supports
+>   * @trips_disabled;	bitmap for disabled trips
+> - * @passive_delay:	number of milliseconds to wait between polls when
+> - *			performing passive cooling.
+>   * @passive_delay_jiffies: number of jiffies to wait between polls when
+>   *			performing passive cooling.
+> - * @polling_delay:	number of milliseconds to wait between polls when
+> - *			checking whether trip points have been crossed (0 for
+> - *			interrupt driven systems)
+>   * @polling_delay_jiffies: number of jiffies to wait between polls when
+>   *			checking whether trip points have been crossed (0 for
+>   *			interrupt driven systems)
+> @@ -162,8 +157,6 @@ struct thermal_zone_device {
+>  	unsigned long trips_disabled;	/* bitmap for disabled trips */
+>  	unsigned long passive_delay_jiffies;
+>  	unsigned long polling_delay_jiffies;
+> -	int passive_delay;
+> -	int polling_delay;
+>  	int temperature;
+>  	int last_temperature;
+>  	int emul_temperature;
+> 
+
