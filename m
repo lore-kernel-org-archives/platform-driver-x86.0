@@ -2,202 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0139C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 22:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CC2C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 06:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 959792342C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Dec 2020 22:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A6423741
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Dec 2020 06:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgLPWgj convert rfc822-to-8bit (ORCPT
+        id S1726862AbgLQGBE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Dec 2020 17:36:39 -0500
-Received: from piie.net ([80.82.223.85]:56480 "EHLO piie.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727164AbgLPWgj (ORCPT
+        Thu, 17 Dec 2020 01:01:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbgLQGBE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Dec 2020 17:36:39 -0500
-Received: from mail.piie.net (_gateway [172.17.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES128-SHA (128/128 bits))
-        (Client did not present a certificate)
-        by piie.net (Postfix) with ESMTPSA id 04BFC3226FC;
-        Wed, 16 Dec 2020 23:35:55 +0100 (CET)
-MIME-Version: 1.0
-Date:   Wed, 16 Dec 2020 22:35:55 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: RainLoop/1.14.0
-From:   "=?utf-8?B?UGV0ZXIgS8Okc3RsZQ==?=" <peter@piie.net>
-Message-ID: <00766bd10b90c0c3bebf25738b782ec9@piie.net>
+        Thu, 17 Dec 2020 01:01:04 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977A5C0617A7
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Dec 2020 22:00:23 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id e25so4585793wme.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Dec 2020 22:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UWUGj7vRR1Ra7bgeGXHDGwnpi7LWLsFY/4lY0Q3LcxI=;
+        b=lN7BiMtiodNlR3/k9qYiT21EC2DhnAhv0O3G3JQM2jGQCvWf+0vc9GQH00kiQQrSlg
+         FwuxZW3Ui/Jd2hp9bPDR38p7XMoskQNbPEPK6VlGR4NIMFf+bhjdbc8WceDrHGlfu2P9
+         /yKYB2eKeQxRN+h4USTzdTJKimh9rmjBlhRhq65ODAzR29T7rmFZMaOH0PLEyvbsRckq
+         zPpiod9d6+OGi6BG1Jm1c14qnsu3GvFB2il2WjBvw/jUQfdqI9HlCbpUxrMGAsf5sHYV
+         wArBz5kxBtdd0yC1VsUIJkeppsXhSR5AsTozA/xD75/RSTWd4LOp3MWxPCIoZTCFbWdN
+         oclg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UWUGj7vRR1Ra7bgeGXHDGwnpi7LWLsFY/4lY0Q3LcxI=;
+        b=X21kV26pLWddJJeoXi+xpvZ3oF+FxtKaeyt9b0MVmLrsjswDVBzMk/VhRTylNmv3+A
+         UmY+IvrqzsBcjZpfQSZpXfrlSP7r5A7O9ldABRETinN5K5g4Bw45iRR7LB5jIfL0UlBK
+         ESlg9mVr0zPcQVs3+3tL6e9MOtqCx3Z36WPnypkXHwzdWWx7806hJ5P+J8ajJdBY7/yJ
+         X+U+isV2KHHg+5TCROj1qfyyOFZTCMoxsl30jCPGbaB01TrXZFfdMI5l6r8k7OsHSZ8O
+         pEfzAvod7Q1veNU5VEPXEI2ecL/xg1P55EeqdIz05MGHxmtusJYCAlsqI2UsF5dCx57K
+         PJDg==
+X-Gm-Message-State: AOAM533DLk7LRY++ybllAHDCuXFdCKVNP+Io2p0POqCbbXHiZacOI9Em
+        AneqQ/CSJ2x5sWD8OxJwzH/wGg==
+X-Google-Smtp-Source: ABdhPJya424XSHoCxm4FRdCMnOQstNEHYDGUW5H/aLIHtUrslwbEA2UyxcnG3A6rNrzkB5i0uUikkw==
+X-Received: by 2002:a1c:9dd8:: with SMTP id g207mr6664076wme.15.1608184822061;
+        Wed, 16 Dec 2020 22:00:22 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:601a:58a2:ee98:f8a1? ([2a01:e34:ed2f:f020:601a:58a2:ee98:f8a1])
+        by smtp.googlemail.com with ESMTPSA id h98sm7698614wrh.69.2020.12.16.22.00.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Dec 2020 22:00:21 -0800 (PST)
 Subject: Re: [PATCH v2 3/3] thermal/core: Remove ms based delay fields
-To:     "Daniel Lezcano" <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+To:     =?UTF-8?Q?Peter_K=c3=a4stle?= <peter@piie.net>, rui.zhang@intel.com
 Cc:     amitk@kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org,
-        "Thara Gopinath" <thara.gopinath@linaro.org>,
-        "Lukasz Luba" <lukasz.luba@arm.com>,
-        "Hans de Goede" <hdegoede@redhat.com>,
-        "Mark Gross" <mgross@linux.intel.com>,
-        "Support Opensource" <support.opensource@diasemi.com>,
-        "Eduardo Valentin" <edubezval@gmail.com>,
-        "Keerthy" <j-keerthy@ti.com>, platform-driver-x86@vger.kernel.org,
+        Thara Gopinath <thara.gopinath@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, platform-driver-x86@vger.kernel.org,
         linux-omap@vger.kernel.org
-In-Reply-To: <20201216220337.839878-3-daniel.lezcano@linaro.org>
 References: <20201216220337.839878-3-daniel.lezcano@linaro.org>
  <20201216220337.839878-1-daniel.lezcano@linaro.org>
+ <00766bd10b90c0c3bebf25738b782ec9@piie.net>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <01b55dc9-0b17-4ccd-e930-5318c0693e30@linaro.org>
+Date:   Thu, 17 Dec 2020 07:00:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <00766bd10b90c0c3bebf25738b782ec9@piie.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-16. Dezember 2020 23:04, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+On 16/12/2020 23:35, Peter Kästle wrote:
+> 16. Dezember 2020 23:04, "Daniel Lezcano" <daniel.lezcano@linaro.org> schrieb:
+> 
+>> The code does no longer use the ms unit based fields to set the
+>> delays as they are replaced by the jiffies.
+>>
+>> Remove them and replace their user to use the jiffies version instead.
+>>
+>> Cc: Thara Gopinath <thara.gopinath@linaro.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+>> ---
+>> drivers/platform/x86/acerhdf.c | 3 ++-
+> 
+> Reviewed-by: Peter Kästle <peter@piie.net>
 
-> The code does no longer use the ms unit based fields to set the
-> delays as they are replaced by the jiffies.
-> 
-> Remove them and replace their user to use the jiffies version instead.
-> 
-> Cc: Thara Gopinath <thara.gopinath@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
-> drivers/platform/x86/acerhdf.c | 3 ++-
+Thanks for reviewing
 
-Reviewed-by: Peter Kästle <peter@piie.net>
+  -- Daniel
 
 
-> drivers/thermal/da9062-thermal.c | 4 ++--
-> drivers/thermal/gov_power_allocator.c | 2 +-
-> drivers/thermal/thermal_core.c | 4 +---
-> drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 6 ++++--
-> include/linux/thermal.h | 7 -------
-> 6 files changed, 10 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/acerhdf.c b/drivers/platform/x86/acerhdf.c
-> index b6aa6e5514f4..6b8b3ab8db48 100644
-> --- a/drivers/platform/x86/acerhdf.c
-> +++ b/drivers/platform/x86/acerhdf.c
-> @@ -336,7 +336,8 @@ static void acerhdf_check_param(struct thermal_zone_device *thermal)
-> pr_notice("interval changed to: %d\n", interval);
-> 
-> if (thermal)
-> - thermal->polling_delay = interval*1000;
-> + thermal->polling_delay_jiffies =
-> + round_jiffies(msecs_to_jiffies(interval * 1000));
-> 
-> prev_interval = interval;
-> }
-> diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
-> index 4d74994f160a..180edec34e07 100644
-> --- a/drivers/thermal/da9062-thermal.c
-> +++ b/drivers/thermal/da9062-thermal.c
-> @@ -95,7 +95,7 @@ static void da9062_thermal_poll_on(struct work_struct *work)
-> thermal_zone_device_update(thermal->zone,
-> THERMAL_EVENT_UNSPECIFIED);
-> 
-> - delay = msecs_to_jiffies(thermal->zone->passive_delay);
-> + delay = thermal->zone->passive_delay_jiffies;
-> queue_delayed_work(system_freezable_wq, &thermal->work, delay);
-> return;
-> }
-> @@ -245,7 +245,7 @@ static int da9062_thermal_probe(struct platform_device *pdev)
-> 
-> dev_dbg(&pdev->dev,
-> "TJUNC temperature polling period set at %d ms\n",
-> - thermal->zone->passive_delay);
-> + jiffies_to_msecs(thermal->zone->passive_delay_jiffies));
-> 
-> ret = platform_get_irq_byname(pdev, "THERMAL");
-> if (ret < 0) {
-> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-> index 7a4170a0b51f..f8c3d1e40b86 100644
-> --- a/drivers/thermal/gov_power_allocator.c
-> +++ b/drivers/thermal/gov_power_allocator.c
-> @@ -258,7 +258,7 @@ static u32 pid_controller(struct thermal_zone_device *tz,
-> * power being applied, slowing down the controller)
-> */
-> d = mul_frac(tz->tzp->k_d, err - params->prev_err);
-> - d = div_frac(d, tz->passive_delay);
-> + d = div_frac(d, jiffies_to_msecs(tz->passive_delay_jiffies));
-> params->prev_err = err;
-> 
-> power_range = p + i + d;
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index d96c515af3cb..b2615449b18f 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -313,7 +313,7 @@ static void monitor_thermal_zone(struct thermal_zone_device *tz)
-> 
-> if (!stop && tz->passive)
-> thermal_zone_device_set_polling(tz, tz->passive_delay_jiffies);
-> - else if (!stop && tz->polling_delay)
-> + else if (!stop && tz->polling_delay_jiffies)
-> thermal_zone_device_set_polling(tz, tz->polling_delay_jiffies);
-> else
-> thermal_zone_device_set_polling(tz, 0);
-> @@ -1307,8 +1307,6 @@ thermal_zone_device_register(const char *type, int trips, int mask,
-> tz->device.class = &thermal_class;
-> tz->devdata = devdata;
-> tz->trips = trips;
-> - tz->passive_delay = passive_delay;
-> - tz->polling_delay = polling_delay;
-> 
-> thermal_set_delay_jiffies(&tz->passive_delay_jiffies, passive_delay);
-> thermal_set_delay_jiffies(&tz->polling_delay_jiffies, polling_delay);
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> index 2ce4b19f312a..f84375865c97 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-> @@ -166,6 +166,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
-> char *domain)
-> {
-> struct ti_thermal_data *data;
-> + int interval;
-> 
-> data = ti_bandgap_get_sensor_data(bgp, id);
-> 
-> @@ -183,9 +184,10 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
-> return PTR_ERR(data->ti_thermal);
-> }
-> 
-> + interval = jiffies_to_msecs(data->ti_thermal->polling_delay_jiffies);
-> +
-> ti_bandgap_set_sensor_data(bgp, id, data);
-> - ti_bandgap_write_update_interval(bgp, data->sensor_id,
-> - data->ti_thermal->polling_delay);
-> + ti_bandgap_write_update_interval(bgp, data->sensor_id, interval);
-> 
-> return 0;
-> }
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index d1b82c70de69..1e686404951b 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -115,13 +115,8 @@ struct thermal_cooling_device {
-> * @devdata: private pointer for device private data
-> * @trips: number of trip points the thermal zone supports
-> * @trips_disabled; bitmap for disabled trips
-> - * @passive_delay: number of milliseconds to wait between polls when
-> - * performing passive cooling.
-> * @passive_delay_jiffies: number of jiffies to wait between polls when
-> * performing passive cooling.
-> - * @polling_delay: number of milliseconds to wait between polls when
-> - * checking whether trip points have been crossed (0 for
-> - * interrupt driven systems)
-> * @polling_delay_jiffies: number of jiffies to wait between polls when
-> * checking whether trip points have been crossed (0 for
-> * interrupt driven systems)
-> @@ -162,8 +157,6 @@ struct thermal_zone_device {
-> unsigned long trips_disabled; /* bitmap for disabled trips */
-> unsigned long passive_delay_jiffies;
-> unsigned long polling_delay_jiffies;
-> - int passive_delay;
-> - int polling_delay;
-> int temperature;
-> int last_temperature;
-> int emul_temperature;
-> -- 
-> 2.25.1
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
