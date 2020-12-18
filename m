@@ -2,117 +2,214 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223D6C4361B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Dec 2020 10:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EC6C4361B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Dec 2020 17:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E873923A00
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Dec 2020 10:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6345523B51
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Dec 2020 17:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbgLRKqa (ORCPT
+        id S1728220AbgLRRyd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Dec 2020 05:46:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733166AbgLRKqa (ORCPT
+        Fri, 18 Dec 2020 12:54:33 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.113]:12905 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725800AbgLRRyc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Dec 2020 05:46:30 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079B4C0617B0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Dec 2020 02:45:44 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id q18so1650411wrn.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 18 Dec 2020 02:45:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=58X31zZpONeEKwQdcdX8fGmd9oTd9u4c+E9558qGKSU=;
-        b=JlW8X6b2tP9pUaPsTXXX5hdRh+Qn4YzkBdbOVjAsGpiQsBThpDT0M6ux6qPrdVA/Ad
-         /J8fcH+6jYPPuiEXgUCBR+fQHRgkFopX5abwCdFaq9TqcZEZPwTMVzT4Oun5c6AnqqeI
-         GeC1Oj92H9Ae6GHgNGxuf6xgTytKZsaOGwha0fbAVOk/ZGgC6Nn/NOsuG+r8b4yX1voX
-         pwprJ8pXqDxRDtQTgpo8aFIUCHTI06J6OhLyuTmTlmEQzISfHjauvvaP+a0zJoREX5jm
-         ium7SY7q+qMONEkuvC881zsg6MjDU99qD464siHR2Y3sIcBmZf1wfYtqcxIXliD8gVmR
-         MZ4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=58X31zZpONeEKwQdcdX8fGmd9oTd9u4c+E9558qGKSU=;
-        b=Wfo337fyTEbNkQo3kSpu0fTCdyXE8WqgrFN7gGK/ePsukvYirPdMHFJfp8lAxOaOIT
-         ozhi3+Ls7Eoh5WkmCzKF8UdQ2vnkqhhzoZ2wGCtvqopU7QZb1RB8lUPdt6EIslVv1w8Z
-         sLr5epReTKQo44pKeQuaLyB/SA4GYPyNxXCruGYxe8gad12PW32YJsbGwNxuqUFTbO/W
-         0K+QmJXzfnW/ST13eo2xOdrYk/dAszYcOB3gkjCo2WJxI7VAFQvRscNHZAgjnQ8DdxDa
-         RhLG77Kdh2udUEJS63lKa+Ivdliz7IstIlJ9Q28iQpsCCgkB4tNc0TFNCk2goJKIo443
-         MOuw==
-X-Gm-Message-State: AOAM531EyFsKS/5GR/yqW6r/GPm9rcJjTVPpNVeCwNew7/7Gq7edkUY3
-        ecs0g/jml4q1tp9TxInhLU58zg==
-X-Google-Smtp-Source: ABdhPJw3rMz0JuHJtNI5TvKJwMhRsZYFrmay2JwIOybU3txdcxLex/rnUmjfipG0+04WxeZ0WnDGDw==
-X-Received: by 2002:adf:a319:: with SMTP id c25mr3778258wrb.262.1608288342621;
-        Fri, 18 Dec 2020 02:45:42 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9551:6b47:8c25:8c7f? ([2a01:e34:ed2f:f020:9551:6b47:8c25:8c7f])
-        by smtp.googlemail.com with ESMTPSA id h16sm12882095wrq.29.2020.12.18.02.45.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Dec 2020 02:45:41 -0800 (PST)
-Subject: Re: [PATCH v2 3/3] thermal/core: Remove ms based delay fields
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>
-Cc:     "amitk@kernel.org" <amitk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Thara Gopinath <thara.gopinath@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Peter Kaestle <peter@piie.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "open list:ACER ASPIRE ONE TEMPERATURE AND FAN DRIVER" 
-        <platform-driver-x86@vger.kernel.org>,
-        "open list:TI BANDGAP AND THERMAL DRIVER" 
-        <linux-omap@vger.kernel.org>
-References: <20201216220337.839878-1-daniel.lezcano@linaro.org>
- <20201216220337.839878-3-daniel.lezcano@linaro.org>
- <PR3PR10MB414206497B833D717BC627A280C30@PR3PR10MB4142.EURPRD10.PROD.OUTLOOK.COM>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <0f9ef932-b49c-9a1f-71a8-1c9dbf5de520@linaro.org>
-Date:   Fri, 18 Dec 2020 11:45:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 18 Dec 2020 12:54:32 -0500
+Received: from [100.112.132.72] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.us-west-2.aws.symcld.net id 42/98-28581-F8BECDF5; Fri, 18 Dec 2020 17:49:03 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFKsWRWlGSWpSXmKPExsWSLveKTbf/9Z1
+  4gzmTJC32X5ew6FpoYLHw/ilWi6/fbrNbvDk+ncli+b5+RoumziY2i88dk1ksVu95wWyx9ss8
+  Noszpy+xOnB7TJo5g9lj56y77B6/tq1h8di8Qstj3slAj562TUwe7/ddZfPYcrWdxePzJrkAz
+  ijWzLyk/IoE1ozJ97UKnutUXJ2zla2B8aZaFyMXh5DAf0aJy5+uskA4DxklNsxrY+pi5ORgE9
+  CW2LLlF1sXIweHiICMxIe1niBhZoFtTBK9+4JAbGGBRInOG9NYQWwWAVWJC70LwWxeARuJna3
+  72UFsCQF5iae9y5lBbE6gmjNdj1lAbCEBFYn7D5awQdQLSpyc+YQFYr68RPPW2cwQtoTEwRcv
+  mCHmKEgsevafDcJOkFj28g7zBEaBWUjaZyFpn4WkfQEj8ypG86SizPSMktzEzBxdQwMDXUNDI
+  11DYyNdM2O9xCrdJL3SYt3y1OISXSO9xPJiveLK3OScFL281JJNjMAoSylosd/BOOPNB71DjJ
+  IcTEqivFoP7sQL8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuAtfwWUEyxKTU+tSMvMAUY8TFqCg0d
+  JhDfoJVCat7ggMbc4Mx0idYpRUUqcd9NDoIQASCKjNA+uDZZkLjHKSgnzMjIwMAjxFKQW5WaW
+  oMq/YhTnYFQS5g0EGc+TmVcCN/0V0GImoMV8M26DLC5JREhJNTD1FOjo1MjtdHkup2Y9J6yA5
+  5CG3kYrtZtH+g6zFZ/xWxt1wPnpAk/tn+vrhLPn3XjBesda5+UW2S2s/2ILHASTV+4I379ZiK
+  lVeAHvpH9l67VnT/xyxdn94z0PzkvzvAJatrTcKD9Saxv0fOvq4/VOgZtjXiROKGOR3y7Hs27
+  eU1aRqqqsRKeGG0eKdl/tXsbfX/xMzKYtp3rW2RVNc77KbGvNrAuq/qbTckb0jtvmncGhDScj
+  2+ccvadqLr07V2Nr6sx1DS+/hjSed3fjecoVZnql45i09rl1m66dsTxxdkdT6UpNtZP/9r7Ym
+  Ohh5hC+TFr7QfDHKa8vRS15yZYz05nRzYGta9kdhTM/VE8psRRnJBpqMRcVJwIA7u0oQa0DAA
+  A=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-23.tower-355.messagelabs.com!1608313741!2698!1
+X-Originating-IP: [103.30.234.6]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 17089 invoked from network); 18 Dec 2020 17:49:03 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-23.tower-355.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Dec 2020 17:49:03 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id DE37AB9277B14558C298;
+        Sat, 19 Dec 2020 01:48:58 +0800 (CST)
+Received: from localhost.home (10.64.89.183) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Fri, 18 Dec
+ 2020 09:48:53 -0800
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>, <hadess@hadess.net>,
+        <pobrn@protonmail.com>, <mario.limonciello@dell.com>,
+        <eliadevito@gmail.com>, <bberg@redhat.com>, <dvhart@infradead.org>,
+        <njoshi1@lenovo.com>
+Subject: [PATCH v7 1/3] Documentation: Add documentation for new platform_profile sysfs attribute
+Date:   Fri, 18 Dec 2020 12:47:57 -0500
+Message-ID: <20201218174759.667457-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-In-Reply-To: <PR3PR10MB414206497B833D717BC627A280C30@PR3PR10MB4142.EURPRD10.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.64.89.183]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 18/12/2020 11:16, Adam Thomson wrote:
-> On 16 December 2020 22:04, Daniel Lezcano wrote:
-> 
->> The code does no longer use the ms unit based fields to set the
->> delays as they are replaced by the jiffies.
->>
->> Remove them and replace their user to use the jiffies version instead.
->>
->> Cc: Thara Gopinath <thara.gopinath@linaro.org>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> For DA9062: Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+On modern systems the platform performance, temperature, fan and other
+hardware related characteristics are often dynamically configurable. The
+profile is often automatically adjusted to the load by some
+automatic-mechanism (which may very well live outside the kernel).
 
-Thanks !
+These auto platform-adjustment mechanisms often can be configured with
+one of several 'platform-profiles', with either a bias towards low-power
+consumption or towards performance (and higher power consumption and
+thermals).
 
+Introduce a new platform_profile sysfs API which offers a generic API for
+selecting the performance-profile of these automatic-mechanisms.
 
+Co-developed-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+ - updated to rst format
+Changes in v3, v4, v5
+ - version bump along with rest of patch series
+Changes in v6:
+ - Split sysfs-platform_profile.rs into ABI text and then admin guide in
+   userspace-api section. Hope this is correct - I'm guessing a bit.
+Changes in v7:
+ - Correct available_choices to platform_profile_choices
+ - Improve phrasing as recommended by review
+
+ .../ABI/testing/sysfs-platform_profile        | 24 ++++++++++
+ Documentation/userspace-api/index.rst         |  1 +
+ .../userspace-api/sysfs-platform_profile.rst  | 44 +++++++++++++++++++
+ 3 files changed, 69 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
+ create mode 100644 Documentation/userspace-api/sysfs-platform_profile.rst
+
+diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
+new file mode 100644
+index 000000000000..9d6b89b66cca
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform_profile
+@@ -0,0 +1,24 @@
++What:		/sys/firmware/acpi/platform_profile_choices
++Date:		October 2020
++Contact:	Hans de Goede <hdegoede@redhat.com>
++Description:	This file contains a space-separated list of profiles supported for this device.
++
++		Drivers must use the following standard profile-names:
++
++		============	============================================
++		low-power	Low power consumption
++		cool		Cooler operation
++		quiet		Quieter operation
++		balanced	Balance between low power consumption and performance
++		performance	High performance operation
++		============	============================================
++
++		Userspace may expect drivers to offer more than one of these
++		standard profile names.
++
++What:		/sys/firmware/acpi/platform_profile
++Date:		October 2020
++Contact:	Hans de Goede <hdegoede@redhat.com>
++Description:	Reading this file gives the current selected profile for this
++		device. Writing this file with one of the strings from
++		platform_profile_choices changes the profile to the new value.
+diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
+index acd2cc2a538d..d29b020e5622 100644
+--- a/Documentation/userspace-api/index.rst
++++ b/Documentation/userspace-api/index.rst
+@@ -24,6 +24,7 @@ place where this information is gathered.
+    ioctl/index
+    iommu
+    media/index
++   sysfs-platform_profile
+ 
+ .. only::  subproject and html
+ 
+diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
+new file mode 100644
+index 000000000000..046bf2f3ffd0
+--- /dev/null
++++ b/Documentation/userspace-api/sysfs-platform_profile.rst
+@@ -0,0 +1,44 @@
++=====================================================================
++Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)
++=====================================================================
++
++On modern systems the platform performance, temperature, fan and other
++hardware related characteristics are often dynamically configurable. The
++platform configuration is often automatically adjusted to the current
++conditions by some automatic mechanism (which may very well live outside
++the kernel).
++
++These auto platform adjustment mechanisms often can be configured with
++one of several platform profiles, with either a bias towards low power
++operation or towards performance.
++
++The purpose of the platform_profile attribute is to offer a generic sysfs
++API for selecting the platform profile of these automatic mechanisms.
++
++Note that this API is only for selecting the platform profile, it is
++NOT a goal of this API to allow monitoring the resulting performance
++characteristics. Monitoring performance is best done with device/vendor
++specific tools such as e.g. turbostat.
++
++Specifically when selecting a high performance profile the actual achieved
++performance may be limited by various factors such as: the heat generated
++by other components, room temperature, free air flow at the bottom of a
++laptop, etc. It is explicitly NOT a goal of this API to let userspace know
++about any sub-optimal conditions which are impeding reaching the requested
++performance level.
++
++Since numbers on their own cannot represent the multiple variables that a
++profile will adjust (power consumption, heat generation, etc) this API
++uses strings to describe the various profiles. To make sure that userspace
++gets a consistent experience the sysfs-platform_profile ABI document defines
++a fixed set of profile names. Drivers *must* map their internal profile
++representation onto this fixed set.
++
++If there is no good match when mapping then a new profile name may be
++added. Drivers which wish to introduce new profile names must:
++
++ 1. Explain why the existing profile names canot be used.
++ 2. Add the new profile name, along with a clear description of the
++    expected behaviour, to the sysfs-platform_profile ABI documentation.
++
++
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.28.0
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
