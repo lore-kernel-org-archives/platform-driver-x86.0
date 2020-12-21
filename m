@@ -2,71 +2,73 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05939C2BBCD
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Dec 2020 21:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03DFC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Dec 2020 07:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03CC229C4
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Dec 2020 21:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A58422B51
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Dec 2020 07:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgLTVTP (ORCPT
+        id S1725987AbgLUHWN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Dec 2020 16:19:15 -0500
-Received: from mail.ispras.ru ([83.149.199.84]:36432 "EHLO mail.ispras.ru"
+        Mon, 21 Dec 2020 02:22:13 -0500
+Received: from mga01.intel.com ([192.55.52.88]:8563 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbgLTVTP (ORCPT
+        id S1725963AbgLUHWN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Dec 2020 16:19:15 -0500
-X-Greylist: delayed 374 seconds by postgrey-1.27 at vger.kernel.org; Sun, 20 Dec 2020 16:19:14 EST
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-        by mail.ispras.ru (Postfix) with ESMTPS id 9A64540A1DA4;
-        Sun, 20 Dec 2020 21:12:14 +0000 (UTC)
-Date:   Mon, 21 Dec 2020 00:12:14 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     platform-driver-x86@vger.kernel.org
-cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alexander.Deucher@amd.com, linux-kernel@vger.kernel.org
-Subject: amd-pmc s2idle driver issues
-Message-ID: <alpine.LNX.2.20.13.2012202341520.6949@monopod.intra.ispras.ru>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        Mon, 21 Dec 2020 02:22:13 -0500
+IronPort-SDR: b5Ew+Ttdi4fa9zHxJdBkY8JaV12fSlenrEP8KNFpBSroBwafidbke+GQIkMSGznShwIIvw/YIf
+ ZL37enZTAePg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9841"; a="194115520"
+X-IronPort-AV: E=Sophos;i="5.78,436,1599548400"; 
+   d="scan'208";a="194115520"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2020 23:20:25 -0800
+IronPort-SDR: PSS5g5LvPub4FC9vPhFnDXYmSTbZMTcZRiMIUP09/T/1lMCnF6/cKEnFzDG/ZoxrFUjchW+x53
+ aAPMDwGgQj+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.78,436,1599548400"; 
+   d="scan'208";a="372321451"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by orsmga008.jf.intel.com with ESMTP; 20 Dec 2020 23:20:25 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: tools/power/x86/intel-speed-select: Fixes for regression
+Date:   Sun, 20 Dec 2020 23:18:57 -0800
+Message-Id: <20201221071859.2783957-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi folks,
+One side-effect of fixing the scaling frequency limits using the
+commit eacc9c5a927e ("cpufreq: intel_pstate: Fix intel_pstate_get_hwp_max()
+for turbo disabled") causes stale HWP_CAP.GUARANTEED to be used as max.
+Without processing HWP interrupts, user space needs to be able to update
+a new max while Intel SST is in use. This is not a problem as the
+change of guaranteed is caused by user space action, so user space knows
+that guarantee will change.
 
-I've tried the "platform/x86: amd-pmc: Add AMD platform support for S2Idle"
-patch on my Acer Swift SF314-42 laptop (Renoir SoC, Ryzen 4500U CPU) and hit
-the following issues:
-
-1. The driver doesn't bind to any device. It has the following binding table:
-
-+static const struct acpi_device_id amd_pmc_acpi_ids[] = {
-+	{"AMDI0005", 0},
-+	{"AMD0004", 0},
-+	{ }
-+};
-
-This laptop has "AMD0005" instead. Adding it to the list allows the driver to
-successfully probe.
-
-2. The debugfs interface does not seem to be very helpful. It shows
-
-SMU FW Info: ffffffff
-
-It's not very informative. The code seems to be fetching SMU version from mmio,
-so I guess the file should be saying "FW version" rather than "FW Info", and
-then, I think version number is not supposed to be "-1".
+This series causes user space to trigger scaling_max_freq update with
+the new base_frequency.
 
 
-(and I'm afraid I cannot use the driver, as there seems to be an issue with
-GPU resume: sometimes the screen is frozen or black after resume, so I need
-to reboot the laptop :( )
+Srinivas Pandruvada (2):
+  tools/power/x86/intel-speed-select: Set scaling_max_freq to
+    base_frequency
+  tools/power/x86/intel-speed-select: Set higher of cpuinfo_max_freq or
+    base_frequency
 
-Alexander
+ .../x86/intel-speed-select/isst-config.c      | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+-- 
+2.29.2
+
