@@ -2,187 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E7FC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Dec 2020 16:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7C3C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Dec 2020 17:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF4A23103
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Dec 2020 16:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE35823133
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Dec 2020 17:26:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgLVQpv (ORCPT
+        id S1727916AbgLVR0h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Dec 2020 11:45:51 -0500
-Received: from mail-mw2nam12on2058.outbound.protection.outlook.com ([40.107.244.58]:18176
+        Tue, 22 Dec 2020 12:26:37 -0500
+Received: from mail-mw2nam12on2048.outbound.protection.outlook.com ([40.107.244.48]:42241
         "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727201AbgLVQpu (ORCPT
+        id S1727084AbgLVR0g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Dec 2020 11:45:50 -0500
+        Tue, 22 Dec 2020 12:26:36 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VFHKQ+zuIB9UO8LqRN8cdSqpHZ87klET6gcsNywrrfcbHYBD6vnUXsZl9t4rD+IlzY/HK/ZVtTU3cubZ1jGrzKNv1hVCSslOL4BwbL0OjELGO6Z8H0/JY6E+Zhu+rOdaD2qB5ZU6tUdr/QR0TMEgoKfQ0suBcI4izPOnzkfKoXIENzLtI2XmUIwNcKfQjaKUVvWLLN/8GGBoF+R+hk4XxL3srVzb1/mPvhxfUvNmoLUdxBDdkt5AJuh9ZL46TakmI2nqVy5CKy2nkkBfHHHHlQKsVG21zF3G/Zcq67a/Ah2NSwQUJueK7hyTkJMr939scvIm0tENJVhereQrrCQllQ==
+ b=FlEWZBRGI147apzr3cuBsVWG8hMcxR2DhR/QrZM0fVnmUWZpK9SiVYXE2VJ6QKIzOPcojn+vuzbEu92dEUl4ylCYEB2XXdc1m5E94vEzZJX5nHzcHQECe8FW1PEec6UmtlKODDWqHM4Mncc8aWUGtXGeCWcuPjhmpzT+kBcPq61iuKI7hzECj3sFcCMpeRtWxSKh1bwzxrElE+mI0mTWZwyAf5aMKPk8IgefwzA7qRg0Wns71W8FDIjPj+89BZXg4LdOE/5dsC1K0QeuezGHTs0G+a3k1z5PaoqOO1Trcwg8uGoYrIUM2vPMGwH8LVjRr+jOybAXfFtYTGb0h/MNPQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVErv/2WC3keLdSMTu3AJu+WyF2MfteHtPqpl6BJKeY=;
- b=mXTJHiYRe04hPZl2F0dirXRDJXViUgi8iKqP9VoPoX0BuRaHqYz16DiM6iuWdxp73G30OLsj68sVc8KvhNxS3VJL3lJ1NA7YaIG7Nmgus1NRlcTEbZyINk+MRdznUO1OFmniIEDHfoINOLqLc+LjK2P89GwWhrILIbnj6vIbqBiYZDSwUg0AY8lngoOxqW1xQ/fI7yInHFlMaIrJ04uFLi7QENWoS6oLyH5+N8HpOUeb3/nAhJzHULZaNZ4M22fd6M9SOY1TWUZW9FJxbhAfVbNVP4hSq3d6IUeRpbaUtzxmsTiUGxWn7uXyYM8OyeunsUm5GdzwEncTVcJeorJrGA==
+ bh=bOvHUum7DmyyA3BNU9bxostE5sc8tCHSnrZ3QrSr+bg=;
+ b=XCKukb0xe4DmYdqLkdiuPeAwwhBGuSytzwMrzd2cZbjPx6MjoiIMGxsZ0XgMNYnaJkg5klUcFo4eEAlLwrmx9RDXhqwOv7RMzPpQqwlgKuVv5a9Dv90giJTPrpnt1A6VogSyJnHVH/f4Sm8kpAyX5KiEfzputLgX5DwNNHRv0bHsO0szW6FYJugaBa7QR/KS5dz7/9mB4NZ8n63scuTO/TYd+GR47Qa0iiSq7Cqw9hZU+qCXJ3lbHaPC7DiX76bOq7GLEkV9oVNIy0qPAxfSTIMEeURUPZhh6+c8hrd6C/xi/JTH222TufdlY4AgFiy66gcFycmBzb/u6wjVbPKr8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FVErv/2WC3keLdSMTu3AJu+WyF2MfteHtPqpl6BJKeY=;
- b=hl6+KAXx9rPA0EiaTbCmxcI5JoCDOOMhzzpZMjWQhv+IrZI3N+txC0loT36CBcBMNDCnEYnKiM2PGDm5qDDWkQaLChEMdjlgXDEEJ3gfvn9rwBOlBbPuo7veV1Wt9EvqLHn++4bWysZcJuZG11bte+2Wzuin2wzveovUwmVdoZA=
-Received: from MN2PR12MB4488.namprd12.prod.outlook.com (2603:10b6:208:24e::19)
- by MN2PR12MB4453.namprd12.prod.outlook.com (2603:10b6:208:260::9) with
+ bh=bOvHUum7DmyyA3BNU9bxostE5sc8tCHSnrZ3QrSr+bg=;
+ b=n4BEr1sbkowJTv33LCc2Ry7/atcrWgamI5ji9XK2I6giN3YSOF5MBhIiuH2gD5Nkmu3nvXWhB8YkNlABsQbiLzIp8Ewh2a/+aKK5HmCYo2GLeUpBZrC5hq2aipl3CbZJ9KhBc6PqYzj3sp6/adGg/tydtoFQ2pZkjg7HkfdZT4s=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2495.namprd12.prod.outlook.com (2603:10b6:802:32::17)
+ by SN6PR12MB4621.namprd12.prod.outlook.com (2603:10b6:805:e4::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3676.25; Tue, 22 Dec
- 2020 16:44:56 +0000
-Received: from MN2PR12MB4488.namprd12.prod.outlook.com
- ([fe80::fca3:155c:bf43:94af]) by MN2PR12MB4488.namprd12.prod.outlook.com
- ([fe80::fca3:155c:bf43:94af%4]) with mapi id 15.20.3676.033; Tue, 22 Dec 2020
- 16:44:56 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Alexander Monakov <amonakov@ispras.ru>
-CC:     "platform-driver-x86@vger.kernel.org" 
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3700.27; Tue, 22 Dec
+ 2020 17:25:44 +0000
+Received: from SN1PR12MB2495.namprd12.prod.outlook.com
+ ([fe80::c9d:1af9:30b:c4ef]) by SN1PR12MB2495.namprd12.prod.outlook.com
+ ([fe80::c9d:1af9:30b:c4ef%4]) with mapi id 15.20.3676.033; Tue, 22 Dec 2020
+ 17:25:44 +0000
+Subject: Re: amd-pmc s2idle driver issues
+To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Alexander Monakov <amonakov@ispras.ru>
+Cc:     "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
         Hans de Goede <hdegoede@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: amd-pmc s2idle driver issues
-Thread-Topic: amd-pmc s2idle driver issues
-Thread-Index: AQHW1xTQl60Nyywz90OztdBJHGRZvKoDKnNAgAAJj4CAAAlawIAACraAgAAL+yA=
-Date:   Tue, 22 Dec 2020 16:44:56 +0000
-Message-ID: <MN2PR12MB44884E97C8F01FA474C74F72F7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
 References: <alpine.LNX.2.20.13.2012202341520.6949@monopod.intra.ispras.ru>
-  <MN2PR12MB448821DBD2DAA296FAE29A7AF7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <MN2PR12MB448821DBD2DAA296FAE29A7AF7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
  <alpine.LNX.2.20.13.2012221720290.10565@monopod.intra.ispras.ru>
-  <MN2PR12MB4488CC1657EAEAB16886A200F7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+ <MN2PR12MB4488CC1657EAEAB16886A200F7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
  <alpine.LNX.2.20.13.2012221834180.10565@monopod.intra.ispras.ru>
-In-Reply-To: <alpine.LNX.2.20.13.2012221834180.10565@monopod.intra.ispras.ru>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Enabled=true;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SetDate=2020-12-22T16:44:50Z;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Method=Privileged;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Name=Public_0;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ActionId=6286432e-22e3-4fd2-9852-00005b747b7f;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ContentBits=1
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_enabled: true
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_setdate: 2020-12-22T16:44:46Z
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_method: Standard
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_name: Internal Use Only -
- Unrestricted
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_actionid: b22546ca-c625-4254-9fff-0000767c5ed6
-msip_label_76546daa-41b6-470c-bb85-f6f40f044d7f_contentbits: 0
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_enabled: true
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_setdate: 2020-12-22T16:44:52Z
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_method: Privileged
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_name: Public_0
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_actionid: f2d62204-4e31-4104-9b77-0000fa18d80d
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_contentbits: 0
-dlp-product: dlpe-windows
-dlp-version: 11.5.0.60
-dlp-reaction: no-action
-authentication-results: ispras.ru; dkim=none (message not signed)
- header.d=none;ispras.ru; dmarc=none action=none header.from=amd.com;
-x-originating-ip: [192.161.78.241]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 27cabe7a-6791-4534-2155-08d8a698e9ef
-x-ms-traffictypediagnostic: MN2PR12MB4453:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB44538D1D9F34490FC1F92389F7DF0@MN2PR12MB4453.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uhvFueeKY3J0KSD3U9Wr5kcjfmfspwGSTG86aFfwCSqKbOL0QrbDthzLQ36pEZekwWH2B9kvOvnXew5cjFUMHbxxN8zeOh0efn7iFpgTbLLtvBEBV8sfXofBagS361g7BOQmpLcN4K8CJ8BP0/Pbk0uCroJ3T0Jtqtl5VUsRqBa09p3YYW9WQWUK/YkxB1QokUntL9ID75rzgkG3XsmMJyfZzQf+kgHedsxcgidGuzQcvKxgQqV/bNYM+z3gLZcStfd+0o80ayFUnzRY41qmhKijENjZsVKYHqJkznTNVnwwXzuzR/gZXVOlNUpLmIDYkMs7pzIfZ1tyOw4r4lYqs1u1B4sR7VywDl/Op7vrsbXvGrE03VdXWYAjSenZztTH1qbXw8vrE2oVX4LImdHn5Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4488.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(5660300002)(26005)(33656002)(8936002)(71200400001)(66946007)(478600001)(186003)(52536014)(86362001)(6506007)(316002)(54906003)(4326008)(76116006)(64756008)(6916009)(53546011)(83380400001)(8676002)(7696005)(66446008)(55016002)(2906002)(9686003)(66476007)(66556008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?1tY6zcRbYB6xXo+jSzjupbgRWD+7Pxz97M6xX1GFowzc8H3Y0M8VdGu+Wx+p?=
- =?us-ascii?Q?SMemaFAS2BguWdn/RhKFXOZx1U1EqRTjgsGhFVIYfb2icxWTxFi7zgkN+lbH?=
- =?us-ascii?Q?fiR1EQBsOFbObtA05fqubNersshHmpot9Oyi435u1cSgFlO1cBnC+yBKu9yT?=
- =?us-ascii?Q?E2EmhYcBEULk9ry+cUteVJepc6Sf0Id86MUEu4y6v7qFDw6NgoxA3iiXZ6V8?=
- =?us-ascii?Q?UUh+vZklhyQa+koMYYL9+K65leNXygknoy7ZKmj4ABR3glGwki3yXDAjExDZ?=
- =?us-ascii?Q?rVpffbU0DyDVxniQIl5AHSdwn4gFTNHJLQNBxNMp4RghPVXj99l9ThwsJ/Iz?=
- =?us-ascii?Q?wd5Mkz4w6UJSfF8LMftT2VtQLWogFA9531tpIk5r4liWayI34F6SwZtBP5Lh?=
- =?us-ascii?Q?l8p4r9daG3a2sPFRfY2Qqp/ANUB1obHGVcdkXWhkUtZ8N2QImd4ApNd8NjWk?=
- =?us-ascii?Q?OCJk1v1ADGkTDytpXOw8saSvWBj3G4W3sqpcPnUoT4xXv3GITMqCjR/t3w5G?=
- =?us-ascii?Q?9zUsS7q89YI+kZwsPeu66VJb7edr8FhmQv8ungQW6hRuzJRxUBzVKJ9zOJop?=
- =?us-ascii?Q?YPM9UFivSvSkK/UEI0Hou8T0KtJmftZYxauaOc8J/bz93mJD0B87yRN7SfAd?=
- =?us-ascii?Q?scAoTCPjI22S53fRr6kTSGdrsrfGYGkoq4sABdSsaGqq11a34apT7UBiwL6K?=
- =?us-ascii?Q?OrkCTnyDNIYMMG7F9FLzzpETCvNpe7bpwVdkgJwqY+GpKsByfxYMf7dsYXCB?=
- =?us-ascii?Q?LmEimdHIF0wXwPZdnWwhD3XhIyb1Tuf2zw3hymDDejkqp7dEYwbi8UqzOffl?=
- =?us-ascii?Q?IVCMh8Lt2ZKr7h/CcDROjrhQUipefkB0GEbyDO0LKjMdj5gEEBjb18VsUlAE?=
- =?us-ascii?Q?W+q4a7e5quYu0eg9dQXpyDkyecVaJxikFQsfm9k/E3RiFIDtiq1Zf4T60KIO?=
- =?us-ascii?Q?LuTtJKAJ66g32RIYeSYN6xQ5UThErzBNnwGHhN3tDwY=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ <MN2PR12MB44884E97C8F01FA474C74F72F7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Message-ID: <470204a1-fe54-c4d8-5352-059334a65c1d@amd.com>
+Date:   Tue, 22 Dec 2020 22:55:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
+In-Reply-To: <MN2PR12MB44884E97C8F01FA474C74F72F7DF0@MN2PR12MB4488.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [165.204.159.242]
+X-ClientProxiedBy: PN2PR01CA0130.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::15) To SN1PR12MB2495.namprd12.prod.outlook.com
+ (2603:10b6:802:32::17)
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.252.89.180] (165.204.159.242) by PN2PR01CA0130.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:6::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3700.27 via Frontend Transport; Tue, 22 Dec 2020 17:25:41 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e0d9e1c6-a6a2-48e0-3138-08d8a69e9ce9
+X-MS-TrafficTypeDiagnostic: SN6PR12MB4621:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB46210A5497EB568FE3853CA99ADF0@SN6PR12MB4621.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: h9K7Fz1JKGfl/YFL4/yMYaugPijmSS4hfIyKRtc+/NUbzUi88O1lky9Kkz7W4BbH4IVWqwtkSKssDva+qVGH5/E4lMKWY9fx4rgbcsBktazasdXRuNgYrARyYVDYpr8FJh/0H6b+FHLubgbM3XA7+he36sN1mqjXF0Eqv8eWVNa3iBcylTaM59a+5gbIExRAN43nZfhXTBGFsOkJQSTuzvOSP38fbB9UaaXAOLgvsqw39nsg3yqbcCDVjIFGK+Ni17mJ2w3lw+WM6v//LcNvr2Vn6gxoYl20Yf13Sm4/uck4a0LojxgDXerWZPpAYISbwXPACjjvLufssqyeaP6RLKOGt2todGS1k41JewLNCsKV9vTyAh3dRjvgzEDJ7PvHOoEh3mVebgXn86Odskrdn814kQ2+SSdNK4z0eQLs996nKXKDbHjjTB/JiQzx9m+uolYNdnWUus9NiQ3Cl0np7ye/aYZLV9fDU1qdWv4WOF3CYhIRHKFKCCgrARBMvVymjA1zigDlYOlsuRkNPgCOJVC9CqVNfA/4Fi+OsLl9EFiyRl2jCM6o4vrysiMGHIu7
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2495.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(53546011)(86362001)(83380400001)(66556008)(66476007)(66946007)(31696002)(4326008)(8936002)(316002)(16576012)(36756003)(110136005)(54906003)(31686004)(2906002)(52116002)(478600001)(26005)(6486002)(5660300002)(6666004)(966005)(16526019)(186003)(8676002)(2616005)(956004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?c2NROFNMN0ZkSWtzVTRFTGEyQnA2NlpzSGNJTWtXMEoxRk02RmVLbW9vNXhW?=
+ =?utf-8?B?UmdJMUM5ZTcxVVdWYTJvTEFRSE90SGdUV3NLN0c4VjZBaGZBenRURVdyU3RW?=
+ =?utf-8?B?Wk9QV2RhWWd5alkwN0ZjZ2o4OEQwbGRmVzV5Vytxc1RHZlNFNzRtc25pNWp4?=
+ =?utf-8?B?WW8wYUVXMjdaVlEwb054dCtiaTZ1S0QrMzZTaGswUi9aejJMU25rRE9MNjl4?=
+ =?utf-8?B?UEJzYjBXMGdydnJzdEtWYTk1eS9sUHY0b2lTK2c0RUlxajIzU1RTRXM3QXBv?=
+ =?utf-8?B?ZzJaUklMNkRLcWRxMWRhQ2pYd2FnaEpuR2VIWGIvZTNlWmZxa0pOQmFPT3BB?=
+ =?utf-8?B?QzRSeCtocldUK0tXYTArcXFVVGg2Z1FOb2xBbml4aTg4R21Gam1SYUtmdmIx?=
+ =?utf-8?B?YkVlazJ6SHFhclhXcmttWFFNVGZlUWdYWjRQQ0Q2aHFXelRNYWIrU0RLVXh3?=
+ =?utf-8?B?aFp0OTZaK041RWVjWWh4Q2pJZW1WVVhtdzhRZXI3WnpkMGRJVGZISDRJQlpW?=
+ =?utf-8?B?b3dzNzZ1dmp1RWYzSzdhY1puUi9rdEswT01GaHp5b1k4MnpDaXhYSjVOMGVQ?=
+ =?utf-8?B?Z3ZCUStTUlJnZ3FBSkp4UmczYnIzOEpUdXJRS2QzVjRUZFVTR2dacTVTSUZM?=
+ =?utf-8?B?VDhWajJoYndTY053TXRQOElFZHBEZU1yYTU2M2cySmR2WjFPS3p1YnZIcHhT?=
+ =?utf-8?B?TnpuODByUHJ4WE9hbGM4S2tDTkZ2NUFyam5od0tkSGxkZzFLcHZNT2xvakN0?=
+ =?utf-8?B?T2Q1TVNFcE5ld2hub2Z6U2krYjlpWkx3UVMrcVRqQXdNK3F2ZUdhaEpVYUtk?=
+ =?utf-8?B?YXlZWkd2OTB0dTVwV0xJMW94N2ZGckFIeXA4a3VieUhueHRVZ2lhUkNsV0NM?=
+ =?utf-8?B?anFtRkwxYmE0N3YzU3BvN1ZiYmZaNXBSTDRMaGtRYnFORFhRUDRHdW96dlNW?=
+ =?utf-8?B?UDNCQ2htZmhsM09VWSt6V3JjQ0dlNStaNk9tWnh2N2ZWelFPNGgveWhqeG5m?=
+ =?utf-8?B?R240bXNzeXgrY2ZSUHVNaVFmejVwSk5aZDNTSGlBcDVQSWNiMHFaV1NqblJP?=
+ =?utf-8?B?ZlZmaHkwSFcvZnBONzRESFZVeHVGZ2lRclBVd0JIcERWb0Z6RFJpQkwyTCtt?=
+ =?utf-8?B?b0QwLzBVbUJtY0t5WUVDZmIvN1JLYnNFMWE4VVFGUFV1Q2wvK1pCL2svMHpT?=
+ =?utf-8?B?Um9RVkhBYm1pajJZMlUxdjJWd21oRERBM2ZWMDM0YkRSZFJpZ2NFbW1KYTlz?=
+ =?utf-8?B?QjFxdngrMFZvYWdVZEZtOGpRV2VWZXd2NWVTM0tHWVNkdTFtSWlJVTVCSkdh?=
+ =?utf-8?Q?5XyY3z1YskzT3YNuMIUgoQRphb4QzvjBaV?=
 X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2495.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4488.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27cabe7a-6791-4534-2155-08d8a698e9ef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Dec 2020 16:44:56.2250
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Dec 2020 17:25:43.9867
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LulMEVSyA/Za21UdeFe9ZQGL2MoLsIBB9sHW4AqSy/Kk4HfPRmW3DvU8A/SlDJq6HnyaK/skxjQ5BPYlZtR1hw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4453
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Network-Message-Id: e0d9e1c6-a6a2-48e0-3138-08d8a69e9ce9
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TDuhw9eTaaZDm9Kt3JccG/Fg4UvMGeML3StO1Pb2TmbFaJlBp7eTHfpVrubpzCVoS37U0EEou3qudIMryjjm2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4621
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-[AMD Public Use]
 
-> -----Original Message-----
-> From: Alexander Monakov <amonakov@ispras.ru>
-> Sent: Tuesday, December 22, 2020 10:57 AM
-> To: Deucher, Alexander <Alexander.Deucher@amd.com>
-> Cc: platform-driver-x86@vger.kernel.org; S-k, Shyam-sundar <Shyam-
-> sundar.S-k@amd.com>; Hans de Goede <hdegoede@redhat.com>; linux-
-> kernel@vger.kernel.org
-> Subject: RE: amd-pmc s2idle driver issues
->=20
-> On Tue, 22 Dec 2020, Deucher, Alexander wrote:
->=20
-> > > Yes. Out-of-the-box it's a "modern standby" laptop. There's a "hidden=
-"
-> > > bios menu with extra settings that apparently allows to select legacy=
- S3.
-> > > I did not change it, so I'm testing the "modern" mode.
-> > >
-> > > Note that this driver fetches SMU version from MMIO, which looks odd
-> > > to
-> > > me:
-> > > elsewhere (i.e. in the amdgpu driver) SMU version is retrieved by
-> > > issuing the corresponding SMU command, as far as I can tell.
-> >
-> > There are multiple interfaces to the SMU. It's shared by the entire
-> > SoC on APUs.
->=20
-> Just pointing that out because evidently this interface does not work on =
-this
-> laptop, producing all-ones instead of something resembling a version
-> number.
->=20
-> Which APU generations does this driver support? If it does not support
-> Renoir
-> (yet?) it should be documented in the Kconfig text. Is Renoir support rel=
-ated
-> to missing AMD0005 ACPI id binding, and borked version number info?
 
-The current code supports both Raven/Picasso and Renoir parts. At least som=
-e Renoir parts are supported as that is what we are mainly testing now.  I'=
-m not sure why some boards have AMDI0005 vs AMD0005. We'll have to check wi=
-th the sbios or windows teams.
+On 12/22/2020 10:14 PM, Deucher, Alexander wrote:
+> [AMD Public Use]
+> 
+>> -----Original Message-----
+>> From: Alexander Monakov <amonakov@ispras.ru>
+>> Sent: Tuesday, December 22, 2020 10:57 AM
+>> To: Deucher, Alexander <Alexander.Deucher@amd.com>
+>> Cc: platform-driver-x86@vger.kernel.org; S-k, Shyam-sundar <Shyam-
+>> sundar.S-k@amd.com>; Hans de Goede <hdegoede@redhat.com>; linux-
+>> kernel@vger.kernel.org
+>> Subject: RE: amd-pmc s2idle driver issues
+>>
+>> On Tue, 22 Dec 2020, Deucher, Alexander wrote:
+>>
+>>>> Yes. Out-of-the-box it's a "modern standby" laptop. There's a "hidden"
+>>>> bios menu with extra settings that apparently allows to select legacy S3.
+>>>> I did not change it, so I'm testing the "modern" mode.
+>>>>
+>>>> Note that this driver fetches SMU version from MMIO, which looks odd
+>>>> to
+>>>> me:
+>>>> elsewhere (i.e. in the amdgpu driver) SMU version is retrieved by
+>>>> issuing the corresponding SMU command, as far as I can tell.
+>>>
+>>> There are multiple interfaces to the SMU. It's shared by the entire
+>>> SoC on APUs.
+>>
+>> Just pointing that out because evidently this interface does not work on this
+>> laptop, producing all-ones instead of something resembling a version
+>> number.
+>>
+>> Which APU generations does this driver support? If it does not support
+>> Renoir
+>> (yet?) it should be documented in the Kconfig text. Is Renoir support related
+>> to missing AMD0005 ACPI id binding, and borked version number info?
+> 
+> The current code supports both Raven/Picasso and Renoir parts. At least some Renoir parts are supported as that is what we are mainly testing now.  I'm not sure why some boards have AMDI0005 vs AMD0005. We'll have to check with the sbios or windows teams.
+> 
 
-Alex
+I think newer sbios'es have the AMDI0005 for Renior also. So, I am guessing you might be running an older BIOS. This driver is supposed to work for all generations of RYZEN starting from Picasso (provided you the right bios which supports modern standby).
+
+You can keep an eye if some of the devices are not entering the lowest device state if your kernel is built with this patch: 
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=146f1ed852a87b802ed6e71c31e189c64871383c
+
+Also, on my reference platform I see the debugfs giving some valid information. Since you have a sbios with AMD0005, I cannot comment much on it.
+
+Thanks,
+Shyam
