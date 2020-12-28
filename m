@@ -5,71 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A0C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Dec 2020 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6510C4332D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Dec 2020 16:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12187224D2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Dec 2020 16:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8FE20867
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Dec 2020 16:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390275AbgL1NaK (ORCPT
+        id S1730202AbgL1QZp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Dec 2020 08:30:10 -0500
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:31734 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390259AbgL1NaI (ORCPT
+        Mon, 28 Dec 2020 11:25:45 -0500
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:64036 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731077AbgL1NJN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Dec 2020 08:30:08 -0500
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BSDRgMr001937;
-        Mon, 28 Dec 2020 08:29:23 -0500
+        Mon, 28 Dec 2020 08:09:13 -0500
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BSD7lsY011964;
+        Mon, 28 Dec 2020 08:08:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
  subject : date : message-id : mime-version : content-type :
  content-transfer-encoding; s=smtpout1;
  bh=1Bgjw5mhw4Cvt9LbQ9JHFyc4QEkHWm7M4W4hBC6voP0=;
- b=bmGUoFvwQzqdcYV6jJ43effIkBk4jSvzPbNn3vNpyX71urFYXV6OASSOC5/DckbrKcgf
- to2EInYsVz1O/I+mOVXrf/fQD2PlGWLOalqFkIo8fFwU+l7i3KlaEdfF10KCuYmAhLnK
- xL0gjAdPJX6qSMs7n1YuHqwAzUi6AbNmC+IkKCZAGLMRnIikZHFvgiLVd0n7osc4d1NJ
- NFj6zVHMEHfSgS9qkvhfvHMV8kUSWyYbGz9ogVWSVRNxjc++x20//gcy0vnLxLiFY361
- Ap1NSKQtcIUWcGIaw9ZWC2DVoGDz+ieenB/oILJr8ZE47Gkzo09hNDW+Kn1GA0KWBTim yg== 
+ b=VVuMN4gFB9HxuN4QIu8YU31eypGbGH/CFAvKLjoo2rLEYC+ihwOYCwVuH2KjyogEMc+b
+ 9cHpjoE/LNbFcdaXZUxxyBvtc9pff2Q6c7Vk9sV5C1pQneMAGUoz5RcEt5oqr3I6BJIO
+ hOmLbt4ta3o4XvabgSmaXBbnizcJmt3EoX4KhmKNd+dCqR3UY8LiIeaUxk3kCgQtwlqd
+ Kepq5pmqijOeR7zD0uW8Mt+vYn5Wtt+BSFZXgwRDybNu6ui8L8cpBG43eloLSTB8yFau
+ ybcuxp8PQwAGj3Hb64yVxmj0SWndgz+0uNHnqiy/ZoJIkyc7JsCEUu2vKszkNdBx2AW1 DQ== 
 Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 35p1w3cbmk-1
+        by mx0a-00154904.pphosted.com with ESMTP id 35p1cpcbkf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Dec 2020 08:29:22 -0500
-Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BSDJwe1117031;
-        Mon, 28 Dec 2020 08:29:22 -0500
-Received: from ausc60pc101.us.dell.com ([143.166.85.206])
-        by mx0b-00154901.pphosted.com with ESMTP id 35pkbjmu3r-1
+        Mon, 28 Dec 2020 08:08:30 -0500
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 0BSD4RPV006058;
+        Mon, 28 Dec 2020 08:08:30 -0500
+Received: from ausc60ps301.us.dell.com ([143.166.148.206])
+        by mx0a-00154901.pphosted.com with ESMTP id 35pk274gx6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Dec 2020 08:29:21 -0500
+        Mon, 28 Dec 2020 08:08:29 -0500
 X-LoopCount0: from 10.69.132.19
 X-PREM-Routing: D-Outbound
 X-IronPort-AV: E=Sophos;i="5.78,455,1599541200"; 
-   d="scan'208";a="1648071367"
+   d="scan'208";a="1518355409"
 From:   Perry Yuan <Perry.Yuan@dell.com>
 To:     hdegoede@redhat.com, mgross@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Perry.Yuan@dell.com, Limonciello Mario <Mario.Limonciello@dell.com>
 Subject: [PATCH v2 1/2] platform/x86: dell-privacy: Add support for Dell hardware privacy
-Date:   Mon, 28 Dec 2020 21:28:55 +0800
-Message-Id: <20201228132855.17544-1-Perry_Yuan@Dell.com>
+Date:   Mon, 28 Dec 2020 21:08:10 +0800
+Message-Id: <20201228130813.13468-1-Perry_Yuan@Dell.com>
 X-Mailer: git-send-email 2.19.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-28_11:2020-12-28,2020-12-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- bulkscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- lowpriorityscore=0 mlxscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012280083
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ definitions=2020-12-28_11:2020-12-24,2020-12-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 clxscore=1011 priorityscore=1501 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012280084
+ definitions=main-2012280081
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012280081
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
