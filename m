@@ -4,207 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EFC5C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Dec 2020 00:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952E5C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Dec 2020 02:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C657207CF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Dec 2020 00:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8F2207CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Dec 2020 02:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgL3AYW (ORCPT
+        id S1726209AbgL3CxT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 29 Dec 2020 19:24:22 -0500
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:58792 "EHLO
+        Tue, 29 Dec 2020 21:53:19 -0500
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:42883 "EHLO
         mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726156AbgL3AYW (ORCPT
+        by vger.kernel.org with ESMTP id S1726190AbgL3CxT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 29 Dec 2020 19:24:22 -0500
-Received: from [100.112.7.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-c.us-east-1.aws.symcld.net id EA/01-56876-D67CBEF5; Wed, 30 Dec 2020 00:18:53 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOIsWRWlGSWpSXmKPExsWS8eIhr27u8df
-  xBmcOali8OT6dyWL5vn5Gi88dk1ksVu95wWxx5vQlVgdWj3knAz3e77vK5rHlajuLx+dNcgEs
-  UayZeUn5FQmsGU9W7GYpWKpbsfflD/YGxh71LkYuDiGB/4wSzXN7WSGch0DOkRmMXYycHGwC2
-  hJbtvxi62Lk4BARkJH4sNYTpIZZoI9RYtbf/ewgNcICiRINb9cxg9gsAqoSXZeng9m8AlYSk5
-  /OBauREJCXeNq7HCzOCVRzpusxC4gtJKAicf/BEjaIekGJkzOfgMWZgeqbt85mhrAlJA6+eME
-  MMUdB4lPrZDYIO0Fi2cs7zBMYBWYhaZ+FpH0WkvYFjMyrGM2SijLTM0pyEzNzdA0NDHQNDY10
-  zYAsE73EKt1kvdJi3dTE4hJdQ73E8mK94src5JwUvbzUkk2MwPBPKWDL2MHY/uaD3iFGSQ4mJ
-  VFeyQWv44X4kvJTKjMSizPii0pzUosPMcpwcChJ8PIdBcoJFqWmp1akZeYAYxEmLcHBoyTCWw
-  eS5i0uSMwtzkyHSJ1iVJQS530AkhAASWSU5sG1weL/EqOslDAvIwMDgxBPQWpRbmYJqvwrRnE
-  ORiVh3mSQKTyZeSVw018BLWYCWsyYA7a4JBEhJdXAZBtc/URQK6wy4uLzaLkEVV9Z9X6VheU3
-  PD4/VbV2kS6+tTN6PrPq3RtOJs822x4rXtb0QLvlqebl2Ovbme6pTpt8f0O+ccif015HUh8cn
-  7Fv7rdb3QfFr/2fcb2d5Z/l44CVBlxX5+TUOLXGyi7TfmTR1rTd79meFfGtO44cnCjo7rLm39
-  F+9qb16poLbczTbrBnzNzstZFdc17kbqUfv115H+qGsPStLXexfb6Zd8Y2vae/f2zKzWM1mvi
-  S0+PROo0qu/QFxfq//0d41lvO75x/2HxttHDdrs0/xDYvKmy/eTu/00n/y6nHn3VWVBQvYeYW
-  TV9uu7Cu62tX9RUGIYMpnPO2/+J0LdXZFiP0X4mlOCPRUIu5qDgRAGcxirN6AwAA
+        Tue, 29 Dec 2020 21:53:19 -0500
+Received: from [100.112.5.40] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-c.us-east-1.aws.symcld.net id 2A/5F-56876-85AEBEF5; Wed, 30 Dec 2020 02:47:52 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRWlGSWpSXmKPExsWSLveKTTf81et
+  4g6fTjC3eHJ/OZPG5YzKLxeo9L5gdmD3mnQz0eL/vKpvH501yAcxRrJl5SfkVCawZTx9tYinY
+  xllx69dD9gbGRo4uRi4OIYH/jBJHPjcxQTivgZzJ84AcTg42AW2JLVt+sXUxcnCICMhIfFjrC
+  RJmFoiWaH57hRXEFhbwl/j4+RYbiM0ioCrx6PQpRhCbV8BKYsLWx2BjJATkJZ72LmcGsTmBas
+  50PWYBsYUEVCTuP1jCBlEvKHFy5hMWiPnyEs1bZzND2BISB1+8YIab8/QC1MwEiWUv7zBPYBS
+  YhaR9FpL2WUjaFzAyr2I0TSrKTM8oyU3MzNE1NDDQNTQ00jXRNTbRS6zSTdYrLdZNTSwu0TXU
+  Sywv1iuuzE3OSdHLSy3ZxAgM7pQCFqUdjM1vPugdYpTkYFIS5T1//nW8EF9SfkplRmJxRnxRa
+  U5q8SFGGQ4OJQlewZdAOcGi1PTUirTMHGCkwaQlOHiURHj7QdK8xQWJucWZ6RCpU4yKUuK8y1
+  4AJQRAEhmleXBtsOi+xCgrJczLyMDAIMRTkFqUm1mCKv+KUZyDUUmYNxlkPE9mXgnc9FdAi5m
+  AFjPmgC0uSURISTUw8VcL8MTcvlFlP3mi3wKVqIxAzdVvKjt836ZcUZoS7NnzpWv3oTuJFov2
+  BXYtO/97YcOecB0z++JHzRsq+Pk+ilz2dizIMm1M/vd00er17906VoYtaFwWt1knmPNW+CnHk
+  mtvX1msyMv6xP30jtXNvWe+cklfC91nn/NV5fanjTdmb5e4dOGP2p2EoLMF3ZLhz8ykMxXkVF
+  xj1sy3eP4punrH5YzdpuxvDlRNPWO1b5nfdA4p5keMkw/VzmXekpxZlebxVlBx60Xmf5eveSd
+  GLQ5trHG/3mt+h8u8S6Dtsc1vse9xp9OLOg/Yn73k33Wm0Wyz5U+lqQ/WSb6w9bcqdH8l2/RL
+  ySJIk9HpfvIUJZbijERDLeai4kQAOsPLi2kDAAA=
 X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-24.tower-415.messagelabs.com!1609287533!657538!1
-X-Originating-IP: [104.232.225.13]
+X-Msg-Ref: server-18.tower-416.messagelabs.com!1609296469!735642!1
+X-Originating-IP: [103.30.234.6]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.60.3; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 11716 invoked from network); 30 Dec 2020 00:18:53 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-24.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 30 Dec 2020 00:18:53 -0000
+Received: (qmail 23723 invoked from network); 30 Dec 2020 02:47:51 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-18.tower-416.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 30 Dec 2020 02:47:51 -0000
 Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 71729F22B6B38509BA9C;
-        Tue, 29 Dec 2020 19:18:53 -0500 (EST)
-Received: from localhost.home (10.64.93.153) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Tue, 29 Dec
- 2020 16:18:51 -0800
+        by Forcepoint Email with ESMTPS id A9C7768F0218EF3AA706;
+        Wed, 30 Dec 2020 10:47:48 +0800 (CST)
+Received: from localhost.localdomain.com (10.64.81.85) by
+ reswpmail04.lenovo.com (10.62.32.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2044.4; Tue, 29 Dec 2020 18:47:45 -0800
 From:   Mark Pearson <markpearson@lenovo.com>
 To:     <markpearson@lenovo.com>
 CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
         <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v8 1/3] Documentation: Add documentation for new platform_profile sysfs attribute
-Date:   Tue, 29 Dec 2020 19:18:25 -0500
-Message-ID: <20201230001827.3745-1-markpearson@lenovo.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: correct palmsensor error checking
+Date:   Tue, 29 Dec 2020 21:47:26 -0500
+Message-ID: <20201230024726.7861-1-markpearson@lenovo.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <markpearson@lenovo.com>
 References: <markpearson@lenovo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.93.153]
+X-Originating-IP: [10.64.81.85]
 X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
  reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On modern systems the platform performance, temperature, fan and other
-hardware related characteristics are often dynamically configurable. The
-profile is often automatically adjusted to the load by some
-automatic-mechanism (which may very well live outside the kernel).
+The previous commit adding functionality for the palm sensor had a
+mistake which meant the error conditions on initialisation was not checked
+correctly. On some older platforms this meant that if the sensor wasn't
+available an error would be returned and the driver would fail to load.
 
-These auto platform-adjustment mechanisms often can be configured with
-one of several 'platform-profiles', with either a bias towards low-power
-consumption or towards performance (and higher power consumption and
-thermals).
+This commit corrects the error condition. Many thanks to Mario Oenning
+for reporting and determining the issue
 
-Introduce a new platform_profile sysfs API which offers a generic API for
-selecting the performance-profile of these automatic-mechanisms.
-
-Co-developed-by: Mark Pearson <markpearson@lenovo.com>
 Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Changes in v2:
- - updated to rst format
-Changes in v3, v4, v5
- - version bump along with rest of patch series
-Changes in v6:
- - Split sysfs-platform_profile.rs into ABI text and then admin guide in
-   userspace-api section. Hope this is correct - I'm guessing a bit.
-Changes in v7:
- - Correct available_choices to platform_profile_choices
- - Improve phrasing as recommended by review
-Changes in v8:
- - Removed unnecessary empty lines at end of file
+ drivers/platform/x86/thinkpad_acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- .../ABI/testing/sysfs-platform_profile        | 24 +++++++++++
- Documentation/userspace-api/index.rst         |  1 +
- .../userspace-api/sysfs-platform_profile.rst  | 42 +++++++++++++++++++
- 3 files changed, 67 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform_profile
- create mode 100644 Documentation/userspace-api/sysfs-platform_profile.rst
-
-diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
-new file mode 100644
-index 000000000000..9d6b89b66cca
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform_profile
-@@ -0,0 +1,24 @@
-+What:		/sys/firmware/acpi/platform_profile_choices
-+Date:		October 2020
-+Contact:	Hans de Goede <hdegoede@redhat.com>
-+Description:	This file contains a space-separated list of profiles supported for this device.
-+
-+		Drivers must use the following standard profile-names:
-+
-+		============	============================================
-+		low-power	Low power consumption
-+		cool		Cooler operation
-+		quiet		Quieter operation
-+		balanced	Balance between low power consumption and performance
-+		performance	High performance operation
-+		============	============================================
-+
-+		Userspace may expect drivers to offer more than one of these
-+		standard profile names.
-+
-+What:		/sys/firmware/acpi/platform_profile
-+Date:		October 2020
-+Contact:	Hans de Goede <hdegoede@redhat.com>
-+Description:	Reading this file gives the current selected profile for this
-+		device. Writing this file with one of the strings from
-+		platform_profile_choices changes the profile to the new value.
-diff --git a/Documentation/userspace-api/index.rst b/Documentation/userspace-api/index.rst
-index acd2cc2a538d..d29b020e5622 100644
---- a/Documentation/userspace-api/index.rst
-+++ b/Documentation/userspace-api/index.rst
-@@ -24,6 +24,7 @@ place where this information is gathered.
-    ioctl/index
-    iommu
-    media/index
-+   sysfs-platform_profile
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e03df2881dc6..c102657b3eb3 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9951,9 +9951,9 @@ static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
+ 	if ((palm_err == -ENODEV) && (lap_err == -ENODEV))
+ 		return 0;
+ 	/* Otherwise, if there was an error return it */
+-	if (palm_err && (palm_err != ENODEV))
++	if (palm_err && (palm_err != -ENODEV))
+ 		return palm_err;
+-	if (lap_err && (lap_err != ENODEV))
++	if (lap_err && (lap_err != -ENODEV))
+ 		return lap_err;
  
- .. only::  subproject and html
- 
-diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst b/Documentation/userspace-api/sysfs-platform_profile.rst
-new file mode 100644
-index 000000000000..c33a71263d9e
---- /dev/null
-+++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-@@ -0,0 +1,42 @@
-+=====================================================================
-+Platform Profile Selection (e.g. /sys/firmware/acpi/platform_profile)
-+=====================================================================
-+
-+On modern systems the platform performance, temperature, fan and other
-+hardware related characteristics are often dynamically configurable. The
-+platform configuration is often automatically adjusted to the current
-+conditions by some automatic mechanism (which may very well live outside
-+the kernel).
-+
-+These auto platform adjustment mechanisms often can be configured with
-+one of several platform profiles, with either a bias towards low power
-+operation or towards performance.
-+
-+The purpose of the platform_profile attribute is to offer a generic sysfs
-+API for selecting the platform profile of these automatic mechanisms.
-+
-+Note that this API is only for selecting the platform profile, it is
-+NOT a goal of this API to allow monitoring the resulting performance
-+characteristics. Monitoring performance is best done with device/vendor
-+specific tools such as e.g. turbostat.
-+
-+Specifically when selecting a high performance profile the actual achieved
-+performance may be limited by various factors such as: the heat generated
-+by other components, room temperature, free air flow at the bottom of a
-+laptop, etc. It is explicitly NOT a goal of this API to let userspace know
-+about any sub-optimal conditions which are impeding reaching the requested
-+performance level.
-+
-+Since numbers on their own cannot represent the multiple variables that a
-+profile will adjust (power consumption, heat generation, etc) this API
-+uses strings to describe the various profiles. To make sure that userspace
-+gets a consistent experience the sysfs-platform_profile ABI document defines
-+a fixed set of profile names. Drivers *must* map their internal profile
-+representation onto this fixed set.
-+
-+If there is no good match when mapping then a new profile name may be
-+added. Drivers which wish to introduce new profile names must:
-+
-+ 1. Explain why the existing profile names canot be used.
-+ 2. Add the new profile name, along with a clear description of the
-+    expected behaviour, to the sysfs-platform_profile ABI documentation.
+ 	if (has_palmsensor) {
 -- 
 2.28.0
 
