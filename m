@@ -5,152 +5,136 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7942C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jan 2021 06:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39CBC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jan 2021 12:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9515120719
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jan 2021 06:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F8C20782
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  1 Jan 2021 12:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbhAAGNE (ORCPT
+        id S1726829AbhAAM5j (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 1 Jan 2021 01:13:04 -0500
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:53483 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726322AbhAAGND (ORCPT
+        Fri, 1 Jan 2021 07:57:39 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36673 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726693AbhAAM5j (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 1 Jan 2021 01:13:03 -0500
+        Fri, 1 Jan 2021 07:57:39 -0500
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.west.internal (Postfix) with ESMTP id 4079AF6C;
-        Fri,  1 Jan 2021 01:12:17 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 25D7758041A;
+        Fri,  1 Jan 2021 07:56:53 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 01 Jan 2021 01:12:17 -0500
+  by compute6.internal (MEProxy); Fri, 01 Jan 2021 07:56:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=I1lXXepHh7qPnRgGVeB12wxdX+
-        RVecLFPZFy7yLCB74=; b=DACcTb4GzlfcUBKDnmJV6y4wiL0Ra9b33BKwJlpzRi
-        hAz4QLGtM41crvLvkIftnhMsxL9L3T9lvpzdgfRdM1y3v0rspdKYgRg3sLcmejZL
-        TfuEZobpOWEYVq+QiKnVCyB9ViOR/FEpaA9Z9je0GG/SlbOV6u9R/UUHimC3PqW6
-        j8WQ42Tch3YeXUJRVVzYgRiwVzaF9+tzkH2Oco7371tLiqDJNFO+00yxSKl3MeJl
-        qjJ7TNmgzomz3VaVMgoOf6qFNFhmnacVam9VfeIuV/48DqKMk/31mCkVQAefrISI
-        m61UmcAfNf501200WT7orbHqvA/8SJRx2H6PF0q7Lc7A==
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=/ETWZ4/0vUN6q
+        k8OTyPL4Ov6POGsGEMJ3pj3b0rxw10=; b=TzeRUmDFW/zy7JbeS+HW2hWzgUy81
+        wfywMNo5H9l1dsQUENRD9qIm81s/RMFicByO7A6euV3ARAucYouC/C6Z1gPtrWVq
+        Mr2e0GzTAka4iVEtq+ptrtTACXb4vSDttkGUylVKPuC4A9DgyO3HmoJ8jej0ZNW7
+        6uPgFcLZtK26wKC4ARjT5T7w+LW7uFVRdRKojgUsVoSAtuwyFRgpsFdWDCE2cCVM
+        wEibcYqyLtZKt2/YhFFwiHq7TapdjfZ8/JYco+X18UJdv/+CEJbrOurjliewc+zn
+        Heo51y4fNEPXsaqccFW0LljVEXNVV4AglZGsR1eGYSme2RUvE/AcBH2dQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=I1lXXepHh7qPnRgGV
-        eB12wxdX+RVecLFPZFy7yLCB74=; b=mqTMC2ylhip+02l+28p0rJ26XyYWff7pI
-        abHmguMNwwNzqjuFT3HOmWVRVF6gdE1SvfmO3g9C7FHQ79ZdwF5Y0fm38AfMifAT
-        Dw+aB9VFZRmW/Iz8xbASmFySkMMvzLAHqqH7nDKgL5YrO/EpIh0hOOGcl3JdrDL6
-        VU5bKDHh/H+guoNORT0EdevRu4QcywfL0FUgO0zdHOlz0rS3YfFmm5F+QGPVh2FR
-        dugZFuzoSEMLAwUuyhUN0s8XKLtr+pQ8KxAqAuermmsSABIgIZeKs/aLYKzXNtj6
-        xiFz4H4VU01P0NMEica3QDaR/SnDMxOaPJFiMqsh0bydEugnl1XCg==
-X-ME-Sender: <xms:P73uX5HZwA_6lRIwk06rY9HHfNdejLBlbh9I3CbWNJfxL12VOSfG3w>
-    <xme:P73uX-UEN5C7gzSnm9mQ8WhewM8ioMvGWjdKzpFPnPON8DIW_WTsyo_R7DBPoqDjV
-    vFGKq8OhsyF8Utusks>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddviedgledvucetufdoteggodetrfdotf
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=/ETWZ4/0vUN6qk8OTyPL4Ov6POGsGEMJ3pj3b0rxw10=; b=bmGfekQ7
+        fH7/f/ZBCeXR+qyhbVLLcpzXOfiEtxeCDqTZjVklRTc0v1PwYQy4zd4TB9sQ/PEV
+        yBfNntLk7AV3taiP4IvIwy9Yd197sSI4fmvWEd2YtsbrlALtxhNumKZLJvWp4m0b
+        ybvs8C/t1ZcOd91qtyfaxAEnclntt+y9SwZ489hjeQViAAbeZybiNiPCE17rdoI9
+        ZFmtjNXP5EfTCgh2W1skwpIYTJwLcETFcOfCEEU/3jpZtD5Q6IAcUUd5ZRBhwjPx
+        SRA4puBwvZ9J9E9vvO0ZJ/G24uB9EaRFv8fmxnxnrRsG4Y8PysQAQI0UpZTa2l3H
+        zjbb0CXqh0Cl+A==
+X-ME-Sender: <xms:FBzvX3L3Oy5ejcgYwz88fVFAOgIF0TaTeNuECKi1Mp8NJ-kqKIjGfw>
+    <xme:FBzvX7Lj5tB4iuAmznZS_ddrg41jRalQfH5zXuAtQDUKFsNdHtM6ev7TSvLLnru0x
+    dwWDbtljnY7po2l4cc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvddvjedggeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflihgrgihunhcu
-    jggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecuggftrf
-    grthhtvghrnhephfejtdektdeuhedtieefteekveffteejteefgeekveegffetvddugfel
-    iefhtddunecukfhppeeitddrudejjedrudekledrudejudenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhih
-    ghhorghtrdgtohhm
-X-ME-Proxy: <xmx:P73uX7IrT-a5QyBrdCEsnpALU6dDU_ceNNrjxjRh0pkLydaYCKT0dQ>
-    <xmx:P73uX_Hy8hn-Qt-fs7U0CLHnyVmW0-DAiukP37s6LlxpdSVBrElUTA>
-    <xmx:P73uX_W6JYOKqENX0IxqD6ZMVhij9AQbt17cWyaQYa3Aym2TR6YQMw>
-    <xmx:QL3uX6SL_m7qNnkG0fNF14VV4cdjJ5W-CZ24ynEHW7on0gR8uKvKqV-HN8o>
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeflihgrgihu
+    nhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecugg
+    ftrfgrthhtvghrnhepjeeihffgteelkeelffdukedtheevudejvdegkeekjeefhffhhfet
+    udetgfdtffeunecukfhppeeitddrudejjedrudekledrudejudenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehf
+    lhihghhorghtrdgtohhm
+X-ME-Proxy: <xmx:FBzvX_s2WZ7I1pEoK55Oudq-8medDzzEy-ihlmk6UNvXSj-t8CwqNw>
+    <xmx:FBzvXwZXqTFvcAgedDZ9BPG_42_9BMvlAk7aaodFsin6ghIuZpi-yg>
+    <xmx:FBzvX-Y1FfO1QwNRPCy7cy43bFGq_fQ0DJLjkszh3Gz0bHrkZcjzuA>
+    <xmx:FBzvXzMdPsA5yEj6ik4EjIwah8v9GsEf1ae6gVXCz-LgkXsAbw0xYA>
 Received: from strike.202.net.flygoat.com (unknown [60.177.189.171])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BA0F724005A;
-        Fri,  1 Jan 2021 01:12:08 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 457CC240057;
+        Fri,  1 Jan 2021 07:56:46 -0500 (EST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     platform-driver-x86@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
-        Ike Panhc <ike.pan@canonical.com>,
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: ideapad-laptop: Add has_touchpad_switch
-Date:   Fri,  1 Jan 2021 14:11:40 +0800
-Message-Id: <20210101061140.27547-1-jiaxun.yang@flygoat.com>
+        Ike Panhc <ike.pan@canonical.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] ACPI: platform-profile: Introduce data parameter to handler
+Date:   Fri,  1 Jan 2021 20:56:25 +0800
+Message-Id: <20210101125629.20974-2-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Newer ideapads (e.g.: Yoga 14s, 720S 14) comes with I2C HID
-Touchpad and do not use EC to switch touchpad. Reading VPCCMD_R_TOUCHPAD
-will return zero thus touchpad may be blocked. Writing VPCCMD_W_TOUCHPAD
-may cause a spurious key press.
-
-Add has_touchpad_switch to workaround these machines.
+Add a data parameter to handler callbacks to avoid having
+global variables everywhere.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: stable@vger.kernel.org # 5.4+
 ---
- drivers/platform/x86/ideapad-laptop.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/acpi/platform_profile.c  | 4 ++--
+ include/linux/platform_profile.h | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 7598cd46cf60..b6a4db37d0fc 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -92,6 +92,7 @@ struct ideapad_private {
- 	struct dentry *debug;
- 	unsigned long cfg;
- 	bool has_hw_rfkill_switch;
-+	bool has_touchpad_switch;
- 	const char *fnesc_guid;
+diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+index 91be50a32cc8..60072f6e032d 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
+ 		return -ENODEV;
+ 	}
+ 
+-	err = cur_profile->profile_get(&profile);
++	err = cur_profile->profile_get(cur_profile->data, &profile);
+ 	mutex_unlock(&profile_lock);
+ 	if (err)
+ 		return err;
+@@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	err = cur_profile->profile_set(i);
++	err = cur_profile->profile_set(cur_profile->data, i);
+ 	mutex_unlock(&profile_lock);
+ 	if (err)
+ 		return err;
+diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+index 3623d7108421..272faf55875d 100644
+--- a/include/linux/platform_profile.h
++++ b/include/linux/platform_profile.h
+@@ -27,9 +27,10 @@ enum platform_profile_option {
  };
  
-@@ -535,7 +536,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
- 	} else if (attr == &dev_attr_fn_lock.attr) {
- 		supported = acpi_has_method(priv->adev->handle, "HALS") &&
- 			acpi_has_method(priv->adev->handle, "SALS");
--	} else
-+	} else if (attr == &dev_attr_touchpad.attr)
-+		supported = priv->has_touchpad_switch;
-+	else
- 		supported = true;
+ struct platform_profile_handler {
++	void *data;
+ 	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+-	int (*profile_get)(enum platform_profile_option *profile);
+-	int (*profile_set)(enum platform_profile_option profile);
++	int (*profile_get)(void *data, enum platform_profile_option *profile);
++	int (*profile_set)(void *data, enum platform_profile_option profile);
+ };
  
- 	return supported ? attr->mode : 0;
-@@ -867,6 +870,9 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
- {
- 	unsigned long value;
- 
-+	if (!priv->has_touchpad_switch)
-+		return;
-+
- 	/* Without reading from EC touchpad LED doesn't switch state */
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
- 		/* Some IdeaPads don't really turn off touchpad - they only
-@@ -989,6 +995,12 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->platform_device = pdev;
- 	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
- 
-+	/* Most ideapads with I2C HID don't use EC touchpad switch */
-+	if (acpi_dev_present("PNP0C50", NULL, -1))
-+		priv->has_touchpad_switch = false;
-+	else
-+		priv->has_touchpad_switch = true;
-+
- 	ret = ideapad_sysfs_init(priv);
- 	if (ret)
- 		return ret;
-@@ -1006,6 +1018,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	if (!priv->has_hw_rfkill_switch)
- 		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
- 
-+	/* The same for Touchpad */
-+	if (!priv->has_touchpad_switch)
-+		write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
-+
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
- 			ideapad_register_rfkill(priv, i);
+ int platform_profile_register(const struct platform_profile_handler *pprof);
 -- 
 2.30.0
 
