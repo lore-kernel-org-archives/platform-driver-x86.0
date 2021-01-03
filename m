@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E99C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FFCC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39EDC20795
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B96C207AF
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbhACDEy (ORCPT
+        id S1726253AbhACDiK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Jan 2021 22:04:54 -0500
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:44339 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbhACDEx (ORCPT
+        Sat, 2 Jan 2021 22:38:10 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:49733 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbhACDiK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Jan 2021 22:04:53 -0500
+        Sat, 2 Jan 2021 22:38:10 -0500
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 63F21580300;
-        Sat,  2 Jan 2021 22:03:47 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 02 Jan 2021 22:03:47 -0500
+        by mailnew.nyi.internal (Postfix) with ESMTP id A1477580138;
+        Sat,  2 Jan 2021 22:37:03 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sat, 02 Jan 2021 22:37:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
         from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=34DA642wIHVqOSnPLGDFVK5mdJ
-        RElXLDheOtXgf+oEQ=; b=ffYAd7eZNCSOxKrBZq07D6PvrDNyihf43Q5gFJAwYW
-        FhcCXyLBXfBE792kb8/AWc3QM0Cs7vBUMMoqyLuSiDEkhuNK/mU9Ic+wIPgy0Kux
-        /h0NobUwclq7B3TXdaKXzIOHgtX/V5d5qc+yiejuoIb6kybCVp7vW6pUm+uRzAzd
-        ZFqprZ9Qrlo9yJBruB76gXhULhkW0LnOqnajC7uw/PrK2jPg/RLvR9LN+AbSBMhD
-        xmNKQONp1vHQbjRGZnsf1hiSG3IsCOoTVsn9vtObbYzkJu9Lm3TV4YDPcA98YvXV
-        0ctNAIE+S4ILydDWpl8yAHLBrrgErl9JRhtJjGyGOE9Q==
+        :content-transfer-encoding; s=fm1; bh=prgSBV48sskv7qoxiNhz9ZZefl
+        FHExPWuOS3tRXXsD4=; b=pOL86OOf8Sse/XpCRDO7WxZlF0nUWkQS0kOYz3VnVt
+        p7ZbOpcZoIzW3FLZ1woAIzB66pPQpcJtzCCyhPKbyN07eAdPun8Ers26BpSwVgl1
+        mOEZprjot9rVZikuSXGCjp1WeI6E98JK7jLUe7Rcttqqtbi3Fp4KNb2pp9fZfEh0
+        M46VvrYB1HwmSerPHaA5dbDWVVCwUX10CmMyYQge8X0rf+6+mlSl68J5Ii9zjNTZ
+        NLzMGFzQdSI3B21s2SxOq7qFojMyi/FDAqc34RcBXyTgTZb1oYChgXIhJgKAkEOW
+        KUR/orGsJkQJ5Qtatf6Fq/KQFsGCttDR/Sy+cbv1pGOw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=34DA642wIHVqOSnPL
-        GDFVK5mdJRElXLDheOtXgf+oEQ=; b=GMuyjLsmOyh2umDyQK0HVarSHbWdH3pij
-        XIJoex0K/XV6XEp5K3y/QhMeLYPXwx/24bmoWSnnvVcmO+6XQJcjBzL0sHtDB86/
-        QR4tavNcdwaRN8F7+B4LFIouQTMKrL1ZjabTj8h3opTtf62F/uTvHmh22ijBk7bY
-        hE7qwkVNBuqXmBfshEfLjiLkLTcV4dQMitLAfokzAfH22qvhdp0ai9kPgN+bOpCW
-        Afpx1mUsIu/bsEIBN4jaRNKzgTJKy07DcuL7bvlCfUTtM9DtVwFqBDeKs92OHFJl
-        mahq/8cf/dMAukSDzj4QtfHi+Lk4yQ7atcX5vT4DzpqpKTlWKzPDw==
-X-ME-Sender: <xms:ETTxX15gcYPWMVlAR60x2PobIaItK8V12XS3NNOJiy_28HdDLdDGbg>
-    <xme:ETTxXy6YeHbXNuiLLOwD7ew81zwMScL7LGyXXEweK69smH3DVxsNIPqbcu0rskJfO
-    i_R9QHAiG-c5ZDbPxM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdeftddgheeiucetufdoteggodetrfdotf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=prgSBV48sskv7qoxi
+        Nhz9ZZeflFHExPWuOS3tRXXsD4=; b=EqSRDVmO5ORlac/JfYspOykp5MklJr6jD
+        4FwlCJAsZT8yvWtFgq/t66+mtcXLuTxO9caXzz4eoIySslhrl9mg5DQ472tXgQL/
+        O7rrrLHpPMplsEJ1o5IGb9rD146MT/6z0JqvQJbR4Hao+pFuKsvgufr9mlmVa4De
+        yOboEUD9Zw6CVa3Ko6Ur7nXsO5CjcT+5jIxGd7DfzV0/EzOIaVrnli0Dyjb2ts8t
+        +fiLayEvPwh5I/jB9QEpDr8J+cwe5N6yHugwyvIiLgmzgEjqLjWQPii8yPoLU4Bv
+        so/6aPGJuyuBWoqxn1W+mTVCaB0rgdaYDcIlp/MyTRDAdea03WPIw==
+X-ME-Sender: <xms:3jvxXzpfYJH_623Gg9ogqSh_3WzImlQ0xjq_BJ-qMmnUF8vPD86bzg>
+    <xme:3jvxX9rDBNndy8QaOEIxqBDmz1YGD3Fuyihn_17xwEcfZrn9EDrnZkQ_UbD9zcRhT
+    8lfFW4C0g2znqSPqNE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdeftddgieefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflihgrgihunhcu
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdeftddgheeiucetufdoteggod
     iefhtddunecukfhppedukeefrdduheejrdefvddruddtudenucevlhhushhtvghrufhiii
     gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhih
     ghhorghtrdgtohhm
-X-ME-Proxy: <xmx:ETTxX8d32u_q9DJpKVD6ONTB-BK_4ySga-wywdzAf3JIJkE4tthyHA>
-    <xmx:ETTxX-I1-alLNQ3qDFFIVcpPJEAE7vEyMRIOvLGnCffmSZ5iFryt4w>
-    <xmx:ETTxX5LBICr2SSeJSqYhmW_FhTrE5o9q3uAclNf_uxqCG0WWpU8B1w>
-    <xmx:EjTxX50ML_lH0uHvz6mKIBUx_RWPCHxbf8gxIWwedJpYhedrA8sKzw>
+X-ME-Proxy: <xmx:3jvxXwOYVT-KAm-zUs-LQFYGGpeYFAuF2kYf5in6l8TvYcSE9pspLQ>
+    <xmx:3jvxX27Xq99Dpo818kxbNHeEIHIYdrmLQ7lC9RqjjsQ-J8LbJzSFgg>
+    <xmx:3jvxXy5SY9lQwCXmZB-ZFAJoiezviBA7K8Z3EhlbG_F4ljq3p2xZQA>
+    <xmx:3zvxX4koH-f0TtwSyAE6HwW_e1JEGTXt9piBCeZoY6SDdqu8Z52oyw>
 Received: from strike.202.net.flygoat.com (unknown [183.157.32.101])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 5A64824005C;
-        Sat,  2 Jan 2021 22:03:41 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 78217108005C;
+        Sat,  2 Jan 2021 22:36:58 -0500 (EST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH fixes v2] platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634
-Date:   Sun,  3 Jan 2021 11:03:32 +0800
-Message-Id: <20210103030332.34185-1-jiaxun.yang@flygoat.com>
+Subject: [PATCH fixes v3] platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634
+Date:   Sun,  3 Jan 2021 11:36:51 +0800
+Message-Id: <20210103033651.47580-1-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -94,12 +94,13 @@ Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: stable@vger.kernel.org # 5.4+
 --
 v2: Specify touchpad to ELAN0634
+v3: Stupid missing ! in v2
 ---
  drivers/platform/x86/ideapad-laptop.c | 15 ++++++++++++++-
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 7598cd46cf60..3bd29eb956d2 100644
+index 7598cd46cf60..427970b3b0da 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
 @@ -92,6 +92,7 @@ struct ideapad_private {
@@ -136,7 +137,7 @@ index 7598cd46cf60..3bd29eb956d2 100644
  	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
  
 +	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
-+	priv->has_touchpad_switch = acpi_dev_present("PNP0C50", "ELAN0634", -1);
++	priv->has_touchpad_switch = !acpi_dev_present("PNP0C50", "ELAN0634", -1);
 +
  	ret = ideapad_sysfs_init(priv);
  	if (ret)
