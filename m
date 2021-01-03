@@ -2,124 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF75C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jan 2021 12:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E99C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED38722482
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  2 Jan 2021 12:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EDC20795
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  3 Jan 2021 03:05:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbhABMUa (ORCPT
+        id S1725981AbhACDEy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 2 Jan 2021 07:20:30 -0500
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:10675 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbhABMU3 (ORCPT
+        Sat, 2 Jan 2021 22:04:54 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:44339 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbhACDEx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 2 Jan 2021 07:20:29 -0500
-Date:   Sat, 02 Jan 2021 12:19:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1609589986;
-        bh=xeKFx/zvJeF3EOI2JHzXBLYuaUj021bIJFzj5apYGzs=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=WmZmcyfRLRh7AKjO6USItaXwQjM4X6UUHS7RNYtEfmVWCDBe2oCwPtGNMgVVYk01P
-         HUs3p+rvZTmN1AGfTd8bKs7TJIuMzUMVmqMSSmaeb0ThSAsyRpJF+XFyYZh2mPHI0K
-         w5XxToiGjdnQONeNbC1Dww4MJrpSqj5G/9tQgoS8=
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Sat, 2 Jan 2021 22:04:53 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 63F21580300;
+        Sat,  2 Jan 2021 22:03:47 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 02 Jan 2021 22:03:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=34DA642wIHVqOSnPLGDFVK5mdJ
+        RElXLDheOtXgf+oEQ=; b=ffYAd7eZNCSOxKrBZq07D6PvrDNyihf43Q5gFJAwYW
+        FhcCXyLBXfBE792kb8/AWc3QM0Cs7vBUMMoqyLuSiDEkhuNK/mU9Ic+wIPgy0Kux
+        /h0NobUwclq7B3TXdaKXzIOHgtX/V5d5qc+yiejuoIb6kybCVp7vW6pUm+uRzAzd
+        ZFqprZ9Qrlo9yJBruB76gXhULhkW0LnOqnajC7uw/PrK2jPg/RLvR9LN+AbSBMhD
+        xmNKQONp1vHQbjRGZnsf1hiSG3IsCOoTVsn9vtObbYzkJu9Lm3TV4YDPcA98YvXV
+        0ctNAIE+S4ILydDWpl8yAHLBrrgErl9JRhtJjGyGOE9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=34DA642wIHVqOSnPL
+        GDFVK5mdJRElXLDheOtXgf+oEQ=; b=GMuyjLsmOyh2umDyQK0HVarSHbWdH3pij
+        XIJoex0K/XV6XEp5K3y/QhMeLYPXwx/24bmoWSnnvVcmO+6XQJcjBzL0sHtDB86/
+        QR4tavNcdwaRN8F7+B4LFIouQTMKrL1ZjabTj8h3opTtf62F/uTvHmh22ijBk7bY
+        hE7qwkVNBuqXmBfshEfLjiLkLTcV4dQMitLAfokzAfH22qvhdp0ai9kPgN+bOpCW
+        Afpx1mUsIu/bsEIBN4jaRNKzgTJKy07DcuL7bvlCfUTtM9DtVwFqBDeKs92OHFJl
+        mahq/8cf/dMAukSDzj4QtfHi+Lk4yQ7atcX5vT4DzpqpKTlWKzPDw==
+X-ME-Sender: <xms:ETTxX15gcYPWMVlAR60x2PobIaItK8V12XS3NNOJiy_28HdDLdDGbg>
+    <xme:ETTxXy6YeHbXNuiLLOwD7ew81zwMScL7LGyXXEweK69smH3DVxsNIPqbcu0rskJfO
+    i_R9QHAiG-c5ZDbPxM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdeftddgheeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflihgrgihunhcu
+    jggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecuggftrf
+    grthhtvghrnhephfejtdektdeuhedtieefteekveffteejteefgeekveegffetvddugfel
+    iefhtddunecukfhppedukeefrdduheejrdefvddruddtudenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhih
+    ghhorghtrdgtohhm
+X-ME-Proxy: <xmx:ETTxX8d32u_q9DJpKVD6ONTB-BK_4ySga-wywdzAf3JIJkE4tthyHA>
+    <xmx:ETTxX-I1-alLNQ3qDFFIVcpPJEAE7vEyMRIOvLGnCffmSZ5iFryt4w>
+    <xmx:ETTxX5LBICr2SSeJSqYhmW_FhTrE5o9q3uAclNf_uxqCG0WWpU8B1w>
+    <xmx:EjTxX50ML_lH0uHvz6mKIBUx_RWPCHxbf8gxIWwedJpYhedrA8sKzw>
+Received: from strike.202.net.flygoat.com (unknown [183.157.32.101])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5A64824005C;
+        Sat,  2 Jan 2021 22:03:41 -0500 (EST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
         Ike Panhc <ike.pan@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: Add has_touchpad_switch
-Message-ID: <D2lfUAOv4FVNsPPkc_6KIGFGu1WZEj2JAt2pN2L03sIHxB6qxSwKM85gyKfhE11eEM4wcVYhMmRTC4zoOeaADbu0ueQXtRzxyoy-K2j9Y1Y=@protonmail.com>
-In-Reply-To: <063eb02d-a699-3f6c-fd1b-721e9d195e82@flygoat.com>
-References: <20210101061140.27547-1-jiaxun.yang@flygoat.com> <_kQDaYPt7vh_mQfPr1tLJV2IP-p40OBPcU5zk-1xHhF9XJsm8Y-efANBgiRdWU-J2QTtOjmrfE0Tw6UrZpm6uG-zZGlfpaVOp9FuoKAbjzA=@protonmail.com> <bcb3bc76-da83-4ee1-8c2d-0453d359ae37@www.fastmail.com> <XVSpzJf9TdCi-rg53vfxB7yLg8VJQsQVbqoC1Fu1L7tL5mPKCpMABkedQNatITMiUy7pvBC7g0Cqd30-zqc0bCsSSoy5YXp_gJLTLM0odTg=@protonmail.com> <063eb02d-a699-3f6c-fd1b-721e9d195e82@flygoat.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH fixes v2] platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634
+Date:   Sun,  3 Jan 2021 11:03:32 +0800
+Message-Id: <20210103030332.34185-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2021. janu=C3=A1r 2., szombat 3:36 keltez=C3=A9ssel, Jiaxun Yang =C3=ADrta:
+Newer ideapads (e.g.: Yoga 14s, 720S 14) come with ELAN0634 touchpad do not
+use EC to switch touchpad.
 
-> =E5=9C=A8 2021/1/2 =E4=B8=8A=E5=8D=881:09, Barnab=C3=A1s P=C5=91cze =
-=E5=86=99=E9=81=93:
-> > Hi
-> >
-> >
-> > 2021. janu=C3=A1r 1., p=C3=A9ntek 17:08 keltez=C3=A9ssel, Jiaxun Yang =
-=C3=ADrta:
-> >
-> >> [...]
-> >>>> @@ -1006,6 +1018,10 @@ static int ideapad_acpi_add(struct platform_d=
-evice *pdev)
-> >>>>   =09if (!priv->has_hw_rfkill_switch)
-> >>>>   =09=09write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
-> >>>>
-> >>>> +=09/* The same for Touchpad */
-> >>>> +=09if (!priv->has_touchpad_switch)
-> >>>> +=09=09write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
-> >>>> +
-> >>> Shouldn't it be the other way around: `if (priv->has_touchpad_switch)=
-`?
-> >> It is to prevent accidentally disable touchpad on machines that do hav=
-e EC switch,
-> >> so it's intentional.
-> >> [...]
-> > Sorry, but the explanation not fully clear to me. The commit message se=
-ems to
-> > indicate that some models "do not use EC to switch touchpad", and I tak=
-e that
-> > means that reading from VPCCMD_R_TOUCHPAD will not reflect the actual s=
-tate of the
-> > touchpad and writing to VPCCMD_W_TOUCHPAD will not change the state of =
-the touchpad.
->
-> I'm just trying to prevent removing functionality on machines that
-> touchpad can be controlled
-> by EC but also equipped I2C HID touchpad. At least users will have a
-> functional touchpad
-> after that.
->
+Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
+unexpectedly.
+Writing VPCCMD_W_TOUCHPAD may cause a spurious key press.
 
-Thanks for the clarification.
+Add has_touchpad_switch to workaround these machines.
 
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: stable@vger.kernel.org # 5.4+
+--
+v2: Specify touchpad to ELAN0634
+---
+ drivers/platform/x86/ideapad-laptop.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-> >
-> > But then why do you still write to VPCCMD_W_TOUCHPAD on devices where s=
-upposedly
-> > this does not have any effect (at least not the desired one)? And the p=
-art of the
-> > code I made my comment about only runs on machines on which the touchpa=
-d supposedly
-> > cannot be controlled by the EC. What am I missing?
-> >
-> > And there is the other problem: on some machines, this patch removes wo=
-rking
-> > functionality.
-> Yeah that's a problem. I just don't want to repeat the story of rfkill
-> whitelist, it ends up with
-> countless machine to be added.
->
-> Maybe I should specify HID of touchpad as well. Two machines that known
-> to be problematic
-> all have ELAN0634 touchpad.
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 7598cd46cf60..3bd29eb956d2 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -92,6 +92,7 @@ struct ideapad_private {
+ 	struct dentry *debug;
+ 	unsigned long cfg;
+ 	bool has_hw_rfkill_switch;
++	bool has_touchpad_switch;
+ 	const char *fnesc_guid;
+ };
+ 
+@@ -535,7 +536,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+ 	} else if (attr == &dev_attr_fn_lock.attr) {
+ 		supported = acpi_has_method(priv->adev->handle, "HALS") &&
+ 			acpi_has_method(priv->adev->handle, "SALS");
+-	} else
++	} else if (attr == &dev_attr_touchpad.attr)
++		supported = priv->has_touchpad_switch;
++	else
+ 		supported = true;
+ 
+ 	return supported ? attr->mode : 0;
+@@ -867,6 +870,9 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
+ {
+ 	unsigned long value;
+ 
++	if (!priv->has_touchpad_switch)
++		return;
++
+ 	/* Without reading from EC touchpad LED doesn't switch state */
+ 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
+ 		/* Some IdeaPads don't really turn off touchpad - they only
+@@ -989,6 +995,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	priv->platform_device = pdev;
+ 	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+ 
++	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
++	priv->has_touchpad_switch = acpi_dev_present("PNP0C50", "ELAN0634", -1);
++
+ 	ret = ideapad_sysfs_init(priv);
+ 	if (ret)
+ 		return ret;
+@@ -1006,6 +1015,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+ 	if (!priv->has_hw_rfkill_switch)
+ 		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
+ 
++	/* The same for Touchpad */
++	if (!priv->has_touchpad_switch)
++		write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
++
+ 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+ 		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
+ 			ideapad_register_rfkill(priv, i);
+-- 
+2.30.0
 
-I think that would be better since the Lenovo Yoga 520-14IKB 80X8 device
-I'm concerned about has a SYNA2B2C touchpad device, so at least that wouldn=
-'t be
-affected.
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
