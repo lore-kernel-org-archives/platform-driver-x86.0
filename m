@@ -8,76 +8,75 @@ X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6DCC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 12:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EE0C43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 12:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3014E21D79
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 12:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4518F21D93
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 12:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726306AbhADMBM (ORCPT
+        id S1725921AbhADMCI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 07:01:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31025 "EHLO
+        Mon, 4 Jan 2021 07:02:08 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58694 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726098AbhADMBM (ORCPT
+        by vger.kernel.org with ESMTP id S1726419AbhADMCI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 07:01:12 -0500
+        Mon, 4 Jan 2021 07:02:08 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609761585;
+        s=mimecast20190719; t=1609761641;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=pres5e8WrRpvRCj7iEQnIu8o6lrBPcNGoStEUF06tHM=;
-        b=ZpQdC2mOIa7qbn1oAqbCO+f4Q/rcONdSidSZGp/8HJpjZxMVgsZqT5WfsAoy0ZGSwQTGGr
-        njveq2LpA2KvanUDW11jbMFRXlwaxDwLmSiFuV35JJUfRNE9T1QJ746zPvofSaJfwQrUg3
-        pThGhov62I7H5O819blXDxaeCSFwdDw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-05aQ-JSAOFymBV10O52sGA-1; Mon, 04 Jan 2021 06:59:42 -0500
-X-MC-Unique: 05aQ-JSAOFymBV10O52sGA-1
-Received: by mail-ej1-f72.google.com with SMTP id k3so6886982ejr.16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 03:59:42 -0800 (PST)
+        bh=iPcN1/R/XYG/gfaOrpnk4vK5+vqEpAMklYQvlCVjfFE=;
+        b=LnQVqw9i3PU4eC3Jh0avL+4twr3M1kyay6u+BD6IaZCO3ixWnPXw++fJY5fFKQctuXwY4b
+        LlBHc9S0L2pjM1bVMjUb8S9NP7JuFikEhfPyVJQoMVNCS6nx/9iyyZCEkVuvzq0s7usSzZ
+        j3sVsc/KgrXokZoKnyPaUm5ROnIXZv4=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-l9fSBMo_OrCwPDB3aXD9Sw-1; Mon, 04 Jan 2021 07:00:36 -0500
+X-MC-Unique: l9fSBMo_OrCwPDB3aXD9Sw-1
+Received: by mail-ed1-f72.google.com with SMTP id e11so12104406edn.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 04:00:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=pres5e8WrRpvRCj7iEQnIu8o6lrBPcNGoStEUF06tHM=;
-        b=OoN+D0AW9oLRPQRR3R0fEafXvz7kyxUkLfe+klb+y6Pe2GkNVgkXU+xr/gNYYmrq0B
-         vJAX4WOyIjZnerMk76Gx4yhaYosajrOSIE2/RTB8ABy2Bv1KCzFvACEO4zNtpub2nISo
-         EfHInHv50/NHiUcpmoqPKB2oqQOWcGuw+I9SU0fkv44Xqa3uUy1Z1Ybmk7xD7EX0wcj2
-         QVcWYyNVjaAb4q98a7hmyuV8AqfcjUZH7ZXHegK7DmlfnhiC/ufPPLYDjj8g7+5TnxSL
-         bR0tNBqMALs4kjZ/xh4+0P+92yKZ9ZJON4BqmhEEzMo0glYwIArl5nopINf2lrvGTPQI
-         gCZg==
-X-Gm-Message-State: AOAM530oQ0/cJO5iFyoolyS8CBp0s/DdEdSMZABfGX3zWOAQRYs961gp
-        LpS3DjfB4qm4wiCw0amY/mC1gXikJPtZEJb74TauJCgEGsBLO6oL20mek0csSDlKvBw5CVdx2Vt
-        XzB8qwj94/B+8kDV0Cprat0f2fuIWFwTHWg==
-X-Received: by 2002:a17:906:d784:: with SMTP id pj4mr64447413ejb.360.1609761580992;
-        Mon, 04 Jan 2021 03:59:40 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxtNlcqeBweOBOg+dDeiF31iBz+D6P3NJw9O4uA6DMPJS1Pge79InvCsi/rq7oRYQrdZ6wEfw==
-X-Received: by 2002:a17:906:d784:: with SMTP id pj4mr64447403ejb.360.1609761580815;
-        Mon, 04 Jan 2021 03:59:40 -0800 (PST)
+        bh=iPcN1/R/XYG/gfaOrpnk4vK5+vqEpAMklYQvlCVjfFE=;
+        b=LrPb7KVHQ2MfzFfGiuGNq5XbhLWL6SOkNJIx7XSJhrhrfcG1qSH1EPWsWjD/VTf0hu
+         WhRQM4WZfQnAzVjl40Np35DHWBl1JSMBdooBbfTR2mNKFBCQmY6waDoHSj60nu2WfbC1
+         49LpssrrJHs0GHLjhey2pYju0Zu3PHapQFwSP8i9ghOFW3T0ml1DNsxihPec7oct+ogz
+         9hzt42iqBq9JHcHQdX6YOUCFFbWk/N1SEMpKTldic7WHXSDv0wZjOi+/fSw8fiEeh8I7
+         XSQyMeeAPRUmwDR/X5pB+zSFlOkxP14GQ1tLa6xSfUloitQ1DQc88248c08s2199T7zX
+         lBEw==
+X-Gm-Message-State: AOAM530hIaonIDZnG5rCGjlW0+FDjgYgeTtDYcQLEB/tXHImr4AHzFkP
+        JAB55vsjgJS/wN98kUv2RSAXk0Di3PuW159whwVD6IUMPmvsne2qAAXpnApzSiqWnfGPjohCS1u
+        tcH+cNMIeaPlt4iSxGEjBWtAOixnWZl0YGw==
+X-Received: by 2002:a05:6402:1592:: with SMTP id c18mr16976642edv.181.1609761634949;
+        Mon, 04 Jan 2021 04:00:34 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyuEmY5C8c7ftYmZRYYEMIdFvp8FhKA0fFd2btQTmum1/6Gg8hA/IcB0zINAdK1k8hkJGb5kA==
+X-Received: by 2002:a05:6402:1592:: with SMTP id c18mr16976614edv.181.1609761634708;
+        Mon, 04 Jan 2021 04:00:34 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id 35sm43202887ede.0.2021.01.04.03.59.39
+        by smtp.gmail.com with ESMTPSA id y14sm23212597eju.115.2021.01.04.04.00.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jan 2021 03:59:40 -0800 (PST)
-Subject: Re: [PATCH] ACPI / scan: Don't create platform device for INT3515
- ACPI nodes
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Moody Salem <moody@uniswap.org>, stable@vger.kernel.org
-References: <20201223143644.33341-1-heikki.krogerus@linux.intel.com>
+        Mon, 04 Jan 2021 04:00:34 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add swap-x-y quirk for
+ Goodix touchscreen on Estar Beauty HD tablet
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     linux-input@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+References: <20201224135158.10976-1-hdegoede@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ae94a191-4273-0000-deda-4859034343b8@redhat.com>
-Date:   Mon, 4 Jan 2021 12:59:39 +0100
+Message-ID: <99d3da8d-3319-3904-25d1-a9ff34be653f@redhat.com>
+Date:   Mon, 4 Jan 2021 13:00:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20201223143644.33341-1-heikki.krogerus@linux.intel.com>
+In-Reply-To: <20201224135158.10976-1-hdegoede@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,26 +86,37 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 12/23/20 3:36 PM, Heikki Krogerus wrote:
-> There are several reports about the tps6598x causing
-> interrupt flood on boards with the INT3515 ACPI node, which
-> then causes instability. There appears to be several
-> problems with the interrupt. One problem is that the
-> I2CSerialBus resources do not always map to the Interrupt
-> resource with the same index, but that is not the only
-> problem. We have not been able to come up with a solution
-> for all the issues, and because of that disabling the device
-> for now.
+On 12/24/20 2:51 PM, Hans de Goede wrote:
+> The Estar Beauty HD (MID 7316R) tablet uses a Goodix touchscreen,
+> with the X and Y coordinates swapped compared to the LCD panel.
 > 
-> The PD controller on these platforms is autonomous, and the
-> purpose for the driver is primarily to supply status to the
-> userspace, so this will not affect any functionality.
+> Add a touchscreen_dmi entry for this adding a "touchscreen-swapped-x-y"
+> device-property to the i2c-client instantiated for this device before
+> the driver binds.
 > 
-> Reported-by: Moody Salem <moody@uniswap.org>
-> Fixes: a3dd034a1707 ("ACPI / scan: Create platform device for INT3515 ACPI nodes")
-> Cc: stable@vger.kernel.org
-> Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1883511
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> This is the first entry of a Goodix touchscreen to touchscreen_dmi.c,
+> so far DMI quirks for Goodix touchscreen's have been added directly
+> to drivers/input/touchscreen/goodix.c. Currently there are 3
+> DMI tables in goodix.c:
+> 1. rotated_screen[] for devices where the touchscreen is rotated
+>    180 degrees vs the LCD panel
+> 2. inverted_x_screen[] for devices where the X axis is inverted
+> 3. nine_bytes_report[] for devices which use a non standard touch
+>    report size
+> 
+> Arguably only 3. really needs to be inside the driver and the other
+> 2 cases are better handled through the generic touchscreen DMI quirk
+> mechanism from touchscreen_dmi.c, which allows adding device-props to
+> any i2c-client. Esp. now that goodix.c is using the generic
+> touchscreen_properties code.
+> 
+> Alternative to the approach from this patch we could add a 4th
+> dmi_system_id table for devices with swapped-x-y axis to goodix.c,
+> but that seems undesirable.
+> 
+> Cc: Bastien Nocera <hadess@hadess.net>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -124,61 +134,45 @@ Regards,
 
 Hans
 
-
-
-
 > ---
->  drivers/platform/x86/i2c-multi-instantiate.c | 31 +++++++++++++++-----
->  1 file changed, 23 insertions(+), 8 deletions(-)
+>  drivers/platform/x86/touchscreen_dmi.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> diff --git a/drivers/platform/x86/i2c-multi-instantiate.c b/drivers/platform/x86/i2c-multi-instantiate.c
-> index 6acc8457866e1..e1df665d3ad31 100644
-> --- a/drivers/platform/x86/i2c-multi-instantiate.c
-> +++ b/drivers/platform/x86/i2c-multi-instantiate.c
-> @@ -166,13 +166,29 @@ static const struct i2c_inst_data bsg2150_data[]  = {
->  	{}
+> diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+> index 5783139d0a11..c4de932302d6 100644
+> --- a/drivers/platform/x86/touchscreen_dmi.c
+> +++ b/drivers/platform/x86/touchscreen_dmi.c
+> @@ -263,6 +263,16 @@ static const struct ts_dmi_data digma_citi_e200_data = {
+>  	.properties	= digma_citi_e200_props,
 >  };
 >  
-> -static const struct i2c_inst_data int3515_data[]  = {
-> -	{ "tps6598x", IRQ_RESOURCE_APIC, 0 },
-> -	{ "tps6598x", IRQ_RESOURCE_APIC, 1 },
-> -	{ "tps6598x", IRQ_RESOURCE_APIC, 2 },
-> -	{ "tps6598x", IRQ_RESOURCE_APIC, 3 },
-> -	{}
-> -};
-> +/*
-> + * Device with _HID INT3515 (TI PD controllers) has some unresolved interrupt
-> + * issues. The most common problem seen is interrupt flood.
-> + *
-> + * There are at least two known causes. Firstly, on some boards, the
-> + * I2CSerialBus resource index does not match the Interrupt resource, i.e. they
-> + * are not one-to-one mapped like in the array below. Secondly, on some boards
-> + * the irq line from the PD controller is not actually connected at all. But the
-> + * interrupt flood is also seen on some boards where those are not a problem, so
-> + * there are some other problems as well.
-> + *
-> + * Because of the issues with the interrupt, the device is disabled for now. If
-> + * you wish to debug the issues, uncomment the below, and add an entry for the
-> + * INT3515 device to the i2c_multi_instance__ids table.
-> + *
-> + * static const struct i2c_inst_data int3515_data[]  = {
-> + *	{ "tps6598x", IRQ_RESOURCE_APIC, 0 },
-> + *	{ "tps6598x", IRQ_RESOURCE_APIC, 1 },
-> + *	{ "tps6598x", IRQ_RESOURCE_APIC, 2 },
-> + *	{ "tps6598x", IRQ_RESOURCE_APIC, 3 },
-> + *	{ }
-> + * };
-> + */
->  
->  /*
->   * Note new device-ids must also be added to i2c_multi_instantiate_ids in
-> @@ -181,7 +197,6 @@ static const struct i2c_inst_data int3515_data[]  = {
->  static const struct acpi_device_id i2c_multi_inst_acpi_ids[] = {
->  	{ "BSG1160", (unsigned long)bsg1160_data },
->  	{ "BSG2150", (unsigned long)bsg2150_data },
-> -	{ "INT3515", (unsigned long)int3515_data },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(acpi, i2c_multi_inst_acpi_ids);
+> +static const struct property_entry estar_beauty_hd_props[] = {
+> +	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
+> +	{ }
+> +};
+> +
+> +static const struct ts_dmi_data estar_beauty_hd_data = {
+> +	.acpi_name	= "GDIX1001:00",
+> +	.properties	= estar_beauty_hd_props,
+> +};
+> +
+>  static const struct property_entry gp_electronic_t701_props[] = {
+>  	PROPERTY_ENTRY_U32("touchscreen-size-x", 960),
+>  	PROPERTY_ENTRY_U32("touchscreen-size-y", 640),
+> @@ -942,6 +952,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+>  			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
+>  		},
+>  	},
+> +	{
+> +		/* Estar Beauty HD (MID 7316R) */
+> +		.driver_data = (void *)&estar_beauty_hd_data,
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Estar"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "eSTAR BEAUTY HD Intel Quad core"),
+> +		},
+> +	},
+>  	{
+>  		/* GP-electronic T701 */
+>  		.driver_data = (void *)&gp_electronic_t701_data,
 > 
 
