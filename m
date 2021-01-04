@@ -2,82 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFC8C4332D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C3AC433E9
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9402F221F1
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D78D22211
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725830AbhADOgF (ORCPT
+        id S1727086AbhADOl6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 09:36:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27876 "EHLO
+        Mon, 4 Jan 2021 09:41:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36021 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727203AbhADOgF (ORCPT
+        by vger.kernel.org with ESMTP id S1727042AbhADOl6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 09:36:05 -0500
+        Mon, 4 Jan 2021 09:41:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609770878;
+        s=mimecast20190719; t=1609771231;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MlGNmue/OEcc+LrokQ5uW+ClGR/N9N2hz5xtfGyMhr8=;
-        b=PEaf0PDGxshevRGo4BojzBDOyEjRaadYsqkR4D77hfAd+utPI2KSIDUORNfsfQCFxgKVEc
-        CLFkIQGQWXFn6aaJBKsB4CP/SKSBQNlJ6mZ/fS9Bo8SNT41m72WJCeN/9Vox/Iu6cgdLOg
-        2pSXEh+36VyNdm4mZD54SIEo8ie1Rew=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-193-YTlRATqYMQq1Rc6eN5RUbw-1; Mon, 04 Jan 2021 09:34:33 -0500
-X-MC-Unique: YTlRATqYMQq1Rc6eN5RUbw-1
-Received: by mail-ej1-f70.google.com with SMTP id ov1so7039462ejb.1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 06:34:33 -0800 (PST)
+        bh=QFfXv6TzDRE7F942fvHmw3WnMe4ntA68qR259LcqXAc=;
+        b=GQiwixzYA24qid4TxZMxrM97FdV+/9xqjxm2dDR7N11e6zkbhqaTf2i1DrCcvvVan+WF1a
+        z2y92gN+79LzRtM4HVdZHVX2AMsI8dy7iE18Olg80SV4ZWxVOBv4C4yPf7L0G37wdeIQZs
+        w2+goRdsoOvVl3eJ/RQwaR3S7chWzgo=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-127-zhbloVCvO9-9TChqSTi3sw-1; Mon, 04 Jan 2021 09:40:30 -0500
+X-MC-Unique: zhbloVCvO9-9TChqSTi3sw-1
+Received: by mail-ed1-f69.google.com with SMTP id u18so12274845edy.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 06:40:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=MlGNmue/OEcc+LrokQ5uW+ClGR/N9N2hz5xtfGyMhr8=;
-        b=VSnU1kf4GIi2qFWNFnCkfMWdHV3nz7sJ+U9wG6PP6tNjDvF/hcVGCDdmXwkMT77mdw
-         CUbsjC04A/j2+bD9VhQj2GHgOJznkWvY435heRPN4aYD577an13AxsYNSetgsJP+KrpP
-         b/e6QWgZ/Z6SMwwiBFh3qYBK/cOlzFRSCNq2dhU2YwRbQKekG1/7sc70wTiF3e41PT4U
-         VzXWzU10W5IrTgBiECQOR9BciVbE0wTdYv2QyeXsuKpSHRzumO/8Wfe7evBKd6LMTeGR
-         iuZ3dC33+Reclc6ZImDwynRal3SFI6E+hHqgcPZY2kDIMQM1Vbxix3a65+0d5FPeREGv
-         GrQg==
-X-Gm-Message-State: AOAM532zDvFnOHUUmVgrX79vYIeUrOY6TmRvslpEcMo7RwBkJdRMf9Mi
-        kG9tcRZ3OVrlKrgpB1D/+QMAw9Rwf1ugGeDWqnKYvFsMquThegDeyK90TVuBZXG9On4DLmUW+69
-        wlcrjvN/DN07HkXlexCq0Y1mrpvURnEdJFw==
-X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr42799380ejy.199.1609770872624;
-        Mon, 04 Jan 2021 06:34:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyznHvL5Jm3vifHBDmK8iYArUSZMyjWRdPfXkd44h1PErXhEC1aVo64TNJev5ys8eLkIEsggA==
-X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr42799366ejy.199.1609770872506;
-        Mon, 04 Jan 2021 06:34:32 -0800 (PST)
+        bh=QFfXv6TzDRE7F942fvHmw3WnMe4ntA68qR259LcqXAc=;
+        b=RbgFYm7jUJD4IPy4Z37wo1Ah8Or4A6d+5e0uOv2QrzeDsR3UXQVGBKuVcoWvYGgdvn
+         4zkKQuw/izjO6HdQeqRDeF8h/JHTOmf844nh4nUILd0w2bN9jpECwPmziUpUoOw8H+P9
+         EoF04hctr2oX1kiL8q2IA5QSCBf2nV4bySNR5UaR/ZdznkmlFsr0BgKoYKZbqf8bHOiS
+         Dy+PKIFoNMUADbaj/xTNuSUOCAeshe5vUujhZyMbesdK+dF2G4AkD91xOI8t4NqTv6Bv
+         RYdMKr8glQBz/Ia1zkw4/T5qPazLIO9m1n1q6Q6bUA1YZ5RZ2u8VqVcqs6uV3xmqonX7
+         sdnQ==
+X-Gm-Message-State: AOAM533UUaZZW/Y5g8a7mGfnV3YGye8Y1w45eLJ6FRlCPbGpEndxXkwU
+        n8O5UlyJq+29bnPZJVrQ8ldTJWexokyunXfxfwiYFN10SZzOSdDNdNy2sOoT7yKi57wTED6KoNl
+        JEFKYAOr9ZtLJcHcwpBjvwXKC1FPYU7DHFA==
+X-Received: by 2002:aa7:cd44:: with SMTP id v4mr71107001edw.156.1609771228658;
+        Mon, 04 Jan 2021 06:40:28 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzx6P6tR5UcsmUHVGbV86xokCSfjVoiuiRBDMj9z44PscTIMEbLncB4lg2h8VyJQ8X1aBPlOw==
+X-Received: by 2002:aa7:cd44:: with SMTP id v4mr71106988edw.156.1609771228541;
+        Mon, 04 Jan 2021 06:40:28 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id v24sm44039398edw.23.2021.01.04.06.34.31
+        by smtp.gmail.com with ESMTPSA id e19sm44477821edr.61.2021.01.04.06.40.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jan 2021 06:34:32 -0800 (PST)
-Subject: Re: [PATCH 0/2] IdeaPad platform profile support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+        Mon, 04 Jan 2021 06:40:28 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Support for tablet mode on Dell
+ Inspiron 7352
+To:     Arnold Gozum <arngozum@gmail.com>
+Cc:     AceLan Kao <acelan.kao@canonical.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20201226205307.249659-1-arngozum@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <35ac853a-266c-6944-6e5e-6286456865e3@redhat.com>
-Date:   Mon, 4 Jan 2021 15:34:31 +0100
+Message-ID: <15c05099-6739-b71e-c39f-10c03cada588@redhat.com>
+Date:   Mon, 4 Jan 2021 15:40:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <20201226205307.249659-1-arngozum@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,40 +85,49 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/1/21 1:56 PM, Jiaxun Yang wrote:
-> Tested on Lenovo Yoga-14SARE Chinese Edition.
+On 12/26/20 9:53 PM, Arnold Gozum wrote:
+> The Dell Inspiron 7352 is a 2-in-1 model that has chassis-type "Notebook".
+> Add this model to the dmi_switches_allow_list.
 > 
-> Jiaxun Yang (2):
->   ACPI: platform-profile: Introduce data parameter to handler
->   platform/x86: ideapad-laptop: DYTC Platform profile support
-> 
->  drivers/acpi/platform_profile.c       |   4 +-
->  drivers/platform/x86/Kconfig          |   1 +
->  drivers/platform/x86/ideapad-laptop.c | 281 ++++++++++++++++++++++++++
->  include/linux/platform_profile.h      |   5 +-
->  4 files changed, 287 insertions(+), 4 deletions(-)
+> Signed-off-by: Arnold Gozum <arngozum@gmail.com>
 
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Thank you for your series, unfortunately the
-"ACPI: platform-profile: Introduce data parameter to handler"
-patch causes a conflict with the pending:
-"[PATCH v8 3/3] platform/x86: thinkpad_acpi: Add platform profile support"
-patch.
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-But I do agree that adding that data parameter makes sense, so
-it might be best to merge:
-
-"ACPI: platform-profile: Introduce data parameter to handler"
-
-First and then rebase the thinkpad_acpi patch on top.
-
-Rafael, do you think you could add:
-
-"ACPI: platform-profile: Introduce data parameter to handler"
-
-To the 2 ACPI: platform-profile patches which you already have pending for 5.11-rc# ?
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+> ---
+>  drivers/platform/x86/intel-vbtn.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+> index 3b49a1f4061b..9bbdb26d4305 100644
+> --- a/drivers/platform/x86/intel-vbtn.c
+> +++ b/drivers/platform/x86/intel-vbtn.c
+> @@ -222,6 +222,12 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "Switch SA5-271"),
+>  		},
+>  	},
+> +	{
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 7352"),
+> +		},
+> +	},
+>  	{} /* Array terminator */
+>  };
+>  
+> 
 
