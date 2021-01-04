@@ -2,114 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CAFC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 15:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA1EC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7881221F9
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 15:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0507A20731
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 15:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbhADPe0 (ORCPT
+        id S1727373AbhADPsN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 10:34:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59756 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725889AbhADPe0 (ORCPT
+        Mon, 4 Jan 2021 10:48:13 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.114]:23019 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726419AbhADPsN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 10:34:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609774379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SLb4fZfLiqO5vRQPaQ9+Ac7a0d4yDsd8OpbE704zoyI=;
-        b=hfy3w+1JsMp6RfTMI+WfIOIXMyhu4bnvcorpZde+WuBQ2CxilUctKgFJsc6JhIJ4fNXc/Z
-        N5uStb+tHbDGVwMpdrDlDzvaUROpyVxbKMAFQ705eYl8RSS6rfsP0AoebQu31w7iaU5gAp
-        F9hyKAKaPLQb0MFk78XMhGIFE8nBhc0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-3bK-oq1IOhGouj0RTToQSg-1; Mon, 04 Jan 2021 10:32:55 -0500
-X-MC-Unique: 3bK-oq1IOhGouj0RTToQSg-1
-Received: by mail-ej1-f70.google.com with SMTP id dv25so7094775ejb.15
-        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 07:32:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SLb4fZfLiqO5vRQPaQ9+Ac7a0d4yDsd8OpbE704zoyI=;
-        b=fANSpuVWj1gR4YePAklht9EeZZj4yRrzLp+zDpFM6ph8EgHqrPL6gm5UMOTDNZWgvX
-         rXkHswSWcZvRlp7PVN5n7HFwsCDyGJZlrE8wp47BojOwx17Z3c8T9fFS96qxKvxjg9ZA
-         8p09AYPAH10JT6ZwEAmAQ7RJxYoveN6YN2GIHh1xurkorIzOKmcJqchjORZNOMtOCamV
-         yFkUZa1a965+uHxowst+fVafZx0V85pzcs9xYFIZed9xvGpTCgC/qWbl8NMS072avw4C
-         2+FXcSlD/9AbihD2FzNIq27DI42RRZEkLJL0X0mJ35vru8vsvzPphQTO/dgueG51aSlN
-         0X5g==
-X-Gm-Message-State: AOAM532AoTxg1Na7/LeJqEP4Wumfqu3Af+IP/ebO39cdP0HJ6dtDxK1K
-        6pzbawfks7Qa0D+kJ+EqxFNszGX5u479EawPmRUSQYnccUDB9wInUfAP72FP45mNRdQj9DcolPC
-        5zI/+BBduC0yBK7gMoQ+32tTEnH3pnFzkQNPq07Ogwr8xUvGyXdrNuv10RPxmmuGwn27IMUNGzS
-        1RsCeUyTVe+Q==
-X-Received: by 2002:a17:906:a3c7:: with SMTP id ca7mr69081433ejb.523.1609774373834;
-        Mon, 04 Jan 2021 07:32:53 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxlykuxOXv8CmaxaCzv7WyuzFo/a+81GMLeam2ZJ2ABr/YWyj/xKn+0BHa5sqyk6I9UfGhR0Q==
-X-Received: by 2002:a17:906:a3c7:: with SMTP id ca7mr69081417ejb.523.1609774373616;
-        Mon, 04 Jan 2021 07:32:53 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id r24sm44054312edc.21.2021.01.04.07.32.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Jan 2021 07:32:53 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: correct palmsensor error
- checking
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
+        Mon, 4 Jan 2021 10:48:13 -0500
+Received: from [100.112.132.72] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.us-west-2.aws.symcld.net id AE/69-33082-DA733FF5; Mon, 04 Jan 2021 15:43:41 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRWlGSWpSXmKPExsWSLveKXXet+ed
+  4g+9bpCxeTjjMaPHm+HQmi88dk1ksVu95wezA4rFz1l12j3knAz3e77vK5vF5k1wASxRrZl5S
+  fkUCa8bfFZdYChZzV2yad4G1gbGbs4uRi0NI4D+jxJJ3rSwQzjNGiTcHF7J1MXJyCAskS1y7c
+  RjMFhEIlbg34S4jiM0sEC+x799EdoiGs4wSX271gyXYBLQltmz5BdbAK2ArcXPVc1YQm0VARe
+  LCit/sILaoQLjE+iUrGSFqBCVOznzCAmJzCthJTJk/B6iXA2iBpsT6XfoQu8Qlbj2ZzwRhy0t
+  sfzuHGaREAsjueSgLEpYQSJBY9vIO8wRGwVlIhs5CGDQLyaBZSAYtYGRZxWiRVJSZnlGSm5iZ
+  o2toYKBraGika2hsAsRmeolVukl6pcW65anFJbpGeonlxXrFlbnJOSl6eaklmxiBUZJS0Naxg
+  3H6mw96hxglOZiURHklhT/HC/El5adUZiQWZ8QXleakFh9ilOHgUJLgNTQDygkWpaanVqRl5g
+  AjFiYtwcGjJMJ7GiTNW1yQmFucmQ6ROsWoKCXOWwCSEABJZJTmwbXBksQlRlkpYV5GBgYGIZ6
+  C1KLczBJU+VeM4hyMSsK8N0Cm8GTmlcBNfwW0mAlosVjie5DFJYkIKakGJo37xSd0ltrPCe+1
+  VRExnPZpXWfVw4VRi6Y/mNEg3TujX6uL86/lfH9to+D5ST5MXDtuPVpXYfXzwFSt1+Yl2R4TC
+  ljr3iefmpCyPvEw55kfm94emPBlMv/hHq2AW2VdPE85/06fctGiyK3Gq7B+h3WOzkyFlS8s7E
+  /YpkRO3HGsNmK7WErx141Wl3jdfz1TOP622Yo/PeenQoqv1TYlt1dJVZr8Sy/ZLS66abrtVeQ
+  bZvfS2Pdx60X0Ts+dt/fpukMJk4v2rzK8xfBs4iT2DbN6W1f77Zm6ZdoaxwuSvCs/TZQ4fHKK
+  09zVpTNecBwLevLxuajve+U9iZM8tXPjJjY1XD13J/tqa/U8pshA+RtKLMUZiYZazEXFiQADM
+  SySjQMAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-22.tower-356.messagelabs.com!1609775019!3798!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 20054 invoked from network); 4 Jan 2021 15:43:41 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-22.tower-356.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Jan 2021 15:43:41 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 416787B581366AABC956;
+        Mon,  4 Jan 2021 23:43:38 +0800 (CST)
+Received: from localhost.localdomain (10.38.54.96) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Mon, 4 Jan 2021
+ 07:43:37 -0800
+Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: correct
+ palmsensor error checking
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>
 References: <markpearson@lenovo.com>
  <20201230024726.7861-1-markpearson@lenovo.com>
  <CAHp75VfS3hAJ+vP54V+80zzWVW-+vYK-gGocRMrQhHkWnPXzXg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c99cbd33-4969-568a-205d-52c53509e586@redhat.com>
-Date:   Mon, 4 Jan 2021 16:32:52 +0100
+ <c99cbd33-4969-568a-205d-52c53509e586@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <e9f57686-bdd1-89eb-622f-851b26e35f17@lenovo.com>
+Date:   Mon, 4 Jan 2021 10:43:36 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfS3hAJ+vP54V+80zzWVW-+vYK-gGocRMrQhHkWnPXzXg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <c99cbd33-4969-568a-205d-52c53509e586@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.38.54.96]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 1/4/21 4:17 PM, Andy Shevchenko wrote:
-> On Wed, Dec 30, 2020 at 4:54 AM Mark Pearson <markpearson@lenovo.com> wrote:
->>
->> The previous commit adding functionality for the palm sensor had a
->> mistake which meant the error conditions on initialisation was not checked
->> correctly. On some older platforms this meant that if the sensor wasn't
->> available an error would be returned and the driver would fail to load.
+On 04/01/2021 10:32, Hans de Goede wrote:
+> Hi,
 > 
->> This commit corrects the error condition. Many thanks to Mario Oenning
->> for reporting and determining the issue
+> On 1/4/21 4:17 PM, Andy Shevchenko wrote:
+>> On Wed, Dec 30, 2020 at 4:54 AM Mark Pearson
+>> <markpearson@lenovo.com> wrote:
+>>> 
+>>> The previous commit adding functionality for the palm sensor had
+>>> a mistake which meant the error conditions on initialisation was
+>>> not checked correctly. On some older platforms this meant that if
+>>> the sensor wasn't available an error would be returned and the
+>>> driver would fail to load.
+>> 
+>>> This commit corrects the error condition. Many thanks to Mario
+>>> Oenning for reporting and determining the issue
+>> 
+>> Hint to the future (maybe Hans will fix this while it's in his
+>> review queue): we have a Reported-by tag. Of course if a person
+>> would like to avoid it, then it's fine.
 > 
-> Hint to the future (maybe Hans will fix this while it's in his review queue):
-> we have a Reported-by tag. Of course if a person would like to avoid
-> it, then it's fine.
+> I did notice this too, but I did not fix it. For future patches the
+> right thing to do is to ask the reporter if he is ok with a
+> Reported-by tag being added (which will expose their email to the
+> world) and then proceed depending on their answer, at least that is
+> what I usually do. Although sometimes I do just add the Reported-by
+> tag, esp. if the email has been send to a (couple of) lists, so the
+> email already has been exposed to a large audience.
+> 
+Ack - thanks all. I wasn't aware of the reported-by etiquette :)
 
-I did notice this too, but I did not fix it. For future patches the right
-thing to do is to ask the reporter if he is ok with a Reported-by tag being
-added (which will expose their email to the world) and then proceed depending
-on their answer, at least that is what I usually do. Although sometimes I do
-just add the Reported-by tag, esp. if the email has been send to a (couple of)
-lists, so the email already has been exposed to a large audience.
+Probably a good one to know about....I'm sure this won't be the last
+issue reported against a Lenovo system!
 
-Regards,
-
-Hans
-
+Mark
