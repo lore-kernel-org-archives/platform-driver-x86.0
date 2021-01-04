@@ -2,140 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C55DDC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35571C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEAE207BC
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB0021D93
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 14:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbhADOLP (ORCPT
+        id S1726950AbhADOfv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 09:11:15 -0500
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:35753 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbhADOLP (ORCPT
+        Mon, 4 Jan 2021 09:35:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60467 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726472AbhADOfu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 09:11:15 -0500
-Date:   Mon, 04 Jan 2021 14:10:27 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1609769432;
-        bh=whXRbK2A+bStQ4OaPK2MGD7P0DGU3PQk2/0lPI/Jwdw=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=MvbAMmLR5hNw1av9tMPbiaS6R2TS7j1opFXGcG3INQJxQINvuGnY5WNiZxV/r4kJ5
-         8ldYDhPaLfrX72p667byRN6YdUq/7jf759z4+CIWjXzRsIMZ13uXEwJEJytDYyv8ab
-         kq4hpTldcFg5okmyfPj9Sll9wT3whWvpz1ZSiLE8=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
+        Mon, 4 Jan 2021 09:35:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609770864;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PTEfEjtKePQ0/JuJ57gSim73GubJunX7YVIOZ0Wadjk=;
+        b=Dlbk+DIhNtJTuhobKyWtOdzu0/7qZk00DLkyw4bV2wrX1Tuvfkpj76GWmmRnYSa+wqcrf5
+        9ZY/8CUMB2QTifyDyoKm7YjGhZn9ST0aPJR3zeGKB+oa3D1ZZOCiZ/2M4s1r/w73MSo6X6
+        RSaNrNdMGhu9rF/V+v4Czas5OBKLCGQ=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-606NgrxDMSCQnQZV8Y6k6Q-1; Mon, 04 Jan 2021 09:34:19 -0500
+X-MC-Unique: 606NgrxDMSCQnQZV8Y6k6Q-1
+Received: by mail-ed1-f69.google.com with SMTP id k5so11367726edk.15
+        for <platform-driver-x86@vger.kernel.org>; Mon, 04 Jan 2021 06:34:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PTEfEjtKePQ0/JuJ57gSim73GubJunX7YVIOZ0Wadjk=;
+        b=d+w0B9BuliFr4AO2NFMThZIB+WkwDZx3Nhek0KA1AQLN8DYR4mhroETow/6IXYeHrh
+         c1/MCBfncn+tlh29EgabnT6TWW32Rjd+TI5Ky4/jKYpwlkMJqVX1L9o2RcHWF+lHb33i
+         y3lOtfENO7Ri/OJv4Mt3iObmv4Km5IOQB+HjBIAfycgfyCzAd8dDqA85WcTU851DX6xs
+         XplSVOicjv7qJUnn8gKoZsQ2sMRmMFVwLxRklz/zmKMCC7MLfGHPRMECInIlHj7GJOg0
+         8JLh7eNHEbUxCQqiJUIroAXXYel1EATN0BLRKHcwVacCym6K8VIIyo3sHVbdbBo0i/tb
+         tNuw==
+X-Gm-Message-State: AOAM533QNE5JA2YFI27AVBCJzZ1ShAzhBwSCPoF49l/id3JfntjwQc0M
+        LQcg05hf+13mC8O3kMokfG+RpgWVjmgAfQnJ2blwcttzGwH4/tBAzJo9PWvdfoLtfScePzEI4j2
+        m+KMzCtT94WqV/7R/Q70sJbnn0AOHk+zd5g==
+X-Received: by 2002:a17:906:4809:: with SMTP id w9mr66494828ejq.139.1609770858001;
+        Mon, 04 Jan 2021 06:34:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx6O37oPsVISpiRv4vXsFdt1QCkP08fqKLicEBFWvl0wC0+ErN5ZrtJrx0V/Uvq60GofTzJqA==
+X-Received: by 2002:a17:906:4809:: with SMTP id w9mr66494821ejq.139.1609770857873;
+        Mon, 04 Jan 2021 06:34:17 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id d3sm40336685edt.32.2021.01.04.06.34.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Jan 2021 06:34:17 -0800 (PST)
+Subject: Re: [PATCH 1/2] ACPI: platform-profile: Introduce data parameter to
+ handler
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
         Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH 00/24] platform/x86: ideapad-laptop: cleanup, keyboard backlight and "always on USB charging" control support, reenable touchpad control
-Message-ID: <6pY9uysbdjcsHSZ0pDkhQ6gasikcDwymJy4OIP2y7ydX_s1BCMQZH4W1b5XYLVuJYJiDKyycNP8gSYyFmW9H1mBT_kQvdKx8vGm64kSi_eA=@protonmail.com>
-In-Reply-To: <fa684b4c-4f0e-ec0e-4522-cffb2bba106f@redhat.com>
-References: <20201216013857.360987-1-pobrn@protonmail.com> <YGRDwoO_mZPu_JF1FiT-FpjTx11PTttBt1TuVvH9e7lLxLsv6f0EkQZI6u_GtLGUOQzQPQTZwsYD0Rse7TiUEQiBCio2oVzXiG-OETPf9mA=@protonmail.com> <fa684b4c-4f0e-ec0e-4522-cffb2bba106f@redhat.com>
+        Ike Panhc <ike.pan@canonical.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+ <20210101125629.20974-2-jiaxun.yang@flygoat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c58562aa-b3c5-f35f-0328-06bed81db559@redhat.com>
+Date:   Mon, 4 Jan 2021 15:34:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
+In-Reply-To: <20210101125629.20974-2-jiaxun.yang@flygoat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2021. janu=C3=A1r 4., h=C3=A9tf=C5=91 15:03 keltez=C3=A9ssel, Hans de Goede=
- =C3=ADrta:
+Hi,
 
-> Hi Barnab=C3=A1s,
->
-> On 1/4/21 1:03 PM, Barnab=C3=A1s P=C5=91cze wrote:
->
-> > 2020.  december 16., szerda 2:39 keltez=C3=A9ssel, Barnab=C3=A1s P=
-=C5=91cze =C3=ADrta:
-> >
-> > > This series contains patches that aim to bring more consistency
-> > > to the code; add keyboard backlight control support; add
-> > > "always on USB charging" control support.
-> > > Furthermore, commit 7f363145992cebf4ea760447f1cfdf6f81459683 is rever=
-ted
-> > > since it made it impossible to disable/enable the touchpad via the
-> > > ideapad-laptop module and on some devices the method implemented in t=
-he
-> > > module works correctly to disable/enable the touchpad.
-> > > Barnab=C3=A1s P=C5=91cze (24):
-> > > platform/x86: ideapad-laptop: remove unnecessary dev_set_drvdata()
-> > > call
-> > > platform/x86: ideapad-laptop: use appropriately typed variable to
-> > > store the return value of ACPI methods
-> > > platform/x86: ideapad-laptop: sort includes lexicographically
-> > > platform/x86: ideapad-laptop: use sysfs_emit()
-> > > platform/x86: ideapad-laptop: use for_each_set_bit() helper to
-> > > simplify event processing
-> > > platform/x86: ideapad-laptop: use msecs_to_jiffies() helper instead o=
-f
-> > > hand-crafted formula
-> > > platform/x86: ideapad-laptop: use dev_{err,warn} or appropriate
-> > > variant to display log messages
-> > > platform/x86: ideapad-laptop: convert ACPI helpers to return -EIO in
-> > > case of failure
-> > > platform/x86: ideapad-laptop: always propagate error codes from devic=
-e
-> > > attributes' show() callback
-> > > platform/x86: ideapad-laptop: misc. device attribute changes
-> > > platform/x86: ideapad-laptop: group and separate (un)related constant=
-s
-> > > into enums
-> > > platform/x86: ideapad-laptop: rework and create new ACPI helpers
-> > > platform/x86: ideapad-laptop: rework is_visible() logic
-> > > platform/x86: ideapad-laptop: check for Fn-lock support in HALS
-> > > platform/x86: ideapad-laptop: check for touchpad support in _CFG
-> > > platform/x86: ideapad-laptop: change 'status' debugfs file format
-> > > platform/x86: ideapad-laptop: change 'cfg' debugfs file format
-> > > Revert "platform/x86: ideapad-laptop: Switch touchpad attribute to be
-> > > RO"
-> > > platform/x86: ideapad-laptop: fix checkpatch warnings, more consisten=
-t
-> > > style
-> > > platform/x86: ideapad-laptop: send notification about touchpad state
-> > > change to sysfs
-> > > platform/x86: ideapad-laptop: add keyboard backlight control support
-> > > platform/x86: ideapad-laptop: add "always on USB charging" control
-> > > support
-> > > Documentation/ABI: sysfs-platform-ideapad-laptop: update device
-> > > attribute paths
-> > > Documentation/ABI: sysfs-platform-ideapad-laptop: conservation_mode
-> > > and usb_charging
-> > > .../ABI/testing/sysfs-platform-ideapad-laptop | 26 +-
-> > > drivers/platform/x86/ideapad-laptop.c | 1047 +++++++++++------
-> > > 2 files changed, 692 insertions(+), 381 deletions(-)
-> > >
-> > > 2.29.2
-> >
-> > A patch in the series a serious flaw which I have just noticed;
-> > I will send a new version when the situation about a conflicting
-> > patch1 becomes clear.
->
-> Thank you for the headsup, I will try to make some time to review v1
-> of this series, so that you can take any review-remarks which I might
-> have into account when posting v2 (or add my reviewed-by for patches
-> for which I have no remark).
->
-> May I ask which patch is flawed and what the flaw is ? Then I can skip
-> that while reviewing. I hope to get around to reviewing v1 (this version)
-> of this series this Wednesday (but no promises).
->
+On 1/1/21 1:56 PM, Jiaxun Yang wrote:
+> Add a data parameter to handler callbacks to avoid having
+> global variables everywhere.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-Hi
+Thanks, patch looks good to me:
 
-
-In "platform/x86: ideapad-laptop: check for touchpad support in _CFG", the =
-bit
-is off by one. It should be 30, not 31.
-
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 Regards,
-Barnab=C3=A1s P=C5=91cze
+
+Hans
+
+
+
+> ---
+>  drivers/acpi/platform_profile.c  | 4 ++--
+>  include/linux/platform_profile.h | 5 +++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index 91be50a32cc8..60072f6e032d 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
+>  		return -ENODEV;
+>  	}
+>  
+> -	err = cur_profile->profile_get(&profile);
+> +	err = cur_profile->profile_get(cur_profile->data, &profile);
+>  	mutex_unlock(&profile_lock);
+>  	if (err)
+>  		return err;
+> @@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> -	err = cur_profile->profile_set(i);
+> +	err = cur_profile->profile_set(cur_profile->data, i);
+>  	mutex_unlock(&profile_lock);
+>  	if (err)
+>  		return err;
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> index 3623d7108421..272faf55875d 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -27,9 +27,10 @@ enum platform_profile_option {
+>  };
+>  
+>  struct platform_profile_handler {
+> +	void *data;
+>  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> -	int (*profile_get)(enum platform_profile_option *profile);
+> -	int (*profile_set)(enum platform_profile_option profile);
+> +	int (*profile_get)(void *data, enum platform_profile_option *profile);
+> +	int (*profile_set)(void *data, enum platform_profile_option profile);
+>  };
+>  
+>  int platform_profile_register(const struct platform_profile_handler *pprof);
+> 
+
