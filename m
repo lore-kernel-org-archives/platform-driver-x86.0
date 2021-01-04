@@ -2,142 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16926C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 22:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 23:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDB222512
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 22:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA4B22519
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 23:52:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbhADWEX (ORCPT
+        id S1727766AbhADXwN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 17:04:23 -0500
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.112]:26589 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726608AbhADWEX (ORCPT
+        Mon, 4 Jan 2021 18:52:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726289AbhADXwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 17:04:23 -0500
-Received: from [100.112.7.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-c.us-east-1.aws.symcld.net id 7E/90-29370-E9F83FF5; Mon, 04 Jan 2021 21:58:54 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRWlGSWpSXmKPExsWS8eIhr+68/s/
-  xBhf3Mlu8OT6dyeLIqZNsFlMP1FjsfPiWzWL5vn5Gi8u75rBZfO6YzGKxes8LZou5X6YyW5w5
-  fYnVgctjVkMvm8e7U1vYPDat6mTzmHcy0OP9vqtsHluutrN4fN4kF8AexZqZl5RfkcCasWVWS
-  cEjgYoNUztZGhi383YxcnEICfxnlDjxdysbhPOMUWLyk3fMXYycHMICHhJbN25iBbFFBAIlvj
-  6+A1bELPCISWLKjJ+MEB0vGCVOXT7LDlLFJqAtsWXLLzYQm1fAVuL58YNgk1gEVCS6N+9mAbF
-  FBcIl1i9ZyQhRIyhxcuYTsDingJ3ErJ2rgeZwAG3QlFi/Sx8kzCwgLnHryXwmCFteYvvbOcwg
-  JRJAds9DWZCwhECCxLKXd5gnMArOQjJ0FsKgWUgGzUIyaAEjyypG06SizPSMktzEzBxdQwMDX
-  UNDI11zXRNLvcQq3WS90mLd1MTiEl1DvcTyYr3iytzknBS9vNSSTYzAuEspYDfcwbj4zQe9Q4
-  ySHExKorwefZ/jhfiS8lMqMxKLM+KLSnNSiw8xynBwKEnwyvYA5QSLUtNTK9Iyc4ApACYtwcG
-  jJML7H6SVt7ggMbc4Mx0idYpRUUqc9w5IQgAkkVGaB9cGSzuXGGWlhHkZGRgYhHgKUotyM0tQ
-  5V8xinMwKgnz7usFmsKTmVcCN/0V0GImoMWHQ8EWlyQipKQamLZ6d67Tvhew07j22XXrDYqd0
-  ZUcq99fZWw3tRCtFdi/6rYa+4YjOcGsJsaFvsZy25KaMsz4JerEX515bFmuyRPw1G7WJsXlzV
-  kPpHa5r7x//vAGJ9nVThwyZVcvvg7aKhS36MHsb5a/53qkqh2JPRuZ+zH1U+nqW4zpzpPOzlz
-  SPL3+VqOp3DNu7vyrvWf+cOXL77r6zz5R5uUD7x17Q3d3NDw8pV3gqXkzOU+1VjPQzfTzIcvK
-  GTd/+xdIPhO/ISj0VORLeb+G2WydHfKLOU5P+7H5xdPJLhyvc/6q92fd4O4JnlYUaZnw71FPv
-  F8Xs0L+Z4VNr2ykdC3LtEz+1Spn1T9Q9wm/l75yh0SBEktxRqKhFnNRcSIA/G2/5rYDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-3.tower-416.messagelabs.com!1609797533!966805!1
-X-Originating-IP: [104.232.225.13]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 1410 invoked from network); 4 Jan 2021 21:58:54 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-3.tower-416.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 4 Jan 2021 21:58:54 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id CDF5549D335A48744C5A;
-        Mon,  4 Jan 2021 16:58:53 -0500 (EST)
-Received: from localhost.localdomain (10.38.54.96) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Mon, 4 Jan 2021
- 13:58:52 -0800
-Subject: Re: [External] Re: [PATCH 0/2] IdeaPad platform profile support
-To:     Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-CC:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
+        Mon, 4 Jan 2021 18:52:13 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704A9C061574;
+        Mon,  4 Jan 2021 15:51:32 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id v19so20079344pgj.12;
+        Mon, 04 Jan 2021 15:51:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FhUpEO+5p3LEHY1dTLvydWrAfFUq4dwKw8m6KddxEmo=;
+        b=De23hGEmQ/leNj7ycpp5iQ3hkQofyF7JfOyYD2sqy8X2nWNNSxVF7Pyc3onyM17ERJ
+         dVOGaqxUE3f3meX9ZlUp5ob69x6F2WxBj8Yc9xgJVit6m/y9d3aHDadFcMIcx/0AP0xn
+         cQn2tBbrJartCZLBllkNjXSJElxHxeAl/udknSWHzddcAaCX2JWZVALOEIEzmwFGRgDs
+         8uZrY3kxMTAHLKCbdr7wX2sxCFvo+tJJOkhxgLfmb8z/G8HJqBUe0HkzvfrIo8VBlLit
+         Z3vgDvLNdoQVXd8uOHrQfiUYnnqBOHzDQ6WvUPSyRsY/AkE2y2WwxXjtoEgDe5KMpbPp
+         jMLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FhUpEO+5p3LEHY1dTLvydWrAfFUq4dwKw8m6KddxEmo=;
+        b=W5N+K+u1rVPkUkLupWRL4cRgVmZUw2jhfQAr/GnU8GFhkDm4rXOCchVbyemus8Y2i+
+         53iGwIxCX43DgC6kiE45VOQACW+zq44278lPXUWszsKXeiGtqYk24eA+znD462iZtBqt
+         1UQXeuULA01CWhloGks+hnH50NYc9VJeb7cRUqNgafC8pyS3BL0LobyPYtr6HG0kHDIC
+         276wuD/Jgwcp/nZpnBGjf3ia0SEXJam5MChdJnihBmFwjkfWM1oydRG4odNjZe+R5g5L
+         6FN6sxa7ZHQ8C8kPSSeJf0qYoV4wTPDrDeS6FZXYRpXVFjLvP5l0ZeuuwpKXg+2yb/Vl
+         qHIQ==
+X-Gm-Message-State: AOAM5311EHmqOeV9IN7sIxak0zWnvmYNUhMFR4tirZtfQUo852oIQkxh
+        QWsU0RfK71P0CZgazqlvJ/WMMv/NXkc=
+X-Google-Smtp-Source: ABdhPJzPa6e+ftPXqqpYzv+JSZ9avkLgWKVdMZKxpEoeo6jG2Z6gMtIwhAJQwpCzv+Aeylx5BUq5nw==
+X-Received: by 2002:a62:37c7:0:b029:1aa:22ea:537d with SMTP id e190-20020a6237c70000b02901aa22ea537dmr66214026pfa.56.1609797406347;
+        Mon, 04 Jan 2021 13:56:46 -0800 (PST)
+Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id u25sm57058108pfn.170.2021.01.04.13.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Jan 2021 13:56:45 -0800 (PST)
+Date:   Mon, 4 Jan 2021 13:56:43 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <j.w.r.degoede@gmail.com>
+Cc:     Bastien Nocera <hadess@hadess.net>,
         Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
- <35ac853a-266c-6944-6e5e-6286456865e3@redhat.com>
- <CAJZ5v0jcCD3qWUJQcS+nFVJWSCQEbq2eN3i07mN8yFr3WZD9dg@mail.gmail.com>
- <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <2eefa5ec-4f09-eabd-2c20-f217fa084dfc@lenovo.com>
-Date:   Mon, 4 Jan 2021 16:58:52 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+        linux-input@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add swap-x-y quirk for
+ Goodix touchscreen on Estar Beauty HD tablet
+Message-ID: <X/OPG5caR4SJ/PMH@google.com>
+References: <20201224135158.10976-1-hdegoede@redhat.com>
+ <99d3da8d-3319-3904-25d1-a9ff34be653f@redhat.com>
+ <c7b47af9cc3bd1d38b6c3582f6e63d7876365ee9.camel@hadess.net>
+ <2ce7980e-e90f-f778-d349-44e35b3baf1d@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.54.96]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ce7980e-e90f-f778-d349-44e35b3baf1d@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 04/01/2021 15:58, Hans de Goede wrote:
-> Hi,
-> 
-> On 1/4/21 9:33 PM, Rafael J. Wysocki wrote:
->> On Mon, Jan 4, 2021 at 3:36 PM Hans de Goede <hdegoede@redhat.com>
->>  wrote:
->>> 
->>> Hi,
->>> 
->>> On 1/1/21 1:56 PM, Jiaxun Yang wrote:
->>>> Tested on Lenovo Yoga-14SARE Chinese Edition.
->>>> 
-<snip>
-> 
->> Also, on a somewhat related note, I'm afraid that it may not be a 
->> good idea to push this series for 5.11-rc in the face of recent 
->> objections against new material going in after the merge window.
-> 
-> That is fine with me, since this did not make rc1 (nor rc2) I'm not 
-> entirely comfortable with sending out a late pull-req for the pdx86 
-> side of this either, so lets postpone this to 5.12 (sorry Mark).
-It is what it is.
+Hi Hans,
 
+On Mon, Jan 04, 2021 at 02:24:27PM +0100, Hans de Goede wrote:
 > 
-> Rafael, once we have the discussion with the passing a pointer back 
-> to the drivers data thing resolved (and a patch merged for that if we
-> go that route) can you provide me with an immutable branch to merge
-> into pdx86/for-next so that I can then merge the pdx86 bits on top ?
+> Dmitry, once I have a patch ready to move the goodix rotated_screen
+> and inverted_x_screen DMI quirk tables to platform/drivers/x86/touchscreen_dmi.c
+> where all other (x86) touchscreen quirks have been gathered so far, the question
+> becomes how to merge that patch ?
 > 
-> Note this does not need to be done right now around say rc4 would be
->  fine, so that we have some time for the patches currently in 
-> bleeding-edge to settle a bit.
+> I see 2 options:
 > 
-Just for my understanding of what happens next....please correct me if I
-have anything wrong:
+> 1. Have 2 separate patches, one adding the quirks to
+> platform/drivers/x86/touchscreen_dmi.c and a second patch removing the
+> DMI tables (and the code handling them) from goodix.c. And then merge
+> them through the pdx86 resp. the input tree.
+> 
+> 2. Have 1 big patch doing both.
+> 
+> The downside of 1. is that there might be a point in git history where
+> the coordinates of the touchscreens regress. Depending on which pull-req
+> lands first (if the pdx86 pull-req for 5.12-rc1 gets merged first there
+> is no issue). But only when git-bisecting so I think that 1. is best to
+> avoid any merge issues. At least platform/drivers/x86/touchscreen_dmi.c
+> sees a lot of activity every cycle. So another option would be to 
+> do 1 big patch and then merge that through the pdx86 tree (I can provide
+> an immutable branch for that).
+> 
+> Dmitry if you can let me know which way you would prefer to move forward
+> with this then I can prepare the 1 or 2 patches (once I hear back from the
+> "Cube I15-TC" quirk patch author).
 
- - platform_profile gets pulled from ACPI for 5.11
+I am fine with a single patch going through either platform or input
+tree. We could even have an immutable branch off 5.10 and merge it into
+both trees to ensure there are no clashes.
 
- - platform_profile gets updated to add this data/pointer implementation
-and goes into 5.12. Jiaxun, let me know if you're happy with following
-up on that based on Hans suggestions, If you are pushed for time let me
-know and I'll happily help out/implement/test as required. I sadly don't
-have any ideapads but very happy to support your efforts any way I can.
+Thanks.
 
- - Can we get the x86 portion done at the same time or does that end up
-going to 5.13? I had been looking at the ideapad_laptop.c patch and have
-some concerns there as Jiaxun's patch is essentially a duplicate of what
-I implemented in thinkpad_acpi.c which doesn't seem to be ideal
-(especially as there is a V6 version of DYTC coming out this year). I
-haven't had time to look at code to consider better alternatives though...
-
-Mark
+-- 
+Dmitry
