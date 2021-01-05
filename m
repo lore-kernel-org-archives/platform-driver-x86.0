@@ -2,154 +2,183 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B54C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 13:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DC0C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 16:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92C3122525
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 13:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D270622CBE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 16:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbhAENSQ (ORCPT
+        id S1730092AbhAEQ6W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Jan 2021 08:18:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57686 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727796AbhAENSP (ORCPT
+        Tue, 5 Jan 2021 11:58:22 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.115]:7793 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729248AbhAEQ6W (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Jan 2021 08:18:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609852608;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LtvpE51PJaJIshJkk/nmlb3ypMZHhp2FfVBDGEueVK0=;
-        b=O0/ymIGCLFtmV8BOWfUH6ZI9QCpobDhBxB5C63hjdsD3N6143etsLFHY4mm6rOwtuo4uSS
-        a9wW/aSFJeS4Fcx6TvBf4idr5ccexdymIeN6t1ZMsoTGrNkqsA6VMNKLwTVcrOFItYuDOe
-        8/icGCgdYl/Yaf9dBKGfCPSYqZbLxDc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-GyTm_zMzN26N--fojYQdoA-1; Tue, 05 Jan 2021 08:16:47 -0500
-X-MC-Unique: GyTm_zMzN26N--fojYQdoA-1
-Received: by mail-ej1-f72.google.com with SMTP id he8so4290665ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 05 Jan 2021 05:16:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LtvpE51PJaJIshJkk/nmlb3ypMZHhp2FfVBDGEueVK0=;
-        b=ctS0I6SHp7XSkv1GrxeDpdjdLRrqGRvacv+P9bspyY/XIRihssyeDJyyDUkCfG5mQd
-         CBAsOQ9YfFplG3t1vVq1s8623KHQAh7pziU230T3lCk85oNe8dM+QqpoljowSxSzhKni
-         mz8sg+Mh3XKGDclI3jBX1X7DOqjPjjAyOLSXiEv9i6BSy+Fs4p8Pj24cTY+1JYZva0gT
-         y5TsOdpLnV/sidFfU27UcNLQ9nwCx+6Er8IdQR6EZgFdD8bL4a1uvslpQ34VT7fztAxi
-         BIp+NcP1y/+PXv7U7JfGTtHb/j6oVpdLMYiRTX4lrCn3b28lQBfom/RvljRC0193jTkT
-         l4sw==
-X-Gm-Message-State: AOAM530xyEDPBvh1fweUK7rNteqcRU/StCCzmTpC9WQr57gXbsdG+CQz
-        Hf6EzmjdsXqTp18kVStbgkewZPxxsia3bjNPEi3bz2gZfGRJ+mfRGvWanf7/wrFvnZJ2iPvuqe4
-        ydIveTOyf+0oAmrt7Q3w/sDdiOJRtD840LA==
-X-Received: by 2002:a17:906:351a:: with SMTP id r26mr67935437eja.204.1609852605859;
-        Tue, 05 Jan 2021 05:16:45 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzR8665AcodeuSJbYBLUiasXhwrRCFhXP5UBpYr9ukaXtBLdpvwkT7bCIIXAfTHAulHtc13TA==
-X-Received: by 2002:a17:906:351a:: with SMTP id r26mr67935430eja.204.1609852605708;
-        Tue, 05 Jan 2021 05:16:45 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id e1sm24929834edk.51.2021.01.05.05.16.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Jan 2021 05:16:45 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] ACPI: platform-profile: Introduce object pointers
- to callbacks
+        Tue, 5 Jan 2021 11:58:22 -0500
+Received: from [100.112.132.72] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-b.us-west-2.aws.symcld.net id CE/76-61492-D9994FF5; Tue, 05 Jan 2021 16:53:49 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRWlGSWpSXmKPExsWSLveKXXfuzC/
+  xBrPnMVq8OT6dyeLIqZNsFlMP1FjsfPiWzWL5vn5Gi8u75rBZfO6YzGKxes8LZou5X6YyW5w5
+  fYnVgctjVkMvm8e7U1vYPDat6mTzmHcy0OP9vqtsHluutrN4fN4kF8AexZqZl5RfkcCaMfHlH
+  eaCbeIVdy5eYGlgfC/UxcjFISTwn1Gi/+sjNgjnGaPExZ/fGbsYOTmEBTwktm7cxApiiwhUSG
+  yevJsVpIhZYBeTxMuWJVAd55kkDr5tBetgE9CW2LLlFxuIzStgKzFjTQsziM0ioCKxrnM6O4g
+  tKhAusX7JSkaIGkGJkzOfsIDYnAL2EhO23ASKcwBt0JRYv0sfJMwsIC5x68l8JghbXqJ562xm
+  kBIJILvnoSxIWEIgQWIZ0GcTGAVnIRk6C2HQLCSDZiEZtICRZRWjRVJRZnpGSW5iZo6uoYGBr
+  qGhka6hsQkQm+klVukm6ZUW65anFpfoGukllhfrFVfmJuek6OWllmxiBMZfSkFbxw7G6W8+6B
+  1ilORgUhLlnRb9JV6ILyk/pTIjsTgjvqg0J7X4EKMMB4eSBC8XMKKFBItS01Mr0jJzgKkAJi3
+  BwaMkwis0HSjNW1yQmFucmQ6ROsWoy7Hy4JJFzEIsefl5qVLivFdBigRAijJK8+BGwNLSJUZZ
+  KWFeRgYGBiGegtSi3MwSVPlXjOIcjErCvKdnAE3hycwrgdv0CugIJqAjDod+BjmiJBEhJdXAZ
+  Hph9sWoZf+LFqaucnFiSHf61HqpaN6vXRsL+zsbo07z3HXOnfylcOstvvvtHbuurL29K/aJ86
+  a7rtrOZnmTLxr6BW8Vr7Cz3l/3dbGdJd8LD854r92beqaFzVm7ftHrPNYq8VfG+Q/4ks7W5on
+  bchR0228szF6r/0V+voZnm4ndW84esfbQC3yZt7ObSyxehpbysP30iX1oc/7JufO6k5aLq0av
+  94jiS5G9GxU424+jfWrMvl+CX+2WnmBNXiNkxnKqJUD1ouChnX+lbBuvvW35tWPTqRr+dXqGu
+  gGV8eI7ZB+ZNbZa2c5+w5MV+pz5U9yuQPvZR88YGW+Yxqn+5cjMCRq911ITQy7lzVdXYinOSD
+  TUYi4qTgQAL8xcMcYDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-24.tower-356.messagelabs.com!1609865626!4995!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 31544 invoked from network); 5 Jan 2021 16:53:48 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-24.tower-356.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 5 Jan 2021 16:53:48 -0000
+Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 3AD635DA9918C07D62E6;
+        Wed,  6 Jan 2021 00:53:44 +0800 (CST)
+Received: from localhost.localdomain (10.38.54.96) by reswpmail04.lenovo.com
+ (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Tue, 5 Jan 2021
+ 08:53:42 -0800
+Subject: Re: [External] Re: [PATCH 0/2] IdeaPad platform profile support
 To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Len Brown <lenb@kernel.org>,
         Mark Gross <mgross@linux.intel.com>,
         Ike Panhc <ike.pan@canonical.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210105131447.38036-1-jiaxun.yang@flygoat.com>
- <20210105131447.38036-2-jiaxun.yang@flygoat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <683c8358-fd71-cd27-8e39-19fdf3e1f71f@redhat.com>
-Date:   Tue, 5 Jan 2021 14:16:44 +0100
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+ <35ac853a-266c-6944-6e5e-6286456865e3@redhat.com>
+ <CAJZ5v0jcCD3qWUJQcS+nFVJWSCQEbq2eN3i07mN8yFr3WZD9dg@mail.gmail.com>
+ <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
+ <2eefa5ec-4f09-eabd-2c20-f217fa084dfc@lenovo.com>
+ <75952842-3ee3-82a2-7809-66e2d5263c73@flygoat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <f53cd0dc-17b4-6410-02f9-526e67c7132c@lenovo.com>
+Date:   Tue, 5 Jan 2021 11:53:41 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <20210105131447.38036-2-jiaxun.yang@flygoat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <75952842-3ee3-82a2-7809-66e2d5263c73@flygoat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.38.54.96]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail04.lenovo.com (10.62.32.23)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Jiaxun,
 
-On 1/5/21 2:14 PM, Jiaxun Yang wrote:
-> Add a object pointer to handler callbacks to avoid having
-> global variables everywhere.
+On 05/01/2021 01:24, Jiaxun Yang wrote:
+> 在 2021/1/5 上午5:58, Mark Pearson 写道:
+>> On 04/01/2021 15:58, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 1/4/21 9:33 PM, Rafael J. Wysocki wrote:
+>>>> On Mon, Jan 4, 2021 at 3:36 PM Hans de Goede <hdegoede@redhat.com>
+>>>>   wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 1/1/21 1:56 PM, Jiaxun Yang wrote:
+>>>>>> Tested on Lenovo Yoga-14SARE Chinese Edition.
+>>>>>>
+> [...]
+>> Just for my understanding of what happens next....please correct me if I
+>> have anything wrong:
+>>
+>>   - platform_profile gets pulled from ACPI for 5.11
+>>
+>>   - platform_profile gets updated to add this data/pointer implementation
+>> and goes into 5.12.
+> Hi all,
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Suggested-by: Hans de Goede <hdegoede@redhat.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
-> ---
->  drivers/acpi/platform_profile.c  | 4 ++--
->  include/linux/platform_profile.h | 6 ++++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
+> Another approach could be just let all the patch go through pdx86 tree
+> and with
+> pointer part acked by Rafael as it's unlikely to have merge conflicts.
 > 
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> index 91be50a32cc8..bb4d7b0fe2ac 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
->  		return -ENODEV;
->  	}
->  
-> -	err = cur_profile->profile_get(&profile);
-> +	err = cur_profile->profile_get(cur_profile, &profile);
->  	mutex_unlock(&profile_lock);
->  	if (err)
->  		return err;
-> @@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
->  		return -EOPNOTSUPP;
->  	}
->  
-> -	err = cur_profile->profile_set(i);
-> +	err = cur_profile->profile_set(cur_profile, i);
->  	mutex_unlock(&profile_lock);
->  	if (err)
->  		return err;
-> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> index 3623d7108421..43f4583b5259 100644
-> --- a/include/linux/platform_profile.h
-> +++ b/include/linux/platform_profile.h
-> @@ -28,8 +28,10 @@ enum platform_profile_option {
->  
->  struct platform_profile_handler {
->  	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-> -	int (*profile_get)(enum platform_profile_option *profile);
-> -	int (*profile_set)(enum platform_profile_option profile);
-> +	int (*profile_get)(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option *profile);
-> +	int (*profile_set)(struct platform_profile_handler *pprof,
-> +				enum platform_profile_option profile);
->  };
->  
->  int platform_profile_register(const struct platform_profile_handler *pprof);
+>> Jiaxun, let me know if you're happy with following
+>> up on that based on Hans suggestions, If you are pushed for time let me
+>> know and I'll happily help out/implement/test as required. I sadly don't
+>> have any ideapads but very happy to support your efforts any way I can.
 > 
+> 
+> I'm happy with Hans suggestion, will send v2 for it later.
+> 
+> I've been ask Lenovo engineers about DYTC and other ideapad ACPI
+> stuff on Lenovo China forum[1], but moderator here told me Lenovo won't
+> invest any Linux effort on their consumer product line :-(
+> 
+> Is it possible to publish a DYTC specification or documents to help us
+> further
+> understand these mechanisms?
+> 
+> I'm tired of reading disassembly AML and code to figure out these
+> internals.
+> 
+I hear you :)
 
+Afraid I'm not allowed to publish the full DYTC spec - but I make public
+the bits that I can.
+
+I don't have many hooks into the ideapad team as it's not in the Linux
+plan - so I can't answer your questions with confidence. I am going to
+ask the firmware team if they can confirm if ideapad is using the same
+spec - it would make sense if they are.
+Feel free to bug me off mailing list and I'll happily help out with any
+debugging issues.
+
+I'm also not allowed to confirm or deny future plans but my personal
+hope is that the Linux project in Lenovo grows. Fingers crossed for the
+future.
+
+>>
+>>   - Can we get the x86 portion done at the same time or does that end up
+>> going to 5.13? I had been looking at the ideapad_laptop.c patch and have
+>> some concerns there as Jiaxun's patch is essentially a duplicate of what
+>> I implemented in thinkpad_acpi.c which doesn't seem to be ideal
+>> (especially as there is a V6 version of DYTC coming out this year). I
+>> haven't had time to look at code to consider better alternatives
+>> though...
+> 
+> It may be worthy to share these code but I'm comfort to have this
+> duplication as I'm
+> unsure about the future of DYTC. Will DYTC for thinkpads always coherent
+> with DYTC
+> for ideapads?
+I'll see if I can find out.
+
+> 
+> Thanks.
+> 
+> [1]: https://club.lenovo.com.cn/thread-5980431-1-1.html
+> 
+> - Jiaxun
+> 
+>>
+>> Mark
+> 
