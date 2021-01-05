@@ -2,119 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B84AC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 23:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A4BC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 06:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA4B22519
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  4 Jan 2021 23:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C742222A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 06:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbhADXwN (ORCPT
+        id S1726097AbhAEGZr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 4 Jan 2021 18:52:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726289AbhADXwN (ORCPT
+        Tue, 5 Jan 2021 01:25:47 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:35589 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725862AbhAEGZr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 4 Jan 2021 18:52:13 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704A9C061574;
-        Mon,  4 Jan 2021 15:51:32 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id v19so20079344pgj.12;
-        Mon, 04 Jan 2021 15:51:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FhUpEO+5p3LEHY1dTLvydWrAfFUq4dwKw8m6KddxEmo=;
-        b=De23hGEmQ/leNj7ycpp5iQ3hkQofyF7JfOyYD2sqy8X2nWNNSxVF7Pyc3onyM17ERJ
-         dVOGaqxUE3f3meX9ZlUp5ob69x6F2WxBj8Yc9xgJVit6m/y9d3aHDadFcMIcx/0AP0xn
-         cQn2tBbrJartCZLBllkNjXSJElxHxeAl/udknSWHzddcAaCX2JWZVALOEIEzmwFGRgDs
-         8uZrY3kxMTAHLKCbdr7wX2sxCFvo+tJJOkhxgLfmb8z/G8HJqBUe0HkzvfrIo8VBlLit
-         Z3vgDvLNdoQVXd8uOHrQfiUYnnqBOHzDQ6WvUPSyRsY/AkE2y2WwxXjtoEgDe5KMpbPp
-         jMLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FhUpEO+5p3LEHY1dTLvydWrAfFUq4dwKw8m6KddxEmo=;
-        b=W5N+K+u1rVPkUkLupWRL4cRgVmZUw2jhfQAr/GnU8GFhkDm4rXOCchVbyemus8Y2i+
-         53iGwIxCX43DgC6kiE45VOQACW+zq44278lPXUWszsKXeiGtqYk24eA+znD462iZtBqt
-         1UQXeuULA01CWhloGks+hnH50NYc9VJeb7cRUqNgafC8pyS3BL0LobyPYtr6HG0kHDIC
-         276wuD/Jgwcp/nZpnBGjf3ia0SEXJam5MChdJnihBmFwjkfWM1oydRG4odNjZe+R5g5L
-         6FN6sxa7ZHQ8C8kPSSeJf0qYoV4wTPDrDeS6FZXYRpXVFjLvP5l0ZeuuwpKXg+2yb/Vl
-         qHIQ==
-X-Gm-Message-State: AOAM5311EHmqOeV9IN7sIxak0zWnvmYNUhMFR4tirZtfQUo852oIQkxh
-        QWsU0RfK71P0CZgazqlvJ/WMMv/NXkc=
-X-Google-Smtp-Source: ABdhPJzPa6e+ftPXqqpYzv+JSZ9avkLgWKVdMZKxpEoeo6jG2Z6gMtIwhAJQwpCzv+Aeylx5BUq5nw==
-X-Received: by 2002:a62:37c7:0:b029:1aa:22ea:537d with SMTP id e190-20020a6237c70000b02901aa22ea537dmr66214026pfa.56.1609797406347;
-        Mon, 04 Jan 2021 13:56:46 -0800 (PST)
-Received: from google.com ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id u25sm57058108pfn.170.2021.01.04.13.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Jan 2021 13:56:45 -0800 (PST)
-Date:   Mon, 4 Jan 2021 13:56:43 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Hans de Goede <j.w.r.degoede@gmail.com>
-Cc:     Bastien Nocera <hadess@hadess.net>,
+        Tue, 5 Jan 2021 01:25:47 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id BD60E580553;
+        Tue,  5 Jan 2021 01:25:00 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 05 Jan 2021 01:25:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm1; bh=N
+        Cgc2BalphfKGG4aBWNk6OJ60l8uwTPLt9jJB7A+fGA=; b=Q/gF8uvV4VZc8JoUt
+        cFJ0GaKDLYljr8ck2GQn/nhm4p8pqFDmg/Fi8CsLIXBrdlh9UJbf9sFLple7NXMr
+        Mx62xHNThAhc8R/K/+OQb1BstP2xtWIO2ABD/HxdD7T9qZl1T/hdOCdkGZ8eyRoD
+        fs3Ti/6tlVTSIB1KO+obek4GHKmAIXUvlV2OWq6vqX1rvZeGA18KBsQa6BqlNOg+
+        A/WMlggIF+6KAm3V5fOiS0nJeUB96hNywlGVV/Kryo4WGpn4sZVj/hA2R00wps7Z
+        waNsYAXlr0GjfgL2W4Vf8GaB+YlJa7C4w61O5pRT3V321kGVY2GH5sy3tJQO/+3M
+        4GKig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=NCgc2BalphfKGG4aBWNk6OJ60l8uwTPLt9jJB7A+f
+        GA=; b=haODKpgwAAa7cHDzJpzevRBZCg7AQsCvuoPBWOe06zQQo8EyaSO9itwdF
+        2wdZ6m8QQkqRjW46YRiv5QEgpZa5pONecb05N4yP4BvNE7fg+O3alNIdhZhhvZFM
+        UON5ZA88AfJoFi9GCl7CC+1ioZX+/ecVYdEKFnhgCEtd5GSfvzsH8g0ppXw96oPu
+        +mZ7jbjb0uzrfru1NnaokU45YVQB2XbHs6KStHBFwP+hYIJot305lYVdDOTqCisI
+        DuWrlLF6u3efP9N3OCbPvBxjFa0Zw34L5Wn97rWXmL7UOhwEKAKDjH2P4mI1S7XC
+        2a/SQqHboMlROrhrmh7sMt8V3evUA==
+X-ME-Sender: <xms:OQb0Xynbht16e_1MlDOBf7TQ6AQ_NSgSXCRSI978nnCCLU9huw7YzA>
+    <xme:OQb0X51CFFuNCRZC2X4ec-_nMVC33oEykiwxyYtTEbpiu9f5QxLCJ1fCaAVt0Qhfb
+    iPYmNoaE9PVZO3UX-I>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdefgedgleefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomheplfhirgig
+    uhhnucgjrghnghcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmqeenuc
+    ggtffrrghtthgvrhhnpedvledvvdeukeekjeffudehtdefudfgkedujeevfeevjeelvddt
+    ueeivdegueetieenucffohhmrghinheplhgvnhhovhhordgtohhmrdgtnhenucfkphepge
+    ehrdeffedrhedtrddvheegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:OQb0XwrDlYHD14FEZUlVboSYMS2OjY0uDOnrjGAB39IdNazmYVUCzA>
+    <xmx:OQb0X2lzGnhqRksXxWVHfnmZfIz9V6imCr7njakC_pEUX7jCec734A>
+    <xmx:OQb0Xw0-A5YAohb36pd27KvePlh1YYLzx5Popc8flQP5VExRZPs98A>
+    <xmx:Owb0X6pc9abW9tQBuonzhUYMCoRRPhzsSwKtMUDzH1JyORvr5I130A>
+Received: from [0.0.0.0] (li1000-254.members.linode.com [45.33.50.254])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6F7B61080057;
+        Tue,  5 Jan 2021 01:24:53 -0500 (EST)
+Subject: Re: [External] Re: [PATCH 0/2] IdeaPad platform profile support
+To:     Mark Pearson <markpearson@lenovo.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
         Mark Gross <mgross@linux.intel.com>,
-        linux-input@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add swap-x-y quirk for
- Goodix touchscreen on Estar Beauty HD tablet
-Message-ID: <X/OPG5caR4SJ/PMH@google.com>
-References: <20201224135158.10976-1-hdegoede@redhat.com>
- <99d3da8d-3319-3904-25d1-a9ff34be653f@redhat.com>
- <c7b47af9cc3bd1d38b6c3582f6e63d7876365ee9.camel@hadess.net>
- <2ce7980e-e90f-f778-d349-44e35b3baf1d@gmail.com>
+        Ike Panhc <ike.pan@canonical.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
+ <35ac853a-266c-6944-6e5e-6286456865e3@redhat.com>
+ <CAJZ5v0jcCD3qWUJQcS+nFVJWSCQEbq2eN3i07mN8yFr3WZD9dg@mail.gmail.com>
+ <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
+ <2eefa5ec-4f09-eabd-2c20-f217fa084dfc@lenovo.com>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <75952842-3ee3-82a2-7809-66e2d5263c73@flygoat.com>
+Date:   Tue, 5 Jan 2021 14:24:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ce7980e-e90f-f778-d349-44e35b3baf1d@gmail.com>
+In-Reply-To: <2eefa5ec-4f09-eabd-2c20-f217fa084dfc@lenovo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+在 2021/1/5 上午5:58, Mark Pearson 写道:
+> On 04/01/2021 15:58, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 1/4/21 9:33 PM, Rafael J. Wysocki wrote:
+>>> On Mon, Jan 4, 2021 at 3:36 PM Hans de Goede <hdegoede@redhat.com>
+>>>   wrote:
+>>>> Hi,
+>>>>
+>>>> On 1/1/21 1:56 PM, Jiaxun Yang wrote:
+>>>>> Tested on Lenovo Yoga-14SARE Chinese Edition.
+>>>>>
+[...]
+> Just for my understanding of what happens next....please correct me if I
+> have anything wrong:
+>
+>   - platform_profile gets pulled from ACPI for 5.11
+>
+>   - platform_profile gets updated to add this data/pointer implementation
+> and goes into 5.12.
+Hi all,
 
-On Mon, Jan 04, 2021 at 02:24:27PM +0100, Hans de Goede wrote:
-> 
-> Dmitry, once I have a patch ready to move the goodix rotated_screen
-> and inverted_x_screen DMI quirk tables to platform/drivers/x86/touchscreen_dmi.c
-> where all other (x86) touchscreen quirks have been gathered so far, the question
-> becomes how to merge that patch ?
-> 
-> I see 2 options:
-> 
-> 1. Have 2 separate patches, one adding the quirks to
-> platform/drivers/x86/touchscreen_dmi.c and a second patch removing the
-> DMI tables (and the code handling them) from goodix.c. And then merge
-> them through the pdx86 resp. the input tree.
-> 
-> 2. Have 1 big patch doing both.
-> 
-> The downside of 1. is that there might be a point in git history where
-> the coordinates of the touchscreens regress. Depending on which pull-req
-> lands first (if the pdx86 pull-req for 5.12-rc1 gets merged first there
-> is no issue). But only when git-bisecting so I think that 1. is best to
-> avoid any merge issues. At least platform/drivers/x86/touchscreen_dmi.c
-> sees a lot of activity every cycle. So another option would be to 
-> do 1 big patch and then merge that through the pdx86 tree (I can provide
-> an immutable branch for that).
-> 
-> Dmitry if you can let me know which way you would prefer to move forward
-> with this then I can prepare the 1 or 2 patches (once I hear back from the
-> "Cube I15-TC" quirk patch author).
+Another approach could be just let all the patch go through pdx86 tree 
+and with
+pointer part acked by Rafael as it's unlikely to have merge conflicts.
 
-I am fine with a single patch going through either platform or input
-tree. We could even have an immutable branch off 5.10 and merge it into
-both trees to ensure there are no clashes.
+> Jiaxun, let me know if you're happy with following
+> up on that based on Hans suggestions, If you are pushed for time let me
+> know and I'll happily help out/implement/test as required. I sadly don't
+> have any ideapads but very happy to support your efforts any way I can.
+
+
+I'm happy with Hans suggestion, will send v2 for it later.
+
+I've been ask Lenovo engineers about DYTC and other ideapad ACPI
+stuff on Lenovo China forum[1], but moderator here told me Lenovo won't
+invest any Linux effort on their consumer product line :-(
+
+Is it possible to publish a DYTC specification or documents to help us 
+further
+understand these mechanisms?
+
+I'm tired of reading disassembly AML and code to figure out these internals.
+
+>
+>   - Can we get the x86 portion done at the same time or does that end up
+> going to 5.13? I had been looking at the ideapad_laptop.c patch and have
+> some concerns there as Jiaxun's patch is essentially a duplicate of what
+> I implemented in thinkpad_acpi.c which doesn't seem to be ideal
+> (especially as there is a V6 version of DYTC coming out this year). I
+> haven't had time to look at code to consider better alternatives though...
+
+It may be worthy to share these code but I'm comfort to have this 
+duplication as I'm
+unsure about the future of DYTC. Will DYTC for thinkpads always coherent 
+with DYTC
+for ideapads?
 
 Thanks.
 
--- 
-Dmitry
+[1]: https://club.lenovo.com.cn/thread-5980431-1-1.html
+
+- Jiaxun
+
+>
+> Mark
+
