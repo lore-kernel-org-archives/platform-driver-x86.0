@@ -2,204 +2,322 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0996BC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 18:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9645EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 18:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA09223125
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 18:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F9823125
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 18:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbhAFSxu (ORCPT
+        id S1726143AbhAFSyR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jan 2021 13:53:50 -0500
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:64104 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbhAFSxu (ORCPT
+        Wed, 6 Jan 2021 13:54:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35405 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725890AbhAFSyR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jan 2021 13:53:50 -0500
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 106IqsZx023471;
-        Wed, 6 Jan 2021 13:52:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=7uzZay8Z6yosiu3zH0vfV4y7pg2yTIcjgloNnFlPCps=;
- b=i2pkZLh+8Akg6ciHmVwMyRegJYnF96Z7BauIYbdlEbNNYmV2ba2EdQoAVCHVwPZQN9wx
- ZVR6y1GMj28ZLd3s0gw1V8KwQ+mxVoXbjlqIdTkiSLdnLuSzw4A1z6bmV2z+f/2bngAw
- c7mrN2evn2BiqY+j4rM/VIT1j1danPHUdWkq61Ri9wXH+in6xP2pPruFvH3LBHFZpSKR
- +BLpvN0ipcc1nNhL4DCWZ0z9e+ao60NOset0XIYxcRyzXQ5iIbYepqMUvrqgUe/dyeDd
- legOcgFay9d0vn9laofzLbmNH9AKKwgrCfORc5wtCk9vhAb1gM/Tth2GSA4GxC64no9O 5w== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 35tms8q5mh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Jan 2021 13:52:59 -0500
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 106IpHLY185366;
-        Wed, 6 Jan 2021 13:52:59 -0500
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-        by mx0a-00154901.pphosted.com with ESMTP id 35wj6arnq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Jan 2021 13:52:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFcd1PiG41Xr+XcCRUFbqQiw1H37kO6sK/gc4E7LihLmPY1Vr5V1MTOjZwtCQ1sxO4JAwy9TB6+8i0Zc0gYH00mQ67MS9a4tI7zGBl7vTQPAi2byyR3keJDeEq4YeIOo/gqLLeHW3BcZgRZvr9taWJJn/q1QldZiVR/bhzySe75df99KwdffntfHeldihoaz4DCUG3/4ZW9PvwX3PcUQmLX3nnT3NJomyZssGCLyWS4wA5EoQhQ13M6uQnkaDmhfFooALWKbnw5TY5S8xGFtIUXE38RtVWnSWOGRkvQPjlulGww3k/C72dDN+7zSlBH9MKHQNfgtiuQ645Rq+rLGbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7uzZay8Z6yosiu3zH0vfV4y7pg2yTIcjgloNnFlPCps=;
- b=IBxPEm2w72XTe6gsqLdEMjcBlWybp9VFraAu5o30iQ/vst1TEpTQH6e20dVnLbe02HkJCIVxPztXI0shxaaRe/XAonL4uS5qkEzFXh/jOTEDdl+c3j8hsg++NAkFVq66rktE049RcjqT5rmdZjeLBPZbOkM5a2Brqq9pBiNONAg2MsKXJkg4hIEQXvXK6dAtDAA/ke11DXBtLJ2JGr69IQ7MHOu7vz5a39UvFZC+mQGrnyCmiVxplLM+wV+6n/4NvhNSea7LgoM0VIUXOsSV0De7ZSgO65l8TE/+zV5zUEryicwcHjcZdIXwEJIL6vCkTui5DiS7Zt6JaglKuVen2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Dell.onmicrosoft.com;
- s=selector1-Dell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7uzZay8Z6yosiu3zH0vfV4y7pg2yTIcjgloNnFlPCps=;
- b=PD9t9qkk0OWaMPoofAPKfK3Q0YJWxKE0E1QOuJZfpCnt11NK8MEl4O2LSKcyS4M3aFm93jn3YDIrfsD/x9GYSZONC7+CktyqOteRpquR7Eb+Do9C/h2Lng4wO1BWaoilMgFvhfBoVrkRQUFXZshOhbdYuNAWFEzCbq+1Zc+kK88=
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com (2603:10b6:806:1a6::18)
- by SN6PR1901MB4655.namprd19.prod.outlook.com (2603:10b6:805:9::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Wed, 6 Jan
- 2021 18:52:57 +0000
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::e14a:eb33:4847:6cba]) by SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::e14a:eb33:4847:6cba%3]) with mapi id 15.20.3721.024; Wed, 6 Jan 2021
- 18:52:57 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>
-CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: RE: How to detect Cherry Trail vs Brasswell inside the kernel ?
-Thread-Topic: How to detect Cherry Trail vs Brasswell inside the kernel ?
-Thread-Index: AQHW5Cg6LiZtnW9xb02LLj+H/BGp/Koa8Qjg
-Date:   Wed, 6 Jan 2021 18:52:57 +0000
-Message-ID: <SA1PR19MB492668D0A7FA8F09DCFDECA0FAD00@SA1PR19MB4926.namprd19.prod.outlook.com>
-References: <37906985-e026-48d3-cda8-6e63696e72aa@redhat.com>
-In-Reply-To: <37906985-e026-48d3-cda8-6e63696e72aa@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-01-06T18:52:57.1211507Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=2a94e1a1-6d12-4045-b08b-e0d402d28051;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8737150e-76b2-4469-bfa7-08d8b2744871
-x-ms-traffictypediagnostic: SN6PR1901MB4655:
-x-microsoft-antispam-prvs: <SN6PR1901MB46552632FB5B1520F4000311FAD00@SN6PR1901MB4655.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Fz1Y8bcXsYWxlvdOdndJ5fgJs8+8XOEOHtFoZE6sqkQv0Tt+NBXP3A6LrGra6IayLfmTlnhWmhOlXjuCXCuDboPPpzF3IP0C0rKus/jYBj7llbngqq1ZyRaR5zgnz9QwNBV51P61QMynyboBFBBYk0mDdf3ALrGCs7cmaIkQm+VgKJuHbZSQuhNgBOuhzrHTWwf1F+lKD15UqcJcD++9MM/tdyazz/as4pRLeEgUA4e9sitpe+dh+MvZMhs5ggWJAVg1Xmq1Q12SUYM9jUgfI/R5sXI3ZTOU83LE1sZfA1YfrRiZMvcnDmUhZfwib/X7u2kFnEV06+o9VyMibmzPtoWR/FlfDXp2rAMDzuAEtNLLhaOX3SiACWtn4eDwd1htFSZu6oKEe9484MMEphjjyw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR19MB4926.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(376002)(396003)(136003)(52536014)(186003)(5660300002)(8936002)(4326008)(7696005)(66446008)(66476007)(76116006)(64756008)(55016002)(9686003)(6506007)(26005)(66946007)(33656002)(478600001)(316002)(110136005)(66556008)(54906003)(83380400001)(71200400001)(8676002)(86362001)(786003)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?MjgxM3BabWNkejJZRklVNHpTdm1DdjZ3M0xIdUZmdGt3TW1FUEZZY0FOMkYx?=
- =?utf-8?B?R0R1VkduSVArQ2YrcUZMdktJYSt5R3NLQXhudGRxSUl4M2JjNHduYzFleTN1?=
- =?utf-8?B?RXBlRG5mRi9PVDRyUjYzRXUrcFI3T3VsT3FiZzIvZjExb3FWUkxtT01zRzl1?=
- =?utf-8?B?MFdVVEhkWXV6Wmc5TmxMcE5IRHBQdVdBM1g5R01XcHVIWW4xZWF3bmFOZ015?=
- =?utf-8?B?SGNQbzdLSDJSY3hNenRWeHM5L0RSc0ZkMVNtUnNQUlR5Ykt1eUpVczc3ZmVi?=
- =?utf-8?B?V3JkYm9mQnpBY05lQXpkZTRpb1VMUU9VRzNlWHVKZXBWZVdjd3REYS9RMktx?=
- =?utf-8?B?VEprd1RldExXVjBwR0lmTnN1NGNlcHpXd0tVTHU5Z1ZEQzR4NnRseTVjTVp4?=
- =?utf-8?B?ZVRiQy9HVXZaTkFSa0hJVzZReDdRTUFkZlRlRDU4TERjaENJQVVISjQ3am1D?=
- =?utf-8?B?c0JkTDkrMEdpM2tzczgvamEvRjZDeTA0MzRjdmZ1K241UzVZc2RsWFlDZklr?=
- =?utf-8?B?dytDbjZnUTFLbWNEWmZtRU1kdmt2VzlWekp5aGhNckNIZXNmMndSdFN4cGgx?=
- =?utf-8?B?YnEvY3RnZ2xBeGFLSlhvbCtqNG96b1g1djF4TGFuTGkrQ2s3eFR2RFJRWDJh?=
- =?utf-8?B?U3c5cjZqOVY0MCtaQzk1d2N2bWRObHFudE9tNGRIUTZhVzZUZTNVU3k4Sk44?=
- =?utf-8?B?WVFuRWViRFd4aGNDaXpTTVg5elRpZFQ1Wk1uQ3pvdm9DSzNTa0lxTGoySUh3?=
- =?utf-8?B?WUowcG1IZnNFSForVGQ1N3ZZY2Q4aktCajEyZmordEMzbStCaHdNU2J4M0tW?=
- =?utf-8?B?NGd4d2J5VTNxdkNIL0NLQXFoQjdLZVVseUo2L1FnTVA1WldFcGZZd1BsdVlI?=
- =?utf-8?B?YTFUVFJpK2FoNjZUd2I2UGUzY3N6UUlyVnBvTW44ellJSkI3NFFiMnRrTDA2?=
- =?utf-8?B?K3Mxb3pnYXowek9RQTY4YlJuWTQ3eVhPZ21mZDdMeTg4V2s3SzJEcVNvRW9O?=
- =?utf-8?B?K0pKbVl6MkQwNzlZQXRHa0h4ZU1sbTg5bktsWDRFcGR1ajV2bThqcjlraWRU?=
- =?utf-8?B?aFptbnhxWlBzd1U5SGM4eGV0SGhJbWNqTVRwTGNWTldERk5oOThqTDhDNTNo?=
- =?utf-8?B?cWdMQ0V1dDQ0Z3pJbVY1ckRaZnl1cTFxbElIUUVFZm1LUWk0QngxR2ZlaVNl?=
- =?utf-8?B?NzFNejl0MFdXVkEvaDdqZE1Hc0cvYzZ6eHN2Y2FDanEvVTBjcXN6K3FQMnor?=
- =?utf-8?B?bmNPblBaV2lJandTS0FnZ1M0WWJGNWVJTmhVdVpsZm01VXI2YjdoNldTSnRv?=
- =?utf-8?Q?WqNvzL9xtLZZA=3D?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 6 Jan 2021 13:54:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1609959169;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SlDnd0VEqsWJEQpZ1EacmJCcX+1Wxro9cFs6IiTUslI=;
+        b=U+N3XntHIYQk9m4lcStv523OiuWh8p89ybtlu6dWCGSH0o2G/+8RcdrZ8J+PCqupK1RYoi
+        bFY4Mz5MekvZZikGOEr+uSQwmU3OsthcUgBd8nZInziznALGguM86UYeP8UUlS6kiYx2sC
+        TVkm84jZkbeli1VxMR2ZbRBl/bxsBBA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-ywbx0oDRMM2DyADsWxD28Q-1; Wed, 06 Jan 2021 13:52:47 -0500
+X-MC-Unique: ywbx0oDRMM2DyADsWxD28Q-1
+Received: by mail-ed1-f70.google.com with SMTP id l33so2271488ede.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Jan 2021 10:52:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SlDnd0VEqsWJEQpZ1EacmJCcX+1Wxro9cFs6IiTUslI=;
+        b=arUR3cwC3fKnrA85InBgWD7qHcD0QecaixraRyj6WoukWa3Yvxgjvcl1IfhtWwcZMY
+         /Nk1egTn/MrBTAh42xJj8Jtr2JOqoeoiu7wA9c1JgG2GMoPIKbJDzyIaEjDRMT8jz30n
+         6fIVA4ep4IJI2jo+3dpQydlYVBRZ1V3bNwp6vBXHa/W7QS1GehjHNfywZR7vlMxgHsau
+         GJWINeN/8KjZl7+zNV0XOXxCpW7cKJhG2PljSOueqOHiC+YiEtl3RQa+5+azVLUTcMWY
+         LCstcqJGdrgqk03Z6JWl+g2LbUePNcAleFn+gIqrhOBlCm2BqhQQy864xHrUczycEVca
+         BsrQ==
+X-Gm-Message-State: AOAM533V8q1vzIAg7QZRaHlTMDTWXyDBntxSw/Wlihh5IhtastV7wY/F
+        LyD84+FaqiRuTbOv6Ri2b3JjrH2v8z8H+9rAZQKt37J4p62mJD33mqyRxqO0xbanOBurloJQ1xW
+        46N7eoDo9fCWecRZy8dXa0/vSB4ricEHaTw==
+X-Received: by 2002:a17:907:373:: with SMTP id rs19mr3551099ejb.298.1609959165741;
+        Wed, 06 Jan 2021 10:52:45 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyr3PRMfJtdx/qmoxY3KxU3lRjelLpV4kruipQk1RnU7RN5x5mmjIdSg7Us/8AVAHr0DhWUHA==
+X-Received: by 2002:a17:907:373:: with SMTP id rs19mr3551086ejb.298.1609959165563;
+        Wed, 06 Jan 2021 10:52:45 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id f8sm1779705eds.19.2021.01.06.10.52.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Jan 2021 10:52:45 -0800 (PST)
+Subject: Re: [PATCH 21/24] platform/x86: ideapad-laptop: add keyboard
+ backlight control support
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>
+References: <20201216013857.360987-22-pobrn@protonmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <770007e6-a06f-eb0a-112c-17e2eb396ae5@redhat.com>
+Date:   Wed, 6 Jan 2021 19:52:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR19MB4926.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8737150e-76b2-4469-bfa7-08d8b2744871
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Jan 2021 18:52:57.3383
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qzPqlSOHo1F5Hik/ZqEX13o8BTwI5ntAQYyF3qsaiU3W7UcdJwVI153Tj2fDsXHU3D87IzRKNqJQAb65m5j7QiwHbKrQYJ4S+txyzL/qMqE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR1901MB4655
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2021-01-06_10:2021-01-06,2021-01-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1011 priorityscore=1501 adultscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0 phishscore=0
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2101060106
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101060106
+In-Reply-To: <20201216013857.360987-22-pobrn@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiBTbyBJIHdhcyB3b25kZXJpbmcgaWYgYW55b25lIGVsc2UgaGFzIGFueSBiZXR0ZXIgaWRlYXMg
-aGVyZT8NCj4gDQo+IFJlZ2FyZHMsDQo+IA0KPiBIYW5zDQo+IA0KPiANCj4gcC5zLg0KPiANCj4g
-SnVzdCBGWUkgdGhlIDIgaXNzdWVzIHdoaWNoIEkgd2FudCB0byByZXNvbHZlIGFyZToNCj4gDQo+
-IDEuIFByZXZlbnQgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfaW50MDAwMl92Z3Bpby5jIGJp
-bmRpbmcgb24gQnJhc3dlbGwNCj4gKG5vbiAidGFibGV0IikgU29Dcy4gVGhlIElOVDAwMDIgQUNQ
-SSBkZXZpY2UgaXMgdXNlZCBmb3Igc29tZSB3YWtldXANCj4gZXZlbnRzIChmcm9tIFMyaWRsZSkg
-b24gdGhlIHRhYmxldCAoQ2hlcnJ5IFRyYWlsKSB2ZXJzaW9ucyBvZiB0aGUgU29DLg0KPiANCj4g
-VGhlIGN1cnJlbnQgY29kZSB3aWxsIGFsc28gYmluZCB0byB0aGUgSU5UMDAwMiBBQ1BJIGRldmlj
-ZSAoaWYgcHJlc2VudCkgb24NCj4gQnJhc3dlbGwsIHRoaXMgaXMgY2F1c2luZyBzdXNwZW5kL3Jl
-c3VtZSBpc3N1ZXMgb24gc29tZSBkZXZpY2VzLg0KPiBBVE0gd2UgYXJlIHdvcmtpbmcgYXJvdW5k
-IHRoaXMgYnkgc2V0dGluZyB0aGUgSVJRQ0hJUF9TS0lQX1NFVF9XQUtFIG9uDQo+IHRoZSBpcnEt
-Y2hpcCBmb3IgdGhlIElOVDAwMDIgdkdQSU8gcGluLiBCdXQgdGhpcyBpbiB0dXJuIGlzIGJyZWFr
-aW5nIHdha2V1cA0KPiBieSBVU0IgcGVyaXBoZXJhbHMgb24gQ2hlcnJ5IFRyYWlsIGRldmljZXMu
-IElmIHdlIGNhbiBqdXN0IHN0b3AgdGhlIGRyaXZlcg0KPiBmcm9tIGJpbmRpbmcgb24gQnJhc3dl
-bGwgZGV2aWNlcyBhbGwgdG9nZXRoZXIgdGhlbiB0aGF0IHdvdWxkIGJlIGJldHRlci4NCj4gDQoN
-CldvdWxkIGl0IGJlIHBvc3NpYmxlIHRvIGFzayB0aGUgdmVuZG9yIHRvIHJlbW92ZSBJTlQwMDAy
-IGRldmljZSBmcm9tIHRoZQ0KZmlybXdhcmU/DQoNCj4gMi4gRGVhbCB3aXRoIG5vbiBmdW5jdGlv
-bmFsIC9zeXMvY2xhc3MvYmFja2xpZ2h0L2FjcGlfdmlkZW9bMC03XSBkZXZpY2VzDQo+IHNob3dp
-bmcgdXAgb24gQllUL0NIVCBiYXNlZCBtZWRpYS1ib3hlcyAvIGhkbWktc3RpY2tzLiBUaGVzZSBk
-ZXZpY2VzIGRvDQo+IG5vdCBoYXZlIGEgTENEIHBhbmVsLCBzbyB0aGVyZSB3aWxsIGJlIG5vICJu
-YXRpdmUiIGJhY2tsaWdodCBkcml2ZXIgY2F1c2luZw0KPiBkcml2ZXJzL2FjcGkvdmlkZW8tZGV0
-ZWN0LmMgdG8gc2VsZWN0IGFjcGlfYmFja2xpZ2h0X3ZpZGVvIGFzIGJhY2tsaWdodC10eXBlLg0K
-PiBkcml2ZXJzL2FjcGkvYWNwaS12aWRlby5jIHRyaWVzIHRvIGF2b2lkIHJlZ2lzdGVyaW5nIG5v
-bi1mdW5jdGlvbmFsDQo+IC9zeXMvY2xhc3MvYmFja2xpZ2h0L2FjcGlfdmlkZW8gZGV2aWNlcyBp
-biBjYXNlcyBsaWtlIHRoaXMsIGJ1dCB0aGF0IGRlcGVuZHMNCj4gb24gYSBETUkgY2hhc3Npcy10
-eXBlIGNoZWNrICh0byBhdm9pZCBzdXBwcmVzc2luZyB0aGUgYmFja2xpZ2h0IGludGVyZmFjZQ0K
-PiBvbiBsYXB0b3BzIHdoZXJlIHdlIGxpa2VseSBkbyB3YW50IGl0KSBhbmQgbWFueSBvZiB0aGVz
-ZSBtZWRpYS1ib3hlcyAvDQo+IGhkbWktc3RpY2tzIGFyZSBkZXJpdmVkIGZyb20gQllUL0NIVCB0
-YWJsZXQgZGVzaWducyBhbmQgb2Z0ZW4gdGhlIERNSQ0KPiBjaGFzc2lzIHR5cGUgc3RpbGwgc2F5
-cyAiVGFibGV0Ii4gQWN0dWFsIENoZXJyeSBUcmFpbCBkZXZpY2VzIHdpdGggYSBMQ0QNCj4gcGFu
-ZWwgYWx3YXlzIHVzZSB0aGUgbmF0aXZlIGludGVsX2JhY2tsaWdodCBpbnRlcmZhY2UsIGJ1dCBJ
-IGd1ZXNzIHNvbWUNCj4gQnJhc3dlbGwgYmFzZWQgZGV2aWNlcyBtaWdodCB1c2UgdGhlIGFjcGlf
-dmlkZW8gaW50ZXJmYWNlLg0KDQpNYXliZSBhIGZ1bmN0aW9uIHRvIGxvb2sgYXQgc3BlY2lmaWNh
-bGx5IHRoZSBETUkgY2hhc3NpcyB0eXBlIG9mICJUYWJsZXQiIGFuZA0KY2hlY2sgZm9yIHRoZSBs
-YWNrIG9mIGFuIGludGVybmFsIExDRCBwYW5lbC4gIFRoYXQgc2VlbXMgbGlrZSBkZXRlY3Rpbmcg
-dGhhdA0KY29tYmluYXRpb24gc2hvdWxkbid0IGV2ZXIgdHJ5IHRvIHJ1biB0aGlzIGNvZGUuDQoN
-Cj4gDQo+IEkgd291bGQgbGlrZSB0byBiZSBhYmxlIHRvIGFkZCBzb21lIGNvZGUgdGhlIHRoZSBB
-Q1BJIHZpZGVvIGNvZGUgd2hpY2gNCj4gc2ltcGx5IGlnbm9yZXMgdGhlIGJyb2tlbiBhY3BpX3Zp
-ZGVvIGludGVyZmFjZSBvbiBDaGVycnkgVHJhaWwgZGV2aWNlcywNCj4gd2hpbGUgc3RpbGwgdXNp
-bmcgaXRzIG5vcm1hbCBkZXRlY3Rpb24gbG9naWMgb24gQnJhc3N3ZWxsIGRldmljZXMuDQo+IFRo
-ZSBhbHRlcm5hdGl2ZSB3b3VsZCBiZSBhbiBldmVyIGdyb3dpbmcgbGlzdCBvZiBETUkgYmFzZWQg
-cXVpcmtzIHdoaWNoDQo+IGlzIHVuZGVzaXJhYmxlLg0KDQo=
+Hi,
+
+On 12/16/20 2:40 AM, Barnabás Pőcze wrote:
+> On certain models it is possible to control/query the keyboard backlight
+> via the SALS/HALS ACPI methods. Add support for that, and register an LED
+> class device to expose this functionality.
+> Tested on: Lenovo YOGA 520-14IKB 80X8
+> 
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 075056075b2d..a43574e65f61 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -9,6 +9,7 @@
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  
+>  #include <acpi/video.h>
+> +#include <dt-bindings/leds/common.h>
+>  #include <linux/acpi.h>
+>  #include <linux/backlight.h>
+>  #include <linux/bitops.h>
+> @@ -22,6 +23,7 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+> +#include <linux/leds.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/rfkill.h>
+
+I guess you need a "depends on LEDS_CLASS" in the Kconfig for this?
+
+> @@ -56,12 +58,16 @@ enum {
+>  };
+>  
+>  enum {
+> +	HALS_KBD_BL_SUPPORT_BIT  = 4,
+> +	HALS_KBD_BL_STATE_BIT    = 5,
+>  	HALS_FNLOCK_SUPPORT_BIT  = 9,
+>  	HALS_FNLOCK_STATE_BIT    = 10,
+>  	HALS_HOTKEYS_PRIMARY_BIT = 11,
+>  };
+>  
+>  enum {
+> +	SALS_KBD_BL_ON  = 0x8,
+> +	SALS_KBD_BL_OFF = 0x9,
+>  	SALS_FNLOCK_ON  = 0xe,
+>  	SALS_FNLOCK_OFF = 0xf,
+>  };
+> @@ -114,6 +120,11 @@ struct ideapad_private {
+>  		     fn_lock           : 1,
+>  		     hw_rfkill_switch  : 1;
+>  	} features;
+> +	struct {
+> +		bool initialized;
+> +		struct led_classdev led;
+> +		unsigned int last_brightness;
+> +	} kbd_bl;
+>  };
+>  
+>  static bool no_bt_rfkill;
+> @@ -934,6 +945,110 @@ static void ideapad_backlight_notify_brightness(struct ideapad_private *priv)
+>  		backlight_force_update(priv->blightdev, BACKLIGHT_UPDATE_HOTKEY);
+>  }
+>  
+> +/*
+> + * keyboard backlight
+> + */
+> +static int ideapad_kbd_bl_brightness_get(struct ideapad_private *priv)
+> +{
+> +	unsigned long hals;
+> +	int err;
+> +
+> +	err = eval_hals(priv->adev->handle, &hals);
+> +	if (err)
+> +		return err;
+> +
+> +	return test_bit(HALS_KBD_BL_STATE_BIT, &hals);
+> +}
+> +
+> +static enum led_brightness ideapad_kbd_bl_led_cdev_brightness_get(struct led_classdev *led_cdev)
+> +{
+> +	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
+> +
+> +	return ideapad_kbd_bl_brightness_get(priv);
+> +}
+> +
+> +static int ideapad_kbd_bl_brightness_set(struct ideapad_private *priv, unsigned int brightness)
+> +{
+> +	int err;
+> +
+> +	err = eval_sals(priv->adev->handle,
+> +			brightness ? SALS_KBD_BL_ON : SALS_KBD_BL_OFF);
+> +	if (err)
+> +		return err;
+> +
+> +	priv->kbd_bl.last_brightness = brightness;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ideapad_kbd_bl_led_cdev_brightness_set(struct led_classdev *led_cdev,
+> +						  enum led_brightness brightness)
+> +{
+> +	struct ideapad_private *priv = container_of(led_cdev, struct ideapad_private, kbd_bl.led);
+> +
+> +	return ideapad_kbd_bl_brightness_set(priv, brightness);
+> +}
+> +
+> +static void ideapad_kbd_bl_notify(struct ideapad_private *priv)
+> +{
+> +	int brightness;
+> +
+> +	if (!priv->kbd_bl.initialized)
+> +		return;
+> +
+> +	brightness = ideapad_kbd_bl_brightness_get(priv);
+> +	if (brightness < 0)
+> +		return;
+> +
+> +	if (brightness == priv->kbd_bl.last_brightness)
+> +		return;
+> +
+> +	priv->kbd_bl.last_brightness = brightness;
+> +
+> +	led_classdev_notify_brightness_hw_changed(&priv->kbd_bl.led, brightness);
+> +}
+
+So I guess that there is some hotkey combo on the laptops keyboards which
+directly changes the state of the kbd backlight "underneath" us and that
+is why this is necessary ?
+
+> +
+> +static int ideapad_kbd_bl_init(struct ideapad_private *priv)
+> +{
+> +	unsigned long hals;
+> +	int err;
+> +
+> +	err = eval_hals(priv->adev->handle, &hals);
+> +	if (err)
+> +		return err;
+
+So you are checking for presence of the HALS method here, but not
+for SALS which is being used in ideapad_kbd_bl_led_cdev_brightness_set()
+and you are needlessly re-evaluating HALS here. Would it not be better
+to add a features.kbd_bl flag and set that from ideapad_check_features()
+as done for other features ? That would avoid an extra evaluation of
+the HALS method and also check for SALS.
+
+You can then still unconditionally call this function but just bail
+with -ENODEV if the feature flag is not set.
+
+Otherwise this looks good to me.
+
+Regards,
+
+Hans
+
+
+
+> +
+> +	if (!test_bit(HALS_KBD_BL_SUPPORT_BIT, &hals))
+> +		return -ENODEV;
+> +
+> +	err = ideapad_kbd_bl_brightness_get(priv);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	priv->kbd_bl.last_brightness = err;
+> +
+> +	priv->kbd_bl.led.name                    = "platform::" LED_FUNCTION_KBD_BACKLIGHT;
+> +	priv->kbd_bl.led.max_brightness          = 1;
+> +	priv->kbd_bl.led.brightness_get          = ideapad_kbd_bl_led_cdev_brightness_get;
+> +	priv->kbd_bl.led.brightness_set_blocking = ideapad_kbd_bl_led_cdev_brightness_set;
+> +	priv->kbd_bl.led.flags                   = LED_BRIGHT_HW_CHANGED;
+> +
+> +	err = led_classdev_register(&priv->platform_device->dev, &priv->kbd_bl.led);
+> +	if (err)
+> +		return err;
+> +
+> +	priv->kbd_bl.initialized = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static void ideapad_kbd_bl_exit(struct ideapad_private *priv)
+> +{
+> +	if (!priv->kbd_bl.initialized)
+> +		return;
+> +
+> +	led_classdev_unregister(&priv->kbd_bl.led);
+> +}
+> +
+>  /*
+>   * module init/exit
+>   */
+> @@ -1000,8 +1115,9 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+>  			 * Some IdeaPads report event 1 every ~20
+>  			 * seconds while on battery power; some
+>  			 * report this when changing to/from tablet
+> -			 * mode. Squelch this event.
+> +			 * mode.
+>  			 */
+> +			ideapad_kbd_bl_notify(priv);
+>  			break;
+>  		default:
+>  			dev_warn(&priv->platform_device->dev,
+> @@ -1101,6 +1217,11 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  	if (err)
+>  		goto input_failed;
+>  
+> +	err = ideapad_kbd_bl_init(priv);
+> +	if (err && err != -ENODEV)
+> +		dev_warn(&pdev->dev,
+> +			 "Could not register keyboard backlight led: %d\n", err);
+> +
+>  	/*
+>  	 * On some models without a hw-switch (the yoga 2 13 at least)
+>  	 * VPCCMD_W_RF must be explicitly set to 1 for the wifi to work.
+> @@ -1161,6 +1282,7 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+>  		ideapad_unregister_rfkill(priv, i);
+>  
+> +	ideapad_kbd_bl_exit(priv);
+>  	ideapad_input_exit(priv);
+>  
+>  input_failed:
+> @@ -1188,6 +1310,7 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
+>  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+>  		ideapad_unregister_rfkill(priv, i);
+>  
+> +	ideapad_kbd_bl_exit(priv);
+>  	ideapad_input_exit(priv);
+>  	ideapad_debugfs_exit(priv);
+>  	ideapad_sysfs_exit(priv);
+> 
+
