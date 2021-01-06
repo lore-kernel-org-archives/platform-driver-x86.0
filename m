@@ -2,200 +2,333 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEFFC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 17:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15215C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 06:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16B422D6D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  5 Jan 2021 17:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C989B223E8
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 06:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbhAERT3 (ORCPT
+        id S1725868AbhAFGhk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 5 Jan 2021 12:19:29 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:33098 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbhAERT3 (ORCPT
+        Wed, 6 Jan 2021 01:37:40 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:48350 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725837AbhAFGhk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 5 Jan 2021 12:19:29 -0500
-Received: by mail-oi1-f176.google.com with SMTP id d203so350061oia.0;
-        Tue, 05 Jan 2021 09:19:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w6rJskTc4hEuFh9sBz5GYGc9LX37ZTG1VymDOHA5oC0=;
-        b=l7vHBKjXB0oCWlck/jjxi1DHyejdBSriTWQQJgkBgCrzISw1wz/9Q6hDzqWvBmc1fW
-         hH7lXSEicSvh0VMSBwXjUqZ4T50tIMSjwlcDH0ODOr+lGOOeQx6UJJP9tdSb1/73hCrr
-         G2bSqOIB9MlUAiK7ZzXaKAaPyfOPdpM83UrrBJjJqYbO9cuL22dOGYrV2fLssVPMsEL7
-         eIq9vkc60skqxDTUuYjUHtruWNezb+i46Ko+WCFx7K9OfYJZ8nIwIZX/qeD5/yJBMgro
-         h8Msn4dzIxD50R9yhR11/SVdBaJHHwaEmIr4vjg4z3iMStU5HsZkQOaMD5WFQUXM1Saq
-         twsw==
-X-Gm-Message-State: AOAM533MbVrkunFZ4ps0CWbbG1n6gXKUjWrhCaVQauRaSQLB4lv3XTIc
-        P5p0uizig+6YDpBIyNmrjoU5slIux6RUPaHGPRM=
-X-Google-Smtp-Source: ABdhPJyeLw9qLKGDfXEat5y3Fu4ARdx1irTIcueXHn8PgQMkxdz03DWfT4YQb+KCnNSWSo2WsrQfBTIdi8X1XnO7U8A=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr389256oig.69.1609867127808;
- Tue, 05 Jan 2021 09:18:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20210101125629.20974-1-jiaxun.yang@flygoat.com>
- <35ac853a-266c-6944-6e5e-6286456865e3@redhat.com> <CAJZ5v0jcCD3qWUJQcS+nFVJWSCQEbq2eN3i07mN8yFr3WZD9dg@mail.gmail.com>
- <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
-In-Reply-To: <6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Jan 2021 18:18:35 +0100
-Message-ID: <CAJZ5v0je41iXQnr3m-RY9fD_C-qnqbLdqYMvUzp0qgBwEvVoJA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] IdeaPad platform profile support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Jan 2021 01:37:40 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=abaci-bugfix@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0UKtHOJ6_1609914978;
+Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:abaci-bugfix@linux.alibaba.com fp:SMTPD_---0UKtHOJ6_1609914978)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 06 Jan 2021 14:36:53 +0800
+From:   YANG LI <abaci-bugfix@linux.alibaba.com>
+To:     hdegoede@redhat.com
+Cc:     mgross@linux.intel.com, ibm-acpi@hmh.eng.br,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        YANG LI <abaci-bugfix@linux.alibaba.com>
+Subject: [PATCH] thinkpad_acpi: fix: use scnprintf instead of snprintf.
+Date:   Wed,  6 Jan 2021 14:36:16 +0800
+Message-Id: <1609914976-28113-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 4, 2021 at 9:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 1/4/21 9:33 PM, Rafael J. Wysocki wrote:
-> > On Mon, Jan 4, 2021 at 3:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On 1/1/21 1:56 PM, Jiaxun Yang wrote:
-> >>> Tested on Lenovo Yoga-14SARE Chinese Edition.
-> >>>
-> >>> Jiaxun Yang (2):
-> >>>   ACPI: platform-profile: Introduce data parameter to handler
-> >>>   platform/x86: ideapad-laptop: DYTC Platform profile support
-> >>>
-> >>>  drivers/acpi/platform_profile.c       |   4 +-
-> >>>  drivers/platform/x86/Kconfig          |   1 +
-> >>>  drivers/platform/x86/ideapad-laptop.c | 281 ++++++++++++++++++++++++++
-> >>>  include/linux/platform_profile.h      |   5 +-
-> >>>  4 files changed, 287 insertions(+), 4 deletions(-)
-> >>
-> >>
-> >> Thank you for your series, unfortunately the
-> >> "ACPI: platform-profile: Introduce data parameter to handler"
-> >> patch causes a conflict with the pending:
-> >> "[PATCH v8 3/3] platform/x86: thinkpad_acpi: Add platform profile support"
-> >> patch.
-> >>
-> >> But I do agree that adding that data parameter makes sense, so
-> >> it might be best to merge:
-> >>
-> >> "ACPI: platform-profile: Introduce data parameter to handler"
-> >>
-> >> First and then rebase the thinkpad_acpi patch on top.
-> >>
-> >> Rafael, do you think you could add:
-> >>
-> >> "ACPI: platform-profile: Introduce data parameter to handler"
-> >>
-> >> To the 2 ACPI: platform-profile patches which you already have pending for 5.11-rc# ?
-> >
-> > I'm not sure why that patch is needed at all, because whoever
-> > registers a platform profile handler needs to have access to the
-> > original handler object anyway.
->
-> True, I was actually thinking that instead of the data argument, we might
-> pass a pointer to the original handler object like this:
->
-> @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
->                 return -ENODEV;
->         }
->
-> -       err = cur_profile->profile_get(&profile);
-> +       err = cur_profile->profile_get(cur_profile, &profile);
->         mutex_unlock(&profile_lock);
->         if (err)
->                 return err;
+The snprintf() function returns the number of characters which would
+have been printed if there were enough space, but the scnprintf()
+returns the number of characters which were actually printed. If the
+buffer is not large enough, then using snprintf() would result in a
+read overflow and an information leak. This error was found with the
+help of coccicheck.
 
-I would prefer this approach.
+Signed-off-by: YANG LI <abaci-bugfix@linux.alibaba.com>
+Reported-by: Abaci <abaci@linux.alibaba.com>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 62 ++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
->
-> And then the driver which has registered the cur_profile, can get to
-> its own data by using container of on the cur_profile pointer.
->
-> With the code currently in your bleeding-edge branch, there is no way
-> for any driver-code to get to its own (possibly/likely dynamically
-> allocated) driver-data struct.
->
-> E.g. a typical driver using only dynamic data tied to device_get_drvdata,
-> might have this:
->
-> struct driver_data {
->         ...
->         struct platform_profile_handler profile_handler;
->         ...
-> };
->
-> int probe(...) {
->         struct driver_data *my_data;
->
->         my_data = devm_kzalloc(dev, sizeof(*my_data), GFP_KERNEL);
->
->         ...
->
->         ret = platform_profile_register(&my_data->profile_handler);
->         ...
-> }
->
-> And with the change which I suggest above would then be able to
-> get the struct driver_data *my_data back from the profile_get callback by
-> using container_of on the struct platform_profile_handler *profile_handler
-> argument added to the profile_get callback.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e03df28..c29a639 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -1340,7 +1340,7 @@ static ssize_t tpacpi_rfk_sysfs_enable_show(const enum tpacpi_rfk_id id,
+ 			return status;
+ 	}
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n",
++	return scnprintf(buf, PAGE_SIZE, "%d\n",
+ 			(status == TPACPI_RFK_RADIO_ON) ? 1 : 0);
+ }
+ 
+@@ -1433,14 +1433,14 @@ static int tpacpi_rfk_procfs_write(const enum tpacpi_rfk_id id, char *buf)
+ /* interface_version --------------------------------------------------- */
+ static ssize_t interface_version_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", TPACPI_SYSFS_VERSION);
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", TPACPI_SYSFS_VERSION);
+ }
+ static DRIVER_ATTR_RO(interface_version);
+ 
+ /* debug_level --------------------------------------------------------- */
+ static ssize_t debug_level_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%04x\n", dbg_level);
++	return scnprintf(buf, PAGE_SIZE, "0x%04x\n", dbg_level);
+ }
+ 
+ static ssize_t debug_level_store(struct device_driver *drv, const char *buf,
+@@ -1460,7 +1460,7 @@ static ssize_t debug_level_store(struct device_driver *drv, const char *buf,
+ /* version ------------------------------------------------------------- */
+ static ssize_t version_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%s v%s\n",
++	return scnprintf(buf, PAGE_SIZE, "%s v%s\n",
+ 			TPACPI_DESC, TPACPI_VERSION);
+ }
+ static DRIVER_ATTR_RO(version);
+@@ -1472,7 +1472,7 @@ static ssize_t version_show(struct device_driver *drv, char *buf)
+ /* wlsw_emulstate ------------------------------------------------------ */
+ static ssize_t wlsw_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wlsw_emulstate);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wlsw_emulstate);
+ }
+ 
+ static ssize_t wlsw_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -1495,7 +1495,7 @@ static ssize_t wlsw_emulstate_store(struct device_driver *drv, const char *buf,
+ /* bluetooth_emulstate ------------------------------------------------- */
+ static ssize_t bluetooth_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_bluetooth_emulstate);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_bluetooth_emulstate);
+ }
+ 
+ static ssize_t bluetooth_emulstate_store(struct device_driver *drv,
+@@ -1515,7 +1515,7 @@ static ssize_t bluetooth_emulstate_store(struct device_driver *drv,
+ /* wwan_emulstate ------------------------------------------------- */
+ static ssize_t wwan_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wwan_emulstate);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_wwan_emulstate);
+ }
+ 
+ static ssize_t wwan_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -1535,7 +1535,7 @@ static ssize_t wwan_emulstate_store(struct device_driver *drv, const char *buf,
+ /* uwb_emulstate ------------------------------------------------- */
+ static ssize_t uwb_emulstate_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_uwb_emulstate);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", !!tpacpi_uwb_emulstate);
+ }
+ 
+ static ssize_t uwb_emulstate_store(struct device_driver *drv, const char *buf,
+@@ -2745,7 +2745,7 @@ static ssize_t hotkey_enable_show(struct device *dev,
+ 	if (res)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", status);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", status);
+ }
+ 
+ static ssize_t hotkey_enable_store(struct device *dev,
+@@ -2773,7 +2773,7 @@ static ssize_t hotkey_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_user_mask);
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_user_mask);
+ }
+ 
+ static ssize_t hotkey_mask_store(struct device *dev,
+@@ -2821,7 +2821,7 @@ static ssize_t hotkey_bios_mask_show(struct device *dev,
+ {
+ 	printk_deprecated_attribute("hotkey_bios_mask",
+ 			"This attribute is useless.");
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_orig_mask);
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_orig_mask);
+ }
+ 
+ static DEVICE_ATTR_RO(hotkey_bios_mask);
+@@ -2831,7 +2831,7 @@ static ssize_t hotkey_all_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
+ 				hotkey_all_mask | hotkey_source_mask);
+ }
+ 
+@@ -2842,7 +2842,7 @@ static ssize_t hotkey_adaptive_all_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
+ 			hotkey_adaptive_all_mask | hotkey_source_mask);
+ }
+ 
+@@ -2853,7 +2853,7 @@ static ssize_t hotkey_recommended_mask_show(struct device *dev,
+ 					    struct device_attribute *attr,
+ 					    char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n",
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n",
+ 			(hotkey_all_mask | hotkey_source_mask)
+ 			& ~hotkey_reserved_mask);
+ }
+@@ -2867,7 +2867,7 @@ static ssize_t hotkey_source_mask_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_source_mask);
++	return scnprintf(buf, PAGE_SIZE, "0x%08x\n", hotkey_source_mask);
+ }
+ 
+ static ssize_t hotkey_source_mask_store(struct device *dev,
+@@ -2918,7 +2918,7 @@ static ssize_t hotkey_poll_freq_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_poll_freq);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", hotkey_poll_freq);
+ }
+ 
+ static ssize_t hotkey_poll_freq_store(struct device *dev,
+@@ -2960,7 +2960,7 @@ static ssize_t hotkey_radio_sw_show(struct device *dev,
+ 	/* Opportunistic update */
+ 	tpacpi_rfk_update_hwblock_state((res == TPACPI_RFK_RADIO_OFF));
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n",
++	return scnprintf(buf, PAGE_SIZE, "%d\n",
+ 			(res == TPACPI_RFK_RADIO_OFF) ? 0 : 1);
+ }
+ 
+@@ -2983,7 +2983,7 @@ static ssize_t hotkey_tablet_mode_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", !!s);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", !!s);
+ }
+ 
+ static DEVICE_ATTR_RO(hotkey_tablet_mode);
+@@ -3000,7 +3000,7 @@ static ssize_t hotkey_wakeup_reason_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_wakeup_reason);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", hotkey_wakeup_reason);
+ }
+ 
+ static DEVICE_ATTR(wakeup_reason, S_IRUGO, hotkey_wakeup_reason_show, NULL);
+@@ -3016,7 +3016,7 @@ static ssize_t hotkey_wakeup_hotunplug_complete_show(struct device *dev,
+ 			   struct device_attribute *attr,
+ 			   char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%d\n", hotkey_autosleep_ack);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", hotkey_autosleep_ack);
+ }
+ 
+ static DEVICE_ATTR(wakeup_hotunplug_complete, S_IRUGO,
+@@ -3051,7 +3051,7 @@ static ssize_t adaptive_kbd_mode_show(struct device *dev,
+ 	if (current_mode < 0)
+ 		return current_mode;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", current_mode);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", current_mode);
+ }
+ 
+ static ssize_t adaptive_kbd_mode_store(struct device *dev,
+@@ -6295,7 +6295,7 @@ static int thermal_get_sensor(int idx, s32 *value)
+ 
+ 	case TPACPI_THERMAL_ACPI_UPDT:
+ 		if (idx <= 7) {
+-			snprintf(tmpi, sizeof(tmpi), "TMP%c", '0' + idx);
++			scnprintf(tmpi, sizeof(tmpi), "TMP%c", '0' + idx);
+ 			if (!acpi_evalf(ec_handle, NULL, "UPDT", "v"))
+ 				return -EIO;
+ 			if (!acpi_evalf(ec_handle, &t, tmpi, "d"))
+@@ -6307,7 +6307,7 @@ static int thermal_get_sensor(int idx, s32 *value)
+ 
+ 	case TPACPI_THERMAL_ACPI_TMP07:
+ 		if (idx <= 7) {
+-			snprintf(tmpi, sizeof(tmpi), "TMP%c", '0' + idx);
++			scnprintf(tmpi, sizeof(tmpi), "TMP%c", '0' + idx);
+ 			if (!acpi_evalf(ec_handle, &t, tmpi, "d"))
+ 				return -EIO;
+ 			if (t > 127 || t < -127)
+@@ -6387,7 +6387,7 @@ static ssize_t thermal_temp_input_show(struct device *dev,
+ 	if (value == TPACPI_THERMAL_SENSOR_NA)
+ 		return -ENXIO;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", value);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", value);
+ }
+ 
+ #define THERMAL_SENSOR_ATTR_TEMP(_idxA, _idxB) \
+@@ -7618,10 +7618,10 @@ static int __init volume_create_alsa_mixer(void)
+ 		sizeof(card->driver));
+ 	strlcpy(card->shortname, TPACPI_ALSA_SHRTNAME,
+ 		sizeof(card->shortname));
+-	snprintf(card->mixername, sizeof(card->mixername), "ThinkPad EC %s",
++	scnprintf(card->mixername, sizeof(card->mixername), "ThinkPad EC %s",
+ 		 (thinkpad_id.ec_version_str) ?
+ 			thinkpad_id.ec_version_str : "(unknown)");
+-	snprintf(card->longname, sizeof(card->longname),
++	scnprintf(card->longname, sizeof(card->longname),
+ 		 "%s at EC reg 0x%02x, fw %s", card->shortname, TP_EC_AUDIO,
+ 		 (thinkpad_id.ec_version_str) ?
+ 			thinkpad_id.ec_version_str : "unknown");
+@@ -8588,7 +8588,7 @@ static ssize_t fan_pwm1_enable_show(struct device *dev,
+ 	} else
+ 		mode = 1;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%d\n", mode);
++	return scnprintf(buf, PAGE_SIZE, "%d\n", mode);
+ }
+ 
+ static ssize_t fan_pwm1_enable_store(struct device *dev,
+@@ -8654,7 +8654,7 @@ static ssize_t fan_pwm1_show(struct device *dev,
+ 	if (status > 7)
+ 		status = 7;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", (status * 255) / 7);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", (status * 255) / 7);
+ }
+ 
+ static ssize_t fan_pwm1_store(struct device *dev,
+@@ -8707,7 +8707,7 @@ static ssize_t fan_fan1_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan1_input, S_IRUGO, fan_fan1_input_show, NULL);
+@@ -8724,7 +8724,7 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ 	if (res < 0)
+ 		return res;
+ 
+-	return snprintf(buf, PAGE_SIZE, "%u\n", speed);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+ static DEVICE_ATTR(fan2_input, S_IRUGO, fan_fan2_input_show, NULL);
+@@ -8732,7 +8732,7 @@ static ssize_t fan_fan2_input_show(struct device *dev,
+ /* sysfs fan fan_watchdog (hwmon driver) ------------------------------- */
+ static ssize_t fan_watchdog_show(struct device_driver *drv, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "%u\n", fan_watchdog_maxinterval);
++	return scnprintf(buf, PAGE_SIZE, "%u\n", fan_watchdog_maxinterval);
+ }
+ 
+ static ssize_t fan_watchdog_store(struct device_driver *drv, const char *buf,
+-- 
+1.8.3.1
 
-OK, fair enough.
-
-> I know that the platform_profile stuff is intended to only have a
-> single provider, so this could use global variables, but some
-> drivers which may be a provider use 0 global variables (other then
-> module_params) atm and it would be a lot cleaner from the pov
-> of the design of these drivers to be able to do something like the
-> pseudo code above. Which is why I added my Reviewed-by to patch 1/2
-> of the series from this thread.
->
-> Patch 1/2 does use a slightly different approach then I suggest above,
-> thinking more about this it would be cleaner IMHO to just pass the
-> cur_profile pointer to the callbacks as the pseudo-code patch which I
-> wrote above does. Drivers which use globals can then just ignore
-> the extra argument (and keep the platform_profile_handler struct const)
-> where as drivers which use dynamic allocation can embed the struct in
-> their driver's data-struct.
-
-Agreed.
-
-> > Also, on a somewhat related note, I'm afraid that it may not be a good
-> > idea to push this series for 5.11-rc in the face of recent objections
-> > against new material going in after the merge window.
->
-> That is fine with me, since this did not make rc1 (nor rc2) I'm not entirely
-> comfortable with sending out a late pull-req for the pdx86 side of this
-> either, so lets postpone this to 5.12 (sorry Mark).
->
-> Rafael, once we have the discussion with the passing a pointer back to
-> the drivers data thing resolved (and a patch merged for that if we go
-> that route) can you provide me with an immutable branch to merge into
-> pdx86/for-next so that I can then merge the pdx86 bits on top ?
-
-Sure, no problem.
-
-> Note this does not need to be done right now around say rc4 would be fine,
-> so that we have some time for the patches currently in bleeding-edge to
-> settle a bit.
-
-OK
-
-Cheers!
