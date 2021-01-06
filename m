@@ -2,150 +2,295 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796FC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 21:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A948DC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 23:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252DD2313B
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 21:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7204B23333
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  6 Jan 2021 23:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbhAFVJb (ORCPT
+        id S1727794AbhAFXm3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 6 Jan 2021 16:09:31 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23749 "EHLO
+        Wed, 6 Jan 2021 18:42:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48812 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725922AbhAFVJb (ORCPT
+        by vger.kernel.org with ESMTP id S1727789AbhAFXm3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 6 Jan 2021 16:09:31 -0500
+        Wed, 6 Jan 2021 18:42:29 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609967284;
+        s=mimecast20190719; t=1609976461;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wjdvx1byGsS25UTbB7hPdv++FygQg2vDPz/Au7xS9qk=;
-        b=PA1o4f+q3j7dqsDe1mXeGpZD11A0AarsUpz3Uz518vTuXA9jTnQ9X5+JrcSiz7tZ0grERP
-        7cuLQN6ForJ104BM/uEMJCHz8idVoy3+t5DaAiGKMFJ+wPOO2RTB1kfQw8dQIIF34zukd+
-        oipwbYeU0YmTr0/+pni/GbvGgiSBbus=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-X1yXG8pzMfeZKTynuOMzPw-1; Wed, 06 Jan 2021 16:08:02 -0500
-X-MC-Unique: X1yXG8pzMfeZKTynuOMzPw-1
-Received: by mail-ej1-f72.google.com with SMTP id he8so1787218ejc.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Jan 2021 13:08:02 -0800 (PST)
+        bh=gg1abwP+BqeCY//k62aX3KXyaRI5IScydAPs2iM5zX8=;
+        b=DwxC2fpZD2T05sOMvqbsGOSwnFYMMhUQHX9GsUAwlLTzNR/W0PNVxG69mHENNrEmvm9WrN
+        GxFT0mCeNdDpiyxrRR1CmM3qoCMPh7/p8pI/BnFSNlgL/tvygZWFexlORGwa6va6f2HHwt
+        +Q9U9zfvkCE8PCeE7oKnpE/ucWmL/yI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-101-9rL1_6gvMNS8-1GoDAnZRQ-1; Wed, 06 Jan 2021 18:40:59 -0500
+X-MC-Unique: 9rL1_6gvMNS8-1GoDAnZRQ-1
+Received: by mail-ed1-f69.google.com with SMTP id n18so2514434eds.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 06 Jan 2021 15:40:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wjdvx1byGsS25UTbB7hPdv++FygQg2vDPz/Au7xS9qk=;
-        b=tvKTs3K8sNdo33bzAgIkcLK53lwmC8jlsWDqODY/ryNrhxeky3iTwScDk3yh6+VDIi
-         n9ez2BBMJkyCWBzRpI4Hxy5VQa7l6Ypez2hpIQNVc1xVQw8Vy1itqstFYthj/Y2IMONt
-         qXfXWoxnWf5ag5MiBLLNMxy027S2y2fLQkWOzLZLvHm6ejWu95D/EcLViS3zJOGn05Ih
-         pVlix6BZ8KaVoz+rIa9rOGwOKJZK8ge8E+twx0jmN0XONZaGB1DJ0ErSJ8J5/bvT/wXh
-         1EkZV7KXIDi6ok/jO/EDOxiTNJMgdzFVgYDtbkUookTFq2qicQO04Pzi+WHsYzRjE6/N
-         tHuw==
-X-Gm-Message-State: AOAM531S+avQ3KK+gQLoxZEebbNipGhTZFJ2Xe3pw56wEZ++kCdCj6CE
-        v2BCbP5ZE2hBJArIo19YkLEWAmE/PQvcwDylutaQ51xRCg3ImMlKDudi5G428dr83o77xw35Qsc
-        T8aLaOBXs7LvpiPjMLpUewJ/fP3YMXk+NZw==
-X-Received: by 2002:a05:6402:1d0f:: with SMTP id dg15mr5189424edb.1.1609967281722;
-        Wed, 06 Jan 2021 13:08:01 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwWDpbilXHmjvGdTM09+rW7IW1lvr5svW8jK84ZpC/JslZTj6icuJH2r7jAu9i5p5t+EJ2gMA==
-X-Received: by 2002:a05:6402:1d0f:: with SMTP id dg15mr5189411edb.1.1609967281529;
-        Wed, 06 Jan 2021 13:08:01 -0800 (PST)
+        bh=gg1abwP+BqeCY//k62aX3KXyaRI5IScydAPs2iM5zX8=;
+        b=MESaMBvNFEllwmEeGtMbAKlZfDzAzcQG8ThmxWS8X/rhC6bRtecrJdqH11H0E+j+uR
+         cKE0jJSbzgdSq5PH3/QZfQdVkcFaHgtg3SuN2iqqWDaUssX7e6aI76dT/+TU02TwXyxJ
+         98NIoxI9LRkCVVDgd1of0hDhzqz5NK0/aTgr4EciRYWS7rRuMrCcs99f/fUFS1b8cTWD
+         0MDeOQFE/Grz/SAM4bYDpcub16sdQcSZpLAbYJ7D0YIU+c0nAakeBvU3b5qOWoCN7w6H
+         QyY+pvXA6w0pNnsNsbeWpg25RPwQhGv8wOcM9OJrDesPaU7TFk+IbF9YdBOjG6QClGTj
+         pAwg==
+X-Gm-Message-State: AOAM5303NKOzrtq0TSWuDJ0Yuc2D7K6YFd9Dh4antCIpLayUNJlcJbOk
+        nzXOPfwPno0Y5h/Z5f7NEXsdwkD/1ZD0X4iP9C1alETzm9mxXlK6fBtxNUhPC5DZGhHA61Bvb8g
+        9K72rlWO/r6u915SEsmnvtB5nL+MK2YobDQ==
+X-Received: by 2002:a17:906:2755:: with SMTP id a21mr4492488ejd.374.1609976457902;
+        Wed, 06 Jan 2021 15:40:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy2qqa4NVTN8YKqNbKoZ88bAEZVXKvFTJDmjmRqxRyBEdOQ49LBm88dohdusRjKj+Cjy/ppIQ==
+X-Received: by 2002:a17:906:2755:: with SMTP id a21mr4492475ejd.374.1609976457686;
+        Wed, 06 Jan 2021 15:40:57 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id oq27sm1674341ejb.108.2021.01.06.13.08.00
+        by smtp.gmail.com with ESMTPSA id be6sm1960700edb.29.2021.01.06.15.40.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Jan 2021 13:08:01 -0800 (PST)
-Subject: Re: [PATCH 00/24] platform/x86: ideapad-laptop: cleanup, keyboard
- backlight and "always on USB charging" control support, reenable touchpad
- control
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-References: <20201216013857.360987-1-pobrn@protonmail.com>
- <d7fbc7ed-801e-0cc2-7433-a829e48f4ec8@redhat.com>
- <J3-J89FbEfOIFJXsEo9jy23l2lFJ1QIe_VecEe_Z5v24gd3SgLAyAhxgJ0gq2IB0dFc1OSCuV2-O3YFMEgqkn_katLZqCJ2_YBNaegDgjOU=@protonmail.com>
+        Wed, 06 Jan 2021 15:40:56 -0800 (PST)
+Subject: Re: [PATCH v3 0/9] Add support for Microsoft Surface System
+ Aggregator Module
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?Q?Bla=c5=be_Hrastnik?= <blaz@mxxn.io>,
+        Dorian Stoll <dorian.stoll@tmsp.io>,
+        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20201221183959.1186143-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c9a8f27c-04f0-462a-971a-2970513643e9@redhat.com>
-Date:   Wed, 6 Jan 2021 22:08:00 +0100
+Message-ID: <a47f9739-0d6f-4e1d-c436-3ec272144d87@redhat.com>
+Date:   Thu, 7 Jan 2021 00:40:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.4.0
 MIME-Version: 1.0
-In-Reply-To: <J3-J89FbEfOIFJXsEo9jy23l2lFJ1QIe_VecEe_Z5v24gd3SgLAyAhxgJ0gq2IB0dFc1OSCuV2-O3YFMEgqkn_katLZqCJ2_YBNaegDgjOU=@protonmail.com>
+In-Reply-To: <20201221183959.1186143-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/6/21 9:49 PM, Barnabás Pőcze wrote:
-> 2021. január 6., szerda 19:23 keltezéssel, Hans de Goede írta:
+On 12/21/20 7:39 PM, Maximilian Luz wrote:
+> Hello,
 > 
->> [...]
->> Thank you for this series, it is good to see all the
->> cleanups, as well as to see the new functionality.
->>
->> Patches 1-20 and 22-24 look good to me and you may add my:
->>
->> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->>
->> To them for v2 of this patch-set.
->>
+> Here is version three of the Surface System Aggregator Module (SAM/SSAM)
+> driver series, adding initial support for the embedded controller on 5th
+> and later generation Microsoft Surface devices. Initial support includes
+> the ACPI interface to the controller, via which battery and thermal
+> information is provided on some of these devices.
 > 
-> Thanks for the review.
+> The first version and cover letter detailing what this series is about
+> can be found at
 > 
+>   https://lore.kernel.org/platform-driver-x86/20201115192143.21571-1-luzmaximilian@gmail.com/
 > 
->> I have some remarks about patch 21 I will reply to that one
->> separately.
->>
->> One minor remark about patch 3/24, normally we put all
->> the #include <linux/foo.h> includes first (sorted
->> alphabetically as you already do in the patch) and then
->> follow up by other / subsys specific include such as
->> acpi/video.h. Again sorted alphabetically for the file-names
->> after the subsys dir. I don't think there really is any
->> preferred order for which subsys headers to include first,
->> but typically the generic linux/foo.h headers are included
->> first.
->>
+> the previous version (v2) at
 > 
-> I will change the order as requested.
+>   https://lore.kernel.org/platform-driver-x86/20201203212640.663931-1-luzmaximilian@gmail.com/
 > 
+> This patch-set can also be found at the following repository and
+> reference, if you prefer to look at a kernel tree instead of these
+> emails:
 > 
->> Regards,
->>
->> Hans
->>
->> p.s.
->>
->> About merging this series vs other outstanding ideapad-laptop
->> changes. The other outstanding changes are quite small, so easy
->> to rebase. As such I would actually prefer to merge this series
->> first. So if you can send out a v2 soon-ish, then that would be
->> great.
+>   https://github.com/linux-surface/kernel tags/s/surface-aggregator/v3
 > 
-> That would make it harder to backport, no? As far as I remember, the patch[1] was
-> sent to stable@kernel.org as well.
-> 
-> [1]: https://lore.kernel.org/platform-driver-x86/20210103033651.47580-1-jiaxun.yang@flygoat.com/#t
+> Thank you all for the feedback to and reviews of the previous versions,
+> I hope I have addressed all comments.
 
-That is true. So lets get that patch merged first, and then you can base your v2 on top of that.
+Thank you for your patch-series, I've applied the series to my
+review-hans branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Jiaxun, can you send out a v4 of your "[PATCH fixes v3] platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634"
-patch addressing my review remark on v3 ?
+This has been applied on top of:
+"platform/surface: SURFACE_PLATFORMS should depend on ACPI"
+
+As requested. Since my review-hans branch has been fast-forwarded to 5.11-rc1
+there where some conflicts:
+
+6/9 "platform/surface: aggregator: Add dedicated bus and device type" had conflicts in:
+scripts/mod/devicetable-offsets.c
+scripts/mod/file2alias.c
+
+8/9 "platform/surface: Add Surface Aggregator user-space interface" had a conflict in:
+Documentation/userspace-api/ioctl/ioctl-number.rst
+
+This conflict was caused by the addition of documentation of the sgx ioctls, these use
+0xA4 as "Code" byte (shared with uapi/linux/tee.h), so the 0xA5 code for the sam cdev
+ioctl is still unique.
+
+I'm pretty sure that I've properly resolved the conflicts, but please double-check.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+
+
+
+> Note: In v3, I have dropped the explicit dependency of the core module
+> and driver on CONFIG_ACPI due to the incoming
+> 
+>   [PATCH] platform/surface: SURFACE_PLATFORMS should depend on ACPI
+> 
+> Thus, this series depends on said patch. This patch can be found at
+> 
+>   https://www.spinics.net/lists/platform-driver-x86/msg23929.html
+> 
+> 
+> Changes in v1 (from RFC, overview):
+>  - move to platform/surface
+>  - add copyright lines
+>  - change SPDX identifier to GPL-2.0+ (was GPL-2.0-or-later)
+>  - change user-space interface from debugfs to misc-device
+>  - address issues in user-space interface
+>  - fix typos in commit messages and documentation
+>  - fix some bugs, address other issues
+> 
+> Changes in v2 (overview):
+>  - simplify some code, mostly with regards to concurrency
+>  - add architectural overview to documentation
+>  - improve comments for documentation
+>  - use printk specifier for hex prefix instead of hard-coding it
+>  - spell check comments and strings, fix typos
+>  - unify comment style
+>  - run checkpatch --strict, fix these and other style issues
+> 
+> Changes in v3 (overview):
+>  - remove explicit dependency on ACPI as this is going to be covered by
+>    CONFIG_SURFACE_PLATFORMS
+>  - simplify locking requirements
+>  - help enforce locking requirements via lockdep assertions
+>  - fix false-positive lockdep warning
+>  - warn on event enablement reference counter exhaustion
+>  - don't warn about unhandled event if event handling failed
+>  - validate flags on request initialization
+>  - improve documentation/add comments
+>  - replace 'iff' with 'if' in documentation and comments
+> 
+> Changes regarding specific patches (and more details) can be found on
+> the individual patch.
+> 
+> 
+> Maximilian Luz (9):
+>   platform/surface: Add Surface Aggregator subsystem
+>   platform/surface: aggregator: Add control packet allocation caching
+>   platform/surface: aggregator: Add event item allocation caching
+>   platform/surface: aggregator: Add trace points
+>   platform/surface: aggregator: Add error injection capabilities
+>   platform/surface: aggregator: Add dedicated bus and device type
+>   docs: driver-api: Add Surface Aggregator subsystem documentation
+>   platform/surface: Add Surface Aggregator user-space interface
+>   platform/surface: Add Surface ACPI Notify driver
+> 
+>  Documentation/driver-api/index.rst            |    1 +
+>  .../surface_aggregator/client-api.rst         |   38 +
+>  .../driver-api/surface_aggregator/client.rst  |  393 +++
+>  .../surface_aggregator/clients/cdev.rst       |   87 +
+>  .../surface_aggregator/clients/index.rst      |   21 +
+>  .../surface_aggregator/clients/san.rst        |   44 +
+>  .../driver-api/surface_aggregator/index.rst   |   21 +
+>  .../surface_aggregator/internal-api.rst       |   67 +
+>  .../surface_aggregator/internal.rst           |  577 ++++
+>  .../surface_aggregator/overview.rst           |   77 +
+>  .../driver-api/surface_aggregator/ssh.rst     |  344 +++
+>  .../userspace-api/ioctl/ioctl-number.rst      |    2 +
+>  MAINTAINERS                                   |   13 +
+>  drivers/platform/surface/Kconfig              |   38 +
+>  drivers/platform/surface/Makefile             |    3 +
+>  drivers/platform/surface/aggregator/Kconfig   |   68 +
+>  drivers/platform/surface/aggregator/Makefile  |   17 +
+>  drivers/platform/surface/aggregator/bus.c     |  415 +++
+>  drivers/platform/surface/aggregator/bus.h     |   27 +
+>  .../platform/surface/aggregator/controller.c  | 2579 +++++++++++++++++
+>  .../platform/surface/aggregator/controller.h  |  285 ++
+>  drivers/platform/surface/aggregator/core.c    |  839 ++++++
+>  .../platform/surface/aggregator/ssh_msgb.h    |  205 ++
+>  .../surface/aggregator/ssh_packet_layer.c     | 2057 +++++++++++++
+>  .../surface/aggregator/ssh_packet_layer.h     |  190 ++
+>  .../platform/surface/aggregator/ssh_parser.c  |  228 ++
+>  .../platform/surface/aggregator/ssh_parser.h  |  154 +
+>  .../surface/aggregator/ssh_request_layer.c    | 1264 ++++++++
+>  .../surface/aggregator/ssh_request_layer.h    |  143 +
+>  drivers/platform/surface/aggregator/trace.h   |  632 ++++
+>  .../platform/surface/surface_acpi_notify.c    |  886 ++++++
+>  .../surface/surface_aggregator_cdev.c         |  303 ++
+>  include/linux/mod_devicetable.h               |   18 +
+>  include/linux/surface_acpi_notify.h           |   39 +
+>  include/linux/surface_aggregator/controller.h |  824 ++++++
+>  include/linux/surface_aggregator/device.h     |  423 +++
+>  include/linux/surface_aggregator/serial_hub.h |  672 +++++
+>  include/uapi/linux/surface_aggregator/cdev.h  |   78 +
+>  scripts/mod/devicetable-offsets.c             |    8 +
+>  scripts/mod/file2alias.c                      |   23 +
+>  40 files changed, 14103 insertions(+)
+>  create mode 100644 Documentation/driver-api/surface_aggregator/client-api.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/client.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/clients/cdev.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/clients/index.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/clients/san.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/index.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/internal-api.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/internal.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/overview.rst
+>  create mode 100644 Documentation/driver-api/surface_aggregator/ssh.rst
+>  create mode 100644 drivers/platform/surface/aggregator/Kconfig
+>  create mode 100644 drivers/platform/surface/aggregator/Makefile
+>  create mode 100644 drivers/platform/surface/aggregator/bus.c
+>  create mode 100644 drivers/platform/surface/aggregator/bus.h
+>  create mode 100644 drivers/platform/surface/aggregator/controller.c
+>  create mode 100644 drivers/platform/surface/aggregator/controller.h
+>  create mode 100644 drivers/platform/surface/aggregator/core.c
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_msgb.h
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_packet_layer.c
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_packet_layer.h
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_parser.c
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_parser.h
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_request_layer.c
+>  create mode 100644 drivers/platform/surface/aggregator/ssh_request_layer.h
+>  create mode 100644 drivers/platform/surface/aggregator/trace.h
+>  create mode 100644 drivers/platform/surface/surface_acpi_notify.c
+>  create mode 100644 drivers/platform/surface/surface_aggregator_cdev.c
+>  create mode 100644 include/linux/surface_acpi_notify.h
+>  create mode 100644 include/linux/surface_aggregator/controller.h
+>  create mode 100644 include/linux/surface_aggregator/device.h
+>  create mode 100644 include/linux/surface_aggregator/serial_hub.h
+>  create mode 100644 include/uapi/linux/surface_aggregator/cdev.h
+> 
 
