@@ -2,158 +2,102 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0272FC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92264C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 16:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC22623120
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 14:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE1C23433
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 16:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbhAGOp6 (ORCPT
+        id S1728346AbhAGQEa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jan 2021 09:45:58 -0500
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:46647 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727789AbhAGOp6 (ORCPT
+        Thu, 7 Jan 2021 11:04:30 -0500
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:30878 "EHLO
+        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbhAGQEa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jan 2021 09:45:58 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id E48E01804;
-        Thu,  7 Jan 2021 09:45:11 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 07 Jan 2021 09:45:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=hFwjh/ZpvoJpdLxkGcSqLHl/+S
-        LEYanliGHFuQMPbQU=; b=bH+4wenJyqRl5SdQii4f/V8Fw8rZ4UzT3N7S3Qt8TL
-        rT6W0niqzP07Xsl5w17QiNhCdmL1cIlZRppCkxiSujiefFQcJXcZ9fHRZ7CzFOQy
-        zYEugI19/wq4MF2IOcC+2VBmB3SiCpDzULFcbappDTczAYKKK1JUEc8yUkdBy6GH
-        bOX2IaGumNpJpFtoqDr5oXMvTpWv0J6roIwWRyOC5zLItN+yVD3M5ZvLmCvz40/i
-        tgcz8lrlTWzmUa0cWRL9T/DIKXS+ZYU7dT2gWOM+JacAAS5jArWCoUCayGvBgYcQ
-        kf4pZPbh6XbXHbocxHFErLI33UjlEk9tztQN5z8+gFUw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=hFwjh/ZpvoJpdLxkG
-        cSqLHl/+SLEYanliGHFuQMPbQU=; b=AhwK72PA7U/+/L48rgDWTFxLhgYfH7YM/
-        kEcLLZ+26Kf0H+LlVYgafk1u7v81GcP7VnY8MuLcYz800Bhwwe14YFTZ3HJJwf9I
-        OQuNFj320Nvrv/uvzpWqbqQBE0RF/zDyIko0qNXcBxd+ysdvvYIWWy8FUms9x7lx
-        9ve3Ol8a1JcYHD+iqWTMLGfQedt9lsNC8NyScDjQsarL65a8v1sxyX5wKwnIvN1e
-        t7SS1I6JOL0Rpd+Ah/mCadPlCxUnmxgHEgZ4+O8rT2UYjhWh7d+V30W1La/Jm5Z+
-        eyuCmDmNIt8pigSEu1+0kOr3oe1UYkjTkE1CGfKZlh+iBH3p8hWSg==
-X-ME-Sender: <xms:dh73XxdYVRE-q3gA_3dzstC3Ufw9actAJCjEwVTu2kDsnz2BwtILbA>
-    <xme:dh73X6JK38Qyt0BjBkiIl3TCBu4urqycqqgC7YViSX57I_D_X_BTQHFg-xCVHXdeu
-    cCl3ghNkTl7YgmdDBI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdegvddgieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflihgrgihunhcu
-    jggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqnecuggftrf
-    grthhtvghrnhephfejtdektdeuhedtieefteekveffteejteefgeekveegffetvddugfel
-    iefhtddunecukfhppedutddurdekgedrgeeirdegudenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghho
-    rghtrdgtohhm
-X-ME-Proxy: <xmx:dh73X5jJgMeFgd8v1A7k89F931qWgwWdArGoY1wOGniCZFEKO6OqUA>
-    <xmx:dh73XwRq4k0MJ-HluxcgT6EkyrJNygwNS5LTLGQ_V-ku1Z0nBfWPtw>
-    <xmx:dh73X7WXmrOWgJPTT5uKCsAaDmc4FZZ9-c_oZcloNtKHDvP2whbVbA>
-    <xmx:dx73X3MFJms5Dw8iBSpa2z1fRpHt2KcBK__qXl3XjVJ1lvK7x6D18b6I9FM>
-Received: from localhost.localdomain (unknown [101.84.46.41])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6C6BC240064;
-        Thu,  7 Jan 2021 09:44:59 -0500 (EST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, stable@vger.kernel.org,
-        Ike Panhc <ike.pan@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH fixes v4] platform/x86: ideapad-laptop: Disable touchpad_switch for ELAN0634
-Date:   Thu,  7 Jan 2021 22:44:38 +0800
-Message-Id: <20210107144438.12605-1-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.30.0
+        Thu, 7 Jan 2021 11:04:30 -0500
+Date:   Thu, 07 Jan 2021 16:03:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1610035427;
+        bh=NjLJYtrwGi8fl20fDTPPgaGJm/yzsWtQLjMz/qlJmLk=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=lJFxtxag81erccYTjlMGJWfmCu/2PURzR6TdJ4oSGuwrv48rv+4ZCfybs62jPISY+
+         h1bj48txohaisl7Mi9NJnA8O1jvKX2M0+/jB9Fh6jbGgX/wVejN5PmIH/OMzV3CV8u
+         SiHxLtOIZu1ZMn9L2OdHhkyMsHYEXgvRlX0nyZ8s=
+To:     Hans de Goede <hdegoede@redhat.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     Perry Yuan <Perry.Yuan@dell.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Limonciello Mario <Mario.Limonciello@dell.com>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH v2 1/2] platform/x86: dell-privacy: Add support for Dell hardware privacy
+Message-ID: <kt8PP3Pj3sI0-gL28bw5rPCvcv3S8STD0pMFoQUrixarFRv_36In5dPDtrOtSSJk2WhEo4FN9duHO_pNG8kDDPng06mDOX9UvmXeaPNI6sE=@protonmail.com>
+In-Reply-To: <d1d31281-d5c8-ea09-9e2d-1c5acb35deef@redhat.com>
+References: <20201228132855.17544-1-Perry_Yuan@Dell.com> <d1d31281-d5c8-ea09-9e2d-1c5acb35deef@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Newer ideapads (e.g.: Yoga 14s, 720S 14) come with ELAN0634 touchpad do not
-use EC to switch touchpad.
+Hi
 
-Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
-unexpectedly.
-Writing VPCCMD_W_TOUCHPAD may cause a spurious key press.
 
-Add has_touchpad_switch to workaround these machines.
+2021. janu=C3=A1r 7., cs=C3=BCt=C3=B6rt=C3=B6k 0:43 keltez=C3=A9ssel, Hans =
+de Goede =C3=ADrta:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: stable@vger.kernel.org # 5.4+
---
-v2: Specify touchpad to ELAN0634
-v3: Stupid missing ! in v2
-v4: Correct acpi_dev_present usage (Hans)
----
- drivers/platform/x86/ideapad-laptop.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+> Hi Perry,
+>
+> On 12/28/20 2:28 PM, Perry Yuan wrote:
+>
+> > From: Perry Yuan perry_yuan@dell.com
+> > add support for dell privacy driver for the dell units equipped
+> > hardware privacy design, which protect users privacy
+> > of audio and camera from hardware level. once the audio or camera
+> > privacy mode enabled, any applications will not get any audio or
+> > video stream.
+> > when user pressed ctrl+F4 hotkey, audio privacy mode will be
+> > enabled,Micmute led will be also changed accordingly.
+> > The micmute led is fully controlled by hardware & EC.
+> > and camera mute hotkey is ctrl+F9.currently design only emmit
+> > SW_CAMERA_LENS_COVER event while the camera LENS shutter will be
+> > changed by EC & HW control.
+> > *The flow is like this:
+> >
+> > 1.  User presses key. HW does stuff with this key (timeout is started)
+> > 2.  Event is emitted from FW
+> > 3.  Event received by dell-privacy
+> > 4.  KEY_MICMUTE emitted from dell-privacy
+> > 5.  Userland picks up key and modifies kcontrol for SW mute
+> > 6.  Codec kernel driver catches and calls ledtrig_audio_set, like this:
+> >     ledtrig_audio_set(LED_AUDIO_MICMUTE,
+> >     rt715->micmute_led ? LED_ON :LED_OFF);
+> >
+> > 7.  If "LED" is set to on dell-privacy notifies ec,
+> >     and timeout is cancelled,HW mic mute activated.
+> >
+> >
+> > Signed-off-by: Perry Yuan perry_yuan@dell.com
+> > Signed-off-by: Limonciello Mario mario_limonciello@dell.com
+>
+> Thank you for your patch, please send a new version addressing
+> Barnab=C3=A1s' review comment and including the second patch of the
+> series.
+> [...]
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 7598cd46cf60..5b81bafa5c16 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -92,6 +92,7 @@ struct ideapad_private {
- 	struct dentry *debug;
- 	unsigned long cfg;
- 	bool has_hw_rfkill_switch;
-+	bool has_touchpad_switch;
- 	const char *fnesc_guid;
- };
- 
-@@ -535,7 +536,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
- 	} else if (attr == &dev_attr_fn_lock.attr) {
- 		supported = acpi_has_method(priv->adev->handle, "HALS") &&
- 			acpi_has_method(priv->adev->handle, "SALS");
--	} else
-+	} else if (attr == &dev_attr_touchpad.attr)
-+		supported = priv->has_touchpad_switch;
-+	else
- 		supported = true;
- 
- 	return supported ? attr->mode : 0;
-@@ -867,6 +870,9 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
- {
- 	unsigned long value;
- 
-+	if (!priv->has_touchpad_switch)
-+		return;
-+
- 	/* Without reading from EC touchpad LED doesn't switch state */
- 	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
- 		/* Some IdeaPads don't really turn off touchpad - they only
-@@ -989,6 +995,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	priv->platform_device = pdev;
- 	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
- 
-+	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
-+	priv->has_touchpad_switch = !acpi_dev_present("ELAN0634", NULL, -1);
-+
- 	ret = ideapad_sysfs_init(priv);
- 	if (ret)
- 		return ret;
-@@ -1006,6 +1015,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
- 	if (!priv->has_hw_rfkill_switch)
- 		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
- 
-+	/* The same for Touchpad */
-+	if (!priv->has_touchpad_switch)
-+		write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
-+
- 	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
- 		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
- 			ideapad_register_rfkill(priv, i);
--- 
-2.30.0
+I think first something needs to be figured out regarding
+the integration with the rest of the Dell modules. I feel
+that list is not a desirable way to do it.
 
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
