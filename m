@@ -2,135 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-24.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 17:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A093EC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 22:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF82311E
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 17:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A044235FD
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 22:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbhAGRL7 (ORCPT
+        id S1726326AbhAGWfN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jan 2021 12:11:59 -0500
-Received: from mail-oi1-f170.google.com ([209.85.167.170]:36194 "EHLO
-        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbhAGRL7 (ORCPT
+        Thu, 7 Jan 2021 17:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbhAGWfL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jan 2021 12:11:59 -0500
-Received: by mail-oi1-f170.google.com with SMTP id 9so8133215oiq.3;
-        Thu, 07 Jan 2021 09:11:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1PbEYJF/MvWbGrN60pFdKWGcw422aT1Ml4Xjt2II+jk=;
-        b=pjrcQ8HIDqRPH8mr1fYsOYySO3QPQbMefiPXc0F1DgM5O9yYrWrXWpqWrKc46H1oJV
-         2C7YbsVKZIu27UBMzNPWEI5Yj0YWBfZUp3HQZjM75tmOnCNe673/CYH4zLdejFCqlLUe
-         Y9OjHgDR0rBgs0BxUoyGgpn9GvMsB8twdzT9hW4Q0vWGfxre6/9licxs/X89iidgzhnZ
-         ZGF1rLgUkwQadPz1udTxS/qobsqih7U4chiQzF1GcbrHy4RgzNF3MW+qWCqrmG/jViG+
-         xd/FTrYQcJJYmNA7UK9jUt6Ih4yI1JpzZnX0oiiRAt11a4Wtj42mDTHOuwlzYqBx+vTw
-         f65Q==
-X-Gm-Message-State: AOAM532Cyzkb4VJyRBWq2zJRUH+POUle67WcpTCKz/35uf4ty2Ukt8cT
-        DKx6XTQI4qzmxWutmDlcWkS/wGF9LY5/4gArS60=
-X-Google-Smtp-Source: ABdhPJwvt9RljOaJcwc//OOXu96K4s2vVFASiWCVYzOY7QE13L5vHON4PHIPfkcAKUzSL6SijcimmyHoyMuJHe8Vo8M=
-X-Received: by 2002:aca:4892:: with SMTP id v140mr1981608oia.71.1610039478172;
- Thu, 07 Jan 2021 09:11:18 -0800 (PST)
+        Thu, 7 Jan 2021 17:35:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AE003233FB;
+        Thu,  7 Jan 2021 22:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610058871;
+        bh=YxWPwsnnRjlrhr4yxPjg93gIGIM1hNu7MQw7OLs3KDI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nMU3CXGiXfYZYNwQR0pp5xAhCezD0B0HarZZ/6Pu6ZNPIb4aO+XBZvh6JBf3Do0eG
+         p+yJYETgNWkbTO7EvZB3u1lhJ/p9dW2M5kUUAN7ZAmGw/RKfdaofmAgdfDkX6DUXRq
+         FehZrcoJitZXPRPMvZX/NOwZPNW2Zwtptz9PocTxCMheK7jJDTXj7phMEO9U8xCTqb
+         GhJLvhFPBcrjVrZP8sKIB2ktNNRSQnc77bVfC5dEpn+3vR4Tm53MAc1rAT9eLjjJFj
+         6iwnn+yefEYQ/Thm/rWLT6U1FHgcnOcPCCO/qzur2iXeQQhQ4jGhc1VA82FcNJv4Id
+         GsWHy1fhkz0Xg==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+Date:   Thu,  7 Jan 2021 23:34:15 +0100
+Message-Id: <20210107223424.4135538-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-References: <20210105131447.38036-1-jiaxun.yang@flygoat.com>
- <20210105131447.38036-2-jiaxun.yang@flygoat.com> <683c8358-fd71-cd27-8e39-19fdf3e1f71f@redhat.com>
-In-Reply-To: <683c8358-fd71-cd27-8e39-19fdf3e1f71f@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 7 Jan 2021 18:11:07 +0100
-Message-ID: <CAJZ5v0jHFqGu1hmFwkfWsvP37hQnhBiG4M_Pa7TTHYL4C1VgMA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ACPI: platform-profile: Introduce object pointers
- to callbacks
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 5, 2021 at 2:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 1/5/21 2:14 PM, Jiaxun Yang wrote:
-> > Add a object pointer to handler callbacks to avoid having
-> > global variables everywhere.
-> >
-> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > Suggested-by: Hans de Goede <hdegoede@redhat.com>
->
-> Thanks, patch looks good to me:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
-> Regards,
->
-> Hans
->
->
->
-> > ---
-> >  drivers/acpi/platform_profile.c  | 4 ++--
-> >  include/linux/platform_profile.h | 6 ++++--
-> >  2 files changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-> > index 91be50a32cc8..bb4d7b0fe2ac 100644
-> > --- a/drivers/acpi/platform_profile.c
-> > +++ b/drivers/acpi/platform_profile.c
-> > @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
-> >               return -ENODEV;
-> >       }
-> >
-> > -     err = cur_profile->profile_get(&profile);
-> > +     err = cur_profile->profile_get(cur_profile, &profile);
-> >       mutex_unlock(&profile_lock);
-> >       if (err)
-> >               return err;
-> > @@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
-> >               return -EOPNOTSUPP;
-> >       }
-> >
-> > -     err = cur_profile->profile_set(i);
-> > +     err = cur_profile->profile_set(cur_profile, i);
-> >       mutex_unlock(&profile_lock);
-> >       if (err)
-> >               return err;
-> > diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-> > index 3623d7108421..43f4583b5259 100644
-> > --- a/include/linux/platform_profile.h
-> > +++ b/include/linux/platform_profile.h
-> > @@ -28,8 +28,10 @@ enum platform_profile_option {
-> >
-> >  struct platform_profile_handler {
-> >       unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
-> > -     int (*profile_get)(enum platform_profile_option *profile);
-> > -     int (*profile_set)(enum platform_profile_option profile);
-> > +     int (*profile_get)(struct platform_profile_handler *pprof,
-> > +                             enum platform_profile_option *profile);
-> > +     int (*profile_set)(struct platform_profile_handler *pprof,
-> > +                             enum platform_profile_option profile);
-> >  };
-> >
-> >  int platform_profile_register(const struct platform_profile_handler *pprof);
-> >
->
+From: Arnd Bergmann <arnd@arndb.de>
 
-Applied with a modified subject and some edits in the changelog as
-5.12 material, and I'm leaving the [2/2] to you.
+When 5-level page tables are enabled, clang triggers a BUILD_BUG_ON():
 
-Thanks!
+x86_64-linux-ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
+efi_64.c:(.text+0x22c): undefined reference to `__compiletime_assert_354'
+
+Use the same method as in commit c65e774fb3f6 ("x86/mm: Make PGDIR_SHIFT
+and PTRS_PER_P4D variable") and change it to MAYBE_BUILD_BUG_ON(),
+so it only triggers for constant input.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/256
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/platform/efi/efi_64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e1e8d4e3a213..62bb1616b4a5 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -137,8 +137,8 @@ void efi_sync_low_kernel_mappings(void)
+ 	 * As with PGDs, we share all P4D entries apart from the one entry
+ 	 * that covers the EFI runtime mapping space.
+ 	 */
+-	BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+-	BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
++	MAYBE_BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
++	MAYBE_BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+ 
+ 	pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
+ 	pgd_k = pgd_offset_k(EFI_VA_END);
+-- 
+2.29.2
+
