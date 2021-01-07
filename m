@@ -2,102 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92264C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 16:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1140AC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 17:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE1C23433
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 16:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFEF82311E
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  7 Jan 2021 17:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbhAGQEa (ORCPT
+        id S1728265AbhAGRL7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 7 Jan 2021 11:04:30 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:30878 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbhAGQEa (ORCPT
+        Thu, 7 Jan 2021 12:11:59 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:36194 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728131AbhAGRL7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 7 Jan 2021 11:04:30 -0500
-Date:   Thu, 07 Jan 2021 16:03:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610035427;
-        bh=NjLJYtrwGi8fl20fDTPPgaGJm/yzsWtQLjMz/qlJmLk=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=lJFxtxag81erccYTjlMGJWfmCu/2PURzR6TdJ4oSGuwrv48rv+4ZCfybs62jPISY+
-         h1bj48txohaisl7Mi9NJnA8O1jvKX2M0+/jB9Fh6jbGgX/wVejN5PmIH/OMzV3CV8u
-         SiHxLtOIZu1ZMn9L2OdHhkyMsHYEXgvRlX0nyZ8s=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Perry Yuan <Perry.Yuan@dell.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Limonciello Mario <Mario.Limonciello@dell.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 1/2] platform/x86: dell-privacy: Add support for Dell hardware privacy
-Message-ID: <kt8PP3Pj3sI0-gL28bw5rPCvcv3S8STD0pMFoQUrixarFRv_36In5dPDtrOtSSJk2WhEo4FN9duHO_pNG8kDDPng06mDOX9UvmXeaPNI6sE=@protonmail.com>
-In-Reply-To: <d1d31281-d5c8-ea09-9e2d-1c5acb35deef@redhat.com>
-References: <20201228132855.17544-1-Perry_Yuan@Dell.com> <d1d31281-d5c8-ea09-9e2d-1c5acb35deef@redhat.com>
+        Thu, 7 Jan 2021 12:11:59 -0500
+Received: by mail-oi1-f170.google.com with SMTP id 9so8133215oiq.3;
+        Thu, 07 Jan 2021 09:11:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1PbEYJF/MvWbGrN60pFdKWGcw422aT1Ml4Xjt2II+jk=;
+        b=pjrcQ8HIDqRPH8mr1fYsOYySO3QPQbMefiPXc0F1DgM5O9yYrWrXWpqWrKc46H1oJV
+         2C7YbsVKZIu27UBMzNPWEI5Yj0YWBfZUp3HQZjM75tmOnCNe673/CYH4zLdejFCqlLUe
+         Y9OjHgDR0rBgs0BxUoyGgpn9GvMsB8twdzT9hW4Q0vWGfxre6/9licxs/X89iidgzhnZ
+         ZGF1rLgUkwQadPz1udTxS/qobsqih7U4chiQzF1GcbrHy4RgzNF3MW+qWCqrmG/jViG+
+         xd/FTrYQcJJYmNA7UK9jUt6Ih4yI1JpzZnX0oiiRAt11a4Wtj42mDTHOuwlzYqBx+vTw
+         f65Q==
+X-Gm-Message-State: AOAM532Cyzkb4VJyRBWq2zJRUH+POUle67WcpTCKz/35uf4ty2Ukt8cT
+        DKx6XTQI4qzmxWutmDlcWkS/wGF9LY5/4gArS60=
+X-Google-Smtp-Source: ABdhPJwvt9RljOaJcwc//OOXu96K4s2vVFASiWCVYzOY7QE13L5vHON4PHIPfkcAKUzSL6SijcimmyHoyMuJHe8Vo8M=
+X-Received: by 2002:aca:4892:: with SMTP id v140mr1981608oia.71.1610039478172;
+ Thu, 07 Jan 2021 09:11:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20210105131447.38036-1-jiaxun.yang@flygoat.com>
+ <20210105131447.38036-2-jiaxun.yang@flygoat.com> <683c8358-fd71-cd27-8e39-19fdf3e1f71f@redhat.com>
+In-Reply-To: <683c8358-fd71-cd27-8e39-19fdf3e1f71f@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 7 Jan 2021 18:11:07 +0100
+Message-ID: <CAJZ5v0jHFqGu1hmFwkfWsvP37hQnhBiG4M_Pa7TTHYL4C1VgMA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ACPI: platform-profile: Introduce object pointers
+ to callbacks
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
-
-
-2021. janu=C3=A1r 7., cs=C3=BCt=C3=B6rt=C3=B6k 0:43 keltez=C3=A9ssel, Hans =
-de Goede =C3=ADrta:
-
-> Hi Perry,
+On Tue, Jan 5, 2021 at 2:18 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On 12/28/20 2:28 PM, Perry Yuan wrote:
+> Hi,
 >
-> > From: Perry Yuan perry_yuan@dell.com
-> > add support for dell privacy driver for the dell units equipped
-> > hardware privacy design, which protect users privacy
-> > of audio and camera from hardware level. once the audio or camera
-> > privacy mode enabled, any applications will not get any audio or
-> > video stream.
-> > when user pressed ctrl+F4 hotkey, audio privacy mode will be
-> > enabled,Micmute led will be also changed accordingly.
-> > The micmute led is fully controlled by hardware & EC.
-> > and camera mute hotkey is ctrl+F9.currently design only emmit
-> > SW_CAMERA_LENS_COVER event while the camera LENS shutter will be
-> > changed by EC & HW control.
-> > *The flow is like this:
+> On 1/5/21 2:14 PM, Jiaxun Yang wrote:
+> > Add a object pointer to handler callbacks to avoid having
+> > global variables everywhere.
 > >
-> > 1.  User presses key. HW does stuff with this key (timeout is started)
-> > 2.  Event is emitted from FW
-> > 3.  Event received by dell-privacy
-> > 4.  KEY_MICMUTE emitted from dell-privacy
-> > 5.  Userland picks up key and modifies kcontrol for SW mute
-> > 6.  Codec kernel driver catches and calls ledtrig_audio_set, like this:
-> >     ledtrig_audio_set(LED_AUDIO_MICMUTE,
-> >     rt715->micmute_led ? LED_ON :LED_OFF);
-> >
-> > 7.  If "LED" is set to on dell-privacy notifies ec,
-> >     and timeout is cancelled,HW mic mute activated.
-> >
-> >
-> > Signed-off-by: Perry Yuan perry_yuan@dell.com
-> > Signed-off-by: Limonciello Mario mario_limonciello@dell.com
+> > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> > Suggested-by: Hans de Goede <hdegoede@redhat.com>
 >
-> Thank you for your patch, please send a new version addressing
-> Barnab=C3=A1s' review comment and including the second patch of the
-> series.
-> [...]
+> Thanks, patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > ---
+> >  drivers/acpi/platform_profile.c  | 4 ++--
+> >  include/linux/platform_profile.h | 6 ++++--
+> >  2 files changed, 6 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> > index 91be50a32cc8..bb4d7b0fe2ac 100644
+> > --- a/drivers/acpi/platform_profile.c
+> > +++ b/drivers/acpi/platform_profile.c
+> > @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
+> >               return -ENODEV;
+> >       }
+> >
+> > -     err = cur_profile->profile_get(&profile);
+> > +     err = cur_profile->profile_get(cur_profile, &profile);
+> >       mutex_unlock(&profile_lock);
+> >       if (err)
+> >               return err;
+> > @@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
+> >               return -EOPNOTSUPP;
+> >       }
+> >
+> > -     err = cur_profile->profile_set(i);
+> > +     err = cur_profile->profile_set(cur_profile, i);
+> >       mutex_unlock(&profile_lock);
+> >       if (err)
+> >               return err;
+> > diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> > index 3623d7108421..43f4583b5259 100644
+> > --- a/include/linux/platform_profile.h
+> > +++ b/include/linux/platform_profile.h
+> > @@ -28,8 +28,10 @@ enum platform_profile_option {
+> >
+> >  struct platform_profile_handler {
+> >       unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> > -     int (*profile_get)(enum platform_profile_option *profile);
+> > -     int (*profile_set)(enum platform_profile_option profile);
+> > +     int (*profile_get)(struct platform_profile_handler *pprof,
+> > +                             enum platform_profile_option *profile);
+> > +     int (*profile_set)(struct platform_profile_handler *pprof,
+> > +                             enum platform_profile_option profile);
+> >  };
+> >
+> >  int platform_profile_register(const struct platform_profile_handler *pprof);
+> >
+>
 
-I think first something needs to be figured out regarding
-the integration with the rest of the Dell modules. I feel
-that list is not a desirable way to do it.
+Applied with a modified subject and some edits in the changelog as
+5.12 material, and I'm leaving the [2/2] to you.
 
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+Thanks!
