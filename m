@@ -2,61 +2,62 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F0EC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 15:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E4AC43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 15:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3709121BE5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 15:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E362251F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 15:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbhAKPtn (ORCPT
+        id S1730209AbhAKPtr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jan 2021 10:49:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54794 "EHLO
+        Mon, 11 Jan 2021 10:49:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730494AbhAKPtn (ORCPT
+        with ESMTP id S2387555AbhAKPtq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jan 2021 10:49:43 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E582CC061794;
-        Mon, 11 Jan 2021 07:49:02 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id jx16so217758ejb.10;
-        Mon, 11 Jan 2021 07:49:02 -0800 (PST)
+        Mon, 11 Jan 2021 10:49:46 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0FEC06179F;
+        Mon, 11 Jan 2021 07:49:05 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id 6so270664ejz.5;
+        Mon, 11 Jan 2021 07:49:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lZToKGTZKbZH1EPW/AH7elrckIZzJdraGl1TvIdytnU=;
-        b=sMIb0sdK2jJ1FfLxd8L/kLrNsyPdfFnMI86WFIQN8Y7knhpZQkVe08zHk5k84G31VF
-         vNoXzqDoaRW1RpHZClKVEcJVcjYrlXjAyJlYJERkDguodXTSCZS/zrkEavBBzy5Tmzhy
-         7KWzzoXDSksavGFFnHTmpYdGkONL663i+yC4JwnNMcrMq4i4U64s+5MA2uSAF3M32I8Y
-         WaSnXWLDqVyC+rrpzcyXzvdHzEIcxGyiHfIKXuW5nmkw1TRhl8MaxpUSPX7F5v0YZUoL
-         zDbY6q+jCQmdUr3isdI4Zx4fhhRMaMfUt7Jp/5y0glJ8hElREj9WmpnrbckIr/ey05Mp
-         hbzg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9fhDyXIzLb3tp3sYrxiiTJVfbmMx3udMPekHrzkNr6g=;
+        b=a162Hx+PQVhapVcwLdSPh3bhweg0hZJDd61KrKsuW3AK/SsxCdymuLkIZWHR/4cNCk
+         GSQUixWKFVr6YAHCmKukEilBmAW73/CPzYddux6/KHtluoS3LtjYmkPnJqYBJrlvYXv7
+         /iBsJQ98rcAveDgqtGf26SgmV8WPKhirG/+fT2rKU+BSrxk14ixDcrRCQi3zH+LwBokC
+         Ad5mwNooq9OOoovstqlnuqm29ZN8G2UItIfy5U/VQva4QoJ47uZj26SSLY5jRgdhEYEh
+         dVwSkfDI0LPc8u2D2Iu/uzJbMCITQWxgCSLblw1xHqgd4SMXb5J/OdvYvwC6YgxL4CqN
+         PijA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lZToKGTZKbZH1EPW/AH7elrckIZzJdraGl1TvIdytnU=;
-        b=ilO2f5w/TZW08rENrHsmZOAvpQ2Nw8yhLjoTuCNRb/DDfXtxT4kHdM5qrhd9lhkyOH
-         mi3fOdsgMaYkRa3efGszp41LO8blfxGW+XlPhic4X6H2zHH0sUNL5Xo9T1VtTPQDdqry
-         KheumV8rpM8UUrsHDOqyA6SzjDS7ekwJTw4qB94QvjLa0eEKTkA4POcWf4TD9u2vVH4V
-         zqUQUKruZJI/c4PMjSNyh47eNl+vwLMfn692Cx958ibWZIBiXpxxgN8XbnaT7UJ2XjT7
-         yw+FkikgA90ZEhHEjqziSwARxE7DZ/TcpTPTV2KmBlwjC2sWvm91q4kOMfELVaxdY5PQ
-         2Wkg==
-X-Gm-Message-State: AOAM532FwEwnof4K7TfRRQYQyfLqbFuwVGIAvdQJ5dpZiajO+kMzhkjh
-        AP6pr5che1HWkBJv1/4gyWx5iIglgl4=
-X-Google-Smtp-Source: ABdhPJwgOeOegwqq/dRFJQG3Do0UVkLOSvXR/dllyzYHzzT3TYoDYLyUd5J5219oYny2jZ4W1RXfLA==
-X-Received: by 2002:a17:906:890:: with SMTP id n16mr42947eje.463.1610380141304;
-        Mon, 11 Jan 2021 07:49:01 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9fhDyXIzLb3tp3sYrxiiTJVfbmMx3udMPekHrzkNr6g=;
+        b=ET5o0nHIPyrxL5ZcN8WVFwN8p12a1ZvHbsKt6kXL36qq5q0cTqPHhUz7B2yRgcStCE
+         4MN/WWWIRx9cuQ2m6iKba1nIufAXEOMv/Yd8RAS/TZLqHIXJbN2cFoCNjLfa3NTUPOSv
+         62Z4g5KZnMI+bXAewjhmdG9u2piFvJMMXqYrvYTIcZI7X0KZQ/QLXsi+d7KWoWJu+eKI
+         vdrifWDj7+FcWSFkmPkdQKn3V5IpBhkfvrwGVj3TmN6fkoEw1MZVX5y4XsEgdy/YJEoi
+         UvLnciMxfQV1LFmN3bwoxnNKBOSd8lPwL+AT6NmP2wT+0Ut/oCgJ57h80joknUjfNhuw
+         xGoQ==
+X-Gm-Message-State: AOAM532E2E2j31aQl4v8mOF8YFjHN6b95hf8wTaAuwt7OLN74aCNb2AP
+        gkMNvPeDeZG4VKENPkrwtWsij59CqB4=
+X-Google-Smtp-Source: ABdhPJw4DvSlOPkT2eJXUb7cebD4P9IWkasY9s9kw/lepsP5u0g+61CH3wm/CTikdyEOi2M4FgUEdA==
+X-Received: by 2002:a17:906:e15:: with SMTP id l21mr41054eji.509.1610380143928;
+        Mon, 11 Jan 2021 07:49:03 -0800 (PST)
 Received: from xws.localdomain (pd9ea3126.dip0.t-ipconnect.de. [217.234.49.38])
-        by smtp.gmail.com with ESMTPSA id d22sm7182671eja.72.2021.01.11.07.49.00
+        by smtp.gmail.com with ESMTPSA id d22sm7182671eja.72.2021.01.11.07.49.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jan 2021 07:49:00 -0800 (PST)
+        Mon, 11 Jan 2021 07:49:03 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
@@ -64,30 +65,75 @@ Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         Colin Ian King <colin.king@canonical.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH -next 0/2] platform/surface: aggregator_cdev: Fixes for CI analysis
-Date:   Mon, 11 Jan 2021 16:48:49 +0100
-Message-Id: <20210111154851.325404-1-luzmaximilian@gmail.com>
+Subject: [PATCH -next 2/2] platform/surface: aggregator_cdev: Add comments regarding unchecked allocation size
+Date:   Mon, 11 Jan 2021 16:48:51 +0100
+Message-Id: <20210111154851.325404-3-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210111154851.325404-1-luzmaximilian@gmail.com>
+References: <20210111154851.325404-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+CI static analysis complains about the allocation size in payload and
+response buffers being unchecked. In general, these allocations should
+be safe as the user-input is u16 and thus limited to U16_MAX, which is
+only slightly larger than the theoretical maximum imposed by the
+underlying SSH protocol.
 
-here are some patches addressing two issues in the Surface Aggregator
-user-space interface reported by Colin Ian King via static analysis.
+All bounds on these values required by the underlying protocol are
+enforced in ssam_request_sync() (or rather the functions called by it),
+thus bounds here are only relevant for allocation.
 
-Maximilian Luz (2):
-  platform/surface: aggregator_cdev: Fix access of uninitialized
-    variables
-  platform/surface: aggregator_cdev: Add comments regarding unchecked
-    allocation size
+Add comments explaining that this should be safe.
 
- .../surface/surface_aggregator_cdev.c         | 23 +++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Fixes: 178f6ab77e61 ("platform/surface: Add Surface Aggregator user-space interface")
+Addresses-Coverity: ("Untrusted allocation size")
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ .../surface/surface_aggregator_cdev.c         | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
+diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
+index 979340cdd9de..ccfffe5eadfc 100644
+--- a/drivers/platform/surface/surface_aggregator_cdev.c
++++ b/drivers/platform/surface/surface_aggregator_cdev.c
+@@ -106,6 +106,15 @@ static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
+ 			goto out;
+ 		}
+ 
++		/*
++		 * Note: spec.length is limited to U16_MAX bytes via struct
++		 * ssam_cdev_request. This is slightly larger than the
++		 * theoretical maximum (SSH_COMMAND_MAX_PAYLOAD_SIZE) of the
++		 * underlying protocol (note that nothing remotely this size
++		 * should ever be allocated in any normal case). This size is
++		 * validated later in ssam_request_sync(), for allocation the
++		 * bound imposed by u16 should be enough.
++		 */
+ 		spec.payload = kzalloc(spec.length, GFP_KERNEL);
+ 		if (!spec.payload) {
+ 			ret = -ENOMEM;
+@@ -125,6 +134,16 @@ static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
+ 			goto out;
+ 		}
+ 
++		/*
++		 * Note: rsp.capacity is limited to U16_MAX bytes via struct
++		 * ssam_cdev_request. This is slightly larger than the
++		 * theoretical maximum (SSH_COMMAND_MAX_PAYLOAD_SIZE) of the
++		 * underlying protocol (note that nothing remotely this size
++		 * should ever be allocated in any normal case). In later use,
++		 * this capacity does not have to be strictly bounded, as it
++		 * is only used as an output buffer to be written to. For
++		 * allocation the bound imposed by u16 should be enough.
++		 */
+ 		rsp.pointer = kzalloc(rsp.capacity, GFP_KERNEL);
+ 		if (!rsp.pointer) {
+ 			ret = -ENOMEM;
 -- 
 2.30.0
 
