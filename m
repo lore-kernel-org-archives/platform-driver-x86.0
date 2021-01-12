@@ -2,478 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7AC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 16:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDD1C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Jan 2021 17:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10746223E4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 11 Jan 2021 16:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEDDA23122
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 12 Jan 2021 17:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbhAKQ11 (ORCPT
+        id S2390525AbhALRQU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 11 Jan 2021 11:27:27 -0500
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:55771 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725858AbhAKQ11 (ORCPT
+        Tue, 12 Jan 2021 12:16:20 -0500
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:37800 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391194AbhALRQT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 11 Jan 2021 11:27:27 -0500
-Received: from [100.112.3.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id E7/FC-00973-D5B7CFF5; Mon, 11 Jan 2021 16:22:53 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRWlGSWpSXmKPExsWS8eIhr25s9Z9
-  4g2X93BZfv91mt3hzfDqTxfJ9/YwWnzsms1is3vOC2eLM6UusDmwev7atYfGYdzLQ4/2+q2we
-  W662s3h83iQXwBrFmpmXlF+RwJrx9upqpoLfMRVbb25naWB869vFyMUhJPCfUWL59eusEM4DR
-  onLi64AOZwcbALaElu2/GLrYuTgEBGQkfiw1hOkhllgF6PElf5uFpAaYQFfic8P3oPVsAioSj
-  w+IwVi8gpYSZy5Vg9SISEgL/G0dzkziM0JVHGm6zFYp5CAisT9B0vYQGxeAUGJkzOfgMWZgeq
-  bt85mhrAlJA6+eMEMM2f2zL3sEHaCxLKXd5gnMArMQtI+C0n7LCTtCxiZVzGaJhVlpmeU5CZm
-  5ugaGhjoGhoa6RrqWljqJVbpJumVFuumJhaX6BrqJZYX6xVX5ibnpOjlpZZsYgRGQ0oBY+QOx
-  n2vP+gdYpTkYFIS5WUx/xMvxJeUn1KZkVicEV9UmpNafIhRhoNDSYL3XyVQTrAoNT21Ii0zBx
-  iZMGkJDh4lEd6aKqA0b3FBYm5xZjpE6hSjopQ4bwNIQgAkkVGaB9cGSwaXGGWlhHkZGRgYhHg
-  KUotyM0tQ5V8xinMwKgnzXgSZwpOZVwI3/RXQYiagxawOv0EWlyQipKQamKTLAzTme2Qu8OyZ
-  E2ZdOedGV/ufjK7mpPOscW9Sutp9ZSdP9NiWkVnh8KRPMr1VaBfrredGsYfWcRcwrY5ZW/Zua
-  pngkxP/d7/orw1o6njY7zFxc8PUTwu8N5obOfgZTOCtPnfz96t3DLrqRyfPv2X8S7H73+odnK
-  d2VKa9bPpiwNsRUGXjI/y1ZYLOzRQXP4eejNjGl65p5swFpd9Vj3VxLfF++7gx5pz+buGrk/a
-  vCFxibRWueDfEROnfmso9t3uMXmonM3BoPZvPfftYklrn3GymXb897V6fzoyWntPR9Tnthpl7
-  EcfjuYu1HXU+aTyrSf5ltsjxkPXZFxNLhU+5PDn4Q1y5PuXeDM0TSizFGYmGWsxFxYkAx4CZh
-  4EDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-18.tower-386.messagelabs.com!1610382173!1395082!1
-X-Originating-IP: [104.232.225.13]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 19245 invoked from network); 11 Jan 2021 16:22:53 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-18.tower-386.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 11 Jan 2021 16:22:53 -0000
-Received: from reswpmail04.lenovo.com (unknown [10.62.32.23])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id EA907777F995A54FF9C5;
-        Mon, 11 Jan 2021 11:22:52 -0500 (EST)
-Received: from localhost.home (10.64.89.60) by reswpmail04.lenovo.com
- (10.62.32.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Mon, 11 Jan
- 2021 08:22:50 -0800
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <rjw@rjwysocki.net>, <linux-acpi@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>, <hadess@hadess.net>,
-        <njoshi1@lenovo.com>
-Subject: [PATCH v9] platform/x86: thinkpad_acpi: Add platform profile support
-Date:   Mon, 11 Jan 2021 11:22:37 -0500
-Message-ID: <20210111162237.3469-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+        Tue, 12 Jan 2021 12:16:19 -0500
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 10CHDcv3030313;
+        Tue, 12 Jan 2021 12:15:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=smtpout1; bh=IuO+MqdxINFhV6RKwLi9ZG11Bhv9DITM4qJkav4smBk=;
+ b=Rb6WUJoYnfPoHG54X9p3wyi/Af83PzlN8/VVAx2DbO4PhFBn6vCrwlsidVl8Eun71/7v
+ lH8OANEWeau6yfrNfOSINxIHDoDSmBgthLIonGFuMNbVxFTJHH8YjYCzj7LUvRMsyTsI
+ i3/eoD8WQI5N8g1Kgiiv61/jvqsI5BvB0YSqiR6c7xnrEp0O/GnB2fRs8r+BxdmVggRp
+ 2uVAhX/O45XhVKa37rCFs6foTiA+WJXViY721WcZEIFmWJP3RJ8wXTczAiu5uKgFlLte
+ v+xH9haD84SghJTUgRmrLF89llJeH3F1dNoFy8Iw+SYKkL1Kz1oSUBe0vGpvOnSAJu3S 7g== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 361fyag0fv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 Jan 2021 12:15:38 -0500
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 10CH9bNv025045;
+        Tue, 12 Jan 2021 12:15:37 -0500
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0a-00154901.pphosted.com with ESMTP id 361fqw8dnv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Jan 2021 12:15:36 -0500
+X-LoopCount0: from 10.69.132.19
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.79,341,1602565200"; 
+   d="scan'208";a="585223467"
+From:   Perry Yuan <Perry.Yuan@dell.com>
+To:     oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
+        hdegoede@redhat.com, mgross@linux.intel.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Perry.Yuan@dell.com,
+        Mario.Limonciello@dell.com
+Subject: [PATCH v3 0/3] Dell hardware privacy implementation for dell laptop
+Date:   Wed, 13 Jan 2021 01:15:02 +0800
+Message-Id: <20210112171502.11452-1-Perry_Yuan@Dell.com>
+X-Mailer: git-send-email 2.19.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.64.89.60]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail04.lenovo.com (10.62.32.23)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2021-01-12_12:2021-01-12,2021-01-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 spamscore=0 clxscore=1015 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101120100
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101120100
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add support to thinkpad_acpi for Lenovo platforms that have DYTC
-version 5 support or newer to use the platform profile feature.
+From: Perry Yuan <perry_yuan@dell.com>
 
-This will allow users to determine and control the platform modes
-between low-power, balanced operation and performance modes.
+Hi All,
+This patch set is a new driver for dell mobile platform ,which has the
+hardware privacy feature.
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
----
-Changes in v2:
- Address (hopefully) all recommendations from review including:
- - use IS_ENABLED instead of IS_DEFINED
- - update driver to work with all the fixes in platform_profile update
- - improve error handling for invalid inputs
- - move tracking of current profile mode into this driver
+For micmute led control, the hotkey is Fn + F4, it is a hardware based
+mute state, and new privacy will prevent micphone void input from
+hardware layer, any application cannot get voice data when micmute
+activated. 
 
-Changes in v3:
- - version update for patch series
+Camera mute use a new hardware design to control the camrea shutter.
+When video is muted, no OS application should be functionally able to
+capture images of the person/environment in front of the system
 
-Changes in v4:
- - Rebase on top of palm sensor patch which led to a little bit of file
-   restructuring/clean up
- - Use BIT macro where applicable
- - Formatting fixes
- - Check sysfs node created on exit function
- - implement and use DYTC_SET_COMMAND macro
- - in case of failure setting performance mode make sure CQL mode is
-   enabled again before returning.
- - Clean up initialisation and error handling code
+Older history:
+[1]https://patchwork.kernel.org/project/platform-driver-x86/patch/20201228132855.17544-1-Perry_Yuan@Dell.com/
+[2]https://patchwork.kernel.org/project/alsa-devel/patch/20201103125859.8759-1-Perry_Yuan@Dell.com/#23733605
+[3]https://www.spinics.net/lists/alsa-devel/msg120537.html
+[4]https://github.com/thesofproject/linux/pull/2660
 
-Changes in v5:
- - Use atomic_int with ignoring events
- - Add mutex when accessing ACPI information 
- - Clean up registration code
- - Use cached value in profile_get function
- - Add dytc_cql_command function to clean up and provide common handler
- - Update to work with changes in platform_profile implementation
 
-Changes in v6:
- - Update file to build against update in v6 platform_profile
+Perry Yuan (3):
+  platform/x86: dell-privacy: Add support for Dell hardware privacy
+  x86/platform/dell-privacy-wmi: add document for dell privacy driver
+  ASoC: rt715:add micmute led state control supports
 
-Changes in v7 & v8:
- - version bump along with rest of patch series
+ .../testing/sysfs-platform-dell-privacy-wmi   |  31 ++
+ drivers/platform/x86/Kconfig                  |  17 +
+ drivers/platform/x86/Makefile                 |   4 +-
+ drivers/platform/x86/dell-laptop.c            |  25 +-
+ drivers/platform/x86/dell-privacy-acpi.c      | 167 +++++++++
+ drivers/platform/x86/dell-privacy-wmi.c       | 320 ++++++++++++++++++
+ drivers/platform/x86/dell-privacy-wmi.h       |  33 ++
+ drivers/platform/x86/dell-wmi.c               |  37 +-
+ sound/soc/codecs/rt715-sdca.c                 |  16 +
+ sound/soc/codecs/rt715-sdca.h                 |   1 +
+ sound/soc/codecs/rt715.c                      |  14 +
+ sound/soc/codecs/rt715.h                      |   1 +
+ 12 files changed, 650 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
+ create mode 100644 drivers/platform/x86/dell-privacy-acpi.c
+ create mode 100644 drivers/platform/x86/dell-privacy-wmi.c
+ create mode 100644 drivers/platform/x86/dell-privacy-wmi.h
 
-Changes in v9:
- - Update define names to be correct with the linux-pm branches accepted
-   version
- - Rename DYTC_MODE_QUIET to LOW_POWER just because it's confusing. It
-   was originally based on internal documentation.
-Note - originally this patch was part of a series but with the other two
-pieces being accepted into the acpi maintainers branch this one becomes
-standalone.
-
- drivers/platform/x86/thinkpad_acpi.c | 294 ++++++++++++++++++++++++++-
- 1 file changed, 288 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index e03df2881dc6..c5645331cfac 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -66,6 +66,7 @@
- #include <linux/acpi.h>
- #include <linux/pci.h>
- #include <linux/power_supply.h>
-+#include <linux/platform_profile.h>
- #include <sound/core.h>
- #include <sound/control.h>
- #include <sound/initval.h>
-@@ -9854,16 +9855,27 @@ static bool has_lapsensor;
- static bool palm_state;
- static bool lap_state;
- 
--static int lapsensor_get(bool *present, bool *state)
-+static int dytc_command(int command, int *output)
- {
- 	acpi_handle dytc_handle;
--	int output;
- 
--	*present = false;
--	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle)))
-+	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DYTC", &dytc_handle))) {
-+		/* Platform doesn't support DYTC */
- 		return -ENODEV;
--	if (!acpi_evalf(dytc_handle, &output, NULL, "dd", DYTC_CMD_GET))
-+	}
-+	if (!acpi_evalf(dytc_handle, output, NULL, "dd", command))
- 		return -EIO;
-+	return 0;
-+}
-+
-+static int lapsensor_get(bool *present, bool *state)
-+{
-+	int output, err;
-+
-+	*present = false;
-+	err = dytc_command(DYTC_CMD_GET, &output);
-+	if (err)
-+		return err;
- 
- 	*present = true; /*If we get his far, we have lapmode support*/
- 	*state = output & BIT(DYTC_GET_LAPMODE_BIT) ? true : false;
-@@ -9982,6 +9994,264 @@ static struct ibm_struct proxsensor_driver_data = {
- 	.exit = proxsensor_exit,
- };
- 
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+
-+/*************************************************************************
-+ * DYTC Platform Profile interface
-+ */
-+
-+#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
-+#define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
-+#define DYTC_CMD_RESET    0x1ff /* To reset back to default */
-+
-+#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
-+#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
-+#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
-+
-+#define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
-+#define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
-+
-+#define DYTC_SET_FUNCTION_BIT 12 /* Bits 12-15 - function setting */
-+#define DYTC_SET_MODE_BIT     16 /* Bits 16-19 - mode setting */
-+#define DYTC_SET_VALID_BIT    20 /* Bit     20 - 1 = on, 0 = off */
-+
-+#define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
-+#define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
-+#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
-+
-+#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
-+#define DYTC_MODE_LOWPOWER    3  /* Low power mode */
-+#define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
-+
-+#define DYTC_SET_COMMAND(function, mode, on) \
-+	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
-+	 (mode) << DYTC_SET_MODE_BIT | \
-+	 (on) << DYTC_SET_VALID_BIT)
-+
-+#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 0)
-+
-+#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 1)
-+
-+static bool dytc_profile_available;
-+static enum platform_profile_option dytc_current_profile;
-+static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
-+static DEFINE_MUTEX(dytc_mutex);
-+
-+static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
-+{
-+	switch (dytcmode) {
-+	case DYTC_MODE_LOWPOWER:
-+		*profile = PLATFORM_PROFILE_LOW_POWER;
-+		break;
-+	case DYTC_MODE_BALANCE:
-+		*profile =  PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case DYTC_MODE_PERFORM:
-+		*profile =  PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	default: /* Unknown mode */
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int convert_profile_to_dytc(enum platform_profile_option profile, int *perfmode)
-+{
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		*perfmode = DYTC_MODE_LOWPOWER;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		*perfmode = DYTC_MODE_BALANCE;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		*perfmode = DYTC_MODE_PERFORM;
-+		break;
-+	default: /* Unknown profile */
-+		return -EOPNOTSUPP;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * dytc_profile_get: Function to register with platform_profile
-+ * handler. Returns current platform profile.
-+ */
-+int dytc_profile_get(struct platform_profile_handler *pprof,
-+			enum platform_profile_option *profile)
-+{
-+	*profile = dytc_current_profile;
-+	return 0;
-+}
-+
-+/*
-+ * Helper function - check if we are in CQL mode and if we are
-+ *  -  disable CQL,
-+ *  - run the command
-+ *  - enable CQL
-+ *  If not in CQL mode, just run the command
-+ */
-+int dytc_cql_command(int command, int *output)
-+{
-+	int err, cmd_err, dummy;
-+	int cur_funcmode;
-+
-+	/* Determine if we are in CQL mode. This alters the commands we do */
-+	err = dytc_command(DYTC_CMD_GET, output);
-+	if (err)
-+		return err;
-+
-+	cur_funcmode = (*output >> DYTC_GET_FUNCTION_BIT) & 0xF;
-+	/* Check if we're OK to return immediately */
-+	if ((command == DYTC_CMD_GET) && (cur_funcmode != DYTC_FUNCTION_CQL))
-+		return 0;
-+
-+	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-+		atomic_inc(&dytc_ignore_event);
-+		err = dytc_command(DYTC_DISABLE_CQL, &dummy);
-+		if (err)
-+			return err;
-+	}
-+
-+	cmd_err = dytc_command(command,	output);
-+	/* Check return condition after we've restored CQL state */
-+
-+	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-+		err = dytc_command(DYTC_ENABLE_CQL, &dummy);
-+		if (err)
-+			return err;
-+	}
-+
-+	return cmd_err;
-+}
-+
-+/*
-+ * dytc_profile_set: Function to register with platform_profile
-+ * handler. Sets current platform profile.
-+ */
-+int dytc_profile_set(struct platform_profile_handler *pprof,
-+			enum platform_profile_option profile)
-+{
-+	int output;
-+	int err;
-+
-+	if (!dytc_profile_available)
-+		return -ENODEV;
-+
-+	err = mutex_lock_interruptible(&dytc_mutex);
-+	if (err)
-+		return err;
-+
-+	if (profile == PLATFORM_PROFILE_BALANCED) {
-+		/* To get back to balanced mode we just issue a reset command */
-+		err = dytc_command(DYTC_CMD_RESET, &output);
-+		if (err)
-+			goto unlock;
-+	} else {
-+		int perfmode;
-+
-+		err = convert_profile_to_dytc(profile, &perfmode);
-+		if (err)
-+			goto unlock;
-+
-+		/* Determine if we are in CQL mode. This alters the commands we do */
-+		err = dytc_cql_command(DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1), &output);
-+		if (err)
-+			goto unlock;
-+	}
-+	/* Success - update current profile */
-+	dytc_current_profile = profile;
-+unlock:
-+	mutex_unlock(&dytc_mutex);
-+	return err;
-+}
-+
-+static void dytc_profile_refresh(void)
-+{
-+	enum platform_profile_option profile;
-+	int output, err;
-+	int perfmode;
-+
-+	mutex_lock(&dytc_mutex);
-+	err = dytc_cql_command(DYTC_CMD_GET, &output);
-+	mutex_unlock(&dytc_mutex);
-+	if (err)
-+		return;
-+
-+	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
-+	convert_dytc_to_profile(perfmode, &profile);
-+	if (profile != dytc_current_profile) {
-+		dytc_current_profile = profile;
-+		platform_profile_notify();
-+	}
-+}
-+
-+static struct platform_profile_handler dytc_profile = {
-+	.profile_get = dytc_profile_get,
-+	.profile_set = dytc_profile_set,
-+};
-+
-+static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
-+{
-+	int err, output;
-+
-+	/* Setup supported modes */
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, dytc_profile.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, dytc_profile.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, dytc_profile.choices);
-+
-+	dytc_profile_available = false;
-+	err = dytc_command(DYTC_CMD_QUERY, &output);
-+	/*
-+	 * If support isn't available (ENODEV) then don't return an error
-+	 * and don't create the sysfs group
-+	 */
-+	if (err == -ENODEV)
-+		return 0;
-+	/* For all other errors we can flag the failure */
-+	if (err)
-+		return err;
-+
-+	/* Check DYTC is enabled and supports mode setting */
-+	if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
-+		/* Only DYTC v5.0 and later has this feature. */
-+		int dytc_version;
-+
-+		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
-+		if (dytc_version >= 5) {
-+			dbg_printk(TPACPI_DBG_INIT,
-+				   "DYTC version %d: thermal mode available\n", dytc_version);
-+			/* Create platform_profile structure and register */
-+			err = platform_profile_register(&dytc_profile);
-+			/*
-+			 * If for some reason platform_profiles aren't enabled
-+			 * don't quit terminally.
-+			 */
-+			if (err)
-+				return 0;
-+
-+			dytc_profile_available = true;
-+			/* Ensure initial values are correct */
-+			dytc_profile_refresh();
-+		}
-+	}
-+	return 0;
-+}
-+
-+static void dytc_profile_exit(void)
-+{
-+	if (dytc_profile_available) {
-+		dytc_profile_available = false;
-+		platform_profile_remove();
-+	}
-+}
-+
-+static struct ibm_struct  dytc_profile_driver_data = {
-+	.name = "dytc-profile",
-+	.exit = dytc_profile_exit,
-+};
-+#endif /* CONFIG_ACPI_PLATFORM_PROFILE */
-+
- /****************************************************************************
-  ****************************************************************************
-  *
-@@ -10030,8 +10300,14 @@ static void tpacpi_driver_event(const unsigned int hkey_event)
- 		mutex_unlock(&kbdlight_mutex);
- 	}
- 
--	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED)
-+	if (hkey_event == TP_HKEY_EV_THM_CSM_COMPLETED) {
- 		lapsensor_refresh();
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+		/* If we are already accessing DYTC then skip dytc update */
-+		if (!atomic_add_unless(&dytc_ignore_event, -1, 0))
-+			dytc_profile_refresh();
-+#endif
-+	}
- }
- 
- static void hotkey_driver_event(const unsigned int scancode)
-@@ -10474,6 +10750,12 @@ static struct ibm_init_struct ibms_init[] __initdata = {
- 		.init = tpacpi_proxsensor_init,
- 		.data = &proxsensor_driver_data,
- 	},
-+#if IS_ENABLED(CONFIG_ACPI_PLATFORM_PROFILE)
-+	{
-+		.init = tpacpi_dytc_profile_init,
-+		.data = &dytc_profile_driver_data,
-+	},
-+#endif
- };
- 
- static int __init set_ibm_param(const char *val, const struct kernel_param *kp)
 -- 
-2.28.0
+2.25.1
 
