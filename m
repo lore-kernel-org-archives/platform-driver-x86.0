@@ -2,115 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCE1C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 08:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C711AC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 09:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD9323120
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 08:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6727C2339F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 09:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbhAMIRR (ORCPT
+        id S1726900AbhAMJ0R (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jan 2021 03:17:17 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:50342 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbhAMIRR (ORCPT
+        Wed, 13 Jan 2021 04:26:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48700 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbhAMJ0R (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jan 2021 03:17:17 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10D8DgeT035026;
-        Wed, 13 Jan 2021 08:16:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=5ICXWdirQJTcNW4Au8BGFVkxs6mzGXevur0jM5R8ea4=;
- b=rQJfzSH24YqzxaGW/+7ICkeflm8LzSNu9cm47A88k0siTsGExgLLfk0EJmcGpYdLegtd
- ZMJ4ndUUhUwlxkeUzKB+plBrf8zD/TBvpegdL1L61mASRPSfuKxVpJ1blAZIVT6fOXsI
- moebEN7j1iTsXKbynT5ikGDDNEHV+r5AbXuIbCruZBqCu1SAEadaqJ0YjUi8QtqrqDzO
- DsTvrMZSyMKDy9GwBHkhTIOC7FZsLQjyu44eIEluvj5QXH+sf5MVYdaGeQaHbQD7F5zI
- U9RTMBbtB6zv0i28ue+fxrRnkwMwZ8MhzmhiF0AGPS/O9O2BGbdhkkHU53qJqRepjBrN Gg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 360kg1t4n4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Jan 2021 08:16:31 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10D8EW73064465;
-        Wed, 13 Jan 2021 08:16:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 360kf73p9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Jan 2021 08:16:30 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 10D8GT3u005639;
-        Wed, 13 Jan 2021 08:16:29 GMT
-Received: from mwanda (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 Jan 2021 00:16:28 -0800
-Date:   Wed, 13 Jan 2021 11:16:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Wed, 13 Jan 2021 04:26:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610529890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A9ksjDeyfuxGoy9asdFqUc8798GrLEWqzUIv9UWdtSg=;
+        b=cGm+VwQfCJKo3exQiEE3KQj1NOg3XTg+oJPWN1Owr+BCBYGg8wq7kxBit4Sv7qY2UXkVFm
+        vhszfbu/i5Ww1KRKToxNK9cwl038wddn1r2nTs0J+XzgccmEwr8UHsjzHQjI8ER8/8HXkN
+        yA+krfIbisG4bXOEuhCBX/vmKm/ZSek=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-fDp-_THSNiG9lRBUtiNbKQ-1; Wed, 13 Jan 2021 04:24:48 -0500
+X-MC-Unique: fDp-_THSNiG9lRBUtiNbKQ-1
+Received: by mail-ed1-f71.google.com with SMTP id u17so587154edi.18
+        for <platform-driver-x86@vger.kernel.org>; Wed, 13 Jan 2021 01:24:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A9ksjDeyfuxGoy9asdFqUc8798GrLEWqzUIv9UWdtSg=;
+        b=fLGHAh0GtlDTOjxIEC2GmsZ/HMVwxR+XiuM6HdsKObiXZBKvrLc3ofx8aPo02YzSWk
+         WqXtHBrTuuDIji/M/+7zQ2rmbRnX209DJ5qEcufZv3PkpsJNH+IN6awxCxdCTp6YBsCc
+         /xUAqClqo88JsPUMODKu5+YugZwnbYBdFDTcZZQsAOzOoiWnDht0VMg5nAvQldC2+jr1
+         +4H7tZpxsNliHoXgI8M6d6umt3kKxl7BJrJxsBcBWG4jOK5TFPujVHn9UZLFDAqcm2ag
+         dYJjpb4w/OX0jSoA2lHH6iphrbPPBeyuTskUGtFjozKIfUAvwfx1TVZCG3U/L4yOJd1V
+         Ba8A==
+X-Gm-Message-State: AOAM5328yS/mh9pXTcNV4bJl9nqrLhMzsyidOqgwDKFLlHIxuzaAGlMh
+        +L/7+H2n9PBUyCcCCnAcssQzs+Eoa5omkP5zlAbzlk37R36KxBFaF3sPfx4HA2IEpw7Byz655Ki
+        SdMtJdrxk43oAiDOYCAs/ZNzDwjBcAKaotw==
+X-Received: by 2002:a17:906:4756:: with SMTP id j22mr913253ejs.353.1610529887241;
+        Wed, 13 Jan 2021 01:24:47 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzr/Q3eR5rbgGFzsCsWj6QifS8PJJQr4SQXFTihkxnSILUE2KyVi+mMvDiJlpsTOlpvOWjqlg==
+X-Received: by 2002:a17:906:4756:: with SMTP id j22mr913244ejs.353.1610529887047;
+        Wed, 13 Jan 2021 01:24:47 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id u19sm465252ejg.16.2021.01.13.01.24.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Jan 2021 01:24:46 -0800 (PST)
+Subject: Re: [PATCH fixes v4] platform/x86: ideapad-laptop: Disable
+ touchpad_switch for ELAN0634
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     stable@vger.kernel.org, Ike Panhc <ike.pan@canonical.com>,
         Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/surface: aggregator: prevent information leak in
- ssam_cdev_request()
-Message-ID: <X/6sVaewHLPzv00U@mwanda>
+        linux-kernel@vger.kernel.org
+References: <20210107144438.12605-1-jiaxun.yang@flygoat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <dba9db5f-fa66-6003-382d-b35d5643d0d2@redhat.com>
+Date:   Wed, 13 Jan 2021 10:24:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9862 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 bulkscore=0 spamscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101130048
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9862 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- clxscore=1011 impostorscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- phishscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101130048
+In-Reply-To: <20210107144438.12605-1-jiaxun.yang@flygoat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-If copy_struct_from_user() fails at the start of the function then this
-function calls put_user(rsp.length, &r->response.length) before
-"rsp.length" is set to zero.  That is a potential security issue because
-it discloses kernel stack data to user space.
+Hi,
 
-Fixes: 178f6ab77e61 ("platform/surface: Add Surface Aggregator user-space interface")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/platform/surface/surface_aggregator_cdev.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+On 1/7/21 3:44 PM, Jiaxun Yang wrote:
+> Newer ideapads (e.g.: Yoga 14s, 720S 14) come with ELAN0634 touchpad do not
+> use EC to switch touchpad.
+> 
+> Reading VPCCMD_R_TOUCHPAD will return zero thus touchpad may be blocked
+> unexpectedly.
+> Writing VPCCMD_W_TOUCHPAD may cause a spurious key press.
+> 
+> Add has_touchpad_switch to workaround these machines.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Cc: stable@vger.kernel.org # 5.4+
 
-diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
-index 340d15b148b9..05e9eb118d76 100644
---- a/drivers/platform/surface/surface_aggregator_cdev.c
-+++ b/drivers/platform/surface/surface_aggregator_cdev.c
-@@ -67,7 +67,7 @@ static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
- 	struct ssam_cdev_request __user *r;
- 	struct ssam_cdev_request rqst;
- 	struct ssam_request spec;
--	struct ssam_response rsp;
-+	struct ssam_response rsp = {};
- 	const void __user *plddata;
- 	void __user *rspdata;
- 	int status = 0, ret = 0, tmp;
-@@ -96,8 +96,6 @@ static long ssam_cdev_request(struct ssam_cdev *cdev, unsigned long arg)
- 		spec.flags |= SSAM_REQUEST_UNSEQUENCED;
- 
- 	rsp.capacity = rqst.response.length;
--	rsp.length = 0;
--	rsp.pointer = NULL;
- 
- 	/* Get request payload from user-space. */
- 	if (spec.length) {
--- 
-2.29.2
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+I will also cherry-pick this into the fixes branch and include
+it in a future fixes pull-req for 5.11 .
+
+Regards,
+
+Hans
+
+
+
+
+> --
+> v2: Specify touchpad to ELAN0634
+> v3: Stupid missing ! in v2
+> v4: Correct acpi_dev_present usage (Hans)
+> ---
+>  drivers/platform/x86/ideapad-laptop.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 7598cd46cf60..5b81bafa5c16 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -92,6 +92,7 @@ struct ideapad_private {
+>  	struct dentry *debug;
+>  	unsigned long cfg;
+>  	bool has_hw_rfkill_switch;
+> +	bool has_touchpad_switch;
+>  	const char *fnesc_guid;
+>  };
+>  
+> @@ -535,7 +536,9 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+>  	} else if (attr == &dev_attr_fn_lock.attr) {
+>  		supported = acpi_has_method(priv->adev->handle, "HALS") &&
+>  			acpi_has_method(priv->adev->handle, "SALS");
+> -	} else
+> +	} else if (attr == &dev_attr_touchpad.attr)
+> +		supported = priv->has_touchpad_switch;
+> +	else
+>  		supported = true;
+>  
+>  	return supported ? attr->mode : 0;
+> @@ -867,6 +870,9 @@ static void ideapad_sync_touchpad_state(struct ideapad_private *priv)
+>  {
+>  	unsigned long value;
+>  
+> +	if (!priv->has_touchpad_switch)
+> +		return;
+> +
+>  	/* Without reading from EC touchpad LED doesn't switch state */
+>  	if (!read_ec_data(priv->adev->handle, VPCCMD_R_TOUCHPAD, &value)) {
+>  		/* Some IdeaPads don't really turn off touchpad - they only
+> @@ -989,6 +995,9 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  	priv->platform_device = pdev;
+>  	priv->has_hw_rfkill_switch = dmi_check_system(hw_rfkill_list);
+>  
+> +	/* Most ideapads with ELAN0634 touchpad don't use EC touchpad switch */
+> +	priv->has_touchpad_switch = !acpi_dev_present("ELAN0634", NULL, -1);
+> +
+>  	ret = ideapad_sysfs_init(priv);
+>  	if (ret)
+>  		return ret;
+> @@ -1006,6 +1015,10 @@ static int ideapad_acpi_add(struct platform_device *pdev)
+>  	if (!priv->has_hw_rfkill_switch)
+>  		write_ec_cmd(priv->adev->handle, VPCCMD_W_RF, 1);
+>  
+> +	/* The same for Touchpad */
+> +	if (!priv->has_touchpad_switch)
+> +		write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, 1);
+> +
+>  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
+>  		if (test_bit(ideapad_rfk_data[i].cfgbit, &priv->cfg))
+>  			ideapad_register_rfkill(priv, i);
+> 
 
