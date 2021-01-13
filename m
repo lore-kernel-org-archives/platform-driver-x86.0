@@ -8,36 +8,36 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F8BC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1633CC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803D723436
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B9523436
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbhAMSVS (ORCPT
+        id S1727827AbhAMSV2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jan 2021 13:21:18 -0500
-Received: from mail1.protonmail.ch ([185.70.40.18]:60222 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbhAMSVS (ORCPT
+        Wed, 13 Jan 2021 13:21:28 -0500
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:19520 "EHLO
+        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbhAMSV2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jan 2021 13:21:18 -0500
-Date:   Wed, 13 Jan 2021 18:20:31 +0000
+        Wed, 13 Jan 2021 13:21:28 -0500
+Date:   Wed, 13 Jan 2021 18:20:36 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610562035;
-        bh=p/RmxgzjPFuwTZGWTX148bvreK8r1y3X6OlrhmokIi0=;
+        s=protonmail; t=1610562044;
+        bh=QxZoSSn4vJAFzWA8ldV4HrL5vzLpbF2pOA2Z50GPnIQ=;
         h=Date:To:From:Reply-To:Subject:In-Reply-To:References:From;
-        b=xhBlPL//BBdCYdMcdIMa/zwjxMEbGsBl7A/UCzwQz7f5uMLvF+3dIDWBcsx9cMDBB
-         dU6nVte7354JbhmNLAmEvclzrmzbf/ChL47Y4NcSx02Fhi5Moc4QfdsYByLGi4h+sn
-         2t9GoAkitvitCMPboK4o7pxbRazlup/aanql/VD4=
+        b=karPq8lzJM/ApXmlDDSp6eeKZbLZgtCSvQQVhXfL6whuLi3NFxxhj+kBebncHwMsa
+         V48Wid1d5lMCqGDnuc+qv+EdsY41N9jI7AQ1RsqIfhaXZ5bLjXphkD9g1THcdn5bP3
+         ZU0dd46ZqdlYMw4l+3MKTO1BLB72e8M469HoEEI8=
 To:     platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Ike Panhc <ike.pan@canonical.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v2 02/24] platform/x86: ideapad-laptop: use appropriately typed variable to store the return value of ACPI methods
-Message-ID: <20210113182016.166049-3-pobrn@protonmail.com>
+Subject: [PATCH v2 03/24] platform/x86: ideapad-laptop: sort includes lexicographically
+Message-ID: <20210113182016.166049-4-pobrn@protonmail.com>
 In-Reply-To: <20210113182016.166049-1-pobrn@protonmail.com>
 References: <20210113182016.166049-1-pobrn@protonmail.com>
 MIME-Version: 1.0
@@ -47,62 +47,53 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use a variable with type `acpi_status` to store the return value of ACPI
-methods instead of a plain `int`. And use ACPI_{SUCCESS,FAILURE} macros
-where possible instead of direct comparison.
+Managing includes is easier when they are sorted, so
+sort them lexicographically.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
 deapad-laptop.c
-index c96fd60ec7d2..fbaf8d3f4792 100644
+index fbaf8d3f4792..d92d96fe4aa1 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -977,6 +977,7 @@ static int ideapad_acpi_add(struct platform_device *pde=
-v)
- =09int cfg;
- =09struct ideapad_private *priv;
- =09struct acpi_device *adev;
-+=09acpi_status acpi_err;
+@@ -8,22 +8,23 @@
 =20
- =09ret =3D acpi_bus_get_device(ACPI_HANDLE(&pdev->dev), &adev);
- =09if (ret)
-@@ -1031,22 +1032,26 @@ static int ideapad_acpi_add(struct platform_device =
-*pdev)
- =09=09if (ret && ret !=3D -ENODEV)
- =09=09=09goto backlight_failed;
- =09}
--=09ret =3D acpi_install_notify_handler(adev->handle,
--=09=09ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
--=09if (ret)
-+=09acpi_err =3D acpi_install_notify_handler(adev->handle,
-+=09=09=09ACPI_DEVICE_NOTIFY, ideapad_acpi_notify, priv);
-+=09if (ACPI_FAILURE(acpi_err)) {
-+=09=09ret =3D -EIO;
- =09=09goto notification_failed;
-+=09}
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 =20
- #if IS_ENABLED(CONFIG_ACPI_WMI)
- =09for (i =3D 0; i < ARRAY_SIZE(ideapad_wmi_fnesc_events); i++) {
--=09=09ret =3D wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
--=09=09=09=09=09=09 ideapad_wmi_notify, priv);
--=09=09if (ret =3D=3D AE_OK) {
-+=09=09acpi_err =3D wmi_install_notify_handler(ideapad_wmi_fnesc_events[i],
-+=09=09=09=09=09=09      ideapad_wmi_notify, priv);
-+=09=09if (ACPI_SUCCESS(acpi_err)) {
- =09=09=09priv->fnesc_guid =3D ideapad_wmi_fnesc_events[i];
- =09=09=09break;
- =09=09}
- =09}
--=09if (ret !=3D AE_OK && ret !=3D AE_NOT_EXIST)
-+=09if (ACPI_FAILURE(acpi_err) && acpi_err !=3D AE_NOT_EXIST) {
-+=09=09ret =3D -EIO;
- =09=09goto notification_failed_wmi;
-+=09}
- #endif
+-#include <linux/kernel.h>
+-#include <linux/module.h>
+-#include <linux/init.h>
+-#include <linux/types.h>
+ #include <linux/acpi.h>
+-#include <linux/rfkill.h>
+-#include <linux/platform_device.h>
+-#include <linux/input.h>
+-#include <linux/input/sparse-keymap.h>
+ #include <linux/backlight.h>
+-#include <linux/fb.h>
+ #include <linux/debugfs.h>
+-#include <linux/seq_file.h>
+-#include <linux/i8042.h>
+-#include <linux/dmi.h>
+ #include <linux/device.h>
++#include <linux/dmi.h>
++#include <linux/fb.h>
++#include <linux/i8042.h>
++#include <linux/init.h>
++#include <linux/input.h>
++#include <linux/input/sparse-keymap.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/rfkill.h>
++#include <linux/seq_file.h>
++#include <linux/types.h>
++
+ #include <acpi/video.h>
 =20
- =09return 0;
+ #define IDEAPAD_RFKILL_DEV_NUM=09(3)
 --=20
 2.30.0
+
 
