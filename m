@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D554C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD543C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 014DF23436
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662AF23436
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbhAMSWE (ORCPT
+        id S1728110AbhAMSWF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jan 2021 13:22:04 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:16718 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728110AbhAMSWD (ORCPT
+        Wed, 13 Jan 2021 13:22:05 -0500
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:32265 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbhAMSWF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jan 2021 13:22:03 -0500
-Date:   Wed, 13 Jan 2021 18:21:08 +0000
+        Wed, 13 Jan 2021 13:22:05 -0500
+Date:   Wed, 13 Jan 2021 18:21:18 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
         s=protonmail; t=1610562080;
-        bh=vBkONu6Jei4xIWcqx5RgdZRGm18rGH/qDkfVBKqoJjQ=;
+        bh=eJJIwzlS0il/1ITNvxntXc58+a8umAqjQ5OzcNCbq9w=;
         h=Date:To:From:Reply-To:Subject:In-Reply-To:References:From;
-        b=VsySn14zOsVFYMn9/IHGpL3yuolkJgHz4sWbeFLceG9MfIs8d510ueUey0Gn4EU9n
-         DPYGPHTFuoHaiKlWdUySkFSFTOM5+fqS7mpV+4734gKGtfQzTLtk1S0kdJOLsRKoqv
-         DkcCly3Ku59Qrn0oaThQZOu9jkPfXfNm3OWX+Unc=
+        b=oTeVD+ABFh76VdxexrH+Ldl6ImdyDAn2q1cqet+28lecvsv6JYqeS+uRS+/hnpP0P
+         eTx5NOL3vC9A+bG5Zm5n1q7bXF5w77Gj1Ef19huAB/1zybtpQEQhTfbuJFizDUQ48s
+         qXtfcApqKSQ9rvQ8IZNG5+RsHpHfzRbt6iJhtFcY=
 To:     platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Ike Panhc <ike.pan@canonical.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v2 07/24] platform/x86: ideapad-laptop: use dev_{err,warn} or appropriate variant to display log messages
-Message-ID: <20210113182016.166049-8-pobrn@protonmail.com>
+Subject: [PATCH v2 08/24] platform/x86: ideapad-laptop: convert ACPI helpers to return -EIO in case of failure
+Message-ID: <20210113182016.166049-9-pobrn@protonmail.com>
 In-Reply-To: <20210113182016.166049-1-pobrn@protonmail.com>
 References: <20210113182016.166049-1-pobrn@protonmail.com>
 MIME-Version: 1.0
@@ -47,109 +47,268 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Having the device name in the log message makes it easier to determine in
-the context of which device the message was printed, so utilize the
-appropriate variants of dev_{err,warn,...} when printing log messages.
+ACPI helpers returned -1 in case of failure. Convert these functions to
+return appropriate error codes, and convert their users to propagate
+these error codes accordingly.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
 deapad-laptop.c
-index 174edbfc52dc..b0d8e332b48a 100644
+index b0d8e332b48a..9bc6c7340876 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -203,7 +203,7 @@ static int read_ec_data(acpi_handle handle, int cmd, un=
-signed long *data)
+@@ -117,7 +117,7 @@ static int read_method_int(acpi_handle handle, const ch=
+ar *method, int *val)
+ =09status =3D acpi_evaluate_integer(handle, (char *)method, NULL, &result)=
+;
+ =09if (ACPI_FAILURE(status)) {
+ =09=09*val =3D -1;
+-=09=09return -1;
++=09=09return -EIO;
+ =09}
+ =09*val =3D result;
+ =09return 0;
+@@ -138,7 +138,7 @@ static int method_int1(acpi_handle handle, char *method=
+, int cmd)
+ =09acpi_status status;
+=20
+ =09status =3D acpi_execute_simple_method(handle, method, cmd);
+-=09return ACPI_FAILURE(status) ? -1 : 0;
++=09return ACPI_FAILURE(status) ? -EIO : 0;
+ }
+=20
+ static int method_vpcr(acpi_handle handle, int cmd, int *ret)
+@@ -157,7 +157,7 @@ static int method_vpcr(acpi_handle handle, int cmd, int=
+ *ret)
+=20
+ =09if (ACPI_FAILURE(status)) {
+ =09=09*ret =3D -1;
+-=09=09return -1;
++=09=09return -EIO;
+ =09}
+ =09*ret =3D result;
+ =09return 0;
+@@ -179,54 +179,60 @@ static int method_vpcw(acpi_handle handle, int cmd, i=
+nt data)
+=20
+ =09status =3D acpi_evaluate_object(handle, "VPCW", &params, NULL);
+ =09if (status !=3D AE_OK)
+-=09=09return -1;
++=09=09return -EIO;
+ =09return 0;
+ }
+=20
+ static int read_ec_data(acpi_handle handle, int cmd, unsigned long *data)
+ {
+-=09int val;
++=09int val, err;
+ =09unsigned long int end_jiffies;
+=20
+-=09if (method_vpcw(handle, 1, cmd))
+-=09=09return -1;
++=09err =3D method_vpcw(handle, 1, cmd);
++=09if (err)
++=09=09return err;
+=20
+ =09for (end_jiffies =3D jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1=
+;
+ =09     time_before(jiffies, end_jiffies);) {
+ =09=09schedule();
+-=09=09if (method_vpcr(handle, 1, &val))
+-=09=09=09return -1;
++=09=09err =3D method_vpcr(handle, 1, &val);
++=09=09if (err)
++=09=09=09return err;
+ =09=09if (val =3D=3D 0) {
+-=09=09=09if (method_vpcr(handle, 0, &val))
+-=09=09=09=09return -1;
++=09=09=09err =3D method_vpcr(handle, 0, &val);
++=09=09=09if (err)
++=09=09=09=09return err;
+ =09=09=09*data =3D val;
  =09=09=09return 0;
  =09=09}
  =09}
--=09pr_err("timeout in %s\n", __func__);
-+=09acpi_handle_err(handle, "timeout in %s\n", __func__);
- =09return -1;
+ =09acpi_handle_err(handle, "timeout in %s\n", __func__);
+-=09return -1;
++=09return -ETIMEDOUT;
  }
 =20
-@@ -225,7 +225,7 @@ static int write_ec_cmd(acpi_handle handle, int cmd, un=
-signed long data)
+ static int write_ec_cmd(acpi_handle handle, int cmd, unsigned long data)
+ {
+-=09int val;
++=09int val, err;
+ =09unsigned long int end_jiffies;
+=20
+-=09if (method_vpcw(handle, 0, data))
+-=09=09return -1;
+-=09if (method_vpcw(handle, 1, cmd))
+-=09=09return -1;
++=09err =3D method_vpcw(handle, 0, data);
++=09if (err)
++=09=09return err;
++=09err =3D method_vpcw(handle, 1, cmd);
++=09if (err)
++=09=09return err;
+=20
+ =09for (end_jiffies =3D jiffies + msecs_to_jiffies(IDEAPAD_EC_TIMEOUT) + 1=
+;
+ =09     time_before(jiffies, end_jiffies);) {
+ =09=09schedule();
+-=09=09if (method_vpcr(handle, 1, &val))
+-=09=09=09return -1;
++=09=09err =3D method_vpcr(handle, 1, &val);
++=09=09if (err)
++=09=09=09return err;
  =09=09if (val =3D=3D 0)
  =09=09=09return 0;
  =09}
--=09pr_err("timeout in %s\n", __func__);
-+=09acpi_handle_err(handle, "timeout in %s\n", __func__);
- =09return -1;
+ =09acpi_handle_err(handle, "timeout in %s\n", __func__);
+-=09return -1;
++=09return -ETIMEDOUT;
  }
 =20
-@@ -696,13 +696,15 @@ static int ideapad_input_init(struct ideapad_private =
-*priv)
+ /*
+@@ -365,8 +371,8 @@ static ssize_t store_ideapad_cam(struct device *dev,
+ =09if (sscanf(buf, "%i", &state) !=3D 1)
+ =09=09return -EINVAL;
+ =09ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_CAMERA, state);
+-=09if (ret < 0)
+-=09=09return -EIO;
++=09if (ret)
++=09=09return ret;
+ =09return count;
+ }
 =20
- =09error =3D sparse_keymap_setup(inputdev, ideapad_keymap, NULL);
- =09if (error) {
--=09=09pr_err("Unable to setup input device keymap\n");
-+=09=09dev_err(&priv->platform_device->dev,
-+=09=09=09"Unable to setup input device keymap\n");
- =09=09goto err_free_dev;
- =09}
+@@ -398,8 +404,8 @@ static ssize_t store_ideapad_fan(struct device *dev,
+ =09if (state < 0 || state > 4 || state =3D=3D 3)
+ =09=09return -EINVAL;
+ =09ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_FAN, state);
+-=09if (ret < 0)
+-=09=09return -EIO;
++=09if (ret)
++=09=09return ret;
+ =09return count;
+ }
 =20
- =09error =3D input_register_device(inputdev);
- =09if (error) {
--=09=09pr_err("Unable to register input device\n");
-+=09=09dev_err(&priv->platform_device->dev,
-+=09=09=09"Unable to register input device\n");
- =09=09goto err_free_dev;
- =09}
+@@ -431,8 +437,8 @@ static ssize_t __maybe_unused touchpad_store(struct dev=
+ice *dev,
+ =09=09return ret;
 =20
-@@ -756,7 +758,8 @@ static void ideapad_check_special_buttons(struct ideapa=
+ =09ret =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_TOUCHPAD, state);
+-=09if (ret < 0)
+-=09=09return -EIO;
++=09if (ret)
++=09=09return ret;
+ =09return count;
+ }
+=20
+@@ -465,8 +471,8 @@ static ssize_t conservation_mode_store(struct device *d=
+ev,
+ =09ret =3D method_int1(priv->adev->handle, "SBMC", state ?
+ =09=09=09=09=09      BMCMD_CONSERVATION_ON :
+ =09=09=09=09=09      BMCMD_CONSERVATION_OFF);
+-=09if (ret < 0)
+-=09=09return -EIO;
++=09if (ret)
++=09=09return ret;
+ =09return count;
+ }
+=20
+@@ -503,8 +509,8 @@ static ssize_t fn_lock_store(struct device *dev,
+ =09ret =3D method_int1(priv->adev->handle, "SALS", state ?
+ =09=09=09  HACMD_FNLOCK_ON :
+ =09=09=09  HACMD_FNLOCK_OFF);
+-=09if (ret < 0)
+-=09=09return -EIO;
++=09if (ret)
++=09=09return ret;
+ =09return count;
+ }
+=20
+@@ -744,7 +750,8 @@ static void ideapad_check_special_buttons(struct ideapa=
 d_private *priv)
- =09=09=09ideapad_input_report(priv, 64);
- =09=09=09break;
- =09=09default:
--=09=09=09pr_info("Unknown special button: %lu\n", bit);
-+=09=09=09dev_warn(&priv->platform_device->dev,
-+=09=09=09=09 "Unknown special button: %lu\n", bit);
- =09=09=09break;
- =09=09}
- =09}
-@@ -822,7 +825,8 @@ static int ideapad_backlight_init(struct ideapad_privat=
-e *priv)
- =09=09=09=09=09      &ideapad_backlight_ops,
- =09=09=09=09=09      &props);
- =09if (IS_ERR(blightdev)) {
--=09=09pr_err("Could not register backlight device\n");
-+=09=09dev_warn(&priv->platform_device->dev,
-+=09=09=09 "Could not register backlight device\n");
- =09=09return PTR_ERR(blightdev);
- =09}
-=20
-@@ -934,7 +938,8 @@ static void ideapad_acpi_notify(acpi_handle handle, u32=
- event, void *data)
- =09=09=09 */
- =09=09=09break;
- =09=09default:
--=09=09=09pr_info("Unknown event: %lu\n", bit);
-+=09=09=09dev_warn(&priv->platform_device->dev,
-+=09=09=09=09 "Unknown event: %lu\n", bit);
- =09=09}
- =09}
- }
-@@ -942,12 +947,15 @@ static void ideapad_acpi_notify(acpi_handle handle, u=
-32 event, void *data)
- #if IS_ENABLED(CONFIG_ACPI_WMI)
- static void ideapad_wmi_notify(u32 value, void *context)
  {
-+=09struct ideapad_private *priv =3D context;
-+
- =09switch (value) {
- =09case 128:
--=09=09ideapad_input_report(context, value);
-+=09=09ideapad_input_report(priv, value);
- =09=09break;
- =09default:
--=09=09pr_info("Unknown WMI event %u\n", value);
-+=09=09dev_warn(&priv->platform_device->dev,
-+=09=09=09 "Unknown WMI event: %u\n", value);
- =09}
+ =09unsigned long bit, value;
+=20
+-=09read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value);
++=09if (read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value))
++=09=09return;
+=20
+ =09for_each_set_bit(bit, &value, 16) {
+ =09=09switch (bit) {
+@@ -772,28 +779,33 @@ static int ideapad_backlight_get_brightness(struct ba=
+cklight_device *blightdev)
+ {
+ =09struct ideapad_private *priv =3D bl_get_data(blightdev);
+ =09unsigned long now;
++=09int err;
+=20
+ =09if (!priv)
+ =09=09return -EINVAL;
+=20
+-=09if (read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now))
+-=09=09return -EIO;
++=09err =3D read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
++=09if (err)
++=09=09return err;
+ =09return now;
  }
- #endif
+=20
+ static int ideapad_backlight_update_status(struct backlight_device *blight=
+dev)
+ {
+ =09struct ideapad_private *priv =3D bl_get_data(blightdev);
++=09int err;
+=20
+ =09if (!priv)
+ =09=09return -EINVAL;
+=20
+-=09if (write_ec_cmd(priv->adev->handle, VPCCMD_W_BL,
+-=09=09=09 blightdev->props.brightness))
+-=09=09return -EIO;
+-=09if (write_ec_cmd(priv->adev->handle, VPCCMD_W_BL_POWER,
+-=09=09=09 blightdev->props.power =3D=3D FB_BLANK_POWERDOWN ? 0 : 1))
+-=09=09return -EIO;
++=09err =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_BL,
++=09=09=09   blightdev->props.brightness);
++=09if (err)
++=09=09return err;
++=09err =3D write_ec_cmd(priv->adev->handle, VPCCMD_W_BL_POWER,
++=09=09=09   blightdev->props.power !=3D FB_BLANK_POWERDOWN);
++=09if (err)
++=09=09return err;
+=20
+ =09return 0;
+ }
+@@ -808,13 +820,17 @@ static int ideapad_backlight_init(struct ideapad_priv=
+ate *priv)
+ =09struct backlight_device *blightdev;
+ =09struct backlight_properties props;
+ =09unsigned long max, now, power;
+-
+-=09if (read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &max))
+-=09=09return -EIO;
+-=09if (read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now))
+-=09=09return -EIO;
+-=09if (read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &power))
+-=09=09return -EIO;
++=09int err;
++
++=09err =3D read_ec_data(priv->adev->handle, VPCCMD_R_BL_MAX, &max);
++=09if (err)
++=09=09return err;
++=09err =3D read_ec_data(priv->adev->handle, VPCCMD_R_BL, &now);
++=09if (err)
++=09=09return err;
++=09err =3D read_ec_data(priv->adev->handle, VPCCMD_R_BL_POWER, &power);
++=09if (err)
++=09=09return err;
+=20
+ =09memset(&props, 0, sizeof(struct backlight_properties));
+ =09props.max_brightness =3D max;
 --=20
 2.30.0
 
