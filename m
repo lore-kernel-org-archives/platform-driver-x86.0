@@ -2,118 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF139C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC6C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C410F23A57
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084D723A6C
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbhANOgG (ORCPT
+        id S1726761AbhANOxv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jan 2021 09:36:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45024 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726175AbhANOgG (ORCPT
+        Thu, 14 Jan 2021 09:53:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbhANOxv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jan 2021 09:36:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610634879;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=AminTM+JmcklWWEPw2/l1521ldDupyU3M/j5IBDP7hE=;
-        b=R10aHy5xlD+Di2hpvpZjiYHCWEEnnAPOTWjvwqB2yobwEltzCFjQicimp7g8g8g3F0dFDn
-        8JIt+dfMz8IzUhHFagQg8yyveZTmN6bJD/a6mRYa5r4fHzK+Rr7o9H1x88ZUJQ+iGJ6Qme
-        NDQJqEtNCZ4fCHd2QPMvCfPcAcxR8cc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-6BVhOC7-MsCdIvzSWk933A-1; Thu, 14 Jan 2021 09:34:36 -0500
-X-MC-Unique: 6BVhOC7-MsCdIvzSWk933A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77B56107ACF8;
-        Thu, 14 Jan 2021 14:34:35 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-113-237.ams2.redhat.com [10.36.113.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F12D060C47;
-        Thu, 14 Jan 2021 14:34:33 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>
+        Thu, 14 Jan 2021 09:53:51 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACF5C061574;
+        Thu, 14 Jan 2021 06:53:10 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id v184so722948wma.1;
+        Thu, 14 Jan 2021 06:53:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vXE0mmnItBS+KOK1GpktK7ApVoMKmWB/4ok6x8HwdfM=;
+        b=jHKAOq//l2Pley5Km6YuU8Jma6GOwF+kNpi7TkY/zxiAoL8GRi2qrXlYbw3UlUZB/7
+         HAUsgaiHFnnp0CyG/6a2ZBGVqhM7kC0jEqafupGq00ScQq4jSlYaHMVY/sgdZSaAIdtD
+         pp6KHJ13IBJTw73SHxBdwmt+WtvxNS0v1CUSWJ4TlepWuszH8pXzQoHKDPI06wQ0JjZL
+         s5AeRvVpnH2sFCUXSLJ8CZxMbPrrD6fdvbbxSzoPCR3Ha9iMqX3hgvsi1Q8agZOEGl+N
+         M/bv/G5rx7kmr41TWvz4dLobEuNWq3UppgNrSjUSM9ZigeLxP8f3UUnEhJzj6oW09wxT
+         MSPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vXE0mmnItBS+KOK1GpktK7ApVoMKmWB/4ok6x8HwdfM=;
+        b=S95kGPNzlH45ITIO6ijE5XzprRNfwtMnRKXq5L6AH/iU6BH+eFJoRx2QtaZF4/ctY4
+         d+mJbEB7qpAB750wdmRKKHhnU0iUBjgOXfisDT+1tECySjBlA8EFPhDmwfK3gvJWD0/3
+         MPMFl0PDsVoxlIF0nJ+6qD/CbT7ajeIwDeHNjjgDsQXqxkcxbnQN0h3qm1Mjjv63WkJ7
+         zb0+A2VpBrpgBgcgCpvH3CnfrNVSuRAGZRwHRvMrPEyvPFJawXhl0xiG7GRQ/3UzMQIl
+         BqFdx6UgVU3tq6OjfOElJ7DiC+AJHtAYgL/rkmhcdwBbF77iGOBoUGrt+kK6DQQAouXi
+         rR0w==
+X-Gm-Message-State: AOAM532twithCGWBe6LNGPUI/UvlZLNoXB4iqQ51JrtoYSTTDA0+UqlF
+        gKlyEvns+RSz9e6Rys7szDe2dVgxWYN2Gg==
+X-Google-Smtp-Source: ABdhPJxOolToRV7rsm7AM/M2dtx01MzWVdtFIzvgwYSxVJrhI5i4OC9R/mBmRffoi18w3syOBSwIkw==
+X-Received: by 2002:a1c:6283:: with SMTP id w125mr4271505wmb.155.1610635989142;
+        Thu, 14 Jan 2021 06:53:09 -0800 (PST)
+Received: from [192.168.2.202] (pd9e5aa30.dip0.t-ipconnect.de. [217.229.170.48])
+        by smtp.gmail.com with ESMTPSA id q15sm10441410wrw.75.2021.01.14.06.53.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Jan 2021 06:53:08 -0800 (PST)
+Subject: Re: [PATCH v6 16/16] platform/surface: aggregator: fix a kernel-doc
+ markup
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: intel-vbtn: Drop HP Stream x360 Convertible PC 11 from allow-list
-Date:   Thu, 14 Jan 2021 15:34:32 +0100
-Message-Id: <20210114143432.31750-1-hdegoede@redhat.com>
+        Mark Gross <mgross@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <cover.1610610937.git.mchehab+huawei@kernel.org>
+ <4a6bf33cfbd06654d78294127f2b6d354d073089.1610610937.git.mchehab+huawei@kernel.org>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <a0cb2b1a-4546-7864-faaf-3a1db8223189@gmail.com>
+Date:   Thu, 14 Jan 2021 15:53:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <4a6bf33cfbd06654d78294127f2b6d354d073089.1610610937.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-THe HP Stream x360 Convertible PC 11 DSDT has the following VGBS function:
+On 1/14/21 9:04 AM, Mauro Carvalho Chehab wrote:
+> A function has a different name between their prototype
+> and its kernel-doc markup:
+> 
+> 	../drivers/platform/surface/aggregator/ssh_request_layer.c:1065: warning: expecting prototype for ssh_rtl_tx_start(). Prototype was for ssh_rtl_start() instead
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>   drivers/platform/surface/aggregator/ssh_request_layer.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
+> index bb1c862411a2..25db4d638cfa 100644
+> --- a/drivers/platform/surface/aggregator/ssh_request_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
+> @@ -1056,7 +1056,7 @@ void ssh_rtl_destroy(struct ssh_rtl *rtl)
+>   }
+>   
+>   /**
+> - * ssh_rtl_tx_start() - Start request transmitter and receiver.
+> + * ssh_rtl_start() - Start request transmitter and receiver.
+>    * @rtl: The request transport layer.
+>    *
+>    * Return: Returns zero on success, a negative error code on failure.
+> 
 
-            Method (VGBS, 0, Serialized)
-            {
-                If ((^^PCI0.LPCB.EC0.ROLS == Zero))
-                {
-                    VBDS = Zero
-                }
-                Else
-                {
-                    VBDS = Zero
-                }
+Thanks! Looks good to me.
 
-                Return (VBDS) /* \_SB_.VGBI.VBDS */
-            }
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-Which is obviously wrong, because it always returns 0 independent of the
-2-in-1 being in laptop or tablet mode. This causes the intel-vbtn driver
-to initially report SW_TABLET_MODE = 1 to userspace, which is known to
-cause problems when the 2-in-1 is actually in laptop mode.
+There seems to be another issue similar to this, specifically the
+non-existing ssh_rtl_tx_start() and ssh_rtl_tx_start() are referenced.
+Both should point to to ssh_rtl_start() instead. I'll start working on a
+patch to fix that right away.
 
-During earlier testing this turned out to not be a problem because the
-2-in-1 would do a Notify(..., 0xCC) or Notify(..., 0xCD) soon after
-the intel-vbtn driver loaded, correcting the SW_TABLET_MODE state.
-
-Further testing however has shown that this Notify() soon after the
-intel-vbtn driver loads, does not always happen. When the Notify
-does not happen, then intel-vbtn reports SW_TABLET_MODE = 1 resulting in
-a non-working touchpad.
-
-IOW the tablet-mode reporting is not reliable on this device, so it
-should be dropped from the allow-list, fixing the touchpad sometimes
-not working.
-
-Fixes: 8169bd3e6e19 ("platform/x86: intel-vbtn: Switch to an allow-list for SW_TABLET_MODE reporting")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/intel-vbtn.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index 9bbdb26d4305..30a9062d2b4b 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -204,12 +204,6 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
- 		},
- 	},
--	{
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "HP Stream x360 Convertible PC 11"),
--		},
--	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Hewlett-Packard"),
--- 
-2.28.0
-
+Regards,
+Max
