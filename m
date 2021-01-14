@@ -2,93 +2,247 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E517C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B4FC43381
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 08:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FB32343F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 13 Jan 2021 18:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57CA239EB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 08:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbhAMSXk (ORCPT
+        id S1728307AbhANIGq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 13 Jan 2021 13:23:40 -0500
-Received: from mail1.protonmail.ch ([185.70.40.18]:54928 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbhAMSXk (ORCPT
+        Thu, 14 Jan 2021 03:06:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728130AbhANIGX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 13 Jan 2021 13:23:40 -0500
-Date:   Wed, 13 Jan 2021 18:22:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610562177;
-        bh=iqAwI1IuE13sRI/q34P1JwdMO/H3mkdvkrVBPMh6n3k=;
-        h=Date:To:From:Reply-To:Subject:From;
-        b=ZNJXQHYKAW6K45YLe5SeFs8nVIOAztmfAML2rrV3ZoBP5tdsNmcO3A6vJI8IZYFfW
-         mZepqzc7h3se1I4k8d6dS1qoNBVXC60ooDdXBMjMA70HAc4xKfc+yT6jrYm1gUhGlK
-         XtWGIydH9eAyok00sVkSCMlQWg7Bh2Ip1w1cxA2Q=
-To:     platform-driver-x86@vger.kernel.org,
+        Thu, 14 Jan 2021 03:06:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AFD9323A58;
+        Thu, 14 Jan 2021 08:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610611500;
+        bh=KzRA72DJ8FelN5FRPnISDXzhJWHYX6V5D7cnrrYqmns=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nOm4NqCaUWLg4HTBDeJeoBxDK1hE6KD6kwIaS5QUdGE5d95M0LOuBe17UH6ZhtxWj
+         2SIokKCq5OrWbc/QTRPFACCsP/28F9IHn5ydVSMGUJC9s2jP+tMN80H9tSZ77bm3FC
+         VuJGlQICCzi4qz/Gjt5ZVImWz1CaQcpPOemSSW2UY1plhyCBX0ffc8ZreB8SYwreWG
+         a2Wjqa/k8fmoxGbUlaKINA7quVFVGZDOIEdybff/MtPHwEQKCte3px4suSSxEJzxPs
+         ZezS17i65C2hxskblSDd8TCCCI/NNP1qdJmjaooHey/QEueJfY+BWtlFyEGbMsiuzC
+         o3DjiUV3zELfQ==
+Received: by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kzxcn-00EQ6N-K6; Thu, 14 Jan 2021 09:04:57 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
         Hans de Goede <hdegoede@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v2 23/24] Documentation/ABI: sysfs-platform-ideapad-laptop: update device attribute paths
-Message-ID: <20210113182016.166049-24-pobrn@protonmail.com>
+        Matt Porter <mporter@kernel.crashing.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Will Drewry <wad@chromium.org>,
+        Ying Xue <ying.xue@windriver.com>,
+        dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH v6 00/16] Fix several bad kernel-doc markups
+Date:   Thu, 14 Jan 2021 09:04:36 +0100
+Message-Id: <cover.1610610937.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The documentation referred to non-existent device attributes under a non-ex=
-istent
-platform device. Update it with the current location of the attributes.
+Hi Jon,
 
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+This series have three parts:
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop b/Docu=
-mentation/ABI/testing/sysfs-platform-ideapad-laptop
-index fd2ac02bc5bd..e024678947c8 100644
---- a/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-+++ b/Documentation/ABI/testing/sysfs-platform-ideapad-laptop
-@@ -1,11 +1,11 @@
--What:=09=09/sys/devices/platform/ideapad/camera_power
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/camera_power
- Date:=09=09Dec 2010
- KernelVersion:=092.6.37
- Contact:=09"Ike Panhc <ike.pan@canonical.com>"
- Description:
- =09=09Control the power of camera module. 1 means on, 0 means off.
-=20
--What:=09=09/sys/devices/platform/ideapad/fan_mode
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/fan_mode
- Date:=09=09June 2012
- KernelVersion:=093.6
- Contact:=09"Maxim Mikityanskiy <maxtram95@gmail.com>"
-@@ -18,7 +18,7 @@ Description:
- =09=09=09* 2 -> Dust Cleaning
- =09=09=09* 4 -> Efficient Thermal Dissipation Mode
-=20
--What:=09=09/sys/devices/platform/ideapad/touchpad
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/touchpad
- Date:=09=09May 2017
- KernelVersion:=094.13
- Contact:=09"Ritesh Raj Sarraf <rrs@debian.org>"
-@@ -27,7 +27,7 @@ Description:
- =09=09=09* 1 -> Switched On
- =09=09=09* 0 -> Switched Off
-=20
--What:=09=09/sys/bus/pci/devices/<bdf>/<device>/VPC2004:00/fn_lock
-+What:=09=09/sys/bus/platform/devices/VPC2004:*/fn_lock
- Date:=09=09May 2018
- KernelVersion:=094.18
- Contact:=09"Oleg Keri <ezhi99@gmail.com>"
---=20
-2.30.0
+1)  10 remaining fixup patches from the series I sent back on Dec, 1st:
+
+   parport: fix a kernel-doc markup
+   rapidio: fix kernel-doc a markup
+   fs: fix kernel-doc markups
+   pstore/zone: fix a kernel-doc markup
+   firmware: stratix10-svc: fix kernel-doc markups
+   connector: fix a kernel-doc markup
+   lib/crc7: fix a kernel-doc markup
+   memblock: fix kernel-doc markups
+   w1: fix a kernel-doc markup
+   selftests: kselftest_harness.h: partially fix kernel-doc markups
+
+2) The patch adding the new check to ensure that the kernel-doc
+   markup will be used for the right declaration;
+
+3) 5 additional patches, produced against next-20210114 with new
+   problems detected after the original series: 
+
+ net: tip: fix a couple kernel-doc markups
+ net: cfg80211: fix a kerneldoc markup
+ reset: core: fix a kernel-doc markup
+ drm: drm_crc: fix a kernel-doc markup
+ platform/surface: aggregator: fix a kernel-doc markup
+
+It probably makes sense to merge at least the first 11 patches
+via the doc tree, as they should apply cleanly there, and
+having the last 5 patches merged via each maintainer's tree.
+
+-
+
+Kernel-doc has always be limited to a probably bad documented
+rule:
+
+The kernel-doc markups should appear *imediatelly before* the
+function or data structure that it documents.
+
+On other words, if a C file would contain something like this:
+
+	/**
+	 * foo - function foo
+	 * @args: foo args
+	 */
+	static inline void bar(int args);
+
+	/**
+	 * bar - function bar
+	 * @args: foo args
+	 */
+	static inline void foo(void *args);
+
+
+The output (in ReST format) will be:
+
+	.. c:function:: void bar (int args)
+
+	   function foo
+
+	**Parameters**
+
+	``int args``
+	  foo args
+
+
+	.. c:function:: void foo (void *args)
+
+	   function bar
+
+	**Parameters**
+
+	``void *args``
+	  foo args
+
+Which is clearly a wrong result.  Before this changeset, 
+not even a warning is produced on such cases.
+
+As placing such markups just before the documented
+data is a common practice, on most cases this is fine.
+
+However, as patches touch things, identifiers may be
+renamed, and people may forget to update the kernel-doc
+markups to follow such changes.
+
+This has been happening for quite a while, as there are
+lots of files with kernel-doc problems.
+
+This series address those issues and add a file at the
+end that will enforce that the identifier will match the
+kernel-doc markup, avoiding this problem from
+keep happening as time goes by.
+
+This series is based on current upstream tree.
+
+@maintainers: feel free to pick the patches and
+apply them directly on your trees, as all patches on 
+this series are independent from the other ones.
+
+--
+
+v6:
+  - rebased on the top of next-20210114 and added a few extra fixes
+
+v5:
+  - The completion.h patch was replaced by another one which drops
+    an obsolete macro;
+  - Some typos got fixed and review tags got added;
+  - Dropped patches that were already merged at linux-next.
+
+v4:
+
+  - Patches got rebased and got some acks.
+
+Mauro Carvalho Chehab (16):
+  parport: fix a kernel-doc markup
+  rapidio: fix kernel-doc a markup
+  fs: fix kernel-doc markups
+  pstore/zone: fix a kernel-doc markup
+  firmware: stratix10-svc: fix kernel-doc markups
+  connector: fix a kernel-doc markup
+  lib/crc7: fix a kernel-doc markup
+  memblock: fix kernel-doc markups
+  w1: fix a kernel-doc markup
+  selftests: kselftest_harness.h: partially fix kernel-doc markups
+  scripts: kernel-doc: validate kernel-doc markup with the actual names
+  net: tip: fix a couple kernel-doc markups
+  net: cfg80211: fix a kerneldoc markup
+  reset: core: fix a kernel-doc markup
+  drm: drm_crc: fix a kernel-doc markup
+  platform/surface: aggregator: fix a kernel-doc markup
+
+ drivers/parport/share.c                       |  2 +-
+ .../surface/aggregator/ssh_request_layer.c    |  2 +-
+ drivers/rapidio/rio.c                         |  2 +-
+ drivers/reset/core.c                          |  4 +-
+ fs/dcache.c                                   | 73 ++++++++++---------
+ fs/inode.c                                    |  4 +-
+ fs/pstore/zone.c                              |  2 +-
+ fs/seq_file.c                                 |  5 +-
+ fs/super.c                                    | 12 +--
+ include/drm/drm_crtc.h                        |  2 +-
+ include/linux/connector.h                     |  2 +-
+ .../firmware/intel/stratix10-svc-client.h     | 10 +--
+ include/linux/memblock.h                      |  4 +-
+ include/linux/parport.h                       | 31 ++++++++
+ include/linux/w1.h                            |  2 +-
+ include/net/cfg80211.h                        |  2 +-
+ lib/crc7.c                                    |  2 +-
+ net/tipc/link.c                               |  2 +-
+ net/tipc/node.c                               |  2 +-
+ scripts/kernel-doc                            | 62 ++++++++++++----
+ tools/testing/selftests/kselftest_harness.h   | 26 ++++---
+ 21 files changed, 160 insertions(+), 93 deletions(-)
+
+-- 
+2.29.2
+
 
