@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4A3C43381
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 22:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2897FC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 23:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41D623977
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 22:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF1123A5E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 23:29:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbhANWvn (ORCPT
+        id S1730701AbhANX3Q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jan 2021 17:51:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27705 "EHLO
+        Thu, 14 Jan 2021 18:29:16 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52397 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730834AbhANWvn (ORCPT
+        by vger.kernel.org with ESMTP id S1725863AbhANX3Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jan 2021 17:51:43 -0500
+        Thu, 14 Jan 2021 18:29:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610664616;
+        s=mimecast20190719; t=1610666869;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=nkKrU8HDKW+lXfhW2c96XhhEHjVqI2eSg4SI0WExWi8=;
-        b=BgV8T+QapalK6sXIwG1bJSsNso8wrrg1jSa+ilNl/j0SIm7INZGIXc4zJzR29QL6tMV01o
-        lPhUIerLzeSHI7uigPypDllGYO3200/KNK21+Y3GTUCaRn97838SvqltauZXfoQDa6kdbZ
-        n6cOE6BPcwBRg4YD/xb3Mf64SjmTCqg=
+        bh=EyximcakHA0XiBA818tKH+3po7EPFrK2BuASx/Yux2o=;
+        b=LPEooS+H0QX0WtVBqdudqvyJQExJB4Xa4iU4Vf5XxJkaOc/oxxfRcJkxnal/OoxikSY9xo
+        fDnFRL7FVPRgzNcBVsXJfH9E80IoOobiujOPDDTkjjL2vuoe7UCQ6PknDn1Ia87GiDTcWi
+        UvV84Ry6aQZBJ8MqZUO+zsC42UKyvUc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-184-7i7pK-w1Mfa0BynQgLt2_g-1; Thu, 14 Jan 2021 17:50:14 -0500
-X-MC-Unique: 7i7pK-w1Mfa0BynQgLt2_g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-47-fVHZe3qyNt-YBpSQAgPY8g-1; Thu, 14 Jan 2021 18:27:48 -0500
+X-MC-Unique: fVHZe3qyNt-YBpSQAgPY8g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D1A1195D560;
-        Thu, 14 Jan 2021 22:50:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C272B180A08A;
+        Thu, 14 Jan 2021 23:27:46 +0000 (UTC)
 Received: from x1.localdomain.com (ovpn-113-237.ams2.redhat.com [10.36.113.237])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 784735D9C2;
-        Thu, 14 Jan 2021 22:50:12 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD52410023B4;
+        Thu, 14 Jan 2021 23:27:45 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <mgross@linux.intel.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -49,11 +49,11 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
         Elia Devito <eliadevito@gmail.com>
 Subject: [PATCH] platform/x86: hp-wmi: Don't log a warning on HPWMI_RET_UNKNOWN_COMMAND errors
-Date:   Thu, 14 Jan 2021 23:50:11 +0100
-Message-Id: <20210114225011.128535-1-hdegoede@redhat.com>
+Date:   Fri, 15 Jan 2021 00:27:44 +0100
+Message-Id: <20210114232744.154886-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -72,11 +72,14 @@ Cc: Elia Devito <eliadevito@gmail.com>
 Fixes: 81c93798ef3e ("platform/x86: hp-wmi: add support for thermal policy
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+Changes in v2:
+- Fix compilation error which I missed in v1 (oops)
+---
  drivers/platform/x86/hp-wmi.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index ecd477964d11..be11a35a0906 100644
+index ecd477964d11..18bf8aeb5f87 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
 @@ -247,7 +247,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
@@ -85,7 +88,7 @@ index ecd477964d11..be11a35a0906 100644
  	if (ret) {
 -		if (ret != HPWMI_RET_UNKNOWN_CMDTYPE)
 +		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
-+		    ret != HPWMI_RET_UNKNOWN_CMDTYPE) {
++		    ret != HPWMI_RET_UNKNOWN_CMDTYPE)
  			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
  		goto out_free;
  	}
