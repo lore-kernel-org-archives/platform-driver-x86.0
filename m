@@ -2,121 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFC6C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C07C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 15:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084D723A6C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 14:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ECB23A69
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 15:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbhANOxv (ORCPT
+        id S1726459AbhANPJZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jan 2021 09:53:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
+        Thu, 14 Jan 2021 10:09:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbhANOxv (ORCPT
+        with ESMTP id S1725961AbhANPJZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jan 2021 09:53:51 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACF5C061574;
-        Thu, 14 Jan 2021 06:53:10 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id v184so722948wma.1;
-        Thu, 14 Jan 2021 06:53:10 -0800 (PST)
+        Thu, 14 Jan 2021 10:09:25 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771FFC061574;
+        Thu, 14 Jan 2021 07:08:44 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id o10so131529wmc.1;
+        Thu, 14 Jan 2021 07:08:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vXE0mmnItBS+KOK1GpktK7ApVoMKmWB/4ok6x8HwdfM=;
-        b=jHKAOq//l2Pley5Km6YuU8Jma6GOwF+kNpi7TkY/zxiAoL8GRi2qrXlYbw3UlUZB/7
-         HAUsgaiHFnnp0CyG/6a2ZBGVqhM7kC0jEqafupGq00ScQq4jSlYaHMVY/sgdZSaAIdtD
-         pp6KHJ13IBJTw73SHxBdwmt+WtvxNS0v1CUSWJ4TlepWuszH8pXzQoHKDPI06wQ0JjZL
-         s5AeRvVpnH2sFCUXSLJ8CZxMbPrrD6fdvbbxSzoPCR3Ha9iMqX3hgvsi1Q8agZOEGl+N
-         M/bv/G5rx7kmr41TWvz4dLobEuNWq3UppgNrSjUSM9ZigeLxP8f3UUnEhJzj6oW09wxT
-         MSPg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TMHpOkpp/Tlyt5zGDdDWC3Ym3fdf3CvDPYvzDLefiAI=;
+        b=WRR0pBlL0cOgw4KU8ANiLKeNTJt/3Kjg6yLJr3g2qWuDMQu+bjuW84W31EgVeajhyA
+         zjc9bBneUQAXDGhRyW6JN5x/GZwaEsxa2pASlY+9P9KXYOwa0jFSi9rOaVFI83Xjq3AM
+         NeeKqPok1SffXneiGrCo2eNrOutSEP08ogoScpYyRoqEqNwgrTDrsCcWqWjzCMbTFnm/
+         ZyfACEvwbHBQhgNvgCrdN3Q5OFYScgpGEdDS1c23PawTXlXCBBWwqb5Ht+CwTy6VPivO
+         3hKCDa5RRQm0h7kPlI+p4I+OPfMzEShVjfbuiz3BShkTZyW4HsuyNcyHjMzQyqSUttJq
+         IpIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=vXE0mmnItBS+KOK1GpktK7ApVoMKmWB/4ok6x8HwdfM=;
-        b=S95kGPNzlH45ITIO6ijE5XzprRNfwtMnRKXq5L6AH/iU6BH+eFJoRx2QtaZF4/ctY4
-         d+mJbEB7qpAB750wdmRKKHhnU0iUBjgOXfisDT+1tECySjBlA8EFPhDmwfK3gvJWD0/3
-         MPMFl0PDsVoxlIF0nJ+6qD/CbT7ajeIwDeHNjjgDsQXqxkcxbnQN0h3qm1Mjjv63WkJ7
-         zb0+A2VpBrpgBgcgCpvH3CnfrNVSuRAGZRwHRvMrPEyvPFJawXhl0xiG7GRQ/3UzMQIl
-         BqFdx6UgVU3tq6OjfOElJ7DiC+AJHtAYgL/rkmhcdwBbF77iGOBoUGrt+kK6DQQAouXi
-         rR0w==
-X-Gm-Message-State: AOAM532twithCGWBe6LNGPUI/UvlZLNoXB4iqQ51JrtoYSTTDA0+UqlF
-        gKlyEvns+RSz9e6Rys7szDe2dVgxWYN2Gg==
-X-Google-Smtp-Source: ABdhPJxOolToRV7rsm7AM/M2dtx01MzWVdtFIzvgwYSxVJrhI5i4OC9R/mBmRffoi18w3syOBSwIkw==
-X-Received: by 2002:a1c:6283:: with SMTP id w125mr4271505wmb.155.1610635989142;
-        Thu, 14 Jan 2021 06:53:09 -0800 (PST)
-Received: from [192.168.2.202] (pd9e5aa30.dip0.t-ipconnect.de. [217.229.170.48])
-        by smtp.gmail.com with ESMTPSA id q15sm10441410wrw.75.2021.01.14.06.53.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Jan 2021 06:53:08 -0800 (PST)
-Subject: Re: [PATCH v6 16/16] platform/surface: aggregator: fix a kernel-doc
- markup
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        bh=TMHpOkpp/Tlyt5zGDdDWC3Ym3fdf3CvDPYvzDLefiAI=;
+        b=pXh4q9pPwiYT9RNCALDUPhm/5j0JdKynviSNUcdJ4Vu68GN8pB/TU6MNN1q8u0azHa
+         oXdPZFoG71AEJl3wbqFnb6S+U0eGu0N2NL43XtDahEN8jyjnN1eIGxHAomPXiyo8O2t7
+         9TS3ZxlKkqVAgXvJoJgGFbbl7FmlT3alJ6yCqIUibjTx7S8oYkn2vXmmUY2uHGGP50BV
+         Z86cn4teC7QA8ELTM/383TfYSmn0NaSfRi0tEdB1UJWtu9vRfJBtc1lAa8djnUWAVG0n
+         1sa/5WPTQ+naVP/I1jvzdaclttRSsSbkLQEaIT8y+HCL1+Tf7+Q1lb9j38ydwM3dyTiU
+         vZnw==
+X-Gm-Message-State: AOAM530Qq6uWpSiVGCMw4/malDy6Py7zn2o+271INOq/jkCdEk6oBaHe
+        r3JuB0YSk2HO8wfqdGHoIhjOLcz8dnB6Vg==
+X-Google-Smtp-Source: ABdhPJwW+Urj2LKjTq8gGTX8kpHTJlVQcqKpCcoC/wiyDyFknCT6TKWGXXKgNiYFxlthKhpBa1hCWw==
+X-Received: by 2002:a1c:b682:: with SMTP id g124mr4456735wmf.10.1610636922790;
+        Thu, 14 Jan 2021 07:08:42 -0800 (PST)
+Received: from xws.localdomain (pd9e5aa30.dip0.t-ipconnect.de. [217.229.170.48])
+        by smtp.gmail.com with ESMTPSA id i11sm8193986wmq.10.2021.01.14.07.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Jan 2021 07:08:42 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <cover.1610610937.git.mchehab+huawei@kernel.org>
- <4a6bf33cfbd06654d78294127f2b6d354d073089.1610610937.git.mchehab+huawei@kernel.org>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <a0cb2b1a-4546-7864-faaf-3a1db8223189@gmail.com>
-Date:   Thu, 14 Jan 2021 15:53:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+Subject: [PATCH] platform/surface: aggregator: Fix kernel-doc references
+Date:   Thu, 14 Jan 2021 16:08:26 +0100
+Message-Id: <20210114150826.19109-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-In-Reply-To: <4a6bf33cfbd06654d78294127f2b6d354d073089.1610610937.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 1/14/21 9:04 AM, Mauro Carvalho Chehab wrote:
-> A function has a different name between their prototype
-> and its kernel-doc markup:
-> 
-> 	../drivers/platform/surface/aggregator/ssh_request_layer.c:1065: warning: expecting prototype for ssh_rtl_tx_start(). Prototype was for ssh_rtl_start() instead
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->   drivers/platform/surface/aggregator/ssh_request_layer.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
-> index bb1c862411a2..25db4d638cfa 100644
-> --- a/drivers/platform/surface/aggregator/ssh_request_layer.c
-> +++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
-> @@ -1056,7 +1056,7 @@ void ssh_rtl_destroy(struct ssh_rtl *rtl)
->   }
->   
->   /**
-> - * ssh_rtl_tx_start() - Start request transmitter and receiver.
-> + * ssh_rtl_start() - Start request transmitter and receiver.
->    * @rtl: The request transport layer.
->    *
->    * Return: Returns zero on success, a negative error code on failure.
-> 
+Both, ssh_rtl_rx_start() and ssh_rtl_tx_start() functions, do not exist
+and have been consolidated into ssh_rtl_start(). Nevertheless,
+kernel-doc references the former functions. Replace those references
+with references to ssh_rtl_start().
 
-Thanks! Looks good to me.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Note: This patch does not change the kernel doc at the ssh_rtl_start()
+itself, as there is already another patch for it:
 
-There seems to be another issue similar to this, specifically the
-non-existing ssh_rtl_tx_start() and ssh_rtl_tx_start() are referenced.
-Both should point to to ssh_rtl_start() instead. I'll start working on a
-patch to fix that right away.
+  "platform/surface: aggregator: fix a kernel-doc markup"
+  https://lore.kernel.org/patchwork/patch/1364953/
 
-Regards,
-Max
+---
+ drivers/platform/surface/aggregator/ssh_request_layer.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
+index bb1c862411a2..4fbe58265e31 100644
+--- a/drivers/platform/surface/aggregator/ssh_request_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
+@@ -1004,9 +1004,8 @@ int ssh_request_init(struct ssh_request *rqst, enum ssam_request_flags flags,
+  *
+  * Initializes the given request transport layer and associated packet
+  * transport layer. Transmitter and receiver threads must be started
+- * separately via ssh_rtl_tx_start() and ssh_rtl_rx_start(), after the
+- * request-layer has been initialized and the lower-level serial device layer
+- * has been set up.
++ * separately via ssh_rtl_start(), after the request-layer has been
++ * initialized and the lower-level serial device layer has been set up.
+  *
+  * Return: Returns zero on success and a nonzero error code on failure.
+  */
+-- 
+2.30.0
+
