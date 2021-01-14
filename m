@@ -2,113 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C07C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 15:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4A3C43381
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 22:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0ECB23A69
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 15:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B41D623977
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 14 Jan 2021 22:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbhANPJZ (ORCPT
+        id S1730875AbhANWvn (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 14 Jan 2021 10:09:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725961AbhANPJZ (ORCPT
+        Thu, 14 Jan 2021 17:51:43 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27705 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730834AbhANWvn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 14 Jan 2021 10:09:25 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771FFC061574;
-        Thu, 14 Jan 2021 07:08:44 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id o10so131529wmc.1;
-        Thu, 14 Jan 2021 07:08:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TMHpOkpp/Tlyt5zGDdDWC3Ym3fdf3CvDPYvzDLefiAI=;
-        b=WRR0pBlL0cOgw4KU8ANiLKeNTJt/3Kjg6yLJr3g2qWuDMQu+bjuW84W31EgVeajhyA
-         zjc9bBneUQAXDGhRyW6JN5x/GZwaEsxa2pASlY+9P9KXYOwa0jFSi9rOaVFI83Xjq3AM
-         NeeKqPok1SffXneiGrCo2eNrOutSEP08ogoScpYyRoqEqNwgrTDrsCcWqWjzCMbTFnm/
-         ZyfACEvwbHBQhgNvgCrdN3Q5OFYScgpGEdDS1c23PawTXlXCBBWwqb5Ht+CwTy6VPivO
-         3hKCDa5RRQm0h7kPlI+p4I+OPfMzEShVjfbuiz3BShkTZyW4HsuyNcyHjMzQyqSUttJq
-         IpIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TMHpOkpp/Tlyt5zGDdDWC3Ym3fdf3CvDPYvzDLefiAI=;
-        b=pXh4q9pPwiYT9RNCALDUPhm/5j0JdKynviSNUcdJ4Vu68GN8pB/TU6MNN1q8u0azHa
-         oXdPZFoG71AEJl3wbqFnb6S+U0eGu0N2NL43XtDahEN8jyjnN1eIGxHAomPXiyo8O2t7
-         9TS3ZxlKkqVAgXvJoJgGFbbl7FmlT3alJ6yCqIUibjTx7S8oYkn2vXmmUY2uHGGP50BV
-         Z86cn4teC7QA8ELTM/383TfYSmn0NaSfRi0tEdB1UJWtu9vRfJBtc1lAa8djnUWAVG0n
-         1sa/5WPTQ+naVP/I1jvzdaclttRSsSbkLQEaIT8y+HCL1+Tf7+Q1lb9j38ydwM3dyTiU
-         vZnw==
-X-Gm-Message-State: AOAM530Qq6uWpSiVGCMw4/malDy6Py7zn2o+271INOq/jkCdEk6oBaHe
-        r3JuB0YSk2HO8wfqdGHoIhjOLcz8dnB6Vg==
-X-Google-Smtp-Source: ABdhPJwW+Urj2LKjTq8gGTX8kpHTJlVQcqKpCcoC/wiyDyFknCT6TKWGXXKgNiYFxlthKhpBa1hCWw==
-X-Received: by 2002:a1c:b682:: with SMTP id g124mr4456735wmf.10.1610636922790;
-        Thu, 14 Jan 2021 07:08:42 -0800 (PST)
-Received: from xws.localdomain (pd9e5aa30.dip0.t-ipconnect.de. [217.229.170.48])
-        by smtp.gmail.com with ESMTPSA id i11sm8193986wmq.10.2021.01.14.07.08.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jan 2021 07:08:42 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/surface: aggregator: Fix kernel-doc references
-Date:   Thu, 14 Jan 2021 16:08:26 +0100
-Message-Id: <20210114150826.19109-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        Thu, 14 Jan 2021 17:51:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610664616;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=nkKrU8HDKW+lXfhW2c96XhhEHjVqI2eSg4SI0WExWi8=;
+        b=BgV8T+QapalK6sXIwG1bJSsNso8wrrg1jSa+ilNl/j0SIm7INZGIXc4zJzR29QL6tMV01o
+        lPhUIerLzeSHI7uigPypDllGYO3200/KNK21+Y3GTUCaRn97838SvqltauZXfoQDa6kdbZ
+        n6cOE6BPcwBRg4YD/xb3Mf64SjmTCqg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-7i7pK-w1Mfa0BynQgLt2_g-1; Thu, 14 Jan 2021 17:50:14 -0500
+X-MC-Unique: 7i7pK-w1Mfa0BynQgLt2_g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D1A1195D560;
+        Thu, 14 Jan 2021 22:50:13 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-113-237.ams2.redhat.com [10.36.113.237])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 784735D9C2;
+        Thu, 14 Jan 2021 22:50:12 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Elia Devito <eliadevito@gmail.com>
+Subject: [PATCH] platform/x86: hp-wmi: Don't log a warning on HPWMI_RET_UNKNOWN_COMMAND errors
+Date:   Thu, 14 Jan 2021 23:50:11 +0100
+Message-Id: <20210114225011.128535-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Both, ssh_rtl_rx_start() and ssh_rtl_tx_start() functions, do not exist
-and have been consolidated into ssh_rtl_start(). Nevertheless,
-kernel-doc references the former functions. Replace those references
-with references to ssh_rtl_start().
+The recently added thermal policy support makes a
+hp_wmi_perform_query(0x4c, ...) call on older devices which do not
+support thermal policies this causes the following warning to be
+logged (seen on a HP Stream x360 Convertible PC 11):
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+[   26.805305] hp_wmi: query 0x4c returned error 0x3
+
+Error 0x3 is HPWMI_RET_UNKNOWN_COMMAND error. This commit silences
+the warning for unknown-command errors, silencing the new warning.
+
+Cc: Elia Devito <eliadevito@gmail.com>
+Fixes: 81c93798ef3e ("platform/x86: hp-wmi: add support for thermal policy
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
+ drivers/platform/x86/hp-wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Note: This patch does not change the kernel doc at the ssh_rtl_start()
-itself, as there is already another patch for it:
-
-  "platform/surface: aggregator: fix a kernel-doc markup"
-  https://lore.kernel.org/patchwork/patch/1364953/
-
----
- drivers/platform/surface/aggregator/ssh_request_layer.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
-index bb1c862411a2..4fbe58265e31 100644
---- a/drivers/platform/surface/aggregator/ssh_request_layer.c
-+++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
-@@ -1004,9 +1004,8 @@ int ssh_request_init(struct ssh_request *rqst, enum ssam_request_flags flags,
-  *
-  * Initializes the given request transport layer and associated packet
-  * transport layer. Transmitter and receiver threads must be started
-- * separately via ssh_rtl_tx_start() and ssh_rtl_rx_start(), after the
-- * request-layer has been initialized and the lower-level serial device layer
-- * has been set up.
-+ * separately via ssh_rtl_start(), after the request-layer has been
-+ * initialized and the lower-level serial device layer has been set up.
-  *
-  * Return: Returns zero on success and a nonzero error code on failure.
-  */
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index ecd477964d11..be11a35a0906 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -247,7 +247,8 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	ret = bios_return->return_code;
+ 
+ 	if (ret) {
+-		if (ret != HPWMI_RET_UNKNOWN_CMDTYPE)
++		if (ret != HPWMI_RET_UNKNOWN_COMMAND &&
++		    ret != HPWMI_RET_UNKNOWN_CMDTYPE) {
+ 			pr_warn("query 0x%x returned error 0x%x\n", query, ret);
+ 		goto out_free;
+ 	}
 -- 
-2.30.0
+2.28.0
 
