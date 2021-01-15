@@ -2,127 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A607C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 07:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEFDC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 16:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025E9207C4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 07:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8936C2388B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 16:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbhAOHpR (ORCPT
+        id S1728668AbhAOQIB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jan 2021 02:45:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731827AbhAOHpP (ORCPT
+        Fri, 15 Jan 2021 11:08:01 -0500
+Received: from mail-03.mail-europe.com ([91.134.188.129]:32842 "EHLO
+        mail-03.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbhAOQIB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jan 2021 02:45:15 -0500
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBB3C061575;
-        Thu, 14 Jan 2021 23:44:34 -0800 (PST)
-Received: by mail-pf1-x42f.google.com with SMTP id 11so4965399pfu.4;
-        Thu, 14 Jan 2021 23:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=RSUcZOUYDHjygfK1QSy+jp5s+BrbUL+dlNwmT8GQw1w=;
-        b=ZwuSSIKHJiI1sHVTdL7H8XYDfqijJG0hhQrmHfTd4uksDZccNDCrDh5bStIhowCZqb
-         NKGXyPEtkYS9yM/EKrfMkARoRkxtU/aIeQ2SK70kyPJBfEp5MnVucOSEpnihvKCk/Xl3
-         zp2jZzcm0/JK3oje2nd0euaEXB8Kv3Etzs9p8yYFUA0QEDx4sz1xaWzSMPIFfRjY9wZA
-         M3zfEwojmDwTg/brWyXVKpbPFclkm+/hDu1hsGpz3YKTWUI6Hge1tv74UeuB7wKTn+yD
-         qCFO2KXfGAXZyT5bu+TdtWh8GYSgIqL+ox0VnpIDAGv/wyh/3/uPdYo8Jzv/BHZ/dyDN
-         jXhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=RSUcZOUYDHjygfK1QSy+jp5s+BrbUL+dlNwmT8GQw1w=;
-        b=SToAUfNx0917WWp9bLw7wsi2ZgaEWPfwwvY6ydDoggPZQrsG+s+EaBCU/IA3K8m9ro
-         lHgaIfHSFDZ466NngybRZkRkBQ5kYotfuKJtIs457/TVbN+slu/QCkaLWc53z23Mc8m+
-         QS4M7nIG0zcknzRHzG8PtfMvRdQAeupLOulB24R9PhMr2eyDDXxJboIDdMVfQH9Sn+x+
-         y2iW9UNIkv8E2Hx+C4xZVNUlJpdHRrb3u6bONJJv/gQizQa1EBgeA2sKKsQiCxkf8F0B
-         mcMUM6aNnMjvf3XVnZcUzJFnhKdbGojW6gopDsXK1yCYuPUD2pYl3esv+IsdYHny5mRk
-         hpog==
-X-Gm-Message-State: AOAM53057w20hDsJbp/uowae3uXMXQPsX2drlaiucIlOeNV052A77X/T
-        TIUOi9MF8TWEdfJff3YBS+U=
-X-Google-Smtp-Source: ABdhPJwd863AHDzeAXfeQW0QLgSK+zvfW8TK+L0XEjuEWl6LDlSGvpiMNpfHbAi8oXBEA/JUxRCHEQ==
-X-Received: by 2002:a63:a556:: with SMTP id r22mr11487744pgu.296.1610696674401;
-        Thu, 14 Jan 2021 23:44:34 -0800 (PST)
-Received: from [0.0.0.0] (n218250008152.netvigator.com. [218.250.8.152])
-        by smtp.gmail.com with ESMTPSA id b18sm7381358pfi.173.2021.01.14.23.44.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Jan 2021 23:44:33 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Perry Yuan <Perry.Yuan@dell.com>
-Cc:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        Fri, 15 Jan 2021 11:08:01 -0500
+Date:   Fri, 15 Jan 2021 16:06:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1610726797;
+        bh=rpwDHH8YpTsspihYKFgJ2DWnflYdj6iSgdWat1FlfQU=;
+        h=Date:To:From:Reply-To:Subject:From;
+        b=xg5Gm/bIJ/znB5yTCDXG80Qzr4PNaG1ffB7PKx5TNGUSuvZFpheYABmK0LhzrpMwo
+         2H7PHw5/d8N/Klolpjf+o9HjWsArdyboWi+sMeAMqJQMX8NvZ+Oz1YEXD5kRZU8Awr
+         3XSYFeQxZIkQ+kCt+3jpkW41/+hoRO4BJ/CeJZcY=
+To:     "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Limonciello Mario <Mario.Limonciello@dell.com>
-References: <20201228132855.17544-1-Perry_Yuan@Dell.com>
- <mXtNUreCVsPKizG-fnNKPId9_lQGit0S6pYEpk-aNT1hGQjVwblZDiO4E-YX3hxnrbbNN1-6hSntiv13wz66RxbhXjPJhpAVOIlZmmwUI7w=@protonmail.com>
- <7def1cdc-e275-9ae6-4941-55517359bb1e@gmail.com>
- <ce598a92-73ef-e9a6-d772-59f5da3d251e@redhat.com>
-From:   Perry Yuan <perry979106@gmail.com>
-Message-ID: <1f72244c-4510-f945-6997-baa3fcdf9d7b@gmail.com>
-Date:   Fri, 15 Jan 2021 15:44:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>
+From:   jeanniestevenson <jeanniestevenson@protonmail.com>
+Reply-To: jeanniestevenson <jeanniestevenson@protonmail.com>
+Subject: [PATCH] platform/x86: thinkpad_acpi: Add P53/73 firmware to fan_quirk_table for dual fan control
+Message-ID: <Pn_Xii4XYpQRFtgkf4PbNgieE89BAkHgLI1kWIq-zFudwh2A1DY5J_DJVHK06rMW_hGPHx_mPE33gd8mg9-8BxqJTaSC6hhPqAsfZlcNGH0=@protonmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ce598a92-73ef-e9a6-d772-59f5da3d251e@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2021/1/13 2:37, Hans de Goede wrote:
+This commit enables dual fan control for the new Lenovo P53 and P73 laptop =
+models.
 
-> Hi,
->
-> I know there already is a v3 out and I will try to get around to reviewing
-> that soon, still 1 remark about the discussion surrounding v2:
->
-> On 1/11/21 2:42 PM, Perry Yuan wrote:
->
-> <snip>
->
->>>> *The flow is like this:
->>>> 1) User presses key. HW does stuff with this key (timeout is started)
->>>> 2) Event is emitted from FW
->>>> 3) Event received by dell-privacy
->>>> 4) KEY_MICMUTE emitted from dell-privacy
->>>> 5) Userland picks up key and modifies kcontrol for SW mute
->>>> 6) Codec kernel driver catches and calls ledtrig_audio_set, like this:
->>>> 	ledtrig_audio_set(LED_AUDIO_MICMUTE,
->>>> 		rt715->micmute_led ? LED_ON :LED_OFF);
->>>> 7) If "LED" is set to on dell-privacy notifies ec,
->>>>    and timeout is cancelled,HW mic mute activated.
->>>>
->>> Please proofread the commit message again, and pay attention to capitalization
->>> and spacing.
->> I want to reformat it and move the commit info to cover letter.
-> Please also put a copy of this as a comment in either the wmi or the
-> acpi driver (with a comment pointing to the comment in the other) this is
-> important info to have for someone reading the code and trying to understand
-> how this all fits together.
->
-> Regards,
->
-> Hans
+Signed-off-by: Jeannie Stevenson <jeanniestevenson@protonmail.com>
 
-Hi Hans:
-
-Agreed.
-
-I will add this to the driver comments and explain how the acpi/wmi 
-driver associated.
-
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/th=
+inkpad_acpi.c
+index c404706379d9..69402758b99c 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -8782,6 +8782,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __=
+initconst =3D {
+ =09TPACPI_Q_LNV3('N', '1', 'T', TPACPI_FAN_2CTL),=09/* P71 */
+ =09TPACPI_Q_LNV3('N', '1', 'U', TPACPI_FAN_2CTL),=09/* P51 */
+ =09TPACPI_Q_LNV3('N', '2', 'C', TPACPI_FAN_2CTL),=09/* P52 / P72 */
++=09TPACPI_Q_LNV3('N', '2', 'N', TPACPI_FAN_2CTL),=09/* P53 / P73 */
+ =09TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),=09/* P1 / X1 Extreme (1s=
+t gen) */
+ =09TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),=09/* P1 / X1 Extreme (2n=
+d gen) */
+ =09TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),=09/* P1 / X1 Extreme (3n=
+d gen) */
