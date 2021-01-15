@@ -2,82 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB0FC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AD7C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08AD023A5E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F33235F8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbhAOTTU (ORCPT
+        id S1728081AbhAOTVi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jan 2021 14:19:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:50354 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbhAOTTU (ORCPT
+        Fri, 15 Jan 2021 14:21:38 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:44989 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726541AbhAOTVi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jan 2021 14:19:20 -0500
-Received: from zn.tnic (p200300ec2f0acf007cb1195bb528937a.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:cf00:7cb1:195b:b528:937a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CE2441EC041D;
-        Fri, 15 Jan 2021 20:18:38 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1610738318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=vRaLSxM+z9kh51zGEHjPKubHQKF9CpJm494sShQUxrA=;
-        b=a4/U7CvDSqbu111l2vSbwdyJn6bNIhbDvBudnYVeDkOiawxRfoZE+O4onBapZXNhghMypT
-        RoXgibSW7KMHWZdAHMUGOgKcIc7CHreUzLpM/4Mhi9wScv64BbiNkY7wHijyTYTchyc5FS
-        dV3uDP1JAkoR66sJvRC4Dz0YeaPjNE8=
-Date:   Fri, 15 Jan 2021 20:18:33 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
-Message-ID: <20210115191833.GF9138@zn.tnic>
-References: <20210107223424.4135538-1-arnd@kernel.org>
- <20210115182300.GD9138@zn.tnic>
- <20210115183203.GA1991122@ubuntu-m3-large-x86>
- <20210115190729.GE9138@zn.tnic>
- <YAHo3ZEMu+6mESZA@rani.riverdale.lan>
+        Fri, 15 Jan 2021 14:21:38 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7065C5C01D9;
+        Fri, 15 Jan 2021 14:20:52 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Fri, 15 Jan 2021 14:20:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=gfEAVPUzFg5yJJW/gS7HJCsWwI0
+        Jpxe3im3ZZ7fX7jM=; b=CoJgb8PKzW2C0/IZdGvWwQwDNlrNG4eOtbhmvp/bjvz
+        FyqDniwvsYItCS4RZa60il0fjTwLoCQvqvHH9yd5H9siB1TOfKWuNLwJLXoQEIGY
+        jsybw8L+ofClH4ToBm049+gsa289mYgznXleGD/lJomWEhSe+hBRk1mfQjx40Y5B
+        VjVhvDZ/cHkSriwOzhgod9Ff4CcP00XkvbcM4FA3LFvgUPltUBFYs5D36RV9nv3r
+        k4iWHpPi8cEyH4OItkYExL1s9pvpBTYfQPVPUREXoCt1Bbqqur7xdjKykzYc7rcJ
+        FqohxIo1SMCLt4pRlybX7ObpV8qGZZ2ebQRnMFn0qsQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=gfEAVP
+        UzFg5yJJW/gS7HJCsWwI0Jpxe3im3ZZ7fX7jM=; b=Cr22si+bQKVsxjDl0kzGSr
+        EtA9mib/QUyqZPA8xYduGTDykT+wYizd3izv0yhuop2g06m0aqfJ+spoho9Er9Li
+        DHy7CLd+ODJMwJkd9r6neeJmdpU8fAfTAyXIVTx+Syo6OZ3D2TR25mIbn4Y0Mb/I
+        TFTN7rrY8nnIbMzMPME57LHZwY25LZWlR9P+qZ523+vEUYRG7Fg2Bnm9yYkbmIBi
+        flWZ2EDmZu0V6a/dRQhhDRYMOkj6uPQqkeQRlXtsLuGPre86tsOkk8Dy+cgXGKI8
+        3s3IrtEMqYZLhccLw3HCNjPVA6jxUD1E4qI0fYkSMlZcTmmEIqkmWNF26b135KTQ
+        ==
+X-ME-Sender: <xms:E-sBYOw5lUikpKDk9xbdSaALyrsl8-frndnKxVWTulBdq2TMwBi9OA>
+    <xme:E-sBYGEcVcQSOzBiVmMaBjqjyd_uLgIlmE_8GfE60JZofRZ7S-n9RzbSQreCJQZBU
+    LDV5tgWUPzkkg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtddvgdellecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesthdttd
+    dttdervdenucfhrhhomhepjfgvnhhrihhquhgvucguvgcuofhorhgrvghsucfjohhlshgt
+    hhhuhhcuoehhmhhhsehhmhhhrdgvnhhgrdgsrheqnecuggftrfgrthhtvghrnhepvedute
+    ejgeeiudefuefgieehleejkeefudfhjeefgeekheekvddvheehleegveeinecukfhppedu
+    jeejrdduleegrdejrdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehhmhhhsehhmhhhrdgvnhhgrdgsrh
+X-ME-Proxy: <xmx:E-sBYLt0eR9bdBOkqeu6qHYglank8a2BEFu6eHxX6K3P99UNtoKV7w>
+    <xmx:E-sBYODyqH6k8pbmnykpuL1x1sfJgNupBWeNOUAMCrvLuJ9vGk3Axw>
+    <xmx:E-sBYOA_LyVZiUM8ofpsuv9XJCV1NkleKLBg48CT_wHoSQb8PqYaYQ>
+    <xmx:FOsBYP8Fi7FsqkRMq7z24t2DgBzUsozd4whhv7D2nJVnZEbwvrifFw>
+Received: from khazad-dum.debian.net (unknown [177.194.7.32])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 85E7A108005C;
+        Fri, 15 Jan 2021 14:20:51 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id C05303403214;
+        Fri, 15 Jan 2021 16:20:49 -0300 (-03)
+X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
+Received: from khazad-dum.debian.net ([127.0.0.1])
+        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id qakJ42RXAmJO; Fri, 15 Jan 2021 16:20:45 -0300 (-03)
+Received: by khazad-dum.debian.net (Postfix, from userid 1000)
+        id C9EE7340017A; Fri, 15 Jan 2021 16:20:45 -0300 (-03)
+Date:   Fri, 15 Jan 2021 16:20:45 -0300
+From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+To:     jeanniestevenson <jeanniestevenson@protonmail.com>
+Cc:     "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ibm-acpi@hmh.eng.br" <ibm-acpi@hmh.eng.br>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: Add P53/73 firmware to
+ fan_quirk_table for dual fan control
+Message-ID: <20210115192045.GA10895@khazad-dum.debian.net>
+References: <Pn_Xii4XYpQRFtgkf4PbNgieE89BAkHgLI1kWIq-zFudwh2A1DY5J_DJVHK06rMW_hGPHx_mPE33gd8mg9-8BxqJTaSC6hhPqAsfZlcNGH0=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YAHo3ZEMu+6mESZA@rani.riverdale.lan>
+In-Reply-To: <Pn_Xii4XYpQRFtgkf4PbNgieE89BAkHgLI1kWIq-zFudwh2A1DY5J_DJVHK06rMW_hGPHx_mPE33gd8mg9-8BxqJTaSC6hhPqAsfZlcNGH0=@protonmail.com>
+X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
+ 0BD9 E811 39CB 4807
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 02:11:25PM -0500, Arvind Sankar wrote:
-> That's how build-time assertions work: they are _supposed_ to be
-> optimized away completely when the assertion is true. If they're
-> _not_ optimized away, the build will fail.
+On Fri, 15 Jan 2021, jeanniestevenson wrote:
+> This commit enables dual fan control for the new Lenovo P53 and P73 laptop models.
+> 
+> Signed-off-by: Jeannie Stevenson <jeanniestevenson@protonmail.com>
 
-Yah, that I know, thanks.
+It has been tested on which thinkpad model (name and numerical model,
+please) ?  It is also nice to have that kind of information in the
+commit message.
 
-If gcc really inlines p4d_index() and does a lot more aggressive
-optimization to determine that the condition is false and thus optimize
-everything away (and clang doesn't), then that would explain the
-observation.
+With that information:
+Acked-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index c404706379d9..69402758b99c 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -8782,6 +8782,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
+>  	TPACPI_Q_LNV3('N', '1', 'T', TPACPI_FAN_2CTL),	/* P71 */
+>  	TPACPI_Q_LNV3('N', '1', 'U', TPACPI_FAN_2CTL),	/* P51 */
+>  	TPACPI_Q_LNV3('N', '2', 'C', TPACPI_FAN_2CTL),	/* P52 / P72 */
+> +	TPACPI_Q_LNV3('N', '2', 'N', TPACPI_FAN_2CTL),	/* P53 / P73 */
+>  	TPACPI_Q_LNV3('N', '2', 'E', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (1st gen) */
+>  	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
+>  	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+  Henrique Holschuh
