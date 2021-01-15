@@ -2,116 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D090C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1297C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51DAE235F8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75F6622B2A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbhAOT23 (ORCPT
+        id S1732829AbhAOTzT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jan 2021 14:28:29 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58761 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726410AbhAOT22 (ORCPT
+        Fri, 15 Jan 2021 14:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbhAOTzR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jan 2021 14:28:28 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 69AB95C0140;
-        Fri, 15 Jan 2021 14:27:22 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Fri, 15 Jan 2021 14:27:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=h77nPCYht3txjg+nUmTjHkq/nfm
-        P49yYK/WpXV7YqO8=; b=ipNtdEZJLlyTUIcPGINdeOubDZitwr/oEYae+hx8IyZ
-        Vu5sy2yHBVUQ4bFJX8gjWsxGWPLpDWpaS3bWuYAp537z4aaaOIuf0A6gIcTJQJuS
-        1nSLGETg04LufNmpw9BUwpZkC++v9HYNMvDFwAYFRNjnXFaTfhwLA+NjU/6tibRO
-        4stfUk/K8TvDDepxYw9jGWdxFZYCQZTQSkUjkCbeFPS/O3v2Ia4xTE04VLG3oSp4
-        JT52rOkXVyUH0jqcy5WgLFVAnm0N8vTMeCW7FGv1DQT1okLQ4GjSeH3dDZYHcWIW
-        tznjBtX7e9TFbLYZrJFUzpzIUZBXyc5s4Dskpgn2+xQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=h77nPC
-        Yht3txjg+nUmTjHkq/nfmP49yYK/WpXV7YqO8=; b=elEiK2KcarRXZU5NvqbqaZ
-        zzDo4odT8xcw4477cHOIdQJvaFO7yNVFVcvKP6KTOS1T6stWhgaboRb6l/+/UmXd
-        9nm1ZFrQniCXZYW2+oZOkCYd5beuFYvVoDsrx7fk0HZAXWyO5flaHatzEFB0YJhw
-        ezUVq62YXXsqYt1mD8fMqJKMW5IW9pz/JXcvIlsETr512yox3YXl0bJR5vJZoV2Z
-        DiLNInfyBYOxtptnFrVoTDFS5ARzRCH70Ya4l6j3/2ztuVCLFPt+TDitOuykINxi
-        Jg/eWVER27Qgot2FQNR4SxluWd+VOrt59Rn+MVYXIXm+ecmEh8B8qWqC7lV1aHvw
-        ==
-X-ME-Sender: <xms:mewBYGJ8y7Us_bMd2ObOf6EoiqVTxmd1g-HPIJqnynnZEF0Sq-1Tsg>
-    <xme:mewBYOIdsicWpF0E8yuHlvdahcltBnulExjO2SiE9Ust9fLDDDetz5ZhCfQeNppVN
-    WpQGmXyW6VjRg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtddvgddutddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehttd
-    dttddtredvnecuhfhrohhmpefjvghnrhhiqhhuvgcuuggvucfoohhrrggvshcujfholhhs
-    tghhuhhhuceohhhmhheshhhmhhdrvghnghdrsghrqeenucggtffrrghtthgvrhhnpeevud
-    etjeegiedufeeugfeiheeljeekfeduhfejfeegkeehkedvvdehheelgeevieenucfkphep
-    udejjedrudelgedrjedrfedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhephhhmhheshhhmhhdrvghnghdrsghr
-X-ME-Proxy: <xmx:mewBYGsdaG3_XdRs3HlzBQfrwu8sZzQqdBQ7HXZIL_-WCcc55AG3pw>
-    <xmx:mewBYLYUSk1K6XU7flDp2tTvcIXtRvI6kGdzpa67R6rsdw01rQBySw>
-    <xmx:mewBYNYZMp8pqWXkzrJTMpjeo2V2-n11uwAnRaDQFq0YG5zvqTiw_w>
-    <xmx:muwBYBHkM0HFzcxPMSg3ZeZMAIsu1N53dKtnlrBgQ5vvrY3snc2wpg>
-Received: from khazad-dum.debian.net (unknown [177.194.7.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7DE8D1080057;
-        Fri, 15 Jan 2021 14:27:21 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id 8E30F3403215;
-        Fri, 15 Jan 2021 16:27:19 -0300 (-03)
-X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
-Received: from khazad-dum.debian.net ([127.0.0.1])
-        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id 5Dz2lDureRDU; Fri, 15 Jan 2021 16:27:19 -0300 (-03)
-Received: by khazad-dum.debian.net (Postfix, from userid 1000)
-        id 0E0113403214; Fri, 15 Jan 2021 16:27:18 -0300 (-03)
-Date:   Fri, 15 Jan 2021 16:27:18 -0300
-From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-To:     Joe Perches <joe@perches.com>
-Cc:     YANG LI <abaci-bugfix@linux.alibaba.com>, hdegoede@redhat.com,
-        mgross@linux.intel.com, ibm-acpi@hmh.eng.br,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thinkpad_acpi: fix: use scnprintf instead of snprintf.
-Message-ID: <20210115192718.GB10895@khazad-dum.debian.net>
-References: <1609914976-28113-1-git-send-email-abaci-bugfix@linux.alibaba.com>
- <2d5f6ffcf47ec4675cde21ff52fc70a9dd13b023.camel@perches.com>
+        Fri, 15 Jan 2021 14:55:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D9504235F8;
+        Fri, 15 Jan 2021 19:54:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610740477;
+        bh=3P6UzwvfBE7I8FHg+VBGNcbWcvpdD9Wa7p1LGDVMHzg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=og1RkAf/ZcgBndINyfwmX4RYO3dOBLwN6SlYxgJiU4oMjg0HBBGUJoMLyIeU0CgYI
+         Cnsbu8mCZqrmuclUYI2ux3344/nhnWWLBgz0IaWPW9nATckk5GAPYlR7owO8GS0yYE
+         EP14qQPGEiDmW/j/86ytD7xoJa8sZuthlSDJJRR3nwuyAhX/Qo443hargiPv2iuHJb
+         BP1wDuqPL/qvN5l1k4YoE+rA4iQyorvMuRy1E0cCsD01euH4MJKL9oaNGlbb/cyawX
+         8TTD4Y4N34jwHqydzHcejAaQeRBSq1e4HCHbDTU70B+jLaqli5kz6f8aX+cDD3b95o
+         LDMH2HBjO5ziQ==
+Received: by mail-ot1-f46.google.com with SMTP id d8so9705610otq.6;
+        Fri, 15 Jan 2021 11:54:36 -0800 (PST)
+X-Gm-Message-State: AOAM53002x0NM45XOpdxuPBCEaeYQCBu2zIE8bJCbsSPJMiG0SyXLP8a
+        /u5S8jWhB7DtliW0pQ2dFitYbS4Xc2MrYLxmGMs=
+X-Google-Smtp-Source: ABdhPJxQE2QUt8HCjVvyUcq6bQG9A+Jwffvpto1nf8XVkIzv0pvcaSdwa5eDX784wCKpffGC+37VqQhsxqGdle7ekeg=
+X-Received: by 2002:a9d:741a:: with SMTP id n26mr2326419otk.210.1610740476133;
+ Fri, 15 Jan 2021 11:54:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d5f6ffcf47ec4675cde21ff52fc70a9dd13b023.camel@perches.com>
-X-GPG-Fingerprint1: 4096R/0x0BD9E81139CB4807: C467 A717 507B BAFE D3C1  6092
- 0BD9 E811 39CB 4807
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20210107223424.4135538-1-arnd@kernel.org> <20210115182300.GD9138@zn.tnic>
+ <20210115183203.GA1991122@ubuntu-m3-large-x86> <20210115190729.GE9138@zn.tnic>
+ <YAHo3ZEMu+6mESZA@rani.riverdale.lan> <20210115191833.GF9138@zn.tnic>
+In-Reply-To: <20210115191833.GF9138@zn.tnic>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Fri, 15 Jan 2021 20:54:18 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a39vtF8GvRVQtEYssc+GvX-75j9-4pwXj4qhc7LK2RgNw@mail.gmail.com>
+Message-ID: <CAK8P3a39vtF8GvRVQtEYssc+GvX-75j9-4pwXj4qhc7LK2RgNw@mail.gmail.com>
+Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 06 Jan 2021, Joe Perches wrote:
-> On Wed, 2021-01-06 at 14:36 +0800, YANG LI wrote:
-> > The snprintf() function returns the number of characters which would
-> > have been printed if there were enough space, but the scnprintf()
-> > returns the number of characters which were actually printed. If the
-> > buffer is not large enough, then using snprintf() would result in a
-> > read overflow and an information leak. This error was found with the
-> > help of coccicheck.
-> 
-> In all cases, the buffer _is_ large enough.
+On Fri, Jan 15, 2021 at 8:18 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Jan 15, 2021 at 02:11:25PM -0500, Arvind Sankar wrote:
+> > That's how build-time assertions work: they are _supposed_ to be
+> > optimized away completely when the assertion is true. If they're
+> > _not_ optimized away, the build will fail.
+>
+> Yah, that I know, thanks.
+>
+> If gcc really inlines p4d_index() and does a lot more aggressive
+> optimization to determine that the condition is false and thus optimize
+> everything away (and clang doesn't), then that would explain the
+> observation.
 
-Thank you for double-checking!
+One difference is that gcc does not have
+-fsanitize=unsigned-integer-overflow at all, and I don't see the
+assertion without that on clang either, so it's possible that clang
+behaves as designed here.
 
-> _show function lengths are OK for all the uses with PAGE_SIZE.
-> And it's probably better to use sysfs_emit for all the _show functions
+The description is:
+    -fsanitize=unsigned-integer-overflow: Unsigned integer overflow, where
+     the result of an unsigned integer computation cannot be represented in
+     its type. Unlike signed integer overflow, this is not undefined behavior,
+     but it is often unintentional. This sanitizer does not check for
+lossy implicit
+     conversions performed before such a computation (see
+    -fsanitize=implicit-conversion).
 
-Indeed.
+The "-68 * ((1UL) << 30" computation does overflow an unsigned long
+as intended, right? Maybe this is enough for the ubsan code in clang to
+just disable some of the optimization steps that the assertion relies on.
 
--- 
-  Henrique Holschuh
+        Arnd
