@@ -2,118 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,
+	MAILING_LIST_MULTI,MONEY_NOHTML,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4377AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 18:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAF9C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 160BB23A59
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 18:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6993A221E2
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 19:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbhAOS5O (ORCPT
+        id S1733262AbhAOTIR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jan 2021 13:57:14 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47965 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733214AbhAOS5O (ORCPT
+        Fri, 15 Jan 2021 14:08:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732380AbhAOTIQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jan 2021 13:57:14 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 266245C007B;
-        Fri, 15 Jan 2021 13:56:08 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 15 Jan 2021 13:56:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hmh.eng.br; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=A8sO8RCTv7PgF40lOhCMmLrMZ0
-        +/H/yvkRj83/HH5Vw=; b=dfaoaQrku4RR5O7XqOk5qJawWIZUubwcN8dOQEH0DB
-        S8jzuw3I/YvvdrknEDs4g6NLkU0zkPcXQSLSWITNe+oXrxoiRvb/x4Tv3JjQ+f5F
-        lzHpaiJ8u6CjLCwZ9/OfDPq0rgXzefq32luokyDYFzeFIK7fZh2DCMWl+Zbd+k5s
-        CDvkD2KEVgeUBafRdPrZAULoSYWT+8eN8qHePBrdG4xFwfEz1B9fH+q+hckuqIYZ
-        7svoLlWV3z8qqc9lq5Hj6ekttY4PK3RUxB+uJwa709ZiCSPQp4ZXBT4n2mTaQvPL
-        Df953MhrP13AxYg0iOo1tm90CVKr+ayAx53IUKnap3+w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=A8sO8RCTv7PgF40lO
-        hCMmLrMZ0+/H/yvkRj83/HH5Vw=; b=CdEuDwZyhRbxrgvsfJDLzpl/cdMbLPeDz
-        f3XjPRqxIst3ocWXD9wAUVWcZbY+iiF8P238BNzHwMWRcxgMD88jVGk3FYwVqk+1
-        mEenM6mGWt22FrOscPkhQDSqaviIdAOl2Dzpr4x6LS1Ev2+LaFM9uA+XitiU9R78
-        9mj5pFOa8UrYjO0ty2s8Bg2UUNw9Pq4FQx822rDNFYVlzO5xlrPhvl8ZdNkJ8Oc/
-        4K7/Y+kJbUMsIbAYQ6ZWdKnOwmfHVA+vLnhJhJQtEQnpbB6zU6hgYhWhEZPErlXg
-        UIR9hHb0UN+W5x78peLj/FKsxS32EAybZN+AFLP6iAV8uz9N9XOTg==
-X-ME-Sender: <xms:R-UBYL3FzdMc05L2BsvzXmhCb1NuFwpXHCzW-lILCGRC7pPnA-k2iA>
-    <xme:R-UBYKEbd4Z_Z3bITU5hS62KHJ-h3LxydBfaFFT_udF3ReFQEd8IM0j3uIYhenGPf
-    dE3gJFA1iDaPQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrtddvgdelfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepjfgvnhhrihhquhgv
-    ucguvgcuofhorhgrvghsucfjohhlshgthhhuhhcuoehhmhhhsehhmhhhrdgvnhhgrdgsrh
-    eqnecuggftrfgrthhtvghrnheptdelheefkeejiefhudegueeihfevhefhveffhfdvkefh
-    heejudfhffekkeffieffnecukfhppedujeejrdduleegrdejrdefvdenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehhmhhhsehhmhhhrdgvnhhg
-    rdgsrh
-X-ME-Proxy: <xmx:R-UBYL7BVVENkxzqrvx0YKiIsGQZAT1-_sxd3c98ZXV2ueHNfRJ2pw>
-    <xmx:R-UBYA2en1H3pk-RyE39qabg4-AQXIza0XbMhRlmfzx5K80KBDub1A>
-    <xmx:R-UBYOG9NV8GKLvH0YPOSVu3uLrIPP8LO6GRmD4p4wkC0a5SmgrBqQ>
-    <xmx:SOUBYJzBjLyLYllXqk6oorbHenpbE_I2E-1xeH74CQPA1BEuVG_jnA>
-Received: from khazad-dum.debian.net (unknown [177.194.7.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A4AEC240062;
-        Fri, 15 Jan 2021 13:56:07 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by localhost.khazad-dum.debian.net (Postfix) with ESMTP id C0983340041E;
-        Fri, 15 Jan 2021 15:47:31 -0300 (-03)
-X-Virus-Scanned: Debian amavisd-new at khazad-dum.debian.net
-Received: from khazad-dum.debian.net ([127.0.0.1])
-        by localhost (khazad-dum2.khazad-dum.debian.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id DtaHUGVSxZyx; Fri, 15 Jan 2021 15:47:21 -0300 (-03)
-Received: by khazad-dum.debian.net (Postfix, from userid 1000)
-        id 95B0D340017A; Fri, 15 Jan 2021 15:47:21 -0300 (-03)
-From:   Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: update email address for Henrique de Moraes Holschuh
-Date:   Fri, 15 Jan 2021 15:47:21 -0300
-Message-Id: <20210115184721.32546-1-hmh@hmh.eng.br>
-X-Mailer: git-send-email 2.20.1
+        Fri, 15 Jan 2021 14:08:16 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F3CC061757;
+        Fri, 15 Jan 2021 11:07:36 -0800 (PST)
+Received: from zn.tnic (p200300ec2f0acf007cb1195bb528937a.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:cf00:7cb1:195b:b528:937a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 407601EC041D;
+        Fri, 15 Jan 2021 20:07:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1610737654;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=IL2Li+VoVRz1ZLH8TsjVaWowu41cqfDQQ4xb4rgDPpA=;
+        b=kQSTl2hcvjHob0BnMyXEr6Eg/al13WgaiP34iPoaRgs0W1J6aI+bls+yDp3r1c4akasNFw
+        75cO1KAvTsPUw7GR6EO5eKIgygI7vnxCy4N5FjM6ZqZCgAFIpXqeO+7F/eScWqHIbmqoFY
+        YBmUwIKxK4c4m74+QeRN86lcKEA5mJQ=
+Date:   Fri, 15 Jan 2021 20:07:29 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+Message-ID: <20210115190729.GE9138@zn.tnic>
+References: <20210107223424.4135538-1-arnd@kernel.org>
+ <20210115182300.GD9138@zn.tnic>
+ <20210115183203.GA1991122@ubuntu-m3-large-x86>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210115183203.GA1991122@ubuntu-m3-large-x86>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update my email address in MAINTAINERS to the one I have been using for
-commits, Signed-off-by and Acked-by tags.  Only two ancient commits had
-the old ibm-acpi@hmh.eng.br, so it is unlikely to justify a .mailmap
-entry.
+On Fri, Jan 15, 2021 at 11:32:03AM -0700, Nathan Chancellor wrote:
+> I triggered it with CONFIG_UBSAN=y + CONFIG_UBSAN_UNSIGNED_OVERFLOW=y
+> (it can be exposed with an allyesconfig/allmodconfig on mainline
+> currently).
 
-Note that ibm-acpi@hmh.eng.br does work as a way to contact me, but
-apparently it is best when MAINTAINERS entries match commit email
-addresses ;-)
+Yah, I can trigger with that, thanks.
 
-Signed-off-by: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But I'll be damned, check this out:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 79b400c97059..b7980a752c28 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17637,7 +17637,7 @@ F:	drivers/thermal/gov_power_allocator.c
- F:	include/trace/events/thermal_power_allocator.h
- 
- THINKPAD ACPI EXTRAS DRIVER
--M:	Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-+M:	Henrique de Moraes Holschuh <hmh@hmh.eng.br>
- L:	ibm-acpi-devel@lists.sourceforge.net
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
+clang preprocesses to this:
+
+ do { extern void __compiletime_assert_332(void) ; if (!(!(p4d_index((-68 * ((1UL) << 30))) != p4d_index((0xffffffffff000000UL))))) __compiletime_assert_332(); } while (0);
+
+The resulting asm is:
+
+.LBB1_32:
+        movabsq $-73014444032, %r13     # imm = 0xFFFFFFEF00000000
+        testb   $1, %al
+        jne     .LBB1_33
+.LBB1_34:
+        xorl    %r14d, %ebx
+        testl   $33554431, %ebx         # imm = 0x1FFFFFF
+        je      .LBB1_36
+# %bb.35:
+        callq   __compiletime_assert_332
+
+so the undefined symbol is there, leading to:
+
+ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
+/home/boris/kernel/linux/arch/x86/platform/efi/efi_64.c:140: undefined reference to `__compiletime_assert_332'
+
+Now look at gcc:
+
+It preprocesses to:
+
+ do { extern void __compiletime_assert_332(void) __attribute__((__error__("BUILD_BUG_ON failed: " "p4d_index(EFI_VA_END) != p4d_index(MODULES_END)"))); if (!(!(p4d_index((-68 * ((1UL) << 30))) != p4d_index((0xffffffffff000000UL))))) __compiletime_assert_332(); } while (0);
+
+
+Resulting asm:
+
+$ grep __compiletime_assert_332  arch/x86/platform/efi/efi_64.s
+$
+
+That thing has been optimized away!
+
+Which means, those build assertions are gone on gcc and they don't catch
+diddly squat. I sure hope I'm missing something here...
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
