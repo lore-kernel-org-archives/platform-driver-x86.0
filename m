@@ -2,119 +2,167 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65851C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4209EC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382D222527
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB6B22527
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbhAPRLC (ORCPT
+        id S1727864AbhAPRLz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 12:11:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39258 "EHLO
+        Sat, 16 Jan 2021 12:11:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728508AbhAPRK5 (ORCPT
+        with ESMTP id S1728531AbhAPRLA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Jan 2021 12:10:57 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E008C06138B;
-        Sat, 16 Jan 2021 07:10:19 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id t6so6236778plq.1;
-        Sat, 16 Jan 2021 07:10:19 -0800 (PST)
+        Sat, 16 Jan 2021 12:11:00 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDE4C06135A;
+        Sat, 16 Jan 2021 07:50:50 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id v184so5946045wma.1;
+        Sat, 16 Jan 2021 07:50:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-transfer-encoding;
-        bh=XVfRC3VS1iJhQ2u3rXKF8OukI6C4/RaKCNwIeoBnNA8=;
-        b=TAKZGD1onxE+hqw2liMiAR6pLAy2OjUK6G6N0Iidv5+wyIrqq6OfaTex58tm9r6+vk
-         zSvUuS8DOWFmwLGjS2vakEq7mSSb8Fq7cw1sySU2K0eUItU1a/9KVo8oCk1o3QpwFlCc
-         Egcy6UnFsYM0RSTkRFL+OcymaaSjAO/3klT/VAYStQlabJbGIuuzlmDLR34X2NNYf35Y
-         qLFgIAV8aX9J8JYWSSX8oDN9dQ/XcGJAo28V9dcwPV5vVFkNNueb9pUxrQ3KDeL2bSjX
-         K7Ek8sWxMv7eHvuhcUAV1Bq7qkOWznHWiZdSyQPIMR53FNKXZfi4NQVaGr9j9dV93H9q
-         +vZg==
+        bh=x+00tIBf/QefUex9fblzjYl8TVeelPB225Pi420+hDY=;
+        b=plFPi22y1+imtJRfUHti77svL+kZBuzp5qyZDcOiHMP2+n+0/Acj/PDpFpa7hrrOYR
+         1SN5YXQUzXOr5+MEU2ZlVgYY9Ef03M66UNUpYv6+lkWybj7r/p4j/skU+gNomxyeZMrL
+         ldAbJCAvC+fI9P7XIFu4aaDwyqNwZ9Q5JJ875Hrv+Xl6ZWN/trptb0ecxQ42yiO+ePTc
+         u8gstUBtd89iHDiy+yqrr5mWK1MiSgq/UTjFZzsX75wm0AOGRuGnPd9KQcEbSzZidck5
+         p3urffKVECdgsB0dvUbthXqOFTYsivgcDFddD6Ak9/NszbRcQWQRs3Pyn8nrMU9JvTkJ
+         iUtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=XVfRC3VS1iJhQ2u3rXKF8OukI6C4/RaKCNwIeoBnNA8=;
-        b=oUAsDZEIzC6io3vi/lS1mejKrfcY5MlRT4Jy6w8EGjSF139q2dIRyhFzHeSthvc4RG
-         uqiwiSHiY63KAgMdVvCcBQVHvNUpwb+XTh/txhpW8cOFA904TPUNpeVjBXu57WyTzJce
-         R+rPu872N+V2AM12X2nvRoD7eK5QagRk+YzQER5pS4HrAfLYaTnS6QXH2XzdPv3zClxX
-         8Haf1gTPuI8XRXZ3tS+Kl/VKu92bkzKFDZWhG3eH2VXBmThFmx96zgI4ZMwHUCU6V3vs
-         4PVgxksggemOzZbU7lT/OQP2lIwM/wpy2HgBdgT05WYAc0sRx+jT5rGGeul52Np8sz3r
-         swpw==
-X-Gm-Message-State: AOAM532urnMDrZRecclXyX8QSXrgioYwzlpiEEgt6hFFEojPm9o82e8C
-        ixG+ieySCOkEKhJGb4i878E=
-X-Google-Smtp-Source: ABdhPJzzJXE8U3cCbdWQMpki+05Mne2wHUEjtbfMSLerP6XdOZocWIyN/QPq8DEDMPKCHW0rIFYQqQ==
-X-Received: by 2002:a17:90a:d70e:: with SMTP id y14mr16163154pju.9.1610809818836;
-        Sat, 16 Jan 2021 07:10:18 -0800 (PST)
-Received: from [0.0.0.0] (n218250008152.netvigator.com. [218.250.8.152])
-        by smtp.gmail.com with ESMTPSA id n195sm11391438pfd.169.2021.01.16.07.10.13
+        bh=x+00tIBf/QefUex9fblzjYl8TVeelPB225Pi420+hDY=;
+        b=E6OgCbZgi2UcDS+rgG9l9FE8T+2OtT2SiACrCd0uIzYXUcRVtscei9qvPinqVBbqlb
+         ybiza1Mi0cA2bGh4rMg0Af7QUnEmF/BTmJYsuKRkQVdTG+Ejce+wpTGK1EymsBmU24iQ
+         jQkd7LRG+BO7U1H2hrixH3R9pYOdJJc2cYmKgESJDTeptaEIhSXZOAsq8QF8OIFifeVK
+         sWqURG6dE/JDf6rtdOXIGSEr1x3tH7W55aD2ryNKVDqF39HebY7RlbEpKTVMcxx4B6Xm
+         n2KRLUYPUGUJ+f5279GNOXTB6KEk2gZzxwFthP6WQr6cL7fkNdxyrTDpJWzbH0NOCzJY
+         b1hQ==
+X-Gm-Message-State: AOAM533mQuMfia+UVOAMxySnDZcjk0l9vg3D2+esqKu3SdRfy/1mfQRM
+        Jc5PRROzKC+Vtidvp7u9pH4=
+X-Google-Smtp-Source: ABdhPJwV1ftSvgQ9GSkbR7qmb2GHxkGVLRGKlny5KKMHQ3z0eLqDXCdkKL4jT9t79JwW8nifC8z4eA==
+X-Received: by 2002:a7b:c115:: with SMTP id w21mr2300075wmi.114.1610812248994;
+        Sat, 16 Jan 2021 07:50:48 -0800 (PST)
+Received: from [0.0.0.0] ([2a01:4f8:c17:e10a::1])
+        by smtp.gmail.com with ESMTPSA id o8sm18256383wrm.17.2021.01.16.07.50.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Jan 2021 07:10:18 -0800 (PST)
-Subject: Re: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
-        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
-        mgross@linux.intel.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        Sat, 16 Jan 2021 07:50:47 -0800 (PST)
+Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
+To:     Mark Brown <broonie@kernel.org>, Perry Yuan <Perry.Yuan@dell.com>
+Cc:     oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
+        hdegoede@redhat.com, mgross@linux.intel.com, lgirdwood@gmail.com,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
-References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
- <cc83351b-a19a-9a3e-d511-4553cf4d7ef0@infradead.org>
+References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
+ <20210112175406.GF4646@sirena.org.uk>
 From:   Perry Yuan <perry979106@gmail.com>
-Message-ID: <578023b1-ae22-f21a-3969-62f06557baf1@gmail.com>
-Date:   Sat, 16 Jan 2021 23:10:02 +0800
+Message-ID: <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
+Date:   Sat, 16 Jan 2021 23:50:31 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <cc83351b-a19a-9a3e-d511-4553cf4d7ef0@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20210112175406.GF4646@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2021/1/13 1:39, Randy Dunlap wrote:
+Hi Mark,
+  Thanks for your review feedback.
 
-> On 1/12/21 9:17 AM, Perry Yuan wrote:
->> +config DELL_PRIVACY
->> +	tristate "Dell Hardware Privacy Support"
->> +	depends on ACPI
->> +	depends on ACPI_WMI
->> +	depends on INPUT
->> +	depends on DELL_LAPTOP
->> +	depends on LEDS_TRIGGER_AUDIO
->> +	select DELL_WMI
->> +	help
->> +	This driver provides support for the "Dell Hardware Privacy" feature
->> +	of Dell laptops.
->> +	Support for a micmute and camera mute privacy will be provided as
->> +	hardware button Ctrl+F4 and Ctrl+F9 hotkey
-> 	End above with a period '.' please.
->
+On 2021/1/13 1:54, Mark Brown wrote:
+> On Wed, Jan 13, 2021 at 01:18:14AM +0800, Perry Yuan wrote:
+> 
+>> Some new Dell system is going to support audio internal micphone
+>> privacy setting from hardware level with micmute led state changing
+>> When micmute hotkey pressed by user, soft mute will need to be enabled
+>> firstly in case of pop noise, and codec driver need to react to mic
+>> mute event to EC(embedded controller) notifying that SW mute is completed
+>> Then EC will do the hardware mute physically within the timeout reached
+> 
+>> This patch allow codec rt715 driver to ack EC when micmute key pressed
+>> through this micphone led control interface like hda_generic provided
+>> ACPI method defined in dell-privacy micmute led trigger will be called
+>> for notifying the EC that software mute has been completed
+> 
+> It feels like there's an abstraction problem here with this being hard
+> coded in a specific CODEC driver.
+> 
+
+I will remove the CONFIG_DELL_PRIVACY ,because other vendors and other 
+platforms maybe need to set their Mic mute led state when they enable 
+soundwire and sof driver for audio function.
+We can avoid hardcode in codec driver, indeed it is need for this new
+soundwire & sof architecture of alsa.
+
+>>   #include <linux/soundwire/sdw.h>
+>> @@ -244,6 +245,7 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol *kcontrol,
+>>   	unsigned int max = mc->max;
+>>   	int val;
+>>   
+>> +	pr_err("++++++rt715_sdca_get_volsw++\n");
+>>   	val = snd_soc_component_read(component, mc->reg);
+>>   	if (val < 0)
+>>   		return -EINVAL;
+> 
+> This shouldn't be in the patch.
+It is my mistake to leave the debug line here.
+will be removed in next V4 .
+> 
+>> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
+>>   			return err;
+>>   	}
+>>   
+>> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+>> +	/* dell privacy LED trigger state changed by muted/unmute switch */
+>> +	if (mc->invert) {
+>> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
+>> +			rt715->micmute_led = LED_OFF;
+>> +		} else {
+>> +			rt715->micmute_led = LED_ON;
+>> +		}
+>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+>> +	}
+>> +#endif
 >> +
->> +	To compile this driver as a module, choose M here: the module will
->> +	be called dell_privacy.
-> Please follow coding-style for Kconfig files:
->
-> from Documentation/process/coding-style.rst, section 10):
->
-> For all of the Kconfig* configuration files throughout the source tree,
-> the indentation is somewhat different.  Lines under a ``config`` definition
-> are indented with one tab, while help text is indented an additional two
-> spaces.
->
->
-> thanks.
+> 
+> This doesn't look good.  There's nothing Dell specific here, and nothing
+> about this is conditional on any sort of runtime detection of Dell
+> systems, it's not obvious why this is conditional on DELL_PRIVACY or why
+> we only report the state if the control is inverted.
 
-Thanks for your review feedback.
+I will remove the CONFIG_DELL_PRIVACY for the mic mute led operation is 
+not only needed for dell platforms but also other Vendors all need to 
+set micmute led necessaryily.
+> 
+> I'm also not convinced that it's a good idea to set the mute LED if only
+> one channel in a stereo microphone is muted, that seems likely to lead
+> to surprising behaviour for users.
+> 
+At first, i just want to handle val0 == 1 && val1 == 1 and val0 == 0 && 
+val1 == 0 only. Intel suggested i need to cover all about other cases, 
+the mute led should be off if any channel of mic is on.
+So i change the led state when any one channel is muted or unmuted.
 
-I will fix this in V4 patch.
+> TBH I don't understand why this isn't being done in generic code.
+> 
+>> +	bool micmute_led;
+> 
+> What is this for, it never seems to be read except for in the function
+> where it's set?
+> 
+
+Do you mean i can use a local micmute_led var in the function?
 
