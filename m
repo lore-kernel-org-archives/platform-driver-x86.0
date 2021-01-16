@@ -2,93 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA13EC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8678C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A882087E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B40207B2
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726083AbhAPUPZ (ORCPT
+        id S1726385AbhAPUP1 convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 15:15:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbhAPUOm (ORCPT
+        Sat, 16 Jan 2021 15:15:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726201AbhAPUPZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Jan 2021 15:14:42 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F29C061573
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:13:47 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id m5so7188664pjv.5
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:13:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Au7F42JgPgjD5nH0ga4bskA4ZUcpo8VyI6JMMUMsX88=;
-        b=E9CXyFVWgBqkyKklcwDuj8QQhloH0hhGbb8aLaKRxnU0rv7I0g2Jnbbmyqu4+l6DCJ
-         8gnRFvakHY4gUQzTYjCxt5z4R1BCaC4uQalhAsy8uiajgdZhp0v30g7sXBIQ0WKRH32a
-         mlUVTUHZr5+1KrszZ3NFExsvvnFpUwcrsMqJyWZwlTZ11tkN2Rs5ci47c+zw7/uaX96h
-         GIColf8Vz4sVe9yl/DzTVszG8DKrZgbrcpnSYn5oxHWH3R+ojTDhEOdyY7yNPAoMh0rh
-         njqY5vIklPvQYv9CKRIi/0cZtYuN5L5SQKB7OlT/jxOQawAkkGREoXKyrXPY2p8XLwud
-         Vofg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Au7F42JgPgjD5nH0ga4bskA4ZUcpo8VyI6JMMUMsX88=;
-        b=EurISN5ydvLZOJl4VCThzsKaCbGMMYUpA8OpouwPYs7iqdzibsns11/9dKQ+boPE07
-         G4JCslAbvnX1hnYRUk8EwhHAkdeeeh1a1nz6N8wRLQn4Rot8hTzTYDSzxOpRt+KntzLI
-         Lo5tP/Z96y9xd7qRaUj4vCxZsPE7/zgm530T+fJCNZIXDWhI++Cys9jrgRPCGdyjb9xX
-         6NJHvsJCLZdWjqjHjtoazNzGPQP/TblGJthpZWhYc/bGlxADpO27iAkfAMPNtX/R+1ID
-         Agrr50iPbso167bYsfYqNiHbnWrw0ba1EgZ1cEcuUXxZzNQfXZ84dDKs7HwERrk4GikN
-         0f6g==
-X-Gm-Message-State: AOAM531a0yhgUZHTlmdLMxg0j08sunnGppNoYx+JLWa0n/sDCUqNRzbI
-        yRTLhSOfJ1kiP68k3efpfooNY5eW0W+NqaVtbs8=
-X-Google-Smtp-Source: ABdhPJzJ8jwBp5gRVR2tXAiAAagJQK5ukNGa2M3cnoWkiGH7ZrQ50fmLyzIG++HC7so3jiVn7c1Rw3zfl+jHFysiF2A=
-X-Received: by 2002:a17:90a:1050:: with SMTP id y16mr17720657pjd.181.1610828025470;
- Sat, 16 Jan 2021 12:13:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20210113182016.166049-1-pobrn@protonmail.com>
-In-Reply-To: <20210113182016.166049-1-pobrn@protonmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 16 Jan 2021 22:13:29 +0200
-Message-ID: <CAHp75Vffc3h=e3F65C3JnfgmFqqZamGP4GyrER6yrtw5aR2YFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/24] platform/x86: ideapad-laptop: cleanup, keyboard
- backlight and "always on USB charging" control support, reenable touchpad control
-To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
+        Sat, 16 Jan 2021 15:15:25 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 06B3B207B2
+        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 20:14:26 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
+ Envy x360)
+Date:   Sat, 16 Jan 2021 20:14:25 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: luya@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-199715-215701-uipTsGtI87@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
+References: <bug-199715-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 8:22 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.=
-com> wrote:
->
-> This series contains patches that aim to bring more consistency
-> to the code; add keyboard backlight control support; add
-> "always on USB charging" control support.
-> Furthermore, commit 7f363145992cebf4ea760447f1cfdf6f81459683
-> ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
-> is reverted since it made it impossible to disable/enable the touchpad vi=
-a the
-> ideapad-laptop module and on some devices the method implemented in the
-> module works correctly to disable/enable the touchpad.
+https://bugzilla.kernel.org/show_bug.cgi?id=199715
 
-I like this clean up series, but it requires some work to be done.
-So, for *non*-commented patches, feel free to add
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+--- Comment #24 from Luya Tshimbalanga (luya@fedoraproject.org) ---
+Testing the latest kernel 5.11.0-0.rc3.20210114git65f0d2414b70 snapshot with
+amd_sfh module enabled:
 
---=20
-With Best Regards,
-Andy Shevchenko
+lspci -knn
+03:00.7 Non-VGA unclassified device [0000]: Advanced Micro Devices, Inc. [AMD]
+Raven/Raven2/Renoir Sensor Fusion Hub [1022:15e4]
+        Subsystem: Hewlett-Packard Company Device [103c:8497]
+        Kernel driver in use: pcie_mp2_amd
+        Kernel modules: amd_sfh
+
+lsmod | grep amd
+edac_mce_amd           90112  0
+kvm_amd               380928  0
+kvm                  2207744  1 kvm_amd
+amdgpu              19922944  16
+drm_ttm_helper         16384  1 amdgpu
+ttm                   188416  2 amdgpu,drm_ttm_helper
+iommu_v2               36864  1 amdgpu
+gpu_sched              86016  1 amdgpu
+i2c_algo_bit           28672  1 amdgpu
+drm_kms_helper        638976  1 amdgpu
+drm                  1359872  19
+gpu_sched,drm_kms_helper,amdgpu,drm_ttm_helper,ttm
+ccp                   274432  1 kvm_amd
+amd_sfh                36864  0
+pinctrl_amd            73728  1
+
+modinfo amd_sfh
+filename:      
+/lib/modules/5.11.0-0.rc3.20210114git65f0d2414b70.125.amdsfh.fc33.x86_64/kernel/drivers/hid/amd-sfh-hid/amd_sfh.ko.xz
+author:         Sandeep Singh <Sandeep.singh@amd.com>
+author:         Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+license:        Dual BSD/GPL
+description:    AMD(R) PCIe MP2 Communication Driver
+rhelversion:    8.99
+alias:          pci:v00001022d000015E4sv*sd*bc*sc*i*
+depends:        
+retpoline:      Y
+intree:         Y
+name:           amd_sfh
+vermagic:       5.11.0-0.rc3.20210114git65f0d2414b70.125.amdsfh.fc33.x86_64 SMP
+mod_unload 
+
+
+monitor-sensors failed to detect sensor fusion
+
+-- 
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.
