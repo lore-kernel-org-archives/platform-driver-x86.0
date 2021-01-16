@@ -2,65 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8F4C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA13EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB2B122CAE
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A882087E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbhAPUNC (ORCPT
+        id S1726083AbhAPUPZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 15:13:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
+        Sat, 16 Jan 2021 15:15:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbhAPUM4 (ORCPT
+        with ESMTP id S1726385AbhAPUOm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Jan 2021 15:12:56 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608C6C061574
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:12:16 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id r4so6440631pls.11
-        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:12:16 -0800 (PST)
+        Sat, 16 Jan 2021 15:14:42 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F29C061573
+        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:13:47 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id m5so7188664pjv.5
+        for <platform-driver-x86@vger.kernel.org>; Sat, 16 Jan 2021 12:13:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Mc5HAdfDMI88Fmai043WkokS6PLowOlJmD/jaCWxYYk=;
-        b=szs7RLz/Ykh+7hUqRumEluipmsAqy4+FuU6F8y1QQIlSQicn8zWnQCUEarCUZCBj/f
-         Ia4Jj62TLAC6F1aOxtpgk3JCI4sRnYrCv6lUBjqfiZHeFjhTLfU8+rewMCGJWbYpFmkR
-         oKMiiU4sUNicHJ86L+NsxvEBl0jI2aBe8N6Jszpb5UOXEwSwJzsihMyKteRgmQGFJ1s4
-         vJb66OfpL5uysqKnbA17RsyaYNU/m1GtbZpzPm8OLXjRfbFOAUK4SDmeyHwC/Tk29qec
-         an7/O0RS3MRPxpFn4em9ZSPzgkecW60McBCuoogMoLha3INUvd+GbLa8EZMUemdPPHpy
-         WzvA==
+        bh=Au7F42JgPgjD5nH0ga4bskA4ZUcpo8VyI6JMMUMsX88=;
+        b=E9CXyFVWgBqkyKklcwDuj8QQhloH0hhGbb8aLaKRxnU0rv7I0g2Jnbbmyqu4+l6DCJ
+         8gnRFvakHY4gUQzTYjCxt5z4R1BCaC4uQalhAsy8uiajgdZhp0v30g7sXBIQ0WKRH32a
+         mlUVTUHZr5+1KrszZ3NFExsvvnFpUwcrsMqJyWZwlTZ11tkN2Rs5ci47c+zw7/uaX96h
+         GIColf8Vz4sVe9yl/DzTVszG8DKrZgbrcpnSYn5oxHWH3R+ojTDhEOdyY7yNPAoMh0rh
+         njqY5vIklPvQYv9CKRIi/0cZtYuN5L5SQKB7OlT/jxOQawAkkGREoXKyrXPY2p8XLwud
+         Vofg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mc5HAdfDMI88Fmai043WkokS6PLowOlJmD/jaCWxYYk=;
-        b=ESnWizO0s8GTI8IY+6P6pkhcx8KIOHSuzSTOTDVR9tICyWyjzGqy/nqXrz3YlauYn7
-         MmTJSIr230s566zIp3Lt4vbDQ0Cm2PPEzWKtHj+sAbELH9H3+BsfnTSGrwxYlPVH777o
-         DNpcFatLCPWn3W6Bpo32DsjpMbYJxa9+7JOo1RdKosVZq9JGDRJL0AgGpXUiXI9faFlk
-         GcjF2LD7sdWxVp9QRm4BQ7a95ei9kJIth2tsrYtbfFUTjKjLhxZeCf/4PtqPVZifgNu7
-         ysnNj2syWrvZzVNvOD8h93nmA3UCOme6kFqGVRhT/I0WpzfkNpOVkznJ7XHPM8sFneQ1
-         jxqQ==
-X-Gm-Message-State: AOAM531nxrk0e6MjkLVMhTlJRgF3tF7e4brkLL462MHmSwXeW4zC5WL+
-        kOGT8iqGTw9wRRPQ2uzNBl/1jtsuI++PIPYbfUc=
-X-Google-Smtp-Source: ABdhPJyV2E42sIGphQZ06ZcTDZF5Nb2NHrBCW0jawpV8Ir2l9OSwrZjt+1WKhcweVdYGqeaV4L9CLOWE5D3v++ziFK0=
-X-Received: by 2002:a17:90a:4d83:: with SMTP id m3mr17503270pjh.228.1610827936016;
- Sat, 16 Jan 2021 12:12:16 -0800 (PST)
+        bh=Au7F42JgPgjD5nH0ga4bskA4ZUcpo8VyI6JMMUMsX88=;
+        b=EurISN5ydvLZOJl4VCThzsKaCbGMMYUpA8OpouwPYs7iqdzibsns11/9dKQ+boPE07
+         G4JCslAbvnX1hnYRUk8EwhHAkdeeeh1a1nz6N8wRLQn4Rot8hTzTYDSzxOpRt+KntzLI
+         Lo5tP/Z96y9xd7qRaUj4vCxZsPE7/zgm530T+fJCNZIXDWhI++Cys9jrgRPCGdyjb9xX
+         6NJHvsJCLZdWjqjHjtoazNzGPQP/TblGJthpZWhYc/bGlxADpO27iAkfAMPNtX/R+1ID
+         Agrr50iPbso167bYsfYqNiHbnWrw0ba1EgZ1cEcuUXxZzNQfXZ84dDKs7HwERrk4GikN
+         0f6g==
+X-Gm-Message-State: AOAM531a0yhgUZHTlmdLMxg0j08sunnGppNoYx+JLWa0n/sDCUqNRzbI
+        yRTLhSOfJ1kiP68k3efpfooNY5eW0W+NqaVtbs8=
+X-Google-Smtp-Source: ABdhPJzJ8jwBp5gRVR2tXAiAAagJQK5ukNGa2M3cnoWkiGH7ZrQ50fmLyzIG++HC7so3jiVn7c1Rw3zfl+jHFysiF2A=
+X-Received: by 2002:a17:90a:1050:: with SMTP id y16mr17720657pjd.181.1610828025470;
+ Sat, 16 Jan 2021 12:13:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20210113182016.166049-25-pobrn@protonmail.com>
-In-Reply-To: <20210113182016.166049-25-pobrn@protonmail.com>
+References: <20210113182016.166049-1-pobrn@protonmail.com>
+In-Reply-To: <20210113182016.166049-1-pobrn@protonmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 16 Jan 2021 22:11:59 +0200
-Message-ID: <CAHp75VfBES_AfOv+C_q40t2hjtV0F0atV7QTbDfRTF5UY0m5pA@mail.gmail.com>
-Subject: Re: [PATCH v2 24/24] Documentation/ABI: sysfs-platform-ideapad-laptop:
- conservation_mode and usb_charging
+Date:   Sat, 16 Jan 2021 22:13:29 +0200
+Message-ID: <CAHp75Vffc3h=e3F65C3JnfgmFqqZamGP4GyrER6yrtw5aR2YFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/24] platform/x86: ideapad-laptop: cleanup, keyboard
+ backlight and "always on USB charging" control support, reenable touchpad control
 To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -72,20 +72,22 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 8:25 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.=
+On Wed, Jan 13, 2021 at 8:22 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.=
 com> wrote:
 >
-> Document the conservation_mode and usb_charging attributes provided
-> by the ideapad-laptop module.
+> This series contains patches that aim to bring more consistency
+> to the code; add keyboard backlight control support; add
+> "always on USB charging" control support.
+> Furthermore, commit 7f363145992cebf4ea760447f1cfdf6f81459683
+> ("platform/x86: ideapad-laptop: Switch touchpad attribute to be RO")
+> is reverted since it made it impossible to disable/enable the touchpad vi=
+a the
+> ideapad-laptop module and on some devices the method implemented in the
+> module works correctly to disable/enable the touchpad.
 
-Looking at dates it seems it should be split to two, where the first
-one has a Fixes tag in it.
-
-> +Date:          Aug 2017
-> +KernelVersion: 4.14
-
-> +Date:          Dec 2020
-> +KernelVersion: 5.12
+I like this clean up series, but it requires some work to be done.
+So, for *non*-commented patches, feel free to add
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 --=20
 With Best Regards,
