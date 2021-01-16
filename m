@@ -2,300 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A65C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D50C4332D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D97822527
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D293227C3
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728489AbhAPRL4 (ORCPT
+        id S1726603AbhAPRFv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 12:11:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728527AbhAPRLA (ORCPT
+        Sat, 16 Jan 2021 12:05:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727022AbhAPQfU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Jan 2021 12:11:00 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CD1C061342;
-        Sat, 16 Jan 2021 07:25:18 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id x20so1551884pjh.3;
-        Sat, 16 Jan 2021 07:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=ggcboeLG4CFiFtKTGSmZVZcrJyJsvuMrSDAwMqdE0Kw=;
-        b=Fg0xoK/E8ciPg/mwRymFV+R+5Iz3Vr5Rs5/D26WJfqwjCoI+uSJdBibnuGUB6B8RVy
-         iKDDrgpk1/zp5U8E5qPbsc7ETvPEqIeatHaKLVcag3ZoMpOaDYR9EdNouy22GPy5Va+j
-         8IPMp4vEhH26zvHT2ZTLO62NznYmCCgXMdIf2mRfh+nsKkKyxVFGBQXvYskL2+l94blS
-         uNBACVSYgEY14WJoJ2s3p326vBdZ5YtRgppLw4H1gfUNRq6/w3eiOOnWV/EPlOr4vFBe
-         igsy6LxUYi07Ttle0Hpz9+KQRZES7SvkmaS3ubZpx70K6lk8QjJa1rEWvoRCaatS+CcM
-         nRZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=ggcboeLG4CFiFtKTGSmZVZcrJyJsvuMrSDAwMqdE0Kw=;
-        b=uDFmzDcmMTROkgJ10YVWpFi56HPN8C93miNuP4s7X6OyxzJEnu8hkrW/Fpw36JR+uh
-         9Gw5GobU7YH9RwuNn1IriwiBglytQaboUQZt54hokyc96gQulLegUOSjgNqf4str4KRF
-         3ZRT9akm71qX+/zOb5Ls10Zv5DB4Bm5QMiA/Z6VZcn8brbrBs5fcAdqX9CwQjoI1TiY8
-         NbxdtT8yh8vnwIQKgRbioc5SzhcwMLoDM4u15DDNCfKThflvihUIqC+RFykCQG6xIT95
-         S9NoGkMH72AkCJVMWC4IJ8Nl+egrszz6KqykZ140HaVP0lZ/7ywjZh48YXOxlJ8/CMWT
-         yxQw==
-X-Gm-Message-State: AOAM532UE2KtOkyOQK03F3nghV+HQwaNZCxHEvf12nU+BLXKftmlUFf5
-        Jom5lwSBy+TERhR0D3KBcm1nWT75JKgwdBY6KjE=
-X-Google-Smtp-Source: ABdhPJxlBQvDBqAYZSBgJqI+aBB93gRv3OC6vlButVnCPnHBM7zBU6tIiIWQV+INE0eIHIiOG3jQMg==
-X-Received: by 2002:a17:90a:8d84:: with SMTP id d4mr16549986pjo.56.1610810717334;
-        Sat, 16 Jan 2021 07:25:17 -0800 (PST)
-Received: from [0.0.0.0] (n218250008152.netvigator.com. [218.250.8.152])
-        by smtp.gmail.com with ESMTPSA id x15sm11017288pfi.184.2021.01.16.07.25.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Jan 2021 07:25:16 -0800 (PST)
-Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        "Yuan, Perry" <Perry.Yuan@dell.com>,
-        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
- <BY3PR19MB49131AA4EAE7C24D365FAC8DFAAA0@BY3PR19MB4913.namprd19.prod.outlook.com>
-From:   Perry Yuan <perry979106@gmail.com>
-Message-ID: <44d8e280-c8f3-4e3a-7ef7-b68224c96def@gmail.com>
-Date:   Sat, 16 Jan 2021 23:25:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Sat, 16 Jan 2021 11:35:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C1D19207C5;
+        Sat, 16 Jan 2021 16:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610814879;
+        bh=aH136bRk4cKdS8/17ekFrHN1qCL194ImwlzjMMmIfrk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UTwCnHtVRR2JZJ0ZlQUPIfJc5KY1gSl7JfDZBhOIuVmd+R19MeujlQPfpAxVlgWOC
+         t/CFSvzgi84drlgws6O5TJOFoDlzmKaABr8NS9WqVAOvxOUaDaYMToQnzKjRB3B9d2
+         ci9KPIdfDcx9JBhpFL6aWhN40xHjPs/puojIW/hIRqMvejBz+APwzeYGJDhr+POuiO
+         eE2pOF8Hnrmokvl9HJ7rND64ltu347yiMove3zY/M/AJRUzX44QAOJM39x8mL0//ng
+         vpdyVMSnudrOp3hoA+oER0HnrkQupblsEknW4aOjhEENeyWAxS5oBmZ+7nrAEfTt7w
+         8YVtk+85leHUQ==
+Received: by mail-ot1-f46.google.com with SMTP id w3so11793524otp.13;
+        Sat, 16 Jan 2021 08:34:39 -0800 (PST)
+X-Gm-Message-State: AOAM533Y/qQ0BLuAGtRqPz+61h55FD1uwL43pkJ76aJuinIeQjIhlHeb
+        sFItDnm49AbbLbWLokNmpyvRXuGIyC97kwc3Ev4=
+X-Google-Smtp-Source: ABdhPJy2VyjRGD23Ym1ssVK/6l47tYsfWMPAWGpQwEzb/frJQCEdtDXfTuYLRevKA2MnCgXof1CL9NsQ/Z/SaP/F0v0=
+X-Received: by 2002:a05:6830:10d2:: with SMTP id z18mr12489782oto.90.1610814879037;
+ Sat, 16 Jan 2021 08:34:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <BY3PR19MB49131AA4EAE7C24D365FAC8DFAAA0@BY3PR19MB4913.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20210107223424.4135538-1-arnd@kernel.org> <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
+ <YAH6r3lak/F2wndp@rani.riverdale.lan>
+In-Reply-To: <YAH6r3lak/F2wndp@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Sat, 16 Jan 2021 17:34:27 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
+Message-ID: <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
+Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2021/1/13 1:50, Limonciello, Mario wrote:
-
->> -----Original Message-----
->> From: Yuan, Perry <Perry_Yuan@Dell.com>
->> Sent: Tuesday, January 12, 2021 11:18
->> To: oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
->> hdegoede@redhat.com; mgross@linux.intel.com
->> Cc: lgirdwood@gmail.com; broonie@kernel.org; alsa-devel@alsa-project.org;
->> linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; Yuan,
->> Perry; Limonciello, Mario
->> Subject: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
->>
->> From: Perry Yuan <perry_yuan@dell.com>
->>
->> Some new Dell system is going to support audio internal micphone
->> privacy setting from hardware level with micmute led state changing
->> When micmute hotkey pressed by user, soft mute will need to be enabled
->> firstly in case of pop noise, and codec driver need to react to mic
->> mute event to EC(embedded controller) notifying that SW mute is completed
->> Then EC will do the hardware mute physically within the timeout reached
->>
->> This patch allow codec rt715 driver to ack EC when micmute key pressed
->> through this micphone led control interface like hda_generic provided
->> ACPI method defined in dell-privacy micmute led trigger will be called
->> for notifying the EC that software mute has been completed
->>
->> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
->>
->> --------
->> v2 -> v3
->> * simplify the patch to reuse some val value
->> * add more detail to the commit info
->>
->> v1 -> v2:
->> * fix some format issue
->> --------
->> ---
->>   sound/soc/codecs/rt715-sdca.c | 16 ++++++++++++++++
->>   sound/soc/codecs/rt715-sdca.h |  1 +
->>   sound/soc/codecs/rt715.c      | 14 ++++++++++++++
->>   sound/soc/codecs/rt715.h      |  1 +
->>   4 files changed, 32 insertions(+)
->>
->> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
->> index b43ac8559e45..861a0d2a8957 100644
->> --- a/sound/soc/codecs/rt715-sdca.c
->> +++ b/sound/soc/codecs/rt715-sdca.c
->> @@ -12,6 +12,7 @@
->>   #include <linux/version.h>
->>   #include <linux/kernel.h>
->>   #include <linux/init.h>
->> +#include <linux/leds.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pm.h>
->>   #include <linux/soundwire/sdw.h>
->> @@ -244,6 +245,7 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol
->> *kcontrol,
->>   	unsigned int max = mc->max;
->>   	int val;
->>
->> +	pr_err("++++++rt715_sdca_get_volsw++\n");
->>   	val = snd_soc_component_read(component, mc->reg);
->>   	if (val < 0)
->>   		return -EINVAL;
->> @@ -261,6 +263,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
->> *kcontrol,
->>   	struct snd_ctl_elem_value *ucontrol)
->>   {
->>   	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
->> +	struct rt715_sdca_priv *rt715 =
->> snd_soc_component_get_drvdata(component);
->>   	struct soc_mixer_control *mc =
->>   		(struct soc_mixer_control *)kcontrol->private_value;
->>   	unsigned int val, val2, loop_cnt = 2, i;
->> @@ -268,6 +271,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
->> *kcontrol,
->>   	unsigned int reg2 = mc->rreg;
->>   	unsigned int reg = mc->reg;
->>   	unsigned int max = mc->max;
->> +	unsigned int val0, val1;
->>   	int err;
->>
->>   	val = ucontrol->value.integer.value[0];
->> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
->> *kcontrol,
->>   			return err;
->>   	}
->>
->> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
->> +	/* dell privacy LED trigger state changed by muted/unmute switch */
->> +	if (mc->invert) {
->> +		if (ucontrol->value.integer.value[0] || ucontrol-
->>> value.integer.value[1]) {
->> +			rt715->micmute_led = LED_OFF;
->> +		} else {
->> +			rt715->micmute_led = LED_ON;
->> +		}
->> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
->> +	}
->> +#endif
->> +
->>   	return 0;
->>   }
->>
->> diff --git a/sound/soc/codecs/rt715-sdca.h b/sound/soc/codecs/rt715-sdca.h
->> index 840c237895dd..f8988ab88f80 100644
->> --- a/sound/soc/codecs/rt715-sdca.h
->> +++ b/sound/soc/codecs/rt715-sdca.h
->> @@ -31,6 +31,7 @@ struct rt715_sdca_priv {
->>   	int l_is_unmute;
->>   	int r_is_unmute;
->>   	int hw_sdw_ver;
->> +	bool micmute_led;
->>   };
->>
->>   struct rt715_sdw_stream_data {
->> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
->> index cdcba70146da..b4e480744c94 100644
->> --- a/sound/soc/codecs/rt715.c
->> +++ b/sound/soc/codecs/rt715.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/init.h>
->>   #include <linux/delay.h>
->>   #include <linux/i2c.h>
->> +#include <linux/leds.h>
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pm.h>
->>   #include <linux/soundwire/sdw.h>
->> @@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
->> *kcontrol,
->>   		RT715_SET_GAIN_MIX_ADC2_L};
->>   	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
->>   	unsigned int read_ll, read_rl, i, j, loop_cnt;
->> +	unsigned int val0, val1;
->>
->>   	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
->>   		strstr(ucontrol->id.name, "Main Capture Volume"))
->> @@ -95,6 +97,18 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
->> *kcontrol,
->>   	else
->>   		loop_cnt = 1;
->>
->> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
->> +	/* Micmute LED state changed by muted/unmute switch */
->> +	if (mc->invert) {
->> +		if (ucontrol->value.integer.value[0] || ucontrol-
->>> value.integer.value[1]) {
->> +			rt715->micmute_led = LED_OFF;
->> +		} else {
->> +			rt715->micmute_led = LED_ON;
->> +		}
->> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
->> +	}
->> +#endif
->> +
-> You might have missed my other comment on v2 feedback, but is there a reason
-> to keep it behind a compile time flag for dell privacy module?  In practice
-> any other future led backend provider should work too.  Another way to think
-> about it - if dell privacy wasn't enabled would this cause a problem to run
-> this code?  I think it would just be a no-op.
+On Fri, 15 Jan 2021 at 21:27, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
->>   	for (j = 0; j < loop_cnt; j++) {
->>   		/* Can't use update bit function, so read the original value first
->> */
->>   		if (loop_cnt == 1) {
->> diff --git a/sound/soc/codecs/rt715.h b/sound/soc/codecs/rt715.h
->> index 009a8266f606..57c9af041181 100644
->> --- a/sound/soc/codecs/rt715.h
->> +++ b/sound/soc/codecs/rt715.h
->> @@ -22,6 +22,7 @@ struct rt715_priv {
->>   	struct sdw_bus_params params;
->>   	bool hw_init;
->>   	bool first_hw_init;
->> +	bool micmute_led;
->>   };
->>
->>   struct sdw_stream_data {
->> --
->> 2.25.1
+> On Fri, Jan 15, 2021 at 02:07:51PM -0500, Arvind Sankar wrote:
+> > On Thu, Jan 07, 2021 at 11:34:15PM +0100, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > When 5-level page tables are enabled, clang triggers a BUILD_BUG_ON():
+> > >
+> > > x86_64-linux-ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
+> > > efi_64.c:(.text+0x22c): undefined reference to `__compiletime_assert_354'
+> > >
+> > > Use the same method as in commit c65e774fb3f6 ("x86/mm: Make PGDIR_SHIFT
+> > > and PTRS_PER_P4D variable") and change it to MAYBE_BUILD_BUG_ON(),
+> > > so it only triggers for constant input.
+> > >
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/256
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > ---
+> > >  arch/x86/platform/efi/efi_64.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> > > index e1e8d4e3a213..62bb1616b4a5 100644
+> > > --- a/arch/x86/platform/efi/efi_64.c
+> > > +++ b/arch/x86/platform/efi/efi_64.c
+> > > @@ -137,8 +137,8 @@ void efi_sync_low_kernel_mappings(void)
+> > >      * As with PGDs, we share all P4D entries apart from the one entry
+> > >      * that covers the EFI runtime mapping space.
+> > >      */
+> > > -   BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+> > > -   BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > > +   MAYBE_BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+> > > +   MAYBE_BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > >
+> > >     pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
+> > >     pgd_k = pgd_offset_k(EFI_VA_END);
+> > > --
+> > > 2.29.2
+> > >
+> >
+> > I think this needs more explanation as to why clang is triggering this.
+> > The issue mentions clang not inline p4d_index(), and I guess not
+> > performing inter-procedural analysis either?
+> >
+> > For the second assertion there, everything is always constant AFAICT:
+> > EFI_VA_START, EFI_VA_END and P4D_MASK are all constants regardless of
+> > CONFIG_5LEVEL.
+> >
+> > For the first assertion, it isn't technically constant, but if
+> > p4d_index() gets inlined, the compiler should be able to see that the
+> > two are always equal, even though ptrs_per_p4d is not constant:
+> >       EFI_VA_END >> 39 == MODULES_END >> 39
+> > so the masking with ptrs_per_p4d-1 doesn't matter for the comparison.
+> >
+> > As a matter of fact, it seems like the four assertions could be combined
+> > into:
+> >       BUILD_BUG_ON((EFI_VA_END & P4D_MASK) != (MODULES_END & P4D_MASK));
+> >       BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > instead of separately asserting they're the same PGD entry and the same
+> > P4D entry.
+> >
+> > Thanks.
+>
+> I actually don't quite get the MODULES_END check -- Ard, do you know
+> what that's for?
+>
 
-Pierre Louis suggested to just set the mic mute led state unconditionally .
-It is more common interface to allow other platforms to change micmute led.
-The discussion result is from "[PATCH v2 2/2] ASoC: rt715:add Mic Mute LED control support"
+Maybe Boris remembers? He wrote the original code for the 'new' EFI
+page table layout.
 
-Here is the change compared to V3 ,the CONFIG_DELL_PRIVACY will be removed
 
--#if IS_ENABLED(CONFIG_DELL_PRIVACY)
--       /* dell privacy LED trigger state changed by muted/unmute switch */
-+       /* MicMute LED state changed by muted/unmute switch */
-         if (mc->invert) {
-                 if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-                         rt715->micmute_led = LED_OFF;
-diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
-index b4e480744c94..60bb3d98103e 100644
---- a/sound/soc/codecs/rt715.c
-+++ b/sound/soc/codecs/rt715.c
-@@ -97,8 +97,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
-         else
-                 loop_cnt = 1;
-  
--#if IS_ENABLED(CONFIG_DELL_PRIVACY)
--       /* Micmute LED state changed by muted/unmute switch */
-+       /* MicMute LED state changed by muted/unmute switch */
-         if (mc->invert) {
-                 if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-                         rt715->micmute_led = LED_OFF;
-@@ -107,7 +106,6 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
-                 }
-                 ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
-         }
--#endif
+> What we really should be checking is that EFI_VA_START is in the top-most
+> PGD entry and the top-most P4D entry, since we only copy PGD/P4D entries
+> before EFI_VA_END, but not after EFI_VA_START. So the checks should
+> really be
+>         BUILD_BUG_ON(((EFI_VA_START - 1) & P4D_MASK) != (-1ul & P4D_MASK));
+>         BUILD_BUG_ON(((EFI_VA_START - 1) & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> imo. I guess that's what using MODULES_END is effectively checking, but
+> it would be clearer to check it directly.
 
+This obviously needs a comment, but checking that everything lives in
+the top 512 GB of the kernel VA space seems sufficient to me,
