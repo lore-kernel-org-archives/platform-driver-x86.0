@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39E1C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E37C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB78721D7A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EEB221ED
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 20:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbhAPU3N (ORCPT
+        id S1726903AbhAPUfP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 15:29:13 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:37670 "EHLO
+        Sat, 16 Jan 2021 15:35:15 -0500
+Received: from mail-40131.protonmail.ch ([185.70.40.131]:53263 "EHLO
         mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725979AbhAPU3M (ORCPT
+        with ESMTP id S1726083AbhAPUfO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 16 Jan 2021 15:29:12 -0500
-Date:   Sat, 16 Jan 2021 20:28:23 +0000
+        Sat, 16 Jan 2021 15:35:14 -0500
+Date:   Sat, 16 Jan 2021 20:34:24 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610828910;
-        bh=XjXZ/VnWDn9/9uY3bpVB3qCT1CKJh4laGgmahIQjsJU=;
+        s=protonmail; t=1610829272;
+        bh=sOFM2phcRU+uFnUsL1+vBxKM8nH+luEkkB4+C7/Gc9o=;
         h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=yNAMe9C53jaT1UrISaUwPYOW+KBjHg+qcfclr25fuC1MnpCZmqGtyv/OPEGzC5t3Y
-         GnhFD8Kj3qp99qovGOThsaplpGf0njM15sZrcRp5prZNpLjVzhLYuY9n/rBlZ5f+OY
-         MqelnBlzEliRnQtEKo9mg8o4wfQJ7NJNpChSZ0Hs=
+        b=IUlxr6yU9efrX39RmsJ3yUHImZw3Sgu3Sj+Jr0MljzYta+SEaNNPu9O3Zys0+jtP/
+         P+4oiV/t7QyivO+iZXIeH+31bG7di5XsreRj1q6dGrEEgi/e30rb2OFKMpN7J8IXhg
+         kNZcmy64ed8qmTq8Y0ycZ5egtx1EV6ojyjsLp7+E=
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -36,10 +36,10 @@ Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Mark Gross <mgross@linux.intel.com>,
         Ike Panhc <ike.pan@canonical.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 08/24] platform/x86: ideapad-laptop: convert ACPI helpers to return -EIO in case of failure
-Message-ID: <NStEFinV-Kv0jDbXxLVig-6zyCjJmyjZkDDeZR29ZJrg_n4jkTBONiDde-4T1dId-t5HADf_QmVjs8LBQU601IDKwshLrQDKWiLGhAe2XFc=@protonmail.com>
-In-Reply-To: <CAHp75Vf-a4D0u6dmJso6jkHCXyCYGm-MFTgM08y2E_OiMr3qFg@mail.gmail.com>
-References: <20210113182016.166049-1-pobrn@protonmail.com> <20210113182016.166049-9-pobrn@protonmail.com> <CAHp75Vf-a4D0u6dmJso6jkHCXyCYGm-MFTgM08y2E_OiMr3qFg@mail.gmail.com>
+Subject: Re: [PATCH v2 07/24] platform/x86: ideapad-laptop: use dev_{err,warn} or appropriate variant to display log messages
+Message-ID: <xOz_6Hj0TZSyCFbqlSs7eCqC-z6d7ayRd425T6w2A_aZ02Y4KoUDTXMSXZWr08SGO3msoWaW91uKT9fJODw5QD257jNRxl7yd-gTBdAwdWo=@protonmail.com>
+In-Reply-To: <CAHp75VfjDCAqPpPsaDiRCBDrq7VwyiZpOMpr-VvebPe+3b3w9A@mail.gmail.com>
+References: <20210113182016.166049-1-pobrn@protonmail.com> <20210113182016.166049-8-pobrn@protonmail.com> <CAHp75VfjDCAqPpPsaDiRCBDrq7VwyiZpOMpr-VvebPe+3b3w9A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -50,27 +50,26 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi
 
 
+2021. janu=C3=A1r 16., szombat 20:46 keltez=C3=A9ssel, Andy Shevchenko =
+=C3=ADrta:
+
 > On Wed, Jan 13, 2021 at 8:22 PM Barnab=C3=A1s P=C5=91cze wrote:
 > >
-> > ACPI helpers returned -1 in case of failure. Convert these functions to
-> > return appropriate error codes, and convert their users to propagate
-> > these error codes accordingly.
+> > Having the device name in the log message makes it easier to determine =
+in
+> > the context of which device the message was printed, so utilize the
+> > appropriate variants of dev_{err,warn,...} when printing log messages.
 >
-> ...
->
-> > -       int val;
-> > +       int val, err;
-> >         unsigned long int end_jiffies;
->
-> Perhaps in this and other similar cases switch to reversed xmas tree
-> order at the same time?
+> This doesn't explain transitions like pr_err() -> dev_warn() or
+> pr_info() -> dev_warn().
+> Care to elaborate in the commit message?
 > [...]
 
-Thanks for the review; I intentionally tried to make as few modifications
-as possible in order to achieve what I wanted. I deemed it better to
-place all "coding style"-related changes in their own patch (19).
-
-I would prefer to keep it this way. Do you have any objections?
+Thanks for the review, and thanks for pointing this out. I don't recall int=
+endeding
+to promote/demote any of the log messages when I was making these changes. =
+I will
+revisit my them and modify the commit and commit message accordingly.
 
 
 Thanks,
