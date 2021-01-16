@@ -2,144 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC60C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 20:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65851C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6A723A5A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 15 Jan 2021 20:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382D222527
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbhAOUcv (ORCPT
+        id S1728541AbhAPRLC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 15 Jan 2021 15:32:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58096 "EHLO
+        Sat, 16 Jan 2021 12:11:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbhAOUcu (ORCPT
+        with ESMTP id S1728508AbhAPRK5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 15 Jan 2021 15:32:50 -0500
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46D7C061757;
-        Fri, 15 Jan 2021 12:32:09 -0800 (PST)
-Received: by mail-qt1-x82a.google.com with SMTP id c1so6998453qtc.1;
-        Fri, 15 Jan 2021 12:32:09 -0800 (PST)
+        Sat, 16 Jan 2021 12:10:57 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E008C06138B;
+        Sat, 16 Jan 2021 07:10:19 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id t6so6236778plq.1;
+        Sat, 16 Jan 2021 07:10:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BVIgSjuV976cGlpOjqUg4jAiYaTKabic/p9h6hRPsiU=;
-        b=XjSJapW79gC5VBIO3wCG7Te5A95WeoBeaPgoQmIiDvhayH8pCfmJlyK3s/C5g6CPXk
-         kH9E2Hjfwe3tL5pUBUAyW9gACVfifGuAJLYTYm7l83WOkwr0CDBL4JWxJV+G6XX/KYMP
-         FZ2s7A0FddkEdNgRjkvXGEHPxN9+yP3t5bdYbtcH1bpfVr+/E+Z/FGvLtnPslDIrOycs
-         1UMsCHUlrGOQK+3j9HjX/47X+7Osj8vMXSho7euePLrF9CMRVSfgclyv9UWoowMeOALO
-         JIr98GsN80UnhoXz21d4qSz9blnkfCX1VTNdGc/eF+MTYNho5feODwtiP7ayS7lTa4JN
-         0r9w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=XVfRC3VS1iJhQ2u3rXKF8OukI6C4/RaKCNwIeoBnNA8=;
+        b=TAKZGD1onxE+hqw2liMiAR6pLAy2OjUK6G6N0Iidv5+wyIrqq6OfaTex58tm9r6+vk
+         zSvUuS8DOWFmwLGjS2vakEq7mSSb8Fq7cw1sySU2K0eUItU1a/9KVo8oCk1o3QpwFlCc
+         Egcy6UnFsYM0RSTkRFL+OcymaaSjAO/3klT/VAYStQlabJbGIuuzlmDLR34X2NNYf35Y
+         qLFgIAV8aX9J8JYWSSX8oDN9dQ/XcGJAo28V9dcwPV5vVFkNNueb9pUxrQ3KDeL2bSjX
+         K7Ek8sWxMv7eHvuhcUAV1Bq7qkOWznHWiZdSyQPIMR53FNKXZfi4NQVaGr9j9dV93H9q
+         +vZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=BVIgSjuV976cGlpOjqUg4jAiYaTKabic/p9h6hRPsiU=;
-        b=kEA+m3rnmdZNzmPdq+SX639HG8asimNiNwh3WHlYXGSnYAeZo9nuto6IxOnm0l9epD
-         wsnkoHuwhzDQjzDehW70cgLKSfBfMjGCHPXmatRdsATWu6PqMLTU9vIr2N/uQxAODegj
-         gW/rah5zEBwdJyZ0T5AxO5OjdMb7gaxR3WkhUipG4NMps8LhG/IxZbTQWuMFGcCcSE58
-         YY3N7ZNlMgFiXcocwvuKA6QYIlMFpfU3kmm/NNK1GAsXdPjGKRt2WtKS1Wx68/ONJ9fF
-         qCi2wsVdw/Q0YoWTRe0m9hTDiRJzbcpL+t1/EzJteUxAloDCNhh6aBSFYKNGXnKjkqV7
-         cDLA==
-X-Gm-Message-State: AOAM532CjAfwE9kLaHVhDf0IHbfOE9HUN5gKOuYDVR9+O6AN7vnByQlO
-        vj26w1jbLUagSOUopoiCMcY=
-X-Google-Smtp-Source: ABdhPJwaoV9e5of1oPbEIjlm/kN/Wkir46+iQh6aBIMe3yyvJ4EPDguKtg4d/vQX8KjkGPPch5/bFw==
-X-Received: by 2002:ac8:6c36:: with SMTP id k22mr13626091qtu.62.1610742728990;
-        Fri, 15 Jan 2021 12:32:08 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c62sm5599633qkf.34.2021.01.15.12.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Jan 2021 12:32:08 -0800 (PST)
-Sender: Arvind Sankar <niveditas98@gmail.com>
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 15 Jan 2021 15:32:06 -0500
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
-Message-ID: <YAH7xlaHZN8i8ORK@rani.riverdale.lan>
-References: <20210107223424.4135538-1-arnd@kernel.org>
- <20210115182300.GD9138@zn.tnic>
- <20210115183203.GA1991122@ubuntu-m3-large-x86>
- <20210115190729.GE9138@zn.tnic>
- <YAHo3ZEMu+6mESZA@rani.riverdale.lan>
- <20210115191833.GF9138@zn.tnic>
- <CAK8P3a39vtF8GvRVQtEYssc+GvX-75j9-4pwXj4qhc7LK2RgNw@mail.gmail.com>
- <YAH3KY0I2AWudkc9@rani.riverdale.lan>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=XVfRC3VS1iJhQ2u3rXKF8OukI6C4/RaKCNwIeoBnNA8=;
+        b=oUAsDZEIzC6io3vi/lS1mejKrfcY5MlRT4Jy6w8EGjSF139q2dIRyhFzHeSthvc4RG
+         uqiwiSHiY63KAgMdVvCcBQVHvNUpwb+XTh/txhpW8cOFA904TPUNpeVjBXu57WyTzJce
+         R+rPu872N+V2AM12X2nvRoD7eK5QagRk+YzQER5pS4HrAfLYaTnS6QXH2XzdPv3zClxX
+         8Haf1gTPuI8XRXZ3tS+Kl/VKu92bkzKFDZWhG3eH2VXBmThFmx96zgI4ZMwHUCU6V3vs
+         4PVgxksggemOzZbU7lT/OQP2lIwM/wpy2HgBdgT05WYAc0sRx+jT5rGGeul52Np8sz3r
+         swpw==
+X-Gm-Message-State: AOAM532urnMDrZRecclXyX8QSXrgioYwzlpiEEgt6hFFEojPm9o82e8C
+        ixG+ieySCOkEKhJGb4i878E=
+X-Google-Smtp-Source: ABdhPJzzJXE8U3cCbdWQMpki+05Mne2wHUEjtbfMSLerP6XdOZocWIyN/QPq8DEDMPKCHW0rIFYQqQ==
+X-Received: by 2002:a17:90a:d70e:: with SMTP id y14mr16163154pju.9.1610809818836;
+        Sat, 16 Jan 2021 07:10:18 -0800 (PST)
+Received: from [0.0.0.0] (n218250008152.netvigator.com. [218.250.8.152])
+        by smtp.gmail.com with ESMTPSA id n195sm11391438pfd.169.2021.01.16.07.10.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 16 Jan 2021 07:10:18 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
+        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
+ <cc83351b-a19a-9a3e-d511-4553cf4d7ef0@infradead.org>
+From:   Perry Yuan <perry979106@gmail.com>
+Message-ID: <578023b1-ae22-f21a-3969-62f06557baf1@gmail.com>
+Date:   Sat, 16 Jan 2021 23:10:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YAH3KY0I2AWudkc9@rani.riverdale.lan>
+In-Reply-To: <cc83351b-a19a-9a3e-d511-4553cf4d7ef0@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 03:12:25PM -0500, Arvind Sankar wrote:
-> On Fri, Jan 15, 2021 at 08:54:18PM +0100, Arnd Bergmann wrote:
-> > On Fri, Jan 15, 2021 at 8:18 PM Borislav Petkov <bp@alien8.de> wrote:
-> > >
-> > > On Fri, Jan 15, 2021 at 02:11:25PM -0500, Arvind Sankar wrote:
-> > > > That's how build-time assertions work: they are _supposed_ to be
-> > > > optimized away completely when the assertion is true. If they're
-> > > > _not_ optimized away, the build will fail.
-> > >
-> > > Yah, that I know, thanks.
-> > >
-> > > If gcc really inlines p4d_index() and does a lot more aggressive
-> > > optimization to determine that the condition is false and thus optimize
-> > > everything away (and clang doesn't), then that would explain the
-> > > observation.
-> > 
-> > One difference is that gcc does not have
-> > -fsanitize=unsigned-integer-overflow at all, and I don't see the
-> > assertion without that on clang either, so it's possible that clang
-> > behaves as designed here.
-> > 
-> > The description is:
-> >     -fsanitize=unsigned-integer-overflow: Unsigned integer overflow, where
-> >      the result of an unsigned integer computation cannot be represented in
-> >      its type. Unlike signed integer overflow, this is not undefined behavior,
-> >      but it is often unintentional. This sanitizer does not check for
-> > lossy implicit
-> >      conversions performed before such a computation (see
-> >     -fsanitize=implicit-conversion).
-> > 
-> > The "-68 * ((1UL) << 30" computation does overflow an unsigned long
-> > as intended, right? Maybe this is enough for the ubsan code in clang to
-> > just disable some of the optimization steps that the assertion relies on.
-> > 
-> >         Arnd
-> 
-> That does seem to be an overflow, but that happens at compile-time.
-> Maybe
-> 	AC(-68, UL) << 30
-> would be a better definition to avoid overflow.
+On 2021/1/13 1:39, Randy Dunlap wrote:
 
-Eh, that's an overflow too, isn't it :( Is this option really useful
-with kernel code -- this sort of thing is probably done all over the
-place?
+> On 1/12/21 9:17 AM, Perry Yuan wrote:
+>> +config DELL_PRIVACY
+>> +	tristate "Dell Hardware Privacy Support"
+>> +	depends on ACPI
+>> +	depends on ACPI_WMI
+>> +	depends on INPUT
+>> +	depends on DELL_LAPTOP
+>> +	depends on LEDS_TRIGGER_AUDIO
+>> +	select DELL_WMI
+>> +	help
+>> +	This driver provides support for the "Dell Hardware Privacy" feature
+>> +	of Dell laptops.
+>> +	Support for a micmute and camera mute privacy will be provided as
+>> +	hardware button Ctrl+F4 and Ctrl+F9 hotkey
+> 	End above with a period '.' please.
+>
+>> +
+>> +	To compile this driver as a module, choose M here: the module will
+>> +	be called dell_privacy.
+> Please follow coding-style for Kconfig files:
+>
+> from Documentation/process/coding-style.rst, section 10):
+>
+> For all of the Kconfig* configuration files throughout the source tree,
+> the indentation is somewhat different.  Lines under a ``config`` definition
+> are indented with one tab, while help text is indented an additional two
+> spaces.
+>
+>
+> thanks.
 
-> 
-> The real issue might be (ptrs_per_p4d - 1) which can overflow at
-> run-time, and maybe the added ubsan code makes p4d_index() not worth
-> inlining according to clang?
+Thanks for your review feedback.
+
+I will fix this in V4 patch.
+
