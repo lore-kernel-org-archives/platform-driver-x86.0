@@ -2,133 +2,184 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4209EC433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A65C433E6
 	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB6B22527
+	by mail.kernel.org (Postfix) with ESMTP id 5D97822527
 	for <platform-driver-x86@archiver.kernel.org>; Sat, 16 Jan 2021 17:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbhAPRLz (ORCPT
+        id S1728489AbhAPRL4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 16 Jan 2021 12:11:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
+        Sat, 16 Jan 2021 12:11:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728531AbhAPRLA (ORCPT
+        with ESMTP id S1728527AbhAPRLA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sat, 16 Jan 2021 12:11:00 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDE4C06135A;
-        Sat, 16 Jan 2021 07:50:50 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id v184so5946045wma.1;
-        Sat, 16 Jan 2021 07:50:50 -0800 (PST)
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CD1C061342;
+        Sat, 16 Jan 2021 07:25:18 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id x20so1551884pjh.3;
+        Sat, 16 Jan 2021 07:25:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-transfer-encoding;
-        bh=x+00tIBf/QefUex9fblzjYl8TVeelPB225Pi420+hDY=;
-        b=plFPi22y1+imtJRfUHti77svL+kZBuzp5qyZDcOiHMP2+n+0/Acj/PDpFpa7hrrOYR
-         1SN5YXQUzXOr5+MEU2ZlVgYY9Ef03M66UNUpYv6+lkWybj7r/p4j/skU+gNomxyeZMrL
-         ldAbJCAvC+fI9P7XIFu4aaDwyqNwZ9Q5JJ875Hrv+Xl6ZWN/trptb0ecxQ42yiO+ePTc
-         u8gstUBtd89iHDiy+yqrr5mWK1MiSgq/UTjFZzsX75wm0AOGRuGnPd9KQcEbSzZidck5
-         p3urffKVECdgsB0dvUbthXqOFTYsivgcDFddD6Ak9/NszbRcQWQRs3Pyn8nrMU9JvTkJ
-         iUtQ==
+        bh=ggcboeLG4CFiFtKTGSmZVZcrJyJsvuMrSDAwMqdE0Kw=;
+        b=Fg0xoK/E8ciPg/mwRymFV+R+5Iz3Vr5Rs5/D26WJfqwjCoI+uSJdBibnuGUB6B8RVy
+         iKDDrgpk1/zp5U8E5qPbsc7ETvPEqIeatHaKLVcag3ZoMpOaDYR9EdNouy22GPy5Va+j
+         8IPMp4vEhH26zvHT2ZTLO62NznYmCCgXMdIf2mRfh+nsKkKyxVFGBQXvYskL2+l94blS
+         uNBACVSYgEY14WJoJ2s3p326vBdZ5YtRgppLw4H1gfUNRq6/w3eiOOnWV/EPlOr4vFBe
+         igsy6LxUYi07Ttle0Hpz9+KQRZES7SvkmaS3ubZpx70K6lk8QjJa1rEWvoRCaatS+CcM
+         nRZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=x+00tIBf/QefUex9fblzjYl8TVeelPB225Pi420+hDY=;
-        b=E6OgCbZgi2UcDS+rgG9l9FE8T+2OtT2SiACrCd0uIzYXUcRVtscei9qvPinqVBbqlb
-         ybiza1Mi0cA2bGh4rMg0Af7QUnEmF/BTmJYsuKRkQVdTG+Ejce+wpTGK1EymsBmU24iQ
-         jQkd7LRG+BO7U1H2hrixH3R9pYOdJJc2cYmKgESJDTeptaEIhSXZOAsq8QF8OIFifeVK
-         sWqURG6dE/JDf6rtdOXIGSEr1x3tH7W55aD2ryNKVDqF39HebY7RlbEpKTVMcxx4B6Xm
-         n2KRLUYPUGUJ+f5279GNOXTB6KEk2gZzxwFthP6WQr6cL7fkNdxyrTDpJWzbH0NOCzJY
-         b1hQ==
-X-Gm-Message-State: AOAM533mQuMfia+UVOAMxySnDZcjk0l9vg3D2+esqKu3SdRfy/1mfQRM
-        Jc5PRROzKC+Vtidvp7u9pH4=
-X-Google-Smtp-Source: ABdhPJwV1ftSvgQ9GSkbR7qmb2GHxkGVLRGKlny5KKMHQ3z0eLqDXCdkKL4jT9t79JwW8nifC8z4eA==
-X-Received: by 2002:a7b:c115:: with SMTP id w21mr2300075wmi.114.1610812248994;
-        Sat, 16 Jan 2021 07:50:48 -0800 (PST)
-Received: from [0.0.0.0] ([2a01:4f8:c17:e10a::1])
-        by smtp.gmail.com with ESMTPSA id o8sm18256383wrm.17.2021.01.16.07.50.41
+        bh=ggcboeLG4CFiFtKTGSmZVZcrJyJsvuMrSDAwMqdE0Kw=;
+        b=uDFmzDcmMTROkgJ10YVWpFi56HPN8C93miNuP4s7X6OyxzJEnu8hkrW/Fpw36JR+uh
+         9Gw5GobU7YH9RwuNn1IriwiBglytQaboUQZt54hokyc96gQulLegUOSjgNqf4str4KRF
+         3ZRT9akm71qX+/zOb5Ls10Zv5DB4Bm5QMiA/Z6VZcn8brbrBs5fcAdqX9CwQjoI1TiY8
+         NbxdtT8yh8vnwIQKgRbioc5SzhcwMLoDM4u15DDNCfKThflvihUIqC+RFykCQG6xIT95
+         S9NoGkMH72AkCJVMWC4IJ8Nl+egrszz6KqykZ140HaVP0lZ/7ywjZh48YXOxlJ8/CMWT
+         yxQw==
+X-Gm-Message-State: AOAM532UE2KtOkyOQK03F3nghV+HQwaNZCxHEvf12nU+BLXKftmlUFf5
+        Jom5lwSBy+TERhR0D3KBcm1nWT75JKgwdBY6KjE=
+X-Google-Smtp-Source: ABdhPJxlBQvDBqAYZSBgJqI+aBB93gRv3OC6vlButVnCPnHBM7zBU6tIiIWQV+INE0eIHIiOG3jQMg==
+X-Received: by 2002:a17:90a:8d84:: with SMTP id d4mr16549986pjo.56.1610810717334;
+        Sat, 16 Jan 2021 07:25:17 -0800 (PST)
+Received: from [0.0.0.0] (n218250008152.netvigator.com. [218.250.8.152])
+        by smtp.gmail.com with ESMTPSA id x15sm11017288pfi.184.2021.01.16.07.25.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 16 Jan 2021 07:50:47 -0800 (PST)
+        Sat, 16 Jan 2021 07:25:16 -0800 (PST)
 Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
-To:     Mark Brown <broonie@kernel.org>, Perry Yuan <Perry.Yuan@dell.com>
-Cc:     oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "Yuan, Perry" <Perry.Yuan@dell.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
 References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
- <20210112175406.GF4646@sirena.org.uk>
+ <BY3PR19MB49131AA4EAE7C24D365FAC8DFAAA0@BY3PR19MB4913.namprd19.prod.outlook.com>
 From:   Perry Yuan <perry979106@gmail.com>
-Message-ID: <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
-Date:   Sat, 16 Jan 2021 23:50:31 +0800
+Message-ID: <44d8e280-c8f3-4e3a-7ef7-b68224c96def@gmail.com>
+Date:   Sat, 16 Jan 2021 23:25:02 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210112175406.GF4646@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <BY3PR19MB49131AA4EAE7C24D365FAC8DFAAA0@BY3PR19MB4913.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
-  Thanks for your review feedback.
+On 2021/1/13 1:50, Limonciello, Mario wrote:
 
-On 2021/1/13 1:54, Mark Brown wrote:
-> On Wed, Jan 13, 2021 at 01:18:14AM +0800, Perry Yuan wrote:
-> 
+>> -----Original Message-----
+>> From: Yuan, Perry <Perry_Yuan@Dell.com>
+>> Sent: Tuesday, January 12, 2021 11:18
+>> To: oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
+>> hdegoede@redhat.com; mgross@linux.intel.com
+>> Cc: lgirdwood@gmail.com; broonie@kernel.org; alsa-devel@alsa-project.org;
+>> linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; Yuan,
+>> Perry; Limonciello, Mario
+>> Subject: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
+>>
+>> From: Perry Yuan <perry_yuan@dell.com>
+>>
 >> Some new Dell system is going to support audio internal micphone
 >> privacy setting from hardware level with micmute led state changing
 >> When micmute hotkey pressed by user, soft mute will need to be enabled
 >> firstly in case of pop noise, and codec driver need to react to mic
 >> mute event to EC(embedded controller) notifying that SW mute is completed
 >> Then EC will do the hardware mute physically within the timeout reached
-> 
+>>
 >> This patch allow codec rt715 driver to ack EC when micmute key pressed
 >> through this micphone led control interface like hda_generic provided
 >> ACPI method defined in dell-privacy micmute led trigger will be called
 >> for notifying the EC that software mute has been completed
-> 
-> It feels like there's an abstraction problem here with this being hard
-> coded in a specific CODEC driver.
-> 
-
-I will remove the CONFIG_DELL_PRIVACY ,because other vendors and other 
-platforms maybe need to set their Mic mute led state when they enable 
-soundwire and sof driver for audio function.
-We can avoid hardcode in codec driver, indeed it is need for this new
-soundwire & sof architecture of alsa.
-
+>>
+>> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
+>>
+>> --------
+>> v2 -> v3
+>> * simplify the patch to reuse some val value
+>> * add more detail to the commit info
+>>
+>> v1 -> v2:
+>> * fix some format issue
+>> --------
+>> ---
+>>   sound/soc/codecs/rt715-sdca.c | 16 ++++++++++++++++
+>>   sound/soc/codecs/rt715-sdca.h |  1 +
+>>   sound/soc/codecs/rt715.c      | 14 ++++++++++++++
+>>   sound/soc/codecs/rt715.h      |  1 +
+>>   4 files changed, 32 insertions(+)
+>>
+>> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
+>> index b43ac8559e45..861a0d2a8957 100644
+>> --- a/sound/soc/codecs/rt715-sdca.c
+>> +++ b/sound/soc/codecs/rt715-sdca.c
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/version.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/init.h>
+>> +#include <linux/leds.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm.h>
 >>   #include <linux/soundwire/sdw.h>
->> @@ -244,6 +245,7 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol *kcontrol,
+>> @@ -244,6 +245,7 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol
+>> *kcontrol,
 >>   	unsigned int max = mc->max;
 >>   	int val;
->>   
+>>
 >> +	pr_err("++++++rt715_sdca_get_volsw++\n");
 >>   	val = snd_soc_component_read(component, mc->reg);
 >>   	if (val < 0)
 >>   		return -EINVAL;
-> 
-> This shouldn't be in the patch.
-It is my mistake to leave the debug line here.
-will be removed in next V4 .
-> 
->> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
+>> @@ -261,6 +263,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+>> *kcontrol,
+>>   	struct snd_ctl_elem_value *ucontrol)
+>>   {
+>>   	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
+>> +	struct rt715_sdca_priv *rt715 =
+>> snd_soc_component_get_drvdata(component);
+>>   	struct soc_mixer_control *mc =
+>>   		(struct soc_mixer_control *)kcontrol->private_value;
+>>   	unsigned int val, val2, loop_cnt = 2, i;
+>> @@ -268,6 +271,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+>> *kcontrol,
+>>   	unsigned int reg2 = mc->rreg;
+>>   	unsigned int reg = mc->reg;
+>>   	unsigned int max = mc->max;
+>> +	unsigned int val0, val1;
+>>   	int err;
+>>
+>>   	val = ucontrol->value.integer.value[0];
+>> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+>> *kcontrol,
 >>   			return err;
 >>   	}
->>   
+>>
 >> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
 >> +	/* dell privacy LED trigger state changed by muted/unmute switch */
 >> +	if (mc->invert) {
->> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
+>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+>>> value.integer.value[1]) {
 >> +			rt715->micmute_led = LED_OFF;
 >> +		} else {
 >> +			rt715->micmute_led = LED_ON;
@@ -137,32 +188,114 @@ will be removed in next V4 .
 >> +	}
 >> +#endif
 >> +
-> 
-> This doesn't look good.  There's nothing Dell specific here, and nothing
-> about this is conditional on any sort of runtime detection of Dell
-> systems, it's not obvious why this is conditional on DELL_PRIVACY or why
-> we only report the state if the control is inverted.
-
-I will remove the CONFIG_DELL_PRIVACY for the mic mute led operation is 
-not only needed for dell platforms but also other Vendors all need to 
-set micmute led necessaryily.
-> 
-> I'm also not convinced that it's a good idea to set the mute LED if only
-> one channel in a stereo microphone is muted, that seems likely to lead
-> to surprising behaviour for users.
-> 
-At first, i just want to handle val0 == 1 && val1 == 1 and val0 == 0 && 
-val1 == 0 only. Intel suggested i need to cover all about other cases, 
-the mute led should be off if any channel of mic is on.
-So i change the led state when any one channel is muted or unmuted.
-
-> TBH I don't understand why this isn't being done in generic code.
-> 
+>>   	return 0;
+>>   }
+>>
+>> diff --git a/sound/soc/codecs/rt715-sdca.h b/sound/soc/codecs/rt715-sdca.h
+>> index 840c237895dd..f8988ab88f80 100644
+>> --- a/sound/soc/codecs/rt715-sdca.h
+>> +++ b/sound/soc/codecs/rt715-sdca.h
+>> @@ -31,6 +31,7 @@ struct rt715_sdca_priv {
+>>   	int l_is_unmute;
+>>   	int r_is_unmute;
+>>   	int hw_sdw_ver;
 >> +	bool micmute_led;
-> 
-> What is this for, it never seems to be read except for in the function
-> where it's set?
-> 
+>>   };
+>>
+>>   struct rt715_sdw_stream_data {
+>> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
+>> index cdcba70146da..b4e480744c94 100644
+>> --- a/sound/soc/codecs/rt715.c
+>> +++ b/sound/soc/codecs/rt715.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/init.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/i2c.h>
+>> +#include <linux/leds.h>
+>>   #include <linux/pm_runtime.h>
+>>   #include <linux/pm.h>
+>>   #include <linux/soundwire/sdw.h>
+>> @@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+>> *kcontrol,
+>>   		RT715_SET_GAIN_MIX_ADC2_L};
+>>   	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
+>>   	unsigned int read_ll, read_rl, i, j, loop_cnt;
+>> +	unsigned int val0, val1;
+>>
+>>   	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
+>>   		strstr(ucontrol->id.name, "Main Capture Volume"))
+>> @@ -95,6 +97,18 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+>> *kcontrol,
+>>   	else
+>>   		loop_cnt = 1;
+>>
+>> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+>> +	/* Micmute LED state changed by muted/unmute switch */
+>> +	if (mc->invert) {
+>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+>>> value.integer.value[1]) {
+>> +			rt715->micmute_led = LED_OFF;
+>> +		} else {
+>> +			rt715->micmute_led = LED_ON;
+>> +		}
+>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+>> +	}
+>> +#endif
+>> +
+> You might have missed my other comment on v2 feedback, but is there a reason
+> to keep it behind a compile time flag for dell privacy module?  In practice
+> any other future led backend provider should work too.  Another way to think
+> about it - if dell privacy wasn't enabled would this cause a problem to run
+> this code?  I think it would just be a no-op.
+>
+>>   	for (j = 0; j < loop_cnt; j++) {
+>>   		/* Can't use update bit function, so read the original value first
+>> */
+>>   		if (loop_cnt == 1) {
+>> diff --git a/sound/soc/codecs/rt715.h b/sound/soc/codecs/rt715.h
+>> index 009a8266f606..57c9af041181 100644
+>> --- a/sound/soc/codecs/rt715.h
+>> +++ b/sound/soc/codecs/rt715.h
+>> @@ -22,6 +22,7 @@ struct rt715_priv {
+>>   	struct sdw_bus_params params;
+>>   	bool hw_init;
+>>   	bool first_hw_init;
+>> +	bool micmute_led;
+>>   };
+>>
+>>   struct sdw_stream_data {
+>> --
+>> 2.25.1
 
-Do you mean i can use a local micmute_led var in the function?
+Pierre Louis suggested to just set the mic mute led state unconditionally .
+It is more common interface to allow other platforms to change micmute led.
+The discussion result is from "[PATCH v2 2/2] ASoC: rt715:add Mic Mute LED control support"
+
+Here is the change compared to V3 ,the CONFIG_DELL_PRIVACY will be removed
+
+-#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+-       /* dell privacy LED trigger state changed by muted/unmute switch */
++       /* MicMute LED state changed by muted/unmute switch */
+         if (mc->invert) {
+                 if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
+                         rt715->micmute_led = LED_OFF;
+diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
+index b4e480744c94..60bb3d98103e 100644
+--- a/sound/soc/codecs/rt715.c
++++ b/sound/soc/codecs/rt715.c
+@@ -97,8 +97,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
+         else
+                 loop_cnt = 1;
+  
+-#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+-       /* Micmute LED state changed by muted/unmute switch */
++       /* MicMute LED state changed by muted/unmute switch */
+         if (mc->invert) {
+                 if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
+                         rt715->micmute_led = LED_OFF;
+@@ -107,7 +106,6 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
+                 }
+                 ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+         }
+-#endif
 
