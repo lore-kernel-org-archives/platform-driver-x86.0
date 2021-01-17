@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C20C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DF4C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4321221ED
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B70221ED
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729886AbhAQU4n (ORCPT
+        id S1729976AbhAQU6K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jan 2021 15:56:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54272 "EHLO
+        Sun, 17 Jan 2021 15:58:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbhAQU4i (ORCPT
+        with ESMTP id S1729755AbhAQU6J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jan 2021 15:56:38 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CF62C061575
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:55:58 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id y8so7513280plp.8
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:55:58 -0800 (PST)
+        Sun, 17 Jan 2021 15:58:09 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 925D3C061573
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:57:29 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id d4so7514269plh.5
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:57:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=FW7tf7fovkxqur+gXWPbj0nZWEDTm9fWcYyDHePgTuo=;
-        b=ZSsJ0iIiVNlv0C0yMqgTEO9De82n++vz3G84Dnbjtdj56xB5DrEdsFTh5PVaf0GAsK
-         bAussXxLvcJZZB3lDTQ5SKNZIbQ8U03Hwbk2SMKMKaM2XP/MkFGVpGxDCXvVAr/VM42K
-         9VzypeEsfHr9bMQwYvx6kknW8Y8FhWX5Wr0djjD2yvouk85r+HNxzI97G0EAb9PAyx5r
-         uHx3gEzriz3Vb4v/PsqonwIYAcNjT+T0dfYHCDzzPcSJhfvXR8dxZgpWOOA5ddjKwlWB
-         Ps3vpV5D2+k7p/ZO7+oG75sj1bSgEDd6zwqXh374kVifJ1WjSxwqLZz+Czf2BUWt+P1y
-         dvsA==
+        bh=siMbpuJzRkX8AWqvGkR1/86p+m3hxiDLqlryma5SrFk=;
+        b=bGkhe4gy0PhoGCJpA8K7D/ZUTTtflkzLzpOT18bJWgwKi2VEhODYoaHaMOgaYVQrNK
+         yQbWjWp+noUp6Vc8ygUMpVfTCqF+Re/7ZJiPdeFMP+hNVU4FyJHJEYkhHHgdeIJlwt5b
+         9NEEDalmJMRlQYDovFxzTG8uzdzWns91GVfI8B2k09g0Ex5hszn1nEriiaBI3O7JO9X9
+         kfHZ4hQ2oZKDvckG+yKG4r2jNcvVfvCZ0iHAB7G5g7Zpxfn0GCsQ6e6Vd5YhBaSTCqrY
+         0gRRYPFU9Yn3EsIxmEIRq2VasJaTM+Zitm5nx0cUr9TD4O33B9l3fVu95bS6xzMUZsVg
+         mCpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FW7tf7fovkxqur+gXWPbj0nZWEDTm9fWcYyDHePgTuo=;
-        b=hBcP2HF4f1PPiY5YS4+zsef2zIpKdSeVM0C0jDwzXTkVxy+fHGT8+iry2hoB5C/o7+
-         bpWJNnE3ENSOSfJjdqGeOxbH4a1lwwlG4eriXRIs/rtCVLzt9CzJMdELIsE2mdgx5jYq
-         161a25Xr77OVsNLcONIdBZ1MUcCM3UUXGSYgIrqQbpxSZMsEoWrhhMcJEqPs8C4ps8a0
-         7HMIyBqRy2qk2ErcvgxCCe5wy1Vio6LLGoYyhuMMq+kAyWFbluSfLCLgnk1rSCCTjFR5
-         zlLi98sPAyE1Xmy27gnjYQaNvJ9awwVx7dHWsZQREYLKXNXj1QwrZAo4pwbLSg8FvcPn
-         pfeg==
-X-Gm-Message-State: AOAM53012b1K1lufY0MRgJH54lUY002z5mQwI7GdqI01Nq34qnxc0g54
-        TWSMbW6W10tidxalPkRwRpOVyFQ6YWVTSgg9QBE=
-X-Google-Smtp-Source: ABdhPJyjs3yIvj1i7dBIF4xdHfoLUX2pw6/Q1Ea1qH3OEqqhHNr6a796fTNea8DY/mNWu+yc3wBEgQhPTx2qQZmK0Bk=
-X-Received: by 2002:a17:90a:4d83:: with SMTP id m3mr22885210pjh.228.1610916957760;
- Sun, 17 Jan 2021 12:55:57 -0800 (PST)
+        bh=siMbpuJzRkX8AWqvGkR1/86p+m3hxiDLqlryma5SrFk=;
+        b=URp0JS+Ufht0DOvE/EYHgnT6a62uaIPH2EB2MmQ7S9zR2EBZZVfU956OLioNDRQsMe
+         S5OLZi7s1SZWMp4kxgZxUioEihknxt+gWO2qRLppCuNuNEGPLnjCyAl6R2jC6zgnXr2h
+         7EMho6AOu164QdF48FAi+Gr8wcih96tYL3lf4HjkhHMmyUAZUUXGj640k3yt/pdXd2Bx
+         i8IUFhZTI4b7LcK6dIUIe06joriypUzja/7WdRdLMDtfClY8HbeNigMgmkXIT8oU0i+j
+         GsX6RwzVtKJ77yGdhxjdMXQV503UjDLn0zvzE8NYQnCAkpk/Q7Q/NR6mIZQhH9nO8hwd
+         6YFw==
+X-Gm-Message-State: AOAM532wcPxjN8rdWIhi/iG1udQE5x9xsJtpwCb7/roTc2LHZjldIu80
+        NftS2MlIv/Abh+kKNfSbiqPorpTtBqSpps0SCq0=
+X-Google-Smtp-Source: ABdhPJzzs/Fi5rpTxYagLwhnqa4cx/zVYQ5cZYuKPjoJAtvg7dJ0IkX9XdxZ/M0B3EoGDbkZVTEXHvm19iXH7t3aa7U=
+X-Received: by 2002:a17:90a:6c90:: with SMTP id y16mr23130792pjj.129.1610917049063;
+ Sun, 17 Jan 2021 12:57:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20210113182016.166049-22-pobrn@protonmail.com>
- <CAHp75VcSnygW5TgZePcF96uMk9et25doqxmWieMdbtaRb5hS4w@mail.gmail.com> <IsMD9D-Q_PWUoLKzhXMQ8VK3xxRZJ9KYw1N6Yx3ClQerrFdp7KaGK0EZGbIPpIBHJ5sFYoUpJGE_mY2WFtDy_st4EgJw2AuX7gOgueO_Nqw=@protonmail.com>
-In-Reply-To: <IsMD9D-Q_PWUoLKzhXMQ8VK3xxRZJ9KYw1N6Yx3ClQerrFdp7KaGK0EZGbIPpIBHJ5sFYoUpJGE_mY2WFtDy_st4EgJw2AuX7gOgueO_Nqw=@protonmail.com>
+References: <20210113182016.166049-24-pobrn@protonmail.com>
+ <CAHp75Ve8DO+DufJ=ApDonLjqdrOaRa4L-Tpeg8YWGNKvCBY_Eg@mail.gmail.com> <uaRWzbXLCtfIvyAplzL4R6WPbWDp2vxeODkljsKlaRVLoduXUrRFlW6oFqbZltiZ6YJv6fm2goGUEpCJuglx8ytLGETou1ZPehILoepF2_I=@protonmail.com>
+In-Reply-To: <uaRWzbXLCtfIvyAplzL4R6WPbWDp2vxeODkljsKlaRVLoduXUrRFlW6oFqbZltiZ6YJv6fm2goGUEpCJuglx8ytLGETou1ZPehILoepF2_I=@protonmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 17 Jan 2021 22:55:41 +0200
-Message-ID: <CAHp75VceYKFRc02gtuTLBA2bP=PDNBHKBYJrwajRdpOAhfgfMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 21/24] platform/x86: ideapad-laptop: add keyboard
- backlight control support
+Date:   Sun, 17 Jan 2021 22:57:13 +0200
+Message-ID: <CAHp75VfR4Y7TZzcOo13oFxavPxQUeV4kLDXYsnpY1wEDGz34=w@mail.gmail.com>
+Subject: Re: [PATCH v2 23/24] Documentation/ABI: sysfs-platform-ideapad-laptop:
+ update device attribute paths
 To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -73,29 +73,27 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jan 17, 2021 at 12:44 AM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
+On Sun, Jan 17, 2021 at 12:58 AM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
 .com> wrote:
-> 2021. janu=C3=A1r 16., szombat 21:07 keltez=C3=A9ssel, Andy Shevchenko =
+> 2021. janu=C3=A1r 16., szombat 21:10 keltez=C3=A9ssel, Andy Shevchenko =
 =C3=ADrta:
 > > On Wed, Jan 13, 2021 at 8:25 PM Barnab=C3=A1s P=C5=91cze wrote:
 
-...
-
-> > > +       struct {
-> > > +               bool initialized;
-> > > +               struct led_classdev led;
-> > > +               unsigned int last_brightness;
-> > > +       } kbd_bl;
+> > > The documentation referred to non-existent device attributes under a =
+non-existent
+> > > platform device. Update it with the current location of the attribute=
+s.
 > >
-> > Data structure without sense.
+> > Fixes tag, please?
+> >
+>
+> I'm not sure which commit (if any) should be referenced. Do you think
+> the patch that removed the platform device - hence making the documented =
+paths
+> incorrect - would be OK to reference here?
 
-> It makes a lot of sense to me, it groups the members which are concerned =
-with
-> keyboard backlight control. Do you have any specific issues with it? And
-> what would you suggest instead?
-
-Oops, I somehow misread it as similar to one with boolean bit fields.
-Sorry, please,  disregard my comment.
+From your description it looks like the right one, the general rule is
+to find a change after which this becomes broken / invalid.
 
 
 --=20
