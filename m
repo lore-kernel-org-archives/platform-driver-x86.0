@@ -2,86 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72E9C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 16:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EB7C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F772250F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 16:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3920A20793
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbhAQQBo convert rfc822-to-8bit (ORCPT
+        id S1728859AbhAQUxZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jan 2021 11:01:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbhAQQBm (ORCPT
+        Sun, 17 Jan 2021 15:53:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbhAQUxY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jan 2021 11:01:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id EC57922573
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 16:01:01 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Sun, 17 Jan 2021 16:01:01 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mail@richard-neumann.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-199715-215701-RSX9xoOVcn@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 17 Jan 2021 15:53:24 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B54C061573
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:52:44 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id x20so3018883pjh.3
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:52:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k7rkxFviIhZZGrYcBNp4fUuXsq1QJ+b6bDAXK1PyWRo=;
+        b=kxEVzQNlCfHrcOM7bzsNdR3cnj294RuY9ZPZZX8uTC7IyOMV00MJBeybuXBqrzq3e1
+         +7UtqIBViP4lN//mq+Hhn4xSO96mdzVinf+9A+5icKbOJR+EGJ0W+E49QbSfRHuqmLGc
+         AexCCoWS1iX0JpT/zdNyP6D0QGSkuFvCVtcPdW9cqlHUNdwPp6OsjQ+BWLfYB9hOwnIa
+         SqA5kI9Ba7Nt1b8ES8CtjG4ph5EF40wbeftkBS2TUVBplJJtFI3nM6A1yZQV5vakIChq
+         0XRYI0cq31bPJCGeaGmWWCkn8jzjJiTg6v/FZ0tpsP0AF85BaIL5c+Y1tlTWlC2B1rhB
+         lOsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k7rkxFviIhZZGrYcBNp4fUuXsq1QJ+b6bDAXK1PyWRo=;
+        b=EwqegfSWqazkOPeMsnLtmoSCVGqzTGJPH2gKEoj96qEWIbNyI1mCWiIxyae/LbCh7d
+         zmNbWq9j8L7j4APm+Sj4RC7MabcPQF8SLrBPBmJuI0K1KEV0do6o7EXeTNhSv2DIQOdZ
+         ByJ4PZk37I5+kROVkFiI6MMDmgWTmw/ngTfZKWt6ApZkNk4lPSDN13vsvw6lv6Tl2gR1
+         lAZJAj2r5UEfX4CrqOrhWA+43E/62FJEJJWWWu0ioeHsf+42YmcddwRpPe1RGSfiGWpm
+         Kdd+Y+l/z1BgkR7AWbM8ReFTLJ6BTgEBdi86pZsdJvMcRFHJR45pPwWWVMbH5uJ6wDN0
+         aVEg==
+X-Gm-Message-State: AOAM531i3a5Hgemur5aKcncem5nfSf8uOSyhyOZyVUhweNmu5KAsqsAp
+        ou0qNKCM+sETxIv3bgLbeWNfPm9GfWDA7DEsPo2CNskNyrxfQA==
+X-Google-Smtp-Source: ABdhPJzNpvyowka/xNgDOLbruSvDi727MpAdRDBuBK5fjOzs2iFuBSTYpqptLBnzOsVKM3NRZs/7Q6KPBLe1/e3LZzA=
+X-Received: by 2002:a17:90a:6c90:: with SMTP id y16mr23116078pjj.129.1610916763891;
+ Sun, 17 Jan 2021 12:52:43 -0800 (PST)
 MIME-Version: 1.0
+References: <20210113182016.166049-14-pobrn@protonmail.com>
+ <CAHp75VdfTjwN_5CusbzFExPxm=--ePoS7+YrUVSWzP=OqkE6+g@mail.gmail.com> <GFjexByUwomkq1jtqoU26Z0QnimZ4Q_erOtoX0L-oOMW46o28XbGSaMUEi-CPgLigJ-xTbKM6B19KPAczx6Z1OWcnTyqRVKMrXZD7cXVe4o=@protonmail.com>
+In-Reply-To: <GFjexByUwomkq1jtqoU26Z0QnimZ4Q_erOtoX0L-oOMW46o28XbGSaMUEi-CPgLigJ-xTbKM6B19KPAczx6Z1OWcnTyqRVKMrXZD7cXVe4o=@protonmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 17 Jan 2021 22:52:27 +0200
+Message-ID: <CAHp75VfbfJHPEiRSnvFMnB-eD0zWqGM+amc2-k3A0Ta2GkV3bQ@mail.gmail.com>
+Subject: Re: [PATCH v2 13/24] platform/x86: ideapad-laptop: rework
+ is_visible() logic
+To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=199715
+On Sun, Jan 17, 2021 at 12:21 AM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
+.com> wrote:
+> 2021. janu=C3=A1r 16., szombat 20:58 keltez=C3=A9ssel, Andy Shevchenko =
+=C3=ADrta:
+> > On Wed, Jan 13, 2021 at 8:23 PM Barnab=C3=A1s P=C5=91cze wrote:
 
---- Comment #39 from Richard Neumann (mail@richard-neumann.de) ---
-I just tried to test the latest staged upstream version, but it does not even
-build:
+...
 
-make: Entering directory '/usr/lib/modules/5.10.7-zen1-1-zen/build'
-  CC [M]  /var/lib/dkms/amd-sfh-hid/1.0.3/build/amd_sfh_hid.o
-  CC [M]  /var/lib/dkms/amd-sfh-hid/1.0.3/build/amd_sfh_client.o
-  CC [M]  /var/lib/dkms/amd-sfh-hid/1.0.3/build/amd_sfh_pcie.o
-  CC [M] 
-/var/lib/dkms/amd-sfh-hid/1.0.3/build/hid_descriptor/amd_sfh_hid_desc.o
-/var/lib/dkms/amd-sfh-hid/1.0.3/build/hid_descriptor/amd_sfh_hid_desc.c:12:10:
-fatal error: amd_sfh_pcie.h: No such file or directory
-   12 | #include "amd_sfh_pcie.h"
-      |          ^~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.build:279:
-/var/lib/dkms/amd-sfh-hid/1.0.3/build/hid_descriptor/amd_sfh_hid_desc.o] Error
-1
-make: *** [Makefile:1805: /var/lib/dkms/amd-sfh-hid/1.0.3/build] Error 2
-make: Leaving directory '/usr/lib/modules/5.10.7-zen1-1-zen/build'
+> > > +       struct {
+> > > +               bool hw_rfkill_switch     : 1,
+> >
+> > Does it make sense? Not to me.
+> > Why not put all of them (I don't like comma and single occurrence of
+> > the type, it may be problematic in the future) as unsigned int, or
+> > something like that?
+>
+> I will add the full declaration for each, with type and semicolon in each
+> line. Would you prefer the type to be `unsigned int` instead of `bool`, o=
+r
+> could you clarify what you mean by the second question?
 
-I never understood why they put the hid descriptors in a subdir anyway.
-I already spent far too much time on this driver. I have my working refactored
-version. I'll leave the rest for somebody else.
+I have no preference and in my code I can do either depending on the
+case. But your below answer is fine, so choose what you prefer in this
+case.
 
--- 
-You may reply to this email to add a comment.
+> > Also, is it okay to have bit fields (I mean from synchronization p.o.v.=
+)?
+>
+> I am fairly certain it is since this bit-field is only ever written in
+> `ideapad_check_features()` which is called from `ideapad_acpi_add()`. Apa=
+rt from
+> two instances they are only read indirectly by `ideapad_acpi_add()`, and =
+even
+> in those two cases if the values are read as false instead of their real
+> value, it cannot cause significant issues as far as I see.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Okay, then choose what you prefer. Bit fields are beasts when it comes
+to synchronization / concurrent access matter, but they will take less
+size (when > 4, since bool usually takes 1 byte on some architectures
+/ compilers).
+
+> > > +                    fan_mode             : 1,
+> > > +                    touchpad_ctrl_via_ec : 1,
+> > > +                    conservation_mode    : 1,
+> > > +                    fn_lock              : 1;
+> > > +       } features;
+> > >  };
+
+--=20
+With Best Regards,
+Andy Shevchenko
