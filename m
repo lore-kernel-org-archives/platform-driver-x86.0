@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DF4C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19268C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 21:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B70221ED
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 20:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5B4D22226
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 21:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbhAQU6K (ORCPT
+        id S1729970AbhAQVB0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jan 2021 15:58:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
+        Sun, 17 Jan 2021 16:01:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729755AbhAQU6J (ORCPT
+        with ESMTP id S1729755AbhAQVBW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jan 2021 15:58:09 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 925D3C061573
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:57:29 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id d4so7514269plh.5
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 12:57:29 -0800 (PST)
+        Sun, 17 Jan 2021 16:01:22 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54E1C061573
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 13:00:42 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id p18so9655288pgm.11
+        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 13:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=siMbpuJzRkX8AWqvGkR1/86p+m3hxiDLqlryma5SrFk=;
-        b=bGkhe4gy0PhoGCJpA8K7D/ZUTTtflkzLzpOT18bJWgwKi2VEhODYoaHaMOgaYVQrNK
-         yQbWjWp+noUp6Vc8ygUMpVfTCqF+Re/7ZJiPdeFMP+hNVU4FyJHJEYkhHHgdeIJlwt5b
-         9NEEDalmJMRlQYDovFxzTG8uzdzWns91GVfI8B2k09g0Ex5hszn1nEriiaBI3O7JO9X9
-         kfHZ4hQ2oZKDvckG+yKG4r2jNcvVfvCZ0iHAB7G5g7Zpxfn0GCsQ6e6Vd5YhBaSTCqrY
-         0gRRYPFU9Yn3EsIxmEIRq2VasJaTM+Zitm5nx0cUr9TD4O33B9l3fVu95bS6xzMUZsVg
-         mCpg==
+        bh=LXqDtedgTB74RhR8eUV9meKSuPXPVP5VRwUoH19TqI0=;
+        b=l6H10H9w6hCRhTkEi2RL7ZVyXDe+ZhHZp003+mYuJ+yzkTiq7PGBW8Ki10mnEGQQyD
+         8feCFmhH1TsU+dkfXUUFNiDbcYjQoWEj9BO0Yeki6JWRllENolNjMeH66NNl58ISHsUB
+         //IwX6B/3fI7hwjXlw9GRGMDes1pyUKUfnu7HKKElJw7dZHluOMpUiqUJDzdTYkaV3JU
+         5feDJYa0Bw2yQGmIX+pD5Q7Vg0Yo4NnP9HfvJ4jPWzMLpE3WkoQWj0AV1X7AEvGMTSQV
+         95raayeqwEHamRZl/ruPvoBIz6xF+7cmM/GK8ex5GqFvb4JMWO3513x0Eai0pw536VNU
+         419w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=siMbpuJzRkX8AWqvGkR1/86p+m3hxiDLqlryma5SrFk=;
-        b=URp0JS+Ufht0DOvE/EYHgnT6a62uaIPH2EB2MmQ7S9zR2EBZZVfU956OLioNDRQsMe
-         S5OLZi7s1SZWMp4kxgZxUioEihknxt+gWO2qRLppCuNuNEGPLnjCyAl6R2jC6zgnXr2h
-         7EMho6AOu164QdF48FAi+Gr8wcih96tYL3lf4HjkhHMmyUAZUUXGj640k3yt/pdXd2Bx
-         i8IUFhZTI4b7LcK6dIUIe06joriypUzja/7WdRdLMDtfClY8HbeNigMgmkXIT8oU0i+j
-         GsX6RwzVtKJ77yGdhxjdMXQV503UjDLn0zvzE8NYQnCAkpk/Q7Q/NR6mIZQhH9nO8hwd
-         6YFw==
-X-Gm-Message-State: AOAM532wcPxjN8rdWIhi/iG1udQE5x9xsJtpwCb7/roTc2LHZjldIu80
-        NftS2MlIv/Abh+kKNfSbiqPorpTtBqSpps0SCq0=
-X-Google-Smtp-Source: ABdhPJzzs/Fi5rpTxYagLwhnqa4cx/zVYQ5cZYuKPjoJAtvg7dJ0IkX9XdxZ/M0B3EoGDbkZVTEXHvm19iXH7t3aa7U=
-X-Received: by 2002:a17:90a:6c90:: with SMTP id y16mr23130792pjj.129.1610917049063;
- Sun, 17 Jan 2021 12:57:29 -0800 (PST)
+        bh=LXqDtedgTB74RhR8eUV9meKSuPXPVP5VRwUoH19TqI0=;
+        b=B79gk8M3naqruyD88HhaOw83icyV3+2MtmcpPFWWfn//8RFbJMj2Ep6IO1KZ0S9NTL
+         P0VZ/wYQgN8WKYAEEKMWMk2d2lHnFibmNIeWPuxJzCGdMjXlk1Zk3p3DcG3DsTlLEcUJ
+         C8DBAtvIEeO/J8lib1zA8aNRTfD2zu/Lw0Jjjh+6UfasCLUHo3alYuGq0kNcLq1kOvbe
+         F4JxxlckibZAKQz4nWHdCUEBhiodlw2IMaU+50HXbQPogeStAq7zeqRYwj9JEV14hhvc
+         K0TEBIx1kYGzQND37PE0ZJqFdcwM/5hGnILUDAo4U9cBJYhfjC0Wk0xLo/SXHZFYB7da
+         3QNA==
+X-Gm-Message-State: AOAM532M1kz3g57d7UzA92n/bUd0bvY1wqhv1qT+OmgMPGQeMEd5IVLL
+        Mnyad0dN/rWVKcTdr54OA0zRz7b1rJlmoP5qwKU=
+X-Google-Smtp-Source: ABdhPJz43Ls/HKuGjlmm6pQUKMd42Y49LHI08TemypjpQVWYV5QV3lI41JjH9wBJKk8COwIjnBNqOX/Ongo6YePT+Q8=
+X-Received: by 2002:a63:4b16:: with SMTP id y22mr23048736pga.203.1610917242101;
+ Sun, 17 Jan 2021 13:00:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20210113182016.166049-24-pobrn@protonmail.com>
- <CAHp75Ve8DO+DufJ=ApDonLjqdrOaRa4L-Tpeg8YWGNKvCBY_Eg@mail.gmail.com> <uaRWzbXLCtfIvyAplzL4R6WPbWDp2vxeODkljsKlaRVLoduXUrRFlW6oFqbZltiZ6YJv6fm2goGUEpCJuglx8ytLGETou1ZPehILoepF2_I=@protonmail.com>
-In-Reply-To: <uaRWzbXLCtfIvyAplzL4R6WPbWDp2vxeODkljsKlaRVLoduXUrRFlW6oFqbZltiZ6YJv6fm2goGUEpCJuglx8ytLGETou1ZPehILoepF2_I=@protonmail.com>
+References: <20210113182016.166049-1-pobrn@protonmail.com> <20210113182016.166049-11-pobrn@protonmail.com>
+ <CAHp75VfQHmFT1Oqup_+XvnNTwuMpo75JNWNmorsAf1v-6b2TnA@mail.gmail.com> <UPsRV_eoitiLZOqi6Wtl9WOvpm_3CsWGTvBJBNc_McovSMgkzeCS_2ZxCNj4Ymc8wvp6P4ZvPTSUWhvE-BCoAV9LNjUAzwV7enolECurkUo=@protonmail.com>
+In-Reply-To: <UPsRV_eoitiLZOqi6Wtl9WOvpm_3CsWGTvBJBNc_McovSMgkzeCS_2ZxCNj4Ymc8wvp6P4ZvPTSUWhvE-BCoAV9LNjUAzwV7enolECurkUo=@protonmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 17 Jan 2021 22:57:13 +0200
-Message-ID: <CAHp75VfR4Y7TZzcOo13oFxavPxQUeV4kLDXYsnpY1wEDGz34=w@mail.gmail.com>
-Subject: Re: [PATCH v2 23/24] Documentation/ABI: sysfs-platform-ideapad-laptop:
- update device attribute paths
+Date:   Sun, 17 Jan 2021 23:00:26 +0200
+Message-ID: <CAHp75VeU1Z4n9Pyoxisjje-1bD0k9cnG+ZN75QNNAaS-mNSUHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/24] platform/x86: ideapad-laptop: misc. device
+ attribute changes
 To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
 Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -73,27 +73,58 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Jan 17, 2021 at 12:58 AM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
+On Sat, Jan 16, 2021 at 11:54 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
 .com> wrote:
-> 2021. janu=C3=A1r 16., szombat 21:10 keltez=C3=A9ssel, Andy Shevchenko =
+> 2021. janu=C3=A1r 16., szombat 20:52 keltez=C3=A9ssel, Andy Shevchenko =
 =C3=ADrta:
-> > On Wed, Jan 13, 2021 at 8:25 PM Barnab=C3=A1s P=C5=91cze wrote:
+> > On Wed, Jan 13, 2021 at 8:23 PM Barnab=C3=A1s P=C5=91cze wrote:
 
-> > > The documentation referred to non-existent device attributes under a =
-non-existent
-> > > platform device. Update it with the current location of the attribute=
-s.
+...
+
+> > > -       if (sscanf(buf, "%i", &state) !=3D 1)
+> > > -               return -EINVAL;
+> > > +       ret =3D kstrtouint(buf, 0, &state);
+> > > +       if (ret)
+> > > +               return ret;
 > >
-> > Fixes tag, please?
-> >
+> > This seems to me a relaxing case, and should be 10 instead of 0. Am I
+> > right about %i?
+> > If it's true it's probably minor, but still an ABI breakage.
 >
-> I'm not sure which commit (if any) should be referenced. Do you think
-> the patch that removed the platform device - hence making the documented =
-paths
-> incorrect - would be OK to reference here?
+> According to the latest C99 draft[1] (7.19.6.2):
+>
+>   [The 'i' format specifier] Matches an optionally signed integer, whose =
+format
+>   is the same as expected for the subject sequence of the strtol function=
+ with
+>   the value 0 for the base argument. The corresponding argument shall be =
+a pointer
+>   to signed integer.
 
-From your description it looks like the right one, the general rule is
-to find a change after which this becomes broken / invalid.
+> Skimming over `vsscanf()`, I'm fairly sure it implements the same behavio=
+ur.
+> So '0' as the base is correct, I believe.
+
+Ah, okay, good to know. I assumed that %i is decimal only.
+Thanks!
+
+>  But technically it's still an ABI
+> breakage since negative numbers are no longer accepted. In the case of
+> `store_ideapad_fan()` it changes nothing since there was bounds checking =
+in place.
+> In the case of `store_ideapad_cam()` negative numbers are now rejected. I=
+'m not
+> sure if this change should be of great concern, since the the documentati=
+on only
+> mentions '0' and '1', and I would be surprised if anyone used this interf=
+ace
+> to send negative numbers to the embedded controller.
+
+If it's only 0 / 1 perhaps you may go further and make it bool
+(kstrtobool() API)?
+
+> [1]: https://wg14.link/c99
+
 
 
 --=20
