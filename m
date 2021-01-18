@@ -2,90 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83231C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C11EC43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269D4224B8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CC6221F8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391173AbhARMFX (ORCPT
+        id S2391495AbhARMaD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 07:05:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
+        Mon, 18 Jan 2021 07:30:03 -0500
+Received: from mga17.intel.com ([192.55.52.151]:3201 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403874AbhARMEn (ORCPT
+        id S2391480AbhARM3m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 07:04:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2E4AD224B8;
-        Mon, 18 Jan 2021 12:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610971442;
-        bh=5JIZNpOAuXjudU6ZQ7N4iBY+T/rnQaQAjKMQnYWoePw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/y1YPLsE9UFBFBA7q92Oa50xV98nkfD56zidQK28kcnH9LdVVPmjGH7MOCWLCa5W
-         GbNRs7ZtZO4+y+IXTF4AfX5eJxBUBu0ZjvQwHNCnXEQYsR6LmI8IVpx/NHMOuQxk9f
-         yGlJy7Hy7utlv5oVu61EKnEyr1Jb7RMYIyEHZ3BMfH0WZqVH8CoKXnskpetpWyV6XM
-         +Vk8g3/n0HlMRhpmb0Rmz+KxRkLZ7wtdq9aEh/GMBMyls78bpL8Cy08jLabipCsO5o
-         HauiH6xMzlPMYMtlXYsvj48WrZ8n5c/Lr9k9Zu1imT3jFjOn8EXjpLtHGJdq3CvSay
-         sUWaLp7icxyCQ==
-Date:   Mon, 18 Jan 2021 12:03:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Perry Yuan <perry979106@gmail.com>
-Cc:     Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
-        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
-Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
-Message-ID: <20210118120325.GB4455@sirena.org.uk>
-References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
- <20210112175406.GF4646@sirena.org.uk>
- <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
+        Mon, 18 Jan 2021 07:29:42 -0500
+IronPort-SDR: nxnbOWCZEH08Q1+W7Lk7Ya10E3vlgOFxGF1x7ekinxN0/Gga4i2BjsI//wY1trC/Utl7CEB1cv
+ T5chMmN6PWxw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="158569566"
+X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
+   d="scan'208";a="158569566"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:27:55 -0800
+IronPort-SDR: 2j/s5jqLYA5tSPupN5GM+8EIavU5r0cI0hwt2U8w3taMjoaixo9V17vkvePk10ElGdV9NYhb2T
+ SeW3LjG0YcBA==
+X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
+   d="scan'208";a="500631904"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:27:50 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l1TeO-0027Qp-96; Mon, 18 Jan 2021 14:28:52 +0200
+Date:   Mon, 18 Jan 2021 14:28:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
+Message-ID: <20210118122852.GD4077@smile.fi.intel.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-2-djrscally@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
-X-Cookie: Huh?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210118003428.568892-2-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+> I need to be able to identify devices which declare themselves to be
+> dependent on other devices through _DEP; add this function to utils.c
+> and export it to the rest of the ACPI layer.
 
---LpQ9ahxlCli8rRTG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Prefix -> "ACPI / utils: "
 
-On Sat, Jan 16, 2021 at 11:50:31PM +0800, Perry Yuan wrote:
-> On 2021/1/13 1:54, Mark Brown wrote:
+Otherwise good to me
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> > > +	bool micmute_led;
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes in v2:
+> 	- Introduced
+> 
+>  drivers/acpi/acpi_lpss.c | 24 ------------------------
+>  drivers/acpi/internal.h  |  1 +
+>  drivers/acpi/utils.c     | 24 ++++++++++++++++++++++++
+>  3 files changed, 25 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+> index be73974ce449..70c7d9a3f715 100644
+> --- a/drivers/acpi/acpi_lpss.c
+> +++ b/drivers/acpi/acpi_lpss.c
+> @@ -543,30 +543,6 @@ static struct device *acpi_lpss_find_device(const char *hid, const char *uid)
+>  	return bus_find_device(&pci_bus_type, NULL, &data, match_hid_uid);
+>  }
+>  
+> -static bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+> -{
+> -	struct acpi_handle_list dep_devices;
+> -	acpi_status status;
+> -	int i;
+> -
+> -	if (!acpi_has_method(adev->handle, "_DEP"))
+> -		return false;
+> -
+> -	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+> -					 &dep_devices);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+> -		return false;
+> -	}
+> -
+> -	for (i = 0; i < dep_devices.count; i++) {
+> -		if (dep_devices.handles[i] == handle)
+> -			return true;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+>  static void acpi_lpss_link_consumer(struct device *dev1,
+>  				    const struct lpss_device_links *link)
+>  {
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index cb229e24c563..ee62c0973576 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -79,6 +79,7 @@ static inline void acpi_lpss_init(void) {}
+>  #endif
+>  
+>  void acpi_apd_init(void);
+> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
+>  
+>  acpi_status acpi_hotplug_schedule(struct acpi_device *adev, u32 src);
+>  bool acpi_queue_hotplug_work(struct work_struct *work);
+> diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
+> index ddca1550cce6..78b38775f18b 100644
+> --- a/drivers/acpi/utils.c
+> +++ b/drivers/acpi/utils.c
+> @@ -807,6 +807,30 @@ static int acpi_dev_match_cb(struct device *dev, const void *data)
+>  	return hrv == match->hrv;
+>  }
+>  
+> +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
+> +{
+> +	struct acpi_handle_list dep_devices;
+> +	acpi_status status;
+> +	int i;
+> +
+> +	if (!acpi_has_method(adev->handle, "_DEP"))
+> +		return false;
+> +
+> +	status = acpi_evaluate_reference(adev->handle, "_DEP", NULL,
+> +					 &dep_devices);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_dbg(&adev->dev, "Failed to evaluate _DEP.\n");
+> +		return false;
+> +	}
+> +
+> +	for (i = 0; i < dep_devices.count; i++) {
+> +		if (dep_devices.handles[i] == handle)
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  /**
+>   * acpi_dev_present - Detect that a given ACPI device is present
+>   * @hid: Hardware ID of the device.
+> -- 
+> 2.25.1
+> 
 
-> > What is this for, it never seems to be read except for in the function
-> > where it's set?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> Do you mean i can use a local micmute_led var in the function?
 
-Yes.
-
---LpQ9ahxlCli8rRTG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAFeQwACgkQJNaLcl1U
-h9Bi/gf/a1axKJapuFhHFDtl+4V48j7+sPO2o2ca2rzuf5frVz4W4s27sxUvhgr2
-t0CPGS0wrR3P15AlEGaMhlBvZbv8KZUA8FAGI3F98fgcxzwWOaWZmDUb/tLrnr3X
-QQVcX8sCWqz64o/WyBIEqSvKwxkDIgK19RjCHC64Q+JQz5hpPLkdO7uTAbqslLqD
-AMHP9m5rXkt4p395mENABsxV/fN0i3NESe4sbBR3J4iblIMQ1OTC8Q4/0gmG/mYz
-5wy5KjCfT8v4QPMcbp8LjDsg4M0hs2+LdxA2DijSlQyIGgOuhzjB92WcA9Yprfog
-loUeGuAuZ+Yx88zu3XVDEUmVfcqjxA==
-=0TFr
------END PGP SIGNATURE-----
-
---LpQ9ahxlCli8rRTG--
