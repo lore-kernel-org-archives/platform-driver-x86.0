@@ -2,83 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ABBC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 14:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4E0C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 14:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A454922B4E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 14:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B34222BE9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 14:28:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391509AbhARMan (ORCPT
+        id S2392918AbhARO2a convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 07:30:43 -0500
-Received: from mga07.intel.com ([134.134.136.100]:10055 "EHLO mga07.intel.com"
+        Mon, 18 Jan 2021 09:28:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391503AbhARMaj (ORCPT
+        id S2392889AbhARO2C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 07:30:39 -0500
-IronPort-SDR: nUwFUPJV6CSSo518YJoIPh6QYXAsuZMMB2c9JMkiVvps0LfDPy9QM6a39QgjQ1KhD1lwDqAPOf
- 25ZwWjMvfLoQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="242866894"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="242866894"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:28:53 -0800
-IronPort-SDR: 6iH2ILx1Vuk7B7LU89OE6QX3T0bl5uWmnLgdqabGa401cHoG+kpRpyXtCNjDmh0DUPh5ZxHfA4
- 5T0Cd9pQihGg==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="346860180"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 04:28:48 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1TfK-0027Uk-F1; Mon, 18 Jan 2021 14:29:50 +0200
-Date:   Mon, 18 Jan 2021 14:29:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 1/7] acpi: utils: move acpi_lpss_dep() to utils
-Message-ID: <20210118122950.GE4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-2-djrscally@gmail.com>
- <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
+        Mon, 18 Jan 2021 09:28:02 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0613D22B39
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jan 2021 14:27:21 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 211117] [oxygen] [virtuoso] route, dmix and other alsa plugins
+ produce garbage output with mem_encrypt on Ryzen platform
+Date:   Mon, 18 Jan 2021 14:27:20 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: perex@perex.cz
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: component assigned_to
+Message-ID: <bug-211117-215701-myZ7mLfb0s@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-211117-215701@https.bugzilla.kernel.org/>
+References: <bug-211117-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YAU3msXszVZ8CLjs@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 09:24:10AM +0200, Laurent Pinchart wrote:
-> On Mon, Jan 18, 2021 at 12:34:22AM +0000, Daniel Scally wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=211117
 
-...
+Jaroslav Kysela (perex@perex.cz) changed:
 
-> > +bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle);
-> 
-> "lpss" stands for low power subsystem, an Intel device within the PCH
-> that handles I2C, SPI, UART, ... I think the function should be renamed,
-> as it's now generic. acpi_dev_has_dep() is a potential candidate, I'm
-> sure better ones exist. A bit of kerneldoc would also not hurt.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+          Component|Sound(ALSA)                 |Platform_x86
+           Assignee|perex@perex.cz              |drivers_platform_x86@kernel
+                   |                            |-bugs.osdl.org
 
-Actually a good suggestions. Please apply my tag after addressing above.
+--- Comment #15 from Jaroslav Kysela (perex@perex.cz) ---
+It looks like an issue which is not related directly to audio, right?
+
+Reassigning to Platform_X86 .
 
 -- 
-With Best Regards,
-Andy Shevchenko
+You may reply to this email to add a comment.
 
-
+You are receiving this mail because:
+You are watching the assignee of the bug.
