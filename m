@@ -2,172 +2,359 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D034C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F675C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA0922D2A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FC1206BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437910AbhARUZO (ORCPT
+        id S2390473AbhARUsw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 15:25:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        Mon, 18 Jan 2021 15:48:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437212AbhARUY6 (ORCPT
+        with ESMTP id S2394441AbhARUrY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 15:24:58 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D76EC061573;
-        Mon, 18 Jan 2021 12:24:15 -0800 (PST)
-Received: from zn.tnic (p200300ec2f069f0062c4736095b963a8.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:9f00:62c4:7360:95b9:63a8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E31721EC0283;
-        Mon, 18 Jan 2021 21:24:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1611001454;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wg2C2nBbuOIoS8W3mFG5ELiW7MV2Ki338+OxxUJ5xdQ=;
-        b=RtFIAxXornjPEFiX1Srlbb2t6bk2lF+oLnAzkcRMedV6rByl6aIGIv/lKOkbyBG70ahfWT
-        jcHHlCmbrEyksnKcBp4vR2ZTQMgMan9kbBCDRpY/7cIv5QGBbkuj5DUKkrFVBT1UKjUmso
-        QU0sy23k/qpjfFqEM3DWGBmXEpVwoK4=
-Date:   Mon, 18 Jan 2021 21:24:09 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
-Message-ID: <20210118202409.GG30090@zn.tnic>
-References: <20210107223424.4135538-1-arnd@kernel.org>
- <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
- <YAH6r3lak/F2wndp@rani.riverdale.lan>
- <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
+        Mon, 18 Jan 2021 15:47:24 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 165B4C061757;
+        Mon, 18 Jan 2021 12:46:37 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id c124so14715504wma.5;
+        Mon, 18 Jan 2021 12:46:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=9pd6NP8MKjOIZLtlaBPlwpeyWjI68tp87PnWyTG6FQo=;
+        b=P7MDBVp2loUeGaeaCPb9ydJEPSginKWp9PFeqivuX7x+oNuy4YmjoWQtCR+1FZK3lp
+         maXNw5mdKbPvYczcDHWlM1VN5o/qJXC8Uhfc0KXMZMW+XlhRpQOTnVDeD6cGQaY/ae00
+         6R968ILzIQlI9sYkvsO2YETiAmTtnlF+uKYDKJOTM5j2dx52jtb1QbE6NSD31vscEL3J
+         /fUGV1mjvjo3airWsTnBIuO+n2TcZaivt9BEOv+FhcIQtDZqu2wY+maAB2DBNumNRHK2
+         hkpiD7BY8Rwsz9rcQjFA4OkY9ZLZj/ryjbQS/C0SnPYdc/Av9l4eccXlKZO0yrLEL0rf
+         l+aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=9pd6NP8MKjOIZLtlaBPlwpeyWjI68tp87PnWyTG6FQo=;
+        b=MzrVzoUR+J7m52AMvdiZl+mi0MAOrJiEd/CqWAE033asHnntega4kGD5sGfv5co0OP
+         hQmg2EJj64C4F0OX6CAoYdTlYPdSYaale/snjDt27RDpgVbOHfBUu/DwUVFVNxC/8r8P
+         pTHTxLLdR4ekm6AgdMf7w4RYHZ9DRIO9HO78it/Yn4Z4fzE4EbQfhuZZVs4rxSpIPGU/
+         RGKVPkmOL7Dpy2VPBS27m7OmndMlTbaTvrm9YN1L1VU7izifzpb+bTzpJ94BFGugj4ln
+         iMTFO/sjgVNm0ju129BRUA6CPG9Z+NvnfLE/Q1i2Hr53MQI58se9rX1kW2sjZPlfrsT6
+         FlWQ==
+X-Gm-Message-State: AOAM531+7Ymfi7rz67AJI/O8moeo33UUlNKLmDWu2iUxDclUmuWg+/Dm
+        jFjXHzPEdyNPCH5a92a5hj0=
+X-Google-Smtp-Source: ABdhPJyi0RSCbLsr1taKlUHRyiXCxtKBjT2oiXy25DuCHFmuTZZFyrIWKN1HWGLpUoWz11fxYUhB3Q==
+X-Received: by 2002:a05:600c:2044:: with SMTP id p4mr5632wmg.11.1611002795765;
+        Mon, 18 Jan 2021 12:46:35 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id 33sm35554183wrn.35.2021.01.18.12.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 12:46:35 -0800 (PST)
+From:   Daniel Scally <djrscally@gmail.com>
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+Message-ID: <3872041c-1a4a-2508-d325-80242598d55e@gmail.com>
+Date:   Mon, 18 Jan 2021 20:46:34 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 16, 2021 at 05:34:27PM +0100, Ard Biesheuvel wrote:
-> On Fri, 15 Jan 2021 at 21:27, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Fri, Jan 15, 2021 at 02:07:51PM -0500, Arvind Sankar wrote:
-> > > On Thu, Jan 07, 2021 at 11:34:15PM +0100, Arnd Bergmann wrote:
-> > > > From: Arnd Bergmann <arnd@arndb.de>
-> > > >
-> > > > When 5-level page tables are enabled, clang triggers a BUILD_BUG_ON():
-> > > >
-> > > > x86_64-linux-ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
-> > > > efi_64.c:(.text+0x22c): undefined reference to `__compiletime_assert_354'
-> > > >
-> > > > Use the same method as in commit c65e774fb3f6 ("x86/mm: Make PGDIR_SHIFT
-> > > > and PTRS_PER_P4D variable") and change it to MAYBE_BUILD_BUG_ON(),
-> > > > so it only triggers for constant input.
-> > > >
-> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/256
-> > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > > ---
-> > > >  arch/x86/platform/efi/efi_64.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-> > > > index e1e8d4e3a213..62bb1616b4a5 100644
-> > > > --- a/arch/x86/platform/efi/efi_64.c
-> > > > +++ b/arch/x86/platform/efi/efi_64.c
-> > > > @@ -137,8 +137,8 @@ void efi_sync_low_kernel_mappings(void)
-> > > >      * As with PGDs, we share all P4D entries apart from the one entry
-> > > >      * that covers the EFI runtime mapping space.
-> > > >      */
-> > > > -   BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
-> > > > -   BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
-> > > > +   MAYBE_BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
-> > > > +   MAYBE_BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
-> > > >
-> > > >     pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
-> > > >     pgd_k = pgd_offset_k(EFI_VA_END);
-> > > > --
-> > > > 2.29.2
-> > > >
-> > >
-> > > I think this needs more explanation as to why clang is triggering this.
-> > > The issue mentions clang not inline p4d_index(), and I guess not
-> > > performing inter-procedural analysis either?
-> > >
-> > > For the second assertion there, everything is always constant AFAICT:
-> > > EFI_VA_START, EFI_VA_END and P4D_MASK are all constants regardless of
-> > > CONFIG_5LEVEL.
-> > >
-> > > For the first assertion, it isn't technically constant, but if
-> > > p4d_index() gets inlined, the compiler should be able to see that the
-> > > two are always equal, even though ptrs_per_p4d is not constant:
-> > >       EFI_VA_END >> 39 == MODULES_END >> 39
-> > > so the masking with ptrs_per_p4d-1 doesn't matter for the comparison.
-> > >
-> > > As a matter of fact, it seems like the four assertions could be combined
-> > > into:
-> > >       BUILD_BUG_ON((EFI_VA_END & P4D_MASK) != (MODULES_END & P4D_MASK));
-> > >       BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
-> > > instead of separately asserting they're the same PGD entry and the same
-> > > P4D entry.
-> > >
-> > > Thanks.
-> >
-> > I actually don't quite get the MODULES_END check -- Ard, do you know
-> > what that's for?
-> >
-> 
-> Maybe Boris remembers? He wrote the original code for the 'new' EFI
-> page table layout.
+Hi Laurent, thanks for the comments - really appreciate the detail.
 
-That was added by Kirill for 5-level pgtables:
 
-  e981316f5604 ("x86/efi: Add 5-level paging support")
+Some specific responses below but assume a general "will do" to
+everything you mentioned otherwise...
 
- Documentation/x86/x86_64/mm.rst should explain the pagetable layout:
+On 18/01/2021 09:15, Laurent Pinchart wrote:
+>> +	  PMIC) and one designed for Chrome OS.
+> How about expanding this a bit to explain what the INT3472 stands for ?
+>
+> 	  The INT3472 is an Intel camera power controller, a logical device
+> 	  found on some Skylake-based systems that can map to different
+> 	  hardware devices depending on the platform. On machines
+> 	  designed for Chrome OS, it maps to a TPS68470 camera PMIC. On
+> 	  machines designed for Windows, it maps to either a TP68470
+> 	  camera PMIC, a uP6641Q sensor PMIC, or a set of discrete GPIOs
+> 	  and power gates.
 
-   ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole
-   ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space
-   ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole
-   ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
-   ffffffff80000000 |-2048    MB |                  |         |
-   ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space
-   ffffffffff000000 |  -16    MB |                  |         |
-      FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset
+Yeah sure ok
 
-That thing which starts at -512 GB above is the last PGD on the
-pagetable. In it, between -4G and -68G there are 64G which are the EFI
-region mapping space for runtime services.
 
-Frankly I'm not sure what this thing is testing because the EFI VA range
-is hardcoded and I can't imagine it being somewhere else *except* in the
-last PGD.
+>> This driver handles all three
+>> +	  situations by discovering information it needs to discern them at
+>> +	  runtime.
+>> +
+>> +	  If your device was designed for Chrome OS, this driver will provide
+>> +	  an ACPI operation region, which must be available before any of the
+>> +	  devices using this are probed. For this reason, you should select Y
+>> +	  if your device was designed for ChromeOS. This option also configures
+>> +	  the designware-i2c driver to be built-in, for the same reason.
+> Is the last sentence a leftover ?
 
-Lemme add Kirill for clarification.
+Oops - it is, but it was supposed to remind me to double check that that
+was still necessary. I'll take a look, thanks.
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+>> +
+>> +#include "intel_skl_int3472_common.h"
+>> +
+>> +int skl_int3472_get_cldb_buffer(struct acpi_device *adev,
+>> +				struct int3472_cldb *cldb)
+>> +{
+>> +	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+>> +	acpi_handle handle = adev->handle;
+>> +	union acpi_object *obj;
+>> +	acpi_status status;
+>> +	int ret = 0;
+>> +
+>> +	status = acpi_evaluate_object(handle, "CLDB", NULL, &buffer);
+>> +	if (ACPI_FAILURE(status))
+>> +		return -ENODEV;
+>> +
+>> +	obj = buffer.pointer;
+>> +	if (!obj) {
+>> +		dev_err(&adev->dev, "ACPI device has no CLDB object\n");
+> Is this the code path that is taken on Chrome OS ? If so an error
+> message isn't appropriate. I'd drop this message, and instead add an
+> error message in the discrete PMIC code.
+
+Ah yes of course, thanks, I'll move the error message.
+
+
+>> +
+>> +	unsigned int n_gpios; /* how many GPIOs have we seen */
+>> +
+>> +	struct int3472_gpio_regulator regulator;
+>> +	struct int3472_gpio_clock clock;
+> You don't necessarily need to define separate structures for this, you
+> could also write
+>
+> 	struct {
+> 		char regulator_name[GPIO_REGULATOR_NAME_LENGTH];
+> 		char supply_name[GPIO_REGULATOR_SUPPLY_NAME_LENGTH];
+> 		struct gpio_desc *gpio;
+> 		struct regulator_dev *rdev;
+> 		struct regulator_desc rdesc;
+> 	} regulator;
+>
+> 	struct {
+> 		struct clk *clk;
+> 		struct clk_hw clk_hw;
+> 		struct clk_lookup *cl;
+> 		struct gpio_desc *gpio;
+> 	} clock;
+>
+> It's entirely up to you.
+
+
+Ooh yeah I like that more, thanks very much.
+
+
+>> +/* 79234640-9e10-4fea-a5c1-b5aa8b19756f */
+>> +static const guid_t int3472_gpio_guid =
+>> +	GUID_INIT(0x79234640, 0x9e10, 0x4fea,
+>> +		  0xa5, 0xc1, 0xb5, 0xaa, 0x8b, 0x19, 0x75, 0x6f);
+>> +
+>> +/* 822ace8f-2814-4174-a56b-5f029fe079ee */
+>> +static const guid_t cio2_sensor_module_guid =
+>> +	GUID_INIT(0x822ace8f, 0x2814, 0x4174,
+>> +		  0xa5, 0x6b, 0x5f, 0x02, 0x9f, 0xe0, 0x79, 0xee);
+> A comment that explains what those DSM functions do would be useful for
+> reference. It has taken lots of time to figure it out, let's spare the
+> pain to the next person who tries to understand this :-)
+
+
+Hah - good point, well made. I'll explain what they're for then.
+
+
+>> +static int skl_int3472_clk_enable(struct clk_hw *hw)
+>> +{
+>> +	struct int3472_gpio_clock *clk = to_int3472_clk(hw);
+>> +
+>> +	gpiod_set_value(clk->gpio, 1);
+> The clock enable() and disable() methods are not supposed to sleep,
+> while setting a GPIO value may sleep in the general case. Should this be
+> moved to skl_int3472_clk_prepare() ? Same for skl_int3472_clk_disable()
+> and skl_int3472_clk_unprepare().
+
+
+I was under the assumption the difference between gpiod_set_value() and
+gpiod_set_value_cansleep() was that gpiod_set_value() _can't_ sleep, but
+actually reading the function's comments it seems it will just complain
+if it turns out it can sleep:
+
+
+* This function can be called from contexts where we cannot sleep, and will
+* complain if the GPIO chip functions potentially sleep. It doesn't
+complain, on either of my devices, but I guess that can't be guaranteed
+for _every_ device, so these calls probably are safer in (un)prepare() yes.
+
+>> +			}
+>> +
+>> +			i++;
+>> +		}
+>> +	}
+>> +
+>> +	if (!func)
+>> +		return 0;
+> I initially thought this wasn't right, as if no entry was found in the
+> mapping table, func would still have its non-NULL value as passed to
+> this function. I then realized that you're checking if the match that
+> was found is NULL. A comment to explain this would be useful.
+
+
+Yep ok - I actually had one and decided it was superfluous and removed
+it - my bad.
+
+>> +
+>> +	status = acpi_get_handle(NULL, path, &handle);
+>> +	if (ACPI_FAILURE(status))
+>> +		return -EINVAL;
+>> +
+>> +	ret = acpi_bus_get_device(handle, &adev);
+>> +	if (ret)
+>> +		return -ENODEV;
+>> +
+>> +	table_entry = (struct gpiod_lookup)GPIO_LOOKUP_IDX(acpi_dev_name(adev),
+>> +							   ares->data.gpio.pin_table[0],
+>> +							   func, 0, polarity);
+> I wonder if
+>
+> 	table_entry.key = acpi_dev_name(adev);
+> 	table_entry.chip_hwnum = ares->data.gpio.pin_table[0];
+> 	table_entry.con_id = func;
+> 	table_entry.idx = 0;
+> 	table_entry.flags = polarity;
+>
+> (with struct gpiod_lookup table_entry = { }; above) would be more
+> readable. Up to you.
+>
+>> +
+>> +	memcpy(&int3472->gpios.table[int3472->n_sensor_gpios], &table_entry,
+>> +	       sizeof(table_entry));
+> Ah, or maybe
+>
+> 	struct gpio_lookup *table_entry;
+>
+> 	table_entry = &int3472->gpios.table[int3472->n_sensor_gpios];
+> 	table_entry->key = acpi_dev_name(adev);
+> 	table_entry->chip_hwnum = ares->data.gpio.pin_table[0];
+> 	table_entry->con_id = func;
+> 	table_entry->idx = 0;
+> 	table_entry->flags = polarity;
+>
+> (no need to memset() to 0 first as the whole structure has been
+> allocated with kzalloc()).
+
+
+Yeah you're right, this looks much nicer - thanks.
+
+
+>> +	int ret = 0;
+>> +
+>> +	init.name = kasprintf(GFP_KERNEL, "%s-clk",
+>> +			      acpi_dev_name(int3472->adev));
+> You need to check for NULL and return -ENOMEM.
+
+
+Oops, of course, thanks
+
+
+>> +		goto err_unregister_clk;
+> If this fails, you will end up calling clk_unregister() and
+> clkdev_drop() in skl_int3472_discrete_remove(). You should replace the
+> check in the remove function with
+>
+> 	if (!int3472->clock.cl) {
+
+You're right, good spot, thank you.
+
+
+>> +		dev_err(&int3472->pdev->dev, "No sensor module config\n");
+>> +		return PTR_ERR(sensor_config);
+>> +	}
+> Would it make sense to call this in skl_int3472_discrete_probe() or
+> skl_int3472_parse_crs() and cache the config pointer ?
+
+
+Yes, probably actually, and then the GPIO mapping function can just
+check for its presence.
+
+
+>> +	init_data.constraints.valid_ops_mask = REGULATOR_CHANGE_STATUS;
+>> +	init_data.num_consumer_supplies = 1;
+>> +	init_data.consumer_supplies = &sensor_config->supply_map;
+>> +
+>> +	snprintf(int3472->regulator.regulator_name,
+>> +		 GPIO_REGULATOR_NAME_LENGTH, "int3472-discrete-regulator");
+> s/GPIO_REGULATOR_NAME_LENGTH/sizeof(int3472->regulator.regulator_name)/
+>
+> Do regulator names need to be unique ? If so you may have a problem if a
+> platform has two discrete INT3472.
+
+
+Unlike clocks, the regulator framework doesn't shout at you when you do
+this, but I agree it's suboptimal at the very least, I'll set it to
+..."%s-regulator", acpi_dev_name(int3472->adev)... as with the clock.
+
+
+>> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +		ret = skl_int3472_map_gpio_to_sensor(int3472, ares,
+>> +						     "indicator-led",
+>> +						     GPIO_ACTIVE_HIGH);
+> Mapping the indicator LED to the sensor isn't great, as all sensor
+> drivers would then need to handle it. Could it be handled in the
+> regulator instead, so that it would be turned on automatically when the
+> sensor is powered up ? Another option, more complicated, would be to
+> handle it in the CIO2 driver (but I'm not sure how we would map it).
+
+
+Not with the regulator, because it turns out only the 0x0b pin is one of
+those and those appear on very few devices in scope, so it wouldn't be
+called on a Surface Book 2 for example. Perhaps as part of clock
+prepare/enable? I don't much like the idea of it running in the CIO2
+driver to be honest, feels a bit out of place.
+
+
+>> +
+>> +	if (int3472->gpios_mapped)
+>> +		gpiod_remove_lookup_table(&int3472->gpios);
+> You could avoid the need for the gpios_mapped field by checking for
+>
+> 	if (int3472->gpios.list.next)
+>
+> Up to you.
+
+
+Thank you! I was scratching my head trying to figure out a better way of
+doing that.
+
