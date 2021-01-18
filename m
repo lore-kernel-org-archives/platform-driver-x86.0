@@ -2,124 +2,163 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911DDC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 21:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F8BC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C83922475
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 17 Jan 2021 21:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E07AE223DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbhAQVFB (ORCPT
+        id S1730490AbhARAfX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jan 2021 16:05:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56060 "EHLO
+        Sun, 17 Jan 2021 19:35:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729202AbhAQVFA (ORCPT
+        with ESMTP id S1730468AbhARAfW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jan 2021 16:05:00 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B066C061575
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 13:04:20 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id z21so9692672pgj.4
-        for <platform-driver-x86@vger.kernel.org>; Sun, 17 Jan 2021 13:04:20 -0800 (PST)
+        Sun, 17 Jan 2021 19:35:22 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826FC061573;
+        Sun, 17 Jan 2021 16:34:41 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id r4so12385274wmh.5;
+        Sun, 17 Jan 2021 16:34:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=t3S5gZJEavSA/ffgm3qBvjsucxhu0DZFd54r0dqx/CU=;
-        b=MKd2AmgQmwr7DKUXgpXZzKZ9Ux7tWAWkTiOY36TfHcTVLrgsc4WvKQEGez8s5m88r8
-         lEjIcdH8LhfZxoEsitfIs7NpbYfZ8vzG75Ef1Gb87q60RxhaFofOs46/P4vxpnkMuABd
-         Nj9/EpcqEElxKTRDiAXDS/jePUm/n8ginMQt9+DenxwXYAdaD87Cqedz2RuK54+qqPpu
-         fQk05bnNwG3gNVsn62m9kKk0lLxo8D5POJYhPgnMjw7HIeyA+tasixBnj1tYKyYHygDq
-         p1yDhs7IklNGNUSyBIPmw9+u4774rdeZgtaKROaK4apGknEFMZPUgQ14JeFjrhFHaVh6
-         s3SA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hv3QULuAw3daEtPKtW/GfZxtyLAjRCNrwbUyjJ0z7Xs=;
+        b=iab6/rtv8fV2t/9tKiUZM6JzYtYY5t2jiLWWaSJwuY4UQBwFm9+jBWNQ7plLcMo4yv
+         Ew0u3XTUYFIes11V2xwarfu+yyqrmpJhps5NW8NU0GNSSaAm3mJ7uvOqOL1+RkHGzr6m
+         AXeXBkXDUe3OqWEcONBJEtzhC4f1kP3x3rAntdvkvCIFQt5FfmxIfVFRaTAlA6F4rRj/
+         p+h9CYL6A2JH8yF1B6Sn8jm6eeZ6CNHF0HnDMyj+iCp2wSXj70pjrPQcs2F/OVF1FAEK
+         UONkTBn3oPbgabnAfnEbWYEueALZzKbthyc5W7LXOI38rJEfnfjVvbIvGLgZ56YWAv/O
+         CcSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=t3S5gZJEavSA/ffgm3qBvjsucxhu0DZFd54r0dqx/CU=;
-        b=ulWMOdKv5srJoB60sjswDVj5XZtNFOos27Glv2X+8KAMZuW90jjvEP4vdOeWPaR5Kp
-         XfMXkvVsVRr4EltSwFv2nWOwkq+8rJa2QLJrXA2POJVunBb5fhgU145IAcmjXac1P/FC
-         w3ZyC1ocNhdWWeCMk+0FOKUb2QshZPkuzE/KOxAJJ0jnl8jK8/q2ypteMdjUPhxLCi8N
-         UrPnnq2za/KwcnURhiz+Beu6P/zWqcklsXRdfO1v+/70dogHKRUwgzQPExpdAQYapyk3
-         cWxJGyvYu4c+DTkZXMKc9CbN9HlhxLLeg0hrfLgD88PHCDo4U7sdL9syefqGxXhkCd8x
-         BL0w==
-X-Gm-Message-State: AOAM532KOd2ZTERHMF47fEHEHnpvkZ2kmwV+DroA0ShsojBg/qMIlCem
-        dLMBJaBwqwPbj3buuPt5xRgbBuhvQVP9PlA6gH28KBBlw9cKuQ==
-X-Google-Smtp-Source: ABdhPJydXXeLbMggVUBnhDT2Aicf8eBhqbIhCQ+bj98x39Dbe2Gk0BLzC3lXavQaXW+Af6nI2vDubzaTnsPaqbGOolo=
-X-Received: by 2002:a65:644b:: with SMTP id s11mr6708085pgv.4.1610917460101;
- Sun, 17 Jan 2021 13:04:20 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hv3QULuAw3daEtPKtW/GfZxtyLAjRCNrwbUyjJ0z7Xs=;
+        b=pOVyc+hEhXCvnB9KpAj8DjaNczycBidmZi8qbsgJZ9c3nhUIB6blz18jUenXm8BVLC
+         7epdXB2fgSSjzi/9NRwUo4FOQ+obuof3/2+4hZJvZ/ur4MXJGh65Epi1rmfczbC5FURt
+         aBK7Ga86dVPRvSENOqSRYWGZAgvazrAAwWS5jWtm/fcGN29yzW9dHz7KMQ42i/DNM3pE
+         UnyaoEBgy5EtMz9ExaJxMJAVUj2KbX3ag3FRwBlSdvuyOuYTieTKfdiOfq//cAc4gSSc
+         EKJKGUBY9A4sLFQHhg7DpaAIcCvUNJ6ycFU3zF/K1Iz4XlUnpTunb591HGOckO48xibF
+         kSrw==
+X-Gm-Message-State: AOAM5333qTqvngQZz7Ql6ebXRofpY3vC8xL3ygKJJS9yNAmS14YZt6WS
+        ETpmBFAyIAdmp1tpMfCtzzgEAVqsaoA8eQ==
+X-Google-Smtp-Source: ABdhPJx2d8jb8IceRsmC0SWY66dY7dVMCHYr1ggXjUpDi/gyQV3E+EAl3VTbJ8wyyNCBSbuwmUlSqA==
+X-Received: by 2002:a1c:6383:: with SMTP id x125mr18434747wmb.46.1610930080551;
+        Sun, 17 Jan 2021 16:34:40 -0800 (PST)
+Received: from valhalla.home ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id o124sm23642040wmb.5.2021.01.17.16.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 17 Jan 2021 16:34:39 -0800 (PST)
+From:   Daniel Scally <djrscally@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org
+Cc:     rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: [PATCH v2 0/7] Introduce intel_skl_int3472 driver 
+Date:   Mon, 18 Jan 2021 00:34:21 +0000
+Message-Id: <20210118003428.568892-1-djrscally@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210113182016.166049-1-pobrn@protonmail.com> <20210113182016.166049-9-pobrn@protonmail.com>
- <CAHp75Vf-a4D0u6dmJso6jkHCXyCYGm-MFTgM08y2E_OiMr3qFg@mail.gmail.com>
- <NStEFinV-Kv0jDbXxLVig-6zyCjJmyjZkDDeZR29ZJrg_n4jkTBONiDde-4T1dId-t5HADf_QmVjs8LBQU601IDKwshLrQDKWiLGhAe2XFc=@protonmail.com>
- <CAHp75Vfgyy_awJB2MOvM=8rju6o-ZGLmtPbfsVBC68OowQvNHg@mail.gmail.com> <Y5RyLbh64gBPslboJJ0rxqdIg8lldbVQPqar-uz4zZpWfdrd6F4xxuBCRl3BUiNDjrAyhTVXyUw6ONopRxHkrMw3hN5zJuWaKTrDbMxPUog=@protonmail.com>
-In-Reply-To: <Y5RyLbh64gBPslboJJ0rxqdIg8lldbVQPqar-uz4zZpWfdrd6F4xxuBCRl3BUiNDjrAyhTVXyUw6ONopRxHkrMw3hN5zJuWaKTrDbMxPUog=@protonmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 17 Jan 2021 23:04:03 +0200
-Message-ID: <CAHp75VcD-hYksrJH=6-7uqd_doCAn315omJUEiMs0eF+93L9zg@mail.gmail.com>
-Subject: Re: [PATCH v2 08/24] platform/x86: ideapad-laptop: convert ACPI
- helpers to return -EIO in case of failure
-To:     =?UTF-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jan 16, 2021 at 11:28 PM Barnab=C3=A1s P=C5=91cze <pobrn@protonmail=
-.com> wrote:
-> 2021. janu=C3=A1r 16., szombat 21:42 keltez=C3=A9ssel, Andy Shevchenko =
-=C3=ADrta:
-> > On Sat, Jan 16, 2021 at 10:28 PM Barnab=C3=A1s P=C5=91cze wrote:
+Hello all
 
-...
+v1 for this series was originally 14-18 of this series:
+https://lore.kernel.org/linux-media/20201130133129.1024662-1-djrscally@gmail.com/T/#m91934e12e3d033da2e768e952ea3b4a125ee3e67
 
-> > It has no difference in this patch where to place a line which you have=
- changed.
-> >
-> >  +       int val, err;
-> >          unsigned long int end_jiffies;
-> >
-> > is the same as
-> >
-> >          unsigned long int end_jiffies;
-> >  +       int val, err;
+At the moment in the kernel the ACPI _HID INT3472 is taken by the tps68470
+MFD driver, but that driver can only handle some of the cases of that _HID
+that we see. There are at least these three possibilities:
 
-(1)
+1. INT3472 devices that provide GPIOs through the usual framework and run
+   power and clocks through an operation region; this is the situation that
+   the current module handles and is seen on ChromeOS devices
+2. INT3472 devices that provide GPIOs, plus clocks and regulators that are
+   meant to be driven through the usual frameworks, usually seen on devices
+   designed to run Windows
+3. INT3472 devices that don't actually represent a physical tps68470, but
+   are being used as a convenient way of grouping a bunch of system GPIO
+   lines that are intended to enable power and clocks for sensors which
+   are called out as dependent on them. Also seen on devices designed to
+   run Windows.
 
-> > I don't understand what "few modifications" you mentioned above?
-> > [...]
->
-> In other commits there were instances where I could've made
-> similar changes, but I chose not to, because I wanted to keep
-> the "stylistic" and functional changes separate.
-> For example, in patch 9:
->
-> @@ -353,9 +353,11 @@ static ssize_t show_ideapad_cam(struct device *dev,
->  {
->         unsigned long result;
->         struct ideapad_private *priv =3D dev_get_drvdata(dev);
-> +       int err;
+This series introduces a new module which registers:
 
-(2)
+1. An i2c driver that determines which scenario (#1 or #2) applies to the
+   machine and registers platform devices to be bound to GPIO, OpRegion,
+   clock and regulator drivers as appropriate.
+2. A platform driver that binds to the dummy INT3472 devices described in
+   #3
 
-> I did not change the order. Is that OK or do you think it'd be
-> preferable to change the order here as well?
+The platform driver for the dummy device registers the GPIO lines that
+enable the clocks and regulators to the sensors via those frameworks so
+that sensor drivers can consume them in the usual fashion. The existing
+GPIO and OpRegion tps68470 drivers will work with the i2c driver that's
+registered. Clock and regulator drivers are currently in the works.
 
-I see, The case (1) above is different to this. and actually in (2)
-you do right.
-And I agree that in latter case (2) the stylistic should be *a
-separate* change, which is completely the right thing to do.
+The existing mfd/tps68470.c driver being thus superseded, it is removed.
 
---=20
-With Best Regards,
-Andy Shevchenko
+This has been tested on a number of devices; but currently **not** on a
+ChromeOS, which we ideally need to do to ensure no regression caused by
+replacing the tps68470 MFD driver.
+
+Thanks
+Dan
+
+Daniel Scally (7):
+  acpi: utils: move acpi_lpss_dep() to utils
+  acpi: utils: Add function to fetch dependent acpi_devices
+  i2c: i2c-core-base: Use format macro in i2c_dev_set_name()
+  i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
+  gpio: gpiolib-acpi: Export acpi_get_gpiod()
+  platform: x86: Add intel_skl_int3472 driver
+  mfd: Remove tps68470 MFD driver
+
+ MAINTAINERS                                   |   5 +
+ drivers/acpi/acpi_lpss.c                      |  24 -
+ drivers/acpi/internal.h                       |   1 +
+ drivers/acpi/pmic/Kconfig                     |   1 -
+ drivers/acpi/utils.c                          |  58 ++
+ drivers/gpio/Kconfig                          |   1 -
+ drivers/gpio/gpiolib-acpi.c                   |   3 +-
+ drivers/i2c/i2c-core-acpi.c                   |  16 +
+ drivers/i2c/i2c-core-base.c                   |   4 +-
+ drivers/mfd/Kconfig                           |  18 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/tps68470.c                        |  97 ----
+ drivers/platform/x86/Kconfig                  |  25 +
+ drivers/platform/x86/Makefile                 |   4 +
+ .../platform/x86/intel_skl_int3472_common.c   | 100 ++++
+ .../platform/x86/intel_skl_int3472_common.h   | 100 ++++
+ .../platform/x86/intel_skl_int3472_discrete.c | 496 ++++++++++++++++++
+ .../platform/x86/intel_skl_int3472_tps68470.c | 145 +++++
+ include/acpi/acpi_bus.h                       |   2 +
+ include/linux/acpi.h                          |   5 +
+ include/linux/i2c.h                           |   8 +
+ 21 files changed, 969 insertions(+), 145 deletions(-)
+ delete mode 100644 drivers/mfd/tps68470.c
+ create mode 100644 drivers/platform/x86/intel_skl_int3472_common.c
+ create mode 100644 drivers/platform/x86/intel_skl_int3472_common.h
+ create mode 100644 drivers/platform/x86/intel_skl_int3472_discrete.c
+ create mode 100644 drivers/platform/x86/intel_skl_int3472_tps68470.c
+
+-- 
+2.25.1
+
