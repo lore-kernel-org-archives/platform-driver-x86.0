@@ -2,165 +2,69 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1C0C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44282C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3968D223E8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A07C20758
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 00:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbhARAh3 (ORCPT
+        id S1729469AbhARA6v (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 17 Jan 2021 19:37:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730507AbhARAfY (ORCPT
+        Sun, 17 Jan 2021 19:58:51 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11102 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730376AbhARA5N (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 17 Jan 2021 19:35:24 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54217C061575;
-        Sun, 17 Jan 2021 16:34:44 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id c5so14846553wrp.6;
-        Sun, 17 Jan 2021 16:34:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oxyOObT1sg5s9bWkUVceIGz0KKXfziZMqNtmhxIBUsg=;
-        b=QzL/Nu1C+vMnHFaRThEDIZe5Ncq5Of2W3gkYCJnm8AmU7SESXNgasBnk8UNZDddGaQ
-         NY2UFS1U4m8+RsHxWIsXCuHC55DliW48CVdjoyr/Hcn1plYmlhE+l47VbBxLoz8itTu2
-         aZo45y9QldNIOq5Rzwd+s1ivBqcKHiGqlxioGfubLKYAdjh4m37/fcMJWFQus9zOugXS
-         c2PKC6sAQ6Am6/ejcfKwnxansf6BufsA8GzXsQYwjgJtbZ4C5jlb8HNHBXaD+lJ3jQiN
-         ZY1wZFnmzKWrxFBPslIqd9GIVPEHI3y+LjYJCjN6WD5tpfhV22TIdQt7X/v833C874MM
-         pfbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oxyOObT1sg5s9bWkUVceIGz0KKXfziZMqNtmhxIBUsg=;
-        b=NyUYXtlmW9rx/aHp6K/xozCJP1rNchifLWx8LL2ebFjUiWvoVSLsk1RbIDOvTeQ24j
-         j10xNCp0SgDwk49PNcAHhCB4fw2fGb9cw3FaTOGpA8qyTcDO/6FY3GxVj7tiayEApjzA
-         S+e6qmLaINLFsTsEBgKVFvYBtG79IFxlTd0bHCsCCmKko13TKEssjxzDWrQ55oG1wiKo
-         Rld9R4CZwZ33/2j8tk4TPi1b+SFyulvutqvwuL1TiHMXeB1UptDCe3fJBeGH+R7raLSt
-         uklrwOV/GOc18nJmXmaBcqOYr7yw8TNYOAiFWQkZgzE4wcio3kkU5hfQ6xNU2Lt/jDwU
-         2gGA==
-X-Gm-Message-State: AOAM530nHKW984q5KIRC22FxPYRyxBzOE9tmt8LOu364uVfUnYKkXtbx
-        Gvlk/LFBsz5Gwrztb6GyYckTT3dA2ylOwA==
-X-Google-Smtp-Source: ABdhPJwP8X4dWttjUj1Bb2v8rxhV65TD73lpEEX+TkikPku+vK0TaGlSy9mss5ow/8gIZF3SXV9r4Q==
-X-Received: by 2002:adf:cc81:: with SMTP id p1mr23185951wrj.339.1610930083018;
-        Sun, 17 Jan 2021 16:34:43 -0800 (PST)
-Received: from valhalla.home ([2.29.208.120])
-        by smtp.gmail.com with ESMTPSA id o124sm23642040wmb.5.2021.01.17.16.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 16:34:42 -0800 (PST)
-From:   Daniel Scally <djrscally@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org
-Cc:     rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        robert.moore@intel.com, erik.kaneda@intel.com,
-        sakari.ailus@linux.intel.com, andriy.shevchenko@linux.intel.com,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-Subject: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent acpi_devices
-Date:   Mon, 18 Jan 2021 00:34:23 +0000
-Message-Id: <20210118003428.568892-3-djrscally@gmail.com>
+        Sun, 17 Jan 2021 19:57:13 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4DJtbz13Znz15v6m;
+        Mon, 18 Jan 2021 08:54:55 +0800 (CST)
+Received: from huawei.com (10.175.112.125) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.498.0; Mon, 18 Jan 2021
+ 08:55:54 +0800
+From:   Yue Zou <zouyue3@huawei.com>
+To:     <malattia@linux.it>, <mchehab@kernel.org>,
+        <gregkh@linuxfoundation.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] sony-laptop: Remove unneeded semicolon
+Date:   Mon, 18 Jan 2021 01:01:37 +0000
+Message-ID: <20210118010137.214378-1-zouyue3@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210118003428.568892-1-djrscally@gmail.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In some ACPI tables we encounter, devices use the _DEP method to assert
-a dependence on other ACPI devices as opposed to the OpRegions that the
-specification intends. We need to be able to find those devices "from"
-the dependee, so add a function to parse all ACPI Devices and check if
-the include the handle of the dependee device in their _DEP buffer.
+Remove a superfluous semicolon after function definition.
 
-Signed-off-by: Daniel Scally <djrscally@gmail.com>
+Signed-off-by: Yue Zou <zouyue3@huawei.com>
 ---
-Changes in v2:
-	- Used acpi_lpss_dep() as Andy suggested.
+ include/linux/sony-laptop.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- drivers/acpi/utils.c    | 34 ++++++++++++++++++++++++++++++++++
- include/acpi/acpi_bus.h |  2 ++
- 2 files changed, 36 insertions(+)
-
-diff --git a/drivers/acpi/utils.c b/drivers/acpi/utils.c
-index 78b38775f18b..ec6a2406a886 100644
---- a/drivers/acpi/utils.c
-+++ b/drivers/acpi/utils.c
-@@ -831,6 +831,18 @@ bool acpi_lpss_dep(struct acpi_device *adev, acpi_handle handle)
- 	return false;
- }
+diff --git a/include/linux/sony-laptop.h b/include/linux/sony-laptop.h
+index 374d0fdb0743..1e3c92feea6e 100644
+--- a/include/linux/sony-laptop.h
++++ b/include/linux/sony-laptop.h
+@@ -31,7 +31,7 @@
+ #if IS_ENABLED(CONFIG_SONY_LAPTOP)
+ int sony_pic_camera_command(int command, u8 value);
+ #else
+-static inline int sony_pic_camera_command(int command, u8 value) { return 0; };
++static inline int sony_pic_camera_command(int command, u8 value) { return 0; }
+ #endif
  
-+static int acpi_dev_match_by_dep(struct device *dev, const void *data)
-+{
-+	struct acpi_device *adev = to_acpi_device(dev);
-+	const struct acpi_device *dependee = data;
-+	acpi_handle handle = dependee->handle;
-+
-+	if (acpi_lpss_dep(adev, handle))
-+		return 1;
-+
-+	return 0;
-+}
-+
- /**
-  * acpi_dev_present - Detect that a given ACPI device is present
-  * @hid: Hardware ID of the device.
-@@ -866,6 +878,28 @@ bool acpi_dev_present(const char *hid, const char *uid, s64 hrv)
- }
- EXPORT_SYMBOL(acpi_dev_present);
- 
-+/**
-+ * acpi_dev_get_next_dep_dev - Return next ACPI device dependent on input dev
-+ * @adev: Pointer to the dependee device
-+ * @prev: Pointer to the previous dependent device (or NULL for first match)
-+ *
-+ * Return the next ACPI device which declares itself dependent on @adev in
-+ * the _DEP buffer.
-+ *
-+ * The caller is responsible to call put_device() on the returned device.
-+ */
-+struct acpi_device *acpi_dev_get_next_dep_dev(struct acpi_device *adev,
-+					      struct acpi_device *prev)
-+{
-+	struct device *start = prev ? &prev->dev : NULL;
-+	struct device *dev;
-+
-+	dev = bus_find_device(&acpi_bus_type, start, adev, acpi_dev_match_by_dep);
-+
-+	return dev ? to_acpi_device(dev) : NULL;
-+}
-+EXPORT_SYMBOL(acpi_dev_get_next_dep_dev);
-+
- /**
-  * acpi_dev_get_next_match_dev - Return the next match of ACPI device
-  * @adev: Pointer to the previous acpi_device matching this @hid, @uid and @hrv
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index 02a716a0af5d..33deb22294f2 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -683,6 +683,8 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
- 
- bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
- 
-+struct acpi_device *
-+acpi_dev_get_next_dep_dev(struct acpi_device *adev, struct acpi_device *prev);
- struct acpi_device *
- acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
- struct acpi_device *
+ #endif	/* __KERNEL__ */
 -- 
 2.25.1
 
