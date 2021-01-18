@@ -2,94 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F7DC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D034C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB9B22D71
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA0922D2A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 20:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388619AbhARUIk (ORCPT
+        id S2437910AbhARUZO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 15:08:40 -0500
-Received: from smtprelay0021.hostedemail.com ([216.40.44.21]:49188 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387977AbhARUIe (ORCPT
+        Mon, 18 Jan 2021 15:25:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437212AbhARUY6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 15:08:34 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 715CD180A7FDE;
-        Mon, 18 Jan 2021 20:07:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: box36_1c182e92754c
-X-Filterd-Recvd-Size: 3497
-Received: from [192.168.1.159] (unknown [47.151.137.21])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 18 Jan 2021 20:07:23 +0000 (UTC)
-Message-ID: <dcc9fbef12ec58dfd3a2a98d9d3986fc5fa15f73.camel@perches.com>
-Subject: Re: [PATCH v2 7/7] mfd: Remove tps68470 MFD driver
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org,
-        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        robert.moore@intel.com, erik.kaneda@intel.com,
-        sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com,
-        kieran.bingham@ideasonboard.com
-Date:   Mon, 18 Jan 2021 12:07:22 -0800
-In-Reply-To: <20210118135310.GN4077@smile.fi.intel.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
-         <20210118003428.568892-8-djrscally@gmail.com>
-         <20210118135310.GN4077@smile.fi.intel.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.38.1-1 
+        Mon, 18 Jan 2021 15:24:58 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D76EC061573;
+        Mon, 18 Jan 2021 12:24:15 -0800 (PST)
+Received: from zn.tnic (p200300ec2f069f0062c4736095b963a8.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:9f00:62c4:7360:95b9:63a8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E31721EC0283;
+        Mon, 18 Jan 2021 21:24:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1611001454;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wg2C2nBbuOIoS8W3mFG5ELiW7MV2Ki338+OxxUJ5xdQ=;
+        b=RtFIAxXornjPEFiX1Srlbb2t6bk2lF+oLnAzkcRMedV6rByl6aIGIv/lKOkbyBG70ahfWT
+        jcHHlCmbrEyksnKcBp4vR2ZTQMgMan9kbBCDRpY/7cIv5QGBbkuj5DUKkrFVBT1UKjUmso
+        QU0sy23k/qpjfFqEM3DWGBmXEpVwoK4=
+Date:   Mon, 18 Jan 2021 21:24:09 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+Message-ID: <20210118202409.GG30090@zn.tnic>
+References: <20210107223424.4135538-1-arnd@kernel.org>
+ <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
+ <YAH6r3lak/F2wndp@rani.riverdale.lan>
+ <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2021-01-18 at 15:53 +0200, Andy Shevchenko wrote:
-> On Mon, Jan 18, 2021 at 12:34:28AM +0000, Daniel Scally wrote:
-> > This driver only covered one scenario in which ACPI devices with _HID
-> > INT3472 are found, and its functionality has been taken over by the
-> > intel-skl-int3472 module, so remove it.
+On Sat, Jan 16, 2021 at 05:34:27PM +0100, Ard Biesheuvel wrote:
+> On Fri, 15 Jan 2021 at 21:27, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Fri, Jan 15, 2021 at 02:07:51PM -0500, Arvind Sankar wrote:
+> > > On Thu, Jan 07, 2021 at 11:34:15PM +0100, Arnd Bergmann wrote:
+> > > > From: Arnd Bergmann <arnd@arndb.de>
+> > > >
+> > > > When 5-level page tables are enabled, clang triggers a BUILD_BUG_ON():
+> > > >
+> > > > x86_64-linux-ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
+> > > > efi_64.c:(.text+0x22c): undefined reference to `__compiletime_assert_354'
+> > > >
+> > > > Use the same method as in commit c65e774fb3f6 ("x86/mm: Make PGDIR_SHIFT
+> > > > and PTRS_PER_P4D variable") and change it to MAYBE_BUILD_BUG_ON(),
+> > > > so it only triggers for constant input.
+> > > >
+> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/256
+> > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > > ---
+> > > >  arch/x86/platform/efi/efi_64.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+> > > > index e1e8d4e3a213..62bb1616b4a5 100644
+> > > > --- a/arch/x86/platform/efi/efi_64.c
+> > > > +++ b/arch/x86/platform/efi/efi_64.c
+> > > > @@ -137,8 +137,8 @@ void efi_sync_low_kernel_mappings(void)
+> > > >      * As with PGDs, we share all P4D entries apart from the one entry
+> > > >      * that covers the EFI runtime mapping space.
+> > > >      */
+> > > > -   BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+> > > > -   BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > > > +   MAYBE_BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+> > > > +   MAYBE_BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > > >
+> > > >     pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
+> > > >     pgd_k = pgd_offset_k(EFI_VA_END);
+> > > > --
+> > > > 2.29.2
+> > > >
+> > >
+> > > I think this needs more explanation as to why clang is triggering this.
+> > > The issue mentions clang not inline p4d_index(), and I guess not
+> > > performing inter-procedural analysis either?
+> > >
+> > > For the second assertion there, everything is always constant AFAICT:
+> > > EFI_VA_START, EFI_VA_END and P4D_MASK are all constants regardless of
+> > > CONFIG_5LEVEL.
+> > >
+> > > For the first assertion, it isn't technically constant, but if
+> > > p4d_index() gets inlined, the compiler should be able to see that the
+> > > two are always equal, even though ptrs_per_p4d is not constant:
+> > >       EFI_VA_END >> 39 == MODULES_END >> 39
+> > > so the masking with ptrs_per_p4d-1 doesn't matter for the comparison.
+> > >
+> > > As a matter of fact, it seems like the four assertions could be combined
+> > > into:
+> > >       BUILD_BUG_ON((EFI_VA_END & P4D_MASK) != (MODULES_END & P4D_MASK));
+> > >       BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+> > > instead of separately asserting they're the same PGD entry and the same
+> > > P4D entry.
+> > >
+> > > Thanks.
+> >
+> > I actually don't quite get the MODULES_END check -- Ard, do you know
+> > what that's for?
+> >
 > 
-> Prefix: "mfd: tps68470: ". Rationale: easier to look for specific commits, by,
-> for example, running `git log --grep tps68470`.
+> Maybe Boris remembers? He wrote the original code for the 'new' EFI
+> page table layout.
 
-It's also reasonable to grep by path instead
+That was added by Kirill for 5-level pgtables:
 
-$ git log --pretty=oneline --grep 'tps68470'
-cf2e8c544cd3b33e9e403b7b72404c221bf888d1 Merge tag 'mfd-next-5.1' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
-66265e719b4603ef9a1b8a6c876bcb542c021496 mfd: tps68470: Drop unused MODULE_DEVICE_TABLE
-883cad5ba8cc2d9b740b4ad0a8a91063c99c75a3 Merge tag 'mfd-next-4.18' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
-ca34b4f0bed802e1c8612ef08456b20992aeb02a gpio: tps68470: Update to SPDX license identifier
+  e981316f5604 ("x86/efi: Add 5-level paging support")
 
-vs
+ Documentation/x86/x86_64/mm.rst should explain the pagetable layout:
 
-$ git log --pretty=oneline -- '*tps68470*'
-e42615ec233b30dfaf117b108d4cb49455b4df1d gpio: Use new GPIO_LINE_DIRECTION
-66265e719b4603ef9a1b8a6c876bcb542c021496 mfd: tps68470: Drop unused MODULE_DEVICE_TABLE
-36b835176fe014197639f335d9d35424b7805027 ACPI / PMIC: Sort headers alphabetically
-37c089d1facaf03969f66a5469c169a2c73429f6 mfd: Update to SPDX license identifier
-1b2951dd99af3970c1c1a8385a12b90236b837de Merge tag 'gpio-v4.17-1' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
-ca34b4f0bed802e1c8612ef08456b20992aeb02a gpio: tps68470: Update to SPDX license identifier
-66444f460e68d641a63f0787627bac6c1ee340b5 ACPI / PMIC: Replace license boilerplate with SPDX license identifier
-e13452ac379070f038c264618e35559434252175 ACPI / PMIC: Add TI PMIC TPS68470 operation region driver
-968c61f7da3cf6d58a49587cfe00d899ca72c1ad Merge tag 'mfd-next-4.14' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
-9bbf6a15ce19dd947b7fa6ad4095931ab3682da8 mfd: Add support for TPS68470 device
-275b13a65547e2dc39c75d660d2e0f0fddde90f6 gpio: Add support for TPS68470 GPIOs
+   ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole
+   ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space
+   ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole
+   ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
+   ffffffff80000000 |-2048    MB |                  |         |
+   ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space
+   ffffffffff000000 |  -16    MB |                  |         |
+      FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset
 
+That thing which starts at -512 GB above is the last PGD on the
+pagetable. In it, between -4G and -68G there are 64G which are the EFI
+region mapping space for runtime services.
 
+Frankly I'm not sure what this thing is testing because the EFI VA range
+is hardcoded and I can't imagine it being somewhere else *except* in the
+last PGD.
 
+Lemme add Kirill for clarification.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
