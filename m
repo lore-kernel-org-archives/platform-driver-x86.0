@@ -2,126 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7BCC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 11:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83231C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE7E22ADC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 11:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 269D4224B8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 12:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389404AbhARLNj (ORCPT
+        id S2391173AbhARMFX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 06:13:39 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:33813 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389208AbhARLNd (ORCPT
+        Mon, 18 Jan 2021 07:05:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403874AbhARMEn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 06:13:33 -0500
-Date:   Mon, 18 Jan 2021 11:12:34 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1610968360;
-        bh=peSC9o9yu05hJE1IC0P2apZMWF5VoegXfyyqCO9GoLM=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=n3XZ3zXlRHqfavOYPOO4tMpM6ITEmWi7rzGm1xwFAXrA+DFpaNcnHbXyTD0eQaL0N
-         xqR7q698aaAqxz/QTH/P7btgZ0H//3/BvLEHd0K+66DfrfUfORbrj5tmGE0HTdaaCw
-         o1awLClmG58F+Hwqq9edfb4Q1t/wBUWASaq2qI0Y=
-To:     Daniel Scally <djrscally@gmail.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "andy@kernel.org" <andy@kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.kaneda@intel.com" <erik.kaneda@intel.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <-GKrxu8GJvGe-PlKkLpblw9N-DtVtS7i87BOCLgJR72yf4hUFpUgiOlGcFero_gqgUxJrX2gxtLOnz_31hJugfam0SXXmXxIzGIhS162mhI=@protonmail.com>
-In-Reply-To: <20210118003428.568892-7-djrscally@gmail.com>
-References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-7-djrscally@gmail.com>
+        Mon, 18 Jan 2021 07:04:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2E4AD224B8;
+        Mon, 18 Jan 2021 12:04:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610971442;
+        bh=5JIZNpOAuXjudU6ZQ7N4iBY+T/rnQaQAjKMQnYWoePw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U/y1YPLsE9UFBFBA7q92Oa50xV98nkfD56zidQK28kcnH9LdVVPmjGH7MOCWLCa5W
+         GbNRs7ZtZO4+y+IXTF4AfX5eJxBUBu0ZjvQwHNCnXEQYsR6LmI8IVpx/NHMOuQxk9f
+         yGlJy7Hy7utlv5oVu61EKnEyr1Jb7RMYIyEHZ3BMfH0WZqVH8CoKXnskpetpWyV6XM
+         +Vk8g3/n0HlMRhpmb0Rmz+KxRkLZ7wtdq9aEh/GMBMyls78bpL8Cy08jLabipCsO5o
+         HauiH6xMzlPMYMtlXYsvj48WrZ8n5c/Lr9k9Zu1imT3jFjOn8EXjpLtHGJdq3CvSay
+         sUWaLp7icxyCQ==
+Date:   Mon, 18 Jan 2021 12:03:25 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Perry Yuan <perry979106@gmail.com>
+Cc:     Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
+        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
+        mgross@linux.intel.com, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
+Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
+Message-ID: <20210118120325.GB4455@sirena.org.uk>
+References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
+ <20210112175406.GF4646@sirena.org.uk>
+ <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
+Content-Disposition: inline
+In-Reply-To: <bd2aea87-2f91-2748-424b-50b3b6feb22b@gmail.com>
+X-Cookie: Huh?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
 
+--LpQ9ahxlCli8rRTG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-2021. janu=C3=A1r 18., h=C3=A9tf=C5=91 1:34 keltez=C3=A9ssel, Daniel Scally=
- =C3=ADrta:
+On Sat, Jan 16, 2021 at 11:50:31PM +0800, Perry Yuan wrote:
+> On 2021/1/13 1:54, Mark Brown wrote:
 
-> ACPI devices with _HID INT3472 are currently matched to the tps68470
-> driver, however this does not cover all situations in which that _HID
-> occurs. We've encountered three possibilities:
->
-> 1. On Chrome OS devices, an ACPI device with _HID INT3472 (representing
-> a physical tps68470 device) that requires a GPIO and OpRegion driver
-> 2. On devices designed for Windows, an ACPI device with _HID INT3472
-> (again representing a physical tps68470 device) which requires GPIO,
-> Clock and Regulator drivers.
-> 3. On other devices designed for Windows, an ACPI device with _HID
-> INT3472 which does NOT represent a physical tps68470, and is instead
-> used as a dummy device to group some system GPIO lines which are meant
-> to be consumed by the sensor that is dependent on this entry.
->
-> This commit adds a new module, registering a platform driver to deal
-> with the 3rd scenario plus an i2c-driver to deal with #1 and #2, by
-> querying the CLDB buffer found against INT3472 entries to determine
-> which is most appropriate.
->
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
-> Changes in v2:
->
-> =09- Switched to a module registering a platform driver to run
-> =09the dummy ACPI devices, plus an i2c driver to replace and extend
-> =09the existing tps68470 driver
-> =09- Added clock handling functions to the int3472-discrete driver
-> =09- A whole bunch of other changes too numerous to enumerate
->  MAINTAINERS                                   |   5 +
->  drivers/platform/x86/Kconfig                  |  25 +
->  drivers/platform/x86/Makefile                 |   4 +
->  .../platform/x86/intel_skl_int3472_common.c   | 100 ++++
->  .../platform/x86/intel_skl_int3472_common.h   | 100 ++++
->  .../platform/x86/intel_skl_int3472_discrete.c | 496 ++++++++++++++++++
->  .../platform/x86/intel_skl_int3472_tps68470.c | 145 +++++
->  7 files changed, 875 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_skl_int3472_common.c
->  create mode 100644 drivers/platform/x86/intel_skl_int3472_common.h
->  create mode 100644 drivers/platform/x86/intel_skl_int3472_discrete.c
->  create mode 100644 drivers/platform/x86/intel_skl_int3472_tps68470.c
+> > > +	bool micmute_led;
 
-Have you considered putting the source (and header) files into a dedicated
-folder? I think it'd help manageability in the long run, and it'd be immedi=
-ately
-obvious that these source files form a single "unit".
+> > What is this for, it never seems to be read except for in the function
+> > where it's set?
 
+> Do you mean i can use a local micmute_led var in the function?
 
-Regards,
-Barnab=C3=A1s P=C5=91cze
+Yes.
+
+--LpQ9ahxlCli8rRTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmAFeQwACgkQJNaLcl1U
+h9Bi/gf/a1axKJapuFhHFDtl+4V48j7+sPO2o2ca2rzuf5frVz4W4s27sxUvhgr2
+t0CPGS0wrR3P15AlEGaMhlBvZbv8KZUA8FAGI3F98fgcxzwWOaWZmDUb/tLrnr3X
+QQVcX8sCWqz64o/WyBIEqSvKwxkDIgK19RjCHC64Q+JQz5hpPLkdO7uTAbqslLqD
+AMHP9m5rXkt4p395mENABsxV/fN0i3NESe4sbBR3J4iblIMQ1OTC8Q4/0gmG/mYz
+5wy5KjCfT8v4QPMcbp8LjDsg4M0hs2+LdxA2DijSlQyIGgOuhzjB92WcA9Yprfog
+loUeGuAuZ+Yx88zu3XVDEUmVfcqjxA==
+=0TFr
+-----END PGP SIGNATURE-----
+
+--LpQ9ahxlCli8rRTG--
