@@ -2,44 +2,69 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB56C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 15:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35EAC43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 15:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4CE922472
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 15:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F2722B4E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 18 Jan 2021 15:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393445AbhARPYc (ORCPT
+        id S2405866AbhARPsJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 18 Jan 2021 10:24:32 -0500
-Received: from mga02.intel.com ([134.134.136.20]:63424 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393430AbhARPYW (ORCPT
+        Mon, 18 Jan 2021 10:48:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57068 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405903AbhARPe0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 18 Jan 2021 10:24:22 -0500
-IronPort-SDR: Hv8o6MDNpH3eIOv5DJb4r+7EmlxDHLm/vU0tf2uMYcJbl5q+5PfMVdltcof77mrC/vMDFhQa5E
- 8GDHxS8wujQA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9867"; a="165905457"
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="165905457"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 07:22:28 -0800
-IronPort-SDR: ey9MYaovfO4Cxa0p3PXuW/Ij57ursllGF9zE68jwOIjMt8T1cdZfRTVNo5ok9NGulZeFPoWuG6
- Dj026CjwSatw==
-X-IronPort-AV: E=Sophos;i="5.79,356,1602572400"; 
-   d="scan'208";a="350241206"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2021 07:22:21 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l1WNH-002Hbm-Ex; Mon, 18 Jan 2021 17:23:23 +0200
-Date:   Mon, 18 Jan 2021 17:23:23 +0200
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+        Mon, 18 Jan 2021 10:34:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610983979;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JTZcVq1Ep1CR1WH46c5PqheI+6A00IvbUKXMhBi/vHM=;
+        b=TB6OYNVAI+W9AlWt/1Q81fKLBiah2xxnWem93LTbIez+ZPxySdqW+pyYMhHVILaJTF//ZD
+        A7J+NM8UMNPt9VGxGWotltJNTvGw8RbdsoZSjSoefYyAjnKQW87qGKtg1HBL04FgUwH1+u
+        WjhEyOd0sK7Yu9jQaIGgHD/R2HkL4Pg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-UdfVz3dGOWyuT-ZZv4Y66w-1; Mon, 18 Jan 2021 10:32:57 -0500
+X-MC-Unique: UdfVz3dGOWyuT-ZZv4Y66w-1
+Received: by mail-ej1-f71.google.com with SMTP id n18so556538ejc.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 18 Jan 2021 07:32:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JTZcVq1Ep1CR1WH46c5PqheI+6A00IvbUKXMhBi/vHM=;
+        b=XThZwQLM3z12R0Im77oBIOJ1ax0EASKE8V8gieDoEC8up9Mi8ZUanN1ZRTUaLLzwbs
+         SIS7uEpHlaEbiBU6FtIeGeg9mE2eLNed6Vdhd6qE5CyCJLvGPml3PVbgBHSR7hHlsHtX
+         hoq+9upsr2uHnlsq9b89SfeCjbyrbUEmBuUzcaPt+H0D/6IBFVYJ2DBj7Dns09tvy5L9
+         Aa9Llwuqsu3Px+oP5TmX9cmOYWogDMPtqAZwKfAaOeLwU+dhotT5LX72/85OTYNh/qD9
+         Iwaw4m4C8xWBFIUs7d8TZsQ0ej6WFSsQjfvvjUFmkwGUoWdtet55nApwJqnIIbuAWZG+
+         /pNQ==
+X-Gm-Message-State: AOAM533ZgsleRzdu6Sc4D9ZcrDYN8Rfhr4QQdebOHTAd99jnD05zLLLj
+        aXXphL/fqgH8IXKhkhOqitDVR5WUiLTuXqaMzzslWvB5iMOiep+VMWti0ddu+VghcxF3fI6A9MO
+        lvjDmxdasW416/f9gSLujUOi/OZ/hxEwP5w==
+X-Received: by 2002:a17:907:3f29:: with SMTP id hq41mr159899ejc.227.1610983976401;
+        Mon, 18 Jan 2021 07:32:56 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJycAq+hqWDtUQe7NVghv7pF04QqTqMhEAqZ/RU/z2hM4W99B0SgV7qJ5jp+uqhNGO9HnpVacg==
+X-Received: by 2002:a17:907:3f29:: with SMTP id hq41mr159882ejc.227.1610983976211;
+        Mon, 18 Jan 2021 07:32:56 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id v15sm330168ejj.4.2021.01.18.07.32.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 18 Jan 2021 07:32:55 -0800 (PST)
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+To:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
 Cc:     Daniel Scally <djrscally@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
@@ -56,7 +81,6 @@ Cc:     Daniel Scally <djrscally@gmail.com>,
         "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "wsa@kernel.org" <wsa@kernel.org>,
         "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "mgross@linux.intel.com" <mgross@linux.intel.com>,
         "robert.moore@intel.com" <robert.moore@intel.com>,
         "erik.kaneda@intel.com" <erik.kaneda@intel.com>,
@@ -64,47 +88,78 @@ Cc:     Daniel Scally <djrscally@gmail.com>,
         "laurent.pinchart@ideasonboard.com" 
         <laurent.pinchart@ideasonboard.com>,
         "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <20210118152323.GV4077@smile.fi.intel.com>
 References: <20210118003428.568892-1-djrscally@gmail.com>
  <20210118003428.568892-7-djrscally@gmail.com>
  <-GKrxu8GJvGe-PlKkLpblw9N-DtVtS7i87BOCLgJR72yf4hUFpUgiOlGcFero_gqgUxJrX2gxtLOnz_31hJugfam0SXXmXxIzGIhS162mhI=@protonmail.com>
  <20210118135121.GM4077@smile.fi.intel.com>
  <w3qrFtorGLZ_wMnr_Mi7cltli9g8jsMtiQ7Z1Usnj2IKfJ1MJz6-wxlIAEQ-ErgU1x6IBxdAIHBHtQ3OOT_FJOuUYheILlUc20ysNL_zroo=@protonmail.com>
+ <20210118152323.GV4077@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e1032328-c5e8-0bfa-4b87-64207d283d17@redhat.com>
+Date:   Mon, 18 Jan 2021 16:32:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
+In-Reply-To: <20210118152323.GV4077@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <w3qrFtorGLZ_wMnr_Mi7cltli9g8jsMtiQ7Z1Usnj2IKfJ1MJz6-wxlIAEQ-ErgU1x6IBxdAIHBHtQ3OOT_FJOuUYheILlUc20ysNL_zroo=@protonmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 02:51:30PM +0000, Barnabás Pőcze wrote:
-> 2021. január 18., hétfő 14:51 keltezéssel, Andy Shevchenko írta:
-> 
-> > On Mon, Jan 18, 2021 at 11:12:34AM +0000, Barnabás Pőcze wrote:
-> > > 2021. január 18., hétfő 1:34 keltezéssel, Daniel Scally írta:
-> >
-> > > Have you considered putting the source (and header) files into a dedicated
-> > > folder? I think it'd help manageability in the long run, and it'd be immediately
-> > > obvious that these source files form a single "unit".
-> >
-> > What would be the folder name? Because, for example, intel_cht_int33fe* have no
-> > folder (yet?) and here it's kinda similar case when HID describes something
-> > else than just one IP.
-> 
-> I think "intel_skl_int3472" would not be a bad name for the folder. And I believe
-> "intel_cht_int33fe" could be given its own folder as well.
+Hi,
 
-I;m not objecting (at some point in the past I had proposed moving Intel stuff
-to a separate folder, but at that time PDx86 has no folders at all and Darren
-was kinda not in favour of creating ones, but things changed), just let's hear
-Hans on this.
+On 1/18/21 4:23 PM, andriy.shevchenko@linux.intel.com wrote:
+> On Mon, Jan 18, 2021 at 02:51:30PM +0000, Barnabás Pőcze wrote:
+>> 2021. január 18., hétfő 14:51 keltezéssel, Andy Shevchenko írta:
+>>
+>>> On Mon, Jan 18, 2021 at 11:12:34AM +0000, Barnabás Pőcze wrote:
+>>>> 2021. január 18., hétfő 1:34 keltezéssel, Daniel Scally írta:
+>>>
+>>>> Have you considered putting the source (and header) files into a dedicated
+>>>> folder? I think it'd help manageability in the long run, and it'd be immediately
+>>>> obvious that these source files form a single "unit".
+>>>
+>>> What would be the folder name? Because, for example, intel_cht_int33fe* have no
+>>> folder (yet?) and here it's kinda similar case when HID describes something
+>>> else than just one IP.
+>>
+>> I think "intel_skl_int3472" would not be a bad name for the folder. And I believe
+>> "intel_cht_int33fe" could be given its own folder as well.
+> 
+> I;m not objecting (at some point in the past I had proposed moving Intel stuff
+> to a separate folder, but at that time PDx86 has no folders at all and Darren
+> was kinda not in favour of creating ones, but things changed), just let's hear
+> Hans on this.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I'm in favor of using a folder for this and "intel_skl_int3472" is fine with me.
+
+With that said I'm not entirely sure if I'm in favor of the _skl_ part of
+the folder and driver name or not.
+
+The INT3472 ACPI device is used with other CPUs, e.g. Apollo Lake too and
+I think the driver should work fine with those.
+
+The intel_cht_int33fe case is special because the driver only applies
+to some models with an INT33FE ACPI device (the whole INT33FE ACPI device
+is a horrible thing which seems to stem from Intel rushing Bay Trail to
+market to try and compete on the tablet market).
+
+With that all said SKL probably is the first SoC to feature this and I
+guess future IPUs may still use INT3472 given Intel's BAD habit of
+re-using ACPI HIDs for multiple incompatible generations. So I guess
+that keeping it is fine; and if we then need an incompatible INT3472
+driver for newer IPUs we can use a different prefix for those.
+
+TL;DR:
+
+1. Using a folder is fine, desirable even
+2. I've some concerns about the name, but I'm not really objecting,
+just giving my 2 cents.
+
+Regards,
+
+Hans
 
 
