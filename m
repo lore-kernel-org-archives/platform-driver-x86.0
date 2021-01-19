@@ -2,128 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105DBC433DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D52CC433E9
 	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DED71230FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1833F22D08
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389693AbhASOgl (ORCPT
+        id S2388605AbhASOgi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jan 2021 09:36:41 -0500
-Received: from mail-oi1-f179.google.com ([209.85.167.179]:43398 "EHLO
-        mail-oi1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404399AbhASNUn (ORCPT
+        Tue, 19 Jan 2021 09:36:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405252AbhASLMn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jan 2021 08:20:43 -0500
-Received: by mail-oi1-f179.google.com with SMTP id q25so21077411oij.10;
-        Tue, 19 Jan 2021 05:19:53 -0800 (PST)
+        Tue, 19 Jan 2021 06:12:43 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A5BC0613C1;
+        Tue, 19 Jan 2021 03:12:02 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id y187so16349257wmd.3;
+        Tue, 19 Jan 2021 03:12:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=vzBb5/Tv6UlBk+EMbkqMhlDzSJvMQnejvX8e7cfy6pY=;
+        b=iyKbA/ref/cqKHgmpv0D2SbIRkZVdsRnvxsb1kFyMXSwCclym02NRPq2rQUaahMNWf
+         fFOWZgA4hllMQSYlubBVGt3BNHoMUSYFtQXTeNCgHOdlnMMnoMIsf/ShygjQZiucVuCk
+         i09fmQjHgfbGTL2MeqfkeC1iGYWKDcHtbZVopWJO62y47u2A3ZC7G5MfmrpyV8pLTixn
+         U7a5PhbLQcQe3K0K8FKJ/Vax2pFtkcbfQig32ukhx9PrijsfqDUfzkcjbtJGIQdkxCMd
+         ERW/P9Sg5AnY1Z5qLRkxdgA/OJsNYEN1ZVDGxEPSZGEQtcwoXxWZixH0Cf54RKs5+WcM
+         NfUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kUDdGSpowK1CEbj8McVC+bBtkLq63WQr+Zql2YLqG5U=;
-        b=APR2QqebwLBhixWfzvKPO1J2toMMxc5wGp2eyDUTVTgDdeiNhXK9t6GdizLJ1xkZqO
-         9FUJcPELlC8JsKvZHgBtP/Ouyr8wWl7/QC6N2kqS0Li/vWGRmut2IRxVbXPhlkaNolc+
-         YXtBkshomBq06Z92/3M3YA3v32X5IuS3Fjcs2T+j7H8yNeRu/EH+gKLfKCGJPh9Buv2w
-         PH0oMcgsVw9Y6E7Bp34L49D7RMsDRVlVulxSNBXLwVyuZf1n6mqf1hlwIDnkodjDxUv5
-         TSBMz7CAVNaWyjyCpMwPiJ6OEpyBpr+lxLlu9AucA+mGHM9ffrkAt1B/xb2zhDj9eT2T
-         EnZg==
-X-Gm-Message-State: AOAM5320PfM7sBJ4mg7+Ikxwfq1IGR98LK0HQaVUFF7cmGuDrycn1e5q
-        +seTqS7UdaDCLlahsDcTmZN/4kOlHfyFAY4r+II=
-X-Google-Smtp-Source: ABdhPJx6gcAwtwXRqp5/IJOsji1kIJ+Z/62NGRk7TKZOMu+nRuZ+LcTh4icQ0/TaVor6jnR3+WE/obLzf1Lcm6Gy7n8=
-X-Received: by 2002:aca:5c05:: with SMTP id q5mr2555018oib.157.1611062368209;
- Tue, 19 Jan 2021 05:19:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-5-djrscally@gmail.com>
- <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
-In-Reply-To: <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 19 Jan 2021 14:19:16 +0100
-Message-ID: <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, andy@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=vzBb5/Tv6UlBk+EMbkqMhlDzSJvMQnejvX8e7cfy6pY=;
+        b=nufY3A+laS7DgkUbNxdtQg9/Vj+0bGZut2jhfL160Ck8nmV0qGdLAOF4HG2eFHJk0R
+         fUBzB130DMC5MQVljTfy3Jn65KX+DdOZT9CPApn4WQK3WY2ryKy8weP/Dou/zT3c7OTk
+         pZ5YdxfxYZ8aZAwYQ+/4ETKtN1nBkXg8LcFY/i5KLk9hbI3FSDEBe+lyScg7J3jPXVJx
+         JpfTqPiElAXtnRwyMLAB+NfOnDcQa4/iPg17lbIosxUojafYH+Hvz+/P1HhICRSQLEFm
+         jZj8xAy6NASpbmM3ypogB/OUcfRuLqdGsssSRbgY4AKmeQL/JAC/0ct6kDn1y2mGvxih
+         E4Lw==
+X-Gm-Message-State: AOAM532fqqkdequECosTr3D7GuUu/+8IAgd9eGHdw0jcGYzNTWRl1NXh
+        2OSZT+3mn26KIDHDlhggjuI=
+X-Google-Smtp-Source: ABdhPJzXyvKMRBHff/3egHeqjvWcHG8JKBSU0/vF5pWK95xFgz+RG+FsjEHU51pFgAwOPbn5ONplsA==
+X-Received: by 2002:a1c:24c4:: with SMTP id k187mr3693910wmk.14.1611054721747;
+        Tue, 19 Jan 2021 03:12:01 -0800 (PST)
+Received: from [192.168.1.211] ([2.29.208.120])
+        by smtp.gmail.com with ESMTPSA id 17sm3833428wmk.48.2021.01.19.03.12.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Jan 2021 03:12:01 -0800 (PST)
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        robert.moore@intel.com, erik.kaneda@intel.com,
+        sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-7-djrscally@gmail.com>
+ <2d8d7072-3b6f-4ffa-29dc-51f31fe4af72@ideasonboard.com>
+ <20210119111122.GU4077@smile.fi.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <c720ec32-b6d1-9b78-376e-4e3686878d70@gmail.com>
+Date:   Tue, 19 Jan 2021 11:12:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20210119111122.GU4077@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 9:55 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Daniel,
->
-> Thank you for the patch.
->
-> On Mon, Jan 18, 2021 at 12:34:25AM +0000, Daniel Scally wrote:
-> > We want to refer to an i2c device by name before it has been
->
-> s/i2c device/acpi i2c device/ ?
->
-> > created by the kernel; add a function that constructs the name
-> > from the acpi device instead.
-> >
-> > Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> > ---
-> > Changes in v2:
-> >
-> >       - Stopped using devm_kasprintf()
-> >
-> >  drivers/i2c/i2c-core-acpi.c | 16 ++++++++++++++++
-> >  include/linux/i2c.h         |  5 +++++
-> >  2 files changed, 21 insertions(+)
-> >
-> > diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> > index 37c510d9347a..98c3ba9a2350 100644
-> > --- a/drivers/i2c/i2c-core-acpi.c
-> > +++ b/drivers/i2c/i2c-core-acpi.c
-> > @@ -497,6 +497,22 @@ struct i2c_client *i2c_acpi_new_device(struct device *dev, int index,
-> >  }
-> >  EXPORT_SYMBOL_GPL(i2c_acpi_new_device);
-> >
-> > +/**
-> > + * i2c_acpi_dev_name - Construct i2c device name for devs sourced from ACPI
-> > + * @adev:     ACPI device to construct the name for
-> > + *
-> > + * Constructs the name of an i2c device matching the format used by
-> > + * i2c_dev_set_name() to allow users to refer to an i2c device by name even
-> > + * before they have been instantiated.
-> > + *
-> > + * The caller is responsible for freeing the returned pointer.
-> > + */
-> > +char *i2c_acpi_dev_name(struct acpi_device *adev)
-> > +{
-> > +     return kasprintf(GFP_KERNEL, I2C_DEV_NAME_FORMAT, acpi_dev_name(adev));
->
-> There's a real danger of a memory leak, as the function name sounds very
-> similar to dev_name() or acpi_dev_name() and those don't allocate
-> memory. I'm not sure what a better name would be, but given that this
-> function is only used in patch 6/7 and not in the I2C subsystem itself,
-> I wonder if we should inline this kasprintf() call in the caller and
-> drop this patch.
 
-IMO if this is a one-off usage, it's better to open-code it.
+On 19/01/2021 11:11, Andy Shevchenko wrote:
+> On Tue, Jan 19, 2021 at 10:56:17AM +0000, Kieran Bingham wrote:
+>> On 18/01/2021 00:34, Daniel Scally wrote:
+> ...
+>
+>>> +config INTEL_SKL_INT3472
+>>> +	tristate "Intel SkyLake ACPI INT3472 Driver"
+>>> +	depends on X86 && ACPI
+>>> +	select REGMAP_I2C
+>> I've tried compiling this as a built in and a module and on my minimal
+>> config I had failures on both for regulator_register and
+>> regulator_unregister.
+>>
+>> I suspect this needs to have either a selects or a depends upon
+>> CONFIG_REGULATOR
+> Valid point, although it seems no consensus on which is better to use. It seems
+> to me that in this case we need to select it.
+>
+Yeah; it will be necessary for the gpio-regulator too anyway I expect.
+
+
+Thanks Kieran; I missed that entirely.
+
