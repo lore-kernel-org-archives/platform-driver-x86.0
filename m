@@ -5,27 +5,27 @@ X-Spam-Level:
 X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BFFC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E35C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA1023107
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF6D22472
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbhASUij convert rfc822-to-8bit (ORCPT
+        id S1730428AbhASUqs convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jan 2021 15:38:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
+        Tue, 19 Jan 2021 15:46:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727011AbhASUVP (ORCPT
+        id S2391929AbhASUqk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jan 2021 15:21:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4E92523139
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2021 20:20:35 +0000 (UTC)
+        Tue, 19 Jan 2021 15:46:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 7276A23131
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2021 20:45:59 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
  Envy x360)
-Date:   Tue, 19 Jan 2021 20:20:34 +0000
+Date:   Tue, 19 Jan 2021 20:45:58 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -34,14 +34,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: dmaroulidis@dimitrismaroulidis.com
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-199715-215701-ZF0RXTMrun@https.bugzilla.kernel.org/>
+Message-ID: <bug-199715-215701-YH55E7GGpg@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
 References: <bug-199715-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -55,15 +55,23 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=199715
 
---- Comment #44 from Dimitris (dmaroulidis@dimitrismaroulidis.com) ---
-@Richard I just upgraded to v2.8.7, corrected the module's options and now the
-accelerometer functions correctly, like before. 
+--- Comment #47 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to Dimitris from comment #46)
+> @Hans I get 0 on the gyro, the magneto functions correctly (tested with Luya
+> method in comment #45) and the accelerometer also. I have no ALS detected.
+> 
+> My laptop model is Envy x360 13-ag0011nv (P/N: 5VZ54EA).
 
-Today I noticed that monitor-sensors stated that no ambient light sensor was
-present. If I understand correctly a bitmask of 0x80007 activates all sensors
-on the hub. So that means that the light sensor would be active too. That would
-suggest the ag0xxx doesn't have an ALS. I couldn't find any information about
-whether that line has an ALS on HP support or PartSurfer.
+Thanks, so that would be a "HP ENVY x360 Convertible 13-ag0xxx" like the one
+from Richard. Can you confirm that:
+
+cat /sys/class/dmi/id/product_name
+
+Outputs "HP ENVY x360 Convertible 13-ag0xxx" ?
+
+
+
+@Richard, no need for you to also test this then.
 
 -- 
 You may reply to this email to add a comment.
