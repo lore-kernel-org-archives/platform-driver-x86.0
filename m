@@ -2,79 +2,332 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E35C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14849C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF6D22472
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C111A206EC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 20:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbhASUqs convert rfc822-to-8bit (ORCPT
+        id S2392068AbhASUxF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jan 2021 15:46:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34306 "EHLO mail.kernel.org"
+        Tue, 19 Jan 2021 15:53:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45164 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391929AbhASUqk (ORCPT
+        id S2390432AbhASUwy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jan 2021 15:46:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7276A23131
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2021 20:45:59 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Tue, 19 Jan 2021 20:45:58 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-199715-215701-YH55E7GGpg@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
+        Tue, 19 Jan 2021 15:52:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F1D4DAF28;
+        Tue, 19 Jan 2021 20:52:09 +0000 (UTC)
+Date:   Tue, 19 Jan 2021 21:52:09 +0100
+Message-ID: <s5h7do8fy4m.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        Perry Yuan <perry979106@gmail.com>,
+        "Yuan, Perry" <Perry.Yuan@dell.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
+In-Reply-To: <47830d92-e98a-00f8-bf91-79e187ba7c5b@redhat.com>
+References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
+        <BY3PR19MB49131AA4EAE7C24D365FAC8DFAAA0@BY3PR19MB4913.namprd19.prod.outlook.com>
+        <44d8e280-c8f3-4e3a-7ef7-b68224c96def@gmail.com>
+        <SA1PR19MB4926382ED61402D0F0BFA3B3FAA30@SA1PR19MB4926.namprd19.prod.outlook.com>
+        <47830d92-e98a-00f8-bf91-79e187ba7c5b@redhat.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=199715
-
---- Comment #47 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-(In reply to Dimitris from comment #46)
-> @Hans I get 0 on the gyro, the magneto functions correctly (tested with Luya
-> method in comment #45) and the accelerometer also. I have no ALS detected.
+On Tue, 19 Jan 2021 21:33:04 +0100,
+Hans de Goede wrote:
 > 
-> My laptop model is Envy x360 13-ag0011nv (P/N: 5VZ54EA).
+> Hi,
+> 
+> On 1/19/21 5:33 PM, Limonciello, Mario wrote:
+> >>>> -----Original Message-----
+> >>>> From: Yuan, Perry <Perry_Yuan@Dell.com>
+> >>>> Sent: Tuesday, January 12, 2021 11:18
+> >>>> To: oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
+> >>>> hdegoede@redhat.com; mgross@linux.intel.com
+> >>>> Cc: lgirdwood@gmail.com; broonie@kernel.org; alsa-devel@alsa-project.org;
+> >>>> linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; Yuan,
+> >>>> Perry; Limonciello, Mario
+> >>>> Subject: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
+> >>>>
+> >>>> From: Perry Yuan <perry_yuan@dell.com>
+> >>>>
+> >>>> Some new Dell system is going to support audio internal micphone
+> >>>> privacy setting from hardware level with micmute led state changing
+> >>>> When micmute hotkey pressed by user, soft mute will need to be enabled
+> >>>> firstly in case of pop noise, and codec driver need to react to mic
+> >>>> mute event to EC(embedded controller) notifying that SW mute is completed
+> >>>> Then EC will do the hardware mute physically within the timeout reached
+> >>>>
+> >>>> This patch allow codec rt715 driver to ack EC when micmute key pressed
+> >>>> through this micphone led control interface like hda_generic provided
+> >>>> ACPI method defined in dell-privacy micmute led trigger will be called
+> >>>> for notifying the EC that software mute has been completed
+> >>>>
+> >>>> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
+> >>>>
+> >>>> --------
+> >>>> v2 -> v3
+> >>>> * simplify the patch to reuse some val value
+> >>>> * add more detail to the commit info
+> >>>>
+> >>>> v1 -> v2:
+> >>>> * fix some format issue
+> >>>> --------
+> >>>> ---
+> >>>>   sound/soc/codecs/rt715-sdca.c | 16 ++++++++++++++++
+> >>>>   sound/soc/codecs/rt715-sdca.h |  1 +
+> >>>>   sound/soc/codecs/rt715.c      | 14 ++++++++++++++
+> >>>>   sound/soc/codecs/rt715.h      |  1 +
+> >>>>   4 files changed, 32 insertions(+)
+> >>>>
+> >>>> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
+> >>>> index b43ac8559e45..861a0d2a8957 100644
+> >>>> --- a/sound/soc/codecs/rt715-sdca.c
+> >>>> +++ b/sound/soc/codecs/rt715-sdca.c
+> >>>> @@ -12,6 +12,7 @@
+> >>>>   #include <linux/version.h>
+> >>>>   #include <linux/kernel.h>
+> >>>>   #include <linux/init.h>
+> >>>> +#include <linux/leds.h>
+> >>>>   #include <linux/pm_runtime.h>
+> >>>>   #include <linux/pm.h>
+> >>>>   #include <linux/soundwire/sdw.h>
+> >>>> @@ -244,6 +245,7 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   	unsigned int max = mc->max;
+> >>>>   	int val;
+> >>>>
+> >>>> +	pr_err("++++++rt715_sdca_get_volsw++\n");
+> >>>>   	val = snd_soc_component_read(component, mc->reg);
+> >>>>   	if (val < 0)
+> >>>>   		return -EINVAL;
+> >>>> @@ -261,6 +263,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   	struct snd_ctl_elem_value *ucontrol)
+> >>>>   {
+> >>>>   	struct snd_soc_component *component = snd_kcontrol_chip(kcontrol);
+> >>>> +	struct rt715_sdca_priv *rt715 =
+> >>>> snd_soc_component_get_drvdata(component);
+> >>>>   	struct soc_mixer_control *mc =
+> >>>>   		(struct soc_mixer_control *)kcontrol->private_value;
+> >>>>   	unsigned int val, val2, loop_cnt = 2, i;
+> >>>> @@ -268,6 +271,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   	unsigned int reg2 = mc->rreg;
+> >>>>   	unsigned int reg = mc->reg;
+> >>>>   	unsigned int max = mc->max;
+> >>>> +	unsigned int val0, val1;
+> >>>>   	int err;
+> >>>>
+> >>>>   	val = ucontrol->value.integer.value[0];
+> >>>> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   			return err;
+> >>>>   	}
+> >>>>
+> >>>> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+> >>>> +	/* dell privacy LED trigger state changed by muted/unmute switch */
+> >>>> +	if (mc->invert) {
+> >>>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+> >>>>> value.integer.value[1]) {
+> >>>> +			rt715->micmute_led = LED_OFF;
+> >>>> +		} else {
+> >>>> +			rt715->micmute_led = LED_ON;
+> >>>> +		}
+> >>>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+> >>>> +	}
+> >>>> +#endif
+> >>>> +
+> >>>>   	return 0;
+> >>>>   }
+> >>>>
+> >>>> diff --git a/sound/soc/codecs/rt715-sdca.h b/sound/soc/codecs/rt715-sdca.h
+> >>>> index 840c237895dd..f8988ab88f80 100644
+> >>>> --- a/sound/soc/codecs/rt715-sdca.h
+> >>>> +++ b/sound/soc/codecs/rt715-sdca.h
+> >>>> @@ -31,6 +31,7 @@ struct rt715_sdca_priv {
+> >>>>   	int l_is_unmute;
+> >>>>   	int r_is_unmute;
+> >>>>   	int hw_sdw_ver;
+> >>>> +	bool micmute_led;
+> >>>>   };
+> >>>>
+> >>>>   struct rt715_sdw_stream_data {
+> >>>> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
+> >>>> index cdcba70146da..b4e480744c94 100644
+> >>>> --- a/sound/soc/codecs/rt715.c
+> >>>> +++ b/sound/soc/codecs/rt715.c
+> >>>> @@ -13,6 +13,7 @@
+> >>>>   #include <linux/init.h>
+> >>>>   #include <linux/delay.h>
+> >>>>   #include <linux/i2c.h>
+> >>>> +#include <linux/leds.h>
+> >>>>   #include <linux/pm_runtime.h>
+> >>>>   #include <linux/pm.h>
+> >>>>   #include <linux/soundwire/sdw.h>
+> >>>> @@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   		RT715_SET_GAIN_MIX_ADC2_L};
+> >>>>   	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
+> >>>>   	unsigned int read_ll, read_rl, i, j, loop_cnt;
+> >>>> +	unsigned int val0, val1;
+> >>>>
+> >>>>   	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
+> >>>>   		strstr(ucontrol->id.name, "Main Capture Volume"))
+> >>>> @@ -95,6 +97,18 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+> >>>> *kcontrol,
+> >>>>   	else
+> >>>>   		loop_cnt = 1;
+> >>>>
+> >>>> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+> >>>> +	/* Micmute LED state changed by muted/unmute switch */
+> >>>> +	if (mc->invert) {
+> >>>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+> >>>>> value.integer.value[1]) {
+> >>>> +			rt715->micmute_led = LED_OFF;
+> >>>> +		} else {
+> >>>> +			rt715->micmute_led = LED_ON;
+> >>>> +		}
+> >>>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+> >>>> +	}
+> >>>> +#endif
+> >>>> +
+> >>> You might have missed my other comment on v2 feedback, but is there a reason
+> >>> to keep it behind a compile time flag for dell privacy module?  In practice
+> >>> any other future led backend provider should work too.  Another way to think
+> >>> about it - if dell privacy wasn't enabled would this cause a problem to run
+> >>> this code?  I think it would just be a no-op.
+> >>>
+> >>>>   	for (j = 0; j < loop_cnt; j++) {
+> >>>>   		/* Can't use update bit function, so read the original value first
+> >>>> */
+> >>>>   		if (loop_cnt == 1) {
+> >>>> diff --git a/sound/soc/codecs/rt715.h b/sound/soc/codecs/rt715.h
+> >>>> index 009a8266f606..57c9af041181 100644
+> >>>> --- a/sound/soc/codecs/rt715.h
+> >>>> +++ b/sound/soc/codecs/rt715.h
+> >>>> @@ -22,6 +22,7 @@ struct rt715_priv {
+> >>>>   	struct sdw_bus_params params;
+> >>>>   	bool hw_init;
+> >>>>   	bool first_hw_init;
+> >>>> +	bool micmute_led;
+> >>>>   };
+> >>>>
+> >>>>   struct sdw_stream_data {
+> >>>> --
+> >>>> 2.25.1
+> >>
+> >> Pierre Louis suggested to just set the mic mute led state unconditionally .
+> >> It is more common interface to allow other platforms to change micmute led.
+> >> The discussion result is from "[PATCH v2 2/2] ASoC: rt715:add Mic Mute LED
+> >> control support"
+> >>
+> >> Here is the change compared to V3 ,the CONFIG_DELL_PRIVACY will be removed
+> >>
+> >> -#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+> >> -       /* dell privacy LED trigger state changed by muted/unmute switch */
+> >> +       /* MicMute LED state changed by muted/unmute switch */
+> >>          if (mc->invert) {
+> >>                  if (ucontrol->value.integer.value[0] || ucontrol-
+> >>> value.integer.value[1]) {
+> >>                          rt715->micmute_led = LED_OFF;
+> >> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
+> >> index b4e480744c94..60bb3d98103e 100644
+> >> --- a/sound/soc/codecs/rt715.c
+> >> +++ b/sound/soc/codecs/rt715.c
+> >> @@ -97,8 +97,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+> >> *kcontrol,
+> >>          else
+> >>                  loop_cnt = 1;
+> >>
+> >> -#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+> >> -       /* Micmute LED state changed by muted/unmute switch */
+> >> +       /* MicMute LED state changed by muted/unmute switch */
+> >>          if (mc->invert) {
+> >>                  if (ucontrol->value.integer.value[0] || ucontrol-
+> >>> value.integer.value[1]) {
+> >>                          rt715->micmute_led = LED_OFF;
+> >> @@ -107,7 +106,6 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
+> >> *kcontrol,
+> >>                  }
+> >>                  ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+> >>          }
+> >> -#endif
+> > 
+> > I'm not sure which thread, but I believe there was still also another suggestion
+> > that this should be made more "generic" and to work for all codecs.  So that when
+> > we have lets say a hypothetical rt717 we don't need the same in that module.
+> 
+> Right:
+> 
+> 
+> On 1/15/21 6:45 PM, Jaroslav Kysela wrote:
+> > Dne 12. 01. 21 v 18:18 Perry Yuan napsal(a):
+> > 
+> >> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
+> >> +	/* dell privacy LED trigger state changed by muted/unmute switch */
+> >> +	if (mc->invert) {
+> >> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
+> >> +			rt715->micmute_led = LED_OFF;
+> >> +		} else {
+> >> +			rt715->micmute_led = LED_ON;
+> >> +		}
+> >> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
+> >> +	}
+> >> +#endif
+> > 
+> > [removing lkml and x86-platform lists]
+> > 
+> > Looking to this code, perhaps, it may be a good idea to move the LED trigger
+> > handling from the low-level drivers and do it in the top-level control code
+> > (sound/core/control.c). Adding a new flag SNDRV_CTL_ELEM_ACCESS_MIC_LED may be
+> > an option and we can nicely handle the situation for multiple microphones (OR
+> > operation). The motivation is to remove the duplicated code.
+> > 
+> > The same situation is for the playback LED.
+> 
+> I believe that this is an excellent suggestion and that this is the way to go.
 
-Thanks, so that would be a "HP ENVY x360 Convertible 13-ag0xxx" like the one
-from Richard. Can you confirm that:
+Well, I'm not thrilled by moving in that high level.
 
-cat /sys/class/dmi/id/product_name
+If you put it to the core, the control core (i.e. the main snd module)
+will need the dependency on the LEDS stuff.  Such an dependency mess
+is what we'd like to avoid in general.
 
-Outputs "HP ENVY x360 Convertible 13-ag0xxx" ?
+At most, yet more helper module that depends on the leds, but OTOH, we
+don't want yet more module, either...
+
+BTW, there is always some crazy request.  For example, HD-audio code
+has the mute-LED mode to flip the LED meaning; i.e. turn LED on at
+unmuted so that user can see explicitly that it's being recorded.
+It makes sense from the security POV.
+
+Just to keep such a possibility in mind.
 
 
-
-@Richard, no need for you to also test this then.
-
--- 
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.
+Takashi
