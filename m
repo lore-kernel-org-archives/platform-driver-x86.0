@@ -2,85 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BE6C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 18:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE655C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 19:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551AC22E00
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 18:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676E323109
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 19:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390327AbhASQuW (ORCPT
+        id S1728033AbhASTdw convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jan 2021 11:50:22 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55482 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389915AbhASQuC (ORCPT
+        Tue, 19 Jan 2021 14:33:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbhASTdm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jan 2021 11:50:02 -0500
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9850BA4E;
-        Tue, 19 Jan 2021 17:49:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1611074959;
-        bh=1CtpRSqqqrjLBnzm0zOskfSPhuxfIgbfyljcSVFkVKA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a3ev1gS7FYRk4JOV55TANrPdgNqcjECkvYuR6HbXpX1t2elboozdTnZQ224IcF4yE
-         LBQH2LYkknLdbYdLdyPjnOMJo5on6K+/Zvl27v/aq7C52Cg3aTFZJVb2Cr0ceQgGSj
-         fJaQMMyFOoHLF/OPxGY7IxVxGd0peaUcwrZRqKZQ=
-Date:   Tue, 19 Jan 2021 18:49:02 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
-        andy@kernel.org, mika.westerberg@linux.intel.com,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-Message-ID: <YAcNficDLrp8NTx8@pendragon.ideasonboard.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-7-djrscally@gmail.com>
- <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
- <20210118144606.GO4077@smile.fi.intel.com>
- <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
- <1053125f-7cb2-8aa0-3204-24df62986184@gmail.com>
- <YAZ6Y1QDyWwPGE69@pendragon.ideasonboard.com>
- <20210119093542.GP4077@smile.fi.intel.com>
+        Tue, 19 Jan 2021 14:33:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 53E6D2310C
+        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2021 19:33:00 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 211117] dma_mmap_coherent() - garbage sound output with
+ mem_encrypt on Ryzen platform
+Date:   Tue, 19 Jan 2021 19:33:00 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: thomas.lendacky@amd.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-211117-215701-Am6NIQ8Vem@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-211117-215701@https.bugzilla.kernel.org/>
+References: <bug-211117-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210119093542.GP4077@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 11:35:42AM +0200, Andy Shevchenko wrote:
-> On Tue, Jan 19, 2021 at 08:21:23AM +0200, Laurent Pinchart wrote:
-> > On Tue, Jan 19, 2021 at 12:11:40AM +0000, Daniel Scally wrote:
-> > > On 18/01/2021 21:19, Daniel Scally wrote:
-> 
-> ...
-> 
-> > > (also, Laurent, if we did it this way we wouldn't be able to also handle
-> > > the led-indicator GPIO here without some fairly major rework)
-> > 
-> > Given the additional complexity I don't think it's worth it, your
-> > implementation is fine and code duplication with clk-gpio is minimal.
-> 
-> Making clk-gpio.c available as a library is a win in long term and reduces a
-> possible duplication by others in the future. I bet we even might find already
-> clk-gpio parts in some drivers.
+https://bugzilla.kernel.org/show_bug.cgi?id=211117
 
-How about you submit a patch on top then ? :-) Let's avoid yak shaving.
+thomas.lendacky@amd.com changed:
+
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |thomas.lendacky@amd.com
+
+--- Comment #17 from thomas.lendacky@amd.com ---
+This sounds like a mismatch between the encryption bit in the kernel and the
+encryption bit in userspace. It looks like that should be taken care of by the
+dma_pgprot() call in dma_mmap_attrs() or in iommu_dma_mmap(). But maybe the
+force_dma_unencrypted() in arch/x86/mm/mem_encrypt.c needs to understand if the
+IOMMU is doing the mapping. Since, even if the device doesn't support 48-bit or
+higher DMA, it will still done encrypted because of the IOMMU. I don't see any
+dmesg output, is the IOMMU enabled? What happens if you do iommu=pt on the
+kernel command line?
+
+Alternatively, if you want memory encryption for your bare-metal system, you
+can see if the BIOS supports TSME (Transparent SME). Then you can remove
+mem_encrypt=on or add mem_encrypt=off (if enabled by default), and still get
+memory encryption.
 
 -- 
-Regards,
+You may reply to this email to add a comment.
 
-Laurent Pinchart
+You are receiving this mail because:
+You are watching the assignee of the bug.
