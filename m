@@ -2,112 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB8EC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2601CC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591E4230FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0140622E01
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 19 Jan 2021 22:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbhASW0x convert rfc822-to-8bit (ORCPT
+        id S1728278AbhASWdJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 19 Jan 2021 17:26:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51344 "EHLO mail.kernel.org"
+        Tue, 19 Jan 2021 17:33:09 -0500
+Received: from mga18.intel.com ([134.134.136.126]:24755 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbhASW0l (ORCPT
+        id S1727669AbhASRoS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 19 Jan 2021 17:26:41 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4F27F23121
-        for <platform-driver-x86@vger.kernel.org>; Tue, 19 Jan 2021 22:26:00 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Tue, 19 Jan 2021 22:25:59 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mail@richard-neumann.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-199715-215701-waGMFEIV6n@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 19 Jan 2021 12:44:18 -0500
+IronPort-SDR: dJV84DJ/vSSJ+Hn8A+Wxhhtm3za3Zz/j8Sqwl21dBj00sBMoTG3/iIJ32hKObH1S0bMA52ZeqM
+ W5dm7lHYx3mw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="166632754"
+X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
+   d="scan'208";a="166632754"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 09:42:19 -0800
+IronPort-SDR: EL58UZk+sJ19P4ixy5WWw7RUj9/Yx+9c2hUyTbYVWS2dSrkQoe04HMeVAzYEqHzQNh6FuH/9zD
+ F+SVCiy3PhJQ==
+X-IronPort-AV: E=Sophos;i="5.79,359,1602572400"; 
+   d="scan'208";a="501005745"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2021 09:42:13 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l1v2B-004oA2-Fm; Tue, 19 Jan 2021 19:43:15 +0200
+Date:   Tue, 19 Jan 2021 19:43:15 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        andy@kernel.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
+        mgross@linux.intel.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+Message-ID: <YAcaM9Tcif1rS3V/@smile.fi.intel.com>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+ <20210118144606.GO4077@smile.fi.intel.com>
+ <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
+ <1053125f-7cb2-8aa0-3204-24df62986184@gmail.com>
+ <20210119093358.GO4077@smile.fi.intel.com>
+ <YAcKj9fyNZY8QETd@pendragon.ideasonboard.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YAcKj9fyNZY8QETd@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=199715
+On Tue, Jan 19, 2021 at 06:36:31PM +0200, Laurent Pinchart wrote:
+> On Tue, Jan 19, 2021 at 11:33:58AM +0200, Andy Shevchenko wrote:
+> > On Tue, Jan 19, 2021 at 12:11:40AM +0000, Daniel Scally wrote:
+> > > On 18/01/2021 21:19, Daniel Scally wrote:
 
---- Comment #48 from Richard Neumann (mail@richard-neumann.de) ---
-$ cat /sys/class/dmi/id/product_name
-HP ENVY x360 Convertible 13-ag0xxx
+...
 
-$ for file in /sys/bus/iio/devices/iio\:device0/in_anglvel_*; do echo
-"$(basename "${file}"): $(cat "${file}")"; done
-in_anglvel_hysteresis: 1.270000
-in_anglvel_offset: 0
-in_anglvel_sampling_frequency: 12.500000
-in_anglvel_scale: 0.000174532
-in_anglvel_x_raw: 0
-in_anglvel_y_raw: 0
-in_anglvel_z_raw: 0
+> > See my previous reply. TL;DR: you have to modify clk-gpio.c to export couple of
+> > methods to be able to use it as a library.
+> 
+> That seems really overkill given the very simple implementation of the
+> clock provided here.
 
-$ for file in /sys/bus/iio/devices/iio\:device1/in_magn_*; do echo "$(basename
-"${file}"): $(cat "${file}")"; done
-in_magn_hysteresis: 1.270000
-in_magn_offset: 0
-in_magn_sampling_frequency: 12.500000
-in_magn_scale: 0.000001000
-in_magn_x_raw: 40
-in_magn_y_raw: -14
-in_magn_z_raw: -16
+Less code in the end is called an overkill? Hmm...
+I think since we in Linux it's better to utilize what it provides. Do you want
+me to prepare a patch to show that there is no overkill at all?
 
-$ for file in /sys/bus/iio/devices/iio\:device2/in_accel_*; do echo "$(basename
-"${file}"): $(cat "${file}")"; done
-in_accel_hysteresis: 1.270000
-in_accel_offset: 0
-in_accel_sampling_frequency: 12.500000
-in_accel_scale: 0.098066500
-in_accel_x_raw: 0
-in_accel_y_raw: -9
-in_accel_z_raw: -5
+...
 
-$ for file in /sys/bus/iio/devices/iio\:device3/in_i*; do echo "$(basename
-"${file}"): $(cat "${file}")"; done
-cat: '/sys/bus/iio/devices/iio:device3/in_illuminance_hysteresis': Invalid
-argument
-in_illuminance_hysteresis: 
-in_illuminance_offset: 0
-in_illuminance_raw: 0
-in_illuminance_sampling_frequency: 12.500000
-in_illuminance_scale: 0.100000000
-in_intensity_both_raw: 0
-cat: '/sys/bus/iio/devices/iio:device3/in_intensity_hysteresis': Invalid
-argument
-in_intensity_hysteresis: 
-in_intensity_offset: 0
-in_intensity_sampling_frequency: 12.500000
-in_intensity_scale: 0.100000000
+> > > (also, Laurent, if we did it this way we wouldn't be able to also handle
+> > > the led-indicator GPIO here without some fairly major rework)
+> > 
+> > LED indicators are done as LED class devices (see plenty of examples in PDx86
+> > drivers: drivers/platform/x86/)
+> 
+> How do you expose the link between the sensor and its indicator LED to
+> userspace ? Isn't it better to handle it in the kernel to avoid rogue
+> userspace turning the camera on without notifying the user ?
+
+I didn't get this. It's completely a LED handling driver business. We may
+expose it to user space or not, but it's orthogonal to the usage of LED class
+IIUC. Am I mistaken here?
 
 -- 
-You may reply to this email to add a comment.
+With Best Regards,
+Andy Shevchenko
 
-You are receiving this mail because:
-You are watching the assignee of the bug.
+
