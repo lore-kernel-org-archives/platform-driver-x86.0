@@ -2,86 +2,66 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA83FC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 12:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F128C4332B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 12:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71ED422A84
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 12:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75462339E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 12:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388362AbhATMir (ORCPT
+        id S1727201AbhATMiv convert rfc822-to-8bit (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Jan 2021 07:38:47 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:45150 "EHLO mail.skyhub.de"
+        Wed, 20 Jan 2021 07:38:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388715AbhATLp3 (ORCPT
+        id S2388775AbhATLqm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Jan 2021 06:45:29 -0500
-Received: from zn.tnic (p200300ec2f0bb0007fac97ee58c503f0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:b000:7fac:97ee:58c5:3f0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 570471EC046E;
-        Wed, 20 Jan 2021 12:44:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1611143084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=20LzYZPoh99oMXgfw4CHHwaH/q6GrOZfZD3z4Nnb0wg=;
-        b=E2E7ATLf7PM0xDk7VFGsC6LxaCDqpTk3/0jmeLtCJRUuWShS5yavgB3rAPVCug/oo+ImsB
-        L6SHAbHQ5zcrqFw5h2IhN5QsZ+AojeGeadBBHW92tAQYfgt2hPULXuYXsJzlpI5Ep/5qia
-        nQ1kpdrk2Y5BIsKRUOm39J/CHZZpmO4=
-Date:   Wed, 20 Jan 2021 12:44:38 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
-Message-ID: <20210120114438.GD825@zn.tnic>
-References: <20210107223424.4135538-1-arnd@kernel.org>
- <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
- <YAH6r3lak/F2wndp@rani.riverdale.lan>
- <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
- <20210118202409.GG30090@zn.tnic>
- <YAYAvBARSRSg8z8G@rani.riverdale.lan>
- <CAMj1kXHM98-iDYpAozaWEv-qxhZ0-CUMwSdG532x2d+55gXDhQ@mail.gmail.com>
+        Wed, 20 Jan 2021 06:46:42 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id C4DB423340
+        for <platform-driver-x86@vger.kernel.org>; Wed, 20 Jan 2021 11:45:58 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
+ Envy x360)
+Date:   Wed, 20 Jan 2021 11:45:58 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: dmaroulidis@dimitrismaroulidis.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-199715-215701-ffpeXI4mcQ@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
+References: <bug-199715-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHM98-iDYpAozaWEv-qxhZ0-CUMwSdG532x2d+55gXDhQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 10:33:43AM +0100, Ard Biesheuvel wrote:
-> The churn doesn't seem to be worth it, tbh.
-> 
-> So could we get rid of the complexity here, and only build_bug() on
-> the start address of the EFI region being outside the topmost p4d?
-> That should make the PGD test redundant as well.
+https://bugzilla.kernel.org/show_bug.cgi?id=199715
 
-Yah, makes sense to me.
-
-Thx.
+--- Comment #51 from Dimitris (dmaroulidis@dimitrismaroulidis.com) ---
+One thing I'm noticing, is that after waking up from sleep the accelerometer
+disappears.
 
 -- 
-Regards/Gruss,
-    Boris.
+You may reply to this email to add a comment.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+You are receiving this mail because:
+You are watching the assignee of the bug.
