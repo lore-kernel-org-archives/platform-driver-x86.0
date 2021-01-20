@@ -2,148 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F14C432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E11C43217
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 17:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60FAA23358
+	by mail.kernel.org (Postfix) with ESMTP id 803C4233ED
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 20 Jan 2021 17:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbhATOJe (ORCPT
+        id S1728150AbhATOJj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 20 Jan 2021 09:09:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37780 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728150AbhATMvR (ORCPT
+        Wed, 20 Jan 2021 09:09:39 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26813 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388785AbhATM6w (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 20 Jan 2021 07:51:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611146987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0Bfha2fbHfuW6W+tGSi5kKJFD6FiyXcrTmdCV77PGrk=;
-        b=gbCYFLwsEjbPOWIGkxGmtSj7X3pJO1TTfXAmq4uAQBW5JXtf7Q7KmA/GhxyVG9QT8F/MV4
-        kJ/qd5Xufa1HrWntqQciBTqUF7PCELz7ScEvFjKKrBt7+Ax9yg2o9i9s/HVvGwRp96JpaL
-        y3RX36hk2W3yEl/N9UTANBIOatuBz6k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-b7NKc1P0MJucDehjzMYAnQ-1; Wed, 20 Jan 2021 07:49:45 -0500
-X-MC-Unique: b7NKc1P0MJucDehjzMYAnQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3B9E839A00;
-        Wed, 20 Jan 2021 12:49:44 +0000 (UTC)
-Received: from x1.localdomain (ovpn-114-1.ams2.redhat.com [10.36.114.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DFA1E5D9C2;
-        Wed, 20 Jan 2021 12:49:42 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Elia Devito <eliadevito@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>
-Subject: [PATCH] platform/x86: hp-wmi: Disable tablet-mode reporting by default
-Date:   Wed, 20 Jan 2021 13:49:41 +0100
-Message-Id: <20210120124941.73409-1-hdegoede@redhat.com>
+        Wed, 20 Jan 2021 07:58:52 -0500
+IronPort-SDR: a16MObkPOgydVTtVtVn4sM3NMfNjZeDoh+63rUHnmjQmOm0Wm4QkCuVAEg/gD0CFioFNXcowF2
+ JvTe+hZkEphA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9869"; a="243168906"
+X-IronPort-AV: E=Sophos;i="5.79,361,1602572400"; 
+   d="scan'208";a="243168906"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 04:56:58 -0800
+IronPort-SDR: E3+DqvOKS99F18AO9ed7Ig/CTmbzFRmG4z7PEc2gZkB40x9L2sX9NZvSvQK14js++SPQenII19
+ EhuidwvK1I+w==
+X-IronPort-AV: E=Sophos;i="5.79,361,1602572400"; 
+   d="scan'208";a="351036000"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2021 04:56:53 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l2D3b-006A5X-GZ; Wed, 20 Jan 2021 14:57:55 +0200
+Date:   Wed, 20 Jan 2021 14:57:55 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, rjw@rjwysocki.net, lenb@kernel.org,
+        andy@kernel.org, mika.westerberg@linux.intel.com,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@kernel.org, lee.jones@linaro.org, hdegoede@redhat.com,
+        mgross@linux.intel.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, sakari.ailus@linux.intel.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
+Message-ID: <YAgo06hhlael1/rm@smile.fi.intel.com>
+References: <20210118003428.568892-7-djrscally@gmail.com>
+ <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
+ <20210118144606.GO4077@smile.fi.intel.com>
+ <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
+ <20210119092448.GN4077@smile.fi.intel.com>
+ <a735380b-57ac-1950-b29a-07fe6cb708d2@gmail.com>
+ <20210119110837.GT4077@smile.fi.intel.com>
+ <YAcNT1d5zQHGsoe6@pendragon.ideasonboard.com>
+ <YAccEtQIBrbKPSmv@smile.fi.intel.com>
+ <YAev1YviLVfEHSg6@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <YAev1YviLVfEHSg6@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Recently userspace has started making more use of SW_TABLET_MODE
-(when an input-dev reports this).
+On Wed, Jan 20, 2021 at 06:21:41AM +0200, Laurent Pinchart wrote:
+> On Tue, Jan 19, 2021 at 07:51:14PM +0200, Andy Shevchenko wrote:
+> > On Tue, Jan 19, 2021 at 06:48:15PM +0200, Laurent Pinchart wrote:
+> > > On Tue, Jan 19, 2021 at 01:08:37PM +0200, Andy Shevchenko wrote:
+> > > > On Tue, Jan 19, 2021 at 10:40:42AM +0000, Daniel Scally wrote:
+> > > > > On 19/01/2021 09:24, Andy Shevchenko wrote:
+> > > > > >>>>> +static struct i2c_driver int3472_tps68470 = {
+> > > > > >>>>> +	.driver = {
+> > > > > >>>>> +		.name = "int3472-tps68470",
+> > > > > >>>>> +		.acpi_match_table = int3472_device_id,
+> > > > > >>>>> +	},
+> > > > > >>>>> +	.probe_new = skl_int3472_tps68470_probe,
+> > > > > >>>>> +};
+> > > > > >>> I'm not sure we want to have like this. If I'm not mistaken the I≤C driver can
+> > > > > >>> be separated without ACPI IDs (just having I≤C IDs) and you may instantiate it
+> > > > > >>> via i2c_new_client_device() or i2c_acpi_new_device() whichever suits better...
+> > > > > >> Sorry, I'm a bit confused by this. The i2c device is already
+> > > > > >> present...we just want the driver to bind to them, so what role do those
+> > > > > >> functions have there?
+> > > > > > What I meant is something like
+> > > > > >
+> > > > > >  *_i2c.c
+> > > > > > 	real I≤C driver for the TPS chip, but solely with I≤C ID table, no ACPI
+> > > > > > 	involved (and it sounds like it should be mfd/tps one, in which you
+> > > > > > 	just cut out ACPI IDs and convert to pure I≤C one, that what I had
+> > > > > > 	suggested in the first place)
+> > > > > 
+> > > > > Ahh; sorry - i misunderstood what you meant there. I understand now I
+> > > > > think, but there is one complication; the ACPI subsystem already creates
+> > > > > a client for that i2c adapter and address; i2c_new_client_device()
+> > > > > includes a check to see whether that adapter / address combination has
+> > > > > an i2c device already.† So we would have to have the platform driver
+> > > > > with ACPI ID first find the existing i2c_client and unregister it before
+> > > > > registering the new one...the existing clients have a name matching the
+> > > > > ACPI device instance name (e.g i2c-INT3472:00) which we can't use as an
+> > > > > i2c_device_id of course.
+> > > > 
+> > > > See how INT33FE is being handled. Hint: drivers/acpi/scan.c:~1600
+> > > > 
+> > > > static const struct acpi_device_id i2c_multi_instantiate_ids[] = {
+> > > > 	{"BSG1160", },
+> > > > 	{"BSG2150", },
+> > > > 	{"INT33FE", },
+> > > > 	{"INT3515", },
+> > > > 	{}
+> > > > };
+> > > > 
+> > > > So, we quirklist it here and instantiate manually from platform driver (new
+> > > > coming one).
+> > > 
+> > > This is documented as used for devices that have multiple I2cSerialBus
+> > > resources. That's not the case for the INT3472 as far as I can tell. I
+> > > don't think we should abuse this mechanism.
+> > 
+> > This is quite a similar case to that one. Let's avoid yak shaving, right?
+> 
+> Exactly my point, that's why I think this patch is good overall, I don't
+> think it requires a complete rewrite.
 
-Specifically recent GNOME3 versions will:
+The approach in the series is to reinvent the MFD driver which I against of.
+I don;t think we need to kill it there and reborn in a new form and dragging
+code from there to here to there.
 
-1.  When SW_TABLET_MODE is reported and is reporting 0:
-1.1 Disable accelerometer-based screen auto-rotation
-1.2 Disable automatically showing the on-screen keyboard when a
-    text-input field is focussed
+On top of that the approach with a quirk driver in the middle seems to me
+cleaner than using different paths how the two drivers are being initialized.
+In the proposed approach there will be one making decision point and easy to
+understand what's going on.
 
-2.  When SW_TABLET_MODE is reported and is reporting 1:
-2.1 Ignore input-events from the builtin keyboard and touchpad
-    (this is for 360¬∞ hinges style 2-in-1s where the keyboard and
-     touchpads are accessible on the back of the tablet when folded
-     into tablet-mode)
+The bad example of two making decision points is acpi_lpss.c vs. individual
+drivers (however in that case it have different ID's, i.e. ACPI vs. PCI),
 
-This means that claiming to support SW_TABLET_MODE when it does not
-actually work / reports correct values has bad side-effects.
+> > > Don't forget that the TPS68470 I2C driver needs to be ACPI-aware, as it
+> > > has to register an OpRegion for ACPI-based Chrome OS devices. On other
+> > > platforms (including DT platforms), it should only register regulators,
+> > > clocks and GPIOs. Given the differences between those platforms, I don't
+> > > think a TPS68470 driver that would fake being unaware of being probed
+> > > through ACPI would be a good idea. We can always refactor the code later
+> > > when we'll have a non-ACPI based platform using the TPS68470, without
+> > > such a platform there's no way we can test the I2C driver without ACPI
+> > > anyway.
+> > 
+> > Are you agree that MFD approach should stay? How then we can manage to have an
+> > MFD driver cohabit with our new driver? I proposed a clean solution which will
+> > handle all possible cases via quirk driver. Having two drivers enumerated by
+> > different scenarios is a call for troubles (we have already with one of that
+> > sensors).
+> 
+> I think we should solve this problem when it will arise. Solving
+> problems with complex architectures without a platform to test the code
+> on is a pretty sure way to get the architecture design wrong. Let's get
+> this merged, it's an improvement compared to the current situation, and
+> then let's improve it further on top when we'll need to support more use
+> cases.
 
-The check in the hp-wmi code which is used to decide if the input-dev
-should claim SW_TABLET_MODE support, only checks if the
-HPWMI_HARDWARE_QUERY is supported. It does *not* check if the hardware
-actually is capable of reporting SW_TABLET_MODE.
+But this is problem already here right now. The submitted code is to support
+a new platform that needs a quirk and treats INT3472 differently. The usual
+way is to refactor the existing solution to make them both to have a best
+compromise.
 
-This leads to the hp-wmi input-dev claming SW_TABLET_MODE support,
-while in reality it will always report 0 as SW_TABLET_MODE value.
-This has been seen on a "HP ENVY x360 Convertible 15-cp0xxx" and
-this likely is the case on a whole lot of other HP models.
+> > And there is no "faking" anything, it's rather gating it depending on the
+> > platform.
 
-This problem causes both auto-rotation and on-screen keyboard
-support to not work on affected x360 models.
-
-There is no easy fix for this, but since userspace expects
-SW_TABLET_MODE reporting to be reliable when advertised it is
-better to not claim/report SW_TABLET_MODE support at all, then
-to claim to support it while it does not work.
-
-To avoid the mentioned problems, add a new enable_tablet_mode_sw
-module-parameter which defaults to false.
-
-Note I've made this an int using the standard -1=auto, 0=off, 1=on
-tripplet, with the hope that in the future we can come up with a
-better way to detect SW_TABLET_MODE support. ATM the default
-auto option just does the same as off.
-
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1918255
-Cc: Stefan Br√ºns <stefan.bruens@rwth-aachen.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/hp-wmi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 18bf8aeb5f87..ff028587cd21 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -32,6 +32,10 @@ MODULE_LICENSE("GPL");
- MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
- MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
- 
-+static int enable_tablet_mode_sw = -1;
-+module_param(enable_tablet_mode_sw, int, 0444);
-+MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
-+
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
- 
-@@ -654,10 +658,12 @@ static int __init hp_wmi_input_setup(void)
- 	}
- 
- 	/* Tablet mode */
--	val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
--	if (!(val < 0)) {
--		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
--		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+	if (enable_tablet_mode_sw > 0) {
-+		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
-+		if (!(val < 0)) {
-+			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-+			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+		}
- 	}
- 
- 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
