@@ -2,146 +2,163 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B5DC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 21:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821CCC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 23:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3AA623A22
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 21:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2E8206F6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 23:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbhAUVLk (ORCPT
+        id S1725863AbhAUXtx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Jan 2021 16:11:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbhAUVJI (ORCPT
+        Thu, 21 Jan 2021 18:49:53 -0500
+Received: from mga17.intel.com ([192.55.52.151]:3999 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbhAUXtv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Jan 2021 16:09:08 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2479CC061756;
-        Thu, 21 Jan 2021 13:08:28 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id m4so3100127wrx.9;
-        Thu, 21 Jan 2021 13:08:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=OMFMRDIlKBCL9Ohj87OUa8tkrf6G4uCu7Gi4SktmUto=;
-        b=KIp5eccKN5MoF5EXrpEigjcHLx1XdU7pp8SCXjiUMhOP7z30XgYU21ZTTHczLR/j/V
-         JjnhKqS1LUsWLbRXTE4le0QiPC1m3iNG2Fili4MHXGLYx3YVMoOu0bc7sRsN6v+BFMpv
-         UjkckzY8iVFdijAmbxeupjYIL1YnEjAmdVXYIWq0IYB94NdcYmoghMZAnxgWAHGGmkFL
-         pXO/3NlyjnPbCHVv+QktRvMlRkld1BBaQZ2rTQccbzW4J5ify05AH23Rc89B/K/jIJcr
-         O1hOXNLtrjxcpeye37n7r7VVgdCFpW2TV5wdXh9MG4JH7lrRSBbKp/r58QcL0LQQcVPB
-         4h+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=OMFMRDIlKBCL9Ohj87OUa8tkrf6G4uCu7Gi4SktmUto=;
-        b=HEmT3MNZAfLxK3s6N/s2U5X15HRLC6TC6qHYU6vaFfq5hE/vSS3TLqYRZOsNblEST2
-         bIcUu6XRR8MAnEcQuZmqNeGhYWkMJo/FooOSoQ8oSo94myTompW+uR1PNHIwy2mhSDGd
-         ikGKDMMaF6dpFuU/G21h6aCed/oam/yCD906a7xUAOyiltHOSPWeqrdkPdOPV/z9kwQL
-         ojGcKHCSh6Fbxkny+yzW4PIBK0pYzee+2Oy7GE7BX90CFQA4BpRRkMnXdgDJpCD2Hnp4
-         TJdK3/MLRtJsMZCJj01s8DRWdwv6k/wZuIuFsgY1Z4JFFT+O8KkqPC/VTUREuc7iKWbq
-         9jSQ==
-X-Gm-Message-State: AOAM5302hU3OZW0OeaZg1zfiL9O6uyB5SiGyUtUMi7PVnYR6SGUBLG65
-        S5kwXjOM+fwe5ssTkIt9WDA=
-X-Google-Smtp-Source: ABdhPJw3191VKC674udlSDdtZ4NJ1fR1XfdltPOh/9Cz1AcR6fwweuP3nkh4JmZd0P/D8rW7WCg83Q==
-X-Received: by 2002:a05:6000:1374:: with SMTP id q20mr1279024wrz.44.1611263306941;
-        Thu, 21 Jan 2021 13:08:26 -0800 (PST)
-Received: from [192.168.1.211] ([2.29.208.120])
-        by smtp.gmail.com with ESMTPSA id i131sm8816923wmi.25.2021.01.21.13.08.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Jan 2021 13:08:26 -0800 (PST)
-Subject: Re: [PATCH v2 6/7] platform: x86: Add intel_skl_int3472 driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org,
-        rjw@rjwysocki.net, lenb@kernel.org, andy@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        robert.moore@intel.com, erik.kaneda@intel.com,
-        sakari.ailus@linux.intel.com, kieran.bingham@ideasonboard.com
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-7-djrscally@gmail.com>
- <YAVRqWeUsLjvU62P@pendragon.ideasonboard.com>
- <20210118144606.GO4077@smile.fi.intel.com>
- <75e99a06-4579-44ee-5f20-8f2ee3309a68@gmail.com>
- <1053125f-7cb2-8aa0-3204-24df62986184@gmail.com>
- <20210119093358.GO4077@smile.fi.intel.com>
- <YAcKj9fyNZY8QETd@pendragon.ideasonboard.com>
- <YAcaM9Tcif1rS3V/@smile.fi.intel.com>
- <YAevLTVlUSXMylWL@pendragon.ideasonboard.com>
- <YAgXlgLauIGEe05w@smile.fi.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <837b221d-57ad-88fb-65df-e1cae64f0ad0@gmail.com>
-Date:   Thu, 21 Jan 2021 21:08:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 21 Jan 2021 18:49:51 -0500
+IronPort-SDR: v16SKkSSRTTKmNRIVCVhsVEJZGA1K5iUkZXCvwGTZvs/Hs2GzFtPGqdDnsuHnPXCaP/TYDG/IW
+ kDa2lUNXQEuA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="159145038"
+X-IronPort-AV: E=Sophos;i="5.79,365,1602572400"; 
+   d="scan'208";a="159145038"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 15:48:03 -0800
+IronPort-SDR: UIMFsgFkmSYbdyGsoLDAhLT6Y+9SApmNY28o+pa7wpWcPQJAgj3AlJqCR23C0FwyYi316IHPhW
+ HT99qoZM+/PA==
+X-IronPort-AV: E=Sophos;i="5.79,365,1602572400"; 
+   d="scan'208";a="392133595"
+Received: from smtp.ostc.intel.com ([10.54.29.231])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 15:48:03 -0800
+Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 79F296365;
+        Thu, 21 Jan 2021 15:48:03 -0800 (PST)
+Date:   Thu, 21 Jan 2021 15:48:03 -0800
+From:   mark gross <mgross@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Elia Devito <eliadevito@gmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
+Subject: Re: [PATCH] platform/x86: hp-wmi: Disable tablet-mode reporting by
+ default
+Message-ID: <20210121234803.GB60912@linux.intel.com>
+Reply-To: mgross@linux.intel.com
+References: <20210120124941.73409-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <YAgXlgLauIGEe05w@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210120124941.73409-1-hdegoede@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi both
+On Wed, Jan 20, 2021 at 01:49:41PM +0100, Hans de Goede wrote:
+> Recently userspace has started making more use of SW_TABLET_MODE
+> (when an input-dev reports this).
+> 
+> Specifically recent GNOME3 versions will:
+> 
+> 1.  When SW_TABLET_MODE is reported and is reporting 0:
+> 1.1 Disable accelerometer-based screen auto-rotation
+> 1.2 Disable automatically showing the on-screen keyboard when a
+>     text-input field is focussed
+> 
+> 2.  When SW_TABLET_MODE is reported and is reporting 1:
+> 2.1 Ignore input-events from the builtin keyboard and touchpad
+>     (this is for 360° hinges style 2-in-1s where the keyboard and
+>      touchpads are accessible on the back of the tablet when folded
+>      into tablet-mode)
+> 
+> This means that claiming to support SW_TABLET_MODE when it does not
+> actually work / reports correct values has bad side-effects.
+did you mean "reports incorrect values"?
 
-On 20/01/2021 11:44, Andy Shevchenko wrote:
-> On Wed, Jan 20, 2021 at 06:18:53AM +0200, Laurent Pinchart wrote:
->> On Tue, Jan 19, 2021 at 07:43:15PM +0200, Andy Shevchenko wrote:
->>> On Tue, Jan 19, 2021 at 06:36:31PM +0200, Laurent Pinchart wrote:
->>>> On Tue, Jan 19, 2021 at 11:33:58AM +0200, Andy Shevchenko wrote:
->>>>> On Tue, Jan 19, 2021 at 12:11:40AM +0000, Daniel Scally wrote:
->>>>>> On 18/01/2021 21:19, Daniel Scally wrote:
-> ...
->
->>>>> See my previous reply. TL;DR: you have to modify clk-gpio.c to export couple of
->>>>> methods to be able to use it as a library.
->>>> That seems really overkill given the very simple implementation of the
->>>> clock provided here.
->>> Less code in the end is called an overkill? Hmm...
->>> I think since we in Linux it's better to utilize what it provides. Do you want
->>> me to prepare a patch to show that there is no overkill at all?
->> The amount of code we would save it very small. It's not necessarily a
->> bad idea, but I think such an improvement could be made on top, it
->> shouldn't block this series.
-> Okay, let's wait what Dan will say on this.
-> I can probably help to achieve this improvement sooner than later.
+> 
+> The check in the hp-wmi code which is used to decide if the input-dev
+> should claim SW_TABLET_MODE support, only checks if the
+> HPWMI_HARDWARE_QUERY is supported. It does *not* check if the hardware
+> actually is capable of reporting SW_TABLET_MODE.
+> 
+> This leads to the hp-wmi input-dev claming SW_TABLET_MODE support,
+> while in reality it will always report 0 as SW_TABLET_MODE value.
+> This has been seen on a "HP ENVY x360 Convertible 15-cp0xxx" and
+> this likely is the case on a whole lot of other HP models.
+> 
+> This problem causes both auto-rotation and on-screen keyboard
+> support to not work on affected x360 models.
+> 
+> There is no easy fix for this, but since userspace expects
+> SW_TABLET_MODE reporting to be reliable when advertised it is
+> better to not claim/report SW_TABLET_MODE support at all, then
+                                                            than
+> to claim to support it while it does not work.
+> 
+> To avoid the mentioned problems, add a new enable_tablet_mode_sw
+> module-parameter which defaults to false.
+> 
+> Note I've made this an int using the standard -1=auto, 0=off, 1=on
+> tripplet, with the hope that in the future we can come up with a
+> better way to detect SW_TABLET_MODE support. ATM the default
+> auto option just does the same as off.
+> 
+> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1918255
+> Cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/platform/x86/hp-wmi.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+> index 18bf8aeb5f87..ff028587cd21 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -32,6 +32,10 @@ MODULE_LICENSE("GPL");
+>  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
+>  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+>  
+> +static int enable_tablet_mode_sw = -1;
+So busted HW gets the default while working HW will need to add a boot time
+parameter.  If there are no working tablet_mode devices I guess its ok but, if
+I had a working platform I'd be a little miffed at the choice to make my life
+harder (by forcing me to add a enable_tablet_mode_sw=1 to my kernel
+command line) while making life easier for those with busted hardware.
+
+I'm not saying change it but, it should be considered.
+
+--mark
 
 
-Well; turns out that we missed an operation we really need to add
-(clk_recalc_rate) which in our case needs to read a fixed value stored
-in a buffer in ACPI; most of the code is shared with an existing
-function in the driver so it's not much extra to add, but I think it
-kinda precludes using clk-gpio for this anyway
-
->>>>>> (also, Laurent, if we did it this way we wouldn't be able to also handle
->>>>>> the led-indicator GPIO here without some fairly major rework)
->>>>> LED indicators are done as LED class devices (see plenty of examples in PDx86
->>>>> drivers: drivers/platform/x86/)
->>>> How do you expose the link between the sensor and its indicator LED to
->>>> userspace ? Isn't it better to handle it in the kernel to avoid rogue
->>>> userspace turning the camera on without notifying the user ?
->>> I didn't get this. It's completely a LED handling driver business. We may
->>> expose it to user space or not, but it's orthogonal to the usage of LED class
->>> IIUC. Am I mistaken here?
->> If it stays internal to the kernel and is solely controlled from the
->> int3472 driver, there's no need to involve the LED class. If we want to
->> expose the privacy LED to userspace then the LED framework is the way to
->> go, but we will also need to find a way to expose the link between the
->> camera sensor and the LED to userspace. If there are two privacy LEDs,
->> one for the front sensor and one for the back sensor, userspace will
->> need to know which is which.
-> I see. For now we probably can keep GPIO LED implementation internally.
->
+> +module_param(enable_tablet_mode_sw, int, 0444);
+> +MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
+> +
+>  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+>  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+>  
+> @@ -654,10 +658,12 @@ static int __init hp_wmi_input_setup(void)
+>  	}
+>  
+>  	/* Tablet mode */
+> -	val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
+> -	if (!(val < 0)) {
+> -		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> -		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+> +	if (enable_tablet_mode_sw > 0) {
+> +		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
+> +		if (!(val < 0)) {
+> +			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
+> +			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
+> +		}
+>  	}
+>  
+>  	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+> -- 
+> 2.28.0
+> 
