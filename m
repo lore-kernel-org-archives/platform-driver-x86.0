@@ -2,198 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0837FC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 18:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E080C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 19:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB33623A58
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 18:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58422221E7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 19:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbhAUSJj (ORCPT
+        id S1727060AbhAUTL2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Jan 2021 13:09:39 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:34839 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389720AbhAUSJd (ORCPT
+        Thu, 21 Jan 2021 14:11:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbhAUTLX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Jan 2021 13:09:33 -0500
-Received: by mail-oi1-f169.google.com with SMTP id w8so3135895oie.2;
-        Thu, 21 Jan 2021 10:09:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rZuG0eDaYJNboNh8e3LplxwDe2N2H+yB/LmrSLFUl6M=;
-        b=mpkd3gCV1ZB6Juf+EQnHYyaq+CeUe3ecQxGnUd7uu/l9DT1GyHAiYpRPiCTckxdwcu
-         V3xwqZSMqz3SwpPlslSYftoRE8zgYGXGIqgbhtBymwtR/Qdn4elnQiJCGdfo/T813M83
-         J/MhKLhpC/q+UEDX69wVRJiVlTIv9hvf1q4QVqvWlREkpH23j0nyzcy+Z+44gUdslrWl
-         3QH+ltYD/mDAqm2VcdfaPv4fDRGoiyrPx2w55sysQEICePLlNj/eXJhenl8Q7aNbXaZw
-         nzjIKsutWYadXq0/4Td18vt+mmSi2cakIwlMWAeOuaS0uc+QlhDxeQgRz9wH42+1woke
-         Snog==
-X-Gm-Message-State: AOAM530kLzE1PB5BRbLrkjTQus1vv5zd702sh82DuavPC1AjLIu0oIXy
-        s22k5WItbF+VkjmilXT6kTT+uNZzlTKiricwjCM=
-X-Google-Smtp-Source: ABdhPJzonsjyrNxpDyasZkL5KpTZWxHq4Ux3HEM1YkApyJQtDjSw14vrAyNsETjZ7up7pvN+p39lnrgFySegxATtRNE=
-X-Received: by 2002:aca:308a:: with SMTP id w132mr552636oiw.69.1611252522742;
- Thu, 21 Jan 2021 10:08:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20210118003428.568892-1-djrscally@gmail.com> <20210118003428.568892-3-djrscally@gmail.com>
- <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
- <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com> <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
- <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com> <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
- <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com> <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
- <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com>
-In-Reply-To: <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 Jan 2021 19:08:31 +0100
-Message-ID: <CAJZ5v0jVxMMGh6k-vXeBRsCtD0L14poNUrg4kZOpCfOz2sZGZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent acpi_devices
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, andy@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        Thu, 21 Jan 2021 14:11:23 -0500
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 686F7C061756;
+        Thu, 21 Jan 2021 11:11:08 -0800 (PST)
+Received: from lwn.net (unknown [IPv6:2601:281:8300:104d::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 67463615C;
+        Thu, 21 Jan 2021 19:09:55 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 67463615C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1611256197; bh=0PfEGC/cPJ5o5ce4iP7kPM3qg+xRX/ZAzMq8mA7LR+w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LfmTwdSQP3IBIFsgIimE+P0zc4qOuRRENhFAbFZ81/G0xiY0DScELhTCtldW3XIfz
+         Ugs8obCBqzDnsrsJoi5krEbWrGHjyZPpGee+9oAGUJ1ZDXrSP/jMHtPw39Va3bBst2
+         L4SlcWZ4eBnLVGq3hawDKWCzzYzGfx0DG20ajnIZZRO05FEVzu6Z6QH1o0t7hxv9Z5
+         FAGLGDnT/R3zaflLKjCnNdzZoWBPmMbSxH+vE+gp8swBNJrsI901YZhh5xO0J5KAQE
+         q+gS4MkjsOprcfN5wLvJLeHWfw2eGdzUGLUYeV2MifPW5V3sfXPnjMGNWyuhz0xfWx
+         Q0+/sodoN2x/A==
+Date:   Thu, 21 Jan 2021 12:09:54 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
         Hans de Goede <hdegoede@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+        Matt Porter <mporter@kernel.crashing.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Will Drewry <wad@chromium.org>,
+        Ying Xue <ying.xue@windriver.com>,
+        dri-devel@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: Re: [PATCH v6 00/16] Fix several bad kernel-doc markups
+Message-ID: <20210121120954.5ed4c3b2@lwn.net>
+In-Reply-To: <cover.1610610937.git.mchehab+huawei@kernel.org>
+References: <cover.1610610937.git.mchehab+huawei@kernel.org>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 5:34 PM Daniel Scally <djrscally@gmail.com> wrote:
->
->
-> On 21/01/2021 14:39, Rafael J. Wysocki wrote:
-> > On Thu, Jan 21, 2021 at 1:04 PM Daniel Scally <djrscally@gmail.com> wrote:
-> >>
-> >> On 21/01/2021 11:58, Rafael J. Wysocki wrote:
-> >>> On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
-> >>>> Hi Rafael
-> >>>>
-> >>>> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
-> >>>>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
-> >>>>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
-> >>>>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
-> >>>>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
-> >>>>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
-> >>>>>>>> specification intends. We need to be able to find those devices "from"
-> >>>>>>>> the dependee, so add a function to parse all ACPI Devices and check if
-> >>>>>>>> the include the handle of the dependee device in their _DEP buffer.
-> >>>>>>> What exactly do you need this for?
-> >>>>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
-> >>>>>> refer to those INT3472's in their _DEP method. The driver binds to the
-> >>>>>> INT3472 device, we need to find the sensors dependent on them.
-> >>>>>>
-> >>>>> Well, this is an interesting concept. :-)
-> >>>>>
-> >>>>> Why does _DEP need to be used for that?  Isn't there any other way to
-> >>>>> look up the dependent sensors?
-> >>>>>
-> >>>>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
-> >>>>>>>
-> >>>>>>> Note that supplier drivers may remove entries from there, but does
-> >>>>>>> that matter for your use case?
-> >>>>>> Ah - that may work, yes. Thank you, let me test that.
-> >>>>> Even if that doesn't work right away, but it can be made work, I would
-> >>>>> very much prefer that to the driver parsing _DEP for every device in
-> >>>>> the namespace by itself.
-> >>>> This does work; do you prefer it in scan.c, or in utils.c (in which case
-> >>>> with acpi_dep_list declared as external var in internal.h)?
-> >>> Let's put it in scan.c for now, because there is the lock protecting
-> >>> the list in there too.
-> >>>
-> >>> How do you want to implement this?  Something like "walk the list and
-> >>> run a callback for the matching entries" or do you have something else
-> >>> in mind?
-> >>
-> >> Something like this (though with a mutex_lock()). It could be simplified
-> >> by dropping the prev stuff, but we have seen INT3472 devices with
-> >> multiple sensors declaring themselves dependent on the same device
-> >>
-> >>
-> >> struct acpi_device *
-> >> acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
-> >>                 struct acpi_device *prev)
-> >> {
-> >>     struct acpi_dep_data *dep;
-> >>     struct acpi_device *adev;
-> >>     int ret;
-> >>
-> >>     if (!supplier)
-> >>         return ERR_PTR(-EINVAL);
-> >>
-> >>     if (prev) {
-> >>         /*
-> >>          * We need to find the previous device in the list, so we know
-> >>          * where to start iterating from.
-> >>          */
-> >>         list_for_each_entry(dep, &acpi_dep_list, node)
-> >>             if (dep->consumer == prev->handle &&
-> >>                 dep->supplier == supplier->handle)
-> >>                 break;
-> >>
-> >>         dep = list_next_entry(dep, node);
-> >>     } else {
-> >>         dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
-> >>                        node);
-> >>     }
-> >>
-> >>
-> >>     list_for_each_entry_from(dep, &acpi_dep_list, node) {
-> >>         if (dep->supplier == supplier->handle) {
-> >>             ret = acpi_bus_get_device(dep->consumer, &adev);
-> >>             if (ret)
-> >>                 return ERR_PTR(ret);
-> >>
-> >>             return adev;
-> >>         }
-> >>     }
-> >>
-> >>     return NULL;
-> >> }
-> > That would work I think, but would it be practical to modify
-> > acpi_walk_dep_device_list() so that it runs a callback for every
-> > consumer found instead of or in addition to the "delete from the list
-> > and free the entry" operation?
->
->
-> I think that this would work fine, if that's the way you want to go.
-> We'd just need to move everything inside the if (dep->supplier ==
-> handle) block to a new callback, and for my purposes I think also add a
-> way to stop parsing the list from the callback (so like have the
-> callbacks return int and stop parsing on a non-zero return). Do you want
-> to expose that ability to pass a callback outside of ACPI?
+On Thu, 14 Jan 2021 09:04:36 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Yes.
+> 1)  10 remaining fixup patches from the series I sent back on Dec, 1st:
+> 
+>    parport: fix a kernel-doc markup
+>    rapidio: fix kernel-doc a markup
+>    fs: fix kernel-doc markups
+>    pstore/zone: fix a kernel-doc markup
+>    firmware: stratix10-svc: fix kernel-doc markups
+>    connector: fix a kernel-doc markup
+>    lib/crc7: fix a kernel-doc markup
+>    memblock: fix kernel-doc markups
+>    w1: fix a kernel-doc markup
+>    selftests: kselftest_harness.h: partially fix kernel-doc markups
 
-> Or just export helpers to call each of the callbacks (one to fetch the next
-> dependent device, one to decrement the unmet dependencies counter)
+A week later none of these have shown up in linux-next, so I went ahead
+and applied the set.
 
-If you can run a callback for every matching entry, you don't really
-need to have a callback to return the next matching entry.  You can do
-stuff for all of them in one go (note that it probably is not a good
-idea to run the callback under the lock, so the for loop currently in
-there is not really suitable for that).
+Thanks,
 
-> Otherwise, I'd just need to update the 5 users of that function either
-> to use the new helper or else to also pass the decrement dependencies
-> callback.
-
-Or have a wrapper around it passing the decrement dependencies
-callback for the "typical" users.
+jon
