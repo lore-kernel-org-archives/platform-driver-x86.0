@@ -2,168 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C85C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 21:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A07C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 22:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B2E23B55
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 21:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828D823B1F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 22:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbhAVVGG (ORCPT
+        id S1730836AbhAVWBl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Jan 2021 16:06:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27139 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728368AbhAVVFq (ORCPT
+        Fri, 22 Jan 2021 17:01:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34130 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729322AbhAVWBT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 22 Jan 2021 16:05:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611349451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ojBbmib3HW+Vk8eHI0XyBI6yZ25pUk4R+YG8M8Azs8Q=;
-        b=R68lkk8+18Qm9yxFjSabM8MMI5kLlAZxSbKgOZN2wq5xzhnq7UEHRV/mX75WuggBdA3gLm
-        SkriYYt656HHpZJxZoK002+e08kfin00nK2hClDOMrlBFHvRQT5waEnYYdDJ5rJnG+vu9I
-        RHVSBJt4025MDM9KCfxpjHlbaN6CA78=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-XUGtPX_ZP6qcyaJkGshAew-1; Fri, 22 Jan 2021 16:04:09 -0500
-X-MC-Unique: XUGtPX_ZP6qcyaJkGshAew-1
-Received: by mail-ej1-f70.google.com with SMTP id n25so2432004ejd.5
-        for <platform-driver-x86@vger.kernel.org>; Fri, 22 Jan 2021 13:04:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ojBbmib3HW+Vk8eHI0XyBI6yZ25pUk4R+YG8M8Azs8Q=;
-        b=AnYhDB9joKwOPCiVtbrzINZkl/y9AI73QQGIyOkpIPZFv45gW8WScwRVNcG25Ba4fn
-         6/ClzmVwMyPZ43Fi6gP1jQHCZN+xIw12OaW5sGCKqffwQV4wbLHQ9mMA1rBXpFyZ4U8v
-         2V2BFDZuyiB+mDZQo+5QuInFhHSYnvpJktQEULxVD9JU/HENARX3oOC0sgUIL2JRR35g
-         oroklgFIHNbm5I2pSCr7edZPbGGdrZRAdreMRaDqdlMtXDbF2E+7PyVvAl6V8VfPghSJ
-         lf5TsZdL/MDMo6IicZlzPRcI0C3t65j21EmFfXi76KlzVaGGMqfvr47pwSQKuuLljmGh
-         pOMA==
-X-Gm-Message-State: AOAM531ZL4TmAT8pWQ8pyKGmtblbykHnk3zo0yyvWEHSxSYTWwo2P8DR
-        SdpPbTXBT6z/3HeUE5nE/lJi/SzBjAhtJx9FGXAEmMqltj0ops+U2ja20mmylfYUB8sbWyZxxp2
-        x7DOq0ax0jtWZg++H9nfE65w2REjp7RUo5g==
-X-Received: by 2002:a17:907:7252:: with SMTP id ds18mr4272393ejc.239.1611349448605;
-        Fri, 22 Jan 2021 13:04:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx9MLCCtbPCyhHqfL3DjFawychQZ/BSSkESjO+dy5CJSr0XHbHZaRsDEncNSaKanNsoT+PPYQ==
-X-Received: by 2002:a17:907:7252:: with SMTP id ds18mr4272367ejc.239.1611349448347;
-        Fri, 22 Jan 2021 13:04:08 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id h12sm5923735edb.16.2021.01.22.13.04.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Jan 2021 13:04:07 -0800 (PST)
-Subject: Re: [PATCH v1 1/5] watchdog: intel_scu_watchdog: Remove driver for
- deprecated platform
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org,
+        Fri, 22 Jan 2021 17:01:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 58EEC23B08;
+        Fri, 22 Jan 2021 22:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611352839;
+        bh=56HnNKcrxaTHWZXlBFLfmhzbzB737NtG+EO1ntQr9E8=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=m+Se4sd8GyxSr2cn4IOGxQ1SAuVCplJUvlUFCR90VVMGGt/vHGz0hWOCXtvB069Pz
+         wkJ+JCLszKRKzo3ikMunBI7gxTNwz/uc3v39JFQGzjEsKwkvv0WLc0XIwKN1hkJwtr
+         hBzXfjOq2RGzttOqnw5D4Tr0SKqjDN7Sy3vY8kxkxu0szFtCHoJUjn4UFBvYkoUxLQ
+         JaiZuiczuaVi/w+VjEr1ZEwWgRtnvMPmFUFTv7f1tyurml/Cxd2WVscytB+qrFENfj
+         mw5XVlwG6cH0A0g3HnwVP/p4eUA/vE7GJtUOY0VEYnAg/rj1mk7haFHhnLBcuekc8E
+         07Rm6jC077Wmw==
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.11-2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <ac7b0183-fda1-754f-f65c-e390ef147c89@redhat.com>
+References: <ac7b0183-fda1-754f-f65c-e390ef147c89@redhat.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ac7b0183-fda1-754f-f65c-e390ef147c89@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.11-2
+X-PR-Tracked-Commit-Id: 173aac2fef96972e42d33c0e1189e6f756a0d719
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9887e9af2d58e4021f1015bf804f5f226b3b2b1c
+Message-Id: <161135283933.4174.8291269431667336021.pr-tracker-bot@kernel.org>
+Date:   Fri, 22 Jan 2021 22:00:39 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Mark Gross <mgross@linux.intel.com>,
-        linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-References: <20210122123201.40935-1-andriy.shevchenko@linux.intel.com>
- <1f3d5ad1-9f8f-4a78-6239-6cdcbeeeb95b@redhat.com>
- <YArtsQSQsGdfNlBI@smile.fi.intel.com> <YArzAvcZXfv8DaI4@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4ba64643-9254-055d-49a0-55104b8669d8@redhat.com>
-Date:   Fri, 22 Jan 2021 22:04:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
-MIME-Version: 1.0
-In-Reply-To: <YArzAvcZXfv8DaI4@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+The pull request you sent on Fri, 22 Jan 2021 10:02:59 +0100:
 
-On 1/22/21 4:45 PM, Andy Shevchenko wrote:
-> +Cc: Arnd, RTC maintainers, Lee
-> 
-> On Fri, Jan 22, 2021 at 05:22:25PM +0200, Andy Shevchenko wrote:
->> On Fri, Jan 22, 2021 at 03:59:34PM +0100, Hans de Goede wrote:
->>> Hi,
->>>
->>> What is the plan for merging this series ?
->>>
->>> It touches files under:
->>> arch/x86
->>> drivers/watchdog
->>> drivers/platform/x86
->>>
->>> It is probably best if the entire series is merged through a single
->>> tree. I don't expect this to cause any conflicts with current / upcoming
->>> changes under drivers/platform/x86, so I'm fine with this being merged
->>> through another tree.
->>>
->>> Or if I can get an ack for that from the x86 and watchdog maintainers
->>> I can merge the entire series through the pdx86 tree.
->>
->> For time being I'm collecting tags and comments.
->> As of today this series is independent per se, but other (later) clean up
->> patches may rely on this.
->>
->> One strategy can be providing an immutable branch for anybody who wants it and
->> merge thru PDx86 or watchdog tree (I guess PDx86 is preferable because there
->> are more patches touching other stuff, though independently, in this matters).
-> 
-> Yes, I think one more time and guess the best is:
->  - get tags from x86 / watchdog
->  - get tag from RTC
->  - collect everything in PDx86 immutable branch
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.11-2
 
-Ok, that works for me. I assume that it is best for the other subsystems
-if I create an immutable branch for this based on 5.11-rc1
-(and then merge that into pdx86/for-next) ?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9887e9af2d58e4021f1015bf804f5f226b3b2b1c
 
-Guenter, I believe you have already reviewed all the watchdog changes,
-are you ok with me creating an immutable branch for the entire series
-and then sending you a pull-req for that ?
+Thank you!
 
-And x86 folks, can I get an Ack for merging the:
-rename arch/x86/platform/intel-mid/device_libs/platform_mrfld_wdt.c => drivers/platform/x86/intel_scu_wdt.c
-
-Change through an PDx86 immutable branch (for which you will then
-get a pull-req) ?
-
-Regards,
-
-Hans
-
-
-
-
-
-
->  - part 2 can be merged thru Lee's MFD tree with taking above mentioned branch
->    as a base
->  - part 3 (SFI removal) can be done based on Lee's branch and via tip tree
-> 
-> in this case we won't wait all maintainers to give a tag in a short period of
-> time (like couple of weeks from now on).
-> 
-> The full series (all three parts) are located in [1].
-> 
-> [1]: https://gitlab.com/andy-shev/next/-/tree/topic/mid-removal-next
-> 
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
