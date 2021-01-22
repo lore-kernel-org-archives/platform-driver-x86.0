@@ -5,38 +5,38 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D1C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80172C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 12:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A195522D57
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 12:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 510EE22D57
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 12:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbhAVMfO (ORCPT
+        id S1728163AbhAVMfg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 22 Jan 2021 07:35:14 -0500
-Received: from mga12.intel.com ([192.55.52.136]:11230 "EHLO mga12.intel.com"
+        Fri, 22 Jan 2021 07:35:36 -0500
+Received: from mga14.intel.com ([192.55.52.115]:29472 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728156AbhAVMek (ORCPT
+        id S1728159AbhAVMek (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 22 Jan 2021 07:34:40 -0500
-IronPort-SDR: 0ty8CsPaFZLWcDRDaGuoC3XNIwN7XH2/Nb/Ors1JlzyzKAGbKM+iBfGtAmhljHv9zQbkXUiplU
- z6ip9VSUDp4Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="158617608"
+IronPort-SDR: IM2ELx6Ijke34ySPI0Qmfn8qV7zd8S2C81VH+rGGffFb/mWCTE473sEFcC6Ut/iWBHAOYLb2dO
+ Nowr2KOHTMHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="178661020"
 X-IronPort-AV: E=Sophos;i="5.79,366,1602572400"; 
-   d="scan'208";a="158617608"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 04:32:07 -0800
-IronPort-SDR: BrIzskPsl6Sg9+MjqpUaQLYlI3dmaMvKvn4C6ItAeijJRYhnW8X+MhR5NQdzbrUOGkeI3PlAkR
- DDH06W3KNUmA==
+   d="scan'208";a="178661020"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2021 04:32:10 -0800
+IronPort-SDR: Wh3rkhMZP+YbZBcmjyEVRU8Txx6FDyJbuPNdBg7uhBs7dltk1l2P+qib5BV6QU8uE6n+/2zpk4
+ V46bSMzUWypg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.79,366,1602572400"; 
-   d="scan'208";a="351883204"
+   d="scan'208";a="355224168"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 22 Jan 2021 04:32:03 -0800
+  by orsmga006.jf.intel.com with ESMTP; 22 Jan 2021 04:32:03 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D1B5212A; Fri, 22 Jan 2021 14:32:02 +0200 (EET)
+        id E5BB629A; Fri, 22 Jan 2021 14:32:02 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -47,11 +47,11 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v1 2/5] watchdog: intel-mid_wdt: Postpone IRQ handler registration till SCU is ready
-Date:   Fri, 22 Jan 2021 14:31:58 +0200
-Message-Id: <20210122123201.40935-2-andriy.shevchenko@linux.intel.com>
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 4/5] platform/x86: intel_scu_wdt: Drop SCU notification
+Date:   Fri, 22 Jan 2021 14:32:00 +0200
+Message-Id: <20210122123201.40935-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210122123201.40935-1-andriy.shevchenko@linux.intel.com>
 References: <20210122123201.40935-1-andriy.shevchenko@linux.intel.com>
@@ -61,44 +61,71 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When SCU is not ready and CONFIG_DEBUG_SHIRQ=y we got deferred probe followed
-by fired test IRQ which immediately makes kernel panic. Fix this by delaying
-IRQ handler registration till SCU is ready.
+Since SCU code along with the Intel MID watchdog driver has been refactored
+in a way that latter will be probed only after the former has been come
+to live, the notification code is bogus and not needed. Remove it for good.
 
-Fixes: 80ae679b8f86 ("watchdog: intel-mid_wdt: Convert to use new SCU IPC API")
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/watchdog/intel-mid_wdt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/platform/x86/intel_scu_wdt.c | 31 +++++++---------------------
+ 1 file changed, 7 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/watchdog/intel-mid_wdt.c b/drivers/watchdog/intel-mid_wdt.c
-index 1ae03b64ef8b..9b2173f765c8 100644
---- a/drivers/watchdog/intel-mid_wdt.c
-+++ b/drivers/watchdog/intel-mid_wdt.c
-@@ -154,6 +154,10 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(wdt_dev, WATCHDOG_NOWAYOUT);
- 	watchdog_set_drvdata(wdt_dev, mid);
+diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel_scu_wdt.c
+index 227218a8f98e..19f7686a3c19 100644
+--- a/drivers/platform/x86/intel_scu_wdt.c
++++ b/drivers/platform/x86/intel_scu_wdt.c
+@@ -12,7 +12,6 @@
+ #include <linux/platform_data/intel-mid_wdt.h>
  
-+	mid->scu = devm_intel_scu_ipc_dev_get(dev);
-+	if (!mid->scu)
-+		return -EPROBE_DEFER;
-+
- 	ret = devm_request_irq(dev, pdata->irq, mid_wdt_irq,
- 			       IRQF_SHARED | IRQF_NO_SUSPEND, "watchdog",
- 			       wdt_dev);
-@@ -162,10 +166,6 @@ static int mid_wdt_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+ #include <asm/intel-mid.h>
+-#include <asm/intel_scu_ipc.h>
+ #include <asm/io_apic.h>
+ #include <asm/hw_irq.h>
  
--	mid->scu = devm_intel_scu_ipc_dev_get(dev);
--	if (!mid->scu)
--		return -EPROBE_DEFER;
+@@ -49,34 +48,18 @@ static struct intel_mid_wdt_pdata tangier_pdata = {
+ 	.probe = tangier_probe,
+ };
+ 
+-static int wdt_scu_status_change(struct notifier_block *nb,
+-				 unsigned long code, void *data)
+-{
+-	if (code == SCU_DOWN) {
+-		platform_device_unregister(&wdt_dev);
+-		return 0;
+-	}
 -
- 	/*
- 	 * The firmware followed by U-Boot leaves the watchdog running
- 	 * with the default threshold which may vary. When we get here
+-	return platform_device_register(&wdt_dev);
+-}
+-
+-static struct notifier_block wdt_scu_notifier = {
+-	.notifier_call	= wdt_scu_status_change,
+-};
+-
+ static int __init register_mid_wdt(void)
+ {
+ 	if (intel_mid_identify_cpu() != INTEL_MID_CPU_CHIP_TANGIER)
+ 		return -ENODEV;
+ 
+ 	wdt_dev.dev.platform_data = &tangier_pdata;
+-
+-	/*
+-	 * We need to be sure that the SCU IPC is ready before watchdog device
+-	 * can be registered:
+-	 */
+-	intel_scu_notifier_add(&wdt_scu_notifier);
+-
+-	return 0;
++	return platform_device_register(&wdt_dev);
+ }
+ arch_initcall(register_mid_wdt);
++
++static void __exit unregister_mid_wdt(void)
++{
++	platform_device_unregister(&wdt_dev);
++}
++__exitcall(unregister_mid_wdt);
 -- 
 2.29.2
 
