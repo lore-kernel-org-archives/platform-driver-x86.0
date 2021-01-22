@@ -2,163 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821CCC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 23:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B69C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 00:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2E8206F6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 21 Jan 2021 23:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E7A22283
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 22 Jan 2021 00:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725863AbhAUXtx (ORCPT
+        id S1726322AbhAVAGh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 21 Jan 2021 18:49:53 -0500
-Received: from mga17.intel.com ([192.55.52.151]:3999 "EHLO mga17.intel.com"
+        Thu, 21 Jan 2021 19:06:37 -0500
+Received: from mga09.intel.com ([134.134.136.24]:51616 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbhAUXtv (ORCPT
+        id S1726492AbhAVAGQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 21 Jan 2021 18:49:51 -0500
-IronPort-SDR: v16SKkSSRTTKmNRIVCVhsVEJZGA1K5iUkZXCvwGTZvs/Hs2GzFtPGqdDnsuHnPXCaP/TYDG/IW
- kDa2lUNXQEuA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="159145038"
+        Thu, 21 Jan 2021 19:06:16 -0500
+IronPort-SDR: +og1ANQrdqEFSFbM58DblpJ0SF1TnMjan5P2MoGUPb4nHrGfSo1+b+Kuy0tf1YwAChg5GKQb0o
+ EC401uKJ7tbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9871"; a="179515896"
 X-IronPort-AV: E=Sophos;i="5.79,365,1602572400"; 
-   d="scan'208";a="159145038"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 15:48:03 -0800
-IronPort-SDR: UIMFsgFkmSYbdyGsoLDAhLT6Y+9SApmNY28o+pa7wpWcPQJAgj3AlJqCR23C0FwyYi316IHPhW
- HT99qoZM+/PA==
+   d="scan'208";a="179515896"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 16:04:22 -0800
+IronPort-SDR: c1MKkzPbXEBhA/O+iW4qLxNCUCNeECnHbcXaZ0uNcOEE8JKinLn3XRejeSGn/uvKdMho+FRBAn
+ 8XuYUk1GGevg==
 X-IronPort-AV: E=Sophos;i="5.79,365,1602572400"; 
-   d="scan'208";a="392133595"
+   d="scan'208";a="570906848"
 Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 15:48:03 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2021 16:04:22 -0800
 Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 79F296365;
-        Thu, 21 Jan 2021 15:48:03 -0800 (PST)
-Date:   Thu, 21 Jan 2021 15:48:03 -0800
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 1256D6365;
+        Thu, 21 Jan 2021 16:04:22 -0800 (PST)
+Date:   Thu, 21 Jan 2021 16:04:22 -0800
 From:   mark gross <mgross@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Elia Devito <eliadevito@gmail.com>,
-        platform-driver-x86@vger.kernel.org,
-        Stefan =?iso-8859-1?Q?Br=FCns?= <stefan.bruens@rwth-aachen.de>
-Subject: Re: [PATCH] platform/x86: hp-wmi: Disable tablet-mode reporting by
- default
-Message-ID: <20210121234803.GB60912@linux.intel.com>
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: amd-pmc: put device on error paths
+Message-ID: <20210122000422.GC60912@linux.intel.com>
 Reply-To: mgross@linux.intel.com
-References: <20210120124941.73409-1-hdegoede@redhat.com>
+References: <20210121045005.73342-1-bianpan2016@163.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210120124941.73409-1-hdegoede@redhat.com>
+In-Reply-To: <20210121045005.73342-1-bianpan2016@163.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 01:49:41PM +0100, Hans de Goede wrote:
-> Recently userspace has started making more use of SW_TABLET_MODE
-> (when an input-dev reports this).
-> 
-> Specifically recent GNOME3 versions will:
-> 
-> 1.  When SW_TABLET_MODE is reported and is reporting 0:
-> 1.1 Disable accelerometer-based screen auto-rotation
-> 1.2 Disable automatically showing the on-screen keyboard when a
->     text-input field is focussed
-> 
-> 2.  When SW_TABLET_MODE is reported and is reporting 1:
-> 2.1 Ignore input-events from the builtin keyboard and touchpad
->     (this is for 360° hinges style 2-in-1s where the keyboard and
->      touchpads are accessible on the back of the tablet when folded
->      into tablet-mode)
-> 
-> This means that claiming to support SW_TABLET_MODE when it does not
-> actually work / reports correct values has bad side-effects.
-did you mean "reports incorrect values"?
+On Wed, Jan 20, 2021 at 08:50:05PM -0800, Pan Bian wrote:
+> Put the PCI device rdev on error paths to fix potential reference count
+> leaks.
 
-> 
-> The check in the hp-wmi code which is used to decide if the input-dev
-> should claim SW_TABLET_MODE support, only checks if the
-> HPWMI_HARDWARE_QUERY is supported. It does *not* check if the hardware
-> actually is capable of reporting SW_TABLET_MODE.
-> 
-> This leads to the hp-wmi input-dev claming SW_TABLET_MODE support,
-> while in reality it will always report 0 as SW_TABLET_MODE value.
-> This has been seen on a "HP ENVY x360 Convertible 15-cp0xxx" and
-> this likely is the case on a whole lot of other HP models.
-> 
-> This problem causes both auto-rotation and on-screen keyboard
-> support to not work on affected x360 models.
-> 
-> There is no easy fix for this, but since userspace expects
-> SW_TABLET_MODE reporting to be reliable when advertised it is
-> better to not claim/report SW_TABLET_MODE support at all, then
-                                                            than
-> to claim to support it while it does not work.
-> 
-> To avoid the mentioned problems, add a new enable_tablet_mode_sw
-> module-parameter which defaults to false.
-> 
-> Note I've made this an int using the standard -1=auto, 0=off, 1=on
-> tripplet, with the hope that in the future we can come up with a
-> better way to detect SW_TABLET_MODE support. ATM the default
-> auto option just does the same as off.
-> 
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1918255
-> Cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/hp-wmi.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> index 18bf8aeb5f87..ff028587cd21 100644
-> --- a/drivers/platform/x86/hp-wmi.c
-> +++ b/drivers/platform/x86/hp-wmi.c
-> @@ -32,6 +32,10 @@ MODULE_LICENSE("GPL");
->  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
->  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
->  
-> +static int enable_tablet_mode_sw = -1;
-So busted HW gets the default while working HW will need to add a boot time
-parameter.  If there are no working tablet_mode devices I guess its ok but, if
-I had a working platform I'd be a little miffed at the choice to make my life
-harder (by forcing me to add a enable_tablet_mode_sw=1 to my kernel
-command line) while making life easier for those with busted hardware.
+Can you make a stronger statment than "fix potenital reference count leaks?".
+Also, make the commit comment match the code better.
 
-I'm not saying change it but, it should be considered.
+maybe something like:
+"On the prob error return paths associated with rdev we are leaking ref counts, add
+pci_dev_put to return patch to avoid the leaks".
+
+Note: I'm not sure there is a leak but, assuming the code is correct the commit
+comment should be more clear and match the code.
+
+Do you have a test case that show this change is good?
 
 --mark
 
 
-> +module_param(enable_tablet_mode_sw, int, 0444);
-> +MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
-> +
->  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
->  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> ---
+>  drivers/platform/x86/amd-pmc.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index 0102bf1c7916..df140019c4bd 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -210,31 +210,39 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  	dev->dev = &pdev->dev;
 >  
-> @@ -654,10 +658,12 @@ static int __init hp_wmi_input_setup(void)
+>  	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
+> -	if (!rdev || !pci_match_id(pmc_pci_ids, rdev))
+> +	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
+> +		pci_dev_put(rdev);
+>  		return -ENODEV;
+> +	}
+>  
+>  	dev->cpu_id = rdev->device;
+>  	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
+>  	if (err) {
+>  		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
 >  	}
 >  
->  	/* Tablet mode */
-> -	val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
-> -	if (!(val < 0)) {
-> -		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-> -		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-> +	if (enable_tablet_mode_sw > 0) {
-> +		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
-> +		if (!(val < 0)) {
-> +			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-> +			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-> +		}
+>  	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+> -	if (err)
+> +	if (err) {
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+> +	}
+>  
+>  	base_addr_lo = val & AMD_PMC_BASE_ADDR_HI_MASK;
+>  
+>  	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_HI);
+>  	if (err) {
+>  		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
 >  	}
 >  
->  	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+>  	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+> -	if (err)
+> +	if (err) {
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+> +	}
+>  
+>  	base_addr_hi = val & AMD_PMC_BASE_ADDR_LO_MASK;
+>  	pci_dev_put(rdev);
 > -- 
-> 2.28.0
+> 2.17.1
+> 
 > 
