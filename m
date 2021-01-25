@@ -2,125 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F383C4332D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DFCC433E0
 	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9FD2223D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD83F22ADF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbhAZFxS (ORCPT
+        id S1727980AbhAZFxC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 00:53:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46802 "EHLO
+        Tue, 26 Jan 2021 00:53:02 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:58554 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728154AbhAYMmT (ORCPT
+        by vger.kernel.org with ESMTP id S1727852AbhAYMNw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:42:19 -0500
+        Mon, 25 Jan 2021 07:13:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611578401;
+        s=mimecast20190719; t=1611576721;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1Ym5PHTKPWPOLf8d0WlAx/Fb0LftgVbNw31j7r0xpfc=;
-        b=dY4kqTbCosGFTVlDGagsXKb1uaA/bpVhiNVWlngM/w9yxgUr0nXLC2M0M3LaKGjbr58l5l
-        zY8iKkTrjnQpfVw7yaU6rWDMWIQzM9CfkUnKtt84B4e4gLnpeKbFfwO2u6E9L/5wF+EvXA
-        a3Ev7lCHMBuCxoWHP+fPqqJu2ntC8YM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-554-U_TVjInnOfSMP9mRQE-RFQ-1; Mon, 25 Jan 2021 06:26:50 -0500
-X-MC-Unique: U_TVjInnOfSMP9mRQE-RFQ-1
-Received: by mail-ed1-f70.google.com with SMTP id a24so7171711eda.14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jan 2021 03:26:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Ym5PHTKPWPOLf8d0WlAx/Fb0LftgVbNw31j7r0xpfc=;
-        b=D5Tupk6hMkbGLRwf+Q7LIIX8Ojd0Haj9f9j91EsAg2TkvUzqzK5Gm66lsYHIasX15Z
-         s93OmpijZIHaMP+/4F6PgLWIuhytCPUN9v3DcUDoNUAIMCeWu5S30xikmSZJJb/5tlT2
-         t7z+dbxVDFjJpreeVDNjXLphEnoKUALovI/AfitPtpYnLEayxebkZf8g57xXsQC3JntZ
-         7xWmJHXPWj1GS7qY4FoLhzJ074ClLtLTyp0nkyyVS8J8Vofy6L9ho9qiSsW8vIo7nN4M
-         eI2/4AJMJOhMYE8GqM3rz5SYn5se14qvMO8D+TJdf3tJB8nzxV7QIdwJdNeRLhztoZRK
-         VnLA==
-X-Gm-Message-State: AOAM532HoXITX1az5yi3hoBymfzDs0HoXMJZrEFz+nRobozZXDBSo7MU
-        lYmrZpqGwVlvOF9NOq42YRAeH9PpKGQT12tHG5KZbwwFc8AxJq3RBbSSgf/cxIz6I3c6+Npyp3v
-        /YpZQKf04S7q7yh3Z2L4OOVp29WyCpWWkjA==
-X-Received: by 2002:a17:906:248e:: with SMTP id e14mr41071ejb.495.1611574009184;
-        Mon, 25 Jan 2021 03:26:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyhzPrjFD6h0h+0aqusTXLnxD0aow8cTexptgbaIwSWFF6/tTIpbrdpFR7CCXoweAdwIh+d2Q==
-X-Received: by 2002:a17:906:248e:: with SMTP id e14mr41063ejb.495.1611574009044;
-        Mon, 25 Jan 2021 03:26:49 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id n5sm8699456edw.7.2021.01.25.03.26.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Jan 2021 03:26:48 -0800 (PST)
-Subject: Re: [PATCH v2 09/24] platform/x86: ideapad-laptop: always propagate
- error codes from device attributes' show() callback
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ike Panhc <ike.pan@canonical.com>
-Cc:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>
-References: <20210113182016.166049-1-pobrn@protonmail.com>
- <20210113182016.166049-10-pobrn@protonmail.com>
- <CAHp75VfJBvG6ma0UxOjb4Wudeqpf9qrE3AtQ+nwwtsGhZ6fRpQ@mail.gmail.com>
- <b99c4482-faea-ff72-4367-8aeca7250040@canonical.com>
- <CAHp75Ve0hpfX6GPEH+ehCb-FsKomMwKRzkkD7Oup4utXSAidAA@mail.gmail.com>
+        bh=qFYGXPSLNwIoMSm+97j34GHslVZxB/S/yGvgs080vfg=;
+        b=SUONJrzFpCTedPd48O1wM1OTd0xw2dzAFcRwj6PH9qsF173jKSlPS48dbBfh7vcqmU0p5P
+        dKmqe57J9XESngvxmV+8QrsOcFLQEX6UlNNgGpHrDzGT3uFhOtanNmxDr37HHWy+eX+CKj
+        NduMDNgNRLQN2R4RwVRhVBn3ThbNtXA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-470-3CETjn75OdGqFRqkPGCJGA-1; Mon, 25 Jan 2021 07:00:32 -0500
+X-MC-Unique: 3CETjn75OdGqFRqkPGCJGA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C752192203E;
+        Mon, 25 Jan 2021 12:00:26 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-112-170.ams2.redhat.com [10.36.112.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DA3960C90;
+        Mon, 25 Jan 2021 12:00:02 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8f9c5892-afad-7066-3a12-1c96c16dba8d@redhat.com>
-Date:   Mon, 25 Jan 2021 12:26:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Bastien Nocera <hadess@hadess.net>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 2/2] ACPI: platform-profile: Introduce object pointers to callbacks
+Date:   Mon, 25 Jan 2021 12:59:57 +0100
+Message-Id: <20210125115957.3292-3-hdegoede@redhat.com>
+In-Reply-To: <20210125115957.3292-1-hdegoede@redhat.com>
+References: <20210125115957.3292-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve0hpfX6GPEH+ehCb-FsKomMwKRzkkD7Oup4utXSAidAA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-On 1/25/21 11:57 AM, Andy Shevchenko wrote:
-> On Mon, Jan 25, 2021 at 9:37 AM Ike Panhc <ike.pan@canonical.com> wrote:
->>
->> On 1/17/21 3:49 AM, Andy Shevchenko wrote:
->>> On Wed, Jan 13, 2021 at 8:23 PM Barnabás Pőcze <pobrn@protonmail.com> wrote:
->>>>
->>>> Consumers can differentiate an error from a successful read much more
->>>> easily if the read() call fails with the appropriate errno instead of
->>>> returning a magic string like "-1".
->>>
->>> Is user space ready for this (for the record, it seems an ABI breakage)?
->>>
->>
->> read() and getting errno looks sysfs/driver broken to me. I think
->> if button/method is not available, it's better to be something like
->> sysfs_emit(buf, "%d\n", -ENODEV)
-> 
-> Either way it will be an ABI breakage.
+Add an object pointer to handler callbacks to avoid the need for
+drivers to have a global variable to get to their driver-data
+struct.
 
-True any change here will be an ABI breakage, but I really do not expect
-anything to be dependent on this weird behavior of returning errors by
-writing some magic value to the buffer, rather then just error-ing out
-of the read() call.
+Link: https://lore.kernel.org/linux-acpi/6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com/
+Link: https://lore.kernel.org/r/20210114073429.176462-3-jiaxun.yang@flygoat.com
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Suggested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2 (Hans de Goede):
+- Tweak the commit message wording a bit
+---
+ drivers/acpi/platform_profile.c  | 4 ++--
+ include/linux/platform_profile.h | 6 ++++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-The kernel-convention here clearly is to make the read() syscall fail with
--ESOMETHING on errors. So I see this as making the driver conform to the
-expected sysfs API behavior. Since this change is nicely split out into a
-separate patch, we can always revert it if it turns out there actually
-is something depending on this. But again I see that as highly
-unlikely.
-
-Regards,
-
-Hans
+diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+index f65c61db7921..80e9df427eb8 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
+ 		return -ENODEV;
+ 	}
+ 
+-	err = cur_profile->profile_get(&profile);
++	err = cur_profile->profile_get(cur_profile, &profile);
+ 	mutex_unlock(&profile_lock);
+ 	if (err)
+ 		return err;
+@@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
+ 		return -EOPNOTSUPP;
+ 	}
+ 
+-	err = cur_profile->profile_set(i);
++	err = cur_profile->profile_set(cur_profile, i);
+ 	mutex_unlock(&profile_lock);
+ 	if (err)
+ 		return err;
+diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+index c797fdb3d91a..a26542d53058 100644
+--- a/include/linux/platform_profile.h
++++ b/include/linux/platform_profile.h
+@@ -28,8 +28,10 @@ enum platform_profile_option {
+ 
+ struct platform_profile_handler {
+ 	unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+-	int (*profile_get)(enum platform_profile_option *profile);
+-	int (*profile_set)(enum platform_profile_option profile);
++	int (*profile_get)(struct platform_profile_handler *pprof,
++				enum platform_profile_option *profile);
++	int (*profile_set)(struct platform_profile_handler *pprof,
++				enum platform_profile_option profile);
+ };
+ 
+ int platform_profile_register(struct platform_profile_handler *pprof);
+-- 
+2.29.2
 
