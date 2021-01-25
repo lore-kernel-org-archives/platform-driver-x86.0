@@ -2,60 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5321FC43333
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7182AC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 19:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCA52223D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41ABD20724
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 19:16:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbhAZRX0 (ORCPT
+        id S1728028AbhAZFxa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 12:23:26 -0500
-Received: from mail.v3.sk ([167.172.186.51]:48068 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727884AbhAZHio (ORCPT
+        Tue, 26 Jan 2021 00:53:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59447 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731622AbhAYTKq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 02:38:44 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 71D48E075A;
-        Tue, 26 Jan 2021 07:33:43 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id djKZx1FV6yFd; Tue, 26 Jan 2021 07:33:41 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id A8CACE0838;
-        Tue, 26 Jan 2021 07:33:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id tqTQ0URBotaI; Tue, 26 Jan 2021 07:33:41 +0000 (UTC)
-Received: from localhost (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 4AF43E075A;
-        Tue, 26 Jan 2021 07:33:41 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] Platform: OLPC: A couple of fixes
-Date:   Tue, 26 Jan 2021 08:37:37 +0100
-Message-Id: <20210126073740.10232-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.29.2
+        Mon, 25 Jan 2021 14:10:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611601759;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+lWKLwxMgB8k9HPpVmv4K8bwd8xRT+dLD+7+TjXu/wY=;
+        b=Fcb4FO1Wiz72iW954s9RYprxt85HbjUWa3B3Fdqs2WHJWCpt/2H/9EnfZq5aKImqYhkTK8
+        FtvE3IMhKg2mwY6xRDBILAUTCCcqc6X8zolCZHzZN2xLWlR2DGJVOs2qNG0CsZDap1EY25
+        iyz6eCYMAKmsotJki5277SiP6mofrzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-Q4L7LbstMnitI2Si0bFjTQ-1; Mon, 25 Jan 2021 14:09:14 -0500
+X-MC-Unique: Q4L7LbstMnitI2Si0bFjTQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8851F8066EA;
+        Mon, 25 Jan 2021 19:09:13 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-56.ams2.redhat.com [10.36.112.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 48D3E61D2E;
+        Mon, 25 Jan 2021 19:09:12 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Bastien Nocera <hadess@hadess.net>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/1] ACPI: platform-profile: Fix possible deadlock in platform_profile_remove()
+Date:   Mon, 25 Jan 2021 20:09:09 +0100
+Message-Id: <20210125190909.4384-2-hdegoede@redhat.com>
+In-Reply-To: <20210125190909.4384-1-hdegoede@redhat.com>
+References: <20210125190909.4384-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+After a rmmod thinkpad_acpi, lockdep pointed out this possible deadlock:
 
-chained to this message is a couple of fixes related to OLPC EC platform
-code. Please take a look and consider applying to platform-drivers-x86.
+Our _show and _store sysfs attr functions get called with the kn->active
+lock held for the sysfs attr and then take the profile_lock.
+sysfs_remove_group() also takes the kn->active lock for the sysfs attr,
+so if we call it with the profile_lock held, then we get an ABBA deadlock.
 
-Thank you
-Lubo
+platform_profile_remove() must only be called by drivers which have
+first *successfully* called platform_profile_register(). Anything else
+is a driver bug. So the check for cur_profile being set before calling
+sysfs_remove_group() is not necessary and it can be dropped.
 
+It is safe to call sysfs_remove_group() without holding the profile_lock
+since the attr-group group cannot be re-added until after we clear
+cur_profile.
+
+Change platform_profile_remove() to only hold the profile_lock while
+clearing the cur_profile, fixing the deadlock.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/acpi/platform_profile.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+index 80e9df427eb8..4a59c5993bde 100644
+--- a/drivers/acpi/platform_profile.c
++++ b/drivers/acpi/platform_profile.c
+@@ -164,13 +164,9 @@ EXPORT_SYMBOL_GPL(platform_profile_register);
+ 
+ int platform_profile_remove(void)
+ {
+-	mutex_lock(&profile_lock);
+-	if (!cur_profile) {
+-		mutex_unlock(&profile_lock);
+-		return -ENODEV;
+-	}
+-
+ 	sysfs_remove_group(acpi_kobj, &platform_profile_group);
++
++	mutex_lock(&profile_lock);
+ 	cur_profile = NULL;
+ 	mutex_unlock(&profile_lock);
+ 	return 0;
+-- 
+2.29.2
 
