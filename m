@@ -2,110 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D81C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E287AC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF162223D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CE32223D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 05:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbhAZFxZ (ORCPT
+        id S1729409AbhAZFx2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 00:53:25 -0500
-Received: from mail-40134.protonmail.ch ([185.70.40.134]:19279 "EHLO
-        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729361AbhAYOSq (ORCPT
+        Tue, 26 Jan 2021 00:53:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55850 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731616AbhAYTKl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Jan 2021 09:18:46 -0500
-Date:   Mon, 25 Jan 2021 14:17:54 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1611584283;
-        bh=7nNdB63QdRQMdbIHYe4I50+Lx1RuLumtEacZpIkAsAk=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=kiuq9Jx71x+Hg0ZjMSOCuUoNmjVxKL2szPnL0VrmLII/aAyN/f6YfxzefNmfqJNRZ
-         i6doCJkvrOoGIHf+e9+6lUhuVfZWze5mMMjb1lRcaZE/Wrck9Zz+7eSBGD5qFlKtoO
-         X2QrE3ODLMtkwy0/N1iFT5kBxT2JbJazoWbaQZ6E=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH v2 09/24] platform/x86: ideapad-laptop: always propagate error codes from device attributes' show() callback
-Message-ID: <d8cwgdfa3LVr-6vePbV5MwgwG97MlzUiNdO1LPomugtHi0GO83FPCbDMbj9hef1w5f9XbDR919K7R4JOvz5o9WMurdoRz6Y8KcSRXRwGtTY=@protonmail.com>
-In-Reply-To: <cbee040a-53c8-b58f-3231-58d774bbda0a@redhat.com>
-References: <20210113182016.166049-1-pobrn@protonmail.com> <20210113182016.166049-10-pobrn@protonmail.com> <CAHp75VfJBvG6ma0UxOjb4Wudeqpf9qrE3AtQ+nwwtsGhZ6fRpQ@mail.gmail.com> <b99c4482-faea-ff72-4367-8aeca7250040@canonical.com> <CAHp75Ve0hpfX6GPEH+ehCb-FsKomMwKRzkkD7Oup4utXSAidAA@mail.gmail.com> <8f9c5892-afad-7066-3a12-1c96c16dba8d@redhat.com> <CAHp75VdmwxZeqY3qdO6AuK3QTF=p+Wn9qByMsLEzaV4VV78QHQ@mail.gmail.com> <cbee040a-53c8-b58f-3231-58d774bbda0a@redhat.com>
+        Mon, 25 Jan 2021 14:10:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611601755;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=f1V+LPuoBvB9sYfJwGxS3yrxFQp3mMYgaVtf/y9Yvg4=;
+        b=Fh2lyT1dRX4jw9QpfxpCHqo3m/U9G2nlODu4M9wDOnBoY0debhCEPV/5e45FdL+U4RuNnN
+        hx+zOmrvr+TzzVdogrS9D5Li63yUAI4sBKqU/kVRrfQu0ue/d+++J+LuqxTvbcEPIW/lBt
+        LyUUmf/zVOJw/HjeMNwjs4mu6UcgQOM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-478-z02yBCcDP1m1LdWVwmQKoQ-1; Mon, 25 Jan 2021 14:09:13 -0500
+X-MC-Unique: z02yBCcDP1m1LdWVwmQKoQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3F9610054FF;
+        Mon, 25 Jan 2021 19:09:11 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-56.ams2.redhat.com [10.36.112.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 878325E1A4;
+        Mon, 25 Jan 2021 19:09:10 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Bastien Nocera <hadess@hadess.net>, linux-acpi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/1] ACPI: platform-profile: Fix possible deadlock in platform_profile_remove()
+Date:   Mon, 25 Jan 2021 20:09:08 +0100
+Message-Id: <20210125190909.4384-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-2021. janu=C3=A1r 25., h=C3=A9tf=C5=91 12:40 keltez=C3=A9ssel, Hans de Goed=
-e =C3=ADrta:
+Hi Rafael,
 
-> Hi,
->
-> On 1/25/21 12:35 PM, Andy Shevchenko wrote:
-> > On Mon, Jan 25, 2021 at 1:26 PM Hans de Goede <hdegoede@redhat.com> wro=
-te:
-> >> On 1/25/21 11:57 AM, Andy Shevchenko wrote:
-> >>> On Mon, Jan 25, 2021 at 9:37 AM Ike Panhc <ike.pan@canonical.com> wro=
-te:
-> >>>>
-> >>>> On 1/17/21 3:49 AM, Andy Shevchenko wrote:
-> >>>>> On Wed, Jan 13, 2021 at 8:23 PM Barnab=C3=A1s P=C5=91cze <pobrn@pro=
-tonmail.com> wrote:
-> >>>>>>
-> >>>>>> Consumers can differentiate an error from a successful read much m=
-ore
-> >>>>>> easily if the read() call fails with the appropriate errno instead=
- of
-> >>>>>> returning a magic string like "-1".
-> >>>>>
-> >>>>> Is user space ready for this (for the record, it seems an ABI break=
-age)?
-> >>>>>
-> >>>>
-> >>>> read() and getting errno looks sysfs/driver broken to me. I think
-> >>>> if button/method is not available, it's better to be something like
-> >>>> sysfs_emit(buf, "%d\n", -ENODEV)
-> >>>
-> >>> Either way it will be an ABI breakage.
-> >>
-> >> True any change here will be an ABI breakage, but I really do not expe=
-ct
-> >> anything to be dependent on this weird behavior of returning errors by
-> >> writing some magic value to the buffer, rather then just error-ing out
-> >> of the read() call.
-> >>
-> >> The kernel-convention here clearly is to make the read() syscall fail =
-with
-> >> -ESOMETHING on errors. So I see this as making the driver conform to t=
-he
-> >> expected sysfs API behavior. Since this change is nicely split out int=
-o a
-> >> separate patch, we can always revert it if it turns out there actually
-> >> is something depending on this. But again I see that as highly
-> >> unlikely.
-> >
-> > Me too. My point is that every stakeholder here understands that.
-> > Perhaps elaborated in the commit message.
->
-> Ack, adding a note about this to the commit message would be good.
->
-> Barnab=C3=A1s, can you add a note about this to the commit message?
->
-> Also I think we are about ready for you to post a v3 of this
-> series (when you have time to do so).
->
+Sorry for throwing another patch into the mix for the acpi-platform
+branch. I always build my local kernels with lockdep enabled and
+while testing an unrelated acpi_thinkpad patch I did "rmmod acpi_thinkpad"
+and lockdep pointed out this potential deadlock.
 
-Yes, I can add a note about this. I've been relatively busy for some time,
-but I'm planning to submit the new version shortly (by the end of this week=
-).
+The fix is simple enough, although it does rely on the assumption
+that drivers will only call platform_profile_remove() after they
+have first successfully called platform_profile_register().
+
+See the actual patch for more details.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (1):
+  ACPI: platform-profile: Fix possible deadlock in platform_profile_remove()
+
+ drivers/acpi/platform_profile.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
