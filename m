@@ -2,146 +2,186 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=BAYES_00,BIGNUM_EMAILS,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8751EC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366CEC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 13:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A08D21D81
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1C722B3B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 13:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbhAYMNG (ORCPT
+        id S1729127AbhAYNwj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Jan 2021 07:13:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
+        Mon, 25 Jan 2021 08:52:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbhAYMM6 (ORCPT
+        with ESMTP id S1729124AbhAYNwJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:12:58 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1131DC06121F
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jan 2021 04:12:13 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id f16so1613244wmq.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jan 2021 04:12:12 -0800 (PST)
+        Mon, 25 Jan 2021 08:52:09 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16AE7C06174A;
+        Mon, 25 Jan 2021 05:51:20 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id z21so8939383pgj.4;
+        Mon, 25 Jan 2021 05:51:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7cGpp4Q/I11lKQsM0NrfStdcMQHZmJsYCLBWm8CMShU=;
-        b=OHFIjCCRispoXYZUs0ZIHE2wR60srWzDnOi/xhMdGnXpxbHumqVjDeJN+/p5iOSw09
-         5FSBGCIA6nVrPCBaQE48edDczk7p5DWtvvsLElU9tXJqRFo0KWW52ve1tdjf7TB/5T/z
-         0TdID9evn2TCuC4ljXfBd66yxMkQcOq8NHEbSYMiQj+LfphOFOgsRWFQWNVaaft6QuDk
-         JoU4hGy1ST4PTfd+KjVJ6yPoIQY+lTrfyLd1U9pYVzROER4S1y0bViA+9xU+i+aNOmWf
-         zkJ1xNHFWohj65c3SHRfZjihl2DHm9eL8R10uRt5nfOZJWMrRTug1SuKJfUg9xK+p8v0
-         D9OQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RWUF9sk6aAtbCcNvEafq7sz3OWsvQ496bVTDX1JAh1k=;
+        b=A+ZwgBJV3zw5DaExWioh221t3IGyNlFttWc0FjTmOIlVqgcm0chiXZQReo3L4bmdxm
+         qDrqoH1iQAzGfmkzNC0+GaDVJURAuSMIfng2QzOWPiy32D2lhtx33iz/8LWxhYLdgueI
+         MGcnq6cNIRyL+7g2h+jA/lLb553Ma97swsDJLA7xntRrJnJ6Y4ovCD/FaEPKfm8Ome6B
+         EwlXkRfqV2fxlmdLG89NR+Rzp9Or6MPw+36LINyLlEXqjSFLXiyQbKKHibeOrsMKj7JI
+         Q50nCiL+gl9lR7F0US4nmz1UxZLbIC7JSACJY7a6kyC2ml+ujEoaGtAeX2n3uRF+oHpz
+         7JOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7cGpp4Q/I11lKQsM0NrfStdcMQHZmJsYCLBWm8CMShU=;
-        b=k/RuUR89a6ZB/x7RHaBlM3R3CZ7nXOhZTyP1buffjw9zED3LmzEenaLhW0jgEwMFIB
-         1f9kYEkucbU/e6iABGONdQekPP6w21mGF/ZLeMLltpWgbsCwd7j2kJUrnclPx+mEKpFY
-         YcuGYbCSq2JAifIQ7TZfON2H6G8zT+nbO67GBnl29ghMW2uJoEj2wciFcvpsF/49AKlm
-         0aUKHD94TIzH+J/jv80VMxSjLhFD2OV2ZvvkueC+iyH3rFHG9N8RcA6kssDD+7UEZWnU
-         Y6o1peShYP7/XCEoc0BnFemh3UAl6eT/LtQj8xbcQ3HCWzNX8751AoGR8UqMigdvzy1p
-         uWaw==
-X-Gm-Message-State: AOAM532ibn324yWRGE50Yu/epdHMSmVP/bg46bXzUbuEjT9ZhUZLpYip
-        sz6jZprMAuAXEeON2fvCdmT18x/RQws=
-X-Google-Smtp-Source: ABdhPJylNxoImrXkMQIo6mwjbxED+4RU6Rg8yHbpeqAFHygg5iteAmo4bM4nEaoTmxQEn350txtxAA==
-X-Received: by 2002:a1c:9dcb:: with SMTP id g194mr48655wme.59.1611576731395;
-        Mon, 25 Jan 2021 04:12:11 -0800 (PST)
-Received: from [192.168.2.202] (p5487b82c.dip0.t-ipconnect.de. [84.135.184.44])
-        by smtp.gmail.com with ESMTPSA id o17sm16136004wrp.34.2021.01.25.04.12.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Jan 2021 04:12:10 -0800 (PST)
-Subject: Re: [bug report] platform/surface: Add Surface Aggregator subsystem
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <YA6up/PbuEZ82kNd@mwanda>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <9302e8c9-5909-968c-9ac4-e5725e61082e@gmail.com>
-Date:   Mon, 25 Jan 2021 13:12:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RWUF9sk6aAtbCcNvEafq7sz3OWsvQ496bVTDX1JAh1k=;
+        b=NJ7IoJaFgaikC0h9zvhx27U9JHbJ+e9Bk/sgWURDo4f4B60mgvR4+WH5ccPuPpjTgL
+         NU6Hv7/6+gTAlO0F3dbJoSSD1LVHmlW3zHGryzN1vejUKAoUpJ7oLPp4ANWv37ROlKSu
+         XNqpcXE0G0leFAb0Fj5YFHhCOL+zBsd5HiDoUi62hbN3mcWxX8zGI8HTBVnDSUbSXs7D
+         mBEOAUip7grkGLEQInOV4+EGEMZcaBQLPL12carcjZpXK2biyPzRO1BCUWtQzDTaDYOH
+         o95MZPWzfvYS7Kkl1BDP3S/jwKVbNnPBQ78ZEfvedJria+fJjxklS5m4XOZMaxEjmUri
+         r+Zg==
+X-Gm-Message-State: AOAM531qSUXnEBqw93VfGqwnPotPTbic8peSE3ZsnuGnrwOLlxmnew+v
+        FW1pTHdwGFOHQgoiclXA7wr6ncLX868dC11hRXU=
+X-Google-Smtp-Source: ABdhPJwU9lv/HgEGcXXuj0s6UuwnBTFZexvbrX1j/qcytvzWrZZHV9FVThMAvDbc+POWReXaAQg2cjYw0jcKu3eXl/o=
+X-Received: by 2002:a63:e50:: with SMTP id 16mr748649pgo.74.1611582679385;
+ Mon, 25 Jan 2021 05:51:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <YA6up/PbuEZ82kNd@mwanda>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210122123201.40935-1-andriy.shevchenko@linux.intel.com>
+ <1f3d5ad1-9f8f-4a78-6239-6cdcbeeeb95b@redhat.com> <YArtsQSQsGdfNlBI@smile.fi.intel.com>
+ <YArzAvcZXfv8DaI4@smile.fi.intel.com> <4ba64643-9254-055d-49a0-55104b8669d8@redhat.com>
+ <1d57c7b0-9ef4-3306-1566-2b99f40d92d1@roeck-us.net> <eeda93c6-04cb-a775-7d79-b29a53c6a138@redhat.com>
+ <CAHp75VdE4LSHTKLuZ6x744224N2AvbMU0JeMmTWoqeEHDj7=2A@mail.gmail.com> <f89f2650-73aa-337d-5219-141cd1a2ba32@redhat.com>
+In-Reply-To: <f89f2650-73aa-337d-5219-141cd1a2ba32@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Jan 2021 15:52:08 +0200
+Message-ID: <CAHp75VcKwmOm2QyWtwBBkGTHp8cHEsxXi+nznbjOoUEBdd_aOw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] watchdog: intel_scu_watchdog: Remove driver for
+ deprecated platform
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 1/25/21 12:42 PM, Dan Carpenter wrote:
-> Hello Maximilian Luz,
-> 
-> The patch c167b9c7e3d6: "platform/surface: Add Surface Aggregator
-> subsystem" from Dec 21, 2020, leads to the following static checker
-> warning:
-> 
-> 	drivers/platform/surface/aggregator/ssh_packet_layer.c:1697 ssh_ptl_rx_eval()
-> 	warn: check likely/unlikely parens
-> 
-> drivers/platform/surface/aggregator/ssh_packet_layer.c
->    1683  static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
->    1684  {
->    1685          struct ssh_frame *frame;
->    1686          struct ssam_span payload;
->    1687          struct ssam_span aligned;
->    1688          bool syn_found;
->    1689          int status;
->    1690
->    1691          /* Error injection: Modify data to simulate corrupt SYN bytes. */
->    1692          ssh_ptl_rx_inject_invalid_syn(ptl, source);
->    1693
->    1694          /* Find SYN. */
->    1695          syn_found = sshp_find_syn(source, &aligned);
->    1696
->    1697          if (unlikely(aligned.ptr - source->ptr) > 0) {
-> 
-> The unlikely() macro returns 0/1.  Smatch is suggesting that this should
-> just be "if (unlikely((aligned.ptr - source->ptr) > 0)) {" but I'm not
-> at all sure that that's correct.  Isn't aligned being higher than source
-> the normal case?
+On Mon, Jan 25, 2021 at 1:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 1/25/21 12:15 PM, Andy Shevchenko wrote:
+> > On Sat, Jan 23, 2021 at 2:08 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >> On 1/23/21 1:27 AM, Guenter Roeck wrote:
+> >>> On 1/22/21 1:04 PM, Hans de Goede wrote:
+> >>>> On 1/22/21 4:45 PM, Andy Shevchenko wrote:
+> >>>>> On Fri, Jan 22, 2021 at 05:22:25PM +0200, Andy Shevchenko wrote:
+> >>>>>> On Fri, Jan 22, 2021 at 03:59:34PM +0100, Hans de Goede wrote:
+> >
+> >>>>>>> What is the plan for merging this series ?
+> >>>>>>>
+> >>>>>>> It touches files under:
+> >>>>>>> arch/x86
+> >>>>>>> drivers/watchdog
+> >>>>>>> drivers/platform/x86
+> >>>>>>>
+> >>>>>>> It is probably best if the entire series is merged through a single
+> >>>>>>> tree. I don't expect this to cause any conflicts with current / upcoming
+> >>>>>>> changes under drivers/platform/x86, so I'm fine with this being merged
+> >>>>>>> through another tree.
+> >>>>>>>
+> >>>>>>> Or if I can get an ack for that from the x86 and watchdog maintainers
+> >>>>>>> I can merge the entire series through the pdx86 tree.
+> >>>>>>
+> >>>>>> For time being I'm collecting tags and comments.
+> >>>>>> As of today this series is independent per se, but other (later) clean up
+> >>>>>> patches may rely on this.
+> >>>>>>
+> >>>>>> One strategy can be providing an immutable branch for anybody who wants it and
+> >>>>>> merge thru PDx86 or watchdog tree (I guess PDx86 is preferable because there
+> >>>>>> are more patches touching other stuff, though independently, in this matters).
+> >>>>>
+> >>>>> Yes, I think one more time and guess the best is:
+> >>>>>  - get tags from x86 / watchdog
+> >>>>>  - get tag from RTC
+> >>>>>  - collect everything in PDx86 immutable branch
+> >>>>
+> >>>> Ok, that works for me. I assume that it is best for the other subsystems
+> >>>> if I create an immutable branch for this based on 5.11-rc1
+> >>>> (and then merge that into pdx86/for-next) ?
+> >>>>
+> >>>> Guenter, I believe you have already reviewed all the watchdog changes,
+> >>>> are you ok with me creating an immutable branch for the entire series
+> >>>> and then sending you a pull-req for that ?
+> >>>
+> >>> Wim handles watchdog pull requests,
+> >
+> > Wim, can you Ack the watchdog changes?
 
-Hi,
+Ah, I missed the fact that Guenter *is* one of the WDT maintainers, so
+we are fine here.
 
-the suggestion by Smatch, i.e.
+> >> Ah, sorry I was under the impression you would do that because you were
+> >> doing the reviews (which I'm sure Wim appreciates).
+> >>
+> >>> and he usually creates a branch
+> >>> for Linus to pull from either during or shortly before a commit window.
+> >>> Also, I don't immediately see why the watchdog tree should carry the other
+> >>> patches of this series, immutable or not; I would not expect a dependency
+> >>> against those.
+> >>>
+> >>> Anyway, I am fine if the the wdt driver removal is submitted through some
+> >>> other branch.
+> >>
+> >> Hmm, looking at the code again it indeed seems that patch 1/5 + 2/5 could
+> >> be simply merged through the watchdog tree, as they don't appear to
+> >> have any interdependencies with the arch/x86 and drivers/platform/x86
+> >> changes.  Andy ?
+> >
+> > The first patch is a dependency to the later (that are not published yet).
+> > I was considering gathering all dependent patches in immutable
+> > branches and doing in three parts / phases.
+> >
+> > I can prepare a branch with a first batch (with Acks from respective
+> > maintainers) and send a PR to you.
+> > Would it work?
+>
+> I guess you would then publish this as an immutable branch yourself and
+> send a PR to all involved subsys-maintainers ?
 
-     if (unlikely((aligned.ptr - source->ptr) > 0)
+Right, I may do this.
 
-should be correct. The normal case is aligned.ptr equal to source->ptr.
+> You have commit rights to the pdx86/platform-drivers-x86 git repo if
+> I'm not mistaken, so you could publish the immutable branch there if
+> you want.
+>
+> That actually sounds like a good plan to me, assuming the other maintainers
+> are ok with it too.
 
-Let me elaborate a bit for detail: SSH messages all start with a "SYN"
-sequence and are frame based. So once we've parsed one message, we
-expect it to be followed up directly by the next message. So, here, we
-are directly expecting a new message to start, meaning the SYN should be
-found at the start of the buffer, or, closer to the code, aligned.ptr
-(the start of the message frame) should equal source->ptr. If this is
-not the case, this indicates that some unexpected bytes are in-between
-the last successfully parsed message and the next message. Usually
-that's caused by when a previous message has failed one of the CRC
-checks (thus we can't rely on the length encoded in the frame) and we're
-actively searching for the next message (via this call here).
+Oki-doki, lemme do this way then. Thanks!
 
-Thanks for the report!
+Taking into account above (Guenter had given his tags) I will prepare
+an immutable branch  and create a tag with current stuff and will send
+it to appropriate subsystems, including PDx86.
+Tell me if I need to do something differently.
 
-Do you want to submit a patch for this or should I do that?
-
-Regards,
-Max
-
-> 
->    1698                  ptl_warn(ptl, "rx: parser: invalid start of frame, skipping\n");
->    1699
->    1700                  /*
->    1701                   * Notes:
->    1702                   * - This might send multiple NAKs in case the communication
-> 
-> regards,
-> dan carpenter
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
