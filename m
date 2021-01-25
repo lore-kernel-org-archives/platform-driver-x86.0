@@ -2,133 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=BAYES_00,BIGNUM_EMAILS,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E34C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8751EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B249622AAA
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A08D21D81
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 25 Jan 2021 12:13:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbhAYMM6 (ORCPT
+        id S1727809AbhAYMNG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 25 Jan 2021 07:12:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43178 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727848AbhAYMMi (ORCPT
+        Mon, 25 Jan 2021 07:13:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727821AbhAYMM6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 25 Jan 2021 07:12:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611576666;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yx6+lqiN2xkCZw3IcAtJgEckwR55n0HSKE2EyvgHAjY=;
-        b=Gv6hLj72XyD/iLQDZg32aoqVHIO+3AeKweTP1judoUF1u/liBiZ5T3BmTdYNdpUm1cqmFL
-        Vci/MBd6zZMF1TkgcN1Sogm/uET/bOfqecsf9WkJosC/yfizT3j0c1NO86lHun9szXN6hM
-        rxs9w9PL0yEx/8zxa3k3rq+ka4KRvts=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-9iurb-apNpSBn2he3Jf9-A-1; Mon, 25 Jan 2021 07:00:03 -0500
-X-MC-Unique: 9iurb-apNpSBn2he3Jf9-A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26D28CE642;
-        Mon, 25 Jan 2021 12:00:02 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-170.ams2.redhat.com [10.36.112.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 943AC60C64;
-        Mon, 25 Jan 2021 12:00:00 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Bastien Nocera <hadess@hadess.net>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2 1/2] ACPI: platform-profile: Drop const qualifier for cur_profile
-Date:   Mon, 25 Jan 2021 12:59:56 +0100
-Message-Id: <20210125115957.3292-2-hdegoede@redhat.com>
-In-Reply-To: <20210125115957.3292-1-hdegoede@redhat.com>
-References: <20210125115957.3292-1-hdegoede@redhat.com>
+        Mon, 25 Jan 2021 07:12:58 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1131DC06121F
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jan 2021 04:12:13 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id f16so1613244wmq.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 25 Jan 2021 04:12:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7cGpp4Q/I11lKQsM0NrfStdcMQHZmJsYCLBWm8CMShU=;
+        b=OHFIjCCRispoXYZUs0ZIHE2wR60srWzDnOi/xhMdGnXpxbHumqVjDeJN+/p5iOSw09
+         5FSBGCIA6nVrPCBaQE48edDczk7p5DWtvvsLElU9tXJqRFo0KWW52ve1tdjf7TB/5T/z
+         0TdID9evn2TCuC4ljXfBd66yxMkQcOq8NHEbSYMiQj+LfphOFOgsRWFQWNVaaft6QuDk
+         JoU4hGy1ST4PTfd+KjVJ6yPoIQY+lTrfyLd1U9pYVzROER4S1y0bViA+9xU+i+aNOmWf
+         zkJ1xNHFWohj65c3SHRfZjihl2DHm9eL8R10uRt5nfOZJWMrRTug1SuKJfUg9xK+p8v0
+         D9OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7cGpp4Q/I11lKQsM0NrfStdcMQHZmJsYCLBWm8CMShU=;
+        b=k/RuUR89a6ZB/x7RHaBlM3R3CZ7nXOhZTyP1buffjw9zED3LmzEenaLhW0jgEwMFIB
+         1f9kYEkucbU/e6iABGONdQekPP6w21mGF/ZLeMLltpWgbsCwd7j2kJUrnclPx+mEKpFY
+         YcuGYbCSq2JAifIQ7TZfON2H6G8zT+nbO67GBnl29ghMW2uJoEj2wciFcvpsF/49AKlm
+         0aUKHD94TIzH+J/jv80VMxSjLhFD2OV2ZvvkueC+iyH3rFHG9N8RcA6kssDD+7UEZWnU
+         Y6o1peShYP7/XCEoc0BnFemh3UAl6eT/LtQj8xbcQ3HCWzNX8751AoGR8UqMigdvzy1p
+         uWaw==
+X-Gm-Message-State: AOAM532ibn324yWRGE50Yu/epdHMSmVP/bg46bXzUbuEjT9ZhUZLpYip
+        sz6jZprMAuAXEeON2fvCdmT18x/RQws=
+X-Google-Smtp-Source: ABdhPJylNxoImrXkMQIo6mwjbxED+4RU6Rg8yHbpeqAFHygg5iteAmo4bM4nEaoTmxQEn350txtxAA==
+X-Received: by 2002:a1c:9dcb:: with SMTP id g194mr48655wme.59.1611576731395;
+        Mon, 25 Jan 2021 04:12:11 -0800 (PST)
+Received: from [192.168.2.202] (p5487b82c.dip0.t-ipconnect.de. [84.135.184.44])
+        by smtp.gmail.com with ESMTPSA id o17sm16136004wrp.34.2021.01.25.04.12.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jan 2021 04:12:10 -0800 (PST)
+Subject: Re: [bug report] platform/surface: Add Surface Aggregator subsystem
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <YA6up/PbuEZ82kNd@mwanda>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <9302e8c9-5909-968c-9ac4-e5725e61082e@gmail.com>
+Date:   Mon, 25 Jan 2021 13:12:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <YA6up/PbuEZ82kNd@mwanda>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+On 1/25/21 12:42 PM, Dan Carpenter wrote:
+> Hello Maximilian Luz,
+> 
+> The patch c167b9c7e3d6: "platform/surface: Add Surface Aggregator
+> subsystem" from Dec 21, 2020, leads to the following static checker
+> warning:
+> 
+> 	drivers/platform/surface/aggregator/ssh_packet_layer.c:1697 ssh_ptl_rx_eval()
+> 	warn: check likely/unlikely parens
+> 
+> drivers/platform/surface/aggregator/ssh_packet_layer.c
+>    1683  static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
+>    1684  {
+>    1685          struct ssh_frame *frame;
+>    1686          struct ssam_span payload;
+>    1687          struct ssam_span aligned;
+>    1688          bool syn_found;
+>    1689          int status;
+>    1690
+>    1691          /* Error injection: Modify data to simulate corrupt SYN bytes. */
+>    1692          ssh_ptl_rx_inject_invalid_syn(ptl, source);
+>    1693
+>    1694          /* Find SYN. */
+>    1695          syn_found = sshp_find_syn(source, &aligned);
+>    1696
+>    1697          if (unlikely(aligned.ptr - source->ptr) > 0) {
+> 
+> The unlikely() macro returns 0/1.  Smatch is suggesting that this should
+> just be "if (unlikely((aligned.ptr - source->ptr) > 0)) {" but I'm not
+> at all sure that that's correct.  Isn't aligned being higher than source
+> the normal case?
 
-Drop the const qualifier from the static global cur_profile
-pointer declaration.
+Hi,
 
-This is a preparation patch for passing the cur_profile pointer as
-parameter to the profile_get() and profile_set() callbacks so that
-drivers dynamically allocating their driver-data struct, with their
-platform_profile_handler struct embedded, can use this pointer to
-get to their driver-data.
+the suggestion by Smatch, i.e.
 
-Note this also requires dropping the const from the pprof
-platform_profile_register() function argument. Dropping this
-const is not a problem, non of the queued up consumers of
-platform_profile_register() actually pass in a const pointer.
+     if (unlikely((aligned.ptr - source->ptr) > 0)
 
-Link: https://lore.kernel.org/linux-acpi/5e7a4d87-52ef-e487-9cc2-8e7094beaa08@redhat.com/
-Link: https://lore.kernel.org/r/20210114073429.176462-2-jiaxun.yang@flygoat.com
-Suggested-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-[hdegoede@redhat.com: Also remove const from platform_profile_register()]
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2 (Hans de Goede):
-- Not only remove the const from the global cur_profile variable declaration,
-  but also from the platform_profile_register() argument
-- Reword commit message to match
----
- drivers/acpi/platform_profile.c  | 4 ++--
- include/linux/platform_profile.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+should be correct. The normal case is aligned.ptr equal to source->ptr.
 
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index 91be50a32cc8..f65c61db7921 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -9,7 +9,7 @@
- #include <linux/platform_profile.h>
- #include <linux/sysfs.h>
- 
--static const struct platform_profile_handler *cur_profile;
-+static struct platform_profile_handler *cur_profile;
- static DEFINE_MUTEX(profile_lock);
- 
- static const char * const profile_names[] = {
-@@ -132,7 +132,7 @@ void platform_profile_notify(void)
- }
- EXPORT_SYMBOL_GPL(platform_profile_notify);
- 
--int platform_profile_register(const struct platform_profile_handler *pprof)
-+int platform_profile_register(struct platform_profile_handler *pprof)
- {
- 	int err;
- 
-diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
-index 3623d7108421..c797fdb3d91a 100644
---- a/include/linux/platform_profile.h
-+++ b/include/linux/platform_profile.h
-@@ -32,7 +32,7 @@ struct platform_profile_handler {
- 	int (*profile_set)(enum platform_profile_option profile);
- };
- 
--int platform_profile_register(const struct platform_profile_handler *pprof);
-+int platform_profile_register(struct platform_profile_handler *pprof);
- int platform_profile_remove(void);
- void platform_profile_notify(void);
- 
--- 
-2.29.2
+Let me elaborate a bit for detail: SSH messages all start with a "SYN"
+sequence and are frame based. So once we've parsed one message, we
+expect it to be followed up directly by the next message. So, here, we
+are directly expecting a new message to start, meaning the SYN should be
+found at the start of the buffer, or, closer to the code, aligned.ptr
+(the start of the message frame) should equal source->ptr. If this is
+not the case, this indicates that some unexpected bytes are in-between
+the last successfully parsed message and the next message. Usually
+that's caused by when a previous message has failed one of the CRC
+checks (thus we can't rely on the length encoded in the frame) and we're
+actively searching for the next message (via this call here).
 
+Thanks for the report!
+
+Do you want to submit a patch for this or should I do that?
+
+Regards,
+Max
+
+> 
+>    1698                  ptl_warn(ptl, "rx: parser: invalid start of frame, skipping\n");
+>    1699
+>    1700                  /*
+>    1701                   * Notes:
+>    1702                   * - This might send multiple NAKs in case the communication
+> 
+> regards,
+> dan carpenter
+> 
