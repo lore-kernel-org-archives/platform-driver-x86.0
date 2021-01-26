@@ -2,126 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F178EC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5181AC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAF4E206A1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B910205F4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390060AbhA0BD5 (ORCPT
+        id S1727914AbhA0BE0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 20:03:57 -0500
-Received: from mga06.intel.com ([134.134.136.31]:27230 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727831AbhAZWCA (ORCPT
+        Tue, 26 Jan 2021 20:04:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388200AbhAZXUo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 17:02:00 -0500
-IronPort-SDR: cEgNN3N+CzRq/7NDT/KN08hK/cDVSkFrcoVU3D2VzpRWV/PsgM3Ld5uYqWuEnsmE/mtzRqxE9x
- c3DyyDw47Opw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="241508067"
-X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
-   d="scan'208";a="241508067"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 14:00:10 -0800
-IronPort-SDR: AFz7R2ksriA2vwmIk/CN8ZQQkC2qEXvnRS930791YbIObtBRPGRzNuxIhQwFDVrr3nY3kqq3RX
- glSi27bOH03A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
-   d="scan'208";a="402887935"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 26 Jan 2021 14:00:07 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.143])
-        by linux.intel.com (Postfix) with ESMTP id 90FBA58010C;
-        Tue, 26 Jan 2021 14:00:07 -0800 (PST)
-Message-ID: <c7099bece001aa0803c8357a44b114d2d26e94e4.camel@linux.intel.com>
-Subject: Re: [PATCH] platform/x86: pmt: Make PMT Kconfig options depend on
- INTEL_PMT_CLASS
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 26 Jan 2021 14:00:07 -0800
-In-Reply-To: <20210126202042.95301-1-hdegoede@redhat.com>
-References: <20210126202042.95301-1-hdegoede@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3 (3.38.3-1.fc33) 
+        Tue, 26 Jan 2021 18:20:44 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C016EC06174A;
+        Tue, 26 Jan 2021 15:19:32 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id v200so249984ybe.1;
+        Tue, 26 Jan 2021 15:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yG8TN3kSOy/r5C1fLciwDAgyrhAMN8G3ZSfNxn4LKwI=;
+        b=JGn9UVd1WL6oLaAIgsVyZFefcVBcfaNKnNmOKOUyzbrJVYPNvDflHiTqTCWbm08KKm
+         cHN3UA9Qctcy/zocpr/AYU08cR4RovIIz4JlaEWXZxBMFL7ThTcs/Xw7vAn5YKV9F6bS
+         Ovrxi5Oqb0xAcSldXg7BPjJ7e8IrIwVj7lashPMbLmBoH+ir0sIVOOgNZRTTXJMWihA5
+         aBH8+0LeIHQz5MZkI5ksYuuMbyMEKaAIyhlG64IipkZUPMFKbeYo+0C5IyD9IBsL+mgu
+         NXmYmPsFaDDfqufP8ivVnzJswuQdVImtIfytTHJaKUTtTMsOam8GbSNJKsqKsz3Wlfh9
+         WIpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yG8TN3kSOy/r5C1fLciwDAgyrhAMN8G3ZSfNxn4LKwI=;
+        b=VQzjlGnjwwKXGtmg6M3zPDHX9hCe0FvY+1Msdl0oVJ5vHLuE+4qGmnWBI57mXUva7y
+         o2zvi+FzAv5LA0fyQ2mFNkirTYcUWFu6rtB7y5CuUU4H9/r/LFnGD1Sv3W3ipeMUgpVn
+         gVl90qg9KKqVNQ3arWXLYJUM0cKycEa4WSavMk0jeUuAKupGWS1KEmrQ4RVJQ2jClT8h
+         GGRhhVet7wd2XwpYaDkDGNHSiZYxluzuJ0AglniaJcwBGjTUoxFClli+Ka4hndHpGl1T
+         u2kRQ3x+sNihGyWuJLyVokibcXkad+Y98a+yijURkntQVA/ThsgygVbv2L34g6aImJ/a
+         FnWA==
+X-Gm-Message-State: AOAM533BgN2PQxauxeOIdYNK6Ug0jpmGKfmcMDPWlukyubKw8RusOpJ5
+        JvyaszjypAx1sHDpQ/44uzA0VLDYSZaaDdIuolM=
+X-Google-Smtp-Source: ABdhPJzBIh/uw8fHMxIPrq4i5pm0L5Jnoe2iN2FtZdlZzW9R7RDH1coLX0c8arxTOhBav4i1zaEHR/zAQGpitgryc7o=
+X-Received: by 2002:a25:9b81:: with SMTP id v1mr10594112ybo.168.1611703172052;
+ Tue, 26 Jan 2021 15:19:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+ <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
+ <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
+ <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
+ <3b4c2f63-14e6-5041-3c15-c2d65b229269@redhat.com> <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+In-Reply-To: <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
+From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date:   Wed, 27 Jan 2021 00:19:17 +0100
+Message-ID: <CAMeQTsZMK9E4=qB-Kxnt9i4RGDFRkVMAgyYSck_tmk7C7yTH2A@mail.gmail.com>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+On Tue, Jan 26, 2021 at 9:53 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Jan 26, 2021 at 8:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 1/26/21 6:14 PM, Andy Shevchenko wrote:
+> > > On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
+> > > <patrik.r.jakobsson@gmail.com> wrote:
+> > >> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
+> > >> <andy.shevchenko@gmail.com> wrote:
+> > >>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+> > >>> <patrik.r.jakobsson@gmail.com> wrote:
+> > >>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+> > >>>> <andriy.shevchenko@linux.intel.com> wrote:
+> > >>>>>
+> > >>>>> Hi guys,
+> > >>>>>
+> > >>>>> This is first part of Intel MID outdated platforms removal. It's collected into
+> > >>>>> immutable branch with a given tag, please pull to yours subsystems.
+> > >>>>
+> > >>>> Hi Andy,
+> > >>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
+> > >>>> then I should probably start looking at removing the corresponding
+> > >>>> parts in GMA500.
+> > >>>
+> > >>> Nope. It is related to only Medfield / Clovertrail platforms.
+> > >>>
+> > >>> There are other (MID) platforms that may / might utilize this driver
+> > >>> in the future.
+> > >>
+> > >> Right, there's still Oaktrail / Moorestown with hardware in the wild.
+> > >
+> > > Actually Moorestown had to be removed a few years ago (kernel won't
+> > > boot on them anyway from that date when Alan removed support under
+> > > arch/x86 for it).
 
-Sorry for missing the discussion on this. Need to fix my mail
-filtering. I just submitted patches that instead make INTEL_PMT_CLASS
-non-user-selectable, leaving the other dependencies in place. Having
-the class driver user-selectable was a mistake.
+Ok. I lump Moorestown and Oaktrail together since they have the same
+Z6xx series CPU/GPU (GMA600). I still have a working Oaktrail device
+so that support should stay in gma500.
 
-I also did go ahead and add a dependancy on the MFD driver since all
-current PMT features are only exposed through this driver. So users
-will only see the following options:
+> > >
+> > > I'm talking about Merrifield and Moorefield that can utilize it and
+> > > also some other platforms that are not SFI based (Cedar something...
+> > > IIRC).
+> >
+> > Yes at least there are some 64 bit capable SoCs with GMA500 which were
+> > used in NAS like devices. These NAS-es actually have a VGA output
+> > (and maybe also DVI?) which is attached to the GMA500.
 
-MFD_INTEL_PMT
-	INTEL_PMT_TELEMETRY (selects INTEL_PMT_CLASS)
-	INTEL_PMT_CRASHLOG (selects INTEL_PMT_CLASS)
+Yes these should be Cedarview/Cedartrail. Some of them are 64-bit and
+some are 32-bit. I think it came down to if bios enabled it or not.
+Cedarview comes with VGA, DVI and eDP/DP. Quite a few Cedarview
+devices exist in the wild.
 
-David
+>
+> Since you are talking about 64-bit, definitely they are *not*
+> Moorestown, Medfield, Clovertrail since the mentioned never were
+> 64-bit. But it would be nice to see the CPU model number to be sure.
+>
+> > I know people are running Fedora on these, so we should at least keep
+> > these supported.
+>
+> Is it possible to gather the CPU model number from them? (Or at least
+> the exact device/box name)
 
-On Tue, 2021-01-26 at 21:20 +0100, Hans de Goede wrote:
-> Make the PMT Kconfig options depend on INTEL_PMT_CLASS instead of
-> selecting it. Select should only be used with hidden options and
-> INTEL_PMT_CLASS is not hidden.
-> 
-> This will stop Kconfig from asking if INTEL_PMT_TELEMETRY and
-> INTEL_PMT_CRASHLOG should be enabled after the user says no
-> to the INTEL_PMT_CLASS prompt.
-> 
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/platform/x86/Kconfig | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/Kconfig
-> b/drivers/platform/x86/Kconfig
-> index 9a73e7baa344..d4f32fc0e40e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1383,7 +1383,7 @@ config INTEL_PMT_CLASS
->  
->  config INTEL_PMT_TELEMETRY
->         tristate "Intel Platform Monitoring Technology (PMT)
-> Telemetry driver"
-> -       select INTEL_PMT_CLASS
-> +       depends on INTEL_PMT_CLASS
->         help
->           The Intel Platform Monitory Technology (PMT) Telemetry
-> driver provides
->           access to hardware telemetry metrics on devices that
-> support the
-> @@ -1394,7 +1394,7 @@ config INTEL_PMT_TELEMETRY
->  
->  config INTEL_PMT_CRASHLOG
->         tristate "Intel Platform Monitoring Technology (PMT) Crashlog
-> driver"
-> -       select INTEL_PMT_CLASS
-> +       depends on INTEL_PMT_CLASS
->         help
->           The Intel Platform Monitoring Technology (PMT) crashlog
-> driver provides
->           access to hardware crashlog capabilities on devices that
-> support the
+Yes, it would be interesting to know more about Clovertrail. gma500
+only supports up to the Cedarview GPUs but Clovertrail might also use
+a Cedarview GPU.
 
-
+-Patrik
