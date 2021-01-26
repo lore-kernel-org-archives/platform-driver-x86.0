@@ -2,130 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0007AC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB8C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC1C72067C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E11206A1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 01:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbhA0BAT (ORCPT
+        id S2389514AbhA0BDU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 20:00:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728999AbhAZRWz (ORCPT
+        Tue, 26 Jan 2021 20:03:20 -0500
+Received: from mga09.intel.com ([134.134.136.24]:58498 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405839AbhAZU44 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:22:55 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C767C061786;
-        Tue, 26 Jan 2021 09:22:14 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id c127so3431648wmf.5;
-        Tue, 26 Jan 2021 09:22:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXRZlniX4gZ072w8uwiSJDkEGOzFxGv7oD25jhieqoA=;
-        b=ib220PyJYk+28pHcN7hPNfQAp3VSlPSkb7xbciCFT570jmuCEdl1xvE6fLCpX4jAc0
-         aQRsq360h3DhSipawGaU2Nw7lAo/vMbtJUyMIBRldAr+G4ul43e8cOEL0vyV+dtK3TM4
-         GRQffaFMObeN0ashevrv8rVcvsDDZBsNJnLhdFJ0EP5tMd87BeGAkitUtTVBY2e5T2oS
-         SqYshql2kBvGYcPM2R0e/mD2c+gJ0Yx68rHtVZ+tIyV8Y7GLHm4OHIakMtfPSj0LbksS
-         7IBVKtsSZHTdlp9iTQuvzU0eR1w5Z5XM85/bWE1O8SYjz697kj67L+mPRCi9+sXyKO2J
-         x/tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXRZlniX4gZ072w8uwiSJDkEGOzFxGv7oD25jhieqoA=;
-        b=RD3/cGUCQlwEpWOZFT9cmoypHBBX2VER6FvzY7Oy7dEu9xYcY5KSU+vfporxZf3zye
-         o5z9JSZwY2ED5/3yyDjWG5tQLy0fei+c8PEzvqx1KTgQ30+LbtyvmgN0boTWX4dRsO5v
-         3zn4M+2QjDr7fldWilmnfvQjgzX12SBDaWq9wF1pvPDshitacvATAkRHSail+Zd57OQE
-         Lh74WYjmRbmm+DYlM3BHewGcMj18denjmv+h/0s8KhohxPlbovIpvQPgWGOH7X8kcn6Q
-         Vh5TyL7EqFRUwlIUHg2rdA1YVZT2unqnB+x87387jppGTS9VIAw9EFpGCTlQzUPHt0Lg
-         k5CA==
-X-Gm-Message-State: AOAM531Od+yXaYg5wnvo0UY1YF6jt9VjZaFjwxYtIOt5mElvfKiAxc6f
-        an2n92zRHxEifEjynNWKNVVbzGu5xkQ6lg==
-X-Google-Smtp-Source: ABdhPJyYgUL2++VpWL9kz47EF9vUH1dIpMhwnUMLSHedFIyqE8zr5/yOrXSLgUhQHUAtzi2ovKwsWA==
-X-Received: by 2002:a05:600c:154c:: with SMTP id f12mr734626wmg.40.1611681732538;
-        Tue, 26 Jan 2021 09:22:12 -0800 (PST)
-Received: from xws.localdomain (p5487bbca.dip0.t-ipconnect.de. [84.135.187.202])
-        by smtp.gmail.com with ESMTPSA id d9sm20768092wrq.74.2021.01.26.09.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 09:22:11 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/surface: aggregator: Fix braces in if condition with unlikely() macro
-Date:   Tue, 26 Jan 2021 18:22:02 +0100
-Message-Id: <20210126172202.1428367-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.30.0
+        Tue, 26 Jan 2021 15:56:56 -0500
+IronPort-SDR: 5iw7a4Jhf+fZcB9vo+s80+zgyfnZ71nFo+STABN5v+LdWlnFu/PL0WNVkf+vl0rHEnMzcuvvly
+ hdwswq2GXBmw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="180116815"
+X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
+   d="scan'208";a="180116815"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 12:55:06 -0800
+IronPort-SDR: UNrPRfrk6KTVXEtEVH3GBQe8VZXjI3tr7c/iJe87wgJWMNCjDlc7bymwqYfDwIf835MnoZk8VV
+ ZfVMbLyHD59g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
+   d="scan'208";a="574163567"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Jan 2021 12:55:06 -0800
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 0F6625807C8;
+        Tue, 26 Jan 2021 12:55:06 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     mark.gross@intel.com, hdegoede@redhat.com, lee.jones@linaro.org,
+        torvalds@linux-foundation.org
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 1/3] platform/x86: intel_pmt: Make INTEL_PMT_CLASS non-user-selectable
+Date:   Tue, 26 Jan 2021 12:55:06 -0800
+Message-Id: <20210126205508.30907-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The braces of the unlikely() macro inside the if condition only cover
-the subtraction part, not the whole statement. This causes the result of
-the subtraction to be converted to zero or one. While that still works
-in this context, it causes static analysis tools to complain (and is
-just plain wrong).
+Fix error in Kconfig that exposed INTEL_PMT_CLASS as a user selectable
+option. It is already selected by INTEL_PMT_TELEMETRY and
+INTEL_PMT_CRASHLOG which are user selectable.
 
-Fix the bracket placement and, while at it, simplify the if-condition.
-Also add a comment to the if-condition explaining what we expect the
-result to be and what happens on the failure path, as it seems to have
-caused a bit of confusion.
-
-This commit should not cause any difference in behavior or generated
-code.
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Fixes: e2729113ce66 ("platform/x86: Intel PMT class driver")
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- .../surface/aggregator/ssh_packet_layer.c     | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ drivers/platform/x86/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-index 74f0faaa2b27..583315db8b02 100644
---- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
-+++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-@@ -1694,7 +1694,24 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
- 	/* Find SYN. */
- 	syn_found = sshp_find_syn(source, &aligned);
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 91e6176cdfbd..af75c3342c06 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1369,7 +1369,7 @@ config INTEL_PMC_CORE
+ 		- MPHY/PLL gating status (Sunrisepoint PCH only)
  
--	if (unlikely(aligned.ptr - source->ptr) > 0) {
-+	if (unlikely(aligned.ptr != source->ptr)) {
-+		/*
-+		 * We expect aligned.ptr == source->ptr. If this is not the
-+		 * case, then aligned.ptr > source->ptr and we've encountered
-+		 * some unexpected data where we'd expect the start of a new
-+		 * message (i.e. the SYN sequence).
-+		 *
-+		 * This can happen when a CRC check for the previous message
-+		 * failed and we start actively searching for the next one
-+		 * (via the call to sshp_find_syn() above), or the first bytes
-+		 * of a message got dropped or corrupted.
-+		 *
-+		 * In any case, we issue a warning, send a NAK to the EC to
-+		 * request re-transmission of any data we haven't acknowledged
-+		 * yet, and finally, skip everything up to the next SYN
-+		 * sequence.
-+		 */
-+
- 		ptl_warn(ptl, "rx: parser: invalid start of frame, skipping\n");
- 
- 		/*
+ config INTEL_PMT_CLASS
+-	tristate "Intel Platform Monitoring Technology (PMT) Class driver"
++	tristate
+ 	help
+ 	  The Intel Platform Monitoring Technology (PMT) class driver provides
+ 	  the basic sysfs interface and file hierarchy uses by PMT devices.
 -- 
-2.30.0
+2.20.1
 
