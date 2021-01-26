@@ -2,87 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FEAC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 06:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC96FC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 07:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBAE20717
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 06:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4DF2072C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 07:01:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232909AbhA0GPH (ORCPT
+        id S316450AbhA0BDc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jan 2021 01:15:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50326 "EHLO mail.kernel.org"
+        Tue, 26 Jan 2021 20:03:32 -0500
+Received: from mga06.intel.com ([134.134.136.31]:22403 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235253AbhA0DQT (ORCPT
+        id S1732138AbhAZU5A (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 22:16:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 52E9464D92
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jan 2021 01:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611712661;
-        bh=qWZYDdCJrHjsLd45tX8q4meM6g6IMcwaKZKnJZiCZQQ=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=PIq+lkU0uCDl6BU8rVnEVre7EruY2ZLuZnykKQ/aQVYMRGFo1+LJrC3EzaQMibNHR
-         jDlgtsheVFp48Fjks06Aow3sSzhYVvSKG+SCMID+xLRRpQtk8Wf8CcxmiEM/j3wFDu
-         s4AFoLX9Tl3g0AMywXGBNvi4wO/Evtxuu/VC8m1aWzuyTHKHPghMs+RIkZgpqqPvPc
-         SrewDZaWPAfeGH/63pq6ZkApi3VCS5NufGCY0dav5BTfQu7JUvyjibC7BITJjgjy0F
-         tm08Q1HAhEkyKiHyf86bmH0Ob8/jpkLQ9TWJq8eiuXLhTl/Tj7rEK37qowqf+zJY+L
-         pAVfQ1/fHa2XQ==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 199715] hp_accel: probe of HPQ6007:00 failed with error -22 (HP
- Envy x360)
-Date:   Wed, 27 Jan 2021 01:57:40 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: luya@fedoraproject.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-199715-215701-og1HffH4wr@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-199715-215701@https.bugzilla.kernel.org/>
-References: <bug-199715-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 26 Jan 2021 15:57:00 -0500
+IronPort-SDR: EXCIfKYWc7SHDoBrYAPOeqXZHTHsRHNpem80Gop2kxodePOjWqvfK7idC3glqI1jJX1vMdM0pl
+ gFq6s8ofLIwQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9876"; a="241500151"
+X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
+   d="scan'208";a="241500151"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 12:55:10 -0800
+IronPort-SDR: sKEk9XZ9yGG7sQiEwrN0nAXAf/bO7EQ3NfIU3eVoQdjlJ/ye0W+ocQ77Ht97K4yYPYuR6XJB/G
+ UyjnbzZSTf8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.79,377,1602572400"; 
+   d="scan'208";a="472877740"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Jan 2021 12:55:09 -0800
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id B58C65807C8;
+        Tue, 26 Jan 2021 12:55:09 -0800 (PST)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     mark.gross@intel.com, hdegoede@redhat.com, lee.jones@linaro.org,
+        torvalds@linux-foundation.org
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 2/3] platform/x86: intel_pmt_telemetry: Add dependency on MFD_INTEL_PMT
+Date:   Tue, 26 Jan 2021 12:55:07 -0800
+Message-Id: <20210126205508.30907-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20210126205508.30907-1-david.e.box@linux.intel.com>
+References: <20210126205508.30907-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D199715
+All devices that expose Intel Platform Monitoring Technology (PMT)
+telemetry are currently owned by the intel_pmt MFD driver. Therefore make
+the telemetry driver depend on the MFD driver for build.
 
---- Comment #58 from Luya Tshimbalanga (luya@fedoraproject.org) ---
-(In reply to Richard Neumann from comment #56)
-> @Dimitris, @Luya
-> I have added DMI-based model detection to my driver [1] (v. 2.9.8 in the
-> AUR).
-> I successfully tested it on my system.
-> Please make sure that you disable i.e. comment out any sensor override if
-> you want to test whether it works on your systems. The quirk should enable
-> only the accelerometer and magnetometer for the devices that Luya and I
-> posted above.
->=20
-> [1] https://github.com/conqp/amd-sfh-hid-dkms/blob/master/amd-sfh-quirks.c
+Fixes: 68fe8e6e2c4b ("platform/x86: Intel PMT Telemetry capability driver")
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks, I will try it on my Fedora system.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index af75c3342c06..9948c5f4928d 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1382,6 +1382,7 @@ config INTEL_PMT_CLASS
+ 
+ config INTEL_PMT_TELEMETRY
+ 	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
++	depends on MFD_INTEL_PMT
+ 	select INTEL_PMT_CLASS
+ 	help
+ 	  The Intel Platform Monitory Technology (PMT) Telemetry driver provides
+-- 
+2.20.1
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
