@@ -2,87 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE77C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 14:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EF6C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 14:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8504522D58
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 14:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A561B206CA
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 14:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405602AbhAZOV6 (ORCPT
+        id S1731245AbhAZO23 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 09:21:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43622 "EHLO
+        Tue, 26 Jan 2021 09:28:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392709AbhAZOVw (ORCPT
+        with ESMTP id S2404318AbhAZO0l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 09:21:52 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ADEC061A31
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jan 2021 06:21:11 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id b17so3312594plz.6
-        for <platform-driver-x86@vger.kernel.org>; Tue, 26 Jan 2021 06:21:11 -0800 (PST)
+        Tue, 26 Jan 2021 09:26:41 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE277C061A29;
+        Tue, 26 Jan 2021 06:25:53 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id n25so11554477pgb.0;
+        Tue, 26 Jan 2021 06:25:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=enNcConCCODk2yvZG4m5Bl4n1RfvQ7/HYs+NrsxhQn4=;
-        b=je3WpgMDitAUYDzscNt0nCR7TjFT1Btwz9ht1LjChTYpu+ZdIckXCFjqoetkzoZ4nZ
-         /TfbYorYZdhuapGXE1L96pTvV7T7MdI2P213Zx7Rjk7FmYeUH+JifVQGmGsETSiBh0RB
-         uL5O4NEdGGTzFHgI4XHNWjmes26xhnA6xQ2qV9tNMxNvBPSraFgdAjCzjXTZzf8RNiDD
-         nzayVA0H2oORweElldv5fQDzwGUQoXYx+AqXxgek/o1ym0RFLEKeYLD/f97zauxU2vA/
-         QMA9DuQ/mCMJEShebHjM2hAfiPyXbdUu0y3FnRIwkfOIlqzOwH7wmf5Vrw/CKVSbLNxg
-         YMZg==
+        bh=NPSOH8Y62ukMN0OaTHNJQcHEYySsxlPH5TqLsLYLoQg=;
+        b=SkFBEQRuNzx7oNacOenVNqjxOYIRojAVRIrMayGeOAl0djFSeR8oH6C199qfpE2FEG
+         Ol9dnrqkN29SpK2qgA9Lc27eNLNVTDTm7wsLeBGrfoVgQ2mPQOESMbwkojG+H87p6Sw+
+         BBNjxJCkN1b5aIBYXTRaAgzHHgotUpU/LQ1qqf89ihNcqH6MbBn3ldQ50AhAgf4dhF6+
+         atpiPndRtmVrHzUhY2rYPoKph+N3GpQeKnyUkd12t7jHWKQ5EEXm4x+FI8XR25U++nrh
+         PKtAVBXkOOA8UF5YNs/k0QMDaIqaK+nEN/YZVzewMomb4Wf/OSidoT1ppzR1f8U1d2Es
+         evZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=enNcConCCODk2yvZG4m5Bl4n1RfvQ7/HYs+NrsxhQn4=;
-        b=WUkxTQyzmZt5oLVZBrtQA/RTVlnZqjq9FvPBYNPxrPtoMV+Af6gGw1UFNrJmbTqEY8
-         tnd+c7EYUfbf0v/8Yu2m1qIpK7PYOAznOoaZoMpceCOlu9n2cca6o5tmwHs//FoZxW7C
-         /XzQ2dE0YWwOrtbGKcLi2pXJWl+/L5wqbAdZXcHgsrjTvdBPQK551Og/pDpwB4LjSJKo
-         oYtvUfDAQehCaaiOoX+mh582C/WBuPRpdtQ7b3vZuMRGIWqJy4Sp7GcbttRD7NjH9ECn
-         olZEFaDpYuiW4SHfGh+CHblnv+FJuiae1HBSNw3O8pjZ2HDMQUOV5UfbxvH3OkLkmrHI
-         XDrg==
-X-Gm-Message-State: AOAM531rCbG7x1fuTYjqMTJ0muC7P0QYDP5QgxIPxVxXG8kjGgKEEBil
-        D9B+Ln0763/E/sE1w+9bwp3FFUihFB0FH+YTd5o=
-X-Google-Smtp-Source: ABdhPJxWJBS9X8AVywzlbaUwbK57OiIriTnjwlqWucnP14Quodb6VG55oMIr/lTUSYnKH0WPER2zq8AuF49IjiykFj0=
-X-Received: by 2002:a17:90a:ca98:: with SMTP id y24mr6659195pjt.181.1611670870826;
- Tue, 26 Jan 2021 06:21:10 -0800 (PST)
+        bh=NPSOH8Y62ukMN0OaTHNJQcHEYySsxlPH5TqLsLYLoQg=;
+        b=C57kn80VWt6clqJomRSg38pYOUpv1u9EcvU2sXfX7HG5ghD5bmifBY6o8erP5WYwC7
+         iKrgENjjvSp9HcaQ5L5QXidYq2Szd6QRVsv6yRgSAAKNCfq0QAjh63RhjfqQ/SPzlCwn
+         vkRAKoh0xzv9AzqD7EA8Uu2En261yMv0SejtqJU4gCs1B9w8/oHOQKSFS9VHYoi8IXpf
+         14iRv2LJPTrc4ulMxPR9cSoSh4T+DGUi7f80ftCwqeO5JUi+Ja9Dbs+93v9rSyZas2Ql
+         +omUbnN/96WlI832LCvbOj/f+ywVTiIm6N/5tjYl8DDd8k/V5MRiFtB30KZ5w2V0hYGU
+         nkwg==
+X-Gm-Message-State: AOAM530df4mDJsIhse+ZDvMPEGEv3BK4c/J+WJYAu27RlrrmhJTbBLfL
+        L7fm2DxuSX7DDf4jsUyHSHFjcRbotviS4QMXbUw=
+X-Google-Smtp-Source: ABdhPJyqWaX+Pth+W5prJc8n9EUN7utWiThsOSD+IU9DjuKJij5MhYt+nVXG/9mfOEsVcVWVJZY13r0DrIoqdfte8f8=
+X-Received: by 2002:a63:e50:: with SMTP id 16mr5867228pgo.74.1611671153433;
+ Tue, 26 Jan 2021 06:25:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20210125025916.180831-1-nitjoshi@gmail.com> <CAHp75VddS69zFvfWem9ZkzAkTFG2yxPKzT7OpH1GAcNiqAZJkA@mail.gmail.com>
-In-Reply-To: <CAHp75VddS69zFvfWem9ZkzAkTFG2yxPKzT7OpH1GAcNiqAZJkA@mail.gmail.com>
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <886bbdc0-3391-2140-a2d4-1688b262966f@redhat.com>
+In-Reply-To: <886bbdc0-3391-2140-a2d4-1688b262966f@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 26 Jan 2021 16:22:00 +0200
-Message-ID: <CAHp75VdHFRU=0=1SH1FDuatfdHzKJhB-qv7Y9EzsBTeRvjooyQ@mail.gmail.com>
-Subject: Re: [PATCH] [v2] platform/x86: thinkpad_acpi: set keyboard language
-To:     Nitin Joshi <nitjoshi@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Berg <bberg@redhat.com>, peter.hutterer@redhat.com,
-        maruichit@lenovo.com, Mark Pearson <mpearson@lenovo.com>,
+Date:   Tue, 26 Jan 2021 16:26:42 +0200
+Message-ID: <CAHp75Vde=dN-9dj2d9pxNeg1ODzp6tV0truHPtHJycbjWA=akQ@mail.gmail.com>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Nitin Joshi <njoshi1@lenovo.com>
+        Mark Gross <mgross@linux.intel.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 11:30 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Jan 26, 2021 at 4:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On Mon, Jan 25, 2021 at 5:03 AM Nitin Joshi <nitjoshi@gmail.com> wrote:
+> Hi,
+>
+> On 1/26/21 1:38 PM, Andy Shevchenko wrote:
+> > Hi guys,
 > >
-> > From: Nitin Joshi <njoshi1@lenovo.com>
+> > This is first part of Intel MID outdated platforms removal. It's collected into
+> > immutable branch with a given tag, please pull to yours subsystems.
+> >
+> > (All changes are tagged by the respective maintainers)
 
-> Maybe it's a bit late, but... nevertheless my comments below.
+...
 
-Nitin, if you are not going to submit a series of fix ups as per my
-comments I would probably do it myself later on. Just tell what you
-want on this matter,
+> >       platform/x86: intel_mid_thermal: Remove driver for deprecated platform
+> >       platform/x86: intel_mid_powerbtn: Remove driver for deprecated platform
+>
+> Erm, I already have this 2 in platform-drivers-x86/for-next since you said that
+> these 2 could be merged independently.
+
+Yes, you may merge this on top, shouldn't be any conflicts.
+But this mail originally was sent a couple of days ago, I had a
+problem with my email setup.
+
+> Anyways I just did a test-merge and there is no conflict, so everything is ok.
+
+Yep. That's how it works :)
+
+> From my pov this looks good and I plan to merge this into platform-drivers-x86/for-next
+> before the merge-window.
+>
+> I'm going to hold off on doing that for a bit for now in case one of the other
+> subsys maintainers has any objections.
+
+Noted and thanks!
 
 -- 
 With Best Regards,
