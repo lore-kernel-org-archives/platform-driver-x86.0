@@ -2,147 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,BIGNUM_EMAILS,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990F3C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 10:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437BCC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 12:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FF223108
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 10:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B13C230FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 12:39:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403855AbhAZKMi (ORCPT
+        id S2390929AbhAZMjT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 05:12:38 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48602 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403808AbhAZKM0 (ORCPT
+        Tue, 26 Jan 2021 07:39:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:47772 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728794AbhAZMjK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 05:12:26 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10QA4gmd008256;
-        Tue, 26 Jan 2021 10:11:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=0n2HYpn7oLE6scNo0rM9sdfBR8KVIYBrxoIp7PQr6Ho=;
- b=f1ryQwnxiK5F2wbTybtFV97AsxN6ow9lcDqHotGs9ClflrgpfhPHprN42mubh+LKyO7+
- qE6/wfsfOZR0Ux166d+05DGsPrnJUP6hx5P8OhpB4/3iYqQVFkmYJImBUrwXbxWJgilE
- gtyYmMyRuTF1CPJvze6b+9/0mrEIPve9WxJ7d9xcHrRusee0pjk2ne+cGnwWtay23+l3
- QKgsmi2QvvHq5o3b2DOe3JE2YFH8bWmwRdgNZw9h3KiJ70wCBmoBe9vfYLTP3+xBE0Ox
- La8iLQ24Fjjlr7b6ewmdJl+QgCsfJqiGkfHfowOW5wZEIVX9lhVvp3ItCRYnAvJx1UK0 kQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 368brkhc1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Jan 2021 10:11:43 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10QA6UMP188320;
-        Tue, 26 Jan 2021 10:11:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 368wpxr9bb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 Jan 2021 10:11:40 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 10QABekv020395;
-        Tue, 26 Jan 2021 10:11:40 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 Jan 2021 02:11:39 -0800
-Date:   Tue, 26 Jan 2021 13:11:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     platform-driver-x86@vger.kernel.org
-Subject: Re: [bug report] platform/surface: Add Surface Aggregator subsystem
-Message-ID: <20210126101133.GP20820@kadam>
-References: <YA6up/PbuEZ82kNd@mwanda>
- <9302e8c9-5909-968c-9ac4-e5725e61082e@gmail.com>
+        Tue, 26 Jan 2021 07:39:10 -0500
+IronPort-SDR: 9X/Ujf1+/mzqowE9kLrSbGllICZ+bsFK+UmSudcujWdy65SYiJ58dYBWdpxhS+6bN3/EV7Lu4Y
+ HUOjJ3rU1nVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9875"; a="179973781"
+X-IronPort-AV: E=Sophos;i="5.79,375,1602572400"; 
+   d="scan'208";a="179973781"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 04:37:14 -0800
+IronPort-SDR: xtjAOkynaLHfXe5zpBV18SvsRxeKacFBYCOy6xM8lMumXM5JOU1r74QRBgpcyA2Zh5et8mJjjw
+ QBmmY7umAlQw==
+X-IronPort-AV: E=Sophos;i="5.79,375,1602572400"; 
+   d="scan'208";a="406691221"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2021 04:37:10 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l4Nbo-00EOdg-F6; Tue, 26 Jan 2021 14:38:12 +0200
+Date:   Tue, 26 Jan 2021 14:38:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+Message-ID: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9302e8c9-5909-968c-9ac4-e5725e61082e@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9875 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 spamscore=0
- adultscore=0 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101260052
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9875 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101260052
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 01:12:06PM +0100, Maximilian Luz wrote:
-> On 1/25/21 12:42 PM, Dan Carpenter wrote:
-> > Hello Maximilian Luz,
-> > 
-> > The patch c167b9c7e3d6: "platform/surface: Add Surface Aggregator
-> > subsystem" from Dec 21, 2020, leads to the following static checker
-> > warning:
-> > 
-> > 	drivers/platform/surface/aggregator/ssh_packet_layer.c:1697 ssh_ptl_rx_eval()
-> > 	warn: check likely/unlikely parens
-> > 
-> > drivers/platform/surface/aggregator/ssh_packet_layer.c
-> >    1683  static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
-> >    1684  {
-> >    1685          struct ssh_frame *frame;
-> >    1686          struct ssam_span payload;
-> >    1687          struct ssam_span aligned;
-> >    1688          bool syn_found;
-> >    1689          int status;
-> >    1690
-> >    1691          /* Error injection: Modify data to simulate corrupt SYN bytes. */
-> >    1692          ssh_ptl_rx_inject_invalid_syn(ptl, source);
-> >    1693
-> >    1694          /* Find SYN. */
-> >    1695          syn_found = sshp_find_syn(source, &aligned);
-> >    1696
-> >    1697          if (unlikely(aligned.ptr - source->ptr) > 0) {
-> > 
-> > The unlikely() macro returns 0/1.  Smatch is suggesting that this should
-> > just be "if (unlikely((aligned.ptr - source->ptr) > 0)) {" but I'm not
-> > at all sure that that's correct.  Isn't aligned being higher than source
-> > the normal case?
-> 
-> Hi,
-> 
-> the suggestion by Smatch, i.e.
-> 
->     if (unlikely((aligned.ptr - source->ptr) > 0)
-> 
-> should be correct. The normal case is aligned.ptr equal to source->ptr.
-> 
-> Let me elaborate a bit for detail: SSH messages all start with a "SYN"
-> sequence and are frame based. So once we've parsed one message, we
-> expect it to be followed up directly by the next message. So, here, we
-> are directly expecting a new message to start, meaning the SYN should be
-> found at the start of the buffer, or, closer to the code, aligned.ptr
-> (the start of the message frame) should equal source->ptr. If this is
-> not the case, this indicates that some unexpected bytes are in-between
-> the last successfully parsed message and the next message. Usually
-> that's caused by when a previous message has failed one of the CRC
-> checks (thus we can't rely on the length encoded in the frame) and we're
-> actively searching for the next message (via this call here).
-> 
-> Thanks for the report!
-> 
-> Do you want to submit a patch for this or should I do that?
-> 
+Hi guys,
 
-I think I understand, but can you send the patch for this.  Why not just
-make the condition:
+This is first part of Intel MID outdated platforms removal. It's collected into
+immutable branch with a given tag, please pull to yours subsystems.
 
-	if (aligned.ptr != source->ptr) {
+(All changes are tagged by the respective maintainers)
 
-Anyway, I assume you know what you're doing.  :)
+Thanks,
 
-regards,
-dan carepnter
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit 5c8fe583cce542aa0b84adc939ce85293de36e5e:
+
+  Linux 5.11-rc1 (2020-12-27 15:30:22 -0800)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+
+for you to fetch changes up to a507e5d90f3d6846a02d9c2c79e6f6395982db92:
+
+  platform/x86: intel_scu_wdt: Get rid of custom x86 model comparison (2021-01-25 20:05:32 +0200)
+
+----------------------------------------------------------------
+ib-drm-gpio-pdx86-rtc-wdt for v5.12-1
+
+First part of Intel MID outdated platforms removal.
+
+The following is an automated git shortlog grouped by driver:
+
+drm/gma500:
+ -  Get rid of duplicate NULL checks
+ -  Convert to use new SCU IPC API
+
+gpio:
+ -  msic: Remove driver for deprecated platform
+ -  intel-mid: Remove driver for deprecated platform
+
+intel_mid_powerbtn:
+ -  Remove driver for deprecated platform
+
+intel_mid_thermal:
+ -  Remove driver for deprecated platform
+
+intel_scu_wdt:
+ -  Get rid of custom x86 model comparison
+ -  Drop SCU notification
+ -  Move driver from arch/x86
+
+rtc:
+ -  mrst: Remove driver for deprecated platform
+
+watchdog:
+ -  intel-mid_wdt: Postpone IRQ handler registration till SCU is ready
+ -  intel_scu_watchdog: Remove driver for deprecated platform
+
+----------------------------------------------------------------
+Andy Shevchenko (12):
+      drm/gma500: Convert to use new SCU IPC API
+      drm/gma500: Get rid of duplicate NULL checks
+      gpio: intel-mid: Remove driver for deprecated platform
+      gpio: msic: Remove driver for deprecated platform
+      platform/x86: intel_mid_thermal: Remove driver for deprecated platform
+      platform/x86: intel_mid_powerbtn: Remove driver for deprecated platform
+      rtc: mrst: Remove driver for deprecated platform
+      watchdog: intel_scu_watchdog: Remove driver for deprecated platform
+      watchdog: intel-mid_wdt: Postpone IRQ handler registration till SCU is ready
+      platform/x86: intel_scu_wdt: Move driver from arch/x86
+      platform/x86: intel_scu_wdt: Drop SCU notification
+      platform/x86: intel_scu_wdt: Get rid of custom x86 model comparison
+
+ MAINTAINERS                                        |   2 -
+ arch/x86/platform/intel-mid/device_libs/Makefile   |   1 -
+ drivers/gpio/Kconfig                               |  14 -
+ drivers/gpio/Makefile                              |   1 -
+ drivers/gpio/TODO                                  |   2 +-
+ drivers/gpio/gpio-intel-mid.c                      | 414 ---------------
+ drivers/gpio/gpio-msic.c                           | 314 ------------
+ drivers/gpu/drm/gma500/Kconfig                     |   1 +
+ drivers/gpu/drm/gma500/mdfld_device.c              |   2 -
+ drivers/gpu/drm/gma500/mdfld_dsi_output.c          |   2 -
+ drivers/gpu/drm/gma500/mdfld_output.c              |   8 +-
+ drivers/gpu/drm/gma500/oaktrail_device.c           |   3 -
+ drivers/gpu/drm/gma500/psb_drv.h                   |   3 +
+ drivers/gpu/drm/gma500/tc35876x-dsi-lvds.c         |  30 +-
+ drivers/platform/x86/Kconfig                       |  23 +-
+ drivers/platform/x86/Makefile                      |   3 +-
+ drivers/platform/x86/intel_mid_powerbtn.c          | 233 ---------
+ drivers/platform/x86/intel_mid_thermal.c           | 560 ---------------------
+ .../platform/x86/intel_scu_wdt.c                   |  41 +-
+ drivers/rtc/Kconfig                                |  12 -
+ drivers/rtc/Makefile                               |   1 -
+ drivers/rtc/rtc-mrst.c                             | 521 -------------------
+ drivers/watchdog/Kconfig                           |   9 -
+ drivers/watchdog/Makefile                          |   1 -
+ drivers/watchdog/intel-mid_wdt.c                   |   8 +-
+ drivers/watchdog/intel_scu_watchdog.c              | 533 --------------------
+ drivers/watchdog/intel_scu_watchdog.h              |  50 --
+ 27 files changed, 54 insertions(+), 2738 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-intel-mid.c
+ delete mode 100644 drivers/gpio/gpio-msic.c
+ delete mode 100644 drivers/platform/x86/intel_mid_powerbtn.c
+ delete mode 100644 drivers/platform/x86/intel_mid_thermal.c
+ rename arch/x86/platform/intel-mid/device_libs/platform_mrfld_wdt.c => drivers/platform/x86/intel_scu_wdt.c (69%)
+ delete mode 100644 drivers/rtc/rtc-mrst.c
+ delete mode 100644 drivers/watchdog/intel_scu_watchdog.c
+ delete mode 100644 drivers/watchdog/intel_scu_watchdog.h
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
