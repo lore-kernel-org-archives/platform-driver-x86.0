@@ -2,117 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDFEC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA9BC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62692229C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 17:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5996E2224C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 26 Jan 2021 18:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389247AbhAZRX7 (ORCPT
+        id S2388153AbhAZRXs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 12:23:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731101AbhAZQ4k (ORCPT
+        Tue, 26 Jan 2021 12:23:48 -0500
+Received: from mail.v3.sk ([167.172.186.51]:48106 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389447AbhAZHip (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 11:56:40 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3880EC061D7D;
-        Tue, 26 Jan 2021 08:56:00 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id b26so23618682lff.9;
-        Tue, 26 Jan 2021 08:56:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IUDDZRZxdmyV3zHbIgFV/f+pJvlpZPQNewiwbQaO6tE=;
-        b=lW8J7gdCPRMweOQw8pwNhFi4aRG/l+tBBUD0aanYKeGqx5yQ1nLZ7amwTrNZHy6vU2
-         V9wwSXUgUvgm4WHsgQysRp7Qdnkj7lv13RJkpJmXiHgv2vptiA6hb/h3zaYrFtGVwNnB
-         wp0favvJMQzNKEyLe/ecQt4MU1Y4BDQ3+CCBSvfEouaXwPVNEjIMQaAm/INI0V4d4EYR
-         Euctr81IITXkASr5McZpLWSUZxaj+GPouo/1cYqAlGbcxNNFf46cYkjGnSmBVeBb3I4t
-         CHAgzgNNdr4nM29pWXKyRFzV2kGPi9FpD5hWu07RxVRd70ZvB5sgyWWcNPRMllyENxG9
-         800Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IUDDZRZxdmyV3zHbIgFV/f+pJvlpZPQNewiwbQaO6tE=;
-        b=O+IzDx/R5ply9lEv35ei1unhLF3QYjDeuIYvzGQfiWiF87wsenSAkYO6FpwABMX3Ru
-         0xp7N1Jo6dYj3eKAgqzIC+1xMACy3ys0W1AGWW0q3bUIkKevD0Och9oOM/coUU5bLfRX
-         /nH4voJzJoN1keIo0BNnCR9KhWMcofF87SJ8vpMQh6n4cSw/ACRwdWhZanCa8r1M+C1Y
-         IalR1nxjWJtqffvvxVAXPs8t3drkFN+BM62ZPfFX8sAZc1FXIV/ZSGmDSw+tkpf+9ds7
-         XhCyV3lquhdNHdXV8IhPaQYW1xz68OseUUxbRGg511FN5k7W/ECDkIfWk9qYGXBU9V6O
-         deVw==
-X-Gm-Message-State: AOAM530JYyAGWFrUSOZ09yN0WvOX+hCGP/wRgXULqPxylsy5Evy+bCxd
-        daJeIpWfsX0lR+mFEEGDMRecAPW04mHGqFgJx68=
-X-Google-Smtp-Source: ABdhPJy9dl1Tk9pVWPFcSjiX8vKJgMaCDnwogfliEKqUrmBFXH5j360/BhKOOcxo7U7KWVqbda7Zg9HYVSXc7AKyd7I=
-X-Received: by 2002:ac2:515b:: with SMTP id q27mr2948208lfd.516.1611680158749;
- Tue, 26 Jan 2021 08:55:58 -0800 (PST)
+        Tue, 26 Jan 2021 02:38:45 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 7CDC7E0B00;
+        Tue, 26 Jan 2021 07:33:44 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id G4dx_yet5KKS; Tue, 26 Jan 2021 07:33:43 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 9D7EDE0838;
+        Tue, 26 Jan 2021 07:33:43 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id bH9cakOCdFqc; Tue, 26 Jan 2021 07:33:43 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 98AEFE0AE3;
+        Tue, 26 Jan 2021 07:33:42 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 3/3] Platform: OLPC: Specify the enable time
+Date:   Tue, 26 Jan 2021 08:37:40 +0100
+Message-Id: <20210126073740.10232-4-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210126073740.10232-1-lkundrak@v3.sk>
+References: <20210126073740.10232-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
- <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
-In-Reply-To: <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
-From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Date:   Tue, 26 Jan 2021 17:55:47 +0100
-Message-ID: <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
-> <patrik.r.jakobsson@gmail.com> wrote:
-> > On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > Hi guys,
-> > >
-> > > This is first part of Intel MID outdated platforms removal. It's collected into
-> > > immutable branch with a given tag, please pull to yours subsystems.
-> >
-> > Hi Andy,
-> > Do you plan on eventually removing X86_INTEL_MID completely? If so,
-> > then I should probably start looking at removing the corresponding
-> > parts in GMA500.
->
-> Nope. It is related to only Medfield / Clovertrail platforms.
->
-> There are other (MID) platforms that may / might utilize this driver
-> in the future.
+Determined empirically.
 
-Right, there's still Oaktrail / Moorestown with hardware in the wild.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+---
+ drivers/platform/olpc/olpc-ec.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
->
-> I.o.w. we probably can remove the oldest stuff in the driver WRT above
-> mentioned platforms, but leave the driver for the rest.
-> I wouldn't be in a hurry with this though, display drivers are easy to
-> remove, but really hard to get back on velocity after that.
+diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc=
+-ec.c
+index 3c852d573e9b4..72dbbea0005c5 100644
+--- a/drivers/platform/olpc/olpc-ec.c
++++ b/drivers/platform/olpc/olpc-ec.c
+@@ -393,11 +393,12 @@ static struct regulator_ops dcon_regulator_ops =3D =
+{
+ };
+=20
+ static const struct regulator_desc dcon_desc =3D {
+-	.name	=3D "dcon",
+-	.id	=3D 0,
+-	.ops	=3D &dcon_regulator_ops,
+-	.type	=3D REGULATOR_VOLTAGE,
+-	.owner	=3D THIS_MODULE,
++	.name		=3D "dcon",
++	.id		=3D 0,
++	.ops		=3D &dcon_regulator_ops,
++	.type		=3D REGULATOR_VOLTAGE,
++	.owner		=3D THIS_MODULE,
++	.enable_time	=3D 25000,
+ };
+=20
+ static int olpc_ec_probe(struct platform_device *pdev)
+--=20
+2.29.2
 
-Ok, I'll have a look at removing Medfield. That code should have been
-removed a long time ago.
-
--Patrik
