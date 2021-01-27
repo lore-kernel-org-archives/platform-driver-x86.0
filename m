@@ -2,128 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3026C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 07:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03293C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 17:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E032072C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 07:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EB964DA3
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 17:50:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S316498AbhA0BAB (ORCPT
+        id S1344015AbhA0Rs4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 26 Jan 2021 20:00:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389310AbhAZRO3 (ORCPT
+        Wed, 27 Jan 2021 12:48:56 -0500
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:38127 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343847AbhA0RsZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 26 Jan 2021 12:14:29 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9385BC061756;
-        Tue, 26 Jan 2021 09:13:46 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id b17so3586383plz.6;
-        Tue, 26 Jan 2021 09:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t5TtFJJmGGXnlkPzRkZI964XfU9tnGtrVx8sJ+nhhgg=;
-        b=C3EzaIXBST8Cm9Ao23YPKGZNoi53AvO8DVjjAwPROAIXUYs1VE82+8vfqjXNnqjdzD
-         liqtV8Y1DERtPWo1nyvHfJ0dIM/8zl2g2OV+IH1gVcjgZEzRSEwCDurFQdLYTY8HnEN1
-         0fEepFjeJDCr3qWqSlfUjxky/XAISoB3hBYR8DzKKdH2NMCPGUGAbfnSuwrsbFq96NSW
-         FlpZ22yilEbZ4sX0iNjxessv0r3jc76/3YCmf9c62Vft0I82Rgw+V8YLURrimjjWJIAj
-         1uTnO8ujuLiPhWVT8RByXB8RRIBu5vPkxq1srzRNiDQBiGg7xvbsiV//h51SSHrX+7L6
-         Zmsw==
+        Wed, 27 Jan 2021 12:48:25 -0500
+Received: by mail-ot1-f54.google.com with SMTP id s2so2520130otp.5;
+        Wed, 27 Jan 2021 09:48:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=t5TtFJJmGGXnlkPzRkZI964XfU9tnGtrVx8sJ+nhhgg=;
-        b=EQrAyz7uNWIbMzrEI9XTa5+pomvQxKZvOQa7VRXe44hgs5/UndIzIfk5kvkqviTlWK
-         qmLKsw2P/2ssZ/MGfHEYt9wI30OD2IStIk5GOLKhhkaDSqz7XmlVUUkpOi/lTxzgtu8Z
-         /JvqU27ePZTbIvkf8YPG6rmd+Tl/PNlN4jqd0+EKNRu9q2L+eTqE8abG4JWLhR1Mf6O3
-         ZjW9GYZKq5cmWDctzwSoIUsWPdUG3l5mhUGetQi+0D0ewpWhAyEwHQG5M63A3IfV2SNe
-         GuURoDjupeexct32qOffijaHoY2XKygZ3TwEFMMGUoiLuiZTQckLB3v8ylyk5izLL5tl
-         DJag==
-X-Gm-Message-State: AOAM530yVKCo8yzmsb9sYwXHfNI+bec0ZLEc1dwXFh6sgomRRfYT7YKg
-        13ZRYhSh2wgHH13KGNnskb7G94yAFlSGunmaJFM=
-X-Google-Smtp-Source: ABdhPJx92R0qs5/XdlRo/afRbr8RCC/r8mWGIZcmtX5Tb/02Z6ZBjPok93oodD57c37HChymbSyI5sp/7oQ9C8Xpisw=
-X-Received: by 2002:a17:90a:644a:: with SMTP id y10mr797421pjm.129.1611681226049;
- Tue, 26 Jan 2021 09:13:46 -0800 (PST)
+        bh=vdHwbl73abB6VMNWToTNpqvH4TxI0Xt6czMeP1SSONU=;
+        b=er5OIGZ1kW43ICfaAkQzJpytcPP1dgk+bpk7ontLmrmYEf8JTmJFyUIxah0NA02Q/h
+         ZcxHroDwtGkyO7bpSvr+GHjGMU3DuC+ILUAeacI9nNQFxeNgnizJ28nUvNQRvCqySmPG
+         xa0p53orHk2l6tTrHwCC/CLHnlz9xs5sFGzQpbOYM/8Ou+lTtIqLLPTPTSavse2HcHtR
+         190Po2XTmd2vXjC1Jdz6jbz0w/iTpg/f/jgfv9TBmPFPU9dUSx5p4ucL4E0yGeXRvmQ1
+         2qzHs9Xc+39dU0rkjY17b2iSSQNuYj1YgNeBUjhGiXj3Hj5ttwppvySH4VAYobRTljih
+         u1wA==
+X-Gm-Message-State: AOAM530+CDd5MzOINjK7Uf0IBrdiF21fOqvzTlHH6RJExBBxeO5WeRRH
+        ovQeEmcROL7gAYEiIy4jZHDnkTYBbe8iLA7HASI=
+X-Google-Smtp-Source: ABdhPJw6u6KdfHzrO2hRhAY3DwystwML/VIEMZE1ZlXSpGH7GLROPx503G79S+aeNM16cQlyOHZImsR58roCK+rTu+U=
+X-Received: by 2002:a9d:1710:: with SMTP id i16mr8426465ota.260.1611769664581;
+ Wed, 27 Jan 2021 09:47:44 -0800 (PST)
 MIME-Version: 1.0
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com> <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
- <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com> <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
-In-Reply-To: <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 26 Jan 2021 19:14:35 +0200
-Message-ID: <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20210125115957.3292-1-hdegoede@redhat.com> <20210125115957.3292-3-hdegoede@redhat.com>
+In-Reply-To: <20210125115957.3292-3-hdegoede@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 27 Jan 2021 18:47:33 +0100
+Message-ID: <CAJZ5v0iVGpUxUVMAO4R9bz8dogFRoYun-9-4G_Mgzq0_WP305Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ACPI: platform-profile: Introduce object pointers
+ to callbacks
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
-<patrik.r.jakobsson@gmail.com> wrote:
-> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
-> > <patrik.r.jakobsson@gmail.com> wrote:
-> > > On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > Hi guys,
-> > > >
-> > > > This is first part of Intel MID outdated platforms removal. It's collected into
-> > > > immutable branch with a given tag, please pull to yours subsystems.
-> > >
-> > > Hi Andy,
-> > > Do you plan on eventually removing X86_INTEL_MID completely? If so,
-> > > then I should probably start looking at removing the corresponding
-> > > parts in GMA500.
-> >
-> > Nope. It is related to only Medfield / Clovertrail platforms.
-> >
-> > There are other (MID) platforms that may / might utilize this driver
-> > in the future.
+On Tue, Jan 26, 2021 at 6:58 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Right, there's still Oaktrail / Moorestown with hardware in the wild.
-
-Actually Moorestown had to be removed a few years ago (kernel won't
-boot on them anyway from that date when Alan removed support under
-arch/x86 for it).
-
-I'm talking about Merrifield and Moorefield that can utilize it and
-also some other platforms that are not SFI based (Cedar something...
-IIRC).
-
-> > I.o.w. we probably can remove the oldest stuff in the driver WRT above
-> > mentioned platforms, but leave the driver for the rest.
-> > I wouldn't be in a hurry with this though, display drivers are easy to
-> > remove, but really hard to get back on velocity after that.
+> From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 >
-> Ok, I'll have a look at removing Medfield. That code should have been
-> removed a long time ago.
+> Add an object pointer to handler callbacks to avoid the need for
+> drivers to have a global variable to get to their driver-data
+> struct.
+>
+> Link: https://lore.kernel.org/linux-acpi/6a29f338-d9e4-150c-81dd-2ffb54f5bc35@redhat.com/
+> Link: https://lore.kernel.org/r/20210114073429.176462-3-jiaxun.yang@flygoat.com
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Suggested-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Applied on top of the previous platform-profile patches, thanks!
+
+> ---
+> Changes in v2 (Hans de Goede):
+> - Tweak the commit message wording a bit
+> ---
+>  drivers/acpi/platform_profile.c  | 4 ++--
+>  include/linux/platform_profile.h | 6 ++++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
+> index f65c61db7921..80e9df427eb8 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -64,7 +64,7 @@ static ssize_t platform_profile_show(struct device *dev,
+>                 return -ENODEV;
+>         }
+>
+> -       err = cur_profile->profile_get(&profile);
+> +       err = cur_profile->profile_get(cur_profile, &profile);
+>         mutex_unlock(&profile_lock);
+>         if (err)
+>                 return err;
+> @@ -104,7 +104,7 @@ static ssize_t platform_profile_store(struct device *dev,
+>                 return -EOPNOTSUPP;
+>         }
+>
+> -       err = cur_profile->profile_set(i);
+> +       err = cur_profile->profile_set(cur_profile, i);
+>         mutex_unlock(&profile_lock);
+>         if (err)
+>                 return err;
+> diff --git a/include/linux/platform_profile.h b/include/linux/platform_profile.h
+> index c797fdb3d91a..a26542d53058 100644
+> --- a/include/linux/platform_profile.h
+> +++ b/include/linux/platform_profile.h
+> @@ -28,8 +28,10 @@ enum platform_profile_option {
+>
+>  struct platform_profile_handler {
+>         unsigned long choices[BITS_TO_LONGS(PLATFORM_PROFILE_LAST)];
+> -       int (*profile_get)(enum platform_profile_option *profile);
+> -       int (*profile_set)(enum platform_profile_option profile);
+> +       int (*profile_get)(struct platform_profile_handler *pprof,
+> +                               enum platform_profile_option *profile);
+> +       int (*profile_set)(struct platform_profile_handler *pprof,
+> +                               enum platform_profile_option profile);
+>  };
+>
+>  int platform_profile_register(struct platform_profile_handler *pprof);
+> --
+> 2.29.2
+>
