@@ -2,155 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABE1C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 20:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86329C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 09:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCEDD64DA4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 27 Jan 2021 20:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4595764DD6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 09:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232119AbhA0UB5 (ORCPT
+        id S231723AbhA1JAM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 27 Jan 2021 15:01:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:34878 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232564AbhA0UAo (ORCPT
+        Thu, 28 Jan 2021 04:00:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229709AbhA1JAL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 27 Jan 2021 15:00:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611777551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h/UsaQpy9owGSAnCeo3VsEu5JuZEkF1vXo3NykuqkpE=;
-        b=jBfqrtFFCRBvQYRSW3aqtsSGZ0XyO5lHAFTQXaBzhieGM8EFJmVeQm3hLcsa4EraLjm6Mz
-        pBFFeeVnISU9Mpt5ciRNMFQzYh1qe2KvPhM5nR+NA3KncTcT0SuM8kJXx7X3+hBdpfPfvs
-        o1VIv/8SQGtQAXYGmG0pLqP8nblnpzs=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-MTSicWnxNZuD2_kbmMtmBw-1; Wed, 27 Jan 2021 14:59:09 -0500
-X-MC-Unique: MTSicWnxNZuD2_kbmMtmBw-1
-Received: by mail-ed1-f70.google.com with SMTP id x13so1967162edi.7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 27 Jan 2021 11:59:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h/UsaQpy9owGSAnCeo3VsEu5JuZEkF1vXo3NykuqkpE=;
-        b=NKlxYPbICyhBuGeVcnwgiIe8/slx6086Lj7rq/vIIc4cftulVam04CFdFZIQqFnnLd
-         zWV8t6Lxq06gCBpRBQKFl/D1aTgZpZm61iY4bHdtDe/v+9d8h8q1kzPiXNSF59eyvdlj
-         Kp36UYTohrBHFJUQpZsK5K/li8Z9AtclG1LdQzqKmmij3hOLlDTdJqBLgKrTNwryQfhY
-         r+gmAsczrcREwBvn2SxnkppFbeOJbWCv+2LlMQ1Zr2Ugl8oZ0JVyaaiBtL0phdryD2pV
-         BLCnPVbn3YYEQcEM6oEEKOUOUzDvyuOPXISNNYZcV4N/Er+UPmZqO59Qoz0GoZhkwMLU
-         2AVw==
-X-Gm-Message-State: AOAM5302mkBQowv4TclfTrx7K/wzjOpZ4/s6upUxxdpq/67Yr3V0AjBQ
-        dK4wukzKLzyV+AJpdi5JliuBKG+h6Rwxg4j0YjXngbSbDc70EeLqurd0h0IxKMHIoeDgK91T0Ql
-        oVcutuk6d78eHqbxGyYonbgl8NmRa7YQv/w==
-X-Received: by 2002:a17:906:708f:: with SMTP id b15mr8139593ejk.267.1611777548268;
-        Wed, 27 Jan 2021 11:59:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwlaO5BzU++0K+fbZ4fszfnZHOzoIQSWZSqrmuYdsQcWzs897KjBJMn22JCj/RJRaVwvpFeVw==
-X-Received: by 2002:a17:906:708f:: with SMTP id b15mr8139580ejk.267.1611777548103;
-        Wed, 27 Jan 2021 11:59:08 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id v9sm1275522ejd.92.2021.01.27.11.59.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 Jan 2021 11:59:07 -0800 (PST)
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 28 Jan 2021 04:00:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7EDCB64D9A;
+        Thu, 28 Jan 2021 09:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611824456;
+        bh=0L3aHlbV9lGw/pwOLtUtCbTsuwnYQQ6OL1z4Tf1UkSs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kB1wCwOZLoPTen+92GJbcpkCz6Jti3sicvzQdRYpS5aL1gBN/XQAT6L7Dks/fNDUb
+         bbu8z/tbap7g7kAEy0m3cs+ttQaA+QgEETmvsPluXeW3EluF5clx7KNgoeiCrSp+nP
+         deWUfFXHvod5gsc7FMrd5SogzahQmdzIL8fRJqoOWkgzfcMlzPE64uBeWfmfNjJNSu
+         0MWRUIps9xo+VY70lp1I1RBTp56RF9VM8rvogU1e2mWIasogQwJqgIBOH2wf/dlxXT
+         bYtE9RKwJL4DcrkQvgIgVRVOZH9512UCEHxoUy4OwkB19nScMbJeuswWn9Aa/mTz0S
+         Lu1uXCa3/ZXTw==
+Date:   Thu, 28 Jan 2021 10:00:53 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
- <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
- <CAHp75Vc9RAHvTDAw1ryHq_CPRMtjqkzg9081nw0+RPY_yWPJgA@mail.gmail.com>
- <CAMeQTsY6k64LUg3DYbi67W6-Gx6znOeJbDfKUhzGt-BxF2BgKA@mail.gmail.com>
- <CAHp75VdKxARQAyyTd=ZcaoER1iF6Mk4AS1Dn6U9VCjt_D_+q8A@mail.gmail.com>
- <3b4c2f63-14e6-5041-3c15-c2d65b229269@redhat.com>
- <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1c860f9a-f007-e7c6-6142-dbeed10c40ba@redhat.com>
-Date:   Wed, 27 Jan 2021 20:59:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
+Message-ID: <20210128090053.GE963@ninjato>
+References: <20210118003428.568892-1-djrscally@gmail.com>
+ <20210118003428.568892-5-djrscally@gmail.com>
+ <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
+ <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcEq4thOub+k5rDR61KZX4jCZj2zJr2OqsdedmpSB64KA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dFWYt1i2NyOo1oI9"
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 1/26/21 9:54 PM, Andy Shevchenko wrote:
-> On Tue, Jan 26, 2021 at 8:33 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 1/26/21 6:14 PM, Andy Shevchenko wrote:
->>> On Tue, Jan 26, 2021 at 6:55 PM Patrik Jakobsson
->>> <patrik.r.jakobsson@gmail.com> wrote:
->>>> On Tue, Jan 26, 2021 at 4:51 PM Andy Shevchenko
->>>> <andy.shevchenko@gmail.com> wrote:
->>>>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
->>>>> <patrik.r.jakobsson@gmail.com> wrote:
->>>>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
->>>>>> <andriy.shevchenko@linux.intel.com> wrote:
->>>>>>>
->>>>>>> Hi guys,
->>>>>>>
->>>>>>> This is first part of Intel MID outdated platforms removal. It's collected into
->>>>>>> immutable branch with a given tag, please pull to yours subsystems.
->>>>>>
->>>>>> Hi Andy,
->>>>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
->>>>>> then I should probably start looking at removing the corresponding
->>>>>> parts in GMA500.
->>>>>
->>>>> Nope. It is related to only Medfield / Clovertrail platforms.
->>>>>
->>>>> There are other (MID) platforms that may / might utilize this driver
->>>>> in the future.
->>>>
->>>> Right, there's still Oaktrail / Moorestown with hardware in the wild.
->>>
->>> Actually Moorestown had to be removed a few years ago (kernel won't
->>> boot on them anyway from that date when Alan removed support under
->>> arch/x86 for it).
->>>
->>> I'm talking about Merrifield and Moorefield that can utilize it and
->>> also some other platforms that are not SFI based (Cedar something...
->>> IIRC).
->>
->> Yes at least there are some 64 bit capable SoCs with GMA500 which were
->> used in NAS like devices. These NAS-es actually have a VGA output
->> (and maybe also DVI?) which is attached to the GMA500.
-> 
-> Since you are talking about 64-bit, definitely they are *not*
-> Moorestown, Medfield, Clovertrail since the mentioned never were
-> 64-bit. But it would be nice to see the CPU model number to be sure.
+--dFWYt1i2NyOo1oI9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My info on this comes from this bugreport:
-https://bugzilla.redhat.com/show_bug.cgi?id=1665766
 
-And the machine that bugreport is about is a "Thecus N5550 NAS box (Intel Atom D2550/Cedarview platform)"
+> > There's a real danger of a memory leak, as the function name sounds very
+> > similar to dev_name() or acpi_dev_name() and those don't allocate
+> > memory. I'm not sure what a better name would be, but given that this
+> > function is only used in patch 6/7 and not in the I2C subsystem itself,
+> > I wonder if we should inline this kasprintf() call in the caller and
+> > drop this patch.
+>=20
+> IMO if this is a one-off usage, it's better to open-code it.
 
-Regards,
+Sounds reasonable to me, too.
 
-Hans
 
+--dFWYt1i2NyOo1oI9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmASfUUACgkQFA3kzBSg
+KbY9PRAAjVQXWyde1sa4VM3SZZiem5T6eY2LSnbYh9L717+Npfw3qTdRvsWN0klU
+1+ZO5n3IkqvbY3/N70ONHrw1kvhC+u+8CvPMN+sBZqrCLApC0E1CEnL1WzqgjIRf
+7qpzTOv20TCb5REdvBj2FBPoCd3jdBWBfYUvR3SmbQBhSYo4m8EutoYiBw35cjUy
+P6lV52Z6bUb9KW+iUUNnqBNqGPyWN6sELoh9t4H8BvTfavaXUZjotFt00PdJV0Ya
+KBLfanATBa9iwH7BZr2jUNpgDZHMQHnHY/bmFvPFc7exd+trCSjJiFg/SxOWh9HV
+uUSg25rj699WMJq67QQleo1RVnTkM5uG3vtUa3cQssxp3fCsnvCNvY7xB24APHJx
+foJqDMCICM4YnUIkAOsIenwzxL3kptt5mD95qzRKUI8+ENY07QjQOEnp3BhLcJIQ
+vE0CVEGZ/nlhxciaXt+5KkOgDNkQ/zbazYSKhRJ0i7NtAGuL1ageey/x9b32+xi5
+zQcEChNhfWOVPdaW95jZRaM/hAHyRB/em35So7tmw3AllrUIWscXk22xS+o2N0Ur
+kTEK5JEUeXz3/oNcYIQSc+mClHINxq8k65Fy34bWBRv5ZFXOvpMMIR6Ayzzvj9Xd
+p8ZNIoPeRclQ6557C0nGGgiTo1+o7/YPQMo/J4utGGRoB9NhK18=
+=9VIP
+-----END PGP SIGNATURE-----
+
+--dFWYt1i2NyOo1oI9--
