@@ -2,106 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F4EC433E9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 09:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1C5C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 11:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE8664DEE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 09:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3068064D9A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 28 Jan 2021 11:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232438AbhA1JVB (ORCPT
+        id S229640AbhA1Li2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 28 Jan 2021 04:21:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232481AbhA1JSZ (ORCPT
+        Thu, 28 Jan 2021 06:38:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54576 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229551AbhA1Li0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 28 Jan 2021 04:18:25 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1DF7764DD1;
-        Thu, 28 Jan 2021 09:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611825463;
-        bh=KLm4wo+HtSbrNHCKJ/zI7Q/uyUKm613jhpDefnBjTCc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cXApo3jzimWIpxwBqGNdyQEybpPRBqHgQ9PZnSB4RjOhMTb4N/tuILK5r+HTkXCyP
-         rGax5AOP3ylP+wxTqxDpA15r0v+723HndGTP7+4La19gtxP4Iq52eNIlpztEOsEMga
-         oXLhQbKXndEgq5t/8JiB1moGaNFDs23OuBaFGoqBY/PyHFTJ03xAoFpCe5vSg4lJab
-         K+uvzi9o8FqIyLM1BmVaBOYweGroBUfAKC/5MYbnSsGU7E4TdCevBWyedTL6fVWsw0
-         iLxxgg5efWJwReY4IMO+ylkjyQRI9Q2y3kIDJrw/Ip3elfLV6qgZbQbwucXkxM7mSI
-         pPndFJUUeKEgA==
-Date:   Thu, 28 Jan 2021 10:17:41 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, andy@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v2 4/7] i2c: i2c-core-acpi: Add i2c_acpi_dev_name()
-Message-ID: <20210128091741.GJ963@ninjato>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-5-djrscally@gmail.com>
- <YAVSf7+iTPNYf5XS@pendragon.ideasonboard.com>
- <CAJZ5v0hUELtKc9CK=z47XQvSAAx=wTWvoVwP-PaMqugaXaCgZQ@mail.gmail.com>
- <20210128090053.GE963@ninjato>
- <7e7a8614-3cdb-e160-b10f-8aa0e11b15e5@gmail.com>
+        Thu, 28 Jan 2021 06:38:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611833818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=m+AKwvzs7nJ3kXoQu6OIG1Oc6mIPSmzwYlHWvIofE00=;
+        b=XEvQqwRKzKRfcvdGCyjQsnCJQkQ8K7j29nOKXwgykrQa9c1SOlMTN+HkJOYGhiwfYRtpJA
+        /heMrkkwIFhRVqlKcF1mGPy3kQ+5ve9+qZHV6XXIStgRomHFmv4nPmZ9h6QHVqCLAlJuwA
+        J4qziTzqGx8CCKNWHrfNZ8OkzEOgDYE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-DhYatYl4NQeD5x05kcMNPQ-1; Thu, 28 Jan 2021 06:36:57 -0500
+X-MC-Unique: DhYatYl4NQeD5x05kcMNPQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CE6C1005513;
+        Thu, 28 Jan 2021 11:36:55 +0000 (UTC)
+Received: from x1.localdomain (ovpn-114-250.ams2.redhat.com [10.36.114.250])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 281DC5D720;
+        Thu, 28 Jan 2021 11:36:53 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Jumper EZpad 7 tablet
+Date:   Thu, 28 Jan 2021 12:36:53 +0100
+Message-Id: <20210128113653.5442-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nywXBoy70X0GaB8B"
-Content-Disposition: inline
-In-Reply-To: <7e7a8614-3cdb-e160-b10f-8aa0e11b15e5@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Add touchscreen info for the Jumper EZpad 7 tablet.
 
---nywXBoy70X0GaB8B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index c4de932302d6..c44a6e8dceb8 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -382,6 +382,23 @@ static const struct ts_dmi_data jumper_ezpad_6_m4_data = {
+ 	.properties	= jumper_ezpad_6_m4_props,
+ };
+ 
++static const struct property_entry jumper_ezpad_7_props[] = {
++	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
++	PROPERTY_ENTRY_U32("touchscreen-min-y", 10),
++	PROPERTY_ENTRY_U32("touchscreen-size-x", 2044),
++	PROPERTY_ENTRY_U32("touchscreen-size-y", 1526),
++	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
++	PROPERTY_ENTRY_STRING("firmware-name", "gsl3680-jumper-ezpad-7.fw"),
++	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
++	PROPERTY_ENTRY_BOOL("silead,stuck-controller-bug"),
++	{ }
++};
++
++static const struct ts_dmi_data jumper_ezpad_7_data = {
++	.acpi_name	= "MSSL1680:00",
++	.properties	= jumper_ezpad_7_props,
++};
++
+ static const struct property_entry jumper_ezpad_mini3_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 23),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y", 16),
+@@ -1034,6 +1051,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "Jumper8.S106x"),
+ 		},
+ 	},
++	{
++		/* Jumper EZpad 7 */
++		.driver_data = (void *)&jumper_ezpad_7_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Jumper"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "EZpad"),
++			/* Jumper12x.WJ2012.bsBKRCP05 with the version dropped */
++			DMI_MATCH(DMI_BIOS_VERSION, "Jumper12x.WJ2012.bsBKRCP"),
++		},
++	},
+ 	{
+ 		/* Jumper EZpad mini3 */
+ 		.driver_data = (void *)&jumper_ezpad_mini3_data,
+-- 
+2.29.2
 
-> Just to clarify; "open-code" meaning inline it in the caller like
-> Laurent said, right?
-
-Yes.
-
-
---nywXBoy70X0GaB8B
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmASgTUACgkQFA3kzBSg
-KbYp/Q/9F/nRbn3nFjrt5FM2/iCyVjGf2gclcksrI/3A5i31jDJYjPUOXw2f5kWH
-Viv6eRE1An7Obe8s3ia3ZkL2xVHI0AHK4KFwPDTOdN8svzXqeNAL96wSRowmCoPI
-jQoFthGD2Oq1/FyAPw/yOp1GSm+JwG+D0PNz6iJ1f7MgICd1INqyFd81B370RAyV
-SzKhKLNS5jZG3S25N+M/EWcs3sEz4/oeTvD8RX7Ir593o3fW7J/z2LJD/6YySpMX
-VypgMsMUn/1iAqOu5vA/Edc3ltiqMFRtjNgjTGlpCzSfsjEDv9hkI3/ZA6Q9XI39
-T6uRnzjRX0LWCO2GInKiRgJ9pFzS2EFrO+Rhr1SShALqdcbLoRCC7qX7ecA+F2bf
-488MZFAEURUnMaY6Yf7Iz2wIFE+EraToQsbW4OICydoqZpX2wfKonpT6JtPHjV3D
-eVYvwLMkIgDd3sNqAj6kt3qP76+DoYSCetryy0teyC6uDnt1Ql01QBn9hHljvhbF
-TCHzO0E/3MyOi1gwadmlQLTJSD+dyD45SYStpP1yTaURXLLV81DDeHZrGe3ao1PN
-AEgHP0XMXVdMMTo2z6gGc7kEtMhfK0Uy8UcWF6VhmsGFtXvtZCa9a/6oYKgky7rT
-99zeypU23JYVD3cfuGlm9hInMH+2Ed7n2F5RWKUbeQm9+H+b378=
-=RtKi
------END PGP SIGNATURE-----
-
---nywXBoy70X0GaB8B--
