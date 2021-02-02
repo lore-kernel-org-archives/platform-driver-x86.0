@@ -2,226 +2,292 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1649C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 00:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA0BC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 07:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 800DC64E7B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 00:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7454064EED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 07:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbhBBAdI (ORCPT
+        id S231419AbhBBHT0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Feb 2021 19:33:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbhBBAdH (ORCPT
+        Tue, 2 Feb 2021 02:19:26 -0500
+Received: from condef-03.nifty.com ([202.248.20.68]:39875 "EHLO
+        condef-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229614AbhBBHT0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Feb 2021 19:33:07 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1ADC061573
-        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Feb 2021 16:32:27 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id b21so13657892pgk.7
-        for <platform-driver-x86@vger.kernel.org>; Mon, 01 Feb 2021 16:32:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fmk6HAK83O+MhR4+V3Y1PpAJKJP4w23SY8NeXqf50B4=;
-        b=g554xwH7uDl4MBp1uR6cyYI/a1DJvC8R9p+ojE9VX4AInef3NbENIuO/b+NYXIObQy
-         BopvboAyys2NHi+zhN5WE0sYk+P6BdNKphXl5JEaLo1VxqVHDLwOFEH2LBsHW1ym+9Nd
-         rjqBDKFwalNgzBo+MN+Pj1JrA6AXRddn2rhjCoUtE2IdK4ABD+4wJO6WDcJBLPtVqESR
-         mMj61jG1NFw5uOZIttL2wpacI5P2EMphf/sVHsXLR+yco2fo0TL/NwxnzVLp5bAWrbng
-         skMcPHdPrfgLxAxkoEzJ7la+cNigBn2gCphUB4u+6HMBqJ+uYwQVvTIriMDm+WKOwkV6
-         vBjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fmk6HAK83O+MhR4+V3Y1PpAJKJP4w23SY8NeXqf50B4=;
-        b=GcCGzLKvzfaNCo7Jll68JBVm0QsZ/Vo2oEEH8ru0Npswn2KfWO/RaXoJPVk38IqnQW
-         Dn0GvuWYheMmFPFlxUpidlFQOp/ufiPaGELQao9UaRW8jjZF0lq/0Z00gP76cvGY62cC
-         OYsTox5v2o/wKzhtE6fAp44FPNie1Yyc+FoGYz1twNUSl2nQ9rq6Pp0dP/M3JYpLmPUQ
-         Y0Y4EWoxpaY89vjlXmUJP1+1uNJbS8SjQN7uU6CHEEBub/ifPOMa6otVX5BTWGnuiYk5
-         P7KSj1UPbsHfMNjTdwjiMUPfqNhBsMOoNufXWwbixJLm6CdMRRjJR+tRyr3dcydWbIoN
-         /Jsg==
-X-Gm-Message-State: AOAM533aAqY4q94opNE5InTIG22xcZ/0uYEiVqFeRcnhKXPYRzy+iG68
-        uBkLzrApcr/Pd4W7A2WoUp8=
-X-Google-Smtp-Source: ABdhPJyPhEbgzI72P9opAOACRTJUE4H6m2gaUO+pslnHCDxmKXEazCSYGjZNLppQW6KhS2l5cVPqtQ==
-X-Received: by 2002:a62:f943:0:b029:1a5:43f9:9023 with SMTP id g3-20020a62f9430000b02901a543f99023mr18930233pfm.75.1612225947134;
-        Mon, 01 Feb 2021 16:32:27 -0800 (PST)
-Received: from localhost.localdomain (p926243-ipngn9601hodogaya.kanagawa.ocn.ne.jp. [114.164.25.243])
-        by smtp.gmail.com with ESMTPSA id ds10sm613200pjb.1.2021.02.01.16.32.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Feb 2021 16:32:26 -0800 (PST)
-From:   Nitin Joshi <nitjoshi@gmail.com>
-X-Google-Original-From: Nitin Joshi <njoshi1@lenovo.com>
-To:     hdegoede@redhat.com
-Cc:     andy.shevchenko@gmail.com, mpearson@lenovo.com,
-        platform-driver-x86@vger.kernel.org,
-        Nitin Joshi <njoshi1@lenovo.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/x86: thinkpad_acpi: fixed warning and incorporated review comments
-Date:   Tue,  2 Feb 2021 09:32:10 +0900
-Message-Id: <20210202003210.91773-1-njoshi1@lenovo.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 2 Feb 2021 02:19:26 -0500
+X-Greylist: delayed 439 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Feb 2021 02:19:24 EST
+Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-03.nifty.com with ESMTP id 11277FMo011668;
+        Tue, 2 Feb 2021 16:08:23 +0900
+Received: from oscar.flets-west.jp (softbank126026094251.bbtec.net [126.26.94.251]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id 11274eAp003392;
+        Tue, 2 Feb 2021 16:04:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 11274eAp003392
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1612249482;
+        bh=b2jPOlkmNQEQwNHcvOIubOJ6oDXT0fTKYaGEmlHljAI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ueStfIRG5Kl3BNbhbUI+1XErXYBed+C5Jh8MnATHP9lkxK1OPYAlfvj/RtamHV8zj
+         9Q/n6GroGELc152fNd91JuIgemZpOSKoDrYe2lBHtgZoEVoBFA9mXcgX10QqawDv1W
+         Xkvrdpy911mi+dNTLCX7d9TGTkt+1gchbISTycZ6/o0LLSxp3l6qG0JFb/Qu9WAZ2U
+         q63DivUoTZYnQmRFXgehWgq7ugRH/r05woY9m3GcizA4e3HmJO1Nq/+GjpvvJvx928
+         rmgl8QfD3vEHFz0gyu483qLBzG++IuO5AuKr/mRPbysfs5S2yZnraS+0pcbZvmzYqR
+         I5t+s0cWbt1fA==
+X-Nifty-SrcIP: [126.26.94.251]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Peter Jones <pjones@redhat.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-efi@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org
+Subject: [PATCH 1/3] printk: use CONFIG_CONSOLE_LOGLEVEL_* directly
+Date:   Tue,  2 Feb 2021 16:02:16 +0900
+Message-Id: <20210202070218.856847-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The previous commit adding new sysfs for keyboard language has warning and
-few code correction has to be done as per new review comments.
+CONSOLE_LOGLEVEL_DEFAULT is nothing more than a shorthand of
+CONFIG_CONSOLE_LOGLEVEL_DEFAULT.
 
-Below changes has been addressed in this version:
- - corrected warning. Many thanks to kernel test robot <lkp@intel.com> for
-   reporting and determining this warning.
- - used sysfs_emit_at() API instead of strcat.
- - sorted keyboard language array.
- - removed unwanted space and corrected sentences.
+When you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from Kconfig, almost
+all objects are rebuilt because CONFIG_CONSOLE_LOGLEVEL_DEFAULT is
+used in <linux/printk.h>, which is included from most of source files.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
+In fact, there are only 4 users of CONSOLE_LOGLEVEL_DEFAULT:
+
+  arch/x86/platform/uv/uv_nmi.c
+  drivers/firmware/efi/libstub/efi-stub-helper.c
+  drivers/tty/sysrq.c
+  kernel/printk/printk.c
+
+So, when you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT and rebuild the
+kernel, it is enough to recompile those 4 files.
+
+Remove the CONSOLE_LOGLEVEL_DEFAULT definition from <linux/printk.h>,
+and use CONFIG_CONSOLE_LOGLEVEL_DEFAULT directly.
+
+With this, the build system will rebuild the minimal number of objects.
+
+Steps to confirm it:
+
+  [1] Do the full build
+  [2] Change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from 'make menuconfig' etc.
+  [3] Rebuild
+
+  $ make
+    SYNC    include/config/auto.conf
+    CALL    scripts/checksyscalls.sh
+    CALL    scripts/atomic/check-atomics.sh
+    DESCEND  objtool
+    CHK     include/generated/compile.h
+    CC      kernel/printk/printk.o
+    AR      kernel/printk/built-in.a
+    AR      kernel/built-in.a
+    CC      drivers/tty/sysrq.o
+    AR      drivers/tty/built-in.a
+    CC      drivers/firmware/efi/libstub/efi-stub-helper.o
+    STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
+    AR      drivers/firmware/efi/libstub/lib.a
+    AR      drivers/built-in.a
+    GEN     .version
+    CHK     include/generated/compile.h
+    UPD     include/generated/compile.h
+    CC      init/version.o
+    AR      init/built-in.a
+    LD      vmlinux.o
+    ...
+
+For the same reason, do likewise for CONSOLE_LOGLEVEL_QUIET and
+MESSAGE_LOGLEVEL_DEFAULT.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- .../admin-guide/laptops/thinkpad-acpi.rst     | 15 ++++----
- drivers/platform/x86/thinkpad_acpi.c          | 34 +++++++------------
- 2 files changed, 20 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index b1188f05a99a..3b225ae47f1a 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1476,18 +1476,19 @@ sysfs: keyboard_lang
- This feature is used to set keyboard language to ECFW using ASL interface.
- Fewer thinkpads models like T580 , T590 , T15 Gen 1 etc.. has "=", "(',
- ")" numeric keys, which are not displaying correctly, when keyboard language
--is other than "english". This is because of default keyboard language in ECFW
--is set as "english". Hence using this sysfs, user can set correct keyboard
--language to ECFW and then these key's will work correctly .
-+is other than "english". This is because the default keyboard language in ECFW
-+is set as "english". Hence using this sysfs, user can set the correct keyboard
-+language to ECFW and then these key's will work correctly.
+ arch/x86/platform/uv/uv_nmi.c                  |  2 +-
+ drivers/firmware/efi/libstub/efi-stub-helper.c |  6 +++---
+ drivers/tty/sysrq.c                            |  4 ++--
+ drivers/video/fbdev/core/fbcon.c               |  2 +-
+ drivers/video/fbdev/efifb.c                    |  2 +-
+ include/linux/printk.h                         | 10 ----------
+ init/main.c                                    |  2 +-
+ kernel/printk/printk.c                         |  6 +++---
+ 8 files changed, 12 insertions(+), 22 deletions(-)
+
+diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
+index eafc530c8767..4751299c7416 100644
+--- a/arch/x86/platform/uv/uv_nmi.c
++++ b/arch/x86/platform/uv/uv_nmi.c
+@@ -100,7 +100,7 @@ static cpumask_var_t uv_nmi_cpu_mask;
+  * Default is all stack dumps go to the console and buffer.
+  * Lower level to send to log buffer only.
+  */
+-static int uv_nmi_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
++static int uv_nmi_loglevel = CONFIG_CONSOLE_LOGLEVEL_DEFAULT;
+ module_param_named(dump_loglevel, uv_nmi_loglevel, int, 0644);
  
- Example of command to set keyboard language is mentioned below::
+ /*
+diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+index aa8da0a49829..3e8d8f706589 100644
+--- a/drivers/firmware/efi/libstub/efi-stub-helper.c
++++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+@@ -12,7 +12,7 @@
+ #include <linux/ctype.h>
+ #include <linux/efi.h>
+ #include <linux/kernel.h>
+-#include <linux/printk.h> /* For CONSOLE_LOGLEVEL_* */
++#include <linux/printk.h> /* For CONSOLE_LOGLEVEL_DEBUG */
+ #include <asm/efi.h>
+ #include <asm/setup.h>
  
-         echo jp > /sys/devices/platform/thinkpad_acpi/keyboard_lang
+@@ -21,7 +21,7 @@
+ bool efi_nochunk;
+ bool efi_nokaslr = !IS_ENABLED(CONFIG_RANDOMIZE_BASE);
+ bool efi_noinitrd;
+-int efi_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
++int efi_loglevel = CONFIG_CONSOLE_LOGLEVEL_DEFAULT;
+ bool efi_novamap;
  
--Text corresponding to keyboard layout to be set in sysfs are : jp (Japan), be(Belgian),
--cz(Czech), en(English), da(Danish), de(German), es(Spain) , et(Estonian),
--fr(French) , fr-ch (French(Switzerland)), pl(Polish), sl(Slovenian), hu
--(Hungarian), nl(Dutch), tr(Turkey), it(Italy), sv(Sweden), pt(portugese)
-+Text corresponding to keyboard layout to be set in sysfs are: be(Belgian),
-+cz(Czech), da(Danish), de(German), en(English), es(Spain), et(Estonian),
-+fr(French), fr-ch(French(Switzerland)), hu(Hungarian), it(Italy), jp (Japan),
-+nl(Dutch), nn(Norway), pl(Polish), pt(portugese), sl(Slovenian), sv(Sweden),
-+tr(Turkey)
+ static bool efi_nosoftreserve;
+@@ -213,7 +213,7 @@ efi_status_t efi_parse_options(char const *cmdline)
+ 		if (!strcmp(param, "nokaslr")) {
+ 			efi_nokaslr = true;
+ 		} else if (!strcmp(param, "quiet")) {
+-			efi_loglevel = CONSOLE_LOGLEVEL_QUIET;
++			efi_loglevel = CONFIG_CONSOLE_LOGLEVEL_QUIET;
+ 		} else if (!strcmp(param, "noinitrd")) {
+ 			efi_noinitrd = true;
+ 		} else if (!strcmp(param, "efi") && val) {
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index 959f9e121cc6..e0ae7793155e 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -103,7 +103,7 @@ static void sysrq_handle_loglevel(int key)
+ 	int i;
  
+ 	i = key - '0';
+-	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
++	console_loglevel = CONFIG_CONSOLE_LOGLEVEL_DEFAULT;
+ 	pr_info("Loglevel set to %d\n", i);
+ 	console_loglevel = i;
+ }
+@@ -584,7 +584,7 @@ void __handle_sysrq(int key, bool check_mask)
+ 	 * routing in the consumers of /proc/kmsg.
+ 	 */
+ 	orig_log_level = console_loglevel;
+-	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
++	console_loglevel = CONFIG_CONSOLE_LOGLEVEL_DEFAULT;
  
- Adaptive keyboard
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 3cfc4a872c2d..a7f1b4ee5457 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9991,16 +9991,12 @@ struct keyboard_lang_data {
- 	int lang_code;
- };
+         op_p = __sysrq_get_key_op(key);
+         if (op_p) {
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index bf61598bf1c3..75b97268663f 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1043,7 +1043,7 @@ static void fbcon_init(struct vc_data *vc, int init)
+ 
+ 	info = registered_fb[con2fb_map[vc->vc_num]];
+ 
+-	if (logo_shown < 0 && console_loglevel <= CONSOLE_LOGLEVEL_QUIET)
++	if (logo_shown < 0 && console_loglevel <= CONFIG_CONSOLE_LOGLEVEL_QUIET)
+ 		logo_shown = FBCON_LOGO_DONTSHOW;
+ 
+ 	if (vc != svc || logo_shown == FBCON_LOGO_DONTSHOW ||
+diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
+index e57c00824965..dfb234a0a59d 100644
+--- a/drivers/video/fbdev/efifb.c
++++ b/drivers/video/fbdev/efifb.c
+@@ -160,7 +160,7 @@ static void efifb_show_boot_graphics(struct fb_info *info)
+ 	}
+ 
+ 	/* Avoid flashing the logo if we're going to print std probe messages */
+-	if (console_loglevel > CONSOLE_LOGLEVEL_QUIET)
++	if (console_loglevel > CONFIG_CONSOLE_LOGLEVEL_QUIET)
+ 		return;
+ 
+ 	/* bgrt_tab.status is unreliable, so we don't check it */
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index fe7eb2351610..fd34b3aa2f90 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -46,22 +46,12 @@ static inline const char *printk_skip_headers(const char *buffer)
+ 
+ #define CONSOLE_EXT_LOG_MAX	8192
+ 
+-/* printk's without a loglevel use this.. */
+-#define MESSAGE_LOGLEVEL_DEFAULT CONFIG_MESSAGE_LOGLEVEL_DEFAULT
+-
+ /* We show everything that is MORE important than this.. */
+ #define CONSOLE_LOGLEVEL_SILENT  0 /* Mum's the word */
+ #define CONSOLE_LOGLEVEL_MIN	 1 /* Minimum loglevel we let people use */
+ #define CONSOLE_LOGLEVEL_DEBUG	10 /* issue debug messages */
+ #define CONSOLE_LOGLEVEL_MOTORMOUTH 15	/* You can't shut this one up */
  
 -/*
-- * When adding new entries to keyboard_lang_data, please check that
-- * the select_lang[] buffer in keyboard_lang_show() is still large enough.
+- * Default used to be hard-coded at 7, quiet used to be hardcoded at 4,
+- * we're now allowing both to be set from kernel config.
 - */
--struct keyboard_lang_data keyboard_lang_data[] = {
--	{"en", 0},
-+static const struct keyboard_lang_data keyboard_lang_data[] = {
- 	{"be", 0x080c},
- 	{"cz", 0x0405},
- 	{"da", 0x0406},
- 	{"de", 0x0c07},
-+	{"en", 0x0000},
- 	{"es", 0x2c0a},
- 	{"et", 0x0425},
- 	{"fr", 0x040c},
-@@ -10056,9 +10052,7 @@ static ssize_t keyboard_lang_show(struct device *dev,
- 				struct device_attribute *attr,
- 				char *buf)
+-#define CONSOLE_LOGLEVEL_DEFAULT CONFIG_CONSOLE_LOGLEVEL_DEFAULT
+-#define CONSOLE_LOGLEVEL_QUIET	 CONFIG_CONSOLE_LOGLEVEL_QUIET
+-
+ extern int console_printk[];
+ 
+ #define console_loglevel (console_printk[0])
+diff --git a/init/main.c b/init/main.c
+index c68d784376ca..4dfcbf7f24c6 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -236,7 +236,7 @@ static int __init debug_kernel(char *str)
+ 
+ static int __init quiet_kernel(char *str)
  {
--	int output, err, i;
--	char select_lang[80] = "";
--	char lang[8] = "";
-+	int output, err, i, len = 0;
- 
- 	err = get_keyboard_lang(&output);
- 	if (err)
-@@ -10066,19 +10060,18 @@ static ssize_t keyboard_lang_show(struct device *dev,
- 
- 	for (i = 0; i < ARRAY_SIZE(keyboard_lang_data); i++) {
- 		if (i)
--			strcat(select_lang, " ");
-+			len += sysfs_emit_at(buf, len, "%s", " ");
- 
- 		if (output == keyboard_lang_data[i].lang_code) {
--			strcat(lang, "[");
--			strcat(lang, keyboard_lang_data[i].lang_str);
--			strcat(lang, "]");
--			strcat(select_lang, lang);
-+			len += sysfs_emit_at(buf, len, "%s%s%s", "[",
-+					keyboard_lang_data[i].lang_str, "]");
- 		} else {
--			strcat(select_lang, keyboard_lang_data[i].lang_str);
-+			len += sysfs_emit_at(buf, len, "%s", keyboard_lang_data[i].lang_str);
- 		}
- 	}
-+	len += sysfs_emit_at(buf, len, "\n");
- 
--	return sysfs_emit(buf, "%s\n", select_lang);
-+	return len;
+-	console_loglevel = CONSOLE_LOGLEVEL_QUIET;
++	console_loglevel = CONFIG_CONSOLE_LOGLEVEL_QUIET;
+ 	return 0;
  }
  
- static ssize_t keyboard_lang_store(struct device *dev,
-@@ -10105,7 +10098,7 @@ static ssize_t keyboard_lang_store(struct device *dev,
- 		if (err)
- 			return err;
- 	} else {
--		pr_err("Unknown Keyboard language. Ignoring\n");
-+		dev_err(&tpacpi_pdev->dev, "Unknown Keyboard language. Ignoring\n");
- 		return -EINVAL;
- 	}
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 5a95c688621f..92b93340905c 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -61,10 +61,10 @@
+ #include "internal.h"
  
-@@ -10116,7 +10109,6 @@ static ssize_t keyboard_lang_store(struct device *dev,
+ int console_printk[4] = {
+-	CONSOLE_LOGLEVEL_DEFAULT,	/* console_loglevel */
+-	MESSAGE_LOGLEVEL_DEFAULT,	/* default_message_loglevel */
++	CONFIG_CONSOLE_LOGLEVEL_DEFAULT,	/* console_loglevel */
++	CONFIG_MESSAGE_LOGLEVEL_DEFAULT,	/* default_message_loglevel */
+ 	CONSOLE_LOGLEVEL_MIN,		/* minimum_console_loglevel */
+-	CONSOLE_LOGLEVEL_DEFAULT,	/* default_console_loglevel */
++	CONFIG_CONSOLE_LOGLEVEL_DEFAULT,	/* default_console_loglevel */
+ };
+ EXPORT_SYMBOL_GPL(console_printk);
  
- 	return count;
- }
--
- static DEVICE_ATTR_RW(keyboard_lang);
- 
- static struct attribute *kbdlang_attributes[] = {
-@@ -10135,7 +10127,7 @@ static int tpacpi_kbdlang_init(struct ibm_init_struct *iibm)
- 	err = get_keyboard_lang(&output);
- 	/*
- 	 * If support isn't available (ENODEV) then don't return an error
--	 * just don't create the sysfs group
-+	 * just don't create the sysfs group.
- 	 */
- 	if (err == -ENODEV)
- 		return 0;
-@@ -10144,9 +10136,7 @@ static int tpacpi_kbdlang_init(struct ibm_init_struct *iibm)
- 		return err;
- 
- 	/* Platform supports this feature - create the sysfs file */
--	err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
--
--	return err;
-+	return sysfs_create_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
- }
- 
- static void kbdlang_exit(void)
 -- 
-2.25.1
+2.27.0
 
