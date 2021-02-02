@@ -2,168 +2,131 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04A4C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 14:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC039C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 14:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84CCD61481
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 14:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8CC64DF5
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 14:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbhBBOax (ORCPT
+        id S234624AbhBBOm2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 09:30:53 -0500
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:55104 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234452AbhBBO3S (ORCPT
+        Tue, 2 Feb 2021 09:42:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:60418 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234696AbhBBOhY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 09:29:18 -0500
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 112EIcSv000968;
-        Tue, 2 Feb 2021 14:28:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
- bh=KgON0JNjPPn3agmdfKnN9oeNhsJWy56GgPCfWOLOKC0=;
- b=IpFWp4aQwHKekm3gQOeIJ0IQlKo7pLkN5MaFZlchEgRMQLomGLMRI+DslPKYtijNvCRx
- ctuwbLEyv2ng9tB+PlQWMZ+hrrVl0nOdvmE2Q96pvoAI1XX8Hb6K8L4iHv5jN4nvtvzL
- pF4p9sixxH9InMmx89lEozQijxLF2Qx6y7V3cJNkossoE2+gBtrKbSGH4uoI8MBltdAJ
- VXrTG8/D+QyG/AfUE3e5TuHu+Acb6NpSdkuFpXdfZJ5uyfjdOkUy8x450NxWWLiM8V5J
- /MDJEefWxMXJ++Xi4t5/ale/PjdKB1h03AC35KkQrHkFo8XaAatLbRureMyKGB+Y65B8 bg== 
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0a-002e3701.pphosted.com with ESMTP id 36dgwuprs4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Feb 2021 14:28:05 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id BC92566;
-        Tue,  2 Feb 2021 14:28:04 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id B4E674E;
-        Tue,  2 Feb 2021 14:28:02 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Borislav_Petkov_ <bp@alien8.de>,
-        Thomas_Gleixner_ <tglx@linutronix.de>,
-        Ingo_Molnar_ <mingo@redhat.com>,
-        Steve_Wahl_ <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Georges Aureau <georges.aureau@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri_Sivanich_ <dimitri.sivanich@hpe.com>,
-        Russ_Anderson_ <russ.anderson@hpe.com>,
-        Darren_Hart_ <dvhart@infradead.org>,
-        Andy_Shevchenko_ <andy@infradead.org>,
-        "H._Peter_Anvin_" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/platform/uv: Add more to secondary cpu kdump info
-Date:   Tue,  2 Feb 2021 08:27:46 -0600
-Message-Id: <20210202142746.170353-1-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 2 Feb 2021 09:37:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612276557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yuioLk+QBKsBksw92DnH4UnwQxafZS+S4qY6HXlBF3g=;
+        b=a+2Uhu9fQAHaRQOo9pvpQdqkKW/OnC2yTkWy2Cq6mIe8ONvz8ogPSZLkfZCfeZd4/d5YSG
+        uh120LQgHNgO1g0aAOXCpmbYgZWNEOiQInPZKNbt4oSbRApxnSolKUcpAMQd0SOGhmhnxn
+        TK15vIPR8pxqMhcccn8lL8Xl+Vhsaj0=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-474-sQxgQXdPPJ2fY6U1EDFyow-1; Tue, 02 Feb 2021 09:35:55 -0500
+X-MC-Unique: sQxgQXdPPJ2fY6U1EDFyow-1
+Received: by mail-ej1-f69.google.com with SMTP id h4so10128703eja.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 06:35:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yuioLk+QBKsBksw92DnH4UnwQxafZS+S4qY6HXlBF3g=;
+        b=qJHU2w1yKRaRLXFGsvP/J5cCLofV1ubU0K3bceh0AgCM0srWU+M5q7BeDLpQfAKSmj
+         mVhrAmf5bTFrF1oCeYbUZkSZ2ttkJh2YYqj5z9/fUgccUiL78X61GIbQzVgJihRSbb0f
+         5rp5/3Qf6QHHmuuY2aJY62ECz/o4pWQw57gsGcdGa/nl2oFoAjemmanGQDdfVJeHtsR0
+         BILbkKyHhJAHa0PrS/q1F8GGqT3R3+2vNn9rjWwDjEi0W7yHk5UQqvuk+4ZpXkuAzExx
+         V8PdpucHNhb/ryy8g+3ll61YCdjaz5I3w0zTR0ReeFAHrAbduw7+VY0IPRfpDyLL7f9z
+         c20A==
+X-Gm-Message-State: AOAM5302GxENkI7bT+Y7ul7Bknt7wUbPuT0F+RcbDz5Aqj5Dshctfuxv
+        VpU9z/CAvdAQEVoLGrGtPEIBjSaHLeijEOuTEHRV1BKbFaDpNqAPxqfGfhLSou8dyJrJpzUnw5n
+        6SmbISl1d/IBdbNSnhefCMihCzDnPtqc9mUurIjpsHGjHE9KEGALfXm1m0Mjbtu1ohzu9F2aL7y
+        +n0KrZqvCvOw==
+X-Received: by 2002:a17:906:8555:: with SMTP id h21mr13769679ejy.403.1612276553550;
+        Tue, 02 Feb 2021 06:35:53 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzX376850pRzW8rhJndm8qGoRK4hnvatMT4A3h6h/V51T3FYCBdyNuksIIYpZES05LFx/deHQ==
+X-Received: by 2002:a17:906:8555:: with SMTP id h21mr13769660ejy.403.1612276553364;
+        Tue, 02 Feb 2021 06:35:53 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id dm6sm9232402ejc.32.2021.02.02.06.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Feb 2021 06:35:52 -0800 (PST)
+Subject: Re: How to detect Cherry Trail vs Brasswell inside the kernel ?
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Shevchenko <andy@infradead.org>, linux-acpi@vger.kernel.org,
+        x86@kernel.org,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <37906985-e026-48d3-cda8-6e63696e72aa@redhat.com>
+ <X/XQak3+YtbyeAqM@hirez.programming.kicks-ass.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2d5b3911-b4b0-70bd-6ac0-c418fef0c682@redhat.com>
+Date:   Tue, 2 Feb 2021 15:35:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
- definitions=2021-02-02_06:2021-02-02,2021-02-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 spamscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2102020098
+In-Reply-To: <X/XQak3+YtbyeAqM@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Georges Aureau <georges.aureau@hpe.com>
+Hi,
 
-Add call to run_crash_ipi_callback() to gather more info of what the
-secondary cpus were doing to help with failure analysis.
+On 1/6/21 3:59 PM, Peter Zijlstra wrote:
+> On Wed, Jan 06, 2021 at 01:31:46PM +0100, Hans de Goede wrote:
+>> Hi All,
+>>
+>> I've 2 different kernel bugs where the fix requires differentiating between
+>> Cherry Trail vs Brasswell, just checking the CPU model does not allow to
+>> differentiate between these 2 since they are both using Airmont cores.
+>>
+>> I have the same issue with the Bay Trail laptop SoCs vs the
+>> Bay Trail-T tablet SoCs, but for now lets focus on
+>> Cherry Trail vs Brasswell since that is less confusing:
+>>
+>> https://ark.intel.com/content/www/us/en/ark/products/codename/46629/cherry-trail.html
+>> https://ark.intel.com/content/www/us/en/ark/products/codename/66094/braswell.html
+>>
+>> So I see a number of possible solutions here:
+>>
+>> 1) Do a (substring) check on the CPU model-name checking for "x5-Z8" and "x7-Z8"
+>> 2) Check for presence of some embedded peripheral which is present on one but not the
+>> other. E.g. The Braswell devices have HDA audio where as the Cherry Trail devices
+>> use the "Low Power Engine (LPE) Audio Controller"
+>> 3) Check for acpi_gbl_reduced_hardware, but I'm not sure if that is a reliable
+>> indicator of running on the tablet versions of the SoCs.
+>>
+>> 1 and 2 will work but neither is very pretty, I guess I could try to spend some
+>> more time investigating 3. But I only have limited access to the non tablet versions
+>> of the Bay Trail and I'm not sure if I have any Braswell devices at all. 
+>>
+>> So I was wondering if anyone else has any better ideas here?
+> 
+> Does MSR_PLATFORM_ID (0x17) bits 50-52 work to differentiate these?
 
-Excerpt from Georges:
-'It is only changing where crash secondaries will be stalling after having
-taken care of properly laying down "crash note regs". Please note that
-"crash note regs" are a key piece of data used by crash dump debuggers
-to provide a reliable backtrace of running processors.'
+Thank you, that is (was) a good idea.
 
-Secondary change pursuant to a5f526ec:
-	change master/slave to main/secondary
+So since you send this email I've added a debug print to the kernel for these
+bits and collected the output of that debug print on various devices.
 
-Signed-off-by: Georges Aureau <georges.aureau@hpe.com>
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
----
- arch/x86/platform/uv/uv_nmi.c | 39 +++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+Unfortunately these bits always read 0 on all Bay Trail / Bay Trail-T /
+Cherry Trail devices which I've tested, so these bits do not help.
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index eafc530c8767..f83810f7bcc2 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -24,6 +24,7 @@
- #include <asm/kdebug.h>
- #include <asm/local64.h>
- #include <asm/nmi.h>
-+#include <asm/reboot.h>
- #include <asm/traps.h>
- #include <asm/uv/uv.h>
- #include <asm/uv/uv_hub.h>
-@@ -834,34 +835,42 @@ static void uv_nmi_touch_watchdogs(void)
- 	touch_nmi_watchdog();
- }
- 
--static atomic_t uv_nmi_kexec_failed;
--
- #if defined(CONFIG_KEXEC_CORE)
--static void uv_nmi_kdump(int cpu, int master, struct pt_regs *regs)
-+static atomic_t uv_nmi_kexec_failed;
-+static void uv_nmi_kdump(int cpu, int main, struct pt_regs *regs)
- {
-+	/* Check if kdump kernel loaded for both main and secondary CPUs */
-+	if (!kexec_crash_image) {
-+		if (main)
-+			pr_err("UV: NMI error: kdump kernel not loaded\n");
-+		return;
-+	}
-+
- 	/* Call crash to dump system state */
--	if (master) {
-+	if (main) {
- 		pr_emerg("UV: NMI executing crash_kexec on CPU%d\n", cpu);
- 		crash_kexec(regs);
- 
--		pr_emerg("UV: crash_kexec unexpectedly returned, ");
-+		pr_emerg("UV: crash_kexec unexpectedly returned\n");
- 		atomic_set(&uv_nmi_kexec_failed, 1);
--		if (!kexec_crash_image) {
--			pr_cont("crash kernel not loaded\n");
--			return;
-+
-+	} else { /* secondary */
-+
-+		/* If kdump kernel fails, secondaries will exit this loop */
-+		while (atomic_read(&uv_nmi_kexec_failed) == 0) {
-+
-+			/* Once shootdown cpus starts, they do not return */
-+			run_crash_ipi_callback(regs);
-+
-+			mdelay(10);
- 		}
--		pr_cont("kexec busy, stalling cpus while waiting\n");
- 	}
--
--	/* If crash exec fails the slaves should return, otherwise stall */
--	while (atomic_read(&uv_nmi_kexec_failed) == 0)
--		mdelay(10);
- }
- 
- #else /* !CONFIG_KEXEC_CORE */
--static inline void uv_nmi_kdump(int cpu, int master, struct pt_regs *regs)
-+static inline void uv_nmi_kdump(int cpu, int main, struct pt_regs *regs)
- {
--	if (master)
-+	if (main)
- 		pr_err("UV: NMI kdump: KEXEC not supported in this kernel\n");
- 	atomic_set(&uv_nmi_kexec_failed, 1);
- }
--- 
-2.21.0
+Regards,
+
+Hans
 
