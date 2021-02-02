@@ -2,105 +2,171 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B39C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 19:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200FBC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 23:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3971864E27
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 19:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D453564E41
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 23:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238472AbhBBTy3 (ORCPT
+        id S236037AbhBBXF5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 14:54:29 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38047 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240090AbhBBTxb (ORCPT
+        Tue, 2 Feb 2021 18:05:57 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:22160 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233050AbhBBXF4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 14:53:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612295524;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NxQodtgYcmc4QZjZKTAF3TCMHN4Ic1oSfzkOYjvIdZc=;
-        b=b9tJ+SPpBPyF4CJVTCfvhfSZPAXWKZ0UHhLmYkVLJSvVqDYyni7O8fxsn5OWWlL/OrHTmW
-        41NjJQjFixQlO1qY5n/73VbwlHAXNRa/WsxBdMPbZ+KeIIy316LdRGEAq1PS7GTpgMGMu/
-        Nisv2MD6Blkc6lojrUl707zB+NUxSw8=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-oWhFngdHON6bM1HJNKdXxA-1; Tue, 02 Feb 2021 14:52:02 -0500
-X-MC-Unique: oWhFngdHON6bM1HJNKdXxA-1
-Received: by mail-ej1-f71.google.com with SMTP id p1so10471707ejo.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 11:52:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NxQodtgYcmc4QZjZKTAF3TCMHN4Ic1oSfzkOYjvIdZc=;
-        b=IaISjZEMDQ8nKQgdMCPAHeLe7RPB99Z5tQIo98k0jXElZlH1HsXT7pSgUcxsHNTI0w
-         xPttFfg3a+TlqF+DAH2DiIL0Rl+DiLHEuK8hIXb9oLWoQK2SjkO1AaGv2/MWdf13O8C6
-         Z+sZYSPqRtmwFIUg5gfZOf2G6X6Q08XDY0PUFNRTW7/dIkj7/xg52tir6oVlzsqdh/wg
-         gke2G0KhEdt1scHXpuBRZ3mg7fQzVh6fKx6fU+jYWA3vl55tQBsSCAEo/Y/36Jh71Pqm
-         A8Hs83ZUQCJembZ/IqpFEfMYh+YD/EZxdwIWNN9GKWOS5/n71Rvx9apb4ON14YLkwXVX
-         DJ/Q==
-X-Gm-Message-State: AOAM531+L3KCbBAEehA+SCIcGSnxKMnvJZsOzosj2yuqzmW9hqqHLUwT
-        /GifzpbUDDk88dBsown/83oLIX3/BHnVh1myNGpMRvcHYXTG52MQXeSqcQceESXaBLAff6GP8d2
-        W5UEzhInlyjlUB3jD54AuRelmaXWeEtha/Q==
-X-Received: by 2002:aa7:d755:: with SMTP id a21mr493003eds.301.1612295521032;
-        Tue, 02 Feb 2021 11:52:01 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyYfKVSviHVWCzOxE3Kc3e6aX+wFXb2mRq00duIqLVwYSo0WiW7GeLafvB3sL4pPLUfy/AWFw==
-X-Received: by 2002:aa7:d755:: with SMTP id a21mr492993eds.301.1612295520859;
-        Tue, 02 Feb 2021 11:52:00 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id g2sm9800386ejk.108.2021.02.02.11.52.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 11:52:00 -0800 (PST)
-Subject: Re: [PATCH 0/3] Platform: OLPC: A couple of fixes
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210126073740.10232-1-lkundrak@v3.sk>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9132ebf9-8665-4add-74a8-5e4d73ca7246@redhat.com>
-Date:   Tue, 2 Feb 2021 20:51:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 2 Feb 2021 18:05:56 -0500
+X-Greylist: delayed 57464 seconds by postgrey-1.27 at vger.kernel.org; Tue, 02 Feb 2021 18:05:53 EST
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 112N4khF003133;
+        Wed, 3 Feb 2021 08:04:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 112N4khF003133
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1612307086;
+        bh=UGA0Rplim8ZfC6e4whP20xTht9RzqhbWWxLaXhzWRUA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tOBe0hEHHf9tvmT3rHNnjBL9ugZuudIECWVtYvCik/AC2pP1I4bqBET4RIJ/vBKSB
+         0aRw/i7F91TD/PzkclnU2rVRXFMEw6JAzCx93I17/rKXeFG7l0py1WRGJG2fQCZQLj
+         q99jD6spPDWOLAzyv0+yHJdvetuJ0mv8N9l2T+24C2KTXwMzAOnAFXBCq1xn8EfdZh
+         EqvYL29bZ/OMZE6jEBXdHTulk62/GRSs0uLVCRks7bcTqFsH9kUUbnniWFdepR5nay
+         nVRHIn7crbFdyzki6dQc69GxxIU1dobMhHCeavZav8fqc5flWT+QiFEmuYa9o3WH3Q
+         4bzZRX2Ms/k9g==
+X-Nifty-SrcIP: [209.85.214.177]
+Received: by mail-pl1-f177.google.com with SMTP id u11so13344353plg.13;
+        Tue, 02 Feb 2021 15:04:46 -0800 (PST)
+X-Gm-Message-State: AOAM532yuR3F6Vl6z+NNFjFuGpuWcQl1WLAEmHtTkrLsMp8b4+WdKjrw
+        hQrJrSp9A9DIdg9f51DuZe3ED7EZv7t5beQT7aU=
+X-Google-Smtp-Source: ABdhPJxvtHfeu+crGL+CyXAo0FUYVHkXnleiaiv+dMA4n8+oso6WU2K79gP3aD12VFT56j8XRv47GWHWmTyr4FAXNxk=
+X-Received: by 2002:a17:90b:1b50:: with SMTP id nv16mr88481pjb.153.1612307085830;
+ Tue, 02 Feb 2021 15:04:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20210126073740.10232-1-lkundrak@v3.sk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210202070218.856847-1-masahiroy@kernel.org> <YBkk0cZXdwYdXIcD@jagdpanzerIV.localdomain>
+In-Reply-To: <YBkk0cZXdwYdXIcD@jagdpanzerIV.localdomain>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 3 Feb 2021 08:04:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQh=bMuyEinKzr6t28E2TuSWAhYU=M+jeJ+HiNhjQN=3A@mail.gmail.com>
+Message-ID: <CAK7LNAQh=bMuyEinKzr6t28E2TuSWAhYU=M+jeJ+HiNhjQN=3A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] printk: use CONFIG_CONSOLE_LOGLEVEL_* directly
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Peter Jones <pjones@redhat.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-hi,
+On Tue, Feb 2, 2021 at 7:09 PM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
+>
+> On (21/02/02 16:02), Masahiro Yamada wrote:
+> >
+> > CONSOLE_LOGLEVEL_DEFAULT is nothing more than a shorthand of
+> > CONFIG_CONSOLE_LOGLEVEL_DEFAULT.
+> >
+> > When you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from Kconfig, almost
+> > all objects are rebuilt because CONFIG_CONSOLE_LOGLEVEL_DEFAULT is
+> > used in <linux/printk.h>, which is included from most of source files.
+> >
+> > In fact, there are only 4 users of CONSOLE_LOGLEVEL_DEFAULT:
+> >
+> >   arch/x86/platform/uv/uv_nmi.c
+> >   drivers/firmware/efi/libstub/efi-stub-helper.c
+> >   drivers/tty/sysrq.c
+> >   kernel/printk/printk.c
+> >
+> > So, when you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT and rebuild the
+> > kernel, it is enough to recompile those 4 files.
+>
+> Do you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT so often that it becomes a
+> problem?
+>
+>         -ss
 
-On 1/26/21 8:37 AM, Lubomir Rintel wrote:
-> Hi,
-> 
-> chained to this message is a couple of fixes related to OLPC EC platform
-> code. Please take a look and consider applying to platform-drivers-x86.
 
-Thank you for your patch-series, I've applied the series to my
-review-hans branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+<linux/printk.h> is one of most included headers,
+so it is worth downsizing.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+CONSOLE_LOGLEVEL_DEFAULT is not such a parameter
+that printk() users need to know.
 
-Regards,
+Changing CONFIG_CONSOLE_LOGLEVEL_DEFAULT results in
+the rebuilds of the entire tree, which is a flag of
+bad code structure.
 
-Hans
+So, this is not only CONSOLE_LOGLEVEL_DEFAULT.
+<linux/printk.h> contains parameters
+and func declarations that printk() users
+do not need to know.
 
+Examples:
+CONSOLE_LOGLEVEL_DEFAULT
+log_buf_addr_get()
+log_buf_len_get()
+oops_in_progress
+...
+
+
+They are only needed for those who want
+to more closely get access to
+the printk internals.
+
+
+Ideally, such parameters and func
+declarations can go to the subsystems'
+local header (kernel/printk/internal.h)
+but when it is not possible,
+they can be separated out to
+a different header.
+
+
+I can see a similar idea in the consumer/provider
+model in several subsystems.
+
+Consumers and providers are often orthogonal,
+and de-coupling them clarifies
+who needs what.
+
+See other subsystems, for example,
+
+<linux/clk.h>           -  clk consumer
+<linux/clk-provider.h>  -  clk provider
+
+
+
+
+
+
+
+
+
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
