@@ -5,78 +5,81 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67FBC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1049CC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951D164F94
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEF064F94
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237938AbhBBSCO (ORCPT
+        id S233838AbhBBSPD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 13:02:14 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51483 "EHLO
+        Tue, 2 Feb 2021 13:15:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51943 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233930AbhBBOIH (ORCPT
+        by vger.kernel.org with ESMTP id S233310AbhBBOGp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 09:08:07 -0500
+        Tue, 2 Feb 2021 09:06:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612274798;
+        s=mimecast20190719; t=1612274718;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cjK9MrWoNn0z0BVlyAGANBXR32QRzWjIhyxyKQThtAI=;
-        b=ga9Oom3dQes/Bf0NPyw2ejv0OzPZg0IP4dCIQ3XZc5MRuaLkywxiseO865zt0wB/ke27r2
-        Qt0mc9uUSUCaDjmoRYW7pBXc6nX2Yj9I/14qZwGsWVFLltYpnt5b0mUOdnUA+OJ2ZLpdbX
-        0Z6oDRW7fc+uS859pdxKzD5gAhPDW6Q=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-n1EMGEwEP-O6wju6K8tB8g-1; Tue, 02 Feb 2021 09:06:36 -0500
-X-MC-Unique: n1EMGEwEP-O6wju6K8tB8g-1
-Received: by mail-ed1-f70.google.com with SMTP id f4so9590950eds.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 06:06:36 -0800 (PST)
+        bh=LXlNwCxVBCnWTgIRZ67SF78i3D9tADdgI1TeYfcOFjI=;
+        b=EhcXHDxBzyRiiU1U0u9HFjrlPdTu1K20D9gi+AHSrRcqXrnxU7KLVjdGoIVkpZ5zAi7/Zp
+        vO5hquBzoSRQY8z1LZEEspSac1LUryImCKwZMGbQqxallc270PRvQ4kI8hb0Y8/eXKANO+
+        rasSBXKrrPegT18D8nHR/adnATP3Xow=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-496-V-A5YBebOcalVNGAQbBOhA-1; Tue, 02 Feb 2021 09:05:17 -0500
+X-MC-Unique: V-A5YBebOcalVNGAQbBOhA-1
+Received: by mail-ej1-f72.google.com with SMTP id le12so10014518ejb.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 06:05:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=cjK9MrWoNn0z0BVlyAGANBXR32QRzWjIhyxyKQThtAI=;
-        b=fws/UNbS4wGE77OhiZE4cjfcixIzbZyGQQlTJdu12Wa3WLKVSm5h9hIfnkkBNfoZRq
-         yZqEbeJqAppKEo31lhw8dS2nHwKhCn1D5sg7ReWK2miceVQ9/KSfNrUx+gZFYFa5apvw
-         cyZVZ0wF4ySfawmbLV/Uud/3HoM5EzJKykzxoHPJ0Atr5dXsIJ+6Vyupmma9j4bGUnFd
-         3w/06G1+Og/NfzkxI1xe58ZbmoFi3XwGKiEzBquddGMBnyLsoavFehN/UFAgNYvJ70Oo
-         70N9YYVbJ7Gy/eG4KxE229fHkscMPR5AbSlI1sYgausPdOKgnwMwPHPJ+YLHDj+ry0pG
-         qhdw==
-X-Gm-Message-State: AOAM532renxErBGvQh/Kj6lls4P4idn1oRwqHWJGQhbzMPHzNF0c4dS1
-        Bi8nOHlAVasJ8c3kUhsGkc7MVuT8rQJ6vKOOoKo0HtaWbdC327cfA2sKFjrUrqOulm1pHlPGVFd
-        KmKZGA1d3no2hI9dH3AYjW2HoRF9FohkIXA==
-X-Received: by 2002:a17:906:4893:: with SMTP id v19mr22353714ejq.454.1612274795084;
-        Tue, 02 Feb 2021 06:06:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz/fhdneLJUFgAulN3Z2kivkkUyuDwqZZM+CAEbbK5mSVKWvc/jYXCIx27X8nJYX3/OSjsjsA==
-X-Received: by 2002:a17:906:4893:: with SMTP id v19mr22353698ejq.454.1612274794908;
-        Tue, 02 Feb 2021 06:06:34 -0800 (PST)
+        bh=LXlNwCxVBCnWTgIRZ67SF78i3D9tADdgI1TeYfcOFjI=;
+        b=kze8tzkEUVlPUHP0VmZLTe5FdupY7lpywKkZ5vfa8wo9ZGAA0AsKx0YGmfbeDVgYBB
+         enakQxJNlK+jni0LM92ASXn1h/wTSSjwxPCkoZe+dornEzHEcZDNoaxGKc12eG7oogf1
+         Gokv7r27LNAjCmCUnCi3jO6b4KgWzAPzcmtUq4YBivPjyrwVSL/G8pQdn0YA9TxPYzk9
+         mjtFcl3iL32NnM+xWSpG33R35zjK+8PgW3B+0Q1BV/utfBfHpoIrAy457lqr6G+G7p4X
+         CQ71HX/Zni9o3/IaLKfax2Qsny9CERDsBFI+RenWoiNOJPOtVxO1LOjAz5cosdwiYo4/
+         vG4A==
+X-Gm-Message-State: AOAM533RsRZcCb8k4HSuzjrtltYy/Hikm+5PloiCJjFUHmqzPPCFujij
+        0TYIllxk0yEj4F7jXCJcRoXsr2IgtatKPWcaR6yrP78QA419Nl/5a5E7kf3+Ii3HgL7VqjwWdzp
+        dx3Pts2NiS8+EVGhLe3fxJAG9DhMfpHTnyA==
+X-Received: by 2002:a17:906:780c:: with SMTP id u12mr22282918ejm.125.1612274715973;
+        Tue, 02 Feb 2021 06:05:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxQ/DyaGLIBeJhjBFt5cegtfQ7kGKj1VDMfIj8k1n8QaRu28f438c65QA8HfxsXqI6Pm6fGcw==
+X-Received: by 2002:a17:906:780c:: with SMTP id u12mr22282903ejm.125.1612274715788;
+        Tue, 02 Feb 2021 06:05:15 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id p16sm684440eja.109.2021.02.02.06.06.34
+        by smtp.gmail.com with ESMTPSA id ec18sm9321262ejb.24.2021.02.02.06.05.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 06:06:34 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fixed warning and
- incorporated review comments
-To:     Nitin Joshi <nitjoshi@gmail.com>
-Cc:     andy.shevchenko@gmail.com, mpearson@lenovo.com,
-        platform-driver-x86@vger.kernel.org,
+        Tue, 02 Feb 2021 06:05:15 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: rectify length of title
+ underline
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Nitin Joshi <njoshi1@lenovo.com>,
-        kernel test robot <lkp@intel.com>
-References: <20210202003210.91773-1-njoshi1@lenovo.com>
+        platform-driver-x86@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210129040849.26740-1-lukas.bulwahn@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1bc153dd-6613-8040-5c2b-13906edf4255@redhat.com>
-Date:   Tue, 2 Feb 2021 15:06:33 +0100
+Message-ID: <3b91a535-b818-09be-456b-c728838612dc@redhat.com>
+Date:   Tue, 2 Feb 2021 15:05:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210202003210.91773-1-njoshi1@lenovo.com>
+In-Reply-To: <20210129040849.26740-1-lukas.bulwahn@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,111 +89,19 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/2/21 1:32 AM, Nitin Joshi wrote:
-> The previous commit adding new sysfs for keyboard language has warning and
-> few code correction has to be done as per new review comments.
+On 1/29/21 5:08 AM, Lukas Bulwahn wrote:
+> Commit d7cbe2773aed ("platform/x86: thinkpad_acpi: set keyboard language")
+> adds information on keyboard setting to the thinkpad documentation, but
+> made the subsection title underline too short.
 > 
-> Below changes has been addressed in this version:
->  - corrected warning. Many thanks to kernel test robot <lkp@intel.com> for
->    reporting and determining this warning.
->  - used sysfs_emit_at() API instead of strcat.
->  - sorted keyboard language array.
->  - removed unwanted space and corrected sentences.
+> Hence, make htmldocs warns:
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
-> ---
->  .../admin-guide/laptops/thinkpad-acpi.rst     | 15 ++++----
->  drivers/platform/x86/thinkpad_acpi.c          | 34 +++++++------------
->  2 files changed, 20 insertions(+), 29 deletions(-)
+>   Documentation/admin-guide/laptops/thinkpad-acpi.rst:1472: \
+>     WARNING: Title underline too short.
 > 
-> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> index b1188f05a99a..3b225ae47f1a 100644
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> @@ -1476,18 +1476,19 @@ sysfs: keyboard_lang
->  This feature is used to set keyboard language to ECFW using ASL interface.
->  Fewer thinkpads models like T580 , T590 , T15 Gen 1 etc.. has "=", "(',
->  ")" numeric keys, which are not displaying correctly, when keyboard language
-> -is other than "english". This is because of default keyboard language in ECFW
-> -is set as "english". Hence using this sysfs, user can set correct keyboard
-> -language to ECFW and then these key's will work correctly .
-> +is other than "english". This is because the default keyboard language in ECFW
-> +is set as "english". Hence using this sysfs, user can set the correct keyboard
-> +language to ECFW and then these key's will work correctly.
->  
->  Example of command to set keyboard language is mentioned below::
->  
->          echo jp > /sys/devices/platform/thinkpad_acpi/keyboard_lang
->  
-> -Text corresponding to keyboard layout to be set in sysfs are : jp (Japan), be(Belgian),
-> -cz(Czech), en(English), da(Danish), de(German), es(Spain) , et(Estonian),
-> -fr(French) , fr-ch (French(Switzerland)), pl(Polish), sl(Slovenian), hu
-> -(Hungarian), nl(Dutch), tr(Turkey), it(Italy), sv(Sweden), pt(portugese)
-> +Text corresponding to keyboard layout to be set in sysfs are: be(Belgian),
-> +cz(Czech), da(Danish), de(German), en(English), es(Spain), et(Estonian),
-> +fr(French), fr-ch(French(Switzerland)), hu(Hungarian), it(Italy), jp (Japan),
-> +nl(Dutch), nn(Norway), pl(Polish), pt(portugese), sl(Slovenian), sv(Sweden),
-> +tr(Turkey)
->  
->  
->  Adaptive keyboard
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 3cfc4a872c2d..a7f1b4ee5457 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -9991,16 +9991,12 @@ struct keyboard_lang_data {
->  	int lang_code;
->  };
->  
-> -/*
-> - * When adding new entries to keyboard_lang_data, please check that
-> - * the select_lang[] buffer in keyboard_lang_show() is still large enough.
-> - */
-> -struct keyboard_lang_data keyboard_lang_data[] = {
-> -	{"en", 0},
-> +static const struct keyboard_lang_data keyboard_lang_data[] = {
->  	{"be", 0x080c},
->  	{"cz", 0x0405},
->  	{"da", 0x0406},
->  	{"de", 0x0c07},
-> +	{"en", 0x0000},
->  	{"es", 0x2c0a},
->  	{"et", 0x0425},
->  	{"fr", 0x040c},
-> @@ -10056,9 +10052,7 @@ static ssize_t keyboard_lang_show(struct device *dev,
->  				struct device_attribute *attr,
->  				char *buf)
->  {
-> -	int output, err, i;
-> -	char select_lang[80] = "";
-> -	char lang[8] = "";
-> +	int output, err, i, len = 0;
->  
->  	err = get_keyboard_lang(&output);
->  	if (err)
-> @@ -10066,19 +10060,18 @@ static ssize_t keyboard_lang_show(struct device *dev,
->  
->  	for (i = 0; i < ARRAY_SIZE(keyboard_lang_data); i++) {
->  		if (i)
-> -			strcat(select_lang, " ");
-> +			len += sysfs_emit_at(buf, len, "%s", " ");
->  
->  		if (output == keyboard_lang_data[i].lang_code) {
-> -			strcat(lang, "[");
-> -			strcat(lang, keyboard_lang_data[i].lang_str);
-> -			strcat(lang, "]");
-> -			strcat(select_lang, lang);
-> +			len += sysfs_emit_at(buf, len, "%s%s%s", "[",
-> +					keyboard_lang_data[i].lang_str, "]");
-
-This can be simplified to:
-
-			len += sysfs_emit_at(buf, len, "[%s]", keyboard_lang_data[i].lang_str);
-
-I've applied the patch with this fixed up.
+> Rectify length of subsection title underline.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -209,56 +120,28 @@ Regards,
 Hans
 
 
-
-
->  		} else {
-> -			strcat(select_lang, keyboard_lang_data[i].lang_str);
-> +			len += sysfs_emit_at(buf, len, "%s", keyboard_lang_data[i].lang_str);
->  		}
->  	}
-> +	len += sysfs_emit_at(buf, len, "\n");
+> ---
+> applies cleanly on next-20210128
+> 
+> Nitin, please ack.
+> 
+> Hans, please pick this minor fixup for your platform/x86 -next tree.
+> 
+>  Documentation/admin-guide/laptops/thinkpad-acpi.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> index b1188f05a99a..0e4c5bb7fb70 100644
+> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+> @@ -1469,7 +1469,7 @@ Sysfs notes
 >  
-> -	return sysfs_emit(buf, "%s\n", select_lang);
-> +	return len;
->  }
 >  
->  static ssize_t keyboard_lang_store(struct device *dev,
-> @@ -10105,7 +10098,7 @@ static ssize_t keyboard_lang_store(struct device *dev,
->  		if (err)
->  			return err;
->  	} else {
-> -		pr_err("Unknown Keyboard language. Ignoring\n");
-> +		dev_err(&tpacpi_pdev->dev, "Unknown Keyboard language. Ignoring\n");
->  		return -EINVAL;
->  	}
+>  Setting keyboard language
+> --------------------
+> +-------------------------
 >  
-> @@ -10116,7 +10109,6 @@ static ssize_t keyboard_lang_store(struct device *dev,
+>  sysfs: keyboard_lang
 >  
->  	return count;
->  }
-> -
->  static DEVICE_ATTR_RW(keyboard_lang);
->  
->  static struct attribute *kbdlang_attributes[] = {
-> @@ -10135,7 +10127,7 @@ static int tpacpi_kbdlang_init(struct ibm_init_struct *iibm)
->  	err = get_keyboard_lang(&output);
->  	/*
->  	 * If support isn't available (ENODEV) then don't return an error
-> -	 * just don't create the sysfs group
-> +	 * just don't create the sysfs group.
->  	 */
->  	if (err == -ENODEV)
->  		return 0;
-> @@ -10144,9 +10136,7 @@ static int tpacpi_kbdlang_init(struct ibm_init_struct *iibm)
->  		return err;
->  
->  	/* Platform supports this feature - create the sysfs file */
-> -	err = sysfs_create_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
-> -
-> -	return err;
-> +	return sysfs_create_group(&tpacpi_pdev->dev.kobj, &kbdlang_attr_group);
->  }
->  
->  static void kbdlang_exit(void)
 > 
 
