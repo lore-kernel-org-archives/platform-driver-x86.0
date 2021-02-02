@@ -2,258 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3E5C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 09:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5164DC43381
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 10:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4998264F54
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 09:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129D064F54
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 10:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231432AbhBBJ7I (ORCPT
+        id S229910AbhBBKKQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 04:59:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54024 "EHLO
+        Tue, 2 Feb 2021 05:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbhBBJ7B (ORCPT
+        with ESMTP id S229883AbhBBKKF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 04:59:01 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DA2C061573;
-        Tue,  2 Feb 2021 01:58:20 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id e15so1711501wme.0;
-        Tue, 02 Feb 2021 01:58:20 -0800 (PST)
+        Tue, 2 Feb 2021 05:10:05 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA393C0613D6;
+        Tue,  2 Feb 2021 02:09:25 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id b8so12181506plh.12;
+        Tue, 02 Feb 2021 02:09:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aRWlB17fgJ7FBH80ZaL2irHbFGq9l/cSPpFGGk65Sp0=;
-        b=jr8Y7EVTubO4xkazVVobZAPzZmg2jsav0Qka/39DaINvgiuxy4NV2/s/+++Qf9qdRg
-         a/whI2ECcaMWwxnNQybb2z7q6X/qeI4wVdaTJtkZKYEihuu4h+NP567Ok/H2+JD/5dhS
-         EuZAQwvZxMIMyO4tZ5TiXJpqVBXAS8Y9qw+SIAIZZTnvvIUyfqHNT/O6IgB4URn6fmeL
-         DMo5PDBVAI+hf5gb+kIdrMeNgDvfCkDSCdIzpu4ZaJWUXb84Nleks/nFL7gEffMqYr7b
-         kLp51qp05OOClLpQR9NvyRaosH6kyPktIroXbKpr+/cJxRfN671HjNTbm9PoNdy6xm38
-         QFSQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FYeJLFgukpjjaiX0ohZ3jkdwwwc8rHopLauzuSIyIdw=;
+        b=tV+v78ppPBh5j1qozvGytXqYRH3YTJdedkA+I8BKPM/+ZtmYvrTzBWbeVfXbArKUSM
+         iN4DyO4rLEKMayZ/QM19bmkFz6e2qX/7WaBp+PIDYEig7nWtknkexxzua6XvFhgpHqne
+         lMEJZfTOQk7alc33ttk1hifGy5+zTtIrFKaHTSf6mg9Tfz5AO0tqYi4erZkvNM02mM7F
+         34qhUEHyyimt6uvazTjZyHv98SSh3Jyu5L4GyjX35aHc1AQuPb7R2MgE/5cvZaUS1c2/
+         oW/pTvabA1T2TAr4fqG1xQ9yyF5eenOs5p6igNbRJQAuRb/uXxQJoOvzreh2AVCzW5ld
+         4Zkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aRWlB17fgJ7FBH80ZaL2irHbFGq9l/cSPpFGGk65Sp0=;
-        b=E3dhDC3G/NueOX1NJSK2qhx+Chqb9UZgPeSwj6R3nSCWnPToLWC8aTb1bwI/hz1TxO
-         lPV90Wkn2kvCwuxhuhDvjDqvjG+puPK/djgfUAqpjLWjhyDIMo+qgUJT+FdR+RdB9KMS
-         K8MtxQSDmqwgJ3m5hihBOx53C/0oUyCC8xvmxDfCBGPoQZHZI1uva03h/KC03bqmkS+i
-         94MGF6XB6NAZohv0u6qLpqTd7nQ8o7G/8rWpx9lDtGCJHsWw52kOHZDRTnQCBkyrJttr
-         i1rIfZPdhIT/FIxswPBuZEr8EzS9TvVaJmOkOeSTd+AQq+M/DidFKvrOm5zEzyueODec
-         tRAg==
-X-Gm-Message-State: AOAM532DyRuw3pWmbRAr5HJ8Qr4Coc+xjORdlFQyRu4xoDGIRcI+nbtC
-        dn4AoTCszDu4eP/cc6+EdiA=
-X-Google-Smtp-Source: ABdhPJzExWAL1lD8x9TqPU/EeGYBZQ9l6JLXhM07AU/7P3U6pjBm3uQII891MxzVZ/yfRYSAsOmKQA==
-X-Received: by 2002:a1c:c356:: with SMTP id t83mr1417532wmf.99.1612259898784;
-        Tue, 02 Feb 2021 01:58:18 -0800 (PST)
-Received: from [192.168.1.211] ([2.31.224.123])
-        by smtp.gmail.com with ESMTPSA id e16sm30913024wrp.24.2021.02.02.01.58.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 01:58:18 -0800 (PST)
-Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent
- acpi_devices
-From:   Daniel Scally <djrscally@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, andy@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20210118003428.568892-1-djrscally@gmail.com>
- <20210118003428.568892-3-djrscally@gmail.com>
- <CAJZ5v0gVQsZ4rxXW8uMidW9zfY_S50zpfrL-Gq0J3Z4-qqBiww@mail.gmail.com>
- <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com>
- <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
- <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com>
- <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
- <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
- <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
- <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com>
- <CAJZ5v0jVxMMGh6k-vXeBRsCtD0L14poNUrg4kZOpCfOz2sZGZQ@mail.gmail.com>
- <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com>
-Message-ID: <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
-Date:   Tue, 2 Feb 2021 09:58:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FYeJLFgukpjjaiX0ohZ3jkdwwwc8rHopLauzuSIyIdw=;
+        b=bOIzmPHvRpzgmS1MmP9MuyPEs2lHHMSPd5xHbplR/n2Nkuoow4i8P7LrCQQXSCeBS1
+         QvNEFeKzRbFhC6uC12aL5DJtv1XUUVGpZ3pvo/aD+YB1GW3KheCp70vakvw2UOeHTMI8
+         m8zvpgXyhpfjg2go7ZtNRWUnja84KPvwMWfX/ntL59ar6A4MAFRRmifjg1194UOWYQmZ
+         TO48u5iO/2tHoiwEbDQXds+4SPq4RhWUov2Rj9DXUTOGwebtl3a2Xj91Do65PGYJXQRA
+         LoThXRCR0PF8rrB4Aqhe2LXlpB/duLiDGceGSBlArcWt9GyXEKNwjokHvvnIeobRMGPY
+         mYaA==
+X-Gm-Message-State: AOAM530B6XEA5phDOS5fsxDvc4l8ytxSDmE/WxwxWGcs/xP4Q7NFpd1R
+        RdRQ8vWY/zKTKkDk7GCE5dqcHAMlQE5jlw==
+X-Google-Smtp-Source: ABdhPJzOiwWh5mPPYa1i19XPG4Fp5MvPpEcfOWz0ooMRC2HOki3phGTorM9UmMcRGoRVm4K5OTM51w==
+X-Received: by 2002:a17:90a:d02:: with SMTP id t2mr3397288pja.130.1612260565335;
+        Tue, 02 Feb 2021 02:09:25 -0800 (PST)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id l2sm21403893pga.65.2021.02.02.02.09.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Feb 2021 02:09:24 -0800 (PST)
+Date:   Tue, 2 Feb 2021 19:09:21 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Peter Jones <pjones@redhat.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, linux-efi@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/3] printk: use CONFIG_CONSOLE_LOGLEVEL_* directly
+Message-ID: <YBkk0cZXdwYdXIcD@jagdpanzerIV.localdomain>
+References: <20210202070218.856847-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210202070218.856847-1-masahiroy@kernel.org>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Rafael
-
-On 21/01/2021 21:06, Daniel Scally wrote:
+On (21/02/02 16:02), Masahiro Yamada wrote:
 > 
-> On 21/01/2021 18:08, Rafael J. Wysocki wrote:
->> On Thu, Jan 21, 2021 at 5:34 PM Daniel Scally <djrscally@gmail.com> wrote:
->>>
->>> On 21/01/2021 14:39, Rafael J. Wysocki wrote:
->>>> On Thu, Jan 21, 2021 at 1:04 PM Daniel Scally <djrscally@gmail.com> wrote:
->>>>> On 21/01/2021 11:58, Rafael J. Wysocki wrote:
->>>>>> On Thu, Jan 21, 2021 at 10:47 AM Daniel Scally <djrscally@gmail.com> wrote:
->>>>>>> Hi Rafael
->>>>>>>
->>>>>>> On 19/01/2021 13:15, Rafael J. Wysocki wrote:
->>>>>>>> On Mon, Jan 18, 2021 at 9:51 PM Daniel Scally <djrscally@gmail.com> wrote:
->>>>>>>>> On 18/01/2021 16:14, Rafael J. Wysocki wrote:
->>>>>>>>>> On Mon, Jan 18, 2021 at 1:37 AM Daniel Scally <djrscally@gmail.com> wrote:
->>>>>>>>>>> In some ACPI tables we encounter, devices use the _DEP method to assert
->>>>>>>>>>> a dependence on other ACPI devices as opposed to the OpRegions that the
->>>>>>>>>>> specification intends. We need to be able to find those devices "from"
->>>>>>>>>>> the dependee, so add a function to parse all ACPI Devices and check if
->>>>>>>>>>> the include the handle of the dependee device in their _DEP buffer.
->>>>>>>>>> What exactly do you need this for?
->>>>>>>>> So, in our DSDT we have devices with _HID INT3472, plus sensors which
->>>>>>>>> refer to those INT3472's in their _DEP method. The driver binds to the
->>>>>>>>> INT3472 device, we need to find the sensors dependent on them.
->>>>>>>>>
->>>>>>>> Well, this is an interesting concept. :-)
->>>>>>>>
->>>>>>>> Why does _DEP need to be used for that?  Isn't there any other way to
->>>>>>>> look up the dependent sensors?
->>>>>>>>
->>>>>>>>>> Would it be practical to look up the suppliers in acpi_dep_list instead?
->>>>>>>>>>
->>>>>>>>>> Note that supplier drivers may remove entries from there, but does
->>>>>>>>>> that matter for your use case?
->>>>>>>>> Ah - that may work, yes. Thank you, let me test that.
->>>>>>>> Even if that doesn't work right away, but it can be made work, I would
->>>>>>>> very much prefer that to the driver parsing _DEP for every device in
->>>>>>>> the namespace by itself.
->>>>>>> This does work; do you prefer it in scan.c, or in utils.c (in which case
->>>>>>> with acpi_dep_list declared as external var in internal.h)?
->>>>>> Let's put it in scan.c for now, because there is the lock protecting
->>>>>> the list in there too.
->>>>>>
->>>>>> How do you want to implement this?  Something like "walk the list and
->>>>>> run a callback for the matching entries" or do you have something else
->>>>>> in mind?
->>>>> Something like this (though with a mutex_lock()). It could be simplified
->>>>> by dropping the prev stuff, but we have seen INT3472 devices with
->>>>> multiple sensors declaring themselves dependent on the same device
->>>>>
->>>>>
->>>>> struct acpi_device *
->>>>> acpi_dev_get_next_dependent_dev(struct acpi_device *supplier,
->>>>>                 struct acpi_device *prev)
->>>>> {
->>>>>     struct acpi_dep_data *dep;
->>>>>     struct acpi_device *adev;
->>>>>     int ret;
->>>>>
->>>>>     if (!supplier)
->>>>>         return ERR_PTR(-EINVAL);
->>>>>
->>>>>     if (prev) {
->>>>>         /*
->>>>>          * We need to find the previous device in the list, so we know
->>>>>          * where to start iterating from.
->>>>>          */
->>>>>         list_for_each_entry(dep, &acpi_dep_list, node)
->>>>>             if (dep->consumer == prev->handle &&
->>>>>                 dep->supplier == supplier->handle)
->>>>>                 break;
->>>>>
->>>>>         dep = list_next_entry(dep, node);
->>>>>     } else {
->>>>>         dep = list_first_entry(&acpi_dep_list, struct acpi_dep_data,
->>>>>                        node);
->>>>>     }
->>>>>
->>>>>
->>>>>     list_for_each_entry_from(dep, &acpi_dep_list, node) {
->>>>>         if (dep->supplier == supplier->handle) {
->>>>>             ret = acpi_bus_get_device(dep->consumer, &adev);
->>>>>             if (ret)
->>>>>                 return ERR_PTR(ret);
->>>>>
->>>>>             return adev;
->>>>>         }
->>>>>     }
->>>>>
->>>>>     return NULL;
->>>>> }
->>>> That would work I think, but would it be practical to modify
->>>> acpi_walk_dep_device_list() so that it runs a callback for every
->>>> consumer found instead of or in addition to the "delete from the list
->>>> and free the entry" operation?
->>>
->>> I think that this would work fine, if that's the way you want to go.
->>> We'd just need to move everything inside the if (dep->supplier ==
->>> handle) block to a new callback, and for my purposes I think also add a
->>> way to stop parsing the list from the callback (so like have the
->>> callbacks return int and stop parsing on a non-zero return). Do you want
->>> to expose that ability to pass a callback outside of ACPI?
->> Yes.
->>
->>> Or just export helpers to call each of the callbacks (one to fetch the next
->>> dependent device, one to decrement the unmet dependencies counter)
->> If you can run a callback for every matching entry, you don't really
->> need to have a callback to return the next matching entry.  You can do
->> stuff for all of them in one go
+> CONSOLE_LOGLEVEL_DEFAULT is nothing more than a shorthand of
+> CONFIG_CONSOLE_LOGLEVEL_DEFAULT.
 > 
-> Well it my case it's more to return a pointer to the dep->consumer's
-> acpi_device for a matching entry, so my idea was where there's multiple
-> dependents you could use this as an iterator...but it could just be
-> extended to that if needed later; I don't actually need to do it right now.
+> When you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from Kconfig, almost
+> all objects are rebuilt because CONFIG_CONSOLE_LOGLEVEL_DEFAULT is
+> used in <linux/printk.h>, which is included from most of source files.
 > 
+> In fact, there are only 4 users of CONSOLE_LOGLEVEL_DEFAULT:
 > 
->> note that it probably is not a good
->> idea to run the callback under the lock, so the for loop currently in
->> there is not really suitable for that
+>   arch/x86/platform/uv/uv_nmi.c
+>   drivers/firmware/efi/libstub/efi-stub-helper.c
+>   drivers/tty/sysrq.c
+>   kernel/printk/printk.c
 > 
-> No problem;  I'll tweak that then
+> So, when you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT and rebuild the
+> kernel, it is enough to recompile those 4 files.
 
-Slightly walking back my "No problem" here; as I understand this there's
-kinda two options:
+Do you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT so often that it becomes a
+problem?
 
-1. Walk over the (locked) list, when a match is found unlock, run the
-callback and re-lock.
-
-The problem with that idea is unless I'm mistaken there's no guarantee
-that the .next pointer is still valid then (even using the *_safe()
-methods) because either the next or the next + 1 entry could have been
-removed whilst the list was unlocked and the callback was being ran, so
-this seems a little unsafe.
-
-2. Walk over the (locked) list twice, the first time counting matching
-entries and using that to allocate a temporary buffer, then walk again
-to store the matching entries into the buffer. Finally, run the callback
-for everything in the buffer, free it and return.
-
-Obviously that's a lot less efficient than the current function, which
-isn't particularly palatable.
-
-Apologies if I've missed a better option that would work fine; but
-failing that do you still want me to go ahead and change
-acpi_walk_dep_device_list() to do this (I'd choose #2 of the above), or
-fallback to using acpi_dev_get_next_dependent_dev() described above? If
-the latter, does acpi_walk_dep_device_list() maybe need re-naming to
-make clear it's not a generalised function?
+	-ss
