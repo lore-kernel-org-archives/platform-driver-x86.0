@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-22.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2165EC433E9
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 16:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67FBC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07B264F55
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 16:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951D164F94
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236066AbhBBQTK (ORCPT
+        id S237938AbhBBSCO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 11:19:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24062 "EHLO
+        Tue, 2 Feb 2021 13:02:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51483 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233904AbhBBOPq (ORCPT
+        by vger.kernel.org with ESMTP id S233930AbhBBOIH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 09:15:46 -0500
+        Tue, 2 Feb 2021 09:08:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612275258;
+        s=mimecast20190719; t=1612274798;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yKrS5uQRhtab8WItDsHInXUN/7EkbDwKjpoO0IVO3FI=;
-        b=bFvhQD4POGpkhmDJsQTtF4L2Dy6vg1U1t5XCNyGlCL6ArelZDDgTmYZfeHJhTmqOG4ysJ/
-        uRPhQwTm5PKG7qrgFtYKw1TUJNvvgQs0+RyPYLcC0/fY2u0CFPArYQNBlist+pdki90bdk
-        NhpMYbqAyf742hqWTHUFAueVdOLYyFI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-KBU2Qo-XPImQGM5DW091Kg-1; Tue, 02 Feb 2021 09:14:15 -0500
-X-MC-Unique: KBU2Qo-XPImQGM5DW091Kg-1
-Received: by mail-ej1-f70.google.com with SMTP id dc21so10024029ejb.19
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 06:14:14 -0800 (PST)
+        bh=cjK9MrWoNn0z0BVlyAGANBXR32QRzWjIhyxyKQThtAI=;
+        b=ga9Oom3dQes/Bf0NPyw2ejv0OzPZg0IP4dCIQ3XZc5MRuaLkywxiseO865zt0wB/ke27r2
+        Qt0mc9uUSUCaDjmoRYW7pBXc6nX2Yj9I/14qZwGsWVFLltYpnt5b0mUOdnUA+OJ2ZLpdbX
+        0Z6oDRW7fc+uS859pdxKzD5gAhPDW6Q=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-n1EMGEwEP-O6wju6K8tB8g-1; Tue, 02 Feb 2021 09:06:36 -0500
+X-MC-Unique: n1EMGEwEP-O6wju6K8tB8g-1
+Received: by mail-ed1-f70.google.com with SMTP id f4so9590950eds.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 06:06:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=yKrS5uQRhtab8WItDsHInXUN/7EkbDwKjpoO0IVO3FI=;
-        b=Jt2NfUEWHeWBrzIUjI/yI7X36nbH7tPB5e0KWe0OQpEX4PXey0k0Vcxo40tv4Nwceh
-         P3Gla8ybGjHJqqa6b9JCdvWC+JkETDrRytfjZzoz6bzAMhhxhQFmCcds+58qmdr0lhYU
-         sfHZDf9hmxQlL//dA6pJJMw/xdBhEdBWmaefe6D5gnJKMYLAle/eD3nnuFllYeyjYNHk
-         GQ/gGzMPHTsPoqrTt+lBPE8Az5cG/JBUC/L1X3crBSsY2V8HLyU0iaAEKpPcq312zPqn
-         c2QUl6fxlSTgAL5KtoQUsPIm+8URtNli6+H7t3T+XR12YAlG0olHbMyXv2xtSHpLIBnz
-         RQEg==
-X-Gm-Message-State: AOAM532RvDEjOgjyiDVKmk6am3PlnelC27wZlt5MrCJGX4D9LZ91/SLq
-        uFzUakYk5sA9w6RxhhkXi0kHbgHZJCYWT7OgylbIg6+lP4CMKkuITl5dR8SDSLzRb+jPu0empuC
-        RO+JYoAczQbn94lmZE3GoEyJB9isbTKjbDw==
-X-Received: by 2002:a17:906:70d4:: with SMTP id g20mr23022217ejk.361.1612275253911;
-        Tue, 02 Feb 2021 06:14:13 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyUj4/h6QsEtudc8xoqWaDgnjmgj3PlGvH0NKfRBe6B6o4MN8TZ9fw2/BipAkJgd8NV1w6LDQ==
-X-Received: by 2002:a17:906:70d4:: with SMTP id g20mr23022189ejk.361.1612275253592;
-        Tue, 02 Feb 2021 06:14:13 -0800 (PST)
+        bh=cjK9MrWoNn0z0BVlyAGANBXR32QRzWjIhyxyKQThtAI=;
+        b=fws/UNbS4wGE77OhiZE4cjfcixIzbZyGQQlTJdu12Wa3WLKVSm5h9hIfnkkBNfoZRq
+         yZqEbeJqAppKEo31lhw8dS2nHwKhCn1D5sg7ReWK2miceVQ9/KSfNrUx+gZFYFa5apvw
+         cyZVZ0wF4ySfawmbLV/Uud/3HoM5EzJKykzxoHPJ0Atr5dXsIJ+6Vyupmma9j4bGUnFd
+         3w/06G1+Og/NfzkxI1xe58ZbmoFi3XwGKiEzBquddGMBnyLsoavFehN/UFAgNYvJ70Oo
+         70N9YYVbJ7Gy/eG4KxE229fHkscMPR5AbSlI1sYgausPdOKgnwMwPHPJ+YLHDj+ry0pG
+         qhdw==
+X-Gm-Message-State: AOAM532renxErBGvQh/Kj6lls4P4idn1oRwqHWJGQhbzMPHzNF0c4dS1
+        Bi8nOHlAVasJ8c3kUhsGkc7MVuT8rQJ6vKOOoKo0HtaWbdC327cfA2sKFjrUrqOulm1pHlPGVFd
+        KmKZGA1d3no2hI9dH3AYjW2HoRF9FohkIXA==
+X-Received: by 2002:a17:906:4893:: with SMTP id v19mr22353714ejq.454.1612274795084;
+        Tue, 02 Feb 2021 06:06:35 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz/fhdneLJUFgAulN3Z2kivkkUyuDwqZZM+CAEbbK5mSVKWvc/jYXCIx27X8nJYX3/OSjsjsA==
+X-Received: by 2002:a17:906:4893:: with SMTP id v19mr22353698ejq.454.1612274794908;
+        Tue, 02 Feb 2021 06:06:34 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id o4sm10137005edw.78.2021.02.02.06.14.12
+        by smtp.gmail.com with ESMTPSA id p16sm684440eja.109.2021.02.02.06.06.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 06:14:13 -0800 (PST)
-From:   Hans de Goede <hdegoede@redhat.com>
+        Tue, 02 Feb 2021 06:06:34 -0800 (PST)
 Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fixed warning and
  incorporated review comments
 To:     Nitin Joshi <nitjoshi@gmail.com>
@@ -71,8 +70,9 @@ Cc:     andy.shevchenko@gmail.com, mpearson@lenovo.com,
         Nitin Joshi <njoshi1@lenovo.com>,
         kernel test robot <lkp@intel.com>
 References: <20210202003210.91773-1-njoshi1@lenovo.com>
-Message-ID: <cdfbe712-81d5-e384-ac0d-de86aeeaf439@redhat.com>
-Date:   Tue, 2 Feb 2021 15:14:12 +0100
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <1bc153dd-6613-8040-5c2b-13906edf4255@redhat.com>
+Date:   Tue, 2 Feb 2021 15:06:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
@@ -84,7 +84,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,Hi,
+Hi,
 
 On 2/2/21 1:32 AM, Nitin Joshi wrote:
 > The previous commit adding new sysfs for keyboard language has warning and
@@ -100,25 +100,6 @@ On 2/2/21 1:32 AM, Nitin Joshi wrote:
 > Reported-by: kernel test robot <lkp@intel.com>
 > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Erm, this patch is the result of some extra reviewing after I merged
-the original patch, but the changes themselves have not been reviewed,
-so these are wrong.
-
-So I've dropped the 2 Reviewed-by tags.
-
-In the future please only add Reviewed-by tags if you are:
-
-1. Posting a new (revised) version of an existing patch
-2. Where people have responded to a previous version with their Reviewed-by.
-3. The changes in the new revision are small. Large changes invalidate
-   previous reviews.
-
-Thanks & Regards,
-
-Hans
-
-
 > Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
 > ---
 >  .../admin-guide/laptops/thinkpad-acpi.rst     | 15 ++++----
