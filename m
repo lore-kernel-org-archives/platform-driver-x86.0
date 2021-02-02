@@ -2,133 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC555C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 10:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9444C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 11:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 890B164F55
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 10:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C602B64E7B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 11:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbhBBKNj (ORCPT
+        id S231201AbhBBLbe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 05:13:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46568 "EHLO mail.kernel.org"
+        Tue, 2 Feb 2021 06:31:34 -0500
+Received: from mga17.intel.com ([192.55.52.151]:6959 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229590AbhBBKNh (ORCPT
+        id S230319AbhBBL3e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 05:13:37 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D1AC64EE2;
-        Tue,  2 Feb 2021 10:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1612260775;
-        bh=a9JpeLTPXuDOqgu+ithu1Vjt2uPFzg7y0tFXGXpxM34=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2G7Sa2W2ilSNpuWlzi5xy2tjO1cPC84KVISQKCBmXkdFncJ0agNWmtpKRNGXthS7M
-         rd2RAlsEu/8qmLpx/S4Q9Tb4/zkCloMzc6hNLmvZhgw4B4eBq90pJ8K/CHAPqsTO5q
-         /uTrJLoBQx5z3FubOBQqvQ5cnYa4wvWYyC/ml7P8=
-Date:   Tue, 2 Feb 2021 11:12:53 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Mike Travis <mike.travis@hpe.com>,
-        Peter Jones <pjones@redhat.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, linux-efi@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH 1/3] printk: use CONFIG_CONSOLE_LOGLEVEL_* directly
-Message-ID: <YBklpQ1PrVc5iEQl@kroah.com>
-References: <20210202070218.856847-1-masahiroy@kernel.org>
+        Tue, 2 Feb 2021 06:29:34 -0500
+IronPort-SDR: Mfg/488EZG1NsiXVMVGwbHvLj29W8WOYlWqewBIsz83yGGVMvRAYZC7J62+9bJmDdvYcO3YXe/
+ 928gBCh2FJJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9882"; a="160603654"
+X-IronPort-AV: E=Sophos;i="5.79,394,1602572400"; 
+   d="scan'208";a="160603654"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 03:27:43 -0800
+IronPort-SDR: 2Rc0Ikw4v3gdbwgcJwco0+nR1oatilf8/ryPGdXG7K+2H+4ey6rP6I8ScbsETZ+vR3T1kOCBEy
+ GN/VDhaWLS0Q==
+X-IronPort-AV: E=Sophos;i="5.79,394,1602572400"; 
+   d="scan'208";a="370573944"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2021 03:27:39 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l6tqK-001NPV-2X; Tue, 02 Feb 2021 13:27:36 +0200
+Date:   Tue, 2 Feb 2021 13:27:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, andy@kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v2 2/7] acpi: utils: Add function to fetch dependent
+ acpi_devices
+Message-ID: <YBk3KDs5FCffkQp1@smile.fi.intel.com>
+References: <b381b48e-1bf2-f3e7-10a6-e51cd261f43c@gmail.com>
+ <CAJZ5v0iU2m4Hs6APuauQ645DwbjYaB8nJFjYH0+7yQnR-FPZBQ@mail.gmail.com>
+ <e2d7e5e9-920f-7227-76a6-b166e30e11e5@gmail.com>
+ <CAJZ5v0gg5oXG3yOO9iDvPKSsadYrFojW6JcKfZcQbFFpO78zAQ@mail.gmail.com>
+ <85ccf00d-7c04-b1da-a4bc-82c805df69c9@gmail.com>
+ <CAJZ5v0jO9O1zhBMNRNB5kRt1o86BTjr1kRuFUe=nNVTDwBQhEg@mail.gmail.com>
+ <0fac24d2-e8fc-7dc8-0f2f-44c7aadb1daf@gmail.com>
+ <CAJZ5v0jVxMMGh6k-vXeBRsCtD0L14poNUrg4kZOpCfOz2sZGZQ@mail.gmail.com>
+ <ee8f6b58-55c8-e0a0-c161-bdef361f9e0a@gmail.com>
+ <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210202070218.856847-1-masahiroy@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d9ec0439-4323-51a2-70e7-c258fe63cd86@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 02, 2021 at 04:02:16PM +0900, Masahiro Yamada wrote:
-> CONSOLE_LOGLEVEL_DEFAULT is nothing more than a shorthand of
-> CONFIG_CONSOLE_LOGLEVEL_DEFAULT.
-> 
-> When you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from Kconfig, almost
-> all objects are rebuilt because CONFIG_CONSOLE_LOGLEVEL_DEFAULT is
-> used in <linux/printk.h>, which is included from most of source files.
-> 
-> In fact, there are only 4 users of CONSOLE_LOGLEVEL_DEFAULT:
-> 
->   arch/x86/platform/uv/uv_nmi.c
->   drivers/firmware/efi/libstub/efi-stub-helper.c
->   drivers/tty/sysrq.c
->   kernel/printk/printk.c
-> 
-> So, when you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT and rebuild the
-> kernel, it is enough to recompile those 4 files.
-> 
-> Remove the CONSOLE_LOGLEVEL_DEFAULT definition from <linux/printk.h>,
-> and use CONFIG_CONSOLE_LOGLEVEL_DEFAULT directly.
-> 
-> With this, the build system will rebuild the minimal number of objects.
-> 
-> Steps to confirm it:
-> 
->   [1] Do the full build
->   [2] Change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from 'make menuconfig' etc.
->   [3] Rebuild
-> 
->   $ make
->     SYNC    include/config/auto.conf
->     CALL    scripts/checksyscalls.sh
->     CALL    scripts/atomic/check-atomics.sh
->     DESCEND  objtool
->     CHK     include/generated/compile.h
->     CC      kernel/printk/printk.o
->     AR      kernel/printk/built-in.a
->     AR      kernel/built-in.a
->     CC      drivers/tty/sysrq.o
->     AR      drivers/tty/built-in.a
->     CC      drivers/firmware/efi/libstub/efi-stub-helper.o
->     STUBCPY drivers/firmware/efi/libstub/efi-stub-helper.stub.o
->     AR      drivers/firmware/efi/libstub/lib.a
->     AR      drivers/built-in.a
->     GEN     .version
->     CHK     include/generated/compile.h
->     UPD     include/generated/compile.h
->     CC      init/version.o
->     AR      init/built-in.a
->     LD      vmlinux.o
->     ...
-> 
-> For the same reason, do likewise for CONSOLE_LOGLEVEL_QUIET and
-> MESSAGE_LOGLEVEL_DEFAULT.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
-> 
->  arch/x86/platform/uv/uv_nmi.c                  |  2 +-
->  drivers/firmware/efi/libstub/efi-stub-helper.c |  6 +++---
->  drivers/tty/sysrq.c                            |  4 ++--
->  drivers/video/fbdev/core/fbcon.c               |  2 +-
->  drivers/video/fbdev/efifb.c                    |  2 +-
->  include/linux/printk.h                         | 10 ----------
->  init/main.c                                    |  2 +-
->  kernel/printk/printk.c                         |  6 +++---
->  8 files changed, 12 insertions(+), 22 deletions(-)
+On Tue, Feb 02, 2021 at 09:58:17AM +0000, Daniel Scally wrote:
+> On 21/01/2021 21:06, Daniel Scally wrote:
+> > On 21/01/2021 18:08, Rafael J. Wysocki wrote:
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+...
+
+> > No problem;  I'll tweak that then
+> 
+> Slightly walking back my "No problem" here; as I understand this there's
+> kinda two options:
+> 
+> 1. Walk over the (locked) list, when a match is found unlock, run the
+> callback and re-lock.
+> 
+> The problem with that idea is unless I'm mistaken there's no guarantee
+> that the .next pointer is still valid then (even using the *_safe()
+> methods) because either the next or the next + 1 entry could have been
+> removed whilst the list was unlocked and the callback was being ran, so
+> this seems a little unsafe.
+
+It's easy to solve.
+See an example in deferred_probe_work_func().
+
+https://elixir.bootlin.com/linux/latest/source/drivers/base/dd.c#L75
+
+> 2. Walk over the (locked) list twice, the first time counting matching
+> entries and using that to allocate a temporary buffer, then walk again
+> to store the matching entries into the buffer. Finally, run the callback
+> for everything in the buffer, free it and return.
+> 
+> Obviously that's a lot less efficient than the current function, which
+> isn't particularly palatable.
+> 
+> Apologies if I've missed a better option that would work fine; but
+> failing that do you still want me to go ahead and change
+> acpi_walk_dep_device_list() to do this (I'd choose #2 of the above), or
+> fallback to using acpi_dev_get_next_dependent_dev() described above? If
+> the latter, does acpi_walk_dep_device_list() maybe need re-naming to
+> make clear it's not a generalised function?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
