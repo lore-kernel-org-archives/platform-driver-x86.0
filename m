@@ -5,82 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C327C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F5AC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1646A64FA6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD4164F92
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  2 Feb 2021 18:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238728AbhBBSdE (ORCPT
+        id S238709AbhBBSga (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Feb 2021 13:33:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26108 "EHLO
+        Tue, 2 Feb 2021 13:36:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57840 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238700AbhBBSba (ORCPT
+        by vger.kernel.org with ESMTP id S238768AbhBBSew (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Feb 2021 13:31:30 -0500
+        Tue, 2 Feb 2021 13:34:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612290602;
+        s=mimecast20190719; t=1612290805;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4NVHzXfkFeElDr9XmJnCbWatBBOoCAQ1UOAh9NqsA6o=;
-        b=V1cf++1y3go0WzrS50q1G1bCI+qtEYbnIvUNhebQMQxVckGhkoKz7WB8S9gH1YdBFJvfbV
-        kLIloY7LsTPnZJarhszXkagnl6iZrww1bZS2VeQ4PQ9Gw6xM+6ncDqqcMs7LtUAai9NUZp
-        opJAWCYnAfZ4Ggd8LnmUOnuzqYqa35o=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-593-sLqzrsODMYyU1_A5YBVpEA-1; Tue, 02 Feb 2021 13:30:00 -0500
-X-MC-Unique: sLqzrsODMYyU1_A5YBVpEA-1
-Received: by mail-ed1-f69.google.com with SMTP id o8so10067866edh.12
-        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 10:30:00 -0800 (PST)
+        bh=fyl4UhLeDGYOAotIfdCQEOAc+/SmCI2MbVX25WRRUF4=;
+        b=TQHGhO0v1867d6gNg67iv9D3rQIZbx74bAqOZhbXkkib8444CLXt1REyjv+nZUuBmc7kKM
+        S5yxA4Q+8Cw1aSqvFs4iADNFmweeYbSxWX8Vmv78VHPfJDnllN1923r72mZf5/1hWP5/Jz
+        WfXCIGmKWEpZp9BoROZdacTJMudEMrU=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-235-Xe52zUeiPdKx1KfR4Fh6Ow-1; Tue, 02 Feb 2021 13:33:21 -0500
+X-MC-Unique: Xe52zUeiPdKx1KfR4Fh6Ow-1
+Received: by mail-ed1-f71.google.com with SMTP id y6so10030079edc.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Feb 2021 10:33:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4NVHzXfkFeElDr9XmJnCbWatBBOoCAQ1UOAh9NqsA6o=;
-        b=YOEZ9aIYKGaoe3ilVmsxToHqqC+trMXeNkE1v7ehEtCP8YpA9Z0IesXgXTNLu1IFjM
-         AcIAAAjmuFEmAi3lTCnhfXhnKrh/3dnXoXJ0n8DZs/8BXUdT8H4q1psnudLL5NovkqiL
-         FK+KASE4Gdv54qme50SU3LTo+hTH17sAHcFH7EmcAqKVIpzqfTF0ftwKVlvfr7bA7Z4N
-         3cLQTXWNZo02rsBn9FWMcGLHhHcsowZgua2cJtPt4GcfmRI4cFoxiZJBk2xm9D2fpzwv
-         erYJdZyDOilZ+BU607y//l7fY5esCXMPQNIhAlVzlgFLymD39sE8GUpGP5fb6P6/cpE8
-         NX7A==
-X-Gm-Message-State: AOAM533jlmIBadUXG6kaQJk/iqpQ8FBHnFZUKDU6eYt2SURnz1gzb3V3
-        BaFBdxyXIucCo98FSZ838/BH/zjbW2MXw7kWYgtQRVFhrajffpXWrRReac2E6yG46Mo9f0V1FIG
-        LwKDYWzRvIdosh6dHIjU2wGOk9zjcbZRuAQ==
-X-Received: by 2002:a17:906:854f:: with SMTP id h15mr11668316ejy.2.1612290598933;
-        Tue, 02 Feb 2021 10:29:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwqCF6ajK85F9nHRQQFkVNMWqYRyBaxTWJYT+rAVAv9B6RnG4cwx9WNDbB/LGlHtRz1LXDoVg==
-X-Received: by 2002:a17:906:854f:: with SMTP id h15mr11668300ejy.2.1612290598694;
-        Tue, 02 Feb 2021 10:29:58 -0800 (PST)
+        bh=fyl4UhLeDGYOAotIfdCQEOAc+/SmCI2MbVX25WRRUF4=;
+        b=VbTbLXA1rpn/AjpiF3GBC08rQk/W1SLD9qdeD2NMtOJi1i8XqudzciNSA/lmm1PVak
+         qkV6TKeMjA2RhMGAHIpX1S2+3EkTvzf0M9zDdi3nT0ZgJO8ardfiqMcOMAJYvO51Pxg4
+         AFEMUIIgRXJnVbo7KqJoheDkZKp61pYGB0dGhA9rhnzIIKYwicnMql+BCh6ueBI9QUtv
+         1/tAUGzzHL1JgP626rzMYe5Vuk1cB/IWZcbhPLHOaVT1ysluXr+SwxXsTJHEqEekXA19
+         COyg7AVBZxruS6xLUCI9pA6SrMfHbqYXvFxqEfatYKL0TvhblQHXxI7q9tN+BRh3vRDS
+         GYZg==
+X-Gm-Message-State: AOAM532X3mCJVAhSZBBPPakyQAzhhO1CT+OxdR3MqmFx5pwrFiLPKcNW
+        IVk1aG4WtzLRFpqjPmoZCYXuoojxhVmJcNe+DFHjb8efRwV8Z9MKjGRoep8yHf0qUB89/QmZqQy
+        8YRS20b55mL2Hp2XXA4qB58CeGMJiYuGoLw==
+X-Received: by 2002:aa7:dd16:: with SMTP id i22mr246959edv.215.1612290800552;
+        Tue, 02 Feb 2021 10:33:20 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzFoJxObjMsf7HhEymSiv0tpTYhbIkkTjLf+SQ/b0Whvh9vGWxliQWJDMqcfSvIXGTip/DQ3w==
+X-Received: by 2002:aa7:dd16:: with SMTP id i22mr246951edv.215.1612290800412;
+        Tue, 02 Feb 2021 10:33:20 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id w14sm9820444eji.85.2021.02.02.10.29.57
+        by smtp.gmail.com with ESMTPSA id k6sm9752409ejb.84.2021.02.02.10.33.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 Feb 2021 10:29:58 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] platform/x86: ideapad-laptop: DYTC Platform
- profile support
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210105131447.38036-1-jiaxun.yang@flygoat.com>
- <20210105131447.38036-3-jiaxun.yang@flygoat.com>
+        Tue, 02 Feb 2021 10:33:19 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: amd-pmc: put device on error paths
+To:     Pan Bian <bianpan2016@163.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210121045005.73342-1-bianpan2016@163.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c032ce07-112b-ca71-60f2-2f2bd2104209@redhat.com>
-Date:   Tue, 2 Feb 2021 19:29:57 +0100
+Message-ID: <aed49969-9b6b-c625-9d83-78efbd2276de@redhat.com>
+Date:   Tue, 2 Feb 2021 19:33:19 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210105131447.38036-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20210121045005.73342-1-bianpan2016@163.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,84 +84,11 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 1/5/21 2:14 PM, Jiaxun Yang wrote:
-> Add support to ideapad-laptop for Lenovo platforms that have DYTC
-> version 5 support or newer to use the platform profile feature.
+On 1/21/21 5:50 AM, Pan Bian wrote:
+> Put the PCI device rdev on error paths to fix potential reference count
+> leaks.
 > 
-> Mostly based on Mark Pearson <markpearson@lenovo.com>'s thinkpad-acpi
-> work but massaged to fit ideapad driver.
-> 
-> Note that different from ThinkPads, IdeaPads's Thermal Hotkey won't
-> trigger profile switch itself, we'll leave it for userspace programs.
-> 
-> Tested on Lenovo Yoga-14S ARE Chinese Edition.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-Now that the acpi/platform_profile stuff has landed I've merged this patch.
-
-Note I've made one small but important change I've replaced all
-occurrences of QUIET with LOW_POWER as was done in the latest revision
-of the thinkpad_acpi change.
-
-This is not only a cosmetical thing, it also fixes an actual bug:
-
-> +static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
-> +{
-> +	switch (dytcmode) {
-> +	case DYTC_MODE_QUIET:
-> +		*profile = PLATFORM_PROFILE_LOW_POWER;
-> +		break;
-
-QUIET -> LOW_POWER, ok there actually is a PLATFORM_PROFILE_QUIET
-too, but according to the docs LOW_POWER actually is a better match
-(hence the rename).
-
-> +	case DYTC_MODE_BALANCE:
-> +		*profile =  PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case DYTC_MODE_PERFORM:
-> +		*profile =  PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	default: /* Unknown mode */
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int convert_profile_to_dytc(enum platform_profile_option profile, int *perfmode)
-> +{
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_QUIET:
-> +		*perfmode = DYTC_MODE_QUIET;
-
-QUIET -> QUIET erm, but we weren't using PLATFORM_PROFILE_QUIET in this driver at all, also see:
-
-> +	/* Setup supported modes */
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->dytc->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, priv->dytc->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->dytc->pprof.choices);
-
-See we are not advertising PLATFORM_PROFILE_LOW_POWER and above
-we actually map DYTC_MODE_QUIET -> PLATFORM_PROFILE_LOW_POWER
-
-So we should do the reverse here.
-
-Anyways replacing all instances of QUIET with LOW_POWER clears up
-the confusion which lead to this bug and also actually fixes the bug.
-
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		*perfmode = DYTC_MODE_BALANCE;
-> +		break;
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		*perfmode = DYTC_MODE_PERFORM;
-> +		break;
-> +	default: /* Unknown profile */
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -187,372 +108,56 @@ Hans
 
 
 
-
 > ---
->  drivers/platform/x86/Kconfig          |   1 +
->  drivers/platform/x86/ideapad-laptop.c | 289 ++++++++++++++++++++++++++
->  2 files changed, 290 insertions(+)
+>  drivers/platform/x86/amd-pmc.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 91e6176cdfbd..8059143c21bb 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -624,6 +624,7 @@ config IDEAPAD_LAPTOP
->  	depends on BACKLIGHT_CLASS_DEVICE
->  	depends on ACPI_VIDEO || ACPI_VIDEO = n
->  	depends on ACPI_WMI || ACPI_WMI = n
-> +	depends on ACPI_PLATFORM_PROFILE
->  	select INPUT_SPARSEKMAP
->  	help
->  	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 7598cd46cf60..5512367c604a 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -15,6 +15,7 @@
->  #include <linux/acpi.h>
->  #include <linux/rfkill.h>
->  #include <linux/platform_device.h>
-> +#include <linux/platform_profile.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/backlight.h>
-> @@ -77,6 +78,13 @@ enum {
->  	VPCCMD_W_BL_POWER = 0x33,
->  };
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index 0102bf1c7916..df140019c4bd 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -210,31 +210,39 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  	dev->dev = &pdev->dev;
 >  
-> +struct ideapad_dytc_priv {
-> +	enum platform_profile_option current_profile;
-> +	struct platform_profile_handler pprof;
-> +	struct mutex mutex;
-> +	struct ideapad_private *priv;
-> +};
-> +
->  struct ideapad_rfk_priv {
->  	int dev;
->  	struct ideapad_private *priv;
-> @@ -89,6 +97,7 @@ struct ideapad_private {
->  	struct platform_device *platform_device;
->  	struct input_dev *inputdev;
->  	struct backlight_device *blightdev;
-> +	struct ideapad_dytc_priv *dytc;
->  	struct dentry *debug;
->  	unsigned long cfg;
->  	bool has_hw_rfkill_switch;
-> @@ -136,6 +145,28 @@ static int method_int1(acpi_handle handle, char *method, int cmd)
->  	return ACPI_FAILURE(status) ? -1 : 0;
->  }
+>  	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
+> -	if (!rdev || !pci_match_id(pmc_pci_ids, rdev))
+> +	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
+> +		pci_dev_put(rdev);
+>  		return -ENODEV;
+> +	}
 >  
-> +static int method_dytc(acpi_handle handle, int cmd, int *ret)
-> +{
-> +	acpi_status status;
-> +	unsigned long long result;
-> +	struct acpi_object_list params;
-> +	union acpi_object in_obj;
-> +
-> +	params.count = 1;
-> +	params.pointer = &in_obj;
-> +	in_obj.type = ACPI_TYPE_INTEGER;
-> +	in_obj.integer.value = cmd;
-> +
-> +	status = acpi_evaluate_integer(handle, "DYTC", &params, &result);
-> +
-> +	if (ACPI_FAILURE(status)) {
-> +		*ret = -1;
-> +		return -1;
-> +	}
-> +	*ret = result;
-> +	return 0;
-> +}
-> +
->  static int method_vpcr(acpi_handle handle, int cmd, int *ret)
->  {
->  	acpi_status status;
-> @@ -546,6 +577,257 @@ static const struct attribute_group ideapad_attribute_group = {
->  	.attrs = ideapad_attributes
->  };
+>  	dev->cpu_id = rdev->device;
+>  	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
+>  	if (err) {
+>  		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+>  	}
 >  
-> +/*
-> + * DYTC Platform profile
-> + */
-> +#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
-> +#define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
-> +#define DYTC_CMD_GET          2 /* To get current IC function and mode */
-> +#define DYTC_CMD_RESET    0x1ff /* To reset back to default */
-> +
-> +#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
-> +#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
-> +#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
-> +
-> +#define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
-> +#define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
-> +
-> +#define DYTC_SET_FUNCTION_BIT 12 /* Bits 12-15 - function setting */
-> +#define DYTC_SET_MODE_BIT     16 /* Bits 16-19 - mode setting */
-> +#define DYTC_SET_VALID_BIT    20 /* Bit     20 - 1 = on, 0 = off */
-> +
-> +#define DYTC_FUNCTION_STD     0  /* Function = 0, standard mode */
-> +#define DYTC_FUNCTION_CQL     1  /* Function = 1, lap mode */
-> +#define DYTC_FUNCTION_MMC     11 /* Function = 11, desk mode */
-> +
-> +#define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
-> +#define DYTC_MODE_QUIET       3  /* Low power mode aka quiet */
-> +#define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
-> +
-> +#define DYTC_SET_COMMAND(function, mode, on) \
-> +	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
-> +	 (mode) << DYTC_SET_MODE_BIT | \
-> +	 (on) << DYTC_SET_VALID_BIT)
-> +
-> +#define DYTC_DISABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 0)
-> +
-> +#define DYTC_ENABLE_CQL DYTC_SET_COMMAND(DYTC_FUNCTION_CQL, DYTC_MODE_BALANCE, 1)
-> +
-> +static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
-> +{
-> +	switch (dytcmode) {
-> +	case DYTC_MODE_QUIET:
-> +		*profile = PLATFORM_PROFILE_LOW_POWER;
-> +		break;
-> +	case DYTC_MODE_BALANCE:
-> +		*profile =  PLATFORM_PROFILE_BALANCED;
-> +		break;
-> +	case DYTC_MODE_PERFORM:
-> +		*profile =  PLATFORM_PROFILE_PERFORMANCE;
-> +		break;
-> +	default: /* Unknown mode */
-> +		return -EINVAL;
+>  	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+> -	if (err)
+> +	if (err) {
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
 > +	}
-> +	return 0;
-> +}
-> +
-> +static int convert_profile_to_dytc(enum platform_profile_option profile, int *perfmode)
-> +{
-> +	switch (profile) {
-> +	case PLATFORM_PROFILE_QUIET:
-> +		*perfmode = DYTC_MODE_QUIET;
-> +		break;
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		*perfmode = DYTC_MODE_BALANCE;
-> +		break;
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		*perfmode = DYTC_MODE_PERFORM;
-> +		break;
-> +	default: /* Unknown profile */
-> +		return -EOPNOTSUPP;
-> +	}
-> +	return 0;
-> +}
-> +
-> +/*
-> + * dytc_profile_get: Function to register with platform_profile
-> + * handler. Returns current platform profile.
-> + */
-> +int dytc_profile_get(struct platform_profile_handler *pprof,
-> +			enum platform_profile_option *profile)
-> +{
-> +	struct ideapad_dytc_priv *dytc;
-> +
-> +	dytc = container_of(pprof, struct ideapad_dytc_priv, pprof);
-> +	*profile = dytc->current_profile;
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Helper function - check if we are in CQL mode and if we are
-> + *  -  disable CQL,
-> + *  - run the command
-> + *  - enable CQL
-> + *  If not in CQL mode, just run the command
-> + */
-> +int dytc_cql_command(struct ideapad_private *priv, int command, int *output)
-> +{
-> +	int err, cmd_err, dummy;
-> +	int cur_funcmode;
-> +
-> +	/* Determine if we are in CQL mode. This alters the commands we do */
-> +	err = method_dytc(priv->adev->handle, DYTC_CMD_GET, output);
-> +	if (err)
-> +		return err;
-> +
-> +	cur_funcmode = (*output >> DYTC_GET_FUNCTION_BIT) & 0xF;
-> +	/* Check if we're OK to return immediately */
-> +	if ((command == DYTC_CMD_GET) && (cur_funcmode != DYTC_FUNCTION_CQL))
-> +		return 0;
-> +
-> +	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-> +		err = method_dytc(priv->adev->handle, DYTC_DISABLE_CQL, &dummy);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	cmd_err = method_dytc(priv->adev->handle, command,	output);
-> +	/* Check return condition after we've restored CQL state */
-> +
-> +	if (cur_funcmode == DYTC_FUNCTION_CQL) {
-> +		err = method_dytc(priv->adev->handle, DYTC_ENABLE_CQL, &dummy);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return cmd_err;
-> +}
-> +
-> +/*
-> + * dytc_profile_set: Function to register with platform_profile
-> + * handler. Sets current platform profile.
-> + */
-> +int dytc_profile_set(struct platform_profile_handler *pprof,
-> +			enum platform_profile_option profile)
-> +{
-> +	struct ideapad_dytc_priv *dytc;
-> +	struct ideapad_private *priv;
-> +	int output;
-> +	int err;
-> +
-> +	dytc = container_of(pprof, struct ideapad_dytc_priv, pprof);
-> +	priv = dytc->priv;
-> +
-> +	err = mutex_lock_interruptible(&dytc->mutex);
-> +	if (err)
-> +		return err;
-> +
-> +	if (profile == PLATFORM_PROFILE_BALANCED) {
-> +		/* To get back to balanced mode we just issue a reset command */
-> +		err = method_dytc(priv->adev->handle, DYTC_CMD_RESET, &output);
-> +		if (err)
-> +			goto unlock;
-> +	} else {
-> +		int perfmode;
-> +
-> +		err = convert_profile_to_dytc(profile, &perfmode);
-> +		if (err)
-> +			goto unlock;
-> +
-> +		/* Determine if we are in CQL mode. This alters the commands we do */
-> +		err = dytc_cql_command(priv,
-> +				DYTC_SET_COMMAND(DYTC_FUNCTION_MMC, perfmode, 1),
-> +				&output);
-> +		if (err)
-> +			goto unlock;
-> +	}
-> +	/* Success - update current profile */
-> +	dytc->current_profile = profile;
-> +unlock:
-> +	mutex_unlock(&dytc->mutex);
-> +	return err;
-> +}
-> +
-> +static void dytc_profile_refresh(struct ideapad_private *priv)
-> +{
-> +	enum platform_profile_option profile;
-> +	int output, err;
-> +	int perfmode;
-> +
-> +	mutex_lock(&priv->dytc->mutex);
-> +	err = dytc_cql_command(priv, DYTC_CMD_GET, &output);
-> +	mutex_unlock(&priv->dytc->mutex);
-> +	if (err)
-> +		return;
-> +
-> +	perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
-> +	convert_dytc_to_profile(perfmode, &profile);
-> +	if (profile != priv->dytc->current_profile) {
-> +		priv->dytc->current_profile = profile;
-> +		platform_profile_notify();
-> +	}
-> +}
-> +
-> +static int ideapad_dytc_profile_init(struct ideapad_private *priv)
-> +{
-> +	int err, output, dytc_version;
-> +
-> +	err = method_dytc(priv->adev->handle, DYTC_CMD_QUERY, &output);
-> +	/* For all other errors we can flag the failure */
-> +	if (err)
-> +		return err;
-> +
-> +	/* Check DYTC is enabled and supports mode setting */
-> +	if (!(output & BIT(DYTC_QUERY_ENABLE_BIT)))
-> +		return -ENODEV;
-> +
-> +	dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
-> +	if (dytc_version < 5)
-> +		return -ENODEV;
-> +
-> +	priv->dytc = kzalloc(sizeof(struct ideapad_dytc_priv), GFP_KERNEL);
-> +	if (!priv->dytc)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&priv->dytc->mutex);
-> +
-> +	priv->dytc->priv = priv;
-> +	priv->dytc->pprof.profile_get = dytc_profile_get;
-> +	priv->dytc->pprof.profile_set = dytc_profile_set;
-> +
-> +	/* Setup supported modes */
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, priv->dytc->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, priv->dytc->pprof.choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, priv->dytc->pprof.choices);
-> +
-> +	/* Create platform_profile structure and register */
-> +	err = platform_profile_register(&priv->dytc->pprof);
-> +	if (err)
-> +		goto mutex_destroy;
-> +
-> +	/* Ensure initial values are correct */
-> +	dytc_profile_refresh(priv);
-> +
-> +	return 0;
-> +
-> +mutex_destroy:
-> +	mutex_destroy(&priv->dytc->mutex);
-> +	kfree(priv->dytc);
-> +	priv->dytc = NULL;
-> +	return err;
-> +}
-> +
-> +static void ideapad_dytc_profile_exit(struct ideapad_private *priv)
-> +{
-> +	if (!priv->dytc)
-> +		return;
-> +
-> +	platform_profile_remove();
-> +	mutex_destroy(&priv->dytc->mutex);
-> +	kfree(priv->dytc);
-> +	priv->dytc = NULL;
-> +}
-> +
->  /*
->   * Rfkill
->   */
-> @@ -1013,6 +1295,8 @@ static int ideapad_acpi_add(struct platform_device *pdev)
->  	ideapad_sync_rfk_state(priv);
->  	ideapad_sync_touchpad_state(priv);
 >  
-> +	ideapad_dytc_profile_init(priv);
-> +
->  	if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
->  		ret = ideapad_backlight_init(priv);
->  		if (ret && ret != -ENODEV)
-> @@ -1066,6 +1350,7 @@ static int ideapad_acpi_remove(struct platform_device *pdev)
->  	acpi_remove_notify_handler(priv->adev->handle,
->  		ACPI_DEVICE_NOTIFY, ideapad_acpi_notify);
->  	ideapad_backlight_exit(priv);
-> +	ideapad_dytc_profile_exit(priv);
->  	for (i = 0; i < IDEAPAD_RFKILL_DEV_NUM; i++)
->  		ideapad_unregister_rfkill(priv, i);
->  	ideapad_input_exit(priv);
-> @@ -1087,6 +1372,10 @@ static int ideapad_acpi_resume(struct device *device)
+>  	base_addr_lo = val & AMD_PMC_BASE_ADDR_HI_MASK;
 >  
->  	ideapad_sync_rfk_state(priv);
->  	ideapad_sync_touchpad_state(priv);
-> +
-> +	if (priv->dytc)
-> +		dytc_profile_refresh(priv);
-> +
->  	return 0;
->  }
->  #endif
+>  	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_HI);
+>  	if (err) {
+>  		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+>  	}
+>  
+>  	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+> -	if (err)
+> +	if (err) {
+> +		pci_dev_put(rdev);
+>  		return pcibios_err_to_errno(err);
+> +	}
+>  
+>  	base_addr_hi = val & AMD_PMC_BASE_ADDR_LO_MASK;
+>  	pci_dev_put(rdev);
 > 
 
