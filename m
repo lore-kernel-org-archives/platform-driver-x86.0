@@ -2,155 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980C5C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB85C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522D864DA3
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1016864E4E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbhBCVww (ORCPT
+        id S231865AbhBCVzA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 16:52:52 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:61983 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbhBCVww (ORCPT
+        Wed, 3 Feb 2021 16:55:00 -0500
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:34416 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231807AbhBCVzA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 16:52:52 -0500
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 113LpkpU031784;
-        Thu, 4 Feb 2021 06:51:47 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 113LpkpU031784
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1612389107;
-        bh=gxgjcR0VEeZAZf1rRpSkG8b/Bi8s2o6fMLa0IvUA9lw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m8YX4O0ILm07ceuK5fotq4uY3K1hAC5ptJnoW/XxUW9j/FOFfRWgmXqWK2pF4kSRY
-         4L+fB30NvHjrsFwew2rRy7cFbU3phsYIDhTUChcaf6G3eSioxTg0vL6rH4L65ZYLmT
-         lz94outN2VEfVM9wget8Gd7fyhP75NCUuuRRltnOaYTm33ePYZq6JljjVBZK6k3iZl
-         3ap3wl9kfMRsGrDugDGg9SYkc5ORYZDxbd775RD15YXafXAVy4IK760wiJDiB0jNk6
-         ehrI5u1as17AjgQbBmj8OtK9khhGP8T+iYvA42Yow+UzzxKzQu5AGheonRWWDzVWiT
-         +HiLyq5jRddPQ==
-X-Nifty-SrcIP: [209.85.210.170]
-Received: by mail-pf1-f170.google.com with SMTP id w18so696520pfu.9;
-        Wed, 03 Feb 2021 13:51:47 -0800 (PST)
-X-Gm-Message-State: AOAM530PWonDFWS5MGUKZt+KXi1VUFydsQJGCJj793D3tYC/41DzcCco
-        rTjByl+14SiV/P5wDHKHE13gf4l8p7/VEOOoiy8=
-X-Google-Smtp-Source: ABdhPJx/LaBTQoB963qFg1P+igJksCCKE8Z041HxDmq3/pC0hBJHBlx2ThcrSaLxlu5UdkfwoNWPTs8TPJ6pU3GFLI0=
-X-Received: by 2002:a63:575e:: with SMTP id h30mr5652383pgm.7.1612389106322;
- Wed, 03 Feb 2021 13:51:46 -0800 (PST)
+        Wed, 3 Feb 2021 16:55:00 -0500
+Date:   Wed, 03 Feb 2021 21:54:16 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1612389257;
+        bh=5gAqn1Uyyzp6MO4df2yrBHmNngOgwJaLQf2Gis59Edo=;
+        h=Date:To:From:Reply-To:Subject:In-Reply-To:References:From;
+        b=n0zfcP2KxztNUEw6050BmNOWjqZhNXtYU1ml4PmJK7b4HPiCliT/3qG3eZztQbETG
+         gbiwVBlWwIa3WJVCLmEvgqXLX7sCaJFXuZZ+U1FNaLUQ2d9LPEZSxYo9LdL52gF93X
+         FNTEFfY+HK2VUQYGuCXmscfdPYrsbAUWYSC/Ix18=
+To:     platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: [PATCH v3 01/29] platform/x86: ideapad-laptop: remove unnecessary dev_set_drvdata() call
+Message-ID: <20210203215403.290792-2-pobrn@protonmail.com>
+In-Reply-To: <20210203215403.290792-1-pobrn@protonmail.com>
+References: <20210203215403.290792-1-pobrn@protonmail.com>
 MIME-Version: 1.0
-References: <20210202070218.856847-1-masahiroy@kernel.org> <87eehy27b5.fsf@jogness.linutronix.de>
- <YBq/2ojccc4ZZp9y@alley>
-In-Reply-To: <YBq/2ojccc4ZZp9y@alley>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Thu, 4 Feb 2021 06:51:09 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQyV-asWNY6CK6MWze9sFZS3CgXxtH2LEht5e=kjrLu7w@mail.gmail.com>
-Message-ID: <CAK7LNAQyV-asWNY6CK6MWze9sFZS3CgXxtH2LEht5e=kjrLu7w@mail.gmail.com>
-Subject: Re: [PATCH 1/3] printk: use CONFIG_CONSOLE_LOGLEVEL_* directly
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Mike Travis <mike.travis@hpe.com>,
-        Peter Jones <pjones@redhat.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 4, 2021 at 12:23 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Tue 2021-02-02 09:44:22, John Ogness wrote:
-> > On 2021-02-02, Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > CONSOLE_LOGLEVEL_DEFAULT is nothing more than a shorthand of
-> > > CONFIG_CONSOLE_LOGLEVEL_DEFAULT.
-> > >
-> > > When you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT from Kconfig, almost
-> > > all objects are rebuilt because CONFIG_CONSOLE_LOGLEVEL_DEFAULT is
-> > > used in <linux/printk.h>, which is included from most of source files.
-> > >
-> > > In fact, there are only 4 users of CONSOLE_LOGLEVEL_DEFAULT:
-> > >
-> > >   arch/x86/platform/uv/uv_nmi.c
-> > >   drivers/firmware/efi/libstub/efi-stub-helper.c
-> > >   drivers/tty/sysrq.c
-> > >   kernel/printk/printk.c
-> > >
-> > > So, when you change CONFIG_CONSOLE_LOGLEVEL_DEFAULT and rebuild the
-> > > kernel, it is enough to recompile those 4 files.
-> > >
-> > > Remove the CONSOLE_LOGLEVEL_DEFAULT definition from <linux/printk.h>,
-> > > and use CONFIG_CONSOLE_LOGLEVEL_DEFAULT directly.
-> >
-> > With commit a8fe19ebfbfd ("kernel/printk: use symbolic defines for
-> > console loglevels") it can be seen that various drivers used to
-> > hard-code their own values. The introduction of the macros in an
-> > intuitive location (include/linux/printk.h) made it easier for authors
-> > to find/use the various available printk settings and thresholds.
-> >
-> > Technically there is no problem using Kconfig macros directly. But will
-> > authors bother to hunt down available Kconfig settings? Or will they
-> > only look in printk.h to see what is available?
-> >
-> > IMHO if code wants to use settings from a foreign subsystem, it should
-> > be taking those from headers of that subsystem, rather than using some
-> > Kconfig settings from that subsystem. Headers exist to make information
-> > available to external code. Kconfig (particularly for a subsystem) exist
-> > to configure that subsystem.
->
-> I agree with this this view.
+The driver core already sets the driver specific data on
+bind failure or removal. Thus the call is unnecessary.
+
+Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
+deapad-laptop.c
+index cc42af2a0a98..18c71e28ebc8 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1369,7 +1369,6 @@ static int ideapad_acpi_remove(struct platform_device=
+ *pdev)
+ =09ideapad_input_exit(priv);
+ =09ideapad_debugfs_exit(priv);
+ =09ideapad_sysfs_exit(priv);
+-=09dev_set_drvdata(&pdev->dev, NULL);
+=20
+ =09return 0;
+ }
+--=20
+2.30.0
 
 
-I have never seen a policy to restrict
-the use of CONFIG options in relevant
-subsystem headers.
-
-
-
-> What about using default_console_loglevel() in the external code?
-> It reads the value from an array. This value is initialized to
-> CONSOLE_LOGLEVEL_DEFAULT and never modified later.
-
-I do not think default_console_loglevel()
-is a perfect constant
-because it can be modified via
-/proc/sys/kernel/printk
-
-
-I am not sure if it works either.
-
-Some code may not be linked to vmlinux.
-drivers/firmware/efi/libstub/efi-stub-helper.c
-
-
-
-
-> Best Regards,
-> Petr
-
-
-
-
---
-Best Regards
-Masahiro Yamada
