@@ -2,117 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76CBC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 11:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2467DC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 11:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0A164F74
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 11:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51AF64E06
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 11:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234059AbhBCLJE (ORCPT
+        id S233972AbhBCLe6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 06:09:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:11003 "EHLO mga05.intel.com"
+        Wed, 3 Feb 2021 06:34:58 -0500
+Received: from mga09.intel.com ([134.134.136.24]:7701 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233258AbhBCLJD (ORCPT
+        id S234120AbhBCLez (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 06:09:03 -0500
-IronPort-SDR: AY9yi9FagsWAuqgJrTNTvNKqUTEPKTVhGYq/eXQ0ZVQq0HmnHoqXeYrOlXvlvT/qynVrGL1Ofx
- im7v50m9I25g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="265856388"
+        Wed, 3 Feb 2021 06:34:55 -0500
+IronPort-SDR: VrvKHEtQL8ATDyXtz0b4tLZ/Y8dlwPje6Q+nHuZcag9pqKqdAxMgL+VoE54Fj/BBEZS4bviqHe
+ gGQ8h88ySHsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9883"; a="181171175"
 X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="265856388"
+   d="scan'208";a="181171175"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:08:19 -0800
-IronPort-SDR: o134eirMFPeTUWOydEEw8aYttN75QcofTnGYMkGLqCpwZuyydYfYGmESVeFcTSWS2xu+NjzHnO
- eEoISbHn+T7w==
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:33:05 -0800
+IronPort-SDR: sILv8woMiG3bCT3377Nmfxf5mQ1ib86LDdb7qFDU2Y54tMOPq7O6TCpLSd1bpph+a0J9ndujr4
+ Hrq3yE2bsMEQ==
 X-IronPort-AV: E=Sophos;i="5.79,398,1602572400"; 
-   d="scan'208";a="433366277"
+   d="scan'208";a="433373037"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:08:15 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 03:33:04 -0800
 Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1l7G15-001c7c-VW; Wed, 03 Feb 2021 13:08:11 +0200
-Date:   Wed, 3 Feb 2021 13:08:11 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1l7GP7-001cWu-OT; Wed, 03 Feb 2021 13:33:01 +0200
+Date:   Wed, 3 Feb 2021 13:33:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-Message-ID: <YBqEG4GGXmfD6f0f@smile.fi.intel.com>
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
- <886bbdc0-3391-2140-a2d4-1688b262966f@redhat.com>
- <CAHp75VeFvwE64zX8Wu8XvMMJ6vgxAaoYpvH2rJ_FD3CCnFZNHA@mail.gmail.com>
- <8d350b8c-5f1d-256d-cdc5-8501af0c0cad@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v1] platform/x86: Kconfig: Surround WMI drivers by 'if
+ ACPI_WMI'
+Message-ID: <YBqJ7VmchoG6Kt8t@smile.fi.intel.com>
+References: <20210126140052.3451769-1-andriy.shevchenko@linux.intel.com>
+ <3578abae-bf14-c3fe-7726-25358e8993ea@redhat.com>
+ <6b88be94-cc9c-e86c-82bc-f0d72e0c1c4f@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d350b8c-5f1d-256d-cdc5-8501af0c0cad@redhat.com>
+In-Reply-To: <6b88be94-cc9c-e86c-82bc-f0d72e0c1c4f@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 11:35:59AM +0100, Hans de Goede wrote:
-> On 2/3/21 10:54 AM, Andy Shevchenko wrote:
-> > On Tue, Jan 26, 2021 at 4:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 1/26/21 1:38 PM, Andy Shevchenko wrote:
-> >>> Hi guys,
-> >>>
-> >>> This is first part of Intel MID outdated platforms removal. It's collected into
-> >>> immutable branch with a given tag, please pull to yours subsystems.
-> >>>
-> >>> (All changes are tagged by the respective maintainers)
+On Wed, Feb 03, 2021 at 11:55:40AM +0100, Hans de Goede wrote:
+> On 2/3/21 11:48 AM, Hans de Goede wrote:
+> > On 1/26/21 3:00 PM, Andy Shevchenko wrote:
+> >> Surround WMI drivers by 'if ACPI_WMI' instead of depending
+> >> each of them separately.
 > > 
-> >> Erm, I already have this 2 in platform-drivers-x86/for-next since you said that
-> >> these 2 could be merged independently.
-> >>
-> >> Anyways I just did a test-merge and there is no conflict, so everything is ok.
-> >>
-> >> From my pov this looks good and I plan to merge this into platform-drivers-x86/for-next
-> >> before the merge-window.
-> >>
-> >> I'm going to hold off on doing that for a bit for now in case one of the other
-> >> subsys maintainers has any objections.
+> > This does not cover all drivers which depend on ACPI_WMI; and in
+> > for-next there is a new UV_SYSFS Kconfig symbol in the middle of
+> > the block which you are surrounding with if ACPI_WMI .. endif
+> > and that new Kconfig symbol does not depend on ACPI_WMI.
 > > 
-> > Any news on this? Have you pulled it somewhere (I don't see it in Linux next)?
+> > Admittedly I should have payed more attention when the UV_SYSFS
+> > symbol was merged, but atm there is no real ordering in the
+> > Kconfig symbols.
 > 
-> I was going through all pending pdx86 stuff yesterday to prep for the upcoming
-> merge-window. I was doing so in FIFO order and I ran out of steam just as I got
-> to this pull-req.
+> Ok, so I just checked the Makefile and noticed that there is
+> an ordering there. But most people start with looking at Kconfig
+> when adding a new driver and the ordering is very much not clear
+> there. Also splitting the Intel bits in three groups does not
+> necessariyl help IMHO. E.g  CONFIG_INTEL_CHT_INT33FE is in the
+> generic Intel block but it is definitely PMIC related.
 > 
-> So today is a new day and after sending out a fixes pull-req for 5.11 this is
-> (was) the first thing on my list.
+> And the WMI drivers are grouped, except that some of them
+> (Asus, Dell, EEEPC at least) are not in the group...
 > 
-> I've merged this into my review-hans now (and I will push it to for-next soon).
-> 
-> I did one last check of all the commits after merging, and I found one small
-> issue.
-> 
-> The "gpio: msic: Remove driver for deprecated platform" commit forgets to
-> drop the Makefile line for the msic driver:
-> 
-> obj-$(CONFIG_GPIO_MSIC)                 += gpio-msic.o
-> 
-> This is not a reason to redo the entire branch, but it would be good if you
-> can do a follow up patch to fix this.
+> So I still think just sorting the entire bups alphabetically
+> is better. We can then also add a comment at the top to please
+> keep things sorted alphabetically.
 
-Indeed. Thanks for catching this, I'll fixed locally and will send it soon.
+In long term I prefer split the entire folder to subfolders where you create
+a new Kconfig with a rules like alphabetical order or so.
+
+Shuffling now Kconfig and Makefile w/o above doesn't bring a value in my
+opinion.
+
 
 -- 
 With Best Regards,
