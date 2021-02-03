@@ -8,28 +8,28 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA654C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262ACC4332B
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E7964F74
+	by mail.kernel.org (Postfix) with ESMTP id 035A864F6B
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 21:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232279AbhBCV4V (ORCPT
+        id S232313AbhBCV4V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Wed, 3 Feb 2021 16:56:21 -0500
-Received: from mail-40136.protonmail.ch ([185.70.40.136]:28123 "EHLO
-        mail-40136.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232270AbhBCV4L (ORCPT
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:29902 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232319AbhBCV4U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 16:56:11 -0500
-Date:   Wed, 03 Feb 2021 21:55:21 +0000
+        Wed, 3 Feb 2021 16:56:20 -0500
+Date:   Wed, 03 Feb 2021 21:55:32 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1612389328;
-        bh=yPZwJ1R12939t2HLBgqQcdWgI3iD3zxvfJsHHi+lZ5s=;
+        s=protonmail; t=1612389334;
+        bh=chIH/ghy4eLyGIh7IItlDQm6hmoPy8z/b8igGxILJfQ=;
         h=Date:To:From:Reply-To:Subject:From;
-        b=lVKrqkLaI4bY7sA3VwwfekdlZhu+88iDKkjqP5D63OeUO7UOR/+YAhRaw2Xa6TZCh
-         iwkKyv+lQxLLQ5/qoCpjKOwCesRPhd2Z9+H9hOoovWvnIKq9ASQzH76k5mnLVmCx6B
-         huX8qkZZRW9OmwT6SJboyzZEEi7+RLGtadgvuf8Q=
+        b=NwTO/m6vXS+IwBF8aIFqZALjzXLBgxcgIPsGyc/cs+j2EJE7TxL4mAc7k6kNFqEmw
+         sOmCuH5pD0GZM4+z5AsBoshtShO+cm6aMJ423TNibkeEhCSfnDEPEz+9wEM2DC4C04
+         Q86i7Ro3+x2l/NuDYfKPHLYuUrUTiNU9+O8BTV9c=
 To:     platform-driver-x86@vger.kernel.org,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -37,8 +37,8 @@ To:     platform-driver-x86@vger.kernel.org,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
 Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH v3 09/29] platform/x86: ideapad-laptop: use for_each_set_bit() helper to simplify event processing
-Message-ID: <20210203215403.290792-10-pobrn@protonmail.com>
+Subject: [PATCH v3 11/29] platform/x86: ideapad-laptop: use dev_{err,warn} or appropriate variant to display log messages
+Message-ID: <20210203215403.290792-12-pobrn@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -46,157 +46,108 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The current code used the combination of a for loop + test_bit,
-which can be simplified using for_each_set_bit(), so utilize that.
+Having the device name in the log message makes it easier to determine
+in the context of which device the message was printed, so utilize the
+appropriate variants of dev_{err,warn,...} when printing log messages.
 
 Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
 deapad-laptop.c
-index 30ea97143567..5978770bac2a 100644
+index bb7eb9c1f0ec..1aa3a05c3360 100644
 --- a/drivers/platform/x86/ideapad-laptop.c
 +++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -10,6 +10,7 @@
+@@ -235,7 +235,7 @@ static int read_ec_data(acpi_handle handle, int cmd, un=
+signed long *data)
+ =09=09=09return 0;
+ =09=09}
+ =09}
+-=09pr_err("timeout in %s\n", __func__);
++=09acpi_handle_err(handle, "timeout in %s\n", __func__);
+ =09return -1;
+ }
 =20
- #include <linux/acpi.h>
- #include <linux/backlight.h>
-+#include <linux/bitops.h>
- #include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/dmi.h>
-@@ -1018,22 +1019,20 @@ static void ideapad_check_special_buttons(struct id=
-eapad_private *priv)
+@@ -258,7 +258,7 @@ static int write_ec_cmd(acpi_handle handle, int cmd, un=
+signed long data)
+ =09=09if (val =3D=3D 0)
+ =09=09=09return 0;
+ =09}
+-=09pr_err("timeout in %s\n", __func__);
++=09acpi_handle_err(handle, "timeout in %s\n", __func__);
+ =09return -1;
+ }
 =20
- =09read_ec_data(priv->adev->handle, VPCCMD_R_SPECIAL_BUTTONS, &value);
+@@ -974,13 +974,15 @@ static int ideapad_input_init(struct ideapad_private =
+*priv)
 =20
--=09for (bit =3D 0; bit < 16; bit++) {
--=09=09if (test_bit(bit, &value)) {
--=09=09=09switch (bit) {
--=09=09=09case 0:=09/* Z580 */
--=09=09=09case 6:=09/* Z570 */
--=09=09=09=09/* Thermal Management button */
--=09=09=09=09ideapad_input_report(priv, 65);
--=09=09=09=09break;
--=09=09=09case 1:
--=09=09=09=09/* OneKey Theater button */
--=09=09=09=09ideapad_input_report(priv, 64);
--=09=09=09=09break;
--=09=09=09default:
--=09=09=09=09pr_info("Unknown special button: %lu\n", bit);
--=09=09=09=09break;
--=09=09=09}
-+=09for_each_set_bit (bit, &value, 16) {
-+=09=09switch (bit) {
-+=09=09case 0:=09/* Z580 */
-+=09=09case 6:=09/* Z570 */
-+=09=09=09/* Thermal Management button */
-+=09=09=09ideapad_input_report(priv, 65);
-+=09=09=09break;
-+=09=09case 1:
-+=09=09=09/* OneKey Theater button */
-+=09=09=09ideapad_input_report(priv, 64);
-+=09=09=09break;
-+=09=09default:
-+=09=09=09pr_info("Unknown special button: %lu\n", bit);
-+=09=09=09break;
+ =09error =3D sparse_keymap_setup(inputdev, ideapad_keymap, NULL);
+ =09if (error) {
+-=09=09pr_err("Unable to setup input device keymap\n");
++=09=09dev_err(&priv->platform_device->dev,
++=09=09=09"Unable to setup input device keymap\n");
+ =09=09goto err_free_dev;
+ =09}
+=20
+ =09error =3D input_register_device(inputdev);
+ =09if (error) {
+-=09=09pr_err("Unable to register input device\n");
++=09=09dev_err(&priv->platform_device->dev,
++=09=09=09"Unable to register input device\n");
+ =09=09goto err_free_dev;
+ =09}
+=20
+@@ -1034,7 +1036,8 @@ static void ideapad_check_special_buttons(struct idea=
+pad_private *priv)
+ =09=09=09ideapad_input_report(priv, 64);
+ =09=09=09break;
+ =09=09default:
+-=09=09=09pr_info("Unknown special button: %lu\n", bit);
++=09=09=09dev_info(&priv->platform_device->dev,
++=09=09=09=09 "Unknown special button: %lu\n", bit);
+ =09=09=09break;
+ =09=09}
+ =09}
+@@ -1094,7 +1097,8 @@ static int ideapad_backlight_init(struct ideapad_priv=
+ate *priv)
+ =09=09=09=09=09      &ideapad_backlight_ops,
+ =09=09=09=09=09      &props);
+ =09if (IS_ERR(blightdev)) {
+-=09=09pr_err("Could not register backlight device\n");
++=09=09dev_err(&priv->platform_device->dev,
++=09=09=09"Could not register backlight device\n");
+ =09=09return PTR_ERR(blightdev);
+ =09}
+=20
+@@ -1207,7 +1211,8 @@ static void ideapad_acpi_notify(acpi_handle handle, u=
+32 event, void *data)
+ =09=09=09 */
+ =09=09=09break;
+ =09=09default:
+-=09=09=09pr_info("Unknown event: %lu\n", bit);
++=09=09=09dev_info(&priv->platform_device->dev,
++=09=09=09=09 "Unknown event: %lu\n", bit);
  =09=09}
  =09}
  }
-@@ -1161,7 +1160,7 @@ static void ideapad_sync_touchpad_state(struct ideapa=
-d_private *priv)
- static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
- {
- =09struct ideapad_private *priv =3D data;
--=09unsigned long vpc1, vpc2, vpc_bit;
-+=09unsigned long vpc1, vpc2, bit;
-=20
- =09if (read_ec_data(handle, VPCCMD_R_VPC1, &vpc1))
- =09=09return;
-@@ -1169,44 +1168,43 @@ static void ideapad_acpi_notify(acpi_handle handle,=
+@@ -1215,12 +1220,15 @@ static void ideapad_acpi_notify(acpi_handle handle,=
  u32 event, void *data)
- =09=09return;
-=20
- =09vpc1 =3D (vpc2 << 8) | vpc1;
--=09for (vpc_bit =3D 0; vpc_bit < 16; vpc_bit++) {
--=09=09if (test_bit(vpc_bit, &vpc1)) {
--=09=09=09switch (vpc_bit) {
--=09=09=09case 9:
--=09=09=09=09ideapad_sync_rfk_state(priv);
--=09=09=09=09break;
--=09=09=09case 13:
--=09=09=09case 11:
--=09=09=09case 8:
--=09=09=09case 7:
--=09=09=09case 6:
--=09=09=09=09ideapad_input_report(priv, vpc_bit);
--=09=09=09=09break;
--=09=09=09case 5:
--=09=09=09=09ideapad_sync_touchpad_state(priv);
--=09=09=09=09break;
--=09=09=09case 4:
--=09=09=09=09ideapad_backlight_notify_brightness(priv);
--=09=09=09=09break;
--=09=09=09case 3:
--=09=09=09=09ideapad_input_novokey(priv);
--=09=09=09=09break;
--=09=09=09case 2:
--=09=09=09=09ideapad_backlight_notify_power(priv);
--=09=09=09=09break;
--=09=09=09case 0:
--=09=09=09=09ideapad_check_special_buttons(priv);
--=09=09=09=09break;
--=09=09=09case 1:
--=09=09=09=09/* Some IdeaPads report event 1 every ~20
--=09=09=09=09 * seconds while on battery power; some
--=09=09=09=09 * report this when changing to/from tablet
--=09=09=09=09 * mode. Squelch this event.
--=09=09=09=09 */
--=09=09=09=09break;
--=09=09=09default:
--=09=09=09=09pr_info("Unknown event: %lu\n", vpc_bit);
--=09=09=09}
+ #if IS_ENABLED(CONFIG_ACPI_WMI)
+ static void ideapad_wmi_notify(u32 value, void *context)
+ {
++=09struct ideapad_private *priv =3D context;
 +
-+=09for_each_set_bit (bit, &vpc1, 16) {
-+=09=09switch (bit) {
-+=09=09case 9:
-+=09=09=09ideapad_sync_rfk_state(priv);
-+=09=09=09break;
-+=09=09case 13:
-+=09=09case 11:
-+=09=09case 8:
-+=09=09case 7:
-+=09=09case 6:
-+=09=09=09ideapad_input_report(priv, bit);
-+=09=09=09break;
-+=09=09case 5:
-+=09=09=09ideapad_sync_touchpad_state(priv);
-+=09=09=09break;
-+=09=09case 4:
-+=09=09=09ideapad_backlight_notify_brightness(priv);
-+=09=09=09break;
-+=09=09case 3:
-+=09=09=09ideapad_input_novokey(priv);
-+=09=09=09break;
-+=09=09case 2:
-+=09=09=09ideapad_backlight_notify_power(priv);
-+=09=09=09break;
-+=09=09case 0:
-+=09=09=09ideapad_check_special_buttons(priv);
-+=09=09=09break;
-+=09=09case 1:
-+=09=09=09/* Some IdeaPads report event 1 every ~20
-+=09=09=09 * seconds while on battery power; some
-+=09=09=09 * report this when changing to/from tablet
-+=09=09=09 * mode. Squelch this event.
-+=09=09=09 */
-+=09=09=09break;
-+=09=09default:
-+=09=09=09pr_info("Unknown event: %lu\n", bit);
- =09=09}
+ =09switch (value) {
+ =09case 128:
+-=09=09ideapad_input_report(context, value);
++=09=09ideapad_input_report(priv, value);
+ =09=09break;
+ =09default:
+-=09=09pr_info("Unknown WMI event %u\n", value);
++=09=09dev_info(&priv->platform_device->dev,
++=09=09=09 "Unknown WMI event: %u\n", value);
  =09}
  }
+ #endif
 --=20
 2.30.0
 
