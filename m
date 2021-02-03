@@ -2,148 +2,789 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDCAC43332
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 18:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782DCC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF9F64F92
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 18:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10EDA64E39
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbhBCSwh (ORCPT
+        id S229719AbhBCT1h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 13:52:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233034AbhBCSwd (ORCPT
+        Wed, 3 Feb 2021 14:27:37 -0500
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:53708 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229661AbhBCT1e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 13:52:33 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8608864DF2;
-        Wed,  3 Feb 2021 18:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612378312;
-        bh=pdqysl9a+E8+CjpEt22x733DHWioxlkoDBqTzcbX16k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bY/Ya/8jhVTj/b9t5lEyMfF6qRehHUMCuFG+iO4Ro82CQozRL2BpRTFG2yzL/91Ck
-         I/9pW8mcjfxlzTZ6E8R/DJr6pmmR9amt4RzDR6eGR9z4t1VG5tLv20NpOn+ixsoTTV
-         49j1qxSOoPb9PQ8xMtQxGe0ToGYSoC9x+xgyydz+4epSULZz0xZwPwi3fJ7U5k2HYm
-         DqjrvFuehGWk68OMk37BoGvZJ47NX+lxjS/tSt1qHrZS5blkNxhp2WJL77VzcuSnFR
-         908nMt3ag28y/rc/w4pHbaz2vVZ/c0uHwVyXcGwCGMzbaV7FURAgc527I97YEYycWC
-         2t8dNxYLUSjcg==
-Date:   Wed, 3 Feb 2021 11:51:48 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Borislav Petkov <bp@alien8.de>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
+        Wed, 3 Feb 2021 14:27:34 -0500
+Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 113JM1PC030238;
+        Wed, 3 Feb 2021 14:26:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=smtpout1;
+ bh=zeXzGdAAJRDJ6N1lkmG4aKSW/TYDiCp0QqxTqXtuAgM=;
+ b=cAT+f5m2t6PiVgZM5+GmfQfuBUBrclsQYcIsOmsHpKlYsWdfTglCnEKt3JMFxoy3cGXr
+ yMsg1DlAmDP0O7PnKvXqmICgTd/JkeBjDPiqPiVYzbTMmm6kc3ia7kSrm6G4YrmMqQqr
+ n7poWuZuoPEjX2SswWfaQ9wRfBiPpGjPgiDGAMhDk/b0z1s4JGUGWJUda8TE8RmEo8tO
+ iz45aUGdJ0KyL25fruQ7V7U4MHKl6tu2lM+uAgAKvzFTUHAr3UqkYlgV51HxxbDUu66Q
+ BjA0BLvpsYzn70RsBIZ9IRXIBcOs4xn4MiMvnXucJqQZF3E/dLckJkDQtUaHgO/9QLo3 hA== 
+Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 36d3jde7e6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 Feb 2021 14:26:50 -0500
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 113JQF0e092573;
+        Wed, 3 Feb 2021 14:26:49 -0500
+Received: from ausc60pc101.us.dell.com (ausc60pc101.us.dell.com [143.166.85.206])
+        by mx0b-00154901.pphosted.com with ESMTP id 36fpyu2ajb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 03 Feb 2021 14:26:48 -0500
+X-LoopCount0: from 10.173.37.130
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.79,399,1602565200"; 
+   d="scan'208";a="1662446416"
+From:   Mario Limonciello <mario.limonciello@dell.com>
+To:     Hans De Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
-Message-ID: <20210203185148.GA1711888@localhost>
-References: <20210107223424.4135538-1-arnd@kernel.org>
- <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
- <YAH6r3lak/F2wndp@rani.riverdale.lan>
- <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
- <20210118202409.GG30090@zn.tnic>
- <YAYAvBARSRSg8z8G@rani.riverdale.lan>
- <CAMj1kXHM98-iDYpAozaWEv-qxhZ0-CUMwSdG532x2d+55gXDhQ@mail.gmail.com>
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] platform/x86: Move all dell drivers to their own subdirectory
+Date:   Wed,  3 Feb 2021 13:26:37 -0600
+Message-Id: <20210203192637.2947540-1-mario.limonciello@dell.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHM98-iDYpAozaWEv-qxhZ0-CUMwSdG532x2d+55gXDhQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.737
+ definitions=2021-02-03_07:2021-02-03,2021-02-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 phishscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102030113
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102030113
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 10:33:43AM +0100, Ard Biesheuvel wrote:
-> On Mon, 18 Jan 2021 at 22:42, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Mon, Jan 18, 2021 at 09:24:09PM +0100, Borislav Petkov wrote:
-> > > > > > As a matter of fact, it seems like the four assertions could be combined
-> > > > > > into:
-> > > > > >       BUILD_BUG_ON((EFI_VA_END & P4D_MASK) != (MODULES_END & P4D_MASK));
-> > > > > >       BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
-> > > > > > instead of separately asserting they're the same PGD entry and the same
-> > > > > > P4D entry.
-> > > > > >
-> > > > > > Thanks.
-> > > > >
-> > > > > I actually don't quite get the MODULES_END check -- Ard, do you know
-> > > > > what that's for?
-> > > > >
-> > > >
-> > > > Maybe Boris remembers? He wrote the original code for the 'new' EFI
-> > > > page table layout.
-> > >
-> > > That was added by Kirill for 5-level pgtables:
-> > >
-> > >   e981316f5604 ("x86/efi: Add 5-level paging support")
-> >
-> > That just duplicates the existing pgd_index() check for the p4d_index()
-> > as well. It looks like the original commit adding
-> > efi_sync_low_kernel_mappings() used to copy upto the PGD entry including
-> > MODULES_END:
-> >   d2f7cbe7b26a7 ("x86/efi: Runtime services virtual mapping")
-> > and then Matt changed that when creating efi_mm:
-> >   67a9108ed4313 ("x86/efi: Build our own page table structures")
-> > to use EFI_VA_END instead but have a check that EFI_VA_END is in the
-> > same entry as MODULES_END.
-> >
-> > AFAICT, MODULES_END is only relevant as being something that happens to
-> > be in the top 512GiB, and -1ul would be clearer.
-> >
-> > >
-> > >  Documentation/x86/x86_64/mm.rst should explain the pagetable layout:
-> > >
-> > >    ffffff8000000000 | -512    GB | ffffffeeffffffff |  444 GB | ... unused hole
-> > >    ffffffef00000000 |  -68    GB | fffffffeffffffff |   64 GB | EFI region mapping space
-> > >    ffffffff00000000 |   -4    GB | ffffffff7fffffff |    2 GB | ... unused hole
-> > >    ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
-> > >    ffffffff80000000 |-2048    MB |                  |         |
-> > >    ffffffffa0000000 |-1536    MB | fffffffffeffffff | 1520 MB | module mapping space
-> > >    ffffffffff000000 |  -16    MB |                  |         |
-> > >       FIXADDR_START | ~-11    MB | ffffffffff5fffff | ~0.5 MB | kernel-internal fixmap range, variable size and offset
-> > >
-> > > That thing which starts at -512 GB above is the last PGD on the
-> > > pagetable. In it, between -4G and -68G there are 64G which are the EFI
-> > > region mapping space for runtime services.
-> > >
-> > > Frankly I'm not sure what this thing is testing because the EFI VA range
-> > > is hardcoded and I can't imagine it being somewhere else *except* in the
-> > > last PGD.
-> >
-> > It's just so that someone doesn't just change the #define's for
-> > EFI_VA_END/START and think that it will work, I guess.
-> >
-> > Another reasonable option, for example, would be to reserve an entire
-> > PGD entry, allowing everything but the PGD level to be shared, and
-> > adding the EFI PGD to the pgd_list and getting rid of
-> > efi_sync_low_kernel_mappings() altogether. There aren't that many PGD
-> > entries still unused though, so this is probably not worth it.
-> >
-> 
-> The churn doesn't seem to be worth it, tbh.
-> 
-> So could we get rid of the complexity here, and only build_bug() on
-> the start address of the EFI region being outside the topmost p4d?
-> That should make the PGD test redundant as well.
+A user without a Dell system doesn't need to pick any of these
+drivers.
 
-Was there ever a resolution to this conversation or a patch sent? I am
-still seeing the build failure that Arnd initially sent the patch for.
-x86_64 all{mod,yes}config with clang are going to ship broken in 5.11.
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ MAINTAINERS                                   |  22 +--
+ drivers/platform/x86/Kconfig                  | 182 +-----------------
+ drivers/platform/x86/Makefile                 |  16 +-
+ drivers/platform/x86/dell/Kconfig             | 180 +++++++++++++++++
+ drivers/platform/x86/dell/Makefile            |  21 ++
+ .../platform/x86/{ => dell}/alienware-wmi.c   |   0
+ drivers/platform/x86/{ => dell}/dcdbas.c      |   0
+ drivers/platform/x86/{ => dell}/dcdbas.h      |   0
+ drivers/platform/x86/{ => dell}/dell-laptop.c |   0
+ drivers/platform/x86/{ => dell}/dell-rbtn.c   |   0
+ drivers/platform/x86/{ => dell}/dell-rbtn.h   |   0
+ .../x86/{ => dell}/dell-smbios-base.c         |   0
+ .../platform/x86/{ => dell}/dell-smbios-smm.c |   0
+ .../platform/x86/{ => dell}/dell-smbios-wmi.c |   0
+ drivers/platform/x86/{ => dell}/dell-smbios.h |   0
+ .../platform/x86/{ => dell}/dell-smo8800.c    |   0
+ .../platform/x86/{ => dell}/dell-wmi-aio.c    |   0
+ .../x86/{ => dell}/dell-wmi-descriptor.c      |   0
+ .../x86/{ => dell}/dell-wmi-descriptor.h      |   0
+ .../platform/x86/{ => dell}/dell-wmi-led.c    |   0
+ .../x86/{ => dell}/dell-wmi-sysman/Makefile   |   0
+ .../dell-wmi-sysman/biosattr-interface.c      |   0
+ .../dell-wmi-sysman/dell-wmi-sysman.h         |   0
+ .../dell-wmi-sysman/enum-attributes.c         |   0
+ .../dell-wmi-sysman/int-attributes.c          |   0
+ .../dell-wmi-sysman/passobj-attributes.c      |   0
+ .../dell-wmi-sysman/passwordattr-interface.c  |   0
+ .../dell-wmi-sysman/string-attributes.c       |   0
+ .../x86/{ => dell}/dell-wmi-sysman/sysman.c   |   0
+ drivers/platform/x86/{ => dell}/dell-wmi.c    |   0
+ drivers/platform/x86/{ => dell}/dell_rbu.c    |   0
+ 31 files changed, 223 insertions(+), 198 deletions(-)
+ create mode 100644 drivers/platform/x86/dell/Kconfig
+ create mode 100644 drivers/platform/x86/dell/Makefile
+ rename drivers/platform/x86/{ => dell}/alienware-wmi.c (100%)
+ rename drivers/platform/x86/{ => dell}/dcdbas.c (100%)
+ rename drivers/platform/x86/{ => dell}/dcdbas.h (100%)
+ rename drivers/platform/x86/{ => dell}/dell-laptop.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-rbtn.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-rbtn.h (100%)
+ rename drivers/platform/x86/{ => dell}/dell-smbios-base.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-smbios-smm.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-smbios-wmi.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-smbios.h (100%)
+ rename drivers/platform/x86/{ => dell}/dell-smo8800.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-aio.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-descriptor.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-descriptor.h (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-led.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/Makefile (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/biosattr-interface.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/dell-wmi-sysman.h (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/enum-attributes.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/int-attributes.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/passobj-attributes.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/passwordattr-interface.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/string-attributes.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi-sysman/sysman.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell-wmi.c (100%)
+ rename drivers/platform/x86/{ => dell}/dell_rbu.c (100%)
 
-Cheers,
-Nathan
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d3e847f7f3dc..ae83c6cff843 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4970,17 +4970,17 @@ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali@kernel.org>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell-laptop.c
++F:	drivers/platform/x86/dell/dell-laptop.c
+ 
+ DELL LAPTOP FREEFALL DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell-smo8800.c
++F:	drivers/platform/x86/dell/dell-smo8800.c
+ 
+ DELL LAPTOP RBTN DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell-rbtn.*
++F:	drivers/platform/x86/dell/dell-rbtn.*
+ 
+ DELL LAPTOP SMM DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+@@ -4992,26 +4992,26 @@ DELL REMOTE BIOS UPDATE DRIVER
+ M:	Stuart Hayes <stuart.w.hayes@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell_rbu.c
++F:	drivers/platform/x86/dell/dell_rbu.c
+ 
+ DELL SMBIOS DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+ M:	Mario Limonciello <mario.limonciello@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell-smbios.*
++F:	drivers/platform/x86/dell/dell-smbios.*
+ 
+ DELL SMBIOS SMM DRIVER
+ M:	Mario Limonciello <mario.limonciello@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell-smbios-smm.c
++F:	drivers/platform/x86/dell/dell-smbios-smm.c
+ 
+ DELL SMBIOS WMI DRIVER
+ M:	Mario Limonciello <mario.limonciello@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/dell-smbios-wmi.c
++F:	drivers/platform/x86/dell/dell-smbios-wmi.c
+ F:	tools/wmi/dell-smbios-example.c
+ 
+ DELL SYSTEMS MANAGEMENT BASE DRIVER (dcdbas)
+@@ -5019,12 +5019,12 @@ M:	Stuart Hayes <stuart.w.hayes@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/driver-api/dcdbas.rst
+-F:	drivers/platform/x86/dcdbas.*
++F:	drivers/platform/x86/dell/dcdbas.*
+ 
+ DELL WMI DESCRIPTOR DRIVER
+ M:	Mario Limonciello <mario.limonciello@dell.com>
+ S:	Maintained
+-F:	drivers/platform/x86/dell-wmi-descriptor.c
++F:	drivers/platform/x86/dell/dell-wmi-descriptor.c
+ 
+ DELL WMI SYSMAN DRIVER
+ M:	Divya Bharathi <divya.bharathi@dell.com>
+@@ -5033,13 +5033,13 @@ M:	Prasanth Ksr <prasanth.ksr@dell.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+-F:	drivers/platform/x86/dell-wmi-sysman/
++F:	drivers/platform/x86/dell/dell-wmi-sysman/
+ 
+ DELL WMI NOTIFICATIONS DRIVER
+ M:	Matthew Garrett <mjg59@srcf.ucam.org>
+ M:	Pali Rohár <pali@kernel.org>
+ S:	Maintained
+-F:	drivers/platform/x86/dell-wmi.c
++F:	drivers/platform/x86/dell/dell-wmi.c
+ 
+ DELTA ST MEDIA DRIVER
+ M:	Hugues Fruchet <hugues.fruchet@st.com>
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 91e6176cdfbd..bc62659286bf 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -49,18 +49,6 @@ config WMI_BMOF
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called wmi-bmof.
+ 
+-config ALIENWARE_WMI
+-	tristate "Alienware Special feature control"
+-	depends on ACPI
+-	depends on LEDS_CLASS
+-	depends on NEW_LEDS
+-	depends on ACPI_WMI
+-	help
+-	 This is a driver for controlling Alienware BIOS driven
+-	 features.  It exposes an interface for controlling the AlienFX
+-	 zones on Alienware machines that don't contain a dedicated AlienFX
+-	 USB MCU such as the X51 and X51-R2.
+-
+ config HUAWEI_WMI
+ 	tristate "Huawei WMI laptop extras driver"
+ 	depends on ACPI_BATTERY
+@@ -327,169 +315,19 @@ config EEEPC_WMI
+ 	  If you have an ACPI-WMI compatible Eee PC laptop (>= 1000), say Y or M
+ 	  here.
+ 
+-config DCDBAS
+-	tristate "Dell Systems Management Base Driver"
+-	depends on X86
+-	help
+-	  The Dell Systems Management Base Driver provides a sysfs interface
+-	  for systems management software to perform System Management
+-	  Interrupts (SMIs) and Host Control Actions (system power cycle or
+-	  power off after OS shutdown) on certain Dell systems.
+-
+-	  See <file:Documentation/driver-api/dcdbas.rst> for more details on the driver
+-	  and the Dell systems on which Dell systems management software makes
+-	  use of this driver.
+-
+-	  Say Y or M here to enable the driver for use by Dell systems
+-	  management software such as Dell OpenManage.
+-
+-#
+-# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
+-# backends are selected. The "depends" line prevents a configuration
+-# where DELL_SMBIOS=y while either of those dependencies =m.
+-#
+-config DELL_SMBIOS
+-	tristate "Dell SMBIOS driver"
+-	depends on DCDBAS || DCDBAS=n
+-	depends on ACPI_WMI || ACPI_WMI=n
+-	help
+-	This provides support for the Dell SMBIOS calling interface.
+-	If you have a Dell computer you should enable this option.
+-
+-	Be sure to select at least one backend for it to work properly.
+-
+-config DELL_SMBIOS_WMI
+-	bool "Dell SMBIOS driver WMI backend"
++menuconfig DELL_X86_PLATFORM_DRIVERS
++	bool "Dell X86 Platform Specific Device Drivers"
+ 	default y
+-	depends on ACPI_WMI
+-	select DELL_WMI_DESCRIPTOR
+-	depends on DELL_SMBIOS
+-	help
+-	This provides an implementation for the Dell SMBIOS calling interface
+-	communicated over ACPI-WMI.
+-
+-	If you have a Dell computer from >2007 you should say Y here.
+-	If you aren't sure and this module doesn't work for your computer
+-	it just won't load.
+-
+-config DELL_SMBIOS_SMM
+-	bool "Dell SMBIOS driver SMM backend"
+-	default y
+-	depends on DCDBAS
+-	depends on DELL_SMBIOS
+-	help
+-	This provides an implementation for the Dell SMBIOS calling interface
+-	communicated over SMI/SMM.
+-
+-	If you have a Dell computer from <=2017 you should say Y here.
+-	If you aren't sure and this module doesn't work for your computer
+-	it just won't load.
+-
+-config DELL_LAPTOP
+-	tristate "Dell Laptop Extras"
+-	depends on DMI
+-	depends on BACKLIGHT_CLASS_DEVICE
+-	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on RFKILL || RFKILL = n
+-	depends on SERIO_I8042
+-	depends on DELL_SMBIOS
+-	select POWER_SUPPLY
+-	select LEDS_CLASS
+-	select NEW_LEDS
+-	select LEDS_TRIGGERS
+-	select LEDS_TRIGGER_AUDIO
+-	help
+-	This driver adds support for rfkill and backlight control to Dell
+-	laptops (except for some models covered by the Compal driver).
+-
+-config DELL_RBTN
+-	tristate "Dell Airplane Mode Switch driver"
+-	depends on ACPI
+-	depends on INPUT
+-	depends on RFKILL
+-	help
+-	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
+-	  device on Dell laptops. Sometimes it has names: DELLABCE or DELRBTN.
+-	  This driver register rfkill device or input hotkey device depending
+-	  on hardware type (hw switch slider or keyboard toggle button). For
+-	  rfkill devices it receive HW switch events and set correct hard
+-	  rfkill state.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called dell-rbtn.
+-
+-config DELL_RBU
+-	tristate "BIOS update support for DELL systems via sysfs"
+-	depends on X86
+-	select FW_LOADER
+-	select FW_LOADER_USER_HELPER
+-	help
+-	 Say m if you want to have the option of updating the BIOS for your
+-	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
+-	 supporting application to communicate with the BIOS regarding the new
+-	 image for the image update to take effect.
+-	 See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
+-
+-config DELL_SMO8800
+-	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
+-	depends on ACPI
++	depends on X86_PLATFORM_DEVICES
+ 	help
+-	  Say Y here if you want to support SMO88XX freefall devices
+-	  on Dell Latitude laptops.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called dell-smo8800.
+-
+-config DELL_WMI
+-	tristate "Dell WMI notifications"
+-	depends on ACPI_WMI
+-	depends on DMI
+-	depends on INPUT
+-	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on DELL_SMBIOS
+-	select DELL_WMI_DESCRIPTOR
+-	select INPUT_SPARSEKMAP
+-	help
+-	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called dell-wmi.
+-
+-config DELL_WMI_SYSMAN
+-	tristate "Dell WMI-based Systems management driver"
+-	depends on ACPI_WMI
+-	depends on DMI
+-	select NLS
+-	help
+-	  This driver allows changing BIOS settings on many Dell machines from
+-	  2018 and newer without the use of any additional software.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called dell-wmi-sysman.
+-
+-config DELL_WMI_DESCRIPTOR
+-	tristate
+-	depends on ACPI_WMI
+-
+-config DELL_WMI_AIO
+-	tristate "WMI Hotkeys for Dell All-In-One series"
+-	depends on ACPI_WMI
+-	depends on INPUT
+-	select INPUT_SPARSEKMAP
+-	help
+-	  Say Y here if you want to support WMI-based hotkeys on Dell
+-	  All-In-One machines.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called dell-wmi-aio.
++	  Say Y here to get to see options for device drivers for various
++	  Dell x86 platforms, including vendor-specific laptop extension drivers.
++	  This option alone does not add any kernel code.
+ 
+-config DELL_WMI_LED
+-	tristate "External LED on Dell Business Netbooks"
+-	depends on LEDS_CLASS
+-	depends on ACPI_WMI
+-	help
+-	  This adds support for the Latitude 2100 and similar
+-	  notebooks that have an external LED.
++	  If you say N, all options in this submenu will be skipped and disabled.
++if DELL_X86_PLATFORM_DRIVERS
++source "drivers/platform/x86/dell/Kconfig"
++endif # DELL_X86_PLATFORM_DRIVERS
+ 
+ config AMILO_RFKILL
+ 	tristate "Fujitsu-Siemens Amilo rfkill support"
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 581475f59819..2ec05af6cf14 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -9,7 +9,6 @@ obj-$(CONFIG_ACPI_WMI)		+= wmi.o
+ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
+ 
+ # WMI drivers
+-obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
+ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
+ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+@@ -37,20 +36,7 @@ obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+ 
+ # Dell
+-obj-$(CONFIG_DCDBAS)			+= dcdbas.o
+-obj-$(CONFIG_DELL_SMBIOS)		+= dell-smbios.o
+-dell-smbios-objs			:= dell-smbios-base.o
+-dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
+-dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
+-obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
+-obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
+-obj-$(CONFIG_DELL_RBU)			+= dell_rbu.o
+-obj-$(CONFIG_DELL_SMO8800)		+= dell-smo8800.o
+-obj-$(CONFIG_DELL_WMI)			+= dell-wmi.o
+-obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
+-obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
+-obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
+-obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
++obj-$(CONFIG_DELL_X86_PLATFORM_DRIVERS)		+= dell/
+ 
+ # Fujitsu
+ obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+new file mode 100644
+index 000000000000..ce40817163f6
+--- /dev/null
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Dell X86 Platform Specific Drivers
++#
++
++config ALIENWARE_WMI
++	tristate "Alienware Special feature control"
++	depends on ACPI
++	depends on LEDS_CLASS
++	depends on NEW_LEDS
++	depends on ACPI_WMI
++	help
++	 This is a driver for controlling Alienware BIOS driven
++	 features.  It exposes an interface for controlling the AlienFX
++	 zones on Alienware machines that don't contain a dedicated AlienFX
++	 USB MCU such as the X51 and X51-R2.
++
++config DCDBAS
++	tristate "Dell Systems Management Base Driver"
++	depends on X86
++	help
++	  The Dell Systems Management Base Driver provides a sysfs interface
++	  for systems management software to perform System Management
++	  Interrupts (SMIs) and Host Control Actions (system power cycle or
++	  power off after OS shutdown) on certain Dell systems.
++
++	  See <file:Documentation/driver-api/dcdbas.rst> for more details on the driver
++	  and the Dell systems on which Dell systems management software makes
++	  use of this driver.
++
++	  Say Y or M here to enable the driver for use by Dell systems
++	  management software such as Dell OpenManage.
++
++config DELL_LAPTOP
++	tristate "Dell Laptop Extras"
++	depends on DMI
++	depends on BACKLIGHT_CLASS_DEVICE
++	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	depends on RFKILL || RFKILL = n
++	depends on SERIO_I8042
++	depends on DELL_SMBIOS
++	select POWER_SUPPLY
++	select LEDS_CLASS
++	select NEW_LEDS
++	select LEDS_TRIGGERS
++	select LEDS_TRIGGER_AUDIO
++	help
++	This driver adds support for rfkill and backlight control to Dell
++	laptops (except for some models covered by the Compal driver).
++
++config DELL_RBU
++	tristate "BIOS update support for DELL systems via sysfs"
++	depends on X86
++	select FW_LOADER
++	select FW_LOADER_USER_HELPER
++	help
++	 Say m if you want to have the option of updating the BIOS for your
++	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
++	 supporting application to communicate with the BIOS regarding the new
++	 image for the image update to take effect.
++	 See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
++
++config DELL_RBTN
++	tristate "Dell Airplane Mode Switch driver"
++	depends on ACPI
++	depends on INPUT
++	depends on RFKILL
++	help
++	  Say Y here if you want to support Dell Airplane Mode Switch ACPI
++	  device on Dell laptops. Sometimes it has names: DELLABCE or DELRBTN.
++	  This driver register rfkill device or input hotkey device depending
++	  on hardware type (hw switch slider or keyboard toggle button). For
++	  rfkill devices it receive HW switch events and set correct hard
++	  rfkill state.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-rbtn.
++
++#
++# The DELL_SMBIOS driver depends on ACPI_WMI and/or DCDBAS if those
++# backends are selected. The "depends" line prevents a configuration
++# where DELL_SMBIOS=y while either of those dependencies =m.
++#
++config DELL_SMBIOS
++	tristate "Dell SMBIOS driver"
++	depends on DCDBAS || DCDBAS=n
++	depends on ACPI_WMI || ACPI_WMI=n
++	help
++	This provides support for the Dell SMBIOS calling interface.
++	If you have a Dell computer you should enable this option.
++
++	Be sure to select at least one backend for it to work properly.
++
++config DELL_SMBIOS_WMI
++	bool "Dell SMBIOS driver WMI backend"
++	default y
++	depends on ACPI_WMI
++	select DELL_WMI_DESCRIPTOR
++	depends on DELL_SMBIOS
++	help
++	This provides an implementation for the Dell SMBIOS calling interface
++	communicated over ACPI-WMI.
++
++	If you have a Dell computer from >2007 you should say Y here.
++	If you aren't sure and this module doesn't work for your computer
++	it just won't load.
++
++config DELL_SMBIOS_SMM
++	bool "Dell SMBIOS driver SMM backend"
++	default y
++	depends on DCDBAS
++	depends on DELL_SMBIOS
++	help
++	This provides an implementation for the Dell SMBIOS calling interface
++	communicated over SMI/SMM.
++
++	If you have a Dell computer from <=2017 you should say Y here.
++	If you aren't sure and this module doesn't work for your computer
++	it just won't load.
++
++config DELL_SMO8800
++	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
++	depends on ACPI
++	help
++	  Say Y here if you want to support SMO88XX freefall devices
++	  on Dell Latitude laptops.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-smo8800.
++
++config DELL_WMI
++	tristate "Dell WMI notifications"
++	depends on ACPI_WMI
++	depends on DMI
++	depends on INPUT
++	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	depends on DELL_SMBIOS
++	select DELL_WMI_DESCRIPTOR
++	select INPUT_SPARSEKMAP
++	help
++	  Say Y here if you want to support WMI-based hotkeys on Dell laptops.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-wmi.
++
++config DELL_WMI_AIO
++	tristate "WMI Hotkeys for Dell All-In-One series"
++	depends on ACPI_WMI
++	depends on INPUT
++	select INPUT_SPARSEKMAP
++	help
++	  Say Y here if you want to support WMI-based hotkeys on Dell
++	  All-In-One machines.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-wmi-aio.
++
++config DELL_WMI_DESCRIPTOR
++	tristate
++	depends on ACPI_WMI
++
++config DELL_WMI_LED
++	tristate "External LED on Dell Business Netbooks"
++	depends on LEDS_CLASS
++	depends on ACPI_WMI
++	help
++	  This adds support for the Latitude 2100 and similar
++	  notebooks that have an external LED.
++
++config DELL_WMI_SYSMAN
++	tristate "Dell WMI-based Systems management driver"
++	depends on ACPI_WMI
++	depends on DMI
++	select NLS
++	help
++	  This driver allows changing BIOS settings on many Dell machines from
++	  2018 and newer without the use of any additional software.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called dell-wmi-sysman.
+diff --git a/drivers/platform/x86/dell/Makefile b/drivers/platform/x86/dell/Makefile
+new file mode 100644
+index 000000000000..d720a3e42ae3
+--- /dev/null
++++ b/drivers/platform/x86/dell/Makefile
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for linux/drivers/platform/x86/dell
++# Dell x86 Platform-Specific Drivers
++#
++
++obj-$(CONFIG_ALIENWARE_WMI)		+= alienware-wmi.o
++obj-$(CONFIG_DCDBAS)			+= dcdbas.o
++obj-$(CONFIG_DELL_LAPTOP)		+= dell-laptop.o
++obj-$(CONFIG_DELL_RBTN)			+= dell-rbtn.o
++obj-$(CONFIG_DELL_RBU)			+= dell_rbu.o
++obj-$(CONFIG_DELL_SMBIOS)		+= dell-smbios.o
++dell-smbios-objs			:= dell-smbios-base.o
++dell-smbios-$(CONFIG_DELL_SMBIOS_WMI)	+= dell-smbios-wmi.o
++dell-smbios-$(CONFIG_DELL_SMBIOS_SMM)	+= dell-smbios-smm.o
++obj-$(CONFIG_DELL_SMO8800)		+= dell-smo8800.o
++obj-$(CONFIG_DELL_WMI)			+= dell-wmi.o
++obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
++obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
++obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
++obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
+diff --git a/drivers/platform/x86/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+similarity index 100%
+rename from drivers/platform/x86/alienware-wmi.c
+rename to drivers/platform/x86/dell/alienware-wmi.c
+diff --git a/drivers/platform/x86/dcdbas.c b/drivers/platform/x86/dell/dcdbas.c
+similarity index 100%
+rename from drivers/platform/x86/dcdbas.c
+rename to drivers/platform/x86/dell/dcdbas.c
+diff --git a/drivers/platform/x86/dcdbas.h b/drivers/platform/x86/dell/dcdbas.h
+similarity index 100%
+rename from drivers/platform/x86/dcdbas.h
+rename to drivers/platform/x86/dell/dcdbas.h
+diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell/dell-laptop.c
+similarity index 100%
+rename from drivers/platform/x86/dell-laptop.c
+rename to drivers/platform/x86/dell/dell-laptop.c
+diff --git a/drivers/platform/x86/dell-rbtn.c b/drivers/platform/x86/dell/dell-rbtn.c
+similarity index 100%
+rename from drivers/platform/x86/dell-rbtn.c
+rename to drivers/platform/x86/dell/dell-rbtn.c
+diff --git a/drivers/platform/x86/dell-rbtn.h b/drivers/platform/x86/dell/dell-rbtn.h
+similarity index 100%
+rename from drivers/platform/x86/dell-rbtn.h
+rename to drivers/platform/x86/dell/dell-rbtn.h
+diff --git a/drivers/platform/x86/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+similarity index 100%
+rename from drivers/platform/x86/dell-smbios-base.c
+rename to drivers/platform/x86/dell/dell-smbios-base.c
+diff --git a/drivers/platform/x86/dell-smbios-smm.c b/drivers/platform/x86/dell/dell-smbios-smm.c
+similarity index 100%
+rename from drivers/platform/x86/dell-smbios-smm.c
+rename to drivers/platform/x86/dell/dell-smbios-smm.c
+diff --git a/drivers/platform/x86/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+similarity index 100%
+rename from drivers/platform/x86/dell-smbios-wmi.c
+rename to drivers/platform/x86/dell/dell-smbios-wmi.c
+diff --git a/drivers/platform/x86/dell-smbios.h b/drivers/platform/x86/dell/dell-smbios.h
+similarity index 100%
+rename from drivers/platform/x86/dell-smbios.h
+rename to drivers/platform/x86/dell/dell-smbios.h
+diff --git a/drivers/platform/x86/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+similarity index 100%
+rename from drivers/platform/x86/dell-smo8800.c
+rename to drivers/platform/x86/dell/dell-smo8800.c
+diff --git a/drivers/platform/x86/dell-wmi-aio.c b/drivers/platform/x86/dell/dell-wmi-aio.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-aio.c
+rename to drivers/platform/x86/dell/dell-wmi-aio.c
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.c b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-descriptor.c
+rename to drivers/platform/x86/dell/dell-wmi-descriptor.c
+diff --git a/drivers/platform/x86/dell-wmi-descriptor.h b/drivers/platform/x86/dell/dell-wmi-descriptor.h
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-descriptor.h
+rename to drivers/platform/x86/dell/dell-wmi-descriptor.h
+diff --git a/drivers/platform/x86/dell-wmi-led.c b/drivers/platform/x86/dell/dell-wmi-led.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-led.c
+rename to drivers/platform/x86/dell/dell-wmi-led.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/Makefile b/drivers/platform/x86/dell/dell-wmi-sysman/Makefile
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/Makefile
+rename to drivers/platform/x86/dell/dell-wmi-sysman/Makefile
+diff --git a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h
+rename to drivers/platform/x86/dell/dell-wmi-sysman/dell-wmi-sysman.h
+diff --git a/drivers/platform/x86/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/enum-attributes.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/enum-attributes.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/int-attributes.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/int-attributes.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/passobj-attributes.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/string-attributes.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/string-attributes.c
+diff --git a/drivers/platform/x86/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi-sysman/sysman.c
+rename to drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+diff --git a/drivers/platform/x86/dell-wmi.c b/drivers/platform/x86/dell/dell-wmi.c
+similarity index 100%
+rename from drivers/platform/x86/dell-wmi.c
+rename to drivers/platform/x86/dell/dell-wmi.c
+diff --git a/drivers/platform/x86/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
+similarity index 100%
+rename from drivers/platform/x86/dell_rbu.c
+rename to drivers/platform/x86/dell/dell_rbu.c
+-- 
+2.25.1
+
