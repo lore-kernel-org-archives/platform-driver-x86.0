@@ -2,89 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773C0C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDB9C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDDB64DDC
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9AE64FC2
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 19:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbhBCThO (ORCPT
+        id S231367AbhBCTj0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 14:37:14 -0500
-Received: from mga01.intel.com ([192.55.52.88]:5950 "EHLO mga01.intel.com"
+        Wed, 3 Feb 2021 14:39:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231296AbhBCThN (ORCPT
+        id S231336AbhBCTjX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 14:37:13 -0500
-IronPort-SDR: EjwDIsVy3c6WF00rPkdDgid8M99z0Vzt4GJwwIG4JJeYb/54V2BfjiATgnWxOG/aVFwHmMBl+L
- bqFx2YPcPDYw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9884"; a="200070508"
-X-IronPort-AV: E=Sophos;i="5.79,399,1602572400"; 
-   d="scan'208";a="200070508"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 11:35:28 -0800
-IronPort-SDR: wvqFBOGBv6TkhLjc0tjMG0iEkYLihlCupR907htdu1Pcsy0EU9gMdQL423diT2xYCi2JPIc9N0
- 0fN5E8iG8pTw==
-X-IronPort-AV: E=Sophos;i="5.79,399,1602572400"; 
-   d="scan'208";a="480464255"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 11:35:27 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1l7Nvw-001iG7-G8; Wed, 03 Feb 2021 21:35:24 +0200
-Date:   Wed, 3 Feb 2021 21:35:24 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@dell.com>
-Cc:     Hans De Goede <hdegoede@redhat.com>,
+        Wed, 3 Feb 2021 14:39:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 6D67E64F92;
+        Wed,  3 Feb 2021 19:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612381122;
+        bh=cIizPYfPKPRhVKZCcw6ZGwAIiFHD/9rKEfu2UP3a150=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=f1+SVm01PvU7KGmA09zJaA6zPFn/ocQiSdvxK41QIV3hAtZr12Nhx3uca4IX+qkgT
+         HVbfUJUQSLK1E1HkJQGtL3h90cokf+dTUv3dUsDaUi+BAx7JNfuFvMTMpR4Nnz5vwf
+         19WGdz6Qwb37JqGR+DRczR5OJeHpmD+ZQu9JJjYRmKyYUMRY3ND+j/iy5GFgqw5FgL
+         ndg5r07aA9VPT5z1uZh3LgaE++PTBo0MkMi5+GyfZpaLJs8vFyqHY/0rqnpLefQx+P
+         Xrmc9gkxjYn9FOD0MkI8jF5orJKotw9+WQan4l5vqIZ7T3Cjc/NEfpYxaM+uOcYcpZ
+         kt1leNkX27DJQ==
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.11-3
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <368c6b64-1e5b-743d-e255-7e9bade23238@redhat.com>
+References: <368c6b64-1e5b-743d-e255-7e9bade23238@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <368c6b64-1e5b-743d-e255-7e9bade23238@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.11-3
+X-PR-Tracked-Commit-Id: 215164bfb7144c5890dd8021ff06e486939862d4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4aa2fb4ef799b01dd5d2dcc3970344a9a036c1f2
+Message-Id: <161238112242.20071.8703639274817211311.pr-tracker-bot@kernel.org>
+Date:   Wed, 03 Feb 2021 19:38:42 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Mark Gross <mgross@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: Move all dell drivers to their own
- subdirectory
-Message-ID: <YBr6/ClMRV4Sw/kN@smile.fi.intel.com>
-References: <20210203192637.2947540-1-mario.limonciello@dell.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210203192637.2947540-1-mario.limonciello@dell.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Feb 03, 2021 at 01:26:37PM -0600, Mario Limonciello wrote:
-> A user without a Dell system doesn't need to pick any of these
-> drivers.
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+The pull request you sent on Wed, 3 Feb 2021 11:23:52 +0100:
 
-You are fast, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.11-3
 
-...
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4aa2fb4ef799b01dd5d2dcc3970344a9a036c1f2
 
-> +menuconfig DELL_X86_PLATFORM_DRIVERS
-
-I'm not sure this is a good order, rather X86_PLATFORM_DRIVERS_DELL?
-
-...
-
-> +if DELL_X86_PLATFORM_DRIVERS
-> +source "drivers/platform/x86/dell/Kconfig"
-> +endif # DELL_X86_PLATFORM_DRIVERS
-
-Would you expect something else here?
-
-I would rather unconditionally source this and inside it do that menuconfig
-with ifdeffery.
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
