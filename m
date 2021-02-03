@@ -2,76 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D04C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84446C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFCE564DE7
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2B364F74
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233825AbhBCKZ2 (ORCPT
+        id S233854AbhBCKhc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 05:25:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31017 "EHLO
+        Wed, 3 Feb 2021 05:37:32 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37521 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233740AbhBCKZ1 (ORCPT
+        by vger.kernel.org with ESMTP id S233337AbhBCKha (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 05:25:27 -0500
+        Wed, 3 Feb 2021 05:37:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612347839;
+        s=mimecast20190719; t=1612348564;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=PgAz4MrsS+zW5N77zXxwS56AukbM+WtnyJF1hzHWECk=;
-        b=ARYDso+SqMqa0IFVB2qsUhbyHVyxI1lfjK+/ai+fuo0WT3552J/f1gtBH4CwJ7rVqUJo0d
-        cpjl4+9Mi7fCCBu9MwMoeqRhdeFHpJLdaTkjdqWm80bZ2u72ikMkmLn9Cp9LCe7BTr0Zkc
-        wrSqEEfpRzb92wgfDVLUo960LJF2FVA=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-498-eRfDZja8OTyGTHDNq4Z8VQ-1; Wed, 03 Feb 2021 05:23:55 -0500
-X-MC-Unique: eRfDZja8OTyGTHDNq4Z8VQ-1
-Received: by mail-ej1-f69.google.com with SMTP id n25so11690987ejd.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Feb 2021 02:23:55 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fEB7xBqwhyPOWn31cidRiNIM5Aa2KdyDpLu2IJ8+dfE=;
+        b=QLHgPVoPnxW3uKN0Qlp8nBFKUQsMsAfPw2FjYtq3X1MEs9KtXYnPGIFOAS3PtXB9cQxJjB
+        ipmSLHQ5KKKEEKJSsWEcg1GytUX6aUS9ij3YjY5VpC5J1lWjj/MU9xgdbrdyHeSRF9es0f
+        HTiANNvFUnSlc7k0IeXGd9qAc+xkjCY=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-586-A-64CfeIOGGXaXsgfTJMQA-1; Wed, 03 Feb 2021 05:36:02 -0500
+X-MC-Unique: A-64CfeIOGGXaXsgfTJMQA-1
+Received: by mail-ej1-f71.google.com with SMTP id x22so11674336ejb.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Feb 2021 02:36:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=PgAz4MrsS+zW5N77zXxwS56AukbM+WtnyJF1hzHWECk=;
-        b=GkRzqYNxoSrCA1H9jHQzmXrXqPY+QTslI7zeevvvedBExw2aojx1d4E8Mx1MShwoLX
-         LKXCIN1OvcNlePLGoeO9Vud6py0wkkfZk49EiPItUx/RzsdNC1/TuX/uGyEtfIsTXdsE
-         XQu90GqGYvdt6gMCW7Xbritvo7Ii583HA1b6+LWnDVDNBkU0oNrScSyTk2Prk3UKgFCO
-         IlNBHIyzY1wONbZxtgm9Goy+TjW2sNDI4c7fidfYGXVL9q0mtApqFyOYdnlLH5siSdZO
-         XGFe6TIzxIqkmbZaH6QuFlQ81BqHEI8wjFzVvQVtVuIC7rMGh0dl5igaVdtKmJAgTPZa
-         ym/A==
-X-Gm-Message-State: AOAM530AgUNWkuBJfC8sQ6QusFThy0Z+bLZHHhZIPQh+APhZ5ENXfux0
-        GoxMTjwo5R0Q1iq39Bq5qs+AbgZypjomV4pudOTBjDtM58hYeA88aAn4SoIz/nMbTgCXjOk9aIF
-        pKQSEA0dwOCPPLMbMKXBuAhoeJb37rg6JylGqTqJm91nGabnwFNhp4Br3Xfvv8KvrxecaP4Fjas
-        1EZKCJe19/Qw==
-X-Received: by 2002:aa7:cdcd:: with SMTP id h13mr2186448edw.11.1612347834467;
-        Wed, 03 Feb 2021 02:23:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx012jsD6tLqDqC6mBh2rOnYXYjs2Fy2dpQH3GcInyos9pCyFxbGKsOMvEmvYsfA6UWY4tM8Q==
-X-Received: by 2002:aa7:cdcd:: with SMTP id h13mr2186434edw.11.1612347834221;
-        Wed, 03 Feb 2021 02:23:54 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fEB7xBqwhyPOWn31cidRiNIM5Aa2KdyDpLu2IJ8+dfE=;
+        b=FdoI9tZvnSr4vwLSZl7BBezwaMh25hnu70xD3QXmEw2UhzciGbd9IP0Ot6dAOZbTql
+         wK+mCJUcDDU8cFKe98MmJTSErztqg+zDBSDRBiPccwHwWQE5yn0/wNOxJYQb6rp0qxJp
+         vWumU79w/gxOBclW+GXGkowZThGUs6PReV8sEjtfJ9Jxxa/TRICbvdd3zecrdHI9l047
+         PqZMNWKc/CDlDNFj6mXNggIgXLD+RTdFJCpF10jgfjDuGsBoN1vCV92bQpoJJGvCDKOV
+         1qORIJERoZtwbuWkGEvPbRFAPGoAd10VReYoapqIStpKG0RbsXMe0WEFVImvoJsKR5bv
+         uQ8g==
+X-Gm-Message-State: AOAM533/tvUIKNn24Eew/njNBSQZZnpyIXFtLRVdPPo559F+tgKbCmPA
+        VTCYWDC6YvvatDxZeZgL24AOfCMe58NbWWhqDS/+34HK9b01iOfUG/Ffxb58mefnVvxYyh03C7e
+        rtL2I27KcnhobNkbj73XEZsgIAty7Oj4YvA==
+X-Received: by 2002:a17:907:10c1:: with SMTP id rv1mr2694243ejb.74.1612348561147;
+        Wed, 03 Feb 2021 02:36:01 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxqwfeuaQQcjcQ8kmMpA9bMjScyF6z1WqjDALhpwWfWpqmNI4F1sKUnQiqj4uSlF2824+0Cdg==
+X-Received: by 2002:a17:907:10c1:: with SMTP id rv1mr2694227ejb.74.1612348561015;
+        Wed, 03 Feb 2021 02:36:01 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id lz27sm793054ejb.50.2021.02.03.02.23.53
+        by smtp.gmail.com with ESMTPSA id e9sm655746edk.66.2021.02.03.02.36.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Feb 2021 02:23:53 -0800 (PST)
+        Wed, 03 Feb 2021 02:36:00 -0800 (PST)
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>, linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
+ <886bbdc0-3391-2140-a2d4-1688b262966f@redhat.com>
+ <CAHp75VeFvwE64zX8Wu8XvMMJ6vgxAaoYpvH2rJ_FD3CCnFZNHA@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.11-3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Message-ID: <368c6b64-1e5b-743d-e255-7e9bade23238@redhat.com>
-Date:   Wed, 3 Feb 2021 11:23:52 +0100
+Message-ID: <8d350b8c-5f1d-256d-cdc5-8501af0c0cad@redhat.com>
+Date:   Wed, 3 Feb 2021 11:35:59 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VeFvwE64zX8Wu8XvMMJ6vgxAaoYpvH2rJ_FD3CCnFZNHA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,56 +94,52 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-Sorry about the last-minute pull-req. This pull-req contains 2 small but
-important bug fixes.
+On 2/3/21 10:54 AM, Andy Shevchenko wrote:
+> On Tue, Jan 26, 2021 at 4:23 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 1/26/21 1:38 PM, Andy Shevchenko wrote:
+>>> Hi guys,
+>>>
+>>> This is first part of Intel MID outdated platforms removal. It's collected into
+>>> immutable branch with a given tag, please pull to yours subsystems.
+>>>
+>>> (All changes are tagged by the respective maintainers)
+> 
+>> Erm, I already have this 2 in platform-drivers-x86/for-next since you said that
+>> these 2 could be merged independently.
+>>
+>> Anyways I just did a test-merge and there is no conflict, so everything is ok.
+>>
+>> From my pov this looks good and I plan to merge this into platform-drivers-x86/for-next
+>> before the merge-window.
+>>
+>> I'm going to hold off on doing that for a bit for now in case one of the other
+>> subsys maintainers has any objections.
+> 
+> Any news on this? Have you pulled it somewhere (I don't see it in Linux next)?
 
-The hp-wmi change fixes an issue which is actively being hit by users:
-https://bugzilla.redhat.com/show_bug.cgi?id=1918255
-https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/3564
+I was going through all pending pdx86 stuff yesterday to prep for the upcoming
+merge-window. I was doing so in FIFO order and I ran out of steam just as I got
+to this pull-req.
 
-And the dell-wmi-sysman patch fixes a bug in the new dell-wmi-sysman
-driver which causes some systems to hang at boot when the driver loads.
+So today is a new day and after sending out a fixes pull-req for 5.11 this is
+(was) the first thing on my list.
+
+I've merged this into my review-hans now (and I will push it to for-next soon).
+
+I did one last check of all the commits after merging, and I found one small
+issue.
+
+The "gpio: msic: Remove driver for deprecated platform" commit forgets to
+drop the Makefile line for the msic driver:
+
+obj-$(CONFIG_GPIO_MSIC)                 += gpio-msic.o
+
+This is not a reason to redo the entire branch, but it would be good if you
+can do a follow up patch to fix this.
 
 Regards,
 
 Hans
-
-
-The following changes since commit 173aac2fef96972e42d33c0e1189e6f756a0d719:
-
-  platform/x86: thinkpad_acpi: Add P53/73 firmware to fan_quirk_table for dual fan control (2021-01-18 21:42:01 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.11-3
-
-for you to fetch changes up to 215164bfb7144c5890dd8021ff06e486939862d4:
-
-  platform/x86: dell-wmi-sysman: fix a NULL pointer dereference (2021-01-31 22:05:35 +0100)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v5.11-3
-
-2 last minute small but important fixes for v5.11 .
-
-The following is an automated git shortlog grouped by driver:
-
-dell-wmi-sysman:
- -  fix a NULL pointer dereference
-
-hp-wmi:
- -  Disable tablet-mode reporting by default
-
-----------------------------------------------------------------
-Hans de Goede (1):
-      platform/x86: hp-wmi: Disable tablet-mode reporting by default
-
-Mario Limonciello (1):
-      platform/x86: dell-wmi-sysman: fix a NULL pointer dereference
-
- drivers/platform/x86/dell-wmi-sysman/sysman.c |  6 +++++-
- drivers/platform/x86/hp-wmi.c                 | 14 ++++++++++----
- 2 files changed, 15 insertions(+), 5 deletions(-)
 
