@@ -2,120 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F198C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA78C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA11864F5C
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038B364E42
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Feb 2021 10:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233948AbhBCK5M (ORCPT
+        id S233729AbhBCK7i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Feb 2021 05:57:12 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49772 "EHLO
+        Wed, 3 Feb 2021 05:59:38 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24983 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233825AbhBCK5L (ORCPT
+        by vger.kernel.org with ESMTP id S233575AbhBCK7h (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Feb 2021 05:57:11 -0500
+        Wed, 3 Feb 2021 05:59:37 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612349744;
+        s=mimecast20190719; t=1612349890;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yn83yLBRux6pkgk3YgU5bvgICX5LFq9qAb45UIy9d7o=;
-        b=bRjzDo2gOABwQeFlqQhNYSUBecojbsvjpdEr64N3/awS5t4PZThclJ1pAr77WmpMBT/32S
-        J1odMPWurZ0k/wvyNiJDvMLkDQy6rAKbgLSy3VaF8sDQlyv09jx63oqmToIDZoc+3z787x
-        2PBYwShKTS25VrL7NRPbQdrrzT5/VOs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-M2T0iE-oNLGbXJfoHDWaMQ-1; Wed, 03 Feb 2021 05:55:43 -0500
-X-MC-Unique: M2T0iE-oNLGbXJfoHDWaMQ-1
-Received: by mail-ej1-f69.google.com with SMTP id x22so11706912ejb.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Feb 2021 02:55:42 -0800 (PST)
+        bh=LViKl+WPV2coHi94yA6LZO+UImnRCiUbgygPdrV5LrU=;
+        b=fBBhg4qA7ICoFZtsOdXa93SIhtto09S2McxuX4a/q9Zt5t+nSiJYusOU/iMq57ZKjo1Kbv
+        bsizcESPng3gsbZOVrCAorzeVAxUQUvEqWQgcmuvxPlf52HXg/ZJi/ZD7I3+IYgli5iyrT
+        f1LvNtQSLWjby79AU002tit4z4yOt9k=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-423-DFv5g4E_NR-KVV_9UqV8OA-1; Wed, 03 Feb 2021 05:58:08 -0500
+X-MC-Unique: DFv5g4E_NR-KVV_9UqV8OA-1
+Received: by mail-ed1-f70.google.com with SMTP id ay16so2346474edb.2
+        for <platform-driver-x86@vger.kernel.org>; Wed, 03 Feb 2021 02:58:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=yn83yLBRux6pkgk3YgU5bvgICX5LFq9qAb45UIy9d7o=;
-        b=RPY9qjZnSshG/6pdTVpo6J1LINfHHOeXhtvJBwSdb28+Ri/d3o0fEwEGBlhdq7QTYn
-         ANRa/s+Od01KEbzsw7gnxczUHvCLMMxM3UeGBjx4Tc5TdAYLprwGyuBe/FrIyxl97+pd
-         pKZCGEcBG2tI+gf8esEp3o+JKZOeUPsazLTkJnGGHjzvrW609PE4sv+B1x/Q5Jk7xu49
-         Dq7NsOdlBEWUMPnUfCpjH/Eoz8HcViCfqQPz+/0uoGhLoPz4d036assiBHUuX87I8cAm
-         EZ9ZvKhCG2xmtobmaryeqxV8m0WXuuL1ltVTqJdZTTEHxX0M7kDDx9+w2Ym7Y0x0sG1T
-         PG9g==
-X-Gm-Message-State: AOAM531EXOAMig9uHQqg0+wjyCDdJ+y9R4amwZzbtmedzbWNvdHDsjAB
-        ONMPwZAq+hsxdZDhQHiMQRJRxgxMtN23EhRLKVSkMSt62Ejd1tFkEaqyYAenfvYs0NurzSKHoo1
-        ipbFQLxLvid+IeA0ZcGI81f2oEOkuzLQxsR7Rohrw4Eq5dXkOXFMQE3QXg4q3P16IAY3v5hz+z8
-        N/dbBOElnEEw==
-X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr2300217edd.341.1612349741669;
-        Wed, 03 Feb 2021 02:55:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx/b/iET4HaCLiALroMkasQIy4yQuLLd8KqVMDOs9Qli8/tTGLlTIkQVnmc3Uxm+wyBWO6xRg==
-X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr2300201edd.341.1612349741449;
-        Wed, 03 Feb 2021 02:55:41 -0800 (PST)
+        bh=LViKl+WPV2coHi94yA6LZO+UImnRCiUbgygPdrV5LrU=;
+        b=udHzk7VFRz5P5w7rpUoBQQF/qmJFIKHiL+8+LvUWERttNn5/k/KFAQruZsdv4YVL6G
+         BUoftox84IqySdFGMSdRW/uvDN0ysHkXRU51M60eZcGt/Um79qpKbBLy6OhcHUiLzZXA
+         QluMW8a35kdb204aZ7eF7O+7C5LwUi4VKtRtWcH+2c08BddrdDJTBxEdVJLhpKXd8bMJ
+         NPZSFBZHRWn5bjKGEUXn7fjzewnDQn/4zlzYJX4i2jdjtlag8TkVgahusAR+s1fi7msg
+         L3PhwQiwir0SNfcj5pU8Etm11dMpzLcrDq+K3BFzkklatUiI2IgCf03s5X3mZSLnE5/d
+         tQ7A==
+X-Gm-Message-State: AOAM5308AZxncobphsHkcY3vGORGg2PC9g6leX97n/k3++nuNbr9XBGY
+        FR1e0B3BXD7p7OqharbupGotmALynDlxt+fVROZZ79JzUOyQtRriunvCMy3Ytl1tz4EDRV5b2Zk
+        PKDQR/VLs6086EoXZ+R7QTV/CLuZ+mnZueQ==
+X-Received: by 2002:a05:6402:309c:: with SMTP id de28mr1520663edb.96.1612349887447;
+        Wed, 03 Feb 2021 02:58:07 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyisjQrXzaOCWYFyvl4Srsyq7bFbBoBKWvnb+JesPslMeIz++kNx8FsrzPGEaCT5EBdsyK3mw==
+X-Received: by 2002:a05:6402:309c:: with SMTP id de28mr1520654edb.96.1612349887301;
+        Wed, 03 Feb 2021 02:58:07 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id k6sm819697ejb.84.2021.02.03.02.55.40
+        by smtp.gmail.com with ESMTPSA id k4sm846965eji.82.2021.02.03.02.58.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Feb 2021 02:55:40 -0800 (PST)
-Subject: Re: [PATCH v1] platform/x86: Kconfig: Surround WMI drivers by 'if
- ACPI_WMI'
+        Wed, 03 Feb 2021 02:58:06 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: pmt: Make PMT Kconfig options depend on
+ INTEL_PMT_CLASS
+To:     david.e.box@linux.intel.com, Mark Gross <mgross@linux.intel.com>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20210126202042.95301-1-hdegoede@redhat.com>
+ <c7099bece001aa0803c8357a44b114d2d26e94e4.camel@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20210126140052.3451769-1-andriy.shevchenko@linux.intel.com>
- <3578abae-bf14-c3fe-7726-25358e8993ea@redhat.com>
-Message-ID: <6b88be94-cc9c-e86c-82bc-f0d72e0c1c4f@redhat.com>
-Date:   Wed, 3 Feb 2021 11:55:40 +0100
+Message-ID: <c91d456c-8803-88b7-aa37-f094ce939889@redhat.com>
+Date:   Wed, 3 Feb 2021 11:58:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <3578abae-bf14-c3fe-7726-25358e8993ea@redhat.com>
+In-Reply-To: <c7099bece001aa0803c8357a44b114d2d26e94e4.camel@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/3/21 11:48 AM, Hans de Goede wrote:
-> Hi,
+On 1/26/21 11:00 PM, David E. Box wrote:
+> Hi Hans,
 > 
-> On 1/26/21 3:00 PM, Andy Shevchenko wrote:
->> Surround WMI drivers by 'if ACPI_WMI' instead of depending
->> each of them separately.
+> Sorry for missing the discussion on this. Need to fix my mail
+> filtering. I just submitted patches that instead make INTEL_PMT_CLASS
+> non-user-selectable, leaving the other dependencies in place. Having
+> the class driver user-selectable was a mistake.
 > 
-> This does not cover all drivers which depend on ACPI_WMI; and in
-> for-next there is a new UV_SYSFS Kconfig symbol in the middle of
-> the block which you are surrounding with if ACPI_WMI .. endif
-> and that new Kconfig symbol does not depend on ACPI_WMI.
+> I also did go ahead and add a dependancy on the MFD driver since all
+> current PMT features are only exposed through this driver. So users
+> will only see the following options:
 > 
-> Admittedly I should have payed more attention when the UV_SYSFS
-> symbol was merged, but atm there is no real ordering in the
-> Kconfig symbols.
+> MFD_INTEL_PMT
+> 	INTEL_PMT_TELEMETRY (selects INTEL_PMT_CLASS)
+> 	INTEL_PMT_CRASHLOG (selects INTEL_PMT_CLASS)
 
-Ok, so I just checked the Makefile and noticed that there is
-an ordering there. But most people start with looking at Kconfig
-when adding a new driver and the ordering is very much not clear
-there. Also splitting the Intel bits in three groups does not
-necessariyl help IMHO. E.g  CONFIG_INTEL_CHT_INT33FE is in the
-generic Intel block but it is definitely PMIC related.
-
-And the WMI drivers are grouped, except that some of them
-(Asus, Dell, EEEPC at least) are not in the group...
-
-So I still think just sorting the entire bups alphabetically
-is better. We can then also add a comment at the top to please
-keep things sorted alphabetically.
+Ok, your version looks good, so I will merge it instead of my
+version.
 
 Regards,
 
 Hans
+
+
+
+> 
+> David
+> 
+> On Tue, 2021-01-26 at 21:20 +0100, Hans de Goede wrote:
+>> Make the PMT Kconfig options depend on INTEL_PMT_CLASS instead of
+>> selecting it. Select should only be used with hidden options and
+>> INTEL_PMT_CLASS is not hidden.
+>>
+>> This will stop Kconfig from asking if INTEL_PMT_TELEMETRY and
+>> INTEL_PMT_CRASHLOG should be enabled after the user says no
+>> to the INTEL_PMT_CLASS prompt.
+>>
+>> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>> Cc: David E. Box <david.e.box@linux.intel.com>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  drivers/platform/x86/Kconfig | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/Kconfig
+>> b/drivers/platform/x86/Kconfig
+>> index 9a73e7baa344..d4f32fc0e40e 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -1383,7 +1383,7 @@ config INTEL_PMT_CLASS
+>>  
+>>  config INTEL_PMT_TELEMETRY
+>>         tristate "Intel Platform Monitoring Technology (PMT)
+>> Telemetry driver"
+>> -       select INTEL_PMT_CLASS
+>> +       depends on INTEL_PMT_CLASS
+>>         help
+>>           The Intel Platform Monitory Technology (PMT) Telemetry
+>> driver provides
+>>           access to hardware telemetry metrics on devices that
+>> support the
+>> @@ -1394,7 +1394,7 @@ config INTEL_PMT_TELEMETRY
+>>  
+>>  config INTEL_PMT_CRASHLOG
+>>         tristate "Intel Platform Monitoring Technology (PMT) Crashlog
+>> driver"
+>> -       select INTEL_PMT_CLASS
+>> +       depends on INTEL_PMT_CLASS
+>>         help
+>>           The Intel Platform Monitoring Technology (PMT) crashlog
+>> driver provides
+>>           access to hardware crashlog capabilities on devices that
+>> support the
+> 
+> 
 
