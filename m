@@ -2,306 +2,140 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2B0C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 05:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A0DC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 08:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0719A64F47
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 05:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C660864F43
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 08:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbhBDFIu (ORCPT
+        id S233392AbhBDINp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Feb 2021 00:08:50 -0500
-Received: from mga17.intel.com ([192.55.52.151]:30907 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229508AbhBDFIs (ORCPT
+        Thu, 4 Feb 2021 03:13:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20189 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231767AbhBDINo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Feb 2021 00:08:48 -0500
-IronPort-SDR: JIytQgueJw31sKi/gOm4GBTwo0b2bRGw5zd4nTR9/RS7hOU5r+wgIRJw9V9V9bkYjXtAzwLNPQ
- ZTO/8+p8+kCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9884"; a="160931036"
-X-IronPort-AV: E=Sophos;i="5.79,400,1602572400"; 
-   d="scan'208";a="160931036"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2021 21:08:07 -0800
-IronPort-SDR: C74lcrLAkGqntePQOGFZBxvTN5dmP4Rrxcabao+ixET4l8Kwud95IC1U8Dcn/py1to5Enyz239
- o6uJB2GJqfXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.79,400,1602572400"; 
-   d="scan'208";a="414673513"
-Received: from lkp-server02.sh.intel.com (HELO 8b832f01bb9c) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Feb 2021 21:08:05 -0800
-Received: from kbuild by 8b832f01bb9c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1l7Ws8-0000lJ-G3; Thu, 04 Feb 2021 05:08:04 +0000
-Date:   Thu, 04 Feb 2021 13:07:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [platform-drivers-x86:for-next] BUILD REGRESSION
- 60accc011af0ff869875b1ded81cbd0948267f05
-Message-ID: <601b80fc.oHIG/GJZzcM6ofyv%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 4 Feb 2021 03:13:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1612426337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/Wh0DIdrkA4YW2O4sxJRy2qqQ4e9oXm1QIzs7RUWeVo=;
+        b=NO5GNhNSje5wKR7obqXc/FSGOxIVA6G8uGYJbMgROawj4at9t0O+TeAinpXYmk15vB8nLw
+        UGfY1BzDZ4jMm1YvDkqz4RMzgmTRaxItVv1S2N1XVQ4eAZVVhY7ThLDWbTrthSdpYTHE0C
+        5Fzc+PzDJJIpiymNHTGrUFcIP/NAV9g=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-558-TIPO6d8EMuGR17M_mB_69w-1; Thu, 04 Feb 2021 03:12:16 -0500
+X-MC-Unique: TIPO6d8EMuGR17M_mB_69w-1
+Received: by mail-ej1-f70.google.com with SMTP id dc21so2005786ejb.19
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Feb 2021 00:12:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/Wh0DIdrkA4YW2O4sxJRy2qqQ4e9oXm1QIzs7RUWeVo=;
+        b=p10EM+j2eI0y8/hceVq7WWll5mL86/ohsJajuAHlX6fipNjx1CbeDNFa4geK0Xcz2Z
+         G6c8lVV0qKLoE2rBya9pwrEV9t3msfw8BZxi2Yq6urRfgBgVekG6gENXH3qfbkQepX16
+         TcpGE2GQeRZilknn57lFezK4k/TCq268wXXSSbGisK1OVSvpeiQgywe3pb5GJsEg7XD+
+         Rfmpg8irhXiyh51NJU1QSPB3RwoBj3dVACtcXH/y9K6wEI8rAYIkUKXjrg0L3CgZ88CZ
+         +PTncbV0mejSdBr7C2Ycn26vO1y8VtUzmO/ZL5llRRbTf0ddeg6Sd9FxgKo3tJJ1b3Mf
+         T9qw==
+X-Gm-Message-State: AOAM530XREFmduS4+GIlV58Ta5HQgdUniimmqjSapmAHOnaT75XEuKZh
+        68DgUsnTPg1UhYNFtVxU0qWPCnJs1QGvo1RB0dqUqpB8JTWpdivkkf6TBj3yyJIRWDYcgTxgLjz
+        N+Pt5u9wBv/BmbEjB6XTNZJgYP8BRhGUkYA==
+X-Received: by 2002:a17:906:e15:: with SMTP id l21mr6832381eji.376.1612426334947;
+        Thu, 04 Feb 2021 00:12:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx0PqgHF3bUbZJ97CsxfNGMJ+DnJvlxxbl0ArJ8i0X75kxCEWjUlxc3cIP64FHV4H7gowMglQ==
+X-Received: by 2002:a17:906:e15:: with SMTP id l21mr6832367eji.376.1612426334821;
+        Thu, 04 Feb 2021 00:12:14 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
+        by smtp.gmail.com with ESMTPSA id kv24sm1931809ejc.117.2021.02.04.00.12.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Feb 2021 00:12:14 -0800 (PST)
+Subject: Re: [PATCH v3 12/29] platform/x86: ideapad-laptop: check return value
+ of debugfs_create_dir() for errors
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
+        Ike Panhc <ike.pan@canonical.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20210203215403.290792-13-pobrn@protonmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <acc8d35b-eea6-8fad-0d7a-ad9c189a51ad@redhat.com>
+Date:   Thu, 4 Feb 2021 09:12:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20210203215403.290792-13-pobrn@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-tree/branch: git://git.infradead.org/linux-platform-drivers-x86.git for-next
-branch HEAD: 60accc011af0ff869875b1ded81cbd0948267f05  platform/x86/intel-uncore-freq: Add Sapphire Rapids server support
+Hi Barnabás,
 
-Error/Warning reports:
+On 2/3/21 10:55 PM, Barnabás Pőcze wrote:
+> debugfs_create_dir() may return an ERR_PTR(),
+> add a check to ideapad_debugfs_init() that
+> handles the case when that occurs.
 
-https://lore.kernel.org/platform-driver-x86/202102040432.nrBYesxd-lkp@intel.com
-https://lore.kernel.org/platform-driver-x86/202102040432.qcL72rtk-lkp@intel.com
-https://lore.kernel.org/platform-driver-x86/202102040503.hpbrH6qm-lkp@intel.com
+debugfs functions should not be error-checked:
 
-Error/Warning in current branch:
+1. They are for debugging so if they don't work it is not an issue
+   (note your own error handling also just returns without propagating 
+    the error).
+2. Subsequent debugfs calls taking the ERR-PTR will detect this and
+   turn into no-op-s
 
-drivers/platform/x86/ideapad-laptop.c:659:5: warning: no previous prototype for 'dytc_profile_get' [-Wmissing-prototypes]
-drivers/platform/x86/ideapad-laptop.c:676:5: warning: no previous prototype for 'dytc_cql_command' [-Wmissing-prototypes]
-drivers/platform/x86/ideapad-laptop.c:713:5: warning: no previous prototype for 'dytc_profile_set' [-Wmissing-prototypes]
-drivers/platform/x86/thinkpad_acpi.c:10081:5: warning: no previous prototype for 'dytc_profile_get' [-Wmissing-prototypes]
-drivers/platform/x86/thinkpad_acpi.c:10095:5: warning: no previous prototype for 'dytc_cql_command' [-Wmissing-prototypes]
-drivers/platform/x86/thinkpad_acpi.c:10133:5: warning: no previous prototype for 'dytc_profile_set' [-Wmissing-prototypes]
-drivers/platform/x86/thinkpad_acpi.c:10186: undefined reference to `platform_profile_notify'
-drivers/platform/x86/thinkpad_acpi.c:10226: undefined reference to `platform_profile_register'
-drivers/platform/x86/thinkpad_acpi.c:10246: undefined reference to `platform_profile_remove'
+So I'm going to skip this patch while applying this series.
 
-Error/Warning ids grouped by kconfigs:
+Regards,
 
-gcc_recent_errors
-|-- i386-allmodconfig
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- i386-randconfig-a003-20210202
-|   |-- drivers-platform-x86-thinkpad_acpi.c:undefined-reference-to-platform_profile_notify
-|   |-- drivers-platform-x86-thinkpad_acpi.c:undefined-reference-to-platform_profile_register
-|   |-- drivers-platform-x86-thinkpad_acpi.c:undefined-reference-to-platform_profile_remove
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- i386-randconfig-a004-20210202
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- i386-randconfig-r021-20210203
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- x86_64-allmodconfig
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- x86_64-allyesconfig
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- x86_64-rhel
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- x86_64-rhel-7.6-kselftests
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-|-- x86_64-rhel-8.3
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-|   |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-|   |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-|   `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
-`-- x86_64-rhel-8.3-kbuiltin
-    |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_cql_command
-    |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_get
-    |-- drivers-platform-x86-ideapad-laptop.c:warning:no-previous-prototype-for-dytc_profile_set
-    |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_cql_command
-    |-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_get
-    `-- drivers-platform-x86-thinkpad_acpi.c:warning:no-previous-prototype-for-dytc_profile_set
+Hans
 
-elapsed time: 727m
 
-configs tested: 149
-configs skipped: 2
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-s390                       zfcpdump_defconfig
-mips                           ip28_defconfig
-sh                           se7724_defconfig
-c6x                                 defconfig
-xtensa                              defconfig
-arm                      jornada720_defconfig
-mips                           ip27_defconfig
-powerpc                     powernv_defconfig
-arm                        mvebu_v7_defconfig
-ia64                         bigsur_defconfig
-mips                            gpr_defconfig
-arm                         cm_x300_defconfig
-sh                          urquell_defconfig
-arm                        spear6xx_defconfig
-sh                ecovec24-romimage_defconfig
-c6x                        evmc6472_defconfig
-powerpc                       ebony_defconfig
-m68k                             allmodconfig
-arm                       multi_v4t_defconfig
-sh                              ul2_defconfig
-nios2                         3c120_defconfig
-m68k                       m5475evb_defconfig
-openrisc                            defconfig
-mips                           ip32_defconfig
-powerpc                        cell_defconfig
-powerpc                      makalu_defconfig
-sh                            migor_defconfig
-powerpc                  mpc866_ads_defconfig
-sh                           se7751_defconfig
-sh                          polaris_defconfig
-ia64                          tiger_defconfig
-mips                       lemote2f_defconfig
-arm                        oxnas_v6_defconfig
-mips                        nlm_xlp_defconfig
-powerpc                      ppc44x_defconfig
-sh                          landisk_defconfig
-arm                       aspeed_g5_defconfig
-mips                           xway_defconfig
-mips                          ath79_defconfig
-arm                           viper_defconfig
-arc                      axs103_smp_defconfig
-arc                            hsdk_defconfig
-arc                        nsim_700_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                     tqm8548_defconfig
-powerpc                 mpc837x_rdb_defconfig
-powerpc                 mpc836x_rdk_defconfig
-nios2                               defconfig
-h8300                     edosk2674_defconfig
-sh                          rsk7201_defconfig
-xtensa                  nommu_kc705_defconfig
-powerpc                          g5_defconfig
-arm                        cerfcube_defconfig
-arm                             pxa_defconfig
-arm                          moxart_defconfig
-powerpc                      katmai_defconfig
-powerpc                         wii_defconfig
-powerpc                 mpc834x_mds_defconfig
-s390                          debug_defconfig
-nds32                             allnoconfig
-mips                         bigsur_defconfig
-c6x                              allyesconfig
-arm                          lpd270_defconfig
-arm                       netwinder_defconfig
-xtensa                          iss_defconfig
-arm                         orion5x_defconfig
-arm                          collie_defconfig
-powerpc                         ps3_defconfig
-arc                    vdk_hs38_smp_defconfig
-arm                            xcep_defconfig
-arm                        multi_v5_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                               tinyconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20210202
-i386                 randconfig-a003-20210202
-i386                 randconfig-a002-20210202
-i386                 randconfig-a004-20210202
-i386                 randconfig-a005-20210202
-i386                 randconfig-a006-20210202
-x86_64               randconfig-a013-20210202
-x86_64               randconfig-a014-20210202
-x86_64               randconfig-a015-20210202
-x86_64               randconfig-a016-20210202
-x86_64               randconfig-a011-20210202
-x86_64               randconfig-a012-20210202
-i386                 randconfig-a013-20210202
-i386                 randconfig-a016-20210202
-i386                 randconfig-a014-20210202
-i386                 randconfig-a012-20210202
-i386                 randconfig-a015-20210202
-i386                 randconfig-a011-20210202
-i386                 randconfig-a013-20210203
-i386                 randconfig-a016-20210203
-i386                 randconfig-a014-20210203
-i386                 randconfig-a012-20210203
-i386                 randconfig-a015-20210203
-i386                 randconfig-a011-20210203
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                      rhel-8.3-kbuiltin
-x86_64                                  kexec
 
-clang tested configs:
-x86_64               randconfig-a001-20210202
-x86_64               randconfig-a002-20210202
-x86_64               randconfig-a004-20210202
-x86_64               randconfig-a003-20210202
-x86_64               randconfig-a006-20210202
-x86_64               randconfig-a005-20210202
+> 
+> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
+> 
+> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+> index 1aa3a05c3360..ba0bd344f5ed 100644
+> --- a/drivers/platform/x86/ideapad-laptop.c
+> +++ b/drivers/platform/x86/ideapad-laptop.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/device.h>
+>  #include <linux/dmi.h>
+> +#include <linux/err.h>
+>  #include <linux/fb.h>
+>  #include <linux/i8042.h>
+>  #include <linux/init.h>
+> @@ -350,9 +351,11 @@ DEFINE_SHOW_ATTRIBUTE(debugfs_cfg);
+>  
+>  static void ideapad_debugfs_init(struct ideapad_private *priv)
+>  {
+> -	struct dentry *dir;
+> +	struct dentry *dir = debugfs_create_dir("ideapad", NULL);
+> +
+> +	if (IS_ERR(dir))
+> +		return;
+>  
+> -	dir = debugfs_create_dir("ideapad", NULL);
+>  	priv->debug = dir;
+>  
+>  	debugfs_create_file("cfg", S_IRUGO, dir, priv, &debugfs_cfg_fops);
+> 
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
