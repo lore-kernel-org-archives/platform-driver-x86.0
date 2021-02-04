@@ -2,70 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD23C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C63C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A69A564DEB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6970A64F5C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236638AbhBDOVQ (ORCPT
+        id S236672AbhBDO3S (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Feb 2021 09:21:16 -0500
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:24075 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236651AbhBDOVJ (ORCPT
+        Thu, 4 Feb 2021 09:29:18 -0500
+Received: from mga17.intel.com ([192.55.52.151]:64732 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236519AbhBDO2a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Feb 2021 09:21:09 -0500
-Date:   Thu, 04 Feb 2021 14:20:15 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1612448424;
-        bh=/3im6k1GNlJEIup7dacbvSESNlDgje5cX9xH2M6HCdg=;
-        h=Date:To:From:Reply-To:Subject:From;
-        b=KAiNUiVI8aFZF5B4Mqqi1Sdqnol9Bmr9Sqx89c9xe/MiCz6ETR4+oObOadzIjO3CY
-         4VrNm3g8+bwi0pZAMJuLOVRpMjsYxBmuvWOAMQEhUev0lZ7AMplSJ3XBRgGwenova0
-         KUMJce5LmtTF4X8pcd9zb1wwOTQpYK3bx+6t908k=
-To:     platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
+        Thu, 4 Feb 2021 09:28:30 -0500
+IronPort-SDR: VOLLVUwSoSzmDh8Ch9cJ19RQCvYhsrUc5chi2PkJ5822Y/SlM/PjqZsNnR68drvnnZmUF9tndJ
+ M8zmwCxtrVNA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9884"; a="161003790"
+X-IronPort-AV: E=Sophos;i="5.79,401,1602572400"; 
+   d="scan'208";a="161003790"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2021 06:27:54 -0800
+IronPort-SDR: gUx4H1h+qtB8y95Q03WZldW1Wh1On8guEl5FzkQzNf2nJZEUOFpgDXU11BGoOAFqvDHXMD238g
+ 21L39mETNz9A==
+X-IronPort-AV: E=Sophos;i="5.79,401,1602572400"; 
+   d="scan'208";a="372980154"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Feb 2021 06:27:50 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1l7fbm-001v8j-Vy; Thu, 04 Feb 2021 16:27:46 +0200
+Date:   Thu, 4 Feb 2021 16:27:46 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH] platform/x86: Kconfig: add missing selects for ideapad-laptop
-Message-ID: <20210204142010.356675-1-pobrn@protonmail.com>
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
+Message-ID: <YBwEYo0F+vNSiglD@smile.fi.intel.com>
+References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
+ <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
+ <CAHp75VeYroY5uG38NrsqwbHnjT0j_LMMD3JmNmRED3OY5ff7xA@mail.gmail.com>
+ <CAMeQTsZRng0UWkO5fXUmZW=-gnKWiigwO0BwMY9p1T2D-hoMNA@mail.gmail.com>
+ <CAKMK7uEBaWMz-AjuJO3vvUBvacqMHuevOhMhQ0a+r5TtyDpwuQ@mail.gmail.com>
+ <797cf4ac-ffdc-e73e-cb58-d027beb6e3b4@redhat.com>
+ <20210204105752.GA3940374@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210204105752.GA3940374@piout.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-LED class support is needed by the ideapad-laptop module to compile after
-the referenced commit. Add missing NEW_LEDS and LEDS_CLASS to Kconfig.
+On Thu, Feb 04, 2021 at 11:57:52AM +0100, Alexandre Belloni wrote:
+> On 04/02/2021 11:50:03+0100, Hans de Goede wrote:
+> > On 2/4/21 11:36 AM, Daniel Vetter wrote:
+> > > On Thu, Feb 4, 2021 at 11:19 AM Patrik Jakobsson
+> > > <patrik.r.jakobsson@gmail.com> wrote:
+> > >> On Wed, Feb 3, 2021 at 1:00 PM Andy Shevchenko
+> > >> <andy.shevchenko@gmail.com> wrote:
+> > >>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
+> > >>> <patrik.r.jakobsson@gmail.com> wrote:
+> > >>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
+> > >>>> <andriy.shevchenko@linux.intel.com> wrote:
 
-Fixes: 503325f84bc0 ("platform/x86: ideapad-laptop: add keyboard backlight =
-control support")
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
+> > >>>>> This is first part of Intel MID outdated platforms removal. It's collected into
+> > >>>>> immutable branch with a given tag, please pull to yours subsystems.
+> > >>>>
+> > >>>> Hi Andy,
+> > >>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
+> > >>>> then I should probably start looking at removing the corresponding
+> > >>>> parts in GMA500.
+> > >>>
+> > >>> I have noticed new commits in DRM against GMA500 and it seems now in a
+> > >>> conflict with my immutable branch. Are you sure you don't forget to
+> > >>> pull it?
+> > >>
+> > >> Hi Andy, sorry I missed pulling the immutable branch before taking the
+> > >> gma500 medfield removal. I was unsure how to do that through drm-misc
+> > >> and it's tools so I got sidetracked. What would be the correct way to
+> > >> fix this?
+> > > 
+> > > Imo Linus can resolve this, it's pretty trivial, as long as both pull
+> > > requests point it out to him.
+> > 
+> > The removal of older Intel platforms touches a number of subsystem trees,
+> > the idea about the IM branch was that all subsystem-trees would merge that.
+> > 
+> > I can certainly point out the problem in the pdx86 pull-req to Linus,
+> > but the GPIO pull-req also contains a merge of the IM branch as will
+> > the x86/tip and rtc pull-reqs I believe. We can add a remark to all
+> > the pull-reqs about the issue I guess ?
+> 
+> FWIW, I'm not going to merge the PR in the rtc tree because it is a
+> simple removal and doesn't have any conflicts.
+> 
+> > But it might be better to still merge the branch into drm-misc-next and
+> > resolve the conflict there. I think that should avoid Linus seeing it ?
+> 
+> Linus doesn't mind seeing and solving conflicts.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index cf76e724e8c3..89cc2936f2ef 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -452,6 +452,8 @@ config IDEAPAD_LAPTOP
- =09depends on ACPI_WMI || ACPI_WMI =3D n
- =09depends on ACPI_PLATFORM_PROFILE
- =09select INPUT_SPARSEKMAP
-+=09select NEW_LEDS
-+=09select LEDS_CLASS
- =09help
- =09  This is a driver for Lenovo IdeaPad netbooks contains drivers for
- =09  rfkill switch, hotkey, fan control and backlight control.
---=20
-2.30.0
+Yes, but in this case the conflict is artificially created by us in the first
+place and shouldn't be there from the day 1. I consider merging immutable tag
+to DRM misc would be the less intrusive solution.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
