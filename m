@@ -2,157 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9D4C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 13:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B27C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 830B864F4D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 13:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF6A64E41
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 14:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236161AbhBDNPT (ORCPT
+        id S236602AbhBDOEW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Feb 2021 08:15:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:48905 "EHLO
+        Thu, 4 Feb 2021 09:04:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24599 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236029AbhBDNPS (ORCPT
+        by vger.kernel.org with ESMTP id S236477AbhBDODg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Feb 2021 08:15:18 -0500
+        Thu, 4 Feb 2021 09:03:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612444431;
+        s=mimecast20190719; t=1612447330;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hQ7ftLisEtrbD3nvPMM1qLqviSAiLANOhKU7vQoTi+4=;
-        b=eKKWRmIorlehN3gkpm+y1odaxibWtxN1vhBsKA21o3HEDs3y2coYRRHklHPzjuucF14kfH
-        O+jZjyVdloqDAkgv87U+WOgmcA4UidpZawy0LOZufPABqiB/jh7G8E849lWtvwfK4mF4tv
-        yNSzqnspY2oonI84LwYitTBHOG7XCUg=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-474-fEVlKSAXNi-NOLFDEcW2kQ-1; Thu, 04 Feb 2021 08:13:50 -0500
-X-MC-Unique: fEVlKSAXNi-NOLFDEcW2kQ-1
-Received: by mail-ej1-f72.google.com with SMTP id q11so2544300ejd.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Feb 2021 05:13:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hQ7ftLisEtrbD3nvPMM1qLqviSAiLANOhKU7vQoTi+4=;
-        b=X/4k+B15/95PsBFv4xkHXf1fKx5elo9Moau3WDzqMf0fr6umPjVgCNKbuFc8uoijvo
-         3ryL0RZRwRb5A0xo/ZhO77QoDvWPyoz/CYJKk2JHEbG6dma1ditg4+RAy3Ydou4iN8o4
-         nCEoxiPnpvmVa1oe5JkFAsr1ay+g56XwiBbxL63b0JnARNkByHS2F6huKD48cmbGDvE7
-         DZtrs5DetH0rbXPWhPI4Qz7sXzNWPrtV7noRCQZE+4QChXPufZj/aJILAB+iQBh3vP2K
-         zuiyC5iyk8qd1MGsghQK/9cOlrbfjgrQ16iCLL4yDRab8HCpbekw4jlpV8w3+GDq7LDq
-         82VQ==
-X-Gm-Message-State: AOAM531sMlQRPerrVtanQv+qYPqR3yfyGxcpSYlth+umGVOE5qMqi05M
-        WCqLIoi2Yl4nMFPNFANUCDRDhcjHepPsq1WTxWX+P7VlETnUQgO1DOr2UxV/JbiweHZbMbpz88O
-        pJg3Om0FZmVq1fkO8iecpqkSvMf6EXt4IbA==
-X-Received: by 2002:a05:6402:1215:: with SMTP id c21mr7939292edw.310.1612444429377;
-        Thu, 04 Feb 2021 05:13:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxgCxtwdrnsZoIPSbXFhx9pnDMDxk6NWI7ctPtMJfYB+x267Zt4gdBOzNHHmhRCEh2kUOl0wg==
-X-Received: by 2002:a05:6402:1215:: with SMTP id c21mr7939278edw.310.1612444429237;
-        Thu, 04 Feb 2021 05:13:49 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id w4sm2449851eds.40.2021.02.04.05.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Feb 2021 05:13:48 -0800 (PST)
-Subject: Re: [PATCH v3 24/29] platform/x86: ideapad-laptop: fix checkpatch
- warnings, more consistent style
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20210203215403.290792-25-pobrn@protonmail.com>
- <070b8c56-5b04-c50b-2e72-7dba07b02ed4@redhat.com>
- <TpRuYoh3r3tsFcaDiM7VGsvO7fxuxkjRJFafIrdnNX4WY4Bl8iiiqHS2Yiy9pg2hpLtw-olz7sT_2FmEJggNXlSMJrnoWoQnFXvUg5B-YZw=@protonmail.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1T6E6hRus1e5llbVYMcvcCrA20et2NSSAcNG0kJJ9z4=;
+        b=E6ecI6GAzNW/GL+mlhO2XeccPXdDPvk2jNndyf/MWkZYdDFxco8oJkBU2bWIlBT2/buIxN
+        t+XxDqQ4dbM4uEOpE/3VPhLCl5OcbHExhLApxddQvP533xSWGWWGkjQiZx/HDakmCXfdkc
+        g0U5SzcwudLpbKqJjOsruOLInmL0wbw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-xfuYXn4NPZGo3eo4YAaxrg-1; Thu, 04 Feb 2021 09:02:08 -0500
+X-MC-Unique: xfuYXn4NPZGo3eo4YAaxrg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 395D1C73A9;
+        Thu,  4 Feb 2021 14:02:07 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-112.ams2.redhat.com [10.36.112.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4211010023B9;
+        Thu,  4 Feb 2021 14:02:05 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <810815e9-e055-40a9-5374-793ab68c6ff9@redhat.com>
-Date:   Thu, 4 Feb 2021 14:13:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+To:     Mark Gross <mgross@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: acer-wmi: Don't use ACPI_EXCEPTION()
+Date:   Thu,  4 Feb 2021 15:02:05 +0100
+Message-Id: <20210204140205.268344-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <TpRuYoh3r3tsFcaDiM7VGsvO7fxuxkjRJFafIrdnNX4WY4Bl8iiiqHS2Yiy9pg2hpLtw-olz7sT_2FmEJggNXlSMJrnoWoQnFXvUg5B-YZw=@protonmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+ACPI_EXCEPTION is only intended for internal use by the ACPICA code.
 
-On 2/4/21 1:45 PM, Barnabás Pőcze wrote:
-> Hi
-> 
-> 
-> 2021. február 4., csütörtök 9:58 keltezéssel, Hans de Goede írta:
-> 
->> Hi,
->>
->> On 2/3/21 10:56 PM, Barnabás Pőcze wrote:
->>
->>> Fix all checkpatch warnings. Reorder variable definitions from
->>> longest to shortest. Add more whitespaces for better readability.
->>> Rename variables named `ret` to `err` where appropriate. Reorder
->>> sysfs attributes show/store callbacks and the `ideapad_attributes`
->>> array in lexicographic order. And other minor formatting changes.
->>> No significant functional changes are intended.
->>> Signed-off-by: Barnabás Pőcze pobrn@protonmail.com
->>
->> Ugh, this is a big patch with a lot of things going on.
->>
->> I will take this patch as is this time, but next time please
->> split patches like this up a bit:
->>
->> 1.  The reworking of the sysfs show/store functions really belongs in a separate patch
->> 2.  That separate rework sysfs show/store functions patch itself should be 2 patches:
->>     2.1 Move the various show/store functions around to their final alphabetical order
->>     without any further changes, just move the blocks. And explicitly mention this
->>     in the commit message, to make life easier for the reviewer
->>     2.2 And then do the actual reworking in a separate patch, that makes reviewing this
->>     much much easier, now I had to jump back and forth between the old and new blocks
->>     (which were not in the same place) to make sure that nothing has changed.
->>     Note doing things like this (first move without any changes other then moving)
->>     also makes checking your own work easier.
->>
->> 3.  This change:
->>
->>> @@ -773,7 +801,10 @@ static void dytc_profile_refresh(struct ideapad_private *priv)
->>> return;
->>> perfmode = (output >> DYTC_GET_MODE_BIT) & 0xF;
->>>
->>> -   convert_dytc_to_profile(perfmode, &profile);
->>>
->>> -
->>> -   if (convert_dytc_to_profile(perfmode, &profile))
->>> -       return;
->>>
->>>
->>> -   if (profile != priv->dytc->current_profile) {
->>>     priv->dytc->current_profile = profile;
->>>     platform_profile_notify();
->>>
->>
->> Although a good change, clearly is not just a checkpatch / style change and as
->> such really should have been in its own commit!
-> 
-> 
-> Yes, I'm sorry, I apologize for the inconvenience, this really should've been split up
-> and I failed to do so. If you want, I can still split it up and send the whole
-> (or part of the) series again?
+ACPI_EXCEPTION was being used here to change the apci_status code into
+something human-readable, use acpi_format_exception() for this instead,
+which is the proper way to do this outside of ACPICA.
 
-I've already merged the entire series (minus patch 12) as is, so no need to resend it,
-just something to keep in mind for the next time.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/acer-wmi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+index c1a5357da885..85db9403cc14 100644
+--- a/drivers/platform/x86/acer-wmi.c
++++ b/drivers/platform/x86/acer-wmi.c
+@@ -30,7 +30,6 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <acpi/video.h>
+ 
+-ACPI_MODULE_NAME(KBUILD_MODNAME);
+ MODULE_AUTHOR("Carlos Corbacho");
+ MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+ MODULE_LICENSE("GPL");
+@@ -1605,7 +1604,8 @@ static void acer_kbd_dock_get_initial_state(void)
+ 
+ 	status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input_buf, &output_buf);
+ 	if (ACPI_FAILURE(status)) {
+-		ACPI_EXCEPTION((AE_INFO, status, "Error getting keyboard-dock initial status"));
++		pr_err("Error getting keyboard-dock initial status: %s\n",
++		       acpi_format_exception(status));
+ 		return;
+ 	}
+ 
+-- 
+2.29.2
 
