@@ -2,149 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FDF4C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 10:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8303CC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 10:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EA364F64
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 10:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443BF64DD4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 10:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235484AbhBDKvh (ORCPT
+        id S235505AbhBDKwq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Feb 2021 05:51:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42816 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235435AbhBDKvf (ORCPT
+        Thu, 4 Feb 2021 05:52:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234873AbhBDKwp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Feb 2021 05:51:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612435808;
+        Thu, 4 Feb 2021 05:52:45 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33233C061573;
+        Thu,  4 Feb 2021 02:52:05 -0800 (PST)
+Received: from zn.tnic (p200300ec2f0c7e00dc348a22cc2c06fb.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:7e00:dc34:8a22:cc2c:6fb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A80071EC00F8;
+        Thu,  4 Feb 2021 11:52:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1612435921;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ExcdpvdW4w9z0j1rSZqVqf3PX+bGLK8NJ4uHHCnJ7SI=;
-        b=Ckj4V9W55B7e90v71yhXsJNTIbxnM9fjsphF04l3kGfyJz9RY6n6HMRkaIK5ZegenqDVbI
-        tpMmnkhjqk5lEj7FTH3aBe5xvFf4yuK4e+AlNtje/JGBP8RSVuWm9kDwUWUBeb5r2/Gy3X
-        AULraChdaU8ugH8Ao7JJgAA1aTqYdPc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-427-5UHyHkJBMuSBMrmteJ88Qg-1; Thu, 04 Feb 2021 05:50:06 -0500
-X-MC-Unique: 5UHyHkJBMuSBMrmteJ88Qg-1
-Received: by mail-ej1-f70.google.com with SMTP id x22so2430971ejb.10
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Feb 2021 02:50:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ExcdpvdW4w9z0j1rSZqVqf3PX+bGLK8NJ4uHHCnJ7SI=;
-        b=asU7buhryk5GFw9Gfix7odlYbnj2JT35FonrIYZD5jfjvd4lC2Tm8e6ZmeZAICHptR
-         OHMv3wbYEIc3DndnWb1YPQ+H7Nehi93KawdUnhYEljmvzfZK5f7jkeX8ywBUzw0lyk2a
-         4RTSty2eV8783soRv8hN2z311Nch6MH5r64/ujPTsAzrdwYAXFCI7Ti5vSSOseq8smTf
-         fEuVqgVoTDveGMx40+CuMA13u50sjaGra6BEA4oSZW7ZBheqKQkwLlwT6HZqcH2bIIch
-         YXQcQIZ9FjcBQADxClGJtWHCv35oGgtmWpO+DIcU7De8ZPW6tP3WYfxI50tjPQ0VFlJ5
-         BESg==
-X-Gm-Message-State: AOAM5315OF3UaDAA47dz11TnyozP0tIU0Dlk3aDWei4vJ9oryRLrvqhN
-        lw/+sNMdmIixEVv+HzqRSRWLFpC35ZMhnQxgFkURN+zHw7bcIAhK1BMJ4y2tx5Pgg8hf3yv1lud
-        5SciDL4B2xFOMvzHj+SxmJjMfMs8lsSWsEg==
-X-Received: by 2002:a50:e40d:: with SMTP id d13mr7199522edm.286.1612435805422;
-        Thu, 04 Feb 2021 02:50:05 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyrLq4STTB5oHsAxoJ/eqPScYWEXm044cXSlN/alKGEooRBz1nK3qDv8a2u2yCHeu/QD1EDgg==
-X-Received: by 2002:a50:e40d:: with SMTP id d13mr7199513edm.286.1612435805290;
-        Thu, 04 Feb 2021 02:50:05 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id n16sm2273045ejd.116.2021.02.04.02.50.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Feb 2021 02:50:04 -0800 (PST)
-Subject: Re: [GIT PULL] ib-drm-gpio-pdx86-rtc-wdt-v5.12-1
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <YBANNJ8XtoRf7SuW@smile.fi.intel.com>
- <CAMeQTsbGBrTvfkz6BStwL240Kz-dbrQVKtXbYkRtbD3OoUKCcg@mail.gmail.com>
- <CAHp75VeYroY5uG38NrsqwbHnjT0j_LMMD3JmNmRED3OY5ff7xA@mail.gmail.com>
- <CAMeQTsZRng0UWkO5fXUmZW=-gnKWiigwO0BwMY9p1T2D-hoMNA@mail.gmail.com>
- <CAKMK7uEBaWMz-AjuJO3vvUBvacqMHuevOhMhQ0a+r5TtyDpwuQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <797cf4ac-ffdc-e73e-cb58-d027beb6e3b4@redhat.com>
-Date:   Thu, 4 Feb 2021 11:50:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=x+q7M5BysVCq0z73BCA5GL6K1zhxLeh9Ep6YuQ1rvpw=;
+        b=NkbeH0s9FBLOV+Wse/Y6c3Vc6CDqAD5AEy6ZGsLflQepqjqCjWV3lxVgMi6lbhBpftYVew
+        9QtP+ljkKRefd9fZoY1dFln9/Q9e2nFNnzMC/0s/gZU154j1HyoOWlWHrCTQqsJfebf8Q9
+        FrVVybE3qHTptJdYnKQsjd6ae3frQgg=
+Date:   Thu, 4 Feb 2021 11:51:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] x86: efi: avoid BUILD_BUG_ON() for non-constant p4d_index
+Message-ID: <20210204105155.GA32255@zn.tnic>
+References: <20210107223424.4135538-1-arnd@kernel.org>
+ <YAHoB4ODvxSqNhsq@rani.riverdale.lan>
+ <YAH6r3lak/F2wndp@rani.riverdale.lan>
+ <CAMj1kXGZFZciN1_KruCr=g6GANNpRrCLR48b3q13+QfK481C7Q@mail.gmail.com>
+ <20210118202409.GG30090@zn.tnic>
+ <YAYAvBARSRSg8z8G@rani.riverdale.lan>
+ <CAMj1kXHM98-iDYpAozaWEv-qxhZ0-CUMwSdG532x2d+55gXDhQ@mail.gmail.com>
+ <20210203185148.GA1711888@localhost>
+ <CAMj1kXFPOvkcw573wzKzMQOgT-nddFcAZo9M4Lk+idn_1UBbnA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uEBaWMz-AjuJO3vvUBvacqMHuevOhMhQ0a+r5TtyDpwuQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFPOvkcw573wzKzMQOgT-nddFcAZo9M4Lk+idn_1UBbnA@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Wed, Feb 03, 2021 at 09:29:18PM +0100, Ard Biesheuvel wrote:
+> I think we have agreement on the approach but it is unclear who is
+> going to write the patch.
 
-On 2/4/21 11:36 AM, Daniel Vetter wrote:
-> On Thu, Feb 4, 2021 at 11:19 AM Patrik Jakobsson
-> <patrik.r.jakobsson@gmail.com> wrote:
->>
->> On Wed, Feb 3, 2021 at 1:00 PM Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->>>
->>> On Tue, Jan 26, 2021 at 5:25 PM Patrik Jakobsson
->>> <patrik.r.jakobsson@gmail.com> wrote:
->>>> On Tue, Jan 26, 2021 at 1:37 PM Andy Shevchenko
->>>> <andriy.shevchenko@linux.intel.com> wrote:
->>>>>
->>>>> Hi guys,
->>>>>
->>>>> This is first part of Intel MID outdated platforms removal. It's collected into
->>>>> immutable branch with a given tag, please pull to yours subsystems.
->>>>
->>>> Hi Andy,
->>>> Do you plan on eventually removing X86_INTEL_MID completely? If so,
->>>> then I should probably start looking at removing the corresponding
->>>> parts in GMA500.
->>>
->>> I have noticed new commits in DRM against GMA500 and it seems now in a
->>> conflict with my immutable branch. Are you sure you don't forget to
->>> pull it?
->>
->> Hi Andy, sorry I missed pulling the immutable branch before taking the
->> gma500 medfield removal. I was unsure how to do that through drm-misc
->> and it's tools so I got sidetracked. What would be the correct way to
->> fix this?
-> 
-> Imo Linus can resolve this, it's pretty trivial, as long as both pull
-> requests point it out to him.
+How's that below?
 
-The removal of older Intel platforms touches a number of subsystem trees,
-the idea about the IM branch was that all subsystem-trees would merge that.
+And frankly, I'd even vote for removing those assertions altogether. If
+somehow the EFI pgd lands somewhere else, the kernel will crash'n'burn
+spectacularly and quickly so it's not like we won't catch it...
 
-I can certainly point out the problem in the pdx86 pull-req to Linus,
-but the GPIO pull-req also contains a merge of the IM branch as will
-the x86/tip and rtc pull-reqs I believe. We can add a remark to all
-the pull-reqs about the issue I guess ?
+---
+diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
+index 91ac10654570..b6be19c09841 100644
+--- a/arch/x86/include/asm/pgtable_64_types.h
++++ b/arch/x86/include/asm/pgtable_64_types.h
+@@ -156,8 +156,8 @@ extern unsigned int ptrs_per_p4d;
+ #define CPU_ENTRY_AREA_PGD	_AC(-4, UL)
+ #define CPU_ENTRY_AREA_BASE	(CPU_ENTRY_AREA_PGD << P4D_SHIFT)
+ 
+-#define EFI_VA_START		( -4 * (_AC(1, UL) << 30))
+-#define EFI_VA_END		(-68 * (_AC(1, UL) << 30))
++#define EFI_VA_START		( -4UL * (_AC(1, UL) << 30))
++#define EFI_VA_END		(-68UL * (_AC(1, UL) << 30))
+ 
+ #define EARLY_DYNAMIC_PAGE_TABLES	64
+ 
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e1e8d4e3a213..56fdc0bbb554 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -123,9 +123,7 @@ void efi_sync_low_kernel_mappings(void)
+ 	 * only span a single PGD entry and that the entry also maps
+ 	 * other important kernel regions.
+ 	 */
+-	MAYBE_BUILD_BUG_ON(pgd_index(EFI_VA_END) != pgd_index(MODULES_END));
+-	MAYBE_BUILD_BUG_ON((EFI_VA_START & PGDIR_MASK) !=
+-			(EFI_VA_END & PGDIR_MASK));
++	MAYBE_BUILD_BUG_ON((EFI_VA_START & PGDIR_MASK) != PGDIR_MASK);
+ 
+ 	pgd_efi = efi_pgd + pgd_index(PAGE_OFFSET);
+ 	pgd_k = pgd_offset_k(PAGE_OFFSET);
+@@ -137,8 +135,7 @@ void efi_sync_low_kernel_mappings(void)
+ 	 * As with PGDs, we share all P4D entries apart from the one entry
+ 	 * that covers the EFI runtime mapping space.
+ 	 */
+-	BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+-	BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
++	BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != P4D_MASK);
+ 
+ 	pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
+ 	pgd_k = pgd_offset_k(EFI_VA_END);
 
-But it might be better to still merge the branch into drm-misc-next and
-resolve the conflict there. I think that should avoid Linus seeing it ?
 
-Regards,
+-- 
+Regards/Gruss,
+    Boris.
 
-Hans
-
+https://people.kernel.org/tglx/notes-about-netiquette
