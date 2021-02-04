@@ -8,89 +8,90 @@ X-Spam-Status: No, score=-22.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11215C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 16:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1251BC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 16:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEDF64F4D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 16:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C737564E35
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Feb 2021 16:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237122AbhBDQZk (ORCPT
+        id S237072AbhBDQ0W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Feb 2021 11:25:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34703 "EHLO
+        Thu, 4 Feb 2021 11:26:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35233 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237997AbhBDQZ0 (ORCPT
+        by vger.kernel.org with ESMTP id S237140AbhBDQZr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Feb 2021 11:25:26 -0500
+        Thu, 4 Feb 2021 11:25:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612455839;
+        s=mimecast20190719; t=1612455859;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=c6GH/RMJKdRcZGKhwAu0rb2nnGno2HqVqDDSYv114mE=;
-        b=GzyRCjYBZPd+u5pTxpYEje19dUby8pmXjrcJ3lIJpiBh5K5aXYbfYjDIMrLCkF1uRDj6A3
-        hUA9u+mBVKnABrGNfMLLY4tivq+Mj3vLXlhGOwr3UkZQEpxJqj/pvNGMaSXU0+QWitsJU9
-        SdJD2yZAHGVyLXVP2O6xdjAZEPjoVL0=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-ehxFv3pCOiCRn6fY6YM5cw-1; Thu, 04 Feb 2021 11:23:58 -0500
-X-MC-Unique: ehxFv3pCOiCRn6fY6YM5cw-1
-Received: by mail-ed1-f70.google.com with SMTP id t9so3249042edd.3
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Feb 2021 08:23:57 -0800 (PST)
+        bh=WNwlKTDWoeqLyiAXQQIOfkUaFk/WLHzLd9vQiv5PVsU=;
+        b=NkzKNWQYwyWxxCxBk9FIbdCF2PrKdJOVrpE8qu7vuOmkaArxxWH3fxtldEHspcjPyvZhiP
+        l0wqbr8njDYkq1lQP5Z5I/w59DB3NrvsyhBK5Q0bHb5kpo0tJbUaCMCS0kAIQ78Wrc9k7l
+        nQxDlR1k5QT0qrsScEjUoadiOC4yt9U=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-143-u3I7FxM3Pxi83cNDUsOxCw-1; Thu, 04 Feb 2021 11:24:17 -0500
+X-MC-Unique: u3I7FxM3Pxi83cNDUsOxCw-1
+Received: by mail-ej1-f69.google.com with SMTP id le12so2938361ejb.13
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Feb 2021 08:24:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=c6GH/RMJKdRcZGKhwAu0rb2nnGno2HqVqDDSYv114mE=;
-        b=odeaMbSPDldYj3V+eKb/p4xXXznIb1RIrVvPRci34skQoJy/JxajeUjigeTKlWh+Ra
-         YmsYqsTBj3rEiTmF0Pk5o+0AHYGQQ1/e9Nd/SpcWpHV5UvK7reVEx1rbgtofg9h5xCJh
-         EQ+Xec5RCYV4DOrKwDUiBfR3d06eK+ZnRdNh6VrYJO6F4Cq79bc4oC5yQ0xoEb0AovUz
-         045cBfg2LGWXbWDb9aUk4MumsBXZKFC5HpOXdTzOGhGdNod/rHoOcXosfH3Dt1PVzyEN
-         IhAhWjonIURWpX4B4SkzXRPuPPQ9olcO5JPp5z3VKvc50UOT4LT8zGyuZfPeqxTFXXA+
-         SwsQ==
-X-Gm-Message-State: AOAM532yt0n5TVTFY/hGBOqgMBJg2X5XS9oOp9ls7x/I10HKmQ4vSyM/
-        2eBjRrMf46m3Rbka6syKW505Zt/CAMlVogzfzsTKXvUloRIAc9Cen9LagVrnk0isXhgFOfA4DZd
-        rTLTV5wkZxxPchSmrEyHc4R+CQW36lvEybw==
-X-Received: by 2002:aa7:c895:: with SMTP id p21mr8685878eds.165.1612455836908;
-        Thu, 04 Feb 2021 08:23:56 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwHPlvuWtARA8QC3sBbIxEUwAE4rKNgHRLSm7btlkrSyRCpbmm/Ppq4ovz2kAxFxU1YmQ/oDw==
-X-Received: by 2002:aa7:c895:: with SMTP id p21mr8685862eds.165.1612455836732;
-        Thu, 04 Feb 2021 08:23:56 -0800 (PST)
+        bh=WNwlKTDWoeqLyiAXQQIOfkUaFk/WLHzLd9vQiv5PVsU=;
+        b=mZ5Ii92xXuqMwl68Suex1jeNzU+94R/CRa2NXotMJzzZdpRHHmNiHBdc41rIi0Ney/
+         lqc2+6E+1iCKEfm69EYgM4of8zm6A759m2QWJDTFhdk3+LtEVK8HGZhAWOpdLQKtmk4r
+         EIcqgJaaUfu/XcVHkJIPCrVSxM9i7yISHZaP8Bm3/eCD57RXCARu6qn8Ng/IG6An5BGP
+         Hzu5t+CaqkGGss9ZxpC1dHUJSiEqOjEP4uClZ0p0GBO2+7KkokapLHAjI+oQnHv/eBsE
+         6lALA98o0ybOsHE8iJ/gNz6GQ+75PE+ZEyLEoJxx/JzI75stKP2jIEupcTeiLdLEYZkZ
+         2JcA==
+X-Gm-Message-State: AOAM532RjiRPeDu6IfB53FWFNHR9y6Do5HoNX9PNETRIHKyfmbK/3M+p
+        PAk4VbqXbtPxns0DnEaLCvCJa/3lsHE417fJl95EtTUkVDgNCZ5FUM/btkwF3Ma2/JnrjAnSp6F
+        YAXO+JRnMigKtOhrV1+Di89Vb+iv2zU77sw==
+X-Received: by 2002:aa7:d15a:: with SMTP id r26mr8467643edo.29.1612455855717;
+        Thu, 04 Feb 2021 08:24:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzHvu1J/wIvXBEojQwfLAYuEXrORLTJLC0yLWW3OEy6kRZiOp9LGMFe1wS52PlkMhfgcJGwSg==
+X-Received: by 2002:aa7:d15a:: with SMTP id r26mr8467626edo.29.1612455855524;
+        Thu, 04 Feb 2021 08:24:15 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-37a3-353b-be90-1238.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:37a3:353b:be90:1238])
-        by smtp.gmail.com with ESMTPSA id p16sm2676349edw.44.2021.02.04.08.23.55
+        by smtp.gmail.com with ESMTPSA id jg33sm2586403ejc.103.2021.02.04.08.24.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Feb 2021 08:23:55 -0800 (PST)
-Subject: Re: [PATCH] platform/x86: Kconfig: add missing selects for
- ideapad-laptop
-To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        Thu, 04 Feb 2021 08:24:15 -0800 (PST)
+Subject: Re: [PATCH v1] platform/x86: intel_scu_wdt: Drop mistakenly added
+ const
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        Ike Panhc <ike.pan@canonical.com>
-References: <20210204142010.356675-1-pobrn@protonmail.com>
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20210204150508.62659-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fee5187f-5438-88ff-0974-3a67be294a65@redhat.com>
-Date:   Thu, 4 Feb 2021 17:23:55 +0100
+Message-ID: <a5fe50e4-2d8a-10e4-5d12-c3e79e14561f@redhat.com>
+Date:   Thu, 4 Feb 2021 17:24:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <20210204142010.356675-1-pobrn@protonmail.com>
+In-Reply-To: <20210204150508.62659-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/4/21 3:20 PM, Barnabás Pőcze wrote:
-> LED class support is needed by the ideapad-laptop module to compile after
-> the referenced commit. Add missing NEW_LEDS and LEDS_CLASS to Kconfig.
+On 2/4/21 4:05 PM, Andy Shevchenko wrote:
+> Neither original structure nor platform_data is declared with const.
+> Drop mistakenly added const when assing platform_data.
 > 
-> Fixes: 503325f84bc0 ("platform/x86: ideapad-laptop: add keyboard backlight control support")
-> Signed-off-by: Barnabás Pőcze <pobrn@protonmail.com>
+> Fixes: a507e5d90f3d ("platform/x86: intel_scu_wdt: Get rid of custom x86 model comparison")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -109,19 +110,24 @@ Regards,
 Hans
 
 
+
+
+> ---
+>  drivers/platform/x86/intel_scu_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index cf76e724e8c3..89cc2936f2ef 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -452,6 +452,8 @@ config IDEAPAD_LAPTOP
->  	depends on ACPI_WMI || ACPI_WMI = n
->  	depends on ACPI_PLATFORM_PROFILE
->  	select INPUT_SPARSEKMAP
-> +	select NEW_LEDS
-> +	select LEDS_CLASS
->  	help
->  	  This is a driver for Lenovo IdeaPad netbooks contains drivers for
->  	  rfkill switch, hotkey, fan control and backlight control.
+> diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel_scu_wdt.c
+> index 85ee85ca2215..c2479777a1d6 100644
+> --- a/drivers/platform/x86/intel_scu_wdt.c
+> +++ b/drivers/platform/x86/intel_scu_wdt.c
+> @@ -63,7 +63,7 @@ static int __init register_mid_wdt(void)
+>  	if (!id)
+>  		return -ENODEV;
+>  
+> -	wdt_dev.dev.platform_data = (const struct intel_mid_wdt_pdata *)id->driver_data;
+> +	wdt_dev.dev.platform_data = (struct intel_mid_wdt_pdata *)id->driver_data;
+>  	return platform_device_register(&wdt_dev);
+>  }
+>  arch_initcall(register_mid_wdt);
 > 
 
