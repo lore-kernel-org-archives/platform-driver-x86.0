@@ -2,52 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA75C43331
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 311D2C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252F964E7D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0728964E88
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235187AbhBHSAx (ORCPT
+        id S235414AbhBHSFv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Feb 2021 13:00:53 -0500
+        Mon, 8 Feb 2021 13:05:51 -0500
 Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235137AbhBHR7o (ORCPT
+        id S235119AbhBHSCl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Feb 2021 12:59:44 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7C9BC64E8B;
-        Mon,  8 Feb 2021 17:58:18 +0000 (UTC)
+        Mon, 8 Feb 2021 13:02:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3983864ECB;
+        Mon,  8 Feb 2021 17:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612807099;
-        bh=N22Zf85f0trjNoELs3GnoGMbbStZyq3DAIB/qb+HGCo=;
+        s=k20201202; t=1612807137;
+        bh=MwE0dRe4FlkiHM4UEKZwi9NyT1H5uA6kVgZ45xrrRhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1v8/jik+grw87np1PptmGJfMx8wZwdQh2Kt5BZKFrCHmjE0Q6/i6IKJpXtgr0h1M
-         9L4HaD0ymxCEmlb8Sz8Y05WZNEmMoFxoyZCW8qscGhK/LFb3cxD0/F2ftZ7BUBTCp9
-         zDOAAiEPtg7SQ8XT5XLy6qirA4ZAnSwSL8Kz8j0eAwY6Cbx0kUaUZjCLX6ggBbM/4v
-         Rt5dz5WSnJtL89Vxg+I/ghxX0OyykxIP0UjhFFNCuatgOS3MsgPetd6yNKqXICY1yJ
-         24oUxCvumgUQyhvoEiBL0o+TqYHcZZ5ENZ3tmJuUedxeGU586TJXxWW13sQS2h3tVI
-         CKSB3QC5+ZT6w==
+        b=XabMr1QwJGKzQfPAvLkSR+Q02JW41Xwn9yW+y9iFm+AMxEolwaazADOhCXb2rh/Ip
+         n5EncEqiPNWgZFc1ctphzvpnG2Go17pG4SqZU9trLWipG5TA3yiZwzlZ8DX2B1h1xc
+         Kg4q/qAhBp4xUFZNb2PRxC7662dmx21IrJiRpMv5nuo96/aMni71o/nh0u6EEsHJ12
+         h9UBSRZiSA5tBk7yvJwISSo+lGHcCPgOXEhg0t6hxiJ2fw0LqTS4fDLSun1R9el8OF
+         CqP+V7ETDB69aXcBp5f15X05HwRtVb+HeGskvlyaIdFIAKjhcDvbhM02T3evefIXoM
+         ONJl5AH25u45A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?q?Stefan=20Br=C3=BCns?= <stefan.bruens@rwth-aachen.de>,
-        Mark Gross <mgross@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 09/36] platform/x86: hp-wmi: Disable tablet-mode reporting by default
-Date:   Mon,  8 Feb 2021 12:57:39 -0500
-Message-Id: <20210208175806.2091668-9-sashal@kernel.org>
+Cc:     Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.10 36/36] x86/efi: Remove EFI PGD build time checks
+Date:   Mon,  8 Feb 2021 12:58:06 -0500
+Message-Id: <20210208175806.2091668-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210208175806.2091668-1-sashal@kernel.org>
 References: <20210208175806.2091668-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -55,97 +56,87 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Borislav Petkov <bp@suse.de>
 
-[ Upstream commit 67fbe02a5cebc3c653610f12e3c0424e58450153 ]
+[ Upstream commit 816ef8d7a2c4182e19bc06ab65751cb9e3951e94 ]
 
-Recently userspace has started making more use of SW_TABLET_MODE
-(when an input-dev reports this).
+With CONFIG_X86_5LEVEL, CONFIG_UBSAN and CONFIG_UBSAN_UNSIGNED_OVERFLOW
+enabled, clang fails the build with
 
-Specifically recent GNOME3 versions will:
+  x86_64-linux-ld: arch/x86/platform/efi/efi_64.o: in function `efi_sync_low_kernel_mappings':
+  efi_64.c:(.text+0x22c): undefined reference to `__compiletime_assert_354'
 
-1.  When SW_TABLET_MODE is reported and is reporting 0:
-1.1 Disable accelerometer-based screen auto-rotation
-1.2 Disable automatically showing the on-screen keyboard when a
-    text-input field is focussed
+which happens due to -fsanitize=unsigned-integer-overflow being enabled:
 
-2.  When SW_TABLET_MODE is reported and is reporting 1:
-2.1 Ignore input-events from the builtin keyboard and touchpad
-    (this is for 360° hinges style 2-in-1s where the keyboard and
-     touchpads are accessible on the back of the tablet when folded
-     into tablet-mode)
+  -fsanitize=unsigned-integer-overflow: Unsigned integer overflow, where
+  the result of an unsigned integer computation cannot be represented
+  in its type. Unlike signed integer overflow, this is not undefined
+  behavior, but it is often unintentional. This sanitizer does not check
+  for lossy implicit conversions performed before such a computation
+  (see -fsanitize=implicit-conversion).
 
-This means that claiming to support SW_TABLET_MODE when it does not
-actually work / reports correct values has bad side-effects.
+and that fires when the (intentional) EFI_VA_START/END defines overflow
+an unsigned long, leading to the assertion expressions not getting
+optimized away (on GCC they do)...
 
-The check in the hp-wmi code which is used to decide if the input-dev
-should claim SW_TABLET_MODE support, only checks if the
-HPWMI_HARDWARE_QUERY is supported. It does *not* check if the hardware
-actually is capable of reporting SW_TABLET_MODE.
+However, those checks are superfluous: the runtime services mapping
+code already makes sure the ranges don't overshoot EFI_VA_END as the
+EFI mapping range is hardcoded. On each runtime services call, it is
+switched to the EFI-specific PGD and even if mappings manage to escape
+that last PGD, this won't remain unnoticed for long.
 
-This leads to the hp-wmi input-dev claiming SW_TABLET_MODE support,
-while in reality it will always report 0 as SW_TABLET_MODE value.
-This has been seen on a "HP ENVY x360 Convertible 15-cp0xxx" and
-this likely is the case on a whole lot of other HP models.
+So rip them out.
 
-This problem causes both auto-rotation and on-screen keyboard
-support to not work on affected x360 models.
+See https://github.com/ClangBuiltLinux/linux/issues/256 for more info.
 
-There is no easy fix for this, but since userspace expects
-SW_TABLET_MODE reporting to be reliable when advertised it is
-better to not claim/report SW_TABLET_MODE support at all, then
-to claim to support it while it does not work.
-
-To avoid the mentioned problems, add a new enable_tablet_mode_sw
-module-parameter which defaults to false.
-
-Note I've made this an int using the standard -1=auto, 0=off, 1=on
-triplett, with the hope that in the future we can come up with a
-better way to detect SW_TABLET_MODE support. ATM the default
-auto option just does the same as off.
-
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1918255
-Cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Mark Gross <mgross@linux.intel.com>
-Link: https://lore.kernel.org/r/20210120124941.73409-1-hdegoede@redhat.com
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Link: http://lkml.kernel.org/r/20210107223424.4135538-1-arnd@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wmi.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/x86/platform/efi/efi_64.c | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 18bf8aeb5f870..e94e59283ecb9 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -32,6 +32,10 @@ MODULE_LICENSE("GPL");
- MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
- MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e1e8d4e3a2139..8efd003540cae 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -115,31 +115,12 @@ void efi_sync_low_kernel_mappings(void)
+ 	pud_t *pud_k, *pud_efi;
+ 	pgd_t *efi_pgd = efi_mm.pgd;
  
-+static int enable_tablet_mode_sw = -1;
-+module_param(enable_tablet_mode_sw, int, 0444);
-+MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=auto, 0=no, 1=yes)");
-+
- #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
- #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
+-	/*
+-	 * We can share all PGD entries apart from the one entry that
+-	 * covers the EFI runtime mapping space.
+-	 *
+-	 * Make sure the EFI runtime region mappings are guaranteed to
+-	 * only span a single PGD entry and that the entry also maps
+-	 * other important kernel regions.
+-	 */
+-	MAYBE_BUILD_BUG_ON(pgd_index(EFI_VA_END) != pgd_index(MODULES_END));
+-	MAYBE_BUILD_BUG_ON((EFI_VA_START & PGDIR_MASK) !=
+-			(EFI_VA_END & PGDIR_MASK));
+-
+ 	pgd_efi = efi_pgd + pgd_index(PAGE_OFFSET);
+ 	pgd_k = pgd_offset_k(PAGE_OFFSET);
  
-@@ -654,10 +658,12 @@ static int __init hp_wmi_input_setup(void)
- 	}
+ 	num_entries = pgd_index(EFI_VA_END) - pgd_index(PAGE_OFFSET);
+ 	memcpy(pgd_efi, pgd_k, sizeof(pgd_t) * num_entries);
  
- 	/* Tablet mode */
--	val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
--	if (!(val < 0)) {
--		__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
--		input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+	if (enable_tablet_mode_sw > 0) {
-+		val = hp_wmi_hw_state(HPWMI_TABLET_MASK);
-+		if (val >= 0) {
-+			__set_bit(SW_TABLET_MODE, hp_wmi_input_dev->swbit);
-+			input_report_switch(hp_wmi_input_dev, SW_TABLET_MODE, val);
-+		}
- 	}
- 
- 	err = sparse_keymap_setup(hp_wmi_input_dev, hp_wmi_keymap, NULL);
+-	/*
+-	 * As with PGDs, we share all P4D entries apart from the one entry
+-	 * that covers the EFI runtime mapping space.
+-	 */
+-	BUILD_BUG_ON(p4d_index(EFI_VA_END) != p4d_index(MODULES_END));
+-	BUILD_BUG_ON((EFI_VA_START & P4D_MASK) != (EFI_VA_END & P4D_MASK));
+-
+ 	pgd_efi = efi_pgd + pgd_index(EFI_VA_END);
+ 	pgd_k = pgd_offset_k(EFI_VA_END);
+ 	p4d_efi = p4d_offset(pgd_efi, 0);
 -- 
 2.27.0
 
