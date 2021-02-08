@@ -2,137 +2,397 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83E1C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB449C433E9
 	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 19:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98BA464E8F
+	by mail.kernel.org (Postfix) with ESMTP id BE32160238
 	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 19:37:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236315AbhBHTgv (ORCPT
+        id S236342AbhBHTgy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Feb 2021 14:36:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52414 "EHLO
+        Mon, 8 Feb 2021 14:36:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236364AbhBHTgA (ORCPT
+        with ESMTP id S236384AbhBHTgD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Feb 2021 14:36:00 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D6BC061786;
-        Mon,  8 Feb 2021 11:35:19 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id t5so20118519eds.12;
-        Mon, 08 Feb 2021 11:35:19 -0800 (PST)
+        Mon, 8 Feb 2021 14:36:03 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5550EC06178A;
+        Mon,  8 Feb 2021 11:35:23 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id w1so26978012ejf.11;
+        Mon, 08 Feb 2021 11:35:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lLkfqnoN6pj/NAqIhpdOb7jdNAMnGipQQ2M65QsTy4Q=;
-        b=CUeH4orN2XxCoPw4eEFN8Oz4q1Qc6yh4X4CeGQSvEY5c6/KFwPNVmz9fSaiJZNSBPz
-         FzyjXMyTmG6/Zkm0oD89HUYxFvt7vEN5nOx5mA3ame6XhAZUrrKgKRHl4JotlDDixpzf
-         pSad6YwTzf7KLEoNS3PC5WLTipU3yzm2ofLlXXfJ1zHB5YPyZjpxaC4NbHMeXTJj6xIs
-         T+7qYhW7ulHCsiSKY6WfZeq9LnMsiyvFQ+OVtAgqOH3Twhko62WXQbzcR+Am5TU4TcqY
-         i5ckmD6rirDeGfFimpAtEmN1PvbH9Bz0x13v+Hg4WUA6YFz5TO2SUIPi47eZ1e0AeLqw
-         31lQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CKTjcZrKPElcKyPJ5qAyLAr8f1S682D7/6q/UuWh6ys=;
+        b=tiOe0Tx+kT0lO1I85fHzss690AbbHPQLgtZ4OxesVPRHqSEhFYlHC0vJJMTECD1EQC
+         cZagIfwiywfbuA275x/5qVf5zR7DaosZIHKpovUC619wucprZA0k/BWN+GxFkcLtvxqc
+         r13yATT7mLpXXAxTKDKgx750zKe654XiuSHuBenfCXolbblSF9HC6xFOYiufCsOUDNTU
+         N3uLnVuwtiZQ2dlVOr+Z0g4pBm2lwHmOKgYB1mSPl6hTVDEYVFP6Zayrmx8GZWV+5G4x
+         YvcJzXYOJ3R33L8odNgu7BGBlNHftkZP+WO8xYvjZ0zKZBXsv2twh+6pnT2471XB26Vv
+         rhRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lLkfqnoN6pj/NAqIhpdOb7jdNAMnGipQQ2M65QsTy4Q=;
-        b=MRh8FrECwV3BLuhS7JDICCv6LpQLkIW6WjLdv952UObjd8AwQ99TMKI2nxZjiuyXGA
-         5aWKJM3TzjXdICkN9eift1Ey1S7r9J7narkx8VSSba4RSrLBpj4HmyMynKq5fvpvDo32
-         +uLSAVtnO45DEtVWqsto+DsgU0+SpewsYUKcr+2M3/QFJ0O5EJwO7/ZgIv8f65DDpexL
-         PrRpwH2+sW12D8t+9d5nBRumo3xmhOeVlfFWDBryP/gewqHcO46azZrcJjNK/LtX1Zgf
-         HAPuKPzwFQ4loylg0pQyQF4MVboGI/jSAIFYDg9oGrE01JDrpiVUUGG5949EIv+jG7Uo
-         rdnQ==
-X-Gm-Message-State: AOAM531HSt/+HUPHqftzzRK8U3cz3S4hFwQO1mQLkgKY8FpxdfhkCF8q
-        XJPxEbaAz4esxQ4svzHKt6s=
-X-Google-Smtp-Source: ABdhPJx3MTEvSexn+W4oAJGgxlwYWAuABMPJjc1CqBowY1bbDxut3GNqdtl+G3UokrMVTGUUSBYqmg==
-X-Received: by 2002:a05:6402:22b0:: with SMTP id cx16mr11323174edb.255.1612812918607;
-        Mon, 08 Feb 2021 11:35:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CKTjcZrKPElcKyPJ5qAyLAr8f1S682D7/6q/UuWh6ys=;
+        b=P/VTQBANmeJ64QhfVHD3Amx6N/n/23S4n9K/DJl0lbXudyyWcQfrAZJtT634Vbsa+P
+         VeJWC5AlTlnYq4IXhQzF9mkexh2pCVwR0yNPoy0B/NwdRKHXfbkwBMauOjgCSp9uxjBC
+         eHMxenBzs1WiZgA53RAwaBqVUfSRfq5A7mvSiFDNvnX+DpufdprBKtAr2xLPZLlushpP
+         FXPyv0x5VTqIIyHgwJKKeN+DfqL8B18p9DPKOAIpSeONQhBe7WeRM6dayj38VMwzJAeL
+         FKAbcj+Mh7/HiCRWVISqFZO8vgfDl6bayHmiaSbRkM8DidfBUiJbKlICgXIVv5QNDrCW
+         zo8g==
+X-Gm-Message-State: AOAM533Sgt/vcIO86x5OsXZN5dELich3BaNtunZnNlSXiqZnW4oYHTM4
+        T/HbG5fnFxU/VY8j26+5Mtw=
+X-Google-Smtp-Source: ABdhPJyvZZ77WkLVc4OOOnTjuMqyWftQVh5dXOCZVtOPfMhb9ucyw4ORdNE3yz7dq2NHoI+CymJW/g==
+X-Received: by 2002:a17:906:e104:: with SMTP id gj4mr18364099ejb.349.1612812922078;
+        Mon, 08 Feb 2021 11:35:22 -0800 (PST)
 Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id g9sm9241414ejp.55.2021.02.08.11.35.16
+        by smtp.gmail.com with ESMTPSA id g9sm9241414ejp.55.2021.02.08.11.35.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Feb 2021 11:35:17 -0800 (PST)
+        Mon, 08 Feb 2021 11:35:21 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] platform/surface: Add Surface Aggregator device registry
-Date:   Mon,  8 Feb 2021 20:35:02 +0100
-Message-Id: <20210208193508.3038055-1-luzmaximilian@gmail.com>
+Subject: [PATCH 2/6] platform/surface: aggregator_registry: Add base device hub
+Date:   Mon,  8 Feb 2021 20:35:04 +0100
+Message-Id: <20210208193508.3038055-3-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210208193508.3038055-1-luzmaximilian@gmail.com>
+References: <20210208193508.3038055-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Surface System Aggregator Module (SSAM) subsystem provides various
-functionalities, which are separated by spreading them across multiple
-devices and corresponding drivers. Parts of that functionality / some of
-those devices, however, can (as far as we currently know) not be
-auto-detected by conventional means. While older (specifically 5th- and
-6th-)generation models do advertise most of their functionality via
-standard platform devices in ACPI, newer generations do not.
+The Surface Book 3 has a detachable base part. While the top part
+(so-called clipboard) contains the CPU, touchscreen, and primary
+battery, the base contains, among other things, a keyboard, touchpad,
+and secondary battery.
 
-As we are currently also not aware of any feasible way to query said
-functionalities dynamically, this poses a problem. There is, however, a
-device in ACPI that seems to be used by Windows for identifying
-different Surface models: The Windows Surface Integration Device (WSID).
-This device seems to have a HID corresponding to the overall set of
-functionalities SSAM provides for the associated model.
+Those devices do not react well to being accessed when the base part is
+detached and should thus be removed and added in sync with the base. To
+facilitate this, we introduce a virtual base device hub, which
+automatically removes or adds the devices registered under it.
 
-This series introduces a device registry based on software nodes and
-device hubs to solve this problem. The registry is intended to contain
-all required non-detectable information.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ .../surface/surface_aggregator_registry.c     | 261 +++++++++++++++++-
+ 1 file changed, 260 insertions(+), 1 deletion(-)
 
-The platform hub driver is loaded against the WSID device and
-instantiates and manages SSAM devices based on the information provided
-by the registry for the given WSID HID of the Surface model. All new
-devices created by this hub added as child devices to this hub.
-
-In addition, a base hub is introduced to manage devices associated with
-the detachable base part of the Surface Book 3, as this requires special
-handling (i.e. devices need to be removed when the base is removed).
-Again, all devices created by the base hub (i.e. associated with the
-base) are added as child devices to this hub.
-
-In total, this will yield the following device structure
-
-  WSID
-   |- SSAM device 1 (physical device)
-   |- SSAM device 2 (physical device)
-   |- SSAM device 3 (physical device)
-   |- ...
-   \- SSAM base hub (virtual device)
-      |- SSAM base device 1 (physical device)
-      |- SSAM base device 2 (physical device)
-      |- ...
-
-While software nodes seem to be well suited for this approach due to
-extensibility, they still need to be hard-coded, so I'm open for ideas
-on how this could be improved.
-
-Maximilian Luz (6):
-  platform/surface: Set up Surface Aggregator device registry
-  platform/surface: aggregator_registry: Add base device hub
-  platform/surface: aggregator_registry: Add battery subsystem devices
-  platform/surface: aggregator_registry: Add platform profile device
-  platform/surface: aggregator_registry: Add DTX device
-  platform/surface: aggregator_registry: Add HID subsystem devices
-
- MAINTAINERS                                   |   1 +
- drivers/platform/surface/Kconfig              |  26 +
- drivers/platform/surface/Makefile             |   1 +
- .../surface/surface_aggregator_registry.c     | 641 ++++++++++++++++++
- 4 files changed, 669 insertions(+)
- create mode 100644 drivers/platform/surface/surface_aggregator_registry.c
-
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index a051d941ad96..0d802804594c 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -11,9 +11,12 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/kernel.h>
++#include <linux/limits.h>
+ #include <linux/module.h>
++#include <linux/mutex.h>
+ #include <linux/platform_device.h>
+ #include <linux/property.h>
++#include <linux/types.h>
+ 
+ #include <linux/surface_aggregator/controller.h>
+ #include <linux/surface_aggregator/device.h>
+@@ -38,6 +41,12 @@ static const struct software_node ssam_node_root = {
+ 	.name = "ssam_platform_hub",
+ };
+ 
++/* Base device hub (devices attached to Surface Book 3 base). */
++static const struct software_node ssam_node_hub_base = {
++	.name = "ssam:00:00:02:00:00",
++	.parent = &ssam_node_root,
++};
++
+ /* Devices for Surface Book 2. */
+ static const struct software_node *ssam_node_group_sb2[] = {
+ 	&ssam_node_root,
+@@ -47,6 +56,7 @@ static const struct software_node *ssam_node_group_sb2[] = {
+ /* Devices for Surface Book 3. */
+ static const struct software_node *ssam_node_group_sb3[] = {
+ 	&ssam_node_root,
++	&ssam_node_hub_base,
+ 	NULL,
+ };
+ 
+@@ -177,6 +187,230 @@ static int ssam_hub_add_devices(struct device *parent, struct ssam_controller *c
+ }
+ 
+ 
++/* -- SSAM base-hub driver. ------------------------------------------------- */
++
++enum ssam_base_hub_state {
++	SSAM_BASE_HUB_UNINITIALIZED,
++	SSAM_BASE_HUB_CONNECTED,
++	SSAM_BASE_HUB_DISCONNECTED,
++};
++
++struct ssam_base_hub {
++	struct ssam_device *sdev;
++
++	struct mutex lock;  /* Guards state update checks and transitions. */
++	enum ssam_base_hub_state state;
++
++	struct ssam_event_notifier notif;
++};
++
++static SSAM_DEFINE_SYNC_REQUEST_R(ssam_bas_query_opmode, u8, {
++	.target_category = SSAM_SSH_TC_BAS,
++	.target_id       = 0x01,
++	.command_id      = 0x0d,
++	.instance_id     = 0x00,
++});
++
++#define SSAM_BAS_OPMODE_TABLET		0x00
++#define SSAM_EVENT_BAS_CID_CONNECTION	0x0c
++
++static int ssam_base_hub_query_state(struct ssam_base_hub *hub, enum ssam_base_hub_state *state)
++{
++	u8 opmode;
++	int status;
++
++	status = ssam_retry(ssam_bas_query_opmode, hub->sdev->ctrl, &opmode);
++	if (status < 0) {
++		dev_err(&hub->sdev->dev, "failed to query base state: %d\n", status);
++		return status;
++	}
++
++	if (opmode != SSAM_BAS_OPMODE_TABLET)
++		*state = SSAM_BASE_HUB_CONNECTED;
++	else
++		*state = SSAM_BASE_HUB_DISCONNECTED;
++
++	return 0;
++}
++
++static ssize_t ssam_base_hub_state_show(struct device *dev, struct device_attribute *attr,
++					char *buf)
++{
++	struct ssam_base_hub *hub = dev_get_drvdata(dev);
++	bool connected;
++
++	mutex_lock(&hub->lock);
++	connected = hub->state == SSAM_BASE_HUB_CONNECTED;
++	mutex_unlock(&hub->lock);
++
++	return sysfs_emit(buf, "%d\n", connected);
++}
++
++static struct device_attribute ssam_base_hub_attr_state =
++	__ATTR(state, 0444, ssam_base_hub_state_show, NULL);
++
++static struct attribute *ssam_base_hub_attrs[] = {
++	&ssam_base_hub_attr_state.attr,
++	NULL,
++};
++
++const struct attribute_group ssam_base_hub_group = {
++	.attrs = ssam_base_hub_attrs,
++};
++
++static int __ssam_base_hub_update(struct ssam_base_hub *hub, enum ssam_base_hub_state new)
++{
++	struct fwnode_handle *node = dev_fwnode(&hub->sdev->dev);
++	int status = 0;
++
++	lockdep_assert_held(hub->lock);
++
++	if (hub->state == new)
++		return 0;
++	hub->state = new;
++
++	if (hub->state == SSAM_BASE_HUB_CONNECTED)
++		status = ssam_hub_add_devices(&hub->sdev->dev, hub->sdev->ctrl, node);
++	else
++		ssam_hub_remove_devices(&hub->sdev->dev);
++
++	if (status)
++		dev_err(&hub->sdev->dev, "failed to update base-hub devices: %d\n", status);
++
++	return status;
++}
++
++static int ssam_base_hub_update(struct ssam_base_hub *hub)
++{
++	enum ssam_base_hub_state state;
++	int status;
++
++	mutex_lock(&hub->lock);
++
++	status = ssam_base_hub_query_state(hub, &state);
++	if (!status)
++		status = __ssam_base_hub_update(hub, state);
++
++	mutex_unlock(&hub->lock);
++	return status;
++}
++
++static u32 ssam_base_hub_notif(struct ssam_event_notifier *nf, const struct ssam_event *event)
++{
++	struct ssam_base_hub *hub;
++	struct ssam_device *sdev;
++	enum ssam_base_hub_state new;
++
++	hub = container_of(nf, struct ssam_base_hub, notif);
++	sdev = hub->sdev;
++
++	if (event->command_id != SSAM_EVENT_BAS_CID_CONNECTION)
++		return 0;
++
++	if (event->length < 1) {
++		dev_err(&sdev->dev, "unexpected payload size: %u\n",
++			event->length);
++		return 0;
++	}
++
++	if (event->data[0])
++		new = SSAM_BASE_HUB_CONNECTED;
++	else
++		new = SSAM_BASE_HUB_DISCONNECTED;
++
++	mutex_lock(&hub->lock);
++	__ssam_base_hub_update(hub, new);
++	mutex_unlock(&hub->lock);
++
++	/*
++	 * Do not return SSAM_NOTIF_HANDLED: The event should be picked up and
++	 * consumed by the detachment system driver. We're just a (more or less)
++	 * silent observer.
++	 */
++	return 0;
++}
++
++static int __maybe_unused ssam_base_hub_resume(struct device *dev)
++{
++	return ssam_base_hub_update(dev_get_drvdata(dev));
++}
++static SIMPLE_DEV_PM_OPS(ssam_base_hub_pm_ops, NULL, ssam_base_hub_resume);
++
++static int ssam_base_hub_probe(struct ssam_device *sdev)
++{
++	struct ssam_base_hub *hub;
++	int status;
++
++	hub = devm_kzalloc(&sdev->dev, sizeof(*hub), GFP_KERNEL);
++	if (!hub)
++		return -ENOMEM;
++
++	mutex_init(&hub->lock);
++
++	hub->sdev = sdev;
++	hub->state = SSAM_BASE_HUB_UNINITIALIZED;
++
++	hub->notif.base.priority = INT_MAX;  /* This notifier should run first. */
++	hub->notif.base.fn = ssam_base_hub_notif;
++	hub->notif.event.reg = SSAM_EVENT_REGISTRY_SAM;
++	hub->notif.event.id.target_category = SSAM_SSH_TC_BAS,
++	hub->notif.event.id.instance = 0,
++	hub->notif.event.mask = SSAM_EVENT_MASK_NONE;
++	hub->notif.event.flags = SSAM_EVENT_SEQUENCED;
++
++	ssam_device_set_drvdata(sdev, hub);
++
++	status = ssam_notifier_register(sdev->ctrl, &hub->notif);
++	if (status)
++		goto err_register;
++
++	status = ssam_base_hub_update(hub);
++	if (status)
++		goto err_update;
++
++	status = sysfs_create_group(&sdev->dev.kobj, &ssam_base_hub_group);
++	if (status)
++		goto err_update;
++
++	return 0;
++
++err_update:
++	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
++	ssam_hub_remove_devices(&sdev->dev);
++err_register:
++	mutex_destroy(&hub->lock);
++	return status;
++}
++
++static void ssam_base_hub_remove(struct ssam_device *sdev)
++{
++	struct ssam_base_hub *hub = ssam_device_get_drvdata(sdev);
++
++	sysfs_remove_group(&sdev->dev.kobj, &ssam_base_hub_group);
++
++	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
++	ssam_hub_remove_devices(&sdev->dev);
++
++	mutex_destroy(&hub->lock);
++}
++
++static const struct ssam_device_id ssam_base_hub_match[] = {
++	{ SSAM_VDEV(HUB, 0x02, SSAM_ANY_IID, 0x00) },
++	{ },
++};
++
++static struct ssam_device_driver ssam_base_hub_driver = {
++	.probe = ssam_base_hub_probe,
++	.remove = ssam_base_hub_remove,
++	.match_table = ssam_base_hub_match,
++	.driver = {
++		.name = "surface_aggregator_base_hub",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++		.pm = &ssam_base_hub_pm_ops,
++	},
++};
++
++
+ /* -- SSAM platform/meta-hub driver. ---------------------------------------- */
+ 
+ static const struct acpi_device_id ssam_platform_hub_match[] = {
+@@ -277,7 +511,32 @@ static struct platform_driver ssam_platform_hub_driver = {
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ };
+-module_platform_driver(ssam_platform_hub_driver);
++
++
++/* -- Module initialization. ------------------------------------------------ */
++
++static int __init ssam_device_hub_init(void)
++{
++	int status;
++
++	status = platform_driver_register(&ssam_platform_hub_driver);
++	if (status)
++		return status;
++
++	status = ssam_device_driver_register(&ssam_base_hub_driver);
++	if (status)
++		platform_driver_unregister(&ssam_platform_hub_driver);
++
++	return status;
++}
++module_init(ssam_device_hub_init);
++
++static void __exit ssam_device_hub_exit(void)
++{
++	ssam_device_driver_unregister(&ssam_base_hub_driver);
++	platform_driver_unregister(&ssam_platform_hub_driver);
++}
++module_exit(ssam_device_hub_exit);
+ 
+ MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+ MODULE_DESCRIPTION("Device-registry for Surface System Aggregator Module");
 -- 
 2.30.0
 
