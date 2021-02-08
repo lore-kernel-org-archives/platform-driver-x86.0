@@ -2,83 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B973EC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 09:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785F1C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 10:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747FE64E7A
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 09:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3846764E7D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 10:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229766AbhBHJIp (ORCPT
+        id S231797AbhBHKVe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Feb 2021 04:08:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31534 "EHLO
+        Mon, 8 Feb 2021 05:21:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:23171 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231497AbhBHJGa (ORCPT
+        by vger.kernel.org with ESMTP id S232010AbhBHKT2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Feb 2021 04:06:30 -0500
+        Mon, 8 Feb 2021 05:19:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612775101;
+        s=mimecast20190719; t=1612779480;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=A3evLbIe2FU9BIUHah1B/gIbRgx1g2yvVc3nuQsMilU=;
-        b=gn3j5uU0eaU5JQj3Jaqym6d0aKHTELTc4xByxPHGWmShhk4z6DV8De1gRArPLzpce3FS7R
-        cKds/C/Zw69MYatjFZkHU6VkShgLLF6mDAefbbT0pXNLsiJOA9h2LzzgPRdgm8ITBgPN95
-        CTiD+cetNi2/fVAbPh8O1XuQqZ8vfBM=
+        bh=nsplxaRDtKAAkbOz3qiY8e9OTVA7rBqISeIiP7kozAE=;
+        b=gOjfoTd3cYCJazfFZA21DwH5xQoawWVBE08U0G+POZaQwoGa9EHP7H5ZNVJb5LwBAOTqIa
+        ox8t/TUV63aONZ1cBb0rrO73ZH0WYxdgMBcEAgXemEIg9L5vyRx6TykR8lL+pbMTvxV423
+        Q+cMr+Xp1Kdi4nWWftnFRYGyhmpjYcU=
 Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
  [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-509-iyLik1SLNK2f3mK8TAyZHg-1; Mon, 08 Feb 2021 04:04:59 -0500
-X-MC-Unique: iyLik1SLNK2f3mK8TAyZHg-1
-Received: by mail-ed1-f69.google.com with SMTP id w23so12766448edr.15
-        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Feb 2021 01:04:59 -0800 (PST)
+ us-mta-82-TFyWyfyCMKqZBP8u9Ur_Bg-1; Mon, 08 Feb 2021 05:17:58 -0500
+X-MC-Unique: TFyWyfyCMKqZBP8u9Ur_Bg-1
+Received: by mail-ed1-f69.google.com with SMTP id p18so12900610edr.20
+        for <platform-driver-x86@vger.kernel.org>; Mon, 08 Feb 2021 02:17:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:cc:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=A3evLbIe2FU9BIUHah1B/gIbRgx1g2yvVc3nuQsMilU=;
-        b=QGAdvY5r431kUNrF7GwCs7AI79AgYI4tFCiZNecF6Yc8lmd18Lc1Q6gSHCphD56Wa9
-         2cLaUGy+QRUFueBh0SzuyeYkQP/9MgAtfbdHooc5q5X3rFN5q6AsPwwcp82RtAN+U/qd
-         4zMiJ6HBnM/5yn1Zyee0hfTf2VvtbTrNvJCqNvri5vRff4jnA8jYnRd03XXyXwxhwcTU
-         eGh6DVukWEEZpPDye5spvDaki1Tqcvsr71hCd3s9PPfWxD5MRs+8COFmm6sS7G6Cdxf5
-         IvUKxjxL7t0qLhj4q1kjTw6eEbHUfJl8JGVRV9o4yNZkiiS5R3KqjmuhDSTzx9BK8V1+
-         UE7g==
-X-Gm-Message-State: AOAM532NpjGyV7k2JMYWxFQyjkvQ9yEZRYCpmdfeQ7vCMGqHk/ZvqNMO
-        n3p786FhGCDTxTI/goyYdrOd6s07vrP4ZkhkRl4ql+yCxoaCc6n7PoBzHmSxItl7TxFTnE6kpWB
-        2WkVu3QfNRQmq0tKUbwdPIRprUKQPYTu7AQ==
-X-Received: by 2002:a17:906:cc5d:: with SMTP id mm29mr16419998ejb.183.1612775098617;
-        Mon, 08 Feb 2021 01:04:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyKr161OS2Pu2mdVk/i3seStbGM8cKN/HyQni9BDEqjdln4Ey8kwyoxRAt9vH/Je6bYnhv4NQ==
-X-Received: by 2002:a17:906:cc5d:: with SMTP id mm29mr16419989ejb.183.1612775098482;
-        Mon, 08 Feb 2021 01:04:58 -0800 (PST)
+        bh=nsplxaRDtKAAkbOz3qiY8e9OTVA7rBqISeIiP7kozAE=;
+        b=Swm5IrWkNVumbVeOYz/sVl119T/G7yrt1eXZ+YN4qz1kigWOxXqwnT8zue4aiFl/iE
+         BDjYoGxqVZ3+NysaSldZQxMJa1JPdNKvDysJunKBxHh5Md3/USHI5Spmf/LBUN9GYzo1
+         XlHXJ7QwqXePOaKIYC2N2PK5iUQxYjy5VDMUCcOW2JvAs7kzwnM6kP957d/1SB23vPov
+         beazeaucNiIXFBflsO1YM9ENilUbsxARIUkAsWGBrqw6cj+nlcFKjSXLPTPufRUx1mnS
+         I1+83L776YCQ6qfVqUh4VB3j6tlWTb90Jeo8ZUAtMsa+0qKQQQObLg0HjR6vCPpTXAQa
+         XMgw==
+X-Gm-Message-State: AOAM530dOSi31kbqse4Tb4KRHZDgvAAzLIkHn3eu8NmJiZytbYJiiD/G
+        WIIJEj8GYfi3uM4zPOLJoGmlpNVuwT+l/t9vydm4rSwuk62JL3lZh/zTc5WOu7zFZvcrgmIldTe
+        EqgsBzSl3PEhdLtQJpXYiMWLY2V3/EeOkMA==
+X-Received: by 2002:a17:907:9614:: with SMTP id gb20mr1869773ejc.157.1612779477141;
+        Mon, 08 Feb 2021 02:17:57 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzkYi4kM/dAoc6sY/PAi2RT1L1H/Lc+6uB0mcrVzsCCrmezd1sPlubAXc5cc3Ev+he1vAut3A==
+X-Received: by 2002:a17:907:9614:: with SMTP id gb20mr1869755ejc.157.1612779476889;
+        Mon, 08 Feb 2021 02:17:56 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q13sm1762628ejy.20.2021.02.08.01.04.57
+        by smtp.gmail.com with ESMTPSA id ha21sm2331964ejb.97.2021.02.08.02.17.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Feb 2021 01:04:57 -0800 (PST)
-Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY
- 0x4012, 0x4013 events
-To:     Nitin Joshi1 <njoshi1@lenovo.com>,
-        Alexander Kobel <a-kobel@a-kobel.de>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <mpearson@lenovo.com>
+        Mon, 08 Feb 2021 02:17:56 -0800 (PST)
+Subject: Support for X1 tablet keyboard (was Re: [PATCH] platform/x86:
+ thinkpad_acpi: handle HKEY 0x4012, 0x4013 events)
+To:     Alexander Kobel <a-kobel@a-kobel.de>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>
 References: <53abdd94-8df4-cc1c-84e9-221face6b07c@a-kobel.de>
  <9d133a27-751a-a436-d255-3dd4a7d411d8@redhat.com>
- <TY2PR03MB3645D33506D85E1EECD6DABA8C8F9@TY2PR03MB3645.apcprd03.prod.outlook.com>
+ <38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0e85bd26-bf2f-734c-1334-15ad591ec811@redhat.com>
-Date:   Mon, 8 Feb 2021 10:04:57 +0100
+Cc:     linux-input <linux-input@vger.kernel.org>
+Message-ID: <be3f6a0f-281f-975f-70c2-b167adb5547c@redhat.com>
+Date:   Mon, 8 Feb 2021 11:17:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <TY2PR03MB3645D33506D85E1EECD6DABA8C8F9@TY2PR03MB3645.apcprd03.prod.outlook.com>
+In-Reply-To: <38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,79 +85,137 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Nitin, Alexander,
+Hi,
 
-On 2/8/21 8:17 AM, Nitin Joshi1 wrote:
-> Hello Hans,
+On 2/7/21 6:55 PM, Alexander Kobel wrote:
+> Hi,
 > 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Monday, February 8, 2021 2:10 AM
->> To: Alexander Kobel <a-kobel@a-kobel.de>; platform-driver-
->> x86@vger.kernel.org; Mark Pearson <mpearson@lenovo.com>; Nitin Joshi1
->> <njoshi1@lenovo.com>
->> Subject: [External] Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY
->> 0x4012, 0x4013 events
->>
+> On 2/7/21 6:10 PM, Hans de Goede wrote:
 >> Hi,
 >>
 >> On 2/7/21 5:34 PM, Alexander Kobel wrote:
 >>> Those events occur when a keyboard cover is attached to a ThinkPad
->>> Tablet device.  Typically, they are used to switch from normal to
->>> tablet mode in userspace; e.g., to offer touch keyboard choices when
->>> focus goes to a text box and no keyboard is attached, or to enable
->>> autorotation of the display according to the builtin orientation sensor.
+>>> Tablet device.  Typically, they are used to switch from normal to tablet
+>>> mode in userspace; e.g., to offer touch keyboard choices when focus goes
+>>> to a text box and no keyboard is attached, or to enable autorotation of
+>>> the display according to the builtin orientation sensor.
 >>
 >> Thank you for your patch.
->>
+> 
+> Thank you for your swift response.
+
+You're welcome.
+
 >>> No attempt is taken to emit an EV_SW event for SW_TABLET_MODE; this is
 >>> left to userspace.
 >>
->> I don't understand this part, in order for userspace to respond to these events
->> the thinkpad_acpi driver needs to emit events for this; and emitting
+>> I don't understand this part, in order for userspace to respond to these
+>> events the thinkpad_acpi driver needs to emit events for this; and emitting
 >> SW_TABLET_MODE seems like it is the right thing to do.
 >>
 >> Why are you not doing this ?
->>
->> Note that it is important to only advertise SW_TABLET_MODE functionality on
->> devices where it actually works. Which might be challenging I guess...
->>
->> But we have contacts inside Lenovo now, so perhaps they can help.
->>
->> Mark, Nitin, is there a way for the thinkpad_acpi code to figure out if 0x4012 /
->> 0x4013 events will be send by a device?
 > 
-> It seems , these events are used for not only keyboard cover, but also other tablet options.
-> In attached document, Interface type 4 (Graft type) is of ThinkPad X1 Tablet Series.
+> Quite frankly, because I did not know how to, reliably.  (First ever
+> patch attempt to the kernel here, so I'd rather err on the safe side.)
+> 
+> There are a number of events (e.g., TP_HKEY_EV_HOTPLUG_DOCK) that do not
+> propagate to userspace, but only report a specific message.  I figured
+> it's better to have a meaningful entry in the log rather than just the
+> warning about an unknown event.
+> But on second thought: pretending to react, but not actually doing
+> something, isn't too valuable.
+> 
+> I'll go off and try to improve.
 
-Great, Nitin thank you for the docs!
+So Nitin has been kind enough to provide us with some docs for this,
+please see me reply to Nitin's email and lets continue this part of this mail
+thread there.
 
-Nitin, one question below about version checks, it would be great if you can help with
-this.
+<snip>
 
->> Also is there a way to get the current state of the keyboard-cover being
->> attached at boot or not ?
-> It seems "GTOP" ASL method can be used to get current state.
+> Finally, I mentioned some open ends already on a post to ibm-acpi-devel
+> at https://sourceforge.net/p/ibm-acpi/mailman/message/37200082/; this
+> very question is among them.
+> I will start tackling the SW_TABLET_MODE event issue first, but if Mark
+> and Nitin can already hint about the keyboard shortcuts, it'd be highly
+> appreciated.
 
-Ack.
+I think I might be able to help there, a couple of months ago I bought
+a second-hand thinkpad-10 tablet which also has a USB attached keyboard.
 
-Alexander, so it looks like we need to do the following to support this properly:
+In hindsight I guess I could have asked Mark and Nitin for some more info,
+but I went on autopilot and just ran hexdump -C on the /dev/hidraw node
+to see which events all the keys send.
 
-1. At a new TP_HOTKEY_TABLET_USES_GTOP to the hotkey_tablet enum
-2. At probe time in hotkey_init_tablet_mode add a new if / case with I guess
-   the highest prio (so try before GMMS) which does:
-   1. Call GTOP with parameter 0x0000, check return equals 0x0103 (or newer?)
-      Nitin, how should the version check look like here, check that the
-      upper byte == 0x01 and the lower byte >= 0x03 ?
-   2. Call GTOP with parameter 0x0100, check return value equals 4
-   3. Call GTOP with parameter 0x0200, set in_tablet_mode based on bit 0
-      and bit 16. I think we should report SW_TABLET_MODE=1 when the thin-kbd
-      is attached, but folded to the back
-3. Make hotkey_get_tablet_mode support the new TP_HOTKEY_TABLET_USES_GTOP case and
-   make it call GTOP with parameter 0x0200 and check bit 0 + bit 16
-4. On the events which you identified call tpacpi_input_send_tabletsw()
+And I fired up an usb-sniffer under Windows to figure out the audio-leds,
+since I'm used to just figure these things out without help from the vendor :)
 
-And can you also check if there are events when folding the kbd behind the tablet?
+See the recent commits here for my work on this:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/hid/hid-lenovo.c
+
+So on the ibm-acpi list message you said that the kbd sends the following:
+
+type 4 (EV_MSC), code 4 (MSC_SCAN), value c0001
+type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 1
+
+For the Fn-keys, does it send the same MSC_SCAN code for *all* the
+non-working Fn-keys ?
+
+If so then it seems that this is very much like the thinkpad 10 kbd dock
+which also does this, see the lenovo_input_mapping_tp10_ultrabook_kbd()
+function in drivers/hid/hid-lenovo.c .
+
+If I have that right, then I think we should be able to get the
+Fn keys to work without too much trouble. You could try hacking up
+drivers/hid/hid-lenovo.c a bit:
+
+1. Add an entry to the lenovo_devices array like this:
+
+	/*
+	 * Note bind to the HID_GROUP_GENERIC group, so that we only bind to the keyboard part,
+	 * while letting hid-multitouch.c handle the touchpad and trackpoint.
+	 */
+        { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+                     USB_VENDOR_ID_LENOVO,
+                     USB_DEVICE_ID_LENOVO_X1_TAB),
+
+2. Add the following entry to the switch-case in lenovo_input_mapping() :
+
+        case USB_DEVICE_ID_LENOVO_X1_TAB:
+                return lenovo_input_mapping_tp10_ultrabook_kbd(hdev, hi, field,
+                                                               usage, bit, max);
+
+And then build hid-lenovo.c and modprobe it.
+
+After the modprobe to:
+
+ls -l /sys/bus/hid/devices/0003:17EF:60A3.*/driver
+
+This should show 2 devices (I guess) with one being bound to hid-lenovo
+and 1 being bound to hid-multitouch.
+
+If this works some of your Fn + F# keys will now hopefully start doing
+something, you can play around with modifying lenovo_input_mapping_tp10_ultrabook_kbd
+to make it do the right thing for your kbd.
+
+###
+
+About LED support, just enabling the LED support bits for the
+USB_DEVICE_ID_LENOVO_TP10UBKBD handling for now might work fine,
+but there is a tiny chance that sending the wrong command somehow puts
+the kbd in firmware update mode, I had that happen once with a Logitech
+kbd which did not seem to have any kind of handshake / passcode to avoid
+accidental fw updates (*).
+
+If you can give me a dump of the hid-descriptors for your keyboard,
+then I can check if that the LEDs might work the same way too (or not).
+
+The easiest way to get a dump is to run the following command as root:
+
+cat /sys/kernel/debug/hid/0003:17EF:60A3.*/rdesc > rdesc
+
+And then attach rdesc to your next email.
 
 Regards,
 
@@ -166,56 +223,9 @@ Hans
 
 
 
->>> So this patch is mainly to avoid warnings about unknown and unhandled
->>> events, which are now reported as:
->>>
->>> * Event 0x4012: attached keyboard cover
->>> * Event 0x4013: detached keyboard cover
->>>
->>> Tested as working on a ThinkPad X1 Tablet Gen 2, 20JCS00C00, and as
->>> non-interfering with a ThinkPad X1 Carbon 7th, 20QESABM02 (normal
->>> clamshell, so it does not have a keyboard cover).
->>>
->>> Signed-off-by: Alexander Kobel <a-kobel@a-kobel.de>
->>> ---
->>>  drivers/platform/x86/thinkpad_acpi.c | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/drivers/platform/x86/thinkpad_acpi.c
->>> b/drivers/platform/x86/thinkpad_acpi.c
->>> index c404706379d9..fd5322b5bbbd 100644
->>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>> @@ -174,6 +174,8 @@ enum tpacpi_hkey_event_t {
->>>                                                      or port replicator */
->>>         TP_HKEY_EV_HOTPLUG_UNDOCK       = 0x4011, /* undocked from
->> hotplug
->>>                                                      dock or port
->>> replicator */
->>> +       TP_HKEY_EV_KBD_COVER_ATTACH     = 0x4012, /* attached keyboard
->> cover */
->>> +       TP_HKEY_EV_KBD_COVER_DETACH     = 0x4013, /* detached keyboard
->> cover */
->>>
->>>         /* User-interface events */
->>>         TP_HKEY_EV_LID_CLOSE            = 0x5001, /* laptop lid closed */
->>> @@ -3989,6 +3991,12 @@ static bool hotkey_notify_dockevent(const u32
->> hkey,
->>>         case TP_HKEY_EV_HOTPLUG_UNDOCK: /* undocked from port
->> replicator */
->>>                 pr_info("undocked from hotplug port replicator\n");
->>>                 return true;
->>> +       case TP_HKEY_EV_KBD_COVER_ATTACH:
->>> +               pr_info("attached keyboard cover\n");
->>> +               return true;
->>> +       case TP_HKEY_EV_KBD_COVER_DETACH:
->>> +               pr_info("detached keyboard cover\n");
->>> +               return true;
->>>
->>>         default:
->>>                 return false;
->>> --
->>> 2.30.0
->>>
-> 
+
+
+*) Luckily it at least had a separate firmware-bootlader mode in which it
+was stuck now, so with some cmdline magic to force an upgrade the Windows
+fw installer could still fix it.
 
