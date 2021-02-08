@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83E6C43332
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F0C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEF764E7D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65BB64E88
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235421AbhBHSF7 (ORCPT
+        id S235110AbhBHSHP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Feb 2021 13:05:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
+        Mon, 8 Feb 2021 13:07:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234895AbhBHSDf (ORCPT
+        id S235168AbhBHSDj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Feb 2021 13:03:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 481EA64EE1;
-        Mon,  8 Feb 2021 17:59:30 +0000 (UTC)
+        Mon, 8 Feb 2021 13:03:39 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A973A64EF0;
+        Mon,  8 Feb 2021 17:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612807171;
+        s=k20201202; t=1612807191;
         bh=8Q3v9KXNyoY8FwManLhHl+Kzwr834mGKxWc2c2jILPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1ZZbEHnLJ6dmdQAtmwxgYfJ+NNXSOu5sBAEyIBgtOPDt/S+sIcAH27rEdaiEOcGA
-         Jx+GW7JVv1gXBNkLsvLMCBLsqll5za/xcH7eXwG6EHjaA0B8iCnE6TSBk7tHeVCVFh
-         7UaVj3LeIpU4Vo2mMkhJkSNdgJYICm3Fcwd1T5KNXgOyoVIO6Ya5OeaN0F/N0z4RK1
-         aL1TTf+s/F4v1MK6B6o2rBXfZb6DgI1ijCL5EfQJ5KmPgUvRLxRRdwu0z6eK/eC0NF
-         kLrIg0zFUMJKPq7SKQYhz4EzBl3ZHTEcqDytOXDr8VJDawYwdIbIdI5MdJq+iJ14mJ
-         pM8xbLuJzluuw==
+        b=QtI9Oa/iiU9u3f6miUS5ZLalrAM6NiAmtZheZ25HuBz4Va18F6WBzLl+Zdn8CLSmk
+         o05cRQg88l/9T0i2kMRuNxzk+vcZIA7CHTIG96mL3i4MNCldnUTgLvgu7tU34jcrKW
+         wGdSOasmXxxVxQ8derHrhaagkvDxBkWzr/gSAIs28znJQ9nHdvTa3AEKB6HauEcVDq
+         cYhj9kC7zlJyLNQncGA/RdYaoA4HKaJPDNcGjfD3/p7NLF/abp3qD0YloJYbP333sl
+         xDdiMS0z9yK4FVkMA+td2k+9Ei4dCiO8orJ799B1R9ZenaLlhNeDUKqcaoW9d+k9y3
+         DyH0zrB6Ow12g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -40,12 +40,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/14] platform/x86: hp-wmi: Disable tablet-mode reporting by default
-Date:   Mon,  8 Feb 2021 12:59:15 -0500
-Message-Id: <20210208175926.2092211-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 3/9] platform/x86: hp-wmi: Disable tablet-mode reporting by default
+Date:   Mon,  8 Feb 2021 12:59:40 -0500
+Message-Id: <20210208175946.2092374-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210208175926.2092211-1-sashal@kernel.org>
-References: <20210208175926.2092211-1-sashal@kernel.org>
+In-Reply-To: <20210208175946.2092374-1-sashal@kernel.org>
+References: <20210208175946.2092374-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
