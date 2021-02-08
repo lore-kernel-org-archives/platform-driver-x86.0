@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6B1C433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83E6C43332
 	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8D4E64E7D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EEF764E7D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Feb 2021 18:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235214AbhBHSFq (ORCPT
+        id S235421AbhBHSF7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Feb 2021 13:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        Mon, 8 Feb 2021 13:05:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235181AbhBHSCk (ORCPT
+        id S234895AbhBHSDf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Feb 2021 13:02:40 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8065D64E84;
-        Mon,  8 Feb 2021 17:59:05 +0000 (UTC)
+        Mon, 8 Feb 2021 13:03:35 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 481EA64EE1;
+        Mon,  8 Feb 2021 17:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612807146;
-        bh=cmKW45r6hs2Z1/NnGF/yyuEQQZMv5xQUmLc50BBG/B4=;
+        s=k20201202; t=1612807171;
+        bh=8Q3v9KXNyoY8FwManLhHl+Kzwr834mGKxWc2c2jILPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IK+SuX9YBsv/iJ77dma4lTSgTVf87YazlAdkyKgfqd7in8hxmi+zOqRRzEgCuPu/5
-         SViXCHIIkn6u2TljbbtNPkl6tQDzVErfhP/RNZqxXI/dFzFbGr8+bmM5qE5rEHqZkN
-         474JUqiPM5wY6OVgbqIrj6C/KC09D2C+L9Masp11Rg6LgoxzxVA6M5zZet597jzp2M
-         D2eBafoxephsfkSpIBvlv7E65LxUeHQ+gkn6IBX/oTJUtqH67GAEv0s2YldijDjVZU
-         vBC4HKAtAW2/Dlx1A0jwmgoi1HbQYRJSNiFQOuIsOFnJvQQQANJttDu2Bahk4SjQbo
-         CQr+boabD4ZOQ==
+        b=k1ZZbEHnLJ6dmdQAtmwxgYfJ+NNXSOu5sBAEyIBgtOPDt/S+sIcAH27rEdaiEOcGA
+         Jx+GW7JVv1gXBNkLsvLMCBLsqll5za/xcH7eXwG6EHjaA0B8iCnE6TSBk7tHeVCVFh
+         7UaVj3LeIpU4Vo2mMkhJkSNdgJYICm3Fcwd1T5KNXgOyoVIO6Ya5OeaN0F/N0z4RK1
+         aL1TTf+s/F4v1MK6B6o2rBXfZb6DgI1ijCL5EfQJ5KmPgUvRLxRRdwu0z6eK/eC0NF
+         kLrIg0zFUMJKPq7SKQYhz4EzBl3ZHTEcqDytOXDr8VJDawYwdIbIdI5MdJq+iJ14mJ
+         pM8xbLuJzluuw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -40,12 +40,12 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/19] platform/x86: hp-wmi: Disable tablet-mode reporting by default
-Date:   Mon,  8 Feb 2021 12:58:44 -0500
-Message-Id: <20210208175858.2092008-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 03/14] platform/x86: hp-wmi: Disable tablet-mode reporting by default
+Date:   Mon,  8 Feb 2021 12:59:15 -0500
+Message-Id: <20210208175926.2092211-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210208175858.2092008-1-sashal@kernel.org>
-References: <20210208175858.2092008-1-sashal@kernel.org>
+In-Reply-To: <20210208175926.2092211-1-sashal@kernel.org>
+References: <20210208175926.2092211-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -115,10 +115,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index a44a2ec332872..63a530a3d9feb 100644
+index 952544ca0d84d..93fadd4abf14d 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
-@@ -32,6 +32,10 @@ MODULE_LICENSE("GPL");
+@@ -45,6 +45,10 @@ MODULE_LICENSE("GPL");
  MODULE_ALIAS("wmi:95F24279-4D7B-4334-9387-ACCDC67EF61C");
  MODULE_ALIAS("wmi:5FB7F034-2C63-45e9-BE91-3D44E2C707E4");
  
@@ -129,7 +129,7 @@ index a44a2ec332872..63a530a3d9feb 100644
  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
  
-@@ -654,10 +658,12 @@ static int __init hp_wmi_input_setup(void)
+@@ -656,10 +660,12 @@ static int __init hp_wmi_input_setup(void)
  	}
  
  	/* Tablet mode */
