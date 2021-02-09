@@ -2,1426 +2,1302 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3805C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Feb 2021 14:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A872C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Feb 2021 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56E1464E4F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Feb 2021 14:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71E764EB8
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Feb 2021 15:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231576AbhBIO3n (ORCPT
+        id S231674AbhBIPRl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Feb 2021 09:29:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231459AbhBIO3m (ORCPT
+        Tue, 9 Feb 2021 10:17:41 -0500
+Received: from ganymed.uberspace.de ([185.26.156.242]:33848 "EHLO
+        ganymed.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232435AbhBIPRg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Feb 2021 09:29:42 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0996EC061786;
-        Tue,  9 Feb 2021 06:29:02 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id u143so5784153pfc.7;
-        Tue, 09 Feb 2021 06:29:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p9IpMSy5FX8XquOJz85ykF72hqrwrUvMmr3WRilD7Tc=;
-        b=EhtR1w+yykO3ubHRTJzEZ3vk5dRGskNDGJJO10TNjGtSkdWkPffUs0SpsE6jEYo5a9
-         QwJY7tpe61K6xuT+dpqhxBAidMEcOBf1Awh5ljsUOi+qR2T+96JbO+1r7IrC13duRdDB
-         bqp3BPacef9/SP5mhEY7duAjFpcZilFqsns058UjQG2XQLlp0MwssbrnS+p4LUlLUErk
-         6SJ4UypGsuKVXHCvADZ48ZqIfsMYBM853IVKTtQc90cepYBESEuHwJKUc633KDMadbc5
-         ko4OOr9ipDj4Kx+gqS0Zv2HNnPXwMitixTEzzaLTHQodeHJHx/dQN4QteFCpzGRrazL5
-         IDXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=p9IpMSy5FX8XquOJz85ykF72hqrwrUvMmr3WRilD7Tc=;
-        b=UR97gUZIAQHwlrLIcfemT2vf7ctISF5se3jOzXnCqPlRsSyxngKuKOfICZJKnLKybX
-         hASlw1kYOoD7TMZKLkCDb9Fno5oDHA3Y+LOsxv6RuTsN3BViz58H76f4DF2ZKXOiB04v
-         rjg/jA78GCHRv7jionUbYrH2erFzu75QdZpF9Ih6KiXaA30NWsDVcD+3nD1KphAfyt0q
-         bfLnW6HGLJ1k3bRceJFh1ygQryAUDAy3eDy3JUOdVV25fA/M1DssDsq5zIggCTimJs3K
-         mdCA89JHtQoX+2mYsTdYd/4tXbA1f88d3JJzHRobefSEptKV+PrTN0gbddh0kBhnAeJW
-         EftQ==
-X-Gm-Message-State: AOAM532SFcTgO/V2Gw2SUwXSFaQQ827zaGXcUfopv4iH96f0K8hTl4BA
-        vRJZV5b8UYM6iM8GFpKAlec=
-X-Google-Smtp-Source: ABdhPJzKFttlNwAu85FOnIBa7bnY5Qz4f3SMtCWYZt2gS//zZQAF5g8C97LyKq6f8TwqoBqhlJIMAw==
-X-Received: by 2002:a05:6a00:a8d:b029:1ba:71d1:fe3c with SMTP id b13-20020a056a000a8db02901ba71d1fe3cmr22903777pfl.51.1612880941242;
-        Tue, 09 Feb 2021 06:29:01 -0800 (PST)
-Received: from localhost.localdomain ([49.207.192.187])
-        by smtp.gmail.com with ESMTPSA id v1sm22540396pga.63.2021.02.09.06.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Feb 2021 06:29:00 -0800 (PST)
-From:   "Prasanth, KSR" <kosigiprasanth@gmail.com>
-X-Google-Original-From: "Prasanth, KSR" <prasanth.ksr@dell.com>
-To:     Hans de Goede <hdegoede@redhat.com>, dvhart@infradead.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Tue, 9 Feb 2021 10:17:36 -0500
+Received: (qmail 22573 invoked from network); 9 Feb 2021 15:16:39 -0000
+Received: from localhost (HELO localhost) (127.0.0.1)
+  by ganymed.uberspace.de with SMTP; 9 Feb 2021 15:16:39 -0000
+Subject: Re: Support for X1 tablet keyboard (was Re: [PATCH] platform/x86:
+ thinkpad_acpi: handle HKEY 0x4012, 0x4013 events)
+To:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org,
-        "Prasanth KSR" <prasanth.ksr@dell.com>,
-        Divya Bharathi <divya.bharathi@dell.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH] IOCTL support for dell-wmi-sysman driver
-Date:   Tue,  9 Feb 2021 19:58:26 +0530
-Message-Id: <20210209142826.42728-1-prasanth.ksr@dell.com>
-X-Mailer: git-send-email 2.25.1
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>
+Cc:     linux-input <linux-input@vger.kernel.org>
+References: <53abdd94-8df4-cc1c-84e9-221face6b07c@a-kobel.de>
+ <9d133a27-751a-a436-d255-3dd4a7d411d8@redhat.com>
+ <38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de>
+ <be3f6a0f-281f-975f-70c2-b167adb5547c@redhat.com>
+From:   Alexander Kobel <a-kobel@a-kobel.de>
+Message-ID: <64a4f249-f90b-c6b2-887f-55a016d93c65@a-kobel.de>
+Date:   Tue, 9 Feb 2021 16:16:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <be3f6a0f-281f-975f-70c2-b167adb5547c@redhat.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms080700000604000308020803"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "Prasanth KSR" <prasanth.ksr@dell.com>
+This is a cryptographically signed message in MIME format.
 
-Perform BIOS Management calls on supported Dell machines
-through the Dell WMI System Management interface.
+--------------ms080700000604000308020803
+Content-Type: multipart/mixed;
+ boundary="------------F645A6997CF7ADE77AEBCEC3"
+Content-Language: en-US
 
-This interface provides IOCTL's to perform bundled
-BIOS Setting transactions.
+This is a multi-part message in MIME format.
+--------------F645A6997CF7ADE77AEBCEC3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Hans de Goede <hdegoede@redhat.com>
+Hi,
 
-Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
-Co-developed-by: Divya Bharathi <divya.bharathi@dell.com>
-Signed-off-by: Divya Bharathi <divya.bharathi@dell.com>
-Co-developed-by: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- Documentation/ABI/testing/dell-wmi-sysman     |  39 ++
- .../x86/dell-wmi-sysman/biosattr-interface.c  | 257 +++++++++--
- .../x86/dell-wmi-sysman/dell-wmi-sysman.h     |  20 +-
- .../x86/dell-wmi-sysman/enum-attributes.c     |  45 +-
- .../x86/dell-wmi-sysman/int-attributes.c      |  46 +-
- .../x86/dell-wmi-sysman/passobj-attributes.c  |  23 +
- .../x86/dell-wmi-sysman/string-attributes.c   |  50 +-
- drivers/platform/x86/dell-wmi-sysman/sysman.c |  48 +-
- include/uapi/linux/wmi.h                      |  56 +++
- tools/dell-wmi-sysman/Makefile                |  19 +
- .../dell-wmi-sysman/dell-wmi-sysman-example.c | 432 ++++++++++++++++++
- 11 files changed, 946 insertions(+), 89 deletions(-)
- create mode 100644 Documentation/ABI/testing/dell-wmi-sysman
- create mode 100644 tools/dell-wmi-sysman/Makefile
- create mode 100644 tools/dell-wmi-sysman/dell-wmi-sysman-example.c
+On 2/8/21 11:17 AM, Hans de Goede wrote:
+> On 2/7/21 6:55 PM, Alexander Kobel wrote:
+>> <snip>
+>> I'll go off and try to improve.
+>=20
+> So Nitin has been kind enough to provide us with some docs for this,
+> please see me reply to Nitin's email and lets continue this part of thi=
+s mail
+> thread there.
 
-diff --git a/Documentation/ABI/testing/dell-wmi-sysman b/Documentation/ABI/testing/dell-wmi-sysman
-new file mode 100644
-index 000000000000..4f3883529a06
---- /dev/null
-+++ b/Documentation/ABI/testing/dell-wmi-sysman
-@@ -0,0 +1,39 @@
-+What:		/dev/wmi/dell-wmi-sysman
-+Date:		November 2021
-+KernelVersion:	5.15
-+Contact:	"Divya Bharathi" <divya.bharathi@dell.com>
-+		"Mario Limonciello" <mario.limonciello@dell.com>
-+		"Prasanth K S R" <prasanth.ksr@dell.com>
-+Description:
-+		Perform BIOS Management calls on supported Dell machines
-+		through the Dell WMI System Management interface.
-+
-+		This interface provides IOCTL's to perform bundled
-+		BIOS Setting transactions.
-+
-+		IOCTL's and buffer formats are defined in:
-+		<uapi/linux/wmi.h>
-+
-+		1) To perform a BIOS System Management call from userspace,
-+		you'll need to first determine the minimum size of the
-+		system management interface buffer for your machine.
-+		Platforms that contain larger buffers can return larger
-+		objects from the system firmware.
-+		Commonly this size is either 4k or 32k.
-+
-+		To determine the size of the buffer read() a u64 dword from
-+		the WMI character device /dev/wmi/dell-wmi-sysman.
-+
-+		2) After you've determined the minimum size of the system management
-+		interface buffer, you can allocate a structure that represents
-+		the structure documented above (struct dell_wmi_sysman_buffer).
-+
-+		3) In this buffer object, prepare as necessary for the BIOS System
-+		Management call you're interested in. Typically System Management
-+		buffers have "length", "command" , "count" and "admin_password"
-+		defined to values that coincide with the "data" you are interested in.
-+
-+		4) Run the call by using ioctl() as described in the header.
-+
-+		5) The output will be returned in the buffer object and
-+		make sure to free up the allocated buffer.
-diff --git a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-index f95d8ddace5a..9a82e78fe59e 100644
---- a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-@@ -6,12 +6,14 @@
-  *  Copyright (c) 2020 Dell Inc.
-  */
- 
-+#include <uapi/linux/wmi.h>
- #include <linux/wmi.h>
- #include "dell-wmi-sysman.h"
- 
- #define SETDEFAULTVALUES_METHOD_ID					0x02
- #define SETBIOSDEFAULTS_METHOD_ID					0x03
- #define SETATTRIBUTE_METHOD_ID						0x04
-+#define SETATTRIBUTES_METHOD_ID						0x05
- 
- static int call_biosattributes_interface(struct wmi_device *wdev, char *in_args, size_t size,
- 					int method_id)
-@@ -41,17 +43,17 @@ static int call_biosattributes_interface(struct wmi_device *wdev, char *in_args,
- }
- 
- /**
-- * set_attribute() - Update an attribute value
-- * @a_name: The attribute name
-- * @a_value: The attribute value
-+ * set_bios_defaults() - Resets BIOS defaults
-+ * @deftype: the type of BIOS value reset to issue.
-  *
-- * Sets an attribute to new value
-+ * Resets BIOS defaults
-  */
--int set_attribute(const char *a_name, const char *a_value)
-+int set_bios_defaults(u8 deftype)
- {
- 	size_t security_area_size, buffer_size;
--	size_t a_name_size, a_value_size;
--	char *buffer = NULL, *start;
-+	size_t integer_area_size = sizeof(u8);
-+	char *buffer = NULL;
-+	u8 *defaultType;
- 	int ret;
- 
- 	mutex_lock(&wmi_priv.mutex);
-@@ -60,11 +62,8 @@ int set_attribute(const char *a_name, const char *a_value)
- 		goto out;
- 	}
- 
--	/* build/calculate buffer */
- 	security_area_size = calculate_security_buffer(wmi_priv.current_admin_password);
--	a_name_size = calculate_string_buffer(a_name);
--	a_value_size = calculate_string_buffer(a_value);
--	buffer_size = security_area_size + a_name_size + a_value_size;
-+	buffer_size = security_area_size + integer_area_size;
- 	buffer = kzalloc(buffer_size, GFP_KERNEL);
- 	if (!buffer) {
- 		ret = -ENOMEM;
-@@ -74,44 +73,51 @@ int set_attribute(const char *a_name, const char *a_value)
- 	/* build security area */
- 	populate_security_buffer(buffer, wmi_priv.current_admin_password);
- 
--	/* build variables to set */
--	start = buffer + security_area_size;
--	ret = populate_string_buffer(start, a_name_size, a_name);
--	if (ret < 0)
--		goto out;
--	start += ret;
--	ret = populate_string_buffer(start, a_value_size, a_value);
--	if (ret < 0)
--		goto out;
-+	defaultType = buffer + security_area_size;
-+	*defaultType = deftype;
- 
--	print_hex_dump_bytes("set attribute data: ", DUMP_PREFIX_NONE, buffer, buffer_size);
--	ret = call_biosattributes_interface(wmi_priv.bios_attr_wdev,
--					    buffer, buffer_size,
--					    SETATTRIBUTE_METHOD_ID);
--	if (ret == -EOPNOTSUPP)
--		dev_err(&wmi_priv.bios_attr_wdev->dev, "admin password must be configured\n");
--	else if (ret == -EACCES)
--		dev_err(&wmi_priv.bios_attr_wdev->dev, "invalid password\n");
-+	ret = call_biosattributes_interface(wmi_priv.bios_attr_wdev, buffer, buffer_size,
-+					    SETBIOSDEFAULTS_METHOD_ID);
-+	if (ret)
-+		dev_err(&wmi_priv.bios_attr_wdev->dev, "reset BIOS defaults failed: %d\n", ret);
- 
--out:
- 	kfree(buffer);
-+out:
- 	mutex_unlock(&wmi_priv.mutex);
- 	return ret;
- }
- 
- /**
-- * set_bios_defaults() - Resets BIOS defaults
-- * @deftype: the type of BIOS value reset to issue.
-+ * calculate_array_length() - calculate total size of string array
-+ * @str_arr: array of strings
-+ * @str_count: string count
-  *
-- * Resets BIOS defaults
-- */
--int set_bios_defaults(u8 deftype)
-+ * Method to calculate the total size of array of string
-+ **/
-+static int calculate_array_length(char **str_arr, int str_count)
- {
--	size_t security_area_size, buffer_size;
--	size_t integer_area_size = sizeof(u8);
--	char *buffer = NULL;
--	u8 *defaultType;
--	int ret;
-+	int ret = 0, i;
-+
-+	for (i = 0; i < str_count; ++i)
-+		ret += calculate_string_buffer(str_arr[i]);
-+	return ret;
-+}
-+
-+/**
-+ * set_attributes() - Update multiple attribute values
-+ * @in_data: input set data
-+ * @a_count: Number of atributes to be set
-+ * @command: command to decide set user input value or default
-+ *
-+ * Sets attributes to user input value of defaut value
-+ **/
-+int set_attributes(struct dell_set_data *in_data, int a_count, unsigned short command)
-+{
-+	size_t security_area_size, string_area_size, buffer_size, attr_count_area;
-+	char **a_names, **a_values;
-+	char *buffer = NULL, *start;
-+	int ret, method_id, i;
-+	u32 *attr_count;
- 
- 	mutex_lock(&wmi_priv.mutex);
- 	if (!wmi_priv.bios_attr_wdev) {
-@@ -119,8 +125,34 @@ int set_bios_defaults(u8 deftype)
- 		goto out;
- 	}
- 
-+	//allocate memory to hold set inputs
-+	a_names = kmalloc(a_count * (sizeof(char *)), GFP_KERNEL);
-+	if (!a_names) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	if (command == SET_ATTRIBUTES) {
-+		a_values = kmalloc(a_count * (sizeof(char *)), GFP_KERNEL);
-+		if (!a_values) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+	}
-+
-+	//assign inputs to single array and send to set functions
-+	for (i = 0; i < a_count; i++) {
-+		a_names[i] = in_data[i].attribute_name;
-+		if (command == SET_ATTRIBUTES)
-+			a_values[i] = in_data[i].attribute_value;
-+	}
-+
- 	security_area_size = calculate_security_buffer(wmi_priv.current_admin_password);
--	buffer_size = security_area_size + integer_area_size;
-+	attr_count_area = sizeof(u32);
-+	string_area_size = (calculate_array_length(a_names, a_count));
-+	if (command == SET_ATTRIBUTES)
-+		string_area_size += (calculate_array_length(a_values, a_count));
-+	buffer_size = security_area_size + attr_count_area + string_area_size
-+					+ (sizeof(u16) * a_count);
- 	buffer = kzalloc(buffer_size, GFP_KERNEL);
- 	if (!buffer) {
- 		ret = -ENOMEM;
-@@ -130,26 +162,153 @@ int set_bios_defaults(u8 deftype)
- 	/* build security area */
- 	populate_security_buffer(buffer, wmi_priv.current_admin_password);
- 
--	defaultType = buffer + security_area_size;
--	*defaultType = deftype;
-+	/* build variables to set */
-+	attr_count = (u32 *)(buffer + security_area_size);
-+	*attr_count = (u32)a_count;
-+	start =  (u8 *)(attr_count) + attr_count_area;
- 
--	ret = call_biosattributes_interface(wmi_priv.bios_attr_wdev, buffer, buffer_size,
--					    SETBIOSDEFAULTS_METHOD_ID);
--	if (ret)
--		dev_err(&wmi_priv.bios_attr_wdev->dev, "reset BIOS defaults failed: %d\n", ret);
-+	for (i = 0; i < a_count; i++) {
-+		ret = populate_string_buffer(start, calculate_string_buffer(a_names[i]),
-+						a_names[i]);
-+		if (ret < 0)
-+			goto out;
-+		start += ret;
-+	}
-+
-+	if (command == SET_ATTRIBUTES) {
-+		for (i = 0; i < a_count; i++) {
-+			ret = populate_string_buffer(start, calculate_string_buffer(a_values[i]),
-+							a_values[i]);
-+			if (ret < 0)
-+				goto out;
-+			start += ret;
-+		}
-+		method_id = SETATTRIBUTES_METHOD_ID;
-+	} else {
-+		method_id = SETDEFAULTVALUES_METHOD_ID;
-+	}
-+
-+	print_hex_dump_bytes("set multiple attribute: ", DUMP_PREFIX_NONE, buffer, buffer_size);
-+	ret = call_biosattributes_interface(wmi_priv.bios_attr_wdev,
-+					    buffer, buffer_size, method_id);
-+
-+	if (ret == -EOPNOTSUPP)
-+		dev_err(&wmi_priv.password_attr_wdev->dev, "admin password must be configured\n");
-+	else if (ret == -EACCES)
-+		dev_err(&wmi_priv.password_attr_wdev->dev, "invalid password\n");
- 
--	kfree(buffer);
- out:
-+	kfree(buffer);
-+	kfree(a_names);
-+	if (command == SET_ATTRIBUTES)
-+		kfree(a_values);
- 	mutex_unlock(&wmi_priv.mutex);
- 	return ret;
- }
- 
-+__u64 get_attrs_size(void)
-+{
-+	__u64 size = sizeof(struct dell_attributes_data) *
-+				(get_instance_count(DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID) +
-+				get_instance_count(DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID) +
-+				get_instance_count(DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID));
-+	return size;
-+}
-+
-+int run_sysman_call(struct dell_wmi_sysman_buffer *buf)
-+{
-+	struct dell_set_password *pass_set_data;
-+	struct dell_set_data *in_data;
-+	int ret = -ENOIOCTLCMD;
-+	char *tmp_system = NULL;
-+	char *tmp_admin = NULL;
-+
-+	switch (buf->command) {
-+	case ENUMERATE_ALL:
-+		buf->count = get_attrs_size() / sizeof(struct dell_attributes_data);
-+		get_enumeration_data(buf);
-+		get_integer_data(buf);
-+		get_string_data(buf);
-+		ret = 0;
-+		break;
-+	case SET_ATTRIBUTES:
-+	case SET_DEFAULTS:
-+		if (!buf->count)
-+			goto out;
-+		in_data = (struct dell_set_data *)buf->data;
-+		tmp_admin = kstrdup(wmi_priv.current_admin_password, GFP_KERNEL);
-+		strlcpy_attr(wmi_priv.current_admin_password, buf->admin_password);
-+		ret = set_attributes(in_data, buf->count, buf->command);
-+		strlcpy_attr(wmi_priv.current_admin_password, tmp_admin);
-+		kfree(tmp_admin);
-+		break;
-+	case GET_PASS:
-+		get_po_data(buf);
-+		ret = 0;
-+		break;
-+	case SET_PASS:
-+		pass_set_data = (struct dell_set_password *)buf->data;
-+		tmp_admin = kstrdup(wmi_priv.current_admin_password, GFP_KERNEL);
-+		strlcpy_attr(wmi_priv.current_admin_password, buf->admin_password);
-+
-+		if (strcmp(pass_set_data->attribute_name, "System") == 0) {
-+			tmp_system = kstrdup(wmi_priv.current_system_password, GFP_KERNEL);
-+			strlcpy_attr(wmi_priv.current_system_password,
-+					pass_set_data->system_password);
-+		}
-+
-+		ret = set_new_password(pass_set_data->attribute_name, pass_set_data->new_password);
-+		strlcpy_attr(wmi_priv.current_admin_password, tmp_admin);
-+		kfree(tmp_admin);
-+
-+		if (tmp_system != NULL) {
-+			strlcpy_attr(wmi_priv.current_system_password, tmp_system);
-+			kfree(tmp_system);
-+		}
-+		break;
-+	}
-+out:
-+	return ret;
-+}
-+
-+
-+static long bios_attr_set_interface_filter(struct wmi_device *wdev, unsigned int cmd,
-+				   struct wmi_ioctl_buffer *arg)
-+{
-+	struct dell_wmi_sysman_buffer *buf;
-+	struct dell_resetBIOS *reset_buf;
-+	char *tmp_admin = NULL;
-+	int ret = -ENOIOCTLCMD;
-+
-+	switch (cmd) {
-+	case DELL_WMI_SYSMAN_CMD:
-+		buf = (struct dell_wmi_sysman_buffer *) arg;
-+		ret = run_sysman_call(buf);
-+		break;
-+	case DELL_WMI_SYSMAN_RESET_BIOS:
-+		reset_buf = (struct dell_resetBIOS *) arg;
-+		if (reset_buf->option > 0) {
-+			tmp_admin = kstrdup(wmi_priv.current_admin_password, GFP_KERNEL);
-+			strlcpy_attr(wmi_priv.current_admin_password, reset_buf->admin_password);
-+			ret = set_bios_defaults(reset_buf->option);
-+			strlcpy_attr(wmi_priv.current_admin_password, tmp_admin);
-+			kfree(tmp_admin);
-+		}
-+		break;
-+	}
-+	return ret;
-+}
-+
- static int bios_attr_set_interface_probe(struct wmi_device *wdev, const void *context)
- {
-+	__u32 req_buf_size;
- 	mutex_lock(&wmi_priv.mutex);
- 	wmi_priv.bios_attr_wdev = wdev;
- 	mutex_unlock(&wmi_priv.mutex);
--	return 0;
-+	req_buf_size = get_attrs_size();
-+	/* add in size of struct dell_wmi_sysman_buffer which is used internally with ioctl */
-+	req_buf_size += sizeof(struct dell_wmi_sysman_buffer);
-+	return set_required_buffer_size(wdev, req_buf_size);
- }
- 
- static int bios_attr_set_interface_remove(struct wmi_device *wdev)
-@@ -171,6 +330,7 @@ static struct wmi_driver bios_attr_set_interface_driver = {
- 	.probe = bios_attr_set_interface_probe,
- 	.remove = bios_attr_set_interface_remove,
- 	.id_table = bios_attr_set_interface_id_table,
-+	.filter_callback = bios_attr_set_interface_filter
- };
- 
- int init_bios_attr_set_interface(void)
-@@ -184,3 +344,4 @@ void exit_bios_attr_set_interface(void)
- }
- 
- MODULE_DEVICE_TABLE(wmi, bios_attr_set_interface_id_table);
-+
-diff --git a/drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h b/drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h
-index b80f2a62ea3f..13c216e6ddec 100644
---- a/drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h
-+++ b/drivers/platform/x86/dell-wmi-sysman/dell-wmi-sysman.h
-@@ -8,6 +8,7 @@
- #define _DELL_WMI_BIOS_ATTR_H_
- 
- #include <linux/wmi.h>
-+#include <uapi/linux/wmi.h>
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-@@ -87,8 +88,6 @@ struct wmi_sysman_priv {
- /* global structure used by multiple WMI interfaces */
- extern struct wmi_sysman_priv wmi_priv;
- 
--enum { ENUM, INT, STR, PO };
--
- enum {
- 	ATTR_NAME,
- 	DISPL_NAME_LANG_CODE,
-@@ -134,6 +133,7 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
- 				struct kobj_attribute *attr,			\
- 				const char *buf, size_t count)			\
- {										\
-+	struct dell_set_data *set_data;						\
- 	char *p, *buf_cp;							\
- 	int i, ret = -EIO;							\
- 	buf_cp = kstrdup(buf, GFP_KERNEL);					\
-@@ -146,15 +146,19 @@ static ssize_t curr_val##_store(struct kobject *kobj,				\
- 	i = get_##type##_instance_id(kobj);					\
- 	if (i >= 0)								\
- 		ret = validate_##type##_input(i, buf_cp);			\
-+	set_data = kzalloc(sizeof(*set_data), GFP_KERNEL);			\
-+	strlcpy_attr(set_data[0].attribute_value, buf_cp);			\
-+	strlcpy_attr(set_data[0].attribute_name, kobj->name);			\
- 	if (!ret)								\
--		ret = set_attribute(kobj->name, buf_cp);			\
-+		ret = set_attributes(set_data, 1, SET_ATTRIBUTES);		\
- 	kfree(buf_cp);								\
- 	return ret ? ret : count;						\
- }
- 
- union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string);
- int get_instance_count(const char *guid_string);
--void strlcpy_attr(char *dest, char *src);
-+int get_current_value(char *buf, int instance_id, const char *guid_string);
-+void strlcpy_attr(char *dest, const char *src);
- 
- int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
- 			struct kobject *attr_name_kobj);
-@@ -174,7 +178,7 @@ int populate_po_data(union acpi_object *po_obj, int instance_id, struct kobject
- int alloc_po_data(void);
- void exit_po_attributes(void);
- 
--int set_attribute(const char *a_name, const char *a_value);
-+int set_attributes(struct dell_set_data *in_data, int a_count, unsigned short command);
- int set_bios_defaults(u8 defType);
- 
- void exit_bios_attr_set_interface(void);
-@@ -188,4 +192,10 @@ int set_new_password(const char *password_type, const char *new);
- int init_bios_attr_pass_interface(void);
- void exit_bios_attr_pass_interface(void);
- 
-+__u64 get_attrs_size(void);
-+void get_enumeration_data(struct dell_wmi_sysman_buffer *buf);
-+void get_integer_data(struct dell_wmi_sysman_buffer *buf);
-+void get_string_data(struct dell_wmi_sysman_buffer *buf);
-+void get_po_data(struct dell_wmi_sysman_buffer *attr_data);
-+
- #endif
-diff --git a/drivers/platform/x86/dell-wmi-sysman/enum-attributes.c b/drivers/platform/x86/dell-wmi-sysman/enum-attributes.c
-index 80f4b7785c6c..b23e10ac00da 100644
---- a/drivers/platform/x86/dell-wmi-sysman/enum-attributes.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/enum-attributes.c
-@@ -13,22 +13,17 @@ get_instance_id(enumeration);
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
- 	int instance_id = get_enumeration_instance_id(kobj);
--	union acpi_object *obj;
--	ssize_t ret;
-+	int ret;
- 
- 	if (instance_id < 0)
- 		return instance_id;
- 
--	/* need to use specific instance_id and guid combination to get right data */
--	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
--	if (!obj)
--		return -EIO;
--	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
--		kfree(obj);
--		return -EINVAL;
-+	ret = get_current_value(buf, instance_id, DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
-+	if (ret > 0) {
-+		strcat(buf, "\n");
-+		return strlen(buf);
- 	}
--	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
--	kfree(obj);
-+	/* read error */
- 	return ret;
- }
- 
-@@ -171,6 +166,34 @@ int populate_enum_data(union acpi_object *enumeration_obj, int instance_id,
- 	return sysfs_create_group(attr_name_kobj, &enumeration_attr_group);
- }
- 
-+void get_enumeration_data(struct dell_wmi_sysman_buffer *buf)
-+{
-+	struct dell_attributes_data *attr_data;
-+	int i;
-+
-+	attr_data = (struct dell_attributes_data *)buf->data;
-+	for (i = 0; i < wmi_priv.enumeration_instances_count; i++) {
-+		attr_data[i].type = ENUM;
-+		strlcpy_attr(attr_data[i].attribute_name,
-+					wmi_priv.enumeration_data[i].attribute_name);
-+		strlcpy_attr(attr_data[i].display_name,
-+					wmi_priv.enumeration_data[i].display_name);
-+		strlcpy_attr(attr_data[i].display_name_language_code,
-+					wmi_priv.enumeration_data[i].display_name_language_code);
-+		strlcpy_attr(attr_data[i].possible_values,
-+					wmi_priv.enumeration_data[i].possible_values);
-+		strlcpy_attr(attr_data[i].dell_modifier,
-+					wmi_priv.enumeration_data[i].dell_modifier);
-+		strlcpy_attr(attr_data[i].dell_value_modifier,
-+					wmi_priv.enumeration_data[i].dell_value_modifier);
-+		strlcpy_attr(attr_data[i].default_value,
-+					wmi_priv.enumeration_data[i].default_value);
-+		get_current_value(attr_data[i].current_value, i,
-+					DELL_WMI_BIOS_ENUMERATION_ATTRIBUTE_GUID);
-+
-+	}
-+}
-+
- /**
-  * exit_enum_attributes() - Clear all attribute data
-  *
-diff --git a/drivers/platform/x86/dell-wmi-sysman/int-attributes.c b/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-index 75aedbb733be..0155f6189576 100644
---- a/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/int-attributes.c
-@@ -15,22 +15,17 @@ get_instance_id(integer);
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
- 	int instance_id = get_integer_instance_id(kobj);
--	union acpi_object *obj;
--	ssize_t ret;
-+	int ret;
- 
- 	if (instance_id < 0)
- 		return instance_id;
- 
--	/* need to use specific instance_id and guid combination to get right data */
--	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID);
--	if (!obj)
--		return -EIO;
--	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_INTEGER) {
--		kfree(obj);
--		return -EINVAL;
-+	ret = get_current_value(buf, instance_id, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID);
-+	if (ret > 0) {
-+		strcat(buf, "\n");
-+		return strlen(buf);
- 	}
--	ret = snprintf(buf, PAGE_SIZE, "%lld\n", obj->package.elements[CURRENT_VAL].integer.value);
--	kfree(obj);
-+	/* read error */
- 	return ret;
- }
- 
-@@ -161,6 +156,35 @@ int populate_int_data(union acpi_object *integer_obj, int instance_id,
- 	return sysfs_create_group(attr_name_kobj, &integer_attr_group);
- }
- 
-+void get_integer_data(struct dell_wmi_sysman_buffer *buf)
-+{
-+	struct dell_attributes_data *attr_data;
-+	int i;
-+	//To populate in same dell_attributes_data, increment after enum data
-+	int a_count = wmi_priv.enumeration_instances_count;
-+
-+	attr_data = (struct dell_attributes_data *)buf->data;
-+	for (i = 0; i < wmi_priv.integer_instances_count; i++) {
-+		attr_data[a_count].type = INT;
-+		strlcpy_attr(attr_data[a_count].attribute_name,
-+					wmi_priv.integer_data[i].attribute_name);
-+		strlcpy_attr(attr_data[a_count].display_name,
-+					wmi_priv.integer_data[i].display_name);
-+		strlcpy_attr(attr_data[a_count].display_name_language_code,
-+					wmi_priv.integer_data[i].display_name_language_code);
-+		strlcpy_attr(attr_data[a_count].dell_modifier,
-+					wmi_priv.integer_data[i].dell_modifier);
-+		attr_data[a_count].min = wmi_priv.integer_data[i].min_value;
-+		attr_data[a_count].max = wmi_priv.integer_data[i].max_value;
-+		attr_data[a_count].scalar_increment = wmi_priv.integer_data[i].scalar_increment;
-+		snprintf(attr_data[a_count].default_value, PAGE_SIZE, "%d",
-+				wmi_priv.integer_data[i].default_value);
-+		get_current_value(attr_data[a_count].current_value, i,
-+				DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID);
-+		a_count++;
-+	}
-+}
-+
- /**
-  * exit_int_attributes() - Clear all attribute data
-  *
-diff --git a/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c b/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
-index 3abcd95477c0..9f50989a9f44 100644
---- a/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/passobj-attributes.c
-@@ -169,6 +169,29 @@ int populate_po_data(union acpi_object *po_obj, int instance_id, struct kobject
- 	return sysfs_create_group(attr_name_kobj, &po_attr_group);
- }
- 
-+void get_po_data(struct dell_wmi_sysman_buffer *in_data)
-+{
-+	int i;
-+	struct dell_password_data *attr_data;
-+
-+	in_data->count = wmi_priv.po_instances_count;
-+	attr_data = (struct dell_password_data *)in_data->data;
-+	for (i = 0; i < wmi_priv.po_instances_count; i++) {
-+		union acpi_object *obj;
-+
-+		strlcpy_attr(attr_data[i].attribute_name,
-+						wmi_priv.po_data[i].attribute_name);
-+		attr_data[i].min_length = wmi_priv.po_data[i].min_password_length;
-+		attr_data[i].max_length = wmi_priv.po_data[i].max_password_length;
-+
-+		obj = get_wmiobj_pointer(i, DELL_WMI_BIOS_PASSOBJ_ATTRIBUTE_GUID);
-+		if (!obj)
-+			continue;
-+		attr_data[i].is_set = obj->package.elements[IS_PASS_SET].integer.value;
-+		kfree(obj);
-+	}
-+}
-+
- /**
-  * exit_po_attributes() - Clear all attribute data
-  *
-diff --git a/drivers/platform/x86/dell-wmi-sysman/string-attributes.c b/drivers/platform/x86/dell-wmi-sysman/string-attributes.c
-index ac75dce88a4c..a3847e4a6bf8 100644
---- a/drivers/platform/x86/dell-wmi-sysman/string-attributes.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/string-attributes.c
-@@ -15,22 +15,17 @@ get_instance_id(str);
- static ssize_t current_value_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
- {
- 	int instance_id = get_str_instance_id(kobj);
--	union acpi_object *obj;
--	ssize_t ret;
-+	int ret;
- 
- 	if (instance_id < 0)
--		return -EIO;
--
--	/* need to use specific instance_id and guid combination to get right data */
--	obj = get_wmiobj_pointer(instance_id, DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID);
--	if (!obj)
--		return -EIO;
--	if (obj->package.elements[CURRENT_VAL].type != ACPI_TYPE_STRING) {
--		kfree(obj);
--		return -EINVAL;
-+		return instance_id;
-+
-+	ret = get_current_value(buf, instance_id, DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID);
-+	if (ret > 0) {
-+		strcat(buf, "\n");
-+		return strlen(buf);
- 	}
--	ret = snprintf(buf, PAGE_SIZE, "%s\n", obj->package.elements[CURRENT_VAL].string.pointer);
--	kfree(obj);
-+	/* read error */
- 	return ret;
- }
- 
-@@ -141,6 +136,35 @@ int populate_str_data(union acpi_object *str_obj, int instance_id, struct kobjec
- 	return sysfs_create_group(attr_name_kobj, &str_attr_group);
- }
- 
-+void get_string_data(struct dell_wmi_sysman_buffer *buf)
-+{
-+	struct dell_attributes_data *attr_data;
-+	int i;
-+	//To populate in same dell_attributes_data, increment after enum+int data
-+	int a_count = wmi_priv.enumeration_instances_count +
-+					wmi_priv.integer_instances_count;
-+	attr_data = (struct dell_attributes_data *)buf->data;
-+
-+	for (i = 0; i < wmi_priv.str_instances_count; i++) {
-+		attr_data[a_count].type = STR;
-+		strlcpy_attr(attr_data[a_count].attribute_name,
-+						wmi_priv.str_data[i].attribute_name);
-+		strlcpy_attr(attr_data[a_count].display_name,
-+						wmi_priv.str_data[i].display_name);
-+		strlcpy_attr(attr_data[a_count].display_name_language_code,
-+						wmi_priv.str_data[i].display_name_language_code);
-+		strlcpy_attr(attr_data[a_count].dell_modifier,
-+						wmi_priv.str_data[i].dell_modifier);
-+		attr_data[a_count].min = wmi_priv.str_data[i].min_length;
-+		attr_data[a_count].max = wmi_priv.str_data[i].max_length;
-+		strlcpy_attr(attr_data[a_count].default_value,
-+						wmi_priv.str_data[i].default_value);
-+		get_current_value(attr_data[a_count].current_value, i,
-+				DELL_WMI_BIOS_STRING_ATTRIBUTE_GUID);
-+		a_count++;
-+	}
-+}
-+
- /**
-  * exit_str_attributes() - Clear all attribute data
-  *
-diff --git a/drivers/platform/x86/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell-wmi-sysman/sysman.c
-index cb81010ba1a2..0b77a6a0b8a8 100644
---- a/drivers/platform/x86/dell-wmi-sysman/sysman.c
-+++ b/drivers/platform/x86/dell-wmi-sysman/sysman.c
-@@ -275,7 +275,7 @@ static struct kobj_type attr_name_ktype = {
-  * @dest: Where to copy the string to
-  * @src: Where to copy the string from
-  */
--void strlcpy_attr(char *dest, char *src)
-+void strlcpy_attr(char *dest, const char *src)
- {
- 	size_t len = strlen(src) + 1;
- 
-@@ -307,6 +307,52 @@ union acpi_object *get_wmiobj_pointer(int instance_id, const char *guid_string)
- 	return ACPI_SUCCESS(status) ? (union acpi_object *)out.pointer : NULL;
- }
- 
-+int validate_acpi_type(union acpi_object *obj, const char *guid_string)
-+{
-+	u32 acpi_type;
-+
-+	if (strcmp(guid_string, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID) == 0)
-+		acpi_type = ACPI_TYPE_INTEGER;
-+	else
-+		acpi_type = ACPI_TYPE_STRING;
-+
-+	if (obj->package.elements[CURRENT_VAL].type != acpi_type)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+/**
-+ * get_curret_value() - Get current_value of an attribute
-+ * @instance_id: WMI instance ID
-+ * @guid_string: WMI GUID (in string form)
-+ */
-+int get_current_value(char *buf, int instance_id, const char *guid_string)
-+{
-+	union acpi_object *obj;
-+	int ret;
-+
-+	/* need to use specific instance_id and guid combination to get right data */
-+	obj = get_wmiobj_pointer(instance_id, guid_string);
-+	if (!obj)
-+		return -EIO;
-+
-+	ret = validate_acpi_type(obj, guid_string);
-+	if (ret)
-+		goto out;
-+
-+	if (strcmp(guid_string, DELL_WMI_BIOS_INTEGER_ATTRIBUTE_GUID) == 0)
-+		ret = snprintf(buf, PAGE_SIZE, "%lld",
-+				obj->package.elements[CURRENT_VAL].integer.value);
-+	else
-+		ret = snprintf(buf, PAGE_SIZE, "%s",
-+				obj->package.elements[CURRENT_VAL].string.pointer);
-+
-+out:
-+	kfree(obj);
-+	return ret;
-+}
-+
- /**
-  * get_instance_count() - Compute total number of instances under guid_string
-  * @guid_string: WMI GUID (in string form)
-diff --git a/include/uapi/linux/wmi.h b/include/uapi/linux/wmi.h
-index 7085c5dca9fa..f160d1eef7cb 100644
---- a/include/uapi/linux/wmi.h
-+++ b/include/uapi/linux/wmi.h
-@@ -13,6 +13,11 @@
- /* WMI bus will filter all WMI vendor driver requests through this IOC */
- #define WMI_IOC 'W'
- 
-+enum BIOS_ATTRIBUTE_TYPE { ENUM, INT, STR, PO };
-+enum IOCTL_COMMAND { ENUMERATE_ALL = 1, SET_ATTRIBUTES, SET_DEFAULTS, GET_PASS, SET_PASS };
-+
-+#define MAX_BUFF  512
-+
- /* All ioctl requests through WMI should declare their size followed by
-  * relevant data objects
-  */
-@@ -43,6 +48,53 @@ struct dell_wmi_smbios_buffer {
- 	struct dell_wmi_extensions	ext;
- } __packed;
- 
-+struct dell_wmi_sysman_buffer {
-+	__u64 length;
-+	__u32 count;
-+	__u16 command;
-+	char admin_password[MAX_BUFF];
-+	__u8 data[];
-+} __packed;
-+
-+struct dell_attributes_data {
-+	char display_name_language_code[MAX_BUFF];
-+	char dell_value_modifier[MAX_BUFF];
-+	char possible_values[MAX_BUFF];
-+	char attribute_name[MAX_BUFF];
-+	char current_value[MAX_BUFF];
-+	char default_value[MAX_BUFF];
-+	char dell_modifier[MAX_BUFF];
-+	char display_name[MAX_BUFF];
-+	int scalar_increment;
-+	int type;
-+	int min;
-+	int max;
-+} __packed;
-+
-+struct dell_set_data {
-+	char attribute_name[MAX_BUFF];
-+	char attribute_value[MAX_BUFF];
-+} __packed;
-+
-+struct dell_set_password {
-+	char attribute_name[MAX_BUFF];
-+	char system_password[MAX_BUFF];
-+	char new_password[MAX_BUFF];
-+} __packed;
-+
-+struct dell_password_data {
-+	char attribute_name[MAX_BUFF];
-+	__u8 is_set;
-+	int min_length;
-+	int max_length;
-+} __packed;
-+
-+struct dell_resetBIOS {
-+	__u64 length;
-+	__u8 option;
-+	char admin_password[MAX_BUFF];
-+} __packed;
-+
- /* Whitelisted smbios class/select commands */
- #define CLASS_TOKEN_READ	0
- #define CLASS_TOKEN_WRITE	1
-@@ -67,4 +119,8 @@ struct dell_wmi_smbios_buffer {
- /* Dell SMBIOS calling IOCTL command used by dell-smbios-wmi */
- #define DELL_WMI_SMBIOS_CMD	_IOWR(WMI_IOC, 0, struct dell_wmi_smbios_buffer)
- 
-+/* Dell WMI System Management calling IOCTL commands used by dell-wmi-sysman */
-+#define DELL_WMI_SYSMAN_CMD _IOWR(WMI_IOC, 0, struct dell_wmi_sysman_buffer)
-+#define DELL_WMI_SYSMAN_RESET_BIOS _IOW(WMI_IOC, 0, struct dell_resetBIOS)
-+
- #endif
-diff --git a/tools/dell-wmi-sysman/Makefile b/tools/dell-wmi-sysman/Makefile
-new file mode 100644
-index 000000000000..0a01a82a0745
---- /dev/null
-+++ b/tools/dell-wmi-sysman/Makefile
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+PREFIX ?= /usr
-+SBINDIR ?= sbin
-+INSTALL ?= install
-+CFLAGS += -D__EXPORTED_HEADERS__ -I../../include/uapi -I../../include -I./
-+
-+TARGET = dell-wmi-sysman-example
-+
-+all: $(TARGET)
-+
-+%: %.c
-+	$(CC) $(CFLAGS) $(LDFLAGS) -g -o $@ $<
-+
-+clean:
-+	$(RM) $(TARGET)
-+
-+install: dell-wmi-sysman-example
-+	$(INSTALL) -D -m 755 $(TARGET) $(DESTDIR)$(PREFIX)/$(SBINDIR)/$(TARGET)
-+
-diff --git a/tools/dell-wmi-sysman/dell-wmi-sysman-example.c b/tools/dell-wmi-sysman/dell-wmi-sysman-example.c
-new file mode 100644
-index 000000000000..50db8835cea6
---- /dev/null
-+++ b/tools/dell-wmi-sysman/dell-wmi-sysman-example.c
-@@ -0,0 +1,432 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  Sample application for system management over WMI interface
-+ *  Performs the following:
-+ *  - Enemeration of all BIOS attributes present in system
-+ *  - Set BIOS atributes to user input or default
-+ *	- Reset BIOS
-+ *
-+ *  Copyright (C) 2021 Dell, Inc.
-+ *
-+ *  This program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License version 2 as
-+ *  published by the Free Software Foundation.
-+ */
-+
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <sys/ioctl.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <ctype.h>
-+
-+/* if uapi header isn't installed, this might not yet exist */
-+#ifndef __packed
-+#define __packed __attribute__((packed))
-+#endif
-+#include <linux/wmi.h>
-+
-+enum USER_OPTS {GET_ATTRS = 1, SET_ATTRS, SET_DEFS, PASS_MAN, RESET, EXIT };
-+enum PASS_OPTS {GET_PASSINFO = 1, SET_OR_CHANGE_PASS, CLEAR_PASS, BACK };
-+
-+static const char *ioctl_devfs = "/dev/wmi/dell-wmi-sysman";
-+__u64 buff_size;
-+
-+static int query_buffer_size(__u64 *buffer_size)
-+{
-+	FILE *f = fopen(ioctl_devfs, "rb");
-+
-+	if (!f)
-+		return -EINVAL;
-+	fread(buffer_size, sizeof(__u64), 1, f);
-+	fclose(f);
-+	return EXIT_SUCCESS;
-+}
-+
-+int read_integer_input(void)
-+{
-+	int val, in, c;
-+	char follow;
-+
-+	while (1) {
-+		in = scanf("%d%c", &val, &follow);
-+		if (in == 2) {
-+			if (isspace(follow))
-+				return val;
-+			printf("Invalid input! Try again...\nEnter - ");
-+		} else if (in == 1) {
-+			return val;
-+		printf("Invalid input! Try again...\nEnter - ");
-+		}
-+
-+		while ((c = getchar()) != '\n' && c != EOF)
-+			;
-+	}
-+}
-+
-+static int call_ioctl(struct dell_wmi_sysman_buffer *buffer)
-+{
-+	int fd;
-+	int ret;
-+
-+	fd = open(ioctl_devfs, O_NONBLOCK);
-+	ret = ioctl(fd, DELL_WMI_SYSMAN_CMD, buffer);
-+	close(fd);
-+	return ret;
-+}
-+
-+int is_password_set(unsigned char *password_type)
-+{
-+	int ret, i;
-+	int is_set = 0;
-+	struct dell_wmi_sysman_buffer *buff_pwd;
-+	struct dell_password_data *indata;
-+
-+	buff_pwd = malloc(buff_size); //buff_size large enough to get password data
-+	if (buff_pwd == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return -ENOMEM;
-+	}
-+
-+	buff_pwd->length = buff_size;
-+	buff_pwd->command = GET_PASS;
-+	call_ioctl(buff_pwd);
-+
-+	indata = (struct dell_password_data *)buff_pwd->data;
-+
-+	for (i = 0; i < buff_pwd->count; i++) {
-+		if (strcmp(indata[i].attribute_name, password_type) == 0) {
-+			is_set = indata[i].is_set;
-+			break;
-+		}
-+	}
-+
-+	free(buff_pwd);
-+	return is_set;
-+}
-+
-+/* Enumerate functions start*/
-+void display_attributes(struct dell_wmi_sysman_buffer *buff_all)
-+{
-+	struct dell_attributes_data *testdata;
-+	int i;
-+
-+	testdata = (struct dell_attributes_data *)buff_all->data;
-+	for (i = 0; i < buff_all->count; i++) {
-+		printf("\n%d\n", (i + 1));
-+		printf("AttributeName = %s\n", testdata[i].attribute_name);
-+		printf("Display LangCode = %s\n", testdata[i].display_name_language_code);
-+		printf("Display Name = %s\n", testdata[i].display_name);
-+		printf("Modifier = %s\n", testdata[i].dell_modifier);
-+		printf("Current Value = %s\n", testdata[i].current_value);
-+		printf("Default Value = %s\n", testdata[i].default_value);
-+		if (testdata[i].type == ENUM) {
-+			printf("Value Modifier = %s\n", testdata[i].dell_value_modifier);
-+			printf("PossibleValues = %s\n", testdata[i].possible_values);
-+		}
-+		if (testdata[i].type == INT) {
-+			printf("Lower Bound = %d\n", testdata[i].min);
-+			printf("Upper Bound = %d\n", testdata[i].max);
-+			printf("Scalar incr = %d\n", testdata[i].scalar_increment);
-+		}
-+		if (testdata[i].type == STR) {
-+			printf("Minimum Length = %d\n", testdata[i].min);
-+			printf("Maximum Length = %d\n", testdata[i].max);
-+		}
-+	}
-+	printf("---------------------------------------------------------\n");
-+}
-+
-+void enumerate_all_attributes(void)
-+{
-+	struct dell_wmi_sysman_buffer *buff_all;
-+	int ret;
-+
-+	buff_all = malloc(buff_size);
-+	if (buff_all == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return;
-+	}
-+	buff_all->length = buff_size;
-+	buff_all->command = ENUMERATE_ALL;
-+	ret = call_ioctl(buff_all);
-+	if (ret) {
-+		printf("smbios ioctl failed: %d\n", ret);
-+		goto out;
-+	}
-+	display_attributes(buff_all);
-+out:
-+	if (buff_all != NULL)
-+		free(buff_all);
-+}
-+/* Enumerate functions end*/
-+
-+/* SET functions start */
-+int read_set_data(struct dell_wmi_sysman_buffer *buff_set, int option)
-+{
-+	int i, admin_pwd_set;
-+	struct dell_set_data *indata;
-+
-+	admin_pwd_set = is_password_set("Admin");
-+	if (admin_pwd_set < 0) {
-+		printf("check password call failed!!!\n");
-+		return EXIT_FAILURE;
-+	}
-+
-+	printf("How many attributes to set: ");
-+	scanf("%d", &buff_set->count);
-+
-+	indata = (struct dell_set_data *)buff_set->data;
-+
-+	if (admin_pwd_set) {
-+		printf("Admin password is set, please enter password - ");
-+		scanf("%s", buff_set->admin_password);
-+	}
-+
-+	for (i = 0; i < buff_set->count; i++) {
-+		printf("Enter Attribute Name: ");
-+		scanf("%s", indata[i].attribute_name);
-+
-+		if (option == SET_ATTRIBUTES) {
-+			printf("Enter Attribute Value: ");
-+			scanf("%s", indata[i].attribute_value);
-+		}
-+	}
-+	return 0;
-+}
-+
-+void call_set_cmd(int cmd_opt)
-+{
-+	int i, ret;
-+	struct dell_wmi_sysman_buffer *buff_set;
-+
-+	buff_set = malloc(buff_size);
-+	if (buff_set == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return;
-+	}
-+	buff_set->length = buff_size;
-+	buff_set->command = cmd_opt;
-+	if (read_set_data(buff_set, cmd_opt))
-+		goto out;
-+
-+	ret = call_ioctl(buff_set);
-+	if (!ret) {
-+		printf("Set Successful...\n");
-+		goto out;
-+	}
-+	printf("Set failed: %d\n", ret);
-+out:
-+	free(buff_set);
-+}
-+/* SET functions end */
-+
-+/* Password related functions start */
-+void get_password_info(void)
-+{
-+	int i;
-+	struct dell_wmi_sysman_buffer *buff_pwd;
-+	struct dell_password_data *testdata;
-+
-+	buff_pwd = malloc(buff_size); //buff_size large enough to get password data
-+	if (buff_pwd == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return;
-+	}
-+	buff_pwd->length = buff_size;
-+	buff_pwd->command = GET_PASS;
-+	if (call_ioctl(buff_pwd)) {
-+		free(buff_pwd);
-+		printf("smbios ioctl failed!!!\n");
-+		return;
-+	}
-+
-+	testdata = (struct dell_password_data *)buff_pwd->data;
-+	for (i = 0; i < buff_pwd->count; i++) {
-+		printf("\n%d\n", (i + 1));
-+		printf("AttributeName = %s\n", testdata[i].attribute_name);
-+		printf("Minimum Length = %d\n", testdata[i].min_length);
-+		printf("Maximum Length = %d\n", testdata[i].max_length);
-+		printf("Is Password Set = %d\n", testdata[i].is_set);
-+	}
-+	if (buff_pwd != NULL)
-+		free(buff_pwd);
-+}
-+
-+void call_set_pasword_cmd(int clear_opt)
-+{
-+	int ret, is_admin_pwd_set, is_system_pwd_set;
-+	struct dell_wmi_sysman_buffer *buff_pwd;
-+	struct dell_set_password *indata;
-+
-+	buff_pwd = malloc(buff_size); //buff_size large enough to get password data
-+	if (buff_pwd == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return;
-+	}
-+	buff_pwd->length = buff_size;
-+	buff_pwd->command = SET_PASS;
-+	is_admin_pwd_set = is_password_set("Admin");
-+	is_system_pwd_set = is_password_set("System");
-+	if ((is_admin_pwd_set < 0) || (is_system_pwd_set < 0)) {
-+		printf("check password call failed!!!\n");
-+		goto out;
-+	}
-+
-+	indata = (struct dell_set_password *)buff_pwd->data;
-+
-+	if (is_admin_pwd_set) {
-+		printf("Admin password is set, please enter current admin password - ");
-+		scanf("%s", buff_pwd->admin_password);
-+	}
-+
-+	printf("Enter which password to set Admin/System - ");
-+	scanf("%s", indata->attribute_name);
-+
-+	if (strcmp(indata->attribute_name, "System") == 0 && (is_system_pwd_set)) {
-+		printf("System password is set, please enter current system password - ");
-+		scanf("%s", indata->system_password);
-+	}
-+
-+	if (clear_opt == 3) {
-+		strcpy(indata->new_password, "");
-+	} else {
-+		printf("Enter new password - ");
-+		scanf("%s", indata->new_password);
-+	}
-+	ret = call_ioctl(buff_pwd);
-+	if (!ret) {
-+		printf("Set Successful...\n");
-+		ret = EXIT_SUCCESS;
-+		goto out;
-+	}
-+	printf("Set failed: %d\n", ret);
-+out:
-+	free(buff_pwd);
-+}
-+
-+void call_password_management(void)
-+{
-+	int opt, ret;
-+
-+	while (1) {
-+		printf("\n##############################\n");
-+		printf(" Password Management Menu\t\n");
-+		printf("##############################\n");
-+		printf("\n1 - Get Password Information\n"
-+				"2 - Set/Change Password\n"
-+				"3 - Clear Password\n"
-+				"4 - Go to back to Main Menu\n\n"
-+				"Enter - ");
-+		opt = read_integer_input();
-+
-+		switch (opt) {
-+		case GET_PASSINFO:
-+			get_password_info();
-+			break;
-+		case SET_OR_CHANGE_PASS:
-+		case CLEAR_PASS:
-+			call_set_pasword_cmd(opt);
-+			break;
-+		case BACK:
-+			return;
-+		default:
-+			printf("Invalid option!\n");
-+			break;
-+		}
-+	}
-+}
-+/* Password related functions end */
-+
-+void call_reset_bios(void)
-+{
-+	struct dell_resetBIOS *buff_reset;
-+	unsigned char reset_option;
-+	int fd, ret, is_admin_pwd_set;
-+
-+	printf("\nReset Options:\n"
-+			"0 - Built-in Safe Defaults\n"
-+			"1 - Last Known Good\n"
-+			"2 - Factory\n"
-+			"3 - Custom\n\n"
-+			"Enter - ");
-+	scanf("%hhu", &reset_option);
-+	buff_reset = malloc(buff_size);
-+	if (buff_reset == NULL) {
-+		printf("failed to alloc memory for ioctl\n");
-+		return;
-+	}
-+	is_admin_pwd_set = is_password_set("Admin");
-+	if ((is_admin_pwd_set < 0)) {
-+		printf("check password call failed!!!\n");
-+		goto out;
-+	}
-+
-+	buff_reset->length = buff_size;
-+	if (is_admin_pwd_set) {
-+		printf("Admin password is set, please enter current admin password - ");
-+		scanf("%s", buff_reset->admin_password);
-+	}
-+	fd = open(ioctl_devfs, O_NONBLOCK);
-+	ret = ioctl(fd, DELL_WMI_SYSMAN_RESET_BIOS, buff_reset);
-+	close(fd);
-+	if (!ret) {
-+		printf("Reset Successful. Reboot the system\n");
-+		ret = EXIT_SUCCESS;
-+		goto out;
-+	}
-+	printf("Reset Failed: %d\n", ret);
-+out:
-+	if (buff_reset != NULL)
-+		free(buff_reset);
-+}
-+
-+int main(void)
-+{
-+	int ret, opt;
-+	__u64 value = 0;
-+
-+	ret = query_buffer_size(&value);
-+	if (ret == EXIT_FAILURE || !value) {
-+		printf("Unable to read buffer size\n");
-+		return ret;
-+	}
-+	buff_size = value;
-+	while (1) {
-+		printf("\n\n\n##############################\n");
-+		printf("Dell BIOS System Management Utility\n");
-+		printf("##############################\n");
-+		printf("\n1 - Enumerate All Attributes\n"
-+				"2 - Set Attributes\n"
-+				"3 - Set To Defaults\n"
-+				"4 - Password Management\n"
-+				"5 - Reset BIOS\n"
-+				"6 - Exit\n"
-+				"\n\nEnter - ");
-+		opt = read_integer_input();
-+
-+		switch (opt) {
-+		case GET_ATTRS:
-+			enumerate_all_attributes();
-+			break;
-+		case SET_ATTRS:
-+		case SET_DEFS:
-+			call_set_cmd(opt);
-+			break;
-+		case PASS_MAN:
-+			call_password_management();
-+			break;
-+		case RESET:
-+			call_reset_bios();
-+			break;
-+		case EXIT:
-+			exit(0);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+	return 0;
-+}
--- 
-2.25.1
+Right. I have the other patch ready, thanks to your great help. I'm
+waiting for Nitin's okay whether / how much info I can copy from the
+reference sheet to source code comments. Once I have that confirmation,
+I will post the revised patch.
 
+> <snip>
+>=20
+>> Finally, I mentioned some open ends already on a post to ibm-acpi-deve=
+l
+>> at https://sourceforge.net/p/ibm-acpi/mailman/message/37200082/; this
+>> very question is among them.
+>> I will start tackling the SW_TABLET_MODE event issue first, but if Mar=
+k
+>> and Nitin can already hint about the keyboard shortcuts, it'd be highl=
+y
+>> appreciated.
+>=20
+> I think I might be able to help there, a couple of months ago I bought
+> a second-hand thinkpad-10 tablet which also has a USB attached keyboard=
+=2E
+>=20
+> In hindsight I guess I could have asked Mark and Nitin for some more in=
+fo,
+> but I went on autopilot and just ran hexdump -C on the /dev/hidraw node=
+
+> to see which events all the keys send.
+>=20
+> And I fired up an usb-sniffer under Windows to figure out the audio-led=
+s,
+> since I'm used to just figure these things out without help from the ve=
+ndor :)
+
+Yeah, why take the boring route if you know how to do all the work on
+your own... ;-)
+
+> See the recent commits here for my work on this:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/=
+drivers/hid/hid-lenovo.c
+
+Thanks, very helpful.
+
+> So on the ibm-acpi list message you said that the kbd sends the followi=
+ng:
+>=20
+> type 4 (EV_MSC), code 4 (MSC_SCAN), value c0001
+> type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 1
+>=20
+> For the Fn-keys, does it send the same MSC_SCAN code for *all* the
+> non-working Fn-keys ?
+
+Correct. And I can confirm that /dev/hidraw1 lets me distinguish between
+the keys.
+
+> If so then it seems that this is very much like the thinkpad 10 kbd doc=
+k
+> which also does this, see the lenovo_input_mapping_tp10_ultrabook_kbd()=
+
+> function in drivers/hid/hid-lenovo.c .
+>=20
+> If I have that right, then I think we should be able to get the
+> Fn keys to work without too much trouble. You could try hacking up
+> drivers/hid/hid-lenovo.c a bit:
+
+(Not yet there, but will investigate.)
+
+> 1. Add an entry to the lenovo_devices array like this:
+>=20
+> 	/*
+> 	 * Note bind to the HID_GROUP_GENERIC group, so that we only bind to t=
+he keyboard part,
+> 	 * while letting hid-multitouch.c handle the touchpad and trackpoint.
+> 	 */
+>         { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>                      USB_VENDOR_ID_LENOVO,
+>                      USB_DEVICE_ID_LENOVO_X1_TAB),
+>=20
+> 2. Add the following entry to the switch-case in lenovo_input_mapping()=
+ :
+>=20
+>         case USB_DEVICE_ID_LENOVO_X1_TAB:
+>                 return lenovo_input_mapping_tp10_ultrabook_kbd(hdev, hi=
+, field,
+>                                                                usage, b=
+it, max);
+>=20
+> And then build hid-lenovo.c and modprobe it.
+>=20
+> After the modprobe to:
+>=20
+> ls -l /sys/bus/hid/devices/0003:17EF:60A3.*/driver
+>=20
+> This should show 2 devices (I guess) with one being bound to hid-lenovo=
+
+> and 1 being bound to hid-multitouch.
+
+So far (without patching hid-lenovo), 2 bound to hid-generic and 1 to
+hid-multitouch.
+
+> If this works some of your Fn + F# keys will now hopefully start doing
+> something, you can play around with modifying lenovo_input_mapping_tp10=
+_ultrabook_kbd
+> to make it do the right thing for your kbd.
+>=20
+> ###
+>=20
+> About LED support, just enabling the LED support bits for the
+> USB_DEVICE_ID_LENOVO_TP10UBKBD handling for now might work fine,
+> but there is a tiny chance that sending the wrong command somehow puts
+> the kbd in firmware update mode, I had that happen once with a Logitech=
+
+> kbd which did not seem to have any kind of handshake / passcode to avoi=
+d
+> accidental fw updates (*).
+>=20
+> If you can give me a dump of the hid-descriptors for your keyboard,
+> then I can check if that the LEDs might work the same way too (or not).=
+
+>=20
+> The easiest way to get a dump is to run the following command as root:
+>=20
+> cat /sys/kernel/debug/hid/0003:17EF:60A3.*/rdesc > rdesc
+>=20
+> And then attach rdesc to your next email.
+
+Please find this one attached already now.
+In case it helps, the * expands to 0057 0058 0059 on my system.
+
+
+Thanks,
+Alex
+
+
+> Regards,
+>=20
+> Hans
+>=20
+>=20
+>=20
+>=20
+>=20
+> *) Luckily it at least had a separate firmware-bootlader mode in which =
+it
+> was stuck now, so with some cmdline magic to force an upgrade the Windo=
+ws
+> fw installer could still fix it.
+>=20
+
+--------------F645A6997CF7ADE77AEBCEC3
+Content-Type: text/plain; charset=UTF-8;
+ name="rdesc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="rdesc"
+
+MDUgMDEgMDkgMDYgYTEgMDEgMDUgMDcgMTkgZTAgMjkgZTcgMTUgMDAgMjUgMDEgNzUgMDEg
+OTUgMDggODEgMDIgOTUgMDEgNzUgMDggODEgMDEgOTUgMDUgNzUgMDEgMDUgMDggMTkgMDEg
+MjkgMDUgOTEgMDIgOTUgMDEgNzUgMDMgOTEgMDEgOTUgMDYgNzUgMDggMTUgMDAgMjYgZmYg
+MDAgMDUgMDcgMTkgMDAgMmEgZmYgMDAgODEgMDAgMDUgMGMgMDkgMDAgMTUgODAgMjUgN2Yg
+OTUgNDAgNzUgMDggYjEgMDIgYzAgCgogIElOUFVUW0lOUFVUXQogICAgRmllbGQoMCkKICAg
+ICAgQXBwbGljYXRpb24oR2VuZXJpY0Rlc2t0b3AuS2V5Ym9hcmQpCiAgICAgIFVzYWdlKDgp
+CiAgICAgICAgS2V5Ym9hcmQuMDBlMAogICAgICAgIEtleWJvYXJkLjAwZTEKICAgICAgICBL
+ZXlib2FyZC4wMGUyCiAgICAgICAgS2V5Ym9hcmQuMDBlMwogICAgICAgIEtleWJvYXJkLjAw
+ZTQKICAgICAgICBLZXlib2FyZC4wMGU1CiAgICAgICAgS2V5Ym9hcmQuMDBlNgogICAgICAg
+IEtleWJvYXJkLjAwZTcKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwg
+TWF4aW11bSgxKQogICAgICBSZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQoOCkK
+ICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUg
+KQogICAgRmllbGQoMSkKICAgICAgQXBwbGljYXRpb24oR2VuZXJpY0Rlc2t0b3AuS2V5Ym9h
+cmQpCiAgICAgIFVzYWdlKDI1NikKICAgICAgICBLZXlib2FyZC4wMDAwCiAgICAgICAgS2V5
+Ym9hcmQuMDAwMQogICAgICAgIEtleWJvYXJkLjAwMDIKICAgICAgICBLZXlib2FyZC4wMDAz
+CiAgICAgICAgS2V5Ym9hcmQuMDAwNAogICAgICAgIEtleWJvYXJkLjAwMDUKICAgICAgICBL
+ZXlib2FyZC4wMDA2CiAgICAgICAgS2V5Ym9hcmQuMDAwNwogICAgICAgIEtleWJvYXJkLjAw
+MDgKICAgICAgICBLZXlib2FyZC4wMDA5CiAgICAgICAgS2V5Ym9hcmQuMDAwYQogICAgICAg
+IEtleWJvYXJkLjAwMGIKICAgICAgICBLZXlib2FyZC4wMDBjCiAgICAgICAgS2V5Ym9hcmQu
+MDAwZAogICAgICAgIEtleWJvYXJkLjAwMGUKICAgICAgICBLZXlib2FyZC4wMDBmCiAgICAg
+ICAgS2V5Ym9hcmQuMDAxMAogICAgICAgIEtleWJvYXJkLjAwMTEKICAgICAgICBLZXlib2Fy
+ZC4wMDEyCiAgICAgICAgS2V5Ym9hcmQuMDAxMwogICAgICAgIEtleWJvYXJkLjAwMTQKICAg
+ICAgICBLZXlib2FyZC4wMDE1CiAgICAgICAgS2V5Ym9hcmQuMDAxNgogICAgICAgIEtleWJv
+YXJkLjAwMTcKICAgICAgICBLZXlib2FyZC4wMDE4CiAgICAgICAgS2V5Ym9hcmQuMDAxOQog
+ICAgICAgIEtleWJvYXJkLjAwMWEKICAgICAgICBLZXlib2FyZC4wMDFiCiAgICAgICAgS2V5
+Ym9hcmQuMDAxYwogICAgICAgIEtleWJvYXJkLjAwMWQKICAgICAgICBLZXlib2FyZC4wMDFl
+CiAgICAgICAgS2V5Ym9hcmQuMDAxZgogICAgICAgIEtleWJvYXJkLjAwMjAKICAgICAgICBL
+ZXlib2FyZC4wMDIxCiAgICAgICAgS2V5Ym9hcmQuMDAyMgogICAgICAgIEtleWJvYXJkLjAw
+MjMKICAgICAgICBLZXlib2FyZC4wMDI0CiAgICAgICAgS2V5Ym9hcmQuMDAyNQogICAgICAg
+IEtleWJvYXJkLjAwMjYKICAgICAgICBLZXlib2FyZC4wMDI3CiAgICAgICAgS2V5Ym9hcmQu
+MDAyOAogICAgICAgIEtleWJvYXJkLjAwMjkKICAgICAgICBLZXlib2FyZC4wMDJhCiAgICAg
+ICAgS2V5Ym9hcmQuMDAyYgogICAgICAgIEtleWJvYXJkLjAwMmMKICAgICAgICBLZXlib2Fy
+ZC4wMDJkCiAgICAgICAgS2V5Ym9hcmQuMDAyZQogICAgICAgIEtleWJvYXJkLjAwMmYKICAg
+ICAgICBLZXlib2FyZC4wMDMwCiAgICAgICAgS2V5Ym9hcmQuMDAzMQogICAgICAgIEtleWJv
+YXJkLjAwMzIKICAgICAgICBLZXlib2FyZC4wMDMzCiAgICAgICAgS2V5Ym9hcmQuMDAzNAog
+ICAgICAgIEtleWJvYXJkLjAwMzUKICAgICAgICBLZXlib2FyZC4wMDM2CiAgICAgICAgS2V5
+Ym9hcmQuMDAzNwogICAgICAgIEtleWJvYXJkLjAwMzgKICAgICAgICBLZXlib2FyZC4wMDM5
+CiAgICAgICAgS2V5Ym9hcmQuMDAzYQogICAgICAgIEtleWJvYXJkLjAwM2IKICAgICAgICBL
+ZXlib2FyZC4wMDNjCiAgICAgICAgS2V5Ym9hcmQuMDAzZAogICAgICAgIEtleWJvYXJkLjAw
+M2UKICAgICAgICBLZXlib2FyZC4wMDNmCiAgICAgICAgS2V5Ym9hcmQuMDA0MAogICAgICAg
+IEtleWJvYXJkLjAwNDEKICAgICAgICBLZXlib2FyZC4wMDQyCiAgICAgICAgS2V5Ym9hcmQu
+MDA0MwogICAgICAgIEtleWJvYXJkLjAwNDQKICAgICAgICBLZXlib2FyZC4wMDQ1CiAgICAg
+ICAgS2V5Ym9hcmQuMDA0NgogICAgICAgIEtleWJvYXJkLjAwNDcKICAgICAgICBLZXlib2Fy
+ZC4wMDQ4CiAgICAgICAgS2V5Ym9hcmQuMDA0OQogICAgICAgIEtleWJvYXJkLjAwNGEKICAg
+ICAgICBLZXlib2FyZC4wMDRiCiAgICAgICAgS2V5Ym9hcmQuMDA0YwogICAgICAgIEtleWJv
+YXJkLjAwNGQKICAgICAgICBLZXlib2FyZC4wMDRlCiAgICAgICAgS2V5Ym9hcmQuMDA0Zgog
+ICAgICAgIEtleWJvYXJkLjAwNTAKICAgICAgICBLZXlib2FyZC4wMDUxCiAgICAgICAgS2V5
+Ym9hcmQuMDA1MgogICAgICAgIEtleWJvYXJkLjAwNTMKICAgICAgICBLZXlib2FyZC4wMDU0
+CiAgICAgICAgS2V5Ym9hcmQuMDA1NQogICAgICAgIEtleWJvYXJkLjAwNTYKICAgICAgICBL
+ZXlib2FyZC4wMDU3CiAgICAgICAgS2V5Ym9hcmQuMDA1OAogICAgICAgIEtleWJvYXJkLjAw
+NTkKICAgICAgICBLZXlib2FyZC4wMDVhCiAgICAgICAgS2V5Ym9hcmQuMDA1YgogICAgICAg
+IEtleWJvYXJkLjAwNWMKICAgICAgICBLZXlib2FyZC4wMDVkCiAgICAgICAgS2V5Ym9hcmQu
+MDA1ZQogICAgICAgIEtleWJvYXJkLjAwNWYKICAgICAgICBLZXlib2FyZC4wMDYwCiAgICAg
+ICAgS2V5Ym9hcmQuMDA2MQogICAgICAgIEtleWJvYXJkLjAwNjIKICAgICAgICBLZXlib2Fy
+ZC4wMDYzCiAgICAgICAgS2V5Ym9hcmQuMDA2NAogICAgICAgIEtleWJvYXJkLjAwNjUKICAg
+ICAgICBLZXlib2FyZC4wMDY2CiAgICAgICAgS2V5Ym9hcmQuMDA2NwogICAgICAgIEtleWJv
+YXJkLjAwNjgKICAgICAgICBLZXlib2FyZC4wMDY5CiAgICAgICAgS2V5Ym9hcmQuMDA2YQog
+ICAgICAgIEtleWJvYXJkLjAwNmIKICAgICAgICBLZXlib2FyZC4wMDZjCiAgICAgICAgS2V5
+Ym9hcmQuMDA2ZAogICAgICAgIEtleWJvYXJkLjAwNmUKICAgICAgICBLZXlib2FyZC4wMDZm
+CiAgICAgICAgS2V5Ym9hcmQuMDA3MAogICAgICAgIEtleWJvYXJkLjAwNzEKICAgICAgICBL
+ZXlib2FyZC4wMDcyCiAgICAgICAgS2V5Ym9hcmQuMDA3MwogICAgICAgIEtleWJvYXJkLjAw
+NzQKICAgICAgICBLZXlib2FyZC4wMDc1CiAgICAgICAgS2V5Ym9hcmQuMDA3NgogICAgICAg
+IEtleWJvYXJkLjAwNzcKICAgICAgICBLZXlib2FyZC4wMDc4CiAgICAgICAgS2V5Ym9hcmQu
+MDA3OQogICAgICAgIEtleWJvYXJkLjAwN2EKICAgICAgICBLZXlib2FyZC4wMDdiCiAgICAg
+ICAgS2V5Ym9hcmQuMDA3YwogICAgICAgIEtleWJvYXJkLjAwN2QKICAgICAgICBLZXlib2Fy
+ZC4wMDdlCiAgICAgICAgS2V5Ym9hcmQuMDA3ZgogICAgICAgIEtleWJvYXJkLjAwODAKICAg
+ICAgICBLZXlib2FyZC4wMDgxCiAgICAgICAgS2V5Ym9hcmQuMDA4MgogICAgICAgIEtleWJv
+YXJkLjAwODMKICAgICAgICBLZXlib2FyZC4wMDg0CiAgICAgICAgS2V5Ym9hcmQuMDA4NQog
+ICAgICAgIEtleWJvYXJkLjAwODYKICAgICAgICBLZXlib2FyZC4wMDg3CiAgICAgICAgS2V5
+Ym9hcmQuMDA4OAogICAgICAgIEtleWJvYXJkLjAwODkKICAgICAgICBLZXlib2FyZC4wMDhh
+CiAgICAgICAgS2V5Ym9hcmQuMDA4YgogICAgICAgIEtleWJvYXJkLjAwOGMKICAgICAgICBL
+ZXlib2FyZC4wMDhkCiAgICAgICAgS2V5Ym9hcmQuMDA4ZQogICAgICAgIEtleWJvYXJkLjAw
+OGYKICAgICAgICBLZXlib2FyZC4wMDkwCiAgICAgICAgS2V5Ym9hcmQuMDA5MQogICAgICAg
+IEtleWJvYXJkLjAwOTIKICAgICAgICBLZXlib2FyZC4wMDkzCiAgICAgICAgS2V5Ym9hcmQu
+MDA5NAogICAgICAgIEtleWJvYXJkLjAwOTUKICAgICAgICBLZXlib2FyZC4wMDk2CiAgICAg
+ICAgS2V5Ym9hcmQuMDA5NwogICAgICAgIEtleWJvYXJkLjAwOTgKICAgICAgICBLZXlib2Fy
+ZC4wMDk5CiAgICAgICAgS2V5Ym9hcmQuMDA5YQogICAgICAgIEtleWJvYXJkLjAwOWIKICAg
+ICAgICBLZXlib2FyZC4wMDljCiAgICAgICAgS2V5Ym9hcmQuMDA5ZAogICAgICAgIEtleWJv
+YXJkLjAwOWUKICAgICAgICBLZXlib2FyZC4wMDlmCiAgICAgICAgS2V5Ym9hcmQuMDBhMAog
+ICAgICAgIEtleWJvYXJkLjAwYTEKICAgICAgICBLZXlib2FyZC4wMGEyCiAgICAgICAgS2V5
+Ym9hcmQuMDBhMwogICAgICAgIEtleWJvYXJkLjAwYTQKICAgICAgICBLZXlib2FyZC4wMGE1
+CiAgICAgICAgS2V5Ym9hcmQuMDBhNgogICAgICAgIEtleWJvYXJkLjAwYTcKICAgICAgICBL
+ZXlib2FyZC4wMGE4CiAgICAgICAgS2V5Ym9hcmQuMDBhOQogICAgICAgIEtleWJvYXJkLjAw
+YWEKICAgICAgICBLZXlib2FyZC4wMGFiCiAgICAgICAgS2V5Ym9hcmQuMDBhYwogICAgICAg
+IEtleWJvYXJkLjAwYWQKICAgICAgICBLZXlib2FyZC4wMGFlCiAgICAgICAgS2V5Ym9hcmQu
+MDBhZgogICAgICAgIEtleWJvYXJkLjAwYjAKICAgICAgICBLZXlib2FyZC4wMGIxCiAgICAg
+ICAgS2V5Ym9hcmQuMDBiMgogICAgICAgIEtleWJvYXJkLjAwYjMKICAgICAgICBLZXlib2Fy
+ZC4wMGI0CiAgICAgICAgS2V5Ym9hcmQuMDBiNQogICAgICAgIEtleWJvYXJkLjAwYjYKICAg
+ICAgICBLZXlib2FyZC4wMGI3CiAgICAgICAgS2V5Ym9hcmQuMDBiOAogICAgICAgIEtleWJv
+YXJkLjAwYjkKICAgICAgICBLZXlib2FyZC4wMGJhCiAgICAgICAgS2V5Ym9hcmQuMDBiYgog
+ICAgICAgIEtleWJvYXJkLjAwYmMKICAgICAgICBLZXlib2FyZC4wMGJkCiAgICAgICAgS2V5
+Ym9hcmQuMDBiZQogICAgICAgIEtleWJvYXJkLjAwYmYKICAgICAgICBLZXlib2FyZC4wMGMw
+CiAgICAgICAgS2V5Ym9hcmQuMDBjMQogICAgICAgIEtleWJvYXJkLjAwYzIKICAgICAgICBL
+ZXlib2FyZC4wMGMzCiAgICAgICAgS2V5Ym9hcmQuMDBjNAogICAgICAgIEtleWJvYXJkLjAw
+YzUKICAgICAgICBLZXlib2FyZC4wMGM2CiAgICAgICAgS2V5Ym9hcmQuMDBjNwogICAgICAg
+IEtleWJvYXJkLjAwYzgKICAgICAgICBLZXlib2FyZC4wMGM5CiAgICAgICAgS2V5Ym9hcmQu
+MDBjYQogICAgICAgIEtleWJvYXJkLjAwY2IKICAgICAgICBLZXlib2FyZC4wMGNjCiAgICAg
+ICAgS2V5Ym9hcmQuMDBjZAogICAgICAgIEtleWJvYXJkLjAwY2UKICAgICAgICBLZXlib2Fy
+ZC4wMGNmCiAgICAgICAgS2V5Ym9hcmQuMDBkMAogICAgICAgIEtleWJvYXJkLjAwZDEKICAg
+ICAgICBLZXlib2FyZC4wMGQyCiAgICAgICAgS2V5Ym9hcmQuMDBkMwogICAgICAgIEtleWJv
+YXJkLjAwZDQKICAgICAgICBLZXlib2FyZC4wMGQ1CiAgICAgICAgS2V5Ym9hcmQuMDBkNgog
+ICAgICAgIEtleWJvYXJkLjAwZDcKICAgICAgICBLZXlib2FyZC4wMGQ4CiAgICAgICAgS2V5
+Ym9hcmQuMDBkOQogICAgICAgIEtleWJvYXJkLjAwZGEKICAgICAgICBLZXlib2FyZC4wMGRi
+CiAgICAgICAgS2V5Ym9hcmQuMDBkYwogICAgICAgIEtleWJvYXJkLjAwZGQKICAgICAgICBL
+ZXlib2FyZC4wMGRlCiAgICAgICAgS2V5Ym9hcmQuMDBkZgogICAgICAgIEtleWJvYXJkLjAw
+ZTAKICAgICAgICBLZXlib2FyZC4wMGUxCiAgICAgICAgS2V5Ym9hcmQuMDBlMgogICAgICAg
+IEtleWJvYXJkLjAwZTMKICAgICAgICBLZXlib2FyZC4wMGU0CiAgICAgICAgS2V5Ym9hcmQu
+MDBlNQogICAgICAgIEtleWJvYXJkLjAwZTYKICAgICAgICBLZXlib2FyZC4wMGU3CiAgICAg
+ICAgS2V5Ym9hcmQuMDBlOAogICAgICAgIEtleWJvYXJkLjAwZTkKICAgICAgICBLZXlib2Fy
+ZC4wMGVhCiAgICAgICAgS2V5Ym9hcmQuMDBlYgogICAgICAgIEtleWJvYXJkLjAwZWMKICAg
+ICAgICBLZXlib2FyZC4wMGVkCiAgICAgICAgS2V5Ym9hcmQuMDBlZQogICAgICAgIEtleWJv
+YXJkLjAwZWYKICAgICAgICBLZXlib2FyZC4wMGYwCiAgICAgICAgS2V5Ym9hcmQuMDBmMQog
+ICAgICAgIEtleWJvYXJkLjAwZjIKICAgICAgICBLZXlib2FyZC4wMGYzCiAgICAgICAgS2V5
+Ym9hcmQuMDBmNAogICAgICAgIEtleWJvYXJkLjAwZjUKICAgICAgICBLZXlib2FyZC4wMGY2
+CiAgICAgICAgS2V5Ym9hcmQuMDBmNwogICAgICAgIEtleWJvYXJkLjAwZjgKICAgICAgICBL
+ZXlib2FyZC4wMGY5CiAgICAgICAgS2V5Ym9hcmQuMDBmYQogICAgICAgIEtleWJvYXJkLjAw
+ZmIKICAgICAgICBLZXlib2FyZC4wMGZjCiAgICAgICAgS2V5Ym9hcmQuMDBmZAogICAgICAg
+IEtleWJvYXJkLjAwZmUKICAgICAgICBLZXlib2FyZC4wMGZmCiAgICAgIExvZ2ljYWwgTWlu
+aW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oMjU1KQogICAgICBSZXBvcnQgU2l6ZSg4
+KQogICAgICBSZXBvcnQgQ291bnQoNikKICAgICAgUmVwb3J0IE9mZnNldCgxNikKICAgICAg
+RmxhZ3MoIEFycmF5IEFic29sdXRlICkKICBPVVRQVVRbT1VUUFVUXQogICAgRmllbGQoMCkK
+ICAgICAgQXBwbGljYXRpb24oR2VuZXJpY0Rlc2t0b3AuS2V5Ym9hcmQpCiAgICAgIFVzYWdl
+KDUpCiAgICAgICAgTEVELk51bUxvY2sKICAgICAgICBMRUQuQ2Fwc0xvY2sKICAgICAgICBM
+RUQuU2Nyb2xsTG9jawogICAgICAgIExFRC5Db21wb3NlCiAgICAgICAgTEVELkthbmEKICAg
+ICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgxKQogICAgICBS
+ZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQoNSkKICAgICAgUmVwb3J0IE9mZnNl
+dCgwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogIEZFQVRVUkVbRkVBVFVS
+RV0KICAgIEZpZWxkKDApCiAgICAgIEFwcGxpY2F0aW9uKEdlbmVyaWNEZXNrdG9wLktleWJv
+YXJkKQogICAgICBVc2FnZSg2NCkKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29u
+c3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAw
+CiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBD
+b25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAw
+MDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAg
+IENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIu
+MDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAg
+ICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1l
+ci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAg
+ICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1
+bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAog
+ICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29u
+c3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAw
+CiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBD
+b25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAw
+MDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAg
+IENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIu
+MDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAg
+ICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1l
+ci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAg
+ICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1
+bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAog
+ICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgICAgQ29u
+c3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBDb25zdW1lci4wMDAw
+CiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAwMDAKICAgICAgICBD
+b25zdW1lci4wMDAwCiAgICAgICAgQ29uc3VtZXIuMDAwMAogICAgICAgIENvbnN1bWVyLjAw
+MDAKICAgICAgICBDb25zdW1lci4wMDAwCiAgICAgIExvZ2ljYWwgTWluaW11bSgtMTI4KQog
+ICAgICBMb2dpY2FsIE1heGltdW0oMTI3KQogICAgICBSZXBvcnQgU2l6ZSg4KQogICAgICBS
+ZXBvcnQgQ291bnQoNjQpCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZh
+cmlhYmxlIEFic29sdXRlICkKCktleWJvYXJkLjAwZTAgLS0tPiBLZXkuTGVmdENvbnRyb2wK
+S2V5Ym9hcmQuMDBlMSAtLS0+IEtleS5MZWZ0U2hpZnQKS2V5Ym9hcmQuMDBlMiAtLS0+IEtl
+eS5MZWZ0QWx0CktleWJvYXJkLjAwZTMgLS0tPiBLZXkuTGVmdE1ldGEKS2V5Ym9hcmQuMDBl
+NCAtLS0+IEtleS5SaWdodEN0cmwKS2V5Ym9hcmQuMDBlNSAtLS0+IEtleS5SaWdodFNoaWZ0
+CktleWJvYXJkLjAwZTYgLS0tPiBLZXkuUmlnaHRBbHQKS2V5Ym9hcmQuMDBlNyAtLS0+IEtl
+eS5SaWdodE1ldGEKS2V5Ym9hcmQuMDAwMCAtLS0+IFN5bmMuUmVwb3J0CktleWJvYXJkLjAw
+MDEgLS0tPiBTeW5jLlJlcG9ydApLZXlib2FyZC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKS2V5
+Ym9hcmQuMDAwMyAtLS0+IFN5bmMuUmVwb3J0CktleWJvYXJkLjAwMDQgLS0tPiBLZXkuQQpL
+ZXlib2FyZC4wMDA1IC0tLT4gS2V5LkIKS2V5Ym9hcmQuMDAwNiAtLS0+IEtleS5DCktleWJv
+YXJkLjAwMDcgLS0tPiBLZXkuRApLZXlib2FyZC4wMDA4IC0tLT4gS2V5LkUKS2V5Ym9hcmQu
+MDAwOSAtLS0+IEtleS5GCktleWJvYXJkLjAwMGEgLS0tPiBLZXkuRwpLZXlib2FyZC4wMDBi
+IC0tLT4gS2V5LkgKS2V5Ym9hcmQuMDAwYyAtLS0+IEtleS5JCktleWJvYXJkLjAwMGQgLS0t
+PiBLZXkuSgpLZXlib2FyZC4wMDBlIC0tLT4gS2V5LksKS2V5Ym9hcmQuMDAwZiAtLS0+IEtl
+eS5MCktleWJvYXJkLjAwMTAgLS0tPiBLZXkuTQpLZXlib2FyZC4wMDExIC0tLT4gS2V5Lk4K
+S2V5Ym9hcmQuMDAxMiAtLS0+IEtleS5PCktleWJvYXJkLjAwMTMgLS0tPiBLZXkuUApLZXli
+b2FyZC4wMDE0IC0tLT4gS2V5LlEKS2V5Ym9hcmQuMDAxNSAtLS0+IEtleS5SCktleWJvYXJk
+LjAwMTYgLS0tPiBLZXkuUwpLZXlib2FyZC4wMDE3IC0tLT4gS2V5LlQKS2V5Ym9hcmQuMDAx
+OCAtLS0+IEtleS5VCktleWJvYXJkLjAwMTkgLS0tPiBLZXkuVgpLZXlib2FyZC4wMDFhIC0t
+LT4gS2V5LlcKS2V5Ym9hcmQuMDAxYiAtLS0+IEtleS5YCktleWJvYXJkLjAwMWMgLS0tPiBL
+ZXkuWQpLZXlib2FyZC4wMDFkIC0tLT4gS2V5LloKS2V5Ym9hcmQuMDAxZSAtLS0+IEtleS4x
+CktleWJvYXJkLjAwMWYgLS0tPiBLZXkuMgpLZXlib2FyZC4wMDIwIC0tLT4gS2V5LjMKS2V5
+Ym9hcmQuMDAyMSAtLS0+IEtleS40CktleWJvYXJkLjAwMjIgLS0tPiBLZXkuNQpLZXlib2Fy
+ZC4wMDIzIC0tLT4gS2V5LjYKS2V5Ym9hcmQuMDAyNCAtLS0+IEtleS43CktleWJvYXJkLjAw
+MjUgLS0tPiBLZXkuOApLZXlib2FyZC4wMDI2IC0tLT4gS2V5LjkKS2V5Ym9hcmQuMDAyNyAt
+LS0+IEtleS4wCktleWJvYXJkLjAwMjggLS0tPiBLZXkuRW50ZXIKS2V5Ym9hcmQuMDAyOSAt
+LS0+IEtleS5Fc2MKS2V5Ym9hcmQuMDAyYSAtLS0+IEtleS5CYWNrc3BhY2UKS2V5Ym9hcmQu
+MDAyYiAtLS0+IEtleS5UYWIKS2V5Ym9hcmQuMDAyYyAtLS0+IEtleS5TcGFjZQpLZXlib2Fy
+ZC4wMDJkIC0tLT4gS2V5Lk1pbnVzCktleWJvYXJkLjAwMmUgLS0tPiBLZXkuRXF1YWwKS2V5
+Ym9hcmQuMDAyZiAtLS0+IEtleS5MZWZ0QnJhY2UKS2V5Ym9hcmQuMDAzMCAtLS0+IEtleS5S
+aWdodEJyYWNlCktleWJvYXJkLjAwMzEgLS0tPiBLZXkuQmFja1NsYXNoCktleWJvYXJkLjAw
+MzIgLS0tPiBLZXkuQmFja1NsYXNoCktleWJvYXJkLjAwMzMgLS0tPiBLZXkuU2VtaWNvbG9u
+CktleWJvYXJkLjAwMzQgLS0tPiBLZXkuQXBvc3Ryb3BoZQpLZXlib2FyZC4wMDM1IC0tLT4g
+S2V5LkdyYXZlCktleWJvYXJkLjAwMzYgLS0tPiBLZXkuQ29tbWEKS2V5Ym9hcmQuMDAzNyAt
+LS0+IEtleS5Eb3QKS2V5Ym9hcmQuMDAzOCAtLS0+IEtleS5TbGFzaApLZXlib2FyZC4wMDM5
+IC0tLT4gS2V5LkNhcHNMb2NrCktleWJvYXJkLjAwM2EgLS0tPiBLZXkuRjEKS2V5Ym9hcmQu
+MDAzYiAtLS0+IEtleS5GMgpLZXlib2FyZC4wMDNjIC0tLT4gS2V5LkYzCktleWJvYXJkLjAw
+M2QgLS0tPiBLZXkuRjQKS2V5Ym9hcmQuMDAzZSAtLS0+IEtleS5GNQpLZXlib2FyZC4wMDNm
+IC0tLT4gS2V5LkY2CktleWJvYXJkLjAwNDAgLS0tPiBLZXkuRjcKS2V5Ym9hcmQuMDA0MSAt
+LS0+IEtleS5GOApLZXlib2FyZC4wMDQyIC0tLT4gS2V5LkY5CktleWJvYXJkLjAwNDMgLS0t
+PiBLZXkuRjEwCktleWJvYXJkLjAwNDQgLS0tPiBLZXkuRjExCktleWJvYXJkLjAwNDUgLS0t
+PiBLZXkuRjEyCktleWJvYXJkLjAwNDYgLS0tPiBLZXkuU3lzUnEKS2V5Ym9hcmQuMDA0NyAt
+LS0+IEtleS5TY3JvbGxMb2NrCktleWJvYXJkLjAwNDggLS0tPiBLZXkuUGF1c2UKS2V5Ym9h
+cmQuMDA0OSAtLS0+IEtleS5JbnNlcnQKS2V5Ym9hcmQuMDA0YSAtLS0+IEtleS5Ib21lCktl
+eWJvYXJkLjAwNGIgLS0tPiBLZXkuUGFnZVVwCktleWJvYXJkLjAwNGMgLS0tPiBLZXkuRGVs
+ZXRlCktleWJvYXJkLjAwNGQgLS0tPiBLZXkuRW5kCktleWJvYXJkLjAwNGUgLS0tPiBLZXku
+UGFnZURvd24KS2V5Ym9hcmQuMDA0ZiAtLS0+IEtleS5SaWdodApLZXlib2FyZC4wMDUwIC0t
+LT4gS2V5LkxlZnQKS2V5Ym9hcmQuMDA1MSAtLS0+IEtleS5Eb3duCktleWJvYXJkLjAwNTIg
+LS0tPiBLZXkuVXAKS2V5Ym9hcmQuMDA1MyAtLS0+IEtleS5OdW1Mb2NrCktleWJvYXJkLjAw
+NTQgLS0tPiBLZXkuS1BTbGFzaApLZXlib2FyZC4wMDU1IC0tLT4gS2V5LktQQXN0ZXJpc2sK
+S2V5Ym9hcmQuMDA1NiAtLS0+IEtleS5LUE1pbnVzCktleWJvYXJkLjAwNTcgLS0tPiBLZXku
+S1BQbHVzCktleWJvYXJkLjAwNTggLS0tPiBLZXkuS1BFbnRlcgpLZXlib2FyZC4wMDU5IC0t
+LT4gS2V5LktQMQpLZXlib2FyZC4wMDVhIC0tLT4gS2V5LktQMgpLZXlib2FyZC4wMDViIC0t
+LT4gS2V5LktQMwpLZXlib2FyZC4wMDVjIC0tLT4gS2V5LktQNApLZXlib2FyZC4wMDVkIC0t
+LT4gS2V5LktQNQpLZXlib2FyZC4wMDVlIC0tLT4gS2V5LktQNgpLZXlib2FyZC4wMDVmIC0t
+LT4gS2V5LktQNwpLZXlib2FyZC4wMDYwIC0tLT4gS2V5LktQOApLZXlib2FyZC4wMDYxIC0t
+LT4gS2V5LktQOQpLZXlib2FyZC4wMDYyIC0tLT4gS2V5LktQMApLZXlib2FyZC4wMDYzIC0t
+LT4gS2V5LktQRG90CktleWJvYXJkLjAwNjQgLS0tPiBLZXkuMTAybmQKS2V5Ym9hcmQuMDA2
+NSAtLS0+IEtleS5Db21wb3NlCktleWJvYXJkLjAwNjYgLS0tPiBLZXkuUG93ZXIKS2V5Ym9h
+cmQuMDA2NyAtLS0+IEtleS5LUEVxdWFsCktleWJvYXJkLjAwNjggLS0tPiBLZXkuRjEzCktl
+eWJvYXJkLjAwNjkgLS0tPiBLZXkuRjE0CktleWJvYXJkLjAwNmEgLS0tPiBLZXkuRjE1Cktl
+eWJvYXJkLjAwNmIgLS0tPiBLZXkuRjE2CktleWJvYXJkLjAwNmMgLS0tPiBLZXkuRjE3Cktl
+eWJvYXJkLjAwNmQgLS0tPiBLZXkuRjE4CktleWJvYXJkLjAwNmUgLS0tPiBLZXkuRjE5Cktl
+eWJvYXJkLjAwNmYgLS0tPiBLZXkuRjIwCktleWJvYXJkLjAwNzAgLS0tPiBLZXkuRjIxCktl
+eWJvYXJkLjAwNzEgLS0tPiBLZXkuRjIyCktleWJvYXJkLjAwNzIgLS0tPiBLZXkuRjIzCktl
+eWJvYXJkLjAwNzMgLS0tPiBLZXkuRjI0CktleWJvYXJkLjAwNzQgLS0tPiBLZXkuT3BlbgpL
+ZXlib2FyZC4wMDc1IC0tLT4gS2V5LkhlbHAKS2V5Ym9hcmQuMDA3NiAtLS0+IEtleS5Qcm9w
+cwpLZXlib2FyZC4wMDc3IC0tLT4gS2V5LkZyb250CktleWJvYXJkLjAwNzggLS0tPiBLZXku
+U3RvcApLZXlib2FyZC4wMDc5IC0tLT4gS2V5LkFnYWluCktleWJvYXJkLjAwN2EgLS0tPiBL
+ZXkuVW5kbwpLZXlib2FyZC4wMDdiIC0tLT4gS2V5LkN1dApLZXlib2FyZC4wMDdjIC0tLT4g
+S2V5LkNvcHkKS2V5Ym9hcmQuMDA3ZCAtLS0+IEtleS5QYXN0ZQpLZXlib2FyZC4wMDdlIC0t
+LT4gS2V5LkZpbmQKS2V5Ym9hcmQuMDA3ZiAtLS0+IEtleS5NdXRlCktleWJvYXJkLjAwODAg
+LS0tPiBLZXkuVm9sdW1lVXAKS2V5Ym9hcmQuMDA4MSAtLS0+IEtleS5Wb2x1bWVEb3duCktl
+eWJvYXJkLjAwODIgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMDgzIC0tLT4gS2V5LlVu
+a25vd24KS2V5Ym9hcmQuMDA4NCAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwODUgLS0t
+PiBLZXkuS1BDb21tYQpLZXlib2FyZC4wMDg2IC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQu
+MDA4NyAtLS0+IEtleS5STwpLZXlib2FyZC4wMDg4IC0tLT4gS2V5LkthdGFrYW5hL0hpcmFn
+YW5hCktleWJvYXJkLjAwODkgLS0tPiBLZXkuWWVuCktleWJvYXJkLjAwOGEgLS0tPiBLZXku
+SGVua2FuCktleWJvYXJkLjAwOGIgLS0tPiBLZXkuTXVoZW5rYW4KS2V5Ym9hcmQuMDA4YyAt
+LS0+IEtleS5LUEpwQ29tbWEKS2V5Ym9hcmQuMDA4ZCAtLS0+IEtleS5Vbmtub3duCktleWJv
+YXJkLjAwOGUgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMDhmIC0tLT4gS2V5LlVua25v
+d24KS2V5Ym9hcmQuMDA5MCAtLS0+IEtleS5IYW5nZXVsCktleWJvYXJkLjAwOTEgLS0tPiBL
+ZXkuSGFuamEKS2V5Ym9hcmQuMDA5MiAtLS0+IEtleS5LYXRha2FuYQpLZXlib2FyZC4wMDkz
+IC0tLT4gS2V5LkhJUkFHQU5BCktleWJvYXJkLjAwOTQgLS0tPiBLZXkuWmVua2FrdS9IYW5r
+YWt1CktleWJvYXJkLjAwOTUgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMDk2IC0tLT4g
+S2V5LlVua25vd24KS2V5Ym9hcmQuMDA5NyAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAw
+OTggLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMDk5IC0tLT4gS2V5LlVua25vd24KS2V5
+Ym9hcmQuMDA5YSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwOWIgLS0tPiBLZXkuVW5r
+bm93bgpLZXlib2FyZC4wMDljIC0tLT4gS2V5LkRlbGV0ZQpLZXlib2FyZC4wMDlkIC0tLT4g
+S2V5LlVua25vd24KS2V5Ym9hcmQuMDA5ZSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAw
+OWYgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGEwIC0tLT4gS2V5LlVua25vd24KS2V5
+Ym9hcmQuMDBhMSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYTIgLS0tPiBLZXkuVW5r
+bm93bgpLZXlib2FyZC4wMGEzIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBhNCAtLS0+
+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYTUgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4w
+MGE2IC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBhNyAtLS0+IEtleS5Vbmtub3duCktl
+eWJvYXJkLjAwYTggLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGE5IC0tLT4gS2V5LlVu
+a25vd24KS2V5Ym9hcmQuMDBhYSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYWIgLS0t
+PiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGFjIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQu
+MDBhZCAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYWUgLS0tPiBLZXkuVW5rbm93bgpL
+ZXlib2FyZC4wMGFmIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBiMCAtLS0+IEtleS5V
+bmtub3duCktleWJvYXJkLjAwYjEgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGIyIC0t
+LT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBiMyAtLS0+IEtleS5Vbmtub3duCktleWJvYXJk
+LjAwYjQgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGI1IC0tLT4gS2V5LlVua25vd24K
+S2V5Ym9hcmQuMDBiNiAtLS0+IEtleS5LUExlZnRQYXJlbnRoZXNpcwpLZXlib2FyZC4wMGI3
+IC0tLT4gS2V5LktQUmlnaHRQYXJlbnRoZXNpcwpLZXlib2FyZC4wMGI4IC0tLT4gS2V5LlVu
+a25vd24KS2V5Ym9hcmQuMDBiOSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYmEgLS0t
+PiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGJiIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQu
+MDBiYyAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYmQgLS0tPiBLZXkuVW5rbm93bgpL
+ZXlib2FyZC4wMGJlIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBiZiAtLS0+IEtleS5V
+bmtub3duCktleWJvYXJkLjAwYzAgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGMxIC0t
+LT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBjMiAtLS0+IEtleS5Vbmtub3duCktleWJvYXJk
+LjAwYzMgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGM0IC0tLT4gS2V5LlVua25vd24K
+S2V5Ym9hcmQuMDBjNSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYzYgLS0tPiBLZXku
+VW5rbm93bgpLZXlib2FyZC4wMGM3IC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBjOCAt
+LS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwYzkgLS0tPiBLZXkuVW5rbm93bgpLZXlib2Fy
+ZC4wMGNhIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBjYiAtLS0+IEtleS5Vbmtub3du
+CktleWJvYXJkLjAwY2MgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGNkIC0tLT4gS2V5
+LlVua25vd24KS2V5Ym9hcmQuMDBjZSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwY2Yg
+LS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGQwIC0tLT4gS2V5LlVua25vd24KS2V5Ym9h
+cmQuMDBkMSAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAwZDIgLS0tPiBLZXkuVW5rbm93
+bgpLZXlib2FyZC4wMGQzIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBkNCAtLS0+IEtl
+eS5Vbmtub3duCktleWJvYXJkLjAwZDUgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGQ2
+IC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBkNyAtLS0+IEtleS5Vbmtub3duCktleWJv
+YXJkLjAwZDggLS0tPiBLZXkuRGVsZXRlCktleWJvYXJkLjAwZDkgLS0tPiBLZXkuVW5rbm93
+bgpLZXlib2FyZC4wMGRhIC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBkYiAtLS0+IEtl
+eS5Vbmtub3duCktleWJvYXJkLjAwZGMgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGRk
+IC0tLT4gS2V5LlVua25vd24KS2V5Ym9hcmQuMDBkZSAtLS0+IEtleS5Vbmtub3duCktleWJv
+YXJkLjAwZGYgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGUwIC0tLT4gS2V5LkxlZnRD
+b250cm9sCktleWJvYXJkLjAwZTEgLS0tPiBLZXkuTGVmdFNoaWZ0CktleWJvYXJkLjAwZTIg
+LS0tPiBLZXkuTGVmdEFsdApLZXlib2FyZC4wMGUzIC0tLT4gS2V5LkxlZnRNZXRhCktleWJv
+YXJkLjAwZTQgLS0tPiBLZXkuUmlnaHRDdHJsCktleWJvYXJkLjAwZTUgLS0tPiBLZXkuUmln
+aHRTaGlmdApLZXlib2FyZC4wMGU2IC0tLT4gS2V5LlJpZ2h0QWx0CktleWJvYXJkLjAwZTcg
+LS0tPiBLZXkuUmlnaHRNZXRhCktleWJvYXJkLjAwZTggLS0tPiBLZXkuUGxheVBhdXNlCktl
+eWJvYXJkLjAwZTkgLS0tPiBLZXkuU3RvcENECktleWJvYXJkLjAwZWEgLS0tPiBLZXkuUHJl
+dmlvdXNTb25nCktleWJvYXJkLjAwZWIgLS0tPiBLZXkuTmV4dFNvbmcKS2V5Ym9hcmQuMDBl
+YyAtLS0+IEtleS5FamVjdENECktleWJvYXJkLjAwZWQgLS0tPiBLZXkuVm9sdW1lVXAKS2V5
+Ym9hcmQuMDBlZSAtLS0+IEtleS5Wb2x1bWVEb3duCktleWJvYXJkLjAwZWYgLS0tPiBLZXku
+TXV0ZQpLZXlib2FyZC4wMGYwIC0tLT4gS2V5LldXVwpLZXlib2FyZC4wMGYxIC0tLT4gS2V5
+LkJhY2sKS2V5Ym9hcmQuMDBmMiAtLS0+IEtleS5Gb3J3YXJkCktleWJvYXJkLjAwZjMgLS0t
+PiBLZXkuU3RvcApLZXlib2FyZC4wMGY0IC0tLT4gS2V5LkZpbmQKS2V5Ym9hcmQuMDBmNSAt
+LS0+IEtleS5TY3JvbGxVcApLZXlib2FyZC4wMGY2IC0tLT4gS2V5LlNjcm9sbERvd24KS2V5
+Ym9hcmQuMDBmNyAtLS0+IEtleS5FZGl0CktleWJvYXJkLjAwZjggLS0tPiBLZXkuU2xlZXAK
+S2V5Ym9hcmQuMDBmOSAtLS0+IEtleS5Db2ZmZWUKS2V5Ym9hcmQuMDBmYSAtLS0+IEtleS5S
+ZWZyZXNoCktleWJvYXJkLjAwZmIgLS0tPiBLZXkuQ2FsYwpLZXlib2FyZC4wMGZjIC0tLT4g
+S2V5LlVua25vd24KS2V5Ym9hcmQuMDBmZCAtLS0+IEtleS5Vbmtub3duCktleWJvYXJkLjAw
+ZmUgLS0tPiBLZXkuVW5rbm93bgpLZXlib2FyZC4wMGZmIC0tLT4gS2V5LlVua25vd24KTEVE
+Lk51bUxvY2sgLS0tPiBMRUQuTnVtTG9jawpMRUQuQ2Fwc0xvY2sgLS0tPiBMRUQuQ2Fwc0xv
+Y2sKTEVELlNjcm9sbExvY2sgLS0tPiBMRUQuU2Nyb2xsTG9jawpMRUQuQ29tcG9zZSAtLS0+
+IExFRC5Db21wb3NlCkxFRC5LYW5hIC0tLT4gTEVELkthbmEKMDUgMDEgMDkgODAgYTEgMDEg
+ODUgMDIgMDUgMDEgMTkgODEgMjkgODMgMTUgMDAgMjUgMDEgOTUgMDMgNzUgMDEgODEgMDIg
+OTUgMDEgNzUgMDUgODEgMDEgYzAgMDUgMGMgMDkgMDEgYTEgMDEgODUgMDMgMTUgMDAgMjUg
+MDEgMDkgMDEgMDkgMDEgMDkgMDEgMDkgMDEgMDkgMDEgMDkgZTIgMDkgMDEgMDkgMDEgMDkg
+MDEgMDkgMDEgMDkgMDEgMDkgYjcgMDkgMDEgMDkgMDEgMDkgMDEgMDkgMDEgMDkgMDEgMDkg
+MDEgMDkgMDEgMDkgNmYgMDkgZWEgMDkgZTkgMDkgNzAgMDkgMDEgNzUgMDEgOTUgMTggODEg
+MDIgYzAgMDYgYTAgZmYgMDkgMDEgYTEgMDEgODUgMDkgMTUgMDAgMjUgZmYgMDkgMDQgNzUg
+MDggOTUgMDIgOTEgMDIgMDYgYTEgZmYgMDkgMDEgODUgNTQgMTUgMDAgMjUgN2YgMGEgMTEg
+MDAgNzUgMDggOTUgMDEgYjEgMDIgMDYgYTIgZmYgMDkgMDEgODUgNjQgMTUgMDAgMjUgMDEg
+MGEgMTIgMDAgNzUgMDggOTUgMDEgYjEgMDIgMDYgYTMgZmYgMDkgMDEgODUgNzQgMTUgMDAg
+MjUgMDEgMGEgMTMgMDAgNzUgMDggOTUgMDEgYjEgMDIgMDYgYTQgZmYgMDkgMDEgODUgOTAg
+MDkgMDggYjEgMDIgODUgODQgMDkgMDkgYjEgMDIgODUgMjAgMDkgMGEgYjEgMDIgMDYgYTUg
+ZmYgMDkgMDEgODUgYTIgMDkgMGIgOTUgMDYgYjEgMDIgODUgYTMgMDkgMGMgOTUgMDMgYjEg
+MDIgYzAgMDkgMjIgYTEgMDAgODUgMDQgMDkgNTcgMDkgNTggNzUgMDEgOTUgMDIgMjUgMDEg
+YjEgMDIgOTUgMDYgYjEgMDMgYzAgCgogIElOUFVUKDIpW0lOUFVUXQogICAgRmllbGQoMCkK
+ICAgICAgQXBwbGljYXRpb24oR2VuZXJpY0Rlc2t0b3AuU3lzdGVtQ29udHJvbCkKICAgICAg
+VXNhZ2UoMykKICAgICAgICBHZW5lcmljRGVza3RvcC5TeXN0ZW1Qb3dlckRvd24KICAgICAg
+ICBHZW5lcmljRGVza3RvcC5TeXN0ZW1TbGVlcAogICAgICAgIEdlbmVyaWNEZXNrdG9wLlN5
+c3RlbVdha2VVcAogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhp
+bXVtKDEpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAgIFJlcG9ydCBDb3VudCgzKQogICAg
+ICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAg
+SU5QVVQoMylbSU5QVVRdCiAgICBGaWVsZCgwKQogICAgICBBcHBsaWNhdGlvbihDb25zdW1l
+ci4wMDAxKQogICAgICBVc2FnZSgyNCkKICAgICAgICBDb25zdW1lci4wMDAxCiAgICAgICAg
+Q29uc3VtZXIuMDAwMQogICAgICAgIENvbnN1bWVyLjAwMDEKICAgICAgICBDb25zdW1lci4w
+MDAxCiAgICAgICAgQ29uc3VtZXIuMDAwMQogICAgICAgIENvbnN1bWVyLjAwZTIKICAgICAg
+ICBDb25zdW1lci4wMDAxCiAgICAgICAgQ29uc3VtZXIuMDAwMQogICAgICAgIENvbnN1bWVy
+LjAwMDEKICAgICAgICBDb25zdW1lci4wMDAxCiAgICAgICAgQ29uc3VtZXIuMDAwMQogICAg
+ICAgIENvbnN1bWVyLjAwYjcKICAgICAgICBDb25zdW1lci4wMDAxCiAgICAgICAgQ29uc3Vt
+ZXIuMDAwMQogICAgICAgIENvbnN1bWVyLjAwMDEKICAgICAgICBDb25zdW1lci4wMDAxCiAg
+ICAgICAgQ29uc3VtZXIuMDAwMQogICAgICAgIENvbnN1bWVyLjAwMDEKICAgICAgICBDb25z
+dW1lci4wMDAxCiAgICAgICAgQ29uc3VtZXIuMDA2ZgogICAgICAgIENvbnN1bWVyLjAwZWEK
+ICAgICAgICBDb25zdW1lci4wMGU5CiAgICAgICAgQ29uc3VtZXIuMDA3MAogICAgICAgIENv
+bnN1bWVyLjAwMDEKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4
+aW11bSgxKQogICAgICBSZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQoMjQpCiAg
+ICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkK
+ICBPVVRQVVQoOSlbT1VUUFVUXQogICAgRmllbGQoMCkKICAgICAgQXBwbGljYXRpb24oZmZh
+MC4wMDAxKQogICAgICBVc2FnZSgyKQogICAgICAgIGZmYTAuMDAwNAogICAgICAgIGZmYTAu
+MDAwNAogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDI1
+NSkKICAgICAgUmVwb3J0IFNpemUoOCkKICAgICAgUmVwb3J0IENvdW50KDIpCiAgICAgIFJl
+cG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBGRUFU
+VVJFKDg0KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgQXBwbGljYXRpb24oZmZhMC4w
+MDAxKQogICAgICBVc2FnZSgyKQogICAgICAgIGZmYTEuMDAwMQogICAgICAgIGZmYTEuMDAx
+MQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDEyNykK
+ICAgICAgUmVwb3J0IFNpemUoOCkKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9y
+dCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBGRUFUVVJF
+KDEwMClbRkVBVFVSRV0KICAgIEZpZWxkKDApCiAgICAgIEFwcGxpY2F0aW9uKGZmYTAuMDAw
+MSkKICAgICAgVXNhZ2UoMikKICAgICAgICBmZmEyLjAwMDEKICAgICAgICBmZmEyLjAwMTIK
+ICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgxKQogICAg
+ICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVwb3J0IE9m
+ZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogIEZFQVRVUkUoMTE2
+KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgQXBwbGljYXRpb24oZmZhMC4wMDAxKQog
+ICAgICBVc2FnZSgyKQogICAgICAgIGZmYTMuMDAwMQogICAgICAgIGZmYTMuMDAxMwogICAg
+ICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDEpCiAgICAgIFJl
+cG9ydCBTaXplKDgpCiAgICAgIFJlcG9ydCBDb3VudCgxKQogICAgICBSZXBvcnQgT2Zmc2V0
+KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgRkVBVFVSRSgxNDQpW0ZF
+QVRVUkVdCiAgICBGaWVsZCgwKQogICAgICBBcHBsaWNhdGlvbihmZmEwLjAwMDEpCiAgICAg
+IFVzYWdlKDIpCiAgICAgICAgZmZhNC4wMDAxCiAgICAgICAgZmZhNC4wMDA4CiAgICAgIExv
+Z2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oMSkKICAgICAgUmVwb3J0
+IFNpemUoOCkKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkK
+ICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBGRUFUVVJFKDEzMilbRkVBVFVS
+RV0KICAgIEZpZWxkKDApCiAgICAgIEFwcGxpY2F0aW9uKGZmYTAuMDAwMSkKICAgICAgVXNh
+Z2UoMSkKICAgICAgICBmZmE0LjAwMDkKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAg
+IExvZ2ljYWwgTWF4aW11bSgxKQogICAgICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQg
+Q291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUg
+QWJzb2x1dGUgKQogIEZFQVRVUkUoMzIpW0ZFQVRVUkVdCiAgICBGaWVsZCgwKQogICAgICBB
+cHBsaWNhdGlvbihmZmEwLjAwMDEpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgZmZhNC4wMDBh
+CiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oMSkKICAg
+ICAgUmVwb3J0IFNpemUoOCkKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9ydCBP
+ZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBGRUFUVVJFKDE2
+MilbRkVBVFVSRV0KICAgIEZpZWxkKDApCiAgICAgIEFwcGxpY2F0aW9uKGZmYTAuMDAwMSkK
+ICAgICAgVXNhZ2UoNikKICAgICAgICBmZmE1LjAwMDEKICAgICAgICBmZmE1LjAwMGIKICAg
+ICAgICBmZmE1LjAwMGIKICAgICAgICBmZmE1LjAwMGIKICAgICAgICBmZmE1LjAwMGIKICAg
+ICAgICBmZmE1LjAwMGIKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwg
+TWF4aW11bSgxKQogICAgICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQgQ291bnQoNikK
+ICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUg
+KQogIEZFQVRVUkUoMTYzKVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgQXBwbGljYXRp
+b24oZmZhMC4wMDAxKQogICAgICBVc2FnZSgzKQogICAgICAgIGZmYTUuMDAwYwogICAgICAg
+IGZmYTUuMDAwYwogICAgICAgIGZmYTUuMDAwYwogICAgICBMb2dpY2FsIE1pbmltdW0oMCkK
+ICAgICAgTG9naWNhbCBNYXhpbXVtKDEpCiAgICAgIFJlcG9ydCBTaXplKDgpCiAgICAgIFJl
+cG9ydCBDb3VudCgzKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJp
+YWJsZSBBYnNvbHV0ZSApCiAgRkVBVFVSRSg0KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAg
+ICAgUGh5c2ljYWwoZmZhNS4wMDIyKQogICAgICBVc2FnZSgyKQogICAgICAgIGZmYTUuMDA1
+NwogICAgICAgIGZmYTUuMDA1OAogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9n
+aWNhbCBNYXhpbXVtKDEpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAgIFJlcG9ydCBDb3Vu
+dCgyKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNv
+bHV0ZSApCgpHZW5lcmljRGVza3RvcC5TeXN0ZW1Qb3dlckRvd24gLS0tPiBLZXkuUG93ZXIK
+R2VuZXJpY0Rlc2t0b3AuU3lzdGVtU2xlZXAgLS0tPiBLZXkuU2xlZXAKR2VuZXJpY0Rlc2t0
+b3AuU3lzdGVtV2FrZVVwIC0tLT4gS2V5Lldha2VVcApDb25zdW1lci4wMDAxIC0tLT4gS2V5
+LlVua25vd24KQ29uc3VtZXIuMDAwMSAtLS0+IEtleS5Vbmtub3duCkNvbnN1bWVyLjAwMDEg
+LS0tPiBLZXkuVW5rbm93bgpDb25zdW1lci4wMDAxIC0tLT4gS2V5LlVua25vd24KQ29uc3Vt
+ZXIuMDAwMSAtLS0+IEtleS5Vbmtub3duCkNvbnN1bWVyLjAwZTIgLS0tPiBLZXkuTXV0ZQpD
+b25zdW1lci4wMDAxIC0tLT4gS2V5LlVua25vd24KQ29uc3VtZXIuMDAwMSAtLS0+IEtleS5V
+bmtub3duCkNvbnN1bWVyLjAwMDEgLS0tPiBLZXkuVW5rbm93bgpDb25zdW1lci4wMDAxIC0t
+LT4gS2V5LlVua25vd24KQ29uc3VtZXIuMDAwMSAtLS0+IEtleS5Vbmtub3duCkNvbnN1bWVy
+LjAwYjcgLS0tPiBLZXkuU3RvcENECkNvbnN1bWVyLjAwMDEgLS0tPiBLZXkuVW5rbm93bgpD
+b25zdW1lci4wMDAxIC0tLT4gS2V5LlVua25vd24KQ29uc3VtZXIuMDAwMSAtLS0+IEtleS5V
+bmtub3duCkNvbnN1bWVyLjAwMDEgLS0tPiBLZXkuVW5rbm93bgpDb25zdW1lci4wMDAxIC0t
+LT4gS2V5LlVua25vd24KQ29uc3VtZXIuMDAwMSAtLS0+IEtleS5Vbmtub3duCkNvbnN1bWVy
+LjAwMDEgLS0tPiBLZXkuVW5rbm93bgpDb25zdW1lci4wMDZmIC0tLT4gS2V5LkJyaWdodG5l
+c3NVcApDb25zdW1lci4wMGVhIC0tLT4gS2V5LlZvbHVtZURvd24KQ29uc3VtZXIuMDBlOSAt
+LS0+IEtleS5Wb2x1bWVVcApDb25zdW1lci4wMDcwIC0tLT4gS2V5LkJyaWdodG5lc3NEb3du
+CkNvbnN1bWVyLjAwMDEgLS0tPiBLZXkuVW5rbm93bgpmZmEwLjAwMDQgLS0tPiBTeW5jLlJl
+cG9ydApmZmEwLjAwMDQgLS0tPiBTeW5jLlJlcG9ydAowNSAwMSAwOSAwMiBhMSAwMSA4NSAw
+MiAwOSAwMSBhMSAwMCAwNSAwOSAxOSAwMSAyOSAwMiAxNSAwMCAyNSAwMSA3NSAwMSA5NSAw
+MiA4MSAwMiA5NSAwNiA4MSAwMSAwNSAwMSAwOSAzMCAwOSAzMSAxNSA4MSAyNSA3ZiA3NSAw
+OCA5NSAwMiA4MSAwNiBjMCBjMCAwNSAwMSAwOSAwMiBhMSAwMSA4NSAxMCAwOSAwMSBhMSAw
+MCAwNSAwOSAxOSAwMSAyOSAwMyAxNSAwMCAyNSAwMSA3NSAwMSA5NSAwMyA4MSAwMiA5NSAw
+NSA4MSAwMSAwNSAwMSAwOSAzMCAwOSAzMSAxNSA4MSAyNSA3ZiA3NSAwOCA5NSAwMiA4MSAw
+NiBjMCBjMCAwNSAwZCAwOSAwNSBhMSAwMSA4NSAwMyAwNSAwZCAwOSAyMiBhMSAwMiAxNSAw
+MCAyNSAwMSAwOSA0NyAwOSA0MiA5NSAwMiA3NSAwMSA4MSAwMiA5NSAwMSA3NSAwMyAyNSAw
+NSAwOSA1MSA4MSAwMiA3NSAwMSA5NSAwMyA4MSAwMyAwNSAwMSAxNSAwMCAyNiAxNiAwNCA3
+NSAxMCA1NSAwZSA2NSAxMSAwOSAzMCAzNSAwMCA0NiA2NyAwMyA5NSAwMSA4MSAwMiA0NiBk
+MCAwMSAyNiAyZCAwMiAwOSAzMSA4MSAwMiBjMCAwNSAwZCAwOSAyMiBhMSAwMiAxNSAwMCAy
+NSAwMSAwOSA0NyAwOSA0MiA5NSAwMiA3NSAwMSA4MSAwMiA5NSAwMSA3NSAwMyAyNSAwNSAw
+OSA1MSA4MSAwMiA3NSAwMSA5NSAwMyA4MSAwMyAwNSAwMSAxNSAwMCAyNiAxNiAwNCA3NSAx
+MCA1NSAwZSA2NSAxMSAwOSAzMCAzNSAwMCA0NiA2NyAwMyA5NSAwMSA4MSAwMiA0NiBkMCAw
+MSAyNiAyZCAwMiAwOSAzMSA4MSAwMiBjMCAwNSAwZCAwOSAyMiBhMSAwMiAxNSAwMCAyNSAw
+MSAwOSA0NyAwOSA0MiA5NSAwMiA3NSAwMSA4MSAwMiA5NSAwMSA3NSAwMyAyNSAwNSAwOSA1
+MSA4MSAwMiA3NSAwMSA5NSAwMyA4MSAwMyAwNSAwMSAxNSAwMCAyNiAxNiAwNCA3NSAxMCA1
+NSAwZSA2NSAxMSAwOSAzMCAzNSAwMCA0NiA2NyAwMyA5NSAwMSA4MSAwMiA0NiBkMCAwMSAy
+NiAyZCAwMiAwOSAzMSA4MSAwMiBjMCAwNSAwZCAwOSAyMiBhMSAwMiAxNSAwMCAyNSAwMSAw
+OSA0NyAwOSA0MiA5NSAwMiA3NSAwMSA4MSAwMiA5NSAwMSA3NSAwMyAyNSAwNSAwOSA1MSA4
+MSAwMiA3NSAwMSA5NSAwMyA4MSAwMyAwNSAwMSAxNSAwMCAyNiAxNiAwNCA3NSAxMCA1NSAw
+ZSA2NSAxMSAwOSAzMCAzNSAwMCA0NiA2NyAwMyA5NSAwMSA4MSAwMiA0NiBkMCAwMSAyNiAy
+ZCAwMiAwOSAzMSA4MSAwMiBjMCAwNSAwZCAwOSAyMiBhMSAwMiAxNSAwMCAyNSAwMSAwOSA0
+NyAwOSA0MiA5NSAwMiA3NSAwMSA4MSAwMiA5NSAwMSA3NSAwMyAyNSAwNSAwOSA1MSA4MSAw
+MiA3NSAwMSA5NSAwMyA4MSAwMyAwNSAwMSAxNSAwMCAyNiAxNiAwNCA3NSAxMCA1NSAwZSA2
+NSAxMSAwOSAzMCAzNSAwMCA0NiA2NyAwMyA5NSAwMSA4MSAwMiA0NiBkMCAwMSAyNiAyZCAw
+MiAwOSAzMSA4MSAwMiBjMCAwNSAwZCA1NSAwYyA2NiAwMSAxMCA0NyBmZiBmZiAwMCAwMCAy
+NyBmZiBmZiAwMCAwMCA3NSAxMCA5NSAwMSAwOSA1NiA4MSAwMiAwOSA1NCAyNSA3ZiA5NSAw
+MSA3NSAwOCA4MSAwMiAwNSAwOSAwOSAwMSAyNSAwMSA3NSAwMSA5NSAwMSA4MSAwMiA5NSAw
+NyA4MSAwMyAwNSAwZCA4NSAwOCAwOSA1NSAwOSA1OSA3NSAwNCA5NSAwMiAyNSAwZiBiMSAw
+MiA4NSAwZCAwOSA2MCA3NSAwMSA5NSAwMSAxNSAwMCAyNSAwMSBiMSAwMiA5NSAwNyBiMSAw
+MyA4NSAwNyAwNiAwMCBmZiAwOSBjNSAxNSAwMCAyNiBmZiAwMCA3NSAwOCA5NiAwMCAwMSBi
+MSAwMiBjMCAwNSAwZCAwOSAwZSBhMSAwMSA4NSAwNCAwOSAyMiBhMSAwMiAwOSA1MiAxNSAw
+MCAyNSAwYSA3NSAwOCA5NSAwMSBiMSAwMiBjMCAwOSAyMiBhMSAwMCA4NSAwNiAwOSA1NyAw
+OSA1OCA3NSAwMSA5NSAwMiAyNSAwMSBiMSAwMiA5NSAwNiBiMSAwMyBjMCBjMCAwNiAwMCBm
+ZiAwOSAwMSBhMSAwMSA4NSAwOSAwOSAwMiAxNSAwMCAyNiBmZiAwMCA3NSAwOCA5NSAxNCA5
+MSAwMiA4NSAwYSAwOSAwMyAxNSAwMCAyNiBmZiAwMCA3NSAwOCA5NSAxNCA5MSAwMiA4NSAw
+YiAwOSAwNCAxNSAwMCAyNiBmZiAwMCA3NSAwOCA5NSAzZCA4MSAwMiA4NSAwYyAwOSAwNSAx
+NSAwMCAyNiBmZiAwMCA3NSAwOCA5NSAzZCA4MSAwMiA4NSAwZiAwOSAwNiAxNSAwMCAyNiBm
+ZiAwMCA3NSAwOCA5NSAwMyBiMSAwMiA4NSAwZSAwOSAwNyAxNSAwMCAyNiBmZiAwMCA3NSAw
+OCA5NSAwMSBiMSAwMiBjMCAKCiAgSU5QVVQoMilbSU5QVVRdCiAgICBGaWVsZCgwKQogICAg
+ICBQaHlzaWNhbChHZW5lcmljRGVza3RvcC5Qb2ludGVyKQogICAgICBBcHBsaWNhdGlvbihH
+ZW5lcmljRGVza3RvcC5Nb3VzZSkKICAgICAgVXNhZ2UoMikKICAgICAgICBCdXR0b24uMDAw
+MQogICAgICAgIEJ1dHRvbi4wMDAyCiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBM
+b2dpY2FsIE1heGltdW0oMSkKICAgICAgUmVwb3J0IFNpemUoMSkKICAgICAgUmVwb3J0IENv
+dW50KDIpCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFi
+c29sdXRlICkKICAgIEZpZWxkKDEpCiAgICAgIFBoeXNpY2FsKEdlbmVyaWNEZXNrdG9wLlBv
+aW50ZXIpCiAgICAgIEFwcGxpY2F0aW9uKEdlbmVyaWNEZXNrdG9wLk1vdXNlKQogICAgICBV
+c2FnZSgyKQogICAgICAgIEdlbmVyaWNEZXNrdG9wLlgKICAgICAgICBHZW5lcmljRGVza3Rv
+cC5ZCiAgICAgIExvZ2ljYWwgTWluaW11bSgtMTI3KQogICAgICBMb2dpY2FsIE1heGltdW0o
+MTI3KQogICAgICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQgQ291bnQoMikKICAgICAg
+UmVwb3J0IE9mZnNldCg4KQogICAgICBGbGFncyggVmFyaWFibGUgUmVsYXRpdmUgKQogIElO
+UFVUKDE2KVtJTlBVVF0KICAgIEZpZWxkKDApCiAgICAgIFBoeXNpY2FsKEdlbmVyaWNEZXNr
+dG9wLlBvaW50ZXIpCiAgICAgIEFwcGxpY2F0aW9uKEdlbmVyaWNEZXNrdG9wLk1vdXNlKQog
+ICAgICBVc2FnZSgzKQogICAgICAgIEJ1dHRvbi4wMDAxCiAgICAgICAgQnV0dG9uLjAwMDIK
+ICAgICAgICBCdXR0b24uMDAwMwogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9n
+aWNhbCBNYXhpbXVtKDEpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAgIFJlcG9ydCBDb3Vu
+dCgzKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNv
+bHV0ZSApCiAgICBGaWVsZCgxKQogICAgICBQaHlzaWNhbChHZW5lcmljRGVza3RvcC5Qb2lu
+dGVyKQogICAgICBBcHBsaWNhdGlvbihHZW5lcmljRGVza3RvcC5Nb3VzZSkKICAgICAgVXNh
+Z2UoMikKICAgICAgICBHZW5lcmljRGVza3RvcC5YCiAgICAgICAgR2VuZXJpY0Rlc2t0b3Au
+WQogICAgICBMb2dpY2FsIE1pbmltdW0oLTEyNykKICAgICAgTG9naWNhbCBNYXhpbXVtKDEy
+NykKICAgICAgUmVwb3J0IFNpemUoOCkKICAgICAgUmVwb3J0IENvdW50KDIpCiAgICAgIFJl
+cG9ydCBPZmZzZXQoOCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIFJlbGF0aXZlICkKICBJTlBV
+VCgzKVtJTlBVVF0KICAgIEZpZWxkKDApCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5n
+ZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdl
+KDIpCiAgICAgICAgRGlnaXRpemVycy5Db25maWRlbmNlCiAgICAgICAgRGlnaXRpemVycy5U
+aXBTd2l0Y2gKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11
+bSgxKQogICAgICBSZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQoMikKICAgICAg
+UmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAg
+RmllbGQoMSkKICAgICAgTG9naWNhbChEaWdpdGl6ZXJzLkZpbmdlcikKICAgICAgQXBwbGlj
+YXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAgICAgVXNhZ2UoMSkKICAgICAgICBEaWdp
+dGl6ZXJzLkNvbnRhY3RJRAogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNh
+bCBNYXhpbXVtKDUpCiAgICAgIFJlcG9ydCBTaXplKDMpCiAgICAgIFJlcG9ydCBDb3VudCgx
+KQogICAgICBSZXBvcnQgT2Zmc2V0KDIpCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0
+ZSApCiAgICBGaWVsZCgyKQogICAgICBMb2dpY2FsKERpZ2l0aXplcnMuRmluZ2VyKQogICAg
+ICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJzLlRvdWNoUGFkKQogICAgICBVc2FnZSgxKQogICAg
+ICAgIEdlbmVyaWNEZXNrdG9wLlgKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExv
+Z2ljYWwgTWF4aW11bSgxMDQ2KQogICAgICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAgIFBo
+eXNpY2FsIE1heGltdW0oODcxKQogICAgICBVbml0IEV4cG9uZW50KC0yKQogICAgICBVbml0
+KFNJIExpbmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBTaXplKDE2KQogICAgICBS
+ZXBvcnQgQ291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCg4KQogICAgICBGbGFncyggVmFy
+aWFibGUgQWJzb2x1dGUgKQogICAgRmllbGQoMykKICAgICAgTG9naWNhbChEaWdpdGl6ZXJz
+LkZpbmdlcikKICAgICAgQXBwbGljYXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAgICAg
+VXNhZ2UoMSkKICAgICAgICBHZW5lcmljRGVza3RvcC5ZCiAgICAgIExvZ2ljYWwgTWluaW11
+bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oNTU3KQogICAgICBQaHlzaWNhbCBNaW5pbXVt
+KDApCiAgICAgIFBoeXNpY2FsIE1heGltdW0oNDY0KQogICAgICBVbml0IEV4cG9uZW50KC0y
+KQogICAgICBVbml0KFNJIExpbmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBTaXpl
+KDE2KQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCgyNCkKICAg
+ICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICAgIEZpZWxkKDQpCiAgICAgIExvZ2lj
+YWwoRGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91
+Y2hQYWQpCiAgICAgIFVzYWdlKDIpCiAgICAgICAgRGlnaXRpemVycy5Db25maWRlbmNlCiAg
+ICAgICAgRGlnaXRpemVycy5UaXBTd2l0Y2gKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAg
+ICAgIExvZ2ljYWwgTWF4aW11bSgxKQogICAgICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAg
+IFBoeXNpY2FsIE1heGltdW0oNDY0KQogICAgICBVbml0IEV4cG9uZW50KC0yKQogICAgICBV
+bml0KFNJIExpbmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAg
+IFJlcG9ydCBDb3VudCgyKQogICAgICBSZXBvcnQgT2Zmc2V0KDQwKQogICAgICBGbGFncygg
+VmFyaWFibGUgQWJzb2x1dGUgKQogICAgRmllbGQoNSkKICAgICAgTG9naWNhbChEaWdpdGl6
+ZXJzLkZpbmdlcikKICAgICAgQXBwbGljYXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAg
+ICAgVXNhZ2UoMSkKICAgICAgICBEaWdpdGl6ZXJzLkNvbnRhY3RJRAogICAgICBMb2dpY2Fs
+IE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDUpCiAgICAgIFBoeXNpY2FsIE1p
+bmltdW0oMCkKICAgICAgUGh5c2ljYWwgTWF4aW11bSg0NjQpCiAgICAgIFVuaXQgRXhwb25l
+bnQoLTIpCiAgICAgIFVuaXQoU0kgTGluZWFyIDogQ2VudGltZXRlcikKICAgICAgUmVwb3J0
+IFNpemUoMykKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoNDIp
+CiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgICBGaWVsZCg2KQogICAgICBM
+b2dpY2FsKERpZ2l0aXplcnMuRmluZ2VyKQogICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJz
+LlRvdWNoUGFkKQogICAgICBVc2FnZSgxKQogICAgICAgIEdlbmVyaWNEZXNrdG9wLlgKICAg
+ICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgxMDQ2KQogICAg
+ICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAgIFBoeXNpY2FsIE1heGltdW0oODcxKQogICAg
+ICBVbml0IEV4cG9uZW50KC0yKQogICAgICBVbml0KFNJIExpbmVhciA6IENlbnRpbWV0ZXIp
+CiAgICAgIFJlcG9ydCBTaXplKDE2KQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVw
+b3J0IE9mZnNldCg0OCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICAgIEZp
+ZWxkKDcpCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0
+aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgR2VuZXJp
+Y0Rlc2t0b3AuWQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhp
+bXVtKDU1NykKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhp
+bXVtKDQ2NCkKICAgICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIg
+OiBDZW50aW1ldGVyKQogICAgICBSZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENvdW50
+KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoNjQpCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNv
+bHV0ZSApCiAgICBGaWVsZCg4KQogICAgICBMb2dpY2FsKERpZ2l0aXplcnMuRmluZ2VyKQog
+ICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJzLlRvdWNoUGFkKQogICAgICBVc2FnZSgyKQog
+ICAgICAgIERpZ2l0aXplcnMuQ29uZmlkZW5jZQogICAgICAgIERpZ2l0aXplcnMuVGlwU3dp
+dGNoCiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oMSkK
+ICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDQ2NCkK
+ICAgICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1l
+dGVyKQogICAgICBSZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQoMikKICAgICAg
+UmVwb3J0IE9mZnNldCg4MCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICAg
+IEZpZWxkKDkpCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxp
+Y2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgRGln
+aXRpemVycy5Db250YWN0SUQKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2lj
+YWwgTWF4aW11bSg1KQogICAgICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAgIFBoeXNpY2Fs
+IE1heGltdW0oNDY0KQogICAgICBVbml0IEV4cG9uZW50KC0yKQogICAgICBVbml0KFNJIExp
+bmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBTaXplKDMpCiAgICAgIFJlcG9ydCBD
+b3VudCgxKQogICAgICBSZXBvcnQgT2Zmc2V0KDgyKQogICAgICBGbGFncyggVmFyaWFibGUg
+QWJzb2x1dGUgKQogICAgRmllbGQoMTApCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5n
+ZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdl
+KDEpCiAgICAgICAgR2VuZXJpY0Rlc2t0b3AuWAogICAgICBMb2dpY2FsIE1pbmltdW0oMCkK
+ICAgICAgTG9naWNhbCBNYXhpbXVtKDEwNDYpCiAgICAgIFBoeXNpY2FsIE1pbmltdW0oMCkK
+ICAgICAgUGh5c2ljYWwgTWF4aW11bSg4NzEpCiAgICAgIFVuaXQgRXhwb25lbnQoLTIpCiAg
+ICAgIFVuaXQoU0kgTGluZWFyIDogQ2VudGltZXRlcikKICAgICAgUmVwb3J0IFNpemUoMTYp
+CiAgICAgIFJlcG9ydCBDb3VudCgxKQogICAgICBSZXBvcnQgT2Zmc2V0KDg4KQogICAgICBG
+bGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAgRmllbGQoMTEpCiAgICAgIExvZ2ljYWwo
+RGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQ
+YWQpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgR2VuZXJpY0Rlc2t0b3AuWQogICAgICBMb2dp
+Y2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDU1NykKICAgICAgUGh5c2lj
+YWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDQ2NCkKICAgICAgVW5pdCBF
+eHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1ldGVyKQogICAgICBS
+ZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9ydCBPZmZz
+ZXQoMTA0KQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAgRmllbGQoMTIp
+CiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0aW9uKERp
+Z2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdlKDIpCiAgICAgICAgRGlnaXRpemVycy5D
+b25maWRlbmNlCiAgICAgICAgRGlnaXRpemVycy5UaXBTd2l0Y2gKICAgICAgTG9naWNhbCBN
+aW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgxKQogICAgICBQaHlzaWNhbCBNaW5p
+bXVtKDApCiAgICAgIFBoeXNpY2FsIE1heGltdW0oNDY0KQogICAgICBVbml0IEV4cG9uZW50
+KC0yKQogICAgICBVbml0KFNJIExpbmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBT
+aXplKDEpCiAgICAgIFJlcG9ydCBDb3VudCgyKQogICAgICBSZXBvcnQgT2Zmc2V0KDEyMCkK
+ICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICAgIEZpZWxkKDEzKQogICAgICBM
+b2dpY2FsKERpZ2l0aXplcnMuRmluZ2VyKQogICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJz
+LlRvdWNoUGFkKQogICAgICBVc2FnZSgxKQogICAgICAgIERpZ2l0aXplcnMuQ29udGFjdElE
+CiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oNSkKICAg
+ICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDQ2NCkKICAg
+ICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1ldGVy
+KQogICAgICBSZXBvcnQgU2l6ZSgzKQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVw
+b3J0IE9mZnNldCgxMjIpCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgICBG
+aWVsZCgxNCkKICAgICAgTG9naWNhbChEaWdpdGl6ZXJzLkZpbmdlcikKICAgICAgQXBwbGlj
+YXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAgICAgVXNhZ2UoMSkKICAgICAgICBHZW5l
+cmljRGVza3RvcC5YCiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1h
+eGltdW0oMTA0NikKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBN
+YXhpbXVtKDg3MSkKICAgICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5l
+YXIgOiBDZW50aW1ldGVyKQogICAgICBSZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENv
+dW50KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoMTI4KQogICAgICBGbGFncyggVmFyaWFibGUg
+QWJzb2x1dGUgKQogICAgRmllbGQoMTUpCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5n
+ZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdl
+KDEpCiAgICAgICAgR2VuZXJpY0Rlc2t0b3AuWQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkK
+ICAgICAgTG9naWNhbCBNYXhpbXVtKDU1NykKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQog
+ICAgICBQaHlzaWNhbCBNYXhpbXVtKDQ2NCkKICAgICAgVW5pdCBFeHBvbmVudCgtMikKICAg
+ICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1ldGVyKQogICAgICBSZXBvcnQgU2l6ZSgxNikK
+ICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoMTQ0KQogICAgICBG
+bGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAgRmllbGQoMTYpCiAgICAgIExvZ2ljYWwo
+RGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQ
+YWQpCiAgICAgIFVzYWdlKDIpCiAgICAgICAgRGlnaXRpemVycy5Db25maWRlbmNlCiAgICAg
+ICAgRGlnaXRpemVycy5UaXBTd2l0Y2gKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAg
+IExvZ2ljYWwgTWF4aW11bSgxKQogICAgICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAgIFBo
+eXNpY2FsIE1heGltdW0oNDY0KQogICAgICBVbml0IEV4cG9uZW50KC0yKQogICAgICBVbml0
+KFNJIExpbmVhciA6IENlbnRpbWV0ZXIpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAgIFJl
+cG9ydCBDb3VudCgyKQogICAgICBSZXBvcnQgT2Zmc2V0KDE2MCkKICAgICAgRmxhZ3MoIFZh
+cmlhYmxlIEFic29sdXRlICkKICAgIEZpZWxkKDE3KQogICAgICBMb2dpY2FsKERpZ2l0aXpl
+cnMuRmluZ2VyKQogICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJzLlRvdWNoUGFkKQogICAg
+ICBVc2FnZSgxKQogICAgICAgIERpZ2l0aXplcnMuQ29udGFjdElECiAgICAgIExvZ2ljYWwg
+TWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oNSkKICAgICAgUGh5c2ljYWwgTWlu
+aW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDQ2NCkKICAgICAgVW5pdCBFeHBvbmVu
+dCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1ldGVyKQogICAgICBSZXBvcnQg
+U2l6ZSgzKQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCgxNjIp
+CiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgICBGaWVsZCgxOCkKICAgICAg
+TG9naWNhbChEaWdpdGl6ZXJzLkZpbmdlcikKICAgICAgQXBwbGljYXRpb24oRGlnaXRpemVy
+cy5Ub3VjaFBhZCkKICAgICAgVXNhZ2UoMSkKICAgICAgICBHZW5lcmljRGVza3RvcC5YCiAg
+ICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oMTA0NikKICAg
+ICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDg3MSkKICAg
+ICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5lYXIgOiBDZW50aW1ldGVy
+KQogICAgICBSZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJl
+cG9ydCBPZmZzZXQoMTY4KQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAg
+RmllbGQoMTkpCiAgICAgIExvZ2ljYWwoRGlnaXRpemVycy5GaW5nZXIpCiAgICAgIEFwcGxp
+Y2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgR2Vu
+ZXJpY0Rlc2t0b3AuWQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBN
+YXhpbXVtKDU1NykKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBN
+YXhpbXVtKDQ2NCkKICAgICAgVW5pdCBFeHBvbmVudCgtMikKICAgICAgVW5pdChTSSBMaW5l
+YXIgOiBDZW50aW1ldGVyKQogICAgICBSZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENv
+dW50KDEpCiAgICAgIFJlcG9ydCBPZmZzZXQoMTg0KQogICAgICBGbGFncyggVmFyaWFibGUg
+QWJzb2x1dGUgKQogICAgRmllbGQoMjApCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMu
+VG91Y2hQYWQpCiAgICAgIFVzYWdlKDEpCiAgICAgICAgRGlnaXRpemVycy4wMDU2CiAgICAg
+IExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dpY2FsIE1heGltdW0oNjU1MzUpCiAgICAg
+IFBoeXNpY2FsIE1pbmltdW0oMCkKICAgICAgUGh5c2ljYWwgTWF4aW11bSg2NTUzNSkKICAg
+ICAgVW5pdCBFeHBvbmVudCgtNCkKICAgICAgVW5pdChTSSBMaW5lYXIgOiBTZWNvbmRzKQog
+ICAgICBSZXBvcnQgU2l6ZSgxNikKICAgICAgUmVwb3J0IENvdW50KDEpCiAgICAgIFJlcG9y
+dCBPZmZzZXQoMjAwKQogICAgICBGbGFncyggVmFyaWFibGUgQWJzb2x1dGUgKQogICAgRmll
+bGQoMjEpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVz
+YWdlKDEpCiAgICAgICAgRGlnaXRpemVycy5Db250YWN0Q291bnQKICAgICAgTG9naWNhbCBN
+aW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgxMjcpCiAgICAgIFBoeXNpY2FsIE1p
+bmltdW0oMCkKICAgICAgUGh5c2ljYWwgTWF4aW11bSg2NTUzNSkKICAgICAgVW5pdCBFeHBv
+bmVudCgtNCkKICAgICAgVW5pdChTSSBMaW5lYXIgOiBTZWNvbmRzKQogICAgICBSZXBvcnQg
+U2l6ZSg4KQogICAgICBSZXBvcnQgQ291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCgyMTYp
+CiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgICBGaWVsZCgyMikKICAgICAg
+QXBwbGljYXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAgICAgVXNhZ2UoMSkKICAgICAg
+ICBCdXR0b24uMDAwMQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBN
+YXhpbXVtKDEpCiAgICAgIFBoeXNpY2FsIE1pbmltdW0oMCkKICAgICAgUGh5c2ljYWwgTWF4
+aW11bSg2NTUzNSkKICAgICAgVW5pdCBFeHBvbmVudCgtNCkKICAgICAgVW5pdChTSSBMaW5l
+YXIgOiBTZWNvbmRzKQogICAgICBSZXBvcnQgU2l6ZSgxKQogICAgICBSZXBvcnQgQ291bnQo
+MSkKICAgICAgUmVwb3J0IE9mZnNldCgyMjQpCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNv
+bHV0ZSApCiAgSU5QVVQoMTEpW0lOUFVUXQogICAgRmllbGQoMCkKICAgICAgQXBwbGljYXRp
+b24oZmYwMC4wMDAxKQogICAgICBVc2FnZSg2MSkKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+ICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAgICBmZjAwLjAwMDQKICAgICAg
+TG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgyNTUpCiAgICAgIFBo
+eXNpY2FsIE1pbmltdW0oMCkKICAgICAgUGh5c2ljYWwgTWF4aW11bSg2NTUzNSkKICAgICAg
+VW5pdCBFeHBvbmVudCgtNCkKICAgICAgVW5pdChTSSBMaW5lYXIgOiBTZWNvbmRzKQogICAg
+ICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQgQ291bnQoNjEpCiAgICAgIFJlcG9ydCBP
+ZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBJTlBVVCgxMilb
+SU5QVVRdCiAgICBGaWVsZCgwKQogICAgICBBcHBsaWNhdGlvbihmZjAwLjAwMDEpCiAgICAg
+IFVzYWdlKDYxKQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICAg
+IGZmMDAuMDAwNQogICAgICAgIGZmMDAuMDAwNQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkK
+ICAgICAgTG9naWNhbCBNYXhpbXVtKDI1NSkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQog
+ICAgICBQaHlzaWNhbCBNYXhpbXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQog
+ICAgICBVbml0KFNJIExpbmVhciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDgpCiAg
+ICAgIFJlcG9ydCBDb3VudCg2MSkKICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFn
+cyggVmFyaWFibGUgQWJzb2x1dGUgKQogIE9VVFBVVCg5KVtPVVRQVVRdCiAgICBGaWVsZCgw
+KQogICAgICBBcHBsaWNhdGlvbihmZjAwLjAwMDEpCiAgICAgIFVzYWdlKDIwKQogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICAg
+IGZmMDAuMDAwMgogICAgICAgIGZmMDAuMDAwMgogICAgICBMb2dpY2FsIE1pbmltdW0oMCkK
+ICAgICAgTG9naWNhbCBNYXhpbXVtKDI1NSkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQog
+ICAgICBQaHlzaWNhbCBNYXhpbXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQog
+ICAgICBVbml0KFNJIExpbmVhciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDgpCiAg
+ICAgIFJlcG9ydCBDb3VudCgyMCkKICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFn
+cyggVmFyaWFibGUgQWJzb2x1dGUgKQogIE9VVFBVVCgxMClbT1VUUFVUXQogICAgRmllbGQo
+MCkKICAgICAgQXBwbGljYXRpb24oZmYwMC4wMDAxKQogICAgICBVc2FnZSgyMCkKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAg
+ICBmZjAwLjAwMDMKICAgICAgICBmZjAwLjAwMDMKICAgICAgTG9naWNhbCBNaW5pbXVtKDAp
+CiAgICAgIExvZ2ljYWwgTWF4aW11bSgyNTUpCiAgICAgIFBoeXNpY2FsIE1pbmltdW0oMCkK
+ICAgICAgUGh5c2ljYWwgTWF4aW11bSg2NTUzNSkKICAgICAgVW5pdCBFeHBvbmVudCgtNCkK
+ICAgICAgVW5pdChTSSBMaW5lYXIgOiBTZWNvbmRzKQogICAgICBSZXBvcnQgU2l6ZSg4KQog
+ICAgICBSZXBvcnQgQ291bnQoMjApCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxh
+Z3MoIFZhcmlhYmxlIEFic29sdXRlICkKICBGRUFUVVJFKDgpW0ZFQVRVUkVdCiAgICBGaWVs
+ZCgwKQogICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJzLlRvdWNoUGFkKQogICAgICBVc2Fn
+ZSgyKQogICAgICAgIERpZ2l0aXplcnMuQ29udGFjdE1heGltdW1OdW1iZXIKICAgICAgICBE
+aWdpdGl6ZXJzLkJ1dHRvblR5cGUKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExv
+Z2ljYWwgTWF4aW11bSgxNSkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlz
+aWNhbCBNYXhpbXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQogICAgICBVbml0
+KFNJIExpbmVhciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDQpCiAgICAgIFJlcG9y
+dCBDb3VudCgyKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJs
+ZSBBYnNvbHV0ZSApCiAgRkVBVFVSRSgxMylbRkVBVFVSRV0KICAgIEZpZWxkKDApCiAgICAg
+IEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuVG91Y2hQYWQpCiAgICAgIFVzYWdlKDEpCiAgICAg
+ICAgRGlnaXRpemVycy4wMDYwCiAgICAgIExvZ2ljYWwgTWluaW11bSgwKQogICAgICBMb2dp
+Y2FsIE1heGltdW0oMSkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNh
+bCBNYXhpbXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQogICAgICBVbml0KFNJ
+IExpbmVhciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDEpCiAgICAgIFJlcG9ydCBD
+b3VudCgxKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBB
+YnNvbHV0ZSApCiAgRkVBVFVSRSg3KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgQXBw
+bGljYXRpb24oRGlnaXRpemVycy5Ub3VjaFBhZCkKICAgICAgVXNhZ2UoMjU2KQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAgIGZmMDAuMDBjNQogICAgICAg
+IGZmMDAuMDBjNQogICAgICBMb2dpY2FsIE1pbmltdW0oMCkKICAgICAgTG9naWNhbCBNYXhp
+bXVtKDI1NSkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhp
+bXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQogICAgICBVbml0KFNJIExpbmVh
+ciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDgpCiAgICAgIFJlcG9ydCBDb3VudCgy
+NTYpCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFic29s
+dXRlICkKICBGRUFUVVJFKDQpW0ZFQVRVUkVdCiAgICBGaWVsZCgwKQogICAgICBMb2dpY2Fs
+KERpZ2l0aXplcnMuRmluZ2VyKQogICAgICBBcHBsaWNhdGlvbihEaWdpdGl6ZXJzLkRldmlj
+ZUNvbmZpZ3VyYXRpb24pCiAgICAgIFVzYWdlKDEpCiAgICAgICAgRGlnaXRpemVycy5JbnB1
+dE1vZGUKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2ljYWwgTWF4aW11bSgx
+MCkKICAgICAgUGh5c2ljYWwgTWluaW11bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDY1
+NTM1KQogICAgICBVbml0IEV4cG9uZW50KC00KQogICAgICBVbml0KFNJIExpbmVhciA6IFNl
+Y29uZHMpCiAgICAgIFJlcG9ydCBTaXplKDgpCiAgICAgIFJlcG9ydCBDb3VudCgxKQogICAg
+ICBSZXBvcnQgT2Zmc2V0KDApCiAgICAgIEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAg
+RkVBVFVSRSg2KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgUGh5c2ljYWwoRGlnaXRp
+emVycy5GaW5nZXIpCiAgICAgIEFwcGxpY2F0aW9uKERpZ2l0aXplcnMuRGV2aWNlQ29uZmln
+dXJhdGlvbikKICAgICAgVXNhZ2UoMikKICAgICAgICBEaWdpdGl6ZXJzLjAwNTcKICAgICAg
+ICBEaWdpdGl6ZXJzLjAwNTgKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2lj
+YWwgTWF4aW11bSgxKQogICAgICBQaHlzaWNhbCBNaW5pbXVtKDApCiAgICAgIFBoeXNpY2Fs
+IE1heGltdW0oNjU1MzUpCiAgICAgIFVuaXQgRXhwb25lbnQoLTQpCiAgICAgIFVuaXQoU0kg
+TGluZWFyIDogU2Vjb25kcykKICAgICAgUmVwb3J0IFNpemUoMSkKICAgICAgUmVwb3J0IENv
+dW50KDIpCiAgICAgIFJlcG9ydCBPZmZzZXQoMCkKICAgICAgRmxhZ3MoIFZhcmlhYmxlIEFi
+c29sdXRlICkKICBGRUFUVVJFKDE1KVtGRUFUVVJFXQogICAgRmllbGQoMCkKICAgICAgQXBw
+bGljYXRpb24oZmYwMC4wMDAxKQogICAgICBVc2FnZSgzKQogICAgICAgIGZmMDAuMDAwNgog
+ICAgICAgIGZmMDAuMDAwNgogICAgICAgIGZmMDAuMDAwNgogICAgICBMb2dpY2FsIE1pbmlt
+dW0oMCkKICAgICAgTG9naWNhbCBNYXhpbXVtKDI1NSkKICAgICAgUGh5c2ljYWwgTWluaW11
+bSgwKQogICAgICBQaHlzaWNhbCBNYXhpbXVtKDY1NTM1KQogICAgICBVbml0IEV4cG9uZW50
+KC00KQogICAgICBVbml0KFNJIExpbmVhciA6IFNlY29uZHMpCiAgICAgIFJlcG9ydCBTaXpl
+KDgpCiAgICAgIFJlcG9ydCBDb3VudCgzKQogICAgICBSZXBvcnQgT2Zmc2V0KDApCiAgICAg
+IEZsYWdzKCBWYXJpYWJsZSBBYnNvbHV0ZSApCiAgRkVBVFVSRSgxNClbRkVBVFVSRV0KICAg
+IEZpZWxkKDApCiAgICAgIEFwcGxpY2F0aW9uKGZmMDAuMDAwMSkKICAgICAgVXNhZ2UoMSkK
+ICAgICAgICBmZjAwLjAwMDcKICAgICAgTG9naWNhbCBNaW5pbXVtKDApCiAgICAgIExvZ2lj
+YWwgTWF4aW11bSgyNTUpCiAgICAgIFBoeXNpY2FsIE1pbmltdW0oMCkKICAgICAgUGh5c2lj
+YWwgTWF4aW11bSg2NTUzNSkKICAgICAgVW5pdCBFeHBvbmVudCgtNCkKICAgICAgVW5pdChT
+SSBMaW5lYXIgOiBTZWNvbmRzKQogICAgICBSZXBvcnQgU2l6ZSg4KQogICAgICBSZXBvcnQg
+Q291bnQoMSkKICAgICAgUmVwb3J0IE9mZnNldCgwKQogICAgICBGbGFncyggVmFyaWFibGUg
+QWJzb2x1dGUgKQoKQnV0dG9uLjAwMDEgLS0tPiBLZXkuTGVmdEJ0bgpCdXR0b24uMDAwMiAt
+LS0+IEtleS5SaWdodEJ0bgpHZW5lcmljRGVza3RvcC5YIC0tLT4gUmVsYXRpdmUuWApHZW5l
+cmljRGVza3RvcC5ZIC0tLT4gUmVsYXRpdmUuWQpCdXR0b24uMDAwMSAtLS0+IEtleS5MZWZ0
+QnRuCkJ1dHRvbi4wMDAyIC0tLT4gS2V5LlJpZ2h0QnRuCkJ1dHRvbi4wMDAzIC0tLT4gS2V5
+Lk1pZGRsZUJ0bgpHZW5lcmljRGVza3RvcC5YIC0tLT4gUmVsYXRpdmUuWApHZW5lcmljRGVz
+a3RvcC5ZIC0tLT4gUmVsYXRpdmUuWQpEaWdpdGl6ZXJzLkNvbmZpZGVuY2UgLS0tPiBTeW5j
+LlJlcG9ydApEaWdpdGl6ZXJzLlRpcFN3aXRjaCAtLS0+IFN5bmMuUmVwb3J0CkRpZ2l0aXpl
+cnMuQ29udGFjdElEIC0tLT4gU3luYy5SZXBvcnQKR2VuZXJpY0Rlc2t0b3AuWCAtLS0+IFN5
+bmMuUmVwb3J0CkdlbmVyaWNEZXNrdG9wLlkgLS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJz
+LkNvbmZpZGVuY2UgLS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJzLlRpcFN3aXRjaCAtLS0+
+IFN5bmMuUmVwb3J0CkRpZ2l0aXplcnMuQ29udGFjdElEIC0tLT4gU3luYy5SZXBvcnQKR2Vu
+ZXJpY0Rlc2t0b3AuWCAtLS0+IFN5bmMuUmVwb3J0CkdlbmVyaWNEZXNrdG9wLlkgLS0tPiBT
+eW5jLlJlcG9ydApEaWdpdGl6ZXJzLkNvbmZpZGVuY2UgLS0tPiBTeW5jLlJlcG9ydApEaWdp
+dGl6ZXJzLlRpcFN3aXRjaCAtLS0+IFN5bmMuUmVwb3J0CkRpZ2l0aXplcnMuQ29udGFjdElE
+IC0tLT4gU3luYy5SZXBvcnQKR2VuZXJpY0Rlc2t0b3AuWCAtLS0+IFN5bmMuUmVwb3J0Ckdl
+bmVyaWNEZXNrdG9wLlkgLS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJzLkNvbmZpZGVuY2Ug
+LS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJzLlRpcFN3aXRjaCAtLS0+IFN5bmMuUmVwb3J0
+CkRpZ2l0aXplcnMuQ29udGFjdElEIC0tLT4gU3luYy5SZXBvcnQKR2VuZXJpY0Rlc2t0b3Au
+WCAtLS0+IFN5bmMuUmVwb3J0CkdlbmVyaWNEZXNrdG9wLlkgLS0tPiBTeW5jLlJlcG9ydApE
+aWdpdGl6ZXJzLkNvbmZpZGVuY2UgLS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJzLlRpcFN3
+aXRjaCAtLS0+IFN5bmMuUmVwb3J0CkRpZ2l0aXplcnMuQ29udGFjdElEIC0tLT4gU3luYy5S
+ZXBvcnQKR2VuZXJpY0Rlc2t0b3AuWCAtLS0+IFN5bmMuUmVwb3J0CkdlbmVyaWNEZXNrdG9w
+LlkgLS0tPiBTeW5jLlJlcG9ydApEaWdpdGl6ZXJzLjAwNTYgLS0tPiBTeW5jLlJlcG9ydApE
+aWdpdGl6ZXJzLkNvbnRhY3RDb3VudCAtLS0+IFN5bmMuUmVwb3J0CkJ1dHRvbi4wMDAxIC0t
+LT4gS2V5LkxlZnRCdG4KZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA0IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDA1IC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAyIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0tLT4gU3luYy5SZXBvcnQKZmYwMC4wMDAzIC0t
+LT4gU3luYy5SZXBvcnQK
+--------------F645A6997CF7ADE77AEBCEC3--
+
+--------------ms080700000604000308020803
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+Ew0wggY9MIIEJaADAgECAgg3B676YzbKKTANBgkqhkiG9w0BAQsFADBSMQswCQYDVQQGEwJE
+RTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxKjAoBgNVBAMMIVZvbGtzdmVyc2NobHVlc3Nl
+bHVuZyBSb290IENBIEcwMjAeFw0yMDA1MjYxMzIxNDFaFw0zMDA1MjUxMzIxNDFaMFUxCzAJ
+BgNVBAYTAkRFMRcwFQYDVQQKDA5GcmF1bmhvZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJz
+Y2hsdWVzc2VsdW5nIFByaXZhdGUgQ0EgRzAyMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIIC
+CgKCAgEAzW9OcLabPtfz9rbgtyyuNQCQkmI8cPW39VGsXLX1J9EIcUPvp1ysi6kuqMfw+YOC
+LjxopSIhpjhH/p84LzmcBJElRPkzWHJreZry+Lu5SDhOcOH49fNEo7UeYE0wkSJNv+jLMWwU
+H93dPaSNeRN/5/Peq6tcKTx0FflS2ZScP9OcPvXgp1c/bXYoRyiOGSVR8/+7qlwNuku2px6f
+0c6XOKOwkyTeSghmQ8vdfeqcMd9fNUhn/ijWFHahr0LUGB9We6SoxklOz9gfgSCjhInt+4qy
+N6bHl/utH/vj1qnuhkaP25h1eCbz2WKqv0wKWwa/r4F0ItLYYP2YhwICTNLDDT8GmctRdt2S
+yLmgXo9Gz0nrwrYuGMWcXNLm682Fgg3wQne0DTszFFUU8PrVOtgzB5Qm6DPrRSUHXQEfT7DY
+ZzDA+FmSoTSiCe+aoNPbglta4gDar0B/gni15LtCzW4tNhk3fXkYxEWpbq32vNy3wCDOQazc
+vxzko5Ior1iDZJNuzurtp5qRjAnOcUiKhNUJeBnmLDB/Di9XZHIQCD0EjiZzef0OR4+ZbPPM
+xl6n9KHdrZ2c8r3yjGJtGkeMc0aMkBpvYNDy/s4fYnE5MRIOWdmMnq23/DvCpsQtF5UWZlF9
+MaKVcjXmtGpnhpe0XOkFXvxd9PSM0Oe4uei+buhbF7ECAwEAAaOCARIwggEOMBIGA1UdEwEB
+/wQIMAYBAf8CAQAwHwYDVR0jBBgwFoAUPnwBB805qJCxODW0j7v1rBeEocAwTQYIKwYBBQUH
+AQEEQTA/MD0GCCsGAQUFBzAChjFodHRwOi8vdm9sa3N2ZXJzY2hsdWVzc2VsdW5nLmRlL2Nh
+L3Jvb3RjYV9nMDIuY3J0MBQGA1UdIAQNMAswCQYHKyQPCQMBATBDBgNVHR8EPDA6MDigNqA0
+hjJodHRwOi8vdm9sa3N2ZXJzY2hsdWVzc2VsdW5nLmRlL2NybC9yb290Y2FfZzAyLmNybDAd
+BgNVHQ4EFgQUBNGCAAc5XwIAgrw4HtCXwN3HOwMwDgYDVR0PAQH/BAQDAgEGMA0GCSqGSIb3
+DQEBCwUAA4ICAQAPsI1fETAPUfq7LoI2FxRDylRduC/nVhVca7ORxhZXrFmksT/q1jHU4eXK
+IhcVms623/FHhcVHl1qB5G/cgU2OtjEP5/BXIRu4I78EZIhb8U3ZGe9gZql/RSOBD08lhmzv
+fRz+nwE2Pl9stzXKohjGRWyfFfuaWKLXUZzCK/wYX6IqhTxjkoEFSgejoO41B886rrm3+aaO
+5Db5EBW4gYWF9VCV3bmedmTJzbvOOYDxaVT1+O8E9Ym5BZL+qJNjgdjJXE1TUGyUg6ZweNHT
+dse6xTc9KhfnAyppkMUu9AKT6jkloA6l0/T3zEMKhvtf9gLYWJ0zMwm1JfQk5mVMZtQoOPYI
+Wj7IVUKPZJMizHoaAAIzi7C0w3XpN3xMDJOs5eRsRPk0qF8UulshIUA/6idOrg7eUY4WZGN1
+RZsFYyhBg1sPaeFyFAUs0XJUrWLOKO5f9VZGbmEF6gqbTxdwMCJZzonwpUxVwxKLMa+Z4EMG
+QoY1rLNPCRZlzhW+TRBsuy4tGN21PlhvcvEnxs8eHvqlwfM/KwYtXhLG8881KMMSzemRvX/c
+pNCU2YlHpAwpdm6cAn60leS0WPfTb6QAqmtQTij6uAfFN46hQDLqpfTWnoPSMvbeyFwqP6Fv
+V6RgquAIpe9p5daLY9M+Krkd7mH8QR2PN615TboR0ocoF4REdTCCBlwwggREoAMCAQICCBUM
+N0NLozG+MA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAkRFMRcwFQYDVQQKDA5GcmF1bmhv
+ZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJzY2hsdWVzc2VsdW5nIFByaXZhdGUgQ0EgRzAy
+MB4XDTIwMTAxMTE2NTIzN1oXDTIzMTAxMDE2NTIzN1owgYkxGDAWBgNVBAMMD0FMRVhBTkRF
+UiBLT0JFTDEOMAwGA1UEBAwFS09CRUwxEjAQBgNVBCoMCUFMRVhBTkRFUjFJMEcGA1UEBRNA
+RDQwMDNFMTc4OTlGMTQzMTI2ODExMzM0OUY1N0M1QzU0NEQ5RjcwNDVCQTkyMEJEMzdDQURB
+NTQzOEFGQ0EzODCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAM9yNVKr/cuT0WnJ
+PLe7kmfd5Wo7rlb1F+harCy3OLgaTqkMI6j37OTXMAmdkZ0y7zrlhbEGCEpODaDPYwVSEb+s
+Cv05n3SAMCdy9kQlnqP9We7C/2mbnuKYhpO5P6mUVdPoM+tfTM22YH7CzO8sa1Tq1s/DrIZs
+NhXDRvWZEdDwUCjLPKVXGtTqHbUjs7OufxpbyzA7xHE5N7qRff1WrOuq/RS1OvGZVcUjLAmI
+loYCvYm1Q3oBYuSZygOsawjmJQ14fh7dKkOjogx6byElWAVBkUQxud8CtBHW+L4VY35uinRJ
+k81mwI8ac0zS5FEbYWoF9Gi5pWbCgoIvGXIMcPEQqu8mVBpN/CAMUOUlIkOPDvFqfiQ9TI2C
+xnNih8csWwVInRS7m8itJrnlbVfDwdHMJhPT522gCDOC6lXaRUizwGqRh/26W1dJqA2SYmEn
+EMH/TcP3eyiFLN5QDXm2odnh+rbvQbwEtlPxup24HGe8RqWFdiCOW1syM+V74lUn5wIDAQAB
+o4IBeTCCAXUwHQYDVR0RBBYwFIESYS1rb2JlbEBhLWtvYmVsLmRlMA4GA1UdDwEB/wQEAwIG
+wDATBgNVHSUEDDAKBggrBgEFBQcDBDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFATRggAH
+OV8CAIK8OB7Ql8DdxzsDMIGCBggrBgEFBQcBAQR2MHQwQAYIKwYBBQUHMAKGNGh0dHA6Ly92
+b2xrc3ZlcnNjaGx1ZXNzZWx1bmcuZGUvY2EvcHJpdmF0ZWNhX2cwMi5jcnQwMAYIKwYBBQUH
+MAGGJGh0dHA6Ly9vY3NwLnZvbGtzdmVyc2NobHVlc3NlbHVuZy5kZTAUBgNVHSAEDTALMAkG
+ByskDwkDAQEwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL3ZvbGtzdmVyc2NobHVlc3NlbHVu
+Zy5kZS9jcmwvcHJpdmF0ZWNhX2cwMi5jcmwwHQYDVR0OBBYEFDadSlBdeaipQdbmS4vn439F
+6fkNMA0GCSqGSIb3DQEBCwUAA4ICAQBUhcmTTecspwaSgUUlrG/gUPzDLM/Ty0Jpz4GvRbRn
+kJxHlHAopkk8P1SXlnOy2kfC5LgFCRB9tJqSlXmIXwphm90fZKRGZU2dBgxGkDQppXGH6PjJ
+P52QAhvpztJDPEqfqkzcpKdkYuFg+KEzqZmsu8Mvy4rqCTRIAtOX5zHVFEIarp7YUMNhzGxg
+eQakmDjykC1Xksx/ULsX7r5QW5Fqp1ZL5obNmA2emJgn0VrKRIYY8vqnOwUi13G/lDa+fphz
+PMhpIKOKQ9Wy0Wn8mBdSdIqmt2L58Pu14ygwOkK3vnb/QKqayhwme2uf4waXG5or3wZdSr39
+SvvGZT8Z6cHw6n7Jw0+gRApkB1cUO7j1T/aHCBcZPJ5i6bBoGrT5E8IHIqj+oZXUCY7jxknL
+aHaiOARg8fFkf8lp3uy7ay4WcDIorPa9ugNaCP3SnYvtKvk44ulgMIjhvkG1Mga/70SA9Evq
+3cFUle3jaaEYujSxLnN8LVm39dR93QCqcdkIayPA9LT6vizlGoA6BdOMWDzKWWnoelYTb+Ip
+iqpafot50MCUqf1e2T0z8Ygki1LLOxlpi/DWQApb/Qq9EomeEYMKm0aJc7166pLiWsk1fWOX
+kwBa3phG+CbbUxqotGP++r39Dk8Diny+lYjkRXpoqggzF9g9uxARXBIw0H+G6XbgCzCCBmgw
+ggRQoAMCAQICCGRFBiAAmYjgMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAkRFMRcwFQYD
+VQQKDA5GcmF1bmhvZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJzY2hsdWVzc2VsdW5nIFBy
+aXZhdGUgQ0EgRzAyMB4XDTIwMTAxMTE2NTIyM1oXDTIzMTAxMDE2NTIyM1owgYkxGDAWBgNV
+BAMMD0FMRVhBTkRFUiBLT0JFTDEOMAwGA1UEBAwFS09CRUwxEjAQBgNVBCoMCUFMRVhBTkRF
+UjFJMEcGA1UEBRNARDQwMDNFMTc4OTlGMTQzMTI2ODExMzM0OUY1N0M1QzU0NEQ5RjcwNDVC
+QTkyMEJEMzdDQURBNTQzOEFGQ0EzODCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGB
+AIHe4er7YlQrv+fgKBYbb2FSJLtzoB9s4ZhYgIfQuR1x9+WJvj9EMne5rsHB+OJ5bwZQ1Fnh
+qhJhtepikZhLDRVfRbzRdrOSzxnkePhH/SZ9VhtN6327PuSAwxe/te/DPDo6aWZj3d7RoioE
+UgkyF5gNWYu082LeSHbvNpDcHUN2Rs7XgZi5uBUnHR1btXA7BOzUMfPhEIqwuCDKLZAGCc0q
+2JKhKeOIOsoZ8lP2/HfW3Az1ij6xztb/HfoZnyZMpQC1ly7VgJU5rTLRJz39kscZSBcnxRqP
+8cE9rrlPZOgRPK2NR4x+30Sr9sOtnbRYldKWT4uCtqrPrnxNKiDkv3P2h1yKYbCamlqwaoJW
+cjrphzLycSGHitalla/f82xHSN+7gJHGp91WYIn+c6jPLcx0wmKUJBB1TIEaeh4izkqLwB0P
+1HUBHo50OdmTnRGdnvNt/+Xsc9KetVnmJM2bqXXDlgYMfsULoe6Y0AVemQFvd1V49GePGpGT
+NGMe5jf7NwIDAQABo4IBhTCCAYEwHQYDVR0RBBYwFIESYS1rb2JlbEBhLWtvYmVsLmRlMA4G
+A1UdDwEB/wQEAwIEMDAfBgNVHSUEGDAWBgorBgEEAYI3CgMEBggrBgEFBQcDBDAMBgNVHRMB
+Af8EAjAAMB8GA1UdIwQYMBaAFATRggAHOV8CAIK8OB7Ql8DdxzsDMIGCBggrBgEFBQcBAQR2
+MHQwQAYIKwYBBQUHMAKGNGh0dHA6Ly92b2xrc3ZlcnNjaGx1ZXNzZWx1bmcuZGUvY2EvcHJp
+dmF0ZWNhX2cwMi5jcnQwMAYIKwYBBQUHMAGGJGh0dHA6Ly9vY3NwLnZvbGtzdmVyc2NobHVl
+c3NlbHVuZy5kZTAUBgNVHSAEDTALMAkGByskDwkDAQEwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0
+cDovL3ZvbGtzdmVyc2NobHVlc3NlbHVuZy5kZS9jcmwvcHJpdmF0ZWNhX2cwMi5jcmwwHQYD
+VR0OBBYEFJiKTcJJSCtBVQS6oS4OSO8QKEWBMA0GCSqGSIb3DQEBCwUAA4ICAQBfdnVpzlnO
+JupsJfdYW9xyt3lSky85oA1qPichmW6UjrnIZdunQPJrCTTM+7wUqeqwlhbRmwUKgAPH/5fc
+cOnyMulgbvc50VV+mBK4ph/1/fhom7zJYEfvKEpPWg5tGx3/Mp6YIVvuhRnZ7vmodMGXgj/f
+1D7yHFJib/430e6pcD76DPaAFA1cVVp5FUP+b0fBzvgYjsgSwL2GTXXaNGEaLqBuhtmInBh/
+y4X2ZEz8kw6B2P0GpQ8jg+5I1tNM6vf/KH2FxDj/ykmSsgtyrQAddEjrNQbaQAzXTtHAPui/
+6/wbgYfLp05aH7PsLsKGdDS9yb8UaWfWgwFuFz3dLXSdI3YYhXB2QnASX5RV3ndnu9vwGmns
+c6iu4C9+h0hFdcWMIEso5K/mV/kXO31xzw7JLU2y5Nk7XEgrXwqFuX4ZruqCfw3EXP1hYnmt
+OtfAaSLzTdBS0GskGGnWAs12dJrL8FysZbtX5cgWMyT1nun8ksvSodVgQ+7BA5YHTwfHussP
+nPBDabaHmlOUVBi3IYZvoJ90XwuuMvVqcYeEzvuGDrssZHY2pG9DqTeXfzmUdpTfMy7zwu5K
+jBPKilDLTXJkrA5wlQpSihjSQG/UPLP+YDsrEuwwBC1DbcSn5KOyMXFpfxsoSegFzb0lxPRc
+6sScLr/v96FwvwWpL54Fp9dr0TGCA80wggPJAgEBMGEwVTELMAkGA1UEBhMCREUxFzAVBgNV
+BAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRWb2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJp
+dmF0ZSBDQSBHMDICCBUMN0NLozG+MA0GCWCGSAFlAwQCAQUAoIIBvTAYBgkqhkiG9w0BCQMx
+CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMDkxNTE2MzdaMC8GCSqGSIb3DQEJ
+BDEiBCBDsUa0kreOcevQIwzsMnFmfp+SXOYuMpOR7tJTkFiuPDBsBgkqhkiG9w0BCQ8xXzBd
+MAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
+MA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMHAGCSsGAQQBgjcQBDFj
+MGEwVTELMAkGA1UEBhMCREUxFzAVBgNVBAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRW
+b2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJpdmF0ZSBDQSBHMDICCGRFBiAAmYjgMHIGCyqGSIb3
+DQEJEAILMWOgYTBVMQswCQYDVQQGEwJERTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxLTAr
+BgNVBAMMJFZvbGtzdmVyc2NobHVlc3NlbHVuZyBQcml2YXRlIENBIEcwMgIIZEUGIACZiOAw
+DQYJKoZIhvcNAQEBBQAEggGAgkbWzGFpNfh2/fFtuoUP8UYTMUpKG7rwv96GU0Nug/mBivzV
+jXzS0ANqP2YEm/7QYdKynx6ZY3i4swNuaVfNjZ/emcRJ1+DOjFjqxlq9vcItx+q5eEuMuwuz
+2Zq8i/vjHQ1BQD/i/CQ+D1N5BW6k8iKbou1LIw6ktUGFDPrGao4Ub443j94ZmrCbmrWYZmUG
+mPD4REErINdWVlP93FTVWn6VPD9nOxcUKsGafMd5S9VEidhuariBzyudV+olXvAHuBs9x15k
+Z0Jk+eZlhihhTgJHaGIDG0Rc6nw8+y5+8OLCG36OSASi3ZhewYWugJKVDL8dwcoc1NsK97b4
+GlQx6yhm/aV0h+KkY+fW0v6dq+wYrU5Xn7YgSVhTey8fw7anwW8yIav24UtOcvdTnU5WIFF8
+zpJwRJwF9I9P4I7JA+WPFyXnug2F/U/Lrj/fuxLPuOZKbjNH+ZQby0i8z6s0zK8t6mFDUW6Z
+A4VkLuEI3N/+8RUNhtsgVd8IkoZcfLPnAAAAAAAA
+--------------ms080700000604000308020803--
