@@ -2,242 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60606C4332D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Feb 2021 23:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55ACEC43332
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Feb 2021 23:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3479164E42
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Feb 2021 23:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB1364E25
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Feb 2021 23:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231815AbhBJXqq (ORCPT
+        id S233490AbhBJXqt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Feb 2021 18:46:46 -0500
-Received: from ganymed.uberspace.de ([185.26.156.242]:60766 "EHLO
+        Wed, 10 Feb 2021 18:46:49 -0500
+Received: from ganymed.uberspace.de ([185.26.156.242]:60798 "EHLO
         ganymed.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233874AbhBJXqp (ORCPT
+        with ESMTP id S233948AbhBJXqs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Feb 2021 18:46:45 -0500
-Received: (qmail 32216 invoked from network); 10 Feb 2021 23:45:57 -0000
+        Wed, 10 Feb 2021 18:46:48 -0500
+Received: (qmail 32279 invoked from network); 10 Feb 2021 23:46:03 -0000
 Received: from localhost (HELO localhost) (127.0.0.1)
-  by ganymed.uberspace.de with SMTP; 10 Feb 2021 23:45:57 -0000
-From:   Alexander Kobel <a-kobel@a-kobel.de>
-Subject: [PATCH v3] platform/x86: thinkpad_acpi: Handle keyboard cover
+  by ganymed.uberspace.de with SMTP; 10 Feb 2021 23:46:03 -0000
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Handle keyboard cover
  attach/detach events
-To:     Hans de Goede <hdegoede@redhat.com>,
+To:     =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Nitin Joshi1 <njoshi1@lenovo.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <mpearson@lenovo.com>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Message-ID: <d2b4f0df-0d09-e4c0-26d6-ef4c29e5415a@a-kobel.de>
-Date:   Thu, 11 Feb 2021 00:45:55 +0100
+        Mark Pearson <mpearson@lenovo.com>
+References: <00d3570a-8624-89ca-7216-7d648b0a2f0b@a-kobel.de>
+ <984D5EJD7aHLu4SvKWlumE3xhawPAvBV3B9JezdQhjclDnufeiTOOMInBizd1p_rdhJBgOmjc2sW8Ji00gkmBY1NIMW_weIwVZfgSZefizA=@protonmail.com>
+From:   Alexander Kobel <a-kobel@a-kobel.de>
+Message-ID: <83a0b308-21b9-c30c-e3ef-982d36b30a17@a-kobel.de>
+Date:   Thu, 11 Feb 2021 00:46:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms020404020302020902020303"
+In-Reply-To: <984D5EJD7aHLu4SvKWlumE3xhawPAvBV3B9JezdQhjclDnufeiTOOMInBizd1p_rdhJBgOmjc2sW8Ji00gkmBY1NIMW_weIwVZfgSZefizA=@protonmail.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms020305080907050405020109"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 This is a cryptographically signed message in MIME format.
 
---------------ms020404020302020902020303
+--------------ms020305080907050405020109
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-ThinkPad X1 Tablets emit HKEY 0x4012 and 0x4013 events when a keyboard
-cover is attached/detached or folded to the back of the device. They are
-used to switch from normal to tablet mode in userspace; e.g., to offer
-touch keyboard choices when focus goes to a text box and no keyboard is
-attached, or to enable autorotation of the display according to the
-built-in orientation sensor.
+Hi,
 
-This patch handles the two events by issuing corresponding
-SW_TABLET_MODE notifications to the ACPI userspace.
+thanks for reviewing.
 
-Tested as working on a ThinkPad X1 Tablet Gen 2, 20JCS00C00, and as
-non-interfering with a ThinkPad X1 Carbon 7th, 20QESABM02 (normal
-clamshell, so it does not have a keyboard cover).
+On 2/10/21 10:48 PM, Barnab=C3=A1s P=C5=91cze wrote:
+> Hi
+>=20
+> 2021. febru=C3=A1r 10., szerda 18:54 keltez=C3=A9ssel, Alexander Kobel =
+=C3=ADrta:
+>=20
+>> @@ -174,6 +174,11 @@ enum tpacpi_hkey_event_t {
+>>  						     or port replicator */
+>>  	TP_HKEY_EV_HOTPLUG_UNDOCK	=3D 0x4011, /* undocked from hotplug
+>>  						     dock or port replicator */
+>> +	/* Thinkpad X1 Tablet series (and probably other GTOP type 4) emit 0=
+x4012 and 0x4013
+>=20
+> The preferred style of multi-line comments is
+>=20
+> /* <note the empty line here>
+>  * Lorem ipsum ...
+>  */
 
-Signed-off-by: Alexander Kobel <a-kobel@a-kobel.de>
----
- drivers/platform/x86/thinkpad_acpi.c | 100 ++++++++++++++++++++++++++-
- 1 file changed, 99 insertions(+), 1 deletion(-)
+Corrected.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-index c404706379d9..c3e805f478a3 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -145,6 +145,45 @@ enum {
- 	TP_ACPI_WGSV_STATE_UWBPWR	=3D 0x0020, /* UWB radio enabled */
- };
-=20
-+/* ThinkPad GTOP ("Get Tablet OPtion") methods */
-+enum {
-+	TP_GTOP_CMD_QUERY_VERSION		=3D 0x0000,
-+	TP_GTOP_CMD_QUERY_INTERFACE_TYPE	=3D 0x0100,
-+	TP_GTOP_CMD_GET_ATTACH_OPTION		=3D 0x2000,
-+};
-+
-+#define TP_GTOP_MINIMUM_VERSION	0x0103
-+
-+enum {
-+	TP_GTOP_INTERFACE_TYPE_RESERVED		=3D 0,
-+	TP_GTOP_INTERFACE_TYPE_ANY_TYPE		=3D 1,
-+	TP_GTOP_INTERFACE_TYPE_TP_HELIX		=3D 2,
-+	TP_GTOP_INTERFACE_TYPE_TP10		=3D 3,
-+	TP_GTOP_INTERFACE_TYPE_TP_X1_TAB	=3D 4,
-+};
-+
-+/* Attach option states for GTOP Type 1 interfaces ("Any type") */
-+#define TP_GTOP_ANY_TYPE_STATE_ANY_OPTION_ATTACHED	BIT(0)
-+
-+/*
-+ * Attach option states for GTOP Type 4 interfaces ("ThinkPad X1 Tablet =
-series")
-+ * 0: detached, 1: attached
-+ * except for special meanings for Pico cartridge and folio keyboard cov=
-er location
-+ */
-+#define TP_GTOP_TP_X1_TAB_STATE_THIN_KBD_ATTACHED		BIT(0)
-+#define TP_GTOP_TP_X1_TAB_STATE_PRO_CARTRIDGE_ATTACHED		BIT(1)
-+#define TP_GTOP_TP_X1_TAB_STATE_PICO_CARTRIDGE_ATTACH_MASK	GENMASK(3, 2)=
+>> @@ -2166,11 +2173,32 @@ static int hotkey_gmms_get_tablet_mode(int s, =
+int *has_tablet_mode)
+>>  	return !!(mode & TP_ACPI_MULTI_MODE_TABLET_LIKE);
+>>  }
+>>
+>> +static int hotkey_gtop_any_type_get_tablet_mode(int s)
+>> +{
+>> +	return !(s & 0x1);
+>> +}
+>=20
+> I believe it would be preferable to do something like
+>=20
+>   #define TP_GTOP_TYPE_ANY_ATTACH_STATE BIT(0)
+>   /* or possibly use an enum */
+>   ...
+>   return !(s & TP_GTOP_TYPE_ANY_ATTACH_STATE);
+>=20
+> or let `s` be `unsigned long`, and then
+>=20
+>   #define TP_GTOP_TYPE_ANY_ATTACH_STATE_BIT 0
+>   ...
+>   return !test_bit(TP_GTOP_TYPE_ANY_ATTACH_STATE_BIT, &s);
+>=20
+> or something along these lines, and I also think the return type could =
+be `bool`.
 
-+#define TP_GTOP_TP_X1_TAB_STATE_3D_CARTRIDGE_ATTACHED		BIT(4)
-+#define TP_GTOP_TP_X1_TAB_STATE_RESERVE1_ATTACHED		BIT(5)
-+#define TP_GTOP_TP_X1_TAB_STATE_RESERVE2_ATTACHED		BIT(6)
-+#define TP_GTOP_TP_X1_TAB_STATE_FOLIO_KBD_FOLDED_ONTO_BACK	BIT(16)
-+
-+/* Special values for Pico cartridge state (bits 3-2) */
-+#define TP_GTOP_TP_X1_TAB_STATE_PICO_CARTRIDGE_DETACHED		0
-+#define TP_GTOP_TP_X1_TAB_STATE_PICO_CARTRIDGE_ATTACHED		BIT(2)
-+#define TP_GTOP_TP_X1_TAB_STATE_PICO_CARTRIDGE_BATTERY_ERROR	BIT(3)
-+#define TP_GTOP_TP_X1_TAB_STATE_PICO_CARTRIDGE_RESERVED		(BIT(2) | BIT(3=
-))
-+
- /* HKEY events */
- enum tpacpi_hkey_event_t {
- 	/* Hotkey-related */
-@@ -174,6 +213,12 @@ enum tpacpi_hkey_event_t {
- 						     or port replicator */
- 	TP_HKEY_EV_HOTPLUG_UNDOCK	=3D 0x4011, /* undocked from hotplug
- 						     dock or port replicator */
-+	/*
-+	 * Thinkpad X1 Tablet series devices emit 0x4012 and 0x4013
-+	 * when keyboard cover is attached, detached or folded onto the back
-+	 */
-+	TP_HKEY_EV_KBD_COVER_ATTACH	=3D 0x4012, /* keyboard cover attached */
-+	TP_HKEY_EV_KBD_COVER_DETACH	=3D 0x4013, /* keyboard cover detached or f=
-olded back */
-=20
- 	/* User-interface events */
- 	TP_HKEY_EV_LID_CLOSE		=3D 0x5001, /* laptop lid closed */
-@@ -308,6 +353,10 @@ static struct {
- 		TP_HOTKEY_TABLET_NONE =3D 0,
- 		TP_HOTKEY_TABLET_USES_MHKG,
- 		TP_HOTKEY_TABLET_USES_GMMS,
-+		TP_HOTKEY_TABLET_USES_GTOP_ANY_TYPE,
-+		TP_HOTKEY_TABLET_USES_GTOP_TP_HELIX,
-+		TP_HOTKEY_TABLET_USES_GTOP_TP10,
-+		TP_HOTKEY_TABLET_USES_GTOP_TP_X1_TAB,
- 	} hotkey_tablet;
- 	u32 kbdlight:1;
- 	u32 light:1;
-@@ -2166,11 +2215,32 @@ static int hotkey_gmms_get_tablet_mode(int s, int=
- *has_tablet_mode)
- 	return !!(mode & TP_ACPI_MULTI_MODE_TABLET_LIKE);
- }
-=20
-+static bool hotkey_gtop_any_type_get_tablet_mode(int s)
-+{
-+	return !(s & TP_GTOP_ANY_TYPE_STATE_ANY_OPTION_ATTACHED);
-+}
-+
-+static bool hotkey_gtop_tp_x1_tab_get_tablet_mode(int s)
-+{
-+	return (!(s & TP_GTOP_TP_X1_TAB_STATE_THIN_KBD_ATTACHED) ||
-+		(s & TP_GTOP_TP_X1_TAB_STATE_FOLIO_KBD_FOLDED_ONTO_BACK));
-+}
-+
- static int hotkey_get_tablet_mode(int *status)
- {
- 	int s;
-=20
- 	switch (tp_features.hotkey_tablet) {
-+	case TP_HOTKEY_TABLET_USES_GTOP_ANY_TYPE:
-+		if (!acpi_evalf(hkey_handle, &s, "GTOP", "dd", TP_GTOP_CMD_GET_ATTACH_=
-OPTION))
-+			return -EIO;
-+		*status =3D hotkey_gtop_any_type_get_tablet_mode(s);
-+		break;
-+	case TP_HOTKEY_TABLET_USES_GTOP_TP_X1_TAB:
-+		if (!acpi_evalf(hkey_handle, &s, "GTOP", "dd", TP_GTOP_CMD_GET_ATTACH_=
-OPTION))
-+			return -EIO;
-+		*status =3D hotkey_gtop_tp_x1_tab_get_tablet_mode(s);
-+		break;
- 	case TP_HOTKEY_TABLET_USES_MHKG:
- 		if (!acpi_evalf(hkey_handle, &s, "MHKG", "d"))
- 			return -EIO;
-@@ -3213,7 +3283,29 @@ static int hotkey_init_tablet_mode(void)
- 	int in_tablet_mode =3D 0, res;
- 	char *type =3D NULL;
-=20
--	if (acpi_evalf(hkey_handle, &res, "GMMS", "qdd", 0)) {
-+	if (acpi_evalf(hkey_handle, &res, "GTOP", "qdd", TP_GTOP_CMD_QUERY_VERS=
-ION) &&
-+	    res >=3D TP_GTOP_MINIMUM_VERSION &&
-+	    acpi_evalf(hkey_handle, &res, "GTOP", "qdd", TP_GTOP_CMD_QUERY_INTE=
-RFACE_TYPE)) {
-+		switch (res) {
-+		case TP_GTOP_INTERFACE_TYPE_ANY_TYPE:
-+			tp_features.hotkey_tablet =3D TP_HOTKEY_TABLET_USES_GTOP_ANY_TYPE;
-+			if (acpi_evalf(hkey_handle, &res, "GTOP", "qdd",
-+				       TP_GTOP_CMD_GET_ATTACH_OPTION))
-+				in_tablet_mode =3D hotkey_gtop_any_type_get_tablet_mode(res);
-+			type =3D "GTOP";
-+			break;
-+		case TP_GTOP_INTERFACE_TYPE_TP_X1_TAB:
-+			tp_features.hotkey_tablet =3D TP_HOTKEY_TABLET_USES_GTOP_TP_X1_TAB;
-+			if (acpi_evalf(hkey_handle, &res, "GTOP", "qdd",
-+				       TP_GTOP_CMD_GET_ATTACH_OPTION))
-+				in_tablet_mode =3D hotkey_gtop_tp_x1_tab_get_tablet_mode(res);
-+			type =3D "GTOP";
-+			break;
-+		default:
-+			pr_err("unsupported GTOP type, please report this to %s\n", TPACPI_MA=
-IL);
-+			break;
-+		}
-+	} else if (acpi_evalf(hkey_handle, &res, "GMMS", "qdd", 0)) {
- 		int has_tablet_mode;
-=20
- 		in_tablet_mode =3D hotkey_gmms_get_tablet_mode(res,
-@@ -3989,6 +4081,12 @@ static bool hotkey_notify_dockevent(const u32 hkey=
-,
- 	case TP_HKEY_EV_HOTPLUG_UNDOCK: /* undocked from port replicator */
- 		pr_info("undocked from hotplug port replicator\n");
- 		return true;
-+	case TP_HKEY_EV_KBD_COVER_ATTACH:
-+	case TP_HKEY_EV_KBD_COVER_DETACH:
-+		tpacpi_input_send_tabletsw();
-+		hotkey_tablet_mode_notify_change();
-+		*send_acpi_ev =3D false;
-+		return true;
-=20
- 	default:
- 		return false;
---=20
-2.30.1
+Indeed, thanks for the suggestion. I used the first variant.
+
+>> +
+>> +static int hotkey_gtop_x1_tablet_type_get_tablet_mode(int s)
+>> +{
+>> +	return (!(s & 0x1) /* keyboard NOT attached */
+>> +		|| ((s >> 16) & 0x1) /* or folded onto the back */);
+>> +}
+>=20
+> Same here, I suggest using the `BIT()` macro or `test_bit()` and prefer=
+ably
+> name the constants.
+
+Ditto.
+
+>> @@ -3213,7 +3241,62 @@ static int hotkey_init_tablet_mode(void)
+>>  	int in_tablet_mode =3D 0, res;
+>>  	char *type =3D NULL;
+>>
+>> -	if (acpi_evalf(hkey_handle, &res, "GMMS", "qdd", 0)) {
+>> +	if (acpi_evalf(hkey_handle, &res, "GTOP", "qdd", 0x0000)
+>> +	    && res >=3D 0x0103
+>> +	    && acpi_evalf(hkey_handle, &res, "GTOP", "qdd", 0x0100)) {
+>=20
+> Minor thing, but checkpatch prefers `&&` at the end of the line. And th=
+e rest of
+> the code places them at the end, too.
+
+Corrected, thanks.
+
+>> +		/*
+>> +		 * GTOP ("Get Tablet OPtion") state ASL method definition:
+>> +		 * - Input: 0x0000: Query version
+>> +		 *   Output: 0x0103 (version 1.03)
+>> +		 * - Input: 0x0100: Query interface type
+>> +		 *   Output: DWORD But 31-0 Interface type
+>                                     ^
+> Shouldn't that be "Bit"?
+
+Of course. I effectively turned the entire comment into descriptive const=
+ants, at the same time correcting the other issues.
+
+>> +		switch (res) {
+>> +		case 1:
+>> +			tp_features.hotkey_tablet =3D TP_HOTKEY_TABLET_USES_GTOP_ANY_TYPE;=
+
+>> +			if (acpi_evalf(hkey_handle, &res, "GTOP", "qdd", 0x200))
+>=20
+> Please name that `0x200` something like TP_GTOP_CMD_GET_ATTACH_STATE or=
+ something
+> you like. (Same for the rest of the GTOP calls.) I know it's just above=
+ in the comment,
+> but I still think it'd be better to have concrete, more or less self-ex=
+planatory names
+> in the actual command
+
+Indeed. All magic constants are now collected at a single place before th=
+e HKEY constants.
 
 
---------------ms020404020302020902020303
+Thanks again,
+Alex
+
+
+> Regards,
+> Barnab=C3=A1s P=C5=91cze
+>=20
+
+
+--------------ms020305080907050405020109
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -337,20 +273,20 @@ jBPKilDLTXJkrA5wlQpSihjSQG/UPLP+YDsrEuwwBC1DbcSn5KOyMXFpfxsoSegFzb0lxPRc
 6sScLr/v96FwvwWpL54Fp9dr0TGCA80wggPJAgEBMGEwVTELMAkGA1UEBhMCREUxFzAVBgNV
 BAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRWb2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJp
 dmF0ZSBDQSBHMDICCBUMN0NLozG+MA0GCWCGSAFlAwQCAQUAoIIBvTAYBgkqhkiG9w0BCQMx
-CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMTAyMzQ1NTVaMC8GCSqGSIb3DQEJ
-BDEiBCAKsOz9N2xZh7cYYJsFupDO1bxAVluxMnCwnd+HXkYTOjBsBgkqhkiG9w0BCQ8xXzBd
+CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMTAyMzQ2MDFaMC8GCSqGSIb3DQEJ
+BDEiBCCFHW9d9yj5Gih+B02xgqqvfMvb2inSD+og6V0qWQhuUDBsBgkqhkiG9w0BCQ8xXzBd
 MAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
 MA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMHAGCSsGAQQBgjcQBDFj
 MGEwVTELMAkGA1UEBhMCREUxFzAVBgNVBAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRW
 b2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJpdmF0ZSBDQSBHMDICCGRFBiAAmYjgMHIGCyqGSIb3
 DQEJEAILMWOgYTBVMQswCQYDVQQGEwJERTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxLTAr
 BgNVBAMMJFZvbGtzdmVyc2NobHVlc3NlbHVuZyBQcml2YXRlIENBIEcwMgIIZEUGIACZiOAw
-DQYJKoZIhvcNAQEBBQAEggGAsoOZR6JgqgCZk1sks4oOiUhDA9sjeZ53sUNKhc5uCWau9xlp
-7mo6WCWp2IRGemz9LYYLOcvm7VooodI4klHFaNfl8kEF6fRzrQ7yPC2Et7gyhKpZXlrOH3AO
-AGg//ssByLBBwukJY8+oLwBRz6p2gI+ad7T1bBF8F3bbAms65fIYVQClE435hSV4QbfDE83K
-sg/33VjTRdgHtXjs7NFPCcCyD6u2Ztxila9y/Ee3bNv9vwdAbIwM3OuuOMCW0cMRv6pm73yS
-rEiw+ZmxpgsWrkF/dwvcQKFeEcWAqsAiy62co4NA8JG7k7x3qnBI29d+widBFRBxAGr/al9l
-N9K7G/L59vc54p/8BgpQgHwzf6UYf8Ou/rUm/aaQ1oPoGSBkYvsJ/+sztJ5EgNGqddUH0Qdf
-cL1VWwGVelY0gudHr2ai+SvZDKZmo3YaBvN1PcFOFJXseAr5L0lpEx5dmmehqamttV2vE+EM
-/fNi5Qw45ztu81vYSwZncgwtziWYiFi2AAAAAAAA
---------------ms020404020302020902020303--
+DQYJKoZIhvcNAQEBBQAEggGAezECyZTewkOL1vxvj56ZwHOEkHoDY/B9pJ9zexnibKPZxSo+
+w6IE+sMVyElWsRsdL0g4ML87OR21RysDUk/7feoUgtbRpRpQs2At+8bWEzZ+HMygQUT+KG5T
+xqjGdC6zf54qG2veJD1+y/fwya5TaRj0p9reGPW9ZhKeY/YdBaMXLhwZCC3OGET3hXARRWFr
+STfKMf0TqIXmNjcQOsXch3kjGBW53YyyvdbW9VZWDUnlCDoqonuUIY/4LCTJ6gZWzhpPrL2g
+yB+FnbXeczfljq7akKg0oDBYgVUQbhck2ELfi1nil3fOqdoKU1rVAxSa7GAoTItQnWoyfbDC
+2v+3t1skPQNTp1ZYEcYTjwkduvKsulKwMxNyrSvmMQ0g1vxQwbP9hgUuTSdPhusW51uBwStH
+ergyQ7caDjrP84n9ABjVHYRjLQ1N/uMRudBo9AIcuceFQOPtOeOgZEGlPAeceSqUgpgP69AB
+QH/CYIFycN063WPgTFS4bDx32d037Id7AAAAAAAA
+--------------ms020305080907050405020109--
