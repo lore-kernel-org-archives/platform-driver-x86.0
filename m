@@ -2,295 +2,611 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98C2C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 23:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CA2C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 23:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A389864DF2
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 23:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681DB64E35
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 23:43:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbhBKXHy (ORCPT
+        id S229681AbhBKXnv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 18:07:54 -0500
-Received: from ganymed.uberspace.de ([185.26.156.242]:52246 "EHLO
-        ganymed.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbhBKXHx (ORCPT
+        Thu, 11 Feb 2021 18:43:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34192 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229647AbhBKXnu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 18:07:53 -0500
-Received: (qmail 7901 invoked from network); 11 Feb 2021 23:07:07 -0000
-Received: from localhost (HELO localhost) (127.0.0.1)
-  by ganymed.uberspace.de with SMTP; 11 Feb 2021 23:07:07 -0000
-From:   Alexander Kobel <a-kobel@a-kobel.de>
-Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY
- 0x4012, 0x4013 events
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <mpearson@lenovo.com>
+        Thu, 11 Feb 2021 18:43:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613086940;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wSpG2+vY6NWrsHbZ6OA3pbPqZzlnGWNOFKtjlIX1uWY=;
+        b=Ua4Q+nhu/pKQAhkELaQw2gM89x+ky+COItxuhw2v/eZMGvEIcMA0brRmwHdwcTIM/nzf+q
+        7rAn+9m5g4AXLs0ZbAgHbxWJI4L5LejYKhb+Ob0SojTMkgpCCDORzxDwEBDzrT4vmwQbjE
+        Z0WOKbiHr9wduW8xBnNVeSMLivNNQGo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-luMojWPyPmm5YeM17p4E9A-1; Thu, 11 Feb 2021 18:42:17 -0500
+X-MC-Unique: luMojWPyPmm5YeM17p4E9A-1
+Received: by mail-ed1-f70.google.com with SMTP id q2so5446539edt.16
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Feb 2021 15:42:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=wSpG2+vY6NWrsHbZ6OA3pbPqZzlnGWNOFKtjlIX1uWY=;
+        b=Tu7JOQLXqwE0sufq1I0h96liau9GiYWtYVZAuJf/kVtcBSqK0yzr0EbGtmI5B+57ve
+         h7Kcz9GFtDqFj5EkXAyEI7yPPdlgln4xX/FmX/5BKjedLo5T3m6XdN0P2/LNdvwbD14A
+         LOYd552NIoQcj/iyxmrkqgBW3y7ZlPUex9h0utvIgCxrDdIR6esoO/Kdlv1Sdh5Tnvoz
+         7CiQljU3Y2xoSmpzOK0TqFwZOE1vximhpx/VTyCqxGubDwJq8bCLBiTKSbcnM2zp3G+E
+         iR5HcOiOPDuMDxL+17EDzMXgCWsdaz2bhLjG7/XpElFNBZGWJx58urlWmW7+eGWV+Iwt
+         5Uwg==
+X-Gm-Message-State: AOAM532qKB5+SgS9rGvfYoibedqyUfRSu5ztGph1FEto/FZm4lwkFgNC
+        Ty7+UZ/xSbXZYOvbgo3MgCmK1dG9x+AgBqASWG7nG2q8aFGEzTfEsjagHIcAQIS9buToXnC0jgq
+        6j6h+hhLh1JF+L4M2VhyJUYrhMmvJd8Nwig==
+X-Received: by 2002:a17:906:8591:: with SMTP id v17mr190774ejx.30.1613086935749;
+        Thu, 11 Feb 2021 15:42:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzCFJwvlqo4mm9ye2Jw2AjCr63zLzxjKAtISnEQLOKi9xRRQjBPHiRvyvN0zZvShwvO1elzHg==
+X-Received: by 2002:a17:906:8591:: with SMTP id v17mr190757ejx.30.1613086935488;
+        Thu, 11 Feb 2021 15:42:15 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id s12sm5062661edu.28.2021.02.11.15.42.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Feb 2021 15:42:14 -0800 (PST)
+Subject: Re: Support for X1 tablet keyboard (was Re: [PATCH] platform/x86:
+ thinkpad_acpi: handle HKEY 0x4012, 0x4013 events)
+To:     Alexander Kobel <a-kobel@a-kobel.de>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Pearson <mpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>
+Cc:     linux-input <linux-input@vger.kernel.org>
 References: <53abdd94-8df4-cc1c-84e9-221face6b07c@a-kobel.de>
  <9d133a27-751a-a436-d255-3dd4a7d411d8@redhat.com>
- <TY2PR03MB3645D33506D85E1EECD6DABA8C8F9@TY2PR03MB3645.apcprd03.prod.outlook.com>
- <0e85bd26-bf2f-734c-1334-15ad591ec811@redhat.com>
- <499bd1fb-159b-53b0-173e-90167a2d23fa@a-kobel.de>
- <7f40435e-4287-fc67-55d1-52ee41efcbf0@redhat.com>
-Message-ID: <dcd315d6-2aa6-a4ab-6346-d6b2199c2878@a-kobel.de>
-Date:   Fri, 12 Feb 2021 00:07:06 +0100
+ <38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de>
+ <be3f6a0f-281f-975f-70c2-b167adb5547c@redhat.com>
+ <64a4f249-f90b-c6b2-887f-55a016d93c65@a-kobel.de>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <29961a1a-a66a-e732-ff7c-c7f2da52a83d@redhat.com>
+Date:   Fri, 12 Feb 2021 00:42:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <7f40435e-4287-fc67-55d1-52ee41efcbf0@redhat.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms050106030802090101020805"
+In-Reply-To: <64a4f249-f90b-c6b2-887f-55a016d93c65@a-kobel.de>
+Content-Type: multipart/mixed;
+ boundary="------------7B2B611B04312046DFE622D9"
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
-
---------------ms050106030802090101020805
+This is a multi-part message in MIME format.
+--------------7B2B611B04312046DFE622D9
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi Hans,
+Hi,
 
-and thanks also for the source code review. I will address those valid po=
-ints once I know whether the patch might be accepted, see below.
+On 2/9/21 4:16 PM, Alexander Kobel wrote:
+> Hi,
+> 
+> On 2/8/21 11:17 AM, Hans de Goede wrote:
+>> On 2/7/21 6:55 PM, Alexander Kobel wrote:
+>>> <snip>
+>>> I'll go off and try to improve.
+>>
+>> So Nitin has been kind enough to provide us with some docs for this,
+>> please see me reply to Nitin's email and lets continue this part of this mail
+>> thread there.
+> 
+> Right. I have the other patch ready, thanks to your great help. I'm
+> waiting for Nitin's okay whether / how much info I can copy from the
+> reference sheet to source code comments. Once I have that confirmation,
+> I will post the revised patch.
+> 
+>> <snip>
+>>
+>>> Finally, I mentioned some open ends already on a post to ibm-acpi-devel
+>>> at https://sourceforge.net/p/ibm-acpi/mailman/message/37200082/; this
+>>> very question is among them.
+>>> I will start tackling the SW_TABLET_MODE event issue first, but if Mark
+>>> and Nitin can already hint about the keyboard shortcuts, it'd be highly
+>>> appreciated.
+>>
+>> I think I might be able to help there, a couple of months ago I bought
+>> a second-hand thinkpad-10 tablet which also has a USB attached keyboard.
+>>
+>> In hindsight I guess I could have asked Mark and Nitin for some more info,
+>> but I went on autopilot and just ran hexdump -C on the /dev/hidraw node
+>> to see which events all the keys send.
+>>
+>> And I fired up an usb-sniffer under Windows to figure out the audio-leds,
+>> since I'm used to just figure these things out without help from the vendor :)
+> 
+> Yeah, why take the boring route if you know how to do all the work on
+> your own... ;-)
+> 
+>> See the recent commits here for my work on this:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/hid/hid-lenovo.c
+> 
+> Thanks, very helpful.
+> 
+>> So on the ibm-acpi list message you said that the kbd sends the following:
+>>
+>> type 4 (EV_MSC), code 4 (MSC_SCAN), value c0001
+>> type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 1
+>>
+>> For the Fn-keys, does it send the same MSC_SCAN code for *all* the
+>> non-working Fn-keys ?
+> 
+> Correct. And I can confirm that /dev/hidraw1 lets me distinguish between
+> the keys.
+> 
+>> If so then it seems that this is very much like the thinkpad 10 kbd dock
+>> which also does this, see the lenovo_input_mapping_tp10_ultrabook_kbd()
+>> function in drivers/hid/hid-lenovo.c .
+>>
+>> If I have that right, then I think we should be able to get the
+>> Fn keys to work without too much trouble. You could try hacking up
+>> drivers/hid/hid-lenovo.c a bit:
+> 
+> (Not yet there, but will investigate.)
+> 
+>> 1. Add an entry to the lenovo_devices array like this:
+>>
+>> 	/*
+>> 	 * Note bind to the HID_GROUP_GENERIC group, so that we only bind to the keyboard part,
+>> 	 * while letting hid-multitouch.c handle the touchpad and trackpoint.
+>> 	 */
+>>         { HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>>                      USB_VENDOR_ID_LENOVO,
+>>                      USB_DEVICE_ID_LENOVO_X1_TAB),
+>>
+>> 2. Add the following entry to the switch-case in lenovo_input_mapping() :
+>>
+>>         case USB_DEVICE_ID_LENOVO_X1_TAB:
+>>                 return lenovo_input_mapping_tp10_ultrabook_kbd(hdev, hi, field,
+>>                                                                usage, bit, max);
+>>
+>> And then build hid-lenovo.c and modprobe it.
+>>
+>> After the modprobe to:
+>>
+>> ls -l /sys/bus/hid/devices/0003:17EF:60A3.*/driver
+>>
+>> This should show 2 devices (I guess) with one being bound to hid-lenovo
+>> and 1 being bound to hid-multitouch.
+> 
+> So far (without patching hid-lenovo), 2 bound to hid-generic and 1 to
+> hid-multitouch.
+
+Ok, so it seems that they kept the thinkpad 10 kbd bits (mostly) with
+1 keyboard interface using the usb boot kbd interface (so that it will
+also work inside the BIOS) and a second interface for multimedia-keys +
+the mouse emulation of the thinkpad 10 touchpad, those are interfaces
+1 and 2, except that they removed the mouse emulation as they added a
+new proper multi-touch capable touchpad as interface 3; and that one
+also handles the pointing stick I believe.
+
+So yes 2 bound to hid-generic, 1 bound to hid-multitouch seems to be
+correct.
+
+>> If this works some of your Fn + F# keys will now hopefully start doing
+>> something, you can play around with modifying lenovo_input_mapping_tp10_ultrabook_kbd
+>> to make it do the right thing for your kbd.
+>>z
+>> ###
+>>
+>> About LED support, just enabling the LED support bits for the
+>> USB_DEVICE_ID_LENOVO_TP10UBKBD handling for now might work fine,
+>> but there is a tiny chance that sending the wrong command somehow puts
+>> the kbd in firmware update mode, I had that happen once with a Logitech
+>> kbd which did not seem to have any kind of handshake / passcode to avoid
+>> accidental fw updates (*).
+>>
+>> If you can give me a dump of the hid-descriptors for your keyboard,
+>> then I can check if that the LEDs might work the same way too (or not).
+>>
+>> The easiest way to get a dump is to run the following command as root:
+>>
+>> cat /sys/kernel/debug/hid/0003:17EF:60A3.*/rdesc > rdesc
+>>
+>> And then attach rdesc to your next email.
+> 
+> Please find this one attached already now.
+> In case it helps, the * expands to 0057 0058 0059 on my system.
+
+Ok, so there still is an output-report number 9 on the second interface,
+which probably still controls the LEDS but its descriptors are subtly
+different. Although different in a good way I guess because the thinkpad
+10 dock descriptor describes the 2 bytes in the output report as being
+in the range of 0-1 which is not how they are actually used.
+
+So I think that the code for the Thinkpad 10 ultrabook keyboard as
+Lenovo calls it, should also work on the X1 tablet thin keyboard.
+
+I've prepared a set of patches which enable the tp10ubkbd code on
+the X1 tablet thin keyboard. But beware as mentioned before there is a
+tiny chance that sending the wrong command somehow puts the kbd in
+firmware update mode. I believe that trying the tp10ubkbd code is safe,
+esp. since this is using a 2 byte large output report and using that
+for fw-updating would be a bit weird. Still there is a small risk
+(there always is when poking hw) so I will leave it up to you if
+you are willing to try this.
+
+Here is how I test this (note you will need to adjust the paths a bit) :
+
+Toggle the 2 mute LEDs:
+
+[root@localhost ~]# echo 1 > /sys/class/leds/0003:17EF:6062.000E:amber:micmute/brightness
+[root@localhost ~]# echo 0 > /sys/class/leds/0003:17EF:6062.000E:amber:micmute/brightness
+[root@localhost ~]# echo 1 > /sys/class/leds/0003:17EF:6062.000E:amber:mute/brightness
+[root@localhost ~]# echo 0 > /sys/class/leds/0003:17EF:6062.000E:amber:mute/brightness
+
+Check Fnlock LED state (toggle on kbd by pressing Fn + Esc) :
+
+[root@localhost ~]# cat /sys/bus/hid/devices/0003:17EF:6062.000E/fn_lock
+1
+[root@localhost ~]# cat /sys/bus/hid/devices/0003:17EF:6062.000E/fn_lock
+0
+
+Change Fnlock state from within Linux:
+
+[root@localhost ~]# echo 1 > /sys/bus/hid/devices/0003:17EF:6062.000E/fn_lock
+[root@localhost ~]# echo 0 > /sys/bus/hid/devices/0003:17EF:6062.000E/fn_lock
+
+(The Led on the kbd should update; and the F## key behavior should change)
+
+Regards,
+
+Hans
 
 
-On 2/11/21 5:24 PM, Hans de Goede wrote:
-> Hi Alexander,
->=20
-> On 2/10/21 6:51 PM, Alexander Kobel wrote:
->> <snip>>> Works like a charm.
->> I realized that the device also emits 0x60c0 (TP_HKEY_EV_TABLET_CHANGE=
-D) when the keyboard cover is attached or detached, yet *not* when it's f=
-olded. I don't quite get why I nevertheless receive only one notification=
- to userspace according to acpi_listen, despite the fact that the 0x60c0 =
-handler also calls tpacpi_input_send_tabletsw and hotkey_tablet_mode_noti=
-fy_change. Is there a deduplication behind the scenes?
->=20
-> Yes the input subsystem layer will not send events when nothing has cha=
-nged.
-
-I see, thanks for the confirmation.
-
->> I also realized that intel_vbtn reports the change, too. Would it be i=
-n order to modify intel_vbtn in a next step and blacklist this device to =
-avoid duplicates?
->=20
-> Hmm, that is a bit of a problem I would prefer to avoid having to deny-=
-list things in intel_vbtn.
-
-Agreed.
-
-> So do the 2 behave exactly the same? Also wrt when the kbd is folded be=
-hind the kbd. IOW
-> are the 2 SW_TABLET_MODE reports fully in sync in all possible states:
->=20
-> 1. Just the tablet
-> 2. Tablet + keyboard attached, keyboard in use
-> 3. Tablet + keyboard attached, keyboard folded away behind tablet=20
->=20
-> ?
-
-They are in sync, at least as soon as the state changes and an event is e=
-mitted. The only functional difference seems to be that thinkpad_acpi off=
-ers the sysfs entry hotkey_tablet_mode to read the current state, that's =
-it.
-This is nice after bootup or for scripts started at random time without t=
-he chance of observing state changes. E.g., I'd like to have autorotation=
- triggered via the orientation sensor, but only if the device is in table=
-t mode; so my autorotation handler would read that sysfs entry as the fir=
-st thing. If there's no way to read the state, I have to resort to watchi=
-ng the state toggle and cache it for myself in userspace.
-But perhaps intel-vbtn offers a similar interface for that purpose that I=
- don't know?
-
-I can almost work around that by checking for the existence of the "PRIMA=
-X ThinkPad X1 Tablet Thin Keyboard Gen 2" input. But that's not a nice wo=
-rkaround, and it doesn't detect the folding away (input is still register=
-ed, although the firmware doesn't send key presses anymore).
-
-So, indeed the benefit of my patch is rather minor. If that means it shou=
-ld be discarded, that's fine for me (I learned a lot while writing and re=
-fining it, always nice). If someone can give me a hint on how to read int=
-el-vbtn state one-shot, even better, then it'd be mostly obsolete.
-
-What might be more interesting is the potential handling different attach=
-able devices, such as the portable dock (I guess this is the "Pico Cartri=
-dge", since it comes with another battery). For this one, I would actuall=
-y expect an SW_DOCK event, and via the GTOP queries, this could be detect=
-ed and distinguished from other attachment options. I assume intel-vbtn c=
-an't cover that case out-of-the-box.
-Unfortunately, I don't have such a dock (yet), so that's just guessing.
 
 
-Out of curiosity: is your ThinkPad 10 fully handled by intel-vbtn?
+--------------7B2B611B04312046DFE622D9
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-HID-lenovo-Fix-false-positive-errors-on-setting-tp10.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-HID-lenovo-Fix-false-positive-errors-on-setting-tp10.pa";
+ filename*1="tch"
+
+From 44311c907697180046648736dc82b34e8ab5beaf Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 11 Feb 2021 23:14:20 +0100
+Subject: [PATCH 1/5] HID: lenovo: Fix false positive errors on setting
+ tp10ubkbd LEDs
+
+Fix the error check in lenovo_led_set_tp10ubkbd(), on success
+hid_hw_raw_request() returns the number of bytes send. So we should
+check for (ret != 3) rather then for (ret != 0).
+
+Fixes: bc04b37ea0ec ("HID: lenovo: Add ThinkPad 10 Ultrabook Keyboard support")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/hid/hid-lenovo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index c6c8e20f3e8d..69d709439676 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -75,7 +75,7 @@ static void lenovo_led_set_tp10ubkbd(struct hid_device *hdev, u8 led_code,
+ 	data->led_report[2] = value ? TP10UBKBD_LED_ON : TP10UBKBD_LED_OFF;
+ 	ret = hid_hw_raw_request(hdev, data->led_report[0], data->led_report, 3,
+ 				 HID_OUTPUT_REPORT, HID_REQ_SET_REPORT);
+-	if (ret)
++	if (ret != 3)
+ 		hid_err(hdev, "Set LED output report error: %d\n", ret);
+ 
+ 	mutex_unlock(&data->led_report_mutex);
+-- 
+2.30.1
 
 
->> On the other hand, userspace should expect duplicate messages to some =
-degree and use a hysteresis approach anyway. Every now and then, the cont=
-act of the magnetic plug is not established perfectly on the first attemp=
-t. So perhaps not really an issue.
->=20
-> The only userspace consumer of this which I know is mutter (part of gno=
-me-shell) and it
-> will just take the value from the last event. So if the 2 are always in=
- sync then
-> the event send by the second input-dev will essentially be a no-op sinc=
-e the value will
-> be the same as the other event.
+--------------7B2B611B04312046DFE622D9
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0002-HID-lenovo-Check-hid_get_drvdata-returns-non-NULL-in.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0002-HID-lenovo-Check-hid_get_drvdata-returns-non-NULL-in.pa";
+ filename*1="tch"
 
-Well, naturally another consumer is the acpi framework, e.g., acpi_listen=
- or acpid. There, we have the possibility to install user-defined handler=
-s. The same holds for window manager handlers such as sway's bindswitch t=
-ablet:{on,off,toggle} or, I presume, xbindkeys.
+From c24649efa10189d49b87a19b6a999ccfa8987801 Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 11 Feb 2021 23:41:53 +0100
+Subject: [PATCH 2/5] HID: lenovo: Check hid_get_drvdata() returns non NULL in
+ lenovo_event()
 
-IMHO all reasonable handlers are idempotent, but users can be arbitrarily=
- crazy. As mentioned, even if events are emitted exactly once on the soft=
-ware side, non-idempotent behavior will still occasionally be buggy, beca=
-use the hardware connection is dodgy at times.
+The HID lenovo probe function only attaches drvdata to one of the
+USB interfaces, but lenovo_event() will get called for all USB interfaces
+to which hid-lenovo is bound.
 
-> We do need to resolve the question of how to handle this before I can m=
-erge the patch,
-> atm I think that just having it reported twice is fine (as long as both=
- reports are in
-> sync).
+This allows a malicious device to fake being a device handled by
+hid-lenovo, which generates events for which lenovo_event() has
+special handling (and thus dereferences hid_get_drvdata()) on another
+interface triggering a NULL pointer exception.
 
-They are in sync, that much I can confirm. But as mentioned, if you refra=
-in from integrating the patch, I'm fine with that.
-In that case, we should probably just add a dummy handler for HKEYs 0x401=
-2 and 0x4013 with comments towards intel-vbtn, to avoid the unknown HKEY =
-warning cluttering the system log.
+Add a check for hid_get_drvdata() returning NULL, avoiding this
+possible NULL pointer exception.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/hid/hid-lenovo.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index 69d709439676..8a040f6040eb 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -498,6 +498,9 @@ static int lenovo_event_cptkbd(struct hid_device *hdev,
+ static int lenovo_event(struct hid_device *hdev, struct hid_field *field,
+ 		struct hid_usage *usage, __s32 value)
+ {
++	if (!hid_get_drvdata(hdev))
++		return 0;
++
+ 	switch (hdev->product) {
+ 	case USB_DEVICE_ID_LENOVO_CUSBKBD:
+ 	case USB_DEVICE_ID_LENOVO_CBTKBD:
+-- 
+2.30.1
 
 
-Cheers,
-Alexander
+--------------7B2B611B04312046DFE622D9
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0003-HID-lenovo-Set-default_trigger-s-for-the-mute-and-mi.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0003-HID-lenovo-Set-default_trigger-s-for-the-mute-and-mi.pa";
+ filename*1="tch"
+
+From 0fde88dac366cca64fd38b4303b329adfec643ef Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 11 Feb 2021 23:21:39 +0100
+Subject: [PATCH 3/5] HID: lenovo: Set default_trigger-s for the mute and
+ micmute LEDs
+
+The mute and mic-mute LEDs should be automatically turned on/off based
+on the audio-cards mixer settings.
+
+Add the standardized default-trigger names for this, so that the alsa
+code can turn the LEDs on/off as appropriate (on supported audo cards).
+
+This brings the mute/mic-mute LED support inline with the thinkpad_acpi
+support for the same LEDs in keyboards directly connected to the
+laptop's embedded-controller.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/hid/hid-lenovo.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index 8a040f6040eb..c4cd4f69cdfd 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -824,6 +824,7 @@ static int lenovo_register_leds(struct hid_device *hdev)
+ 	snprintf(name_micm, name_sz, "%s:amber:micmute", dev_name(&hdev->dev));
+ 
+ 	data->led_mute.name = name_mute;
++	data->led_mute.default_trigger = "audio-mute";
+ 	data->led_mute.brightness_get = lenovo_led_brightness_get;
+ 	data->led_mute.brightness_set = lenovo_led_brightness_set;
+ 	data->led_mute.dev = &hdev->dev;
+@@ -832,6 +833,7 @@ static int lenovo_register_leds(struct hid_device *hdev)
+ 		return ret;
+ 
+ 	data->led_micmute.name = name_micm;
++	data->led_micmute.default_trigger = "audio-micmute";
+ 	data->led_micmute.brightness_get = lenovo_led_brightness_get;
+ 	data->led_micmute.brightness_set = lenovo_led_brightness_set;
+ 	data->led_micmute.dev = &hdev->dev;
+-- 
+2.30.1
 
 
-> Regards,
->=20
-> Hans
+--------------7B2B611B04312046DFE622D9
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0004-HID-lenovo-Rework-how-the-tp10ubkbd-code-decides-whi.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0004-HID-lenovo-Rework-how-the-tp10ubkbd-code-decides-whi.pa";
+ filename*1="tch"
+
+From 7f03da5567b810f1b3790674a0fb34db4866ceca Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 11 Feb 2021 23:10:27 +0100
+Subject: [PATCH 4/5] HID: lenovo: Rework how the tp10ubkbd code decides which
+ USB interface to use
+
+Instead of looking for a hdev with a type of HID_TYPE_USBMOUSE find
+the interface for the mute/mic-mute/fn-lock LEDs by checking for the
+output-report which is used to set them.
+
+This is a preparation patch for adding support for the LEDs on the
+X1 tablet thin keyboard which uses the same output-report, but has
+a separate (third) USB interface for the touchpad/mouse functionality.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/hid/hid-lenovo.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index c4cd4f69cdfd..33033b74b434 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -957,11 +957,24 @@ static const struct attribute_group lenovo_attr_group_tp10ubkbd = {
+ 
+ static int lenovo_probe_tp10ubkbd(struct hid_device *hdev)
+ {
++	struct hid_report_enum *rep_enum;
+ 	struct lenovo_drvdata *data;
++	struct hid_report *rep;
++	bool found;
+ 	int ret;
+ 
+-	/* All the custom action happens on the USBMOUSE device for USB */
+-	if (hdev->type != HID_TYPE_USBMOUSE)
++	/*
++	 * The LEDs and the Fn-lock functionality use output report 9,
++	 * with an application of 0xffa0001, add the LEDs on the interface
++	 * with this output report.
++	 */
++	found = false;
++	rep_enum = &hdev->report_enum[HID_OUTPUT_REPORT];
++	list_for_each_entry(rep, &rep_enum->report_list, list) {
++		if (rep->application == 0xffa00001)
++			found = true;
++	}
++	if (!found)
+ 		return 0;
+ 
+ 	data = devm_kzalloc(&hdev->dev, sizeof(*data), GFP_KERNEL);
+-- 
+2.30.1
 
 
---------------ms050106030802090101020805
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+--------------7B2B611B04312046DFE622D9
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0005-HID-lenovo-WIP-Add-support-for-Thinkpad-X1-Tablet-Th.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0005-HID-lenovo-WIP-Add-support-for-Thinkpad-X1-Tablet-Th.pa";
+ filename*1="tch"
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-Ew0wggY9MIIEJaADAgECAgg3B676YzbKKTANBgkqhkiG9w0BAQsFADBSMQswCQYDVQQGEwJE
-RTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxKjAoBgNVBAMMIVZvbGtzdmVyc2NobHVlc3Nl
-bHVuZyBSb290IENBIEcwMjAeFw0yMDA1MjYxMzIxNDFaFw0zMDA1MjUxMzIxNDFaMFUxCzAJ
-BgNVBAYTAkRFMRcwFQYDVQQKDA5GcmF1bmhvZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJz
-Y2hsdWVzc2VsdW5nIFByaXZhdGUgQ0EgRzAyMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIIC
-CgKCAgEAzW9OcLabPtfz9rbgtyyuNQCQkmI8cPW39VGsXLX1J9EIcUPvp1ysi6kuqMfw+YOC
-LjxopSIhpjhH/p84LzmcBJElRPkzWHJreZry+Lu5SDhOcOH49fNEo7UeYE0wkSJNv+jLMWwU
-H93dPaSNeRN/5/Peq6tcKTx0FflS2ZScP9OcPvXgp1c/bXYoRyiOGSVR8/+7qlwNuku2px6f
-0c6XOKOwkyTeSghmQ8vdfeqcMd9fNUhn/ijWFHahr0LUGB9We6SoxklOz9gfgSCjhInt+4qy
-N6bHl/utH/vj1qnuhkaP25h1eCbz2WKqv0wKWwa/r4F0ItLYYP2YhwICTNLDDT8GmctRdt2S
-yLmgXo9Gz0nrwrYuGMWcXNLm682Fgg3wQne0DTszFFUU8PrVOtgzB5Qm6DPrRSUHXQEfT7DY
-ZzDA+FmSoTSiCe+aoNPbglta4gDar0B/gni15LtCzW4tNhk3fXkYxEWpbq32vNy3wCDOQazc
-vxzko5Ior1iDZJNuzurtp5qRjAnOcUiKhNUJeBnmLDB/Di9XZHIQCD0EjiZzef0OR4+ZbPPM
-xl6n9KHdrZ2c8r3yjGJtGkeMc0aMkBpvYNDy/s4fYnE5MRIOWdmMnq23/DvCpsQtF5UWZlF9
-MaKVcjXmtGpnhpe0XOkFXvxd9PSM0Oe4uei+buhbF7ECAwEAAaOCARIwggEOMBIGA1UdEwEB
-/wQIMAYBAf8CAQAwHwYDVR0jBBgwFoAUPnwBB805qJCxODW0j7v1rBeEocAwTQYIKwYBBQUH
-AQEEQTA/MD0GCCsGAQUFBzAChjFodHRwOi8vdm9sa3N2ZXJzY2hsdWVzc2VsdW5nLmRlL2Nh
-L3Jvb3RjYV9nMDIuY3J0MBQGA1UdIAQNMAswCQYHKyQPCQMBATBDBgNVHR8EPDA6MDigNqA0
-hjJodHRwOi8vdm9sa3N2ZXJzY2hsdWVzc2VsdW5nLmRlL2NybC9yb290Y2FfZzAyLmNybDAd
-BgNVHQ4EFgQUBNGCAAc5XwIAgrw4HtCXwN3HOwMwDgYDVR0PAQH/BAQDAgEGMA0GCSqGSIb3
-DQEBCwUAA4ICAQAPsI1fETAPUfq7LoI2FxRDylRduC/nVhVca7ORxhZXrFmksT/q1jHU4eXK
-IhcVms623/FHhcVHl1qB5G/cgU2OtjEP5/BXIRu4I78EZIhb8U3ZGe9gZql/RSOBD08lhmzv
-fRz+nwE2Pl9stzXKohjGRWyfFfuaWKLXUZzCK/wYX6IqhTxjkoEFSgejoO41B886rrm3+aaO
-5Db5EBW4gYWF9VCV3bmedmTJzbvOOYDxaVT1+O8E9Ym5BZL+qJNjgdjJXE1TUGyUg6ZweNHT
-dse6xTc9KhfnAyppkMUu9AKT6jkloA6l0/T3zEMKhvtf9gLYWJ0zMwm1JfQk5mVMZtQoOPYI
-Wj7IVUKPZJMizHoaAAIzi7C0w3XpN3xMDJOs5eRsRPk0qF8UulshIUA/6idOrg7eUY4WZGN1
-RZsFYyhBg1sPaeFyFAUs0XJUrWLOKO5f9VZGbmEF6gqbTxdwMCJZzonwpUxVwxKLMa+Z4EMG
-QoY1rLNPCRZlzhW+TRBsuy4tGN21PlhvcvEnxs8eHvqlwfM/KwYtXhLG8881KMMSzemRvX/c
-pNCU2YlHpAwpdm6cAn60leS0WPfTb6QAqmtQTij6uAfFN46hQDLqpfTWnoPSMvbeyFwqP6Fv
-V6RgquAIpe9p5daLY9M+Krkd7mH8QR2PN615TboR0ocoF4REdTCCBlwwggREoAMCAQICCBUM
-N0NLozG+MA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAkRFMRcwFQYDVQQKDA5GcmF1bmhv
-ZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJzY2hsdWVzc2VsdW5nIFByaXZhdGUgQ0EgRzAy
-MB4XDTIwMTAxMTE2NTIzN1oXDTIzMTAxMDE2NTIzN1owgYkxGDAWBgNVBAMMD0FMRVhBTkRF
-UiBLT0JFTDEOMAwGA1UEBAwFS09CRUwxEjAQBgNVBCoMCUFMRVhBTkRFUjFJMEcGA1UEBRNA
-RDQwMDNFMTc4OTlGMTQzMTI2ODExMzM0OUY1N0M1QzU0NEQ5RjcwNDVCQTkyMEJEMzdDQURB
-NTQzOEFGQ0EzODCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAM9yNVKr/cuT0WnJ
-PLe7kmfd5Wo7rlb1F+harCy3OLgaTqkMI6j37OTXMAmdkZ0y7zrlhbEGCEpODaDPYwVSEb+s
-Cv05n3SAMCdy9kQlnqP9We7C/2mbnuKYhpO5P6mUVdPoM+tfTM22YH7CzO8sa1Tq1s/DrIZs
-NhXDRvWZEdDwUCjLPKVXGtTqHbUjs7OufxpbyzA7xHE5N7qRff1WrOuq/RS1OvGZVcUjLAmI
-loYCvYm1Q3oBYuSZygOsawjmJQ14fh7dKkOjogx6byElWAVBkUQxud8CtBHW+L4VY35uinRJ
-k81mwI8ac0zS5FEbYWoF9Gi5pWbCgoIvGXIMcPEQqu8mVBpN/CAMUOUlIkOPDvFqfiQ9TI2C
-xnNih8csWwVInRS7m8itJrnlbVfDwdHMJhPT522gCDOC6lXaRUizwGqRh/26W1dJqA2SYmEn
-EMH/TcP3eyiFLN5QDXm2odnh+rbvQbwEtlPxup24HGe8RqWFdiCOW1syM+V74lUn5wIDAQAB
-o4IBeTCCAXUwHQYDVR0RBBYwFIESYS1rb2JlbEBhLWtvYmVsLmRlMA4GA1UdDwEB/wQEAwIG
-wDATBgNVHSUEDDAKBggrBgEFBQcDBDAMBgNVHRMBAf8EAjAAMB8GA1UdIwQYMBaAFATRggAH
-OV8CAIK8OB7Ql8DdxzsDMIGCBggrBgEFBQcBAQR2MHQwQAYIKwYBBQUHMAKGNGh0dHA6Ly92
-b2xrc3ZlcnNjaGx1ZXNzZWx1bmcuZGUvY2EvcHJpdmF0ZWNhX2cwMi5jcnQwMAYIKwYBBQUH
-MAGGJGh0dHA6Ly9vY3NwLnZvbGtzdmVyc2NobHVlc3NlbHVuZy5kZTAUBgNVHSAEDTALMAkG
-ByskDwkDAQEwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL3ZvbGtzdmVyc2NobHVlc3NlbHVu
-Zy5kZS9jcmwvcHJpdmF0ZWNhX2cwMi5jcmwwHQYDVR0OBBYEFDadSlBdeaipQdbmS4vn439F
-6fkNMA0GCSqGSIb3DQEBCwUAA4ICAQBUhcmTTecspwaSgUUlrG/gUPzDLM/Ty0Jpz4GvRbRn
-kJxHlHAopkk8P1SXlnOy2kfC5LgFCRB9tJqSlXmIXwphm90fZKRGZU2dBgxGkDQppXGH6PjJ
-P52QAhvpztJDPEqfqkzcpKdkYuFg+KEzqZmsu8Mvy4rqCTRIAtOX5zHVFEIarp7YUMNhzGxg
-eQakmDjykC1Xksx/ULsX7r5QW5Fqp1ZL5obNmA2emJgn0VrKRIYY8vqnOwUi13G/lDa+fphz
-PMhpIKOKQ9Wy0Wn8mBdSdIqmt2L58Pu14ygwOkK3vnb/QKqayhwme2uf4waXG5or3wZdSr39
-SvvGZT8Z6cHw6n7Jw0+gRApkB1cUO7j1T/aHCBcZPJ5i6bBoGrT5E8IHIqj+oZXUCY7jxknL
-aHaiOARg8fFkf8lp3uy7ay4WcDIorPa9ugNaCP3SnYvtKvk44ulgMIjhvkG1Mga/70SA9Evq
-3cFUle3jaaEYujSxLnN8LVm39dR93QCqcdkIayPA9LT6vizlGoA6BdOMWDzKWWnoelYTb+Ip
-iqpafot50MCUqf1e2T0z8Ygki1LLOxlpi/DWQApb/Qq9EomeEYMKm0aJc7166pLiWsk1fWOX
-kwBa3phG+CbbUxqotGP++r39Dk8Diny+lYjkRXpoqggzF9g9uxARXBIw0H+G6XbgCzCCBmgw
-ggRQoAMCAQICCGRFBiAAmYjgMA0GCSqGSIb3DQEBCwUAMFUxCzAJBgNVBAYTAkRFMRcwFQYD
-VQQKDA5GcmF1bmhvZmVyIFNJVDEtMCsGA1UEAwwkVm9sa3N2ZXJzY2hsdWVzc2VsdW5nIFBy
-aXZhdGUgQ0EgRzAyMB4XDTIwMTAxMTE2NTIyM1oXDTIzMTAxMDE2NTIyM1owgYkxGDAWBgNV
-BAMMD0FMRVhBTkRFUiBLT0JFTDEOMAwGA1UEBAwFS09CRUwxEjAQBgNVBCoMCUFMRVhBTkRF
-UjFJMEcGA1UEBRNARDQwMDNFMTc4OTlGMTQzMTI2ODExMzM0OUY1N0M1QzU0NEQ5RjcwNDVC
-QTkyMEJEMzdDQURBNTQzOEFGQ0EzODCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGB
-AIHe4er7YlQrv+fgKBYbb2FSJLtzoB9s4ZhYgIfQuR1x9+WJvj9EMne5rsHB+OJ5bwZQ1Fnh
-qhJhtepikZhLDRVfRbzRdrOSzxnkePhH/SZ9VhtN6327PuSAwxe/te/DPDo6aWZj3d7RoioE
-UgkyF5gNWYu082LeSHbvNpDcHUN2Rs7XgZi5uBUnHR1btXA7BOzUMfPhEIqwuCDKLZAGCc0q
-2JKhKeOIOsoZ8lP2/HfW3Az1ij6xztb/HfoZnyZMpQC1ly7VgJU5rTLRJz39kscZSBcnxRqP
-8cE9rrlPZOgRPK2NR4x+30Sr9sOtnbRYldKWT4uCtqrPrnxNKiDkv3P2h1yKYbCamlqwaoJW
-cjrphzLycSGHitalla/f82xHSN+7gJHGp91WYIn+c6jPLcx0wmKUJBB1TIEaeh4izkqLwB0P
-1HUBHo50OdmTnRGdnvNt/+Xsc9KetVnmJM2bqXXDlgYMfsULoe6Y0AVemQFvd1V49GePGpGT
-NGMe5jf7NwIDAQABo4IBhTCCAYEwHQYDVR0RBBYwFIESYS1rb2JlbEBhLWtvYmVsLmRlMA4G
-A1UdDwEB/wQEAwIEMDAfBgNVHSUEGDAWBgorBgEEAYI3CgMEBggrBgEFBQcDBDAMBgNVHRMB
-Af8EAjAAMB8GA1UdIwQYMBaAFATRggAHOV8CAIK8OB7Ql8DdxzsDMIGCBggrBgEFBQcBAQR2
-MHQwQAYIKwYBBQUHMAKGNGh0dHA6Ly92b2xrc3ZlcnNjaGx1ZXNzZWx1bmcuZGUvY2EvcHJp
-dmF0ZWNhX2cwMi5jcnQwMAYIKwYBBQUHMAGGJGh0dHA6Ly9vY3NwLnZvbGtzdmVyc2NobHVl
-c3NlbHVuZy5kZTAUBgNVHSAEDTALMAkGByskDwkDAQEwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0
-cDovL3ZvbGtzdmVyc2NobHVlc3NlbHVuZy5kZS9jcmwvcHJpdmF0ZWNhX2cwMi5jcmwwHQYD
-VR0OBBYEFJiKTcJJSCtBVQS6oS4OSO8QKEWBMA0GCSqGSIb3DQEBCwUAA4ICAQBfdnVpzlnO
-JupsJfdYW9xyt3lSky85oA1qPichmW6UjrnIZdunQPJrCTTM+7wUqeqwlhbRmwUKgAPH/5fc
-cOnyMulgbvc50VV+mBK4ph/1/fhom7zJYEfvKEpPWg5tGx3/Mp6YIVvuhRnZ7vmodMGXgj/f
-1D7yHFJib/430e6pcD76DPaAFA1cVVp5FUP+b0fBzvgYjsgSwL2GTXXaNGEaLqBuhtmInBh/
-y4X2ZEz8kw6B2P0GpQ8jg+5I1tNM6vf/KH2FxDj/ykmSsgtyrQAddEjrNQbaQAzXTtHAPui/
-6/wbgYfLp05aH7PsLsKGdDS9yb8UaWfWgwFuFz3dLXSdI3YYhXB2QnASX5RV3ndnu9vwGmns
-c6iu4C9+h0hFdcWMIEso5K/mV/kXO31xzw7JLU2y5Nk7XEgrXwqFuX4ZruqCfw3EXP1hYnmt
-OtfAaSLzTdBS0GskGGnWAs12dJrL8FysZbtX5cgWMyT1nun8ksvSodVgQ+7BA5YHTwfHussP
-nPBDabaHmlOUVBi3IYZvoJ90XwuuMvVqcYeEzvuGDrssZHY2pG9DqTeXfzmUdpTfMy7zwu5K
-jBPKilDLTXJkrA5wlQpSihjSQG/UPLP+YDsrEuwwBC1DbcSn5KOyMXFpfxsoSegFzb0lxPRc
-6sScLr/v96FwvwWpL54Fp9dr0TGCA80wggPJAgEBMGEwVTELMAkGA1UEBhMCREUxFzAVBgNV
-BAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRWb2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJp
-dmF0ZSBDQSBHMDICCBUMN0NLozG+MA0GCWCGSAFlAwQCAQUAoIIBvTAYBgkqhkiG9w0BCQMx
-CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMTEyMzA3MDZaMC8GCSqGSIb3DQEJ
-BDEiBCAIso1P+UetDEgec00Hr+ysStRgwv6JdhM44sBnopa16zBsBgkqhkiG9w0BCQ8xXzBd
-MAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
-MA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMHAGCSsGAQQBgjcQBDFj
-MGEwVTELMAkGA1UEBhMCREUxFzAVBgNVBAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRW
-b2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJpdmF0ZSBDQSBHMDICCGRFBiAAmYjgMHIGCyqGSIb3
-DQEJEAILMWOgYTBVMQswCQYDVQQGEwJERTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxLTAr
-BgNVBAMMJFZvbGtzdmVyc2NobHVlc3NlbHVuZyBQcml2YXRlIENBIEcwMgIIZEUGIACZiOAw
-DQYJKoZIhvcNAQEBBQAEggGAk+Gw1odjCu9aSTJSUYS8LhpnI77eUW6ve424Pl0Zg1lczY+D
-NaCguZlOmF6ylKyhRuLM88MJu1PsL7jXITNxRUOCLEylBxGE4X0uURnKPCtnisY4UMm/pAg5
-T+sxQaMyPsQJPDTzlo3MzF+b1L+8iruqqqIRssCDTdqeTtqc+Go0E7fqMma/vkAPA2v8kVwz
-uzPoeoaB8hTohVP1FuCQtqostoBL3VMw8aXbmS8UcRqdpWEQJYmYBHZgfnc8TIbukP2yGrrw
-sZn7R6FrVwgvPBKcuEZinC9fFgfbkU3aDOotlYi9+YlajgCPuw65IyJO1bOJ3Ig475jFzNeb
-bnz5V0LxZzLNDB3iphirwrP8w681fF111xdGWXoGVjqp9S43sqP81iEyx+VBGpT4LxvUlg3s
-Rbm1CJJOPknpbTIXMuG4RIUpCpnPjnYaBCxWtJjYzNLQMOqAhLIn2616oNg+o1kf/LgRhjhc
-vVpk/YEt3cQ0JBn0zclshhnFYPOEfN8JAAAAAAAA
---------------ms050106030802090101020805--
+From 44a8670e26c6cb57c03c26d0476f813a2856434f Mon Sep 17 00:00:00 2001
+From: Hans de Goede <hdegoede@redhat.com>
+Date: Thu, 11 Feb 2021 23:40:11 +0100
+Subject: [PATCH 5/5] HID: lenovo: WIP: Add support for Thinkpad X1 Tablet Thin
+ keyboard
+
+WIP: untested and the key mappings in lenovo_input_mapping_x1_tab_kbd()
+need work.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/hid/hid-lenovo.c | 46 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
+index 33033b74b434..9a628e7a2382 100644
+--- a/drivers/hid/hid-lenovo.c
++++ b/drivers/hid/hid-lenovo.c
+@@ -255,6 +255,39 @@ static int lenovo_input_mapping_tp10_ultrabook_kbd(struct hid_device *hdev,
+ 	return 0;
+ }
+ 
++static int lenovo_input_mapping_x1_tab_kbd(struct hid_device *hdev,
++		struct hid_input *hi, struct hid_field *field,
++		struct hid_usage *usage, unsigned long **bit, int *max)
++{
++	/*
++	 * The ThinkPad X1 Tablet Thin Keyboard uses 0x000c0001 usage for
++	 * a bunch of keys which have no standard consumer page code.
++	 */
++	// FIXME the below mappings are taken for the tp10_ultrabook_kbd mapping function
++	// these may very well need to be changed for the X1 Tablet Thin Keyboard
++	if (usage->hid == 0x000c0001) {
++		switch (usage->usage_index) {
++		case 8: /* Fn-Esc: Fn-lock toggle */
++			map_key_clear(KEY_FN_ESC);
++			return 1;
++		case 9: /* Fn-F4: Mic mute */
++			map_key_clear(KEY_MICMUTE);
++			return 1;
++		case 10: /* Fn-F7: Control panel */
++			map_key_clear(KEY_CONFIG);
++			return 1;
++		case 11: /* Fn-F8: Search (magnifier glass) */
++			map_key_clear(KEY_SEARCH);
++			return 1;
++		case 12: /* Fn-F10: Open My computer (6 boxes) */
++			map_key_clear(KEY_FILE);
++			return 1;
++		}
++	}
++
++	return 0;
++}
++
+ static int lenovo_input_mapping(struct hid_device *hdev,
+ 		struct hid_input *hi, struct hid_field *field,
+ 		struct hid_usage *usage, unsigned long **bit, int *max)
+@@ -278,6 +311,8 @@ static int lenovo_input_mapping(struct hid_device *hdev,
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
+ 		return lenovo_input_mapping_tp10_ultrabook_kbd(hdev, hi, field,
+ 							       usage, bit, max);
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
++		return lenovo_input_mapping_x1_tab_kbd(hdev, hi, field, usage, bit, max);
+ 	default:
+ 		return 0;
+ 	}
+@@ -364,6 +399,7 @@ static ssize_t attr_fn_lock_store(struct device *dev,
+ 		lenovo_features_set_cptkbd(hdev);
+ 		break;
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
+ 		lenovo_led_set_tp10ubkbd(hdev, TP10UBKBD_FN_LOCK_LED, value);
+ 		break;
+ 	}
+@@ -506,6 +542,7 @@ static int lenovo_event(struct hid_device *hdev, struct hid_field *field,
+ 	case USB_DEVICE_ID_LENOVO_CBTKBD:
+ 		return lenovo_event_cptkbd(hdev, field, usage, value);
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
+ 		return lenovo_event_tp10ubkbd(hdev, field, usage, value);
+ 	default:
+ 		return 0;
+@@ -802,6 +839,7 @@ static void lenovo_led_brightness_set(struct led_classdev *led_cdev,
+ 		lenovo_led_set_tpkbd(hdev);
+ 		break;
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
+ 		lenovo_led_set_tp10ubkbd(hdev, tp10ubkbd_led[led_nr], value);
+ 		break;
+ 	}
+@@ -1036,6 +1074,7 @@ static int lenovo_probe(struct hid_device *hdev,
+ 		ret = lenovo_probe_cptkbd(hdev);
+ 		break;
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
+ 		ret = lenovo_probe_tp10ubkbd(hdev);
+ 		break;
+ 	default:
+@@ -1101,6 +1140,7 @@ static void lenovo_remove(struct hid_device *hdev)
+ 		lenovo_remove_cptkbd(hdev);
+ 		break;
+ 	case USB_DEVICE_ID_LENOVO_TP10UBKBD:
++	case USB_DEVICE_ID_LENOVO_X1_TAB:
+ 		lenovo_remove_tp10ubkbd(hdev);
+ 		break;
+ 	}
+@@ -1140,6 +1180,12 @@ static const struct hid_device_id lenovo_devices[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_IBM, USB_DEVICE_ID_IBM_SCROLLPOINT_800DPI_OPTICAL_PRO) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_SCROLLPOINT_OPTICAL) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_TP10UBKBD) },
++	/*
++	 * Note bind to the HID_GROUP_GENERIC group, so that we only bind to the keyboard
++	 * part, while letting hid-multitouch.c handle the touchpad and trackpoint.
++	 */
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_X1_TAB) },
+ 	{ }
+ };
+ 
+-- 
+2.30.1
+
+
+--------------7B2B611B04312046DFE622D9--
+
