@@ -2,160 +2,370 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804B2C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 16:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29258C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 16:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4620464E92
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 16:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF49464EA1
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 16:35:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231603AbhBKQ2n (ORCPT
+        id S231861AbhBKQfH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 11:28:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46906 "EHLO
+        Thu, 11 Feb 2021 11:35:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51960 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231912AbhBKQ03 (ORCPT
+        by vger.kernel.org with ESMTP id S231666AbhBKQdF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 11:26:29 -0500
+        Thu, 11 Feb 2021 11:33:05 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613060702;
+        s=mimecast20190719; t=1613061095;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vebezmOkv8hZ8zX7JolpKS2EQqSZ4415FxCXyRy+wiM=;
-        b=bB/KQ0pNA4SJBtywFouftO+FJLVUW8ecdyTs3dX30enb/AvJmaKSBKOliAqtq3gI6cY3H7
-        doFhXh6ZYXk253CgRn4ihkGWzQ4r67FjdR8580DFW8Vgx0Wc5N0sWjfKNJHaj8ZjSuMcWM
-        v15lbhvr/z+BzC//75cXLCf3gGaIAdk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-537-AK7f44ZmPjKVcPzOA07WbA-1; Thu, 11 Feb 2021 11:25:00 -0500
-X-MC-Unique: AK7f44ZmPjKVcPzOA07WbA-1
-Received: by mail-ej1-f69.google.com with SMTP id eb5so5053921ejc.6
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Feb 2021 08:24:59 -0800 (PST)
+        bh=iP5q6udBlsMETC0T2b60y2uG3jRJ8nKqlZ7qnhq4LCY=;
+        b=btMRzSJjJaycuABRXSr67rRrIqfeTXZIztYDhh2ANeC0ZoFKX7wxRQy7aS0UMxB6DveDP+
+        x/+TkMGvacPU2+82tNujsTxn9ZsU44nrCWdLXVto4DGc91rnXjRs4BurwYn/7Yt1mqT9SN
+        RDz1Moxhxn6NXVFSZqY5Mz/GpY4/vhI=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-e5AdJZ8dMK20WUan7-pWMg-1; Thu, 11 Feb 2021 11:31:28 -0500
+X-MC-Unique: e5AdJZ8dMK20WUan7-pWMg-1
+Received: by mail-ej1-f72.google.com with SMTP id yd11so4983455ejb.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Feb 2021 08:31:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vebezmOkv8hZ8zX7JolpKS2EQqSZ4415FxCXyRy+wiM=;
-        b=KwW/xWC89SNdE0CiOJ8SqrvyiWTlswMc7YkenvFIxnnFBq+qP9z9E4K8wU5RWCXsWg
-         UjjF3OMRNkusXWDrKf8ygCx7WH00emLrw1hTcpA4OWegSEADayj3E15vI0Bx7xqvcGDq
-         Lm/7BiSi7BfDckZSLNvTAKOII5zPXLwYVhPagxtmdyAiJh86Nw6jD294wdmCd5g8Pvkf
-         evhqr89m0I9TCVEBlwphELcU+616yEK0QpzTMJKvgLfc85zyOqbjiA+bXrVkuN20YBx4
-         l2K/rzBxFTW8JQC7UyWsy0+OuqOpPuW8D7pU/9mamg8uQI0oDURUbMZt+2SeDUiGoprb
-         xZHw==
-X-Gm-Message-State: AOAM533rqm1sAPaknc3MuxV/aPw+JYnm/IAYmNx/mJee/Dv0NiCUSyg+
-        /YOqATi6DDKtqc1vFeco6jpDRrQ99LlsgHUo232n+hQ14x69Pdff7OAqk/mayn/08Q8AZeD0ysh
-        gfBQDILkymKF7U4+l9fA3fMwqzUA8Oro1hQ==
-X-Received: by 2002:a17:907:7347:: with SMTP id dq7mr9433403ejc.385.1613060698700;
-        Thu, 11 Feb 2021 08:24:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyHJ3RZ256+iCLM+P8vYMFjuAm/I6qwusSSTUKQUfjoDaEX4X4VyWRWIBbbv9VgN2B/Nkqvnw==
-X-Received: by 2002:a17:907:7347:: with SMTP id dq7mr9433385ejc.385.1613060698464;
-        Thu, 11 Feb 2021 08:24:58 -0800 (PST)
+        bh=iP5q6udBlsMETC0T2b60y2uG3jRJ8nKqlZ7qnhq4LCY=;
+        b=oiPfEjgzWBJ12XYdbD7jqqpx6YLOTPtb8wjzHU8svWCRYF8pjRiiPOhW+m4KNenfYA
+         Zg8J5/GxNAu351mYBhW6Ks4PqttVByCm5G6jS+MpLTJNSRJ+vTShCGd6JC4nrb1StBV3
+         PZK7Dys90vntaW+ZS7bwY6sH6pGUC2pdidKtFs/lfQ96rgdS7AteLwFWDKxBxwyP2i4x
+         KBqCJKihaGPq09gcB1c+zlPe+ytg0LYzrCI0QHEKO3C6laV5NmWMhsZfrQBVOuUm86Ut
+         GftrmHHBNdWjY0uktgWpC3LQRM0aYyMUV2P7fJclZMf+/a64t4myLzlrinj8LiuEaCnA
+         8yjQ==
+X-Gm-Message-State: AOAM530l8qa1rGAsY1LrNeGFspbG0tNdX8vH1OttZeYyiB5xkM5v+2XJ
+        WPI3grNjaZS30lY95rT4g7EGTb6Nprc67vbN2a0WRVy6OO6QEetpqGkHu0dYsakdrts523eCEUw
+        OcfPQEtmI9Nkgm0KhCu3Z214b+RhzHKGnXQ==
+X-Received: by 2002:a17:906:118f:: with SMTP id n15mr9290287eja.497.1613061086934;
+        Thu, 11 Feb 2021 08:31:26 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw5gcH5Lk3sWtHvZqq96et1lNZojJDjR1q+yFUumAG56r1PdTxqGY7QbJYIZANvs2MwE3x1PA==
+X-Received: by 2002:a17:906:118f:: with SMTP id n15mr9290248eja.497.1613061086573;
+        Thu, 11 Feb 2021 08:31:26 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id ze12sm4883200ejb.18.2021.02.11.08.24.57
+        by smtp.gmail.com with ESMTPSA id f20sm4478226edd.47.2021.02.11.08.31.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Feb 2021 08:24:57 -0800 (PST)
-Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY
- 0x4012, 0x4013 events
-To:     Alexander Kobel <a-kobel@a-kobel.de>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <mpearson@lenovo.com>
-References: <53abdd94-8df4-cc1c-84e9-221face6b07c@a-kobel.de>
- <9d133a27-751a-a436-d255-3dd4a7d411d8@redhat.com>
- <TY2PR03MB3645D33506D85E1EECD6DABA8C8F9@TY2PR03MB3645.apcprd03.prod.outlook.com>
- <0e85bd26-bf2f-734c-1334-15ad591ec811@redhat.com>
- <499bd1fb-159b-53b0-173e-90167a2d23fa@a-kobel.de>
+        Thu, 11 Feb 2021 08:31:26 -0800 (PST)
+Subject: Re: [PATCH] platform/surface: Add platform profile driver
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210208194903.3039142-1-luzmaximilian@gmail.com>
+ <cc9d27aa-955d-1cd1-19b8-9b18bdc6b8a2@redhat.com>
+ <c485a731-4378-239f-95e7-3b588f13cb66@gmail.com>
+ <dfc90822-d13e-cfc9-af99-0f7b78d2a286@redhat.com>
+ <caa365e1-b371-fdcb-f947-2cdb34d5bcf8@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7f40435e-4287-fc67-55d1-52ee41efcbf0@redhat.com>
-Date:   Thu, 11 Feb 2021 17:24:57 +0100
+Message-ID: <966e2e3d-d3df-747c-069a-71c5552d1594@redhat.com>
+Date:   Thu, 11 Feb 2021 17:31:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <499bd1fb-159b-53b0-173e-90167a2d23fa@a-kobel.de>
+In-Reply-To: <caa365e1-b371-fdcb-f947-2cdb34d5bcf8@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Alexander,
+Hi,
 
-On 2/10/21 6:51 PM, Alexander Kobel wrote:
-> Hi Hans, Nitin,
+On 2/11/21 5:17 PM, Maximilian Luz wrote:
 > 
-> thanks a lot for your help.
 > 
-> On 2/8/21 10:04 AM, Hans de Goede wrote:
+> On 2/11/21 4:56 PM, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 2/8/21 10:38 PM, Maximilian Luz wrote:
+>>>
+>>>
+>>> On 2/8/21 9:27 PM, Hans de Goede wrote:
+>>
 >> <snip>
->> Alexander, so it looks like we need to do the following to support this properly:
+>>
+>>>>> +static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
+>>>>> +{
+>>>>> +    switch (p) {
+>>>>> +    case SSAM_TMP_PROFILE_NORMAL:
+>>>>> +        return PLATFORM_PROFILE_QUIET;
+>>>>> +
+>>>>> +    case SSAM_TMP_PROFILE_BATTERY_SAVER:
+>>>>> +        return PLATFORM_PROFILE_LOW_POWER;
+>>>>> +
+>>>>> +    case SSAM_TMP_PROFILE_BETTER_PERFORMANCE:
+>>>>> +        return PLATFORM_PROFILE_BALANCED;
+>>>>> +
+>>>>> +    case SSAM_TMP_PROFILE_BEST_PERFORMANCE:
+>>>>> +        return PLATFORM_PROFILE_PERFORMANCE;
+>>>>> +
+>>>>> +    default:
+>>>>> +        dev_err(&sdev->dev, "invalid performance profile: %d", p);
+>>>>> +        return -EINVAL;
+>>>>> +    }
+>>>>> +}
+>>>>
+>>>> I'm not sure about the mapping which you have chosen here. I know that at least for
+>>>> gnome there are plans to make this stuff available in the UI:
+>>>>
+>>>> https://gitlab.gnome.org/Teams/Design/settings-mockups/-/blob/master/power/power.png
+>>>> http://www.hadess.net/2020/09/power-profiles-daemon-new-project.html
+>>>
+>>> Thanks for those links!
+>>>  
+>>>> Notice there are only 3 levels in the UI, which will primarily be mapped to:
+>>>>
+>>>> PLATFORM_PROFILE_LOW_POWER
+>>>> PLATFORM_PROFILE_BALANCED
+>>>> PLATFORM_PROFILE_PERFORMANCE
+>>>>
+>>>> (with fallbacks to say QUIET for LOW_POWER of there is no LOW_POWER, but that
+>>>> mostly is something for userspace to worry about).
+>>>
+>>> Interesting, I wasn't aware of that. I was aware of Bastien's work
+>>> towards implementing user-space support for this but I hadn't yet looked
+>>> at it in detail (e.g. the "fallback to quiet" is new to me).
+>>
+>> Note that the fallback stuff would not apply here, since you do provide
+>> all 3 of low-power, balanced and performance. But the current way gnome
+>> will handle this means that it will be impossible to select "normal" from
+>> the GNOME ui which feels wrong.
+>>
+>>>> And the power-profile-daemon will likely restore the last used setting on boot,
+>>>> meaning with your mapping that it will always switch the profile away from
+>>>> SSAM_TMP_PROFILE_NORMAL, which I assume is the default profile picked at boot ?
+>>>
+>>> Pretty much, yeah. AFAICT booting doesn't reset it, but hard-resetting
+>>> the EC does. Same difference though.
+>>>  
+>>>> So ideally we would map PLATFORM_PROFILE_BALANCED (which will be the default
+>>>> GNOME / power-profile-daemon setting) to SSAM_TMP_PROFILE_NORMAL.
+>>>>
+>>>> I know the ABI docs say that drivers should try to use existing values, but
+>>>> this seems like a good case to add a new value or 2 to the PLATFORM_PROFILE enum.
+>>>>
+>>>> During the discussion the following 2 options were given because some devices
+>>>> may have more then one balanced profile:
+>>>>
+>>>> PLATFORM_PROFILE_BALANCED_LOW_POWER:
+>>>>
+>>>>                   balanced-low-power:     Balances between low power consumption
+>>>>                                           and performance with a slight bias
+>>>>                                           towards low power
+>>>>
+>>>> PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+>>>>
+>>>>                   balanced-performance:   Balances between performance and low
+>>>>                                           power consumption with a slight bias
+>>>>                                           towards performance
+>>>>
+>>>> I think it would be better to add 1 or both of these, if we add both
+>>>> we could e.g. do the following mappings:
+>>>>
+>>>> SSAM_TMP_PROFILE_BATTERY_SAVER      ->  PLATFORM_PROFILE_LOW_POWER
+>>>> SSAM_TMP_PROFILE_NORMAL             ->  PLATFORM_PROFILE_BALANCED_LOW_POWER
+>>>> SSAM_TMP_PROFILE_BETTER_PERFORMANCE ->  PLATFORM_PROFILE_BALANCED_PERFORMANCE
+>>>> SSAM_TMP_PROFILE_BEST_PERFORMANCE   ->  PLATFORM_PROFILE_PERFORMANCE
+>>>>
+>>>> or we could do:
+>>>>
+>>>> SSAM_TMP_PROFILE_BATTERY_SAVER      ->  PLATFORM_PROFILE_LOW_POWER
+>>>> SSAM_TMP_PROFILE_NORMAL             ->  PLATFORM_PROFILE_BALANCED
+>>>> SSAM_TMP_PROFILE_BETTER_PERFORMANCE ->  PLATFORM_PROFILE_BALANCED_PERFORMANCE
+>>>> SSAM_TMP_PROFILE_BEST_PERFORMANCE   ->  PLATFORM_PROFILE_PERFORMANCE
+>>>>
+>>>> I'm not sure which is best, I hope you have a better idea of that then me.
+>>>>
+>>>> I might even be wrong here and NORMAL might really be more about being QUIET
+>>>> then it really being BALANCED ? In which case the mapping is fine as is.
+>>>
+>>> I can only really speak on the behavior of my Surface Book 2. On that
+>>> device, the CPU is passively cooled, but the discrete GPU is actively
+>>> cooled, so I can actually only really talk about active cooling behavior
+>>> for the dGPU.
+>>>
+>>> On that, at least, the normal (Windows calls this 'recommended') profile
+>>> feels like it targets quiet operation. Using the dGPU with that profile
+>>> pretty much ensures that the dGPU will be limited in performance by a
+>>> thermal limiter (around 75°C to 80°C; at least it feels that way), while
+>>> the fan is somewhat audible but definitely not at maximum speed.
+>>> Changing the profile to any higher profile (Windows calls those 'better
+>>> performance' and 'best performance'), the fan becomes significantly more
+>>> audible. I'm not entirely sure if the performance increase can solely be
+>>> attributed to cooling though.
+>>>
+>>> As far as I've heard, that behavior seems to be similar on other devices
+>>> with fans for CPU cooling, but I can try to get some more feedback on
+>>> that.
+>>>
+>>> Based on all of this, I thought that this would most resemble a 'quiet'
+>>> profile. But I'd also be fine with your second suggestion. Calling the
+>>> last two options 'balanced performance' and 'performance' might be a bit
+>>> closer to the Windows naming scheme. It doesn't seem like the normal
+>>> profile does much power limiting in terms of actually capping the power
+>>> limit of the dGPU, so I think calling this 'balanced' would also make
+>>> sense to me, especially in light of Gnome's defaults.
+>>
+>> Ack.
+>>
+>> So that means that this is going to need to have a preparation patch
+>> adding the 2 balanced variants which I mention above. Can you take care
+>> of that in the next version?
 > 
-> Spot on. Thanks for the detailed guide; I wouldn't have been able to get there in due time without your advise.
-> I will send the revised patch in a separate mail, but want to highlight few points.
+> Sure. Already prepared a patch for the 'balanced-performance' one over at [1].
+> Just needs some squashing and I can send in an updated series. Do you also want
+> me to add the 'balanced-low-power' version? I'd have chosen 'balanced' and
+> 'balanced-performance' in the new mapping, so there wouldn't be any driver
+> right now using that.
+
+I see at [1] that for now you've just added 'balanced-performance' that is probably
+best, since as you say atm there are no users for 'balanced-low-power' .
+
+>> And since that prep. patch needs to go through Rafael's PM tree anyways,
+>> maybe also throw in a patch to make ACPI_PLATFORM_PROFILE not user selectable
+>> and use select on it in the thinkpad_acpi and ideapad_laptop drivers?
 > 
->> 1. At a new TP_HOTKEY_TABLET_USES_GTOP to the hotkey_tablet enum
->> 2. At probe time in hotkey_init_tablet_mode add a new if / case with I guess
->>    the highest prio (so try before GMMS) which does:
->>    1. Call GTOP with parameter 0x0000, check return equals 0x0103 (or newer?)
->>       Nitin, how should the version check look like here, check that the
->>       upper byte == 0x01 and the lower byte >= 0x03 ?
-> 
-> Exactly.
-> 
->>    2. Call GTOP with parameter 0x0100, check return value equals 4
-> 
-> I also included the simpler "any type" interface which does not report folding to the back. I confirmed that it works on my X1 with limited functionality, but don't have a "any type" device to test available. (In fact, I don't know whether such a device even exists.) IIUC it can also easily cover type 2 "Helix" and type 3 "Thinkpad 10" with the functionality available on those types. Since I cannot test, I didn't enable that in my patch; but it should be a matter of checking for return values 2 and 3 and adding an appropriate case in hotkey_get_tablet_mode.
-> By the way, Nitin kindly confirmed that I can translate the GTOP reference sheet to source code comments, and provided the mapping between type 2, 3, 4 and series "Helix", "Thinkpad 10" and "X1 Tablet".
-> 
->>    3. Call GTOP with parameter 0x0200, set in_tablet_mode based on bit 0
->>       and bit 16. I think we should report SW_TABLET_MODE=1 when the thin-kbd
->>       is attached, but folded to the back
-> 
-> Right.
-> 
->> 3. Make hotkey_get_tablet_mode support the new TP_HOTKEY_TABLET_USES_GTOP case and
->>    make it call GTOP with parameter 0x0200 and check bit 0 + bit 16
->> 4. On the events which you identified call tpacpi_input_send_tabletsw()
-> 
-> Works like a charm.
-> I realized that the device also emits 0x60c0 (TP_HKEY_EV_TABLET_CHANGED) when the keyboard cover is attached or detached, yet *not* when it's folded. I don't quite get why I nevertheless receive only one notification to userspace according to acpi_listen, despite the fact that the 0x60c0 handler also calls tpacpi_input_send_tabletsw and hotkey_tablet_mode_notify_change. Is there a deduplication behind the scenes?
+> There's also already one at [1] for that just waiting to be sent :)
 
-Yes the input subsystem layer will not send events when nothing has changed.
+Nice, thank you!
 
-> I also realized that intel_vbtn reports the change, too. Would it be in order to modify intel_vbtn in a next step and blacklist this device to avoid duplicates?
+> [1]: https://github.com/linux-surface/kernel/commits/s/surface-platform-profile/next
 
-Hmm, that is a bit of a problem I would prefer to avoid having to deny-list things in intel_vbtn.
-
-So do the 2 behave exactly the same? Also wrt when the kbd is folded behind the kbd. IOW
-are the 2 SW_TABLET_MODE reports fully in sync in all possible states:
-
-1. Just the tablet
-2. Tablet + keyboard attached, keyboard in use
-3. Tablet + keyboard attached, keyboard folded away behind tablet 
-
-?
-
-> On the other hand, userspace should expect duplicate messages to some degree and use a hysteresis approach anyway. Every now and then, the contact of the magnetic plug is not established perfectly on the first attempt. So perhaps not really an issue.
-
-The only userspace consumer of this which I know is mutter (part of gnome-shell) and it
-will just take the value from the last event. So if the 2 are always in sync then
-the event send by the second input-dev will essentially be a no-op since the value will
-be the same as the other event.
-
-We do need to resolve the question of how to handle this before I can merge the patch,
-atm I think that just having it reported twice is fine (as long as both reports are in
-sync).
+The platform-profile bits which you have here all look good to me.
 
 Regards,
 
 Hans
 
+
+
+
+
+>>>>> +
+>>>>> +static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profile_option p)
+>>>>> +{
+>>>>> +    switch (p) {
+>>>>> +    case PLATFORM_PROFILE_LOW_POWER:
+>>>>> +        return SSAM_TMP_PROFILE_BATTERY_SAVER;
+>>>>> +
+>>>>> +    case PLATFORM_PROFILE_QUIET:
+>>>>> +        return SSAM_TMP_PROFILE_NORMAL;
+>>>>> +
+>>>>> +    case PLATFORM_PROFILE_BALANCED:
+>>>>> +        return SSAM_TMP_PROFILE_BETTER_PERFORMANCE;
+>>>>> +
+>>>>> +    case PLATFORM_PROFILE_PERFORMANCE:
+>>>>> +        return SSAM_TMP_PROFILE_BEST_PERFORMANCE;
+>>>>> +
+>>>>> +    default:
+>>>>> +        /* This should have already been caught by platform_profile_store(). */
+>>>>> +        WARN(true, "unsupported platform profile");
+>>>>> +        return -EOPNOTSUPP;
+>>>>> +    }
+>>>>> +}
+>>>>> +
+>>>>> +static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
+>>>>> +                     enum platform_profile_option *profile)
+>>>>> +{
+>>>>> +    struct ssam_tmp_profile_device *tpd;
+>>>>> +    enum ssam_tmp_profile tp;
+>>>>> +    int status;
+>>>>> +
+>>>>> +    tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
+>>>>> +
+>>>>> +    status = ssam_tmp_profile_get(tpd->sdev, &tp);
+>>>>> +    if (status)
+>>>>> +        return status;
+>>>>> +
+>>>>> +    status = convert_ssam_to_profile(tpd->sdev, tp);
+>>>>> +    if (status < 0)
+>>>>> +        return status;
+>>>>> +
+>>>>> +    *profile = status;
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int ssam_platform_profile_set(struct platform_profile_handler *pprof,
+>>>>> +                     enum platform_profile_option profile)
+>>>>> +{
+>>>>> +    struct ssam_tmp_profile_device *tpd;
+>>>>> +    int tp;
+>>>>> +
+>>>>> +    tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
+>>>>> +
+>>>>> +    tp = convert_profile_to_ssam(tpd->sdev, profile);
+>>>>> +    if (tp < 0)
+>>>>> +        return tp;
+>>>>> +
+>>>>> +    return ssam_tmp_profile_set(tpd->sdev, tp);
+>>>>> +}
+>>>>> +
+>>>>> +static int surface_platform_profile_probe(struct ssam_device *sdev)
+>>>>> +{
+>>>>> +    struct ssam_tmp_profile_device *tpd;
+>>>>> +
+>>>>> +    tpd = devm_kzalloc(&sdev->dev, sizeof(*tpd), GFP_KERNEL);
+>>>>> +    if (!tpd)
+>>>>> +        return -ENOMEM;
+>>>>> +
+>>>>> +    tpd->sdev = sdev;
+>>>>> +
+>>>>> +    tpd->handler.profile_get = ssam_platform_profile_get;
+>>>>> +    tpd->handler.profile_set = ssam_platform_profile_set;
+>>>>> +
+>>>>> +    set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
+>>>>> +    set_bit(PLATFORM_PROFILE_QUIET, tpd->handler.choices);
+>>>>> +    set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
+>>>>> +    set_bit(PLATFORM_PROFILE_PERFORMANCE, tpd->handler.choices);
+>>>>> +
+>>>>> +    platform_profile_register(&tpd->handler);
+>>>>> +    return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static void surface_platform_profile_remove(struct ssam_device *sdev)
+>>>>> +{
+>>>>> +    platform_profile_remove();
+>>>>> +}
+>>>>> +
+>>>>> +static const struct ssam_device_id ssam_platform_profile_match[] = {
+>>>>> +    { SSAM_SDEV(TMP, 0x01, 0x00, 0x01) },
+>>>>> +    { },
+>>>>> +};
+>>>>> +MODULE_DEVICE_TABLE(ssam, ssam_platform_profile_match);
+>>>>> +
+>>>>> +static struct ssam_device_driver surface_platform_profile = {
+>>>>> +    .probe = surface_platform_profile_probe,
+>>>>> +    .remove = surface_platform_profile_remove,
+>>>>> +    .match_table = ssam_platform_profile_match,
+>>>>> +    .driver = {
+>>>>> +        .name = "surface_platform_profile",
+>>>>> +        .probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>>>>> +    },
+>>>>> +};
+>>>>> +module_ssam_device_driver(surface_platform_profile);
+>>>>> +
+>>>>> +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+>>>>> +MODULE_DESCRIPTION("Platform Profile Support for Surface System Aggregator Module");
+>>>>> +MODULE_LICENSE("GPL");
+>>>>>
+>>>>
+>>>
+>>
+> 
 
