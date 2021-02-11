@@ -2,92 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3BEC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A1C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61DF664E79
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015D164DFF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbhBKNJu (ORCPT
+        id S231265AbhBKNKV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 08:09:50 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43014 "EHLO mga09.intel.com"
+        Thu, 11 Feb 2021 08:10:21 -0500
+Received: from mga12.intel.com ([192.55.52.136]:29897 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231624AbhBKNGq (ORCPT
+        id S231567AbhBKNHk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 08:06:46 -0500
-IronPort-SDR: 55ObIwXXP7Ce+w74u2c3hDjZHO3GcWqkMcBtUfKazDIngzn3bigOULlPiVf33d343Cd0zZqqMH
- iLmcAyNdWchw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="182369696"
+        Thu, 11 Feb 2021 08:07:40 -0500
+IronPort-SDR: z1kKqnFwU+kN5dqt3YHaMVjSqF+1JQd4GQvCe4RcIG05asDY6EzesQyFNI0CR7TI14t+V0D1be
+ t6fIWI++92ZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="161379339"
 X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="182369696"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:04:51 -0800
-IronPort-SDR: xmlb9NqFgliArX/nIyV1XOP5dZrVm+iMz+ouoHhFVFin0OJO3ifO98hiQVCt3vuiEQ6czA0zcz
- eIuL75rTI65g==
+   d="scan'208";a="161379339"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:06:13 -0800
+IronPort-SDR: Mm5mJyui1VJd1BUeLJpYp2lb0DD7frreI4IRQpQMPENH4YeDra1ltGX/dwJKqVIRLrernDGMXL
+ JWz2iXzsTmRA==
 X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
-   d="scan'208";a="437106463"
+   d="scan'208";a="510846864"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:04:49 -0800
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:06:11 -0800
 Received: from andy by smile with local (Exim 4.94)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lABeJ-004E5z-3c; Thu, 11 Feb 2021 15:04:47 +0200
-Date:   Thu, 11 Feb 2021 15:04:47 +0200
+        id 1lABfc-004E6i-FI; Thu, 11 Feb 2021 15:06:08 +0200
+Date:   Thu, 11 Feb 2021 15:06:08 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
+        Mark Gross <mgross@linx.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-test-robot <lkp@intel.com>
-Subject: Re: [PATCH] platform/surface: aggregator: Fix access of unaligned
+Subject: Re: [PATCH v2] platform/surface: aggregator: Fix access of unaligned
  value
-Message-ID: <YCUrb+yAdBCagxvv@smile.fi.intel.com>
-References: <20210210230411.1938660-1-luzmaximilian@gmail.com>
- <YCUFgF9gmyeO+796@smile.fi.intel.com>
- <b68b7547-5be4-c823-d015-febb5e7f84e9@gmail.com>
+Message-ID: <YCUrwLsQEqUzr267@smile.fi.intel.com>
+References: <20210211124149.2439007-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b68b7547-5be4-c823-d015-febb5e7f84e9@gmail.com>
+In-Reply-To: <20210211124149.2439007-1-luzmaximilian@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Feb 11, 2021 at 12:58:48PM +0100, Maximilian Luz wrote:
-> On 2/11/21 11:22 AM, Andy Shevchenko wrote:
-> > On Thu, Feb 11, 2021 at 12:04:11AM +0100, Maximilian Luz wrote:
-> > > The raw message frame length is unaligned and explicitly marked as
-> > > little endian. It should not be accessed without the appropriatte
-> > > accessor functions. Fix this.
-
-...
-
-> > Also it's possible to annotate temporary variable and use it, but it seems not
-> > worth to do.
+On Thu, Feb 11, 2021 at 01:41:49PM +0100, Maximilian Luz wrote:
+> The raw message frame length is unaligned and explicitly marked as
+> little endian. It should not be accessed without the appropriate
+> accessor functions. Fix this.
 > 
-> Now that you mention it, we already have the correct frame length in
-> payload.len. Let me draft up a new patch with that.
+> Note that payload.len already contains the correct length after parsing
+> via sshp_parse_frame(), so we can simply use that instead.
 
-Good!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> > Side question: Do you think the below is correct (& operator)?
-> > 
-> >          sp.len = get_unaligned_le16(&((struct ssh_frame *)sf.ptr)->len);
-> > 
-> > To me seems like you take an address to len member rather its value.
+> Reported-by: kernel-test-robot <lkp@intel.com>
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> ---
 > 
-> That's the point though, no? The signature is
+> Changes in v2:
+>  - Use payload.len instead of getting the frame length directly. Note
+>    that payload.len equals the frame length and is already correctly set
+>    in sshp_parse_frame(), so they are exactly the same thing. Makes it
+>    look a bit nicer though.
 > 
->         u16 get_unaligned_le16(const void *p)
+>    I did drop the ACKs/Reveiewd-by in case you want to check that
+>    yourselves and since that's essentially the whole change.
 > 
-> so we do want a pointer to the len member. So I believe that is correct.
-
-Indeed. I messed up with le16_to_cpu().
+> ---
+>  drivers/platform/surface/aggregator/ssh_packet_layer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 583315db8b02..15d96eac6811 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -1774,7 +1774,7 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
+>  		break;
+>  	}
+>  
+> -	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(frame->len);
+> +	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(payload.len);
+>  }
+>  
+>  static int ssh_ptl_rx_threadfn(void *data)
+> -- 
+> 2.30.0
+> 
 
 -- 
 With Best Regards,
