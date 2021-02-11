@@ -2,163 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF21C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 19:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63333C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 20:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E154264E45
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 19:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB8364E45
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 20:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbhBKTsW (ORCPT
+        id S231725AbhBKUSE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 14:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51956 "EHLO
+        Thu, 11 Feb 2021 15:18:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231408AbhBKTsI (ORCPT
+        with ESMTP id S231728AbhBKUR5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 14:48:08 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34CEDC06178B;
-        Thu, 11 Feb 2021 11:46:54 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id lg21so11889244ejb.3;
-        Thu, 11 Feb 2021 11:46:54 -0800 (PST)
+        Thu, 11 Feb 2021 15:17:57 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8841C061756;
+        Thu, 11 Feb 2021 12:17:16 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id w1so11948038ejf.11;
+        Thu, 11 Feb 2021 12:17:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=R6dNG5V5dWsYH7eHxyaPUs81huQoeK3laGD/naMd3MI=;
-        b=ImN+gkxPMKH18ZnVHeshOhr6ndqLV0rGBOdvaLkJKceRH6rw6FTWDxX8NAN7MTmStK
-         OphFjMafr3l3HKTEE6p9esG30KKohMSc3Kl67n55Y27J+5qh8vKR3TjyBE1BkDAaoiz1
-         X4LLHnP8jzS1XXdBnifchrlXp0t92kmRS5X0brMJGouVp7jAZyOj/fMgQ4DvMNFAEgUS
-         DOR1Uqdt4KeuoAMK3bsEEuyb6Zj6jBNi5CQ87ZAaM8EMVzGZ4v7NOFjXlH47S9GR73Wg
-         RoQLyVJ5tLafaTUmM9wvtsJh6a+AfRElG0p/24IZGJXpAHMWQgwIodvRoS6ib065H9qe
-         05Ag==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7h/P68fi4XyowjoWEA/DZsqBXWvyY+Lwx+kBuaa3z2Q=;
+        b=BrLIhb7FgXeGt4Krf6DDIxY6dUT7v+kxo7nrmPnKPFyFd93HEBYaHtC5cZJPb968zU
+         FyDSZ4SPeUTkTlOwn6HaaRWa4XAiRFN4tWMW2/MTgrgrx0xIpRBo1uO4/blGKa2NlW8y
+         aK7e1BR7xEil47+QoaUzW5NCnT3J5NmT3u+4l3ea24KTGOkG7VaoA3uu+FJX1/0uGDwd
+         e2Q1EpXH9Mu29p5Q5uopJlbP/yyseea/o4QzsayVZm4jVDZHn1lZ5OrVIk8Z6BAZm/pj
+         0wEMzXJYtVXIfJGmArg78JXFl7SdjmvDd3YucpYXvH4civWhHU5s2mQZ57NCFDF00yAc
+         Oo+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=R6dNG5V5dWsYH7eHxyaPUs81huQoeK3laGD/naMd3MI=;
-        b=dw6r7CzoPyT3KI4U9tl4jQg7wrtO+XHREFfXcK4fUzDFAb4K/u8uF77gjU4JPoptWU
-         t4EWnhft3KPMaH7bPK8ZxMaG9xzyQoC6Nh21+JW3qZTPYo4Nz0DlT+GR1GJfUrl7XA0Y
-         55p1KGN7AM4tR86uR3lkEVaLkP77T37f9QuMg//AH3efBTpg5DrV5nMkTkdVbd7YaeoG
-         3T30sHH2EGLJwWqn/NJyqgw9bMX13P+Fg68UDFbe0m1RK/s7Gq1VEg5kRAByIOIgkOmx
-         EPEHNvcGxk73QciO1LX6/zBYJ4n/tZKPnBKQBd9P8pBM7B+Gxh7gyQ6Jxant33Jxftf3
-         R1uw==
-X-Gm-Message-State: AOAM530vlPfXcPLXig3Xl0SaFb3M7pSX1V2aEX6Q8vKp7FC0H9GWKBEe
-        PvV5DTdfZB+UK4zehlEP7Oz9jDTgy5rqJg==
-X-Google-Smtp-Source: ABdhPJywvdLWQHY5PyOytsgynRAmotV5Y0WSjahGWQ3duTSfa/ADDHTS3N3gBwlugDdePFRGFISmlw==
-X-Received: by 2002:a17:906:ce24:: with SMTP id sd4mr9788048ejb.21.1613072812956;
-        Thu, 11 Feb 2021 11:46:52 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7h/P68fi4XyowjoWEA/DZsqBXWvyY+Lwx+kBuaa3z2Q=;
+        b=juImyTrZhGNVnpqXKGXlt504DwC3o97wkXt4owIiydKw2SNMrmioS3mdxfrWefvLXc
+         VYbWj1toOTkw9ERHJa6q6FCld+lHFFMTBOBWCq4K0ACv69rkoEfluNmCiEDRVZXQ24FL
+         LmmSInPur7YABcJEids+i1FeovUtXv24yihQl0X7VnHhPMd6iTzKoyGmB6+oiktlK9FZ
+         fwKu4bKzDS+qxAH9e5/ky1RUStXqaeYWP4AsnW8/QYLfjMc//B9cQWQUQ95a8SPipnEI
+         xvTB67SlTNeVimeykRBrKBL7re2W683HGkGE49N+3lmzVMG2FEmkwptIO/hK7lGvuFyz
+         nVQg==
+X-Gm-Message-State: AOAM531ypXQX/+J1Q8rLZSSrCxRkDUCEyHZt1+uL+wOF13bFk/g6WZCl
+        uA7+rkqQJ1eQEdh/hTw4LK8=
+X-Google-Smtp-Source: ABdhPJz/mCRWkKdWxJbBlnyWVmhf578mEZPXMXD3CInoUq7fpVB1g7s6bZl01dIzevBLvFWG7JOnlw==
+X-Received: by 2002:a17:906:7698:: with SMTP id o24mr9757984ejm.504.1613074635665;
+        Thu, 11 Feb 2021 12:17:15 -0800 (PST)
 Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id f6sm4728728edr.72.2021.02.11.11.46.51
+        by smtp.gmail.com with ESMTPSA id a1sm4938177edj.6.2021.02.11.12.17.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Feb 2021 11:46:52 -0800 (PST)
+        Thu, 11 Feb 2021 12:17:15 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] platform/surface: aggregator_registry: Add HID subsystem devices
-Date:   Thu, 11 Feb 2021 20:46:36 +0100
-Message-Id: <20210211194636.568929-7-luzmaximilian@gmail.com>
+        Len Brown <lenb@kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] platform/surface: Add platform profile driver for Surface devices
+Date:   Thu, 11 Feb 2021 21:16:59 +0100
+Message-Id: <20210211201703.658240-1-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210211194636.568929-1-luzmaximilian@gmail.com>
-References: <20210211194636.568929-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add HID subsystem (TC=0x15) devices. These devices need to be registered
-for 7th-generation Surface models. On previous generations, these
-devices are either provided as platform devices via ACPI (Surface Laptop
-1 and 2) or implemented as standard USB device.
+This series adds a driver to provide platform profile support on 5th-
+and later generation Microsoft Surface devices with a Surface System
+Aggregator Module. On those devices, the platform profile can be used to
+influence cooling behavior and power consumption.
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- .../surface/surface_aggregator_registry.c     | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
+To achieve this, a new platform profile is introduced: the
+'balanced-performance' profile.
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index 4c74e80dc34a..07cadd5a10f2 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -77,6 +77,48 @@ static const struct software_node ssam_node_bas_dtx = {
- 	.parent = &ssam_node_root,
- };
- 
-+/* HID keyboard. */
-+static const struct software_node ssam_node_hid_main_keyboard = {
-+	.name = "ssam:01:15:02:01:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID touchpad. */
-+static const struct software_node ssam_node_hid_main_touchpad = {
-+	.name = "ssam:01:15:02:03:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID device instance 5 (unknown HID device). */
-+static const struct software_node ssam_node_hid_main_iid5 = {
-+	.name = "ssam:01:15:02:05:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID keyboard (base hub). */
-+static const struct software_node ssam_node_hid_base_keyboard = {
-+	.name = "ssam:01:15:02:01:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID touchpad (base hub). */
-+static const struct software_node ssam_node_hid_base_touchpad = {
-+	.name = "ssam:01:15:02:03:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID device instance 5 (unknown HID device, base hub). */
-+static const struct software_node ssam_node_hid_base_iid5 = {
-+	.name = "ssam:01:15:02:05:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID device instance 6 (unknown HID device, base hub). */
-+static const struct software_node ssam_node_hid_base_iid6 = {
-+	.name = "ssam:01:15:02:06:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
- /* Devices for Surface Book 2. */
- static const struct software_node *ssam_node_group_sb2[] = {
- 	&ssam_node_root,
-@@ -93,6 +135,10 @@ static const struct software_node *ssam_node_group_sb3[] = {
- 	&ssam_node_bat_sb3base,
- 	&ssam_node_tmp_pprof,
- 	&ssam_node_bas_dtx,
-+	&ssam_node_hid_base_keyboard,
-+	&ssam_node_hid_base_touchpad,
-+	&ssam_node_hid_base_iid5,
-+	&ssam_node_hid_base_iid6,
- 	NULL,
- };
- 
-@@ -116,6 +162,9 @@ static const struct software_node *ssam_node_group_sl3[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_tmp_pprof,
-+	&ssam_node_hid_main_keyboard,
-+	&ssam_node_hid_main_touchpad,
-+	&ssam_node_hid_main_iid5,
- 	NULL,
- };
- 
+In addition, a couple of fix-ups are performed:
+- Hide CONFIG_ACPI_PLATFORM_PROFILE and change drivers so that it is
+  selected instead of depended on.
+- Fix some references to documentation in a comment.
+
+Note: This series (or more specifically "platform/surface: Add platform
+profile driver") depends on the "platform/surface: Add Surface
+Aggregator device registry" series.
+
+Changes in v2:
+ - Introduce new 'balanced-performance' platform profile and change
+   profile mapping in driver.
+ - Perform some fix-ups for the ACPI platform profile implementation:
+   - Fix some references to documentation in a comment.
+   - Hide CONFIG_ACPI_PLATFORM_PROFILE
+
+Maximilian Luz (4):
+  ACPI: platform: Hide ACPI_PLATFORM_PROFILE option
+  ACPI: platform: Fix file references in comment
+  ACPI: platform: Add balanced-performance platform profile
+  platform/surface: Add platform profile driver
+
+ .../ABI/testing/sysfs-platform_profile        |  18 +-
+ MAINTAINERS                                   |   6 +
+ drivers/acpi/Kconfig                          |  16 +-
+ drivers/acpi/platform_profile.c               |   1 +
+ drivers/platform/surface/Kconfig              |  22 ++
+ drivers/platform/surface/Makefile             |   1 +
+ .../surface/surface_platform_profile.c        | 190 ++++++++++++++++++
+ drivers/platform/x86/Kconfig                  |   4 +-
+ include/linux/platform_profile.h              |   6 +-
+ 9 files changed, 237 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/platform/surface/surface_platform_profile.c
+
 -- 
 2.30.0
 
