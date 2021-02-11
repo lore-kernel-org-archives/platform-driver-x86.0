@@ -2,105 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD558C4332B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 15:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C668EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 15:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7C1064E92
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 15:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B9D64E8B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 15:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbhBKPs4 (ORCPT
+        id S229871AbhBKPyN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 10:48:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42637 "EHLO
+        Thu, 11 Feb 2021 10:54:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40795 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231341AbhBKPqu (ORCPT
+        by vger.kernel.org with ESMTP id S230204AbhBKPvu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 10:46:50 -0500
+        Thu, 11 Feb 2021 10:51:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613058323;
+        s=mimecast20190719; t=1613058623;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=39EV7/G2PzTJehWm5IY3xEu3xVTJ2cfFkuLTjx/NCso=;
-        b=Fs0v+FUX0koAuz9/I4KhY1Hw+3Ami1iRWsHdBL9gGdHznXxIF/UWwUgVT3Arxl73U4RKNt
-        qJd4dKf7BDKscAqF1z9EO01CgY05e8BWg7NvwdOwTrUS0L78EGwmR0J0pPbw11MJQvhwmf
-        0A/MoiMBrGq+P373lZX5Ug1wE+htPFM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-175-dTLpXdG5P9y85mztUQkErg-1; Thu, 11 Feb 2021 10:45:21 -0500
-X-MC-Unique: dTLpXdG5P9y85mztUQkErg-1
-Received: by mail-ej1-f69.google.com with SMTP id aq28so4958127ejc.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Feb 2021 07:45:21 -0800 (PST)
+        bh=PFie4b8IIggJBAyOAfk90BEtab+sed/Odrk1Xr+jPYU=;
+        b=VQle+APcuYjBZlv1GnWJa4NITJlQ+wyp3HnmPeJS/+p8O/46S3f5oFEW84uF+D6xXRYAq9
+        7nceZx49TuNAA8ITWt1V7EWruvxnbqyaREow/LTErAhDyFn2xm6HZBnn1nXrxNfe8PCYzC
+        9LZsjssGCAYIvJvJ4HeBrqCNtpfLnV8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-8XikERA_Nui9cPxOoMZt9g-1; Thu, 11 Feb 2021 10:50:19 -0500
+X-MC-Unique: 8XikERA_Nui9cPxOoMZt9g-1
+Received: by mail-ed1-f69.google.com with SMTP id w23so4731127edr.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 11 Feb 2021 07:50:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=39EV7/G2PzTJehWm5IY3xEu3xVTJ2cfFkuLTjx/NCso=;
-        b=NEH2pHeQgRX5+ZykqHLx2T4Ry+JuZhkcseIpP52cnvm7KLPGznNPuUkklZPl78m2CT
-         G1xBF8Jh3x7XPfV8aTIVU2psHrK0c/2CDMgU4F1cHLrpJHHUDXFNx4GGr0JjfC2b0dSG
-         P3zNy3sxKiQjvn69aNnt/WKRoadGvNtEU9UqEPual/KwwElW4NFT2BKGP/5PA0/gyLVM
-         vDPoc/c9lr3y+Ln73MWoOjsB0R2wP1bACWX3FfYeK/HjS4b2GGYRwp1G4kZ0wQxSxh/9
-         vIGgiKbH4PyZ8ayI611cwuo+6djZcNLXvt234x0J0xKSuIfrXLrY+GvYBXNRLknGrVis
-         1+0Q==
-X-Gm-Message-State: AOAM530wQiNWokcpNl/mHNpz1t+1pqpIi1druMh2uObZw5Tm7PNnVoO8
-        cAOTjurK6k8Ot+2oMpZ7Myl+n+cPBBI9RxYbkZRGm+FSXBXAKAoIrEH9y7KJbDNCI9gMpsvIkB4
-        Nt/3zJIEPeWmuKjh5XpqB7j/rFvKKBKobWg==
-X-Received: by 2002:a17:906:c0d7:: with SMTP id bn23mr9024990ejb.94.1613058320145;
-        Thu, 11 Feb 2021 07:45:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyAqoP5eDFW4xcTb4dIWPHhgt73k8gUL/gfI/YINR2uueo6qHqMl/9WQ2OnMwUijI+is8nBSg==
-X-Received: by 2002:a17:906:c0d7:: with SMTP id bn23mr9024980ejb.94.1613058319935;
-        Thu, 11 Feb 2021 07:45:19 -0800 (PST)
+        bh=PFie4b8IIggJBAyOAfk90BEtab+sed/Odrk1Xr+jPYU=;
+        b=pvmEBuJjSY88KP/U2u4EeAjcaDaypkwDHy8YH9arEuIu9TbdmpSw7rc2cG+tGaZMhh
+         M9Cv2tnOHB23wz+jW2EWbdBKAF5TIn52dfV2qQMz8Q5ije9xfl1v1/tIX6WIRWbnmtne
+         xAO8efEiAA8BDHWvrkztgLs9H2eNDU2tGsC3zPUcOzJ5XufysAzD+O5OUF1vyICM/BCF
+         F/D6A2xhVPl1WLmMpl2xfmw8IQP7C2ZvpAFgACgSOsw+sjGmyyKF8Nmqv31cWTn70GMX
+         4KbFnN5jG3oRzBZ2z0TGsDqGpiWikNkE9Ib/68Ay+we7x4tms5axjn0RUItMj9IvQG9H
+         U6vQ==
+X-Gm-Message-State: AOAM533WjDS+wFfkbFXnilMo9ykdWSwoR/buPCjZlZWnmF24QzCAoW8E
+        JArfWIjchBCn+B2J8rWyLBRhD8jiUvWyJ+5w+oj5z7p7cA/D2aht7Z+Xp/0zCDQv7ccoyjOsJE1
+        WaH79Cn6j1SK1sqiw2txV5CTmEqhFbzYDSA==
+X-Received: by 2002:a17:906:2993:: with SMTP id x19mr8719280eje.409.1613058618554;
+        Thu, 11 Feb 2021 07:50:18 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxrvTuvWfiuzdxsmc2sdY/DkovUffsQYFa4iEEUwrewwyy70yZLSYdjQjhLcGIuO5NwnNns3Q==
+X-Received: by 2002:a17:906:2993:: with SMTP id x19mr8719270eje.409.1613058618394;
+        Thu, 11 Feb 2021 07:50:18 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bk2sm4539280ejb.98.2021.02.11.07.45.18
+        by smtp.gmail.com with ESMTPSA id i6sm4567051ejd.110.2021.02.11.07.50.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Feb 2021 07:45:19 -0800 (PST)
-Subject: Re: [PATCH v1 0/9] x86/platform: Remove SFI framework and users
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@kernel.org>, Wolfram Sang <wsa@kernel.org>,
-        Sumit Gupta <sumitg@nvidia.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <20210211134008.38282-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0gzd0Xwd006P3PUutKcVRqLNxmREBB-QW85BRMBArbBVw@mail.gmail.com>
+        Thu, 11 Feb 2021 07:50:17 -0800 (PST)
+Subject: Re: [PATCH v2] platform/surface: aggregator: Fix access of unaligned
+ value
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Mark Gross <mgross@linx.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-test-robot <lkp@intel.com>
+References: <20210211124149.2439007-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bf10026f-13bb-c1c6-2787-d8c9520f8401@redhat.com>
-Date:   Thu, 11 Feb 2021 16:45:18 +0100
+Message-ID: <824cb5dc-4594-fb00-a777-88189c41d62e@redhat.com>
+Date:   Thu, 11 Feb 2021 16:50:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0gzd0Xwd006P3PUutKcVRqLNxmREBB-QW85BRMBArbBVw@mail.gmail.com>
+In-Reply-To: <20210211124149.2439007-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -110,125 +86,61 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/11/21 4:24 PM, Rafael J. Wysocki wrote:
-> On Thu, Feb 11, 2021 at 2:50 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->>
->> This is last part of Intel MID (SFI based) removal. We have no more users of it
->> in the kernel and since SFI has been marked Obsolete for a few years already,
->> Remove all the stuff altogether.
->>
->> Note, the more recent platforms (Intel Merrifield and Moorefield) still work as
->> long as they provide correct ACPI tables.
->>
->> The series requires two prerequisite branches to be pulled first, i.e.
->> - one form Rafael's PM tree (currently bleeding-edge)
->> - one form TIP tree (x86/platform), actually only one patch is needed from it
->>
->> Due to above it's convenient to proceed all of these via Rafael's PM tree,
->>
->> Note, atomisp change is tagged by Sakari on behalf of media tree maintainers.
->>
->> Andy Shevchenko (9):
->>   media: atomisp: Remove unused header
->>   cpufreq: sfi-cpufreq: Remove driver for deprecated firmware
->>   sfi: Remove framework for deprecated firmware
->>   x86/PCI: Get rid of custom x86 model comparison
->>   x86/PCI: Describe @reg for type1_access_ok()
->>   x86/platform/intel-mid: Get rid of intel_scu_ipc_legacy.h
->>   x86/platform/intel-mid: Drop unused __intel_mid_cpu_chip and Co.
->>   x86/platform/intel-mid: Remove unused header inclusion in intel-mid.h
->>   x86/platform/intel-mid: Update Copyright year and drop file names
->>
->>  Documentation/ABI/testing/sysfs-firmware-sfi  |  15 -
->>  Documentation/ABI/testing/sysfs-platform-kim  |   2 +-
->>  MAINTAINERS                                   |   7 -
->>  arch/x86/Kconfig                              |   7 +-
->>  arch/x86/include/asm/intel-mid.h              |  65 +--
->>  arch/x86/include/asm/intel_scu_ipc.h          |   2 -
->>  arch/x86/include/asm/intel_scu_ipc_legacy.h   |  74 ---
->>  arch/x86/include/asm/platform_sst_audio.h     |   2 -
->>  arch/x86/kernel/apic/io_apic.c                |   4 +-
->>  arch/x86/kernel/setup.c                       |   2 -
->>  arch/x86/pci/intel_mid_pci.c                  |  18 +-
->>  arch/x86/pci/mmconfig-shared.c                |   6 +-
->>  arch/x86/platform/Makefile                    |   1 -
->>  arch/x86/platform/intel-mid/Makefile          |   5 -
->>  .../platform/intel-mid/device_libs/Makefile   |  23 -
->>  .../intel-mid/device_libs/platform_bcm43xx.c  | 101 ----
->>  .../intel-mid/device_libs/platform_bma023.c   |  16 -
->>  .../intel-mid/device_libs/platform_bt.c       | 101 ----
->>  .../intel-mid/device_libs/platform_emc1403.c  |  39 --
->>  .../device_libs/platform_gpio_keys.c          |  81 ---
->>  .../intel-mid/device_libs/platform_lis331.c   |  37 --
->>  .../intel-mid/device_libs/platform_max7315.c  |  77 ---
->>  .../intel-mid/device_libs/platform_mpu3050.c  |  32 --
->>  .../device_libs/platform_mrfld_pinctrl.c      |  39 --
->>  .../device_libs/platform_mrfld_rtc.c          |  44 --
->>  .../intel-mid/device_libs/platform_mrfld_sd.c |  43 --
->>  .../device_libs/platform_mrfld_spidev.c       |  50 --
->>  .../device_libs/platform_pcal9555a.c          |  95 ----
->>  .../intel-mid/device_libs/platform_tc35876x.c |  42 --
->>  .../intel-mid/device_libs/platform_tca6416.c  |  53 --
->>  arch/x86/platform/intel-mid/intel-mid.c       |  27 +-
->>  arch/x86/platform/intel-mid/sfi.c             | 419 --------------
->>  arch/x86/platform/sfi/Makefile                |   2 -
->>  arch/x86/platform/sfi/sfi.c                   | 100 ----
->>  drivers/Makefile                              |   2 +-
->>  drivers/cpufreq/Kconfig.x86                   |  10 -
->>  drivers/cpufreq/Makefile                      |   1 -
->>  drivers/cpufreq/sfi-cpufreq.c                 | 127 -----
->>  drivers/platform/x86/intel_scu_pcidrv.c       |  22 +-
->>  drivers/sfi/Kconfig                           |  18 -
->>  drivers/sfi/Makefile                          |   4 -
->>  drivers/sfi/sfi_acpi.c                        | 214 -------
->>  drivers/sfi/sfi_core.c                        | 522 ------------------
->>  drivers/sfi/sfi_core.h                        |  81 ---
->>  .../atomisp/include/linux/atomisp_platform.h  |   1 -
->>  include/linux/sfi.h                           | 210 -------
->>  include/linux/sfi_acpi.h                      |  93 ----
->>  init/main.c                                   |   2 -
->>  48 files changed, 37 insertions(+), 2901 deletions(-)
->>  delete mode 100644 Documentation/ABI/testing/sysfs-firmware-sfi
->>  delete mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/Makefile
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_bcm43xx.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_bma023.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_bt.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_emc1403.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_gpio_keys.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_lis331.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_max7315.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mpu3050.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mrfld_pinctrl.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mrfld_rtc.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mrfld_sd.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_mrfld_spidev.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_pcal9555a.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tc35876x.c
->>  delete mode 100644 arch/x86/platform/intel-mid/device_libs/platform_tca6416.c
->>  delete mode 100644 arch/x86/platform/intel-mid/sfi.c
->>  delete mode 100644 arch/x86/platform/sfi/Makefile
->>  delete mode 100644 arch/x86/platform/sfi/sfi.c
->>  delete mode 100644 drivers/cpufreq/sfi-cpufreq.c
->>  delete mode 100644 drivers/sfi/Kconfig
->>  delete mode 100644 drivers/sfi/Makefile
->>  delete mode 100644 drivers/sfi/sfi_acpi.c
->>  delete mode 100644 drivers/sfi/sfi_core.c
->>  delete mode 100644 drivers/sfi/sfi_core.h
->>  delete mode 100644 include/linux/sfi.h
->>  delete mode 100644 include/linux/sfi_acpi.h
->>
->> --
+On 2/11/21 1:41 PM, Maximilian Luz wrote:
+> The raw message frame length is unaligned and explicitly marked as
+> little endian. It should not be accessed without the appropriate
+> accessor functions. Fix this.
 > 
-> All of this looks good to me, so I'm going to queue it up for 5.12
-> unless there are objections against doing that.
+> Note that payload.len already contains the correct length after parsing
+> via sshp_parse_frame(), so we can simply use that instead.
+> 
+> Reported-by: kernel-test-robot <lkp@intel.com>
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-That is fine by me (for the drivers/platform/x86 bits) :
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-Acked-by: Hans de Goede <hdegoede@redhat.com>
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
+
+> ---
+> 
+> Changes in v2:
+>  - Use payload.len instead of getting the frame length directly. Note
+>    that payload.len equals the frame length and is already correctly set
+>    in sshp_parse_frame(), so they are exactly the same thing. Makes it
+>    look a bit nicer though.
+> 
+>    I did drop the ACKs/Reveiewd-by in case you want to check that
+>    yourselves and since that's essentially the whole change.
+> 
+> ---
+>  drivers/platform/surface/aggregator/ssh_packet_layer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> index 583315db8b02..15d96eac6811 100644
+> --- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> +++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+> @@ -1774,7 +1774,7 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
+>  		break;
+>  	}
+>  
+> -	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(frame->len);
+> +	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(payload.len);
+>  }
+>  
+>  static int ssh_ptl_rx_threadfn(void *data)
+> 
 
