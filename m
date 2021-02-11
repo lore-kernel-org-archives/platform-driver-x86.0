@@ -2,117 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C38FC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 12:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3BEC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10F3C64E79
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 12:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DF664E79
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Feb 2021 13:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230405AbhBKMpJ (ORCPT
+        id S229792AbhBKNJu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Feb 2021 07:45:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231722AbhBKMmn (ORCPT
+        Thu, 11 Feb 2021 08:09:50 -0500
+Received: from mga09.intel.com ([134.134.136.24]:43014 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231624AbhBKNGq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Feb 2021 07:42:43 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7EEC0613D6;
-        Thu, 11 Feb 2021 04:42:02 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id g6so3995251wrs.11;
-        Thu, 11 Feb 2021 04:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qtFZ+ysode8Xi1WRcTgeQ/GmeL5uIuE9pL6MZ8vd2tk=;
-        b=LeUQKnPdwGFXMMCh42bauUrMAG0o/uP4Plr/v1Q1wJ1vzrH3AX3i6u1RaLPcz5idLX
-         09DHqTgu/Fp0FXdk87K3y4maKSc+zkHswsJbFojiqPwlWVQwfS+Wbc8kSQ6RdlLHidKV
-         4w4mJ2NR2cjmCT0djL5NvydexMBxXTJWT6crqNLf7mjlaqQeNgtO2H7aOwNyXfIDXJ9E
-         twH4gya129KR6UYmZNFtfEUuJPUX8p4OydMkanUyNNV8GP5H5VzqeF3U15IZD2dxfAXB
-         ITldAKr/Tj40Q/DIAywCdE7OA0iX88k4VfPTsv2uZe68KgcOsv5FtONeJMkgB1XYt5ut
-         IbxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qtFZ+ysode8Xi1WRcTgeQ/GmeL5uIuE9pL6MZ8vd2tk=;
-        b=WRIou/3FV/baGgFZGi/KaPlWUqM/j0+DQ2/o0XGr3uT1zxfZ9yM4cOAU585GILA1l1
-         iy16OGtybaoFhi9mQvSv1hYTSg/2p4DWumnbxO/BBF7WfeJ9ROsrkP589N0xMS9+od+C
-         aLN9WowIn/U2Bx0DW+OvEikQlAsxILKGoicS8Gk9+3X1yFk9uw3cMZDwt1ZKlFVl6aBX
-         Y3zJSOusBZuWpS4CnCt8xRsUqemzR2FzHkvRyfvPeRcAbgIGMRQZ+JxsUPQUHX1meezP
-         s4AeexHYlp2NLgaU7B///mPIx2FOEDLCuwT0430FeM0IwEY5hg7MFOdD4zKF9v9LyPtm
-         uoEg==
-X-Gm-Message-State: AOAM532hzpTueKvChT4Hw0q3TqAJ2rHNqvWtzTIPDh1vzGvJvV/nGNBp
-        k9eQtJ7rLDeawjXeX4R0YUfh6CbIqE8FuQ==
-X-Google-Smtp-Source: ABdhPJxIEiquzBiL9X2r1/AEeGI0+b6t9u5snGJfTycACRLWyedjDPN1ZKcckQNJOInIzGP7nctWew==
-X-Received: by 2002:a05:6000:254:: with SMTP id m20mr5615671wrz.300.1613047321520;
-        Thu, 11 Feb 2021 04:42:01 -0800 (PST)
-Received: from xws.localdomain (p5487b829.dip0.t-ipconnect.de. [84.135.184.41])
-        by smtp.gmail.com with ESMTPSA id s12sm4754222wrr.29.2021.02.11.04.42.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Feb 2021 04:42:00 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mark Gross <mgross@linx.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thu, 11 Feb 2021 08:06:46 -0500
+IronPort-SDR: 55ObIwXXP7Ce+w74u2c3hDjZHO3GcWqkMcBtUfKazDIngzn3bigOULlPiVf33d343Cd0zZqqMH
+ iLmcAyNdWchw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9891"; a="182369696"
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="182369696"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:04:51 -0800
+IronPort-SDR: xmlb9NqFgliArX/nIyV1XOP5dZrVm+iMz+ouoHhFVFin0OJO3ifO98hiQVCt3vuiEQ6czA0zcz
+ eIuL75rTI65g==
+X-IronPort-AV: E=Sophos;i="5.81,170,1610438400"; 
+   d="scan'208";a="437106463"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2021 05:04:49 -0800
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lABeJ-004E5z-3c; Thu, 11 Feb 2021 15:04:47 +0200
+Date:   Thu, 11 Feb 2021 15:04:47 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-test-robot <lkp@intel.com>
-Subject: [PATCH v2] platform/surface: aggregator: Fix access of unaligned value
-Date:   Thu, 11 Feb 2021 13:41:49 +0100
-Message-Id: <20210211124149.2439007-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.30.0
+Subject: Re: [PATCH] platform/surface: aggregator: Fix access of unaligned
+ value
+Message-ID: <YCUrb+yAdBCagxvv@smile.fi.intel.com>
+References: <20210210230411.1938660-1-luzmaximilian@gmail.com>
+ <YCUFgF9gmyeO+796@smile.fi.intel.com>
+ <b68b7547-5be4-c823-d015-febb5e7f84e9@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b68b7547-5be4-c823-d015-febb5e7f84e9@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The raw message frame length is unaligned and explicitly marked as
-little endian. It should not be accessed without the appropriate
-accessor functions. Fix this.
+On Thu, Feb 11, 2021 at 12:58:48PM +0100, Maximilian Luz wrote:
+> On 2/11/21 11:22 AM, Andy Shevchenko wrote:
+> > On Thu, Feb 11, 2021 at 12:04:11AM +0100, Maximilian Luz wrote:
+> > > The raw message frame length is unaligned and explicitly marked as
+> > > little endian. It should not be accessed without the appropriatte
+> > > accessor functions. Fix this.
 
-Note that payload.len already contains the correct length after parsing
-via sshp_parse_frame(), so we can simply use that instead.
+...
 
-Reported-by: kernel-test-robot <lkp@intel.com>
-Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
+> > Also it's possible to annotate temporary variable and use it, but it seems not
+> > worth to do.
+> 
+> Now that you mention it, we already have the correct frame length in
+> payload.len. Let me draft up a new patch with that.
 
-Changes in v2:
- - Use payload.len instead of getting the frame length directly. Note
-   that payload.len equals the frame length and is already correctly set
-   in sshp_parse_frame(), so they are exactly the same thing. Makes it
-   look a bit nicer though.
+Good!
 
-   I did drop the ACKs/Reveiewd-by in case you want to check that
-   yourselves and since that's essentially the whole change.
+> > Side question: Do you think the below is correct (& operator)?
+> > 
+> >          sp.len = get_unaligned_le16(&((struct ssh_frame *)sf.ptr)->len);
+> > 
+> > To me seems like you take an address to len member rather its value.
+> 
+> That's the point though, no? The signature is
+> 
+>         u16 get_unaligned_le16(const void *p)
+> 
+> so we do want a pointer to the len member. So I believe that is correct.
 
----
- drivers/platform/surface/aggregator/ssh_packet_layer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Indeed. I messed up with le16_to_cpu().
 
-diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-index 583315db8b02..15d96eac6811 100644
---- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
-+++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
-@@ -1774,7 +1774,7 @@ static size_t ssh_ptl_rx_eval(struct ssh_ptl *ptl, struct ssam_span *source)
- 		break;
- 	}
- 
--	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(frame->len);
-+	return aligned.ptr - source->ptr + SSH_MESSAGE_LENGTH(payload.len);
- }
- 
- static int ssh_ptl_rx_threadfn(void *data)
 -- 
-2.30.0
+With Best Regards,
+Andy Shevchenko
+
 
