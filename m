@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB0BC4332D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA855C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FBE64DAE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C6E64E01
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230481AbhBLL4V (ORCPT
+        id S230388AbhBLL5H (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Feb 2021 06:56:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        Fri, 12 Feb 2021 06:57:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbhBLLzp (ORCPT
+        with ESMTP id S231167AbhBLL4u (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Feb 2021 06:55:45 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA666C061788;
-        Fri, 12 Feb 2021 03:55:04 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id 7so7569611wrz.0;
-        Fri, 12 Feb 2021 03:55:04 -0800 (PST)
+        Fri, 12 Feb 2021 06:56:50 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBED2C06178A;
+        Fri, 12 Feb 2021 03:55:05 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id 190so655122wmz.0;
+        Fri, 12 Feb 2021 03:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oioqwQoSTIzVy9jk3Rwm6T1cSacseJktNMTIpVeJWKg=;
-        b=keYgiB6Ig+jq0cCM+XhmNnwQWWnNXyZnQ4nyTGO+nPS4Bz1uVPzdSvUzRXzLXR67Mr
-         A0b6trlEE8cfQjeKLy81MdUsl8yRVWYoUOQXZAW88UtQuVjHvzfzmVga8qjv0Zs9gbYf
-         ggFCoPuFMDYEkwHSMCdPFblOEnyQJjRnUEnQisX+B39khu9vDnKPXaW5CVyEVhBgTM7X
-         4NfFzeAl0EeCYR8eqJvpWPJ+lrHvoc+x1Dmdk0JOnnnTyGrWdeTGA4aG156wx7itrZ8X
-         wUaAxpzSYek2h8z1ZQPGInF9oX8n/o0l1EX4K5WD5UckPCLmwWF2Lq9WljuCHR4pUpnj
-         gQYg==
+        bh=tNh6rH4UdLS/W3UD6qka/BzSxRKPCMk3eczDtB3LU80=;
+        b=pbAzSXV5CmLq7aXlHfQrC3edRTT7E3lNx9g0+7Hfa6XCNxb9fdio+lrVdw+Eqhs8Bn
+         Y+GMIlvpLX8jks/7g+5rMWOdiDrvQnlx9bzTcIWcsaWK9npo8fbko0hDgyU2yJdWi3CI
+         5MxzswPeli9DPNVcDiHm2RfwZt4dJ63jGmTc8WDoExQFHLV423Ro/d8RsCon7JDpb44U
+         5ZfnDV9XCJhDnb1HlgFjf36GtCU7cxTrKDF9R5y+q9mAp7UPdYMdtX293q2C1oEf1yCl
+         Nkot4gtv8vPsLqt/UODXI0YqL6ac9rr9tWiC7kv98i1uGPSL6CksTciCevjUuFlCmOgA
+         UdLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oioqwQoSTIzVy9jk3Rwm6T1cSacseJktNMTIpVeJWKg=;
-        b=L+VwMF8Yo4056qj+gs0qO2gfeorgynNAr6/PvmrcpCAaGoZn37MVZF9ah8r2tMlL+b
-         /8aPTysVnI0SsHwrkjqWZw2c2yKQ6uwxU0jwEsemphhDL3nTKxUeuqcSrPR1qu68L/wH
-         LRXLoAq0iGMi81DzHLKCql7j1nBbenoep3GRXmEK9SqrqPAWlpnFuTo6WFJL4o0XqttC
-         ZqA1XRWSl6Wo+WdgxdfZgqF9CVwgQ2K+Bi3oShqv0kLS9AganEVzvkB6mnPIUnVjJ3x5
-         O9JUJfXp7dAfXEmVSAGtxl+BTsndmiBGd02Q4MkBdiw8357wd0XnMtFRaSDPMbjIJk9b
-         ir3Q==
-X-Gm-Message-State: AOAM533gydLGgfqtuQYa8W/fAQU53eO2ab2BTiEhLztkT0iDkDp++7ov
-        2DdhkS9b6csXv3CetrI1//8=
-X-Google-Smtp-Source: ABdhPJyLj2Q/CnqgnkHXRXLjxIJWCEdsucg5CfUNmwpp2drAC+tEd0S/JDloJDQ0gk1bfhkaEK9F8w==
-X-Received: by 2002:a5d:47af:: with SMTP id 15mr3009539wrb.205.1613130903568;
-        Fri, 12 Feb 2021 03:55:03 -0800 (PST)
+        bh=tNh6rH4UdLS/W3UD6qka/BzSxRKPCMk3eczDtB3LU80=;
+        b=B/MvSlbkicp8YRmIIzFjwgxn85m+3Agd/HDENLJqNhluDO7yZc+pY1gKUkzMLEz739
+         F/v3GwBX6FfNjSQjEMmPHuL07+MvqN0dxf3avaxo1EdLfLaPfDCUFB+FBrICLQyj7ebj
+         jL5xffLVTVfVu8/ZD8TnyT5rDYkqGnI4HKpbOt7sbZW6QQ6g9GaBTcWx/ZwkVkYexfah
+         dejKqU5by4zYLlgCbUwgo4Pj6SS4ieseMOrCtMKXl4Q1I2gDtN3lI9zsd0jEla/oKH+K
+         DjXqxmQLvRrYuL7tjKn6mO8mGgbiP7nDJVXgyearmuLvHiVIR3L1t9rDmLT3bw4a/Gw7
+         ekSw==
+X-Gm-Message-State: AOAM532GEU8XGiyZ+tvH0pbj49qS9s50yoUN8ynOd2CD2X97ZdmQEX9T
+        YK052v1Roi8CEQAB0CTcsYM=
+X-Google-Smtp-Source: ABdhPJw2YaA5x9eyltYdf9L5lVHj5jpjGun5V42/zv14fWRkY3WIY1/WD1ANyzssGuUn93esEyUQiw==
+X-Received: by 2002:a05:600c:204b:: with SMTP id p11mr2327208wmg.129.1613130904729;
+        Fri, 12 Feb 2021 03:55:04 -0800 (PST)
 Received: from xws.localdomain (p5487bf16.dip0.t-ipconnect.de. [84.135.191.22])
-        by smtp.gmail.com with ESMTPSA id p1sm9455560wru.86.2021.02.12.03.55.02
+        by smtp.gmail.com with ESMTPSA id p1sm9455560wru.86.2021.02.12.03.55.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 03:55:03 -0800 (PST)
+        Fri, 12 Feb 2021 03:55:04 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/6] platform/surface: aggregator_registry: Add platform profile device
-Date:   Fri, 12 Feb 2021 12:54:37 +0100
-Message-Id: <20210212115439.1525216-5-luzmaximilian@gmail.com>
+Subject: [PATCH v3 5/6] platform/surface: aggregator_registry: Add DTX device
+Date:   Fri, 12 Feb 2021 12:54:38 +0100
+Message-Id: <20210212115439.1525216-6-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210212115439.1525216-1-luzmaximilian@gmail.com>
 References: <20210212115439.1525216-1-luzmaximilian@gmail.com>
@@ -75,93 +75,36 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add the SSAM platform profile device to the SSAM device registry. This
-device is accessible under the thermal subsystem (TC=0x03) and needs to
-be registered for all Surface models.
+Add the detachment system (DTX) SSAM device for the Surface Book 3. This
+device is accessible under the base (TC=0x11) subsystem.
 
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 ---
- .../surface/surface_aggregator_registry.c         | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/platform/surface/surface_aggregator_registry.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index cde279692842..33904613dd4b 100644
+index 33904613dd4b..dc044d06828b 100644
 --- a/drivers/platform/surface/surface_aggregator_registry.c
 +++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -65,9 +65,16 @@ static const struct software_node ssam_node_bat_sb3base = {
- 	.parent = &ssam_node_hub_base,
+@@ -71,6 +71,12 @@ static const struct software_node ssam_node_tmp_pprof = {
+ 	.parent = &ssam_node_root,
  };
  
-+/* Platform profile / performance-mode device. */
-+static const struct software_node ssam_node_tmp_pprof = {
-+	.name = "ssam:01:03:01:00:01",
++/* DTX / detachment-system device (Surface Book 3). */
++static const struct software_node ssam_node_bas_dtx = {
++	.name = "ssam:01:11:01:00:00",
 +	.parent = &ssam_node_root,
 +};
 +
  /* Devices for Surface Book 2. */
  static const struct software_node *ssam_node_group_sb2[] = {
  	&ssam_node_root,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
-@@ -78,18 +85,21 @@ static const struct software_node *ssam_node_group_sb3[] = {
- 	&ssam_node_bat_ac,
+@@ -86,6 +92,7 @@ static const struct software_node *ssam_node_group_sb3[] = {
  	&ssam_node_bat_main,
  	&ssam_node_bat_sb3base,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
- /* Devices for Surface Laptop 1. */
- static const struct software_node *ssam_node_group_sl1[] = {
- 	&ssam_node_root,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
- /* Devices for Surface Laptop 2. */
- static const struct software_node *ssam_node_group_sl2[] = {
- 	&ssam_node_root,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
-@@ -98,6 +108,7 @@ static const struct software_node *ssam_node_group_sl3[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
-@@ -106,18 +117,21 @@ static const struct software_node *ssam_node_group_slg1[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
- /* Devices for Surface Pro 5. */
- static const struct software_node *ssam_node_group_sp5[] = {
- 	&ssam_node_root,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
- /* Devices for Surface Pro 6. */
- static const struct software_node *ssam_node_group_sp6[] = {
- 	&ssam_node_root,
-+	&ssam_node_tmp_pprof,
- 	NULL,
- };
- 
-@@ -126,6 +140,7 @@ static const struct software_node *ssam_node_group_sp7[] = {
- 	&ssam_node_root,
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
-+	&ssam_node_tmp_pprof,
+ 	&ssam_node_tmp_pprof,
++	&ssam_node_bas_dtx,
  	NULL,
  };
  
