@@ -2,163 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F3EC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EB2C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 15:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFB0864DAE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 11:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0A764E76
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 12 Feb 2021 15:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbhBLL5I (ORCPT
+        id S232171AbhBLPen (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 12 Feb 2021 06:57:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231171AbhBLL4u (ORCPT
+        Fri, 12 Feb 2021 10:34:43 -0500
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:58162 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232270AbhBLPed (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 12 Feb 2021 06:56:50 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168CFC06178B;
-        Fri, 12 Feb 2021 03:55:07 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id u14so7559405wri.3;
-        Fri, 12 Feb 2021 03:55:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FUUbiYDFGCraawh5DHwBORHGH4DrwjhPrPCMACKRdt4=;
-        b=qBW/D+K870aXZzvpoPhHwC41LOXs8CSAQpBSJSY48hqDscNQ+rAZ9ShLRBl2ZAVNG0
-         DkfoEc+FkIAsX6MgvonK3Oyq4q0mA9+enPCpRUIctiKLUUbwPI9Med+eSC6h3Hd9K8vH
-         8l35vboXzD2ZDSHsWgIMvfnQyH3qglffeRswqhd5Rger60nuBPlszgl7mjlq1wuCM9F9
-         UK1J2jXihR1tcm7XgrOaiOIvjQ8Os2J0KDUV3y/mtPVRQ10lCDDQr/wXkoMR/4WH7Cw7
-         W5ffdsYWQZkq//fV8s58Y5Qy29HcINbVz4hvPcTGh/DD4IvyP+FjBxPPpWHR+1aLgr/p
-         DGJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FUUbiYDFGCraawh5DHwBORHGH4DrwjhPrPCMACKRdt4=;
-        b=ITsU9gdaTn98PG7oAmO6gUv2Oofb+7H4n9JjbErGpSY7l/lIaS5i/1Is1A0gjQhM2A
-         eyoGl27bLsMluu1Uk4///gm1ZqXPehZjyxHRWJT3jiRt9j2P1WP+SQmgygEvM6Pgz+4l
-         dfWzEcwWGDecONc5xmgLcct5+MYsso3kLRNb33xjZothlwtFAm2X8nBhcm2CmN+E9Nmo
-         LSbJPl/r3lVtqWWhdeJUP7ZZR1tYeWXOqBTkeEDkWyr6oCBDtzW5mQWggFSmyuLVS9OO
-         4ktXnuBH9UwCZLop6yWp1FzLfxRf67O0iKDZLBDDPq8pHfdnNbA+MvqyrQTdG2QH6GL5
-         EC7A==
-X-Gm-Message-State: AOAM5318PxCX4XnZmVRpJgDUl7S1WbBx1tv8iFlMs+qXPSDc7q6SZ9wM
-        GU/Rki3wjPna/Mg0czemqUXLtzJKGPg=
-X-Google-Smtp-Source: ABdhPJwVq7SAHGGeGJykYop+zmjN3d3isQDdaPPor0FE+DxNQjw+nAH5IXvgjmEY4Oyd16s+EzYwSg==
-X-Received: by 2002:adf:9599:: with SMTP id p25mr2806772wrp.107.1613130905894;
-        Fri, 12 Feb 2021 03:55:05 -0800 (PST)
-Received: from xws.localdomain (p5487bf16.dip0.t-ipconnect.de. [84.135.191.22])
-        by smtp.gmail.com with ESMTPSA id p1sm9455560wru.86.2021.02.12.03.55.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 03:55:05 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] platform/surface: aggregator_registry: Add HID subsystem devices
-Date:   Fri, 12 Feb 2021 12:54:39 +0100
-Message-Id: <20210212115439.1525216-7-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210212115439.1525216-1-luzmaximilian@gmail.com>
-References: <20210212115439.1525216-1-luzmaximilian@gmail.com>
+        Fri, 12 Feb 2021 10:34:33 -0500
+Received: from [100.112.3.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 32/66-00973-1CE96206; Fri, 12 Feb 2021 15:29:05 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRWlGSWpSXmKPExsWS8eIhj+7BeWo
+  JBlM6+C3eHJ/OZDH1QI3Fzodv2SyW7+tntLi8aw6bRfvG2awWnzsms1is3vOC2eLM6UusDpwe
+  705tYfPYOesuu8emVZ1sHvNOBnq833eVzWPL1XYWj8+b5ALYo1gz85LyKxJYM+7+WcNe8EWgo
+  vubQANjP28XIxeHkMB/Romvhw+zQzjPGSVOf1zF3MXIySEskCkxad5UMFtEoFqi8fwvVpAiZo
+  FLjBKvpq1lB0kICdhK3F9yHqyITUBbYsuWX2wgNi9Q/OPMVlYQm0VAVWLqtM8sILaoQLjE602
+  fGSFqBCVOznwCFucUsJO4smoWUxcjB9ACTYn1u/RBwswC4hK3nsxngrDlJba/nQO2SgLI/vHo
+  FjuEnSDR8+8R2wRGwVlIps5CmDQLyaRZSCYtYGRZxWiWVJSZnlGSm5iZo2toYKBraGika6BrZ
+  GSkl1ilm6RXWqybmlhcomuol1herFdcmZuck6KXl1qyiREYbykFDPd2MP55/UHvEKMkB5OSKO
+  +ZGWoJQnxJ+SmVGYnFGfFFpTmpxYcYZTg4lCR4VWcD5QSLUtNTK9Iyc4CxD5OW4OBREuHNmgu
+  U5i0uSMwtzkyHSJ1iVJQS590JkhAASWSU5sG1wdLNJUZZKWFeRgYGBiGegtSi3MwSVPlXjOIc
+  jErCvEfmAE3hycwrgZv+CmgxE9Dimi6wxSWJCCmpBqaiJQ31JTUCDCqfU9xfn/gnce6sUscxF
+  ZnWTbcWHPCNrZ8zmSlhGofSFMf2FxsZly45M0NhldmPTZIfQyZNNunqjQ5j+cRetGby1pQjx2
+  Z7npmwepkze/9/SQtjhramBYe5vns8s62QMZrkkS7az+ZycmKmF/PU6gd2b7TfTHTvfXYuU0Y
+  y913KvqPVSXUch32mxnz/+GNp7c4ONa9J0fPqeQ22zzjPW+xkwj3rl12lT5hegOkT+e1HOhZt
+  /ZejU1y55L5sh/pk75IZHIYbGZ9OY/+4wtTQ8HSDhI0nr/UPy4dzbzydKVXPHOF3TnV+fPORz
+  7XO/797xh59c+fxF1ulyq1litaLp0XVcuqI8CqxFGckGmoxFxUnAgCPf1JPsgMAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-31.tower-395.messagelabs.com!1613143745!262690!1
+X-Originating-IP: [104.232.225.12]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 28115 invoked from network); 12 Feb 2021 15:29:05 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.12)
+  by server-31.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Feb 2021 15:29:05 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 0B0FDB4F202F52A5DBA3;
+        Fri, 12 Feb 2021 10:29:05 -0500 (EST)
+Received: from localhost.localdomain (10.46.53.63) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Fri, 12 Feb
+ 2021 10:28:27 -0500
+Subject: Re: [External] [PATCH v2 0/4] platform/surface: Add platform profile
+ driver for Surface devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Mark Gross <mgross@linux.intel.com>, Len Brown <lenb@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20210211201703.658240-1-luzmaximilian@gmail.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <5133800c-e7e4-034a-d646-de1411065fac@lenovo.com>
+Date:   Fri, 12 Feb 2021 10:29:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210211201703.658240-1-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.46.53.63]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add HID subsystem (TC=0x15) devices. These devices need to be registered
-for 7th-generation Surface models. On previous generations, these
-devices are either provided as platform devices via ACPI (Surface Laptop
-1 and 2) or implemented as standard USB device.
+On 11/02/2021 15:16, Maximilian Luz wrote:
+> This series adds a driver to provide platform profile support on 5th-
+> and later generation Microsoft Surface devices with a Surface System
+> Aggregator Module. On those devices, the platform profile can be used to
+> influence cooling behavior and power consumption.
+> 
+> To achieve this, a new platform profile is introduced: the
+> 'balanced-performance' profile.
+> 
+> In addition, a couple of fix-ups are performed:
+> - Hide CONFIG_ACPI_PLATFORM_PROFILE and change drivers so that it is
+>   selected instead of depended on.
+> - Fix some references to documentation in a comment.
+> 
+> Note: This series (or more specifically "platform/surface: Add platform
+> profile driver") depends on the "platform/surface: Add Surface
+> Aggregator device registry" series.
+> 
+> Changes in v2:
+>  - Introduce new 'balanced-performance' platform profile and change
+>    profile mapping in driver.
+>  - Perform some fix-ups for the ACPI platform profile implementation:
+>    - Fix some references to documentation in a comment.
+>    - Hide CONFIG_ACPI_PLATFORM_PROFILE
+> 
+> Maximilian Luz (4):
+>   ACPI: platform: Hide ACPI_PLATFORM_PROFILE option
+>   ACPI: platform: Fix file references in comment
+>   ACPI: platform: Add balanced-performance platform profile
+>   platform/surface: Add platform profile driver
+> 
+>  .../ABI/testing/sysfs-platform_profile        |  18 +-
+>  MAINTAINERS                                   |   6 +
+>  drivers/acpi/Kconfig                          |  16 +-
+>  drivers/acpi/platform_profile.c               |   1 +
+>  drivers/platform/surface/Kconfig              |  22 ++
+>  drivers/platform/surface/Makefile             |   1 +
+>  .../surface/surface_platform_profile.c        | 190 ++++++++++++++++++
+>  drivers/platform/x86/Kconfig                  |   4 +-
+>  include/linux/platform_profile.h              |   6 +-
+>  9 files changed, 237 insertions(+), 27 deletions(-)
+>  create mode 100644 drivers/platform/surface/surface_platform_profile.c
+> 
+I looked through the patch series and it all looked good to me.
+Glad the platform profile implementation is getting used in more places :)
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- .../surface/surface_aggregator_registry.c     | 49 +++++++++++++++++++
- 1 file changed, 49 insertions(+)
-
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index dc044d06828b..caee90d135c5 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -77,6 +77,48 @@ static const struct software_node ssam_node_bas_dtx = {
- 	.parent = &ssam_node_root,
- };
- 
-+/* HID keyboard. */
-+static const struct software_node ssam_node_hid_main_keyboard = {
-+	.name = "ssam:01:15:02:01:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID touchpad. */
-+static const struct software_node ssam_node_hid_main_touchpad = {
-+	.name = "ssam:01:15:02:03:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID device instance 5 (unknown HID device). */
-+static const struct software_node ssam_node_hid_main_iid5 = {
-+	.name = "ssam:01:15:02:05:00",
-+	.parent = &ssam_node_root,
-+};
-+
-+/* HID keyboard (base hub). */
-+static const struct software_node ssam_node_hid_base_keyboard = {
-+	.name = "ssam:01:15:02:01:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID touchpad (base hub). */
-+static const struct software_node ssam_node_hid_base_touchpad = {
-+	.name = "ssam:01:15:02:03:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID device instance 5 (unknown HID device, base hub). */
-+static const struct software_node ssam_node_hid_base_iid5 = {
-+	.name = "ssam:01:15:02:05:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
-+/* HID device instance 6 (unknown HID device, base hub). */
-+static const struct software_node ssam_node_hid_base_iid6 = {
-+	.name = "ssam:01:15:02:06:00",
-+	.parent = &ssam_node_hub_base,
-+};
-+
- /* Devices for Surface Book 2. */
- static const struct software_node *ssam_node_group_sb2[] = {
- 	&ssam_node_root,
-@@ -93,6 +135,10 @@ static const struct software_node *ssam_node_group_sb3[] = {
- 	&ssam_node_bat_sb3base,
- 	&ssam_node_tmp_pprof,
- 	&ssam_node_bas_dtx,
-+	&ssam_node_hid_base_keyboard,
-+	&ssam_node_hid_base_touchpad,
-+	&ssam_node_hid_base_iid5,
-+	&ssam_node_hid_base_iid6,
- 	NULL,
- };
- 
-@@ -116,6 +162,9 @@ static const struct software_node *ssam_node_group_sl3[] = {
- 	&ssam_node_bat_ac,
- 	&ssam_node_bat_main,
- 	&ssam_node_tmp_pprof,
-+	&ssam_node_hid_main_keyboard,
-+	&ssam_node_hid_main_touchpad,
-+	&ssam_node_hid_main_iid5,
- 	NULL,
- };
- 
--- 
-2.30.1
-
+Thanks
+Mark
