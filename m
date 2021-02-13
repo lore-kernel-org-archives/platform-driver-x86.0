@@ -2,247 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DABC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 15:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD60C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 15:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95CA164DCE
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 15:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E9E64DDA
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 15:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbhBMPGV (ORCPT
+        id S229531AbhBMPOX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 13 Feb 2021 10:06:21 -0500
-Received: from ganymed.uberspace.de ([185.26.156.242]:56934 "EHLO
+        Sat, 13 Feb 2021 10:14:23 -0500
+Received: from ganymed.uberspace.de ([185.26.156.242]:60032 "EHLO
         ganymed.uberspace.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbhBMPGS (ORCPT
+        with ESMTP id S229703AbhBMPOW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 13 Feb 2021 10:06:18 -0500
-Received: (qmail 28790 invoked from network); 13 Feb 2021 15:05:31 -0000
+        Sat, 13 Feb 2021 10:14:22 -0500
+Received: (qmail 32651 invoked from network); 13 Feb 2021 15:13:38 -0000
 Received: from localhost (HELO localhost) (127.0.0.1)
-  by ganymed.uberspace.de with SMTP; 13 Feb 2021 15:05:31 -0000
+  by ganymed.uberspace.de with SMTP; 13 Feb 2021 15:13:38 -0000
 From:   Alexander Kobel <a-kobel@a-kobel.de>
-Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY
- 0x4012, 0x4013 events
+Subject: [PATCH v2] platform/x86: thinkpad_acpi: Handle keyboard cover
+ attach/detach events
 To:     Hans de Goede <hdegoede@redhat.com>,
         Nitin Joshi1 <njoshi1@lenovo.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         Mark Pearson <mpearson@lenovo.com>
-References: <53abdd94-8df4-cc1c-84e9-221face6b07c@a-kobel.de>
- <9d133a27-751a-a436-d255-3dd4a7d411d8@redhat.com>
- <TY2PR03MB3645D33506D85E1EECD6DABA8C8F9@TY2PR03MB3645.apcprd03.prod.outlook.com>
- <0e85bd26-bf2f-734c-1334-15ad591ec811@redhat.com>
- <499bd1fb-159b-53b0-173e-90167a2d23fa@a-kobel.de>
- <7f40435e-4287-fc67-55d1-52ee41efcbf0@redhat.com>
- <dcd315d6-2aa6-a4ab-6346-d6b2199c2878@a-kobel.de>
- <9f1229ab-41d1-440a-5843-6a026bb418fb@redhat.com>
-Message-ID: <07148bfc-726d-8267-f36f-9a5f19f6c434@a-kobel.de>
-Date:   Sat, 13 Feb 2021 16:05:29 +0100
+Message-ID: <83a0e45f-590d-0c7d-0afd-00a5a6322bd0@a-kobel.de>
+Date:   Sat, 13 Feb 2021 16:13:36 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <9f1229ab-41d1-440a-5843-6a026bb418fb@redhat.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms070004010503030605040504"
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms090701090905000508040304"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 This is a cryptographically signed message in MIME format.
 
---------------ms070004010503030605040504
+--------------ms090701090905000508040304
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Those events occur when a keyboard cover is attached to a ThinkPad
+X1 Tablet series device.  Typically, they are used to switch from normal
+to tablet mode in userspace; e.g., to offer touch keyboard choices when
+focus goes to a text box and no keyboard is attached, or to enable
+autorotation of the display according to the builtin orientation sensor.
 
-On 2/12/21 12:51 AM, Hans de Goede wrote:
-> Hi,
->=20
-> On 2/12/21 12:07 AM, Alexander Kobel wrote:
->> Hi Hans,
->>
->> and thanks also for the source code review. I will address those valid=
- points once I know whether the patch might be accepted, see below.
->>
->>
->> On 2/11/21 5:24 PM, Hans de Goede wrote:
->>> Hi Alexander,
->>>
->>> On 2/10/21 6:51 PM, Alexander Kobel wrote:
->>>> <snip>>> Works like a charm.
->>>> I realized that the device also emits 0x60c0 (TP_HKEY_EV_TABLET_CHAN=
-GED) when the keyboard cover is attached or detached, yet *not* when it's=
- folded. I don't quite get why I nevertheless receive only one notificati=
-on to userspace according to acpi_listen, despite the fact that the 0x60c=
-0 handler also calls tpacpi_input_send_tabletsw and hotkey_tablet_mode_no=
-tify_change. Is there a deduplication behind the scenes?
->>>
->>> Yes the input subsystem layer will not send events when nothing has c=
-hanged.
->>
->> I see, thanks for the confirmation.
->>
->>>> I also realized that intel_vbtn reports the change, too. Would it be=
- in order to modify intel_vbtn in a next step and blacklist this device t=
-o avoid duplicates?
->>>
->>> Hmm, that is a bit of a problem I would prefer to avoid having to den=
-y-list things in intel_vbtn.
->>
->> Agreed.
->>
->>> So do the 2 behave exactly the same? Also wrt when the kbd is folded =
-behind the kbd. IOW
->>> are the 2 SW_TABLET_MODE reports fully in sync in all possible states=
-:
->>>
->>> 1. Just the tablet
->>> 2. Tablet + keyboard attached, keyboard in use
->>> 3. Tablet + keyboard attached, keyboard folded away behind tablet=20
->>>
->>> ?
->>
->> They are in sync, at least as soon as the state changes and an event i=
-s emitted. The only functional difference seems to be that thinkpad_acpi =
-offers the sysfs entry hotkey_tablet_mode to read the current state, that=
-'s it.
->> This is nice after bootup or for scripts started at random time withou=
-t the chance of observing state changes. E.g., I'd like to have autorotat=
-ion triggered via the orientation sensor, but only if the device is in ta=
-blet mode; so my autorotation handler would read that sysfs entry as the =
-first thing. If there's no way to read the state, I have to resort to wat=
-ching the state toggle and cache it for myself in userspace.
->> But perhaps intel-vbtn offers a similar interface for that purpose tha=
-t I don't know?
->=20
-> No, but you can query the switch state with the evtest util.
+intel-vtbn already recognizes those events.  To avoid sending duplicate
+events to userspace, they are simply ignored.  Thus, this patch only
+avoids warnings about unknown and unhandled HKEYs 0x4012 and 0x4013.
 
-Ah! Great, thanks for the hint. This also reports the correct state with =
-just intel-vbtn, so really no point in pursuing my patch (unless someone/=
-me eventually bothers with other attachments).
+For more information about the background and potential improvements for
+different types of attachment options, such as the Pico cartridge dock
+module, see
+https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4ae2=
+90be737@a-kobel.de/
 
+Signed-off-by: Alexander Kobel <a-kobel@a-kobel.de>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
->> I can almost work around that by checking for the existence of the "PR=
-IMAX ThinkPad X1 Tablet Thin Keyboard Gen 2" input. But that's not a nice=
- workaround, and it doesn't detect the folding away (input is still regis=
-tered, although the firmware doesn't send key presses anymore).
->>
->> So, indeed the benefit of my patch is rather minor. If that means it s=
-hould be discarded, that's fine for me (I learned a lot while writing and=
- refining it, always nice). If someone can give me a hint on how to read =
-intel-vbtn state one-shot, even better, then it'd be mostly obsolete.
->=20
-> I was surprised that your device supports intel-vbtn, there might very =
-well be other X1 tablet generations / models which support GTOP but not i=
-ntel-vbtn...
-
-We'll have the code in the archive for easy access, no problem.
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+index c404706379d9..e16d4b804c92 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -174,6 +174,12 @@ enum tpacpi_hkey_event_t {
+ 						     or port replicator */
+ 	TP_HKEY_EV_HOTPLUG_UNDOCK	=3D 0x4011, /* undocked from hotplug
+ 						     dock or port replicator */
++	/*
++	 * Thinkpad X1 Tablet series devices emit 0x4012 and 0x4013
++	 * when keyboard cover is attached, detached or folded onto the back
++	 */
++	TP_HKEY_EV_KBD_COVER_ATTACH	=3D 0x4012, /* keyboard cover attached */
++	TP_HKEY_EV_KBD_COVER_DETACH	=3D 0x4013, /* keyboard cover detached or f=
+olded back */
+=20
+ 	/* User-interface events */
+ 	TP_HKEY_EV_LID_CLOSE		=3D 0x5001, /* laptop lid closed */
+@@ -3990,6 +3996,23 @@ static bool hotkey_notify_dockevent(const u32 hkey=
+,
+ 		pr_info("undocked from hotplug port replicator\n");
+ 		return true;
+=20
++	/*
++	 * Deliberately ignore attaching and detaching the keybord cover to avo=
+id
++	 * duplicates from intel-vbtn, which already emits SW_TABLET_MODE event=
+s
++	 * to userspace.
++	 *
++	 * Please refer to the following thread for more information and a prel=
+iminary
++	 * implementation using the GTOP ("Get Tablet OPtions") interface that =
+could be
++	 * extended to other attachment options of the ThinkPad X1 Tablet serie=
+s, such as
++	 * the Pico cartridge dock module:
++	 * https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-=
+b4ae290be737@a-kobel.de/
++	 */
++	case TP_HKEY_EV_KBD_COVER_ATTACH:
++	case TP_HKEY_EV_KBD_COVER_DETACH:
++		*send_acpi_ev =3D false;
++		*ignore_acpi_ev =3D true;
++		return true;
++
+ 	default:
+ 		return false;
+ 	}
+--=20
+2.30.1
 
 
->> What might be more interesting is the potential handling different att=
-achable devices, such as the portable dock (I guess this is the "Pico Car=
-tridge", since it comes with another battery). For this one, I would actu=
-ally expect an SW_DOCK event, and via the GTOP queries, this could be det=
-ected and distinguished from other attachment options. I assume intel-vbt=
-n can't cover that case out-of-the-box.
->=20
-> Right, that would be another case where having GTOP support would be he=
-lpful.
-
-It's on my watchlist for cheap finds on eBay, so this might happen at som=
-e point.
-
-
->> Unfortunately, I don't have such a dock (yet), so that's just guessing=
-=2E
->>
->>
->> Out of curiosity: is your ThinkPad 10 fully handled by intel-vbtn?
->=20
->=20
-> I've the first generation ThinkPad 10 with a Bay Trail SoC. Not only do=
-es it not have intel-vbtn support, it also does not have GTOP support.
->=20
-> I just checked and currently thinkpad_acpi does not even load on my Thi=
-nkPad 10. It does a "HKEY" device, but with a HID of LEN0168, where as th=
-inkpad_acpi only binds to=20
-> LEN0068 and LEN0268. I could make thinkpad_acpi bind, but it won't do a=
-nything useful. I just checked and there is nothing useful in the whole L=
-EN0168 HKEY device.
-
-I see, thanks.
-
->>>> On the other hand, userspace should expect duplicate messages to som=
-e degree and use a hysteresis approach anyway. Every now and then, the co=
-ntact of the magnetic plug is not established perfectly on the first atte=
-mpt. So perhaps not really an issue.
->>>
->>> The only userspace consumer of this which I know is mutter (part of g=
-nome-shell) and it
->>> will just take the value from the last event. So if the 2 are always =
-in sync then
->>> the event send by the second input-dev will essentially be a no-op si=
-nce the value will
->>> be the same as the other event.
->>
->> Well, naturally another consumer is the acpi framework, e.g., acpi_lis=
-ten or acpid. There, we have the possibility to install user-defined hand=
-lers. The same holds for window manager handlers such as sway's bindswitc=
-h tablet:{on,off,toggle} or, I presume, xbindkeys.
->>
->> IMHO all reasonable handlers are idempotent, but users can be arbitrar=
-ily crazy. As mentioned, even if events are emitted exactly once on the s=
-oftware side, non-idempotent behavior will still occasionally be buggy, b=
-ecause the hardware connection is dodgy at times.
->>
->>> We do need to resolve the question of how to handle this before I can=
- merge the patch,
->>> atm I think that just having it reported twice is fine (as long as bo=
-th reports are in
->>> sync).
->>
->> They are in sync, that much I can confirm. But as mentioned, if you re=
-frain from integrating the patch, I'm fine with that.
->> In that case, we should probably just add a dummy handler for HKEYs 0x=
-4012 and 0x4013 with comments towards intel-vbtn, to avoid the unknown HK=
-EY warning cluttering the system log.
->=20
-> Hmm, I'm honestly not sure what to do here...
->=20
-> I guess we can always grab your patch from the archives if it turns out=
- to be useful on another device.
->=20
-> And until then a dummy handler indeed is probably best.
-
-I think so, too.
-
-> Can you do a v2 of your original patch with:
->=20
-> 1. A comment about SW_TABLET_MODE being handled by intel-vbtn
-> 2. In that comment also put a link to this mailinglist discussion:
-> https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4a=
-e290be737@a-kobel.de/
-
-Will be on the list in few minutes.
-
-Note that I added send_acpi_ev=3Dfalse and ignore_acpi_ev=3Dtrue.  I gues=
-s that's correct?
-Also, I did not bother to add the pr_info.  Mostly because, after the con=
-siderations of the week, I don't know whether the message should be "keyb=
-oard cover attached" or "something attached".  Same for the names in the =
-enum, too - it could be that "TP_HKEY_EV_ATTACH_SOMETHING" would be more =
-apt, but I don't know when exactly the HKEY is sent.
-
-
-Cheers,
-Alex
-
-
---------------ms070004010503030605040504
+--------------ms090701090905000508040304
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -342,20 +224,20 @@ jBPKilDLTXJkrA5wlQpSihjSQG/UPLP+YDsrEuwwBC1DbcSn5KOyMXFpfxsoSegFzb0lxPRc
 6sScLr/v96FwvwWpL54Fp9dr0TGCA80wggPJAgEBMGEwVTELMAkGA1UEBhMCREUxFzAVBgNV
 BAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRWb2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJp
 dmF0ZSBDQSBHMDICCBUMN0NLozG+MA0GCWCGSAFlAwQCAQUAoIIBvTAYBgkqhkiG9w0BCQMx
-CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMTMxNTA1MjlaMC8GCSqGSIb3DQEJ
-BDEiBCD6tq+y/Jv2O62J/vufeQy0gAkpMMuAkCXnuiTq2YJIjjBsBgkqhkiG9w0BCQ8xXzBd
+CwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMTAyMTMxNTEzMzZaMC8GCSqGSIb3DQEJ
+BDEiBCCXQ8t4ulo9oX31Jkn14tdfoAGqhGWjTkj5UrmCHXi5iTBsBgkqhkiG9w0BCQ8xXzBd
 MAsGCWCGSAFlAwQBKjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCA
 MA0GCCqGSIb3DQMCAgFAMAcGBSsOAwIHMA0GCCqGSIb3DQMCAgEoMHAGCSsGAQQBgjcQBDFj
 MGEwVTELMAkGA1UEBhMCREUxFzAVBgNVBAoMDkZyYXVuaG9mZXIgU0lUMS0wKwYDVQQDDCRW
 b2xrc3ZlcnNjaGx1ZXNzZWx1bmcgUHJpdmF0ZSBDQSBHMDICCGRFBiAAmYjgMHIGCyqGSIb3
 DQEJEAILMWOgYTBVMQswCQYDVQQGEwJERTEXMBUGA1UECgwORnJhdW5ob2ZlciBTSVQxLTAr
 BgNVBAMMJFZvbGtzdmVyc2NobHVlc3NlbHVuZyBQcml2YXRlIENBIEcwMgIIZEUGIACZiOAw
-DQYJKoZIhvcNAQEBBQAEggGAjpuadtJzSNhdaVJCwcJKkEHhy8A50rw7xVs0fztlk/p7P4UM
-893HN4yUZqYy3yHkDCi4bfn1riP5jBju4uFkT98o6Q/9CRf7z4UPvITSdB3OxS3K0V5ammig
-Asnr4M1L35+PloMgFrH9sI3dQAim57y1bTAUU8m4DURtVp2dO3v+C1omlRMdf2e4IvbSxge4
-t/CWY9Juu7CeXQI2FgyYNQ2myW8EN6uMLs0s7fBYarWc64R1+x3NxsAe6qPGnPEGDXZ2Bm/e
-oUaLWIWOolkdMWXQRbnDiWTljT6DPp2gx0wn4eJGtWtGry390ZesTlSNddTLmslozkVKXFwS
-8pC7TI9NoBX74KBJCD2Qh932nbmOexLijLwC83vrudHYYg2+6J2sLnJfJN1DJhUkPRhfAa+V
-0XJ9fAz9Jn9+QEMuJuQyzdDrbYGNv44r+cNUJWNgVuSL/RDssLxSt58xiLZ+B0UuHp9n9zSj
-UTuR7LU3R09kSdMd7QY6ZmY3+x6W0MYgAAAAAAAA
---------------ms070004010503030605040504--
+DQYJKoZIhvcNAQEBBQAEggGAt8BO9tKAbTh1vvftljmosVrVCSbdhW02aGKcMt6D5lPxFazN
+fatQbvjoqW6AwuE6R6b6g3gqCmzWgqy9DOiIzaPuqrKDx7mQJOoMv7tqEl0kActs7fUyCsgo
+hZ8MOisHNN8JMO+uGhcWemaz+1R9FwWZ2PYDq5JhnFLluK+qPE6OKKAyrcWu7zjGZ5ahiuXK
+lr3hEl+XX0jbBbzAGbpzgXyOAofR4IEAGK09qLhTxYebEfdoBrdH1iTKVInONxW+L3ExL2tl
+1ph/yZHZIG34YfmjjkVEN128TQFqgeRHzb2OJ978WTXiLM+vT71j2HcJQOkMjGLNVpK1Pgmt
+wp0BfiWI/RgfqXltgnz/SQCww7jOioFs/b0vUH/FI3XM3G8eTwEMFsskJlin3UNPtApSg5Z2
+pUp2FS1pdBCKE+aia9FZqu0k/41Q1tGBDr3UXcaItW8DrIqd7Y2QJtEnx9Eq19SA/mDsIaN5
+dBl03bT4bRpvDSKt5TAQI/5J2HwoDX7FAAAAAAAA
+--------------ms090701090905000508040304--
