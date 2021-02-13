@@ -2,199 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760B7C43381
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 18:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED98C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 20:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBF664DD1
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 18:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3234164DCF
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 13 Feb 2021 20:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbhBMSSQ (ORCPT
+        id S229647AbhBMUoO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 13 Feb 2021 13:18:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbhBMSSO (ORCPT
+        Sat, 13 Feb 2021 15:44:14 -0500
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:21075 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229653AbhBMUoN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 13 Feb 2021 13:18:14 -0500
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A946CC061574;
-        Sat, 13 Feb 2021 10:17:34 -0800 (PST)
-Received: by mail-ot1-x32d.google.com with SMTP id e4so2405152ote.5;
-        Sat, 13 Feb 2021 10:17:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HOn2/z8mqg+rGPT+Y/Aq1lFl/aq6tLIGwds8V2BocAI=;
-        b=k8LI9jwcQy44WxZmxXT4QLcLL6ng0HD4fNSHxTO3mqaHxsSm0BfNjMU+Lu/hyLFQsp
-         W02Nx1jsCvyOW+pjXprp6dCdMG6AaZPe3FI37DhV/kMhLp9a97HRupdVI2ApFvLpmZqm
-         me636eoZmGr09rhVDUis26bbd+kBQb4eJ6IoX9YwYMQBT7zkLhiYs5whtaSVEYcvFMM5
-         ZWQ7w5Db7ViqorTMrhMVtL8LB2GlpQVGTLqn6EczXhcMoTCDgIonHX/ASkCHl9RZKo7g
-         NbLcwm6DcL+qNJmwTXcBArVtpk+fd25qU5U8KKcV6WoKuWrqu2h7Cq0ViiOaUIzs3xhX
-         rriQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HOn2/z8mqg+rGPT+Y/Aq1lFl/aq6tLIGwds8V2BocAI=;
-        b=WuMoSK4rjXtxtNn90Kb0qGNS3GB3jxUbV1LsTVQNdl+nPEjEptZM4gXVaL+E46WkCb
-         ukipgXdZrEuGwPpt6G6JgbQg4TdVgsenYQR370efWkRUXIyzOu6mJPL163MT3c8Pq4Ia
-         5jY+a0F7ffYy61pYNkLXhonz6eF1cLOpW4XvBVRxQ1CFyuKvCpx9BKMVgagqe8AOaKFN
-         032Zy9WasiA/zSpP1xOCHt+P9gAvMIsrk00jIKFKTR9vtYyiFAZIgZrzCk1T2LiMzU1s
-         3aQcNq9VgxlAMnPdPQF+7y3uHgl1/6AFoEYsug+FKUzGgvkq7x56yvy2+pWs/l84dEwK
-         tAog==
-X-Gm-Message-State: AOAM5301iYxrvRTpc1ANBxN05K9pyWbDyCE1ewN7PWCJpWg1Z1asa9Ex
-        0gHiJ4jRFfRhUp/xtwxy+uq9mxmtmBs=
-X-Google-Smtp-Source: ABdhPJxD1MoHOqLUvWpxhIvYmzPvyYyRDEcMznpsG2SE+YrctzI+Td8G0CIBIlCGQJjCi1iiUkFgrw==
-X-Received: by 2002:a9d:6c4c:: with SMTP id g12mr6176921otq.53.1613240253599;
-        Sat, 13 Feb 2021 10:17:33 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g11sm2722206oif.9.2021.02.13.10.17.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Feb 2021 10:17:32 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [RFC PATCH 1/7] drivers: base: Add resource managed version of
- delayed work init
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        mazziesaccount@gmail.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
- <1230b0d2ba99ad546d72ab079e76cb1b3df32afb.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
- <2fb4b305-a93f-f91e-3001-dab5057e39cc@redhat.com>
- <084893a3-0071-13e9-5ce6-b7b027e6cd2a@roeck-us.net>
- <16140f5b-c504-1c07-9f0c-3813d686d157@redhat.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <7fc66c14-5dc5-d7b4-60ec-060bcf2d78cf@roeck-us.net>
-Date:   Sat, 13 Feb 2021 10:17:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 13 Feb 2021 15:44:13 -0500
+Date:   Sat, 13 Feb 2021 20:43:23 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1613249009;
+        bh=zzk+h6KF7rRy0OJ2BDF/o7A6Ch7mUbs1SYENJIKpS7Y=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=g4apXxbVWRVVPlxATXoeGl2vdrpM8fmzsAVl/QIjYHUNzACExQ4Kkg8+Pafb4Q5vr
+         w9oUoN7yS4eUfEAT9Rxn0aHIwe6DDxy8NAFTyDhREsMQqJ7P6Tlz3bd2uVq3uRxVmX
+         D9afOxw01cPR59RZt10jBqcNA4jV+d/+2j9dXjOk=
+To:     Nitin Joshi <nitjoshi@gmail.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Nitin Joshi <njoshi1@lenovo.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH 2/2] platorm/x86: thinkpad_acpi: sysfs interface to interface to get wwan antenna type
+Message-ID: <Z37uykc5gmsuJ0GzzVV8r1w2247m33IZ49gGcW-wSZI8Xu43M2C8jgpSizSvKm2-iVDy0BVY3mGcRAybwkz-OOnZi6VQYmpHe3miOc0dQF8=@protonmail.com>
+In-Reply-To: <20210212055856.232702-2-njoshi1@lenovo.com>
+References: <20210212055856.232702-1-njoshi1@lenovo.com> <20210212055856.232702-2-njoshi1@lenovo.com>
 MIME-Version: 1.0
-In-Reply-To: <16140f5b-c504-1c07-9f0c-3813d686d157@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2/13/21 7:59 AM, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/13/21 4:27 PM, Guenter Roeck wrote:
->> On 2/13/21 7:03 AM, Hans de Goede wrote:
->> [ ... ]
->>>
->>> I think something like this should work:
->>>
->>> static int devm_delayed_work_autocancel(struct device *dev, struct delayed_work *w,
->>> 					void (*worker)(struct work_struct *work)) {
->>> 	INIT_DELAYED_WORK(w, worker);
->>> 	return devm_add_action(dev, (void (*action)(void *))cancel_delayed_work_sync, w);
->>> }
->>>
->>> I'm not sure about the cast, that may need something like this instead:
->>>
->>> typedef void (*devm_action_func)(void *);
->>>
->>> static int devm_delayed_work_autocancel(struct device *dev, struct delayed_work *w,
->>> 					void (*worker)(struct work_struct *work)) {
->>> 	INIT_DELAYED_WORK(w, worker);
->>> 	return devm_add_action(dev, (devm_action_func)cancel_delayed_work_sync, w);
->>
->> Unfortunately, you can not type cast function pointers in C. It is against the C ABI.
->> I am sure it is done in a few places in the kernel anyway, but those are wrong.
-> 
-> I see, bummer.
-> 
->> This is the reason why many calls to devm_add_action() point to functions such as
->>
->> static void visconti_clk_disable_unprepare(void *data)
->> {
->>         clk_disable_unprepare(data);
->> }
->>
->> which could otherwise be handled using typecasts.
-> 
-> Hmm, wouldn't something like this be a candidate for adding a:
-> 
-> devm_clk_prepare_enable() helper?
-> 
-> This seems better then having the driver(s) make + error check separate
-> clk_prepare_enable() + devm_add_action_or_reset() calls ?
-> 
+Hi
 
-I don't really want to go there anymore. The maintainer rejected it several times.
 
-Guenter
+2021. febru=C3=A1r 12., p=C3=A9ntek 6:58 keltez=C3=A9ssel, Nitin Joshi =
+=C3=ADrta:
+
+> [...]
+> +/* sysfs wwan antenna type entry */
+> +static ssize_t wwan_antenna_type_show(struct device *dev,
+> +=09=09=09=09struct device_attribute *attr,
+> +=09=09=09=09char *buf)
+> +{
+> +=09switch (wwan_antennatype) {
+> +=09case 1:
+> +=09=09return sysfs_emit(buf, "type a\n");
+> +=09case 2:
+> +=09=09return sysfs_emit(buf, "type b\n");
+> +=09default:
+> +=09=09return sysfs_emit(buf, "unknown type\n");
+
+I feel like returning -ENODATA would be more appropriate here. Or maybe you=
+ could choose
+not to create the attribute if the antenna type is unknown. And I'm not sur=
+e if
+the "type" prefix is necessary. I believe the name of the attribute 'wwan_a=
+ntenna_type'
+already implies that the content will describe a type. Furthermore, I think=
+ you could
+omit the `has_antennatype` variable altogether, storing only `wwan_antennat=
+ype` is enough.
+
+
+> +=09}
+> +}
+> +
+>  static ssize_t wlan_tx_strength_reduce_store(struct device *dev,
+>  =09=09=09=09struct device_attribute *attr,
+>  =09=09=09=09const char *buf, size_t count)
+> @@ -10076,24 +10114,29 @@ static ssize_t wlan_tx_strength_reduce_store(st=
+ruct device *dev,
+>  =09}
+>
+>  =09sysfs_notify(&tpacpi_pdev->dev.kobj, NULL, "wlan_tx_strength_reduce")=
+;
+> +
+
+If you want the empty line here, I think you should place it in the previou=
+s patch.
+
+
+>  =09return count;
+>  }
+>  static DEVICE_ATTR_RW(wlan_tx_strength_reduce);
+> +static DEVICE_ATTR_RO(wwan_antenna_type);
+>
+>  static int tpacpi_dprc_init(struct ibm_init_struct *iibm)
+>  {
+> -=09int wlantx_err, err;
+> +=09int wlantx_err, wwanantenna_err, err;
+>
+>  =09wlantx_err =3D get_wlan_state(&has_wlantxreduce, &wlan_txreduce);
+> +=09wwanantenna_err =3D get_wwan_antenna(&has_antennatype, &wwan_antennat=
+ype);
+>  =09/*
+>  =09 * If support isn't available (ENODEV) for both devices then quit, bu=
+t
+>  =09 * don't return an error.
+>  =09 */
+> -=09if (wlantx_err =3D=3D -ENODEV)
+> +=09if ((wlantx_err =3D=3D -ENODEV) && (wwanantenna_err =3D=3D -ENODEV))
+>  =09=09return 0;
+>  =09/* Otherwise, if there was an error return it */
+>  =09if (wlantx_err && (wlantx_err !=3D -ENODEV))
+>  =09=09return wlantx_err;
+> +=09if (wwanantenna_err && (wwanantenna_err !=3D -ENODEV))
+> +=09=09return wwanantenna_err;
+>
+>  =09if (has_wlantxreduce) {
+>  =09=09err =3D sysfs_create_file(&tpacpi_pdev->dev.kobj,
+> @@ -10101,6 +10144,12 @@ static int tpacpi_dprc_init(struct ibm_init_stru=
+ct *iibm)
+>  =09=09if (err)
+>  =09=09=09return err;
+>  =09}
+> +
+> +=09if (has_antennatype) {
+> +=09=09err =3D sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_wwan_a=
+ntenna_type.attr);
+> +=09=09if (err)
+> +=09=09=09return err;
+> +=09}
+>  =09return 0;
+>  }
+> [...]
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
