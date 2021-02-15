@@ -2,108 +2,185 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC97C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 14 Feb 2021 19:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D08C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 06:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4F564E12
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 14 Feb 2021 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B3864E73
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 06:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbhBNTA2 (ORCPT
+        id S229910AbhBOG7S (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 14 Feb 2021 14:00:28 -0500
-Received: from mail1.perex.cz ([77.48.224.245]:52362 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229642AbhBNTA2 (ORCPT
+        Mon, 15 Feb 2021 01:59:18 -0500
+Received: from mail-lf1-f49.google.com ([209.85.167.49]:36292 "EHLO
+        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229836AbhBOG7Q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 14 Feb 2021 14:00:28 -0500
-X-Greylist: delayed 473 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Feb 2021 14:00:27 EST
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 5E495A0042;
-        Sun, 14 Feb 2021 19:51:51 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 5E495A0042
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1613328711; bh=cvdjkRHWFkzG1lLfAFQoWXRELwhjh9aZAgl/H1YhF18=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=shMZT7rji9g0Qza6xyS5aIMcHpz4YS2/4/dcUoAH3CcWxdJkioPpRZ7uUADD1y7XZ
-         Pq1Zbh3YLDrArISiKbUvm5hyoUXCPA4h5NbzKv+U3a9wMFODe5bhs/B5Wn23KaPxY1
-         qDn4xzoaUGOjpF3t6tQ8njru35ulewub33j2YS8w=
-Received: from p1gen2.localdomain (unknown [192.168.100.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Sun, 14 Feb 2021 19:51:39 +0100 (CET)
-Subject: Re: [PATCH v3 3/3] ASoC: rt715:add micmute led state control supports
-To:     Perry Yuan <perry979106@gmail.com>,
+        Mon, 15 Feb 2021 01:59:16 -0500
+Received: by mail-lf1-f49.google.com with SMTP id f1so8635269lfu.3;
+        Sun, 14 Feb 2021 22:58:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=4BH4r71LEBLN/FYC56Md53GFBHnSsqrv3bI2bMVLjMY=;
+        b=NWdVM1yfucxAPBxRS7RY/nxtQPhmSEOJplKZCNyY1xSR1uGQssZ+nzutaabPBKdRoG
+         1cWU1F48Nveu7EkOjtRp5znhupdKMEZ47r3DotwIG7XOEl6YIvo0+lHvKu6JT0t/2pTd
+         XGdhNGJC7ofiFICqIZZRMyEcxBeUmOi3HT/uW6/Hfga1O4R3Rj8dk8Ae5U/cgrSHQFk+
+         VemG1dyy3gA4a6/R81uzfirulFiTF6KVoB6TTlrOSpQ5pZQN8ato888yEqf/kybSlSMc
+         NDRG1lkB2MJO0JkPPGvnvHndhENQtvbJbX0B8eicyd2zTgeuEB8Z7MkiMXqymmveN493
+         JElw==
+X-Gm-Message-State: AOAM5334EmO1CLsdt0iczOHQto4TTDahnv2pcekAWQP69nazG9y5z6CH
+        OYKjlk/U8wLfph0t/MR0wCBkuMdiCz8kbA==
+X-Google-Smtp-Source: ABdhPJxoO4MrtauooOlxH50TwCbt0pujKzTLH9TqAOrNw1CHA0Xl/TC5vi4pS4C/ggVj7vcnRHPNyg==
+X-Received: by 2002:a19:10:: with SMTP id 16mr7936722lfa.497.1613372313252;
+        Sun, 14 Feb 2021 22:58:33 -0800 (PST)
+Received: from dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
+        by smtp.gmail.com with ESMTPSA id d14sm2653860lfg.128.2021.02.14.22.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Feb 2021 22:58:32 -0800 (PST)
+Message-ID: <4fb3a4c93d3db8640deeface4478ab057a3e3f78.camel@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH 1/7] drivers: base: Add resource managed version of
+ delayed work init
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Gross <mgross@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Perry Yuan <Perry.Yuan@dell.com>
-Cc:     oder_chiou@realtek.com, tiwai@suse.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, lgirdwood@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Mario.Limonciello@dell.com
-References: <20210112171814.5404-1-Perry_Yuan@Dell.com>
- <20210112175406.GF4646@sirena.org.uk>
- <43507ba7-74b8-2d18-57ca-271f89a752de@gmail.com>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <4a79cb14-4c71-8bd8-9c8c-ab2421e97e0b@perex.cz>
-Date:   Sun, 14 Feb 2021 19:51:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <284d4a13-5cc8-e23c-7e99-c03db5415bf1@redhat.com>
+References: <cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
+         <1230b0d2ba99ad546d72ab079e76cb1b3df32afb.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
+         <YCfDAly9b0zHMpJT@kroah.com>
+         <284d4a13-5cc8-e23c-7e99-c03db5415bf1@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <43507ba7-74b8-2d18-57ca-271f89a752de@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Mon, 15 Feb 2021 08:58:24 +0200
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Dne 14. 02. 21 v 7:43 Perry Yuan napsal(a):
 
->>> @@ -287,6 +291,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->>>   			return err;
->>>   	}
->>>   
->>> +#if IS_ENABLED(CONFIG_DELL_PRIVACY)
->>> +	/* dell privacy LED trigger state changed by muted/unmute switch */
->>> +	if (mc->invert) {
->>> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
->>> +			rt715->micmute_led = LED_OFF;
->>> +		} else {
->>> +			rt715->micmute_led = LED_ON;
->>> +		}
->>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, rt715->micmute_led);
->>> +	}
->>> +#endif
->>> +
-
-My question is, how do we know that the rt715 codec has connected internal
-microphone to this input? I believe that this should be covered in the machine
-specific code (runtime check), not in the codec code. #if CONFIG is not
-sufficient here.
-
-> I have moved this part code to the local definition of 
-> rt715_set_amp_gain_put and removed from rt715_priv.
-> new code will be like this in V4.
+On Sat, 2021-02-13 at 14:18 +0100, Hans de Goede wrote:
+> Hi,
 > 
-> @@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol 
-> *kcontrol,
->                  RT715_SET_GAIN_MIX_ADC2_L};
->          unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
->          unsigned int read_ll, read_rl, i, j, loop_cnt;
-> +       bool micmute_led;
+> On 2/13/21 1:16 PM, Greg Kroah-Hartman wrote:
+> > On Sat, Feb 13, 2021 at 01:58:44PM +0200, Matti Vaittinen wrote:
+> > > +/**
+> > > + * devm_delayed_work_autocancel - Resource-managed work
+> > > allocation
+> > > + * @dev: Device which lifetime work is bound to
+> > > + * @pdata: work to be cancelled when device exits
+> > > + *
+> > > + * Initialize work which is automatically cancelled when device
+> > > exits.
+> > 
+> > There is no such thing in the driver model as "when device exits".
+> > Please use the proper terminology as I do not understand what you
+> > think
+> > this is doing here...
+> 
+> I agree that this needs better wording I always talk about driver-
+> unbinding
+> because sysfs has /sys/bus/*/drivers/*/bind and
+> /sys/bus/*/drivers/*/unbind
+> attributes. But I see that the relevant driver-core functions all
+> call it
+> driver detaching, so lets be consistent and use that here too.
+
+//Snip
+
+> > > @@ -249,6 +250,10 @@ void __iomem *devm_of_iomap(struct device
+> > > *dev,
+> > >  			    struct device_node *node, int index,
+> > >  			    resource_size_t *size);
+> > >  
+> > > +/* delayed work which is cancelled when driver exits */
+> > 
+> > Not when the "driver exits".
+> 
+> Right this should be detached not exits.
 > 
 
-The whole LED trigger mechanism for the sound is covered in my LED generic
-code : https://lore.kernel.org/alsa-devel/20210211111400.1131020-1-perex@perex.cz/
+Thanks guys.
+I am poor with the terminology so I do appreciate your help in getting
+this right. I can change this for the v2.
 
-						Jaroslav
 
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+> > There is two different lifespans here (well 3).  Code and
+> > data*2.  Don't
+> > confuse them as that will just cause lots of problems.
+> > 
+> > The move toward more and more "devm" functions is not the way to go
+> > as
+> > they just more and more make things easier to get wrong.
+> > 
+> > APIs should be impossible to get wrong, this one is going to be
+> > almost
+> > impossible to get right.
+> 
+> I have to disagree here devm generally makes it easier to get things
+> right,
+> it is when some devm functions are missing and devm and non devm
+> resources
+> are mixed that things get tricky.
+
+Thanks for the discussion. I hope we can come to some conclusion here.
+Unsurprisingly I agree with Hans here. I did after all send this patch
+series :) I guess I am mostly just repeating what he said.
+
+As Hans pointed out, when all calls are 'undone' by devm the order of
+'undoing' is highly likely to be correct as the unwinding is done in
+reverse order to initializations. I think it is sane to assume in most
+case things are initiated in order where operations which depend on
+something are done last - and when 'unwinding' things those are
+'undone' first. 
+
+My 'gut feeling' for probe / remove related errors is that the most
+usual errors I've seen have been:
+
+a) Tear-down completely forgotten
+b) Tear-down forgotten at error path
+c) Wrong order of initiating things (IRQ requested prior resource
+initialization)
+d) Wrong order of cleann-up at remove.
+
+a) and b) class errors have been the most common ones I've seen. They
+can be completely avoided when devm is used.
+c) is there no matter if we use devm or not.
+d) is mostly avoided when only devm is used - mixing devm and manual
+operations make this more likely as Hans pointed out. As long as we
+have some devm operations we should help avoid mixing devm and manual
+clean-up.
+
+Best Regards
+	Matti Vaittinen
+
+
+
