@@ -8,75 +8,77 @@ X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9B6C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 14:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A8C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 14:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58C2F64E5A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 14:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E25F614A5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Feb 2021 14:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbhBOOaI (ORCPT
+        id S230106AbhBOOfp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Feb 2021 09:30:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49154 "EHLO
+        Mon, 15 Feb 2021 09:35:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41156 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229627AbhBOOaF (ORCPT
+        by vger.kernel.org with ESMTP id S230031AbhBOOfn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Feb 2021 09:30:05 -0500
+        Mon, 15 Feb 2021 09:35:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613399316;
+        s=mimecast20190719; t=1613399655;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=/6ExkZJh7aS4LgSRXEwsvG8E7a1TrPw1bCHDFElsQUA=;
-        b=Y0ZvwQUQUJ2iKgZSUByw8mgt3YlEEo3SrIM9qd5Yc6WGLutvNSpvK8k9z7VMf/Y9is6A1a
-        qQU0/Mhr9A1qrk8j5s6cbaoQSkND9eFi6r9dtVWgw/Bs0Ig08bsq3kJKzOYyEI9ZsK3RJw
-        oxYY4pdXSHAR82ZXNJdsdGMKzYkksak=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-5mWPkb8BPtCSqyDntFUhjw-1; Mon, 15 Feb 2021 09:28:33 -0500
-X-MC-Unique: 5mWPkb8BPtCSqyDntFUhjw-1
-Received: by mail-ej1-f72.google.com with SMTP id p15so4405399ejq.22
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2021 06:28:33 -0800 (PST)
+        bh=d2J+8Tfem94WsFrszmXvqkgjRa934v/heCKhqM64Y7M=;
+        b=Lhs5ucQmH+PJDWWwvPNSNj/AbJGougIT6VLZ47k22wQ5Dp2574mQ7L47Jily6fjtwEivXo
+        BkpLoiemQKBmvDhNdic7yze5BxW+c27oS73ZctmAYTLY/vvBdLgC32CNNY2C9PHv0WGeEZ
+        qjZGp2D3arD6zwFUhhtKeu+IohS56q0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-419-8mK7kpl1OKmo-HlGYWgEDg-1; Mon, 15 Feb 2021 09:34:11 -0500
+X-MC-Unique: 8mK7kpl1OKmo-HlGYWgEDg-1
+Received: by mail-ed1-f72.google.com with SMTP id l22so703112eds.18
+        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2021 06:34:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/6ExkZJh7aS4LgSRXEwsvG8E7a1TrPw1bCHDFElsQUA=;
-        b=oej7eCw45jRkWXaJekAvVKX+f/YqaoqBh8WMjsLOhs4+RegAbrzm9+DkAuMWBht4Bn
-         kuW3TmjI835465CPaoJurWHCh0hygrNexso2krnsGXdXHeB8kWFXT2iCAjrsCn2TlXIN
-         siJtgMMU8XPpfoacNQfUE9JTtFgen3xwFIsJMG2jQal3xlcsIbRzcXc3jG/D4dnKrPv9
-         +S6rtv92xlbmpTycLBxIrBgl4JmvQ0pJFRQE5+YVDNL/rB/Q2m2m5uLX3r2NEaLRrnjI
-         wuZHwUMfxtqdolZgF57tVrxMsLZpCxLc+7yVQgZf/u0IhCnLz7Aqg1BKxORhfSef08ok
-         DeXg==
-X-Gm-Message-State: AOAM533JnjIO6oAMAf3QP/YZrT+sil2xE7irkZW9RtQYTQtscXvPLRpw
-        UqkXSpL5katKPcBx96INWSpiCwDRiq/ILEXprYm8bmlzFo/6FHAcKl3aFWrNz99QkLEjMN+6z0d
-        jedf3JL1B8naLgXjyYCYDWGB7EXsSSKFNEg==
-X-Received: by 2002:aa7:c94a:: with SMTP id h10mr16501267edt.41.1613399312359;
-        Mon, 15 Feb 2021 06:28:32 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxBY9NcWPR0QeGNI4r5BtB/2r6CydGfmwmf1eGXOpI6i8hqFOUQSml53rVPpORhyLxlxQW0tQ==
-X-Received: by 2002:aa7:c94a:: with SMTP id h10mr16501256edt.41.1613399312219;
-        Mon, 15 Feb 2021 06:28:32 -0800 (PST)
+        bh=d2J+8Tfem94WsFrszmXvqkgjRa934v/heCKhqM64Y7M=;
+        b=Oc6fe99x+ssDRHuC8PPqI2yXwMqQcL1DXx1OWGBnEyxZfbEOwJAsRhcuQWyMLVOnsz
+         fXLgciJj5p+DcXvhHEBwUTIN7FHzRKty/evxuZN9CMMSN6Ad+mMFhQ0jDVNq2Ctepq5x
+         6+Jwb74UhEYYENKQ6BxjJEbU5flfa/mjiWihaOSW7UOaJEH9wbaFKHtmSyz9H6ehc+CZ
+         2yBjihYVO8FIjQIJZqCyHoBnzqIMBT2H58mGzFP9BPRm0Hth/SRPlrqZQgcjpIuP5LOU
+         xti5Gxirl5CJOsePWJ1K1EtzBJQwbYVw0duz4RdHFyzVLGBPg3Z9J/8NZw4p6ussv4DS
+         AS3w==
+X-Gm-Message-State: AOAM530DX97I0wL/pbeYmgFuf4zxEP9Y0nXaKPTA3cPU7IRdfztluQ/q
+        1sH6WhgLkVT6wUs2Wu2xCLyNWJfMbWd4EvZbNxyl6eMcZODgsF6BYxmY5IZQcGA0S76x1H//zP1
+        ZuadoUAlDC30rjR4uvRKpWCHoBdBiaoAShg==
+X-Received: by 2002:a05:6402:3069:: with SMTP id bs9mr15921822edb.151.1613399649825;
+        Mon, 15 Feb 2021 06:34:09 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxNUE1ybmiPJKS3BTRwzixs3/QMCzPSsX2m5S3uk+QJ1dTn5R58eECNp2pJwtfpKd7T/RVaag==
+X-Received: by 2002:a05:6402:3069:: with SMTP id bs9mr15921804edb.151.1613399649641;
+        Mon, 15 Feb 2021 06:34:09 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id r11sm10193729edt.58.2021.02.15.06.28.31
+        by smtp.gmail.com with ESMTPSA id v9sm775630edj.89.2021.02.15.06.34.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Feb 2021 06:28:31 -0800 (PST)
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Handle keyboard cover
- attach/detach events
-To:     Alexander Kobel <a-kobel@a-kobel.de>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <mpearson@lenovo.com>
-References: <83a0e45f-590d-0c7d-0afd-00a5a6322bd0@a-kobel.de>
+        Mon, 15 Feb 2021 06:34:09 -0800 (PST)
+Subject: Re: [PATCH v2 0/4] platform/surface: Add platform profile driver for
+ Surface devices
+To:     Maximilian Luz <luzmaximilian@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Mark Gross <mgross@linux.intel.com>, Len Brown <lenb@kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20210211201703.658240-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2cc9451c-5f54-b986-49d5-dce192c82bf7@redhat.com>
-Date:   Mon, 15 Feb 2021 15:28:30 +0100
+Message-ID: <898aa498-8256-d59f-9e72-0e1199b3a62a@redhat.com>
+Date:   Mon, 15 Feb 2021 15:34:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <83a0e45f-590d-0c7d-0afd-00a5a6322bd0@a-kobel.de>
+In-Reply-To: <20210211201703.658240-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,30 +88,39 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/13/21 4:13 PM, Alexander Kobel wrote:
-> Those events occur when a keyboard cover is attached to a ThinkPad
-> X1 Tablet series device.  Typically, they are used to switch from normal
-> to tablet mode in userspace; e.g., to offer touch keyboard choices when
-> focus goes to a text box and no keyboard is attached, or to enable
-> autorotation of the display according to the builtin orientation sensor.
+On 2/11/21 9:16 PM, Maximilian Luz wrote:
+> This series adds a driver to provide platform profile support on 5th-
+> and later generation Microsoft Surface devices with a Surface System
+> Aggregator Module. On those devices, the platform profile can be used to
+> influence cooling behavior and power consumption.
 > 
-> intel-vtbn already recognizes those events.  To avoid sending duplicate
-> events to userspace, they are simply ignored.  Thus, this patch only
-> avoids warnings about unknown and unhandled HKEYs 0x4012 and 0x4013.
+> To achieve this, a new platform profile is introduced: the
+> 'balanced-performance' profile.
 > 
-> For more information about the background and potential improvements for
-> different types of attachment options, such as the Pico cartridge dock
-> module, see
-> https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de/
+> In addition, a couple of fix-ups are performed:
+> - Hide CONFIG_ACPI_PLATFORM_PROFILE and change drivers so that it is
+>   selected instead of depended on.
+> - Fix some references to documentation in a comment.
 > 
-> Signed-off-by: Alexander Kobel <a-kobel@a-kobel.de>
+> Note: This series (or more specifically "platform/surface: Add platform
+> profile driver") depends on the "platform/surface: Add Surface
+> Aggregator device registry" series.
+> 
+> Changes in v2:
+>  - Introduce new 'balanced-performance' platform profile and change
+>    profile mapping in driver.
+>  - Perform some fix-ups for the ACPI platform profile implementation:
+>    - Fix some references to documentation in a comment.
+>    - Hide CONFIG_ACPI_PLATFORM_PROFILE
 
-Thanks, patch looks good to me:
+Thanks, the entire series looks good to me, so for the series:
 
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-Note I will merge this into my review-hans branch and eventually pdx86/for-next
-once 5.12-rc1 is released.
+Rafael, can you (once 5.12-rc1 is out) pick 1-3/4 and then provide a
+stable branch for me to merge?
+
+Then I will pick up 4/4.
 
 Regards,
 
@@ -117,50 +128,24 @@ Hans
 
 
 
-> ---
->  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index c404706379d9..e16d4b804c92 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -174,6 +174,12 @@ enum tpacpi_hkey_event_t {
->  						     or port replicator */
->  	TP_HKEY_EV_HOTPLUG_UNDOCK	= 0x4011, /* undocked from hotplug
->  						     dock or port replicator */
-> +	/*
-> +	 * Thinkpad X1 Tablet series devices emit 0x4012 and 0x4013
-> +	 * when keyboard cover is attached, detached or folded onto the back
-> +	 */
-> +	TP_HKEY_EV_KBD_COVER_ATTACH	= 0x4012, /* keyboard cover attached */
-> +	TP_HKEY_EV_KBD_COVER_DETACH	= 0x4013, /* keyboard cover detached or folded back */
->  
->  	/* User-interface events */
->  	TP_HKEY_EV_LID_CLOSE		= 0x5001, /* laptop lid closed */
-> @@ -3990,6 +3996,23 @@ static bool hotkey_notify_dockevent(const u32 hkey,
->  		pr_info("undocked from hotplug port replicator\n");
->  		return true;
->  
-> +	/*
-> +	 * Deliberately ignore attaching and detaching the keybord cover to avoid
-> +	 * duplicates from intel-vbtn, which already emits SW_TABLET_MODE events
-> +	 * to userspace.
-> +	 *
-> +	 * Please refer to the following thread for more information and a preliminary
-> +	 * implementation using the GTOP ("Get Tablet OPtions") interface that could be
-> +	 * extended to other attachment options of the ThinkPad X1 Tablet series, such as
-> +	 * the Pico cartridge dock module:
-> +	 * https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de/
-> +	 */
-> +	case TP_HKEY_EV_KBD_COVER_ATTACH:
-> +	case TP_HKEY_EV_KBD_COVER_DETACH:
-> +		*send_acpi_ev = false;
-> +		*ignore_acpi_ev = true;
-> +		return true;
-> +
->  	default:
->  		return false;
->  	}
+> Maximilian Luz (4):
+>   ACPI: platform: Hide ACPI_PLATFORM_PROFILE option
+>   ACPI: platform: Fix file references in comment
+>   ACPI: platform: Add balanced-performance platform profile
+>   platform/surface: Add platform profile driver
+> 
+>  .../ABI/testing/sysfs-platform_profile        |  18 +-
+>  MAINTAINERS                                   |   6 +
+>  drivers/acpi/Kconfig                          |  16 +-
+>  drivers/acpi/platform_profile.c               |   1 +
+>  drivers/platform/surface/Kconfig              |  22 ++
+>  drivers/platform/surface/Makefile             |   1 +
+>  .../surface/surface_platform_profile.c        | 190 ++++++++++++++++++
+>  drivers/platform/x86/Kconfig                  |   4 +-
+>  include/linux/platform_profile.h              |   6 +-
+>  9 files changed, 237 insertions(+), 27 deletions(-)
+>  create mode 100644 drivers/platform/surface/surface_platform_profile.c
 > 
 
