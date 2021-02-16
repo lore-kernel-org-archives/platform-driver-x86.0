@@ -2,253 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7FEC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 07:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE78C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 14:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9C364E08
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 07:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF61164E02
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 14:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbhBPHiM (ORCPT
+        id S229970AbhBPO6s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Feb 2021 02:38:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbhBPHiD (ORCPT
+        Tue, 16 Feb 2021 09:58:48 -0500
+Received: from mga18.intel.com ([134.134.136.126]:1208 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229912AbhBPO6s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Feb 2021 02:38:03 -0500
-Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4D7C061756
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2021 23:37:23 -0800 (PST)
-Received: by mail-pg1-x52c.google.com with SMTP id z21so5723628pgj.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Feb 2021 23:37:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7L8DKLlnVG3UUI1KgAzvVMXy6KnDtpNaaM9mizcM8oQ=;
-        b=ZMYipoFNxghn5IXjXBKzzWybeuT2tfIuKHOLiJALRW6qhH4OHrWsAg8l4Miv5jX7bg
-         WmbRWVWwd8IlIqPOfXOTJilXPsbSLcZbbHLApe62zDGAQSg7piUEkRjTaNwI3B55VlGk
-         X3MKF5ZOPI4q1dWtPc4MHjf2+Lmn7OXP/SwT8qc/zA3UoAcGng9LM2Qfj2aZq2MiEVg3
-         C9WcWL1ma4aVhzHV/Xe54Z2b11ca2KOiqV+/3+3WgbAcUJgFEFZreIwWdOnVNJwvLs8q
-         JevZx5A4JTxCVWxEylGVoAflGOkWfl8l3NKQV93XkTdao60qJpvRzDmcLqPCiG+Vs58j
-         cCPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7L8DKLlnVG3UUI1KgAzvVMXy6KnDtpNaaM9mizcM8oQ=;
-        b=BLU738XrACeALM/YqfqJ52t4gEPz/WEWcdt0BNP1kNsuO9B93a6A8V7xYroOA3Ez8t
-         LcmPJPWggZUZ35lOAJXJ0mbVLRHPrczkCWg38HdNFWbti8Setym7S2pMQr+ydDtMgZPa
-         HGWmVO8baCexu9xA+CbLVnHlpB2yJ1hAQ5AggjggZGvLM+b2NF8EIvoOnpeYRbktDg4P
-         zQZ/yWQER7XXZoW52VTGwqX9cNO3xplalI/hGvjCcfjuBCaXh4mcbzyv7R/QUmERdfec
-         oKZAlnqXD+A2OLcAMGDa/vDLA2Jol17p/AAVkyNFLlZJ9QA3jsqdTvktBGXYy1lwtHye
-         nGTQ==
-X-Gm-Message-State: AOAM532zN/rry4wWGX/Ln8M6nT7PAajigHDPXytLfRnWP9n0GSvyW94t
-        GNL0GUZyZGsRS09FMzCOgb/aDjOSnxNjcuCH
-X-Google-Smtp-Source: ABdhPJwsLguxzLbUqz46Sst6/ccEDuKf6XI9tSTsK30+QUZKSPhknLRcxuU2ihYhvROnenKroKRdoA==
-X-Received: by 2002:a63:4405:: with SMTP id r5mr18072255pga.168.1613461042554;
-        Mon, 15 Feb 2021 23:37:22 -0800 (PST)
-Received: from localhost.localdomain (p926243-ipngn9601hodogaya.kanagawa.ocn.ne.jp. [114.164.25.243])
-        by smtp.gmail.com with ESMTPSA id x190sm20695145pfx.166.2021.02.15.23.37.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Feb 2021 23:37:22 -0800 (PST)
-From:   Nitin Joshi <nitjoshi@gmail.com>
-X-Google-Original-From: Nitin Joshi <njoshi1@lenovo.com>
-To:     hdegoede@redhat.com
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org,
-        Nitin Joshi <njoshi1@lenovo.com>,
-        Mark Pearson <markpearson@lenovo.com>
-Subject: [PATCH v2 2/2] platorm/x86: thinkpad_acpi: sysfs interface to interface to get wwan antenna type
-Date:   Tue, 16 Feb 2021 16:36:39 +0900
-Message-Id: <20210216073639.687703-2-njoshi1@lenovo.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210216073639.687703-1-njoshi1@lenovo.com>
-References: <20210216073639.687703-1-njoshi1@lenovo.com>
+        Tue, 16 Feb 2021 09:58:48 -0500
+IronPort-SDR: N2EXDkv9ZEiOAYjPDLrjhARvCoYtRpdAXWpIvaq9xEj50RfW/cO496RbCb6zpW8OmmMEO5q7D3
+ VTlH545b7A/w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9896"; a="170567169"
+X-IronPort-AV: E=Sophos;i="5.81,183,1610438400"; 
+   d="scan'208";a="170567169"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2021 06:57:02 -0800
+IronPort-SDR: Zq8HeEFeVHOnTSnG3IYXfriCk8fqQlPxgpK1Y13YT0NeoKk6/diCeKu85sfiEYrJMO2cvVSdy8
+ 8Xdh08xlsvxA==
+X-IronPort-AV: E=Sophos;i="5.81,183,1610438400"; 
+   d="scan'208";a="361706392"
+Received: from nshettyk-mobl1.amr.corp.intel.com (HELO [10.212.9.66]) ([10.212.9.66])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2021 06:56:58 -0800
+Subject: Re: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     Perry Yuan <perry979106@gmail.com>,
+        Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
+        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     alsa-devel@alsa-project.org, Mario.Limonciello@dell.com,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        platform-driver-x86@vger.kernel.org, broonie@kernel.org
+References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
+ <bf048701-4e6b-ad18-1a73-8bca5c922425@linux.intel.com>
+ <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <31982e8d-3b0d-7187-8798-900f95d876ee@linux.intel.com>
+Date:   Tue, 16 Feb 2021 08:56:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On some newer Thinkpads we need to set SAR value based on antenna type.
-This patch provides a sysfs interface that userspace can use to get
-antenna type and set corresponding SAR value, as is required for FCC
-certification.
 
-Reviewed-by: Mark Pearson <markpearson@lenovo.com>
-Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
----
- .../admin-guide/laptops/thinkpad-acpi.rst     | 21 ++++++
- drivers/platform/x86/thinkpad_acpi.c          | 65 +++++++++++++++++--
- 2 files changed, 82 insertions(+), 4 deletions(-)
+>>> +static const struct acpi_device_id privacy_acpi_device_ids[] = {
+>>> +    {"PNP0C09", 0},
+>>> +    { },
+>>> +};
+>>> +MODULE_DEVICE_TABLE(acpi, privacy_acpi_device_ids);
+>>> +
+>>> +static struct platform_driver dell_privacy_platform_drv = {
+>>> +    .driver = {
+>>> +        .name = PRIVACY_PLATFORM_NAME,
+>>> +        .acpi_match_table = ACPI_PTR(privacy_acpi_device_ids),
+>>> +    },
+>>
+>> no .probe?
+> Originally i added the probe here, but it cause the driver  .probe 
+> called twice. after i use platform_driver_probe to register the driver 
+> loading process, the duplicated probe issue resolved.
+> 
+> I
+>>
+>>> +    .remove = dell_privacy_acpi_remove,
+>>> +};
+>>> +
+>>> +int __init dell_privacy_acpi_init(void)
+>>> +{
+>>> +    int err;
+>>> +    struct platform_device *pdev;
+>>> +    int privacy_capable = wmi_has_guid(DELL_PRIVACY_GUID);
+>>> +
+>>> +    if (!wmi_has_guid(DELL_PRIVACY_GUID))
+>>> +        return -ENODEV;
+>>> +
+>>> +    privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
+>>> +    if (!privacy_acpi)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    pdev = platform_device_register_simple(
+>>> +            PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
+>>> +    if (IS_ERR(pdev)) {
+>>> +        err = PTR_ERR(pdev);
+>>> +        goto pdev_err;
+>>> +    }
+>>> +    err = platform_driver_probe(&dell_privacy_platform_drv,
+>>> +            dell_privacy_acpi_probe);
+>>> +    if (err)
+>>> +        goto pdrv_err;
+>>
+>> why is the probe done here? Put differently, what prevents you from 
+>> using a 'normal' platform driver, and do the leds_setup in the .probe()?
+> At first ,I used the normal platform driver framework, however tt cause 
+> the driver  .probe called twice. after i use platform_driver_probe to 
+> register the driver loading process, the duplicated probe issue resolved.
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 10410811b990..df6904f23dea 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -52,6 +52,7 @@ detailed description):
- 	- LCD Shadow (PrivacyGuard) enable and disable
- 	- Lap mode sensor
- 	- WLAN transmission power control
-+	- WWAN Antenna type
- 
- A compatibility table by model and feature is maintained on the web
- site, http://ibm-acpi.sf.net/. I appreciate any success or failure
-@@ -1465,6 +1466,26 @@ The available commands are::
- The first command restores the wlan transmission power and the latter one
- reduces wlan transmission power.
- 
-+WWAN Antenna type
-+-----------------
-+
-+sysfs: wwan_antenna_type
-+
-+On some newer Thinkpads we need to set SAR value based on the antenna
-+type. This interface will be used by userspace to get the antenna type
-+and set the corresponding SAR value, as is required for FCC certification.
-+
-+The available commands are::
-+
-+        cat /sys/devices/platform/thinkpad_acpi/wwan_antenna_type
-+
-+Currently 2 antenna types are supported as mentioned below:
-+- type a
-+- type b
-+
-+The property is read-only. If the platform doesn't have support the sysfs
-+class is not created.
-+
- EXPERIMENTAL: UWB
- -----------------
- 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index af90251d79d7..1faf260f6bbf 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9992,8 +9992,13 @@ static struct ibm_struct proxsensor_driver_data = {
- #define DPRC_SET_WLAN_POWER_FULL        0x00030100
- #define DPRC_WLAN_POWER_REDUCE_BIT      BIT(4)
- #define DPRC_WLAN_POWER_FULL_BIT        BIT(8)
-+#define DPRC_GET_WWAN_ANTENNA_TYPE      0x40000
-+#define DPRC_WWAN_ANTENNA_TYPE_A_BIT    BIT(4)
-+#define DPRC_WWAN_ANTENNA_TYPE_B_BIT    BIT(8)
- static bool has_wlantxreduce;
- static int wlan_txreduce;
-+static bool has_antennatype;
-+static int wwan_antennatype;
- 
- static int dprc_command(int command, int *output)
- {
-@@ -10017,6 +10022,25 @@ static int dprc_command(int command, int *output)
- 	return 0;
- }
- 
-+static int get_wwan_antenna(int *wwan_antennatype)
-+{
-+	int output, err;
-+
-+	/* Get current Antenna type */
-+	err = dprc_command(DPRC_GET_WWAN_ANTENNA_TYPE, &output);
-+	if (err)
-+		return err;
-+
-+	if (output & DPRC_WWAN_ANTENNA_TYPE_A_BIT)
-+		*wwan_antennatype = 1;
-+	else if (output & DPRC_WWAN_ANTENNA_TYPE_B_BIT)
-+		*wwan_antennatype = 2;
-+	else
-+		return -ENODATA;
-+
-+	return 0;
-+}
-+
- static int get_wlan_state(int *wlan_txreduce)
- {
- 	int output, err;
-@@ -10036,6 +10060,21 @@ static int get_wlan_state(int *wlan_txreduce)
- 	return 0;
- }
- 
-+/* sysfs wwan antenna type entry */
-+static ssize_t wwan_antenna_type_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	switch (wwan_antennatype) {
-+	case 1:
-+		return sysfs_emit(buf, "type a\n");
-+	case 2:
-+		return sysfs_emit(buf, "type b\n");
-+	default:
-+		return -ENODATA;
-+	}
-+}
-+
- /* sysfs wlan entry */
- static ssize_t wlan_tx_strength_reduce_show(struct device *dev,
- 						struct device_attribute *attr,
-@@ -10071,18 +10110,22 @@ static ssize_t wlan_tx_strength_reduce_store(struct device *dev,
- 	return count;
- }
- static DEVICE_ATTR_RW(wlan_tx_strength_reduce);
-+static DEVICE_ATTR_RO(wwan_antenna_type);
- 
- static int tpacpi_dprc_init(struct ibm_init_struct *iibm)
- {
--	int wlantx_err, err;
-+	int wlantx_err, wwanantenna_err, err;
- 
- 	wlantx_err = get_wlan_state(&wlan_txreduce);
-+	wwanantenna_err = get_wwan_antenna(&wwan_antennatype);
- 	/*
--	 * If support isn't available (ENODEV) for both devices then quit, but
--	 * don't return an error.
-+	 * If support isn't available (ENODEV) or no data available (ENODATA) for both devices
-+	 * then quit, but don't return an error.
- 	 */
--	if ((wlantx_err == -ENODEV) || (wlantx_err == -ENODATA))
-+	if (((wlantx_err == -ENODEV) || (wlantx_err == -ENODATA)) &&
-+		((wwanantenna_err == -ENODEV) || (wwanantenna_err == -ENODATA)))
- 		return 0;
-+
- 	/* Otherwise, if there was an error return it */
- 	if (wlantx_err && (wlantx_err != -ENODEV) && (wlantx_err != -ENODATA))
- 		return wlantx_err;
-@@ -10095,6 +10138,18 @@ static int tpacpi_dprc_init(struct ibm_init_struct *iibm)
- 		if (err)
- 			return err;
- 	}
-+
-+	/* if there was an error return it */
-+	if (wwanantenna_err && (wwanantenna_err != -ENODEV) && (wwanantenna_err != -ENODATA))
-+		return wwanantenna_err;
-+	else if (!wwanantenna_err)
-+		has_antennatype = true;
-+
-+	if (has_antennatype) {
-+		err = sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_wwan_antenna_type.attr);
-+		if (err)
-+			return err;
-+	}
- 	return 0;
- }
- 
-@@ -10102,6 +10157,8 @@ static void dprc_exit(void)
- {
- 	if (has_wlantxreduce)
- 		sysfs_remove_file(&tpacpi_pdev->dev.kobj, &dev_attr_wlan_tx_strength_reduce.attr);
-+	if (has_antennatype)
-+		sysfs_remove_file(&tpacpi_pdev->dev.kobj, &dev_attr_wwan_antenna_type.attr);
- }
- 
- static struct ibm_struct dprc_driver_data = {
--- 
-2.25.1
+This sounds very odd...
 
+this looks like a conflict with the ACPI subsystem finding a device and 
+probing the driver that's associated with the PNP0C09 HID, and then this 
+module __init  creating a device manually which leads to a second probe
+
+Neither the platform_device_register_simple() nor 
+platform_driver_probe() seem necessary?
