@@ -2,121 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE78C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 14:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF2C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 15:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF61164E02
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 14:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815A664DF0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 15:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbhBPO6s (ORCPT
+        id S229913AbhBPP02 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Feb 2021 09:58:48 -0500
-Received: from mga18.intel.com ([134.134.136.126]:1208 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229912AbhBPO6s (ORCPT
+        Tue, 16 Feb 2021 10:26:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:42926 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229880AbhBPP01 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Feb 2021 09:58:48 -0500
-IronPort-SDR: N2EXDkv9ZEiOAYjPDLrjhARvCoYtRpdAXWpIvaq9xEj50RfW/cO496RbCb6zpW8OmmMEO5q7D3
- VTlH545b7A/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9896"; a="170567169"
-X-IronPort-AV: E=Sophos;i="5.81,183,1610438400"; 
-   d="scan'208";a="170567169"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2021 06:57:02 -0800
-IronPort-SDR: Zq8HeEFeVHOnTSnG3IYXfriCk8fqQlPxgpK1Y13YT0NeoKk6/diCeKu85sfiEYrJMO2cvVSdy8
- 8Xdh08xlsvxA==
-X-IronPort-AV: E=Sophos;i="5.81,183,1610438400"; 
-   d="scan'208";a="361706392"
-Received: from nshettyk-mobl1.amr.corp.intel.com (HELO [10.212.9.66]) ([10.212.9.66])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2021 06:56:58 -0800
-Subject: Re: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-To:     Perry Yuan <perry979106@gmail.com>,
-        Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
-        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
-        mgross@linux.intel.com
-Cc:     alsa-devel@alsa-project.org, Mario.Limonciello@dell.com,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        platform-driver-x86@vger.kernel.org, broonie@kernel.org
-References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
- <bf048701-4e6b-ad18-1a73-8bca5c922425@linux.intel.com>
- <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <31982e8d-3b0d-7187-8798-900f95d876ee@linux.intel.com>
-Date:   Tue, 16 Feb 2021 08:56:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 16 Feb 2021 10:26:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613489102;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IUDp6jeygFsKWjWIBMH3h4A7hRjO7NUoMGcja8ua/yE=;
+        b=Iy2eD2hLv41Ur7GKYrsFHYNYqnu1sqLtPfCnMLd4FLG7A1JlzjIqUFE0SDiL6RQTUdoegQ
+        zkmHwPD1A7flxNMxSbkDEcgWjw+GbQN76kWqC1YEfRcN8gqsOhpD9LABh7Y2sR87cchpLR
+        83MCPip/eCpcexHnWdmikw7Dul28RHY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-548-4aO5XeJ8OXOvB1RelKCXtw-1; Tue, 16 Feb 2021 10:24:58 -0500
+X-MC-Unique: 4aO5XeJ8OXOvB1RelKCXtw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 235C3107ACE4;
+        Tue, 16 Feb 2021 15:24:57 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-113-22.ams2.redhat.com [10.36.113.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB02D60C15;
+        Tue, 16 Feb 2021 15:24:55 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@nvidia.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: update MELLANOX HARDWARE PLATFORM SUPPORT maintainers
+Date:   Tue, 16 Feb 2021 16:24:54 +0100
+Message-Id: <20210216152454.11878-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The "MELLANOX HARDWARE PLATFORM SUPPORT" is maintained as part of the
+pdx86 tree. But when Mark and I took over as new pdx86 maintainers the
+"MELLANOX HARDWARE PLATFORM SUPPORT" MAINTAINERS entry was not updated.
 
->>> +static const struct acpi_device_id privacy_acpi_device_ids[] = {
->>> +    {"PNP0C09", 0},
->>> +    { },
->>> +};
->>> +MODULE_DEVICE_TABLE(acpi, privacy_acpi_device_ids);
->>> +
->>> +static struct platform_driver dell_privacy_platform_drv = {
->>> +    .driver = {
->>> +        .name = PRIVACY_PLATFORM_NAME,
->>> +        .acpi_match_table = ACPI_PTR(privacy_acpi_device_ids),
->>> +    },
->>
->> no .probe?
-> Originally i added the probe here, but it cause the driver  .probe 
-> called twice. after i use platform_driver_probe to register the driver 
-> loading process, the duplicated probe issue resolved.
-> 
-> I
->>
->>> +    .remove = dell_privacy_acpi_remove,
->>> +};
->>> +
->>> +int __init dell_privacy_acpi_init(void)
->>> +{
->>> +    int err;
->>> +    struct platform_device *pdev;
->>> +    int privacy_capable = wmi_has_guid(DELL_PRIVACY_GUID);
->>> +
->>> +    if (!wmi_has_guid(DELL_PRIVACY_GUID))
->>> +        return -ENODEV;
->>> +
->>> +    privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
->>> +    if (!privacy_acpi)
->>> +        return -ENOMEM;
->>> +
->>> +    pdev = platform_device_register_simple(
->>> +            PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
->>> +    if (IS_ERR(pdev)) {
->>> +        err = PTR_ERR(pdev);
->>> +        goto pdev_err;
->>> +    }
->>> +    err = platform_driver_probe(&dell_privacy_platform_drv,
->>> +            dell_privacy_acpi_probe);
->>> +    if (err)
->>> +        goto pdrv_err;
->>
->> why is the probe done here? Put differently, what prevents you from 
->> using a 'normal' platform driver, and do the leds_setup in the .probe()?
-> At first ,I used the normal platform driver framework, however tt cause 
-> the driver  .probe called twice. after i use platform_driver_probe to 
-> register the driver loading process, the duplicated probe issue resolved.
+Update the entry now.
 
-This sounds very odd...
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-this looks like a conflict with the ACPI subsystem finding a device and 
-probing the driver that's associated with the PNP0C09 HID, and then this 
-module __init  creating a device manually which leads to a second probe
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 452f0f7b7c21..aa800d6829ae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11367,8 +11367,8 @@ Q:	https://patchwork.kernel.org/project/netdevbpf/list/
+ F:	drivers/net/ethernet/mellanox/mlxfw/
+ 
+ MELLANOX HARDWARE PLATFORM SUPPORT
+-M:	Andy Shevchenko <andy@infradead.org>
+-M:	Darren Hart <dvhart@infradead.org>
++M:	Hans de Goede <hdegoede@redhat.com>
++M:	Mark Gross <mgross@linux.intel.com>
+ M:	Vadim Pasternak <vadimp@nvidia.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Supported
+-- 
+2.30.1
 
-Neither the platform_device_register_simple() nor 
-platform_driver_probe() seem necessary?
