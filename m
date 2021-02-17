@@ -2,90 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA87C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 21:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0E7C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Feb 2021 12:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4BC64E42
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Feb 2021 21:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B77364E45
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Feb 2021 12:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbhBPVjx (ORCPT
+        id S232805AbhBQMsq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Feb 2021 16:39:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59170 "EHLO
+        Wed, 17 Feb 2021 07:48:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbhBPVjr (ORCPT
+        with ESMTP id S232062AbhBQMsm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Feb 2021 16:39:47 -0500
-X-Greylist: delayed 165 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 16 Feb 2021 13:39:02 PST
-Received: from gmmr3.centrum.cz (gmmr3.centrum.cz [IPv6:2a00:da80:0:502::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 691F8C061574;
-        Tue, 16 Feb 2021 13:39:02 -0800 (PST)
-Received: from gmmr-1.centrum.cz (unknown [10.255.254.26])
-        by gmmr3.centrum.cz (Postfix) with ESMTP id 4BB2B18009BD1;
-        Tue, 16 Feb 2021 22:36:15 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-        t=1613511375; bh=BOQwvYaKx+mwGwDldsCzFpXiNGdtuG61UIvQL5tA15M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JfMehplcrYvrRZwr+9Dyc38b0a+oQfLg1AUCcxEnAjz9CLLmpQj2FRZM0fqxTKTkF
-         A3A6DEKtssRnk9+KBc14qOOk5W/DnquYZRIeEAhNbYRy47jHPLRJ7wDWwBX8bWFu/E
-         y15OsPI1ho+S4ZpSfv29Dz5nxpvoJx7U7ixpSH54=
-Received: from vm2.excello.cz (vm2.excello.cz [IPv6:2001:67c:15a0:4000::b])
-        by gmmr-1.centrum.cz (Postfix) with QMQP
-        id 49C8130007702; Tue, 16 Feb 2021 22:36:15 +0100 (CET)
-Received: from vm2.excello.cz by vm2.excello.cz
- (VF-Scanner: Clear:RC:0(2a00:da80:0:502::7):SC:0(-2.8/5.0):CC:0:;
- processed in 0.3 s); 16 Feb 2021 21:36:15 +0000
-X-VF-Scanner-ID: 20210216213615.027371.571.vm2.excello.cz.0
-Received: from gmmr-1.centrum.cz (2a00:da80:0:502::7)
-  by out1.virusfree.cz with ESMTPS (TLSv1.3, TLS_AES_256_GCM_SHA384); 16 Feb 2021 22:36:15 +0100
-Received: from gm-smtp11.centrum.cz (unknown [10.255.254.29])
-        by gmmr-1.centrum.cz (Postfix) with ESMTP id F34E82005DD88;
-        Tue, 16 Feb 2021 22:36:14 +0100 (CET)
-Received: from arkam (unknown [78.45.77.139])
-        by gm-smtp11.centrum.cz (Postfix) with ESMTPA id D278618054D25;
-        Tue, 16 Feb 2021 22:36:14 +0100 (CET)
-Date:   Tue, 16 Feb 2021 22:36:13 +0100
-From:   Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-Subject: [PATCH] platform/x86: fix typo in Kconfig
-Message-ID: <YCw6zavnfeHRGWgr@arkam>
+        Wed, 17 Feb 2021 07:48:42 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D42C061756;
+        Wed, 17 Feb 2021 04:48:01 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id z7so7358039plk.7;
+        Wed, 17 Feb 2021 04:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=LxFn4W9o9jOzv9KLzMHQXyxirKKlLx5EMaZ9RsITOuw=;
+        b=DzngJu7Z6z0/+kWv251zZ4GEzpARMockZt/9+QoKi5MQQtIJ+Y0umbS8cDEkpyOmfw
+         ust/Kiuu4JyHc4DrgnrYRTx33vMhPnjXlD5m+tFjFIM6TDOubmyumNbqrhprZ9PK0y5x
+         D+E5p3IPfUC23iiACIODUi+NBXs35cdUu9w/OYlSxnbGgHUph2wNx0AxPQENgw6L1/Cm
+         ReRRr6F9A1k2w25Vx4AxCdH7nF/fSu+oD7eGReffZTF6rzN7K6K4Gy8awLP7SsgeNqxq
+         ylpvMnwqKpHrFmriMWbrTFK+ut8aiSKcDi7kIlHnRRnAfyn3xuheT6yQYRpcPjCHwbE/
+         4V6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=LxFn4W9o9jOzv9KLzMHQXyxirKKlLx5EMaZ9RsITOuw=;
+        b=fx9ITt69/9ZbK8Ra6kCOohzX25GwioOBgfmm8JW4nOg6H6T3IGhw+PhuDmYTmxCoyN
+         QZQL5Fh0k2uestWnScKbu/PqlfiX92rWB5elYLkzOER2tNokZK+iWfH1jdyweMKmVN2y
+         8i0DaMoIxBimhI2j5+TUJcEBIcI9O0FaboQ0lPNCQOKQbDQ4JB+vHgTwmZncZ44bWSTY
+         9LE4ZIIY+XUlEYrqwdtFJlOLRZQnCya1nJBnd7h8J5RMoQTyt3j0SVZ9+e+RmGbkR+UZ
+         aBHFkiYWmt87AZS/TySPrTeq96Lcsz4Z1x3nf1Bg7yr5hHSHyjt8T6eg10/8LPmOAib/
+         8RKQ==
+X-Gm-Message-State: AOAM531CLhbCUphXaFMn0mOYe+SweImYb+uLxtY8iAyKvEZy+h8TCubI
+        a6M9yvspin+k/KKAen9ZM2A=
+X-Google-Smtp-Source: ABdhPJzja9YOfu921M8CWphegsgmA9y9BsmyYOmipRer8O9IXuclHZHnGiUjpqUjW0uuVCoGFT8YNw==
+X-Received: by 2002:a17:902:bcc6:b029:e3:f95:6da5 with SMTP id o6-20020a170902bcc6b02900e30f956da5mr24612328pls.6.1613566081427;
+        Wed, 17 Feb 2021 04:48:01 -0800 (PST)
+Received: from [0.0.0.0] ([2605:52c0:2:4a5::])
+        by smtp.gmail.com with ESMTPSA id i1sm2322259pjd.37.2021.02.17.04.47.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Feb 2021 04:48:01 -0800 (PST)
+Subject: Re: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Perry Yuan <Perry.Yuan@dell.com>, oder_chiou@realtek.com,
+        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     alsa-devel@alsa-project.org, Mario.Limonciello@dell.com,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        platform-driver-x86@vger.kernel.org, broonie@kernel.org
+References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
+ <bf048701-4e6b-ad18-1a73-8bca5c922425@linux.intel.com>
+ <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
+ <31982e8d-3b0d-7187-8798-900f95d876ee@linux.intel.com>
+From:   Perry Yuan <perry979106@gmail.com>
+Message-ID: <e66d8098-beb6-1299-20aa-42cfe13882f6@gmail.com>
+Date:   Wed, 17 Feb 2021 20:47:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <31982e8d-3b0d-7187-8798-900f95d876ee@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-uses by -> used by
+Hi Pierre:
+On 2021/2/16 22:56, Pierre-Louis Bossart wrote:
+> 
+>>>> +static const struct acpi_device_id privacy_acpi_device_ids[] = {
+>>>> +    {"PNP0C09", 0},
+>>>> +    { },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(acpi, privacy_acpi_device_ids);
+>>>> +
+>>>> +static struct platform_driver dell_privacy_platform_drv = {
+>>>> +    .driver = {
+>>>> +        .name = PRIVACY_PLATFORM_NAME,
+>>>> +        .acpi_match_table = ACPI_PTR(privacy_acpi_device_ids),
+>>>> +    },
+>>>
+>>> no .probe?
+>> Originally i added the probe here, but it cause the driver  .probe 
+>> called twice. after i use platform_driver_probe to register the driver 
+>> loading process, the duplicated probe issue resolved.
+>>
+>> I
+>>>
+>>>> +    .remove = dell_privacy_acpi_remove,
+>>>> +};
+>>>> +
+>>>> +int __init dell_privacy_acpi_init(void)
+>>>> +{
+>>>> +    int err;
+>>>> +    struct platform_device *pdev;
+>>>> +    int privacy_capable = wmi_has_guid(DELL_PRIVACY_GUID);
+>>>> +
+>>>> +    if (!wmi_has_guid(DELL_PRIVACY_GUID))
+>>>> +        return -ENODEV;
+>>>> +
+>>>> +    privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
+>>>> +    if (!privacy_acpi)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    pdev = platform_device_register_simple(
+>>>> +            PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
+>>>> +    if (IS_ERR(pdev)) {
+>>>> +        err = PTR_ERR(pdev);
+>>>> +        goto pdev_err;
+>>>> +    }
+>>>> +    err = platform_driver_probe(&dell_privacy_platform_drv,
+>>>> +            dell_privacy_acpi_probe);
+>>>> +    if (err)
+>>>> +        goto pdrv_err;
+>>>
+>>> why is the probe done here? Put differently, what prevents you from 
+>>> using a 'normal' platform driver, and do the leds_setup in the .probe()?
+>> At first ,I used the normal platform driver framework, however tt 
+>> cause the driver  .probe called twice. after i use 
+>> platform_driver_probe to register the driver loading process, the 
+>> duplicated probe issue resolved.
+> 
+> This sounds very odd...
+> 
+> this looks like a conflict with the ACPI subsystem finding a device and 
+> probing the driver that's associated with the PNP0C09 HID, and then this 
+> module __init  creating a device manually which leads to a second probe
+> 
+> Neither the platform_device_register_simple() nor 
+> platform_driver_probe() seem necessary?Because this privacy acpi driver file has dependency on the ec handle, 
+so i want to determine if the driver can be loaded basing on the EC ID 
+PNP0C09 matching.
 
-Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
----
- drivers/platform/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So far,It works well for me to register the privacy driver with  the 
+register sequence.
+Dose it hurt to keep current registering process with 
+platform_driver_probe used?
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 91e6176cdfbd..94f2f05bc133 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1372,7 +1372,7 @@ config INTEL_PMT_CLASS
- 	tristate "Intel Platform Monitoring Technology (PMT) Class driver"
- 	help
- 	  The Intel Platform Monitoring Technology (PMT) class driver provides
--	  the basic sysfs interface and file hierarchy uses by PMT devices.
-+	  the basic sysfs interface and file hierarchy used by PMT devices.
- 
- 	  For more information, see:
- 	  <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
--- 
-2.26.2
-
+Perry
