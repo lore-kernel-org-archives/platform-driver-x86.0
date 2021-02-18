@@ -7,87 +7,82 @@ X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C7AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 17:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74946C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 17:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0DE64E79
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 17:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4F264EAF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 17:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232130AbhBRRWH (ORCPT
+        id S232593AbhBRRWS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Feb 2021 12:22:07 -0500
-Received: from mga11.intel.com ([192.55.52.93]:63737 "EHLO mga11.intel.com"
+        Thu, 18 Feb 2021 12:22:18 -0500
+Received: from mga12.intel.com ([192.55.52.136]:45737 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233104AbhBRQWF (ORCPT
+        id S230434AbhBRQXc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Feb 2021 11:22:05 -0500
-IronPort-SDR: Ew6t2zfeG4OBeIluF3loHDQGe7ZHEgPGNZNvp7RsP6173bcm1cujx1P262XqXngtOBpeAZjCaC
- tNCAXD1lbVLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="180035580"
+        Thu, 18 Feb 2021 11:23:32 -0500
+IronPort-SDR: HcNVJ9nowSRk2ollqH8wVaVLMpeC7AkPHKCptHQUlYNO/PJCl4qlyDYVbAn4MmDMHlQiGVC0kS
+ /Jp2KoKm1jfQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9898"; a="162692611"
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="180035580"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 08:17:55 -0800
-IronPort-SDR: 5fGvCDkGx3aLNPDAUygI3UtMeBsyIWdmY5C4M93AHDkhF+aql6Bup7vM8W7DavOMYv+6GeDFPG
- 6Y5zw62Q0s8g==
+   d="scan'208";a="162692611"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 08:19:55 -0800
+IronPort-SDR: Lf+ROC00VWLuqGm1eI8CBjydl88e6ORQORBmIDMtR6XLAVDu6939yYnKt7MKNxfuOdKYpmdR7l
+ IWHgF6q2BsAg==
 X-IronPort-AV: E=Sophos;i="5.81,187,1610438400"; 
-   d="scan'208";a="590141126"
+   d="scan'208";a="581326513"
 Received: from smtp.ostc.intel.com ([10.54.29.231])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 08:17:55 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Feb 2021 08:19:55 -0800
 Received: from localhost (mtg-dev.jf.intel.com [10.54.74.10])
-        by smtp.ostc.intel.com (Postfix) with ESMTP id 0041E6365;
-        Thu, 18 Feb 2021 08:17:54 -0800 (PST)
-Date:   Thu, 18 Feb 2021 08:17:54 -0800
+        by smtp.ostc.intel.com (Postfix) with ESMTP id 1D1836365;
+        Thu, 18 Feb 2021 08:19:55 -0800 (PST)
+Date:   Thu, 18 Feb 2021 08:19:55 -0800
 From:   mark gross <mgross@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@nvidia.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: update MELLANOX HARDWARE PLATFORM SUPPORT
- maintainers
-Message-ID: <20210218161754.GN154917@linux.intel.com>
+To:     Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: fix typo in Kconfig
+Message-ID: <20210218161955.GO154917@linux.intel.com>
 Reply-To: mgross@linux.intel.com
-References: <20210216152454.11878-1-hdegoede@redhat.com>
+References: <YCw6zavnfeHRGWgr@arkam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210216152454.11878-1-hdegoede@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YCw6zavnfeHRGWgr@arkam>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Feb 16, 2021 at 04:24:54PM +0100, Hans de Goede wrote:
-> The "MELLANOX HARDWARE PLATFORM SUPPORT" is maintained as part of the
-> pdx86 tree. But when Mark and I took over as new pdx86 maintainers the
-> "MELLANOX HARDWARE PLATFORM SUPPORT" MAINTAINERS entry was not updated.
+On Tue, Feb 16, 2021 at 10:36:13PM +0100, Petr Vaněk wrote:
+> uses by -> used by
 > 
-> Update the entry now.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by : Mark Gross <mgross@linux.intel.com>
+> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+Reviewed-by: Mark Gross <mgross@linux.intel.com>
 
+Thanks for the clean up!
+
+-mark
 > ---
->  MAINTAINERS | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 452f0f7b7c21..aa800d6829ae 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11367,8 +11367,8 @@ Q:	https://patchwork.kernel.org/project/netdevbpf/list/
->  F:	drivers/net/ethernet/mellanox/mlxfw/
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 91e6176cdfbd..94f2f05bc133 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1372,7 +1372,7 @@ config INTEL_PMT_CLASS
+>  	tristate "Intel Platform Monitoring Technology (PMT) Class driver"
+>  	help
+>  	  The Intel Platform Monitoring Technology (PMT) class driver provides
+> -	  the basic sysfs interface and file hierarchy uses by PMT devices.
+> +	  the basic sysfs interface and file hierarchy used by PMT devices.
 >  
->  MELLANOX HARDWARE PLATFORM SUPPORT
-> -M:	Andy Shevchenko <andy@infradead.org>
-> -M:	Darren Hart <dvhart@infradead.org>
-> +M:	Hans de Goede <hdegoede@redhat.com>
-> +M:	Mark Gross <mgross@linux.intel.com>
->  M:	Vadim Pasternak <vadimp@nvidia.com>
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Supported
+>  	  For more information, see:
+>  	  <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
 > -- 
-> 2.30.1
+> 2.26.2
 > 
