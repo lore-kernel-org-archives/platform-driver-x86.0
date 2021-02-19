@@ -2,137 +2,197 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67693C43381
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70634C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6F464EE6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23FE864E43
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbhBSKgu (ORCPT
+        id S230081AbhBSKoW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Feb 2021 05:36:50 -0500
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:38274 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbhBSKgl (ORCPT
+        Fri, 19 Feb 2021 05:44:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21900 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229985AbhBSKoT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Feb 2021 05:36:41 -0500
-Received: by mail-lj1-f181.google.com with SMTP id j6so17651396ljo.5;
-        Fri, 19 Feb 2021 02:36:23 -0800 (PST)
+        Fri, 19 Feb 2021 05:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1613731372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fHQcr2/sIGEkNpsTNCW8sWG7GDqb/gPUn+AcpCELTFw=;
+        b=TXOjVOUdagxJkMGS4cg5rp1vW4LNpRyGAi+fH4+jG3367Iss5NYSjfodHGUGyqsQ+N4fao
+        1d9ubIpOKIkWKHjWFs8vUKYT1mEx7UVQ88YpXrjm+e4fBMnmCnvqdAbf4hDCcO4hQFKy1G
+        gAYlbBwZNhYN1Q50r6p7dlFTa+kzL/o=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-454-HP0EfbZ7PcyfWaM7KXrLCA-1; Fri, 19 Feb 2021 05:42:50 -0500
+X-MC-Unique: HP0EfbZ7PcyfWaM7KXrLCA-1
+Received: by mail-ed1-f71.google.com with SMTP id j10so2394613edv.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Feb 2021 02:42:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
-         :in-reply-to:references:mime-version:date:user-agent
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=nTn6ZavwiX+iUA/fKHbxz6oGLOlCA6cVyQWgY9ZgZLg=;
-        b=QOxCjO3HH+ADPyELPS+QSf9+cI77RXwHBMsIBsKkHVDB365VpD5Uuok1Qfiv4bMpwB
-         HEe3djJNrFMYB9dTScQbG4C5Ct+SpT0YxxK3lPo+C3VXugWnqh5ygmnEcmbSFYKDH/rH
-         HXhXKtbxq9j7LE+8EdpvO/rP4w4747SdT/D80t1AzypXTSz16XrSwIiHWtyjmBd0QNHn
-         lh4bsc2viQa1MGo6BOLSo2BpkkdrFvBC+rexNHGLgJP5mz/U+xwhZCKvDKhwvOmk9pJh
-         VNfFCMsp6nk3vdxWbOL8E65r5WWIxjH5AQvQn5S5ckOQ7te3fGn0nW1IuaGfIt6X+I9y
-         8KDw==
-X-Gm-Message-State: AOAM531kmq5iyUW/yLN/BbtHuU4uNSrs3eNHj2sJt2saEZpouWt9w7/N
-        9fzjFuShVF/0R4gaHhVcqSw=
-X-Google-Smtp-Source: ABdhPJzG0M58qPNdOEK8XmQmqu0DNkflmATorE93w4HYy6twMvFdiFngo70LAkHDlEnw10M77EQnCA==
-X-Received: by 2002:a2e:7c02:: with SMTP id x2mr5110440ljc.247.1613730958187;
-        Fri, 19 Feb 2021 02:35:58 -0800 (PST)
-Received: from dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
-        by smtp.gmail.com with ESMTPSA id q3sm882433ljb.64.2021.02.19.02.35.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Feb 2021 02:35:57 -0800 (PST)
-Message-ID: <468a5c7820a510b8a12c10b1b8a107fb41e9d26c.camel@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH 0/7] Add managed version of delayed work init
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reply-To: matti.vaittinen@fi.rohmeurope.com
-To:     mgross@linux.intel.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-In-Reply-To: <20210218162821.GP154917@linux.intel.com>
-References: <cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
-         <20210218162821.GP154917@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        bh=fHQcr2/sIGEkNpsTNCW8sWG7GDqb/gPUn+AcpCELTFw=;
+        b=oHsN80WNqtBs3QrSCuaEhPjXE4UK0EKzt/bd6sFVSOOtKW7FCr4pAHQ8kCDEJ54cCN
+         jFmIauTi0QKTHFCKhStdzOjJ7fOdff3TSJv8eOieQhK0idJP0pEscwA++GZLQizM43c/
+         jfajFc51iv2NSS6TMjWlQA62iqLCKDqbStw3ySTJJgZJQaRNWLurHc3IOnhvxikmgsOM
+         F+WtRJBTFoho/Wx8IOvMFBW2zdKno0UUyt0mLKSuFzLFqt262IsSQ1SMg9V7qcs/syCG
+         QdZ/J0S+j1twyBbhGaeSfb0ZVoWRZtM48s0kpO+gqQO6xWvrjVtHif5Lnu2E72FqfaNi
+         t7EA==
+X-Gm-Message-State: AOAM531RlWvtbvNfA+Soz/WGjUH3R9GjVELINNgdMIAydTT9hWasqf+/
+        VTbg5JApK4VpA5mFp7R6zahKNAamHAhvTWoN2TZPm07NepH8YwCnYjx2/SEZ1t5si59cubXj78h
+        uPs76RZyw5lePlrcbUWSaF5UFPXOYWrpXfQ==
+X-Received: by 2002:a17:906:c01:: with SMTP id s1mr8252414ejf.412.1613731369402;
+        Fri, 19 Feb 2021 02:42:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzvJBv5dF7NIC6t+tnVdXePC77S52Aufd8Lr3gzlYGPc4NpMg1STmKjtEtdNsZMpNASZdH6xw==
+X-Received: by 2002:a17:906:c01:: with SMTP id s1mr8252407ejf.412.1613731369215;
+        Fri, 19 Feb 2021 02:42:49 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id q2sm4578676edv.93.2021.02.19.02.42.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Feb 2021 02:42:48 -0800 (PST)
+Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: correct an initialization
+ failure
+To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        Alexander Naumann <alexandernaumann@gmx.de>
+References: <20210218191723.20030-1-mario.limonciello@dell.com>
+ <20210218224848.GB134379@linux.intel.com>
+ <SA1PR19MB49261FC8B24465A86A985975FA859@SA1PR19MB4926.namprd19.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <863cffc8-7257-7ee3-ecd7-d7acfbb11475@redhat.com>
+Date:   Fri, 19 Feb 2021 11:42:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Date:   Fri, 19 Feb 2021 12:35:51 +0200
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+In-Reply-To: <SA1PR19MB49261FC8B24465A86A985975FA859@SA1PR19MB4926.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello Mark,
+Hi,
 
-Thanks for taking a look at the series! This is the first time anyone
-has been commenting on a cover-letter which is likely to fade away and
-never be looked at again. Guess you are a thorough person :)
+On 2/19/21 12:26 AM, Limonciello, Mario wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: mark gross <mgross@linux.intel.com>
+>> Sent: Thursday, February 18, 2021 16:49
+>> To: Limonciello, Mario
+>> Cc: Hans De Goede; Mark Gross; LKML; platform-driver-x86@vger.kernel.org;
+>> Bharathi, Divya; Alexander Naumann
+>> Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: correct an initialization
+>> failure
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> On Thu, Feb 18, 2021 at 01:17:23PM -0600, Mario Limonciello wrote:
+>>> On Dell systems that don't support this interface the module is
+>>> mistakingly returning error code "0", when it should be returning
+>>> -ENODEV.  Correct a logic error to guarantee the correct return code.
+>>>
+>>> Cc: Divya Bharathi <Divya_Bharathi@Dell.com>
+>>> Reported-by: Alexander Naumann <alexandernaumann@gmx.de>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+>>> ---
+>>>  drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c     | 4 +++-
+>>>  drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c | 4 +++-
+>>>  drivers/platform/x86/dell-wmi-sysman/sysman.c                 | 4 ++--
+>>>  3 files changed, 8 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
+>> b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
+>>> index f95d8ddace5a..8d59f81f9db4 100644
+>>> --- a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
+>>> +++ b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
+>>> @@ -175,7 +175,9 @@ static struct wmi_driver bios_attr_set_interface_driver
+>> = {
+>>>
+>>>  int init_bios_attr_set_interface(void)
+>>>  {
+>>> -	return wmi_driver_register(&bios_attr_set_interface_driver);
+>>> +	int ret = wmi_driver_register(&bios_attr_set_interface_driver);
+>> I have to ask if the propper fix should be in wmi_driver_register
+> 
+> Do you mean something like this?
+> 
+> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+> index c669676ea8e8..89d04c5e3ab9 100644
+> --- a/drivers/platform/x86/wmi.c
+> +++ b/drivers/platform/x86/wmi.c
+> @@ -1415,6 +1415,11 @@ static int acpi_wmi_probe(struct platform_device *device)
+>  int __must_check __wmi_driver_register(struct wmi_driver *driver,
+>                                        struct module *owner)
+>  {
+> +       const struct wmi_device_id *id = driver->id_table;
+> +
+> +       if (!wmi_has_guid(id->guid_string))
+> +               return -ENODEV;
+> +
+>         driver->driver.owner = owner;
+>         driver->driver.bus = &wmi_bus_type;
+> 
 
-On Thu, 2021-02-18 at 08:28 -0800, mark gross wrote:
-> On Sat, Feb 13, 2021 at 01:58:17PM +0200, Matti Vaittinen wrote:
-> > It's not rare that device drivers need delayed work.
-> > It's not rare that this work needs driver's data.
-> > 
-> > Often this means that driver must ensure the work is not queued
-> > when
-> > driver exits. Usually this is done by ensuring new work is not
-> > added and
-> > then calling cancel_delayed_work_sync() at remove(). In many cases
-> > this
-> > may also require cleanup at probe error path - which is easy to
-> > forget.
-> > 
-> > It might be helpful for (a) few drivers if there was a work init
->  why the (a) and not just a?
+No, drivers should be able to register before the GUID shows up. I know that
+the GUID showing up later will likely never happen with WMI, but having a match
+check like this in the driver_register function is highly unusual and would
+be different from what all other busses do.
 
-I am not sure how many drivers are needed to change it from 'few' to 'a
-few'. Additionally, this series converted only the drivers which I
-found could easily get rid of the .remove() - I did not analyze how
-many drivers would benefit from this by getting rid of mixed
-devm/manual resource management.
+But your initial fix here is wrong too, because it does call wmi_driver_register,
+which succeeds and then makes sysman_init() exit with -ENODEV.
 
-So to sum up - I don't know how many drivers will benefit and what
-people think makes 'few' to turn to 'a few'. '(a) few' leaves this
-decision to readers - and (a) few of them know the drivers better than
-I do.
+Returning -ENODEV from sysman_init() is what we want, this causes the entire
+insmod to be aborted, without logging an error (because of -ENODEV) so the
+code will not be taking up memory.
 
-> > Main reson why this is RFC is that I had hard time deciding where
-> > this
-> > function should be introduced. It's not nice to include all device
-> > stuff
-> > in workqueue - because many workqueue users are not interested in
-> > devices. In same way, not all of the devices are interested in WQs.
-> > OTOH, adding own file just for this sounds like an overkill.
-> s/own/one
+This means that the memory into which the module was loaded before the kernel
+calls sysman_init() will be free-ed and now the *still* registered WMI driver
+entry will point to that free-ed memory, which is not good (TM).
 
-Hm. The 'own file for XXX' does not make sense for native English
-speakers? Didn't now that. Thanks for pointing it out.
+So instead init_bios_attr_set_interface() should become something like this:
 
-I will edit the cover letter when I respin this rebased on v5.12-rc1 -
-and it is likely the series v2 will add this function inlined in a new
-header dedicated for devm-helpers (as was suggested by Hans de Goede).
+int init_bios_attr_set_interface(void)
+{
+	int ret;
 
-Best Regards
---Matti
+	ret = wmi_driver_register(&bios_attr_set_interface_driver);
+	if (ret)
+		return ret;
+
+	if (!wmi_priv.bios_attr_wdev) {
+		wmi_driver_unregister(&bios_attr_set_interface_driver);
+		return -ENODEV;
+	}
+
+	return 0;
+}
+
+And the same for the init_bios_attr_pass_interface() function.
+
+This follows the standard kernel pattern that a function should always
+undo any things / resource-allocations it has done on error before
+exiting with an error.
+
+Regards,
+
+Hans
 
