@@ -2,288 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BAD_THREAD_QP_64,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0861CC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 23:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67693C43381
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C15564EB3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Feb 2021 23:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6F464EE6
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Feb 2021 10:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbhBRX1m (ORCPT
+        id S230001AbhBSKgu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Feb 2021 18:27:42 -0500
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:42726 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230019AbhBRX1i (ORCPT
+        Fri, 19 Feb 2021 05:36:50 -0500
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:38274 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229527AbhBSKgl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Feb 2021 18:27:38 -0500
-Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11INLpQ9015180;
-        Thu, 18 Feb 2021 18:26:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=173IEF+G7l2R3kYDrZgxjeApvivdsl4EJ2cUK/VXK1U=;
- b=G8f74eR/BY9GhIyUsd71v/Upl7ucQU93qHA3ifpfiXks/CmqYrfaS4cNkULAzaOW21S6
- DBv1ldcnVRnC5C1ICxSKFGabIvJWASfJc5YDY+LScXWRiU8lyHM+/gtUmJPeTO7vP8Kw
- m4Ak0Sf+RHgDwp34H+bxOJjzHQUDpPmkos9dOK20yw7QX2P+zhYGmCw8VCB/ips6EnGL
- pr6MRaZ0a2KrXDhKZ+ESRuIXlx7NPztp09XMINNkbikxWXKusdAKQTkCpFcetItFOWYc
- Tb7Ybp1QTBlB041XTBg+zU9NeG9L/BGjlAFHODZELJQXZio298R8d3i2Pz87CuMhdiHo sQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 36pbnrt1nw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 18 Feb 2021 18:26:50 -0500
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11INP6Oa035907;
-        Thu, 18 Feb 2021 18:26:50 -0500
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-        by mx0a-00154901.pphosted.com with ESMTP id 36pvn58tma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Feb 2021 18:26:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=S6Fh3ig8g1/SFPXakn2mPxC3qA88bj7TnOGeNulfKEuXKJp6Xsd/2ZShAHskyvUtC3qPIRTRLeevKFHXe7PNqrdtq0/1xLZCBGRGA352vM2XPBRiWxsDGmlCbVL0PgGcybDYZ9oOSen4iwBWoM7RfCvaQl2aFp1K5k1PW/bIOPMDDk5I76R/+00UJRBXDQVm1IuZ9bz2YKOmrLNFYpjAwKZxYkCBF+45U6TwzAwt+4vjXKVGpsP9QWm3GA+T0SHDCXDOYF6YE6v0kd1Xn1RgDCQ4zrf8bH8JPL8VoRfA86lX/YO1r+PDxa/R29bamutc2d953ihZX+j3QYWyYVWTQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=173IEF+G7l2R3kYDrZgxjeApvivdsl4EJ2cUK/VXK1U=;
- b=QLCnwdm22nUKPXt9sqc9OFBLbFDZPz7zzLkzY3utrTGgizedYA6pDd37Hdqkf2OM1QHKORJrfc4vCB/Se49KpI1LVyfz7EddSHMOIo60Ma/+6RJ253TtVAgFK4dICgK1ag73fJCnFl7FgjQC5YhC9IJt++/Tr7M9Z8njHQcKFmKnqzFvf1mDF9MLrBJNWO2FMe6vCqvL4k09rVlH2emeS+yb/evqyxxrFEKJYTtS1LkLIfNaKoDufzaugFxOMoyReGdLc/YGC9rRbVJwPXVLC7d+cEYJaf1hH6RXhmRZA3xLVbJ9hsYq/wmIupTQUy3yckWlV4+imThBkAfd5TZCJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com (2603:10b6:806:1a6::18)
- by SA0PR19MB4237.namprd19.prod.outlook.com (2603:10b6:806:90::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Thu, 18 Feb
- 2021 23:26:48 +0000
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::1c92:24d3:b11f:bc50]) by SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::1c92:24d3:b11f:bc50%6]) with mapi id 15.20.3846.043; Thu, 18 Feb 2021
- 23:26:48 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     "mgross@linux.intel.com" <mgross@linux.intel.com>
-CC:     Hans De Goede <hdegoede@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
-        Alexander Naumann <alexandernaumann@gmx.de>
-Subject: RE: [PATCH] platform/x86: dell-wmi-sysman: correct an initialization
- failure
-Thread-Topic: [PATCH] platform/x86: dell-wmi-sysman: correct an initialization
- failure
-Thread-Index: AQHXBiq2bH3JAPkdtkOB9EMzpoMmtapehBoAgAAJxHA=
-Date:   Thu, 18 Feb 2021 23:26:48 +0000
-Message-ID: <SA1PR19MB49261FC8B24465A86A985975FA859@SA1PR19MB4926.namprd19.prod.outlook.com>
-References: <20210218191723.20030-1-mario.limonciello@dell.com>
- <20210218224848.GB134379@linux.intel.com>
-In-Reply-To: <20210218224848.GB134379@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-02-18T23:26:46.0842092Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=8ed95a80-0a95-4c86-a517-bef5af6052fd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f024f6b6-67f9-4b0b-35e8-08d8d464aa11
-x-ms-traffictypediagnostic: SA0PR19MB4237:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR19MB42377A1F3DAEA130B7BAA429FA859@SA0PR19MB4237.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VYnF4k1wenlyd78mbGgNGynWUPlYyfHoK0oQ81AeDYm5mkBiqFgc0FIjs7jycGEUF691EtTfQE9dt94XaLdtflB6Z01rPleQIMlENPddF0wwnGDeU4WiT5jaG/Sbv2meJYF5hH10FdLlf+nBiPKrZgKPrkDkxBH5rTFf5F/1kV/H4QBKs9+rxWrTpcI70LlyoDD5XiczoyCGCjtvVXxxQqkwoXVEN2QIizjrgzW+bbf+1LH495twMwxJuz/1e1I+RHsIGULkubnkfVqkazDERK3z+EJIEKRx19ESV9h3npPEX+iJsLqFDrzXkeq1uf/jue0E6uRfc+luWWvs83vbY0QTwTLcpJLaWqnsuPpEBuZapg+ZaDC4yEnH85K2Ci/muMlF5mtNEGqdpYO1OrJnR98eRfpvDYlpV7p1Le/gr1OsGdQ4XiuOIbbFWYW/X3QnTCEAtGDg8qNF4mndkkfCKHOA95b7wLdPe2sL3KxY8LEEHvKv6+Rp0a72laA6JXvFbuu+4eJdQiyrZWlrNahFNg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR19MB4926.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(376002)(366004)(39860400002)(6506007)(6916009)(53546011)(2906002)(26005)(186003)(9686003)(66556008)(5660300002)(55016002)(71200400001)(66476007)(8936002)(83380400001)(316002)(8676002)(76116006)(478600001)(786003)(33656002)(54906003)(86362001)(52536014)(64756008)(66446008)(4326008)(66946007)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?5Jh6jciFOhJKfaanV7ZAt9baxI+tDOctWooyD/0//DxT+zY+jAyAgAk97dn8?=
- =?us-ascii?Q?S6LbyISRACXSRlMjIFjhsnmiE0OrVCl1w7Q3SzEhsZ9E97ZI02WXHVopWX6t?=
- =?us-ascii?Q?dVWQwXai6I5wFhhvma2g3uKJI7FuXUbfJ702mMOiOiWjVIBqcYmQXISDPr9m?=
- =?us-ascii?Q?9XejiIcYPWsmHpUQq4Cbejr6eCY7VF5PvY45VG2eP6y9RGEn8SQ6h/2kbJyB?=
- =?us-ascii?Q?AHdRhY+fzsgSlb0QMv8yo8E9Y2ovxtcr5LupW9TeX/GPBgM3lAvnT9zL32Ub?=
- =?us-ascii?Q?ClnEIV29mhBOoSoBXEF/uo/+dPawzFkA0RgSEgVhNv2y+0DfaK1/v5rsoeyM?=
- =?us-ascii?Q?UbW0Rz/kPd36QkBi43yfFzP2uvYh7SiXY6kzCOKU8o3n0AlBdFsX8Fp/4mPt?=
- =?us-ascii?Q?KpGVYnooX9s55SwS3WFA/HPZgGQRGQXWRWAqjYHU2I1D7FhGIBQ+ExeZ/MyX?=
- =?us-ascii?Q?1HN3My8ABMir2qvzbmxR9lAwmZDYg8rIPYU3j5nOq+zEy9f0mx2RmY4/0vDf?=
- =?us-ascii?Q?1PNHsM2rDdRT/cxWeNRkx4iZ5zHYdKH2jzjJeHyqbEI5q8CzdflPTzwIZON4?=
- =?us-ascii?Q?ktG+rTa6W5BrY7cdbibQtrfYdkcZJ7avH9Fpa6Nphwdi5OaVh51dtKZvJrEY?=
- =?us-ascii?Q?bjxHtZis/v1/QFLhvmu714JqSgNYd6Mi/YIC8TGBaEGRXvvyEL5Tn1cBf0Gx?=
- =?us-ascii?Q?SZcOPKuIUyWX+EbwN6OdjtJq4EyyoqIdiOt0LN8zfpmMNfZsCuPclSMF7s9f?=
- =?us-ascii?Q?8iKB2WqmFvxWbjs3DfE+7patSO7UpdyuHjQOmhkQIicIMG8gd1uwjttsIpBv?=
- =?us-ascii?Q?Kdr1/G1P7gyu66WWF570ntnaEJtZwyFDb0fdDkDjzMQZQta6NJoK+jtEbvMr?=
- =?us-ascii?Q?Jm0degPEALj1QvbQpjij9f6K+Ugqq6rdW+5ObRtzXUJToxVRg1+vMMuEqT+f?=
- =?us-ascii?Q?DS1XaFaIp3JZxsqxOTztR1OEq8OOT+iqAJ+gm3j4H0T6g1DmSqldcglw2WrX?=
- =?us-ascii?Q?tLU/jnRhrDQgG6Xz+BVPc2sdgllKNbzTGg9IAlwIYWEkqwDf8HhCk/TU1qfg?=
- =?us-ascii?Q?fwNLWsj8LgdpTmHk07/5IqJ56z75xqUZ2ze5m2zL0h2b+ujtMtr2k5ZDLDcU?=
- =?us-ascii?Q?RGmN+yst6iiNVJaIm3qJSF02RauET3OAGCmg3CkUmVazdplMKzHXQ8qOP0MM?=
- =?us-ascii?Q?pjhiGUlk4GUJ7RPJNWqXnMbPLMLBGqm5wqfG8f6OURr0gqftarGYFoPv4lgc?=
- =?us-ascii?Q?uvRRK1BGaDH67F1XCV/aQsDNw7cECdr0vRgYuxoZ5/vAqzHkWlesbRr33Tvb?=
- =?us-ascii?Q?4Z3hHwCEG0SuiX70ITR2oPjI?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 19 Feb 2021 05:36:41 -0500
+Received: by mail-lj1-f181.google.com with SMTP id j6so17651396ljo.5;
+        Fri, 19 Feb 2021 02:36:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
+         :content-transfer-encoding;
+        bh=nTn6ZavwiX+iUA/fKHbxz6oGLOlCA6cVyQWgY9ZgZLg=;
+        b=QOxCjO3HH+ADPyELPS+QSf9+cI77RXwHBMsIBsKkHVDB365VpD5Uuok1Qfiv4bMpwB
+         HEe3djJNrFMYB9dTScQbG4C5Ct+SpT0YxxK3lPo+C3VXugWnqh5ygmnEcmbSFYKDH/rH
+         HXhXKtbxq9j7LE+8EdpvO/rP4w4747SdT/D80t1AzypXTSz16XrSwIiHWtyjmBd0QNHn
+         lh4bsc2viQa1MGo6BOLSo2BpkkdrFvBC+rexNHGLgJP5mz/U+xwhZCKvDKhwvOmk9pJh
+         VNfFCMsp6nk3vdxWbOL8E65r5WWIxjH5AQvQn5S5ckOQ7te3fGn0nW1IuaGfIt6X+I9y
+         8KDw==
+X-Gm-Message-State: AOAM531kmq5iyUW/yLN/BbtHuU4uNSrs3eNHj2sJt2saEZpouWt9w7/N
+        9fzjFuShVF/0R4gaHhVcqSw=
+X-Google-Smtp-Source: ABdhPJzG0M58qPNdOEK8XmQmqu0DNkflmATorE93w4HYy6twMvFdiFngo70LAkHDlEnw10M77EQnCA==
+X-Received: by 2002:a2e:7c02:: with SMTP id x2mr5110440ljc.247.1613730958187;
+        Fri, 19 Feb 2021 02:35:58 -0800 (PST)
+Received: from dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
+        by smtp.gmail.com with ESMTPSA id q3sm882433ljb.64.2021.02.19.02.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Feb 2021 02:35:57 -0800 (PST)
+Message-ID: <468a5c7820a510b8a12c10b1b8a107fb41e9d26c.camel@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH 0/7] Add managed version of delayed work init
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
+To:     mgross@linux.intel.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <20210218162821.GP154917@linux.intel.com>
+References: <cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com>
+         <20210218162821.GP154917@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR19MB4926.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f024f6b6-67f9-4b0b-35e8-08d8d464aa11
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Feb 2021 23:26:48.6843
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: E6de9vCNqZtKvEBGGz2uZconYPM2mDwldwlJQnj1emxnWuhCYgTcZoS7kzbfP1x1egzsT8R8xkZgL/Toh1z6mpKTKmR8PjnfXT7/YGC9cG0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR19MB4237
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-02-18_14:2021-02-18,2021-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 adultscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102180197
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 mlxscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102180197
+Date:   Fri, 19 Feb 2021 12:35:51 +0200
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hello Mark,
 
+Thanks for taking a look at the series! This is the first time anyone
+has been commenting on a cover-letter which is likely to fade away and
+never be looked at again. Guess you are a thorough person :)
 
-> -----Original Message-----
-> From: mark gross <mgross@linux.intel.com>
-> Sent: Thursday, February 18, 2021 16:49
-> To: Limonciello, Mario
-> Cc: Hans De Goede; Mark Gross; LKML; platform-driver-x86@vger.kernel.org;
-> Bharathi, Divya; Alexander Naumann
-> Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: correct an initializa=
-tion
-> failure
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Thu, Feb 18, 2021 at 01:17:23PM -0600, Mario Limonciello wrote:
-> > On Dell systems that don't support this interface the module is
-> > mistakingly returning error code "0", when it should be returning
-> > -ENODEV.  Correct a logic error to guarantee the correct return code.
-> >
-> > Cc: Divya Bharathi <Divya_Bharathi@Dell.com>
-> > Reported-by: Alexander Naumann <alexandernaumann@gmx.de>
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > ---
-> >  drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c     | 4 +++-
-> >  drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c | 4 +++-
-> >  drivers/platform/x86/dell-wmi-sysman/sysman.c                 | 4 ++--
-> >  3 files changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-> b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-> > index f95d8ddace5a..8d59f81f9db4 100644
-> > --- a/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-> > +++ b/drivers/platform/x86/dell-wmi-sysman/biosattr-interface.c
-> > @@ -175,7 +175,9 @@ static struct wmi_driver bios_attr_set_interface_dr=
-iver
-> =3D {
-> >
-> >  int init_bios_attr_set_interface(void)
-> >  {
-> > -	return wmi_driver_register(&bios_attr_set_interface_driver);
-> > +	int ret =3D wmi_driver_register(&bios_attr_set_interface_driver);
-> I have to ask if the propper fix should be in wmi_driver_register
+On Thu, 2021-02-18 at 08:28 -0800, mark gross wrote:
+> On Sat, Feb 13, 2021 at 01:58:17PM +0200, Matti Vaittinen wrote:
+> > It's not rare that device drivers need delayed work.
+> > It's not rare that this work needs driver's data.
+> > 
+> > Often this means that driver must ensure the work is not queued
+> > when
+> > driver exits. Usually this is done by ensuring new work is not
+> > added and
+> > then calling cancel_delayed_work_sync() at remove(). In many cases
+> > this
+> > may also require cleanup at probe error path - which is easy to
+> > forget.
+> > 
+> > It might be helpful for (a) few drivers if there was a work init
+>  why the (a) and not just a?
 
-Do you mean something like this?
+I am not sure how many drivers are needed to change it from 'few' to 'a
+few'. Additionally, this series converted only the drivers which I
+found could easily get rid of the .remove() - I did not analyze how
+many drivers would benefit from this by getting rid of mixed
+devm/manual resource management.
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index c669676ea8e8..89d04c5e3ab9 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -1415,6 +1415,11 @@ static int acpi_wmi_probe(struct platform_device *de=
-vice)
- int __must_check __wmi_driver_register(struct wmi_driver *driver,
-                                       struct module *owner)
- {
-+       const struct wmi_device_id *id =3D driver->id_table;
-+
-+       if (!wmi_has_guid(id->guid_string))
-+               return -ENODEV;
-+
-        driver->driver.owner =3D owner;
-        driver->driver.bus =3D &wmi_bus_type;
+So to sum up - I don't know how many drivers will benefit and what
+people think makes 'few' to turn to 'a few'. '(a) few' leaves this
+decision to readers - and (a) few of them know the drivers better than
+I do.
 
-> > +
-> > +	return wmi_priv.bios_attr_wdev ? ret : -ENODEV;
-> Also, is there any point to call wmi_driver_register if returning -ENODEV=
-?
-> i.e. should the call to driver register be wrapped in a test for
-> bios_atter_wdev?
+> > Main reson why this is RFC is that I had hard time deciding where
+> > this
+> > function should be introduced. It's not nice to include all device
+> > stuff
+> > in workqueue - because many workqueue users are not interested in
+> > devices. In same way, not all of the devices are interested in WQs.
+> > OTOH, adding own file just for this sounds like an overkill.
+> s/own/one
 
-With some bus types it probably makes sense to register the driver whether =
-or
-not the device is present.  With the wmi bus it's fixed at bootup.
+Hm. The 'own file for XXX' does not make sense for native English
+speakers? Didn't now that. Thanks for pointing it out.
 
->=20
->=20
-> >  }
-> >
-> >  void exit_bios_attr_set_interface(void)
-> > diff --git a/drivers/platform/x86/dell-wmi-sysman/passwordattr-interfac=
-e.c
-> b/drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c
-> > index 5780b4d94759..bf449dc5ff47 100644
-> > --- a/drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c
-> > +++ b/drivers/platform/x86/dell-wmi-sysman/passwordattr-interface.c
-> > @@ -142,7 +142,9 @@ static struct wmi_driver bios_attr_pass_interface_d=
-river
-> =3D {
-> >
-> >  int init_bios_attr_pass_interface(void)
-> >  {
-> > -	return wmi_driver_register(&bios_attr_pass_interface_driver);
-> > +	int ret =3D wmi_driver_register(&bios_attr_pass_interface_driver);
-> > +
-> > +	return wmi_priv.password_attr_wdev ? ret : -ENODEV;
-> same comments as above only for password_atter_wdev.
->=20
-> --mark
->=20
-> >  }
-> >
-> >  void exit_bios_attr_pass_interface(void)
-> > diff --git a/drivers/platform/x86/dell-wmi-sysman/sysman.c
-> b/drivers/platform/x86/dell-wmi-sysman/sysman.c
-> > index cb81010ba1a2..d9ad0e83b66f 100644
-> > --- a/drivers/platform/x86/dell-wmi-sysman/sysman.c
-> > +++ b/drivers/platform/x86/dell-wmi-sysman/sysman.c
-> > @@ -513,13 +513,13 @@ static int __init sysman_init(void)
-> >  	}
-> >
-> >  	ret =3D init_bios_attr_set_interface();
-> > -	if (ret || !wmi_priv.bios_attr_wdev) {
-> > +	if (ret) {
-> >  		pr_debug("failed to initialize set interface\n");
-> >  		goto fail_set_interface;
-> >  	}
-> >
-> >  	ret =3D init_bios_attr_pass_interface();
-> > -	if (ret || !wmi_priv.password_attr_wdev) {
-> > +	if (ret) {
-> >  		pr_debug("failed to initialize pass interface\n");
-> >  		goto fail_pass_interface;
-> >  	}
-> > --
-> > 2.25.1
-> >
+I will edit the cover letter when I respin this rebased on v5.12-rc1 -
+and it is likely the series v2 will add this function inlined in a new
+header dedicated for devm-helpers (as was suggested by Hans de Goede).
+
+Best Regards
+--Matti
+
