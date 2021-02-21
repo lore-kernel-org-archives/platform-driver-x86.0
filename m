@@ -8,65 +8,67 @@ X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D6AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 21:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D770C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 21:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F00A64E4B
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 21:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F3464E5F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 21:31:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230184AbhBUVGA (ORCPT
+        id S230177AbhBUVby (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Feb 2021 16:06:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        Sun, 21 Feb 2021 16:31:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229985AbhBUVGA (ORCPT
+        with ESMTP id S230174AbhBUVby (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Feb 2021 16:06:00 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989DBC061574;
-        Sun, 21 Feb 2021 13:05:19 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id v62so12571762wmg.4;
-        Sun, 21 Feb 2021 13:05:19 -0800 (PST)
+        Sun, 21 Feb 2021 16:31:54 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C845FC061786;
+        Sun, 21 Feb 2021 13:31:13 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id h98so12237066wrh.11;
+        Sun, 21 Feb 2021 13:31:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sK//K0s31poyiYG87+9PljlbveG+XzuTDDaliKRPm2Y=;
-        b=GpqbLRth2mV+AU+vIyJjk3DcdKSUuAq+sFxJv2mywG05x/qd96F8dUkLcZed3fATOD
-         a16w2ZfeIXiyrOE8rrBBvbKRd03oJm37O/ea1y/UQivXvD+zj2hYbZd3lRfw1sUgPWpF
-         XaHDtSmO5BiA4J8fPB7gnyQWkYUBeYsMnRE3gY/i6M7lLPy8t+StiZ9EVF82rwytYuTv
-         OMnUu9VMBiyIk5HgcWMKPtYGR/A0DO1nnSWRxJnwlBc7Q/1iVQmHGYoVumYld+asWvM+
-         ewwA5W2jrXoIN3WsKpQmog/TJX3zQsrWZQSN5AJarnpQNbs4k6ElQgM+GqxzmBisjlCA
-         cuSg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SQWQp/fGjtTbL9z86k225IBSAPVnbR+Nqs5l18w+3FU=;
+        b=Xjm5W1/VTQnfgCKME6kbMBu2PzVE/DKOhxB/DRQe2lHBo+y/8E0SDboDJZb39UnQJi
+         OxpReZ+OJ1zzq5P76hhCeyR5LBS2Yp2ChuYMcFEN7jK7p4utHBDL8Ya8+AG2SlAmVl5w
+         UawZRMQTsszjoqvsRmW/r6u2IKBLcNKaK/aY3opiDZfmpcW3HEwOhpttr8t640odzrAx
+         /zLbTT0bviRZm+nqhKqnWHpd6jW3qOcemsZ3cuP0kC/Njkx0a8ae8M0KMfFcry7Bl7+X
+         wMMEKK/HdMsXmzinLjGAlj/eNn7V/ZgMgJtEwkWHaUcAShQX1YBI1VqAtDm5KOVAvHMl
+         y1lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sK//K0s31poyiYG87+9PljlbveG+XzuTDDaliKRPm2Y=;
-        b=VsBG9jESr0u+kDKTe1oIceoby6dRGEnvq5eKWEPHhzrgoWOl4H8eqYvVvwwBuAsCo6
-         h53l8cZmtnOlTgR2857+XrC02WmfZDU4+qS6eeooYXCGnxK1kDHDhFmSXScEUwluV0Nn
-         UPdCfpIz4WBfAZAcLv9xizwUsfIjqVgCxMp/DKHaazG/MAoP/T7+EcAwGAXtXejksLPf
-         zVY8tFXAP6FstE4DaM7/zteyAozVuSsxaWkpcGfndsYsWjk4+rJZx2xDqBbMa+iaElIV
-         6uj21sBeWoB1T0jvvBDcxbmwDmM4wdSQczA5GxnZbXFrEUQrSa0IkSEOpfezrZGAJ3vm
-         ppRw==
-X-Gm-Message-State: AOAM533C8Yt8e/O4LLg7Sk3m4h2IZm0KLdYDZ1rfZyMw5XL46SxeUEhi
-        SHYToFxXJgeFuE0G+RqbG+E=
-X-Google-Smtp-Source: ABdhPJxf+ZxPxUBFPXP+XOa0zs8+8n6s/W9jIQqqpgdMNrD2vxbZDTYobjuH4f0iPO1sPSrixzL9Sg==
-X-Received: by 2002:a1c:2d47:: with SMTP id t68mr17798100wmt.189.1613941518339;
-        Sun, 21 Feb 2021 13:05:18 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SQWQp/fGjtTbL9z86k225IBSAPVnbR+Nqs5l18w+3FU=;
+        b=Vg20EFBqwBxbR0wEUGkDFrDkf32JLfxih5xnNw/jSwGXB/I5YgR0B2h+WE8pgc6SdH
+         mmSrw1+hb+Zn51JnucIpUYFW7AQXfOAr4gzu1S+Xwy5+N/BJoracC5Gv8uDZLEOS8EYy
+         vBH+t647a9WGPrZuR0LwMDzejPmNMvk3HLQPPqKb75GZZNKxKOrWX6JnhK64V4iQJZ3/
+         8K+wwc/5iGNWEOnPourSfGz9Kh3ndMxGFhT8l3LuGHW6AR2k/15e5zqOhj4QagF+jSSm
+         f6xUM6PBuido3HSMlgWMGOfcqOnJcGFFWveKVKXenZfGQm8DqmEAq6nwMXx7UbxPXVOm
+         WiEg==
+X-Gm-Message-State: AOAM531dnCsXvf2UW/kRLIayCsClEDBDvzsrVMaSzAu73nEEw8YoQNHG
+        MYFpmyPmG+KBV1zhjv5R2So=
+X-Google-Smtp-Source: ABdhPJwAKuO5C03oxbwb8vY8eT13hgq1r8AZCRtocyK5Z7WZfAGyiIDtol+jivQvKGv7e4gDSIPI+Q==
+X-Received: by 2002:adf:e60e:: with SMTP id p14mr1605624wrm.388.1613943072580;
+        Sun, 21 Feb 2021 13:31:12 -0800 (PST)
 Received: from localhost.localdomain (host-79-22-224-43.retail.telecomitalia.it. [79.22.224.43])
-        by smtp.gmail.com with ESMTPSA id g1sm23166595wmh.9.2021.02.21.13.05.17
+        by smtp.gmail.com with ESMTPSA id l4sm25949193wrt.42.2021.02.21.13.31.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Feb 2021 13:05:18 -0800 (PST)
+        Sun, 21 Feb 2021 13:31:12 -0800 (PST)
 From:   Elia Devito <eliadevito@gmail.com>
 Cc:     Elia Devito <eliadevito@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] platform/x86: hp-wmi: add platform profile support
-Date:   Sun, 21 Feb 2021 22:04:39 +0100
-Message-Id: <20210221210439.68590-1-eliadevito@gmail.com>
+Subject: [PATCH v2 2/2] platform/x86: hp-wmi: add platform profile support
+Date:   Sun, 21 Feb 2021 22:30:06 +0100
+Message-Id: <20210221213006.4725-1-eliadevito@gmail.com>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210221210439.68590-1-eliadevito@gmail.com>
+References: <20210221210439.68590-1-eliadevito@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -80,11 +82,13 @@ Signed-off-by: Elia Devito <eliadevito@gmail.com>
 ---
 the "quiet" profile will be implemented with a further patch
 
- drivers/platform/x86/hp-wmi.c | 96 +++++++++++++++++++++++++++++++++--
- 1 file changed, 91 insertions(+), 5 deletions(-)
+v2: added platform_profile_remove() missing call
+
+ drivers/platform/x86/hp-wmi.c | 103 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 6d7b91b8109b..d983267b252b 100644
+index 6d7b91b8109b..a33203d61cf0 100644
 --- a/drivers/platform/x86/hp-wmi.c
 +++ b/drivers/platform/x86/hp-wmi.c
 @@ -21,6 +21,7 @@
@@ -108,15 +112,16 @@ index 6d7b91b8109b..d983267b252b 100644
  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
  
-@@ -159,6 +166,7 @@ static const struct key_entry hp_wmi_keymap[] = {
+@@ -159,6 +166,8 @@ static const struct key_entry hp_wmi_keymap[] = {
  
  static struct input_dev *hp_wmi_input_dev;
  static struct platform_device *hp_wmi_platform_dev;
 +static struct platform_profile_handler platform_profile_handler;
++static int platform_profile_support = 0;
  
  static struct rfkill *wifi_rfkill;
  static struct rfkill *bluetooth_rfkill;
-@@ -869,23 +877,101 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+@@ -869,11 +878,80 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
  	return err;
  }
  
@@ -127,9 +132,7 @@ index 6d7b91b8109b..d983267b252b 100644
 +	int tp;
  
  	tp = hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
- 	if (tp < 0)
- 		return tp;
- 
++
 +	return tp;
 +}
 +
@@ -198,10 +201,10 @@ index 6d7b91b8109b..d983267b252b 100644
 +	int err, tp;
 +
 +	tp = thermal_profile_get();
-+	if (tp < 0)
-+		return tp;
-+
- 	/*
+ 	if (tp < 0)
+ 		return tp;
+ 
+@@ -881,11 +959,23 @@ static int thermal_profile_setup(struct platform_device *device)
  	 * call thermal profile write command to ensure that the firmware correctly
  	 * sets the OEM variables for the DPTF
  	 */
@@ -218,11 +221,16 @@ index 6d7b91b8109b..d983267b252b 100644
 +	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
 +	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
 +
-+	platform_profile_register(&platform_profile_handler);
++	err = platform_profile_register(&platform_profile_handler);
++	if (err)
++		return err;
++
++	platform_profile_support = 1;
++
  	return 0;
  }
  
-@@ -900,7 +986,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+@@ -900,7 +990,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
  	if (hp_wmi_rfkill_setup(device))
  		hp_wmi_rfkill2_setup(device);
  
@@ -231,6 +239,15 @@ index 6d7b91b8109b..d983267b252b 100644
  
  	return 0;
  }
+@@ -1030,5 +1120,8 @@ static void __exit hp_wmi_exit(void)
+ 		platform_device_unregister(hp_wmi_platform_dev);
+ 		platform_driver_unregister(&hp_wmi_driver);
+ 	}
++
++	if (platform_profile_support)
++		platform_profile_remove();
+ }
+ module_exit(hp_wmi_exit);
 -- 
 2.29.2
 
