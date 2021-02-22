@@ -2,249 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEAEC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 22:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4317FC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Feb 2021 07:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A62864DF2
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Feb 2021 22:16:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E272464EC3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Feb 2021 07:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231667AbhBUWQK (ORCPT
+        id S229952AbhBVHBY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Feb 2021 17:16:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231745AbhBUWQF (ORCPT
+        Mon, 22 Feb 2021 02:01:24 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:34265 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229780AbhBVHBX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Feb 2021 17:16:05 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236D3C061574;
-        Sun, 21 Feb 2021 14:15:25 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id l30so1421322wrb.12;
-        Sun, 21 Feb 2021 14:15:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CWmiNEs97OZnCfH3+LxcVD0SeyQhZ+wmaHX9mtZJ5TU=;
-        b=jmjEGhzKJdAe8dthuCi+Sd0P67T1gL/fZZTX8iPKjXFza9+Y5PuPGG5eEdyb1jpood
-         JCJhVm6Nxqbijwh5KuSaMUIx2dv/cAJS7V9VxqPjmnsAE2LPnU0diPa+RN1e4BygqVt8
-         AtN6BS398O+HUBK0/lLf+xYbYFV3K8Y8FfRMzS62vrnh152f9cgW/lrvRUcWzMj+pPAS
-         RAk6Xr52SVilKuA7RMta5n0nGAPdnXtX7+m2LvL95IDParU7x/qPoOcTn3Hh5/6gBBbX
-         QIKhxEC5lznd1m46dNPOkkh7G2XOYMNMArQhWAJT0lNvlKhJy3d7AxumCW+CyUAh3dUK
-         Ygvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CWmiNEs97OZnCfH3+LxcVD0SeyQhZ+wmaHX9mtZJ5TU=;
-        b=Co6Kwx1LrHduq83gfhR7BF2yKSygYgcPvCU8Y34Xm8BURQ1cFgPGS3QnRDmw14pXIb
-         89cwJLc5UKcIB41yWdvBOOHTrkp1w4eECxzlZRWQoyr3QN+R8scXSrdfEu1U0Hv2+72/
-         ciV3LBmOS18szvEF3FA+1TQb5hkR4covJqDIPb4GJBzG5V6k1oO105OCxMtXR11+5Mzk
-         c0Ch3puDbF7UOnbwEjRtAvQGI5NJ2c5RVYsJx0/k62pY0YMKTBpcvp3EkwEy8oBwyRVD
-         Wdhvx8hafhTOzuQDsHvyMgzVUCsAHsbtxAqBRQKxZk/5ntIwwv9tNcAUklHsP3Ljuzjg
-         JACA==
-X-Gm-Message-State: AOAM532E1z20+A9FqDC47pSh7buZI7x7lL+VPI/D//NbV9yDQ7h7FIZo
-        6AvxO8jo7GO6m37hEQClNYo=
-X-Google-Smtp-Source: ABdhPJwowhgc63ULwqi1ptjDgHV3SsxPZtcnUFL/kseNnwpRF3WBNlEgzQ4HEtWbrwgeNF5H+4nRZQ==
-X-Received: by 2002:adf:e809:: with SMTP id o9mr18793183wrm.137.1613945722917;
-        Sun, 21 Feb 2021 14:15:22 -0800 (PST)
-Received: from localhost.localdomain (host-79-22-224-43.retail.telecomitalia.it. [79.22.224.43])
-        by smtp.gmail.com with ESMTPSA id h18sm30446261wrm.54.2021.02.21.14.15.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Feb 2021 14:15:22 -0800 (PST)
-From:   Elia Devito <eliadevito@gmail.com>
-Cc:     Elia Devito <eliadevito@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] platform/x86: hp-wmi: add platform profile support
-Date:   Sun, 21 Feb 2021 23:13:40 +0100
-Message-Id: <20210221221339.12395-1-eliadevito@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <nVb9zC39HBbC5-iweNmNol7ymCjT4iD91ydsZVuo_Upqh2_3eVKaF1X1rbYpZGva-NyrGUW_W2uJIc5RHu1KhBGy7-ejGNYZJyRttjhJT-s=@protonmail.com>
-References: <nVb9zC39HBbC5-iweNmNol7ymCjT4iD91ydsZVuo_Upqh2_3eVKaF1X1rbYpZGva-NyrGUW_W2uJIc5RHu1KhBGy7-ejGNYZJyRttjhJT-s=@protonmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 22 Feb 2021 02:01:23 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01424;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UP9s3Nh_1613977240;
+Received: from j63c13417.sqa.eu95.tbsite.net(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0UP9s3Nh_1613977240)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 22 Feb 2021 15:00:40 +0800
+From:   Yang Li <yang.lee@linux.alibaba.com>
+To:     ike.pan@canonical.com
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH] platform/x86: Switch to using the new API kobj_to_dev()
+Date:   Mon, 22 Feb 2021 15:00:38 +0800
+Message-Id: <1613977238-104556-1-git-send-email-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Implement support for cool, balanced and performance thermal profile
+fixed the following coccicheck:
+./drivers/platform/x86/ideapad-laptop.c:523:60-61: WARNING opportunity
+for kobj_to_dev()
 
-Signed-off-by: Elia Devito <eliadevito@gmail.com>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 ---
-the "quiet" profile will be implemented with a further patch
+ drivers/platform/x86/ideapad-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2: added platform_profile_remove() missing call
-v3: apply Barnabás suggestions
-
- drivers/platform/x86/hp-wmi.c | 97 +++++++++++++++++++++++++++++++++--
- 1 file changed, 92 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-index 6d7b91b8109b..027a1467d009 100644
---- a/drivers/platform/x86/hp-wmi.c
-+++ b/drivers/platform/x86/hp-wmi.c
-@@ -21,6 +21,7 @@
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/platform_device.h>
-+#include <linux/platform_profile.h>
- #include <linux/acpi.h>
- #include <linux/rfkill.h>
- #include <linux/string.h>
-@@ -119,6 +120,12 @@ enum hp_wireless2_bits {
- 	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
- };
- 
-+enum hp_thermal_profile {
-+	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
-+	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-+	HP_THERMAL_PROFILE_COOL			= 0x02
-+};
-+
- #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
- #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
- 
-@@ -159,6 +166,8 @@ static const struct key_entry hp_wmi_keymap[] = {
- 
- static struct input_dev *hp_wmi_input_dev;
- static struct platform_device *hp_wmi_platform_dev;
-+static struct platform_profile_handler platform_profile_handler;
-+static bool platform_profile_support;
- 
- static struct rfkill *wifi_rfkill;
- static struct rfkill *bluetooth_rfkill;
-@@ -869,11 +878,74 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
- 	return err;
- }
- 
--static int thermal_profile_setup(struct platform_device *device)
-+static int thermal_profile_get(void)
-+{
-+	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
-+}
-+
-+static int thermal_profile_set(int thermal_profile)
-+{
-+	return hp_wmi_perform_query(HPWMI_THERMAL_PROFILE_QUERY, HPWMI_WRITE, &thermal_profile,
-+							   sizeof(thermal_profile), 0);
-+}
-+
-+static int platform_profile_get(struct platform_profile_handler *pprof,
-+				enum platform_profile_option *profile)
-+{
-+	int tp;
-+
-+	tp = thermal_profile_get();
-+	if (tp < 0)
-+		return tp;
-+
-+	switch (tp) {
-+	case HP_THERMAL_PROFILE_PERFORMANCE:
-+		*profile =  PLATFORM_PROFILE_PERFORMANCE;
-+		break;
-+	case HP_THERMAL_PROFILE_DEFAULT:
-+		*profile =  PLATFORM_PROFILE_BALANCED;
-+		break;
-+	case HP_THERMAL_PROFILE_COOL:
-+		*profile =  PLATFORM_PROFILE_COOL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int platform_profile_set(struct platform_profile_handler *pprof,
-+				enum platform_profile_option profile)
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 5b81baf..d6ca4f0 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -520,7 +520,7 @@ static umode_t ideapad_is_visible(struct kobject *kobj,
+ 				 struct attribute *attr,
+ 				 int idx)
  {
- 	int err, tp;
- 
--	tp = hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
-+	switch (profile) {
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		tp =  HP_THERMAL_PROFILE_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		tp =  HP_THERMAL_PROFILE_DEFAULT;
-+		break;
-+	case PLATFORM_PROFILE_COOL:
-+		tp =  HP_THERMAL_PROFILE_COOL;
-+		break;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+
-+	err = thermal_profile_set(tp);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int thermal_profile_setup(void)
-+{
-+	int err, tp;
-+
-+	tp = thermal_profile_get();
- 	if (tp < 0)
- 		return tp;
- 
-@@ -881,11 +953,23 @@ static int thermal_profile_setup(struct platform_device *device)
- 	 * call thermal profile write command to ensure that the firmware correctly
- 	 * sets the OEM variables for the DPTF
- 	 */
--	err = hp_wmi_perform_query(HPWMI_THERMAL_PROFILE_QUERY, HPWMI_WRITE, &tp,
--							   sizeof(tp), 0);
-+	err = thermal_profile_set(tp);
- 	if (err)
- 		return err;
- 
-+	platform_profile_handler.profile_get = platform_profile_get,
-+	platform_profile_handler.profile_set = platform_profile_set,
-+
-+	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, platform_profile_handler.choices);
-+
-+	err = platform_profile_register(&platform_profile_handler);
-+	if (err)
-+		return err;
-+
-+	platform_profile_support = true;
-+
- 	return 0;
- }
- 
-@@ -900,7 +984,7 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
- 	if (hp_wmi_rfkill_setup(device))
- 		hp_wmi_rfkill2_setup(device);
- 
--	thermal_profile_setup(device);
-+	thermal_profile_setup();
- 
- 	return 0;
- }
-@@ -927,6 +1011,9 @@ static int __exit hp_wmi_bios_remove(struct platform_device *device)
- 		rfkill_destroy(wwan_rfkill);
- 	}
- 
-+	if (platform_profile_support)
-+		platform_profile_remove();
-+
- 	return 0;
- }
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct ideapad_private *priv = dev_get_drvdata(dev);
+ 	bool supported;
  
 -- 
-2.29.2
+1.8.3.1
 
