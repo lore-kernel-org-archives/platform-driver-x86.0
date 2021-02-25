@@ -2,178 +2,203 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6FCC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Feb 2021 23:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2CEC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Feb 2021 15:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF4664F03
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Feb 2021 23:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF5F64EDC
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Feb 2021 15:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234255AbhBXXDj (ORCPT
+        id S232649AbhBYPCu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Feb 2021 18:03:39 -0500
-Received: from mga06.intel.com ([134.134.136.31]:59508 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236169AbhBXXDj (ORCPT
+        Thu, 25 Feb 2021 10:02:50 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:42316 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229596AbhBYPCT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Feb 2021 18:03:39 -0500
-IronPort-SDR: OO0a5f9u6tOGpflourjBbj8kOKFXwtuyeXjHs3vH+Lu7lNW0ABt7NSFe7DjzfLM1woEGsG80AN
- XtP/Uvh/pTyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9905"; a="246751274"
-X-IronPort-AV: E=Sophos;i="5.81,203,1610438400"; 
-   d="scan'208";a="246751274"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2021 15:01:50 -0800
-IronPort-SDR: h+2RPi2OzYuEaNndyIK6zqK4KdInzQr7GhcSJueF3UyfHRZbnVl1/4nPgIhm/kEOMZU3AtMTd1
- Q+tZzEfJSk3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,203,1610438400"; 
-   d="scan'208";a="597555568"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Feb 2021 15:01:50 -0800
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.55])
-        by linux.intel.com (Postfix) with ESMTP id 85B1558066A;
-        Wed, 24 Feb 2021 15:01:50 -0800 (PST)
-Message-ID: <dc97f44840890ccb0bc2cde1f1ef1e0ca47a64ab.camel@linux.intel.com>
-Subject: Re: [PATCH V2 1/2] MFD: intel_pmt: Fix nuisance messages and
- handling of disabled capabilities
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>, lee.jones@linaro.org,
-        mgross@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Wed, 24 Feb 2021 15:01:50 -0800
-In-Reply-To: <6d45db24-7741-1956-9cf1-35a7dec517c5@redhat.com>
-References: <20210128172846.99352-1-david.e.box@linux.intel.com>
-         <20210224201005.1034005-1-david.e.box@linux.intel.com>
-         <6d45db24-7741-1956-9cf1-35a7dec517c5@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Thu, 25 Feb 2021 10:02:19 -0500
+Received: by mail-ot1-f49.google.com with SMTP id e45so5897743ote.9;
+        Thu, 25 Feb 2021 07:02:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e502o7CCWlPNbJmZY9s9X5FHWXBm35Nmhk7yitJzO4E=;
+        b=fYMF1GDDA53c2wyBizyBXO3hDH8uZfQoPhiCszU43IKQS/l0TFN5PY37sNFqpY41Gr
+         fA2odc0l+hcu0PKmxAxFfwZL+3M0PwXJGx6dCIUsdJn+iag6JPVW4ulXWSLWcEeM0qXs
+         M53LoaUnHSyiCgefKy6tVkfbjudDZ3nBclLkebtAvdtPQyxvNn4y1Cs3/NEg+iSHBYBS
+         vFWBiOgQIvuX/NpafMAuzs8sm9+bEG+vPnOczcRcICaI49vbCLS9fr5ZsHH8PSZ/vO+f
+         8ezGGrnyG8PsfG9OYGpfu9PBb3po/IdhIu4XzfGHjIoNOP7dmK49I68ngQUAfp1DC9fi
+         OTWQ==
+X-Gm-Message-State: AOAM530qoVs7xJoxeQYW2GNzq9GdNpy2P1dR5RSCFz99ihLh3R+rgkTX
+        5hgonhiMbeZifl0BAk9YDVPAbug1AsO8J3u2CsbaMH42
+X-Google-Smtp-Source: ABdhPJzQCX/66Mb0QI7j7N3f/dOotLPO7MAOeXnFoJvadqv5IziVI0uMkZkjS139qJQxhIsF9W2QpuK0fme2LSEv2OU=
+X-Received: by 2002:a05:6830:2466:: with SMTP id x38mr2735214otr.206.1614265295839;
+ Thu, 25 Feb 2021 07:01:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <2074665.VPHYfYaQb6@kreacher> <46166c43-ee54-4a6b-5e48-36ff8e08cba6@redhat.com>
+In-Reply-To: <46166c43-ee54-4a6b-5e48-36ff8e08cba6@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 Feb 2021 16:01:25 +0100
+Message-ID: <CAJZ5v0iwOiZg1--J-NTzV-1GBFCJytmKW2bDx+x_pPNX61DV0w@mail.gmail.com>
+Subject: Re: [PATCH v1] platform: x86: ACPI: Get rid of ACPICA message printing
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Chen Yu <yu.c.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2021-02-24 at 21:22 +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 2/24/21 9:10 PM, David E. Box wrote:
-> > Some products will be available that have PMT capabilities that are
-> > not
-> > supported. Remove the warnings in this instance to avoid nuisance
-> > messages
-> > and confusion.
-> > 
-> > Also return an error code for capabilities that are disabled by
-> > quirk to
-> > prevent them from keeping the driver loaded if only disabled
-> > capabilities
-> > are found.
-> > 
-> > Fixes: 4f8217d5b0ca ("mfd: Intel Platform Monitoring Technology
-> > support")
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > For merge in platform-drivers-x86
-> > 
-> > Based on 5.11-rc1 review-hans branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> 
-> Which, assuming you did a git remote update recently is AKA platform-
-> drivers-x86-v5.12-1 .
+On Wed, Feb 24, 2021 at 8:03 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi Rafael,
+>
+> On 2/24/21 7:41 PM, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > A few x86 platform drivers use ACPI_DEBUG_PRINT() or ACPI_EXCEPTION()
+> > for printing messages, but that is questionable, because those macros
+> > belong to ACPICA and they should not be used elsewhere.  In addition,
+> > ACPI_DEBUG_PRINT() requires special enabling to allow it to actually
+> > print the message, which is a nuisance, and the _COMPONENT symbol
+> > generally needed for that is not defined in any of the files in
+> > question.
+> >
+> > For this reason, replace the ACPI_DEBUG_PRINT() in lg-laptop.c with
+> > pr_debug() and the one in xo15-ebook.c with acpi_handle_debug()
+> > (with the additional benefit that the source object can be identified
+> > more easily after this change), and replace the ACPI_EXCEPTION() in
+> > acer-wmi.c with pr_warn().
+> >
+> > Also drop the ACPI_MODULE_NAME() definitions that are only used by
+> > the ACPICA message printing macros from those files and from wmi.c
+> > and surfacepro3_button.c (while at it).
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Thank you for your patch for this.
+>
+> This looks good to me, except that I already fixed the acer-wmi.c case
+> a couple of weeks ago, and that fiox was merged into Linus' tree already:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ef14f0e82c9b225ae19476fa5bed89d55b2a96d5
+>
+> I can drop the acer-wmi.c chunks when I merge this, so there is no
+> need to send out a new version.
 
-That it is.
+OK, thanks!
 
-> 
-> > Changes from V1:
-> > 
-> >         - None. Patch 2 added.
-> 
-> The series looks good to me, so for the series:
-> 
+I will be assuming that you will pick up this patch and adjust it as needed.
+
 > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Lee, since both patches touch mfd files (and patch 2 also touches
-> files under drivers/platform/x86)
-> I think it would be best if you just merge the entire series.
-
-Ack
-
-David
-
-> 
-> As always I would appreciate a pull-req from you to also pull the
-> changes
-> into my tree, in case further drivers/platform/x86/intel_pmt* changes
-> show up during this cycle.
-> 
+>
 > Regards,
-> 
+>
 > Hans
-> 
-> 
-> 
-> 
-> 
-> 
-> > 
-> >  drivers/mfd/intel_pmt.c | 11 +++--------
-> >  1 file changed, 3 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
-> > index 744b230cdcca..65da2b17a204 100644
-> > --- a/drivers/mfd/intel_pmt.c
-> > +++ b/drivers/mfd/intel_pmt.c
-> > @@ -79,19 +79,18 @@ static int pmt_add_dev(struct pci_dev *pdev,
-> > struct intel_dvsec_header *header,
-> >         case DVSEC_INTEL_ID_WATCHER:
-> >                 if (quirks & PMT_QUIRK_NO_WATCHER) {
-> >                         dev_info(dev, "Watcher not supported\n");
-> > -                       return 0;
-> > +                       return -EINVAL;
-> >                 }
-> >                 name = "pmt_watcher";
-> >                 break;
-> >         case DVSEC_INTEL_ID_CRASHLOG:
-> >                 if (quirks & PMT_QUIRK_NO_CRASHLOG) {
-> >                         dev_info(dev, "Crashlog not supported\n");
-> > -                       return 0;
-> > +                       return -EINVAL;
-> >                 }
-> >                 name = "pmt_crashlog";
-> >                 break;
-> >         default:
-> > -               dev_err(dev, "Unrecognized PMT capability: %d\n",
-> > id);
-> >                 return -EINVAL;
-> >         }
-> >  
-> > @@ -174,12 +173,8 @@ static int pmt_pci_probe(struct pci_dev *pdev,
-> > const struct pci_device_id *id)
-> >                 header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-> >  
-> >                 ret = pmt_add_dev(pdev, &header, quirks);
-> > -               if (ret) {
-> > -                       dev_warn(&pdev->dev,
-> > -                                "Failed to add device for DVSEC id
-> > %d\n",
-> > -                                header.id);
-> > +               if (ret)
-> >                         continue;
-> > -               }
-> >  
-> >                 found_devices = true;
-> >         } while (true);
-> > 
-> > base-commit: a7d53dbbc70a81d5781da7fc905b656f41ad2381
-> > 
-> 
-
-
+>
+>
+>
+> > ---
+> >  drivers/platform/surface/surfacepro3_button.c |    2 --
+> >  drivers/platform/x86/acer-wmi.c               |    4 ++--
+> >  drivers/platform/x86/lg-laptop.c              |    2 +-
+> >  drivers/platform/x86/wmi.c                    |    1 -
+> >  drivers/platform/x86/xo15-ebook.c             |    6 ++----
+> >  5 files changed, 5 insertions(+), 10 deletions(-)
+> >
+> > Index: linux-pm/drivers/platform/x86/lg-laptop.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/x86/lg-laptop.c
+> > +++ linux-pm/drivers/platform/x86/lg-laptop.c
+> > @@ -678,7 +678,7 @@ static int __init acpi_init(void)
+> >
+> >       result = acpi_bus_register_driver(&acpi_driver);
+> >       if (result < 0) {
+> > -             ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Error registering driver\n"));
+> > +             pr_debug("Error registering driver\n");
+> >               return -ENODEV;
+> >       }
+> >
+> > Index: linux-pm/drivers/platform/x86/xo15-ebook.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/x86/xo15-ebook.c
+> > +++ linux-pm/drivers/platform/x86/xo15-ebook.c
+> > @@ -26,8 +26,6 @@
+> >  #define XO15_EBOOK_HID                       "XO15EBK"
+> >  #define XO15_EBOOK_DEVICE_NAME               "EBook Switch"
+> >
+> > -ACPI_MODULE_NAME(MODULE_NAME);
+> > -
+> >  MODULE_DESCRIPTION("OLPC XO-1.5 ebook switch driver");
+> >  MODULE_LICENSE("GPL");
+> >
+> > @@ -66,8 +64,8 @@ static void ebook_switch_notify(struct a
+> >               ebook_send_state(device);
+> >               break;
+> >       default:
+> > -             ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+> > -                               "Unsupported event [0x%x]\n", event));
+> > +             acpi_handle_debug(device->handle,
+> > +                               "Unsupported event [0x%x]\n", event);
+> >               break;
+> >       }
+> >  }
+> > Index: linux-pm/drivers/platform/x86/acer-wmi.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/x86/acer-wmi.c
+> > +++ linux-pm/drivers/platform/x86/acer-wmi.c
+> > @@ -30,7 +30,6 @@
+> >  #include <linux/input/sparse-keymap.h>
+> >  #include <acpi/video.h>
+> >
+> > -ACPI_MODULE_NAME(KBUILD_MODNAME);
+> >  MODULE_AUTHOR("Carlos Corbacho");
+> >  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+> >  MODULE_LICENSE("GPL");
+> > @@ -1605,7 +1604,8 @@ static void acer_kbd_dock_get_initial_st
+> >
+> >       status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input_buf, &output_buf);
+> >       if (ACPI_FAILURE(status)) {
+> > -             ACPI_EXCEPTION((AE_INFO, status, "Error getting keyboard-dock initial status"));
+> > +             pr_warn("Error getting keyboard-dock initial status: %s\n",
+> > +                     acpi_format_exception(status));
+> >               return;
+> >       }
+> >
+> > Index: linux-pm/drivers/platform/surface/surfacepro3_button.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/surface/surfacepro3_button.c
+> > +++ linux-pm/drivers/platform/surface/surfacepro3_button.c
+> > @@ -40,8 +40,6 @@ static const guid_t MSHW0040_DSM_UUID =
+> >  #define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN              0xc2
+> >  #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN    0xc3
+> >
+> > -ACPI_MODULE_NAME("surface pro 3 button");
+> > -
+> >  MODULE_AUTHOR("Chen Yu");
+> >  MODULE_DESCRIPTION("Surface Pro3 Button Driver");
+> >  MODULE_LICENSE("GPL v2");
+> > Index: linux-pm/drivers/platform/x86/wmi.c
+> > ===================================================================
+> > --- linux-pm.orig/drivers/platform/x86/wmi.c
+> > +++ linux-pm/drivers/platform/x86/wmi.c
+> > @@ -32,7 +32,6 @@
+> >  #include <linux/fs.h>
+> >  #include <uapi/linux/wmi.h>
+> >
+> > -ACPI_MODULE_NAME("wmi");
+> >  MODULE_AUTHOR("Carlos Corbacho");
+> >  MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+> >  MODULE_LICENSE("GPL");
+> >
+> >
+> >
+>
