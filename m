@@ -2,172 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCFEC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 10:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7132C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 13:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19E6464EC0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 10:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D79364EB3
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 13:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbhB0KVz (ORCPT
+        id S229953AbhB0NLS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 27 Feb 2021 05:21:55 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:39231 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229795AbhB0KVt (ORCPT
+        Sat, 27 Feb 2021 08:11:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229946AbhB0NLR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Feb 2021 05:21:49 -0500
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 25D145C00E7;
-        Sat, 27 Feb 2021 05:20:37 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sat, 27 Feb 2021 05:20:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=E6d3EqCm/Mqzt4Wpj
-        s0w9KIfRfCuGqkKgOG7lSuv7qo=; b=awNe+4BgXoAlMj6gQTawYObJz/h7HFmOT
-        P1KPQNzNSxkH6ZJkt6YESi8aZlCV5u+GVxBU+hSDDiH63b6Nxv6ATJcrfRLXD3L5
-        5/553+/Jd/BD0M7phwnmyywA+leNw8JZfNnzThwksOj2hWplWBs3oNJuuq1QONsr
-        HLCu5CdFStNAYIHY8f52hCyIi9X8MxWo9gPiej2VTEiALAF2spIqpMMiy2fio2E/
-        GaGfJFMwLx4ARfovudR2oJ3/oe7YTkvs7XUJqC0Y9JXbzLySxg5uuzJoi20U/h0M
-        quEu68yo/jAvlWxtCZY/q5YYbDzvDSupRNbZ1zu/QnT4HiwJvrUbA==
-X-ME-Sender: <xms:9Bw6YDTAIFiRZFdvI53Kfgm6yO0Gz7tNd2psAaQ8r-2oZdq8nqpKUg>
-    <xme:9Bw6YEsPBqPAia2oPDm7nlaHzGwXgFp489WkOpkW2AaU2BcsEiRTJ5kyyhtv5Q6yf
-    cYOGtWYJ4VrQ2-sWqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrleefgddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
-    dtnecuhfhrohhmpefnuhhkvgcuffculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdgu
-    vghvqeenucggtffrrghtthgvrhhnpeffgffhheehkefgtddtiefhudegteekudeihfdvud
-    ejudeigfdtheeijeetvdejvdenucfkphepudduiedrvdehuddrudelfedrudelieenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslh
-    hjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:9Bw6YFvamp9HpJqqL02aobJFIvHhUPseIlQAWPa5yov_mZR1qdWXxw>
-    <xmx:9Bw6YKynqwxVjTUKfT3ysBfiO4AJZJZRBgchCrv-t01NS7qwV2kfGA>
-    <xmx:9Bw6YLj1SWchglx5x2CYXvMTVSn8519lnUrB7_VaMSz8gRvM4szboA>
-    <xmx:9Rw6YI-RDmwIRLOeu6MR4RtjfxRmte82AsZZOE-dFz4wXWHLS0dPgw>
-Received: from datatron-ljones.. (unknown [116.251.193.196])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8A2BF108005F;
-        Sat, 27 Feb 2021 05:20:32 -0500 (EST)
-From:   Luke D Jones <luke@ljones.dev>
+        Sat, 27 Feb 2021 08:11:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 750B964EB3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 27 Feb 2021 13:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614431436;
+        bh=kAU5msXrWdP5FjbNm5hiAQn5+ahFKOYrh8Ms2Cr5h1c=;
+        h=From:To:Subject:Date:From;
+        b=rWbHuXiK9BWDPBU1ei+k3VdEMXXCWpT8XtcpSB+/1A0Vn9bWixJVeg0WI0or/KxYL
+         2PYUMDftlE6evKO9GUubDFfNeG1aaFmyrnrBeBQejMg2cMCO8J+82ZwNV+7tw9nuPM
+         LGBE2hiuRXZ2oo9VxNV5A6AIESouwqFEUQzbz/T4mfG0lCX5aTYv98pUQpyflMarvl
+         GH8dNgfd2IRM6d/0C/S3VxFW/5ZZrfvxhW0BL8vElDMXn8fvLf6Vf8QVv+S/CnU4DQ
+         7f65KyKuziND/J7ASxsTK9UnQyUEIsrzU0stwL4rFDrQZeaRrrDm+VWhWNSbkz/BMv
+         kPY6LjP3gxAdg==
+From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
-Cc:     corentin.chary@gmail.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, acpi4asus-user@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Luke D Jones <luke@ljones.dev>
-Subject: [PATCH] WMI: asus: Reduce G14 and G15 match to min product name
-Date:   Sat, 27 Feb 2021 23:20:11 +1300
-Message-Id: <20210227102010.65429-1-luke@ljones.dev>
-X-Mailer: git-send-email 2.30.1
+Subject: [Bug 211977] New: System fails to resume the second time with
+ 5.10.17, resumes fine with 5.10.13
+Date:   Sat, 27 Feb 2021 13:10:36 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-211977-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch reduces the product match for GA401 series laptops to
-the minimum string required.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D211977
 
-The GA401 series of laptops has a lengthy list of product
-variations in the 2020 series and the 2021 series refresh
-is using the same base product ID of GA401.
+            Bug ID: 211977
+           Summary: System fails to resume the second time with 5.10.17,
+                    resumes fine with 5.10.13
+           Product: Drivers
+           Version: 2.5
+    Kernel Version: 5.10.17
+          Hardware: x86-64
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: high
+          Priority: P1
+         Component: Platform_x86
+          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
+          Reporter: aros@gmx.com
+        Regression: No
 
-The same is also true for the GA502 series, and the new GA503
-series which is added in this patch as a variant of the G15.
+Steps to reproduce the issue: suspend and resume.
 
-Signed-off-by: Luke D Jones <luke@ljones.dev>
----
- drivers/platform/x86/asus-nb-wmi.c | 57 ++++--------------------------
- 1 file changed, 6 insertions(+), 51 deletions(-)
+How often does the steps listed above trigger the issue? 5.10.13 - resumes =
+OK
+as many times as you want, 5.10.17 - randomly fails to resume on the second
+time, sometimes it's the third or the fourth time - anyways it some point it
+fails to resume.
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index d41d7ad14be0..f4db67c3eba2 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -427,73 +427,28 @@ static const struct dmi_system_id asus_quirks[] = {
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA401IH",
-+		.ident = "ASUSTeK COMPUTER INC. GA401",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA401"),
- 		},
- 		.driver_data = &quirk_asus_vendor_backlight,
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA401II",
-+		.ident = "ASUSTeK COMPUTER INC. GA502",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA502"),
- 		},
- 		.driver_data = &quirk_asus_vendor_backlight,
- 	},
- 	{
- 		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA401IU",
-+		.ident = "ASUSTeK COMPUTER INC. GA503",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
--		},
--		.driver_data = &quirk_asus_vendor_backlight,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA401IV",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
--		},
--		.driver_data = &quirk_asus_vendor_backlight,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
--		},
--		.driver_data = &quirk_asus_vendor_backlight,
--	},
--		{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA502II",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
--		},
--		.driver_data = &quirk_asus_vendor_backlight,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA502IU",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
--		},
--		.driver_data = &quirk_asus_vendor_backlight,
--	},
--	{
--		.callback = dmi_matched,
--		.ident = "ASUSTeK COMPUTER INC. GA502IV",
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
--			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "GA503"),
- 		},
- 		.driver_data = &quirk_asus_vendor_backlight,
- 	},
--- 
-2.30.1
+When it fails to resume, the system is completely dead: CAPS lock doesn't w=
+ork,
+the power button which normally shuts down my laptop also doesn't work.
 
+System info:
+Linux localhost 5.10.13-200.fc33.x86_64 #1 SMP Thu Feb 4 14:54:51 UTC 2021
+x86_64 x86_64 x86_64 GNU/Linux
+Fedora 33 x64
+HP Pavilion x360 Convertible (P1F10UA#ABA)
+CPU/GPU: Intel Core i5 6200U/HD Graphics 520, rev 07
+Display connector: eDP
+
+I _really_ wouldn't want to bisect the issue because it will involve buildi=
+ng
+Fedora's kernel on my quite feeble laptop.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
