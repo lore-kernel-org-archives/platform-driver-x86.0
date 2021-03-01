@@ -2,176 +2,270 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4AEC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 15:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC65C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19BB964DEF
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 15:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA85F64E2E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 16:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236852AbhCAPDJ (ORCPT
+        id S237575AbhCAQHA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Mar 2021 10:03:09 -0500
-Received: from mga17.intel.com ([192.55.52.151]:39889 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236851AbhCAPDF (ORCPT
+        Mon, 1 Mar 2021 11:07:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237518AbhCAQFO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Mar 2021 10:03:05 -0500
-IronPort-SDR: oLA0531zfjrUboNNaCIp5295ZbxgKSFm+onVHJwpJ/hZ1zqWIp22E3MBmU2EJirbn77bNcmWp4
- JDFGtXkPlbTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9910"; a="166365396"
-X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
-   d="scan'208";a="166365396"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 07:01:17 -0800
-IronPort-SDR: KF2Avy2eAS2o+2sJug2/wUSV6fRdMARwcncPBqSE1narCLlG0Cy5Zn+D7vvtgZ4/eAXWhdx5y9
- 4Fo+iBBVVCFA==
-X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
-   d="scan'208";a="406256458"
-Received: from jli125-mobl.gar.corp.intel.com (HELO [10.255.229.226]) ([10.255.229.226])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 07:01:16 -0800
-Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control supports
-To:     Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
-        oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        Mario.Limonciello@dell.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <20210301093834.19524-1-Perry_Yuan@Dell.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <98d8b015-c1d6-fd4c-ac94-3f9226b93436@linux.intel.com>
-Date:   Mon, 1 Mar 2021 08:30:20 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 1 Mar 2021 11:05:14 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2993C061788
+        for <platform-driver-x86@vger.kernel.org>; Mon,  1 Mar 2021 08:04:33 -0800 (PST)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lGl1r-00023S-Qp; Mon, 01 Mar 2021 17:04:15 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1lGl1l-00065g-Po; Mon, 01 Mar 2021 17:04:09 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Prasanth Ksr <prasanth.ksr@dell.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        platform-driver-x86@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] platform/x86: wmi: Make remove callback return void
+Date:   Mon,  1 Mar 2021 17:04:04 +0100
+Message-Id: <20210301160404.1677064-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-In-Reply-To: <20210301093834.19524-1-Perry_Yuan@Dell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The driver core ignores the return value of struct bus_type::remove()
+(and so wmi_dev_remove()) because there is only little that can be done.
 
+To simplify the quest to make this function return void, let struct
+wmi_driver::remove() return void, too. All implementers of this callback
+return 0 already and this way it should be obvious to driver authors
+that returning an error code is a bad idea.
 
-On 3/1/21 3:38 AM, Perry Yuan wrote:
-> From: Perry Yuan <perry_yuan@dell.com>
-> 
-> Some new Dell system is going to support audio internal micphone
-> privacy setting from hardware level with micmute led state changing
-> When micmute hotkey pressed by user, soft mute will need to be enabled
-> firstly in case of pop noise, and codec driver need to react to mic
-> mute event to EC(embedded controller) notifying that SW mute is completed
-> Then EC will do the hardware mute physically within the timeout reached
-> 
-> This patch allow codec rt715 and rt715 sdca driver to change the local micmute
-> led state. Dell privacy led trigger driver will ack EC when micmute key pressed
-> through this micphone led control interface like hda_generic provided
-> ACPI method defined in dell-privacy micmute led trigger will be called
-> for notifying the EC that software mute has been completed, then hardware
-> audio circuit solution controlled by EC will switch the audio input source off/on
-> 
-> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
-> 
-> --------
-> v3 -> v4:
-> * remove unused debug log
-> * remove compile flag of DELL privacy
-> * move the micmute_led to local from rt715_priv
-> * when Jaroslav upstream his gerneric LED trigger driver,I will rebase
->    this patch,please consider merge this at first
->    https://lore.kernel.org/alsa-devel/20210211111400.1131020-1-perex@perex.cz/
-> v2 -> v3:
-> * simplify the patch to reuse some val value
-> * add more detail to the commit info
-> v1 -> v2:
-> * fix some format issue
-> --------
-> ---
->   sound/soc/codecs/rt715-sdca.c | 12 ++++++++++++
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/platform/x86/dell/dell-smbios-wmi.c                  | 3 +--
+ drivers/platform/x86/dell/dell-wmi-descriptor.c              | 3 +--
+ .../platform/x86/dell/dell-wmi-sysman/biosattr-interface.c   | 3 +--
+ .../x86/dell/dell-wmi-sysman/passwordattr-interface.c        | 3 +--
+ drivers/platform/x86/dell/dell-wmi.c                         | 3 +--
+ drivers/platform/x86/intel-wmi-sbl-fw-update.c               | 3 +--
+ drivers/platform/x86/intel-wmi-thunderbolt.c                 | 3 +--
+ drivers/platform/x86/wmi-bmof.c                              | 3 +--
+ drivers/platform/x86/wmi.c                                   | 5 ++---
+ include/linux/wmi.h                                          | 2 +-
+ 10 files changed, 11 insertions(+), 20 deletions(-)
 
-that file is not yet in Mark Brown's tree, so that patch wouldn't apply.
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+index 27a298b7c541..a1753485159c 100644
+--- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -205,7 +205,7 @@ static int dell_smbios_wmi_probe(struct wmi_device *wdev, const void *context)
+ 	return ret;
+ }
+ 
+-static int dell_smbios_wmi_remove(struct wmi_device *wdev)
++static void dell_smbios_wmi_remove(struct wmi_device *wdev)
+ {
+ 	struct wmi_smbios_priv *priv = dev_get_drvdata(&wdev->dev);
+ 	int count;
+@@ -218,7 +218,6 @@ static int dell_smbios_wmi_remove(struct wmi_device *wdev)
+ 	count = get_order(priv->req_buf_size);
+ 	free_pages((unsigned long)priv->buf, count);
+ 	mutex_unlock(&call_mutex);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id dell_smbios_wmi_id_table[] = {
+diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.c b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+index a068900ae8a1..3c4af7c08bb1 100644
+--- a/drivers/platform/x86/dell/dell-wmi-descriptor.c
++++ b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+@@ -174,14 +174,13 @@ static int dell_wmi_descriptor_probe(struct wmi_device *wdev,
+ 	return ret;
+ }
+ 
+-static int dell_wmi_descriptor_remove(struct wmi_device *wdev)
++static void dell_wmi_descriptor_remove(struct wmi_device *wdev)
+ {
+ 	struct descriptor_priv *priv = dev_get_drvdata(&wdev->dev);
+ 
+ 	mutex_lock(&list_mutex);
+ 	list_del(&priv->list);
+ 	mutex_unlock(&list_mutex);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id dell_wmi_descriptor_id_table[] = {
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+index f95d8ddace5a..c2dd2de6bc20 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/biosattr-interface.c
+@@ -152,12 +152,11 @@ static int bios_attr_set_interface_probe(struct wmi_device *wdev, const void *co
+ 	return 0;
+ }
+ 
+-static int bios_attr_set_interface_remove(struct wmi_device *wdev)
++static void bios_attr_set_interface_remove(struct wmi_device *wdev)
+ {
+ 	mutex_lock(&wmi_priv.mutex);
+ 	wmi_priv.bios_attr_wdev = NULL;
+ 	mutex_unlock(&wmi_priv.mutex);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id bios_attr_set_interface_id_table[] = {
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+index 5780b4d94759..339a082d6c18 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+@@ -119,12 +119,11 @@ static int bios_attr_pass_interface_probe(struct wmi_device *wdev, const void *c
+ 	return 0;
+ }
+ 
+-static int bios_attr_pass_interface_remove(struct wmi_device *wdev)
++static void bios_attr_pass_interface_remove(struct wmi_device *wdev)
+ {
+ 	mutex_lock(&wmi_priv.mutex);
+ 	wmi_priv.password_attr_wdev = NULL;
+ 	mutex_unlock(&wmi_priv.mutex);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id bios_attr_pass_interface_id_table[] = {
+diff --git a/drivers/platform/x86/dell/dell-wmi.c b/drivers/platform/x86/dell/dell-wmi.c
+index bbdb3e860892..5e1b7f897df5 100644
+--- a/drivers/platform/x86/dell/dell-wmi.c
++++ b/drivers/platform/x86/dell/dell-wmi.c
+@@ -714,10 +714,9 @@ static int dell_wmi_probe(struct wmi_device *wdev, const void *context)
+ 	return dell_wmi_input_setup(wdev);
+ }
+ 
+-static int dell_wmi_remove(struct wmi_device *wdev)
++static void dell_wmi_remove(struct wmi_device *wdev)
+ {
+ 	dell_wmi_input_destroy(wdev);
+-	return 0;
+ }
+ static const struct wmi_device_id dell_wmi_id_table[] = {
+ 	{ .guid_string = DELL_EVENT_GUID },
+diff --git a/drivers/platform/x86/intel-wmi-sbl-fw-update.c b/drivers/platform/x86/intel-wmi-sbl-fw-update.c
+index ea87fa0786e8..3c86e0108a24 100644
+--- a/drivers/platform/x86/intel-wmi-sbl-fw-update.c
++++ b/drivers/platform/x86/intel-wmi-sbl-fw-update.c
+@@ -117,10 +117,9 @@ static int intel_wmi_sbl_fw_update_probe(struct wmi_device *wdev,
+ 	return 0;
+ }
+ 
+-static int intel_wmi_sbl_fw_update_remove(struct wmi_device *wdev)
++static void intel_wmi_sbl_fw_update_remove(struct wmi_device *wdev)
+ {
+ 	dev_info(&wdev->dev, "Slim Bootloader signaling driver removed\n");
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id intel_wmi_sbl_id_table[] = {
+diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel-wmi-thunderbolt.c
+index 974c22a7ff61..4ae87060d18b 100644
+--- a/drivers/platform/x86/intel-wmi-thunderbolt.c
++++ b/drivers/platform/x86/intel-wmi-thunderbolt.c
+@@ -66,11 +66,10 @@ static int intel_wmi_thunderbolt_probe(struct wmi_device *wdev,
+ 	return ret;
+ }
+ 
+-static int intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
++static void intel_wmi_thunderbolt_remove(struct wmi_device *wdev)
+ {
+ 	sysfs_remove_group(&wdev->dev.kobj, &tbt_attribute_group);
+ 	kobject_uevent(&wdev->dev.kobj, KOBJ_CHANGE);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id intel_wmi_thunderbolt_id_table[] = {
+diff --git a/drivers/platform/x86/wmi-bmof.c b/drivers/platform/x86/wmi-bmof.c
+index 66b434d6307f..80137afb9753 100644
+--- a/drivers/platform/x86/wmi-bmof.c
++++ b/drivers/platform/x86/wmi-bmof.c
+@@ -86,13 +86,12 @@ static int wmi_bmof_probe(struct wmi_device *wdev, const void *context)
+ 	return ret;
+ }
+ 
+-static int wmi_bmof_remove(struct wmi_device *wdev)
++static void wmi_bmof_remove(struct wmi_device *wdev)
+ {
+ 	struct bmof_priv *priv = dev_get_drvdata(&wdev->dev);
+ 
+ 	sysfs_remove_bin_file(&wdev->dev.kobj, &priv->bmof_bin_attr);
+ 	kfree(priv->bmofdata);
+-	return 0;
+ }
+ 
+ static const struct wmi_device_id wmi_bmof_id_table[] = {
+diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
+index c669676ea8e8..aa9bd2ee7390 100644
+--- a/drivers/platform/x86/wmi.c
++++ b/drivers/platform/x86/wmi.c
+@@ -986,7 +986,6 @@ static int wmi_dev_remove(struct device *dev)
+ 	struct wmi_block *wblock = dev_to_wblock(dev);
+ 	struct wmi_driver *wdriver =
+ 		container_of(dev->driver, struct wmi_driver, driver);
+-	int ret = 0;
+ 
+ 	if (wdriver->filter_callback) {
+ 		misc_deregister(&wblock->char_dev);
+@@ -995,12 +994,12 @@ static int wmi_dev_remove(struct device *dev)
+ 	}
+ 
+ 	if (wdriver->remove)
+-		ret = wdriver->remove(dev_to_wdev(dev));
++		wdriver->remove(dev_to_wdev(dev));
+ 
+ 	if (ACPI_FAILURE(wmi_method_enable(wblock, 0)))
+ 		dev_warn(dev, "failed to disable device\n");
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static struct class wmi_bus_class = {
+diff --git a/include/linux/wmi.h b/include/linux/wmi.h
+index 8ef7e7faea1e..2cb3913c1f50 100644
+--- a/include/linux/wmi.h
++++ b/include/linux/wmi.h
+@@ -37,7 +37,7 @@ struct wmi_driver {
+ 	const struct wmi_device_id *id_table;
+ 
+ 	int (*probe)(struct wmi_device *wdev, const void *context);
+-	int (*remove)(struct wmi_device *wdev);
++	void (*remove)(struct wmi_device *wdev);
+ 	void (*notify)(struct wmi_device *device, union acpi_object *data);
+ 	long (*filter_callback)(struct wmi_device *wdev, unsigned int cmd,
+ 				struct wmi_ioctl_buffer *arg);
+-- 
+2.30.0
 
->   sound/soc/codecs/rt715.c      | 12 ++++++++++++
->   2 files changed, 24 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
-> index b43ac8559e45..816348ae11a1 100644
-> --- a/sound/soc/codecs/rt715-sdca.c
-> +++ b/sound/soc/codecs/rt715-sdca.c
-> @@ -12,6 +12,7 @@
->   #include <linux/version.h>
->   #include <linux/kernel.h>
->   #include <linux/init.h>
-> +#include <linux/leds.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/pm.h>
->   #include <linux/soundwire/sdw.h>
-> @@ -269,6 +270,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->   	unsigned int reg = mc->reg;
->   	unsigned int max = mc->max;
->   	int err;
-> +	bool micmute_led;
->   
->   	val = ucontrol->value.integer.value[0];
->   	if (invert)
-> @@ -287,6 +289,16 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->   			return err;
->   	}
->   
-> +	/* Micmute LED state changed by muted/unmute switch */
-> +	if (mc->invert) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-> +			micmute_led = LED_OFF;
-> +		} else {
-> +			micmute_led = LED_ON;
-> +		}
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
-> +
->   	return 0;
->   }
->   
-> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
-> index cdcba70146da..db2c0d2ff9d2 100644
-> --- a/sound/soc/codecs/rt715.c
-> +++ b/sound/soc/codecs/rt715.c
-> @@ -13,6 +13,7 @@
->   #include <linux/init.h>
->   #include <linux/delay.h>
->   #include <linux/i2c.h>
-> +#include <linux/leds.h>
->   #include <linux/pm_runtime.h>
->   #include <linux/pm.h>
->   #include <linux/soundwire/sdw.h>
-> @@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->   		RT715_SET_GAIN_MIX_ADC2_L};
->   	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
->   	unsigned int read_ll, read_rl, i, j, loop_cnt;
-> +	bool micmute_led;
->   
->   	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
->   		strstr(ucontrol->id.name, "Main Capture Volume"))
-> @@ -95,6 +97,16 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->   	else
->   		loop_cnt = 1;
->   
-> +	/* Micmute LED state changed by muted/unmute switch */
-> +	if (mc->invert) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-> +			micmute_led = LED_OFF;
-> +		} else {
-> +			micmute_led = LED_ON;
-> +		}
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
-> +
->   	for (j = 0; j < loop_cnt; j++) {
->   		/* Can't use update bit function, so read the original value first */
->   		if (loop_cnt == 1) {
-> 
