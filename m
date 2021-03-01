@@ -2,191 +2,336 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B156BC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 09:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7401CC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 15:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F42C64E31
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 09:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF2C64DAF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 15:03:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234024AbhCAJjg (ORCPT
+        id S236847AbhCAPDJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Mar 2021 04:39:36 -0500
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:61028 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234033AbhCAJjZ (ORCPT
+        Mon, 1 Mar 2021 10:03:09 -0500
+Received: from mga17.intel.com ([192.55.52.151]:39881 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236849AbhCAPDF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Mar 2021 04:39:25 -0500
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1219bsnt023238;
-        Mon, 1 Mar 2021 04:38:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=smtpout1; bh=fwWYGhIgeA//auGUVrYqkTT5nitDGeyYzh4vm+Tr33A=;
- b=SpUkVYgc1Ir0stIzV0puPq5Lkp6MES/JhV3QTbETbabR+JaX+Dbf06bN/KaxX8tQpIs6
- 9tyCbdzHhOcSs6LAEOfQBxpxEQYwwWF4cWX1R4DUgdceO0Lxbo8d3hLShus6FEzoJ8IT
- +sskQzy9rsxoNpQv1XHFJdL3NlpXjQpnv4xHqF4gk4Ni9Ah4Utwkoq4kp5e18uivvzd/
- D0/1UH0YI7CH630d7vG/cIcWNB9DCOVzjOx2Q6jMDI0ufeEVMEingt30g93E9yK8/3RM
- rjQkMALrW2yhCYx0wOL6tedO7d2pUM1bIZKFcHvQdssSQsBtTCfShvtdySG25YbCHcR3 0Q== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 36yj6ec0s5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Mar 2021 04:38:43 -0500
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1219L1JG190248;
-        Mon, 1 Mar 2021 04:38:42 -0500
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0a-00154901.pphosted.com with ESMTP id 3704k2w64j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Mar 2021 04:38:42 -0500
-X-LoopCount0: from 10.69.132.19
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.81,215,1610431200"; 
-   d="scan'208";a="600234247"
-From:   Perry Yuan <Perry.Yuan@dell.com>
-To:     pobrn@protonmail.com, pierre-louis.bossart@linux.intel.com,
+        Mon, 1 Mar 2021 10:03:05 -0500
+IronPort-SDR: bvBi8LfeHXsmvtoKfFyBDbZRFHAuDI6XoS4R4VCVuTrfwFHZBHjoG7K8Qx0IulC/vKoq292mwQ
+ CIo0csNl2xfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9910"; a="166365368"
+X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
+   d="scan'208";a="166365368"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 07:01:16 -0800
+IronPort-SDR: RIu8wdV9ecjSdrrfV/CYNJkqq7vcMUP7Y5lYPWrmooxDwvIgoJ8n037rOIxi8lQQnMxfASkBIX
+ KAHBJJfa+O4g==
+X-IronPort-AV: E=Sophos;i="5.81,215,1610438400"; 
+   d="scan'208";a="406256430"
+Received: from jli125-mobl.gar.corp.intel.com (HELO [10.255.229.226]) ([10.255.229.226])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2021 07:01:13 -0800
+Subject: Re: [PATCH v4 1/2] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
         oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
         hdegoede@redhat.com, mgross@linux.intel.com,
         Mario.Limonciello@dell.com
 Cc:     lgirdwood@gmail.com, broonie@kernel.org,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Perry.Yuan@dell.com
-Subject: [PATCH v4 2/2] ASoC: rt715:add micmute led state control supports
-Date:   Mon,  1 Mar 2021 17:38:34 +0800
-Message-Id: <20210301093834.19524-1-Perry_Yuan@Dell.com>
-X-Mailer: git-send-email 2.19.2.windows.1
+        platform-driver-x86@vger.kernel.org
+References: <20210301093753.16300-1-Perry_Yuan@Dell.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <551e30d2-0211-f3cb-fbb8-ee5b2f22a851@linux.intel.com>
+Date:   Mon, 1 Mar 2021 08:28:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20210301093753.16300-1-Perry_Yuan@Dell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-01_05:2021-02-26,2021-03-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 clxscore=1015 bulkscore=0 suspectscore=0
- mlxscore=0 impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103010078
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103010079
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Perry Yuan <perry_yuan@dell.com>
 
-Some new Dell system is going to support audio internal micphone
-privacy setting from hardware level with micmute led state changing
-When micmute hotkey pressed by user, soft mute will need to be enabled
-firstly in case of pop noise, and codec driver need to react to mic
-mute event to EC(embedded controller) notifying that SW mute is completed
-Then EC will do the hardware mute physically within the timeout reached
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 581475f59819..18c430456de7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -51,7 +51,9 @@ obj-$(CONFIG_DELL_WMI_DESCRIPTOR)	+= dell-wmi-descriptor.o
+>   obj-$(CONFIG_DELL_WMI_AIO)		+= dell-wmi-aio.o
+>   obj-$(CONFIG_DELL_WMI_LED)		+= dell-wmi-led.o
+>   obj-$(CONFIG_DELL_WMI_SYSMAN)		+= dell-wmi-sysman/
+> -
+> +obj-$(CONFIG_DELL_PRIVACY)              += dell-privacy.o
+> +dell-privacy-objs                       := dell-privacy-wmi.o \
+> +	                                   dell-privacy-acpi.o
+>   # Fujitsu
+>   obj-$(CONFIG_AMILO_RFKILL)	+= amilo-rfkill.o
+>   obj-$(CONFIG_FUJITSU_LAPTOP)	+= fujitsu-laptop.o
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index 70edc5bb3a14..ec0dcc7fc17c 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -31,6 +31,8 @@
+>   #include "dell-rbtn.h"
+>   #include "dell-smbios.h"
+>   
+> +#include "dell-privacy-wmi.h"
+> +
+>   struct quirk_entry {
+>   	bool touchpad_led;
+>   	bool kbd_led_not_present;
+> @@ -90,10 +92,12 @@ static struct rfkill *wifi_rfkill;
+>   static struct rfkill *bluetooth_rfkill;
+>   static struct rfkill *wwan_rfkill;
+>   static bool force_rfkill;
+> +static bool has_privacy;
+>   
+>   module_param(force_rfkill, bool, 0444);
+>   MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted models");
+>   
+> +
 
-This patch allow codec rt715 and rt715 sdca driver to change the local micmute
-led state. Dell privacy led trigger driver will ack EC when micmute key pressed
-through this micphone led control interface like hda_generic provided
-ACPI method defined in dell-privacy micmute led trigger will be called
-for notifying the EC that software mute has been completed, then hardware
-audio circuit solution controlled by EC will switch the audio input source off/on
+spurious line change
 
-Signed-off-by: Perry Yuan <perry_yuan@dell.com>
+>   static const struct dmi_system_id dell_device_table[] __initconst = {
+>   	{
+>   		.ident = "Dell laptop",
+> @@ -2205,11 +2209,17 @@ static int __init dell_init(void)
+>   	dell_laptop_register_notifier(&dell_laptop_notifier);
+>   
+>   	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+> -	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+> -		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+> -		if (ret < 0)
+> -			goto fail_led;
+> +			dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
 
---------
-v3 -> v4:
-* remove unused debug log
-* remove compile flag of DELL privacy
-* move the micmute_led to local from rt715_priv
-* when Jaroslav upstream his gerneric LED trigger driver,I will rebase
-  this patch,please consider merge this at first
-  https://lore.kernel.org/alsa-devel/20210211111400.1131020-1-perex@perex.cz/
-v2 -> v3:
-* simplify the patch to reuse some val value
-* add more detail to the commit info
-v1 -> v2:
-* fix some format issue
---------
----
- sound/soc/codecs/rt715-sdca.c | 12 ++++++++++++
- sound/soc/codecs/rt715.c      | 12 ++++++++++++
- 2 files changed, 24 insertions(+)
+not sure why you changed the alignment?
 
-diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
-index b43ac8559e45..816348ae11a1 100644
---- a/sound/soc/codecs/rt715-sdca.c
-+++ b/sound/soc/codecs/rt715-sdca.c
-@@ -12,6 +12,7 @@
- #include <linux/version.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/leds.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm.h>
- #include <linux/soundwire/sdw.h>
-@@ -269,6 +270,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
- 	unsigned int reg = mc->reg;
- 	unsigned int max = mc->max;
- 	int err;
-+	bool micmute_led;
- 
- 	val = ucontrol->value.integer.value[0];
- 	if (invert)
-@@ -287,6 +289,16 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
- 			return err;
- 	}
- 
-+	/* Micmute LED state changed by muted/unmute switch */
-+	if (mc->invert) {
-+		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-+			micmute_led = LED_OFF;
-+		} else {
-+			micmute_led = LED_ON;
-+		}
-+		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
-index cdcba70146da..db2c0d2ff9d2 100644
---- a/sound/soc/codecs/rt715.c
-+++ b/sound/soc/codecs/rt715.c
-@@ -13,6 +13,7 @@
- #include <linux/init.h>
- #include <linux/delay.h>
- #include <linux/i2c.h>
-+#include <linux/leds.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm.h>
- #include <linux/soundwire/sdw.h>
-@@ -88,6 +89,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
- 		RT715_SET_GAIN_MIX_ADC2_L};
- 	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
- 	unsigned int read_ll, read_rl, i, j, loop_cnt;
-+	bool micmute_led;
- 
- 	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
- 		strstr(ucontrol->id.name, "Main Capture Volume"))
-@@ -95,6 +97,16 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
- 	else
- 		loop_cnt = 1;
- 
-+	/* Micmute LED state changed by muted/unmute switch */
-+	if (mc->invert) {
-+		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1]) {
-+			micmute_led = LED_OFF;
-+		} else {
-+			micmute_led = LED_ON;
-+		}
-+		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-+	}
-+
- 	for (j = 0; j < loop_cnt; j++) {
- 		/* Can't use update bit function, so read the original value first */
- 		if (loop_cnt == 1) {
--- 
-2.25.1
+> +		if (!privacy_valid)
+> +			has_privacy = true;
+> +		else
+> +			has_privacy = false;
+> +		if (!has_privacy) {
+> +			micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +			ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+> +			if (ret < 0)
+> +				goto fail_led;
+> +		}
+>   	}
+>   
+>   	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
 
+> +static struct platform_driver dell_privacy_platform_drv = {
+> +	.driver = {
+> +		.name = PRIVACY_PLATFORM_NAME,
+> +	},
+> +	.probe = dell_privacy_acpi_probe,
+> +	.remove = dell_privacy_acpi_remove,
+> +};
+> +
+> +int __init dell_privacy_acpi_init(void)
+> +{
+> +	int err;
+> +	struct platform_device *pdev;
+> +
+> +	if (!wmi_has_guid(DELL_PRIVACY_GUID))
+> +		return -ENODEV;
+> +
+> +	privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
+> +	if (!privacy_acpi)
+> +		return -ENOMEM;
+> +
+> +	err = platform_driver_register(&dell_privacy_platform_drv);
+> +	if (err)
+> +		goto pdrv_err;
+> +
+> +	pdev = platform_device_register_simple(
+> +			PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
+> +	if (IS_ERR(pdev)) {
+> +		err = PTR_ERR(pdev);
+> +		goto pdev_err;
+> +	}
+> +
+> +	return 0;
+> +
+> +pdev_err:
+> +	platform_device_unregister(pdev);
+> +pdrv_err:
+> +	kfree(privacy_acpi);
+> +	return err;
+> +}
+
+don't you need some sort of device_initcall() to load this module on 
+startup?
+
+> +void dell_privacy_process_event(int type, int code, int status)
+> +{
+> +	struct privacy_wmi_data *priv;
+> +	const struct key_entry *key;
+> +
+> +	mutex_lock(&list_mutex);
+> +	priv = list_first_entry_or_null(&wmi_list,
+> +			struct privacy_wmi_data,
+> +			list);
+> +	if (!priv) {
+> +		pr_err("dell privacy priv is NULL\n");
+> +		goto error;
+> +	}
+> +	key = sparse_keymap_entry_from_scancode(priv->input_dev, (type << 16) | code);
+> +	if (!key) {
+> +		dev_dbg(&priv->wdev->dev, "Unknown key with type 0x%04x and code 0x%04x pressed\n",
+> +				type, code);
+> +		goto error;
+> +	}
+> +	switch (code) {
+> +	case DELL_PRIVACY_TYPE_AUDIO: /* Mic mute */
+> +		priv->last_status = status;
+> +		sparse_keymap_report_entry(priv->input_dev, key, 1, true);
+> +		break;
+> +	case DELL_PRIVACY_TYPE_CAMERA: /* Camera mute */
+> +		priv->last_status = status;
+> +		sparse_keymap_report_entry(priv->input_dev, key, 1, true);
+> +		break;
+
+You are doing the same things twice, so group the two cases:
+
+	case DELL_PRIVACY_TYPE_AUDIO: /* Mic mute */
+	case DELL_PRIVACY_TYPE_CAMERA: /* Camera mute */
+		priv->last_status = status;
+		sparse_keymap_report_entry(priv->input_dev, key, 1, true);
+		break;
+
+> +	default:
+> +			dev_dbg(&priv->wdev->dev, "unknown event type 0x%04x 0x%04x",
+> +					type, code);
+
+alignment?
+
+> +	}
+> +error:
+> +	mutex_unlock(&list_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(dell_privacy_process_event);
+
+> +static int dell_privacy_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct privacy_wmi_data *priv;
+> +	struct key_entry *keymap;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(&wdev->dev, priv);
+> +	priv->wdev = wdev;
+> +	/* create evdev passing interface */
+> +	priv->input_dev = devm_input_allocate_device(&wdev->dev);
+> +	if (!priv->input_dev)
+> +		return -ENOMEM;
+> +	/* remap the wmi keymap event to new keymap */
+> +	keymap = kcalloc(ARRAY_SIZE(dell_wmi_keymap_type_0012),
+> +			sizeof(struct key_entry), GFP_KERNEL);
+> +	if (!keymap) {
+> +		ret = -ENOMEM;
+> +		goto err_free_dev;
+> +	}
+> +	/* remap the keymap code with Dell privacy key type 0x12 as prefix
+> +	 * KEY_MICMUTE scancode will be reported as 0x120001
+> +	 */
+> +	for (i = 0; i < ARRAY_SIZE(dell_wmi_keymap_type_0012); i++) {
+> +		keymap[i] = dell_wmi_keymap_type_0012[i];
+> +		keymap[i].code |= (0x0012 << 16);
+> +	}
+> +	ret = sparse_keymap_setup(priv->input_dev, keymap, NULL);
+> +	if (ret)
+> +		return ret;
+> +	priv->input_dev->dev.parent = &wdev->dev;
+> +	priv->input_dev->name = "Dell Privacy Driver";
+> +	priv->input_dev->id.bustype = BUS_HOST;
+> +	if (input_register_device(priv->input_dev)) {
+> +		pr_debug("input_register_device failed to register!\n");
+> +		goto err_free_keymap;
+> +	}
+> +	mutex_lock(&list_mutex);
+> +	list_add_tail(&priv->list, &wmi_list);
+> +	mutex_unlock(&list_mutex);
+> +
+> +	if (get_current_status(priv->wdev))
+> +		goto err_free_input;
+> +
+> +	ret = devm_device_add_group(&wdev->dev, &privacy_attribute_group);
+> +	if (ret)
+> +		goto err_free_input;
+> +
+> +	kfree(keymap);
+> +	return 0;
+> +
+> +err_free_input:
+> +	input_unregister_device(priv->input_dev);
+> +err_free_keymap:
+> +	privacy_valid = -ENODEV;
+> +	kfree(keymap);
+> +err_free_dev:
+> +	input_free_device(priv->input_dev);
+
+priv->input_dev is allocated with devm_, so why do you need to do 
+anything with it? that seems like a miss.
+
+> +	return ret;
+> +}
+> +
+
+>   MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+>   MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+> @@ -381,6 +383,7 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>   	u16 *buffer_entry, *buffer_end;
+>   	acpi_size buffer_size;
+>   	int len, i;
+> +	int err;
+>   
+>   	if (obj->type != ACPI_TYPE_BUFFER) {
+>   		pr_warn("bad response type %x\n", obj->type);
+> @@ -427,10 +430,9 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>   
+>   		switch (buffer_entry[1]) {
+>   		case 0x0000: /* One key pressed or event occurred */
+> -		case 0x0012: /* Event with extended data occurred */
+>   			if (len > 2)
+>   				dell_wmi_process_key(wdev, buffer_entry[1],
+> -						     buffer_entry[2]);
+> +						buffer_entry[2]);
+
+keep the alignment?
+
+>   			/* Extended data is currently ignored */
+>   			break;
+>   		case 0x0010: /* Sequence of keys pressed */
+> @@ -439,6 +441,17 @@ static void dell_wmi_notify(struct wmi_device *wdev,
+>   				dell_wmi_process_key(wdev, buffer_entry[1],
+>   						     buffer_entry[i]);
+>   			break;
+> +		case 0x0012:
+> +			err = dell_privacy_state();
+> +			if (err == 0) {
+> +				dell_privacy_process_event(buffer_entry[1],
+> +						buffer_entry[3], buffer_entry[4]);
+> +			} else {
+> +				if (len > 2)
+> +					dell_wmi_process_key(wdev, buffer_entry[1],
+> +						buffer_entry[2]);
+> +			}
+> +			break;
+>   		default: /* Unknown event */
+>   			pr_info("Unknown WMI event type 0x%x\n",
+>   				(int)buffer_entry[1]);
+> 
