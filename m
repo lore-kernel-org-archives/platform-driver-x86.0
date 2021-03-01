@@ -2,78 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A55AC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 13:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2560C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 09:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C87564E69
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 27 Feb 2021 13:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843E964E22
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 09:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbhB0NLq (ORCPT
+        id S233993AbhCAJiQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 27 Feb 2021 08:11:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229990AbhB0NLp (ORCPT
+        Mon, 1 Mar 2021 04:38:16 -0500
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:1996 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234023AbhCAJhv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 27 Feb 2021 08:11:45 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 652EF64EC0
-        for <platform-driver-x86@vger.kernel.org>; Sat, 27 Feb 2021 13:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614431465;
-        bh=h7fzdMA77YiP1zKVRbkJ7cUYsokQf9J6rDOTmJuY8qs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=rO/hpm3n5LW0os/7vmwi9KBKZ15QNQy7wDBTDuL/Yg5u1zRsGWED7eU1uKBpg+kVO
-         bcqnL7utxHQcEQy1whiznSday8Wkr4x4Xu7KFnky2GfZbDiWnUFzeKd7wBNM+FTX3z
-         1UYAvGI2mM6ao3nBG2C/K8gIyLdmdm5ZprkqLAcWPZv8/vSKNZjSGNirxM/xR9+wsW
-         JAc2QPyGUfFL1z8AFjBm+9epfP42PAeJTPUknYtl4wtcMCPLQdt6s0jYRFW0YsBdII
-         6AlzNA1OOakmufkg3l1BxANXYMarZZDBnzX2QkUNbtuhohMytY3ZsL8O2VGRrQ4z5e
-         JCbIB/1Bpsc0Q==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 211977] System fails to resume the second time with 5.10.17,
- resumes fine with 5.10.13
-Date:   Sat, 27 Feb 2021 13:11:05 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cf_regression
-Message-ID: <bug-211977-215701-R6o5HW6tIH@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-211977-215701@https.bugzilla.kernel.org/>
-References: <bug-211977-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 1 Mar 2021 04:37:51 -0500
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1219M6jj020302;
+        Mon, 1 Mar 2021 04:37:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=smtpout1;
+ bh=EM5BrDIMVQChc57nS9FKhnvWtBPZQxuDesoN5FM42HY=;
+ b=PZC1SrmUH0uEHUWnDpIHNQABzojXvXcyAsd8LnoEVbBx6k9soD6KaOkPc7ZyrdI145ht
+ niSMA1b3iUVEAc5yw6YmwAmHFtqIY9K1NXgpSkBIjScooBEcV0cfgSjUnGGBBpqn5bg9
+ lwjFxTWTvtmZR8Aew+/RMntJ9BlbYIM8/nTU6/uiwoT8rdhEEbcSMc/e2Qr2u6wmBEB6
+ MG0xGdxlazbACaElrRizs/lbMi5Qnv9tRxv//GWSTqRCzVj1TLaGivs6d9Rd73oFRY1J
+ aJsPmjgMkBiPErn6sR7LC+fswx5mhH5whLtGY5EfghhIZNn9HadiscyTxJ56h00dfehY Kg== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 36yhhb42gq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 01 Mar 2021 04:37:06 -0500
+Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1219K7cC108365;
+        Mon, 1 Mar 2021 04:37:05 -0500
+Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
+        by mx0b-00154901.pphosted.com with ESMTP id 37046jn8c2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 01 Mar 2021 04:37:04 -0500
+X-LoopCount0: from 10.69.132.19
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.81,215,1610431200"; 
+   d="scan'208";a="1537356588"
+From:   Perry Yuan <Perry.Yuan@dell.com>
+To:     pobrn@protonmail.com, pierre-louis.bossart@linux.intel.com,
+        oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        Mario.Limonciello@dell.com
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Perry.Yuan@dell.com
+Subject: [PATCH v4 0/2] Dell-hardware-privacy-implementation-for-dell-laptop
+Date:   Mon,  1 Mar 2021 17:36:13 +0800
+Message-Id: <20210301093614.15888-1-Perry_Yuan@Dell.com>
+X-Mailer: git-send-email 2.19.2.windows.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-01_05:2021-02-26,2021-03-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=944
+ malwarescore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103010078
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103010078
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D211977
+From: Perry Yuan <perry_yuan@dell.com>
 
-Artem S. Tashkinov (aros@gmx.com) changed:
+Hi All,
+This patch set is a new driver for dell mobile platform ,which has the
+hardware privacy feature.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-         Regression|No                          |Yes
+For micmute led control, the hotkey is Fn + F4, it is a hardware based
+mute state, and new privacy will prevent micphone void input from
+hardware layer, any application cannot get voice data when micmute
+activated. 
 
---=20
-You may reply to this email to add a comment.
+Camera mute use a new hardware design to control the camrea shutter.
+When video is muted, no OS application should be functionally able to
+capture images of the person/environment in front of the system
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Older history:
+[1]https://patchwork.kernel.org/project/platform-driver-x86/patch/20201228132855.17544-1-Perry_Yuan@Dell.com/
+[2]https://patchwork.kernel.org/project/alsa-devel/patch/20201103125859.8759-1-Perry_Yuan@Dell.com/#23733605
+[3]https://www.spinics.net/lists/alsa-devel/msg120537.html
+[4]https://github.com/thesofproject/linux/pull/2660
+
+
+Perry Yuan (2):
+  platform/x86: dell-privacy: Add support for Dell hardware privacy
+  ASoC: rt715:add micmute led state control supports
+
+ .../testing/sysfs-platform-dell-privacy-wmi   |  32 ++
+ drivers/platform/x86/Kconfig                  |  17 +
+ drivers/platform/x86/Makefile                 |   4 +-
+ drivers/platform/x86/dell-laptop.c            |  26 +-
+ drivers/platform/x86/dell-privacy-acpi.c      | 164 +++++++++
+ drivers/platform/x86/dell-privacy-wmi.c       | 340 ++++++++++++++++++
+ drivers/platform/x86/dell-privacy-wmi.h       |  35 ++
+ drivers/platform/x86/dell-wmi.c               |  29 +-
+ sound/soc/codecs/rt715-sdca.c                 |  12 +
+ sound/soc/codecs/rt715.c                      |  12 +
+ 10 files changed, 655 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
+ create mode 100644 drivers/platform/x86/dell-privacy-acpi.c
+ create mode 100644 drivers/platform/x86/dell-privacy-wmi.c
+ create mode 100644 drivers/platform/x86/dell-privacy-wmi.h
+
+-- 
+2.25.1
+
