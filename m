@@ -2,96 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC65C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 17:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3B3C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 194D964EED
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  1 Mar 2021 17:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD0464E99
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:40:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237175AbhCARMa (ORCPT
+        id S232421AbhCCC2N (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 1 Mar 2021 12:12:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237160AbhCARKS (ORCPT
+        Tue, 2 Mar 2021 21:28:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240163AbhCBL7i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 1 Mar 2021 12:10:18 -0500
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BFD8C061788;
-        Mon,  1 Mar 2021 09:09:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=tdr23ctYIjaSovyzCrlydLo8hJiZD6TcVuVzx8JMj0k=; b=MlIKc0va3pxSmyS1RSEDvO35fD
-        bQ8phkHe4gntkak3qfJfjxhYLX3d7PnQzdoCJG4iQHt549TayZ9h/g13m/zbR0/P/3rtWTK+BajOb
-        eWFx+NDDAjNdXxX4zKwkMk4FKLttPqzCNxcmDRTJwqpLeI6a186Aey4B10FyGmSHZGerP68k5EPQy
-        C1G8dAulciA1MMsrQ01pt9rrDsNZs/3SqmHuPiP2+dULEy6ag7i2BJE1mI4GWb3MJ+2N3Ot2IU4we
-        xDIhs133VVhaYCoOXRrul43eeFiHsh08SXZw9QRYqMiruV5qo0DgCxnD+hx8gfJtfUmQLefmuWzUJ
-        Y3Rmj/zQ==;
-Received: from [2601:1c0:6280:3f0::3ba4]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1lGm2y-0006Ie-At; Mon, 01 Mar 2021 17:09:28 +0000
-Subject: Re: [PATCH v4 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-To:     Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
-        pierre-louis.bossart@linux.intel.com, oder_chiou@realtek.com,
-        perex@perex.cz, tiwai@suse.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, Mario.Limonciello@dell.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Tue, 2 Mar 2021 06:59:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EFF4D64F1F;
+        Tue,  2 Mar 2021 11:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614686153;
+        bh=bTF6eS8rQHKgs/nfkztSQV06/8ZuGnFy2R703xIO9VE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j7pss65dsrCaJQwUq1RV8ZFd+SkPdm9d0HaSvziIchicV1cl11Ok3Iw4pc4lrYZiG
+         QPJ7UOOj99u66N1Nl/I5n1psjHqqjKdjzOW4kEP+b+817rjP9hQNJhVskzR7PBt+GC
+         Av6LjvtObpT59R94P70SlCkklIBliOT3d9fF+ZCG9vVxuNiGiKisZXREMebCLFfdA3
+         nv3AYNR6ai5hhPAoifeUyEEOA3ZW+Mj+6OKocx5qq0Qzm3ovRyYHRA+E/h5+e0GfI5
+         UzJRYYEH+MhFlUsYTNe/iGCOTVizEOgyY8yhiA2mrb3JgWVdY5gotGAWrZTCv4555E
+         TSdC/dnbuonKQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Pan Bian <bianpan2016@163.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-References: <20210301093753.16300-1-Perry_Yuan@Dell.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6123db00-8a4e-ff1e-d4be-c3fa2558d379@infradead.org>
-Date:   Mon, 1 Mar 2021 09:09:22 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+Subject: [PATCH AUTOSEL 5.11 14/52] platform/x86: amd-pmc: put device on error paths
+Date:   Tue,  2 Mar 2021 06:54:55 -0500
+Message-Id: <20210302115534.61800-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.1
+In-Reply-To: <20210302115534.61800-1-sashal@kernel.org>
+References: <20210302115534.61800-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20210301093753.16300-1-Perry_Yuan@Dell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 3/1/21 1:37 AM, Perry Yuan wrote:
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 91e6176cdfbd..e20f79389a39 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -491,6 +491,23 @@ config DELL_WMI_LED
->  	  This adds support for the Latitude 2100 and similar
->  	  notebooks that have an external LED.
->  
-> +config DELL_PRIVACY
-> +	tristate "Dell Hardware Privacy Support"
-> +	depends on ACPI
-> +	depends on ACPI_WMI
-> +	depends on INPUT
-> +	depends on DELL_LAPTOP
-> +	depends on LEDS_TRIGGER_AUDIO
-> +	select DELL_WMI
-> +	  help
+From: Pan Bian <bianpan2016@163.com>
 
-The "help" keyword should be indented only with one tab. Drop the 
-2 additional spaces for it.
+[ Upstream commit 745ed17a04f966406c8c27c8f992544336c06013 ]
 
-> +	  This driver provides support for the "Dell Hardware Privacy" feature
-> +	  of Dell laptops.
-> +	  Support for a micmute and camera mute privacy will be provided as
-> +	  hardware button Ctrl+F4 and Ctrl+F9 hotkey.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called dell_privacy.
+Put the PCI device rdev on error paths to fix potential reference count
+leaks.
 
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/20210121045005.73342-1-bianpan2016@163.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/amd-pmc.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index ef8342572463..b9da58ee9b1e 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -210,31 +210,39 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	dev->dev = &pdev->dev;
+ 
+ 	rdev = pci_get_domain_bus_and_slot(0, 0, PCI_DEVFN(0, 0));
+-	if (!rdev || !pci_match_id(pmc_pci_ids, rdev))
++	if (!rdev || !pci_match_id(pmc_pci_ids, rdev)) {
++		pci_dev_put(rdev);
+ 		return -ENODEV;
++	}
+ 
+ 	dev->cpu_id = rdev->device;
+ 	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_LO);
+ 	if (err) {
+ 		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
++		pci_dev_put(rdev);
+ 		return pcibios_err_to_errno(err);
+ 	}
+ 
+ 	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+-	if (err)
++	if (err) {
++		pci_dev_put(rdev);
+ 		return pcibios_err_to_errno(err);
++	}
+ 
+ 	base_addr_lo = val & AMD_PMC_BASE_ADDR_HI_MASK;
+ 
+ 	err = pci_write_config_dword(rdev, AMD_PMC_SMU_INDEX_ADDRESS, AMD_PMC_BASE_ADDR_HI);
+ 	if (err) {
+ 		dev_err(dev->dev, "error writing to 0x%x\n", AMD_PMC_SMU_INDEX_ADDRESS);
++		pci_dev_put(rdev);
+ 		return pcibios_err_to_errno(err);
+ 	}
+ 
+ 	err = pci_read_config_dword(rdev, AMD_PMC_SMU_INDEX_DATA, &val);
+-	if (err)
++	if (err) {
++		pci_dev_put(rdev);
+ 		return pcibios_err_to_errno(err);
++	}
+ 
+ 	base_addr_hi = val & AMD_PMC_BASE_ADDR_LO_MASK;
+ 	pci_dev_put(rdev);
 -- 
-~Randy
+2.30.1
 
