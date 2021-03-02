@@ -2,109 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A5CC433DB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E7C433E6
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D01964E90
+	by mail.kernel.org (Postfix) with ESMTP id A558664E89
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233670AbhCCC3b (ORCPT
+        id S234280AbhCCCaE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Mar 2021 21:29:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
+        Tue, 2 Mar 2021 21:30:04 -0500
+Received: from gecko.sbs.de ([194.138.37.40]:55296 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1384037AbhCBNwd (ORCPT
+        id S1382872AbhCBQqs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:52:33 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F6EE64F85;
-        Tue,  2 Mar 2021 11:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614686279;
-        bh=6c15F5Uhi6U8dgs+Iy1Mr9IC+YG/q6nRShgMK4C9KO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TE/m0REPVl1o+kQCXSfBPLN/N1NxH6VMpsjugcfeCRneC1UDRHc7Nd9gGaOCDj/L6
-         uqsX1ThYStboOiIO6Y8etNuaEa2KkwR0HomTqQ3ydTlj8gE8R+iba4XsHz0xAyoD2Q
-         z8jHWssXMcIue5b5KsBWAITX17CegpreLLEAVUuhc98eNin/gqpS2qhXJD/EUDDkAQ
-         7qPdGZ//DoTA+5inNUOiQEuE3VIdIBH5j3qwtgU/Xtm9V0y4RuezWwmTWGLYxe0adR
-         34QJ6+7MEP+aa2+1jmVEHXMCTWapbMSWvv76fv4iLmoGgZfEyLVwai1eDCEcXFutn3
-         hzQKH/9/yodBQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
+        Tue, 2 Mar 2021 11:46:48 -0500
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 122GcC5A009123
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Mar 2021 17:38:12 +0100
+Received: from md1za8fc.ad001.siemens.net ([167.87.44.113])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 122GXBHN025192;
+        Tue, 2 Mar 2021 17:33:11 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Henning Schild <henning.schild@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/33] Platform: OLPC: Fix probe error handling
-Date:   Tue,  2 Mar 2021 06:57:23 -0500
-Message-Id: <20210302115749.62653-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210302115749.62653-1-sashal@kernel.org>
-References: <20210302115749.62653-1-sashal@kernel.org>
+        Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 0/4] add device drivers for Siemens Industrial PCs
+Date:   Tue,  2 Mar 2021 17:33:05 +0100
+Message-Id: <20210302163309.25528-1-henning.schild@siemens.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Lubomir Rintel <lkundrak@v3.sk>
+From: Henning Schild <henning.schild@siemens.com>
 
-[ Upstream commit cec551ea0d41c679ed11d758e1a386e20285b29d ]
+This series adds support for watchdogs and leds of several x86 devices
+from Siemens.
 
-Reset ec_priv if probe ends unsuccessfully.
+It is structured with a platform driver that mainly does identification
+of the machines. It might trigger loading of the actual device drivers
+by attaching devices to the platform bus.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Link: https://lore.kernel.org/r/20210126073740.10232-2-lkundrak@v3.sk
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/olpc/olpc-ec.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+The identification is vendor specific, parsing a special binary DMI
+entry. The implementation of that platform identification is applied on
+pmc_atom clock quirks in the final patch.
 
-diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
-index f64b82824db2..2db7113383fd 100644
---- a/drivers/platform/olpc/olpc-ec.c
-+++ b/drivers/platform/olpc/olpc-ec.c
-@@ -426,11 +426,8 @@ static int olpc_ec_probe(struct platform_device *pdev)
- 
- 	/* get the EC revision */
- 	err = olpc_ec_cmd(EC_FIRMWARE_REV, NULL, 0, &ec->version, 1);
--	if (err) {
--		ec_priv = NULL;
--		kfree(ec);
--		return err;
--	}
-+	if (err)
-+		goto error;
- 
- 	config.dev = pdev->dev.parent;
- 	config.driver_data = ec;
-@@ -440,12 +437,16 @@ static int olpc_ec_probe(struct platform_device *pdev)
- 	if (IS_ERR(ec->dcon_rdev)) {
- 		dev_err(&pdev->dev, "failed to register DCON regulator\n");
- 		err = PTR_ERR(ec->dcon_rdev);
--		kfree(ec);
--		return err;
-+		goto error;
- 	}
- 
- 	ec->dbgfs_dir = olpc_ec_setup_debugfs();
- 
-+	return 0;
-+
-+error:
-+	ec_priv = NULL;
-+	kfree(ec);
- 	return err;
- }
- 
+It is all structured in a way that we can easily add more devices and
+more platform drivers later. Internally we have some more code for
+hardware monitoring, more leds, watchdogs etc. This will follow some
+day.
+
+But the idea here is to share early, and hopefully not fail early.
+
+Henning Schild (4):
+  platform/x86: simatic-ipc: add main driver for Siemens devices
+  leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
+  watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial PCs
+  platform/x86: pmc_atom: improve critclk_systems matching for Siemens
+    PCs
+
+ drivers/leds/Kconfig                          |  11 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/simatic-ipc-leds.c               | 224 +++++++++++++
+ drivers/platform/x86/Kconfig                  |   9 +
+ drivers/platform/x86/Makefile                 |   3 +
+ drivers/platform/x86/pmc_atom.c               |  39 +--
+ drivers/platform/x86/simatic-ipc.c            | 166 ++++++++++
+ drivers/watchdog/Kconfig                      |  11 +
+ drivers/watchdog/Makefile                     |   1 +
+ drivers/watchdog/simatic-ipc-wdt.c            | 305 ++++++++++++++++++
+ .../platform_data/x86/simatic-ipc-base.h      |  33 ++
+ include/linux/platform_data/x86/simatic-ipc.h |  68 ++++
+ 12 files changed, 853 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/leds/simatic-ipc-leds.c
+ create mode 100644 drivers/platform/x86/simatic-ipc.c
+ create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+ create mode 100644 include/linux/platform_data/x86/simatic-ipc-base.h
+ create mode 100644 include/linux/platform_data/x86/simatic-ipc.h
+
 -- 
-2.30.1
+2.26.2
 
