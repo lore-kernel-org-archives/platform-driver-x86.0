@@ -2,128 +2,339 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB0EC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25F8C432C3
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 20:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19F4864EA4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 02:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F56564EF9
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  3 Mar 2021 20:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244149AbhCCCdJ (ORCPT
+        id S233673AbhCCTZe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 2 Mar 2021 21:33:09 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36108 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381321AbhCBU4Q (ORCPT
+        Wed, 3 Mar 2021 14:25:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234640AbhCCCvc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 2 Mar 2021 15:56:16 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 0F40C1C0B81; Tue,  2 Mar 2021 21:54:53 +0100 (CET)
-Date:   Tue, 2 Mar 2021 21:54:52 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-Message-ID: <20210302205452.GA32573@duo.ucw.cz>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
- <20210302163309.25528-3-henning.schild@siemens.com>
+        Tue, 2 Mar 2021 21:51:32 -0500
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D080AC06178C
+        for <platform-driver-x86@vger.kernel.org>; Tue,  2 Mar 2021 18:50:44 -0800 (PST)
+Received: by mail-vk1-xa41.google.com with SMTP id m25so4918825vkk.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 02 Mar 2021 18:50:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nctu.edu.tw; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=2z3DP2mZYy6O9kWu2lZTASdLX36+jjI/S076QUgaa6E=;
+        b=eyxJDubnQ3yERaXeIvU1m8DfSAn2sJyB+O2UaUbwV7arm/m/532XbMCxQCWSkMuVgi
+         GKMoSt62fNRgaOTq1pH6SPExVG2Td6GzRJCrhU42ypntACf3M9VOj/Oa1DWI/htx0UUb
+         s9f2FcSw6SucGxME6KIVbhWmVP66WVzRxir/Gs294e8y2NL7SuT+7OdegJJ/6SOdYdef
+         NETEPyInXJag3i5M+kJ8iJWBo0/6gGJ77CcIAyJ3YDu8ZFmfj52yoiLOS6APKCfqdHUO
+         2uoIrqdXdzpA/8TPJeYAh04sq4UA9gnYR49CjdOo61hCvNl3ce27dcbGmFjGa2iqopM2
+         wJUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=2z3DP2mZYy6O9kWu2lZTASdLX36+jjI/S076QUgaa6E=;
+        b=hyHzYHGRXgPmP50xkq7GPHH35VOD1Gwm1pCbaBswObteanYgYD0mIjBnQLRn25TEIF
+         4KmFZ9DecevUMMHrL91L9TWMPpJOekgFQQK7S5n7MP29WUNSoxAmXZi1HuDpjb7+DmbI
+         NvEkPV0S8HTdKF1xkIE4X1NCjoSKqtbNpFWA10PWqvc+f1HezpQ3OkbnBYsL48s0aWZR
+         /zVYQFfRdY4+Lvhtc1SRBCA4I0i4lhTabExosNbAvUTK/tUSU1YhPK0zjDj+4tRZZEf3
+         1z+vipiqLXwrly0mryoITcRsdB7LG6vFv1EKXEidQ1dMHv9EZs+MFlr6phk/LvwOaCqS
+         N+Rw==
+X-Gm-Message-State: AOAM532t1M+N9hhYfN6cnPUDbNMJ6xMq1dp9m3XNAQNjweEyMLhXb3hD
+        2bnpHEn7fDyahm+wJMlGy14Iij1bSIyea96rsG3twre1wau0XZ4X
+X-Google-Smtp-Source: ABdhPJyfoJdBtY9ua6K/O7nHaDRg0wwNQ30XyQ33VBmpm8PqUSAyZM2wxQ8EoweyRM89RtlyjY/ni1Afy7qMsoHs6i0=
+X-Received: by 2002:a1f:2ecb:: with SMTP id u194mr5069146vku.13.1614739843657;
+ Tue, 02 Mar 2021 18:50:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
-Content-Disposition: inline
-In-Reply-To: <20210302163309.25528-3-henning.schild@siemens.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   "YingChieh, Ho" <andrea.cs97g@nctu.edu.tw>
+Date:   Wed, 3 Mar 2021 10:50:38 +0800
+Message-ID: <CAFysUkSztjJpSjKA92a=3j3Nj7vfQy5TCsiJtNmfjegxLBvFSA@mail.gmail.com>
+Subject: [V1,1/1] platform/x86: add support for Advantech software defined button
+To:     platform-driver-x86@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-kernel@vger.kernel.org, andrea.ho@advantech.com.tw,
+        Andrea Ho <voyandrea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Advantech sw_button is a ACPI event trigger button.
 
-Hi!
+With this driver, we can report KEY_EVENT on the
+Advantech Tabletop Network Appliances products and it has been
+tested in FWA1112VC.
 
-> This driver adds initial support for several devices from Siemens. It is
-> based on a platform driver introduced in an earlier commit.
+Add the software define button support to report EV_REP key_event
+(BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
+interface and trigger the customized actions.
 
-Ok.
+Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+---
+ MAINTAINERS                         |   5 +
+ drivers/platform/x86/Kconfig        |  11 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/adv_swbutton.c | 190 ++++++++++++++++++++++++++++
+ 4 files changed, 209 insertions(+)
+ create mode 100644 drivers/platform/x86/adv_swbutton.c
 
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 2a698df9da57..c15e1e3c5958 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -93,6 +93,7 @@ obj-$(CONFIG_LEDS_TURRIS_OMNIA)		+=3D leds-turris-omnia=
-=2Eo
->  obj-$(CONFIG_LEDS_WM831X_STATUS)	+=3D leds-wm831x-status.o
->  obj-$(CONFIG_LEDS_WM8350)		+=3D leds-wm8350.o
->  obj-$(CONFIG_LEDS_WRAP)			+=3D leds-wrap.o
-> +obj-$(CONFIG_LEDS_SIEMENS_SIMATIC_IPC)	+=3D simatic-ipc-leds.o
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c71664ca8bfd..d8951050d273 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -571,6 +571,11 @@ S: Maintained
+ F:     Documentation/scsi/advansys.rst
+ F:     drivers/scsi/advansys.c
 
-Let's put this into drivers/leds/simple. You'll have to create it.
++ADVANTECH SWBTN DRIVER
++M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
++S:     Maintained
++F:     drivers/platform/x86/adv_swbutton.c
++
+ ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
+ M:     Michael Hennerich <michael.hennerich@analog.com>
+ S:     Supported
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ad4e630e73e2..b553f3ebb9a7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -179,6 +179,17 @@ config ACER_WMI
+          If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
+          here.
 
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
++config ADV_SWBUTTON
++    tristate "Advantech ACPI Software button Driver"
++    depends on ACPI
++    help
++      Say Y here to enable support for Advantech software defined
++      button feature. More information can be fount at
++      <http://www.advantech.com.tw/products/>
++
++      To compile this driver as a module, choose M here. The module will
++      be called adv_swbutton.
++
+ config AMD_PMC
+        tristate "AMD SoC PMC driver"
+        depends on ACPI && PCI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 60d554073749..2faadc614cd2 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -21,6 +21,9 @@ obj-$(CONFIG_ACERHDF)         += acerhdf.o
+ obj-$(CONFIG_ACER_WIRELESS)    += acer-wireless.o
+ obj-$(CONFIG_ACER_WMI)         += acer-wmi.o
 
-Remove?
++# Advantech
++obj-$(CONFIG_ADV_SWBUTTON)  += adv_swbutton.o
++
+ # AMD
+ obj-$(CONFIG_AMD_PMC)          += amd-pmc.o
 
-> +static struct simatic_ipc_led simatic_ipc_leds_io[] =3D {
-> +	{1 << 15, "simatic-ipc:green:run-stop"},
-> +	{1 << 7,  "simatic-ipc:yellow:run-stop"},
-> +	{1 << 14, "simatic-ipc:red:error"},
-> +	{1 << 6,  "simatic-ipc:yellow:error"},
-> +	{1 << 13, "simatic-ipc:red:maint"},
-> +	{1 << 5,  "simatic-ipc:yellow:maint"},
-> +	{0, ""},
-> +};
-
-Please use names consistent with other systems, this is user
-visible. If you have two-color power led, it should be
-:green:power... See include/dt-bindings/leds/common.h .
-
-Please avoid // comments in the code.
-
-> +module_init(simatic_ipc_led_init_module);
-> +module_exit(simatic_ipc_led_exit_module);
-
-No need for such verbosity for functions that are static.
-
-> +MODULE_LICENSE("GPL");
-
-GPL v2?
-
-Best regards,
-								Pavel
-
---=20
-http://www.livejournal.com/~pavelmachek
-
---cWoXeonUoKmBZSoM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYD6mHAAKCRAw5/Bqldv6
-8jccAKCW5J5k8GW26pDj+wn7z3ClTwgz9gCdG2YoZJI2nYD8w2mz8d3Xbt3YS1w=
-=iNci
------END PGP SIGNATURE-----
-
---cWoXeonUoKmBZSoM--
+diff --git a/drivers/platform/x86/adv_swbutton.c
+b/drivers/platform/x86/adv_swbutton.c
+new file mode 100644
+index 000000000000..09e5a83c61a9
+--- /dev/null
++++ b/drivers/platform/x86/adv_swbutton.c
+@@ -0,0 +1,190 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  adv_swbutton.c - Software Button Interface Driver.
++ *
++ *  (C) Copyright 2020 Advantech Corporation, Inc
++ *
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/version.h>
++#include <linux/types.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/input.h>
++#include <linux/slab.h>
++#include <linux/acpi.h>
++#include <linux/ktime.h>
++#include <linux/moduleparam.h>
++#include <acpi/button.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
++
++#define ACPI_SWBTN_NAME                     "Software Button"
++#define ACPI_BUTTON_CLASS                   "button"
++
++#define ACPI_BUTTON_SUBCLASS_SOFTWARE       "software"
++#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
++#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
++
++#define ACPI_BUTTON_FILE_INFO               "info"
++#define ACPI_BUTTON_FILE_STATE              "state"
++#define ACPI_BUTTON_TYPE_UNKNOWN            0x00
++
++#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
++#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
++
++#define SOFTWARE_BUTTON                     BTN_TRIGGER_HAPPY
++
++#define _COMPONENT                          ACPI_BUTTON_COMPONENT
++
++struct acpi_button {
++       unsigned int type;
++       struct input_dev *input;
++       char phys[32];
++       bool pressed;
++};
++
++/*-------------------------------------------------------------------------
++ *                               Driver Interface
++ *--------------------------------------------------------------------------
++ */
++static void acpi_button_notify(struct acpi_device *device, u32 event)
++{
++       struct acpi_button *button = acpi_driver_data(device);
++       struct input_dev *input;
++
++       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
++
++       switch (event) {
++       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
++               input = button->input;
++
++               if (!button->pressed)
++                       return;
++
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                               BTN_KEYCODE : KEY_UNKNOWN;
++
++               button->pressed = false;
++
++               input_report_key(input, keycode, 0);
++               input_sync(input);
++       break;
++       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
++               input = button->input;
++               button->pressed = true;
++
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                           BTN_KEYCODE : KEY_UNKNOWN;
++
++               input_report_key(input, keycode, 1);
++               input_sync(input);
++       break;
++       default:
++               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
++                                 "Unsupported event [0x%x]\n", event));
++       break;
++       }
++}
++
++static int acpi_button_add(struct acpi_device *device)
++{
++       struct acpi_button *button;
++       struct input_dev *input;
++       const char *hid = acpi_device_hid(device);
++       char *name, *class;
++       int error;
++
++       button = devm_kzalloc(&device->dev, sizeof(*button), GFP_KERNEL);
++       if (!button)
++               return -ENOMEM;
++
++       device->driver_data = button;
++       input = devm_input_allocate_device(&device->dev);
++       if (!input) {
++               error =  -ENOMEM;
++               goto err_free_mem;
++       }
++
++       button->input = input;
++
++       name = acpi_device_name(device);
++       class = acpi_device_class(device);
++
++       if (!strcmp(hid, ACPI_BUTTON_HID_SWBTN)) {
++               button->type = ACPI_BUTTON_TYPE_SOFTWARE;
++               button->pressed = false;
++               strcpy(name, ACPI_SWBTN_NAME);
++               sprintf(class, "%s/%s", ACPI_BUTTON_CLASS,
++                       ACPI_BUTTON_SUBCLASS_SOFTWARE);
++       } else {
++               return -ENODEV;
++       }
++
++       snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
++
++       input->name = name;
++       input->phys = button->phys;
++       input->id.bustype = BUS_HOST;
++       input->id.product = button->type;
++       input->dev.parent = &device->dev;
++
++       switch (button->type) {
++       case ACPI_BUTTON_TYPE_SOFTWARE:
++               set_bit(EV_KEY, input->evbit);
++               set_bit(EV_REP, input->evbit);
++
++               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
++       break;
++       }
++
++       input_set_drvdata(input, device);
++       error = input_register_device(input);
++       if (error)
++               return error;
++
++       device_init_wakeup(&device->dev, true);
++
++       return 0;
++
++err_free_mem:
++       devm_kfree(&device->dev, button);
++       return error;
++}
++
++static int acpi_button_remove(struct acpi_device *device)
++{
++       struct acpi_button *button = acpi_driver_data(device);
++
++       input_unregister_device(button->input);
++       devm_kfree(&device->dev, button);
++       return 0;
++}
++
++static const struct acpi_device_id button_device_ids[] = {
++       {ACPI_BUTTON_HID_SWBTN, 0},
++       {"", 0},
++};
++MODULE_DEVICE_TABLE(acpi, button_device_ids);
++
++static struct acpi_driver acpi_button_driver = {
++       .name = ACPI_SWBTN_NAME,
++       .class = ACPI_BUTTON_CLASS,
++       .owner = THIS_MODULE,
++       .ids = button_device_ids,
++       .ops = {
++               .add = acpi_button_add,
++               .remove = acpi_button_remove,
++               .notify = acpi_button_notify,
++       },
++};
++
++module_acpi_driver(acpi_button_driver);
++
++ACPI_MODULE_NAME("swbutton");
++
++MODULE_AUTHOR("Andrea Ho");
++MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
++MODULE_LICENSE("GPL v2");
+--
+2.17.1
