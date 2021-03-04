@@ -2,323 +2,261 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE1FC43381
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 19:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9780C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 20:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325E264F65
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 19:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7553264F6B
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 20:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236228AbhCDTxz (ORCPT
+        id S231969AbhCDUHP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Mar 2021 14:53:55 -0500
-Received: from gecko.sbs.de ([194.138.37.40]:51328 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232119AbhCDTxs (ORCPT
+        Thu, 4 Mar 2021 15:07:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231529AbhCDUHM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Mar 2021 14:53:48 -0500
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 124JqiUE006146
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Mar 2021 20:52:44 +0100
-Received: from md1za8fc.ad001.siemens.net ([167.87.11.66])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 124Jghx6027068;
-        Thu, 4 Mar 2021 20:42:43 +0100
-Date:   Thu, 4 Mar 2021 20:42:42 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/4] platform/x86: simatic-ipc: add main driver for
- Siemens devices
-Message-ID: <20210304204242.08b4c064@md1za8fc.ad001.siemens.net>
-In-Reply-To: <CAHp75VfDDGxdhP0-yKOCJyJ_+Y2Zu3TmOdvUJmEZ0AvQnceV6A@mail.gmail.com>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
-        <20210302163309.25528-2-henning.schild@siemens.com>
-        <CAHp75VfDDGxdhP0-yKOCJyJ_+Y2Zu3TmOdvUJmEZ0AvQnceV6A@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Mar 2021 15:07:12 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBF7C061574
+        for <platform-driver-x86@vger.kernel.org>; Thu,  4 Mar 2021 12:06:32 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id h13so1355702pjt.0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 12:06:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lnJjHLK9ZFNv1LfwcSxXM5rm17wtY4Bt/ImB5tn9sNA=;
+        b=aS4Br3QxJPduwCSP0G16n1nsbN0FRnu22xdxKkv1cSH5NA92NnwfdbKDMF5IbhT0TU
+         K02WJ3RrNk5vJXbC5kcu7u5ccTtJl+9ez7DVTfj1WqjC0ZiI5FeFP7UJ2Re1ROE41kQP
+         tJbdd9Cblairk3TMEaJO0YirXtRZ8c0p3AsdE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lnJjHLK9ZFNv1LfwcSxXM5rm17wtY4Bt/ImB5tn9sNA=;
+        b=IXrCd2gRLp+a/1jzYu3B9q/ZPRcYNDLiv9H15TlDcm/zok19yvtlUMGw3ZIOKDLOVe
+         XrCQjZBXjsGwRE7sB0dQjsivjc8lvkrNKh7bbTlWgbJvL4sBVrH+jexobuxqhR8P7ZPQ
+         Q2gDwBWwVyyava8+9OREB/YESb7eQ5UIzGxn9E1v4f9Viai1J/vl5Wtsk9yaum3ZCfVH
+         f8EEFoyIb/+tjlhgHBogd7lURL9gPlF15sduxxSn2sRCVVg6jpssKdI0ygHqB1MwK+SL
+         fCcDkT4jGwSFIZVcTLh2YNxjkmrtpdId7Wi68ZeY69VcJ4GPO5rWIwfjQhqqnBKTVuNn
+         3mng==
+X-Gm-Message-State: AOAM532DSB0JUnWU6VyrO+/hxzQkBmmBJM33nB+mzcXlJH865XBfUTHT
+        upejBoNwMJDmigM6+HHCF43ZSw==
+X-Google-Smtp-Source: ABdhPJyF2fNxbvWj5AWkAFxyulMHQvPSvmvbNBivEVEqAGckfXq+s6pB6gv45igmOgG0WhRvHJ1yKQ==
+X-Received: by 2002:a17:90a:fb47:: with SMTP id iq7mr6463323pjb.159.1614888391652;
+        Thu, 04 Mar 2021 12:06:31 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k4sm214009pfg.102.2021.03.04.12.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Mar 2021 12:06:31 -0800 (PST)
+Date:   Thu, 4 Mar 2021 12:06:30 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Vadim Pasternak <vadimp@nvidia.com>,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-hardening@vger.kernel.org,
+        Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: Flipping firmware write-protection bits from within the kernel
+ (was Re: [PATCH RFC platform-next 8/8] Documentation/ABI: Add new line card
+ attributes for mlxreg-io sysfs interfaces)
+Message-ID: <202103041202.08F8D8533@keescook>
+References: <20210203173622.5845-1-vadimp@nvidia.com>
+ <20210203173622.5845-9-vadimp@nvidia.com>
+ <009a1a80-62ca-35ce-5f02-b43b25e5ebd1@redhat.com>
+ <96f705e0-2d34-3c8e-3f13-8585dbbb74bf@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96f705e0-2d34-3c8e-3f13-8585dbbb74bf@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Thu, 4 Mar 2021 12:11:12 +0200
-schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+On Thu, Mar 04, 2021 at 11:48:10AM +0100, Hans de Goede wrote:
+> Hi Kees, et al.,
+> 
+> Kees, you were the first person who came to mind to ask about this, feel free to
+> point me to someone else.
+> 
+> While reviewing a patch-set for hw-enablement of some upcoming Melanox platforms,
+> the addition of some sysfs files which flip write-protect bits for various firmwares
+> found on the platform on/off stood out to me.
 
-> On Thu, Mar 4, 2021 at 8:36 AM Henning Schild
-> <henning.schild@siemens.com> wrote:
-> >
-> > From: Henning Schild <henning.schild@siemens.com>
-> >
-> > This mainly implements detection of these devices and will allow
-> > secondary drivers to work on such machines.
-> >
-> > The identification is DMI-based with a vendor specific way to tell
-> > them apart in a reliable way.
-> >
-> > Drivers for LEDs and Watchdogs will follow to make use of that
-> > platform detection.  
-> 
-> > Signed-off-by: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
-> > Signed-off-by: Henning Schild <henning.schild@siemens.com>  
-> 
-> The order is wrong taking into account the From line in the body. So,
-> it's not clear who is the author, who is a co-developer, and who is
-> the committer (one person may utilize few roles).
-> Check for the rest of the series as well (basically this is the rule
-> of thumb to recheck entire code for the comment you have got at any
-> single place of it).
+Eeek :(
 
-For some code Gerd is the author, and i am the co-Author. We even have
-Jan in the mix at places. At least in copyright headers.
+> As I mention in me reply to the below patch adding the docs for this at a minimum
+> this must (IMHO) tie into the new lockdown framework and disallow enabling
+> fw-updates this way depending on the lockdown mode.
 
-I will remain the committer for the three of us. And since i do not
-know exactly what the problem is i will add only my Signed-off to avoid
-confusion.
+I would agree: lockdown (integrity mode) should, IMO, block these kinds
+of firmware writes if there isn't some kind of cryptographic attestation
+happening.
 
-Please speak up it that would be wrong as well and point me to the docs
-i missed. Or tell me how it should be done. 
+(Probably there are many of these holes already in the kernel, but we
+should avoid adding more.)
 
-> ...
 > 
-> > +config SIEMENS_SIMATIC_IPC
-> > +       tristate "Siemens Simatic IPC Class driver"
-> > +       depends on PCI
-> > +       help
-> > +         This Simatic IPC class driver is the central of several
-> > drivers. It
-> > +         is mainly used for system identification, after which
-> > drivers in other
-> > +         classes will take care of driving specifics of those
-> > machines.
-> > +         i.e. leds and watchdogs  
+> Are there any other security checks which the code should/could do here ?
 > 
-> LEDs
-> watchdog. (missed period and singular form)
-> 
-> Module name?
-> 
-> >  endif # X86_PLATFORM_DEVICES  
-> 
-> Not sure about the ordering of the section in Kconfig, but it is up to
-> maintainers.
-> 
-> ...
-> 
-> > +# Siemens Simatic Industrial PCs
-> > +obj-$(CONFIG_SIEMENS_SIMATIC_IPC)      += simatic-ipc.o  
-> 
-> Ditto.
+> Maybe tie into the audit code somehow ?
 
-I will check both again if a find a pattern, otherwise will wait for
-maintainers to complain and hopefully suggest.
+I'll leave that to the audit folks to answer. :)
 
-> ...
-> 
-> > + * Siemens SIMATIC IPC driver for LEDs  
-> 
-> It seems to be used in patch 4 which is not LED related. Also, why is
-> it here if it's for LEDs?
-> 
-> ...
-> 
-> > + * This program is free software; you can redistribute it and/or
-> > modify
-> > + * it under the terms of the GNU General Public License version 2
-> > as
-> > + * published by the Free Software Foundation.  
-> 
-> Replace with SPDX
-> 
-> ...
-> 
-> > +#include <linux/module.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/platform_device.h>  
-> 
-> Ordered?
-> 
-> > +#include <linux/platform_data/x86/simatic-ipc.h>  
-> 
-> ...
-> 
-> > +static int register_platform_devices(u32 station_id)
-> > +{
-> > +       int i;
-> > +       u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
-> > +       u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;  
-> 
-> Reversed xmas tree order?
+-Kees
 
-I do not get this, it is almost easter egg order time. Please explain.
-
-> > +       platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
-> > +               if (device_modes[i].station_id == station_id) {
-> > +                       ledmode = device_modes[i].led_mode;
-> > +                       wdtmode = device_modes[i].wdt_mode;
-> > +                       break;
-> > +               }
-> > +       }
-> > +
-> > +       if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
-> > +               platform_data.devmode = ledmode;  
 > 
-> > +               ipc_led_platform_device =
-> > platform_device_register_data
-> > +                       (NULL, KBUILD_MODNAME "_leds",
-> > PLATFORM_DEVID_NONE,
-> > +                        &platform_data, sizeof(struct
-> > simatic_ipc_platform));  
+> Regards,
 > 
-> Strange indentation (second line).
+> Hans
 > 
-> > +               if (IS_ERR(ipc_led_platform_device))
-> > +                       return PTR_ERR(ipc_led_platform_device);  
 > 
-> > +               pr_debug(KBUILD_MODNAME ": device=%s created\n",
-> > +                        ipc_led_platform_device->name);  
 > 
-> Utilize pr_fmt() instead of adding prefixes like this.
 > 
-> > +       }  
-> 
-> > +       if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
-> > +               platform_data.devmode = wdtmode;
-> > +               ipc_wdt_platform_device =
-> > platform_device_register_data
-> > +                       (NULL, KBUILD_MODNAME "_wdt",
-> > PLATFORM_DEVID_NONE,
-> > +                        &platform_data, sizeof(struct
-> > simatic_ipc_platform));
-> > +               if (IS_ERR(ipc_wdt_platform_device))
-> > +                       return PTR_ERR(ipc_wdt_platform_device);
-> > +
-> > +               pr_debug(KBUILD_MODNAME ": device=%s created\n",
-> > +                        ipc_wdt_platform_device->name);
-> > +       }  
-> 
-> Same comments as above.
-> 
-> > +       if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
-> > +           wdtmode == SIMATIC_IPC_DEVICE_NONE) {
-> > +               pr_warn(KBUILD_MODNAME
-> > +                       ": unsupported IPC detected, station
-> > id=%08x\n",
-> > +                       station_id);  
-> 
-> Ugly indentation. With pr_fmt() in use will be much better.
-> 
-> > +               return -EINVAL;  
-> 
-> > +       } else {  
-> 
-> Redundant.
-> 
-> > +               return 0;
-> > +       }
-> > +}  
-> 
-> ...
-> 
-> > +/*
-> > + * Get membase address from PCI, used in leds and wdt modul. Here
-> > we read
-> > + * the bar0. The final address calculation is done in the
-> > appropriate modules  
-> 
-> bar -> BAR
-> Missed period.
-> 
-> > + */  
-> 
-> > +  
-> 
-> Unneeded blank line.
-> 
-> > +u32 simatic_ipc_get_membase0(unsigned int p2sb)
-> > +{
-> > +       u32 bar0 = 0;  
-> 
-> > +#ifdef CONFIG_PCI  
-> 
-> It's ugly besides the fact that you have a dependency.
-
-left over from out-of-tree, will be removed
-
-rest is clear, Thanks!
-Henning
-
-> > +       struct pci_bus *bus;  
-> 
-> Missed blank line.
-> 
-> > +       /*
-> > +        * The GPIO memory is bar0 of the hidden P2SB device.
-> > Unhide the device
-> > +        * to have a quick look at it, before we hide it again.
-> > +        * Also grab the pci rescan lock so that device does not
-> > get discovered
-> > +        * and remapped while it is visible.
-> > +        * This code is inspired by drivers/mfd/lpc_ich.c
-> > +        */
-> > +       bus = pci_find_bus(0, 0);
-> > +       pci_lock_rescan_remove();
-> > +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
-> > +       pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0,
-> > &bar0); +
-> > +       bar0 &= ~0xf;
-> > +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
-> > +       pci_unlock_rescan_remove();
-> > +#endif /* CONFIG_PCI */
-> > +       return bar0;
-> > +}
-> > +EXPORT_SYMBOL(simatic_ipc_get_membase0);  
-> 
-> Oy vey! I know what this is and let's do it differently. I have some
-> (relatively old) patch series I can send you privately for testing.
-> 
-> ...
-> 
-> > + * This program is free software; you can redistribute it and/or
-> > modify
-> > + * it under the terms of the GNU General Public License version 2
-> > as
-> > + * published by the Free Software Foundation.  
-> 
-> Not needed when you have SPDX.
-> 
-> ...
-> 
-> > +#include <linux/pci.h>  
-> 
-> Wrong header. Should be types.h
-> 
-> ...
-> 
-> > +#include <linux/dmi.h>
-> > +#include <linux/platform_data/x86/simatic-ipc-base.h>  
-> 
-> Missed headers. You need to include ones that the code below is a
-> direct user of.
-> 
-> Like types.h
+> On 3/4/21 11:39 AM, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 2/3/21 6:36 PM, Vadim Pasternak wrote:
+> >> Add documentation for the new attributes for line cards:
+> >> - CPLDs versioning.
+> >> - Write protection control for 'nvram' devices.
+> >> - Line card reset reasons.
+> >> - Enabling burning of FPGA and CPLDs.
+> >> - Enabling burning of FPGA and gearbox SPI flashes,
+> >> - Enabling power of whole line card.
+> >> - Enabling power of QSFP ports equipped on line card.
+> >> - The maximum powered required for line card feeding.
+> >> - Line card configuration Id.
+> >>
+> >> Signed-off-by: Vadim Pasternak <vadimp@nvidia.com>
+> >> ---
+> >>  Documentation/ABI/stable/sysfs-driver-mlxreg-io | 92 +++++++++++++++++++++++++
+> >>  1 file changed, 92 insertions(+)
+> >>
+> >> diff --git a/Documentation/ABI/stable/sysfs-driver-mlxreg-io b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> >> index 1d1a8ee59534..a22e9d6c0904 100644
+> >> --- a/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> >> +++ b/Documentation/ABI/stable/sysfs-driver-mlxreg-io
+> >> @@ -326,3 +326,95 @@ Description:	This file unlocks system after hardware or firmware thermal
+> >>  		locking.
+> >>  
+> >>  		The file is read/write.
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_pn
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_version
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld1_version_min
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files show with which CPLD major and minor versions
+> >> +		and part number has been burned CPLD device on line card.
+> >> +
+> >> +		The files are read only.
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_pn
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_version
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga1_version_min
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files show with which FPGA major and minor versions
+> >> +		and part number has been burned FPGA device on line card.
+> >> +
+> >> +		The files are read only.
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/ini_wp
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/vpd_wp
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files allow to overwrite line card VPD and firmware blob
+> >> +		hardware write protection mode. When attribute is set 1 - write
+> >> +		protection is disabled, when 0 - enabled. By default both are
+> >> +		write protected.
+> >> +
+> >> +		The files are read/write.
+> > 
+> > This seems to have some serious security implications. IMHO this should be tie into the
+> > kernel's new(ish) lockdown system, so that if the system is in locked-down mode writing
+> > these will not be allowed.
+> > 
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_aux_pwr_or_ref
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_dc_dc_pwr_fail
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_fpga_not_done
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_from_chassis
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_line_card
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/reset_pwr_off_from_chassis
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files show the line reset cause, as following: power
+> >> +		auxiliary outage or power refresh, DC-to-DC power failure, FPGA reset
+> >> +		failed, line card reset failed, power off from chassis.
+> >> +		Value 1 in file means this is reset cause, 0 - otherwise. Only one of
+> >> +		the above causes could be 1 at the same time, representing only last
+> >> +		reset cause.
+> >> +
+> >> +		The files are read only.
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/cpld_upgrade_en
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga_upgrade_en
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files allow CPLD and FPGA burning. Value 1 in file means burning
+> >> +		is enabled, 0 - otherwise.
+> >> +
+> >> +		The files are read/write.
+> > 
+> > Same remark as above.
+> > 
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/qsfp_pwr_en
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/pwr_en
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files allow to power on/off all QSFP ports and whole line card.
+> >> +		The attributes are set 1 for power on, 0 - for power off.
+> >> +
+> >> +		The files are read/write.
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/agb_spi_burn_en
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/fpga_spi_burn_en
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files allow gearboxes and FPGA SPI flash burning.
+> >> +		The attributes are set 1 to enable burning, 0 - to disable.
+> >> +
+> >> +		The file is read/write.
+> > 
+> > Same remark as above.
+> > 
+> >> +
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/max_power
+> >> +What:		/sys/devices/platform/mlxplat/i2c_mlxcpld.*/i2c-*/i2c-*/i2c-*/*-0032/mlxreg-io.*/hwmon/hwmon*/config
+> >> +Date:		March 2021
+> >> +KernelVersion:	5.12
+> >> +Contact:	Vadim Pasternak <vadimp@nvidia.com>
+> >> +Description:	These files provide the maximum powered required for line card
+> >> +		feeding and line card configuration Id.
+> >> +
+> >> +		The files are read only.
+> >>
+> > 
+> > Regards,
+> > 
+> > Hans
+> > 
 > 
 
+-- 
+Kees Cook
