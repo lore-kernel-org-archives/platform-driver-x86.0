@@ -2,137 +2,75 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D153C15501
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA17C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 08:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA9764F79
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 00:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641F664E76
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 08:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245604AbhCDAwK (ORCPT
+        id S236560AbhCDIWV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 3 Mar 2021 19:52:10 -0500
-Received: from lizzard.sbs.de ([194.138.37.39]:36707 "EHLO lizzard.sbs.de"
+        Thu, 4 Mar 2021 03:22:21 -0500
+Received: from mga12.intel.com ([192.55.52.136]:8184 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1377458AbhCCVC2 (ORCPT
+        id S235802AbhCDIWK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 3 Mar 2021 16:02:28 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 123L1LfG026717
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 Mar 2021 22:01:21 +0100
-Received: from md1za8fc.ad001.siemens.net ([139.22.36.86])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 123KuKU6014282;
-        Wed, 3 Mar 2021 21:56:20 +0100
-Date:   Wed, 3 Mar 2021 21:56:15 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Hans de Goede" <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-Message-ID: <20210303215615.64e45720@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210303214810.511ad65a@md1za8fc.ad001.siemens.net>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
-        <20210302163309.25528-3-henning.schild@siemens.com>
-        <20210302205452.GA32573@duo.ucw.cz>
-        <20210303141052.30641e6b@md1za8fc.ad001.siemens.net>
-        <20210303193134.GB8720@amd>
-        <20210303214810.511ad65a@md1za8fc.ad001.siemens.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 4 Mar 2021 03:22:10 -0500
+IronPort-SDR: h/AZN0XsGLgD729fL568E73zRMBTl/PxrMgf5V0W84KXoYtJipWAQswLzmAHP4rnAIotYJ97mJ
+ 7o49+IX53atw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9912"; a="166625125"
+X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
+   d="scan'208";a="166625125"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2021 00:20:25 -0800
+IronPort-SDR: KtnJIZJxOwEy5iAWkXc/uy11mqntPRYTwvWunItyldZyge//csYiVPDM+6biih0zU8lGQ2K/V5
+ xk0yPNP0bG5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,222,1610438400"; 
+   d="scan'208";a="507271929"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2021 00:20:23 -0800
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: touchscreen_dmi: Handle device properties with software node API
+Date:   Thu,  4 Mar 2021 11:20:23 +0300
+Message-Id: <20210304082023.17689-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Wed, 3 Mar 2021 21:48:21 +0100
-schrieb Henning Schild <henning.schild@siemens.com>:
+The old device property API (device_add_properties()) is
+going to be removed. Replacing the it with the software node
+API equivalent, device_create_managed_software_node().
 
-> Am Wed, 3 Mar 2021 20:31:34 +0100
-> schrieb Pavel Machek <pavel@ucw.cz>:
-> 
-> > Hi!
-> >   
-> > > > > +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
-> > > > > +	{1 << 15, "simatic-ipc:green:run-stop"},
-> > > > > +	{1 << 7,  "simatic-ipc:yellow:run-stop"},
-> > > > > +	{1 << 14, "simatic-ipc:red:error"},
-> > > > > +	{1 << 6,  "simatic-ipc:yellow:error"},
-> > > > > +	{1 << 13, "simatic-ipc:red:maint"},
-> > > > > +	{1 << 5,  "simatic-ipc:yellow:maint"},
-> > > > > +	{0, ""},
-> > > > > +};      
-> > > > 
-> > > > Please use names consistent with other systems, this is user
-> > > > visible. If you have two-color power led, it should be
-> > > > :green:power... See include/dt-bindings/leds/common.h .    
-> > > 
-> > > Well we wanted to pick names that are printed on the devices and
-> > > would like to stick to those. Has been a discussion ...
-> > > Can we have symlinks to have multiple names per LED?    
-> > 
-> > No symlinks. We plan to have command line tool to manipulate LEDs,
-> > aliases might be possible there.  
-> 
-> Sounds like a future plan. sysfs and "cat" "echo" are mighty tools and
-> "everything is a file" is the best idea ever. So i would say any
-> aliasing should live in the kernel, but that is just me. Tools will
-> just get out of sync, be missing in busybox or a random yocto ... or
-> whichever distro you like.
-> On the other hand you have "complexity should be userland" ... i do
-> not have the answer.
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/platform/x86/touchscreen_dmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My personal horror would be systemd-ledd or some dracut snipet for
-initrd. But that would be a generic led class discussion ... that tool.
-
-> > > How strong would you feel about us using our names?    
-> > 
-> > Strongly. :-)  
-> 
-> OK, will try to find a match where possible. 
-
-Do we happen to have a description of the existing names, to find a fit
-for ours? In the header you pointed out i only found names without
-"meaning"
-
-regards,
-Henning
-
-> 
-> > Do you have a picture how the leds look like?  
-> 
-> I could even find chassis photos in our internal review but that would
-> be too much.
-> 
-> Our idea is probably the same as yours. We want the same names across
-> all devices. But we struggle with colors because on some boxes we have
-> red+green, while other offer yellow ... implemented in HW and messing
-> with red+green in some cases.
-> 
-> But so far we only looked at Siemens devices and thought we could get
-> our own "namespace".
-> 
-> To be honest i could not even tell how our names map on the known
-> ones, but we will do our best to find a match. They all are
-> "high-level" so "power" and other basic things are not exposed.
-> 
-> regards,
-> Henning
->  
-> > Best regards,
-> > 							Pavel  
-> 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index c44a6e8dceb8c..45203e333f578 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -1355,7 +1355,7 @@ static void ts_dmi_add_props(struct i2c_client *client)
+ 
+ 	if (has_acpi_companion(dev) &&
+ 	    !strncmp(ts_data->acpi_name, client->name, I2C_NAME_SIZE)) {
+-		error = device_add_properties(dev, ts_data->properties);
++		error = device_create_managed_software_node(dev, ts_data->properties, NULL);
+ 		if (error)
+ 			dev_err(dev, "failed to add properties: %d\n", error);
+ 	}
+-- 
+2.30.1
 
