@@ -2,86 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE0AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 14:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8DCC433E9
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 14:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3AE64EF8
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 14:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8395664F39
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 14:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236477AbhCDOFj (ORCPT
+        id S240561AbhCDONj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Mar 2021 09:05:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39653 "EHLO
+        Thu, 4 Mar 2021 09:13:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35594 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237018AbhCDOFN (ORCPT
+        by vger.kernel.org with ESMTP id S231937AbhCDONK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Mar 2021 09:05:13 -0500
+        Thu, 4 Mar 2021 09:13:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614866628;
+        s=mimecast20190719; t=1614867105;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vDQP6snMag6XxAEBa+EmQwWRFCxkjx4xBBCVCl5Gh1A=;
-        b=YgGaCTVkRaVUSz6hA+cPm+arzqiIJ2QJeX8zYvZSC/lgNlpsCJh3ISYGNNoIBQ0T92dWre
-        rUlxrAd16GYDspbpqbf8oU0LYEvpgPPNd/Nd3GY+GsDYXHToH4Q4j5UK1DXFs+706r1xdQ
-        0bviPl+8gzRkhpzbaburhREBKr4kfqA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-442-Cu3EarymOZi34BrfTuP6nA-1; Thu, 04 Mar 2021 09:03:47 -0500
-X-MC-Unique: Cu3EarymOZi34BrfTuP6nA-1
-Received: by mail-ed1-f70.google.com with SMTP id p12so14092983edw.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 06:03:45 -0800 (PST)
+        bh=Senccpuc1TTEJq53wRUPtgfA6m7/zD3KJgdxFYTizkY=;
+        b=CkrS7b0Hb4qV3ANfQI+fDOId/Zf1BNlpVJuOk1epG25AijYOWJ2ICaFqLRWFLTts5AcJG0
+        48etOjj9EpMy96YI4j6csF9ywOBtlN3HFuxUxpYa4VM92WDjxcZSUM3x6wuHbMsuUW9lvL
+        FWHjLne1kppG6paxx79ew44z4MGlTG0=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-159-NufwYTxFNdCetfmAeTZpuw-1; Thu, 04 Mar 2021 09:11:40 -0500
+X-MC-Unique: NufwYTxFNdCetfmAeTZpuw-1
+Received: by mail-ej1-f71.google.com with SMTP id v10so12157662ejh.15
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 06:11:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=vDQP6snMag6XxAEBa+EmQwWRFCxkjx4xBBCVCl5Gh1A=;
-        b=I5juv4j31pHrpIw3fL/IPCVcxrGqeY0K1HzOiSYTa5LGZUpPdrQP3AF7Z/ZqJN+M1j
-         cR3Db2p22egc0EX2zfpbD203gWiSF2XaHuCZSRDdppPOV7Nat2fM82CQY+unnQiACpoQ
-         stqcz4YY7xO//XaZ0ieUl9y25ARbz+AiDuTK0J1qfIprcNzyZ06PTmPmavyUnZK+enlc
-         5EsjM0i7y/cBTyJ41dPxvH46ij6pZ1ihH8hKruknQGvI2XUSejLILV983NScv3zlrZ7o
-         vWN2WuJuLTNIqweubx2G4q1fpMBVwo2VjnakV3JjDQITvj5lCdYisgGsRW3KvCwX96Op
-         rXvQ==
-X-Gm-Message-State: AOAM532B9H/SR8QQs6eXcr8gWEVm2bwsUN2Ry5kGShSwvlqVrIyn+dqv
-        rUXK24bZn7W6wiVmoXfaJi8vAwMQPwg+ZuLF5bty91FbL5IIEvkTN40oco2PukMjufACPrOD4+C
-        5COIrAIJ3EmYVq6nP1lPR+26T8i70eUpcXA==
-X-Received: by 2002:a17:906:3801:: with SMTP id v1mr4428851ejc.353.1614866624788;
-        Thu, 04 Mar 2021 06:03:44 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzZplifH1rsPnLSh/UDJJZohAnMagDJLqjaHg1OVrs9ysOY30ZNvytm6Kup6F2ILxmyAQp2KQ==
-X-Received: by 2002:a17:906:3801:: with SMTP id v1mr4428837ejc.353.1614866624612;
-        Thu, 04 Mar 2021 06:03:44 -0800 (PST)
+        bh=Senccpuc1TTEJq53wRUPtgfA6m7/zD3KJgdxFYTizkY=;
+        b=risZLCGUGaxWhEn01gPdyl/VItLYaQOGnqim+7/mdgZFzgnAr+IMkVoGh+T5wEIm7b
+         vbOJBCcfJuRegziAyaINWtz3edQkZRT64LVjntKtoUCl4d/F8kZpsJs344lxXUVLfX4C
+         MfSX48pu7Mi3HNte/T0UEW8CtJJgYFkq0zWFu27USP43cLgc9slTgKLNXw7BbZ/JchZN
+         tG5hyljFoPQPUCjvLjljtCoXYwlrvfzsMBVCSKvePaIEjVVkoe4GWAUunnmgcpkfEvii
+         SC2mTXU6aFQsnV6RgXQwNp/f1iXyIdjt8MSusmi1C6BbiWlN5g9M9rKpjZ6p2THHEXDG
+         +0tA==
+X-Gm-Message-State: AOAM532VcCvupzg2E2nJvESwz8p8YspertxKIwrRKzxkuBKAjMu3eF/c
+        TGBWiPpzVS3sBjuYaxbJIuIfobLTbaNDcTgTnvMQxnoBeDmiYRGJ/4B/8e722eRQbdSw6G5BZGk
+        GihAeJpUpIvB3bdv7LATJiTzIyq0BMjXWZw==
+X-Received: by 2002:a17:906:1fd2:: with SMTP id e18mr4621050ejt.49.1614867099431;
+        Thu, 04 Mar 2021 06:11:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzLk6KLql7nlw9YimuS3xza8Ashn9e8ZbujmQsfr6ZM2rBNv06qhUySS/NFIdc1O1ZtOfCgew==
+X-Received: by 2002:a17:906:1fd2:: with SMTP id e18mr4621027ejt.49.1614867099230;
+        Thu, 04 Mar 2021 06:11:39 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id jx22sm22114314ejc.105.2021.03.04.06.03.43
+        by smtp.gmail.com with ESMTPSA id a12sm11065943edx.91.2021.03.04.06.11.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Mar 2021 06:03:43 -0800 (PST)
-Subject: Re: [PATCH 1/4] platform/x86: simatic-ipc: add main driver for
- Siemens devices
-To:     Henning Schild <henning.schild@siemens.com>,
-        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
- <20210302163309.25528-2-henning.schild@siemens.com>
+        Thu, 04 Mar 2021 06:11:38 -0800 (PST)
+Subject: Re: [PATCH v1] platform: x86: ACPI: Get rid of ACPICA message
+ printing
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Chen Yu <yu.c.chen@intel.com>
+References: <2074665.VPHYfYaQb6@kreacher>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ed715381-016a-5bf7-3cdb-d340747c4498@redhat.com>
-Date:   Thu, 4 Mar 2021 15:03:43 +0100
+Message-ID: <77955b4c-eca1-afe9-5fbc-ceddc39cb397@redhat.com>
+Date:   Thu, 4 Mar 2021 15:11:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210302163309.25528-2-henning.schild@siemens.com>
+In-Reply-To: <2074665.VPHYfYaQb6@kreacher>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,52 +87,133 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/2/21 5:33 PM, Henning Schild wrote:
+On 2/24/21 7:41 PM, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> A few x86 platform drivers use ACPI_DEBUG_PRINT() or ACPI_EXCEPTION()
+> for printing messages, but that is questionable, because those macros
+> belong to ACPICA and they should not be used elsewhere.  In addition,
+> ACPI_DEBUG_PRINT() requires special enabling to allow it to actually
+> print the message, which is a nuisance, and the _COMPONENT symbol
+> generally needed for that is not defined in any of the files in
+> question.
+> 
+> For this reason, replace the ACPI_DEBUG_PRINT() in lg-laptop.c with
+> pr_debug() and the one in xo15-ebook.c with acpi_handle_debug()
+> (with the additional benefit that the source object can be identified
+> more easily after this change), and replace the ACPI_EXCEPTION() in
+> acer-wmi.c with pr_warn().
+> 
+> Also drop the ACPI_MODULE_NAME() definitions that are only used by
+> the ACPICA message printing macros from those files and from wmi.c
+> and surfacepro3_button.c (while at it).
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-<snip>
+Thank you.
 
-> +static inline u32 simatic_ipc_get_station_id(u8 *data)
-> +{
-> +	u32 station_id = SIMATIC_IPC_INVALID_STATION_ID;
-> +	int i;
-> +	struct {
-> +		u8	type;		/* type (0xff = binary) */
-> +		u8	len;		/* len of data entry */
-> +		u8	reserved[3];
-> +		u32	station_id;	/* station id (LE) */
-> +	} __packed * data_entry = (void *)data;
-> +
-> +	/* find 4th entry in OEM data */
-> +	for (i = 0; i < 3; i++)
-> +		data_entry = (void *)((u8 *)(data_entry) + data_entry->len);
-> +
-> +	/* decode station id */
-> +	if (data_entry && data_entry->type == 0xff && data_entry->len == 9)
-> +		station_id = le32_to_cpu(data_entry->station_id);
-> +
-> +	return station_id;
-> +}
-> +
-> +static inline void
-> +simatic_ipc_find_dmi_entry_helper(const struct dmi_header *dh, void *_data)
-> +{
-> +	u32 *id = _data;
-> +
-> +	if (dh->type != DMI_ENTRY_OEM)
-> +		return;
-> +
-> +	*id = simatic_ipc_get_station_id((u8 *)dh + sizeof(struct dmi_header));
-> +}
-
-Please take dh->length into account here and make sure that you don't walk
-past the end of the DMI tables during the parsing here.
+I've merged this into my review-hans branch now, minus the
+acer-wmi.c changes because a similar patch was already merged for those.
 
 Regards,
 
 Hans
 
 
-> +
-> +#endif /* __PLATFORM_DATA_X86_SIMATIC_IPC_H */
+
+> ---
+>  drivers/platform/surface/surfacepro3_button.c |    2 --
+>  drivers/platform/x86/acer-wmi.c               |    4 ++--
+>  drivers/platform/x86/lg-laptop.c              |    2 +-
+>  drivers/platform/x86/wmi.c                    |    1 -
+>  drivers/platform/x86/xo15-ebook.c             |    6 ++----
+>  5 files changed, 5 insertions(+), 10 deletions(-)
+> 
+> Index: linux-pm/drivers/platform/x86/lg-laptop.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/lg-laptop.c
+> +++ linux-pm/drivers/platform/x86/lg-laptop.c
+> @@ -678,7 +678,7 @@ static int __init acpi_init(void)
+>  
+>  	result = acpi_bus_register_driver(&acpi_driver);
+>  	if (result < 0) {
+> -		ACPI_DEBUG_PRINT((ACPI_DB_ERROR, "Error registering driver\n"));
+> +		pr_debug("Error registering driver\n");
+>  		return -ENODEV;
+>  	}
+>  
+> Index: linux-pm/drivers/platform/x86/xo15-ebook.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/xo15-ebook.c
+> +++ linux-pm/drivers/platform/x86/xo15-ebook.c
+> @@ -26,8 +26,6 @@
+>  #define XO15_EBOOK_HID			"XO15EBK"
+>  #define XO15_EBOOK_DEVICE_NAME		"EBook Switch"
+>  
+> -ACPI_MODULE_NAME(MODULE_NAME);
+> -
+>  MODULE_DESCRIPTION("OLPC XO-1.5 ebook switch driver");
+>  MODULE_LICENSE("GPL");
+>  
+> @@ -66,8 +64,8 @@ static void ebook_switch_notify(struct a
+>  		ebook_send_state(device);
+>  		break;
+>  	default:
+> -		ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+> -				  "Unsupported event [0x%x]\n", event));
+> +		acpi_handle_debug(device->handle,
+> +				  "Unsupported event [0x%x]\n", event);
+>  		break;
+>  	}
+>  }
+> Index: linux-pm/drivers/platform/x86/acer-wmi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/acer-wmi.c
+> +++ linux-pm/drivers/platform/x86/acer-wmi.c
+> @@ -30,7 +30,6 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <acpi/video.h>
+>  
+> -ACPI_MODULE_NAME(KBUILD_MODNAME);
+>  MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+>  MODULE_LICENSE("GPL");
+> @@ -1605,7 +1604,8 @@ static void acer_kbd_dock_get_initial_st
+>  
+>  	status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input_buf, &output_buf);
+>  	if (ACPI_FAILURE(status)) {
+> -		ACPI_EXCEPTION((AE_INFO, status, "Error getting keyboard-dock initial status"));
+> +		pr_warn("Error getting keyboard-dock initial status: %s\n",
+> +			acpi_format_exception(status));
+>  		return;
+>  	}
+>  
+> Index: linux-pm/drivers/platform/surface/surfacepro3_button.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/surface/surfacepro3_button.c
+> +++ linux-pm/drivers/platform/surface/surfacepro3_button.c
+> @@ -40,8 +40,6 @@ static const guid_t MSHW0040_DSM_UUID =
+>  #define SURFACE_BUTTON_NOTIFY_PRESS_VOLUME_DOWN		0xc2
+>  #define SURFACE_BUTTON_NOTIFY_RELEASE_VOLUME_DOWN	0xc3
+>  
+> -ACPI_MODULE_NAME("surface pro 3 button");
+> -
+>  MODULE_AUTHOR("Chen Yu");
+>  MODULE_DESCRIPTION("Surface Pro3 Button Driver");
+>  MODULE_LICENSE("GPL v2");
+> Index: linux-pm/drivers/platform/x86/wmi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/wmi.c
+> +++ linux-pm/drivers/platform/x86/wmi.c
+> @@ -32,7 +32,6 @@
+>  #include <linux/fs.h>
+>  #include <uapi/linux/wmi.h>
+>  
+> -ACPI_MODULE_NAME("wmi");
+>  MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("ACPI-WMI Mapping Driver");
+>  MODULE_LICENSE("GPL");
+> 
+> 
 > 
 
