@@ -2,339 +2,230 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5B6C4332D
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 13:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D47C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 13:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B86D64F0A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 13:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1EB64F45
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 13:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241539AbhCDNtH (ORCPT
+        id S241576AbhCDNuM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Mar 2021 08:49:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54199 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241536AbhCDNtF (ORCPT
+        Thu, 4 Mar 2021 08:50:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241567AbhCDNt5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Mar 2021 08:49:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614865659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vckiuo5o0lbsf+iCp4TD+mlnrNoZKeBTtEoYHD3gcKU=;
-        b=ZqVVsdoZ4VxLPdZzfY9skyL8AXzZP9CnvNWaA5UQHn1WmgVcMEind3/jtSmvK1oX7SujOE
-        U6kt7+ieaeXxWj6BT1EtTJmrsheL/nwWPSSbk0x0FIJGwUsmpcWl5YsL6aIQRutcc0lFZj
-        gzQHCIyQYILCpOz63gXLkNqiTPSzEgw=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-198-ELqHjDasNqq5jh9tVI-6VA-1; Thu, 04 Mar 2021 08:47:38 -0500
-X-MC-Unique: ELqHjDasNqq5jh9tVI-6VA-1
-Received: by mail-ej1-f72.google.com with SMTP id v19so4095770ejc.12
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 05:47:38 -0800 (PST)
+        Thu, 4 Mar 2021 08:49:57 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3CDC061574;
+        Thu,  4 Mar 2021 05:49:17 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id m1so9756961wml.2;
+        Thu, 04 Mar 2021 05:49:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=3+SX3U1VXxjbBb3AFkilt3hNXMs9Ccf8nN8eBgzxjZU=;
+        b=CvZl9GQ1BZZAyv6izOJnS5InuxmDYt4uJJVB1al7+eRTagi8Hp3agEdzup8pVHR/sf
+         o3Vni2I3nVEYqJ9YTi40pEy9V8Qptwls9CmdNMGLfHZP3vRLsuO6SyliaChK2n/BroJ/
+         vncTY+vrj7cP8TGVeX56PYMc+KRVuD0mDbdi32PasHZq96URRUPwfpRJAxt4xNKtUcjE
+         L7h7mihpJrDKOBwbVJVb6hB4brAiB2kKcow05wFQaVPl/InxsPVWCLuW9mPGJx4BrGRQ
+         Sq6ZzZ+PEZzUPqHEw/BmBp3Qh/Up+uqFI0XmQhw1n4Pm7juaFRc+T9hQw8SRbNT6xCD0
+         Pdww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vckiuo5o0lbsf+iCp4TD+mlnrNoZKeBTtEoYHD3gcKU=;
-        b=uD9Pqts0hksVp8rRHG83vjfYbWIQ/1ib9G/fSXSrJ+ZSAYgye2/yPytp007IYXOqsM
-         2ay1G8yHT2kbqkiZ78AT1itbuMw3RKbra2rNOsz/2pFxyWKQlK/CV9K30TE9Wve+mxeB
-         kO011O0JJz4K7OVka3w6V8v49/La7TeVQmer6J0ws75evtzFHih48giDAG+sahLgk+cv
-         ItAMXATNZ5/AwH280Qub0UmtRpeXhiupz1pSlwSCY8c3JgYmhr44kp2nq+Wk4xOAnVsa
-         /4HWaVzUobhp9p5JNA1UL6I74+/jmipICspSjNpJslkCqTyqKR4lxz0+1+AuFHPdN6ce
-         EH4g==
-X-Gm-Message-State: AOAM531uHwP8BmKH4b03zgPSJw/apODD4ySf1/ZO3cbSytxl8t1w4MZu
-        gDCo1auE0bll8BIKppu0BSVXqYfYCsMdgj6MB4NvDssy/t961HqltI5e2wEKgZ6M812Wdn3Xxc8
-        QDc//cCZCwKeM54EX8Vn/fTKLySJWJMD62g==
-X-Received: by 2002:aa7:c450:: with SMTP id n16mr4333421edr.16.1614865657197;
-        Thu, 04 Mar 2021 05:47:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx3J+jtz/N74ECvDEpaxRsank0/rYMS/bHniqXvZ9EmFDKyhJ0wsME+zu5fV5pVHJDTZTQ1Gg==
-X-Received: by 2002:aa7:c450:: with SMTP id n16mr4333397edr.16.1614865656987;
-        Thu, 04 Mar 2021 05:47:36 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id ld19sm1373084ejb.102.2021.03.04.05.47.35
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=3+SX3U1VXxjbBb3AFkilt3hNXMs9Ccf8nN8eBgzxjZU=;
+        b=U+srqDIEHIpNVpqkUoQcFWptfkSYbwDL4FcAiUR6T3Yl3T7ess5Lwc7794IyA1pfIC
+         EX/aoPlfBU1lEV8qqyBjomYBYw3FFc9iEVW9loqXLAmVyGuPg9pqsUM9c0yFVFldpTEb
+         vRpxdeHUoi/fXSjtK4RIqCLsyV6jRYT1zqVPY1DOuXssOIaBF3QqF4mqh/sp6CLl7A/d
+         YuEhRGNmxoMwR/BVKFs0C/7f4XW9CffvFh3s/kWFdARn5FsXSCi9SBUgWoQKOjHMkY6r
+         VM0Btzyg0BK2g1y30bXFUsCnDb1zZTj2GV20QCCdjmVkCT8YWQz28xAQ3CChi113j4nG
+         K1eQ==
+X-Gm-Message-State: AOAM531CqOLKPu/USiAj1VwGmGblCJ9HSgXaViA8Sun0xSAU4HFKGZTE
+        39CxaWJXyW9LIKaNGVGzBu8=
+X-Google-Smtp-Source: ABdhPJyRx+2m1kvS4rKn8ipRK5BYpQzYTY5VuQm9zqKGv70JdXH343ORRDLD6NwYhwkDbuBwDpb87A==
+X-Received: by 2002:a05:600c:47d7:: with SMTP id l23mr4105259wmo.155.1614865756142;
+        Thu, 04 Mar 2021 05:49:16 -0800 (PST)
+Received: from [192.168.1.211] ([2.26.187.30])
+        by smtp.gmail.com with ESMTPSA id l15sm10022214wmh.21.2021.03.04.05.49.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Mar 2021 05:47:36 -0800 (PST)
-Subject: Re: [PATCH 1/4] platform/x86: simatic-ipc: add main driver for
- Siemens devices
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
- <20210302163309.25528-2-henning.schild@siemens.com>
- <CAHp75VfDDGxdhP0-yKOCJyJ_+Y2Zu3TmOdvUJmEZ0AvQnceV6A@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2fad304a-9e1e-c83d-7a9e-02b35ed22418@redhat.com>
-Date:   Thu, 4 Mar 2021 14:47:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Thu, 04 Mar 2021 05:49:15 -0800 (PST)
+Subject: Re: [PATCH v3 0/6] Introduce intel_skl_int3472 module
+To:     Hans de Goede <hdegoede@redhat.com>, tfiga@chromium.org,
+        sakari.ailus@linux.intel.com, rajmohan.mani@intel.com,
+        rjw@rjwysocki.net, lenb@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org
+Cc:     andriy.shevchenko@linux.intel.com,
+        kieran.bingham+renesas@ideasonboard.com,
+        laurent.pinchart@ideasonboard.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, me@fabwu.ch, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <fd2fbee6-e620-a594-8377-d2f22131af29@redhat.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
+Date:   Thu, 4 Mar 2021 13:49:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfDDGxdhP0-yKOCJyJ_+Y2Zu3TmOdvUJmEZ0AvQnceV6A@mail.gmail.com>
+In-Reply-To: <fd2fbee6-e620-a594-8377-d2f22131af29@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Hans
 
-On 3/4/21 11:11 AM, Andy Shevchenko wrote:
-> On Thu, Mar 4, 2021 at 8:36 AM Henning Schild
-> <henning.schild@siemens.com> wrote:
+On 04/03/2021 13:37, Hans de Goede wrote:
+> Hi,
+>
+> On 2/22/21 2:07 PM, Daniel Scally wrote:
+>> v1 for this series was originally 14-18 of this series:
+>> https://lore.kernel.org/linux-media/20201130133129.1024662-1-djrscally@gmail.com/T/#m91934e12e3d033da2e768e952ea3b4a125ee3e67
 >>
->> From: Henning Schild <henning.schild@siemens.com>
+>> v2 was here:
+>> https://lore.kernel.org/platform-driver-x86/20210118003428.568892-1-djrscally@gmail.com/
 >>
->> This mainly implements detection of these devices and will allow
->> secondary drivers to work on such machines.
+>> Series level changelog:
 >>
->> The identification is DMI-based with a vendor specific way to tell them
->> apart in a reliable way.
+>> 	- Dropped the patch moving acpi_lpss_dep() to utils since it's not used
+>> 	in acpi_dev_get_dependent_dev() anymore.
+>> 	- Replaced it with a patch extending acpi_walk_dep_device_list() to be
+>> 	able to apply a given callback against each device in acpi_dep_list
+>> 	- Dropped the patch creating acpi_i2c_dev_name() and simply open coded
+>> 	that functionality.
 >>
->> Drivers for LEDs and Watchdogs will follow to make use of that platform
->> detection.
-> 
->> Signed-off-by: Gerd Haeussler <gerd.haeussler.ext@siemens.com>
->> Signed-off-by: Henning Schild <henning.schild@siemens.com>
-> 
-> The order is wrong taking into account the From line in the body. So,
-> it's not clear who is the author, who is a co-developer, and who is
-> the committer (one person may utilize few roles).
-> Check for the rest of the series as well (basically this is the rule
-> of thumb to recheck entire code for the comment you have got at any
-> single place of it).
-> 
-> ...
-> 
->> +config SIEMENS_SIMATIC_IPC
->> +       tristate "Siemens Simatic IPC Class driver"
->> +       depends on PCI
->> +       help
->> +         This Simatic IPC class driver is the central of several drivers. It
->> +         is mainly used for system identification, after which drivers in other
->> +         classes will take care of driving specifics of those machines.
->> +         i.e. leds and watchdogs
-> 
-> LEDs
-> watchdog. (missed period and singular form)
-> 
-> Module name?
-> 
->>  endif # X86_PLATFORM_DEVICES
-> 
-> Not sure about the ordering of the section in Kconfig, but it is up to
-> maintainers.
-> 
-> ...
-> 
->> +# Siemens Simatic Industrial PCs
->> +obj-$(CONFIG_SIEMENS_SIMATIC_IPC)      += simatic-ipc.o
-> 
-> Ditto.
-> 
-> ...
-> 
->> + * Siemens SIMATIC IPC driver for LEDs
-> 
-> It seems to be used in patch 4 which is not LED related. Also, why is
-> it here if it's for LEDs?
-> 
-> ...
-> 
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
-> 
-> Replace with SPDX
-> 
-> ...
-> 
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/platform_device.h>
-> 
-> Ordered?
-> 
->> +#include <linux/platform_data/x86/simatic-ipc.h>
-> 
-> ...
-> 
->> +static int register_platform_devices(u32 station_id)
->> +{
->> +       int i;
->> +       u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
->> +       u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
-> 
-> Reversed xmas tree order?
-> 
->> +       platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
->> +
->> +       for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
->> +               if (device_modes[i].station_id == station_id) {
->> +                       ledmode = device_modes[i].led_mode;
->> +                       wdtmode = device_modes[i].wdt_mode;
->> +                       break;
->> +               }
->> +       }
->> +
->> +       if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
->> +               platform_data.devmode = ledmode;
-> 
->> +               ipc_led_platform_device = platform_device_register_data
->> +                       (NULL, KBUILD_MODNAME "_leds", PLATFORM_DEVID_NONE,
->> +                        &platform_data, sizeof(struct simatic_ipc_platform));
-> 
-> Strange indentation (second line).
-> 
->> +               if (IS_ERR(ipc_led_platform_device))
->> +                       return PTR_ERR(ipc_led_platform_device);
-> 
->> +               pr_debug(KBUILD_MODNAME ": device=%s created\n",
->> +                        ipc_led_platform_device->name);
-> 
-> Utilize pr_fmt() instead of adding prefixes like this.
-> 
->> +       }
-> 
->> +       if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
->> +               platform_data.devmode = wdtmode;
->> +               ipc_wdt_platform_device = platform_device_register_data
->> +                       (NULL, KBUILD_MODNAME "_wdt", PLATFORM_DEVID_NONE,
->> +                        &platform_data, sizeof(struct simatic_ipc_platform));
->> +               if (IS_ERR(ipc_wdt_platform_device))
->> +                       return PTR_ERR(ipc_wdt_platform_device);
->> +
->> +               pr_debug(KBUILD_MODNAME ": device=%s created\n",
->> +                        ipc_wdt_platform_device->name);
->> +       }
-> 
-> Same comments as above.
-> 
->> +       if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
->> +           wdtmode == SIMATIC_IPC_DEVICE_NONE) {
->> +               pr_warn(KBUILD_MODNAME
->> +                       ": unsupported IPC detected, station id=%08x\n",
->> +                       station_id);
-> 
-> Ugly indentation. With pr_fmt() in use will be much better.
-> 
->> +               return -EINVAL;
-> 
->> +       } else {
-> 
-> Redundant.
-> 
->> +               return 0;
->> +       }
->> +}
-> 
-> ...
-> 
->> +/*
->> + * Get membase address from PCI, used in leds and wdt modul. Here we read
->> + * the bar0. The final address calculation is done in the appropriate modules
-> 
-> bar -> BAR
-> Missed period.
-> 
->> + */
-> 
->> +
-> 
-> Unneeded blank line.
-> 
->> +u32 simatic_ipc_get_membase0(unsigned int p2sb)
->> +{
->> +       u32 bar0 = 0;
-> 
->> +#ifdef CONFIG_PCI
-> 
-> It's ugly besides the fact that you have a dependency.
-> 
->> +       struct pci_bus *bus;
-> 
-> Missed blank line.
-> 
->> +       /*
->> +        * The GPIO memory is bar0 of the hidden P2SB device. Unhide the device
->> +        * to have a quick look at it, before we hide it again.
->> +        * Also grab the pci rescan lock so that device does not get discovered
->> +        * and remapped while it is visible.
->> +        * This code is inspired by drivers/mfd/lpc_ich.c
->> +        */
->> +       bus = pci_find_bus(0, 0);
->> +       pci_lock_rescan_remove();
->> +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
->> +       pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0, &bar0);
->> +
->> +       bar0 &= ~0xf;
->> +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
->> +       pci_unlock_rescan_remove();
->> +#endif /* CONFIG_PCI */
->> +       return bar0;
->> +}
->> +EXPORT_SYMBOL(simatic_ipc_get_membase0);
-> 
-> Oy vey! I know what this is and let's do it differently. I have some
-> (relatively old) patch series I can send you privately for testing.
-
-This bit stood out the most to me too, it would be good if we can this fixed
-in some cleaner work. So I'm curious how things will look with Andy's work
-integrated.
-
-Also I don't think this should be exported. Instead this (or its replacement)
-should be used to get the address for an IOMEM resource to add the platform 
-devices when they are instantiated. Then the platform-dev drivers can just
-use the regular functions to get their resources instead of relying on this
-module.
-
-Regards,
-
-Hans
+>> This has been tested on a number of devices, but currently **not** on a device
+>> designed for ChromeOS, which we ideally need to do to ensure no regression
+>> caused by replacing the tps68470 MFD driver. Sakari / Tomasz, is there any way
+>> you could help with that? Unfortunately, I don't have a device to test it on
+>> myself.
+>>
+>> Original cover letter: 
+>>
+>> At the moment in the kernel the ACPI _HID INT3472 is taken by the tps68470
+>> MFD driver, but that driver can only handle some of the cases of that _HID
+>> that we see. There are at least these three possibilities:
+>>
+>> 1. INT3472 devices that provide GPIOs through the usual framework and run
+>>    power and clocks through an operation region; this is the situation that
+>>    the current module handles and is seen on ChromeOS devices
+>> 2. INT3472 devices that provide GPIOs, plus clocks and regulators that are
+>>    meant to be driven through the usual frameworks, usually seen on devices
+>>    designed to run Windows
+>> 3. INT3472 devices that don't actually represent a physical tps68470, but
+>>    are being used as a convenient way of grouping a bunch of system GPIO
+>>    lines that are intended to enable power and clocks for sensors which
+>>    are called out as dependent on them. Also seen on devices designed to
+>>    run Windows.
+>>
+>> This series introduces a new module which registers:
+>>
+>> 1. An i2c driver that determines which scenario (#1 or #2) applies to the
+>>    machine and registers platform devices to be bound to GPIO, OpRegion,
+>>    clock and regulator drivers as appropriate.
+>> 2. A platform driver that binds to the dummy INT3472 devices described in
+>>    #3
+>>
+>> The platform driver for the dummy device registers the GPIO lines that
+>> enable the clocks and regulators to the sensors via those frameworks so
+>> that sensor drivers can consume them in the usual fashion. The existing
+>> GPIO and OpRegion tps68470 drivers will work with the i2c driver that's
+>> registered. Clock and regulator drivers are available but have not so far been
+>> tested, so aren't part of this series.
+>>
+>> The existing mfd/tps68470.c driver being thus superseded, it is removed.
+> Thank you for this patch series. Since there have already been a whole
+> bunch of review-comments, I've not taken a detailed look at this yet.
 
 
+No problem, I'm hoping to do a v3 over the weekend anyway.
 
 
-> 
-> ...
-> 
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
-> 
-> Not needed when you have SPDX.
-> 
-> ...
-> 
->> +#include <linux/pci.h>
-> 
-> Wrong header. Should be types.h
-> 
-> ...
-> 
->> +#include <linux/dmi.h>
->> +#include <linux/platform_data/x86/simatic-ipc-base.h>
-> 
-> Missed headers. You need to include ones that the code below is a
-> direct user of.
-> 
-> Like types.h
-> 
+> I do wonder if you have thought about how this series should be merged?
+> This series is spread over quite a few subsytems and since there are
+> various interdependencies in the patches it is probably best if it gets
+> merged in its entirety through a single tree.
+>
+> I guess that merging though either Rafael's (drivers/acpi) tree or
+> Lee's (drivers/mfd) tree makes the most sense.
+>
+> As drivers/platform/x86 maintainer I'm happy with whatever solution
+> works for the other subsystem maintainers.
 
+
+I also think it's a good idea to go through a single tree, and my plan
+was to raise that probably after the next review round or so, but I
+hadn't gotten as far as thinking about whos tree it should be or
+anything yet. To be honest I'm not sure what factors dictate which
+choice is best in that regard; handling complex git merges is a bit
+outside my experience.
+
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>> Thanks
+>> Dan
+>>
+>> Daniel Scally (6):
+>>   ACPI: scan: Extend acpi_walk_dep_device_list()
+>>   ACPI: scan: Add function to fetch dependent of acpi device
+>>   i2c: core: Add a format macro for I2C device names
+>>   gpiolib: acpi: Export acpi_get_gpiod()
+>>   platform/x86: Add intel_skl_int3472 driver
+>>   mfd: tps68470: Remove tps68470 MFD driver
+>>
+>>  MAINTAINERS                                   |   5 +
+>>  drivers/acpi/ec.c                             |   2 +-
+>>  drivers/acpi/pmic/Kconfig                     |   2 +-
+>>  drivers/acpi/pmic/intel_pmic_chtdc_ti.c       |   2 +-
+>>  drivers/acpi/scan.c                           |  92 ++-
+>>  drivers/gpio/Kconfig                          |   2 +-
+>>  drivers/gpio/gpiolib-acpi.c                   |  38 +-
+>>  drivers/i2c/i2c-core-acpi.c                   |   2 +-
+>>  drivers/i2c/i2c-core-base.c                   |   4 +-
+>>  drivers/mfd/Kconfig                           |  18 -
+>>  drivers/mfd/Makefile                          |   1 -
+>>  drivers/mfd/tps68470.c                        |  97 ---
+>>  drivers/platform/surface/surface3_power.c     |   2 +-
+>>  drivers/platform/x86/Kconfig                  |   2 +
+>>  drivers/platform/x86/Makefile                 |   1 +
+>>  drivers/platform/x86/intel-int3472/Kconfig    |  31 +
+>>  drivers/platform/x86/intel-int3472/Makefile   |   4 +
+>>  .../intel-int3472/intel_skl_int3472_common.c  | 106 ++++
+>>  .../intel-int3472/intel_skl_int3472_common.h  | 110 ++++
+>>  .../intel_skl_int3472_discrete.c              | 592 ++++++++++++++++++
+>>  .../intel_skl_int3472_tps68470.c              | 113 ++++
+>>  include/acpi/acpi_bus.h                       |   8 +
+>>  include/linux/acpi.h                          |   4 +-
+>>  include/linux/gpio/consumer.h                 |   7 +
+>>  include/linux/i2c.h                           |   3 +
+>>  25 files changed, 1100 insertions(+), 148 deletions(-)
+>>  delete mode 100644 drivers/mfd/tps68470.c
+>>  create mode 100644 drivers/platform/x86/intel-int3472/Kconfig
+>>  create mode 100644 drivers/platform/x86/intel-int3472/Makefile
+>>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.c
+>>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.h
+>>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c
+>>  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+>>
