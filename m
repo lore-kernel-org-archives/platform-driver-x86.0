@@ -8,77 +8,75 @@ X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB99C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 11:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E128C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 11:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BE464F37
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 11:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 330C464F2C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  4 Mar 2021 11:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239369AbhCDLD1 (ORCPT
+        id S239355AbhCDLEb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Mar 2021 06:03:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26921 "EHLO
+        Thu, 4 Mar 2021 06:04:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31379 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239352AbhCDLDP (ORCPT
+        by vger.kernel.org with ESMTP id S239495AbhCDLES (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Mar 2021 06:03:15 -0500
+        Thu, 4 Mar 2021 06:04:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614855709;
+        s=mimecast20190719; t=1614855773;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lfdhuAvLC6NBQL+gULxY8Cmi6ZuNoIkOlN3h1b842EI=;
-        b=RG+mYUxGoH+PlNnWk6TWbHOGtGNPSM3eVskwN0WDNZr4MvMgazq5Eafc37Z2ohGMyUizNH
-        SKF3y/Mexs3XBGKmx0yitv+y+TpsCIscAdReTlz6ePQmkdb1TeXi5ncg1zh/8bo4RPJ4kQ
-        Vd4cVA5jkWKW8XXoPv1kxT3koNeThP0=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-MoVkQnCiMW2zx-1ETNKl_A-1; Thu, 04 Mar 2021 06:01:47 -0500
-X-MC-Unique: MoVkQnCiMW2zx-1ETNKl_A-1
-Received: by mail-ej1-f71.google.com with SMTP id 11so5414948ejz.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 03:01:46 -0800 (PST)
+        bh=TeTuaov9fAJxrBVHDiNBKXTfzaU3lQUjgJbMXtZKcgw=;
+        b=PwOURl4dV8yMM948Pr0zqL2VKPiDkfyGSwCXrVCHoSM6/Ol9TwTnKzJeh5nmnkCTnU1WMw
+        Y5JwyRrrbYIGjdhoPAJOiceYhw9Ds41FiU2/EOSfLN5GAEVY9RbkkM8g1i+N5luqg7UWji
+        YhcYY5QEubhLjb/JlURewmgDPeQbVZw=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-OZtpD7PiOySWDH_fAiolZg-1; Thu, 04 Mar 2021 06:02:51 -0500
+X-MC-Unique: OZtpD7PiOySWDH_fAiolZg-1
+Received: by mail-ed1-f69.google.com with SMTP id l23so13961968edt.23
+        for <platform-driver-x86@vger.kernel.org>; Thu, 04 Mar 2021 03:02:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=lfdhuAvLC6NBQL+gULxY8Cmi6ZuNoIkOlN3h1b842EI=;
-        b=q6rxNnm+EUwxerTOUSz2tPZVipuu1Xk5pqJAqi2hH1Z1qDi8joaZbfwKnThCHosMxn
-         NNCL+8SkY9wzIuqGh8/Ozzdrzw0zBCPx85oRcE0nUONSlLhiDgGKinn8YZeNmELlYXS4
-         H9eky1xk23A53vVis6IkA0uNZyf9UbslJ/C73wG8uG+KrHi2snzJ5gze398lg5WvCFuc
-         FQVMk8YVfUpdLU9OL3o7WpuJ9cAEFNtoSNk+WnDofx2MyRCSAYOZJuUxvxgsa++fMtTP
-         CqXsxyMRx4J61lWLIwpmPSKn2hzJI1tOUo5gd5RCW2o3x7oXlM7s5LpdpgHsNBRGnC0h
-         26RA==
-X-Gm-Message-State: AOAM5302ig1hJ9dIF1qCgvMiCNVtZk5ehR26xdrLtvktPzHsB4vjrwBS
-        1Cma/BksYxuqHpYjHV1xuStoM94YxFgHh0IhRDyf/7GUHyXm2zNhNdFbi31QEkDKWDY9hQpx+bK
-        55VU16/8uWx2sObXqd6UMb1Wno3HIO/9zgA==
-X-Received: by 2002:a17:907:d0b:: with SMTP id gn11mr3594100ejc.463.1614855704668;
-        Thu, 04 Mar 2021 03:01:44 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzm3UcJSCxHQa+zc/fqYBtX3TqcFpzTPvHN0CrZW1rGVOBXYhd7hRHpqf3awwi4s7s6y+Mm/w==
-X-Received: by 2002:a17:907:d0b:: with SMTP id gn11mr3594075ejc.463.1614855704427;
-        Thu, 04 Mar 2021 03:01:44 -0800 (PST)
+        bh=TeTuaov9fAJxrBVHDiNBKXTfzaU3lQUjgJbMXtZKcgw=;
+        b=Ysf4rsMgmyNq/+OvzlIxxYmt6lvXV+ifOWTEDjfX5vk/daeCT+xwL1DUnP70dKbNGh
+         +EIMzS1JuNXwThoQYnhOFzuMFuLFQkCfVQ+t4owPaBzOAXB/lXV9vxW0QyY4GscTKh8R
+         8f5ONfDiA4djqhlnHdV0FyCPYLyv9f0TMybhd2vWA5XU9mAlfF75KWV/UnaqjGksDVGD
+         q+3cAbRoYUVB1N6eFAjVVs+zgO6JHJtgu1BBTMPRCSnofC6VYodMpTMM1KZLqysfGVNq
+         m6KZ0sy4K/JtH2DJO8OihNmDkMHfI1E3r/MraiQE/9mAv18igazasQ3r8AEwvbStKlio
+         zxJQ==
+X-Gm-Message-State: AOAM532n/MiIRV0vnQI8s+STe0KOF1/f05Mx5Z+mZjFtQEg9757SSGQR
+        9UiOq1eoC+eguHQBs1WUb4bXpO1PKjCB0CQX+lMSaC3nRRu/8xmRp9qIkFwe0niVUe81BhWWlcn
+        iVWZhJSA07dO4WMFUXUELaTdlo7fthiBIhw==
+X-Received: by 2002:a17:907:2642:: with SMTP id ar2mr3595505ejc.145.1614855769890;
+        Thu, 04 Mar 2021 03:02:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJx412VKu7r0Q0+XMhgu1IPDSDWwRE18DyyeKqB19jTs+2bA18vNSdr0dp+Y71NNaXg881fU6Q==
+X-Received: by 2002:a17:907:2642:: with SMTP id ar2mr3595484ejc.145.1614855769665;
+        Thu, 04 Mar 2021 03:02:49 -0800 (PST)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id g1sm20330650edh.31.2021.03.04.03.01.43
+        by smtp.gmail.com with ESMTPSA id y12sm17277776ejb.104.2021.03.04.03.02.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Mar 2021 03:01:43 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] platform/surface: Add platform profile driver
-To:     Maximilian Luz <luzmaximilian@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Mark Gross <mgross@linux.intel.com>, Len Brown <lenb@kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210211201703.658240-1-luzmaximilian@gmail.com>
- <20210211201703.658240-5-luzmaximilian@gmail.com>
+        Thu, 04 Mar 2021 03:02:48 -0800 (PST)
+Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: Handle keyboard cover
+ attach/detach events
+To:     Alexander Kobel <a-kobel@a-kobel.de>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <mpearson@lenovo.com>
+References: <83a0e45f-590d-0c7d-0afd-00a5a6322bd0@a-kobel.de>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <b075f6f6-a947-2847-1488-762584ca3bb6@redhat.com>
-Date:   Thu, 4 Mar 2021 12:01:43 +0100
+Message-ID: <b707cf36-3d90-90cb-0847-0a50282bfeb3@redhat.com>
+Date:   Thu, 4 Mar 2021 12:02:48 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210211201703.658240-5-luzmaximilian@gmail.com>
+In-Reply-To: <83a0e45f-590d-0c7d-0afd-00a5a6322bd0@a-kobel.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -88,17 +86,23 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 2/11/21 9:17 PM, Maximilian Luz wrote:
-> Add a driver to provide platform profile support on 5th- and later
-> generation Microsoft Surface devices with a Surface System Aggregator
-> Module. On those devices, the platform profile can be used to influence
-> cooling behavior and power consumption.
+On 2/13/21 4:13 PM, Alexander Kobel wrote:
+> Those events occur when a keyboard cover is attached to a ThinkPad
+> X1 Tablet series device.  Typically, they are used to switch from normal
+> to tablet mode in userspace; e.g., to offer touch keyboard choices when
+> focus goes to a text box and no keyboard is attached, or to enable
+> autorotation of the display according to the builtin orientation sensor.
 > 
-> For example, the default 'quiet' profile limits fan noise and in turn
-> sacrifices performance of the discrete GPU found on Surface Books. Its
-> full performance can only be unlocked on the 'performance' profile.
+> intel-vtbn already recognizes those events.  To avoid sending duplicate
+> events to userspace, they are simply ignored.  Thus, this patch only
+> avoids warnings about unknown and unhandled HKEYs 0x4012 and 0x4013.
 > 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> For more information about the background and potential improvements for
+> different types of attachment options, such as the Pico cartridge dock
+> module, see
+> https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de/
+> 
+> Signed-off-by: Alexander Kobel <a-kobel@a-kobel.de>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -116,271 +120,50 @@ Regards,
 
 Hans
 
-
-
 > ---
->  MAINTAINERS                                   |   6 +
->  drivers/platform/surface/Kconfig              |  22 ++
->  drivers/platform/surface/Makefile             |   1 +
->  .../surface/surface_platform_profile.c        | 190 ++++++++++++++++++
->  4 files changed, 219 insertions(+)
->  create mode 100644 drivers/platform/surface/surface_platform_profile.c
+>  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 000a82f59c76..a08d65f8f0df 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11811,6 +11811,12 @@ L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  F:	drivers/platform/surface/surface_hotplug.c
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index c404706379d9..e16d4b804c92 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -174,6 +174,12 @@ enum tpacpi_hkey_event_t {
+>  						     or port replicator */
+>  	TP_HKEY_EV_HOTPLUG_UNDOCK	= 0x4011, /* undocked from hotplug
+>  						     dock or port replicator */
+> +	/*
+> +	 * Thinkpad X1 Tablet series devices emit 0x4012 and 0x4013
+> +	 * when keyboard cover is attached, detached or folded onto the back
+> +	 */
+> +	TP_HKEY_EV_KBD_COVER_ATTACH	= 0x4012, /* keyboard cover attached */
+> +	TP_HKEY_EV_KBD_COVER_DETACH	= 0x4013, /* keyboard cover detached or folded back */
 >  
-> +MICROSOFT SURFACE PLATFORM PROFILE DRIVER
-> +M:	Maximilian Luz <luzmaximilian@gmail.com>
-> +L:	platform-driver-x86@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/platform/surface/surface_platform_profile.c
-> +
->  MICROSOFT SURFACE PRO 3 BUTTON DRIVER
->  M:	Chen Yu <yu.c.chen@intel.com>
->  L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
-> index 179b8c93d7fd..a045425026ae 100644
-> --- a/drivers/platform/surface/Kconfig
-> +++ b/drivers/platform/surface/Kconfig
-> @@ -132,6 +132,28 @@ config SURFACE_HOTPLUG
->  	  Select M or Y here, if you want to (fully) support hot-plugging of
->  	  dGPU devices on the Surface Book 2 and/or 3 during D3cold.
+>  	/* User-interface events */
+>  	TP_HKEY_EV_LID_CLOSE		= 0x5001, /* laptop lid closed */
+> @@ -3990,6 +3996,23 @@ static bool hotkey_notify_dockevent(const u32 hkey,
+>  		pr_info("undocked from hotplug port replicator\n");
+>  		return true;
 >  
-> +config SURFACE_PLATFORM_PROFILE
-> +	tristate "Surface Platform Profile Driver"
-> +	depends on SURFACE_AGGREGATOR_REGISTRY
-> +	select ACPI_PLATFORM_PROFILE
-> +	help
-> +	  Provides support for the ACPI platform profile on 5th- and later
-> +	  generation Microsoft Surface devices.
+> +	/*
+> +	 * Deliberately ignore attaching and detaching the keybord cover to avoid
+> +	 * duplicates from intel-vbtn, which already emits SW_TABLET_MODE events
+> +	 * to userspace.
+> +	 *
+> +	 * Please refer to the following thread for more information and a preliminary
+> +	 * implementation using the GTOP ("Get Tablet OPtions") interface that could be
+> +	 * extended to other attachment options of the ThinkPad X1 Tablet series, such as
+> +	 * the Pico cartridge dock module:
+> +	 * https://lore.kernel.org/platform-driver-x86/38cb8265-1e30-d547-9e12-b4ae290be737@a-kobel.de/
+> +	 */
+> +	case TP_HKEY_EV_KBD_COVER_ATTACH:
+> +	case TP_HKEY_EV_KBD_COVER_DETACH:
+> +		*send_acpi_ev = false;
+> +		*ignore_acpi_ev = true;
+> +		return true;
 > +
-> +	  More specifically, this driver provides ACPI platform profile support
-> +	  on Microsoft Surface devices with a Surface System Aggregator Module
-> +	  (SSAM) connected via the Surface Serial Hub (SSH / SAM-over-SSH). In
-> +	  other words, this driver provides platform profile support on the
-> +	  Surface Pro 5, Surface Book 2, Surface Laptop, Surface Laptop Go and
-> +	  later. On those devices, the platform profile can significantly
-> +	  influence cooling behavior, e.g. setting it to 'quiet' (default) or
-> +	  'low-power' can significantly limit performance of the discrete GPU on
-> +	  Surface Books, while in turn leading to lower power consumption and/or
-> +	  less fan noise.
-> +
-> +	  Select M or Y here, if you want to include ACPI platform profile
-> +	  support on the above mentioned devices.
-> +
->  config SURFACE_PRO3_BUTTON
->  	tristate "Power/home/volume buttons driver for Microsoft Surface Pro 3/4 tablet"
->  	depends on INPUT
-> diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
-> index 80035ee540bf..99372c427b73 100644
-> --- a/drivers/platform/surface/Makefile
-> +++ b/drivers/platform/surface/Makefile
-> @@ -13,4 +13,5 @@ obj-$(CONFIG_SURFACE_AGGREGATOR_CDEV)	+= surface_aggregator_cdev.o
->  obj-$(CONFIG_SURFACE_AGGREGATOR_REGISTRY) += surface_aggregator_registry.o
->  obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
->  obj-$(CONFIG_SURFACE_HOTPLUG)		+= surface_hotplug.o
-> +obj-$(CONFIG_SURFACE_PLATFORM_PROFILE)	+= surface_platform_profile.o
->  obj-$(CONFIG_SURFACE_PRO3_BUTTON)	+= surfacepro3_button.o
-> diff --git a/drivers/platform/surface/surface_platform_profile.c b/drivers/platform/surface/surface_platform_profile.c
-> new file mode 100644
-> index 000000000000..0081b01a5b0f
-> --- /dev/null
-> +++ b/drivers/platform/surface/surface_platform_profile.c
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Surface Platform Profile / Performance Mode driver for Surface System
-> + * Aggregator Module (thermal subsystem).
-> + *
-> + * Copyright (C) 2021 Maximilian Luz <luzmaximilian@gmail.com>
-> + */
-> +
-> +#include <asm/unaligned.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_profile.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/surface_aggregator/device.h>
-> +
-> +enum ssam_tmp_profile {
-> +	SSAM_TMP_PROFILE_NORMAL             = 1,
-> +	SSAM_TMP_PROFILE_BATTERY_SAVER      = 2,
-> +	SSAM_TMP_PROFILE_BETTER_PERFORMANCE = 3,
-> +	SSAM_TMP_PROFILE_BEST_PERFORMANCE   = 4,
-> +};
-> +
-> +struct ssam_tmp_profile_info {
-> +	__le32 profile;
-> +	__le16 unknown1;
-> +	__le16 unknown2;
-> +} __packed;
-> +
-> +struct ssam_tmp_profile_device {
-> +	struct ssam_device *sdev;
-> +	struct platform_profile_handler handler;
-> +};
-> +
-> +static SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_tmp_profile_get, struct ssam_tmp_profile_info, {
-> +	.target_category = SSAM_SSH_TC_TMP,
-> +	.command_id      = 0x02,
-> +});
-> +
-> +static SSAM_DEFINE_SYNC_REQUEST_CL_W(__ssam_tmp_profile_set, __le32, {
-> +	.target_category = SSAM_SSH_TC_TMP,
-> +	.command_id      = 0x03,
-> +});
-> +
-> +static int ssam_tmp_profile_get(struct ssam_device *sdev, enum ssam_tmp_profile *p)
-> +{
-> +	struct ssam_tmp_profile_info info;
-> +	int status;
-> +
-> +	status = ssam_retry(__ssam_tmp_profile_get, sdev, &info);
-> +	if (status < 0)
-> +		return status;
-> +
-> +	*p = le32_to_cpu(info.profile);
-> +	return 0;
-> +}
-> +
-> +static int ssam_tmp_profile_set(struct ssam_device *sdev, enum ssam_tmp_profile p)
-> +{
-> +	__le32 profile_le = cpu_to_le32(p);
-> +
-> +	return ssam_retry(__ssam_tmp_profile_set, sdev, &profile_le);
-> +}
-> +
-> +static int convert_ssam_to_profile(struct ssam_device *sdev, enum ssam_tmp_profile p)
-> +{
-> +	switch (p) {
-> +	case SSAM_TMP_PROFILE_NORMAL:
-> +		return PLATFORM_PROFILE_BALANCED;
-> +
-> +	case SSAM_TMP_PROFILE_BATTERY_SAVER:
-> +		return PLATFORM_PROFILE_LOW_POWER;
-> +
-> +	case SSAM_TMP_PROFILE_BETTER_PERFORMANCE:
-> +		return PLATFORM_PROFILE_BALANCED_PERFORMANCE;
-> +
-> +	case SSAM_TMP_PROFILE_BEST_PERFORMANCE:
-> +		return PLATFORM_PROFILE_PERFORMANCE;
-> +
-> +	default:
-> +		dev_err(&sdev->dev, "invalid performance profile: %d", p);
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int convert_profile_to_ssam(struct ssam_device *sdev, enum platform_profile_option p)
-> +{
-> +	switch (p) {
-> +	case PLATFORM_PROFILE_LOW_POWER:
-> +		return SSAM_TMP_PROFILE_BATTERY_SAVER;
-> +
-> +	case PLATFORM_PROFILE_BALANCED:
-> +		return SSAM_TMP_PROFILE_NORMAL;
-> +
-> +	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> +		return SSAM_TMP_PROFILE_BETTER_PERFORMANCE;
-> +
-> +	case PLATFORM_PROFILE_PERFORMANCE:
-> +		return SSAM_TMP_PROFILE_BEST_PERFORMANCE;
-> +
-> +	default:
-> +		/* This should have already been caught by platform_profile_store(). */
-> +		WARN(true, "unsupported platform profile");
-> +		return -EOPNOTSUPP;
-> +	}
-> +}
-> +
-> +static int ssam_platform_profile_get(struct platform_profile_handler *pprof,
-> +				     enum platform_profile_option *profile)
-> +{
-> +	struct ssam_tmp_profile_device *tpd;
-> +	enum ssam_tmp_profile tp;
-> +	int status;
-> +
-> +	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-> +
-> +	status = ssam_tmp_profile_get(tpd->sdev, &tp);
-> +	if (status)
-> +		return status;
-> +
-> +	status = convert_ssam_to_profile(tpd->sdev, tp);
-> +	if (status < 0)
-> +		return status;
-> +
-> +	*profile = status;
-> +	return 0;
-> +}
-> +
-> +static int ssam_platform_profile_set(struct platform_profile_handler *pprof,
-> +				     enum platform_profile_option profile)
-> +{
-> +	struct ssam_tmp_profile_device *tpd;
-> +	int tp;
-> +
-> +	tpd = container_of(pprof, struct ssam_tmp_profile_device, handler);
-> +
-> +	tp = convert_profile_to_ssam(tpd->sdev, profile);
-> +	if (tp < 0)
-> +		return tp;
-> +
-> +	return ssam_tmp_profile_set(tpd->sdev, tp);
-> +}
-> +
-> +static int surface_platform_profile_probe(struct ssam_device *sdev)
-> +{
-> +	struct ssam_tmp_profile_device *tpd;
-> +
-> +	tpd = devm_kzalloc(&sdev->dev, sizeof(*tpd), GFP_KERNEL);
-> +	if (!tpd)
-> +		return -ENOMEM;
-> +
-> +	tpd->sdev = sdev;
-> +
-> +	tpd->handler.profile_get = ssam_platform_profile_get;
-> +	tpd->handler.profile_set = ssam_platform_profile_set;
-> +
-> +	set_bit(PLATFORM_PROFILE_LOW_POWER, tpd->handler.choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED, tpd->handler.choices);
-> +	set_bit(PLATFORM_PROFILE_BALANCED_PERFORMANCE, tpd->handler.choices);
-> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, tpd->handler.choices);
-> +
-> +	platform_profile_register(&tpd->handler);
-> +	return 0;
-> +}
-> +
-> +static void surface_platform_profile_remove(struct ssam_device *sdev)
-> +{
-> +	platform_profile_remove();
-> +}
-> +
-> +static const struct ssam_device_id ssam_platform_profile_match[] = {
-> +	{ SSAM_SDEV(TMP, 0x01, 0x00, 0x01) },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(ssam, ssam_platform_profile_match);
-> +
-> +static struct ssam_device_driver surface_platform_profile = {
-> +	.probe = surface_platform_profile_probe,
-> +	.remove = surface_platform_profile_remove,
-> +	.match_table = ssam_platform_profile_match,
-> +	.driver = {
-> +		.name = "surface_platform_profile",
-> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +};
-> +module_ssam_device_driver(surface_platform_profile);
-> +
-> +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
-> +MODULE_DESCRIPTION("Platform Profile Support for Surface System Aggregator Module");
-> +MODULE_LICENSE("GPL");
+>  	default:
+>  		return false;
+>  	}
 > 
 
