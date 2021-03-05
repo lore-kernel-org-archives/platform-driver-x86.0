@@ -2,227 +2,405 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D378C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 02:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E93DC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 08:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05D2164F52
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 02:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0032964F59
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 08:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbhCEC56 (ORCPT
+        id S229469AbhCEIv0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 4 Mar 2021 21:57:58 -0500
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:52954 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229848AbhCEC56 (ORCPT
+        Fri, 5 Mar 2021 03:51:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40496 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229489AbhCEIvP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 4 Mar 2021 21:57:58 -0500
-Received: from pps.filterd (m0170398.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1252mBgI024542;
-        Thu, 4 Mar 2021 21:57:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=9EjuQnbTo3vE3GEtzABNaGCv8Z74CNi4GSw09TWtbYc=;
- b=s2FC1fwhI/MsjAKBKcw6Tj6/rbULtqBexEcGlnJX4CsuMSxwbpPnN2kb42a1GThGftzl
- F7+Aa4XLfhsrpBBCB35KNYCHmuSN4W3tAx1FJUZbMBXBlM+fHE8g6qWXMMjPI7WHr30T
- bxVxHvKtq5RxNnszgfQN8PiaBqDQR3c4Y/A5HqgOv90/WJouzlcbIclzmDJ/jNFlxubz
- NxPjNNMY2Ry3jGxLhV8RAqpy2npQDAW7XDtWai31FYiH8QZ4+MXF9CsziTuZmnfQmESz
- ZxdoCgB2fmBYvrU6jVsgMidrtB3FpK+kby++/q3RjbhBnIrvwOdMfdcCquah3PRIcTWe 4w== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 36yj6ew2bw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Mar 2021 21:57:00 -0500
-Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1252pQCJ040361;
-        Thu, 4 Mar 2021 21:56:59 -0500
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
-        by mx0a-00154901.pphosted.com with ESMTP id 372yj4kph3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Mar 2021 21:56:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZugqOW6t6ZaN8KL1oN8cYCY8mhI163VHrKZRIbgn3cW59qoI1RF3rkvfY2JOpEjgkfY/o4cCStc8vMCX1bxFecqf7oT/4wGJx8wcONjByehsQT90brKIGhDxY2F+8QT9ePEz+3FyJ3/vf/AbXg6FILUJEUSPoFGawqe/v/VpL85xUqlzC42KAkNaaPlf+JkEFE2yChxb3qOKLkwp1Mkrmn9Bxy7O/xUuRpP4lkI6mzQ3FgpTpzekSIpsJoa7KkMCXEDsJH/qvfKuw5yYYR7UHyU/ON/bU3p/WMZQ+ujULTkJP/kDPgiPSepzjc2epFA19Do+mmkU4fiu4PZrmgpVsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9EjuQnbTo3vE3GEtzABNaGCv8Z74CNi4GSw09TWtbYc=;
- b=RysrEUuf3Qs67HcJIKpCqhEngBm+YMHxftFsV875BOBg5Em7/EaukQL50A8qV5tF+kkae0WsvJ9cMOrtNWUjfh34Iw74cq6jhOzMKjciX2Mvh+vRP9ywup0RcMab1Cx64bSwAgWJOyNWnaUov3jW3rLeYp5cp70oIIlkX/DYnkSmtTfX3/vITMLCdeoiA4MDI2ywhFBx2myafyiNTjRaF3Z7vkUgaD7248MHZvThHlh+w0SbKRkOH9RWeuMKoBIDsuHEz3/LbPMsBxLA5Y6r+WBTb7U123nYANssGkF4qwuVVL8HceT/uYsfr7wvq70rre/IfIRpHWgp/bGfm4AlDg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SJ0PR19MB4528.namprd19.prod.outlook.com (2603:10b6:a03:28a::6)
- by SJ0PR19MB4574.namprd19.prod.outlook.com (2603:10b6:a03:283::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.18; Fri, 5 Mar
- 2021 02:56:57 +0000
-Received: from SJ0PR19MB4528.namprd19.prod.outlook.com
- ([fe80::50bf:f1c3:9600:fe6b]) by SJ0PR19MB4528.namprd19.prod.outlook.com
- ([fe80::50bf:f1c3:9600:fe6b%8]) with mapi id 15.20.3890.032; Fri, 5 Mar 2021
- 02:56:57 +0000
-From:   "Yuan, Perry" <Perry.Yuan@dell.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Perry Yuan <perry979106@gmail.com>,
-        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        Fri, 5 Mar 2021 03:51:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614934274;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qwOiiilhnbZitpKDqUKfd1Bk/Pqsm8dh6GiRcCRjc7M=;
+        b=D6muFu2oazV0m5UaiV4ZP1rCFWJzv/BeuM/hdj0W2omst5Sx78y+xOywaaLnm1jD8zqvZn
+        yNB9wrwD/PpuAGuSijOyU+ZrSTTigoYfsPEAY0OC7QywNNychqZkBPHZFgA8RHZrZE49nm
+        KAzyZXQM92reBWaFC+bcdAZKAhypWgc=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-zT6OVnm-O-iXGLwgVDfNmg-1; Fri, 05 Mar 2021 03:51:13 -0500
+X-MC-Unique: zT6OVnm-O-iXGLwgVDfNmg-1
+Received: by mail-ed1-f70.google.com with SMTP id i19so599613edy.18
+        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Mar 2021 00:51:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qwOiiilhnbZitpKDqUKfd1Bk/Pqsm8dh6GiRcCRjc7M=;
+        b=hR0f5nmkfV1+huf/NcDV4W0QUWlbfJmH7jjdhnQg7+K4wvuB1UPWgpb5tAaPOrUVgN
+         VsKpaVHH82lr1IP6OWP3XW6vWxBwaJjrFtSVAoyObHlYGhnlduEl/RE1gdAfnUsjGBq5
+         aEaWGMf15P4Dg+F8LHqlQW4EuVyBlu7f5RADybiBv0OiNwHTOeOPIL/A98CoFqZqbVaY
+         GOe5Jq/5lPQsgi0vY0aaRArf1pSzZRkO6EQCTlIL9IpbFfEC14/EQsOyYeEQg7COyje0
+         CxVrhcr/FAQ8z32Lm9iro86XGuLuV7dtePUw0s9VKKYJCJXLTQ+PmAjXGv1xPi0wgFjx
+         ieOA==
+X-Gm-Message-State: AOAM532ZzivtGgILCNSVzggrJE4haEehpJcyyVfqU+7motCPKtjZCo2A
+        ct26JuoSxm+NY/D2qlKTbGp31jFE4/RaqwMoq9X6OcRCtZeSRM9cgt6mRVr/kepBun0ARmUin3E
+        PQva6AOSKJ9DS5TLPcVDvS2p42JdeljnUeQ==
+X-Received: by 2002:a17:906:2b9a:: with SMTP id m26mr1316000ejg.526.1614934271748;
+        Fri, 05 Mar 2021 00:51:11 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz1bmwHnUvoPk3weLLuW3q2UyJXqlmWOdyGCpEOgdXcrv+O9FZuhUqfHvsJlO/Yp/bXG+9OEQ==
+X-Received: by 2002:a17:906:2b9a:: with SMTP id m26mr1315991ejg.526.1614934271592;
+        Fri, 05 Mar 2021 00:51:11 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id j25sm1214368edy.9.2021.03.05.00.51.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 Mar 2021 00:51:11 -0800 (PST)
+Subject: Re: [External] Re: [PATCH v2 1/2] platorm/x86: thinkpad_acpi: sysfs
+ interface to reduce wlan tx power
+To:     Nitin Joshi1 <njoshi1@lenovo.com>, Nitin Joshi <nitjoshi@gmail.com>
+Cc:     "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: RE: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-Thread-Topic: [PATCH v3 1/3] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-Thread-Index: AQHW6QbX7RFZ7lqWNEyhC5TzzcBrh6okWHSAgDY07ICAAIh9AIABbkoAgAAa24CAGGTpYA==
-Date:   Fri, 5 Mar 2021 02:56:57 +0000
-Message-ID: <SJ0PR19MB4528BF867F9CAB88675A6B5584969@SJ0PR19MB4528.namprd19.prod.outlook.com>
-References: <20210112171723.19484-1-Perry_Yuan@Dell.com>
- <bf048701-4e6b-ad18-1a73-8bca5c922425@linux.intel.com>
- <79277bf2-3c9e-8b66-47a9-b926a2576f7f@gmail.com>
- <31982e8d-3b0d-7187-8798-900f95d876ee@linux.intel.com>
- <e66d8098-beb6-1299-20aa-42cfe13882f6@gmail.com>
- <882f4b80-c182-4038-39bd-eddb2ecc7800@linux.intel.com>
-In-Reply-To: <882f4b80-c182-4038-39bd-eddb2ecc7800@linux.intel.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Perry_Yuan@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-03-05T02:56:52.6858568Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=bd154b0b-1bfe-4f07-a505-2f9073ec506c;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [114.84.248.83]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b231df27-159b-43f4-5359-08d8df825766
-x-ms-traffictypediagnostic: SJ0PR19MB4574:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SJ0PR19MB45748852E01D14C210D05F8084969@SJ0PR19MB4574.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bvof8+JZ0COJbOtVXXuC2Qvrujhbr/38znKPEtmWDUpmq3fF2czr7IU92k812/F1xTHB0QNV+8sXxReuHnW8boJgFL43W+nO9Hx7fCfZlsqkKlwYG+beP6xnms/5OQYVZV6JXGeGFgMQltRm+Rr6qDXz/TXTqqgu/jrFmr1LGz0pehVvywfCBjEE2g5WtoKyJF8u+vQ7dTJfFMeh6iswHettQXqy2OdzaK1M7NxYJV7i1pHUrpemw6+ECy54F8duvVxugG9I43pyrRfwkIhmuHjbaAM8Jsd0pLMzc4mm3UvvZh1Y3P0AaS+fXZZoUC0zBE4s31CjwxTiY6526+DetHn7x/FFnimz8ocoGGBp1pq6MsK8nPGLTihzSu5LZridw2ldood8Wnj3NCLOsR/wTB5DmBFEYvA5ZrKVMzGdaCfh7ogRBIZsQcRXUfQxBxMS2pMC8w4rZWQDimzjL9kIWB4Ob0KvD5LCc1QVnJz9cETpMwq/qd5UbEyfCEJLfxwOynXaNxMJIimT7BfyoLzq8Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR19MB4528.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(346002)(376002)(396003)(39860400002)(76116006)(2906002)(66946007)(53546011)(54906003)(52536014)(5660300002)(26005)(66556008)(186003)(66476007)(64756008)(66446008)(83380400001)(7416002)(86362001)(6506007)(8936002)(316002)(7696005)(71200400001)(33656002)(55016002)(786003)(110136005)(4326008)(9686003)(478600001)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 7neu1dUtHJ9vJlSnXBwngxL//xnUgSABxDgOrnoB+rF+NVv23ebPihFvKrVfL/khKF4FhKpRWKMu95XBJlCYKg7sSy3lY2rzd2VEVL5UAuuhr6QxzpSsdGZwNUgoysakf57TTedY8IkZwal28yZqr8lrSrf+fDNwkRO28GugJb1eyry/LIfwLd4fsddbguUdaad+TsWrPNEUyzL3FzsZqmrD1MQ7zxe6SFwtKSqzhhOW/tIRPChC0EMnb4tto1ZugMsr7gd8/olKmV6quEW4eOGNDHMYzbKkl1a6h7jxyfH84egkLVI5ST4uIzGK8IfnyiLYts5Odw+MFzoj7vZysrYu4qTdzAVOkBzdafpKegwLGuOloLufHa115uonQZAmjNHnrgObWLCLZuLMTcQJmNrcsGqzr2IfQIap6pUx5tU2RFjTmnnGte69pKSsyu9ZSQ175FS3vvu5hGQDtRV+qCyKDgbxwVICJBSY6LVBu46zovoAS0rLc/UL/hfECBqDtCmLCngjR2kX9SQIZZIgJQFVqpPeboYxIDSgHEBFPCyAxg0loNGRzMJiSEZTRthiXlvBt14DzBVM7xW9lf+Cg4m9sQmpQN7GAXR4WBNA6gJZEMDecm7P0HM0vfw44O9TMQbeDxy280ZQRpUxXF/hNBAi/FcgMZqrX1qwGNet3tcFCC9y32r9cK99JF3dy7vEG8gg3sPqDdV4EhGmZ6aVVwzV5S6CU6JXgc4G2/+tGRI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mark RH Pearson <markpearson@lenovo.com>
+References: <20210216073639.687703-1-njoshi1@lenovo.com>
+ <d4427d59-7385-d41f-07a0-c27ce8d495bb@redhat.com>
+ <TY2PR03MB36456FC14E208B1B2C8B09528C969@TY2PR03MB3645.apcprd03.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <fd2b03c6-f600-326b-61ad-1b2047438a0d@redhat.com>
+Date:   Fri, 5 Mar 2021 09:51:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR19MB4528.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b231df27-159b-43f4-5359-08d8df825766
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2021 02:56:57.7324
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: V3MKLlpqSLOW1ZxMvmyuQZoUa+0D/INVsj1b77wnjn2MkXuru0u5XtQZF/eCsHX5l66SnHudrJ2BKOJ+cXVi6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR19MB4574
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-04_09:2021-03-03,2021-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- phishscore=0 bulkscore=0 impostorscore=0 adultscore=0 lowpriorityscore=0
- suspectscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103050012
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103050012
+In-Reply-To: <TY2PR03MB36456FC14E208B1B2C8B09528C969@TY2PR03MB3645.apcprd03.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-SGkgUGllcnJlDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGllcnJl
-LUxvdWlzIEJvc3NhcnQgPHBpZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbT4NCj4g
-U2VudDogMjAyMeW5tDLmnIgxN+aXpSAyMjoyNA0KPiBUbzogUGVycnkgWXVhbjsgWXVhbiwgUGVy
-cnk7IG9kZXJfY2hpb3VAcmVhbHRlay5jb207IHBlcmV4QHBlcmV4LmN6Ow0KPiB0aXdhaUBzdXNl
-LmNvbTsgaGRlZ29lZGVAcmVkaGF0LmNvbTsgbWdyb3NzQGxpbnV4LmludGVsLmNvbQ0KPiBDYzog
-YWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnOyBMaW1vbmNpZWxsbywgTWFyaW87IGxpbnV4LQ0K
-PiBrZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsZ2lyZHdvb2RAZ21haWwuY29tOyBwbGF0Zm9ybS1k
-cml2ZXItDQo+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IGJyb29uaWVAa2VybmVsLm9yZw0KPiBTdWJq
-ZWN0OiBSZTogW1BBVENIIHYzIDEvM10gcGxhdGZvcm0veDg2OiBkZWxsLXByaXZhY3k6IEFkZCBz
-dXBwb3J0IGZvciBEZWxsDQo+IGhhcmR3YXJlIHByaXZhY3kNCj4gDQo+IA0KPiBbRVhURVJOQUwg
-RU1BSUxdDQo+IA0KPiANCj4gDQo+IE9uIDIvMTcvMjEgNjo0NyBBTSwgUGVycnkgWXVhbiB3cm90
-ZToNCj4gPiBIaSBQaWVycmU6DQo+ID4gT24gMjAyMS8yLzE2IDIyOjU2LCBQaWVycmUtTG91aXMg
-Qm9zc2FydCB3cm90ZToNCj4gPj4NCj4gPj4+Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgYWNwaV9k
-ZXZpY2VfaWQgcHJpdmFjeV9hY3BpX2RldmljZV9pZHNbXSA9IHsNCj4gPj4+Pj4gK8KgwqDCoCB7
-IlBOUDBDMDkiLCAwfSwNCj4gPj4+Pj4gK8KgwqDCoCB7IH0sDQo+ID4+Pj4+ICt9Ow0KPiA+Pj4+
-PiArTU9EVUxFX0RFVklDRV9UQUJMRShhY3BpLCBwcml2YWN5X2FjcGlfZGV2aWNlX2lkcyk7DQo+
-ID4+Pj4+ICsNCj4gPj4+Pj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGRlbGxfcHJp
-dmFjeV9wbGF0Zm9ybV9kcnYgPSB7DQo+ID4+Pj4+ICvCoMKgwqAgLmRyaXZlciA9IHsNCj4gPj4+
-Pj4gK8KgwqDCoMKgwqDCoMKgIC5uYW1lID0gUFJJVkFDWV9QTEFURk9STV9OQU1FLA0KPiA+Pj4+
-PiArwqDCoMKgwqDCoMKgwqAgLmFjcGlfbWF0Y2hfdGFibGUgPSBBQ1BJX1BUUihwcml2YWN5X2Fj
-cGlfZGV2aWNlX2lkcyksDQo+ID4+Pj4+ICvCoMKgwqAgfSwNCj4gPj4+Pg0KPiA+Pj4+IG5vIC5w
-cm9iZT8NCj4gPj4+IE9yaWdpbmFsbHkgaSBhZGRlZCB0aGUgcHJvYmUgaGVyZSwgYnV0IGl0IGNh
-dXNlIHRoZSBkcml2ZXLCoCAucHJvYmUNCj4gPj4+IGNhbGxlZCB0d2ljZS4gYWZ0ZXIgaSB1c2Ug
-cGxhdGZvcm1fZHJpdmVyX3Byb2JlIHRvIHJlZ2lzdGVyIHRoZQ0KPiA+Pj4gZHJpdmVyIGxvYWRp
-bmcgcHJvY2VzcywgdGhlIGR1cGxpY2F0ZWQgcHJvYmUgaXNzdWUgcmVzb2x2ZWQuDQo+ID4+Pg0K
-PiA+Pj4gSQ0KPiA+Pj4+DQo+ID4+Pj4+ICvCoMKgwqAgLnJlbW92ZSA9IGRlbGxfcHJpdmFjeV9h
-Y3BpX3JlbW92ZSwgfTsNCj4gPj4+Pj4gKw0KPiA+Pj4+PiAraW50IF9faW5pdCBkZWxsX3ByaXZh
-Y3lfYWNwaV9pbml0KHZvaWQpIHsNCj4gPj4+Pj4gK8KgwqDCoCBpbnQgZXJyOw0KPiA+Pj4+PiAr
-wqDCoMKgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7DQo+ID4+Pj4+ICvCoMKgwqAgaW50
-IHByaXZhY3lfY2FwYWJsZSA9IHdtaV9oYXNfZ3VpZChERUxMX1BSSVZBQ1lfR1VJRCk7DQo+ID4+
-Pj4+ICsNCj4gPj4+Pj4gK8KgwqDCoCBpZiAoIXdtaV9oYXNfZ3VpZChERUxMX1BSSVZBQ1lfR1VJ
-RCkpDQo+ID4+Pj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT0RFVjsNCj4gPj4+Pj4gKw0K
-PiA+Pj4+PiArwqDCoMKgIHByaXZhY3lfYWNwaSA9IGt6YWxsb2Moc2l6ZW9mKCpwcml2YWN5X2Fj
-cGkpLCBHRlBfS0VSTkVMKTsNCj4gPj4+Pj4gK8KgwqDCoCBpZiAoIXByaXZhY3lfYWNwaSkNCj4g
-Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiAtRU5PTUVNOw0KPiA+Pj4+PiArDQo+ID4+Pj4+
-ICvCoMKgwqAgcGRldiA9IHBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcl9zaW1wbGUoDQo+ID4+Pj4+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFBSSVZBQ1lfUExBVEZPUk1fTkFNRSwgUExBVEZPUk1f
-REVWSURfTk9ORSwgTlVMTCwNCj4gMCk7DQo+ID4+Pj4+ICvCoMKgwqAgaWYgKElTX0VSUihwZGV2
-KSkgew0KPiA+Pj4+PiArwqDCoMKgwqDCoMKgwqAgZXJyID0gUFRSX0VSUihwZGV2KTsNCj4gPj4+
-Pj4gK8KgwqDCoMKgwqDCoMKgIGdvdG8gcGRldl9lcnI7DQo+ID4+Pj4+ICvCoMKgwqAgfQ0KPiA+
-Pj4+PiArwqDCoMKgIGVyciA9IHBsYXRmb3JtX2RyaXZlcl9wcm9iZSgmZGVsbF9wcml2YWN5X3Bs
-YXRmb3JtX2RydiwNCj4gPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVsbF9wcml2YWN5
-X2FjcGlfcHJvYmUpOw0KPiA+Pj4+PiArwqDCoMKgIGlmIChlcnIpDQo+ID4+Pj4+ICvCoMKgwqDC
-oMKgwqDCoCBnb3RvIHBkcnZfZXJyOw0KPiA+Pj4+DQo+ID4+Pj4gd2h5IGlzIHRoZSBwcm9iZSBk
-b25lIGhlcmU/IFB1dCBkaWZmZXJlbnRseSwgd2hhdCBwcmV2ZW50cyB5b3UgZnJvbQ0KPiA+Pj4+
-IHVzaW5nIGEgJ25vcm1hbCcgcGxhdGZvcm0gZHJpdmVyLCBhbmQgZG8gdGhlIGxlZHNfc2V0dXAg
-aW4gdGhlDQo+ID4+Pj4gLnByb2JlKCk/DQo+ID4+PiBBdCBmaXJzdCAsSSB1c2VkIHRoZSBub3Jt
-YWwgcGxhdGZvcm0gZHJpdmVyIGZyYW1ld29yaywgaG93ZXZlciB0dA0KPiA+Pj4gY2F1c2UgdGhl
-IGRyaXZlcsKgIC5wcm9iZSBjYWxsZWQgdHdpY2UuIGFmdGVyIGkgdXNlDQo+ID4+PiBwbGF0Zm9y
-bV9kcml2ZXJfcHJvYmUgdG8gcmVnaXN0ZXIgdGhlIGRyaXZlciBsb2FkaW5nIHByb2Nlc3MsIHRo
-ZQ0KPiA+Pj4gZHVwbGljYXRlZCBwcm9iZSBpc3N1ZSByZXNvbHZlZC4NCj4gPj4NCj4gPj4gVGhp
-cyBzb3VuZHMgdmVyeSBvZGQuLi4NCj4gPj4NCj4gPj4gdGhpcyBsb29rcyBsaWtlIGEgY29uZmxp
-Y3Qgd2l0aCB0aGUgQUNQSSBzdWJzeXN0ZW0gZmluZGluZyBhIGRldmljZQ0KPiA+PiBhbmQgcHJv
-YmluZyB0aGUgZHJpdmVyIHRoYXQncyBhc3NvY2lhdGVkIHdpdGggdGhlIFBOUDBDMDkgSElELCBh
-bmQNCj4gPj4gdGhlbiB0aGlzIG1vZHVsZSBfX2luaXTCoCBjcmVhdGluZyBhIGRldmljZSBtYW51
-YWxseSB3aGljaCBsZWFkcyB0byBhDQo+ID4+IHNlY29uZCBwcm9iZQ0KPiA+Pg0KPiA+PiBOZWl0
-aGVyIHRoZSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKCkgbm9yDQo+ID4+IHBsYXRm
-b3JtX2RyaXZlcl9wcm9iZSgpIHNlZW0gbmVjZXNzYXJ5P0JlY2F1c2UgdGhpcyBwcml2YWN5IGFj
-cGkNCj4gPj4gZHJpdmVyIGZpbGUgaGFzIGRlcGVuZGVuY3kgb24gdGhlIGVjIGhhbmRsZSwNCj4g
-PiBzbyBpIHdhbnQgdG8gZGV0ZXJtaW5lIGlmIHRoZSBkcml2ZXIgY2FuIGJlIGxvYWRlZCBiYXNp
-bmcgb24gdGhlIEVDIElEDQo+ID4gUE5QMEMwOSBtYXRjaGluZy4NCj4gPg0KPiA+IFNvIGZhcixJ
-dCB3b3JrcyB3ZWxsIGZvciBtZSB0byByZWdpc3RlciB0aGUgcHJpdmFjeSBkcml2ZXIgd2l0aMKg
-IHRoZQ0KPiA+IHJlZ2lzdGVyIHNlcXVlbmNlLg0KPiA+IERvc2UgaXQgaHVydCB0byBrZWVwIGN1
-cnJlbnQgcmVnaXN0ZXJpbmcgcHJvY2VzcyB3aXRoDQo+ID4gcGxhdGZvcm1fZHJpdmVyX3Byb2Jl
-IHVzZWQ/DQo+IA0KPiBTb3JyeSwgSSBkb24ndCB1bmRlcnN0YW5kIHdoeSB5b3UgbmVlZCB0byBs
-aXN0IFBOUDBDMDkgSElEIGluIGEgbWF0Y2hpbmcNCj4gdGFibGUgaWYgaXQncyBub3QgdXNlZCB0
-byBwcm9iZSBhbnl0aGluZy4NCj4gDQo+IFRoZSBwdXJwb3NlIG9mIHRob3NlIG1hdGNoaW5nIHRh
-YmxlcyBpcyB0aGF0IHdoZW4gdGhpcyBISUQgaXMgZm91bmQsIHRoZSBjb3JlDQo+IHdpbGwgaW52
-b2tlIHRoZSBwcm9iZSBjYWxsYmFjayB3aXRoIG5vIG5lZWQgZm9yIGFueSBtYW51YWwgaW50ZXJ2
-ZW50aW9uLg0KPiANCj4gSWYgeW91IHdhbnQgdG8gZG8gdGhpbmdzIG1hbnVhbGx5IHdpdGggdGhl
-IG1vZHVsZSBpbml0LCB0aGF0J3MgZmluZSwgaXQncyB0aGUNCj4gY29tYmluYXRpb24gb2YgdGhl
-IHR3byB0aGF0IEkgZmluZCBxdWVzdGlvbmFibGUuDQo+IA0KPiBJdCdzIGxpa2UgaGF2aW5nIGJv
-dGggYSBtYW51YWwgYW5kIGF1dG9tYXRpYyB0cmFuc21pc3Npb24gaW4gYSBjYXIsIHdpdGggdGhl
-DQo+IGF1dG9tYXRpYyB0cmFuc21pc3Npb24gbm90IGNvdXBsZWQgdG8gdGhlIHdoZWVscy4NCg0K
-SSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQsSSBoYXZlIHJlbW92ZWQgdGhlIFBOUDBDMDkgSUQgZnJv
-bSBWNCBwYXRjaC4NClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uIHZlcnkgbXVjaCAhDQoNClBl
-cnJ5IA0K
+Hi,
+
+On 3/5/21 1:42 AM, Nitin Joshi1 wrote:
+> Hello Hans,
+> 
+>> -----Original Message-----
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Sent: Thursday, March 4, 2021 8:44 PM
+>> To: Nitin Joshi <nitjoshi@gmail.com>
+>> Cc: ibm-acpi-devel@lists.sourceforge.net; platform-driver-
+>> x86@vger.kernel.org; Nitin Joshi1 <njoshi1@lenovo.com>; Mark RH Pearson
+>> <markpearson@lenovo.com>
+>> Subject: [External] Re: [PATCH v2 1/2] platorm/x86: thinkpad_acpi: sysfs
+>> interface to reduce wlan tx power
+>>
+>> Hi,
+>>
+>> On 2/16/21 8:36 AM, Nitin Joshi wrote:
+>>> Some newer Thinkpads have the WLAN antenna placed close to the WWAN
+>>> antenna. In these cases FCC certification requires that when WWAN is
+>>> active we reduce WLAN transmission power. A new Dynamic Power
+>>> Reduction Control (DPRC) method is available from the BIOS on these
+>>> platforms to reduce or restore WLAN Tx power.
+>>>
+>>> This patch provides a sysfs interface that userspace can use to adjust
+>>> the WLAN power appropriately.
+>>>
+>>> Reviewed-by: Mark Pearson <markpearson@lenovo.com>
+>>> Signed-off-by: Nitin Joshi <njoshi1@lenovo.com>
+>>
+>> Thank you for your patches, I'm afraid that there are still a couple of small
+>> issues which need to be fixed before I can apply these:
+> 
+> Thank you for your comments and apologize for any inconvenience caused.
+> 
+>>
+>> 1. Both patches have "platform" misspelled in the patch Subject.
+> Ack.  I will correct it in next version.
+> 
+>> 2. The patches don't apply cleanly because your kbdlang patch has
+>>   been merged and these are based on a thinkpad_acpi version without
+>>   these.
+> Ack.  I will take latest file and correct it in next version.
+> 
+>> 3. I've some review remarks about this patch, see my inline comments below.
+>>   Note some of these remarks apply to patch 2/2 too
+>>   (I've indicated when this is the case).
+> Ack with thanks
+> 
+>>
+>>> ---
+>>>  .../admin-guide/laptops/thinkpad-acpi.rst     |  18 +++
+>>>  drivers/platform/x86/thinkpad_acpi.c          | 130 ++++++++++++++++++
+>>>  2 files changed, 148 insertions(+)
+>>>
+>>> diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> index 5fe1ade88c17..10410811b990 100644
+>>> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> @@ -51,6 +51,7 @@ detailed description):
+>>>  	- UWB enable and disable
+>>>  	- LCD Shadow (PrivacyGuard) enable and disable
+>>>  	- Lap mode sensor
+>>> +	- WLAN transmission power control
+>>>
+>>>  A compatibility table by model and feature is maintained on the web
+>>> site, http://ibm-acpi.sf.net/. I appreciate any success or failure @@
+>>> -1447,6 +1448,23 @@ they differ between desk and lap mode.
+>>>  The property is read-only. If the platform doesn't have support the
+>>> sysfs  class is not created.
+>>>
+>>> +WLAN transmission power control
+>>> +--------------------------------
+>>> +
+>>> +sysfs: wlan_tx_strength_reduce
+>>> +
+>>> +Some newer Thinkpads have the WLAN antenna placed close to the WWAN
+>> antenna.
+>>> +This interface will be used by userspace to reduce the WLAN Tx power
+>>> +strength when WWAN is active, as is required for FCC certification.
+>>> +
+>>> +The available commands are::
+>>> +
+>>> +        echo '0' >
+>> /sys/devices/platform/thinkpad_acpi/wlan_tx_strength_reduce
+>>> +        echo '1' >
+>>> + /sys/devices/platform/thinkpad_acpi/wlan_tx_strength_reduce
+>>> +
+>>> +The first command restores the wlan transmission power and the latter
+>>> +one reduces wlan transmission power.
+>>> +
+>>>  EXPERIMENTAL: UWB
+>>>  -----------------
+>>>
+>>> diff --git a/drivers/platform/x86/thinkpad_acpi.c
+>>> b/drivers/platform/x86/thinkpad_acpi.c
+>>> index f3e8eca8d86d..af90251d79d7 100644
+>>> --- a/drivers/platform/x86/thinkpad_acpi.c
+>>> +++ b/drivers/platform/x86/thinkpad_acpi.c
+>>> @@ -9983,6 +9983,132 @@ static struct ibm_struct proxsensor_driver_data
+>> = {
+>>>  	.exit = proxsensor_exit,
+>>>  };
+>>>
+>>>
+>> +/***************************************************************
+>> *****
+>>> +*****
+>>> + * DPRC(Dynamic Power Reduction Control) subdriver, for the Lenovo
+>>> +WWAN
+>>> + * and WLAN feature.
+>>> + */
+>>> +#define DPRC_GET_WLAN_STATE             0x20000
+>>> +#define DPRC_SET_WLAN_POWER_REDUCE      0x00030010
+>>> +#define DPRC_SET_WLAN_POWER_FULL        0x00030100
+>>> +#define DPRC_WLAN_POWER_REDUCE_BIT      BIT(4)
+>>> +#define DPRC_WLAN_POWER_FULL_BIT        BIT(8)
+>>> +static bool has_wlantxreduce;
+>>> +static int wlan_txreduce;
+>>> +
+>>> +static int dprc_command(int command, int *output) {
+>>> +	acpi_handle dprc_handle;
+>>> +
+>>> +	if (ACPI_FAILURE(acpi_get_handle(hkey_handle, "DPRC",
+>> &dprc_handle))) {
+>>> +		/* Platform doesn't support DPRC */
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	if (!acpi_evalf(dprc_handle, output, NULL, "dd", command))
+>>> +		return -EIO;
+>>> +
+>>> +	/*
+>>> +	 * METHOD_ERR gets returned on devices where few commands are
+>> not supported
+>>> +	 * for example WLAN power reduce command is not supported on
+>> some devices.
+>>> +	 */
+>>> +	if (*output & METHOD_ERR)
+>>> +		return -ENODEV;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int get_wlan_state(int *wlan_txreduce) {
+>>> +	int output, err;
+>>> +
+>>> +	/* Get current WLAN Power Transmission state */
+>>> +	err = dprc_command(DPRC_GET_WLAN_STATE, &output);
+>>> +	if (err)
+>>> +		return err;
+>>> +
+>>> +	if (output & DPRC_WLAN_POWER_REDUCE_BIT)
+>>> +		*wlan_txreduce = 1;
+>>> +	else if (output & DPRC_WLAN_POWER_FULL_BIT)
+>>> +		*wlan_txreduce = 0;
+>>> +	else
+>>> +		return -ENODATA;
+>>
+>> If you return -ENODEV here, then the error handling in tpacpi_dprc_init()
+>> becomes a lot simpler / easier to read.
+>>
+>> Note this remark applies to patch 2/2 too.
+> Ack. I will modify it on next version.
+> 
+>>
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +/* sysfs wlan entry */
+>>> +static ssize_t wlan_tx_strength_reduce_show(struct device *dev,
+>>> +						struct device_attribute *attr,
+>>> +						char *buf)
+>>> +{
+>>> +	int err;
+>>> +
+>>> +	err = get_wlan_state(&wlan_txreduce);
+>>> +	if (err)
+>>> +		return err;
+>>
+>> Is it necessary to re-query the setting here? Can't you just query it from
+>> tpacpi_dprc_init() once and store the updated value in
+>> wlan_tx_strength_reduce_store() on success?
+> We will have to call this sys for WLAN power reduce or full from userspace based on
+> some conditions. After setting we need to make sure if wlan is set correctly in BIOS .
+> I can understand that if setting is success, then we can store updated value on success.
+> However , since, we have command to get wlan tx state in "DPRC" method , so I just want to make sure 
+> If wlan tx state is set correctly in BIOS as I don’t have any other way to confirm it.
+> So, I think it's better to keep this setting here.   
+
+Keeping the querying of the setting here is fine.
+
+> 
+>>
+>>
+>>> +
+>>> +	return sysfs_emit(buf, "%d\n", wlan_txreduce); }
+>>> +
+>>> +static ssize_t wlan_tx_strength_reduce_store(struct device *dev,
+>>> +						struct device_attribute *attr,
+>>> +						const char *buf, size_t count)
+>>> +{
+>>> +	int output, err, ret;
+>>
+>> Please use just err here, there is no need to have both err and ret.
+> Ack. I will modify it in next version.
+> 
+>>
+>>> +	bool state;
+>>> +
+>>> +	ret = kstrtobool(buf, &state);
+>>> +	if (ret)
+>>> +		return ret;
+>>
+>> So change to using err here.
+>>
+> Ack. I will modify it in next version.
+> 
+>>> +
+>>> +	if (state)
+>>> +		err = dprc_command(DPRC_SET_WLAN_POWER_REDUCE,
+>> &output);
+>>> +	else
+>>> +		err = dprc_command(DPRC_SET_WLAN_POWER_FULL,
+>> &output);
+>>
+>>
+>> You are not doing anything with err here, shouldn't this have a:
+>>
+>> 	if (err)
+>> 		return err;
+>>
+>> here ?
+> Ack. I will recheck it and modify it in next version.
+> 
+> I will incorporate all comments and send updated patch by next week or asap.
+
+Thank you.
+
+Regards,
+
+Hans
+
+
+
+>>> +
+>>> +	sysfs_notify(&tpacpi_pdev->dev.kobj, NULL,
+>>> +"wlan_tx_strength_reduce");
+>>> +
+>>> +	return count;
+>>> +}
+>>> +static DEVICE_ATTR_RW(wlan_tx_strength_reduce);
+>>> +
+>>> +static int tpacpi_dprc_init(struct ibm_init_struct *iibm) {
+>>> +	int wlantx_err, err;
+>>> +
+>>> +	wlantx_err = get_wlan_state(&wlan_txreduce);
+>>> +	/*
+>>> +	 * If support isn't available (ENODEV) for both devices then quit, but
+>>> +	 * don't return an error.
+>>> +	 */
+>>> +	if ((wlantx_err == -ENODEV) || (wlantx_err == -ENODATA))
+>>> +		return 0;
+>>> +	/* Otherwise, if there was an error return it */
+>>> +	if (wlantx_err && (wlantx_err != -ENODEV) && (wlantx_err != -
+>> ENODATA))
+>>> +		return wlantx_err;
+>>> +	else if (!wlantx_err)
+>>> +		has_wlantxreduce = true;
+>>> +
+>>> +	if (has_wlantxreduce) {
+>>> +		err = sysfs_create_file(&tpacpi_pdev->dev.kobj,
+>>> +
+>> 	&dev_attr_wlan_tx_strength_reduce.attr);
+>>> +		if (err)
+>>> +			return err;
+>>> +	}
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void dprc_exit(void)
+>>> +{
+>>> +	if (has_wlantxreduce)
+>>> +		sysfs_remove_file(&tpacpi_pdev->dev.kobj,
+>>> +&dev_attr_wlan_tx_strength_reduce.attr);
+>>> +}
+>>> +
+>>> +static struct ibm_struct dprc_driver_data = {
+>>> +	.name = "dprc",
+>>> +	.exit = dprc_exit,
+>>> +};
+>>> +
+>>>
+>> /****************************************************************
+>> ************
+>>>
+>> *****************************************************************
+>> ***********
+>>>   *
+>>> @@ -10475,6 +10601,10 @@ static struct ibm_init_struct ibms_init[]
+>> __initdata = {
+>>>  		.init = tpacpi_proxsensor_init,
+>>>  		.data = &proxsensor_driver_data,
+>>>  	},
+>>> +	{
+>>> +		.init = tpacpi_dprc_init,
+>>> +		.data = &dprc_driver_data,
+>>> +	},
+>>>  };
+>>>
+>>>  static int __init set_ibm_param(const char *val, const struct
+>>> kernel_param *kp)
+>>>
+> 
+
