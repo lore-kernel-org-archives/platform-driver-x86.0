@@ -1,447 +1,325 @@
-Return-Path: <platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=Dww4=ID=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6C4C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 12:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13304C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 14:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F17964FED
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 12:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E7965000
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  5 Mar 2021 14:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbhCEMEA (ORCPT
+        id S229898AbhCEOvh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 5 Mar 2021 07:04:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30940 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229821AbhCEMDz (ORCPT
+        Fri, 5 Mar 2021 09:51:37 -0500
+Received: from mail-eopbgr1320125.outbound.protection.outlook.com ([40.107.132.125]:23439
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229911AbhCEOv1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 5 Mar 2021 07:03:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614945834;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5KcyyYXzSqf69qVhnkK2ANTlfmtlCV/ZTK/kma3sC60=;
-        b=JuBZhn4gUgve6ph0j5Smyu1ABNLymo+obHOmfaUpREWXjKItxEqzOej8cEcNu0D0psucV3
-        kHGKLW+4Owtnj6tIr1oi/kwsBwXjPfDb2BOk7PbTRD9beQc521O7J1ItjXfyj5Fp3F6u0O
-        QbwSTL9mOAHVQo7z5rLpbPyPg0iUhU8=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-504-jFf61QAnMLi_u5fUEz0AmQ-1; Fri, 05 Mar 2021 07:03:53 -0500
-X-MC-Unique: jFf61QAnMLi_u5fUEz0AmQ-1
-Received: by mail-ed1-f69.google.com with SMTP id i4so819686edt.11
-        for <platform-driver-x86@vger.kernel.org>; Fri, 05 Mar 2021 04:03:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5KcyyYXzSqf69qVhnkK2ANTlfmtlCV/ZTK/kma3sC60=;
-        b=g4j85dvfxCzArNoZ7P6lwjqzkhrfSdTz6yZpAd4vvN5OHdLpPMBuB4uSsD1uknMN90
-         Y6/9a5rIe8bEPInv7fSrPhjxI6NIXbTdJkXLWnqRRvSQt98yrAIUPaNfRGzvs84hn4AO
-         Nl3P+TQqVYE9JKynepmPUWqsZPcVFWEe9ws5Vr02kjKeNyQJgKZkLiqCyYGJ/Lj3rO07
-         a/4Ltb033kgnBpQV3lZLUGR3koyjcdQ/S2+L8Ssj22Hr1pd7/rmc4kDywOtCDSVv5XuE
-         8ivjojW/ZaP4fFTVuzDK+2nuRhjJjPBbde76HwRTkPCTJ5ACQUVjRWtjsUYOrozleh3A
-         36ZQ==
-X-Gm-Message-State: AOAM5327lUJwkDMoMH1yeqO/2KQHdqq37zky8Vd0o8aagPek7rh7r2XR
-        JijFj/B7u+MmghNIcH3+L1/6FJpQyaVxXjsUdA2QaNIg94JQ/qIaRQ5vVon3nR89FUudng7PJAI
-        sUu5eCTwRfowJA3/y5ZdXV3MO3exBmXP6A8aNjY43a2jh8pQLKn+QE+RZRX5AZKPGEWR7RdQdVI
-        8kPxa6igB/Bg==
-X-Received: by 2002:a17:906:489:: with SMTP id f9mr1889029eja.428.1614945831209;
-        Fri, 05 Mar 2021 04:03:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz/Ro5roe6a5UaSsDcs8T2FiDVgqBOPtO8suOdLY7P//p0HV6PBd64+/Z7XZ0QwGmM5IaqW9g==
-X-Received: by 2002:a17:906:489:: with SMTP id f9mr1888989eja.428.1614945830824;
-        Fri, 05 Mar 2021 04:03:50 -0800 (PST)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bw22sm1386067ejb.78.2021.03.05.04.03.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Mar 2021 04:03:50 -0800 (PST)
-Subject: Re: [PATCH] WMI: asus: Reduce G14 and G15 match to min product name
-To:     Luke Jones <luke@ljones.dev>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210227102010.65429-1-luke@ljones.dev>
- <94e01965-1511-c687-1c20-fe1f01041ac3@redhat.com>
- <GNOHPQ.KYXM8SR2TF8L@ljones.dev>
- <6bb6843e-f166-a1cc-f1ac-419a46c71622@redhat.com>
- <XXSHPQ.3IV4A1VDG7UR1@ljones.dev>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <043998b9-53fa-766e-74e3-e149c0b5d978@redhat.com>
-Date:   Fri, 5 Mar 2021 13:03:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
-MIME-Version: 1.0
-In-Reply-To: <XXSHPQ.3IV4A1VDG7UR1@ljones.dev>
-Content-Type: text/plain; charset=utf-8
+        Fri, 5 Mar 2021 09:51:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mTjvvPlyH8qF3/mORyFf/h1/FkPXDDEZdcW0g7ckoSiHz3Ff63IJpTyAFqb0+8Ir3tWwnvlL2ecsufEOsOyo25X/zpj0azwmk9vJU31ojKgH+CW0bz6GohaUXDOS+WHXv4elsP8lh2/mXyekhGKyuXEsUNSUSTDZ/3JavotAj9p7mb3eFnMBsnwHUywxCvNFzyKi4koZ/5f0g5GtlZ76oU/HTP8+Bb/AKidN9YTDQ83bEtgtSNQS0J/IT/r8FfI3nDqTMYA0UlijPMF8GHsooyJ8RlkkY4wsVGbs9qoPKhwOrLN8/CxZTtpL9Ra58pB66SAHPTtE7hG3j9V9zCLutw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1g61xzw7248djJPBHB6ms66uktXqjDTCrkGlx+J2VLE=;
+ b=SnM6UcPp8sq6KAFAD3PKwBZdhSlTkXXDJ5QhhM3dDv50lbhzXYdJVHg7swQrSEK02XSivsZGD+SlBtGmEI2Mph5SSQhqUyinRVblGdTKwvmLtWqYugIKjWTOdUt89nVVv4MOghpPOCZfW2pHtycIxxstGe7QvsHW2q6ipBpMva2crC4JIo2Gd6wilMyS/loUErFD6V43zGzyRaQRCA/Tu48eOgr766B9MTpq7tshV24yAatbBXA6B3WKkKV2Uq7KBNO1Vyj9T39SaiymMA6qU6o+6NF5dsWa1o+q/gEPzdhiDe4yQS8Y+p7flVW0GJorsrK0/gOnhk94p5tXODTLOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=lenovo.com; dmarc=pass action=none header.from=lenovo.com;
+ dkim=pass header.d=lenovo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=LenovoBeijing.onmicrosoft.com; s=selector2-LenovoBeijing-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1g61xzw7248djJPBHB6ms66uktXqjDTCrkGlx+J2VLE=;
+ b=s814jYJ6T8SYOi74bScZDP0FKrytVL8Oz34l9Xn1ZgeheUc/gSdhgrC1dn+7mAYqJh1g7z8iiKKa8PfndemcGnusT2Sao3oC/YmPinGDCYMiz9BfVATDTVWvA6TU3MrHWxBM39UTN1cQS+o61EjK7U1OuWkblixOzb5pluO/4gU=
+Received: from TY2PR03MB3645.apcprd03.prod.outlook.com (2603:1096:404:3f::21)
+ by TY2PR03MB3678.apcprd03.prod.outlook.com (2603:1096:404:5c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.14; Fri, 5 Mar
+ 2021 14:51:23 +0000
+Received: from TY2PR03MB3645.apcprd03.prod.outlook.com
+ ([fe80::51c4:f02c:2dd9:a1c2]) by TY2PR03MB3645.apcprd03.prod.outlook.com
+ ([fe80::51c4:f02c:2dd9:a1c2%7]) with mapi id 15.20.3933.014; Fri, 5 Mar 2021
+ 14:51:23 +0000
+From:   Nitin Joshi1 <njoshi1@lenovo.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Nitin Joshi <nitjoshi@gmail.com>
+CC:     "ibm-acpi-devel@lists.sourceforge.net" 
+        <ibm-acpi-devel@lists.sourceforge.net>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark RH Pearson <markpearson@lenovo.com>
+Subject: RE: [External] Re: [PATCH v2 1/2] platorm/x86: thinkpad_acpi: sysfs
+ interface to reduce wlan tx power
+Thread-Topic: [External] Re: [PATCH v2 1/2] platorm/x86: thinkpad_acpi: sysfs
+ interface to reduce wlan tx power
+Thread-Index: AQHXEZy/bUR/Im/HBkiNQ6O2f9hrSap1enYA
+Date:   Fri, 5 Mar 2021 14:51:23 +0000
+Message-ID: <TY2PR03MB364560159A2A96CEFC5FA7BA8C969@TY2PR03MB3645.apcprd03.prod.outlook.com>
+References: <20210216073639.687703-1-njoshi1@lenovo.com>
+ <d4427d59-7385-d41f-07a0-c27ce8d495bb@redhat.com>
+ <TY2PR03MB36456FC14E208B1B2C8B09528C969@TY2PR03MB3645.apcprd03.prod.outlook.com>
+ <fd2b03c6-f600-326b-61ad-1b2047438a0d@redhat.com>
+In-Reply-To: <fd2b03c6-f600-326b-61ad-1b2047438a0d@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=lenovo.com;
+x-originating-ip: [114.164.25.243]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5949ced6-dcd9-423c-3c3e-08d8dfe62542
+x-ms-traffictypediagnostic: TY2PR03MB3678:
+x-ld-processed: 5c7d0b28-bdf8-410c-aa93-4df372b16203,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR03MB3678F18B0F50C0C63E35AC988C969@TY2PR03MB3678.apcprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UZYIP69qbo38HIih05WrxEbSyFbiqxabmu4a2Q9CrZKxw5J1XDO9wFcf+BaQZKCijIg1HeMH1IQ00Sl2eU2A1AQACX7gmIBUAg+iWgsAhKee2q8NOTekIVQcEUkRzGZFTkSp/sJ7m594Du90ef0TYqaQhXwWaMyNWJ/kfMa/pbbnCD6QjthqQYW7GbbiAFHcJol2kQwaQe9RKUgxrOL4bBFZhL2HpR5g+u9JHjvdpAoIIqrX/sZxAdYoL3XOI5meVqxc1LRlkmDj+Zd7QBMB7+Iaz3zoTRO1jhlS8w1gz37t8x1DqNKcLzb/h08F5c4UbzgG2Cw8RGWChcJcR2sP3XgUEdlP4ergtYHy7Mw/6lsf8Co3PF+zGtbr4PjTK6/ihgGHHf6kP0XA8FizJWKBMdz2xXYW0yJH+TqFYfK+NffhtozkLZz+y1875lz7/Cj96uYEzE0fyG0fGO3ENhTvvsTRbeMhxIAm+WoNmhx34vClENXjC3t7KXyJI0ONf5q7TF/iXPEE0lqZit/flfiy/v9Ub305m2BJ+bEeUJWdxiEPYdtMZCqauYiPjpGdkW/uD/z/dcgCJ/X3rEUWvf1J/gBQipNfvGai7fIbzIz7Vjatt5BmNarQQWcCVItQHbmQahrIMkAGLw5/w8xxhXwmyg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR03MB3645.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(39860400002)(366004)(396003)(376002)(66556008)(66446008)(71200400001)(66946007)(478600001)(66476007)(64756008)(186003)(86362001)(26005)(83380400001)(33656002)(30864003)(107886003)(7696005)(4326008)(110136005)(2906002)(5660300002)(9686003)(52536014)(76116006)(55016002)(6506007)(53546011)(8676002)(966005)(316002)(54906003)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?T0ZtclVrT0t0T1RGa2VQUDA0eitiV1pPRldVVWx4Vm8wdDE2ZExTZldOeEd6?=
+ =?utf-8?B?MytGN2hzMVZpalhscTZhb3puVFBndE1BUEpsQktiajJGMjU0T0ljYWlVaVpO?=
+ =?utf-8?B?TTN4eGJvM1dSRFlOTE91UTdqekswNmJmRkxaODRUVzVJY1B1bU5nNUF3NDFq?=
+ =?utf-8?B?UkttSGo1VWU0SytZY2Q5bGxhRGhtNUtkay8rMmxOOXVCMVRiSTYyQ0FKaSs0?=
+ =?utf-8?B?SzJMdWVtUjBOLzRod2IzQ2pTOTQxRjc5OEx6ZzdVQWEzNUUxMGllZVc1aldL?=
+ =?utf-8?B?RjV3bVFOZ3pQaStxbk9wZEo3bVIxbU45Wjh4VHRuVlVrbGJKR0d2TnBMbTZR?=
+ =?utf-8?B?Nm1nUUh4NW54RDVlNyszZU5Jc2ZCU0w4YnJhUW5RNElRbUgyZit1aWJKeW9o?=
+ =?utf-8?B?R0I5SmwxYzZ0UWNRRTBzT3FWeGN6QThCazg1OWVsRVZaZkl2V2xpdkx3Yjlh?=
+ =?utf-8?B?S3paa3ArNHBjS0h0c2ozZXVsYnA2bHBadXM2T2toaHZYL3Z3V0pLV0tFcnNp?=
+ =?utf-8?B?Tk15SEdDUVo2UmtQdmM2QUdrQmFkb2ZVWmdZZ1g3cVRQd3JRNlYvcGRBeFhD?=
+ =?utf-8?B?OFE0ejJGaTVlVjdGdHM3WjMySFZIUlVPTHV4emR0TWcyZVpWZ3dZaWI5U05z?=
+ =?utf-8?B?TTdmNCtwZmdtOHFaTCsvTXNhKzJLeWQ5S24ydDNURlEwZDJCWkVtVEdrdVhx?=
+ =?utf-8?B?WXdHQ1lJb1J6amlKNS9paTVzaVJZTjBWVmNUbXplNEZoSXd4T05nY21NWkNU?=
+ =?utf-8?B?SkFNanhBSDBnZVZxT0hRQ283U1IyendCU253V3F1OXdGM0wvL1prQXNPbDNG?=
+ =?utf-8?B?a203Y3Nqc01IUkpsQml1c09FclVsNWJ3VFUrUGpEWHBaUnpIcWFpRVl3Vldi?=
+ =?utf-8?B?OG83SWpURjRUTDNDb1ZNd0w3aGhleWdHcWpiY1RjU2JsYVZqQ01XU1VydXUw?=
+ =?utf-8?B?V0V1YnYzRllVRUxTSUM0VzNFb2FGMDlCelZjNHlTZnhBalFCb3ozRmJIVHEv?=
+ =?utf-8?B?TG5wNzZ2cXJ5emdEZlZXdUM2UjNjNCtDMkJBa2VtM1Z4RkdNL2Njem1IT1hT?=
+ =?utf-8?B?aDRBL0Y5ditROVN2c2hRN09jRHp3bXVBKzNwT215U3RsUVA5Njk1NWplQ2RQ?=
+ =?utf-8?B?S2dCN0RobGFyNkpFOE5kT291S2JMQ1ZzMUFzZHA0K05yeXRIVkF6cFh2TUdC?=
+ =?utf-8?B?blBORWVCZWd2RHprQ1lYQlJpYXVMS2k1Q09HMVlhMkxvMW1oajhsVXBzckZu?=
+ =?utf-8?B?aTErZ2d4YVJWbjZQYTdvbzlsMy9qR05CbGVONGxvd3hrNDVtaHZXcjRMZjZ2?=
+ =?utf-8?B?MU12TUlyQmxSNytYbWp3SnloM3hsQS9vaDZqeitNYkZsVjRVRXBpaGs5bi9W?=
+ =?utf-8?B?aDZFRSttbkE4MkhpWlFQUFdWQUJGTTJUV1Vnd2JMTUlTbkRXQnBoWjN2ejF2?=
+ =?utf-8?B?YWRtbXJpTWRlVkxaekxBTjJrclhPVE5GdU92MFphTUR4WUF2YUdKb2hXNUFo?=
+ =?utf-8?B?YmcrR1BEZTZHMHlnSEV6VmFSWVp3c2h4NDcrejB2SDVIQlllKzl2WE54Yks1?=
+ =?utf-8?B?dTlSU2pHRDR5b3FvMm5Xd2tlTzEwUHNsOGZsTDVkUHV5L1E2ZXJZeGR5d1R0?=
+ =?utf-8?B?ZjY1Uk9tenZHdWJZR0IxVDkwN3d2bmJFRnpRR0Q1bVNLR3VsUFFKWUpPTHlU?=
+ =?utf-8?B?eFhGOUszbnc0djgwMzArZklnS0NRSUowTTNSb2JtbjJ4czBuYVhsL1R6dHVK?=
+ =?utf-8?Q?fg1OGMVGKVMSeEiKkztSTunncIMCOLmzZWhK5oX?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: lenovo.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR03MB3645.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5949ced6-dcd9-423c-3c3e-08d8dfe62542
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2021 14:51:23.1506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JsybyJNu1SPhYRy3BCwsOTUMl8i3M4uXITqsHX7d61l1irT9m5C+0XrnjYnfeL+qjHv5fcZ3x+aNHqBCOmoLEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR03MB3678
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 3/5/21 11:53 AM, Luke Jones wrote:
-> First report:
-
-Thank you.
-
-> G14 / 2020 - integrated graphics only (NVIDIA disabled)
-> 
-> # cat /proc/cmdline
-> BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.10.19-200.fc33.x86_64 root=UUID=c3fe67fb-a740-440b-bc2d-e7cfc9f19a42 ro rootflags=subvol=@ rd.luks.uuid=luks-cf5c7a8a-d5da-45ae-b556-db9c78b359e5 rhgb quiet rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 acpi_backlight=video
-> 
-> 1. # ls /sys/class/backlight
-> acpi_video0 amdgpu_bl0
-> 
-> 2. acpi_video0 max_brightness 49, brightness is changing
-> amdgpu_bl0 max_brightness 255, brightness is changing
-> Both equal bright at max value
-> 
-> # cat /proc/cmdline
-> BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.10.19-200.fc33.x86_64 root=UUID=c3fe67fb-a740-440b-bc2d-e7cfc9f19a42 ro rootflags=subvol=@ rd.luks.uuid=luks-cf5c7a8a-d5da-45ae-b556-db9c78b359e5 rhgb quiet rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 acpi_backlight=native
-> 
-> 3. # ls /sys/class/backlight
-> amdgpu_bl0
-> 
-> 4. amdgpu_bl0 max_brightness 255, brightness is changing
-> 
-> # cat /proc/cmdline
-> BOOT_IMAGE=(hd0,gpt2)/vmlinuz-5.10.19-200.fc33.x86_64 root=UUID=c3fe67fb-a740-440b-bc2d-e7cfc9f19a42 ro rootflags=subvol=@ rd.luks.uuid=luks-cf5c7a8a-d5da-45ae-b556-db9c78b359e5 rhgb quiet rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nvidia-drm.modeset=1 acpi_backlight=vendor
-> 
-> 5. # ls /sys/class/backlight
-> amdgpu_bl0
-> 
-> 6. amdgpu_bl0 max_brightness 255, brightness is changing
-
-Ok, so basically in all cases we have working backlight control
-and with "native", which is the default without quirks we get only
-1 interface (so no userspace confusion possible) and that interface
-has a better range then the acpi_video0 one which gets enabled
-by the acpi_backlight=video option.
-
-Also interesting here is that acpi_backlight=vendor is actually
-not resulting in a "asus-nb-wmi" dir showing up under /sys/class/backlight
-as it should. Which means that the Asus WMI interface on this model
-does not support backlight control through the WMI interface at all.
-
-Which matches my initial reaction of finding it very strange that
-a vendor specific interface would be used for this in 2020/2021.
-
-What I think is happening here is that depending on the BIOS setting
-for which GPU to use, there might not be any native backlight interface
-at all. IOW if that BIOS setting is set to nvidia only then
-/sys/class/backlight/amdgpu_bl0 goes away and when nouveau is not
-used /blacklisted it will not be replaced by a /sys/class/backlight/nouveau...
-native interface.
-
-The kernel-code which deals with selecting which backlight interface(s)
-to register then notices there is no native backlight driver and thus
-will allow the acpi_video0 interface to register; and I guess that
-that interface is not working when the BIOS setting is set to only
-use (or prefer) the nvidia GPU.
-
-And I guess this showing up of the non-working
-/sys/class/backlight/acpi_video0 interface is causing userspace
-to prefer that over whatever mechanism the nvidia binary driver
-is using to allow control over the backlight.
-
-So, the quirks which have been added so far, which do the
-equivalent of passing acpi_backlight=vendor on the cmdline are
-not enabling the "vendor" (Asus) backlight interface at all,
-instead all they are doing is disabling the auto backlight selection
-code in the kernel which, without the quirk, automatically behaves
-as if acpi_backlight=video is specified when no native backlight
-interfaces are registered.
-
-I think a couple of users first need to run some more tests to
-confirm all this (with the nvidia GPU enabled and while using
-the nvidia binary driver).
-
-Then once we have this confirmed, the proper fix is to add
-a quirk (with the generic model matching from your patch)
-to set acpi_backlight=native by calling the
-video_detect_force_native() callback from the DMI entries
-in the video_detect_dmi_table[] in drivers/acpi/video_detect.c
-
-The entries for this should be added at the end of the list
-of models already using the video_detect_force_native() callback,
-so around line 387, just before this comment block:
-
-        /*
-         * Desktops which falsely report a backlight and which our heuristics
-         * for this do not catch.
-         */
-
-And then once that change has landed upstream, the existing
-quirks for this can be dropped from the asus-nb-wmi.c code.
-
-But first we need more testing / logs to confirm my theory here.
-
-> 5.10 kernel includes the quirk patches. Were you wanting data
-> with that patch removed completely? (not just the submitted one)
-
-No that is not necessary, the quirk does the equivalent of passing
-acpi_backlight=vendor and the kernel-commandline setting
-trumps (overrides) the DMI quirk.
-
-> From what you've said, I think I expected acpi_backlight=video to
-> work regardless of the patch being applied.
-
-Correct.
-
-Regards,
-
-Hans
-
-
-
-> On Fri, Mar 5, 2021 at 10:36, Hans de Goede <hdegoede@redhat.com> wrote:
->> <note adding the pdx86 list back to the Cc>
->>
->> Hi Luke,
->>
->> On 3/5/21 10:21 AM, Luke Jones wrote:
->>>  Hello Hans,
->>>
->>>  Many thanks for taking the time to review this and provide some
->>>  knowledge.
->>>
->>>  Most of what has come about in this patch is through direct user
->>>  with a fairly large community I maintain on Discord centered
->>>  around a utility I wrote to make ROG laptop users lives a bit
->>>  better - https://gitlab.com/asus-linux. The community has been
->>>  beneficial to getting some realtime testing done, shortening
->>>  time.
->>>
->>>  In the case of the 2021 Ryzen laptops I'm pleased you asked
->>>  questions. I asked the single G15 laptop owner we have to
->>>  check functionality and yes, we don't need that code.
->>>  It appears there were some crossed wires in conversations.
->>>
->>>  I will amend the patch keeping the glob style got 2020 G14
->>>  and G15 as we do have concrete anecdotal evidence that all
->>>  *those* models, and some un-added ones need the quirk.
->>
->> If possible I would like to see some more research done on
->> those 2020 models too.
->>
->> Specifically it would be good to get the following info:
->>
->> 1. Output of "ls /sys/class/backlight" with "acpi_backlight=video"
->> on the kernel commandline.
->>
->> 2. Testing of *all* the present backlight devices with "acpi_backlight=video"
->> on the kernel commandline. The user can test this by doing:
->>
->> cd /sys/class/backlight/$backlight-name
->> cat max_brightness
->> echo $value-between-0-and-max_brightness > brightness
->> echo $another-value-between-0-and-max_brightness > brightness
->> etc.
->>
->> And then see if the brightness of the screen actually changes.
->>
->> 3. Output of "ls /sys/class/backlight" with "acpi_backlight=native"
->> on the kernel commandline.
->>
->> 4. Testing of *all* the present backlight devices with "acpi_backlight=native"
->> on the kernel commandline (see 2.)
->>
->> 5. Output of "ls /sys/class/backlight" with "acpi_backlight=vendor"
->> on the kernel commandline.
->>
->> 6. Testing of *all* the present backlight devices with "acpi_backlight=vendor"
->> on the kernel commandline (see 2.)
->>
->>
->> My hope/expectation is that acpi_backlight=video will also work,
->> because as said using acpi_backlight=vendor is somewhat weird for
->> 2020 / 2021 laptop models.  Also typically the acpi-video backlight
->> interface will have a larger max_brightness giving finer grained
->> (more steps) brightness control.
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>  On Thu, Mar 4, 2021 at 15:35, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>  Hi,
->>>>
->>>>  On 2/27/21 11:20 AM, Luke D Jones wrote:
->>>>>   This patch reduces the product match for GA401 series laptops to
->>>>>   the minimum string required.
->>>>>
->>>>>   The GA401 series of laptops has a lengthy list of product
->>>>>   variations in the 2020 series and the 2021 series refresh
->>>>>   is using the same base product ID of GA401.
->>>>>
->>>>>   The same is also true for the GA502 series, and the new GA503
->>>>>   series which is added in this patch as a variant of the G15.
->>>>
->>>>  Thank you for your patch.
->>>>
->>>>  I msut say that I find it very strange that 2021 series laptops need
->>>>  to use the Asus vendor specific WMI interface for backlight control.
->>>>
->>>>  I see that the GA401 GA502 and GA503 models are all models with
->>>>  AMD 4000/5000 series CPUs + Nvidia 2060 series GPUs.
->>>>  So I guess it may be possible that this is the right thing
->>>>  to do, and I do realize that we are already doing this for the
->>>>  listed models. But it seems weird.
->>>>
->>>>  Modern laptops almost always use the native backlight control
->>>>  build into the drm/kms driver. And in some special cases
->>>>  (hybrid GPU setups) they might use the good old ACPI-video
->>>>  interface. But using vendor specific interfaces sounds very
->>>>  wrong to me. That is something which was typically done on
->>>>  pre Windows XP era hardware.
->>>>
->>>>  Have you tried passing acpi_backlight=video on the kernel commandline?
->>>>
->>>>  What is the output of ls /sys/class/backlight before and after this
->>>>  patch?
->>>>
->>>>  What is the output of ls /sys/class/backlight when using
->>>>  acpi_backlight=video on the kernel commandline?
->>>>
->>>>  If the ls output shows multiple interfaces have you tried using all
->>>>  listed interfaces directly from sysfs / the commandline ?
->>>>
->>>>  (perhaps userspace is picking the wrong interface in the case there
->>>>  are multiple interfaces?)
->>>>
->>>>  Note what you are doing now is the equivalent of passing
->>>>  acpi_backlight=vendor, which again is a weird thing to do on
->>>>  recent / new hardware.
->>>>
->>>>  Also your commit message seems to lack a lot of details like:
->>>>
->>>>  1. Do you own an effected or multiple affected models yourself on
->>>>  which you tested this?
->>>>
->>>>  2. Was this tested by others on other models of these series?
->>>>
->>>>  3. I assume this was discussed with others in some mailinglist /
->>>>  forum discussion please provide links to this discussion.
->>>>
->>>>  4. Has this been tested with with both the nouveau and the
->>>>  nvidia binary driver or only with the nvidia binary driver ?
->>>>
->>>>  5. What were the symptoms / problems noticed before making this change
->>>>  and how do things work after making the change?
->>>>
->>>>  Regards,
->>>>
->>>>  Hans
->>>>
->>>>
->>>>
->>>>
->>>>
->>>>>
->>>>>   Signed-off-by: Luke D Jones <luke@ljones.dev>
->>>>>   ---
->>>>>    drivers/platform/x86/asus-nb-wmi.c | 57 ++++--------------------------
->>>>>    1 file changed, 6 insertions(+), 51 deletions(-)
->>>>>
->>>>>   diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->>>>>   index d41d7ad14be0..f4db67c3eba2 100644
->>>>>   --- a/drivers/platform/x86/asus-nb-wmi.c
->>>>>   +++ b/drivers/platform/x86/asus-nb-wmi.c
->>>>>   @@ -427,73 +427,28 @@ static const struct dmi_system_id asus_quirks[] = {
->>>>>        },
->>>>>        {
->>>>>            .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA401IH",
->>>>>   +        .ident = "ASUSTeK COMPUTER INC. GA401",
->>>>>            .matches = {
->>>>>                DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
->>>>>   +            DMI_MATCH(DMI_PRODUCT_NAME, "GA401"),
->>>>>            },
->>>>>            .driver_data = &quirk_asus_vendor_backlight,
->>>>>        },
->>>>>        {
->>>>>            .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA401II",
->>>>>   +        .ident = "ASUSTeK COMPUTER INC. GA502",
->>>>>            .matches = {
->>>>>                DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
->>>>>   +            DMI_MATCH(DMI_PRODUCT_NAME, "GA502"),
->>>>>            },
->>>>>            .driver_data = &quirk_asus_vendor_backlight,
->>>>>        },
->>>>>        {
->>>>>            .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA401IU",
->>>>>   +        .ident = "ASUSTeK COMPUTER INC. GA503",
->>>>>            .matches = {
->>>>>                DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
->>>>>   -        },
->>>>>   -        .driver_data = &quirk_asus_vendor_backlight,
->>>>>   -    },
->>>>>   -    {
->>>>>   -        .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA401IV",
->>>>>   -        .matches = {
->>>>>   -            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
->>>>>   -        },
->>>>>   -        .driver_data = &quirk_asus_vendor_backlight,
->>>>>   -    },
->>>>>   -    {
->>>>>   -        .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA401IVC",
->>>>>   -        .matches = {
->>>>>   -            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
->>>>>   -        },
->>>>>   -        .driver_data = &quirk_asus_vendor_backlight,
->>>>>   -    },
->>>>>   -        {
->>>>>   -        .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA502II",
->>>>>   -        .matches = {
->>>>>   -            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
->>>>>   -        },
->>>>>   -        .driver_data = &quirk_asus_vendor_backlight,
->>>>>   -    },
->>>>>   -    {
->>>>>   -        .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA502IU",
->>>>>   -        .matches = {
->>>>>   -            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
->>>>>   -        },
->>>>>   -        .driver_data = &quirk_asus_vendor_backlight,
->>>>>   -    },
->>>>>   -    {
->>>>>   -        .callback = dmi_matched,
->>>>>   -        .ident = "ASUSTeK COMPUTER INC. GA502IV",
->>>>>   -        .matches = {
->>>>>   -            DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->>>>>   -            DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
->>>>>   +            DMI_MATCH(DMI_PRODUCT_NAME, "GA503"),
->>>>>            },
->>>>>            .driver_data = &quirk_asus_vendor_backlight,
->>>>>        },
->>>>>
->>>>
->>>
->>>
->>
-> 
-> 
-
+SGVsbG8gSGFucywNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogSGFucyBk
+ZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj5TZW50OiBGcmlkYXksIE1hcmNoIDUsIDIw
+MjEgNTo1MSBQTQ0KPlRvOiBOaXRpbiBKb3NoaTEgPG5qb3NoaTFAbGVub3ZvLmNvbT47IE5pdGlu
+IEpvc2hpIDxuaXRqb3NoaUBnbWFpbC5jb20+DQo+Q2M6IGlibS1hY3BpLWRldmVsQGxpc3RzLnNv
+dXJjZWZvcmdlLm5ldDsgcGxhdGZvcm0tZHJpdmVyLQ0KPng4NkB2Z2VyLmtlcm5lbC5vcmc7IE1h
+cmsgUkggUGVhcnNvbiA8bWFya3BlYXJzb25AbGVub3ZvLmNvbT4NCj5TdWJqZWN0OiBSZTogW0V4
+dGVybmFsXSBSZTogW1BBVENIIHYyIDEvMl0gcGxhdG9ybS94ODY6IHRoaW5rcGFkX2FjcGk6IHN5
+c2ZzDQo+aW50ZXJmYWNlIHRvIHJlZHVjZSB3bGFuIHR4IHBvd2VyDQo+DQo+SGksDQo+DQo+T24g
+My81LzIxIDE6NDIgQU0sIE5pdGluIEpvc2hpMSB3cm90ZToNCj4+IEhlbGxvIEhhbnMsDQo+Pg0K
+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+Pj4gRnJvbTogSGFucyBkZSBHb2VkZSA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4+PiBTZW50OiBUaHVyc2RheSwgTWFyY2ggNCwgMjAyMSA4
+OjQ0IFBNDQo+Pj4gVG86IE5pdGluIEpvc2hpIDxuaXRqb3NoaUBnbWFpbC5jb20+DQo+Pj4gQ2M6
+IGlibS1hY3BpLWRldmVsQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgcGxhdGZvcm0tZHJpdmVyLQ0K
+Pj4+IHg4NkB2Z2VyLmtlcm5lbC5vcmc7IE5pdGluIEpvc2hpMSA8bmpvc2hpMUBsZW5vdm8uY29t
+PjsgTWFyayBSSA0KPj4+IFBlYXJzb24gPG1hcmtwZWFyc29uQGxlbm92by5jb20+DQo+Pj4gU3Vi
+amVjdDogW0V4dGVybmFsXSBSZTogW1BBVENIIHYyIDEvMl0gcGxhdG9ybS94ODY6IHRoaW5rcGFk
+X2FjcGk6DQo+Pj4gc3lzZnMgaW50ZXJmYWNlIHRvIHJlZHVjZSB3bGFuIHR4IHBvd2VyDQo+Pj4N
+Cj4+PiBIaSwNCj4+Pg0KPj4+IE9uIDIvMTYvMjEgODozNiBBTSwgTml0aW4gSm9zaGkgd3JvdGU6
+DQo+Pj4+IFNvbWUgbmV3ZXIgVGhpbmtwYWRzIGhhdmUgdGhlIFdMQU4gYW50ZW5uYSBwbGFjZWQg
+Y2xvc2UgdG8gdGhlDQo+V1dBTg0KPj4+PiBhbnRlbm5hLiBJbiB0aGVzZSBjYXNlcyBGQ0MgY2Vy
+dGlmaWNhdGlvbiByZXF1aXJlcyB0aGF0IHdoZW4gV1dBTiBpcw0KPj4+PiBhY3RpdmUgd2UgcmVk
+dWNlIFdMQU4gdHJhbnNtaXNzaW9uIHBvd2VyLiBBIG5ldyBEeW5hbWljIFBvd2VyDQo+Pj4+IFJl
+ZHVjdGlvbiBDb250cm9sIChEUFJDKSBtZXRob2QgaXMgYXZhaWxhYmxlIGZyb20gdGhlIEJJT1Mg
+b24gdGhlc2UNCj4+Pj4gcGxhdGZvcm1zIHRvIHJlZHVjZSBvciByZXN0b3JlIFdMQU4gVHggcG93
+ZXIuDQo+Pj4+DQo+Pj4+IFRoaXMgcGF0Y2ggcHJvdmlkZXMgYSBzeXNmcyBpbnRlcmZhY2UgdGhh
+dCB1c2Vyc3BhY2UgY2FuIHVzZSB0bw0KPj4+PiBhZGp1c3QgdGhlIFdMQU4gcG93ZXIgYXBwcm9w
+cmlhdGVseS4NCj4+Pj4NCj4+Pj4gUmV2aWV3ZWQtYnk6IE1hcmsgUGVhcnNvbiA8bWFya3BlYXJz
+b25AbGVub3ZvLmNvbT4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogTml0aW4gSm9zaGkgPG5qb3NoaTFA
+bGVub3ZvLmNvbT4NCj4+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgeW91ciBwYXRjaGVzLCBJJ20gYWZy
+YWlkIHRoYXQgdGhlcmUgYXJlIHN0aWxsIGEgY291cGxlDQo+Pj4gb2Ygc21hbGwgaXNzdWVzIHdo
+aWNoIG5lZWQgdG8gYmUgZml4ZWQgYmVmb3JlIEkgY2FuIGFwcGx5IHRoZXNlOg0KPj4NCj4+IFRo
+YW5rIHlvdSBmb3IgeW91ciBjb21tZW50cyBhbmQgYXBvbG9naXplIGZvciBhbnkgaW5jb252ZW5p
+ZW5jZSBjYXVzZWQuDQo+Pg0KPj4+DQo+Pj4gMS4gQm90aCBwYXRjaGVzIGhhdmUgInBsYXRmb3Jt
+IiBtaXNzcGVsbGVkIGluIHRoZSBwYXRjaCBTdWJqZWN0Lg0KPj4gQWNrLiAgSSB3aWxsIGNvcnJl
+Y3QgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KPj4NCj4+PiAyLiBUaGUgcGF0Y2hlcyBkb24ndCBhcHBs
+eSBjbGVhbmx5IGJlY2F1c2UgeW91ciBrYmRsYW5nIHBhdGNoIGhhcw0KPj4+ICAgYmVlbiBtZXJn
+ZWQgYW5kIHRoZXNlIGFyZSBiYXNlZCBvbiBhIHRoaW5rcGFkX2FjcGkgdmVyc2lvbiB3aXRob3V0
+DQo+Pj4gICB0aGVzZS4NCj4+IEFjay4gIEkgd2lsbCB0YWtlIGxhdGVzdCBmaWxlIGFuZCBjb3Jy
+ZWN0IGl0IGluIG5leHQgdmVyc2lvbi4NCj4+DQo+Pj4gMy4gSSd2ZSBzb21lIHJldmlldyByZW1h
+cmtzIGFib3V0IHRoaXMgcGF0Y2gsIHNlZSBteSBpbmxpbmUgY29tbWVudHMNCj5iZWxvdy4NCj4+
+PiAgIE5vdGUgc29tZSBvZiB0aGVzZSByZW1hcmtzIGFwcGx5IHRvIHBhdGNoIDIvMiB0b28NCj4+
+PiAgIChJJ3ZlIGluZGljYXRlZCB3aGVuIHRoaXMgaXMgdGhlIGNhc2UpLg0KPj4gQWNrIHdpdGgg
+dGhhbmtzDQo+Pg0KPj4+DQo+Pj4+IC0tLQ0KPj4+PiAgLi4uL2FkbWluLWd1aWRlL2xhcHRvcHMv
+dGhpbmtwYWQtYWNwaS5yc3QgICAgIHwgIDE4ICsrKw0KPj4+PiAgZHJpdmVycy9wbGF0Zm9ybS94
+ODYvdGhpbmtwYWRfYWNwaS5jICAgICAgICAgIHwgMTMwICsrKysrKysrKysrKysrKysrKw0KPj4+
+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxNDggaW5zZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9sYXB0b3BzL3RoaW5rcGFkLWFjcGkucnN0
+DQo+Pj4+IGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9sYXB0b3BzL3RoaW5rcGFkLWFjcGku
+cnN0DQo+Pj4+IGluZGV4IDVmZTFhZGU4OGMxNy4uMTA0MTA4MTFiOTkwIDEwMDY0NA0KPj4+PiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2xhcHRvcHMvdGhpbmtwYWQtYWNwaS5yc3QN
+Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9sYXB0b3BzL3RoaW5rcGFkLWFj
+cGkucnN0DQo+Pj4+IEBAIC01MSw2ICs1MSw3IEBAIGRldGFpbGVkIGRlc2NyaXB0aW9uKToNCj4+
+Pj4gIAktIFVXQiBlbmFibGUgYW5kIGRpc2FibGUNCj4+Pj4gIAktIExDRCBTaGFkb3cgKFByaXZh
+Y3lHdWFyZCkgZW5hYmxlIGFuZCBkaXNhYmxlDQo+Pj4+ICAJLSBMYXAgbW9kZSBzZW5zb3INCj4+
+Pj4gKwktIFdMQU4gdHJhbnNtaXNzaW9uIHBvd2VyIGNvbnRyb2wNCj4+Pj4NCj4+Pj4gIEEgY29t
+cGF0aWJpbGl0eSB0YWJsZSBieSBtb2RlbCBhbmQgZmVhdHVyZSBpcyBtYWludGFpbmVkIG9uIHRo
+ZSB3ZWINCj4+Pj4gc2l0ZSwgaHR0cDovL2libS1hY3BpLnNmLm5ldC8uIEkgYXBwcmVjaWF0ZSBh
+bnkgc3VjY2VzcyBvciBmYWlsdXJlDQo+Pj4+IEBADQo+Pj4+IC0xNDQ3LDYgKzE0NDgsMjMgQEAg
+dGhleSBkaWZmZXIgYmV0d2VlbiBkZXNrIGFuZCBsYXAgbW9kZS4NCj4+Pj4gIFRoZSBwcm9wZXJ0
+eSBpcyByZWFkLW9ubHkuIElmIHRoZSBwbGF0Zm9ybSBkb2Vzbid0IGhhdmUgc3VwcG9ydCB0aGUN
+Cj4+Pj4gc3lzZnMgIGNsYXNzIGlzIG5vdCBjcmVhdGVkLg0KPj4+Pg0KPj4+PiArV0xBTiB0cmFu
+c21pc3Npb24gcG93ZXIgY29udHJvbA0KPj4+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0NCj4+Pj4gKw0KPj4+PiArc3lzZnM6IHdsYW5fdHhfc3RyZW5ndGhfcmVkdWNlDQo+Pj4+
+ICsNCj4+Pj4gK1NvbWUgbmV3ZXIgVGhpbmtwYWRzIGhhdmUgdGhlIFdMQU4gYW50ZW5uYSBwbGFj
+ZWQgY2xvc2UgdG8gdGhlDQo+V1dBTg0KPj4+IGFudGVubmEuDQo+Pj4+ICtUaGlzIGludGVyZmFj
+ZSB3aWxsIGJlIHVzZWQgYnkgdXNlcnNwYWNlIHRvIHJlZHVjZSB0aGUgV0xBTiBUeA0KPj4+PiAr
+cG93ZXIgc3RyZW5ndGggd2hlbiBXV0FOIGlzIGFjdGl2ZSwgYXMgaXMgcmVxdWlyZWQgZm9yIEZD
+QyBjZXJ0aWZpY2F0aW9uLg0KPj4+PiArDQo+Pj4+ICtUaGUgYXZhaWxhYmxlIGNvbW1hbmRzIGFy
+ZTo6DQo+Pj4+ICsNCj4+Pj4gKyAgICAgICAgZWNobyAnMCcgPg0KPj4+IC9zeXMvZGV2aWNlcy9w
+bGF0Zm9ybS90aGlua3BhZF9hY3BpL3dsYW5fdHhfc3RyZW5ndGhfcmVkdWNlDQo+Pj4+ICsgICAg
+ICAgIGVjaG8gJzEnID4NCj4+Pj4gKyAvc3lzL2RldmljZXMvcGxhdGZvcm0vdGhpbmtwYWRfYWNw
+aS93bGFuX3R4X3N0cmVuZ3RoX3JlZHVjZQ0KPj4+PiArDQo+Pj4+ICtUaGUgZmlyc3QgY29tbWFu
+ZCByZXN0b3JlcyB0aGUgd2xhbiB0cmFuc21pc3Npb24gcG93ZXIgYW5kIHRoZQ0KPj4+PiArbGF0
+dGVyIG9uZSByZWR1Y2VzIHdsYW4gdHJhbnNtaXNzaW9uIHBvd2VyLg0KPj4+PiArDQo+Pj4+ICBF
+WFBFUklNRU5UQUw6IFVXQg0KPj4+PiAgLS0tLS0tLS0tLS0tLS0tLS0NCj4+Pj4NCj4+Pj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYw0KPj4+PiBiL2Ry
+aXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFkX2FjcGkuYw0KPj4+PiBpbmRleCBmM2U4ZWNhOGQ4
+NmQuLmFmOTAyNTFkNzlkNyAxMDA2NDQNCj4+Pj4gLS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYv
+dGhpbmtwYWRfYWNwaS5jDQo+Pj4+ICsrKyBiL2RyaXZlcnMvcGxhdGZvcm0veDg2L3RoaW5rcGFk
+X2FjcGkuYw0KPj4+PiBAQCAtOTk4Myw2ICs5OTgzLDEzMiBAQCBzdGF0aWMgc3RydWN0IGlibV9z
+dHJ1Y3QNCj4+Pj4gcHJveHNlbnNvcl9kcml2ZXJfZGF0YQ0KPj4+ID0gew0KPj4+PiAgCS5leGl0
+ID0gcHJveHNlbnNvcl9leGl0LA0KPj4+PiAgfTsNCj4+Pj4NCj4+Pj4NCj4+Pg0KPisvKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+DQo+Pj4gKioqKioNCj4+Pj4gKyoqKioqDQo+Pj4+ICsgKiBEUFJDKER5bmFtaWMgUG93ZXIgUmVk
+dWN0aW9uIENvbnRyb2wpIHN1YmRyaXZlciwgZm9yIHRoZSBMZW5vdm8NCj4+Pj4gK1dXQU4NCj4+
+Pj4gKyAqIGFuZCBXTEFOIGZlYXR1cmUuDQo+Pj4+ICsgKi8NCj4+Pj4gKyNkZWZpbmUgRFBSQ19H
+RVRfV0xBTl9TVEFURSAgICAgICAgICAgICAweDIwMDAwDQo+Pj4+ICsjZGVmaW5lIERQUkNfU0VU
+X1dMQU5fUE9XRVJfUkVEVUNFICAgICAgMHgwMDAzMDAxMA0KPj4+PiArI2RlZmluZSBEUFJDX1NF
+VF9XTEFOX1BPV0VSX0ZVTEwgICAgICAgIDB4MDAwMzAxMDANCj4+Pj4gKyNkZWZpbmUgRFBSQ19X
+TEFOX1BPV0VSX1JFRFVDRV9CSVQgICAgICBCSVQoNCkNCj4+Pj4gKyNkZWZpbmUgRFBSQ19XTEFO
+X1BPV0VSX0ZVTExfQklUICAgICAgICBCSVQoOCkNCj4+Pj4gK3N0YXRpYyBib29sIGhhc193bGFu
+dHhyZWR1Y2U7DQo+Pj4+ICtzdGF0aWMgaW50IHdsYW5fdHhyZWR1Y2U7DQo+Pj4+ICsNCj4+Pj4g
+K3N0YXRpYyBpbnQgZHByY19jb21tYW5kKGludCBjb21tYW5kLCBpbnQgKm91dHB1dCkgew0KPj4+
+PiArCWFjcGlfaGFuZGxlIGRwcmNfaGFuZGxlOw0KPj4+PiArDQo+Pj4+ICsJaWYgKEFDUElfRkFJ
+TFVSRShhY3BpX2dldF9oYW5kbGUoaGtleV9oYW5kbGUsICJEUFJDIiwNCj4+PiAmZHByY19oYW5k
+bGUpKSkgew0KPj4+PiArCQkvKiBQbGF0Zm9ybSBkb2Vzbid0IHN1cHBvcnQgRFBSQyAqLw0KPj4+
+PiArCQlyZXR1cm4gLUVOT0RFVjsNCj4+Pj4gKwl9DQo+Pj4+ICsNCj4+Pj4gKwlpZiAoIWFjcGlf
+ZXZhbGYoZHByY19oYW5kbGUsIG91dHB1dCwgTlVMTCwgImRkIiwgY29tbWFuZCkpDQo+Pj4+ICsJ
+CXJldHVybiAtRUlPOw0KPj4+PiArDQo+Pj4+ICsJLyoNCj4+Pj4gKwkgKiBNRVRIT0RfRVJSIGdl
+dHMgcmV0dXJuZWQgb24gZGV2aWNlcyB3aGVyZSBmZXcgY29tbWFuZHMgYXJlDQo+Pj4gbm90IHN1
+cHBvcnRlZA0KPj4+PiArCSAqIGZvciBleGFtcGxlIFdMQU4gcG93ZXIgcmVkdWNlIGNvbW1hbmQg
+aXMgbm90IHN1cHBvcnRlZCBvbg0KPj4+IHNvbWUgZGV2aWNlcy4NCj4+Pj4gKwkgKi8NCj4+Pj4g
+KwlpZiAoKm91dHB1dCAmIE1FVEhPRF9FUlIpDQo+Pj4+ICsJCXJldHVybiAtRU5PREVWOw0KPj4+
+PiArDQo+Pj4+ICsJcmV0dXJuIDA7DQo+Pj4+ICt9DQo+Pj4+ICsNCj4+Pj4gK3N0YXRpYyBpbnQg
+Z2V0X3dsYW5fc3RhdGUoaW50ICp3bGFuX3R4cmVkdWNlKSB7DQo+Pj4+ICsJaW50IG91dHB1dCwg
+ZXJyOw0KPj4+PiArDQo+Pj4+ICsJLyogR2V0IGN1cnJlbnQgV0xBTiBQb3dlciBUcmFuc21pc3Np
+b24gc3RhdGUgKi8NCj4+Pj4gKwllcnIgPSBkcHJjX2NvbW1hbmQoRFBSQ19HRVRfV0xBTl9TVEFU
+RSwgJm91dHB1dCk7DQo+Pj4+ICsJaWYgKGVycikNCj4+Pj4gKwkJcmV0dXJuIGVycjsNCj4+Pj4g
+Kw0KPj4+PiArCWlmIChvdXRwdXQgJiBEUFJDX1dMQU5fUE9XRVJfUkVEVUNFX0JJVCkNCj4+Pj4g
+KwkJKndsYW5fdHhyZWR1Y2UgPSAxOw0KPj4+PiArCWVsc2UgaWYgKG91dHB1dCAmIERQUkNfV0xB
+Tl9QT1dFUl9GVUxMX0JJVCkNCj4+Pj4gKwkJKndsYW5fdHhyZWR1Y2UgPSAwOw0KPj4+PiArCWVs
+c2UNCj4+Pj4gKwkJcmV0dXJuIC1FTk9EQVRBOw0KPj4+DQo+Pj4gSWYgeW91IHJldHVybiAtRU5P
+REVWIGhlcmUsIHRoZW4gdGhlIGVycm9yIGhhbmRsaW5nIGluDQo+Pj4gdHBhY3BpX2RwcmNfaW5p
+dCgpIGJlY29tZXMgYSBsb3Qgc2ltcGxlciAvIGVhc2llciB0byByZWFkLg0KPj4+DQo+Pj4gTm90
+ZSB0aGlzIHJlbWFyayBhcHBsaWVzIHRvIHBhdGNoIDIvMiB0b28uDQo+PiBBY2suIEkgd2lsbCBt
+b2RpZnkgaXQgb24gbmV4dCB2ZXJzaW9uLg0KPj4NCj4+Pg0KPj4+PiArDQo+Pj4+ICsJcmV0dXJu
+IDA7DQo+Pj4+ICt9DQo+Pj4+ICsNCj4+Pj4gKy8qIHN5c2ZzIHdsYW4gZW50cnkgKi8NCj4+Pj4g
+K3N0YXRpYyBzc2l6ZV90IHdsYW5fdHhfc3RyZW5ndGhfcmVkdWNlX3Nob3coc3RydWN0IGRldmlj
+ZSAqZGV2LA0KPj4+PiArCQkJCQkJc3RydWN0IGRldmljZV9hdHRyaWJ1dGUgKmF0dHIsDQo+Pj4+
+ICsJCQkJCQljaGFyICpidWYpDQo+Pj4+ICt7DQo+Pj4+ICsJaW50IGVycjsNCj4+Pj4gKw0KPj4+
+PiArCWVyciA9IGdldF93bGFuX3N0YXRlKCZ3bGFuX3R4cmVkdWNlKTsNCj4+Pj4gKwlpZiAoZXJy
+KQ0KPj4+PiArCQlyZXR1cm4gZXJyOw0KPj4+DQo+Pj4gSXMgaXQgbmVjZXNzYXJ5IHRvIHJlLXF1
+ZXJ5IHRoZSBzZXR0aW5nIGhlcmU/IENhbid0IHlvdSBqdXN0IHF1ZXJ5IGl0DQo+Pj4gZnJvbQ0K
+Pj4+IHRwYWNwaV9kcHJjX2luaXQoKSBvbmNlIGFuZCBzdG9yZSB0aGUgdXBkYXRlZCB2YWx1ZSBp
+bg0KPj4+IHdsYW5fdHhfc3RyZW5ndGhfcmVkdWNlX3N0b3JlKCkgb24gc3VjY2Vzcz8NCj4+IFdl
+IHdpbGwgaGF2ZSB0byBjYWxsIHRoaXMgc3lzIGZvciBXTEFOIHBvd2VyIHJlZHVjZSBvciBmdWxs
+IGZyb20NCj4+IHVzZXJzcGFjZSBiYXNlZCBvbiBzb21lIGNvbmRpdGlvbnMuIEFmdGVyIHNldHRp
+bmcgd2UgbmVlZCB0byBtYWtlIHN1cmUgaWYNCj53bGFuIGlzIHNldCBjb3JyZWN0bHkgaW4gQklP
+UyAuDQo+PiBJIGNhbiB1bmRlcnN0YW5kIHRoYXQgaWYgc2V0dGluZyBpcyBzdWNjZXNzLCB0aGVu
+IHdlIGNhbiBzdG9yZSB1cGRhdGVkIHZhbHVlDQo+b24gc3VjY2Vzcy4NCj4+IEhvd2V2ZXIgLCBz
+aW5jZSwgd2UgaGF2ZSBjb21tYW5kIHRvIGdldCB3bGFuIHR4IHN0YXRlIGluICJEUFJDIiBtZXRo
+b2QNCj4+ICwgc28gSSBqdXN0IHdhbnQgdG8gbWFrZSBzdXJlIElmIHdsYW4gdHggc3RhdGUgaXMg
+c2V0IGNvcnJlY3RseSBpbiBCSU9TIGFzIEkgZG9u4oCZdA0KPmhhdmUgYW55IG90aGVyIHdheSB0
+byBjb25maXJtIGl0Lg0KPj4gU28sIEkgdGhpbmsgaXQncyBiZXR0ZXIgdG8ga2VlcCB0aGlzIHNl
+dHRpbmcgaGVyZS4NCj4NCj5LZWVwaW5nIHRoZSBxdWVyeWluZyBvZiB0aGUgc2V0dGluZyBoZXJl
+IGlzIGZpbmUuDQo+DQpOb3RlZCB3aXRoIHRoYW5rcyAuDQoNClRoYW5rcyAmIFJlZ2FyZHMsDQpO
+aXRpbiBKb3NoaSANCj4+DQo+Pj4NCj4+Pg0KPj4+PiArDQo+Pj4+ICsJcmV0dXJuIHN5c2ZzX2Vt
+aXQoYnVmLCAiJWRcbiIsIHdsYW5fdHhyZWR1Y2UpOyB9DQo+Pj4+ICsNCj4+Pj4gK3N0YXRpYyBz
+c2l6ZV90IHdsYW5fdHhfc3RyZW5ndGhfcmVkdWNlX3N0b3JlKHN0cnVjdCBkZXZpY2UgKmRldiwN
+Cj4+Pj4gKwkJCQkJCXN0cnVjdCBkZXZpY2VfYXR0cmlidXRlICphdHRyLA0KPj4+PiArCQkJCQkJ
+Y29uc3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQpIHsNCj4+Pj4gKwlpbnQgb3V0cHV0LCBlcnIs
+IHJldDsNCj4+Pg0KPj4+IFBsZWFzZSB1c2UganVzdCBlcnIgaGVyZSwgdGhlcmUgaXMgbm8gbmVl
+ZCB0byBoYXZlIGJvdGggZXJyIGFuZCByZXQuDQo+PiBBY2suIEkgd2lsbCBtb2RpZnkgaXQgaW4g
+bmV4dCB2ZXJzaW9uLg0KPj4NCj4+Pg0KPj4+PiArCWJvb2wgc3RhdGU7DQo+Pj4+ICsNCj4+Pj4g
+KwlyZXQgPSBrc3RydG9ib29sKGJ1ZiwgJnN0YXRlKTsNCj4+Pj4gKwlpZiAocmV0KQ0KPj4+PiAr
+CQlyZXR1cm4gcmV0Ow0KPj4+DQo+Pj4gU28gY2hhbmdlIHRvIHVzaW5nIGVyciBoZXJlLg0KPj4+
+DQo+PiBBY2suIEkgd2lsbCBtb2RpZnkgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KPj4NCj4+Pj4gKw0K
+Pj4+PiArCWlmIChzdGF0ZSkNCj4+Pj4gKwkJZXJyID0gZHByY19jb21tYW5kKERQUkNfU0VUX1dM
+QU5fUE9XRVJfUkVEVUNFLA0KPj4+ICZvdXRwdXQpOw0KPj4+PiArCWVsc2UNCj4+Pj4gKwkJZXJy
+ID0gZHByY19jb21tYW5kKERQUkNfU0VUX1dMQU5fUE9XRVJfRlVMTCwNCj4+PiAmb3V0cHV0KTsN
+Cj4+Pg0KPj4+DQo+Pj4gWW91IGFyZSBub3QgZG9pbmcgYW55dGhpbmcgd2l0aCBlcnIgaGVyZSwg
+c2hvdWxkbid0IHRoaXMgaGF2ZSBhOg0KPj4+DQo+Pj4gCWlmIChlcnIpDQo+Pj4gCQlyZXR1cm4g
+ZXJyOw0KPj4+DQo+Pj4gaGVyZSA/DQo+PiBBY2suIEkgd2lsbCByZWNoZWNrIGl0IGFuZCBtb2Rp
+ZnkgaXQgaW4gbmV4dCB2ZXJzaW9uLg0KPj4NCj4+IEkgd2lsbCBpbmNvcnBvcmF0ZSBhbGwgY29t
+bWVudHMgYW5kIHNlbmQgdXBkYXRlZCBwYXRjaCBieSBuZXh0IHdlZWsgb3INCj5hc2FwLg0KPg0K
+PlRoYW5rIHlvdS4NCj4NCj5SZWdhcmRzLA0KPg0KPkhhbnMNCj4NCj4NCj4NCj4+Pj4gKw0KPj4+
+PiArCXN5c2ZzX25vdGlmeSgmdHBhY3BpX3BkZXYtPmRldi5rb2JqLCBOVUxMLA0KPj4+PiArInds
+YW5fdHhfc3RyZW5ndGhfcmVkdWNlIik7DQo+Pj4+ICsNCj4+Pj4gKwlyZXR1cm4gY291bnQ7DQo+
+Pj4+ICt9DQo+Pj4+ICtzdGF0aWMgREVWSUNFX0FUVFJfUlcod2xhbl90eF9zdHJlbmd0aF9yZWR1
+Y2UpOw0KPj4+PiArDQo+Pj4+ICtzdGF0aWMgaW50IHRwYWNwaV9kcHJjX2luaXQoc3RydWN0IGli
+bV9pbml0X3N0cnVjdCAqaWlibSkgew0KPj4+PiArCWludCB3bGFudHhfZXJyLCBlcnI7DQo+Pj4+
+ICsNCj4+Pj4gKwl3bGFudHhfZXJyID0gZ2V0X3dsYW5fc3RhdGUoJndsYW5fdHhyZWR1Y2UpOw0K
+Pj4+PiArCS8qDQo+Pj4+ICsJICogSWYgc3VwcG9ydCBpc24ndCBhdmFpbGFibGUgKEVOT0RFVikg
+Zm9yIGJvdGggZGV2aWNlcyB0aGVuIHF1aXQsIGJ1dA0KPj4+PiArCSAqIGRvbid0IHJldHVybiBh
+biBlcnJvci4NCj4+Pj4gKwkgKi8NCj4+Pj4gKwlpZiAoKHdsYW50eF9lcnIgPT0gLUVOT0RFVikg
+fHwgKHdsYW50eF9lcnIgPT0gLUVOT0RBVEEpKQ0KPj4+PiArCQlyZXR1cm4gMDsNCj4+Pj4gKwkv
+KiBPdGhlcndpc2UsIGlmIHRoZXJlIHdhcyBhbiBlcnJvciByZXR1cm4gaXQgKi8NCj4+Pj4gKwlp
+ZiAod2xhbnR4X2VyciAmJiAod2xhbnR4X2VyciAhPSAtRU5PREVWKSAmJiAod2xhbnR4X2VyciAh
+PSAtDQo+Pj4gRU5PREFUQSkpDQo+Pj4+ICsJCXJldHVybiB3bGFudHhfZXJyOw0KPj4+PiArCWVs
+c2UgaWYgKCF3bGFudHhfZXJyKQ0KPj4+PiArCQloYXNfd2xhbnR4cmVkdWNlID0gdHJ1ZTsNCj4+
+Pj4gKw0KPj4+PiArCWlmIChoYXNfd2xhbnR4cmVkdWNlKSB7DQo+Pj4+ICsJCWVyciA9IHN5c2Zz
+X2NyZWF0ZV9maWxlKCZ0cGFjcGlfcGRldi0+ZGV2LmtvYmosDQo+Pj4+ICsNCj4+PiAJJmRldl9h
+dHRyX3dsYW5fdHhfc3RyZW5ndGhfcmVkdWNlLmF0dHIpOw0KPj4+PiArCQlpZiAoZXJyKQ0KPj4+
+PiArCQkJcmV0dXJuIGVycjsNCj4+Pj4gKwl9DQo+Pj4+ICsJcmV0dXJuIDA7DQo+Pj4+ICt9DQo+
+Pj4+ICsNCj4+Pj4gK3N0YXRpYyB2b2lkIGRwcmNfZXhpdCh2b2lkKQ0KPj4+PiArew0KPj4+PiAr
+CWlmIChoYXNfd2xhbnR4cmVkdWNlKQ0KPj4+PiArCQlzeXNmc19yZW1vdmVfZmlsZSgmdHBhY3Bp
+X3BkZXYtPmRldi5rb2JqLA0KPj4+PiArJmRldl9hdHRyX3dsYW5fdHhfc3RyZW5ndGhfcmVkdWNl
+LmF0dHIpOw0KPj4+PiArfQ0KPj4+PiArDQo+Pj4+ICtzdGF0aWMgc3RydWN0IGlibV9zdHJ1Y3Qg
+ZHByY19kcml2ZXJfZGF0YSA9IHsNCj4+Pj4gKwkubmFtZSA9ICJkcHJjIiwNCj4+Pj4gKwkuZXhp
+dCA9IGRwcmNfZXhpdCwNCj4+Pj4gK307DQo+Pj4+ICsNCj4+Pj4NCj4+Pg0KPi8qKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQo+
+Pj4gKioqKioqKioqKioqDQo+Pj4+DQo+Pj4NCj4qKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KPj4+ICoqKioqKioqKioqDQo+
+Pj4+ICAgKg0KPj4+PiBAQCAtMTA0NzUsNiArMTA2MDEsMTAgQEAgc3RhdGljIHN0cnVjdCBpYm1f
+aW5pdF9zdHJ1Y3QgaWJtc19pbml0W10NCj4+PiBfX2luaXRkYXRhID0gew0KPj4+PiAgCQkuaW5p
+dCA9IHRwYWNwaV9wcm94c2Vuc29yX2luaXQsDQo+Pj4+ICAJCS5kYXRhID0gJnByb3hzZW5zb3Jf
+ZHJpdmVyX2RhdGEsDQo+Pj4+ICAJfSwNCj4+Pj4gKwl7DQo+Pj4+ICsJCS5pbml0ID0gdHBhY3Bp
+X2RwcmNfaW5pdCwNCj4+Pj4gKwkJLmRhdGEgPSAmZHByY19kcml2ZXJfZGF0YSwNCj4+Pj4gKwl9
+LA0KPj4+PiAgfTsNCj4+Pj4NCj4+Pj4gIHN0YXRpYyBpbnQgX19pbml0IHNldF9pYm1fcGFyYW0o
+Y29uc3QgY2hhciAqdmFsLCBjb25zdCBzdHJ1Y3QNCj4+Pj4ga2VybmVsX3BhcmFtICprcCkNCj4+
+Pj4NCj4+DQoNCg==
