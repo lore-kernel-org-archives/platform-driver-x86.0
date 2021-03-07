@@ -1,251 +1,173 @@
-Return-Path: <SRS0=RDqw=IE=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=OtHb=IF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B452FC433E9
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Mar 2021 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C8EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 08:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC6765018
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  6 Mar 2021 13:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DE26512A
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 08:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230399AbhCFNMD (ORCPT
+        id S230023AbhCGIj2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 6 Mar 2021 08:12:03 -0500
-Received: from gecko.sbs.de ([194.138.37.40]:46327 "EHLO gecko.sbs.de"
+        Sun, 7 Mar 2021 03:39:28 -0500
+Received: from mga01.intel.com ([192.55.52.88]:26640 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230213AbhCFNMD (ORCPT
+        id S229872AbhCGIj0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 6 Mar 2021 08:12:03 -0500
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 126DBZYo010323
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 6 Mar 2021 14:11:35 +0100
-Received: from md1za8fc.ad001.siemens.net ([139.22.40.205])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 126D6XWf023339;
-        Sat, 6 Mar 2021 14:06:33 +0100
-Date:   Sat, 6 Mar 2021 14:06:33 +0100
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        "Hans de Goede" <hdegoede@redhat.com>
-Subject: Re: [PATCH 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-Message-ID: <20210306140633.57f28b05@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210306135453.6dc186d2@md1za8fc.ad001.siemens.net>
-References: <20210302163309.25528-1-henning.schild@siemens.com>
-        <20210302163309.25528-3-henning.schild@siemens.com>
-        <20210302205452.GA32573@duo.ucw.cz>
-        <20210303141052.30641e6b@md1za8fc.ad001.siemens.net>
-        <20210303193134.GB8720@amd>
-        <20210303214810.511ad65a@md1za8fc.ad001.siemens.net>
-        <20210303215615.64e45720@md1za8fc.ad001.siemens.net>
-        <20210305192555.34f7ea0f@md1za8fc.ad001.siemens.net>
-        <20210306135453.6dc186d2@md1za8fc.ad001.siemens.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 7 Mar 2021 03:39:26 -0500
+IronPort-SDR: zk6EYJHZOedSszN0wEqK7K7E2evhzfj7yGqpOAI9oZQkO7tRjepnNl2ZELIsTo3+2s6wy2LdKm
+ UBQzTE+Zhy0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9915"; a="207629168"
+X-IronPort-AV: E=Sophos;i="5.81,229,1610438400"; 
+   d="scan'208";a="207629168"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2021 00:39:23 -0800
+IronPort-SDR: M+e00K1rWQjSQqckLAaK0Mg7SbqPOvmw8j/6S2L1LXSv2HXm2R9M9tmv7r8hFbKrwEJXPBDuRv
+ Bw7KDHupUSEg==
+X-IronPort-AV: E=Sophos;i="5.81,229,1610438400"; 
+   d="scan'208";a="408933151"
+Received: from sneftin-mobl.ger.corp.intel.com (HELO [10.185.168.83]) ([10.185.168.83])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2021 00:39:20 -0800
+Subject: Re: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
+ platforms
+To:     "David E. Box" <david.e.box@linux.intel.com>,
+        irenic.rajneesh@gmail.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org,
+        "Neftin, Sasha" <sasha.neftin@intel.com>
+References: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+From:   "Neftin, Sasha" <sasha.neftin@intel.com>
+Message-ID: <113b08b2-ead1-7f4c-1b09-4f3572d6134f@intel.com>
+Date:   Sun, 7 Mar 2021 10:39:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Sat, 6 Mar 2021 13:54:53 +0100
-schrieb Henning Schild <henning.schild@siemens.com>:
-
-> Am Fri, 5 Mar 2021 19:25:55 +0100
-> schrieb Henning Schild <henning.schild@siemens.com>:
+On 3/5/2021 21:06, David E. Box wrote:
+> Due to a HW limitation, the Latency Tolerance Reporting (LTR) value
+> programmed in the Tiger Lake GBE controller is not large enough to allow
+> the platform to enter Package C10, which in turn prevents the platform from
+> achieving its low power target during suspend-to-idle.  Ignore the GBE LTR
+> value on Tiger Lake. LTR ignore functionality is currently performed solely
+> by a debugfs write call. Split out the LTR code into its own function that
+> can be called by both the debugfs writer and by this work around.
 > 
-> > Am Wed, 3 Mar 2021 21:56:15 +0100
-> > schrieb Henning Schild <henning.schild@siemens.com>:
-> >   
-> > > Am Wed, 3 Mar 2021 21:48:21 +0100
-> > > schrieb Henning Schild <henning.schild@siemens.com>:
-> > >     
-> > > > Am Wed, 3 Mar 2021 20:31:34 +0100
-> > > > schrieb Pavel Machek <pavel@ucw.cz>:
-> > > >       
-> > > > > Hi!
-> > > > >         
-> > > > > > > > +static struct simatic_ipc_led simatic_ipc_leds_io[] = {
-> > > > > > > > +	{1 << 15, "simatic-ipc:green:run-stop"},
-> > > > > > > > +	{1 << 7,  "simatic-ipc:yellow:run-stop"},
-> > > > > > > > +	{1 << 14, "simatic-ipc:red:error"},
-> > > > > > > > +	{1 << 6,  "simatic-ipc:yellow:error"},
-> > > > > > > > +	{1 << 13, "simatic-ipc:red:maint"},
-> > > > > > > > +	{1 << 5,  "simatic-ipc:yellow:maint"},
-> > > > > > > > +	{0, ""},
-> > > > > > > > +};            
-> > > > > > > 
-> > > > > > > Please use names consistent with other systems, this is
-> > > > > > > user visible. If you have two-color power led, it should
-> > > > > > > be :green:power... See include/dt-bindings/leds/common.h .
-> > > > > > >      
-> > > > > > 
-> > > > > > Well we wanted to pick names that are printed on the devices
-> > > > > > and would like to stick to those. Has been a discussion ...
-> > > > > > Can we have symlinks to have multiple names per LED?
-> > > > > >   
-> > > > > 
-> > > > > No symlinks. We plan to have command line tool to manipulate
-> > > > > LEDs, aliases might be possible there.        
-> > > > 
-> > > > Sounds like a future plan. sysfs and "cat" "echo" are mighty
-> > > > tools and "everything is a file" is the best idea ever. So i
-> > > > would say any aliasing should live in the kernel, but that is
-> > > > just me. Tools will just get out of sync, be missing in busybox
-> > > > or a random yocto ... or whichever distro you like.
-> > > > On the other hand you have "complexity should be userland" ... i
-> > > > do not have the answer.      
-> > > 
-> > > My personal horror would be systemd-ledd or some dracut snipet for
-> > > initrd. But that would be a generic led class discussion ... that
-> > > tool.
-> > >     
-> > > > > > How strong would you feel about us using our names?
-> > > > > >  
-> > > > > 
-> > > > > Strongly. :-)        
-> > > > 
-> > > > OK, will try to find a match where possible.       
-> > > 
-> > > Do we happen to have a description of the existing names, to find
-> > > a fit for ours? In the header you pointed out i only found names
-> > > without "meaning"    
-> > 
-> > I had a closer look at the several LED_FUNCTION_ while i could
-> > probably find a match for the names we had in mind ...
-> > 
-> > -       {1 << 14, "simatic-ipc:red:error"},
-> > +       {1 << 14, "simatic-ipc:red:" LED_FUNCTION_FAULT },
-> > 
-> > I still do not understand what those mean. Going over the kernel
-> > sources many have only one single grep-hit in the tree.
-> > LED_FUNCTION_ not having a single one in drivers/leds
-> > Others are found in one dts and in that header ... 2 hits in the
-> > tree, maybe i should add my favorite strings ;)
-> > 
-> > LED_FUNCTION_FLASH vs LED_FUNCTION_TORCH ...? Sound like timing, not
-> > function.
-> > 
-> > Let us say i match the three "error", "run-stop", "maint" to
-> > LED_FUNCTION_*
-> > 
-> > I would have a really hard time finding matches for other LEDs i did
-> > not even propose. One example being disks ... many of them, would i
-> > be allowed to 
-> > 
-> > LED_FUNCTION_DISK "0"
-> > LED_FUNCTION_DISK "1"
-> > ...
-> > 
-> > they would all have the same colors.
-> > 
-> > Maybe you explain the idea behind choosing only from that namespace?
-> > My guess would be high-level software being able to toggle leds
-> > totally indep of the device it runs on. Such software would have to
-> > do some really nasty directory listing, name parsing, dealing with
-> > multiple hits. Does such generic software already exist, maybe that
-> > would help me understand my "mapping problems" ?
-> > 
-> > The current class encodes, color, function and name into "name".
-> > 
-> > Maybe i am all wrong and should go for
-> > 
-> > {1 << 14, "simatic-ipc-error:red:" LED_FUNCTION_STATUS }
-> > {1 << 15, "simatic-ipc-run-stop:green:" LED_FUNCTION_STATUS}
-> > {...    , "simatic-ipc-hdd0:red:" LED_FUNCTION_DISK }
-> > {...    , "simatic-ipc-hdd1:red:" LED_FUNCTION_DISK }
-> > 
-> > so appending my wanted name to the name before the first :, and use
-> > functions i "understand" after the second :  
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Sasha Neftin <sasha.neftin@intel.com>
+> Cc: intel-wired-lan@lists.osuosl.org
+> ---
+>   drivers/platform/x86/intel_pmc_core.c | 55 ++++++++++++++++++++-------
+>   1 file changed, 42 insertions(+), 13 deletions(-)
 > 
-> Found the docs and the check script. It has been a while since i read
-> those docs.
-> 
-> But that script fails on bus=platform
-> 
-> quick workaround would be
-> 
->         fi
-> +elif [ "$bus" = "platform" ]; then
-> +       true
->  else
->         echo "Unknown device type."
->         exit 1
-> 
-> But i guess it would be nice to get some sort of platform information,
-> device vendor etc.
-> 
-> I see two options for pattern i could choose
-> 
-> "green:" LED_FUNCTION_STATUS "-0"
-> -> platform bus patch needed, no plaform information  
-> 
-> simatic-ipc:green:" LED_FUNCTION_STATUS "-0"
-> -> platform bus patch needed, will fail with "Unknown devicename"  
-> 
-> Without further advice i will choose the second for v2. That is also
-> what i.e. "tpacpi" on my laptop looks like.
-> 
-> I would also be happy to include a fix to that script. My suggestion
-> would be to allow bus=platform, in which case a "devicename" will be
-> required and is allowed to have any value.
-
-Furthermore it might be good to catch that in the led core instead of
-that script. Maybe warn() on dev registration when function/color/name
-seem off. Could later become "return -EINVAL"
-
-Henning
-
-> regards,
-> Henning
-> 
-> > regards,
-> > Henning
-> > 
-> >   
-> > > regards,
-> > > Henning
-> > >     
-> > > >       
-> > > > > Do you have a picture how the leds look like?        
-> > > > 
-> > > > I could even find chassis photos in our internal review but that
-> > > > would be too much.
-> > > > 
-> > > > Our idea is probably the same as yours. We want the same names
-> > > > across all devices. But we struggle with colors because on some
-> > > > boxes we have red+green, while other offer yellow ...
-> > > > implemented in HW and messing with red+green in some cases.
-> > > > 
-> > > > But so far we only looked at Siemens devices and thought we
-> > > > could get our own "namespace".
-> > > > 
-> > > > To be honest i could not even tell how our names map on the
-> > > > known ones, but we will do our best to find a match. They all
-> > > > are "high-level" so "power" and other basic things are not
-> > > > exposed.
-> > > > 
-> > > > regards,
-> > > > Henning
-> > > >        
-> > > > > Best regards,
-> > > > > 							Pavel
-> > > > >      
-> > > >       
-> > >     
-> >   
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index ee2f757515b0..ab31eb646a1a 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -863,34 +863,45 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+>   }
+>   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+>   
+> -static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> -					 const char __user *userbuf,
+> -					 size_t count, loff_t *ppos)
+> +static int pmc_core_write_ltr_ignore(u32 value)
+>   {
+>   	struct pmc_dev *pmcdev = &pmc;
+>   	const struct pmc_reg_map *map = pmcdev->map;
+> -	u32 val, buf_size, fd;
+> -	int err;
+> -
+> -	buf_size = count < 64 ? count : 64;
+> -
+> -	err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> -	if (err)
+> -		return err;
+> +	u32 fd;
+> +	int err = 0;
+>   
+>   	mutex_lock(&pmcdev->lock);
+>   
+> -	if (val > map->ltr_ignore_max) {
+> +	if (fls(value) > map->ltr_ignore_max) {
+>   		err = -EINVAL;
+>   		goto out_unlock;
+>   	}
+>   
+>   	fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+> -	fd |= (1U << val);
+> +	fd |= value;
+>   	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
+>   
+>   out_unlock:
+>   	mutex_unlock(&pmcdev->lock);
+> +
+> +	return err;
+> +}
+> +
+> +static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> +					 const char __user *userbuf,
+> +					 size_t count, loff_t *ppos)
+> +{
+> +	u32 buf_size, val;
+> +	int err;
+> +
+> +	buf_size = count < 64 ? count : 64;
+> +
+> +	err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	err = pmc_core_write_ltr_ignore(1U << val);
+> +
+>   	return err == 0 ? count : err;
+>   }
+>   
+> @@ -1189,6 +1200,15 @@ static int quirk_xtal_ignore(const struct dmi_system_id *id)
+>   	return 0;
+>   }
+>   
+> +static int quirk_ltr_ignore(u32 val)
+> +{
+> +	int err;
+> +
+> +	err = pmc_core_write_ltr_ignore(val);
+> +
+> +	return err;
+> +}
+> +
+>   static const struct dmi_system_id pmc_core_dmi_table[]  = {
+>   	{
+>   	.callback = quirk_xtal_ignore,
+> @@ -1244,6 +1264,15 @@ static int pmc_core_probe(struct platform_device *pdev)
+>   	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>   	dmi_check_system(pmc_core_dmi_table);
+>   
+> +	/*
+> +	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
+> +	 * a cable is attached. Tell the PMC to ignore it.
+> +	 */
+> +	if (pmcdev->map == &tgl_reg_map) {
+I would suggest: if (pmcdev->map >= &tgl_reg_map)
+> +		dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
+> +		quirk_ltr_ignore(1U << 3);
+> +	}
+> +
+>   	pmc_core_dbgfs_register(pmcdev);
+>   
+>   	device_initialized = true;
 > 
 
