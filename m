@@ -2,132 +2,205 @@ Return-Path: <SRS0=OtHb=IF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD34C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 13:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67818C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 19:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B379A650EA
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 13:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2AA64F53
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 19:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231366AbhCGNgf (ORCPT
+        id S231592AbhCGTJj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 7 Mar 2021 08:36:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbhCGNgd (ORCPT
+        Sun, 7 Mar 2021 14:09:39 -0500
+Received: from mga03.intel.com ([134.134.136.65]:25558 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232176AbhCGTJP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Mar 2021 08:36:33 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFB2C06174A;
-        Sun,  7 Mar 2021 05:36:32 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id l12so8544290wry.2;
-        Sun, 07 Mar 2021 05:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yi0ZEk8deovytENaEvDCthUQeLN5wMyV9czNFYkt5v8=;
-        b=TW2g+FuofdVpBTKZbgcw7UKt9/oClRY56f0UVE9xgNtjCBHogr2CzWpaXjjoD05OYh
-         phK5IWT+dSSm3LAgHAX9g20Oz3GAXeRw8Xbae4QR1VSiwyHJYK9yqCRH9+liu1vAiMmw
-         dYbQ3wwWE7gQaXjMQQZt10qiwMdI2syLNxVgxP5o9XipAlb8hfmO6VJHOhvLWpdstCHF
-         gdB2ubkT3mLtZCFCrsVNZn0k794MUwlEtH2DI0MN2BkQYV1mzPsBF8L5uoWXEfp7mxcG
-         0gMRBOkNACZYYQ+SfSW1u1Jcpopa57a30U71lA5co9aEsbrmMmllQbqWOtpO53LB9UaM
-         LENg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yi0ZEk8deovytENaEvDCthUQeLN5wMyV9czNFYkt5v8=;
-        b=DCcqMqq0f+CYMinqH4aMBwNclvmNpBQei4GKekCm7Ht2i7M5gSxkAYEUwmEO+f2wM9
-         6VZEc3Yjk2IskEVgraQu1GdgtWNifP9Ayl3Z8bhViZamHPiFAEb7AhHPf9M7hInkfAJ1
-         bLNBC6Kblx4EcLA3JJBA5X/Z7GKc/5rzL9V5dqjNwVr0clOK6+oLo/om2XMuuv6oEXam
-         TXQ0JsHovRvcPVuLfQnpOcuThOM8D7ZbwFLB8rBSYa3XurSiICyzYItu8jbd9DIlfRj5
-         aKdSyqkFCpGQN2wca4ZwnFbc0/fI6KaXqNA3rEsqAHQ8Um4SdSk+woCS71dJ2062DRSF
-         YNnQ==
-X-Gm-Message-State: AOAM532X7iA+5C6pnDEMmaf5QitQUiZEixc/el9F8o0yr09gOeD1twzm
-        uWzY4RoYtUqDBNh8ZqFaaZU=
-X-Google-Smtp-Source: ABdhPJwVhpx/6GHUWljlYteLFeB2XDkyHEIXoHp6ywzSmetUGMVD69EzoZpf743suloxyGthWzmtWg==
-X-Received: by 2002:adf:f851:: with SMTP id d17mr18290310wrq.267.1615124191313;
-        Sun, 07 Mar 2021 05:36:31 -0800 (PST)
-Received: from [192.168.1.211] ([2.26.187.30])
-        by smtp.gmail.com with ESMTPSA id v1sm12702800wmj.31.2021.03.07.05.36.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Mar 2021 05:36:30 -0800 (PST)
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org, "Rafael J . Wysocki" <rafael@kernel.org>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
-Date:   Sun, 7 Mar 2021 13:36:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sun, 7 Mar 2021 14:09:15 -0500
+IronPort-SDR: 3dOA4lGIbUSz4iwnOFl+tenkHl5k3EU6MqfOVrsYyC+D1402Yf2fJDmIieEw2Ce+7wYAwTkjbp
+ udwCwxtVv/DQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9916"; a="187977355"
+X-IronPort-AV: E=Sophos;i="5.81,230,1610438400"; 
+   d="scan'208";a="187977355"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2021 11:09:14 -0800
+IronPort-SDR: k4u/SFLJtT4v2Y95kgtSD8GHq87WnACa/lCo/6HdKs5XWe1Fru1ms6Do1R5S+gb2pdJ6KBmsji
+ vMc2Y5nlDSRw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,230,1610438400"; 
+   d="scan'208";a="601882081"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Mar 2021 11:09:14 -0800
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.57])
+        by linux.intel.com (Postfix) with ESMTP id 8498758080F;
+        Sun,  7 Mar 2021 11:09:14 -0800 (PST)
+Message-ID: <35bca0efb7d485f66e3cacdac113ab9e42058846.camel@linux.intel.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
+ platforms
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     "Neftin, Sasha" <sasha.neftin@intel.com>,
+        irenic.rajneesh@gmail.com, hdegoede@redhat.com,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org
+Date:   Sun, 07 Mar 2021 11:09:14 -0800
+In-Reply-To: <113b08b2-ead1-7f4c-1b09-4f3572d6134f@intel.com>
+References: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+         <113b08b2-ead1-7f4c-1b09-4f3572d6134f@intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy
+Hi Sasha,
 
-On 22/02/2021 13:34, Andy Shevchenko wrote:
-> On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
->> The acpi_walk_dep_device_list() is not as generalisable as its name
->> implies, serving only to decrement the dependency count for each
->> dependent device of the input. Extend the function to instead accept
->> a callback which can be applied to all the dependencies in acpi_dep_list.
->> Replace all existing calls to the function with calls to a wrapper, passing
->> a callback that applies the same dependency reduction.
-> The code looks okay to me, if it was the initial idea, feel free to add
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Sun, 2021-03-07 at 10:39 +0200, Neftin, Sasha wrote:
+> On 3/5/2021 21:06, David E. Box wrote:
+> > Due to a HW limitation, the Latency Tolerance Reporting (LTR) value
+> > programmed in the Tiger Lake GBE controller is not large enough to
+> > allow
+> > the platform to enter Package C10, which in turn prevents the
+> > platform from
+> > achieving its low power target during suspend-to-idle.  Ignore the
+> > GBE LTR
+> > value on Tiger Lake. LTR ignore functionality is currently
+> > performed solely
+> > by a debugfs write call. Split out the LTR code into its own
+> > function that
+> > can be called by both the debugfs writer and by this work around.
+> > 
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Sasha Neftin <sasha.neftin@intel.com>
+> > Cc: intel-wired-lan@lists.osuosl.org
+> > ---
+> >   drivers/platform/x86/intel_pmc_core.c | 55 ++++++++++++++++++++--
+> > -----
+> >   1 file changed, 42 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/platform/x86/intel_pmc_core.c
+> > b/drivers/platform/x86/intel_pmc_core.c
+> > index ee2f757515b0..ab31eb646a1a 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.c
+> > +++ b/drivers/platform/x86/intel_pmc_core.c
+> > @@ -863,34 +863,45 @@ static int pmc_core_pll_show(struct seq_file
+> > *s, void *unused)
+> >   }
+> >   DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+> >   
+> > -static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> > -                                        const char __user
+> > *userbuf,
+> > -                                        size_t count, loff_t
+> > *ppos)
+> > +static int pmc_core_write_ltr_ignore(u32 value)
+> >   {
+> >         struct pmc_dev *pmcdev = &pmc;
+> >         const struct pmc_reg_map *map = pmcdev->map;
+> > -       u32 val, buf_size, fd;
+> > -       int err;
+> > -
+> > -       buf_size = count < 64 ? count : 64;
+> > -
+> > -       err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> > -       if (err)
+> > -               return err;
+> > +       u32 fd;
+> > +       int err = 0;
+> >   
+> >         mutex_lock(&pmcdev->lock);
+> >   
+> > -       if (val > map->ltr_ignore_max) {
+> > +       if (fls(value) > map->ltr_ignore_max) {
+> >                 err = -EINVAL;
+> >                 goto out_unlock;
+> >         }
+> >   
+> >         fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+> > -       fd |= (1U << val);
+> > +       fd |= value;
+> >         pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
+> >   
+> >   out_unlock:
+> >         mutex_unlock(&pmcdev->lock);
+> > +
+> > +       return err;
+> > +}
+> > +
+> > +static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> > +                                        const char __user
+> > *userbuf,
+> > +                                        size_t count, loff_t
+> > *ppos)
+> > +{
+> > +       u32 buf_size, val;
+> > +       int err;
+> > +
+> > +       buf_size = count < 64 ? count : 64;
+> > +
+> > +       err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       err = pmc_core_write_ltr_ignore(1U << val);
+> > +
+> >         return err == 0 ? count : err;
+> >   }
+> >   
+> > @@ -1189,6 +1200,15 @@ static int quirk_xtal_ignore(const struct
+> > dmi_system_id *id)
+> >         return 0;
+> >   }
+> >   
+> > +static int quirk_ltr_ignore(u32 val)
+> > +{
+> > +       int err;
+> > +
+> > +       err = pmc_core_write_ltr_ignore(val);
+> > +
+> > +       return err;
+> > +}
+> > +
+> >   static const struct dmi_system_id pmc_core_dmi_table[]  = {
+> >         {
+> >         .callback = quirk_xtal_ignore,
+> > @@ -1244,6 +1264,15 @@ static int pmc_core_probe(struct
+> > platform_device *pdev)
+> >         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+> >         dmi_check_system(pmc_core_dmi_table);
+> >   
+> > +       /*
+> > +        * On TGL, due to a hardware limitation, the GBE LTR blocks
+> > PC10 when
+> > +        * a cable is attached. Tell the PMC to ignore it.
+> > +        */
+> > +       if (pmcdev->map == &tgl_reg_map) {
+> I would suggest: if (pmcdev->map >= &tgl_reg_map)
 
+This will already cover Rocket Lake since it uses Tiger Lake PCH. Those
+are the newest platforms this driver covers. Otherwise, I don't want to
+rely on this as the permanent solution. We can evaluate this on a per
+platform basis while persuing other measures to more properly resolve
+it.
 
-Thank you!
+David
 
+> > +               dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
+> > +               quirk_ltr_ignore(1U << 3);
+> > +       }
+> > +
+> >         pmc_core_dbgfs_register(pmcdev);
+> >   
+> >         device_initialized = true;
+> > 
+> 
 
->> + */
->> +void acpi_dev_flag_dependency_met(acpi_handle handle)
->> +{
-> Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
-
-
-I can do this, but I avoided it because in most of the uses in the
-kernel currently there's no struct acpi_device, they're just passing
-ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-ACPI_COMPANION() in each place. It didn't seem worth it...but happy to
-do it if you'd prefer it that way?
 
