@@ -1,127 +1,160 @@
-Return-Path: <SRS0=OtHb=IF=vger.kernel.org=platform-driver-x86-owner@kernel.org>
+Return-Path: <SRS0=UxnR=IG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA2C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 20:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D464BC43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 08:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747DC64FE9
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  7 Mar 2021 20:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A451C65200
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 08:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232938AbhCGUkN (ORCPT
+        id S231514AbhCHIOh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 7 Mar 2021 15:40:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231732AbhCGUjg (ORCPT
+        Mon, 8 Mar 2021 03:14:37 -0500
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:44712 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230432AbhCHIOR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 7 Mar 2021 15:39:36 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76BCC06174A;
-        Sun,  7 Mar 2021 12:39:35 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id kr3-20020a17090b4903b02900c096fc01deso1928791pjb.4;
-        Sun, 07 Mar 2021 12:39:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ksneqLZ9zvuj+Q9Pi6/GCANghUOfFQNIq6D+RQ8519s=;
-        b=gsBwdgKy0qJ/sWj2BknIzEzST332yyHdoW5xYOtq9fWcfHflnhmaGhq2v6q3a4IYmj
-         4m0L+gBQsxS6lqDfeq7qXVpJa/1xFLnOtrpduuYufDMwijEVDsiVCTrifmiuqRHxy4D7
-         hLPkAgOp1xjPHPBPLFjlvyGFa7ikTYDXjMVWzPUK/5feTbTPDv+eJWQhQcsrNEjHQIp6
-         xh2gqgD09F6/3L4HXirWiqukMjWmlgiMFw0TDgmAeTr9NHY8yVNQyppk+HAKOREQHwFZ
-         79dWlj2kWlC85Y2y3L72bZ8CmWcgy+y7cDQG3rf24DBn73gv54r1lQ9diZdY+lzLWWdG
-         BNDg==
+        Mon, 8 Mar 2021 03:14:17 -0500
+Received: by mail-lf1-f54.google.com with SMTP id p21so19562132lfu.11;
+        Mon, 08 Mar 2021 00:14:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ksneqLZ9zvuj+Q9Pi6/GCANghUOfFQNIq6D+RQ8519s=;
-        b=sAzzl0ww9gGcTOGzkzgfrv8fsGsVOCkwWkZrsKcPyhU0rrthrEe2vBR2UTi/9MrNEt
-         LuVFOKYGkJ9fbRZIxblBd+l4Veyaq1FFARG9qwX8pl5DzJLLv5pRvBoql++5f0eprRVf
-         kl60x419A8GBrul7HnUvk2RqWoUvDPX2s5GK7z5RU8YbSSp4vZsq49jOj2dDKkNmNxin
-         cW8Lgr7jAxqSdVgSW6yNN9rZMkrdjmqGdHw7Hzb1jv5AXyXyiHHqnkYaJp4rUvj21S/O
-         yjQm6ajHlTF0MUR3CVSrXTA6TKUVKSz2cUdDcSnWHCSa2J4TNC5+sP5Z+pTaEQ/NXIUF
-         uMfg==
-X-Gm-Message-State: AOAM531vpV+zKi/10qhzhHJdy0XPeUo6h/Qq3O0wGIYtDzkDoxOE5K7n
-        AV0MWNrsVgoPEpZHI3vvEy3TQk77hVSeepgGMCw=
-X-Google-Smtp-Source: ABdhPJxlj04alWLqhDKdUE58NU9W7umO8MwZXqbfilTz4/eiKjejZ6M4QMIuwTi82BfFMcr9ywapb7y/aJ9mm6zMO+c=
-X-Received: by 2002:a17:902:d2c1:b029:e5:ccfe:1e93 with SMTP id
- n1-20020a170902d2c1b02900e5ccfe1e93mr17949404plc.0.1615149575234; Sun, 07 Mar
- 2021 12:39:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com> <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
-In-Reply-To: <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 7 Mar 2021 22:39:18 +0200
-Message-ID: <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=RL8kpShXTflR5U23zepyqK1mLDGqgE+CRyZzfRgboL8=;
+        b=J3WaROHhaqAzD0WwbqxFi+rO+WhxkV9hU29n4aJhKpR6tvsPOVFKOLCdkDCSUKNKX4
+         jrEo8b3fcfO0Axuyar07fG6ZzykN5Mnh9Ei5/8mGgka1GeDG/7H5mYcSrM8V9U/djOYA
+         U2K0IzSAEyH34bopFO9YIZuR2bB0NNGpPDxHf7ECfs4ZSiK+KoChLJ0pDgWc4apTI4Ml
+         EuvZ7VD8SwdCKgkZZ/49qdTH8snrDuLHg5I0usC60saxUJ8qGu6B8KPKaVGmKP2jqOFt
+         r0Q8yImAPjmU42q+hx758anzRRzFLP/jmENmNGEdAFsfuF22DxnuTsdYb19+WlHAArpM
+         p50g==
+X-Gm-Message-State: AOAM532CS0WOF6+ODdihJsGJsBFK84P2lrrCWqLMkVfx+h8bvwWcJkVU
+        n8miOVvmDKGqtZC0TXQTGoA=
+X-Google-Smtp-Source: ABdhPJy4LBhGHzpYjfCk4DPU0GQ7j+ILUZTNTy8ae7YAwRYHU+EtBNIniFrEhhdbuSeUW+Ms7a2PBw==
+X-Received: by 2002:a05:6512:3092:: with SMTP id z18mr13309397lfd.249.1615191255329;
+        Mon, 08 Mar 2021 00:14:15 -0800 (PST)
+Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyycy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::4])
+        by smtp.gmail.com with ESMTPSA id 14sm1269292lfl.301.2021.03.08.00.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 00:14:14 -0800 (PST)
+Date:   Mon, 8 Mar 2021 10:14:08 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        devel@acpica.org, "Rafael J . Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: [RFC PATCH v2 0/8] Add managed version of delayed work init
+Message-ID: <cover.1615187284.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
-> On 22/02/2021 13:34, Andy Shevchenko wrote:
-> > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
-> >> The acpi_walk_dep_device_list() is not as generalisable as its name
-> >> implies, serving only to decrement the dependency count for each
-> >> dependent device of the input. Extend the function to instead accept
-> >> a callback which can be applied to all the dependencies in acpi_dep_list.
-> >> Replace all existing calls to the function with calls to a wrapper, passing
-> >> a callback that applies the same dependency reduction.
-> > The code looks okay to me, if it was the initial idea, feel free to add
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
->
-> Thank you!
->
->
-> >> + */
-> >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
-> >> +{
-> > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
->
->
-> I can do this, but I avoided it because in most of the uses in the
-> kernel currently there's no struct acpi_device, they're just passing
-> ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-> ACPI_COMPANION() in each place. It didn't seem worth it...but happy to
-> do it if you'd prefer it that way?
+It's not rare that device drivers need delayed work.
+It's not rare that this work needs driver's data.
 
-I see, let Rafael decide then. I'm not pushing here.
+Often this means that driver must ensure the work is not queued when
+driver is detached. Often it is done by ensuring new work is not added and
+then calling cancel_delayed_work_sync() at remove(). In many cases this
+may also require cleanup at probe error path - which is easy to forget.
+
+Also the "by ensuring new work is not added" has a gotcha.
+
+It is not strange to see devm managed IRQs scheduling (delayed) work.
+Mixing this with manua wq clean-up is hard to do correctly because the
+devm is likely to free the IRQ only after the remove() is ran. So manual
+wq cancellation and devm-based IRQ management do not mix well - there is
+a short(?) time-window after the wq clean-up when IRQs are still not
+freed and may schedule new work.
+
+When both WQs and IRQs are managed by devm things are likely to just
+work. WQs should be initialized before IRQs (when IRQs need to schedule
+work) and devm unwinds things in "FILO" order.
+
+This series implements delayed wq cancellation on top of devm and replaces
+the obvious cases where only thing remove call-back in a driver does is
+cancelling the work. There might be other cases where we could switch
+more than just work cancellation to use managed version and thus get rid
+of remove or mixed (manual and devm) resource management.
+
+This RFC does also introduce include/linux/devm-helpers.h file which
+hopefully works as a place where this kind of helpers can be inlined.
+
+Please see previous discussion here:
+RFC v1:
+https://lore.kernel.org/lkml/cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com/
+
+Changelog v2:
+  - used correct terminology ("driver detach" instead of "exit, ...")
+  - inlined the devm_delayed_work_autocancel() in a header
+  - added Hans as a maintainer for the new header + myself as a reviewer
+  - used devm_add_action() instead of using plain devres_add()
+
+---
+
+Matti Vaittinen (8):
+  workqueue: Add resource managed version of delayed work init
+  MAINTAINERS: Add entry for devm helpers
+  extconn: Clean-up few drivers by using managed work init
+  hwmon: raspberry-pi: Clean-up few drivers by using managed work init
+  platform/x86: gpd pocket fan: Clean-up by using managed work init
+  power: supply: Clean-up few drivers by using managed work init
+  regulator: qcom_spmi-regulator: Clean-up by using managed work init
+  watchdog: retu_wdt: Clean-up by using managed work init
+
+ MAINTAINERS                                  |  6 +++
+ drivers/extcon/extcon-gpio.c                 | 15 ++----
+ drivers/extcon/extcon-intel-int3496.c        | 16 ++----
+ drivers/extcon/extcon-palmas.c               | 17 +++----
+ drivers/extcon/extcon-qcom-spmi-misc.c       | 17 +++----
+ drivers/hwmon/raspberrypi-hwmon.c            | 17 +++----
+ drivers/platform/x86/gpd-pocket-fan.c        | 17 +++----
+ drivers/power/supply/axp20x_usb_power.c      | 15 ++----
+ drivers/power/supply/bq24735-charger.c       | 18 +++----
+ drivers/power/supply/ltc2941-battery-gauge.c | 20 +++-----
+ drivers/power/supply/sbs-battery.c           | 16 ++----
+ drivers/regulator/qcom_spmi-regulator.c      | 34 +++----------
+ drivers/watchdog/retu_wdt.c                  | 22 +++-----
+ include/linux/devm-helpers.h                 | 53 ++++++++++++++++++++
+ 14 files changed, 128 insertions(+), 155 deletions(-)
+ create mode 100644 include/linux/devm-helpers.h
+
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+-- 
+2.25.4
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
