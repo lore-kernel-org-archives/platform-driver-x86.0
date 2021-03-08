@@ -2,841 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25E9C432C3
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 18:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DD7C43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A44DC65298
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 18:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E3864F09
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 20:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbhCHSsu (ORCPT
+        id S229575AbhCHUkm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 13:48:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
+        Mon, 8 Mar 2021 15:40:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230510AbhCHSsm (ORCPT
+        with ESMTP id S229446AbhCHUk3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 13:48:42 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86159C06174A;
-        Mon,  8 Mar 2021 10:48:41 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id w11so12565141wrr.10;
-        Mon, 08 Mar 2021 10:48:41 -0800 (PST)
+        Mon, 8 Mar 2021 15:40:29 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88303C06174A;
+        Mon,  8 Mar 2021 12:40:29 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id w11so12869930wrr.10;
+        Mon, 08 Mar 2021 12:40:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aIlT8Oj5v/UpLNiV6pDtgUvThU9i3iarLcxIFtukF+g=;
-        b=WCVDIjAnJsYmQlRsBwY7JpBQiKkMVPDTL0ncBGQ/rbzrx8L+YmVbL1LgkH58qLiehr
-         pR1R0G9Mi4l2BbghEyDcLL05Eap+pD/CoB3giXDdSjJ0PmcyCkeSxNHJVqJeMQNAN+9/
-         o30T8i7HXOfDoiVWK0ssT71qnFiGqjvWJYxOh8jPvLWFI3jg5HyqfBRAHZgp1g36Ndt+
-         CiEMstdZWNwnD0NDHhXcUfeI830VdW5xVTlB23U0Nm8M9AH3brq73pUf3lbqvUZdBukQ
-         2VTOftjPzXDcxvTQWdBnoefJMBlK+3Sx14VQbhM5GsfNL6VjegYJJKDijOdHN0DFC2Rs
-         hFjA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=o+/dpOFXV6mbnRPaa86MvmeRPVIsGW4+sgQ7UqPkyUk=;
+        b=i9q0Gzq3zGFl6wNaPAxhQ1Wi0FqVf60X5CcXgP3rKsQuOfxkx7dC5sbgciNwGXNAD2
+         9lSVAS1HtuurSJGNxFkKy/NrOdlKx9DxexPyh6b5Eamjih382ibC6pov5WJJ8/PwLtR9
+         3dbFcZf3lG46L+ZNmCcahce/Hke41wBD0bJ66qtBWd1Qtl1H8Gu+TRjuwhmH7Ey6H2B8
+         uJO1kl97PTebKz2Hser77wWtXMskadF+55O/B2eAz7v/UWLs0EPB95T9QZNbXqIPQGtn
+         EMj50GGV1UopVKp/QcKlplfCV3vJs3OpJ3HpOF1FPAN5HiUcFogt7DDcP8h+O+ivUItd
+         wV2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aIlT8Oj5v/UpLNiV6pDtgUvThU9i3iarLcxIFtukF+g=;
-        b=JGXuMbhgZn3bfKMUEuTgkuJ6AGqo1iHtX+/IjHVZAPjtC01qX0PBtqqVx0a6BqK9ga
-         3ErwvCYYgtvhn80hFHxTDRGD8ODxLTM+S7LQq73GNGZhUccz6+E2FIstESTypgl9Rr46
-         hL0siGxUhBUSIswB7UGuBCLGwb9xYTKiYjWbs0HQIiYwrMmEEosYlRTT+60SXkxhSFph
-         d2SR4+Xn3lXjEREqcOIK1qMBW+bq0O7SWcO2M2hovIZ7D3H5xhFkz8gwgYtNF8221l+s
-         Kfgb27pMVy4Qi3O1J7LPi1AkswK5pizoWo+tiOxPDd6d3wIXDkfqWX+kZbvaajVEDrIx
-         HlfA==
-X-Gm-Message-State: AOAM5334UmduBDg4Mp9b3Ex/9aNwDfD2vFnq0kwwrbMtP4gL5dc6QoDf
-        oUubG3J4wUt1sacAlppnoYg=
-X-Google-Smtp-Source: ABdhPJykk57fgv2hiMPF1EBt9EZqSwRkKy0hV3wg4VZ4hVl41K6W3s/N+/DwFNTzZOt/tNmVv9/8iA==
-X-Received: by 2002:a5d:4688:: with SMTP id u8mr24175281wrq.39.1615229319953;
-        Mon, 08 Mar 2021 10:48:39 -0800 (PST)
-Received: from xws.localdomain (pd9ea322b.dip0.t-ipconnect.de. [217.234.50.43])
-        by smtp.gmail.com with ESMTPSA id z3sm19758877wrw.96.2021.03.08.10.48.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 10:48:39 -0800 (PST)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=o+/dpOFXV6mbnRPaa86MvmeRPVIsGW4+sgQ7UqPkyUk=;
+        b=kkMIugTaudqprGq5fL06K1R/BQ3gflS6cRE+ohDdrfFUQM8C70vrL+AFDS60oOiVW8
+         i9GmVdrIuGFDUgdCfqNTl/kt7kSl1tQb8phlxtDsSA8I6gFCz+4Gv2Jjfa8nK9ZFbpif
+         Pgg7gmx8+batyZHXOgzzxXGKiHu1MWYc9CEUaRFJRPPYpmvRbCtCpgYzpMXqVYGuIHSJ
+         PuuB/OwiI96TKc+LhJZwf9vR+FKq8L3Vxrt+74/jO6mAHIzaNb3AuHmxMLV4GtX/8doU
+         snHj81oCfEzSNDjXThsg0RI5hkt+1Ghwgi8AtOLuGr1Z9cXDcO1CV/dHY/+fFsY9vkE+
+         9ouw==
+X-Gm-Message-State: AOAM530s9hpQpdXiYsGoRj8Pant+0jWCBN72wZmn7CWCpvSBPJZrJxp9
+        xopChfvsffD7KuHGQJyijtM=
+X-Google-Smtp-Source: ABdhPJxhGvSvYgGNZNFtcF5uW2ZNoDAv+znKgthZfkcniHOKbaebYxXoanzndIP4HxAd/l8+6kXvxg==
+X-Received: by 2002:a05:6000:1546:: with SMTP id 6mr24364251wry.398.1615236028247;
+        Mon, 08 Mar 2021 12:40:28 -0800 (PST)
+Received: from [192.168.1.211] ([2.26.187.30])
+        by smtp.gmail.com with ESMTPSA id w6sm21630328wrl.49.2021.03.08.12.40.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Mar 2021 12:40:27 -0800 (PST)
+Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        andy.shevchenko@linux.intel.com,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] docs: driver-api: Add Surface DTX driver documentation
-Date:   Mon,  8 Mar 2021 19:48:19 +0100
-Message-Id: <20210308184819.437438-4-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210308184819.437438-1-luzmaximilian@gmail.com>
-References: <20210308184819.437438-1-luzmaximilian@gmail.com>
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <20210222130735.1313443-2-djrscally@gmail.com>
+ <CAJZ5v0ib+3oScz2CuFNQdTvo16_fGYgfppZjpVZbtMC-2FK-2w@mail.gmail.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <74e27b1f-b1aa-de84-7832-e76b3207bddc@gmail.com>
+Date:   Mon, 8 Mar 2021 20:40:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0ib+3oScz2CuFNQdTvo16_fGYgfppZjpVZbtMC-2FK-2w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add documentation for the user-space interface of the Surface DTX
-(detachment system) driver, used on Microsoft Surface Book series
-devices.
+Hi Rafael
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- .../surface_aggregator/clients/dtx.rst        | 718 ++++++++++++++++++
- .../surface_aggregator/clients/index.rst      |   1 +
- MAINTAINERS                                   |   1 +
- 3 files changed, 720 insertions(+)
- create mode 100644 Documentation/driver-api/surface_aggregator/clients/dtx.rst
+On 08/03/2021 17:46, Rafael J. Wysocki wrote:
+>> +void acpi_walk_dep_device_list(acpi_handle handle,
+>> +                              int (*callback)(struct acpi_dep_data *, void *),
+>> +                              void *data)
+>> +{
+>> +       struct acpi_dep_data *dep, *tmp;
+>> +       int ret;
+>> +
+>>         mutex_lock(&acpi_dep_list_lock);
+>>         list_for_each_entry_safe(dep, tmp, &acpi_dep_list, node) {
+>>                 if (dep->supplier == handle) {
+>> -                       acpi_bus_get_device(dep->consumer, &adev);
+>> -                       if (!adev)
+>> -                               continue;
+>> -
+>> -                       adev->dep_unmet--;
+>> -                       if (!adev->dep_unmet)
+>> -                               acpi_bus_attach(adev, true);
+> The above code in the mainline has changed recently, so you need to
+> rebase the above and adjust for the change of behavior.
 
-diff --git a/Documentation/driver-api/surface_aggregator/clients/dtx.rst b/Documentation/driver-api/surface_aggregator/clients/dtx.rst
-new file mode 100644
-index 000000000000..e7e7c20007f0
---- /dev/null
-+++ b/Documentation/driver-api/surface_aggregator/clients/dtx.rst
-@@ -0,0 +1,718 @@
-+.. SPDX-License-Identifier: GPL-2.0+
-+
-+.. |__u16| replace:: :c:type:`__u16 <__u16>`
-+.. |sdtx_event| replace:: :c:type:`struct sdtx_event <sdtx_event>`
-+.. |sdtx_event_code| replace:: :c:type:`enum sdtx_event_code <sdtx_event_code>`
-+.. |sdtx_base_info| replace:: :c:type:`struct sdtx_base_info <sdtx_base_info>`
-+.. |sdtx_device_mode| replace:: :c:type:`struct sdtx_device_mode <sdtx_device_mode>`
-+
-+======================================================
-+User-Space DTX (Clipboard Detachment System) Interface
-+======================================================
-+
-+The ``surface_dtx`` driver is responsible for proper clipboard detachment
-+and re-attachment handling. To this end, it provides the ``/dev/surface/dtx``
-+device file, through which it can interface with a user-space daemon. This
-+daemon is then ultimately responsible for determining and taking necessary
-+actions, such as unmounting devices attached to the base,
-+unloading/reloading the graphics-driver, user-notifications, etc.
-+
-+There are two basic communication principles used in this driver: Commands
-+(in other parts of the documentation also referred to as requests) and
-+events. Commands are sent to the EC and may have a different implications in
-+different contexts. Events are sent by the EC upon some internal state
-+change. Commands are always driver-initiated, whereas events are always
-+initiated by the EC.
-+
-+.. contents::
-+
-+Nomenclature
-+============
-+
-+* **Clipboard:**
-+  The detachable upper part of the Surface Book, housing the screen and CPU.
-+
-+* **Base:**
-+  The lower part of the Surface Book from which the clipboard can be
-+  detached, optionally (model dependent) housing the discrete GPU (dGPU).
-+
-+* **Latch:**
-+  The mechanism keeping the clipboard attached to the base in normal
-+  operation and allowing it to be detached when requested.
-+
-+* **Silently ignored commands:**
-+  The command is accepted by the EC as a valid command and acknowledged
-+  (following the standard communication protocol), but the EC does not act
-+  upon it, i.e. ignores it.e upper part of the
-+
-+
-+Detachment Process
-+==================
-+
-+Warning: This part of the documentation is based on reverse engineering and
-+testing and thus may contain errors or be incomplete.
-+
-+Latch States
-+------------
-+
-+The latch mechanism has two major states: *open* and *closed*. In the
-+*closed* state (default), the clipboard is secured to the base, whereas in
-+the *open* state, the clipboard can be removed by a user.
-+
-+The latch can additionally be locked and, correspondingly, unlocked, which
-+can influence the detachment procedure. Specifically, this locking mechanism
-+is intended to prevent the dGPU, positioned in the base of the device, from
-+being hot-unplugged while in use. More details can be found in the
-+documentation for the detachment procedure below. By default, the latch is
-+unlocked.
-+
-+Detachment Procedure
-+--------------------
-+
-+Note that the detachment process is governed fully by the EC. The
-+``surface_dtx`` driver only relays events from the EC to user-space and
-+commands from user-space to the EC, i.e. it does not influence this process.
-+
-+The detachment process is started with the user pressing the *detach* button
-+on the base of the device or executing the ``SDTX_IOCTL_LATCH_REQUEST`` IOCTL.
-+Following that:
-+
-+1. The EC turns on the indicator led on the detach-button, sends a
-+   *detach-request* event (``SDTX_EVENT_REQUEST``), and awaits further
-+   instructions/commands. In case the latch is unlocked, the led will flash
-+   green. If the latch has been locked, the led will be solid red
-+
-+2. The event is, via the ``surface_dtx`` driver, relayed to user-space, where
-+   an appropriate user-space daemon can handle it and send instructions back
-+   to the EC via IOCTLs provided by this driver.
-+
-+3. The EC waits for instructions from user-space and acts according to them.
-+   If the EC does not receive any instructions in a given period, it will
-+   time out and continue as follows:
-+
-+   - If the latch is unlocked, the EC will open the latch and the clipboard
-+     can be detached from the base. This is the exact behavior as without
-+     this driver or any user-space daemon. See the ``SDTX_IOCTL_LATCH_CONFIRM``
-+     description below for more details on the follow-up behavior of the EC.
-+
-+   - If the latch is locked, the EC will *not* open the latch, meaning the
-+     clipboard cannot be detached from the base. Furthermore, the EC sends
-+     an cancel event (``SDTX_EVENT_CANCEL``) detailing this with the cancel
-+     reason ``SDTX_DETACH_TIMEDOUT`` (see :ref:`events` for details).
-+
-+Valid responses by a user-space daemon to a detachment request event are:
-+
-+- Execute ``SDTX_IOCTL_LATCH_REQUEST``. This will immediately abort the
-+  detachment process. Furthermore, the EC will send a detach-request event,
-+  similar to the user pressing the detach-button to cancel said process (see
-+  below).
-+
-+- Execute ``SDTX_IOCTL_LATCH_CONFIRM``. This will cause the EC to open the
-+  latch, after which the user can separate clipboard and base.
-+
-+  As this changes the latch state, a *latch-status* event
-+  (``SDTX_EVENT_LATCH_STATUS``) will be sent once the latch has been opened
-+  successfully. If the EC fails to open the latch, e.g. due to hardware
-+  error or low battery, a latch-cancel event (``SDTX_EVENT_CANCEL``) will be
-+  sent with the cancel reason indicating the specific failure.
-+
-+  If the latch is currently locked, the latch will automatically be
-+  unlocked before it is opened.
-+
-+- Execute ``SDTX_IOCTL_LATCH_HEARTBEAT``. This will reset the internal timeout.
-+  No other actions will be performed, i.e. the detachment process will neither
-+  be completed nor canceled, and the EC will still be waiting for further
-+  responses.
-+
-+- Execute ``SDTX_IOCTL_LATCH_CANCEL``. This will abort the detachment process,
-+  similar to ``SDTX_IOCTL_LATCH_REQUEST``, described above, or the button
-+  press, described below. A *generic request* event (``SDTX_EVENT_REQUEST``)
-+  is send in response to this. In contrast to those, however, this command
-+  does not trigger a new detachment process if none is currently in
-+  progress.
-+
-+- Do nothing. The detachment process eventually times out as described in
-+  point 3.
-+
-+See :ref:`ioctls` for more details on these responses.
-+
-+It is important to note that, if the user presses the detach button at any
-+point when a detachment operation is in progress (i.e. after the EC has sent
-+the initial *detach-request* event (``SDTX_EVENT_REQUEST``) and before it
-+received the corresponding response concluding the process), the detachment
-+process is canceled on the EC-level and an identical event is being sent.
-+Thus a *detach-request* event, by itself, does not signal the start of the
-+detachment process.
-+
-+The detachment process may further be canceled by the EC due to hardware
-+failures or a low clipboard battery. This is done via a cancel event
-+(``SDTX_EVENT_CANCEL``) with the corresponding cancel reason.
-+
-+
-+User-Space Interface Documentation
-+==================================
-+
-+Error Codes and Status Values
-+-----------------------------
-+
-+Error and status codes are divided into different categories, which can be
-+used to determine if the status code is an error, and, if it is, the
-+severity and type of that error. The current categories are:
-+
-+.. flat-table:: Overview of Status/Error Categories.
-+   :widths: 2 1 3
-+   :header-rows: 1
-+
-+   * - Name
-+     - Value
-+     - Short Description
-+
-+   * - ``STATUS``
-+     - ``0x0000``
-+     - Non-error status codes.
-+
-+   * - ``RUNTIME_ERROR``
-+     - ``0x1000``
-+     - Non-critical runtime errors.
-+
-+   * - ``HARDWARE_ERROR``
-+     - ``0x2000``
-+     - Critical hardware failures.
-+
-+   * - ``UNKNOWN``
-+     - ``0xF000``
-+     - Unknown error codes.
-+
-+Other categories are reserved for future use. The ``SDTX_CATEGORY()`` macro
-+can be used to determine the category of any status value. The
-+``SDTX_SUCCESS()`` macro can be used to check if the status value is a
-+success value (``SDTX_CATEGORY_STATUS``) or if it indicates a failure.
-+
-+Unknown status or error codes sent by the EC are assigned to the ``UNKNOWN``
-+category by the driver and may be implemented via their own code in the
-+future.
-+
-+Currently used error codes are:
-+
-+.. flat-table:: Overview of Error Codes.
-+   :widths: 2 1 1 3
-+   :header-rows: 1
-+
-+   * - Name
-+     - Category
-+     - Value
-+     - Short Description
-+
-+   * - ``SDTX_DETACH_NOT_FEASIBLE``
-+     - ``RUNTIME``
-+     - ``0x1001``
-+     - Detachment not feasible due to low clipboard battery.
-+
-+   * - ``SDTX_DETACH_TIMEDOUT``
-+     - ``RUNTIME``
-+     - ``0x1002``
-+     - Detachment process timed out while the latch was locked.
-+
-+   * - ``SDTX_ERR_FAILED_TO_OPEN``
-+     - ``HARDWARE``
-+     - ``0x2001``
-+     - Failed to open latch.
-+
-+   * - ``SDTX_ERR_FAILED_TO_REMAIN_OPEN``
-+     - ``HARDWARE``
-+     - ``0x2002``
-+     - Failed to keep latch open.
-+
-+   * - ``SDTX_ERR_FAILED_TO_CLOSE``
-+     - ``HARDWARE``
-+     - ``0x2003``
-+     - Failed to close latch.
-+
-+Other error codes are reserved for future use. Non-error status codes may
-+overlap and are generally only unique within their use-case:
-+
-+.. flat-table:: Latch Status Codes.
-+   :widths: 2 1 1 3
-+   :header-rows: 1
-+
-+   * - Name
-+     - Category
-+     - Value
-+     - Short Description
-+
-+   * - ``SDTX_LATCH_CLOSED``
-+     - ``STATUS``
-+     - ``0x0000``
-+     - Latch is closed/has been closed.
-+
-+   * - ``SDTX_LATCH_OPENED``
-+     - ``STATUS``
-+     - ``0x0001``
-+     - Latch is open/has been opened.
-+
-+.. flat-table:: Base State Codes.
-+   :widths: 2 1 1 3
-+   :header-rows: 1
-+
-+   * - Name
-+     - Category
-+     - Value
-+     - Short Description
-+
-+   * - ``SDTX_BASE_DETACHED``
-+     - ``STATUS``
-+     - ``0x0000``
-+     - Base has been detached/is not present.
-+
-+   * - ``SDTX_BASE_ATTACHED``
-+     - ``STATUS``
-+     - ``0x0001``
-+     - Base has been attached/is present.
-+
-+Again, other codes are reserved for future use.
-+
-+.. _events:
-+
-+Events
-+------
-+
-+Events can be received by reading from the device file. They are disabled by
-+default and have to be enabled by executing ``SDTX_IOCTL_EVENTS_ENABLE``
-+first. All events follow the layout prescribed by |sdtx_event|. Specific
-+event types can be identified by their event code, described in
-+|sdtx_event_code|. Note that other event codes are reserved for future use,
-+thus an event parser must be able to handle any unknown/unsupported event
-+types gracefully, by relying on the payload length given in the event header.
-+
-+Currently provided event types are:
-+
-+.. flat-table:: Overview of DTX events.
-+   :widths: 2 1 1 3
-+   :header-rows: 1
-+
-+   * - Name
-+     - Code
-+     - Payload
-+     - Short Description
-+
-+   * - ``SDTX_EVENT_REQUEST``
-+     - ``1``
-+     - ``0`` bytes
-+     - Detachment process initiated/aborted.
-+
-+   * - ``SDTX_EVENT_CANCEL``
-+     - ``2``
-+     - ``2`` bytes
-+     - EC canceled detachment process.
-+
-+   * - ``SDTX_EVENT_BASE_CONNECTION``
-+     - ``3``
-+     - ``4`` bytes
-+     - Base connection state changed.
-+
-+   * - ``SDTX_EVENT_LATCH_STATUS``
-+     - ``4``
-+     - ``2`` bytes
-+     - Latch status changed.
-+
-+   * - ``SDTX_EVENT_DEVICE_MODE``
-+     - ``5``
-+     - ``2`` bytes
-+     - Device mode changed.
-+
-+Individual events in more detail:
-+
-+``SDTX_EVENT_REQUEST``
-+^^^^^^^^^^^^^^^^^^^^^^
-+
-+Sent when a detachment process is started or, if in progress, aborted by the
-+user, either via a detach button press or a detach request
-+(``SDTX_IOCTL_LATCH_REQUEST``) being sent from user-space.
-+
-+Does not have any payload.
-+
-+``SDTX_EVENT_CANCEL``
-+^^^^^^^^^^^^^^^^^^^^^
-+
-+Sent when a detachment process is canceled by the EC due to unfulfilled
-+preconditions (e.g. clipboard battery too low to detach) or hardware
-+failure. The reason for cancellation is given in the event payload detailed
-+below and can be one of
-+
-+* ``SDTX_DETACH_TIMEDOUT``: Detachment timed out while the latch was locked.
-+  The latch has neither been opened nor unlocked.
-+
-+* ``SDTX_DETACH_NOT_FEASIBLE``: Detachment not feasible due to low clipboard
-+  battery.
-+
-+* ``SDTX_ERR_FAILED_TO_OPEN``: Could not open the latch (hardware failure).
-+
-+* ``SDTX_ERR_FAILED_TO_REMAIN_OPEN``: Could not keep the latch open (hardware
-+  failure).
-+
-+* ``SDTX_ERR_FAILED_TO_CLOSE``: Could not close the latch (hardware failure).
-+
-+Other error codes in this context are reserved for future use.
-+
-+These codes can be classified via the ``SDTX_CATEGORY()`` macro to discern
-+between critical hardware errors (``SDTX_CATEGORY_HARDWARE_ERROR``) or
-+runtime errors (``SDTX_CATEGORY_RUNTIME_ERROR``), the latter of which may
-+happen during normal operation if certain preconditions for detachment are
-+not given.
-+
-+.. flat-table:: Detachment Cancel Event Payload
-+   :widths: 1 1 4
-+   :header-rows: 1
-+
-+   * - Field
-+     - Type
-+     - Description
-+
-+   * - ``reason``
-+     - |__u16|
-+     - Reason for cancellation.
-+
-+``SDTX_EVENT_BASE_CONNECTION``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Sent when the base connection state has changed, i.e. when the base has been
-+attached, detached, or detachment has become infeasible due to low clipboard
-+battery. The new state and, if a base is connected, ID of the base is
-+provided as payload of type |sdtx_base_info| with its layout presented
-+below:
-+
-+.. flat-table:: Base-Connection-Change Event Payload
-+   :widths: 1 1 4
-+   :header-rows: 1
-+
-+   * - Field
-+     - Type
-+     - Description
-+
-+   * - ``state``
-+     - |__u16|
-+     - Base connection state.
-+
-+   * - ``base_id``
-+     - |__u16|
-+     - Type of base connected (zero if none).
-+
-+Possible values for ``state`` are:
-+
-+* ``SDTX_BASE_DETACHED``,
-+* ``SDTX_BASE_ATTACHED``, and
-+* ``SDTX_DETACH_NOT_FEASIBLE``.
-+
-+Other values are reserved for future use.
-+
-+``SDTX_EVENT_LATCH_STATUS``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Sent when the latch status has changed, i.e. when the latch has been opened,
-+closed, or an error occurred. The current status is provided as payload:
-+
-+.. flat-table:: Latch-Status-Change Event Payload
-+   :widths: 1 1 4
-+   :header-rows: 1
-+
-+   * - Field
-+     - Type
-+     - Description
-+
-+   * - ``status``
-+     - |__u16|
-+     - Latch status.
-+
-+Possible values for ``status`` are:
-+
-+* ``SDTX_LATCH_CLOSED``,
-+* ``SDTX_LATCH_OPENED``,
-+* ``SDTX_ERR_FAILED_TO_OPEN``,
-+* ``SDTX_ERR_FAILED_TO_REMAIN_OPEN``, and
-+* ``SDTX_ERR_FAILED_TO_CLOSE``.
-+
-+Other values are reserved for future use.
-+
-+``SDTX_EVENT_DEVICE_MODE``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Sent when the device mode has changed. The new device mode is provided as
-+payload:
-+
-+.. flat-table:: Device-Mode-Change Event Payload
-+   :widths: 1 1 4
-+   :header-rows: 1
-+
-+   * - Field
-+     - Type
-+     - Description
-+
-+   * - ``mode``
-+     - |__u16|
-+     - Device operation mode.
-+
-+Possible values for ``mode`` are:
-+
-+* ``SDTX_DEVICE_MODE_TABLET``,
-+* ``SDTX_DEVICE_MODE_LAPTOP``, and
-+* ``SDTX_DEVICE_MODE_STUDIO``.
-+
-+Other values are reserved for future use.
-+
-+.. _ioctls:
-+
-+IOCTLs
-+------
-+
-+The following IOCTLs are provided:
-+
-+.. flat-table:: Overview of DTX IOCTLs
-+   :widths: 1 1 1 1 4
-+   :header-rows: 1
-+
-+   * - Type
-+     - Number
-+     - Direction
-+     - Name
-+     - Description
-+
-+   * - ``0xA5``
-+     - ``0x21``
-+     - ``-``
-+     - ``EVENTS_ENABLE``
-+     - Enable events for the current file descriptor.
-+
-+   * - ``0xA5``
-+     - ``0x22``
-+     - ``-``
-+     - ``EVENTS_DISABLE``
-+     - Disable events for the current file descriptor.
-+
-+   * - ``0xA5``
-+     - ``0x23``
-+     - ``-``
-+     - ``LATCH_LOCK``
-+     - Lock the latch.
-+
-+   * - ``0xA5``
-+     - ``0x24``
-+     - ``-``
-+     - ``LATCH_UNLOCK``
-+     - Unlock the latch.
-+
-+   * - ``0xA5``
-+     - ``0x25``
-+     - ``-``
-+     - ``LATCH_REQUEST``
-+     - Request clipboard detachment.
-+
-+   * - ``0xA5``
-+     - ``0x26``
-+     - ``-``
-+     - ``LATCH_CONFIRM``
-+     - Confirm clipboard detachment request.
-+
-+   * - ``0xA5``
-+     - ``0x27``
-+     - ``-``
-+     - ``LATCH_HEARTBEAT``
-+     - Send heartbeat signal to EC.
-+
-+   * - ``0xA5``
-+     - ``0x28``
-+     - ``-``
-+     - ``LATCH_CANCEL``
-+     - Cancel detachment process.
-+
-+   * - ``0xA5``
-+     - ``0x29``
-+     - ``R``
-+     - ``GET_BASE_INFO``
-+     - Get current base/connection information.
-+
-+   * - ``0xA5``
-+     - ``0x2A``
-+     - ``R``
-+     - ``GET_DEVICE_MODE``
-+     - Get current device operation mode.
-+
-+   * - ``0xA5``
-+     - ``0x2B``
-+     - ``R``
-+     - ``GET_LATCH_STATUS``
-+     - Get current device latch status.
-+
-+``SDTX_IOCTL_EVENTS_ENABLE``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x22)``.
-+
-+Enable events for the current file descriptor. Events can be obtained by
-+reading from the device, if enabled. Events are disabled by default.
-+
-+``SDTX_IOCTL_EVENTS_DISABLE``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x22)``.
-+
-+Disable events for the current file descriptor. Events can be obtained by
-+reading from the device, if enabled. Events are disabled by default.
-+
-+``SDTX_IOCTL_LATCH_LOCK``
-+^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x23)``.
-+
-+Locks the latch, causing the detachment procedure to abort without opening
-+the latch on timeout. The latch is unlocked by default. This command will be
-+silently ignored if the latch is already locked.
-+
-+``SDTX_IOCTL_LATCH_UNLOCK``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x24)``.
-+
-+Unlocks the latch, causing the detachment procedure to open the latch on
-+timeout. The latch is unlocked by default. This command will not open the
-+latch when sent during an ongoing detachment process. It will be silently
-+ignored if the latch is already unlocked.
-+
-+``SDTX_IOCTL_LATCH_REQUEST``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x25)``.
-+
-+Generic latch request. Behavior depends on the context: If no
-+detachment-process is active, detachment is requested. Otherwise the
-+currently active detachment-process will be aborted.
-+
-+If a detachment process is canceled by this operation, a generic detachment
-+request event (``SDTX_EVENT_REQUEST``) will be sent.
-+
-+This essentially behaves the same as a detachment button press.
-+
-+``SDTX_IOCTL_LATCH_CONFIRM``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x26)``.
-+
-+Acknowledges and confirms a latch request. If sent during an ongoing
-+detachment process, this command causes the latch to be opened immediately.
-+The latch will also be opened if it has been locked. In this case, the latch
-+lock is reset to the unlocked state.
-+
-+This command will be silently ignored if there is currently no detachment
-+procedure in progress.
-+
-+``SDTX_IOCTL_LATCH_HEARTBEAT``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x27)``.
-+
-+Sends a heartbeat, essentially resetting the detachment timeout. This
-+command can be used to keep the detachment process alive while work required
-+for the detachment to succeed is still in progress.
-+
-+This command will be silently ignored if there is currently no detachment
-+procedure in progress.
-+
-+``SDTX_IOCTL_LATCH_CANCEL``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IO(0xA5, 0x28)``.
-+
-+Cancels detachment in progress (if any). If a detachment process is canceled
-+by this operation, a generic detachment request event
-+(``SDTX_EVENT_REQUEST``) will be sent.
-+
-+This command will be silently ignored if there is currently no detachment
-+procedure in progress.
-+
-+``SDTX_IOCTL_GET_BASE_INFO``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IOR(0xA5, 0x29, struct sdtx_base_info)``.
-+
-+Get the current base connection state (i.e. attached/detached) and the type
-+of the base connected to the clipboard. This is command essentially provides
-+a way to query the information provided by the base connection change event
-+(``SDTX_EVENT_BASE_CONNECTION``).
-+
-+Possible values for ``struct sdtx_base_info.state`` are:
-+
-+* ``SDTX_BASE_DETACHED``,
-+* ``SDTX_BASE_ATTACHED``, and
-+* ``SDTX_DETACH_NOT_FEASIBLE``.
-+
-+Other values are reserved for future use.
-+
-+``SDTX_IOCTL_GET_DEVICE_MODE``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IOR(0xA5, 0x2A, __u16)``.
-+
-+Returns the device operation mode, indicating if and how the base is
-+attached to the clipboard. This is command essentially provides a way to
-+query the information provided by the device mode change event
-+(``SDTX_EVENT_DEVICE_MODE``).
-+
-+Returned values are:
-+
-+* ``SDTX_DEVICE_MODE_LAPTOP``
-+* ``SDTX_DEVICE_MODE_TABLET``
-+* ``SDTX_DEVICE_MODE_STUDIO``
-+
-+See |sdtx_device_mode| for details. Other values are reserved for future
-+use.
-+
-+
-+``SDTX_IOCTL_GET_LATCH_STATUS``
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+Defined as ``_IOR(0xA5, 0x2B, __u16)``.
-+
-+Get the current latch status or (presumably) the last error encountered when
-+trying to open/close the latch. This is command essentially provides a way
-+to query the information provided by the latch status change event
-+(``SDTX_EVENT_LATCH_STATUS``).
-+
-+Returned values are:
-+
-+* ``SDTX_LATCH_CLOSED``,
-+* ``SDTX_LATCH_OPENED``,
-+* ``SDTX_ERR_FAILED_TO_OPEN``,
-+* ``SDTX_ERR_FAILED_TO_REMAIN_OPEN``, and
-+* ``SDTX_ERR_FAILED_TO_CLOSE``.
-+
-+Other values are reserved for future use.
-+
-+A Note on Base IDs
-+------------------
-+
-+Base types/IDs provided via ``SDTX_EVENT_BASE_CONNECTION`` or
-+``SDTX_IOCTL_GET_BASE_INFO`` are directly forwarded from the EC in the lower
-+byte of the combined |__u16| value, with the driver storing the EC type from
-+which this ID comes in the high byte (without this, base IDs over different
-+types of ECs may be overlapping).
-+
-+The ``SDTX_DEVICE_TYPE()`` macro can be used to determine the EC device
-+type. This can be one of
-+
-+* ``SDTX_DEVICE_TYPE_HID``, for Surface Aggregator Module over HID, and
-+
-+* ``SDTX_DEVICE_TYPE_SSH``, for Surface Aggregator Module over Surface Serial
-+  Hub.
-+
-+Note that currently only the ``SSH`` type EC is supported, however ``HID``
-+type is reserved for future use.
-+
-+Structures and Enums
-+--------------------
-+
-+.. kernel-doc:: include/uapi/linux/surface_aggregator/dtx.h
-+
-+API Users
-+=========
-+
-+A user-space daemon utilizing this API can be found at
-+https://github.com/linux-surface/surface-dtx-daemon.
-diff --git a/Documentation/driver-api/surface_aggregator/clients/index.rst b/Documentation/driver-api/surface_aggregator/clients/index.rst
-index 3ccabce23271..98ea9946b8a2 100644
---- a/Documentation/driver-api/surface_aggregator/clients/index.rst
-+++ b/Documentation/driver-api/surface_aggregator/clients/index.rst
-@@ -11,6 +11,7 @@ This is the documentation for client drivers themselves. Refer to
-    :maxdepth: 1
- 
-    cdev
-+   dtx
-    san
- 
- .. only::  subproject and html
-diff --git a/MAINTAINERS b/MAINTAINERS
-index adfc3a437db7..3ff47a63cf32 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11865,6 +11865,7 @@ MICROSOFT SURFACE DTX DRIVER
- M:	Maximilian Luz <luzmaximilian@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
-+F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
- F:	drivers/platform/surface/surface_dtx.c
- F:	include/uapi/linux/surface_aggregator/dtx.h
- 
--- 
-2.30.1
+
+Yeah, I'll rebase onto 5.12-rc2 before next submission.
+
+>
+>> -
+>> -                       list_del(&dep->node);
+>> -                       kfree(dep);
+>> +                       ret = callback(dep, data);
+>> +                       if (ret)
+>> +                               break;
+>>                 }
+>>         }
+>>         mutex_unlock(&acpi_dep_list_lock);
+>>  }
+>>  EXPORT_SYMBOL_GPL(acpi_walk_dep_device_list);
+>>
+>> +/**
+>> + * acpi_dev_flag_dependency_met() - Inform consumers of @handle that the device
+>> + *                                 is now active
+> No parens here, please, and make it fit one line.
+>
+> Also the description should be something like "Clear dependencies on
+> the given device."
+
+
+OK - no problem
 
