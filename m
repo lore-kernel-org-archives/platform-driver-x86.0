@@ -2,300 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BAD_THREAD_QP_64,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DEFC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E2EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8F8650E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC176527E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:25:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbhCHRVN (ORCPT
+        id S230476AbhCHRY3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 12:21:13 -0500
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:2180 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230116AbhCHRU7 (ORCPT
+        Mon, 8 Mar 2021 12:24:29 -0500
+Received: from mail-oi1-f178.google.com ([209.85.167.178]:44926 "EHLO
+        mail-oi1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231220AbhCHRYD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 12:20:59 -0500
-Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 128GvOMN023505;
-        Mon, 8 Mar 2021 12:20:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=g9E6PAbrhhI1LfNvNOsn6AwNsWET2U0veRINIAi3YYs=;
- b=vgh8sCCBLiRIWill63yemKmm1LmzU2N85FAlW7mdgmGCl2LadB/vVYg1YL0TcfMRxWn0
- rTqzxN3aWg3RI52SHaDR5saQPCc+NwM8y1FS9+UKVtDSqwhHkdiqOfk3ijIHXlPeIgUE
- 7svUMEH0hguwybU9kd9GhRf7w6Uk1gTC/0iBO4GSNXeYtGl6V6WN2lb82WFwSvd866I/
- MobCrGipVP2vkMIvjJ7ZvYULaV57G5fzXav8SC7h4lTG6nnsd8Nv7nv3dSLyzAbYoRMB
- LFDvKDLS03T1+nx749BBEpdUe9T3VABnvN7FOv83kbuHYqn5VPCMJlHfFLjCzozI87xA tg== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0a-00154904.pphosted.com with ESMTP id 3746mrnc2g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 Mar 2021 12:20:56 -0500
-Received: from pps.filterd (m0134746.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 128GxWEm172346;
-        Mon, 8 Mar 2021 12:20:56 -0500
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-        by mx0a-00154901.pphosted.com with ESMTP id 374qn1j6m6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 08 Mar 2021 12:20:56 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQLBBM9kZKuf/ws7BxcgffyZ12yjFK/tMCOTT0VJjihDl65LW1wqrBHer1jMrJ/SFE2xZlJCHGoQ0qwRtLBZoRhT+7o4wApmaxoCyhy0rtV1PfGkB1VqazM4ovh68cJMj+ZC5F5KY8rNRn44lrUivYQfqGwHo0mBMRkI5ndymIB5HmNyPnCqwoiTd7WINvP3HvZKbKuSYkLgkareL2ibrcQGcsLg5qzQxsqirfH9ihAHnVIIXIvuoBgmKB+7ulKRGHlCvGzfXaXMMNFy3iYjWj7ATklEuPLGn3c6IxpDc4IABchMD6C2FIvgZuKosoo6SU1oW61KLrEmtlketlWpaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g9E6PAbrhhI1LfNvNOsn6AwNsWET2U0veRINIAi3YYs=;
- b=UvU4xkJEJe3RpUNYCAaPFs6m4rq0VJZhotLpkhg1Ck9wayTByLNg187BeCi79F3oS8/qTAlY9Gln2rEoGc/XWiTxb6pgwIqu75N+Vyb428kHdYrkPHxOB3O2zm1whYL/VRTkj5vXqbXkxSAU7WQOa6CYkaTsDHc7kORhZQVdub+jDDZv0Y4EB0vBJ4g/3afZAII6BsLDEWeBn8riRqbtCPcQfKCPd2upQnm4Gi2HQKb5mi3A/WoAsKViCVgLV4NboZl1tDlaVUVN/HoUCDDWH2cP0oyhiYTvlG07b5jAaH3nW1f3nWZ5+dB/4YrIoa2k5UeO0GY8ps70I3sNmFuKxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com (2603:10b6:806:1a6::18)
- by SN6PR1901MB1999.namprd19.prod.outlook.com (2603:10b6:805:10::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.28; Mon, 8 Mar
- 2021 17:20:51 +0000
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::1c92:24d3:b11f:bc50]) by SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::1c92:24d3:b11f:bc50%6]) with mapi id 15.20.3912.027; Mon, 8 Mar 2021
- 17:20:51 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "sasha.neftin@intel.com" <sasha.neftin@intel.com>
-CC:     "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
-Subject: RE: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
- platforms
-Thread-Topic: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
- platforms
-Thread-Index: AQHXEfLhzYLSroQh8UmKnpvnJJhjqqp6Wj0A
-Date:   Mon, 8 Mar 2021 17:20:51 +0000
-Message-ID: <SA1PR19MB49261823693E915E7D646B07FA939@SA1PR19MB4926.namprd19.prod.outlook.com>
-References: <20210305190608.1834164-1-david.e.box@linux.intel.com>
-In-Reply-To: <20210305190608.1834164-1-david.e.box@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-03-08T17:20:07.5927632Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=944ee811-ef5c-4a5e-b04c-64056ad7416f;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc15a46e-e036-47e8-1887-08d8e256860f
-x-ms-traffictypediagnostic: SN6PR1901MB1999:
-x-microsoft-antispam-prvs: <SN6PR1901MB19991CFFE4B0F8BF4D8B28A4FA939@SN6PR1901MB1999.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0T8ED2Ed+QdXZPGc6sAQkLAKfg9+tuEo13hQ+RUsMZYNnaMStvj4f15bcUHYG/4GI7c0tvABsvwaxu9OuIEtXVb4+Pqk4BWgJfFbhNlct4FvJecxoZwkwtXer9ylDUpi31sFAJWTI3ukeiXYpmDrqN0Mg6jxumS3TxDQC8W6iRS7xfTv38bKbaOPnLmNixobnf46sNLUUKbYKd6bsD/07Lr34d6hRrCv/z0SpNHtx8ZPUFEF7cdIRssAuw0LZAsXNWp0LC32xiEC1C8k3lxkg4P0vTSG/o6jSPry/RvgnQvncxSaK3DSyiO+N3+0GiW01YdEbrgso4n5TMPVXfJj7LxC1wnXw8fF3G6emFgEAClRmSEeLI2r3CED8AafA6y2qXi9V2OFoVx6uSa0ij9J9tw1CAClrVMOHmJLWudOL1HiKbVhtKvhqlZtdBsqVwcPvPxLlV+LMQxI1IxU4aFkd5jVb58wRAll7Ot1Mz/m+zUbN428v1EbJjSRwjmcxTmOPjI28P9LCrlaoHOv797icw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR19MB4926.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(52536014)(66446008)(64756008)(66556008)(8936002)(26005)(9686003)(5660300002)(7696005)(55016002)(2906002)(6506007)(498600001)(186003)(4326008)(8676002)(71200400001)(86362001)(66946007)(54906003)(76116006)(83380400001)(110136005)(33656002)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?Q2WSmOS7HIOApIZv6wa7zIVCZtuwQStBVH271ev8cBA3CzsWPiCjZskO06Kv?=
- =?us-ascii?Q?7/bv4wiiizc/xJfBdUtWvhk5gHYt3/yhWytwemSK7L9i2zkb3l0vRDJmYP21?=
- =?us-ascii?Q?KLxo30lCoufKTMsk1v99K4T6LGTpDOUmpoV3L5+MtiVuBASYNiEZ3euxfLNZ?=
- =?us-ascii?Q?SLTRwk3yNSXEhiRlIhcHIWWh7m5G+lWsrcWL8CbLHRBi1OdC4+9aBnkyI5T/?=
- =?us-ascii?Q?/GoumgsII0ndCYHorDps2iaM6+lla5LTtHASXut+xIsPShs+mnIEfc1Qf6YY?=
- =?us-ascii?Q?Lf2K5foDGx2qEKH1m8Mv9BrAfgI8s+YcYX7Cf42s1KX9mTCpYw9erXuys8Xi?=
- =?us-ascii?Q?9Ewr8rU7yspCq4LNUjuzplrwswb1RZ7oUGu8mYijaU/wwsZFNCaY+5qnsKTb?=
- =?us-ascii?Q?dUUwFy3AEmA9bdAfnLfg3Ga2/dHGOS97vS23SVy0ARJHK695SbP0oCZ83cz5?=
- =?us-ascii?Q?HsaigZFUdT115j7xQUo2jMk4eRMW14ekp0L8tufu8NenM2YgdK549JToCLcG?=
- =?us-ascii?Q?YFiXfvOVN2SWOscznery+ISHesYeGEr7Hq/8iOfDZu/RVjpq4wplAdSC3mgT?=
- =?us-ascii?Q?KSBdOquFcYNC5MVJX70y6eVzeQGX0mQmMjyMh/O97EFKT/+w/NIoF/huyAul?=
- =?us-ascii?Q?3nDvrUh0stAM9QN/BvMuTeKaDQZV/NuxE1Sw/sV8HGdZlAzaAfhiJey0bXRQ?=
- =?us-ascii?Q?ISCnwTypzLiJkU9i9OoMYGwx2amU0KRcIRGMr+fgeeqZPj9Z92WMALMB7izR?=
- =?us-ascii?Q?N0wcYmsaI20SdNxsYsbp8lQjaY4JR4vyVZNIyzQo0Rfy3TGXygZArDsOvCUl?=
- =?us-ascii?Q?K58n30NtPIZcoryU/JGmaofasCktFutt5lGjjd62dQs6CXNbbByeg8f4R5Sl?=
- =?us-ascii?Q?I8agtHwyLUhphvGW1IuG4IZ33vqU7fR0IYmS0DQgSOKrFIp5etlh4vV3C6F5?=
- =?us-ascii?Q?yZx02aGTPsJuKS9p644BQi4mR0kCC0zJA1icIoZw7B3xMuggwI1NzeKvE90f?=
- =?us-ascii?Q?eTqqIzMh9bON5M5k05kJRIt9yqtNJm3Ov53JpirmNg7FfAxsdvuy3lPqKzxj?=
- =?us-ascii?Q?ThrvSNnI/KtYaMqtjTRf7WTtEneZDt1cywtnbuSVsZcYXTNm38PC6AJxa4Vw?=
- =?us-ascii?Q?Ok/QZEJ9x9xcRT/+K03KAMOLSfz/cjdPFll/j1JOyeibDtUbpzpDYnMFARKS?=
- =?us-ascii?Q?gHyuQDPbeAbavY1lAEOcLf1FCSU1WU5q8b0cuCTavGyxkrRXX3bQHM1XDIVj?=
- =?us-ascii?Q?cKa0FUP8UJJvur8nbnogXcW2ZcyrWgLLgE7YKAy9H5FUPG6/0aoW8ISXLMEd?=
- =?us-ascii?Q?8ByZU+mbGbuMGgczGlAEsKkp?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 8 Mar 2021 12:24:03 -0500
+Received: by mail-oi1-f178.google.com with SMTP id w195so5124555oif.11;
+        Mon, 08 Mar 2021 09:24:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=46Dl+/n5MDXaPsg8pK7iPxr6SdZP0DYwFyO9StPfVU0=;
+        b=BVwUHNbpB1GDF/DPzuq7HfbJGHAhmy5UfUbOmsLkZID6pvX98UnbCr+Km0WlyHEzNM
+         njyjuhDUJCMqdmnYUgfhtr454v/c1AY4oVGfBPyNFBtDiYblWqESmGWGCJoTmqwZ9sqB
+         +EG85f0m+03vBRHBLJ0ZOrWKhCQdYd94vMdP7hZlvMhQ7zrEgw8i3AYUzgz46pyEFajw
+         U76PVM9/x8Xo8/10+gfL0i0+i313LZpxZS9AaUdb7AYfq3jqHch+pOpcqGjUBlIOrN0R
+         w59hCiWTeJ7j+Oz3BxxKu3B0a0to8+NvorQKvJwgCsvbSOD6NHCwBqGO0m4ulsROiXJm
+         ZE5g==
+X-Gm-Message-State: AOAM530CJCcR3vtx1oWe3BIybAEjMqyNNtWgE2r+5X60FfMJmFGDB/si
+        5Jz82lLGBEBt8d0Kg7Qe9PGFrzxwerNy+P69m+w=
+X-Google-Smtp-Source: ABdhPJwMlR4X/o29NrD2vDK13sLOTLewPoMXmTCDSlyg1tEBBcj52cBVPnmXI+TT1Hb829Z/MVg/FVmPbb5+YFhYMjI=
+X-Received: by 2002:aca:3d85:: with SMTP id k127mr18673488oia.157.1615224242728;
+ Mon, 08 Mar 2021 09:24:02 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR19MB4926.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc15a46e-e036-47e8-1887-08d8e256860f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 17:20:51.5672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SCT0d7KimDwqfez1pqYJVcxiG0+xB/DZRtcLI9pvpybHPLBwkm5t0MzTkKWJalFmSlLtF8gA/RMlzGzoSPjy1hfuvL1ZFfUceDFA+l+mWeg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR1901MB1999
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-08_14:2021-03-08,2021-03-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- clxscore=1011 lowpriorityscore=0 priorityscore=1501 adultscore=0
- mlxlogscore=999 malwarescore=0 phishscore=0 impostorscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103080091
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 adultscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103080091
+References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
+ <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
+ <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com> <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
+ <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com>
+ <YEYtME2AxpXBq6iF@smile.fi.intel.com> <CAJZ5v0i+suMNWhUc=v0pnpabS-Ew-CMeSH945JB0YKnQAbi4Wg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i+suMNWhUc=v0pnpabS-Ew-CMeSH945JB0YKnQAbi4Wg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 8 Mar 2021 18:23:51 +0100
+Message-ID: <CAJZ5v0iyGGLjhYnQxQTokib5Dyiuz_ApvaWb13qz8=U3V44vFg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
->=20
-> [EXTERNAL EMAIL]
->=20
-> Due to a HW limitation, the Latency Tolerance Reporting (LTR) value
-> programmed in the Tiger Lake GBE controller is not large enough to allow
-> the platform to enter Package C10, which in turn prevents the platform fr=
-om
-> achieving its low power target during suspend-to-idle.  Ignore the GBE LT=
-R
-> value on Tiger Lake. LTR ignore functionality is currently performed sole=
-ly
-> by a debugfs write call. Split out the LTR code into its own function tha=
-t
-> can be called by both the debugfs writer and by this work around.
->=20
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> Reviewed-by: Sasha Neftin <sasha.neftin@intel.com>
-> Cc: intel-wired-lan@lists.osuosl.org
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 55 ++++++++++++++++++++-------
->  1 file changed, 42 insertions(+), 13 deletions(-)
+On Mon, Mar 8, 2021 at 4:45 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Mon, Mar 8, 2021 at 2:57 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Mon, Mar 08, 2021 at 02:36:27PM +0100, Rafael J. Wysocki wrote:
+> > > On Sun, Mar 7, 2021 at 9:39 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
+> > > > > On 22/02/2021 13:34, Andy Shevchenko wrote:
+> > > > > > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
+> > > > > >> The acpi_walk_dep_device_list() is not as generalisable as its name
+> > > > > >> implies, serving only to decrement the dependency count for each
+> > > > > >> dependent device of the input. Extend the function to instead accept
+> > > > > >> a callback which can be applied to all the dependencies in acpi_dep_list.
+> > > > > >> Replace all existing calls to the function with calls to a wrapper, passing
+> > > > > >> a callback that applies the same dependency reduction.
+> > > > > > The code looks okay to me, if it was the initial idea, feel free to add
+> > > > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
+> > ...
+> >
+> > > > > >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
+> >
+> > > > > > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
+> > > > >
+> > > > > I can do this, but I avoided it because in most of the uses in the
+> > > > > kernel currently there's no struct acpi_device, they're just passing
+> > > > > ACPI_HANDLE(dev) instead, so I'd need to get the adev with
+> > > > > ACPI_COMPANION() in each place. It didn't seem worth it...
+> > >
+> > > It may not even be possible sometimes, because that function may be
+> > > called before creating all of the struct acpi_device objects (like in
+> > > the case of deferred enumeration).
+> > >
+> > > > > but happy to
+> > > > > do it if you'd prefer it that way?
+> > > >
+> > > > I see, let Rafael decide then. I'm not pushing here.
+> > >
+> > > Well, it's a matter of correctness.
+> >
+> > Looking at your above comment it is indeed. Thanks for clarification!
+>
+> Well, actually, the struct device for the object passed to this
+> function should be there already, because otherwise it wouldn't make
+> sense to update the list.  So my comment above is not really
+> applicable to this particular device and the function could take a
+> struct acpi_device pointer argument.  Sorry for the confusion.
+>
+> > But should we have acpi_dev_*() namespace for this function if it takes handle?
+>
+> It takes a device object handle.
+>
+> Anyway, as per the above, it can take a struct acpi_device pointer
+> argument in which case the "acpi_dev_" prefix should be fine.
+>
+> > For time being nothing better than following comes to my mind:
+> >
+> > __acpi_dev_flag_dependency_met() => __acpi_flag_device_dependency_met()
+> > acpi_dev_flag_dependency_met() => acpi_flag_device_dependency_met()
+>
+> The above said, the name is somewhat confusing overall IMV.
+>
+> Something like acpi_dev_clear_dependencies() might be better.
+>
+> So lets make it something like
+>
+> void acpi_dev_clear_dependencies(struct acpi_device *supplier);
 
-I feel like this driver change causes a weak reference between e1000e and i=
-ntel_pmc_core.
-It would mean significantly different behavior if you use e1000e but don't =
-have PMC module
-available for any reason.
+To be precise, there are two functions in the patch,
+acpi_dev_flag_dependency_met() which invokes
+acpi_walk_dep_device_list() and __acpi_dev_flag_dependency_met()
+invoked by the latter as a callback.
 
-In this case does it maybe make sense to at least use "imply" in the Kconfi=
-g for e1000e so
-that selecting e1000e gets intel-pmc-core enabled too?
+Above I was talking about the first one.
 
->=20
-> diff --git a/drivers/platform/x86/intel_pmc_core.c
-> b/drivers/platform/x86/intel_pmc_core.c
-> index ee2f757515b0..ab31eb646a1a 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -863,34 +863,45 @@ static int pmc_core_pll_show(struct seq_file *s, vo=
-id
-> *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
->=20
-> -static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-> -					 const char __user *userbuf,
-> -					 size_t count, loff_t *ppos)
-> +static int pmc_core_write_ltr_ignore(u32 value)
->  {
->  	struct pmc_dev *pmcdev =3D &pmc;
->  	const struct pmc_reg_map *map =3D pmcdev->map;
-> -	u32 val, buf_size, fd;
-> -	int err;
-> -
-> -	buf_size =3D count < 64 ? count : 64;
-> -
-> -	err =3D kstrtou32_from_user(userbuf, buf_size, 10, &val);
-> -	if (err)
-> -		return err;
-> +	u32 fd;
-> +	int err =3D 0;
->=20
->  	mutex_lock(&pmcdev->lock);
->=20
-> -	if (val > map->ltr_ignore_max) {
-> +	if (fls(value) > map->ltr_ignore_max) {
->  		err =3D -EINVAL;
->  		goto out_unlock;
->  	}
->=20
->  	fd =3D pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
-> -	fd |=3D (1U << val);
-> +	fd |=3D value;
->  	pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
->=20
->  out_unlock:
->  	mutex_unlock(&pmcdev->lock);
-> +
-> +	return err;
-> +}
-> +
-> +static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-> +					 const char __user *userbuf,
-> +					 size_t count, loff_t *ppos)
-> +{
-> +	u32 buf_size, val;
-> +	int err;
-> +
-> +	buf_size =3D count < 64 ? count : 64;
-> +
-> +	err =3D kstrtou32_from_user(userbuf, buf_size, 10, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	err =3D pmc_core_write_ltr_ignore(1U << val);
-> +
->  	return err =3D=3D 0 ? count : err;
->  }
->=20
-> @@ -1189,6 +1200,15 @@ static int quirk_xtal_ignore(const struct dmi_syst=
-em_id
-> *id)
->  	return 0;
->  }
->=20
-> +static int quirk_ltr_ignore(u32 val)
-> +{
-> +	int err;
-> +
-> +	err =3D pmc_core_write_ltr_ignore(val);
-> +
-> +	return err;
-> +}
-> +
->  static const struct dmi_system_id pmc_core_dmi_table[]  =3D {
->  	{
->  	.callback =3D quirk_xtal_ignore,
-> @@ -1244,6 +1264,15 @@ static int pmc_core_probe(struct platform_device *=
-pdev)
->  	pmcdev->pmc_xram_read_bit =3D pmc_core_check_read_lock_bit();
->  	dmi_check_system(pmc_core_dmi_table);
->=20
-> +	/*
-> +	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
-> +	 * a cable is attached. Tell the PMC to ignore it.
-> +	 */
-> +	if (pmcdev->map =3D=3D &tgl_reg_map) {
-> +		dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
-> +		quirk_ltr_ignore(1U << 3);
-> +	}
-> +
->  	pmc_core_dbgfs_register(pmcdev);
->=20
->  	device_initialized =3D true;
-> --
-> 2.25.1
-
+The callback should still take a struct acpi_dep_data pointer argument
+and I would call it acpi_scan_clear_dep() or similar.
