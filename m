@@ -2,120 +2,127 @@ Return-Path: <SRS0=UxnR=IG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F5BC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDEEC43381
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB55651FD
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FE0651D3
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbhCHNhO (ORCPT
+        id S229821AbhCHNoq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 08:37:14 -0500
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:38646 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbhCHNgn (ORCPT
+        Mon, 8 Mar 2021 08:44:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229971AbhCHNoS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 08:36:43 -0500
-Received: by mail-ot1-f41.google.com with SMTP id a17so9177466oto.5;
-        Mon, 08 Mar 2021 05:36:42 -0800 (PST)
+        Mon, 8 Mar 2021 08:44:18 -0500
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5B9C061762;
+        Mon,  8 Mar 2021 05:44:14 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id c19so7798747ljn.12;
+        Mon, 08 Mar 2021 05:44:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WaQEYnGNWJ/OtyKV8I7R1ooNb9kpyo4mdpeJtr/93Ho=;
+        b=DD8/JlFZJ6G68i1cOe9PJRXvajjKX61MGCQGf7M4eDOeh41yUfDdx0qBLjoXidNvA/
+         4/Xu1j8hsRkwTCJYWX4UsBU1rff3ERHFxIQ55cAgANxFTshftvXWb4o7/+WQJVLkI3sH
+         ZBEm0b1VtpEHPsffNAtdASBiK0gvli/tMhQgwfVR6ieUs1MBAx1BIbngEjzdzzDrRLQa
+         3B5RrhZOj/VnksJ2q3pnbKI3jJmrXXO/Dy7CMTt7twZY7sEDkQpXJX5bNorSh4T1tmT2
+         czFMnhEnhSaubZprZi+4kR6IGF5ogE2kOA3/mispkJSdo9w1J5UzM9XL4plCoE42iLMK
+         MX5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3SC+dThWdkkdkAOzaSbWtrlTJ9uPyl9VXsnQJro4+zQ=;
-        b=Z9POlgOuy793D5BTuqYmhgpFlOHnU98IJxVI8ua8ZoyLjF66pFS4goo6Ue55mTB5ki
-         4OZMjUeg1jnvFGMNMyKzu6afF4c1p3Gw+u5Q3MOddDWB9X7JOw2ltKe9PRKwLBL9odiv
-         y73xIUt2ZBWk3OuzLxSZ+mn0S/1o+1GQIzN8FHiSb9RifbdWl7VJtn+hL9IhNFlWaC9+
-         /5Fqdwh6JNAqWWyI53tfh5tG/rxKYURwCznBfhunDDM4XDDLI/F8JnEwHWo/oMzU8N4X
-         pFc3IyTgJHEiFAsOSM934at6bodX0dthqz6kWup1BFfMZD3xBPx0pJVTd57S28HZ1Aqw
-         NIRA==
-X-Gm-Message-State: AOAM532rgzPr7QDsiIvk69OSdQommAsE42WW48bPTH+QF2aal4aVatqB
-        BsWWRX9JBENuoHx7LQhdT7ypultRc6OmgvsQTd4=
-X-Google-Smtp-Source: ABdhPJyy6ZpakLDXyR3Oyk57jV9FGupiJLAQnH75QbMy9JuTsZHE14IlWkvw4HT+2ZoGrY9c8JoAUD0rFxSpfGAfb7Q=
-X-Received: by 2002:a05:6830:1e03:: with SMTP id s3mr9299001otr.321.1615210602629;
- Mon, 08 Mar 2021 05:36:42 -0800 (PST)
+        bh=WaQEYnGNWJ/OtyKV8I7R1ooNb9kpyo4mdpeJtr/93Ho=;
+        b=BhFceszcfFTrOzGwF5dpL1wTVn4fzTD0GhYkqMls0EFBrkHmH+ZOr3Oy7p212JeJf5
+         5nGs2IfC9aKQId2fCNi9Ewr7UmqZv2o2c0hvCkxmBt5xEt+LWiJbZCex1Kl16is7iJH+
+         CCfe4l29Pp1fz3Fan+geY8Bgn7h4Hprnrrzf++9kR5eQEhILSEkiKi2j0Wh7X5GM7JBG
+         /I1aRpLXH+6FK22y1YvlpHxR9lv2K0gwLFhwOPcEIchGP98lzp/gvashEI++jCcZ76EQ
+         NyhyblrgtKPugebLC5+rz+6n5/tFkfh/CcRlz0NaeDc7oG0ctMO7MzJxtBsUEFxnbkL8
+         rdYw==
+X-Gm-Message-State: AOAM530+hnsYmfWvmhntPeeeU83zazVbZSVqy4Hgw/IGHgXBeBVCUgSV
+        U2oPOQpBpF+q88KtenHj7Xmyc2OzFZADXo6V8GI=
+X-Google-Smtp-Source: ABdhPJwFXWe+FddoQETwle8prutSDIA3QZ3m+wdRbe3N8yyIcvGoPRpCDDpQ6hE2dDakU2Kq0eNoqoJa1NEKRSwXqr0=
+X-Received: by 2002:a2e:8196:: with SMTP id e22mr13941260ljg.398.1615211053458;
+ Mon, 08 Mar 2021 05:44:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
- <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com> <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
-In-Reply-To: <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 8 Mar 2021 14:36:27 +0100
-Message-ID: <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+References: <20210302163309.25528-1-henning.schild@siemens.com>
+ <20210302163309.25528-2-henning.schild@siemens.com> <CAHp75VfDDGxdhP0-yKOCJyJ_+Y2Zu3TmOdvUJmEZ0AvQnceV6A@mail.gmail.com>
+ <2fad304a-9e1e-c83d-7a9e-02b35ed22418@redhat.com> <CAHp75VfB8v1n3Hav_oMqG0k4C31NBEUe082i8NrrOGUbSgoESw@mail.gmail.com>
+ <20210305174223.11537d42@md1za8fc.ad001.siemens.net> <CAHp75VdssrnvGn+Qs6Ua72MSFrTCHOCMBdPEAfmGFp1RrwdJ+g@mail.gmail.com>
+ <CAHp75VdcBxo5emWpNy7jHLfSMfN0zWW_L_BW3Hs3_55zyn6WOA@mail.gmail.com> <20210308135714.3cc48c34@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210308135714.3cc48c34@md1za8fc.ad001.siemens.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 8 Mar 2021 15:43:56 +0200
+Message-ID: <CAHp75Vc8eYTDJv+8oEr6we71k9fhXhM9XfCDGsnmTDNJ_+0nGA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] platform/x86: simatic-ipc: add main driver for
+ Siemens devices
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Mar 7, 2021 at 9:39 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Mon, Mar 8, 2021 at 3:02 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+> Am Fri, 5 Mar 2021 19:44:57 +0200
+> schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+> > On Fri, Mar 5, 2021 at 7:17 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Fri, Mar 5, 2021 at 6:47 PM Henning Schild
+> > > <henning.schild@siemens.com> wrote:
+> > > > Am Fri, 5 Mar 2021 17:42:42 +0200
+> > > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+> > > > > On Thu, Mar 4, 2021 at 3:47 PM Hans de Goede
+> > > > > <hdegoede@redhat.com> wrote:
+
+...
+
+> > > > > [1]: https://gitlab.com/andy-shev/next/-/tree/p2sb
+> > > >
+> > > > That is a little weird, might be a good idea to RFC reply to the
+> > > > cover letter of this one. To allow review and discussion in a
+> > > > central place.
+> > >
+> > > I'm now rebasing it to be more presentable.
+> > > If you can test this approach and it works for you, I'll send a
+> > > formal RFC series.
+> >
+> > Okay, [1] now is in presentable shape, each patch with a proper commit
+> > message and authorship, also all patches are compiled without issues.
 >
-> On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > On 22/02/2021 13:34, Andy Shevchenko wrote:
-> > > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > >> The acpi_walk_dep_device_list() is not as generalisable as its name
-> > >> implies, serving only to decrement the dependency count for each
-> > >> dependent device of the input. Extend the function to instead accept
-> > >> a callback which can be applied to all the dependencies in acpi_dep_list.
-> > >> Replace all existing calls to the function with calls to a wrapper, passing
-> > >> a callback that applies the same dependency reduction.
-> > > The code looks okay to me, if it was the initial idea, feel free to add
-> > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >
-> >
-> > Thank you!
-> >
-> >
-> > >> + */
-> > >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
-> > >> +{
-> > > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
-> >
-> >
-> > I can do this, but I avoided it because in most of the uses in the
-> > kernel currently there's no struct acpi_device, they're just passing
-> > ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-> > ACPI_COMPANION() in each place. It didn't seem worth it...
+> Thank you so much, i will base v2 on that and let you know how that
+> works.
 
-It may not even be possible sometimes, because that function may be
-called before creating all of the struct acpi_device objects (like in
-the case of deferred enumeration).
+I went ahead and submitted the series [2]. Feel free either to use the
+last 7 patches from [1], or the series. In either case, if it works
+for you I would expect the Tested-by tag given against _series_.
+Thanks!
+(Or comment there what is not working / needed for your case)
 
-> > but happy to
-> > do it if you'd prefer it that way?
->
-> I see, let Rafael decide then. I'm not pushing here.
+[2]: https://lore.kernel.org/linux-pci/20210308122020.57071-1-andriy.shevchenko@linux.intel.com/T/#t
 
-Well, it's a matter of correctness.
+-- 
+With Best Regards,
+Andy Shevchenko
