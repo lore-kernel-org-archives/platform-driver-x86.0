@@ -2,222 +2,308 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8D6C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EA7C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12466651CA
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4095765296
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbhCHRc2 (ORCPT
+        id S229818AbhCHRqh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 12:32:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40136 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbhCHRcD (ORCPT
+        Mon, 8 Mar 2021 12:46:37 -0500
+Received: from mail-oo1-f50.google.com ([209.85.161.50]:44179 "EHLO
+        mail-oo1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229459AbhCHRqT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 12:32:03 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06223C06174A;
-        Mon,  8 Mar 2021 09:32:02 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id d15so12339473wrv.5;
-        Mon, 08 Mar 2021 09:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1vN6k5pXokza2dBxBoaJoD8BYKPtCKRtAZbFCogTu4k=;
-        b=uzMcXdB9W0g3/ZzqbsUdTGkHnHhto0xQ0ZKxA6WLWZOAfmDO5zFTvvBnjRS6J7Ve2h
-         7ara4xxaM+MPvxBqK+rPRCCYPCdG+62lIjIfMd0W5ez17XMmvrhLiLMwrHMS/j20uaq2
-         VbXSXUAm62wZ0qqccLLQq3bbT+7mxYyPOidgu67rRGDm/KFOcmTFckvjYgP5uz660DyW
-         1L7ozkmQPZIxhtg/58TrgrV74I9QYq8mUoT6vNjgEksm37wtR0h4XQM7lFNjTzfT+05k
-         r04dT+1u6QQN2q+QcAUjC3rrAg38lM/C3Xr/PxZWwBYT1Me0YwMqT0NZ0Kuwc4qGdBz5
-         GZNw==
+        Mon, 8 Mar 2021 12:46:19 -0500
+Received: by mail-oo1-f50.google.com with SMTP id n19so2376161ooj.11;
+        Mon, 08 Mar 2021 09:46:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1vN6k5pXokza2dBxBoaJoD8BYKPtCKRtAZbFCogTu4k=;
-        b=LdshAGDehcfHxLL6MyzVYPP00loFKsKgD01kXRxwHjKTH5iNnkBRDEifeRgFb+BBwo
-         iKmZtZBAVcK42EaC6lAfU6fMByrZZAYNxoiZ9nxzywVEKzEp1ry2dHNbWCWg1os/j7HO
-         pXINirrfbvbDn2jE/PH7W+5QXfCtqjMZw2WpUaflVLdRD3K8ADOK6+w1XNRDR/CMg9xB
-         sMA6VfbY9D3pIxQfGltFL9y5++jNwi+ThL2rlD3NtBv6ZL5nvHfbshCW2FIbCaY08SQ1
-         UpgvNor1j31y5ajtiCPX3wb9b+OsRwKqW+tM3qMxFmEMbvaSwizsGADAvMiFuz8Al4/D
-         y3Dg==
-X-Gm-Message-State: AOAM532m2U9gnWEJ5d/nJ4vgOgkIvFvEg8J0fBw4H1ZvpY+emkk+CyQf
-        UnCRsWUJ6XGPWm24Ul4tW1fE+1yY3ywA4RMv3aA=
-X-Google-Smtp-Source: ABdhPJy6O5q2U60BX+GftuoCMbfRjFLZKH23/XhLP5CJCA7uB8txB4c2JjQsJ3gVxgS8e8PY8wT49Jghmbchocuc+pk=
-X-Received: by 2002:a5d:564b:: with SMTP id j11mr24184602wrw.326.1615224721526;
- Mon, 08 Mar 2021 09:32:01 -0800 (PST)
+        bh=rDAxitlThypn1GJEjMqUi6q6zLzkYSdOylaY9ls+Dr0=;
+        b=PHFUt0MV+r/DSlT2Xd6FLGUu6fX57GAo8Olz9xK+iNi3wW8ThMxUx5LbZZkvpnVMnQ
+         0CSRkUEq4agmzRX/U9U4m9MvQKnnvO0XBSkwfc0iFvb9xosePSYJGnzWFHtEZQM/5mK/
+         CdYR+LcZQx0rZ47u4XEXLx/dYhB78i4foVfD4YGKwjdZoKo5kBFHsCC0cX/H47uWJUsB
+         GBFo7Y/7jV0qcPFdfzguMHicQQYXym8dcO5uD7cm4a/Rs0O5kqNKO/FAHWiMBGX14K3q
+         NXK83uKAL/6oWlO0rTYVFJogBnhxEQCAvh/fXv1rf1PcBYJlubyqU5dnFbXyrQFX8csB
+         WApw==
+X-Gm-Message-State: AOAM531e7BAUnx/zwLzNEJerXoGiqWl7CqDAUNF+Hl2CZu+vpc52DA8j
+        miFwsIiTwB2HRIr0VzYllhOmRY2Bn0p9lfKNb/a2654g
+X-Google-Smtp-Source: ABdhPJwyhzOdWoKELxTrgA0osc9usc41t0Uh3CAQo4x3D6Uju9rbSCakCqLvd+w63fkouortpkgO5PacHhfOz4D1934=
+X-Received: by 2002:a4a:d48b:: with SMTP id o11mr4386544oos.2.1615225578823;
+ Mon, 08 Mar 2021 09:46:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20210305190608.1834164-1-david.e.box@linux.intel.com> <SA1PR19MB49261823693E915E7D646B07FA939@SA1PR19MB4926.namprd19.prod.outlook.com>
-In-Reply-To: <SA1PR19MB49261823693E915E7D646B07FA939@SA1PR19MB4926.namprd19.prod.outlook.com>
-From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Mon, 8 Mar 2021 12:31:35 -0500
-Message-ID: <CAE2upjT1SabzsEtxnVzFV9hVDVm-KuqXP9QEQqO6HHKVS0-HZg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake platforms
-To:     "Limonciello, Mario" <Mario.Limonciello@dell.com>
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "sasha.neftin@intel.com" <sasha.neftin@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
+In-Reply-To: <20210222130735.1313443-2-djrscally@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 8 Mar 2021 18:46:07 +0100
+Message-ID: <CAJZ5v0ib+3oScz2CuFNQdTvo16_fGYgfppZjpVZbtMC-2FK-2w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        andy.shevchenko@linux.intel.com,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Mar 8, 2021 at 12:20 PM Limonciello, Mario
-<Mario.Limonciello@dell.com> wrote:
+On Mon, Feb 22, 2021 at 2:07 PM Daniel Scally <djrscally@gmail.com> wrote:
 >
-> >
-> > [EXTERNAL EMAIL]
-> >
-> > Due to a HW limitation, the Latency Tolerance Reporting (LTR) value
-> > programmed in the Tiger Lake GBE controller is not large enough to allow
-> > the platform to enter Package C10, which in turn prevents the platform from
-> > achieving its low power target during suspend-to-idle.  Ignore the GBE LTR
-> > value on Tiger Lake. LTR ignore functionality is currently performed solely
-> > by a debugfs write call. Split out the LTR code into its own function that
-> > can be called by both the debugfs writer and by this work around.
-> >
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > Reviewed-by: Sasha Neftin <sasha.neftin@intel.com>
-> > Cc: intel-wired-lan@lists.osuosl.org
-> > ---
-> >  drivers/platform/x86/intel_pmc_core.c | 55 ++++++++++++++++++++-------
-> >  1 file changed, 42 insertions(+), 13 deletions(-)
+> The acpi_walk_dep_device_list() is not as generalisable as its name
+> implies, serving only to decrement the dependency count for each
+> dependent device of the input. Extend the function to instead accept
+> a callback which can be applied to all the dependencies in acpi_dep_list.
+> Replace all existing calls to the function with calls to a wrapper, passing
+> a callback that applies the same dependency reduction.
 >
-> I feel like this driver change causes a weak reference between e1000e and intel_pmc_core.
-> It would mean significantly different behavior if you use e1000e but don't have PMC module
-> available for any reason.
-
-Can you elaborate what would change significantly? This is a FW/HW
-issue and the driver is just doing a work around to let the platform
-enter a deep idle state beyond PC10. If the system could enter PC10
-and was denied entry by PMC only because of a bad LAN LTR, then that's
-purely an e1000e driver/GBE fw issue.
-
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes in v3:
+>         - patch introduced
 >
-> In this case does it maybe make sense to at least use "imply" in the Kconfig for e1000e so
-> that selecting e1000e gets intel-pmc-core enabled too?
-
-This change would tell PMC to ignore GBE LTR, regardless of which GBE
-driver is selected. This doesn't bind e1000e.
-
+>  drivers/acpi/ec.c                         |  2 +-
+>  drivers/acpi/pmic/intel_pmic_chtdc_ti.c   |  2 +-
+>  drivers/acpi/scan.c                       | 58 ++++++++++++++++-------
+>  drivers/gpio/gpiolib-acpi.c               |  2 +-
+>  drivers/i2c/i2c-core-acpi.c               |  2 +-
+>  drivers/platform/surface/surface3_power.c |  2 +-
+>  include/acpi/acpi_bus.h                   |  7 +++
+>  include/linux/acpi.h                      |  4 +-
+>  8 files changed, 55 insertions(+), 24 deletions(-)
 >
-> >
-> > diff --git a/drivers/platform/x86/intel_pmc_core.c
-> > b/drivers/platform/x86/intel_pmc_core.c
-> > index ee2f757515b0..ab31eb646a1a 100644
-> > --- a/drivers/platform/x86/intel_pmc_core.c
-> > +++ b/drivers/platform/x86/intel_pmc_core.c
-> > @@ -863,34 +863,45 @@ static int pmc_core_pll_show(struct seq_file *s, void
-> > *unused)
-> >  }
-> >  DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
-> >
-> > -static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-> > -                                      const char __user *userbuf,
-> > -                                      size_t count, loff_t *ppos)
-> > +static int pmc_core_write_ltr_ignore(u32 value)
-> >  {
-> >       struct pmc_dev *pmcdev = &pmc;
-> >       const struct pmc_reg_map *map = pmcdev->map;
-> > -     u32 val, buf_size, fd;
-> > -     int err;
-> > -
-> > -     buf_size = count < 64 ? count : 64;
-> > -
-> > -     err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
-> > -     if (err)
-> > -             return err;
-> > +     u32 fd;
-> > +     int err = 0;
-> >
-> >       mutex_lock(&pmcdev->lock);
-> >
-> > -     if (val > map->ltr_ignore_max) {
-> > +     if (fls(value) > map->ltr_ignore_max) {
-> >               err = -EINVAL;
-> >               goto out_unlock;
-> >       }
-> >
-> >       fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
-> > -     fd |= (1U << val);
-> > +     fd |= value;
-> >       pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
-> >
-> >  out_unlock:
-> >       mutex_unlock(&pmcdev->lock);
-> > +
-> > +     return err;
-> > +}
-> > +
-> > +static ssize_t pmc_core_ltr_ignore_write(struct file *file,
-> > +                                      const char __user *userbuf,
-> > +                                      size_t count, loff_t *ppos)
-> > +{
-> > +     u32 buf_size, val;
-> > +     int err;
-> > +
-> > +     buf_size = count < 64 ? count : 64;
-> > +
-> > +     err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
-> > +     if (err)
-> > +             return err;
-> > +
-> > +     err = pmc_core_write_ltr_ignore(1U << val);
-> > +
-> >       return err == 0 ? count : err;
-> >  }
-> >
-> > @@ -1189,6 +1200,15 @@ static int quirk_xtal_ignore(const struct dmi_system_id
-> > *id)
-> >       return 0;
-> >  }
-> >
-> > +static int quirk_ltr_ignore(u32 val)
-> > +{
-> > +     int err;
-> > +
-> > +     err = pmc_core_write_ltr_ignore(val);
-> > +
-> > +     return err;
-> > +}
-> > +
-> >  static const struct dmi_system_id pmc_core_dmi_table[]  = {
-> >       {
-> >       .callback = quirk_xtal_ignore,
-> > @@ -1244,6 +1264,15 @@ static int pmc_core_probe(struct platform_device *pdev)
-> >       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
-> >       dmi_check_system(pmc_core_dmi_table);
-> >
-> > +     /*
-> > +      * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
-> > +      * a cable is attached. Tell the PMC to ignore it.
-> > +      */
-> > +     if (pmcdev->map == &tgl_reg_map) {
-> > +             dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
-> > +             quirk_ltr_ignore(1U << 3);
-> > +     }
-> > +
-> >       pmc_core_dbgfs_register(pmcdev);
-> >
-> >       device_initialized = true;
-> > --
-> > 2.25.1
+> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
+> index 13565629ce0a..a258db713bd2 100644
+> --- a/drivers/acpi/ec.c
+> +++ b/drivers/acpi/ec.c
+> @@ -1627,7 +1627,7 @@ static int acpi_ec_add(struct acpi_device *device)
+>         WARN(!ret, "Could not request EC cmd io port 0x%lx", ec->command_addr);
 >
+>         /* Reprobe devices depending on the EC */
+> -       acpi_walk_dep_device_list(ec->handle);
+> +       acpi_dev_flag_dependency_met(ec->handle);
+>
+>         acpi_handle_debug(ec->handle, "enumerated.\n");
+>         return 0;
+> diff --git a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+> index a5101b07611a..59cca504325e 100644
+> --- a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+> +++ b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
+> @@ -117,7 +117,7 @@ static int chtdc_ti_pmic_opregion_probe(struct platform_device *pdev)
+>                 return err;
+>
+>         /* Re-enumerate devices depending on PMIC */
+> -       acpi_walk_dep_device_list(ACPI_HANDLE(pdev->dev.parent));
+> +       acpi_dev_flag_dependency_met(ACPI_HANDLE(pdev->dev.parent));
+>         return 0;
+>  }
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 80b668c80073..c9e4190316ef 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -49,12 +49,6 @@ static DEFINE_MUTEX(acpi_hp_context_lock);
+>   */
+>  static u64 spcr_uart_addr;
+>
+> -struct acpi_dep_data {
+> -       struct list_head node;
+> -       acpi_handle supplier;
+> -       acpi_handle consumer;
+> -};
+> -
+>  void acpi_scan_lock_acquire(void)
+>  {
+>         mutex_lock(&acpi_scan_lock);
+> @@ -2099,30 +2093,58 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
+>                 device->handler->hotplug.notify_online(device);
+>  }
+>
+> -void acpi_walk_dep_device_list(acpi_handle handle)
+> +static int __acpi_dev_flag_dependency_met(struct acpi_dep_data *dep,
+> +                                         void *data)
+>  {
+> -       struct acpi_dep_data *dep, *tmp;
+>         struct acpi_device *adev;
+>
+> +       acpi_bus_get_device(dep->consumer, &adev);
+> +       if (!adev)
+> +               return 0;
+> +
+> +       adev->dep_unmet--;
+> +       if (!adev->dep_unmet)
+> +               acpi_bus_attach(adev, true);
+> +
+> +       list_del(&dep->node);
+> +       kfree(dep);
+> +       return 0;
+> +}
+> +
+> +void acpi_walk_dep_device_list(acpi_handle handle,
+> +                              int (*callback)(struct acpi_dep_data *, void *),
+> +                              void *data)
+> +{
+> +       struct acpi_dep_data *dep, *tmp;
+> +       int ret;
+> +
+>         mutex_lock(&acpi_dep_list_lock);
+>         list_for_each_entry_safe(dep, tmp, &acpi_dep_list, node) {
+>                 if (dep->supplier == handle) {
+> -                       acpi_bus_get_device(dep->consumer, &adev);
+> -                       if (!adev)
+> -                               continue;
+> -
+> -                       adev->dep_unmet--;
+> -                       if (!adev->dep_unmet)
+> -                               acpi_bus_attach(adev, true);
 
+The above code in the mainline has changed recently, so you need to
+rebase the above and adjust for the change of behavior.
 
--- 
-Thanks,
-Rajneesh
+> -
+> -                       list_del(&dep->node);
+> -                       kfree(dep);
+> +                       ret = callback(dep, data);
+> +                       if (ret)
+> +                               break;
+>                 }
+>         }
+>         mutex_unlock(&acpi_dep_list_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_walk_dep_device_list);
+>
+> +/**
+> + * acpi_dev_flag_dependency_met() - Inform consumers of @handle that the device
+> + *                                 is now active
+
+No parens here, please, and make it fit one line.
+
+Also the description should be something like "Clear dependencies on
+the given device."
+
+> + * @handle: acpi_handle for the supplier device
+> + *
+> + * This function walks through the dependencies list and informs each consumer
+> + * of @handle that their dependency upon it is now met. Devices with no more
+> + * unmet dependencies will be attached to the acpi bus.
+> + */
+> +void acpi_dev_flag_dependency_met(acpi_handle handle)
+> +{
+> +       acpi_walk_dep_device_list(handle, __acpi_dev_flag_dependency_met, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_dev_flag_dependency_met);
+> +
+>  /**
+>   * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
+>   * @handle: Root of the namespace scope to scan.
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index e37a57d0a2f0..e4d728fda982 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1254,7 +1254,7 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
+>
+>         acpi_gpiochip_request_regions(acpi_gpio);
+>         acpi_gpiochip_scan_gpios(acpi_gpio);
+> -       acpi_walk_dep_device_list(handle);
+> +       acpi_dev_flag_dependency_met(handle);
+>  }
+>
+>  void acpi_gpiochip_remove(struct gpio_chip *chip)
+> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+> index 37c510d9347a..38647cf34bde 100644
+> --- a/drivers/i2c/i2c-core-acpi.c
+> +++ b/drivers/i2c/i2c-core-acpi.c
+> @@ -283,7 +283,7 @@ void i2c_acpi_register_devices(struct i2c_adapter *adap)
+>         if (!handle)
+>                 return;
+>
+> -       acpi_walk_dep_device_list(handle);
+> +       acpi_dev_flag_dependency_met(handle);
+>  }
+>
+>  static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] = {
+> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
+> index cc4f9cba6856..ad895285d3e9 100644
+> --- a/drivers/platform/surface/surface3_power.c
+> +++ b/drivers/platform/surface/surface3_power.c
+> @@ -478,7 +478,7 @@ static int mshw0011_install_space_handler(struct i2c_client *client)
+>                 return -ENOMEM;
+>         }
+>
+> -       acpi_walk_dep_device_list(handle);
+> +       acpi_dev_flag_dependency_met(handle);
+>         return 0;
+>  }
+>
+> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+> index 02a716a0af5d..91172af3a04d 100644
+> --- a/include/acpi/acpi_bus.h
+> +++ b/include/acpi/acpi_bus.h
+> @@ -278,6 +278,12 @@ struct acpi_device_power {
+>         struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /* Power states (D0-D3Cold) */
+>  };
+>
+> +struct acpi_dep_data {
+> +       struct list_head node;
+> +       acpi_handle supplier;
+> +       acpi_handle consumer;
+> +};
+> +
+>  /* Performance Management */
+>
+>  struct acpi_device_perf_flags {
+> @@ -683,6 +689,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
+>
+>  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
+>
+> +void acpi_dev_flag_dependency_met(acpi_handle handle);
+>  struct acpi_device *
+>  acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
+>  struct acpi_device *
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 2630c2e953f7..2d5e6e88e8a0 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -655,7 +655,9 @@ extern bool acpi_driver_match_device(struct device *dev,
+>                                      const struct device_driver *drv);
+>  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
+>  int acpi_device_modalias(struct device *, char *, int);
+> -void acpi_walk_dep_device_list(acpi_handle handle);
+> +void acpi_walk_dep_device_list(acpi_handle handle,
+> +                              int (*callback)(struct acpi_dep_data *, void *),
+> +                              void *data);
+>
+>  struct platform_device *acpi_create_platform_device(struct acpi_device *,
+>                                                     struct property_entry *);
+> --
+> 2.25.1
+>
