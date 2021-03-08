@@ -2,132 +2,221 @@ Return-Path: <SRS0=UxnR=IG=vger.kernel.org=platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EE5C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715B8C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 14:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07EEB651D3
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 13:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE8D65020
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 14:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230440AbhCHN5p (ORCPT
+        id S230385AbhCHOFW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 08:57:45 -0500
-Received: from mga02.intel.com ([134.134.136.20]:1940 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231355AbhCHN5O (ORCPT
+        Mon, 8 Mar 2021 09:05:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230033AbhCHOFC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 08:57:14 -0500
-IronPort-SDR: Pwa/bL1bAo5fWRjaH9h1H2mveQFO8NwGxsf/CiKZXJxxHz8gfjOqDLKqZJOybkecKvf6YhRqVP
- ILcSlFOqQCjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9916"; a="175140516"
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
-   d="scan'208";a="175140516"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 05:57:13 -0800
-IronPort-SDR: y7vlO1ZA2ifHMhH+r9TWzkrV9NvFjAt1sBk3WHBE5e1lqHdlk6qXWckWfrSUFCrRF3XTbMxTIE
- N5f/lPC1De+Q==
-X-IronPort-AV: E=Sophos;i="5.81,232,1610438400"; 
-   d="scan'208";a="437486815"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2021 05:57:07 -0800
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1lJGNc-00ApWj-AU; Mon, 08 Mar 2021 15:57:04 +0200
-Date:   Mon, 8 Mar 2021 15:57:04 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-Message-ID: <YEYtME2AxpXBq6iF@smile.fi.intel.com>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
- <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
- <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
- <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com>
+        Mon, 8 Mar 2021 09:05:02 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76373C06174A;
+        Mon,  8 Mar 2021 06:05:02 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id y124-20020a1c32820000b029010c93864955so3878809wmy.5;
+        Mon, 08 Mar 2021 06:05:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u0rxkzcpEQymr2WKgLCpuC2S/8N0HG0Aoqtpouow3H4=;
+        b=PaX5YYLCSMMUiQETtB0dVNpVssXBosDEtg/oMphDxy4Q6eDv6Gsx0vfy0jcqRrCcfH
+         i5VUvlsUz8xyhMfM3RpJjtZ4eldJdvWOjyiYnaHQu+CSU6RF7EgGBbbct+HFCnY2nnnj
+         XLUKkKQdnhFLmVCIV4ptbzVspk9M+f5mrFXrBUw2aCsRM5a5U7LyCTYUOyqaKWknMC1A
+         i6SDfkTjEFMv4FotCQjVvt9Lk6F+vCUvDwCkOWqex3QmmvkH6wDT3Eu6CsRqCapQn0K5
+         TP3rWwj5x0vESs98HaFZo9FBhLljY5X1I3VgiKZ24WT7A2KDh5zyYXDJc5qWzab3ZtAI
+         n/5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u0rxkzcpEQymr2WKgLCpuC2S/8N0HG0Aoqtpouow3H4=;
+        b=JMbbnkIRVwLa5Y7VnCM0AS5pfSyj/s01goE8g/3/dgQISsqX5dKYjI2s49NJxzuHnr
+         p1gKz/qBzH552NnWjyw4QAyX2fZlapguPbG4SsDqcQxsFFXXD3rfWRRUN2Ex7uaPv27D
+         gqHPOD72I/YKJmj4FQ3dmKDugAedN3d0Oy8kBYXN/uRF05HcqjuuNmM62N4alyMmmUTS
+         ajhx3DC5XzSn4J66TWsHmk6E2A/QM5qey8efI3fHgt/YiehN8REKTuT1PSnkHvKYhl5i
+         V52gKTEWXYPO8HJiOwMcQifucD9b1KxK3ckiVJ8nUO/kCIG/Xz3daIsXi+IYnC9BVYZ8
+         zXfA==
+X-Gm-Message-State: AOAM533pfolbmdE5I+k1xl1r+KkoOzQLw1VMVxpuW3OPkZG0Bx46fY/9
+        5Tjki7piLRjbS4o1gaSg/dluZPodXXkYKKyGbTI=
+X-Google-Smtp-Source: ABdhPJySxZcF2LBkg+JoYZ/p2nuMDUJ0PxOWgO75l+dbeMUnrpiO23sIxaWNg38e8MPIA9xbc3XNOUyhSLTUN9OfvwQ=
+X-Received: by 2002:a7b:c442:: with SMTP id l2mr22396841wmi.69.1615212301078;
+ Mon, 08 Mar 2021 06:05:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+In-Reply-To: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Date:   Mon, 8 Mar 2021 09:04:33 -0500
+Message-ID: <CAE2upjSkN6R_MNxNOwT+sTREGXRq0RVehnG3gCD5Wx9_-D41vg@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake platforms
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        sasha.neftin@intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Mar 08, 2021 at 02:36:27PM +0100, Rafael J. Wysocki wrote:
-> On Sun, Mar 7, 2021 at 9:39 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > > On 22/02/2021 13:34, Andy Shevchenko wrote:
-> > > > On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
-> > > >> The acpi_walk_dep_device_list() is not as generalisable as its name
-> > > >> implies, serving only to decrement the dependency count for each
-> > > >> dependent device of the input. Extend the function to instead accept
-> > > >> a callback which can be applied to all the dependencies in acpi_dep_list.
-> > > >> Replace all existing calls to the function with calls to a wrapper, passing
-> > > >> a callback that applies the same dependency reduction.
-> > > > The code looks okay to me, if it was the initial idea, feel free to add
-> > > > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Hi David
 
-...
+Overall, it looks like the right thing to do but i have a few
+comments. See below.
 
-> > > >> +void acpi_dev_flag_dependency_met(acpi_handle handle)
+On Fri, Mar 5, 2021 at 2:07 PM David E. Box <david.e.box@linux.intel.com> wrote:
+>
+> Due to a HW limitation, the Latency Tolerance Reporting (LTR) value
+> programmed in the Tiger Lake GBE controller is not large enough to allow
+> the platform to enter Package C10, which in turn prevents the platform from
+> achieving its low power target during suspend-to-idle.  Ignore the GBE LTR
+> value on Tiger Lake. LTR ignore functionality is currently performed solely
+> by a debugfs write call. Split out the LTR code into its own function that
+> can be called by both the debugfs writer and by this work around.
+>
 
-> > > > Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
-> > >
-> > > I can do this, but I avoided it because in most of the uses in the
-> > > kernel currently there's no struct acpi_device, they're just passing
-> > > ACPI_HANDLE(dev) instead, so I'd need to get the adev with
-> > > ACPI_COMPANION() in each place. It didn't seem worth it...
-> 
-> It may not even be possible sometimes, because that function may be
-> called before creating all of the struct acpi_device objects (like in
-> the case of deferred enumeration).
-> 
-> > > but happy to
-> > > do it if you'd prefer it that way?
-> >
-> > I see, let Rafael decide then. I'm not pushing here.
-> 
-> Well, it's a matter of correctness.
+I presume this must be the last resort to use such quirk and you've
+already considered a user space tuning program or fw patch is not an
+option on this generation of SOCs.
 
-Looking at your above comment it is indeed. Thanks for clarification!
-But should we have acpi_dev_*() namespace for this function if it takes handle?
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Sasha Neftin <sasha.neftin@intel.com>
+> Cc: intel-wired-lan@lists.osuosl.org
+> ---
+>  drivers/platform/x86/intel_pmc_core.c | 55 ++++++++++++++++++++-------
+>  1 file changed, 42 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index ee2f757515b0..ab31eb646a1a 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -863,34 +863,45 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+>
+> -static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> -                                        const char __user *userbuf,
+> -                                        size_t count, loff_t *ppos)
+> +static int pmc_core_write_ltr_ignore(u32 value)
 
-For time being nothing better than following comes to my mind:
+This sounds a bit confusing with pmc_core_ltr_ignore_write.
 
-__acpi_dev_flag_dependency_met() => __acpi_flag_device_dependency_met()
-acpi_dev_flag_dependency_met() => acpi_flag_device_dependency_met()
+>  {
+>         struct pmc_dev *pmcdev = &pmc;
+>         const struct pmc_reg_map *map = pmcdev->map;
+> -       u32 val, buf_size, fd;
+> -       int err;
+> -
+> -       buf_size = count < 64 ? count : 64;
+> -
+> -       err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> -       if (err)
+> -               return err;
+> +       u32 fd;
+
+lets just call it value
+
+> +       int err = 0;
+>
+>         mutex_lock(&pmcdev->lock);
+>
+> -       if (val > map->ltr_ignore_max) {
+> +       if (fls(value) > map->ltr_ignore_max) {
+
+I am not sure why you're considering a bit position here. We rather
+use absolute value for this and we already preserve (OR) previously
+programmed LTR while changing to the new desired value.  Current
+modification would allow users to supply even bigger values than the
+MAX IP ignore allowed. This can be useful when you want to ignore more
+than 1 IP at a time but that's not how we usually use it for debug.
+This is more for a user space debug script to deal with.
+https://01.org/blogs/rajneesh/2019/using-power-management-controller-drivers-debug-low-power-platform-states
+
+>                 err = -EINVAL;
+>                 goto out_unlock;
+>         }
+>
+>         fd = pmc_core_reg_read(pmcdev, map->ltr_ignore_offset);
+> -       fd |= (1U << val);
+> +       fd |= value;
+>         pmc_core_reg_write(pmcdev, map->ltr_ignore_offset, fd);
+>
+>  out_unlock:
+>         mutex_unlock(&pmcdev->lock);
+> +
+> +       return err;
+> +}
+> +
+> +static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+> +                                        const char __user *userbuf,
+> +                                        size_t count, loff_t *ppos)
+> +{
+> +       u32 buf_size, val;
+> +       int err;
+> +
+> +       buf_size = count < 64 ? count : 64;
+> +
+> +       err = kstrtou32_from_user(userbuf, buf_size, 10, &val);
+> +       if (err)
+> +               return err;
+> +
+> +       err = pmc_core_write_ltr_ignore(1U << val);
+> +
+>         return err == 0 ? count : err;
+>  }
+>
+> @@ -1189,6 +1200,15 @@ static int quirk_xtal_ignore(const struct dmi_system_id *id)
+>         return 0;
+>  }
+>
+> +static int quirk_ltr_ignore(u32 val)
+> +{
+> +       int err;
+> +
+> +       err = pmc_core_write_ltr_ignore(val);
+> +
+> +       return err;
+> +}
+> +
+>  static const struct dmi_system_id pmc_core_dmi_table[]  = {
+>         {
+>         .callback = quirk_xtal_ignore,
+> @@ -1244,6 +1264,15 @@ static int pmc_core_probe(struct platform_device *pdev)
+>         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+>         dmi_check_system(pmc_core_dmi_table);
+>
+> +       /*
+> +        * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
+> +        * a cable is attached. Tell the PMC to ignore it.
+> +        */
+> +       if (pmcdev->map == &tgl_reg_map) {
+> +               dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
+> +               quirk_ltr_ignore(1U << 3);
+
+Can this be made a part of *_reg_map itself if intended to be used for
+more future platforms? Otherwise we just leave it as a one time quirk.
+
+> +       }
+> +
+>         pmc_core_dbgfs_register(pmcdev);
+>
+>         device_initialized = true;
+> --
+> 2.25.1
+>
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Rajneesh
