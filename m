@@ -2,308 +2,282 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EA7C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655C6C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 18:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4095765296
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 17:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F59065287
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 18:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbhCHRqh (ORCPT
+        id S229469AbhCHSD1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 12:46:37 -0500
-Received: from mail-oo1-f50.google.com ([209.85.161.50]:44179 "EHLO
-        mail-oo1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbhCHRqT (ORCPT
+        Mon, 8 Mar 2021 13:03:27 -0500
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:27490 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230409AbhCHSDL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 12:46:19 -0500
-Received: by mail-oo1-f50.google.com with SMTP id n19so2376161ooj.11;
-        Mon, 08 Mar 2021 09:46:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDAxitlThypn1GJEjMqUi6q6zLzkYSdOylaY9ls+Dr0=;
-        b=PHFUt0MV+r/DSlT2Xd6FLGUu6fX57GAo8Olz9xK+iNi3wW8ThMxUx5LbZZkvpnVMnQ
-         0CSRkUEq4agmzRX/U9U4m9MvQKnnvO0XBSkwfc0iFvb9xosePSYJGnzWFHtEZQM/5mK/
-         CdYR+LcZQx0rZ47u4XEXLx/dYhB78i4foVfD4YGKwjdZoKo5kBFHsCC0cX/H47uWJUsB
-         GBFo7Y/7jV0qcPFdfzguMHicQQYXym8dcO5uD7cm4a/Rs0O5kqNKO/FAHWiMBGX14K3q
-         NXK83uKAL/6oWlO0rTYVFJogBnhxEQCAvh/fXv1rf1PcBYJlubyqU5dnFbXyrQFX8csB
-         WApw==
-X-Gm-Message-State: AOAM531e7BAUnx/zwLzNEJerXoGiqWl7CqDAUNF+Hl2CZu+vpc52DA8j
-        miFwsIiTwB2HRIr0VzYllhOmRY2Bn0p9lfKNb/a2654g
-X-Google-Smtp-Source: ABdhPJwyhzOdWoKELxTrgA0osc9usc41t0Uh3CAQo4x3D6Uju9rbSCakCqLvd+w63fkouortpkgO5PacHhfOz4D1934=
-X-Received: by 2002:a4a:d48b:: with SMTP id o11mr4386544oos.2.1615225578823;
- Mon, 08 Mar 2021 09:46:18 -0800 (PST)
+        Mon, 8 Mar 2021 13:03:11 -0500
+Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 128Hl5nl004228;
+        Mon, 8 Mar 2021 13:02:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=jH09qDCo8ljOsJl8kuAyqFZrLgkTk3Q9uBvjDzMCw+Y=;
+ b=GogrUBOalFtfr7B7SadcB5pk2BCpSrIXuzZMZhqWOz/vvcJAQfnX6arqE4SKYXqlnCcN
+ VYulR1P80TmjxGwyeLKkQRkc52qOnB0WEuZIbVkS1jiVfsLfbfU6ZDvnJa+R/1omSiXE
+ If58Ddtbn5NiDZe1klNCaWm1HtOAYUBmgCfVQg5EDcXgKyNOxJ6tAr3k7nXuM1DhTIcv
+ LixoHOfc3vn1QKQKm9UbdjsOVKtKwI+hUN8s7bip/o6uSHfqgkWuAgB9b87fUpj1PZWM
+ bGH+uuDLGWkfwwlqd3GeCu4pkhu0LBl0NdKuzjhCBZf8V3AusGw5SXi7H7H0DQLsQhTo 4A== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0b-00154904.pphosted.com with ESMTP id 37456bdmsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 Mar 2021 13:02:04 -0500
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 128HjM3c046632;
+        Mon, 8 Mar 2021 13:02:03 -0500
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+        by mx0b-00154901.pphosted.com with ESMTP id 374qkn2u2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 08 Mar 2021 13:02:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Tm02rFYxiOij3/9F9UIZfpHzi33e6NXOpjt9X5pZcpM8p4GkHalHJVCsU8t6IBFuZREep5Ja24bpBWE9BAbeT6a9670Q2KgA6XX9hFQS/XZHevLvg+gA60rQGY0sajVBRRNjaHJYI3fPwksjrKto9qBFYD7yv4H2/N2acVnvcoFUKmRufg0niWE69C0hKL8NhrAqVFJnUv2xvk2aP42B8B1HT4wnJpNvoADLc2reFsPZgGTg+p37qqjnr4zyfJCIk2UH/tTNCDjgYhGQg9im93sLsn03rtlya4XHtbR1UO279DSgrUj/f7FHzUBr6pMuzg6Y3KIdyrsF4rW+PcMZLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jH09qDCo8ljOsJl8kuAyqFZrLgkTk3Q9uBvjDzMCw+Y=;
+ b=bjNAqByEPJGTZdPL+34sRGC5C7n+TCRSCcmZ5AdHgiTqEMh2cgYvuON0hb6di0INlSu06OanvqDT1NpoyC5JjD+CC4oQnhBP4Ms/CT6WgfgT0O4D4NWidDJkHWCSc1hck8CnlOGAuhY5a16QepjB7JbTNwLch/k615utaFOu1Qco438NQwy9jcDiFE9X+ALBpXczlsfRGCR7rMZ9CGQr1RgNg5YY1No4yzw2AGzsEnuhw9jfMPLQKzuYt19/v25UAj809cWHfto1JogfinO0obFr2NwV0GONBirgI2x0OAzaqJwRWTho+pwAPOH9BmO7MvPV02jubxzL1omvQBYr4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from SA1PR19MB4926.namprd19.prod.outlook.com (2603:10b6:806:1a6::18)
+ by SA0PR19MB4443.namprd19.prod.outlook.com (2603:10b6:806:c3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.26; Mon, 8 Mar
+ 2021 18:02:01 +0000
+Received: from SA1PR19MB4926.namprd19.prod.outlook.com
+ ([fe80::1c92:24d3:b11f:bc50]) by SA1PR19MB4926.namprd19.prod.outlook.com
+ ([fe80::1c92:24d3:b11f:bc50%6]) with mapi id 15.20.3912.027; Mon, 8 Mar 2021
+ 18:02:01 +0000
+From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+CC:     "David E. Box" <david.e.box@linux.intel.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "sasha.neftin@intel.com" <sasha.neftin@intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>
+Subject: RE: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
+ platforms
+Thread-Topic: [PATCH] platform/x86: intel_pmc: Ignore GBE LTR on Tiger Lake
+ platforms
+Thread-Index: AQHXEfLhzYLSroQh8UmKnpvnJJhjqqp6Wj0AgAADo4CAAAd1sA==
+Date:   Mon, 8 Mar 2021 18:02:00 +0000
+Message-ID: <SA1PR19MB49260612D4BEC9AA3FCA85A3FA939@SA1PR19MB4926.namprd19.prod.outlook.com>
+References: <20210305190608.1834164-1-david.e.box@linux.intel.com>
+ <SA1PR19MB49261823693E915E7D646B07FA939@SA1PR19MB4926.namprd19.prod.outlook.com>
+ <CAE2upjT1SabzsEtxnVzFV9hVDVm-KuqXP9QEQqO6HHKVS0-HZg@mail.gmail.com>
+In-Reply-To: <CAE2upjT1SabzsEtxnVzFV9hVDVm-KuqXP9QEQqO6HHKVS0-HZg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-03-08T18:01:57.9155413Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=df8f9ae3-0702-410c-b19a-7376884fb7c9;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [76.251.167.31]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0617429b-1110-4139-2c31-08d8e25c45ec
+x-ms-traffictypediagnostic: SA0PR19MB4443:
+x-microsoft-antispam-prvs: <SA0PR19MB4443193AA3442F3435841509FA939@SA0PR19MB4443.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: p+ZehGY5Up5eCrWJGRmdMtB+ER2hZx8NpFLifAOzq3gR0JCJX0rqXbSwsQAWYwjdpU6kc1KHnT9LCzZoeIQW+V1Ph4h3x4WcwbgZ7QpjnTYUk9hgcvhJy26+YaCJRwiYLDgnOtKpa0GVL5M//02+mDiCUSnWy44bKNElwnIT2Lx8rfuaZrVBVG2vhogGSAzOLIrBY8I3r9/t2cela6O59G+lBZyPTh20CIIMkb/yi4gpvT8OyABMjIImzgYjGI3PAkayRQusFaQ6WEXDw8FjwXXOzxwl0tORsc3WB6pP32zeqnkokb0ieVho7CBjdq9msmpAqcebEv+ZkvrmsRt0cym5F3cCqRArDStFjKKHv7ilSNyHvh/4+bsp90WfUfCyvxNugns9IMMfu/FuHlbLc5Z6iscFi/2YIZGbYggjBeKypiXAEbes8A6hRpQ3nzih0SgidYLNnf/+aGgDzGsnlhbEG60nUD0sF0hEX1IBrqGKVJ+cUQGyimA7u+kLUOYGDP5qdMuAu1XMJHXwrYjgJg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR19MB4926.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(83380400001)(86362001)(9686003)(55016002)(186003)(33656002)(316002)(6506007)(53546011)(786003)(7696005)(6916009)(8676002)(478600001)(8936002)(66556008)(71200400001)(5660300002)(76116006)(66946007)(54906003)(66476007)(66446008)(64756008)(52536014)(26005)(2906002)(4326008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?dHJObktTQWkxVmRQdGZ2ZmlKR0F3Q29IWnVzWmo5MXVoakdvSWg1WDc0cjNh?=
+ =?utf-8?B?aCtyWTQzMjUxSEVzWS9xRFRGWk8xakkvd3VwT0xUNjJROG1XdXZPaXVZcVRu?=
+ =?utf-8?B?T3R0YnNzT1cxSDBtTFFURG5NN2MwYVErQjc5anlQTlNINXpyMWR3KzJDV2VU?=
+ =?utf-8?B?bm1aMFZKa1J3bDdGWnFIWnNiSTZPYURDZEtEazNrSkJqQ1htakVzUDV3TWxj?=
+ =?utf-8?B?UnRrejVaeWlIa1l1QmZZOTg5d044UERkZnNzb2FSaVZENTAxcERvSVBUL3N0?=
+ =?utf-8?B?YW9BOXVsV0M4VElCVHAwUVZFRmE0SlNreXhWdCtLcVJEWHRhU3U0Tm5TU3lO?=
+ =?utf-8?B?cnhmNlh0amE1MEs5K1p6WFlDSXdBdGNPbmt1T1FMMXgwRTdkUUFXMVZFeFlu?=
+ =?utf-8?B?bGtOTlc0Qk9LeENER2VsdDFNK1Mxai9ES0Nxa0VQOTV5T1NSeUxibEtEOVJM?=
+ =?utf-8?B?VXZCTzlOOFZIeUFWWXBCcG5QVG84WVdSQ0VlNmtDZWdMd3k3N0dHVTd6UDVS?=
+ =?utf-8?B?NEhjdE5ET1FOM2x0elF0Z2NzVnh1UnJ2THZlTTdzczJGMkJEdUtEV1lMUWJP?=
+ =?utf-8?B?T3hIWlhzVnFlcGNIclFGWTZHSUFIRkxVeDdUTUpRWFUxd1JqTTZ6WVFoZUZR?=
+ =?utf-8?B?SU1QdDRheFFTQ3RYSzhCSFV3ZHpuUFlaUmdWZVF0ejloZEJ1VzR4NWR2VW1U?=
+ =?utf-8?B?WElSV2pyekY4MmVKQ2gvZXZtcTdYbFd3dkdmbXljbUJVOUdKL2tPV01RK1pt?=
+ =?utf-8?B?T25Sa1ZRaENrOFpuMTNMSUxIZjM1Y2NaSzRqQ2RUMjhPRW9mSVhudFhuaWF3?=
+ =?utf-8?B?eUtkUEhlbUtoUm5RMHBSdURpVm9DT3RodmZsM0pLdFJHaE52ZERqOERsNFAx?=
+ =?utf-8?B?YXZiOEliZ3NUTmNmbVdVSnFRamxDdVFmdVFwQno5VHNud0kwMzBSNnJITVNW?=
+ =?utf-8?B?K2lhZm5NVlUyNjZQT0hONm9QcHo1YUpHU3RlRmxyeEg1QTk2Y1RzYk5TY01r?=
+ =?utf-8?B?ck81ZHhaTGZUNFlNNFlsTjVPNDlzZzRVZFIrRUhQdEdhSnkrZmlFcnczNDRQ?=
+ =?utf-8?B?bE4yNkFCZ1NQU05QSWlzTWFxVkttTEJWY0s0V0FQVHFrNURVeEEvdGdvYTRT?=
+ =?utf-8?B?OEc1UlBXZ28rOFN6NUtzbzlod1hYcTNBWVFmTFlvMU15elpMbmx1MFNiNjFY?=
+ =?utf-8?B?a3ZaS3hjemJZd25EZndHUy82S3NaTnJaRUpDVFo5TjdsZ3pqSm1aVFY1WFl1?=
+ =?utf-8?B?TUc4eHZHSGM2a2hyTnByUWtXNGpjZndhYXNWYldaL1FYY1ZUclVGOHdJaG5S?=
+ =?utf-8?B?T1QxZE1GQTMrQnVGR2F5T09jMFN6cHFoVGhreUNXWm5PRHBNOWdKbUxYSFp1?=
+ =?utf-8?B?UWdoNHhxeXQ4bnMrQkZyVmhuSzZVZUFPTlR6RmgrbDh3OFJ3MkovR0xlRUl6?=
+ =?utf-8?B?V3I4YTdoK0c5T3RtNjQwYVdkT2E2enl5V2gxaWtQRzNoaWtYY3VMdlhrSW5R?=
+ =?utf-8?B?eXdRSHgrSkt1REUyUzA2Mk9iVmF6MUxUeUNBaGVWamRUWVYwUXpLRzFQRVpt?=
+ =?utf-8?B?SS9HYk9HeDhoV1NXQkJidytuYVd4OFdEbUJEYllSMUd4NUlMSGc5NmQyeHlv?=
+ =?utf-8?B?dStHSmpKb0YyU2RUSWtxR3E5YmFmZjZVd29waFg5Q0RQbDR6Q2JQYXlxOGNO?=
+ =?utf-8?B?cmFEaHpHU3dWZHNKWDNublJuWjdCTjVZWDBEdTRwT2IxL09vYk4rZ2Q3RWxi?=
+ =?utf-8?Q?b8YN28LZy9T+o4R7qLNtMBt8glziZj0W/2VZNik?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-2-djrscally@gmail.com>
-In-Reply-To: <20210222130735.1313443-2-djrscally@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 8 Mar 2021 18:46:07 +0100
-Message-ID: <CAJZ5v0ib+3oScz2CuFNQdTvo16_fGYgfppZjpVZbtMC-2FK-2w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        andy.shevchenko@linux.intel.com,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR19MB4926.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0617429b-1110-4139-2c31-08d8e25c45ec
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2021 18:02:00.8131
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hOj9UNv//mSkSuBEATzzOPA6ylIe4pJXSsTGV5PtYZkUnC4lCep3qUiDZbfxEcElEELR4re6hprZR9BLJcxi7jt8eo9uUm7BGNv8xRWnH7s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR19MB4443
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-08_14:2021-03-08,2021-03-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 mlxscore=0 malwarescore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103080095
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103080095
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Feb 22, 2021 at 2:07 PM Daniel Scally <djrscally@gmail.com> wrote:
->
-> The acpi_walk_dep_device_list() is not as generalisable as its name
-> implies, serving only to decrement the dependency count for each
-> dependent device of the input. Extend the function to instead accept
-> a callback which can be applied to all the dependencies in acpi_dep_list.
-> Replace all existing calls to the function with calls to a wrapper, passing
-> a callback that applies the same dependency reduction.
->
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
-> Changes in v3:
->         - patch introduced
->
->  drivers/acpi/ec.c                         |  2 +-
->  drivers/acpi/pmic/intel_pmic_chtdc_ti.c   |  2 +-
->  drivers/acpi/scan.c                       | 58 ++++++++++++++++-------
->  drivers/gpio/gpiolib-acpi.c               |  2 +-
->  drivers/i2c/i2c-core-acpi.c               |  2 +-
->  drivers/platform/surface/surface3_power.c |  2 +-
->  include/acpi/acpi_bus.h                   |  7 +++
->  include/linux/acpi.h                      |  4 +-
->  8 files changed, 55 insertions(+), 24 deletions(-)
->
-> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-> index 13565629ce0a..a258db713bd2 100644
-> --- a/drivers/acpi/ec.c
-> +++ b/drivers/acpi/ec.c
-> @@ -1627,7 +1627,7 @@ static int acpi_ec_add(struct acpi_device *device)
->         WARN(!ret, "Could not request EC cmd io port 0x%lx", ec->command_addr);
->
->         /* Reprobe devices depending on the EC */
-> -       acpi_walk_dep_device_list(ec->handle);
-> +       acpi_dev_flag_dependency_met(ec->handle);
->
->         acpi_handle_debug(ec->handle, "enumerated.\n");
->         return 0;
-> diff --git a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> index a5101b07611a..59cca504325e 100644
-> --- a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> +++ b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
-> @@ -117,7 +117,7 @@ static int chtdc_ti_pmic_opregion_probe(struct platform_device *pdev)
->                 return err;
->
->         /* Re-enumerate devices depending on PMIC */
-> -       acpi_walk_dep_device_list(ACPI_HANDLE(pdev->dev.parent));
-> +       acpi_dev_flag_dependency_met(ACPI_HANDLE(pdev->dev.parent));
->         return 0;
->  }
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 80b668c80073..c9e4190316ef 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -49,12 +49,6 @@ static DEFINE_MUTEX(acpi_hp_context_lock);
->   */
->  static u64 spcr_uart_addr;
->
-> -struct acpi_dep_data {
-> -       struct list_head node;
-> -       acpi_handle supplier;
-> -       acpi_handle consumer;
-> -};
-> -
->  void acpi_scan_lock_acquire(void)
->  {
->         mutex_lock(&acpi_scan_lock);
-> @@ -2099,30 +2093,58 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
->                 device->handler->hotplug.notify_online(device);
->  }
->
-> -void acpi_walk_dep_device_list(acpi_handle handle)
-> +static int __acpi_dev_flag_dependency_met(struct acpi_dep_data *dep,
-> +                                         void *data)
->  {
-> -       struct acpi_dep_data *dep, *tmp;
->         struct acpi_device *adev;
->
-> +       acpi_bus_get_device(dep->consumer, &adev);
-> +       if (!adev)
-> +               return 0;
-> +
-> +       adev->dep_unmet--;
-> +       if (!adev->dep_unmet)
-> +               acpi_bus_attach(adev, true);
-> +
-> +       list_del(&dep->node);
-> +       kfree(dep);
-> +       return 0;
-> +}
-> +
-> +void acpi_walk_dep_device_list(acpi_handle handle,
-> +                              int (*callback)(struct acpi_dep_data *, void *),
-> +                              void *data)
-> +{
-> +       struct acpi_dep_data *dep, *tmp;
-> +       int ret;
-> +
->         mutex_lock(&acpi_dep_list_lock);
->         list_for_each_entry_safe(dep, tmp, &acpi_dep_list, node) {
->                 if (dep->supplier == handle) {
-> -                       acpi_bus_get_device(dep->consumer, &adev);
-> -                       if (!adev)
-> -                               continue;
-> -
-> -                       adev->dep_unmet--;
-> -                       if (!adev->dep_unmet)
-> -                               acpi_bus_attach(adev, true);
-
-The above code in the mainline has changed recently, so you need to
-rebase the above and adjust for the change of behavior.
-
-> -
-> -                       list_del(&dep->node);
-> -                       kfree(dep);
-> +                       ret = callback(dep, data);
-> +                       if (ret)
-> +                               break;
->                 }
->         }
->         mutex_unlock(&acpi_dep_list_lock);
->  }
->  EXPORT_SYMBOL_GPL(acpi_walk_dep_device_list);
->
-> +/**
-> + * acpi_dev_flag_dependency_met() - Inform consumers of @handle that the device
-> + *                                 is now active
-
-No parens here, please, and make it fit one line.
-
-Also the description should be something like "Clear dependencies on
-the given device."
-
-> + * @handle: acpi_handle for the supplier device
-> + *
-> + * This function walks through the dependencies list and informs each consumer
-> + * of @handle that their dependency upon it is now met. Devices with no more
-> + * unmet dependencies will be attached to the acpi bus.
-> + */
-> +void acpi_dev_flag_dependency_met(acpi_handle handle)
-> +{
-> +       acpi_walk_dep_device_list(handle, __acpi_dev_flag_dependency_met, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_dev_flag_dependency_met);
-> +
->  /**
->   * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
->   * @handle: Root of the namespace scope to scan.
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index e37a57d0a2f0..e4d728fda982 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -1254,7 +1254,7 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
->
->         acpi_gpiochip_request_regions(acpi_gpio);
->         acpi_gpiochip_scan_gpios(acpi_gpio);
-> -       acpi_walk_dep_device_list(handle);
-> +       acpi_dev_flag_dependency_met(handle);
->  }
->
->  void acpi_gpiochip_remove(struct gpio_chip *chip)
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 37c510d9347a..38647cf34bde 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -283,7 +283,7 @@ void i2c_acpi_register_devices(struct i2c_adapter *adap)
->         if (!handle)
->                 return;
->
-> -       acpi_walk_dep_device_list(handle);
-> +       acpi_dev_flag_dependency_met(handle);
->  }
->
->  static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] = {
-> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
-> index cc4f9cba6856..ad895285d3e9 100644
-> --- a/drivers/platform/surface/surface3_power.c
-> +++ b/drivers/platform/surface/surface3_power.c
-> @@ -478,7 +478,7 @@ static int mshw0011_install_space_handler(struct i2c_client *client)
->                 return -ENOMEM;
->         }
->
-> -       acpi_walk_dep_device_list(handle);
-> +       acpi_dev_flag_dependency_met(handle);
->         return 0;
->  }
->
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 02a716a0af5d..91172af3a04d 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -278,6 +278,12 @@ struct acpi_device_power {
->         struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /* Power states (D0-D3Cold) */
->  };
->
-> +struct acpi_dep_data {
-> +       struct list_head node;
-> +       acpi_handle supplier;
-> +       acpi_handle consumer;
-> +};
-> +
->  /* Performance Management */
->
->  struct acpi_device_perf_flags {
-> @@ -683,6 +689,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
->
->  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
->
-> +void acpi_dev_flag_dependency_met(acpi_handle handle);
->  struct acpi_device *
->  acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
->  struct acpi_device *
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 2630c2e953f7..2d5e6e88e8a0 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -655,7 +655,9 @@ extern bool acpi_driver_match_device(struct device *dev,
->                                      const struct device_driver *drv);
->  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
->  int acpi_device_modalias(struct device *, char *, int);
-> -void acpi_walk_dep_device_list(acpi_handle handle);
-> +void acpi_walk_dep_device_list(acpi_handle handle,
-> +                              int (*callback)(struct acpi_dep_data *, void *),
-> +                              void *data);
->
->  struct platform_device *acpi_create_platform_device(struct acpi_device *,
->                                                     struct property_entry *);
-> --
-> 2.25.1
->
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmFqbmVlc2ggQmhhcmR3
+YWogPGlyZW5pYy5yYWpuZWVzaEBnbWFpbC5jb20+DQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggOCwg
+MjAyMSAxMTozMg0KPiBUbzogTGltb25jaWVsbG8sIE1hcmlvDQo+IENjOiBEYXZpZCBFLiBCb3g7
+IGhkZWdvZWRlQHJlZGhhdC5jb207IG1ncm9zc0BsaW51eC5pbnRlbC5jb207DQo+IHNhc2hhLm5l
+ZnRpbkBpbnRlbC5jb207IHBsYXRmb3JtLWRyaXZlci14ODZAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgaW50ZWwtd2lyZWQtbGFuQGxpc3RzLm9zdW9z
+bC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gcGxhdGZvcm0veDg2OiBpbnRlbF9wbWM6IEln
+bm9yZSBHQkUgTFRSIG9uIFRpZ2VyIExha2UNCj4gcGxhdGZvcm1zDQo+IA0KPiANCj4gW0VYVEVS
+TkFMIEVNQUlMXQ0KPiANCj4gT24gTW9uLCBNYXIgOCwgMjAyMSBhdCAxMjoyMCBQTSBMaW1vbmNp
+ZWxsbywgTWFyaW8NCj4gPE1hcmlvLkxpbW9uY2llbGxvQGRlbGwuY29tPiB3cm90ZToNCj4gPg0K
+PiA+ID4NCj4gPiA+IFtFWFRFUk5BTCBFTUFJTF0NCj4gPiA+DQo+ID4gPiBEdWUgdG8gYSBIVyBs
+aW1pdGF0aW9uLCB0aGUgTGF0ZW5jeSBUb2xlcmFuY2UgUmVwb3J0aW5nIChMVFIpIHZhbHVlDQo+
+ID4gPiBwcm9ncmFtbWVkIGluIHRoZSBUaWdlciBMYWtlIEdCRSBjb250cm9sbGVyIGlzIG5vdCBs
+YXJnZSBlbm91Z2ggdG8gYWxsb3cNCj4gPiA+IHRoZSBwbGF0Zm9ybSB0byBlbnRlciBQYWNrYWdl
+IEMxMCwgd2hpY2ggaW4gdHVybiBwcmV2ZW50cyB0aGUgcGxhdGZvcm0NCj4gZnJvbQ0KPiA+ID4g
+YWNoaWV2aW5nIGl0cyBsb3cgcG93ZXIgdGFyZ2V0IGR1cmluZyBzdXNwZW5kLXRvLWlkbGUuICBJ
+Z25vcmUgdGhlIEdCRSBMVFINCj4gPiA+IHZhbHVlIG9uIFRpZ2VyIExha2UuIExUUiBpZ25vcmUg
+ZnVuY3Rpb25hbGl0eSBpcyBjdXJyZW50bHkgcGVyZm9ybWVkDQo+IHNvbGVseQ0KPiA+ID4gYnkg
+YSBkZWJ1Z2ZzIHdyaXRlIGNhbGwuIFNwbGl0IG91dCB0aGUgTFRSIGNvZGUgaW50byBpdHMgb3du
+IGZ1bmN0aW9uIHRoYXQNCj4gPiA+IGNhbiBiZSBjYWxsZWQgYnkgYm90aCB0aGUgZGVidWdmcyB3
+cml0ZXIgYW5kIGJ5IHRoaXMgd29yayBhcm91bmQuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1i
+eTogRGF2aWQgRS4gQm94IDxkYXZpZC5lLmJveEBsaW51eC5pbnRlbC5jb20+DQo+ID4gPiBSZXZp
+ZXdlZC1ieTogU2FzaGEgTmVmdGluIDxzYXNoYS5uZWZ0aW5AaW50ZWwuY29tPg0KPiA+ID4gQ2M6
+IGludGVsLXdpcmVkLWxhbkBsaXN0cy5vc3Vvc2wub3JnDQo+ID4gPiAtLS0NCj4gPiA+ICBkcml2
+ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jIHwgNTUgKysrKysrKysrKysrKysrKysr
+KystLS0tLS0tDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDEzIGRl
+bGV0aW9ucygtKQ0KPiA+DQo+ID4gSSBmZWVsIGxpa2UgdGhpcyBkcml2ZXIgY2hhbmdlIGNhdXNl
+cyBhIHdlYWsgcmVmZXJlbmNlIGJldHdlZW4gZTEwMDBlIGFuZA0KPiBpbnRlbF9wbWNfY29yZS4N
+Cj4gPiBJdCB3b3VsZCBtZWFuIHNpZ25pZmljYW50bHkgZGlmZmVyZW50IGJlaGF2aW9yIGlmIHlv
+dSB1c2UgZTEwMDBlIGJ1dCBkb24ndA0KPiBoYXZlIFBNQyBtb2R1bGUNCj4gPiBhdmFpbGFibGUg
+Zm9yIGFueSByZWFzb24uDQo+IA0KPiBDYW4geW91IGVsYWJvcmF0ZSB3aGF0IHdvdWxkIGNoYW5n
+ZSBzaWduaWZpY2FudGx5PyBUaGlzIGlzIGEgRlcvSFcNCj4gaXNzdWUgYW5kIHRoZSBkcml2ZXIg
+aXMganVzdCBkb2luZyBhIHdvcmsgYXJvdW5kIHRvIGxldCB0aGUgcGxhdGZvcm0NCj4gZW50ZXIg
+YSBkZWVwIGlkbGUgc3RhdGUgYmV5b25kIFBDMTAuIElmIHRoZSBzeXN0ZW0gY291bGQgZW50ZXIg
+UEMxMA0KPiBhbmQgd2FzIGRlbmllZCBlbnRyeSBieSBQTUMgb25seSBiZWNhdXNlIG9mIGEgYmFk
+IExBTiBMVFIsIHRoZW4gdGhhdCdzDQo+IHB1cmVseSBhbiBlMTAwMGUgZHJpdmVyL0dCRSBmdyBp
+c3N1ZS4NCj4gDQpCZWNhdXNlIHRoZSB3b3JrYXJvdW5kIGlzIGluIHBtYyBkcml2ZXIsIHRoZSBw
+bGF0Zm9ybSBiZWhhdmlvciBiZWNvbWVzIHRpZWQNCnRvIHdoZXRoZXIgdGhpcyBkcml2ZXIgd2Fz
+IGVuYWJsZWQuICBCZWZvcmUgdGhpcyB0aGUgZHJpdmVyIHdhcyBtb3N0bHkgZm9yIGRlYnVnZ2lu
+Zw0KcHVycG9zZSBhbmQgcmVhbGx5IG5vdCBuZWNlc3NhcnkuICBOb3cgaXQgaGFzIGEgZnVuY3Rp
+b25hbCBwdXJwb3NlLg0KDQpBcyBzdWNoIEkgdGhpbmsgaXQgc2hvdWxkIGJlIG1hZGUgYXBwYXJl
+bnQgdGhhdCB5b3UgbmVlZCBpdCBub3cgZm9yIHNvbWUgc3lzdGVtcy4NCg0KPiA+DQo+ID4gSW4g
+dGhpcyBjYXNlIGRvZXMgaXQgbWF5YmUgbWFrZSBzZW5zZSB0byBhdCBsZWFzdCB1c2UgImltcGx5
+IiBpbiB0aGUgS2NvbmZpZw0KPiBmb3IgZTEwMDBlIHNvDQo+ID4gdGhhdCBzZWxlY3RpbmcgZTEw
+MDBlIGdldHMgaW50ZWwtcG1jLWNvcmUgZW5hYmxlZCB0b28/DQo+IA0KPiBUaGlzIGNoYW5nZSB3
+b3VsZCB0ZWxsIFBNQyB0byBpZ25vcmUgR0JFIExUUiwgcmVnYXJkbGVzcyBvZiB3aGljaCBHQkUN
+Cj4gZHJpdmVyIGlzIHNlbGVjdGVkLiBUaGlzIGRvZXNuJ3QgYmluZCBlMTAwMGUuDQoNClllYWgs
+IHRoYXQncyBhIGdvb2QgcG9pbnQuDQoNCk1heWJlIG15IHN1Z2dlc3Rpb24gY2FuIGJlIHRvIHRh
+a2UgdGhpcyBpbnRvIGRvY3VtZW50YXRpb24gc29tZXdoZXJlIGluc3RlYWQuDQoNCj4gDQo+ID4N
+Cj4gPiA+DQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWxfcG1j
+X2NvcmUuYw0KPiA+ID4gYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbF9wbWNfY29yZS5jDQo+
+ID4gPiBpbmRleCBlZTJmNzU3NTE1YjAuLmFiMzFlYjY0NmExYSAxMDA2NDQNCj4gPiA+IC0tLSBh
+L2RyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4gPiA+ICsrKyBiL2RyaXZl
+cnMvcGxhdGZvcm0veDg2L2ludGVsX3BtY19jb3JlLmMNCj4gPiA+IEBAIC04NjMsMzQgKzg2Myw0
+NSBAQCBzdGF0aWMgaW50IHBtY19jb3JlX3BsbF9zaG93KHN0cnVjdCBzZXFfZmlsZSAqcywNCj4g
+dm9pZA0KPiA+ID4gKnVudXNlZCkNCj4gPiA+ICB9DQo+ID4gPiAgREVGSU5FX1NIT1dfQVRUUklC
+VVRFKHBtY19jb3JlX3BsbCk7DQo+ID4gPg0KPiA+ID4gLXN0YXRpYyBzc2l6ZV90IHBtY19jb3Jl
+X2x0cl9pZ25vcmVfd3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsDQo+ID4gPiAtICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFyIF9fdXNlciAqdXNlcmJ1ZiwNCj4g
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVfdCBjb3VudCwg
+bG9mZl90ICpwcG9zKQ0KPiA+ID4gK3N0YXRpYyBpbnQgcG1jX2NvcmVfd3JpdGVfbHRyX2lnbm9y
+ZSh1MzIgdmFsdWUpDQo+ID4gPiAgew0KPiA+ID4gICAgICAgc3RydWN0IHBtY19kZXYgKnBtY2Rl
+diA9ICZwbWM7DQo+ID4gPiAgICAgICBjb25zdCBzdHJ1Y3QgcG1jX3JlZ19tYXAgKm1hcCA9IHBt
+Y2Rldi0+bWFwOw0KPiA+ID4gLSAgICAgdTMyIHZhbCwgYnVmX3NpemUsIGZkOw0KPiA+ID4gLSAg
+ICAgaW50IGVycjsNCj4gPiA+IC0NCj4gPiA+IC0gICAgIGJ1Zl9zaXplID0gY291bnQgPCA2NCA/
+IGNvdW50IDogNjQ7DQo+ID4gPiAtDQo+ID4gPiAtICAgICBlcnIgPSBrc3RydG91MzJfZnJvbV91
+c2VyKHVzZXJidWYsIGJ1Zl9zaXplLCAxMCwgJnZhbCk7DQo+ID4gPiAtICAgICBpZiAoZXJyKQ0K
+PiA+ID4gLSAgICAgICAgICAgICByZXR1cm4gZXJyOw0KPiA+ID4gKyAgICAgdTMyIGZkOw0KPiA+
+ID4gKyAgICAgaW50IGVyciA9IDA7DQo+ID4gPg0KPiA+ID4gICAgICAgbXV0ZXhfbG9jaygmcG1j
+ZGV2LT5sb2NrKTsNCj4gPiA+DQo+ID4gPiAtICAgICBpZiAodmFsID4gbWFwLT5sdHJfaWdub3Jl
+X21heCkgew0KPiA+ID4gKyAgICAgaWYgKGZscyh2YWx1ZSkgPiBtYXAtPmx0cl9pZ25vcmVfbWF4
+KSB7DQo+ID4gPiAgICAgICAgICAgICAgIGVyciA9IC1FSU5WQUw7DQo+ID4gPiAgICAgICAgICAg
+ICAgIGdvdG8gb3V0X3VubG9jazsNCj4gPiA+ICAgICAgIH0NCj4gPiA+DQo+ID4gPiAgICAgICBm
+ZCA9IHBtY19jb3JlX3JlZ19yZWFkKHBtY2RldiwgbWFwLT5sdHJfaWdub3JlX29mZnNldCk7DQo+
+ID4gPiAtICAgICBmZCB8PSAoMVUgPDwgdmFsKTsNCj4gPiA+ICsgICAgIGZkIHw9IHZhbHVlOw0K
+PiA+ID4gICAgICAgcG1jX2NvcmVfcmVnX3dyaXRlKHBtY2RldiwgbWFwLT5sdHJfaWdub3JlX29m
+ZnNldCwgZmQpOw0KPiA+ID4NCj4gPiA+ICBvdXRfdW5sb2NrOg0KPiA+ID4gICAgICAgbXV0ZXhf
+dW5sb2NrKCZwbWNkZXYtPmxvY2spOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAgcmV0dXJuIGVycjsN
+Cj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIHNzaXplX3QgcG1jX2NvcmVfbHRyX2ln
+bm9yZV93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIgX191c2VyICp1c2VyYnVmLA0KPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2l6ZV90IGNvdW50LCBsb2ZmX3Qg
+KnBwb3MpDQo+ID4gPiArew0KPiA+ID4gKyAgICAgdTMyIGJ1Zl9zaXplLCB2YWw7DQo+ID4gPiAr
+ICAgICBpbnQgZXJyOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAgYnVmX3NpemUgPSBjb3VudCA8IDY0
+ID8gY291bnQgOiA2NDsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIGVyciA9IGtzdHJ0b3UzMl9mcm9t
+X3VzZXIodXNlcmJ1ZiwgYnVmX3NpemUsIDEwLCAmdmFsKTsNCj4gPiA+ICsgICAgIGlmIChlcnIp
+DQo+ID4gPiArICAgICAgICAgICAgIHJldHVybiBlcnI7DQo+ID4gPiArDQo+ID4gPiArICAgICBl
+cnIgPSBwbWNfY29yZV93cml0ZV9sdHJfaWdub3JlKDFVIDw8IHZhbCk7DQo+ID4gPiArDQo+ID4g
+PiAgICAgICByZXR1cm4gZXJyID09IDAgPyBjb3VudCA6IGVycjsNCj4gPiA+ICB9DQo+ID4gPg0K
+PiA+ID4gQEAgLTExODksNiArMTIwMCwxNSBAQCBzdGF0aWMgaW50IHF1aXJrX3h0YWxfaWdub3Jl
+KGNvbnN0IHN0cnVjdA0KPiBkbWlfc3lzdGVtX2lkDQo+ID4gPiAqaWQpDQo+ID4gPiAgICAgICBy
+ZXR1cm4gMDsNCj4gPiA+ICB9DQo+ID4gPg0KPiA+ID4gK3N0YXRpYyBpbnQgcXVpcmtfbHRyX2ln
+bm9yZSh1MzIgdmFsKQ0KPiA+ID4gK3sNCj4gPiA+ICsgICAgIGludCBlcnI7DQo+ID4gPiArDQo+
+ID4gPiArICAgICBlcnIgPSBwbWNfY29yZV93cml0ZV9sdHJfaWdub3JlKHZhbCk7DQo+ID4gPiAr
+DQo+ID4gPiArICAgICByZXR1cm4gZXJyOw0KPiA+ID4gK30NCj4gPiA+ICsNCj4gPiA+ICBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRtaV9zeXN0ZW1faWQgcG1jX2NvcmVfZG1pX3RhYmxlW10gID0gew0K
+PiA+ID4gICAgICAgew0KPiA+ID4gICAgICAgLmNhbGxiYWNrID0gcXVpcmtfeHRhbF9pZ25vcmUs
+DQo+ID4gPiBAQCAtMTI0NCw2ICsxMjY0LDE1IEBAIHN0YXRpYyBpbnQgcG1jX2NvcmVfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gPiA+ICAgICAgIHBtY2Rldi0+cG1j
+X3hyYW1fcmVhZF9iaXQgPSBwbWNfY29yZV9jaGVja19yZWFkX2xvY2tfYml0KCk7DQo+ID4gPiAg
+ICAgICBkbWlfY2hlY2tfc3lzdGVtKHBtY19jb3JlX2RtaV90YWJsZSk7DQo+ID4gPg0KPiA+ID4g
+KyAgICAgLyoNCj4gPiA+ICsgICAgICAqIE9uIFRHTCwgZHVlIHRvIGEgaGFyZHdhcmUgbGltaXRh
+dGlvbiwgdGhlIEdCRSBMVFIgYmxvY2tzIFBDMTANCj4gd2hlbg0KPiA+ID4gKyAgICAgICogYSBj
+YWJsZSBpcyBhdHRhY2hlZC4gVGVsbCB0aGUgUE1DIHRvIGlnbm9yZSBpdC4NCj4gPiA+ICsgICAg
+ICAqLw0KPiA+ID4gKyAgICAgaWYgKHBtY2Rldi0+bWFwID09ICZ0Z2xfcmVnX21hcCkgew0KPiA+
+ID4gKyAgICAgICAgICAgICBkZXZfZGJnKCZwZGV2LT5kZXYsICJpZ25vcmluZyBHQkUgTFRSXG4i
+KTsNCj4gPiA+ICsgICAgICAgICAgICAgcXVpcmtfbHRyX2lnbm9yZSgxVSA8PCAzKTsNCj4gPiA+
+ICsgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICAgICAgIHBtY19jb3JlX2RiZ2ZzX3JlZ2lzdGVyKHBt
+Y2Rldik7DQo+ID4gPg0KPiA+ID4gICAgICAgZGV2aWNlX2luaXRpYWxpemVkID0gdHJ1ZTsNCj4g
+PiA+IC0tDQo+ID4gPiAyLjI1LjENCj4gPg0KPiANCj4gDQo+IC0tDQo+IFRoYW5rcywNCj4gUmFq
+bmVlc2gNCg==
