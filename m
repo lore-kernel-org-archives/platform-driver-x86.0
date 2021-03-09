@@ -2,186 +2,115 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C59CC4332D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 20:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93885C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 00:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD5C965272
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  8 Mar 2021 20:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D19F65287
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 00:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230320AbhCHUtx (ORCPT
+        id S231946AbhCIAGI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 8 Mar 2021 15:49:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        Mon, 8 Mar 2021 19:06:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229917AbhCHUtn (ORCPT
+        with ESMTP id S231924AbhCIAFj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 8 Mar 2021 15:49:43 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19EDDC06174A;
-        Mon,  8 Mar 2021 12:49:43 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id r10-20020a05600c35cab029010c946c95easo4624613wmq.4;
-        Mon, 08 Mar 2021 12:49:43 -0800 (PST)
+        Mon, 8 Mar 2021 19:05:39 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A6EC06174A;
+        Mon,  8 Mar 2021 16:05:39 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id e10so13265077wro.12;
+        Mon, 08 Mar 2021 16:05:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=u6BZPIdvgWtIEd689VvS5QtUOzKg7WXaBx7o4om4Ymc=;
-        b=E8VIeiOpY9O4jeKN+/hmU8YFMSGRUwp2id5mjymFQa49+OkplP2mo3xIIok+8lDXA2
-         r99PiTax3vzFA5X3M8WVGwmmuyopeBcVwOt5sfvGYCkdn4e70b7vQ10bk+K92+BWnjdy
-         Exv2JROEMEjwAr0/AJHyxvGDEeUe/4jthIDRqJSdRCIQDU8fdhq3K2BsWpQ1NlRj3Lrp
-         89ZW3Ql+bL+kUH9/zF1jaiKFlSSs8azNzvx9dKzbsPipUTPX9DAl0q/fZKPmzBqKgLpY
-         q5TVg9txYqA+MzyOaWVEMWWtwb0udL+vL0xfROjeKfkKwSNHky3hrqbhZQZ+nWsgcgAz
-         N58w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L5e+Dqx5oV5slrTGbLaugu01HFMhPchgspXa5P+rEow=;
+        b=XpqFqGIbkOfY0JP824cDolTDvpGWg0BNFSwq3Tq5jJ+ULj0A+wABLY86aygY4RJe6n
+         7XymkthqaIAlDGOIdpmtsI2o1jBS94pwP9UGnl1Zj4BRrMjPSDqHWu073kPth91BN70a
+         FWtLm+Kb6dBXLdiyWsK48olJNWFE1A0nQAuNqTvimLIVnUr7XWSUzwyTTRTUSVkdHd/c
+         koLMLp/hwxOPD9s6nKITwsV3Rb0Ry7YG2XbGqb4wTnNIzVHHG2lxviz4x+0dCkZAVdgB
+         cMSOVfQKbR6CF1xG8BA41DbkNUxVHFCAlpGQeskMuRLMxctKl9CDexVtfRVOWMQFY1L5
+         sR5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=u6BZPIdvgWtIEd689VvS5QtUOzKg7WXaBx7o4om4Ymc=;
-        b=EBdTJZl3VkULD2noN+XLj1w4GPKlSKtkiId89i7k3fIbmUij/ImWQ5Y2VUZCx7iLid
-         qeVu9ZSRTJ+mtofPyYZHmY8791mTbzRyqcpVb2pIV14O8lZS/UG3EbcJ9J21XTEGicqS
-         MeirSP8+Iyfbi/IXlrJl3N44JLIWan9Bywd/yUzsZ8jP7xkpKbAcNcBWIiO1Mn5b71hT
-         nnMIG5zW4LhpDnGdhry/27ZvOWBpxe47cf/wz+dh/wfIwjbKL73PkZKByi0eZQRSPBcU
-         LbnV63wkVv+H86AXacdW2kk2VGGerVVrMcs6dgkJ8rVWqVpRcS8Q5iJl4zppfk+e/7Mw
-         l0QQ==
-X-Gm-Message-State: AOAM5338rj4BnbbD1KTIhM59MCW9k3JpDuwN7CfwAPd3hiTF5ARelPVn
-        BS4ExM0LzqUryXXUsER6T2s=
-X-Google-Smtp-Source: ABdhPJxUeGSjsLbhLGHOOPieUUpb8j0uvTlHEwi5jFjQBMLQGNpi4Au4ginO2ZzOyZRAs2e0ejLGYQ==
-X-Received: by 2002:a7b:cdef:: with SMTP id p15mr610310wmj.0.1615236581888;
-        Mon, 08 Mar 2021 12:49:41 -0800 (PST)
-Received: from [192.168.1.211] ([2.26.187.30])
-        by smtp.gmail.com with ESMTPSA id a131sm640669wmc.48.2021.03.08.12.49.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Mar 2021 12:49:41 -0800 (PST)
-Subject: Re: [PATCH v3 1/6] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L5e+Dqx5oV5slrTGbLaugu01HFMhPchgspXa5P+rEow=;
+        b=itgdPfYTW2gtd40yxLsLvwZ+E1U/gTbQ860EBMnOOZ7/Sp23JNGMyPaXJsxSgsPy97
+         7IRbIJcsNN0ArAvfNoZ1FpPffZKy7tCKhmsPkbIH9w8OMupn8Nu8+je+FFwPg2RWlUCH
+         Ps4+XJ76bIiTDSxwtkb8cYn8a+My1Y+b3K8o2jLou87EGsXxr3yNtgSKvvCqNFjnBz5c
+         B//Tc4nfAMQ7M7OVsxK+kFVLw8O8/aVRMTnaU80HUFjblXrwxEQji4j2ty9uQV0XNI1J
+         rwh49MuGIqo1PZoqha/uSaisB51u5XEwUCRqDbPVCtKURAmF2U8ZLgKBiebOdyev9Vcy
+         CY5w==
+X-Gm-Message-State: AOAM533P2X/28BD3QEeMGpeAHEIjaPWxP3O8lhz+OB1Np129o77Z5dVQ
+        RrKUtBpzKzlTSUNkfxoxGfs=
+X-Google-Smtp-Source: ABdhPJxIVU8S7grx38ZAx4jAvvdeGXkZjlqvrLk2RZIWG7Wsw0brcv+KWrjiYOADGFYsdvvoiB8ceA==
+X-Received: by 2002:a5d:6c66:: with SMTP id r6mr25239962wrz.407.1615248338250;
+        Mon, 08 Mar 2021 16:05:38 -0800 (PST)
+Received: from xws.localdomain (pd9ea322b.dip0.t-ipconnect.de. [217.234.50.43])
+        by smtp.gmail.com with ESMTPSA id 75sm1333623wma.23.2021.03.08.16.05.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Mar 2021 16:05:37 -0800 (PST)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-2-djrscally@gmail.com>
- <CAHp75VfPuDjt=ZfHkwErF7_6Ks6wpqXO8mtq-2KjV+mU_PXFtg@mail.gmail.com>
- <615bad5e-6e68-43c9-dd0b-f26d2832d52f@gmail.com>
- <CAHp75Vc2iwvh1RiYmQDPSvgNvGT_gBcGTK67F+MhWgXyoxqn0A@mail.gmail.com>
- <CAJZ5v0ijOhT3PVm6-gqnqycE-YZhD00dGbtK1UEV5nfrOF5Obw@mail.gmail.com>
- <YEYtME2AxpXBq6iF@smile.fi.intel.com>
- <CAJZ5v0i+suMNWhUc=v0pnpabS-Ew-CMeSH945JB0YKnQAbi4Wg@mail.gmail.com>
- <CAJZ5v0iyGGLjhYnQxQTokib5Dyiuz_ApvaWb13qz8=U3V44vFg@mail.gmail.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <3138da4c-7e1b-d75e-b0a3-014bdc5147c1@gmail.com>
-Date:   Mon, 8 Mar 2021 20:49:40 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] power: supply: Add battery and AC drivers for Surface devices
+Date:   Tue,  9 Mar 2021 01:05:28 +0100
+Message-Id: <20210309000530.2165752-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0iyGGLjhYnQxQTokib5Dyiuz_ApvaWb13qz8=U3V44vFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Rafael
+This series provides battery and AC drivers for Microsoft Surface
+devices, where this information is provided via an embedded controller
+(the Surface System Aggregator Module, SSAM) instead of the usual ACPI
+interface.
 
-On 08/03/2021 17:23, Rafael J. Wysocki wrote:
-> On Mon, Mar 8, 2021 at 4:45 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->> On Mon, Mar 8, 2021 at 2:57 PM Andy Shevchenko
->> <andy.shevchenko@gmail.com> wrote:
->>> On Mon, Mar 08, 2021 at 02:36:27PM +0100, Rafael J. Wysocki wrote:
->>>> On Sun, Mar 7, 2021 at 9:39 PM Andy Shevchenko
->>>> <andy.shevchenko@gmail.com> wrote:
->>>>> On Sun, Mar 7, 2021 at 3:36 PM Daniel Scally <djrscally@gmail.com> wrote:
->>>>>> On 22/02/2021 13:34, Andy Shevchenko wrote:
->>>>>>> On Mon, Feb 22, 2021 at 3:12 PM Daniel Scally <djrscally@gmail.com> wrote:
->>>>>>>> The acpi_walk_dep_device_list() is not as generalisable as its name
->>>>>>>> implies, serving only to decrement the dependency count for each
->>>>>>>> dependent device of the input. Extend the function to instead accept
->>>>>>>> a callback which can be applied to all the dependencies in acpi_dep_list.
->>>>>>>> Replace all existing calls to the function with calls to a wrapper, passing
->>>>>>>> a callback that applies the same dependency reduction.
->>>>>>> The code looks okay to me, if it was the initial idea, feel free to add
->>>>>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>> ...
->>>
->>>>>>>> +void acpi_dev_flag_dependency_met(acpi_handle handle)
->>>>>>> Since it's acpi_dev_* namespace, perhaps it should take struct acpi_device here?
->>>>>> I can do this, but I avoided it because in most of the uses in the
->>>>>> kernel currently there's no struct acpi_device, they're just passing
->>>>>> ACPI_HANDLE(dev) instead, so I'd need to get the adev with
->>>>>> ACPI_COMPANION() in each place. It didn't seem worth it...
->>>> It may not even be possible sometimes, because that function may be
->>>> called before creating all of the struct acpi_device objects (like in
->>>> the case of deferred enumeration).
->>>>
->>>>>> but happy to
->>>>>> do it if you'd prefer it that way?
->>>>> I see, let Rafael decide then. I'm not pushing here.
->>>> Well, it's a matter of correctness.
->>> Looking at your above comment it is indeed. Thanks for clarification!
->> Well, actually, the struct device for the object passed to this
->> function should be there already, because otherwise it wouldn't make
->> sense to update the list.  So my comment above is not really
->> applicable to this particular device and the function could take a
->> struct acpi_device pointer argument.  Sorry for the confusion.
->>
->>> But should we have acpi_dev_*() namespace for this function if it takes handle?
->> It takes a device object handle.
->>
->> Anyway, as per the above, it can take a struct acpi_device pointer
->> argument in which case the "acpi_dev_" prefix should be fine.
+Specifically, 7th generation Surface devices, i.e. Surface Pro 7,
+Surface Book 3, Surface Laptop 3, as well as the Surface Laptop Go use
+this new interface.
 
+Note: This series depends on the
 
-OK, so the conclusion there is change the argument to a struct
-acpi_device pointer and update all the uses.
+    platform/surface: Add Surface Aggregator device registry
 
->>> For time being nothing better than following comes to my mind:
->>>
->>> __acpi_dev_flag_dependency_met() => __acpi_flag_device_dependency_met()
->>> acpi_dev_flag_dependency_met() => acpi_flag_device_dependency_met()
->> The above said, the name is somewhat confusing overall IMV.
->>
->> Something like acpi_dev_clear_dependencies() might be better.
->>
->> So lets make it something like
->>
->> void acpi_dev_clear_dependencies(struct acpi_device *supplier);
-> To be precise, there are two functions in the patch,
-> acpi_dev_flag_dependency_met() which invokes
-> acpi_walk_dep_device_list() and __acpi_dev_flag_dependency_met()
-> invoked by the latter as a callback.
->
-> Above I was talking about the first one.
->
-> The callback should still take a struct acpi_dep_data pointer argument
-> and I would call it acpi_scan_clear_dep() or similar.
+series. More specifically patch
 
+    platform/surface: Set up Surface Aggregator device registry
 
-OK, works for me, I'll make those changes - thanks
+The full series has been merged into the for-next branch of the
+platform-drivers-x86 tree [1]. The commit in question can be found at
+[2].
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=fc622b3d36e6d91330fb21506b9ad1e3206a4dde
+
+Maximilian Luz (2):
+  power: supply: Add battery driver for Surface Aggregator Module
+  power: supply: Add AC driver for Surface Aggregator Module
+
+ MAINTAINERS                            |   8 +
+ drivers/power/supply/Kconfig           |  32 +
+ drivers/power/supply/Makefile          |   2 +
+ drivers/power/supply/surface_battery.c | 901 +++++++++++++++++++++++++
+ drivers/power/supply/surface_charger.c | 296 ++++++++
+ 5 files changed, 1239 insertions(+)
+ create mode 100644 drivers/power/supply/surface_battery.c
+ create mode 100644 drivers/power/supply/surface_charger.c
+
+-- 
+2.30.1
 
