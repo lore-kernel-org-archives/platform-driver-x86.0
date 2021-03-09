@@ -2,122 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B56C433E6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 13:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666F8C4332D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 16:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7787C64EBB
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 13:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CEA661574
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  9 Mar 2021 16:27:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbhCINYi (ORCPT
+        id S230449AbhCIQ0e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 9 Mar 2021 08:24:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
+        Tue, 9 Mar 2021 11:26:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230183AbhCINYb (ORCPT
+        with ESMTP id S230328AbhCIQ0U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 9 Mar 2021 08:24:31 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35996C06174A;
-        Tue,  9 Mar 2021 05:24:31 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id r10-20020a05600c35cab029010c946c95easo6242533wmq.4;
-        Tue, 09 Mar 2021 05:24:31 -0800 (PST)
+        Tue, 9 Mar 2021 11:26:20 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18004C06174A;
+        Tue,  9 Mar 2021 08:26:20 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id f12so16835608wrx.8;
+        Tue, 09 Mar 2021 08:26:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cLqnVuKuFuZQ++0ePuUnM1AiknBJ6qGOFZib/XotzbY=;
-        b=buh/KLMIQGIX4go50r+3gnvbw4mC1j/wpRz0DJFoHxBMaEe/gr7Y8vDlaCELmlac9p
-         4qlH/X4r9SqXFlnKNOQ1YFan4U4GVEWKJAdk6Ek44QMDE1kwTT5MBxOzRj69QEVcdihy
-         phmEkq76ATbQIFsFCaMHDrjmYj1JISUEWkjp68T/WnnkeIkcL5XYm36uBHptc0tPITew
-         A1a07gyMvHlWmPL/EHEAZKxyrY6bUsDFYdDfv3Ifb3MT0lnZ8wjSVRdB/Q00IgRipSYQ
-         K7NhGX7ZVQW42TvO4f62zPgaDZ/7pPCYEQUrOQPmDHD+u3ZSFFzJIjCR8QEy1vzziiOD
-         VhAw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TdtX2sAcluZunzjO1B5Jwegzd5Uwhijb5PNqHMJaTlc=;
+        b=R8paXwW3L03tr5Z6f2dHW6O0d6W6tOShYK0YfHl3dJElK3BOPPkDh3Us+dPlTAe+l6
+         DuuWgPKpmOMu6ntzXoXsl2yi5XRxdQsLXGtYHRNYDL9oMpNhTargOULruDdQpjMZ/oG8
+         3i+J0Xxp63x/xV1+32cKJNmfF9+/KkXM28N6bKCSeLNHBu8+R2VZzustlNQ7tbYhp6qW
+         c6UmsrsQYXJ77AzdKAR3vXg4UZgJ1oGhg2HgnODyfZHWi8M1Md9PXhgwjZ4rHSOrit0s
+         7LzyozSRCt+kVh8CWY3+w1wOEv+rvlUqtEebUCYamUR8FitSvRb62t93wVbUYAbbmy2k
+         gBqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=cLqnVuKuFuZQ++0ePuUnM1AiknBJ6qGOFZib/XotzbY=;
-        b=K8oFMrs3ycrnKiBjLFcWj4XBzO6Qj0IRdTq8yv3cSB3fyJ3eo7D6a27fbjrYXt0nVc
-         FyQ7gRctNvqcCZ13C5Pd+rph5Hq6rPFSgQlIzGtD/oO70oMmzt5zlGAXmDFfY3skr1xU
-         XpI+JomCsMRlLCb9CTZNVcSdZNhRs3WMCfHHNXPfMtyvtGX4rYggR8r+7a7tdGQ8uIJb
-         BUM/5+SBxuS68x1+Jn4UXV/+2ZJDhkSckt2d7wBm9TpgqI1dtupGGDGxOoV5/Ngw7IAt
-         leRBNSqLnMfz71e+mBRRG+tcA+KukYYrzF+nXTDS/5NlENvwRQyM1zVbZ4XdPXmsNT8x
-         MlyQ==
-X-Gm-Message-State: AOAM531LVJ47orgfCwSuNQAQ02yo3ihQHVM2Q9lVGqqGQGPZHUNxtRlJ
-        b6yRCzXxawWtLdY8aex6sgs3hxBpdeM=
-X-Google-Smtp-Source: ABdhPJxKWiby4MOwEq/NlX/JDUKG0qy/bSy8RQn1mY7fUyoq+Cetq0QuNZU3h7H2j1aoFzbXJWsmTw==
-X-Received: by 2002:a7b:c2aa:: with SMTP id c10mr4011453wmk.101.1615296270002;
-        Tue, 09 Mar 2021 05:24:30 -0800 (PST)
-Received: from [192.168.2.202] (p5487b975.dip0.t-ipconnect.de. [84.135.185.117])
-        by smtp.gmail.com with ESMTPSA id u2sm4475845wmm.5.2021.03.09.05.24.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Mar 2021 05:24:29 -0800 (PST)
-Subject: Re: [PATCH -next] platform/surface: aggregator_registry: Make symbol
- 'ssam_base_hub_group' static
-To:     'Wei Yongjun <weiyongjun1@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-References: <20210309131500.1885772-1-weiyongjun1@huawei.com>
+        bh=TdtX2sAcluZunzjO1B5Jwegzd5Uwhijb5PNqHMJaTlc=;
+        b=O1/JIr9kdUft9JTFsImgE03eWBHmrrxK+N+urTvMsfHOjZ8lB6FdRJWwj0if3GlA/+
+         NKzD3dkViL6J9UJ6XfKIKn/+3st1KOdcQumgvfeZS4KKY1rV+rgEbaFJOAgqSIFRqHGQ
+         0rr2xbPWx2TvWxj1Ve9gslmzm2GBiOaVtgbOAekLm1SwN9mbbdcgsyCiexWfCyjwXNWz
+         asdN1ITTS8WgQoMzAY7WwdRG5dZQjcdolcWXJtA/5PaV2279CKcldnsRH+dRXB3i6Yxy
+         U8bWQsOBxMFyQPs/cyV8TYKhCwV/HwwlDZ2OuZuETirhw8tidwLmZ9kdLA8VjLpE1mca
+         iqJQ==
+X-Gm-Message-State: AOAM532xA+JPCHsYICde6GMiywyiQumO9EVFhHLoGLKi4Jj7HE/OdvQc
+        Wn6eFL3ctDjIpqKD1+pLpnw=
+X-Google-Smtp-Source: ABdhPJwudyf+BLWnjfIraLg3ACXU3j00XkabOU3nP4//lR0XCD8y6ttlEv5GiwtvPxsNIywxP6gglg==
+X-Received: by 2002:adf:cd8c:: with SMTP id q12mr28653584wrj.185.1615307178744;
+        Tue, 09 Mar 2021 08:26:18 -0800 (PST)
+Received: from xws.localdomain (p5487b975.dip0.t-ipconnect.de. [84.135.185.117])
+        by smtp.gmail.com with ESMTPSA id a17sm5343792wmj.9.2021.03.09.08.26.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Mar 2021 08:26:18 -0800 (PST)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <b16458f8-a4ce-f8ef-0c64-e00c312e3d1e@gmail.com>
-Date:   Tue, 9 Mar 2021 14:24:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/surface: aggregator_registry: Add support for Surface Pro 7+
+Date:   Tue,  9 Mar 2021 17:25:50 +0100
+Message-Id: <20210309162550.302161-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-In-Reply-To: <20210309131500.1885772-1-weiyongjun1@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 3/9/21 2:15 PM, 'Wei Yongjun wrote:
-> From: Wei Yongjun <weiyongjun1@huawei.com>
-> 
-> The sparse tool complains as follows:
-> 
-> drivers/platform/surface/surface_aggregator_registry.c:355:30: warning:
->   symbol 'ssam_base_hub_group' was not declared. Should it be static?
-> 
-> This symbol is not used outside of surface_aggregator_registry.c, so this
-> commit marks it static.
+The Surface Pro 7+ is essentially a refresh of the Surface Pro 7 with
+updated hardware and a new WSID identifier.
 
-Right, this should be static.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/surface_aggregator_registry.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+index cdb4a95af3e8..c42b97f61a57 100644
+--- a/drivers/platform/surface/surface_aggregator_registry.c
++++ b/drivers/platform/surface/surface_aggregator_registry.c
+@@ -191,7 +191,7 @@ static const struct software_node *ssam_node_group_sp6[] = {
+ 	NULL,
+ };
+ 
+-/* Devices for Surface Pro 7. */
++/* Devices for Surface Pro 7 and Surface Pro 7+. */
+ static const struct software_node *ssam_node_group_sp7[] = {
+ 	&ssam_node_root,
+ 	&ssam_node_bat_ac,
+@@ -521,6 +521,9 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
+ 	/* Surface Pro 7 */
+ 	{ "MSHW0116", (unsigned long)ssam_node_group_sp7 },
+ 
++	/* Surface Pro 7+ */
++	{ "MSHW0119", (unsigned long)ssam_node_group_sp7 },
++
+ 	/* Surface Book 2 */
+ 	{ "MSHW0107", (unsigned long)ssam_node_group_sb2 },
+ 
+-- 
+2.30.1
 
-Thanks,
-Max
-
-> 
-> Fixes: 797e78564634 ("platform/surface: aggregator_registry: Add base device hub")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->   .../platform/surface/surface_aggregator_registry.c  | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index cdb4a95af3e8..86cff5fce3cd 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -352,7 +352,7 @@ static struct attribute *ssam_base_hub_attrs[] = {
->   	NULL,
->   };
->   
-> -const struct attribute_group ssam_base_hub_group = {
-> +static const struct attribute_group ssam_base_hub_group = {
->   	.attrs = ssam_base_hub_attrs,
->   };
->   
-> 
