@@ -2,112 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CF5C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 10:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD81BC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E14F64FE5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 10:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7F564FCC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232065AbhCJK5W (ORCPT
+        id S233418AbhCJTYs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Mar 2021 05:57:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232623AbhCJK5P (ORCPT
+        Wed, 10 Mar 2021 14:24:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231126AbhCJTYZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Mar 2021 05:57:15 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31BDC061760
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 02:57:14 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id w11so22800025wrr.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 02:57:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ran6jv4T8eASAxUQF++U7Sou6onWiHh/0sYKH562zOU=;
-        b=Qukof5fOttc8noCDQV1vJ9KKLni6o1NOZtnmt9PKg4/cpfSB4v1U/5DMEJzTKzPs2B
-         TveXJDPY8cBY3o0pQVttbnaj8QU+wruMpoaZeIDQUC24zKd9nQYwhAw8XTISusfamveo
-         b9HtneIFd1HGtOdKyfgClKEgh9UJxOGI/oUYUJ1yoU08kg8Eu+z2DcwQu5bLETKBjNhB
-         aeC7nfqeigGlJWp+Qz1K5QLu5UMAOvqTnMFANRp5EGnh5bcNUUgNmojcVQSA81GBkudx
-         CAnpHKlfKpPIIRITNsF7zfp45pBfSnQkCaLll2dSTmqMQsTAKhHdA2lBzT7weXbYRuke
-         tcIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ran6jv4T8eASAxUQF++U7Sou6onWiHh/0sYKH562zOU=;
-        b=DSuECbCvUCk7lndRsC0ODasYkFg+V/SSyXy7Q9yv8eTXLIbI2oPXmSnzR5IIAYV4N8
-         4BntPMB3rzjH1a9Yw7cfYrKO0rWifZfoGYEE6Hf2wn1ZsBPobBAneaJJq07n4aOolpc3
-         0pYxtfg7FHgEK1VN4CddfyoyUUp9CzkIMz3mYHIArTT/nENSuTOMHcfgnHlU/2h4IIwB
-         raQbo4bmMmmlpoeFfcTC3+sZDq+QgZGcvWg0+C1O/nsCuRu1AbTmb99KQwdkj4ER7rof
-         6hYZqAK+Yj/tMmxFwMEXbWGhqbS42yQb+m5omc1Jy1Rn66366MKOOxsi6FPHhqPfn4SZ
-         QVaQ==
-X-Gm-Message-State: AOAM53164dWdPY1UJv3MJynppeqAZT2VskI45bXMaweh4QPdEzbSd0gR
-        4w+IY4Q3JFUR+4ksqgdZ8W0ZXA==
-X-Google-Smtp-Source: ABdhPJyzR6rierxPNgJjnnbYdjb5jyK9H+K8960XSYyXKm+A1lBmGrul+T7317lMk+Xo+8YP7jD5Ug==
-X-Received: by 2002:adf:ea0e:: with SMTP id q14mr2933779wrm.389.1615373833373;
-        Wed, 10 Mar 2021 02:57:13 -0800 (PST)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id q19sm3343882wrg.80.2021.03.10.02.57.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 02:57:12 -0800 (PST)
-Date:   Wed, 10 Mar 2021 10:57:11 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [GIT PULL v2] Immutable branch between MFD and Platform/X86 due for
- the v5.13 merge window
-Message-ID: <20210310105711.GJ701493@dell>
-References: <20210128172846.99352-1-david.e.box@linux.intel.com>
- <20210224201005.1034005-1-david.e.box@linux.intel.com>
- <20210309181206.GT4931@dell>
+        Wed, 10 Mar 2021 14:24:25 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id B089264FC6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 19:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615404264;
+        bh=YDMtGy2Ldtt+NX+K4GhhYxY/0Bi6fQmCwMqTNad6FtY=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=a1Q6Ypf3YSLz/NWja+ho7d9VHWhHEmTExDJKPJiaDvM9cyFhIzzAzkdx3N+aAb7Kj
+         Ivt50GDz7N6lFdTGH0KabTRbNF5gld/Igapzyt8LhtjiEjbIX16j//6IfKCnQQ6dQi
+         ctwoNVM0PpG4J4yNGL7Yzh3NFIOqkOYsetq0V3Iy+LZnuSg/bl2nQv3tucmXWvb28x
+         Xrsg18OcmliNFZlHXQ/DFSOE7JqDj6wEq4rHMBP5twDO9MuHT2Jch1WK5j5bvjrh42
+         gkapnjKBo6cmoS7JshSYclGCya9fm26NxnBD8RmH96F9lUxGm+sWhjAroEfVViCHj+
+         WQXFpzis0x0qQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 210457] Fan sporadically maxed on wake-up due to unavailable
+ sensor temperature
+Date:   Wed, 10 Mar 2021 19:24:24 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: reescf@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-210457-215701-SrjOGtUTvx@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-210457-215701@https.bugzilla.kernel.org/>
+References: <bug-210457-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210309181206.GT4931@dell>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Rebased onto -rc2
+https://bugzilla.kernel.org/show_bug.cgi?id=3D210457
 
-The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
+cfr (reescf@gmail.com) changed:
 
-  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |reescf@gmail.com
 
-are available in the Git repository at:
+--- Comment #1 from cfr (reescf@gmail.com) ---
+Lenovo ThinkPad X720 is also affected by this, but it is not sporadic, as f=
+ar
+as I can tell. Not once since installing my current kernel have I seen norm=
+al
+behaviour following sleep.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-platform-x86-v5.13
+The problem persists if the machine is rebooted. Only powering off and
+restarting restores the expected behaviour.
 
-for you to fetch changes up to aa47ad3f853ae72c32b7e46dfc8bc2c8dc2dbad7:
+The bug seems to be a regression. See
+https://bugzilla.kernel.org/show_bug.cgi?id=3D196129. My machine was not af=
+fected
+by the original bug, but the problem looks to be the same.
 
-  mfd: intel_pmt: Add support for DG1 (2021-03-10 10:48:48 +0000)
+Following sleep:
 
-----------------------------------------------------------------
-Immutable branch between MFD and Platform/x86 due for the v5.13 merge window
+cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp*
+0
+1000
+0
+0
+0
+0
+0
+cat: /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input: No such
+device or address
+cat: /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp2_input: No such
+device or address
+0
+0
+0
+0
+0
+0
+0
 
-----------------------------------------------------------------
-David E. Box (2):
-      mfd: intel_pmt: Fix nuisance messages and handling of disabled capabilities
-      mfd: intel_pmt: Add support for DG1
+and
 
- drivers/mfd/intel_pmt.c                    | 112 +++++++++++++++++++----------
- drivers/platform/x86/intel_pmt_class.c     |  46 ++++++++++++
- drivers/platform/x86/intel_pmt_class.h     |   1 +
- drivers/platform/x86/intel_pmt_telemetry.c |  20 ------
- 4 files changed, 122 insertions(+), 57 deletions(-)
+cat /proc/acpi/ibm/thermal=20
+temperatures:   -128 -128 0 0 0 0 0 0 0 0 1 0 0 0 0 0
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Prior to sleep, only the second sensor is missing and acpitz-acpi-0 gives a
+sane reading. Following, the first goes AWOL and acpitz-acpi-0 is stuck at =
+48.
+
+Removing and reloading thinkpad_acpi makes no difference and, for me,
+re-sleeping and rewaking makes no difference either.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
