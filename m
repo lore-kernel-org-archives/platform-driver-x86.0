@@ -2,112 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46676C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 09:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CF5C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 10:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C9C64FF7
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 09:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E14F64FE5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 10:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232509AbhCJJdy (ORCPT
+        id S232065AbhCJK5W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Mar 2021 04:33:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51880 "EHLO
+        Wed, 10 Mar 2021 05:57:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232468AbhCJJdi (ORCPT
+        with ESMTP id S232623AbhCJK5P (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Mar 2021 04:33:38 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C04C061761
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 01:33:38 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id d139-20020a1c1d910000b029010b895cb6f2so10257492wmd.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 01:33:38 -0800 (PST)
+        Wed, 10 Mar 2021 05:57:15 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31BDC061760
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 02:57:14 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id w11so22800025wrr.10
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 02:57:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=DBkpl+xD4oZAcvKTWFgn5ufHlMadxME7etzpIVJ7NDI=;
-        b=LWkPVnm4FOGXuMt/XlLDHOzZrLxjPKHbpg4ynOEaxl1Sa/LkJsFdkBBRlN6OPTyR+x
-         J575prTN3E68aCQmuOI3lpQsXqs96UytsfuiesvZNC7ImZvfACP6Ws0hBnEclNPJ/myx
-         Ws6LPzcIi5hknGde/f75MPvjs20KpBtdquwDhl4pN6PvvsYWOOoo+ZAT28z74gxhjGZz
-         O+/Na0jU1niNXa5pRMwzrZHvGPCegEbBipGuOArYjWr47yYj/+kkJLanerfDrPOjufpj
-         T0rCCtKApnDJyZweJYmfkFwLscOjQ5fYGD4mHSgHFhZue1oRC+77fKMbULmA2VYnLsTu
-         de/g==
+        bh=Ran6jv4T8eASAxUQF++U7Sou6onWiHh/0sYKH562zOU=;
+        b=Qukof5fOttc8noCDQV1vJ9KKLni6o1NOZtnmt9PKg4/cpfSB4v1U/5DMEJzTKzPs2B
+         TveXJDPY8cBY3o0pQVttbnaj8QU+wruMpoaZeIDQUC24zKd9nQYwhAw8XTISusfamveo
+         b9HtneIFd1HGtOdKyfgClKEgh9UJxOGI/oUYUJ1yoU08kg8Eu+z2DcwQu5bLETKBjNhB
+         aeC7nfqeigGlJWp+Qz1K5QLu5UMAOvqTnMFANRp5EGnh5bcNUUgNmojcVQSA81GBkudx
+         CAnpHKlfKpPIIRITNsF7zfp45pBfSnQkCaLll2dSTmqMQsTAKhHdA2lBzT7weXbYRuke
+         tcIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=DBkpl+xD4oZAcvKTWFgn5ufHlMadxME7etzpIVJ7NDI=;
-        b=p/NNbXirr/6qnP+F69imeBx+6UHMepB8Fti+mALhv5Yftn+EyBBS0K/8zbFb/Dv3XE
-         pOgYeeCxA2fMRvfbjfCv2IywHkiXNoHg274OhcXcboQNpqGbS4Po1yULy4Bz09L0FyqV
-         WgQcKllLcX1vjecgqILYB+eZ2eBJ+voRHAmOi1Z6XGjOcIFg6OSbQ7eKNg1rGXhOpKbg
-         dOEtTyJPqBY0PknkXDggqKlrpJqvOWNHwwtz7mHvSzHeTP0Mlc/PS0BUPF2VFghKnB2x
-         FxidjpCVQfAFnpsib06Bp/5Pqsu3VUCyj4NAgilEBAGiDt+iB80f341W92PgoEFb0Qsf
-         SjNA==
-X-Gm-Message-State: AOAM5307Dzc2q/d5hGOHmgTTnc4h9brFGUR9fk+C/6ILpeS+kH1QCt1f
-        J0I58qCi5VXa5alzAeAQlISF2g==
-X-Google-Smtp-Source: ABdhPJxxc/itI5SsHSC//A+r/pQaChX9aXm0PYl5GF2BpZsZeu/Clm1aKBtk60CyvvU4AgP+zcMIDQ==
-X-Received: by 2002:a05:600c:2945:: with SMTP id n5mr2433718wmd.78.1615368816817;
-        Wed, 10 Mar 2021 01:33:36 -0800 (PST)
+        bh=Ran6jv4T8eASAxUQF++U7Sou6onWiHh/0sYKH562zOU=;
+        b=DSuECbCvUCk7lndRsC0ODasYkFg+V/SSyXy7Q9yv8eTXLIbI2oPXmSnzR5IIAYV4N8
+         4BntPMB3rzjH1a9Yw7cfYrKO0rWifZfoGYEE6Hf2wn1ZsBPobBAneaJJq07n4aOolpc3
+         0pYxtfg7FHgEK1VN4CddfyoyUUp9CzkIMz3mYHIArTT/nENSuTOMHcfgnHlU/2h4IIwB
+         raQbo4bmMmmlpoeFfcTC3+sZDq+QgZGcvWg0+C1O/nsCuRu1AbTmb99KQwdkj4ER7rof
+         6hYZqAK+Yj/tMmxFwMEXbWGhqbS42yQb+m5omc1Jy1Rn66366MKOOxsi6FPHhqPfn4SZ
+         QVaQ==
+X-Gm-Message-State: AOAM53164dWdPY1UJv3MJynppeqAZT2VskI45bXMaweh4QPdEzbSd0gR
+        4w+IY4Q3JFUR+4ksqgdZ8W0ZXA==
+X-Google-Smtp-Source: ABdhPJyzR6rierxPNgJjnnbYdjb5jyK9H+K8960XSYyXKm+A1lBmGrul+T7317lMk+Xo+8YP7jD5Ug==
+X-Received: by 2002:adf:ea0e:: with SMTP id q14mr2933779wrm.389.1615373833373;
+        Wed, 10 Mar 2021 02:57:13 -0800 (PST)
 Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id m14sm9164174wmi.27.2021.03.10.01.33.35
+        by smtp.gmail.com with ESMTPSA id q19sm3343882wrg.80.2021.03.10.02.57.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Mar 2021 01:33:36 -0800 (PST)
-Date:   Wed, 10 Mar 2021 09:33:34 +0000
+        Wed, 10 Mar 2021 02:57:12 -0800 (PST)
+Date:   Wed, 10 Mar 2021 10:57:11 +0000
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     tfiga@chromium.org, sakari.ailus@linux.intel.com,
-        rajmohan.mani@intel.com, rjw@rjwysocki.net, lenb@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org,
-        andy.shevchenko@linux.intel.com,
-        kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart@ideasonboard.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, luzmaximilian@gmail.com,
-        robert.moore@intel.com, erik.kaneda@intel.com, me@fabwu.ch,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org
-Subject: Re: [PATCH v3 6/6] mfd: tps68470: Remove tps68470 MFD driver
-Message-ID: <20210310093334.GP4931@dell>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <20210222130735.1313443-7-djrscally@gmail.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [GIT PULL v2] Immutable branch between MFD and Platform/X86 due for
+ the v5.13 merge window
+Message-ID: <20210310105711.GJ701493@dell>
+References: <20210128172846.99352-1-david.e.box@linux.intel.com>
+ <20210224201005.1034005-1-david.e.box@linux.intel.com>
+ <20210309181206.GT4931@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210222130735.1313443-7-djrscally@gmail.com>
+In-Reply-To: <20210309181206.GT4931@dell>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 22 Feb 2021, Daniel Scally wrote:
+Rebased onto -rc2
 
-> This driver only covered one scenario in which ACPI devices with _HID
-> INT3472 are found, and its functionality has been taken over by the
-> intel-skl-int3472 module, so remove it.
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
-> Changes in v3:
-> 	- Replaced Kconfig dependencies with INTEL_SKL_INT3472 for the tps68470
-> 	  OpRegion and GPIO drivers.
-> 
->  drivers/acpi/pmic/Kconfig |  2 +-
->  drivers/gpio/Kconfig      |  2 +-
->  drivers/mfd/Kconfig       | 18 --------
->  drivers/mfd/Makefile      |  1 -
->  drivers/mfd/tps68470.c    | 97 ---------------------------------------
->  5 files changed, 2 insertions(+), 118 deletions(-)
->  delete mode 100644 drivers/mfd/tps68470.c
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-platform-x86-v5.13
+
+for you to fetch changes up to aa47ad3f853ae72c32b7e46dfc8bc2c8dc2dbad7:
+
+  mfd: intel_pmt: Add support for DG1 (2021-03-10 10:48:48 +0000)
+
+----------------------------------------------------------------
+Immutable branch between MFD and Platform/x86 due for the v5.13 merge window
+
+----------------------------------------------------------------
+David E. Box (2):
+      mfd: intel_pmt: Fix nuisance messages and handling of disabled capabilities
+      mfd: intel_pmt: Add support for DG1
+
+ drivers/mfd/intel_pmt.c                    | 112 +++++++++++++++++++----------
+ drivers/platform/x86/intel_pmt_class.c     |  46 ++++++++++++
+ drivers/platform/x86/intel_pmt_class.h     |   1 +
+ drivers/platform/x86/intel_pmt_telemetry.c |  20 ------
+ 4 files changed, 122 insertions(+), 57 deletions(-)
 
 -- 
 Lee Jones [李琼斯]
