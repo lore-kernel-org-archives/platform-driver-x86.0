@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D9C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C83C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A42A264FD2
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 232F164FC9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 10 Mar 2021 19:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232030AbhCJTsz (ORCPT
+        id S233181AbhCJTyW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 10 Mar 2021 14:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51250 "EHLO mail.kernel.org"
+        Wed, 10 Mar 2021 14:54:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232907AbhCJTsX (ORCPT
+        id S232659AbhCJTyV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 10 Mar 2021 14:48:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7FF4864FB5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 19:48:23 +0000 (UTC)
+        Wed, 10 Mar 2021 14:54:21 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0562564FBB
+        for <platform-driver-x86@vger.kernel.org>; Wed, 10 Mar 2021 19:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615405703;
-        bh=AtVTm9v2ynhxjQyrxepBOAv7/QkMwVWeFC61MhU3Q4c=;
+        s=k20201202; t=1615406061;
+        bh=3Sk40NHWFikAzcjIDs4FyZ7XWtaNL6MCEHb05ZHXSG0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Q93AXeo7ZlUhb7rXqD/zUUJLvDQXR3nHEWPDZx2sq0iDze1az7Qsn3IddoHs1MYU9
-         h0hOHkK2owOU1s1qe4jNKUSLs1B3S9x/3g4SAPsRZme72vgU1rc90CHeEZ0kd9/fQP
-         07c0danoDhVMtP01izWIhoZKyG2KAXhKCPa9s5kGDgS3qzLrkhLSLrVtEerE8+lF4A
-         3YcT/x9FgDVL2lm1QqwO9MzxevyThwWHI4kw1+FgDSsiaaBMu+cli6dRcEA0LAgHfW
-         4IWJgwWF7PNKGZjAbXmdXgoSCq9+gNMswkDU3nk82iwIPgeI6NGEFUHa3LcowNCoVW
-         Ld2HCTc62bOqw==
+        b=lajpcE7lVqIxib654zjfq1ZjC4OUNlsY3m0MiCVEHv0eq1t3Bdx4kEAQLgHBbKxbZ
+         5tZewz822K7+QYWabSBxNWgfuIkFzak3yBq5GI3z3grYGGMQxQGX2BOalEpwN69oQJ
+         rZMPJtPLpcDAc80I5VQBxhgK3wa3fh8TxEv5+jzaX+jk06/qHZPyoodoemjSwvdUeG
+         yd2o9D/4a7rezMMDlNRiQGAl/DVvXR4Ha7hJp5T9VBOaDY/7gdyy6hraAlJRW5tIrt
+         qHYrYlbWfhbrsvPRCbINKvuOqaewuuQclQ9MVUkyR2Tw0mKwnQEmyUP+d/TKTg1jGO
+         kXwBX1fV7qp8Q==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 210457] Fan sporadically maxed on wake-up due to unavailable
  sensor temperature
-Date:   Wed, 10 Mar 2021 19:48:23 +0000
+Date:   Wed, 10 Mar 2021 19:54:20 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -52,7 +52,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-210457-215701-ClhsbM5dL1@https.bugzilla.kernel.org/>
+Message-ID: <bug-210457-215701-Ipi8TUtm1o@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-210457-215701@https.bugzilla.kernel.org/>
 References: <bug-210457-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,15 +66,30 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D210457
 
---- Comment #3 from cfr (reescf@gmail.com) ---
-I tried adding=20
+--- Comment #4 from cfr (reescf@gmail.com) ---
+The bug does NOT manifest if I boot linux-lts 5.10.21-1. Following sleep:
 
-acpi.ec_freeze_events=3DY acpi.ec_suspend_yield=3DY
+cat /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp*
+0
+1000
+0
+0
+0
+0
+0
+38000
+cat: /sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp2_input: No such
+device or address
+0
+0
+0
+0
+0
+0
+0
 
-to my kernel command line and rebooting, but I never got past the screen
-displaying the command. The machine froze and I had to poweroff.=20
-
-Is there a newer invocation I could try here?
+and the fan is at 0RPM, while acpitz-acpi-0 and thinkpad-isa-0000 temp1 are
+both +38.0=C2=B0C.
 
 --=20
 You may reply to this email to add a comment.
