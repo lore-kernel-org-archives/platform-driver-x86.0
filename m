@@ -2,168 +2,235 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAF6C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Mar 2021 15:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA8C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Mar 2021 17:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4063864FA6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Mar 2021 15:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41BA64F93
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 11 Mar 2021 17:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233582AbhCKPL3 (ORCPT
+        id S229469AbhCKRt3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 11 Mar 2021 10:11:29 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:32886 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233978AbhCKPLZ (ORCPT
+        Thu, 11 Mar 2021 12:49:29 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.113]:21234 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229459AbhCKRtB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 11 Mar 2021 10:11:25 -0500
-Received: from pps.filterd (m0148664.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12BF3LwI011868;
-        Thu, 11 Mar 2021 15:10:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
- bh=KgON0JNjPPn3agmdfKnN9oeNhsJWy56GgPCfWOLOKC0=;
- b=Z9lP1LFRS8/LA/bKCcS3pd9zGFa2gSRWwWgFmkIDK8C9x9Y1uY8bEPg3efU7W0wJJKxY
- +R75srS9eatU0wLo2eiKNb8+6WYaW0+3PPpNnbimAA4cJrb5YS+QMPT7VvpAemMO0zbw
- K55jjZQnaCAVvuDK+TkXwmFt0hD9c40gIuT6gAaVXfJzsVgYvbWH6ThLyRETMXFhWpAL
- w5xO5K3MButeSR/Bi7rd3TvR9WX1557i+PpPsbqyQqZFOf05W7ywHGStH8Ias4P7bxgW
- 3GL23KaVsdzLT4eRggl93Fo2SuGOVNtf0uklzbS9vz78P2n34Jc/s5Yy4que/L8kzR12 fw== 
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0b-002e3701.pphosted.com with ESMTP id 377ev23ee1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 11 Mar 2021 15:10:43 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 4AB6653;
-        Thu, 11 Mar 2021 15:10:42 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 20DC748;
-        Thu, 11 Mar 2021 15:10:39 +0000 (UTC)
-From:   Mike Travis <mike.travis@hpe.com>
-To:     Borislav_Petkov_ <bp@alien8.de>,
-        Thomas_Gleixner_ <tglx@linutronix.de>,
-        Ingo_Molnar_ <mingo@redhat.com>,
-        Steve_Wahl_ <steve.wahl@hpe.com>, x86@kernel.org
-Cc:     Georges Aureau <georges.aureau@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Dimitri_Sivanich_ <dimitri.sivanich@hpe.com>,
-        Russ_Anderson_ <russ.anderson@hpe.com>,
-        Darren_Hart_ <dvhart@infradead.org>,
-        Andy_Shevchenko_ <andy@infradead.org>,
-        "H._Peter_Anvin_" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/platform/uv: Add more to secondary cpu kdump info
-Date:   Thu, 11 Mar 2021 09:10:28 -0600
-Message-Id: <20210311151028.82678-1-mike.travis@hpe.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 11 Mar 2021 12:49:01 -0500
+Received: from [100.112.134.46] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.us-west-2.aws.symcld.net id A3/71-28581-C085A406; Thu, 11 Mar 2021 17:49:00 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRWlGSWpSXmKPExsWS8eIhjy53hFe
+  CwZbJVhZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaM7bPOMxW8
+  Uau40hPfwLhUvouRk0NI4D+jxJINUV2MXED2a0aJaXevMIIk2AS0JbZs+cXWxcjBISIgI/Fhr
+  SdImFkgWqL57RVWEFtYIEhi+65mJhCbRUBVYvGdLjYQm1fASuLug6ssILaEgLzE/9ZTYPWcQD
+  Vnuh6zQOxVkbj/YAlUvaDEyZlPWCDmy0s0b53NDGFLSBx88YIZ5ASQOffmCUCMTJDo+feIbQK
+  jwCwk3bOQdM9C0r2AkXkVo3lSUWZ6RkluYmaOrqGBga6hoZGuobGRrpmxXmKVbpJeabFueWpx
+  ia6RXmJ5sV5xZW5yTopeXmrJJkZgaKcUtNjvYJzx5oPeIUZJDiYlUd4MPq8EIb6k/JTKjMTij
+  Pii0pzU4kOMMhwcShK8X0KBcoJFqempFWmZOcA4g0lLcPAoifAWgqR5iwsSc4sz0yFSpxgVpc
+  R5n4MkBEASGaV5cG2w2L7EKCslzMvIwMAgxFOQWpSbWYIq/4pRnINRSZh3H8gUnsy8Erjpr4A
+  WMwEt9lIFW1ySiJCSamAqEnywUWvW/NXMKyY9mGTDeaD79G17/y/vtqrzSq9cc16TV2nn/HeT
+  tk9MEHf+9cim+lvB1O8eTdbz65aF9R0r9Pt+5eS2lhDLs1ua7uSX21nrRdyVme1yVCNU2V4yb
+  Jvizl6znsB28wnfOPgSNk6ojmX8dd+368HkSZIqXTtusfgbVrq+j37LJBy7ymV/5YEFLNW7BE
+  4wa6vsU1EQfmekKlK25MeXxvSpMbrX37vK6233ip7EkzLrgNvrSNesPfIJ4ofnXfnFt3eaxzz
+  rLZprtN6FOqWvZVVtLba8WMFeZc/UduGblwZf/y/BC5tOXnp59sLWBJs/UzmeiVqJnbod/U1y
+  tvYT1pl8e35ff3VXiaU4I9FQi7moOBEA9Vv1k2gDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-2.tower-346.messagelabs.com!1615484938!2663!1
+X-Originating-IP: [104.232.225.12]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 20913 invoked from network); 11 Mar 2021 17:48:59 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.12)
+  by server-2.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 11 Mar 2021 17:48:59 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 5675D883C23D56FAE3C4;
+        Thu, 11 Mar 2021 12:48:58 -0500 (EST)
+Received: from localhost.localdomain.com (10.46.59.53) by
+ reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2106.2; Thu, 11 Mar 2021 12:48:56 -0500
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] platform/x86: thinkpad_acpi: check dytc version for lapmode sysfs
+Date:   Thu, 11 Mar 2021 12:48:43 -0500
+Message-ID: <20210311174843.3161-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-11_05:2021-03-10,2021-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxlogscore=999 impostorscore=0 phishscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103110082
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.46.59.53]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Georges Aureau <georges.aureau@hpe.com>
+Lenovo platforms with DYTC versions earlier than version 5 don't set
+the lapmode interface correctly, causing issues with thermald on
+older platforms.
 
-Add call to run_crash_ipi_callback() to gather more info of what the
-secondary cpus were doing to help with failure analysis.
+Add checking to only create the dytc_lapmode interface for version
+5 and later.
 
-Excerpt from Georges:
-'It is only changing where crash secondaries will be stalling after having
-taken care of properly laying down "crash note regs". Please note that
-"crash note regs" are a key piece of data used by crash dump debuggers
-to provide a reliable backtrace of running processors.'
-
-Secondary change pursuant to a5f526ec:
-	change master/slave to main/secondary
-
-Signed-off-by: Georges Aureau <georges.aureau@hpe.com>
-Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 ---
- arch/x86/platform/uv/uv_nmi.c | 39 +++++++++++++++++++++--------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 91 ++++++++++++++++++++--------
+ 1 file changed, 65 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/platform/uv/uv_nmi.c b/arch/x86/platform/uv/uv_nmi.c
-index eafc530c8767..f83810f7bcc2 100644
---- a/arch/x86/platform/uv/uv_nmi.c
-+++ b/arch/x86/platform/uv/uv_nmi.c
-@@ -24,6 +24,7 @@
- #include <asm/kdebug.h>
- #include <asm/local64.h>
- #include <asm/nmi.h>
-+#include <asm/reboot.h>
- #include <asm/traps.h>
- #include <asm/uv/uv.h>
- #include <asm/uv/uv_hub.h>
-@@ -834,34 +835,42 @@ static void uv_nmi_touch_watchdogs(void)
- 	touch_nmi_watchdog();
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index b881044b31b0..f7de90a47e28 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -9845,6 +9845,11 @@ static struct ibm_struct lcdshadow_driver_data = {
+  * Thinkpad sensor interfaces
+  */
+ 
++#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
++#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
++#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
++#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
++
+ #define DYTC_CMD_GET          2 /* To get current IC function and mode */
+ #define DYTC_GET_LAPMODE_BIT 17 /* Set when in lapmode */
+ 
+@@ -9855,6 +9860,7 @@ static bool has_palmsensor;
+ static bool has_lapsensor;
+ static bool palm_state;
+ static bool lap_state;
++static int dytc_version;
+ 
+ static int dytc_command(int command, int *output)
+ {
+@@ -9869,6 +9875,33 @@ static int dytc_command(int command, int *output)
+ 	return 0;
  }
  
--static atomic_t uv_nmi_kexec_failed;
--
- #if defined(CONFIG_KEXEC_CORE)
--static void uv_nmi_kdump(int cpu, int master, struct pt_regs *regs)
-+static atomic_t uv_nmi_kexec_failed;
-+static void uv_nmi_kdump(int cpu, int main, struct pt_regs *regs)
++static int dytc_get_version(void)
++{
++	int err, output;
++
++	/* Check if we've been called before - and just return cached value */
++	if (dytc_version)
++		return dytc_version;
++
++	/* Otherwise query DYTC and extract version information */
++	err = dytc_command(DYTC_CMD_QUERY, &output);
++	/*
++	 * If support isn't available (ENODEV) then don't return an error
++	 * and don't create the sysfs group
++	 */
++	if (err == -ENODEV)
++		return 0;
++	/* For all other errors we can flag the failure */
++	if (err)
++		return err;
++
++	/* Check DYTC is enabled and supports mode setting */
++	if (output & BIT(DYTC_QUERY_ENABLE_BIT))
++		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
++
++	return 0;
++}
++
+ static int lapsensor_get(bool *present, bool *state)
  {
-+	/* Check if kdump kernel loaded for both main and secondary CPUs */
-+	if (!kexec_crash_image) {
-+		if (main)
-+			pr_err("UV: NMI error: kdump kernel not loaded\n");
-+		return;
-+	}
-+
- 	/* Call crash to dump system state */
--	if (master) {
-+	if (main) {
- 		pr_emerg("UV: NMI executing crash_kexec on CPU%d\n", cpu);
- 		crash_kexec(regs);
- 
--		pr_emerg("UV: crash_kexec unexpectedly returned, ");
-+		pr_emerg("UV: crash_kexec unexpectedly returned\n");
- 		atomic_set(&uv_nmi_kexec_failed, 1);
--		if (!kexec_crash_image) {
--			pr_cont("crash kernel not loaded\n");
--			return;
-+
-+	} else { /* secondary */
-+
-+		/* If kdump kernel fails, secondaries will exit this loop */
-+		while (atomic_read(&uv_nmi_kexec_failed) == 0) {
-+
-+			/* Once shootdown cpus starts, they do not return */
-+			run_crash_ipi_callback(regs);
-+
-+			mdelay(10);
- 		}
--		pr_cont("kexec busy, stalling cpus while waiting\n");
+ 	int output, err;
+@@ -9974,7 +10007,18 @@ static int tpacpi_proxsensor_init(struct ibm_init_struct *iibm)
+ 		if (err)
+ 			return err;
  	}
--
--	/* If crash exec fails the slaves should return, otherwise stall */
--	while (atomic_read(&uv_nmi_kexec_failed) == 0)
--		mdelay(10);
- }
+-	if (has_lapsensor) {
++
++	/* Check if we know the DYTC version, if we don't then get it */
++	if (!dytc_version) {
++		err = dytc_get_version();
++		if (err)
++			return err;
++	}
++	/*
++	 * Platforms before DYTC version 5 claim to have a lap sensor, but it doesn't work, so we
++	 * ignore them
++	 */
++	if (has_lapsensor && (dytc_version >= 5)) {
+ 		err = sysfs_create_file(&tpacpi_pdev->dev.kobj, &dev_attr_dytc_lapmode.attr);
+ 		if (err)
+ 			return err;
+@@ -9999,14 +10043,9 @@ static struct ibm_struct proxsensor_driver_data = {
+  * DYTC Platform Profile interface
+  */
  
- #else /* !CONFIG_KEXEC_CORE */
--static inline void uv_nmi_kdump(int cpu, int master, struct pt_regs *regs)
-+static inline void uv_nmi_kdump(int cpu, int main, struct pt_regs *regs)
- {
--	if (master)
-+	if (main)
- 		pr_err("UV: NMI kdump: KEXEC not supported in this kernel\n");
- 	atomic_set(&uv_nmi_kexec_failed, 1);
+-#define DYTC_CMD_QUERY        0 /* To get DYTC status - enable/revision */
+ #define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
+ #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
+ 
+-#define DYTC_QUERY_ENABLE_BIT 8  /* Bit        8 - 0 = disabled, 1 = enabled */
+-#define DYTC_QUERY_SUBREV_BIT 16 /* Bits 16 - 27 - sub revision */
+-#define DYTC_QUERY_REV_BIT    28 /* Bits 28 - 31 - revision */
+-
+ #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+ #define DYTC_GET_MODE_BIT     12 /* Bits 12-15 - mode setting */
+ 
+@@ -10211,28 +10250,28 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 	if (err)
+ 		return err;
+ 
++	/* Check if we know the DYTC version, if we don't then get it */
++	if (!dytc_version) {
++		err = dytc_get_version();
++		if (err)
++			return err;
++	}
+ 	/* Check DYTC is enabled and supports mode setting */
+-	if (output & BIT(DYTC_QUERY_ENABLE_BIT)) {
+-		/* Only DYTC v5.0 and later has this feature. */
+-		int dytc_version;
+-
+-		dytc_version = (output >> DYTC_QUERY_REV_BIT) & 0xF;
+-		if (dytc_version >= 5) {
+-			dbg_printk(TPACPI_DBG_INIT,
+-				   "DYTC version %d: thermal mode available\n", dytc_version);
+-			/* Create platform_profile structure and register */
+-			err = platform_profile_register(&dytc_profile);
+-			/*
+-			 * If for some reason platform_profiles aren't enabled
+-			 * don't quit terminally.
+-			 */
+-			if (err)
+-				return 0;
++	if (dytc_version >= 5) {
++		dbg_printk(TPACPI_DBG_INIT,
++				"DYTC version %d: thermal mode available\n", dytc_version);
++		/* Create platform_profile structure and register */
++		err = platform_profile_register(&dytc_profile);
++		/*
++		 * If for some reason platform_profiles aren't enabled
++		 * don't quit terminally.
++		 */
++		if (err)
++			return 0;
+ 
+-			dytc_profile_available = true;
+-			/* Ensure initial values are correct */
+-			dytc_profile_refresh();
+-		}
++		dytc_profile_available = true;
++		/* Ensure initial values are correct */
++		dytc_profile_refresh();
+ 	}
+ 	return 0;
  }
 -- 
-2.21.0
+2.29.2
 
