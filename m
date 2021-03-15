@@ -2,87 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A427C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Mar 2021 16:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B30E8C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Mar 2021 16:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 517BD64EE7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Mar 2021 16:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7903E64F00
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 15 Mar 2021 16:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232286AbhCOQEu (ORCPT
+        id S230401AbhCOQJi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 15 Mar 2021 12:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44852 "EHLO mail.kernel.org"
+        Mon, 15 Mar 2021 12:09:38 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:49021 "EHLO gecko.sbs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234646AbhCOQEk (ORCPT
+        id S229831AbhCOQJV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 15 Mar 2021 12:04:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5044C64EEC
-        for <platform-driver-x86@vger.kernel.org>; Mon, 15 Mar 2021 16:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615824280;
-        bh=w9XnGjj6hdoETstIpPylpw9MCgOSm1sbx+09crjNvxg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=VwmGFmJMyrP2LYiHFAqObSw6O35/6qEcu248yDImQWERmIQumMVU8klOY9tCyR1WD
-         lWKk3bQVSyTrHWZNt11IvyhW4MdMEfsKp03W0DaD4KxBi6k/UtnugC1LrPqkBh9krm
-         QKOxUT/jeKdCi5YG7B/N8nXGlKirmKRY9fRqcI3P/Bne8vEvRevGChJiWFce7FnR+e
-         bKlp1bYS+prCUTOuXvEqUy2/QlDQaezY5bx8SkOkSPpsEGBiZ0bRGdN4e99Sm03DcA
-         P/0xY+N0Pyvg/CPawZNsC9xxGaLfb7ng79+KoUGdD1hY4yYTuOgamo9/khn9ErVifi
-         lcjWe9EtGEUpw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 211977] System fails to resume the second time with 5.10.17,
- resumes fine with 5.10.13
-Date:   Mon, 15 Mar 2021 16:04:39 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: aros@gmx.com
-X-Bugzilla-Status: REOPENED
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status resolution
-Message-ID: <bug-211977-215701-GUdjcHUyRp@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-211977-215701@https.bugzilla.kernel.org/>
-References: <bug-211977-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 15 Mar 2021 12:09:21 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 12FG8s4Q018596
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Mar 2021 17:08:54 +0100
+Received: from md1za8fc.ad001.siemens.net ([139.22.41.172])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 12FG8sXg007739;
+        Mon, 15 Mar 2021 17:08:54 +0100
+Date:   Mon, 15 Mar 2021 17:08:52 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/4] add device drivers for Siemens Industrial PCs
+Message-ID: <20210315170852.578f557f@md1za8fc.ad001.siemens.net>
+In-Reply-To: <CAHp75Vfu1PoN6bH4ew99Ct9JS=d9KSXtM0EXV_T7VF211TW-Yg@mail.gmail.com>
+References: <20210315095710.7140-1-henning.schild@siemens.com>
+        <CAHp75Vfu1PoN6bH4ew99Ct9JS=d9KSXtM0EXV_T7VF211TW-Yg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D211977
+Am Mon, 15 Mar 2021 12:55:13 +0200
+schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
 
-Artem S. Tashkinov (aros@gmx.com) changed:
+> On Mon, Mar 15, 2021 at 12:12 PM Henning Schild
+> <henning.schild@siemens.com> wrote:
+> >
+> > changes since v1:
+> >
+> > - fixed lots of style issues found in v1
+> >   - (debug) printing
+> >   - header ordering
+> > - fixed license issues GPLv2 and SPDX in all files
+> > - module_platform_driver instead of __init __exit
+> > - wdt simplifications cleanup
+> > - lots of fixes in wdt driver, all that was found in v1
+> > - fixed dmi length in dmi helper
+> > - changed LED names to allowed ones
+> > - move led driver to simple/
+> > - switched pmc_atom to dmi callback with global variable
+> >
+> > --
+> >
+> > This series adds support for watchdogs and leds of several x86
+> > devices from Siemens.
+> >
+> > It is structured with a platform driver that mainly does
+> > identification of the machines. It might trigger loading of the
+> > actual device drivers by attaching devices to the platform bus.
+> >
+> > The identification is vendor specific, parsing a special binary DMI
+> > entry. The implementation of that platform identification is
+> > applied on pmc_atom clock quirks in the final patch.
+> >
+> > It is all structured in a way that we can easily add more devices
+> > and more platform drivers later. Internally we have some more code
+> > for hardware monitoring, more leds, watchdogs etc. This will follow
+> > some day.  
+> 
+> Thanks for an update!
+> 
+> I did review more thoughtfully the series and realized that you can
+> avoid that P2SB thingy and may the approach be much cleaner if you
+> register the real GPIO driver and convert your LEDs to be a GPIO LEDs.
+> Then you won't need any custom code for it (except some board file, or
+> what would be better to file _DSD in your ACPI tables.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|RESOLVED                    |REOPENED
-         Resolution|CODE_FIX                    |---
+Thanks Andy. I will need to read through your comments and existing
+code. Are you saying there already is a GPIO driver that i should
+rather hook into ... given there is and will not be WDAT any time soon?
+Can you please point it out to me, the driver and maybe an example.
 
---- Comment #2 from Artem S. Tashkinov (aros@gmx.com) ---
-No, it's not fixed or maybe 5.10.23 has regressed again.
+If you are suggesting to write a generic GPIO driver, i would probably
+say that this can hopefully wait until we have a second user and need
+that level of abstraction.
 
-Anyways with 5.10.17 I could suspend and resume for over a week, around 20
-times, and with 5.10.19 and later the system dies on resume after two or th=
-ree
-resumes.
+regards,
+Henning
 
---=20
-You may reply to this email to add a comment.
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
