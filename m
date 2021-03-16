@@ -2,297 +2,103 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459EC433E9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Mar 2021 09:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E509CC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Mar 2021 22:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D258165017
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Mar 2021 09:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D6464E3F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 16 Mar 2021 22:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234531AbhCPJnq (ORCPT
+        id S230201AbhCPWSO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 16 Mar 2021 05:43:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57218 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234737AbhCPJnU (ORCPT
+        Tue, 16 Mar 2021 18:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229602AbhCPWRw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 16 Mar 2021 05:43:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615887800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bQIOSEk5BjrSRm1laXXj6IwKnY3/TWDw4P4sj8DiKt4=;
-        b=ijpk2Ib48FcANiZOR3zumPV6DyPCi8i+kgrYX6jzAwJZ/ts7g60HCm+V2sggOQ7T5YcQWd
-        N4Bc7HnB8CeOKWEbbMwmEvhMLK3DR36l7z+o3QWSc/bg8KQY52J2PMrnlvBQcIRizHgiSi
-        wwNRWwQpTlsVBLIrCbCnqR4fc+MtROs=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-uBUqFAsWNjKG30UOdHLnEg-1; Tue, 16 Mar 2021 05:43:18 -0400
-X-MC-Unique: uBUqFAsWNjKG30UOdHLnEg-1
-Received: by mail-ej1-f69.google.com with SMTP id k16so13310414ejg.9
-        for <platform-driver-x86@vger.kernel.org>; Tue, 16 Mar 2021 02:43:18 -0700 (PDT)
+        Tue, 16 Mar 2021 18:17:52 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E75C06174A;
+        Tue, 16 Mar 2021 15:17:51 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id e9so8233670wrw.10;
+        Tue, 16 Mar 2021 15:17:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kRA0HCbEjT4GZQCeNIs3PSJKICgvU616s1ESCC3pTK0=;
+        b=NJaUaSprJa36hY/KVAoa+aRlI3mTw2pTEgLdQrvubH4tFieFibPRmLK8HlMfV7EyoB
+         F4L8wblPUyyPpDJuioJUVCzgDAfNXqO0Guhdr1n6U3wowU8ifVbyM1/uKLySO3KyZPvk
+         6qYqMv/ykaogHeItXU/N8Hp6Cb7JmWp8p3jyfxYSR2gUg49UFIYpQfo3ibEbRrG2+V0W
+         cPowHEOno7Coa6TPyrlnCSoEGBXc1HLMb1fox7u8AyR3amKtrvfXKJ38Q0EEI4QXxnzw
+         XBdU5+Hnnw5lk3OJsecQ0ptD4+HNNDufwn/Xk6HVa195cVepsQqVUEUIVclo53cCqsL4
+         AM1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=bQIOSEk5BjrSRm1laXXj6IwKnY3/TWDw4P4sj8DiKt4=;
-        b=WCOoIXpeHVCMr/OqNddrbpBkG8rBKqxEoSALjWAidGKZNNiE9LUcQdS+hjis7gQbAV
-         IaS07CvKq1hurXyFmnz3snCt7B9GiWHEheHVvZqwEgw+G8CjhkrS3kugyZfVPcqKR7A8
-         vIesjbxrYdFDmamp8+Oa9RT4BymU+ok5RTaxNm2cyGlTm+3vje+jkopxjYC3qFDv2gwE
-         dyxCCiGoYyiiKAN6zSmHMz0I6LU0U5JVZNQgvnyHALzfsYUIKIRCJIrr6phzL3G9j5Cr
-         AH61q76cLLtGkoMinfO+GURdTFaxaWl54SxicetKM6FSKPrzYpHeHdjVuHh4eYxyB/Cx
-         xLvQ==
-X-Gm-Message-State: AOAM5333PKbmAlCZBh2tL+3bv/F0BOKuhfl4Hxm/nxxeJAQkYfbmGctc
-        FhrooCNSETG4cJJKeuziIAVGbqWthP5ZurThLiA90Mc4bEdpW8PCseu8F5AuANoodQrjNoqmmT3
-        3/fvabrSiEcLZCxNMYB0MmlArajhDHjOxpg==
-X-Received: by 2002:a17:906:78d:: with SMTP id l13mr27734344ejc.97.1615887797299;
-        Tue, 16 Mar 2021 02:43:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy2VbTg9Bkoq3u6rCT48R/wuXJcfOSgwAd7SVDhw1O0S63eru4u6ACw4WJ2U5nlYsqUO6O+vA==
-X-Received: by 2002:a17:906:78d:: with SMTP id l13mr27734327ejc.97.1615887797094;
-        Tue, 16 Mar 2021 02:43:17 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id e18sm8947663eji.111.2021.03.16.02.43.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Mar 2021 02:43:16 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: pmc_atom: use callback for all dmi quirk
- entries
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        bh=kRA0HCbEjT4GZQCeNIs3PSJKICgvU616s1ESCC3pTK0=;
+        b=tWJTyHQAywJQNl6e7t4PkWN9rrPtHe/4qC0sLFMOIxd+rLRNLjNSSpH9heTRYveHBW
+         18U/4GKqf5zgO/dX1Tpz5o4XQma4VBNpqZPXE0wugPqfeMNipgZp8cC4oLZAnr5u0W9K
+         T32PPr450L4ZJpIQVkZjZirmc4FPwuQBacEdJIWTmlGfJNM4VsZq+E7kP8KrtoVXSta8
+         OVJSnbZEG4HYK4Aw/54GyL55G6enUafaSh589cto8dqDayleiVjtVfK2/MGUqNtIxNkA
+         bLgGFVhd7KyE4QzexENkTI4C8o1/Oo54yN/sOVshWMIy38YnZ6K7hr0ualIbfswd/KKg
+         K14Q==
+X-Gm-Message-State: AOAM532oIugp0V0bMxMwWrCG40Qkc63eJSyfxN6VfQcSgmqH2NL7KHeu
+        gT0nLACmoWkEUWCRKbQnjlI=
+X-Google-Smtp-Source: ABdhPJzOp+ns2T7fZHW0zHZoOIrO5Dx7kB274pAizU3zKUV8TfAPTr9nvT+Xanapt/lbpE21QS/vVg==
+X-Received: by 2002:a5d:4686:: with SMTP id u6mr1168656wrq.60.1615933070114;
+        Tue, 16 Mar 2021 15:17:50 -0700 (PDT)
+Received: from luca020400-laptop-arch.lan ([2001:b07:5d33:19f:ea1f:2342:ea78:219a])
+        by smtp.googlemail.com with ESMTPSA id 1sm1151960wmj.0.2021.03.16.15.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Mar 2021 15:17:49 -0700 (PDT)
+From:   Luca Stefani <luca.stefani.ge1@gmail.com>
+Cc:     chiu@endlessm.com, Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <ef5fe493-285d-145c-8d05-7f9bd0cb47c5@redhat.com>
- <20210315145855.17174-1-henning.schild@siemens.com>
- <8577f3a8-c5e4-3752-1bc1-5937ee164217@redhat.com>
- <20210315180011.6a3f60b0@md1za8fc.ad001.siemens.net>
- <43841119-4839-09d2-b606-7dd40cad4b89@redhat.com>
- <20210316064743.0b5a47cf@md1za8fc.ad001.siemens.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8c416d06-4190-2d1b-3969-209c4291d73b@redhat.com>
-Date:   Tue, 16 Mar 2021 10:43:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] platform/x86: asus-wmi: Disable fn-lock mode by default
+Date:   Tue, 16 Mar 2021 23:17:47 +0100
+Message-Id: <20210316221747.90829-1-luca.stefani.ge1@gmail.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-In-Reply-To: <20210316064743.0b5a47cf@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Henning,
+* On recent ZenBooks the fn-lock is disabled
+  by default on boot while running Windows.
 
-On 3/16/21 6:47 AM, Henning Schild wrote:
-> Hoi Hans,
-> 
-> on a slighly different but also related topic. Did you ever come across
-> SMSC SCH5347? Seems to be pretty similar to 56xx, only with spec non
-> public ... and probably less often in use
-> Maybe you happen to have code, or know the differences. We already have
-> it working with a modified copy of sch56xx but that is still rough and
-> i thought i ask before we potentially duplicate work.
+* Follow the same paradigm also here.
 
-The history of FSC (Fujitsu-Siemens Computers) sensor support goes something
-like this:
+Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+---
+ drivers/platform/x86/asus-wmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-1. The university which I worked at had picked a FSC machine for the
-replacement of all workstations, the FSCXXX sensor chip it had was i2c based,
-so I could relatively easy reverse-engineer it and wrote a driver.
-
-2. Around the time I stopped working for the university and started working
-for Red Hat (2008) FSC contacted me and asked me if I wanted to help them
-with officially supporting the FSC and later the SCH devices. They provided
-test hardware and documentation at this time.
-
-3. This continued for a while when FSC became just "Fujitsu" and things
-moved from the FSC i2c based chips to the super-io based SCH chips. After
-a while Fujitsu stopped contacting me about new chips and I stopped working
-on this.
-
-So ATM I'm not working no SCH56xx support and I've not worked on that for
-quite some time now. So it is good to hear that you will be contributing
-SCH5347 support to the kernel.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-> Am Mon, 15 Mar 2021 19:01:13 +0100
-> schrieb Hans de Goede <hdegoede@redhat.com>:
-> 
->> Hi,
->>
->> On 3/15/21 6:00 PM, Henning Schild wrote:
->>> Am Mon, 15 Mar 2021 17:31:49 +0100
->>> schrieb Hans de Goede <hdegoede@redhat.com>:
->>>   
->>>> Hi,
->>>>
->>>> On 3/15/21 3:58 PM, Henning Schild wrote:  
->>>>> Introduce a global variable to remember the matching entry for
->>>>> later printing. Also having a callback allows to stop matching
->>>>> after the first hit.
->>>>>
->>>>> Signed-off-by: Henning Schild <henning.schild@siemens.com>
->>>>> ---
->>>>>  drivers/platform/x86/pmc_atom.c | 26 ++++++++++++++++++++------
->>>>>  1 file changed, 20 insertions(+), 6 deletions(-)
->>>>>
->>>>> diff --git a/drivers/platform/x86/pmc_atom.c
->>>>> b/drivers/platform/x86/pmc_atom.c index 38542d547f29..d0f74856cd8b
->>>>> 100644 --- a/drivers/platform/x86/pmc_atom.c
->>>>> +++ b/drivers/platform/x86/pmc_atom.c
->>>>> @@ -364,8 +364,16 @@ static void pmc_dbgfs_register(struct pmc_dev
->>>>> *pmc) #endif /* CONFIG_DEBUG_FS */
->>>>>  
->>>>>  static bool pmc_clk_is_critical = true;
->>>>> +static const struct dmi_system_id *dmi_critical;
->>>>>  
->>>>> -static int siemens_clk_is_critical(const struct dmi_system_id *d)
->>>>> +static int dmi_callback(const struct dmi_system_id *d)
->>>>> +{
->>>>> +	dmi_critical = d;    
->>>>
->>>> Don't introduce a global variable for this please. Instead just
->>>> directly print the ident of the matching dmi_system_id here.  
->>>
->>> Sorry, missed that part. Result looks nice and clean, thanks. I
->>> think i will squash it into 4/4 in v3 and not follow up here for
->>> now.  
->>
->> Ack, that sounds good to me.
->>
->> Regards,
->>
->> Hans
->>
->>
->>>>> +
->>>>> +	return 1;
->>>>> +}
->>>>> +
->>>>> +static int dmi_callback_siemens(const struct dmi_system_id *d)
->>>>>  {
->>>>>  	u32 st_id;
->>>>>  
->>>>> @@ -373,7 +381,7 @@ static int siemens_clk_is_critical(const
->>>>> struct dmi_system_id *d) goto out;
->>>>>  
->>>>>  	if (st_id == SIMATIC_IPC_IPC227E || st_id ==
->>>>> SIMATIC_IPC_IPC277E)
->>>>> -		return 1;
->>>>> +		return dmi_callback(d);
->>>>>  
->>>>>  out:
->>>>>  	pmc_clk_is_critical = false;
->>>>> @@ -388,6 +396,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk0 is used for an external HSIC USB
->>>>> HUB */ .ident = "MPL CEC1x",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "MPL AG"),
->>>>>  			DMI_MATCH(DMI_PRODUCT_NAME, "CEC10
->>>>> Family"), @@ -396,6 +405,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk0 - 3 are used for the 4 ethernet
->>>>> controllers */ .ident = "Lex 3I380D",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Lex
->>>>> BayTrail"), DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
->>>>> @@ -404,6 +414,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk* - are used for ethernet
->>>>> controllers */ .ident = "Lex 2I385SW",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Lex
->>>>> BayTrail"), DMI_MATCH(DMI_PRODUCT_NAME, "2I385SW"),
->>>>> @@ -412,6 +423,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk* - are used for ethernet
->>>>> controllers */ .ident = "Beckhoff CB3163",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff
->>>>> Automation"), DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
->>>>> @@ -420,6 +432,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk* - are used for ethernet
->>>>> controllers */ .ident = "Beckhoff CB4063",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff
->>>>> Automation"), DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
->>>>> @@ -428,6 +441,7 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk* - are used for ethernet
->>>>> controllers */ .ident = "Beckhoff CB6263",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff
->>>>> Automation"), DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
->>>>> @@ -436,13 +450,14 @@ static const struct dmi_system_id
->>>>> critclk_systems[] = { {
->>>>>  		/* pmc_plt_clk* - are used for ethernet
->>>>> controllers */ .ident = "Beckhoff CB6363",
->>>>> +		.callback = dmi_callback,
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff
->>>>> Automation"), DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
->>>>>  		},
->>>>>  	},
->>>>>  	{
->>>>> -		.callback = siemens_clk_is_critical,
->>>>> +		.callback = dmi_callback_siemens,
->>>>>  		.ident = "SIEMENS AG",
->>>>>  		.matches = {
->>>>>  			DMI_MATCH(DMI_SYS_VENDOR, "SIEMENS AG"),
->>>>> @@ -457,7 +472,6 @@ static int pmc_setup_clks(struct pci_dev
->>>>> *pdev, void __iomem *pmc_regmap, {
->>>>>  	struct platform_device *clkdev;
->>>>>  	struct pmc_clk_data *clk_data;
->>>>> -	const struct dmi_system_id *d;
->>>>>  
->>>>>  	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
->>>>>  	if (!clk_data)
->>>>> @@ -468,8 +482,8 @@ static int pmc_setup_clks(struct pci_dev
->>>>> *pdev, void __iomem *pmc_regmap, if
->>>>> (dmi_check_system(critclk_systems)) { clk_data->critical =
->>>>> pmc_clk_is_critical; if (clk_data->critical) {
->>>>> -			d = dmi_first_match(critclk_systems);
->>>>> -			pr_info("%s critclks quirk enabled\n",
->>>>> d->ident);
->>>>> +			pr_info("%s critclks quirk enabled\n",
->>>>> +				dmi_critical->ident);
->>>>>  		}
->>>>>  	}
->>>>>  
->>>>>     
->>>>  
->>>   
->>
-> 
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 9ca15f724343..32319f7d6e17 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -2673,7 +2673,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 		err = asus_wmi_set_devstate(ASUS_WMI_DEVID_BACKLIGHT, 2, NULL);
+ 
+ 	if (asus_wmi_has_fnlock_key(asus)) {
+-		asus->fnlock_locked = true;
++		asus->fnlock_locked = false;
+ 		asus_wmi_fnlock_update(asus);
+ 	}
+ 
+-- 
+2.31.0
 
