@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED78C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B7EC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4960D64F70
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A3A64F67
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231644AbhCQOBu (ORCPT
+        id S231450AbhCQOEd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 10:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48970 "EHLO
+        Wed, 17 Mar 2021 10:04:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231450AbhCQOBT (ORCPT
+        with ESMTP id S231801AbhCQOEM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 10:01:19 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5B1FC06174A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:01:18 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id u10so3288373lju.7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:01:18 -0700 (PDT)
+        Wed, 17 Mar 2021 10:04:12 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FEEC06175F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:04:11 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id u4so3307416ljo.6
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=to:cc:from:subject:message-id:date:user-agent:mime-version
          :content-language:content-transfer-encoding;
-        bh=TU/XiH4G/Qe9yC5cuJLRt7/aTlv2y//0HTH/F4MsWZs=;
-        b=Ca35Jv0WooEP8L7vG0EbdzaUel8ZgdhYIYvn/sDrxD1FWZtW8nZ8x2P+9TyOdpbtnm
-         NVya4vkm1VpWrm4pE/PbHYhdArMVTI7nngx6RN+sRrbb/9ziLZKM7zp+I9bq+5dguFZ5
-         17EaRI6xbRLAFaYBT/Tv60lDFNL/Gt97OgMhVtCYOJVMR2CyHl0hwLmukxpLlYTZ+ePD
-         erXZE3HdkWmmoNYivMm/BhznhKOqe/KLLck2QUdyxANTw5ReD6D5B3oITifrZgyzrRld
-         nsaNFrgZADZ5i3AOzXVfSYzKsIjNo5qwPRaxc2rpnl2M7Ur59AE7W0lyNFQM0A8KObOF
-         qQEw==
+        bh=KuGkTYBsx2xZQcvlbwACYZJD5cGL+onUZBf1otk12wE=;
+        b=YQHvGb0mDQ48yoj/cZDsOk+/AbASjNN9hsK9h7XDdZ96TbquImooScdtsMvcSRaXXF
+         uVAlWQlwlzAfk99obtf3wz+HWQaiThSkmjSGScWtr3KkgL1dGURJxe0BZj/qPZ7BH7Kt
+         rJ7XfyzbSJx7L4SEpqyWrGTKQvp8KnnttvAz1LW9NWovbVERuepVj5gXQL2hjc3pV5BS
+         ouHR8ALBjYnNXirPkvGL5Ahe8mnSGB89fPUrYl6aW1CxH6f5kVZLF6pOFu4V0QMENbHZ
+         LrF7E1qKbATQER1VkDVfw/M2aYN1+xYRVh1wQrdHQM3lZO6Wv8EQR6FSH5xDYpCsEdRn
+         5h9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
          :mime-version:content-language:content-transfer-encoding;
-        bh=TU/XiH4G/Qe9yC5cuJLRt7/aTlv2y//0HTH/F4MsWZs=;
-        b=RZguWblTJ1jVgABqb4cxOiMcb+rsNaPZiseodGd0Njy/Z6ZdnMVxTt4bo5HgfuLSMF
-         oZIT2pf/IsE4Df1f0zpLYm+RkztuLu3U9PAnA44N8k/pfNwyBt8p3bsUVXPFna9/PsIi
-         8Ac2fYTnnvtvFHkuWkBNULXyBLbsq7JMrJ6D0IxYs/IRV4HHk/FGeKKqtlukyuyGfsuI
-         KseoBdIxEhVoMVYm2TLgard+vO+ulNboqWgS7k5+TQRw/h4m6/8rt3TpuPj4f60s1+FL
-         4avpucdk7m73Wn8E6cfsuGHpNgXD4GeCf5y4BxsaR86Cf1eUpXivECJ6Zy9+ew0R5H0Y
-         IPfA==
-X-Gm-Message-State: AOAM531e2Gys+Y/G486XYDZzge5hMPeVhNZE+2jSEguQjEJ5bPlMLul+
-        /a5igwxYMBY96Z1t5/Q95cA=
-X-Google-Smtp-Source: ABdhPJzUPpom+QzLvcQxYCfZ1cU19v3ZjedeANWcuzOEsrBEKoLyCxW5wlXENzclYKdqHAdb30sQIw==
-X-Received: by 2002:a2e:9949:: with SMTP id r9mr2587179ljj.428.1615989672318;
-        Wed, 17 Mar 2021 07:01:12 -0700 (PDT)
+        bh=KuGkTYBsx2xZQcvlbwACYZJD5cGL+onUZBf1otk12wE=;
+        b=TWIE4xov36bWZcwIGaqKCj00rBwVQSSGC7N8YbLsi9q8XSjIwZygRJ7TUU65eUBLCm
+         xbsVvERiG2U0bVpCYd3agjzlwPHcqH3SwcADIpXA6dvk6C2CRAhdnnJlgYgYoDh2Z1EA
+         xPWUh16yMFUa1qPRlwlnFbTBU56zUNk7xOncKV8tbFc/II2aKlcHc/3TpGIecX9pfGjs
+         kQho+GVmTMdrynUeNHXdn4lNbzRSEHIG3budvyuCJbZIs5DEa/1RF72gL8sh2QHQ0zQ5
+         uDeREhcGwgPWhOhnKMILKzneEP9dmRD8vqruUN/3br1soc3PWX0qCpFnxaYA0ao12Ob+
+         YbSA==
+X-Gm-Message-State: AOAM531nzV8Do1IjHFEbCy34CxEdtBzUp4ALA0WIiri2hIcZmyJpaWeB
+        AZUgRQaY7LF9vEQgyAH1LLFNSu1Csf8=
+X-Google-Smtp-Source: ABdhPJwl8viYKSC6cz7Tc5JR3XkXUIenXD4fvNfhnieHadw4a6iBobUts18Iy7D3H9AL/KzoZee0NQ==
+X-Received: by 2002:a2e:7c17:: with SMTP id x23mr2533963ljc.65.1615989850309;
+        Wed, 17 Mar 2021 07:04:10 -0700 (PDT)
 Received: from [130.238.51.50] (emp-51-50.eduroam.uu.se. [130.238.51.50])
-        by smtp.gmail.com with ESMTPSA id 200sm3428824lfl.2.2021.03.17.07.01.11
+        by smtp.gmail.com with ESMTPSA id k5sm3545151ljb.78.2021.03.17.07.04.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Mar 2021 07:01:11 -0700 (PDT)
+        Wed, 17 Mar 2021 07:04:09 -0700 (PDT)
 To:     platform-driver-x86@vger.kernel.org
 Cc:     jwrdegoede@fedoraproject.org, smclt30p@gmail.com, linrunner@gmx.net
 From:   Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>
-Subject: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
-Message-ID: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com>
-Date:   Wed, 17 Mar 2021 15:01:10 +0100
+Subject: [PATCH 2/3] thinkpad_acpi: add support for inhibit_charge
+Message-ID: <d2808930-5840-6ffb-3a59-d235cdb1fe16@gmail.com>
+Date:   Wed, 17 Mar 2021 15:04:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Firefox/78.0 Thunderbird/78.8.0
 MIME-Version: 1.0
@@ -74,169 +74,183 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Lenovo ThinkPad systems have a feature that lets you
-force the battery to discharge when AC is attached.
+Lenovo ThinkPad systems support to hold battery charging
+via a manual override called Inhibit Charge.
 
 This patch implements that feature and exposes it via the generic
 ACPI battery driver in the generic location:
 
-/sys/class/power_supply/BATx/force_discharge
+/sys/class/power_supply/BATx/inhibit_charge
 
 Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
 Signed-off-by: Thomas Koch <linrunner@gmx.net>
 Signed-off-by: Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 59 ++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 4 deletions(-)
+ drivers/platform/x86/thinkpad_acpi.c | 68 ++++++++++++++++++++++++++--
+ 1 file changed, 63 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 9c4df41687a3..6c7dca3a10d2 100644
+index 6c7dca3a10d2..a13feb1d7313 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -9317,6 +9317,8 @@ static struct ibm_struct mute_led_driver_data = {
- #define SET_START	"BCCS"
- #define GET_STOP	"BCSG"
+@@ -9319,6 +9319,8 @@ static struct ibm_struct mute_led_driver_data = {
  #define SET_STOP	"BCSS"
-+#define GET_DISCHARGE	"BDSG"
-+#define SET_DISCHARGE	"BDSS"
+ #define GET_DISCHARGE	"BDSG"
+ #define SET_DISCHARGE	"BDSS"
++#define GET_INHIBIT	"PSSG"
++#define SET_INHIBIT	"BICS"
  
  enum {
  	BAT_ANY = 0,
-@@ -9333,6 +9335,7 @@ enum {
+@@ -9335,7 +9337,8 @@ enum {
  	/* This is used in the get/set helpers */
  	THRESHOLD_START,
  	THRESHOLD_STOP,
-+	FORCE_DISCHARGE
+-	FORCE_DISCHARGE
++	FORCE_DISCHARGE,
++	INHIBIT_CHARGE
  };
  
  struct tpacpi_battery_data {
-@@ -9340,6 +9343,7 @@ struct tpacpi_battery_data {
- 	int start_support;
+@@ -9344,6 +9347,7 @@ struct tpacpi_battery_data {
  	int charge_stop;
  	int stop_support;
-+	int discharge_support;
+ 	int discharge_support;
++	int inhibit_support;
  };
  
  struct tpacpi_battery_driver_data {
-@@ -9397,6 +9401,12 @@ static int tpacpi_battery_get(int what, int battery, int *ret)
- 		if (*ret == 0)
- 			*ret = 100;
+@@ -9407,6 +9411,13 @@ static int tpacpi_battery_get(int what, int battery, int *ret)
+ 		/* The force discharge status is in bit 0 */
+ 		*ret = *ret & 0x01;
  		return 0;
-+	case FORCE_DISCHARGE:
-+		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_DISCHARGE, ret, battery))
++	case INHIBIT_CHARGE:
++		/* This is actually reading peak shift state, like tpacpi-bat does */
++		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, ret, battery))
 +			return -ENODEV;
-+		/* The force discharge status is in bit 0 */
++		/* The inhibit charge status is in bit 0 */
 +		*ret = *ret & 0x01;
 +		return 0;
  	default:
  		pr_crit("wrong parameter: %d", what);
  		return -EINVAL;
-@@ -9425,6 +9435,16 @@ static int tpacpi_battery_set(int what, int battery, int value)
+@@ -9445,6 +9456,22 @@ static int tpacpi_battery_set(int what, int battery, int value)
  			return -ENODEV;
  		}
  		return 0;
-+	case FORCE_DISCHARGE:
-+		/* Force discharge is in bit 0,
-+		 * break on AC attach is in bit 1 (won't work on some ThinkPads),
-+		 * battery ID is in bits 8-9, 2 bits.
++	case INHIBIT_CHARGE:
++		/* When setting inhibit charge, we set a default value of
++		 * always breaking on AC detach and the effective time is set to
++		 * be permanent.
++		 * The battery ID is in bits 4-5, 2 bits,
++		 * the effective time is in bits 8-23, 2 bytes.
++		 * A time of FFFF indicates forever.
 +		 */
-+		if ACPI_FAILURE(tpacpi_battery_acpi_eval(SET_DISCHARGE, &ret, param)) {
-+			pr_err("failed to set force dischrage on %d", battery);
++		param = value;
++		param |= battery << 4;
++		param |= 0xFFFF << 8;
++		if ACPI_FAILURE(tpacpi_battery_acpi_eval(SET_INHIBIT, &ret, param)) {
++			pr_err("failed to set inhibit charge on %d", battery);
 +			return -ENODEV;
 +		}
 +		return 0;
  	default:
  		pr_crit("wrong parameter: %d", what);
  		return -EINVAL;
-@@ -9443,6 +9463,8 @@ static int tpacpi_battery_probe(int battery)
- 	 * 2) Check for support
- 	 * 3) Get the current stop threshold
+@@ -9465,6 +9492,8 @@ static int tpacpi_battery_probe(int battery)
  	 * 4) Check for support
-+	 * 5) Get the current force discharge status
-+	 * 6) Check for support
+ 	 * 5) Get the current force discharge status
+ 	 * 6) Check for support
++	 * 7) Get the current inhibit charge status
++	 * 8) Check for support
  	 */
  	if (acpi_has_method(hkey_handle, GET_START)) {
  		if ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_START, &ret, battery)) {
-@@ -9479,11 +9501,16 @@ static int tpacpi_battery_probe(int battery)
- 			return -ENODEV;
- 		}
- 	}
--	pr_info("battery %d registered (start %d, stop %d)",
-+	if (acpi_has_method(hkey_handle, GET_DISCHARGE))
-+		if (!ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_DISCHARGE, &ret, battery)))
-+			/* Support is marked in bit 8 */
-+			battery_info.batteries[battery].discharge_support = ret & BIT(8);
-+
-+	pr_info("battery %d registered (start %d, stop %d, force: %d)",
+@@ -9505,12 +9534,17 @@ static int tpacpi_battery_probe(int battery)
+ 		if (!ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_DISCHARGE, &ret, battery)))
+ 			/* Support is marked in bit 8 */
+ 			battery_info.batteries[battery].discharge_support = ret & BIT(8);
++	if (acpi_has_method(hkey_handle, GET_INHIBIT))
++		if (!ACPI_FAILURE(tpacpi_battery_acpi_eval(GET_INHIBIT, &ret, battery)))
++			/* Support is marked in bit 5 */
++			battery_info.batteries[battery].inhibit_support = ret & BIT(5);
+ 
+-	pr_info("battery %d registered (start %d, stop %d, force: %d)",
++	pr_info("battery %d registered (start %d, stop %d, force: %d, inhibit: %d)",
  			battery,
  			battery_info.batteries[battery].charge_start,
--			battery_info.batteries[battery].charge_stop);
--
-+			battery_info.batteries[battery].charge_stop,
-+			battery_info.batteries[battery].discharge_support);
+ 			battery_info.batteries[battery].charge_stop,
+-			battery_info.batteries[battery].discharge_support);
++			battery_info.batteries[battery].discharge_support,
++			battery_info.batteries[battery].inhibit_support);
  	return 0;
  }
  
-@@ -9569,6 +9596,15 @@ static ssize_t tpacpi_battery_store(int what,
- 		if (tpacpi_battery_set(THRESHOLD_STOP, battery, value))
- 			return -EINVAL;
+@@ -9576,7 +9610,6 @@ static ssize_t tpacpi_battery_store(int what,
+ 			return -ENODEV;
+ 		battery_info.batteries[battery].charge_start = value;
  		return count;
-+	case FORCE_DISCHARGE:
-+		if (!battery_info.batteries[battery].discharge_support)
+-
+ 	case THRESHOLD_STOP:
+ 		if (!battery_info.batteries[battery].stop_support)
+ 			return -ENODEV;
+@@ -9605,6 +9638,15 @@ static ssize_t tpacpi_battery_store(int what,
+ 		if (tpacpi_battery_set(FORCE_DISCHARGE, battery, value))
+ 			return -ENODEV;
+ 		return count;
++	case INHIBIT_CHARGE:
++		if (!battery_info.batteries[battery].inhibit_support)
 +			return -ENODEV;
 +		/* The only valid values are 1 and 0 */
 +		if (value != 0 && value != 1)
 +			return -EINVAL;
-+		if (tpacpi_battery_set(FORCE_DISCHARGE, battery, value))
++		if (tpacpi_battery_set(INHIBIT_CHARGE, battery, value))
 +			return -ENODEV;
 +		return count;
  	default:
  		pr_crit("Wrong parameter: %d", what);
  		return -EINVAL;
-@@ -9617,6 +9653,13 @@ static ssize_t charge_control_end_threshold_show(struct device *device,
- 	return tpacpi_battery_show(THRESHOLD_STOP, device, buf);
+@@ -9660,6 +9702,13 @@ static ssize_t force_discharge_show(struct device *device,
+ 	return tpacpi_battery_show(FORCE_DISCHARGE, device, buf);
  }
  
-+static ssize_t force_discharge_show(struct device *device,
++static ssize_t inhibit_charge_show(struct device *device,
 +				struct device_attribute *attr,
 +				char *buf)
 +{
-+	return tpacpi_battery_show(FORCE_DISCHARGE, device, buf);
++	return tpacpi_battery_show(INHIBIT_CHARGE, device, buf);
 +}
 +
  static ssize_t charge_control_start_threshold_store(struct device *dev,
  				struct device_attribute *attr,
  				const char *buf, size_t count)
-@@ -9631,8 +9674,16 @@ static ssize_t charge_control_end_threshold_store(struct device *dev,
- 	return tpacpi_battery_store(THRESHOLD_STOP, dev, buf, count);
+@@ -9681,9 +9730,17 @@ static ssize_t force_discharge_store(struct device *dev,
+ 	return tpacpi_battery_store(FORCE_DISCHARGE, dev, buf, count);
  }
  
-+static ssize_t force_discharge_store(struct device *dev,
++static ssize_t inhibit_charge_store(struct device *dev,
 +				struct device_attribute *attr,
 +				const char *buf, size_t count)
 +{
-+	return tpacpi_battery_store(FORCE_DISCHARGE, dev, buf, count);
++	return tpacpi_battery_store(INHIBIT_CHARGE, dev, buf, count);
 +}
 +
  static DEVICE_ATTR_RW(charge_control_start_threshold);
  static DEVICE_ATTR_RW(charge_control_end_threshold);
-+static DEVICE_ATTR_RW(force_discharge);
+ static DEVICE_ATTR_RW(force_discharge);
++static DEVICE_ATTR_RW(inhibit_charge);
  static struct device_attribute dev_attr_charge_start_threshold = __ATTR(
  	charge_start_threshold,
  	0644,
-@@ -9645,12 +9696,12 @@ static struct device_attribute dev_attr_charge_stop_threshold = __ATTR(
- 	charge_control_end_threshold_show,
- 	charge_control_end_threshold_store
- );
--
- static struct attribute *tpacpi_battery_attrs[] = {
- 	&dev_attr_charge_control_start_threshold.attr,
- 	&dev_attr_charge_control_end_threshold.attr,
+@@ -9702,7 +9759,8 @@ static struct attribute *tpacpi_battery_attrs[] = {
  	&dev_attr_charge_start_threshold.attr,
  	&dev_attr_charge_stop_threshold.attr,
-+	&dev_attr_force_discharge.attr,
- 	NULL,
+ 	&dev_attr_force_discharge.attr,
+-	NULL,
++	&dev_attr_inhibit_charge.attr,
++	NULL
  };
  
+ ATTRIBUTE_GROUPS(tpacpi_battery);
 -- 
 2.25.1
