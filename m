@@ -5,67 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1B4C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 08:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08231C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 09:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748A864F2B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 08:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D205D64F6C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 09:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229512AbhCQIoU (ORCPT
+        id S229602AbhCQJ5c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 04:44:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
+        Wed, 17 Mar 2021 05:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbhCQIoI (ORCPT
+        with ESMTP id S229846AbhCQJ5Y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 04:44:08 -0400
+        Wed, 17 Mar 2021 05:57:24 -0400
 Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B016C06174A;
-        Wed, 17 Mar 2021 01:44:08 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id g24so820816qts.6;
-        Wed, 17 Mar 2021 01:44:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA75C06174A;
+        Wed, 17 Mar 2021 02:57:10 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id c6so936011qtc.1;
+        Wed, 17 Mar 2021 02:57:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6JbRF6Qj7q5szAzhJ2UjhaCTZjCpnjDyNBz/V7TfE2U=;
-        b=B7g/y88mGemt0kYcZNjVh1HlC6paZPhdqQhgDGibz5h/ROpuHEJRU/N9ajzldfQ7kU
-         rZTsmCJm5XRFATxRCWoS9QCj6Bfepgitl1M8WqWt6k/3xoe7lLqjYi/PY11VdRaxoqbD
-         gLrgNZoZn5YFu2tljelBELpDppHiClnpQrG/ngbLVVBtsVpVliqGpaPuOWdg8lsSLdtr
-         0tSZHJ1b0xG9yDRAQJGHdJv9tYAJvOvm77kAeB31p6bWuZlooX8b6bwT5k2zsZtA25IL
-         4DUgbK73z2mWrvTvYRpYO++GIpc1nZrF3tZWgy6fp9SS7VlSkl6x/QPiapOYS/m9YW93
-         iCVw==
+        bh=5DT/Tb82dfOUQn3pF6Xxk/zZfoQwDhnzs09a7hrsaJQ=;
+        b=FJjZyLuy4Eo+5onI9+vOke1d2I6gth6cngQxmg42w8P4sE+UpfImquEqZjRXWmXHUi
+         OijwX/Kis+r4z4yO4At9NKUslP94wJgfmZR4sNqna+b9rO2h29G8dWpourejztLkf9M8
+         TQZOqiJUYBaeqPu8bg4wzk44nUrZYgSAH9vNNCXEtqsPlSel7ye3d2w/VMTK81SCmeXS
+         ijZ4bSnXK9D/GF+0GTUZ7NpzH6MCJ5tDbBGJZHI9E1khyKfDGlSnoc9qLN0kkFNKEh4k
+         ufU4QzgG/EF0gZsmKgmWygtSREzYnm1VUa901MXrB+VRUb0TzUNCusD1bZy4pRMcIydE
+         pEKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=6JbRF6Qj7q5szAzhJ2UjhaCTZjCpnjDyNBz/V7TfE2U=;
-        b=LncfJp8Hk9jt5Cnlv53M4/lN5g+Ak3ma/OS2z0UaFwX1Gd9ERoQF5yFg05QBjATEUg
-         wprFNw2Cq11miFmN5Ko9uacMCCBnIzvHT6ZIZOvimLlSGbae+i9aXfVR0vPkEzzvlKnO
-         usVz4c5KGkM6e6iZbtHi1g8c37aWRnfa5jTTYozwK/3nCivxzhNXcRl5z60rWXeff1i0
-         yEY9nZsLZVZ04juLxlK+rPbHJIGRtZ2cq8GgHJIIuoz3iuGsepeAiP7gjqGm+Dz5X2Qh
-         tQBMe5y6XpypOvdtIZDu6QK3xMmIxoXDASsx7WRjCequKIGt/U3qrcdn8NqGIrNyWPUB
-         f+oQ==
-X-Gm-Message-State: AOAM530ITqVL2zq9PbgZVmD6UQEewKmK/GC8Ini8+qdm8EglFELhmlzC
-        +A/0DHe0F7Ave8CinuE8AdA=
-X-Google-Smtp-Source: ABdhPJyzKtnJNfcra4IXJO1T3jFNzLBNsbBL1LND1ngVH1KwZb7H4GmwhlvLXNvFkAwcVD2sc/h7lg==
-X-Received: by 2002:ac8:4c87:: with SMTP id j7mr2954614qtv.338.1615970647462;
-        Wed, 17 Mar 2021 01:44:07 -0700 (PDT)
+        bh=5DT/Tb82dfOUQn3pF6Xxk/zZfoQwDhnzs09a7hrsaJQ=;
+        b=MAJL58JOlas7v+cLqg70/ceWQIsqQR55jvvvfRnO69XrB8qQboe386mCbvwmKRXdi5
+         SIGOXr7hi8g+9AVVsTuVPPkitS4evoYMaIiw2jsdmL+rL7dlT+c7JG2DEOP7XP2O2nqt
+         9kcAoM3lnpwf+KAY46jpCT8tPvXTAKa7DodOPVSGE0SkushQ2Tx0klodlYvTDDPqbfTb
+         QruibkK9SBhviBcfkm0Ud7p3gpHwjuSQzyAwb/CV4p+CVyzRyelTpcgqyN7cECsmTRvF
+         R0+/Liz4NIXrQ2XnImxjWFKy8LLkxkAPVG8jqD1SLzq2+9NO1J7auXXziO32hDRxaaeY
+         jI7Q==
+X-Gm-Message-State: AOAM5308dKsOGb872NifiV8QcRXy7gyGFLzDKBGxKdsq17+BNRTMzRkr
+        3mBb6Y4PoXlV/aPE4EQXkR4ekM1lzkcd7IeW
+X-Google-Smtp-Source: ABdhPJyazJ+xhIZNmt+SRzMgC0RrSxlOcg8eL06vVrvK6jyA6eAGX++nM+qFYIBsVNKxqqlKFf3kTw==
+X-Received: by 2002:a05:622a:11cd:: with SMTP id n13mr3175704qtk.52.1615975029425;
+        Wed, 17 Mar 2021 02:57:09 -0700 (PDT)
 Received: from localhost.localdomain ([37.19.198.48])
-        by smtp.gmail.com with ESMTPSA id p66sm17167880qkd.57.2021.03.17.01.44.03
+        by smtp.gmail.com with ESMTPSA id f136sm17494286qke.24.2021.03.17.02.57.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Mar 2021 01:44:06 -0700 (PDT)
+        Wed, 17 Mar 2021 02:57:08 -0700 (PDT)
 From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     cascardo@holoscopio.com, don@syst.com.br, hdegoede@redhat.com,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+To:     andy@infradead.org, dvhart@infradead.org, vadimp@nvidia.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     rdunlap@infradead.org, Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] platform: x86: Typo fix in the file classmate-laptop.c
-Date:   Wed, 17 Mar 2021 14:13:43 +0530
-Message-Id: <20210317084343.3788084-1-unixbhaskar@gmail.com>
+Subject: [PATCH] platform: mellanox: Typo fix in the file mlxbf-bootctl.c
+Date:   Wed, 17 Mar 2021 15:26:50 +0530
+Message-Id: <20210317095650.2036419-1-unixbhaskar@gmail.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,26 +73,26 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
-s/derefence/dereference/
+s/progamming/programming/
 
 Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- drivers/platform/x86/classmate-laptop.c | 2 +-
+ drivers/platform/mellanox/mlxbf-bootctl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-index 3e03e8d3a07f..9309ab5792cb 100644
---- a/drivers/platform/x86/classmate-laptop.c
-+++ b/drivers/platform/x86/classmate-laptop.c
-@@ -956,7 +956,7 @@ static int cmpc_ipml_add(struct acpi_device *acpi)
- 	/*
- 	 * If RFKILL is disabled, rfkill_alloc will return ERR_PTR(-ENODEV).
- 	 * This is OK, however, since all other uses of the device will not
--	 * derefence it.
-+	 * dereference it.
- 	 */
- 	if (ipml->rf) {
- 		retval = rfkill_register(ipml->rf);
+diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
+index 5d21c6adf1ab..1c7a288b59a5 100644
+--- a/drivers/platform/mellanox/mlxbf-bootctl.c
++++ b/drivers/platform/mellanox/mlxbf-bootctl.c
+@@ -208,7 +208,7 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
+ 	 * 0011 = version 1, 0111 = version 2, 1111 = version 3). Upper 4 bits
+ 	 * are a thermometer code indicating key programming has completed for
+ 	 * key n (same encodings as the start bits). This allows for detection
+-	 * of an interruption in the progamming process which has left the key
++	 * of an interruption in the programming process which has left the key
+ 	 * partially programmed (and thus invalid). The process is to burn the
+ 	 * eFuse for the new key start bit, burn the key eFuses, then burn the
+ 	 * eFuse for the new key complete bit.
 --
 2.30.2
 
