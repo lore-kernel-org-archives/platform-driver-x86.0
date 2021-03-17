@@ -2,88 +2,243 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF54C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 18:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF33C43381
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 19:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2389864F20
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 18:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F5364F2B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 19:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbhCQSCq (ORCPT
+        id S233151AbhCQTOL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 14:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbhCQSCU (ORCPT
+        Wed, 17 Mar 2021 15:14:11 -0400
+Received: from lizzard.sbs.de ([194.138.37.39]:33307 "EHLO lizzard.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233087AbhCQTNj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 14:02:20 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1234::107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25718C06174A;
-        Wed, 17 Mar 2021 11:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=9lsHS9lOU27LyGTG7QJBu3yVy8h5bkH/PgY8pAOOR6k=; b=f4pi4tMaDfirLHGE08FIvAgRrr
-        emtuq8/Wn4S30m/LlkVScDaZjuS6e18BBe653aSuW19aCIasGjXIOS21WDVhFx5287m20ib43T3xL
-        0JhMHMUjY5whZQ/6HhuUy8oTP2bPTgHjWTs9w3y/jRxGT6ks6HitaR0boEEjd2eVudVzvX1PQOS2K
-        Ic7SXOoLv2omP2NCkHMfNlMcc5IZCgvJ11X9xy5Civg44+CmMqej/mdvVqJUUpOTurtZlvKHaqY6v
-        YJ42GMxeTJUWbnO427ZFaH9Km3JLKVECucn5zXLrZF6B0P2vG7jR72xq4aBjKdn/eQFFWyBBDUoJt
-        eIL6GPlA==;
-Received: from [2601:1c0:6280:3f0::9757]
-        by merlin.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lMaUp-001fk0-4S; Wed, 17 Mar 2021 18:02:15 +0000
-Subject: Re: [PATCH] platform: mellanox: Typo fix in the file mlxbf-bootctl.c
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, andy@infradead.org,
-        dvhart@infradead.org, vadimp@nvidia.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210317095650.2036419-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e7f14e71-87fe-3619-3d4b-fff47643c14e@infradead.org>
-Date:   Wed, 17 Mar 2021 11:02:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Wed, 17 Mar 2021 15:13:39 -0400
+Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
+        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 12HJDE7x004592
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Mar 2021 20:13:14 +0100
+Received: from md1za8fc.ad001.siemens.net ([167.87.41.250])
+        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 12HJDCYx007184;
+        Wed, 17 Mar 2021 20:13:13 +0100
+Date:   Wed, 17 Mar 2021 20:13:11 +0100
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/4] platform/x86: simatic-ipc: add main driver for
+ Siemens devices
+Message-ID: <20210317201311.70528fd4@md1za8fc.ad001.siemens.net>
+In-Reply-To: <CAHp75VdXDcTfNL9QRQ5XE-zVLHacfMKHUxhse3=dAfJbOJdObQ@mail.gmail.com>
+References: <20210315095710.7140-1-henning.schild@siemens.com>
+        <20210315095710.7140-2-henning.schild@siemens.com>
+        <CAHp75VdXDcTfNL9QRQ5XE-zVLHacfMKHUxhse3=dAfJbOJdObQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20210317095650.2036419-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 3/17/21 2:56 AM, Bhaskar Chowdhury wrote:
+Am Mon, 15 Mar 2021 12:31:11 +0200
+schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+
+> On Mon, Mar 15, 2021 at 12:02 PM Henning Schild
+> <henning.schild@siemens.com> wrote:
+> >
+> > This mainly implements detection of these devices and will allow
+> > secondary drivers to work on such machines.
+> >
+> > The identification is DMI-based with a vendor specific way to tell
+> > them apart in a reliable way.
+> >
+> > Drivers for LEDs and Watchdogs will follow to make use of that
+> > platform detection.  
 > 
-> s/progamming/programming/
+> ...
 > 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-> ---
->  drivers/platform/mellanox/mlxbf-bootctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > +static int register_platform_devices(u32 station_id)
+> > +{
+> > +       u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
+> > +       u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
+> > +       int i;
+> > +
+> > +       platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
+> > +               if (device_modes[i].station_id == station_id) {
+> > +                       ledmode = device_modes[i].led_mode;
+> > +                       wdtmode = device_modes[i].wdt_mode;
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> > +       if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
+> > +               platform_data.devmode = ledmode;
+> > +               ipc_led_platform_device =
+> > +                       platform_device_register_data(NULL,
+> > +                               KBUILD_MODNAME "_leds",
+> > PLATFORM_DEVID_NONE,
+> > +                               &platform_data,
+> > +                               sizeof(struct
+> > simatic_ipc_platform));
+> > +               if (IS_ERR(ipc_led_platform_device))
+> > +                       return PTR_ERR(ipc_led_platform_device);
+> > +
+> > +               pr_debug("device=%s created\n",
+> > +                        ipc_led_platform_device->name);
+> > +       }
+> > +
+> > +       if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
+> > +               platform_data.devmode = wdtmode;
+> > +               ipc_wdt_platform_device =
+> > +                       platform_device_register_data(NULL,
+> > +                               KBUILD_MODNAME "_wdt",
+> > PLATFORM_DEVID_NONE,
+> > +                               &platform_data,
+> > +                               sizeof(struct
+> > simatic_ipc_platform));
+> > +               if (IS_ERR(ipc_wdt_platform_device))
+> > +                       return PTR_ERR(ipc_wdt_platform_device);
+> > +
+> > +               pr_debug("device=%s created\n",
+> > +                        ipc_wdt_platform_device->name);
+> > +       }
+> > +
+> > +       if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
+> > +           wdtmode == SIMATIC_IPC_DEVICE_NONE) {
+> > +               pr_warn("unsupported IPC detected, station
+> > id=%08x\n",
+> > +                       station_id);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return 0;
+> > +}  
 > 
-> diff --git a/drivers/platform/mellanox/mlxbf-bootctl.c b/drivers/platform/mellanox/mlxbf-bootctl.c
-> index 5d21c6adf1ab..1c7a288b59a5 100644
-> --- a/drivers/platform/mellanox/mlxbf-bootctl.c
-> +++ b/drivers/platform/mellanox/mlxbf-bootctl.c
-> @@ -208,7 +208,7 @@ static ssize_t secure_boot_fuse_state_show(struct device *dev,
->  	 * 0011 = version 1, 0111 = version 2, 1111 = version 3). Upper 4 bits
->  	 * are a thermometer code indicating key programming has completed for
->  	 * key n (same encodings as the start bits). This allows for detection
-> -	 * of an interruption in the progamming process which has left the key
-> +	 * of an interruption in the programming process which has left the key
->  	 * partially programmed (and thus invalid). The process is to burn the
->  	 * eFuse for the new key start bit, burn the key eFuses, then burn the
->  	 * eFuse for the new key complete bit.
-> --
+> Why not use MFD here?
 
+Never had a close look at mfd to be honest. I might
 
--- 
-~Randy
+With the custom dmi matching on 129 being part of the header, and the
+p2sb unhide moving out as well ... that first driver ends up being not
+too valuable indeed
+
+It just identifies the box and tells subsequent drivers which one it
+is, which watchdog and LED path to take. Moving the knowledge of which
+box has which LED/watchdog into the respective drivers seems to be the
+better way to go.
+
+So we would end up with a LED and a watchdog driver both
+MODULE_ALIAS("dmi:*:svnSIEMENSAG:*");
+and doing the identification with the inline dmi from that header,
+doing p2sb with the support to come ... possibly a "//TODO\ninline" in
+the meantime.
+
+So no "main platform" driver anymore, but still central platform
+headers.
+
+Not sure how this sounds, but i think making that change should be
+possible. And that is what i will try and go for in v3.
+
+regards,
+Henning
+
+> ...
+> 
+> > +/*
+> > + * Get membase address from PCI, used in leds and wdt modul. Here
+> > we read
+> > + * the bar0. The final address calculation is done in the
+> > appropriate modules
+> > + */  
+> 
+> No blank line here.
+> 
+> I would add FIXME or REVISIT here to point out that this should be
+> deduplicated in the future.
+> 
+> > +u32 simatic_ipc_get_membase0(unsigned int p2sb)
+> > +{
+> > +       struct pci_bus *bus;
+> > +       u32 bar0 = 0;
+> > +
+> > +       /*
+> > +        * The GPIO memory is bar0 of the hidden P2SB device.
+> > Unhide the device  
+> 
+> No, it's not a GPIO's bar. It's P2SB's one. GPIO resides in that bar
+> somewhere.
+> 
+> > +        * to have a quick look at it, before we hide it again.
+> > +        * Also grab the pci rescan lock so that device does not
+> > get discovered
+> > +        * and remapped while it is visible.
+> > +        * This code is inspired by drivers/mfd/lpc_ich.c
+> > +        */
+> > +       bus = pci_find_bus(0, 0);
+> > +       pci_lock_rescan_remove();
+> > +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
+> > +       pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0,
+> > &bar0); +
+> > +       bar0 &= ~0xf;
+> > +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
+> > +       pci_unlock_rescan_remove();
+> > +
+> > +       return bar0;
+> > +}
+> > +EXPORT_SYMBOL(simatic_ipc_get_membase0);  
+> 
+> ...
+> 
+> > +static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
+> > +{
+> > +       u32 station_id = SIMATIC_IPC_INVALID_STATION_ID;
+> > +       int i;  
+> 
+> Reversed xmas tree order, please.
+> 
+> > +       struct {
+> > +               u8      type;           /* type (0xff = binary) */
+> > +               u8      len;            /* len of data entry */
+> > +               u8      reserved[3];
+> > +               u32     station_id;     /* station id (LE) */  
+> 
+> > +       } __packed
+> > +       *data_entry = (void *)data + sizeof(struct dmi_header);  
+> 
+> Can be one line.
+> 
+> > +       /* find 4th entry in OEM data */
+> > +       for (i = 0; i < 3; i++)  
+> 
+> 3 is magic!
+> 
+> > +               data_entry = (void *)((u8 *)(data_entry) +
+> > data_entry->len); +
+> > +       /* decode station id */
+> > +       if (data_entry && (u8 *)data_entry < data + max_len &&
+> > +           data_entry->type == 0xff && data_entry->len == 9)
+> > +               station_id = le32_to_cpu(data_entry->station_id);
+> > +
+> > +       return station_id;
+> > +}  
+> 
 
