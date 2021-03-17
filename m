@@ -2,291 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EC8C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 20:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D28C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 20:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C741F64F38
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 20:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F3F64F30
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 20:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233360AbhCQUD3 (ORCPT
+        id S233356AbhCQUkP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 16:03:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:46878 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233348AbhCQUDN (ORCPT
+        Wed, 17 Mar 2021 16:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233269AbhCQUjy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 16:03:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616011392;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HwJ9TXTu++FXWJPVVeBtvy+lQhOEWQWY2oBpOepSq6I=;
-        b=Q/j4CfltEC89VAatrd+32fELhgJJcTrSsLIqsKgvLeWQ2mRp5OaOtXdUt4DXZHIUojOnni
-        2DrjrQUV6ngJgRQ0oP0jaqouJNh+rNg6gMpD6zzdkmh8rHzGWeZv4XE9KZf4TmLZT/M7Qq
-        kPmoHmxDz5xZAnCtj+cE4qvwyOnGd0k=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-yX28nQDeO86kVHx1P5PwCQ-1; Wed, 17 Mar 2021 16:03:10 -0400
-X-MC-Unique: yX28nQDeO86kVHx1P5PwCQ-1
-Received: by mail-ej1-f69.google.com with SMTP id sa29so15686505ejb.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 13:03:10 -0700 (PDT)
+        Wed, 17 Mar 2021 16:39:54 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04501C06174A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 13:39:54 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id z25so4861643lja.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 13:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=wBlcBqItxhN4k3IlfJ8T+gvy61+2XtxUuTbIu4871dg=;
+        b=Gred+eovD+3ODGYb0WI6kSAmhMxGJ7/3xaRj2Am6S6GZ8Ylpf2TuVK6doXTOuWpC4A
+         lZ0+43RAQ7scpyJCHB5RRJ9+QYCCxkTtORDoNnHQAPR5H1kruLW8G6Vs14vflCNAaDfm
+         TMk8pW7+zE2ajO2r+JDKLEpaZQBX0+ZrP3FLcms961gu8wmEBAT2xz6k1vCyygyDIS4M
+         os+0ReBTwlkcsP2QtIQ/l6gXbHpwfWrKmOcgNL56TYqMYWEN5XFw3UM8waqQyvk9cOt0
+         LTx1N9cnuwsAnSrR9K6KiPf0L5ldEo4H5ifhDEbWQfYxK4DsBqViEsajGIvv1G9pFF9A
+         OSYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HwJ9TXTu++FXWJPVVeBtvy+lQhOEWQWY2oBpOepSq6I=;
-        b=iguYYHy2d0UEwPaCW7vnb+MNdBNE33XLmKUk5QN3mXSfmhYl7w62mS3bqIziqt+NVO
-         YIEgLXbNu3T5D+5qOBz/RDkrHJHUovEogSiCi5CwyZSttNpfB/f0teDW+++bKeFQ+Qgz
-         eQUpeLE79ytrb3GpmCq01FXXmk6TEnmZnvNObr0F5jQD/SbOoV0cuwBcIQVn2WrmW3Kf
-         OrjgCCD6yKFewoTdVXZfNMB32VGN6+mk+1GPZCOzZtPij/JUfBuuKT2/EawDihv91xz+
-         27fOwhrOyczPRJNeUtt4UWznYtsXMdxvCb4EfO9OWItxMlm0992VzOXfaUVFc6tcv916
-         AF+g==
-X-Gm-Message-State: AOAM533fFpVQax+sG9WuB6TiEBvyS3VS1HQFyOhnn/2sXoPyB1f1uj/Z
-        jtf3TwYcU7MKAdZsmxTEzCwbN0/uLJEq2B76sKhFNC4bmdAD5HwQLdSB88nk+gvLxbWTAYpeC9D
-        gUKldtOH4LFaqSvbId4auw86dbVfzNk0tvQ==
-X-Received: by 2002:a05:6402:1115:: with SMTP id u21mr44199729edv.383.1616011389266;
-        Wed, 17 Mar 2021 13:03:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxo4c8JjgJKYU4UbOZ7P7IHLU7WgoQ+vXAgJua3OZItOXAYRcju0/gF7IIHAJjnPsNY6k8hcQ==
-X-Received: by 2002:a05:6402:1115:: with SMTP id u21mr44199693edv.383.1616011389050;
-        Wed, 17 Mar 2021 13:03:09 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id n16sm12252728ejy.35.2021.03.17.13.03.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Mar 2021 13:03:08 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] platform/x86: simatic-ipc: add main driver for
- Siemens devices
-To:     Henning Schild <henning.schild@siemens.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <20210315095710.7140-1-henning.schild@siemens.com>
- <20210315095710.7140-2-henning.schild@siemens.com>
- <CAHp75VdXDcTfNL9QRQ5XE-zVLHacfMKHUxhse3=dAfJbOJdObQ@mail.gmail.com>
- <20210317201311.70528fd4@md1za8fc.ad001.siemens.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <92080a68-9029-3103-9240-65c92d17bf16@redhat.com>
-Date:   Wed, 17 Mar 2021 21:03:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=wBlcBqItxhN4k3IlfJ8T+gvy61+2XtxUuTbIu4871dg=;
+        b=LbOo50MIwS02AEaSUXa0uwPGGCHyKSAmc+MXU2lJV4LZGhhBq2Yua52/as2RTJeuVl
+         5/9J7tmXaQQuyTQt7Z2fGKEHT895o3iaExDfxGv+KAKYdJi0rRc9M3XX3yH2Ryouzaf5
+         qOu8gF2Ddo7F8wPE85uSnZ/csCB/OehDDkCYX1sKt1tAZjxgnzmhnbuCs+33yVBl9jlZ
+         ieI7TqVUDJLVM+JyXfm0q7hjb5fknB97wI4UHclDUkQE1UoA6RMm472msbe+R9mcGpz4
+         6YE6H5lmw06HN4h2yPI+6qIA1pEzMZ65swXcP8AzpxGrBj/ZAikGJFztE5cfeRBcyNV1
+         Nk3g==
+X-Gm-Message-State: AOAM532Cgb9Bukt9VcrkasG6FkSNa/d8+AJViKg82NosFr4Rr/QNoGBE
+        rmwcAb2v5VuwfpIp+eFGQaIKTHUIdfMy0b4NQ0lqN9d0KjA=
+X-Google-Smtp-Source: ABdhPJw0LPx9iX+YZKANGpVyVzkKNl+v2Qg7GRAXKaA6kIrgmvmrIqjvT/vX8fYyebnAWw74J6cVOrJzBBnnOrPbeIo=
+X-Received: by 2002:a05:651c:201d:: with SMTP id s29mr3319662ljo.315.1616013592421;
+ Wed, 17 Mar 2021 13:39:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210317201311.70528fd4@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   =?UTF-8?Q?Ambro=C5=BE_Bizjak?= <abizjak.pro@gmail.com>
+Date:   Wed, 17 Mar 2021 21:39:39 +0100
+Message-ID: <CAJ4FQ9A=Xcom1d0fWVw+dRLX+yKAg3ACeXW=LgQEo9W-D7EfrQ@mail.gmail.com>
+Subject: ideapad-laptop incorrectly sets RF-kill block on initialization
+To:     platform-driver-x86@vger.kernel.org
+Content-Type: multipart/mixed; boundary="000000000000236d0105bdc17c92"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+--000000000000236d0105bdc17c92
+Content-Type: text/plain; charset="UTF-8"
+
 Hi,
 
-On 3/17/21 8:13 PM, Henning Schild wrote:
-> Am Mon, 15 Mar 2021 12:31:11 +0200
-> schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> 
->> On Mon, Mar 15, 2021 at 12:02 PM Henning Schild
->> <henning.schild@siemens.com> wrote:
->>>
->>> This mainly implements detection of these devices and will allow
->>> secondary drivers to work on such machines.
->>>
->>> The identification is DMI-based with a vendor specific way to tell
->>> them apart in a reliable way.
->>>
->>> Drivers for LEDs and Watchdogs will follow to make use of that
->>> platform detection.  
->>
->> ...
->>
->>> +static int register_platform_devices(u32 station_id)
->>> +{
->>> +       u8 ledmode = SIMATIC_IPC_DEVICE_NONE;
->>> +       u8 wdtmode = SIMATIC_IPC_DEVICE_NONE;
->>> +       int i;
->>> +
->>> +       platform_data.devmode = SIMATIC_IPC_DEVICE_NONE;
->>> +
->>> +       for (i = 0; i < ARRAY_SIZE(device_modes); i++) {
->>> +               if (device_modes[i].station_id == station_id) {
->>> +                       ledmode = device_modes[i].led_mode;
->>> +                       wdtmode = device_modes[i].wdt_mode;
->>> +                       break;
->>> +               }
->>> +       }
->>> +
->>> +       if (ledmode != SIMATIC_IPC_DEVICE_NONE) {
->>> +               platform_data.devmode = ledmode;
->>> +               ipc_led_platform_device =
->>> +                       platform_device_register_data(NULL,
->>> +                               KBUILD_MODNAME "_leds",
->>> PLATFORM_DEVID_NONE,
->>> +                               &platform_data,
->>> +                               sizeof(struct
->>> simatic_ipc_platform));
->>> +               if (IS_ERR(ipc_led_platform_device))
->>> +                       return PTR_ERR(ipc_led_platform_device);
->>> +
->>> +               pr_debug("device=%s created\n",
->>> +                        ipc_led_platform_device->name);
->>> +       }
->>> +
->>> +       if (wdtmode != SIMATIC_IPC_DEVICE_NONE) {
->>> +               platform_data.devmode = wdtmode;
->>> +               ipc_wdt_platform_device =
->>> +                       platform_device_register_data(NULL,
->>> +                               KBUILD_MODNAME "_wdt",
->>> PLATFORM_DEVID_NONE,
->>> +                               &platform_data,
->>> +                               sizeof(struct
->>> simatic_ipc_platform));
->>> +               if (IS_ERR(ipc_wdt_platform_device))
->>> +                       return PTR_ERR(ipc_wdt_platform_device);
->>> +
->>> +               pr_debug("device=%s created\n",
->>> +                        ipc_wdt_platform_device->name);
->>> +       }
->>> +
->>> +       if (ledmode == SIMATIC_IPC_DEVICE_NONE &&
->>> +           wdtmode == SIMATIC_IPC_DEVICE_NONE) {
->>> +               pr_warn("unsupported IPC detected, station
->>> id=%08x\n",
->>> +                       station_id);
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       return 0;
->>> +}  
->>
->> Why not use MFD here?
-> 
-> Never had a close look at mfd to be honest. I might
-> 
-> With the custom dmi matching on 129 being part of the header, and the
-> p2sb unhide moving out as well ... that first driver ends up being not
-> too valuable indeed
-> 
-> It just identifies the box and tells subsequent drivers which one it
-> is, which watchdog and LED path to take. Moving the knowledge of which
-> box has which LED/watchdog into the respective drivers seems to be the
-> better way to go.
-> 
-> So we would end up with a LED and a watchdog driver both
-> MODULE_ALIAS("dmi:*:svnSIEMENSAG:*");
-> and doing the identification with the inline dmi from that header,
-> doing p2sb with the support to come ... possibly a "//TODO\ninline" in
-> the meantime.
-> 
-> So no "main platform" driver anymore, but still central platform
-> headers.
-> 
-> Not sure how this sounds, but i think making that change should be
-> possible. And that is what i will try and go for in v3.
+I have found an issue in the ideapad-laptop driver which causes WiFi
+to not work on the Lenovo Legion Y720 laptop. It seems the issue is
+generally present on this laptop as can be found by googling and
+finding that the workaround is to blacklist ideapad-laptop.
 
-Dropping the main drivers/platform/x86 driver sounds good to me,
-I was already wondering a bit about its function since it just
-instantiates devs to which the other ones bind to then instantiate
-more devs (in the LED case).
+In the code comment here:
+https://github.com/torvalds/linux/blob/1df27313f50a57497c1faeb6a6ae4ca939c85a7d/drivers/platform/x86/ideapad-laptop.c#L1462
+it is explained that the driver has a list of devices which are known
+to have an RF-kill switch and for other devices it assumes that it
+does not have one. Since the list is in fact empty, one would conclude
+that the driver should never cause an RF-kill block. However on this
+laptop loading the driver has this exact effect.
 
-Regards,
+The reason is what seems to be a bug here:
+https://github.com/torvalds/linux/blob/1df27313f50a57497c1faeb6a6ae4ca939c85a7d/drivers/platform/x86/ideapad-laptop.c#L1001
+At initialization, ideapad_register_rfkill() sets the initial RF-kill
+block state based on reading the state of the possibly nonexisting
+RF-kill switch without considering priv->features.hw_rfkill_switch.
+This is inconsistent with ideapad_sync_rfk_state() which sets
+unblocked if hw_rfkill_switch is false. The result is that
+ideapad_register_rfkill() would block but ideapad_sync_rfk_state()
+would unblock as soon as it is called. But on my laptop
+ideapad_sync_rfk_state() is presumably never called and the blocked
+state persists indefinitely. I have verified this by changing
+ideapad_register_rfkill() to use the same logic as
+ideapad_sync_rfk_state() which has fixed the problem.
 
-Hans
+I am attaching a patch for master and 5.4, I have only tested the latter.
 
+--000000000000236d0105bdc17c92
+Content-Type: text/x-patch; charset="US-ASCII"; name="ideapad-laptop-rfkill-master.diff"
+Content-Disposition: attachment; 
+	filename="ideapad-laptop-rfkill-master.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kmdwo8sm0>
+X-Attachment-Id: f_kmdwo8sm0
 
->> ...
->>
->>> +/*
->>> + * Get membase address from PCI, used in leds and wdt modul. Here
->>> we read
->>> + * the bar0. The final address calculation is done in the
->>> appropriate modules
->>> + */  
->>
->> No blank line here.
->>
->> I would add FIXME or REVISIT here to point out that this should be
->> deduplicated in the future.
->>
->>> +u32 simatic_ipc_get_membase0(unsigned int p2sb)
->>> +{
->>> +       struct pci_bus *bus;
->>> +       u32 bar0 = 0;
->>> +
->>> +       /*
->>> +        * The GPIO memory is bar0 of the hidden P2SB device.
->>> Unhide the device  
->>
->> No, it's not a GPIO's bar. It's P2SB's one. GPIO resides in that bar
->> somewhere.
->>
->>> +        * to have a quick look at it, before we hide it again.
->>> +        * Also grab the pci rescan lock so that device does not
->>> get discovered
->>> +        * and remapped while it is visible.
->>> +        * This code is inspired by drivers/mfd/lpc_ich.c
->>> +        */
->>> +       bus = pci_find_bus(0, 0);
->>> +       pci_lock_rescan_remove();
->>> +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x0);
->>> +       pci_bus_read_config_dword(bus, p2sb, PCI_BASE_ADDRESS_0,
->>> &bar0); +
->>> +       bar0 &= ~0xf;
->>> +       pci_bus_write_config_byte(bus, p2sb, 0xE1, 0x1);
->>> +       pci_unlock_rescan_remove();
->>> +
->>> +       return bar0;
->>> +}
->>> +EXPORT_SYMBOL(simatic_ipc_get_membase0);  
->>
->> ...
->>
->>> +static inline u32 simatic_ipc_get_station_id(u8 *data, int max_len)
->>> +{
->>> +       u32 station_id = SIMATIC_IPC_INVALID_STATION_ID;
->>> +       int i;  
->>
->> Reversed xmas tree order, please.
->>
->>> +       struct {
->>> +               u8      type;           /* type (0xff = binary) */
->>> +               u8      len;            /* len of data entry */
->>> +               u8      reserved[3];
->>> +               u32     station_id;     /* station id (LE) */  
->>
->>> +       } __packed
->>> +       *data_entry = (void *)data + sizeof(struct dmi_header);  
->>
->> Can be one line.
->>
->>> +       /* find 4th entry in OEM data */
->>> +       for (i = 0; i < 3; i++)  
->>
->> 3 is magic!
->>
->>> +               data_entry = (void *)((u8 *)(data_entry) +
->>> data_entry->len); +
->>> +       /* decode station id */
->>> +       if (data_entry && (u8 *)data_entry < data + max_len &&
->>> +           data_entry->type == 0xff && data_entry->len == 9)
->>> +               station_id = le32_to_cpu(data_entry->station_id);
->>> +
->>> +       return station_id;
->>> +}  
->>
-> 
+LS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3AuYwkyMDIxLTAzLTE3IDIx
+OjI3OjM5LjA5ODU0NDAyMyArMDEwMAorKysgYi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFk
+LWxhcHRvcC5jCTIwMjEtMDMtMTcgMjE6Mjg6NTkuMDU5MzQzMDI4ICswMTAwCkBAIC05OTgsOSAr
+OTk4LDEzIEBACiAJaWYgKCFwcml2LT5yZmtbZGV2XSkKIAkJcmV0dXJuIC1FTk9NRU07CiAKLQll
+cnIgPSByZWFkX2VjX2RhdGEocHJpdi0+YWRldi0+aGFuZGxlLCBpZGVhcGFkX3Jma19kYXRhW2Rl
+dl0ub3Bjb2RlIC0gMSwgJnJmX2VuYWJsZWQpOwotCWlmIChlcnIpCisJaWYgKCFwcml2LT5mZWF0
+dXJlcy5od19yZmtpbGxfc3dpdGNoKSB7CiAJCXJmX2VuYWJsZWQgPSAxOworCX0gZWxzZSB7CisJ
+CWVyciA9IHJlYWRfZWNfZGF0YShwcml2LT5hZGV2LT5oYW5kbGUsIGlkZWFwYWRfcmZrX2RhdGFb
+ZGV2XS5vcGNvZGUgLSAxLCAmcmZfZW5hYmxlZCk7CisJCWlmIChlcnIpCisJCQlyZl9lbmFibGVk
+ID0gMTsKKwl9CiAKIAlyZmtpbGxfaW5pdF9zd19zdGF0ZShwcml2LT5yZmtbZGV2XSwgIXJmX2Vu
+YWJsZWQpOwogCg==
+--000000000000236d0105bdc17c92
+Content-Type: text/x-patch; charset="US-ASCII"; name="ideapad-laptop-rfkill-5.4.patch"
+Content-Disposition: attachment; filename="ideapad-laptop-rfkill-5.4.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_kmdwojl01>
+X-Attachment-Id: f_kmdwojl01
 
+ZGlmZiAtdXJOIGxpbnV4LTUuNC4xMDQub3JpZy9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9pZGVhcGFk
+LWxhcHRvcC5jIGxpbnV4LTUuNC4xMDQvZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1sYXB0
+b3AuYwotLS0gbGludXgtNS40LjEwNC5vcmlnL2RyaXZlcnMvcGxhdGZvcm0veDg2L2lkZWFwYWQt
+bGFwdG9wLmMJMjAyMS0wMy0xNiAxOTowMjoxMi4xMjYzODMwOTkgKzAxMDAKKysrIGxpbnV4LTUu
+NC4xMDQvZHJpdmVycy9wbGF0Zm9ybS94ODYvaWRlYXBhZC1sYXB0b3AuYwkyMDIxLTAzLTE2IDE5
+OjA3OjA0LjM4MDk2MTEyOSArMDEwMApAQCAtNjE2LDcgKzYxNiw4IEBACiAJaWYgKCFwcml2LT5y
+ZmtbZGV2XSkKIAkJcmV0dXJuIC1FTk9NRU07CiAKLQlpZiAocmVhZF9lY19kYXRhKHByaXYtPmFk
+ZXYtPmhhbmRsZSwgaWRlYXBhZF9yZmtfZGF0YVtkZXZdLm9wY29kZS0xLAorCWlmICghcHJpdi0+
+aGFzX2h3X3Jma2lsbF9zd2l0Y2ggfHwKKyAgICAgICAgICAgIHJlYWRfZWNfZGF0YShwcml2LT5h
+ZGV2LT5oYW5kbGUsIGlkZWFwYWRfcmZrX2RhdGFbZGV2XS5vcGNvZGUtMSwKIAkJCSAmc3dfYmxv
+Y2tlZCkpIHsKIAkJcmZraWxsX2luaXRfc3dfc3RhdGUocHJpdi0+cmZrW2Rldl0sIDApOwogCX0g
+ZWxzZSB7Cg==
+--000000000000236d0105bdc17c92--
