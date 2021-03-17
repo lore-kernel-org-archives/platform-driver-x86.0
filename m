@@ -2,72 +2,53 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468B3C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B236CC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 17:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED52A64F6C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 14:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8356E64E6B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 17:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbhCQOGI (ORCPT
+        id S229710AbhCQR0G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 10:06:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
+        Wed, 17 Mar 2021 13:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231750AbhCQOFl (ORCPT
+        with ESMTP id S229766AbhCQRZv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 10:05:41 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31513C06174A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:05:40 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id k9so3111515lfo.12
-        for <platform-driver-x86@vger.kernel.org>; Wed, 17 Mar 2021 07:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=r6yZM+f65zIgodvjTS777JEJuFTI/LvA7ZOpg/FRjOA=;
-        b=BhP+Gkb/neU+dUNufG+jsXqZdN2afOg5luAGSX7etUiRXZSquEDRW1y0HZtYTCB+Oh
-         +uXyyQ2EktpBeS+tVCoEiFggt9p6gMLJVW8DSAXvcjj45YVZrtX3kNf3i4bkelsQn8iN
-         GUTocT8qclGW6VVydKRW9zOIDozFor7oDmz8y882eOuIY2o4/4pNB52E2CD75eNHQo4b
-         X5hMhc6yHeVUuFljsuJ0Y4umuuM5h+FdsDXY0vSJuSAFuICRlxmsZy5cU3POKHaEQlMQ
-         264AlUd8ksDaMvcAQJPcwnnmJN0oioEqmTzTd4t82c6wyIqYkp2f64vLwLvOVKpPWh/g
-         F79A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=r6yZM+f65zIgodvjTS777JEJuFTI/LvA7ZOpg/FRjOA=;
-        b=RE8subJiW9LCbIq4Vp9fA6kXiGf6Dt/r1Vyvt4PfeXRk6H4JW4lRbMglM2K1W/tgPB
-         Rr5zBoS7S+QOsRR/yUmclr/fTcw3KQUmMLEPEe9W0W+wBOXDfiVxo0jInKFw9dw8G+lw
-         1brHfTG0czTqdk5ABecs9f8i3OvjWVvaOYDuJ81NZyxRXJK88LgNLSYHlileD9Cs2UEM
-         bkPx/FwbKL/WTxGTjnkyzk8DLcylq2KYNRu4bLwAnMiVDTXKzBKnYxF5Cua7Flpl4rAQ
-         J4nwR80ZxS/ne4npiNLU18Uo3h1Y04ANThlJ1xUC6+QrrIBL6piuq19Jfb0DZvyP6hAS
-         bJ0A==
-X-Gm-Message-State: AOAM531ojBWo86rNh007LcS9X+bGYZ/4GvEBrH0yiWkd9WwZ7Q4HjGgg
-        ZVfIvlz4bo9znMWyoEDeVYHW8NyCyag=
-X-Google-Smtp-Source: ABdhPJx/OGtxohXr1i+8TlCT6DwJfVbVHRd4KtrPqDO7AkRprSJ7fSTg3l/BWTbeF7wbVqR+NLjx1w==
-X-Received: by 2002:a05:6512:108c:: with SMTP id j12mr2599867lfg.431.1615989938613;
-        Wed, 17 Mar 2021 07:05:38 -0700 (PDT)
-Received: from [130.238.51.50] (emp-51-50.eduroam.uu.se. [130.238.51.50])
-        by smtp.gmail.com with ESMTPSA id a1sm3397803lfk.148.2021.03.17.07.05.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Mar 2021 07:05:38 -0700 (PDT)
-To:     platform-driver-x86@vger.kernel.org
-Cc:     jwrdegoede@fedoraproject.org, smclt30p@gmail.com, linrunner@gmx.net
-From:   Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>
-Subject: [PATCH 3/3] thinkpad_acpi: document force_discharge and,
- inhibit_charge
-Message-ID: <05bb641c-0390-bbd6-56bf-4871e65e4f20@gmail.com>
-Date:   Wed, 17 Mar 2021 15:05:37 +0100
+        Wed, 17 Mar 2021 13:25:51 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1234::107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F83C06174A;
+        Wed, 17 Mar 2021 10:25:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description;
+        bh=OC5ns7Q2lAq5rjOh5Mg0dRoImkJNwBQe+BgcvqUEvmA=; b=ahwdZsuDAcl6wq9mDEDkas2iCd
+        xRP06FZFnziIc49o5aHDSdOgb4A6mcIKovW32MpMM5LQPdX9XBK/mkI5qAI1GUHQTDqskwfmna7ZZ
+        +KeNlOri8SrhljsPWkPPFig7xRLW11MvFklyQdM5pcBmX8ZMO9iV/+KjPXztmyCsmakERZkOzCkPW
+        gxXNoPm5GPU0KnHC+KcPM9/tzYupKjE11A8GY2ENW4yzbY+MQz7D3snkbV2G26CQtH5yP24GSOw9e
+        hdv5GRD5W/afstuUyTsNUL0F0KAKZaumRvvRJPbaF2TBvmdRq7i3hskahWRRk/GIueozsi6Nbd6cC
+        NWNtBhtg==;
+Received: from [2601:1c0:6280:3f0::9757]
+        by merlin.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
+        id 1lMZvY-001fPf-5e; Wed, 17 Mar 2021 17:25:48 +0000
+Subject: Re: [PATCH] platform: x86: Typo fix in the file classmate-laptop.c
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, cascardo@holoscopio.com,
+        don@syst.com.br, hdegoede@redhat.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210317084343.3788084-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <eb527fe8-3039-f02b-a206-054386e1b647@infradead.org>
+Date:   Wed, 17 Mar 2021 10:25:45 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.8.0
+ Thunderbird/78.8.0
 MIME-Version: 1.0
+In-Reply-To: <20210317084343.3788084-1-unixbhaskar@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -75,62 +56,34 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Describe the additional sysfs attributes for
-forced discharging and charge inhibiting.
+On 3/17/21 1:43 AM, Bhaskar Chowdhury wrote:
+> 
+> s/derefence/dereference/
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 
-Improve description of charge_control_{start,end}_threshold.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
-Signed-off-by: Thomas Koch <linrunner@gmx.net>
-Signed-off-by: Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>
----
- .../admin-guide/laptops/thinkpad-acpi.rst     | 30 +++++++++++++++----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+> ---
+>  drivers/platform/x86/classmate-laptop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
+> index 3e03e8d3a07f..9309ab5792cb 100644
+> --- a/drivers/platform/x86/classmate-laptop.c
+> +++ b/drivers/platform/x86/classmate-laptop.c
+> @@ -956,7 +956,7 @@ static int cmpc_ipml_add(struct acpi_device *acpi)
+>  	/*
+>  	 * If RFKILL is disabled, rfkill_alloc will return ERR_PTR(-ENODEV).
+>  	 * This is OK, however, since all other uses of the device will not
+> -	 * derefence it.
+> +	 * dereference it.
+>  	 */
+>  	if (ipml->rf) {
+>  		retval = rfkill_register(ipml->rf);
+> --
 
-diff --git a/Documentation/admin-guide/laptops/thinkpad-acpi.rst b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-index 5e477869df18..e71bc74d69dc 100644
---- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-+++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-@@ -1493,15 +1493,35 @@ sysfs attributes:
- 
- These two attributes are created for those batteries that are supported by the
- driver. They enable the user to control the battery charge thresholds of the
--given battery. Both values may be read and set. `charge_control_start_threshold`
--accepts an integer between 0 and 99 (inclusive); this value represents a battery
--percentage level, below which charging will begin. `charge_control_end_threshold`
--accepts an integer between 1 and 100 (inclusive); this value represents a battery
--percentage level, above which charging will stop.
-+given battery. Both values may be read and set.
-+
-+`charge_control_start_threshold` accepts an integer between 0 and 99 (inclusive).
-+This value represents the battery percentage level below which charging will begin.
-+
-+`charge_control_end_threshold` accepts an integer between 1 and 100 (inclusive).
-+This value represents the battery percentage level where charging will stop.
- 
- The exact semantics of the attributes may be found in
- Documentation/ABI/testing/sysfs-class-power.
- 
-+Battery forced discharging
-+--------------------------
-+
-+sysfs attribute:
-+/sys/class/power_supply/BATx/force_discharge
-+
-+Setting this attribute to 1 forces the battery to discharge while AC is attached.
-+Setting it to 0 terminates forced discharging.
-+
-+Battery charge inhibiting
-+--------------------------
-+
-+sysfs attribute:
-+/sys/class/power_supply/BATx/inhibit_discharge
-+
-+Setting this attribute to 1 stops charging of the battery as a manual override
-+over the threshold attributes. Setting it to 0 terminates the override.
-+
- Multiple Commands, Module Parameters
- ------------------------------------
- 
+
 -- 
-2.25.1
+~Randy
+
