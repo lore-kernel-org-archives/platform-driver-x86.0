@@ -2,81 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-20.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7DBC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 10:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1500AC433E0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 12:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E4664F4D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 10:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD31164EB9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 17 Mar 2021 12:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbhCQKmW (ORCPT
+        id S231450AbhCQMBA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 17 Mar 2021 06:42:22 -0400
-Received: from trem.minaslivre.org ([195.201.159.152]:37790 "EHLO
-        grilo.cascardo.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230256AbhCQKmR (ORCPT
+        Wed, 17 Mar 2021 08:01:00 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:5849 "EHLO
+        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231453AbhCQMA3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 17 Mar 2021 06:42:17 -0400
-X-Greylist: delayed 454 seconds by postgrey-1.27 at vger.kernel.org; Wed, 17 Mar 2021 06:42:16 EDT
-Received: from siri.cascardo.eti.br (unknown [IPv6:2804:431:e7c5:4bc1:6a17:29ff:fe00:4f38])
-        by grilo.cascardo.info (Postfix) with ESMTPSA id A0B33200156;
-        Wed, 17 Mar 2021 10:34:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=cascardo.eti.br;
-        s=mail; t=1615977273;
-        bh=054+NtLT3avzruiBiKwFLs2LAnxdQ1eXdhwm1LKFnbM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SVkzbYlHbJFCTIMaf+HuouUA2ISO2IEqgXWekvQ+KL2WN7AiZ98XrJC/Xk+3DJuDS
-         JPAxDWbKtaG6yE+IFPlWLqyef8uwfJsijX/GT+RVYTU9cKUZvF78bCpyCXEI39ZT/7
-         cEfdtIX8PMgvt/qsTOVuKoh/rozFT3YqD1gznaFcbcvt/MNExBSlgZOI6liTi1cRN6
-         P9QZjdi7nymHG2PQmB+K6SS3aa1cruCw5C1l4x3Uf0ShaAEMQiuGIY4HvwVLPRvNCV
-         EKRZbGtwKfbgn7x0r60UwYaqo4UE3rolapulHjJrILQMBh07c0hGlq3jIddxIp3VhO
-         z/1PLdIhsY96A==
-Date:   Wed, 17 Mar 2021 07:34:18 -0300
-From:   Thadeu Lima de Souza Cascardo <cascardo@cascardo.eti.br>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     don@syst.com.br, hdegoede@redhat.com, mgross@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org
-Subject: Re: [PATCH] platform: x86: Typo fix in the file classmate-laptop.c
-Message-ID: <YFHbKkyOrBLW6BCY@siri.cascardo.eti.br>
-References: <20210317084343.3788084-1-unixbhaskar@gmail.com>
+        Wed, 17 Mar 2021 08:00:29 -0400
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3AgIihj6P6wYoB2sBcTgGjsMiAIKoaSvp033AA?=
+ =?us-ascii?q?0UdtRRtJNvGJjszGpoV46TbYgCscMUtKpfmuI6+FKEm3ybdQwa08eYivRxPnvm?=
+ =?us-ascii?q?zAFvAA0aLHzyf7EyPzss5xvJ0AT4FEBNf9DUd3gK/BiWGFOuw9y9qK+r3Av4nj?=
+ =?us-ascii?q?5kpqJDsHV4hd9QtjTi6UHkpqLTMnObMJUKvZ3MZBqja6EE57Uu2wDBA+MNT+mw?=
+ =?us-ascii?q?=3D=3D?=
+X-IronPort-AV: E=Sophos;i="5.81,256,1610406000"; 
+   d="scan'208";a="376004234"
+Received: from 173.121.68.85.rev.sfr.net (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Mar 2021 13:00:27 +0100
+Date:   Wed, 17 Mar 2021 13:00:26 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user@lists.sourceforge.net
+cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kbuild-all@lists.01.org, Denis Efremov <efremov@linux.com>
+Subject: [PATCH] asus-laptop: fix kobj_to_dev.cocci warnings
+Message-ID: <alpine.DEB.2.22.394.2103171258010.2981@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210317084343.3788084-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 02:13:43PM +0530, Bhaskar Chowdhury wrote:
-> 
-> s/derefence/dereference/
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+From: kernel test robot <lkp@intel.com>
 
-Acked-by: Thadeu Lima de Souza Cascardo <cascardo@cascardo.eti.br>
+Use kobj_to_dev() instead of container_of()
 
-> ---
->  drivers/platform/x86/classmate-laptop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/classmate-laptop.c b/drivers/platform/x86/classmate-laptop.c
-> index 3e03e8d3a07f..9309ab5792cb 100644
-> --- a/drivers/platform/x86/classmate-laptop.c
-> +++ b/drivers/platform/x86/classmate-laptop.c
-> @@ -956,7 +956,7 @@ static int cmpc_ipml_add(struct acpi_device *acpi)
->  	/*
->  	 * If RFKILL is disabled, rfkill_alloc will return ERR_PTR(-ENODEV).
->  	 * This is OK, however, since all other uses of the device will not
-> -	 * derefence it.
-> +	 * dereference it.
->  	 */
->  	if (ipml->rf) {
->  		retval = rfkill_register(ipml->rf);
-> --
-> 2.30.2
-> 
+Generated by: scripts/coccinelle/api/kobj_to_dev.cocci
+
+CC: Denis Efremov <efremov@linux.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+---
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   1df27313f50a57497c1faeb6a6ae4ca939c85a7d
+commit: a2fc3718bc22e85378085568ecc5765fb28cabce coccinelle: api: add kobj_to_dev.cocci script
+:::::: branch date: 5 hours ago
+:::::: commit date: 7 months ago
+
+ asus-laptop.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/platform/x86/asus-laptop.c
++++ b/drivers/platform/x86/asus-laptop.c
+@@ -1569,7 +1569,7 @@ static umode_t asus_sysfs_is_visible(str
+ 				    struct attribute *attr,
+ 				    int idx)
+ {
+-	struct device *dev = container_of(kobj, struct device, kobj);
++	struct device *dev = kobj_to_dev(kobj);
+ 	struct asus_laptop *asus = dev_get_drvdata(dev);
+ 	acpi_handle handle = asus->handle;
+ 	bool supported;
