@@ -2,79 +2,83 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D11C433E9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DA6C433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 11:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0596764F40
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CED864F2B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 11:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbhCRKiy (ORCPT
+        id S230384AbhCRLCf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Mar 2021 06:38:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32828 "EHLO
+        Thu, 18 Mar 2021 07:02:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21998 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230092AbhCRKil (ORCPT
+        by vger.kernel.org with ESMTP id S230015AbhCRLCG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Mar 2021 06:38:41 -0400
+        Thu, 18 Mar 2021 07:02:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616063921;
+        s=mimecast20190719; t=1616065326;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZFcEuBunPrBlnFARDxQLLLV7P1+tq4mKkv7tIwNYp1M=;
-        b=WNwC9OXknFDPhyT92UAZe+8AVyAc3qSEKc2mu7eeeC3GNNl0fuHrVM6XjXwiruOlVrmIco
-        1ApeoFYqHIK1ioESfttQmj07N1Sx5++R2LvCZr3u7aE/NjSLTlZV96KbOGx8Oe8wcdswc6
-        SxXSGjH0zeo4QxJ+OL5HX1968GhR0wc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-Wvi3NPstOLye0RkZvcEO5w-1; Thu, 18 Mar 2021 06:38:40 -0400
-X-MC-Unique: Wvi3NPstOLye0RkZvcEO5w-1
-Received: by mail-ed1-f70.google.com with SMTP id v27so20910792edx.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Mar 2021 03:38:39 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qT8sXvj00qItqzlYyDhKarkrcjScc1QZn8W/3wkQDsY=;
+        b=GOKQyi+iKfT1akjt/pdOK+YM/nsVOdaaiLXfViTqsZOHdhGjBYyLhLczfxTArg040uqpHr
+        GTifYBhDNzaakv0rLXaJqG3iDJ5u0P2/n7jbrzfonnTZMx1adO2I9snElkG3nbKOA99qUQ
+        zmf1H+6hG9WomZZZcvHMTTauiXO7QM8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-0xUVJTdeMhmAskId09NsWA-1; Thu, 18 Mar 2021 07:02:04 -0400
+X-MC-Unique: 0xUVJTdeMhmAskId09NsWA-1
+Received: by mail-ed1-f72.google.com with SMTP id h2so20887273edw.10
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Mar 2021 04:02:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=ZFcEuBunPrBlnFARDxQLLLV7P1+tq4mKkv7tIwNYp1M=;
-        b=I9CiXmKPb4eoG1m9iXMbXrPZfQpS7dCo8mu71+1E1jFsoi0h+8w7xXUZGQY2ZWe0MG
-         ghx77fTkZGjoZ38Wx/Sp8fK6ILIXHXZ8psIJRGtv56f4X9Wc6G3LqOQ7bfvgYmlTSj0n
-         g0AQNSSJYwpDY9TzBH3yozVcSi8QhTtLBqD0mrDUxEqHr+Kc2kYI2lYvEN3ab9nGzKxl
-         S97u+F+6gg4B3WLK2NXZcKegZUgA0PIDMt1zdX+Ll93uG6eqDLFU8QWhn7v8Wz027jhr
-         Xr7A5gJzTY1yw/za8OHys5WjbVChGAWy1z5wZ6Qq4D46Ys9eDDzK2qMF3xRhJ+xJk8gn
-         WJCw==
-X-Gm-Message-State: AOAM533VVjbBh9MQICdapvEu6DUpr9CaRbpR5C7pMrwUxdN6c8BJlr9e
-        cf5/Lv1nJH+xgHo/Oic9f+eBfl/YIqKqZtavVZnR3w65MnIwUUZ32+GNVZ2G9bEh1vnctTP9sMO
-        GSoInKLVPez2tzWfzatKPksZMGD2N0y0cSzEtdnwNGaBX5QbnGx/h+fHkhULqI7k+Ebhr9s1YR6
-        7/nr2hJmHHlw==
-X-Received: by 2002:a05:6402:cb8:: with SMTP id cn24mr2818600edb.105.1616063918009;
-        Thu, 18 Mar 2021 03:38:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyOvfcOTS2gm4LSRU+H4K4kIec/9J1COiAQ8YD8CPJ0zSPbijCbWL5+6YeZ+yzdz1sqI/Cv5g==
-X-Received: by 2002:a05:6402:cb8:: with SMTP id cn24mr2818575edb.105.1616063917805;
-        Thu, 18 Mar 2021 03:38:37 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qT8sXvj00qItqzlYyDhKarkrcjScc1QZn8W/3wkQDsY=;
+        b=pUA3vCmfKTcWjOYHV0GFACINaaXXBiASyf9E6I/f60pPdHC4NLyMoMwnDPNvg/Md7r
+         8phU7QTds1UjoLkjpyADc6lFa4MAeLaShgJT39FW4cIc6B3Svl7rnXGgNE1+Lqqq4E7I
+         QlRYvM2el32PktN/yffeBvzwEhJYgfRCe0R1f9pEzPrQkxdymuioNX3latzxFv6OybPu
+         ydXEOqFL3Jn8HOK3aApl404+zJZ/OIVekA6/k0RuKyylTEhLrBUyK3YgRvbkHeb8Zz44
+         92NoXVrhsaWZzzPXP6y8NsZ4GWHs7WT/knk3fZTMAHLJ5c2PiiUCg05yCgDJtdh/8i8/
+         TBsQ==
+X-Gm-Message-State: AOAM530srSN7Z1oxg8/228n3rVAK1MZ1zcr1f5e15qlNdKz9ixSMawKJ
+        psuQzIKWn8P28Rog0z1EKkMeYwYOR73WE5XipHLb2yk3vgLjXiozO3DtMUxNGorsOhA7+VSPRm0
+        JBM6N46Z+6ZtjXhTTM7QypvMcezTy8yMOdl/DsopeMBVojMvdMyzWMsroXTh606P/+tzJibt/wu
+        bvAPumNfS11g==
+X-Received: by 2002:a17:906:bccc:: with SMTP id lw12mr39741390ejb.268.1616065322894;
+        Thu, 18 Mar 2021 04:02:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw4YEOii3XmAv1UFRr9lF62Tb1p12XeAreUyUkh32SNdZLwXapAN5f76EMeu27pU0dsEfkCHA==
+X-Received: by 2002:a17:906:bccc:: with SMTP id lw12mr39741365ejb.268.1616065322619;
+        Thu, 18 Mar 2021 04:02:02 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id t15sm1665733edw.84.2021.03.18.03.38.37
+        by smtp.gmail.com with ESMTPSA id b12sm1691963eds.94.2021.03.18.04.02.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Mar 2021 03:38:37 -0700 (PDT)
-To:     Sebastian Reichel <sre@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
+        Thu, 18 Mar 2021 04:02:02 -0700 (PDT)
+Subject: Re: [GIT PULL v2] Immutable branch between MFD and Platform/X86 due
+ for the v5.13 merge window
+To:     Lee Jones <lee.jones@linaro.org>,
+        "David E. Box" <david.e.box@linux.intel.com>
+Cc:     mgross@linux.intel.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+References: <20210128172846.99352-1-david.e.box@linux.intel.com>
+ <20210224201005.1034005-1-david.e.box@linux.intel.com>
+ <20210309181206.GT4931@dell> <20210310105711.GJ701493@dell>
 From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] Immutable branch between drivers/platform/x86 and HID
- resp. drivers/power/supply due for the v5.13 merge window
-Message-ID: <ef994907-61c7-2e0e-f26d-25b06a5dbf0f@redhat.com>
-Date:   Thu, 18 Mar 2021 11:38:36 +0100
+Message-ID: <f72cdea8-cd65-84e5-8dcd-1e94c01c90d1@redhat.com>
+Date:   Thu, 18 Mar 2021 12:02:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
+In-Reply-To: <20210310105711.GJ701493@dell>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,53 +86,30 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Sebastian, Jiri,
+Hi,
 
-Here is a pull-req with the drivers/platform/surface changes necessary
-as prereqs for the surface power_supply resp. HID patches which have been
-submitted to you.
+On 3/10/21 11:57 AM, Lee Jones wrote:
+> Rebased onto -rc2
+> 
+> The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
+> 
+>   Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-platform-x86-v5.13
+> 
+> for you to fetch changes up to aa47ad3f853ae72c32b7e46dfc8bc2c8dc2dbad7:
+> 
+>   mfd: intel_pmt: Add support for DG1 (2021-03-10 10:48:48 +0000)
+> 
+> ----------------------------------------------------------------
+> Immutable branch between MFD and Platform/x86 due for the v5.13 merge window
 
-Note the dependency seems to purely be a runtime/Kconfig one, so theoretically
-the patches could be merged without this, but then they cannot be compile-tested,
-since the "depends on SURFACE_AGGREGATOR_REGISTRY" then will never be true.
+Thank you, I've merged this into my review-hans branch now, so this will
+soon be in pdx86/for-next.
 
 Regards,
 
 Hans
-
-
-
-The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
-
-  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-surface-aggregator-v5.13-1
-
-for you to fetch changes up to aebf0a11a8c1fb6444d1365db97f90672199a867:
-
-  platform/surface: aggregator_registry: Add HID subsystem devices (2021-03-06 10:23:26 +0100)
-
-----------------------------------------------------------------
-Signed tag for the immutable platform-surface-aggregator-registry
-branch for merging into other sub-systems.
-
-Note this is based on v5.12-rc2.
-
-----------------------------------------------------------------
-Maximilian Luz (6):
-      platform/surface: Set up Surface Aggregator device registry
-      platform/surface: aggregator_registry: Add base device hub
-      platform/surface: aggregator_registry: Add battery subsystem devices
-      platform/surface: aggregator_registry: Add platform profile device
-      platform/surface: aggregator_registry: Add DTX device
-      platform/surface: aggregator_registry: Add HID subsystem devices
-
- MAINTAINERS                                        |   1 +
- drivers/platform/surface/Kconfig                   |  27 +
- drivers/platform/surface/Makefile                  |   1 +
- .../platform/surface/surface_aggregator_registry.c | 641 +++++++++++++++++++++
- 4 files changed, 670 insertions(+)
- create mode 100644 drivers/platform/surface/surface_aggregator_registry.c
 
