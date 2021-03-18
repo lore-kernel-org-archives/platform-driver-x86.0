@@ -2,92 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225CAC433E0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 04:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A2DC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 06:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D218A64F24
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 04:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7551964E27
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 06:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbhCREcy (ORCPT
+        id S229660AbhCRGPg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Mar 2021 00:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229456AbhCREcZ (ORCPT
+        Thu, 18 Mar 2021 02:15:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229708AbhCRGPS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Mar 2021 00:32:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5EF1964F41
-        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Mar 2021 04:32:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616041945;
-        bh=Ha3OpjjkPe2b0FYG6+K3UqnT+G2W23XvTmSvb8lDUcI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=e3HWUj3+vByD+pv0a6e0v6R/i4wHCiLxdjD0rHx7AU4oCKqxZfxiRHAHXk7TVJXEy
-         a5LuoernhBXMQNE+u4SeKVPHgaEGqviixuxuOFlmIl1FqBX/oke0pcsfD+bUTzZBMG
-         vYF7tc2MhY0t8o+x969rECtCgwn1ofMQWtIXZtWzprjbBd8eXGJ4gYiyuRiYMWdrKf
-         0wVX+NfCKYNUDKvuYC5dn8wAhA7iSGxmTLi4OPlQM6Y+bg+DoH4T2xyY8HN2N9qcKh
-         JpQ2AUSWMaTuRmukwKWexL6oimRJW9hrwGVG+kDYYpJLokfme2fTbI4BiersDGASUB
-         MXRW0vXn8VXqw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Thu, 18 Mar 2021 04:32:24 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: mjg59-kernel@srcf.ucam.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status cc resolution
-Message-ID: <bug-204807-215701-XXs5wnkjdv@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 18 Mar 2021 02:15:18 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD959C06174A;
+        Wed, 17 Mar 2021 23:15:17 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id a9so927248qkn.13;
+        Wed, 17 Mar 2021 23:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oGm7NDIPJjCsLFZ6tnghxBXyR6MEo70lHWJC6J/P594=;
+        b=a51vWDnzAGqhmGyVNrv+QHxOUVsCl7VhzWdgzJSgZi0JVESwW2RNjvCh3aMjBrvGTf
+         wzclHBzF9to7l86hHqhPGEbZeLC7OpObViVB/7q8AzgA9mkQLPywqj/Qt6u0jo3H2jpp
+         nAlNxmNmbDaGBtwbUIUSDdq7BNTbl6fat7vzWnoni8pyNdb+btcq34xkKa2U0ajFWjZI
+         KqNSrscJZ3aVunohQ2nD+szINEDbQxgrWzOLKEoOwz1il39xuhd63XeFAcEbsEpDq9ZF
+         Q7Zj0X5NSV9Xj7AAcnqfhvjQl4zdSUJ1RVSLzntGrCI7oEck59b1EOrTeH12Um4t95H8
+         O9nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oGm7NDIPJjCsLFZ6tnghxBXyR6MEo70lHWJC6J/P594=;
+        b=eM2UPUOOOelnZV6pCGXEzts8FatHomtVjzQoe1Z1Qr7LJJucvGHPwh6cKPphtLZKYx
+         zD78V4euaQ6HokYLS3C5RkUyrK8a7YpyOUf7g1XX4O1d3w4B/ZzNLG96KRw4LX7zRfEj
+         /DaiKNNprkR08qbyBCsEtOLgz66f3o2Ldqiu9yKIxCOYx/5a6T3uzXC6XuHmaioeDJUr
+         CoBOBw8p5Z4oBFnipy9XJrNfHHPCXphx+rLwGYmpzmuXNm/4+8WyrfCG2uXTHRp2eVGF
+         ZBcJYoTk4LCWFwsZ6qwW4WjBYhSdwWsLMpu223uPvnL3NlK4gPFmxnWsuK2Dk1bSz/YY
+         oS6Q==
+X-Gm-Message-State: AOAM5328bIBrV+LTI84LllkrevsqfoGASphd0izUUBy6a4wjdJ8s/bCJ
+        Tn/GiBvxO4Zls9UN3CipmZQ=
+X-Google-Smtp-Source: ABdhPJy56e0YJoP2SqJM/xh3/4dgFjsOBO48iD0obwi33OUyX1n5fvWyxSn0Ji7UGAJWu63MiUFXfA==
+X-Received: by 2002:a05:620a:641:: with SMTP id a1mr2788150qka.257.1616048117151;
+        Wed, 17 Mar 2021 23:15:17 -0700 (PDT)
+Received: from localhost.localdomain ([37.19.198.26])
+        by smtp.gmail.com with ESMTPSA id 77sm1095932qko.48.2021.03.17.23.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Mar 2021 23:15:16 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        unixbhaskar@gmail.com, gregkh@linuxfoundation.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     rdunlap@infradead.org
+Subject: [PATCH] x86/platform/intel-quark: Fix a typo
+Date:   Thu, 18 Mar 2021 11:42:51 +0530
+Message-Id: <20210318061250.8593-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Matthew Garrett (mjg59-kernel@srcf.ucam.org) changed:
+s/secton/section/
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|ASSIGNED                    |RESOLVED
-                 CC|                            |mjg59-kernel@srcf.ucam.org
-         Resolution|---                         |INVALID
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ arch/x86/platform/intel-quark/imr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- Comment #33 from Matthew Garrett (mjg59-kernel@srcf.ucam.org) ---
-This isn't a bug - the ACPI tables claim the resource in question, and ther=
-e's
-no way we can verify there are no conflicts between ACPI methods that touch
-that range and the native driver. If you're confident that this is safe on =
-your
-system then you can boot with acpi_enforce_resources=3Dlax, but we can't ma=
-ke
-that the default. This will still produce the warning, but the driver will =
-be
-permitted to load.
+diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+index 0286fe1b14b5..122e0f37b1f5 100644
+--- a/arch/x86/platform/intel-quark/imr.c
++++ b/arch/x86/platform/intel-quark/imr.c
+@@ -551,7 +551,7 @@ static void __init imr_fixup_memmap(struct imr_device *idev)
 
---=20
-You may reply to this email to add a comment.
+ 	/*
+ 	 * Setup an unlocked IMR around the physical extent of the kernel
+-	 * from the beginning of the .text secton to the end of the
++	 * from the beginning of the .text section to the end of the
+ 	 * .rodata section as one physically contiguous block.
+ 	 *
+ 	 * We don't round up @size since it is already PAGE_SIZE aligned.
+--
+2.20.1
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
