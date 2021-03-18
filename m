@@ -2,93 +2,133 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5ECC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D11C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45CE564F41
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0596764F40
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 10:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbhCRK2S (ORCPT
+        id S230035AbhCRKiy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Mar 2021 06:28:18 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:43913 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbhCRK2Q (ORCPT
+        Thu, 18 Mar 2021 06:38:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32828 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230092AbhCRKil (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Mar 2021 06:28:16 -0400
-Received: from [192.168.1.155] ([77.4.36.33]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M26j1-1lOkcd0NRZ-002XsB; Thu, 18 Mar 2021 11:27:54 +0100
-Subject: Re: [PATCH v2 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>
-References: <20210315095710.7140-1-henning.schild@siemens.com>
- <20210315095710.7140-3-henning.schild@siemens.com>
- <CAHp75VcBdR8xqfWqKe+DwGAUYByVL7SBK0p7tHcKPs7m4Ay1iw@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <e2c6bec5-1f8e-c69a-9219-5c0a9f63ba56@metux.net>
-Date:   Thu, 18 Mar 2021 11:27:51 +0100
+        Thu, 18 Mar 2021 06:38:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616063921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZFcEuBunPrBlnFARDxQLLLV7P1+tq4mKkv7tIwNYp1M=;
+        b=WNwC9OXknFDPhyT92UAZe+8AVyAc3qSEKc2mu7eeeC3GNNl0fuHrVM6XjXwiruOlVrmIco
+        1ApeoFYqHIK1ioESfttQmj07N1Sx5++R2LvCZr3u7aE/NjSLTlZV96KbOGx8Oe8wcdswc6
+        SxXSGjH0zeo4QxJ+OL5HX1968GhR0wc=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459-Wvi3NPstOLye0RkZvcEO5w-1; Thu, 18 Mar 2021 06:38:40 -0400
+X-MC-Unique: Wvi3NPstOLye0RkZvcEO5w-1
+Received: by mail-ed1-f70.google.com with SMTP id v27so20910792edx.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Mar 2021 03:38:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=ZFcEuBunPrBlnFARDxQLLLV7P1+tq4mKkv7tIwNYp1M=;
+        b=I9CiXmKPb4eoG1m9iXMbXrPZfQpS7dCo8mu71+1E1jFsoi0h+8w7xXUZGQY2ZWe0MG
+         ghx77fTkZGjoZ38Wx/Sp8fK6ILIXHXZ8psIJRGtv56f4X9Wc6G3LqOQ7bfvgYmlTSj0n
+         g0AQNSSJYwpDY9TzBH3yozVcSi8QhTtLBqD0mrDUxEqHr+Kc2kYI2lYvEN3ab9nGzKxl
+         S97u+F+6gg4B3WLK2NXZcKegZUgA0PIDMt1zdX+Ll93uG6eqDLFU8QWhn7v8Wz027jhr
+         Xr7A5gJzTY1yw/za8OHys5WjbVChGAWy1z5wZ6Qq4D46Ys9eDDzK2qMF3xRhJ+xJk8gn
+         WJCw==
+X-Gm-Message-State: AOAM533VVjbBh9MQICdapvEu6DUpr9CaRbpR5C7pMrwUxdN6c8BJlr9e
+        cf5/Lv1nJH+xgHo/Oic9f+eBfl/YIqKqZtavVZnR3w65MnIwUUZ32+GNVZ2G9bEh1vnctTP9sMO
+        GSoInKLVPez2tzWfzatKPksZMGD2N0y0cSzEtdnwNGaBX5QbnGx/h+fHkhULqI7k+Ebhr9s1YR6
+        7/nr2hJmHHlw==
+X-Received: by 2002:a05:6402:cb8:: with SMTP id cn24mr2818600edb.105.1616063918009;
+        Thu, 18 Mar 2021 03:38:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyOvfcOTS2gm4LSRU+H4K4kIec/9J1COiAQ8YD8CPJ0zSPbijCbWL5+6YeZ+yzdz1sqI/Cv5g==
+X-Received: by 2002:a05:6402:cb8:: with SMTP id cn24mr2818575edb.105.1616063917805;
+        Thu, 18 Mar 2021 03:38:37 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id t15sm1665733edw.84.2021.03.18.03.38.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 Mar 2021 03:38:37 -0700 (PDT)
+To:     Sebastian Reichel <sre@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] Immutable branch between drivers/platform/x86 and HID
+ resp. drivers/power/supply due for the v5.13 merge window
+Message-ID: <ef994907-61c7-2e0e-f26d-25b06a5dbf0f@redhat.com>
+Date:   Thu, 18 Mar 2021 11:38:36 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcBdR8xqfWqKe+DwGAUYByVL7SBK0p7tHcKPs7m4Ay1iw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ixcya2BAbf0QE2jlA5UzDIT03D9u3Hv2Dnuz9dznwiCPoIY9XFN
- pd6RH7axDScUyRXgbv58maBTYc64gK1mtn9u8gS7rBihynwysKXzhfbi2btFnK8bM8ylEL9
- wqlfv2UWYfkh9am83GkUUKnID5Ihw/9q3buCj/wo+3W0jZt06dz/J8t7oQZHdg25XCYk7df
- yNUnr9kt4THGdIKaKyHUg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t8IjnDFihBE=:Be/311bZOEqcvFuRFwPBrK
- wO/ALvA59N7m4mSHi+02UcArQRA0CPvfewMYiXMsSkB3Bp+TFhQ27dyuWz/cBxHn3mgKWhbxi
- 8HgKpEuSJHocffh6iz/rVfw9j01J6DutmUO1kmKj9HJM+WdOWFirsZjiglXfGAZ2SC6BejLv4
- iObnCuuLCOxEASZJ9x7C7qeZ5Tv24Zk59X/gFYIpRszVMPxysd5jJEXDpZfbQin9O+UkSSwji
- vXvDND6aQoIeKXPrZBkF/8kT/lKojpX217n5wfW/0G8HNiNjHVVgz8Nd1ohPPWT+c/8DpiFlw
- ktAWl6rxZmvmn8usui4FlzaH6NLGxrTf8peo79YE0bem7nbWlpOMIzQ9rzSVICEmstSggOvF+
- jELQYL9+3SnDAp8zgTOWFF1WM3BmwWde4ozDfWN+BeOaRMOu+0ho2pLa/svx0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 15.03.21 11:48, Andy Shevchenko wrote:
+Hi Sebastian, Jiri,
 
-Hi,
+Here is a pull-req with the drivers/platform/surface changes necessary
+as prereqs for the surface power_supply resp. HID patches which have been
+submitted to you.
 
-> I have a question, why we can't provide a GPIO driver which is already
-> in the kernel and, with use of the patch series I sent, to convert
-> this all magic to GPIO LEDs as it's done for all normal cases?
+Note the dependency seems to purely be a runtime/Kconfig one, so theoretically
+the patches could be merged without this, but then they cannot be compile-tested,
+since the "depends on SURFACE_AGGREGATOR_REGISTRY" then will never be true.
 
-Do we alread have a generic led driver that for cases that just
-set/clear bits in some mem/io location ? If not, that would be really
-great to have.
+Regards,
+
+Hans
 
 
---mtx
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
+
+  Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-surface-aggregator-v5.13-1
+
+for you to fetch changes up to aebf0a11a8c1fb6444d1365db97f90672199a867:
+
+  platform/surface: aggregator_registry: Add HID subsystem devices (2021-03-06 10:23:26 +0100)
+
+----------------------------------------------------------------
+Signed tag for the immutable platform-surface-aggregator-registry
+branch for merging into other sub-systems.
+
+Note this is based on v5.12-rc2.
+
+----------------------------------------------------------------
+Maximilian Luz (6):
+      platform/surface: Set up Surface Aggregator device registry
+      platform/surface: aggregator_registry: Add base device hub
+      platform/surface: aggregator_registry: Add battery subsystem devices
+      platform/surface: aggregator_registry: Add platform profile device
+      platform/surface: aggregator_registry: Add DTX device
+      platform/surface: aggregator_registry: Add HID subsystem devices
+
+ MAINTAINERS                                        |   1 +
+ drivers/platform/surface/Kconfig                   |  27 +
+ drivers/platform/surface/Makefile                  |   1 +
+ .../platform/surface/surface_aggregator_registry.c | 641 +++++++++++++++++++++
+ 4 files changed, 670 insertions(+)
+ create mode 100644 drivers/platform/surface/surface_aggregator_registry.c
+
