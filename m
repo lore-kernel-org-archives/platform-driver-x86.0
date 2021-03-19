@@ -2,96 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40C0C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 11:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C773C433E1
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 15:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBEA64F73
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 11:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5F961929
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 15:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbhCSLgx (ORCPT
+        id S229996AbhCSPJr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 19 Mar 2021 07:36:53 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:56675 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbhCSLgK (ORCPT
+        Fri, 19 Mar 2021 11:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230378AbhCSPJe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 19 Mar 2021 07:36:10 -0400
-Received: from [192.168.1.155] ([95.114.29.199]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N6c0W-1lkpsh3zCw-0185kY; Fri, 19 Mar 2021 12:35:50 +0100
-Subject: Re: [External] Re: [PATCH] thinkpad_acpi: Allow the FnLock LED to
- change state
-To:     Nitin Joshi1 <njoshi1@lenovo.com>,
-        Mark RH Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Esteve Varela Colominas <esteve.varela@gmail.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>
-Cc:     "ibm-acpi-devel@lists.sourceforge.net" 
-        <ibm-acpi-devel@lists.sourceforge.net>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-References: <20210315195823.23212-1-esteve.varela@gmail.com>
- <7fcaeb12-35b1-242a-dfd0-02324643c34b@redhat.com>
- <18ee74c0-85d9-6a1a-67f5-82682878001a@lenovo.com>
- <TY2PR03MB36456F1A3EFC9C31A865BF498C689@TY2PR03MB3645.apcprd03.prod.outlook.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Message-ID: <a7d7b03b-1053-56ed-15eb-44910753e8e3@metux.net>
-Date:   Fri, 19 Mar 2021 12:35:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Fri, 19 Mar 2021 11:09:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2331D61926
+        for <platform-driver-x86@vger.kernel.org>; Fri, 19 Mar 2021 15:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616166574;
+        bh=oh5BFPCtVnCWm2ZUx2xgO/UF5uL0HFpBeNBECfJYqi0=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Pb8IZIPbYavbQsf5VF9FsC7ROm5zzmUhKudtWNDDPsU8VRbfNq3yhcQBjX9NpSBa5
+         KZmLA4jcvBWFvBwO4hWUH15DkDIcNlDzDpGNpLEFJMGU9vJdLw0wZmvFkGNJAqLU4V
+         Ye5UWKv/BErm1GcwSWaBy4nBf7deOiFADLaVrTKt2PKWRP0Lg6nUeoNrEshKK+hW8j
+         th5SIkdwADTnW0gQduwRDBHdUGk1thusOeMUHaraA1ioU/a4m1m25wkFwWcMywIi99
+         8/SUu00P/Vb6VmHYXwtsksxBhe31lVaKP89vS97Zy1et5f77gHUyN0AIUQDUT6lqzu
+         ORQkcPFapavIg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Fri, 19 Mar 2021 15:09:33 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: aros@gmx.com
+X-Bugzilla-Status: REOPENED
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status cc resolution
+Message-ID: <bug-204807-215701-XAN4etClyz@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <TY2PR03MB36456F1A3EFC9C31A865BF498C689@TY2PR03MB3645.apcprd03.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:cH4HBUtYztyQ+0CLgeeIMUjGixGMEmDd0gPyjOiSeZx0Suq8M84
- lkZpBhYPIvaF2xvlVlKJ4HGUK4rPLw8nLwuaxcDndp0ySN05Q6IUI+UFGF75I9BReO9enVk
- zi7ov3OoHoKEiOxnkxU4we5aXX62KF/wV6+nll4FbUJ25xNweUqbrG8JqPZ69jqziHO7pJx
- AMTz5+XhbiCrS+WwqE1ig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a4pbUfFtTqY=:5nVhztB9wyc3HbapZ5MoJG
- Kg3TR7YOUUMK5Ix0F3n9Jd+SKPMTUbE8uMRs7XVxQdRHoskDCAz9TMCGejy86xDMgPl+vvaCQ
- cB6oLrWiPreDZ3KuAZI9ZpMsVgGLUUmlA5RKbPLQsE0JUskUx66qjLnCaohDs+frXq0atEijg
- uINdbw4CQQTBe6uVKyXT6zu8AdQH8jZ6ZCHCotHPsllRcoFobyjo8C176GLotPZgWopJX01W7
- rsAxiVUMyAMg/lSpOHErvb6L1/9BGpX4nbYJdHggMx1km6iLy6X15ySjDwNTIBXG21sGAsjFs
- ZDaE4PwgEml9oXsvdrxhTYfiC/wNgum/t0lxsGRKQHzq80vNlbPVBbqRXicygWaWOjXtpngnf
- syRhxz7JLLZODtjkcB8ADoJma9cmJmnPvk/+zsESh/ZXwy7PbTTomvva0KcnB
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 19.03.21 11:39, Nitin Joshi1 wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Hi,
+Artem S. Tashkinov (aros@gmx.com) changed:
 
-> Regarding "GMKS" method, it does not have "version" related information. So , its unlikely to impact any older platforms.
-> However, I got it confirmed that definition of GMKS method itself doesn't include any workaround feature.
-> 
-> But, since its getter function , I also think its harmless and if it workaround some issue then I don’t see any concern.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|RESOLVED                    |REOPENED
+                 CC|                            |torvalds@linux-foundation.o
+                   |                            |rg
+         Resolution|INVALID                     |---
 
-How about publishing schematics / specs, so we can confirm what it's
-really doing ?
+--- Comment #34 from Artem S. Tashkinov (aros@gmx.com) ---
+(In reply to Matthew Garrett from comment #33)
+> This isn't a bug - the ACPI tables claim the resource in question, and
+> there's no way we can verify there are no conflicts between ACPI methods
+> that touch that range and the native driver. If you're confident that this
+> is safe on your system then you can boot with acpi_enforce_resources=3Dla=
+x,
+> but we can't make that the default. This will still produce the warning, =
+but
+> the driver will be permitted to load.
 
-In recent decades I've learn to mistrust vendor-provided firmware
-(especially when it comes to acpi). The reason why I'm currently
-bisecting AMD's AGESA blob, in order to completely replace it.
+This bug needs to be fixed because
 
-It's a tedious job, had to write my own analysis tool, but step
-by step making progress. (and already learned they've been using a
-pretty inefficient compiler that can't even inline trivial memcpy().
-Probably some older msvc ... :p)
+1) It doesn't affect Windows
+2) Average people will never know how to deal with issue
+3) I cannot ask my motherboard vendor (ASUS) to fix this issue in BIOS beca=
+use
+they don't provide support for Linux - they barely provide any support at a=
+ll.
 
---mtx
+OoB experience of Linux users should not be "I don't get any sensors output,
+how to fix that?" Most users don't even know what and how to Google. They d=
+on't
+know about dmesg either.
 
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+That's an effing horrible attitude.
+
+I'm CC'ing Linus because I absolutely hate what's going on.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
