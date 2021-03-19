@@ -2,157 +2,280 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49ADC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 20:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC088C433E9
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 03:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6446C64DF4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 18 Mar 2021 20:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D7664F65
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 19 Mar 2021 03:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232674AbhCRUNW (ORCPT
+        id S233557AbhCSDpI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 18 Mar 2021 16:13:22 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.113]:9526 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233014AbhCRUNL (ORCPT
+        Thu, 18 Mar 2021 23:45:08 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:39540 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231351AbhCSDoo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 18 Mar 2021 16:13:11 -0400
-Received: from [100.112.6.224] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-c.us-east-1.aws.symcld.net id 90/D1-49826-654B3506; Thu, 18 Mar 2021 20:13:10 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuplleJIrShJLcpLzFFi42LJePGQRzdsS3C
-  Cwca3vBanr6ZZvDk+ncli9mEbiznP1jJarN7zgtmB1WPnrLvsHr8PMHrsXvCZyeP9vqtsHp83
-  yQWwRrFm5iXlVySwZtz9+oq5YI9Exeb3i9gbGOeLdDFycQgJ/GeUeHXhLROE84JRYumb38xdj
-  JwcwgIREr8eNTCCJEQENjFKtL18xg6SYBYIkujf284KYgsJ5Eu8aFkG1sAmoC2xZcsvNhCbV8
-  BWYuWmI2A2i4CqxIwdy8B6RQXCJXqv3GaFqBGUODnzCQuIzSlgJ7Ho5CmgOAfQfE2J9bv0IVa
-  JS9x6Mp8JwpaX2P52DtgqCQEFiXOPf7FD2AkSPf8esU1gFJyFZOoshEmzkEyahWTSAkaWVYxm
-  SUWZ6RkluYmZObqGBga6hoZGuma6hhbGeolVusl6pcW6qYnFJbqGeonlxXrFlbnJOSl6eaklm
-  xiBMZNSwLZ9B+Pe1x/0DjFKcjApifI+mRycIMSXlJ9SmZFYnBFfVJqTWnyIUYaDQ0mCd/FKoJ
-  xgUWp6akVaZg4wfmHSEhw8SiK8QhuB0rzFBYm5xZnpEKlTjLocL64uXsQsxJKXn5cqJc67cxN
-  QkQBIUUZpHtwIWCq5xCgrJczLyMDAIMRTkFqUm1mCKv+KUZyDUUmY98JmoCk8mXklcJteAR3B
-  BHREBH8QyBEliQgpqQameUeF86fGbXvv9FbsmsiyJ24/dbQuh5jL1XBuTs1J2hX68eLVeVIXa
-  8XOpXLVf77uXChraFJ0IvPdh4fFXRp+PAW75q5U8Eh2EHqZkL7AYuP8i7t7JjqaJen/zg14eT
-  VArfnvd9UZF0r+R+/6N2GR5W7TOzfXrCr9lszQNGHuhsv909dftl8un3Son38u26/VTXnOV6o
-  7V9z5zj+xKWdXSfU7x7UGTKEXdJZM3cby0nFlPTfv6ucnvybnujw6nfthsua7xRKi01z/vPc4
-  GvKhLsBCZNNam7UfXSdKG6yWNnpncUGXo93Q5gXLUXm2j5oTTzAsiDdlbuGZ6hfYseZxccQX9
-  64iht1T3llU7ZarUmIpzkg01GIuKk4EAPAdRVSgAwAA
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-20.tower-415.messagelabs.com!1616098390!35507!1
-X-Originating-IP: [104.232.225.12]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 16649 invoked from network); 18 Mar 2021 20:13:10 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.12)
-  by server-20.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Mar 2021 20:13:10 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 0A71D77508F818417F5F;
-        Thu, 18 Mar 2021 16:13:10 -0400 (EDT)
-Received: from localhost.localdomain (10.38.103.43) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Thu, 18 Mar
- 2021 16:13:09 -0400
-Subject: Re: [External] Re: [PATCH] thinkpad_acpi: Allow the FnLock LED to
- change state
+        Thu, 18 Mar 2021 23:44:44 -0400
+Received: by mail-pg1-f181.google.com with SMTP id k24so2785258pgl.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 18 Mar 2021 20:44:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Lug4qgUDClRW1WnIWEXzkckRal9usq46ZsryZ/P7XuQ=;
+        b=AsfA0lqZ76MR8iQHHC0Kj6NYbs8khEYZ8zT80sC8dU7P+PN5uDEovrPBQz8+zbS4Ud
+         y6DLrA8OQ36RmNZrvMPY3jTN1OhzCVgGpHy2pivNhTpBzatU+BGlT3wm2iolhwx7WIMu
+         VWp8ekiXTUAmkd4Xnlt7XOcc9rWRKhnCVRQZZ9n92ucqyLrrSwSuug+YFvJtKYYFYvrM
+         tnnWI6f2KnRQR+xDZcwTgYLKBAm1xFhnYSxmJFF40Zf4ewMXUkafW4EpzY3hIMoJjJEk
+         0x/YOc3uVQDnzELZAY7+MGNT9RGfK4faT+oCF1ZyGuezO5zTInFow9ess/yDG2K1eZek
+         mBqQ==
+X-Gm-Message-State: AOAM532/fNLlCL31Jcna7B9P9Fc+wLirhspMo2Aq7/Vs/VLVyY0tHUfn
+        xVsPhaq9QMO/cDYgbJtg85A=
+X-Google-Smtp-Source: ABdhPJwb5GhaIEPXoMrqXDFNQhwcOJZZaPIFbGt1aKAQYYYXjB+t+yJ2x5kWwscPfq3ot3fkdwsVKQ==
+X-Received: by 2002:aa7:9a89:0:b029:200:1eed:1388 with SMTP id w9-20020aa79a890000b02902001eed1388mr7118323pfi.79.1616125484154;
+        Thu, 18 Mar 2021 20:44:44 -0700 (PDT)
+Received: from FWA-T011.advantech.corp (61-219-255-68.HINET-IP.hinet.net. [61.219.255.68])
+        by smtp.gmail.com with ESMTPSA id mz11sm3762772pjb.6.2021.03.18.20.44.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Mar 2021 20:44:43 -0700 (PDT)
+From:   YingChieh Ho <andrea.cs97g@nctu.edu.tw>
 To:     Hans de Goede <hdegoede@redhat.com>,
-        Esteve Varela Colominas <esteve.varela@gmail.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Nitin Joshi1 <njoshi1@lenovo.com>
-CC:     <ibm-acpi-devel@lists.sourceforge.net>,
-        <platform-driver-x86@vger.kernel.org>
-References: <20210315195823.23212-1-esteve.varela@gmail.com>
- <7fcaeb12-35b1-242a-dfd0-02324643c34b@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <18ee74c0-85d9-6a1a-67f5-82682878001a@lenovo.com>
-Date:   Thu, 18 Mar 2021 16:13:08 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
-MIME-Version: 1.0
-In-Reply-To: <7fcaeb12-35b1-242a-dfd0-02324643c34b@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.103.43]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+        YingChieh Ho <andrea.cs97g@nctu.edu.tw>,
+        platform-driver-x86@vger.kernel.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     voyandrea@gmail.com, Andrea.Ho@advantech.com.tw
+Subject: [PATCH v3] platform/x86: add support for Advantech software defined button
+Date:   Fri, 19 Mar 2021 03:44:27 +0000
+Message-Id: <20210319034427.23222-1-andrea.cs97g@nctu.edu.tw>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans
+From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
 
-On 18/03/2021 12:49, Hans de Goede wrote:
-> Hi,
-> 
-> On 3/15/21 8:58 PM, Esteve Varela Colominas wrote:
->> On many recent ThinkPad laptops, there's a new LED next to the ESC key,
->> that indicates the FnLock status.
->> When the Fn+ESC combo is pressed, FnLock is toggled, which causes the
->> Media Key functionality to change, making it so that the media keys
->> either perform their media key function, or function as an F-key by
->> default. The Fn key can be used the access the alternate function at any
->> time.
->>
->> With the current linux kernel, the LED doens't change state if you press
->> the Fn+ESC key combo. However, the media key functionality *does*
->> change. This is annoying, since the LED will stay on if it was on during
->> bootup, and it makes it hard to keep track what the current state of the
->> FnLock is.
->>
->> This patch calls an ACPI function, that gets the current media key
->> state, when the Fn+ESC key combo is pressed. Through testing it was
->> discovered that this function causes the LED to update correctly to
->> reflect the current state when this function is called.
->>
->> The relevant ACPI calls are the following:
->> \_SB_.PCI0.LPC0.EC0_.HKEY.GMKS: Get media key state, returns 0x603 if the FnLock mode is enabled, and 0x602 if it's disabled.
->> \_SB_.PCI0.LPC0.EC0_.HKEY.SMKS: Set media key state, sending a 1 will enable FnLock mode, and a 0 will disable it.
->>
->> Relevant discussion:
->> https://bugzilla.kernel.org/show_bug.cgi?id=207841
->> https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1881015
->>
->> Signed-off-by: Esteve Varela Colominas <esteve.varela@gmail.com>
->> ---
->>  drivers/platform/x86/thinkpad_acpi.c | 8 +++++++-
->>  1 file changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->> index c40470637..09362dd74 100644
->> --- a/drivers/platform/x86/thinkpad_acpi.c
->> +++ b/drivers/platform/x86/thinkpad_acpi.c
->> @@ -4079,13 +4079,19 @@ static bool hotkey_notify_6xxx(const u32 hkey,
->>  
->>  	case TP_HKEY_EV_KEY_NUMLOCK:
->>  	case TP_HKEY_EV_KEY_FN:
->> -	case TP_HKEY_EV_KEY_FN_ESC:
->>  		/* key press events, we just ignore them as long as the EC
->>  		 * is still reporting them in the normal keyboard stream */
->>  		*send_acpi_ev = false;
->>  		*ignore_acpi_ev = true;
->>  		return true;
->>  
->> +	case TP_HKEY_EV_KEY_FN_ESC:
->> +		/* Get the media key status to foce the status LED to update */
->> +		acpi_evalf(hkey_handle, NULL, "GMKS", "v");
-> 
-> Sicne this is a getter function I guess that calling it is mostly harmless
-> and if it works around what seems to be a firmware bug on some of the E?95
-> ThinkPad models then I guess that this is fine by me.
-> 
-> Mark, do you have any comments on this ?
-I'd like to follow up with the firmware team to make sure we've got the
-correct details and implementation (kudos on the reverse engineering
-though).
+Advantech sw_button is a ACPI event trigger button.
 
-Nitin - you've worked with the firmware team on hotkeys, would you mind
-digging into this one please to confirm. In particular if there's been a
-change how do we make sure we don't impact older platforms etc.
+With this driver, we can report KEY_EVENT on the
+Advantech Tabletop Network Appliances products and it has been
+tested in FWA1112VC.
 
-Mark
+Add the software define button support to report EV_REP key_event
+(KEY_PROG1) by pressing button that cloud be get on user
+interface and trigger the customized actions.
+
+Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+v3:
+        - refined struct and functions of the driver
+        - drop acpi_device and use adv_swbutton as driver name
+        - remove all unnecessary defines
+
+v2:
+        - change evdev key-code from BTN_TRIGGER_HAPPY to KEY_PROG1
+        - to rewrite the driver to be a regular platform_driver
+        - use specific names instead of generic names,
+          "Software Button" to "Advantech Software Button",
+          "button" to "adv_swbutton"
+        - remove unused defines or use-once defines
+	  ACPI_BUTTON_FILE_INFO, ACPI_BUTTON_FILE_STATE,
+	  ACPI_BUTTON_TYPE_UNKNOWN, ACPI_SWBTN_NAME
+---
+ MAINTAINERS                         |   5 ++
+ drivers/platform/x86/Kconfig        |  11 +++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/adv_swbutton.c | 127 ++++++++++++++++++++++++++++
+ 4 files changed, 146 insertions(+)
+ create mode 100644 drivers/platform/x86/adv_swbutton.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 68f21d46614c..e35c48e411b7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -562,6 +562,11 @@ S:	Maintained
+ F:	Documentation/scsi/advansys.rst
+ F:	drivers/scsi/advansys.c
+ 
++ADVANTECH SWBTN DRIVER
++M:	Andrea Ho <Andrea.Ho@advantech.com.tw>
++S:	Maintained
++F:	drivers/platform/x86/adv_swbutton.c
++
+ ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ S:	Supported
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0581a54cf562..b1340135c5e9 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -180,6 +180,17 @@ config ACER_WMI
+ 	  If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
+ 	  here.
+ 
++config ADV_SWBUTTON
++    tristate "Advantech ACPI Software Button Driver"
++    depends on ACPI
++    help
++      Say Y here to enable support for Advantech software defined
++      button feature. More information can be fount at
++      <http://www.advantech.com.tw/products/>
++
++      To compile this driver as a module, choose M here. The module will
++      be called adv_swbutton.
++
+ config APPLE_GMUX
+ 	tristate "Apple Gmux Driver"
+ 	depends on ACPI && PCI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 2b85852a1a87..76a321fc58ba 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -22,6 +22,9 @@ obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+ obj-$(CONFIG_ACER_WIRELESS)	+= acer-wireless.o
+ obj-$(CONFIG_ACER_WMI)		+= acer-wmi.o
+ 
++# Advantech
++obj-$(CONFIG_ADV_SWBUTTON)  += adv_swbutton.o
++
+ # Apple
+ obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+ 
+diff --git a/drivers/platform/x86/adv_swbutton.c b/drivers/platform/x86/adv_swbutton.c
+new file mode 100644
+index 000000000000..8618dcbbd811
+--- /dev/null
++++ b/drivers/platform/x86/adv_swbutton.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *  adv_swbutton.c - Software Button Interface Driver.
++ *
++ *  (C) Copyright 2020 Advantech Corporation, Inc
++ *
++ */
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/input.h>
++#include <linux/acpi.h>
++#include <linux/platform_device.h>
++
++#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
++
++#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
++#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
++
++#define _COMPONENT                          ACPI_BUTTON_COMPONENT
++
++struct adv_swbutton {
++	struct input_dev *input;
++	char phys[32];
++};
++
++/*-------------------------------------------------------------------------
++ *                               Driver Interface
++ *--------------------------------------------------------------------------
++ */
++static void adv_swbutton_notify(acpi_handle handle, u32 event, void *context)
++{
++	struct platform_device *device = context;
++	struct adv_swbutton *button = dev_get_drvdata(&device->dev);
++
++	switch (event) {
++	case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
++		input_report_key(button->input, KEY_PROG1, 0);
++		input_sync(button->input);
++	break;
++	case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
++		input_report_key(button->input, KEY_PROG1, 1);
++		input_sync(button->input);
++	break;
++	default:
++		dev_dbg(&device->dev, "Unsupported event [0x%x]\n", event);
++	}
++}
++
++static int adv_swbutton_probe(struct platform_device *device)
++{
++	struct adv_swbutton *button;
++	struct input_dev *input;
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++	acpi_status status;
++
++	int error;
++
++	button = devm_kzalloc(&device->dev, sizeof(*button), GFP_KERNEL);
++	if (!button)
++		return -ENOMEM;
++
++	dev_set_drvdata(&device->dev, button);
++
++	input = devm_input_allocate_device(&device->dev);
++	if (!input)
++		return -ENOMEM;
++
++	button->input = input;
++
++	input->name = "Advantech Software Button";
++	input->phys = button->phys;
++	input->id.bustype = BUS_HOST;
++	input->dev.parent = &device->dev;
++
++	set_bit(EV_KEY, input->evbit);
++	set_bit(EV_REP, input->evbit);
++
++	input_set_capability(input, EV_KEY, KEY_PROG1);
++	error = input_register_device(input);
++	if (error)
++		return error;
++
++	device_init_wakeup(&device->dev, true);
++
++	status = acpi_install_notify_handler(handle,
++					     ACPI_DEVICE_NOTIFY,
++					     adv_swbutton_notify,
++					     device);
++	if (ACPI_FAILURE(status)) {
++		dev_err(&device->dev, "Error installing notify handler\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int adv_swbutton_remove(struct platform_device *device)
++{
++	acpi_handle handle = ACPI_HANDLE(&device->dev);
++
++	acpi_remove_notify_handler(handle, ACPI_DEVICE_NOTIFY,
++				   adv_swbutton_notify);
++
++	return 0;
++}
++
++static const struct acpi_device_id button_device_ids[] = {
++	{ACPI_BUTTON_HID_SWBTN, 0},
++	{"", 0},
++};
++
++MODULE_DEVICE_TABLE(acpi, button_device_ids);
++
++static struct platform_driver adv_swbutton_driver = {
++	.driver = {
++		.name = "adv_swbutton",
++		.acpi_match_table = button_device_ids,
++	},
++	.probe = adv_swbutton_probe,
++	.remove = adv_swbutton_remove,
++};
++
++module_platform_driver(adv_swbutton_driver);
++
++MODULE_AUTHOR("Andrea Ho");
++MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.17.1
+
