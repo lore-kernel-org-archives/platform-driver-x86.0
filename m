@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDCCC433E1
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 Mar 2021 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CD6C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 Mar 2021 15:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 091B16195E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 Mar 2021 15:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBB66194A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 20 Mar 2021 15:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbhCTPdV (ORCPT
+        id S229606AbhCTPoR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 20 Mar 2021 11:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40394 "EHLO mail.kernel.org"
+        Sat, 20 Mar 2021 11:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229634AbhCTPdP (ORCPT
+        id S229791AbhCTPns (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 20 Mar 2021 11:33:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 0D57661970
-        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Mar 2021 15:33:15 +0000 (UTC)
+        Sat, 20 Mar 2021 11:43:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 4CD5A61973
+        for <platform-driver-x86@vger.kernel.org>; Sat, 20 Mar 2021 15:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616254395;
-        bh=Wp9RrPXmiq3xZP3bzUqObAXluum4gt/+hrGLXLPKXOs=;
+        s=k20201202; t=1616255028;
+        bh=375WokOQrCC85OgtMFlHWG4ujQNrTREFNWWsn7A+IEY=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=o9NxXtXFORv2/QzLrwm9G6MprqudjHdUMDF3a0aGORzsDawHPvlC0JNBGY5EL9MOe
-         feZb1fWgCK6iIcR3dr9RakcUvHNqv12jHrmuqsqbZji7lCvDQLGNDkplfz1eoo/iNC
-         O5cXV4x2bNBuOjpbKUWORVY99kfm+JOvlpf8n3NniXJCbQSIMg0mOMZqloRdCthrYH
-         RtTgVo9IhpIwdtGQfjUGQ9oux8v8OZpdrYcN2xYuwrfMgiSX1ZaRTC7WW2073pP6w9
-         IZKjLsFpamOXMVHnc2s0z5fZ7reKCZfkGFJmF1yPORYbNj3aR84F/ArbARVD/LGO7R
-         WGgIwEqzB+ZPQ==
+        b=cJJCitLu7ipWe3kki2Qg8dZJNEqYEPK7ruw4TC78vrUj2eFOyEu+5FCPJiygnEtjB
+         GF7P5Lhnq8Z2OkD5fujy/N32T994YglEH5EQKRiBBOkNGl0ha+gPoZ1hOmmtrTAvVX
+         SNPPOLqCAG5mLrKa6h+UaVxu7IdRv9xwkLSXHnvQ3nTDg7msv32HpFH7LEzxxoWlQI
+         aZ5lRhrNN1yjextgPz/K//M487ydZW2zSWwVLum8HbjRdoxgAn2tW6CdS+4PrTxZWM
+         EZokiKYWzy1Jv5BQyLlr1DxlV2voiIk+S6ni7mgJluRs5o+HGUzOfNu1ppBpOyvd2r
+         +QgOpCpAo46HQ==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Sat, 20 Mar 2021 15:33:14 +0000
+Date:   Sat, 20 Mar 2021 15:43:47 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -52,7 +52,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-18QQ5XeLpw@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-c2ixBRibRQ@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,27 +66,20 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #43 from Artem S. Tashkinov (aros@gmx.com) ---
-A small correction of my previous comment:
+--- Comment #44 from Artem S. Tashkinov (aros@gmx.com) ---
+(In reply to Artem S. Tashkinov from comment #42)
+> "Your motherboard might not be exposing ACPI resources correctly, so you
+> might
+> not get access to your HW sensors. You could add
+> "acpi_enforce_resources=3Dlax" to kernel boot parameters to enable monito=
+ring
+> at your own risk. Please refer to
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D204807 for more information=
+".
 
-linux/drivers/platform/x86/asus-nb-wmi.c
-
-/*
- * Asus Notebooks WMI hotkey driver
- *
- * Copyright(C) 2010 Corentin Chary <corentin.chary@gmail.com>
- */
-
-This is not related to lm-sensors in any shape or form. I'm really sad how =
-this
-situation is getting handled: the bug has been known for over 1.5 years,
-affects literally hundreds of thousands devices and you're saying that this
-kernel option might have unintended consequences yet _everyone_ in this thr=
-ead
-has enabled it with _zero_ side affects and Windows seemingly has it enable=
-d by
-default, as no such messages are getting logged in Windows Event Log either
-when using HWiNFO64 or vendor specific monitoring software.
+This message will at least allow various Linux distros to enable the option=
+ by
+default because many are not aware of the bug.
 
 --=20
 You may reply to this email to add a comment.
