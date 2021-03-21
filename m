@@ -2,206 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133DBC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Mar 2021 12:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9B9C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Mar 2021 15:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC99A61946
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Mar 2021 12:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CE361481
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 21 Mar 2021 15:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbhCUMga (ORCPT
+        id S230289AbhCUPdD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Mar 2021 08:36:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20720 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229840AbhCUMgJ (ORCPT
+        Sun, 21 Mar 2021 11:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230273AbhCUPdB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Mar 2021 08:36:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616330168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gFMkTh0ML/omIFEnLyjjjzDHbWoUExuKqtEMhXhKd5o=;
-        b=OGCTKUmjxk5CDjSCPYWYFCsv3cFY74P+h8Wn2QGUVyoY8iCKngPxh8Nv9YUThfQe39BQ4U
-        1H3KD7csOlfclX74aKnu04oBJT1UOpJdMWWFfv0Y/elfZjSjbwypttugi4K+if0nFxWjpG
-        tLSCPzY5WW/k71ApiGlkV8qRp4vE2lc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-a3zhh9bcOfareiXyQjPQag-1; Sun, 21 Mar 2021 08:36:07 -0400
-X-MC-Unique: a3zhh9bcOfareiXyQjPQag-1
-Received: by mail-ed1-f70.google.com with SMTP id r19so25343806edv.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 21 Mar 2021 05:36:07 -0700 (PDT)
+        Sun, 21 Mar 2021 11:33:01 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8A3C061574;
+        Sun, 21 Mar 2021 08:33:01 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id nh23-20020a17090b3657b02900c0d5e235a8so7261869pjb.0;
+        Sun, 21 Mar 2021 08:33:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=r0U+DE5qJnTQ3kRfYyrwXQg8XIU2gEf2QfD79ym1R0w=;
+        b=jmsLkoprnq3UaqjBElrMeEuK8b4+TsJRFDQRTuxjudHG8ZID8h/sUFgSLHhsUE+dgT
+         aDJy6OGfmHm8O8vrryASEbyTR230Eu/ceEgEF8wBvf4KA9MdDulPIa4RqQX+6jmnkdbf
+         wn+b4uP7sgBa+ai4nY9mSb5qlLNoNrKiNcjDD6pphq8lhmjaCDVQFAFfLHS06GDpctu/
+         bzqDjObi+vSqI2Plsp5B0zsd4JyKxuHP+BCeHI/LNw0PEwHBvMBUGGodcZrLqxEy+f1d
+         YbZhth/fpLtxiXm0p1YDU2YDd+NKoAGOoqdfRDxvqBP7D8+CRw0jECqWe0M7eHzEc49y
+         cLxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gFMkTh0ML/omIFEnLyjjjzDHbWoUExuKqtEMhXhKd5o=;
-        b=lFrisI3Rg8HuRUvzHBBc2GnT0Ye/xa0LVU5fSsTvfGd7Mr6kk+63y6hGbiO6KJ62FT
-         zsv5E/gsHd8nepxWp0vijpe9BrNo/U0YfwkAHS/rngeRsguf/6fJlBKBE1la8S3Y2tKg
-         JBANcV1FSbqQb27ci75uaBHIfVpt3X1YPPprjqPiCYf+Y7HkY7WwXgfH3PdV+kdZWD/1
-         e28PeWS/kfdGFahNQOAlAXr31F73A/sLRRPu8k3e6a2hD5hgZQ+noc8iOYmNn2NTxV0w
-         o9UFoQM0tfUzyjWFHAi4ZHHb0B3CV4q7T0Bng5s5LNs9sNN8JSHkPf9prGhpDvOELLP6
-         7mOQ==
-X-Gm-Message-State: AOAM531WCP1dGxgqZgj2WloycKkxqlGgDflnrq5M+gr7fX8fMvFWNEgd
-        K5xkizPGuX4MMn2UHKnl+8e5mYJHLobzq4l2ZxZww+EiEg1N0/hN35uiUd2p12FxzNXXlN0z93Q
-        fmEL5rgHUmTvl/9uPtXlbD6oitaYsQKe8hE23LSiwswgSHm7G4OwSPPeLdU0qeJHGKO9oAOCGAD
-        ute3V8DGqHQg==
-X-Received: by 2002:a05:6402:5255:: with SMTP id t21mr20412203edd.91.1616330165697;
-        Sun, 21 Mar 2021 05:36:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyF5Vh4A2PMx2YVpzLUoh3qbo7wnKaY31I1yUTrlnnW3LwA5kzEtdj52XzSbC3flR3w9cpRiQ==
-X-Received: by 2002:a05:6402:5255:: with SMTP id t21mr20412182edd.91.1616330165454;
-        Sun, 21 Mar 2021 05:36:05 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id k9sm8322248edn.68.2021.03.21.05.36.04
+        bh=r0U+DE5qJnTQ3kRfYyrwXQg8XIU2gEf2QfD79ym1R0w=;
+        b=jSGAXPr+AUDSQTAWv4TGpn/v+RUAlo1g2TOq76EFWwg3/KgEjM058s/0XHQgoIxWqL
+         7cHjqc5WZx9BoEtYiQFI7UBV3QSqaHWOWEvGnC55M/c3dWPpsKHpm1RurSvj91KTr0EF
+         n+Ug+ZLCUt4yAzUFjSm8fahpTuthanLJsCuApATOMZ3Jedy6uq++df960YXQiyOk8uaO
+         MtK6Gi9G31K6il8jZFwCe7HkA5XPvlbq1e/M80wh4781gsynLvl6wRWB/cb7cXoNDmIl
+         y8QKIDuBHU9VSAwBavtWKdmqPrso5OfuqpGKgVwRvHOhTYUSXZQggpunFt25BHAeXlA9
+         LqVw==
+X-Gm-Message-State: AOAM5337K556KYlALhirJEC98MdbReThIRbdbEj5K7xYjM49u5Cxlg3q
+        JZMFQK6+BGidynpsP6TwjBfLyQ1xaUWwGZs4
+X-Google-Smtp-Source: ABdhPJy2FjTJgTxZ6mjw3gj3pZU3EwRWc+4AKQqVeap+HoBd1ehxo6/2TdsRbKI/UOdAuBL8dlNxzQ==
+X-Received: by 2002:a17:902:7407:b029:e4:9645:fdf6 with SMTP id g7-20020a1709027407b02900e49645fdf6mr23266820pll.19.1616340780571;
+        Sun, 21 Mar 2021 08:33:00 -0700 (PDT)
+Received: from [0.0.0.0] ([38.84.76.15])
+        by smtp.gmail.com with ESMTPSA id d14sm11184315pji.22.2021.03.21.08.32.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Mar 2021 05:36:05 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: dell-wmi-sysman: Make
- init_bios_attributes() ACPI object parsing more robust
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Mario Limonciello <mario.limonciello@dell.com>,
-        Divya Bharathi <Divya_Bharathi@dell.com>,
-        Alexander Naumann <alexandernaumann@gmx.de>,
-        platform-driver-x86@vger.kernel.org
-References: <20210321121607.35717-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bdbbe7e6-7a6b-fa9d-426a-e88135e3c7f5@redhat.com>
-Date:   Sun, 21 Mar 2021 13:36:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Sun, 21 Mar 2021 08:33:00 -0700 (PDT)
+Subject: Re: [PATCH v4 1/2] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Yuan, Perry" <Perry.Yuan@dell.com>,
+        "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20210301093753.16300-1-Perry_Yuan@Dell.com>
+ <551e30d2-0211-f3cb-fbb8-ee5b2f22a851@linux.intel.com>
+ <SJ0PR19MB4528E7C88C955D2EE96CE3B484939@SJ0PR19MB4528.namprd19.prod.outlook.com>
+ <ab14a0b2-3f3a-3796-8baf-76e635d82340@linux.intel.com>
+From:   Perry Yuan <perry979106@gmail.com>
+Message-ID: <58d2e2f2-e552-6ecf-b1c3-bf38ad5d2e35@gmail.com>
+Date:   Sun, 21 Mar 2021 23:32:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210321121607.35717-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <ab14a0b2-3f3a-3796-8baf-76e635d82340@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 3/21/21 1:16 PM, Hans de Goede wrote:
-> Make init_bios_attributes() ACPI object parsing more robust:
-> 1. Always check that the type of the return ACPI object is package, rather
->    then only checking this for instance_id == 0
-> 2. Check that the package has the minimum amount of elements which will
->    be consumed by the populate_foo_data() for the attr_type
+Hi Pierre:
+Thanks for your review!
+On 2021/3/8 23:59, Pierre-Louis Bossart wrote:
 > 
-> Note/TODO: The populate_foo_data() functions should also be made more
-> robust. The should check the type of each of the elements matches the
-> type which they expect and in case of populate_enum_data()
-> obj->package.count should be passed to it as an argument and it should
-> re-check this itself since it consume a variable number of elements.
 > 
-> Fixes: e8a60aa7404b ("platform/x86: Introduce support for Systems Management Driver over WMI for Dell Systems")
-> Cc: Divya Bharathi <Divya_Bharathi@dell.com>
-> Cc: Mario Limonciello <mario.limonciello@dell.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v2:
-> - Restore behavior of returning -ENODEV when the get_wmiobj_pointer() call
->   for instance_id == 0 returns NULL. Otherwise
->   /sys/class/firmware-attributes/dell-wmi-sysman will get created with an
->   empty attributes dir (empty except for pending_reboot and reset_bios)
-
-So the reason for this change in v2 is that testing on a Dell Latitude E5570:
-https://bugzilla.redhat.com/show_bug.cgi?id=1936171
-
-With v1 of this patch results in an empty attributes dir (empty except for
-pending_reboot and reset_bios), interestingly enough there are both
-System and Admin dirs created under Authentication, so the BIOS of this
-device seems to have the GUIDs for both the attributes and the authentication
-interfaces; and it has the 2 standard authentication objects, theoretically
-allowing changing the BIOS passwords from within Linux, but it does not
-advertise any attributes which can be changed.
-
-With the new v2 patch, the driver will now simply refuse to load
-(and it should no longer crash during cleanup because of the other patches).
-
-But I wonder what is actually the right thing to do here ?  Arguably
-being able to change the BIOS passwords has some value on its own ?
-
-Mario, what is your take on this?
-
-Regards,
-
-Hans
-
-
-
-> ---
->  .../x86/dell/dell-wmi-sysman/sysman.c         | 32 ++++++++++++++++---
->  1 file changed, 28 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index 7410ccae650c..a90ae6ba4a73 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -399,6 +399,7 @@ static int init_bios_attributes(int attr_type, const char *guid)
->  	union acpi_object *obj = NULL;
->  	union acpi_object *elements;
->  	struct kset *tmp_set;
-> +	int min_elements;
->  
->  	/* instance_id needs to be reset for each type GUID
->  	 * also, instance IDs are unique within GUID but not across
-> @@ -409,14 +410,38 @@ static int init_bios_attributes(int attr_type, const char *guid)
->  	retval = alloc_attributes_data(attr_type);
->  	if (retval)
->  		return retval;
-> +
-> +	switch (attr_type) {
-> +	case ENUM:	min_elements = 8;	break;
-> +	case INT:	min_elements = 9;	break;
-> +	case STR:	min_elements = 8;	break;
-> +	case PO:	min_elements = 4;	break;
-> +	default:
-> +		pr_err("Error: Unknown attr_type: %d\n", attr_type);
-> +		return -EINVAL;
-> +	}
-> +
->  	/* need to use specific instance_id and guid combination to get right data */
->  	obj = get_wmiobj_pointer(instance_id, guid);
-> -	if (!obj || obj->type != ACPI_TYPE_PACKAGE)
-> +	if (!obj)
->  		return -ENODEV;
-> -	elements = obj->package.elements;
->  
->  	mutex_lock(&wmi_priv.mutex);
-> -	while (elements) {
-> +	while (obj) {
-> +		if (obj->type != ACPI_TYPE_PACKAGE) {
-> +			pr_err("Error: Expected ACPI-package type, got: %d\n", obj->type);
-> +			retval = -EIO;
-> +			goto err_attr_init;
-> +		}
-> +
-> +		if (obj->package.count < min_elements) {
-> +			pr_err("Error: ACPI-package does not have enough elements: %d < %d\n",
-> +			       obj->package.count, min_elements);
-> +			goto nextobj;
-> +		}
-> +
-> +		elements = obj->package.elements;
-> +
->  		/* sanity checking */
->  		if (elements[ATTR_NAME].type != ACPI_TYPE_STRING) {
->  			pr_debug("incorrect element type\n");
-> @@ -481,7 +506,6 @@ static int init_bios_attributes(int attr_type, const char *guid)
->  		kfree(obj);
->  		instance_id++;
->  		obj = get_wmiobj_pointer(instance_id, guid);
-> -		elements = obj ? obj->package.elements : NULL;
->  	}
->  
->  	mutex_unlock(&wmi_priv.mutex);
+>>>>    module_param(force_rfkill, bool, 0444);
+>>>>    MODULE_PARM_DESC(force_rfkill, "enable rfkill on non whitelisted
+>>>> models");
+>>>>
+>>>> +
+>>>
+>>> spurious line change
+>> I just want to make them separate with more space .
+>> If it cause concern, I will remote the line in V5.
 > 
+> it's fine to improve spaces/alignment, just do it in a separate patch.
+> 
+>>
+>>>
+>>>>    static const struct dmi_system_id dell_device_table[] __initconst 
+>>>> = {
+>>>>        {
+>>>>            .ident = "Dell laptop",
+>>>> @@ -2205,11 +2209,17 @@ static int __init dell_init(void)
+>>>>        dell_laptop_register_notifier(&dell_laptop_notifier);
+>>>>
+>>>>        if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+>>>> -        dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+>>>> -        micmute_led_cdev.brightness =
+>>> ledtrig_audio_get(LED_AUDIO_MICMUTE);
+>>>> -        ret = led_classdev_register(&platform_device->dev,
+>>> &micmute_led_cdev);
+>>>> -        if (ret < 0)
+>>>> -            goto fail_led;
+>>>> +
+>>>     dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+>>>
+>>> not sure why you changed the alignment?
+>> The previous alignment is a little not correct.
+>> So I adjust it
+>> If it cause concern, will restore it to original shape.
+> 
+> same here, use a different patch.
+> 
+As you suggested,I should add the alignment change in another patch.
+But if i keep the old alignment, the code will be very odd.
+Seems like that I have to change the below code to new alignment in this 
+patch.
+
+if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+     dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) { <<--- changed back
+	if (!privacy_valid)
+	    	has_privacy = true;
+	else
+	    	has_privacy = false;
+	if (!has_privacy) {
+		micmute_led_cdev.brightness <<----------- new alignment
+		...
+	}
+...
+}
+
 
