@@ -2,85 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF81CC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E5C433C1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96E5C6186A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803296191C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbhCVObl (ORCPT
+        id S229866AbhCVOpe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Mar 2021 10:31:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52946 "EHLO mail.kernel.org"
+        Mon, 22 Mar 2021 10:45:34 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:58434 "EHLO mail1.perex.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230039AbhCVOba (ORCPT
+        id S229746AbhCVOpF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Mar 2021 10:31:30 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id C1B0C61992
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Mar 2021 14:31:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616423489;
-        bh=CGFFqpzK/N+5lf70kAlw5FJ+yUvEXc3IGRrA1tHwOqA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oMcRUV4RI1Ht/j8XARRsBxDSxJAEc0nDfRl05eCihY3ZPkoKH2i/q0zQIVJq97WRk
-         90TZsbAYPGMKcA3J95AP7esGoQ90cv3mchaFshxo3RHLdDn0p6THvw2+tbfXtcWEeX
-         rN7GyjHbRm6dXA93eo9BFL4fkoPNeiUtVZRY/wlrAUp736XQu6tMr4lIueQIldzrtn
-         j+LqYJpxXJMLSW9xM4lLNUZ4rkQa5i28dcW51lnTY21bxmzEinbdiZSuwahMGnpCpE
-         kBHeKsq52BTJuNfXYaIsCLiz+pJ2dU2yXVW9yyYCJabL72HATBS9wo9BhNhC3IP4jg
-         Ddd2usyqbIhTw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Mon, 22 Mar 2021 14:31:29 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-204807-215701-lnS4YIeLMV@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 22 Mar 2021 10:45:05 -0400
+X-Greylist: delayed 413 seconds by postgrey-1.27 at vger.kernel.org; Mon, 22 Mar 2021 10:45:04 EDT
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 32F73A003E;
+        Mon, 22 Mar 2021 15:38:05 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 32F73A003E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1616423885; bh=DxfygpitPra5Cpiwi463YlHdOGWgOHeQqjm+lS0lShU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GJZvfhmKnms04+ZSNgkCOh42q886BBqayRTu2vqyYfX3jGYeIryR8NK5UbXX3AOnf
+         +ENS0BARR4vSMmMRapVPUdn1uuSd8fZ1OUFu0DcM9X3c/ekfvKDuaRcOD+SFc7NqZ6
+         JEb59xKL0lUmcdfxY5RxVJpIuZJKqWLFz9bvM76k=
+Received: from p1gen2.localdomain (unknown [192.168.100.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Mon, 22 Mar 2021 15:37:52 +0100 (CET)
+Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control supports
+To:     "Yuan, Perry" <Perry.Yuan@dell.com>,
+        Mark Brown <broonie@kernel.org>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+Cc:     "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20210301093834.19524-1-Perry_Yuan@Dell.com>
+ <20210308172409.GF4656@sirena.org.uk>
+ <SJ0PR19MB4528847687FEEE4A4DED8E3F84659@SJ0PR19MB4528.namprd19.prod.outlook.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <604693cc-08c7-2b5f-632a-58ed537c54a0@perex.cz>
+Date:   Mon, 22 Mar 2021 15:37:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
+In-Reply-To: <SJ0PR19MB4528847687FEEE4A4DED8E3F84659@SJ0PR19MB4528.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Dne 22. 03. 21 v 10:25 Yuan, Perry napsal(a):
+> Hi Mark:
+> 
+>> -----Original Message-----
+>> From: Mark Brown <broonie@kernel.org>
+>> Sent: Tuesday, March 9, 2021 1:24 AM
+>> To: Yuan, Perry
+>> Cc: pobrn@protonmail.com; pierre-louis.bossart@linux.intel.com;
+>> oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
+>> hdegoede@redhat.com; mgross@linux.intel.com; Limonciello, Mario;
+>> lgirdwood@gmail.com; alsa-devel@alsa-project.org; linux-
+>> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+>> Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control
+>> supports
+>>
+>> On Mon, Mar 01, 2021 at 05:38:34PM +0800, Perry Yuan wrote:
+>>
+>>> +	/* Micmute LED state changed by muted/unmute switch */
+>>> +	if (mc->invert) {
+>>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+>>> value.integer.value[1]) {
+>>> +			micmute_led = LED_OFF;
+>>> +		} else {
+>>> +			micmute_led = LED_ON;
+>>> +		}
+>>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
+>>> +	}
+>>
+>> These conditionals on inversion seem weird and counterintuitive.  If we're
+>> going with this approach it would probably be clearer to define a custom
+>> operation for the affected controls that wraps the standard one and adds the
+>> LED setting rather than keying off invert like this.
+> 
+> Currently the sof soundwire driver has no generic led control yet.
+> This patch can handle the led control needs for MIC mute LED, definitely the patch is a short term solution.
+> There is a feature request discussion when we started to implement this solution.
+> https://github.com/thesofproject/linux/issues/2496#issuecomment-713892620
+> 
+> The workable way for now is that we put the LED mute control to the codec driver.
+> When there is new and full sound LED solution implemented, this part will be also optimized.
+> The Hardware privacy feature needs this patch to handle the Mic mute led state change.
+> Before that full solution ready in kernel, could we take this as short term solution?
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
+Perry, it's about the machine detection. Your code is too much generic even
+for the top-level LED trigger implementation. We need an extra check, if the
+proper LED's are really controlled on the specific hardware. Other hardware
+may use RT715 for a different purpose. Use DMI / ACPI checks to detect this
+hardware and don't misuse the inversion flag to enable this code.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
+						Jaroslav
 
---- Comment #53 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-I'm also removing myself from the Cc of this bug because the discussion here
-does not seem to be productive. If anyone wants to implement the solution w=
-hich
-I outlined in command 47, drop me an email at hdegoede@redhat.com .
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
