@@ -2,85 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DB9C433C1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 03:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A27C433E5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 07:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F1961931
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 03:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96916196F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 07:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbhCVDcW (ORCPT
+        id S229840AbhCVHhH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 21 Mar 2021 23:32:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229926AbhCVDcQ (ORCPT
+        Mon, 22 Mar 2021 03:37:07 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:46921 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229482AbhCVHgx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 21 Mar 2021 23:32:16 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E96A7C061574;
-        Sun, 21 Mar 2021 20:32:14 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id h25so7726064pgm.3;
-        Sun, 21 Mar 2021 20:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=G0S6I+wZVHttbgypjBTTF0KD1XSkQLNQ+OX8HCc5mYs=;
-        b=EpjRBVIsNNDdZh7lEDsX325eaA1omJOeh0zGSAmpHKYE0Q4cEcIS/tr+q63ZHtvXs6
-         HpQHFbV+pJN/7fR3Pd3HSih1bGLKHQvxphlabX3+OCzr02iLqbT3YsbWSnPwDcXyPM9n
-         brozHxVS1dmcZCz15XecQy4fZcrNRwE5Sr9IZUEtyqYDt2T5qSjeJk1mHS0BM97Ra0l+
-         pXxtydxcgTJHGayzmKI2umfwPxtgy1C8ih3XWMOTBUxVyVbb/GtTYEZB1n9sP/gcv9Wy
-         XlrcBbKHrG5OFFbjmMnosCI9i8wDM1+8c4LHNrh0rlI7A7JMMb7ND/Vu3dHMJb2FeGsy
-         +cXw==
+        Mon, 22 Mar 2021 03:36:53 -0400
+Received: by mail-lj1-f181.google.com with SMTP id u20so19763908lja.13;
+        Mon, 22 Mar 2021 00:36:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=G0S6I+wZVHttbgypjBTTF0KD1XSkQLNQ+OX8HCc5mYs=;
-        b=n71xMTGh/HbP5+Zhnv7z/jUoYNuK3ByAv32E8TszGp+TAR1YVg3E8IRTO3OlWC7shs
-         V4qyt15MGesu6vD1mxpss+tZa52JxdQJYzT+GuFNTSkL2K4cw0yJmZPDoneZswSTppfx
-         qurnvEfxuY6pUPnGAcqbMeUgYsyhEZu+MzIO1awGgjabso9vZaOAykCRUiCkEWF62h69
-         5SWciqFcm+d9mv4k/dmdt+Sg4P5ifab6Jvteisheh5oVyC5hAL6yY45xnQEEBPWI1rKB
-         07XyWbKsOLTHmD3cM+TN2EVb3dtVv6u9QQNu6eVswGhlILXLvfsUKtxSoCC8XmLNuggK
-         ovvw==
-X-Gm-Message-State: AOAM530yBuths45Z8zEyjL6ASw1Pv1oFoc5rhR/vPsa7TVwgJ76W7rbJ
-        pHxhfl4feXwBc/IuyVnQ2/0=
-X-Google-Smtp-Source: ABdhPJyJSu0dRtQKqoI+CFuPsSKDj+pwfBiW93J4i+STXYkh0WtUyXrI9GS4OaIJ4zcRARYJO8Bv8A==
-X-Received: by 2002:aa7:8145:0:b029:20f:58e6:9c17 with SMTP id d5-20020aa781450000b029020f58e69c17mr19736108pfn.52.1616383934434;
-        Sun, 21 Mar 2021 20:32:14 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:85c2:9df1:533a:87e9])
-        by smtp.gmail.com with ESMTPSA id s17sm5129205pjn.44.2021.03.21.20.32.12
+        bh=SQ3PaiTY3yrXW128oXOTKmB9MRClkfJjAeG90z4F670=;
+        b=HBfRZmWwGzE3Uuh4EhcxibbYPEiRTOfeocrFoRvFOU8lA2sGMZP2yFBQnOwF4dndef
+         f16p4n7L4HpTZY8o50PEuyranAKd6E0Z+MXucWaJirxNnTZYHOt9btbpCQaUI5XZYCIs
+         xcvtSCZcJGn5I/fTHpfGn3mTs8JNL2aIcNfUTDIuOf/FIDQ6rTPPioQCmLEV8/jAmYrZ
+         GmqiZZXUn/x+cBjyLEft8DPe65TlZBTSsk/hSWCJAkqpt6/aGIh0NguFcUH30mQzjspC
+         86OXwHzRIo+G3xqUw5+kxzekIJ01mWWOok7mFl/QsyXpAAoZnIvOeqK7FJQnAonRMQN/
+         l1VQ==
+X-Gm-Message-State: AOAM532vxCPhjHCAbnNbIAQoCQ/uHiHl+9x5RxQfu2s+37OOftAr+nXt
+        qf5VIOoqXyawgT6F0U855OU=
+X-Google-Smtp-Source: ABdhPJzWYjRawOPGm//U/R7ppWGtgRokdpLoSf2xViSu58s6hovmWp8M40iLaLfFZP996aPBqt93VQ==
+X-Received: by 2002:a05:651c:105a:: with SMTP id x26mr9078307ljm.111.1616398611316;
+        Mon, 22 Mar 2021 00:36:51 -0700 (PDT)
+Received: from localhost.localdomain (mobile-access-5673b7-246.dhcp.inet.fi. [86.115.183.246])
+        by smtp.gmail.com with ESMTPSA id i2sm1475632lfl.308.2021.03.22.00.36.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Mar 2021 20:32:13 -0700 (PDT)
-Date:   Sun, 21 Mar 2021 20:32:11 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     hdegoede@redhat.com, rydberg@bitmath.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rdunlap@infradead.org
-Subject: Re: [PATCH] Input: Fix a typo
-Message-ID: <YFgPu7YZSv8j1Vuz@google.com>
-References: <20210322022030.3857089-1-unixbhaskar@gmail.com>
+        Mon, 22 Mar 2021 00:36:50 -0700 (PDT)
+Date:   Mon, 22 Mar 2021 09:36:43 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Matti Vaittinen <mazziesaccount@gmail.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: [RFC RESEND PATCH v2 2/8] MAINTAINERS: Add entry for devm helpers
+Message-ID: <eec1797734e3d080662aa732c565ed4a3c261799.1616395565.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1616395565.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210322022030.3857089-1-unixbhaskar@gmail.com>
+In-Reply-To: <cover.1616395565.git.matti.vaittinen@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Mar 22, 2021 at 07:50:30AM +0530, Bhaskar Chowdhury wrote:
-> 
-> s/subsytem/subsystem/
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Devm helper header containing small inline helpers was added.
+Hans promised to maintain it.
 
-Applied, thank you.
+Add Hans as maintainer and myself as designated reviewer.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9e876927c60d..fa5ac3164678 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5169,6 +5169,12 @@ M:	Torben Mathiasen <device@lanana.org>
+ S:	Maintained
+ W:	http://lanana.org/docs/device-list/index.html
+ 
++DEVICE RESOURCE MANAGEMENT HELPERS
++M:	Hans de Goede <hdegoede@redhat.com>
++R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++S:	Maintained
++F:	include/linux/devm-helpers.h
++
+ DEVICE-MAPPER  (LVM)
+ M:	Alasdair Kergon <agk@redhat.com>
+ M:	Mike Snitzer <snitzer@redhat.com>
+-- 
+2.25.4
+
 
 -- 
-Dmitry
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
