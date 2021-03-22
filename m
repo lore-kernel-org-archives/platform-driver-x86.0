@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C238AC433DB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 13:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF81CC433DB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94CDB6191F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 13:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E5C6186A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 14:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230300AbhCVNYK (ORCPT
+        id S230046AbhCVObl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Mar 2021 09:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        Mon, 22 Mar 2021 10:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233467AbhCVNXF (ORCPT
+        id S230039AbhCVOba (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Mar 2021 09:23:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 40DA461606
-        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Mar 2021 13:23:04 +0000 (UTC)
+        Mon, 22 Mar 2021 10:31:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id C1B0C61992
+        for <platform-driver-x86@vger.kernel.org>; Mon, 22 Mar 2021 14:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616419384;
-        bh=cxeJo1J3DUS9yQ+Hffw4s625qNOtN5Cd9dTjzygIEow=;
+        s=k20201202; t=1616423489;
+        bh=CGFFqpzK/N+5lf70kAlw5FJ+yUvEXc3IGRrA1tHwOqA=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ePLupvduGJfaE6iKaY0zJFOYMnkgemGtB9J5meN7sfO6j/splV/Typ8qUU6NlDrYe
-         cm7F2NjCSF6wxsf0JTlUlFjxkwHG46Wv3F8TMNqY7zPq0W7KyWcJQ2pxWiLE9jXTVk
-         6bYm7taxlSXNGNtd1qj+otvmhT6zAOkCDtdjpe96CjQ8duZErvB5fRqbuDTwCH1CHJ
-         hQgugD/N4aYlHppaylNp36H79+yZFLAYBUrfbhubC4X8Pj2ZdMiUDJwUUkfMYxY7Zz
-         KLZyYNQGckvtFruBHBjb1K5OVYyddWCIdFMHH5RZgkSqVv+503ur1DuSMhAltvbLVy
-         S+Sx4Rdd/3Q4Q==
+        b=oMcRUV4RI1Ht/j8XARRsBxDSxJAEc0nDfRl05eCihY3ZPkoKH2i/q0zQIVJq97WRk
+         90TZsbAYPGMKcA3J95AP7esGoQ90cv3mchaFshxo3RHLdDn0p6THvw2+tbfXtcWEeX
+         rN7GyjHbRm6dXA93eo9BFL4fkoPNeiUtVZRY/wlrAUp736XQu6tMr4lIueQIldzrtn
+         j+LqYJpxXJMLSW9xM4lLNUZ4rkQa5i28dcW51lnTY21bxmzEinbdiZSuwahMGnpCpE
+         kBHeKsq52BTJuNfXYaIsCLiz+pJ2dU2yXVW9yyYCJabL72HATBS9wo9BhNhC3IP4jg
+         Ddd2usyqbIhTw==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 210457] Fan sporadically maxed on wake-up due to unavailable
- sensor temperature
-Date:   Mon, 22 Mar 2021 13:23:04 +0000
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Mon, 22 Mar 2021 14:31:29 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -44,17 +44,17 @@ X-Bugzilla-Product: Drivers
 X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: s-cvhajmmblfsofmpsh@thorsten-wissmann.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-210457-215701-GgGJhRYC5Z@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-210457-215701@https.bugzilla.kernel.org/>
-References: <bug-210457-215701@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-lnS4YIeLMV@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Bugzilla-URL: https://bugzilla.kernel.org/
@@ -64,21 +64,20 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D210457
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #7 from Thorsten (s-cvhajmmblfsofmpsh@thorsten-wissmann.de) ---
-Probably it's the same issue. However, here we know that the main issue is =
-that
-the first entry of /proc/acpi/ibm/thermal is erronously -128 some (or most)=
- of
-the time (so the fan is just a symptom, not the issue).
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-temperatures:   -128 -128 0 0 0 0 0 0 0 0 1 0 0 0 0 0
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |jwrdegoede@fedoraproject.or
+                   |                            |g
 
-Iirc, the first entry is
-/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon*/temp1_input
-
-(By the way, the second entry being -128 is fine)
+--- Comment #53 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+I'm also removing myself from the Cc of this bug because the discussion here
+does not seem to be productive. If anyone wants to implement the solution w=
+hich
+I outlined in command 47, drop me an email at hdegoede@redhat.com .
 
 --=20
 You may reply to this email to add a comment.
