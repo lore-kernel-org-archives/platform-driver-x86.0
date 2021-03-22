@@ -2,163 +2,210 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,PDS_BAD_THREAD_QP_64,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B9DC433E3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 07:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF1CC433E2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 09:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B5161930
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 07:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C1A6198A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 22 Mar 2021 09:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbhCVHly (ORCPT
+        id S229986AbhCVJ1P (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 22 Mar 2021 03:41:54 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:33504 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230021AbhCVHlW (ORCPT
+        Mon, 22 Mar 2021 05:27:15 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:33776 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229987AbhCVJ0t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 22 Mar 2021 03:41:22 -0400
-Received: by mail-lf1-f41.google.com with SMTP id o126so10183250lfa.0;
-        Mon, 22 Mar 2021 00:41:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=9OvoXTfYE4NotW19A5lNKAEwdwJKknjVSZLpfYohfiw=;
-        b=VzC4FcgfWmpRvAY1ZjHnkHhhR8pff7riEIOnn1jcmr1/jknLwznzqfD5EvK9rTzPmz
-         r5lRU3/ht0h/yFd/8CklvGrYUFFWmL96EJ06jQEueph3puBRPRI2bKDvIS8l1fDm9ayW
-         FGUDlj+3m8e8Nf4KpR/D363tYrcuJVQJe7DmMJ5hvjB4No4GtqkN/4fQIGnt1nDvT2pd
-         +jtBZy7FEPhbDKiA5J7JpQhJuIgdToSoV5PkUlT9dPzGqwSVfNEtYNFwAWwCGVEBQADa
-         ulCEJXHxauGfA4o8vazsS0J1csuLPfyK68+MVK34LKvGTpOzxfnbQkTl7zM66zhcfhDG
-         g2Iw==
-X-Gm-Message-State: AOAM530jBzBA1RB7NXgnpIxqR2eB6/u71YdWGjDJtjtIHjVEtDyVNFYF
-        eGNrXxJDp2rp1zUIiJ2IOEA=
-X-Google-Smtp-Source: ABdhPJzjl/BCA7ObW6HNjx3diUaqpRbdVbzl+Zwdos1ACNDo5uSXH9iWMVBGSZK7KTlvXmN4GMDRew==
-X-Received: by 2002:ac2:5519:: with SMTP id j25mr8615753lfk.220.1616398879758;
-        Mon, 22 Mar 2021 00:41:19 -0700 (PDT)
-Received: from localhost.localdomain (mobile-access-5673b7-246.dhcp.inet.fi. [86.115.183.246])
-        by smtp.gmail.com with ESMTPSA id y4sm1472866lfj.254.2021.03.22.00.41.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Mar 2021 00:41:19 -0700 (PDT)
-Date:   Mon, 22 Mar 2021 09:41:13 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: [RFC RESEND PATCH v2 0/8] Add managed version of delayed work init
-Message-ID: <cover.1616395565.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 22 Mar 2021 05:26:49 -0400
+Received: from pps.filterd (m0170393.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12M9IIAM013460;
+        Mon, 22 Mar 2021 05:25:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=XnIyJjJYinS7RTmri1/UR6PRUw9V+9To3VInJf6rF2M=;
+ b=ExXdhL6QGI3VrahzhzX9WllgXQBHitbkelZGQu4bK/42d3SDqqpkPCtW2lgZ0X3AeJ8s
+ xgI2kcZs4CAWnpAcrBzB7hJ4MamSQ7z/G1sVL9mFdQLvFkA9VsjiP0W4L5qpNhmLbVyF
+ PDaCeIhjXEWjvaMQ6sp3m76OzaRDNjEDmyhL9SoxzNA7TRP1P7wXZqoLFq+EN9iMMncz
+ wWquigSqUCjQtFDlUm06Plr4hDIbsZNwvbMl2aNtmEtRyWfWFqVKEZCYDspJYEyRTrtM
+ vXk8J8ohyME/ruE6DDcilEAsSQAagc11Rl9opP1v65bpLYm07w6tbqIV0HWRwgbnVwLn xQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 37dcch4826-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 22 Mar 2021 05:25:28 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12M7b8Tj056901;
+        Mon, 22 Mar 2021 05:25:28 -0400
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
+        by mx0a-00154901.pphosted.com with ESMTP id 37dxq2kp1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 22 Mar 2021 05:25:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NyUrWhco2lg55N/kj/GfJg+QD8OJlB0mEc4HblmR73sqSv7nvZstWOYbfX5Qrmu3fJDUsQ6D2pHifO/6jyHM3aAytY29rWFfaopWYYVRtB/+WHWVrMlHeVOuY7WBXkEQTHVT4lwioyStVLf9/xtJXvOp60Y1JTIdyTD6bNkPOEd4rg4BVLuCsIpe6ZWB5yqaI3EwOQjIyG7DLyCARQlWA0qlTjL2/OlEstx9fbyJyB1sOZjOa7Jbhnt1qU12tCIyTzWfWdpcJNwXgr+kEfiWIefdRmSXVwaQQ4UvKYqiQ1CWK+MAqE5y9uLMdSgRO4/Ut0nE+vG4+X4v3xylbrnF+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XnIyJjJYinS7RTmri1/UR6PRUw9V+9To3VInJf6rF2M=;
+ b=bwUqEYj2XqGWMal0EAdX6Ok2MijNy05+gE0oqrMyt+zi8Mf1sdJGe5zfIIASMxhZ3pqBrF4q0X2xQPV3cqZEDmhHLpKPQreHu6SaADzEN8UHUn+DEM+53POb5+ZiaUa3O1Nco4Qv1tkbToLDv9saSnnwtY3eOcgjSQmIPOvBQ/RFMVY4gaxuP/4nHrH6hNUxkPq7tCTrARkJslxEo03GOiW+2hE1OX6AWw9mH3dwVEouwDAgCjj/w61tDYurB517I0rFYHJrBlT8FH6L58yPYCj+6++Kd0QG9mxw0KSSpoGUt0D4x5ifs5GRf4d+BRhtcZiPPwRR17WS99hkbKVNFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from SJ0PR19MB4528.namprd19.prod.outlook.com (2603:10b6:a03:28a::6)
+ by BY5PR19MB3571.namprd19.prod.outlook.com (2603:10b6:a03:1c3::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.23; Mon, 22 Mar
+ 2021 09:25:25 +0000
+Received: from SJ0PR19MB4528.namprd19.prod.outlook.com
+ ([fe80::8863:ccf2:c6a:d43a]) by SJ0PR19MB4528.namprd19.prod.outlook.com
+ ([fe80::8863:ccf2:c6a:d43a%7]) with mapi id 15.20.3955.027; Mon, 22 Mar 2021
+ 09:25:25 +0000
+From:   "Yuan, Perry" <Perry.Yuan@dell.com>
+To:     Mark Brown <broonie@kernel.org>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+CC:     "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v4 2/2] ASoC: rt715:add micmute led state control supports
+Thread-Topic: [PATCH v4 2/2] ASoC: rt715:add micmute led state control
+ supports
+Thread-Index: AQHXDn6s4PfzwhTth0aZP8v1kYirtKp6YrWAgBVxBJA=
+Date:   Mon, 22 Mar 2021 09:25:25 +0000
+Message-ID: <SJ0PR19MB4528847687FEEE4A4DED8E3F84659@SJ0PR19MB4528.namprd19.prod.outlook.com>
+References: <20210301093834.19524-1-Perry_Yuan@Dell.com>
+ <20210308172409.GF4656@sirena.org.uk>
+In-Reply-To: <20210308172409.GF4656@sirena.org.uk>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [163.244.246.215]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f338e5b7-e415-454a-f125-08d8ed146cea
+x-ms-traffictypediagnostic: BY5PR19MB3571:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BY5PR19MB3571281B1E5DCDEA17BA643384659@BY5PR19MB3571.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: M7rZg0Uf1SK+gGQta/gxWRlNBxauRJhDKrYw2FBct/7/9a+ibAoYw/Z6UKiPpfv8boHH09Jyc3Qv6HvVizWRvN7HP161d1FPFUnU4+OTwJuvXCBPlfgJZcnxM/tqbsSsIHSxZpztrrUYCj0VOMBVOu5zNkFZ5OTRHYbdCaamJ82Z5qcafsr+m+X1DjRZAX5oGUjZd+yYoWDEDPQUoz4mJvvDkLUQhPljTkH343PTnb7TmRhAM6ErnpQZ/8Q4z+HSX28VFK77RxgyhBu+oUGSCvgSKHu51z4AmWfzYON92jQSM5sE2NA1bOiV2JejApKQu4B7wwKUYquM52xf2wRGDu4bM90S9Pz+2yojdQhQOAVgMGALzeX6P+mNXy6HMXNJ82qWZzG5UCxJ1mi+5sOicyujN1v7ZYIPRX8N9ojHDQDY83bzGKy9KwEEmRnhnBKicYsccE/YzQ6PYSVISAQv2O73ikUQPkwc3uq7H1p2QcyHD8sgN6nw8LNxmHAP1YeHsIe91caAoQ06flFrzRSuio7NkNBa/hpMjR4vOARolPIQnR5x7SqOyPMQkvJxnQ2sE4kEJAmlJrN3CXE4bXBibGrbv0vPHLoFu4Vwx9SYq4Gtmz0oWYqyMb40GnqnPzarFVJXqasKYlDKKREHVksy6tyU9nEcoSu2vOSv7ha7sykwmDg8C2Z5y2gjkrDhvyW6sQTPpRvwfm6LoePxcS5lMZV05jMM0TxPp7xs70J8MQ/8VUIdazPbaFow7E0irAwW
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR19MB4528.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(346002)(136003)(39860400002)(376002)(71200400001)(83380400001)(86362001)(478600001)(7416002)(33656002)(110136005)(54906003)(52536014)(76116006)(9686003)(66946007)(55016002)(5660300002)(66476007)(66556008)(64756008)(66446008)(2906002)(966005)(7696005)(8676002)(8936002)(186003)(53546011)(6506007)(38100700001)(786003)(26005)(4326008)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?2F4OCekMjB+9LEsWe8O/8caxSn4fY0hsMVl6LsZ5G+MIY1XoM0t20ti1hu+X?=
+ =?us-ascii?Q?DIuitwYuuo4lQ2KtBNcYEE+s0aN+CJQCAYfsqsTaukf5TLWeHNPeUln//iJK?=
+ =?us-ascii?Q?2kzUECPv1sWzhqJOSGJuiCboyKvG74PPi6IgNqvG8zL2kQPC2y/IY6dphXDt?=
+ =?us-ascii?Q?y+xfwPDJHkDZp1DhG/uCjOCtMrhllgAD6IQ9T/MWdlN6H1kDk7xgBlXmmG8o?=
+ =?us-ascii?Q?UCgKBdwuexJFIkNbeahFSnUKoZQvwFAUjgLlrIu2GRtz5IaYL45kP6VHwN9v?=
+ =?us-ascii?Q?kBLMTKoZPd2L3s8Omgk4O60YusZk7iYJ7M2vweG7K0K1ieDq5iWPt8bQuMpr?=
+ =?us-ascii?Q?fQWEsQT7+A6PVUlAa85GGsryJ5NLMzpDophjpeSpjp4jyrQIxAZVHatScfIj?=
+ =?us-ascii?Q?MFZJET+4Y3vZDrsJC+WvsaQxLcBUgvxRyFBKNEAu2ZsHAZPRK/0Da874qPfA?=
+ =?us-ascii?Q?J8ePMxzomeThQCsF9ac7yNcfaWXph3zQ6JJx4mbQdZ+kkRDpjHjzS/sjGRcQ?=
+ =?us-ascii?Q?YewumA69Btttz8oZG/5Clqdq3yNaaENAISKmjDJ0KwYj+ZyGCjfiI/OBU+uA?=
+ =?us-ascii?Q?E4qLOf1n9wUSHppyOLyRYghTUbn9VaOtdZiVqVrfCik9P3YOtCMTx+M1tKmZ?=
+ =?us-ascii?Q?nddYpX1Ly10pqgEUuNB+vsghsC2OFoe1+XerYFbEnzUsZ7rYEzl2/KQUiBS7?=
+ =?us-ascii?Q?wp1bmtuCH5Tbpuh/K+AD0EMhOEtrGMiWQUcp3wemrSwL1p7+c4YSNk050gWj?=
+ =?us-ascii?Q?g0p9sg/UmGFxiZY77aPmCcm2Auewe23WXNjkzs0IcV1V/PtZRiIWp0LkGpuy?=
+ =?us-ascii?Q?/tjNv+4tM/o4DfQVzC7Y2Lw7cT395mVOOh6agVa0PpChmi1lwnZp+VOliSgI?=
+ =?us-ascii?Q?LHIy8KLqLblpSQLEGA1yMU/PYyPhno5A7Ofk6mBifyKctYw0YtmBsmoRxVvF?=
+ =?us-ascii?Q?cBElZyzQoEHyVZPrBmoWdW+b1xJAT9wP4AGkyVyxicLHnB1Pg7mCZVRov5IZ?=
+ =?us-ascii?Q?uSp/6Afii1QuqE+7JqeKuqxd/QA7R+1pujq9ogfrlljyEaE4MeNKo/mcC5rA?=
+ =?us-ascii?Q?rWVgYShITUOylmVMHS/sTaJdhKAdQ7UfnbSBYlxk6AqN5nsf1jvpeQfYY0Uz?=
+ =?us-ascii?Q?dWYyLAs0MeZUoMTF/HZPMWusrE9pBrCd4enRoac8U2mBbxBIApbobL36g6Ke?=
+ =?us-ascii?Q?EQNGhtZKhN3mLMu3TMLFp/dO8tfhWviY5FG46KAd+LY/uCnD9/QqKCYtiZ0o?=
+ =?us-ascii?Q?dRgC3/4W0qhj+D9dCgSHTe3kLsNI1y8cus9jAOywuSFq+7Xay8TQk/q8cjOS?=
+ =?us-ascii?Q?HnUn3vb+XQzGrJnoANLxbUiu?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR19MB4528.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f338e5b7-e415-454a-f125-08d8ed146cea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2021 09:25:25.4116
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GABbFsEjAEBlEvLB1Qj1A9OuMo678LFY0Axav6FX7H+G0ImHVvUarQ929fPqFb3mtmCl/+bcxbN67btGqqOxRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB3571
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-20_13:2021-03-19,2021-03-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 mlxlogscore=880 mlxscore=0 clxscore=1015
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103210026
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 mlxlogscore=993 phishscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103220072
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-It's not rare that device drivers need delayed work.
-It's not rare that this work needs driver's data.
+Hi Mark:
 
-Often this means that driver must ensure the work is not queued when
-driver is detached. Often it is done by ensuring new work is not added and
-then calling cancel_delayed_work_sync() at remove(). In many cases this
-may also require cleanup at probe error path - which is easy to forget.
+> -----Original Message-----
+> From: Mark Brown <broonie@kernel.org>
+> Sent: Tuesday, March 9, 2021 1:24 AM
+> To: Yuan, Perry
+> Cc: pobrn@protonmail.com; pierre-louis.bossart@linux.intel.com;
+> oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
+> hdegoede@redhat.com; mgross@linux.intel.com; Limonciello, Mario;
+> lgirdwood@gmail.com; alsa-devel@alsa-project.org; linux-
+> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+> Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control
+> supports
+>=20
+> On Mon, Mar 01, 2021 at 05:38:34PM +0800, Perry Yuan wrote:
+>=20
+> > +	/* Micmute LED state changed by muted/unmute switch */
+> > +	if (mc->invert) {
+> > +		if (ucontrol->value.integer.value[0] || ucontrol-
+> >value.integer.value[1]) {
+> > +			micmute_led =3D LED_OFF;
+> > +		} else {
+> > +			micmute_led =3D LED_ON;
+> > +		}
+> > +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
+> > +	}
+>=20
+> These conditionals on inversion seem weird and counterintuitive.  If we'r=
+e
+> going with this approach it would probably be clearer to define a custom
+> operation for the affected controls that wraps the standard one and adds =
+the
+> LED setting rather than keying off invert like this.
 
-Also the "by ensuring new work is not added" has a gotcha.
+Currently the sof soundwire driver has no generic led control yet.
+This patch can handle the led control needs for MIC mute LED, definitely th=
+e patch is a short term solution.
+There is a feature request discussion when we started to implement this sol=
+ution.
+https://github.com/thesofproject/linux/issues/2496#issuecomment-713892620
 
-It is not strange to see devm managed IRQs scheduling (delayed) work.
-Mixing this with manua wq clean-up is hard to do correctly because the
-devm is likely to free the IRQ only after the remove() is ran. So manual
-wq cancellation and devm-based IRQ management do not mix well - there is
-a short(?) time-window after the wq clean-up when IRQs are still not
-freed and may schedule new work.
+The workable way for now is that we put the LED mute control to the codec d=
+river.
+When there is new and full sound LED solution implemented, this part will b=
+e also optimized.
+The Hardware privacy feature needs this patch to handle the Mic mute led st=
+ate change.
+Before that full solution ready in kernel, could we take this as short term=
+ solution?
 
-When both WQs and IRQs are managed by devm things are likely to just
-work. WQs should be initialized before IRQs (when IRQs need to schedule
-work) and devm unwinds things in "FILO" order.
-
-This series implements delayed wq cancellation on top of devm and replaces
-the obvious cases where only thing remove call-back in a driver does is
-cancelling the work. There might be other cases where we could switch
-more than just work cancellation to use managed version and thus get rid
-of remove or mixed (manual and devm) resource management.
-
-This RFC does also introduce include/linux/devm-helpers.h file which
-hopefully works as a place where this kind of helpers can be inlined.
-
-Please see previous discussion here:
-RFC v1:
-https://lore.kernel.org/lkml/cover.1613216412.git.matti.vaittinen@fi.rohmeurope.com/
-
-Changelog v2 resend:
-  - rebased on 5.12-rc4
-
-Changelog v2:
-  - used correct terminology ("driver detach" instead of "exit, ...")
-  - inlined the devm_delayed_work_autocancel() in a header
-  - added Hans as a maintainer for the new header + myself as a reviewer
-  - used devm_add_action() instead of using plain devres_add()
-
----
-
-Matti Vaittinen (8):
-  workqueue: Add resource managed version of delayed work init
-  MAINTAINERS: Add entry for devm helpers
-  extconn: Clean-up few drivers by using managed work init
-  hwmon: raspberry-pi: Clean-up few drivers by using managed work init
-  platform/x86: gpd pocket fan: Clean-up by using managed work init
-  power: supply: Clean-up few drivers by using managed work init
-  regulator: qcom_spmi-regulator: Clean-up by using managed work init
-  watchdog: retu_wdt: Clean-up by using managed work init
-
- MAINTAINERS                                  |  6 +++
- drivers/extcon/extcon-gpio.c                 | 15 ++----
- drivers/extcon/extcon-intel-int3496.c        | 16 ++----
- drivers/extcon/extcon-palmas.c               | 17 +++----
- drivers/extcon/extcon-qcom-spmi-misc.c       | 17 +++----
- drivers/hwmon/raspberrypi-hwmon.c            | 17 +++----
- drivers/platform/x86/gpd-pocket-fan.c        | 17 +++----
- drivers/power/supply/axp20x_usb_power.c      | 15 ++----
- drivers/power/supply/bq24735-charger.c       | 18 +++----
- drivers/power/supply/ltc2941-battery-gauge.c | 20 +++-----
- drivers/power/supply/sbs-battery.c           | 16 ++----
- drivers/regulator/qcom_spmi-regulator.c      | 34 +++----------
- drivers/watchdog/retu_wdt.c                  | 22 +++-----
- include/linux/devm-helpers.h                 | 53 ++++++++++++++++++++
- 14 files changed, 128 insertions(+), 155 deletions(-)
- create mode 100644 include/linux/devm-helpers.h
-
-
-base-commit: 0d02ec6b3136c73c09e7859f0d0e4e2c4c07b49b
--- 
-2.25.4
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+Perry
