@@ -2,150 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E70C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 13:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CFAC433E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 13:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA7E619B2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 13:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6421619D1
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230509AbhCWN6T (ORCPT
+        id S231462AbhCWN64 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Mar 2021 09:58:19 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:38428 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231980AbhCWN5s (ORCPT
+        Tue, 23 Mar 2021 09:58:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44249 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231858AbhCWN6e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Mar 2021 09:57:48 -0400
-Received: by mail-lj1-f175.google.com with SMTP id s17so25737881ljc.5;
-        Tue, 23 Mar 2021 06:57:47 -0700 (PDT)
+        Tue, 23 Mar 2021 09:58:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616507913;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YebnmwWX+S8ZQ3dG1hl6dO6C/gAGM4REm6CQsMnnO4g=;
+        b=DhJDJTDZxUVmaGzKtXxnn6gNYkGbKWgQWiy/P13HORqbFpGXbSLU1j/tFkCFY7k6Tc8bEZ
+        Io0jvbMJa3ug+oaTpR2BooAsp7zZQT/mIYcsg8KXP3XJyzfR3cfugPSqxlwaeX7i4UjgBx
+        FdPuKktNJaMo6Egzs3akDP8wFKAbrs8=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-4OMSUoVyN6y9alJz0LSg-w-1; Tue, 23 Mar 2021 09:58:31 -0400
+X-MC-Unique: 4OMSUoVyN6y9alJz0LSg-w-1
+Received: by mail-ed1-f69.google.com with SMTP id v27so1006810edx.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Mar 2021 06:58:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=luVl7HTqGqd54Q4Vnh/OjrJi/jL+nPdpxWT2c/YxpeA=;
-        b=oMqiCOMalv4Ca1RhEaOKRDlTt+tNBD0o7NyF0JvgmONG1tuK14HjlKJgGEmVL/igbF
-         +uF22q1KnISrNAP0wFo/JYzWWVUAzChUifbCxGKbLYZW3rzh6vp1c6ZKqXbYSYNWfYua
-         jBbl4X/YiIFgQYEJRldYZIvB0Hq8HBnlN1yWDelFBzLpgs/4FhNCvHwNm6R9iHVzGgN/
-         4hEVKcwzMK/EY5zv4z6Zs9OvilTbz5WEa4+as7x6KU+/mB6silA4yAo/hPQWSYUx3/sH
-         CHgcowz8mzeLOTjPcIvAdu87Ci3M/okEmLfWe6SmLxCnlMAjZRO3bVhS0jTQW1iC04sc
-         ZmwA==
-X-Gm-Message-State: AOAM532bDnEffdddjb7lAZlEJJZtnoUxejXCp/+dxoLY0H26P8k4YQkz
-        JNTvgDQHrZOv4ZgGXiYsvLo=
-X-Google-Smtp-Source: ABdhPJzQsfZwkKOcBxJyLzAaplw07f1qQr0vZn0+33F072vuRY3u8TdYgtanskjOMFeZc629hOQyTA==
-X-Received: by 2002:a2e:300d:: with SMTP id w13mr3374905ljw.199.1616507867231;
-        Tue, 23 Mar 2021 06:57:47 -0700 (PDT)
-Received: from localhost.localdomain (dc7vkhyyyyyyyyyyyyyby-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::2])
-        by smtp.gmail.com with ESMTPSA id w12sm2343656ljm.50.2021.03.23.06.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 06:57:46 -0700 (PDT)
-Date:   Tue, 23 Mar 2021 15:57:41 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YebnmwWX+S8ZQ3dG1hl6dO6C/gAGM4REm6CQsMnnO4g=;
+        b=Sdp0jya4z9LeWKxMv7folnbM85pDmH1RErvbhBZaFGGgJtaTmknLjJsS77WQgd0FKH
+         +qs88uKcCbduy2G7QI5W68AqxsVIVOOrNvhaDVVt+mSaoJRcQEI96KxsZwxvCWyJH08B
+         UGxJ39fctRzi6/jANhZAqDggRiIXfru4VHZTKI6y9O8iGkE90YbSbsUCHdYwXK4ECZ8A
+         bjtbaNCAGa4JL48gh3m9JM8gmL9pC1DqVTTQWr8Tl0KLJYAoQzY7X9h0fijISCPZllUb
+         z+OXOsUYp46i1oefnynB7mY7dIp6oKJWnGKeZaM1p6YaGWAUrbXHjh3eSTQdOo7WWqdq
+         vD0Q==
+X-Gm-Message-State: AOAM532HGNMRE1o1AWu45x/LOsSZtY4UDX88goFhCYCJEjdLL32Vnq3o
+        439t5cXi4rekGWAznN/QHqP6uqGJCyWbUTDcMBbT2rgCkquUS8D/PzGYgX/C32I2/N72qtRvncL
+        qcl/Fdh/sM8nutk//zTeWBujgEZlmI39a2w==
+X-Received: by 2002:aa7:d416:: with SMTP id z22mr4661378edq.239.1616507909743;
+        Tue, 23 Mar 2021 06:58:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwi17n1Ed1L2Y8zrgtV4br5V/LDTYPI5t79OE6dRqHFOg9CKjXNlgrCLmv/vO9kOBk+epuJtw==
+X-Received: by 2002:aa7:d416:: with SMTP id z22mr4661358edq.239.1616507909578;
+        Tue, 23 Mar 2021 06:58:29 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id l12sm12767773edb.39.2021.03.23.06.58.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Mar 2021 06:58:29 -0700 (PDT)
+Subject: Re: [PATCH v3 2/8] MAINTAINERS: Add entry for devm helpers
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Mark Gross <mgross@linux.intel.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v3 5/8] platform/x86: gpd pocket fan: Clean-up by using
- managed work init
-Message-ID: <aa25a6781ba016772b045cd6e630da8c559a665d.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+        linux-arm-msm@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
 References: <cover.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+ <eec1797734e3d080662aa732c565ed4a3c261799.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e064fdd7-b276-6732-16fe-2eb2564b2179@redhat.com>
+Date:   Tue, 23 Mar 2021 14:58:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <eec1797734e3d080662aa732c565ed4a3c261799.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Few drivers implement remove call-back only for ensuring a delayed
-work gets cancelled prior driver removal. Clean-up these by switching
-to use devm_delayed_work_autocancel() instead.
+Hi,
 
-This change is compile-tested only. All testing is appreciated.
+On 3/23/21 2:56 PM, Matti Vaittinen wrote:
+> Devm helper header containing small inline helpers was added.
+> Hans promised to maintain it.
+> 
+> Add Hans as maintainer and myself as designated reviewer.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
-Changelog from RFCv2:
- - RFC dropped. No functional changes.
+Yes I did promise that, didn't I?  FWIW going this route is still
+fine by me, assuming that having someone else maintain this makes
+this easier on / more acceptable to Greg.
 
- drivers/platform/x86/gpd-pocket-fan.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+Ultimately this is up to Greg though, so lets wait and see what
+Greg has to say about this.
 
-diff --git a/drivers/platform/x86/gpd-pocket-fan.c b/drivers/platform/x86/gpd-pocket-fan.c
-index 5b516e4c2bfb..7a20f68ae206 100644
---- a/drivers/platform/x86/gpd-pocket-fan.c
-+++ b/drivers/platform/x86/gpd-pocket-fan.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/devm-helpers.h>
- #include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-@@ -124,7 +125,7 @@ static void gpd_pocket_fan_force_update(struct gpd_pocket_fan_data *fan)
- static int gpd_pocket_fan_probe(struct platform_device *pdev)
- {
- 	struct gpd_pocket_fan_data *fan;
--	int i;
-+	int i, ret;
- 
- 	for (i = 0; i < ARRAY_SIZE(temp_limits); i++) {
- 		if (temp_limits[i] < 20000 || temp_limits[i] > 90000) {
-@@ -152,7 +153,10 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	fan->dev = &pdev->dev;
--	INIT_DELAYED_WORK(&fan->work, gpd_pocket_fan_worker);
-+	ret = devm_delayed_work_autocancel(&pdev->dev, &fan->work,
-+					   gpd_pocket_fan_worker);
-+	if (ret)
-+		return ret;
- 
- 	/* Note this returns a "weak" reference which we don't need to free */
- 	fan->dts0 = thermal_zone_get_zone_by_name("soc_dts0");
-@@ -177,14 +181,6 @@ static int gpd_pocket_fan_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int gpd_pocket_fan_remove(struct platform_device *pdev)
--{
--	struct gpd_pocket_fan_data *fan = platform_get_drvdata(pdev);
--
--	cancel_delayed_work_sync(&fan->work);
--	return 0;
--}
--
- #ifdef CONFIG_PM_SLEEP
- static int gpd_pocket_fan_suspend(struct device *dev)
- {
-@@ -215,7 +211,6 @@ MODULE_DEVICE_TABLE(acpi, gpd_pocket_fan_acpi_match);
- 
- static struct platform_driver gpd_pocket_fan_driver = {
- 	.probe	= gpd_pocket_fan_probe,
--	.remove	= gpd_pocket_fan_remove,
- 	.driver	= {
- 		.name			= "gpd_pocket_fan",
- 		.acpi_match_table	= gpd_pocket_fan_acpi_match,
--- 
-2.25.4
+Regards,
+
+Hans
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> ---
+> Changelog from RFCv2:
+>  - RFC dropped. No functional changes.
+> 
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9e876927c60d..fa5ac3164678 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5169,6 +5169,12 @@ M:	Torben Mathiasen <device@lanana.org>
+>  S:	Maintained
+>  W:	http://lanana.org/docs/device-list/index.html
+>  
+> +DEVICE RESOURCE MANAGEMENT HELPERS
+> +M:	Hans de Goede <hdegoede@redhat.com>
+> +R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> +S:	Maintained
+> +F:	include/linux/devm-helpers.h
+> +
+>  DEVICE-MAPPER  (LVM)
+>  M:	Alasdair Kergon <agk@redhat.com>
+>  M:	Mike Snitzer <snitzer@redhat.com>
+> 
+
