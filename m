@@ -2,255 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B4C433E1
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 18:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF26C433C1
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 19:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818436157F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 18:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48396619C9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 19:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232218AbhCWS5h (ORCPT
+        id S230018AbhCWTkq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Mar 2021 14:57:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16493 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232311AbhCWS5V (ORCPT
+        Tue, 23 Mar 2021 15:40:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23938 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230434AbhCWTkV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Mar 2021 14:57:21 -0400
-IronPort-SDR: PHYNVYkCXVP0kxT/b1tbIOQ0gUVaxwzQ34XgziYIop/SOqS3t4D6SMeKhlqPD3iymwxwFwNxXU
- rTWGL8kf+2/g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9932"; a="169877145"
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="169877145"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 11:57:20 -0700
-IronPort-SDR: Q8HJVXl7Lyjl4C2eiFKbLw3GMyYwt6HBnf30s3xNBWhJK1VcUz0LDuN/q+U2d9JFpEkmzVza5K
- kX/iKBm8sHdA==
-X-IronPort-AV: E=Sophos;i="5.81,272,1610438400"; 
-   d="scan'208";a="452273433"
-Received: from laguitie-mobl.amr.corp.intel.com (HELO [10.252.129.185]) ([10.252.129.185])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2021 11:57:19 -0700
+        Tue, 23 Mar 2021 15:40:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616528421;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gTg0YZwN5hFKhiavzk2/eEE2JZuUQxCKgti32JKf8OQ=;
+        b=N6vrrA4dO0lzZe9fhzAqoNnE28R/Apn6CpWPnFhDeCyWgVrYxM4LoWYFyS8Pw3Ud+tFTZC
+        lfJmnvdBhMHcKGZUSpuqevpwLZnFiDR1eERrBHPdjsIWVVEterEmmkiKIYfg9AErp9xIuW
+        isBhfgvSeVdrHOkuVEwQujixR1fyyEw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-hPMjitRbMAm3GuP9WEhO6A-1; Tue, 23 Mar 2021 15:40:19 -0400
+X-MC-Unique: hPMjitRbMAm3GuP9WEhO6A-1
+Received: by mail-ed1-f71.google.com with SMTP id f9so1461838edd.13
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Mar 2021 12:40:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gTg0YZwN5hFKhiavzk2/eEE2JZuUQxCKgti32JKf8OQ=;
+        b=DHQiah7G2hieIuzHbOx+zML8UKpDNgdynZYmRoEfpE8dAYOjugLSNp0LNwg3W13qU3
+         N+t2aKJDMx1x4sqo14+2WlIR2Zf/D9uX/JH5LfyA856Z2mFsBeK+xXt9Mqe3lMsG5Bwf
+         pYrZbWixRkA8r4kQwbvT4eMh5zQLs+Y1XG2SE0CMWmWy4DpRtb7pP/rqla7dRewAAuSG
+         KSSgvFFAxsfscLZi6pRC5UbstsWn+RyV1PRUNqruXc3sOk7AT8xHrLKkQQObFEt3l/F2
+         SDfvgHZ1n/SlVkVud1N5ART+n5KQiEn2HdpLkMgAHeDEE6OGCRXuHxWNwTLw9i4ViGVf
+         ag4Q==
+X-Gm-Message-State: AOAM531wbPRTQVbYhsE1Uqlz1sQ6UheeWr9yNMe/pyBjX3jFragsd1iz
+        E6gNSkv2OBLv91nAVycjur1jRY9KY3CbZSLap/VXAT1jjAc9APb7WkexpgIyVV5xM5cJTj5P9cd
+        mlLyxEnDHPM4IwNILiscwG1grqi8kx0+k1g==
+X-Received: by 2002:a05:6402:110b:: with SMTP id u11mr6397938edv.356.1616528418168;
+        Tue, 23 Mar 2021 12:40:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxWHFAwTK7ag1Wvv7Id+c3/SYEgI+THVgdw8ygYHwpZENXbTKwxMbLV2w6ixKzeZOeLR4v7Vg==
+X-Received: by 2002:a05:6402:110b:: with SMTP id u11mr6397924edv.356.1616528418074;
+        Tue, 23 Mar 2021 12:40:18 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id m14sm13563701edr.13.2021.03.23.12.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Mar 2021 12:40:17 -0700 (PDT)
 Subject: Re: [PATCH v5 1/2] platform/x86: dell-privacy: Add support for Dell
  hardware privacy
-To:     Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
         oder_chiou@realtek.com, perex@perex.cz, tiwai@suse.com,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        Mario.Limonciello@dell.com
+        mgross@linux.intel.com, Mario.Limonciello@dell.com
 Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         lgirdwood@gmail.com, platform-driver-x86@vger.kernel.org,
         broonie@kernel.org
 References: <20210322093841.11840-1-Perry_Yuan@Dell.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <a1fae1fc-2d4f-63e8-e0be-0f9c4c91640c@linux.intel.com>
-Date:   Tue, 23 Mar 2021 13:57:17 -0500
+ <a1fae1fc-2d4f-63e8-e0be-0f9c4c91640c@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c61b975a-a771-eb63-5232-2da184ca95fe@redhat.com>
+Date:   Tue, 23 Mar 2021 20:40:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210322093841.11840-1-Perry_Yuan@Dell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <a1fae1fc-2d4f-63e8-e0be-0f9c4c91640c@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Minor comments below.
+Hi,
 
-On 3/22/21 4:38 AM, Perry Yuan wrote:
-> From: Perry Yuan <perry_yuan@dell.com>
+On 3/23/21 7:57 PM, Pierre-Louis Bossart wrote:
+> Minor comments below.
+
+<snip<
+
+>> +int __init dell_privacy_acpi_init(void)
 > 
-> add support for Dell privacy driver for the Dell units equipped
-> hardware privacy design, which protect users privacy of audio and
-> camera from hardware level. Once the audio or camera privacy mode
-> activated, any applications will not get any audio or video stream
-> when user pressed ctrl+F4 hotkey, audio privacy mode will be
-> enabled, micmute led will be also changed accordingly
-> The micmute led is fully controlled by hardware & EC(embedded controller)
-> and camera mute hotkey is Ctrl+F9. Currently design only emmits
+> is the __init necessary? You call this routine from another which already has this qualifier.
 
-typo: emits
+Yes this is necessary, all functions which are only used during module_load / from the
+module's init function must be marked as __init so that the kernel can unload them
+after module loading is done.
 
-> SW_CAMERA_LENS_COVER event while the camera lens shutter will be
-> changed by EC & hw(hadware) control
+I do wonder if this one should not be static though (I've not looked at this patch in
+detail yet).
 
-typo: hardware
 > 
-> *The flow is like this:
-> 1) User presses key. HW does stuff with this key (timeout timer is started)
-> 2) WMI event is emitted from BIOS to kernel
-> 3) WMI event is received by dell-privacy
-> 4) KEY_MICMUTE emitted from dell-privacy
-> 5) Userland picks up key and modifies kcontrol for SW mute
-> 6) Codec kernel driver catches and calls ledtrig_audio_set, like this:
-> 	ledtrig_audio_set(LED_AUDIO_MICMUTE,
-> 		rt715->micmute_led ? LED_ON :LED_OFF);
-> 7) If "LED" is set to on dell-privacy notifies EC,
-> 	and timeout is cancelled, HW mic mute activated.
+>> +{
+>> +    int err;
+>> +    struct platform_device *pdev;
+>> +
+>> +    if (!wmi_has_guid(DELL_PRIVACY_GUID))
+>> +        return -ENODEV;
+>> +
+>> +    privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
+>> +    if (!privacy_acpi)
+>> +        return -ENOMEM;
+>> +
+>> +    err = platform_driver_register(&dell_privacy_platform_drv);
+>> +    if (err)
+>> +        goto pdrv_err;
+>> +
+>> +    pdev = platform_device_register_simple(
+>> +            PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
+>> +    if (IS_ERR(pdev)) {
+>> +        err = PTR_ERR(pdev);
+>> +        goto pdev_err;
+>> +    }
+>> +
+>> +    return 0;
+>> +
+>> +pdev_err:
+>> +    platform_device_unregister(pdev);
+>> +pdrv_err:
+>> +    kfree(privacy_acpi);
+>> +    return err;
+>> +}
+>> +
+>> +void __exit dell_privacy_acpi_exit(void)
+> 
+> is the __exit required here?
 
-what happens if there is timeout? You have an explicit description of 
-the timer handling in the success case, but not what happens on a timeout...
+Idem. Also static ?
 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi b/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
-> new file mode 100644
-> index 000000000000..20c15a51ec38
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-privacy-wmi
-> @@ -0,0 +1,32 @@
-> +What:		/sys/bus/wmi/devices/6932965F-1671-4CEB-B988-D3AB0A901919/devices_supported
-> +Date:		Feb 2021
-> +KernelVersion:	5.12
+Regards,
 
-5.13 now?
-
-> +static int dell_privacy_micmute_led_set(struct led_classdev *led_cdev,
-> +		enum led_brightness brightness)
-> +{
-> +	struct privacy_acpi_priv *priv = privacy_acpi;
-> +	acpi_status status;
-> +	acpi_handle handle;
-> +	static char *acpi_method = (char *)"ECAK";
-> +
-> +	handle = ec_get_handle();
-> +	if (!handle)
-> +		return -EIO;
-> +	if (!acpi_has_method(handle, acpi_method))
-> +		return -EIO;
-> +	status = acpi_evaluate_object(handle, acpi_method, NULL, NULL);
-> +	if (ACPI_FAILURE(status)) {
-> +		dev_err(priv->dev, "Error setting privacy EC ack value: %s\n",
-> +				acpi_format_exception(status));
-> +		return -EIO;
-> +	}
-> +	pr_debug("set dell privacy micmute ec ack event done\n");
-
-can we use dev_dbg() here? Same for all occurrences of pr_debug and 
-pr_err below, it's cleaner and easier to filter.
-
-> +	return 0;
-> +}
-> +
-> +static int dell_privacy_acpi_remove(struct platform_device *pdev)
-> +{
-> +	struct privacy_acpi_priv *priv = dev_get_drvdata(privacy_acpi->dev);
-> +
-> +	led_classdev_unregister(&priv->cdev);
-> +
-> +	return 0;
-> +}
-> +/*
-> + * Pressing the mute key activates a time delayed circuit to physically cut
-> + * off the mute. The LED is in the same circuit, so it reflects the true
-> + * state of the HW mute.  The reason for the EC "ack" is so that software
-> + * can first invoke a SW mute before the HW circuit is cut off.  Without SW
-> + * cutting this off first does not affect the time delayed muting or status
-> + * of the LED but there is a possibility of a "popping" noise.
-> + *
-> + * If the EC receives the SW ack, the circuit will be activated before the
-> + * delay completed.
-> + *
-> + * Exposing as an LED device allows the codec drivers notification path to
-> + * EC ACK to work
-> + */
-> +static int dell_privacy_leds_setup(struct device *dev)
-> +{
-> +	struct privacy_acpi_priv *priv = dev_get_drvdata(dev);
-> +	int ret = 0;
-
-useless init
-
-> +
-> +	priv->cdev.name = "dell-privacy::micmute";
-> +	priv->cdev.max_brightness = 1;
-> +	priv->cdev.brightness_set_blocking = dell_privacy_micmute_led_set;
-> +	priv->cdev.default_trigger = "audio-micmute";
-> +	priv->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
-> +	ret = devm_led_classdev_register(dev, &priv->cdev);
-> +	if (ret)
-> +		return ret;
-> +	return 0;
-> +}
-> +
-> +static int dell_privacy_acpi_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	platform_set_drvdata(pdev, privacy_acpi);
-> +	privacy_acpi->dev = &pdev->dev;
-> +	privacy_acpi->platform_device = pdev;
-> +
-> +	ret = dell_privacy_leds_setup(&pdev->dev);
-> +	if (ret)
-> +		return -EIO;
-
-any reason to hard-code -EIO, woud 'return ret' be enough?
+Hans
 
 
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver dell_privacy_platform_drv = {
-> +	.driver = {
-> +		.name = PRIVACY_PLATFORM_NAME,
-> +	},
-> +	.probe = dell_privacy_acpi_probe,
-> +	.remove = dell_privacy_acpi_remove,
-> +};
-> +
-> +int __init dell_privacy_acpi_init(void)
 
-is the __init necessary? You call this routine from another which 
-already has this qualifier.
-
-> +{
-> +	int err;
-> +	struct platform_device *pdev;
-> +
-> +	if (!wmi_has_guid(DELL_PRIVACY_GUID))
-> +		return -ENODEV;
-> +
-> +	privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
-> +	if (!privacy_acpi)
-> +		return -ENOMEM;
-> +
-> +	err = platform_driver_register(&dell_privacy_platform_drv);
-> +	if (err)
-> +		goto pdrv_err;
-> +
-> +	pdev = platform_device_register_simple(
-> +			PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
-> +	if (IS_ERR(pdev)) {
-> +		err = PTR_ERR(pdev);
-> +		goto pdev_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +pdev_err:
-> +	platform_device_unregister(pdev);
-> +pdrv_err:
-> +	kfree(privacy_acpi);
-> +	return err;
-> +}
-> +
-> +void __exit dell_privacy_acpi_exit(void)
-
-is the __exit required here?
-
-> +{
-> +	struct platform_device *pdev = to_platform_device(privacy_acpi->dev);
-> +
-> +	platform_device_unregister(pdev);
-> +	platform_driver_unregister(&dell_privacy_platform_drv);
-> +	kfree(privacy_acpi);
-> +}
-> +
-> +MODULE_AUTHOR("Perry Yuan <perry_yuan@dell.com>");
-> +MODULE_DESCRIPTION("DELL Privacy ACPI Driver");
-> +MODULE_LICENSE("GPL");
-
+> 
+>> +{
+>> +    struct platform_device *pdev = to_platform_device(privacy_acpi->dev);
+>> +
+>> +    platform_device_unregister(pdev);
+>> +    platform_driver_unregister(&dell_privacy_platform_drv);
+>> +    kfree(privacy_acpi);
+>> +}
+>> +
+>> +MODULE_AUTHOR("Perry Yuan <perry_yuan@dell.com>");
+>> +MODULE_DESCRIPTION("DELL Privacy ACPI Driver");
+>> +MODULE_LICENSE("GPL");
+> 
+> 
 
