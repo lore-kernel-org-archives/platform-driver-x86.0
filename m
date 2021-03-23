@@ -2,141 +2,595 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0926C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 20:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A102C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0A2619C1
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 20:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5462D619CB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 23 Mar 2021 20:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233252AbhCWUBN (ORCPT
+        id S231326AbhCWUEX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 23 Mar 2021 16:01:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57259 "EHLO
+        Tue, 23 Mar 2021 16:04:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38757 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233110AbhCWUAy (ORCPT
+        by vger.kernel.org with ESMTP id S230287AbhCWUEH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 23 Mar 2021 16:00:54 -0400
+        Tue, 23 Mar 2021 16:04:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616529653;
+        s=mimecast20190719; t=1616529846;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bNZnjO42gjVhs5dIrJp7IOz6pVwoWDKxlsrX2l5lccI=;
-        b=KPqOAFv8t1C3h9dtSSiIrStMzdLTNDLYzpkbnJeTLZKhFf8ugDYQ7rSpsPYJI4vfyUl4Au
-        N01owu4FSIJ5G0e3TH5b+1s6NI59eNu4P/9E6IDfVUZakI5g/EqEF08q8icdVL1uIZkBc6
-        MkuwW/Cw13kaVyk1E2+bEz1iaqKrsa8=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-Bf8urpbQOY6CwEsQbKItGA-1; Tue, 23 Mar 2021 16:00:45 -0400
-X-MC-Unique: Bf8urpbQOY6CwEsQbKItGA-1
-Received: by mail-ej1-f70.google.com with SMTP id e7so1556207ejx.5
-        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Mar 2021 13:00:45 -0700 (PDT)
+        bh=6NLsErYkJ3mGX0rZlxbJrBLu04F3VS9lfrAieb5y/SI=;
+        b=MYIcpL5bvSm71ENkU3KaYfwj7MgRECvGJ7SC+91xhdH1bPWK+KZoCgVQ4jhYE1ty7rayXQ
+        0fiZstgA5f0qFjmcrtw/YGHvwHnaLUsFxEGnHojnZSd529XVNR6lyKy4GinHKlGWLhyCqt
+        Acr0mGpb4I+Fmrl/irU/I7RmMl+tUjE=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-u1CtvKQkM4uvKKYBF8PcxQ-1; Tue, 23 Mar 2021 16:04:00 -0400
+X-MC-Unique: u1CtvKQkM4uvKKYBF8PcxQ-1
+Received: by mail-ed1-f69.google.com with SMTP id n20so1506615edr.8
+        for <platform-driver-x86@vger.kernel.org>; Tue, 23 Mar 2021 13:03:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=bNZnjO42gjVhs5dIrJp7IOz6pVwoWDKxlsrX2l5lccI=;
-        b=efqqWjU7MuaoE8xWg47BunDtwo01hdDXYH1yGk2hxWD38S84508VzxyjNrJyoIK0Vi
-         hH2mTBgDJx+RS8RrMNTBRWUGOGfhaSjSWg0ZmSW5vReE3yjXV/yQTFz3OAnbr2oaeeBl
-         NIMdNAhCT2Gnh8EJhv/9nisYmGDN8456+ch7X+Vd9dhMn+WEnK68vDse8N20jpigd+cs
-         XIlJq5Z3SlThmi77Q56EU+NQ50svU1HX7gomrgdfZODBmEUoidMYhZM0Q48j/cCxIIIv
-         Fharuu3CFnjBP9nX48F50M7OMP9y66KzUh557uwDCD4BPjcbYsV791t8LmYuGbOo3csU
-         D4ag==
-X-Gm-Message-State: AOAM531QirWyZnl1dD9nh8oO+GcNNXTm7mldZIyiTQZWYceQ/CDrcX/O
-        cW3Cg9KO01KucHVIGuKRv+zK28pZV7luwyYuHsxLdMMSqsXC29+5t291ZXmcPnGFGJZg8LgaMec
-        f27bcII7b6nhKYxvHRhCa8NGxcM8Ub+HAKw==
-X-Received: by 2002:a05:6402:4407:: with SMTP id y7mr6211381eda.247.1616529644283;
-        Tue, 23 Mar 2021 13:00:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwh2ay7mE48Qtx5mN3z/Kd46hbrymSoqNAOGINWQybomqJrcMyzc0xZMTC0DqTMcMpgPmXOOA==
-X-Received: by 2002:a05:6402:4407:: with SMTP id y7mr6211358eda.247.1616529644103;
-        Tue, 23 Mar 2021 13:00:44 -0700 (PDT)
+        bh=6NLsErYkJ3mGX0rZlxbJrBLu04F3VS9lfrAieb5y/SI=;
+        b=fSO/BbD2lUweCZiLVCezxy+iNdpMWcekoxBgJvQzaN9DGby1vfJrWUDEgm1uBheTGL
+         /tqfozDnzIWvFXO61+q4HpFMeT3y6FdTM+CpeskDJ3NFtxNDMb8kZl266kZn6HASrsYZ
+         r0tLC8OrsmTRDt+u2WTvhzjlqn63xLYhV29GhcUx9/mdYcKKwicTqAI72a7DQlvsRiW9
+         CewaO7SFMlFovbZP3XFDISolPlfqoP8/06Z44V0jOUQFjTParE7d8VO75fW7PbValbPq
+         BF36pWQ+ymsMiJEyGhW9suVSNVh9kVxn2F7rSAyRlJtONxkavJvVYiO1CFKurVcFqKPQ
+         6qYg==
+X-Gm-Message-State: AOAM531xbhplBRQyTwQ8DwWaMPitwplr5uGtSc2351NzaOo68lCg28x3
+        O6CuWEd6J9pv1YoXUK0YptOxdS4cCG6qMgIkqQqIY6Hni/WPsBwZ3HMrYUbtVaVbmnMmlp1BT7m
+        RKn3zHVAFNVIpQNkgG6HNfZr0rY27lJJOiQ==
+X-Received: by 2002:a50:fe81:: with SMTP id d1mr6410103edt.308.1616529838862;
+        Tue, 23 Mar 2021 13:03:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzNSEhgRw+e+Vifu/7FYUx1mDnCXgxc/zFhxlJA0Ct2AHOz3vRHnjFN0zRi4DEc94iAXm4JJA==
+X-Received: by 2002:a50:fe81:: with SMTP id d1mr6410079edt.308.1616529838567;
+        Tue, 23 Mar 2021 13:03:58 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id f21sm11620875ejw.124.2021.03.23.13.00.43
+        by smtp.gmail.com with ESMTPSA id f16sm3340617ejb.3.2021.03.23.13.03.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Mar 2021 13:00:43 -0700 (PDT)
-Subject: Re: [PATCH] asus-laptop: fix kobj_to_dev.cocci warnings
-To:     Julia Lawall <julia.lawall@inria.fr>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user@lists.sourceforge.net
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@lists.01.org, Denis Efremov <efremov@linux.com>
-References: <alpine.DEB.2.22.394.2103171258010.2981@hadrien>
+        Tue, 23 Mar 2021 13:03:58 -0700 (PDT)
+Subject: Re: [V2,1/1] platform/x86: add support for Advantech software defined
+ button
+To:     "YingChieh, Ho" <andrea.cs97g@nctu.edu.tw>
+Cc:     platform-driver-x86@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Andrea Ho <andrea.ho@advantech.com.tw>
+References: <CAGBRx8NKMqYxz=PWHnHQoxP4f9J4faooMt82DwUAKT8oWYH34w@mail.gmail.com>
+ <283c9df1-9911-d0bd-7db5-2349927c21d1@redhat.com>
+ <CAFysUkREZtoMj7YgiRBGryjWNLTaKoUaZVFSB7jQV7j-o3CGLw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <6e2b729c-11c7-cdf9-18cc-8d3aa988e134@redhat.com>
-Date:   Tue, 23 Mar 2021 21:00:42 +0100
+Message-ID: <fb9b4615-ecd9-d394-82d4-a1b9661be8f6@redhat.com>
+Date:   Tue, 23 Mar 2021 21:03:57 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2103171258010.2981@hadrien>
+In-Reply-To: <CAFysUkREZtoMj7YgiRBGryjWNLTaKoUaZVFSB7jQV7j-o3CGLw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 3/17/21 1:00 PM, Julia Lawall wrote:
-> From: kernel test robot <lkp@intel.com>
+On 3/19/21 5:00 AM, YingChieh, Ho wrote:
+> Hi Hans,
 > 
-> Use kobj_to_dev() instead of container_of()
-> 
-> Generated by: scripts/coccinelle/api/kobj_to_dev.cocci
-> 
-> CC: Denis Efremov <efremov@linux.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
+> Thank you for your kindly review.
+> As a beginner in driver coding, I got gains much from your suggestions.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+I'm glad to hear that my reviews are helping you.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+> Path v3 is ready at patchwork.^^
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Thank you, I'll try to take a look at it soon.
 
 Regards,
 
 Hans
 
 
-> ---
 > 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   1df27313f50a57497c1faeb6a6ae4ca939c85a7d
-> commit: a2fc3718bc22e85378085568ecc5765fb28cabce coccinelle: api: add kobj_to_dev.cocci script
-> :::::: branch date: 5 hours ago
-> :::::: commit date: 7 months ago
-> 
->  asus-laptop.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/drivers/platform/x86/asus-laptop.c
-> +++ b/drivers/platform/x86/asus-laptop.c
-> @@ -1569,7 +1569,7 @@ static umode_t asus_sysfs_is_visible(str
->  				    struct attribute *attr,
->  				    int idx)
->  {
-> -	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct device *dev = kobj_to_dev(kobj);
->  	struct asus_laptop *asus = dev_get_drvdata(dev);
->  	acpi_handle handle = asus->handle;
->  	bool supported;
+> Hans de Goede <hdegoede@redhat.com> 於 2021年3月19日 週五 上午12:21寫道：
+>>
+>> Hi,
+>>
+>> On 3/12/21 9:11 AM, YingChieh Ho wrote:
+>>> From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
+>>>
+>>> Advantech sw_button is a ACPI event trigger button.
+>>>
+>>> With this driver, we can report KEY_EVENT on the
+>>> Advantech Tabletop Network Appliances products and it has been
+>>> tested in FWA1112VC.
+>>>
+>>> Add the software define button support to report EV_REP key_event
+>>> (KEY_PROG1) by pressing button that cloud be get on user
+>>> interface and trigger the customized actions.
+>>>
+>>> Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+>>>
+>>> v2:
+>>>         - change evdev key-code from BTN_TRIGGER_HAPPY to KEY_PROG1
+>>>         - to rewrite the driver to be a regular platform_driver
+>>>         - use specific names instead of generic names,
+>>>           "Software Button" to "Advantech Software Button",
+>>>           "button" to "adv_swbutton"
+>>>         - remove unused defines or use-once defines, ACPI_BUTTON_FILE_INFO,
+>>>           ACPI_BUTTON_FILE_STATE, ACPI_BUTTON_TYPE_UNKNOWN, ACPI_SWBTN_NAME
+>>
+>> Thank you this version is much better, I have various review remarks below.
+>>
+>> Please send a v3 with those fixed.
+>>
+>>
+>>> ---
+>>>  MAINTAINERS                         |   5 +
+>>>  drivers/platform/x86/Kconfig        |  11 ++
+>>>  drivers/platform/x86/Makefile       |   3 +
+>>>  drivers/platform/x86/adv_swbutton.c | 192 ++++++++++++++++++++++++++++
+>>>  4 files changed, 211 insertions(+)
+>>>  create mode 100644 drivers/platform/x86/adv_swbutton.c
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 68f21d46614c..e35c48e411b7 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -562,6 +562,11 @@ S: Maintained
+>>>  F:     Documentation/scsi/advansys.rst
+>>>  F:     drivers/scsi/advansys.c
+>>>
+>>> +ADVANTECH SWBTN DRIVER
+>>> +M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
+>>> +S:     Maintained
+>>> +F:     drivers/platform/x86/adv_swbutton.c
+>>> +
+>>>  ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
+>>>  M:     Michael Hennerich <michael.hennerich@analog.com>
+>>>  S:     Supported
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index 0581a54cf562..b1340135c5e9 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -180,6 +180,17 @@ config ACER_WMI
+>>>           If you have an ACPI-WMI compatible Acer/ Wistron laptop, say Y or M
+>>>           here.
+>>
+>> This is supposed to be indented by a space (from the diff format) and then
+>> a tab + 2 spaces, but in your patch this is now indented by 10 spaces.
+>>
+>> In general your entire patch has all tabs replaced by spaces, I guess that
+>> your mail-client or editor is mangling things. Please do the following:
+>>
+>> 1. Check your patch for checkpatch errors:
+>>
+>> git format-patch HEAD~
+>> scripts/checkpatch.pl 0001-platform...patch
+>>
+>> And fix all reported issues, both whitespace issues and others.
+>>
+>> 2. Send the next version of the patch like this:
+>>
+>> git format-patch -v3 HEAD~
+>> git send-email v3-0001-platform...patch
+>>
+>> Do NOT edit the v3-0001-platform...patch file between these 2 steps.
+>>
+>>
+>>> +config ADV_SWBUTTON
+>>> +    tristate "Advantech ACPI Software Button Driver"
+>>
+>> You are using indent steps of 4 spaces here, that should be a tab
+>>> +    depends on ACPI
+>>> +    help
+>>> +      Say Y here to enable support for Advantech software defined
+>>> +      button feature. More information can be fount at
+>>> +      <http://www.advantech.com.tw/products/>
+>>
+>> And a tab and 2 spaces for the help text.
+>>
+>>> +
+>>> +      To compile this driver as a module, choose M here. The module will
+>>> +      be called adv_swbutton.
+>>> +
+>>>  config APPLE_GMUX
+>>>         tristate "Apple Gmux Driver"
+>>>         depends on ACPI && PCI
+>>> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+>>> index 2b85852a1a87..76a321fc58ba 100644
+>>> --- a/drivers/platform/x86/Makefile
+>>> +++ b/drivers/platform/x86/Makefile
+>>> @@ -22,6 +22,9 @@ obj-$(CONFIG_ACERHDF)         += acerhdf.o
+>>>  obj-$(CONFIG_ACER_WIRELESS)    += acer-wireless.o
+>>>  obj-$(CONFIG_ACER_WMI)         += acer-wmi.o
+>>>
+>>> +# Advantech
+>>> +obj-$(CONFIG_ADV_SWBUTTON)  += adv_swbutton.o
+>>> +
+>>
+>> The indent before the += should use tabs not spaces.
+>>
+>>>  # Apple
+>>>  obj-$(CONFIG_APPLE_GMUX)       += apple-gmux.o
+>>>
+>>> diff --git a/drivers/platform/x86/adv_swbutton.c
+>>> b/drivers/platform/x86/adv_swbutton.c
+>>> new file mode 100644
+>>> index 000000000000..f4387220e8a0
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/adv_swbutton.c
+>>> @@ -0,0 +1,192 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + *  adv_swbutton.c - Software Button Interface Driver.
+>>> + *
+>>> + *  (C) Copyright 2020 Advantech Corporation, Inc
+>>> + *
+>>> + */
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/version.h>
+>>> +#include <linux/types.h>
+>>> +#include <linux/proc_fs.h>
+>>> +#include <linux/input.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/acpi.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <acpi/button.h>
+>>> +#include <acpi/acpi_drivers.h>
+>>
+>> Please drop the following unused defines:
+>>
+>> #include <linux/init.h>
+>> #include <linux/version.h>
+>> #include <linux/types.h>
+>> #include <linux/proc_fs.h>
+>> #include <linux/slab.h>
+>> #include <acpi/button.h>
+>> #include <acpi/acpi_drivers.h>
+>>
+>> And sort the remaining includes alphabetically.
+>>
+>>> +
+>>> +#define MODULE_NAME                         "adv_swbutton"
+>>
+>> Please drop this define, instead just set the .driver.name part of the platform_driver struct directly to "adv_swbutton".
+>>
+>>> +
+>>> +#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
+>>> +#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
+>>
+>> Please drop the ACPI_BUTTON_TYPE_SOFTWARE define.
+>>
+>>> +
+>>> +#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
+>>> +#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
+>>> +
+>>> +#define SOFTWARE_BUTTON                     KEY_PROG1
+>>
+>> Please drop this unnecessary define and just use KEY_PROG1 directly.
+>>
+>>> +
+>>> +#define _COMPONENT                          ACPI_BUTTON_COMPONENT
+>>> +
+>>> +struct acpi_button {
+>>
+>> Please give this struct-type a different name, e.g. use:
+>>
+>> struct adv_swbutton {
+>>
+>>> +       unsigned int type;
+>>
+>> And drop the type here, it is always set to ACPI_BUTTON_TYPE_SOFTWARE, so it has no function.
+>>
+>>> +       struct input_dev *input;
+>>> +       char phys[32];
+>>> +       bool pressed;
+>>
+>> Also please drop the pressed bool, see below.
+>>
+>>
+>>> +};
+>>> +
+>>> +/*-------------------------------------------------------------------------
+>>> + *                               Driver Interface
+>>> + *--------------------------------------------------------------------------
+>>> + */
+>>> +static void acpi_button_notify(acpi_handle handle, u32 event, void *context)
+>>> +{
+>>> +       struct acpi_device *device = context;
+>>> +
+>>> +       struct acpi_button *button = dev_get_drvdata(&device->dev);
+>>
+>> You must not call dev_set_drvdata on the acpi_device since you are not binding
+>> to the acpi_device, you are binding to the platform_device, so set the drv_data
+>> there and please don't touch the acpi_device.
+>>
+>>> +       struct input_dev *input;
+>>> +
+>>> +       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
+>>
+>> Please drop these 3 variables, they are not necessary.
+>>
+>>> +
+>>> +       switch (event) {
+>>> +       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
+>>> +               input = button->input;
+>>
+>> Just use button->input below instead of having this unnecessary
+>> helper variable.
+>>
+>>> +
+>>> +               if (!button->pressed)
+>>> +                       return;
+>>
+>> This is not necessary, the input core takes care of not sending
+>> events when the state does not change.
+>>
+>>> +
+>>> +               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
+>>> +                               BTN_KEYCODE : KEY_UNKNOWN;
+>>
+>> No idea why you are doing this, but it is not necessary,
+>> also it is wrong, you should be using KEY_PROG1 here.
+>>
+>>> +
+>>> +               button->pressed = false;
+>>
+>> Keeping track of the pressed state is not necessary.
+>>
+>>> +
+>>> +               input_report_key(input, keycode, 0);
+>>> +               input_sync(input);
+>>
+>> Basically this entire case can be simplified to:
+>>
+>>        case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
+>>                input_report_key(button->input, KEY_PROG1, 0);
+>>                input_sync(button->input);
+>>                break;
+>>
+>>
+>>> +       break;
+>>
+>> This break is indented wrong.
+>>
+>>> +       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
+>>> +               input = button->input;
+>>> +               button->pressed = true;
+>>> +
+>>> +               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
+>>> +                           BTN_KEYCODE : KEY_UNKNOWN;
+>>> +
+>>> +               input_report_key(input, keycode, 1);
+>>> +               input_sync(input);
+>>> +       break;
+>>
+>> And the same as above here, this can be simplified to:
+>>
+>>        case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
+>>                input_report_key(button->input, KEY_PROG1, 1);
+>>                input_sync(button->input);
+>>                break;
+>>
+>>
+>>> +       default:
+>>> +               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+>>> +                                 "Unsupported event [0x%x]\n", event));
+>>
+>> Please don't use ACPI_DEBUG_PRINTF outside of drivers/acpi, instead
+>> use:
+>>
+>>                   dev_dbg(&platform_device->dev, ...);
+>>
+>>> +       break;
+>>
+>> There is no need for a break at the end of a switch-case
+>>
+>>> +       }
+>>> +}
+>>> +
+>>> +static int acpi_button_probe(struct platform_device *device)
+>>> +{
+>>> +       struct acpi_device *acpi_device;
+>>> +       struct acpi_button *button;
+>>> +       struct input_dev *input;
+>>> +       acpi_status status;
+>>> +
+>>> +       int error;
+>>> +
+>>> +       acpi_device = ACPI_COMPANION(&device->dev);
+>>> +       if (!acpi_device) {
+>>> +               dev_err(&device->dev, "ACPI companion is missing\n");
+>>> +               return -ENOMEM;
+>>> +       }
+>>> +
+>>> +       status = acpi_install_notify_handler(acpi_device->handle,
+>>> +                                            ACPI_DEVICE_NOTIFY,
+>>> +                                            acpi_button_notify,
+>>> +                                            acpi_device);
+>>> +       if (ACPI_FAILURE(status)) {
+>>> +               dev_err(&device->dev, "Error installing notify handler\n");
+>>> +               error = -ENODEV;
+>>> +       }
+>>
+>> This needs to be done at the end of probe, if the notifier now runs, before
+>> you have called dev_set_drvdata(), you will have a NULL pointer deref,
+>> and even if the dev_set_drvdata() then the notifier may run before you have
+>> set button->input = input and you still have a NULL pointer deref.
+>>
+>> So first setup everything and only then call acpi_install_notify_handler().
+>>
+>>> +
+>>> +       button = devm_kzalloc(&acpi_device->dev, sizeof(*button), GFP_KERNEL);
+>>> +       if (!button)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       dev_set_drvdata(&acpi_device->dev, button);
+>>
+>> Call this on the platform_device, so:
+>>
+>>        dev_set_drvdata(&device->dev, button);
+>>
+>> Also see above.
+>>
+>>> +
+>>> +       input = devm_input_allocate_device(&acpi_device->dev);
+>>> +       if (!input) {
+>>> +               error =  -ENOMEM;
+>>> +               goto err_free_mem;
+>>
+>> There is no need for the goto err_free_mem here (see below), so this
+>> can be simplified to just:
+>>
+>>       input = devm_input_allocate_device(&acpi_device->dev);
+>>       if (!input)
+>>                return -ENOMEM;
+>>
+>>> +       }
+>>> +
+>>> +       button->input = input;
+>>> +       button->type = ACPI_BUTTON_TYPE_SOFTWARE;
+>>> +       button->pressed = false;
+>>
+>> Drop the setting of type/pressed, see above.
+>>
+>>
+>>> +
+>>> +       snprintf(button->phys, sizeof(button->phys),
+>>> "%s/button/input0", ACPI_BUTTON_HID_SWBTN);
+>>> +
+>>> +       input->name = "Advantech Software Button";
+>>> +       input->phys = button->phys;
+>>> +       input->id.bustype = BUS_HOST;
+>>> +       input->id.product = button->type;
+>>
+>> Don't set product to some semi-random value. Just leave it at 0.
+>>
+>>> +       input->dev.parent = &acpi_device->dev;
+>>
+>> This should be:
+>>
+>>         input->dev.parent = &device->dev;
+>>
+>>> +
+>>> +       switch (button->type) {
+>>> +       case ACPI_BUTTON_TYPE_SOFTWARE:
+>>> +               set_bit(EV_KEY, input->evbit);
+>>> +               set_bit(EV_REP, input->evbit);
+>>> +
+>>> +               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
+>>> +       break;
+>>> +       }
+>>
+>> button->type always equals ACPI_BUTTON_TYPE_SOFTWARE, so you can drop the whole
+>> switch-case here and input_set_capability(input, EV_KEY, ...) already does:
+>> set_bit(EV_KEY, input->evbit);, so this entire block can be simplified to just:
+>>
+>>           set_bit(EV_REP, input->evbit);
+>>           input_set_capability(input, EV_KEY, KEY_PROG1);
+>>
+>>
+>>> +
+>>> +       input_set_drvdata(input, acpi_device);
+>>
+>> You are never using the drvdata associated with the input_dev, so
+>> this can be dropped. Also please don't use acpi_device for this/
+>>
+>>> +       error = input_register_device(input);
+>>> +       if (error)
+>>> +               return error;
+>>> +
+>>> +       device_init_wakeup(&acpi_device->dev, true);
+>>
+>> Don't use acpi_device, instead do:
+>>
+>>           device_init_wakeup(&device->dev, true);
+>>
+>>
+>>
+>>
+>>> +
+>>> +       return 0;
+>>> +
+>>> +err_free_mem:
+>>> +       devm_kfree(&device->dev, button);
+>>
+>> devm_kzalloced mem will automatically be free-ed when the probe function
+>> returns with an error, or when the driver is unbound (removed) so there
+>> is no need to call devm_kfree() here.
+>>
+>>> +       return error;
+>>> +}
+>>> +
+>>> +static int acpi_button_remove(struct platform_device *device)
+>>> +{
+>>> +       struct acpi_device *acpi_device = ACPI_COMPANION(&device->dev);
+>>> +       struct acpi_button *button = dev_get_drvdata(&acpi_device->dev);
+>>> +
+>>> +       acpi_remove_notify_handler(acpi_device->handle, ACPI_DEVICE_NOTIFY,
+>>> +                                  acpi_button_notify);
+>>> +
+>>> +       input_unregister_device(button->input);
+>>> +       devm_kfree(&acpi_device->dev, button);
+>>
+>> The input_unregister_device() and devm_kfree() will be done automatically
+>> when the remove function exits, so you can drop these 2 calls.
+>>
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static const struct acpi_device_id button_device_ids[] = {
+>>> +       {ACPI_BUTTON_HID_SWBTN, 0},
+>>> +       {"", 0},
+>>> +};
+>>> +
+>>> +MODULE_DEVICE_TABLE(acpi, button_device_ids);
+>>> +
+>>> +static struct platform_driver acpi_button_driver = {
+>>> +       .driver = {
+>>> +               .name = MODULE_NAME,
+>>> +               .acpi_match_table = button_device_ids,
+>>> +       },
+>>> +       .probe = acpi_button_probe,
+>>> +       .remove = acpi_button_remove,
+>>> +};
+>>> +
+>>> +module_platform_driver(acpi_button_driver);
+>>> +
+>>
+>> This is not an ACPI driver, please drop the ACPI_MODULE_NAME() call.
+>>
+>>> +ACPI_MODULE_NAME(MODULE_NAME);
+>>> +
+>>> +MODULE_AUTHOR("Andrea Ho");
+>>> +MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>> --
+>>> 2.17.1
+>>>
+>>
+>> Regards,
+>>
+>> Hans
+>>
 > 
 
