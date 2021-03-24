@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AA2C433FB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713D6C433C1
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E368461A27
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402D261A06
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234604AbhCXM4k (ORCPT
+        id S234394AbhCXM4l (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Mar 2021 08:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
+        Wed, 24 Mar 2021 08:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234620AbhCXM4K (ORCPT
+        with ESMTP id S234656AbhCXM4O (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Mar 2021 08:56:10 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA175C0613DE
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:09 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id b16so27527959eds.7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:09 -0700 (PDT)
+        Wed, 24 Mar 2021 08:56:14 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3C68C061763
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:11 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id y6so27529437eds.1
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=deviqon.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5b4aQ508Io3+0QcWegMSXE+w4jq/XwA5f3VwTDm7+CM=;
-        b=kPAESwGyeqxafo+DnvdLNonf1MxYA0W8rt++k4+tTM0QMkoVWACB1as0tIafLR7YPL
-         V62xqME1LmZj7DnK1VArZ1fIBbN+Zs7KuM2iqdeosqtcHe4WHBmgGsYKZ6KTKmS312Af
-         nSXgDeCOdOR5xeBYbjOlhLgYiTlmP9/Zy2c82nEOofFDlKFFkn6ke8npsr0RmQuFpA3v
-         bL7e0zT3YHEPn/4PHCPJAMOPevARu3dHvBI3VFGzIL1847v1av+P+LlY+czh4F72yx9/
-         dRK69U3EPe5f6fX9RCi2PYl7eWfAyL/sx105I5bXKAbGyKwLD8p2XVPKuqSBeYI+KbF7
-         op4g==
+        bh=B0AOixSVQaYDeSh4VAk4nqi8IzY0YDC7YSX2q7F9wac=;
+        b=p9eNAslDD0sBoEN0CD3Yw/zgILE+kMoGorL0VgdHYiQdT0rhKS7z0mnChro/Q65BKR
+         NkS+yM2dzXDwfu4cOc0CPT0U1y8uvWyr8ByPMvt1oqsuaOOrJQEd4nDolh0XGFqVhBDA
+         yBpb2ID4TQAmaDwla+ifXgdHfEs+VISkqxpvMhqAL/YN2OKehtffFRFiQFU/cigw2xDV
+         dQA+lqyD+8Bj1DjgDe8uHGksSE2VX7/0KNsg6tXjBoj53mvSqZlZtaa1UDfa4hK3/PWF
+         MQwCO5fKiNW1VuopEa9RmH3upnQ0smbXMGoaHlie2wAl4KBM4G9VSNXs7CuUxHxAWc7q
+         /Byg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5b4aQ508Io3+0QcWegMSXE+w4jq/XwA5f3VwTDm7+CM=;
-        b=VJS31eHHZbHIaGj9DBrdH8F+FljEsGnxP0p1XOfE3vfTt4+fM9GvNmH7xHAFwFwkEb
-         tnNc/12llg4WaeMmzEcY2pkCQBYvM+K9LqDblfX6lk6RKUuWn9g7tbIdG/m2Kms/5i1i
-         wybwIrWWvLTWdFKlLridLqIE793uAUhN6u0mHWddRuaMbkLuPXc+Luz77jq1LKdDKP28
-         xMqU77EzKuf4U/RLl6eBJmc0Rj7fz1gT4eWofaP03rIrGGOQVgEgVdn04h0pdht1dWxX
-         oWDae/rGjOlxR1P4+8/3ELxrpRhtrNykQmOmNqYA5gdpgNIgZXabD1shx7d76s0YOQiI
-         0/RQ==
-X-Gm-Message-State: AOAM530TmiIqVT4sVH5lp6K/o8M4VotlIWKpQTrcnmX/C6QMqrLLdv0/
-        U+2LGrupaUanyfIGMtitXtjsCt983GYE6bQ5
-X-Google-Smtp-Source: ABdhPJxsSAiGJmL649dJDQw4Ag16alHr4nvmdoimmmdE27PdMGxU9yPAzPpZEvqfxGs5TmtWmDSLZQ==
-X-Received: by 2002:a50:ec0e:: with SMTP id g14mr3346589edr.264.1616590568409;
-        Wed, 24 Mar 2021 05:56:08 -0700 (PDT)
+        bh=B0AOixSVQaYDeSh4VAk4nqi8IzY0YDC7YSX2q7F9wac=;
+        b=kQgSaxKzoQ2MISgIuecIk+vBO42pDQkw+KVAut/D871QA8Bb+gwa6Br4irKiXNcpAA
+         5Mj8lbzbCAZFRJLWz6Pibwerb90q6ngth9DQkqFMc+z+6RksR/kbumoJce1Eh4It3hHr
+         kqgK4UXItVLOorbaoenxE75oNLWp0KII5gvlq61yuSjvfIiOE+TX40miuCqc4KSNA7fp
+         yx6Qg/dY8WV/SsbzgHaEP7zkTE0ct41hmqAp8Rm4DOifc+pv7NGLpBkrITvycTVirNq7
+         UMLIYvPwrCxRymNkTXOmHDPytI9PlI4q9+jlp+IrqGK6L0TToiHF6kGFAAfAFypC3GGO
+         mSfw==
+X-Gm-Message-State: AOAM532QodU/A6mNhT/3+ijEfUCEEogsS+4nVpFIhHrRpg2YlCUUi81p
+        vqVwabW+OaDMhc2XkI6U9PmDVftV6ApR5l8E
+X-Google-Smtp-Source: ABdhPJzcWnvJEq/xcup+eZznQQjcwhSGHwksnhZO04Sbq0tuTKJTYhTUo/ehIeYEdYC6gE8DgEOhxQ==
+X-Received: by 2002:aa7:d9c8:: with SMTP id v8mr3212277eds.9.1616590570503;
+        Wed, 24 Mar 2021 05:56:10 -0700 (PDT)
 Received: from localhost.localdomain ([5.2.193.191])
-        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.07
+        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 05:56:08 -0700 (PDT)
+        Wed, 24 Mar 2021 05:56:10 -0700 (PDT)
 From:   Alexandru Ardelean <aardelean@deviqon.com>
 To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org
 Cc:     coproscefalo@gmail.com, hdegoede@redhat.com,
         mgross@linux.intel.com, jic23@kernel.org, linux@deviqon.com,
         Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH 08/10] platform/x86: toshiba_acpi: use device-managed for wwan_rfkill management
-Date:   Wed, 24 Mar 2021 14:55:46 +0200
-Message-Id: <20210324125548.45983-9-aardelean@deviqon.com>
+Subject: [PATCH 10/10] platform/x86: toshiba_acpi: bind proc entries creation to parent
+Date:   Wed, 24 Mar 2021 14:55:48 +0200
+Message-Id: <20210324125548.45983-11-aardelean@deviqon.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210324125548.45983-1-aardelean@deviqon.com>
 References: <20210324125548.45983-1-aardelean@deviqon.com>
@@ -75,99 +75,104 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This change converts the wwan_rfkill object to be free'd automatically when
-the parent refcount goes to zero.
-There are 2 cleanup operations required: rfkill_unregister() and
-rfkill_destroy(). Since they don't have any devm_ variants, they are hooked
-via devm_add_action_or_reset().
+This change binds the creation of the proc entries to the parent object,
+via the devm_add_action_or_reset() call.
+This way when the parent object's refcount goes to zero, the proc entries
+are removed in the reverse other in which they were created.
 
-The main reason to do this is to enforce ordering on cleanup, when the
-Toshiba ACPI device is cleaned up.
+This is the last bit of the toshiba_acpi_remove() function, so in this
+change this function is removed.
 
 Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++++++-------
- 1 file changed, 31 insertions(+), 9 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 45 ++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 12860ef60e4d..a1249f6dde9a 100644
+index 8e8917979047..56ee5cd1e90c 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2591,7 +2591,22 @@ static const struct rfkill_ops wwan_rfk_ops = {
- 	.poll = toshiba_acpi_wwan_poll,
- };
+@@ -1671,7 +1671,23 @@ static int __maybe_unused version_proc_show(struct seq_file *m, void *v)
  
--static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
-+static void toshiba_acpi_rfkill_destroy(void *data)
+ #define PROC_TOSHIBA		"toshiba"
+ 
+-static void create_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
++static void remove_toshiba_proc_entries(void *data)
 +{
-+	struct rfkill *wwan_rfk = data;
++	struct toshiba_acpi_dev *dev = data;
 +
-+	rfkill_destroy(wwan_rfk);
++	if (dev->backlight_dev)
++		remove_proc_entry("lcd", toshiba_proc_dir);
++	if (dev->video_supported)
++		remove_proc_entry("video", toshiba_proc_dir);
++	if (dev->fan_supported)
++		remove_proc_entry("fan", toshiba_proc_dir);
++	if (dev->hotkey_dev)
++		remove_proc_entry("keys", toshiba_proc_dir);
++	remove_proc_entry("version", toshiba_proc_dir);
 +}
 +
-+static void toshiba_acpi_rfkill_unreg(void *data)
-+{
-+	struct rfkill *wwan_rfk = data;
-+
-+	rfkill_unregister(wwan_rfk);
-+}
-+
-+static int toshiba_acpi_setup_wwan_rfkill(struct device *parent,
-+					  struct toshiba_acpi_dev *dev)
++static int create_toshiba_proc_entries(struct device *parent,
++				       struct toshiba_acpi_dev *dev)
  {
- 	int ret = toshiba_wireless_status(dev);
+ 	if (dev->backlight_dev)
+ 		proc_create_data("lcd", S_IRUGO | S_IWUSR, toshiba_proc_dir,
+@@ -1687,19 +1703,8 @@ static void create_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
+ 				 &keys_proc_ops, dev);
+ 	proc_create_single_data("version", S_IRUGO, toshiba_proc_dir,
+ 			version_proc_show, dev);
+-}
  
-@@ -2608,15 +2623,27 @@ static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
- 		return -ENOMEM;
- 	}
+-static void remove_toshiba_proc_entries(struct toshiba_acpi_dev *dev)
+-{
+-	if (dev->backlight_dev)
+-		remove_proc_entry("lcd", toshiba_proc_dir);
+-	if (dev->video_supported)
+-		remove_proc_entry("video", toshiba_proc_dir);
+-	if (dev->fan_supported)
+-		remove_proc_entry("fan", toshiba_proc_dir);
+-	if (dev->hotkey_dev)
+-		remove_proc_entry("keys", toshiba_proc_dir);
+-	remove_proc_entry("version", toshiba_proc_dir);
++	return devm_add_action_or_reset(parent, remove_toshiba_proc_entries, dev);
+ }
  
-+	ret = devm_add_action_or_reset(parent, toshiba_acpi_rfkill_destroy,
-+				       dev->wwan_rfk);
+ static const struct backlight_ops toshiba_backlight_data = {
+@@ -3012,15 +3017,6 @@ static void print_supported_features(struct toshiba_acpi_dev *dev)
+ 	pr_cont("\n");
+ }
+ 
+-static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+-{
+-	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
+-
+-	remove_toshiba_proc_entries(dev);
+-
+-	return 0;
+-}
+-
+ static const char *find_hci_method(acpi_handle handle)
+ {
+ 	if (acpi_has_method(handle, "GHCI"))
+@@ -3230,7 +3226,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	create_toshiba_proc_entries(dev);
++	ret = create_toshiba_proc_entries(parent, dev);
 +	if (ret)
 +		return ret;
-+
- 	rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
  
- 	ret = rfkill_register(dev->wwan_rfk);
- 	if (ret) {
- 		pr_err("Unable to register WWAN rfkill device\n");
--		rfkill_destroy(dev->wwan_rfk);
-+		return ret;
- 	}
+ 	toshiba_acpi = dev;
  
--	return ret;
-+	ret = devm_add_action_or_reset(parent, toshiba_acpi_rfkill_unreg,
-+				       dev->wwan_rfk);
-+	if (ret) {
-+		dev->wwan_rfk = NULL;
-+		return ret;
-+	}
-+
-+	return 0;
- }
- 
- /*
-@@ -2996,11 +3023,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
- 		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
- 				   &toshiba_attr_group);
- 
--	if (dev->wwan_rfk) {
--		rfkill_unregister(dev->wwan_rfk);
--		rfkill_destroy(dev->wwan_rfk);
--	}
--
- 	return 0;
- }
- 
-@@ -3189,7 +3211,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 
- 	toshiba_wwan_available(dev);
- 	if (dev->wwan_supported)
--		toshiba_acpi_setup_wwan_rfkill(dev);
-+		toshiba_acpi_setup_wwan_rfkill(parent, dev);
- 
- 	toshiba_cooling_method_available(dev);
- 
+@@ -3340,7 +3338,6 @@ static struct acpi_driver toshiba_acpi_driver = {
+ 	.flags	= ACPI_DRIVER_ALL_NOTIFY_EVENTS,
+ 	.ops	= {
+ 		.add		= toshiba_acpi_add,
+-		.remove		= toshiba_acpi_remove,
+ 		.notify		= toshiba_acpi_notify,
+ 	},
+ 	.drv.pm	= &toshiba_acpi_pm,
 -- 
 2.30.2
 
