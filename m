@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C908DC433EA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3112C433F1
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83CC861A06
+	by mail.kernel.org (Postfix) with ESMTP id D6C1B61A06
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234552AbhCXM4i (ORCPT
+        id S234526AbhCXM4g (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Mar 2021 08:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
+        Wed, 24 Mar 2021 08:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234575AbhCXM4H (ORCPT
+        with ESMTP id S234552AbhCXM4G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Mar 2021 08:56:07 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C90C4C061763
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:06 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id dm8so27536706edb.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:06 -0700 (PDT)
+        Wed, 24 Mar 2021 08:56:06 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9263C0613DF
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:05 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id hq27so32680172ejc.9
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=deviqon.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=gTwIvnFJ6UsqMLEIUtmaMXWTcL1Cr8qDnDvFwxUlyRo=;
-        b=bmsC/KwYkIzuvFP7Idgwv5+p6kgC9Ye8LKkbjNEhX+tq2iw90b48JioM/uXs8qGp/j
-         7yfjdIrCmrv2sB6OFf7M/FkpXYW7wjcT250s9W0gpygqFAd/vs/vdAD5FiiMWDwwNaTp
-         OJgN+VCaAK4AniCbsqmqMkoi02XTfkzi4z/5KDgEaiJotbunvsNjL6+KH7x2+mBaXm3k
-         Vt5Rq5QBnW9eCfp/6ToIbwu4YojnHMXcjCHciJl5BWnrEhHfyXAJD+pfJu6vho1VyuF+
-         z07Xlox0xuiuC7pl3CAuzlGy+jeFgHtaYJACRudvls1IjhT5jCVEOqQRpigkXONRBI3Q
-         rSIA==
+        bh=UFsO3CjdzjvSKalFHfalsmH1Z1YFNl8tTKEel8RPQ5w=;
+        b=TQDfwW+RWxoC195Fzua0pk1St/0sgu8PKZyJu7DVkyw9hXK8uBUvhbeugCJaGDeBa1
+         XOjgEjOI0P71D0gflcRsicksf5UFqjY0oDU6w6+pgeDt9g8NvAV2n4mJ3aX37y0QNCH/
+         9LIPsAzWyRzNHSYMERj840gXWk7xrth+EsdW2C5+1VlyTkG4PE1IkJ5buDdwwCQn7TN9
+         rGAhoe9Q49HZCC7RFbF29ucVwlDeZPZkNbpsoJZcAon8HijLMGTxBvSuiVdXAPc67zXL
+         UjSPLB5QbMbIsZrZoA+MPtjMoomX4ZhbJWwlaQiFyLYgqEghv7r3fto2tprog9M2aEHr
+         CoQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gTwIvnFJ6UsqMLEIUtmaMXWTcL1Cr8qDnDvFwxUlyRo=;
-        b=suPHiyOU6ZwQtUGyiDlUGZXeIC0E7tdwmgpa/6Topk6tkenLVxbTSTwKyi3o27Kkpb
-         AMGOifr8b+HIOPfklPUqmHmzEhn7baUha/UzTqS/oeFcUaZbsb3KNnQRxIZVie/o4M/R
-         qXATzKw9LKeConXr459C15+Luge3ZIoaZBiYYw11m7jHzLjDN1w31MxX80NcSbXKNt12
-         QUij8wBEy71kqy0dhlKBSwtRKpWDZ4SKsrJQtfPYX5tiHGYri63numuyNNI4glYkVoNJ
-         GNLiD2N5qbzZ+Rpm223X+Dpzn0nhxj0YI1bLqV8qjoUXQYsjnhCS+KjWQCs9PnDdnGVp
-         Casw==
-X-Gm-Message-State: AOAM530c12sp6eKI1d+VWQ0tLYfSoQCyre5uoFcmPcd5DPwzC/ts/68W
-        PiAHi7YGYqSPh4mC5yAnxCtmKmJYPcBngneE
-X-Google-Smtp-Source: ABdhPJyN5wrrs/ArU3voReZNJqPglYS2Zo/b32kuE6YTrDfhRKFB4Ch90AD8q0CTaav6C8DazMTz/w==
-X-Received: by 2002:a05:6402:51cd:: with SMTP id r13mr3347222edd.116.1616590565316;
-        Wed, 24 Mar 2021 05:56:05 -0700 (PDT)
+        bh=UFsO3CjdzjvSKalFHfalsmH1Z1YFNl8tTKEel8RPQ5w=;
+        b=c2EaPXvqb80AJ6TRJwzXwRQEgXBwVW6+5YV6KCNZPxVJcF939n/pEsbtGTufbjZp8G
+         Ydpmy8nxDfJK+k8naInodWtIAgQKQF4Jst15hxi5mVp1ggnSu7QG1B5sLQN7KLRyYpor
+         lAwrc4QQP2SNawtQNnmUGd9vXYDsuFllzaeinMNMiG3HUW1PHC7+vZVAdaTJy9fwGdrP
+         LbwDKta7RXucQ395zrotJU/U+aKxaXwdubc3qb2g8CPYwij18ZnEQx3FJ5Aw4C1tblLv
+         sJ6ingN2RbyFYnNuQMspRhH0Bofxpf4pniEzH9/AYLw3cieVnG0Uym3FQ5Y4ss5yddzy
+         4rRQ==
+X-Gm-Message-State: AOAM533t0TSZyL21GVpeOn08yIhpKQEs6XzIPLuglpjf38DrsekCnixd
+        J4o2YZTSeounkn9ePYWJoYbfF6wt7jwqMTZL
+X-Google-Smtp-Source: ABdhPJwJyL58sUWBrXWfLdOooX4vIKkqXRt2tWpnGi0EvOn86rz78Pp4fgk7jt1d1LArIR2ZJgoeog==
+X-Received: by 2002:a17:906:7f84:: with SMTP id f4mr3435189ejr.525.1616590564364;
+        Wed, 24 Mar 2021 05:56:04 -0700 (PDT)
 Received: from localhost.localdomain ([5.2.193.191])
-        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.04
+        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 05:56:05 -0700 (PDT)
+        Wed, 24 Mar 2021 05:56:04 -0700 (PDT)
 From:   Alexandru Ardelean <aardelean@deviqon.com>
 To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org
 Cc:     coproscefalo@gmail.com, hdegoede@redhat.com,
         mgross@linux.intel.com, jic23@kernel.org, linux@deviqon.com,
         Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH 05/10] platform/x86: toshiba_acpi: register backlight with device-managed variant
-Date:   Wed, 24 Mar 2021 14:55:43 +0200
-Message-Id: <20210324125548.45983-6-aardelean@deviqon.com>
+Subject: [PATCH 04/10] platform/x86: toshiba_acpi: use device-managed functions for input device
+Date:   Wed, 24 Mar 2021 14:55:42 +0200
+Message-Id: <20210324125548.45983-5-aardelean@deviqon.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210324125548.45983-1-aardelean@deviqon.com>
 References: <20210324125548.45983-1-aardelean@deviqon.com>
@@ -75,70 +75,151 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This change converts the registration of the backlight data with the
-devm_backlight_device_register() function.
-This way, the backlight_device_unregister() call is no longer required, and
-the order of deregistration is made to be more symmetrical with the
-registration order.
+This change uses device managed functions to handle the deregistration of
+the keyboard resources when the refcount of the parent device goes to zero.
+
+For the input device devm_input_allocate_device() must be used, and after
+that it will be bound also for auto-deregistration when
+input_device_register() is called.
+
+The work object is registered for uninit with devm_add_action(), which will
+be called on device unregister only.
+
+The i8042 filter is registered with devm_add_action() as well, but it is
+done last in the toshiba_acpi_setup_keyboard() function. This is a little
+quirky, because this relies on the fact that there can a single
+toshiba_acpi_dev object.
 
 Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 55 +++++++++++++++++++----------
+ 1 file changed, 36 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 556f2cc99bad..ada2a2d8c913 100644
+index 53ef565378ef..556f2cc99bad 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2876,7 +2876,8 @@ static int toshiba_acpi_setup_keyboard(struct device *parent,
- 	return error;
+@@ -186,7 +186,6 @@ struct toshiba_acpi_dev {
+ 	unsigned int video_supported:1;
+ 	unsigned int fan_supported:1;
+ 	unsigned int system_event_supported:1;
+-	unsigned int ntfy_supported:1;
+ 	unsigned int info_supported:1;
+ 	unsigned int tr_backlight_supported:1;
+ 	unsigned int kbd_illum_supported:1;
+@@ -2756,9 +2755,23 @@ static void toshiba_acpi_process_hotkeys(struct toshiba_acpi_dev *dev)
+ 	}
  }
  
--static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
-+static int toshiba_acpi_setup_backlight(struct device *parent,
-+					struct toshiba_acpi_dev *dev)
+-static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
++static void toshiba_acpi_cancel_hotkey_work(void *data)
++{
++	struct work_struct *hotkey_work = data;
++
++	cancel_work_sync(hotkey_work);
++}
++
++static void toshiba_acpi_i8042_remove_filter(void *data)
++{
++	i8042_remove_filter(toshiba_acpi_i8042_filter);
++}
++
++static int toshiba_acpi_setup_keyboard(struct device *parent,
++				       struct toshiba_acpi_dev *dev)
  {
- 	struct backlight_properties props;
- 	int brightness;
-@@ -2924,11 +2925,12 @@ static int toshiba_acpi_setup_backlight(struct toshiba_acpi_dev *dev)
- 	if (dev->tr_backlight_supported)
- 		props.max_brightness++;
+ 	const struct key_entry *keymap = toshiba_acpi_keymap;
++	bool ntfy_supported = false;
+ 	acpi_handle ec_handle;
+ 	int error;
  
--	dev->backlight_dev = backlight_device_register("toshiba",
--						       &dev->acpi_dev->dev,
--						       dev,
--						       &toshiba_backlight_data,
--						       &props);
-+	dev->backlight_dev = devm_backlight_device_register(parent,
-+							    "toshiba",
-+							    &dev->acpi_dev->dev,
-+							    dev,
-+							    &toshiba_backlight_data,
-+							    &props);
- 	if (IS_ERR(dev->backlight_dev)) {
- 		ret = PTR_ERR(dev->backlight_dev);
- 		pr_err("Could not register toshiba backlight device\n");
-@@ -2999,8 +3001,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+@@ -2779,7 +2792,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 	if (toshiba_hotkey_event_type_get(dev, &dev->hotkey_event_type))
+ 		pr_notice("Unable to query Hotkey Event Type\n");
+ 
+-	dev->hotkey_dev = input_allocate_device();
++	dev->hotkey_dev = devm_input_allocate_device(parent);
+ 	if (!dev->hotkey_dev)
+ 		return -ENOMEM;
+ 
+@@ -2798,7 +2811,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 			dev->hotkey_event_type);
+ 	error = sparse_keymap_setup(dev->hotkey_dev, keymap, NULL);
+ 	if (error)
+-		goto err_free_dev;
++		goto err_null_dev;
+ 
+ 	/*
+ 	 * For some machines the SCI responsible for providing hotkey
+@@ -2811,13 +2824,19 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 	if (ec_handle && acpi_has_method(ec_handle, "NTFY")) {
+ 		INIT_WORK(&dev->hotkey_work, toshiba_acpi_hotkey_work);
+ 
++		error = devm_add_action(parent,
++					toshiba_acpi_cancel_hotkey_work,
++					&dev->hotkey_work);
++		if (error)
++			return error;
++
+ 		error = i8042_install_filter(toshiba_acpi_i8042_filter);
+ 		if (error) {
+ 			pr_err("Error installing key filter\n");
+-			goto err_free_dev;
++			return error;
+ 		}
+ 
+-		dev->ntfy_supported = 1;
++		ntfy_supported = true;
+ 	}
+ 
+ 	/*
+@@ -2840,13 +2859,19 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+ 		goto err_remove_filter;
+ 	}
+ 
++	if (ntfy_supported) {
++		error = devm_add_action(parent,
++					toshiba_acpi_i8042_remove_filter,
++					NULL);
++		goto err_remove_filter;
++	}
++
+ 	return 0;
+ 
+- err_remove_filter:
+-	if (dev->ntfy_supported)
++err_remove_filter:
++	if (ntfy_supported)
+ 		i8042_remove_filter(toshiba_acpi_i8042_filter);
+- err_free_dev:
+-	input_free_device(dev->hotkey_dev);
++err_null_dev:
+ 	dev->hotkey_dev = NULL;
+ 	return error;
+ }
+@@ -2974,14 +2999,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
  		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
  				   &toshiba_attr_group);
  
--	backlight_device_unregister(dev->backlight_dev);
+-	if (dev->ntfy_supported) {
+-		i8042_remove_filter(toshiba_acpi_i8042_filter);
+-		cancel_work_sync(&dev->hotkey_work);
+-	}
 -
+-	if (dev->hotkey_dev)
+-		input_unregister_device(dev->hotkey_dev);
+-
+ 	backlight_device_unregister(dev->backlight_dev);
+ 
  	led_classdev_unregister(&dev->led_dev);
- 	led_classdev_unregister(&dev->kbd_led);
- 	led_classdev_unregister(&dev->eco_led);
-@@ -3104,9 +3104,9 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	ret = get_tr_backlight_status(dev, &dummy);
- 	dev->tr_backlight_supported = !ret;
+@@ -3080,7 +3097,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 	dev->kbd_function_keys_supported = !ret;
  
--	ret = toshiba_acpi_setup_backlight(dev);
-+	ret = toshiba_acpi_setup_backlight(parent, dev);
- 	if (ret)
--		goto error;
-+		return ret;
+ 	dev->hotkey_event_type = 0;
+-	if (toshiba_acpi_setup_keyboard(dev))
++	if (toshiba_acpi_setup_keyboard(parent, dev))
+ 		pr_info("Unable to activate hotkeys\n");
  
- 	toshiba_illumination_available(dev);
- 	if (dev->illumination_supported) {
+ 	/* Determine whether or not BIOS supports transflective backlight */
 -- 
 2.30.2
 
