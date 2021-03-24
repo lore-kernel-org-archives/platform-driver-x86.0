@@ -7,65 +7,65 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D335BC433E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE6EC433E9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC92E619D5
+	by mail.kernel.org (Postfix) with ESMTP id E456D619D5
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 24 Mar 2021 12:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234706AbhCXM4b (ORCPT
+        id S234735AbhCXM4f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 24 Mar 2021 08:56:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57808 "EHLO
+        Wed, 24 Mar 2021 08:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234521AbhCXM4E (ORCPT
+        with ESMTP id S234540AbhCXM4F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 24 Mar 2021 08:56:04 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA54C0613E0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:03 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id e7so27428264edu.10
-        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:03 -0700 (PDT)
+        Wed, 24 Mar 2021 08:56:05 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7801C061763
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:04 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id u5so32688386ejn.8
+        for <platform-driver-x86@vger.kernel.org>; Wed, 24 Mar 2021 05:56:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=deviqon.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vjfeStBI2DcHZmjQrx+N+dsAxgF1a/tnl6rrv3SVE6Q=;
-        b=tekIiAZWW3kwi3DlNvLmMjX9jCWj63bcKAuPkI/Q5kJI1jxRdebmh1n9A/tlN0QDix
-         AhF96gOTxQDa/INulpZewfZFCBHRT32NBq4aN7Wt9iCdCk3hqwXQu0HoXJcnqap2l8rT
-         hp892/IN6CoTYtv4sXGNN0pSbemNt7+zWkpKgHHWadomhZp399P88VkrOkkjNOLK/EO1
-         7/wbr3XDjeBjDtw3cLPZB8UFskNHxNGG40xlP5icGyEQXICCz1O9EsMJb3DXQOXP3TOD
-         Ci3Pr1aUf75aTPI9Grsc2yKD1Y1687FHnbcYBoFJve456VIQJ2f1B4xhuPoI55jOS2ev
-         k91Q==
+        bh=frWPEUlqs06JkDdBYmeAt9wV6HnzyvV5zsDKfCcKu+M=;
+        b=GmpYQYHQItWYbKynRGeuKnH14x7wgEAUOeru1GAukTiYyBVZyNuC62e9vPztxuB3b+
+         o9qG1cfC4xJt5eKWXvGYooq4t61JA5rELbrYnZC5EImztn7SNINNZaLjhtNqYTZPU1lG
+         7HDtCpP+MNoS8NfsghQJc1E42HJqvPOPjK1ajPTu6/XtqpQfNdX/CeS3ANPpsNm/o9ED
+         xDwA7eSuWn46kA6P5NmMwaateIOfXhnoptqZyvF9gYKJhhCg+kP0Prb/bLGnSsfNc52a
+         i/ddBMFrew2LvfV46CLC6Wa9q+r3n1hZeM5EfvzjgzxZzvQ0xEdou4zZQsUFhFSTfULD
+         oSFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vjfeStBI2DcHZmjQrx+N+dsAxgF1a/tnl6rrv3SVE6Q=;
-        b=ZxkVqnt/Zx3oy36fMo9EQSYqepPj+e9P+RXYb3GBSskhfJf+TrFTe3bvhs1P4nlTWL
-         S/ZUDNi7GpyT16ePbuCeJNueOB7bh5+bLmNuiTVrm9XpqBMD91jX6v1pEm5LxShH7zCw
-         Umzen71bsVbsOV4VLuFtQM6g/GDCtBKyvIZnH2GEhx2vit0o+ZBFwKq63dLTb7P9s+6e
-         /1NOLGW9FrrEzhsntFw3EZ4Y8Am7TSvwZY+ojoRwBqLYe/TD42ThjVLvMKhS5FIL0G/V
-         1mJdhnHUGYEHCXHBJ9Tby0Xv9Red4gn7O65toq1k5oajYjD4rDZGF9X5EiOi3/+hF+4P
-         ONOw==
-X-Gm-Message-State: AOAM5328jL45geu+fhFvktDl1wf/d1WkQwJ3vLZJhQ7WD6SXPMBe+9EO
-        hDVJw9890O2wxiBCg2hjgDjQ8GiiZZtF8P7V
-X-Google-Smtp-Source: ABdhPJyE/+A23QNDkwguoiMrfXl+jMVy6xCycwVkij0rRzaeQOah7cxBFhnpOcFlsG90OWCUZmfHRg==
-X-Received: by 2002:a05:6402:2076:: with SMTP id bd22mr3260352edb.378.1616590562364;
-        Wed, 24 Mar 2021 05:56:02 -0700 (PDT)
+        bh=frWPEUlqs06JkDdBYmeAt9wV6HnzyvV5zsDKfCcKu+M=;
+        b=r9JjDB0jyzwZHy6Uw0Kt73fb5PHhli8ysttqRJdGZZqgYi8hkO5mWuWkrLznyT/Vjr
+         4kKffCvEvSobYFW4OaAZNkO+KxGT8mlkzVLQ7jq3ZdfW//z9Ki1l++M9gZQe9rwhg0Gg
+         L2KDo6yaGZaFT/c5CamXk+mqmnJKm533Claayw5lSq0lILcXHDxDpNvYXbt0S6te7jVN
+         kLtg+zi4yNWO9yepnA4upZb8TOP3smHOo7uAuTW6MsS6bSB9rHAQbbYzxjuZX0rJ82uv
+         gPRTI0SFfSbD0IwQYv99iKCrAaw6qJMLzXFI7J0GnXsNO/2wmg6UFZgfeysACGRid0nw
+         c5Ng==
+X-Gm-Message-State: AOAM532brQ/RG7MSS/eKIPedbCIxdReSFVAvpBhm5h8aSmXt75z0/v5j
+        F2nqb/69PLtkuvk7NQ0Ggl/OiPgksP5wIkZQ
+X-Google-Smtp-Source: ABdhPJzpxStqf4689RHXTCYW0kDpZhBA8gf9Qrkx0RVSK+qnEqvmhL4BwM1bxJkrz6O7EHd8bIM0+g==
+X-Received: by 2002:a17:907:a042:: with SMTP id gz2mr3506188ejc.174.1616590563362;
+        Wed, 24 Mar 2021 05:56:03 -0700 (PDT)
 Received: from localhost.localdomain ([5.2.193.191])
-        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.01
+        by smtp.gmail.com with ESMTPSA id fi11sm880282ejb.73.2021.03.24.05.56.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Mar 2021 05:56:02 -0700 (PDT)
+        Wed, 24 Mar 2021 05:56:03 -0700 (PDT)
 From:   Alexandru Ardelean <aardelean@deviqon.com>
 To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-iio@vger.kernel.org
 Cc:     coproscefalo@gmail.com, hdegoede@redhat.com,
         mgross@linux.intel.com, jic23@kernel.org, linux@deviqon.com,
         Alexandru Ardelean <aardelean@deviqon.com>
-Subject: [PATCH 02/10] platform/x86: toshiba_acpi: use devm_add_action_or_reset() for singleton clear
-Date:   Wed, 24 Mar 2021 14:55:40 +0200
-Message-Id: <20210324125548.45983-3-aardelean@deviqon.com>
+Subject: [PATCH 03/10] platform/x86: toshiba_acpi: bind registration of miscdev object to parent
+Date:   Wed, 24 Mar 2021 14:55:41 +0200
+Message-Id: <20210324125548.45983-4-aardelean@deviqon.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210324125548.45983-1-aardelean@deviqon.com>
 References: <20210324125548.45983-1-aardelean@deviqon.com>
@@ -75,56 +75,59 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The only reason to do this is to enforce the ordering of deinitialization,
-when the conversion of the device-managed functions is done.
+This change moves the registration of the Toshiba ACPI miscdev to be
+handled by the devm_add_action_or_reset() hook. This way, the miscdev will
+be unregistered when the reference count of the parent device object goes
+to zero.
 
-The singleton object should be cleared right before it is free'd.
+This also changes the order of cleanup in toshiba_acpi_remove(), where the
+miscdev was deregistered first. Now it will be deregistered right before
+the toshiba_acpi_dev object is free'd.
 
 Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
 ---
- drivers/platform/x86/toshiba_acpi.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/platform/x86/toshiba_acpi.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 6d298810b7bf..c5284601bc2a 100644
+index c5284601bc2a..53ef565378ef 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2995,9 +2995,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
- 		rfkill_destroy(dev->wwan_rfk);
- 	}
+@@ -2963,8 +2963,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+ {
+ 	struct toshiba_acpi_dev *dev = acpi_driver_data(acpi_dev);
  
--	if (toshiba_acpi)
--		toshiba_acpi = NULL;
+-	misc_deregister(&dev->miscdev);
 -
- 	return 0;
+ 	remove_toshiba_proc_entries(dev);
+ 
+ 	if (dev->accelerometer_supported && dev->indio_dev) {
+@@ -3014,6 +3012,13 @@ static void toshiba_acpi_singleton_clear(void *data)
+ 	toshiba_acpi = NULL;
  }
  
-@@ -3012,6 +3009,11 @@ static const char *find_hci_method(acpi_handle handle)
- 	return NULL;
- }
- 
-+static void toshiba_acpi_singleton_clear(void *data)
++static void toshiba_acpi_misc_deregister(void *data)
 +{
-+	toshiba_acpi = NULL;
++	struct miscdevice *miscdev = data;
++
++	misc_deregister(miscdev);
 +}
 +
  static int toshiba_acpi_add(struct acpi_device *acpi_dev)
  {
  	struct device *parent = &acpi_dev->dev;
-@@ -3035,6 +3037,13 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
- 	dev = devm_kzalloc(parent, sizeof(*dev), GFP_KERNEL);
- 	if (!dev)
- 		return -ENOMEM;
-+
-+	ret = devm_add_action_or_reset(parent,
-+				       toshiba_acpi_singleton_clear,
-+				       NULL);
+@@ -3056,6 +3061,11 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+ 		return ret;
+ 	}
+ 
++	ret = devm_add_action_or_reset(parent, toshiba_acpi_misc_deregister,
++				       &dev->miscdev);
 +	if (ret)
 +		return ret;
 +
- 	dev->acpi_dev = acpi_dev;
- 	dev->method_hci = hci_method;
- 	dev->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	acpi_dev->driver_data = dev;
+ 	dev_set_drvdata(&acpi_dev->dev, dev);
+ 
 -- 
 2.30.2
 
