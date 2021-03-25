@@ -2,189 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68A1C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Mar 2021 08:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB76C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Mar 2021 09:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A57B6191F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Mar 2021 08:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAD461A1E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 25 Mar 2021 09:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbhCYIYS (ORCPT
+        id S229744AbhCYJil (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 25 Mar 2021 04:24:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58529 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229847AbhCYIXz (ORCPT
+        Thu, 25 Mar 2021 05:38:41 -0400
+Received: from mail1.perex.cz ([77.48.224.245]:49996 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230051AbhCYJiN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 25 Mar 2021 04:23:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616660635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RYiX0x7fQEzSPtx5RzR0nO5WMxQ7mszVE6ntaDRhN3o=;
-        b=aEZ1pz0Zp9+lXgHarwV0qcP/QQOhdcZrNheTov4z1axOBlCM8WArvtCd7ADBQMKN2REa48
-        45lmU9eC+kk1jwYLHNTaP1MLmnXaZH4wtwdXHyCPYoc8zCyzbdN16N4Upa/UF2ZGY9bzl2
-        2YOe/LgnKdHOv3xON6kpwK3vOdB+/Z0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-CboCw0wHO8yNDRkD_8IZdg-1; Thu, 25 Mar 2021 04:23:53 -0400
-X-MC-Unique: CboCw0wHO8yNDRkD_8IZdg-1
-Received: by mail-ed1-f69.google.com with SMTP id i19so2308253edy.18
-        for <platform-driver-x86@vger.kernel.org>; Thu, 25 Mar 2021 01:23:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RYiX0x7fQEzSPtx5RzR0nO5WMxQ7mszVE6ntaDRhN3o=;
-        b=TvN1q4HIfSbhB/p0G6zctY1AtPRfrbdjIfXIvTXakLfxHRr0LiaB81t6QaWC69k6XN
-         5PhtrfNo40O14JtXh6FYmRX+vTjBce34QzfmDuJufLjBIWOl2siF5z5JiifsnrXN6ROI
-         lzFGRoRMSPEqe8cIKzKAVJeM4dimO3xjJKpVJiex1CtI4nPpWiMHG22GQm5mAmsD9NdU
-         HrGr21VV5UELfG/vQNwpioWJrZnhO5d8QkwrLcwO/mvGeAonNF7Tb79wkWOcpA7pkM64
-         sM4V/tRdLK0nBej1JwFJoCVIwKpt4OdrnEh3cvMeFPomvV2v2k1B6hvFxcnSYRMGDU9t
-         KOzw==
-X-Gm-Message-State: AOAM533lQ/tzSgf09UzvIeqGCdmpbL3PhPqjPusEL+Ywh47nSz8IM6Vh
-        5NvJXu0w4DKkSbXoh8m5PfArYVJiyQfuCjmazImAJCpCuiAzASVbI62LxWXqfD5JGO57SVRMVYb
-        MI0yVtqA+D0lpw72zGBpea5uIxDmrfXsobg==
-X-Received: by 2002:a05:6402:35c9:: with SMTP id z9mr7747114edc.94.1616660632261;
-        Thu, 25 Mar 2021 01:23:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyDH0fg1ePwOG2M9JA9L6BIxw9TAwkOOxCpGB3Y6hBhA86qYmvC+FvOwa/BzMPMfYaG9/TeAQ==
-X-Received: by 2002:a05:6402:35c9:: with SMTP id z9mr7747099edc.94.1616660632118;
-        Thu, 25 Mar 2021 01:23:52 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q2sm2082722eje.24.2021.03.25.01.23.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Mar 2021 01:23:51 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
+        Thu, 25 Mar 2021 05:38:13 -0400
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id E5C64A0042;
+        Thu, 25 Mar 2021 10:38:05 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz E5C64A0042
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1616665085; bh=m40vUxZYaBCFgv5JXNt+otVXhF33b32KBeePsOXeylE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=COtQgjIf7SS1U+9r6pyVoZgOEQL5VrPbPU+Zey6x7BDrCppwysRmKEzFt8ID44Adi
+         M4+g6/8BU6wmB/hQbkC6xGXiVbQFNtdgzSBPVyBlhEvHJAUpqVYdKchaXEAT31rwoX
+         ei5aRoS8LcZUzo8QVn+nzwhcJWCXg5zP/hmvTyM8=
+Received: from p1gen2.localdomain (unknown [192.168.100.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Thu, 25 Mar 2021 10:37:52 +0100 (CET)
+Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control supports
 To:     "Yuan, Perry" <Perry.Yuan@dell.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "hdegoede@redhat.com" <hdegoede@redhat.com>
+Cc:     "pobrn@protonmail.com" <pobrn@protonmail.com>,
         "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "perex@perex.cz" <perex@perex.cz>,
         "tiwai@suse.com" <tiwai@suse.com>,
         "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>
-Cc:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-References: <20210322093841.11840-1-Perry_Yuan@Dell.com>
- <a1fae1fc-2d4f-63e8-e0be-0f9c4c91640c@linux.intel.com>
- <c61b975a-a771-eb63-5232-2da184ca95fe@redhat.com>
- <SJ0PR19MB4528ED97AA4A5D0821A3E68584629@SJ0PR19MB4528.namprd19.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5ec52d3c-3587-6bf7-bf84-b6f8f31be0e7@redhat.com>
-Date:   Thu, 25 Mar 2021 09:23:51 +0100
+        <platform-driver-x86@vger.kernel.org>
+References: <20210301093834.19524-1-Perry_Yuan@Dell.com>
+ <20210308172409.GF4656@sirena.org.uk>
+ <SJ0PR19MB4528847687FEEE4A4DED8E3F84659@SJ0PR19MB4528.namprd19.prod.outlook.com>
+ <604693cc-08c7-2b5f-632a-58ed537c54a0@perex.cz>
+ <SJ0PR19MB4528A75314336D1B756CAFE784629@SJ0PR19MB4528.namprd19.prod.outlook.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <8719e146-3606-aec7-5ba1-fceba383be51@perex.cz>
+Date:   Thu, 25 Mar 2021 10:37:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <SJ0PR19MB4528ED97AA4A5D0821A3E68584629@SJ0PR19MB4528.namprd19.prod.outlook.com>
+In-Reply-To: <SJ0PR19MB4528A75314336D1B756CAFE784629@SJ0PR19MB4528.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 3/25/21 8:52 AM, Yuan, Perry wrote:
-> Hi Hans.
+Dne 25. 03. 21 v 9:19 Yuan, Perry napsal(a):
+> Hi Jaroslav:
 > 
 >> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Wednesday, March 24, 2021 3:40 AM
->> To: Pierre-Louis Bossart; Yuan, Perry; pobrn@protonmail.com;
->> oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
->> mgross@linux.intel.com; Limonciello, Mario
->> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
->> lgirdwood@gmail.com; platform-driver-x86@vger.kernel.org;
->> broonie@kernel.org
->> Subject: Re: [PATCH v5 1/2] platform/x86: dell-privacy: Add support for Dell
->> hardware privacy
+>> From: Jaroslav Kysela <perex@perex.cz>
+>> Sent: Monday, March 22, 2021 10:38 PM
+>> To: Yuan, Perry; Mark Brown; pierre-louis.bossart@linux.intel.com;
+>> Limonciello, Mario; hdegoede@redhat.com
+>> Cc: pobrn@protonmail.com; oder_chiou@realtek.com; tiwai@suse.com;
+>> mgross@linux.intel.com; lgirdwood@gmail.com; alsa-devel@alsa-
+>> project.org; linux-kernel@vger.kernel.org; platform-driver-
+>> x86@vger.kernel.org
+>> Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control
+>> supports
 >>
 >>
 >> [EXTERNAL EMAIL]
 >>
->> Hi,
->>
->> On 3/23/21 7:57 PM, Pierre-Louis Bossart wrote:
->>> Minor comments below.
->>
->> <snip<
->>
->>>> +int __init dell_privacy_acpi_init(void)
+>> Dne 22. 03. 21 v 10:25 Yuan, Perry napsal(a):
+>>> Hi Mark:
 >>>
->>> is the __init necessary? You call this routine from another which already has
->> this qualifier.
->>
->> Yes this is necessary, all functions which are only used during module_load /
->> from the module's init function must be marked as __init so that the kernel
->> can unload them after module loading is done.
->>
->> I do wonder if this one should not be static though (I've not looked at this
->> patch in detail yet).
->>
+>>>> -----Original Message-----
+>>>> From: Mark Brown <broonie@kernel.org>
+>>>> Sent: Tuesday, March 9, 2021 1:24 AM
+>>>> To: Yuan, Perry
+>>>> Cc: pobrn@protonmail.com; pierre-louis.bossart@linux.intel.com;
+>>>> oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
+>>>> hdegoede@redhat.com; mgross@linux.intel.com; Limonciello, Mario;
+>>>> lgirdwood@gmail.com; alsa-devel@alsa-project.org; linux-
+>>>> kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+>>>> Subject: Re: [PATCH v4 2/2] ASoC: rt715:add micmute led state control
+>>>> supports
+>>>>
+>>>> On Mon, Mar 01, 2021 at 05:38:34PM +0800, Perry Yuan wrote:
+>>>>
+>>>>> +	/* Micmute LED state changed by muted/unmute switch */
+>>>>> +	if (mc->invert) {
+>>>>> +		if (ucontrol->value.integer.value[0] || ucontrol-
+>>>>> value.integer.value[1]) {
+>>>>> +			micmute_led = LED_OFF;
+>>>>> +		} else {
+>>>>> +			micmute_led = LED_ON;
+>>>>> +		}
+>>>>> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
+>>>>> +	}
+>>>>
+>>>> These conditionals on inversion seem weird and counterintuitive.  If
+>>>> we're going with this approach it would probably be clearer to define
+>>>> a custom operation for the affected controls that wraps the standard
+>>>> one and adds the LED setting rather than keying off invert like this.
 >>>
->>>> +{
->>>> +    int err;
->>>> +    struct platform_device *pdev;
->>>> +
->>>> +    if (!wmi_has_guid(DELL_PRIVACY_GUID))
->>>> +        return -ENODEV;
->>>> +
->>>> +    privacy_acpi = kzalloc(sizeof(*privacy_acpi), GFP_KERNEL);
->>>> +    if (!privacy_acpi)
->>>> +        return -ENOMEM;
->>>> +
->>>> +    err = platform_driver_register(&dell_privacy_platform_drv);
->>>> +    if (err)
->>>> +        goto pdrv_err;
->>>> +
->>>> +    pdev = platform_device_register_simple(
->>>> +            PRIVACY_PLATFORM_NAME, PLATFORM_DEVID_NONE, NULL, 0);
->>>> +    if (IS_ERR(pdev)) {
->>>> +        err = PTR_ERR(pdev);
->>>> +        goto pdev_err;
->>>> +    }
->>>> +
->>>> +    return 0;
->>>> +
->>>> +pdev_err:
->>>> +    platform_device_unregister(pdev);
->>>> +pdrv_err:
->>>> +    kfree(privacy_acpi);
->>>> +    return err;
->>>> +}
->>>> +
->>>> +void __exit dell_privacy_acpi_exit(void)
+>>> Currently the sof soundwire driver has no generic led control yet.
+>>> This patch can handle the led control needs for MIC mute LED, definitely
+>> the patch is a short term solution.
+>>> There is a feature request discussion when we started to implement this
+>> solution.
+>>> https://github.com/thesofproject/linux/issues/2496#issuecomment-
+>> 713892
+>>> 620
 >>>
->>> is the __exit required here?
+>>> The workable way for now is that we put the LED mute control to the
+>> codec driver.
+>>> When there is new and full sound LED solution implemented, this part
+>> will be also optimized.
+>>> The Hardware privacy feature needs this patch to handle the Mic mute
+>> led state change.
+>>> Before that full solution ready in kernel, could we take this as short term
+>> solution?
 >>
->> Idem. Also static ?
+>> Perry, it's about the machine detection. Your code is too much generic even
+>> for the top-level LED trigger implementation. We need an extra check, if the
+>> proper LED's are really controlled on the specific hardware. Other hardware
+>> may use RT715 for a different purpose. Use DMI / ACPI checks to detect this
+>> hardware and don't misuse the inversion flag to enable this code.
 >>
->> Regards,
+>> 						Jaroslav
 >>
->> Hans
->>
+>> --
+>> Jaroslav Kysela <perex@perex.cz>
+>> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
 > 
-> If adding static to the function,  I will be worried about that the init and exit cannot be called by another file .
+> In the V2 patch, I have added the machine detection, but some guys thought that I should remove the detection for it is harmless to other system
+> So I remove it in the following patches.
+> 
+> Is it Ok for you if I add below detection of Dell system which enable the privacy feature ?
+>  
+> Then the mute led control will be called normally and Mic mute will be successfully configured.
+> There is no any impaction to other systems.
+> 
+> 
+> +#if IS_ENABLED(CONFIG_DELL_PRIVACY) 
+> .....
+> +#endif
 
-That is right, which is why I added the "?".
+I think that you misunderstood the request. It's about the runtime detection
+not about the compile time detection. An example for DMI check is in
+sound/soc/intel/boards/sof_sdw.c / sof_sdw_quirk_table .
 
-But this is no longer relevant after my detailed review of the patch,
-so lets discuss things further in the detailed review email-thread.
+					Jaroslav
 
-Regards,
-
-Hans
-
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
