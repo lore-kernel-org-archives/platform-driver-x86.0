@@ -2,105 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99AEC433C1
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Mar 2021 12:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECF5C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Mar 2021 14:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF14619F3
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Mar 2021 12:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA8A61A24
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 26 Mar 2021 14:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230173AbhCZM3e (ORCPT
+        id S229976AbhCZOGa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 26 Mar 2021 08:29:34 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37024 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbhCZM3C (ORCPT
+        Fri, 26 Mar 2021 10:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229779AbhCZOGM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 26 Mar 2021 08:29:02 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12QCDuq3054633;
-        Fri, 26 Mar 2021 12:28:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=L34Rx1F6HLO9QBVu5OH6foragy9rRs6PFAH5WpxP7ZU=;
- b=INd21cbVmhTYjj5b28Wh2iEIT8Uw7FaWd1vNhJiPTfjcoH/Hsg5R23lSvdpm6/e3fzMV
- Z0orEPlguTAOBpdYqRPnQGtuZwwCKPeSS2I/GPIXFF9EIBj91F2w6WsmCi9bPtlvrOxV
- qU7aBFiwP8XTTJWhDReNpifHo6jHW8dTjmr4HmfBB/nm/GT4mKp7hgZZ7zK62Kz7hlXC
- lKN5OjwFZimUkcfms4tnHoEjJlYW9Gen1A4q8YrloNdsLhicvm6WKTLg0rdQm1WbaK96
- qbZCoyNwWu+SjGN8CcS6ZSjTrcA3Glr8w0ytVjMP6c6zde5a891MvYJPFFu7FRX6wQTy Qg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 37h1421w9f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Mar 2021 12:28:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12QCAYOh189373;
-        Fri, 26 Mar 2021 12:28:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 37h14n3dsp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 Mar 2021 12:28:56 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 12QCSt2v003719;
-        Fri, 26 Mar 2021 12:28:55 GMT
-Received: from mwanda (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 26 Mar 2021 05:28:55 -0700
-Date:   Fri, 26 Mar 2021 15:28:48 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
+        Fri, 26 Mar 2021 10:06:12 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CDFC0613AA;
+        Fri, 26 Mar 2021 07:06:11 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id h13so6450766eds.5;
+        Fri, 26 Mar 2021 07:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AAUeEBvNOlRZeFn3QKTykt9MHuUQpjA5Y+tnrO+kfKQ=;
+        b=U3KqtzLbFEZfuPQqGOTS+dccIk7ZnAnc5e1QRbttk93YJd8TuGQqM03aD0d2Urh19u
+         Ia5O286+r52F2H3fF8iQ3ydyaFKbPN/JmzllzMuyyFX6lblgCic5Io1gZqN5HEWWuo7h
+         VxtN61prve1090JGLCQzWEN/eOwlipoKdFeLmpz3H0aYpmazyeQfKAKlUtyVl/T7S9/f
+         aFYjScxMLxdsSdXGH+7AfsFMK2uCCvXZ9S2pSc0Z1yMbfupbclpeq4AjG3V73Etc3ZDk
+         gtTOFgfee0FSi4IAzcp1Gyi58OIukA3Znw3z2OT8feV9/P33uosZZ9iQX8WO+xmWD7DE
+         NUxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AAUeEBvNOlRZeFn3QKTykt9MHuUQpjA5Y+tnrO+kfKQ=;
+        b=Cwra7tYiMvElaTJGYY11FbkpSKZLio+N9ai49XDVNMLKjJE8fb3eZfzi0noNezquH4
+         8Iby/dlIqlfOatqWQPn75G/Hz0+FhaZ9lyEx2YE/thZAbvaqLxmksV5wwcla48Y83lHm
+         9hWzwPs7s6r8S0Yvhz161dsn9gLvWLlYrGjXfz7F9YEXmRLrE3f8UxO+zJzMC7y0fvqA
+         kBA2U7zwfdcyetb+CQ7cqAs12E+sy27kPi4AgLF3IFGH7MPfUG12oEvEj4KPkB7C2JIP
+         czEKbBGrS9bv91we0zNlH2c3WBgBg7KGJFjYcBL/pIMaEzP3t6DHKk/U5XaHx7l+EvPA
+         q4ag==
+X-Gm-Message-State: AOAM532aYeVR8Fjoekr/cr444kq3Sopw13xw2TbNQaO1yn1a8VmDV0kg
+        J+iWJFQCXLJyO1zKAbpQenSFbNoRn3SK+g==
+X-Google-Smtp-Source: ABdhPJwF/EPr6RMn1+mfNp+lhbo3BHgzp7LyW4Qp3TiJJKlD91udGcaItnBA1syzMo33ZgnwokvcEw==
+X-Received: by 2002:a05:6402:35d3:: with SMTP id z19mr15100004edc.143.1616767570246;
+        Fri, 26 Mar 2021 07:06:10 -0700 (PDT)
+Received: from [10.20.0.9] ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id gq25sm3936362ejb.85.2021.03.26.07.06.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Mar 2021 07:06:09 -0700 (PDT)
+Subject: Re: [PATCH] platform/surface: clean up a variable in
+ surface_dtx_read()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/surface: clean up a variable in surface_dtx_read()
-Message-ID: <YF3TgCcpcCYl3a//@mwanda>
+References: <YF3TgCcpcCYl3a//@mwanda>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <e614021b-62aa-c879-c324-fc1dc1eec73e@gmail.com>
+Date:   Fri, 26 Mar 2021 15:06:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-IMR: 1
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9934 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2103250000 definitions=main-2103260093
-X-Proofpoint-GUID: mD1bNPFzzB62i_GSnsDbqxl32biRC8Zq
-X-Proofpoint-ORIG-GUID: mD1bNPFzzB62i_GSnsDbqxl32biRC8Zq
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9934 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
- clxscore=1011 impostorscore=0 spamscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103250000
- definitions=main-2103260093
+In-Reply-To: <YF3TgCcpcCYl3a//@mwanda>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The "&client->ddev->lock" and "&ddev->lock" are the same thing.  Let's
-use "&ddev->lock" consistently.
+On 3/26/21 1:28 PM, Dan Carpenter wrote:
+> The "&client->ddev->lock" and "&ddev->lock" are the same thing.  Let's
+> use "&ddev->lock" consistently.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/platform/surface/surface_dtx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Good catch, thanks!
 
-diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
-index 1fedacf74050..63ce587e79e3 100644
---- a/drivers/platform/surface/surface_dtx.c
-+++ b/drivers/platform/surface/surface_dtx.c
-@@ -487,7 +487,7 @@ static ssize_t surface_dtx_read(struct file *file, char __user *buf, size_t coun
- 			if (status < 0)
- 				return status;
- 
--			if (down_read_killable(&client->ddev->lock))
-+			if (down_read_killable(&ddev->lock))
- 				return -ERESTARTSYS;
- 
- 			/* Need to check that we're not shut down again. */
--- 
-2.30.2
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
+> ---
+>   drivers/platform/surface/surface_dtx.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
+> index 1fedacf74050..63ce587e79e3 100644
+> --- a/drivers/platform/surface/surface_dtx.c
+> +++ b/drivers/platform/surface/surface_dtx.c
+> @@ -487,7 +487,7 @@ static ssize_t surface_dtx_read(struct file *file, char __user *buf, size_t coun
+>   			if (status < 0)
+>   				return status;
+>   
+> -			if (down_read_killable(&client->ddev->lock))
+> +			if (down_read_killable(&ddev->lock))
+>   				return -ERESTARTSYS;
+>   
+>   			/* Need to check that we're not shut down again. */
+> 
