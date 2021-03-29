@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51034C433E8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1048C433EA
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E609617C9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D3F6044F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231795AbhC2W0t (ORCPT
+        id S232896AbhC2W2V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 18:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
+        Mon, 29 Mar 2021 18:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230444AbhC2WYW (ORCPT
+        id S232957AbhC2WZ4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 18:24:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13286619BD;
-        Mon, 29 Mar 2021 22:23:36 +0000 (UTC)
+        Mon, 29 Mar 2021 18:25:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 17992619AD;
+        Mon, 29 Mar 2021 22:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617056617;
-        bh=IX7JtpBmyJERSohCz5wxHSAX+bY9srr/PlNSCQrPYgQ=;
+        s=k20201202; t=1617056634;
+        bh=v4e+Zfxr40I7fDoTqCELYs3I2iso9a8hbtb8KQoIahs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p/nQoSgmFAQ4Mxaz+Z/hKiY5ARCxzmfAAfDauh7b1VXH244xGWG3QjVVEQoPA78OU
-         g6Q7gqAD+KBuI/uEsCJvn6WcQxXUSaEQPTyn2ZNgiNvGxuiLk+k/zp7nthhZrkcaAu
-         g5+wVWny9RetAoMcHOqI5awjbVUgv0E91u08x5XkHlsvPGXPiFPRV7mU2pnAvsHEvS
-         DzQx1/ycMKoGzViQXuYgTt9fIJUggByJdGN2Rjr3FaCZDxhW8y2Vt0JDXWJDaT3iA2
-         BRZkg19rAsYqI/brNOPG8pT6fumCLzPknAu/9f501kJxw9QEwLrfn7QsM8F6U/99NP
-         HE+bFcaECMM3g==
+        b=FLdq2WaTcUFVow3pBVuRTWU9HCf+oC5MHmDOBwPrHDL/luUyUiJz3KTdTL9PX8K45
+         pccBBTswDiPr066cWtAzgpOWzq/AtSdWpPNmfU2PSn1IQvD0ohioEFKANEGAFY9AHy
+         eX9wMoVJsrcuzEHt/PoDOpRGXNy+bFFDthhAugppn+WPnRSNmfyiRoKmWGteGzqhnr
+         0aXxu394yL7cT0TQq5gO7Wz+vb7tQR5vDPWTXSwp9DYtFWke4G08ORXdPgH+v/NhOs
+         2MdH+e0govmx/cwm5plK9groe21PH/HqzpRJbBHh2nfumRJ9CZwujPLju2atGVpVGR
+         GtXbPgo67YOUA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Esteve Varela Colominas <esteve.varela@gmail.com>,
@@ -40,12 +40,12 @@ Cc:     Esteve Varela Colominas <esteve.varela@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/15] platform/x86: thinkpad_acpi: Allow the FnLock LED to change state
-Date:   Mon, 29 Mar 2021 18:23:20 -0400
-Message-Id: <20210329222327.2383533-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 07/12] platform/x86: thinkpad_acpi: Allow the FnLock LED to change state
+Date:   Mon, 29 Mar 2021 18:23:40 -0400
+Message-Id: <20210329222345.2383777-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210329222327.2383533-1-sashal@kernel.org>
-References: <20210329222327.2383533-1-sashal@kernel.org>
+In-Reply-To: <20210329222345.2383777-1-sashal@kernel.org>
+References: <20210329222345.2383777-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index a6e69f2495d2..559698640fe2 100644
+index ffaaccded34e..30bfd51c0e58 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4102,13 +4102,19 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+@@ -3964,13 +3964,19 @@ static bool hotkey_notify_6xxx(const u32 hkey,
  
  	case TP_HKEY_EV_KEY_NUMLOCK:
  	case TP_HKEY_EV_KEY_FN:
