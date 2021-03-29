@@ -2,99 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B86C433C1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 19:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACA5C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 20:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F97961934
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 19:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADE460295
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 20:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231645AbhC2TKo (ORCPT
+        id S230329AbhC2Ui1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 15:10:44 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51450 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231695AbhC2TKf (ORCPT
+        Mon, 29 Mar 2021 16:38:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229468AbhC2Uh5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 15:10:35 -0400
-IronPort-SDR: Ev16HbaEGto0f3B92GpsiJPQ+OCW9JOk5QCar1SogMhxTEqG5dDRwY9/iQ36psEJEb0bDW+Uoc
- 9TJHaD1UtCdA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="189362554"
-X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="189362554"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 12:10:35 -0700
-IronPort-SDR: OKA4T1bS1Ln+4H1kSQSTUlfsWWJnjiEgwIsjC12p9lMdVKqcyIS0nmlAih7RaduR1bsy/7DBsz
- rWxwHcMmuTYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="438011325"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by fmsmga004.fm.intel.com with ESMTP; 29 Mar 2021 12:10:34 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 29 Mar 2021 12:10:34 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 29 Mar 2021 12:10:33 -0700
-Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
- ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.2106.013;
- Mon, 29 Mar 2021 12:10:33 -0700
-From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
-To:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-CC:     "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>,
-        "prarit@redhat.com" <prarit@redhat.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 5.13-rc1
-Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
- 5.13-rc1
-Thread-Index: AQHXJM8x7bni6jfs1ke01S2Gfe3VPQ==
-Date:   Mon, 29 Mar 2021 19:10:33 +0000
-Message-ID: <96f15cef07d3995d9893ff3e671b0f78e2cdbf68.camel@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E2B08CED36627C4C9DA2C9BA5EF1D111@intel.com>
-Content-Transfer-Encoding: base64
+        Mon, 29 Mar 2021 16:37:57 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D10EC061574;
+        Mon, 29 Mar 2021 13:37:57 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id o16so14180730wrn.0;
+        Mon, 29 Mar 2021 13:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Aem0mmjc+m+1Ls4c4+9Q57HeLTfug6e9XtREoWGla0s=;
+        b=Yyz6cO6mfdJ4gTm/q/IIRn+Gd9fo6a0YRZUwTtMq4g0ykMc312Ut403N0L/wIqKGmv
+         towoVO/GPQNCSCpJKtLguC/+QRRMz7J4T8F78TyeFbzQWiohay7whG+PPzrrX7rQrNrg
+         A1IdGgVh+6vl/hbC41SOby1zjIPRFyBw9sGF0zjc1yUkyt0ga9GlSLGsSFoFagGxKAlY
+         0A9zc0fzEBcPjLRbSq9D4aQDe7sP4dHsVrMSHw0qWx+GZg/15SUoCJnatic6Qy2iB6vP
+         y5k5d4/Lbu/KRZMLjwFqXMHqh0g0IAGQtBD+RCpmK14s1pOqibGV+17LEb7JBSKgFCl2
+         4fMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Aem0mmjc+m+1Ls4c4+9Q57HeLTfug6e9XtREoWGla0s=;
+        b=APKcnnQT+tzpHl+rkhT7sfBpqLWfc57hN2jwm75kJSqUqgBxgSeB8DtejKb6bPJPZr
+         NaMFg002Zg8mb9HA7Dw2y90fjrSW8JOVRSCxYOx1pZHiBhfrn1mTV/7hqG0CN9cJrtEv
+         MndubQgLkr2KW1LPMmWU5wDFxKPCVINDeKH+WYcZsVFspcLFEcbFWWtwHr/C6nKkmrJx
+         mDLhVhTro/diTfIAHCDOxnBLNC3WO4R4s6u2wB8o6cxFbqrh3Xnb69uTeVx2MPeYSL4P
+         zMgfOL6JoFlVIKa6iJha69F39oGnc6v4D32ikRFToY4bkju1rpIsNrdkxoCsgBbsK4iT
+         yZgA==
+X-Gm-Message-State: AOAM530ZaiENetfr1Af+wT16DCey8QH83HKp79EZ92I/6ZKIbXBGmzcG
+        3OLj909T9GBKgxi5lz8c60g=
+X-Google-Smtp-Source: ABdhPJwbk6wDCyr/7t4h+Ru2dj6hjTiJekgD5rahNgY9nQO/QhGp2GU31eI13ujvkwBWaxDTybvuSg==
+X-Received: by 2002:adf:b313:: with SMTP id j19mr29717540wrd.188.1617050275883;
+        Mon, 29 Mar 2021 13:37:55 -0700 (PDT)
+Received: from [192.168.1.211] ([91.110.20.103])
+        by smtp.gmail.com with ESMTPSA id u63sm545862wmg.24.2021.03.29.13.37.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Mar 2021 13:37:55 -0700 (PDT)
+Subject: Re: [PATCH v3 0/6] Introduce intel_skl_int3472 module
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, tfiga@chromium.org,
+        sakari.ailus@linux.intel.com, rajmohan.mani@intel.com,
+        rjw@rjwysocki.net, lenb@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        kieran.bingham+renesas@ideasonboard.com,
+        laurent.pinchart@ideasonboard.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, me@fabwu.ch, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <fd2fbee6-e620-a594-8377-d2f22131af29@redhat.com>
+ <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
+ <YGHsWNXha0i1OwCN@smile.fi.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <5bc96e11-ab7a-d084-900b-9b8fdc4a4e72@gmail.com>
+Date:   Mon, 29 Mar 2021 21:37:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <YGHsWNXha0i1OwCN@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-SGkgTWFyaywgSGFucywNCg0KVGhlIGZvbGxvd2luZyBjaGFuZ2VzIGFyZSBvbiB0b3Agb2Y6DQpn
-aXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy9saW51eC1wbGF0Zm9ybS1kcml2ZXJzLXg4Ni5naXQgZm9y
-LW5leHQNCg0KDQpUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0DQowNzMzZTU0NWZh
-NTk2NjcwMWJjMDU2Y2Y2MmUzMTk1ZWU5MmU0MTkxOg0KDQogIHBsYXRmb3JtL3g4NjogdG91Y2hz
-Y3JlZW5fZG1pOiBIYW5kbGUgZGV2aWNlIHByb3BlcnRpZXMgd2l0aCBzb2Z0d2FyZQ0Kbm9kZSBB
-UEkgKDIwMjEtMDMtMDYgMTA6MjY6MDIgKzAxMDApDQoNCmFyZSBhdmFpbGFibGUgaW4gdGhlIEdp
-dCByZXBvc2l0b3J5IGF0Og0KDQogIGh0dHBzOi8vZ2l0aHViLmNvbS9zcGFuZHJ1dmFkYS9saW51
-eC1rZXJuZWwuZ2l0IGludGVsLXNzdA0KDQpmb3IgeW91IHRvIGZldGNoIGNoYW5nZXMgdXAgdG8N
-CjI2ZmE0YzU4OGYyODk0YWJlZTlhYWVkMzA5N2YzOGM2YTBkZmQxZDI6DQoNCiAgdG9vbHMvcG93
-ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogdjEuOSByZWxlYXNlICgyMDIxLTAzLTI5IDExOjQ1
-OjA0DQotMDcwMCkNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KQW50b25pbyBUZXJjZWlybyAoMSk6DQogICAgICB0b29s
-cy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBEcm9wIF9fREFURV9fIGFuZCBfX1RJTUVf
-Xw0KbWFjcm9zDQoNClNyaW5pdmFzIFBhbmRydXZhZGEgKDQpOg0KICAgICAgdG9vbHMvcG93ZXIv
-eDg2L2ludGVsLXNwZWVkLXNlbGVjdDogSW5jcmVhc2Ugc3RyaW5nIHNpemUNCiAgICAgIHRvb2xz
-L3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IFByb2Nlc3MgbWFpbGJveCByZWFkIGVycm9y
-DQpmb3IgY29yZS1wb3dlcg0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVj
-dDogQWRkIG9wdGlvbnMgdG8gZm9yY2Ugb25saW5lDQogICAgICB0b29scy9wb3dlci94ODYvaW50
-ZWwtc3BlZWQtc2VsZWN0OiB2MS45IHJlbGVhc2UNCg0KIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1z
-cGVlZC1zZWxlY3QvaXNzdC1jb25maWcuYyAgfCAzMA0KKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0LWRpc3BsYXku
-YyB8IDEyICsrKysrKysrKystLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwg
-NiBkZWxldGlvbnMoLSkNCg0KVGhhbmtzLA0KU3Jpbml2YXMNCg==
+Hi Andy
+
+On 29/03/2021 16:03, Andy Shevchenko wrote:
+> On Thu, Mar 04, 2021 at 01:49:14PM +0000, Daniel Scally wrote:
+>> On 04/03/2021 13:37, Hans de Goede wrote:
+>>> On 2/22/21 2:07 PM, Daniel Scally wrote:
+> ...
+>
+>>>> The existing mfd/tps68470.c driver being thus superseded, it is removed.
+>>> Thank you for this patch series. Since there have already been a whole
+>>> bunch of review-comments, I've not taken a detailed look at this yet.
+>> No problem, I'm hoping to do a v3 over the weekend anyway.
+> Do you mean v4?
+
+
+Oops, I do indeed.
+
+
+> I'm just wondering if you need any help.
+
+
+Thanks - I don't think so; I've just not been working on it very much
+lately. I got sidetracked with a sensor driver [1] that was pretty fun,
+so I've been focused on that instead. I'm just finishing up a v2 for
+that, and then I'll come back to this.
+
+
+[1]
+https://lore.kernel.org/linux-media/20210312103239.279523-2-djrscally@gmail.com/
+
