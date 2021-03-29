@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC6C433E5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F3BC4345E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE9D61999
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85EF9619B5
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231135AbhC2WVm (ORCPT
+        id S232115AbhC2WWb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 18:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        Mon, 29 Mar 2021 18:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231585AbhC2WVj (ORCPT
+        id S231962AbhC2WWI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 18:21:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AD1536198A;
-        Mon, 29 Mar 2021 22:21:38 +0000 (UTC)
+        Mon, 29 Mar 2021 18:22:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 08B6D6198F;
+        Mon, 29 Mar 2021 22:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617056499;
-        bh=7yAqtm6eI7uuUYcC/NC9/TEIBkZ1O0C+3Rp8uDSuvg4=;
+        s=k20201202; t=1617056527;
+        bh=tQJoCxpovS4upu8UjYSn8Ty5bw8x9UQbHWn+lFOYW7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geuK2PJ0DpYu3uK23wpiQFA6sekW3TkhjCkmrQczh9WqoDzmMWFSMdQg2lLK6oTU6
-         9UORM/SIUVpp0z/i1ZTKy12NMbC3GRyTi2y2CAczCmmcayKoxzZbZtXnFCmI+hkWfh
-         nsfU+4y61Z3KImKLwMZwYbiPvFX85b4+EKy/tPXCxyOkbjj81z8FeB6tP9TAOasBRg
-         qBNRyC6pBCK+Y4Ecz3KnfHPL3iHvJYw3WsVfBXmbs1pwdTklflXcQmZ+NIApp5fxv+
-         Ra8XhWCEvl/BVnHEsTLI88AzfD7PQeWPMiNSZhkM1gcCKX9gTAtfITLKRpevneToU2
-         z4QBwaBI0K21A==
+        b=J5AhQ3n0veD19VksB1sV0pfnOZX2qiknGVGF2auOG9tRHhQfQWouoAwz7LQSlzBcx
+         uHBYNSNQUD+dAYcc34TUZLhZtv0v/HiduO6FbXYwkuhOtXAKinQz6CGz0PR/cFjzqd
+         DBcnVBMcSSPRFrOTlE66vXkDXoV3SHm5M1OyZqyft0SsgSVNh+TVyYaK7CbPen5bv/
+         5KW9rZJ4/IDSapqYNGuN7LOz2MmGViJs0aJTfmvwZoCTC1VErJY+WaMIdc1IpHktVv
+         BzBFzJIXx9fouo0trtgriM49S7o7Y0OYNygFYldmaoX144DaUi8JPJBeUhb9QzmF9A
+         IPJNkJqbj9sHw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alban Bedel <albeu@free.fr>, Alexander Kobel <a-kobel@a-kobel.de>,
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.11 04/38] platform/x86: intel-hid: Support Lenovo ThinkPad X1 Tablet Gen 2
-Date:   Mon, 29 Mar 2021 18:20:59 -0400
-Message-Id: <20210329222133.2382393-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.11 27/38] platform/x86: intel_pmt_class: Initial resource to 0
+Date:   Mon, 29 Mar 2021 18:21:22 -0400
+Message-Id: <20210329222133.2382393-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210329222133.2382393-1-sashal@kernel.org>
 References: <20210329222133.2382393-1-sashal@kernel.org>
@@ -53,41 +53,33 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Alban Bedel <albeu@free.fr>
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-[ Upstream commit 56678a5f44ef5f0ad9a67194bbee2280c6286534 ]
+[ Upstream commit 7547deff8a221e6bf1e563cf1b636844a8e5378a ]
 
-Like a few other system the Lenovo ThinkPad X1 Tablet Gen 2 miss the
-HEBC method, which prevent the power button from working. Add a quirk
-to enable the button array on this system family and fix the power
-button.
+Initialize the struct resource in intel_pmt_dev_register to zero to avoid a
+fault should the char *name field be non-zero.
 
-Signed-off-by: Alban Bedel <albeu@free.fr>
-Tested-by: Alexander Kobel <a-kobel@a-kobel.de>
-Link: https://lore.kernel.org/r/20210222141559.3775-1-albeu@free.fr
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Link: https://lore.kernel.org/r/20210317024455.3071477-1-david.e.box@linux.intel.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel-hid.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/platform/x86/intel_pmt_class.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 2f5b8d09143e..57cc92891a57 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -90,6 +90,13 @@ static const struct dmi_system_id button_array_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
- 		},
- 	},
-+	{
-+		.ident = "Lenovo ThinkPad X1 Tablet Gen 2",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Tablet Gen 2"),
-+		},
-+	},
- 	{ }
- };
+diff --git a/drivers/platform/x86/intel_pmt_class.c b/drivers/platform/x86/intel_pmt_class.c
+index c8939fba4509..ee2b3bbeb83d 100644
+--- a/drivers/platform/x86/intel_pmt_class.c
++++ b/drivers/platform/x86/intel_pmt_class.c
+@@ -173,7 +173,7 @@ static int intel_pmt_dev_register(struct intel_pmt_entry *entry,
+ 				  struct intel_pmt_namespace *ns,
+ 				  struct device *parent)
+ {
+-	struct resource res;
++	struct resource res = {0};
+ 	struct device *dev;
+ 	int ret;
  
 -- 
 2.30.1
