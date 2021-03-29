@@ -2,147 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1798C433E1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 14:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB76C433E2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC28361960
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 14:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CF36198A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbhC2O5V (ORCPT
+        id S230287AbhC2PER (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 10:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
+        Mon, 29 Mar 2021 11:04:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40984 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231304AbhC2O5K (ORCPT
+        id S229711AbhC2PEE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 10:57:10 -0400
-Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68CAF60C3D;
-        Mon, 29 Mar 2021 14:57:07 +0000 (UTC)
-Date:   Mon, 29 Mar 2021 15:57:13 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <aardelean@deviqon.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, coproscefalo@gmail.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, linux@deviqon.com
-Subject: Re: [PATCH 08/10] platform/x86: toshiba_acpi: use device-managed
- for wwan_rfkill management
-Message-ID: <20210329155713.3c19c0d1@jic23-huawei>
-In-Reply-To: <20210324125548.45983-9-aardelean@deviqon.com>
-References: <20210324125548.45983-1-aardelean@deviqon.com>
-        <20210324125548.45983-9-aardelean@deviqon.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 29 Mar 2021 11:04:04 -0400
+IronPort-SDR: hCpRzlmiI/2TGJVQ5HQe3QGk8rtq0ERUc++YX6ZS8lt89hR3D7Dab8mpKbjf5U9pB8H0D7sRaU
+ 2Q3N9b5xa0Lg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="178694879"
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="178694879"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:04:02 -0700
+IronPort-SDR: M4gkVW7u/AgypQOBXEwIVeagAuv7wqNZGsC6WKfkjdTrFQWMSX/O65nYfA2mMSx6rwNhPXDKFm
+ N5c9qreGZmnQ==
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="376458095"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:03:56 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lQtQm-00H3Eu-RE; Mon, 29 Mar 2021 18:03:52 +0300
+Date:   Mon, 29 Mar 2021 18:03:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, tfiga@chromium.org,
+        sakari.ailus@linux.intel.com, rajmohan.mani@intel.com,
+        rjw@rjwysocki.net, lenb@kernel.org,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
+        kieran.bingham+renesas@ideasonboard.com,
+        laurent.pinchart@ideasonboard.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, robert.moore@intel.com,
+        erik.kaneda@intel.com, me@fabwu.ch, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org
+Subject: Re: [PATCH v3 0/6] Introduce intel_skl_int3472 module
+Message-ID: <YGHsWNXha0i1OwCN@smile.fi.intel.com>
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <fd2fbee6-e620-a594-8377-d2f22131af29@redhat.com>
+ <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 24 Mar 2021 14:55:46 +0200
-Alexandru Ardelean <aardelean@deviqon.com> wrote:
+On Thu, Mar 04, 2021 at 01:49:14PM +0000, Daniel Scally wrote:
+> On 04/03/2021 13:37, Hans de Goede wrote:
+> > On 2/22/21 2:07 PM, Daniel Scally wrote:
 
-> This change converts the wwan_rfkill object to be free'd automatically when
-> the parent refcount goes to zero.
-> There are 2 cleanup operations required: rfkill_unregister() and
-> rfkill_destroy(). Since they don't have any devm_ variants, they are hooked
-> via devm_add_action_or_reset().
-> 
-> The main reason to do this is to enforce ordering on cleanup, when the
-> Toshiba ACPI device is cleaned up.
-> 
-> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
-Superficially looks fine to me though I don't know much about rfkill.
+...
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/platform/x86/toshiba_acpi.c | 40 ++++++++++++++++++++++-------
->  1 file changed, 31 insertions(+), 9 deletions(-)
+> >> The existing mfd/tps68470.c driver being thus superseded, it is removed.
+> > Thank you for this patch series. Since there have already been a whole
+> > bunch of review-comments, I've not taken a detailed look at this yet.
 > 
-> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> index 12860ef60e4d..a1249f6dde9a 100644
-> --- a/drivers/platform/x86/toshiba_acpi.c
-> +++ b/drivers/platform/x86/toshiba_acpi.c
-> @@ -2591,7 +2591,22 @@ static const struct rfkill_ops wwan_rfk_ops = {
->  	.poll = toshiba_acpi_wwan_poll,
->  };
->  
-> -static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
-> +static void toshiba_acpi_rfkill_destroy(void *data)
-> +{
-> +	struct rfkill *wwan_rfk = data;
-> +
-> +	rfkill_destroy(wwan_rfk);
-> +}
-> +
-> +static void toshiba_acpi_rfkill_unreg(void *data)
-> +{
-> +	struct rfkill *wwan_rfk = data;
-> +
-> +	rfkill_unregister(wwan_rfk);
-> +}
-> +
-> +static int toshiba_acpi_setup_wwan_rfkill(struct device *parent,
-> +					  struct toshiba_acpi_dev *dev)
->  {
->  	int ret = toshiba_wireless_status(dev);
->  
-> @@ -2608,15 +2623,27 @@ static int toshiba_acpi_setup_wwan_rfkill(struct toshiba_acpi_dev *dev)
->  		return -ENOMEM;
->  	}
->  
-> +	ret = devm_add_action_or_reset(parent, toshiba_acpi_rfkill_destroy,
-> +				       dev->wwan_rfk);
-> +	if (ret)
-> +		return ret;
-> +
->  	rfkill_set_hw_state(dev->wwan_rfk, !dev->killswitch);
->  
->  	ret = rfkill_register(dev->wwan_rfk);
->  	if (ret) {
->  		pr_err("Unable to register WWAN rfkill device\n");
-> -		rfkill_destroy(dev->wwan_rfk);
-> +		return ret;
->  	}
->  
-> -	return ret;
-> +	ret = devm_add_action_or_reset(parent, toshiba_acpi_rfkill_unreg,
-> +				       dev->wwan_rfk);
-> +	if (ret) {
-> +		dev->wwan_rfk = NULL;
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  /*
-> @@ -2996,11 +3023,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
->  		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
->  				   &toshiba_attr_group);
->  
-> -	if (dev->wwan_rfk) {
-> -		rfkill_unregister(dev->wwan_rfk);
-> -		rfkill_destroy(dev->wwan_rfk);
-> -	}
-> -
->  	return 0;
->  }
->  
-> @@ -3189,7 +3211,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
->  
->  	toshiba_wwan_available(dev);
->  	if (dev->wwan_supported)
-> -		toshiba_acpi_setup_wwan_rfkill(dev);
-> +		toshiba_acpi_setup_wwan_rfkill(parent, dev);
->  
->  	toshiba_cooling_method_available(dev);
->  
+> No problem, I'm hoping to do a v3 over the weekend anyway.
+
+Do you mean v4?
+
+I'm just wondering if you need any help.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
