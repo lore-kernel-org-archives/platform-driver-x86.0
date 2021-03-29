@@ -7,42 +7,41 @@ X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19590C4332B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A3DC433DB
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F13619C5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10318619D0
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 22:23:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbhC2WXh (ORCPT
+        id S232568AbhC2WXf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 18:23:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
+        Mon, 29 Mar 2021 18:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232220AbhC2WWq (ORCPT
+        id S232080AbhC2WW0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 18:22:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B328661976;
-        Mon, 29 Mar 2021 22:22:44 +0000 (UTC)
+        Mon, 29 Mar 2021 18:22:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 73C5161985;
+        Mon, 29 Mar 2021 22:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617056565;
-        bh=UJHv18IyYhRuKDWInx4kw6y7X0EvyDzns49gDA0Nv7k=;
+        s=k20201202; t=1617056546;
+        bh=gzdGyJool8P4iZcxkYD/vk73TsUaBhRG5z/eor8Gfp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HTccZMVh3KcPOe8jVdjxHrA+b3SWpo8dcBEOFaaYTtSb1Sx+/0ZmV2pxiPLfvJPdC
-         ncnaIPxyFsI2vZpyFhMpivrWNXN8X5Dl8CnSDkWV1Q+GenIVJd+LWxxIuQFx10Gmfj
-         O7QxpYrap8RxjBhIxP8Zo1VA/7wF0TQsZhzOsgnuNLdxolGQXtN034nE0ydG5eC4Sf
-         KCGnLR2HwF3/s8RupF6V9KW3SDZFdjwgM1DyITUHuEMmPiQ9ukKLLDnitewMh3T9vb
-         sWJfBtOEgnGdKVDeerxYgS45CCufp6GIG6MRE1tDT41MHCCoSShLOzo3fIrv1LeWc0
-         2O7kMmnve59Ag==
+        b=QlRkXHbvroIg9QCNSBrDpklmAUKcxcrrkGqoqzMG2Jrma90Kw9ie6AgaIWj+7usvH
+         FcuTzjScEVUPoUNuQ5HHy7qidrW03UCFMHQYDRrvcLmD4Zv6HL3ru8GjACKqsBpPoV
+         E6io+B6xS6VoFQiLZ+KBN1yhp2OgQlyVsxEmPaeipCc4kasedhhLRgZ/gjaqWKKAWX
+         mrxYl1qIa1FHZnGYcb4Ns8uO5BUOWRb4fl3hLg8JTsebS1qktnDFHpFyb23RU2LnJh
+         2Pj3rntW7QgqAJtLkVHwpDK1jRO0FJXzE/gE5kpRJXBH0vtcGW2q/irxw8eaMDXVxd
+         px9WF6xHdIlWw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Esteve Varela Colominas <esteve.varela@gmail.com>,
+Cc:     Alban Bedel <albeu@free.fr>, Alexander Kobel <a-kobel@a-kobel.de>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 19/33] platform/x86: thinkpad_acpi: Allow the FnLock LED to change state
-Date:   Mon, 29 Mar 2021 18:22:07 -0400
-Message-Id: <20210329222222.2382987-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 03/33] platform/x86: intel-hid: Support Lenovo ThinkPad X1 Tablet Gen 2
+Date:   Mon, 29 Mar 2021 18:21:51 -0400
+Message-Id: <20210329222222.2382987-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210329222222.2382987-1-sashal@kernel.org>
 References: <20210329222222.2382987-1-sashal@kernel.org>
@@ -54,70 +53,42 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Esteve Varela Colominas <esteve.varela@gmail.com>
+From: Alban Bedel <albeu@free.fr>
 
-[ Upstream commit 3d677f12ea3a2097a16ded570623567403dea959 ]
+[ Upstream commit 56678a5f44ef5f0ad9a67194bbee2280c6286534 ]
 
-On many recent ThinkPad laptops, there's a new LED next to the ESC key,
-that indicates the FnLock status.
-When the Fn+ESC combo is pressed, FnLock is toggled, which causes the
-Media Key functionality to change, making it so that the media keys
-either perform their media key function, or function as an F-key by
-default. The Fn key can be used the access the alternate function at any
-time.
+Like a few other system the Lenovo ThinkPad X1 Tablet Gen 2 miss the
+HEBC method, which prevent the power button from working. Add a quirk
+to enable the button array on this system family and fix the power
+button.
 
-With the current linux kernel, the LED doens't change state if you press
-the Fn+ESC key combo. However, the media key functionality *does*
-change. This is annoying, since the LED will stay on if it was on during
-bootup, and it makes it hard to keep track what the current state of the
-FnLock is.
-
-This patch calls an ACPI function, that gets the current media key
-state, when the Fn+ESC key combo is pressed. Through testing it was
-discovered that this function causes the LED to update correctly to
-reflect the current state when this function is called.
-
-The relevant ACPI calls are the following:
-\_SB_.PCI0.LPC0.EC0_.HKEY.GMKS: Get media key state, returns 0x603 if the FnLock mode is enabled, and 0x602 if it's disabled.
-\_SB_.PCI0.LPC0.EC0_.HKEY.SMKS: Set media key state, sending a 1 will enable FnLock mode, and a 0 will disable it.
-
-Relevant discussion:
-https://bugzilla.kernel.org/show_bug.cgi?id=207841
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1881015
-
-Signed-off-by: Esteve Varela Colominas <esteve.varela@gmail.com>
-Link: https://lore.kernel.org/r/20210315195823.23212-1-esteve.varela@gmail.com
+Signed-off-by: Alban Bedel <albeu@free.fr>
+Tested-by: Alexander Kobel <a-kobel@a-kobel.de>
+Link: https://lore.kernel.org/r/20210222141559.3775-1-albeu@free.fr
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/platform/x86/intel-hid.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 69402758b99c..3b0acaeb20cf 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -4079,13 +4079,19 @@ static bool hotkey_notify_6xxx(const u32 hkey,
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 86261970bd8f..8a0cd5bf0065 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -86,6 +86,13 @@ static const struct dmi_system_id button_array_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "HP Spectre x2 Detachable"),
+ 		},
+ 	},
++	{
++		.ident = "Lenovo ThinkPad X1 Tablet Gen 2",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_PRODUCT_FAMILY, "ThinkPad X1 Tablet Gen 2"),
++		},
++	},
+ 	{ }
+ };
  
- 	case TP_HKEY_EV_KEY_NUMLOCK:
- 	case TP_HKEY_EV_KEY_FN:
--	case TP_HKEY_EV_KEY_FN_ESC:
- 		/* key press events, we just ignore them as long as the EC
- 		 * is still reporting them in the normal keyboard stream */
- 		*send_acpi_ev = false;
- 		*ignore_acpi_ev = true;
- 		return true;
- 
-+	case TP_HKEY_EV_KEY_FN_ESC:
-+		/* Get the media key status to foce the status LED to update */
-+		acpi_evalf(hkey_handle, NULL, "GMKS", "v");
-+		*send_acpi_ev = false;
-+		*ignore_acpi_ev = true;
-+		return true;
-+
- 	case TP_HKEY_EV_TABLET_CHANGED:
- 		tpacpi_input_send_tabletsw();
- 		hotkey_tablet_mode_notify_change();
 -- 
 2.30.1
 
