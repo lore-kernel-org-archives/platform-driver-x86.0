@@ -2,88 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB76C433E2
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC1DC433C1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5CF36198A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EDD56187E
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 15:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbhC2PER (ORCPT
+        id S230212AbhC2PJg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 11:04:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:40984 "EHLO mga02.intel.com"
+        Mon, 29 Mar 2021 11:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229711AbhC2PEE (ORCPT
+        id S230202AbhC2PJZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 11:04:04 -0400
-IronPort-SDR: hCpRzlmiI/2TGJVQ5HQe3QGk8rtq0ERUc++YX6ZS8lt89hR3D7Dab8mpKbjf5U9pB8H0D7sRaU
- 2Q3N9b5xa0Lg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="178694879"
-X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="178694879"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:04:02 -0700
-IronPort-SDR: M4gkVW7u/AgypQOBXEwIVeagAuv7wqNZGsC6WKfkjdTrFQWMSX/O65nYfA2mMSx6rwNhPXDKFm
- N5c9qreGZmnQ==
-X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
-   d="scan'208";a="376458095"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 08:03:56 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lQtQm-00H3Eu-RE; Mon, 29 Mar 2021 18:03:52 +0300
-Date:   Mon, 29 Mar 2021 18:03:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, tfiga@chromium.org,
-        sakari.ailus@linux.intel.com, rajmohan.mani@intel.com,
-        rjw@rjwysocki.net, lenb@kernel.org,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, wsa@kernel.org, lee.jones@linaro.org,
-        kieran.bingham+renesas@ideasonboard.com,
-        laurent.pinchart@ideasonboard.com, mgross@linux.intel.com,
-        luzmaximilian@gmail.com, robert.moore@intel.com,
-        erik.kaneda@intel.com, me@fabwu.ch, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org
-Subject: Re: [PATCH v3 0/6] Introduce intel_skl_int3472 module
-Message-ID: <YGHsWNXha0i1OwCN@smile.fi.intel.com>
-References: <20210222130735.1313443-1-djrscally@gmail.com>
- <fd2fbee6-e620-a594-8377-d2f22131af29@redhat.com>
- <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
+        Mon, 29 Mar 2021 11:09:25 -0400
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E956187E;
+        Mon, 29 Mar 2021 15:09:21 +0000 (UTC)
+Date:   Mon, 29 Mar 2021 16:09:28 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <aardelean@deviqon.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, coproscefalo@gmail.com,
+        hdegoede@redhat.com, mgross@linux.intel.com, linux@deviqon.com
+Subject: Re: [PATCH 09/10] platform/x86: toshiba_acpi: use device-managed
+ for sysfs removal
+Message-ID: <20210329160928.0f8d6b44@jic23-huawei>
+In-Reply-To: <20210324125548.45983-10-aardelean@deviqon.com>
+References: <20210324125548.45983-1-aardelean@deviqon.com>
+        <20210324125548.45983-10-aardelean@deviqon.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d336f50-5f25-fce2-04eb-5ad450c9cd5b@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Mar 04, 2021 at 01:49:14PM +0000, Daniel Scally wrote:
-> On 04/03/2021 13:37, Hans de Goede wrote:
-> > On 2/22/21 2:07 PM, Daniel Scally wrote:
+On Wed, 24 Mar 2021 14:55:47 +0200
+Alexandru Ardelean <aardelean@deviqon.com> wrote:
 
-...
-
-> >> The existing mfd/tps68470.c driver being thus superseded, it is removed.
-> > Thank you for this patch series. Since there have already been a whole
-> > bunch of review-comments, I've not taken a detailed look at this yet.
+> This change moves the creation of the Toshiba ACPI group to be
+> automatically removed when the parent refcount goes to zero.
 > 
-> No problem, I'm hoping to do a v3 over the weekend anyway.
+> The main reason to do this, is to also enforce that the order of removal is
+> mirroring the order of initialization.
+> 
+> Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
+Hmm. The manual handling of the sysfs_create_group() is unfortunate (as opposed
+to just setting a groups pointer) but there doesn't seem to be an easy way to fix
+that with the current architecture.  Ah well
 
-Do you mean v4?
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I'm just wondering if you need any help.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> ---
+>  drivers/platform/x86/toshiba_acpi.c | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
+> index a1249f6dde9a..8e8917979047 100644
+> --- a/drivers/platform/x86/toshiba_acpi.c
+> +++ b/drivers/platform/x86/toshiba_acpi.c
+> @@ -200,7 +200,6 @@ struct toshiba_acpi_dev {
+>  	unsigned int usb_three_supported:1;
+>  	unsigned int wwan_supported:1;
+>  	unsigned int cooling_method_supported:1;
+> -	unsigned int sysfs_created:1;
+>  	unsigned int special_functions;
+>  
+>  	bool kbd_event_generated;
+> @@ -3019,10 +3018,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
+>  
+>  	remove_toshiba_proc_entries(dev);
+>  
+> -	if (dev->sysfs_created)
+> -		sysfs_remove_group(&dev->acpi_dev->dev.kobj,
+> -				   &toshiba_attr_group);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -3049,6 +3044,13 @@ static void toshiba_acpi_misc_deregister(void *data)
+>  	misc_deregister(miscdev);
+>  }
+>  
+> +static void toshiba_acpi_sysfs_remove(void *data)
+> +{
+> +	struct kobject *kobj = data;
+> +
+> +	sysfs_remove_group(kobj, &toshiba_attr_group);
+> +}
+> +
+>  static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  {
+>  	struct device *parent = &acpi_dev->dev;
+> @@ -3219,21 +3221,20 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
+>  
+>  	ret = sysfs_create_group(&dev->acpi_dev->dev.kobj,
+>  				 &toshiba_attr_group);
+> -	if (ret) {
+> -		dev->sysfs_created = 0;
+> -		goto error;
+> -	}
+> -	dev->sysfs_created = !ret;
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_add_action_or_reset(parent,
+> +				       toshiba_acpi_sysfs_remove,
+> +				       &dev->acpi_dev->dev.kobj);
+> +	if (ret)
+> +		return ret;
+>  
+>  	create_toshiba_proc_entries(dev);
+>  
+>  	toshiba_acpi = dev;
+>  
+>  	return 0;
+> -
+> -error:
+> -	toshiba_acpi_remove(acpi_dev);
+> -	return ret;
+>  }
+>  
+>  static void toshiba_acpi_notify(struct acpi_device *acpi_dev, u32 event)
 
