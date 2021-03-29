@@ -2,147 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A73C433E0
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 18:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B86C433C1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 19:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCDEA61985
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F97961934
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 29 Mar 2021 19:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbhC2SGD (ORCPT
+        id S231645AbhC2TKo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 29 Mar 2021 14:06:03 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:36142 "EHLO gecko.sbs.de"
+        Mon, 29 Mar 2021 15:10:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51450 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230506AbhC2SF3 (ORCPT
+        id S231695AbhC2TKf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 29 Mar 2021 14:05:29 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 12TI56ik029191
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Mar 2021 20:05:06 +0200
-Received: from md1za8fc.ad001.siemens.net ([167.87.41.127])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id 12TI05Ad030820;
-        Mon, 29 Mar 2021 20:00:05 +0200
-Date:   Mon, 29 Mar 2021 20:00:01 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-watchdog@vger.kernel.org>
-Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        "Gerd Haeussler" <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v3 0/4] add device drivers for Siemens Industrial PCs
-Message-ID: <20210329200001.7b65e4af@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210329174928.18816-1-henning.schild@siemens.com>
-References: <20210329174928.18816-1-henning.schild@siemens.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 29 Mar 2021 15:10:35 -0400
+IronPort-SDR: Ev16HbaEGto0f3B92GpsiJPQ+OCW9JOk5QCar1SogMhxTEqG5dDRwY9/iQ36psEJEb0bDW+Uoc
+ 9TJHaD1UtCdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9938"; a="189362554"
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="189362554"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2021 12:10:35 -0700
+IronPort-SDR: OKA4T1bS1Ln+4H1kSQSTUlfsWWJnjiEgwIsjC12p9lMdVKqcyIS0nmlAih7RaduR1bsy/7DBsz
+ rWxwHcMmuTYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,288,1610438400"; 
+   d="scan'208";a="438011325"
+Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Mar 2021 12:10:34 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Mon, 29 Mar 2021 12:10:34 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Mon, 29 Mar 2021 12:10:33 -0700
+Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
+ ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.2106.013;
+ Mon, 29 Mar 2021 12:10:33 -0700
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>
+CC:     "srinivas.pandruvada@linux.intel.com" 
+        <srinivas.pandruvada@linux.intel.com>,
+        "prarit@redhat.com" <prarit@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 5.13-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 5.13-rc1
+Thread-Index: AQHXJM8x7bni6jfs1ke01S2Gfe3VPQ==
+Date:   Mon, 29 Mar 2021 19:10:33 +0000
+Message-ID: <96f15cef07d3995d9893ff3e671b0f78e2cdbf68.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E2B08CED36627C4C9DA2C9BA5EF1D111@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Guys,
-
-sorry for the delay. This one did in fact not change too much after all.
-
-The biggest points that are still kind of open are the naming of the
-LEDs. If what is proposed here is acceptable it is not open from my
-side.
-
-The other big point was "using a generic gpio" driver as a basis. My
-current understanding of that point is, that such a driver does not yet
-exist. Meaning an introduction of the abstractions can and probably
-should wait for a second user. Without the second user it is just hard
-to test and find the right abstraction, plus we will end up with more
-code meaning more work for everyone.
-
-regards,
-Henning
-
-Am Mon, 29 Mar 2021 19:49:24 +0200
-schrieb Henning Schild <henning.schild@siemens.com>:
-
-> changes since v2:
-> 
-> - remove "simatic-ipc" prefix from LED names
-> - fix style issues found in v2, mainly LED driver
-> - fix OEM specific dmi code, and remove magic numbers
-> - more "simatic_ipc" name prefixing
-> - improved pmc quirk code using callbacks
-> 
-> changes since v1:
-> 
-> - fixed lots of style issues found in v1
->   - (debug) printing
->   - header ordering
-> - fixed license issues GPLv2 and SPDX in all files
-> - module_platform_driver instead of __init __exit
-> - wdt simplifications cleanup
-> - lots of fixes in wdt driver, all that was found in v1
-> - fixed dmi length in dmi helper
-> - changed LED names to allowed ones
-> - move led driver to simple/
-> - switched pmc_atom to dmi callback with global variable
-> 
-> --
-> 
-> This series adds support for watchdogs and leds of several x86 devices
-> from Siemens.
-> 
-> It is structured with a platform driver that mainly does
-> identification of the machines. It might trigger loading of the
-> actual device drivers by attaching devices to the platform bus.
-> 
-> The identification is vendor specific, parsing a special binary DMI
-> entry. The implementation of that platform identification is applied
-> on pmc_atom clock quirks in the final patch.
-> 
-> It is all structured in a way that we can easily add more devices and
-> more platform drivers later. Internally we have some more code for
-> hardware monitoring, more leds, watchdogs etc. This will follow some
-> day.
-> 
-> Henning Schild (4):
->   platform/x86: simatic-ipc: add main driver for Siemens devices
->   leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
->   watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial PCs
->   platform/x86: pmc_atom: improve critclk_systems matching for Siemens
->     PCs
-> 
->  drivers/leds/Kconfig                          |   3 +
->  drivers/leds/Makefile                         |   3 +
->  drivers/leds/simple/Kconfig                   |  11 +
->  drivers/leds/simple/Makefile                  |   2 +
->  drivers/leds/simple/simatic-ipc-leds.c        | 202 ++++++++++++++++
->  drivers/platform/x86/Kconfig                  |  12 +
->  drivers/platform/x86/Makefile                 |   3 +
->  drivers/platform/x86/pmc_atom.c               |  57 +++--
->  drivers/platform/x86/simatic-ipc.c            | 169 ++++++++++++++
->  drivers/watchdog/Kconfig                      |  11 +
->  drivers/watchdog/Makefile                     |   1 +
->  drivers/watchdog/simatic-ipc-wdt.c            | 215
-> ++++++++++++++++++ .../platform_data/x86/simatic-ipc-base.h      |
-> 29 +++ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
->  14 files changed, 769 insertions(+), 21 deletions(-)
->  create mode 100644 drivers/leds/simple/Kconfig
->  create mode 100644 drivers/leds/simple/Makefile
->  create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
->  create mode 100644 drivers/platform/x86/simatic-ipc.c
->  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
->  create mode 100644 include/linux/platform_data/x86/simatic-ipc-base.h
->  create mode 100644 include/linux/platform_data/x86/simatic-ipc.h
-> 
-
+SGkgTWFyaywgSGFucywNCg0KVGhlIGZvbGxvd2luZyBjaGFuZ2VzIGFyZSBvbiB0b3Agb2Y6DQpn
+aXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy9saW51eC1wbGF0Zm9ybS1kcml2ZXJzLXg4Ni5naXQgZm9y
+LW5leHQNCg0KDQpUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0DQowNzMzZTU0NWZh
+NTk2NjcwMWJjMDU2Y2Y2MmUzMTk1ZWU5MmU0MTkxOg0KDQogIHBsYXRmb3JtL3g4NjogdG91Y2hz
+Y3JlZW5fZG1pOiBIYW5kbGUgZGV2aWNlIHByb3BlcnRpZXMgd2l0aCBzb2Z0d2FyZQ0Kbm9kZSBB
+UEkgKDIwMjEtMDMtMDYgMTA6MjY6MDIgKzAxMDApDQoNCmFyZSBhdmFpbGFibGUgaW4gdGhlIEdp
+dCByZXBvc2l0b3J5IGF0Og0KDQogIGh0dHBzOi8vZ2l0aHViLmNvbS9zcGFuZHJ1dmFkYS9saW51
+eC1rZXJuZWwuZ2l0IGludGVsLXNzdA0KDQpmb3IgeW91IHRvIGZldGNoIGNoYW5nZXMgdXAgdG8N
+CjI2ZmE0YzU4OGYyODk0YWJlZTlhYWVkMzA5N2YzOGM2YTBkZmQxZDI6DQoNCiAgdG9vbHMvcG93
+ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogdjEuOSByZWxlYXNlICgyMDIxLTAzLTI5IDExOjQ1
+OjA0DQotMDcwMCkNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KQW50b25pbyBUZXJjZWlybyAoMSk6DQogICAgICB0b29s
+cy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0OiBEcm9wIF9fREFURV9fIGFuZCBfX1RJTUVf
+Xw0KbWFjcm9zDQoNClNyaW5pdmFzIFBhbmRydXZhZGEgKDQpOg0KICAgICAgdG9vbHMvcG93ZXIv
+eDg2L2ludGVsLXNwZWVkLXNlbGVjdDogSW5jcmVhc2Ugc3RyaW5nIHNpemUNCiAgICAgIHRvb2xz
+L3Bvd2VyL3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3Q6IFByb2Nlc3MgbWFpbGJveCByZWFkIGVycm9y
+DQpmb3IgY29yZS1wb3dlcg0KICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVj
+dDogQWRkIG9wdGlvbnMgdG8gZm9yY2Ugb25saW5lDQogICAgICB0b29scy9wb3dlci94ODYvaW50
+ZWwtc3BlZWQtc2VsZWN0OiB2MS45IHJlbGVhc2UNCg0KIHRvb2xzL3Bvd2VyL3g4Ni9pbnRlbC1z
+cGVlZC1zZWxlY3QvaXNzdC1jb25maWcuYyAgfCAzMA0KKysrKysrKysrKysrKysrKysrKysrKysr
+KystLS0tDQogdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdC9pc3N0LWRpc3BsYXku
+YyB8IDEyICsrKysrKysrKystLQ0KIDIgZmlsZXMgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKSwg
+NiBkZWxldGlvbnMoLSkNCg0KVGhhbmtzLA0KU3Jpbml2YXMNCg==
