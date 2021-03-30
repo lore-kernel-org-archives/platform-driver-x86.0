@@ -2,120 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6435C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 21:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E2C433DB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 22:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCCF6192C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 21:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AEF619CF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 22:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232777AbhC3VfZ (ORCPT
+        id S232840AbhC3WJG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Mar 2021 17:35:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232774AbhC3VfY (ORCPT
+        Tue, 30 Mar 2021 18:09:06 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48937 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232793AbhC3WIo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Mar 2021 17:35:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDD2C061574;
-        Tue, 30 Mar 2021 14:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=z7gpjKduYgeN6oL2kpf0goTjGuX7Jirh6bppui9tmTw=; b=l+hnoP3v0qdie0iPZDvdZiuoBW
-        Iyfz7J0yph9CuU+XlaLvnSo8ku2k7KDd/d+krMIST6s9Fyv/egtQgT3W7t7p6hjWDOv5kSjalw4Ec
-        2UXpr36d7MW1htLT+rvF7dYmYqKfWrD8SaZnI3uaA/Y7LaB/HdZimrmGUV+X/FU5LQdQZd9MAmGR6
-        NDsGb+rIi8T+u5KgbpaQ6qj8t/KO6X+y5CJJ4Kc2mMI6iyux8Pz8u4cQL9Ig/clytqOfua63wAsCW
-        wJwqt1HMRxUeNDwlSLKt9CLSomizp6PDlJyp6MMwFMzNOVpaEZ8iCg/EbLmz5xPDO9FjDdjhTG8xR
-        N8Wq8hZw==;
-Received: from [2601:1c0:6280:3f0::4557]
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lRLyp-003dqg-0Z; Tue, 30 Mar 2021 21:33:07 +0000
-Subject: Re: [PATCH] x86/platform/intel/quark: fix incorrect kernel-doc
- comment syntax in files
-To:     Aditya Srivastava <yashsri421@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     lukas.bulwahn@gmail.com, dvhart@infradead.org, andy@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20210330213022.28769-1-yashsri421@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <1f37b726-7f03-99dc-546f-7d33a1f2c6c9@infradead.org>
-Date:   Tue, 30 Mar 2021 14:32:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Tue, 30 Mar 2021 18:08:44 -0400
+IronPort-SDR: D2MeDUnxbG+iYImGRfvtM3A9AD02RdLV/TZ9uG8K9wmIL0xmpCRCuhoPdhtB5qRnnyyuudfHWL
+ zus9ZxjM4rxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9939"; a="191341943"
+X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
+   d="scan'208";a="191341943"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2021 15:08:43 -0700
+IronPort-SDR: we5lIoaqklH/BWhoMXBYuNlNo2qyQsr+QzNZbSXCX0/UdRn76vILzkUIDbujA1bkuGvWAYnOeB
+ m4qrEAjcvsSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,291,1610438400"; 
+   d="scan'208";a="393779757"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2021 15:08:42 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     mgross@linux.intel.com, hdegoede@redhat.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Account for increased timeout in some cases
+Date:   Tue, 30 Mar 2021 15:08:40 -0700
+Message-Id: <20210330220840.3113959-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <20210330213022.28769-1-yashsri421@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 3/30/21 2:30 PM, Aditya Srivastava wrote:
-> The opening comment mark '/**' is used for highlighting the beginning of
-> kernel-doc comments.
-> There are certain files in arch/x86/platform/intel-quark, which follow this
-> syntax, but the content inside does not comply with kernel-doc.
-> Such lines were probably not meant for kernel-doc parsing, but are parsed
-> due to the presence of kernel-doc like comment syntax(i.e, '/**'), which
-> causes unexpected warnings from kernel-doc.
-> 
-> E.g., presence of kernel-doc like comment in the header lines for
-> arch/x86/platform/intel-quark/imr.c causes these warnings:
-> "warning: Function parameter or member 'fmt' not described in 'pr_fmt'"
-> "warning: expecting prototype for c(). Prototype was for pr_fmt() instead"
-> 
-> Similarly for arch/x86/platform/intel-quark/imr_selftest.c too.
-> 
-> Provide a simple fix by replacing these occurrences with general comment
-> format, i.e. '/*', to prevent kernel-doc from parsing it.
-> 
-> Signed-off-by: Aditya Srivastava <yashsri421@gmail.com>
+In some cases when firmware is busy or updating, some mailbox commands
+still timeout on some newer CPUs. To fix this issue, change how we
+process timeout.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+With this change, replaced timeout from using simple count with real
+timeout in micro-seconds using ktime. When the command response takes
+more than average processing time, yield to other tasks. The worst case
+timeout is extended upto 1 milli-second.
 
-> ---
-> * Applies perfectly on next-20210326
-> 
->  arch/x86/platform/intel-quark/imr.c          | 2 +-
->  arch/x86/platform/intel-quark/imr_selftest.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
-> index 122e0f37b1f5..d3d456925b2a 100644
-> --- a/arch/x86/platform/intel-quark/imr.c
-> +++ b/arch/x86/platform/intel-quark/imr.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0-only
-> -/**
-> +/*
->   * imr.c -- Intel Isolated Memory Region driver
->   *
->   * Copyright(c) 2013 Intel Corporation.
-> diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
-> index 570e3062faac..761f3689f60a 100644
-> --- a/arch/x86/platform/intel-quark/imr_selftest.c
-> +++ b/arch/x86/platform/intel-quark/imr_selftest.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -/**
-> +/*
->   * imr_selftest.c -- Intel Isolated Memory Region self-test driver
->   *
->   * Copyright(c) 2013 Intel Corporation.
-> 
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../intel_speed_select_if/isst_if_mbox_pci.c  | 33 +++++++++++++------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+index a2a2d923e60c..df1fc6c719f3 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
+@@ -21,12 +21,16 @@
+ #define PUNIT_MAILBOX_BUSY_BIT		31
+ 
+ /*
+- * The average time to complete some commands is about 40us. The current
+- * count is enough to satisfy 40us. But when the firmware is very busy, this
+- * causes timeout occasionally.  So increase to deal with some worst case
+- * scenarios. Most of the command still complete in few us.
++ * The average time to complete mailbox commands is less than 40us. Most of
++ * the commands complete in few micro seconds. But the same firmware handles
++ * requests from all power management features.
++ * We can create a scenario where we flood the firmware with requests then
++ * the mailbox response can be delayed for 100s of micro seconds. So define
++ * two timeouts. One for average case and one for long.
++ * If the firmware is taking more than average, just call cond_resched().
+  */
+-#define OS_MAILBOX_RETRY_COUNT		100
++#define OS_MAILBOX_TIMEOUT_AVG_US	40
++#define OS_MAILBOX_TIMEOUT_MAX_US	1000
+ 
+ struct isst_if_device {
+ 	struct mutex mutex;
+@@ -35,11 +39,13 @@ struct isst_if_device {
+ static int isst_if_mbox_cmd(struct pci_dev *pdev,
+ 			    struct isst_if_mbox_cmd *mbox_cmd)
+ {
+-	u32 retries, data;
++	s64 tm_delta = 0;
++	ktime_t tm;
++	u32 data;
+ 	int ret;
+ 
+ 	/* Poll for rb bit == 0 */
+-	retries = OS_MAILBOX_RETRY_COUNT;
++	tm = ktime_get();
+ 	do {
+ 		ret = pci_read_config_dword(pdev, PUNIT_MAILBOX_INTERFACE,
+ 					    &data);
+@@ -48,11 +54,14 @@ static int isst_if_mbox_cmd(struct pci_dev *pdev,
+ 
+ 		if (data & BIT_ULL(PUNIT_MAILBOX_BUSY_BIT)) {
+ 			ret = -EBUSY;
++			tm_delta = ktime_us_delta(ktime_get(), tm);
++			if (tm_delta > OS_MAILBOX_TIMEOUT_AVG_US)
++				cond_resched();
+ 			continue;
+ 		}
+ 		ret = 0;
+ 		break;
+-	} while (--retries);
++	} while (tm_delta < OS_MAILBOX_TIMEOUT_MAX_US);
+ 
+ 	if (ret)
+ 		return ret;
+@@ -74,7 +83,8 @@ static int isst_if_mbox_cmd(struct pci_dev *pdev,
+ 		return ret;
+ 
+ 	/* Poll for rb bit == 0 */
+-	retries = OS_MAILBOX_RETRY_COUNT;
++	tm_delta = 0;
++	tm = ktime_get();
+ 	do {
+ 		ret = pci_read_config_dword(pdev, PUNIT_MAILBOX_INTERFACE,
+ 					    &data);
+@@ -83,6 +93,9 @@ static int isst_if_mbox_cmd(struct pci_dev *pdev,
+ 
+ 		if (data & BIT_ULL(PUNIT_MAILBOX_BUSY_BIT)) {
+ 			ret = -EBUSY;
++			tm_delta = ktime_us_delta(ktime_get(), tm);
++			if (tm_delta > OS_MAILBOX_TIMEOUT_AVG_US)
++				cond_resched();
+ 			continue;
+ 		}
+ 
+@@ -96,7 +109,7 @@ static int isst_if_mbox_cmd(struct pci_dev *pdev,
+ 		mbox_cmd->resp_data = data;
+ 		ret = 0;
+ 		break;
+-	} while (--retries);
++	} while (tm_delta < OS_MAILBOX_TIMEOUT_MAX_US);
+ 
+ 	return ret;
+ }
 -- 
-~Randy
+2.25.4
 
