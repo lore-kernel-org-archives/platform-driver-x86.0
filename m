@@ -2,139 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BA9C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 15:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4E3C433E0
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 21:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5889C619A7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 15:34:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B5F619D4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 21:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232011AbhC3Pdv (ORCPT
+        id S232930AbhC3Vbr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Mar 2021 11:33:51 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:57575 "EHLO gecko.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232335AbhC3Pde (ORCPT
+        Tue, 30 Mar 2021 17:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233389AbhC3Vaf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Mar 2021 11:33:34 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 12UFX7GU024983
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Mar 2021 17:33:07 +0200
-Received: from md1za8fc.ad001.siemens.net ([167.87.2.166])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 12UFN6KW024700;
-        Tue, 30 Mar 2021 17:23:06 +0200
-Date:   Tue, 30 Mar 2021 17:23:05 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>, Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v3 2/4] leds: simatic-ipc-leds: add new driver for
- Siemens Industial PCs
-Message-ID: <20210330172305.67b6e050@md1za8fc.ad001.siemens.net>
-In-Reply-To: <CAHp75VceCsuANZpib6HXJvxgMdJhmr8KPTZgThxKvXq6Yotymg@mail.gmail.com>
-References: <20210329174928.18816-1-henning.schild@siemens.com>
-        <20210329174928.18816-3-henning.schild@siemens.com>
-        <CAHp75Vdh_YAJLE4DWPhxhYY1g5Fc_7EFgr4FED3crpfpzwXeRg@mail.gmail.com>
-        <20210330135808.373c3308@md1za8fc.ad001.siemens.net>
-        <CAHp75Vc0f0HfAJx0KPyQMWjekkhB_T-1+vuR566qAcYGA2JLJA@mail.gmail.com>
-        <20210330143011.0e8ae4a0@md1za8fc.ad001.siemens.net>
-        <CAHp75VceCsuANZpib6HXJvxgMdJhmr8KPTZgThxKvXq6Yotymg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Mar 2021 17:30:35 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5C1C061764;
+        Tue, 30 Mar 2021 14:30:34 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id h25so12664846pgm.3;
+        Tue, 30 Mar 2021 14:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=z5Pwgcx5jldQHTjihKz5LQ36Y/UBnw6DyXH2bNjldL4=;
+        b=UGG9UGBn4yDKVdheETHJU7898bNJ/rOuhIOxBtRrO5s7lVCtAFCACSWJtixvuDw64V
+         avttHcBLJfEOaTetoOchdDeXmg0e/gnTTNc2CAUmr2qFiBqbvq+y3GI/BXAGLoZ+/3Ha
+         sNQx0aUpHlWBg46RtfrfkgktB7PCDcDfyy1H9egsSNoshINTjQgFHy7WkdS1FMaFP3KM
+         fLzvEYZp+VpSkB/yc9qXQ6DDR7xWj1AR9pb2m4o+Nd4wKAyD4xOe663Rh/LWfcpv528Z
+         z2VaP3/CoRKF+g/ttZgVDUG6w37MCDne5WFQEAbAjg2vSRCgjr9bOXYaEx7wAFkjScE7
+         Kv6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z5Pwgcx5jldQHTjihKz5LQ36Y/UBnw6DyXH2bNjldL4=;
+        b=j3naOb1vsDtc+eBE2twJ2+DjGakDqJwKsRa9Act9SgnrHE1pD0rbGAOGjH3YKy8Lio
+         bmdQKErUoBzSzieH0DfjxDW2+Gbtp/8/PFHIxSnW2isIJaiJhhDLIIpr5aQWhOliRgV1
+         ltf+TA9Q7eAbpwEsCoAMV9LF1Bas9r94j/iHT/IsMLlCJzDXKWZmApMTiGKTZ9Qbo5Lf
+         jB+xa2RHBYoQjsfIXWWR9CxS3GDES3HRd41CHgI7ZSFh+96crIdzKulVum7WXl7fMJeE
+         X+uDw8g1Hkjc9EVA6hJhfyifPM15xctk7L8x9zf3mC7C8e5Z+CAl1MHb5dy1BQ8/KY6m
+         1CtQ==
+X-Gm-Message-State: AOAM532uYh9mhtStI/te/dgZDpsGG2wIR3m5BhQK0hM+xFI9EHSUpCwu
+        G6TQe4lN99gAG6X/G2AjZCFUz3bsubXDk2UL
+X-Google-Smtp-Source: ABdhPJzHUE6m7pRCZgtHJX31O2SfZcliToVP6diuEqC05Weo1MXgQ7Ug5Zw6trKkMAWPqAgGvlDy8w==
+X-Received: by 2002:a62:764c:0:b029:1ef:20d2:b44 with SMTP id r73-20020a62764c0000b02901ef20d20b44mr30852603pfc.45.1617139833611;
+        Tue, 30 Mar 2021 14:30:33 -0700 (PDT)
+Received: from localhost.localdomain ([2405:201:600d:a089:d1c0:d79d:e260:a650])
+        by smtp.googlemail.com with ESMTPSA id i10sm8332761pjm.1.2021.03.30.14.30.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Mar 2021 14:30:33 -0700 (PDT)
+From:   Aditya Srivastava <yashsri421@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     yashsri421@gmail.com, lukas.bulwahn@gmail.com,
+        rdunlap@infradead.org, dvhart@infradead.org, andy@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-doc@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH] x86/platform/intel/quark: fix incorrect kernel-doc comment syntax in files
+Date:   Wed, 31 Mar 2021 03:00:22 +0530
+Message-Id: <20210330213022.28769-1-yashsri421@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am Tue, 30 Mar 2021 15:41:53 +0300
-schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
+The opening comment mark '/**' is used for highlighting the beginning of
+kernel-doc comments.
+There are certain files in arch/x86/platform/intel-quark, which follow this
+syntax, but the content inside does not comply with kernel-doc.
+Such lines were probably not meant for kernel-doc parsing, but are parsed
+due to the presence of kernel-doc like comment syntax(i.e, '/**'), which
+causes unexpected warnings from kernel-doc.
 
-> On Tue, Mar 30, 2021 at 3:35 PM Henning Schild
-> <henning.schild@siemens.com> wrote:
-> > Am Tue, 30 Mar 2021 15:15:16 +0300
-> > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:  
-> > > On Tue, Mar 30, 2021 at 2:58 PM Henning Schild
-> > > <henning.schild@siemens.com> wrote:  
-> > > > Am Tue, 30 Mar 2021 14:04:35 +0300
-> > > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:  
-> > > > > On Mon, Mar 29, 2021 at 8:59 PM Henning Schild
-> > > > > <henning.schild@siemens.com> wrote:  
-> 
-> > > > > > +static struct simatic_ipc_led simatic_ipc_leds_mem[] = {
-> > > > > > +       {0x500 + 0x1A0, "red:" LED_FUNCTION_STATUS "-1"},
-> > > > > > +       {0x500 + 0x1A8, "green:" LED_FUNCTION_STATUS "-1"},
-> > > > > > +       {0x500 + 0x1C8, "red:" LED_FUNCTION_STATUS "-2"},
-> > > > > > +       {0x500 + 0x1D0, "green:" LED_FUNCTION_STATUS "-2"},
-> > > > > > +       {0x500 + 0x1E0, "red:" LED_FUNCTION_STATUS "-3"},
-> > > > > > +       {0x500 + 0x198, "green:" LED_FUNCTION_STATUS "-3"},
-> > > > > > +       { }
-> > > > > > +};  
-> > > > >
-> > > > > It seems to me like poking GPIO controller registers directly.
-> > > > > This is not good. The question still remains: Can we simply
-> > > > > register a GPIO (pin control) driver and use an LED GPIO
-> > > > > driver with an additional board file that instantiates it?  
-> > > >
-> > > > I wrote about that in reply to the cover letter. My view is
-> > > > still that it would be an abstraction with only one user, just
-> > > > causing work and likely not ending up as generic as it might
-> > > > eventually have to be.
-> > > >
-> > > > The region is reserved, not sure what the problem with the
-> > > > "poking" is.  
-> > >
-> > >  
-> > > > Maybe i do not understand all the benefits of such a split at
-> > > > this point in time. At the moment i only see work with hardly
-> > > > any benefit, not just work for me but also for maintainers. I
-> > > > sure do not mean to be ignorant. Maybe you go into details and
-> > > > convince me or we wait for other peoples opinions on how to
-> > > > proceed, maybe there is a second user that i am not aware of?
-> > > > Until i am convinced otherwise i will try to argue that a
-> > > > single-user-abstraction is needless work/code, and should be
-> > > > done only when actually needed.  
-> > >
-> > > I have just read your messages (there is a cover letter and
-> > > additional email which was sent lately).
-> > >
-> > > I would like to know what the CPU model number on that board is.
-> > > Than we can continue to see what possibilities we have here.  
-> >
-> > I guess we are talking about the one that uses memory mapped, that
-> > is called an "IPC127E" and seems to have either Intel Atom E3940 or
-> > E3930 which seems to be Apollo Lake.  
-> 
-> Yep. And now the question, in my patch series you should have got the
-> apollolake-pinctrl driver loaded (if not, we have to investigate why
-> it's not being instantiated). This will give you a read GPIO driver.
+E.g., presence of kernel-doc like comment in the header lines for
+arch/x86/platform/intel-quark/imr.c causes these warnings:
+"warning: Function parameter or member 'fmt' not described in 'pr_fmt'"
+"warning: expecting prototype for c(). Prototype was for pr_fmt() instead"
 
-Ok, so there is the existing driver i asked about several times. Thanks
-for pointing it out.
+Similarly for arch/x86/platform/intel-quark/imr_selftest.c too.
 
-> So, you may use regular LED GPIO on top of it
-> (https://elixir.bootlin.com/linux/latest/source/drivers/leds/leds-gpio.c).
-> I would like to understand why it can't be achieved.
+Provide a simple fix by replacing these occurrences with general comment
+format, i.e. '/*', to prevent kernel-doc from parsing it.
 
-Will have a look. Unfortunately this one box is missing in my personal
-collection, but let us assume that one can be converted to that
-existing driver.
-I guess that will still mean the PIO-based part of the LED driver will
-have to stay as is.
+Signed-off-by: Aditya Srivastava <yashsri421@gmail.com>
+---
+* Applies perfectly on next-20210326
 
-regards,
-Henning
+ arch/x86/platform/intel-quark/imr.c          | 2 +-
+ arch/x86/platform/intel-quark/imr_selftest.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+index 122e0f37b1f5..d3d456925b2a 100644
+--- a/arch/x86/platform/intel-quark/imr.c
++++ b/arch/x86/platform/intel-quark/imr.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/**
++/*
+  * imr.c -- Intel Isolated Memory Region driver
+  *
+  * Copyright(c) 2013 Intel Corporation.
+diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
+index 570e3062faac..761f3689f60a 100644
+--- a/arch/x86/platform/intel-quark/imr_selftest.c
++++ b/arch/x86/platform/intel-quark/imr_selftest.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/**
++/*
+  * imr_selftest.c -- Intel Isolated Memory Region self-test driver
+  *
+  * Copyright(c) 2013 Intel Corporation.
+-- 
+2.17.1
+
