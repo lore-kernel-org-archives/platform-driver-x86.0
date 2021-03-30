@@ -2,143 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5A9C433DB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 06:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CCAC433C1
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 07:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A9A61987
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 06:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F60F61996
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 30 Mar 2021 07:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230411AbhC3Gtx (ORCPT
+        id S230122AbhC3HS7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 30 Mar 2021 02:49:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbhC3Gtq (ORCPT
+        Tue, 30 Mar 2021 03:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229468AbhC3HSj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 30 Mar 2021 02:49:46 -0400
-Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E94C061764
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Mar 2021 23:49:46 -0700 (PDT)
-Received: by mail-vk1-xa34.google.com with SMTP id w63so3330039vkf.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 29 Mar 2021 23:49:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=deviqon.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tf2KzUlyksDFUDRISHkB0sElt3B4+D1u0mtS+5lxeuA=;
-        b=GjV6UMKOXOseT3Sqr7BuWmhe6oAE3wXsIuhOD1r28O4ehqpMfZsjPzj+pfMJerPAwJ
-         Utw1oegCbKxUG9FHhXr3Uspq2CcUWlU2miMod9GIyh2ep1YtF3oXT4BcUIt82DiPkoKH
-         0scxjMU6a/OkCtTMhZD4qHWxTTbipBQqwAPaZQTms5et6cTDwoMiJ9SLuHD5U8Fo+pNb
-         7Did25h38asg5xPJMX4ArFyV1mwqTz4vbVIKCHYaeKuM+lyCa79ck97pLOv9eAtFsGCl
-         AVvRqqb+23eAp2s1VkRMf0CPaEZ0MOPtRZt66QLBdsY4om+r7nyUoiYFwHLEatpRd8hb
-         aotQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tf2KzUlyksDFUDRISHkB0sElt3B4+D1u0mtS+5lxeuA=;
-        b=aNSqnNnT7oKeIC8e2FBaNsCPZPmuE0uedgVSblxAlgT9Ycqbg8D1dTL/2+FZa0qmrA
-         dSojazQtn67OEMpvLYW3Iv2XDDcALc0VfHq21aPVZvymWYXSBOmPd5Iel7B6xgu55Pm7
-         26ojM57JjObx0e6KdVUgJhq1zH/D4Pa5cVIsihyPqagTgfAbpjEQbMBI5qsw7BX6yIiO
-         PFyf1ZRyOmuz4TGWpknuRYosIAQr6ueGaAwJroiMI4HaZpv06pKFVyeG8JfXRThS1R4L
-         eBgZNaQRGyvcvSuGk9A+ZiLDKwnn8DbbJ/B92lbKRbQ6YknSDf9H0tvgywWcAE/F/N4u
-         89sQ==
-X-Gm-Message-State: AOAM5320a+zoZWXzh3plOuWYd8YEjKMfEoHyNEye6RD5nlcKFyWtHWM/
-        VQVqMezB0mlPTyUjEp1DS3yomV4jPy2KLSNrf83MoL3NcjHAIw==
-X-Google-Smtp-Source: ABdhPJzCqUzElRvOlJEi5Dts0dowTDaJFhNXQpbCsA1NGWQiHbo38LeVxiLnqXS4SfAslDDedekqISDB49avU1orJwM=
-X-Received: by 2002:a1f:18c9:: with SMTP id 192mr17037924vky.11.1617086985525;
- Mon, 29 Mar 2021 23:49:45 -0700 (PDT)
+        Tue, 30 Mar 2021 03:18:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B1D761935;
+        Tue, 30 Mar 2021 07:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617088718;
+        bh=e6UPwPG74FOABGApPWCXz/djBRTKYrByDn3V+BQ9B7k=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=I40GbXr8LjGDORwww9mOgGw971CcBoFOHTjKLw+ompdO/L3gKCpuV3D7JTMhKqtus
+         BW/OmPDac0e3Pe81cAIke2EpCPFWaZr+kJar9z1jp81V8i38PChgfbnP4izK3UUm9r
+         qqp8dAm5yE75rhjZEUnUXIdtJGvL/Cq5bh5zSvj/nuA2BZnYVbzi2BFIr78MQOzGLP
+         8nqHQRpy8c7T/8n/Omx1UnyMQjDjsl1tuPjSH2inhGvT2DvgHUS27lCvXYpo6KfwgY
+         32u7ygHHRioAFmSELh31XBBBCByxm3KEjAAcwOIAM50dNnG1GTlTu3azBexxAFReW1
+         uq2c80rLKkuBw==
+Date:   Tue, 30 Mar 2021 09:18:35 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+cc:     Sebastian Reichel <sre@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [GIT PULL] Immutable branch between drivers/platform/x86 and
+ HID resp. drivers/power/supply due for the v5.13 merge window
+In-Reply-To: <ef994907-61c7-2e0e-f26d-25b06a5dbf0f@redhat.com>
+Message-ID: <nycvar.YFH.7.76.2103300918170.12405@cbobk.fhfr.pm>
+References: <ef994907-61c7-2e0e-f26d-25b06a5dbf0f@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-References: <20210324125548.45983-1-aardelean@deviqon.com> <20210324125548.45983-2-aardelean@deviqon.com>
- <20210329153047.57904ab4@jic23-huawei>
-In-Reply-To: <20210329153047.57904ab4@jic23-huawei>
-From:   Alexandru Ardelean <aardelean@deviqon.com>
-Date:   Tue, 30 Mar 2021 09:49:34 +0300
-Message-ID: <CAASAkob8J0KJwOb0ENgzYJSvnXazdNpvcrF8C77qxMfEFmA3vw@mail.gmail.com>
-Subject: Re: [PATCH 01/10] platform/x86: toshiba_acpi: bind life-time of
- toshiba_acpi_dev to parent
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, coproscefalo@gmail.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, linux@deviqon.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 29 Mar 2021 at 17:30, Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Wed, 24 Mar 2021 14:55:39 +0200
-> Alexandru Ardelean <aardelean@deviqon.com> wrote:
->
-> > The 'toshiba_acpi_dev' object is allocated first and free'd last. We can
-> > bind it's life-time to the parent ACPI device object. This is a first step
-> > in using more device-managed allocated functions for this.
-> >
-> > The main intent is to try to convert the IIO framework to export only
-> > device-managed functions (i.e. devm_iio_device_alloc() and
-> > devm_iio_device_register()). It's still not 100% sure that this is
-> > possible, but for now, this is the process of taking it slowly in that
-> > direction.
-> >
-> > Signed-off-by: Alexandru Ardelean <aardelean@deviqon.com>
->
-> Might just be me, but naming anything dev that isn't a struct device *
-> is downright confusing?
->
+On Thu, 18 Mar 2021, Hans de Goede wrote:
 
-I found it a bit odd as well, but I decided to not take it in
-consideration for now.
+> Hi Sebastian, Jiri,
+> 
+> Here is a pull-req with the drivers/platform/surface changes necessary
+> as prereqs for the surface power_supply resp. HID patches which have been
+> submitted to you.
+> 
+> Note the dependency seems to purely be a runtime/Kconfig one, so theoretically
+> the patches could be merged without this, but then they cannot be compile-tested,
+> since the "depends on SURFACE_AGGREGATOR_REGISTRY" then will never be true.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> The following changes since commit a38fd8748464831584a19438cbb3082b5a2dab15:
+> 
+>   Linux 5.12-rc2 (2021-03-05 17:33:41 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-surface-aggregator-v5.13-1
+> 
+> for you to fetch changes up to aebf0a11a8c1fb6444d1365db97f90672199a867:
+> 
+>   platform/surface: aggregator_registry: Add HID subsystem devices (2021-03-06 10:23:26 +0100)
 
->
->
->
-> > ---
-> >  drivers/platform/x86/toshiba_acpi.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-> > index fa7232ad8c39..6d298810b7bf 100644
-> > --- a/drivers/platform/x86/toshiba_acpi.c
-> > +++ b/drivers/platform/x86/toshiba_acpi.c
-> > @@ -2998,8 +2998,6 @@ static int toshiba_acpi_remove(struct acpi_device *acpi_dev)
-> >       if (toshiba_acpi)
-> >               toshiba_acpi = NULL;
-> >
-> > -     kfree(dev);
-> > -
-> >       return 0;
-> >  }
-> >
-> > @@ -3016,6 +3014,7 @@ static const char *find_hci_method(acpi_handle handle)
-> >
-> >  static int toshiba_acpi_add(struct acpi_device *acpi_dev)
-> >  {
-> > +     struct device *parent = &acpi_dev->dev;
-> >       struct toshiba_acpi_dev *dev;
-> >       const char *hci_method;
-> >       u32 dummy;
-> > @@ -3033,7 +3032,7 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
-> >               return -ENODEV;
-> >       }
-> >
-> > -     dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> > +     dev = devm_kzalloc(parent, sizeof(*dev), GFP_KERNEL);
-> >       if (!dev)
-> >               return -ENOMEM;
-> >       dev->acpi_dev = acpi_dev;
-> > @@ -3045,7 +3044,6 @@ static int toshiba_acpi_add(struct acpi_device *acpi_dev)
-> >       ret = misc_register(&dev->miscdev);
-> >       if (ret) {
-> >               pr_err("Failed to register miscdevice\n");
-> > -             kfree(dev);
-> >               return ret;
-> >       }
-> >
->
+Pulled into hid.git#for-5.13/surface-system-aggregator-intergration.
+
+Thanks,
+
+-- 
+Jiri Kosina
+SUSE Labs
+
