@@ -2,97 +2,98 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4F3C43611
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 17:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094ADC43600
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 18:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDCA61159
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 17:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D299060240
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 18:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234938AbhDARzw (ORCPT
+        id S237054AbhDASSq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Apr 2021 13:55:52 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:34602 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236410AbhDARom (ORCPT
+        Thu, 1 Apr 2021 14:18:46 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:45439 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238618AbhDASJs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Apr 2021 13:44:42 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131GMG3x012816;
-        Thu, 1 Apr 2021 12:22:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=smtpout1; bh=amhyBFWYg660b275fb3PiPThRjnmySpyVBJZ9j3pYgI=;
- b=rPceU7gQMhSedF8nSFORfW9yO+FEpyxwXVr3CC3wrgeYSpyE0ScphWfD+EUyLvGGbg53
- +EcgnuvByXJLp8KOzLGSj23pxGR9INEYsV2NBIz2ygzOJgSE6CQH3qMYdIDDBXz4LFGw
- YwpqZ3saH5SI9wfH6vSpJ+fj0uhbc1psO3Ux9wWXIZDELfaW6BD7WzVA0hwTsRNryxxy
- AKasHDpqCoXh6BrIORn+w1tFycIifmZWGn22X3tbVyjB0l1zQqMyZA/6pPN2fa1WvwAl
- qbgu8tkqjaGbm6RkoFe4NL2vDKmA1Wu0l+5/rT306ZC9V5ieBdPwDOhsvggESA2cHvCJ rA== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 37n299b49p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 01 Apr 2021 12:22:25 -0400
-Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131EJwVO141020;
-        Thu, 1 Apr 2021 12:22:25 -0400
-Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
-        by mx0a-00154901.pphosted.com with ESMTP id 37n6cem6k0-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 01 Apr 2021 12:22:24 -0400
-X-LoopCount0: from 10.177.160.151
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.81,296,1610431200"; 
-   d="scan'208";a="618976136"
-From:   Mario Limonciello <mario.limonciello@dell.com>
-To:     Hans De Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@outlook.com>,
-        Mario Limonciello <mario.limonciello@dell.com>
-Subject: [PATCH 0/3] Adjust contacts for Dell drivers
-Date:   Thu,  1 Apr 2021 11:22:03 -0500
-Message-Id: <20210401162206.26901-1-mario.limonciello@dell.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 1 Apr 2021 14:09:48 -0400
+Received: from [192.168.1.155] ([95.114.120.255]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mxlio-1lpRFh0GyM-00zFhl; Thu, 01 Apr 2021 18:15:43 +0200
+Subject: Re: [PATCH v3 3/4] watchdog: simatic-ipc-wdt: add new driver for
+ Siemens Industrial PCs
+To:     Henning Schild <henning.schild@siemens.com>,
+        linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20210329174928.18816-1-henning.schild@siemens.com>
+ <20210329174928.18816-4-henning.schild@siemens.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <ffdfe9a9-ab17-18af-300e-062b79d132f3@metux.net>
+Date:   Thu, 1 Apr 2021 18:15:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
+In-Reply-To: <20210329174928.18816-4-henning.schild@siemens.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-28_03:2021-03-26,2021-03-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 mlxscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- suspectscore=0 spamscore=0 mlxlogscore=662 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
- definitions=main-2104010093
-X-Proofpoint-GUID: Sp87cyChh7nNDuNxhD8JEk2sSVzTFB4k
-X-Proofpoint-ORIG-GUID: Sp87cyChh7nNDuNxhD8JEk2sSVzTFB4k
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=805 adultscore=0 bulkscore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
- definitions=main-2104010107
+X-Provags-ID: V03:K1:mZl+/Fxt0NAigmLCH+RKccI3nE5xVjZG1xhGoPUgCxNSXAPqiMk
+ S9U84N7eW7dsD5O10wzfTPVnBv3R4PqEnqCSUCAC0WPCG0h2NbnNAl+zUpmSy7xb6z34dWa
+ W7Sp+3iSb/gJINI7M6KgJlUZoRypT/s5uqJ2mpqPT1/wsHl/phqOpvzs0ebTMg5vgbZL0f2
+ jv/KHgLgD3iBP1j67CACw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vWF9FgB7mL8=:UG6L83VGSPgRsVAviCBrxt
+ KXA9dc0Vp+RuCgdsB+XC/Qwyr/LgC+xNnFeLHgByex/68aGjqseF8jord8HHgtvn1/sL3Qh9P
+ qjATQnm0IBEwteNtgjRUYOGZhJLd8aBFj3GoMBfHhkOld+f4iXwjrJGmcPGojmRSVXkICDFeQ
+ JqJEcnXPizz7ntzhqY9PggqHlO6VhLxrWMDIGeaHJgMFUciombnIDONf8iX6K39sVJFAkfccS
+ u7CvrQELD2gjN3DvjrqwcR9V5jhBqPa5Zc4UdX2loNXuwEkSGSVGQtn6Xwi0r2cGZ3UN74Usx
+ XD3UJKVWJlCQjzbaIiEXIpq9qiqzIEtIF48kH9gzNRmOlrIIqLJ97CLy9LJNV+Peo4fc3B742
+ 2B1eJcMlor/v7G2WuVCl9kjivhJdRBd9gluP1JlJqACC12epgJX06mKA7y4JRE2J8jaCdgEGC
+ 3ivlcz7rxOS2m0lC3t5Hb3ism7N0KdglsVHyrG8gm0V1NDKXN2TX
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Dell drivers I'm involved with all have me as an author and/or
-maintainer.  In the future these will be maintained as a team effort.
-Adjust the contact addresses accordingly.
+On 29.03.21 19:49, Henning Schild wrote:
 
-Mario Limonciello (3):
-  MAINTAINERS: Adjust Dell drivers to email alias
-  MAINTAINERS: Add missing section for alienware-wmi driver
-  platform/x86: Adjust Dell drivers to a personal email address
+Hi,
 
- MAINTAINERS                                     | 17 +++++++++++------
- drivers/platform/x86/dell/alienware-wmi.c       |  4 ++--
- drivers/platform/x86/dell/dell-smbios-base.c    |  2 +-
- drivers/platform/x86/dell/dell-wmi-descriptor.c |  2 +-
- .../platform/x86/dell/dell-wmi-sysman/sysman.c  |  2 +-
- 5 files changed, 16 insertions(+), 11 deletions(-)
+> This driver adds initial support for several devices from Siemens. It is
+> based on a platform driver introduced in an earlier commit.
+
+Where does the wdt actually come from ?
+
+Is it in the SoC ? (which SoC exactly). SoC-builtin wdt is a pretty 
+usual case.
+
+Or some external chip ?
+
+The code smells a bit like two entirely different wdt's that just have
+some similarities. If that's the case, I'd rather split it into two
+separate drivers and let the parent driver (board file) instantiate
+the correct one.
+
+
+--mtx
 
 -- 
-2.25.1
-
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
