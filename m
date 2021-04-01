@@ -2,102 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5462C4360C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 18:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3048C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 19:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B604A601FC
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 18:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979566101A
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 19:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237121AbhDASSr (ORCPT
+        id S235043AbhDATFT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Apr 2021 14:18:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:34391 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237761AbhDASMG (ORCPT
+        Thu, 1 Apr 2021 15:05:19 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:20446 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239459AbhDATEA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:12:06 -0400
-Received: from [192.168.1.155] ([95.114.120.255]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MD9Kj-1lItNN1Tyj-0095AP; Thu, 01 Apr 2021 18:20:52 +0200
-Subject: Re: [PATCH v2 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-References: <20210315095710.7140-1-henning.schild@siemens.com>
- <20210315095710.7140-3-henning.schild@siemens.com>
- <CAHp75VcBdR8xqfWqKe+DwGAUYByVL7SBK0p7tHcKPs7m4Ay1iw@mail.gmail.com>
- <20210315111915.GA14857@duo.ucw.cz>
- <50836593-d5c9-421f-9140-2c65ac6fabe4@metux.net>
- <20210327104610.344afebc@md1za8fc.ad001.siemens.net>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <647d9b70-4efe-41e6-e592-74331d66b675@metux.net>
-Date:   Thu, 1 Apr 2021 18:20:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        Thu, 1 Apr 2021 15:04:00 -0400
+Received: from pps.filterd (m0170389.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131GLxRp026520;
+        Thu, 1 Apr 2021 12:22:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=smtpout1;
+ bh=iBPTbuhFjQOOjvwt1aCiV3+hr34oV8Ho0oel20VKu1A=;
+ b=ExgZa5CMe+r8oIDOZdAPw1fR10JDuu6ePuBJvBpFHKJ1GN9LtEbxX1Wmv4NNxZOOXieG
+ 0lST7AWb4HpzMHZlGUkjaejUqE/9K2ZE9+QWAUITy1/JoxqfH5kL+9itkXBvGT3Plwlt
+ GFxmYb5rAvXUrlWPnTm+uhkWUBwbi+EEstJ7Dyi+XVFJP+IBhO6dxbS4Ekun6tQhRKGz
+ UyYQqFGfG9Cg5VxZ+gnWopdvqWPaCgCsiTiZE4/0eGXLA2rcN4nFJiBhEIjzFfGwKJ4S
+ nZEYDjT7ik95EqYcxy1vsjPOlRsXAQyJMMsozzK/8DZEKbxl2NcTbMbygUxCHsM9LNib BA== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 37n28uu4ht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Apr 2021 12:22:25 -0400
+Received: from pps.filterd (m0090351.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131G5iZt037646;
+        Thu, 1 Apr 2021 12:22:25 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0b-00154901.pphosted.com with ESMTP id 37n2arns7r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Apr 2021 12:22:25 -0400
+X-LoopCount0: from 10.177.160.151
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.81,296,1610431200"; 
+   d="scan'208";a="618976139"
+From:   Mario Limonciello <mario.limonciello@dell.com>
+To:     Hans De Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH 1/3] MAINTAINERS: Adjust Dell drivers to email alias
+Date:   Thu,  1 Apr 2021 11:22:04 -0500
+Message-Id: <20210401162206.26901-2-mario.limonciello@dell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210401162206.26901-1-mario.limonciello@dell.com>
+References: <20210401162206.26901-1-mario.limonciello@dell.com>
 MIME-Version: 1.0
-In-Reply-To: <20210327104610.344afebc@md1za8fc.ad001.siemens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mNglDIX27fLWItHQlziK/n+IY7HGTMabBbBP4e/KFtQ0p40i4z/
- Z3bfdaOjDN0xGaksYuJQC78S/UTb0Tx9jleuOfKumDqN6D48g8BPhbcRE3Nl4msCmUz6wGT
- cxB5vTjwyUmUEbCXM9bHndSkbRk94IZhVWNLBwt5iP3My13QtR4XAjtF/6jqDaIx03Lyl7X
- /L/oV8NRT3tOs2Z1AbG/A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zv3heeluCKs=:hpK/+L7wEVi4G//3IOx+9b
- aoRBbL8+G/cOOfzYk9m+TikKMe/bUT+veAFcQdzo2v9AWS3P27rCfDITEf3zQ72Y2y5OAN78C
- 1wHqALJRpv8q6S8CZCA2xJrFMoIWMkmTdbyTpRdHls3TBUANoZpDJeIWA1AOSWBpC9f7b8Hbl
- c/sf7cP25OJC9BkmqX4bhQdQXq5Y4Q19aMTkf08m3B61RZEw5iuPXfySmBwBQ/yAoPJ8OPgts
- h6xNFTa546nd48QPN91x/8t8O513HA2FewPGxi6YQBzu0g+5/4eEo1PLbrviFBy9ca+3pgvyj
- qndEMEnvRFGzEG0Z9Tq/n79a2rqSN9CMsCbGrb/715yjPyaGno7jtRq2F5TNIfqxDM4Y/w5SH
- lmM0NMVfBqdAuqwwDD4/jakzk+D69qL1Syt+Fjifog8zQna6BKbhMn4JmniWHE/v8z+uOPzSV
- jYAvyUw0JEvMdt9IjYC7mXs6r12/zAg=
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-04-01_07:2021-04-01,2021-04-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ malwarescore=0 adultscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2103310000 definitions=main-2104010106
+X-Proofpoint-GUID: 6NsWL5aTBH0r1KDaDVRH-69IklVTBuwl
+X-Proofpoint-ORIG-GUID: 6NsWL5aTBH0r1KDaDVRH-69IklVTBuwl
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
+ definitions=main-2104010107
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 27.03.21 10:46, Henning Schild wrote:
+A team of engineers will be helping to service these drivers in
+the future rather than just one person.
 
->> In this case, they seem to be assigned to certain specific functions
->> (by physical labels on the box), so IMHO the LED names should reflect
->> that in some ways.
-> 
-> The choice for "status" was because of
-> 
->>> /* Miscelleaus functions. Use functions above if you can. */
-> 
-> And those known names do not really come with an explanation of their
-> meaning. Names like "bluetooth" seem obvious, but "activity" or
-> "indicator" leave a lot of room for speculation.
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ MAINTAINERS | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Maybe we should revise these and add more functions ?
-
-Can you find out some more details, what these LEDs really had been
-intented for ?
-
---mtx
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6e91994b8d3b..46c8fadb59c3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5034,19 +5034,19 @@ F:	drivers/platform/x86/dell/dell_rbu.c
+ 
+ DELL SMBIOS DRIVER
+ M:	Pali Rohár <pali@kernel.org>
+-M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell/dell-smbios.*
+ 
+ DELL SMBIOS SMM DRIVER
+-M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell/dell-smbios-smm.c
+ 
+ DELL SMBIOS WMI DRIVER
+-M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -5060,14 +5060,14 @@ F:	Documentation/driver-api/dcdbas.rst
+ F:	drivers/platform/x86/dell/dcdbas.*
+ 
+ DELL WMI DESCRIPTOR DRIVER
+-M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ S:	Maintained
+ F:	drivers/platform/x86/dell/dell-wmi-descriptor.c
+ 
+ DELL WMI SYSMAN DRIVER
+ M:	Divya Bharathi <divya.bharathi@dell.com>
+-M:	Mario Limonciello <mario.limonciello@dell.com>
+ M:	Prasanth Ksr <prasanth.ksr@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -9242,7 +9242,7 @@ W:	https://slimbootloader.github.io/security/firmware-update.html
+ F:	drivers/platform/x86/intel-wmi-sbl-fw-update.c
+ 
+ INTEL WMI THUNDERBOLT FORCE POWER DRIVER
+-M:	Mario Limonciello <mario.limonciello@dell.com>
++L:	Dell.Client.Kernel@dell.com
+ S:	Maintained
+ F:	drivers/platform/x86/intel-wmi-thunderbolt.c
+ 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.25.1
+
