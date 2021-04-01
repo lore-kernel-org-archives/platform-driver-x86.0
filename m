@@ -2,50 +2,50 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74154C43470
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C9BC4360C
 	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 03:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A7761059
+	by mail.kernel.org (Postfix) with ESMTP id 5B5BA61076
 	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 03:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbhDADGn (ORCPT
+        id S233393AbhDADGp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 31 Mar 2021 23:06:43 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60449 "EHLO mga09.intel.com"
+        Wed, 31 Mar 2021 23:06:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60453 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232763AbhDADGR (ORCPT
+        id S233205AbhDADGU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 31 Mar 2021 23:06:17 -0400
-IronPort-SDR: JUQjAphHwptaOx24KLUx0Y5pUTpRIiRaDtwS1pXbvc2C8ib4l8lhpGl+YdGGdHHBZC03d1ZKww
- ZZ66yeXRohQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9940"; a="192241100"
+        Wed, 31 Mar 2021 23:06:20 -0400
+IronPort-SDR: MHTnGe5tcvXAV0BuuScgnCQlF3ni2j0pDUBPyUhLiHRL1zJ1+L3lcTN7nWXTbSQji7Ub3MzOjF
+ O5gbcwISEAYw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9940"; a="192241097"
 X-IronPort-AV: E=Sophos;i="5.81,295,1610438400"; 
-   d="scan'208";a="192241100"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
+   d="scan'208";a="192241097"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2021 20:06:16 -0700
-IronPort-SDR: QZOWVC6s0Q5InEau380tq4/79ZsBPOb1PIQoMcOrYcC3codWFZHjqnr51iC+BxwQRfM6HcPHH6
- wvfXJcsvX9/w==
+IronPort-SDR: WLQRyNWupYXJ3rCP35OUDZPMLkayBykqQxUHoOHoQ54IroD2AxEh4CDh/G+F2f08RUXus+OvBG
+ VBHvgBmzKD5A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.81,295,1610438400"; 
-   d="scan'208";a="416487611"
+   d="scan'208";a="384668338"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 31 Mar 2021 20:06:16 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 31 Mar 2021 20:06:16 -0700
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 8D14C58094C;
+        by linux.intel.com (Postfix) with ESMTP id 4520B580949;
         Wed, 31 Mar 2021 20:06:16 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     irenic.rajneesh@gmail.com, hdegoede@redhat.com,
         david.e.box@linux.intel.com, mgross@linux.intel.com,
         gayatri.kammela@intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/9] platform/x86: intel_pmc_core: Get LPM requirements for Tiger Lake
-Date:   Wed, 31 Mar 2021 20:05:54 -0700
-Message-Id: <20210401030558.2301621-6-david.e.box@linux.intel.com>
+Subject: [PATCH 1/9] platform/x86: intel_pmc_core: Don't use global pmcdev in quirks
+Date:   Wed, 31 Mar 2021 20:05:50 -0700
+Message-Id: <20210401030558.2301621-2-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210401030558.2301621-1-david.e.box@linux.intel.com>
 References: <20210401030558.2301621-1-david.e.box@linux.intel.com>
@@ -55,128 +55,70 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Gayatri Kammela <gayatri.kammela@intel.com>
+The DMI callbacks, used for quirks, currently access the PMC by getting
+the address a global pmc_dev struct. Instead, have the callbacks set a
+global quirk specific variable. In probe, after calling dmi_check_system(),
+pass pmc_dev to a function that will handle each quirk if its variable
+condition is met. This allows removing the global pmc_dev later.
 
-Platforms that support low power modes (LPM) such as Tiger Lake maintain
-requirements for each sub-state that a readable in the PMC. However, unlike
-LPM status registers, requirement registers are not memory mapped but are
-available from an ACPI _DSM. Collect the requirements for Tiger Lake using
-the _DSM method and store in a buffer.
-
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
-Co-developed-by: David E. Box <david.e.box@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 49 +++++++++++++++++++++++++++
- drivers/platform/x86/intel_pmc_core.h |  2 ++
- 2 files changed, 51 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index ba0db301f07b..0ec26a4c715e 100644
+index b5888aeb4bcf..260d49dca1ad 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -23,7 +23,9 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/uaccess.h>
-+#include <linux/uuid.h>
- 
-+#include <acpi/acpi_bus.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
- #include <asm/msr.h>
-@@ -31,6 +33,9 @@
- 
- #include "intel_pmc_core.h"
- 
-+#define ACPI_S0IX_DSM_UUID		"57a6512e-3979-4e9d-9708-ff13b2508972"
-+#define ACPI_GET_LOW_MODE_REGISTERS	1
-+
- /* PKGC MSRs are common across Intel Core SoCs */
- static const struct pmc_bit_map msr_map[] = {
- 	{"Package C2",                  MSR_PKG_C2_RESIDENCY},
-@@ -587,6 +592,46 @@ static const struct pmc_reg_map tgl_reg_map = {
- 	.lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
- };
- 
-+static void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
-+{
-+	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-+	const int num_maps = pmcdev->map->lpm_num_maps;
-+	size_t lpm_size = LPM_MAX_NUM_MODES * num_maps * 4;
-+	union acpi_object *out_obj;
-+	struct acpi_device *adev;
-+	guid_t s0ix_dsm_guid;
-+	u32 *lpm_req_regs;
-+
-+	adev = ACPI_COMPANION(&pdev->dev);
-+	if (!adev)
-+		return;
-+
-+	lpm_req_regs = devm_kzalloc(&pdev->dev, lpm_size * sizeof(u32),
-+				     GFP_KERNEL);
-+	if (!lpm_req_regs)
-+		return;
-+
-+	guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
-+
-+	out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
-+				    ACPI_GET_LOW_MODE_REGISTERS, NULL);
-+	if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
-+		u32 *addr = (u32 *)out_obj->buffer.pointer;
-+		int size = out_obj->buffer.length;
-+
-+		if (size != lpm_size)
-+			return;
-+
-+		memcpy_fromio(lpm_req_regs, addr, lpm_size);
-+	} else
-+		acpi_handle_debug(adev->handle,
-+				  "_DSM function 0 evaluation failed\n");
-+
-+	ACPI_FREE(out_obj);
-+
-+	pmcdev->lpm_req_regs = lpm_req_regs;
+@@ -1186,9 +1186,15 @@ static const struct pci_device_id pmc_pci_ids[] = {
+  * the platform BIOS enforces 24Mhz crystal to shutdown
+  * before PMC can assert SLP_S0#.
+  */
++static bool xtal_ignore;
+ static int quirk_xtal_ignore(const struct dmi_system_id *id)
+ {
+-	struct pmc_dev *pmcdev = &pmc;
++	xtal_ignore = true;
++	return 0;
 +}
 +
- static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
- {
- 	return readl(pmcdev->regbase + reg_offset);
-@@ -1312,10 +1357,14 @@ static int pmc_core_probe(struct platform_device *pdev)
- 		return -ENOMEM;
++static void pmc_core_xtal_ignore(struct pmc_dev *pmcdev)
++{
+ 	u32 value;
  
- 	mutex_init(&pmcdev->lock);
-+
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
- 	pmc_core_get_low_power_modes(pmcdev);
- 	pmc_core_do_dmi_quirks(pmcdev);
+ 	value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_vric1_offset);
+@@ -1197,7 +1203,6 @@ static int quirk_xtal_ignore(const struct dmi_system_id *id)
+ 	/* Low Voltage Mode Enable */
+ 	value &= ~SPT_PMC_VRIC1_SLPS0LVEN;
+ 	pmc_core_reg_write(pmcdev, pmcdev->map->pm_vric1_offset, value);
+-	return 0;
+ }
  
-+	if (pmcdev->map == &tgl_reg_map)
-+		pmc_core_get_tgl_lpm_reqs(pdev);
-+
- 	/*
- 	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
- 	 * a cable is attached. Tell the PMC to ignore it.
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index 3800c1ba6fb7..81d797feed33 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -288,6 +288,7 @@ struct pmc_reg_map {
-  * @s0ix_counter:	S0ix residency (step adjusted)
-  * @num_modes:		Count of enabled modes
-  * @lpm_en_modes:	Array of enabled modes from lowest to highest priority
-+ * @lpm_req_regs:	List of substate requirements
-  *
-  * pmc_dev contains info about power management controller device.
-  */
-@@ -304,6 +305,7 @@ struct pmc_dev {
- 	u64 s0ix_counter;
- 	int num_modes;
- 	int lpm_en_modes[LPM_MAX_NUM_MODES];
-+	u32 *lpm_req_regs;
+ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+@@ -1212,6 +1217,14 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+ 	{}
  };
  
- #define pmc_for_each_mode(i, mode, pmcdev)		\
++static void pmc_core_do_dmi_quirks(struct pmc_dev *pmcdev)
++{
++	dmi_check_system(pmc_core_dmi_table);
++
++	if (xtal_ignore)
++		pmc_core_xtal_ignore(pmcdev);
++}
++
+ static int pmc_core_probe(struct platform_device *pdev)
+ {
+ 	static bool device_initialized;
+@@ -1253,7 +1266,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	mutex_init(&pmcdev->lock);
+ 	platform_set_drvdata(pdev, pmcdev);
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+-	dmi_check_system(pmc_core_dmi_table);
++	pmc_core_do_dmi_quirks(pmcdev);
+ 
+ 	/*
+ 	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
 -- 
 2.25.1
 
