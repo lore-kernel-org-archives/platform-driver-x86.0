@@ -2,210 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5AFC43470
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 11:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9426BC43462
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAE8B610FC
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 11:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9B461285
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  1 Apr 2021 17:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbhDALFO (ORCPT
+        id S235636AbhDARqw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 1 Apr 2021 07:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233760AbhDALFI (ORCPT
+        Thu, 1 Apr 2021 13:46:52 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:62152 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235559AbhDARm6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 1 Apr 2021 07:05:08 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99026C0613E6;
-        Thu,  1 Apr 2021 04:05:08 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id gb6so985729pjb.0;
-        Thu, 01 Apr 2021 04:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yrUEeBItpHwXb2zkwPEmfBcEOiKyaLjDCMMacKHkExg=;
-        b=FqJiPe3UqWPf36sK5sraHSf7KF9T8xUT8laNp2UNhGPFabncaZIfBO+QStJcFVcbeJ
-         /cqYXtLhrgPgT6U0LS4K8axmKw7oPISXBt/35JipmWhazY86szZEE1VRZ+ehq/hCojhm
-         QoLeCWobfXnVKrOiT9DgeuijP4RxX89qlCAbJ1nz8Y12fZJ4P7VVnjuQPggPtdvnamTG
-         yUZw/flnno1dCZaMaFerd9nIDk1++p8A9n38OcrsTR0sUBlt10lIZhkM+HsL/IqSbh1I
-         QliFMaiFPqdC8kmqooOcmbhvEOeqCtyKkC4IwEgmNA3SAt2+VXy/c3wA+JyII3vI85hl
-         scWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yrUEeBItpHwXb2zkwPEmfBcEOiKyaLjDCMMacKHkExg=;
-        b=rFqNXBmui+AONMiAqHnSFwqzk1NsjSk5ozZSusFG2z0dKMLiBIWC8cqNgKf7Za3qJo
-         9k7vcWESO5S7cUAo8RZf5XBgPIcsVud6eAgcFvLD/EdkEZuwlOMOHW4SCdQep5PEV79e
-         XwQqrWy+Yqnh9+ssPYr1v3WsDAr+xYoI4ZBvUU8DpCr1ZS/ePLgIZB5Q6HZ/0d2LiW2E
-         6eHyVdtU0nzZak3SG2yULuS6fStesCWWY6Bj+wTl6rPlpkzWRO47ZagR43OIggJMJ1Dd
-         2s6P29iFi+/7tbzBoeFcqqXMiV66AlEpHht4Kx5lFKqB6QbsmwfnMpdOpV+iQ8sAj/J6
-         KPpw==
-X-Gm-Message-State: AOAM532Oc6dUwjudPMIHJQhrq7CJl9NtMUz+Lihgsd5WSNcmsHxO+9Xy
-        DImtN2J27VtxsVaN6A7iBa/yfo4Uq0QkS0VF29g=
-X-Google-Smtp-Source: ABdhPJyHjtADObihZXxEJ9xmXmS8A6qv6dA+h925u9DoXHtafhKY2y+djom7gruzHp422cEn1GInwkwHkccNnaGKFrk=
-X-Received: by 2002:a17:902:ee02:b029:e6:5397:d79c with SMTP id
- z2-20020a170902ee02b02900e65397d79cmr7560833plb.21.1617275108048; Thu, 01 Apr
- 2021 04:05:08 -0700 (PDT)
+        Thu, 1 Apr 2021 13:42:58 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131GLiPB026323;
+        Thu, 1 Apr 2021 12:22:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=smtpout1;
+ bh=HWGwDsNnhDjT8V85x8WJx5kCS8sTk0lGILmtYmi4DQ8=;
+ b=KbP33CzddsmSmiFqFBH3NvlRhDEfzH4vB5QXgC0k9e4m/mPu323pTS9vqpgp2BlXCcou
+ XMFihk4cwS1zPLxFcNufzpGhzgY3mpHpj9mrvjjpX4CLSIV6fLlmHaxYCDqVIOE3Q5T2
+ pdgvFAASQjjNEEQ2uUx9bSA9iM99vo4IsJeGX89wLQW+1+cCRKfWtHzUOd8tENp/u5Z3
+ cXAEO5CE9EUJXKHmJuV0aWmDIr/S82EjwYEiylO7gevMNeYzsk30xceIvon/x3UInnp3
+ +gGjhSUP03OsANQym4y3NHICyGG1jkOy6MQ+8ZllFhZrkp0qr5EvbyM+5ROEVLJb7bNa kQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 37n28su41e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Apr 2021 12:22:24 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 131EJwVM141020;
+        Thu, 1 Apr 2021 12:22:24 -0400
+Received: from ausxipps310.us.dell.com (AUSXIPPS310.us.dell.com [143.166.148.211])
+        by mx0a-00154901.pphosted.com with ESMTP id 37n6cem6k0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Apr 2021 12:22:24 -0400
+X-LoopCount0: from 10.177.160.151
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.81,296,1610431200"; 
+   d="scan'208";a="618976143"
+From:   Mario Limonciello <mario.limonciello@dell.com>
+To:     Hans De Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH 3/3] platform/x86: Adjust Dell drivers to a personal email address
+Date:   Thu,  1 Apr 2021 11:22:06 -0500
+Message-Id: <20210401162206.26901-4-mario.limonciello@dell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210401162206.26901-1-mario.limonciello@dell.com>
+References: <20210401162206.26901-1-mario.limonciello@dell.com>
 MIME-Version: 1.0
-References: <20210329174928.18816-1-henning.schild@siemens.com>
- <20210329174928.18816-3-henning.schild@siemens.com> <CAHp75Vdh_YAJLE4DWPhxhYY1g5Fc_7EFgr4FED3crpfpzwXeRg@mail.gmail.com>
- <20210330135808.373c3308@md1za8fc.ad001.siemens.net> <CAHp75Vc0f0HfAJx0KPyQMWjekkhB_T-1+vuR566qAcYGA2JLJA@mail.gmail.com>
- <20210330143011.0e8ae4a0@md1za8fc.ad001.siemens.net> <CAHp75VceCsuANZpib6HXJvxgMdJhmr8KPTZgThxKvXq6Yotymg@mail.gmail.com>
- <20210330172305.67b6e050@md1za8fc.ad001.siemens.net> <CAHp75VcSwW42_oQDpxn34gN7+aJNmB=HdJUbaWsYkBokYAHkSA@mail.gmail.com>
- <20210401124415.3c9321c0@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20210401124415.3c9321c0@md1za8fc.ad001.siemens.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 1 Apr 2021 14:04:51 +0300
-Message-ID: <CAHp75VcU-7-BVum4xuuQcG7NZZc9xXOoXYpfSBUwwPr6iZLWGg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] leds: simatic-ipc-leds: add new driver for Siemens
- Industial PCs
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>, Enrico Weigelt <lkml@metux.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-28_03:2021-03-26,2021-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1011 mlxscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
+ definitions=main-2104010093
+X-Proofpoint-GUID: nfFOa_xC1egnxY6i2N4MnO846gH1eO6Z
+X-Proofpoint-ORIG-GUID: nfFOa_xC1egnxY6i2N4MnO846gH1eO6Z
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103310000
+ definitions=main-2104010107
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Apr 1, 2021 at 1:44 PM Henning Schild
-<henning.schild@siemens.com> wrote:
->
-> Am Wed, 31 Mar 2021 18:40:23 +0300
-> schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
->
-> > On Tue, Mar 30, 2021 at 6:33 PM Henning Schild
-> > <henning.schild@siemens.com> wrote:
-> > > Am Tue, 30 Mar 2021 15:41:53 +0300
-> > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> > > > On Tue, Mar 30, 2021 at 3:35 PM Henning Schild
-> > > > <henning.schild@siemens.com> wrote:
-> > > > > Am Tue, 30 Mar 2021 15:15:16 +0300
-> > > > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> > > > > > On Tue, Mar 30, 2021 at 2:58 PM Henning Schild
-> > > > > > <henning.schild@siemens.com> wrote:
-> > > > > > > Am Tue, 30 Mar 2021 14:04:35 +0300
-> > > > > > > schrieb Andy Shevchenko <andy.shevchenko@gmail.com>:
-> > > > > > > > On Mon, Mar 29, 2021 at 8:59 PM Henning Schild
-> > > > > > > > <henning.schild@siemens.com> wrote:
-> > > >
-> > > > > > > > > +static struct simatic_ipc_led simatic_ipc_leds_mem[] =
-> > > > > > > > > {
-> > > > > > > > > +       {0x500 + 0x1A0, "red:" LED_FUNCTION_STATUS
-> > > > > > > > > "-1"},
-> > > > > > > > > +       {0x500 + 0x1A8, "green:" LED_FUNCTION_STATUS
-> > > > > > > > > "-1"},
-> > > > > > > > > +       {0x500 + 0x1C8, "red:" LED_FUNCTION_STATUS
-> > > > > > > > > "-2"},
-> > > > > > > > > +       {0x500 + 0x1D0, "green:" LED_FUNCTION_STATUS
-> > > > > > > > > "-2"},
-> > > > > > > > > +       {0x500 + 0x1E0, "red:" LED_FUNCTION_STATUS
-> > > > > > > > > "-3"},
-> > > > > > > > > +       {0x500 + 0x198, "green:" LED_FUNCTION_STATUS
-> > > > > > > > > "-3"},
-> > > > > > > > > +       { }
-> > > > > > > > > +};
-> > > > > > > >
-> > > > > > > > It seems to me like poking GPIO controller registers
-> > > > > > > > directly. This is not good. The question still remains:
-> > > > > > > > Can we simply register a GPIO (pin control) driver and
-> > > > > > > > use an LED GPIO driver with an additional board file that
-> > > > > > > > instantiates it?
-> > > > > > >
-> > > > > > > I wrote about that in reply to the cover letter. My view is
-> > > > > > > still that it would be an abstraction with only one user,
-> > > > > > > just causing work and likely not ending up as generic as it
-> > > > > > > might eventually have to be.
-> > > > > > >
-> > > > > > > The region is reserved, not sure what the problem with the
-> > > > > > > "poking" is.
-> > > > > >
-> > > > > >
-> > > > > > > Maybe i do not understand all the benefits of such a split
-> > > > > > > at this point in time. At the moment i only see work with
-> > > > > > > hardly any benefit, not just work for me but also for
-> > > > > > > maintainers. I sure do not mean to be ignorant. Maybe you
-> > > > > > > go into details and convince me or we wait for other
-> > > > > > > peoples opinions on how to proceed, maybe there is a second
-> > > > > > > user that i am not aware of? Until i am convinced otherwise
-> > > > > > > i will try to argue that a single-user-abstraction is
-> > > > > > > needless work/code, and should be done only when actually
-> > > > > > > needed.
-> > > > > >
-> > > > > > I have just read your messages (there is a cover letter and
-> > > > > > additional email which was sent lately).
-> > > > > >
-> > > > > > I would like to know what the CPU model number on that board
-> > > > > > is. Than we can continue to see what possibilities we have
-> > > > > > here.
-> > > > >
-> > > > > I guess we are talking about the one that uses memory mapped,
-> > > > > that is called an "IPC127E" and seems to have either Intel Atom
-> > > > > E3940 or E3930 which seems to be Apollo Lake.
-> > > >
-> > > > Yep. And now the question, in my patch series you should have got
-> > > > the apollolake-pinctrl driver loaded (if not, we have to
-> > > > investigate why it's not being instantiated). This will give you
-> > > > a read GPIO driver.
-> > >
-> > > Ok, so there is the existing driver i asked about several times.
-> > > Thanks for pointing it out.
-> >
-> > If you remember, I asked you about the chip twice :-)
-> > I assumed that we were talking about Apollo Lake and that's why I
-> > insisted that the driver is in the kernel source tree.
->
-> Sorry, maybe i did not get the context of your question and which of
-> the machines you asked about. Now it is clear i guess.
->
-> >
-> > > > So, you may use regular LED GPIO on top of it
-> > > > (https://elixir.bootlin.com/linux/latest/source/drivers/leds/leds-gpio.c).
-> > > > I would like to understand why it can't be achieved.
-> > >
-> > > Will have a look. Unfortunately this one box is missing in my
-> > > personal collection, but let us assume that one can be converted to
-> > > that existing driver.
-> >
-> > OK!
-> >
-> > > I guess that will still mean the PIO-based part of the LED driver
-> > > will have to stay as is.
-> >
-> > Probably yes. I haven't looked into that part and I have no idea
-> > what's going on on that platform(s).
-> >
->
-> Which i guess means the series can be reviewed as if the mmio bits for
-> that apollo lake would not be in it, maybe i will even send a version
-> without that one box. We have others in the "backlog" might as well
-> delay that one if it helps sorting out a base-line.
+So that I can always be reached in the future if necessary, add a
+personal email address.
 
-It depends on the role of P2SB in this case.
-Shouldn't you drop that completely out from this series?
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+---
+ drivers/platform/x86/dell/alienware-wmi.c          | 2 +-
+ drivers/platform/x86/dell/dell-smbios-base.c       | 2 +-
+ drivers/platform/x86/dell/dell-wmi-descriptor.c    | 2 +-
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-Otherwise we have to understand what to do with it.
-It seems the best approach can be to expose the P2SB device to Linux,
-but we have to answer to Bjorn's request about region reservations.
-
-
+diff --git a/drivers/platform/x86/dell/alienware-wmi.c b/drivers/platform/x86/dell/alienware-wmi.c
+index 0d03e6b7b40c..f21248255529 100644
+--- a/drivers/platform/x86/dell/alienware-wmi.c
++++ b/drivers/platform/x86/dell/alienware-wmi.c
+@@ -26,7 +26,7 @@
+ #define WMAX_METHOD_DEEP_SLEEP_CONTROL	0x0B
+ #define WMAX_METHOD_DEEP_SLEEP_STATUS	0x0C
+ 
+-MODULE_AUTHOR("Mario Limonciello <mario_limonciello@dell.com>");
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+ MODULE_DESCRIPTION("Alienware special feature control");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("wmi:" LEGACY_CONTROL_GUID);
+diff --git a/drivers/platform/x86/dell/dell-smbios-base.c b/drivers/platform/x86/dell/dell-smbios-base.c
+index 3a1dbf199441..fc086b66f70b 100644
+--- a/drivers/platform/x86/dell/dell-smbios-base.c
++++ b/drivers/platform/x86/dell/dell-smbios-base.c
+@@ -647,6 +647,6 @@ module_exit(dell_smbios_exit);
+ MODULE_AUTHOR("Matthew Garrett <mjg@redhat.com>");
+ MODULE_AUTHOR("Gabriele Mazzotta <gabriele.mzt@gmail.com>");
+ MODULE_AUTHOR("Pali Rohár <pali@kernel.org>");
+-MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+ MODULE_DESCRIPTION("Common functions for kernel modules using Dell SMBIOS");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell/dell-wmi-descriptor.c b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+index a068900ae8a1..91637c4a03b3 100644
+--- a/drivers/platform/x86/dell/dell-wmi-descriptor.c
++++ b/drivers/platform/x86/dell/dell-wmi-descriptor.c
+@@ -201,6 +201,6 @@ static struct wmi_driver dell_wmi_descriptor_driver = {
+ module_wmi_driver(dell_wmi_descriptor_driver);
+ 
+ MODULE_DEVICE_TABLE(wmi, dell_wmi_descriptor_id_table);
+-MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+ MODULE_DESCRIPTION("Dell WMI descriptor driver");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index 7410ccae650c..98f2b6ba3916 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -604,7 +604,7 @@ static void __exit sysman_exit(void)
+ module_init(sysman_init);
+ module_exit(sysman_exit);
+ 
+-MODULE_AUTHOR("Mario Limonciello <mario.limonciello@dell.com>");
++MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+ MODULE_AUTHOR("Prasanth Ksr <prasanth.ksr@dell.com>");
+ MODULE_AUTHOR("Divya Bharathi <divya.bharathi@dell.com>");
+ MODULE_DESCRIPTION("Dell platform setting control interface");
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
+
