@@ -2,89 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CECC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 13:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CE1C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 13:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F30610D2
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 13:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A8F6112F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 13:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234161AbhDBNcD (ORCPT
+        id S235307AbhDBN5o (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Apr 2021 09:32:03 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:42851 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbhDBNcD (ORCPT
+        Fri, 2 Apr 2021 09:57:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:22014 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229932AbhDBN5n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Apr 2021 09:32:03 -0400
-Received: from [192.168.1.155] ([95.118.52.208]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MfpKZ-1m7xFf3xRx-00gEPf; Fri, 02 Apr 2021 15:31:51 +0200
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: export platform
- global_reset via sysfs.
-To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Fri, 2 Apr 2021 09:57:43 -0400
+IronPort-SDR: BIYrNQOFXzo/hd52bZPhh5NWZJ0MhYwZVVLeMNc1e9tUHgTeXTCsyYljv+LsTPBjyCx4Wv67Zz
+ cZTRmk0jI52Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="212744960"
+X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
+   d="scan'208";a="212744960"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 06:57:41 -0700
+IronPort-SDR: +zv6cCDWwz+JXwN0T+v1UAFzO1v7zqlQANUj43HnLNzm9T3/qFB4QRzf07DNf3svrj36xfNKjY
+ C7G1tgVSRlYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
+   d="scan'208";a="413188499"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga008.fm.intel.com with ESMTP; 02 Apr 2021 06:57:41 -0700
+Received: from lcsmsx603.ger.corp.intel.com (10.109.210.12) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 2 Apr 2021 06:57:40 -0700
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ LCSMSX603.ger.corp.intel.com (10.109.210.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2106.2; Fri, 2 Apr 2021 16:57:38 +0300
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.2106.013;
+ Fri, 2 Apr 2021 16:57:38 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
         Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Hans de Goede" <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tamar Mashiah <tamar.mashiah@intel.com>,
+CC:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: RE: [PATCH] platform/x86: intel_pmc_core: export platform
+ global_reset via sysfs.
+Thread-Topic: [PATCH] platform/x86: intel_pmc_core: export platform
+ global_reset via sysfs.
+Thread-Index: AQHXJz51Jw2Dp3h1DUm1gcOTnDUY2qqhCEmAgAA4ZmA=
+Date:   Fri, 2 Apr 2021 13:57:38 +0000
+Message-ID: <a57460c2ca0949e4998a8545a01ab112@intel.com>
 References: <20210401213144.1009224-1-tomas.winkler@intel.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <f930c11b-7324-19ee-9776-d97a90533b21@metux.net>
-Date:   Fri, 2 Apr 2021 15:31:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+ <f930c11b-7324-19ee-9776-d97a90533b21@metux.net>
+In-Reply-To: <f930c11b-7324-19ee-9776-d97a90533b21@metux.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20210401213144.1009224-1-tomas.winkler@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IZu7NSzQEdCaYaop5YZYea5lfTlHFn4m6/du8f79d+chvvJdTbJ
- GoShAPEkxR3vPrar/3Utbf2kjaDOuQIUIqZZXPTdoBoUWwalMwIHmNVXlonzm8RtOhe1BZa
- 0+vKpTk1MLoToSWAurd3eeM3iSstaH1SAqthJlK1gZ6GLqK+K6Y7Jew5r+glvWEjpDpGBbr
- 6EFIhglDGJ5jPiwJN4LSQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+IWMqBpt+/U=:pn+iKmMLb+Mm1y73/k7FgN
- ug+msfUqiHCnXrfGEp24dtGv+Pxi2/IrKt9XI/djlpb1EBakRTXXGJDBZamUh696avsrZrbdu
- wYaQyRb1lGH6JSEM1i926u0OslC/x2iaklAqB1YYZknQ+J9PAwLFwvCxAY7TxQKHNh/En336M
- ug2BfBTSNUMGEGzoLyLwWlWsaPNJ9FO2Bi+nt6yl0UuNU/tcL1EpKV9cDozZJzun9C50DTMmY
- ijXRDubX99HVCaRxT88niu7DPz/VTghcG8voRqxDW2MwvL6T0fPGQiwLIT4QBPEBir9TQA61H
- ALTKeaOobN5mltky0yhFY23tkkljhMoyAmka5DxPTKD0Zb3y9M2URMqKcvvLrwcHkkXnykqKV
- ATBArGE2Wxasbzni5OrPw25yqDlOhM9a5JM05aQHG2X47x62OTVRmFS+NeEh5MiJEGuyEmdAV
- Tmdnn6HvcFS2fZ68I7Eocpfgh5zORhYF37xrO2cda6/CgwoG6HJs
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 01.04.21 23:31, Tomas Winkler wrote:
-
-Hi,
-
-> During PCH manufacturing a global reset has to be induced in order
-> for configuration changes take affect upon following platform reset.
-> This setting was commonly done by accessing PMC registers via /dev/mem
-> but due to security concern /dev/mem access is much restricted, hence
-> the reason for exposing this setting via dedicated sysfs interface.
-> To prevent post manufacturing abuse the register is protected
-> by hardware locking.
-
-could you please define "manufacturing" ? The chip or board ?
-
-Is there any use for this, after the machine left the factory ?
-
-
---mtx
-
--- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRW5yaWNvIFdlaWdlbHQs
+IG1ldHV4IElUIGNvbnN1bHQgPGxrbWxAbWV0dXgubmV0Pg0KPiBTZW50OiBGcmlkYXksIEFwcmls
+IDAyLCAyMDIxIDE2OjMyDQo+IFRvOiBXaW5rbGVyLCBUb21hcyA8dG9tYXMud2lua2xlckBpbnRl
+bC5jb20+OyBSYWpuZWVzaCBCaGFyZHdhag0KPiA8aXJlbmljLnJham5lZXNoQGdtYWlsLmNvbT47
+IEJveCwgRGF2aWQgRSA8ZGF2aWQuZS5ib3hAaW50ZWwuY29tPjsgSGFucw0KPiBkZSBHb2VkZSA8
+aGRlZ29lZGVAcmVkaGF0LmNvbT47IE1hcmsgR3Jvc3MgPG1ncm9zc0BsaW51eC5pbnRlbC5jb20+
+DQo+IENjOiBwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsNCj4gTWFzaGlhaCwgVGFtYXIgPHRhbWFyLm1hc2hpYWhAaW50ZWwu
+Y29tPjsgQW5keSBTaGV2Y2hlbmtvDQo+IDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBsYXRmb3JtL3g4NjogaW50ZWxfcG1jX2NvcmU6
+IGV4cG9ydCBwbGF0Zm9ybQ0KPiBnbG9iYWxfcmVzZXQgdmlhIHN5c2ZzLg0KPiANCj4gT24gMDEu
+MDQuMjEgMjM6MzEsIFRvbWFzIFdpbmtsZXIgd3JvdGU6DQo+IA0KPiBIaSwNCj4gDQo+ID4gRHVy
+aW5nIFBDSCBtYW51ZmFjdHVyaW5nIGEgZ2xvYmFsIHJlc2V0IGhhcyB0byBiZSBpbmR1Y2VkIGlu
+IG9yZGVyIGZvcg0KPiA+IGNvbmZpZ3VyYXRpb24gY2hhbmdlcyB0YWtlIGFmZmVjdCB1cG9uIGZv
+bGxvd2luZyBwbGF0Zm9ybSByZXNldC4NCj4gPiBUaGlzIHNldHRpbmcgd2FzIGNvbW1vbmx5IGRv
+bmUgYnkgYWNjZXNzaW5nIFBNQyByZWdpc3RlcnMgdmlhIC9kZXYvbWVtDQo+ID4gYnV0IGR1ZSB0
+byBzZWN1cml0eSBjb25jZXJuIC9kZXYvbWVtIGFjY2VzcyBpcyBtdWNoIHJlc3RyaWN0ZWQsIGhl
+bmNlDQo+ID4gdGhlIHJlYXNvbiBmb3IgZXhwb3NpbmcgdGhpcyBzZXR0aW5nIHZpYSBkZWRpY2F0
+ZWQgc3lzZnMgaW50ZXJmYWNlLg0KPiA+IFRvIHByZXZlbnQgcG9zdCBtYW51ZmFjdHVyaW5nIGFi
+dXNlIHRoZSByZWdpc3RlciBpcyBwcm90ZWN0ZWQgYnkNCj4gPiBoYXJkd2FyZSBsb2NraW5nLg0K
+PiANCj4gY291bGQgeW91IHBsZWFzZSBkZWZpbmUgIm1hbnVmYWN0dXJpbmciID8gVGhlIGNoaXAg
+b3IgYm9hcmQgPw0KQm9hcmQNCj4gDQo+IElzIHRoZXJlIGFueSB1c2UgZm9yIHRoaXMsIGFmdGVy
+IHRoZSBtYWNoaW5lIGxlZnQgdGhlIGZhY3RvcnkgPw0KDQpSZWZ1cmJpc2hpbmcsIG1vc3RseSwg
+dGhlIHJlZ2lzdGVyIGlzIGh3IGxvY2tlZCBhZnRlciB0aGF0Lg0KDQo+IA0KPiANCj4gLS1tdHgN
+Cj4gDQo+IC0tDQo+IC0tLQ0KPiBIaW53ZWlzOiB1bnZlcnNjaGzDvHNzZWx0ZSBFLU1haWxzIGvD
+tm5uZW4gbGVpY2h0IGFiZ2Vow7ZydCB1bmQgbWFuaXB1bGllcnQNCj4gd2VyZGVuICEgRsO8ciBl
+aW5lIHZlcnRyYXVsaWNoZSBLb21tdW5pa2F0aW9uIHNlbmRlbiBTaWUgYml0dGUgaWhyZW4NCj4g
+R1BHL1BHUC1TY2hsw7xzc2VsIHp1Lg0KPiAtLS0NCj4gRW5yaWNvIFdlaWdlbHQsIG1ldHV4IElU
+IGNvbnN1bHQNCj4gRnJlZSBzb2Z0d2FyZSBhbmQgTGludXggZW1iZWRkZWQgZW5naW5lZXJpbmcg
+aW5mb0BtZXR1eC5uZXQgLS0gKzQ5LTE1MS0NCj4gMjc1NjUyODcNCg==
