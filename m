@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD69C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 14:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF30C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 15:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09B3861057
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 14:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C40960FD7
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  2 Apr 2021 15:21:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235204AbhDBOBL (ORCPT
+        id S235867AbhDBPV3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 2 Apr 2021 10:01:11 -0400
-Received: from mga04.intel.com ([192.55.52.120]:64940 "EHLO mga04.intel.com"
+        Fri, 2 Apr 2021 11:21:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:15433 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234161AbhDBOBK (ORCPT
+        id S235448AbhDBPV2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 2 Apr 2021 10:01:10 -0400
-IronPort-SDR: tZB53IUQAAXRnvPXgyyzQ33zRyAbwl5fDzanPShC7xRjPtwGhaTuU0UD1uaHbyKls284U+YEMK
- Ij6v8W+0csCA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="190238814"
-X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
-   d="scan'208";a="190238814"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 07:01:09 -0700
-IronPort-SDR: 3qct/WCI+kSWM8eG4TgEf+aiOf1f3wz/7Cz4/BvdTWpF66htUTZSd4cobdL80+p0PVdDIssM9F
- u/rrxbCPHbCg==
-X-IronPort-AV: E=Sophos;i="5.81,299,1610438400"; 
-   d="scan'208";a="413189831"
+        Fri, 2 Apr 2021 11:21:28 -0400
+IronPort-SDR: kOyxMcU5m0Z8npv+tebQquceT/36D7fDc/uYFVoMynPgAgpNIqFGcNkf8x8+0nEl12tfXtvcLM
+ yvDylvoDPOiw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9942"; a="172517988"
+X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
+   d="scan'208";a="172517988"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 08:21:26 -0700
+IronPort-SDR: iTc0WdDPYCIJ56Fs8Ej3JM3UsZQG4la470WB1fiIkEiuD7bF9E9xdidYC1rui0B2ZtJfCvHVZ+
+ 2ZUgnqbWJi/Q==
+X-IronPort-AV: E=Sophos;i="5.81,300,1610438400"; 
+   d="scan'208";a="419698816"
 Received: from twinkler-lnx.jer.intel.com ([10.12.91.138])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 07:01:06 -0700
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2021 08:21:23 -0700
 From:   Tomas Winkler <tomas.winkler@intel.com>
 To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         David E Box <david.e.box@intel.com>,
@@ -43,9 +43,9 @@ Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Tamar Mashiah <tamar.mashiah@intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH v3] platform/x86: intel_pmc_core: export platform global_reset via sysfs.
-Date:   Fri,  2 Apr 2021 17:00:54 +0300
-Message-Id: <20210402140054.1145793-1-tomas.winkler@intel.com>
+Subject: [PATCH v4] platform/x86: intel_pmc_core: export platform global_reset via sysfs.
+Date:   Fri,  2 Apr 2021 18:21:13 +0300
+Message-Id: <20210402152113.1191796-1-tomas.winkler@intel.com>
 X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,8 +55,9 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Tamar Mashiah <tamar.mashiah@intel.com>
 
-During PCH manufacturing a global reset has to be induced in order
-for configuration changes take affect upon following platform reset.
+During PCH (platform/board) manufacturing process a global reset
+has to be induced in order for configuration changes take the effect
+upon following platform reset.
 This setting was commonly done by accessing PMC registers via /dev/mem
 but due to security concern /dev/mem access is much restricted, hence
 the reason for exposing this setting via dedicated sysfs interface.
@@ -70,11 +71,14 @@ Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Tamar Mashiah <tamar.mashiah@intel.com>
 Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 ---
-V2:
+2:
 1. Add locking for reading the ET3 register  (Andy)
 2. Fix few style issues (Andy)
 V3:
 1. Resend
+v4:
+1. Fix return statement (Andy) 
+2. Specify manufacturing process (Enrico)
 
  .../ABI/testing/sysfs-platform-intel-pmc      | 11 +++
  MAINTAINERS                                   |  1 +
@@ -113,7 +117,7 @@ index 04f68e0cda64..618676eba8c8 100644
  
  INTEL PMIC GPIO DRIVERS
 diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index ee2f757515b0..951664133303 100644
+index ee2f757515b0..8afc198550a4 100644
 --- a/drivers/platform/x86/intel_pmc_core.c
 +++ b/drivers/platform/x86/intel_pmc_core.c
 @@ -401,6 +401,7 @@ static const struct pmc_reg_map cnp_reg_map = {
@@ -151,7 +155,7 @@ index ee2f757515b0..951664133303 100644
 +	int err;
 +
 +	if (!map->etr3_offset)
-+		err = -EOPNOTSUPP;
++		return -EOPNOTSUPP;
 +
 +	mutex_lock(&pmcdev->lock);
 +
