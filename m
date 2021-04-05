@@ -2,261 +2,244 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE2BC43460
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 20:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B090CC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 21:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE08613AD
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 20:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7877F613D2
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 21:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235691AbhDEUty (ORCPT
+        id S236905AbhDEVcw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Apr 2021 16:49:54 -0400
-Received: from ned.t-8ch.de ([212.47.237.191]:54754 "EHLO ned.t-8ch.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232860AbhDEUtx (ORCPT
+        Mon, 5 Apr 2021 17:32:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34642 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236532AbhDEVcv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Apr 2021 16:49:53 -0400
-From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1617655777;
-        bh=F2uG0XiAg/JJ2Fj+hieuEdstolegFP/KI92lWRicuWk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzEc/j9UOiKD2AbKLZ7zUuC5wAb43gbJd7xwJqZkV2kRMSqVmR5TuKxeuFixe+eO6
-         E6idX6JnVjmYbLm4y15TxJCO1W6Bct1tcp5yjUlbZy83/aR+gTDj5lltHGOLadnGjR
-         7Xk9+AzBIdnBH0L0clVqQutaWZGDcHl6TFeqQ9SU=
-To:     platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-Date:   Mon,  5 Apr 2021 22:48:10 +0200
-Message-Id: <20210405204810.339763-1-linux@weissschuh.net>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
-References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
+        Mon, 5 Apr 2021 17:32:51 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 61D101F44684
+Received: by earth.universe (Postfix, from userid 1000)
+        id 153853C0C96; Mon,  5 Apr 2021 23:32:41 +0200 (CEST)
+Date:   Mon, 5 Apr 2021 23:32:41 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: Add battery driver for Surface
+ Aggregator Module
+Message-ID: <20210405213241.r6xhtbaf4qkzylz2@earth.universe>
+References: <20210309000530.2165752-1-luzmaximilian@gmail.com>
+ <20210309000530.2165752-2-luzmaximilian@gmail.com>
+ <20210405153752.2r4ii5lguogchgl4@earth.universe>
+ <046f6149-55fd-431e-d582-cc5915d10e20@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s2kgvvnmznjx3piv"
+Content-Disposition: inline
+In-Reply-To: <046f6149-55fd-431e-d582-cc5915d10e20@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Changes since v1:
-* Incorporate feedback from Barnabás Pőcze
-  * Use a WMI driver instead of a platform driver
-  * Let the kernel manage the driver lifecycle
-  * Fix errno/ACPI error confusion
-  * Fix resource cleanup
-  * Document reason for integer casting
 
-Thank you Barnabás for your review, it is much appreciated.
+--s2kgvvnmznjx3piv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- >8 --
+Hi,
 
-Tested with a X570 I Aorus Pro Wifi.
-The mainboard contains an ITE IT8688E chip for management.
-This chips is also handled by drivers/hwmon/i87.c but as it is also used
-by the firmware itself it needs an ACPI driver.
+On Mon, Apr 05, 2021 at 09:07:55PM +0200, Maximilian Luz wrote:
+> [...]
+> > > +static int spwr_battery_recheck_adapter(struct spwr_battery_device *=
+bat)
+> > > +{
+> > > +	/*
+> > > +	 * Handle battery update quirk: When the battery is fully charged (=
+or
+> > > +	 * charged up to the limit imposed by the UEFI battery limit) and t=
+he
+> > > +	 * adapter is plugged in or removed, the EC does not send a separate
+> > > +	 * event for the state (charging/discharging) change. Furthermore it
+> > > +	 * may take some time until the state is updated on the battery.
+> > > +	 * Schedule an update to solve this.
+> > > +	 */
+> >=20
+> > As long as the adapter plug event is being sent you can just add
+> > .external_power_changed() hook in this driver and update the battery
+> > status there instead of using this hack :)
+> >=20
+> > This requires populating .supplied_to in the charger driver, so that
+> > it will notify the battery device when power_supply_changed() is called
+> > for the charger. I will point this out when reviewing PATCH 2.
+>=20
+> I'll switch this to the .external_power_changed() callback, thanks for
+> pointing that out.
+>=20
+> I still need the delay though. The event for the charger is the same
+> event that we rely on here, so the charging/not-charging flag in the BST
+> data may still not be updated yet. So unfortunately still a bit of a
+> hack required.
 
-Unfortunately not all sensor registers are handled by the firmware and even
-less are exposed via WMI.
+Ah, too bad.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/platform/x86/Kconfig        |  11 +++
- drivers/platform/x86/Makefile       |   1 +
- drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
- 3 files changed, 150 insertions(+)
- create mode 100644 drivers/platform/x86/gigabyte-wmi.c
+> > > +	schedule_delayed_work(&bat->update_work, SPWR_AC_BAT_UPDATE_DELAY);
+> > > +	return 0;
+> > > +}
+> [...]
+> > > +static void spwr_battery_update_bst_workfn(struct work_struct *work)
+> > > +{
+> > > +	struct delayed_work *dwork =3D to_delayed_work(work);
+> > > +	struct spwr_battery_device *bat;
+> > > +	int status;
+> > > +
+> > > +	bat =3D container_of(dwork, struct spwr_battery_device, update_work=
+);
+> > > +
+> > > +	status =3D spwr_battery_update_bst(bat, false);
+> > > +	if (!status)
+> > > +		power_supply_changed(bat->psy);
+> >=20
+> > power_supply_changed should only be changed for 'important' changes
+> > (e.g. charging status changes, temperature or capacity threshold reache=
+d),
+> > not every 5 seconds.
+>=20
+> This work struct will only be scheduled when we receive an adapter event
+> and is required to handle the quirk above, so this should be an
+> important change (state changing from charging to not-charging or back)
+> and shouldn't repeat too often, or rather only when the user
+> plugs/unplugs the charger.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index ad4e630e73e2..96622a2106f7 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -123,6 +123,17 @@ config XIAOMI_WMI
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called xiaomi-wmi.
- 
-+config GIGABYTE_WMI
-+	tristate "Gigabyte WMI temperature driver"
-+	depends on ACPI_WMI
-+	depends on HWMON
-+	help
-+	  Say Y here if you want to support WMI-based temperature reporting on
-+	  Gigabyte mainboards.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gigabyte-wmi.
-+
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
- 	depends on ACPI && THERMAL
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 60d554073749..1621ebfd04fd 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-+obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
- 
- # Acer
- obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-new file mode 100644
-index 000000000000..8618363e3ccf
---- /dev/null
-+++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -0,0 +1,138 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
-+ */
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/acpi.h>
-+#include <linux/hwmon.h>
-+#include <linux/module.h>
-+#include <linux/wmi.h>
-+
-+#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
-+
-+enum gigabyte_wmi_commandtype {
-+	GIGABYTE_WMI_BUILD_DATE_QUERY       =   0x1,
-+	GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =   0x2,
-+	GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =   0x4,
-+	GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =   0x5,
-+	GIGABYTE_WMI_TEMPERATURE_QUERY      = 0x125,
-+};
-+
-+struct gigabyte_wmi_args {
-+	u32 arg1;
-+};
-+
-+static int gigabyte_wmi_perform_query(enum gigabyte_wmi_commandtype command,
-+		struct gigabyte_wmi_args *args, struct acpi_buffer *out)
-+{
-+	const struct acpi_buffer in = {
-+		.length = sizeof(*args),
-+		.pointer = args,
-+	};
-+
-+	acpi_status ret = wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out);
-+	if (ret == AE_OK) {
-+		return 0;
-+	} else {
-+		return -EIO;
-+	};
-+}
-+
-+static int gigabyte_wmi_query_integer(enum gigabyte_wmi_commandtype command,
-+		struct gigabyte_wmi_args *args, u64 *res)
-+{
-+	union acpi_object *obj;
-+	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
-+	int ret;
-+
-+	ret = gigabyte_wmi_perform_query(command, args, &result);
-+	if (ret) {
-+		goto out;
-+	}
-+	obj = result.pointer;
-+	if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+		*res = obj->integer.value;
-+		ret = 0;
-+	} else {
-+		ret = -EIO;
-+	}
-+out:
-+	kfree(result.pointer);
-+	return ret;
-+}
-+
-+static int gigabyte_wmi_temperature(u8 sensor, long *res)
-+{
-+	struct gigabyte_wmi_args args = {
-+		.arg1 = sensor,
-+	};
-+	u64 temp;
-+	acpi_status ret;
-+
-+	ret = gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &args, &temp);
-+	if (ret == 0)
-+		*res = (s8) temp * 1000; // value is a signed 8-bit integer
-+	return ret;
-+}
-+
-+static int gigabyte_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+		u32 attr, int channel, long *val)
-+{
-+	return gigabyte_wmi_temperature(channel, val);
-+}
-+
-+static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-+		u32 attr, int channel)
-+{
-+	return 0444;
-+}
-+
-+static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			HWMON_T_INPUT,
-+			HWMON_T_INPUT,
-+			HWMON_T_INPUT,
-+			HWMON_T_INPUT,
-+			HWMON_T_INPUT,
-+			HWMON_T_INPUT),
-+	NULL,
-+};
-+
-+static const struct hwmon_ops gigabyte_wmi_hwmon_ops = {
-+	.read = gigabyte_wmi_hwmon_read,
-+	.is_visible = gigabyte_wmi_hwmon_is_visible,
-+};
-+
-+static const struct hwmon_chip_info gigabyte_wmi_hwmon_chip_info = {
-+	.ops = &gigabyte_wmi_hwmon_ops,
-+	.info = gigabyte_wmi_hwmon_info,
-+};
-+
-+static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
-+{
-+	struct device *hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
-+			"gigabyte_wmi", NULL,
-+			&gigabyte_wmi_hwmon_chip_info, NULL);
-+
-+	return PTR_ERR_OR_ZERO(hwmon_dev);
-+}
-+
-+static const struct wmi_device_id gigabyte_wmi_id_table[] = {
-+	{ GIGABYTE_WMI_GUID, NULL },
-+	{ },
-+};
-+
-+static struct wmi_driver gigabyte_wmi_driver = {
-+	.driver = {
-+		.name = "gigabyte-wmi",
-+	},
-+	.id_table = gigabyte_wmi_id_table,
-+	.probe = gigabyte_wmi_probe,
-+};
-+module_wmi_driver(gigabyte_wmi_driver);
-+
-+MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
-+MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
-+MODULE_DESCRIPTION("Gigabyte Temperature WMI Driver");
-+MODULE_LICENSE("GPL");
+Ack.
 
-base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
--- 
-2.31.1
+> [...]
+> > > +/* -- Alarm attribute. ---------------------------------------------=
+--------- */
+> > > +
+> > > +static ssize_t spwr_battery_alarm_show(struct device *dev, struct de=
+vice_attribute *attr, char *buf)
+> > > +{
+> > > +	struct power_supply *psy =3D dev_get_drvdata(dev);
+> > > +	struct spwr_battery_device *bat =3D power_supply_get_drvdata(psy);
+> > > +	int status;
+> > > +
+> > > +	mutex_lock(&bat->lock);
+> > > +	status =3D sysfs_emit(buf, "%d\n", bat->alarm * 1000);
+> > > +	mutex_unlock(&bat->lock);
+> > > +
+> > > +	return status;
+> > > +}
+> > > +
+> > > +static ssize_t spwr_battery_alarm_store(struct device *dev, struct d=
+evice_attribute *attr,
+> > > +					const char *buf, size_t count)
+> > > +{
+> > > +	struct power_supply *psy =3D dev_get_drvdata(dev);
+> > > +	struct spwr_battery_device *bat =3D power_supply_get_drvdata(psy);
+> > > +	unsigned long value;
+> > > +	int status;
+> > > +
+> > > +	status =3D kstrtoul(buf, 0, &value);
+> > > +	if (status)
+> > > +		return status;
+> > > +
+> > > +	mutex_lock(&bat->lock);
+> > > +
+> > > +	if (!spwr_battery_present(bat)) {
+> > > +		mutex_unlock(&bat->lock);
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	status =3D spwr_battery_set_alarm_unlocked(bat, value / 1000);
+> > > +	if (status) {
+> > > +		mutex_unlock(&bat->lock);
+> > > +		return status;
+> > > +	}
+> > > +
+> > > +	mutex_unlock(&bat->lock);
+> > > +	return count;
+> > > +}
+> > > +
+> > > +static const struct device_attribute alarm_attr =3D {
+> > > +	.attr =3D {.name =3D "alarm", .mode =3D 0644},
+> > > +	.show =3D spwr_battery_alarm_show,
+> > > +	.store =3D spwr_battery_alarm_store,
+> > > +};
+> >=20
+> > DEVICE_ATTR_RW()
+> >=20
+> > custom property needs to be documented in
+> >=20
+> > Documentation/ABI/testing/sysfs-class-power-surface
+> >=20
+> > Also I'm not sure what is being stored here, but it looks like you
+> > can just use POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN?
+>=20
+> This (and other handling of the alarm value) has essentially been copied
+> from drivers/acpi/battery.c and corresponds to ACPI _BTP/battery trip
+> point (the whole interface of this EC is essentially modeled after the
+> ACPI spec).
+>=20
+> The alarm value isn't strictly required to be a lower threshold, but is
+> (according to ACPI spec) a trip point that causes an event to be sent
+> when it is crossed in either direction. So I don't think we can directly
+> map this to POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN as that seems to imply
+> a lower threshold only.
+>=20
+> I'll add documentation for this if that's allright.
 
+Ack.
+
+> [...]
+> > > +static void spwr_battery_unregister(struct spwr_battery_device *bat)
+> > > +{
+> > > +	ssam_notifier_unregister(bat->sdev->ctrl, &bat->notif);
+> > > +	cancel_delayed_work_sync(&bat->update_work);
+> > > +	device_remove_file(&bat->psy->dev, &alarm_attr);
+> > > +	power_supply_unregister(bat->psy);
+> >=20
+> > power_supply_unregister being the last function call is a clear
+> > sign, that devm_power_supply_register can be used instead.
+>=20
+> Right, that works here. I normally try to not mix devm code with
+> non-devm code (apart from maybe allocations).
+
+well allocations are usually done first and free'd last making
+them the first targets in the conversion and pretty much a no
+brainer.
+
+Next merge window it's possible to easily go to full devm by
+using devm_delayed_work_autocancel(), which has been merged
+by Greg two weeks ago. Then last but not least do the ssam
+notifier unregister via devm_add_action_or_reset and its fully
+converted :)
+
+-- Sebastian
+
+--s2kgvvnmznjx3piv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmBrgfIACgkQ2O7X88g7
++poIgw//eiNHJHzoFU774Y+VeSHxK+HM6QjOyuqGJ+kQDOF3Crzp3L/sAPr/Q2pt
+4vmYamGfYq7G7oFT65G30+AZpZ6xu8XmWWJzbErEm8OP9CglBJUfNptSE+DqaJkc
+h2Gn4Q2DUM16L+3V70BCMzBZJLHaaiKkcSb8nNYtB1S0+CFS4lecZRRn2tfeyt1R
+vOXhUsm3DCKUF69qxjl7OoXMhVu5mJwZCcLrBn57MW/8Ou87vblYvwSCJPKMXGmo
+osxfftbDXNVKMgQusJ3wPmUxqpEfYjLp/l6wdX9g1/e2zFLMyjuuT0A1sUInzShY
+/kTJqrJ//BPf0JjXtlhPsV+ijD8+jJXMhJb1AKyh6/D331VrblIKlQipmlwpxvD5
+695uKzejgzG3tMFug5tfCt73uXhMJjX7HEvT5brqO3bUoVPS2AdYZ4TZQEH3N2Qc
+91YJjUFX9M/Cv7AehCRPo+AuKilty8NroEk7VcO7wHidufh6jgLezj7ndSoUfO+G
+2rQt9tZgCHD6veyw0P3L+Zs5rGf0PcPeqmA179zxLFdmjdJZ0ri08KJvHJWb6cJ0
+ezAdmsyCTBBnUDxoYCAQx3QjphWu4XuerhjOhAQu7kIgzE3PBeY+lCoej/uG+oEb
+gBudGk+2JwZyuJxb/uW4mHwKkLDlgxNCCCtHHo1+2tfAM5Hwn/0=
+=8fEC
+-----END PGP SIGNATURE-----
+
+--s2kgvvnmznjx3piv--
