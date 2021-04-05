@@ -2,505 +2,460 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF17C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3123DC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 17:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3AF6124C
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C7C6128D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 17:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238063AbhDEPrk (ORCPT
+        id S231928AbhDEROA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Apr 2021 11:47:40 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60100 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237828AbhDEPrj (ORCPT
+        Mon, 5 Apr 2021 13:14:00 -0400
+Received: from mail-40134.protonmail.ch ([185.70.40.134]:30678 "EHLO
+        mail-40134.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230125AbhDERN7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Apr 2021 11:47:39 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 67B461F4485F
-Received: by earth.universe (Postfix, from userid 1000)
-        id 9D50A3C0C96; Mon,  5 Apr 2021 17:47:30 +0200 (CEST)
-Date:   Mon, 5 Apr 2021 17:47:30 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] power: supply: Add AC driver for Surface Aggregator
- Module
-Message-ID: <20210405154730.3ezemy7jcnmooget@earth.universe>
-References: <20210309000530.2165752-1-luzmaximilian@gmail.com>
- <20210309000530.2165752-3-luzmaximilian@gmail.com>
+        Mon, 5 Apr 2021 13:13:59 -0400
+Date:   Mon, 05 Apr 2021 17:13:48 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1617642831;
+        bh=d0cPIyf07x8JEfdBgHPUUrzKxwY8wZu2hn0c7EYuUy4=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=Gtv987Z59TduJbytHfpoM5PbOpzkJA2B5SqariJj7KmboFZD0wLHMcNKyd0+X8/7/
+         XcLMA5I5dTK9nRX4GMGE0xbEieu39XBBtA1wbQe60Dha4g4w8znuwwc/zEjF5lFET+
+         /0XsyWyd55H4s8OMPsb5Hm395qTh9A84MMIQQtCM=
+To:     =?utf-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthew Garrett <mjg59@srcf.ucam.org>
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH] platform/x86: add Gigabyte WMI temperature driver
+Message-ID: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
+In-Reply-To: <20210405132007.290275-1-linux@weissschuh.net>
+References: <20210405132007.290275-1-linux@weissschuh.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="meea2yzlgltwcg7w"
-Content-Disposition: inline
-In-Reply-To: <20210309000530.2165752-3-luzmaximilian@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi
 
---meea2yzlgltwcg7w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+If you wanted to get some feedback regarding the code, then I added some co=
+mments;
+otherwise please disregard this email.
 
-On Tue, Mar 09, 2021 at 01:05:30AM +0100, Maximilian Luz wrote:
-> On newer Microsoft Surface models (specifically 7th-generation, i.e.
-> Surface Pro 7, Surface Book 3, Surface Laptop 3, and Surface Laptop Go),
-> battery and AC status/information is no longer handled via standard ACPI
-> devices, but instead directly via the Surface System Aggregator Module
-> (SSAM), i.e. the embedded controller on those devices.
->=20
-> While on previous generation models, AC status is also handled via SSAM,
-> an ACPI shim was present to translate the standard ACPI AC interface to
-> SSAM requests. The SSAM interface itself, which is modeled closely after
-> the ACPI interface, has not changed.
->=20
-> This commit introduces a new SSAM client device driver to support AC
-> status/information via the aforementioned interface on said Surface
-> models.
->=20
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+I think the two most important things are:
+
+ * consider using `devm_hwmon_device_register_with_info()` instead of manua=
+lly
+   specifying the attributes;
+ * consider getting rid of the platform {driver,device} and use a single
+   WMI driver.
+
+
+2021. =C3=A1prilis 5., h=C3=A9tf=C5=91 15:20 keltez=C3=A9ssel, Thomas Wei=
+=C3=9Fschuh =C3=ADrta:
+
+> Hi,
+>
+> this patch adds support for temperature readings on Gigabyte Mainboards.
+> (At least on mine)
+>
+> The current code should be usable as is.
+> I'd like for people to test it though and report their results with diffe=
+rent
+> hardware.
+>
+> Further development I have some general questions:
+>
+> The ASL IndexField does not cover all relevant registers, can it be exten=
+ded by
+> driver code?
+>
+> * Not all registers are exposed via ACPI methods, can they be accessed vi=
+a ACPI directly?
+> * Some registers are exposed via ACPI methods but are not reachable direc=
+tly from the WMI dispatcher.
+>   * Does ASL have some sort of reflection that could enable those methods=
+?
+>   * Is it possible to call those methods directly, bypassing WMI?
+>
+> I suspect the answer to be "no" for all of these, but maybe I am wrong.
+>
+> Furthermore there are WMI methods to return information about the install=
+ed
+> firmware.
+>
+> * Version
+> * Build-date
+> * Motherboard name
+>
+> Would it make sense to add this information as attributes to the
+> platform_device?
+
+I think if there aren't really users of the data, then just printing them
+to the kernel message buffer is fine until there's a need
+(in the probe function, for example). Does it provide information
+that DMI doesn't?
+
+
+>
+> The ACPI tables can be found here:
+> https://github.com/t-8ch/linux-gigabyte-wmi-driver/blob/main/ssdt8.dsl
+>
+> Thanks,
+> Thomas
+>
+> -- >8 --
+>
+> Tested with a X570 I Aorus Pro Wifi.
+> The mainboard contains a ITE IT8688E chip for management.
+> This chips is also handled by drivers/hwmon/i87.c but as it is also used
+> by the firmware itself it needs an ACPI driver.
+>
+> Unfortunately not all sensor registers are handled by the firmware and ev=
+en
+> less are exposed via WMI.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 > ---
->=20
-> Note: This patch depends on the
->=20
->     platform/surface: Add Surface Aggregator device registry
->=20
-> series. More specifically patch
->=20
->     platform/surface: Set up Surface Aggregator device registry
->=20
-> The full series has been merged into the for-next branch of the
-> platform-drivers-x86 tree [1]. The commit in question can be found at
-> [2].
->=20
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drive=
-rs-x86.git/log/?h=3Dfor-next
-> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drive=
-rs-x86.git/commit/?h=3Dfor-next&id=3Dfc622b3d36e6d91330fb21506b9ad1e3206a4d=
-de
->=20
-> ---
->  MAINTAINERS                            |   1 +
->  drivers/power/supply/Kconfig           |  16 ++
->  drivers/power/supply/Makefile          |   1 +
->  drivers/power/supply/surface_charger.c | 296 +++++++++++++++++++++++++
->  4 files changed, 314 insertions(+)
->  create mode 100644 drivers/power/supply/surface_charger.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f44521abe8bf..d6651ba93997 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11867,6 +11867,7 @@ L:	linux-pm@vger.kernel.org
->  L:	platform-driver-x86@vger.kernel.org
->  S:	Maintained
->  F:	drivers/power/supply/surface_battery.c
-> +F:	drivers/power/supply/surface_charger.c
-> =20
->  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
->  M:	Maximilian Luz <luzmaximilian@gmail.com>
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index cebeff10d543..91f7cf425ac9 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -817,4 +817,20 @@ config BATTERY_SURFACE
->  	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
->  	  Surface Book 3, and Surface Laptop Go.
-> =20
-> +config CHARGER_SURFACE
-> +	tristate "AC driver for 7th-generation Microsoft Surface devices"
-> +	depends on SURFACE_AGGREGATOR_REGISTRY
-> +	help
-> +	  Driver for AC devices connected via/managed by the Surface System
-> +	  Aggregator Module (SSAM).
+>  drivers/platform/x86/Kconfig        |  10 ++
+>  drivers/platform/x86/Makefile       |   1 +
+>  drivers/platform/x86/gigabyte-wmi.c | 178 ++++++++++++++++++++++++++++
+>  3 files changed, 189 insertions(+)
+>  create mode 100644 drivers/platform/x86/gigabyte-wmi.c
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index ad4e630e73e2..40d593ff1f01 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -123,6 +123,16 @@ config XIAOMI_WMI
+>  =09  To compile this driver as a module, choose M here: the module will
+>  =09  be called xiaomi-wmi.
+>
+> +config GIGABYTE_WMI
+> +=09tristate "Gigabyte WMI temperature driver"
+> +=09depends on ACPI_WMI
+> +=09depends on HWMON
+> +=09help
+> +=09  Say Y here if you want to support WMI-based temperature on Gigabyte=
+ mainboards.
+
+I'm not a native speaker, but maybe "WMI-based temperature reporting" would=
+ be better?
+
+
 > +
-> +	  This driver provides AC-information and -status support for Surface
-> +	  devices where said data is not exposed via the standard ACPI devices.
-> +	  On those models (7th-generation), AC-information is instead handled
-> +	  directly via a SSAM client device and this driver.
+> +=09  To compile this driver as a module, choose M here: the module will
+> +=09  be called gigabyte-wmi.
 > +
-> +	  Say M or Y here to include AC status support for 7th-generation
-> +	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
-> +	  Surface Book 3, and Surface Laptop Go.
-> +
->  endif # POWER_SUPPLY
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index 134041538d2c..a7309a3d1a47 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -102,3 +102,4 @@ obj-$(CONFIG_CHARGER_WILCO)	+=3D wilco-charger.o
->  obj-$(CONFIG_RN5T618_POWER)	+=3D rn5t618_power.o
->  obj-$(CONFIG_BATTERY_ACER_A500)	+=3D acer_a500_battery.o
->  obj-$(CONFIG_BATTERY_SURFACE)	+=3D surface_battery.o
-> +obj-$(CONFIG_CHARGER_SURFACE)	+=3D surface_charger.o
-> diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/suppl=
-y/surface_charger.c
+>  config ACERHDF
+>  =09tristate "Acer Aspire One temperature and fan driver"
+>  =09depends on ACPI && THERMAL
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefil=
+e
+> index 60d554073749..1621ebfd04fd 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)=09+=3D intel-wmi-th=
+underbolt.o
+>  obj-$(CONFIG_MXM_WMI)=09=09=09+=3D mxm-wmi.o
+>  obj-$(CONFIG_PEAQ_WMI)=09=09=09+=3D peaq-wmi.o
+>  obj-$(CONFIG_XIAOMI_WMI)=09=09+=3D xiaomi-wmi.o
+> +obj-$(CONFIG_GIGABYTE_WMI)=09=09+=3D gigabyte-wmi.o
+>
+>  # Acer
+>  obj-$(CONFIG_ACERHDF)=09=09+=3D acerhdf.o
+> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/g=
+igabyte-wmi.c
 > new file mode 100644
-> index 000000000000..fe484523a2c2
+> index 000000000000..a3749cf248cb
 > --- /dev/null
-> +++ b/drivers/power/supply/surface_charger.c
-> @@ -0,0 +1,296 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/drivers/platform/x86/gigabyte-wmi.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
 > +/*
-> + * AC driver for 7th-generation Microsoft Surface devices via Surface Sy=
-stem
-> + * Aggregator Module (SSAM).
+> + * Gigabyte WMI temperature driver
 > + *
-> + * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+> + * Copyright (C) 2021 Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 > + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 > +
-> +#include <asm/unaligned.h>
 > +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/surface_aggregator/device.h>
-> +
-> +
-> +/* -- SAM interface. ---------------------------------------------------=
------ */
-> +
-> +enum sam_event_cid_bat {
-> +	SAM_EVENT_CID_BAT_ADP   =3D 0x17,
-> +};
-> +
-> +enum sam_battery_sta {
-> +	SAM_BATTERY_STA_OK      =3D 0x0f,
-> +	SAM_BATTERY_STA_PRESENT	=3D 0x10,
-> +};
-> +
-> +/* Get battery status (_STA). */
-> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_sta, __le32, {
-> +	.target_category =3D SSAM_SSH_TC_BAT,
-> +	.command_id      =3D 0x01,
-> +});
-> +
-> +/* Get platform power source for battery (_PSR / DPTF PSRC). */
-> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_psrc, __le32, {
-> +	.target_category =3D SSAM_SSH_TC_BAT,
-> +	.command_id      =3D 0x0d,
-> +});
-> +
-> +
-> +/* -- Device structures. -----------------------------------------------=
------ */
-> +
-> +struct spwr_psy_properties {
-> +	const char *name;
-> +	struct ssam_event_registry registry;
-> +};
-> +
-> +struct spwr_ac_device {
-> +	struct ssam_device *sdev;
-> +
-> +	char name[32];
-> +	struct power_supply *psy;
-> +	struct power_supply_desc psy_desc;
-> +
-> +	struct ssam_event_notifier notif;
-> +
-> +	struct mutex lock;  /* Guards access to state below. */
-> +
-> +	__le32 state;
-> +};
-> +
-> +
-> +/* -- State management. ------------------------------------------------=
------ */
-> +
-> +static int spwr_ac_update_unlocked(struct spwr_ac_device *ac)
-> +{
-> +	u32 old =3D ac->state;
-> +	int status;
-> +
-> +	lockdep_assert_held(&ac->lock);
-> +
-> +	status =3D ssam_retry(ssam_bat_get_psrc, ac->sdev, &ac->state);
-> +	if (status < 0)
-> +		return status;
-> +
-> +	return old !=3D ac->state;
-> +}
-> +
-> +static int spwr_ac_update(struct spwr_ac_device *ac)
-> +{
-> +	int status;
-> +
-> +	mutex_lock(&ac->lock);
-> +	status =3D spwr_ac_update_unlocked(ac);
-> +	mutex_unlock(&ac->lock);
-> +
-> +	return status;
-> +}
-> +
-> +static int spwr_ac_recheck(struct spwr_ac_device *ac)
-> +{
-> +	int status;
-> +
-> +	status =3D spwr_ac_update(ac);
-> +	if (status > 0)
-> +		power_supply_changed(ac->psy);
-> +
-> +	return status >=3D 0 ? 0 : status;
-> +}
-> +
-> +static u32 spwr_notify_ac(struct ssam_event_notifier *nf, const struct s=
-sam_event *event)
-> +{
-> +	struct spwr_ac_device *ac;
-> +	int status;
-> +
-> +	ac =3D container_of(nf, struct spwr_ac_device, notif);
-> +
-> +	dev_dbg(&ac->sdev->dev, "power event (cid =3D %#04x, iid =3D %#04x, tid=
- =3D %#04x)\n",
-> +		event->command_id, event->instance_id, event->target_id);
-> +
-> +	/*
-> +	 * Allow events of all targets/instances here. Global adapter status
-> +	 * seems to be handled via target=3D1 and instance=3D1, but events are
-> +	 * reported on all targets/instances in use.
-> +	 *
-> +	 * While it should be enough to just listen on 1/1, listen everywhere to
-> +	 * make sure we don't miss anything.
-> +	 */
-> +
-> +	switch (event->command_id) {
-> +	case SAM_EVENT_CID_BAT_ADP:
-> +		status =3D spwr_ac_recheck(ac);
-> +		return ssam_notifier_from_errno(status) | SSAM_NOTIF_HANDLED;
-> +
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
-> +
-> +/* -- Properties. ------------------------------------------------------=
------ */
-> +
-> +static enum power_supply_property spwr_ac_props[] =3D {
-> +	POWER_SUPPLY_PROP_ONLINE,
-> +};
-> +
-> +static int spwr_ac_get_property(struct power_supply *psy, enum power_sup=
-ply_property psp,
-> +				union power_supply_propval *val)
-> +{
-> +	struct spwr_ac_device *ac =3D power_supply_get_drvdata(psy);
-> +	int status;
-> +
-> +	mutex_lock(&ac->lock);
-> +
-> +	status =3D spwr_ac_update_unlocked(ac);
-> +	if (status)
-> +		goto out;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_ONLINE:
-> +		val->intval =3D !!le32_to_cpu(ac->state);
-> +		break;
-> +
-> +	default:
-> +		status =3D -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&ac->lock);
-> +	return status;
-> +}
-> +
-> +
-> +/* -- Device setup. ----------------------------------------------------=
------ */
-> +
-> +static void spwr_ac_init(struct spwr_ac_device *ac, struct ssam_device *=
-sdev,
-> +			 struct ssam_event_registry registry, const char *name)
-> +{
-> +	mutex_init(&ac->lock);
-> +	strncpy(ac->name, name, ARRAY_SIZE(ac->name) - 1);
-> +
-> +	ac->sdev =3D sdev;
-> +
-> +	ac->notif.base.priority =3D 1;
-> +	ac->notif.base.fn =3D spwr_notify_ac;
-> +	ac->notif.event.reg =3D registry;
-> +	ac->notif.event.id.target_category =3D sdev->uid.category;
-> +	ac->notif.event.id.instance =3D 0;
-> +	ac->notif.event.mask =3D SSAM_EVENT_MASK_NONE;
-> +	ac->notif.event.flags =3D SSAM_EVENT_SEQUENCED;
-> +
-> +	ac->psy_desc.name =3D ac->name;
-> +	ac->psy_desc.type =3D POWER_SUPPLY_TYPE_MAINS;
-> +	ac->psy_desc.properties =3D spwr_ac_props;
-> +	ac->psy_desc.num_properties =3D ARRAY_SIZE(spwr_ac_props);
-> +	ac->psy_desc.get_property =3D spwr_ac_get_property;
-> +}
-> +
-> +static void spwr_ac_destroy(struct spwr_ac_device *ac)
-> +{
-> +	mutex_destroy(&ac->lock);
+> +#include <linux/init.h>
+> +#include <linux/acpi.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
 
-same as battery driver - use devm_add_action_or_reset or
-just drop it. It's not very useful at the end of remove().
+It is usually preferred if the list is sorted alphabetically.
 
-> +}
 
-static char *battery_supplied_to[] =3D {
-    "BAT1",
-    "BAT2",
-};
+> +
+> +#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
+> +#define DRVNAME "gigabyte-wmi"
+> +
+> +MODULE_AUTHOR("Thomas Wei=C3=9Fschuh <thomas@weissschuh.net>");
+> +MODULE_DESCRIPTION("Gigabyte Generic WMI Driver");
 
-> +static int spwr_ac_register(struct spwr_ac_device *ac)
-> +{
-> +	struct power_supply_config psy_cfg =3D {};
-> +	__le32 sta;
-> +	int status;
-> +
-> +	/* Make sure the device is there and functioning properly. */
-> +	status =3D ssam_retry(ssam_bat_get_sta, ac->sdev, &sta);
-> +	if (status)
-> +		return status;
-> +
-> +	if ((le32_to_cpu(sta) & SAM_BATTERY_STA_OK) !=3D SAM_BATTERY_STA_OK)
-> +		return -ENODEV;
-> +
-> +	psy_cfg.drv_data =3D ac;
+The Kconfig says "Gigabyte WMI **temperature** driver". Which one is it?
 
-psy_cfg.supplied_to =3D battery_supplied_to;
-psy_cfg.num_supplicants =3D 2;
 
-> +	ac->psy =3D power_supply_register(&ac->sdev->dev, &ac->psy_desc, &psy_c=
-fg);
-> +	if (IS_ERR(ac->psy))
-> +		return PTR_ERR(ac->psy);
-> +
-> +	status =3D ssam_notifier_register(ac->sdev->ctrl, &ac->notif);
-> +	if (status)
-> +		power_supply_unregister(ac->psy);
-> +
-> +	return status;
-> +}
-> +
-> +static int spwr_ac_unregister(struct spwr_ac_device *ac)
-> +{
-> +	ssam_notifier_unregister(ac->sdev->ctrl, &ac->notif);
-> +	power_supply_unregister(ac->psy);
-
-This driver can also use devm_power_supply_register :)
-
-> +	return 0;
-> +}
-> +
-> +
-> +/* -- Driver setup. ----------------------------------------------------=
------ */
-> +
-> +static int __maybe_unused surface_ac_resume(struct device *dev)
-> +{
-> +	return spwr_ac_recheck(dev_get_drvdata(dev));
-> +}
-> +SIMPLE_DEV_PM_OPS(surface_ac_pm_ops, NULL, surface_ac_resume);
-> +
-> +static int surface_ac_probe(struct ssam_device *sdev)
-> +{
-> +	const struct spwr_psy_properties *p;
-> +	struct spwr_ac_device *ac;
-> +	int status;
-> +
-> +	p =3D ssam_device_get_match_data(sdev);
-> +	if (!p)
-> +		return -ENODEV;
-> +
-> +	ac =3D devm_kzalloc(&sdev->dev, sizeof(*ac), GFP_KERNEL);
-> +	if (!ac)
-> +		return -ENOMEM;
-> +
-> +	spwr_ac_init(ac, sdev, p->registry, p->name);
-> +	ssam_device_set_drvdata(sdev, ac);
-> +
-> +	status =3D spwr_ac_register(ac);
-> +	if (status)
-> +		spwr_ac_destroy(ac);
-> +
-> +	return status;
-> +}
-> +
-> +static void surface_ac_remove(struct ssam_device *sdev)
-> +{
-> +	struct spwr_ac_device *ac =3D ssam_device_get_drvdata(sdev);
-> +
-> +	spwr_ac_unregister(ac);
-> +	spwr_ac_destroy(ac);
-> +}
-> +
-> +static const struct spwr_psy_properties spwr_psy_props_adp1 =3D {
-> +	.name =3D "ADP1",
-> +	.registry =3D SSAM_EVENT_REGISTRY_SAM,
-> +};
-> +
-> +static const struct ssam_device_id surface_ac_match[] =3D {
-> +	{ SSAM_SDEV(BAT, 0x01, 0x01, 0x01), (unsigned long)&spwr_psy_props_adp1=
- },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(ssam, surface_ac_match);
-> +
-> +static struct ssam_device_driver surface_ac_driver =3D {
-> +	.probe =3D surface_ac_probe,
-> +	.remove =3D surface_ac_remove,
-> +	.match_table =3D surface_ac_match,
-> +	.driver =3D {
-> +		.name =3D "surface_ac",
-> +		.pm =3D &surface_ac_pm_ops,
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +};
-> +module_ssam_device_driver(surface_ac_driver);
-> +
-> +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
-> +MODULE_DESCRIPTION("AC driver for Surface System Aggregator Module");
 > +MODULE_LICENSE("GPL");
+> +
+> +MODULE_ALIAS("wmi:" GIGABYTE_WMI_GUID);
+> +
+> +enum gigabyte_wmi_commandtype {
+> +=09GIGABYTE_WMI_BUILD_DATE_QUERY       =3D   0x1,
+> +=09GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =3D   0x2,
+> +=09GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =3D   0x4,
+> +=09GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =3D   0x5,
+> +=09GIGABYTE_WMI_TEMPERATURE_QUERY      =3D 0x125,
+> +};
+> +
+> +static int gigabyte_wmi_temperature(u8 sensor, s8 *res);
 
-Otherwise LGTM.
+If you change the order of functions, you can get rid of this forward decla=
+ration.
 
-Thanks,
 
--- Sebastian
+> +
+> +static ssize_t temp_show(struct device *dev, struct device_attribute *at=
+tr,
+> +=09=09=09 char *buf)
+> +{
+> +=09struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr=
+);
+> +=09int index =3D sattr->index;
+> +=09s8 temp;
+> +=09acpi_status res;
+> +
+> +=09res =3D gigabyte_wmi_temperature(index, &temp);
+> +=09if (ACPI_FAILURE(res))
+> +=09=09return -res;
 
---meea2yzlgltwcg7w
-Content-Type: application/pgp-signature; name="signature.asc"
+ACPI errors and errnos are not compatible, you can't return it like that. O=
+r,
+technically, you can, but it does not make sense. E.g. it'd "convert"
+AE_NO_MEMORY to EINTR since both have the numeric value 4.
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmBrMRIACgkQ2O7X88g7
-+pqjxA//anLYKUvn0LfLXdIgGLqe6J7m2Z36g90S8kTxxAKQ0i7+kv3tojlgeu6b
-82kVnyipGbZ6msnEeI/7V1ytVLFdsDv5zSB/da+SxpkYLTVQo2fc8zRl+Smm3kv8
-CjOIE2u5WIJRM39ZC9o3yOC4eCyBiiq/F94+WTtM4tlZMkoXUwxxHQoc99b/A93l
-XSspuEdQyRXQRFTEEGy+511y0d857oksOAvpe9kSAGzsFCVncXx/oIB2J4yq3odi
-dDP26r+nArKrvSZegsZ7wSBeg/U3/DQycinwHZcqQJ4etETzT08UKrSJpSUaAEVv
-qyiort5cK0d0rPSy1B6Hn3NV1JzybAx18QvGWWgWrjGWArj05r4h+Cr153mtTIxD
-YuvFSQtJYChJ4TAhvA6xY5JmT4OqI29hqFnv8jjIzZTAWMRC9FaIA5poIaqMy9l7
-Iimd/bWUIXfE51gGkTOtY1H+tsMHsl6HfhXgCDcJ9q634P5uRICUUC70eqx976LO
-H3wwrtpa75HEFeUJKHtioF2tr3l+q24WcRYMeT4UCXZsMGI6X0+DeAsoagliD4iS
-2PrzNGNZ7rhz+I5vEVzXIHCQrJhqVRpAY0IGbDWeSX9I0jw7c15s0ZTvXxeLpuWz
-v3rdqlH9AhwIgWaccsj9nVTYEqzyvU5kRT/kpngCE7vnw8qYEAc=
-=GdNv
------END PGP SIGNATURE-----
+> +
+> +=09return sprintf(buf, "%d\n", temp * 1000);
 
---meea2yzlgltwcg7w--
+Use `sysfs_emit()`.
+
+
+> +}
+> +
+> +static SENSOR_DEVICE_ATTR_2_RO(temp1_input, temp, 0, 0);
+> +static SENSOR_DEVICE_ATTR_2_RO(temp2_input, temp, 0, 1);
+> +static SENSOR_DEVICE_ATTR_2_RO(temp3_input, temp, 0, 2);
+> +static SENSOR_DEVICE_ATTR_2_RO(temp4_input, temp, 0, 3);
+> +static SENSOR_DEVICE_ATTR_2_RO(temp5_input, temp, 0, 4);
+> +static SENSOR_DEVICE_ATTR_2_RO(temp6_input, temp, 0, 5);
+> +
+> +static struct platform_device *gigabyte_wmi_pdev;
+> +
+> +
+> +static struct attribute *gigabyte_wmi_hwmon_attributes_temp[] =3D {
+> +=09&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +=09&sensor_dev_attr_temp2_input.dev_attr.attr,
+> +=09&sensor_dev_attr_temp3_input.dev_attr.attr,
+> +=09&sensor_dev_attr_temp4_input.dev_attr.attr,
+> +=09&sensor_dev_attr_temp5_input.dev_attr.attr,
+> +=09&sensor_dev_attr_temp6_input.dev_attr.attr,
+> +=09NULL,
+> +};
+> +
+> +static const struct attribute_group gigabyte_wmi_hwmon_group_temp =3D {
+> +=09.attrs =3D gigabyte_wmi_hwmon_attributes_temp,
+> +};
+> +
+> +static const struct attribute_group *gigabyte_wmi_hwmon_groups[] =3D {
+> +=09&gigabyte_wmi_hwmon_group_temp,
+> +=09NULL,
+> +};
+
+If you want to, you can get rid of these two definitions if you rename
+`gigabyte_wmi_hwmon_attributes_temp` to `gigabyte_wmi_hwmon_temp_attrs`
+and use
+
+  ATTRIBUTE_GROUPS(gigabyte_wmi_hwmon_temp); // linux/sysfs.h
+
+that'll define `gigabyte_wmi_hwmon_temp_group` and `gigabyte_wmi_hwmon_temp=
+_groups`.
+
+
+> +
+> +static int gigabyte_wmi_probe(struct platform_device *pdev)
+> +{
+> +=09struct device *hwmon_dev;
+> +=09struct device *dev =3D &pdev->dev;
+> +
+> +=09if (!wmi_has_guid(GIGABYTE_WMI_GUID))
+> +=09=09return -ENODEV;
+> +=09gigabyte_wmi_pdev =3D pdev;
+> +
+> +=09hwmon_dev =3D devm_hwmon_device_register_with_groups(dev,
+> +=09=09=09=09=09"gigabyte_wmi",
+> +=09=09=09=09=09NULL, gigabyte_wmi_hwmon_groups);
+
+Is there a reason for not using `devm_hwmon_device_register_with_info()` an=
+d
+the hwmon_{chip,channel}_info, hwmon_ops stuff? That way you wouldn't need =
+to
+touch any of the sysfs things.
+
+
+> +=09return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +static struct platform_driver gigabyte_wmi_driver =3D {
+> +=09.driver =3D {
+> +=09=09.name=09=3D DRVNAME,
+> +=09},
+> +=09.probe=09=3D gigabyte_wmi_probe,
+> +};
+
+Is there any reason for using a platform driver instead of a `wmi_driver`?
+I think you could get rid of both the `platform_driver` and the `platform_d=
+evice`
+and simply use a `wmi_driver`.
+
+
+> +
+> +struct args {
+> +=09u32 arg1;
+> +=09u32 arg2;
+> +=09u32 arg3;
+> +};
+> +
+> +static acpi_status gigabyte_wmi_perform_query(
+> +=09=09enum gigabyte_wmi_commandtype command, struct args *args, struct a=
+cpi_buffer *out)
+
+Long function signatures are usually split up in such a way that the first =
+argument
+remains in line with the function name.
+
+
+> +{
+> +=09struct acpi_buffer in =3D {};
+> +
+> +=09if (!args) {
+> +=09=09struct args empty_args =3D {};
+> +
+> +=09=09args =3D &empty_args;
+
+I don't think this is correct. `args` will be a dangling pointer since `emp=
+ty_args`
+goes out of scope - if I'm not mistaken.
+
+
+> +=09}
+> +=09in.length =3D sizeof(*args);
+> +=09in.pointer =3D args;
+> +=09return wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out)=
+;
+> +}
+> +
+> +static int gigabyte_wmi_query_integer(
+> +=09=09enum gigabyte_wmi_commandtype command, struct args *args, u64 *res=
+)
+> +{
+> +=09union acpi_object *obj;
+> +=09struct acpi_buffer result =3D { ACPI_ALLOCATE_BUFFER, NULL };
+
+The allocated buffer is not freed.
+
+
+> +=09acpi_status ret;
+> +
+> +=09ret =3D gigabyte_wmi_perform_query(command, args, &result);
+> +=09if (ACPI_FAILURE(ret))
+> +=09=09return -ENXIO;
+> +=09obj =3D result.pointer;
+> +=09if (!obj || obj->type !=3D ACPI_TYPE_INTEGER) {
+> +=09=09pr_warn("Unexpected result type %d for command %d", obj->type, com=
+mand);
+> +=09=09return -ENXIO;
+> +=09}
+> +=09*res =3D obj->integer.value;
+> +=09return AE_OK;
+> +}
+> +
+> +static int gigabyte_wmi_temperature(u8 sensor, s8 *res)
+> +{
+> +=09struct args args =3D {
+> +=09=09.arg1 =3D sensor,
+> +=09};
+> +=09u64 temp;
+> +=09acpi_status ret;
+> +
+> +=09ret =3D gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &a=
+rgs, &temp);
+> +=09if (ret =3D=3D 0)
+> +=09=09*res =3D (s8) temp;
+
+That cast will be done no matter if it's explicitly specified,
+so you might want to drop it.
+
+
+> +=09return ret;
+> +}
+> +
+> +static int __init gigabyte_wmi_init(void)
+> +{
+> +=09struct platform_device *pdev;
+> +=09int err;
+> +
+> +=09err =3D platform_driver_register(&gigabyte_wmi_driver);
+> +=09if (err)
+> +=09=09return err;
+> +=09pdev =3D platform_device_alloc(DRVNAME, -1);
+
+Prefer `PLATFORM_DEVID_NONE` instead of -1.
+
+
+> +=09if (!pdev) {
+> +=09=09platform_driver_unregister(&gigabyte_wmi_driver);
+> +=09=09return -ENOMEM;
+> +=09}
+> +=09return platform_device_add(pdev);
+
+The driver is not unregistered if this fails.
+
+
+> +}
+> +module_init(gigabyte_wmi_init);
+> +
+> +static void __exit gigabyte_wmi_exit(void)
+> +{
+> +=09platform_device_unregister(gigabyte_wmi_pdev);
+> +=09platform_driver_unregister(&gigabyte_wmi_driver);
+> +}
+> +module_exit(gigabyte_wmi_exit);
+>
+> base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
+> --
+> 2.31.1
+>
+
+
+Regards,
+Barnab=C3=A1s P=C5=91cze
