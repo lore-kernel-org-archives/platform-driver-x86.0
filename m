@@ -2,515 +2,261 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83351C43461
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 19:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE2BC43460
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 20:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED6E610C7
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 19:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE08613AD
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 20:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbhDETJH (ORCPT
+        id S235691AbhDEUty (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Apr 2021 15:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239304AbhDETIx (ORCPT
+        Mon, 5 Apr 2021 16:49:54 -0400
+Received: from ned.t-8ch.de ([212.47.237.191]:54754 "EHLO ned.t-8ch.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232860AbhDEUtx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Apr 2021 15:08:53 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4571C061756;
-        Mon,  5 Apr 2021 12:08:44 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a7so18233700ejs.3;
-        Mon, 05 Apr 2021 12:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0QHNXbaTwsfV7jLzNxr19KZRs0HIlfTov9iWUs+upXI=;
-        b=K+DUF5gw8r6nKsV0tNbOlg+H1Ur9B4kf/X+ffat7G/31mHHx0MeCCdJOLKjpsrIpfc
-         qbMQcg5ttE3c7nIehjVgrapcvkbAr47437eh2cgL+FMzOhAoJi+bd6r3PXiDLZ7dLr0D
-         2sfh0eNXF0V3m64gA3vYoHZkqx/tf7jZnOvGazRrty6+B2dVXEBJUu/jvCS7MwYkPErV
-         hjwkL8giU5nHTBjP3XOlLQvnnIV76qYnjYyEb6cfYQ3nAE6TLhuZllcPpGbEN+7TFe+s
-         apPyfcwpGp845oxy2Q6UiFNeKbpeqUaf8FOAzEtUybWiuXOPjMruCBHvBCA9sNbdUL7Z
-         GJEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0QHNXbaTwsfV7jLzNxr19KZRs0HIlfTov9iWUs+upXI=;
-        b=NO8ga0fEpJUROvg1hoxuzuvoOGul22X1z0NvESTwwCJM5du/aijEnikSYAPVaLARYF
-         b5R2iJuTNA3bUt7IN8JMoiriFX0fljs+QpRsPFlHHLQKdYYbQUkizvzJ74U+g/wjxiG5
-         fnfJfBiAcTsN6Tbl5s1dwMSdY0Iquu51nSU/PgkCsSv0kJAXWOXSaX+6erQQR75Rayko
-         OtSq5dUsVzASkjelKjxS8i/nl+gloC3mslVKVHDtpN5XyFz8SL3oiWzfFFNT8WNv7C5U
-         5CMIDB/3AqHUCAC3Qhu+OWV9kltl5ve2/ZIdnaGclFYrmhy+bjanqCxro1nhhO16g04J
-         2Jbg==
-X-Gm-Message-State: AOAM531OvXWamueqHo5E031fDrHg1McdK0x0OJ2eA4H9HXPEnCRGdAok
-        zT9xb8QrBVhvKXRZc7hzp8Tf0nzk3ak=
-X-Google-Smtp-Source: ABdhPJxuRW4ice3UncXEZxZr9CP/PdlqGhCZ0NVqAS0NkMNR06axwvD+ecIxmcQ4XkiMwf6n4lylPQ==
-X-Received: by 2002:a17:907:105c:: with SMTP id oy28mr11627437ejb.552.1617649722988;
-        Mon, 05 Apr 2021 12:08:42 -0700 (PDT)
-Received: from [10.18.0.9] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id a3sm9356936ejv.40.2021.04.05.12.08.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Apr 2021 12:08:42 -0700 (PDT)
-Subject: Re: [PATCH 2/2] power: supply: Add AC driver for Surface Aggregator
- Module
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210309000530.2165752-1-luzmaximilian@gmail.com>
- <20210309000530.2165752-3-luzmaximilian@gmail.com>
- <20210405154730.3ezemy7jcnmooget@earth.universe>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <5a4b2bea-42ee-8516-bb90-c398238b31aa@gmail.com>
-Date:   Mon, 5 Apr 2021 21:08:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        Mon, 5 Apr 2021 16:49:53 -0400
+From:   =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1617655777;
+        bh=F2uG0XiAg/JJ2Fj+hieuEdstolegFP/KI92lWRicuWk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RzEc/j9UOiKD2AbKLZ7zUuC5wAb43gbJd7xwJqZkV2kRMSqVmR5TuKxeuFixe+eO6
+         E6idX6JnVjmYbLm4y15TxJCO1W6Bct1tcp5yjUlbZy83/aR+gTDj5lltHGOLadnGjR
+         7Xk9+AzBIdnBH0L0clVqQutaWZGDcHl6TFeqQ9SU=
+To:     platform-driver-x86@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
+Date:   Mon,  5 Apr 2021 22:48:10 +0200
+Message-Id: <20210405204810.339763-1-linux@weissschuh.net>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
+References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210405154730.3ezemy7jcnmooget@earth.universe>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Changes since v1:
+* Incorporate feedback from Barnabás Pőcze
+  * Use a WMI driver instead of a platform driver
+  * Let the kernel manage the driver lifecycle
+  * Fix errno/ACPI error confusion
+  * Fix resource cleanup
+  * Document reason for integer casting
 
-On 4/5/21 5:47 PM, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Tue, Mar 09, 2021 at 01:05:30AM +0100, Maximilian Luz wrote:
->> On newer Microsoft Surface models (specifically 7th-generation, i.e.
->> Surface Pro 7, Surface Book 3, Surface Laptop 3, and Surface Laptop Go),
->> battery and AC status/information is no longer handled via standard ACPI
->> devices, but instead directly via the Surface System Aggregator Module
->> (SSAM), i.e. the embedded controller on those devices.
->>
->> While on previous generation models, AC status is also handled via SSAM,
->> an ACPI shim was present to translate the standard ACPI AC interface to
->> SSAM requests. The SSAM interface itself, which is modeled closely after
->> the ACPI interface, has not changed.
->>
->> This commit introduces a new SSAM client device driver to support AC
->> status/information via the aforementioned interface on said Surface
->> models.
->>
->> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
->> ---
->>
->> Note: This patch depends on the
->>
->>      platform/surface: Add Surface Aggregator device registry
->>
->> series. More specifically patch
->>
->>      platform/surface: Set up Surface Aggregator device registry
->>
->> The full series has been merged into the for-next branch of the
->> platform-drivers-x86 tree [1]. The commit in question can be found at
->> [2].
->>
->> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=for-next
->> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=fc622b3d36e6d91330fb21506b9ad1e3206a4dde
->>
->> ---
->>   MAINTAINERS                            |   1 +
->>   drivers/power/supply/Kconfig           |  16 ++
->>   drivers/power/supply/Makefile          |   1 +
->>   drivers/power/supply/surface_charger.c | 296 +++++++++++++++++++++++++
->>   4 files changed, 314 insertions(+)
->>   create mode 100644 drivers/power/supply/surface_charger.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index f44521abe8bf..d6651ba93997 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -11867,6 +11867,7 @@ L:	linux-pm@vger.kernel.org
->>   L:	platform-driver-x86@vger.kernel.org
->>   S:	Maintained
->>   F:	drivers/power/supply/surface_battery.c
->> +F:	drivers/power/supply/surface_charger.c
->>   
->>   MICROSOFT SURFACE GPE LID SUPPORT DRIVER
->>   M:	Maximilian Luz <luzmaximilian@gmail.com>
->> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
->> index cebeff10d543..91f7cf425ac9 100644
->> --- a/drivers/power/supply/Kconfig
->> +++ b/drivers/power/supply/Kconfig
->> @@ -817,4 +817,20 @@ config BATTERY_SURFACE
->>   	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
->>   	  Surface Book 3, and Surface Laptop Go.
->>   
->> +config CHARGER_SURFACE
->> +	tristate "AC driver for 7th-generation Microsoft Surface devices"
->> +	depends on SURFACE_AGGREGATOR_REGISTRY
->> +	help
->> +	  Driver for AC devices connected via/managed by the Surface System
->> +	  Aggregator Module (SSAM).
->> +
->> +	  This driver provides AC-information and -status support for Surface
->> +	  devices where said data is not exposed via the standard ACPI devices.
->> +	  On those models (7th-generation), AC-information is instead handled
->> +	  directly via a SSAM client device and this driver.
->> +
->> +	  Say M or Y here to include AC status support for 7th-generation
->> +	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
->> +	  Surface Book 3, and Surface Laptop Go.
->> +
->>   endif # POWER_SUPPLY
->> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
->> index 134041538d2c..a7309a3d1a47 100644
->> --- a/drivers/power/supply/Makefile
->> +++ b/drivers/power/supply/Makefile
->> @@ -102,3 +102,4 @@ obj-$(CONFIG_CHARGER_WILCO)	+= wilco-charger.o
->>   obj-$(CONFIG_RN5T618_POWER)	+= rn5t618_power.o
->>   obj-$(CONFIG_BATTERY_ACER_A500)	+= acer_a500_battery.o
->>   obj-$(CONFIG_BATTERY_SURFACE)	+= surface_battery.o
->> +obj-$(CONFIG_CHARGER_SURFACE)	+= surface_charger.o
->> diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/supply/surface_charger.c
->> new file mode 100644
->> index 000000000000..fe484523a2c2
->> --- /dev/null
->> +++ b/drivers/power/supply/surface_charger.c
->> @@ -0,0 +1,296 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * AC driver for 7th-generation Microsoft Surface devices via Surface System
->> + * Aggregator Module (SSAM).
->> + *
->> + * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
->> + */
->> +
->> +#include <asm/unaligned.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/mutex.h>
->> +#include <linux/power_supply.h>
->> +#include <linux/types.h>
->> +
->> +#include <linux/surface_aggregator/device.h>
->> +
->> +
->> +/* -- SAM interface. -------------------------------------------------------- */
->> +
->> +enum sam_event_cid_bat {
->> +	SAM_EVENT_CID_BAT_ADP   = 0x17,
->> +};
->> +
->> +enum sam_battery_sta {
->> +	SAM_BATTERY_STA_OK      = 0x0f,
->> +	SAM_BATTERY_STA_PRESENT	= 0x10,
->> +};
->> +
->> +/* Get battery status (_STA). */
->> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_sta, __le32, {
->> +	.target_category = SSAM_SSH_TC_BAT,
->> +	.command_id      = 0x01,
->> +});
->> +
->> +/* Get platform power source for battery (_PSR / DPTF PSRC). */
->> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_psrc, __le32, {
->> +	.target_category = SSAM_SSH_TC_BAT,
->> +	.command_id      = 0x0d,
->> +});
->> +
->> +
->> +/* -- Device structures. ---------------------------------------------------- */
->> +
->> +struct spwr_psy_properties {
->> +	const char *name;
->> +	struct ssam_event_registry registry;
->> +};
->> +
->> +struct spwr_ac_device {
->> +	struct ssam_device *sdev;
->> +
->> +	char name[32];
->> +	struct power_supply *psy;
->> +	struct power_supply_desc psy_desc;
->> +
->> +	struct ssam_event_notifier notif;
->> +
->> +	struct mutex lock;  /* Guards access to state below. */
->> +
->> +	__le32 state;
->> +};
->> +
->> +
->> +/* -- State management. ----------------------------------------------------- */
->> +
->> +static int spwr_ac_update_unlocked(struct spwr_ac_device *ac)
->> +{
->> +	u32 old = ac->state;
->> +	int status;
->> +
->> +	lockdep_assert_held(&ac->lock);
->> +
->> +	status = ssam_retry(ssam_bat_get_psrc, ac->sdev, &ac->state);
->> +	if (status < 0)
->> +		return status;
->> +
->> +	return old != ac->state;
->> +}
->> +
->> +static int spwr_ac_update(struct spwr_ac_device *ac)
->> +{
->> +	int status;
->> +
->> +	mutex_lock(&ac->lock);
->> +	status = spwr_ac_update_unlocked(ac);
->> +	mutex_unlock(&ac->lock);
->> +
->> +	return status;
->> +}
->> +
->> +static int spwr_ac_recheck(struct spwr_ac_device *ac)
->> +{
->> +	int status;
->> +
->> +	status = spwr_ac_update(ac);
->> +	if (status > 0)
->> +		power_supply_changed(ac->psy);
->> +
->> +	return status >= 0 ? 0 : status;
->> +}
->> +
->> +static u32 spwr_notify_ac(struct ssam_event_notifier *nf, const struct ssam_event *event)
->> +{
->> +	struct spwr_ac_device *ac;
->> +	int status;
->> +
->> +	ac = container_of(nf, struct spwr_ac_device, notif);
->> +
->> +	dev_dbg(&ac->sdev->dev, "power event (cid = %#04x, iid = %#04x, tid = %#04x)\n",
->> +		event->command_id, event->instance_id, event->target_id);
->> +
->> +	/*
->> +	 * Allow events of all targets/instances here. Global adapter status
->> +	 * seems to be handled via target=1 and instance=1, but events are
->> +	 * reported on all targets/instances in use.
->> +	 *
->> +	 * While it should be enough to just listen on 1/1, listen everywhere to
->> +	 * make sure we don't miss anything.
->> +	 */
->> +
->> +	switch (event->command_id) {
->> +	case SAM_EVENT_CID_BAT_ADP:
->> +		status = spwr_ac_recheck(ac);
->> +		return ssam_notifier_from_errno(status) | SSAM_NOTIF_HANDLED;
->> +
->> +	default:
->> +		return 0;
->> +	}
->> +}
->> +
->> +
->> +/* -- Properties. ----------------------------------------------------------- */
->> +
->> +static enum power_supply_property spwr_ac_props[] = {
->> +	POWER_SUPPLY_PROP_ONLINE,
->> +};
->> +
->> +static int spwr_ac_get_property(struct power_supply *psy, enum power_supply_property psp,
->> +				union power_supply_propval *val)
->> +{
->> +	struct spwr_ac_device *ac = power_supply_get_drvdata(psy);
->> +	int status;
->> +
->> +	mutex_lock(&ac->lock);
->> +
->> +	status = spwr_ac_update_unlocked(ac);
->> +	if (status)
->> +		goto out;
->> +
->> +	switch (psp) {
->> +	case POWER_SUPPLY_PROP_ONLINE:
->> +		val->intval = !!le32_to_cpu(ac->state);
->> +		break;
->> +
->> +	default:
->> +		status = -EINVAL;
->> +		goto out;
->> +	}
->> +
->> +out:
->> +	mutex_unlock(&ac->lock);
->> +	return status;
->> +}
->> +
->> +
->> +/* -- Device setup. --------------------------------------------------------- */
->> +
->> +static void spwr_ac_init(struct spwr_ac_device *ac, struct ssam_device *sdev,
->> +			 struct ssam_event_registry registry, const char *name)
->> +{
->> +	mutex_init(&ac->lock);
->> +	strncpy(ac->name, name, ARRAY_SIZE(ac->name) - 1);
->> +
->> +	ac->sdev = sdev;
->> +
->> +	ac->notif.base.priority = 1;
->> +	ac->notif.base.fn = spwr_notify_ac;
->> +	ac->notif.event.reg = registry;
->> +	ac->notif.event.id.target_category = sdev->uid.category;
->> +	ac->notif.event.id.instance = 0;
->> +	ac->notif.event.mask = SSAM_EVENT_MASK_NONE;
->> +	ac->notif.event.flags = SSAM_EVENT_SEQUENCED;
->> +
->> +	ac->psy_desc.name = ac->name;
->> +	ac->psy_desc.type = POWER_SUPPLY_TYPE_MAINS;
->> +	ac->psy_desc.properties = spwr_ac_props;
->> +	ac->psy_desc.num_properties = ARRAY_SIZE(spwr_ac_props);
->> +	ac->psy_desc.get_property = spwr_ac_get_property;
->> +}
->> +
->> +static void spwr_ac_destroy(struct spwr_ac_device *ac)
->> +{
->> +	mutex_destroy(&ac->lock);
-> 
-> same as battery driver - use devm_add_action_or_reset or
-> just drop it. It's not very useful at the end of remove().
+Thank you Barnabás for your review, it is much appreciated.
 
-Right, I'll drop that.
+-- >8 --
 
->> +}
-> 
-> static char *battery_supplied_to[] = {
->      "BAT1",
->      "BAT2",
-> };
-> 
->> +static int spwr_ac_register(struct spwr_ac_device *ac)
->> +{
->> +	struct power_supply_config psy_cfg = {};
->> +	__le32 sta;
->> +	int status;
->> +
->> +	/* Make sure the device is there and functioning properly. */
->> +	status = ssam_retry(ssam_bat_get_sta, ac->sdev, &sta);
->> +	if (status)
->> +		return status;
->> +
->> +	if ((le32_to_cpu(sta) & SAM_BATTERY_STA_OK) != SAM_BATTERY_STA_OK)
->> +		return -ENODEV;
->> +
->> +	psy_cfg.drv_data = ac;
-> 
-> psy_cfg.supplied_to = battery_supplied_to;
-> psy_cfg.num_supplicants = 2;
+Tested with a X570 I Aorus Pro Wifi.
+The mainboard contains an ITE IT8688E chip for management.
+This chips is also handled by drivers/hwmon/i87.c but as it is also used
+by the firmware itself it needs an ACPI driver.
 
-Thanks, I'll add that.
+Unfortunately not all sensor registers are handled by the firmware and even
+less are exposed via WMI.
 
-> 
->> +	ac->psy = power_supply_register(&ac->sdev->dev, &ac->psy_desc, &psy_cfg);
->> +	if (IS_ERR(ac->psy))
->> +		return PTR_ERR(ac->psy);
->> +
->> +	status = ssam_notifier_register(ac->sdev->ctrl, &ac->notif);
->> +	if (status)
->> +		power_supply_unregister(ac->psy);
->> +
->> +	return status;
->> +}
->> +
->> +static int spwr_ac_unregister(struct spwr_ac_device *ac)
->> +{
->> +	ssam_notifier_unregister(ac->sdev->ctrl, &ac->notif);
->> +	power_supply_unregister(ac->psy);
-> 
-> This driver can also use devm_power_supply_register :)
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+ drivers/platform/x86/Kconfig        |  11 +++
+ drivers/platform/x86/Makefile       |   1 +
+ drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
+ 3 files changed, 150 insertions(+)
+ create mode 100644 drivers/platform/x86/gigabyte-wmi.c
 
-I'll switch to that.
-  
->> +	return 0;
->> +}
->> +
->> +
->> +/* -- Driver setup. --------------------------------------------------------- */
->> +
->> +static int __maybe_unused surface_ac_resume(struct device *dev)
->> +{
->> +	return spwr_ac_recheck(dev_get_drvdata(dev));
->> +}
->> +SIMPLE_DEV_PM_OPS(surface_ac_pm_ops, NULL, surface_ac_resume);
->> +
->> +static int surface_ac_probe(struct ssam_device *sdev)
->> +{
->> +	const struct spwr_psy_properties *p;
->> +	struct spwr_ac_device *ac;
->> +	int status;
->> +
->> +	p = ssam_device_get_match_data(sdev);
->> +	if (!p)
->> +		return -ENODEV;
->> +
->> +	ac = devm_kzalloc(&sdev->dev, sizeof(*ac), GFP_KERNEL);
->> +	if (!ac)
->> +		return -ENOMEM;
->> +
->> +	spwr_ac_init(ac, sdev, p->registry, p->name);
->> +	ssam_device_set_drvdata(sdev, ac);
->> +
->> +	status = spwr_ac_register(ac);
->> +	if (status)
->> +		spwr_ac_destroy(ac);
->> +
->> +	return status;
->> +}
->> +
->> +static void surface_ac_remove(struct ssam_device *sdev)
->> +{
->> +	struct spwr_ac_device *ac = ssam_device_get_drvdata(sdev);
->> +
->> +	spwr_ac_unregister(ac);
->> +	spwr_ac_destroy(ac);
->> +}
->> +
->> +static const struct spwr_psy_properties spwr_psy_props_adp1 = {
->> +	.name = "ADP1",
->> +	.registry = SSAM_EVENT_REGISTRY_SAM,
->> +};
->> +
->> +static const struct ssam_device_id surface_ac_match[] = {
->> +	{ SSAM_SDEV(BAT, 0x01, 0x01, 0x01), (unsigned long)&spwr_psy_props_adp1 },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(ssam, surface_ac_match);
->> +
->> +static struct ssam_device_driver surface_ac_driver = {
->> +	.probe = surface_ac_probe,
->> +	.remove = surface_ac_remove,
->> +	.match_table = surface_ac_match,
->> +	.driver = {
->> +		.name = "surface_ac",
->> +		.pm = &surface_ac_pm_ops,
->> +		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->> +	},
->> +};
->> +module_ssam_device_driver(surface_ac_driver);
->> +
->> +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
->> +MODULE_DESCRIPTION("AC driver for Surface System Aggregator Module");
->> +MODULE_LICENSE("GPL");
-> 
-> Otherwise LGTM.
-> 
-> Thanks,
-> 
-> -- Sebastian
-> 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ad4e630e73e2..96622a2106f7 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -123,6 +123,17 @@ config XIAOMI_WMI
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called xiaomi-wmi.
+ 
++config GIGABYTE_WMI
++	tristate "Gigabyte WMI temperature driver"
++	depends on ACPI_WMI
++	depends on HWMON
++	help
++	  Say Y here if you want to support WMI-based temperature reporting on
++	  Gigabyte mainboards.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called gigabyte-wmi.
++
+ config ACERHDF
+ 	tristate "Acer Aspire One temperature and fan driver"
+ 	depends on ACPI && THERMAL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 60d554073749..1621ebfd04fd 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+ obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
++obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+ 
+ # Acer
+ obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+new file mode 100644
+index 000000000000..8618363e3ccf
+--- /dev/null
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
++ */
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/hwmon.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
++
++enum gigabyte_wmi_commandtype {
++	GIGABYTE_WMI_BUILD_DATE_QUERY       =   0x1,
++	GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =   0x2,
++	GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =   0x4,
++	GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =   0x5,
++	GIGABYTE_WMI_TEMPERATURE_QUERY      = 0x125,
++};
++
++struct gigabyte_wmi_args {
++	u32 arg1;
++};
++
++static int gigabyte_wmi_perform_query(enum gigabyte_wmi_commandtype command,
++		struct gigabyte_wmi_args *args, struct acpi_buffer *out)
++{
++	const struct acpi_buffer in = {
++		.length = sizeof(*args),
++		.pointer = args,
++	};
++
++	acpi_status ret = wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out);
++	if (ret == AE_OK) {
++		return 0;
++	} else {
++		return -EIO;
++	};
++}
++
++static int gigabyte_wmi_query_integer(enum gigabyte_wmi_commandtype command,
++		struct gigabyte_wmi_args *args, u64 *res)
++{
++	union acpi_object *obj;
++	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
++	int ret;
++
++	ret = gigabyte_wmi_perform_query(command, args, &result);
++	if (ret) {
++		goto out;
++	}
++	obj = result.pointer;
++	if (obj && obj->type == ACPI_TYPE_INTEGER) {
++		*res = obj->integer.value;
++		ret = 0;
++	} else {
++		ret = -EIO;
++	}
++out:
++	kfree(result.pointer);
++	return ret;
++}
++
++static int gigabyte_wmi_temperature(u8 sensor, long *res)
++{
++	struct gigabyte_wmi_args args = {
++		.arg1 = sensor,
++	};
++	u64 temp;
++	acpi_status ret;
++
++	ret = gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &args, &temp);
++	if (ret == 0)
++		*res = (s8) temp * 1000; // value is a signed 8-bit integer
++	return ret;
++}
++
++static int gigabyte_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++		u32 attr, int channel, long *val)
++{
++	return gigabyte_wmi_temperature(channel, val);
++}
++
++static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
++		u32 attr, int channel)
++{
++	return 0444;
++}
++
++static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(temp,
++			HWMON_T_INPUT,
++			HWMON_T_INPUT,
++			HWMON_T_INPUT,
++			HWMON_T_INPUT,
++			HWMON_T_INPUT,
++			HWMON_T_INPUT),
++	NULL,
++};
++
++static const struct hwmon_ops gigabyte_wmi_hwmon_ops = {
++	.read = gigabyte_wmi_hwmon_read,
++	.is_visible = gigabyte_wmi_hwmon_is_visible,
++};
++
++static const struct hwmon_chip_info gigabyte_wmi_hwmon_chip_info = {
++	.ops = &gigabyte_wmi_hwmon_ops,
++	.info = gigabyte_wmi_hwmon_info,
++};
++
++static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
++{
++	struct device *hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
++			"gigabyte_wmi", NULL,
++			&gigabyte_wmi_hwmon_chip_info, NULL);
++
++	return PTR_ERR_OR_ZERO(hwmon_dev);
++}
++
++static const struct wmi_device_id gigabyte_wmi_id_table[] = {
++	{ GIGABYTE_WMI_GUID, NULL },
++	{ },
++};
++
++static struct wmi_driver gigabyte_wmi_driver = {
++	.driver = {
++		.name = "gigabyte-wmi",
++	},
++	.id_table = gigabyte_wmi_id_table,
++	.probe = gigabyte_wmi_probe,
++};
++module_wmi_driver(gigabyte_wmi_driver);
++
++MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
++MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
++MODULE_DESCRIPTION("Gigabyte Temperature WMI Driver");
++MODULE_LICENSE("GPL");
 
-Thanks for the review!
+base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
+-- 
+2.31.1
 
-I'll start working on v2 right away.
-
-Regards,
-Max
