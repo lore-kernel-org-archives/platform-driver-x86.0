@@ -2,495 +2,1195 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E076C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B2C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D12361205
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF5760FEF
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 15:37:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241504AbhDEPSS (ORCPT
+        id S238467AbhDEPiC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Apr 2021 11:18:18 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:49012 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241494AbhDEPSR (ORCPT
+        Mon, 5 Apr 2021 11:38:02 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59928 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238086AbhDEPiC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Apr 2021 11:18:17 -0400
-Received: from pps.filterd (m0170394.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 135F6uM0012863;
-        Mon, 5 Apr 2021 11:17:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=AN2HcDn+CmbOmivG2xn7qGuyedMRnIdk2WgmHdgsa1U=;
- b=QW4y41l2XwQLtRykHKWL2wG5eT9c9uq1jMEuXPSwlFyjcY2vM+0P6YpQf+ZtN2mP8hz1
- hFtMphtxRZzYmUm1byKeFB+4Bc1UolOIfa3BaMAHJp3e3OSD1RpxZsVPRqov1NJH6VCN
- V5q5uE0WHO5RLux7hUZAkQEnb+Nyo6ucjqfWN5/dTQWa77mhSnDvTcbeo3fD5HLfaEyQ
- EkykLEfwMfv03o8sq+Ob0qp7k2LAVjzfOCWRUT8xrXYmRr7b45Xx58AsR6r5doBxpf+o
- T3N7x19KjPrwoCfMfutJ2GVVJ4QiP8SpPe1rOmJk8eLcazvwl/Nq7dLxjkJuqprohflB Gg== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 37q2mx3kup-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 05 Apr 2021 11:17:21 -0400
-Received: from pps.filterd (m0144103.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 135F6UMd122840;
-        Mon, 5 Apr 2021 11:17:21 -0400
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2107.outbound.protection.outlook.com [104.47.70.107])
-        by mx0b-00154901.pphosted.com with ESMTP id 37q58n9b3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 05 Apr 2021 11:17:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RI5mO2cVZA8Y/oAsPWxfzxddXXMoa32Id8h75BUj1ngePqp5aNxncYzBn0gKoOi0uFIGNOQjgZmGXh9kn+mieWBZhf+H6LuiIk4dhESlf+aH9LfjHJGD4XOI2bpsnSsQP5H1QqIR18ut2b3PHIsqzqWhfK1ApVhcmoy9/tA8lTdZB08pJOQ2DR6mBgo4NFwJhtDORbn6OKwbL8AHC+kPinGklD3qi5pzEQhI20T35+IPTOH7TSCJwcW/qpYlyq39IQq+YZx/Gx3HLjxm+lkoKn8DMc3ZNZ1RZTaCjExhh08huEdGyYmKookVO2SNrQ6JwNIYszZg9GACLFJA+wV6DA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AN2HcDn+CmbOmivG2xn7qGuyedMRnIdk2WgmHdgsa1U=;
- b=OPYORgDS8yzwAQ9lNXYaMz/Ka+nOxWL0cLUTFQagLlk71RqEah8a+gDA59wNsqCU4QPxA5+VcjbzzN8gUmozkMNiMZQ8D+bOI2PGODePuK8qP1FM7C50quZ7cPJ6iG79qsC4DQWxtZsWmRThzoVTRr9TJM0+VTBgL2FMIIf0eeAEZWp0Hr0filULzJoEYO0sU4snDB5FqOkPM5Onl1l7BUjBvpq9Rmsk5J5de4o0THNAjWHUmRKc/kJnx7L7B6RqQLU+6YqXDclFbL+Epx4ku4KZl0lpDV+rXzlnOuB62JCRWnDxuYdXDG4j2KANhXDIYf0a1ZO3vqU0go3YUik74A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com (2603:10b6:806:1a6::18)
- by SA1PR19MB4928.namprd19.prod.outlook.com (2603:10b6:806:185::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.29; Mon, 5 Apr
- 2021 15:17:19 +0000
-Received: from SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::8111:322d:270e:4814]) by SA1PR19MB4926.namprd19.prod.outlook.com
- ([fe80::8111:322d:270e:4814%7]) with mapi id 15.20.3999.032; Mon, 5 Apr 2021
- 15:17:19 +0000
-From:   "Limonciello, Mario" <Mario.Limonciello@dell.com>
-To:     =?utf-8?B?QmFybmFiw6FzIFDFkWN6ZQ==?= <pobrn@protonmail.com>,
-        "Yuan, Perry" <Perry.Yuan@dell.com>
-CC:     "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "mario.limonciello@outlook.com" <mario.limonciello@outlook.com>,
-        Dell Client Kernel <Dell.Client.Kernel@dell.com>
-Subject: RE: [PATCH v6 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-Thread-Topic: [PATCH v6 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-Thread-Index: AQHXKSz0ErA+2BSCsEee4FgjEZKsRKqkk7wAgAF240A=
-Date:   Mon, 5 Apr 2021 15:17:19 +0000
-Message-ID: <SA1PR19MB492678E19C1403E656F9382BFA779@SA1PR19MB4926.namprd19.prod.outlook.com>
-References: <20210404083137.14364-1-Perry_Yuan@Dell.com>
- <cWWbrEA1yiaAjQlmJAa4JxS_mMAPGbFs8_1vyHRYw9oX5IL3q_B99re11CL1DoTZOER54QHidpc-pb-BQaY2JTLMirsXVFLta-PtfwWhR3E=@protonmail.com>
-In-Reply-To: <cWWbrEA1yiaAjQlmJAa4JxS_mMAPGbFs8_1vyHRYw9oX5IL3q_B99re11CL1DoTZOER54QHidpc-pb-BQaY2JTLMirsXVFLta-PtfwWhR3E=@protonmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-04-05T15:16:46.8300869Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=ec842d39-86e9-45a4-818b-d7a532b70ad3;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-authentication-results: protonmail.com; dkim=none (message not signed)
- header.d=none;protonmail.com; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [76.251.167.31]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 76ab0b7f-2f63-4176-b543-08d8f845e7b9
-x-ms-traffictypediagnostic: SA1PR19MB4928:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA1PR19MB4928342DCB7E4AB62FFFC79AFA779@SA1PR19MB4928.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:1186;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SBFPhqzV1MgSQuf6lEuHH+h7BxHf67fKGFKROaf4Tlpx7CijIYAB1PE5lDOVd2W1E1JxK6Zy8RVc1Vqq2rzftkoHhjRJz10CDryRKT2CjE24juKPffUELr1kHqMPN1u7dQHeMXDo2Smlv7Ji1ukx4tloYYg06Sydh3xO70g1OwQy6RdihDJQXkYA847gRwLRl/hMT2NTeVDULsYnUwjTArHfQwGRwanmyuUVtr8//r8E1ndgHaxHzUMAUw9i7G5iOEEmPO0Bk5iPDOBra4ZAaiWldt8qwYxF0uWYVnJJDs8EprLvmTzCrxAgDFiftHp3qtrp+O8D06LBOR+5NddqHPPV+GPbAhlu8Hr6gj1Ghrj9Fx5xMqaCxZ7KM4aNJOAMi2ML/KuHUXglE13+zoMycPknsoBwKhfctDkycbZ42qGsZXfDkychsszROHo+xtsShagAvjdqdb8paqgu/lzcm6k/C2Y/AGZUykkGFkwP7kWvtrmZKFwBF8x07h+0wslc3fdCB2+lVZq+AZs3FpQkpyXxs0OHB9AknkOw9fALw3HkvnfNegRPp5VB3zNm/ltg9qvbd9tqowaetMETfNbgMASwhg22CMvnIecIkioGN++xsOvREYGfKN3Sf/Fz0q5kzfNuWw0qgxFSewa6yylK+dbls2mOdcbfn/IV5UvENJA=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR19MB4926.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(33656002)(478600001)(2906002)(9686003)(66574015)(54906003)(6506007)(66476007)(26005)(52536014)(64756008)(4326008)(186003)(71200400001)(7416002)(66556008)(76116006)(66946007)(55016002)(30864003)(316002)(110136005)(8936002)(786003)(38100700001)(83380400001)(5660300002)(6636002)(66446008)(8676002)(86362001)(7696005)(107886003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?utf-8?B?WFVLS0JVZnBzcndOeTk0aEgyakFqNUpnOGF1eWRUUzJuYytBSzdzcmc2STRP?=
- =?utf-8?B?NFAySzh4eXVwODhkMWs4b0JHRmUrRG1pNUZFWmUrZGhXdFRGYURwamdJOVQ3?=
- =?utf-8?B?WXlLcnQwYWIwUjBZTFNpRU43ams2d3R2a0FNSWYvZThPTkttR25qZHMyc0F4?=
- =?utf-8?B?YzdycVNDTkRETUVPc3lQbWx4eitLdTFXMzhlelM3M3dqQzdiWU5hd292dXFk?=
- =?utf-8?B?aWVxQVFKa2VNRlAyZmxXMEVjendPYmJGQmx6VGJ6V0NjVHJWRkVtdGo0Q3VN?=
- =?utf-8?B?OFFLWi80ekhPTmwxYUcvSmVFZWw2clR1ZjhKekMzWFlHUmF3R21yQmtKVi9u?=
- =?utf-8?B?VDdMeFJlby8zVmNHaXlHZGFJajdxbTE0Q3d4eTRWUjMxd3k2MWROdWVWS3JI?=
- =?utf-8?B?UmVYTlJjcEhzOEdYam1xTHdxaE8rbTR3UTF6ZGRUQk1EUGxPbVdLQ05kMWFW?=
- =?utf-8?B?NTBaS1dzQU1vMkRvZEVoZWM4cVk3dmUyLzZSSkpkUjV3eVBMcjEvWEtuWGJ3?=
- =?utf-8?B?RWhFWnlCVlVFMzAydjY1eTlyQ3VqekZoRFdEa0tyc2tPYVZyZG4zWnhFRXpv?=
- =?utf-8?B?WXRMN3pobmJJakZxL09xakVMYWdSeHJWSng0eWdrcnVpQ256akFiRmZMRm1N?=
- =?utf-8?B?TVRPbzlmUWsxL2NFeWVXelhGc2FuN2d2NmZyTThsSFhaRDRrYnp0NzZqZXhC?=
- =?utf-8?B?WElRVnd1MXhyRURtMk9mdUMvdXcybkErZWJBTDVEMS84QTNNVzkxY3pqS1Ir?=
- =?utf-8?B?aW9qTzVyUzhiL3JEYmw3U0RBcy8yZDVMZVJ3Z1RzZVlLaXphS29hZVJHUnFo?=
- =?utf-8?B?WDJGWVRlcm1DTU9ncWdFOUVyMTcxR3gzcW81YzA4Ym5ZOEFrbDFkWFdDNEJu?=
- =?utf-8?B?QTJnZHM5WmI2eXRRNTlVbG5kM0hyM3FKaE5MSXdaM2thajNOdUFUNDVVRHNo?=
- =?utf-8?B?QVpVcjU5UjRMQlFaUjNLazVvU0xVajhnN2lRZlcxOFh4NW1wend0KzNCSmQw?=
- =?utf-8?B?bE56aW54WUhmNDlkbDRjUDA0OWQ3TmhBaThyTFp6aDd6TGFPdit2d2tUbnVP?=
- =?utf-8?B?Wm5jUWQ0bVhnVnF1NHBjemtRcng5K2dETWMxc0s0K1dBb05QN0VsY1kvZ1Ns?=
- =?utf-8?B?L0pJbytOZ3hVQlFJUkZGajh6RjBELzdXWWVNWGJ3VU4ySWhNbUluOFlkVG9G?=
- =?utf-8?B?clBkV3ZoajVPd2hzZXFmU3JoN254ZUNQamtGVE9nS1Z4K1VVTWNKSEd4UzJh?=
- =?utf-8?B?cFRkSTQvQVBpcVdUYTltTklyNCs0M0FCREtyMlhjTmRLeHBhVXh0U0JocmRZ?=
- =?utf-8?B?NW93Uy9rekorUktobURvSnQ0VkIwQjRtQmNUb1U4NlJpVHNCQ09DREIwdnQv?=
- =?utf-8?B?R1lIaFBNbU83TW83d3hXeHArejVwOTNQOWFaNXhMeVJCQTlXZnF0ekliUFVx?=
- =?utf-8?B?eUs4eFp2cFY4NjUyWjhleG9SV1R6cVh1eExoMWd3WllUS1l3TzBYRy9CTnl3?=
- =?utf-8?B?Z2lwN3VVWTNYWWZtMk1veTM0ZVYwZnFoQmRsQnhOZTRzL3FIUU9iRVZJOHlP?=
- =?utf-8?B?a0FPbXVZT3pJWEJkcHJDMmFvck90R3RDZGFsWXNrZFlVNVR6T2wrVWFvKzZv?=
- =?utf-8?B?TE1UQVorcXJzQkJWRHZNK3N1YXBWSThkbGk0d25JRkhBREJKcnE2TnF5dlNs?=
- =?utf-8?B?c0svTVQxR1pnR0ZSS3NENEZCS2xyYTVadlUvNkRsYTVvZlBQaG9wR1l3MDNn?=
- =?utf-8?Q?jzGZ7gR4zZ/NRo3j9iWvB9+MDcPM5FvxU8hbTfE?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 5 Apr 2021 11:38:02 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id BA5D21F4487D
+Received: by earth.universe (Postfix, from userid 1000)
+        id 4D7B43C0C96; Mon,  5 Apr 2021 17:37:52 +0200 (CEST)
+Date:   Mon, 5 Apr 2021 17:37:52 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-pm@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: Add battery driver for Surface
+ Aggregator Module
+Message-ID: <20210405153752.2r4ii5lguogchgl4@earth.universe>
+References: <20210309000530.2165752-1-luzmaximilian@gmail.com>
+ <20210309000530.2165752-2-luzmaximilian@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR19MB4926.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76ab0b7f-2f63-4176-b543-08d8f845e7b9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Apr 2021 15:17:19.6098
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aXc4hK0ZcXnT42dkobfPgbI/85xewZh0xfLOGZwYitNn90o1mblSvC9+iC7vlu1dxJXYn1f9fs0Xsn+vd2Y/2OUwxEqO9T2mYxQ5KnKbuLI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR19MB4928
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-04-05_13:2021-04-01,2021-04-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- priorityscore=1501 phishscore=0 clxscore=1011 suspectscore=0 mlxscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104030000
- definitions=main-2104050105
-X-Proofpoint-ORIG-GUID: 9sGAMSpmPXE5-jP8iZEDKtrHqAaETP8l
-X-Proofpoint-GUID: 9sGAMSpmPXE5-jP8iZEDKtrHqAaETP8l
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104030000
- definitions=main-2104050105
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="x35nxfbf6nounlqj"
+Content-Disposition: inline
+In-Reply-To: <20210309000530.2165752-2-luzmaximilian@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiANCj4gSSB0aGluayB0aGlzIGNvdWxkIGJlIGBkZXZfaW5mbygpYCwgYnV0IGRlZmluaXRlbHkg
-bm90IGBkZXZfZXJyKClgLiBBbHRob3VnaA0KPiBJJ2QNCj4gcGVyc29uYWxseSBtb3ZlIHRoZSBs
-b2dnaW5nIGZyb20gaGVyZSB0byB0aGUgcHJvYmUgZnVuY3Rpb24gaWYgeW91IHdhbnQgdG8gbG9n
-DQo+IHdoaWNoIGZlYXR1cmVzIGFyZSBhdmFpbGFibGUuIGByZXRgIGlzIG5lY2Vzc2FyaWx5IDEg
-aGVyZSwgc28gSSBkb24ndCB0aGluaw0KPiBwcmludGluZyBpdA0KPiBwcm92aWRlcyBhZGRpdGlv
-bmFsIGluZm9ybWF0aW9uLg0KDQpUbyB0aGUgbGF5bWFuIEkgd291bGQgc2F5IGRldl9pbmZvIGlz
-IHRvbyBub2lzeSBhY3R1YWxseS4gIEkgdGhpbmsgZGVidWdnaW5nDQooZGV2X2RiZykgd291bGQg
-YmUganVzdCBmaW5lLiAgSWYgdGhlcmUgaXMgYSBmdW5jdGlvbiBub3Qgd29ya2luZywgYWRkaW5n
-IGR5bmFtaWMNCmRlYnVnZ2luZyBvbiBrZXJuZWwgY29tbWFuZCBsaW5lIG9mIG1vZHByb2JlIGxp
-bmUgd2lsbCBiZSBwbGVudHkgc3VmZmljaWVudCB0byBnZXQNCnRoaXMgaW5mb3JtYXRpb24uDQoN
-Cj4gDQo+IA0KPiA+ICsNCj4gPiArb3V0Og0KPiA+ICsJbXV0ZXhfdW5sb2NrKCZsaXN0X211dGV4
-KTsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoZGVs
-bF9wcml2YWN5X2hhc19taWNtdXRlKTsNCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIFRoZSBmbG93
-IG9mIHByaXZhY3kgZXZlbnQ6DQo+ID4gKyAqIDEpIFVzZXIgcHJlc3NlcyBrZXkuIEhXIGRvZXMg
-c3R1ZmYgd2l0aCB0aGlzIGtleSAodGltZW91dCBpcyBzdGFydGVkKQ0KPiA+ICsgKiAyKSBXTUkg
-ZXZlbnQgaXMgZW1pdHRlZCBmcm9tIEJJT1MNCj4gPiArICogMykgV01JIGV2ZW50IGlzIHJlY2Vp
-dmVkIGJ5IGRlbGwtcHJpdmFjeQ0KPiA+ICsgKiA0KSBLRVlfTUlDTVVURSBlbWl0dGVkIGZyb20g
-ZGVsbC1wcml2YWN5DQo+ID4gKyAqIDUpIFVzZXJsYW5kIHBpY2tzIHVwIGtleSBhbmQgbW9kaWZp
-ZXMga2NvbnRyb2wgZm9yIFNXIG11dGUNCj4gPiArICogNikgQ29kZWMga2VybmVsIGRyaXZlciBj
-YXRjaGVzIGFuZCBjYWxscyBsZWR0cmlnX2F1ZGlvX3NldCBkZWZpbmVkIGJ5DQo+ID4gKyAqICAg
-IGRlbGwtcHJpdmFjeS1hY3BpIGRyaXZlci4gQ29kZWMgZHJpdmVyIHdpbGwgY2FsbCBsaWtlIHRo
-aXMgdG8gc3dpdGNoDQo+IG1pY211dGUgbGVkIHN0YXRlLg0KPiA+ICsgKiAgICBsZWR0cmlnX2F1
-ZGlvX3NldChMRURfQVVESU9fTUlDTVVURSwgbWljbXV0ZV9sZWQgPyBMRURfT04gOkxFRF9PRkYp
-Ow0KPiA+ICsgKiA3KSBJZiAiTEVEIiBpcyBzZXQgdG8gb24gZGVsbC1wcml2YWN5IG5vdGlmaWVz
-IEVDLGFuZCB0aW1lb3V0IGlzDQo+IGNhbmNlbGxlZCwNCj4gPiArICoJSFcgbWljIG11dGUgYWN0
-aXZhdGVkLg0KPiA+ICsgKi8NCj4gPiArYm9vbCBkZWxsX3ByaXZhY3lfcHJvY2Vzc19ldmVudChp
-bnQgdHlwZSwgaW50IGNvZGUsIGludCBzdGF0dXMpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBwcml2
-YWN5X3dtaV9kYXRhICpwcml2Ow0KPiA+ICsJY29uc3Qgc3RydWN0IGtleV9lbnRyeSAqa2V5Ow0K
-PiA+ICsJYm9vbCByZXQgPSBmYWxzZTsNCj4gPiArDQo+ID4gKwltdXRleF9sb2NrKCZsaXN0X211
-dGV4KTsNCj4gPiArCXByaXYgPSBsaXN0X2ZpcnN0X2VudHJ5X29yX251bGwoJndtaV9saXN0LA0K
-PiA+ICsJCQlzdHJ1Y3QgcHJpdmFjeV93bWlfZGF0YSwNCj4gPiArCQkJbGlzdCk7DQo+ID4gKwlp
-ZiAoIXByaXYpIHsNCj4gPiArCQlkZXZfZXJyKCZwcml2LT53ZGV2LT5kZXYsICJwcml2IGRhdGEg
-aXMgTlVMTFxuIik7DQo+ID4gKwkJZ290byBlcnJvcjsNCj4gPiArCX0NCj4gPiArDQo+IA0KPiBJ
-IHRoaW5rIHRoZSByZXN0IG9mIHRoZSBmdW5jdGlvbiBjb3VsZCBiZSByZXBsYWNlZCB3aXRoOg0K
-PiANCj4gICByZXQgPSBzcGFyc2Vfa2V5bWFwX3JlcG9ydF9ldmVudChwcml2LT5pbnB1dF9kZXYs
-IERFTExfU0NBTl9DT0RFKHR5cGUsDQo+IGNvZGUpLCAxLCB0cnVlKQ0KPiANCj4gICBpZiAocmV0
-KQ0KPiAgICAgcHJpdi0+bGFzdF9zdGF0dXMgPSBzdGF0dXM7DQo+IA0KPiAgIGVycm9yOg0KPiAg
-ICAgWy4uLl0NCj4gDQo+IChzZWUgbGF0ZXIgYSBjb21tZW50IGZvciB0aGUgZGVmaW5pdGlvbiBv
-ZiBERUxMX1NDQU5fQ09ERSgpKQ0KPiANCj4gDQo+ID4gKwlrZXkgPSBzcGFyc2Vfa2V5bWFwX2Vu
-dHJ5X2Zyb21fc2NhbmNvZGUocHJpdi0+aW5wdXRfZGV2LCAodHlwZSA8PCAxNikgfA0KPiBjb2Rl
-KTsNCj4gPiArCWlmICgha2V5KSB7DQo+ID4gKwkJZGV2X3dhcm4oJnByaXYtPndkZXYtPmRldiwg
-IlVua25vd24ga2V5IHdpdGggdHlwZSAweCUwNHggYW5kIGNvZGUNCj4gMHglMDR4IHByZXNzZWRc
-biIsDQo+ID4gKwkJCXR5cGUsIGNvZGUpOw0KPiA+ICsJCWdvdG8gZXJyb3I7DQo+ID4gKwl9DQo+
-ID4gKwlkZXZfZGJnKCZwcml2LT53ZGV2LT5kZXYsICJLZXkgd2l0aCB0eXBlIDB4JTA0eCBhbmQg
-Y29kZSAweCUwNHgNCj4gcHJlc3NlZFxuIiwgdHlwZSwgY29kZSk7DQo+ID4gKw0KPiA+ICsJc3dp
-dGNoIChjb2RlKSB7DQo+ID4gKwljYXNlIERFTExfUFJJVkFDWV9BVURJT19FVkVOVDogLyogTWlj
-IG11dGUgKi8NCj4gPiArCWNhc2UgREVMTF9QUklWQUNZX0NBTUVSQV9FVkVOVDogLyogQ2FtZXJh
-IG11dGUgKi8NCj4gPiArCQlwcml2LT5sYXN0X3N0YXR1cyA9IHN0YXR1czsNCj4gPiArCQlzcGFy
-c2Vfa2V5bWFwX3JlcG9ydF9lbnRyeShwcml2LT5pbnB1dF9kZXYsIGtleSwgMSwgdHJ1ZSk7DQo+
-ID4gKwkJcmV0ID0gdHJ1ZTsNCj4gPiArCQlicmVhazsNCj4gPiArCWRlZmF1bHQ6DQo+ID4gKwkJ
-ZGV2X2RiZygmcHJpdi0+d2Rldi0+ZGV2LCAidW5rbm93biBldmVudCB0eXBlIDB4JTA0eCAweCUw
-NHgiLCB0eXBlLA0KPiBjb2RlKTsNCj4gDQo+IFRoZSBjYXBpdGFsaXphdGlvbiBpcyBpbmNvbnNp
-c3RlbnQuIFBsZWFzZSBlaXRoZXIgbWFrZSBhbGwgbWVzc2FnZXMgbG93ZXJjYXNlDQo+IG9yDQo+
-IG1ha2UgdGhlbSBhbGwgc3RhcnQgd2l0aCBhbiB1cHBlcmNhc2UgbGV0dGVyLiAoQW5kIGEgbmV3
-bGluZSBjaGFyYWN0ZXIgaXMNCj4gbWlzc2luZy4pDQo+IA0KPiANCj4gPiArCX0NCj4gPiArDQo+
-ID4gK2Vycm9yOg0KPiA+ICsJbXV0ZXhfdW5sb2NrKCZsaXN0X211dGV4KTsNCj4gPiArCXJldHVy
-biByZXQ7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwoZGVsbF9wcml2YWN5X3Byb2Nl
-c3NfZXZlbnQpOw0KPiA+ICsNCj4gPiArc3RhdGljIHNzaXplX3QgZGVsbF9wcml2YWN5X3N1cHBv
-cnRlZF90eXBlX3Nob3coc3RydWN0IGRldmljZSAqZGV2LA0KPiA+ICsJCQkJCXN0cnVjdCBkZXZp
-Y2VfYXR0cmlidXRlICphdHRyLA0KPiA+ICsJCQkJCWNoYXIgKmJ1ZikNCj4gPiArew0KPiA+ICsJ
-ZW51bSBkZWxsX2hhcmR3YXJlX3ByaXZhY3lfdHlwZSB0eXBlOw0KPiA+ICsJc3RydWN0IHByaXZh
-Y3lfd21pX2RhdGEgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArCWNoYXIgKnMg
-PSBidWY7DQo+ID4gKwl1MzIgcHJpdmFjeV9saXN0Ow0KPiA+ICsNCj4gPiArCXByaXZhY3lfbGlz
-dCA9IHByaXYtPmZlYXR1cmVzX3ByZXNlbnQ7DQo+ID4gKwlmb3IgKHR5cGUgPSBERUxMX1BSSVZB
-Q1lfVFlQRV9BVURJTzsgdHlwZSA8IERFTExfUFJJVkFDWV9UWVBFX01BWDsNCj4gdHlwZSsrKSB7
-DQo+ID4gKwkJaWYgKHByaXZhY3lfdHlwZXNbdHlwZV0pIHsNCj4gDQo+IElzIHRoaXMgY2hlY2sg
-bmVjZXNzYXJ5Pw0KPiANCj4gDQo+ID4gKwkJCWlmIChwcml2YWN5X2xpc3QgJiBCSVQodHlwZSkp
-DQo+ID4gKwkJCQlzICs9IHNwcmludGYocywgIlslc10gW3N1cHBvcnRlZF1cbiIsDQo+IHByaXZh
-Y3lfdHlwZXNbdHlwZV0pOw0KPiA+ICsJCQllbHNlDQo+ID4gKwkJCQlzICs9IHNwcmludGYocywg
-Ilslc10gW3Vuc3VwcG9ydF1cbiIsDQo+IHByaXZhY3lfdHlwZXNbdHlwZV0pOw0KPiANCj4gWW91
-IGNhbiB1c2UgYHN5c2ZzX2VtaXRfYXQoKWAgaGVyZS4NCj4gDQo+IA0KPiA+ICsJCX0NCj4gPiAr
-CX0NCj4gPiArDQo+ID4gKwlpZiAocyAhPSBidWYpDQo+ID4gKwkJLyogY29udmVydCB0aGUgbGFz
-dCBzcGFjZSB0byBhIG5ld2xpbmUgKi8NCj4gPiArCQkqKHMtMSkgPSAnXG4nOw0KPiANCj4gSSBi
-ZWxpZXZlIHRoaXMgaXMgbm90IG5lZWRlZD8NCj4gDQo+IA0KPiA+ICsJcmV0dXJuIChzIC0gYnVm
-KTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHNzaXplX3QgZGVsbF9wcml2YWN5X2N1cnJl
-bnRfc3RhdGVfc2hvdyhzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ID4gKwkJCQkJc3RydWN0IGRldmlj
-ZV9hdHRyaWJ1dGUgKmF0dHIsDQo+ID4gKwkJCQkJY2hhciAqYnVmKQ0KPiA+ICt7DQo+ID4gKwlz
-dHJ1Y3QgcHJpdmFjeV93bWlfZGF0YSAqcHJpdiA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+
-ICsJZW51bSBkZWxsX2hhcmR3YXJlX3ByaXZhY3lfdHlwZSB0eXBlOw0KPiA+ICsJdTMyIHByaXZh
-Y3lfc3RhdGUgPSBwcml2LT5sYXN0X3N0YXR1czsNCj4gPiArCXUzMiBwcml2YWN5X3N1cHBvcnRl
-ZCA9IHByaXYtPmZlYXR1cmVzX3ByZXNlbnQ7DQo+ID4gKwljaGFyICpzID0gYnVmOw0KPiA+ICsN
-Cj4gPiArCWZvciAodHlwZSA9IERFTExfUFJJVkFDWV9UWVBFX0FVRElPOyB0eXBlIDwgREVMTF9Q
-UklWQUNZX1RZUEVfTUFYOw0KPiB0eXBlKyspIHsNCj4gPiArCQlpZiAocHJpdmFjeV9zdXBwb3J0
-ZWQgJiBCSVQodHlwZSkpIHsNCj4gPiArCQkJaWYgKHByaXZhY3lfc3RhdGUgJiBCSVQodHlwZSkp
-DQo+ID4gKwkJCQlzICs9IHNwcmludGYocywgIlslc10gW3VubXV0ZWRdXG4iLA0KPiBwcml2YWN5
-X3R5cGVzW3R5cGVdKTsNCj4gPiArCQkJZWxzZQ0KPiA+ICsJCQkJcyArPSBzcHJpbnRmKHMsICJb
-JXNdIFttdXRlZF1cbiIsIHByaXZhY3lfdHlwZXNbdHlwZV0pOw0KPiANCj4gc3lzZnNfZW1pdF9h
-dA0KPiANCj4gDQo+ID4gKwkJfQ0KPiA+ICsJfQ0KPiA+ICsNCj4gPiArCWlmIChzICE9IGJ1ZikN
-Cj4gPiArCQkvKiBjb252ZXJ0IHRoZSBsYXN0IHNwYWNlIHRvIGEgbmV3bGluZSAqLw0KPiA+ICsJ
-CSoocy0xKSA9ICdcbic7DQo+IA0KPiBub3QgbmVlZGVkPw0KPiANCj4gDQo+ID4gKwlyZXR1cm4g
-KHMgLSBidWYpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgREVWSUNFX0FUVFJfUk8oZGVs
-bF9wcml2YWN5X3N1cHBvcnRlZF90eXBlKTsNCj4gPiArc3RhdGljIERFVklDRV9BVFRSX1JPKGRl
-bGxfcHJpdmFjeV9jdXJyZW50X3N0YXRlKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgYXR0
-cmlidXRlICpwcml2YWN5X2F0dHJpYnV0ZXNbXSA9IHsNCj4gPiArCSZkZXZfYXR0cl9kZWxsX3By
-aXZhY3lfc3VwcG9ydGVkX3R5cGUuYXR0ciwNCj4gPiArCSZkZXZfYXR0cl9kZWxsX3ByaXZhY3lf
-Y3VycmVudF9zdGF0ZS5hdHRyLA0KPiA+ICsJTlVMTCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgYXR0cmlidXRlX2dyb3VwIHByaXZhY3lfYXR0cmlidXRlX2dyb3Vw
-ID0gew0KPiA+ICsJLmF0dHJzID0gcHJpdmFjeV9hdHRyaWJ1dGVzDQo+ID4gK307DQo+ID4gKw0K
-PiA+ICsvKg0KPiA+ICsgKiBEZXNjcmliZXMgdGhlIERldmljZSBTdGF0ZSBjbGFzcyBleHBvc2Vk
-IGJ5IEJJT1Mgd2hpY2ggY2FuIGJlIGNvbnN1bWVkDQo+IGJ5DQo+ID4gKyAqIHZhcmlvdXMgYXBw
-bGljYXRpb25zIGludGVyZXN0ZWQgaW4ga25vd2luZyB0aGUgUHJpdmFjeSBmZWF0dXJlDQo+IGNh
-cGFiaWxpdGllcy4NCj4gPiArICogY2xhc3MgRGV2aWNlU3RhdGUNCj4gPiArICogew0KPiA+ICsg
-KiAgW2tleSwgcmVhZF0gc3RyaW5nIEluc3RhbmNlTmFtZTsNCj4gPiArICogIFtyZWFkXSBib29s
-ZWFuIFJlYWRPbmx5Ow0KPiA+ICsgKiAgW1dtaURhdGFJZCgxKSwgcmVhZF0gdWludDMyIERldmlj
-ZXNTdXBwb3J0ZWQ7DQo+ID4gKyAqICAgMCDigJMgTm9uZSwgMHgxIOKAkyBNaWNyb3Bob25lLCAw
-eDIg4oCTIENhbWVyYSwgMHg0IC1lUHJpdmFjeSAgU2NyZWVuDQo+ICAgICAgICAgICBeICAgICAg
-ICAgICBeICAgICAgICAgICAgICAgICBeICAgICAgICAgICAgIF4gICAgICAgIF5eDQo+IFBsZWFz
-ZSB1c2UgYSBzaW5nbGUgdHlwZSBvZiBoeXBoZW4vZGFzaCBjb25zaXN0ZW50bHkuICAgICBPbmUg
-c3BhY2UgaXMgZW5vdWdoLg0KPiANCj4gDQo+ID4gKyAqICBbV21pRGF0YUlkKDIpLCByZWFkXSB1
-aW50MzIgQ3VycmVudFN0YXRlOw0KPiA+ICsgKiAgIDA6T2ZmOyAxOk9uLiBCaXQwIOKAkyBNaWNy
-b3Bob25lLCBCaXQxIOKAkyBDYW1lcmEsIEJpdDIgLSBlUHJpdmFjeVNjcmVlbg0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIF4gICAgICAgICAgICAgICAgICBeICAgICAgICAgICAgICBeDQo+
-IFNhbWUgaGVyZS4NCj4gDQo+IA0KPiA+ICsgKiB9Ow0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGlu
-dCBnZXRfY3VycmVudF9zdGF0dXMoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYpDQo+ID4gK3sNCj4g
-PiArCXN0cnVjdCBwcml2YWN5X3dtaV9kYXRhICpwcml2ID0gZGV2X2dldF9kcnZkYXRhKCZ3ZGV2
-LT5kZXYpOw0KPiA+ICsJdW5pb24gYWNwaV9vYmplY3QgKm9ial9wcmVzZW50Ow0KPiA+ICsJdTMy
-ICpidWZmZXI7DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArDQo+ID4gKwlpZiAoIXByaXYpIHsN
-Cj4gPiArCQlwcl9lcnIoImRlbGwgcHJpdmFjeSBwcml2IGlzIE5VTExcbiIpOw0KPiANCj4gZGV2
-X2Vycj8NCj4gDQo+IA0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsJLyog
-Y2hlY2sgcHJpdmFjeSBzdXBwb3J0IGZlYXR1cmVzIGFuZCBkZXZpY2Ugc3RhdGVzICovDQo+ID4g
-KwlvYmpfcHJlc2VudCA9IHdtaWRldl9ibG9ja19xdWVyeSh3ZGV2LCAwKTsNCj4gPiArCWlmICgh
-b2JqX3ByZXNlbnQpIHsNCj4gPiArCQlkZXZfZXJyKCZ3ZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVh
-ZCBCaW5hcnkgTU9GXG4iKTsNCj4gPiArCQlyZXQgPSAtRUlPOw0KPiA+ICsJCXJldHVybiByZXQ7
-DQo+IA0KPiByZXR1cm4gLUVJTyA/DQo+IA0KPiANCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpZiAo
-b2JqX3ByZXNlbnQtPnR5cGUgIT0gQUNQSV9UWVBFX0JVRkZFUikgew0KPiA+ICsJCWRldl9lcnIo
-JndkZXYtPmRldiwgIkJpbmFyeSBNT0YgaXMgbm90IGEgYnVmZmVyIVxuIik7DQo+ID4gKwkJcmV0
-ID0gLUVJTzsNCj4gPiArCQlnb3RvIG9ial9mcmVlOw0KPiA+ICsJfQ0KPiA+ICsJLyogIEFsdGhv
-dWdoIGl0J3Mgbm90IHRlY2huaWNhbGx5IGEgZmFpbHVyZSwgdGhpcyB3b3VsZCBsZWFkIHRvDQo+
-ID4gKwkgKiAgdW5leHBlY3RlZCBiZWhhdmlvcg0KPiA+ICsJICovDQo+ID4gKwlpZiAob2JqX3By
-ZXNlbnQtPmJ1ZmZlci5sZW5ndGggIT0gOCkgew0KPiA+ICsJCWRldl9lcnIoJndkZXYtPmRldiwg
-IkRlbGwgcHJpdmFjeSBidWZmZXIgaGFzIHVuZXhwZWN0ZWQgbGVuZ3RoDQo+ICglZCkhXG4iLA0K
-PiA+ICsJCQkJb2JqX3ByZXNlbnQtPmJ1ZmZlci5sZW5ndGgpOw0KPiA+ICsJCXJldCA9IC1FSU5W
-QUw7DQo+ID4gKwkJZ290byBvYmpfZnJlZTsNCj4gPiArCX0NCj4gPiArCWJ1ZmZlciA9ICh1MzIg
-KilvYmpfcHJlc2VudC0+YnVmZmVyLnBvaW50ZXI7DQo+ID4gKwlwcml2LT5mZWF0dXJlc19wcmVz
-ZW50ID0gYnVmZmVyWzBdOw0KPiA+ICsJcHJpdi0+bGFzdF9zdGF0dXMgPSBidWZmZXJbMV07DQo+
-IA0KPiBJdCdzIGEgbWlub3IgdGhpbmcsIGJ1dCBJIHN0aWxsIHRoaW5rIGl0J2QgbW9yZSBleHBs
-aWNpdCBhbmQgc29tZXdoYXQgYmV0dGVyDQo+IHRvDQo+IHVzZSBgZ2V0X3VuYWxpZ25lZF9sZTMy
-KClgIChvciBgZ2V0X3VuYWxpZ25lZF9jcHUzMigpYCkuDQo+IA0KPiANCj4gPiArDQo+ID4gK29i
-al9mcmVlOg0KPiA+ICsJa2ZyZWUob2JqX3ByZXNlbnQpOw0KPiA+ICsJcmV0dXJuIHJldDsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGludCBkZWxsX3ByaXZhY3lfbWljbXV0ZV9sZWRfc2V0
-KHN0cnVjdCBsZWRfY2xhc3NkZXYgKmxlZF9jZGV2LA0KPiA+ICsJCQkJCWVudW0gbGVkX2JyaWdo
-dG5lc3MgYnJpZ2h0bmVzcykNCj4gPiArew0KPiA+ICsJc3RydWN0IHByaXZhY3lfd21pX2RhdGEg
-KnByaXYgPSBjZGV2X3RvX2xlZChsZWRfY2Rldik7DQo+ID4gKwlzdGF0aWMgY2hhciAqYWNwaV9t
-ZXRob2QgPSAoY2hhciAqKSJFQ0FLIjsNCj4gPiArCWFjcGlfc3RhdHVzIHN0YXR1czsNCj4gPiAr
-CWFjcGlfaGFuZGxlIGhhbmRsZTsNCj4gPiArDQo+ID4gKwloYW5kbGUgPSBlY19nZXRfaGFuZGxl
-KCk7DQo+ID4gKwlpZiAoIWhhbmRsZSkNCj4gPiArCQlyZXR1cm4gLUVJTzsNCj4gPiArDQo+ID4g
-KwlpZiAoIWFjcGlfaGFzX21ldGhvZChoYW5kbGUsIGFjcGlfbWV0aG9kKSkNCj4gPiArCQlyZXR1
-cm4gLUVJTzsNCj4gPiArDQo+ID4gKwlzdGF0dXMgPSBhY3BpX2V2YWx1YXRlX29iamVjdChoYW5k
-bGUsIGFjcGlfbWV0aG9kLCBOVUxMLCBOVUxMKTsNCj4gPiArCWlmIChBQ1BJX0ZBSUxVUkUoc3Rh
-dHVzKSkgew0KPiA+ICsJCWRldl9lcnIoJnByaXYtPndkZXYtPmRldiwgIkVycm9yIHNldHRpbmcg
-cHJpdmFjeSBFQyBhY2sgdmFsdWU6DQo+ICVzXG4iLA0KPiA+ICsJCQkJYWNwaV9mb3JtYXRfZXhj
-ZXB0aW9uKHN0YXR1cykpOw0KPiA+ICsJCXJldHVybiAtRUlPOw0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICsvKg0KPiA+ICsgKiBQcmVzc2luZyB0
-aGUgbXV0ZSBrZXkgYWN0aXZhdGVzIGEgdGltZSBkZWxheWVkIGNpcmN1aXQgdG8gcGh5c2ljYWxs
-eSBjdXQNCj4gPiArICogb2ZmIHRoZSBtdXRlLiBUaGUgTEVEIGlzIGluIHRoZSBzYW1lIGNpcmN1
-aXQsIHNvIGl0IHJlZmxlY3RzIHRoZSB0cnVlDQo+ID4gKyAqIHN0YXRlIG9mIHRoZSBIVyBtdXRl
-LiAgVGhlIHJlYXNvbiBmb3IgdGhlIEVDICJhY2siIGlzIHNvIHRoYXQgc29mdHdhcmUNCj4gPiAr
-ICogY2FuIGZpcnN0IGludm9rZSBhIFNXIG11dGUgYmVmb3JlIHRoZSBIVyBjaXJjdWl0IGlzIGN1
-dCBvZmYuICBXaXRob3V0IFNXDQo+ID4gKyAqIGN1dHRpbmcgdGhpcyBvZmYgZmlyc3QgZG9lcyBu
-b3QgYWZmZWN0IHRoZSB0aW1lIGRlbGF5ZWQgbXV0aW5nIG9yIHN0YXR1cw0KPiA+ICsgKiBvZiB0
-aGUgTEVEIGJ1dCB0aGVyZSBpcyBhIHBvc3NpYmlsaXR5IG9mIGEgInBvcHBpbmciIG5vaXNlLg0K
-PiA+ICsgKg0KPiA+ICsgKiBJZiB0aGUgRUMgcmVjZWl2ZXMgdGhlIFNXIGFjaywgdGhlIGNpcmN1
-aXQgd2lsbCBiZSBhY3RpdmF0ZWQgYmVmb3JlIHRoZQ0KPiA+ICsgKiBkZWxheSBjb21wbGV0ZWQu
-DQo+ID4gKyAqDQo+ID4gKyAqIEV4cG9zaW5nIGFzIGFuIExFRCBkZXZpY2UgYWxsb3dzIHRoZSBj
-b2RlYyBkcml2ZXJzIG5vdGlmaWNhdGlvbiBwYXRoIHRvDQo+ID4gKyAqIEVDIEFDSyB0byB3b3Jr
-DQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgaW50IGRlbGxfcHJpdmFjeV9sZWRzX3NldHVwKHN0cnVj
-dCBkZXZpY2UgKmRldikNCj4gPiArew0KPiA+ICsJc3RydWN0IHByaXZhY3lfd21pX2RhdGEgKnBy
-aXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJ
-cHJpdi0+Y2Rldi5uYW1lID0gImRlbGwtcHJpdmFjeTo6bWljbXV0ZSI7DQo+ID4gKwlwcml2LT5j
-ZGV2Lm1heF9icmlnaHRuZXNzID0gMTsNCj4gPiArCXByaXYtPmNkZXYuYnJpZ2h0bmVzc19zZXRf
-YmxvY2tpbmcgPSBkZWxsX3ByaXZhY3lfbWljbXV0ZV9sZWRfc2V0Ow0KPiA+ICsJcHJpdi0+Y2Rl
-di5kZWZhdWx0X3RyaWdnZXIgPSAiYXVkaW8tbWljbXV0ZSI7DQo+ID4gKwlwcml2LT5jZGV2LmJy
-aWdodG5lc3MgPSBsZWR0cmlnX2F1ZGlvX2dldChMRURfQVVESU9fTUlDTVVURSk7DQo+ID4gKwly
-ZXQgPSBkZXZtX2xlZF9jbGFzc2Rldl9yZWdpc3RlcihkZXYsICZwcml2LT5jZGV2KTsNCj4gPiAr
-CWlmIChyZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArCXJldHVybiAwOw0KPiANCj4gWW91
-IGNhbiByZXBsYWNlIHRoZSBsYXN0IGZvdXIgbGluZXMgd2l0aDoNCj4gDQo+ICAgcmV0dXJuIGRl
-dm1fbGVkX2NsYXNzZGV2X3JlZ2lzdGVyKC4uLik7DQo+IA0KPiANCj4gPiArfQ0KPiA+ICsNCj4g
-PiArc3RhdGljIGludCBkZWxsX3ByaXZhY3lfd21pX3Byb2JlKHN0cnVjdCB3bWlfZGV2aWNlICp3
-ZGV2LCBjb25zdCB2b2lkDQo+ICpjb250ZXh0KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgcHJpdmFj
-eV93bWlfZGF0YSAqcHJpdjsNCj4gPiArCXN0cnVjdCBrZXlfZW50cnkgKmtleW1hcDsNCj4gPiAr
-CWludCByZXQsIGk7DQo+ID4gKw0KPiA+ICsJcmV0ID0gd21pX2hhc19ndWlkKERFTExfUFJJVkFD
-WV9HVUlEKTsNCj4gPiArCWlmICghcmV0KQ0KPiA+ICsJCXByX2RlYnVnKCJVbmFibGUgdG8gZGV0
-ZWN0IGF2YWlsYWJsZSBEZWxsIHByaXZhY3kgZGV2aWNlczogJWRcbiIsDQo+IHJldCk7DQo+IA0K
-PiBXaGVuIHRoaXMgYnJhbmNoIGlzIHRha2VuLCBgcmV0YCBpcyBuZWNlc3NhcmlseSB6ZXJvLCBz
-byBJIGRvbid0IHRoaW5rDQo+IHByaW50aW5nIGl0DQo+IHByb3ZpZGVzIHVzZWZ1bCBpbmZvcm1h
-dGlvbi4NCj4gDQo+IEFuZCBJIGJlbGlldmUgdGhpcyBgd21pX2hhc19ndWlkKClgIGNoZWNrIGlz
-IHVubmVjZXNzYXJ5IHNpbmNlIHRoZSBwcm9iZQ0KPiBtZXRob2QNCj4gd291bGQgbm90IGJlIGNh
-bGxlZCBpZiB0aGUgZGV2aWNlIGRpZG4ndCBoYXZlIHN1Y2ggV01JIGd1aWQgaWYgSSdtIG5vdA0K
-PiBtaXN0YWtlbi4NCj4gDQo+IA0KPiA+ICsNCj4gPiArCXByaXYgPSBkZXZtX2t6YWxsb2MoJndk
-ZXYtPmRldiwgc2l6ZW9mKCpwcml2KSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIXByaXYpDQo+
-ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJZGV2X3NldF9kcnZkYXRhKCZ3ZGV2
-LT5kZXYsIHByaXYpOw0KPiA+ICsJcHJpdi0+d2RldiA9IHdkZXY7DQo+ID4gKwkvKiBjcmVhdGUg
-ZXZkZXYgcGFzc2luZyBpbnRlcmZhY2UgKi8NCj4gPiArCXByaXYtPmlucHV0X2RldiA9IGRldm1f
-aW5wdXRfYWxsb2NhdGVfZGV2aWNlKCZ3ZGV2LT5kZXYpOw0KPiA+ICsJaWYgKCFwcml2LT5pbnB1
-dF9kZXYpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJLyogcmVtYXAgdGhl
-IHdtaSBrZXltYXAgZXZlbnQgdG8gbmV3IGtleW1hcCAqLw0KPiA+ICsJa2V5bWFwID0ga2NhbGxv
-YyhBUlJBWV9TSVpFKGRlbGxfd21pX2tleW1hcF90eXBlXzAwMTIpLA0KPiA+ICsJCQlzaXplb2Yo
-c3RydWN0IGtleV9lbnRyeSksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYgKCFrZXltYXApDQo+ID4g
-KwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJLyogcmVtYXAgdGhlIGtleW1hcCBjb2Rl
-IHdpdGggRGVsbCBwcml2YWN5IGtleSB0eXBlIDB4MTIgYXMgcHJlZml4DQo+ID4gKwkgKiBLRVlf
-TUlDTVVURSBzY2FuY29kZSB3aWxsIGJlIHJlcG9ydGVkIGFzIDB4MTIwMDAxDQo+ID4gKwkgKi8N
-Cj4gPiArCWZvciAoaSA9IDA7IGkgPCBBUlJBWV9TSVpFKGRlbGxfd21pX2tleW1hcF90eXBlXzAw
-MTIpOyBpKyspIHsNCj4gPiArCQlrZXltYXBbaV0gPSBkZWxsX3dtaV9rZXltYXBfdHlwZV8wMDEy
-W2ldOw0KPiA+ICsJCWtleW1hcFtpXS5jb2RlIHw9ICgweDAwMTIgPDwgMTYpOw0KPiA+ICsJfQ0K
-PiANCj4gSSBzdGlsbCBkb24ndCBzZWUgdGhlIG5lZWQgZm9yIGFsbG9jYXRpbmcgYW5kIGNvcHlp
-bmcgdGhlIGtleW1hcC4gV291bGRuJ3QgdGhlDQo+IGZvbGxvd2luZyBiZSBzdWZmaWNpZW50Pw0K
-PiANCj4gICAjZGVmaW5lIERFTExfU0NBTl9DT0RFKHR5cGUsIGNvZGUpICgodHlwZSkgPDwgMTYg
-fCAoY29kZSkpDQo+ICAgc3RhdGljIGNvbnN0IHN0cnVjdCBrZXlfZW50cnkgZGVsbF93bWlfa2V5
-bWFwX3R5cGVfMDAxMltdID0gew0KPiAgICAgeyBLRV9LRVksIERFTExfU0NBTl9DT0RFKDB4MDAx
-MiwgMHgwMDAxKSwgeyBLRVlfTUlDTVVURSB9IH0sDQo+ICAgICB7IEtFX1NXLCAgREVMTF9TQ0FO
-X0NPREUoMHgwMDEyLCAweDAwMDIpLCB7IFNXX0NBTUVSQV9MRU5TX0NPVkVSIH0gfSwNCj4gICAg
-IHsgS0VfRU5ELCAwfSwNCj4gICB9Ow0KPiANCj4gT3RoZXIgRGVsbCBkcml2ZXJzIHBvdGVudGlh
-bGx5IG1lcmdlIG11bHRpcGxlIGtleW1hcHMsIHNvIGR5bmFtaWNhbGx5DQo+IGFsbG9jYXRpbmcN
-Cj4gdGhlIGtleV9lbnRyeSBhcnJheSBpcyBqdXN0aWZpZWQuIEhlcmUgSSBzZWUgbm8gc3VjaCBu
-ZWVkLiBDYW4geW91IGV4cGxhaW4gd2h5DQo+IHRoaXMgY29weWluZyBpcyBkb25lPw0KPiANCj4g
-DQo+ID4gKwlyZXQgPSBzcGFyc2Vfa2V5bWFwX3NldHVwKHByaXYtPmlucHV0X2Rldiwga2V5bWFw
-LCBOVUxMKTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gDQo+IGBrZXlt
-YXBgIGlzIGxlYWtlZCBpZiB0aGlzIG9yIGFueSBvZiB0aGUgbGF0ZXIgZWFybHktcmV0dXJucyBh
-cmUgdGFrZW4uDQo+IA0KPiANCj4gPiArDQo+ID4gKwlwcml2LT5pbnB1dF9kZXYtPmRldi5wYXJl
-bnQgPSAmd2Rldi0+ZGV2Ow0KPiA+ICsJcHJpdi0+aW5wdXRfZGV2LT5uYW1lID0gIkRlbGwgUHJp
-dmFjeSBEcml2ZXIiOw0KPiA+ICsJcHJpdi0+aW5wdXRfZGV2LT5pZC5idXN0eXBlID0gQlVTX0hP
-U1Q7DQo+ID4gKw0KPiA+ICsJcmV0ID0gaW5wdXRfcmVnaXN0ZXJfZGV2aWNlKHByaXYtPmlucHV0
-X2Rldik7DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJ
-cmV0ID0gZ2V0X2N1cnJlbnRfc3RhdHVzKHByaXYtPndkZXYpOw0KPiA+ICsJaWYgKHJldCkNCj4g
-PiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IGRldm1fZGV2aWNlX2FkZF9ncm91
-cCgmd2Rldi0+ZGV2LCAmcHJpdmFjeV9hdHRyaWJ1dGVfZ3JvdXApOw0KPiA+ICsJaWYgKHJldCkN
-Cj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IGRlbGxfcHJpdmFjeV9sZWRz
-X3NldHVwKCZwcml2LT53ZGV2LT5kZXYpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4g
-cmV0Ow0KPiA+ICsNCj4gPiArCW11dGV4X2xvY2soJmxpc3RfbXV0ZXgpOw0KPiA+ICsJbGlzdF9h
-ZGRfdGFpbCgmcHJpdi0+bGlzdCwgJndtaV9saXN0KTsNCj4gPiArCW11dGV4X3VubG9jaygmbGlz
-dF9tdXRleCk7DQo+ID4gKwlrZnJlZShrZXltYXApOw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30N
-Cj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgZGVsbF9wcml2YWN5X3dtaV9yZW1vdmUoc3RydWN0IHdt
-aV9kZXZpY2UgKndkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBwcml2YWN5X3dtaV9kYXRhICpw
-cml2ID0gZGV2X2dldF9kcnZkYXRhKCZ3ZGV2LT5kZXYpOw0KPiA+ICsNCj4gPiArCW11dGV4X2xv
-Y2soJmxpc3RfbXV0ZXgpOw0KPiA+ICsJbGlzdF9kZWwoJnByaXYtPmxpc3QpOw0KPiA+ICsJbXV0
-ZXhfdW5sb2NrKCZsaXN0X211dGV4KTsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHdtaV9kZXZpY2VfaWQgZGVsbF93bWlfcHJpdmFjeV93
-bWlfaWRfdGFibGVbXSA9IHsNCj4gPiArCXsgLmd1aWRfc3RyaW5nID0gREVMTF9QUklWQUNZX0dV
-SUQgfSwNCj4gPiArCXsgfSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3Qgd21p
-X2RyaXZlciBkZWxsX3ByaXZhY3lfd21pX2RyaXZlciA9IHsNCj4gPiArCS5kcml2ZXIgPSB7DQo+
-ID4gKwkJLm5hbWUgPSAiZGVsbC1wcml2YWN5IiwNCj4gPiArCX0sDQo+ID4gKwkucHJvYmUgPSBk
-ZWxsX3ByaXZhY3lfd21pX3Byb2JlLA0KPiA+ICsJLnJlbW92ZSA9IGRlbGxfcHJpdmFjeV93bWlf
-cmVtb3ZlLA0KPiA+ICsJLmlkX3RhYmxlID0gZGVsbF93bWlfcHJpdmFjeV93bWlfaWRfdGFibGUs
-DQo+ID4gK307DQo+ID4gKw0KPiA+ICttb2R1bGVfd21pX2RyaXZlcihkZWxsX3ByaXZhY3lfd21p
-X2RyaXZlcik7DQo+ID4gKw0KPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKHdtaSwgZGVsbF93bWlf
-cHJpdmFjeV93bWlfaWRfdGFibGUpOw0KPiA+ICtNT0RVTEVfQVVUSE9SKCJQZXJyeSBZdWFuIDxw
-ZXJyeV95dWFuQGRlbGwuY29tPiIpOw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkRlbGwgUHJp
-dmFjeSBXTUkgRHJpdmVyIik7DQo+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC9kZWxsLXByaXZhY3ktd21pLmgNCj4g
-Yi9kcml2ZXJzL3BsYXRmb3JtL3g4Ni9kZWxsL2RlbGwtcHJpdmFjeS13bWkuaA0KPiA+IG5ldyBm
-aWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5hMjQ4OTM3NTQyODYNCj4g
-PiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC9kZWxs
-LXByaXZhY3ktd21pLmgNCj4gPiBAQCAtMCwwICsxLDMyIEBADQo+ID4gKy8qIFNQRFgtTGljZW5z
-ZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkgKi8NCj4gPiArLyoNCj4gPiArICogRGVsbCBwcml2
-YWN5IG5vdGlmaWNhdGlvbiBkcml2ZXINCj4gPiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAy
-MDIxIERlbGwgSW5jLiBBbGwgUmlnaHRzIFJlc2VydmVkLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4g
-KyNpZm5kZWYgX0RFTExfUFJJVkFDWV9XTUlfSF8NCj4gPiArI2RlZmluZSBfREVMTF9QUklWQUNZ
-X1dNSV9IXw0KPiA+ICsNCj4gPiArI2lmIElTX0VOQUJMRUQoQ09ORklHX0RFTExfUFJJVkFDWSkN
-Cj4gPiAraW50IGRlbGxfcHJpdmFjeV9oYXNfbWljbXV0ZSh2b2lkKTsNCj4gPiArYm9vbCBkZWxs
-X3ByaXZhY3lfcHJlc2VudCh2b2lkKTsNCj4gPiArYm9vbCBkZWxsX3ByaXZhY3lfcHJvY2Vzc19l
-dmVudChpbnQgdHlwZSwgaW50IGNvZGUsIGludCBzdGF0dXMpOw0KPiA+ICsjZWxzZSAvKiBDT05G
-SUdfREVMTF9QUklWQUNZICovDQo+ID4gK3N0YXRpYyBpbmxpbmUgaW50IGRlbGxfcHJpdmFjeV9o
-YXNfbWljbXV0ZSh2b2lkKQ0KPiA+ICt7DQo+ID4gKwlyZXR1cm4gLUVOT0RFVjsNCj4gPiArfQ0K
-PiA+ICsNCj4gPiArc3RhdGljIGlubGluZSBpbnQgZGVsbF9wcml2YWN5X3ByZXNlbnQodm9pZCkN
-Cj4gICAgICAgICAgICAgICAgICBeXl4NCj4gSXQncyBkZWNsYXJlZCB3aXRoIGBib29sYCByZXR1
-cm4gdHlwZSBhIGNvdXBsZSBsaW5lcyBhYm92ZS4NCj4gDQo+IA0KPiA+ICt7DQo+ID4gKwlyZXR1
-cm4gLUVOT0RFVjsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGRlbGxf
-cHJpdmFjeV9wcm9jZXNzX2V2ZW50KGludCB0eXBlLCBpbnQgY29kZSwgaW50DQo+IHN0YXR1cykN
-Cj4gICAgICAgICAgICAgICAgICBeXl5eDQo+IEl0J3MgZGVjbGFyZWQgd2l0aCBgYm9vbGAgcmV0
-dXJuIHR5cGUgYSBjb3VwbGUgbGluZXMgYWJvdmUuDQo+IA0KPiANCj4gPiAre30NCj4gPiArI2Vu
-ZGlmIC8qIENPTkZJR19ERUxMX1BSSVZBQ1kgKi8NCj4gPiArDQo+ID4gK2ludCAgZGVsbF9wcml2
-YWN5X2FjcGlfaW5pdCh2b2lkKTsNCj4gPiArdm9pZCBkZWxsX3ByaXZhY3lfYWNwaV9leGl0KHZv
-aWQpOw0KPiANCj4gVGhlc2UgdHdvIGRvbid0IHNlZW0gdG8gYmUgcmVmZXJlbmNlZCBhbnl3aGVy
-ZT8NCj4gDQo+IA0KPiA+ICsjZW5kaWYNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9y
-bS94ODYvZGVsbC9kZWxsLXdtaS5jDQo+IGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC9kZWxs
-LXdtaS5jDQo+ID4gaW5kZXggYmJkYjNlODYwODkyLi44ZWY5ZTIyYTUzOGYgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9wbGF0Zm9ybS94ODYvZGVsbC9kZWxsLXdtaS5jDQo+ID4gKysrIGIvZHJp
-dmVycy9wbGF0Zm9ybS94ODYvZGVsbC9kZWxsLXdtaS5jDQo+ID4gQEAgLTI3LDYgKzI3LDcgQEAN
-Cj4gPiAgI2luY2x1ZGUgPGFjcGkvdmlkZW8uaD4NCj4gPiAgI2luY2x1ZGUgImRlbGwtc21iaW9z
-LmgiDQo+ID4gICNpbmNsdWRlICJkZWxsLXdtaS1kZXNjcmlwdG9yLmgiDQo+ID4gKyNpbmNsdWRl
-ICJkZWxsLXByaXZhY3ktd21pLmgiDQo+ID4NCj4gPiAgTU9EVUxFX0FVVEhPUigiTWF0dGhldyBH
-YXJyZXR0IDxtamdAcmVkaGF0LmNvbT4iKTsNCj4gPiAgTU9EVUxFX0FVVEhPUigiUGFsaSBSb2jD
-oXIgPHBhbGlAa2VybmVsLm9yZz4iKTsNCj4gPiBAQCAtMzgxLDYgKzM4Miw3IEBAIHN0YXRpYyB2
-b2lkIGRlbGxfd21pX25vdGlmeShzdHJ1Y3Qgd21pX2RldmljZSAqd2RldiwNCj4gPiAgCXUxNiAq
-YnVmZmVyX2VudHJ5LCAqYnVmZmVyX2VuZDsNCj4gPiAgCWFjcGlfc2l6ZSBidWZmZXJfc2l6ZTsN
-Cj4gPiAgCWludCBsZW4sIGk7DQo+ID4gKwlpbnQgcmV0Ow0KPiA+DQo+ID4gIAlpZiAob2JqLT50
-eXBlICE9IEFDUElfVFlQRV9CVUZGRVIpIHsNCj4gPiAgCQlwcl93YXJuKCJiYWQgcmVzcG9uc2Ug
-dHlwZSAleFxuIiwgb2JqLT50eXBlKTsNCj4gPiBAQCAtNDI3LDcgKzQyOSw2IEBAIHN0YXRpYyB2
-b2lkIGRlbGxfd21pX25vdGlmeShzdHJ1Y3Qgd21pX2RldmljZSAqd2RldiwNCj4gPg0KPiA+ICAJ
-CXN3aXRjaCAoYnVmZmVyX2VudHJ5WzFdKSB7DQo+ID4gIAkJY2FzZSAweDAwMDA6IC8qIE9uZSBr
-ZXkgcHJlc3NlZCBvciBldmVudCBvY2N1cnJlZCAqLw0KPiA+IC0JCWNhc2UgMHgwMDEyOiAvKiBF
-dmVudCB3aXRoIGV4dGVuZGVkIGRhdGEgb2NjdXJyZWQgKi8NCj4gPiAgCQkJaWYgKGxlbiA+IDIp
-DQo+ID4gIAkJCQlkZWxsX3dtaV9wcm9jZXNzX2tleSh3ZGV2LCBidWZmZXJfZW50cnlbMV0sDQo+
-ID4gIAkJCQkJCSAgICAgYnVmZmVyX2VudHJ5WzJdKTsNCj4gPiBAQCAtNDM5LDYgKzQ0MCwxNiBA
-QCBzdGF0aWMgdm9pZCBkZWxsX3dtaV9ub3RpZnkoc3RydWN0IHdtaV9kZXZpY2UgKndkZXYsDQo+
-ID4gIAkJCQlkZWxsX3dtaV9wcm9jZXNzX2tleSh3ZGV2LCBidWZmZXJfZW50cnlbMV0sDQo+ID4g
-IAkJCQkJCSAgICAgYnVmZmVyX2VudHJ5W2ldKTsNCj4gPiAgCQkJYnJlYWs7DQo+ID4gKwkJY2Fz
-ZSAweDAwMTI6DQo+ID4gKwkJCXJldCA9IGRlbGxfcHJpdmFjeV9wcmVzZW50KCk7DQo+ID4gKwkJ
-CWlmICgocmV0KSAmJiAobGVuID4gMikpIHsNCj4gDQo+IElzIHRoZSBgbGVuID4gMmAgY2hlY2sg
-Y29ycmVjdD8NCj4gDQo+IE1vcmVvdmVyLCBJIHBlcnNvbmFsbHkgZG9uJ3Qgc2VlIGFueSByZWFz
-b24gdG8gdXNlIGEgbmV3IHZhcmlhYmxlIGhlcmUNCj4gKGByZXRgKS4NCj4gDQo+IElmIHlvdSBp
-bmNvcnBvcmF0ZSB0aGUgYGRlbGxfcHJpdmFjeV9wcmVzZW50KClgIGNoZWNrIGludG8NCj4gYGRl
-bGxfcHJpdmFjeV9wcm9jZXNzX2V2ZW50KClgLCB0aGVuIGV2ZW4NCj4gDQo+ICAgaWYgKGxlbiA+
-ID8/ICYmIGRlbGxfcHJpdmFjeV9wcm9jZXNzX2V2ZW50KC4uLikpDQo+ICAgICAvKiBub3RoaW5n
-ICovIDsNCj4gICBlbHNlIGlmIChsZW4gPiAyKQ0KPiAgICAgZGVsbF93bWlfcHJvY2Vzc19rZXko
-Li4uKTsNCj4gDQo+IHdvdWxkIHdvcmsgYXMgSGFucyBoYXMgYWxyZWFkeSBwb2ludGVkIGl0IG91
-dC4gQW5kIHRoZXJlJ2QgYmUgbm8gbmVlZCBmb3INCj4gYGRlbGxfcHJpdmFjeV9wcmVzZW50KClg
-IGFueW1vcmUuDQo+IA0KPiANCj4gPiArCQkJCWRlbGxfcHJpdmFjeV9wcm9jZXNzX2V2ZW50KGJ1
-ZmZlcl9lbnRyeVsxXSwNCj4gPiArCQkJCQkJCSAgYnVmZmVyX2VudHJ5WzNdLCBidWZmZXJfZW50
-cnlbNF0pOw0KPiA+ICsJCQl9IGVsc2UgaWYgKGxlbiA+IDIpIHsNCj4gPiArCQkJCWRlbGxfd21p
-X3Byb2Nlc3Nfa2V5KHdkZXYsIGJ1ZmZlcl9lbnRyeVsxXSwNCj4gPiArCQkJCQkJICAgICBidWZm
-ZXJfZW50cnlbMl0pOw0KPiA+ICsJCQl9DQo+ID4gKwkJCWJyZWFrOw0KPiA+ICAJCWRlZmF1bHQ6
-IC8qIFVua25vd24gZXZlbnQgKi8NCj4gPiAgCQkJcHJfaW5mbygiVW5rbm93biBXTUkgZXZlbnQg
-dHlwZSAweCV4XG4iLA0KPiA+ICAJCQkJKGludClidWZmZXJfZW50cnlbMV0pOw0KPiA+IC0tDQo+
-ID4gMi4yNS4xDQo+ID4NCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBCYXJuYWLDoXMgUMWRY3plDQo=
+
+--x35nxfbf6nounlqj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Mar 09, 2021 at 01:05:29AM +0100, Maximilian Luz wrote:
+> On newer Microsoft Surface models (specifically 7th-generation, i.e.
+> Surface Pro 7, Surface Book 3, Surface Laptop 3, and Surface Laptop Go),
+> battery and AC status/information is no longer handled via standard ACPI
+> devices, but instead directly via the Surface System Aggregator Module
+> (SSAM), i.e. the embedded controller on those devices.
+>=20
+> While on previous generation models, battery status is also handled via
+> SSAM, an ACPI shim was present to translate the standard ACPI battery
+> interface to SSAM requests. The SSAM interface itself, which is modeled
+> closely after the ACPI interface, has not changed.
+>=20
+> This commit introduces a new SSAM client device driver to support
+> battery status/information via the aforementioned interface on said
+> Surface models. It is in parts based on the standard ACPI battery
+> driver.
+>=20
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> ---
+>=20
+> Note: This patch depends on the
+>=20
+>     platform/surface: Add Surface Aggregator device registry
+>=20
+> series. More specifically patch
+>=20
+>     platform/surface: Set up Surface Aggregator device registry
+>=20
+> The full series has been merged into the for-next branch of the
+> platform-drivers-x86 tree [1]. The commit in question can be found at
+> [2].
+>=20
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drive=
+rs-x86.git/log/?h=3Dfor-next
+> [2]: https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drive=
+rs-x86.git/commit/?h=3Dfor-next&id=3Dfc622b3d36e6d91330fb21506b9ad1e3206a4d=
+de
+>=20
+> ---
+>  MAINTAINERS                            |   7 +
+>  drivers/power/supply/Kconfig           |  16 +
+>  drivers/power/supply/Makefile          |   1 +
+>  drivers/power/supply/surface_battery.c | 901 +++++++++++++++++++++++++
+>  4 files changed, 925 insertions(+)
+>  create mode 100644 drivers/power/supply/surface_battery.c
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d756b9ec236d..f44521abe8bf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11861,6 +11861,13 @@ F:	drivers/scsi/smartpqi/smartpqi*.[ch]
+>  F:	include/linux/cciss*.h
+>  F:	include/uapi/linux/cciss*.h
+> =20
+> +MICROSOFT SURFACE BATTERY AND AC DRIVERS
+> +M:	Maximilian Luz <luzmaximilian@gmail.com>
+> +L:	linux-pm@vger.kernel.org
+> +L:	platform-driver-x86@vger.kernel.org
+> +S:	Maintained
+> +F:	drivers/power/supply/surface_battery.c
+> +
+>  MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+>  M:	Maximilian Luz <luzmaximilian@gmail.com>
+>  L:	platform-driver-x86@vger.kernel.org
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index 006b95eca673..cebeff10d543 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -801,4 +801,20 @@ config BATTERY_ACER_A500
+>  	help
+>  	  Say Y to include support for Acer Iconia Tab A500 battery fuel gauge.
+> =20
+> +config BATTERY_SURFACE
+> +	tristate "Battery driver for 7th-generation Microsoft Surface devices"
+> +	depends on SURFACE_AGGREGATOR_REGISTRY
+> +	help
+> +	  Driver for battery devices connected via/managed by the Surface System
+> +	  Aggregator Module (SSAM).
+> +
+> +	  This driver provides battery-information and -status support for
+> +	  Surface devices where said data is not exposed via the standard ACPI
+> +	  devices. On those models (7th-generation), battery-information is
+> +	  instead handled directly via SSAM client devices and this driver.
+> +
+> +	  Say M or Y here to include battery status support for 7th-generation
+> +	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
+> +	  Surface Book 3, and Surface Laptop Go.
+> +
+>  endif # POWER_SUPPLY
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> index 5e5fdbbef531..134041538d2c 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -101,3 +101,4 @@ obj-$(CONFIG_CHARGER_BD99954)	+=3D bd99954-charger.o
+>  obj-$(CONFIG_CHARGER_WILCO)	+=3D wilco-charger.o
+>  obj-$(CONFIG_RN5T618_POWER)	+=3D rn5t618_power.o
+>  obj-$(CONFIG_BATTERY_ACER_A500)	+=3D acer_a500_battery.o
+> +obj-$(CONFIG_BATTERY_SURFACE)	+=3D surface_battery.o
+> diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/suppl=
+y/surface_battery.c
+> new file mode 100644
+> index 000000000000..b93a4f556b5c
+> --- /dev/null
+> +++ b/drivers/power/supply/surface_battery.c
+> @@ -0,0 +1,901 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Battery driver for 7th-generation Microsoft Surface devices via Surfa=
+ce
+> + * System Aggregator Module (SSAM).
+> + *
+> + * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+> + */
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/power_supply.h>
+> +#include <linux/sysfs.h>
+> +#include <linux/types.h>
+> +#include <linux/workqueue.h>
+> +
+> +#include <linux/surface_aggregator/device.h>
+> +
+> +
+> +/* -- SAM interface. ---------------------------------------------------=
+----- */
+> +
+> +enum sam_event_cid_bat {
+> +	SAM_EVENT_CID_BAT_BIX         =3D 0x15,
+> +	SAM_EVENT_CID_BAT_BST         =3D 0x16,
+> +	SAM_EVENT_CID_BAT_ADP         =3D 0x17,
+> +	SAM_EVENT_CID_BAT_PROT        =3D 0x18,
+> +	SAM_EVENT_CID_BAT_DPTF        =3D 0x53,
+> +};
+> +
+> +enum sam_battery_sta {
+> +	SAM_BATTERY_STA_OK            =3D 0x0f,
+> +	SAM_BATTERY_STA_PRESENT	      =3D 0x10,
+> +};
+> +
+> +enum sam_battery_state {
+> +	SAM_BATTERY_STATE_DISCHARGING =3D BIT(0),
+> +	SAM_BATTERY_STATE_CHARGING    =3D BIT(1),
+> +	SAM_BATTERY_STATE_CRITICAL    =3D BIT(2),
+> +};
+> +
+> +enum sam_battery_power_unit {
+> +	SAM_BATTERY_POWER_UNIT_mW     =3D 0,
+> +	SAM_BATTERY_POWER_UNIT_mA     =3D 1,
+> +};
+> +
+> +/* Equivalent to data returned in ACPI _BIX method, revision 0. */
+> +struct spwr_bix {
+> +	u8  revision;
+> +	__le32 power_unit;
+> +	__le32 design_cap;
+> +	__le32 last_full_charge_cap;
+> +	__le32 technology;
+> +	__le32 design_voltage;
+> +	__le32 design_cap_warn;
+> +	__le32 design_cap_low;
+> +	__le32 cycle_count;
+> +	__le32 measurement_accuracy;
+> +	__le32 max_sampling_time;
+> +	__le32 min_sampling_time;
+> +	__le32 max_avg_interval;
+> +	__le32 min_avg_interval;
+> +	__le32 bat_cap_granularity_1;
+> +	__le32 bat_cap_granularity_2;
+> +	__u8 model[21];
+> +	__u8 serial[11];
+> +	__u8 type[5];
+> +	__u8 oem_info[21];
+> +} __packed;
+> +
+> +static_assert(sizeof(struct spwr_bix) =3D=3D 119);
+> +
+> +/* Equivalent to data returned in ACPI _BST method. */
+> +struct spwr_bst {
+> +	__le32 state;
+> +	__le32 present_rate;
+> +	__le32 remaining_cap;
+> +	__le32 present_voltage;
+> +} __packed;
+> +
+> +static_assert(sizeof(struct spwr_bst) =3D=3D 16);
+> +
+> +#define SPWR_BIX_REVISION		0
+> +#define SPWR_BATTERY_VALUE_UNKNOWN	0xffffffff
+> +
+> +/* Get battery status (_STA) */
+> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_sta, __le32, {
+> +	.target_category =3D SSAM_SSH_TC_BAT,
+> +	.command_id      =3D 0x01,
+> +});
+> +
+> +/* Get battery static information (_BIX). */
+> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_bix, struct spwr_bix, {
+> +	.target_category =3D SSAM_SSH_TC_BAT,
+> +	.command_id      =3D 0x02,
+> +});
+> +
+> +/* Get battery dynamic information (_BST). */
+> +SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_bst, struct spwr_bst, {
+> +	.target_category =3D SSAM_SSH_TC_BAT,
+> +	.command_id      =3D 0x03,
+> +});
+> +
+> +/* Set battery trip point (_BTP). */
+> +SSAM_DEFINE_SYNC_REQUEST_CL_W(ssam_bat_set_btp, __le32, {
+> +	.target_category =3D SSAM_SSH_TC_BAT,
+> +	.command_id      =3D 0x04,
+> +});
+> +
+> +
+> +/* -- Device structures. -----------------------------------------------=
+----- */
+> +
+> +struct spwr_psy_properties {
+> +	const char *name;
+> +	struct ssam_event_registry registry;
+> +};
+> +
+> +struct spwr_battery_device {
+> +	struct ssam_device *sdev;
+> +
+> +	char name[32];
+> +	struct power_supply *psy;
+> +	struct power_supply_desc psy_desc;
+> +
+> +	struct delayed_work update_work;
+> +
+> +	struct ssam_event_notifier notif;
+> +
+> +	struct mutex lock;  /* Guards access to state data below. */
+> +	unsigned long timestamp;
+> +
+> +	__le32 sta;
+> +	struct spwr_bix bix;
+> +	struct spwr_bst bst;
+> +	u32 alarm;
+> +};
+> +
+> +
+> +/* -- Module parameters. -----------------------------------------------=
+----- */
+> +
+> +static unsigned int cache_time =3D 1000;
+> +module_param(cache_time, uint, 0644);
+> +MODULE_PARM_DESC(cache_time, "battery state caching time in milliseconds=
+ [default: 1000]");
+> +
+> +
+> +/* -- State management. ------------------------------------------------=
+----- */
+> +
+> +/*
+> + * Delay for battery update quirk. See spwr_battery_recheck_adapter() be=
+low
+> + * for more details.
+> + */
+> +#define SPWR_AC_BAT_UPDATE_DELAY	msecs_to_jiffies(5000)
+> +
+> +static bool spwr_battery_present(struct spwr_battery_device *bat)
+> +{
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	return le32_to_cpu(bat->sta) & SAM_BATTERY_STA_PRESENT;
+> +}
+> +
+> +static int spwr_battery_load_sta(struct spwr_battery_device *bat)
+> +{
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	return ssam_retry(ssam_bat_get_sta, bat->sdev, &bat->sta);
+> +}
+> +
+> +static int spwr_battery_load_bix(struct spwr_battery_device *bat)
+> +{
+> +	int status;
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (!spwr_battery_present(bat))
+> +		return 0;
+> +
+> +	status =3D ssam_retry(ssam_bat_get_bix, bat->sdev, &bat->bix);
+> +
+> +	/* Enforce NULL terminated strings in case anything goes wrong... */
+> +	bat->bix.model[ARRAY_SIZE(bat->bix.model) - 1] =3D 0;
+> +	bat->bix.serial[ARRAY_SIZE(bat->bix.serial) - 1] =3D 0;
+> +	bat->bix.type[ARRAY_SIZE(bat->bix.type) - 1] =3D 0;
+> +	bat->bix.oem_info[ARRAY_SIZE(bat->bix.oem_info) - 1] =3D 0;
+> +
+> +	return status;
+> +}
+> +
+> +static int spwr_battery_load_bst(struct spwr_battery_device *bat)
+> +{
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (!spwr_battery_present(bat))
+> +		return 0;
+> +
+> +	return ssam_retry(ssam_bat_get_bst, bat->sdev, &bat->bst);
+> +}
+> +
+> +static int spwr_battery_set_alarm_unlocked(struct spwr_battery_device *b=
+at, u32 value)
+> +{
+> +	__le32 value_le =3D cpu_to_le32(value);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	bat->alarm =3D value;
+> +	return ssam_retry(ssam_bat_set_btp, bat->sdev, &value_le);
+> +}
+> +
+> +static int spwr_battery_update_bst_unlocked(struct spwr_battery_device *=
+bat, bool cached)
+> +{
+> +	unsigned long cache_deadline =3D bat->timestamp + msecs_to_jiffies(cach=
+e_time);
+> +	int status;
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (cached && bat->timestamp && time_is_after_jiffies(cache_deadline))
+> +		return 0;
+> +
+> +	status =3D spwr_battery_load_sta(bat);
+> +	if (status)
+> +		return status;
+> +
+> +	status =3D spwr_battery_load_bst(bat);
+> +	if (status)
+> +		return status;
+> +
+> +	bat->timestamp =3D jiffies;
+> +	return 0;
+> +}
+> +
+> +static int spwr_battery_update_bst(struct spwr_battery_device *bat, bool=
+ cached)
+> +{
+> +	int status;
+> +
+> +	mutex_lock(&bat->lock);
+> +	status =3D spwr_battery_update_bst_unlocked(bat, cached);
+> +	mutex_unlock(&bat->lock);
+> +
+> +	return status;
+> +}
+> +
+> +static int spwr_battery_update_bix_unlocked(struct spwr_battery_device *=
+bat)
+> +{
+> +	int status;
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	status =3D spwr_battery_load_sta(bat);
+> +	if (status)
+> +		return status;
+> +
+> +	status =3D spwr_battery_load_bix(bat);
+> +	if (status)
+> +		return status;
+> +
+> +	status =3D spwr_battery_load_bst(bat);
+> +	if (status)
+> +		return status;
+> +
+> +	if (bat->bix.revision !=3D SPWR_BIX_REVISION)
+> +		dev_warn(&bat->sdev->dev, "unsupported battery revision: %u\n", bat->b=
+ix.revision);
+> +
+> +	bat->timestamp =3D jiffies;
+> +	return 0;
+> +}
+> +
+> +static u32 sprw_battery_get_full_cap_safe(struct spwr_battery_device *ba=
+t)
+> +{
+> +	u32 full_cap =3D get_unaligned_le32(&bat->bix.last_full_charge_cap);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (full_cap =3D=3D 0 || full_cap =3D=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +		full_cap =3D get_unaligned_le32(&bat->bix.design_cap);
+> +
+> +	return full_cap;
+> +}
+> +
+> +static bool spwr_battery_is_full(struct spwr_battery_device *bat)
+> +{
+> +	u32 state =3D get_unaligned_le32(&bat->bst.state);
+> +	u32 full_cap =3D sprw_battery_get_full_cap_safe(bat);
+> +	u32 remaining_cap =3D get_unaligned_le32(&bat->bst.remaining_cap);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	return full_cap !=3D SPWR_BATTERY_VALUE_UNKNOWN && full_cap !=3D 0 &&
+> +		remaining_cap !=3D SPWR_BATTERY_VALUE_UNKNOWN &&
+> +		remaining_cap >=3D full_cap &&
+> +		state =3D=3D 0;
+> +}
+> +
+> +static int spwr_battery_recheck_full(struct spwr_battery_device *bat)
+> +{
+> +	bool present;
+> +	u32 unit;
+> +	int status;
+> +
+> +	mutex_lock(&bat->lock);
+> +	unit =3D get_unaligned_le32(&bat->bix.power_unit);
+> +	present =3D spwr_battery_present(bat);
+> +
+> +	status =3D spwr_battery_update_bix_unlocked(bat);
+> +	if (status)
+> +		goto out;
+> +
+> +	/* If battery has been attached, (re-)initialize alarm. */
+> +	if (!present && spwr_battery_present(bat)) {
+> +		u32 cap_warn =3D get_unaligned_le32(&bat->bix.design_cap_warn);
+> +
+> +		status =3D spwr_battery_set_alarm_unlocked(bat, cap_warn);
+> +		if (status)
+> +			goto out;
+> +	}
+> +
+> +	/*
+> +	 * Warn if the unit has changed. This is something we genuinely don't
+> +	 * expect to happen, so make this a big warning. If it does, we'll
+> +	 * need to add support for it.
+> +	 */
+> +	WARN_ON(unit !=3D get_unaligned_le32(&bat->bix.power_unit));
+> +
+> +out:
+> +	mutex_unlock(&bat->lock);
+> +
+> +	if (!status)
+> +		power_supply_changed(bat->psy);
+> +
+> +	return status;
+> +}
+> +
+> +static int spwr_battery_recheck_status(struct spwr_battery_device *bat)
+> +{
+> +	int status;
+> +
+> +	status =3D spwr_battery_update_bst(bat, false);
+> +	if (!status)
+> +		power_supply_changed(bat->psy);
+> +
+> +	return status;
+> +}
+> +
+> +static int spwr_battery_recheck_adapter(struct spwr_battery_device *bat)
+> +{
+> +	/*
+> +	 * Handle battery update quirk: When the battery is fully charged (or
+> +	 * charged up to the limit imposed by the UEFI battery limit) and the
+> +	 * adapter is plugged in or removed, the EC does not send a separate
+> +	 * event for the state (charging/discharging) change. Furthermore it
+> +	 * may take some time until the state is updated on the battery.
+> +	 * Schedule an update to solve this.
+> +	 */
+
+As long as the adapter plug event is being sent you can just add
+=2Eexternal_power_changed() hook in this driver and update the battery
+status there instead of using this hack :)
+
+This requires populating .supplied_to in the charger driver, so that
+it will notify the battery device when power_supply_changed() is called
+for the charger. I will point this out when reviewing PATCH 2.
+
+> +	schedule_delayed_work(&bat->update_work, SPWR_AC_BAT_UPDATE_DELAY);
+> +	return 0;
+> +}
+> +
+> +static u32 spwr_notify_bat(struct ssam_event_notifier *nf, const struct =
+ssam_event *event)
+> +{
+> +	struct spwr_battery_device *bat =3D container_of(nf, struct spwr_batter=
+y_device, notif);
+> +	int status;
+> +
+> +	dev_dbg(&bat->sdev->dev, "power event (cid =3D %#04x, iid =3D %#04x, ti=
+d =3D %#04x)\n",
+> +		event->command_id, event->instance_id, event->target_id);
+> +
+> +	/* Handled here, needs to be handled for all targets/instances. */
+> +	if (event->command_id =3D=3D SAM_EVENT_CID_BAT_ADP) {
+> +		status =3D spwr_battery_recheck_adapter(bat);
+> +		return ssam_notifier_from_errno(status) | SSAM_NOTIF_HANDLED;
+> +	}
+> +
+> +	if (bat->sdev->uid.target !=3D event->target_id)
+> +		return 0;
+> +
+> +	if (bat->sdev->uid.instance !=3D event->instance_id)
+> +		return 0;
+> +
+> +	switch (event->command_id) {
+> +	case SAM_EVENT_CID_BAT_BIX:
+> +		status =3D spwr_battery_recheck_full(bat);
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_BST:
+> +		status =3D spwr_battery_recheck_status(bat);
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_PROT:
+> +		/*
+> +		 * TODO: Implement support for battery protection status change
+> +		 *       event.
+> +		 */
+> +		status =3D 0;
+> +		break;
+> +
+> +	case SAM_EVENT_CID_BAT_DPTF:
+> +		/*
+> +		 * TODO: Implement support for DPTF event.
+> +		 */
+> +		status =3D 0;
+> +		break;
+> +
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	return ssam_notifier_from_errno(status) | SSAM_NOTIF_HANDLED;
+> +}
+> +
+> +static void spwr_battery_update_bst_workfn(struct work_struct *work)
+> +{
+> +	struct delayed_work *dwork =3D to_delayed_work(work);
+> +	struct spwr_battery_device *bat;
+> +	int status;
+> +
+> +	bat =3D container_of(dwork, struct spwr_battery_device, update_work);
+> +
+> +	status =3D spwr_battery_update_bst(bat, false);
+> +	if (!status)
+> +		power_supply_changed(bat->psy);
+
+power_supply_changed should only be changed for 'important' changes
+(e.g. charging status changes, temperature or capacity threshold reached),
+not every 5 seconds.
+
+> +	if (status)
+> +		dev_err(&bat->sdev->dev, "failed to update battery state: %d\n", statu=
+s);
+
+status =3D spwr_battery_update_bst(bat, false);
+if (status < 0) {
+    dev_err(...);
+    return;
+}
+
+=2E..
+
+> +}
+> +
+> +
+> +/* -- Properties. ------------------------------------------------------=
+----- */
+> +
+> +static enum power_supply_property spwr_battery_props_chg[] =3D {
+
+static const
+
+> +	POWER_SUPPLY_PROP_STATUS,
+> +	POWER_SUPPLY_PROP_PRESENT,
+> +	POWER_SUPPLY_PROP_TECHNOLOGY,
+> +	POWER_SUPPLY_PROP_CYCLE_COUNT,
+> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> +	POWER_SUPPLY_PROP_CURRENT_NOW,
+> +	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
+> +	POWER_SUPPLY_PROP_CHARGE_FULL,
+> +	POWER_SUPPLY_PROP_CHARGE_NOW,
+> +	POWER_SUPPLY_PROP_CAPACITY,
+> +	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
+> +	POWER_SUPPLY_PROP_MODEL_NAME,
+> +	POWER_SUPPLY_PROP_MANUFACTURER,
+> +	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+> +};
+> +
+> +static enum power_supply_property spwr_battery_props_eng[] =3D {
+
+static const
+
+> +	POWER_SUPPLY_PROP_STATUS,
+> +	POWER_SUPPLY_PROP_PRESENT,
+> +	POWER_SUPPLY_PROP_TECHNOLOGY,
+> +	POWER_SUPPLY_PROP_CYCLE_COUNT,
+> +	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+> +	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+> +	POWER_SUPPLY_PROP_POWER_NOW,
+> +	POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN,
+> +	POWER_SUPPLY_PROP_ENERGY_FULL,
+> +	POWER_SUPPLY_PROP_ENERGY_NOW,
+> +	POWER_SUPPLY_PROP_CAPACITY,
+> +	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
+> +	POWER_SUPPLY_PROP_MODEL_NAME,
+> +	POWER_SUPPLY_PROP_MANUFACTURER,
+> +	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+> +};
+> +
+> +static int spwr_battery_prop_status(struct spwr_battery_device *bat)
+> +{
+> +	u32 state =3D get_unaligned_le32(&bat->bst.state);
+> +	u32 present_rate =3D get_unaligned_le32(&bat->bst.present_rate);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (state & SAM_BATTERY_STATE_DISCHARGING)
+> +		return POWER_SUPPLY_STATUS_DISCHARGING;
+> +
+> +	if (state & SAM_BATTERY_STATE_CHARGING)
+> +		return POWER_SUPPLY_STATUS_CHARGING;
+> +
+> +	if (spwr_battery_is_full(bat))
+> +		return POWER_SUPPLY_STATUS_FULL;
+> +
+> +	if (present_rate =3D=3D 0)
+> +		return POWER_SUPPLY_STATUS_NOT_CHARGING;
+> +
+> +	return POWER_SUPPLY_STATUS_UNKNOWN;
+> +}
+> +
+> +static int spwr_battery_prop_technology(struct spwr_battery_device *bat)
+> +{
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (!strcasecmp("NiCd", bat->bix.type))
+> +		return POWER_SUPPLY_TECHNOLOGY_NiCd;
+> +
+> +	if (!strcasecmp("NiMH", bat->bix.type))
+> +		return POWER_SUPPLY_TECHNOLOGY_NiMH;
+> +
+> +	if (!strcasecmp("LION", bat->bix.type))
+> +		return POWER_SUPPLY_TECHNOLOGY_LION;
+> +
+> +	if (!strncasecmp("LI-ION", bat->bix.type, 6))
+> +		return POWER_SUPPLY_TECHNOLOGY_LION;
+> +
+> +	if (!strcasecmp("LiP", bat->bix.type))
+> +		return POWER_SUPPLY_TECHNOLOGY_LIPO;
+> +
+> +	return POWER_SUPPLY_TECHNOLOGY_UNKNOWN;
+> +}
+> +
+> +static int spwr_battery_prop_capacity(struct spwr_battery_device *bat)
+> +{
+> +	u32 full_cap =3D sprw_battery_get_full_cap_safe(bat);
+> +	u32 remaining_cap =3D get_unaligned_le32(&bat->bst.remaining_cap);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (full_cap =3D=3D 0 || full_cap =3D=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +		return -ENODEV;
+
+-ENODATA
+
+> +	if (remaining_cap =3D=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +		return -ENODEV;
+
+-ENODATA
+
+> +
+> +	return remaining_cap * 100 / full_cap;
+> +}
+> +
+> +static int spwr_battery_prop_capacity_level(struct spwr_battery_device *=
+bat)
+> +{
+> +	u32 state =3D get_unaligned_le32(&bat->bst.state);
+> +	u32 remaining_cap =3D get_unaligned_le32(&bat->bst.remaining_cap);
+> +
+> +	lockdep_assert_held(&bat->lock);
+> +
+> +	if (state & SAM_BATTERY_STATE_CRITICAL)
+> +		return POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+> +
+> +	if (spwr_battery_is_full(bat))
+> +		return POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+> +
+> +	if (remaining_cap <=3D bat->alarm)
+> +		return POWER_SUPPLY_CAPACITY_LEVEL_LOW;
+> +
+> +	return POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
+> +}
+> +
+> +static int spwr_battery_get_property(struct power_supply *psy, enum powe=
+r_supply_property psp,
+> +				     union power_supply_propval *val)
+> +{
+> +	struct spwr_battery_device *bat =3D power_supply_get_drvdata(psy);
+> +	u32 value;
+> +	int status;
+> +
+> +	mutex_lock(&bat->lock);
+> +
+> +	status =3D spwr_battery_update_bst_unlocked(bat, true);
+> +	if (status)
+> +		goto out;
+> +
+> +	/* Abort if battery is not present. */
+> +	if (!spwr_battery_present(bat) && psp !=3D POWER_SUPPLY_PROP_PRESENT) {
+> +		status =3D -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_STATUS:
+> +		val->intval =3D spwr_battery_prop_status(bat);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_PRESENT:
+> +		val->intval =3D spwr_battery_present(bat);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_TECHNOLOGY:
+> +		val->intval =3D spwr_battery_prop_technology(bat);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CYCLE_COUNT:
+> +		value =3D get_unaligned_le32(&bat->bix.cycle_count);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value;
+> +		else
+> +			status =3D -ENODEV;
+
+Battery not present is already covered above, so this should
+probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
+> +		value =3D get_unaligned_le32(&bat->bix.design_voltage);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+> +		value =3D get_unaligned_le32(&bat->bst.present_voltage);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CURRENT_NOW:
+> +	case POWER_SUPPLY_PROP_POWER_NOW:
+> +		value =3D get_unaligned_le32(&bat->bst.present_rate);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
+> +	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
+> +		value =3D get_unaligned_le32(&bat->bix.design_cap);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CHARGE_FULL:
+> +	case POWER_SUPPLY_PROP_ENERGY_FULL:
+> +		value =3D get_unaligned_le32(&bat->bix.last_full_charge_cap);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CHARGE_NOW:
+> +	case POWER_SUPPLY_PROP_ENERGY_NOW:
+> +		value =3D get_unaligned_le32(&bat->bst.remaining_cap);
+> +		if (value !=3D SPWR_BATTERY_VALUE_UNKNOWN)
+> +			val->intval =3D value * 1000;
+> +		else
+> +			status =3D -ENODEV;
+
+same as above, this should probably be -ENODATA?
+
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CAPACITY:
+> +		val->intval =3D spwr_battery_prop_capacity(bat);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+> +		val->intval =3D spwr_battery_prop_capacity_level(bat);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_MODEL_NAME:
+> +		val->strval =3D bat->bix.model;
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_MANUFACTURER:
+> +		val->strval =3D bat->bix.oem_info;
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_SERIAL_NUMBER:
+> +		val->strval =3D bat->bix.serial;
+> +		break;
+> +
+> +	default:
+> +		status =3D -EINVAL;
+> +		break;
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&bat->lock);
+> +	return status;
+> +}
+> +
+> +
+> +/* -- Alarm attribute. -------------------------------------------------=
+----- */
+> +
+> +static ssize_t spwr_battery_alarm_show(struct device *dev, struct device=
+_attribute *attr, char *buf)
+> +{
+> +	struct power_supply *psy =3D dev_get_drvdata(dev);
+> +	struct spwr_battery_device *bat =3D power_supply_get_drvdata(psy);
+> +	int status;
+> +
+> +	mutex_lock(&bat->lock);
+> +	status =3D sysfs_emit(buf, "%d\n", bat->alarm * 1000);
+> +	mutex_unlock(&bat->lock);
+> +
+> +	return status;
+> +}
+> +
+> +static ssize_t spwr_battery_alarm_store(struct device *dev, struct devic=
+e_attribute *attr,
+> +					const char *buf, size_t count)
+> +{
+> +	struct power_supply *psy =3D dev_get_drvdata(dev);
+> +	struct spwr_battery_device *bat =3D power_supply_get_drvdata(psy);
+> +	unsigned long value;
+> +	int status;
+> +
+> +	status =3D kstrtoul(buf, 0, &value);
+> +	if (status)
+> +		return status;
+> +
+> +	mutex_lock(&bat->lock);
+> +
+> +	if (!spwr_battery_present(bat)) {
+> +		mutex_unlock(&bat->lock);
+> +		return -ENODEV;
+> +	}
+> +
+> +	status =3D spwr_battery_set_alarm_unlocked(bat, value / 1000);
+> +	if (status) {
+> +		mutex_unlock(&bat->lock);
+> +		return status;
+> +	}
+> +
+> +	mutex_unlock(&bat->lock);
+> +	return count;
+> +}
+> +
+> +static const struct device_attribute alarm_attr =3D {
+> +	.attr =3D {.name =3D "alarm", .mode =3D 0644},
+> +	.show =3D spwr_battery_alarm_show,
+> +	.store =3D spwr_battery_alarm_store,
+> +};
+
+DEVICE_ATTR_RW()
+
+custom property needs to be documented in=20
+
+Documentation/ABI/testing/sysfs-class-power-surface
+
+Also I'm not sure what is being stored here, but it looks like you
+can just use POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN?
+
+> +
+> +/* -- Device setup. ----------------------------------------------------=
+----- */
+> +
+> +static void spwr_battery_init(struct spwr_battery_device *bat, struct ss=
+am_device *sdev,
+> +			      struct ssam_event_registry registry, const char *name)
+> +{
+> +	mutex_init(&bat->lock);
+> +	strncpy(bat->name, name, ARRAY_SIZE(bat->name) - 1);
+> +
+> +	bat->sdev =3D sdev;
+> +
+> +	bat->notif.base.priority =3D 1;
+> +	bat->notif.base.fn =3D spwr_notify_bat;
+> +	bat->notif.event.reg =3D registry;
+> +	bat->notif.event.id.target_category =3D sdev->uid.category;
+> +	bat->notif.event.id.instance =3D 0;
+> +	bat->notif.event.mask =3D SSAM_EVENT_MASK_NONE;
+> +	bat->notif.event.flags =3D SSAM_EVENT_SEQUENCED;
+> +
+> +	bat->psy_desc.name =3D bat->name;
+> +	bat->psy_desc.type =3D POWER_SUPPLY_TYPE_BATTERY;
+> +	bat->psy_desc.get_property =3D spwr_battery_get_property;
+> +
+> +	INIT_DELAYED_WORK(&bat->update_work, spwr_battery_update_bst_workfn);
+> +}
+> +
+> +static void spwr_battery_destroy(struct spwr_battery_device *bat)
+> +{
+> +	mutex_destroy(&bat->lock);
+> +}
+
+quite pointless and can be dropped. mutex_destroy is not a cleanup,
+but a debug thing and not very helpful when being the last function
+call. If you really need this, just use devm_add_action_or_reset.
+
+> +
+> +static int spwr_battery_register(struct spwr_battery_device *bat)
+> +{
+> +	struct power_supply_config psy_cfg =3D {};
+> +	__le32 sta;
+> +	int status;
+> +
+> +	/* Make sure the device is there and functioning properly. */
+> +	status =3D ssam_retry(ssam_bat_get_sta, bat->sdev, &sta);
+> +	if (status)
+> +		return status;
+> +
+> +	if ((le32_to_cpu(sta) & SAM_BATTERY_STA_OK) !=3D SAM_BATTERY_STA_OK)
+> +		return -ENODEV;
+> +
+> +	/* Satisfy lockdep although we are in an exclusive context here. */
+> +	mutex_lock(&bat->lock);
+> +
+> +	status =3D spwr_battery_update_bix_unlocked(bat);
+> +	if (status) {
+> +		mutex_unlock(&bat->lock);
+> +		return status;
+> +	}
+> +
+> +	if (spwr_battery_present(bat)) {
+> +		u32 cap_warn =3D get_unaligned_le32(&bat->bix.design_cap_warn);
+> +
+> +		status =3D spwr_battery_set_alarm_unlocked(bat, cap_warn);
+> +		if (status) {
+> +			mutex_unlock(&bat->lock);
+> +			return status;
+> +		}
+> +	}
+> +
+> +	mutex_unlock(&bat->lock);
+> +
+> +	switch (get_unaligned_le32(&bat->bix.power_unit)) {
+> +	case SAM_BATTERY_POWER_UNIT_mW:
+> +		bat->psy_desc.properties =3D spwr_battery_props_eng;
+> +		bat->psy_desc.num_properties =3D ARRAY_SIZE(spwr_battery_props_eng);
+> +		break;
+> +
+> +	case SAM_BATTERY_POWER_UNIT_mA:
+> +		bat->psy_desc.properties =3D spwr_battery_props_chg;
+> +		bat->psy_desc.num_properties =3D ARRAY_SIZE(spwr_battery_props_chg);
+> +		break;
+> +
+> +	default:
+> +		dev_err(&bat->sdev->dev, "unsupported battery power unit: %u\n",
+> +			get_unaligned_le32(&bat->bix.power_unit));
+> +		return -EINVAL;
+> +	}
+> +
+> +	psy_cfg.drv_data =3D bat;
+> +	bat->psy =3D power_supply_register(&bat->sdev->dev, &bat->psy_desc, &ps=
+y_cfg);
+> +	if (IS_ERR(bat->psy))
+> +		return PTR_ERR(bat->psy);
+> +
+> +	status =3D ssam_notifier_register(bat->sdev->ctrl, &bat->notif);
+> +	if (status)
+> +		goto err_notif;
+> +
+> +	status =3D device_create_file(&bat->psy->dev, &alarm_attr);
+> +	if (status)
+> +		goto err_file;
+
+Please use psy_cfg.attr_grp like all other power-supply drivers.
+
+> +
+> +	return 0;
+> +
+> +err_file:
+> +	ssam_notifier_unregister(bat->sdev->ctrl, &bat->notif);
+> +err_notif:
+> +	power_supply_unregister(bat->psy);
+> +	return status;
+> +}
+> +
+> +static void spwr_battery_unregister(struct spwr_battery_device *bat)
+> +{
+> +	ssam_notifier_unregister(bat->sdev->ctrl, &bat->notif);
+> +	cancel_delayed_work_sync(&bat->update_work);
+> +	device_remove_file(&bat->psy->dev, &alarm_attr);
+> +	power_supply_unregister(bat->psy);
+
+power_supply_unregister being the last function call is a clear
+sign, that devm_power_supply_register can be used instead.
+
+> +}
+> +
+> +
+> +/* -- Driver setup. ----------------------------------------------------=
+----- */
+> +
+> +static int __maybe_unused surface_battery_resume(struct device *dev)
+> +{
+> +	return spwr_battery_recheck_full(dev_get_drvdata(dev));
+> +}
+> +SIMPLE_DEV_PM_OPS(surface_battery_pm_ops, NULL, surface_battery_resume);
+> +
+> +static int surface_battery_probe(struct ssam_device *sdev)
+> +{
+> +	const struct spwr_psy_properties *p;
+> +	struct spwr_battery_device *bat;
+> +	int status;
+> +
+> +	p =3D ssam_device_get_match_data(sdev);
+> +	if (!p)
+> +		return -ENODEV;
+> +
+> +	bat =3D devm_kzalloc(&sdev->dev, sizeof(*bat), GFP_KERNEL);
+> +	if (!bat)
+> +		return -ENOMEM;
+> +
+> +	spwr_battery_init(bat, sdev, p->registry, p->name);
+> +	ssam_device_set_drvdata(sdev, bat);
+> +
+> +	status =3D spwr_battery_register(bat);
+> +	if (status)
+> +		spwr_battery_destroy(bat);
+> +
+> +	return status;
+> +}
+> +
+> +static void surface_battery_remove(struct ssam_device *sdev)
+> +{
+> +	struct spwr_battery_device *bat =3D ssam_device_get_drvdata(sdev);
+> +
+> +	spwr_battery_unregister(bat);
+> +	spwr_battery_destroy(bat);
+
+Just merge spwr_battery_unregister into this function.
+
+> +}
+> +
+> +static const struct spwr_psy_properties spwr_psy_props_bat1 =3D {
+> +	.name =3D "BAT1",
+> +	.registry =3D SSAM_EVENT_REGISTRY_SAM,
+> +};
+> +
+> +static const struct spwr_psy_properties spwr_psy_props_bat2_sb3 =3D {
+> +	.name =3D "BAT2",
+> +	.registry =3D SSAM_EVENT_REGISTRY_KIP,
+> +};
+> +
+> +static const struct ssam_device_id surface_battery_match[] =3D {
+> +	{ SSAM_SDEV(BAT, 0x01, 0x01, 0x00), (unsigned long)&spwr_psy_props_bat1=
+     },
+> +	{ SSAM_SDEV(BAT, 0x02, 0x01, 0x00), (unsigned long)&spwr_psy_props_bat2=
+_sb3 },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(ssam, surface_battery_match);
+> +
+> +static struct ssam_device_driver surface_battery_driver =3D {
+> +	.probe =3D surface_battery_probe,
+> +	.remove =3D surface_battery_remove,
+> +	.match_table =3D surface_battery_match,
+> +	.driver =3D {
+> +		.name =3D "surface_battery",
+> +		.pm =3D &surface_battery_pm_ops,
+> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
+> +	},
+> +};
+> +module_ssam_device_driver(surface_battery_driver);
+> +
+> +MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
+> +MODULE_DESCRIPTION("Battery driver for Surface System Aggregator Module"=
+);
+> +MODULE_LICENSE("GPL");
+
+Thanks,
+
+-- Sebastian
+
+--x35nxfbf6nounlqj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmBrLsEACgkQ2O7X88g7
++pqE0w/7BXHXCctR71c8WzZSBPrii36F45d8XJnBh9mWlPe7oFh2dK4beNQ7VZrr
+tkjWeCg8VvhEMn86p9tMK0Vyewq6R2fD1kpmny0fZCuSblsJVP5F7OQX3/AOkdmB
+qkuEd1QXdPUjGTtxvNyt5pnsI0u5ZbUKNkiIED3Zj+EO91dp1BFZXLoSPFtsFjOz
+UOvKSD4duVhuFj/CyYSMSiXkIXEX/BgdaZz2fQ2U2qG8fSh5BzeRPl+kV6vnbdCc
+pBWGOdQHPnOi4fW+okc2aENTJRxY/sjF6ao2GcYteDHWiYKtepKdi4wIHyg1JMm2
+H7cph3U6l81klADIv28Or0LMAQ8ygvHgrjXNEpVQabR3ubjRI0Bs3JLgHM/9um9H
+fVgozhS+MeiuiEHmdCGJDABu6mF6AGIA3xtx2CoQXAKhHmfYW+G0wB0ni0CG6mAf
+AczmCkClAofXfxuF4QNbQSmBhADfCpdl4cH/XBsdv1u53p/G/FquiHJNUuW5CYEa
+X43uBCB9uj4phKYoEEal9gT0HVbiXg/5WQSV4Xh98x//+raqAwkO7LmQtiuoa0Cz
+ugklTJ2tuNb3lgMqjxZowpp3elJTJYWaGya+uRKy96rsniaM0RFgbFemCVgJmsME
+RxxLPUXCE6N5D98UkMulbX6TrU1ufi4y+vBkCIgzSGqD6SjR5ys=
+=OLgM
+-----END PGP SIGNATURE-----
+
+--x35nxfbf6nounlqj--
