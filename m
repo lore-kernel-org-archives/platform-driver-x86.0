@@ -2,132 +2,159 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57789C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 15:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55161C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 16:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C894613CC
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 15:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE34613BD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 16:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345618AbhDFPZ0 (ORCPT
+        id S1346166AbhDFQD4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Apr 2021 11:25:26 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:9216 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232532AbhDFPZ0 (ORCPT
+        Tue, 6 Apr 2021 12:03:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39265 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1346163AbhDFQDx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Apr 2021 11:25:26 -0400
-Received: from [100.112.3.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 36/2C-00973-D5D7C606; Tue, 06 Apr 2021 15:25:17 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRWlGSWpSXmKPExsWS8eIhj25sbU6
-  CwfQ7IhZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaM9jk7WQvO
-  81W8XP6bpYFxAk8XIxeHkMB/RonX91ewQjjPGCX2/rrL0sXIySEs4CVxpfEVK4gtIqAuMbWjh
-  w3EZhZwlpjUMoENoqGTUWL95r+MIAk2AW2JLVt+gRXxCthKLG+5wNzFyMHBIqAicWx3IUhYVC
-  BcovfKbVaIEkGJkzOfgO3iFLCT2HxiHhNIObOApsT6XfoQq8Qlbj2ZzwRhy0tsfzuHGcSWALJ
-  /73vNCmEnSPT8e8Q2gVFwFpKpsxAmzUIyaRaSSQsYWVYxmiUVZaZnlOQmZuboGhoY6BoaGuka
-  6BoZGeklVukm6ZUW66YmFpfoGuollhfrFVfmJuek6OWllmxiBEZDSgHDvR2Mf15/0DvEKMnBp
-  CTKOz8xJ0GILyk/pTIjsTgjvqg0J7X4EKMMB4eSBK9UNVBOsCg1PbUiLTMHGJkwaQkOHiURXi
-  uQNG9xQWJucWY6ROoUo6KUOO9xkIQASCKjNA+uDZYMLjHKSgnzMjIwMAjxFKQW5WaWoMq/YhT
-  nYFQS5lUEmcKTmVcCN/0V0GImoMVSZzNBFpckIqSkGpjaBc5MEmw23Z+X+KZEweVpRPxG67WT
-  ir+a1UW3ciT7F5w5+HajqOn03cf+KmhXSKyYevyybLKjriKT3jafVXK9vF0i87e+LHN+83bN0
-  eX6FjOZDl6rueY4K8I9x0q2qPR3rkuP4vumR2sunxMx0NE3U1yoF3ImNbW6cfGqgkc3Oq7f8d
-  xUFfE3XtWDq9P2wZVtBmejC9mY0zLfZUyYF3s9/wXrH+NT66bvvnho97mlvdcvxJ1gS5ow5b+
-  Kt98sza0PYjdzvF3VojBt/sZNKdwvL06ctuXR2vQZ8TJy3Ze97y04cmppjds2Eyb7iw/zHk27
-  UsVbt8C/LGqu/tYU3q25slNmKnzM7V4oebSk4LetEktxRqKhFnNRcSIAvvGE6oEDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-4.tower-386.messagelabs.com!1617722717!153711!1
-X-Originating-IP: [104.232.225.12]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 24871 invoked from network); 6 Apr 2021 15:25:17 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.12)
-  by server-4.tower-386.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 6 Apr 2021 15:25:17 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 2605E4A33489774464F5;
-        Tue,  6 Apr 2021 11:25:17 -0400 (EDT)
-Received: from localhost.localdomain (10.38.99.27) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Tue, 6 Apr 2021
- 11:25:16 -0400
-Subject: Re: [External] Re: [PATCH] Add support for DYTC MMC_GET BIOS API.
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
-References: <markpearson@lenovo.com>
- <20210406022215.199998-1-markpearson@lenovo.com>
- <a9af6b1f-f667-99b5-efc4-11d7ae7afc3b@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <187507f7-a111-90fe-5955-59115198f16d@lenovo.com>
-Date:   Tue, 6 Apr 2021 11:25:15 -0400
+        Tue, 6 Apr 2021 12:03:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617725025;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=EoqtToOiZ2s5/0xKOoL+G6cfqHUVgxnaLS/CRnQ6hlw=;
+        b=GkDBKFBthiPkKrvQUKQyUnoJMtYs2pINKcUGWMbH+RG0SpML6+wF9WAOrYWjS4iE6sF9Xv
+        cDY3hY559TcwVbsaU16flikCUwOPhuUbsd4rcbcZ4X/xQ9BjDLV/ISQEAGZXi88JN4zSWv
+        paRY5pL9FbJx9fbaLZE4487UDVRi/Ok=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-x2238l0HMBOjCsU6iPr1nA-1; Tue, 06 Apr 2021 12:03:43 -0400
+X-MC-Unique: x2238l0HMBOjCsU6iPr1nA-1
+Received: by mail-ed1-f70.google.com with SMTP id m21so1007210edp.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Apr 2021 09:03:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EoqtToOiZ2s5/0xKOoL+G6cfqHUVgxnaLS/CRnQ6hlw=;
+        b=DbkKOXrFcQpBJ2DGzrf+s30ihM6PZDfKWug/sF+DPH7kOOh7PLuTpyDBVihc612qaO
+         1dQfi4zdBEIMQMO9hFCBqI7OocKA0e3j/bp2B/XO2sk3yP1sGCIMwWVX+8AgjIj7nDTf
+         uerADq2E4wKI4LTePkRcZjiBo/jDUNHLlHuQ95CPkfozBOAf28NETG96zUpmOQzt0PS7
+         A2Qw2clkrtD2OjVaJdUkNvjokIbt/WFZgHslURlJSnTtNcK/AdlUZhJNxEMZyQeU6ODY
+         SyS8kLEeT1h4UjhYGJaOYGVXT/b3p+W3re9JW1HFz6eiJJwXp4alXklMWXePvfVXwadY
+         zJdQ==
+X-Gm-Message-State: AOAM532yygIbw2iA6peYRpIrd5aE+JyeUi3/F4z8zIuuPieQGjMBU0Eh
+        LxR1NIgBTyzDglYlp6OqimXWXYNq3flfmHvIXdHdYuW0kd/Et17xXTkk/XJieeEBEJxjJsHFgoZ
+        RUgfRobKivvbAl5cCYhQEMn13id6jv4pPOiAdjNm5tLcq25HaR/NlA3x/xq5R7QId+lEjR+PUbd
+        yOBv8dkWpCuw==
+X-Received: by 2002:a50:f40a:: with SMTP id r10mr8042750edm.200.1617725021920;
+        Tue, 06 Apr 2021 09:03:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxVyZgdS2J90tnvwF5ywaIpNXd0Kmt4Eyw7bl/jkwhq3ajJPScP41frNDq6V9nxn9CRi+TILg==
+X-Received: by 2002:a50:f40a:: with SMTP id r10mr8042722edm.200.1617725021680;
+        Tue, 06 Apr 2021 09:03:41 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id k26sm6051139ejc.23.2021.04.06.09.03.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Apr 2021 09:03:41 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: intel-hid: Fix spurious wakeups caused by
+ tablet-mode events during suspend
+To:     Elia Devito <eliadevito@gmail.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20210404143831.25173-1-hdegoede@redhat.com>
+ <b5666155ad821c700934397e27e6c5e461503014.camel@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b8b7ebdd-0318-bc57-1862-36af171617b0@redhat.com>
+Date:   Tue, 6 Apr 2021 18:03:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <a9af6b1f-f667-99b5-efc4-11d7ae7afc3b@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <b5666155ad821c700934397e27e6c5e461503014.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.99.27]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-On 06/04/2021 09:50, Hans de Goede wrote:
-> Hi,
+On 4/4/21 5:50 PM, Elia Devito wrote:
+> Hi Hans,
+>> Some devices send (duplicate) tablet-mode events when moved around even
+>> though the mode has not changed; and they do this even when suspended.
+>>
+>> Change the tablet-mode event handling when priv->wakeup_mode is set to
+>> update the switch state in case it changed and then return immediately
+>> (without calling pm_wakeup_hard_event()) to avoid spurious wakeups.
+>>
+>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212537
+>> Fixes: 537b0dd4729e ("platform/x86: intel-hid: Add support for
+>> SW_TABLET_MODE")
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  drivers/platform/x86/intel-hid.c | 16 +++++++++-------
+>>  1 file changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel-hid.c
+>> b/drivers/platform/x86/intel-hid.c
+>> index 57cc92891a57..078648a9201b 100644
+>> --- a/drivers/platform/x86/intel-hid.c
+>> +++ b/drivers/platform/x86/intel-hid.c
+>> @@ -483,11 +483,16 @@ static void notify_handler(acpi_handle handle,
+>> u32 event, void *context)
+>>                         goto wakeup;
+>>  
+>>                 /*
+>> -                * Switch events will wake the device and report the
+>> new switch
+>> -                * position to the input subsystem.
+>> +                * Some devices send (duplicate) tablet-mode events
+>> when moved
+>> +                * around even though the mode has not changed; and
+>> they do this
+>> +                * even when suspended.
+>> +                * Update the switch state in case it changed and then
+>> return
+>> +                * without waking up to avoid spurious wakeups.
+>>                  */
+>> -               if (priv->switches && (event == 0xcc || event == 0xcd))
+>> -                       goto wakeup;
+>> +               if (event == 0xcc || event == 0xcd) {
+>> +                       report_tablet_mode_event(priv->switches,
+>> event);
+>> +                       return;
+>> +               }
+>>  
+>>                 /* Wake up on 5-button array events only. */
+>>                 if (event == 0xc0 || !priv->array)
+>> @@ -501,9 +506,6 @@ static void notify_handler(acpi_handle handle, u32
+>> event, void *context)
+>>  wakeup:
+>>                 pm_wakeup_hard_event(&device->dev);
+>>  
+>> -               if (report_tablet_mode_event(priv->switches, event))
+>> -                       return;
+>> -
+>>                 return;
+>>         }
+>>
 > 
-> On 4/6/21 4:22 AM, Mark Pearson wrote:
->> The BIOS team have added a new API that allows us to retrieve the 
->> current performance profile without having to disable/enable CQL 
->> mode. Adding the changes to use this API.
->> 
->> Tested on P15 and X1C8
->> 
->> Signed-off-by: Mark Pearson <markpearson@lenovo.com> --- 
->> drivers/platform/x86/thinkpad_acpi.c | 24 ++++++++++++++++++++++-- 
->> 1 file changed, 22 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/platform/x86/thinkpad_acpi.c
->> b/drivers/platform/x86/thinkpad_acpi.c index 0d9e2ddbf..4eb1ad443
->> 100644 --- a/drivers/platform/x86/thinkpad_acpi.c +++
->> b/drivers/platform/x86/thinkpad_acpi.c @@ -10050,6 +10050,7 @@
->> static struct ibm_struct proxsensor_driver_data = { */
->> 
-<snip>
+> No regression noted on HP Spectre x360 15-df0xxx.
+> 
+> Reviewed-by: Elia Devito <eliadevito@gmail.com>
 
->> @@ -10271,6 +10280,17 @@ static int tpacpi_dytc_profile_init(struct
->> ibm_init_struct *iibm) if (dytc_version >= 5) { 
->> dbg_printk(TPACPI_DBG_INIT, "DYTC version %d: thermal mode
->> available\n", dytc_version); +		/* +		 * Check if MMC_GET
->> functionality available +		 * Version > 6 and return success from
->> MMC_GET command +		 */ +		dytc_mmc_get_available = false; +		if
->> (dytc_version >= 6) { +			err = dytc_command(DYTC_CMD_MMC_GET,
->> &output); +			if (!err && ((output & DYTC_ERR_MASK) ==
->> DYTC_ERR_SUCCESS)) +				dytc_mmc_get_available = true; +		} +		err
->> = dytc_command(DYTC_CMD_QUERY, &output);
-> 
-> It seems this last:
-> 
-> err = dytc_command(DYTC_CMD_QUERY, &output);
-> 
-> Line snuck in as a copy and paste error? Or is this intentional ?
-> 
-> If this is intentional, may I ask why this is done / needed ?
-> 
-Well that's embarrassing - that is left over from some debug I
-was running and it shouldn't be there.
+Thank you for the testing and the review. I'll push this out to the for-next and fixes branches.
 
-I'll submit a new version with that removed.
+Regards,
 
-Apologies - should have caught that one before pushing for review
-
-Mark
+Hans
 
