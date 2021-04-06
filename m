@@ -2,403 +2,338 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FFBC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 05:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DA5C43461
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 13:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6BB61359
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 05:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4405E613B7
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 13:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbhDFFu0 (ORCPT
+        id S243545AbhDFNMD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Apr 2021 01:50:26 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:22846 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231751AbhDFFuZ (ORCPT
+        Tue, 6 Apr 2021 09:12:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33248 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243533AbhDFNMB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Apr 2021 01:50:25 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1365l6k6006201;
-        Tue, 6 Apr 2021 01:48:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=smtpout1; bh=bGmnfvIWnZqTQcn9g4p38LZbTcydLcLWgiaFyXLPFus=;
- b=gxTHhnFQEpBnopfnvDNKwHQMIcoqWD2UO93wFnwtQOGDEya13EXCDI38pZGRpLG3r/Bm
- tpIbdurLvOl0w4r9JLoPAzW4V7VjLTQ9XqSNKzJhKhf+wuxrJWCKLkK8hpvjs+AeZDGq
- dHt/TE9qGhkG1hOWBnn8Aw8udha9uulL2qVlg25pBQcA03e+7+niCeppowne65uAxOyU
- reYh1dQndodfryU1Pyx3LkstP+ot/77ndm8m+7EQixJUozGU7EB8Vrcy3tw7yufjB3qJ
- ArKbXWRHd9xdy7WVXuVBvK7CUnwtBxnwsVNZOH8lRSv50GgljgIb/BDT+bzWMhj4HLxs eA== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 37q2nsny04-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Apr 2021 01:48:12 -0400
-Received: from pps.filterd (m0144102.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1365jVsB107225;
-        Tue, 6 Apr 2021 01:48:11 -0400
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2175.outbound.protection.outlook.com [104.47.58.175])
-        by mx0b-00154901.pphosted.com with ESMTP id 37q2pmvag8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Apr 2021 01:48:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QJcfQKjACBl0gby1p4joJ4dv9ElGsDpkpoTf36ULIVyWyuC0TnH3btQNWZJnyhI6VX3O4ozyzRpY75aHHTF1O3KtP+frv3KteXyrB3Y0VMs/FaKt4CChg96Uxzj9G3oHAnAKpTXokYcQIp0H2GKuj7NgIO0BaUKioY1BCwaosc1JK4cHCFku7KZH4Cw9yHX/DdYQ7HlNY22IqEpT02qu3SJtDYwIGg5kuXkwHP1A03tHt5kmudgV52Rx/3ot99YotB3lRDQvU+QMFMUNG+ca7RZnLg5ahbQRaY6tjEqckQ6gH9XR06RPeuuFuYLohRGp9i2kMGIx7xTPrMsuVS5vhA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bGmnfvIWnZqTQcn9g4p38LZbTcydLcLWgiaFyXLPFus=;
- b=gmLyj5QvwfKygR3i8gVQSRLlV9JArg560LT+3pnxK2fkhxVa8SK6PcQVv0Gx/PibcE9AbQ+5TK13mjUPw9RP0MmQRxBMOywWH5gM1u2AzGddtO8cgUgQKGi1glY4GjaxvUOxBkKqCbtO3YZFGvGSuLLXpq61KdOC5lGlgtw/il426VvFbSqSujwmJDKh1V7JY0Nh2VLL6GvOVvak3OFwqfbtNNydT9GtFEZmtNiIIxLQXkL+LyZuVn9uQbgoPM+NNf/jOuHqBkMNp+v2hs8Fp5EcjJM4t+YWNc9rEAnXYjgTWlHhwm9JSx0c6KF6sIoN/0KrzBmnxTk8qwEqoIS2kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
- dkim=pass header.d=dell.com; arc=none
-Received: from SJ0PR19MB4528.namprd19.prod.outlook.com (2603:10b6:a03:28a::6)
- by BY5PR19MB4100.namprd19.prod.outlook.com (2603:10b6:a03:222::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3999.27; Tue, 6 Apr
- 2021 05:48:09 +0000
-Received: from SJ0PR19MB4528.namprd19.prod.outlook.com
- ([fe80::8863:ccf2:c6a:d43a]) by SJ0PR19MB4528.namprd19.prod.outlook.com
- ([fe80::8863:ccf2:c6a:d43a%8]) with mapi id 15.20.3999.032; Tue, 6 Apr 2021
- 05:48:09 +0000
-From:   "Yuan, Perry" <Perry.Yuan@dell.com>
-To:     "perex@perex.cz" <perex@perex.cz>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "Limonciello, Mario" <Mario.Limonciello@dell.com>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "mario.limonciello@outlook.com" <mario.limonciello@outlook.com>,
-        Dell Client Kernel <Dell.Client.Kernel@dell.com>,
-        "tiwai@suse.com" <tiwai@suse.com>
-Subject: RE: [PATCH v6 2/2] ASoC: rt715:add micmute led state control
- supportspobrn@protonmail.com
-Thread-Topic: [PATCH v6 2/2] ASoC: rt715:add micmute led state control
- supportspobrn@protonmail.com
-Thread-Index: AdcqqFVFEH1Q0pbGRju+G9CeiJlZEw==
-Date:   Tue, 6 Apr 2021 05:48:09 +0000
-Message-ID: <SJ0PR19MB4528396E98E7A7204789E3FF84769@SJ0PR19MB4528.namprd19.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: perex.cz; dkim=none (message not signed)
- header.d=none;perex.cz; dmarc=none action=none header.from=Dell.com;
-x-originating-ip: [114.84.248.83]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 320a5688-a275-4ecd-f4ec-08d8f8bf8f25
-x-ms-traffictypediagnostic: BY5PR19MB4100:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR19MB41007538868C53C378E22A9B84769@BY5PR19MB4100.namprd19.prod.outlook.com>
-x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dY6rvjc0h2rTVvN4ZxfyqQQtTXo+05g/4+ksV6nDCQ428vRIDXuYPRKIzNpy/td/ba7j8VWluELDbhTC61RtOOcAfVxyfzylk3VfJi9a3xQjjYIbbTbHxUIGtCsoNW9eeUcBoRALwj5z/pz8ENWLaTC8VldHaAPdo9OSUkc/5G+JpGPAg6Xe9SoKMLoizlsqWix/B9GTv3/WGlyb6zc7VoEg+0myH5Q7wCVzWAHRkQTS3Vr0m3BWMIqHLWb0lESRZceGtf0wNZD0Wae85dNmoZcotX2ql365d1/YX8bTfU/CJguTfZrHq1dy7e1U79xqZvQm9t74mcUu99SUPKuiRjsxohIOrIcVjL5RKWgv3UWnlmFrDigJR5GoZG2lTNY+6/vqtRui/28Tlsfkh7g8EXi+FMpXQytGj8jbckzOhD/9yCv/2IV6T17znIg8gvfIlQl7I1ZBz9f/B68CMWp7VJDK5lRYRl7pa6h++YKMpNN9wxbJdeHD+9O6L7GbwU/57DEnc9iLWjBMh0ispQt+nQjHeu9iZybJnpMAUbxXLYL6RH80NywhJ2kYxj26tU1vgMcwKhkJY/R+3boZZKuoksj2krgWeYkanoaEkcFvCtdWpzGUWuSpri80Linhta1J8fWYKZLHBQN3LcIV+GMNTzk5EZqVk0octZJHlSsz23byOATme8fICQfzBP115x+aYEfhv1EoGz+F5rWn2aV5weFIGNtxfTWPnfJEnZf/NN1J8ehrGFOrsSH5Zig8iZlH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR19MB4528.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(396003)(39860400002)(136003)(26005)(64756008)(55016002)(66476007)(86362001)(2906002)(478600001)(966005)(66556008)(7416002)(7696005)(53546011)(6506007)(186003)(66946007)(8936002)(4326008)(33656002)(316002)(71200400001)(110136005)(9686003)(54906003)(45080400002)(8676002)(38100700001)(5660300002)(76116006)(66446008)(6636002)(786003)(83380400001)(52536014);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: =?us-ascii?Q?OKBGmlkuk3ne6RQPKN+HZXX7bDwy3TeKEU3bKRIm8had6nx71MLheHC1TbLf?=
- =?us-ascii?Q?d2B06lpkxGlUd+Rd0+zFblRbavnG0myTUwe7xOn34biFEkktXBPLI/5H9eoV?=
- =?us-ascii?Q?J1iJwwudlOg+i2S22qFlXiJN+ZaBnur53LaSI3f9iCEd8v2A5z2aMvW2to5s?=
- =?us-ascii?Q?LnRhF2WBH307dtxAwyh21Aujzk9RfuV1KgfX21sn8puy+E64lhwZvXCNx4oG?=
- =?us-ascii?Q?L3MIiMUTPtfFrXBfStDPqBs68RJST8Kbk3ZCYPUzpvaSrm9ULYtwRECk7EqV?=
- =?us-ascii?Q?nEnmWW5ULKE4iqGnmpmc7hZh7dE0cpYQTI4wId0qMRIQe7P5EonKAnG+BvTf?=
- =?us-ascii?Q?vvGs8b6Y1Vvm5yfgFOhRjrQCcFWyPQ4wxLb5KDOq3GPnWxLfc3QEqJZTu/hB?=
- =?us-ascii?Q?mXCzwh65xjQ17cvOAqbDvuYcE+3O3FH/zcfqE8mutStQHzRLE1nLOzBg467V?=
- =?us-ascii?Q?FvW/9LeM0JThtofxGBSJpSLeoUTI1I4Mq5e8XPr0d7Em15AoblKxBZDyx/N7?=
- =?us-ascii?Q?y38q4v2Q7YzxzEVDpsXjLE/z9VXoaJdya8q+/r3HmwL/Y3AsoYonNfTEIdPp?=
- =?us-ascii?Q?h+a6uCLJ2iuGR0Wwzs/Bvvf8ZjKwlSHhNsnlaFrVkpvyBSz3V4CJD24xUwVO?=
- =?us-ascii?Q?G6stLINXpZtLvzApN78PlTnqHioo5PQJ++GEdpH0o498VmV+GXYRqNjFtwy9?=
- =?us-ascii?Q?G4JvFZlFPquoWQ2Vu3IBAyW3FzMLboeNEtnEbeTQp3hP+5ct8vKiV8tj3HxK?=
- =?us-ascii?Q?WC3UfEeTuCLvS1WcKRq69lrc+kWSD6DQxciyb54tDixCIiCsR4Bcqc5iyMTl?=
- =?us-ascii?Q?fwG46ycUWu1q6V4WMkEsOzkumrIp4UQUtLA1HAbYHLc95fwfaQrj3LJ+66IV?=
- =?us-ascii?Q?p/JkNy5rgzJywV95lZkGoUCil026ScQ19o6qnSUX8DKNTViJ3BJ7d4SMzWbF?=
- =?us-ascii?Q?VGxxDsM+ZURmuqvnQ8vNrV0Nm6vmJPE6yNbX+bBPSBJphGkmp9v4aXr6x+cW?=
- =?us-ascii?Q?FSkbjcvY6r1CzRj8KrGslCx60tcRtRwq2r31LX/xYD5SIiJNn9bGm+Vtmxmz?=
- =?us-ascii?Q?11ILHNUapN0SuaDncd9KCcGznKU1pWNYFJcCNGUc02ERMtCxcP0oXczceqSq?=
- =?us-ascii?Q?zo9MQC3XGLcezqxUhRp0mXfhoKTFWlPn45+/s+Jph83nZLe7oto1UP6QOrPO?=
- =?us-ascii?Q?ik0oJLTHmHejfmPk99V2tlsbTgeId9BA2dtRphdyCY35Q6/9XPr6GvGyUdkV?=
- =?us-ascii?Q?n6KhCsAZlFrviNXk0ILGKWntHQwwvDQaY4gSGxetIOGvanZbp1hNbUZt0W2X?=
- =?us-ascii?Q?b6CHFFd5FNi728wM5eDQh/Oy?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 6 Apr 2021 09:12:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617714713;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zdu7Z4OAVqUaEnvzGzloKUYCcB96TWUsjOVZ7fqb7qI=;
+        b=JMeOUMP6BDv17xc/nTf4oGu7A+iLs9ZbCCAy14JHTTy9jN9s9wmjF5JmBLwt+DBN5DssPq
+        hgVgBpiCDpFmD01XssQZr1psNJ2yHuS6ow7GjNlgLjXqte2MEe9tgp84/UyPRrbTG0Du1g
+        LD7p635AYscpT73C7YTKHqqo2u81Q14=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-cYHWpIEbPsS_xi2m2MR8xw-1; Tue, 06 Apr 2021 09:11:52 -0400
+X-MC-Unique: cYHWpIEbPsS_xi2m2MR8xw-1
+Received: by mail-ej1-f70.google.com with SMTP id v27so5429648ejq.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Apr 2021 06:11:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Zdu7Z4OAVqUaEnvzGzloKUYCcB96TWUsjOVZ7fqb7qI=;
+        b=ZKVqoKL09v6R1xeMmILc7bIj7LUBnH56Cj7m+CYPPgRJwCWiQFXVOE6aY7uPbaA9j4
+         /S+oMfs6sHTkbrH/YKsWlEx4XhqG5Ep0BStYFR9qR0joDondXWltpjJri1lftuyVjrmK
+         Be8meEgCVWgtZUA1ZCi7edW8M6IBysPzC23m1NY8mvm8K/pSd5QwvMEdVYBIvKLXhMCS
+         PuqzIo0XGMlZYL8ERzEZpHSGEKlVgaa7rDQzRZxCv1/1lUmweE7jNuIdAIUok1UWPPUN
+         qbBQMsOfxsLxV8dfvle207+OhgV+S6Risqx3Dof+0t9Qn8lshx0sKmBRSojzQZIAbUXl
+         5afg==
+X-Gm-Message-State: AOAM5336Ogt3JRNF8DVcdwGTDHbWFFIwM1fKD1ls8b4wOB/stACN3Z9M
+        PdnUP0RMcxKxztjsTjHyl0uvlTmTIn2Fhe7NxvYwrCCf1yOpqcc6bDmjR4OxD0RgSv23hVd1Wkl
+        ZMmGmw/uYlJA0eKy5yznfXwzpVSqpCrnXUg==
+X-Received: by 2002:a17:906:1386:: with SMTP id f6mr33339191ejc.45.1617714710796;
+        Tue, 06 Apr 2021 06:11:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz/h0mKZVO7oYncVW57PsitLtCsYd75f0lMC8dK2GMYZjh2IcqD2MgTZiPUlc9W8gpbm/JI8A==
+X-Received: by 2002:a17:906:1386:: with SMTP id f6mr33339174ejc.45.1617714710608;
+        Tue, 06 Apr 2021 06:11:50 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id rk1sm6760433ejb.88.2021.04.06.06.11.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Apr 2021 06:11:50 -0700 (PDT)
+Subject: Re: [PATCH v4] platform/x86: intel_pmc_core: export platform
+ global_reset via sysfs.
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20210402152113.1191796-1-tomas.winkler@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d5021cc2-46c7-7c78-73b1-af50524e1db2@redhat.com>
+Date:   Tue, 6 Apr 2021 15:11:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: Dell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR19MB4528.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 320a5688-a275-4ecd-f4ec-08d8f8bf8f25
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2021 05:48:09.5164
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: n3Pl2uI8sw2eYwnX+9IiQIRFff5DNFOnuGmPu6H9jDUm/jnXc8TRHA1KPJPHDTllZH0kqMOx+oE8OM/1ng75Cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB4100
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-04-06_01:2021-04-01,2021-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- spamscore=0 adultscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104030000 definitions=main-2104060039
-X-Proofpoint-ORIG-GUID: WaAw6kB2Avw0vd3-V96yBm58haRwi2dj
-X-Proofpoint-GUID: WaAw6kB2Avw0vd3-V96yBm58haRwi2dj
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
- bulkscore=0 mlxlogscore=999 spamscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104030000
- definitions=main-2104060039
+In-Reply-To: <20210402152113.1191796-1-tomas.winkler@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jaroslav:
+Hi,
+
+On 4/2/21 5:21 PM, Tomas Winkler wrote:
+> From: Tamar Mashiah <tamar.mashiah@intel.com>
+> 
+> During PCH (platform/board) manufacturing process a global reset
+> has to be induced in order for configuration changes take the effect
+> upon following platform reset.
+> This setting was commonly done by accessing PMC registers via /dev/mem
+> but due to security concern /dev/mem access is much restricted, hence
+> the reason for exposing this setting via dedicated sysfs interface.
+> To prevent post manufacturing abuse the register is protected
+> by hardware locking.
+
+The purpose of this reset functionality is not entirely clear to me.
+
+Is this only used during production of a board? Or is this also something
+which a user/reseller may use as part of a factory-reset procedure?
+
+If this is only used once during production, then I'm not sure if
+introducing a sysfs file for this is desirable.
+
+Can you please provide a new version where the purpsoe of the newly
+introduced sysfs file is made more clear, both in the commit-msg
+as well as in the:
+
+Documentation/ABI/testing/sysfs-platform-intel-pmc
+
+File ?
+
+Regards,
+
+Hans
 
 
-> -----Original Message-----
-> From: Yuan, Perry <Perry_Yuan@Dell.com>
-> Sent: Sunday, April 4, 2021 4:32 PM
-> To: pobrn@protonmail.com; pierre-louis.bossart@linux.intel.com;
-> oder_chiou@realtek.com; perex@perex.cz; tiwai@suse.com;
-> hdegoede@redhat.com; mgross@linux.intel.com; Limonciello, Mario
-> Cc: lgirdwood@gmail.com; broonie@kernel.org; alsa-devel@alsa-project.org;
-> linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org; Yuan,
-> Perry; mario.limonciello@outlook.com; Dell Client Kernel
-> Subject: [PATCH v6 2/2] ASoC: rt715:add micmute led state control support=
-s
->=20
-> From: Perry Yuan <perry_yuan@dell.com>
->=20
-> Some new Dell system is going to support audio internal micphone privacy
-> setting from hardware level with micmute led state changing When micmute
-> hotkey pressed by user, soft mute will need to be enabled firstly in case=
- of
-> pop noise, and codec driver need to react to mic mute event to
-> EC(embedded controller) notifying that SW mute is completed Then EC will
-> do the hardware mute physically within the timeout reached
->=20
-> This patch allow codec rt715 and rt715 sdca driver to change the local
-> micmute led state. Dell privacy led trigger driver will ack EC when micmu=
-te
-> key pressed through this micphone led control interface like hda_generic
-> provided ACPI method defined in dell-privacy micmute led trigger will be
-> called for notifying the EC that software mute has been completed, then
-> hardware audio circuit solution controlled by EC will switch the audio in=
-put
-> source off/on
->=20
-> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
->=20
-> --------
-> v5 -> v6:
-> * addresed review comments from Jaroslav
-> * add quirks for micmute led control as short term solution to control
->   micmute led state change
-> v4 -> v5:
-> * rebase to latest 5.12 rc4 upstream kernel
-> v3 -> v4:
-> * remove unused debug log
-> * remove compile flag of DELL privacy
-> * move the micmute_led to local from rt715_priv
-> * when Jaroslav upstream his gerneric LED trigger driver,I will rebase
->   this patch,please consider merge this at first
->   https://lore.kernel.org/alsa-devel/20210211111400.1131020-1-
-> perex@perex.cz/
-> v2 -> v3:
-> * simplify the patch to reuse some val value
-> * add more detail to the commit info
-> v1 -> v2:
-> * fix some format issue
-> --------
+
+> 
+> The register in MMIO space is defined for Cannon Lake and newer PCHs.
+> 
+> Cc: David E Box <david.e.box@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Tamar Mashiah <tamar.mashiah@intel.com>
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 > ---
->  sound/soc/codecs/rt715-sdca.c | 41
-> ++++++++++++++++++++++++++++++++++-
->  sound/soc/codecs/rt715.c      | 41
-> +++++++++++++++++++++++++++++++++++
->  2 files changed, 81 insertions(+), 1 deletion(-)
->=20
-> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.=
-c
-> index 20528afbdc57..7bd7ad0ba7d7 100644
-> --- a/sound/soc/codecs/rt715-sdca.c
-> +++ b/sound/soc/codecs/rt715-sdca.c
-> @@ -11,12 +11,14 @@
->  #include <linux/moduleparam.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/leds.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm.h>
->  #include <linux/soundwire/sdw.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
-> +#include <linux/dmi.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -344,6 +346,34 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol
-> *kcontrol,
->  	return 0;
+> 2:
+> 1. Add locking for reading the ET3 register  (Andy)
+> 2. Fix few style issues (Andy)
+> V3:
+> 1. Resend
+> v4:
+> 1. Fix return statement (Andy) 
+> 2. Specify manufacturing process (Enrico)
+> 
+>  .../ABI/testing/sysfs-platform-intel-pmc      | 11 +++
+>  MAINTAINERS                                   |  1 +
+>  drivers/platform/x86/intel_pmc_core.c         | 97 +++++++++++++++++++
+>  drivers/platform/x86/intel_pmc_core.h         |  6 ++
+>  4 files changed, 115 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-pmc
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> new file mode 100644
+> index 000000000000..7ce00e77fbcd
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> @@ -0,0 +1,11 @@
+> +What:		/sys/devices/platform/<platform>/global_reset
+> +Date:		Apr 2021
+> +KernelVersion:	5.13
+> +Contact:	"Tomas Winkler" <tomas.winkler@intel.com>
+> +Description:
+> +		Display global reset setting bits for PMC.
+> +			* bit 31 - global reset is locked
+> +			* bit 20 - global reset is set
+> +		Writing bit 20 value to the global_reset will induce
+> +		a platform global reset upon consequent platform reset.
+> +		in case the register is not locked.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 04f68e0cda64..618676eba8c8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9166,6 +9166,7 @@ M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+>  M:	David E Box <david.e.box@intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
+>  F:	drivers/platform/x86/intel_pmc_core*
+>  
+>  INTEL PMIC GPIO DRIVERS
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index ee2f757515b0..8afc198550a4 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -401,6 +401,7 @@ static const struct pmc_reg_map cnp_reg_map = {
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+>  	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static const struct pmc_reg_map icl_reg_map = {
+> @@ -418,6 +419,7 @@ static const struct pmc_reg_map icl_reg_map = {
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+>  	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static const struct pmc_bit_map tgl_clocksource_status_map[] = {
+> @@ -585,6 +587,7 @@ static const struct pmc_reg_map tgl_reg_map = {
+>  	.lpm_sts = tgl_lpm_maps,
+>  	.lpm_status_offset = TGL_LPM_STATUS_OFFSET,
+>  	.lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+> @@ -603,6 +606,99 @@ static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u32 value)
+>  	return (u64)value * pmcdev->map->slp_s0_res_counter_step;
 >  }
->=20
-> +static bool micmute_led_set;
-> +static int  dmi_matched(const struct dmi_system_id *dmi) {
-> +	micmute_led_set =3D 1;
-> +	return 1;
+>  
+> +static int set_global_reset(struct pmc_dev *pmcdev)
+> +{
+> +	const struct pmc_reg_map *map = pmcdev->map;
+> +	u32 reg;
+> +	int err;
+> +
+> +	if (!map->etr3_offset)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +
+> +	/* check if CF9 is locked */
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	if (reg & ETR3_CF9LOCK) {
+> +		err = -EACCES;
+> +		goto out_unlock;
+> +	}
+> +
+> +	/* write CF9 global reset bit */
+> +	reg |= ETR3_CF9GR;
+> +	pmc_core_reg_write(pmcdev, map->etr3_offset, reg);
+> +
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	if (!(reg & ETR3_CF9GR)) {
+> +		err = -EIO;
+> +		goto out_unlock;
+> +	}
+> +
+> +	err = 0;
+> +
+> +out_unlock:
+> +	mutex_unlock(&pmcdev->lock);
+> +	return err;
 > +}
 > +
-> +/* Some systems will need to use this to trigger mic mute LED state
-> +changed */ static const struct dmi_system_id micmute_led_dmi_table[] =3D=
- {
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Latitude 9420",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude
-> 9420"),
-> +		},
-> +	},
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Latitude 9520",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude
-> 9520"),
-> +		},
-> +	},
-> +	{},
+> +static ssize_t global_reset_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +	const struct pmc_reg_map *map = pmcdev->map;
+> +	u32 reg;
+> +
+> +	if (!map->etr3_offset)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	reg &= ETR3_CF9GR | ETR3_CF9LOCK;
+> +
+> +	mutex_unlock(&pmcdev->lock);
+> +
+> +	return sysfs_emit(buf, "0x%08x", reg);
+> +}
+> +
+> +static ssize_t global_reset_store(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t len)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +	int err;
+> +	u32 reg;
+> +
+> +	err = kstrtouint(buf, 16, &reg);
+> +	if (err)
+> +		return err;
+> +
+> +	/* allow only CF9 writes */
+> +	if (reg != ETR3_CF9GR)
+> +		return -EINVAL;
+> +
+> +	err = set_global_reset(pmcdev);
+> +	if (err)
+> +		return err;
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_RW(global_reset);
+> +
+> +static struct attribute *pmc_attrs[] = {
+> +	&dev_attr_global_reset.attr,
+> +	NULL
 > +};
 > +
->  static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->  	struct snd_ctl_elem_value *ucontrol)
+> +static const struct attribute_group pmc_attr_group = {
+> +	.attrs = pmc_attrs,
+> +};
+> +
+> +static const struct attribute_group *pmc_dev_groups[] = {
+> +	&pmc_attr_group,
+> +	NULL
+> +};
+> +
+>  static int pmc_core_dev_state_get(void *data, u64 *val)
 >  {
-> @@ -358,6 +388,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol
-> *kcontrol,
->  	unsigned int mask =3D (1 << fls(max)) - 1;
->  	unsigned int invert =3D p->invert;
->  	int err;
-> +	bool micmute_led;
->=20
->  	for (i =3D 0; i < 4; i++) {
->  		if (ucontrol->value.integer.value[i] !=3D rt715-
-> >kctl_switch_orig[i]) { @@ -393,7 +424,15 @@ static int
-> rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->  		if (err < 0)
->  			return err;
->  	}
-> -
-> +	/* Micmute LED state changed by muted/unmute switch */
-> +	dmi_check_system(micmute_led_dmi_table);
-> +	if (invert && micmute_led_set) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol-
-> >value.integer.value[1])
-> +			micmute_led =3D LED_OFF;
-> +		else
-> +			micmute_led =3D LED_ON;
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
->  	return k_changed;
->  }
->=20
-> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c index
-> 34c3357e943b..490cf9e63c2d 100644
-> --- a/sound/soc/codecs/rt715.c
-> +++ b/sound/soc/codecs/rt715.c
-> @@ -13,6 +13,7 @@
->  #include <linux/init.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/leds.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm.h>
->  #include <linux/soundwire/sdw.h>
-> @@ -25,6 +26,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_device.h>
-> +#include <linux/dmi.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -70,6 +72,34 @@ static void rt715_get_gain(struct rt715_priv *rt715,
-> unsigned int addr_h,
->  		pr_err("Failed to get L channel gain.\n");  }
->=20
-> +static bool micmute_led_set;
-> +static int  dmi_matched(const struct dmi_system_id *dmi) {
-> +	micmute_led_set =3D 1;
-> +	return 1;
-> +}
+>  	struct pmc_dev *pmcdev = data;
+> @@ -1364,6 +1460,7 @@ static struct platform_driver pmc_core_driver = {
+>  		.name = "intel_pmc_core",
+>  		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+>  		.pm = &pmc_core_pm_ops,
+> +		.dev_groups = pmc_dev_groups,
+>  	},
+>  	.probe = pmc_core_probe,
+>  	.remove = pmc_core_remove,
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> index f33cd2c34835..98ebdfe57138 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -200,6 +200,11 @@ enum ppfear_regs {
+>  #define TGL_LPM_STATUS_OFFSET			0x1C3C
+>  #define TGL_LPM_LIVE_STATUS_OFFSET		0x1C5C
+>  
+> +/* Extended Test Mode Register 3 (CNL and later) */
+> +#define ETR3_OFFSET				0x1048
+> +#define ETR3_CF9GR				BIT(20)
+> +#define ETR3_CF9LOCK				BIT(31)
 > +
-> +/* Some systems will need to use this to trigger mic mute LED state
-> +changed */ static const struct dmi_system_id micmute_led_dmi_table[] =3D=
- {
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Latitude 9420",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude
-> 9420"),
-> +		},
-> +	},
-> +	{
-> +		.callback =3D dmi_matched,
-> +		.ident =3D "Dell Latitude 9520",
-> +		.matches =3D {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Latitude
-> 9520"),
-> +		},
-> +	},
-> +	{},
-> +};
-> +
->  /* For Verb-Set Amplifier Gain (Verb ID =3D 3h) */  static int
-> rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->  					struct snd_ctl_elem_value *ucontrol)
-> @@ -88,6 +118,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
-> *kcontrol,
->  		RT715_SET_GAIN_MIX_ADC2_L};
->  	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
->  	unsigned int read_ll, read_rl, i, j, loop_cnt;
-> +	bool micmute_led;
->=20
->  	if (strstr(ucontrol->id.name, "Main Capture Switch") ||
->  		strstr(ucontrol->id.name, "Main Capture Volume")) @@ -
-> 185,6 +216,16 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol
-> *kcontrol,
->  	if (dapm->bias_level <=3D SND_SOC_BIAS_STANDBY)
->  		regmap_write(rt715->regmap,
->  				RT715_SET_AUDIO_POWER_STATE,
-> AC_PWRST_D3);
-> +
-> +	/* Micmute LED state changed by muted/unmute switch */
-> +	dmi_check_system(micmute_led_dmi_table);
-> +	if (mc->invert && micmute_led_set) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol-
-> >value.integer.value[1])
-> +			micmute_led =3D LED_OFF;
-> +		else
-> +			micmute_led =3D LED_ON;
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
->  	return 0;
->  }
->=20
-> --
-> 2.25.1
-Could you help to review if the patch is acceptable as short term solution?
-I added dmi checking when changing the led state for rt715 and rt715-sdca c=
-odec.
-Thank you!
-Perry
+>  const char *tgl_lpm_modes[] = {
+>  	"S0i2.0",
+>  	"S0i2.1",
+> @@ -263,6 +268,7 @@ struct pmc_reg_map {
+>  	const u32 lpm_residency_offset;
+>  	const u32 lpm_status_offset;
+>  	const u32 lpm_live_status_offset;
+> +	const u32 etr3_offset;
+>  };
+>  
+>  /**
+> 
+
