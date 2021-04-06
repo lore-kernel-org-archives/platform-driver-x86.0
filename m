@@ -2,447 +2,169 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD905C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 23:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A528C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 02:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF6A61184
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Apr 2021 23:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA8F6128D
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Apr 2021 02:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239218AbhDEXmE (ORCPT
+        id S243354AbhDFCXe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Apr 2021 19:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241925AbhDEXmE (ORCPT
+        Mon, 5 Apr 2021 22:23:34 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.5]:28740 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238828AbhDFCXe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Apr 2021 19:42:04 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290A4C061760;
-        Mon,  5 Apr 2021 16:41:53 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id ba6so6794121edb.1;
-        Mon, 05 Apr 2021 16:41:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hp+wNCy40KXqQVhtPgTXPHAmWaLnsZ8TRyXXWQX2ijI=;
-        b=PLbTWMPPDMdL6TutXMwNVUQTJVZIn79Tb0+s0TdyR7HR9RMOieZVy1/F4um5Cb5H6/
-         g6ybzBu+x8LtwzKiNKNxJbpFJJszJDo4ZfAxDXMJiPx0louVSPHy0EyUjIcC8WYVKdX0
-         HasqYPmBCGDkzZoMsQiI92Tq635k1ncJ++1dhUeRFMng4el7piA1KlH8Rv85jo9mDEGK
-         6aKr9mFyw2VAN86T6ZnhGpf16gN9+jnTZ5lCcP/bCigIjHoKs5ZXGVEESU42frl33VnI
-         WW4EqY0ihIGI6kcO5McsziAyoHAMA3sMLtO562VxJqvMT8el4itd+ebfGxvgFLhOt4hb
-         J7xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hp+wNCy40KXqQVhtPgTXPHAmWaLnsZ8TRyXXWQX2ijI=;
-        b=H8+Ta/GZ5oF1fcQNYwI8VC/s1A4Mqy//ZmkO3JLEhZDQPijgPUFpWHMjbNulqd6FlE
-         NK/k0cNVfUjk0AKm1jb6nT69wm/9UuHJ65U7C/+xTczqt95P4iVkHC6PLmtdMh5LLD8c
-         6wP/gvk+s4LYaDxboecYiMCHq00FNUQMsCTKRA1xXl8ths9LlIRb4MPihnAai/ko4sFY
-         0J2f4ciJzp+HEm3nnUqsMZykAJnlQufC7QYqY51+9YhDLb11/LxH8gl54ZrnPPH35MRv
-         YDbqzXmCKUHmC6QW5+3x0lUW/0Y+oiSiqQ5bdSVqMy+S/FdnKcqeYGm8Cg/Sp3+3hLhc
-         WQvQ==
-X-Gm-Message-State: AOAM5318lZT5CZh9LaSRVBQEYUNVIaRxqE3K9vGT0DKE2iNPEBDFtQS2
-        6QGf3grsteRPSkBg6cDedew=
-X-Google-Smtp-Source: ABdhPJyfUNbbhAAmVhJKkmKfOz5Kpv4mdgAANLvaV3W5uoa6x6lDMyh0v70QXn2NMEFtCPGLRvUjqg==
-X-Received: by 2002:a05:6402:17e9:: with SMTP id t9mr34242402edy.211.1617666111896;
-        Mon, 05 Apr 2021 16:41:51 -0700 (PDT)
-Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id h21sm4747963ejb.31.2021.04.05.16.41.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Apr 2021 16:41:51 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] power: supply: Add AC driver for Surface Aggregator Module
-Date:   Tue,  6 Apr 2021 01:41:26 +0200
-Message-Id: <20210405234126.667532-3-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210405234126.667532-1-luzmaximilian@gmail.com>
-References: <20210405234126.667532-1-luzmaximilian@gmail.com>
+        Mon, 5 Apr 2021 22:23:34 -0400
+Received: from [100.112.131.172] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.us-west-2.aws.symcld.net id A7/F9-44762-E16CB606; Tue, 06 Apr 2021 02:23:26 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRWlGSWpSXmKPExsWSLveKTVfuWHa
+  CwZcZshZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaM7381Cw5J
+  VexfNom5gXGqWBcjF4eQwH9GiVN9LWwQzmtGidvvvzF1MXJysAloS2zZ8gsowcEhIiAj8WGtJ
+  0iYWSBaovntFVaQsLCAucSKp8EgYRYBFYnJK36wgti8AjYSJzfdZgexJQTkJdquT2cEsTkFVC
+  XOdD1mAbGFgOrvP1jCBlEvKHFy5hMWiPHyEs1bZzND2BISB1+8YIaYoyBx9tB7Vgg7QaLn3yO
+  2CYwCs5C0z0LSPgtJ+wJG5lWM5klFmekZJbmJmTm6hgYGuoaGRrqGRpa6xsZ6iVW6iXqlxbrl
+  qcUlukZ6ieXFesWVuck5KXp5qSWbGIHBnVLQqLiD8cLrD3qHGCU5mJREeUvUshKE+JLyUyozE
+  osz4otKc1KLDzHKcHAoSfByH81OEBIsSk1PrUjLzAFGGkxagoNHSYQ3eztQmre4IDG3ODMdIn
+  WKUVFKnLcPpE8AJJFRmgfXBovuS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJWEebuPAE3hycw
+  rgZv+CmgxE9BiqbOZIItLEhFSUg1MYvMeLtt0p3jFoje+6ge2//3+/gSH5rOXwklrEie/rFlv
+  /en2/6WRQuLvNofaP7FcLKV+kC3eLuLTxpqKDJ8Wx9XzpgUtESgLYooynvT+lp+S9sZ4hhb1F
+  MFmk61WKba7Y4UEbydcP73npWFV6E/XYNkXeydflW/a+yMyh+/dhPcfvtZ/+La4+oTpY7E9lf
+  5F/hdl3x2O36T8s0vS3u4S3/7HszcaL+Jl/PpWYvJOFkZXm8caJlwbukIfLnF+dcr5UO2G+Av
+  Vgucb7+3k5qqa7i5X/8XzhP/edt+FF25wyWQvmLdvxptPu/sst17XfnjhacCN+4Jb2OvfKT71
+  P3N7294ghgccs43ic9uPCrrvUlViKc5INNRiLipOBACMsPhnaQMAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-25.tower-326.messagelabs.com!1617675804!58464!1
+X-Originating-IP: [103.30.234.6]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 24774 invoked from network); 6 Apr 2021 02:23:26 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-25.tower-326.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 6 Apr 2021 02:23:26 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id B6962EEB1E5F4A47FC9E;
+        Tue,  6 Apr 2021 10:23:23 +0800 (CST)
+Received: from localhost.localdomain.com (10.46.192.12) by
+ reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2106.2; Mon, 5 Apr 2021 22:23:21 -0400
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH] Add support for DYTC MMC_GET BIOS API.
+Date:   Mon, 5 Apr 2021 22:22:15 -0400
+Message-ID: <20210406022215.199998-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.46.192.12]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On newer Microsoft Surface models (specifically 7th-generation, i.e.
-Surface Pro 7, Surface Book 3, Surface Laptop 3, and Surface Laptop Go),
-battery and AC status/information is no longer handled via standard ACPI
-devices, but instead directly via the Surface System Aggregator Module
-(SSAM), i.e. the embedded controller on those devices.
+The BIOS team have added a new API that allows us to retrieve the
+current performance profile without having to disable/enable CQL
+mode. Adding the changes to use this API.
 
-While on previous generation models, AC status is also handled via SSAM,
-an ACPI shim was present to translate the standard ACPI AC interface to
-SSAM requests. The SSAM interface itself, which is modeled closely after
-the ACPI interface, has not changed.
+Tested on P15 and X1C8
 
-This commit introduces a new SSAM client device driver to support AC
-status/information via the aforementioned interface on said Surface
-models.
-
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 ---
+ drivers/platform/x86/thinkpad_acpi.c | 24 ++++++++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-Changes in v2:
- - Use devm_power_supply_register()
- - Specify .supplied_to
- - Fix constness of property arrays
- - Drop mutex_destroy() call
- - Inline spwr_ac_unregister()
-
----
- MAINTAINERS                            |   1 +
- drivers/power/supply/Kconfig           |  16 ++
- drivers/power/supply/Makefile          |   1 +
- drivers/power/supply/surface_charger.c | 282 +++++++++++++++++++++++++
- 4 files changed, 300 insertions(+)
- create mode 100644 drivers/power/supply/surface_charger.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e989beffde99..bfb0ac2b642f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11867,6 +11867,7 @@ L:	linux-pm@vger.kernel.org
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/power/supply/surface_battery.c
-+F:	drivers/power/supply/surface_charger.c
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index 0d9e2ddbf..4eb1ad443 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -10050,6 +10050,7 @@ static struct ibm_struct proxsensor_driver_data = {
+  */
  
- MICROSOFT SURFACE GPE LID SUPPORT DRIVER
- M:	Maximilian Luz <luzmaximilian@gmail.com>
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 5b5054762194..e696364126f1 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -817,4 +817,20 @@ config BATTERY_SURFACE
- 	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
- 	  Surface Book 3, and Surface Laptop Go.
+ #define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
++#define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
+ #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
  
-+config CHARGER_SURFACE
-+	tristate "AC driver for 7th-generation Microsoft Surface devices"
-+	depends on SURFACE_AGGREGATOR_REGISTRY
-+	help
-+	  Driver for AC devices connected via/managed by the Surface System
-+	  Aggregator Module (SSAM).
-+
-+	  This driver provides AC-information and -status support for Surface
-+	  devices where said data is not exposed via the standard ACPI devices.
-+	  On those models (7th-generation), AC-information is instead handled
-+	  directly via a SSAM client device and this driver.
-+
-+	  Say M or Y here to include AC status support for 7th-generation
-+	  Microsoft Surface devices, i.e. Surface Pro 7, Surface Laptop 3,
-+	  Surface Book 3, and Surface Laptop Go.
-+
- endif # POWER_SUPPLY
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 134041538d2c..a7309a3d1a47 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -102,3 +102,4 @@ obj-$(CONFIG_CHARGER_WILCO)	+= wilco-charger.o
- obj-$(CONFIG_RN5T618_POWER)	+= rn5t618_power.o
- obj-$(CONFIG_BATTERY_ACER_A500)	+= acer_a500_battery.o
- obj-$(CONFIG_BATTERY_SURFACE)	+= surface_battery.o
-+obj-$(CONFIG_CHARGER_SURFACE)	+= surface_charger.o
-diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/supply/surface_charger.c
-new file mode 100644
-index 000000000000..c2dd7e604d14
---- /dev/null
-+++ b/drivers/power/supply/surface_charger.c
-@@ -0,0 +1,282 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * AC driver for 7th-generation Microsoft Surface devices via Surface System
-+ * Aggregator Module (SSAM).
-+ *
-+ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/power_supply.h>
-+#include <linux/types.h>
-+
-+#include <linux/surface_aggregator/device.h>
-+
-+
-+/* -- SAM interface. -------------------------------------------------------- */
-+
-+enum sam_event_cid_bat {
-+	SAM_EVENT_CID_BAT_ADP   = 0x17,
-+};
-+
-+enum sam_battery_sta {
-+	SAM_BATTERY_STA_OK      = 0x0f,
-+	SAM_BATTERY_STA_PRESENT	= 0x10,
-+};
-+
-+/* Get battery status (_STA). */
-+SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_sta, __le32, {
-+	.target_category = SSAM_SSH_TC_BAT,
-+	.command_id      = 0x01,
-+});
-+
-+/* Get platform power source for battery (_PSR / DPTF PSRC). */
-+SSAM_DEFINE_SYNC_REQUEST_CL_R(ssam_bat_get_psrc, __le32, {
-+	.target_category = SSAM_SSH_TC_BAT,
-+	.command_id      = 0x0d,
-+});
-+
-+
-+/* -- Device structures. ---------------------------------------------------- */
-+
-+struct spwr_psy_properties {
-+	const char *name;
-+	struct ssam_event_registry registry;
-+};
-+
-+struct spwr_ac_device {
-+	struct ssam_device *sdev;
-+
-+	char name[32];
-+	struct power_supply *psy;
-+	struct power_supply_desc psy_desc;
-+
-+	struct ssam_event_notifier notif;
-+
-+	struct mutex lock;  /* Guards access to state below. */
-+
-+	__le32 state;
-+};
-+
-+
-+/* -- State management. ----------------------------------------------------- */
-+
-+static int spwr_ac_update_unlocked(struct spwr_ac_device *ac)
-+{
-+	u32 old = ac->state;
-+	int status;
-+
-+	lockdep_assert_held(&ac->lock);
-+
-+	status = ssam_retry(ssam_bat_get_psrc, ac->sdev, &ac->state);
-+	if (status < 0)
-+		return status;
-+
-+	return old != ac->state;
-+}
-+
-+static int spwr_ac_update(struct spwr_ac_device *ac)
-+{
-+	int status;
-+
-+	mutex_lock(&ac->lock);
-+	status = spwr_ac_update_unlocked(ac);
-+	mutex_unlock(&ac->lock);
-+
-+	return status;
-+}
-+
-+static int spwr_ac_recheck(struct spwr_ac_device *ac)
-+{
-+	int status;
-+
-+	status = spwr_ac_update(ac);
-+	if (status > 0)
-+		power_supply_changed(ac->psy);
-+
-+	return status >= 0 ? 0 : status;
-+}
-+
-+static u32 spwr_notify_ac(struct ssam_event_notifier *nf, const struct ssam_event *event)
-+{
-+	struct spwr_ac_device *ac;
-+	int status;
-+
-+	ac = container_of(nf, struct spwr_ac_device, notif);
-+
-+	dev_dbg(&ac->sdev->dev, "power event (cid = %#04x, iid = %#04x, tid = %#04x)\n",
-+		event->command_id, event->instance_id, event->target_id);
-+
-+	/*
-+	 * Allow events of all targets/instances here. Global adapter status
-+	 * seems to be handled via target=1 and instance=1, but events are
-+	 * reported on all targets/instances in use.
-+	 *
-+	 * While it should be enough to just listen on 1/1, listen everywhere to
-+	 * make sure we don't miss anything.
-+	 */
-+
-+	switch (event->command_id) {
-+	case SAM_EVENT_CID_BAT_ADP:
-+		status = spwr_ac_recheck(ac);
-+		return ssam_notifier_from_errno(status) | SSAM_NOTIF_HANDLED;
-+
-+	default:
-+		return 0;
-+	}
-+}
-+
-+
-+/* -- Properties. ----------------------------------------------------------- */
-+
-+static const enum power_supply_property spwr_ac_props[] = {
-+	POWER_SUPPLY_PROP_ONLINE,
-+};
-+
-+static int spwr_ac_get_property(struct power_supply *psy, enum power_supply_property psp,
-+				union power_supply_propval *val)
-+{
-+	struct spwr_ac_device *ac = power_supply_get_drvdata(psy);
-+	int status;
-+
-+	mutex_lock(&ac->lock);
-+
-+	status = spwr_ac_update_unlocked(ac);
-+	if (status)
-+		goto out;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		val->intval = !!le32_to_cpu(ac->state);
-+		break;
-+
-+	default:
-+		status = -EINVAL;
-+		goto out;
-+	}
-+
-+out:
-+	mutex_unlock(&ac->lock);
-+	return status;
-+}
-+
-+
-+/* -- Device setup. --------------------------------------------------------- */
-+
-+static char *battery_supplied_to[] = {
-+	"BAT1",
-+	"BAT2",
-+};
-+
-+static void spwr_ac_init(struct spwr_ac_device *ac, struct ssam_device *sdev,
-+			 struct ssam_event_registry registry, const char *name)
-+{
-+	mutex_init(&ac->lock);
-+	strncpy(ac->name, name, ARRAY_SIZE(ac->name) - 1);
-+
-+	ac->sdev = sdev;
-+
-+	ac->notif.base.priority = 1;
-+	ac->notif.base.fn = spwr_notify_ac;
-+	ac->notif.event.reg = registry;
-+	ac->notif.event.id.target_category = sdev->uid.category;
-+	ac->notif.event.id.instance = 0;
-+	ac->notif.event.mask = SSAM_EVENT_MASK_NONE;
-+	ac->notif.event.flags = SSAM_EVENT_SEQUENCED;
-+
-+	ac->psy_desc.name = ac->name;
-+	ac->psy_desc.type = POWER_SUPPLY_TYPE_MAINS;
-+	ac->psy_desc.properties = spwr_ac_props;
-+	ac->psy_desc.num_properties = ARRAY_SIZE(spwr_ac_props);
-+	ac->psy_desc.get_property = spwr_ac_get_property;
-+}
-+
-+static int spwr_ac_register(struct spwr_ac_device *ac)
-+{
-+	struct power_supply_config psy_cfg = {};
-+	__le32 sta;
-+	int status;
-+
-+	/* Make sure the device is there and functioning properly. */
-+	status = ssam_retry(ssam_bat_get_sta, ac->sdev, &sta);
-+	if (status)
-+		return status;
-+
-+	if ((le32_to_cpu(sta) & SAM_BATTERY_STA_OK) != SAM_BATTERY_STA_OK)
-+		return -ENODEV;
-+
-+	psy_cfg.drv_data = ac;
-+	psy_cfg.supplied_to = battery_supplied_to;
-+	psy_cfg.num_supplicants = ARRAY_SIZE(battery_supplied_to);
-+
-+	ac->psy = devm_power_supply_register(&ac->sdev->dev, &ac->psy_desc, &psy_cfg);
-+	if (IS_ERR(ac->psy))
-+		return PTR_ERR(ac->psy);
-+
-+	return ssam_notifier_register(ac->sdev->ctrl, &ac->notif);
-+}
-+
-+
-+/* -- Driver setup. --------------------------------------------------------- */
-+
-+static int __maybe_unused surface_ac_resume(struct device *dev)
-+{
-+	return spwr_ac_recheck(dev_get_drvdata(dev));
-+}
-+SIMPLE_DEV_PM_OPS(surface_ac_pm_ops, NULL, surface_ac_resume);
-+
-+static int surface_ac_probe(struct ssam_device *sdev)
-+{
-+	const struct spwr_psy_properties *p;
-+	struct spwr_ac_device *ac;
-+
-+	p = ssam_device_get_match_data(sdev);
-+	if (!p)
-+		return -ENODEV;
-+
-+	ac = devm_kzalloc(&sdev->dev, sizeof(*ac), GFP_KERNEL);
-+	if (!ac)
-+		return -ENOMEM;
-+
-+	spwr_ac_init(ac, sdev, p->registry, p->name);
-+	ssam_device_set_drvdata(sdev, ac);
-+
-+	return spwr_ac_register(ac);
-+}
-+
-+static void surface_ac_remove(struct ssam_device *sdev)
-+{
-+	struct spwr_ac_device *ac = ssam_device_get_drvdata(sdev);
-+
-+	ssam_notifier_unregister(sdev->ctrl, &ac->notif);
-+}
-+
-+static const struct spwr_psy_properties spwr_psy_props_adp1 = {
-+	.name = "ADP1",
-+	.registry = SSAM_EVENT_REGISTRY_SAM,
-+};
-+
-+static const struct ssam_device_id surface_ac_match[] = {
-+	{ SSAM_SDEV(BAT, 0x01, 0x01, 0x01), (unsigned long)&spwr_psy_props_adp1 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(ssam, surface_ac_match);
-+
-+static struct ssam_device_driver surface_ac_driver = {
-+	.probe = surface_ac_probe,
-+	.remove = surface_ac_remove,
-+	.match_table = surface_ac_match,
-+	.driver = {
-+		.name = "surface_ac",
-+		.pm = &surface_ac_pm_ops,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+module_ssam_device_driver(surface_ac_driver);
-+
-+MODULE_AUTHOR("Maximilian Luz <luzmaximilian@gmail.com>");
-+MODULE_DESCRIPTION("AC driver for Surface System Aggregator Module");
-+MODULE_LICENSE("GPL");
+ #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+@@ -10066,6 +10067,10 @@ static struct ibm_struct proxsensor_driver_data = {
+ #define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
+ #define DYTC_MODE_LOWPOWER    3  /* Low power mode */
+ #define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
++#define DYTC_MODE_MMC_BALANCE 0  /* Default mode from MMC_GET, aka balanced */
++
++#define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
++#define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
+ 
+ #define DYTC_SET_COMMAND(function, mode, on) \
+ 	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
+@@ -10080,6 +10085,7 @@ static bool dytc_profile_available;
+ static enum platform_profile_option dytc_current_profile;
+ static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
+ static DEFINE_MUTEX(dytc_mutex);
++static bool dytc_mmc_get_available;
+ 
+ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
+ {
+@@ -10088,6 +10094,7 @@ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *p
+ 		*profile = PLATFORM_PROFILE_LOW_POWER;
+ 		break;
+ 	case DYTC_MODE_BALANCE:
++	case DYTC_MODE_MMC_BALANCE:
+ 		*profile =  PLATFORM_PROFILE_BALANCED;
+ 		break;
+ 	case DYTC_MODE_PERFORM:
+@@ -10165,7 +10172,6 @@ static int dytc_cql_command(int command, int *output)
+ 		if (err)
+ 			return err;
+ 	}
+-
+ 	return cmd_err;
+ }
+ 
+@@ -10222,7 +10228,10 @@ static void dytc_profile_refresh(void)
+ 	int perfmode;
+ 
+ 	mutex_lock(&dytc_mutex);
+-	err = dytc_cql_command(DYTC_CMD_GET, &output);
++	if (dytc_mmc_get_available)
++		err = dytc_command(DYTC_CMD_MMC_GET, &output);
++	else
++		err = dytc_cql_command(DYTC_CMD_GET, &output);
+ 	mutex_unlock(&dytc_mutex);
+ 	if (err)
+ 		return;
+@@ -10271,6 +10280,17 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+ 	if (dytc_version >= 5) {
+ 		dbg_printk(TPACPI_DBG_INIT,
+ 				"DYTC version %d: thermal mode available\n", dytc_version);
++		/*
++		 * Check if MMC_GET functionality available
++		 * Version > 6 and return success from MMC_GET command
++		 */
++		dytc_mmc_get_available = false;
++		if (dytc_version >= 6) {
++			err = dytc_command(DYTC_CMD_MMC_GET, &output);
++			if (!err && ((output & DYTC_ERR_MASK) == DYTC_ERR_SUCCESS))
++				dytc_mmc_get_available = true;
++		}
++		err = dytc_command(DYTC_CMD_QUERY, &output);
+ 		/* Create platform_profile structure and register */
+ 		err = platform_profile_register(&dytc_profile);
+ 		/*
 -- 
-2.31.1
+2.30.2
 
