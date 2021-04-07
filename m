@@ -5,369 +5,334 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D9C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A74C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964B161132
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D73F61205
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347471AbhDGPyc (ORCPT
+        id S235884AbhDGQbr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 11:54:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38778 "EHLO
+        Wed, 7 Apr 2021 12:31:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50079 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347362AbhDGPyb (ORCPT
+        by vger.kernel.org with ESMTP id S233184AbhDGQbq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 11:54:31 -0400
+        Wed, 7 Apr 2021 12:31:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617810861;
+        s=mimecast20190719; t=1617813096;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CY2aVknDkI0MztKSF9mzjfw7Bllhxi8JMxcn2J8lgDw=;
-        b=HhgXMhm+OM/+JcrVDp+QwUQLvJfRb0Dvp8Iy3yEvRjvV/XfVM0VVXEIaf1IORDWefxYcno
-        Mf0id+sjyR3fCmqGkYPR8xY3PIGBgreU5LqWVaebHh73dTd5zS97UJgeTtzarZYT0bq6Z1
-        0dDAGNi5zRSRJhQLUpunFhrfo7lBHwc=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-555-BHY1sflQPDyUXdYVv8OFBQ-1; Wed, 07 Apr 2021 11:54:19 -0400
-X-MC-Unique: BHY1sflQPDyUXdYVv8OFBQ-1
-Received: by mail-ed1-f69.google.com with SMTP id w16so12333510edc.22
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 08:54:19 -0700 (PDT)
+        bh=R3hmDVIoA8SS7AT3Bh88v69hWmH2wvHwoStkQGgqOaw=;
+        b=Ja71QM6l2qxVszto0JMS5hln4dbF4xYiEAIkrIdvdrPGI7eUpkk4y2WAXcjzzcBAfJ4Pyf
+        1GgEfPbg2L87BDaK6HfVnbyyZQIJGmJrvk5cZDIaV1ThSN3568aioxpnIT5qx9IuGqQu0w
+        1YWCZBjBiVmctxw2VqjLwMipENUKQ2I=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345-pwlBGLnSM5muZme-1n0rlA-1; Wed, 07 Apr 2021 12:31:34 -0400
+X-MC-Unique: pwlBGLnSM5muZme-1n0rlA-1
+Received: by mail-ej1-f70.google.com with SMTP id o11so3452713ejx.23
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 09:31:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=CY2aVknDkI0MztKSF9mzjfw7Bllhxi8JMxcn2J8lgDw=;
-        b=Eykr51KTorgIimiEPUPAJvDqUkXEXtMQ6Co+/UJVUsrh/8iFfO/9lzoUsndSkgNv0w
-         CQq0ufz8SfwAvqwur++jg/58aV1K51d/4M60mussVSemOZfQE30/xF+UNkbAWHDzc9xP
-         8396JTHW5sQtGrPwGa8/a61P+tmWBwa6YJmnVZSE9UMbM83WjqB4giDLvZCtMbf8jnAA
-         j5vmL6wp18IY1M2a8m626KyNOJOQWutDN8I+aukvC4fvhFRN5ccnJZJGUBVE4MMC8BJ0
-         buSa/f6uv7NnnQl4rG6gxDtcMnNZl//MIwp6Oo/A3O1l3RscEp6JcOHGTYS2pV6YV4wF
-         e3RQ==
-X-Gm-Message-State: AOAM530pSpEIMyTCVUTrJM7cPCrIVbJ6kwGhjSw2qjvcCHHKh4tNh8gZ
-        PFzyGMkDrLAyxP1bsLkOqM2SqiVFh3btGOvvph1m8VYjGMD9Z30RZZkZ9XJMX1Fvo/Go6fEW0W2
-        LshAVYG6N3rgdvtBLoqsEr9OQpt143Bzk4Q==
-X-Received: by 2002:a05:6402:518c:: with SMTP id q12mr5333027edd.11.1617810858251;
-        Wed, 07 Apr 2021 08:54:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxh3Ce5MoWSVG7wduI1XRNOe9ABqlTadtTezJdN2B5H51vorTlm7sQVSndH6UFGa1VeTeUUNw==
-X-Received: by 2002:a05:6402:518c:: with SMTP id q12mr5333003edd.11.1617810857970;
-        Wed, 07 Apr 2021 08:54:17 -0700 (PDT)
+        bh=R3hmDVIoA8SS7AT3Bh88v69hWmH2wvHwoStkQGgqOaw=;
+        b=RVvdhW3huDcvzb+4IZuEzDPiMMmuhuuWhWHb4AGzl97+CB56hNNG2M+IrcHQsnuIn1
+         3C4Dr4jutQNCqoy6XS0k883GVPl+jpxajHjaqUFRMaO6UU1lXacCPPUL+qm4P9/x0NQB
+         3Am6lZrmJ/RxxbgHT26g/pz+SdxShm6c5tS063JwLnBpnk79Fs+9oTA8syLTAYjGh1j9
+         1w35ID/YzBNeVAzC2F79jUtF9oQFR1naplKikz/poPFCS9f2f/umj0Sgk04QE5ffuCkp
+         Pu5nyLYhknK69ubIie87xWDFjIsZMHysnUK7YCPpjHB77Aex1aRufdOB9PnwDhhvQs24
+         XKpw==
+X-Gm-Message-State: AOAM531kV6OugkrunncD917Kch0SFy8c5W/IIxF/6q6wrfflXGa0vCFy
+        wi/sAAMiS7MXEwPnjGCjgQySj7zt9NAxigah1JGR3ct2RnQc+fiNNxBtIJFayEogPh3JY6IzQwi
+        +0mZnEcGKBt6gVhtYkJtIECa8Yjh11l7p4A==
+X-Received: by 2002:a17:906:1d01:: with SMTP id n1mr4761027ejh.140.1617813093155;
+        Wed, 07 Apr 2021 09:31:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyAaOx62F3wRfxpkotHOfmgPZChzj/mCZvUV3n6qeXRQdWA32ya07TTtIg3EO6b7ZDEukJ+4w==
+X-Received: by 2002:a17:906:1d01:: with SMTP id n1mr4761011ejh.140.1617813092953;
+        Wed, 07 Apr 2021 09:31:32 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id f21sm2517244edq.55.2021.04.07.08.54.17
+        by smtp.gmail.com with ESMTPSA id x17sm12836122ejd.68.2021.04.07.09.31.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Apr 2021 08:54:17 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>
-References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
- <20210405204810.339763-1-linux@weissschuh.net>
+        Wed, 07 Apr 2021 09:31:32 -0700 (PDT)
+Subject: Re: [PATCH] platform/surface: aggregator_registry: Give devices time
+ to set up when connecting
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210405231222.358113-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
-Date:   Wed, 7 Apr 2021 17:54:17 +0200
+Message-ID: <3a053611-d4ff-bab4-f7df-b98251eb6b68@redhat.com>
+Date:   Wed, 7 Apr 2021 18:31:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210405204810.339763-1-linux@weissschuh.net>
+In-Reply-To: <20210405231222.358113-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Thomas,
+Hi,
 
-Thank you for your new driver and thank you for the quick respin
-addressing Barnabás' request to make it a WMI driver.
+On 4/6/21 1:12 AM, Maximilian Luz wrote:
+> Sometimes, the "base connected" event that we rely on to (re-)attach the
+> device connected to the base is sent a bit too early. When this happens,
+> some devices may not be completely ready yet.
+> 
+> Specifically, the battery has been observed to report zero-values for
+> things like full charge capacity, which, however, is only loaded once
+> when the driver for that device probes. This can thus result in battery
+> readings being unavailable.
+> 
+> As we cannot easily and reliably discern between devices that are not
+> ready yet and devices that are not connected (i.e. will never be ready),
+> delay adding these devices. This should give them enough time to set up.
+> 
+> The delay is set to 2.5 seconds, which should give us a good safety
+> margin based on testing and still be fairly responsive for users.
+> 
+> To achieve that delay switch to updating via a delayed work struct,
+> which means that we can also get rid of some locking.
+> 
+> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-The code looks good, so merging this should be a no-brainer,
-yet I'm not sure if I should merge this driver as-is, let me
-explain.
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-The problem is that I assume that this is based on reverse-engineering?
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-We have some mixes experiences with reverse-engineered WMI drivers,
-sometimes a feature is not supported yet the wmi_evaluate_method()
-call happily succeeds. One example of this causing trouble is:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1797d588af15174d4a4e7159dac8c800538e4f8c
-
-At a minimum I think your driver should check in its
-probe function that
-
-gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, ...)
-
-actually succeeds on the machine the driver is running on chances
-are that Gigabyte has been using the DEADBEEF-2001-0000-00A0-C90629100000
-GUID for ages, where as the 0x125 value for GIGABYTE_WMI_TEMPERATURE_QUERY
-suggests that this is a pretty new API.
-
-It would be good if you can see if you can find some DSDT-s for older
-gigabyte motherboards attached to various distro's bug-tracking systems
-or forum posts and see how those respond to an unknown gigabyte_wmi_commandtype.
-
-Another open question to make sure this driver is suitable
-as a generic driver (and does not misbehave) is how to figure out
-how many temperature sensors there actually are.
-
-Perhaps the WMI interface returns an error when you query an out-of-range
-temperature channel?
-
-One option here might be to add a DMI matching table and only load on
-systems on that table for now. That table could then perhaps also provide
-labels for each of the temperature channels, which is something which
-would be nice to have regardless of my worries about how well this driver
-will work on motherboards on which it has not been tested.
-
-You could combine this DMI matching table with a "force" module option to
-continue with probing on boards which are not on the table to allow users
-to test and report their results to you.
-
-And hopefully after a while, when we're confident that the code works
-well on most gigabyte boards we can drop the DMI table, or at least
-only use it for the channel labels.
-
-Please don't take this the wrong way; I think it is great that you are
-working on this. And the quick turnaround of the v2 of this drivers makes
-me pretty certain that we can figure something out and get this merged.
-
-Have you tried contacting Gigabyte about this? I don't think the WMI
-interface is something which they need to keep secret for competitive
-reasons, so maybe they can help? Note if they want you to sign a NDA
-of sorts to view docs, then make sure that it contains some language
-about them allowing you to release an opensource driver for their
-hardware based on the "protected" information.
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
-
-
-
-
-
-
-
-On 4/5/21 10:48 PM, Thomas Weißschuh wrote:
-> Changes since v1:
-> * Incorporate feedback from Barnabás Pőcze
->   * Use a WMI driver instead of a platform driver
->   * Let the kernel manage the driver lifecycle
->   * Fix errno/ACPI error confusion
->   * Fix resource cleanup
->   * Document reason for integer casting
-> 
-> Thank you Barnabás for your review, it is much appreciated.
-> 
-> -- >8 --
-> 
-> Tested with a X570 I Aorus Pro Wifi.
-> The mainboard contains an ITE IT8688E chip for management.
-> This chips is also handled by drivers/hwmon/i87.c but as it is also used
-> by the firmware itself it needs an ACPI driver.
-> 
-> Unfortunately not all sensor registers are handled by the firmware and even
-> less are exposed via WMI.
-> 
-> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > ---
->  drivers/platform/x86/Kconfig        |  11 +++
->  drivers/platform/x86/Makefile       |   1 +
->  drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 drivers/platform/x86/gigabyte-wmi.c
+>  .../surface/surface_aggregator_registry.c     | 98 ++++++++-----------
+>  1 file changed, 40 insertions(+), 58 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index ad4e630e73e2..96622a2106f7 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -123,6 +123,17 @@ config XIAOMI_WMI
->  	  To compile this driver as a module, choose M here: the module will
->  	  be called xiaomi-wmi.
+> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
+> index eccb9d1007cd..685d37a7add1 100644
+> --- a/drivers/platform/surface/surface_aggregator_registry.c
+> +++ b/drivers/platform/surface/surface_aggregator_registry.c
+> @@ -13,10 +13,10 @@
+>  #include <linux/kernel.h>
+>  #include <linux/limits.h>
+>  #include <linux/module.h>
+> -#include <linux/mutex.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  #include <linux/types.h>
+> +#include <linux/workqueue.h>
 >  
-> +config GIGABYTE_WMI
-> +	tristate "Gigabyte WMI temperature driver"
-> +	depends on ACPI_WMI
-> +	depends on HWMON
-> +	help
-> +	  Say Y here if you want to support WMI-based temperature reporting on
-> +	  Gigabyte mainboards.
-> +
-> +	  To compile this driver as a module, choose M here: the module will
-> +	  be called gigabyte-wmi.
-> +
->  config ACERHDF
->  	tristate "Acer Aspire One temperature and fan driver"
->  	depends on ACPI && THERMAL
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 60d554073749..1621ebfd04fd 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
->  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
->  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-> +obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>  #include <linux/surface_aggregator/controller.h>
+>  #include <linux/surface_aggregator/device.h>
+> @@ -287,6 +287,13 @@ static int ssam_hub_add_devices(struct device *parent, struct ssam_controller *c
 >  
->  # Acer
->  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> new file mode 100644
-> index 000000000000..8618363e3ccf
-> --- /dev/null
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -0,0 +1,138 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
+>  /* -- SSAM base-hub driver. ------------------------------------------------- */
+>  
 > +/*
-> + *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
+> + * Some devices (especially battery) may need a bit of time to be fully usable
+> + * after being (re-)connected. This delay has been determined via
+> + * experimentation.
 > + */
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +#define SSAM_BASE_UPDATE_CONNECT_DELAY		msecs_to_jiffies(2500)
 > +
-> +#include <linux/acpi.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/wmi.h>
+>  enum ssam_base_hub_state {
+>  	SSAM_BASE_HUB_UNINITIALIZED,
+>  	SSAM_BASE_HUB_CONNECTED,
+> @@ -296,8 +303,8 @@ enum ssam_base_hub_state {
+>  struct ssam_base_hub {
+>  	struct ssam_device *sdev;
+>  
+> -	struct mutex lock;  /* Guards state update checks and transitions. */
+>  	enum ssam_base_hub_state state;
+> +	struct delayed_work update_work;
+>  
+>  	struct ssam_event_notifier notif;
+>  };
+> @@ -335,11 +342,7 @@ static ssize_t ssam_base_hub_state_show(struct device *dev, struct device_attrib
+>  					char *buf)
+>  {
+>  	struct ssam_base_hub *hub = dev_get_drvdata(dev);
+> -	bool connected;
+> -
+> -	mutex_lock(&hub->lock);
+> -	connected = hub->state == SSAM_BASE_HUB_CONNECTED;
+> -	mutex_unlock(&hub->lock);
+> +	bool connected = hub->state == SSAM_BASE_HUB_CONNECTED;
+>  
+>  	return sysfs_emit(buf, "%d\n", connected);
+>  }
+> @@ -356,16 +359,20 @@ static const struct attribute_group ssam_base_hub_group = {
+>  	.attrs = ssam_base_hub_attrs,
+>  };
+>  
+> -static int __ssam_base_hub_update(struct ssam_base_hub *hub, enum ssam_base_hub_state new)
+> +static void ssam_base_hub_update_workfn(struct work_struct *work)
+>  {
+> +	struct ssam_base_hub *hub = container_of(work, struct ssam_base_hub, update_work.work);
+>  	struct fwnode_handle *node = dev_fwnode(&hub->sdev->dev);
+> +	enum ssam_base_hub_state state;
+>  	int status = 0;
+>  
+> -	lockdep_assert_held(&hub->lock);
+> +	status = ssam_base_hub_query_state(hub, &state);
+> +	if (status)
+> +		return;
+>  
+> -	if (hub->state == new)
+> -		return 0;
+> -	hub->state = new;
+> +	if (hub->state == state)
+> +		return;
+> +	hub->state = state;
+>  
+>  	if (hub->state == SSAM_BASE_HUB_CONNECTED)
+>  		status = ssam_hub_add_devices(&hub->sdev->dev, hub->sdev->ctrl, node);
+> @@ -374,51 +381,28 @@ static int __ssam_base_hub_update(struct ssam_base_hub *hub, enum ssam_base_hub_
+>  
+>  	if (status)
+>  		dev_err(&hub->sdev->dev, "failed to update base-hub devices: %d\n", status);
+> -
+> -	return status;
+> -}
+> -
+> -static int ssam_base_hub_update(struct ssam_base_hub *hub)
+> -{
+> -	enum ssam_base_hub_state state;
+> -	int status;
+> -
+> -	mutex_lock(&hub->lock);
+> -
+> -	status = ssam_base_hub_query_state(hub, &state);
+> -	if (!status)
+> -		status = __ssam_base_hub_update(hub, state);
+> -
+> -	mutex_unlock(&hub->lock);
+> -	return status;
+>  }
+>  
+>  static u32 ssam_base_hub_notif(struct ssam_event_notifier *nf, const struct ssam_event *event)
+>  {
+> -	struct ssam_base_hub *hub;
+> -	struct ssam_device *sdev;
+> -	enum ssam_base_hub_state new;
+> -
+> -	hub = container_of(nf, struct ssam_base_hub, notif);
+> -	sdev = hub->sdev;
+> +	struct ssam_base_hub *hub = container_of(nf, struct ssam_base_hub, notif);
+> +	unsigned long delay;
+>  
+>  	if (event->command_id != SSAM_EVENT_BAS_CID_CONNECTION)
+>  		return 0;
+>  
+>  	if (event->length < 1) {
+> -		dev_err(&sdev->dev, "unexpected payload size: %u\n",
+> -			event->length);
+> +		dev_err(&hub->sdev->dev, "unexpected payload size: %u\n", event->length);
+>  		return 0;
+>  	}
+>  
+> -	if (event->data[0])
+> -		new = SSAM_BASE_HUB_CONNECTED;
+> -	else
+> -		new = SSAM_BASE_HUB_DISCONNECTED;
+> +	/*
+> +	 * Delay update when the base is being connected to give devices/EC
+> +	 * some time to set up.
+> +	 */
+> +	delay = event->data[0] ? SSAM_BASE_UPDATE_CONNECT_DELAY : 0;
+>  
+> -	mutex_lock(&hub->lock);
+> -	__ssam_base_hub_update(hub, new);
+> -	mutex_unlock(&hub->lock);
+> +	schedule_delayed_work(&hub->update_work, delay);
+>  
+>  	/*
+>  	 * Do not return SSAM_NOTIF_HANDLED: The event should be picked up and
+> @@ -430,7 +414,10 @@ static u32 ssam_base_hub_notif(struct ssam_event_notifier *nf, const struct ssam
+>  
+>  static int __maybe_unused ssam_base_hub_resume(struct device *dev)
+>  {
+> -	return ssam_base_hub_update(dev_get_drvdata(dev));
+> +	struct ssam_base_hub *hub = dev_get_drvdata(dev);
 > +
-> +#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
+> +	schedule_delayed_work(&hub->update_work, 0);
+> +	return 0;
+>  }
+>  static SIMPLE_DEV_PM_OPS(ssam_base_hub_pm_ops, NULL, ssam_base_hub_resume);
+>  
+> @@ -443,8 +430,6 @@ static int ssam_base_hub_probe(struct ssam_device *sdev)
+>  	if (!hub)
+>  		return -ENOMEM;
+>  
+> -	mutex_init(&hub->lock);
+> -
+>  	hub->sdev = sdev;
+>  	hub->state = SSAM_BASE_HUB_UNINITIALIZED;
+>  
+> @@ -456,27 +441,25 @@ static int ssam_base_hub_probe(struct ssam_device *sdev)
+>  	hub->notif.event.mask = SSAM_EVENT_MASK_NONE;
+>  	hub->notif.event.flags = SSAM_EVENT_SEQUENCED;
+>  
+> +	INIT_DELAYED_WORK(&hub->update_work, ssam_base_hub_update_workfn);
 > +
-> +enum gigabyte_wmi_commandtype {
-> +	GIGABYTE_WMI_BUILD_DATE_QUERY       =   0x1,
-> +	GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =   0x2,
-> +	GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =   0x4,
-> +	GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =   0x5,
-> +	GIGABYTE_WMI_TEMPERATURE_QUERY      = 0x125,
-> +};
-> +
-> +struct gigabyte_wmi_args {
-> +	u32 arg1;
-> +};
-> +
-> +static int gigabyte_wmi_perform_query(enum gigabyte_wmi_commandtype command,
-> +		struct gigabyte_wmi_args *args, struct acpi_buffer *out)
-> +{
-> +	const struct acpi_buffer in = {
-> +		.length = sizeof(*args),
-> +		.pointer = args,
-> +	};
-> +
-> +	acpi_status ret = wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out);
-> +	if (ret == AE_OK) {
-> +		return 0;
-> +	} else {
-> +		return -EIO;
-> +	};
-> +}
-> +
-> +static int gigabyte_wmi_query_integer(enum gigabyte_wmi_commandtype command,
-> +		struct gigabyte_wmi_args *args, u64 *res)
-> +{
-> +	union acpi_object *obj;
-> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	int ret;
-> +
-> +	ret = gigabyte_wmi_perform_query(command, args, &result);
-> +	if (ret) {
-> +		goto out;
-> +	}
-> +	obj = result.pointer;
-> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
-> +		*res = obj->integer.value;
-> +		ret = 0;
-> +	} else {
-> +		ret = -EIO;
-> +	}
-> +out:
-> +	kfree(result.pointer);
-> +	return ret;
-> +}
-> +
-> +static int gigabyte_wmi_temperature(u8 sensor, long *res)
-> +{
-> +	struct gigabyte_wmi_args args = {
-> +		.arg1 = sensor,
-> +	};
-> +	u64 temp;
-> +	acpi_status ret;
-> +
-> +	ret = gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &args, &temp);
-> +	if (ret == 0)
-> +		*res = (s8) temp * 1000; // value is a signed 8-bit integer
-> +	return ret;
-> +}
-> +
-> +static int gigabyte_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> +		u32 attr, int channel, long *val)
-> +{
-> +	return gigabyte_wmi_temperature(channel, val);
-> +}
-> +
-> +static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
-> +		u32 attr, int channel)
-> +{
-> +	return 0444;
-> +}
-> +
-> +static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
-> +	HWMON_CHANNEL_INFO(temp,
-> +			HWMON_T_INPUT,
-> +			HWMON_T_INPUT,
-> +			HWMON_T_INPUT,
-> +			HWMON_T_INPUT,
-> +			HWMON_T_INPUT,
-> +			HWMON_T_INPUT),
-> +	NULL,
-> +};
-> +
-> +static const struct hwmon_ops gigabyte_wmi_hwmon_ops = {
-> +	.read = gigabyte_wmi_hwmon_read,
-> +	.is_visible = gigabyte_wmi_hwmon_is_visible,
-> +};
-> +
-> +static const struct hwmon_chip_info gigabyte_wmi_hwmon_chip_info = {
-> +	.ops = &gigabyte_wmi_hwmon_ops,
-> +	.info = gigabyte_wmi_hwmon_info,
-> +};
-> +
-> +static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
-> +{
-> +	struct device *hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
-> +			"gigabyte_wmi", NULL,
-> +			&gigabyte_wmi_hwmon_chip_info, NULL);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static const struct wmi_device_id gigabyte_wmi_id_table[] = {
-> +	{ GIGABYTE_WMI_GUID, NULL },
-> +	{ },
-> +};
-> +
-> +static struct wmi_driver gigabyte_wmi_driver = {
-> +	.driver = {
-> +		.name = "gigabyte-wmi",
-> +	},
-> +	.id_table = gigabyte_wmi_id_table,
-> +	.probe = gigabyte_wmi_probe,
-> +};
-> +module_wmi_driver(gigabyte_wmi_driver);
-> +
-> +MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
-> +MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
-> +MODULE_DESCRIPTION("Gigabyte Temperature WMI Driver");
-> +MODULE_LICENSE("GPL");
-> 
-> base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
+>  	ssam_device_set_drvdata(sdev, hub);
+>  
+>  	status = ssam_notifier_register(sdev->ctrl, &hub->notif);
+>  	if (status)
+> -		goto err_register;
+> -
+> -	status = ssam_base_hub_update(hub);
+> -	if (status)
+> -		goto err_update;
+> +		return status;
+>  
+>  	status = sysfs_create_group(&sdev->dev.kobj, &ssam_base_hub_group);
+>  	if (status)
+> -		goto err_update;
+> +		goto err;
+>  
+> +	schedule_delayed_work(&hub->update_work, 0);
+>  	return 0;
+>  
+> -err_update:
+> +err:
+>  	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
+> +	cancel_delayed_work_sync(&hub->update_work);
+>  	ssam_hub_remove_devices(&sdev->dev);
+> -err_register:
+> -	mutex_destroy(&hub->lock);
+>  	return status;
+>  }
+>  
+> @@ -487,9 +470,8 @@ static void ssam_base_hub_remove(struct ssam_device *sdev)
+>  	sysfs_remove_group(&sdev->dev.kobj, &ssam_base_hub_group);
+>  
+>  	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
+> +	cancel_delayed_work_sync(&hub->update_work);
+>  	ssam_hub_remove_devices(&sdev->dev);
+> -
+> -	mutex_destroy(&hub->lock);
+>  }
+>  
+>  static const struct ssam_device_id ssam_base_hub_match[] = {
 > 
 
