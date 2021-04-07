@@ -5,76 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A74C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7788C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D73F61205
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A2A611CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235884AbhDGQbr (ORCPT
+        id S1344822AbhDGQb6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 12:31:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:50079 "EHLO
+        Wed, 7 Apr 2021 12:31:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41996 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233184AbhDGQbq (ORCPT
+        by vger.kernel.org with ESMTP id S232103AbhDGQb6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 12:31:46 -0400
+        Wed, 7 Apr 2021 12:31:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617813096;
+        s=mimecast20190719; t=1617813108;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=R3hmDVIoA8SS7AT3Bh88v69hWmH2wvHwoStkQGgqOaw=;
-        b=Ja71QM6l2qxVszto0JMS5hln4dbF4xYiEAIkrIdvdrPGI7eUpkk4y2WAXcjzzcBAfJ4Pyf
-        1GgEfPbg2L87BDaK6HfVnbyyZQIJGmJrvk5cZDIaV1ThSN3568aioxpnIT5qx9IuGqQu0w
-        1YWCZBjBiVmctxw2VqjLwMipENUKQ2I=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-pwlBGLnSM5muZme-1n0rlA-1; Wed, 07 Apr 2021 12:31:34 -0400
-X-MC-Unique: pwlBGLnSM5muZme-1n0rlA-1
-Received: by mail-ej1-f70.google.com with SMTP id o11so3452713ejx.23
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 09:31:34 -0700 (PDT)
+        bh=5mVVl+fL6TScHUbVo11wdSW6OBMF7FzXxPqhYZhkxe4=;
+        b=We/JkIf0I/Jq/iVc65nSv7HLEJHjWt89WjQxipMJnxJdwX6ZiwiD+Bwnkz6jV01BG9vk7m
+        h5PdF+j9jcLLaLnMBE20EjJdzmoW+Bge+rzX7d0ukFNic7wEqJkzynRjwlSTaWpQaGUzeE
+        oITEHUVLh+wm7y6YaAU4PmOcujt1QxA=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-563-gxxQ1bEGPUqeD1RcU0g-SA-1; Wed, 07 Apr 2021 12:31:46 -0400
+X-MC-Unique: gxxQ1bEGPUqeD1RcU0g-SA-1
+Received: by mail-ej1-f71.google.com with SMTP id n21so3573720ejl.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 09:31:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=R3hmDVIoA8SS7AT3Bh88v69hWmH2wvHwoStkQGgqOaw=;
-        b=RVvdhW3huDcvzb+4IZuEzDPiMMmuhuuWhWHb4AGzl97+CB56hNNG2M+IrcHQsnuIn1
-         3C4Dr4jutQNCqoy6XS0k883GVPl+jpxajHjaqUFRMaO6UU1lXacCPPUL+qm4P9/x0NQB
-         3Am6lZrmJ/RxxbgHT26g/pz+SdxShm6c5tS063JwLnBpnk79Fs+9oTA8syLTAYjGh1j9
-         1w35ID/YzBNeVAzC2F79jUtF9oQFR1naplKikz/poPFCS9f2f/umj0Sgk04QE5ffuCkp
-         Pu5nyLYhknK69ubIie87xWDFjIsZMHysnUK7YCPpjHB77Aex1aRufdOB9PnwDhhvQs24
-         XKpw==
-X-Gm-Message-State: AOAM531kV6OugkrunncD917Kch0SFy8c5W/IIxF/6q6wrfflXGa0vCFy
-        wi/sAAMiS7MXEwPnjGCjgQySj7zt9NAxigah1JGR3ct2RnQc+fiNNxBtIJFayEogPh3JY6IzQwi
-        +0mZnEcGKBt6gVhtYkJtIECa8Yjh11l7p4A==
-X-Received: by 2002:a17:906:1d01:: with SMTP id n1mr4761027ejh.140.1617813093155;
-        Wed, 07 Apr 2021 09:31:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyAaOx62F3wRfxpkotHOfmgPZChzj/mCZvUV3n6qeXRQdWA32ya07TTtIg3EO6b7ZDEukJ+4w==
-X-Received: by 2002:a17:906:1d01:: with SMTP id n1mr4761011ejh.140.1617813092953;
-        Wed, 07 Apr 2021 09:31:32 -0700 (PDT)
+        bh=5mVVl+fL6TScHUbVo11wdSW6OBMF7FzXxPqhYZhkxe4=;
+        b=Nxa5MdlQp/hUE0dQGsnvPQ4fwix+36Acifujt5N+sre9HABT7s4W805o1hh7Kfmv/S
+         rljttyfd0SspFPtgUKm4nV3rUIaboEnI/kWD2CGgWZyZmxX6leXkLEaUwfgWH9fG3BID
+         YM/89Zz0v89ZnjtZ+XTDeZXv5PqERfJs6CNcmVuDkaj+kIbFtxzm2J1/aZuxhpPN812T
+         eVuNbIJigy7Dnz+12b0MQUC3tHS1kyTOk/SZ0LfzKD0ku1O/g2gBS26EV23xXVQ+LLEk
+         1Y4CmbAgPS6O7Dr8FdUHCgInkuSDU6g/Z1M0SVlQrebNyjzo0Px/iF8yCr0y1FSJU69k
+         Iw/g==
+X-Gm-Message-State: AOAM531WMKPvQo1RQR0tK5ZShvzNx3shYIylAQ4g4uh6Orc1S2zaAP6K
+        whXx0WeYsh53cVLOd/NFmzVNghfISkHB6tC0s6v2+AGaFM2NhImNQZ6njWpiWZb5lx0N4+sKOy6
+        JL4XhQFNchWw2VYYn3NdjVtUWq3N52Up850WFKPBj7vWs++KihHQGyIS4amRCHbqQyTPK0AMl+7
+        0yviI9ecGFew==
+X-Received: by 2002:aa7:d997:: with SMTP id u23mr5489980eds.285.1617813105002;
+        Wed, 07 Apr 2021 09:31:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxaujWOFOweRs/1w9FSs24psRNAmQ/B9jBPrIm+5oPL0ZGs6t2vFLKr72I5NWulpuzJ81Xv9A==
+X-Received: by 2002:aa7:d997:: with SMTP id u23mr5489949eds.285.1617813104790;
+        Wed, 07 Apr 2021 09:31:44 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id x17sm12836122ejd.68.2021.04.07.09.31.32
+        by smtp.gmail.com with ESMTPSA id t7sm1179007edq.42.2021.04.07.09.31.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Apr 2021 09:31:32 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: aggregator_registry: Give devices time
- to set up when connecting
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210405231222.358113-1-luzmaximilian@gmail.com>
+        Wed, 07 Apr 2021 09:31:44 -0700 (PDT)
+Subject: Re: [PATCH v2] Add support for DYTC MMC_GET BIOS API.
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20210406233203.232860-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3a053611-d4ff-bab4-f7df-b98251eb6b68@redhat.com>
-Date:   Wed, 7 Apr 2021 18:31:32 +0200
+Message-ID: <cc6e93ad-e064-ba03-0c40-d9a95c5cb496@redhat.com>
+Date:   Wed, 7 Apr 2021 18:31:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.7.0
 MIME-Version: 1.0
-In-Reply-To: <20210405231222.358113-1-luzmaximilian@gmail.com>
+In-Reply-To: <20210406233203.232860-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,27 +84,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 4/6/21 1:12 AM, Maximilian Luz wrote:
-> Sometimes, the "base connected" event that we rely on to (re-)attach the
-> device connected to the base is sent a bit too early. When this happens,
-> some devices may not be completely ready yet.
+On 4/7/21 1:32 AM, Mark Pearson wrote:
+> The BIOS team have added a new API that allows us to retrieve the
+> current performance profile without having to disable/enable CQL
+> mode. Adding the changes to use this API.
 > 
-> Specifically, the battery has been observed to report zero-values for
-> things like full charge capacity, which, however, is only loaded once
-> when the driver for that device probes. This can thus result in battery
-> readings being unavailable.
+> Tested on P15 and X1C8
 > 
-> As we cannot easily and reliably discern between devices that are not
-> ready yet and devices that are not connected (i.e. will never be ready),
-> delay adding these devices. This should give them enough time to set up.
-> 
-> The delay is set to 2.5 seconds, which should give us a good safety
-> margin based on testing and still be fairly responsive for users.
-> 
-> To achieve that delay switch to updating via a delayed work struct,
-> which means that we can also get rid of some locking.
-> 
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -124,215 +111,87 @@ Hans
 
 
 > ---
->  .../surface/surface_aggregator_registry.c     | 98 ++++++++-----------
->  1 file changed, 40 insertions(+), 58 deletions(-)
+> Changes in v2:
+>  - remove unwanted debug code
 > 
-> diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-> index eccb9d1007cd..685d37a7add1 100644
-> --- a/drivers/platform/surface/surface_aggregator_registry.c
-> +++ b/drivers/platform/surface/surface_aggregator_registry.c
-> @@ -13,10 +13,10 @@
->  #include <linux/kernel.h>
->  #include <linux/limits.h>
->  #include <linux/module.h>
-> -#include <linux/mutex.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue.h>
+>  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 0d9e2ddbf..07de21941 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10050,6 +10050,7 @@ static struct ibm_struct proxsensor_driver_data = {
+>   */
 >  
->  #include <linux/surface_aggregator/controller.h>
->  #include <linux/surface_aggregator/device.h>
-> @@ -287,6 +287,13 @@ static int ssam_hub_add_devices(struct device *parent, struct ssam_controller *c
+>  #define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
+> +#define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
+>  #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
 >  
->  /* -- SSAM base-hub driver. ------------------------------------------------- */
->  
-> +/*
-> + * Some devices (especially battery) may need a bit of time to be fully usable
-> + * after being (re-)connected. This delay has been determined via
-> + * experimentation.
-> + */
-> +#define SSAM_BASE_UPDATE_CONNECT_DELAY		msecs_to_jiffies(2500)
+>  #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
+> @@ -10066,6 +10067,10 @@ static struct ibm_struct proxsensor_driver_data = {
+>  #define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
+>  #define DYTC_MODE_LOWPOWER    3  /* Low power mode */
+>  #define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
+> +#define DYTC_MODE_MMC_BALANCE 0  /* Default mode from MMC_GET, aka balanced */
 > +
->  enum ssam_base_hub_state {
->  	SSAM_BASE_HUB_UNINITIALIZED,
->  	SSAM_BASE_HUB_CONNECTED,
-> @@ -296,8 +303,8 @@ enum ssam_base_hub_state {
->  struct ssam_base_hub {
->  	struct ssam_device *sdev;
+> +#define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
+> +#define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
 >  
-> -	struct mutex lock;  /* Guards state update checks and transitions. */
->  	enum ssam_base_hub_state state;
-> +	struct delayed_work update_work;
+>  #define DYTC_SET_COMMAND(function, mode, on) \
+>  	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
+> @@ -10080,6 +10085,7 @@ static bool dytc_profile_available;
+>  static enum platform_profile_option dytc_current_profile;
+>  static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
+>  static DEFINE_MUTEX(dytc_mutex);
+> +static bool dytc_mmc_get_available;
 >  
->  	struct ssam_event_notifier notif;
->  };
-> @@ -335,11 +342,7 @@ static ssize_t ssam_base_hub_state_show(struct device *dev, struct device_attrib
->  					char *buf)
+>  static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
 >  {
->  	struct ssam_base_hub *hub = dev_get_drvdata(dev);
-> -	bool connected;
-> -
-> -	mutex_lock(&hub->lock);
-> -	connected = hub->state == SSAM_BASE_HUB_CONNECTED;
-> -	mutex_unlock(&hub->lock);
-> +	bool connected = hub->state == SSAM_BASE_HUB_CONNECTED;
->  
->  	return sysfs_emit(buf, "%d\n", connected);
->  }
-> @@ -356,16 +359,20 @@ static const struct attribute_group ssam_base_hub_group = {
->  	.attrs = ssam_base_hub_attrs,
->  };
->  
-> -static int __ssam_base_hub_update(struct ssam_base_hub *hub, enum ssam_base_hub_state new)
-> +static void ssam_base_hub_update_workfn(struct work_struct *work)
->  {
-> +	struct ssam_base_hub *hub = container_of(work, struct ssam_base_hub, update_work.work);
->  	struct fwnode_handle *node = dev_fwnode(&hub->sdev->dev);
-> +	enum ssam_base_hub_state state;
->  	int status = 0;
->  
-> -	lockdep_assert_held(&hub->lock);
-> +	status = ssam_base_hub_query_state(hub, &state);
-> +	if (status)
-> +		return;
->  
-> -	if (hub->state == new)
-> -		return 0;
-> -	hub->state = new;
-> +	if (hub->state == state)
-> +		return;
-> +	hub->state = state;
->  
->  	if (hub->state == SSAM_BASE_HUB_CONNECTED)
->  		status = ssam_hub_add_devices(&hub->sdev->dev, hub->sdev->ctrl, node);
-> @@ -374,51 +381,28 @@ static int __ssam_base_hub_update(struct ssam_base_hub *hub, enum ssam_base_hub_
->  
->  	if (status)
->  		dev_err(&hub->sdev->dev, "failed to update base-hub devices: %d\n", status);
-> -
-> -	return status;
-> -}
-> -
-> -static int ssam_base_hub_update(struct ssam_base_hub *hub)
-> -{
-> -	enum ssam_base_hub_state state;
-> -	int status;
-> -
-> -	mutex_lock(&hub->lock);
-> -
-> -	status = ssam_base_hub_query_state(hub, &state);
-> -	if (!status)
-> -		status = __ssam_base_hub_update(hub, state);
-> -
-> -	mutex_unlock(&hub->lock);
-> -	return status;
->  }
->  
->  static u32 ssam_base_hub_notif(struct ssam_event_notifier *nf, const struct ssam_event *event)
->  {
-> -	struct ssam_base_hub *hub;
-> -	struct ssam_device *sdev;
-> -	enum ssam_base_hub_state new;
-> -
-> -	hub = container_of(nf, struct ssam_base_hub, notif);
-> -	sdev = hub->sdev;
-> +	struct ssam_base_hub *hub = container_of(nf, struct ssam_base_hub, notif);
-> +	unsigned long delay;
->  
->  	if (event->command_id != SSAM_EVENT_BAS_CID_CONNECTION)
->  		return 0;
->  
->  	if (event->length < 1) {
-> -		dev_err(&sdev->dev, "unexpected payload size: %u\n",
-> -			event->length);
-> +		dev_err(&hub->sdev->dev, "unexpected payload size: %u\n", event->length);
->  		return 0;
+> @@ -10088,6 +10094,7 @@ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *p
+>  		*profile = PLATFORM_PROFILE_LOW_POWER;
+>  		break;
+>  	case DYTC_MODE_BALANCE:
+> +	case DYTC_MODE_MMC_BALANCE:
+>  		*profile =  PLATFORM_PROFILE_BALANCED;
+>  		break;
+>  	case DYTC_MODE_PERFORM:
+> @@ -10165,7 +10172,6 @@ static int dytc_cql_command(int command, int *output)
+>  		if (err)
+>  			return err;
 >  	}
->  
-> -	if (event->data[0])
-> -		new = SSAM_BASE_HUB_CONNECTED;
-> -	else
-> -		new = SSAM_BASE_HUB_DISCONNECTED;
-> +	/*
-> +	 * Delay update when the base is being connected to give devices/EC
-> +	 * some time to set up.
-> +	 */
-> +	delay = event->data[0] ? SSAM_BASE_UPDATE_CONNECT_DELAY : 0;
->  
-> -	mutex_lock(&hub->lock);
-> -	__ssam_base_hub_update(hub, new);
-> -	mutex_unlock(&hub->lock);
-> +	schedule_delayed_work(&hub->update_work, delay);
->  
->  	/*
->  	 * Do not return SSAM_NOTIF_HANDLED: The event should be picked up and
-> @@ -430,7 +414,10 @@ static u32 ssam_base_hub_notif(struct ssam_event_notifier *nf, const struct ssam
->  
->  static int __maybe_unused ssam_base_hub_resume(struct device *dev)
->  {
-> -	return ssam_base_hub_update(dev_get_drvdata(dev));
-> +	struct ssam_base_hub *hub = dev_get_drvdata(dev);
-> +
-> +	schedule_delayed_work(&hub->update_work, 0);
-> +	return 0;
->  }
->  static SIMPLE_DEV_PM_OPS(ssam_base_hub_pm_ops, NULL, ssam_base_hub_resume);
->  
-> @@ -443,8 +430,6 @@ static int ssam_base_hub_probe(struct ssam_device *sdev)
->  	if (!hub)
->  		return -ENOMEM;
->  
-> -	mutex_init(&hub->lock);
 > -
->  	hub->sdev = sdev;
->  	hub->state = SSAM_BASE_HUB_UNINITIALIZED;
->  
-> @@ -456,27 +441,25 @@ static int ssam_base_hub_probe(struct ssam_device *sdev)
->  	hub->notif.event.mask = SSAM_EVENT_MASK_NONE;
->  	hub->notif.event.flags = SSAM_EVENT_SEQUENCED;
->  
-> +	INIT_DELAYED_WORK(&hub->update_work, ssam_base_hub_update_workfn);
-> +
->  	ssam_device_set_drvdata(sdev, hub);
->  
->  	status = ssam_notifier_register(sdev->ctrl, &hub->notif);
->  	if (status)
-> -		goto err_register;
-> -
-> -	status = ssam_base_hub_update(hub);
-> -	if (status)
-> -		goto err_update;
-> +		return status;
->  
->  	status = sysfs_create_group(&sdev->dev.kobj, &ssam_base_hub_group);
->  	if (status)
-> -		goto err_update;
-> +		goto err;
->  
-> +	schedule_delayed_work(&hub->update_work, 0);
->  	return 0;
->  
-> -err_update:
-> +err:
->  	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
-> +	cancel_delayed_work_sync(&hub->update_work);
->  	ssam_hub_remove_devices(&sdev->dev);
-> -err_register:
-> -	mutex_destroy(&hub->lock);
->  	return status;
+>  	return cmd_err;
 >  }
 >  
-> @@ -487,9 +470,8 @@ static void ssam_base_hub_remove(struct ssam_device *sdev)
->  	sysfs_remove_group(&sdev->dev.kobj, &ssam_base_hub_group);
+> @@ -10222,7 +10228,10 @@ static void dytc_profile_refresh(void)
+>  	int perfmode;
 >  
->  	ssam_notifier_unregister(sdev->ctrl, &hub->notif);
-> +	cancel_delayed_work_sync(&hub->update_work);
->  	ssam_hub_remove_devices(&sdev->dev);
-> -
-> -	mutex_destroy(&hub->lock);
->  }
->  
->  static const struct ssam_device_id ssam_base_hub_match[] = {
+>  	mutex_lock(&dytc_mutex);
+> -	err = dytc_cql_command(DYTC_CMD_GET, &output);
+> +	if (dytc_mmc_get_available)
+> +		err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> +	else
+> +		err = dytc_cql_command(DYTC_CMD_GET, &output);
+>  	mutex_unlock(&dytc_mutex);
+>  	if (err)
+>  		return;
+> @@ -10271,6 +10280,16 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
+>  	if (dytc_version >= 5) {
+>  		dbg_printk(TPACPI_DBG_INIT,
+>  				"DYTC version %d: thermal mode available\n", dytc_version);
+> +		/*
+> +		 * Check if MMC_GET functionality available
+> +		 * Version > 6 and return success from MMC_GET command
+> +		 */
+> +		dytc_mmc_get_available = false;
+> +		if (dytc_version >= 6) {
+> +			err = dytc_command(DYTC_CMD_MMC_GET, &output);
+> +			if (!err && ((output & DYTC_ERR_MASK) == DYTC_ERR_SUCCESS))
+> +				dytc_mmc_get_available = true;
+> +		}
+>  		/* Create platform_profile structure and register */
+>  		err = platform_profile_register(&dytc_profile);
+>  		/*
 > 
 
