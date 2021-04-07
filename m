@@ -8,60 +8,61 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C227C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45725C43470
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78AAD61394
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1915D610C7
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353842AbhDGPuK (ORCPT
+        id S1353914AbhDGPv0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 11:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37678 "EHLO
+        Wed, 7 Apr 2021 11:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353975AbhDGPtu (ORCPT
+        with ESMTP id S1353937AbhDGPvL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 11:49:50 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B344C061756;
-        Wed,  7 Apr 2021 08:49:40 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id o20-20020a05600c4fd4b0290114265518afso1441023wmq.4;
-        Wed, 07 Apr 2021 08:49:40 -0700 (PDT)
+        Wed, 7 Apr 2021 11:51:11 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9493C061756;
+        Wed,  7 Apr 2021 08:50:59 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id k128so9285899wmk.4;
+        Wed, 07 Apr 2021 08:50:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OtGi8iltWobRpz30xFsiNPJJuKogqzEN6z4UYJQBbAc=;
-        b=WI/J/iMZQQO51ZTZWAZniyQkKpoIu7fudcqEK0ybIQbt8Dtxo9Rq//NkZZN0Ib3+yR
-         iN5jLBkqg7XtNa1BRMXi8SjyRvv/GjzVY5yy4D8c+xO7ItejABLw3hEHGMeOvrwjFt0n
-         DbIw43u0SQ/D4Csj4dytpchvmOZbASgj3N5nuspr2HojH29Y9iJhUC7ONGnXlv9xakaH
-         eAVvioL1lOcUbB5fbrX+IKnv7ughY/+sKsCdfEQUsLU1oTJWMla0lhWE1/h+XeRRLhYK
-         D3MBvh2hQfBp/+foISZEtmL9kyk7+KEwmzWoDShFDi8F/IqFe0//kgOnEjUDbFLTm3C5
-         mGFg==
+        bh=Uh/87BYi0eaEyCci0l5cohZcATknrUCSdTXAmW5tRTk=;
+        b=BW1Sv/mgEVzCHcRK7FmlugeuxTs9w7UiaOVLKxF/5RImEsJ09fFc78sxgmgX6nlRbm
+         dOR1zmbMnO4ZZZIrAyz8yHWlv531XGLuzFU33z5BspQ9bkbY+qW4xeV9U/ei9lg/V6RY
+         8X3hHgw2iGQd8n+p0evg5PpLEcNNlikdLIABT50X0ZBSD20cI62XSVurBazSM0uAhb1J
+         T0Q0hQtfGKCgPGZE93pqXRcqWbtTQy/7enFRWFYAXAx0kkjha+jbfNX3AAm5OgwvB0fn
+         xGrHCoxcfEFE1rHzLHeSkw3ZvZWqPUThuMRHzKgPhTXH+88ceLxA2MTzWkp6At5G9gSt
+         YGtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OtGi8iltWobRpz30xFsiNPJJuKogqzEN6z4UYJQBbAc=;
-        b=Vl+z1NhcUpM3wHPAmRDYC3tEvCtDwiMwdAxizgNjE0odM01lAh3gf5xK28GKCy/jNL
-         Rtc1yoFg41E/ynEZpju5lYrq1BZ7jKydAGM1K+WK45No0p1+uulFa2pGRZZl/RMrmK0c
-         hsdaZ1qBj7zxnHWU0TkSueNI8nqRNwYmucUNT231+0IQ65sQLihPJhO/JWh46mJgF2hv
-         NwDEsdtYymhxI3cy7hKoKolm9efSLv0EvuNzMZtL9lTttLLj/sQupzqgLOyS/qP4jMv/
-         Yt+i2qykO0ym+TsvUjgl5kCECSIAYlcFHcflEsoWLOoCllvi+YKv96rkoABdfGUNUSZX
-         099A==
-X-Gm-Message-State: AOAM5313QZRD4w3ZE2W6vJdjgcWGoD2ikxeZMHIMMpO+EPmfMXgJEOdq
-        H3ol4RY1gYMw7Csk0XeUSqCiVAMc253xdrvwUn+9/77JHzQ=
-X-Google-Smtp-Source: ABdhPJysDp1zr7PSxUM6TDUtGCff00+3vR2+ew2MYnugHBRTus+ZsVM+QsE78dfDTWZIvaeZCem3Jt3Cl+t/37B7YHg=
-X-Received: by 2002:a1c:f701:: with SMTP id v1mr3757648wmh.69.1617810579052;
- Wed, 07 Apr 2021 08:49:39 -0700 (PDT)
+        bh=Uh/87BYi0eaEyCci0l5cohZcATknrUCSdTXAmW5tRTk=;
+        b=dGhyxRYH8FhyWGuoFWn4i/rKfwbU5o0MWpkEM3DatoBLY6VOnuUO4U+zarFtAMuvys
+         6Wi/wv/14jI8/IdN8GNlv0iZE4lVKcV8TyqboitozggRx62XeWnIF0gZRouiL+eLmYOn
+         G8ORV3jU3DsZy1eRSHzSvprz06r4VWyaILZAsgqCusAdfQ47xDDdILYtAs6mF7ivRYIu
+         Alypq7MUtWYO3M6aQQeEORKJkAO/RDWtjTPuKShWpvLinAS87ywpOT49pPGri12bpmKY
+         IqToq4V1NFntmoE0sxh3PqXjp8GjnUdzOA0Va6nLo/TwMajIwzY6JrPDc5QxFcqw1YEE
+         zFhQ==
+X-Gm-Message-State: AOAM530EAzcMyK+UYAyZ4fKK+x++moHPD8SkXgRsA+AIHw1ZxppUXeJ3
+        4LmCy6XKh+PjW62lwuIbIiflwAyzv4LjPlTJgao=
+X-Google-Smtp-Source: ABdhPJxjEwRjvqH1EtYAuhcElo5SxGRy8NQExskhYp3Es+YNzxfcKDo3GLcLjnNvHWZgcDAEBWIUT8TvruXoBOgzTH8=
+X-Received: by 2002:a7b:c34a:: with SMTP id l10mr3682385wmj.46.1617810658456;
+ Wed, 07 Apr 2021 08:50:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-10-david.e.box@linux.intel.com>
-In-Reply-To: <20210401030558.2301621-10-david.e.box@linux.intel.com>
+References: <20210401030558.2301621-1-david.e.box@linux.intel.com>
+ <20210401030558.2301621-9-david.e.box@linux.intel.com> <CAE2upjT6X1cNvoX8HNFkGHP_aDA1t=JngHFPDUjQ1Y0teuErvQ@mail.gmail.com>
+In-Reply-To: <CAE2upjT6X1cNvoX8HNFkGHP_aDA1t=JngHFPDUjQ1Y0teuErvQ@mail.gmail.com>
 From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Wed, 7 Apr 2021 11:49:13 -0400
-Message-ID: <CAE2upjQFnAkKVWWZmOt4u=rTEb5QjP7j+-ZgfOXkMA663THDDw@mail.gmail.com>
-Subject: Re: [PATCH 9/9] platform/x86: intel_pmc_core: Add support for Alder
- Lake PCH-P
+Date:   Wed, 7 Apr 2021 11:50:32 -0400
+Message-ID: <CAE2upjQjEGtQeXbTvegxtpHDGnCywaTRhNRq0kXKG8Qgcy3Rvw@mail.gmail.com>
+Subject: Re: [PATCH 8/9] platform/x86: intel_pmc_core: Add LTR registers for
+ Tiger Lake
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
         gayatri.kammela@intel.com, platform-driver-x86@vger.kernel.org,
@@ -71,33 +72,71 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Acked-by: Rajenesh Bhardwaj <irenic.rajneesh@gmail.com>
+Please ignore the typo in my previous email and use this tag instead.
 
-On Wed, Mar 31, 2021 at 11:06 PM David E. Box
-<david.e.box@linux.intel.com> wrote:
+Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+
+On Wed, Apr 7, 2021 at 11:48 AM Rajneesh Bhardwaj
+<irenic.rajneesh@gmail.com> wrote:
 >
-> Alder PCH-P is based on Tiger Lake PCH.
+> Acked-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
 >
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel_pmc_core.c | 1 +
->  1 file changed, 1 insertion(+)
+> On Wed, Mar 31, 2021 at 11:06 PM David E. Box
+> <david.e.box@linux.intel.com> wrote:
+> >
+> > From: Gayatri Kammela <gayatri.kammela@intel.com>
+> >
+> > Just like Ice Lake, Tiger Lake uses Cannon Lake's LTR information
+> > and supports a few additional registers. Hence add the LTR registers
+> > specific to Tiger Lake to the cnp_ltr_show_map[].
+> >
+> > Also adjust the number of LTR IPs for Tiger Lake to the correct amount.
+> >
+> > Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > ---
+> >  drivers/platform/x86/intel_pmc_core.c | 2 ++
+> >  drivers/platform/x86/intel_pmc_core.h | 4 +++-
+> >  2 files changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> > index 458c0056e7a1..9168062c927e 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.c
+> > +++ b/drivers/platform/x86/intel_pmc_core.c
+> > @@ -383,6 +383,8 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
+> >          * a list of core SoCs using this.
+> >          */
+> >         {"WIGIG",               ICL_PMC_LTR_WIGIG},
+> > +       {"THC0",                TGL_PMC_LTR_THC0},
+> > +       {"THC1",                TGL_PMC_LTR_THC1},
+> >         /* Below two cannot be used for LTR_IGNORE */
+> >         {"CURRENT_PLATFORM",    CNP_PMC_LTR_CUR_PLT},
+> >         {"AGGREGATED_SYSTEM",   CNP_PMC_LTR_CUR_ASLT},
+> > diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> > index f41f61aa7008..634130b589a2 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.h
+> > +++ b/drivers/platform/x86/intel_pmc_core.h
+> > @@ -192,8 +192,10 @@ enum ppfear_regs {
+> >  #define ETR3_CLEAR_LPM_EVENTS_BIT              28
+> >  #define LPM_STS_LATCH_MODE_BIT                 31
+> >
+> > -#define TGL_NUM_IP_IGN_ALLOWED                 22
+> >  #define TGL_PMC_SLP_S0_RES_COUNTER_STEP                0x7A
+> > +#define TGL_PMC_LTR_THC0                       0x1C04
+> > +#define TGL_PMC_LTR_THC1                       0x1C08
+> > +#define TGL_NUM_IP_IGN_ALLOWED                 23
+> >  #define TGL_PMC_LPM_RES_COUNTER_STEP_X2                61      /* 30.5us * 2 */
+> >
+> >  /*
+> > --
+> > 2.25.1
+> >
 >
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index 9168062c927e..88d582df829f 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1440,6 +1440,7 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
->         X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,        &tgl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,      &icl_reg_map),
->         X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,          &tgl_reg_map),
-> +       X86_MATCH_INTEL_FAM6_MODEL(ALDERLAKE_L,         &tgl_reg_map),
->         {}
->  };
 >
 > --
-> 2.25.1
->
+> Thanks,
+> Rajneesh
+
 
 
 -- 
