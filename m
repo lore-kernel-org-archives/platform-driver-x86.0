@@ -8,59 +8,60 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADBFC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB8C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB1E61262
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051A86113A
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241802AbhDGPZj (ORCPT
+        id S243574AbhDGPjb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 11:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60464 "EHLO
+        Wed, 7 Apr 2021 11:39:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236449AbhDGPZh (ORCPT
+        with ESMTP id S236121AbhDGPja (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 11:25:37 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE02C061756;
-        Wed,  7 Apr 2021 08:25:27 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id x7so18411827wrw.10;
-        Wed, 07 Apr 2021 08:25:26 -0700 (PDT)
+        Wed, 7 Apr 2021 11:39:30 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0744CC061756;
+        Wed,  7 Apr 2021 08:39:21 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id n11-20020a05600c4f8bb029010e5cf86347so2743690wmq.1;
+        Wed, 07 Apr 2021 08:39:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4RgM93a6tYKXcyiTiJHlpahR03/dCqSyHqFDXgF8iIg=;
-        b=BpPdWddIqtH3YR7dC2l/Mnml+6sM09qqJtOmHYUQxoI0ceSzBBNQphooZUR+z+l/ic
-         lQc5lvjFUGAcTokeSqK8TVdXPRKKkxBDDLO9lvfQgfoBv2biQlX3Wt04f5LzRx4biSC3
-         AjMLefqycxunl8RubuaigQoUNVEdzS/e0qKCKcflGGRvqJ/oMTmlUuWMiHgOKDgYp6Ll
-         UW9pTozF0/zcCI0DlMheMoMQWCEXKPutuHowR2CmKVH++Ho59opnp0wNfaUgA+h13Ate
-         qv4nEWYk9isvjMpcMvxrSscXbMQ+3WV480CvT/aoZj3C3ctg68t23EPiZ/lVGk6Zl6Sz
-         J7Rw==
+        bh=3c06dT5yQzLlRXaO8yKXXRgU1FZveuehbKiQHk775qU=;
+        b=WKnDcr9z5gZKsGq3pQGMlnr09CxdBekJ1uK724PsRa+7JzyklEXA24x+7h+Ep+lfD3
+         4EsZI+XG7MLqBJU9Uyw73/jdMI/+gU6hjJc1OOMVveUT3sWt8mEViIwOMjI2cRU2B3mI
+         Fadx2OxwnIpEh266kAkI1Ind5bH0kJgbL9ML07h2Uba4uwI30+1Zxi0GJHgkXBRqzckZ
+         TNu2UKtqCDGCOe0fu2j9oqq27gEVg77KPwWC1NAsUI1K5wR1Qp81TPrkDj+PCPdIdEKK
+         +/3+YMRP/6du7+kyBUvXnRg6fy3Da8QPyjiKUbE+NNpQ9OF3Sc34RVh3PCFv/qUQw00G
+         9ATg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4RgM93a6tYKXcyiTiJHlpahR03/dCqSyHqFDXgF8iIg=;
-        b=f/CUcPuPTT0YhVv6GmSUx/6dI4z+4MwkSqqW1lEjdsF3bcR+RyksBmS/jg/7vCSe+o
-         +7nE1nGZJKMqDicE9lupcDeuXYDvGrUefoY9ZRLoAML2DJImX7nzp/8ks2fde0YCuepK
-         9/8CtZJOq/h31LQhm7SAWnuVVCJHxB9izwg0hAOzwuuHVDB4zosFmUbH/ZwfmSMDe1nl
-         yfVv6dkgindHFvYwLb2m86yQi3u30rYb0RNPcchlB61P/JO4V3YvDZJ+3phfQiuUtARo
-         I7eI6POR1oAFOAGq9WmUBgj2gniizk19PxHXTrYlBYQ0ic2Miv6tfUyTJa/ZzKzOfWN9
-         mLxw==
-X-Gm-Message-State: AOAM531kl/bY+dwtvXkMYfJ1RMuDf1Dvd+T+1Qs1A88iJqWJoYmg3CYz
-        l5Plzr4+ge4E0S4dPfx1rU46BX/odV+Go57oGB74b6SRmij24w==
-X-Google-Smtp-Source: ABdhPJyDSqp4M7F3fXHz45Erxa0xz+GlX3qsktsxqwjBCfnt8xzvrITiJHRAtclcYXGXlH3HKD3rkhiVMHoN4vcxrMU=
-X-Received: by 2002:adf:e4c9:: with SMTP id v9mr5133291wrm.342.1617809125761;
- Wed, 07 Apr 2021 08:25:25 -0700 (PDT)
+        bh=3c06dT5yQzLlRXaO8yKXXRgU1FZveuehbKiQHk775qU=;
+        b=WxiB+5QaZkPJ6aOf1vh13Y2cLm2UN2JtLoFDvVXgDDbdca8tyJUTpieql9kMq8weYv
+         xD/OetU6wKaCAhq3LM1yw/OCCNG14h4f5nAE/BlzDsBOGPuSPRp6loW9Pzwh5zB7Ah7N
+         tMJxioIWCbCumbfJp96NsCkjcESKA5oQsyRzWiaFqmv/7ZtoRSBI1jRCp4G3srT7e8NQ
+         zNCJlVRPO3MuqcMjf7X6bK9NZCi7X320SfZ0+bhGGXIElIE64yts3W2cewdTAc3pkx0J
+         Z0SRYITvLOYAs2og5e19CWFyZyQuMe9sxpmzNfNe4Frj40+lB99WswUGF30ab0bavVjk
+         ptmA==
+X-Gm-Message-State: AOAM532kqTZR3lAaKYkuMWPx2EtIfi4o3za8PW63l6adPAPU1/VhNZC9
+        bn88pCJBH4JnVo9LRlbXTUWTlLK4KkSblggFZ3k=
+X-Google-Smtp-Source: ABdhPJwKTup1qPARxJlRmSFbnSUiZp2q7PYUQlRHptnIWfHDIHzbtnxf/puwhOrhIT055IwbM14bkNgWNF5C5A5zNU8=
+X-Received: by 2002:a1c:f701:: with SMTP id v1mr3715170wmh.69.1617809959664;
+ Wed, 07 Apr 2021 08:39:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-5-david.e.box@linux.intel.com>
-In-Reply-To: <20210401030558.2301621-5-david.e.box@linux.intel.com>
+References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-6-david.e.box@linux.intel.com>
+In-Reply-To: <20210401030558.2301621-6-david.e.box@linux.intel.com>
 From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Wed, 7 Apr 2021 11:24:59 -0400
-Message-ID: <CAE2upjRO1Uy4m9Y9qVnSmGg12d_ZjcGg=bzShg_6Knugi9Aj7Q@mail.gmail.com>
-Subject: Re: [PATCH 4/9] platform/x86: intel_pmc_core: Show LPM residency in microseconds
+Date:   Wed, 7 Apr 2021 11:38:53 -0400
+Message-ID: <CAE2upjQ596=iBff4s0nMkSD8jUyPpqC3bTRvVhysftJnHaOYbA@mail.gmail.com>
+Subject: Re: [PATCH 5/9] platform/x86: intel_pmc_core: Get LPM requirements
+ for Tiger Lake
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
         gayatri.kammela@intel.com, platform-driver-x86@vger.kernel.org,
@@ -70,90 +71,134 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-
 On Wed, Mar 31, 2021 at 11:06 PM David E. Box
 <david.e.box@linux.intel.com> wrote:
 >
 > From: Gayatri Kammela <gayatri.kammela@intel.com>
 >
-> Modify the low power mode (LPM or sub-state) residency counters to display
-> in microseconds just like the slp_s0_residency counter. The granularity of
-> the counter is approximately 30.5us per tick. Double this value then divide
-> by two to maintain accuracy.
+> Platforms that support low power modes (LPM) such as Tiger Lake maintain
+> requirements for each sub-state that a readable in the PMC. However, unlike
+> LPM status registers, requirement registers are not memory mapped but are
+> available from an ACPI _DSM. Collect the requirements for Tiger Lake using
+> the _DSM method and store in a buffer.
 >
 > Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> Co-developed-by: David E. Box <david.e.box@linux.intel.com>
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_pmc_core.c | 14 ++++++++++++--
->  drivers/platform/x86/intel_pmc_core.h |  3 +++
->  2 files changed, 15 insertions(+), 2 deletions(-)
+>  drivers/platform/x86/intel_pmc_core.c | 49 +++++++++++++++++++++++++++
+>  drivers/platform/x86/intel_pmc_core.h |  2 ++
+>  2 files changed, 51 insertions(+)
 >
 > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index ce300c2942d0..ba0db301f07b 100644
+> index ba0db301f07b..0ec26a4c715e 100644
 > --- a/drivers/platform/x86/intel_pmc_core.c
 > +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -578,6 +578,7 @@ static const struct pmc_reg_map tgl_reg_map = {
->         .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
->         .ltr_ignore_max = TGL_NUM_IP_IGN_ALLOWED,
->         .lpm_num_maps = TGL_LPM_NUM_MAPS,
-> +       .lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
->         .lpm_en_offset = TGL_LPM_EN_OFFSET,
->         .lpm_priority_offset = TGL_LPM_PRI_OFFSET,
->         .lpm_residency_offset = TGL_LPM_RESIDENCY_OFFSET,
-> @@ -1026,17 +1027,26 @@ static int pmc_core_ltr_show(struct seq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_ltr);
+> @@ -23,7 +23,9 @@
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/uuid.h>
 >
-> +static inline u64 adjust_lpm_residency(struct pmc_dev *pmcdev, u32 offset,
-> +                                      const int lpm_adj_x2)
-> +{
-> +       u64 lpm_res = pmc_core_reg_read(pmcdev, offset);
+> +#include <acpi/acpi_bus.h>
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/intel-family.h>
+>  #include <asm/msr.h>
+> @@ -31,6 +33,9 @@
+>
+>  #include "intel_pmc_core.h"
+>
+> +#define ACPI_S0IX_DSM_UUID             "57a6512e-3979-4e9d-9708-ff13b2508972"
+> +#define ACPI_GET_LOW_MODE_REGISTERS    1
 > +
-> +       return GET_X2_COUNTER((u64)lpm_adj_x2 * lpm_res);
+>  /* PKGC MSRs are common across Intel Core SoCs */
+>  static const struct pmc_bit_map msr_map[] = {
+>         {"Package C2",                  MSR_PKG_C2_RESIDENCY},
+> @@ -587,6 +592,46 @@ static const struct pmc_reg_map tgl_reg_map = {
+>         .lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
+>  };
+>
+> +static void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
+> +{
+> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+> +       const int num_maps = pmcdev->map->lpm_num_maps;
+> +       size_t lpm_size = LPM_MAX_NUM_MODES * num_maps * 4;
+> +       union acpi_object *out_obj;
+> +       struct acpi_device *adev;
+> +       guid_t s0ix_dsm_guid;
+> +       u32 *lpm_req_regs;
+> +
+> +       adev = ACPI_COMPANION(&pdev->dev);
+> +       if (!adev)
+> +               return;
+> +
+> +       lpm_req_regs = devm_kzalloc(&pdev->dev, lpm_size * sizeof(u32),
+> +                                    GFP_KERNEL);
+> +       if (!lpm_req_regs)
+> +               return;
+> +
+> +       guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
+> +
+> +       out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
+> +                                   ACPI_GET_LOW_MODE_REGISTERS, NULL);
+> +       if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
+> +               u32 *addr = (u32 *)out_obj->buffer.pointer;
+> +               int size = out_obj->buffer.length;
+> +
+> +               if (size != lpm_size)
+> +                       return;
+> +
+> +               memcpy_fromio(lpm_req_regs, addr, lpm_size);
+
+this is not __iomem* so why are you using this? Simple memcpy should work here.
+
+> +       } else
+> +               acpi_handle_debug(adev->handle,
+> +                                 "_DSM function 0 evaluation failed\n");
+> +
+> +       ACPI_FREE(out_obj);
+> +
+> +       pmcdev->lpm_req_regs = lpm_req_regs;
 > +}
 > +
->  static int pmc_core_substate_res_show(struct seq_file *s, void *unused)
+>  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
 >  {
->         struct pmc_dev *pmcdev = s->private;
-> +       const int lpm_adj_x2 = pmcdev->map->lpm_res_counter_step_x2;
->         u32 offset = pmcdev->map->lpm_residency_offset;
->         int i, mode;
+>         return readl(pmcdev->regbase + reg_offset);
+> @@ -1312,10 +1357,14 @@ static int pmc_core_probe(struct platform_device *pdev)
+>                 return -ENOMEM;
 >
->         seq_printf(s, "%-10s %-15s\n", "Substate", "Residency");
+>         mutex_init(&pmcdev->lock);
+> +
+>         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+>         pmc_core_get_low_power_modes(pmcdev);
+>         pmc_core_do_dmi_quirks(pmcdev);
 >
->         pmc_for_each_mode(i, mode, pmcdev) {
-> -               seq_printf(s, "%-10s %-15u\n", pmc_lpm_modes[mode],
-> -                          pmc_core_reg_read(pmcdev, offset + (4 * mode)));
-> +               seq_printf(s, "%-10s %-15llu\n", pmc_lpm_modes[mode],
-> +                          adjust_lpm_residency(pmcdev, offset + (4 * mode), lpm_adj_x2));
->         }
->
->         return 0;
+> +       if (pmcdev->map == &tgl_reg_map)
+> +               pmc_core_get_tgl_lpm_reqs(pdev);
+> +
+>         /*
+>          * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
+>          * a cable is attached. Tell the PMC to ignore it.
 > diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index 5a4e3a49f5b1..3800c1ba6fb7 100644
+> index 3800c1ba6fb7..81d797feed33 100644
 > --- a/drivers/platform/x86/intel_pmc_core.h
 > +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -188,9 +188,11 @@ enum ppfear_regs {
->  #define ICL_PMC_SLP_S0_RES_COUNTER_STEP                0x64
+> @@ -288,6 +288,7 @@ struct pmc_reg_map {
+>   * @s0ix_counter:      S0ix residency (step adjusted)
+>   * @num_modes:         Count of enabled modes
+>   * @lpm_en_modes:      Array of enabled modes from lowest to highest priority
+> + * @lpm_req_regs:      List of substate requirements
+>   *
+>   * pmc_dev contains info about power management controller device.
+>   */
+> @@ -304,6 +305,7 @@ struct pmc_dev {
+>         u64 s0ix_counter;
+>         int num_modes;
+>         int lpm_en_modes[LPM_MAX_NUM_MODES];
+> +       u32 *lpm_req_regs;
+>  };
 >
->  #define LPM_MAX_NUM_MODES                      8
-> +#define GET_X2_COUNTER(v)                      ((v) >> 1)
->
->  #define TGL_NUM_IP_IGN_ALLOWED                 22
->  #define TGL_PMC_SLP_S0_RES_COUNTER_STEP                0x7A
-> +#define TGL_PMC_LPM_RES_COUNTER_STEP_X2                61      /* 30.5us * 2 */
->
->  /*
->   * Tigerlake Power Management Controller register offsets
-> @@ -263,6 +265,7 @@ struct pmc_reg_map {
->         const u32 pm_vric1_offset;
->         /* Low Power Mode registers */
->         const int lpm_num_maps;
-> +       const int lpm_res_counter_step_x2;
->         const u32 lpm_en_offset;
->         const u32 lpm_priority_offset;
->         const u32 lpm_residency_offset;
+>  #define pmc_for_each_mode(i, mode, pmcdev)             \
 > --
 > 2.25.1
 >
