@@ -2,146 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F68C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 10:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB4C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 10:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BC46139C
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 10:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A607161242
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 10:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244420AbhDGKdz (ORCPT
+        id S1347045AbhDGKgc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 06:33:55 -0400
-Received: from mail1.protonmail.ch ([185.70.40.18]:53948 "EHLO
-        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235624AbhDGKdy (ORCPT
+        Wed, 7 Apr 2021 06:36:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346649AbhDGKga (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 06:33:54 -0400
-Date:   Wed, 07 Apr 2021 10:33:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1617791623;
-        bh=W2i4t3c5hO2+yxa8Vd/UPUq8nc+zc1aqqf2qHjv7WCE=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=dziWVecpviWfJwvs15nOi0DU6wd9qIannU4yyhFR8viG1QWHVl6Z7jbfJI8m/WOHN
-         fnhfc08Zv8Xrv4HZFob0NnCyzXYlEU+VrRABKBkWCzgL5UmDnDmn/FXkKgJGuO1x+h
-         H31Dmoce84WD0c244+BgdmNLm/SZoTxiiQ87Uhdw=
-To:     Hans de Goede <hdegoede@redhat.com>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        "jwrdegoede@fedoraproject.org" <jwrdegoede@fedoraproject.org>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>,
-        "linrunner@gmx.net" <linrunner@gmx.net>
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
-Message-ID: <3anWBvkrPqTNQyfx2ZwDaLZKXtw5PMwTTdcgGNt0FaACUSsrkb5PaoqVKxLpxXU-4NcVZ9AqDQLs2VMOmvS-KfxHRmOSQiZlMjyvH282mdQ=@protonmail.com>
-In-Reply-To: <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
-References: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com> <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 7 Apr 2021 06:36:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2E8B46139C
+        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Apr 2021 10:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1617791778;
+        bh=hdE04yoTWyEyf9s5S6kQB+wRqWkjDhJshX8+hkx2EZg=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=G6naNRunYi6ip7QVRRPXMn2Qx5h6GhaYxjfO/ND5uSp0WjzUOY/mQG75pupERBkde
+         Hlu6+SC/sWvLLawvMgqZsgMkuWR0LQOkBIsXHoP80swzW461G8djdz6dn6jlMPqX/E
+         x3BKKjzm1ekKpiGf5sD95yQbgTtEJ6+eiI0mr3moAI2v9x67owW6J8IAYvPKkNeQ/X
+         SveBSBKK+raREot/qVim7oCOrSd45QUecLYaD6g2p7BrimYQEgOweLEete1zox2pid
+         3rkygOeY6eWJ+vGZaZE6uSgp7Z8tU8HgYK/sImVmQQ7E5ilHHC0qC5r4Q9uOL0bL3M
+         AGhH+FgtO1OEg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 210457] Fan sporadically maxed on wake-up due to unavailable
+ sensor temperature
+Date:   Wed, 07 Apr 2021 10:36:17 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-210457-215701-9YvtoIKKyG@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-210457-215701@https.bugzilla.kernel.org/>
+References: <bug-210457-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
+https://bugzilla.kernel.org/show_bug.cgi?id=3D210457
 
+Hans de Goede (jwrdegoede@fedoraproject.org) changed:
 
-2021. =C3=A1prilis 7., szerda 12:24 keltez=C3=A9ssel, Hans de Goede =C3=
-=ADrta:
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |jwrdegoede@fedoraproject.or
+                   |                            |g
 
-> Hi Nicola,
->
-> Thank you for your patch series.
->
-> I'm not sure what to do with these. I have a couple of concerns here:
->
-> 1. These features are useful, but not super useful and as such I wonder
-> how often they are used and this how well tested the firmware is wrt thes=
-e.
-> I have added Mark and Nitin from Lenovo to the Cc. Mark, Nitin, can you
-> comment on if it is ok from a firmware pov to try and use the following
-> battery related ACPI methods on all thinkpads? :
->
-> #define GET_DISCHARGE=09"BDSG"
-> #define SET_DISCHARGE=09"BDSS"
-> #define GET_INHIBIT=09"PSSG"
-> #define SET_INHIBIT=09"BICS"
->
->
-> 2. If we add support for this to the kernel we should probably
-> first agree on standardized power-supply class property names for
-> these, rather then coming up with our own names. ATM we register
-> 2 names for the charge start threshold, the one which the thinkpad_acpi
-> code invented and the standardized name which was later added.
->
-> I've added Sebastian, the power-supply class / driver maintainer to
-> the Cc. for this. Sebastian Nicolo wants to add support for 2 new
-> features as power-supply properties:
->
-> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
-> ...
-> +Battery forced discharging
-> +--------------------------
-> +
-> +sysfs attribute:
-> +/sys/class/power_supply/BATx/force_discharge
-> +
-> +Setting this attribute to 1 forces the battery to discharge while AC is =
-attached.
-> +Setting it to 0 terminates forced discharging.
-> +
-> +Battery charge inhibiting
-> +--------------------------
-> +
-> +sysfs attribute:
-> +/sys/class/power_supply/BATx/inhibit_discharge
-> +
-> +Setting this attribute to 1 stops charging of the battery as a manual ov=
-erride
-> +over the threshold attributes. Setting it to 0 terminates the override.
->
+--- Comment #9 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to cfr from comment #8)
+> On my machine, the issue seems to have been caused by a firmware bug, whi=
+ch
+> only manifested in symptoms with the kernel update. That is, the firmware
+> was the same for 3+ years with no issue, the new kernel triggered the bug,
+> but a firmware update seems to have resolved it.
 
-"inhibit_**discharge**"
-"stops **charging** of the battery"
+Thank you.
 
-I'm wondering if it should be "inhibit_charge" or something like that?
+Can the other reporters of this bug please also see if the latest BIOS reso=
+lves
+this? ThinkPad BIOS updates are available on lvfs, so they can be done under
+Linux through fwupdmgr.
 
+--=20
+You may reply to this email to add a comment.
 
-> Sebastian, I believe that this should be changes to instead be documented
-> in: Documentation/ABI/testing/sysfs-class-power
-> and besides the rename I was wondering if you have any remarks on the pro=
-posed
-> API before Nicolo sends out a v2 ?
->
-> Regards,
->
-> Hans
->
->
-> On 3/17/21 3:01 PM, Nicolo' Piazzalunga wrote:
-> > Lenovo ThinkPad systems have a feature that lets you
-> > force the battery to discharge when AC is attached.
-> >
-> > This patch implements that feature and exposes it via the generic
-> > ACPI battery driver in the generic location:
-> >
-> > /sys/class/power_supply/BATx/force_discharge
-> >
-> > Signed-off-by: Ognjen Galic <smclt30p@gmail.com>
-> > Signed-off-by: Thomas Koch <linrunner@gmx.net>
-> > Signed-off-by: Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>
-> [...]
-
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+You are receiving this mail because:
+You are watching the assignee of the bug.=
