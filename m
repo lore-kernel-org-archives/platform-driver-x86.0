@@ -2,124 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B80C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 08:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD21EC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 08:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2B461177
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 08:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71883613CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 08:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233827AbhDGIjn (ORCPT
+        id S1349717AbhDGIyz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 04:39:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55186 "EHLO
+        Wed, 7 Apr 2021 04:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbhDGIjm (ORCPT
+        with ESMTP id S1349708AbhDGIyp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 04:39:42 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCEAC06174A
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Apr 2021 01:39:31 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id p22so784514wmc.3
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 01:39:31 -0700 (PDT)
+        Wed, 7 Apr 2021 04:54:45 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2E1C0613DA;
+        Wed,  7 Apr 2021 01:54:08 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id h20so8993845plr.4;
+        Wed, 07 Apr 2021 01:54:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hUQmUAZk2wCebXvuQSV5Wkz+ixKs6PIME7Dx3dRdP20=;
-        b=cijLSs1vxRXjCFzqNFDw9Js0Afm9Fn7y05fVW2VcD3F/E/vCNj5QOiqqL51CTX2ueE
-         H8Be0KUUP5xTIayV3snk6kLdDXTxiXZ8MmOlN1JtCh2BZ/0mydzee2FryeLqhAjqx/bP
-         j6hRI4X8jgqHnM2NwT4dpouQTa0fYOTHcgGa7cKOFxxlohKB6Fx09TYmkUYCrhwez1vZ
-         fIDOzELvxt59xLNCX+8Q5e7A7icsn0+kIKiExkU784mQUumPu8f/AcGttyhjl4TISYtj
-         sfNosLNeLD+RBspGmrDZMb03ZjhG9nibxTnYPqaCgrkBQM4XD1L7JEGsIUyr7MAfrFZS
-         2XGQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vFuhnvS9PpwlrcTjjiFkrfy0PJPiELTxAIn4Extsom4=;
+        b=dGKUVNcNMjCz+YOznFlGYz9lFtEhWUgJDvgtDmm0q7UEuYfgaVwMCdL2BKcZHMgdGq
+         2H4zjKd1JwumH8yLpXTouLl8JcQHC7b8LeBnIojY1WkMxUU3bKLnsl90OH2G77QUHuCl
+         SpTtjhTruKdkpXm1T2XTea9YwJhTcA9g0RgmjKRIGErcyIrz10J/vNBJYPdR3lWeDJXD
+         XUV6/GfN0QtobY+bCzfV9usCAV65AztP4vnpRHTEY7lrp0dnQRnc6mljJTl/96fJP+xT
+         q3pEyB88+pHQD+aRAtS8+0eWlRlGiJ9hWDB75pze3mfHPr1VWVn+4Z6pTEs7esNFolgO
+         3qTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hUQmUAZk2wCebXvuQSV5Wkz+ixKs6PIME7Dx3dRdP20=;
-        b=i0Q9J5IxdrvUSH+rD6Vyd6z8ZiZD1K79svy7x2TGI/pGp5gALY3gQ2ytOgfUs/jezf
-         +cGtoYJkJIyo8z0v6IJVMoZWCkJXiZWe1ca96V//SdsoELsBa6B1Y3FpYujXSWdn1sXp
-         8EhKdXOix2lRN+ZkQNKFETDmGA0rRikFPPhtMDzetH5xhZE4S97os/N2dGkG6qoFjbI9
-         fb9zo9XwHJXUPNLJAt691g5y36gxCBIWDAar3jOGH2X/ZzTMfSnuAbWddpftihpa859y
-         X03rleXleycgA23iSUOoA9Ic5d+fl4VVoxhQPDMb4mr8S7NscT8GBSxRyUxROtGmMOgS
-         ai5w==
-X-Gm-Message-State: AOAM531veCRkncLo2+c/+vTGmS8wuW5zVdheqUQtk0vKKWo3xvAeT3ug
-        rC2/AjB2ssdw78MU+tvSOmTnGWYEhnY=
-X-Google-Smtp-Source: ABdhPJyqHbbO4UNp69LjqVCXgn76PH6mtiRUY6tCqAwEzSpP0XO08Ta+zRS4spdFqfKQek7D0BAGQA==
-X-Received: by 2002:a05:600c:3325:: with SMTP id q37mr2081629wmp.45.1617784770157;
-        Wed, 07 Apr 2021 01:39:30 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5a581.dip0.t-ipconnect.de. [217.229.165.129])
-        by smtp.gmail.com with ESMTPSA id h8sm37693938wrt.94.2021.04.07.01.39.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Apr 2021 01:39:29 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: aggregator: move to use request_irq by
- IRQF_NO_AUTOEN flag
-To:     Tian Tao <tiantao6@hisilicon.com>, hdegoede@redhat.com,
-        mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org
-References: <1617778852-26492-1-git-send-email-tiantao6@hisilicon.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <8734116a-2da6-60fe-e8bf-e273a27205ac@gmail.com>
-Date:   Wed, 7 Apr 2021 10:39:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vFuhnvS9PpwlrcTjjiFkrfy0PJPiELTxAIn4Extsom4=;
+        b=g4IM5XHIcLxQx3hnECqVMadM5Fb09zBJNi5HSxuc1CD5Nga6uzclSufbanTQHwp8pu
+         esWk1OhN038iTJwBavfUEfSbsBUV34oNG8pgxCAz2q4Ws96FcbkYjHVG+EwWLqc7PAkw
+         ArppLP+qKRSFDTzPouu6iWFfq5revvjiU3mCWwlscDNIq4EKUSZFkVp/tblVIChNqBo2
+         240N11TuRYb+VqHGrdC0QGaxmVL3frUfhprG7JMyve9esCSV1scA60evvG6Lx/JJh+UT
+         4yAe3GbF75h3ufAfSyr+WoC/pljSAnOJ/r53Vhg2IFYJAX1GEM+K5YuA75eqaXPMQDXm
+         RwbA==
+X-Gm-Message-State: AOAM533BIiohn47yztcxWwqVONiLtSHheIgJO2xF0Cxrra8eRRX6b7/b
+        CAm/YR8XeDB4HE7hjKPLc/KAqITCWXEhXxB788A=
+X-Google-Smtp-Source: ABdhPJwE7ooYDZZVMupsvAqrTL+RvJkEstIbOd4aHNX4CtOLVq027XiD1o7TwCYrvsYP0A1pu0WFlq6GktkauAq0Rs4=
+X-Received: by 2002:a17:90a:5407:: with SMTP id z7mr2339028pjh.228.1617785647811;
+ Wed, 07 Apr 2021 01:54:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1617778852-26492-1-git-send-email-tiantao6@hisilicon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210329174928.18816-1-henning.schild@siemens.com>
+ <20210329174928.18816-4-henning.schild@siemens.com> <ffdfe9a9-ab17-18af-300e-062b79d132f3@metux.net>
+ <20210406165247.78791bf7@md1za8fc.ad001.siemens.net>
+In-Reply-To: <20210406165247.78791bf7@md1za8fc.ad001.siemens.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 7 Apr 2021 11:53:51 +0300
+Message-ID: <CAHp75VcOw0WD8s9ZP=-N5Gesmfx0UEkV5s7SSwDwCzYDYoVuPg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] watchdog: simatic-ipc-wdt: add new driver for
+ Siemens Industrial PCs
+To:     Henning Schild <henning.schild@siemens.com>
+Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/7/21 9:00 AM, Tian Tao wrote:
-> disable_irq() after request_irq() still has a time gap in which
-> interrupts can come. request_irq() with IRQF_NO_AUTOEN flag will
-> disable IRQ auto-enable because of requesting.
-> 
-> this patch is made base on "add IRQF_NO_AUTOEN for request_irq" which
-> is being merged: https://lore.kernel.org/patchwork/patch/1388765/
-> 
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+On Tue, Apr 6, 2021 at 5:56 PM Henning Schild
+<henning.schild@siemens.com> wrote:
+>
+> Am Thu, 1 Apr 2021 18:15:41 +0200
+> schrieb "Enrico Weigelt, metux IT consult" <lkml@metux.net>:
+>
+> > On 29.03.21 19:49, Henning Schild wrote:
+> >
+> > Hi,
+> >
+> > > This driver adds initial support for several devices from Siemens.
+> > > It is based on a platform driver introduced in an earlier commit.
+> >
+> > Where does the wdt actually come from ?
+> >
+> > Is it in the SoC ? (which SoC exactly). SoC-builtin wdt is a pretty
+> > usual case.
+> >
+> > Or some external chip ?
+>
+> I guess external chip, but again we are talking about multiple
+> machines. And the manuals i read so far do not go into that sort of
+> detail. In fact on some of the machines you will have two watchdogs,
+> one from the SoC and that "special" one.
+> That has several reasons, probably not too important here. The HW guys
+> are adding another wd not just for fun, and it would be nice to have a
+> driver.
+>
+> > The code smells a bit like two entirely different wdt's that just have
+> > some similarities. If that's the case, I'd rather split it into two
+> > separate drivers and let the parent driver (board file) instantiate
+> > the correct one.
+>
+> Yes, it is two. Just like for the LEDs. One version PIO-based another
+> version gpio/p2sb/mmio based.
 
-Looks good to me.
+I tend to agree with Enrico that this should be two separate drivers.
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+> In fact the latter should very likely be based on that gpio pinctl,
+> whether it really needs to be a separate driver will have to be seen.
+> There are probably pros and cons for both options.
 
-Thanks,
-Max
 
-> ---
->   drivers/platform/surface/aggregator/controller.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-> index aa6f37b..00e3828 100644
-> --- a/drivers/platform/surface/aggregator/controller.c
-> +++ b/drivers/platform/surface/aggregator/controller.c
-> @@ -2483,7 +2483,8 @@ int ssam_irq_setup(struct ssam_controller *ctrl)
->   	 * interrupt, and let the SAM resume callback during the controller
->   	 * resume process clear it.
->   	 */
-> -	const int irqf = IRQF_SHARED | IRQF_ONESHOT | IRQF_TRIGGER_RISING;
-> +	const int irqf = IRQF_SHARED | IRQF_ONESHOT |
-> +			 IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
->   
->   	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
->   	if (IS_ERR(gpiod))
-> @@ -2501,7 +2502,6 @@ int ssam_irq_setup(struct ssam_controller *ctrl)
->   		return status;
->   
->   	ctrl->irq.num = irq;
-> -	disable_irq(ctrl->irq.num);
->   	return 0;
->   }
->   
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
