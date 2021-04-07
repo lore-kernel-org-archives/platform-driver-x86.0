@@ -2,196 +2,452 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7788C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62EAC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 17:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A2A611CC
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 16:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902EA61242
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 17:18:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344822AbhDGQb6 (ORCPT
+        id S1354705AbhDGRSR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 12:31:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41996 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232103AbhDGQb6 (ORCPT
+        Wed, 7 Apr 2021 13:18:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:29039 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1347857AbhDGRSP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 12:31:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617813108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5mVVl+fL6TScHUbVo11wdSW6OBMF7FzXxPqhYZhkxe4=;
-        b=We/JkIf0I/Jq/iVc65nSv7HLEJHjWt89WjQxipMJnxJdwX6ZiwiD+Bwnkz6jV01BG9vk7m
-        h5PdF+j9jcLLaLnMBE20EjJdzmoW+Bge+rzX7d0ukFNic7wEqJkzynRjwlSTaWpQaGUzeE
-        oITEHUVLh+wm7y6YaAU4PmOcujt1QxA=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-563-gxxQ1bEGPUqeD1RcU0g-SA-1; Wed, 07 Apr 2021 12:31:46 -0400
-X-MC-Unique: gxxQ1bEGPUqeD1RcU0g-SA-1
-Received: by mail-ej1-f71.google.com with SMTP id n21so3573720ejl.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 07 Apr 2021 09:31:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5mVVl+fL6TScHUbVo11wdSW6OBMF7FzXxPqhYZhkxe4=;
-        b=Nxa5MdlQp/hUE0dQGsnvPQ4fwix+36Acifujt5N+sre9HABT7s4W805o1hh7Kfmv/S
-         rljttyfd0SspFPtgUKm4nV3rUIaboEnI/kWD2CGgWZyZmxX6leXkLEaUwfgWH9fG3BID
-         YM/89Zz0v89ZnjtZ+XTDeZXv5PqERfJs6CNcmVuDkaj+kIbFtxzm2J1/aZuxhpPN812T
-         eVuNbIJigy7Dnz+12b0MQUC3tHS1kyTOk/SZ0LfzKD0ku1O/g2gBS26EV23xXVQ+LLEk
-         1Y4CmbAgPS6O7Dr8FdUHCgInkuSDU6g/Z1M0SVlQrebNyjzo0Px/iF8yCr0y1FSJU69k
-         Iw/g==
-X-Gm-Message-State: AOAM531WMKPvQo1RQR0tK5ZShvzNx3shYIylAQ4g4uh6Orc1S2zaAP6K
-        whXx0WeYsh53cVLOd/NFmzVNghfISkHB6tC0s6v2+AGaFM2NhImNQZ6njWpiWZb5lx0N4+sKOy6
-        JL4XhQFNchWw2VYYn3NdjVtUWq3N52Up850WFKPBj7vWs++KihHQGyIS4amRCHbqQyTPK0AMl+7
-        0yviI9ecGFew==
-X-Received: by 2002:aa7:d997:: with SMTP id u23mr5489980eds.285.1617813105002;
-        Wed, 07 Apr 2021 09:31:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxaujWOFOweRs/1w9FSs24psRNAmQ/B9jBPrIm+5oPL0ZGs6t2vFLKr72I5NWulpuzJ81Xv9A==
-X-Received: by 2002:aa7:d997:: with SMTP id u23mr5489949eds.285.1617813104790;
-        Wed, 07 Apr 2021 09:31:44 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id t7sm1179007edq.42.2021.04.07.09.31.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Apr 2021 09:31:44 -0700 (PDT)
-Subject: Re: [PATCH v2] Add support for DYTC MMC_GET BIOS API.
-To:     Mark Pearson <markpearson@lenovo.com>
-Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
-References: <markpearson@lenovo.com>
- <20210406233203.232860-1-markpearson@lenovo.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cc6e93ad-e064-ba03-0c40-d9a95c5cb496@redhat.com>
-Date:   Wed, 7 Apr 2021 18:31:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Wed, 7 Apr 2021 13:18:15 -0400
+IronPort-SDR: VzaitwGbcoPcvoUc7H8y5blzETdggmtZbn3FXsmQUzax2ryflKS4jOsW/Kv0ycgxvd9O14mPgY
+ sDek2jtUmQ9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9947"; a="191197547"
+X-IronPort-AV: E=Sophos;i="5.82,203,1613462400"; 
+   d="scan'208";a="191197547"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2021 10:17:49 -0700
+IronPort-SDR: l6ELU6T9o4MFsBBCnqszJNUza3IOL+BpnmuWxrQWIoQuXkN3YyVXk1MKdnpp9gkcs6+g2dvzy/
+ VijVBr3OwX7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,203,1613462400"; 
+   d="scan'208";a="381400610"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 07 Apr 2021 10:17:48 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.27])
+        by linux.intel.com (Postfix) with ESMTP id DAA635805A1;
+        Wed,  7 Apr 2021 10:17:48 -0700 (PDT)
+Message-ID: <fb7e62506bdf19a94ba4f837c5189db676a632c6.camel@linux.intel.com>
+Subject: Re: [PATCH v4] platform/x86: intel_pmc_core: export platform
+ global_reset via sysfs.
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed, 07 Apr 2021 10:17:48 -0700
+In-Reply-To: <641444475c66483086b6e2d58f4b859b@intel.com>
+References: <20210402152113.1191796-1-tomas.winkler@intel.com>
+         <d5021cc2-46c7-7c78-73b1-af50524e1db2@redhat.com>
+         <3387dd6987634bffb7a5082d70bdecfc@intel.com>
+         <69b15385-8df2-b825-1977-a03abca70327@redhat.com>
+         <641444475c66483086b6e2d58f4b859b@intel.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
-In-Reply-To: <20210406233203.232860-1-markpearson@lenovo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 4/7/21 1:32 AM, Mark Pearson wrote:
-> The BIOS team have added a new API that allows us to retrieve the
-> current performance profile without having to disable/enable CQL
-> mode. Adding the changes to use this API.
+On Wed, 2021-04-07 at 09:31 +0000, Winkler, Tomas wrote:
 > 
-> Tested on P15 and X1C8
 > 
-> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-> ---
-> Changes in v2:
->  - remove unwanted debug code
+> > Hi,
+> > 
+> > On 4/7/21 8:51 AM, Winkler, Tomas wrote:
+> > > > > 
+> > > > > During PCH (platform/board) manufacturing process a global
+> > > > > reset has
+> > > > > to be induced in order for configuration changes take the
+> > > > > effect
+> > > > > upon following platform reset.
+> > > > > This setting was commonly done by accessing PMC registers via
+> > > > > /dev/mem but due to security concern /dev/mem access is much
+> > > > > restricted, hence the reason for exposing this setting via
+> > > > > dedicated sysfs
+> > interface.
+> > > > > To prevent post manufacturing abuse the register is protected
+> > > > > by
+> > > > > hardware locking.
+> > > > 
+> > > > The purpose of this reset functionality is not entirely clear
+> > > > to me.
+> > > > 
+> > > > Is this only used during production of a board? Or is this also
+> > > > something which a user/reseller may use as part of a factory-
+> > > > reset
+> > procedure?
+> > > 
+> > > Board production and refurbishing of the board. I can try to
+> > > rephrase but I
+> > thought all the info is in the commit message.
+> > > As a runtime feature a user can check that her/his platform is
+> > > correctly
+> > sealed.
+> > 
+> > Manufacturing is clear, refurbishing is very much not clear, do you
+> > mean
+> > actually desoldering the chip and replacing it with a new one ?
+> > 
+> > > > If this is only used once during production, then I'm not sure
+> > > > if
+> > > > introducing a sysfs file for this is desirable.
+> > > 
+> > > What do you suggest, than?  I'm just guessing is where are you
+> > > heading
+> > > so the answer is that the manufacturing is often already run on
+> > > the
+> > production OS installation,  w/o going into details swapping or
+> > reconfiguring
+> > the OS is not always an option.
+> > > The manufacturer is also a user of ours.
+> > 
+> > Ok, so lets compromise here, please make use of the visibility
+> > sysfs attribute
+> > callback, which returns a umask and make the file read-only at the
+> > umask
+> > level if it has been sealed, to make it clear to users that they
+> > cannot write to
+> > it, the -EACCES error means 'Permission denied' so if the user is
+> > already root
+> > they are going to get mightily confused if ls -l shows the file is
+> > writable.
+> Okay, it seems a better solution if the file is the global reset,  
+> but maybe this path should not be taken if we rename it to 
+> extended_test_mode_register3, than it's better to get EACCESS on a
+> specific bit.
+> > 
+> > Also on set you are checking that the written value is bit 20, and
+> > on show you
+> > are showing the contents of the "Extended Test Mode Register 3" in
+> > hex, or
+> > at least those bits you are willing to show.
 > 
->  drivers/platform/x86/thinkpad_acpi.c | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
+> The intention was to left the user space behave same as with direct
+> register access (/dev/mem)
 > 
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 0d9e2ddbf..07de21941 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10050,6 +10050,7 @@ static struct ibm_struct proxsensor_driver_data = {
->   */
->  
->  #define DYTC_CMD_SET          1 /* To enable/disable IC function mode */
-> +#define DYTC_CMD_MMC_GET      8 /* To get current MMC function and mode */
->  #define DYTC_CMD_RESET    0x1ff /* To reset back to default */
->  
->  #define DYTC_GET_FUNCTION_BIT 8  /* Bits  8-11 - function setting */
-> @@ -10066,6 +10067,10 @@ static struct ibm_struct proxsensor_driver_data = {
->  #define DYTC_MODE_PERFORM     2  /* High power mode aka performance */
->  #define DYTC_MODE_LOWPOWER    3  /* Low power mode */
->  #define DYTC_MODE_BALANCE   0xF  /* Default mode aka balanced */
-> +#define DYTC_MODE_MMC_BALANCE 0  /* Default mode from MMC_GET, aka balanced */
-> +
-> +#define DYTC_ERR_MASK       0xF  /* Bits 0-3 in cmd result are the error result */
-> +#define DYTC_ERR_SUCCESS      1  /* CMD completed successful */
->  
->  #define DYTC_SET_COMMAND(function, mode, on) \
->  	(DYTC_CMD_SET | (function) << DYTC_SET_FUNCTION_BIT | \
-> @@ -10080,6 +10085,7 @@ static bool dytc_profile_available;
->  static enum platform_profile_option dytc_current_profile;
->  static atomic_t dytc_ignore_event = ATOMIC_INIT(0);
->  static DEFINE_MUTEX(dytc_mutex);
-> +static bool dytc_mmc_get_available;
->  
->  static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *profile)
->  {
-> @@ -10088,6 +10094,7 @@ static int convert_dytc_to_profile(int dytcmode, enum platform_profile_option *p
->  		*profile = PLATFORM_PROFILE_LOW_POWER;
->  		break;
->  	case DYTC_MODE_BALANCE:
-> +	case DYTC_MODE_MMC_BALANCE:
->  		*profile =  PLATFORM_PROFILE_BALANCED;
->  		break;
->  	case DYTC_MODE_PERFORM:
-> @@ -10165,7 +10172,6 @@ static int dytc_cql_command(int command, int *output)
->  		if (err)
->  			return err;
->  	}
-> -
->  	return cmd_err;
->  }
->  
-> @@ -10222,7 +10228,10 @@ static void dytc_profile_refresh(void)
->  	int perfmode;
->  
->  	mutex_lock(&dytc_mutex);
-> -	err = dytc_cql_command(DYTC_CMD_GET, &output);
-> +	if (dytc_mmc_get_available)
-> +		err = dytc_command(DYTC_CMD_MMC_GET, &output);
-> +	else
-> +		err = dytc_cql_command(DYTC_CMD_GET, &output);
->  	mutex_unlock(&dytc_mutex);
->  	if (err)
->  		return;
-> @@ -10271,6 +10280,16 @@ static int tpacpi_dytc_profile_init(struct ibm_init_struct *iibm)
->  	if (dytc_version >= 5) {
->  		dbg_printk(TPACPI_DBG_INIT,
->  				"DYTC version %d: thermal mode available\n", dytc_version);
-> +		/*
-> +		 * Check if MMC_GET functionality available
-> +		 * Version > 6 and return success from MMC_GET command
-> +		 */
-> +		dytc_mmc_get_available = false;
-> +		if (dytc_version >= 6) {
-> +			err = dytc_command(DYTC_CMD_MMC_GET, &output);
-> +			if (!err && ((output & DYTC_ERR_MASK) == DYTC_ERR_SUCCESS))
-> +				dytc_mmc_get_available = true;
-> +		}
->  		/* Create platform_profile structure and register */
->  		err = platform_profile_register(&dytc_profile);
->  		/*
+> > So in essence what you are doing here is giving userspace (some)
+> > access to
+> > the "Extended Test Mode Register 3", I would prefer to spell that
+> > out
+> > explicitly. The global_reset sysfs file name to me too much hints
+> > at something
+> > which the user can trigger / use while it is not intended for user
+> > usage.
 > 
+> Yeah, Global reset is maybe too ambiguous name in a general context,
+> this is not the standard platform reset. 
+> 
+> I've left it in register form in order to keep the user space as it
+> has access to the register (/dev/mem)
+> > 
+> > Also the Documentation/ABI/testing/sysfs-platform-intel-pm file
+> > pretty much
+> > describes this as direct register access rather then as some reset
+> > mechanism.
+> > 
+> > So I think it would be better to call the new file
+> > extended_test_mode_register3, this will also be useful if we need
+> > to provide
+> > access to other bits in the same register later; and this will be a
+> > good
+> > template to follow if we need to provide some access to other
+> > registers later
+> > too.
+> 
+> Need to sync with David on that he pointed just ow, that he plans to
+> expose some more bits. 
+
+I just need the offset to read the register. The bits I'm working with
+will not be exposed directly. I'm okay with the name change as long as
+usage remains restricted to the CF9 bits in this patch.
+
+David
+
+> 
+> > Regards,
+> > 
+> > Hans
+> > 
+> > 
+> > 
+> > > 
+> > > > 
+> > > > Can you please provide a new version where the purpsoe of the
+> > > > newly
+> > > > introduced sysfs file is made more clear, both in the commit-
+> > > > msg as
+> > > > well as in
+> > > > the:
+> > > Okay I can do that.
+> > > > 
+> > > > Documentation/ABI/testing/sysfs-platform-intel-pmc
+> > > > 
+> > > > File ?
+> > > > 
+> > > > Regards,
+> > > > 
+> > > > Hans
+> > > > 
+> > > > 
+> > > > 
+> > > > > 
+> > > > > The register in MMIO space is defined for Cannon Lake and
+> > > > > newer PCHs.
+> > > > > 
+> > > > > Cc: David E Box <david.e.box@intel.com>
+> > > > > Reviewed-by: Andy Shevchenko <
+> > > > > andriy.shevchenko@linux.intel.com>
+> > > > > Signed-off-by: Tamar Mashiah <tamar.mashiah@intel.com>
+> > > > > Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+> > > > > ---
+> > > > > 2:
+> > > > > 1. Add locking for reading the ET3 register  (Andy) 2. Fix
+> > > > > few style
+> > > > > issues (Andy)
+> > > > > V3:
+> > > > > 1. Resend
+> > > > > v4:
+> > > > > 1. Fix return statement (Andy)
+> > > > > 2. Specify manufacturing process (Enrico)
+> > > > > 
+> > > > >  .../ABI/testing/sysfs-platform-intel-pmc      | 11 +++
+> > > > >  MAINTAINERS                                   |  1 +
+> > > > >  drivers/platform/x86/intel_pmc_core.c         | 97
+> > > > > +++++++++++++++++++
+> > > > >  drivers/platform/x86/intel_pmc_core.h         |  6 ++
+> > > > >  4 files changed, 115 insertions(+)
+> > > > >  create mode 100644
+> > > > > Documentation/ABI/testing/sysfs-platform-intel-pmc
+> > > > > 
+> > > > > diff --git a/Documentation/ABI/testing/sysfs-platform-intel-
+> > > > > pmc
+> > > > > b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> > > > > new file mode 100644
+> > > > > index 000000000000..7ce00e77fbcd
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> > > > > @@ -0,0 +1,11 @@
+> > > > > +What:          /sys/devices/platform/<platform>/global_reset
+> > > > > +Date:          Apr 2021
+> > > > > +KernelVersion: 5.13
+> > > > > +Contact:       "Tomas Winkler" <tomas.winkler@intel.com>
+> > > > > +Description:
+> > > > > +               Display global reset setting bits for PMC.
+> > > > > +                       * bit 31 - global reset is locked
+> > > > > +                       * bit 20 - global reset is set
+> > > > > +               Writing bit 20 value to the global_reset will
+> > > > > induce
+> > > > > +               a platform global reset upon consequent
+> > > > > platform reset.
+> > > > > +               in case the register is not locked.
+> > > > > diff --git a/MAINTAINERS b/MAINTAINERS index
+> > > > > 04f68e0cda64..618676eba8c8 100644
+> > > > > --- a/MAINTAINERS
+> > > > > +++ b/MAINTAINERS
+> > > > > @@ -9166,6 +9166,7 @@ M:        Rajneesh Bhardwaj
+> > > > <irenic.rajneesh@gmail.com>
+> > > > >  M:     David E Box <david.e.box@intel.com>
+> > > > >  L:     platform-driver-x86@vger.kernel.org
+> > > > >  S:     Maintained
+> > > > > +F:     Documentation/ABI/testing/sysfs-platform-intel-pmc
+> > > > >  F:     drivers/platform/x86/intel_pmc_core*
+> > > > > 
+> > > > >  INTEL PMIC GPIO DRIVERS
+> > > > > diff --git a/drivers/platform/x86/intel_pmc_core.c
+> > > > > b/drivers/platform/x86/intel_pmc_core.c
+> > > > > index ee2f757515b0..8afc198550a4 100644
+> > > > > --- a/drivers/platform/x86/intel_pmc_core.c
+> > > > > +++ b/drivers/platform/x86/intel_pmc_core.c
+> > > > > @@ -401,6 +401,7 @@ static const struct pmc_reg_map
+> > > > > cnp_reg_map =
+> > {
+> > > > >         .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+> > > > >         .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+> > > > >         .ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+> > > > > +       .etr3_offset = ETR3_OFFSET,
+> > > > >  };
+> > > > > 
+> > > > >  static const struct pmc_reg_map icl_reg_map = { @@ -418,6
+> > > > > +419,7 @@
+> > > > > static const struct pmc_reg_map icl_reg_map = {
+> > > > >         .pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+> > > > >         .pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+> > > > >         .ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+> > > > > +       .etr3_offset = ETR3_OFFSET,
+> > > > >  };
+> > > > > 
+> > > > >  static const struct pmc_bit_map tgl_clocksource_status_map[]
+> > > > > = { @@
+> > > > > -585,6 +587,7 @@ static const struct pmc_reg_map tgl_reg_map
+> > > > > = {
+> > > > >         .lpm_sts = tgl_lpm_maps,
+> > > > >         .lpm_status_offset = TGL_LPM_STATUS_OFFSET,
+> > > > >         .lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
+> > > > > +       .etr3_offset = ETR3_OFFSET,
+> > > > >  };
+> > > > > 
+> > > > >  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev,
+> > > > > int
+> > > > > reg_offset) @@ -603,6 +606,99 @@ static inline u64
+> > > > pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u32 value)
+> > > > >         return (u64)value * pmcdev->map-
+> > > > > >slp_s0_res_counter_step;
+> > > > >  }
+> > > > > 
+> > > > > +static int set_global_reset(struct pmc_dev *pmcdev) {
+> > > > > +       const struct pmc_reg_map *map = pmcdev->map;
+> > > > > +       u32 reg;
+> > > > > +       int err;
+> > > > > +
+> > > > > +       if (!map->etr3_offset)
+> > > > > +               return -EOPNOTSUPP;
+> > > > > +
+> > > > > +       mutex_lock(&pmcdev->lock);
+> > > > > +
+> > > > > +       /* check if CF9 is locked */
+> > > > > +       reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> > > > > +       if (reg & ETR3_CF9LOCK) {
+> > > > > +               err = -EACCES;
+> > > > > +               goto out_unlock;
+> > > > > +       }
+> > > > > +
+> > > > > +       /* write CF9 global reset bit */
+> > > > > +       reg |= ETR3_CF9GR;
+> > > > > +       pmc_core_reg_write(pmcdev, map->etr3_offset, reg);
+> > > > > +
+> > > > > +       reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> > > > > +       if (!(reg & ETR3_CF9GR)) {
+> > > > > +               err = -EIO;
+> > > > > +               goto out_unlock;
+> > > > > +       }
+> > > > > +
+> > > > > +       err = 0;
+> > > > > +
+> > > > > +out_unlock:
+> > > > > +       mutex_unlock(&pmcdev->lock);
+> > > > > +       return err;
+> > > > > +}
+> > > > > +
+> > > > > +static ssize_t global_reset_show(struct device *dev,
+> > > > > +                                struct device_attribute
+> > > > > *attr, char *buf) {
+> > > > > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> > > > > +       const struct pmc_reg_map *map = pmcdev->map;
+> > > > > +       u32 reg;
+> > > > > +
+> > > > > +       if (!map->etr3_offset)
+> > > > > +               return -EOPNOTSUPP;
+> > > > > +
+> > > > > +       mutex_lock(&pmcdev->lock);
+> > > > > +
+> > > > > +       reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> > > > > +       reg &= ETR3_CF9GR | ETR3_CF9LOCK;
+> > > > > +
+> > > > > +       mutex_unlock(&pmcdev->lock);
+> > > > > +
+> > > > > +       return sysfs_emit(buf, "0x%08x", reg); }
+> > > > > +
+> > > > > +static ssize_t global_reset_store(struct device *dev,
+> > > > > +                                 struct device_attribute
+> > > > > *attr,
+> > > > > +                                 const char *buf, size_t
+> > > > > len)
+> > > > > +{
+> > > > > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> > > > > +       int err;
+> > > > > +       u32 reg;
+> > > > > +
+> > > > > +       err = kstrtouint(buf, 16, &reg);
+> > > > > +       if (err)
+> > > > > +               return err;
+> > > > > +
+> > > > > +       /* allow only CF9 writes */
+> > > > > +       if (reg != ETR3_CF9GR)
+> > > > > +               return -EINVAL;
+> > > > > +
+> > > > > +       err = set_global_reset(pmcdev);
+> > > > > +       if (err)
+> > > > > +               return err;
+> > > > > +
+> > > > > +       return len;
+> > > > > +}
+> > > > > +static DEVICE_ATTR_RW(global_reset);
+> > > > > +
+> > > > > +static struct attribute *pmc_attrs[] = {
+> > > > > +       &dev_attr_global_reset.attr,
+> > > > > +       NULL
+> > > > > +};
+> > > > > +
+> > > > > +static const struct attribute_group pmc_attr_group = {
+> > > > > +       .attrs = pmc_attrs,
+> > > > > +};
+> > > > > +
+> > > > > +static const struct attribute_group *pmc_dev_groups[] = {
+> > > > > +       &pmc_attr_group,
+> > > > > +       NULL
+> > > > > +};
+> > > > > +
+> > > > >  static int pmc_core_dev_state_get(void *data, u64 *val)  {
+> > > > >         struct pmc_dev *pmcdev = data;
+> > > > > @@ -1364,6 +1460,7 @@ static struct platform_driver
+> > > > > pmc_core_driver
+> > = {
+> > > > >                 .name = "intel_pmc_core",
+> > > > >                 .acpi_match_table =
+> > > > > ACPI_PTR(pmc_core_acpi_ids),
+> > > > >                 .pm = &pmc_core_pm_ops,
+> > > > > +               .dev_groups = pmc_dev_groups,
+> > > > >         },
+> > > > >         .probe = pmc_core_probe,
+> > > > >         .remove = pmc_core_remove,
+> > > > > diff --git a/drivers/platform/x86/intel_pmc_core.h
+> > > > > b/drivers/platform/x86/intel_pmc_core.h
+> > > > > index f33cd2c34835..98ebdfe57138 100644
+> > > > > --- a/drivers/platform/x86/intel_pmc_core.h
+> > > > > +++ b/drivers/platform/x86/intel_pmc_core.h
+> > > > > @@ -200,6 +200,11 @@ enum ppfear_regs {
+> > > > >  #define TGL_LPM_STATUS_OFFSET                  0x1C3C
+> > > > >  #define TGL_LPM_LIVE_STATUS_OFFSET             0x1C5C
+> > > > > 
+> > > > > +/* Extended Test Mode Register 3 (CNL and later) */
+> > > > > +#define ETR3_OFFSET                            0x1048
+> > > > > +#define ETR3_CF9GR                             BIT(20)
+> > > > > +#define ETR3_CF9LOCK                           BIT(31)
+> > > > > +
+> > > > >  const char *tgl_lpm_modes[] = {
+> > > > >         "S0i2.0",
+> > > > >         "S0i2.1",
+> > > > > @@ -263,6 +268,7 @@ struct pmc_reg_map {
+> > > > >         const u32 lpm_residency_offset;
+> > > > >         const u32 lpm_status_offset;
+> > > > >         const u32 lpm_live_status_offset;
+> > > > > +       const u32 etr3_offset;
+> > > > >  };
+> > > > > 
+> > > > >  /**
+> > > > > 
+> > > 
+> 
+
 
