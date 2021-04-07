@@ -8,60 +8,59 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CE8C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 14:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DADC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE84E6136A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 14:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224F960BD3
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345433AbhDGO7e (ORCPT
+        id S1345043AbhDGPDN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 10:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
+        Wed, 7 Apr 2021 11:03:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353277AbhDGO7Q (ORCPT
+        with ESMTP id S239509AbhDGPDL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 10:59:16 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90005C061756;
-        Wed,  7 Apr 2021 07:59:04 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id f12so12339933wro.0;
-        Wed, 07 Apr 2021 07:59:04 -0700 (PDT)
+        Wed, 7 Apr 2021 11:03:11 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9900C061756;
+        Wed,  7 Apr 2021 08:03:00 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id e12so5279980wro.11;
+        Wed, 07 Apr 2021 08:03:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HcxVXaj0ur+VUEHgjw1TAUWAFw7hXltz+jRWOfq7Tpo=;
-        b=Tr85yM87/ql0J6nVxDNoDxEuyJlgM7SnEVJq3hbBYsHvKkT2okKJNrGSrWKyxc4sKd
-         vzksMPmFw122mXSEuLbrrauUsqkTy2Amsk+I9GAekRj4AAiehrh2Ru288OAqDSpd7DZI
-         LGTA3oXNuWHsPaqwcThQB5lwKmYYTCwrkYNH/1jjVZkmxNGLNEiDd8ORbKx3Ee2wGb86
-         OAV7jPK7k+AULOUC0VnBdmVMWATYCUAD4NW3+XUiDHP9pnXokK1lGijFIPR/GucfwR/P
-         kWML6sfAsPpL57pnJpk+QDAlUqnUEWobI1eqgmjazAEZC916HeNcD6tfCjkDkt+5dtiE
-         6gOA==
+        bh=+Dd4tF0J8mnaZXxIAb/IBoNUv1r5Y5oY1KaV/UKGqtY=;
+        b=mirFRIfb3SJEORaFHiWSXKgsNHpDD9oFsoY10TI10lxygv42yqmK3+vmYVytla2Ma7
+         Ijq816Nv/ESBaDwVmneP9snkINgeVRotROtFUPqzt4hrHYgzCIIf2G/FZwYszecwy7RH
+         sbuLFmf2NlUl8DoxGkFNqSMmj4cIaHVNYJEd96MHaq5/+CO6dMWJqCX8WiKpbvc1mxvS
+         2s9aDQzBdKVcWjbvdwPspb2QEjnIQcqpLThyWR5dK/etOYM5uiDXQxbA3fUz3LZMzLED
+         D1G4XFmG3hwue4e7syxKbnDAl4ZHnyui01YnSzk66vlt18D9SlHEP6fGmkTw2xwqu8ik
+         B7Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HcxVXaj0ur+VUEHgjw1TAUWAFw7hXltz+jRWOfq7Tpo=;
-        b=Ympd33Z4ffNmspAD1IHZeoomeCKBpd2nIUcEXJPEI8XOdVGenRobvqpLKcsQjpIhhR
-         HPOZEKmrf9HcXAqRgu9drf6ofhscUHR4BWpeMhk3Gz8En2DNE5KNm/Z25W0Y46JEC9fy
-         uVf89xhD76tCS6VXQ5fxHaXt6KbMFTiZnQBTPxyMDzmqe3cC3tkOUmr9AAatJRBuqs/i
-         v50ozD1kMREarTu10qPbFG2YnUWz5yfZIuWIpise8w6dfcbCM0wrRoAUKDhdfeoZ/4EV
-         w3HWW2XZ24XGm52Q6oGaafupcp4wC55SWU+z9FSwTUKCkoL0nX+98HObKd4PLR2RiQta
-         oXjw==
-X-Gm-Message-State: AOAM530JSeYoJOeB4+NNo+ojuAnFnJkpVEJzUcTCjij2qn+I/ArD7wPI
-        cEcNrDKIHEYvnYVdNUhRChS6VMT4GuC7gnCe7/ilwy6Mt3s=
-X-Google-Smtp-Source: ABdhPJyy6fsMNznMhrbfQxXHOPOa4XWU+Z+EZhl7G5i0EiP5Oaz3RZrDs4MQioO4RNIsGkGfzmS8di4zz2CXA9ZJ9U0=
-X-Received: by 2002:a5d:6a0b:: with SMTP id m11mr5010464wru.108.1617807543162;
- Wed, 07 Apr 2021 07:59:03 -0700 (PDT)
+        bh=+Dd4tF0J8mnaZXxIAb/IBoNUv1r5Y5oY1KaV/UKGqtY=;
+        b=XPPnuhqycNyJ0DCUplUYwOXqMKvwPGTia1pul1Aba/jk2tOz/see4YdNvNlrszcyX5
+         Kcikkeq3m1xFf7fzocZCavjxk+Cyp3mf+twFZzikrDvvomfxmpTtxAr/AeTyXPYTKYFN
+         jde+hVFEdQ0B3qGqx6OSSn1Y6cBPswGdKi1hRSviRFRf2acX1wDi1CjWR37yf2Z2jSVJ
+         bPbwd1r4dXXPXljfxk5WJWKxAUvmxX5DpZk0YAdIAqY9r09XLkDiDEzC0/xqC5eeCQ6o
+         jZ+G3eqOj1ttaEtae8MmVZkLW9HoGANmGgpLGiAAUjpoAs/0ZO7MorZ1+n4dWRhaMPJy
+         iPtw==
+X-Gm-Message-State: AOAM533NkULhVT0mirnoPQiRtkI52yAxEXwjiTnLUI0/BcdWzS4GB9dG
+        jykDQXgk7X82jJqjYfCIbhivKp10dzlxAyHSux94f0hORxq1FQ==
+X-Google-Smtp-Source: ABdhPJw4nJTK1uBiwYk5+aBQXt2TXJJ4y6DuzL5fJ5WfO5zPd1QKM7NjiDgJyv+Mtcl3aOsMnMg4RxOGJKjcJUn2iuo=
+X-Received: by 2002:adf:a3d4:: with SMTP id m20mr3684046wrb.326.1617807779324;
+ Wed, 07 Apr 2021 08:02:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-2-david.e.box@linux.intel.com>
-In-Reply-To: <20210401030558.2301621-2-david.e.box@linux.intel.com>
+References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-3-david.e.box@linux.intel.com>
+In-Reply-To: <20210401030558.2301621-3-david.e.box@linux.intel.com>
 From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Wed, 7 Apr 2021 10:58:37 -0400
-Message-ID: <CAE2upjT143Co-e6G6Hjxr4VcnmFXbHm=nz7fF3Yg54ZK1Xx-oQ@mail.gmail.com>
-Subject: Re: [PATCH 1/9] platform/x86: intel_pmc_core: Don't use global pmcdev
- in quirks
+Date:   Wed, 7 Apr 2021 11:02:33 -0400
+Message-ID: <CAE2upjQ9FZk0quVxm2_4r3AY7GPSgroX=ErSixz3y_JqkWXgcg@mail.gmail.com>
+Subject: Re: [PATCH 2/9] platform/x86: intel_pmc_core: Remove global struct pmc_dev
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
         gayatri.kammela@intel.com, platform-driver-x86@vger.kernel.org,
@@ -76,70 +75,171 @@ Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 On Wed, Mar 31, 2021 at 11:06 PM David E. Box
 <david.e.box@linux.intel.com> wrote:
 >
-> The DMI callbacks, used for quirks, currently access the PMC by getting
-> the address a global pmc_dev struct. Instead, have the callbacks set a
-> global quirk specific variable. In probe, after calling dmi_check_system(),
-> pass pmc_dev to a function that will handle each quirk if its variable
-> condition is met. This allows removing the global pmc_dev later.
+> The intel_pmc_core driver did not always bind to a device which meant it
+> lacked a struct device that could be used to maintain driver data. So a
+> global instance of struct pmc_dev was used for this purpose and functions
+> accessed this directly. Since the driver now binds to an ACPI device,
+> remove the global pmc_dev in favor of one that is allocated during probe.
+> Modify users of the global to obtain the object by argument instead.
 >
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_pmc_core.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+>  drivers/platform/x86/intel_pmc_core.c | 41 ++++++++++++++-------------
+>  1 file changed, 21 insertions(+), 20 deletions(-)
 >
 > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index b5888aeb4bcf..260d49dca1ad 100644
+> index 260d49dca1ad..5ca40fe3da59 100644
 > --- a/drivers/platform/x86/intel_pmc_core.c
 > +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1186,9 +1186,15 @@ static const struct pci_device_id pmc_pci_ids[] = {
->   * the platform BIOS enforces 24Mhz crystal to shutdown
->   * before PMC can assert SLP_S0#.
->   */
-> +static bool xtal_ignore;
->  static int quirk_xtal_ignore(const struct dmi_system_id *id)
+> @@ -31,8 +31,6 @@
+>
+>  #include "intel_pmc_core.h"
+>
+> -static struct pmc_dev pmc;
+> -
+>  /* PKGC MSRs are common across Intel Core SoCs */
+>  static const struct pmc_bit_map msr_map[] = {
+>         {"Package C2",                  MSR_PKG_C2_RESIDENCY},
+> @@ -617,9 +615,8 @@ static int pmc_core_dev_state_get(void *data, u64 *val)
+>
+>  DEFINE_DEBUGFS_ATTRIBUTE(pmc_core_dev_state, pmc_core_dev_state_get, NULL, "%llu\n");
+>
+> -static int pmc_core_check_read_lock_bit(void)
+> +static int pmc_core_check_read_lock_bit(struct pmc_dev *pmcdev)
 >  {
 > -       struct pmc_dev *pmcdev = &pmc;
-> +       xtal_ignore = true;
-> +       return 0;
-> +}
-> +
-> +static void pmc_core_xtal_ignore(struct pmc_dev *pmcdev)
-> +{
 >         u32 value;
 >
->         value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_vric1_offset);
-> @@ -1197,7 +1203,6 @@ static int quirk_xtal_ignore(const struct dmi_system_id *id)
->         /* Low Voltage Mode Enable */
->         value &= ~SPT_PMC_VRIC1_SLPS0LVEN;
->         pmc_core_reg_write(pmcdev, pmcdev->map->pm_vric1_offset, value);
-> -       return 0;
+>         value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_cfg_offset);
+> @@ -744,28 +741,26 @@ static int pmc_core_ppfear_show(struct seq_file *s, void *unused)
+>  DEFINE_SHOW_ATTRIBUTE(pmc_core_ppfear);
+>
+>  /* This function should return link status, 0 means ready */
+> -static int pmc_core_mtpmc_link_status(void)
+> +static int pmc_core_mtpmc_link_status(struct pmc_dev *pmcdev)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+>         u32 value;
+>
+>         value = pmc_core_reg_read(pmcdev, SPT_PMC_PM_STS_OFFSET);
+>         return value & BIT(SPT_PMC_MSG_FULL_STS_BIT);
 >  }
 >
->  static const struct dmi_system_id pmc_core_dmi_table[]  = {
-> @@ -1212,6 +1217,14 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
->         {}
->  };
+> -static int pmc_core_send_msg(u32 *addr_xram)
+> +static int pmc_core_send_msg(struct pmc_dev *pmcdev, u32 *addr_xram)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+>         u32 dest;
+>         int timeout;
 >
-> +static void pmc_core_do_dmi_quirks(struct pmc_dev *pmcdev)
-> +{
-> +       dmi_check_system(pmc_core_dmi_table);
-> +
-> +       if (xtal_ignore)
-> +               pmc_core_xtal_ignore(pmcdev);
-> +}
-> +
+>         for (timeout = NUM_RETRIES; timeout > 0; timeout--) {
+> -               if (pmc_core_mtpmc_link_status() == 0)
+> +               if (pmc_core_mtpmc_link_status(pmcdev) == 0)
+>                         break;
+>                 msleep(5);
+>         }
+>
+> -       if (timeout <= 0 && pmc_core_mtpmc_link_status())
+> +       if (timeout <= 0 && pmc_core_mtpmc_link_status(pmcdev))
+>                 return -EBUSY;
+>
+>         dest = (*addr_xram & MTPMC_MASK) | (1U << 1);
+> @@ -791,7 +786,7 @@ static int pmc_core_mphy_pg_show(struct seq_file *s, void *unused)
+>
+>         mutex_lock(&pmcdev->lock);
+>
+> -       if (pmc_core_send_msg(&mphy_core_reg_low) != 0) {
+> +       if (pmc_core_send_msg(pmcdev, &mphy_core_reg_low) != 0) {
+>                 err = -EBUSY;
+>                 goto out_unlock;
+>         }
+> @@ -799,7 +794,7 @@ static int pmc_core_mphy_pg_show(struct seq_file *s, void *unused)
+>         msleep(10);
+>         val_low = pmc_core_reg_read(pmcdev, SPT_PMC_MFPMC_OFFSET);
+>
+> -       if (pmc_core_send_msg(&mphy_core_reg_high) != 0) {
+> +       if (pmc_core_send_msg(pmcdev, &mphy_core_reg_high) != 0) {
+>                 err = -EBUSY;
+>                 goto out_unlock;
+>         }
+> @@ -842,7 +837,7 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+>         mphy_common_reg  = (SPT_PMC_MPHY_COM_STS_0 << 16);
+>         mutex_lock(&pmcdev->lock);
+>
+> -       if (pmc_core_send_msg(&mphy_common_reg) != 0) {
+> +       if (pmc_core_send_msg(pmcdev, &mphy_common_reg) != 0) {
+>                 err = -EBUSY;
+>                 goto out_unlock;
+>         }
+> @@ -863,9 +858,8 @@ static int pmc_core_pll_show(struct seq_file *s, void *unused)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(pmc_core_pll);
+>
+> -static int pmc_core_send_ltr_ignore(u32 value)
+> +static int pmc_core_send_ltr_ignore(struct pmc_dev *pmcdev, u32 value)
+>  {
+> -       struct pmc_dev *pmcdev = &pmc;
+>         const struct pmc_reg_map *map = pmcdev->map;
+>         u32 reg;
+>         int err = 0;
+> @@ -891,6 +885,8 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+>                                          const char __user *userbuf,
+>                                          size_t count, loff_t *ppos)
+>  {
+> +       struct seq_file *s = file->private_data;
+> +       struct pmc_dev *pmcdev = s->private;
+>         u32 buf_size, value;
+>         int err;
+>
+> @@ -900,7 +896,7 @@ static ssize_t pmc_core_ltr_ignore_write(struct file *file,
+>         if (err)
+>                 return err;
+>
+> -       err = pmc_core_send_ltr_ignore(value);
+> +       err = pmc_core_send_ltr_ignore(pmcdev, value);
+>
+>         return err == 0 ? count : err;
+>  }
+> @@ -1228,13 +1224,19 @@ static void pmc_core_do_dmi_quirks(struct pmc_dev *pmcdev)
 >  static int pmc_core_probe(struct platform_device *pdev)
 >  {
 >         static bool device_initialized;
-> @@ -1253,7 +1266,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+> -       struct pmc_dev *pmcdev = &pmc;
+> +       struct pmc_dev *pmcdev;
+>         const struct x86_cpu_id *cpu_id;
+>         u64 slp_s0_addr;
+>
+>         if (device_initialized)
+>                 return -ENODEV;
+>
+> +       pmcdev = devm_kzalloc(&pdev->dev, sizeof(*pmcdev), GFP_KERNEL);
+> +       if (!pmcdev)
+> +               return -ENOMEM;
+> +
+> +       platform_set_drvdata(pdev, pmcdev);
+> +
+>         cpu_id = x86_match_cpu(intel_pmc_core_ids);
+>         if (!cpu_id)
+>                 return -ENODEV;
+> @@ -1264,8 +1266,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>                 return -ENOMEM;
+>
 >         mutex_init(&pmcdev->lock);
->         platform_set_drvdata(pdev, pmcdev);
->         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
-> -       dmi_check_system(pmc_core_dmi_table);
-> +       pmc_core_do_dmi_quirks(pmcdev);
+> -       platform_set_drvdata(pdev, pmcdev);
+> -       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+> +       pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+>         pmc_core_do_dmi_quirks(pmcdev);
 >
 >         /*
->          * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
+> @@ -1274,7 +1275,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+>          */
+>         if (pmcdev->map == &tgl_reg_map) {
+>                 dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
+> -               pmc_core_send_ltr_ignore(3);
+> +               pmc_core_send_ltr_ignore(pmcdev, 3);
+>         }
+>
+>         pmc_core_dbgfs_register(pmcdev);
 > --
 > 2.25.1
 >
