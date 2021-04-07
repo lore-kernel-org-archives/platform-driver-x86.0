@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EB8C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B0BC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051A86113A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1024E6113E
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Apr 2021 15:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243574AbhDGPjb (ORCPT
+        id S1353731AbhDGPqH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Apr 2021 11:39:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
+        Wed, 7 Apr 2021 11:46:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236121AbhDGPja (ORCPT
+        with ESMTP id S1353705AbhDGPqH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Apr 2021 11:39:30 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0744CC061756;
-        Wed,  7 Apr 2021 08:39:21 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id n11-20020a05600c4f8bb029010e5cf86347so2743690wmq.1;
-        Wed, 07 Apr 2021 08:39:20 -0700 (PDT)
+        Wed, 7 Apr 2021 11:46:07 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2489C061756;
+        Wed,  7 Apr 2021 08:45:57 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id u11so6056694wrp.4;
+        Wed, 07 Apr 2021 08:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3c06dT5yQzLlRXaO8yKXXRgU1FZveuehbKiQHk775qU=;
-        b=WKnDcr9z5gZKsGq3pQGMlnr09CxdBekJ1uK724PsRa+7JzyklEXA24x+7h+Ep+lfD3
-         4EsZI+XG7MLqBJU9Uyw73/jdMI/+gU6hjJc1OOMVveUT3sWt8mEViIwOMjI2cRU2B3mI
-         Fadx2OxwnIpEh266kAkI1Ind5bH0kJgbL9ML07h2Uba4uwI30+1Zxi0GJHgkXBRqzckZ
-         TNu2UKtqCDGCOe0fu2j9oqq27gEVg77KPwWC1NAsUI1K5wR1Qp81TPrkDj+PCPdIdEKK
-         +/3+YMRP/6du7+kyBUvXnRg6fy3Da8QPyjiKUbE+NNpQ9OF3Sc34RVh3PCFv/qUQw00G
-         9ATg==
+        bh=jGBFXOvLGMSZviZxbm30epWCygLIhUM6cpx63lkaaRA=;
+        b=qg5+BMZmpBYLOt5baQoODnuhF65Vpkt6ZN/T13ukIjPy3BS6DsiSkjxQYv9NX2jU9w
+         ST0CVgXkQbyLnCRXHM2MF7ageeuSXqLMGfVcsNF0FtuXeCKXyjtn4nSTc5l9B1XYiFhG
+         1T8lt3/h7OHz0Mhm41McMOg/WZ5GWHIEVNMPouZZdILYI2VcldGtSl+tpcxQV2FiTzBn
+         Bsd2PXLzUgV7kpvSN/pxd+pmD6OYKOoUvgLJvBJRyN+7nfyOZScs9sLzJgD2BM5DDR2q
+         EE6rAA75XJTzdH3KYkbsmYg9B2st9lzuErFNBasfOAfFSryPokYmUm/HKz5kKRosvaMF
+         +TXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3c06dT5yQzLlRXaO8yKXXRgU1FZveuehbKiQHk775qU=;
-        b=WxiB+5QaZkPJ6aOf1vh13Y2cLm2UN2JtLoFDvVXgDDbdca8tyJUTpieql9kMq8weYv
-         xD/OetU6wKaCAhq3LM1yw/OCCNG14h4f5nAE/BlzDsBOGPuSPRp6loW9Pzwh5zB7Ah7N
-         tMJxioIWCbCumbfJp96NsCkjcESKA5oQsyRzWiaFqmv/7ZtoRSBI1jRCp4G3srT7e8NQ
-         zNCJlVRPO3MuqcMjf7X6bK9NZCi7X320SfZ0+bhGGXIElIE64yts3W2cewdTAc3pkx0J
-         Z0SRYITvLOYAs2og5e19CWFyZyQuMe9sxpmzNfNe4Frj40+lB99WswUGF30ab0bavVjk
-         ptmA==
-X-Gm-Message-State: AOAM532kqTZR3lAaKYkuMWPx2EtIfi4o3za8PW63l6adPAPU1/VhNZC9
-        bn88pCJBH4JnVo9LRlbXTUWTlLK4KkSblggFZ3k=
-X-Google-Smtp-Source: ABdhPJwKTup1qPARxJlRmSFbnSUiZp2q7PYUQlRHptnIWfHDIHzbtnxf/puwhOrhIT055IwbM14bkNgWNF5C5A5zNU8=
-X-Received: by 2002:a1c:f701:: with SMTP id v1mr3715170wmh.69.1617809959664;
- Wed, 07 Apr 2021 08:39:19 -0700 (PDT)
+        bh=jGBFXOvLGMSZviZxbm30epWCygLIhUM6cpx63lkaaRA=;
+        b=S6NpJsX8YiLkFjfDgQF48m+tmEOiJHuaqVH5PEGIm5wNQG0gPQ1L1VqF6cqtK7OTBv
+         O5TyqFEQFbwMCxOuS9RBvWzkaxGwD8i1jgK//3qV4OmjqZud+GR95KL0AC841GAIFO0k
+         4t8F1aBCor62ahwlM/cv/1cDcQj1es9Rl77JPBF364ox46pGFI1ePFmr+D7b2ynclYV8
+         MEEo4qOLLQj6JfPv3WXgIBTqs5KXGFMehmTppBfNwcwBBzargq22SwMoaiADXGleabLe
+         jmyp4FSaxcY9aCnuxpzwYMi/nc5olrPKbm6yrV0YxGSL3CjNdRuSmdKGGozKkTDUCZ/X
+         VgGg==
+X-Gm-Message-State: AOAM533HDnQ/OwPdCRPOPcX37pImam1PQhRDqrWvnMDVs1u0O429jzUw
+        OrlsUDiTBbU+njxXa4Tbzwv2yjRbYf4zQHu719K8bZFa+28=
+X-Google-Smtp-Source: ABdhPJyYjSKFqR3DnlSH2JvI7O2ybR5BfTLazWkUIY2AHclFwgUYsiohC0qZVCeP49OPkasBVyIjo8QupEeQ6KeWdiw=
+X-Received: by 2002:a5d:6a0b:: with SMTP id m11mr5265157wru.108.1617810356088;
+ Wed, 07 Apr 2021 08:45:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-6-david.e.box@linux.intel.com>
-In-Reply-To: <20210401030558.2301621-6-david.e.box@linux.intel.com>
+References: <20210401030558.2301621-1-david.e.box@linux.intel.com> <20210401030558.2301621-7-david.e.box@linux.intel.com>
+In-Reply-To: <20210401030558.2301621-7-david.e.box@linux.intel.com>
 From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Wed, 7 Apr 2021 11:38:53 -0400
-Message-ID: <CAE2upjQ596=iBff4s0nMkSD8jUyPpqC3bTRvVhysftJnHaOYbA@mail.gmail.com>
-Subject: Re: [PATCH 5/9] platform/x86: intel_pmc_core: Get LPM requirements
- for Tiger Lake
+Date:   Wed, 7 Apr 2021 11:45:30 -0400
+Message-ID: <CAE2upjR2062tGztm15NVTTKOACtrO-Rc4PH7t=_t-Bm5RGzVhw@mail.gmail.com>
+Subject: Re: [PATCH 6/9] platform/x86: intel_pmc_core: Add requirements file
+ to debugfs
 To:     "David E. Box" <david.e.box@linux.intel.com>
 Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
         gayatri.kammela@intel.com, platform-driver-x86@vger.kernel.org,
@@ -76,129 +76,134 @@ On Wed, Mar 31, 2021 at 11:06 PM David E. Box
 >
 > From: Gayatri Kammela <gayatri.kammela@intel.com>
 >
-> Platforms that support low power modes (LPM) such as Tiger Lake maintain
-> requirements for each sub-state that a readable in the PMC. However, unlike
-> LPM status registers, requirement registers are not memory mapped but are
-> available from an ACPI _DSM. Collect the requirements for Tiger Lake using
-> the _DSM method and store in a buffer.
+> Add the debugfs file, substate_requirements, to view the low power mode
+> (LPM) requirements for each enabled mode alongside the last latched status
+> of the condition.
+>
+> After this patch, the new file will look like this:
+>
+>                     Element |    S0i2.0 |    S0i3.0 |    S0i2.1 |    S0i3.1 |    S0i3.2 |    Status |
+>             USB2PLL_OFF_STS |  Required |  Required |  Required |  Required |  Required |           |
+> PCIe/USB3.1_Gen2PLL_OFF_STS |  Required |  Required |  Required |  Required |  Required |           |
+>        PCIe_Gen3PLL_OFF_STS |  Required |  Required |  Required |  Required |  Required |       Yes |
+>             OPIOPLL_OFF_STS |  Required |  Required |  Required |  Required |  Required |       Yes |
+>               OCPLL_OFF_STS |  Required |  Required |  Required |  Required |  Required |       Yes |
+>             MainPLL_OFF_STS |           |  Required |           |  Required |  Required |           |
 >
 > Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 > Co-developed-by: David E. Box <david.e.box@linux.intel.com>
 > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > ---
->  drivers/platform/x86/intel_pmc_core.c | 49 +++++++++++++++++++++++++++
->  drivers/platform/x86/intel_pmc_core.h |  2 ++
->  2 files changed, 51 insertions(+)
+>  drivers/platform/x86/intel_pmc_core.c | 86 +++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
 >
 > diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index ba0db301f07b..0ec26a4c715e 100644
+> index 0ec26a4c715e..0b47a1da5f49 100644
 > --- a/drivers/platform/x86/intel_pmc_core.c
 > +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -23,7 +23,9 @@
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
->  #include <linux/uaccess.h>
-> +#include <linux/uuid.h>
+> @@ -1122,6 +1122,86 @@ static int pmc_core_substate_l_sts_regs_show(struct seq_file *s, void *unused)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_l_sts_regs);
 >
-> +#include <acpi/acpi_bus.h>
->  #include <asm/cpu_device_id.h>
->  #include <asm/intel-family.h>
->  #include <asm/msr.h>
-> @@ -31,6 +33,9 @@
->
->  #include "intel_pmc_core.h"
->
-> +#define ACPI_S0IX_DSM_UUID             "57a6512e-3979-4e9d-9708-ff13b2508972"
-> +#define ACPI_GET_LOW_MODE_REGISTERS    1
-> +
->  /* PKGC MSRs are common across Intel Core SoCs */
->  static const struct pmc_bit_map msr_map[] = {
->         {"Package C2",                  MSR_PKG_C2_RESIDENCY},
-> @@ -587,6 +592,46 @@ static const struct pmc_reg_map tgl_reg_map = {
->         .lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
->  };
->
-> +static void pmc_core_get_tgl_lpm_reqs(struct platform_device *pdev)
+> +static void pmc_core_substate_req_header_show(struct seq_file *s)
 > +{
-> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-> +       const int num_maps = pmcdev->map->lpm_num_maps;
-> +       size_t lpm_size = LPM_MAX_NUM_MODES * num_maps * 4;
-> +       union acpi_object *out_obj;
-> +       struct acpi_device *adev;
-> +       guid_t s0ix_dsm_guid;
-> +       u32 *lpm_req_regs;
+> +       struct pmc_dev *pmcdev = s->private;
+> +       int i, mode;
 > +
-> +       adev = ACPI_COMPANION(&pdev->dev);
-> +       if (!adev)
-> +               return;
+> +       seq_printf(s, "%30s |", "Element");
+> +       pmc_for_each_mode(i, mode, pmcdev)
+> +               seq_printf(s, " %9s |", pmc_lpm_modes[mode]);
 > +
-> +       lpm_req_regs = devm_kzalloc(&pdev->dev, lpm_size * sizeof(u32),
-> +                                    GFP_KERNEL);
-> +       if (!lpm_req_regs)
-> +               return;
-> +
-> +       guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
-> +
-> +       out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid, 0,
-> +                                   ACPI_GET_LOW_MODE_REGISTERS, NULL);
-> +       if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
-> +               u32 *addr = (u32 *)out_obj->buffer.pointer;
-> +               int size = out_obj->buffer.length;
-> +
-> +               if (size != lpm_size)
-> +                       return;
-> +
-> +               memcpy_fromio(lpm_req_regs, addr, lpm_size);
-
-this is not __iomem* so why are you using this? Simple memcpy should work here.
-
-> +       } else
-> +               acpi_handle_debug(adev->handle,
-> +                                 "_DSM function 0 evaluation failed\n");
-> +
-> +       ACPI_FREE(out_obj);
-> +
-> +       pmcdev->lpm_req_regs = lpm_req_regs;
+> +       seq_printf(s, " %9s |\n", "Status");
 > +}
 > +
->  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+> +static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+> +{
+> +       struct pmc_dev *pmcdev = s->private;
+> +       const struct pmc_bit_map **maps = pmcdev->map->lpm_sts;
+> +       const struct pmc_bit_map *map;
+> +       const int num_maps = pmcdev->map->lpm_num_maps;
+> +       u32 sts_offset = pmcdev->map->lpm_status_offset;
+> +       u32 *lpm_req_regs = pmcdev->lpm_req_regs;
+> +       int mp;
+> +
+> +       /* Display the header */
+> +       pmc_core_substate_req_header_show(s);
+> +
+> +       /* Loop over maps */
+> +       for (mp = 0; mp < num_maps; mp++) {
+> +               u32 req_mask = 0;
+> +               u32 lpm_status;
+> +               int mode, idx, i, len = 32;
+> +
+> +               /*
+> +                * Capture the requirements and create a mask so that we only
+> +                * show an element if it's required for at least one of the
+> +                * enabled low power modes
+> +                */
+> +               pmc_for_each_mode(idx, mode, pmcdev)
+> +                       req_mask |= lpm_req_regs[mp + (mode * num_maps)];
+> +
+> +               /* Get the last latched status for this map */
+> +               lpm_status = pmc_core_reg_read(pmcdev, sts_offset + (mp * 4));
+> +
+> +               /*  Loop over elements in this map */
+> +               map = maps[mp];
+> +               for (i = 0; map[i].name && i < len; i++) {
+> +                       u32 bit_mask = map[i].bit_mask;
+> +
+> +                       if (!(bit_mask & req_mask))
+> +                               /*
+> +                                * Not required for any enabled states
+> +                                * so don't display
+> +                                */
+> +                               continue;
+> +
+> +                       /* Display the element name in the first column */
+> +                       seq_printf(s, "%30s |", map[i].name);
+> +
+> +                       /* Loop over the enabled states and display if required */
+> +                       pmc_for_each_mode(idx, mode, pmcdev) {
+> +                               if (lpm_req_regs[mp + (mode * num_maps)] & bit_mask)
+> +                                       seq_printf(s, " %9s |",
+> +                                                  "Required");
+> +                               else
+> +                                       seq_printf(s, " %9s |", " ");
+> +                       }
+> +
+> +                       /* In Status column, show the last captured state of this agent */
+> +                       if (lpm_status & bit_mask)
+> +                               seq_printf(s, " %9s |", "Yes");
+> +                       else
+> +                               seq_printf(s, " %9s |", " ");
+
+Why is this left blank, maybe NA (Not Available)?
+
+> +
+> +                       seq_puts(s, "\n");
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_req_regs);
+> +
+>  static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
 >  {
->         return readl(pmcdev->regbase + reg_offset);
-> @@ -1312,10 +1357,14 @@ static int pmc_core_probe(struct platform_device *pdev)
->                 return -ENOMEM;
->
->         mutex_init(&pmcdev->lock);
+>         struct pmc_dev *pmcdev = s->private;
+> @@ -1241,6 +1321,12 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>                                     pmcdev->dbgfs_dir, pmcdev,
+>                                     &pmc_core_substate_l_sts_regs_fops);
+>         }
 > +
->         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
->         pmc_core_get_low_power_modes(pmcdev);
->         pmc_core_do_dmi_quirks(pmcdev);
+> +       if (pmcdev->lpm_req_regs) {
+> +               debugfs_create_file("substate_requirements", 0444,
+> +                                   pmcdev->dbgfs_dir, pmcdev,
+> +                                   &pmc_core_substate_req_regs_fops);
+> +       }
+>  }
 >
-> +       if (pmcdev->map == &tgl_reg_map)
-> +               pmc_core_get_tgl_lpm_reqs(pdev);
-> +
->         /*
->          * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
->          * a cable is attached. Tell the PMC to ignore it.
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index 3800c1ba6fb7..81d797feed33 100644
-> --- a/drivers/platform/x86/intel_pmc_core.h
-> +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -288,6 +288,7 @@ struct pmc_reg_map {
->   * @s0ix_counter:      S0ix residency (step adjusted)
->   * @num_modes:         Count of enabled modes
->   * @lpm_en_modes:      Array of enabled modes from lowest to highest priority
-> + * @lpm_req_regs:      List of substate requirements
->   *
->   * pmc_dev contains info about power management controller device.
->   */
-> @@ -304,6 +305,7 @@ struct pmc_dev {
->         u64 s0ix_counter;
->         int num_modes;
->         int lpm_en_modes[LPM_MAX_NUM_MODES];
-> +       u32 *lpm_req_regs;
->  };
->
->  #define pmc_for_each_mode(i, mode, pmcdev)             \
+>  static const struct x86_cpu_id intel_pmc_core_ids[] = {
 > --
 > 2.25.1
 >
