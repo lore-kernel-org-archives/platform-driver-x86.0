@@ -2,359 +2,307 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5C4C43462
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 15:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7172CC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 15:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBF861002
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 15:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F8D61107
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 15:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231480AbhDHPAh (ORCPT
+        id S232116AbhDHPIh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Apr 2021 11:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58994 "EHLO
+        Thu, 8 Apr 2021 11:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231878AbhDHPAg (ORCPT
+        with ESMTP id S231931AbhDHPIg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Apr 2021 11:00:36 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62336C061760;
-        Thu,  8 Apr 2021 08:00:25 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id i81so2455896oif.6;
-        Thu, 08 Apr 2021 08:00:25 -0700 (PDT)
+        Thu, 8 Apr 2021 11:08:36 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 982A9C061761;
+        Thu,  8 Apr 2021 08:08:23 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id w70so2543185oie.0;
+        Thu, 08 Apr 2021 08:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DUxBpxs/369vcco1VxDjt78/jo05xcIgCHr4C9KoACQ=;
-        b=uzT0qfiwDOLvKLLxLMTEcC7cd0imsRGprgvSri70yhHBnUX17KxVClw24YehuOEGMq
-         /Zgc/jAfIXJLYMVijCR1Hy1puvU4pc6AZ3WP859icpW77sOWDm+tGRESyxBknwwNsRH4
-         +BCJt7VOLGCwfuY8ykYoL4257IEwtl4OTTbUPyGmbB1jfkFKe8O1Nwpq7Poc2z32D6Ex
-         gt9Wp8M3x45Yq7GvSA+G1ZZqIhS42GXIRobQ5XVJ6OmT3FhE5GyvvdSc1yu4/AJu4BmT
-         wpmghf90cxy3ielnzGNLEjOQ4JOWY8eiVNcRw7t+W9ikXt1Gfj/DL0pVvwnMpTGPElqb
-         +XVA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=9kvcpM+GB+hcoF8XPjUY/KVSJ7PLNU/AOk4id5vTQvQ=;
+        b=ooY50HMTV7TabpE15vdOsALr0Pmma9xENiej+cTDzEKbESHuoamXf1+3WN9uqLjhLY
+         OnAbcRb47Pn3OK2n1orfWu9PnaH93pWEa/gLqLzNJzSU4EhZ+5a+d3/s7/WSjVl/eUs/
+         gxfWb0iI9SPSJIfrKgFRll+45gOTt7CxzyqwGtg4FotspPIbE6bnKrhonDwFvMtLLSXX
+         pXvv5ryy0GnmFxc1kZIaNFRFTKUlXBu924OCVudv/vOoX6dCNUA7JMT+mLfdaHp7RmSL
+         pK5UvDQ38nlW6foST6WqF5s6YD46L2cRg60LMay+YX7WwT9KGeWPs4xBw+CCar+6PZ9r
+         h4/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=DUxBpxs/369vcco1VxDjt78/jo05xcIgCHr4C9KoACQ=;
-        b=r+zm1niCDRORhw0GGZOOUNwjP/tHKmHMfqLw+r70q53nHRifkEBkkMWf4LvfEEaYCb
-         qIzdWuGJaDQvA2LofA8Mo//4MRyQ3z/EMI4uP4VVO+QVRkGtwZ/GFll+mHkjia4PTNk3
-         pvolnut4QMhZuJNEKsZZA3MqWwNRz+EO2+XvTAGUzcx2T/fgmHYEqRGMY7ofFXP2vw0p
-         vmx3E4N3wIhWiA6hFc3MPgKawQRjGUh9I3y/Iu8OnFVMTz9KaHTNv49WiW3Qw8r2LprI
-         QmbSNYTfQfTnShCGrkuE+mT9WSjlaAsF6aw8qBYozcCVJdNadAzK3Q1JV1W4y2Od6Sc/
-         6H3w==
-X-Gm-Message-State: AOAM530JZD8rSaizXB4FYa6INvabfIIOybe7hqvcHLUEdHtUiVGUv6Y8
-        0oVpjZpBK+CqAuBshEvi14c=
-X-Google-Smtp-Source: ABdhPJy9N/c7DNHv3MQRvbgVDxm7HLJ88QSQYTQskVQOk+69Adriqb23gMftOxgd2zRhoaAVQTv2Mw==
-X-Received: by 2002:aca:2103:: with SMTP id 3mr6409312oiz.80.1617894024668;
-        Thu, 08 Apr 2021 08:00:24 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y11sm4790288oiv.19.2021.04.08.08.00.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Apr 2021 08:00:24 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=9kvcpM+GB+hcoF8XPjUY/KVSJ7PLNU/AOk4id5vTQvQ=;
+        b=r3eT46tArXNXoeSnqc7Zg12H3oNygzaOChYppNSrf/ZjxJpcu4QX0ITfR7Qp5ztrAl
+         ash6p+CMhM/OCjzMOEgaWRy9+W9fw7vRNWiQBYwmxK+N/hL1WRTBWwsc9OallI1UeDsQ
+         d7xGQZkETt4UBRF/CPjPoc/uz+zWguZNgdMAQX8UylHSgxTNyJ+aYywadFXUJYo+JDyG
+         8uLAZjzk146gU4KptdJUw27HKSo3Glv8fh5neof/ZfAo649cJRYSJZy9hcKXsliY/PV4
+         9vYRpT6qzVIg7n3zBVO2ajie/n+4C8dxeWvYXlPSclORuwgj0dNwtM+zkXDVuV1lvFjS
+         WKNQ==
+X-Gm-Message-State: AOAM530pWdRqVPiL+8y8xXWa/G56iir6Tn7IOLbeXyqjSRyZOlwqtWfH
+        bnyZFtdlKHFgEQtUYP2BsD5cCbJ1MjY=
+X-Google-Smtp-Source: ABdhPJzk3GfCuogST6cIchqVVyrMhoryYcZBPffW4itk183PKzdfBWCPeMOMZvJGnidEE0OMZMdgig==
+X-Received: by 2002:aca:240b:: with SMTP id n11mr1583678oic.26.1617894503045;
+        Thu, 08 Apr 2021 08:08:23 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n1sm5019306oig.47.2021.04.08.08.08.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 08 Apr 2021 08:08:22 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Jean Delvare <jdelvare@suse.com>
+Date:   Thu, 8 Apr 2021 08:08:21 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
 Cc:     platform-driver-x86@vger.kernel.org,
         Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
+        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
         Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
+Message-ID: <20210408150821.GA205657@roeck-us.net>
 References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
  <20210405204810.339763-1-linux@weissschuh.net>
- <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
- <123d021b-b86b-4356-b234-fb46fa260193@t-8ch.de>
- <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
-Date:   Thu, 8 Apr 2021 08:00:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210405204810.339763-1-linux@weissschuh.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/8/21 2:36 AM, Hans de Goede wrote:
-> Hi,
+On Mon, Apr 05, 2021 at 10:48:10PM +0200, Thomas Weißschuh wrote:
+> Changes since v1:
+> * Incorporate feedback from Barnabás Pőcze
+>   * Use a WMI driver instead of a platform driver
+>   * Let the kernel manage the driver lifecycle
+>   * Fix errno/ACPI error confusion
+>   * Fix resource cleanup
+>   * Document reason for integer casting
 > 
-> On 4/7/21 9:43 PM, Thomas Weißschuh wrote:
->> Hi Hans,
->>
->> On Mi, 2021-04-07T17:54+0200, Hans de Goede wrote:
->>> Thank you for your new driver and thank you for the quick respin
->>> addressing Barnabás' request to make it a WMI driver.
->>>
->>> The code looks good, so merging this should be a no-brainer,
->>> yet I'm not sure if I should merge this driver as-is, let me
->>> explain.
->>
->> thanks for the encouraging words.
->>
->>> The problem is that I assume that this is based on reverse-engineering?
->>
->> Yes, it is completely reverse-engineered.
->> Essentially I stumbled upon Matthews comment at
->> https://bugzilla.kernel.org/show_bug.cgi?id=204807#c37 and went from there.
->>
->>> We have some mixes experiences with reverse-engineered WMI drivers,
->>> sometimes a feature is not supported yet the wmi_evaluate_method()
->>> call happily succeeds. One example of this causing trouble is:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1797d588af15174d4a4e7159dac8c800538e4f8c
->>
->> There actually are reports of recent, similar mainboards with recent firmware and
->> similar sensor chips that do not support the temperature query.
->> (https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/3 and
->> https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/2)
->>
->> Unfortunately for unknown WMI queries the firmware does not return any value.
->> This ends up as an ACPI integer with value 0 on the driver side.
->> (Which I could not yet find documentation for if that is expected)
->> In the current version of the driver EIO is returned for 0 values which
->> get translated to N/A by lm-sensors.
->>
->>> At a minimum I think your driver should check in its
->>> probe function that
->>>
->>> gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, ...)
->>>
->>> actually succeeds on the machine the driver is running on chances
->>> are that Gigabyte has been using the DEADBEEF-2001-0000-00A0-C90629100000
->>> GUID for ages, where as the 0x125 value for GIGABYTE_WMI_TEMPERATURE_QUERY
->>> suggests that this is a pretty new API.
->>
->> Would it be enough to probe all six sensors and check if all return 0?
+> Thank you Barnabás for your review, it is much appreciated.
 > 
-> I think that failing the probe with -ENODEV, with a dev_info() explaining why when
-> all six sensors return 0 would be good yes, that should also fix those 2
-> issues on https://github.com/t-8ch/linux-gigabyte-wmi-driver/.
+> -- >8 --
 > 
->>> It would be good if you can see if you can find some DSDT-s for older
->>> gigabyte motherboards attached to various distro's bug-tracking systems
->>> or forum posts and see how those respond to an unknown gigabyte_wmi_commandtype.
->>
->> Will do.
+> Tested with a X570 I Aorus Pro Wifi.
+> The mainboard contains an ITE IT8688E chip for management.
+> This chips is also handled by drivers/hwmon/i87.c but as it is also used
+> by the firmware itself it needs an ACPI driver.
 > 
-> Since you alreayd have bugreports of boards where this does not work,
-> please don't spend too much time on this. I guess those older DSDT-s will
-> also just return an integer with value 0.
+> Unfortunately not all sensor registers are handled by the firmware and even
+> less are exposed via WMI.
 > 
->>> Another open question to make sure this driver is suitable
->>> as a generic driver (and does not misbehave) is how to figure out
->>> how many temperature sensors there actually are.
->>
->> So far I could not find out how to query this from the firmware.
->> The IT8688 chip can report the state of each sensor but that is not exposed by
->> the firmware.
->> But even the state information from the IT8688 is not accurate as is.
->> One of the sensors that is reported as being active (directly via it87) on my
->> machine always reports -55°C (yes, negative).
-> 
-> Ok.
-> 
->>> Perhaps the WMI interface returns an error when you query an out-of-range
->>> temperature channel?
->>
->> Also "0" as mentioned above.
-> 
-> Hmm, so maybe this can be used to limit the amount of reported temperature
-> sensors, IOW if sensors 5 and 6 report 0, only register 4 sensors ?
-> 
->>
->>> One option here might be to add a DMI matching table and only load on
->>> systems on that table for now. That table could then perhaps also provide
->>> labels for each of the temperature channels, which is something which
->>> would be nice to have regardless of my worries about how well this driver
->>> will work on motherboards on which it has not been tested.
->>
->> I am collecting reports for working motherboards at
->> https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/1 .
-> 
-> Good, you should probably ask reporters there to provide the output of:
-> 
-> grep . /sys/class/dmi/id/* 2> /dev/null
-> 
-> Ran as a normal user (so that the serial-numbers will be skipped) so that
-> you will have DMI strings to match on if you decide to go that route.
-> 
->>
->>> You could combine this DMI matching table with a "force" module option to
->>> continue with probing on boards which are not on the table to allow users
->>> to test and report their results to you.
->>>
->>> And hopefully after a while, when we're confident that the code works
->>> well on most gigabyte boards we can drop the DMI table, or at least
->>> only use it for the channel labels.
->>
->> That sounds good.
->>
->>> Please don't take this the wrong way; I think it is great that you are
->>> working on this. And the quick turnaround of the v2 of this drivers makes
->>> me pretty certain that we can figure something out and get this merged.
->>
->> Thank you for the feedback!
->>
->>> Have you tried contacting Gigabyte about this? I don't think the WMI
->>> interface is something which they need to keep secret for competitive
->>> reasons, so maybe they can help? Note if they want you to sign a NDA
->>> of sorts to view docs, then make sure that it contains some language
->>> about them allowing you to release an opensource driver for their
->>> hardware based on the "protected" information.
->>
->> I have not contacted them yet, will do.
->>
->> As mentioned in the initial patch submission there would be different ways to
->> access this information firmware:
->>
->> * Directly call the underlying ACPI methods (these are present in all so far
->>   observed firmwares, even if not exposed via WMI).
->> * Directly access the ACPI IndexField representing the it87 chip.
->> * Directly access the it87 registers while holding the relevant locks via ACPI.
->>
->> I assume all of those mechanisms have no place in a proper kernel driver but
->> would like to get your opinion on it.
-> 
-> Actually the "Directly access the it87 registers" option is potentially interesting
-> since it will allow using the it87 driver which gives a lot more features.
-> 
-> I actually wrote a rough outline of how something like this could work here:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
-> 
-> Note I'm not sure if that is the right approach, but it definitely is an
-> option. It seems that this one might also solve the X470-AORUS-ULTRA-GAMING
-> case (https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/2)
-> 
-> Hopefully the direct-register ACPI/WMI access methods will also allow
-> reading the super-io vendor and product ids so that we can be reasonably
-> sure that we are not loading the wrong driver on a board.
-> 
-> OTOH the WMI-temp method approach may also work on boards where the sensors
-> (or some of the sensors) are not supported.
-> 
-> I'm afraid there is no obviously correct answer here. If you feel like it
-> experimenting with the "Directly access the it87 registers" option would certainly
-> be interesting IMHO.
-> 
-> It might be good to get hwmon subsystems maintainer's opinion on this
-> before sinking a lot of time into this though (added to the Cc).
-> 
-> Jean, Guenter,
-> 
-> Thomas has been working on a WMI driver to expose various motherboard
-> temperatures on a gigabyte board where the IO-addresses for the it87 chip
-> are reserved by ACPI. We are discussing how best to deal with this, there
-> are some ACPI methods to directly access the super-IO registers (with locking
-> to protect against other ACPI accesses). This reminded me of an idea I had
-> a while ago to solve a similar issue with an other superIO chip, abstract
-> the superIO register access-es using some reg_ops struct and allow an ACPI/WMI
-> driver to provide alternative reg_ops:
-> https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
-> 
-> Do you think this is a good idea (or a bad one)? And would something like that
-> be acceptable to you ?
-> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+>  drivers/platform/x86/Kconfig        |  11 +++
+>  drivers/platform/x86/Makefile       |   1 +
+>  drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
 
-The upstream it87 driver is severely out of date. I had an out-of-tree driver
-with various improvements which I didn't upstream, first because no one was willing
-to review changes and then because it had deviated too much. I pulled it from
-public view because I got pounded for not upstreaming it, because people started
-demanding support (not asking, demanding) for it, and because Gigabyte stopped
-providing datasheets for the more recent ITE chips and it became effectively
-unmaintainable.
+Originally drivers/platform was supposed to be used for platform specific
+code. Not that I have control over it, but I really dislike that more and
+more hwmon drivers end up there.
 
-Some ITE chips have issues which can cause system hangs if accessed directly.
-I put some work to remedy that into the non-upstream driver, but that was all
-just guesswork. Gigabyte knows about the problem (or so I was told from someone
-who has an NDA with them), but I didn't get them or ITE to even acknowledge it
-to me. I even had a support case open with Gigabyte for a while, but all I could
-get out of them is that they don't support Linux and what I would have to reproduce
-the problem with Windows for them to provide assistance (even though, again,
-they knew about it).
-
-As for using ACPI locks or WMI to ensure that ACPI leaves the chip alone while
-the driver accesses chips directly: That is an option, but it has (at least)
-two problems.
-
-First, ACPI access methods are not well documented or standardized. I had tried
-to find useful means to do that some time ago, but I gave up because each board
-(even from the same vendor) handles locking and accesses differently. We would
-end up with lots of board specific code. Coincidentally, that was for ASUS boards
-and the nct6775 driver.
-
-Second, access through ACPI is only one of the issues. Turns out there are two
-ITE chips on many of the Gigabyte boards nowadays, and the two chips talk to each
-other using I2C. My out-of-tree driver tried to remedy that by blocking those
-accesses while the driver used the chip, but, again, without Gigabyte / ITE
-support this was never a perfect solution, and there was always the risk that
-the board ended up hanging because that access was blocked for too long.
-Recent ITE chips solve that problem by providing memory mapped access to the
-chip registers, but that is only useful if one has a datasheet.
-
-Overall, I don't think it makes much sense trying to make significant changes
-to the it87 driver without pulling in all the changes I had made, and without
-finding a better fix for the cross-chip access problems. I for sure won't have
-time for that (and getting hwmon patches reviewed is still very much an issue).
-
-Having said that, I am of course open to adding WMI/ACPI drivers for the various
-boards. Good luck getting support from Gigabyte, though. Or from ASUS, for that
-matter.
+At least hwmon is in good company - I see drivers for various other subsystems
+there as well. I just wonder if that is such a good idea. That entire directory
+is bypassing subsystem maintainer reviews.
 
 Guenter
+
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 drivers/platform/x86/gigabyte-wmi.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index ad4e630e73e2..96622a2106f7 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -123,6 +123,17 @@ config XIAOMI_WMI
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called xiaomi-wmi.
+>  
+> +config GIGABYTE_WMI
+> +	tristate "Gigabyte WMI temperature driver"
+> +	depends on ACPI_WMI
+> +	depends on HWMON
+> +	help
+> +	  Say Y here if you want to support WMI-based temperature reporting on
+> +	  Gigabyte mainboards.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called gigabyte-wmi.
+> +
+>  config ACERHDF
+>  	tristate "Acer Aspire One temperature and fan driver"
+>  	depends on ACPI && THERMAL
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 60d554073749..1621ebfd04fd 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+>  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
+>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+> +obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+>  
+>  # Acer
+>  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
+> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+> new file mode 100644
+> index 000000000000..8618363e3ccf
+> --- /dev/null
+> +++ b/drivers/platform/x86/gigabyte-wmi.c
+> @@ -0,0 +1,138 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/module.h>
+> +#include <linux/wmi.h>
+> +
+> +#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
+> +
+> +enum gigabyte_wmi_commandtype {
+> +	GIGABYTE_WMI_BUILD_DATE_QUERY       =   0x1,
+> +	GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =   0x2,
+> +	GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =   0x4,
+> +	GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =   0x5,
+> +	GIGABYTE_WMI_TEMPERATURE_QUERY      = 0x125,
+> +};
+> +
+> +struct gigabyte_wmi_args {
+> +	u32 arg1;
+> +};
+> +
+> +static int gigabyte_wmi_perform_query(enum gigabyte_wmi_commandtype command,
+> +		struct gigabyte_wmi_args *args, struct acpi_buffer *out)
+> +{
+> +	const struct acpi_buffer in = {
+> +		.length = sizeof(*args),
+> +		.pointer = args,
+> +	};
+> +
+> +	acpi_status ret = wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out);
+> +	if (ret == AE_OK) {
+> +		return 0;
+> +	} else {
+> +		return -EIO;
+> +	};
+> +}
+> +
+> +static int gigabyte_wmi_query_integer(enum gigabyte_wmi_commandtype command,
+> +		struct gigabyte_wmi_args *args, u64 *res)
+> +{
+> +	union acpi_object *obj;
+> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	int ret;
+> +
+> +	ret = gigabyte_wmi_perform_query(command, args, &result);
+> +	if (ret) {
+> +		goto out;
+> +	}
+> +	obj = result.pointer;
+> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
+> +		*res = obj->integer.value;
+> +		ret = 0;
+> +	} else {
+> +		ret = -EIO;
+> +	}
+> +out:
+> +	kfree(result.pointer);
+> +	return ret;
+> +}
+> +
+> +static int gigabyte_wmi_temperature(u8 sensor, long *res)
+> +{
+> +	struct gigabyte_wmi_args args = {
+> +		.arg1 = sensor,
+> +	};
+> +	u64 temp;
+> +	acpi_status ret;
+> +
+> +	ret = gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &args, &temp);
+> +	if (ret == 0)
+> +		*res = (s8) temp * 1000; // value is a signed 8-bit integer
+> +	return ret;
+> +}
+> +
+> +static int gigabyte_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +		u32 attr, int channel, long *val)
+> +{
+> +	return gigabyte_wmi_temperature(channel, val);
+> +}
+> +
+> +static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
+> +		u32 attr, int channel)
+> +{
+> +	return 0444;
+> +}
+> +
+> +static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
+> +	HWMON_CHANNEL_INFO(temp,
+> +			HWMON_T_INPUT,
+> +			HWMON_T_INPUT,
+> +			HWMON_T_INPUT,
+> +			HWMON_T_INPUT,
+> +			HWMON_T_INPUT,
+> +			HWMON_T_INPUT),
+> +	NULL,
+> +};
+> +
+> +static const struct hwmon_ops gigabyte_wmi_hwmon_ops = {
+> +	.read = gigabyte_wmi_hwmon_read,
+> +	.is_visible = gigabyte_wmi_hwmon_is_visible,
+> +};
+> +
+> +static const struct hwmon_chip_info gigabyte_wmi_hwmon_chip_info = {
+> +	.ops = &gigabyte_wmi_hwmon_ops,
+> +	.info = gigabyte_wmi_hwmon_info,
+> +};
+> +
+> +static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
+> +{
+> +	struct device *hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
+> +			"gigabyte_wmi", NULL,
+> +			&gigabyte_wmi_hwmon_chip_info, NULL);
+> +
+> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +static const struct wmi_device_id gigabyte_wmi_id_table[] = {
+> +	{ GIGABYTE_WMI_GUID, NULL },
+> +	{ },
+> +};
+> +
+> +static struct wmi_driver gigabyte_wmi_driver = {
+> +	.driver = {
+> +		.name = "gigabyte-wmi",
+> +	},
+> +	.id_table = gigabyte_wmi_id_table,
+> +	.probe = gigabyte_wmi_probe,
+> +};
+> +module_wmi_driver(gigabyte_wmi_driver);
+> +
+> +MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
+> +MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
+> +MODULE_DESCRIPTION("Gigabyte Temperature WMI Driver");
+> +MODULE_LICENSE("GPL");
+> 
+> base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
+> -- 
+> 2.31.1
+> 
