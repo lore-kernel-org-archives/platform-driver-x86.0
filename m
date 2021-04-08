@@ -2,368 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7F4C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 16:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEAC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 18:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC833610E8
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 16:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A63B61108
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 18:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbhDHQHx (ORCPT
+        id S232267AbhDHSTb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Apr 2021 12:07:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41713 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232248AbhDHQHu (ORCPT
+        Thu, 8 Apr 2021 14:19:31 -0400
+Received: from mout.gmx.net ([212.227.15.18]:56007 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231676AbhDHST3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Apr 2021 12:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617898059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uB6u1YzjbtDyPwkHUv1YZOjRf0ydZhgxNGQbVLUWhBg=;
-        b=clAqU6Kf6IvltxmCoim+29HO6Nobh6Dj0hfLyGGyKPgbPKRq7wxodhMgX2OXIh0nd04kX+
-        e3p7UHz3b2qYy2iPD38Lg+jHOt12fbFoC0K4oqjD6viL3upr9am/ezoS1yhs35ln6Q0ye1
-        HGKbhm7dOcUV/Wkfwtrbn5758LtVONY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-qkarLOfwOzmyfN5Br1wgbw-1; Thu, 08 Apr 2021 12:07:37 -0400
-X-MC-Unique: qkarLOfwOzmyfN5Br1wgbw-1
-Received: by mail-ed1-f69.google.com with SMTP id f9so1262310edd.13
-        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Apr 2021 09:07:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uB6u1YzjbtDyPwkHUv1YZOjRf0ydZhgxNGQbVLUWhBg=;
-        b=ri3O2WSOowFRFt1XRy5DtibWKJ+m+Xqf/Esh0OyfU45Pt/K4XTumbmjlyp42ND8eqN
-         sGfpDWrF7VbiPpDq7PqumHC/OeoEjm9Kj1KN4T/y69WttZcUV3cJp2QNPRIQvprFo60v
-         BntIJDlYStdEo/ZlVI8g5B103ZjfrnazkGnTONIXkk6OljiLnotaAXQoqhGvGnWI9nPc
-         js17wxqWCE5ae0/Cj7hRgvZXDAcoBJmMo1v1RP6KrGZawkpQfcXR4A736ma4TirJFru5
-         wd+TezIPZdYqnveIN4Udg9K253KdsPGHriSTHsCJH6Yob7y9Cy0mszV84bg5Yb9iwnz3
-         1jHw==
-X-Gm-Message-State: AOAM532ViGO9m8cnvLRIKFKVG7QJLAVL4YutgVIrd9g+WaZkLTW6a5k0
-        qIBKVopcSn1jrVZIY5umOSCKdHLULNrGGy7i4j97QHHnVyqu0FR3TXtsBcBt70jXuYxuABWTBQB
-        7kVmFm/S0ZGkUODx8kEX8pn3nJCD+uLNGfg==
-X-Received: by 2002:a17:906:1b45:: with SMTP id p5mr9907464ejg.215.1617898054921;
-        Thu, 08 Apr 2021 09:07:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybi20bHncsNFA3bB27/6pzAIHvx1q7rUM3wkyQ2XHHj1YwkXCAq/StConXdE+HGvrMpOgRYw==
-X-Received: by 2002:a17:906:1b45:: with SMTP id p5mr9907439ejg.215.1617898054615;
-        Thu, 08 Apr 2021 09:07:34 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id x4sm17086880edd.58.2021.04.08.09.07.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Apr 2021 09:07:34 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-To:     Guenter Roeck <linux@roeck-us.net>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
- <20210405204810.339763-1-linux@weissschuh.net>
- <20210408150821.GA205657@roeck-us.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <245fe6eb-b188-ee50-bf75-8a16fe8f5d67@redhat.com>
-Date:   Thu, 8 Apr 2021 18:07:33 +0200
+        Thu, 8 Apr 2021 14:19:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1617905937;
+        bh=Ki8F9aoZGsc8sYK1np4A+b1L5wPi4wM1eAp3NmOl34w=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=UBCN26siRSKz25/qAfPVNIGcoJrP/JVNCN9tvdCp4oO49khM+Rj8TeR2J1pav/7aB
+         lea5nLqdEmggfCjHRwk9e/Dy4gtN0pgJC9YleuS0F5aRqmZTaDOQ5KM5Kif+Yrb908
+         Ky/+7C1ewQiUDnQ8FdnH/48TgZGVsdBMvwmLhkx4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.135.7.100] ([89.245.126.190]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8XTv-1lhbzE1ctF-014Wi5; Thu, 08
+ Apr 2021 20:18:57 +0200
+Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
+To:     Sebastian Reichel <sre@kernel.org>,
+        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        "jwrdegoede@fedoraproject.org" <jwrdegoede@fedoraproject.org>,
+        "smclt30p@gmail.com" <smclt30p@gmail.com>
+References: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com>
+ <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
+ <3anWBvkrPqTNQyfx2ZwDaLZKXtw5PMwTTdcgGNt0FaACUSsrkb5PaoqVKxLpxXU-4NcVZ9AqDQLs2VMOmvS-KfxHRmOSQiZlMjyvH282mdQ=@protonmail.com>
+ <20210408135102.6r2przibgngaavkp@earth.universe>
+From:   Thomas Koch <linrunner@gmx.net>
+Message-ID: <f90b03c3-178e-0d0b-335e-6e5c0e6f284e@gmx.net>
+Date:   Thu, 8 Apr 2021 20:18:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-In-Reply-To: <20210408150821.GA205657@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210408135102.6r2przibgngaavkp@earth.universe>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:RKkVopUEdFbYMg+apN9YphfoakSrQoI3cDLRYpvfl8zualgg2yV
+ S9iyQBOasKxZ8JSwBUBdbKsgUYjzWmzBEg5aN/hCcE9YafwZjsG6QFunUxja7KtnNBo3jmd
+ PeXGVF+JMW4emXUULUCTkM/rGGR/zghjw0YO0T8abcNukE0hyD4Vo3D71Wtx5XYQFtkgmhK
+ IHMFloC/vQEtgqgIQ09Bg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Gp/6pWfGZ0Y=:/pIb2kNHsWbrzcd+SOzs57
+ UPS/E7iyqh+8ztSkj/0x9rW3IrLOT46/1lgNSU2K/S+PBE0gDc+5F5OhTk4yTjJDIMZIqu/0u
+ 4apGz12ro3yYkiLRfS2uAlQHO+Kb3XUR/YLpsxluv8qPDBme/uaZuDWIJxAcmhMaUWGdlsO/f
+ 9oFEUNYS9Ve2xhRdnloQlTghGxui2ZNcmJrvqrerORknnjDajA5ekzgzUOhpolD1jgLmlkgZf
+ qBelgT1BbDi4L3BK4s7CfzSbPKbxtWbyGPi21OoMCk8eKA/p3HzKnVWfaVQxuMRZw51oYwrzb
+ l0BnHgbNGQuArqESiKZ14UDuRvdEiwJNB3tAHfijGGcaFFRAHDDLQPPPbuzz1l0JyfIIrnxzc
+ YF370b1qa5be0btNJESI42SrdNLesdEgJ8NEItnTZtX/+jCqkKC5YxUJS907fwvscZ7qzlWge
+ d7vIeCpbWwNI/ANJpJR1AEaoW5YT2ATkA85f+wYUv/jnM8qJn3KXBJ9BIBgt0Yjp46telJ7eZ
+ 7DunTjc2cfkxWzPQNusB021zluJ57vGYqz4FKugo/jhEHBKz9+H/SkHFEkSy5kYa8RI1doMOe
+ hTT6dMRPhY2rDBxvkMbzvs+KXTS2Iq6RS0bngNr4Y30LwS4NFpxdQ6Zd5GNy7sa+sWUfw0rvL
+ eBbbq2JxolgYGqtYLpQwjruEginNGshVH/pjyVXy+Y9qRASkeRJrwFALC/aXb9bT+x2jZQ2Xk
+ ysOnxrIKRbFlzI1+Ho3mbmnp3S9ouBd+8Pplhs4JfPEoDXOMuKYVxGmRPEPVvZ7YmcLgUvJXC
+ GJSIfvvSBdDGSU9AbDL31pKIl+dAt8R8c42qyP9qkxKPOVXi5aI8kYke3RmVfOp+JxTvZBz5H
+ pFP5Q3Pk88X0xrnqobyCTYvNp121ajnTRB2l6EOUibSr481Cl0vNgGn+xfjMTlDE1Ds2vWd3s
+ VlOx7kdRt1Tn10LoGrSUMxOjoEP/RAzK2UL7GH+cuzd2T8vLhqqt2zEq2itjprBByqE16WVqH
+ 2L1ADchW+XNbQ9YQU0VovR98P8EBYMBKLiLBOmyj/v+PhxUUEe1vImvrcqA4XREAdr14MbpN2
+ ud9W3Qam1DHgWsenOhkL3CIkFG2yUpNZ4kxwQtqk7amrXlegnvefV7NaW4XGmcbzkMcMsl+qE
+ 0KE5Cky/e/nkqJV6ZeiYmVlVCIZaiYSZiQvav0D54UK/mOd/wA6v7MT1JXs9CwzbJSZHY=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Guenter,
+Hi,
 
-On 4/8/21 5:08 PM, Guenter Roeck wrote:
-> On Mon, Apr 05, 2021 at 10:48:10PM +0200, Thomas Weißschuh wrote:
->> Changes since v1:
->> * Incorporate feedback from Barnabás Pőcze
->>   * Use a WMI driver instead of a platform driver
->>   * Let the kernel manage the driver lifecycle
->>   * Fix errno/ACPI error confusion
->>   * Fix resource cleanup
->>   * Document reason for integer casting
+ >> "inhibit_**discharge**"
+
+ >> "stops **charging** of the battery"
+
+ >> I'm wondering if it should be "inhibit_charge" or something like that?
+ > Text and file name also seem to have reverse meaning for me. I
+
+ > assume the text is the correct one, since it does not seem to
+
+ > make sense inhibiting discharge. That would result in instant
+
+ > poweroff on AC loss?
+
+
+Fortunately that's only a typo in the docs file. The actual sysfs node
+implemented by patch 2/3 is
+
+	/sys/class/power_supply/BATx/inhibit_charge
+
+
+=2D-
+
+Freundliche Gr=C3=BC=C3=9Fe / Kind regards,
+
+Thomas Koch
+
+
+
+Mail : linrunner@gmx.net
+
+Web  : https://linrunner.de/tlp
+
+
+On 08.04.21 15:51, Sebastian Reichel wrote:
+> Hi,
+>
+> On Wed, Apr 07, 2021 at 10:33:41AM +0000, Barnab=C3=A1s P=C5=91cze wrote=
+:
+>> 2021. =C3=A1prilis 7., szerda 12:24 keltez=C3=A9ssel, Hans de Goede =C3=
+=ADrta:
+>>> 2. If we add support for this to the kernel we should probably
+>>> first agree on standardized power-supply class property names for
+>>> these, rather then coming up with our own names. ATM we register
+>>> 2 names for the charge start threshold, the one which the thinkpad_acp=
+i
+>>> code invented and the standardized name which was later added.
+>>>
+>>> I've added Sebastian, the power-supply class / driver maintainer to
+>>> the Cc. for this. Sebastian Nicolo wants to add support for 2 new
+>>> features as power-supply properties:
+>>>
+>>> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
+>>> ...
+>>> +Battery forced discharging
+>>> +--------------------------
+>>> +
+>>> +sysfs attribute:
+>>> +/sys/class/power_supply/BATx/force_discharge
+>>> +
+>>> +Setting this attribute to 1 forces the battery to discharge while AC =
+is attached.
+>>> +Setting it to 0 terminates forced discharging.
+>>> +
+>>> +Battery charge inhibiting
+>>> +--------------------------
+>>> +
+>>> +sysfs attribute:
+>>> +/sys/class/power_supply/BATx/inhibit_discharge
+>>> +
+>>> +Setting this attribute to 1 stops charging of the battery as a manual=
+ override
+>>> +over the threshold attributes. Setting it to 0 terminates the overrid=
+e.
+>>>
 >>
->> Thank you Barnabás for your review, it is much appreciated.
+>> "inhibit_**discharge**"
+>> "stops **charging** of the battery"
 >>
->> -- >8 --
->>
->> Tested with a X570 I Aorus Pro Wifi.
->> The mainboard contains an ITE IT8688E chip for management.
->> This chips is also handled by drivers/hwmon/i87.c but as it is also used
->> by the firmware itself it needs an ACPI driver.
->>
->> Unfortunately not all sensor registers are handled by the firmware and even
->> less are exposed via WMI.
->>
->> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
->> ---
->>  drivers/platform/x86/Kconfig        |  11 +++
->>  drivers/platform/x86/Makefile       |   1 +
->>  drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
-> 
-> Originally drivers/platform was supposed to be used for platform specific
-> code. Not that I have control over it, but I really dislike that more and
-> more hwmon drivers end up there.
-> 
-> At least hwmon is in good company - I see drivers for various other subsystems
-> there as well. I just wonder if that is such a good idea. That entire directory
-> is bypassing subsystem maintainer reviews.
+>> I'm wondering if it should be "inhibit_charge" or something like that?
+>
+> Text and file name also seem to have reverse meaning for me. I
+> assume the text is the correct one, since it does not seem to
+> make sense inhibiting discharge. That would result in instant
+> poweroff on AC loss?
+>
+>>> Sebastian, I believe that this should be changes to instead be documen=
+ted
+>>> in: Documentation/ABI/testing/sysfs-class-power
+>>> and besides the rename I was wondering if you have any remarks on the =
+proposed
+>>> API before Nicolo sends out a v2 ?
+>
+> IIUIC you have 'force_discharge', which basically means the system
+> is running from battery power despite an AC adapter being connected
+> and 'inhibit_discharge', which inhibits charging, so system does not
+> charge battery when AC is connected, but uses AC to supply itself
+> (so battery is idle)?
+>
+> We already have this kind of features on embedded systems (which
+> often provide all kind of charger details). Those drivers solve
+> this by having a writable 'status' property in the charger device:
+>
+> What:           /sys/class/power_supply/<supply_name>/status
+> Date:           May 2007
+> Contact:        linux-pm@vger.kernel.org
+> Description:
+>                  Represents the charging status of the battery. Normally=
+ this
+>                  is read-only reporting although for some supplies this =
+can be
+>                  used to enable/disable charging to the battery.
+>
+>                  Access: Read, Write
+>
+>                  Valid values:
+>                                "Unknown", "Charging", "Discharging",
+>                                "Not charging", "Full"
+>
+> If I do not miss anything writing "Discharging" is the same as forced
+> discharge and "Not Charging" (AKA Idle) is the same as your inhibit feat=
+ure.
+>
+> -- Sebastian
+>
 
-In case you are not aware I've recent(ish) taken over the drivers/platform/x86
-maintainership from Andy Shevchenko.
-
-Yes it is a bit of an odd grab-bag it mostly deals with vendor specific
-ACPI / WMI interfaces which often more or less require using a single
-driver while offering multiple functionalities. These firmware interfaces
-do not really lend themselves to demultiplexing through something like
-MFD. These are mostly found on laptops where they deal with some or all of:
-
-- Hotkeys for brightness adjust / wlan-on/off toggle, touchpad on/off toggle, etc.
-  (input subsystem stuff)
-- Mic. / Speaker mute LEDS (and other special LEDs) found on some laptops
-  (LED subsystem stuff)
-- Enabling/disabling radios
-  (rfkill stuff)
-- Controlling the DPTF performance profile
-  (ACPI stuff)
-- Various sensors, some hwmon, some IIO
-- Backlight control (drm/kms subsys)
-- Enabling/disabling of LCD-builtin privacy filters (requires KMS/DRM subsys integration, pending)
-- Fan control (hwmon subsys)
-
-And often all of this in a single driver. This is all "stuff" for which
-there are no standard APIs shared between vendors, so it is a free for
-all and often it is all stuffed behind a single WMI or ACPI object,
-because that is how the vendor's drivers under Windows work.
-
-It certainly is not my intention to bypass review by other subsystem
-maintainers and when there are significant questions I do try to always
-get other subsys maintainers involved. See e.g. this thread, but also the
-"[PATCH 1/3] thinkpad_acpi: add support for force_discharge" thread
-where I asked for input from sre for the power-supply aspects of that.
-
-The WMI code was reworked a while back to make WMI be a bus and have
-individual WMI objects be devices on that bus. version 2 of this
-driver has been reworked to use this. Since this new driver is just a hwmon
-driver and as this is for a desktop I expect it will stay that way,
-I'm fine with moving this one over to drivers/hwmon if that has your
-preference.
-
-As for other cases then this driver, if you want to make sure you are at
-least Cc-ed on all hwmon related changes I'm fine with adding you as a
-reviewer to the pdx86 MAINTAINERS entry.
-
-Regards,
-
-Hans
-
-
-
-
-> 
-> Guenter
-> 
->>  3 files changed, 150 insertions(+)
->>  create mode 100644 drivers/platform/x86/gigabyte-wmi.c
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index ad4e630e73e2..96622a2106f7 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -123,6 +123,17 @@ config XIAOMI_WMI
->>  	  To compile this driver as a module, choose M here: the module will
->>  	  be called xiaomi-wmi.
->>  
->> +config GIGABYTE_WMI
->> +	tristate "Gigabyte WMI temperature driver"
->> +	depends on ACPI_WMI
->> +	depends on HWMON
->> +	help
->> +	  Say Y here if you want to support WMI-based temperature reporting on
->> +	  Gigabyte mainboards.
->> +
->> +	  To compile this driver as a module, choose M here: the module will
->> +	  be called gigabyte-wmi.
->> +
->>  config ACERHDF
->>  	tristate "Acer Aspire One temperature and fan driver"
->>  	depends on ACPI && THERMAL
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index 60d554073749..1621ebfd04fd 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -15,6 +15,7 @@ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
->>  obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
->>  obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
->>  obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
->> +obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
->>  
->>  # Acer
->>  obj-$(CONFIG_ACERHDF)		+= acerhdf.o
->> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
->> new file mode 100644
->> index 000000000000..8618363e3ccf
->> --- /dev/null
->> +++ b/drivers/platform/x86/gigabyte-wmi.c
->> @@ -0,0 +1,138 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + *  Copyright (C) 2021 Thomas Weißschuh <thomas@weissschuh.net>
->> + */
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/acpi.h>
->> +#include <linux/hwmon.h>
->> +#include <linux/module.h>
->> +#include <linux/wmi.h>
->> +
->> +#define GIGABYTE_WMI_GUID "DEADBEEF-2001-0000-00A0-C90629100000"
->> +
->> +enum gigabyte_wmi_commandtype {
->> +	GIGABYTE_WMI_BUILD_DATE_QUERY       =   0x1,
->> +	GIGABYTE_WMI_MAINBOARD_TYPE_QUERY   =   0x2,
->> +	GIGABYTE_WMI_FIRMWARE_VERSION_QUERY =   0x4,
->> +	GIGABYTE_WMI_MAINBOARD_NAME_QUERY   =   0x5,
->> +	GIGABYTE_WMI_TEMPERATURE_QUERY      = 0x125,
->> +};
->> +
->> +struct gigabyte_wmi_args {
->> +	u32 arg1;
->> +};
->> +
->> +static int gigabyte_wmi_perform_query(enum gigabyte_wmi_commandtype command,
->> +		struct gigabyte_wmi_args *args, struct acpi_buffer *out)
->> +{
->> +	const struct acpi_buffer in = {
->> +		.length = sizeof(*args),
->> +		.pointer = args,
->> +	};
->> +
->> +	acpi_status ret = wmi_evaluate_method(GIGABYTE_WMI_GUID, 0x0, command, &in, out);
->> +	if (ret == AE_OK) {
->> +		return 0;
->> +	} else {
->> +		return -EIO;
->> +	};
->> +}
->> +
->> +static int gigabyte_wmi_query_integer(enum gigabyte_wmi_commandtype command,
->> +		struct gigabyte_wmi_args *args, u64 *res)
->> +{
->> +	union acpi_object *obj;
->> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
->> +	int ret;
->> +
->> +	ret = gigabyte_wmi_perform_query(command, args, &result);
->> +	if (ret) {
->> +		goto out;
->> +	}
->> +	obj = result.pointer;
->> +	if (obj && obj->type == ACPI_TYPE_INTEGER) {
->> +		*res = obj->integer.value;
->> +		ret = 0;
->> +	} else {
->> +		ret = -EIO;
->> +	}
->> +out:
->> +	kfree(result.pointer);
->> +	return ret;
->> +}
->> +
->> +static int gigabyte_wmi_temperature(u8 sensor, long *res)
->> +{
->> +	struct gigabyte_wmi_args args = {
->> +		.arg1 = sensor,
->> +	};
->> +	u64 temp;
->> +	acpi_status ret;
->> +
->> +	ret = gigabyte_wmi_query_integer(GIGABYTE_WMI_TEMPERATURE_QUERY, &args, &temp);
->> +	if (ret == 0)
->> +		*res = (s8) temp * 1000; // value is a signed 8-bit integer
->> +	return ret;
->> +}
->> +
->> +static int gigabyte_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
->> +		u32 attr, int channel, long *val)
->> +{
->> +	return gigabyte_wmi_temperature(channel, val);
->> +}
->> +
->> +static umode_t gigabyte_wmi_hwmon_is_visible(const void *data, enum hwmon_sensor_types type,
->> +		u32 attr, int channel)
->> +{
->> +	return 0444;
->> +}
->> +
->> +static const struct hwmon_channel_info *gigabyte_wmi_hwmon_info[] = {
->> +	HWMON_CHANNEL_INFO(temp,
->> +			HWMON_T_INPUT,
->> +			HWMON_T_INPUT,
->> +			HWMON_T_INPUT,
->> +			HWMON_T_INPUT,
->> +			HWMON_T_INPUT,
->> +			HWMON_T_INPUT),
->> +	NULL,
->> +};
->> +
->> +static const struct hwmon_ops gigabyte_wmi_hwmon_ops = {
->> +	.read = gigabyte_wmi_hwmon_read,
->> +	.is_visible = gigabyte_wmi_hwmon_is_visible,
->> +};
->> +
->> +static const struct hwmon_chip_info gigabyte_wmi_hwmon_chip_info = {
->> +	.ops = &gigabyte_wmi_hwmon_ops,
->> +	.info = gigabyte_wmi_hwmon_info,
->> +};
->> +
->> +static int gigabyte_wmi_probe(struct wmi_device *wdev, const void *context)
->> +{
->> +	struct device *hwmon_dev = devm_hwmon_device_register_with_info(&wdev->dev,
->> +			"gigabyte_wmi", NULL,
->> +			&gigabyte_wmi_hwmon_chip_info, NULL);
->> +
->> +	return PTR_ERR_OR_ZERO(hwmon_dev);
->> +}
->> +
->> +static const struct wmi_device_id gigabyte_wmi_id_table[] = {
->> +	{ GIGABYTE_WMI_GUID, NULL },
->> +	{ },
->> +};
->> +
->> +static struct wmi_driver gigabyte_wmi_driver = {
->> +	.driver = {
->> +		.name = "gigabyte-wmi",
->> +	},
->> +	.id_table = gigabyte_wmi_id_table,
->> +	.probe = gigabyte_wmi_probe,
->> +};
->> +module_wmi_driver(gigabyte_wmi_driver);
->> +
->> +MODULE_DEVICE_TABLE(wmi, gigabyte_wmi_id_table);
->> +MODULE_AUTHOR("Thomas Weißschuh <thomas@weissschuh.net>");
->> +MODULE_DESCRIPTION("Gigabyte Temperature WMI Driver");
->> +MODULE_LICENSE("GPL");
->>
->> base-commit: 144c79ef33536b4ecb4951e07dbc1f2b7fa99d32
->> -- 
->> 2.31.1
->>
-> 
 
