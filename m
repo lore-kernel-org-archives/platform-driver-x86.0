@@ -2,145 +2,173 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A9DC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 06:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FF7C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 12:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABAF661168
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 06:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B00610E7
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 12:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbhDIGCu (ORCPT
+        id S233470AbhDIMpO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Apr 2021 02:02:50 -0400
-Received: from ned.t-8ch.de ([212.47.237.191]:34170 "EHLO ned.t-8ch.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233244AbhDIGCu (ORCPT
+        Fri, 9 Apr 2021 08:45:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45492 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231402AbhDIMpN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Apr 2021 02:02:50 -0400
-Date:   Fri, 9 Apr 2021 08:02:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1617948149;
-        bh=FHpOq7QS5QYAWuDQCp+yK31YAWp1DRpKH+1+t7s003I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FayLsPnKzAtX8Vx8EDISy/FpK1sMI/VA6cDo4MvXv0VIG2TxMvDiinOilY2L6UnnN
-         f9twWpEZtdV1fx22PYZAY+KbFjCy0LR3LHowFB0GxB8GIP9BKCqQQckPXgjd73A2tm
-         KU3GWPNrbOOdx2072zUqCKeqWoRQwEqkpQ2SvUYY=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-Message-ID: <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
-References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
- <20210405204810.339763-1-linux@weissschuh.net>
- <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
- <123d021b-b86b-4356-b234-fb46fa260193@t-8ch.de>
- <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
- <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
+        Fri, 9 Apr 2021 08:45:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617972300;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uvnPWZA5WYAbjq6DAmDLsT765wKi9L7F6ktZ4467iS8=;
+        b=Nwd0ZamUCMirrinLrQO0eN3gULzqLnLIGWx06wGxC3IuElBCrYFmQCszk7KTvtdcBOUsbB
+        BaXoUMcws2+G9AVgMYdjmIjZPRFy5Z8Lwn/IUHHMLFMutBo9QPKKgYIpfY9fcKE0NKio2n
+        0yc/GBadvgxJAlPjR4Yo4ZhnTx8xAaM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-151-xe4MRLsANf-LYo9N6WjUpQ-1; Fri, 09 Apr 2021 08:44:53 -0400
+X-MC-Unique: xe4MRLsANf-LYo9N6WjUpQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81DA7107ACCD;
+        Fri,  9 Apr 2021 12:44:51 +0000 (UTC)
+Received: from localhost (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A66660BE5;
+        Fri,  9 Apr 2021 12:44:46 +0000 (UTC)
+Date:   Fri, 9 Apr 2021 20:44:43 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org,
+        ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dvhart@infradead.org, andy@infradead.org,
+        hpa@zytor.com, kexec@lists.infradead.org, dyoung@redhat.com
+Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
+ crashkernel option is specified
+Message-ID: <20210409124443.GA20513@MiWiFi-R3L-srv>
+References: <20210407140316.30210-1-lijiang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
-Jabber-ID: thomas@t-8ch.de
-X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
-X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
-X-PGP-Key: https://t-8ch.de/pubkey.asc
-X-PGP-Key-Fingerprint: 187EF7CE
+In-Reply-To: <20210407140316.30210-1-lijiang@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Do, 2021-04-08T08:00-0700, Guenter Roeck wrote:
-> On 4/8/21 2:36 AM, Hans de Goede wrote:
-> > On 4/7/21 9:43 PM, Thomas Weißschuh wrote:
-> >> On Mi, 2021-04-07T17:54+0200, Hans de Goede wrote:
-> > Jean, Guenter,
-> > 
-> > Thomas has been working on a WMI driver to expose various motherboard
-> > temperatures on a gigabyte board where the IO-addresses for the it87 chip
-> > are reserved by ACPI. We are discussing how best to deal with this, there
-> > are some ACPI methods to directly access the super-IO registers (with locking
-> > to protect against other ACPI accesses). This reminded me of an idea I had
-> > a while ago to solve a similar issue with an other superIO chip, abstract
-> > the superIO register access-es using some reg_ops struct and allow an ACPI/WMI
-> > driver to provide alternative reg_ops:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
-> > 
-> > Do you think this is a good idea (or a bad one)? And would something like that
-> > be acceptable to you ?
-> > 
+On 04/07/21 at 10:03pm, Lianbo Jiang wrote:
+> Some sub-1MB memory regions may be reserved by EFI boot services, and the
+> memory regions will be released later in the efi_free_boot_services().
 > 
-> The upstream it87 driver is severely out of date. I had an out-of-tree driver
-> with various improvements which I didn't upstream, first because no one was willing
-> to review changes and then because it had deviated too much. I pulled it from
-> public view because I got pounded for not upstreaming it, because people started
-> demanding support (not asking, demanding) for it, and because Gigabyte stopped
-> providing datasheets for the more recent ITE chips and it became effectively
-> unmaintainable.
+> Currently, always reserve all sub-1MB memory regions when the crashkernel
+> option is specified, but unfortunately EFI boot services may have already
+> reserved some sub-1MB memory regions before the crash_reserve_low_1M() is
+> called, which makes that the crash_reserve_low_1M() only own the
+> remaining sub-1MB memory regions, not all sub-1MB memory regions, because,
+> subsequently EFI boot services will free its own sub-1MB memory regions.
+> Eventually, DMA will be able to allocate memory from the sub-1MB area and
+> cause the following error:
 > 
-> Some ITE chips have issues which can cause system hangs if accessed directly.
-> I put some work to remedy that into the non-upstream driver, but that was all
-> just guesswork. Gigabyte knows about the problem (or so I was told from someone
-> who has an NDA with them), but I didn't get them or ITE to even acknowledge it
-> to me. I even had a support case open with Gigabyte for a while, but all I could
-> get out of them is that they don't support Linux and what I would have to reproduce
-> the problem with Windows for them to provide assistance (even though, again,
-> they knew about it).
+
+So this patch is fixing a problem found in crash utility. We ever met
+the similar issue, later fixed by always reserving low 1M in commit
+6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the crashkernel
+option is specified"). Seems the commit is not fixing it completely.
+
+> crash> kmem -s |grep invalid
+> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
+> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
+> crash> vtop ffff9403c0067300
+> VIRTUAL           PHYSICAL
+> ffff9403c0067300  67300   --->The physical address falls into this range [0x0000000000063000-0x000000000008efff]
 > 
-> As for using ACPI locks or WMI to ensure that ACPI leaves the chip alone while
-> the driver accesses chips directly: That is an option, but it has (at least)
-> two problems.
+> kernel debugging log:
+> ...
+> [    0.008927] memblock_reserve: [0x0000000000010000-0x0000000000013fff] efi_reserve_boot_services+0x85/0xd0
+> [    0.008930] memblock_reserve: [0x0000000000063000-0x000000000008efff] efi_reserve_boot_services+0x85/0xd0
+> ...
+> [    0.009425] memblock_reserve: [0x0000000000000000-0x00000000000fffff] crash_reserve_low_1M+0x2c/0x49
+> ...
+> [    0.010586] Zone ranges:
+> [    0.010587]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> [    0.010589]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+> [    0.010591]   Normal   [mem 0x0000000100000000-0x0000000c7fffffff]
+> [    0.010593]   Device   empty
+> ...
+> [    8.814894] __memblock_free_late: [0x0000000000063000-0x000000000008efff] efi_free_boot_services+0x14b/0x23b
+> [    8.815793] __memblock_free_late: [0x0000000000010000-0x0000000000013fff] efi_free_boot_services+0x14b/0x23b
+
+
+In commit 6f599d84231fd27, we call crash_reserve_low_1M() to lock the
+whole low 1M area if crashkernel is specified in kernel cmdline.
+But earlier efi_reserve_boot_services() invokation will break the
+intention of the whole low 1M reserving. In efi_reserve_boot_services(),
+if any memory under low 1M hasn't been reserved, it will call
+memblock_reserve() to reserve it and leave it to
+efi_free_boot_services() to free.
+
+Hi Lianbo,
+
+Please correct me if I am wrong or anything is missed. IIUC, can we move
+efi_reserve_boot_services() after reserve_real_mode() to fix this bug?
+Or move reserve_real_mode() before efi_reserve_boot_services() since
+those real mode regions are all under 1M? Assume efi boot code/data
+won't rely on low 1M area any more at this moment.
+
+Thanks
+Baoquan
+
 > 
-> First, ACPI access methods are not well documented or standardized. I had tried
-> to find useful means to do that some time ago, but I gave up because each board
-> (even from the same vendor) handles locking and accesses differently. We would
-> end up with lots of board specific code. Coincidentally, that was for ASUS boards
-> and the nct6775 driver.
-
-At least for all the Gigabyte ACPI tables I have looked at all access is done
-via two-byte "OperationRegion" over the Index/Data addresses, a "Field" with
-two entries for these and an "IndexField" that is actually used to perform the
-accesses.
-As the IndexField is synchronized via "Lock" it should take a lock on the
-OperationRegion itself.
-
-So I think we should be technically fine with validating these assumption and
-then also taking locks on the OperationRegion.
-
-If it is reasonable to do so is another question.
-
-> Second, access through ACPI is only one of the issues. Turns out there are two
-> ITE chips on many of the Gigabyte boards nowadays, and the two chips talk to each
-> other using I2C. My out-of-tree driver tried to remedy that by blocking those
-> accesses while the driver used the chip, but, again, without Gigabyte / ITE
-> support this was never a perfect solution, and there was always the risk that
-> the board ended up hanging because that access was blocked for too long.
-> Recent ITE chips solve that problem by providing memory mapped access to the
-> chip registers, but that is only useful if one has a datasheet.
-
-Are both of these chips available at the two well-known registers 0x2e and
-0x4e?
-
-Would this too-long blocking also occur when only accessing single registers
-for read-only access?
-Any write access would probably have to be blocked anyways.
-
-> Overall, I don't think it makes much sense trying to make significant changes
-> to the it87 driver without pulling in all the changes I had made, and without
-> finding a better fix for the cross-chip access problems. I for sure won't have
-> time for that (and getting hwmon patches reviewed is still very much an issue).
+> Do not release sub-1MB memory regions even though they are reserved by
+> EFI boot services, so that always reserve all sub-1MB memory regions when
+> the crashkernel option is specified.
 > 
-> Having said that, I am of course open to adding WMI/ACPI drivers for the various
-> boards. Good luck getting support from Gigabyte, though. Or from ASUS, for that
-> matter.
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/platform/efi/quirks.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index 67d93a243c35..637f932c4fd4 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -18,6 +18,7 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/realmode.h>
+>  #include <asm/reboot.h>
+> +#include <asm/cmdline.h>
+>  
+>  #define EFI_MIN_RESERVE 5120
+>  
+> @@ -303,6 +304,19 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>   */
+>  static __init bool can_free_region(u64 start, u64 size)
+>  {
+> +	/*
+> +	 * Some sub-1MB memory regions may be reserved by EFI boot
+> +	 * services, and these memory regions will be released later
+> +	 * in the efi_free_boot_services().
+> +	 *
+> +	 * Do not release sub-1MB memory regions even though they are
+> +	 * reserved by EFI boot services, because, always reserve all
+> +	 * sub-1MB memory when the crashkernel option is specified.
+> +	 */
+> +	if (cmdline_find_option(boot_command_line, "crashkernel", NULL, 0) > 0
+> +		&& (start + size < (1<<20)))
+> +		return false;
+> +
+>  	if (start + size > __pa_symbol(_text) && start <= __pa_symbol(_end))
+>  		return false;
+>  
+> -- 
+> 2.17.1
+> 
 
-Thomas
