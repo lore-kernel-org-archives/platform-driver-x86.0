@@ -2,213 +2,145 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEAC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A9DC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 06:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A63B61108
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Apr 2021 18:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAF661168
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 06:02:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232267AbhDHSTb (ORCPT
+        id S229715AbhDIGCu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Apr 2021 14:19:31 -0400
-Received: from mout.gmx.net ([212.227.15.18]:56007 "EHLO mout.gmx.net"
+        Fri, 9 Apr 2021 02:02:50 -0400
+Received: from ned.t-8ch.de ([212.47.237.191]:34170 "EHLO ned.t-8ch.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231676AbhDHST3 (ORCPT
+        id S233244AbhDIGCu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Apr 2021 14:19:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1617905937;
-        bh=Ki8F9aoZGsc8sYK1np4A+b1L5wPi4wM1eAp3NmOl34w=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=UBCN26siRSKz25/qAfPVNIGcoJrP/JVNCN9tvdCp4oO49khM+Rj8TeR2J1pav/7aB
-         lea5nLqdEmggfCjHRwk9e/Dy4gtN0pgJC9YleuS0F5aRqmZTaDOQ5KM5Kif+Yrb908
-         Ky/+7C1ewQiUDnQ8FdnH/48TgZGVsdBMvwmLhkx4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.135.7.100] ([89.245.126.190]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N8XTv-1lhbzE1ctF-014Wi5; Thu, 08
- Apr 2021 20:18:57 +0200
-Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
-To:     Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
+        Fri, 9 Apr 2021 02:02:50 -0400
+Date:   Fri, 9 Apr 2021 08:02:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
+        s=mail; t=1617948149;
+        bh=FHpOq7QS5QYAWuDQCp+yK31YAWp1DRpKH+1+t7s003I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FayLsPnKzAtX8Vx8EDISy/FpK1sMI/VA6cDo4MvXv0VIG2TxMvDiinOilY2L6UnnN
+         f9twWpEZtdV1fx22PYZAY+KbFjCy0LR3LHowFB0GxB8GIP9BKCqQQckPXgjd73A2tm
+         KU3GWPNrbOOdx2072zUqCKeqWoRQwEqkpQ2SvUYY=
+From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To:     Guenter Roeck <linux@roeck-us.net>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        "jwrdegoede@fedoraproject.org" <jwrdegoede@fedoraproject.org>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>
-References: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com>
- <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
- <3anWBvkrPqTNQyfx2ZwDaLZKXtw5PMwTTdcgGNt0FaACUSsrkb5PaoqVKxLpxXU-4NcVZ9AqDQLs2VMOmvS-KfxHRmOSQiZlMjyvH282mdQ=@protonmail.com>
- <20210408135102.6r2przibgngaavkp@earth.universe>
-From:   Thomas Koch <linrunner@gmx.net>
-Message-ID: <f90b03c3-178e-0d0b-335e-6e5c0e6f284e@gmx.net>
-Date:   Thu, 8 Apr 2021 20:18:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Jean Delvare <jdelvare@suse.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>
+Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
+Message-ID: <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
+References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
+ <20210405204810.339763-1-linux@weissschuh.net>
+ <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
+ <123d021b-b86b-4356-b234-fb46fa260193@t-8ch.de>
+ <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
+ <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20210408135102.6r2przibgngaavkp@earth.universe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RKkVopUEdFbYMg+apN9YphfoakSrQoI3cDLRYpvfl8zualgg2yV
- S9iyQBOasKxZ8JSwBUBdbKsgUYjzWmzBEg5aN/hCcE9YafwZjsG6QFunUxja7KtnNBo3jmd
- PeXGVF+JMW4emXUULUCTkM/rGGR/zghjw0YO0T8abcNukE0hyD4Vo3D71Wtx5XYQFtkgmhK
- IHMFloC/vQEtgqgIQ09Bg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Gp/6pWfGZ0Y=:/pIb2kNHsWbrzcd+SOzs57
- UPS/E7iyqh+8ztSkj/0x9rW3IrLOT46/1lgNSU2K/S+PBE0gDc+5F5OhTk4yTjJDIMZIqu/0u
- 4apGz12ro3yYkiLRfS2uAlQHO+Kb3XUR/YLpsxluv8qPDBme/uaZuDWIJxAcmhMaUWGdlsO/f
- 9oFEUNYS9Ve2xhRdnloQlTghGxui2ZNcmJrvqrerORknnjDajA5ekzgzUOhpolD1jgLmlkgZf
- qBelgT1BbDi4L3BK4s7CfzSbPKbxtWbyGPi21OoMCk8eKA/p3HzKnVWfaVQxuMRZw51oYwrzb
- l0BnHgbNGQuArqESiKZ14UDuRvdEiwJNB3tAHfijGGcaFFRAHDDLQPPPbuzz1l0JyfIIrnxzc
- YF370b1qa5be0btNJESI42SrdNLesdEgJ8NEItnTZtX/+jCqkKC5YxUJS907fwvscZ7qzlWge
- d7vIeCpbWwNI/ANJpJR1AEaoW5YT2ATkA85f+wYUv/jnM8qJn3KXBJ9BIBgt0Yjp46telJ7eZ
- 7DunTjc2cfkxWzPQNusB021zluJ57vGYqz4FKugo/jhEHBKz9+H/SkHFEkSy5kYa8RI1doMOe
- hTT6dMRPhY2rDBxvkMbzvs+KXTS2Iq6RS0bngNr4Y30LwS4NFpxdQ6Zd5GNy7sa+sWUfw0rvL
- eBbbq2JxolgYGqtYLpQwjruEginNGshVH/pjyVXy+Y9qRASkeRJrwFALC/aXb9bT+x2jZQ2Xk
- ysOnxrIKRbFlzI1+Ho3mbmnp3S9ouBd+8Pplhs4JfPEoDXOMuKYVxGmRPEPVvZ7YmcLgUvJXC
- GJSIfvvSBdDGSU9AbDL31pKIl+dAt8R8c42qyP9qkxKPOVXi5aI8kYke3RmVfOp+JxTvZBz5H
- pFP5Q3Pk88X0xrnqobyCTYvNp121ajnTRB2l6EOUibSr481Cl0vNgGn+xfjMTlDE1Ds2vWd3s
- VlOx7kdRt1Tn10LoGrSUMxOjoEP/RAzK2UL7GH+cuzd2T8vLhqqt2zEq2itjprBByqE16WVqH
- 2L1ADchW+XNbQ9YQU0VovR98P8EBYMBKLiLBOmyj/v+PhxUUEe1vImvrcqA4XREAdr14MbpN2
- ud9W3Qam1DHgWsenOhkL3CIkFG2yUpNZ4kxwQtqk7amrXlegnvefV7NaW4XGmcbzkMcMsl+qE
- 0KE5Cky/e/nkqJV6ZeiYmVlVCIZaiYSZiQvav0D54UK/mOd/wA6v7MT1JXs9CwzbJSZHY=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
+Jabber-ID: thomas@t-8ch.de
+X-Accept: text/plain, text/html;q=0.2, text/*;q=0.1
+X-Accept-Language: en-us, en;q=0.8, de-de;q=0.7, de;q=0.6
+X-PGP-Key: https://t-8ch.de/pubkey.asc
+X-PGP-Key-Fingerprint: 187EF7CE
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+On Do, 2021-04-08T08:00-0700, Guenter Roeck wrote:
+> On 4/8/21 2:36 AM, Hans de Goede wrote:
+> > On 4/7/21 9:43 PM, Thomas Weißschuh wrote:
+> >> On Mi, 2021-04-07T17:54+0200, Hans de Goede wrote:
+> > Jean, Guenter,
+> > 
+> > Thomas has been working on a WMI driver to expose various motherboard
+> > temperatures on a gigabyte board where the IO-addresses for the it87 chip
+> > are reserved by ACPI. We are discussing how best to deal with this, there
+> > are some ACPI methods to directly access the super-IO registers (with locking
+> > to protect against other ACPI accesses). This reminded me of an idea I had
+> > a while ago to solve a similar issue with an other superIO chip, abstract
+> > the superIO register access-es using some reg_ops struct and allow an ACPI/WMI
+> > driver to provide alternative reg_ops:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
+> > 
+> > Do you think this is a good idea (or a bad one)? And would something like that
+> > be acceptable to you ?
+> > 
+> 
+> The upstream it87 driver is severely out of date. I had an out-of-tree driver
+> with various improvements which I didn't upstream, first because no one was willing
+> to review changes and then because it had deviated too much. I pulled it from
+> public view because I got pounded for not upstreaming it, because people started
+> demanding support (not asking, demanding) for it, and because Gigabyte stopped
+> providing datasheets for the more recent ITE chips and it became effectively
+> unmaintainable.
+> 
+> Some ITE chips have issues which can cause system hangs if accessed directly.
+> I put some work to remedy that into the non-upstream driver, but that was all
+> just guesswork. Gigabyte knows about the problem (or so I was told from someone
+> who has an NDA with them), but I didn't get them or ITE to even acknowledge it
+> to me. I even had a support case open with Gigabyte for a while, but all I could
+> get out of them is that they don't support Linux and what I would have to reproduce
+> the problem with Windows for them to provide assistance (even though, again,
+> they knew about it).
+> 
+> As for using ACPI locks or WMI to ensure that ACPI leaves the chip alone while
+> the driver accesses chips directly: That is an option, but it has (at least)
+> two problems.
+> 
+> First, ACPI access methods are not well documented or standardized. I had tried
+> to find useful means to do that some time ago, but I gave up because each board
+> (even from the same vendor) handles locking and accesses differently. We would
+> end up with lots of board specific code. Coincidentally, that was for ASUS boards
+> and the nct6775 driver.
 
- >> "inhibit_**discharge**"
+At least for all the Gigabyte ACPI tables I have looked at all access is done
+via two-byte "OperationRegion" over the Index/Data addresses, a "Field" with
+two entries for these and an "IndexField" that is actually used to perform the
+accesses.
+As the IndexField is synchronized via "Lock" it should take a lock on the
+OperationRegion itself.
 
- >> "stops **charging** of the battery"
+So I think we should be technically fine with validating these assumption and
+then also taking locks on the OperationRegion.
 
- >> I'm wondering if it should be "inhibit_charge" or something like that?
- > Text and file name also seem to have reverse meaning for me. I
+If it is reasonable to do so is another question.
 
- > assume the text is the correct one, since it does not seem to
+> Second, access through ACPI is only one of the issues. Turns out there are two
+> ITE chips on many of the Gigabyte boards nowadays, and the two chips talk to each
+> other using I2C. My out-of-tree driver tried to remedy that by blocking those
+> accesses while the driver used the chip, but, again, without Gigabyte / ITE
+> support this was never a perfect solution, and there was always the risk that
+> the board ended up hanging because that access was blocked for too long.
+> Recent ITE chips solve that problem by providing memory mapped access to the
+> chip registers, but that is only useful if one has a datasheet.
 
- > make sense inhibiting discharge. That would result in instant
+Are both of these chips available at the two well-known registers 0x2e and
+0x4e?
 
- > poweroff on AC loss?
+Would this too-long blocking also occur when only accessing single registers
+for read-only access?
+Any write access would probably have to be blocked anyways.
 
+> Overall, I don't think it makes much sense trying to make significant changes
+> to the it87 driver without pulling in all the changes I had made, and without
+> finding a better fix for the cross-chip access problems. I for sure won't have
+> time for that (and getting hwmon patches reviewed is still very much an issue).
+> 
+> Having said that, I am of course open to adding WMI/ACPI drivers for the various
+> boards. Good luck getting support from Gigabyte, though. Or from ASUS, for that
+> matter.
 
-Fortunately that's only a typo in the docs file. The actual sysfs node
-implemented by patch 2/3 is
-
-	/sys/class/power_supply/BATx/inhibit_charge
-
-
-=2D-
-
-Freundliche Gr=C3=BC=C3=9Fe / Kind regards,
-
-Thomas Koch
-
-
-
-Mail : linrunner@gmx.net
-
-Web  : https://linrunner.de/tlp
-
-
-On 08.04.21 15:51, Sebastian Reichel wrote:
-> Hi,
->
-> On Wed, Apr 07, 2021 at 10:33:41AM +0000, Barnab=C3=A1s P=C5=91cze wrote=
-:
->> 2021. =C3=A1prilis 7., szerda 12:24 keltez=C3=A9ssel, Hans de Goede =C3=
-=ADrta:
->>> 2. If we add support for this to the kernel we should probably
->>> first agree on standardized power-supply class property names for
->>> these, rather then coming up with our own names. ATM we register
->>> 2 names for the charge start threshold, the one which the thinkpad_acp=
-i
->>> code invented and the standardized name which was later added.
->>>
->>> I've added Sebastian, the power-supply class / driver maintainer to
->>> the Cc. for this. Sebastian Nicolo wants to add support for 2 new
->>> features as power-supply properties:
->>>
->>> --- a/Documentation/admin-guide/laptops/thinkpad-acpi.rst
->>> +++ b/Documentation/admin-guide/laptops/thinkpad-acpi.rst
->>> ...
->>> +Battery forced discharging
->>> +--------------------------
->>> +
->>> +sysfs attribute:
->>> +/sys/class/power_supply/BATx/force_discharge
->>> +
->>> +Setting this attribute to 1 forces the battery to discharge while AC =
-is attached.
->>> +Setting it to 0 terminates forced discharging.
->>> +
->>> +Battery charge inhibiting
->>> +--------------------------
->>> +
->>> +sysfs attribute:
->>> +/sys/class/power_supply/BATx/inhibit_discharge
->>> +
->>> +Setting this attribute to 1 stops charging of the battery as a manual=
- override
->>> +over the threshold attributes. Setting it to 0 terminates the overrid=
-e.
->>>
->>
->> "inhibit_**discharge**"
->> "stops **charging** of the battery"
->>
->> I'm wondering if it should be "inhibit_charge" or something like that?
->
-> Text and file name also seem to have reverse meaning for me. I
-> assume the text is the correct one, since it does not seem to
-> make sense inhibiting discharge. That would result in instant
-> poweroff on AC loss?
->
->>> Sebastian, I believe that this should be changes to instead be documen=
-ted
->>> in: Documentation/ABI/testing/sysfs-class-power
->>> and besides the rename I was wondering if you have any remarks on the =
-proposed
->>> API before Nicolo sends out a v2 ?
->
-> IIUIC you have 'force_discharge', which basically means the system
-> is running from battery power despite an AC adapter being connected
-> and 'inhibit_discharge', which inhibits charging, so system does not
-> charge battery when AC is connected, but uses AC to supply itself
-> (so battery is idle)?
->
-> We already have this kind of features on embedded systems (which
-> often provide all kind of charger details). Those drivers solve
-> this by having a writable 'status' property in the charger device:
->
-> What:           /sys/class/power_supply/<supply_name>/status
-> Date:           May 2007
-> Contact:        linux-pm@vger.kernel.org
-> Description:
->                  Represents the charging status of the battery. Normally=
- this
->                  is read-only reporting although for some supplies this =
-can be
->                  used to enable/disable charging to the battery.
->
->                  Access: Read, Write
->
->                  Valid values:
->                                "Unknown", "Charging", "Discharging",
->                                "Not charging", "Full"
->
-> If I do not miss anything writing "Discharging" is the same as forced
-> discharge and "Not Charging" (AKA Idle) is the same as your inhibit feat=
-ure.
->
-> -- Sebastian
->
-
-
+Thomas
