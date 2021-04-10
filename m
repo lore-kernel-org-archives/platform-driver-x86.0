@@ -2,240 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC524C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C4DC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 10:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E727610C8
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC1B610F9
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 10:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbhDJG4u (ORCPT
+        id S234350AbhDJKl3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Apr 2021 02:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44322 "EHLO
+        Sat, 10 Apr 2021 06:41:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbhDJG4s (ORCPT
+        with ESMTP id S234091AbhDJKl2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Apr 2021 02:56:48 -0400
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E97C061762;
-        Fri,  9 Apr 2021 23:56:34 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id f75-20020a9d03d10000b0290280def9ab76so2767138otf.12;
-        Fri, 09 Apr 2021 23:56:34 -0700 (PDT)
+        Sat, 10 Apr 2021 06:41:28 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E547C061762;
+        Sat, 10 Apr 2021 03:41:14 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id x7so7984829wrw.10;
+        Sat, 10 Apr 2021 03:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=69v/xKDkKDVCv+vp6CQW+QiOX+E1rN7FFRDWueCafvo=;
-        b=Gc4dkBYtifAXKh3RHfECQuQGpi9IQOjQNqARZLHPSrzAP5v2S0mk9s4SP/4tHEpn7u
-         O/+nrlFgKT0YSNuvy5x+puqruIK/aA8f2saxzA79KHmiXVeS0ktpEZZ3Cr8Zi4O20QnF
-         vpuhISk/WPTxSroMN9cNbMj8X0sOJigy1HmezAo/itXogwvyOOfkoREAFjN4No61goJB
-         3sjmlgpJpIbEXSNrzPGcpLkUarariYSHIpv0rv6yuNODkzeGWgC86q+WpSNEBuWhKsF/
-         PCp4MMPtC9JLIIab5o4BhS7lt+mWs2gfxcharLizFOb6ZxSm+T4wiRP6KlHQf19cNinS
-         xfQg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qb8YcwmVjCvWFlIO3GJpj9CyVTAbrtiPYaokYJsc6zU=;
+        b=uKxwHHfW6z6r9sCgf/UAbjP/xhWeWCW7x2+4FAWp74+p+3Dnow4c3GnlyMKReBLxtm
+         lLvIygdSSl+uhEvzFRtbi3qh+QZBE5qDtEFSK5juYuUfl3lN8ekfbelAWm7GIloq0MU9
+         5P0QS3fMgt2Rug/txjIaZhX9+OjTzTGTTjgq0pI7ZafDZGsFYJ1HUF3z16SiXLWq2S82
+         M/oaif8BnDbw2uhDFCNb0PrltAbKIQFArTFbRAqYJoJ0ani9ksaXeUc9dvZZk1R7DO4v
+         nwiTvWwcQoObPdrVsCfK/u5NdFKGDlvNw8X/NHKGQi36joph8dNoz9yW12dNMw37IEKD
+         18mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=69v/xKDkKDVCv+vp6CQW+QiOX+E1rN7FFRDWueCafvo=;
-        b=DMFKLlgw/M/Rv6+RU/rGVpAcsKDxWCSipH8TklbwSxb1iapAUJoRc58aofGO6nhrTk
-         XBCuSkc9Vpv+i+eJYKWlzW+vkeVDeS7FKbFj49bIo6WBkaQJxNY0Yb8WQBDAe7Zuzpuz
-         gbEYwtqw4ZByQH9CPRan20dyeZk5LswfYJDvMjlQjAlFsgUaf70lJ8QUa5Y2oCZgVivA
-         aG+RaaSe2nLS7ToT4pI0XQJ2xoJJWfO6Dx4RWa2NfI5IUqpSCE07T+/se8mQJijv7F2u
-         U0nPZkUv1Tx1X/v32I6oOSsNZkSAh0HKidanY7rRq4CrPQOp2BJXxYK9sOg41oUSstFL
-         C3xQ==
-X-Gm-Message-State: AOAM530H5ZWg1KwsYPGOoNNBZ66wvHyJ3zq7QLbxtqc++yFiZnoMVdR5
-        mluh3M0xqHLM9PPMHyJtpCc=
-X-Google-Smtp-Source: ABdhPJzcgKWTIsecdEmYCtl4qlXrZrft/c7DTBhj09G08CnyTHtvq6ExnQ20cfgVi0fjlf54xo53tw==
-X-Received: by 2002:a9d:bf8:: with SMTP id 111mr6550391oth.306.1618037793451;
-        Fri, 09 Apr 2021 23:56:33 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l26sm1159294otd.21.2021.04.09.23.56.31
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qb8YcwmVjCvWFlIO3GJpj9CyVTAbrtiPYaokYJsc6zU=;
+        b=RrktLmy6L2tkmRQP0HDLl2juQjqXZmzMoafCgMXLU1Jq5T5ZGfuUKEn+mjGRZkONvF
+         /oYL9j187PQuOzhFfs/iaotTgQayIVQWEcrxt2S58IfthnuhnwQZpRpc9ZOpCXb+twcr
+         OGqY/DukaN2MsQf9JTp575O9sb0rGI6kyHxeVMf8mmzxYivCn1fCWGL1+s1x5p9uJxkB
+         bQoCV7ig8N2PBvAwW9RNFKy24oOlekMnNX9r+rPEDke+14FaMQFAhSxMZiMrCzkBm9EM
+         s8lC0OHshUPCLTr+CLwfPfsPy4V6TyiUXSoy4Msc0c52VouwlTuEwD0blmSQobsZLHDb
+         tDWA==
+X-Gm-Message-State: AOAM533ux0IHLyWxuJt3AfGcBKS82Z/ju9vyT44Smkfm71ymWJ9EtCK8
+        lMxM0ME0qhy2Wg8IrGlAhq3Cp6IUll4=
+X-Google-Smtp-Source: ABdhPJygiTo6NoNb+c5+WZ8H7OctCHMmGFH3/02qw1dh179Y5Q5KGoFrUSnRcOmVYoHInCwvELfHxg==
+X-Received: by 2002:adf:ba87:: with SMTP id p7mr22362806wrg.298.1618051272682;
+        Sat, 10 Apr 2021 03:41:12 -0700 (PDT)
+Received: from [192.168.2.202] (pd9ea306d.dip0.t-ipconnect.de. [217.234.48.109])
+        by smtp.gmail.com with ESMTPSA id w22sm7433524wmc.13.2021.04.10.03.41.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Apr 2021 23:56:32 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        platform-driver-x86@vger.kernel.org,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
-        Matthew Garrett <mjg59@srcf.ucam.org>
-References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
- <20210405204810.339763-1-linux@weissschuh.net>
- <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
- <123d021b-b86b-4356-b234-fb46fa260193@t-8ch.de>
- <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
- <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
- <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <b236c75e-43c0-e56d-aed7-153fdc11729c@roeck-us.net>
-Date:   Fri, 9 Apr 2021 23:56:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 10 Apr 2021 03:41:12 -0700 (PDT)
+Subject: Re: [PATCH -next] power: supply: Make some symbols static
+To:     Qiheng Lin <linqiheng@huawei.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+References: <20210410041246.12791-1-linqiheng@huawei.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <3026d506-4755-4885-4d22-9f589a660221@gmail.com>
+Date:   Sat, 10 Apr 2021 12:41:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
 MIME-Version: 1.0
-In-Reply-To: <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20210410041246.12791-1-linqiheng@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/8/21 11:02 PM, Thomas Weißschuh wrote:
-> On Do, 2021-04-08T08:00-0700, Guenter Roeck wrote:
->> On 4/8/21 2:36 AM, Hans de Goede wrote:
->>> On 4/7/21 9:43 PM, Thomas Weißschuh wrote:
->>>> On Mi, 2021-04-07T17:54+0200, Hans de Goede wrote:
->>> Jean, Guenter,
->>>
->>> Thomas has been working on a WMI driver to expose various motherboard
->>> temperatures on a gigabyte board where the IO-addresses for the it87 chip
->>> are reserved by ACPI. We are discussing how best to deal with this, there
->>> are some ACPI methods to directly access the super-IO registers (with locking
->>> to protect against other ACPI accesses). This reminded me of an idea I had
->>> a while ago to solve a similar issue with an other superIO chip, abstract
->>> the superIO register access-es using some reg_ops struct and allow an ACPI/WMI
->>> driver to provide alternative reg_ops:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
->>>
->>> Do you think this is a good idea (or a bad one)? And would something like that
->>> be acceptable to you ?
->>>
->>
->> The upstream it87 driver is severely out of date. I had an out-of-tree driver
->> with various improvements which I didn't upstream, first because no one was willing
->> to review changes and then because it had deviated too much. I pulled it from
->> public view because I got pounded for not upstreaming it, because people started
->> demanding support (not asking, demanding) for it, and because Gigabyte stopped
->> providing datasheets for the more recent ITE chips and it became effectively
->> unmaintainable.
->>
->> Some ITE chips have issues which can cause system hangs if accessed directly.
->> I put some work to remedy that into the non-upstream driver, but that was all
->> just guesswork. Gigabyte knows about the problem (or so I was told from someone
->> who has an NDA with them), but I didn't get them or ITE to even acknowledge it
->> to me. I even had a support case open with Gigabyte for a while, but all I could
->> get out of them is that they don't support Linux and what I would have to reproduce
->> the problem with Windows for them to provide assistance (even though, again,
->> they knew about it).
->>
->> As for using ACPI locks or WMI to ensure that ACPI leaves the chip alone while
->> the driver accesses chips directly: That is an option, but it has (at least)
->> two problems.
->>
->> First, ACPI access methods are not well documented or standardized. I had tried
->> to find useful means to do that some time ago, but I gave up because each board
->> (even from the same vendor) handles locking and accesses differently. We would
->> end up with lots of board specific code. Coincidentally, that was for ASUS boards
->> and the nct6775 driver.
+On 4/10/21 6:12 AM, Qiheng Lin wrote:
+> The sparse tool complains as follows:
 > 
-> At least for all the Gigabyte ACPI tables I have looked at all access is done
-> via two-byte "OperationRegion" over the Index/Data addresses, a "Field" with
-> two entries for these and an "IndexField" that is actually used to perform the
-> accesses.
-> As the IndexField is synchronized via "Lock" it should take a lock on the
-> OperationRegion itself.
+> drivers/power/supply/surface_battery.c:700:1: warning:
+>   symbol 'dev_attr_alarm' was not declared. Should it be static?
+> drivers/power/supply/surface_battery.c:805:1: warning:
+>   symbol 'surface_battery_pm_ops' was not declared. Should it be static?
 > 
-> So I think we should be technically fine with validating these assumption and
-> then also taking locks on the OperationRegion.
+> This symbol is not used outside of surface_battery.c, so this
+> commit marks it static.
 > 
-> If it is reasonable to do so is another question.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
+
+Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+> ---
+>   drivers/power/supply/surface_battery.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-You'd still have to validate this for each individual board unless you get
-confirmation from Gigabyte that the mechanism is consistent on their boards.
-Then you'd have to handle other vendors using it87 chips, and those are
-just as close-lipped as Gigabyte. Ultimately it would require acpi match
-tables to match the various boards and access methods. I had experimented
-with this this a long time ago but gave up on it after concluding that it was
-unmaintainable.
-
->> Second, access through ACPI is only one of the issues. Turns out there are two
->> ITE chips on many of the Gigabyte boards nowadays, and the two chips talk to each
->> other using I2C. My out-of-tree driver tried to remedy that by blocking those
->> accesses while the driver used the chip, but, again, without Gigabyte / ITE
->> support this was never a perfect solution, and there was always the risk that
->> the board ended up hanging because that access was blocked for too long.
->> Recent ITE chips solve that problem by providing memory mapped access to the
->> chip registers, but that is only useful if one has a datasheet.
+> diff --git a/drivers/power/supply/surface_battery.c b/drivers/power/supply/surface_battery.c
+> index 4116dd839ecd..7efa431a62b2 100644
+> --- a/drivers/power/supply/surface_battery.c
+> +++ b/drivers/power/supply/surface_battery.c
+> @@ -697,7 +697,7 @@ static ssize_t alarm_store(struct device *dev, struct device_attribute *attr, co
+>   	return count;
+>   }
+>   
+> -DEVICE_ATTR_RW(alarm);
+> +static DEVICE_ATTR_RW(alarm);
+>   
+>   static struct attribute *spwr_battery_attrs[] = {
+>   	&dev_attr_alarm.attr,
+> @@ -802,7 +802,7 @@ static int __maybe_unused surface_battery_resume(struct device *dev)
+>   {
+>   	return spwr_battery_recheck_full(dev_get_drvdata(dev));
+>   }
+> -SIMPLE_DEV_PM_OPS(surface_battery_pm_ops, NULL, surface_battery_resume);
+> +static SIMPLE_DEV_PM_OPS(surface_battery_pm_ops, NULL, surface_battery_resume);
+>   
+>   static int surface_battery_probe(struct ssam_device *sdev)
+>   {
 > 
-> Are both of these chips available at the two well-known registers 0x2e and
-> 0x4e?
-> 
-
-The ones I know of are, yes.
-
-Oh, that reminds me, there is another bug. Here are my comments about that:
-
-/*
- * On various Gigabyte AM4 boards (AB350, AX370), the second Super-IO chip
- * (IT8792E) needs to be in configuration mode before accessing the first
- * due to a bug in IT8792E which otherwise results in LPC bus access errors.
- * This needs to be done before accessing the first Super-IO chip since
- * the second chip may have been accessed prior to loading this driver.
- *
- * The problem is also reported to affect IT8795E, which is used on X299 boards
- * and has the same chip ID as IT8792E (0x8733). It also appears to affect
- * systems with IT8790E, which is used on some Z97X-Gaming boards as well as
- * Z87X-OC.
- * DMI entries for those systems will be added as they become available and
- * as the problem is confirmed to affect those boards.
- */
-
-> Would this too-long blocking also occur when only accessing single registers
-> for read-only access?
-
-I don't know. Remember, zero support from Gigabyte / ITE.
-
-Guenter
