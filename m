@@ -2,129 +2,257 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E543BC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 18:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A69C43460
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 02:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC91061105
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Apr 2021 18:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3F16121F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 02:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234307AbhDISeA (ORCPT
+        id S234043AbhDJC5G (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Apr 2021 14:34:00 -0400
-Received: from mout.gmx.net ([212.227.17.21]:47079 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234133AbhDISd7 (ORCPT
+        Fri, 9 Apr 2021 22:57:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59285 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234133AbhDJC5G (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Apr 2021 14:33:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1617993205;
-        bh=vubNQZq27/wvPEMiBJ3ILc3gLh3KKXNv6EfCSlpq5KU=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=gx7/BH67twrRJpbmi25CVvqVgS1WSFc0Dv2f1JxWX3WGZz5wRBc7NcF0SJl4yvVuO
-         JPbMasd7tciQ5xxw5/2XuTHl6UCSMReyrRW05bV1BEMFKnTPkCUt9/xDFXmNw8DA5T
-         7OttMVFG9lvrGWjp2x5jYJEH7hdYsFFvzrmkq2G4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.135.7.100] ([89.245.204.201]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N3KPq-1leFYE43zm-010JTe; Fri, 09
- Apr 2021 20:33:25 +0200
-Subject: Re: [PATCH 1/3] thinkpad_acpi: add support for force_discharge
-To:     Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Nicolo' Piazzalunga <nicolopiazzalunga@gmail.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        "jwrdegoede@fedoraproject.org" <jwrdegoede@fedoraproject.org>,
-        "smclt30p@gmail.com" <smclt30p@gmail.com>
-References: <c2504700-06e9-e7d8-80f7-de90b0b6dfb5@gmail.com>
- <06f65bb5-eca4-c1ba-a8c2-b44f8a94c699@redhat.com>
- <3anWBvkrPqTNQyfx2ZwDaLZKXtw5PMwTTdcgGNt0FaACUSsrkb5PaoqVKxLpxXU-4NcVZ9AqDQLs2VMOmvS-KfxHRmOSQiZlMjyvH282mdQ=@protonmail.com>
- <20210408135102.6r2przibgngaavkp@earth.universe>
-From:   Thomas Koch <linrunner@gmx.net>
-Message-ID: <39c3436a-a08d-9530-3215-854148215312@gmx.net>
-Date:   Fri, 9 Apr 2021 20:33:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        Fri, 9 Apr 2021 22:57:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618023412;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7I+eMWiwUytX/eCn1RbadqntYrqf9xq/6Gyfxo9/q8w=;
+        b=b7fbtja0JhdrXrjS9grcEgED4f8KNoHD5bFrnhGTZubXVdPEpw4lETI13CHDGpHr2SOlGj
+        vPSH0z6fuzxekbezHMrY/YXvURnU1lg/sK26YYrEGWf2NyOQZuYlu2INpKw3qZWiQ17dgc
+        goWAsKNz1vWeFisxA33SkPQ4sPYOLB0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-n9M99CJgMoW0fH2I0Vd_iQ-1; Fri, 09 Apr 2021 22:56:48 -0400
+X-MC-Unique: n9M99CJgMoW0fH2I0Vd_iQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08AB6817469;
+        Sat, 10 Apr 2021 02:56:46 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-141.pek2.redhat.com [10.72.12.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67C8019705;
+        Sat, 10 Apr 2021 02:56:35 +0000 (UTC)
+Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
+ crashkernel option is specified
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, x86@kernel.org,
+        ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dvhart@infradead.org, andy@infradead.org,
+        hpa@zytor.com, kexec@lists.infradead.org, dyoung@redhat.com
+References: <20210407140316.30210-1-lijiang@redhat.com>
+ <20210409124443.GA20513@MiWiFi-R3L-srv>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <54859cf5-210d-a3fe-7978-9c2cd375ebc6@redhat.com>
+Date:   Sat, 10 Apr 2021 10:56:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20210408135102.6r2przibgngaavkp@earth.universe>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+UiLWJewlDAN0uCTAhpXBU/1WF/kVMdkfaO2Fgr2mty3Yo1zAjP
- 0zmenblURQnSiQSNvb3hrz2kdNTZgqzpmV3e6l+BLstLT9l8VA+birMRyKuRUbFFk03UDsw
- RUlna8nK7rGHV7GY6D+B6hHkkjdHHyDCHYKlFmNzBhIT8362TF11HD9iZEzJif9xJjEW+1b
- 3CNar68+ZptknXX8BAhfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/EZNRKJXbcY=:IOFat8jFbAqOtNUCzIbKte
- zlqo3w9eaghQsQUUHc2rASIOrC5GIERkDMDbCGs/SVy7jbpTAdlbiTE9m27UKSvjbKpMdAjNd
- njjrgan+xd9gTZWYXxE9zuB87yxzE/Hl1VTY8MxxpWf+bMzOWwI5A4J0t3iR7moYe85c2KuCt
- P07Loz8B7G3Wbpt7H1Q7Kq/TsVhGT+wuSomMkd6e1ZXhOAb8XZdC7l+dAEVLL8dzuMJ8xNWIv
- C6YUlH9a/KJcCA7tXboFOtNeoy3sqj26SadlfUko3v09gQ3dGk6UgXz8DIsUsh4rOapqem71v
- OpztkEk0gwDgywgXT4wA8i8skxZt652XTjXoZo6q/ue/uR0vL2NaueBpq9h4hFTmFPKU5Od9K
- PLTkPX+Uofs3HkAsCY8oAWArNJjSD65MvP6ED5XiuoK10HqQ9VJQ2NQ+V6zONOQBhwHN+fUjh
- n+cUv+ThLqjEej5R7bSNNvhyFy7o8oUVTRVZznHX5z0wTDE18U9ls6k4gchsxf8gH3uQMkzLJ
- utKPv6vfsklJ5zq2ANsje3NMtLfXrJROC3nMELsLotyMCiM5pvDrnww55ccQh80/MLk56rmaf
- K+bR3v8u54rwgGmx5ysekTKXurWg1X8Yh/FL0t1mtH5vb17jatwRWZ+088S9aQ7mQ9zcW4PMH
- LpsEhmY7nnJHw7tzKCqLHaWIzAinFrNgHPMC8LBissTYJyWCIxY3aa4KyHNpkQDaIXk/BDVsa
- alICJDvYGHO4Y019jP1ObNm64LiehM2N98X4FJSexni4cA/q5XsaJCW2hF5PbkyagT8GJsmOK
- BH2yuZB5rq3iUrSA9KMWXq/Gr5atUtVQU3LPPdutojo/KXB6qn7nuW2NCElX5AA3Uk+Oq32/u
- h2vRjjTPIjg6J0vahuY93BNiXvjJG7PtNaSJCNrHxIGGdyBlA1QDDdOGKKsh4184n6OkyYfN7
- lYIS5im2WtjLHStpbSwowf5kaUeYyLLin5+R0O+zqbonQryGYpFmNH1/XaZbgE10BaUJ1O+QD
- nj4lQ7nAixxcDWz66sgWXzJWDpZzoblyiFMalBo19i8E2v6/Gas9glFqb8a3e+CvQy3E+xf6b
- +yiojKXMsMc5uDiBL5eq0ul2lU+HtvfGA9Z6ZJMKvGQocMOXB38qcrUdaJYM14Yr3SnwPne06
- nTU61LiP3JdeuGAySDmr/0u49MuH2C/jx2DSExK/AN0s25MqIB1e4VxZmt1EVOBQLXqcA=
+In-Reply-To: <20210409124443.GA20513@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi, Baoquan
+Thank you for the comment.
+在 2021年04月09日 20:44, Baoquan He 写道:
+> On 04/07/21 at 10:03pm, Lianbo Jiang wrote:
+>> Some sub-1MB memory regions may be reserved by EFI boot services, and the
+>> memory regions will be released later in the efi_free_boot_services().
+>>
+>> Currently, always reserve all sub-1MB memory regions when the crashkernel
+>> option is specified, but unfortunately EFI boot services may have already
+>> reserved some sub-1MB memory regions before the crash_reserve_low_1M() is
+>> called, which makes that the crash_reserve_low_1M() only own the
+>> remaining sub-1MB memory regions, not all sub-1MB memory regions, because,
+>> subsequently EFI boot services will free its own sub-1MB memory regions.
+>> Eventually, DMA will be able to allocate memory from the sub-1MB area and
+>> cause the following error:
+>>
+> 
+> So this patch is fixing a problem found in crash utility. We ever met
+> the similar issue, later fixed by always reserving low 1M in commit
+> 6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the crashkernel
+> option is specified"). Seems the commit is not fixing it completely.
+> 
+Maybe I should add the "Fixes: 6f599d84231f" in front of 'Signed-off-by' as below:
 
-On 08.04.21 15:51, Sebastian Reichel wrote:
+Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
 
-> IIUIC you have 'force_discharge', which basically means the system
-> is running from battery power despite an AC adapter being connected
-> and 'inhibit_discharge', which inhibits charging, so system does not
-> charge battery when AC is connected, but uses AC to supply itself
-> (so battery is idle)?
->
-> We already have this kind of features on embedded systems (which
-> often provide all kind of charger details). Those drivers solve
-> this by having a writable 'status' property in the charger device:
->
-> What:           /sys/class/power_supply/<supply_name>/status
-> Date:           May 2007
-> Contact:        linux-pm@vger.kernel.org
-> Description:
->                  Represents the charging status of the battery. Normally=
- this
->                  is read-only reporting although for some supplies this =
-can be
->                  used to enable/disable charging to the battery.
->
->                  Access: Read, Write
->
->                  Valid values:
->                                "Unknown", "Charging", "Discharging",
->                                "Not charging", "Full"
->
-> If I do not miss anything writing "Discharging" is the same as forced
-> discharge and "Not Charging" (AKA Idle) is the same as your inhibit feat=
-ure.
+>> crash> kmem -s |grep invalid
+>> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
+>> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
+>> crash> vtop ffff9403c0067300
+>> VIRTUAL           PHYSICAL
+>> ffff9403c0067300  67300   --->The physical address falls into this range [0x0000000000063000-0x000000000008efff]
+>>
+>> kernel debugging log:
+>> ...
+>> [    0.008927] memblock_reserve: [0x0000000000010000-0x0000000000013fff] efi_reserve_boot_services+0x85/0xd0
+>> [    0.008930] memblock_reserve: [0x0000000000063000-0x000000000008efff] efi_reserve_boot_services+0x85/0xd0
+>> ...
+>> [    0.009425] memblock_reserve: [0x0000000000000000-0x00000000000fffff] crash_reserve_low_1M+0x2c/0x49
+>> ...
+>> [    0.010586] Zone ranges:
+>> [    0.010587]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+>> [    0.010589]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+>> [    0.010591]   Normal   [mem 0x0000000100000000-0x0000000c7fffffff]
+>> [    0.010593]   Device   empty
+>> ...
+>> [    8.814894] __memblock_free_late: [0x0000000000063000-0x000000000008efff] efi_free_boot_services+0x14b/0x23b
+>> [    8.815793] __memblock_free_late: [0x0000000000010000-0x0000000000013fff] efi_free_boot_services+0x14b/0x23b
+> 
+> 
+> In commit 6f599d84231fd27, we call crash_reserve_low_1M() to lock the
+> whole low 1M area if crashkernel is specified in kernel cmdline.
+> But earlier efi_reserve_boot_services() invokation will break the
+> intention of the whole low 1M reserving. In efi_reserve_boot_services(),
+> if any memory under low 1M hasn't been reserved, it will call
+> memblock_reserve() to reserve it and leave it to
+> efi_free_boot_services() to free.
+> 
 
-There are ThinkPads with two batteries (BAT0, BAT1) and the hardware
-allows to select which one to discharge. An approach through
-/sys/class/power_supply/AC/status won't cover this.
+Good understanding.
 
-=2D-
-Freundliche Gr=C3=BC=C3=9Fe / Kind regards,
-Thomas Koch
+> Hi Lianbo,
+> 
+> Please correct me if I am wrong or anything is missed. IIUC, can we move
+> efi_reserve_boot_services() after reserve_real_mode() to fix this bug?
 
-Mail : linrunner@gmx.net
-Web  : https://linrunner.de/tlp
+What do you think about the following changes?
+
+patch [1]:
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 5ecd69a48393..c343de3178ec 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1064,12 +1064,6 @@ void __init setup_arch(char **cmdline_p)
+        efi_esrt_init();
+        efi_mokvar_table_init();
+ 
+-       /*
+-        * The EFI specification says that boot service code won't be
+-        * called after ExitBootServices(). This is, in fact, a lie.
+-        */
+-       efi_reserve_boot_services();
+-
+        /* preallocate 4k for mptable mpc */
+        e820__memblock_alloc_reserved_mpc_new();
+ 
+@@ -1087,6 +1081,12 @@ void __init setup_arch(char **cmdline_p)
+        trim_platform_memory_ranges();
+        trim_low_memory_range();
+ 
++       /*
++        * The EFI specification says that boot service code won't be
++        * called after ExitBootServices(). This is, in fact, a lie.
++        */
++       efi_reserve_boot_services();
++
+        init_mem_mapping();
+ 
+        idt_setup_early_pf();
+
+> Or move reserve_real_mode() before efi_reserve_boot_services() since
+> those real mode regions are all under 1M? Assume efi boot code/data
+
+Or patch [2]
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 5ecd69a48393..ceec5af0dfab 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1058,6 +1058,7 @@ void __init setup_arch(char **cmdline_p)
+        sev_setup_arch();
+ 
+        reserve_bios_regions();
++       reserve_real_mode();
+ 
+        efi_fake_memmap();
+        efi_find_mirror();
+@@ -1082,8 +1083,6 @@ void __init setup_arch(char **cmdline_p)
+                        (max_pfn_mapped<<PAGE_SHIFT) - 1);
+ #endif
+ 
+-       reserve_real_mode();
+-
+        trim_platform_memory_ranges();
+        trim_low_memory_range();
+
+
+I tested the above two changes on my machine, both work well.
+
+But I'm not very sure if the reordering of the code may affect the startup(boot)
+on other machines. Any comments about this?
+
+Thanks.
+Lianbo
+
+> won't rely on low 1M area any more at this moment.
+> 
+> Thanks
+> Baoquan
+> 
+>>
+>> Do not release sub-1MB memory regions even though they are reserved by
+>> EFI boot services, so that always reserve all sub-1MB memory regions when
+>> the crashkernel option is specified.
+>>
+>> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+>> ---
+>>  arch/x86/platform/efi/quirks.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+>> index 67d93a243c35..637f932c4fd4 100644
+>> --- a/arch/x86/platform/efi/quirks.c
+>> +++ b/arch/x86/platform/efi/quirks.c
+>> @@ -18,6 +18,7 @@
+>>  #include <asm/cpu_device_id.h>
+>>  #include <asm/realmode.h>
+>>  #include <asm/reboot.h>
+>> +#include <asm/cmdline.h>
+>>  
+>>  #define EFI_MIN_RESERVE 5120
+>>  
+>> @@ -303,6 +304,19 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>>   */
+>>  static __init bool can_free_region(u64 start, u64 size)
+>>  {
+>> +	/*
+>> +	 * Some sub-1MB memory regions may be reserved by EFI boot
+>> +	 * services, and these memory regions will be released later
+>> +	 * in the efi_free_boot_services().
+>> +	 *
+>> +	 * Do not release sub-1MB memory regions even though they are
+>> +	 * reserved by EFI boot services, because, always reserve all
+>> +	 * sub-1MB memory when the crashkernel option is specified.
+>> +	 */
+>> +	if (cmdline_find_option(boot_command_line, "crashkernel", NULL, 0) > 0
+>> +		&& (start + size < (1<<20)))
+>> +		return false;
+>> +
+>>  	if (start + size > __pa_symbol(_text) && start <= __pa_symbol(_end))
+>>  		return false;
+>>  
+>> -- 
+>> 2.17.1
+>>
+
