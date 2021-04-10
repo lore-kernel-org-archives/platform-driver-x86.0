@@ -2,76 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF7DC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC524C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871A86113A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E727610C8
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 10 Apr 2021 06:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbhDJGkS (ORCPT
+        id S230235AbhDJG4u (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Apr 2021 02:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
+        Sat, 10 Apr 2021 02:56:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbhDJGkR (ORCPT
+        with ESMTP id S229537AbhDJG4s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Apr 2021 02:40:17 -0400
+        Sat, 10 Apr 2021 02:56:48 -0400
 Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A596CC061762;
-        Fri,  9 Apr 2021 23:40:03 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id l12-20020a9d6a8c0000b0290238e0f9f0d8so7831832otq.8;
-        Fri, 09 Apr 2021 23:40:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E97C061762;
+        Fri,  9 Apr 2021 23:56:34 -0700 (PDT)
+Received: by mail-ot1-x32c.google.com with SMTP id f75-20020a9d03d10000b0290280def9ab76so2767138otf.12;
+        Fri, 09 Apr 2021 23:56:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=igOZ6Kp3VA1wEOJ+TW8ALtZwZ+6wILNO7aMHAoDA9TU=;
-        b=XOjemfYLhCB7IGRAG+El8JH/YRBMj9FEB78leEdGodz6pG4bNVZbAbjh4XHo2QPSmd
-         /KiKjp0HacslNh0WqxQF+lORT2vogNLRiBgs44NqtBdS0bNuPFX6EB8rQp+pjUNfCnpL
-         9TK2BQb21WymN6LdtaA7gK7SBIJFrSRp3z6OgOIYg9FlRhfkjCFyZI7d7JB5Zti/o+8T
-         rrDOePqL3GF5rbTyeNbrSj6B5rHubOLADoQQCjOaOQNTU7XttHdJ4MAa/bldfR0NEc1B
-         gIazW1xr9u74flzP1Y98d5hc39FrGorRkM0Yd+ToFbIFLFrN57JpzPI/0K5QDz0yveIg
-         GN8w==
+        bh=69v/xKDkKDVCv+vp6CQW+QiOX+E1rN7FFRDWueCafvo=;
+        b=Gc4dkBYtifAXKh3RHfECQuQGpi9IQOjQNqARZLHPSrzAP5v2S0mk9s4SP/4tHEpn7u
+         O/+nrlFgKT0YSNuvy5x+puqruIK/aA8f2saxzA79KHmiXVeS0ktpEZZ3Cr8Zi4O20QnF
+         vpuhISk/WPTxSroMN9cNbMj8X0sOJigy1HmezAo/itXogwvyOOfkoREAFjN4No61goJB
+         3sjmlgpJpIbEXSNrzPGcpLkUarariYSHIpv0rv6yuNODkzeGWgC86q+WpSNEBuWhKsF/
+         PCp4MMPtC9JLIIab5o4BhS7lt+mWs2gfxcharLizFOb6ZxSm+T4wiRP6KlHQf19cNinS
+         xfQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=igOZ6Kp3VA1wEOJ+TW8ALtZwZ+6wILNO7aMHAoDA9TU=;
-        b=YNByL2pfzPbek/BMULQC9Fxxul5ZHf/MF+PlEcpcJRG0ePkQ2C0o/OwBTSU3fJ5GmK
-         5/XagL6mvZGEuZ8bWqvwwqjcWINuIm84/nPqWaXMxSyD+M1BcR3ceVUv7QJ1yt6DDtUW
-         gNyBhIcCBbUn6Gv22qVWSmNCacjMxcKC0LrFM5Ch4CX/loOIgialLjbDL4SWbFJRVxGK
-         Obd6MYZs9sWhKkvwJ/eZK5gSeBZFg5onEzBCpsMf0HHchcODtf7jbDr5Dwia88Fsu1//
-         9gjpT30UeHJoWIfYI9ZiPdWA5AgJHnlP9V1JOGf0rRCAl16EJ4M9qkZV+sU3S3UJHzvj
-         2Fqw==
-X-Gm-Message-State: AOAM532Cuy4wwq7T4bVI84yrACQD6gNhhKxnQu+Wp/nEpOBas5B4/RW8
-        XTm6BKig2Gr3D8tv1KXfz0E=
-X-Google-Smtp-Source: ABdhPJyD0QssoC5XtGRNrRYzh0czHQH61qvNn31ac7PcY9I2az+jKWD9op0DCexA2opgjoaDS5rFhg==
-X-Received: by 2002:a9d:6013:: with SMTP id h19mr15309639otj.72.1618036802508;
-        Fri, 09 Apr 2021 23:40:02 -0700 (PDT)
+        bh=69v/xKDkKDVCv+vp6CQW+QiOX+E1rN7FFRDWueCafvo=;
+        b=DMFKLlgw/M/Rv6+RU/rGVpAcsKDxWCSipH8TklbwSxb1iapAUJoRc58aofGO6nhrTk
+         XBCuSkc9Vpv+i+eJYKWlzW+vkeVDeS7FKbFj49bIo6WBkaQJxNY0Yb8WQBDAe7Zuzpuz
+         gbEYwtqw4ZByQH9CPRan20dyeZk5LswfYJDvMjlQjAlFsgUaf70lJ8QUa5Y2oCZgVivA
+         aG+RaaSe2nLS7ToT4pI0XQJ2xoJJWfO6Dx4RWa2NfI5IUqpSCE07T+/se8mQJijv7F2u
+         U0nPZkUv1Tx1X/v32I6oOSsNZkSAh0HKidanY7rRq4CrPQOp2BJXxYK9sOg41oUSstFL
+         C3xQ==
+X-Gm-Message-State: AOAM530H5ZWg1KwsYPGOoNNBZ66wvHyJ3zq7QLbxtqc++yFiZnoMVdR5
+        mluh3M0xqHLM9PPMHyJtpCc=
+X-Google-Smtp-Source: ABdhPJzcgKWTIsecdEmYCtl4qlXrZrft/c7DTBhj09G08CnyTHtvq6ExnQ20cfgVi0fjlf54xo53tw==
+X-Received: by 2002:a9d:bf8:: with SMTP id 111mr6550391oth.306.1618037793451;
+        Fri, 09 Apr 2021 23:56:33 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d1sm945371oop.0.2021.04.09.23.40.01
+        by smtp.gmail.com with ESMTPSA id l26sm1159294otd.21.2021.04.09.23.56.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Apr 2021 23:40:02 -0700 (PDT)
+        Fri, 09 Apr 2021 23:56:32 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
 Subject: Re: [PATCH v2] platform/x86: add Gigabyte WMI temperature driver
-To:     Hans de Goede <hdegoede@redhat.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
-Cc:     platform-driver-x86@vger.kernel.org,
+To:     =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        platform-driver-x86@vger.kernel.org,
         Mark Gross <mgross@linux.intel.com>,
         linux-kernel@vger.kernel.org,
         =?UTF-8?Q?Barnab=c3=a1s_P=c5=91cze?= <pobrn@protonmail.com>,
         Matthew Garrett <mjg59@srcf.ucam.org>
 References: <N6sOrC__lJeA1mtEKUtB18DPy9hp5bSjL9rq1TfOXiRE7IAO5aih5oyPEpq-vyqdZZsF4W8FIe-9GWB15lO-3fQlqjWQrMTlTJvqLBBGYOQ=@protonmail.com>
  <20210405204810.339763-1-linux@weissschuh.net>
- <20210408150821.GA205657@roeck-us.net>
- <245fe6eb-b188-ee50-bf75-8a16fe8f5d67@redhat.com>
+ <44fbb57c-88ee-62f0-c72c-507cad17eb7d@redhat.com>
+ <123d021b-b86b-4356-b234-fb46fa260193@t-8ch.de>
+ <6993d257-fdc1-2be6-555d-86c6b8c9d18d@redhat.com>
+ <d6cc98f4-1be2-f8bf-0426-58e324fc495b@roeck-us.net>
+ <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
 From:   Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -116,12 +120,12 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d9e42e20-7044-f96a-9542-5aafec2a7a12@roeck-us.net>
-Date:   Fri, 9 Apr 2021 23:40:00 -0700
+Message-ID: <b236c75e-43c0-e56d-aed7-153fdc11729c@roeck-us.net>
+Date:   Fri, 9 Apr 2021 23:56:30 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <245fe6eb-b188-ee50-bf75-8a16fe8f5d67@redhat.com>
+In-Reply-To: <c55b1f8e-24b9-4574-8668-aed64832242b@t-8ch.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -129,95 +133,109 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/8/21 9:07 AM, Hans de Goede wrote:
-> Hi Guenter,
-> 
-> On 4/8/21 5:08 PM, Guenter Roeck wrote:
->> On Mon, Apr 05, 2021 at 10:48:10PM +0200, Thomas Weißschuh wrote:
->>> Changes since v1:
->>> * Incorporate feedback from Barnabás Pőcze
->>>   * Use a WMI driver instead of a platform driver
->>>   * Let the kernel manage the driver lifecycle
->>>   * Fix errno/ACPI error confusion
->>>   * Fix resource cleanup
->>>   * Document reason for integer casting
+On 4/8/21 11:02 PM, Thomas Weißschuh wrote:
+> On Do, 2021-04-08T08:00-0700, Guenter Roeck wrote:
+>> On 4/8/21 2:36 AM, Hans de Goede wrote:
+>>> On 4/7/21 9:43 PM, Thomas Weißschuh wrote:
+>>>> On Mi, 2021-04-07T17:54+0200, Hans de Goede wrote:
+>>> Jean, Guenter,
 >>>
->>> Thank you Barnabás for your review, it is much appreciated.
+>>> Thomas has been working on a WMI driver to expose various motherboard
+>>> temperatures on a gigabyte board where the IO-addresses for the it87 chip
+>>> are reserved by ACPI. We are discussing how best to deal with this, there
+>>> are some ACPI methods to directly access the super-IO registers (with locking
+>>> to protect against other ACPI accesses). This reminded me of an idea I had
+>>> a while ago to solve a similar issue with an other superIO chip, abstract
+>>> the superIO register access-es using some reg_ops struct and allow an ACPI/WMI
+>>> driver to provide alternative reg_ops:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=204807#c47
 >>>
->>> -- >8 --
+>>> Do you think this is a good idea (or a bad one)? And would something like that
+>>> be acceptable to you ?
 >>>
->>> Tested with a X570 I Aorus Pro Wifi.
->>> The mainboard contains an ITE IT8688E chip for management.
->>> This chips is also handled by drivers/hwmon/i87.c but as it is also used
->>> by the firmware itself it needs an ACPI driver.
->>>
->>> Unfortunately not all sensor registers are handled by the firmware and even
->>> less are exposed via WMI.
->>>
->>> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
->>> ---
->>>  drivers/platform/x86/Kconfig        |  11 +++
->>>  drivers/platform/x86/Makefile       |   1 +
->>>  drivers/platform/x86/gigabyte-wmi.c | 138 ++++++++++++++++++++++++++++
 >>
->> Originally drivers/platform was supposed to be used for platform specific
->> code. Not that I have control over it, but I really dislike that more and
->> more hwmon drivers end up there.
+>> The upstream it87 driver is severely out of date. I had an out-of-tree driver
+>> with various improvements which I didn't upstream, first because no one was willing
+>> to review changes and then because it had deviated too much. I pulled it from
+>> public view because I got pounded for not upstreaming it, because people started
+>> demanding support (not asking, demanding) for it, and because Gigabyte stopped
+>> providing datasheets for the more recent ITE chips and it became effectively
+>> unmaintainable.
 >>
->> At least hwmon is in good company - I see drivers for various other subsystems
->> there as well. I just wonder if that is such a good idea. That entire directory
->> is bypassing subsystem maintainer reviews.
+>> Some ITE chips have issues which can cause system hangs if accessed directly.
+>> I put some work to remedy that into the non-upstream driver, but that was all
+>> just guesswork. Gigabyte knows about the problem (or so I was told from someone
+>> who has an NDA with them), but I didn't get them or ITE to even acknowledge it
+>> to me. I even had a support case open with Gigabyte for a while, but all I could
+>> get out of them is that they don't support Linux and what I would have to reproduce
+>> the problem with Windows for them to provide assistance (even though, again,
+>> they knew about it).
+>>
+>> As for using ACPI locks or WMI to ensure that ACPI leaves the chip alone while
+>> the driver accesses chips directly: That is an option, but it has (at least)
+>> two problems.
+>>
+>> First, ACPI access methods are not well documented or standardized. I had tried
+>> to find useful means to do that some time ago, but I gave up because each board
+>> (even from the same vendor) handles locking and accesses differently. We would
+>> end up with lots of board specific code. Coincidentally, that was for ASUS boards
+>> and the nct6775 driver.
 > 
-> In case you are not aware I've recent(ish) taken over the drivers/platform/x86
-> maintainership from Andy Shevchenko.
+> At least for all the Gigabyte ACPI tables I have looked at all access is done
+> via two-byte "OperationRegion" over the Index/Data addresses, a "Field" with
+> two entries for these and an "IndexField" that is actually used to perform the
+> accesses.
+> As the IndexField is synchronized via "Lock" it should take a lock on the
+> OperationRegion itself.
 > 
-> Yes it is a bit of an odd grab-bag it mostly deals with vendor specific
-> ACPI / WMI interfaces which often more or less require using a single
-> driver while offering multiple functionalities. These firmware interfaces
-> do not really lend themselves to demultiplexing through something like
-> MFD. These are mostly found on laptops where they deal with some or all of:
+> So I think we should be technically fine with validating these assumption and
+> then also taking locks on the OperationRegion.
 > 
-> - Hotkeys for brightness adjust / wlan-on/off toggle, touchpad on/off toggle, etc.
->   (input subsystem stuff)
-> - Mic. / Speaker mute LEDS (and other special LEDs) found on some laptops
->   (LED subsystem stuff)
-> - Enabling/disabling radios
->   (rfkill stuff)
-> - Controlling the DPTF performance profile
->   (ACPI stuff)
-> - Various sensors, some hwmon, some IIO
-> - Backlight control (drm/kms subsys)
-> - Enabling/disabling of LCD-builtin privacy filters (requires KMS/DRM subsys integration, pending)
-> - Fan control (hwmon subsys)
+> If it is reasonable to do so is another question.
 > 
-> And often all of this in a single driver. This is all "stuff" for which
-> there are no standard APIs shared between vendors, so it is a free for
-> all and often it is all stuffed behind a single WMI or ACPI object,
-> because that is how the vendor's drivers under Windows work.
-> 
-> It certainly is not my intention to bypass review by other subsystem
-> maintainers and when there are significant questions I do try to always
-> get other subsys maintainers involved. See e.g. this thread, but also the
-> "[PATCH 1/3] thinkpad_acpi: add support for force_discharge" thread
-> where I asked for input from sre for the power-supply aspects of that.
-> 
-> The WMI code was reworked a while back to make WMI be a bus and have
-> individual WMI objects be devices on that bus. version 2 of this
-> driver has been reworked to use this. Since this new driver is just a hwmon
-> driver and as this is for a desktop I expect it will stay that way,
-> I'm fine with moving this one over to drivers/hwmon if that has your
-> preference.
-> 
-I thought about it, but I don't think it makes much sense since all other
-WMI drivers are in drivers/platform.
+You'd still have to validate this for each individual board unless you get
+confirmation from Gigabyte that the mechanism is consistent on their boards.
+Then you'd have to handle other vendors using it87 chips, and those are
+just as close-lipped as Gigabyte. Ultimately it would require acpi match
+tables to match the various boards and access methods. I had experimented
+with this this a long time ago but gave up on it after concluding that it was
+unmaintainable.
 
-> As for other cases then this driver, if you want to make sure you are at
-> least Cc-ed on all hwmon related changes I'm fine with adding you as a
-> reviewer to the pdx86 MAINTAINERS entry.
+>> Second, access through ACPI is only one of the issues. Turns out there are two
+>> ITE chips on many of the Gigabyte boards nowadays, and the two chips talk to each
+>> other using I2C. My out-of-tree driver tried to remedy that by blocking those
+>> accesses while the driver used the chip, but, again, without Gigabyte / ITE
+>> support this was never a perfect solution, and there was always the risk that
+>> the board ended up hanging because that access was blocked for too long.
+>> Recent ITE chips solve that problem by providing memory mapped access to the
+>> chip registers, but that is only useful if one has a datasheet.
 > 
-I think I have a better idea: I'll add a regex pattern into the MAINTAINERS
-entry for hardware monitoring drivers. This way we should get copied whenever
-anyone adds a hardware monitoring driver into the tree.
+> Are both of these chips available at the two well-known registers 0x2e and
+> 0x4e?
+> 
 
-Thanks,
+The ones I know of are, yes.
+
+Oh, that reminds me, there is another bug. Here are my comments about that:
+
+/*
+ * On various Gigabyte AM4 boards (AB350, AX370), the second Super-IO chip
+ * (IT8792E) needs to be in configuration mode before accessing the first
+ * due to a bug in IT8792E which otherwise results in LPC bus access errors.
+ * This needs to be done before accessing the first Super-IO chip since
+ * the second chip may have been accessed prior to loading this driver.
+ *
+ * The problem is also reported to affect IT8795E, which is used on X299 boards
+ * and has the same chip ID as IT8792E (0x8733). It also appears to affect
+ * systems with IT8790E, which is used on some Z97X-Gaming boards as well as
+ * Z87X-OC.
+ * DMI entries for those systems will be added as they become available and
+ * as the problem is confirmed to affect those boards.
+ */
+
+> Would this too-long blocking also occur when only accessing single registers
+> for read-only access?
+
+I don't know. Remember, zero support from Gigabyte / ITE.
+
 Guenter
