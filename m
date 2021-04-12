@@ -2,100 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECEAC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 10:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B12C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3D8861241
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 10:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE056128A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239674AbhDLKyt (ORCPT
+        id S239949AbhDLLWm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Apr 2021 06:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239667AbhDLKys (ORCPT
+        Mon, 12 Apr 2021 07:22:42 -0400
+Received: from internet2.beckhoff.com ([194.25.186.210]:49457 "EHLO
+        Internet2.beckhoff.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240279AbhDLLWh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Apr 2021 06:54:48 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E21F4C061574;
-        Mon, 12 Apr 2021 03:54:30 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id p16so2196849plf.12;
-        Mon, 12 Apr 2021 03:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vilFxhUb0+fJEQ/bexM0f2QpCiANSDnsZGZs3eqyMYM=;
-        b=lF28eNL9V4iMj5dHWeAx+9PsmNCjvV3aqUw/RLQRsMbLw/Pg+k59KNP8GaGcjeyVbG
-         FqvyG1UfZxfjzIY+oxw5QvylWHRtJXiWaeynTK5dxkCkwnyF02EVnrRDNISr/MZ27HTf
-         6N+eJNVfHuPn8kBsvqf+bGnEz38HG/fLfYJ6xUMGo4zponPdd5HWIymlTYNKFPJl1fMb
-         JbWUHguCoIlMTVs7b+woOaZ4fOnjG7qFVwsD5VQZB3lIQ3yUp66xrQNQw/vqADAZVl1V
-         UJ68269RLz4HrqFyEgvePr3VFHL7pwqS1At7kkFDdUyZ37IITGefXFPq7B6LXwdwrjyS
-         hdUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vilFxhUb0+fJEQ/bexM0f2QpCiANSDnsZGZs3eqyMYM=;
-        b=ESBdY7FENMGXih8FdJdPrMear7eLRs/A1id4becz3RfVZmL4r3vK9/E6ELkGTLnNH+
-         qWBKhyfUcqqdJXZ7RnsCwCHkvqz7mAxEcYheLJ+OtF2CydSBNzhdrcTNetTnHy8ZFleC
-         XsF6qr7pbDoiIB661b1l1prhTIwbcb1/+RGlHRLGQOos9PRR5eidS2j/oPTpamgysmk1
-         LjAbkp12L4aVJv/qB8OlAGJz3mphzFJAASx9SQC/WAVdzRO4hCkvkExqbiYfzcybIxvp
-         F7QKReiGzzJvbJRXpgqM5eIuGmJUb2c3rYCd7jAII+SaasWq+A3up+bx55oNfVcuDmPR
-         UXoQ==
-X-Gm-Message-State: AOAM530GtocYFO2AGeZiAXaZnFsVTbSZ9yutfGxQuWWFRtq9DOazap5H
-        +cz4nrUKGaQpf91YhKedCvVLh53gE3nwv05Uw4b0p8gZdWA=
-X-Google-Smtp-Source: ABdhPJy8FZxzadh13/jUIN4JpLedliPzTgtCHeJOWgD4q/KKVnmabFXOEmU3gTX+PMo0vgzalj0xlHEmo9gL7J0g4rs=
-X-Received: by 2002:a17:90b:1e0a:: with SMTP id pg10mr28773614pjb.129.1618224870426;
- Mon, 12 Apr 2021 03:54:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210412090430.167463-1-linux-kernel-dev@beckhoff.com>
- <CAHp75VfLQBDv-Bcj5=Ksv6kp2XH2v8msDvNjsdj6=WZiCk=Q9w@mail.gmail.com> <f406a5a6c6bfe0e458925821b6830e9dc5a151c1.camel@beckhoff.com>
-In-Reply-To: <f406a5a6c6bfe0e458925821b6830e9dc5a151c1.camel@beckhoff.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 12 Apr 2021 13:54:13 +0300
-Message-ID: <CAHp75VcKYc4BWCM_8Zm7NONceAm2BbhTgDKOweu-qM9yLUHUJw@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
- baytrail boards with critclk_systems DMI table
-To:     linux-kernel-dev <linux-kernel-dev@beckhoff.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        Mon, 12 Apr 2021 07:22:37 -0400
+X-Greylist: delayed 898 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Apr 2021 07:22:36 EDT
+Received: from 172.17.2.171 by Internet2.beckhoff.com (Tls12, Aes256, Sha384,
+ DiffieHellmanEllipticKey256); Mon, 12 Apr 2021 11:07:15 GMT
+Received: from ex01.beckhoff.com (172.17.2.168) by ex05.beckhoff.com
+ (172.17.2.171) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2242.4; Mon, 12 Apr
+ 2021 13:07:15 +0200
+Received: from ex01.beckhoff.com ([fe80::8caa:afd3:30d9:a097]) by
+ ex01.beckhoff.com ([fe80::8caa:afd3:30d9:a097%7]) with mapi id
+ 15.01.2242.004; Mon, 12 Apr 2021 13:07:15 +0200
+From:   linux-kernel-dev <linux-kernel-dev@beckhoff.com>
+To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
         "andriy.shevchenko@linux.intel.com" 
         <andriy.shevchenko@linux.intel.com>,
         "mgross@linux.intel.com" <mgross@linux.intel.com>,
         "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
+ baytrail boards with critclk_systems DMI table
+Thread-Topic: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
+ baytrail boards with critclk_systems DMI table
+Thread-Index: AQHXL4BPaMnkOe6iy0OPHOeVEHiMsqqwj5SAgAAEPYCAAAOjAA==
+Date:   Mon, 12 Apr 2021 11:07:15 +0000
+Message-ID: <7af45968aa0f0909ba39eeac3b7fa4947b6e38a6.camel@beckhoff.com>
+References: <20210412090430.167463-1-linux-kernel-dev@beckhoff.com>
+         <CAHp75VfLQBDv-Bcj5=Ksv6kp2XH2v8msDvNjsdj6=WZiCk=Q9w@mail.gmail.com>
+         <f406a5a6c6bfe0e458925821b6830e9dc5a151c1.camel@beckhoff.com>
+         <CAHp75VcKYc4BWCM_8Zm7NONceAm2BbhTgDKOweu-qM9yLUHUJw@mail.gmail.com>
+In-Reply-To: <CAHp75VcKYc4BWCM_8Zm7NONceAm2BbhTgDKOweu-qM9yLUHUJw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.136.117.151]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2A9106C733814243A1A60051293D54E5@beckhoff.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 12, 2021 at 1:39 PM linux-kernel-dev
-<linux-kernel-dev@beckhoff.com> wrote:
-> On Mo, 2021-04-12 at 12:43 +0300, Andy Shevchenko wrote:
-> > On Mon, Apr 12, 2021 at 12:29 PM Steffen Dirkwinkel
-> > <linux-kernel-dev@beckhoff.com> wrote:
+T24gTW8sIDIwMjEtMDQtMTIgYXQgMTM6NTQgKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToN
+Cj4gQ0FVVElPTjogRXh0ZXJuYWwgRW1haWwhIQ0KPg0KPg0KPiBPbiBNb24sIEFwciAxMiwgMjAy
+MSBhdCAxOjM5IFBNIGxpbnV4LWtlcm5lbC1kZXYNCj4gPGxpbnV4LWtlcm5lbC1kZXZAYmVja2hv
+ZmYuY29tPiB3cm90ZToNCj4gPiBPbiBNbywgMjAyMS0wNC0xMiBhdCAxMjo0MyArMDMwMCwgQW5k
+eSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gT24gTW9uLCBBcHIgMTIsIDIwMjEgYXQgMTI6Mjkg
+UE0gU3RlZmZlbiBEaXJrd2lua2VsDQo+ID4gPiA8bGludXgta2VybmVsLWRldkBiZWNraG9mZi5j
+b20+IHdyb3RlOg0KPg0KPiAuLi4NCj4NCj4gPiA+IEknbSBhZnJhaWQgaXQncyBhIGJpdCB0b28g
+bXVjaC4gSXMgdGhlcmUgYW55IGd1YXJhbnRlZSBhbGwgdGhlIGJvYXJkcw0KPiA+ID4gYmFzZWQg
+b24geDg2IHdpbGwgYmUgQmF5dHJhaWwgb25seT8NCj4gPiA+DQo+ID4gU29ycnksIEkgZ3Vlc3Mg
+SSBzaG91bGQgbWFrZSB0aGlzIGNsZWFyZXIgaW4gdGhlIG1lc3NhZ2UuDQo+ID4gQWxsIGJvYXJk
+cyB3aXRoICJDQnh4NjMiIGFyZSBCYXl0cmFpbC4NCj4NCj4gRXhhY3RseSEgQW5kIHRoaXMgc3Vw
+cG9ydHMgbXkgaWRlYSB0aGF0IHRoaXMgc2hvdWxkbid0IGJlIGRvbmUgbGlrZSBpbg0KPiB0aGlz
+IHBhdGNoLg0KPiBBcmUgeW91IGd1YXJhbnRlZWluZyB0aGF0ICphbGwgeDg2LWJhc2VkKiBib2Fy
+ZHMgcHJvZHVjZWQgYnkgeW91cg0KPiBjb21wYW55IHdpbGwgYmUgQmF5dHJhaWwgb25seT8NCj4g
+QWJvdmUgdGVsbHMgdGhhdCB0aGUgYW5zd2VyIGlzIHJhdGhlciAibm8iLiBTbywgSSB0aGluayB3
+ZSBjYW4ndCBhcHBseQ0KPiB0aGlzIHBhdGNoIGluIGl0cyBjdXJyZW50IGZvcm0uDQoNCkFsbCBi
+b2FyZHMgd2l0aCBETUlfUFJPRFVDVF9GQU1JTFk9IkNCeHg2MyIgYXJlIEJheXRyYWlsIGJvYXJk
+cy4gV2UgZG8gcHJvZHVjZSBvdGhlciB4ODYgYm9hcmRzIGJ1dCB0aGUgZmFtaWx5DQppcyBleGNs
+dXNpdmUgdG8gQmF5dHJhaWwuDQpJIG1pZ2h0IGJlIG1pc3VuZGVyc3RhbmRpbmcgaG93IHRoZSBt
+YXRjaGluZyB3b3Jrcy4gRG9lcyB0aGlzIG1hdGNoIGFueXRoaW5nIG90aGVyIHRoYW4gQ0J4eDYz
+Pw0KDQogLm1hdGNoZXMgPSB7DQogRE1JX01BVENIKERNSV9TWVNfVkVORE9SLCAiQmVja2hvZmYg
+QXV0b21hdGlvbiIpLA0KRE1JX01BVENIKERNSV9QUk9EVUNUX0ZBTUlMWSwgIkNCeHg2MyIpLA0K
+fSwNCg0KSSBjYW4gc3dpdGNoIGl0IHRvIERNSV9FWEFDVF9NQVRDSCBidXQgZXZlbiBzdWJzdHJp
+bmcgbWF0Y2hpbmcgd29ya3MuDQoNCj4NCj4gLS0NCj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFu
+ZHkgU2hldmNoZW5rbw0KPg0KDQpCZWNraG9mZiBBdXRvbWF0aW9uIEdtYkggJiBDby4gS0cgfCBN
+YW5hZ2luZyBEaXJlY3RvcjogRGlwbC4gUGh5cy4gSGFucyBCZWNraG9mZiBSZWdpc3RlcmVkIG9m
+ZmljZTogVmVybCwgR2VybWFueSB8IFJlZ2lzdGVyIGNvdXJ0OiBHdWV0ZXJzbG9oIEhSQSA3MDc1
+DQoNCg==
 
-...
-
-> > I'm afraid it's a bit too much. Is there any guarantee all the boards
-> > based on x86 will be Baytrail only?
-> >
-> Sorry, I guess I should make this clearer in the message.
-> All boards with "CBxx63" are Baytrail.
-
-Exactly! And this supports my idea that this shouldn't be done like in
-this patch.
-Are you guaranteeing that *all x86-based* boards produced by your
-company will be Baytrail only?
-Above tells that the answer is rather "no". So, I think we can't apply
-this patch in its current form.
-
--- 
-With Best Regards,
-Andy Shevchenko
