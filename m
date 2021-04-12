@@ -2,131 +2,91 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F231EC43460
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7A6C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 10:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEE316121E
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 09:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9DB61249
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 10:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239410AbhDLJ53 (ORCPT
+        id S237718AbhDLKj0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Apr 2021 05:57:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22238 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241823AbhDLJxG (ORCPT
+        Mon, 12 Apr 2021 06:39:26 -0400
+Received: from netsrv01.beckhoff.com ([62.159.14.10]:53880 "EHLO
+        netsrv01.beckhoff.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239220AbhDLKjY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Apr 2021 05:53:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618221165;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=50xPjNRYwkB4O0C//G0YJK7rbJ/9YSCi+4Syr5FFbG8=;
-        b=X/qELho/J0PNtlb+lpsfHVb13x5Nni2QE2DNC2YIJpUxfWZTejHTH7HxfEobHxSNS2Akhs
-        CNmk94dDrMsvKZQrHCL7b6YETV2aB664S1joaST7CpaMUoQF4IDS2h33mCpBEBnjROiiNi
-        8LLwap/EDxZkegdIw0z8xJgnEVR3A2I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-SU0GMsnZNS-H2JQ8A7xDTw-1; Mon, 12 Apr 2021 05:52:41 -0400
-X-MC-Unique: SU0GMsnZNS-H2JQ8A7xDTw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F7E8107ACC7;
-        Mon, 12 Apr 2021 09:52:39 +0000 (UTC)
-Received: from localhost (ovpn-13-33.pek2.redhat.com [10.72.13.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7FDBF100238C;
-        Mon, 12 Apr 2021 09:52:34 +0000 (UTC)
-Date:   Mon, 12 Apr 2021 17:52:31 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org,
-        ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dvhart@infradead.org, andy@infradead.org,
-        kexec@lists.infradead.org, dyoung@redhat.com
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-Message-ID: <20210412095231.GC4282@MiWiFi-R3L-srv>
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
+        Mon, 12 Apr 2021 06:39:24 -0400
+Received: from 172.17.5.170 by netsrv01.beckhoff.com (Tls12, Aes256, Sha384,
+ DiffieHellmanEllipticKey256); Mon, 12 Apr 2021 10:39:07 GMT
+Received: from ex01.beckhoff.com (172.17.2.168) by ex04.beckhoff.com
+ (172.17.5.170) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2242.4; Mon, 12 Apr
+ 2021 12:39:03 +0200
+Received: from ex01.beckhoff.com ([fe80::8caa:afd3:30d9:a097]) by
+ ex01.beckhoff.com ([fe80::8caa:afd3:30d9:a097%7]) with mapi id
+ 15.01.2242.004; Mon, 12 Apr 2021 12:39:03 +0200
+From:   linux-kernel-dev <linux-kernel-dev@beckhoff.com>
+To:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+CC:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
+ baytrail boards with critclk_systems DMI table
+Thread-Topic: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
+ baytrail boards with critclk_systems DMI table
+Thread-Index: AQHXL4BPaMnkOe6iy0OPHOeVEHiMsqqwj5SA
+Date:   Mon, 12 Apr 2021 10:39:03 +0000
+Message-ID: <f406a5a6c6bfe0e458925821b6830e9dc5a151c1.camel@beckhoff.com>
+References: <20210412090430.167463-1-linux-kernel-dev@beckhoff.com>
+         <CAHp75VfLQBDv-Bcj5=Ksv6kp2XH2v8msDvNjsdj6=WZiCk=Q9w@mail.gmail.com>
+In-Reply-To: <CAHp75VfLQBDv-Bcj5=Ksv6kp2XH2v8msDvNjsdj6=WZiCk=Q9w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [188.136.117.151]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <43D189DD6A60F143BCB75E120EABFEA1@beckhoff.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 04/11/21 at 06:49pm, Andy Lutomirski wrote:
-> 
-> 
-> > On Apr 11, 2021, at 6:14 PM, Baoquan He <bhe@redhat.com> wrote:
-> > 
-> > ﻿On 04/09/21 at 07:59pm, H. Peter Anvin wrote:
-> >> Why don't we do this unconditionally? At the very best we gain half a megabyte of memory (except the trampoline, which has to live there, but it is only a few kilobytes.)
-> > 
-> > This is a great suggestion, thanks. I think we can fix it in this way to
-> > make code simpler. Then the specific caring of real mode in
-> > efi_free_boot_services() can be removed too.
-> > 
-> 
-> This whole situation makes me think that the code is buggy before and buggy after.
-> 
-> The issue here (I think) is that various pieces of code want to reserve specific pieces of otherwise-available low memory for their own nefarious uses. I don’t know *why* crash kernel needs this, but that doesn’t matter too much.
-
-Kdump kernel also need go through real mode code path during bootup. It
-is not different than normal kernel except that it skips the firmware
-resetting. So kdump kernel needs low 1M as system RAM just as normal
-kernel does. Here we reserve the whole low 1M with memblock_reserve()
-to avoid any later kernel or driver data reside in this area. Otherwise,
-we need dump the content of this area to vmcore. As we know, when crash
-happened, the old memory of 1st kernel should be untouched until vmcore
-dumping read out its content. Meanwhile, kdump kernel need reuse low 1M.
-In the past, we used a back up region to copy out the low 1M area, and
-map the back up region into the low 1M area in vmcore elf file. In
-6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the crashkernel
-option is specified"), we changed to lock the whole low 1M to avoid
-writting any kernel data into, like this we can skip this area when
-dumping vmcore.
-
-Above is why we try to memblock reserve the whole low 1M. We don't want
-to use it, just don't want anyone to use it in 1st kernel.
-
-> 
-> I propose that the right solution is to give low-memory-reserving code paths two chances to do what they need: once at the very beginning and once after EFI boot services are freed.
-> 
-> Alternatively, just reserve *all* otherwise unused sub 1M memory up front, then release it right after releasing boot services, and then invoke the special cases exactly once.
-
-I am not sure if I got both suggested ways clearly. They look a little
-complicated in our case. As I explained at above, we want the whole low
-1M locked up, not one piece or some pieces of it.
-
-> 
-> In either case, the result is that the crashkernel mess gets unified with the trampoline mess.  One way the result is called twice and needs to be more careful, and the other way it’s called only once.
-> 
-> Just skipping freeing boot services seems wrong.  It doesn’t unmap boot services, and skipping that is incorrect, I think. And it seems to result in a bogus memory map in which the system thinks that some crashkernel memory is EFI memory instead.
-
-I like hpa's thought to lock the whole low 1M unconditionally since only
-a few KB except of trampoline area is there. Rethinking about it, doing
-it in can_free_region() may be risky because efi memory region could
-cross the 1M boundary, e.g [640K, 100M] with type of
-EFI_BOOT_SERVICES_CODE|EFI_BOOT_SERVICES_DATA, it could cause loss of memory.
-Just a wild guess, not very sure if the 1M boundary corssing can really
-happen. efi_reserve_boot_services() won't split regions.
-
-If moving efi_reserve_boot_services() after reserve_real_mode() is not
-accepted, maybe we can call efi_mem_reserve(0, 1M) just as
-efi_esrt_init() has done.
+T24gTW8sIDIwMjEtMDQtMTIgYXQgMTI6NDMgKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToN
+Cj4NCj4gT24gTW9uLCBBcHIgMTIsIDIwMjEgYXQgMTI6MjkgUE0gU3RlZmZlbiBEaXJrd2lua2Vs
+DQo+IDxsaW51eC1rZXJuZWwtZGV2QGJlY2tob2ZmLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBGcm9t
+OiBTdGVmZmVuIERpcmt3aW5rZWwgPHMuZGlya3dpbmtlbEBiZWNraG9mZi5jb20+DQo+ID4NCj4g
+PiBwbWNfcGx0X2NsayogY2xvY2tzIGFyZSB1c2VkIGZvciBldGhlcm5ldCBjb250cm9sbGVycyBz
+byBuZWVkIHRvIHN0YXkNCj4gPiB0dXJuZWQgb24uIFRoaXMgYWRkcyB0aGUgYWZmZWN0ZWQgYm9h
+cmQgZmFtaWx5IHRvIGNyaXRjbGtfc3lzdGVtcyBETUkNCj4gPiB0YWJsZSBzbyB0aGUgY2xvY2tz
+IGFyZSBtYXJrZWQgYXMgQ0xLX0NSSVRJQ0FMIGFuZCBub3QgdHVybmVkIG9mZi4NCj4gPg0KPiA+
+IFRoaXMgcmVwbGFjZXMgdGhlIHByZXZpb3NseSBsaXN0ZWQgYm9hcmRzIHdpdGggYSBtYXRjaCBm
+b3IgdGhlIHdob2xlDQo+DQo+ICIuLi5wcmV2aW91c2x5Li4uIg0KdGhhbmtzDQoNCj4NCj4gPiBk
+ZXZpY2UgZmFtaWx5LiBUaGVyZSBhcmUgbmV3IGFmZmVjdGVkIGJvYXJkcyB0aGF0IHdvdWxkIG90
+aGVyd2lzZSBuZWVkDQo+ID4gdG8gYmUgbGlzdGVkLiBUaGVyZSBhcmUgb25seSBmZXcgdW5hZmZl
+Y3RlZCBib2FyZHMgaW4gdGhlIGZhbWlseSBhbmQNCj4NCj4gIi4uLm9ubHkgYSBmZXcuLi4iDQp3
+aWxsIGRyb3AgdGhlIHBocmFzZQ0KDQo+DQo+ID4gaGF2aW5nIHRoZSBjbG9ja3MgdHVybmVkIG9u
+IGlzIG5vdCBhbiBpc3N1ZSBvbiB0aG9zZS4NCj4NCj4gIi4uLm5vdCBhbiBpc3N1ZS4iDQpOb3Qg
+YW4gaXNzdWUgZm9yIHRoZXNlIGluZHVzdHJpYWwgUENzIGFzIHNsZWVwIGlzIGFuIHVudXN1YWwg
+dXNlIGNhc2UuDQpIYXZpbmcgbm8gZXRoZXJuZXQgYWZ0ZXIgYm9vdC9zbGVlcCBpcyB3b3JzZS4N
+Cg0KPg0KPiA+IEZpeGVzOiA2NDhlOTIxODg4YWQgKCJjbGs6IHg4NjogU3RvcCBtYXJraW5nIGNs
+b2NrcyBhcyBDTEtfSVNfQ1JJVElDQUwiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZmZW4gRGly
+a3dpbmtlbCA8cy5kaXJrd2lua2VsQGJlY2tob2ZmLmNvbT4NCj4NCj4gSSdtIGFmcmFpZCBpdCdz
+IGEgYml0IHRvbyBtdWNoLiBJcyB0aGVyZSBhbnkgZ3VhcmFudGVlIGFsbCB0aGUgYm9hcmRzDQo+
+IGJhc2VkIG9uIHg4NiB3aWxsIGJlIEJheXRyYWlsIG9ubHk/DQo+DQpTb3JyeSwgSSBndWVzcyBJ
+IHNob3VsZCBtYWtlIHRoaXMgY2xlYXJlciBpbiB0aGUgbWVzc2FnZS4NCkFsbCBib2FyZHMgd2l0
+aCAiQ0J4eDYzIiBhcmUgQmF5dHJhaWwuDQoNCg0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJkcywN
+Cj4gQW5keSBTaGV2Y2hlbmtvDQo+DQoNCkJlY2tob2ZmIEF1dG9tYXRpb24gR21iSCAmIENvLiBL
+RyB8IE1hbmFnaW5nIERpcmVjdG9yOiBEaXBsLiBQaHlzLiBIYW5zIEJlY2tob2ZmIFJlZ2lzdGVy
+ZWQgb2ZmaWNlOiBWZXJsLCBHZXJtYW55IHwgUmVnaXN0ZXIgY291cnQ6IEd1ZXRlcnNsb2ggSFJB
+IDcwNzUNCg0K
 
