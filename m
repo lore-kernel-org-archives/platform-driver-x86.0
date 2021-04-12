@@ -2,122 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC3DC43460
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054B5C43460
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCFC61245
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27CF6124C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 11:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240358AbhDLLXx (ORCPT
+        id S238951AbhDLL2s (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Apr 2021 07:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240213AbhDLLXw (ORCPT
+        Mon, 12 Apr 2021 07:28:48 -0400
+Received: from gecko.sbs.de ([194.138.37.40]:59782 "EHLO gecko.sbs.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237626AbhDLL2s (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Apr 2021 07:23:52 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C2D7C061574;
-        Mon, 12 Apr 2021 04:23:35 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id z16so9118141pga.1;
-        Mon, 12 Apr 2021 04:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3cLuXC7Cd/cpMSgTO8uwS2vpxElc8R+vCCeDYIOPsLE=;
-        b=b9JIMdYA2EytzlJ9hkjW4LHokDAoiyrTcPh5kwMhQZD8+j1zNiu9FE5Eijv6YQ/BCn
-         EyDYDmSbEt7Am7eYi+IM3zCYqoTI3AijAICZHytYzVPy65S2gPDQUy+1gZeObTZD1LSM
-         OdcjabPF3TsaAokvJfhK+kQpLSPGRPtmU9791TTSs7qsDqFisTOmkwdb2nguVkFTLMb/
-         SxGy3uVq4DGpmz6PkidX9lO++FC6pWpd0GgShdexXaBm0vQ7z0EiIgwl3BQZF5khrJRP
-         RtvtpVDrxMO9jubFpW9/rYJ30NsjF99RyzS/vEzEM+BTGNw7K9gPwtWqs0UxC+3Ikg3j
-         STSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3cLuXC7Cd/cpMSgTO8uwS2vpxElc8R+vCCeDYIOPsLE=;
-        b=r2B5jCk2rJgWNsqGquO66dLDMFqCzuYIwCZZfIMgtj8XUTBPMS+Hd/DYQgU+ZVVIdr
-         UYBVnJhivdR5uk8wt4OSNNtGirUIHmFkfuCav6a1pgoP37iCA1wqlAY/FUXqeC1UtHP5
-         kmpdMJEs5/q+RR2tuA4YgKHKA/8PQJJMsVKkQaMsXi0uh0ltHZcU9Y4uQkfD7/H1ptSR
-         Diunh63P+6UGbtdkgR493vx0LIRezpYAwia7yiMvaNJalTqd2UnJbyK35yu3PRSUYYJK
-         f/V5UbC6KU6uoJtPvbULgFUWeMtM6oSSeL0IR7QJs7PIKjqyIdUB2NkYwJFtBl/Ad9NT
-         cDIg==
-X-Gm-Message-State: AOAM533eWJMBLmx0640plu3R7c8VUgD3bOoYCxQI5S+5XxB7hWGqBRkA
-        iq1rm1ISd28TX69zM1vmpKm9iZS26m3jA426c3g=
-X-Google-Smtp-Source: ABdhPJwbzQU7LC1EQQLqrGvIAJQ7Sin3z72YDVQwNU970kkPd2w2uhKy3+2N9PVr24cjHxa2R6q1t0Db8jcEQUlp0yM=
-X-Received: by 2002:a62:5c6:0:b029:24d:e97f:1b1d with SMTP id
- 189-20020a6205c60000b029024de97f1b1dmr2942611pff.40.1618226614660; Mon, 12
- Apr 2021 04:23:34 -0700 (PDT)
+        Mon, 12 Apr 2021 07:28:48 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 13CBS1CZ003961
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 12 Apr 2021 13:28:01 +0200
+Received: from md1za8fc.ad001.siemens.net ([139.22.41.180])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 13CBRxfo010289;
+        Mon, 12 Apr 2021 13:27:59 +0200
+Date:   Mon, 12 Apr 2021 13:27:58 +0200
+From:   Henning Schild <henning.schild@siemens.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-watchdog@vger.kernel.org,
+        Srikanth Krishnakar <skrishnakar@gmail.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Weigelt <lkml@metux.net>
+Subject: Re: [PATCH v3 0/4] add device drivers for Siemens Industrial PCs
+Message-ID: <20210412132758.58cf851c@md1za8fc.ad001.siemens.net>
+In-Reply-To: <857d6cd4-839d-c42a-0aa7-8d45243981ee@redhat.com>
+References: <20210329174928.18816-1-henning.schild@siemens.com>
+        <857d6cd4-839d-c42a-0aa7-8d45243981ee@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20210412090430.167463-1-linux-kernel-dev@beckhoff.com>
- <CAHp75VfLQBDv-Bcj5=Ksv6kp2XH2v8msDvNjsdj6=WZiCk=Q9w@mail.gmail.com>
- <f406a5a6c6bfe0e458925821b6830e9dc5a151c1.camel@beckhoff.com>
- <CAHp75VcKYc4BWCM_8Zm7NONceAm2BbhTgDKOweu-qM9yLUHUJw@mail.gmail.com> <7af45968aa0f0909ba39eeac3b7fa4947b6e38a6.camel@beckhoff.com>
-In-Reply-To: <7af45968aa0f0909ba39eeac3b7fa4947b6e38a6.camel@beckhoff.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 12 Apr 2021 14:23:18 +0300
-Message-ID: <CAHp75VeTK9TstuRCqOkVit9U7sV7TA_xcTQ1yZPGfLdZSt7_Gg@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: pmc_atom: Match all Beckhoff Automation
- baytrail boards with critclk_systems DMI table
-To:     linux-kernel-dev <linux-kernel-dev@beckhoff.com>
-Cc:     "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Apr 12, 2021 at 2:07 PM linux-kernel-dev
-<linux-kernel-dev@beckhoff.com> wrote:
-> On Mo, 2021-04-12 at 13:54 +0300, Andy Shevchenko wrote:
-> > CAUTION: External Email!!
-> > On Mon, Apr 12, 2021 at 1:39 PM linux-kernel-dev
-> > <linux-kernel-dev@beckhoff.com> wrote:
-> > > On Mo, 2021-04-12 at 12:43 +0300, Andy Shevchenko wrote:
-> > > > On Mon, Apr 12, 2021 at 12:29 PM Steffen Dirkwinkel
-> > > > <linux-kernel-dev@beckhoff.com> wrote:
+Am Wed, 7 Apr 2021 13:36:40 +0200
+schrieb Hans de Goede <hdegoede@redhat.com>:
 
-...
+> Hi,
+> 
+> On 3/29/21 7:49 PM, Henning Schild wrote:
+> > changes since v2:
+> > 
+> > - remove "simatic-ipc" prefix from LED names
+> > - fix style issues found in v2, mainly LED driver
+> > - fix OEM specific dmi code, and remove magic numbers
+> > - more "simatic_ipc" name prefixing
+> > - improved pmc quirk code using callbacks
+> > 
+> > changes since v1:
+> > 
+> > - fixed lots of style issues found in v1
+> >   - (debug) printing
+> >   - header ordering
+> > - fixed license issues GPLv2 and SPDX in all files
+> > - module_platform_driver instead of __init __exit
+> > - wdt simplifications cleanup
+> > - lots of fixes in wdt driver, all that was found in v1
+> > - fixed dmi length in dmi helper
+> > - changed LED names to allowed ones
+> > - move led driver to simple/
+> > - switched pmc_atom to dmi callback with global variable
+> > 
+> > --
+> > 
+> > This series adds support for watchdogs and leds of several x86
+> > devices from Siemens.
+> > 
+> > It is structured with a platform driver that mainly does
+> > identification of the machines. It might trigger loading of the
+> > actual device drivers by attaching devices to the platform bus.
+> > 
+> > The identification is vendor specific, parsing a special binary DMI
+> > entry. The implementation of that platform identification is
+> > applied on pmc_atom clock quirks in the final patch.
+> > 
+> > It is all structured in a way that we can easily add more devices
+> > and more platform drivers later. Internally we have some more code
+> > for hardware monitoring, more leds, watchdogs etc. This will follow
+> > some day.  
+> 
+> IT seems there still is significant discussion surrounding the LED
+> and watchdog drivers which use patch 1/4 as parent-driver.
+> 
+> I'm going to hold of on merging 1/4 and 4/4 until there is more
+> consensus surrounding this series.
 
-> > > > I'm afraid it's a bit too much. Is there any guarantee all the boards
-> > > > based on x86 will be Baytrail only?
-> > > >
-> > > Sorry, I guess I should make this clearer in the message.
-> > > All boards with "CBxx63" are Baytrail.
-> >
-> > Exactly! And this supports my idea that this shouldn't be done like in
-> > this patch.
-> > Are you guaranteeing that *all x86-based* boards produced by your
-> > company will be Baytrail only?
-> > Above tells that the answer is rather "no". So, I think we can't apply
-> > this patch in its current form.
->
-> All boards with DMI_PRODUCT_FAMILY="CBxx63" are Baytrail boards. We do produce other x86 boards but the family
-> is exclusive to Baytrail.
-> I might be misunderstanding how the matching works. Does this match anything other than CBxx63?
->
->  .matches = {
->  DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-> DMI_MATCH(DMI_PRODUCT_FAMILY, "CBxx63"),
-> },
->
-> I can switch it to DMI_EXACT_MATCH but even substring matching works.
+Yes. Whithout 2 and 3, 1 would be way too big.
 
-Sorry, I missed the second match line. Yes, looks correct to me now.
+Henning
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Regards,
+> 
+> Hans
+> 
+> 
+> > 
+> > Henning Schild (4):
+> >   platform/x86: simatic-ipc: add main driver for Siemens devices
+> >   leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
+> >   watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial
+> > PCs platform/x86: pmc_atom: improve critclk_systems matching for
+> > Siemens PCs
+> > 
+> >  drivers/leds/Kconfig                          |   3 +
+> >  drivers/leds/Makefile                         |   3 +
+> >  drivers/leds/simple/Kconfig                   |  11 +
+> >  drivers/leds/simple/Makefile                  |   2 +
+> >  drivers/leds/simple/simatic-ipc-leds.c        | 202
+> > ++++++++++++++++ drivers/platform/x86/Kconfig                  |
+> > 12 + drivers/platform/x86/Makefile                 |   3 +
+> >  drivers/platform/x86/pmc_atom.c               |  57 +++--
+> >  drivers/platform/x86/simatic-ipc.c            | 169 ++++++++++++++
+> >  drivers/watchdog/Kconfig                      |  11 +
+> >  drivers/watchdog/Makefile                     |   1 +
+> >  drivers/watchdog/simatic-ipc-wdt.c            | 215
+> > ++++++++++++++++++ .../platform_data/x86/simatic-ipc-base.h      |
+> > 29 +++ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
+> >  14 files changed, 769 insertions(+), 21 deletions(-)
+> >  create mode 100644 drivers/leds/simple/Kconfig
+> >  create mode 100644 drivers/leds/simple/Makefile
+> >  create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
+> >  create mode 100644 drivers/platform/x86/simatic-ipc.c
+> >  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
+> >  create mode 100644
+> > include/linux/platform_data/x86/simatic-ipc-base.h create mode
+> > 100644 include/linux/platform_data/x86/simatic-ipc.h 
+> 
 
--- 
-With Best Regards,
-Andy Shevchenko
