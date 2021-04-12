@@ -2,118 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5280CC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 20:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0D1C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 22:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 294C26121D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 20:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 293CE613BB
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 22:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243661AbhDLUAh (ORCPT
+        id S240745AbhDLWmk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Apr 2021 16:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43054 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237003AbhDLUAh (ORCPT
+        Mon, 12 Apr 2021 18:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238901AbhDLWmj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Apr 2021 16:00:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D622C061574;
-        Mon, 12 Apr 2021 13:00:19 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 3FBA51F44D1C
-Received: by earth.universe (Postfix, from userid 1000)
-        id 024C03C0C96; Mon, 12 Apr 2021 22:00:16 +0200 (CEST)
-Date:   Mon, 12 Apr 2021 22:00:15 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Qiheng Lin <linqiheng@huawei.com>, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH -next] power: supply: Make symbol 'surface_ac_pm_ops'
- static
-Message-ID: <20210412200015.klsjgbxozlcnzjuj@earth.universe>
-References: <20210410041249.12846-1-linqiheng@huawei.com>
- <c5edfe56-eebe-55c0-e30f-4a552934d0b8@gmail.com>
+        Mon, 12 Apr 2021 18:42:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 34A9E613AD
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Apr 2021 22:42:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618267341;
+        bh=b4BttA0eJEy2QSAC7xhGI8PdOOQYNUggfoo9UwU/hto=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=WDG5IOUD4bZ4PGQCzGplRyXdcCURJnEGMi4H1HxxGfN0nXvz9X4wCW4Us2l0MbY4V
+         isQt1JkOHjQ3yI1nsVJ6Myk6/WTBq0AQJUY93s+nEXtjy4X/DAzhZp0BFkSaXNCppe
+         aX7G7ymEEjlUy2t8Rkoz0JtSuxB5f6gm/6RVZ0MzvzMqCdr8nzEkIQGrhOrBFR/qPI
+         NO02EevyjcsHoDQ83x9t3818c6eEX0DCgDp0zjaVOPBkBpvhX56AR97/RkqvyVimHo
+         7JOeGPH2toCqlyXGs8EtgenVpFmHHSbXKo2HP4NN8BcgP2zLo/x0URLO2nJ3BBtfqN
+         EUFGnOk1z+ydg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Mon, 12 Apr 2021 22:42:20 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: syd.meyer@gmail.com
+X-Bugzilla-Status: CLOSED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-QLSM2EWSAm@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n6ae2inqxfgg5nqx"
-Content-Disposition: inline
-In-Reply-To: <c5edfe56-eebe-55c0-e30f-4a552934d0b8@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---n6ae2inqxfgg5nqx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--- Comment #63 from Sydney Meyer (syd.meyer@gmail.com) ---
+Hello all,
 
-Hi,
+perhaps this is the wrong place to ask such a question, but after reading m=
+any
+sites on the interwebs about the issue, i am left with the impression that =
+most
+people (me included) do not actually understand the implications introduced=
+ by
+turning on/off knobs like "acpi_enforce_resources=3Dlax". Also, i read a lo=
+t,
+mostly unclear, comments about "hardware damage" and therefore would like to
+ask, what is actually the recommended way to go about this with the situati=
+on
+as it is now? Is this issue perhaps only relevant for manual fan control,
+because with or without "acpi_enforce_resources=3Dlax" and the nct6775 kern=
+el
+module loaded, the system appears to adjust the fan speed for the appropria=
+te
+load either way and there aren't any noticable differences between CPU temps
+either. So i guess my question basically boils down to this: Is there actua=
+lly
+something to worry about, apart from not beeing able to see/control fan spe=
+eds?
+I just have become a little worried now with all the contradictive informat=
+ion
+out there, also read (on phoronix) about this [1] and this [2] a few weeks =
+ago.
+This is a Asus X570 Gaming-E Board with a Ryzen 5950X CPU. As a regular use=
+r,
+am i going to fry my little computer by running Linux on it?
 
-On Sat, Apr 10, 2021 at 12:42:43PM +0200, Maximilian Luz wrote:
-> On 4/10/21 6:12 AM, Qiheng Lin wrote:
-> > The sparse tool complains as follows:
-> >=20
-> > drivers/power/supply/surface_charger.c:229:1: warning:
-> >   symbol 'surface_ac_pm_ops' was not declared. Should it be static?
-> >=20
-> > This symbol is not used outside of surface_charger.c, so this
-> > commit marks it static.
-> >=20
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
->=20
-> Acked-by: Maximilian Luz <luzmaximilian@gmail.com>
+I understand that nobody will guarantee anything, of course, i just felt th=
+is
+might be a good place for a qualified answer, because, obviously, i don't
+understand any of this low-level stuff.
 
-Thanks, queued.
+Thanks a bunch.
 
--- Sebastian
+[1] Linux 5.11 Drops AMD Zen Voltage/Current Reporting Over Lack Of
+Documentation=20
+https://www.phoronix.com/scan.php?page=3Dnews_item&px=3DLinux-5.11-Drops-k1=
+0temp-V-C
+[2] AMD Ryzen 5000 Temperature Monitoring Support Sent In For Linux 5.12
+https://www.phoronix.com/scan.php?page=3Dnews_item&px=3DZen-3-Desktop-CPU-k=
+10temp
 
-> > ---
-> >   drivers/power/supply/surface_charger.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/power/supply/surface_charger.c b/drivers/power/sup=
-ply/surface_charger.c
-> > index c2dd7e604d14..81a5b79822c9 100644
-> > --- a/drivers/power/supply/surface_charger.c
-> > +++ b/drivers/power/supply/surface_charger.c
-> > @@ -226,7 +226,7 @@ static int __maybe_unused surface_ac_resume(struct =
-device *dev)
-> >   {
-> >   	return spwr_ac_recheck(dev_get_drvdata(dev));
-> >   }
-> > -SIMPLE_DEV_PM_OPS(surface_ac_pm_ops, NULL, surface_ac_resume);
-> > +static SIMPLE_DEV_PM_OPS(surface_ac_pm_ops, NULL, surface_ac_resume);
-> >   static int surface_ac_probe(struct ssam_device *sdev)
-> >   {
-> >=20
+--=20
+You may reply to this email to add a comment.
 
---n6ae2inqxfgg5nqx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmB0ps8ACgkQ2O7X88g7
-+pqFvQ/8Cop/jNAsC3l1eqybF101UmvzrrG6OVsg0c6gVF/OLg6VMwzvkPXudCL3
-Hk+Pv1bZug9iqIGfpSDulUhLkpCucMcE7CVqWcmbvVNYSPGWcr2Gtd30gbK0Ixpc
-u5AL2kBiv9oK3IEy70LLicY4pEjDFhMARBg84dcfID7PieRdm3x8Mw2mVfBRiyyy
-dXqquHr3IK6NkYnd1DzI2bS3oC/GwuO40EdnKP5B52XABg87gXwR+Q/Mer7jGPTu
-j/hS7v7PPZR3QknyL+crLQn68sXSWBumAfIhEnRIEEHSEKGz57YhV2cC3EFv4rWC
-l7npOhAlFfCwAU775Hi9AerS6RvYFdi/SlitosDvXqRCi75aL/ufOq/6buDw0Bir
-FEm6luo8UkDID45BZiO9NrFx8h72zt/H6JjTJn66K928jN1lh/EV4JCTUgF6NlJk
-RUYZ6G8hbbekUWGOuuC8ijhCeQ/XkQF1AAYUh8Alzb+7i1az7vIqGUeyHY2qUcLk
-/Ba13WDmmF/wypEp/gjzYAYAfo/qgusX9Hdg1YPBwRDDh/RXsE+okZ362ciN6F9C
-vEEHazNgTPWHbugGEs7K+d4iwRgeAZdy3b65LR77Ewv5Pa5RWrdUP5GNLLWa8Z2Z
-97ukXQabn7gvZ4NJFTxrkB6tKm0vcTxzCY6ds+lhj5/4GhpbDC4=
-=YxJH
------END PGP SIGNATURE-----
-
---n6ae2inqxfgg5nqx--
+You are receiving this mail because:
+You are watching the assignee of the bug.=
