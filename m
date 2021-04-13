@@ -3,40 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0D1C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 22:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CB8C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 06:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 293CE613BB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Apr 2021 22:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15C0B613BB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 06:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240745AbhDLWmk (ORCPT
+        id S245263AbhDMGLp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Apr 2021 18:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40890 "EHLO mail.kernel.org"
+        Tue, 13 Apr 2021 02:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238901AbhDLWmj (ORCPT
+        id S229748AbhDMGLo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Apr 2021 18:42:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 34A9E613AD
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Apr 2021 22:42:21 +0000 (UTC)
+        Tue, 13 Apr 2021 02:11:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id E2F8C613BB
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Apr 2021 06:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618267341;
-        bh=b4BttA0eJEy2QSAC7xhGI8PdOOQYNUggfoo9UwU/hto=;
+        s=k20201202; t=1618294285;
+        bh=mwjSw/VA1fo1rNK25QfaXxf+HLZyivqMrVsrG9JHOiE=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=WDG5IOUD4bZ4PGQCzGplRyXdcCURJnEGMi4H1HxxGfN0nXvz9X4wCW4Us2l0MbY4V
-         isQt1JkOHjQ3yI1nsVJ6Myk6/WTBq0AQJUY93s+nEXtjy4X/DAzhZp0BFkSaXNCppe
-         aX7G7ymEEjlUy2t8Rkoz0JtSuxB5f6gm/6RVZ0MzvzMqCdr8nzEkIQGrhOrBFR/qPI
-         NO02EevyjcsHoDQ83x9t3818c6eEX0DCgDp0zjaVOPBkBpvhX56AR97/RkqvyVimHo
-         7JOeGPH2toCqlyXGs8EtgenVpFmHHSbXKo2HP4NN8BcgP2zLo/x0URLO2nJ3BBtfqN
-         EUFGnOk1z+ydg==
+        b=oMDBlQmGIk/hZ+ldmEt25YeFJtwZMUTmNFfp5mCUsoWV3AJhKUOo19l8Cgszak0Nb
+         B0wHnaxXzbDMvQh+r+pg4iMHl3KS/jnRlBEMgcZtMe4b+GpZilYDV12Nok9MZkGjXf
+         6qQpRDWUSKSEp/JgvBmXn8i+8GqvKj2JlP5K/zeUG4Ixx3xp7zD9z+nYwjuiiTfdw2
+         oxPuJjsjQoJag4IGPFnvOmZMtBZV4GsZOdOOWeBY5/Gl4/JSTSClQjmtRe7wigAzEs
+         KGwcikkuVXwlKVrveYDDGPHIZ7RElJwt+lNoneXKp8G038304fbLYzJSH14cSQx162
+         bvG2/QHqat88g==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Mon, 12 Apr 2021 22:42:20 +0000
+Date:   Tue, 13 Apr 2021 06:11:25 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: syd.meyer@gmail.com
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
 X-Bugzilla-Status: CLOSED
 X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-QLSM2EWSAm@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-ePoDqrPyyS@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,52 +66,50 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #63 from Sydney Meyer (syd.meyer@gmail.com) ---
-Hello all,
+--- Comment #64 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Sydney, I understand that all the discussion can be somewhat confusing.
 
-perhaps this is the wrong place to ask such a question, but after reading m=
-any
-sites on the interwebs about the issue, i am left with the impression that =
-most
-people (me included) do not actually understand the implications introduced=
- by
-turning on/off knobs like "acpi_enforce_resources=3Dlax". Also, i read a lo=
-t,
-mostly unclear, comments about "hardware damage" and therefore would like to
-ask, what is actually the recommended way to go about this with the situati=
-on
-as it is now? Is this issue perhaps only relevant for manual fan control,
-because with or without "acpi_enforce_resources=3Dlax" and the nct6775 kern=
-el
-module loaded, the system appears to adjust the fan speed for the appropria=
-te
-load either way and there aren't any noticable differences between CPU temps
-either. So i guess my question basically boils down to this: Is there actua=
-lly
-something to worry about, apart from not beeing able to see/control fan spe=
-eds?
-I just have become a little worried now with all the contradictive informat=
-ion
-out there, also read (on phoronix) about this [1] and this [2] a few weeks =
-ago.
-This is a Asus X570 Gaming-E Board with a Ryzen 5950X CPU. As a regular use=
-r,
-am i going to fry my little computer by running Linux on it?
+It should be perfectly safe to run Linux on your computer (but as you said =
+no
+there is no warranty), by default Windows also does not come with any softw=
+are
+to monitor the nct6775 sensors. So when installing Linux without making any
+changes your computer will run the same way as with a pristine (no extra sw
+installed) windows install.
 
-I understand that nobody will guarantee anything, of course, i just felt th=
-is
-might be a good place for a qualified answer, because, obviously, i don't
-understand any of this low-level stuff.
+Under Linux you will even be able to monitor the CPU temperature using the
+CPU's builtin temp-sensors. What does not work is monitoring other
+temperatures, voltages and fan-speeds. Nor controlling fan-speeds.  But
+typically a modern motherboard will automatically control the CPU fan speed
+based on temperature, without needing the OS to do anything; Also most users
+typically use their computer for other things then to monitor the computers
+temps and voltages.
 
-Thanks a bunch.
+Matthew rightly advises against using "acpi_enforce_resources=3Dlax" becaus=
+e that
+opens races between the firmware and Linux which could result in writing to
+another superIO register then intended. This can definitely lead to e.g.
+stopping the fans even though the CPU is running hot, which is not good but=
+ all
+modern CPUs have builtin overtemp protection, so at the worst the system wi=
+ll
+simply shutdown (1).=20
 
-[1] Linux 5.11 Drops AMD Zen Voltage/Current Reporting Over Lack Of
-Documentation=20
-https://www.phoronix.com/scan.php?page=3Dnews_item&px=3DLinux-5.11-Drops-k1=
-0temp-V-C
-[2] AMD Ryzen 5000 Temperature Monitoring Support Sent In For Linux 5.12
-https://www.phoronix.com/scan.php?page=3Dnews_item&px=3DZen-3-Desktop-CPU-k=
-10temp
+Theoretically this could also lead to worse outcomes, such us changes your =
+CPU
+or RAM voltage which could damage your hardware. I am aware of at least one
+semi-related case where RAM got seriously overvolted damaging both the RAM =
+and
+the CPU, this was not with a Super-IO solution though, but with I2C attached
+sensor probing.
+
+1) Repeatedly overheating your CPU to where it automatically shuts down is =
+not
+good for your CPU's health though and will likely shorten its lifetime.
+
+TL;DR: Don't use "acpi_enforce_resources=3Dlax", otherwise running Linux sh=
+ould
+be safe and everything should work fine.
 
 --=20
 You may reply to this email to add a comment.
