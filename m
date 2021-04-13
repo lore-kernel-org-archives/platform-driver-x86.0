@@ -2,199 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B2DC43461
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 09:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB341C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 11:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6506613B8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 09:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85CC86135C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 11:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbhDMJps (ORCPT
+        id S238245AbhDMLbQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Apr 2021 05:45:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58653 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229712AbhDMJps (ORCPT
+        Tue, 13 Apr 2021 07:31:16 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:49221 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231287AbhDMLbM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Apr 2021 05:45:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618307128;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FovRzir69GjJpIMDPymDt6UWLVisdeK1mUh5/bQVIT4=;
-        b=MjeNKI9DU6LkmDyAbjSEwpXyqqj+7notlUM3cE5vj5II+8paUfzq2ObzMLNW58gE0prF5u
-        LR21Z/H2zdSR25Zw1vb2l0FNLDMnM8ooNW55F6IkHhNv5a5Y7XPPPO+PomKTgPaBlee60i
-        jlgRHD+FpOek2S4YIAOu7cvwZtz+pEs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-359-DSoJS-4tMJCTwZ6FU43IpA-1; Tue, 13 Apr 2021 05:45:24 -0400
-X-MC-Unique: DSoJS-4tMJCTwZ6FU43IpA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 13 Apr 2021 07:31:12 -0400
+Received: from [100.112.2.115] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.us-east-1.aws.symcld.net id AC/79-00973-CE085706; Tue, 13 Apr 2021 11:30:52 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRWlGSWpSXmKPExsWSLveKTfdNQ2m
+  CwanpPBZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaMG7uWMhZ8
+  5qhYuHgbWwPjDPYuRi4OIYH/jBKXz71lgXCeM0o8+NMP5HBwCAskS9xYxNzFyMkhIqAuMbWjh
+  w3EZhZwlpjUMgHMFhLoZJT4tDoTxGYT0JbYsuUXWJxXwFbiZWc3M8gYFgFVie2zNUHCogLhEr
+  1XbrNClAhKnJz5BGwTp4CdxKM1UiAms4CmxPpd+hCLxCVuPZnPBGHLS2x/OwfsGAkg+/vjRSw
+  QdoJEz79HbBMYBWchGToLYdIsJJNmIZm0gJFlFaNpUlFmekZJbmJmjq6hgYGuoaGRrqGuhaVe
+  YpVukl5psW5qYnGJrqFeYnmxXnFlbnJOil5easkmRmAUpBQwRu5g3Pf6g94hRkkOJiVR3g1dJ
+  QlCfEn5KZUZicUZ8UWlOanFhxhlODiUJHgZ60sThASLUtNTK9Iyc4ARCZOW4OBREuH9WQeU5i
+  0uSMwtzkyHSJ1iVJQS510L0icAksgozYNrgyWBS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJW
+  EeZmAKUWIJzOvBG76K6DFTECLL24tBFlckoiQkmpgCtzx8NrZ7nNMdnl3NNriEkqVLTbV2LkF
+  nJb0K2ybkXLreW5+FtPphtDnOsYJX7Ll9W+o6bF2b+11uvL2h8X1tlVqaesUc31nnvyYMY9lp
+  k7EqtKXF7itAsIeGO/47pkSk8WqJWF68vyesuWiU7slmBfr79sySci0Nkl6b3hA7k3HU3mrcq
+  L3HFfquJwgUmpwYpOfbm4UY+qvx7b7dsi+1E14tvnuohXyuz57FsX5MLqHtSQI7vzPmj4xzuP
+  roztTXi3yZLkztcNr1sLSU5UHOZJKf/dsKPN+e8xKzK/iRtAGlg1pC3cq5bHdODpjm+XNpVor
+  Dq3nffylMGfR3IiPa50ms9YzrFx6qnb7suK/SizFGYmGWsxFxYkAFpI5OH0DAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-15.tower-395.messagelabs.com!1618313449!510019!1
+X-Originating-IP: [103.30.234.6]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.60.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 28569 invoked from network); 13 Apr 2021 11:30:51 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-15.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 13 Apr 2021 11:30:51 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7D91D87A841;
-        Tue, 13 Apr 2021 09:45:22 +0000 (UTC)
-Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F4CB6E51F;
-        Tue, 13 Apr 2021 09:45:18 +0000 (UTC)
-Date:   Tue, 13 Apr 2021 17:45:15 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-Message-ID: <20210413094515.GD4282@MiWiFi-R3L-srv>
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
- <20210412095231.GC4282@MiWiFi-R3L-srv>
- <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
+        by Forcepoint Email with ESMTPS id 5DF50C23B6980DF9C936;
+        Tue, 13 Apr 2021 19:30:48 +0800 (CST)
+Received: from localhost.localdomain (10.38.52.10) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Tue, 13 Apr
+ 2021 07:30:45 -0400
+Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: Correct
+ thermal sensor allocation
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <20210407212015.298222-1-markpearson@lenovo.com>
+ <1f0e16b9-ab78-881b-1918-7b8cf61bc546@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <92846990-bc3f-fd1c-b854-d03a258e93c1@lenovo.com>
+Date:   Tue, 13 Apr 2021 07:30:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <1f0e16b9-ab78-881b-1918-7b8cf61bc546@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.38.52.10]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 04/12/21 at 08:24am, Andy Lutomirski wrote:
-> On Mon, Apr 12, 2021 at 2:52 AM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > On 04/11/21 at 06:49pm, Andy Lutomirski wrote:
-> > >
-> > >
-> > > > On Apr 11, 2021, at 6:14 PM, Baoquan He <bhe@redhat.com> wrote:
-> > > >
-> > > > ﻿On 04/09/21 at 07:59pm, H. Peter Anvin wrote:
-> > > >> Why don't we do this unconditionally? At the very best we gain half a megabyte of memory (except the trampoline, which has to live there, but it is only a few kilobytes.)
-> > > >
-> > > > This is a great suggestion, thanks. I think we can fix it in this way to
-> > > > make code simpler. Then the specific caring of real mode in
-> > > > efi_free_boot_services() can be removed too.
-> > > >
-> > >
-> > > This whole situation makes me think that the code is buggy before and buggy after.
-> > >
-> > > The issue here (I think) is that various pieces of code want to reserve specific pieces of otherwise-available low memory for their own nefarious uses. I don’t know *why* crash kernel needs this, but that doesn’t matter too much.
-> >
-> > Kdump kernel also need go through real mode code path during bootup. It
-> > is not different than normal kernel except that it skips the firmware
-> > resetting. So kdump kernel needs low 1M as system RAM just as normal
-> > kernel does. Here we reserve the whole low 1M with memblock_reserve()
-> > to avoid any later kernel or driver data reside in this area. Otherwise,
-> > we need dump the content of this area to vmcore. As we know, when crash
-> > happened, the old memory of 1st kernel should be untouched until vmcore
-> > dumping read out its content. Meanwhile, kdump kernel need reuse low 1M.
-> > In the past, we used a back up region to copy out the low 1M area, and
-> > map the back up region into the low 1M area in vmcore elf file. In
-> > 6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the crashkernel
-> > option is specified"), we changed to lock the whole low 1M to avoid
-> > writting any kernel data into, like this we can skip this area when
-> > dumping vmcore.
-> >
-> > Above is why we try to memblock reserve the whole low 1M. We don't want
-> > to use it, just don't want anyone to use it in 1st kernel.
-> >
-> > >
-> > > I propose that the right solution is to give low-memory-reserving code paths two chances to do what they need: once at the very beginning and once after EFI boot services are freed.
-> > >
-> > > Alternatively, just reserve *all* otherwise unused sub 1M memory up front, then release it right after releasing boot services, and then invoke the special cases exactly once.
-> >
-> > I am not sure if I got both suggested ways clearly. They look a little
-> > complicated in our case. As I explained at above, we want the whole low
-> > 1M locked up, not one piece or some pieces of it.
+Thanks Hans
+
+On 13/04/2021 02:28, Hans de Goede wrote:
+> Hi,
 > 
-> My second suggestion is probably the better one.  Here it is, concretely:
+> On 4/7/21 11:20 PM, Mark Pearson wrote:
+>> On recent Thinkpad platforms it was reported that temp sensor 11 was
+>> always incorrectly displaying 66C. It turns out the reason for this is
+>> that this location in EC RAM is not a temperature sensor but is the
+>> power supply ID (offset 0xC2).
+>>
+>> Based on feedback from the Lenovo firmware team the EC RAM version can
+>> be determined and for the current version (3) only the 0x78 to 0x7F
+>> range is used for temp sensors. I don't have any details for earlier
+>> versions so I have left the implementation unaltered there.
+>>
+>> Note - in this block only 0x78 and 0x79 are officially designated (CPU &
+>> GPU sensors). The use of the other locations in the block will vary from
+>> platform to platform; but the existing logic to detect a sensor presence
+>> holds.
+>>
+>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 > 
-> The early (pre-free_efi_boot_services) code just reserves all
-> available sub-1M memory unconditionally, but it specially marks it as
-> reserved-but-available-later.  We stop allocating the trampoline page
-> at this stage.
+> I've merged this, note I've added one small fixup to initialize ver to
+> 0 when it is declared, also see a remark inline below.
 > 
-> In free_efi_boot_services, instead of *freeing* the sub-1M memory, we
-> stick it in the pile of reserved memory created in the early step.
-> This may involve splitting a block, kind of like the current
-> trampoline late allocation works.
-> 
-> Then, *after* free_efi_boot_services(), we run a single block of code
-> that lets everything that wants sub-1M code claim some.  This means
-> that the trampoline gets allocated and, if crashkernel wants to claim
-> everything else, it can.  After that, everything still unclaimed gets
-> freed.
 
-void __init setup_arch(char **cmdline_p)
-{
-...
-	efi_reserve_boot_services();
-	e820__memblock_alloc_reserved_mpc_new();
-#ifdef CONFIG_X86_CHECK_BIOS_CORRUPTION
-        setup_bios_corruption_check();
-#endif
-        reserve_real_mode();                                                                                                                      
+Agreed on setting ver to zero - thanks for adding that
 
-        trim_platform_memory_ranges();
-        trim_low_memory_range();
-...
-}
-
-After efi_reserve_boot_services(), there are several function calling to
-require memory reservation under low 1M.
-
-
-asmlinkage __visible void __init __no_sanitize_address start_kernel(void)                                                                         
-{
-...
-	setup_arch(&command_line);
-...
-	mm_init();
-		--> mem_init();
-			 -->memblock_free_all();
-
-...
-#ifdef CONFIG_X86
-        if (efi_enabled(EFI_RUNTIME_SERVICES))
-                efi_enter_virtual_mode();
-			-->efi_free_boot_services();
-				-->memblock_free_late();
-#endif
-...
-}
-
-So from the code flow, we can see that buddy allocator is built in
-mm_init() which puts all memory from memblock.memory excluding
-memblock.reserved into buddy. And much later, we call
-efi_free_boot_services() to release those reserved efi boot memory into
-buddy too.
-
-Are you suggesting we should do the memory reservation from low 1M
-after efi_free_boot_services()? To require memory pages from buddy for
-them? Please help point out my misunderstanding if have any.
-
-With my understanding, in non-efi case, we have done the memory
-reservation with memblock_reserve(), e.g
-e820__memblock_alloc_reserved_mpc_new, reserve_real_mode() are calling
-to do. Just efi_reserve|free_boot_services() break them when efi is
-enabled. We can do them again in efi_free_boot_services() just like the
-real_mode reservation does.
-
-Thanks
-Baoquan
+Mark
 
