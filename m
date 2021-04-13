@@ -2,223 +2,374 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5AEC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 07:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E42C43460
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 07:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFDB613B2
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 07:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA954613B1
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 07:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238311AbhDMHVi (ORCPT
+        id S239098AbhDMH1d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Apr 2021 03:21:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:58423 "EHLO
+        Tue, 13 Apr 2021 03:27:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51816 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229580AbhDMHVh (ORCPT
+        by vger.kernel.org with ESMTP id S230220AbhDMH1c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Apr 2021 03:21:37 -0400
+        Tue, 13 Apr 2021 03:27:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618298477;
+        s=mimecast20190719; t=1618298832;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xfhWD4LuEvr6SvSP1VhSazKaMKiGs/S9uH0lW7bV7MY=;
-        b=cXujy8U17EJQNChjg8jSltYLYLfBxWBKwmpF1qyEs+7MfzN0f+hOyKkPupBeO/5gia8dF/
-        eR2zbL76osQJDqR4B/jiRRBRTsnBdfN7vRhPUekX3V7K1jK/cnZ2Sak/KtuQhTxUxBKP3h
-        9Fmt9tzlMXj5sDt7aRTJ+O6/qsbugaw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-s6SGmjrjP_iSN4t8xIkbjQ-1; Tue, 13 Apr 2021 03:21:16 -0400
-X-MC-Unique: s6SGmjrjP_iSN4t8xIkbjQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14CAC1006C87;
-        Tue, 13 Apr 2021 07:21:15 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-114-109.ams2.redhat.com [10.36.114.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CBA731724D;
-        Tue, 13 Apr 2021 07:21:13 +0000 (UTC)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sbNlXmW4twHjiHjHaeXid9uU36Go38oRtJs3RsrBYfw=;
+        b=Ttuxwns2UxXUTtrSpdoybQJ99yvOYgc5L90LlOnXo0gZut8DNMVnm9Dht9gLzA+8Igp/wf
+        4tppvf/X6StdPrdAb9mZ17An2IcPzM8VF/Gnp3O0tWaieQdd8gy/54t2jPlbDoriHQyOss
+        ZrRw6IQjYGeBMt+Sng9oBoXKlyYzSnc=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-552-chw3pyWMPhK5Hl6tdGF1Pg-1; Tue, 13 Apr 2021 03:27:10 -0400
+X-MC-Unique: chw3pyWMPhK5Hl6tdGF1Pg-1
+Received: by mail-ed1-f71.google.com with SMTP id y10-20020a50f1ca0000b0290382d654f75eso791302edl.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Apr 2021 00:27:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sbNlXmW4twHjiHjHaeXid9uU36Go38oRtJs3RsrBYfw=;
+        b=TPsFVyhdC/OuVJr7hu8ndSm/v8xBesKvvM61CjpW5IYb0zCmWHUwb/HZlXu9pANwnf
+         e8nflJzfE2Db5BTPNuTwQ32+f+95rgu3/bdA/0ISjhz2Y5NnOL2RcwKsdhB/HdL4fIqf
+         fUxFNg/mWgfMtZnKTE9goBT6cAiqplQmM5vvEJhUjOp4v+P7zJ6Bfk0gJXTmOd38r9gC
+         JTncIC3aOk2cOGaZ/gEIWgYGVX37iDRIzpyJ8VZ9H34D+4gS6q4js5A318gYxtF+APl6
+         zZIJR6EzD0Vb/SvxQsoGd/d3nYO/DV457YoHwdR59AZfE1K/9HztZKushFusTHvXURkV
+         nBzg==
+X-Gm-Message-State: AOAM530mrRfsUtFJI1JqeMG0K5zY6gAixA51jXBzdbJ0+VYADnRAlGdT
+        kewRp5AL6uHnIl+MgwvzoMe5mSvNMjIbyiuLXx6m6Q7rs0O5F2cfJTc9i+riInlvAcl7hpQ7u42
+        kgYD9tep4FncSGPxcggKbXbS/R7sq8doNJg==
+X-Received: by 2002:a17:906:b202:: with SMTP id p2mr30733616ejz.244.1618298829696;
+        Tue, 13 Apr 2021 00:27:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxZ+VkdAhIghxIna0GDqrGWN4W90YHkOrQc+JVIRmx8CO0Slp2tgYUlOwgV1IuZf+PPzcGzmw==
+X-Received: by 2002:a17:906:b202:: with SMTP id p2mr30733601ejz.244.1618298829477;
+        Tue, 13 Apr 2021 00:27:09 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id e20sm2275247ejy.66.2021.04.13.00.27.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Apr 2021 00:27:08 -0700 (PDT)
+Subject: Re: [PATCH v6] platform/x86: intel_pmc_core: export platform global
+ reset bits via etr3 sysfs file
+To:     Tomas Winkler <tomas.winkler@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20210411141532.3004893-1-tomas.winkler@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: Add labels to the first 2 temperature sensors
-Date:   Tue, 13 Apr 2021 09:21:12 +0200
-Message-Id: <20210413072112.183550-1-hdegoede@redhat.com>
+Message-ID: <1ab9f53a-d33c-308a-bb1a-5aefcb6077cc@redhat.com>
+Date:   Tue, 13 Apr 2021 09:27:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20210411141532.3004893-1-tomas.winkler@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On EC version 3, the first 2 temperature sensors are always CPU and GPU
-add labels for these.
+Hi,
 
-This changes e.g. the "sensors" command output on a X1C8 from:
+On 4/11/21 4:15 PM, Tomas Winkler wrote:
+> From: Tamar Mashiah <tamar.mashiah@intel.com>
+> 
+> During PCH (platform/board) manufacturing process a global platform
+> reset has to be induced in order for the configuration changes take
+> the effect upon following platform reset. This is an internal platform
+> state and is not intended to be used in the regular platform resets.
+> The setting is exposed via ETR3 (Extended Test Mode Register 3).
+> After the manufacturing process is completed the register cannot be
+> written anymore and is hardware locked.
+> This setting was commonly done by accessing PMC registers via /dev/mem
+> but due to security concerns /dev/mem access is much more restricted,
+> hence the reason for exposing this setting via the dedicated sysfs
+> interface.
+> To prevent post manufacturing abuse the register is protected
+> by hardware locking and the file is set to read-only mode via is_visible
+> handler.
+> 
+> The register in MMIO space is defined for Cannon Lake and newer PCHs.
+> 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: David E Box <david.e.box@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Tamar Mashiah <tamar.mashiah@intel.com>
+> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
 
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        2694 RPM
-temp1:        +42.0°C
-temp2:            N/A
-temp3:        +33.0°C
-temp4:         +0.0°C
-temp5:        +35.0°C
-temp6:        +42.0°C
-temp7:        +42.0°C
-temp8:            N/A
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
 
-into:
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
 
-thinkpad-isa-0000
-Adapter: ISA adapter
-fan1:        2694 RPM
-CPU:          +42.0°C
-GPU:              N/A
-temp3:        +33.0°C
-temp4:         +0.0°C
-temp5:        +35.0°C
-temp6:        +42.0°C
-temp7:        +42.0°C
-temp8:            N/A
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 72 ++++++++++++++++++----------
- 1 file changed, 47 insertions(+), 25 deletions(-)
+Regards,
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index ec98089d98c9..dd60c9397d35 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -6296,6 +6296,8 @@ struct ibm_thermal_sensors_struct {
- };
- 
- static enum thermal_access_mode thermal_read_mode;
-+static const struct attribute_group *thermal_attr_group;
-+static bool thermal_use_labels;
- 
- /* idx is zero-based */
- static int thermal_get_sensor(int idx, s32 *value)
-@@ -6478,6 +6480,28 @@ static const struct attribute_group thermal_temp_input8_group = {
- #undef THERMAL_SENSOR_ATTR_TEMP
- #undef THERMAL_ATTRS
- 
-+static ssize_t temp1_label_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "CPU\n");
-+}
-+static DEVICE_ATTR_RO(temp1_label);
-+
-+static ssize_t temp2_label_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "GPU\n");
-+}
-+static DEVICE_ATTR_RO(temp2_label);
-+
-+static struct attribute *temp_label_attributes[] = {
-+	&dev_attr_temp1_label.attr,
-+	&dev_attr_temp2_label.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group temp_label_attr_group = {
-+	.attrs = temp_label_attributes,
-+};
-+
- /* --------------------------------------------------------------------- */
- 
- static int __init thermal_init(struct ibm_init_struct *iibm)
-@@ -6533,12 +6557,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 				thermal_read_mode = TPACPI_THERMAL_NONE;
- 			}
- 		} else {
--			if (ver >= 3)
-+			if (ver >= 3) {
- 				thermal_read_mode = TPACPI_THERMAL_TPEC_8;
--			else
-+				thermal_use_labels = true;
-+			} else {
- 				thermal_read_mode =
- 					(ta2 != 0) ?
- 					TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
-+			}
- 		}
- 	} else if (acpi_tmp7) {
- 		if (tpacpi_is_ibm() &&
-@@ -6560,44 +6586,40 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 
- 	switch (thermal_read_mode) {
- 	case TPACPI_THERMAL_TPEC_16:
--		res = sysfs_create_group(&tpacpi_hwmon->kobj,
--				&thermal_temp_input16_group);
--		if (res)
--			return res;
-+		thermal_attr_group = &thermal_temp_input16_group;
- 		break;
- 	case TPACPI_THERMAL_TPEC_8:
- 	case TPACPI_THERMAL_ACPI_TMP07:
- 	case TPACPI_THERMAL_ACPI_UPDT:
--		res = sysfs_create_group(&tpacpi_hwmon->kobj,
--				&thermal_temp_input8_group);
--		if (res)
--			return res;
-+		thermal_attr_group = &thermal_temp_input8_group;
- 		break;
- 	case TPACPI_THERMAL_NONE:
- 	default:
- 		return 1;
- 	}
- 
-+	res = sysfs_create_group(&tpacpi_hwmon->kobj, thermal_attr_group);
-+	if (res)
-+		return res;
-+
-+	if (thermal_use_labels) {
-+		res = sysfs_create_group(&tpacpi_hwmon->kobj, &temp_label_attr_group);
-+		if (res) {
-+			sysfs_remove_group(&tpacpi_hwmon->kobj, thermal_attr_group);
-+			return res;
-+		}
-+	}
-+
- 	return 0;
- }
- 
- static void thermal_exit(void)
- {
--	switch (thermal_read_mode) {
--	case TPACPI_THERMAL_TPEC_16:
--		sysfs_remove_group(&tpacpi_hwmon->kobj,
--				   &thermal_temp_input16_group);
--		break;
--	case TPACPI_THERMAL_TPEC_8:
--	case TPACPI_THERMAL_ACPI_TMP07:
--	case TPACPI_THERMAL_ACPI_UPDT:
--		sysfs_remove_group(&tpacpi_hwmon->kobj,
--				   &thermal_temp_input8_group);
--		break;
--	case TPACPI_THERMAL_NONE:
--	default:
--		break;
--	}
-+	if (thermal_attr_group)
-+		sysfs_remove_group(&tpacpi_hwmon->kobj, thermal_attr_group);
-+
-+	if (thermal_use_labels)
-+		sysfs_remove_group(&tpacpi_hwmon->kobj, &temp_label_attr_group);
- }
- 
- static int thermal_read(struct seq_file *m)
--- 
-2.31.1
+Hans
+
+
+
+
+> ---
+> V2:
+> 1. Add locking for reading the ET3 register  (Andy)
+> 2. Fix few style issues (Andy)
+> V3:
+> 1. Resend
+> v4:
+> 1. Fix return statement (Andy)
+> 2. Specify manufacturing process (Enrico)
+> V5:
+> 1. Rename sysfs file to etr3 (Hans)
+> 2. Make file read only when register is locked (Hans)
+> 3. Add more info to sysfs ABI documentation
+> V5:
+> 1. Parentheses around arithmetic in operand of '|' [-Wparentheses] (lkp)
+>    656 |  return reg & ETR3_CF9LOCK ? attr->mode & SYSFS_PREALLOC | 0444 : attr->mode
+> 
+>  .../ABI/testing/sysfs-platform-intel-pmc      |  20 ++++
+>  MAINTAINERS                                   |   1 +
+>  drivers/platform/x86/intel_pmc_core.c         | 113 ++++++++++++++++++
+>  drivers/platform/x86/intel_pmc_core.h         |   6 +
+>  4 files changed, 140 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-platform-intel-pmc
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-pmc b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> new file mode 100644
+> index 000000000000..ef199af75ab0
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-platform-intel-pmc
+> @@ -0,0 +1,20 @@
+> +What:		/sys/devices/platform/<platform>/etr3
+> +Date:		Apr 2021
+> +KernelVersion:	5.13
+> +Contact:	"Tomas Winkler" <tomas.winkler@intel.com>
+> +Description:
+> +		The file exposes "Extended Test Mode Register 3" global
+> +		reset bits. The bits are used during an Intel platform
+> +		manufacturing process to indicate that consequent reset
+> +		of the platform is a "global reset". This type of reset
+> +		is required in order for manufacturing configurations
+> +		to take effect.
+> +
+> +		Display global reset setting bits for PMC.
+> +			* bit 31 - global reset is locked
+> +			* bit 20 - global reset is set
+> +		Writing bit 20 value to the etr3 will induce
+> +		a platform "global reset" upon consequent platform reset,
+> +		in case the register is not locked.
+> +		The "global reset bit" should be locked on a production
+> +		system and the file is in read-only mode.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7dd6b67f0f51..3e898660b5b4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9145,6 +9145,7 @@ M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+>  M:	David E Box <david.e.box@intel.com>
+>  L:	platform-driver-x86@vger.kernel.org
+>  S:	Maintained
+> +F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
+>  F:	drivers/platform/x86/intel_pmc_core*
+>  
+>  INTEL PMIC GPIO DRIVERS
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+> index b5888aeb4bcf..8fb4e6d1d68d 100644
+> --- a/drivers/platform/x86/intel_pmc_core.c
+> +++ b/drivers/platform/x86/intel_pmc_core.c
+> @@ -401,6 +401,7 @@ static const struct pmc_reg_map cnp_reg_map = {
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+>  	.ltr_ignore_max = CNP_NUM_IP_IGN_ALLOWED,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static const struct pmc_reg_map icl_reg_map = {
+> @@ -418,6 +419,7 @@ static const struct pmc_reg_map icl_reg_map = {
+>  	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+>  	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
+>  	.ltr_ignore_max = ICL_NUM_IP_IGN_ALLOWED,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static const struct pmc_bit_map tgl_clocksource_status_map[] = {
+> @@ -585,6 +587,7 @@ static const struct pmc_reg_map tgl_reg_map = {
+>  	.lpm_sts = tgl_lpm_maps,
+>  	.lpm_status_offset = TGL_LPM_STATUS_OFFSET,
+>  	.lpm_live_status_offset = TGL_LPM_LIVE_STATUS_OFFSET,
+> +	.etr3_offset = ETR3_OFFSET,
+>  };
+>  
+>  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+> @@ -603,6 +606,115 @@ static inline u64 pmc_core_adjust_slp_s0_step(struct pmc_dev *pmcdev, u32 value)
+>  	return (u64)value * pmcdev->map->slp_s0_res_counter_step;
+>  }
+>  
+> +static int set_etr3(struct pmc_dev *pmcdev)
+> +{
+> +	const struct pmc_reg_map *map = pmcdev->map;
+> +	u32 reg;
+> +	int err;
+> +
+> +	if (!map->etr3_offset)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +
+> +	/* check if CF9 is locked */
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	if (reg & ETR3_CF9LOCK) {
+> +		err = -EACCES;
+> +		goto out_unlock;
+> +	}
+> +
+> +	/* write CF9 global reset bit */
+> +	reg |= ETR3_CF9GR;
+> +	pmc_core_reg_write(pmcdev, map->etr3_offset, reg);
+> +
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	if (!(reg & ETR3_CF9GR)) {
+> +		err = -EIO;
+> +		goto out_unlock;
+> +	}
+> +
+> +	err = 0;
+> +
+> +out_unlock:
+> +	mutex_unlock(&pmcdev->lock);
+> +	return err;
+> +}
+> +static umode_t etr3_is_visible(struct kobject *kobj,
+> +				struct attribute *attr,
+> +				int idx)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +	const struct pmc_reg_map *map = pmcdev->map;
+> +	u32 reg;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	mutex_unlock(&pmcdev->lock);
+> +
+> +	return reg & ETR3_CF9LOCK ? attr->mode & (SYSFS_PREALLOC | 0444) : attr->mode;
+> +}
+> +
+> +static ssize_t etr3_show(struct device *dev,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +	const struct pmc_reg_map *map = pmcdev->map;
+> +	u32 reg;
+> +
+> +	if (!map->etr3_offset)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&pmcdev->lock);
+> +
+> +	reg = pmc_core_reg_read(pmcdev, map->etr3_offset);
+> +	reg &= ETR3_CF9GR | ETR3_CF9LOCK;
+> +
+> +	mutex_unlock(&pmcdev->lock);
+> +
+> +	return sysfs_emit(buf, "0x%08x", reg);
+> +}
+> +
+> +static ssize_t etr3_store(struct device *dev,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t len)
+> +{
+> +	struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> +	int err;
+> +	u32 reg;
+> +
+> +	err = kstrtouint(buf, 16, &reg);
+> +	if (err)
+> +		return err;
+> +
+> +	/* allow only CF9 writes */
+> +	if (reg != ETR3_CF9GR)
+> +		return -EINVAL;
+> +
+> +	err = set_etr3(pmcdev);
+> +	if (err)
+> +		return err;
+> +
+> +	return len;
+> +}
+> +static DEVICE_ATTR_RW(etr3);
+> +
+> +static struct attribute *pmc_attrs[] = {
+> +	&dev_attr_etr3.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group pmc_attr_group = {
+> +	.attrs = pmc_attrs,
+> +	.is_visible = etr3_is_visible,
+> +};
+> +
+> +static const struct attribute_group *pmc_dev_groups[] = {
+> +	&pmc_attr_group,
+> +	NULL
+> +};
+> +
+>  static int pmc_core_dev_state_get(void *data, u64 *val)
+>  {
+>  	struct pmc_dev *pmcdev = data;
+> @@ -1384,6 +1496,7 @@ static struct platform_driver pmc_core_driver = {
+>  		.name = "intel_pmc_core",
+>  		.acpi_match_table = ACPI_PTR(pmc_core_acpi_ids),
+>  		.pm = &pmc_core_pm_ops,
+> +		.dev_groups = pmc_dev_groups,
+>  	},
+>  	.probe = pmc_core_probe,
+>  	.remove = pmc_core_remove,
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+> index f33cd2c34835..98ebdfe57138 100644
+> --- a/drivers/platform/x86/intel_pmc_core.h
+> +++ b/drivers/platform/x86/intel_pmc_core.h
+> @@ -200,6 +200,11 @@ enum ppfear_regs {
+>  #define TGL_LPM_STATUS_OFFSET			0x1C3C
+>  #define TGL_LPM_LIVE_STATUS_OFFSET		0x1C5C
+>  
+> +/* Extended Test Mode Register 3 (CNL and later) */
+> +#define ETR3_OFFSET				0x1048
+> +#define ETR3_CF9GR				BIT(20)
+> +#define ETR3_CF9LOCK				BIT(31)
+> +
+>  const char *tgl_lpm_modes[] = {
+>  	"S0i2.0",
+>  	"S0i2.1",
+> @@ -263,6 +268,7 @@ struct pmc_reg_map {
+>  	const u32 lpm_residency_offset;
+>  	const u32 lpm_status_offset;
+>  	const u32 lpm_live_status_offset;
+> +	const u32 etr3_offset;
+>  };
+>  
+>  /**
+> 
 
