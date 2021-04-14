@@ -2,113 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB341C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 11:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C451FC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 07:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85CC86135C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Apr 2021 11:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8FE611C9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 07:58:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238245AbhDMLbQ (ORCPT
+        id S1349784AbhDNH6n (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Apr 2021 07:31:16 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:49221 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231287AbhDMLbM (ORCPT
+        Wed, 14 Apr 2021 03:58:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231520AbhDNH6m (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Apr 2021 07:31:12 -0400
-Received: from [100.112.2.115] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id AC/79-00973-CE085706; Tue, 13 Apr 2021 11:30:52 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRWlGSWpSXmKPExsWSLveKTfdNQ2m
-  CwanpPBZvjk9nsvjcMZnFYvWeF8wOzB7zTgZ6vN93lc3j8ya5AOYo1sy8pPyKBNaMG7uWMhZ8
-  5qhYuHgbWwPjDPYuRi4OIYH/jBKXz71lgXCeM0o8+NMP5HBwCAskS9xYxNzFyMkhIqAuMbWjh
-  w3EZhZwlpjUMgHMFhLoZJT4tDoTxGYT0JbYsuUXWJxXwFbiZWc3M8gYFgFVie2zNUHCogLhEr
-  1XbrNClAhKnJz5BGwTp4CdxKM1UiAms4CmxPpd+hCLxCVuPZnPBGHLS2x/OwfsGAkg+/vjRSw
-  QdoJEz79HbBMYBWchGToLYdIsJJNmIZm0gJFlFaNpUlFmekZJbmJmjq6hgYGuoaGRrqGuhaVe
-  YpVukl5psW5qYnGJrqFeYnmxXnFlbnJOil5easkmRmAUpBQwRu5g3Pf6g94hRkkOJiVR3g1dJ
-  QlCfEn5KZUZicUZ8UWlOanFhxhlODiUJHgZ60sThASLUtNTK9Iyc4ARCZOW4OBREuH9WQeU5i
-  0uSMwtzkyHSJ1iVJQS510L0icAksgozYNrgyWBS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJW
-  EeZmAKUWIJzOvBG76K6DFTECLL24tBFlckoiQkmpgCtzx8NrZ7nNMdnl3NNriEkqVLTbV2LkF
-  nJb0K2ybkXLreW5+FtPphtDnOsYJX7Ll9W+o6bF2b+11uvL2h8X1tlVqaesUc31nnvyYMY9lp
-  k7EqtKXF7itAsIeGO/47pkSk8WqJWF68vyesuWiU7slmBfr79sySci0Nkl6b3hA7k3HU3mrcq
-  L3HFfquJwgUmpwYpOfbm4UY+qvx7b7dsi+1E14tvnuohXyuz57FsX5MLqHtSQI7vzPmj4xzuP
-  roztTXi3yZLkztcNr1sLSU5UHOZJKf/dsKPN+e8xKzK/iRtAGlg1pC3cq5bHdODpjm+XNpVor
-  Dq3nffylMGfR3IiPa50ms9YzrFx6qnb7suK/SizFGYmGWsxFxYkAFpI5OH0DAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-15.tower-395.messagelabs.com!1618313449!510019!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.60.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 28569 invoked from network); 13 Apr 2021 11:30:51 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-15.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 13 Apr 2021 11:30:51 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 5DF50C23B6980DF9C936;
-        Tue, 13 Apr 2021 19:30:48 +0800 (CST)
-Received: from localhost.localdomain (10.38.52.10) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2106.2; Tue, 13 Apr
- 2021 07:30:45 -0400
-Subject: Re: [External] Re: [PATCH] platform/x86: thinkpad_acpi: Correct
- thermal sensor allocation
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
-References: <markpearson@lenovo.com>
- <20210407212015.298222-1-markpearson@lenovo.com>
- <1f0e16b9-ab78-881b-1918-7b8cf61bc546@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <92846990-bc3f-fd1c-b854-d03a258e93c1@lenovo.com>
-Date:   Tue, 13 Apr 2021 07:30:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Wed, 14 Apr 2021 03:58:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id E6B5E613C7
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Apr 2021 07:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1618387101;
+        bh=o49+5j/jkXkXZFQgCubvfQcxEomrMypgbF+Lxx7XaCU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=lI5VTwQCK5BH/U7JFnfCP5uB1xIV21EAv5IDhQ2WgdVSBAE3/bHA71hjFGliibXMB
+         bt/C/QzKS5v5DJzHVX9g5P8zmHgIWkF4r7pChT7D0CVSma3Qa5OKbA8QbJuBrBeMWP
+         nxVk6NDmGgw1SOST7NuC2wUGOyJDpRhfhuMgkbss40qWFWIDZ718tgz8L4nOC9yUc8
+         Q14TSWgSP+RJYzM2WrrSlfAgCJzgPrTb66pst9SO9ik6UAol/lwcFz4pNyG3xacKnL
+         Thd95DmVL6vehA2tJnBVXcXsSAm3zf9a2P1XCW8t20SMUAa1l5IRjRDaSMkRUAvMX6
+         Cb5QTC8FFDd1w==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 14 Apr 2021 07:58:21 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: CLOSED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-204807-215701-rXztDSSzGx@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <1f0e16b9-ab78-881b-1918-7b8cf61bc546@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.52.10]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-On 13/04/2021 02:28, Hans de Goede wrote:
-> Hi,
-> 
-> On 4/7/21 11:20 PM, Mark Pearson wrote:
->> On recent Thinkpad platforms it was reported that temp sensor 11 was
->> always incorrectly displaying 66C. It turns out the reason for this is
->> that this location in EC RAM is not a temperature sensor but is the
->> power supply ID (offset 0xC2).
->>
->> Based on feedback from the Lenovo firmware team the EC RAM version can
->> be determined and for the current version (3) only the 0x78 to 0x7F
->> range is used for temp sensors. I don't have any details for earlier
->> versions so I have left the implementation unaltered there.
->>
->> Note - in this block only 0x78 and 0x79 are officially designated (CPU &
->> GPU sensors). The use of the other locations in the block will vary from
->> platform to platform; but the existing logic to detect a sensor presence
->> holds.
->>
->> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> 
-> I've merged this, note I've added one small fixup to initialize ver to
-> 0 when it is declared, also see a remark inline below.
-> 
+--- Comment #66 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Sydney, thank you for your kind words, you have put a smile on my face, so
+thank you.
 
-Agreed on setting ver to zero - thanks for adding that
+--=20
+You may reply to this email to add a comment.
 
-Mark
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
