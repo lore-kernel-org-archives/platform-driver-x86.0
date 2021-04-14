@@ -2,76 +2,183 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C451FC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 07:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 630E9C43460
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 15:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8FE611C9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 07:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183B961155
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Apr 2021 15:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349784AbhDNH6n (ORCPT
+        id S229699AbhDNPL0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Apr 2021 03:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231520AbhDNH6m (ORCPT
+        Wed, 14 Apr 2021 11:11:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31737 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1347174AbhDNPLY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Apr 2021 03:58:42 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id E6B5E613C7
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Apr 2021 07:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618387101;
-        bh=o49+5j/jkXkXZFQgCubvfQcxEomrMypgbF+Lxx7XaCU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=lI5VTwQCK5BH/U7JFnfCP5uB1xIV21EAv5IDhQ2WgdVSBAE3/bHA71hjFGliibXMB
-         bt/C/QzKS5v5DJzHVX9g5P8zmHgIWkF4r7pChT7D0CVSma3Qa5OKbA8QbJuBrBeMWP
-         nxVk6NDmGgw1SOST7NuC2wUGOyJDpRhfhuMgkbss40qWFWIDZ718tgz8L4nOC9yUc8
-         Q14TSWgSP+RJYzM2WrrSlfAgCJzgPrTb66pst9SO9ik6UAol/lwcFz4pNyG3xacKnL
-         Thd95DmVL6vehA2tJnBVXcXsSAm3zf9a2P1XCW8t20SMUAa1l5IRjRDaSMkRUAvMX6
-         Cb5QTC8FFDd1w==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
- acpi_enforce_resources=lax is enabled
-Date:   Wed, 14 Apr 2021 07:58:21 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: CLOSED
-X-Bugzilla-Resolution: INVALID
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-rXztDSSzGx@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
-References: <bug-204807-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 14 Apr 2021 11:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1618413062;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KeYwEf+mpEoK4qCRvXVhcHaaZfKB7ES3iMBylnvUcVc=;
+        b=RJgeT+CtaQn/CVbr/VK+uk/9fhvs/+eT0OC9cDBSyb2cOSgTePQUFx0KPdHwYGuFw51Doi
+        E3IvjpJVMSiF9XEPUNfbLS42UbJoRatVPPn3Yju/mdPG4VY/x7ZBtDuYN4IegjJUV1nl8D
+        1AtO0i6wH55nvX7YeFZ/5oeIfxpDLio=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-_-lplF7CN5egNHGbY4zXcw-1; Wed, 14 Apr 2021 11:10:58 -0400
+X-MC-Unique: _-lplF7CN5egNHGbY4zXcw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B872100A621;
+        Wed, 14 Apr 2021 15:10:55 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-168.ams2.redhat.com [10.36.112.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DCAE5D6A8;
+        Wed, 14 Apr 2021 15:10:50 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Mark Pearson <markpearson@lenovo.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH resend 0/9] drm: Add privacy-screen class and connector properties
+Date:   Wed, 14 Apr 2021 17:10:40 +0200
+Message-Id: <20210414151049.95828-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
+Hi All,
 
---- Comment #66 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-Sydney, thank you for your kind words, you have put a smile on my face, so
-thank you.
+Here is the privacy-screen related code which I last posted in August
+of last year. To the best of my knowledge there is consensus about /
+everyone is in agreement with the new userspace API (2 connector properties)
+this patch-set add (patch 1 of the series).
 
---=20
-You may reply to this email to add a comment.
+The blocker the last time was that there were no userspace users of
+the new properties and as a rule we don't add new drm userspace API
+without users.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+There now is GNOME userspace code using the new properties:
+https://hackmd.io/@3v1n0/rkyIy3BOw
+
+The new API works as designed for this userspace user and the branches
+mentioned at the above link add the following features to GNOME:
+
+1. Showing an OSD notification when the privacy-screen is toggled on/off
+   through hotkeys handled by the embedded-controller
+2. Allowing control of the privacy-screen from the GNOME control-panel,
+   including the on/off slider shown there updating to match the hw-setting
+   when the setting is changed with the control-panel open.
+3. Restoring the last user-setting at login
+
+This series consists of a number of different parts:
+
+1. A new version of Rajat's privacy-screen connector properties patch,
+this adds new userspace API in the form of new properties
+
+2. Since on most devices the privacy screen is actually controlled by
+some vendor specific ACPI/WMI interface which has a driver under
+drivers/platform/x86, we need some "glue" code to make this functionality
+available to KMS drivers. Patches 2-4 add a new privacy-screen class for
+this, which allows non KMS drivers (and possibly KMS drivers too) to
+register a privacy-screen device and also adds an interface for KMS drivers
+to get access to the privacy-screen associated with a specific connector.
+This is modelled similar to how we deal with e.g. PWMs and GPIOs in the
+kernel, including separate includes for consumers and providers(drivers).
+
+3. Some drm_connector helper functions to keep the actual changes needed
+for this in individual KMS drivers as small as possible (patch 5).
+
+4. Make the thinkpad_acpi code register a privacy-screen device on
+ThinkPads with a privacy-screen (patches 6-8)
+
+5. Make the i915 driver export the privacy-screen functionality through
+the connector properties on the eDP connector.
+
+I believe that it would be best to merge the entire series, including
+the thinkpad_acpi changes through drm-misc in one go. As the pdx86
+subsys maintainer I hereby give my ack for merging the thinkpad_acpi
+changes through drm-misc.
+
+There is one small caveat with this series, which it is good to be
+aware of. The i915 driver will now return -EPROBE_DEFER on Thinkpads
+with an eprivacy screen, until the thinkpad_acpi driver is loaded.
+This means that initrd generation tools will need to be updated to
+include thinkpad_acpi when the i915 driver is added to the initrd.
+Without this the loading of the i915 driver will be delayed to after
+the switch to real rootfs.
+
+Regards,
+
+Hans
+
+
+Hans de Goede (8):
+  drm: Add privacy-screen class
+  drm/privacy-screen: Add X86 specific arch init code
+  drm/privacy-screen: Add notifier support
+  drm/connector: Add a drm_connector privacy-screen helper functions
+  platform/x86: thinkpad_acpi: Add hotkey_notify_extended_hotkey()
+    helper
+  platform/x86: thinkpad_acpi: Get privacy-screen / lcdshadow ACPI
+    handles only once
+  platform/x86: thinkpad_acpi: Register a privacy-screen device
+  drm/i915: Add privacy-screen support
+
+Rajat Jain (1):
+  drm/connector: Add support for privacy-screen properties (v4)
+
+ Documentation/gpu/drm-kms-helpers.rst        |  15 +
+ Documentation/gpu/drm-kms.rst                |   2 +
+ MAINTAINERS                                  |   8 +
+ drivers/gpu/drm/Kconfig                      |   5 +
+ drivers/gpu/drm/Makefile                     |   4 +
+ drivers/gpu/drm/drm_atomic_uapi.c            |   4 +
+ drivers/gpu/drm/drm_connector.c              | 214 ++++++++
+ drivers/gpu/drm/drm_privacy_screen.c         | 493 +++++++++++++++++++
+ drivers/gpu/drm/drm_privacy_screen_x86.c     |  82 +++
+ drivers/gpu/drm/i915/display/intel_display.c |   5 +
+ drivers/gpu/drm/i915/display/intel_dp.c      |  10 +
+ drivers/gpu/drm/i915/i915_pci.c              |  12 +
+ drivers/platform/x86/Kconfig                 |   1 +
+ drivers/platform/x86/thinkpad_acpi.c         | 131 +++--
+ include/drm/drm_connector.h                  |  56 +++
+ include/drm/drm_privacy_screen_consumer.h    |  32 ++
+ include/drm/drm_privacy_screen_driver.h      |  84 ++++
+ include/drm/drm_privacy_screen_machine.h     |  46 ++
+ 18 files changed, 1162 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/gpu/drm/drm_privacy_screen.c
+ create mode 100644 drivers/gpu/drm/drm_privacy_screen_x86.c
+ create mode 100644 include/drm/drm_privacy_screen_consumer.h
+ create mode 100644 include/drm/drm_privacy_screen_driver.h
+ create mode 100644 include/drm/drm_privacy_screen_machine.h
+
+-- 
+2.31.1
+
