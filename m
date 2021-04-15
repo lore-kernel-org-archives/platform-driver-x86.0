@@ -2,144 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE29DC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FC1C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 875FA61132
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C3D61073
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbhDOJLV (ORCPT
+        id S229494AbhDOJPF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Apr 2021 05:11:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45279 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229494AbhDOJLV (ORCPT
+        Thu, 15 Apr 2021 05:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231491AbhDOJPF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Apr 2021 05:11:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618477858;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HQ9IpsN9CYDunNHAYsi0CM0cb5vQOFFiotjNzj6zJMs=;
-        b=K4bsyyiRyC8vpnb25/yH7xNzzMakSQor8vlgG/NiGlZBrGKkeK5ep42Hlem2YFsuSdr2mO
-        6hnEXaa/gFB/0qZgDfaNLeHyKV1loqLRLFJOyiuR1M+unZOg1YeaRW/PY9NuoO7AQHBKhU
-        D8AB0lfQHQdt7OemLwKNwiLlHgiYIzQ=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-2agSqdOkMO2oKvHy3OxJjA-1; Thu, 15 Apr 2021 05:10:55 -0400
-X-MC-Unique: 2agSqdOkMO2oKvHy3OxJjA-1
-Received: by mail-ej1-f70.google.com with SMTP id i10-20020a1709067a4ab029037c5dba8400so704185ejo.8
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Apr 2021 02:10:55 -0700 (PDT)
+        Thu, 15 Apr 2021 05:15:05 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55FB7C061574;
+        Thu, 15 Apr 2021 02:14:42 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t22so11385605ply.1;
+        Thu, 15 Apr 2021 02:14:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8QQanvqIsbT15bWZACbVjA2SrlomBIPcG7B7C48451s=;
+        b=tFWaMlFRTNZDXyYkLqSWHWLlcViX2L7a4h+ZaB6JYG4WXIa2XA1BEJ9dAKOCqZeVTZ
+         w0ql8mpjbQZNI7RQyfyIhZT3N48vLJ3BYtTl6FZQjabwmJ5vVnU/6zz8CjoxqcOSFInF
+         48tWqx3TOjIfh9omZGbIeICMV8SOFaW2GRyVAW0yHjFStRYAXb6Npp+w+vEyjQexTw8u
+         yNeAOOoXPpoZF3tV4qF9mU7UjIk9y6ktbQSTQv/AkZbhunEMU1DTeYE3VBxJmpwfUHYQ
+         0xlWsTR1dB65wbfwz0oTMeAKYvcQds7jgxTTzghs6JHvhPyOPUtuVkIH/aQryMs4+u7Z
+         RgAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HQ9IpsN9CYDunNHAYsi0CM0cb5vQOFFiotjNzj6zJMs=;
-        b=etNGNnqcKIbwRcYqTJY+rgEU7f/Skcch1xRO5wliM5HW5XEnPEqdFpLRRNaJRZuHDW
-         3rwVPc+qDwe86k30V7Hmj3WFPtRiXNXWadKbavxsiX3CJKqt+Tg4LR1YokLJAw7pMVt3
-         kpkJabhrqV+rihJub9FVCJs0coDPPo6IkKJoi5aqRoHPeslg2/zh9XxjRLyF9hy+rCX6
-         C/nxFP0SXBG/C1Q4GPyeAdhta6wB9rdz7FavToe1XLhELqPBgGsIa3lGuUNtIb+qvZ5g
-         i8ekE20+8oK9kRdpOHrLBsKzUDRMUI0uMW1K2EhlmV9CG3vwNsg2BLwO2l5W60VSv1Lq
-         NuCg==
-X-Gm-Message-State: AOAM532WEGhjzHNeSizZIcZZgnVndXX80Pq7VY8u7TEQYck1eVz2GgeL
-        xl5STgjmDU/ItmECYT0QDVFjgWOYw9f3cQBIdGQU2i8mtreZYXYm0pEcyRiBLVHNzJsvAy1+mWv
-        88WXZEi4n4oOwXbTICmc3EnhjwgPbrUusMgBxkvC2jD31wE5btJkih43h+euSvH7u5s12eze5k3
-        xtETRQitQLHw==
-X-Received: by 2002:a17:906:c34d:: with SMTP id ci13mr2285528ejb.430.1618477854436;
-        Thu, 15 Apr 2021 02:10:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9vyfqKMSgH9KYOBEBKBrFVL15j74qkK89LvtrfjkuenpOYLOhLug49eFK1prO6mJdV86tvw==
-X-Received: by 2002:a17:906:c34d:: with SMTP id ci13mr2285510ejb.430.1618477854255;
-        Thu, 15 Apr 2021 02:10:54 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id li16sm1434031ejb.101.2021.04.15.02.10.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Apr 2021 02:10:53 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add X570 AORUS ELITE
-To:     Julian Labus <julian@labus-online.de>,
-        platform-driver-x86@vger.kernel.org
-References: <20210415074526.1782-1-julian@labus-online.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5c5e6515-ea30-9ab4-5b83-2787785082a2@redhat.com>
-Date:   Thu, 15 Apr 2021 11:10:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <20210415074526.1782-1-julian@labus-online.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8QQanvqIsbT15bWZACbVjA2SrlomBIPcG7B7C48451s=;
+        b=JePLpuESPLbowwL9NHHoUxqiZgSJ45XDBQfvTupfxg44KEvDqXz7yxQP0I7dWKo+oi
+         6YLZcoAK16TdEgclWM+GDGI8OnXEvaGXvWPi0kJdDT46X9KH+nmRX3DqqUjLQs3n/Kk4
+         h1xtmcgooIL6F64LVFn7bolTFE5YwFSWp2zC8xKHrHtZ7/IBaDpWN6qk/DMNAr9f3Rrm
+         XDkVIQG2P837lJEdAjdiMt6EhIMGhdIbJE2x8hJKKsecydxBu8gGmp5bOJRrHJrFFzoj
+         SDdfuxsQixnDTXriX0wbhqBc8f7gPfCRamB/HRbgvA2QEy8TCdX2pZx1cEqDGonDr1XS
+         9mdA==
+X-Gm-Message-State: AOAM530/rfAmtSAbVCthWfaOA6dVJi2eE/2FUQ4UYOBBYw/D65hqvCEr
+        p1cdp1HhoHTehJnBpjHS3xNVpAUD5NPv+Ciu
+X-Google-Smtp-Source: ABdhPJxnaseCIkuSx/rHHhtIaAlwpSFCAwxMCggKZi36BRt2BlcfkjXMbBd9Uxh0ah8ZJ2B+yuEuUQ==
+X-Received: by 2002:a17:90a:b891:: with SMTP id o17mr2862355pjr.180.1618478081956;
+        Thu, 15 Apr 2021 02:14:41 -0700 (PDT)
+Received: from mi-OptiPlex-7060.mioffice.cn ([209.9.72.212])
+        by smtp.gmail.com with ESMTPSA id y68sm2051153pgy.5.2021.04.15.02.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Apr 2021 02:14:41 -0700 (PDT)
+From:   zhuguangqing83@gmail.com
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guangqing Zhu <zhuguangqing83@gmail.com>
+Subject: [PATCH] platform/x86: intel_chtdc_ti_pwrbtn: Fix missing IRQF_ONESHOT as only threaded handler
+Date:   Thu, 15 Apr 2021 17:14:35 +0800
+Message-Id: <20210415091435.10486-1-zhuguangqing83@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+From: Guangqing Zhu <zhuguangqing83@gmail.com>
 
-On 4/15/21 9:45 AM, Julian Labus wrote:
-> Add the X570 AORUS ELITE to gigabyte_wmi_known_working_platforms
-> 
-> Signed-off-by: Julian Labus <julian@labus-online.de>
+Coccinelle noticed:
+  drivers/platform/x86/intel_chtdc_ti_pwrbtn.c:59:7-32: ERROR: Threaded IRQ
+with no primary handler requested without IRQF_ONESHOT
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Signed-off-by: Guangqing Zhu <zhuguangqing83@gmail.com>
+---
+ drivers/platform/x86/intel_chtdc_ti_pwrbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> 
-> I read on phoronix.com that a driver for Gigabyte WMI will be added.
-> I gave it a try on my Gigabyte X570 AORUS ELITE with force_load=1 and
-> it seem to work fine. lm_sensors shows 6 sensors with reasonable values.
-> 
-> gigabyte_wmi-virtual-0
-> Adapter: Virtual device
-> temp1:        +26.0°C  
-> temp2:        +30.0°C  
-> temp3:        +27.0°C  
-> temp4:        +34.0°C  
-> temp5:        +29.0°C  
-> temp6:        +43.0°C  
-> 
-> The patch was created against the for-next branch of platform-drivers-x86.git
-> 
->  drivers/platform/x86/gigabyte-wmi.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-> index bb1b0b205fa7..e127a2077bbc 100644
-> --- a/drivers/platform/x86/gigabyte-wmi.c
-> +++ b/drivers/platform/x86/gigabyte-wmi.c
-> @@ -146,6 +146,10 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
->  		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
->  		DMI_EXACT_MATCH(DMI_BOARD_NAME, "Z390 I AORUS PRO WIFI-CF"),
->  	}},
-> +	{ .matches = {
-> +		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
-> +		DMI_EXACT_MATCH(DMI_BOARD_NAME, "X570 AORUS ELITE"),
-> +	}},
->  	{ .matches = {
->  		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
->  		DMI_EXACT_MATCH(DMI_BOARD_NAME, "X570 I AORUS PRO WIFI"),
-> 
+diff --git a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
+index 0df2e82dd249..9606a994af22 100644
+--- a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
++++ b/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
+@@ -58,7 +58,7 @@ static int chtdc_ti_pwrbtn_probe(struct platform_device *pdev)
+ 
+ 	err = devm_request_threaded_irq(dev, irq, NULL,
+ 					chtdc_ti_pwrbtn_interrupt,
+-					0, KBUILD_MODNAME, input);
++					IRQF_ONESHOT, KBUILD_MODNAME, input);
+ 	if (err)
+ 		return err;
+ 
+-- 
+2.17.1
 
