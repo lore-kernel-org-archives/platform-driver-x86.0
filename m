@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62425C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 337E2C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FCEE610CE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12523613B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Apr 2021 09:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231960AbhDOJa3 (ORCPT
+        id S231196AbhDOJkN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Apr 2021 05:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
+        Thu, 15 Apr 2021 05:40:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231919AbhDOJa1 (ORCPT
+        id S229537AbhDOJkM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Apr 2021 05:30:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 24600613B7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Apr 2021 09:30:05 +0000 (UTC)
+        Thu, 15 Apr 2021 05:40:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 9F9E1613C0
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Apr 2021 09:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618479005;
-        bh=2ifLjP0tVaa6Ym7TRDPoWF85Xt1MaLLtu9eSLwCz4uk=;
+        s=k20201202; t=1618479589;
+        bh=+NTFE1pXKNp5aabex0ds3wctt1D9tL21NxgI+Sub3Ko=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=WH8CpYS6N4/9Us0eFk/Bzin3JYj6xx13wcPRPavpEhnOn3REjvmexDLJ77r24zh7n
-         J+98/EaSX+YlPQJLxkGM/HLzVRvaDDa07eamcXHlMxS9epS7Nulh57Gu9A53xi0HJm
-         YyYOcL0uGjP6L/TLZbQocIx4UwspsmcsD8uzsOwYkftqA0yEIdTnpYyXe6AEMbZk1d
-         SBZCI32QUAir3pUvm4DDJRzguxsVxjROI3OKhCihx/MMLuVBNMO7It0aTLUp6WDRXb
-         4zZJZTZutTaknJRTRii4RoeI+Uu8ljHWI6Zp64zMkAZcy5XXvGxZbD1dV+edCMMrwb
-         Zf6Amn2ofbirQ==
+        b=XHTIo/NUcitE0Lcp7y3u77r0ZowYDX9koqYb57RaX/VAdyVXbyzMC1tOkSBWh9LzP
+         +s0Aj29ml35YiNXq1jTv6mcdpVgjiem14PNbRKJ3dir3LOXDpo7OTlI0/eXmWxxlRs
+         WVLbpQ1yGyv3Fy4nSMwOQMDCGjTeOKykM3AoLdd5UxzFZp+9OjoWTRFcDDIJK2STE4
+         D5K78bqLaaW/UnqCzXXnFEKyqFF+ixj3PZL/FX973Jg8jhal4GS3a8eH+d33MSRdBb
+         IFNOVmT31cZBx5uzhgYaCQV0QlolUNaTUlg8tmZZ6wbNF9zHHhlNJDMDzxOgFkysqK
+         uo1nsoAHBxAbg==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
  acpi_enforce_resources=lax is enabled
-Date:   Thu, 15 Apr 2021 09:30:04 +0000
+Date:   Thu, 15 Apr 2021 09:39:48 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: high
-X-Bugzilla-Who: myhateisblind@hotmail.com
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
 X-Bugzilla-Status: CLOSED
 X-Bugzilla-Resolution: INVALID
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-204807-215701-Kyg8RMewIs@https.bugzilla.kernel.org/>
+Message-ID: <bug-204807-215701-w7gUiqJv7P@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
 References: <bug-204807-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,41 +66,42 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
---- Comment #68 from myhateisblind@hotmail.com ---
-I use it for that, and had no problem... yet.
-
-15 abr. 2021 11:27:55 bugzilla-daemon@bugzilla.kernel.org:
-
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
->=20
-> --- Comment #67 from Artem S. Tashkinov (aros@gmx.com) ---
-> (In reply to Hans de Goede from comment #64)
->>=20
->> Matthew rightly advises against using "acpi_enforce_resources=3Dlax" bec=
-ause
->> that opens races between the firmware and Linux which could result in
->> writing to another superIO register then intended. This can definitely l=
-ead
->> to e.g. stopping the fans even though the CPU is running hot, which is n=
-ot
->> good but all modern CPUs have builtin overtemp protection, so at the wor=
-st
->> the system will simply shutdown (1).
->>=20
->=20
+--- Comment #69 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+(In reply to Artem S. Tashkinov from comment #67)
 > Multiple users use acpi_enforce_resources=3Dlax and I haven't seen a sing=
 le
 > report that it's ever broken anything.
->=20
-> AFAIK no one has used this hack to control fans using PWM, so that might
-> indeed
-> lead to unintended consequences.
->=20
-> --=20
-> You may reply to this email to add a comment.
->=20
-> You are receiving this mail because:
-> You are on the CC list for the bug.
+
+<sigh> Yet I have been on the receiving end of a bug-report where I had to
+explain to a user that the lm_sensors sensors-detect script had overvolted =
+his
+RAM ruining both his expensive high-end RAM as well as his expensive top of=
+ the
+line CPU. The user was surprisingly relaxed about all this, which I really
+appreciated.
+
+And that was while the script was not doing anything which we (the develope=
+rs)
+considered dangerous. But the motherboard had a funky setup causing a SMbus
+*read* transaction to change the voltage.
+
+Mucking with this stuff can be dangerous and as Matthew has explained in his
+thorough analysis of the DSDT the DSDT is actually accessing the superio an=
+d if
+that races with a Linux kernel access a wrong register may be read from, or
+worse written to.
+
+Using acpi_enforce_resources=3Dlax simply is dangerous and we are not going=
+ to
+change the default, period, full-stop.
+
+I welcome further discussions here about how we can *safely* solve hwmon ac=
+cess
+on various motherboards.
+
+Please stop discussing acpi_enforce_resources=3Dlax, that is not a safe opt=
+ion to
+use and more discussion about it is not productive.
 
 --=20
 You may reply to this email to add a comment.
