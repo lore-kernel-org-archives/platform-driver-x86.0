@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF1BC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C441C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F95C61354
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23D9361352
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231277AbhDRBoT (ORCPT
+        id S230339AbhDRB7y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 17 Apr 2021 21:44:19 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1668 "EHLO mga11.intel.com"
+        Sat, 17 Apr 2021 21:59:54 -0400
+Received: from mga17.intel.com ([192.55.52.151]:59257 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229870AbhDRBoT (ORCPT
+        id S229870AbhDRB7y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Apr 2021 21:44:19 -0400
-IronPort-SDR: XDcX4RfvB7H14otMHwiJXrsDhGDQo2TTjxVcs73WvU6VDrPpeipRXe0k+UoPYeTRMBufux3w/B
- fi9Q1qKgrlPw==
-X-IronPort-AV: E=McAfee;i="6200,9189,9957"; a="192005351"
+        Sat, 17 Apr 2021 21:59:54 -0400
+IronPort-SDR: xf70rJCTf1FBtnQucdiSvYl/lqedDLza9M+hooKDdS9oG6YBenMRNWv3eaHFiS32Xrrxu3y9HV
+ b8SCU5K40PRQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9957"; a="175302009"
 X-IronPort-AV: E=Sophos;i="5.82,230,1613462400"; 
-   d="scan'208";a="192005351"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2021 18:43:51 -0700
-IronPort-SDR: S9CHhZOoOZeY8fNo4ZM5k/yi6Zk5TlKy5xj1q1NTZO/Mdj0JkXbTRN4909LrJS9NgqKS2zlFrF
- 9eLQwl3/Dieg==
+   d="scan'208";a="175302009"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2021 18:59:26 -0700
+IronPort-SDR: 66UtvVCH4OqrCKK6NcDYSW60N3Gi2ZPTJQN7srtmbd0wMISUHaxeBNurduKbGm7vfMniQZ1pSp
+ mfMRq2HJrvPg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,230,1613462400"; 
-   d="scan'208";a="400268800"
+   d="scan'208";a="383393487"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 17 Apr 2021 18:43:51 -0700
+  by orsmga003.jf.intel.com with ESMTP; 17 Apr 2021 18:59:26 -0700
 Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.174])
-        by linux.intel.com (Postfix) with ESMTP id 3B65B5808AE;
-        Sat, 17 Apr 2021 18:43:51 -0700 (PDT)
-Message-ID: <7dfdf70d8d98dde9698f544c054847c141044688.camel@linux.intel.com>
+        by linux.intel.com (Postfix) with ESMTP id 6C47A5808AE;
+        Sat, 17 Apr 2021 18:59:26 -0700 (PDT)
+Message-ID: <d4a29e5f6c80d3382f7f082e758ae9c41ef8cc04.camel@linux.intel.com>
 Subject: Re: [PATCH V2 5/9] platform/x86: intel_pmc_core: Get LPM
  requirements for Tiger Lake
 From:   "David E. Box" <david.e.box@linux.intel.com>
@@ -46,11 +46,11 @@ Reply-To: david.e.box@linux.intel.com
 To:     Hans de Goede <hdegoede@redhat.com>, irenic.rajneesh@gmail.com,
         mgross@linux.intel.com, gayatri.kammela@intel.com
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sat, 17 Apr 2021 18:43:51 -0700
-In-Reply-To: <6dd84b65-44b4-ae12-fe84-c61d8efd43f3@redhat.com>
+Date:   Sat, 17 Apr 2021 18:59:26 -0700
+In-Reply-To: <a2c2cca5-3984-6554-040a-3ffe74c0ca0c@redhat.com>
 References: <20210417031252.3020837-1-david.e.box@linux.intel.com>
          <20210417031252.3020837-6-david.e.box@linux.intel.com>
-         <6dd84b65-44b4-ae12-fe84-c61d8efd43f3@redhat.com>
+         <a2c2cca5-3984-6554-040a-3ffe74c0ca0c@redhat.com>
 Organization: David E. Box
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
@@ -60,8 +60,8 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
-> Hi,
+On Sat, 2021-04-17 at 10:52 +0200, Hans de Goede wrote:
+> Hi David,
 > 
 > On 4/17/21 5:12 AM, David E. Box wrote:
 > > From: Gayatri Kammela <gayatri.kammela@intel.com>
@@ -80,6 +80,26 @@ On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
 > > Co-developed-by: David E. Box <david.e.box@linux.intel.com>
 > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 > > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> Erm, I did not give my "Reviewed-by: Hans de Goede < 
+> hdegoede@redhat.com>"
+> for this patch, because it still needed some work.
+> 
+> Next time please only add my Reviewed-by to patches where I
+> explicitly replied with a Reviewed-by.
+
+Sure thing. Sorry about that.
+
+David
+
+> The same goes for patch 7/9
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
 > > ---
 > > 
 > > V2:     - Move buffer allocation so that it does not need to be
@@ -130,10 +150,6 @@ On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
 > > +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
 > > +       const int num_maps = pmcdev->map->lpm_num_maps;
 > > +       size_t lpm_size = LPM_MAX_NUM_MODES * num_maps * 4;
-> 
-> The type of lpm_size should be an u32, so that it matches
-> the type of out_obj->buffer.length.
-> 
 > > +       union acpi_object *out_obj;
 > > +       struct acpi_device *adev;
 > > +       guid_t s0ix_dsm_guid;
@@ -151,9 +167,6 @@ On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
 > > NULL);
 > > +       if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
 > > +               int size = out_obj->buffer.length;
-> 
-> out_obj->buffer.length is an u32, please make this an u32 too.
-> 
 > > +
 > > +               if (size != lpm_size) {
 > > +                       acpi_handle_debug(adev->handle,
@@ -161,25 +174,6 @@ On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
 > > size,"
 > > +                               " have %d, expect %ld\n", size,
 > > lpm_size);
-> 
-> And use %u here (twice), this should also fix the warnings reported
-> by the kernel test robot.
-> 
-> If there are no objections against the suggested changes, then I can
-> fix this up while merging this.
-> 
-> Please let me know if the suggested changes are ok with you.
-
-Changes are good with me. Thanks for the fixup.
-
-David
-
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
 > > +                       goto free_acpi_obj;
 > > +               }
 > > +       } else {
