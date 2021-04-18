@@ -2,126 +2,253 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D704C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Apr 2021 17:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF1BC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED776109F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Apr 2021 17:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F95C61354
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Apr 2021 01:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236785AbhDQRbl (ORCPT
+        id S231277AbhDRBoT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 17 Apr 2021 13:31:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32391 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236595AbhDQRbk (ORCPT
+        Sat, 17 Apr 2021 21:44:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1668 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229870AbhDRBoT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 17 Apr 2021 13:31:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618680673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1xPH4juAC74+7lO9pyPZe6QAEdaU20gfrirPmReeFQc=;
-        b=b5mNbq40Cy2CG5fPicGL7qetHUG62xz2oCgMq7EP9jcvYM7fvSKaYZ06goWg/svjp01GqU
-        83cvJWTEY+gVulBiZ/qWuZn+BcGAuSmqcJMd2oSy5TpOUF1o9XfoicvHEpG76uFUZnOlOn
-        nOnrHQDmiEsPdyvI5/5t0NhZ6v+wAZE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-A2u5cbqRPHCU8a5XodY3_g-1; Sat, 17 Apr 2021 13:31:10 -0400
-X-MC-Unique: A2u5cbqRPHCU8a5XodY3_g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBF808030A1;
-        Sat, 17 Apr 2021 17:31:08 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-107.ams2.redhat.com [10.36.112.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED8125D9E3;
-        Sat, 17 Apr 2021 17:31:06 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: touchscreen_dmi: Add info for the Teclast Tbook 11 tablet
-Date:   Sat, 17 Apr 2021 19:31:05 +0200
-Message-Id: <20210417173105.4134-1-hdegoede@redhat.com>
+        Sat, 17 Apr 2021 21:44:19 -0400
+IronPort-SDR: XDcX4RfvB7H14otMHwiJXrsDhGDQo2TTjxVcs73WvU6VDrPpeipRXe0k+UoPYeTRMBufux3w/B
+ fi9Q1qKgrlPw==
+X-IronPort-AV: E=McAfee;i="6200,9189,9957"; a="192005351"
+X-IronPort-AV: E=Sophos;i="5.82,230,1613462400"; 
+   d="scan'208";a="192005351"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2021 18:43:51 -0700
+IronPort-SDR: S9CHhZOoOZeY8fNo4ZM5k/yi6Zk5TlKy5xj1q1NTZO/Mdj0JkXbTRN4909LrJS9NgqKS2zlFrF
+ 9eLQwl3/Dieg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,230,1613462400"; 
+   d="scan'208";a="400268800"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 17 Apr 2021 18:43:51 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.174])
+        by linux.intel.com (Postfix) with ESMTP id 3B65B5808AE;
+        Sat, 17 Apr 2021 18:43:51 -0700 (PDT)
+Message-ID: <7dfdf70d8d98dde9698f544c054847c141044688.camel@linux.intel.com>
+Subject: Re: [PATCH V2 5/9] platform/x86: intel_pmc_core: Get LPM
+ requirements for Tiger Lake
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Hans de Goede <hdegoede@redhat.com>, irenic.rajneesh@gmail.com,
+        mgross@linux.intel.com, gayatri.kammela@intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sat, 17 Apr 2021 18:43:51 -0700
+In-Reply-To: <6dd84b65-44b4-ae12-fe84-c61d8efd43f3@redhat.com>
+References: <20210417031252.3020837-1-david.e.box@linux.intel.com>
+         <20210417031252.3020837-6-david.e.box@linux.intel.com>
+         <6dd84b65-44b4-ae12-fe84-c61d8efd43f3@redhat.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Add touchscreen info for the Teclast Tbook 11 tablet. This includes info
-for getting the firmware directly from the UEFI, so that the user does
-not need to manually install the firmware in /lib/firmware/silead.
+On Sat, 2021-04-17 at 11:00 +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 4/17/21 5:12 AM, David E. Box wrote:
+> > From: Gayatri Kammela <gayatri.kammela@intel.com>
+> > 
+> > Platforms that support low power modes (LPM) such as Tiger Lake
+> > maintain
+> > requirements for each sub-state that a readable in the PMC.
+> > However, unlike
+> > LPM status registers, requirement registers are not memory mapped
+> > but are
+> > available from an ACPI _DSM. Collect the requirements for Tiger
+> > Lake using
+> > the _DSM method and store in a buffer.
+> > 
+> > Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> > Co-developed-by: David E. Box <david.e.box@linux.intel.com>
+> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> > 
+> > V2:     - Move buffer allocation so that it does not need to be
+> > freed
+> >           (which was missing anyway) when an error is encountered.
+> >         - Use label to free out_obj after errors
+> >         - Use memcpy instead of memcpy_fromio for ACPI memory
+> > 
+> >  drivers/platform/x86/intel_pmc_core.c | 56
+> > +++++++++++++++++++++++++++
+> >  drivers/platform/x86/intel_pmc_core.h |  2 +
+> >  2 files changed, 58 insertions(+)
+> > 
+> > diff --git a/drivers/platform/x86/intel_pmc_core.c
+> > b/drivers/platform/x86/intel_pmc_core.c
+> > index 0e59a84b51bf..97efe9a6bd01 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.c
+> > +++ b/drivers/platform/x86/intel_pmc_core.c
+> > @@ -23,7 +23,9 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/suspend.h>
+> >  #include <linux/uaccess.h>
+> > +#include <linux/uuid.h>
+> >  
+> > +#include <acpi/acpi_bus.h>
+> >  #include <asm/cpu_device_id.h>
+> >  #include <asm/intel-family.h>
+> >  #include <asm/msr.h>
+> > @@ -31,6 +33,9 @@
+> >  
+> >  #include "intel_pmc_core.h"
+> >  
+> > +#define ACPI_S0IX_DSM_UUID             "57a6512e-3979-4e9d-9708-
+> > ff13b2508972"
+> > +#define ACPI_GET_LOW_MODE_REGISTERS    1
+> > +
+> >  /* PKGC MSRs are common across Intel Core SoCs */
+> >  static const struct pmc_bit_map msr_map[] = {
+> >         {"Package C2",                  MSR_PKG_C2_RESIDENCY},
+> > @@ -590,6 +595,53 @@ static const struct pmc_reg_map tgl_reg_map =
+> > {
+> >         .etr3_offset = ETR3_OFFSET,
+> >  };
+> >  
+> > +static void pmc_core_get_tgl_lpm_reqs(struct platform_device
+> > *pdev)
+> > +{
+> > +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
+> > +       const int num_maps = pmcdev->map->lpm_num_maps;
+> > +       size_t lpm_size = LPM_MAX_NUM_MODES * num_maps * 4;
+> 
+> The type of lpm_size should be an u32, so that it matches
+> the type of out_obj->buffer.length.
+> 
+> > +       union acpi_object *out_obj;
+> > +       struct acpi_device *adev;
+> > +       guid_t s0ix_dsm_guid;
+> > +       u32 *lpm_req_regs, *addr;
+> > +
+> > +       adev = ACPI_COMPANION(&pdev->dev);
+> > +       if (!adev)
+> > +               return;
+> > +
+> > +       guid_parse(ACPI_S0IX_DSM_UUID, &s0ix_dsm_guid);
+> > +
+> > +       out_obj = acpi_evaluate_dsm(adev->handle, &s0ix_dsm_guid,
+> > 0,
+> > +                                   ACPI_GET_LOW_MODE_REGISTERS,
+> > NULL);
+> > +       if (out_obj && out_obj->type == ACPI_TYPE_BUFFER) {
+> > +               int size = out_obj->buffer.length;
+> 
+> out_obj->buffer.length is an u32, please make this an u32 too.
+> 
+> > +
+> > +               if (size != lpm_size) {
+> > +                       acpi_handle_debug(adev->handle,
+> > +                               "_DSM returned unexpected buffer
+> > size,"
+> > +                               " have %d, expect %ld\n", size,
+> > lpm_size);
+> 
+> And use %u here (twice), this should also fix the warnings reported
+> by the kernel test robot.
+> 
+> If there are no objections against the suggested changes, then I can
+> fix this up while merging this.
+> 
+> Please let me know if the suggested changes are ok with you.
 
-This change will make the touchscreen on these devices work OOTB,
-without requiring any manual setup.
+Changes are good with me. Thanks for the fixup.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/platform/x86/touchscreen_dmi.c | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+David
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 45203e333f57..90fe4f8f3c2c 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -715,6 +715,32 @@ static const struct ts_dmi_data techbite_arc_11_6_data = {
- 	.properties	= techbite_arc_11_6_props,
- };
- 
-+static const struct property_entry teclast_tbook11_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 14),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1916),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1264),
-+	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl3692-teclast-tbook11.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
-+};
-+
-+static const struct ts_dmi_data teclast_tbook11_data = {
-+	.embedded_fw = {
-+		.name	= "silead/gsl3692-teclast-tbook11.fw",
-+		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-+		.length	= 43560,
-+		.sha256	= { 0x9d, 0xb0, 0x3d, 0xf1, 0x00, 0x3c, 0xb5, 0x25,
-+			    0x62, 0x8a, 0xa0, 0x93, 0x4b, 0xe0, 0x4e, 0x75,
-+			    0xd1, 0x27, 0xb1, 0x65, 0x3c, 0xba, 0xa5, 0x0f,
-+			    0xcd, 0xb4, 0xbe, 0x00, 0xbb, 0xf6, 0x43, 0x29 },
-+	},
-+	.acpi_name	= "MSSL1680:00",
-+	.properties	= teclast_tbook11_props,
-+};
-+
- static const struct property_entry teclast_x3_plus_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-size-x", 1980),
- 	PROPERTY_ENTRY_U32("touchscreen-size-y", 1500),
-@@ -1243,6 +1269,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "G8316_272B"),
- 		},
- 	},
-+	{
-+		/* Teclast Tbook 11 */
-+		.driver_data = (void *)&teclast_tbook11_data,
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "TECLAST"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TbooK 11"),
-+			DMI_MATCH(DMI_PRODUCT_SKU, "E5A6_A1"),
-+		},
-+	},
- 	{
- 		/* Teclast X3 Plus */
- 		.driver_data = (void *)&teclast_x3_plus_data,
--- 
-2.31.1
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> > +                       goto free_acpi_obj;
+> > +               }
+> > +       } else {
+> > +               acpi_handle_debug(adev->handle,
+> > +                                 "_DSM function 0 evaluation
+> > failed\n");
+> > +               goto free_acpi_obj;
+> > +       }
+> > +
+> > +       addr = (u32 *)out_obj->buffer.pointer;
+> > +
+> > +       lpm_req_regs = devm_kzalloc(&pdev->dev, lpm_size *
+> > sizeof(u32),
+> > +                                    GFP_KERNEL);
+> > +       if (!lpm_req_regs)
+> > +               goto free_acpi_obj;
+> > +
+> > +       memcpy(lpm_req_regs, addr, lpm_size);
+> > +       pmcdev->lpm_req_regs = lpm_req_regs;
+> > +
+> > +free_acpi_obj:
+> > +       ACPI_FREE(out_obj);
+> > +}
+> > +
+> >  static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int
+> > reg_offset)
+> >  {
+> >         return readl(pmcdev->regbase + reg_offset);
+> > @@ -1424,10 +1476,14 @@ static int pmc_core_probe(struct
+> > platform_device *pdev)
+> >                 return -ENOMEM;
+> >  
+> >         mutex_init(&pmcdev->lock);
+> > +
+> >         pmcdev->pmc_xram_read_bit =
+> > pmc_core_check_read_lock_bit(pmcdev);
+> >         pmc_core_get_low_power_modes(pmcdev);
+> >         pmc_core_do_dmi_quirks(pmcdev);
+> >  
+> > +       if (pmcdev->map == &tgl_reg_map)
+> > +               pmc_core_get_tgl_lpm_reqs(pdev);
+> > +
+> >         /*
+> >          * On TGL, due to a hardware limitation, the GBE LTR blocks
+> > PC10 when
+> >          * a cable is attached. Tell the PMC to ignore it.
+> > diff --git a/drivers/platform/x86/intel_pmc_core.h
+> > b/drivers/platform/x86/intel_pmc_core.h
+> > index aa44fd5399cc..64fb368f40f6 100644
+> > --- a/drivers/platform/x86/intel_pmc_core.h
+> > +++ b/drivers/platform/x86/intel_pmc_core.h
+> > @@ -294,6 +294,7 @@ struct pmc_reg_map {
+> >   * @s0ix_counter:      S0ix residency (step adjusted)
+> >   * @num_lpm_modes:     Count of enabled modes
+> >   * @lpm_en_modes:      Array of enabled modes from lowest to
+> > highest priority
+> > + * @lpm_req_regs:      List of substate requirements
+> >   *
+> >   * pmc_dev contains info about power management controller device.
+> >   */
+> > @@ -310,6 +311,7 @@ struct pmc_dev {
+> >         u64 s0ix_counter;
+> >         int num_lpm_modes;
+> >         int lpm_en_modes[LPM_MAX_NUM_MODES];
+> > +       u32 *lpm_req_regs;
+> >  };
+> >  
+> >  #define pmc_for_each_mode(i, mode, pmcdev)             \
+> > 
+> 
+
 
