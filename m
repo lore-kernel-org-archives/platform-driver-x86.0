@@ -2,111 +2,74 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E15FC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 10:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4353C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 12:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11D9E61164
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 10:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF3E61002
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 12:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231511AbhDTKZR (ORCPT
+        id S231251AbhDTMLV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Apr 2021 06:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbhDTKZO (ORCPT
+        Tue, 20 Apr 2021 08:11:21 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40190 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230118AbhDTMLV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Apr 2021 06:25:14 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95846C06174A;
-        Tue, 20 Apr 2021 03:24:40 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id mh2so35908324ejb.8;
-        Tue, 20 Apr 2021 03:24:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iDi8cUbiyndOqXYkEBTxg8CyIbOjMD0ycEy+x60xpsw=;
-        b=roQeYFmx2/icGD6lUKMbke4T1HvYGH1yyx5REXyF+rwL+KV/sRbiHhLPwydnKtaa/G
-         KeVBfpvYns1GKX1IsuCTdfS4uaFzyFP0mwYAWoW4rqKgf6K5BtNm3GkhWUFM7vndYvle
-         rt2MefYLMF4K8GpKHs244d1OE1NGarkBLo8hnOr+l5j9zJ/OmeohyXo+HJS/upqwOyiZ
-         we2+9j/V/6enS3qdXCPpv5O/lyJe6whuTejnhfMYkUquXgOp+8jQ6lAwBstl2s7k4RPx
-         Kz8yJVv4sG3wL2/YJPvl22nNrh/HG8qeAmGxyf4iSStVjr2TkT+GUB3sR/9swBM5BXOJ
-         5VbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=iDi8cUbiyndOqXYkEBTxg8CyIbOjMD0ycEy+x60xpsw=;
-        b=KmOM0xAerjm44lsnFDHG87uBfgXfOdX2zu6/hUtZg9YU7XTHSrG0UrNRKq+0lI4NX0
-         bDoau11+N0ElAVQW1LGcO+BgZCX4PVAon2Bb1ULpcRwy29sdHkv+4nRJycunkm/4a3Oi
-         U+FTUhPizORHyuqnOTXdKStl+rLchn9VR6jU8eJOaOviGuiusRTZMFdcuzoHmkx/Y/ej
-         nSkfwKugZOvSya7xwaJ32q/ePLY9nbrqjSSjpknJ7Xha/HzwiqcV5r0UeNxLIx1ZHqCH
-         6gAjvwXn/XgY8JpXjqrAvYP7UQnV/BlH4UoPjmqpdD1uuPtt5nxQZB51U8CdmRqt6qgq
-         SZIw==
-X-Gm-Message-State: AOAM530ThWOp3bkuCBAvLGyLMPEwSJtV1rPyUGdWbbHKoENKIL8DC+2d
-        wR+zoJLrspvzaSFXXOCjoO+gnld/eLQ=
-X-Google-Smtp-Source: ABdhPJwv7sEOGcS4T4d7yVxSjB+KHHDSNOEyOEcNORPWzZwaI2xwQnNKXS/ajg8NGQ5NgwEogrWhnw==
-X-Received: by 2002:a17:907:9485:: with SMTP id dm5mr26830144ejc.194.1618914279049;
-        Tue, 20 Apr 2021 03:24:39 -0700 (PDT)
-Received: from [10.18.0.21] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id e11sm12362807ejn.100.2021.04.20.03.24.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Apr 2021 03:24:38 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: aggregator: fix a bit test
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Tue, 20 Apr 2021 08:11:21 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1lYpDI-0007Xn-IJ; Tue, 20 Apr 2021 12:10:44 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <YH6UUhJhGk3mk13b@mwanda>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <7352fbf8-6773-99e6-1baa-3daea8523bc7@gmail.com>
-Date:   Tue, 20 Apr 2021 12:24:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] platform/x86: intel_pmc_core: fix unsigned variable compared to less than zero
+Date:   Tue, 20 Apr 2021 13:10:44 +0100
+Message-Id: <20210420121044.379350-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <YH6UUhJhGk3mk13b@mwanda>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 4/20/21 10:44 AM, Dan Carpenter wrote:
-> The "funcs" variable is a u64.  If "func" is more than 31 then the
-> BIT() shift will wrap instead of testing the high bits.
-> 
-> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Thanks!
+The check for ret < 0 is always false because ret is a (unsigned) size_t
+and not a (signed) ssize_t, hence simple_write_to_buffer failures are
+never detected. Fix this by making ret a ssize_t
 
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->   drivers/platform/surface/aggregator/controller.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-> index 00e38284885a..69e86cd599d3 100644
-> --- a/drivers/platform/surface/aggregator/controller.c
-> +++ b/drivers/platform/surface/aggregator/controller.c
-> @@ -1040,7 +1040,7 @@ static int ssam_dsm_load_u32(acpi_handle handle, u64 funcs, u64 func, u32 *ret)
->   	union acpi_object *obj;
->   	u64 val;
->   
-> -	if (!(funcs & BIT(func)))
-> +	if (!(funcs & BIT_ULL(func)))
->   		return 0; /* Not supported, leave *ret at its default value */
->   
->   	obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
-> 
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 3ae00ac85c75..d174aeb492e0 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1360,7 +1360,7 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+ 	struct pmc_dev *pmcdev = s->private;
+ 	bool clear = false, c10 = false;
+ 	unsigned char buf[8];
+-	size_t ret;
++	ssize_t ret;
+ 	int idx, m, mode;
+ 	u32 reg;
+ 
+-- 
+2.30.2
+
