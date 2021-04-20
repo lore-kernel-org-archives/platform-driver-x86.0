@@ -5,86 +5,105 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC1C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Apr 2021 14:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9B8C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 08:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC6CC61246
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Apr 2021 14:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4821661104
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 08:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239855AbhDSObs (ORCPT
+        id S230168AbhDTIoq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Apr 2021 10:31:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:57930 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232302AbhDSObr (ORCPT
+        Tue, 20 Apr 2021 04:44:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60852 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229749AbhDTIoq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Apr 2021 10:31:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618842677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=A0IIc0M+RZaZjDIx74SepYYkwsfjD6QPhhXp1UtJm0E=;
-        b=itGwIR2lotgCYHzS4JakBrlgbCfjOU3+TsL84aag0qSZU5mH0I1/eBKiLt5WmCLACJWsI8
-        eBGH+dwa3cGiSC20SNWtygkVcNpW2YJXZffsNP1UStvHCXmFZQtQMYgMi1fjUQF9wq58e4
-        TAL6G9oCo/2m39UQEMLkHgU5FhwGoUA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-CYz3XE91OYK7eOFE02gIDA-1; Mon, 19 Apr 2021 10:31:13 -0400
-X-MC-Unique: CYz3XE91OYK7eOFE02gIDA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 585B519253DA;
-        Mon, 19 Apr 2021 14:31:12 +0000 (UTC)
-Received: from x1.localdomain (ovpn-114-152.ams2.redhat.com [10.36.114.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1340660BF1;
-        Mon, 19 Apr 2021 14:31:10 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
+        Tue, 20 Apr 2021 04:44:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13K8JJqv175990;
+        Tue, 20 Apr 2021 08:44:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=vUXFWl3fpUuqSWOHe9zDl0mexS+RTbrEVv1eNGSk3i4=;
+ b=co5rixwnTNEul1efoP0KvaSOtc/dlB1psUa4EtTsNyLI6VYGCMBXbg7sV/p6tze0yyJ9
+ P11jKLfYWZut4+cK4ISQ76WslgHBHePql5xfY3G2qZ7lEiY09DVlMkDzoifSnqhoIsJA
+ 3f1gW84Aodlvh2yQLMAfrL9m+LJ0NK2msaUkOAvg2+DOtm+goVIJNWubpIsmRAajB5qB
+ yOWo94v3I31ds93gvqybTkreXBpvecSsZbnRi9vmKfF9JRRbzex/aTbPP55BQ3WCKGWI
+ IjnLByFpmvYPiVSxD4fWE4HDOy5exQp52E8fZrbJYT6Ofwue1pdIouwivXRmwGvJ9dOj Yw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 37yqmnebkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 08:44:11 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13K8bR1f138467;
+        Tue, 20 Apr 2021 08:44:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 38098pv4w7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 08:44:11 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13K8iA7d163141;
+        Tue, 20 Apr 2021 08:44:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 38098pv4vm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Apr 2021 08:44:10 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 13K8i99f015537;
+        Tue, 20 Apr 2021 08:44:09 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 20 Apr 2021 01:44:09 -0700
+Date:   Tue, 20 Apr 2021 11:44:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/x86: intel_pmc_core: Fix "unsigned 'ret' is never less than zero" smatch warning
-Date:   Mon, 19 Apr 2021 16:31:09 +0200
-Message-Id: <20210419143109.30612-1-hdegoede@redhat.com>
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/surface: aggregator: fix a bit test
+Message-ID: <YH6UUhJhGk3mk13b@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-ORIG-GUID: 4iCASsShEcj4h5YPyacErW9Ry97_fC_x
+X-Proofpoint-GUID: 4iCASsShEcj4h5YPyacErW9Ry97_fC_x
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9959 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104200064
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Change the type of ret form a size_t to a ssize_t, matching the prototype
-of simple_write_to_buffer(), fixing this warning reported by smatch:
+The "funcs" variable is a u64.  If "func" is more than 31 then the
+BIT() shift will wrap instead of testing the high bits.
 
-drivers/platform/x86/intel_pmc_core.c:1369 pmc_core_lpm_latch_mode_write() warn: unsigned 'ret' is never less than zero.
-
-Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
-Cc: David E. Box <david.e.box@linux.intel.com>
+Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
 Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/platform/x86/intel_pmc_core.c | 2 +-
+ drivers/platform/surface/aggregator/controller.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 3ae00ac85c75..d174aeb492e0 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -1360,7 +1360,7 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	struct pmc_dev *pmcdev = s->private;
- 	bool clear = false, c10 = false;
- 	unsigned char buf[8];
--	size_t ret;
-+	ssize_t ret;
- 	int idx, m, mode;
- 	u32 reg;
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index 00e38284885a..69e86cd599d3 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -1040,7 +1040,7 @@ static int ssam_dsm_load_u32(acpi_handle handle, u64 funcs, u64 func, u32 *ret)
+ 	union acpi_object *obj;
+ 	u64 val;
  
+-	if (!(funcs & BIT(func)))
++	if (!(funcs & BIT_ULL(func)))
+ 		return 0; /* Not supported, leave *ret at its default value */
+ 
+ 	obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
 -- 
-2.31.1
+2.30.2
 
