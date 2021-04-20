@@ -5,78 +5,79 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF5FC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:02:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDB2C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7475261104
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:02:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546D1610CC
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232758AbhDTPC6 (ORCPT
+        id S232835AbhDTPDi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Apr 2021 11:02:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33495 "EHLO
+        Tue, 20 Apr 2021 11:03:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:37821 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232682AbhDTPC5 (ORCPT
+        by vger.kernel.org with ESMTP id S232450AbhDTPDi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Apr 2021 11:02:57 -0400
+        Tue, 20 Apr 2021 11:03:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618930944;
+        s=mimecast20190719; t=1618930986;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LOuxmsinNUEghHsSk9wjmamm7+xO1TJQ6v8YtLtqUfE=;
-        b=ANCCS/2N1XC6lGqiKJuYTt/H7IQm8NiXFk3T/EUa+jTudKOt0+MR3jzbCFYntI3AEndatg
-        O3NQqjdoh6Z2+DUoAmtZxFZAxTDc5XlyB35XzUEde8piFSdKKP4AaPnp2S8y/60iK1WdAq
-        H9wNlNJGd2sIvD+c6J6Ok3PRS4Kl93g=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-49-NIp9daP0O4ut46I0FTJV2Q-1; Tue, 20 Apr 2021 11:02:12 -0400
-X-MC-Unique: NIp9daP0O4ut46I0FTJV2Q-1
-Received: by mail-ed1-f70.google.com with SMTP id bf25-20020a0564021a59b0290385169cebf8so5886890edb.8
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Apr 2021 08:02:11 -0700 (PDT)
+        bh=rt7NKGaDjHDmt2xUfgF5jDi+mP8ivKolM0XswNMHLOA=;
+        b=FWLJj0m1+VFaOj7ZtyHph9wn5au3sOBaZ4q8mn8hicPiFSKevewACfR7et5vPEAqa176Rm
+        I2U/F2k1BA+EgjEpgXAmCqT4eZc7GaEbzqh5KxybQF+UL+BaVX2gnCLcjzsNzfupZ2XiZc
+        on/wZ9X6pI/ZF7opRodS/SMSRxwaHiM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-MLIb4fB7OUqiAIpxo4YiDw-1; Tue, 20 Apr 2021 11:02:50 -0400
+X-MC-Unique: MLIb4fB7OUqiAIpxo4YiDw-1
+Received: by mail-ed1-f69.google.com with SMTP id cz7-20020a0564021ca7b02903853d41d8adso3984115edb.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Apr 2021 08:02:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=LOuxmsinNUEghHsSk9wjmamm7+xO1TJQ6v8YtLtqUfE=;
-        b=QCUURZbhiM1rB3SMhrudytWknO+X+IG8FwE/Cm4S7hunZ8vEwjvIsshKyEc0Zzeqba
-         AVOVLQ462F2QRQnQtiqEXEwW3611EeBEtFiROyTSL5o/dj/Ya9JZNaxhYRR+BGftDdRQ
-         zzyl+yuLJTibzf+8aLLMCULVrVb1pvNDkbvlGc+gRmWAENp/6NScrvIHfQAbX21NEn0j
-         /bbtz0Lc1MndvOMil4o3MQBavSiRR8KjfE7pfaqttW88bOUWMQWIngcBI0s5Z4UqRt9Z
-         QqfVJAeKQu69mMlRk6ft6kuo0h5U8nUjCEHtMD8+7eJS6bTd78KYHc0ky1NECp++CVhh
-         42gg==
-X-Gm-Message-State: AOAM533o7xZEb8sWr3zfCB4+OrJwDLyOxpOOaKSFALgTrrWXlWipXstD
-        GC0GUHsc2+YN8K2gc++slF2NNBdvA/mKp7If4inSvEUTwL73E73jaQb9lVzCUsbmxzUAJv/snWF
-        /nBlpphnMdamK4n+D819Va832L63Tr/lU1w==
-X-Received: by 2002:a17:906:f283:: with SMTP id gu3mr27496260ejb.91.1618930930992;
-        Tue, 20 Apr 2021 08:02:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwQWxPdCEp09e5eROF29CuffU4EhqLD9KBqklnh3u0zpOB2tTW38ZDyfpc+9XF/YZYWAu2hoA==
-X-Received: by 2002:a17:906:f283:: with SMTP id gu3mr27496250ejb.91.1618930930867;
-        Tue, 20 Apr 2021 08:02:10 -0700 (PDT)
+        bh=rt7NKGaDjHDmt2xUfgF5jDi+mP8ivKolM0XswNMHLOA=;
+        b=BS9MR0H6nq6NDC6KXuQ68J9dGDNuOR7NjD+yafd86G9f48lG1XVKRNRc7uh0+1Dvdi
+         84v6gwAQgMbNvO0ylN9CamdUFkk6q/kKtADIDUadJoR0fMiDa0X7nTK5h7Xgsu05d8TD
+         rUjosdPQkabF5SkgBRR0ZW3QiYVmH0occIjqGxuzvt1K4bi6F1D4DVTxeI6xf6vgcNnR
+         huWSfeucfvm8U7dxwZ2ygoKmOL8EF0g4NfXs4VZ/bfzqva6GxPASrCdZ6WnAFU3GCwBa
+         pRSAXy7Hwar46E6yTprO1ODvj1tSqDQx2zi9I/2Btil11eTpnjT/WrdDXn4Mepo2gU2a
+         2VtQ==
+X-Gm-Message-State: AOAM533eJZwZnJc7OvVl3RQzi6T2kt3F3O0q6CX8Xx+H9PuHtMTbveCd
+        oo0IxwEYBupTQsCVnQWCA9BzLpOGLwudg8EeMwwmiyd4ZjU7Qqn1V7AKKgT0qRnQa6CLd/wHWRY
+        No0Zc4JWqlhWmGnt3GwPQ+kE5BhaewYM0Qg==
+X-Received: by 2002:a17:906:13d6:: with SMTP id g22mr28063986ejc.475.1618930969858;
+        Tue, 20 Apr 2021 08:02:49 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx8mzqn6L2EwFc7Dx0OfYgYfDc/bUY8zJsA2Mtisctwz4KFSvxkXRHeKmP7F7oY7klb0bilcA==
+X-Received: by 2002:a17:906:13d6:: with SMTP id g22mr28063975ejc.475.1618930969667;
+        Tue, 20 Apr 2021 08:02:49 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id ke14sm13225815ejc.1.2021.04.20.08.02.10
+        by smtp.gmail.com with ESMTPSA id bu20sm1745180ejb.76.2021.04.20.08.02.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Apr 2021 08:02:10 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Fix "unsigned 'ret' is
- never less than zero" smatch warning
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        kernel test robot <lkp@intel.com>
-References: <20210419143109.30612-1-hdegoede@redhat.com>
+        Tue, 20 Apr 2021 08:02:49 -0700 (PDT)
+Subject: Re: [PATCH][next] platform/x86: intel_pmc_core: fix unsigned variable
+ compared to less than zero
+To:     Colin King <colin.king@canonical.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210420121044.379350-1-colin.king@canonical.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d123d876-83ea-76f6-f325-f0076bb38af8@redhat.com>
-Date:   Tue, 20 Apr 2021 17:02:09 +0200
+Message-ID: <ba5a2360-68b2-a3e6-c379-5122e698bfca@redhat.com>
+Date:   Tue, 20 Apr 2021 17:02:48 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210419143109.30612-1-hdegoede@redhat.com>
+In-Reply-To: <20210420121044.379350-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,24 +85,26 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Colin,
 
-On 4/19/21 4:31 PM, Hans de Goede wrote:
-> Change the type of ret form a size_t to a ssize_t, matching the prototype
-> of simple_write_to_buffer(), fixing this warning reported by smatch:
+On 4/20/21 2:10 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> drivers/platform/x86/intel_pmc_core.c:1369 pmc_core_lpm_latch_mode_write() warn: unsigned 'ret' is never less than zero.
+> The check for ret < 0 is always false because ret is a (unsigned) size_t
+> and not a (signed) ssize_t, hence simple_write_to_buffer failures are
+> never detected. Fix this by making ret a ssize_t
 > 
+> Addresses-Coverity: ("Unsigned compared against 0")
 > Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
-> Cc: David E. Box <david.e.box@linux.intel.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-I've applied this to my review-hans branch now.
+Thank you for the patch, but I already send out the same patch myself
+yesterday, so this is a duplicate.
 
 Regards,
 
 Hans
+
 
 
 > ---
