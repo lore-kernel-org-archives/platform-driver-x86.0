@@ -2,108 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9B8C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E15FC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 10:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4821661104
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 08:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D9E61164
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 10:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230168AbhDTIoq (ORCPT
+        id S231511AbhDTKZR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Apr 2021 04:44:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60852 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbhDTIoq (ORCPT
+        Tue, 20 Apr 2021 06:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231422AbhDTKZO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Apr 2021 04:44:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13K8JJqv175990;
-        Tue, 20 Apr 2021 08:44:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=vUXFWl3fpUuqSWOHe9zDl0mexS+RTbrEVv1eNGSk3i4=;
- b=co5rixwnTNEul1efoP0KvaSOtc/dlB1psUa4EtTsNyLI6VYGCMBXbg7sV/p6tze0yyJ9
- P11jKLfYWZut4+cK4ISQ76WslgHBHePql5xfY3G2qZ7lEiY09DVlMkDzoifSnqhoIsJA
- 3f1gW84Aodlvh2yQLMAfrL9m+LJ0NK2msaUkOAvg2+DOtm+goVIJNWubpIsmRAajB5qB
- yOWo94v3I31ds93gvqybTkreXBpvecSsZbnRi9vmKfF9JRRbzex/aTbPP55BQ3WCKGWI
- IjnLByFpmvYPiVSxD4fWE4HDOy5exQp52E8fZrbJYT6Ofwue1pdIouwivXRmwGvJ9dOj Yw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 37yqmnebkp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Apr 2021 08:44:11 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 13K8bR1f138467;
-        Tue, 20 Apr 2021 08:44:11 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 38098pv4w7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Apr 2021 08:44:11 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13K8iA7d163141;
-        Tue, 20 Apr 2021 08:44:10 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 38098pv4vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Apr 2021 08:44:10 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 13K8i99f015537;
-        Tue, 20 Apr 2021 08:44:09 GMT
-Received: from mwanda (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Apr 2021 01:44:09 -0700
-Date:   Tue, 20 Apr 2021 11:44:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Maximilian Luz <luzmaximilian@gmail.com>
+        Tue, 20 Apr 2021 06:25:14 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95846C06174A;
+        Tue, 20 Apr 2021 03:24:40 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id mh2so35908324ejb.8;
+        Tue, 20 Apr 2021 03:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iDi8cUbiyndOqXYkEBTxg8CyIbOjMD0ycEy+x60xpsw=;
+        b=roQeYFmx2/icGD6lUKMbke4T1HvYGH1yyx5REXyF+rwL+KV/sRbiHhLPwydnKtaa/G
+         KeVBfpvYns1GKX1IsuCTdfS4uaFzyFP0mwYAWoW4rqKgf6K5BtNm3GkhWUFM7vndYvle
+         rt2MefYLMF4K8GpKHs244d1OE1NGarkBLo8hnOr+l5j9zJ/OmeohyXo+HJS/upqwOyiZ
+         we2+9j/V/6enS3qdXCPpv5O/lyJe6whuTejnhfMYkUquXgOp+8jQ6lAwBstl2s7k4RPx
+         Kz8yJVv4sG3wL2/YJPvl22nNrh/HG8qeAmGxyf4iSStVjr2TkT+GUB3sR/9swBM5BXOJ
+         5VbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iDi8cUbiyndOqXYkEBTxg8CyIbOjMD0ycEy+x60xpsw=;
+        b=KmOM0xAerjm44lsnFDHG87uBfgXfOdX2zu6/hUtZg9YU7XTHSrG0UrNRKq+0lI4NX0
+         bDoau11+N0ElAVQW1LGcO+BgZCX4PVAon2Bb1ULpcRwy29sdHkv+4nRJycunkm/4a3Oi
+         U+FTUhPizORHyuqnOTXdKStl+rLchn9VR6jU8eJOaOviGuiusRTZMFdcuzoHmkx/Y/ej
+         nSkfwKugZOvSya7xwaJ32q/ePLY9nbrqjSSjpknJ7Xha/HzwiqcV5r0UeNxLIx1ZHqCH
+         6gAjvwXn/XgY8JpXjqrAvYP7UQnV/BlH4UoPjmqpdD1uuPtt5nxQZB51U8CdmRqt6qgq
+         SZIw==
+X-Gm-Message-State: AOAM530ThWOp3bkuCBAvLGyLMPEwSJtV1rPyUGdWbbHKoENKIL8DC+2d
+        wR+zoJLrspvzaSFXXOCjoO+gnld/eLQ=
+X-Google-Smtp-Source: ABdhPJwv7sEOGcS4T4d7yVxSjB+KHHDSNOEyOEcNORPWzZwaI2xwQnNKXS/ajg8NGQ5NgwEogrWhnw==
+X-Received: by 2002:a17:907:9485:: with SMTP id dm5mr26830144ejc.194.1618914279049;
+        Tue, 20 Apr 2021 03:24:39 -0700 (PDT)
+Received: from [10.18.0.21] ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id e11sm12362807ejn.100.2021.04.20.03.24.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Apr 2021 03:24:38 -0700 (PDT)
+Subject: Re: [PATCH] platform/surface: aggregator: fix a bit test
+To:     Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: [PATCH] platform/surface: aggregator: fix a bit test
-Message-ID: <YH6UUhJhGk3mk13b@mwanda>
+References: <YH6UUhJhGk3mk13b@mwanda>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <7352fbf8-6773-99e6-1baa-3daea8523bc7@gmail.com>
+Date:   Tue, 20 Apr 2021 12:24:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-ORIG-GUID: 4iCASsShEcj4h5YPyacErW9Ry97_fC_x
-X-Proofpoint-GUID: 4iCASsShEcj4h5YPyacErW9Ry97_fC_x
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9959 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
- impostorscore=0 spamscore=0 malwarescore=0 clxscore=1015
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2104200064
+In-Reply-To: <YH6UUhJhGk3mk13b@mwanda>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The "funcs" variable is a u64.  If "func" is more than 31 then the
-BIT() shift will wrap instead of testing the high bits.
+On 4/20/21 10:44 AM, Dan Carpenter wrote:
+> The "funcs" variable is a u64.  If "func" is more than 31 then the
+> BIT() shift will wrap instead of testing the high bits.
+> 
+> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/platform/surface/aggregator/controller.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks!
 
-diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-index 00e38284885a..69e86cd599d3 100644
---- a/drivers/platform/surface/aggregator/controller.c
-+++ b/drivers/platform/surface/aggregator/controller.c
-@@ -1040,7 +1040,7 @@ static int ssam_dsm_load_u32(acpi_handle handle, u64 funcs, u64 func, u32 *ret)
- 	union acpi_object *obj;
- 	u64 val;
- 
--	if (!(funcs & BIT(func)))
-+	if (!(funcs & BIT_ULL(func)))
- 		return 0; /* Not supported, leave *ret at its default value */
- 
- 	obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
--- 
-2.30.2
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
+> ---
+>   drivers/platform/surface/aggregator/controller.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+> index 00e38284885a..69e86cd599d3 100644
+> --- a/drivers/platform/surface/aggregator/controller.c
+> +++ b/drivers/platform/surface/aggregator/controller.c
+> @@ -1040,7 +1040,7 @@ static int ssam_dsm_load_u32(acpi_handle handle, u64 funcs, u64 func, u32 *ret)
+>   	union acpi_object *obj;
+>   	u64 val;
+>   
+> -	if (!(funcs & BIT(func)))
+> +	if (!(funcs & BIT_ULL(func)))
+>   		return 0; /* Not supported, leave *ret at its default value */
+>   
+>   	obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
+> 
