@@ -2,126 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42386C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3832CC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2B161426
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA7326144C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234573AbhDUPUQ (ORCPT
+        id S241348AbhDUP7h (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Apr 2021 11:20:16 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:39522 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240440AbhDUPUP (ORCPT
+        Wed, 21 Apr 2021 11:59:37 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:57684 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S241047AbhDUP7f (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Apr 2021 11:20:15 -0400
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13LF1eqh026116;
-        Wed, 21 Apr 2021 15:19:37 GMT
+        Wed, 21 Apr 2021 11:59:35 -0400
+X-Greylist: delayed 1485 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 11:59:35 EDT
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13LFLMSa006596;
+        Wed, 21 Apr 2021 15:33:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=Rxpae055naMvyjukIZqKVynJM4wLpOcw2BPFdfdM5sM=;
- b=fMvfrfBNuzxuhiV0MGTz5RPARWG2+dSn8rnew48y6jv0ulpp+c3EsDnUOY7JKDf2nBii
- aFR33QXvKMTxS0RrHAK004y/mCtjUfdCkI0gCdEXCbyFW6zpOoo11hFsI/qE6t5N5GYP
- rkHgw2LHdrxenhc6j3d3H10TENgpW29jeBz/REfhiNaPBMktSVYfxI6hIjQOEEdHtQwc
- hcHZjTkR9qVVU7MNqJbyng03toEncjesjN2tSZi+lJdwSwkVt4bSnou4Rm/MHnYYZEQj
- a44Sd/AY3FDdbqFuv1Mc2F+tmzBYIBH+kkHWxKR1T/yiUYu1g9P5UfkEaM0cQ/i2qHKH MQ== 
-Received: from oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 381tw0gjjr-1
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=v2NMq5440v5VTI++iKP4cKmxc5nBmtej/HrseiaM7+w=;
+ b=Mp43XrtCuRD5mLxQGa1h+eBKPkGeP2nKFuzhpXyl2L5nZZGFIrM7UMA6N/CEuC2/ci2F
+ VtT6bLFPHT/zWjfXyuHBgrXI7K8120AqOOfytJH6rnstp+GQZUdEjQoRFQPbGPIlMUvs
+ mAjOohKj1x7tXg4i1rkXDonwb2bRJzLKfeOBZgMyMuAGZCJZQOCshM0E/DoIOS+dlYcl
+ aHRIAbodKvX89cYWFXwW2VXAvGn6eNueyLuG8UmM3zy0u2eaoRxwkdUrJEK00gUGMhrU
+ FaxNRGc9/MrEzGalrIbRUYrJrgt7okOjsOxPfv/84wLgojyg4Mj9bOAhp4TgvDHphRZe Tw== 
+Received: from oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 381bjn8rav-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:19:37 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 13LFJaS9054029;
-        Wed, 21 Apr 2021 15:19:36 GMT
+        Wed, 21 Apr 2021 15:33:09 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 13LFLQA4093744;
+        Wed, 21 Apr 2021 15:33:08 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 38098rvm7a-1
+        by userp3030.oracle.com with ESMTP id 3809m0scyv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:19:36 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13LFGvhc037551;
-        Wed, 21 Apr 2021 15:19:35 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 38098rvm6k-1
+        Wed, 21 Apr 2021 15:33:08 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13LFLlod095079;
+        Wed, 21 Apr 2021 15:33:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 3809m0scyc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:19:35 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 13LFJYXI031486;
-        Wed, 21 Apr 2021 15:19:34 GMT
-Received: from mwanda (/102.36.221.92)
+        Wed, 21 Apr 2021 15:33:07 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 13LFX61d031675;
+        Wed, 21 Apr 2021 15:33:06 GMT
+Received: from kadam (/102.36.221.92)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 21 Apr 2021 08:19:33 -0700
-Date:   Wed, 21 Apr 2021 18:19:27 +0300
+        with ESMTP ; Wed, 21 Apr 2021 15:33:05 +0000
+Date:   Wed, 21 Apr 2021 18:32:58 +0300
 From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Cc:     David E Box <david.e.box@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
         Mark Gross <mgross@linux.intel.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] platform/x86: intel_pmc_core: Uninitialized data in
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: re-write copy in
  pmc_core_lpm_latch_mode_write()
-Message-ID: <YIBCf+G9Ef8wrGJw@mwanda>
+Message-ID: <20210421153258.GK1959@kadam>
+References: <YH/xicL9RXjH2pvD@mwanda>
+ <87e61d84-e23e-1ccc-c4ed-57ffa0ed95fb@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <87e61d84-e23e-1ccc-c4ed-57ffa0ed95fb@redhat.com>
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-GUID: ECw56KjdYg0IXNc2JtlNvMSsnop18kv7
-X-Proofpoint-ORIG-GUID: ECw56KjdYg0IXNc2JtlNvMSsnop18kv7
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-GUID: jnEBN2semP3al3cIZqXWTdPHWgv9sb4P
+X-Proofpoint-ORIG-GUID: jnEBN2semP3al3cIZqXWTdPHWgv9sb4P
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The simple_write_to_buffer() can return success if even a single byte
-is copied from user space.  In this case it can result in using
-uninitalized data if the buf[] array is not fully initialized.  Really
-we should only succeed if the whole buffer is copied.
+On Wed, Apr 21, 2021 at 04:11:15PM +0200, Hans de Goede wrote:
+> This should fix that however, while sticking with simple_write_to_buffer():
 
-Just using copy_from_user() is simpler and more appropriate.
+I really want to get rid of the simple_write_to_buffer().  Using it
+would make sense if we wanted the user to be able to seek to the middle
+of buf[] but that would just be an info leak.
 
-Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-v2: The first version of this patch returned -EINVAL if userspace didn't
-give us NUL terminated strings.  That's not necessarily a good
-assumption.
-
-This patch is just simpler as well.  No need to introduce the "len"
-variable because "count" is capped at the start of the function.
-
- drivers/platform/x86/intel_pmc_core.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index d174aeb492e0..b0e486a6bdfb 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -1360,17 +1360,13 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
- 	struct pmc_dev *pmcdev = s->private;
- 	bool clear = false, c10 = false;
- 	unsigned char buf[8];
--	ssize_t ret;
- 	int idx, m, mode;
- 	u32 reg;
- 
- 	if (count > sizeof(buf) - 1)
- 		return -EINVAL;
--
--	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
--	if (ret < 0)
--		return ret;
--
-+	if (copy_from_user(buf, userbuf, count))
-+		return -EFAULT;
- 	buf[count] = '\0';
- 
- 	/*
--- 
-2.30.2
+regards,
+dan carpenter
 
