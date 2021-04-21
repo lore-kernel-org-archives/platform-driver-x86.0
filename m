@@ -2,94 +2,90 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3832CC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEADC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 17:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7326144C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 15:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F7961463
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 17:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241348AbhDUP7h (ORCPT
+        id S237674AbhDURJs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Apr 2021 11:59:37 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:57684 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241047AbhDUP7f (ORCPT
+        Wed, 21 Apr 2021 13:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237525AbhDURJs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Apr 2021 11:59:35 -0400
-X-Greylist: delayed 1485 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 11:59:35 EDT
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13LFLMSa006596;
-        Wed, 21 Apr 2021 15:33:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=v2NMq5440v5VTI++iKP4cKmxc5nBmtej/HrseiaM7+w=;
- b=Mp43XrtCuRD5mLxQGa1h+eBKPkGeP2nKFuzhpXyl2L5nZZGFIrM7UMA6N/CEuC2/ci2F
- VtT6bLFPHT/zWjfXyuHBgrXI7K8120AqOOfytJH6rnstp+GQZUdEjQoRFQPbGPIlMUvs
- mAjOohKj1x7tXg4i1rkXDonwb2bRJzLKfeOBZgMyMuAGZCJZQOCshM0E/DoIOS+dlYcl
- aHRIAbodKvX89cYWFXwW2VXAvGn6eNueyLuG8UmM3zy0u2eaoRxwkdUrJEK00gUGMhrU
- FaxNRGc9/MrEzGalrIbRUYrJrgt7okOjsOxPfv/84wLgojyg4Mj9bOAhp4TgvDHphRZe Tw== 
-Received: from oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 381bjn8rav-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:33:09 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 13LFLQA4093744;
-        Wed, 21 Apr 2021 15:33:08 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3030.oracle.com with ESMTP id 3809m0scyv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:33:08 +0000
-Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13LFLlod095079;
-        Wed, 21 Apr 2021 15:33:07 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 3809m0scyc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Apr 2021 15:33:07 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 13LFX61d031675;
-        Wed, 21 Apr 2021 15:33:06 GMT
-Received: from kadam (/102.36.221.92)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 21 Apr 2021 15:33:05 +0000
-Date:   Wed, 21 Apr 2021 18:32:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: re-write copy in
- pmc_core_lpm_latch_mode_write()
-Message-ID: <20210421153258.GK1959@kadam>
-References: <YH/xicL9RXjH2pvD@mwanda>
- <87e61d84-e23e-1ccc-c4ed-57ffa0ed95fb@redhat.com>
+        Wed, 21 Apr 2021 13:09:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id E83526145A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Apr 2021 17:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619024954;
+        bh=jvqgPeIaqMcqB4ySzYHs2vC2H2k3T0JeSzAKiWX6IRI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=VEnVduaBnWlGVnOIYetMzau1qGzgw68wMHKuDd4ycIMwRg2g2EF2JITEWUpewi4/V
+         V80/j1bjNjFndWOkFXW2S2vZmfgd7mWWN56Rauv3KgZ+yhNr1hcbz2CipnRrweNYZe
+         Z4JDFGcU8KiGFA0xTvT3kwQhQhv/Aw1RIy6txncJQ84igRSLsVAzY6N3K5qcrHFAXg
+         84UaptZnEfcfPtkSimvURuiEGxFj9rKyRCdY4I5OLWppnfXhuyvToq/z6tknb83ZZd
+         GI2liZWpFWliEJY0p79VfPUHnaofZS7f6L5kbLXVegQuW1inJYuluGIGEAPs/NpDw3
+         pkkz4JXvj4RyQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Wed, 21 Apr 2021 17:09:13 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: doomwarriorx@gmail.com
+X-Bugzilla-Status: CLOSED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc attachments.created
+Message-ID: <bug-204807-215701-8nlAEbSyti@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87e61d84-e23e-1ccc-c4ed-57ffa0ed95fb@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-GUID: jnEBN2semP3al3cIZqXWTdPHWgv9sb4P
-X-Proofpoint-ORIG-GUID: jnEBN2semP3al3cIZqXWTdPHWgv9sb4P
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Apr 21, 2021 at 04:11:15PM +0200, Hans de Goede wrote:
-> This should fix that however, while sticking with simple_write_to_buffer():
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-I really want to get rid of the simple_write_to_buffer().  Using it
-would make sense if we wanted the user to be able to seek to the middle
-of buf[] but that would just be an info leak.
+doomwarriorx@gmail.com changed:
 
-regards,
-dan carpenter
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |doomwarriorx@gmail.com
 
+--- Comment #70 from doomwarriorx@gmail.com ---
+Created attachment 296451
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D296451&action=3Dedit
+acpidump for Pro B550-C
+
+can confirm the issue with ASUS System Product Name/Pro B550M-C, BIOS 0214
+10/22/2020
+
+The bug still exists if asus_wmi & eeepc_wmi is blacklisted. Does the acpi_=
+wmi
+still claim the address space even if no consumer/driver is available?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
