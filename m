@@ -2,130 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB6BC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEF9C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 07:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A977613AB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Apr 2021 15:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F54613CD
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 07:51:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232764AbhDTPbZ (ORCPT
+        id S237409AbhDUHwA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Apr 2021 11:31:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46312 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232507AbhDTPbZ (ORCPT
+        Wed, 21 Apr 2021 03:52:00 -0400
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:43806 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237383AbhDUHv7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Apr 2021 11:31:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1618932653;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RBBsrjmHRDP21lnXRazBH5eMtCC8CXeVM/g8RMCBPvM=;
-        b=SQCWukSSFfevkr4c3gIgTUZzTC0WgUpdGirFsKz0TFYGdecF3jRJzINVOnDgEE+d+9c2U1
-        KgvzXsQNMfDkJSKXR94hSV/2Z2xAPVm8K/LATmNgNhC1AKax24Tiy5a3cYVn+DvsFq9oqB
-        LDZ7tQsIGqrX1BQYWnmnr3V+LrgEp2I=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-uBT-kW-9MDqKBOBVacNkPg-1; Tue, 20 Apr 2021 11:30:51 -0400
-X-MC-Unique: uBT-kW-9MDqKBOBVacNkPg-1
-Received: by mail-ej1-f72.google.com with SMTP id o25-20020a1709061d59b029037c94676df5so4941974ejh.7
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Apr 2021 08:30:51 -0700 (PDT)
+        Wed, 21 Apr 2021 03:51:59 -0400
+Received: by mail-lf1-f45.google.com with SMTP id y4so25304504lfl.10;
+        Wed, 21 Apr 2021 00:51:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
+         :in-reply-to:references:mime-version:date:user-agent
          :content-transfer-encoding;
-        bh=RBBsrjmHRDP21lnXRazBH5eMtCC8CXeVM/g8RMCBPvM=;
-        b=HDwwwlB21dBmLnEXieoThyRO017B+fzISpwlgqLm3/4zoemQYK5XWzaruAZbfewwuf
-         uU5yDej5PKJYtBqq+c5yu9qjHeAXK9Db8OtxdnX4uLlM22ex9CJNfcWDjpvKOR7HO6Sj
-         HYZ322lgHzePur+AC7LxmySJsEV6xcoFzknfXUUCyvnn2CWiEQo55QCEwQTD2V9dTblz
-         th7Yi3uUy3sjk3r1pj0LRheG60PE9u0l9hg18KvG1dxhM6Xwi0cYFodEa8FvVyzdhVhc
-         y5LbxJ/5hStSb5IAvShFJ3qXkMAG0z24JHwRlFSNENDczZyxCeQz0e6rXzanoywx7LYz
-         1/rg==
-X-Gm-Message-State: AOAM5305fYLs3NsfxaNpV18qLcdsGU5bVhmfPQS8FglLub843HdBQeC9
-        P/FwOVxyOKLzoV4vyZ7tqXTUrMpC+4tlMzvn+DCagWTXaEAhxjLzfj8Wt2k4bgbNlS/3TYjW0UO
-        c7xQqzH75Hmq1iQTn7vJIFb3G1NiOncUyvw==
-X-Received: by 2002:a05:6402:134f:: with SMTP id y15mr15446458edw.259.1618932650227;
-        Tue, 20 Apr 2021 08:30:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyuVHu6/YIHf26jz/l5PBJO5dia9L05ZHer0be0n8fwzCxg/hUL9LLA7M5dpD9wD7isJaO0ng==
-X-Received: by 2002:a05:6402:134f:: with SMTP id y15mr15446440edw.259.1618932650105;
-        Tue, 20 Apr 2021 08:30:50 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id h19sm12796131ejc.94.2021.04.20.08.30.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Apr 2021 08:30:49 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: aggregator: fix a bit test
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <YH6UUhJhGk3mk13b@mwanda>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <abec80a7-6fee-1105-e219-21fcd88f9949@redhat.com>
-Date:   Tue, 20 Apr 2021 17:30:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        bh=Pae9yH+KaHgTqO+dxMFR9Vep9F1PrK7GQlrKbtuE/kI=;
+        b=CvAbYW+Bz8Sj728WpXFetqW6sVK536wmR4oKurUcMkA5erGaameUl3ZXR/dsx1IHVk
+         1/ziMfI6Fk7n6yt5RanH+ee6XkzzrH0AzzAqemNA0mVQL4ZYTTKMmunzDkWE474NHYfO
+         v6/k1OiWTPbtwQZkKrFe8z/QlKfsI5SMTT1kxa+0PM++P7m+HQBcxEdylz1HXYU3oKxr
+         x1XRtJehMNQ/qw1ybvAb8Wd2hPLhfz+HRWpDu1oVf0ABhThuSf8xSPXjI25XHEHcbM3l
+         2mQp+RtJv21wmYAYjOgOZkpX3UwG27lAgXPoODN5lpmXZLboiA5Fy9mAg9c4Wf0R81qh
+         YeKw==
+X-Gm-Message-State: AOAM533MPIw2QPOojvjLQv9Cf6tfDktk2az+9p0Qw+ac3LtqVaZHy3YF
+        hrIKN10BL5XtYdSoNNuEnco=
+X-Google-Smtp-Source: ABdhPJyamlH7tMymKn/NliNVTaRv5+NWeF4lqRMi91V4eNBUtbjHXg0IbpR8KG2YkoC6zBsccN0XWg==
+X-Received: by 2002:ac2:4e8c:: with SMTP id o12mr16152092lfr.211.1618991485123;
+        Wed, 21 Apr 2021 00:51:25 -0700 (PDT)
+Received: from dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::6])
+        by smtp.gmail.com with ESMTPSA id c18sm125078ljd.66.2021.04.21.00.51.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Apr 2021 00:51:24 -0700 (PDT)
+Message-ID: <da0233f3223d7c0816581afe0969caf0abe20378.camel@fi.rohmeurope.com>
+Subject: Re: [PATCH v3 2/8] MAINTAINERS: Add entry for devm helpers
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reply-To: matti.vaittinen@fi.rohmeurope.com
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mark Gross <mgross@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <YFn5CSB1O3i+SzgR@kroah.com>
+References: <cover.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+         <eec1797734e3d080662aa732c565ed4a3c261799.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
+         <e064fdd7-b276-6732-16fe-2eb2564b2179@redhat.com>
+         <YFn5CSB1O3i+SzgR@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <YH6UUhJhGk3mk13b@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Date:   Wed, 21 Apr 2021 10:51:13 +0300
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 4/20/21 10:44 AM, Dan Carpenter wrote:
-> The "funcs" variable is a u64.  If "func" is more than 31 then the
-> BIT() shift will wrap instead of testing the high bits.
+On Tue, 2021-03-23 at 15:19 +0100, Greg KH wrote:
+> On Tue, Mar 23, 2021 at 02:58:28PM +0100, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 3/23/21 2:56 PM, Matti Vaittinen wrote:
+> > > Devm helper header containing small inline helpers was added.
+> > > Hans promised to maintain it.
+> > > 
+> > > Add Hans as maintainer and myself as designated reviewer.
+> > > 
+> > Ultimately this is up to Greg though, so lets wait and see what
+> > Greg has to say about this.
 > 
-> Fixes: c167b9c7e3d6 ("platform/surface: Add Surface Aggregator subsystem")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Can we move some of the devm_* calls in include/device.h into here as
+> well so that you all can be in charge of them instead of me?
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Seems like this was left w/o answer. I guess the question was pointed
+to Hans - but what comes to my (not always so humble) opinion - most of
+the devm functions in device.h are tightly related to the device
+interface or devres. Thus the device.h feels like appropriate place for
+most of those. OTOH, the kmalloc/kfree related functions, strdub and
+kmemdub might be candidates for move - those are not really "device
+things".
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+But this is really not my call :)
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+Best Regards
+	Matti Vaittinen
 
-Regards,
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Hans
-
-
-> ---
->  drivers/platform/surface/aggregator/controller.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-> index 00e38284885a..69e86cd599d3 100644
-> --- a/drivers/platform/surface/aggregator/controller.c
-> +++ b/drivers/platform/surface/aggregator/controller.c
-> @@ -1040,7 +1040,7 @@ static int ssam_dsm_load_u32(acpi_handle handle, u64 funcs, u64 func, u32 *ret)
->  	union acpi_object *obj;
->  	u64 val;
->  
-> -	if (!(funcs & BIT(func)))
-> +	if (!(funcs & BIT_ULL(func)))
->  		return 0; /* Not supported, leave *ret at its default value */
->  
->  	obj = acpi_evaluate_dsm_typed(handle, &SSAM_SSH_DSM_GUID,
-> 
 
