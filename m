@@ -2,117 +2,129 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEF9C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 07:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A515C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 10:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F54613CD
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 07:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F085061446
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 10:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237409AbhDUHwA (ORCPT
+        id S236591AbhDUKBH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Apr 2021 03:52:00 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:43806 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237383AbhDUHv7 (ORCPT
+        Wed, 21 Apr 2021 06:01:07 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:34420 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235387AbhDUKBF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Apr 2021 03:51:59 -0400
-Received: by mail-lf1-f45.google.com with SMTP id y4so25304504lfl.10;
-        Wed, 21 Apr 2021 00:51:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc
-         :in-reply-to:references:mime-version:date:user-agent
-         :content-transfer-encoding;
-        bh=Pae9yH+KaHgTqO+dxMFR9Vep9F1PrK7GQlrKbtuE/kI=;
-        b=CvAbYW+Bz8Sj728WpXFetqW6sVK536wmR4oKurUcMkA5erGaameUl3ZXR/dsx1IHVk
-         1/ziMfI6Fk7n6yt5RanH+ee6XkzzrH0AzzAqemNA0mVQL4ZYTTKMmunzDkWE474NHYfO
-         v6/k1OiWTPbtwQZkKrFe8z/QlKfsI5SMTT1kxa+0PM++P7m+HQBcxEdylz1HXYU3oKxr
-         x1XRtJehMNQ/qw1ybvAb8Wd2hPLhfz+HRWpDu1oVf0ABhThuSf8xSPXjI25XHEHcbM3l
-         2mQp+RtJv21wmYAYjOgOZkpX3UwG27lAgXPoODN5lpmXZLboiA5Fy9mAg9c4Wf0R81qh
-         YeKw==
-X-Gm-Message-State: AOAM533MPIw2QPOojvjLQv9Cf6tfDktk2az+9p0Qw+ac3LtqVaZHy3YF
-        hrIKN10BL5XtYdSoNNuEnco=
-X-Google-Smtp-Source: ABdhPJyamlH7tMymKn/NliNVTaRv5+NWeF4lqRMi91V4eNBUtbjHXg0IbpR8KG2YkoC6zBsccN0XWg==
-X-Received: by 2002:ac2:4e8c:: with SMTP id o12mr16152092lfr.211.1618991485123;
-        Wed, 21 Apr 2021 00:51:25 -0700 (PDT)
-Received: from dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi (dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::6])
-        by smtp.gmail.com with ESMTPSA id c18sm125078ljd.66.2021.04.21.00.51.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Apr 2021 00:51:24 -0700 (PDT)
-Message-ID: <da0233f3223d7c0816581afe0969caf0abe20378.camel@fi.rohmeurope.com>
-Subject: Re: [PATCH v3 2/8] MAINTAINERS: Add entry for devm helpers
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Reply-To: matti.vaittinen@fi.rohmeurope.com
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        Wed, 21 Apr 2021 06:01:05 -0400
+X-Greylist: delayed 1576 seconds by postgrey-1.27 at vger.kernel.org; Wed, 21 Apr 2021 06:01:04 EDT
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13L9SvcZ022552;
+        Wed, 21 Apr 2021 09:34:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=8gNfUIaKyR1ckO6hGOqqpfoiLL7Zd/cCYnF0H0aUYzs=;
+ b=GEglrgSe8BzcLb28XQ399XpShJF8+bwK/BIce9inxxSxJHY/pOgnfcRC6u+M4Dn4o3rD
+ GTR+xHfFT9BEr4J6DAZcoJ6xTCG0jqjArcB0edsqUEWJV9+BjwdH69TzNQ7Bl+YEHmEf
+ rTLugt8SQhYBSvl3A4oLocywpOXbi0CyKz6NIYDpmFsf4anM09fEyHUGN8rOhJFElm6g
+ zmPCgErBbCaa52/3Wd5042jTQun1aaXrE5zavNRuMdGLKHO+E8G9nsr/HjoNuPmc96NJ
+ dHagy3mEPI8rnwtujWR/GxyI6A+qoptM3gqLSgBrXYt/e0ZQv1f6MyXU3Rl48FKivKHC 7A== 
+Received: from oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3818whgn2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 09:34:12 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.podrdrct (8.16.0.36/8.16.0.36) with SMTP id 13L9YBH5123619;
+        Wed, 21 Apr 2021 09:34:11 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 38098rg2st-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 09:34:11 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 13L9YAGb123586;
+        Wed, 21 Apr 2021 09:34:10 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 38098rg2sb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Apr 2021 09:34:10 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 13L9Y8Ow004066;
+        Wed, 21 Apr 2021 09:34:08 GMT
+Received: from mwanda (/102.36.221.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 21 Apr 2021 02:34:07 -0700
+Date:   Wed, 21 Apr 2021 12:34:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc:     David E Box <david.e.box@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-In-Reply-To: <YFn5CSB1O3i+SzgR@kroah.com>
-References: <cover.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
-         <eec1797734e3d080662aa732c565ed4a3c261799.1616506559.git.matti.vaittinen@fi.rohmeurope.com>
-         <e064fdd7-b276-6732-16fe-2eb2564b2179@redhat.com>
-         <YFn5CSB1O3i+SzgR@kroah.com>
-Content-Type: text/plain; charset="UTF-8"
+        "David E. Box" <david.e.box@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] platform/x86: intel_pmc_core: re-write copy in
+ pmc_core_lpm_latch_mode_write()
+Message-ID: <YH/xicL9RXjH2pvD@mwanda>
 MIME-Version: 1.0
-Date:   Wed, 21 Apr 2021 10:51:13 +0300
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-ORIG-GUID: 7bXkb2nbQYGuKUD1iMJTcne8JMqMVFVd
+X-Proofpoint-GUID: 7bXkb2nbQYGuKUD1iMJTcne8JMqMVFVd
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+There are two bugs in this code:
+1) "ret" is unsigned so the error handling is broken.
+2) simple_write_to_buffer() is innappropriate.  It will succeed even if
+   we are only able to copy a single byte of data from user space.  This
+   could lead to an information leak if the buf[] array is not fully
+   initialized.
 
-On Tue, 2021-03-23 at 15:19 +0100, Greg KH wrote:
-> On Tue, Mar 23, 2021 at 02:58:28PM +0100, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 3/23/21 2:56 PM, Matti Vaittinen wrote:
-> > > Devm helper header containing small inline helpers was added.
-> > > Hans promised to maintain it.
-> > > 
-> > > Add Hans as maintainer and myself as designated reviewer.
-> > > 
-> > Ultimately this is up to Greg though, so lets wait and see what
-> > Greg has to say about this.
-> 
-> Can we move some of the devm_* calls in include/device.h into here as
-> well so that you all can be in charge of them instead of me?
+I've fixed it to use strncpy_from_user() and to return -EINVAL if the
+user supplied string is not NUL terminated.
 
-Seems like this was left w/o answer. I guess the question was pointed
-to Hans - but what comes to my (not always so humble) opinion - most of
-the devm functions in device.h are tightly related to the device
-interface or devres. Thus the device.h feels like appropriate place for
-most of those. OTOH, the kmalloc/kfree related functions, strdub and
-kmemdub might be candidates for move - those are not really "device
-things".
+Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/platform/x86/intel_pmc_core.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-But this is really not my call :)
-
-Best Regards
-	Matti Vaittinen
-
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 3ae00ac85c75..c989796a5d52 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1360,18 +1360,19 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
+ 	struct pmc_dev *pmcdev = s->private;
+ 	bool clear = false, c10 = false;
+ 	unsigned char buf[8];
+-	size_t ret;
+-	int idx, m, mode;
++	int idx, m, mode, ret;
++	size_t len;
+ 	u32 reg;
+ 
+-	if (count > sizeof(buf) - 1)
++	if (count > sizeof(buf))
+ 		return -EINVAL;
+ 
+-	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
++	len = min(count, sizeof(buf));
++	ret = strncpy_from_user(buf, userbuf, len);
+ 	if (ret < 0)
+ 		return ret;
+-
+-	buf[count] = '\0';
++	if (ret == len)
++		return -EINVAL;
+ 
+ 	/*
+ 	 * Allowed strings are:
 -- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
+2.30.2
 
