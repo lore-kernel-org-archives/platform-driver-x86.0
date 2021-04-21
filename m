@@ -2,156 +2,221 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC7BC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 19:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7484EC43470
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 20:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE556143B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 19:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 417CE61435
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 20:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242502AbhDUTc6 (ORCPT
+        id S245660AbhDUUtC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Apr 2021 15:32:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59622 "EHLO
+        Wed, 21 Apr 2021 16:49:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30456 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240272AbhDUTc5 (ORCPT
+        by vger.kernel.org with ESMTP id S245681AbhDUUtB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Apr 2021 15:32:57 -0400
+        Wed, 21 Apr 2021 16:49:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619033544;
+        s=mimecast20190719; t=1619038105;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1BBZbDPdoILFAbDCTmIR8WakICnxwYOnEVliMh8JCfw=;
-        b=Om1GGWAQJTxZsulkCqVWJ2pm7NebDXE8LQ/DQbTVW9g316P2a0C9TRMut4vAnefSOOKADD
-        e0VSOxZNiq7lSUdE1DiLoyZvG0GoYWCD5QfgB6pXHm9XHorKhktNsgtjZqcvqPTkkdUaFs
-        eoMAcWmIRsrNgtm+ukXiOkOfZMMAkE4=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-102-Bx6KkAVvNBevjOgVjSC1ZA-1; Wed, 21 Apr 2021 15:32:21 -0400
-X-MC-Unique: Bx6KkAVvNBevjOgVjSC1ZA-1
-Received: by mail-ed1-f72.google.com with SMTP id l22-20020a0564021256b0290384ebfba68cso11718242edw.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Apr 2021 12:32:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1BBZbDPdoILFAbDCTmIR8WakICnxwYOnEVliMh8JCfw=;
-        b=kI61URzD+IGHZDziYUEf9cYKYsO5MRnUFPL43G0UDHK2eo65ZJ22Y3hVtqnnamwxsP
-         wIAK/LqjDLCUG8JoYRJ7bApRtmzLFZaZ8Xx5wzc56h4bavyHf3sTEgAoah1UjJNQHYD3
-         sCMqK10UWeh2uNHZKzmBIyxWoK0hSt2d9aC9vu9iFlwEG+h3aX36N8cveq4KnQsTd0Pv
-         scS9p1AOysCmaFeboVSS+mVQg5UofB/ZIbhQIyvmaD0pAaxwcazqLPPReeIj0Lk+J5QE
-         +WkRtITHm1KL32/msUuskpMJ8B/SC4LTp/WDdKY382iKm7LjxZQJQQFi1xAm/sEtheIH
-         1t8w==
-X-Gm-Message-State: AOAM530lcHBSdRJ5Ya4rOGZopdrm0xopWmYMAgcGAFAjiNhx8fgkkBnS
-        R6g+SDIrkRg7L3YoS0ksOLphfP/B2xvZAmm024aQYCS7kECjCIt6oCZWVDClpqw/CPU9CuyCuO5
-        AXPxUaVjd0AHBg9rI3HK3HQCSx5ASNBaTnw==
-X-Received: by 2002:a17:906:49c1:: with SMTP id w1mr35176157ejv.178.1619033540664;
-        Wed, 21 Apr 2021 12:32:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxdRpxiINqsS4aMzDxg+dVxuQVoOGhMEjSyLCURLTc1al9CQeb0bDFM8n1U/vBFgVyVwEwFUw==
-X-Received: by 2002:a17:906:49c1:: with SMTP id w1mr35176126ejv.178.1619033540350;
-        Wed, 21 Apr 2021 12:32:20 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id gn19sm287812ejc.68.2021.04.21.12.32.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Apr 2021 12:32:19 -0700 (PDT)
-Subject: Re: [PATCH v2] platform/x86: intel_pmc_core: Uninitialized data in
- pmc_core_lpm_latch_mode_write()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Cc:     David E Box <david.e.box@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <YIBCf+G9Ef8wrGJw@mwanda>
+        bh=OQuBmg3MoSWWm1tU73jrw+1vKzevGcmSLLh43Uy96Wk=;
+        b=LYjMkxrQorNjciuh8YW6qmTE9J0ok53ZYNmcFHdoIWR0ewp6+o1nqpjVLwmigHH6DB/hyh
+        tUvlDX5TPR5jihuj9Y/mgJwDlnUsxEqlA00MvXx6iHXywG0X0N5Hiq3Th87uYthgWemvU2
+        YR6tJdpSgBbYotDZvFMc8L45zaUe4KI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-6qI_brSCM3OgYmQPIEJkGA-1; Wed, 21 Apr 2021 16:48:23 -0400
+X-MC-Unique: 6qI_brSCM3OgYmQPIEJkGA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB27E8189C7;
+        Wed, 21 Apr 2021 20:48:20 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-17.ams2.redhat.com [10.36.112.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 70C275D736;
+        Wed, 21 Apr 2021 20:48:17 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <ad05f502-b3dc-b62f-1f9f-ca8c806e1e3c@redhat.com>
-Date:   Wed, 21 Apr 2021 21:32:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        Mark Pearson <markpearson@lenovo.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v2 3/9] drm/privacy-screen: Add X86 specific arch init code
+Date:   Wed, 21 Apr 2021 22:47:58 +0200
+Message-Id: <20210421204804.589962-4-hdegoede@redhat.com>
+In-Reply-To: <20210421204804.589962-1-hdegoede@redhat.com>
+References: <20210421204804.589962-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <YIBCf+G9Ef8wrGJw@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Add X86 specific arch init code, which fills the privacy-screen lookup
+table by checking for various vendor specific ACPI interfaces for
+controlling the privacy-screen.
 
-On 4/21/21 5:19 PM, Dan Carpenter wrote:
-> The simple_write_to_buffer() can return success if even a single byte
-> is copied from user space.  In this case it can result in using
-> uninitalized data if the buf[] array is not fully initialized.  Really
-> we should only succeed if the whole buffer is copied.
-> 
-> Just using copy_from_user() is simpler and more appropriate.
-> 
-> Fixes: 8074a79fad2e ("platform/x86: intel_pmc_core: Add option to set/clear LPM mode")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-> v2: The first version of this patch returned -EINVAL if userspace didn't
-> give us NUL terminated strings.  That's not necessarily a good
-> assumption.
-> 
-> This patch is just simpler as well.  No need to introduce the "len"
-> variable because "count" is capped at the start of the function.
+This initial version only checks for the Lenovo Thinkpad specific ACPI
+methods for privacy-screen control.
 
-Much better, thank you.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpu/drm/Makefile                 |  2 +-
+ drivers/gpu/drm/drm_privacy_screen_x86.c | 86 ++++++++++++++++++++++++
+ include/drm/drm_privacy_screen_machine.h |  5 ++
+ 3 files changed, 92 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/drm/drm_privacy_screen_x86.c
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-
->  drivers/platform/x86/intel_pmc_core.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index d174aeb492e0..b0e486a6bdfb 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1360,17 +1360,13 @@ static ssize_t pmc_core_lpm_latch_mode_write(struct file *file,
->  	struct pmc_dev *pmcdev = s->private;
->  	bool clear = false, c10 = false;
->  	unsigned char buf[8];
-> -	ssize_t ret;
->  	int idx, m, mode;
->  	u32 reg;
->  
->  	if (count > sizeof(buf) - 1)
->  		return -EINVAL;
-> -
-> -	ret = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> +	if (copy_from_user(buf, userbuf, count))
-> +		return -EFAULT;
->  	buf[count] = '\0';
->  
->  	/*
-> 
+diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+index 578853d18a3d..2e226b57de24 100644
+--- a/drivers/gpu/drm/Makefile
++++ b/drivers/gpu/drm/Makefile
+@@ -32,7 +32,7 @@ drm-$(CONFIG_AGP) += drm_agpsupport.o
+ drm-$(CONFIG_PCI) += drm_pci.o
+ drm-$(CONFIG_DEBUG_FS) += drm_debugfs.o drm_debugfs_crc.o
+ drm-$(CONFIG_DRM_LOAD_EDID_FIRMWARE) += drm_edid_load.o
+-drm-$(CONFIG_DRM_PRIVACY_SCREEN) += drm_privacy_screen.o
++drm-$(CONFIG_DRM_PRIVACY_SCREEN) += drm_privacy_screen.o drm_privacy_screen_x86.o
+ 
+ drm_vram_helper-y := drm_gem_vram_helper.o
+ obj-$(CONFIG_DRM_VRAM_HELPER) += drm_vram_helper.o
+diff --git a/drivers/gpu/drm/drm_privacy_screen_x86.c b/drivers/gpu/drm/drm_privacy_screen_x86.c
+new file mode 100644
+index 000000000000..a2cafb294ca6
+--- /dev/null
++++ b/drivers/gpu/drm/drm_privacy_screen_x86.c
+@@ -0,0 +1,86 @@
++// SPDX-License-Identifier: MIT
++/*
++ * Copyright (C) 2020 Red Hat, Inc.
++ *
++ * Authors:
++ * Hans de Goede <hdegoede@redhat.com>
++ */
++
++#include <linux/acpi.h>
++#include <drm/drm_privacy_screen_machine.h>
++
++#ifdef CONFIG_X86
++static struct drm_privacy_screen_lookup arch_lookup;
++
++struct arch_init_data {
++	struct drm_privacy_screen_lookup lookup;
++	bool (*detect)(void);
++};
++
++#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
++static acpi_status __init acpi_set_handle(acpi_handle handle, u32 level,
++					  void *context, void **return_value)
++{
++	*(acpi_handle *)return_value = handle;
++	return AE_CTRL_TERMINATE;
++}
++
++static bool __init detect_thinkpad_privacy_screen(void)
++{
++	union acpi_object obj = { .type = ACPI_TYPE_INTEGER };
++	struct acpi_object_list args = { .count = 1, .pointer = &obj, };
++	acpi_handle ec_handle = NULL;
++	unsigned long long output;
++	acpi_status status;
++
++	/* Get embedded-controller handle */
++	status = acpi_get_devices("PNP0C09", acpi_set_handle, NULL, &ec_handle);
++	if (ACPI_FAILURE(status) || !ec_handle)
++		return false;
++
++	/* And call the privacy-screen get-status method */
++	status = acpi_evaluate_integer(ec_handle, "HKEY.GSSS", &args, &output);
++	if (ACPI_FAILURE(status))
++		return false;
++
++	return (output & 0x10000) ? true : false;
++}
++#endif
++
++static const struct arch_init_data arch_init_data[] __initconst = {
++#if IS_ENABLED(CONFIG_THINKPAD_ACPI)
++	{
++		.lookup = {
++			.dev_id = NULL,
++			.con_id = NULL,
++			.provider = "privacy_screen-thinkpad_acpi",
++		},
++		.detect = detect_thinkpad_privacy_screen,
++	},
++#endif
++};
++
++void __init drm_privacy_screen_lookup_init(void)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(arch_init_data); i++) {
++		if (!arch_init_data[i].detect())
++			continue;
++
++		pr_info("Found '%s' privacy-screen provider\n",
++			arch_init_data[i].lookup.provider);
++
++		/* Make a copy because arch_init_data is __initconst */
++		arch_lookup = arch_init_data[i].lookup;
++		drm_privacy_screen_lookup_add(&arch_lookup);
++		break;
++	}
++}
++
++void drm_privacy_screen_lookup_exit(void)
++{
++	if (arch_lookup.provider)
++		drm_privacy_screen_lookup_remove(&arch_lookup);
++}
++#endif /* ifdef CONFIG_X86 */
+diff --git a/include/drm/drm_privacy_screen_machine.h b/include/drm/drm_privacy_screen_machine.h
+index aaa0d38cce92..02e5371904d3 100644
+--- a/include/drm/drm_privacy_screen_machine.h
++++ b/include/drm/drm_privacy_screen_machine.h
+@@ -31,11 +31,16 @@ struct drm_privacy_screen_lookup {
+ void drm_privacy_screen_lookup_add(struct drm_privacy_screen_lookup *lookup);
+ void drm_privacy_screen_lookup_remove(struct drm_privacy_screen_lookup *lookup);
+ 
++#if IS_ENABLED(CONFIG_DRM_PRIVACY_SCREEN) && IS_ENABLED(CONFIG_X86)
++void drm_privacy_screen_lookup_init(void);
++void drm_privacy_screen_lookup_exit(void);
++#else
+ static inline void drm_privacy_screen_lookup_init(void)
+ {
+ }
+ static inline void drm_privacy_screen_lookup_exit(void)
+ {
+ }
++#endif
+ 
+ #endif
+-- 
+2.31.1
 
