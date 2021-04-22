@@ -2,105 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81273C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 23:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B00C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Apr 2021 08:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAFB613FA
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Apr 2021 23:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43DED613CE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Apr 2021 08:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241090AbhDUXmi (ORCPT
+        id S235387AbhDVIwL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Apr 2021 19:42:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26728 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234969AbhDUXmg (ORCPT
+        Thu, 22 Apr 2021 04:52:11 -0400
+Received: from mail2.protonmail.ch ([185.70.40.22]:33601 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229938AbhDVIwL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Apr 2021 19:42:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619048522;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lYWmA1IVqQm1Tc92b7ofSSX1Uc8jPsQyYwpqd2nV+74=;
-        b=PPcrsdirLsFb/7V6PO2HcHCevBp9AYOFGTMS/Bcqamdpg4U9qhafsGpweWCiqDeveHyb2a
-        DGM3dZmPGHOfdnGGSlqszb5oXbR89GG0t+MojulpsU/Z2XPyrvpYxsROMZmbzIIiNH1N+p
-        zhLpIrF3+g5Mn47efdp0P3UcWGqVZBw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-Wg7NUV9DOG2ggYvcbVzqcA-1; Wed, 21 Apr 2021 19:42:00 -0400
-X-MC-Unique: Wg7NUV9DOG2ggYvcbVzqcA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 079168030A1;
-        Wed, 21 Apr 2021 23:41:59 +0000 (UTC)
-Received: from rtux.redhat.com (unknown [10.33.36.216])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CF97E19D80;
-        Wed, 21 Apr 2021 23:41:57 +0000 (UTC)
-From:   Alexey Klimov <aklimov@redhat.com>
-To:     thomas@weissschuh.net
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: gigabyte-wmi: add support for B550M AORUS PRO-P
-Date:   Thu, 22 Apr 2021 00:41:56 +0100
-Message-Id: <20210421234156.3942343-1-aklimov@redhat.com>
+        Thu, 22 Apr 2021 04:52:11 -0400
+Date:   Thu, 22 Apr 2021 08:51:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
+        s=protonmail3; t=1619081494;
+        bh=YnbXi/3E4d4OjVC6hxEORIpQ2rRhu1QXBlY5Yolf8UU=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=nNc8+KMdq6ocE8qHrhGhCBd51bt2RLCCey73j+O3unz3sQqox8BihFDD/mjFrrDz/
+         CunGnhbc+h3ujaA68IuYlMD/aqVpf4dms/BM3Rb1uptc4cew0R6e3+tjY6mlpWI+cb
+         mzgFluR7QMvQMcZqftB4J0CWGdilBeI0QSpf8xGJfZMMmnsrU/M0Vde84p1VRk3Dg7
+         EoZsVzc/ERbIjoeDatXOUtWwnMyIjF8Mqn1hQbe36jUe/KbL5FF4OZJEvB8kML+RnT
+         lhpmLahYj3au4JOgWegDxSnyRK5jQ0ahuoieqKzVBmZF2BPpILaDFxO3SSHN0yxT4k
+         RCvMOG/MZH3gA==
+To:     Hans de Goede <hdegoede@redhat.com>
+From:   Simon Ser <contact@emersion.fr>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Reply-To: Simon Ser <contact@emersion.fr>
+Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector properties
+Message-ID: <OwVTQDmCbSZMBV41nuJO75afEwmVzcrgF9gLIDqAL4fODvfI-Md_R-Z-ifcVhy6VLc6FyOINwx6lUUz0B1hpykdQYe4b3iZALLftfk6yp_E=@emersion.fr>
+In-Reply-To: <20210421204804.589962-1-hdegoede@redhat.com>
+References: <20210421204804.589962-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Alexey Klimov <klimov.linux@gmail.com>
+Hi,
 
-From: Alexey Klimov <klimov.linux@gmail.com>
+On Wednesday, April 21st, 2021 at 10:47 PM, Hans de Goede <hdegoede@redhat.=
+com> wrote:
 
-Add the B550M AORUS PRO-P motherboard description to
-gigabyte_wmi_known_working_platforms.
+> There now is GNOME userspace code using the new properties:
+> https://hackmd.io/@3v1n0/rkyIy3BOw
 
-Signed-off-by: Alexey Klimov <klimov.linux@gmail.com>
----
+Thanks for working on this.
 
-The driver works fine on this motherboard with force_load=1 and
-it seems that temperature values are correct.
+Can these patches be submitted as merge requests against the upstream
+projects? It would be nice to get some feedback from the maintainers,
+and be able to easily leave some comments there as well.
 
-gigabyte_wmi-virtual-0
-Adapter: Virtual device
-temp1:        +30.0°C  
-temp2:        +35.0°C  
-temp3:        +30.0°C  
-temp4:        +32.0°C  
-temp5:        +28.0°C  
-temp6:        +42.0°C
+Thanks,
 
-The patch is created against review-hans branch on platform-drivers-x86.git
-I am available for further testing on this board if required, feel free
-to reach me. Thanks.
-
- drivers/platform/x86/gigabyte-wmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index e127a2077bbc..13d57434e60f 100644
---- a/drivers/platform/x86/gigabyte-wmi.c
-+++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -138,6 +138,10 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
- 		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
- 		DMI_EXACT_MATCH(DMI_BOARD_NAME, "B550 GAMING X V2"),
- 	}},
-+	{ .matches = {
-+		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
-+		DMI_EXACT_MATCH(DMI_BOARD_NAME, "B550M AORUS PRO-P"),
-+	}},
- 	{ .matches = {
- 		DMI_EXACT_MATCH(DMI_BOARD_VENDOR, "Gigabyte Technology Co., Ltd."),
- 		DMI_EXACT_MATCH(DMI_BOARD_NAME, "B550M DS3H"),
--- 
-2.31.1
-
+Simon
