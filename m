@@ -2,135 +2,118 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEFC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 15:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D61AC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 17:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A74610FA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 15:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D83761026
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 17:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235466AbhD0PK6 (ORCPT
+        id S235512AbhD0RE2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Apr 2021 11:10:58 -0400
-Received: from mail.dweer.net ([46.4.111.123]:34352 "EHLO mail.dweer.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235974AbhD0PK6 (ORCPT
+        Tue, 27 Apr 2021 13:04:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44731 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235411AbhD0RE1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Apr 2021 11:10:58 -0400
-X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Apr 2021 11:10:57 EDT
-Received: from [192.168.178.85] (p5dd5d33f.dip0.t-ipconnect.de [93.213.211.63])
-        by mail.dweer.net (mail daemon) with ESMTPSA id 9696E3680257;
-        Tue, 27 Apr 2021 15:02:59 +0000 (UTC)
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>, thomas@t-8ch.de
-From:   Jan Kneschke <jan@kneschke.de>
-Subject: gigabyte-wmi: smbus over wmi?
-Cc:     platform-driver-x86@vger.kernel.org
-Message-ID: <f351a63b-90f8-27a4-d6ca-d569e2b733c2@kneschke.de>
-Date:   Tue, 27 Apr 2021 17:02:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+        Tue, 27 Apr 2021 13:04:27 -0400
+Received: from mail-wr1-f71.google.com ([209.85.221.71])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <marco.trevisan@canonical.com>)
+        id 1lbR7f-0003Ae-9M
+        for platform-driver-x86@vger.kernel.org; Tue, 27 Apr 2021 17:03:43 +0000
+Received: by mail-wr1-f71.google.com with SMTP id h60-20020adf90420000b029010418c4cd0cso20103439wrh.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Apr 2021 10:03:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding
+         :content-disposition;
+        bh=gnEyX5fDEIQaKbYtkkxkqc3nHbncbHwyaQBt7C02tuY=;
+        b=M5aDZHgJ5+mowwIte3ZhGT+aEgzKU4c4dH656mnAHVpAVWB5z7KYi2wObLYTyYnlmR
+         6PgEiNxz7XovZse1LArD3yhStg81MGpeV8CmT4hjNK639Lyt7676TfBQNeqaT8KoTyBg
+         p5H3a45E6tv/0E2xrkmcxyL87Ge7Vde+/bkqsG+OTUefAYvsvSfAWquxNLuDU9iuFbXA
+         J9spoE5NWiNAPcH+dO6J5wwnAnxzS2zoxaR+W7zutxUa9mbShfsjN/bAK0wiDTuKcFVA
+         wBxdKUXlzlKWoUUUIImdzKi1CjrEP/FoIjAkrr7mv+WBrrGiR7PccGEvP6usDQi9RTRI
+         +rGg==
+X-Gm-Message-State: AOAM5301YmvVzcYRYdJhjhk0eNW+CysJzWPpxtTUkDbzHgQF0bCQ5tox
+        7h8jguBpvb/RHEzzUC3wADoiINHO4O+QmpG7sWJkWvcyyMgJKl3v2CvCgHNuf0+39tSAZaK2drF
+        oHzF4EEZkYQx1ou6PkGCtJ7xi6AaV5eAV+nKrNU3lLGN7TC4pp9U=
+X-Received: by 2002:adf:ab1d:: with SMTP id q29mr10642654wrc.208.1619543022580;
+        Tue, 27 Apr 2021 10:03:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwL0ufwLghuP8tca8A6GO+T2IGUzbrSmZeoJP3/C3qPre2LHA9JV0wX0Ok6IpJiGWrDg6uyaw==
+X-Received: by 2002:adf:ab1d:: with SMTP id q29mr10642619wrc.208.1619543022376;
+        Tue, 27 Apr 2021 10:03:42 -0700 (PDT)
+Received: from tricky (84.127.144.65.dyn.user.ono.com. [84.127.144.65])
+        by smtp.gmail.com with ESMTPSA id b12sm5935152wrn.18.2021.04.27.10.03.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 27 Apr 2021 10:03:41 -0700 (PDT)
+Date:   Tue, 27 Apr 2021 19:03:39 +0200
+From:   Marco Trevisan <marco.trevisan@canonical.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Simon Ser <contact@emersion.fr>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "=?utf-8?Q?dri-devel=40lists.freedesktop.org?=" 
+        <dri-devel@lists.freedesktop.org>,
+        "=?utf-8?Q?platform-driver-x86=40vger.kernel.org?=" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Message-ID: <0D708B40-20DB-4D5C-BFAD-74A30D5DE477@getmailspring.com>
+In-Reply-To: <88ad0981-0763-9c8d-fb57-70278bcaffd4@redhat.com>
+References: <88ad0981-0763-9c8d-fb57-70278bcaffd4@redhat.com>
+Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector
+ properties
+X-Mailer: Mailspring
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.3 at mail
-X-Virus-Status: Clean
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-the new gigabyte-wmi driver only works only for a subset of current boards.
+>>> There now is GNOME userspace code using the new properties:
+>>> https://hackmd.io/@3v1n0/rkyIy3BOw
+>> 
+>> Thanks for working on this.
+>> 
+>> Can these patches be submitted as merge requests against the upstream
+>> projects? It would be nice to get some feedback from the maintainers,
+>> and be able to easily leave some comments there as well.
 
-For boards with two ITE chips like the X570 AORUS ULTRA the 
-corresponding functions on the WMBB method are just not handled:
+FYI, I've discussed with other uptream developers about these while
+doing them, and afterwards on how to improve them.
 
+> I guess Marco was waiting for the kernel bits too land before
+> submitting these,
+> but I agree that it would probably be good to have these submitted
+> now, we
+> can mark them as WIP to avoid them getting merged before the kernel side
+> is finalized.
 
-   ...
-   ElseIf (((Arg1 >= 0x0118) && (Arg1 <= 0x0121))) {}
-   // GET_TEMP is 0x125.
-   ElseIf ((Arg1 == 0x012C)) {}
-   ...
+I'll submit them in the next days once I'm done with the refactor I've
+in mind, and will notify the list.
 
-One way to handle other gigabyte boards may be using the smbus functions 
-that are exposed through ACPI:
+And for sure we can keep them in WIP till the final bits aren't completed.
 
-$ sudo cat 
-/sys/bus/wmi/drivers/wmi-bmof/05901221-D566-11D1-B2F0-00A0C9062910/bmof 
-| bmf2mof
-
-...
-   [WmiMethodId(98)] void SMBQuickWrite([in] uint8 bus, [in] uint8 addr, 
-[out] GSA1_ret32 ret);
-   [WmiMethodId(99)] void SMBQuickRead([in] uint8 bus, [in] uint8 addr, 
-[out] GSA1_ret32 ret);
-   [WmiMethodId(100)] void SMBIoBaseAddr([out] uint16 data);
-   [WmiMethodId(101)] void SMBSendByte([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 data, [out] GSA1_ret32 ret);
-   [WmiMethodId(102)] void SMBReceiveByte([in] uint8 bus, [in] uint8 
-addr, [out] GSA1_ret32 ret);
-   [WmiMethodId(103)] void SMBWriteByte([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 cmd, [in] uint8 data, [out] GSA1_ret32 ret);
-   [WmiMethodId(104)] void SMBReadByte([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 cmd, [out] GSA1_ret32 ret);
-   [WmiMethodId(105)] void SMBWriteWord([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 cmd, [in] uint16 data, [out] GSA1_ret32 ret);
-   [WmiMethodId(106)] void SMBReadWord([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 cmd, [out] GSA1_ret32 ret);
-   [WmiMethodId(107)] void SMBBlockWrite([in] uint8 bus, [in] uint8 
-addr, [in] uint8 cmd, [in] uint8 data[260], [out] GSA1_ret32 ret);
-   [WmiMethodId(108)] void SMBBlockRead([in] uint8 bus, [in] uint8 addr, 
-[in] uint8 cmd, [out] GSA1_Buff260 ret);
-   [WmiMethodId(109)] void SMBBlockWriteE32B([in] uint8 bus, [in] uint8 
-addr, [in] uint8 cmd, [in] uint8 data[260], [out] GSA1_ret32 ret);
-...
-
-This time, those methods are wired up in WMBB:
-
-   ElseIf (((Arg1 >= 0x62) && (Arg1 <= 0x6D))) {
-     ...
-     if (Arg1 == 0x67) { ... SMM2(...); }
-     ...
-   }
-
-SMM2(bus, addr, ret) locks a mutex SMMB|SMME, calls SMB2(bus, addr, ret) 
-to call the low-level, unlocked smbus_write_byte().
-
-   // bus==0x02
-   Mutex (SMMB, 0x00)
-   OperationRegion (SMBI, SystemIO, 0x0B00, 0x10)
-
-   // bus==0x03
-   Mutex (SMME, 0x00)
-   OperationRegion (SMG0, SystemIO, 0x0B20, 0x20)
-
-The same pattern repeats for the other smbus methods.
-
-It looks like this should be enough to expose the smbus as /dev/i2c-* 
-which calls those WMI functions.
-
- From there the it87 should be able take over the rest.
-
-Has that been done for other drivers yet? Is that even reasonable?
-
-Bonus:
-
-There are also methods exposed for:
-
-- MEM(Read|Write)(8|16|32)
-- PCI(Read|Write)(8|16|32)
-- PIO(Read|Write)(8|16|32)
-
-if that's needed for the it87 driver.
-
-regards,
-   Jan
-
-
-
-
+Cheers
