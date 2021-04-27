@@ -2,108 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D113C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 13:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EEFC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 15:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A953613C0
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 13:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A74610FA
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Apr 2021 15:10:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236558AbhD0Nyt (ORCPT
+        id S235466AbhD0PK6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Apr 2021 09:54:49 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46548 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236872AbhD0Nym (ORCPT
+        Tue, 27 Apr 2021 11:10:58 -0400
+Received: from mail.dweer.net ([46.4.111.123]:34352 "EHLO mail.dweer.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235974AbhD0PK6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Apr 2021 09:54:42 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9C3D71C0B79; Tue, 27 Apr 2021 15:53:56 +0200 (CEST)
-Date:   Tue, 27 Apr 2021 15:53:56 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     =?utf-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
-        <yuechao.zhao@advantech.com.cn>
-Cc:     "345351830@qq.com" <345351830@qq.com>,
-        =?utf-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
-        <Rainbow.Zhang@advantech.com.cn>,
-        =?utf-8?B?eXVueGlhLmxpKOadjuS6kemcnik=?= 
-        <yunxia.li@advantech.com.cn>,
-        =?utf-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [v2,1/1] adv_mix955x is a scheme that multiplexes
- PCA9554/PCA9555 into LED and GPIO
-Message-ID: <20210427135356.GA2426@duo.ucw.cz>
-References: <tencent_17A7BBC4D15D331C1A25B4075294E5D67706@qq.com>
- <cb03b75a018e4bec83eac6898eb1d2af@ACNMB2.ACN.ADVANTECH.CORP>
+        Tue, 27 Apr 2021 11:10:58 -0400
+X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Tue, 27 Apr 2021 11:10:57 EDT
+Received: from [192.168.178.85] (p5dd5d33f.dip0.t-ipconnect.de [93.213.211.63])
+        by mail.dweer.net (mail daemon) with ESMTPSA id 9696E3680257;
+        Tue, 27 Apr 2021 15:02:59 +0000 (UTC)
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>, thomas@t-8ch.de
+From:   Jan Kneschke <jan@kneschke.de>
+Subject: gigabyte-wmi: smbus over wmi?
+Cc:     platform-driver-x86@vger.kernel.org
+Message-ID: <f351a63b-90f8-27a4-d6ca-d569e2b733c2@kneschke.de>
+Date:   Tue, 27 Apr 2021 17:02:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Content-Disposition: inline
-In-Reply-To: <cb03b75a018e4bec83eac6898eb1d2af@ACNMB2.ACN.ADVANTECH.CORP>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.3 at mail
+X-Virus-Status: Clean
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+the new gigabyte-wmi driver only works only for a subset of current boards.
 
-On Tue 2021-04-27 08:32:05, yuechao.zhao(=E8=B5=B5=E8=B6=8A=E8=B6=85) wrote:
-> From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
->=20
-> With this driver, we can multiplex PCA9554/PCA9555 into LED and GPIO base=
-d on the ACPI data of BIOS.
->=20
-> Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-> Signed-off-by: Sui Jia <jia.sui@advantech.com.cn>
+For boards with two ITE chips like the X570 AORUS ULTRA the 
+corresponding functions on the WMBB method are just not handled:
 
-Please Cc LED drivers to the LED maintainers...
 
-> +
-> +static inline u8 amix955x_set_bit(u8 val, int led_id, enum AMIX955X_LED=
-=20
-> +state) {
-> +	led_id %=3D BANK_SIZE;
-> +
-> +	switch (state) {
-> +	case AMIX955X_LED_ON:
-> +		val &=3D ~(1 << led_id); //Clear bit
-> +		break;
-> +	case AMIX955X_LED_OFF:
-> +		val |=3D 1 << led_id; //Set bit
-> +		break;
-> +	}
-> +
-> +	return val;
+   ...
+   ElseIf (((Arg1 >= 0x0118) && (Arg1 <= 0x0121))) {}
+   // GET_TEMP is 0x125.
+   ElseIf ((Arg1 == 0x012C)) {}
+   ...
 
-Please check CodingStyle, avoid useless comments and check word
-wrapping in your email settings.
+One way to handle other gigabyte boards may be using the smbus functions 
+that are exposed through ACPI:
 
-Best regards,
-								Pavel
+$ sudo cat 
+/sys/bus/wmi/drivers/wmi-bmof/05901221-D566-11D1-B2F0-00A0C9062910/bmof 
+| bmf2mof
 
---=20
-http://www.livejournal.com/~pavelmachek
+...
+   [WmiMethodId(98)] void SMBQuickWrite([in] uint8 bus, [in] uint8 addr, 
+[out] GSA1_ret32 ret);
+   [WmiMethodId(99)] void SMBQuickRead([in] uint8 bus, [in] uint8 addr, 
+[out] GSA1_ret32 ret);
+   [WmiMethodId(100)] void SMBIoBaseAddr([out] uint16 data);
+   [WmiMethodId(101)] void SMBSendByte([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 data, [out] GSA1_ret32 ret);
+   [WmiMethodId(102)] void SMBReceiveByte([in] uint8 bus, [in] uint8 
+addr, [out] GSA1_ret32 ret);
+   [WmiMethodId(103)] void SMBWriteByte([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 cmd, [in] uint8 data, [out] GSA1_ret32 ret);
+   [WmiMethodId(104)] void SMBReadByte([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 cmd, [out] GSA1_ret32 ret);
+   [WmiMethodId(105)] void SMBWriteWord([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 cmd, [in] uint16 data, [out] GSA1_ret32 ret);
+   [WmiMethodId(106)] void SMBReadWord([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 cmd, [out] GSA1_ret32 ret);
+   [WmiMethodId(107)] void SMBBlockWrite([in] uint8 bus, [in] uint8 
+addr, [in] uint8 cmd, [in] uint8 data[260], [out] GSA1_ret32 ret);
+   [WmiMethodId(108)] void SMBBlockRead([in] uint8 bus, [in] uint8 addr, 
+[in] uint8 cmd, [out] GSA1_Buff260 ret);
+   [WmiMethodId(109)] void SMBBlockWriteE32B([in] uint8 bus, [in] uint8 
+addr, [in] uint8 cmd, [in] uint8 data[260], [out] GSA1_ret32 ret);
+...
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
+This time, those methods are wired up in WMBB:
 
------BEGIN PGP SIGNATURE-----
+   ElseIf (((Arg1 >= 0x62) && (Arg1 <= 0x6D))) {
+     ...
+     if (Arg1 == 0x67) { ... SMM2(...); }
+     ...
+   }
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYIgXdAAKCRAw5/Bqldv6
-8n36AKCAyk/FV6UAhuTMTRVivRmq2huMAACfa69qtKio3k+F86vekm0Ukg2KABc=
-=asyZ
------END PGP SIGNATURE-----
+SMM2(bus, addr, ret) locks a mutex SMMB|SMME, calls SMB2(bus, addr, ret) 
+to call the low-level, unlocked smbus_write_byte().
 
---r5Pyd7+fXNt84Ff3--
+   // bus==0x02
+   Mutex (SMMB, 0x00)
+   OperationRegion (SMBI, SystemIO, 0x0B00, 0x10)
+
+   // bus==0x03
+   Mutex (SMME, 0x00)
+   OperationRegion (SMG0, SystemIO, 0x0B20, 0x20)
+
+The same pattern repeats for the other smbus methods.
+
+It looks like this should be enough to expose the smbus as /dev/i2c-* 
+which calls those WMI functions.
+
+ From there the it87 should be able take over the rest.
+
+Has that been done for other drivers yet? Is that even reasonable?
+
+Bonus:
+
+There are also methods exposed for:
+
+- MEM(Read|Write)(8|16|32)
+- PCI(Read|Write)(8|16|32)
+- PIO(Read|Write)(8|16|32)
+
+if that's needed for the it87 driver.
+
+regards,
+   Jan
+
+
+
+
