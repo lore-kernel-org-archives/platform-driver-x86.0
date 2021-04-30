@@ -2,65 +2,65 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616E0C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Apr 2021 13:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8DBC43461
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Apr 2021 13:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA176147E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Apr 2021 13:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9912161409
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Apr 2021 13:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbhD3Ndd (ORCPT
+        id S229688AbhD3Nq3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 30 Apr 2021 09:33:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40174 "EHLO
+        Fri, 30 Apr 2021 09:46:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49703 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230047AbhD3Ndd (ORCPT
+        by vger.kernel.org with ESMTP id S229707AbhD3Nq3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Apr 2021 09:33:33 -0400
+        Fri, 30 Apr 2021 09:46:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619789564;
+        s=mimecast20190719; t=1619790341;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AzXJGk/Asz2YQmGyxT/OLQ9QD9gVMig2LUL0+0My+AA=;
-        b=gOvRyZd4tu1kEBj9N6m68DtP5FAO0i5L+C1IMMIGIztKrRXjtvKafpfB3MaybXsBbNC/Uj
-        RSPLniDqF3CIGMYlPF7QLa9l0dZHH1+ur6g4CKJYEAdD5aB5DBNyY+03flBoFORVS/r4Sl
-        Kkz/XAvpRexGoP7PlxlCUFtlsVgyBEA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-asG2zF9OMz-uLrkZqDZWlQ-1; Fri, 30 Apr 2021 09:32:42 -0400
-X-MC-Unique: asG2zF9OMz-uLrkZqDZWlQ-1
-Received: by mail-ed1-f70.google.com with SMTP id f8-20020a0564020688b029038840895df2so1954710edy.17
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Apr 2021 06:32:42 -0700 (PDT)
+        bh=ngr4LyEkdELa/6PdIZcv+wXD2znntuZQwvgVg8NJ51s=;
+        b=UYEYAnxp0JOab1/XjFd4E8KAPeEjfqi5jYdXJjojep2vNInexpZcHwaj6JPjrcPmQNnzWF
+        jMLKjbSldtZb1tBnJkdvSsbvzzLGElwrt3Jid45H7fEBQO1N2js+wZ888wK4tWZfbu3Miq
+        PAc7vpllgJ1I+q15zazTvpxkrXkvQz4=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-jAaHQJm5MZqZiDSQxIIOCQ-1; Fri, 30 Apr 2021 09:45:36 -0400
+X-MC-Unique: jAaHQJm5MZqZiDSQxIIOCQ-1
+Received: by mail-ej1-f69.google.com with SMTP id z15-20020a170906074fb029038ca4d43d48so5848651ejb.17
+        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Apr 2021 06:45:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AzXJGk/Asz2YQmGyxT/OLQ9QD9gVMig2LUL0+0My+AA=;
-        b=Ely5jAk5PVnT+1187pgFqmxkQfpW9rWqswT+JO8dEXJY8Nx40wDH7o7tN/FQSpVQXg
-         9AYqO63bsPz8wPwpcHstJF8jkC69obiO7NLsvKT5cX6ic6Q9e/4O+YpXUxNW4rfY/g7n
-         F4tWT3Uh+DMFdi4kPc6mWRzvKbB20nCedow3IPa/3AUkhUUXUMrG0/F/GrKfGrVVzraO
-         nFjqwpYzceRLncVcQYXgHqmSLCTGKhsG355bhJcEk0wi1f9L3uzXI0YNxBZrwiykBV8f
-         VwUvFEf2fjyxGSCDoV/W1rkf/iJIdImVC5wYq4+ze8XKWxAmVg4wy3hJ626Gf+ehWRul
-         4gXQ==
-X-Gm-Message-State: AOAM531+//EVTlayxy/g0YCH67hThD/UATJJhufYbTh6oE8i3CClyVuW
-        BzGDHorzmiPTAVaux6arRAV/7qWf561wy662av3h3BImgSw7Iw1nJwB9wnFUSu7w/KN5uq5qdsK
-        EBSncbuiMd+YCKEODcQSBg+zlNZIX5BHTSQ==
-X-Received: by 2002:a17:907:961d:: with SMTP id gb29mr4271668ejc.381.1619789561078;
-        Fri, 30 Apr 2021 06:32:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxBZh7V/G4xB8jyTHIE3C+6nCccdifcYxeeUo1/RBc5SJbLFsIwWKV6ge/d42wB3oCtUxR2YQ==
-X-Received: by 2002:a17:907:961d:: with SMTP id gb29mr4271637ejc.381.1619789560841;
-        Fri, 30 Apr 2021 06:32:40 -0700 (PDT)
+        bh=ngr4LyEkdELa/6PdIZcv+wXD2znntuZQwvgVg8NJ51s=;
+        b=hr0f9XtMnDWmm3UWrXEMPBHlrdjTBXaUXJtNB/zUlkWZetbmjtNHZvsTj7et0Iv76Y
+         obsLXsP20j/ysDuvit7ziaBJ/I7F9hytU9wbrsDrhfCB1LDphRJwaMQqTdpkpglLiqLo
+         +XNUodUZx7lCvcDoVa49XGRM5g2m5k80/eqtDq9HFzVfbrfzzPXCu9ItPIzPiDwVwF2q
+         EDPsM9WFuT79yey9CxQ1XbZkfThsqjDMjuAhty/Xo/Z9j7miHzDKjIk//mFBvF7s3vxG
+         DQpKxPpmZVqbaXcq+iMHL7By94pedh50is78+pkprVpuIDUG9vVWu+sWHqhtDTVq5EnK
+         CmCA==
+X-Gm-Message-State: AOAM530CKQ90o+0+psEvGJ3xcloYcOSO2I/w+6Pc0f3rEwOgUmqvsR6l
+        v1c+9zRbYRYVTuieJyz93/M/GsGeTUMfkxgisHdtW7zjRDHOKYipqPLUK2mFhuwzt5U/5Dhx5zR
+        LG2PeEL769/0IN6Ln4H8MG2+stjSlfZGj1A==
+X-Received: by 2002:a05:6402:40d6:: with SMTP id z22mr6005344edb.275.1619790335076;
+        Fri, 30 Apr 2021 06:45:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyVgln2PsbGBWtD0Y9vGbxqHA4KEKia8ZfjelCngqnsAV0j0ddhk9OZLNm9FE8nL8viwO/OZw==
+X-Received: by 2002:a05:6402:40d6:: with SMTP id z22mr6005318edb.275.1619790334881;
+        Fri, 30 Apr 2021 06:45:34 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id hg24sm714443ejc.99.2021.04.30.06.32.39
+        by smtp.gmail.com with ESMTPSA id n10sm1933338ejg.124.2021.04.30.06.45.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Apr 2021 06:32:40 -0700 (PDT)
+        Fri, 30 Apr 2021 06:45:34 -0700 (PDT)
 Subject: Re: [PATCH 1/9] drm/connector: Make the drm_sysfs connector->kdev
  device hold a reference to the connector
 To:     Daniel Vetter <daniel@ffwll.ch>
@@ -87,8 +87,8 @@ References: <20210428215257.500088-1-hdegoede@redhat.com>
  <43ee221e-7151-c0c2-cc52-37b191778221@redhat.com>
  <CAKMK7uFf8n6QfRdSXeB6J+L7NPGbeEyJKhx1Vu7x8env=_7tkA@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5a6fc5d6-a218-8566-6b19-b4ae7d763210@redhat.com>
-Date:   Fri, 30 Apr 2021 15:32:39 +0200
+Message-ID: <9c6d5361-c435-521e-d7d7-f8976927f9de@redhat.com>
+Date:   Fri, 30 Apr 2021 15:45:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
@@ -100,193 +100,11 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+p.s.
 
 On 4/30/21 1:38 PM, Daniel Vetter wrote:
-> On Fri, Apr 30, 2021 at 1:28 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 4/29/21 9:09 PM, Daniel Vetter wrote:
->>> On Thu, Apr 29, 2021 at 02:33:17PM +0200, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 4/29/21 2:04 PM, Daniel Vetter wrote:
->>>>> On Thu, Apr 29, 2021 at 01:54:46PM +0200, Greg Kroah-Hartman wrote:
->>>>>> On Thu, Apr 29, 2021 at 01:40:28PM +0200, Daniel Vetter wrote:
->>>>>>> On Wed, Apr 28, 2021 at 11:52:49PM +0200, Hans de Goede wrote:
->>>>>>>> Userspace could hold open a reference to the connector->kdev device,
->>>>>>>> through e.g. holding a sysfs-atrtribute open after
->>>>>>>> drm_sysfs_connector_remove() has been called. In this case the connector
->>>>>>>> could be free-ed while the connector->kdev device's drvdata is still
->>>>>>>> pointing to it.
->>>>>>>>
->>>>>>>> Give drm_connector devices there own device type, which allows
->>>>>>>> us to specify our own release function and make drm_sysfs_connector_add()
->>>>>>>> take a reference on the connector object, and have the new release
->>>>>>>> function put the reference when the device is released.
->>>>>>>>
->>>>>>>> Giving drm_connector devices there own device type, will also allow
->>>>>>>> checking if a device is a drm_connector device with a
->>>>>>>> "if (device->type == &drm_sysfs_device_connector)" check.
->>>>>>>>
->>>>>>>> Note that the setting of the name member of the device_type struct will
->>>>>>>> cause udev events for drm_connector-s to now contain DEVTYPE=drm_connector
->>>>>>>> as extra info. So this extends the uevent part of the userspace API.
->>>>>>>>
->>>>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>>>>
->>>>>>> Are you sure? I thought sysfs is supposed to flush out any pending
->>>>>>> operations (they complete fast) and handle open fd internally?
->>>>>>
->>>>>> Yes, it "should" :)
->>>>>
->>>>> Thanks for confirming my vague memories :-)
->>>>>
->>>>> Hans, pls drop this one.
->>>>
->>>> Please see my earlier reply to your review of this patch, it is
->>>> still needed but for a different reason:
->>>>
->>>> """
->>>> We still need this change though to make sure that the
->>>> "drm/connector: Add drm_connector_find_by_fwnode() function"
->>>> does not end up following a dangling drvdat pointer from one
->>>> if the drm_connector kdev-s.
->>>>
->>>> The class_dev_iter_init() in drm_connector_find_by_fwnode() gets
->>>> a reference on all devices and between getting that reference
->>>> and it calling drm_connector_get() - drm_connector_unregister()
->>>> may run and drop the possibly last reference to the
->>>> drm_connector object, freeing it and leaving the kdev's
->>>> drvdata as a dangling pointer.
->>>> """
->>>>
->>>> This is actually why I added it initially, and while adding it
->>>> I came up with this wrong theory of why it was necessary independently
->>>> of the drm_connector_find_by_fwnode() addition, sorry about that.
->>>
->>> Generally that's handled by a kref_get_unless_zero under the protection of
->>> the lock which protects the weak reference. Which I think is the right
->>> model here (at a glance at least) since this is a lookup function.
->>
->> I'm afraid that things are a bit more complicated here. The idea here
->> is that we have a subsystem outside of the DRM subsystem which received
->> a hotplug event for a drm-connector.  The only info which this subsystem
->> has is a reference on the fwnode level (either through device-tree or
->> to platform-code instantiating software-fwnode-s + links for this).
->>
->> So in order to deliver the hotplug event to the connector we need
->> to lookup the connector by fwnode.
->>
->> I've chosen to implement this by iterating over all drm_class
->> devices with a dev_type of drm_connector using class_dev_iter_init()
->> and friends. This makes sure that we either get a reference to
->> the device, or that we skip the device if it is being deleted.
->>
->> But this just gives us a reference to the connector->kdev, not
->> to the connector itself. A pointer to the connector itself is stored
->> as drvdata inside the device, but without taking a reference as
->> this patch does, there is no guarantee that that pointer does not
->> point to possibly free-ed mem.
->>
->> We could set drvdata to 0 from drm_sysfs_connector_remove()
->> Before calling device_unregister(connector->kdev) and then do
->> something like this inside drm_connector_find_by_fwnode():
->>
->> /*
->>  * Lock the device to ensure we either see the drvdata == NULL
->>  * set by drm_sysfs_connector_remove(); or we block the removal
->>  * from continuing until we are done with the device.
->>  */
->> device_lock(dev);
->> connector = dev_get_drvdata(dev);
->> if (connector && connector->fwnode == fwnode) {
->>         drm_connector_get(connector);
->>         found = connector;
->> }
->> device_unlock(dev);
-> 
-> Yes this is what I mean. Except not a drm_connector_get, but a
-> kref_get_unless_zero. The connector might already be on it's way out,
-> but the drvdata not yet cleared.
 
-The function we race with is drm_sysfs_connector_remove() and either:
-
-1. The lookup wins the race in which case drm_sysfs_connector_remove()
-   can only complete after the drm_connector_get(); and the connector
-   kref won't drop to 0 before drm_sysfs_connector_remove() completes; or
-2. drm_sysfs_connector_remove() wins the race in which case drvdata will
-   be 0.
-
-So using kref_get_unless_zero here will not make a difference and
-requires poking inside the drm_connector internals.
-
-Note I will probably go with your suggestion below, so whether or
-not to use kref_get_unless_zero here is likely no longer relevant.
-
->> With the device_lock() synchronizing against the device_lock()
->> in device_unregister(connector->kdev). So that we either see
->> drvdata == NULL if we race with unregistering; or we get
->> a reference on the drm_connector obj before its ref-count can
->> drop to 0.
-> 
-> The trouble is that most connectors aren't full drivers on their kdev.
-> So this isn't the right lock. We need another lock which protects the
-> drvdata pointer appropriately for drm connectors.
-> 
->> There might be places though where we call code take the device_lock
->> while holding a lock necessary for the drm_connector_get() , so
->> this approach might lead to an AB BA deadlock. As such I think
->> my original approach is better (also see below).
->>
->>> Lookup tables holding full references tends to lead to all kinds of bad
->>> side effects.
->>
->> The proposed reference is not part of a lookup list, it is a
->> reference from the kdev on the drm_connector object which gets
->> dropped as soon as the kdev's refcount hits 0, which normally
->> happens directly after drm_connector_unregister() has run.
-> 
-> Yeah but the way you use it is for lookup purposes. What we're
-> implementing is the "get me the drm_connector for this fwnode"
-> functionality, and that _is_ a lookup.
-
-Ack.
-
-> How its implemented is an
-> internal detail really, and somehow using full references for lookup
-> functionality isn't great.
-
-Ok, note that the caller of this only needs the reference for a
-short while, what the caller does is:
-
-        connector = drm_connector_find_by_fwnode(dp->connector_fwnode);
-        if (connector) {
-                drm_connector_oob_hotplug_event(connector, &data);
-                drm_connector_put(connector);
-        }
-
-As a result of out discussion I have been thinking about enforcing this
-short-lifetime of the reference by changing:
-
-void drm_connector_oob_hotplug_event(struct drm_connector *connector,
-                                     struct drm_connector_oob_hotplug_event_data *data);
-
-to:
-
-void drm_connector_oob_hotplug_event(struct fwnode_handle connector_fwnode,
-                                     struct drm_connector_oob_hotplug_event_data *data);
-
-And making that do the lookup (+ almost immediate put) internally, making
-the connector-lookup a purely drm-subsys internal thing and enforcing code
-outside of the drm-subsys not holding a long-time reference to the connector
-this way.
-
-Please let me know if you prefer the variant where the connector lookup
-details are hidden from the callers ?
-
-Then I can change this for for v2 of this patch/series.
+Offtopic:
 
 > I'm also not sure why we have to use the kdev stuff here. For other
 > random objects we need to look up we're building that functionality on
@@ -294,12 +112,22 @@ Then I can change this for for v2 of this patch/series.
 > that lookup, but that's really not a big cost. E.g. drm_bridge/panel
 > work like that.
 
-Using class_for_each_dev seemed like a good way to iterate over all
-the connectors. But given the discussion this has caused, just adding
-a new static list + mutex for this to drivers/gpu/drm/drm_connector.c
-sounds like it might be a better approach indeed.
+So I took a peek at the bridge/panel code and that actually seems to
+have an issue with removal vs lookup. It is not even just a race,
+it seems a lookup does not take a reference and there is nothing
+stopping a user from doing an unbind or rmmod causing the panel
+to be removed while other code which got a pointer to the panel
+through of_drm_find_panel() will not be prepared to deal with
+that pointer all of a sudden no longer being valid.
 
-So shall I change thing over to this approach for v2 of this patch/series?
+Now this would be a case of the user shooting his-self in the
+foot (where as connectors can actually dynamically disappear
+under normal circumstances), but ideally we really should do
+better here.
+
+Is there a TODO list somewhere for issues like this ?  Or shall
+I submit a patch adding a FIXME comment, or is this considered
+not worth the trouble of fixing it?
 
 Regards,
 
