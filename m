@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E572C43600
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B65C43603
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 676E96162B
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778A6611AE
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233493AbhEBOHT (ORCPT
+        id S233727AbhEBOH7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 May 2021 10:07:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51352 "EHLO mail.kernel.org"
+        Sun, 2 May 2021 10:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232198AbhEBOGh (ORCPT
+        id S232374AbhEBOHM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 May 2021 10:06:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 92430613D7;
-        Sun,  2 May 2021 14:05:38 +0000 (UTC)
+        Sun, 2 May 2021 10:07:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D0A5F613C4;
+        Sun,  2 May 2021 14:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619964339;
-        bh=A5rui+9WQ023gHk5ziUCoXOdI7JnL4DZNYmRAzSY4K8=;
+        s=k20201202; t=1619964361;
+        bh=vvbbqBiNXJSta4bu/zxbbbE7y5vPOvkX+r2onTimAqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZabkizkXAe6I4hMxlbHKRx9tRX5z5phPDOoQfU9I8TxgybWf24sVspD3q7NARL0f7
-         TCN5p1oEmfQaQbqGr5q9A0k3PbLSPCNU5CbQetZIpXc2s1DS/s2Qk5z/HIMKgrf4MM
-         /opI80sikUBOaUie1X156r4CiSViQgOVcn/p6XLRuWbqWnv3mczvPsXBVvUJvo3QuR
-         dO/bTF1VT0f8niQs0pfCTt2Z212XMPx3Uy0dyPPQSR3vYgmeCNC4zXX73PNHYPuv3O
-         vOnHv1dVOk7JvtS/vE/mKVLZqaNeJjTJR6gUm+OcMsGO7CLl8hnMiIqbZMSvZEBtkF
-         bA65MfYQsTMuQ==
+        b=Mj/KEDOgoRbPanXlVj48+AEyBYOoR7HKyKOeDqUGrp2PrSq36zONqjctojW26aoxu
+         pGy1xzKF5g1CY8U7sJ65RAz7aRM0l6yMWKiu4kMnqoRqyHKWrfRt42u95YaX206oQz
+         CufvN6Lb1BVe3qLvVcFJet3J2xKYO6wEhTrsRtb7Ir+qU9ub+dfpL6RqpBX3qBQkSm
+         c3rEGq5pDxQKsyGn7Bmt8w9RsE/b8soqZIDEmAv/lIE40pJnRb94HgT+wNQQJ3Un9a
+         /BHADOSNvLfjLY1NHEvvuKfJjnOqjtCPbfa7uK1ggYQmc4fjmt2n6Dh9H4KS/PYt82
+         HOq59m10JvyBQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mark Pearson <markpearson@lenovo.com>,
@@ -40,12 +40,12 @@ Cc:     Mark Pearson <markpearson@lenovo.com>,
         Sasha Levin <sashal@kernel.org>,
         ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/21] platform/x86: thinkpad_acpi: Correct thermal sensor allocation
-Date:   Sun,  2 May 2021 10:05:13 -0400
-Message-Id: <20210502140517.2719912-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/16] platform/x86: thinkpad_acpi: Correct thermal sensor allocation
+Date:   Sun,  2 May 2021 10:05:41 -0400
+Message-Id: <20210502140544.2720138-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210502140517.2719912-1-sashal@kernel.org>
-References: <20210502140517.2719912-1-sashal@kernel.org>
+In-Reply-To: <20210502140544.2720138-1-sashal@kernel.org>
+References: <20210502140544.2720138-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -83,10 +83,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 559698640fe2..35c7d3185fea 100644
+index 30bfd51c0e58..30bc952ea552 100644
 --- a/drivers/platform/x86/thinkpad_acpi.c
 +++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -6300,6 +6300,7 @@ enum thermal_access_mode {
+@@ -6162,6 +6162,7 @@ enum thermal_access_mode {
  enum { /* TPACPI_THERMAL_TPEC_* */
  	TP_EC_THERMAL_TMP0 = 0x78,	/* ACPI EC regs TMP 0..7 */
  	TP_EC_THERMAL_TMP8 = 0xC0,	/* ACPI EC regs TMP 8..15 */
@@ -94,7 +94,7 @@ index 559698640fe2..35c7d3185fea 100644
  	TP_EC_THERMAL_TMP_NA = -128,	/* ACPI EC sensor not available */
  
  	TPACPI_THERMAL_SENSOR_NA = -128000, /* Sensor not available */
-@@ -6498,7 +6499,7 @@ static const struct attribute_group thermal_temp_input8_group = {
+@@ -6360,7 +6361,7 @@ static const struct attribute_group thermal_temp_input8_group = {
  
  static int __init thermal_init(struct ibm_init_struct *iibm)
  {
@@ -103,7 +103,7 @@ index 559698640fe2..35c7d3185fea 100644
  	int i;
  	int acpi_tmp7;
  	int res;
-@@ -6513,7 +6514,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+@@ -6375,7 +6376,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
  		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
  		 * non-implemented, thermal sensors return 0x80 when
  		 * not available
@@ -118,7 +118,7 @@ index 559698640fe2..35c7d3185fea 100644
  
  		ta1 = ta2 = 0;
  		for (i = 0; i < 8; i++) {
-@@ -6523,11 +6531,13 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+@@ -6385,11 +6393,13 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
  				ta1 = 0;
  				break;
  			}
@@ -137,7 +137,7 @@ index 559698640fe2..35c7d3185fea 100644
  			}
  		}
  		if (ta1 == 0) {
-@@ -6540,9 +6550,12 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+@@ -6402,9 +6412,12 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
  				thermal_read_mode = TPACPI_THERMAL_NONE;
  			}
  		} else {
