@@ -2,100 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6DC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE40C43460
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71ECD611CD
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244F0613C7
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230221AbhEBKv1 (ORCPT
+        id S233171AbhEBOGh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 May 2021 06:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbhEBKv1 (ORCPT
+        Sun, 2 May 2021 10:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233186AbhEBOF7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 May 2021 06:51:27 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCEDC06174A;
-        Sun,  2 May 2021 03:50:36 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id y30so1705057pgl.7;
-        Sun, 02 May 2021 03:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RHhYrc+yOqIE16Q944nr2p+5NkGLSBsNJbA6NDil1nA=;
-        b=iXtxsig8WLEvoGjkJd5kU0ijZMj7chindx+lBSe66fh2BVCTN0pU4jO7kkiKQyFLN3
-         LOqP/6RjlHypBmcl4R33AqwdP+JtKoj8owoqHB3bUpn0mXq3EyrRs5UmVzLkHbOJGCcI
-         8GBTuFJX3v955tQFA12UMJ0RSnCUzKhfwv1aUi83Yq0D/ZSx3j7MGRkj20yW96J38QkZ
-         213y1TbD5+dxuYj50q/m34wTXSSyuUajw44BdGPGwvS0Wazpi8qU8491VfwqND1Iev1U
-         zD3n9ShRLYTgeByUX1r9AmCdISWN4ttbtI4yux2YzNMCLY6iXSPpnX+jstD4bQe7RvqO
-         eTdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RHhYrc+yOqIE16Q944nr2p+5NkGLSBsNJbA6NDil1nA=;
-        b=jzsHdnEw0lI8Y5B6TXSZBGJkf/VH305dFsDvYAJ6ug+8hN0l+NThNkkTZ3S1F9abBe
-         7HpZ6VcGbtwla0wqJz1+9poSpLlFo8MbSPYfcV8oWmStc0Cu3CZ2YYEZpjRYXiTHbQau
-         VAUWpe/xFDavolTGEkQZOjPZKOmacz/RtbIJEyAh5lyIUkGjQ1mE1SfVrGFt0r0goEfC
-         UPXQLwy+WIuA9S5RJurGhQzO7PXPCpT2hfCfsDceWj3DDpGZ5H0dBoVe9kFWAf2wE4M1
-         GAJf+9PjZ1MpNnEuu54hb/SnDBb4LvBcujBuwYCQDhTWsXSi5ceOmcxHFep/Pg85TczJ
-         235g==
-X-Gm-Message-State: AOAM532ZXdz+xNuADEdZN2/uJkcvKOsk6RDlja507GtE1OIXIRWrp3Rl
-        HgoPcUFappyybwfrEvDtWsvfuCWgTO8TGY6UjKM=
-X-Google-Smtp-Source: ABdhPJzxkQIxXPzsnyV2kxHxCI4Mvyi2yRYwe0nOgnrmTwpp5nTa/r11RzRr/GaSH7tsZvE6K9RiX6kKC4PBVyPp5kA=
-X-Received: by 2002:a62:5c6:0:b029:24d:e97f:1b1d with SMTP id
- 189-20020a6205c60000b029024de97f1b1dmr14180635pff.40.1619952635892; Sun, 02
- May 2021 03:50:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <tencent_F8EEB847E2CD8A6813D0BF4863964CDF3508@qq.com> <b787cd95ad7746d9a04e8cd7f6c0b645@ACNMB2.ACN.ADVANTECH.CORP>
-In-Reply-To: <b787cd95ad7746d9a04e8cd7f6c0b645@ACNMB2.ACN.ADVANTECH.CORP>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 2 May 2021 13:50:19 +0300
-Message-ID: <CAHp75Vce_-m5uXgpyRO300M1Vw8DX2BmnBPsF5OaUK2_hNDb_A@mail.gmail.com>
-Subject: Re: [v3,1/1] adv_mix955x is a scheme that multiplexes PCA9554/PCA9555
- into LED and GPIO
-To:     =?UTF-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
-        <yuechao.zhao@advantech.com.cn>
-Cc:     "345351830@qq.com" <345351830@qq.com>,
-        =?UTF-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
-        <Rainbow.Zhang@advantech.com.cn>,
-        =?UTF-8?B?eXVueGlhLmxpKOadjuS6kemcnik=?= 
-        <yunxia.li@advantech.com.cn>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        =?UTF-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
+        Sun, 2 May 2021 10:05:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28B1E613DB;
+        Sun,  2 May 2021 14:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1619964306;
+        bh=M59DDWMkkjrDrfUs+vPXxpzJ6DUdUvHGlO5UzDFjP7c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YWVaxYV/E42yoCI8r/ED1UOmegg3FQotk7yoYhPSSKWlsOARsgVgi00iqFFOZd/aW
+         dNoU1Ypt5jCZ5HVD7PbMDsGpxg95E+JEsdV19SqpM6xlQOy+ZFl/5bUOB/ImLEbCiu
+         UUkciBAcCXxTSD6VRiadz7FnjmhMBd5KPm4JH2eXuTtt8VyR4Ew3Rj/4AKjVvYFbko
+         BAoaatrP3rW0R49ilB9X5qGJ7zmkbqMAgCXme2LqmuhD965pZtZ2Eh+5GViAEFdIqd
+         osmspGXt46KXVXxthoc092VxwGj3XTki3YdrgGdVQqY7dlS2yIzuxkzoY9JymuPdJI
+         GLZR1Hb3zenXQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mark Pearson <markpearson@lenovo.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Sasha Levin <sashal@kernel.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 26/34] platform/x86: thinkpad_acpi: Correct thermal sensor allocation
+Date:   Sun,  2 May 2021 10:04:26 -0400
+Message-Id: <20210502140434.2719553-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210502140434.2719553-1-sashal@kernel.org>
+References: <20210502140434.2719553-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Apr 30, 2021 at 8:27 AM yuechao.zhao(=E8=B5=B5=E8=B6=8A=E8=B6=85)
-<yuechao.zhao@advantech.com.cn> wrote:
->
-> From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
->
-> With this driver, we can multiplex PCA9554/PCA9555 into LED and GPIO
-> based on the ACPI data of BIOS.
+From: Mark Pearson <markpearson@lenovo.com>
 
-NAK as per v2.
+[ Upstream commit 6759e18e5cd8745a5dfc5726e4a3db5281ec1639 ]
 
-Please, add a proper documentation and show ACPI excerpt, and last but
-not least is missing justification.
+On recent Thinkpad platforms it was reported that temp sensor 11 was
+always incorrectly displaying 66C. It turns out the reason for this is
+that this location in EC RAM is not a temperature sensor but is the
+power supply ID (offset 0xC2).
 
+Based on feedback from the Lenovo firmware team the EC RAM version can
+be determined and for the current version (3) only the 0x78 to 0x7F
+range is used for temp sensors. I don't have any details for earlier
+versions so I have left the implementation unaltered there.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Note - in this block only 0x78 and 0x79 are officially designated (CPU &
+GPU sensors). The use of the other locations in the block will vary from
+platform to platform; but the existing logic to detect a sensor presence
+holds.
+
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Link: https://lore.kernel.org/r/20210407212015.298222-1-markpearson@lenovo.com
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/platform/x86/thinkpad_acpi.c | 31 ++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index e8257de495fd..f027609fdab6 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -6284,6 +6284,7 @@ enum thermal_access_mode {
+ enum { /* TPACPI_THERMAL_TPEC_* */
+ 	TP_EC_THERMAL_TMP0 = 0x78,	/* ACPI EC regs TMP 0..7 */
+ 	TP_EC_THERMAL_TMP8 = 0xC0,	/* ACPI EC regs TMP 8..15 */
++	TP_EC_FUNCREV      = 0xEF,      /* ACPI EC Functional revision */
+ 	TP_EC_THERMAL_TMP_NA = -128,	/* ACPI EC sensor not available */
+ 
+ 	TPACPI_THERMAL_SENSOR_NA = -128000, /* Sensor not available */
+@@ -6482,7 +6483,7 @@ static const struct attribute_group thermal_temp_input8_group = {
+ 
+ static int __init thermal_init(struct ibm_init_struct *iibm)
+ {
+-	u8 t, ta1, ta2;
++	u8 t, ta1, ta2, ver = 0;
+ 	int i;
+ 	int acpi_tmp7;
+ 	int res;
+@@ -6497,7 +6498,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+ 		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
+ 		 * non-implemented, thermal sensors return 0x80 when
+ 		 * not available
++		 * The above rule is unfortunately flawed. This has been seen with
++		 * 0xC2 (power supply ID) causing thermal control problems.
++		 * The EC version can be determined by offset 0xEF and at least for
++		 * version 3 the Lenovo firmware team confirmed that registers 0xC0-0xC7
++		 * are not thermal registers.
+ 		 */
++		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
++			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+ 
+ 		ta1 = ta2 = 0;
+ 		for (i = 0; i < 8; i++) {
+@@ -6507,11 +6515,13 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+ 				ta1 = 0;
+ 				break;
+ 			}
+-			if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
+-				ta2 |= t;
+-			} else {
+-				ta1 = 0;
+-				break;
++			if (ver < 3) {
++				if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
++					ta2 |= t;
++				} else {
++					ta1 = 0;
++					break;
++				}
+ 			}
+ 		}
+ 		if (ta1 == 0) {
+@@ -6524,9 +6534,12 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
+ 				thermal_read_mode = TPACPI_THERMAL_NONE;
+ 			}
+ 		} else {
+-			thermal_read_mode =
+-			    (ta2 != 0) ?
+-			    TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
++			if (ver >= 3)
++				thermal_read_mode = TPACPI_THERMAL_TPEC_8;
++			else
++				thermal_read_mode =
++					(ta2 != 0) ?
++					TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
+ 		}
+ 	} else if (acpi_tmp7) {
+ 		if (tpacpi_is_ibm() &&
+-- 
+2.30.2
+
