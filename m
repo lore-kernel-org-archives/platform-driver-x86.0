@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE40C43460
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4838AC43470
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244F0613C7
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26ACB613DC
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233171AbhEBOGh (ORCPT
+        id S233505AbhEBOGi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 May 2021 10:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        Sun, 2 May 2021 10:06:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233186AbhEBOF7 (ORCPT
+        id S233294AbhEBOGJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 May 2021 10:05:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 28B1E613DB;
-        Sun,  2 May 2021 14:05:06 +0000 (UTC)
+        Sun, 2 May 2021 10:06:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id ED50B613ED;
+        Sun,  2 May 2021 14:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619964306;
-        bh=M59DDWMkkjrDrfUs+vPXxpzJ6DUdUvHGlO5UzDFjP7c=;
+        s=k20201202; t=1619964315;
+        bh=p0dEHENok+HVq9plIeyUNJ5pj7jhyDM3rGXSLbW6w1k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YWVaxYV/E42yoCI8r/ED1UOmegg3FQotk7yoYhPSSKWlsOARsgVgi00iqFFOZd/aW
-         dNoU1Ypt5jCZ5HVD7PbMDsGpxg95E+JEsdV19SqpM6xlQOy+ZFl/5bUOB/ImLEbCiu
-         UUkciBAcCXxTSD6VRiadz7FnjmhMBd5KPm4JH2eXuTtt8VyR4Ew3Rj/4AKjVvYFbko
-         BAoaatrP3rW0R49ilB9X5qGJ7zmkbqMAgCXme2LqmuhD965pZtZ2Eh+5GViAEFdIqd
-         osmspGXt46KXVXxthoc092VxwGj3XTki3YdrgGdVQqY7dlS2yIzuxkzoY9JymuPdJI
-         GLZR1Hb3zenXQ==
+        b=EfEgat1Ye+RGaYzkeh9zqA2ztmAfYPh9TI9nP5oXMNmFaQuTXmSaB4T3kkPDQ4Cjw
+         mihe+ReUTPIIdPKkPlNwZbJVvaR4HwT9kAvAHOZHmcjgHBwXV6yl1/AJSmsknq8aQN
+         hs9cNrJSFqEUzUUPUXwWb7Ejn+R/VrFesNHVY9ULz1eKZaXD2eNacM0V2+s6/kZ5/K
+         1eGrfq7EO5geTs8CImpqDyHI1JuMT/3ci9KGjz8NdEUOE4aBoGCwqo7UOMtIzDuRR5
+         YzxTrkDZ3C0vllKBu7sArYvAhLAA2uKjU5Pbic9J0JPgWdjx5sSb/nXIV41TWaa2Xi
+         U0ow1NvHFt++A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Pearson <markpearson@lenovo.com>,
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         Sasha Levin <sashal@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/34] platform/x86: thinkpad_acpi: Correct thermal sensor allocation
-Date:   Sun,  2 May 2021 10:04:26 -0400
-Message-Id: <20210502140434.2719553-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 33/34] platform/x86: intel_pmc_core: Don't use global pmcdev in quirks
+Date:   Sun,  2 May 2021 10:04:33 -0400
+Message-Id: <20210502140434.2719553-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210502140434.2719553-1-sashal@kernel.org>
 References: <20210502140434.2719553-1-sashal@kernel.org>
@@ -54,105 +54,79 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Mark Pearson <markpearson@lenovo.com>
+From: "David E. Box" <david.e.box@linux.intel.com>
 
-[ Upstream commit 6759e18e5cd8745a5dfc5726e4a3db5281ec1639 ]
+[ Upstream commit c9f86d6ca6b5e23d30d16ade4b9fff5b922a610a ]
 
-On recent Thinkpad platforms it was reported that temp sensor 11 was
-always incorrectly displaying 66C. It turns out the reason for this is
-that this location in EC RAM is not a temperature sensor but is the
-power supply ID (offset 0xC2).
+The DMI callbacks, used for quirks, currently access the PMC by getting
+the address a global pmc_dev struct. Instead, have the callbacks set a
+global quirk specific variable. In probe, after calling dmi_check_system(),
+pass pmc_dev to a function that will handle each quirk if its variable
+condition is met. This allows removing the global pmc_dev later.
 
-Based on feedback from the Lenovo firmware team the EC RAM version can
-be determined and for the current version (3) only the 0x78 to 0x7F
-range is used for temp sensors. I don't have any details for earlier
-versions so I have left the implementation unaltered there.
-
-Note - in this block only 0x78 and 0x79 are officially designated (CPU &
-GPU sensors). The use of the other locations in the block will vary from
-platform to platform; but the existing logic to detect a sensor presence
-holds.
-
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-Link: https://lore.kernel.org/r/20210407212015.298222-1-markpearson@lenovo.com
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Link: https://lore.kernel.org/r/20210417031252.3020837-2-david.e.box@linux.intel.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c | 31 ++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index e8257de495fd..f027609fdab6 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -6284,6 +6284,7 @@ enum thermal_access_mode {
- enum { /* TPACPI_THERMAL_TPEC_* */
- 	TP_EC_THERMAL_TMP0 = 0x78,	/* ACPI EC regs TMP 0..7 */
- 	TP_EC_THERMAL_TMP8 = 0xC0,	/* ACPI EC regs TMP 8..15 */
-+	TP_EC_FUNCREV      = 0xEF,      /* ACPI EC Functional revision */
- 	TP_EC_THERMAL_TMP_NA = -128,	/* ACPI EC sensor not available */
- 
- 	TPACPI_THERMAL_SENSOR_NA = -128000, /* Sensor not available */
-@@ -6482,7 +6483,7 @@ static const struct attribute_group thermal_temp_input8_group = {
- 
- static int __init thermal_init(struct ibm_init_struct *iibm)
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 571b4754477c..4c1312f1616c 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -831,9 +831,15 @@ static const struct pci_device_id pmc_pci_ids[] = {
+  * the platform BIOS enforces 24Mhx Crystal to shutdown
+  * before PMC can assert SLP_S0#.
+  */
++static bool xtal_ignore;
+ static int quirk_xtal_ignore(const struct dmi_system_id *id)
  {
--	u8 t, ta1, ta2;
-+	u8 t, ta1, ta2, ver = 0;
- 	int i;
- 	int acpi_tmp7;
- 	int res;
-@@ -6497,7 +6498,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
- 		 * non-implemented, thermal sensors return 0x80 when
- 		 * not available
-+		 * The above rule is unfortunately flawed. This has been seen with
-+		 * 0xC2 (power supply ID) causing thermal control problems.
-+		 * The EC version can be determined by offset 0xEF and at least for
-+		 * version 3 the Lenovo firmware team confirmed that registers 0xC0-0xC7
-+		 * are not thermal registers.
- 		 */
-+		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-+			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
+-	struct pmc_dev *pmcdev = &pmc;
++	xtal_ignore = true;
++	return 0;
++}
++
++static void pmc_core_xtal_ignore(struct pmc_dev *pmcdev)
++{
+ 	u32 value;
  
- 		ta1 = ta2 = 0;
- 		for (i = 0; i < 8; i++) {
-@@ -6507,11 +6515,13 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 				ta1 = 0;
- 				break;
- 			}
--			if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
--				ta2 |= t;
--			} else {
--				ta1 = 0;
--				break;
-+			if (ver < 3) {
-+				if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-+					ta2 |= t;
-+				} else {
-+					ta1 = 0;
-+					break;
-+				}
- 			}
- 		}
- 		if (ta1 == 0) {
-@@ -6524,9 +6534,12 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 				thermal_read_mode = TPACPI_THERMAL_NONE;
- 			}
- 		} else {
--			thermal_read_mode =
--			    (ta2 != 0) ?
--			    TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
-+			if (ver >= 3)
-+				thermal_read_mode = TPACPI_THERMAL_TPEC_8;
-+			else
-+				thermal_read_mode =
-+					(ta2 != 0) ?
-+					TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
- 		}
- 	} else if (acpi_tmp7) {
- 		if (tpacpi_is_ibm() &&
+ 	value = pmc_core_reg_read(pmcdev, pmcdev->map->pm_vric1_offset);
+@@ -842,7 +848,6 @@ static int quirk_xtal_ignore(const struct dmi_system_id *id)
+ 	/* Low Voltage Mode Enable */
+ 	value &= ~SPT_PMC_VRIC1_SLPS0LVEN;
+ 	pmc_core_reg_write(pmcdev, pmcdev->map->pm_vric1_offset, value);
+-	return 0;
+ }
+ 
+ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+@@ -857,6 +862,14 @@ static const struct dmi_system_id pmc_core_dmi_table[]  = {
+ 	{}
+ };
+ 
++static void pmc_core_do_dmi_quirks(struct pmc_dev *pmcdev)
++{
++	dmi_check_system(pmc_core_dmi_table);
++
++	if (xtal_ignore)
++		pmc_core_xtal_ignore(pmcdev);
++}
++
+ static int pmc_core_probe(struct platform_device *pdev)
+ {
+ 	static bool device_initialized;
+@@ -898,7 +911,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	mutex_init(&pmcdev->lock);
+ 	platform_set_drvdata(pdev, pmcdev);
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit();
+-	dmi_check_system(pmc_core_dmi_table);
++	pmc_core_do_dmi_quirks(pmcdev);
+ 
+ 	pmc_core_dbgfs_register(pmcdev);
+ 
 -- 
 2.30.2
 
