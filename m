@@ -5,20 +5,20 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9EFC433B4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E41AC43460
 	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE4E61176
+	by mail.kernel.org (Postfix) with ESMTP id 6D0FC61352
 	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbhEBKKz (ORCPT
+        id S230373AbhEBKKz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Sun, 2 May 2021 06:10:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35478 "EHLO
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49849 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230373AbhEBKKy (ORCPT
+        by vger.kernel.org with ESMTP id S230455AbhEBKKy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Sun, 2 May 2021 06:10:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -27,22 +27,22 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xDF4o2RyVMfPC13rUjeJC46e1wRU25fQ52hPfhOoKmU=;
-        b=be98GKizwOnpWaP9Alh5KTVHlS3Yqp4gKGtfLRQMlr22sH5uD8RAjMqE9w28fVmDmlGTe3
-        MaSCvkouIvhVxyx2oQp8PVp5jIflZM5RE9C7DIuvh+Sdo49e9TorqorKO8+O5NyRro296o
-        ZmZCp42U8Jl5cq57DT5vz+BvJLCZsVk=
+        bh=tlLUsklXPtVH3UyGV6LcQ+0htPTXCL0NhzahVgnZ+o4=;
+        b=IeMXU1CQIuFiWmOIzHe03M3ORsRGube8uQUZMaMD9vo7ZiR1+NSNw01/6rytQuHKyfmfId
+        VNHjz+1MTIoIfUWfG8DnCrE5HNVffcr7psgqcYEiJFqpbfKC5i2ssVzjvNcIx0GMTsUcJ1
+        XUL4i3uTl6HkNDi+bGbSraUKxC/fZhA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-4Lz-bmzGMDSKduODVnekKQ-1; Sun, 02 May 2021 06:10:01 -0400
-X-MC-Unique: 4Lz-bmzGMDSKduODVnekKQ-1
+ us-mta-435-K-_vtX7TNv6pqazK51s6VQ-1; Sun, 02 May 2021 06:09:59 -0400
+X-MC-Unique: K-_vtX7TNv6pqazK51s6VQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A752801106;
-        Sun,  2 May 2021 10:10:00 +0000 (UTC)
-Received: from x1.localdomain (ovpn-112-34.ams2.redhat.com [10.36.112.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8133B19D7C;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C01410066E6;
         Sun,  2 May 2021 10:09:58 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-34.ams2.redhat.com [10.36.112.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BC8E19D7C;
+        Sun,  2 May 2021 10:09:56 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Bastien Nocera <hadess@hadess.net>,
@@ -51,9 +51,9 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     Hans de Goede <hdegoede@redhat.com>, Arkadiy <arkan49@yandex.ru>,
         "Sergei A . Trusov" <sergei.a.trusov@ya.ru>,
         linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [RFC 4/4] platform/x86: touchscreen_dmi: Add an extra entry for the upside down Goodix touchscreen on Teclast X89 tablets
-Date:   Sun,  2 May 2021 12:09:49 +0200
-Message-Id: <20210502100949.5371-5-hdegoede@redhat.com>
+Subject: [RFC 3/4] Input: goodix - platform/x86: touchscreen_dmi - Move inverted-x quirk to touchscreen_dmi.c
+Date:   Sun,  2 May 2021 12:09:48 +0200
+Message-Id: <20210502100949.5371-4-hdegoede@redhat.com>
 In-Reply-To: <20210502100949.5371-1-hdegoede@redhat.com>
 References: <20210502100949.5371-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -63,39 +63,94 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Teclast X89 tablets come in 2 versions, with Windows pre-installed and with
-Android pre-installed. These 2 versions have different DMI strings.
-
-Add a match for the DMI strings used by the Android version BIOS.
-
-Note the Android version BIOS has a bug in the DSDT where no IRQ is
-provided, so for the touchscreen to work a DSDT override fixing this
-is necessary as well.
+Move the DMI quirk for the Goodix touchscreen with inverted X coordinates
+found on the Cube I15-TC tablet from drivers/input/touchscreen/goodix.c to
+drivers/platform/x86/touchscreen_dmi.c, where all the other x86
+touchscreen quirks live.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/touchscreen/goodix.c     | 22 ----------------------
+ drivers/platform/x86/touchscreen_dmi.c | 19 +++++++++++++++++++
+ 2 files changed, 19 insertions(+), 22 deletions(-)
 
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index d92f6b2b6dcf..2203ad4d8e30 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -131,22 +131,6 @@ static const struct dmi_system_id nine_bytes_report[] = {
+ 	{}
+ };
+ 
+-/*
+- * Those tablets have their x coordinate inverted
+- */
+-static const struct dmi_system_id inverted_x_screen[] = {
+-#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+-	{
+-		.ident = "Cube I15-TC",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "Cube"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "I15-TC")
+-		},
+-	},
+-#endif
+-	{}
+-};
+-
+ /**
+  * goodix_i2c_read - read data from a register of the i2c slave device.
+  *
+@@ -1048,12 +1032,6 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ 			"Non-standard 9-bytes report format quirk\n");
+ 	}
+ 
+-	if (dmi_check_system(inverted_x_screen)) {
+-		ts->prop.invert_x = true;
+-		dev_dbg(&ts->client->dev,
+-			"Applying 'inverted x screen' quirk\n");
+-	}
+-
+ 	error = input_mt_init_slots(ts->input_dev, ts->max_touch_num,
+ 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+ 	if (error) {
 diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 60876d8962b6..a1e4af5a8ce8 100644
+index bb47cea8d297..60876d8962b6 100644
 --- a/drivers/platform/x86/touchscreen_dmi.c
 +++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1339,6 +1339,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
+@@ -218,6 +218,17 @@ static const struct ts_dmi_data cube_iwork8_air_data = {
+ 	.properties	= cube_iwork8_air_props,
+ };
+ 
++static const struct property_entry cube_iwork10_ultimate_i15_tc_props[] = {
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	{ }
++};
++
++static const struct ts_dmi_data cube_iwork10_ultimate_i15_tc_data = {
++	.acpi_hid	= "GDIX1001",
++	.properties	= cube_iwork10_ultimate_i15_tc_props,
++};
++
++
+ static const struct property_entry cube_knote_i1101_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-min-x", 20),
+ 	PROPERTY_ENTRY_U32("touchscreen-min-y",  22),
+@@ -992,6 +1003,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
  		},
  	},
 +	{
-+		/* Teclast X89 (Android version / BIOS) */
-+		.driver_data = (void *)&gdix1001_upside_down_data,
++		/* CUBE iWork10 Ultimate (I15-TC) */
++		.driver_data = (void *)&cube_iwork10_ultimate_i15_tc_data,
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "WISKY"),
-+			DMI_MATCH(DMI_BOARD_NAME, "3G062i"),
++			DMI_MATCH(DMI_SYS_VENDOR, "Cube"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "I15-TC")
 +		},
 +	},
  	{
- 		/* Teclast X89 (Windows version / BIOS) */
- 		.driver_data = (void *)&gdix1001_upside_down_data,
+ 		/* Cube KNote i1101 */
+ 		.driver_data = (void *)&cube_knote_i1101_data,
 -- 
 2.31.1
 
