@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02750C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E6DC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BDB611CD
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71ECD611CD
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 10:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbhEBKtm (ORCPT
+        id S230221AbhEBKv1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 May 2021 06:49:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
+        Sun, 2 May 2021 06:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbhEBKtl (ORCPT
+        with ESMTP id S229988AbhEBKv1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 May 2021 06:49:41 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B507C06174A;
-        Sun,  2 May 2021 03:48:50 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id a11so1314904plh.3;
-        Sun, 02 May 2021 03:48:50 -0700 (PDT)
+        Sun, 2 May 2021 06:51:27 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FCEDC06174A;
+        Sun,  2 May 2021 03:50:36 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id y30so1705057pgl.7;
+        Sun, 02 May 2021 03:50:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=44Pbc9rBUHoVe5YAupOa4qwfHvmyc/iguPZLYW6hLQQ=;
-        b=GvdJ0PzuNdzwIjhvRu5r82xntxXhjrTrpnIkEjV3mHU//BIdgF/GO9SPMQmnWJ2gHt
-         aZzOlJVkdrD35+qv4XhxvxYyhTVipXq3vKD7XtYx2QkfNJtofgaLYGxOPpz3ElV5pnHP
-         C27IrBwTj7vWM5qeLCnAq4R06O4zVLKIBifC4x7z2p0OM53DQxIBHLxFYF5+vNQDXRXV
-         NILnM25brxDoTOMYV0OgUYIrA+6suKef/2WZO+aB8qkqMDSOKVoa/3NDhOEobmabG9kF
-         VwSdxIgBMK6Rh8tgM5qxL1LHF4ohcYEopB6xlHDfhYnsZ5GvZjW1MW1lxHqzQhDHaHx3
-         ZvCQ==
+        bh=RHhYrc+yOqIE16Q944nr2p+5NkGLSBsNJbA6NDil1nA=;
+        b=iXtxsig8WLEvoGjkJd5kU0ijZMj7chindx+lBSe66fh2BVCTN0pU4jO7kkiKQyFLN3
+         LOqP/6RjlHypBmcl4R33AqwdP+JtKoj8owoqHB3bUpn0mXq3EyrRs5UmVzLkHbOJGCcI
+         8GBTuFJX3v955tQFA12UMJ0RSnCUzKhfwv1aUi83Yq0D/ZSx3j7MGRkj20yW96J38QkZ
+         213y1TbD5+dxuYj50q/m34wTXSSyuUajw44BdGPGwvS0Wazpi8qU8491VfwqND1Iev1U
+         zD3n9ShRLYTgeByUX1r9AmCdISWN4ttbtI4yux2YzNMCLY6iXSPpnX+jstD4bQe7RvqO
+         eTdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=44Pbc9rBUHoVe5YAupOa4qwfHvmyc/iguPZLYW6hLQQ=;
-        b=ckeDz1KdszeU7kll7SdtJrM8uvbNjD4MZWOeUuyVYPzUk6n/OTDRWJrBGpwrAZx5yJ
-         fvzdCRAKfeEGnTPPgIdLqXO6yBlMZcA3dQoQ6dOQ/HHOISbtN95+tPYjv9hgAT6HuHro
-         Cvwij4wlhr9tInV9P5TWaYsOBo2q2TgrXf0KG8ecs4Y8Ds+Ql5ipCdgDAbZgYiN7Qn3c
-         CShB0LcQQdJ3d4R0rJzf1uTZ6s37yXasjq9W8DcPFOxytSGh4000PcKZZU6N2m3V+5kl
-         Wq+4xThm3wwSqhVA8Xa2FEUkmkYsL6AnRNhNjCJ9ceFO+UeGoLflt5E8Z2wb6YtT+gYo
-         jLpw==
-X-Gm-Message-State: AOAM530sMwZmo4ysJ9vjo7ktdDRl1S70spNVze4rqnebgwIA+PpnjkuM
-        3iqcvgzvz46icTmr9p6OxzKJ7MtOPBIGi5+WM+U=
-X-Google-Smtp-Source: ABdhPJzqOh2dljV5BEmRaB+D95O9Y1KMnYkfzfUT8/Gutsn3Hp/qury/FqduxgFzrOuSWRr7lGggC0LjVYS+ZH9xfUQ=
-X-Received: by 2002:a17:902:264:b029:eb:3d3a:a09c with SMTP id
- 91-20020a1709020264b02900eb3d3aa09cmr14867233plc.0.1619952529427; Sun, 02 May
- 2021 03:48:49 -0700 (PDT)
+        bh=RHhYrc+yOqIE16Q944nr2p+5NkGLSBsNJbA6NDil1nA=;
+        b=jzsHdnEw0lI8Y5B6TXSZBGJkf/VH305dFsDvYAJ6ug+8hN0l+NThNkkTZ3S1F9abBe
+         7HpZ6VcGbtwla0wqJz1+9poSpLlFo8MbSPYfcV8oWmStc0Cu3CZ2YYEZpjRYXiTHbQau
+         VAUWpe/xFDavolTGEkQZOjPZKOmacz/RtbIJEyAh5lyIUkGjQ1mE1SfVrGFt0r0goEfC
+         UPXQLwy+WIuA9S5RJurGhQzO7PXPCpT2hfCfsDceWj3DDpGZ5H0dBoVe9kFWAf2wE4M1
+         GAJf+9PjZ1MpNnEuu54hb/SnDBb4LvBcujBuwYCQDhTWsXSi5ceOmcxHFep/Pg85TczJ
+         235g==
+X-Gm-Message-State: AOAM532ZXdz+xNuADEdZN2/uJkcvKOsk6RDlja507GtE1OIXIRWrp3Rl
+        HgoPcUFappyybwfrEvDtWsvfuCWgTO8TGY6UjKM=
+X-Google-Smtp-Source: ABdhPJzxkQIxXPzsnyV2kxHxCI4Mvyi2yRYwe0nOgnrmTwpp5nTa/r11RzRr/GaSH7tsZvE6K9RiX6kKC4PBVyPp5kA=
+X-Received: by 2002:a62:5c6:0:b029:24d:e97f:1b1d with SMTP id
+ 189-20020a6205c60000b029024de97f1b1dmr14180635pff.40.1619952635892; Sun, 02
+ May 2021 03:50:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <tencent_17A7BBC4D15D331C1A25B4075294E5D67706@qq.com> <cb03b75a018e4bec83eac6898eb1d2af@ACNMB2.ACN.ADVANTECH.CORP>
-In-Reply-To: <cb03b75a018e4bec83eac6898eb1d2af@ACNMB2.ACN.ADVANTECH.CORP>
+References: <tencent_F8EEB847E2CD8A6813D0BF4863964CDF3508@qq.com> <b787cd95ad7746d9a04e8cd7f6c0b645@ACNMB2.ACN.ADVANTECH.CORP>
+In-Reply-To: <b787cd95ad7746d9a04e8cd7f6c0b645@ACNMB2.ACN.ADVANTECH.CORP>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 2 May 2021 13:48:33 +0300
-Message-ID: <CAHp75Vc_dA_VKMNsUo9jkpuGYX6Mzddy+=P3H+25ZuKiOE5icQ@mail.gmail.com>
-Subject: Re: [v2,1/1] adv_mix955x is a scheme that multiplexes PCA9554/PCA9555
+Date:   Sun, 2 May 2021 13:50:19 +0300
+Message-ID: <CAHp75Vce_-m5uXgpyRO300M1Vw8DX2BmnBPsF5OaUK2_hNDb_A@mail.gmail.com>
+Subject: Re: [v3,1/1] adv_mix955x is a scheme that multiplexes PCA9554/PCA9555
  into LED and GPIO
 To:     =?UTF-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
         <yuechao.zhao@advantech.com.cn>
@@ -68,7 +68,8 @@ Cc:     "345351830@qq.com" <345351830@qq.com>,
         =?UTF-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
         <Rainbow.Zhang@advantech.com.cn>,
         =?UTF-8?B?eXVueGlhLmxpKOadjuS6kemcnik=?= 
-        <yunxia.li@advantech.com.cn>,
+        <yunxia.li@advantech.com.cn>, "pavel@ucw.cz" <pavel@ucw.cz>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
         =?UTF-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -81,20 +82,19 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Apr 27, 2021 at 11:33 AM yuechao.zhao(=E8=B5=B5=E8=B6=8A=E8=B6=85)
+On Fri, Apr 30, 2021 at 8:27 AM yuechao.zhao(=E8=B5=B5=E8=B6=8A=E8=B6=85)
 <yuechao.zhao@advantech.com.cn> wrote:
 >
 > From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
 >
-> With this driver, we can multiplex PCA9554/PCA9555 into LED and GPIO base=
-d on the ACPI data of BIOS.
+> With this driver, we can multiplex PCA9554/PCA9555 into LED and GPIO
+> based on the ACPI data of BIOS.
 
-I really did no get the purpose of this rather enormous pile of code.
-Why you can't simply use PCA9555 with correctly described leds-gpio.
-What the problem this driver solves that can't be solved by existing
-code?
+NAK as per v2.
 
-NAK till it will gain a very good justification.
+Please, add a proper documentation and show ACPI excerpt, and last but
+not least is missing justification.
+
 
 --=20
 With Best Regards,
