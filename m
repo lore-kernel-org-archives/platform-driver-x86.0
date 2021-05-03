@@ -2,70 +2,48 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B55C43462
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 14:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99117C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 15:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33666611C0
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 14:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5991361283
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 15:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbhECOg3 (ORCPT
+        id S230433AbhECPrx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 3 May 2021 10:36:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52487 "EHLO
+        Mon, 3 May 2021 11:47:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46380 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229732AbhECOg1 (ORCPT
+        by vger.kernel.org with ESMTP id S230362AbhECPrw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 3 May 2021 10:36:27 -0400
+        Mon, 3 May 2021 11:47:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620052534;
+        s=mimecast20190719; t=1620056818;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k5l9mji1oYztNVl+ToG36ApOd6oMuk+iglNseyqhqhM=;
-        b=Ce+aS45lJzWrm+EDQV2lz3AqV/WSj7JxpQyRtJa3j6PClukJQ6STPnrX9wkNDiFGO5haxi
-        H6RcK4GVcXvGgPlpNb8PQa6Do/9bxmRIE343FH9JguCPmG7o6QxxExZKbveb8A5so4UJh6
-        /pMSdPUL7UvtCtC2TZjGqduhfsNu2mc=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-600-MFK_TDMLOyuG9n9RQ6lwLA-1; Mon, 03 May 2021 10:35:32 -0400
-X-MC-Unique: MFK_TDMLOyuG9n9RQ6lwLA-1
-Received: by mail-ej1-f70.google.com with SMTP id r14-20020a1709062cceb0290373a80b4002so2125348ejr.20
-        for <platform-driver-x86@vger.kernel.org>; Mon, 03 May 2021 07:35:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=k5l9mji1oYztNVl+ToG36ApOd6oMuk+iglNseyqhqhM=;
-        b=fSPOPDL4dgex1jQhOS5AIBDcRPS4yNouzIUjCKm5qIhZKi9HWf4Qu9CyVWX2dvoHsD
-         UkbsR0lEycRXfO3lonzYr0CU32yOANabE9qSF1rLhVT0bTDzHTh9xeAwJxakm/JSTvxc
-         qZY4SDmPNgkJwZVXktEiTZz4M0g/d+wyCRAPe28Bx3MqAwEcXTjxkZ8lGY4vrSLXT8+t
-         l4Wr221b8xPIQmiHzjmVyGuAZ1dxjNe1EV+L6nzSZ4LlK0T4U4J3Zfk7t4UWLazsLwlW
-         4MDXto2MIp1r1v1BQ8v9zqyOpBRMpdZpXK/tG5eoNOnuMgnkTRUQxsFrFwNIwN0iTsMy
-         UgbQ==
-X-Gm-Message-State: AOAM530OtfVuxu2LWaUWpfTeD/tkogQKojc0+4hwzm5ZVjuoWZfkwZm4
-        UJ8FssZspc9EaOksKoiFrwlFxHa3eUTsQj/20mWLcu5H08py9HzwbTVHLuBrY/0yYuZwNRLBgew
-        cjWqVdcDJeEWpHc1Kge9ztrcQqCYqjXM3kQ==
-X-Received: by 2002:a17:906:6a93:: with SMTP id p19mr17291187ejr.319.1620052530822;
-        Mon, 03 May 2021 07:35:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzUvT+qkq3EqqF/+Zg6Vh+R8TnTUOqUDXXPQpBdiWawf3Ow/BHIM9//4R5/6uwXK5914Y8riw==
-X-Received: by 2002:a17:906:6a93:: with SMTP id p19mr17291172ejr.319.1620052530649;
-        Mon, 03 May 2021 07:35:30 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q25sm12499548edt.51.2021.05.03.07.35.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 May 2021 07:35:30 -0700 (PDT)
-Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
- notification
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Imre Deak <imre.deak@intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=mu6XG45KFRW/fQQiVN4KYt8IYAlebpPIH/GecaPst0Q=;
+        b=MtbNkvBeUVPM739K2EBE3uPLL94HfBfiTxhrYREUpWKeSuQVfxp6GdKiw+kvDfLfDgqd1K
+        I75B+rAWiQQRShEfGhTodTPmOclCii9BRgp4kAxwue7KgO4uZJIo6DoEh9BKYvTjpCpAu6
+        orKIR7MYiuEtdBF9z7NimqDe9LhYXQE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-459-zBshJR2aOVKXfw_nm_1nvQ-1; Mon, 03 May 2021 11:46:54 -0400
+X-MC-Unique: zBshJR2aOVKXfw_nm_1nvQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C576802575;
+        Mon,  3 May 2021 15:46:52 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-158.ams2.redhat.com [10.36.112.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3B2E1007610;
+        Mon,  3 May 2021 15:46:48 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -75,127 +53,115 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20210428215257.500088-1-hdegoede@redhat.com>
- <20210428215257.500088-5-hdegoede@redhat.com>
- <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <00e380b2-0376-0ddb-9b0e-342779b7fc06@redhat.com>
-Date:   Mon, 3 May 2021 16:35:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+Subject: [PATCH 0/9] drm + usb-type-c: Add support for out-of-band hotplug notification (v2)
+Date:   Mon,  3 May 2021 17:46:38 +0200
+Message-Id: <20210503154647.142551-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 5/3/21 10:00 AM, Heikki Krogerus wrote:
-> Hi Hans,
-> 
-> On Wed, Apr 28, 2021 at 11:52:52PM +0200, Hans de Goede wrote:
->> +/**
->> + * struct drm_connector_oob_hotplug_event_data: OOB hotplug event data
->> + *
->> + * Contains data about out-of-band hotplug events, signalled through
->> + * drm_connector_oob_hotplug_event().
->> + */
->> +struct drm_connector_oob_hotplug_event_data {
->> +	/**
->> +	 * @connected: New connected status for the connector.
->> +	 */
->> +	bool connected;
->> +	/**
->> +	 * @dp_lanes: Number of available displayport lanes, 0 if unknown.
->> +	 */
->> +	int dp_lanes;
->> +	/**
->> +	 * @orientation: Connector orientation.
->> +	 */
->> +	enum typec_orientation orientation;
->> +};
-> 
-> I don't think the orientation is relevant. It will always be "normal"
-> from DP PoW after muxing, no?
+Here is v2 of my work on making DP over Type-C work on devices where the
+Type-C controller does not drive the HPD pin on the GPU, but instead
+we need to forward HPD events from the Type-C controller to the DRM driver.
 
-That is what I thought to, but during the discussion of my previous attempt
-at this one of the i915 devs mentioned that in some cases the muxes manage
-to swap the lane order when the connector upside-down and at least the
-Intel GPUs can correct for this on the GPU side, so they asked for this
-info to be included.
+Changes in v2:
+- Replace the bogus "drm/connector: Make the drm_sysfs connector->kdev
+  device hold a reference to the connector" patch with:
+  "drm/connector: Give connector sysfs devices there own device_type"
+  the new patch is a dep for patch 2/9 see the patches
 
-> I'm also not sure those deatils are enough in the long run. Based on
-> what I've understood from our graphics team guys, for example knowing
-> if multi-function is preferred may be important in some cases.
+- Stop using a class-dev-iter, instead at a global connector list
+  to drm_connector.c and use that to find the connector by the fwnode,
+  similar to how we already do this in drm_panel.c and drm_bridge.c
 
-The current data being passed is just intended as a starting point,
-this is purely a kernel internal API so we can easily add more
-data to the struct. As I mentioned in the cover-letter the current
-oob_hotplug handler which the i915 patch adds to the i915 driver does
-not actually do anything with the data.  ATM it is purely there to
-demonstrate that the ability to pass relevant data is there now
-(which was an issue with the previous attempt). I believe the current
-code is fine as a PoC of "pass event data" once GPU drivers actually
-start doing something with the data we can extend or outright replace
-it without issues.
+- Make drm_connector_oob_hotplug_event() take a fwnode pointer as
+  argument, rather then a drm_connector pointer and let it do the
+  lookup itself. This allows making drm_connector_find_by_fwnode() a
+  drm-internal function and avoids code outside the drm subsystem
+  potentially holding on the a drm_connector reference for a longer
+  period.
 
-> +Imre.
-> 
-> All of that, and more, is already available in the Configuration VDO
-> Status VDO that the we have negotiated with the DP partner. Both those
-> VDOs are part of struct typec_displayport_data. I think we should
-> simply supply that structure to the DRM code instead of picking those
-> details out of it...
+This series not only touches drm subsys files but it also touches
+drivers/usb/typec/altmodes/typec_displayport.c, that file usually
+does not see a whole lot of changes. So I believe it would be best
+to just merge the entire series through drm-misc, Assuming we can
+get an ack from Greg for merging the typec_displayport.c changes
+this way.
 
-I'm not sure I like the idea of passing the raw VDO, but if the
-DRM folks think that would be useful we can certainly add it.
+### 
+
+As already mentioned in the v1 cover-letter this series replaces
+a previous attempt from quite some time ago. 
+For anyone interested here are the old (2019!) patches for this:
+
+https://patchwork.freedesktop.org/patch/288491/
+https://patchwork.freedesktop.org/patch/288493/
+https://patchwork.freedesktop.org/patch/288495/
+
+Last time I posted this the biggest change requested was for more info to
+be included in the event send to the DRM-subsystem, specifically sending
+the following info was requested:
+
+1. Which DP connector on the GPU the event is for
+2. How many lanes are available
+3. Connector orientation
+
+This series is basically an entirely new approach, which no longer
+uses the notifier framework at all. Instead the Type-C code looksup
+a connector based on a fwnode (this was suggested by Heikki Krogerus)
+and then calls a new oob_hotplug_event drm_connector_func directly
+on the connector, passing the requested info as argument.
+
+Info such as the orientation and the number of dp-lanes is now passed
+to the drm_connector_oob_hotplug_event() function as requested in the
+review of the old code, but nothing is done with it for now.
+Using this info falls well outside of my knowledge of the i915 driver
+so this is left to a follow-up patch (I will be available to test
+patches for this).
 
 Regards,
 
 Hans
 
 
-> 
->>  /**
->>   * struct drm_tv_connector_state - TV connector related states
->>   * @subconnector: selected subconnector
->> @@ -1110,6 +1132,15 @@ struct drm_connector_funcs {
->>  	 */
->>  	void (*atomic_print_state)(struct drm_printer *p,
->>  				   const struct drm_connector_state *state);
->> +
->> +	/**
->> +	 * @oob_hotplug_event:
->> +	 *
->> +	 * This will get called when a hotplug-event for a drm-connector
->> +	 * has been received from a source outside the display driver / device.
->> +	 */
->> +	void (*oob_hotplug_event)(struct drm_connector *connector,
->> +				  struct drm_connector_oob_hotplug_event_data *data);
-> 
-> So I would not try to generalise this like that. This callback should
-> be USB Type-C DP altmode specific:
-> 
-> 	void (*oob_hotplug_event)(struct drm_connector *connector,
->                                   struct typec_displayport_data *data);
-> 
-> Or like this if the orientation can really be reversed after muxing:
-> 
-> 	void (*oob_hotplug_event)(struct drm_connector *connector,
-> 				  struct typec_altmode *altmode,
->                                   struct typec_displayport_data *data);
-> 
-> You can now check the orientation separately with
-> typec_altmode_get_orientation() if necessary.
-> 
-> 
-> thanks,
-> 
+Hans de Goede (8):
+  drm/connector: Give connector sysfs devices there own device_type
+  drm/connector: Add a fwnode pointer to drm_connector and register with
+    ACPI
+  drm/connector: Add drm_connector_find_by_fwnode() function (v2)
+  drm/connector: Add support for out-of-band hotplug notification (v2)
+  drm/i915/dp: Add support for out-of-bound hotplug events
+  usb: typec: altmodes/displayport: Make dp_altmode_notify() more
+    generic
+  usb: typec: altmodes/displayport: Notify drm subsys of hotplug events
+  platform/x86/intel_cht_int33fe: Correct "displayport" fwnode reference
+
+Heikki Krogerus (1):
+  drm/i915: Associate ACPI connector nodes with connector entries
+
+ drivers/gpu/drm/drm_connector.c               | 79 +++++++++++++++++
+ drivers/gpu/drm/drm_crtc_internal.h           |  1 +
+ drivers/gpu/drm/drm_sysfs.c                   | 87 ++++++++++++++++---
+ drivers/gpu/drm/i915/display/intel_acpi.c     | 40 +++++++++
+ drivers/gpu/drm/i915/display/intel_acpi.h     |  3 +
+ drivers/gpu/drm/i915/display/intel_display.c  |  1 +
+ drivers/gpu/drm/i915/display/intel_dp.c       | 13 +++
+ .../platform/x86/intel_cht_int33fe_typec.c    |  4 +-
+ drivers/usb/typec/altmodes/Kconfig            |  1 +
+ drivers/usb/typec/altmodes/displayport.c      | 73 +++++++++++-----
+ include/drm/drm_connector.h                   | 43 +++++++++
+ 11 files changed, 308 insertions(+), 37 deletions(-)
+
+-- 
+2.31.1
 
