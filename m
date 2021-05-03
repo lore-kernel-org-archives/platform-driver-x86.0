@@ -2,157 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52694C43460
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C120C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 08:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3917161208
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  2 May 2021 14:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE65961221
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  3 May 2021 08:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233857AbhEBOIg (ORCPT
+        id S232983AbhECIBW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 2 May 2021 10:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51874 "EHLO mail.kernel.org"
+        Mon, 3 May 2021 04:01:22 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58342 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232445AbhEBOH7 (ORCPT
+        id S229817AbhECIBW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 2 May 2021 10:07:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D189661628;
-        Sun,  2 May 2021 14:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619964392;
-        bh=zu3mm0nPTqYrIGZNlDndBFTgLVfcZqKXM0POpl5UXvE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5nJpCi8bFOPuv53rpy8yCMdFOdTmemGrUWxd9cSh6ZPA7aAs7EjIS9N8dRJFidmv
-         bLuBWPXAVzs/igbo+82ihHcNtSZSaV0POA4HtzmoNzVUb4sn9q9PbA9T79bFrRhZct
-         Aze6tY3z7XCWc4FkSy0DWdoh0mE0TApTF017V/o3NraNWGw0yzYD11Gmz79ciwePOA
-         o5x6fH2qRfRkmwNF2v3Z44wAGVhR/lZVySaerOcqZfA9jC+P2TrpJqvQ6wkHUjQHg3
-         pDp1rtNu6+FbCbdqQ3an60O2AH3gYTrB1HxSbpV3i4ozbafmkgXns0rQ/9Hw6pi4XV
-         P15xODVYBhpGg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/10] platform/x86: thinkpad_acpi: Correct thermal sensor allocation
-Date:   Sun,  2 May 2021 10:06:19 -0400
-Message-Id: <20210502140623.2720479-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210502140623.2720479-1-sashal@kernel.org>
-References: <20210502140623.2720479-1-sashal@kernel.org>
+        Mon, 3 May 2021 04:01:22 -0400
+IronPort-SDR: YZVN5P/b+Wzf/NlMy+kBz1GmpzWpkdew9Lq2TheZ2DEctudbi0QXkk8pNVg6dP1K/mooCGng9k
+ PDBMQGyr/PrQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,9972"; a="184826537"
+X-IronPort-AV: E=Sophos;i="5.82,268,1613462400"; 
+   d="scan'208";a="184826537"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2021 01:00:28 -0700
+IronPort-SDR: 0BtbVBvW4cKwxyUMXLuMNzqQR8eNMkGREOUVxBr1myj9cvQZmdyv3RaoH6saWoxMkb2gW4mAbU
+ vEVYOaACypdg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,268,1613462400"; 
+   d="scan'208";a="530292089"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 03 May 2021 01:00:21 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 03 May 2021 11:00:20 +0300
+Date:   Mon, 3 May 2021 11:00:20 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Imre Deak <imre.deak@intel.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
+ notification
+Message-ID: <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
+References: <20210428215257.500088-1-hdegoede@redhat.com>
+ <20210428215257.500088-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210428215257.500088-5-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Mark Pearson <markpearson@lenovo.com>
+Hi Hans,
 
-[ Upstream commit 6759e18e5cd8745a5dfc5726e4a3db5281ec1639 ]
+On Wed, Apr 28, 2021 at 11:52:52PM +0200, Hans de Goede wrote:
+> +/**
+> + * struct drm_connector_oob_hotplug_event_data: OOB hotplug event data
+> + *
+> + * Contains data about out-of-band hotplug events, signalled through
+> + * drm_connector_oob_hotplug_event().
+> + */
+> +struct drm_connector_oob_hotplug_event_data {
+> +	/**
+> +	 * @connected: New connected status for the connector.
+> +	 */
+> +	bool connected;
+> +	/**
+> +	 * @dp_lanes: Number of available displayport lanes, 0 if unknown.
+> +	 */
+> +	int dp_lanes;
+> +	/**
+> +	 * @orientation: Connector orientation.
+> +	 */
+> +	enum typec_orientation orientation;
+> +};
 
-On recent Thinkpad platforms it was reported that temp sensor 11 was
-always incorrectly displaying 66C. It turns out the reason for this is
-that this location in EC RAM is not a temperature sensor but is the
-power supply ID (offset 0xC2).
+I don't think the orientation is relevant. It will always be "normal"
+from DP PoW after muxing, no?
 
-Based on feedback from the Lenovo firmware team the EC RAM version can
-be determined and for the current version (3) only the 0x78 to 0x7F
-range is used for temp sensors. I don't have any details for earlier
-versions so I have left the implementation unaltered there.
+I'm also not sure those deatils are enough in the long run. Based on
+what I've understood from our graphics team guys, for example knowing
+if multi-function is preferred may be important in some cases.
 
-Note - in this block only 0x78 and 0x79 are officially designated (CPU &
-GPU sensors). The use of the other locations in the block will vary from
-platform to platform; but the existing logic to detect a sensor presence
-holds.
++Imre.
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-Link: https://lore.kernel.org/r/20210407212015.298222-1-markpearson@lenovo.com
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/platform/x86/thinkpad_acpi.c | 31 ++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+All of that, and more, is already available in the Configuration VDO
+Status VDO that the we have negotiated with the DP partner. Both those
+VDOs are part of struct typec_displayport_data. I think we should
+simply supply that structure to the DRM code instead of picking those
+details out of it...
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 9180b24ba60a..20c588af33d8 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -5766,6 +5766,7 @@ enum thermal_access_mode {
- enum { /* TPACPI_THERMAL_TPEC_* */
- 	TP_EC_THERMAL_TMP0 = 0x78,	/* ACPI EC regs TMP 0..7 */
- 	TP_EC_THERMAL_TMP8 = 0xC0,	/* ACPI EC regs TMP 8..15 */
-+	TP_EC_FUNCREV      = 0xEF,      /* ACPI EC Functional revision */
- 	TP_EC_THERMAL_TMP_NA = -128,	/* ACPI EC sensor not available */
- 
- 	TPACPI_THERMAL_SENSOR_NA = -128000, /* Sensor not available */
-@@ -5964,7 +5965,7 @@ static const struct attribute_group thermal_temp_input8_group = {
- 
- static int __init thermal_init(struct ibm_init_struct *iibm)
- {
--	u8 t, ta1, ta2;
-+	u8 t, ta1, ta2, ver = 0;
- 	int i;
- 	int acpi_tmp7;
- 	int res;
-@@ -5979,7 +5980,14 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 		 * 0x78-0x7F, 0xC0-0xC7.  Registers return 0x00 for
- 		 * non-implemented, thermal sensors return 0x80 when
- 		 * not available
-+		 * The above rule is unfortunately flawed. This has been seen with
-+		 * 0xC2 (power supply ID) causing thermal control problems.
-+		 * The EC version can be determined by offset 0xEF and at least for
-+		 * version 3 the Lenovo firmware team confirmed that registers 0xC0-0xC7
-+		 * are not thermal registers.
- 		 */
-+		if (!acpi_ec_read(TP_EC_FUNCREV, &ver))
-+			pr_warn("Thinkpad ACPI EC unable to access EC version\n");
- 
- 		ta1 = ta2 = 0;
- 		for (i = 0; i < 8; i++) {
-@@ -5989,11 +5997,13 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 				ta1 = 0;
- 				break;
- 			}
--			if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
--				ta2 |= t;
--			} else {
--				ta1 = 0;
--				break;
-+			if (ver < 3) {
-+				if (acpi_ec_read(TP_EC_THERMAL_TMP8 + i, &t)) {
-+					ta2 |= t;
-+				} else {
-+					ta1 = 0;
-+					break;
-+				}
- 			}
- 		}
- 		if (ta1 == 0) {
-@@ -6009,9 +6019,12 @@ static int __init thermal_init(struct ibm_init_struct *iibm)
- 				thermal_read_mode = TPACPI_THERMAL_NONE;
- 			}
- 		} else {
--			thermal_read_mode =
--			    (ta2 != 0) ?
--			    TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
-+			if (ver >= 3)
-+				thermal_read_mode = TPACPI_THERMAL_TPEC_8;
-+			else
-+				thermal_read_mode =
-+					(ta2 != 0) ?
-+					TPACPI_THERMAL_TPEC_16 : TPACPI_THERMAL_TPEC_8;
- 		}
- 	} else if (acpi_tmp7) {
- 		if (tpacpi_is_ibm() &&
+>  /**
+>   * struct drm_tv_connector_state - TV connector related states
+>   * @subconnector: selected subconnector
+> @@ -1110,6 +1132,15 @@ struct drm_connector_funcs {
+>  	 */
+>  	void (*atomic_print_state)(struct drm_printer *p,
+>  				   const struct drm_connector_state *state);
+> +
+> +	/**
+> +	 * @oob_hotplug_event:
+> +	 *
+> +	 * This will get called when a hotplug-event for a drm-connector
+> +	 * has been received from a source outside the display driver / device.
+> +	 */
+> +	void (*oob_hotplug_event)(struct drm_connector *connector,
+> +				  struct drm_connector_oob_hotplug_event_data *data);
+
+So I would not try to generalise this like that. This callback should
+be USB Type-C DP altmode specific:
+
+	void (*oob_hotplug_event)(struct drm_connector *connector,
+                                  struct typec_displayport_data *data);
+
+Or like this if the orientation can really be reversed after muxing:
+
+	void (*oob_hotplug_event)(struct drm_connector *connector,
+				  struct typec_altmode *altmode,
+                                  struct typec_displayport_data *data);
+
+You can now check the orientation separately with
+typec_altmode_get_orientation() if necessary.
+
+
+thanks,
+
 -- 
-2.30.2
-
+heikki
