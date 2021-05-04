@@ -2,155 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6E4C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 12:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4AFC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8516611AE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 12:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDE6613C0
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:10:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230361AbhEDMyj (ORCPT
+        id S230438AbhEDNLE (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 May 2021 08:54:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:49125 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230346AbhEDMyj (ORCPT
+        Tue, 4 May 2021 09:11:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230410AbhEDNLD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 May 2021 08:54:39 -0400
-IronPort-SDR: 0BQbwveTeMZx5csEArOUwo+zXzw3S41Z8r711xumrMl0ls3TFGl5GvnR78pWlSvIpPFZvMM1Ww
- OD5ElDsEX26A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9973"; a="177511993"
-X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="177511993"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 05:53:42 -0700
-IronPort-SDR: fvSVcDAH5DChXuddF2Etdns2q6zsCelkGeI2GKbJcmhMRZ6EM5GgqaG3qgRufd6/pPEb7L4x3M
- LA22KC8Y9dug==
-X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="433268052"
-Received: from ideak-desk.fi.intel.com ([10.237.68.141])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 05:53:38 -0700
-Date:   Tue, 4 May 2021 15:53:35 +0300
-From:   Imre Deak <imre.deak@intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
- notification
-Message-ID: <20210504125335.GA30246@ideak-desk.fi.intel.com>
-References: <20210428215257.500088-1-hdegoede@redhat.com>
- <20210428215257.500088-5-hdegoede@redhat.com>
- <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
+        Tue, 4 May 2021 09:11:03 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CC7C061574;
+        Tue,  4 May 2021 06:10:08 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id p4so7376728pfo.3;
+        Tue, 04 May 2021 06:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZK9OQEQteIofKk7KMwkfpXDx0mveLAlNQFksjWalI30=;
+        b=fHSPTNymgM+HWGgy6W3XBaxTUpQt9pp5QF3gGArRLc1z/Rsw/rlm01RPpnbtltZb3S
+         NNheorZQS05COj8OtXz7h6Z4A9hfrFQPYsYV/3IZT60i/9oewL8e1ZgwZDUMnIEvjTBa
+         hA+/YR5yyGYSPKh5g+J6hWdMGghF+3CmUwmI+0sO7EIBBKFCNZmIzA1GM3IKM11BnYSB
+         2MEGivyYt1DmsZrKAvELkAdMitwUhNNK2ariVXkjxs5osfw8xnsvf7YZuH2IX06jzTEt
+         0lDCjLOtfmqAgs/UkkS5XEy8iZAbFu8Kxr0rO1r1NXoD9C0A/uPzajtAH2FQQWi3PKqZ
+         kowQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZK9OQEQteIofKk7KMwkfpXDx0mveLAlNQFksjWalI30=;
+        b=BGkoxE+ApjvhaBoWuQZGF7i6sLX4sf7BtSEkgLYabUin8s7cHw1bAPJQAPK7UocQ8L
+         HUl5aLbzW6JobMI7CPsN7UVOTy+9NkTaIc/z9+bBlIrUTaimDaito+Oi/C/lgWXM7UZn
+         7Rwl+kGymqbNP89RdEJedkdYhAUr8xImnqNmHyv4UZ4P58xVvtufHT9ANBQmCyx5a/PY
+         wDplwnr2FVQZ2ZYZJ5BAg7A2YfSgSunmMEUnPMs1WegJEceGPtc2/RPLlsT1+O5FCvXh
+         kJhPIetinqKL/nlMN44l/1ly7XB7hzuTz+nrxoMSPZd1iOlXWw0iKGrk/uGlwXUhHpLC
+         hMTw==
+X-Gm-Message-State: AOAM533eGtxN3owuP0AO57WhcdAQVbjljqk9/AOCT3e643qrQ9uiTB14
+        Gm6QrB3BaVHIOHfI1G6jg8gOuC2Dax/sMBxmr4CFd2Am1aVBlQ==
+X-Google-Smtp-Source: ABdhPJzEzjsS0Ss0IItsofLKar1xLd8nHsjEFk0WLYaflZBMU7XX8/1GR/ro+iRvGAkSIlnrxEKTUPlt0MfH5yc1K6U=
+X-Received: by 2002:a62:528e:0:b029:1f5:c5ee:a487 with SMTP id
+ g136-20020a62528e0000b02901f5c5eea487mr23542898pfb.7.1620133807633; Tue, 04
+ May 2021 06:10:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
+References: <20210504123139.45101-1-wsa+renesas@sang-engineering.com>
+ <CAHp75VdqEa+mRDzwUVix7bY=2R=O0WOwXuLjv=mE4MGGOobYBw@mail.gmail.com> <20210504125130.GA43834@ninjato>
+In-Reply-To: <20210504125130.GA43834@ninjato>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 May 2021 16:09:51 +0300
+Message-ID: <CAHp75VfHsMg78vTxEw910ez+28OeNEhzwUQehOHkZxAqePkadQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: samsung-laptop: set debugfs blobs to read only
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 03, 2021 at 11:00:20AM +0300, Heikki Krogerus wrote:
-> Hi Hans,
-> 
-> On Wed, Apr 28, 2021 at 11:52:52PM +0200, Hans de Goede wrote:
-> > +/**
-> > + * struct drm_connector_oob_hotplug_event_data: OOB hotplug event data
-> > + *
-> > + * Contains data about out-of-band hotplug events, signalled through
-> > + * drm_connector_oob_hotplug_event().
-> > + */
-> > +struct drm_connector_oob_hotplug_event_data {
-> > +	/**
-> > +	 * @connected: New connected status for the connector.
-> > +	 */
-> > +	bool connected;
-> > +	/**
-> > +	 * @dp_lanes: Number of available displayport lanes, 0 if unknown.
-> > +	 */
-> > +	int dp_lanes;
-> > +	/**
-> > +	 * @orientation: Connector orientation.
-> > +	 */
-> > +	enum typec_orientation orientation;
-> > +};
-> 
-> I don't think the orientation is relevant. It will always be "normal"
-> from DP PoW after muxing, no?
-> 
-> I'm also not sure those deatils are enough in the long run. Based on
-> what I've understood from our graphics team guys, for example knowing
-> if multi-function is preferred may be important in some cases.
+On Tue, May 4, 2021 at 3:51 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> > > Those blobs can only be read. So, don't confuse users with 'writable'
+> > > flags.
+> >
+> > Wouldn't it make sense at the same time to convert ugly namings to
+> > octal permissions?
+>
+> I think this is out-of-scpoe for this patch. While I also use octals
+> personally, I don't feel strongly about it and let others use what they
+> prefer.
 
-Combo PHY ports - which is what this patchset is adding the notification
-for - can only reverse the lane assignment. TypeC PHY ports (on ICL+)
-have a more C-type aware mux in the SoC (FIA) as well, so in theory we
-could have a system based on such platforms with an external mux only
-switching between the USB, DP, USB+DP (MFD) modes, but leaving the plug
-orientation specific muxing up to the FIA. The graphics driver is not
-involved in programming the FIA though, it's done by a firmware
-component, so I don't think this configuration needs to get passed.
+Linus has (had?) a strong opinion about it. My point is to reduce the
+churn since two patches fixing the very same parameter in a row seems
+too much to me.
+https://lwn.net/Articles/696227/
 
-Yes, the driver needs to know if the PD controller configured the sink
-in the MFD mode (DP+USB) or in the DP-only mode. For that the number of
-lanes assigned to DP is enough.
-
-> +Imre.
-> 
-> All of that, and more, is already available in the Configuration VDO
-> Status VDO that the we have negotiated with the DP partner. Both those
-> VDOs are part of struct typec_displayport_data. I think we should
-> simply supply that structure to the DRM code instead of picking those
-> details out of it...
-> 
-> >  /**
-> >   * struct drm_tv_connector_state - TV connector related states
-> >   * @subconnector: selected subconnector
-> > @@ -1110,6 +1132,15 @@ struct drm_connector_funcs {
-> >  	 */
-> >  	void (*atomic_print_state)(struct drm_printer *p,
-> >  				   const struct drm_connector_state *state);
-> > +
-> > +	/**
-> > +	 * @oob_hotplug_event:
-> > +	 *
-> > +	 * This will get called when a hotplug-event for a drm-connector
-> > +	 * has been received from a source outside the display driver / device.
-> > +	 */
-> > +	void (*oob_hotplug_event)(struct drm_connector *connector,
-> > +				  struct drm_connector_oob_hotplug_event_data *data);
-> 
-> So I would not try to generalise this like that. This callback should
-> be USB Type-C DP altmode specific:
-> 
-> 	void (*oob_hotplug_event)(struct drm_connector *connector,
->                                   struct typec_displayport_data *data);
-> 
-> Or like this if the orientation can really be reversed after muxing:
-> 
-> 	void (*oob_hotplug_event)(struct drm_connector *connector,
-> 				  struct typec_altmode *altmode,
->                                   struct typec_displayport_data *data);
-> 
-> You can now check the orientation separately with
-> typec_altmode_get_orientation() if necessary.
-> 
-> 
-> thanks,
-> 
-> -- 
-> heikki
+-- 
+With Best Regards,
+Andy Shevchenko
