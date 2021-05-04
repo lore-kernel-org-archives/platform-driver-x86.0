@@ -2,87 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF053C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 18:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8E5C43460
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 18:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE491613D2
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 18:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E580A613BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 18:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232215AbhEDSLi (ORCPT
+        id S231650AbhEDS6t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 May 2021 14:11:38 -0400
-Received: from www.zeus03.de ([194.117.254.33]:38948 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232216AbhEDSLh (ORCPT
+        Tue, 4 May 2021 14:58:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43537 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231274AbhEDS6t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 May 2021 14:11:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=Y34wyRaSh3zmhZ3SGxDBw5N6OS0q
-        BKtxcch6tx4BtGs=; b=BjVd7TSZ58IFtBo+B4VnXqV8RD8loGwGDcqKHMm5S4P8
-        /9P1MXFvasFfYwC0w6Mc5fqb1HeuSrgk0Pw+60P6+OiRJk8LieWwCisNSWSx73k3
-        l6hJvmgEaRVdbS2UtzEKbyzizDAEyFopmFs5FEXP6si9qbhGKZPJlX0ayatAa2M=
-Received: (qmail 1458253 invoked from network); 4 May 2021 20:10:40 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 May 2021 20:10:40 +0200
-X-UD-Smtp-Session: l3s3148p1@B1Pm/oTBwo8gAwDPXxOMAJUzfx/HAvHg
-Date:   Tue, 4 May 2021 20:10:39 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        Tue, 4 May 2021 14:58:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1620154673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gd2p2QV1EPtc/NkvtW/sibqV9Ys/KDYOq5RpsUFDSEA=;
+        b=OzcdbXiqJrZxLBXbB1884kYeikaqQZyVGiXEUKwWc8VhqJlu2o0kOd8JUQe1/neSJAwvdz
+        8yagbkjAFIW++acJBuBDJ7xfdkrl/Qu9w46IutNulqpvcMTkdOKvi0HJ2VKoETj5pjF/o/
+        nJpLfQafVq7zJbYwAmjQRC3CkNzk/oI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-548-U22rN4j4NUiTnPitmTx8zg-1; Tue, 04 May 2021 14:57:51 -0400
+X-MC-Unique: U22rN4j4NUiTnPitmTx8zg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 733C3801AB6;
+        Tue,  4 May 2021 18:57:50 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-90.ams2.redhat.com [10.36.112.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7C8D5D6CF;
+        Tue,  4 May 2021 18:57:47 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
         Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] platform/x86: samsung-laptop: set debugfs blobs
- to read only
-Message-ID: <20210504181039.GA58737@ninjato>
-References: <20210504170030.58447-1-wsa+renesas@sang-engineering.com>
- <20210504170030.58447-2-wsa+renesas@sang-engineering.com>
- <CAHp75Vc8OGDB0=ta_GLg3Bjv5NK32dMuuaPTX-ETXRDHtRpxnA@mail.gmail.com>
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>, Arkadiy <arkan49@yandex.ru>,
+        "Sergei A . Trusov" <sergei.a.trusov@ya.ru>,
+        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [RFC v2 0/5] Input: goodix - platform/x86: touchscreen_dmi - Move quirks to touchscreen_dmi.c
+Date:   Tue,  4 May 2021 20:57:41 +0200
+Message-Id: <20210504185746.175461-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vc8OGDB0=ta_GLg3Bjv5NK32dMuuaPTX-ETXRDHtRpxnA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi Dmitry, Bastien,
 
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here v2 of the patch series to move the DMI quirks for upside-down and
+x-axis-inverted touchscreens in goodix.c to the generic x86 touchscreen
+mechanism found in drivers/platform/x86/touchscreen_dmi.c .
+
+As I mentioned in my reply to the v1 RFC I've dropped the:
+"platform/x86: touchscreen_dmi: Match on ACPI HID instead of ACPI companion-dev-name"
+patch from this version; and for completeness sake I've added a
+couple of other pending touchscreen_dmi.c patches.
+
+Note this is still marked as RFC for now since I have been unable to confirm
+the ACPI HID for the touchscreen on the Cube I15-TC which is necessary
+for the touchscreen_dmi.c code. I've send an email to the reporter and
+the author of the patch adding the quirk for the Cube I15-TC.
+
+As discussed in the "[PATCH] platform/x86: touchscreen_dmi: Add swap-x-y
+quirk for Goodix touchscreen on Estar Beauty HD tablet" thread, I'll
+prepare an immutable branch for Dmitry to pull once this is ready
+for merging.
+
+Note if I get no reply to the questions surrounding patch 2/5,
+I'll probably just drop that patch and merge the rest.
+
+Regards,
+
+Hans
 
 
-> Not sure if this should be the second patch in the series (sounds like
-> a potential fix).
+Hans de Goede (4):
+  Input: goodix - platform/x86: touchscreen_dmi - Move upside down
+    quirks to touchscreen_dmi.c
+  Input: goodix - platform/x86: touchscreen_dmi - Move inverted-x quirk
+    to touchscreen_dmi.c
+  platform/x86: touchscreen_dmi: Add an extra entry for the upside down
+    Goodix touchscreen on Teclast X89 tablets
+  platform/x86: touchscreen_dmi: Add info for the Goodix GT912 panel of
+    TM800A550L tablets
 
-Not a fix. The write will be rejected anyhow. It just looks strange to
-have writable permission when there is no proper callback for it.
+Teava Radu (1):
+  platform/x86: touchscreen_dmi: Add info for the Mediacom Winpad 7.0
+    W700 tablet
 
+ drivers/input/touchscreen/goodix.c     |  74 ----------------
+ drivers/platform/x86/touchscreen_dmi.c | 112 +++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+), 74 deletions(-)
 
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.31.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmCRjhoACgkQFA3kzBSg
-KbbQjQ//cKah7zwcBF9H7KvEyZ/rLJyL/7HF6uGe3gKlVjogj4ND4Xi4ktqb979W
-QTLVgi5y+zAt8Kl7iH98Vpx/hAb8FBrpOVj3xsHh2WxYAubTJLqe/v/1bfgU6/5g
-ovXLKpkTa5IVOUm6u7fCFlXht42ZwSf6ZoJYUf60iTL4xlqD5qbtKi2UIiqs4HkE
-9F2YlbBvrK6MYFx9q9eVBa9DT9WUtFzv4mWS433FAOvqdaYPyCIxHWPgEDlFCOby
-vzx+NmOVevSbyrAWIiy0MjNuLP0YUQU4HXe+n6Ba/FHQ6COTzHrojR14xgQSJd6+
-G/CwRTwskKgD5rCY2kfa101Ind8ZhzCcMbDjfL9pYhDwhRFL/vNBJRmL081np2L2
-e1o5iqT/5ccYz9qEQiukw0iYq1402pAT3serRNW6amYnxZcNYBFLmr4Z+o7P/6qh
-spmJpROhxQjShviQozeqMlFR9Or2kbjQH8mwPppccL2mn8IUXO1YvfDirG/xO7ua
-uPK3FhNFk6IODQ5c6miFE07kK2y6mN35FWTgEayOSt6MsDg6ppYcVZCgtJ3OhdV0
-v6ZLCECtdgvpEacReaDqVrYOVeoQ4Ok7zKb4OkrekEEF1nlpVu2cl3i8DptslBj4
-v2qB543sYGCqi4lyFDVpvYoEuM08hsQpZZpCCSS7VIhWTenuFCk=
-=uUfh
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
