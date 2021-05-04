@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D4BC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 14:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D824C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 14:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2A3E61006
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 14:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8FE611CB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 14:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231320AbhEDOxl (ORCPT
+        id S231149AbhEDO5F (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 May 2021 10:53:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11720 "EHLO mga09.intel.com"
+        Tue, 4 May 2021 10:57:05 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51552 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231326AbhEDOxl (ORCPT
+        id S230246AbhEDO5E (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 May 2021 10:53:41 -0400
-IronPort-SDR: ga4yvMvjaUYwnYHVVrDYNeld+pAndwlAIKHBpLHC6wCZ48TOMT5DC06g3d6Ks5QrT6cCBJmF3/
- BBeWZ2hH77fg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="198083717"
+        Tue, 4 May 2021 10:57:04 -0400
+IronPort-SDR: 5n6EG0JPyVT7Xy93HJo4OvO/M1DZmpqDiRiKet1UTV2yEjo7c33ryalW+zCC9RKyXwCs0EbrrK
+ tfBQfik46M4Q==
+X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="198052299"
 X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="198083717"
+   d="scan'208";a="198052299"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 07:52:45 -0700
-IronPort-SDR: vU+uxj5bo8hDLN6NcpjGw6Pky+yuJ7aER+QDsY62qHxO4ixpBbwju6LlsRENQoKe/I1++IH5Mj
- l8zTA6jmHa8w==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 07:56:09 -0700
+IronPort-SDR: a5y6u8eLfzoTlmH3RBbBzZbslDtwNu7smkGG46CpEjFPkGRJgDXIeOdVLYasTJF4VjNXIVCdqz
+ Cr04KJebwGzw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
-   d="scan'208";a="531087248"
+   d="scan'208";a="531088023"
 Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 04 May 2021 07:52:40 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 04 May 2021 17:52:40 +0300
-Date:   Tue, 4 May 2021 17:52:40 +0300
+  by fmsmga001.fm.intel.com with SMTP; 04 May 2021 07:56:04 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 04 May 2021 17:56:03 +0300
+Date:   Tue, 4 May 2021 17:56:03 +0300
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Imre Deak <imre.deak@intel.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
@@ -50,95 +50,56 @@ Cc:     Imre Deak <imre.deak@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
- notification
-Message-ID: <YJFfuF3UGP0TZrVw@kuha.fi.intel.com>
-References: <20210428215257.500088-1-hdegoede@redhat.com>
- <20210428215257.500088-5-hdegoede@redhat.com>
- <YI+tlE35i+6F/WUO@kuha.fi.intel.com>
- <00e380b2-0376-0ddb-9b0e-342779b7fc06@redhat.com>
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 5/9] drm/i915: Associate ACPI connector nodes with
+ connector entries
+Message-ID: <YJFgg0IQ6Csluoxu@kuha.fi.intel.com>
+References: <20210503154647.142551-1-hdegoede@redhat.com>
+ <20210503154647.142551-6-hdegoede@redhat.com>
+ <CAHp75VcS5nvzBzjbSytqD6qsSURyzdEdmDi934y=5W2SCNyo9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <00e380b2-0376-0ddb-9b0e-342779b7fc06@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VcS5nvzBzjbSytqD6qsSURyzdEdmDi934y=5W2SCNyo9A@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 03, 2021 at 04:35:29PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 5/3/21 10:00 AM, Heikki Krogerus wrote:
-> > Hi Hans,
-> > 
-> > On Wed, Apr 28, 2021 at 11:52:52PM +0200, Hans de Goede wrote:
-> >> +/**
-> >> + * struct drm_connector_oob_hotplug_event_data: OOB hotplug event data
-> >> + *
-> >> + * Contains data about out-of-band hotplug events, signalled through
-> >> + * drm_connector_oob_hotplug_event().
-> >> + */
-> >> +struct drm_connector_oob_hotplug_event_data {
-> >> +	/**
-> >> +	 * @connected: New connected status for the connector.
-> >> +	 */
-> >> +	bool connected;
-> >> +	/**
-> >> +	 * @dp_lanes: Number of available displayport lanes, 0 if unknown.
-> >> +	 */
-> >> +	int dp_lanes;
-> >> +	/**
-> >> +	 * @orientation: Connector orientation.
-> >> +	 */
-> >> +	enum typec_orientation orientation;
-> >> +};
-> > 
-> > I don't think the orientation is relevant. It will always be "normal"
-> > from DP PoW after muxing, no?
-> 
-> That is what I thought to, but during the discussion of my previous attempt
-> at this one of the i915 devs mentioned that in some cases the muxes manage
-> to swap the lane order when the connector upside-down and at least the
-> Intel GPUs can correct for this on the GPU side, so they asked for this
-> info to be included.
-> 
-> > I'm also not sure those deatils are enough in the long run. Based on
-> > what I've understood from our graphics team guys, for example knowing
-> > if multi-function is preferred may be important in some cases.
-> 
-> The current data being passed is just intended as a starting point,
-> this is purely a kernel internal API so we can easily add more
-> data to the struct. As I mentioned in the cover-letter the current
-> oob_hotplug handler which the i915 patch adds to the i915 driver does
-> not actually do anything with the data.  ATM it is purely there to
-> demonstrate that the ability to pass relevant data is there now
-> (which was an issue with the previous attempt). I believe the current
-> code is fine as a PoC of "pass event data" once GPU drivers actually
-> start doing something with the data we can extend or outright replace
-> it without issues.
+Hi Andy,
 
-Ah, if there is nothing using that information yet, then just don't
-pass it at all for now. As you said, it's kernel internal API, we can
-change it later if needed.
-
-> > All of that, and more, is already available in the Configuration VDO
-> > Status VDO that the we have negotiated with the DP partner. Both those
-> > VDOs are part of struct typec_displayport_data. I think we should
-> > simply supply that structure to the DRM code instead of picking those
-> > details out of it...
+> > +/* NOTE: The connector order must be final before this is called. */
+> > +void intel_acpi_assign_connector_fwnodes(struct drm_i915_private *i915)
+> > +{
+> > +       struct drm_connector_list_iter conn_iter;
+> > +       struct drm_device *drm_dev = &i915->drm;
+> > +       struct device *kdev = &drm_dev->pdev->dev;
+> > +       struct fwnode_handle *fwnode = NULL;
+> > +       struct drm_connector *connector;
+> > +       struct acpi_device *adev;
+> > +
+> > +       drm_connector_list_iter_begin(drm_dev, &conn_iter);
+> > +       drm_for_each_connector_iter(connector, &conn_iter) {
+> > +               /* Always getting the next, even when the last was not
+> > used. */
+> > +               fwnode = device_get_next_child_node(kdev, fwnode);
+> > +               if (!fwnode)
+> > +                       break;
 > 
-> I'm not sure I like the idea of passing the raw VDO, but if the
-> DRM folks think that would be useful we can certainly add it.
+> Who is dropping reference counting on fwnode ?
+> 
+> I’m in the middle of a pile of fixes for fwnode refcounting when
+> for_each_child or get_next_child is used. So, please double check you drop
+> a reference.
 
-Why are you against passing all the data that we have? What is the
-benefit in picking only certain details out of an object that has a
-standard format, and constructing a customised object for those
-details instead?
+Sorry Andy. This patch is from time before the software nodes
+implementation of the get_next_child callback handled the ref counting
+properly.
 
-
-thanks,
+Br,
 
 -- 
 heikki
