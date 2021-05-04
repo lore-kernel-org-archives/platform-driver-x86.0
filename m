@@ -2,94 +2,92 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4AFC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A88C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BDE6613C0
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D748611AC
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 13:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbhEDNLE (ORCPT
+        id S230460AbhEDNSO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 May 2021 09:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230410AbhEDNLD (ORCPT
+        Tue, 4 May 2021 09:18:14 -0400
+Received: from www.zeus03.de ([194.117.254.33]:57768 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231138AbhEDNSK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 May 2021 09:11:03 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32CC7C061574;
-        Tue,  4 May 2021 06:10:08 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id p4so7376728pfo.3;
-        Tue, 04 May 2021 06:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZK9OQEQteIofKk7KMwkfpXDx0mveLAlNQFksjWalI30=;
-        b=fHSPTNymgM+HWGgy6W3XBaxTUpQt9pp5QF3gGArRLc1z/Rsw/rlm01RPpnbtltZb3S
-         NNheorZQS05COj8OtXz7h6Z4A9hfrFQPYsYV/3IZT60i/9oewL8e1ZgwZDUMnIEvjTBa
-         hA+/YR5yyGYSPKh5g+J6hWdMGghF+3CmUwmI+0sO7EIBBKFCNZmIzA1GM3IKM11BnYSB
-         2MEGivyYt1DmsZrKAvELkAdMitwUhNNK2ariVXkjxs5osfw8xnsvf7YZuH2IX06jzTEt
-         0lDCjLOtfmqAgs/UkkS5XEy8iZAbFu8Kxr0rO1r1NXoD9C0A/uPzajtAH2FQQWi3PKqZ
-         kowQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZK9OQEQteIofKk7KMwkfpXDx0mveLAlNQFksjWalI30=;
-        b=BGkoxE+ApjvhaBoWuQZGF7i6sLX4sf7BtSEkgLYabUin8s7cHw1bAPJQAPK7UocQ8L
-         HUl5aLbzW6JobMI7CPsN7UVOTy+9NkTaIc/z9+bBlIrUTaimDaito+Oi/C/lgWXM7UZn
-         7Rwl+kGymqbNP89RdEJedkdYhAUr8xImnqNmHyv4UZ4P58xVvtufHT9ANBQmCyx5a/PY
-         wDplwnr2FVQZ2ZYZJ5BAg7A2YfSgSunmMEUnPMs1WegJEceGPtc2/RPLlsT1+O5FCvXh
-         kJhPIetinqKL/nlMN44l/1ly7XB7hzuTz+nrxoMSPZd1iOlXWw0iKGrk/uGlwXUhHpLC
-         hMTw==
-X-Gm-Message-State: AOAM533eGtxN3owuP0AO57WhcdAQVbjljqk9/AOCT3e643qrQ9uiTB14
-        Gm6QrB3BaVHIOHfI1G6jg8gOuC2Dax/sMBxmr4CFd2Am1aVBlQ==
-X-Google-Smtp-Source: ABdhPJzEzjsS0Ss0IItsofLKar1xLd8nHsjEFk0WLYaflZBMU7XX8/1GR/ro+iRvGAkSIlnrxEKTUPlt0MfH5yc1K6U=
-X-Received: by 2002:a62:528e:0:b029:1f5:c5ee:a487 with SMTP id
- g136-20020a62528e0000b02901f5c5eea487mr23542898pfb.7.1620133807633; Tue, 04
- May 2021 06:10:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210504123139.45101-1-wsa+renesas@sang-engineering.com>
- <CAHp75VdqEa+mRDzwUVix7bY=2R=O0WOwXuLjv=mE4MGGOobYBw@mail.gmail.com> <20210504125130.GA43834@ninjato>
-In-Reply-To: <20210504125130.GA43834@ninjato>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 May 2021 16:09:51 +0300
-Message-ID: <CAHp75VfHsMg78vTxEw910ez+28OeNEhzwUQehOHkZxAqePkadQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: samsung-laptop: set debugfs blobs to read only
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+        Tue, 4 May 2021 09:18:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=QoW21j72oKNdkevzN53Z3SSjcRs5
+        L5FcS9q3QcCSIjQ=; b=0yU4phmuc1eAcLKZpAbXxf79ecqurTqkHBBxBTkHGao6
+        3BHdHng2EaMEr/Nvi/vYNnr3gCVkQR014SyOVj9QZMt7j2IcG2rFpRmrWb93qGlC
+        egK8InrkDBNwFd7wHP9KSLceuDPQX9ysd/7SoSdO+WlCraOji3s9Cm4RErS31wE=
+Received: (qmail 1373174 invoked from network); 4 May 2021 15:17:14 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 May 2021 15:17:14 +0200
+X-UD-Smtp-Session: l3s3148p1@PlWK5YDBUo0gAwDPXxOMAJUzfx/HAvHg
+Date:   Tue, 4 May 2021 15:17:14 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Corentin Chary <corentin.chary@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] platform/x86: samsung-laptop: set debugfs blobs to read
+ only
+Message-ID: <20210504131714.GB43834@ninjato>
+References: <20210504123139.45101-1-wsa+renesas@sang-engineering.com>
+ <CAHp75VdqEa+mRDzwUVix7bY=2R=O0WOwXuLjv=mE4MGGOobYBw@mail.gmail.com>
+ <20210504125130.GA43834@ninjato>
+ <CAHp75VfHsMg78vTxEw910ez+28OeNEhzwUQehOHkZxAqePkadQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i0/AhcQY5QxfSsSZ"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfHsMg78vTxEw910ez+28OeNEhzwUQehOHkZxAqePkadQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 4, 2021 at 3:51 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > > Those blobs can only be read. So, don't confuse users with 'writable'
-> > > flags.
-> >
-> > Wouldn't it make sense at the same time to convert ugly namings to
-> > octal permissions?
->
-> I think this is out-of-scpoe for this patch. While I also use octals
-> personally, I don't feel strongly about it and let others use what they
-> prefer.
 
-Linus has (had?) a strong opinion about it. My point is to reduce the
-churn since two patches fixing the very same parameter in a row seems
-too much to me.
-https://lwn.net/Articles/696227/
+--i0/AhcQY5QxfSsSZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+> Linus has (had?) a strong opinion about it. My point is to reduce the
+
+OK, I see. Thanks for the pointer!
+
+> churn since two patches fixing the very same parameter in a row seems
+> too much to me.
+
+I'd still prefer that and having a seperate patch fixing the whole
+driver. IMO better than having a mixture of octals and defines.
+
+
+--i0/AhcQY5QxfSsSZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmCRSVoACgkQFA3kzBSg
+Kbb8ew/+LTJ2JUtey67y0nONa9iGb1qerwMH7OJbVmzzUov0n5p103YktKSdfOAz
+HUE8nqbQV0UdqeIaQIwLjNHds+DLurdcvmOBwt253ajOCBpl5gtnjohmNfN72DQJ
+bQJUN2gSrkKGC5Yh3wQoyZSmOJZ7uISzNlfAwda87R2hn8XqBs+pZh6+j7BEoChc
+drJagjPd69uSxLpbfUflKy96T8SUAiCrzD0fHHwu8tiGwMCqv8Yl4Ld2pwB2SlPJ
+6fqr8oq/bu5EymIEJV2dbnzC/xP9dE/96JCdu5NN4NFgC30p+xIb1hyvxyqi6ckg
+ulXAyTkN285j0NkkNYsn9mvKr6EA/XsEw9unKC3eXiTv3jThCPs+ojU2wHdBtqU1
+g40vOrlt0X6u08V5Y+joOOJuWcnFDbbb0NRzBpJoApciGroEJM4bCstzUNlGfAGg
++zRcPSutvvQnIUt0j7aqAzDEknnJ9TWRm1y9n8uTABShKUanW+Pa4Nc9UwnbD8o+
+pMfuACe5MA+iE2sMTo0pB6wp7yNNt+EAi9v6pdYNU4LFmzXR4QfDoeh6zVBelL/X
+0DyTnaQ1umB6c7FgT6chlfEdwS9zUwBsTcdJ4DaugPAg42LxvHTPvenLsbPGlaYY
+5Aq4atpSeD5dVw9gpkMZNaoZcRSrCfmrPMrd70nxApa+k4CR7Ts=
+=7Lqw
+-----END PGP SIGNATURE-----
+
+--i0/AhcQY5QxfSsSZ--
