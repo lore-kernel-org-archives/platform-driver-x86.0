@@ -2,96 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D7C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 15:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A37C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 15:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AFA613C6
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 15:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79EC6610E9
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  4 May 2021 15:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbhEDPGa (ORCPT
+        id S230335AbhEDPLa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 4 May 2021 11:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230256AbhEDPG3 (ORCPT
+        Tue, 4 May 2021 11:11:30 -0400
+Received: from mga05.intel.com ([192.55.52.43]:63481 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230246AbhEDPL3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 4 May 2021 11:06:29 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13058C061574;
-        Tue,  4 May 2021 08:05:35 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id d29so6447942pgd.4;
-        Tue, 04 May 2021 08:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=prwHP+1gSNqeuawI8i6wJx12SWw1HcWMRKZ3M8c8VJU=;
-        b=WCyg6ZLgLaHzRmk2LpWVaxRojL0BtJkEjiativnbhxwmvz3IWuF1dmYOC7T6EyHHtW
-         0liKUd5eM34YLFGntKKF0RcBtcASzb9lTV57JtwvLvFqSkTblK1SvK/D8zXiH+Q7o7Ci
-         R46ZcUhwmbAGwLZe1Ih5s/IedmH0NlyAtDxDaMXLnyZ/Co2VIASEMJJy3w2jvDrlbhQP
-         vltYsawkLwcUhzxfSwm0T/qGVfLGQvdwndNN1MHe4Mw3VrjL6MS6SSEpUm15yQQP+G6e
-         3pcicEdfXI5I7cdy0Qrd6l1qiM9Jpcta+25jqEIPlgb4DFBMRICuAnfdKnc4gtTWTv/y
-         D1UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=prwHP+1gSNqeuawI8i6wJx12SWw1HcWMRKZ3M8c8VJU=;
-        b=ev0ynIA0tsDAPqpMyRsvbOc45SQLya1pqTKNgQoavCRYy9mlRPhPHDiyAa5RlyQGkY
-         vDH/jlUfLES4hKzxRgBdFoXpsWJkdgSCP7jL3h36IOQKgQhI4LisWjbGZJg0hD2Laej/
-         /xeEHUUXSBbL4yrD+UqR3TNKC1pp2G7cbAKEZW4E/dmEaptIGaw0V04JW3A+I9mFLQ4p
-         VX0CC8XqhOh88SE7TmCbTY+JxYvDu6K5MxSow0lV17VNXweZzGG1AcCCbMmJT5I9DO/U
-         eE26Rvo8saWnlmvFKYSOPsbWID2sCtOf19wEq8fcgbYwZZD3+LA+e9Mdityf+bMF9YwD
-         WPUg==
-X-Gm-Message-State: AOAM533j9ifuAC6PiVM2FfO12g5VMySIh+le8WyhyWbtXMMhKhkABk9Z
-        TXod8vcnjnj1GYPcO8y3ZACSrMiRbpzMmoPkUAg=
-X-Google-Smtp-Source: ABdhPJyd8HSJpj/i5SiJqhsUV+ST4lylnm00n5xy3feHopm/OYi6YWpZ+BjccgeYobis+vzFPzLs9hthnKJwk8z9sQI=
-X-Received: by 2002:a17:90a:d90c:: with SMTP id c12mr5776803pjv.129.1620140734459;
- Tue, 04 May 2021 08:05:34 -0700 (PDT)
+        Tue, 4 May 2021 11:11:29 -0400
+IronPort-SDR: w+C2wbYXG4uo7rRgJJ4odU/vsI6eKbIbmicCH3qy2kvQ4iPynCXv9xFfVFkdrCvLLEkqMSPern
+ sn/S5uCEOM+w==
+X-IronPort-AV: E=McAfee;i="6200,9189,9974"; a="283410462"
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="283410462"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2021 08:10:34 -0700
+IronPort-SDR: nLyJdrNp3CNGXSAwYbytKe0ckXjGML1xV1KD42EwKj701NzYv1e0EzfkSWgA11DN4YaWBR70DR
+ 6krTNmyrau8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,272,1613462400"; 
+   d="scan'208";a="531093933"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 04 May 2021 08:10:30 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 04 May 2021 18:10:29 +0300
+Date:   Tue, 4 May 2021 18:10:29 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
+ notification (v2)
+Message-ID: <YJFj5Vk7xOcj+ISZ@kuha.fi.intel.com>
+References: <20210503154647.142551-1-hdegoede@redhat.com>
+ <20210503154647.142551-5-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20210504123139.45101-1-wsa+renesas@sang-engineering.com>
- <CAHp75VdqEa+mRDzwUVix7bY=2R=O0WOwXuLjv=mE4MGGOobYBw@mail.gmail.com>
- <20210504125130.GA43834@ninjato> <CAHp75VfHsMg78vTxEw910ez+28OeNEhzwUQehOHkZxAqePkadQ@mail.gmail.com>
- <20210504131714.GB43834@ninjato>
-In-Reply-To: <20210504131714.GB43834@ninjato>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 May 2021 18:05:18 +0300
-Message-ID: <CAHp75Vf59LDsh0D2+Cd429Z01BApz8niFyg_HU_NG-D4mhuH8g@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: samsung-laptop: set debugfs blobs to read only
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210503154647.142551-5-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 4, 2021 at 4:17 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
->
-> > Linus has (had?) a strong opinion about it. My point is to reduce the
->
-> OK, I see. Thanks for the pointer!
->
-> > churn since two patches fixing the very same parameter in a row seems
-> > too much to me.
->
-> I'd still prefer that and having a seperate patch fixing the whole
-> driver. IMO better than having a mixture of octals and defines.
+> +/**
+> + * drm_connector_oob_hotplug_event - Report out-of-band hotplug event to connector
+> + * @connector: connector to report the event on
+> + * @data: data related to the event
+> + *
+> + * On some hardware a hotplug event notification may come from outside the display
+> + * driver / device. An example of this is some USB Type-C setups where the hardware
+> + * muxes the DisplayPort data and aux-lines but does not pass the altmode HPD
+> + * status bit to the GPU's DP HPD pin.
+> + *
+> + * This function can be used to report these out-of-band events after obtaining
+> + * a drm_connector reference through calling drm_connector_find_by_fwnode().
+> + */
+> +void drm_connector_oob_hotplug_event(struct fwnode_handle *connector_fwnode,
+> +				     struct drm_connector_oob_hotplug_event_data *data)
+> +{
+> +	struct drm_connector *connector;
+> +
+> +	connector = drm_connector_find_by_fwnode(connector_fwnode);
+> +	if (IS_ERR(connector))
+> +		return;
+> +
+> +	if (connector->funcs->oob_hotplug_event)
+> +		connector->funcs->oob_hotplug_event(connector, data);
+> +
+> +	drm_connector_put(connector);
+> +}
+> +EXPORT_SYMBOL(drm_connector_oob_hotplug_event);
 
-You can convert the rest as well. And point out that only blobs are RO.
-Whatever, the main idea is to do both things either with one patch or
-two in a series at the same time.
+So it does looks like the "data" parameter is not needed at all:
+
+void drm_connector_oob_hotplug_event(struct fwnode_handle *connector_fwnode)
+{
+	struct drm_connector *connector;
+
+	connector = drm_connector_find_by_fwnode(connector_fwnode);
+	if (IS_ERR(connector))
+		return;
+
+	if (connector->funcs->oob_hotplug_event)
+		connector->funcs->oob_hotplug_event(connector);
+
+	drm_connector_put(connector);
+}
+
+thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+heikki
