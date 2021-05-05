@@ -2,70 +2,72 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12CC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F906C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 12:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9A861057
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDDF610C8
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 12:55:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232496AbhEEKpu (ORCPT
+        id S233051AbhEEM4f (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 May 2021 06:45:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47185 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232147AbhEEKph (ORCPT
+        Wed, 5 May 2021 08:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232079AbhEEM4e (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 May 2021 06:45:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620211476;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D8317tVLe7KUvXC09G6GyS987twLdZ4cyuo5A5o+ofI=;
-        b=eH8U32GKdATemNtNU10WAflfdfMUia72HtjkW83RqcT9hCxjnVuccB0oxohBxaFoivyF1F
-        JHtRLiNJ2qrFtmF3cTmHoQiGon0Vk3Mr7UoiFcV1tjzmuGV3GI14bB9dHTXHd7D8GV7n1J
-        De5Orms4evlc0Lwx7PPTjRAdl3K5plo=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-3E4mJetINQCee9mpfslmLg-1; Wed, 05 May 2021 06:44:35 -0400
-X-MC-Unique: 3E4mJetINQCee9mpfslmLg-1
-Received: by mail-ed1-f72.google.com with SMTP id d13-20020a056402144db0290387e63c95d8so644303edx.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 May 2021 03:44:34 -0700 (PDT)
+        Wed, 5 May 2021 08:56:34 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD73C061574;
+        Wed,  5 May 2021 05:55:38 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id t2-20020a17090ae502b029015b0fbfbc50so772288pjy.3;
+        Wed, 05 May 2021 05:55:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZhuV1fIZkH25YePI0Y3P6MxQ5i4J7rTme3KQYtyR73Y=;
+        b=gRI6Ic2tMSpnsSMhV6oDdci/E4PlN6TPeYZ6VGH7yYcXBOfTtOXVaQvWyKUvhThmrN
+         JqBm5/kmvoOPA6RqgKpOkINzlUtnVrtvqDCtkTmqhq5FxJJgmGoLXJGYsRjI4YBcghkh
+         A4meN/1fuuQMhxEmvLyhFbeliG/A22YQ7JllWCKLnlzDeMNt4ALzf06o+YabaeOChbg3
+         u1LFxMvxUYcUDW4p2t+95kvBwtLAfCAu7Gz/5mOHDlGjI7nwUfPhpmjIH9B/4aQZnKar
+         gwZ06pliPHDiHPWGjU7ti2fGSjqdDLxvTiOpPny151NLZtRYjNcsA+2Kmqu4BdeDiSq+
+         XjzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D8317tVLe7KUvXC09G6GyS987twLdZ4cyuo5A5o+ofI=;
-        b=W5kg7qnBJbhm2gUMQbRcQ4ZdoUwndnhV+beQQIDh2GQdXr7lAHj83TGLy5ud1c1Wbp
-         +yd2O/Gz4o8z7Ej3awTqIwsUy7BlZTwCedz0oakFKmaQS/kuVacrxiMz2KNOuVVYRadL
-         QxbotHEQGBK/Z9RLUJXJn94Ta34lKIw6ZahON8+ZXNE1ePjoehaan0e0KX0tPIOR/2ZJ
-         JIYfHTYjSHvH2JFodwt8YIqvCjGSdejgQt5Av2VswP9jjA7RaE1gLjgjrvO2isiwdX+F
-         PRYwntRtSo+SQu0d/lfFqUDxR8qqF9p82IwbLertOOruFkt+GSDdi9y3m0i1RqL1U0hR
-         ivZw==
-X-Gm-Message-State: AOAM5321pbBaR9L9HF3HZMfZvxUannX4oeHwQCOPFL4sOFfMuP8BJ0jT
-        ptjGr+Fr6WY3kyfcdvo+1ljPuo31sjhAarTb8aUwuOAwHSGe8Gp6VLHT25UpM1wcdcQbbp4qJKo
-        F6xw6nRL3QHN7gBl+3Hny+zMNCk95pbqHoA==
-X-Received: by 2002:a17:906:4a13:: with SMTP id w19mr2768018eju.533.1620211473864;
-        Wed, 05 May 2021 03:44:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz9TxBnFcM0pbX6pLK+U0KVaA5VXQIH9Zr2v/Cvoge0CfqACkcP1Bcqo5txeqKIySeQSu5IGQ==
-X-Received: by 2002:a17:906:4a13:: with SMTP id w19mr2767996eju.533.1620211473655;
-        Wed, 05 May 2021 03:44:33 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id c12sm17705253edx.54.2021.05.05.03.44.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 May 2021 03:44:33 -0700 (PDT)
-Subject: Re: [PATCH 8/9] usb: typec: altmodes/displayport: Notify drm subsys
- of hotplug events
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZhuV1fIZkH25YePI0Y3P6MxQ5i4J7rTme3KQYtyR73Y=;
+        b=qu0JV4KhCsMIBdD+B/9zepW5uiLeODjdJz2q4f3LTBA6JRWkOtzLJ9hpSjdzaPh5sb
+         vZFRZO5vvmM8iZ5/ileMD1yjFeTnDKc1YQWNVrxq3EOn9Aab2jte8EzlS2MoJoU5VeyP
+         q+RG/QBjefP/BjUrF6GOEJJNneBDKSJy3+lfacQHk02W++/y6cJG4tgqbl944oJUgLy0
+         02+BQoMmCPbdC45fe2/9Kng3pUicl/PHZaK4vMxaDWbyEp5GftGyNd5Sn5z+0Z74Kh+a
+         JLAhbtsXoOA65lR1wrC5CVAsKuGsrsLOxn9yhd1r4zYeHGPhkZ8Jl+jz7E9OgGMnEmiu
+         7FoQ==
+X-Gm-Message-State: AOAM530lSj/cd3iWo+3/FIOJkPm+DfgN7QOqe6Akm5g1CjyFeXc+KXQX
+        x4rekacY/ltUSMprxM7C3gfJMm67Mgl9wTXdmms=
+X-Google-Smtp-Source: ABdhPJzCTkEkc6x9bPHAS+mMVokm63i+ft0JaoTpGrUgTTekG8+kZol92XMK91SVh8Y2tQwk7nOjar/WpkGDyy7r//k=
+X-Received: by 2002:a17:90a:d90c:: with SMTP id c12mr11705143pjv.129.1620219337894;
+ Wed, 05 May 2021 05:55:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210503154647.142551-1-hdegoede@redhat.com> <20210503154647.142551-6-hdegoede@redhat.com>
+ <CAHp75VcS5nvzBzjbSytqD6qsSURyzdEdmDi934y=5W2SCNyo9A@mail.gmail.com>
+ <ee230261-423d-0e2f-16b0-852d264afa2b@redhat.com> <CAHp75VcfkcaVAu2-8-5he7PN=W_tRHiHAgXYn04gRnLehDVsyQ@mail.gmail.com>
+ <ffb46bb6-3548-4ec2-f176-99f3674e7f6d@redhat.com> <CAHp75VcHEMaZ67yy7TD8f8Nk=+oiLT-vRCt9A6fT9K6LeR78Ew@mail.gmail.com>
+ <adb9be8a-70c7-b515-48c3-7e372e5d8801@redhat.com>
+In-Reply-To: <adb9be8a-70c7-b515-48c3-7e372e5d8801@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 May 2021 15:55:21 +0300
+Message-ID: <CAHp75Vcd0U0MBisj3jYb2gptNk7JU61Jtv-MbwnsDK2hzuxU7Q@mail.gmail.com>
+Subject: Re: [PATCH 5/9] drm/i915: Associate ACPI connector nodes with
+ connector entries
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -75,126 +77,39 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20210503154647.142551-1-hdegoede@redhat.com>
- <20210503154647.142551-9-hdegoede@redhat.com>
- <YJJwukxJfi9gGKcf@kuha.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1bd8e7e8-c8d3-5846-fd5c-acf4c35678b7@redhat.com>
-Date:   Wed, 5 May 2021 12:44:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <YJJwukxJfi9gGKcf@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Heikki,
+On Wed, May 5, 2021 at 1:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 5/5/21 12:02 PM, Andy Shevchenko wrote:
 
-On 5/5/21 12:17 PM, Heikki Krogerus wrote:
-> Hi Hans,
-> 
-> On Mon, May 03, 2021 at 05:46:46PM +0200, Hans de Goede wrote:
->> Use the new drm_connector_find_by_fwnode() and
->> drm_connector_oob_hotplug_event() functions to let drm/kms drivers
->> know about DisplayPort over Type-C hotplug events.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> - Add missing depends on DRM to TYPEC_DP_ALTMODE Kconfig entry
->> ---
->>  drivers/usb/typec/altmodes/Kconfig       |  1 +
->>  drivers/usb/typec/altmodes/displayport.c | 40 +++++++++++++++++++++++-
->>  2 files changed, 40 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/typec/altmodes/Kconfig b/drivers/usb/typec/altmodes/Kconfig
->> index 60d375e9c3c7..1a6b5e872b0d 100644
->> --- a/drivers/usb/typec/altmodes/Kconfig
->> +++ b/drivers/usb/typec/altmodes/Kconfig
->> @@ -4,6 +4,7 @@ menu "USB Type-C Alternate Mode drivers"
->>  
->>  config TYPEC_DP_ALTMODE
->>  	tristate "DisplayPort Alternate Mode driver"
->> +	depends on DRM
->>  	help
->>  	  DisplayPort USB Type-C Alternate Mode allows DisplayPort
->>  	  displays and adapters to be attached to the USB Type-C
->> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
->> index aa669b9cf70e..f00dfc5c14b6 100644
->> --- a/drivers/usb/typec/altmodes/displayport.c
->> +++ b/drivers/usb/typec/altmodes/displayport.c
->> @@ -11,8 +11,10 @@
->>  #include <linux/delay.h>
->>  #include <linux/mutex.h>
->>  #include <linux/module.h>
->> +#include <linux/property.h>
->>  #include <linux/usb/pd_vdo.h>
->>  #include <linux/usb/typec_dp.h>
->> +#include <drm/drm_connector.h>
->>  #include "displayport.h"
->>  
->>  #define DP_HEADER(_dp, ver, cmd)	(VDO((_dp)->alt->svid, 1, ver, cmd)	\
->> @@ -62,12 +64,30 @@ struct dp_altmode {
->>  	struct work_struct work;
->>  	struct typec_altmode *alt;
->>  	const struct typec_altmode *port;
->> +	struct fwnode_handle *connector_fwnode;
->>  };
->>  
->> +static void dp_altmode_notify_connector(struct dp_altmode *dp)
->> +{
->> +	struct drm_connector_oob_hotplug_event_data data = { };
->> +	u8 pin_assign = DP_CONF_GET_PIN_ASSIGN(dp->data.conf);
->> +
->> +	data.connected = dp->data.status & DP_STATUS_HPD_STATE;
->> +	data.orientation = typec_altmode_get_orientation(dp->alt);
->> +
->> +	if (pin_assign & DP_PIN_ASSIGN_DP_ONLY_MASK)
->> +		data.dp_lanes = 4;
->> +	else if (pin_assign & DP_PIN_ASSIGN_MULTI_FUNC_MASK)
->> +		data.dp_lanes = 2;
->> +
->> +	drm_connector_oob_hotplug_event(dp->connector_fwnode, &data);
->> +}
->> +
->>  static int dp_altmode_notify(struct dp_altmode *dp)
->>  {
->>  	unsigned long conf;
->>  	u8 state;
->> +	int ret;
->>  
->>  	if (dp->data.conf) {
->>  		state = get_count_order(DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
->> @@ -76,7 +96,12 @@ static int dp_altmode_notify(struct dp_altmode *dp)
->>  		conf = TYPEC_STATE_USB;
->>  	}
->>  
->> -	return typec_altmode_notify(dp->alt, conf, &dp->data);
->> +	ret = typec_altmode_notify(dp->alt, conf, &dp->data);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dp_altmode_notify_connector(dp);
-> 
-> That is now going to be always called after configuration, right? The
-> HPD is not necessarily issued at that point.
-> 
-> I think that should be called from dp_altmode_status_update(), and
-> probable only if there really is HPD IRQ or HPD State changes... I
-> think?
+...
 
-I did see this triggering a bit more often then necessary on the initial
-plugin of a DP-altmode capable Type-C "dongle", so what you are suggesting
-makes sense. I'll come up with a better approach for the next version.
+> But we do really need to document the behavior better here
+> in the kdoc for fwnode_get_next_child_node() and
+> device_get_next_child_node().
 
-Regards,
+Totally agree!
 
-Hans
+> of_get_next_child has this bit, which applies to those too:
+>
+>  *      Returns a node pointer with refcount incremented, use of_node_put() on
+>  *      it when done. Returns NULL when prev is the last child. Decrements the
+>  *      refcount of prev.
+>
+> I'll prepare a patch to add this to the kdoc for fwnode_get_next_child_node()
+> and device_get_next_child_node() once I'm done with readying v3 of this series.
 
+Thanks!
+
+-- 
+With Best Regards,
+Andy Shevchenko
