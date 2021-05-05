@@ -2,70 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1353C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12CC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAC6561057
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9A861057
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 10:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbhEEKnM (ORCPT
+        id S232496AbhEEKpu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 May 2021 06:43:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57847 "EHLO
+        Wed, 5 May 2021 06:45:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47185 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232286AbhEEKnM (ORCPT
+        by vger.kernel.org with ESMTP id S232147AbhEEKph (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 May 2021 06:43:12 -0400
+        Wed, 5 May 2021 06:45:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620211335;
+        s=mimecast20190719; t=1620211476;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mTN0y4oCcFWbB08r7lkZ4UjVsFr6S/2p9fg9DPkTRUA=;
-        b=f7ieV3PsBlgkdaZUZkq3M2w9iSPaJpnjCUrT/Jr/+Roxr7P7P1gQPugd/yIbb0P4zgNYOO
-        lzNTKPfpg8nFNe+Q70WpQfIxR0FncsRXOEb5eNi+eaCzjKajluhVYLpcLQlCEuxQzeLX+d
-        XQKHTIoLbWoyIDPoj7HU/pF7oZ1C8uY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-322-AOug-HN3PfKerXo3c398sQ-1; Wed, 05 May 2021 06:42:14 -0400
-X-MC-Unique: AOug-HN3PfKerXo3c398sQ-1
-Received: by mail-ej1-f69.google.com with SMTP id r18-20020a1709069592b029039256602ce8so293579ejx.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 05 May 2021 03:42:13 -0700 (PDT)
+        bh=D8317tVLe7KUvXC09G6GyS987twLdZ4cyuo5A5o+ofI=;
+        b=eH8U32GKdATemNtNU10WAflfdfMUia72HtjkW83RqcT9hCxjnVuccB0oxohBxaFoivyF1F
+        JHtRLiNJ2qrFtmF3cTmHoQiGon0Vk3Mr7UoiFcV1tjzmuGV3GI14bB9dHTXHd7D8GV7n1J
+        De5Orms4evlc0Lwx7PPTjRAdl3K5plo=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-97-3E4mJetINQCee9mpfslmLg-1; Wed, 05 May 2021 06:44:35 -0400
+X-MC-Unique: 3E4mJetINQCee9mpfslmLg-1
+Received: by mail-ed1-f72.google.com with SMTP id d13-20020a056402144db0290387e63c95d8so644303edx.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 05 May 2021 03:44:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=mTN0y4oCcFWbB08r7lkZ4UjVsFr6S/2p9fg9DPkTRUA=;
-        b=j2/FGnNl0YkZ/Ard4o1P/KPDdiULIL7HQzuCTFfvkP+GdmmxL4h8f8boAlYounmVNI
-         EixrKd7drECLZdOytF2UhnveWmVFqHSQdhAPrFbpR8e6QGY8EvXvL59Q9MPAAS9wgObR
-         wn5bT5idOZKUALXbqS5LuITglYGtSSQG8Euv1r4SGS3Ko5WEYjbRW/6w8dVVOj95gHle
-         Ngqeum+xkEVjYdRYlVA+MAmpbchRA771fLmcTBqk6n4LE80sXyiAk2uc/s9IzUP2vVrQ
-         V2Xi/9NcNm42W9CliH4VEaNz45VZq0IIkV5uEKPPMvP9krD5lXaDqdoJVOB7A/QQUicA
-         35JA==
-X-Gm-Message-State: AOAM5309ZvEGCPBUz/fc0olKQS3gNWSJiFQP+Q/YNmuBxv/FbvPBxsEu
-        Hf0CpkT8pjQIjrduqgUr9F2mdU6/hknBfeSNI+juFAmaxPQV43OfHJXImfpBcI4N3q9R6KyD2lc
-        9qbE+RDZBrfK1mNdbJhPrxN2tUDmv8UGO3w==
-X-Received: by 2002:a17:906:abcc:: with SMTP id kq12mr10305574ejb.97.1620211332826;
-        Wed, 05 May 2021 03:42:12 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwT5NzeVG+LfxMtGXKXQs9mkRuGS75LOBk4BPyRER/VEFGmrGVCJeDof9BEBpxs3KV/LWSyYw==
-X-Received: by 2002:a17:906:abcc:: with SMTP id kq12mr10305549ejb.97.1620211332659;
-        Wed, 05 May 2021 03:42:12 -0700 (PDT)
+        bh=D8317tVLe7KUvXC09G6GyS987twLdZ4cyuo5A5o+ofI=;
+        b=W5kg7qnBJbhm2gUMQbRcQ4ZdoUwndnhV+beQQIDh2GQdXr7lAHj83TGLy5ud1c1Wbp
+         +yd2O/Gz4o8z7Ej3awTqIwsUy7BlZTwCedz0oakFKmaQS/kuVacrxiMz2KNOuVVYRadL
+         QxbotHEQGBK/Z9RLUJXJn94Ta34lKIw6ZahON8+ZXNE1ePjoehaan0e0KX0tPIOR/2ZJ
+         JIYfHTYjSHvH2JFodwt8YIqvCjGSdejgQt5Av2VswP9jjA7RaE1gLjgjrvO2isiwdX+F
+         PRYwntRtSo+SQu0d/lfFqUDxR8qqF9p82IwbLertOOruFkt+GSDdi9y3m0i1RqL1U0hR
+         ivZw==
+X-Gm-Message-State: AOAM5321pbBaR9L9HF3HZMfZvxUannX4oeHwQCOPFL4sOFfMuP8BJ0jT
+        ptjGr+Fr6WY3kyfcdvo+1ljPuo31sjhAarTb8aUwuOAwHSGe8Gp6VLHT25UpM1wcdcQbbp4qJKo
+        F6xw6nRL3QHN7gBl+3Hny+zMNCk95pbqHoA==
+X-Received: by 2002:a17:906:4a13:: with SMTP id w19mr2768018eju.533.1620211473864;
+        Wed, 05 May 2021 03:44:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz9TxBnFcM0pbX6pLK+U0KVaA5VXQIH9Zr2v/Cvoge0CfqACkcP1Bcqo5txeqKIySeQSu5IGQ==
+X-Received: by 2002:a17:906:4a13:: with SMTP id w19mr2767996eju.533.1620211473655;
+        Wed, 05 May 2021 03:44:33 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id d15sm2632188ejj.42.2021.05.05.03.42.11
+        by smtp.gmail.com with ESMTPSA id c12sm17705253edx.54.2021.05.05.03.44.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 May 2021 03:42:12 -0700 (PDT)
-Subject: Re: [PATCH 4/9] drm/connector: Add support for out-of-band hotplug
- notification (v2)
+        Wed, 05 May 2021 03:44:33 -0700 (PDT)
+Subject: Re: [PATCH 8/9] usb: typec: altmodes/displayport: Notify drm subsys
+ of hotplug events
 To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Imre Deak <imre.deak@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -79,17 +79,15 @@ Cc:     Imre Deak <imre.deak@intel.com>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
 References: <20210503154647.142551-1-hdegoede@redhat.com>
- <20210503154647.142551-5-hdegoede@redhat.com>
- <YJFj5Vk7xOcj+ISZ@kuha.fi.intel.com>
- <326621fe-cc4e-ad77-c87e-922a655bfbc8@redhat.com>
- <YJJqeVzS8do3F8wx@kuha.fi.intel.com>
+ <20210503154647.142551-9-hdegoede@redhat.com>
+ <YJJwukxJfi9gGKcf@kuha.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a56b7d60-39a0-8520-8b38-82c0789e4442@redhat.com>
-Date:   Wed, 5 May 2021 12:42:11 +0200
+Message-ID: <1bd8e7e8-c8d3-5846-fd5c-acf4c35678b7@redhat.com>
+Date:   Wed, 5 May 2021 12:44:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <YJJqeVzS8do3F8wx@kuha.fi.intel.com>
+In-Reply-To: <YJJwukxJfi9gGKcf@kuha.fi.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -97,81 +95,104 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Heikki,
 
-On 5/5/21 11:50 AM, Heikki Krogerus wrote:
-> On Tue, May 04, 2021 at 05:35:49PM +0200, Hans de Goede wrote:
->> Hi,
+On 5/5/21 12:17 PM, Heikki Krogerus wrote:
+> Hi Hans,
+> 
+> On Mon, May 03, 2021 at 05:46:46PM +0200, Hans de Goede wrote:
+>> Use the new drm_connector_find_by_fwnode() and
+>> drm_connector_oob_hotplug_event() functions to let drm/kms drivers
+>> know about DisplayPort over Type-C hotplug events.
 >>
->> On 5/4/21 5:10 PM, Heikki Krogerus wrote:
->>>> +/**
->>>> + * drm_connector_oob_hotplug_event - Report out-of-band hotplug event to connector
->>>> + * @connector: connector to report the event on
->>>> + * @data: data related to the event
->>>> + *
->>>> + * On some hardware a hotplug event notification may come from outside the display
->>>> + * driver / device. An example of this is some USB Type-C setups where the hardware
->>>> + * muxes the DisplayPort data and aux-lines but does not pass the altmode HPD
->>>> + * status bit to the GPU's DP HPD pin.
->>>> + *
->>>> + * This function can be used to report these out-of-band events after obtaining
->>>> + * a drm_connector reference through calling drm_connector_find_by_fwnode().
->>>> + */
->>>> +void drm_connector_oob_hotplug_event(struct fwnode_handle *connector_fwnode,
->>>> +				     struct drm_connector_oob_hotplug_event_data *data)
->>>> +{
->>>> +	struct drm_connector *connector;
->>>> +
->>>> +	connector = drm_connector_find_by_fwnode(connector_fwnode);
->>>> +	if (IS_ERR(connector))
->>>> +		return;
->>>> +
->>>> +	if (connector->funcs->oob_hotplug_event)
->>>> +		connector->funcs->oob_hotplug_event(connector, data);
->>>> +
->>>> +	drm_connector_put(connector);
->>>> +}
->>>> +EXPORT_SYMBOL(drm_connector_oob_hotplug_event);
->>>
->>> So it does looks like the "data" parameter is not needed at all:
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> - Add missing depends on DRM to TYPEC_DP_ALTMODE Kconfig entry
+>> ---
+>>  drivers/usb/typec/altmodes/Kconfig       |  1 +
+>>  drivers/usb/typec/altmodes/displayport.c | 40 +++++++++++++++++++++++-
+>>  2 files changed, 40 insertions(+), 1 deletion(-)
 >>
->> Well Imre did indicate that having the number of lanes is useful, so
->> for the next version I'll drop the orientation but I plan to keep
->> the number of lanes if that is ok with you.
->>
->> Not having passing along this info was one of the reasons why my
->> previous attempt at this was nacked, so dropping it all together
->> feels wrong.
+>> diff --git a/drivers/usb/typec/altmodes/Kconfig b/drivers/usb/typec/altmodes/Kconfig
+>> index 60d375e9c3c7..1a6b5e872b0d 100644
+>> --- a/drivers/usb/typec/altmodes/Kconfig
+>> +++ b/drivers/usb/typec/altmodes/Kconfig
+>> @@ -4,6 +4,7 @@ menu "USB Type-C Alternate Mode drivers"
+>>  
+>>  config TYPEC_DP_ALTMODE
+>>  	tristate "DisplayPort Alternate Mode driver"
+>> +	depends on DRM
+>>  	help
+>>  	  DisplayPort USB Type-C Alternate Mode allows DisplayPort
+>>  	  displays and adapters to be attached to the USB Type-C
+>> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+>> index aa669b9cf70e..f00dfc5c14b6 100644
+>> --- a/drivers/usb/typec/altmodes/displayport.c
+>> +++ b/drivers/usb/typec/altmodes/displayport.c
+>> @@ -11,8 +11,10 @@
+>>  #include <linux/delay.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/module.h>
+>> +#include <linux/property.h>
+>>  #include <linux/usb/pd_vdo.h>
+>>  #include <linux/usb/typec_dp.h>
+>> +#include <drm/drm_connector.h>
+>>  #include "displayport.h"
+>>  
+>>  #define DP_HEADER(_dp, ver, cmd)	(VDO((_dp)->alt->svid, 1, ver, cmd)	\
+>> @@ -62,12 +64,30 @@ struct dp_altmode {
+>>  	struct work_struct work;
+>>  	struct typec_altmode *alt;
+>>  	const struct typec_altmode *port;
+>> +	struct fwnode_handle *connector_fwnode;
+>>  };
+>>  
+>> +static void dp_altmode_notify_connector(struct dp_altmode *dp)
+>> +{
+>> +	struct drm_connector_oob_hotplug_event_data data = { };
+>> +	u8 pin_assign = DP_CONF_GET_PIN_ASSIGN(dp->data.conf);
+>> +
+>> +	data.connected = dp->data.status & DP_STATUS_HPD_STATE;
+>> +	data.orientation = typec_altmode_get_orientation(dp->alt);
+>> +
+>> +	if (pin_assign & DP_PIN_ASSIGN_DP_ONLY_MASK)
+>> +		data.dp_lanes = 4;
+>> +	else if (pin_assign & DP_PIN_ASSIGN_MULTI_FUNC_MASK)
+>> +		data.dp_lanes = 2;
+>> +
+>> +	drm_connector_oob_hotplug_event(dp->connector_fwnode, &data);
+>> +}
+>> +
+>>  static int dp_altmode_notify(struct dp_altmode *dp)
+>>  {
+>>  	unsigned long conf;
+>>  	u8 state;
+>> +	int ret;
+>>  
+>>  	if (dp->data.conf) {
+>>  		state = get_count_order(DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
+>> @@ -76,7 +96,12 @@ static int dp_altmode_notify(struct dp_altmode *dp)
+>>  		conf = TYPEC_STATE_USB;
+>>  	}
+>>  
+>> -	return typec_altmode_notify(dp->alt, conf, &dp->data);
+>> +	ret = typec_altmode_notify(dp->alt, conf, &dp->data);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	dp_altmode_notify_connector(dp);
 > 
-> If you need to pass any information to the function, then you need to
-> pass all the information that we have. Don't start with abstraction.
-> First create a dedicated API, and then, only if we really have another
-> user for it, we can add an abstraction layer that both users can use.
-> All cases are going to be different. We don't know how the abstraction
-> / generalisation should look like before we have at least two real
-> users (ideally more than two, actually). Right now we can not even say
-> for sure that generalising the API is even possible.
+> That is now going to be always called after configuration, right? The
+> HPD is not necessarily issued at that point.
 > 
-> I would not make a huge deal out of this unless I wasn't myself being
-> told by guys like Greg KH in the past to drop my attempts to
-> "generalize" things from the beginning when I only had a single user.
-> By doing so you'll not only force all ends, the source of the data
-> (the typec drivers in this case) as well as the consumer (i915), to be
-> always changed together, it will also confuse things. We are not
-> always going to be able to tell the lane count for example like we can
-> with USB Type-C, so i915 can't really rely on that information.
-> 
-> Right now we also don't know what exact details i915 (or what ever GPU
-> driver) needs. We can only say for sure that some details are going to
-> be needed. Trying to guess and cherry-pick the details now does not
-> makes sense because of that reason too.
-> 
-> So just make this API USB Type-C DP Alt Mode specific API first, and
-> supply it everything we have.
+> I think that should be called from dp_altmode_status_update(), and
+> probable only if there really is HPD IRQ or HPD State changes... I
+> think?
 
-Hmm, ok I'll just drop the data argument all together for now (as you
-already suggested); and then we can see what is best once an actual user
-for the info shows up.
+I did see this triggering a bit more often then necessary on the initial
+plugin of a DP-altmode capable Type-C "dongle", so what you are suggesting
+makes sense. I'll come up with a better approach for the next version.
 
 Regards,
 
