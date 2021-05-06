@@ -2,188 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 117B6C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 16:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C606EC43470
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 May 2021 08:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4D66121F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  5 May 2021 16:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A2A610EA
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  6 May 2021 08:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234015AbhEEQZy (ORCPT
+        id S233765AbhEFI1k (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 5 May 2021 12:25:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48650 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234014AbhEEQZx (ORCPT
+        Thu, 6 May 2021 04:27:40 -0400
+Received: from aclms3.advantech.com.tw ([125.252.70.86]:61945 "EHLO
+        aclms3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233767AbhEFI1i (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 5 May 2021 12:25:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620231897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HBAgHsEW2V/hJFYOrDzIb9UIEkONRDljr8/UOShS7J4=;
-        b=h+5WOGyAkj4g+Sv96xqFMDm8027GdE2f6H25xNqYzipCEEb3Wetl0FFjSuGP6d77YGvTcU
-        GBDIy3GAjx+0LRrbuEtCgSmoN3WniDlYrhw/MYJNtCNsrKYKMTHoTPnzAguFKvbrfmnbrh
-        HarcxFjUzcD1bUUz+NNt+b+TrQwDG7c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-356-LKKOLCgXNyutRawazBuh0w-1; Wed, 05 May 2021 12:24:53 -0400
-X-MC-Unique: LKKOLCgXNyutRawazBuh0w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6215A19251B8;
-        Wed,  5 May 2021 16:24:50 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-112-71.ams2.redhat.com [10.36.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 828D45C1C5;
-        Wed,  5 May 2021 16:24:47 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thu, 6 May 2021 04:27:38 -0400
+X-Greylist: delayed 603 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 May 2021 04:27:37 EDT
+Received: from taipei09.ADVANTECH.CORP (unverified [172.20.0.236]) by ACLMS4.ADVANTECH.CORP
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Te64ee006b6ac14110e2c04@ACLMS4.ADVANTECH.CORP>;
+ Thu, 6 May 2021 16:16:22 +0800
+Received: from localhost (172.16.13.205) by taipei09.ADVANTECH.CORP
+ (172.20.0.236) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 6 May
+ 2021 16:16:21 +0800
+From:   Campion Kang <campion.kang@advantech.com.tw>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH 8/8] usb: typec: altmodes/displayport: Notify drm subsys of hotplug events
-Date:   Wed,  5 May 2021 18:24:15 +0200
-Message-Id: <20210505162415.531876-9-hdegoede@redhat.com>
-In-Reply-To: <20210505162415.531876-1-hdegoede@redhat.com>
-References: <20210505162415.531876-1-hdegoede@redhat.com>
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>,
+        AceLan Kao <chia-lin.kao@canonical.com>,
+        Campion Kang <campion.kang@advantech.com.tw>
+Subject: [PATCH v7 1/7] MAINTAINERS: Add Advantech AHC1EC0 embedded controller entry
+Date:   Thu, 6 May 2021 16:16:13 +0800
+Message-ID: <20210506081619.2443-1-campion.kang@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.16.13.205]
+X-ClientProxiedBy: aclcas3.ADVANTECH.CORP (172.20.1.12) To
+ taipei09.ADVANTECH.CORP (172.20.0.236)
+X-TM-SNTS-SMTP: 7876205C7FEC843B581A29769A73260EFC38050E181FB3FE9EB1A7062F0750B12000:8
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Use the new drm_connector_oob_hotplug_event() functions to let drm/kms
-drivers know about DisplayPort over Type-C hotplug events.
+Changed in V7:
+	1. According to the reviewer's comment, add two files:
+	   Documentation/hwmon/ahc1ec0-hwmon.rst and
+	   drivers/platform/x86/ahc1ec0-core.c
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Campion Kang <campion.kang@advantech.com.tw>
 ---
-Changes in v3:
-- Only call drm_connector_oob_hotplug_event() on hpd status bit change
-- Adjust for drm_connector_oob_hotplug_event() no longer having a data
-  argument
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Changes in v2:
-- Add missing depends on DRM to TYPEC_DP_ALTMODE Kconfig entry
----
- drivers/usb/typec/altmodes/Kconfig       |  1 +
- drivers/usb/typec/altmodes/displayport.c | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/drivers/usb/typec/altmodes/Kconfig b/drivers/usb/typec/altmodes/Kconfig
-index 60d375e9c3c7..1a6b5e872b0d 100644
---- a/drivers/usb/typec/altmodes/Kconfig
-+++ b/drivers/usb/typec/altmodes/Kconfig
-@@ -4,6 +4,7 @@ menu "USB Type-C Alternate Mode drivers"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 83c2b1867586..984795eb6b5d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -572,6 +572,19 @@ S:	Maintained
+ F:	Documentation/scsi/advansys.rst
+ F:	drivers/scsi/advansys.c
  
- config TYPEC_DP_ALTMODE
- 	tristate "DisplayPort Alternate Mode driver"
-+	depends on DRM
- 	help
- 	  DisplayPort USB Type-C Alternate Mode allows DisplayPort
- 	  displays and adapters to be attached to the USB Type-C
-diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-index aa669b9cf70e..c1d8c23baa39 100644
---- a/drivers/usb/typec/altmodes/displayport.c
-+++ b/drivers/usb/typec/altmodes/displayport.c
-@@ -11,8 +11,10 @@
- #include <linux/delay.h>
- #include <linux/mutex.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include <linux/usb/pd_vdo.h>
- #include <linux/usb/typec_dp.h>
-+#include <drm/drm_connector.h>
- #include "displayport.h"
- 
- #define DP_HEADER(_dp, ver, cmd)	(VDO((_dp)->alt->svid, 1, ver, cmd)	\
-@@ -57,11 +59,13 @@ struct dp_altmode {
- 	struct typec_displayport_data data;
- 
- 	enum dp_state state;
-+	bool hpd;
- 
- 	struct mutex lock; /* device lock */
- 	struct work_struct work;
- 	struct typec_altmode *alt;
- 	const struct typec_altmode *port;
-+	struct fwnode_handle *connector_fwnode;
- };
- 
- static int dp_altmode_notify(struct dp_altmode *dp)
-@@ -125,6 +129,7 @@ static int dp_altmode_configure(struct dp_altmode *dp, u8 con)
- static int dp_altmode_status_update(struct dp_altmode *dp)
- {
- 	bool configured = !!DP_CONF_GET_PIN_ASSIGN(dp->data.conf);
-+	bool hpd = !!(dp->data.status & DP_STATUS_HPD_STATE);
- 	u8 con = DP_STATUS_CONNECTION(dp->data.status);
- 	int ret = 0;
- 
-@@ -137,6 +142,11 @@ static int dp_altmode_status_update(struct dp_altmode *dp)
- 		ret = dp_altmode_configure(dp, con);
- 		if (!ret)
- 			dp->state = DP_STATE_CONFIGURE;
-+	} else {
-+		if (dp->hpd != hpd) {
-+			drm_connector_oob_hotplug_event(dp->connector_fwnode);
-+			dp->hpd = hpd;
-+		}
- 	}
- 
- 	return ret;
-@@ -512,6 +522,7 @@ static const struct attribute_group dp_altmode_group = {
- int dp_altmode_probe(struct typec_altmode *alt)
- {
- 	const struct typec_altmode *port = typec_altmode_get_partner(alt);
-+	struct fwnode_handle *fwnode;
- 	struct dp_altmode *dp;
- 	int ret;
- 
-@@ -540,6 +551,11 @@ int dp_altmode_probe(struct typec_altmode *alt)
- 	alt->desc = "DisplayPort";
- 	alt->ops = &dp_altmode_ops;
- 
-+	fwnode = dev_fwnode(alt->dev.parent->parent); /* typec_port fwnode */
-+	dp->connector_fwnode = fwnode_find_reference(fwnode, "displayport", 0);
-+	if (IS_ERR(dp->connector_fwnode))
-+		dp->connector_fwnode = NULL;
++ADVANTECH AHC1EC0 EMBEDDED CONTROLLER DRIVER
++M:	Campion Kang <campion.kang@advantech.com.tw>
++L:	linux-kernel@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/ahc1ec0.yaml
++F:	Documentation/hwmon/ahc1ec0-hwmon.rst
++F:	drivers/hwmon/ahc1ec0-hwmon.c
++F:	drivers/mfd/ahc1ec0.c
++F:	drivers/platform/x86/ahc1ec0-core.c
++F:	drivers/watchdog/ahc1ec0-wdt.c
++F:	include/dt-bindings/mfd/ahc1ec0-dt.h
++F:	include/linux/platform_data/ahc1ec0.h
 +
- 	typec_altmode_set_drvdata(alt, dp);
- 
- 	dp->state = DP_STATE_ENTER;
-@@ -555,6 +571,13 @@ void dp_altmode_remove(struct typec_altmode *alt)
- 
- 	sysfs_remove_group(&alt->dev.kobj, &dp_altmode_group);
- 	cancel_work_sync(&dp->work);
-+
-+	if (dp->connector_fwnode) {
-+		if (dp->hpd)
-+			drm_connector_oob_hotplug_event(dp->connector_fwnode);
-+
-+		fwnode_handle_put(dp->connector_fwnode);
-+	}
- }
- EXPORT_SYMBOL_GPL(dp_altmode_remove);
- 
+ ADVANTECH SWBTN DRIVER
+ M:	Andrea Ho <Andrea.Ho@advantech.com.tw>
+ L:	platform-driver-x86@vger.kernel.org
 -- 
-2.31.1
+2.17.1
 
