@@ -2,342 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B62BC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 13:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D81C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:19:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1E761042
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 13:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB2D06145A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235840AbhEGNTD (ORCPT
+        id S230453AbhEGPUb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 May 2021 09:19:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34438 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229886AbhEGNTC (ORCPT
+        Fri, 7 May 2021 11:20:31 -0400
+Received: from mail-eopbgr750075.outbound.protection.outlook.com ([40.107.75.75]:60973
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S234986AbhEGPU0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 May 2021 09:19:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620393482;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bc6gFYtaAautPv5s36zE7t1w1DxKhv3daqqZP7w0uFc=;
-        b=LI+NNj2Xq8Zk+UgcArE9o9QfPcLgXvNdi03r/CfnoGs6CjZL+N/byIeRzCtSZaMEQ12RUv
-        yPxTGp+c4G9maWE+QpnzxMVCcQ2f7uj6bpPQmJvGhTwpw/tAv5BoCgwohgx/ZHf3jrista
-        4x4/08FYnDovPiQLOinNjsYimbDVC4s=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-510-O_o7xsW_NHuxW73ejL6lDQ-1; Fri, 07 May 2021 09:18:00 -0400
-X-MC-Unique: O_o7xsW_NHuxW73ejL6lDQ-1
-Received: by mail-ej1-f69.google.com with SMTP id h9-20020a1709063c09b0290393e97fec0fso2991627ejg.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 07 May 2021 06:18:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Bc6gFYtaAautPv5s36zE7t1w1DxKhv3daqqZP7w0uFc=;
-        b=eHBxEwEdVHxiV2/l6Nyz9+dgWVLAT10JZ2FQvcEIeScnJzH0Ma+LoIGZ+IvAGrb/r/
-         dJ75D3CFPUmzsLeO2nN8RUCuH6lK6wuvGMUSTJ/u3mJqsmlH5vk0i+uhMPLEksd7hAmv
-         dm6D7nryO8oKmWvF4cGA9HTzzEhiEY8+M2QaQn+pbNsMXIoR73PYIlhQv+kvUvWtMIOt
-         LhsexaSOO4aDk6fROIMHGKW5DwqsrRKuvyhgaMhuAKz5t4cR5vYHKdTfJZFA/eiRNh7z
-         iyF4uQ517jh+OMRZRObRK04W1XPTDyEjWdWkInAe67wRN6VA2L7kyxFKr/P2H+nRALGW
-         Ubaw==
-X-Gm-Message-State: AOAM53253CD5OEUncUP1TQJzSL0bQHUoDX/4fgkl22qGo5qFyzmQcsc6
-        nWsxcYeXcGC6oB5fggCeyFfb6Nt6RNvB9Hsk5nUTUubtORN6Of2ppa+qhzSgXPyYHUgaaGwIPZy
-        GSYf4NqkPiIlmTvTuMiXsQC6BfCnoFMJNGg==
-X-Received: by 2002:a17:906:cf82:: with SMTP id um2mr10056070ejb.322.1620393479003;
-        Fri, 07 May 2021 06:17:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx9RMAbnLQQM1GfifQbHqjze/BSzkOG3iRxhRcv6/Dy2qouIy+i/Xzf+Rt2n5APZnk1bnbXJg==
-X-Received: by 2002:a17:906:cf82:: with SMTP id um2mr10056039ejb.322.1620393478737;
-        Fri, 07 May 2021 06:17:58 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id q16sm4278106edv.61.2021.05.07.06.17.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 May 2021 06:17:58 -0700 (PDT)
-Subject: Re: [PATCH v8 2/2] ASoC: rt715:add micmute led state control supports
-To:     Perry Yuan <Perry.Yuan@dell.com>, pobrn@protonmail.com,
-        pierre-louis.bossart@linux.intel.com, oder_chiou@realtek.com,
-        perex@perex.cz, tiwai@suse.com, mgross@linux.intel.com
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, mario.limonciello@outlook.com,
-        Dell.Client.Kernel@dell.com
-References: <20210506115626.12480-1-Perry_Yuan@Dell.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <050c2e9d-9510-523b-5504-10397d7ec96f@redhat.com>
-Date:   Fri, 7 May 2021 15:17:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Fri, 7 May 2021 11:20:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DQ7XLuMLoftgSHV1Io/DGeTyVeV97j8YJS6PbyqIKPt2BFF/PSmdITERCkJ105yCAwtCZZoi72bBQa2BmXG4NjOFltaC45golirogmNEQuB9PXNB8nE6ppXqE5+Rt2z7V324aFpbZIabNrsLLB87EVtkMYL9lgCqaiC/lIGjTaHELip372XNDU303UWuIUzC3SFWtmfu/EiOjjKDvqUGpnRp0tyqg33ygKw3NzVn2rtgeDGu340iRP2RkFFkDrZm9Nt9noWQzgTaDq7mAWGJtSOggTPn9vVNJDVpeFw/SXnYxp4k0ZVdEbi2uD8oGWOcvobi+7VEvj5Ma9o9gDtwDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GbEZz2n+tapIljuUc48Fxgac9r6ElzY36Em4ewmIaxU=;
+ b=QUN+AgT+qvIkm+rEwei/pjM6yF81gp6aV4cAOBf/UDAfSt+NXKpVWNl97GEP9g6cIaMRARQjwz6iMOYthgnjPmFN2oafW22BzczXZxLXxV0TfMl0MWSME3EUF+q3AsOgKLjomWt+u9KMYu1A93UBxXnSp5YOdobiBNp5/82dJeAnuIicGLVXG4+gokxNUrFzkYKUFbtWUX4Vp7eTUEmHfb3n+5bQOxR08RXQzLDPPafShZ80qUsxTbRGh1VUGGW50wuqerAsfBpX3Py7DjTLWFz6LP1pBL3sKGvoxeZKuGvz86CpKFaO5Dmawg14pQVObaMBl5SyxkCbMD4fDYSxqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GbEZz2n+tapIljuUc48Fxgac9r6ElzY36Em4ewmIaxU=;
+ b=uWUgdvky1zW1mmkaF2O6SjWtCZ1KT2ATQglTvxU1v0jZM+T3lW4V8yO/rKKNcA9CGMYmm5NEpD9A0j0n3iDGFuqHzc6XuEuj7mftfqU6aUCfYKS0Kbt50lXIz00hiRRTXaw0wWXRBjM03OnXJ5DGbJyKqlBamdOpCDzwuAUeR7NLCNjVXq/IQwM2otHRDFQuWUQYStga2LuBpkxzwg2GlSy41poL6cDmcIwBSTFYh9OreArrzeuyzCfCZd6nsLTD6yharIsBzfOVjuqdtOQXOR7wWpIPi5GlrvAnC1tvJcoaLfTrSO3T4M8CQOjFHerrzsJ4YbdbjyM9J5HDav3v1A==
+Received: from BN9PR03CA0391.namprd03.prod.outlook.com (2603:10b6:408:111::6)
+ by CO6PR12MB5457.namprd12.prod.outlook.com (2603:10b6:5:355::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Fri, 7 May
+ 2021 15:19:23 +0000
+Received: from BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:111:cafe::37) by BN9PR03CA0391.outlook.office365.com
+ (2603:10b6:408:111::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
+ Transport; Fri, 7 May 2021 15:19:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.32; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.32) by
+ BN8NAM11FT060.mail.protection.outlook.com (10.13.177.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4108.25 via Frontend Transport; Fri, 7 May 2021 15:19:23 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 May
+ 2021 08:19:22 -0700
+Received: from vdi.nvidia.com (172.20.145.6) by mail.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 May 2021 15:19:21 +0000
+From:   Liming Sun <limings@nvidia.com>
+To:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>
+CC:     Liming Sun <limings@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory barrier issue
+Date:   Fri, 7 May 2021 11:19:14 -0400
+Message-ID: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20210506115626.12480-1-Perry_Yuan@Dell.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d6f82deb-a9ed-4505-a652-08d9116b7eec
+X-MS-TrafficTypeDiagnostic: CO6PR12MB5457:
+X-Microsoft-Antispam-PRVS: <CO6PR12MB5457AD4DD29212452672F25BD3579@CO6PR12MB5457.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:556;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eyl1t4kpJQiJY9L+E/7hr7sW+4MlR8PfXVuqd1p8qNfJJSFBqc560vPXdCoExQ3/iIUUbpgK0FP4Ji2bI+GWY6tcGXlwZyd5TT6f3a9wsEw3G3JOzZ2kf0pTRQQ7Zon3C/P2OlmmSRIp9Bj4SWFU2wqLlKzfqVAhfa9nklhZUGanBMy/D1w4HHbqzewrhKB8xAk5EU7NvxHj/QW97cH1xmMQhL6QtGP/hy7KJC6dYq+tGfKuMXI3RWLqrDLDt3vfq9ZFU+GARAVx6dutC7hfc2kMXf0bn6dYFDoYXOyW/x22jVzQRM/I/n1fougdUm1hBYDpGBU5Iu6/QD2o1JgcA0NwPpAmwkULRONfsOF76NTzzbydWMt9f4ftzGYFynuK+EiCimjkM2+9g+LxGLJnBM8jBFwWkqFv/712pFnsZJnD9lB7MKqfMAUThJbf7UXk7alaIfRSYpd/ac16NBo4e2nbs1nkdjAD9ULJWVWMr8M1+ABNqkdUbw3EtLomskkJBpRvPf/HFC7C5rKDVtD3sYoD4sWa4k3S92AS7KcCr1/BeXB3ObMyFIn9OUiHy9CV6JhK1HA4pjxSp/48kbTPPjZNych21ZhtmymW9bY6AVB5o9Kqrkpsy5Yr/jpIopnYAHC4kJdAoz2BR5+me82Tow==
+X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(346002)(136003)(376002)(396003)(36840700001)(46966006)(86362001)(47076005)(5660300002)(8936002)(82310400003)(70206006)(2616005)(54906003)(70586007)(82740400003)(426003)(83380400001)(110136005)(36756003)(316002)(7636003)(36860700001)(6666004)(336012)(26005)(4326008)(7696005)(186003)(8676002)(2906002)(478600001)(356005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2021 15:19:23.6148
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6f82deb-a9ed-4505-a652-08d9116b7eec
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5457
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Perry,
+The virtio framework uses wmb() when updating avail->idx. It
+guarantees the write order, but not necessarily loading order
+for the code accessing the memory. This commit adds a load barrier
+after reading the avail->idx to make sure all the data in the
+descriptor is visible. It also adds a barrier when returning the
+packet to virtio framework to make sure read/writes are visible to
+the virtio code.
 
-On 5/6/21 1:56 PM, Perry Yuan wrote:
-> From: Perry Yuan <perry_yuan@dell.com>
-> 
-> Some new Dell system is going to support audio internal micphone
-> privacy setting from hardware level with micmute led state changing
-> When micmute hotkey pressed by user, soft mute will need to be enabled
-> firstly in case of pop noise, and codec driver need to react to mic
-> mute event to EC(embedded controller) notifying that SW mute is completed
-> Then EC will do the hardware mute physically within the timeout reached
-> 
-> This patch allow codec rt715 and rt715 sdca driver to change the local micmute
-> led state. Dell privacy led trigger driver will ack EC when micmute key pressed
-> through this micphone led control interface like hda_generic provided
-> ACPI method defined in dell-privacy micmute led trigger will be called
-> for notifying the EC that software mute has been completed, then hardware
-> audio circuit solution controlled by EC will switch the audio input source off/on
-> 
-> Signed-off-by: Perry Yuan <perry_yuan@dell.com>
+Signed-off-by: Liming Sun <limings@nvidia.com>
+---
+ drivers/platform/mellanox/mlxbf-tmfifo.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-NACK, as explained before we want the binding of the control to the
-LED-trigger to be done from the UCM profile.
-
-Support for this has landed kernel-side in Linux tree now (this will
-be part of 5.13-rc1). Together with the latest git alsa-lib and
-alsa-utils code, you can now do what this patch does from an UCM
-profile file and AFAIK that is the preferred way to do this.
-
-See here for an example UCM profile patch implementing this:
-
-https://lore.kernel.org/alsa-devel/20210507131139.10231-3-hdegoede@redhat.com/T/#u
-
-Note that if you test this under Fedora you will hit a selinux denial,
-to workaround that you can put selinux in permissive mode. This selinux
-issue is being tracked here:
-
-https://bugzilla.redhat.com/show_bug.cgi?id=1958210
-
-Regards,
-
-Hans
-
-
-
-
-
-
-> 
-> --------
-> v7 -> v8:
-> * N/A
-> v6 -> v7:
-> * addresed review comments from Jaroslav
-> * use device id in the quirk list
-> v5 -> v6:
-> * add quirks for micmute led control as short term solution to control
->   micmute led state change
-> * add comments for the invert checking
-> v4 -> v5:
-> * rebase to latest 5.12 rc4 upstream kernel
-> v3 -> v4:
-> * remove unused debug log
-> * remove compile flag of DELL privacy
-> * move the micmute_led to local from rt715_priv
-> * when Jaroslav upstream his gerneric LED trigger driver,I will rebase
->   this patch,please consider merge this at first
->   https://lore.kernel.org/alsa-devel/20210211111400.1131020-1-perex@perex.cz/
-> v2 -> v3:
-> * simplify the patch to reuse some val value
-> * add more detail to the commit info
-> v1 -> v2:
-> * fix some format issue
-> --------
-> ---
->  sound/soc/codecs/rt715-sdca.c | 42 +++++++++++++++++++++++++++++++++++
->  sound/soc/codecs/rt715.c      | 42 +++++++++++++++++++++++++++++++++++
->  2 files changed, 84 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/rt715-sdca.c b/sound/soc/codecs/rt715-sdca.c
-> index 936e3061ca1e..de46514e0207 100644
-> --- a/sound/soc/codecs/rt715-sdca.c
-> +++ b/sound/soc/codecs/rt715-sdca.c
-> @@ -11,12 +11,14 @@
->  #include <linux/moduleparam.h>
->  #include <linux/kernel.h>
->  #include <linux/init.h>
-> +#include <linux/leds.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm.h>
->  #include <linux/soundwire/sdw.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  #include <linux/platform_device.h>
-> +#include <linux/dmi.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -344,6 +346,32 @@ static int rt715_sdca_get_volsw(struct snd_kcontrol *kcontrol,
->  	return 0;
->  }
->  
-> +static bool micmute_led_set;
-> +static int  dmi_matched(const struct dmi_system_id *dmi)
-> +{
-> +	micmute_led_set = 1;
-> +	return 1;
-> +}
-> +
-> +/* Some systems will need to use this to trigger mic mute LED state changed */
-> +static const struct dmi_system_id micmute_led_dmi_table[] = {
-> +	{
-> +		.callback = dmi_matched,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "0A32"),
-> +		},
-> +	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "0A3E"),
-> +		},
-> +	},
-> +	{},
-> +};
-> +
->  static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->  	struct snd_ctl_elem_value *ucontrol)
->  {
-> @@ -358,6 +386,7 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->  	unsigned int mask = (1 << fls(max)) - 1;
->  	unsigned int invert = p->invert;
->  	int err;
-> +	bool micmute_led;
->  
->  	for (i = 0; i < 4; i++) {
->  		if (ucontrol->value.integer.value[i] != rt715->kctl_switch_orig[i]) {
-> @@ -394,6 +423,18 @@ static int rt715_sdca_put_volsw(struct snd_kcontrol *kcontrol,
->  			return err;
->  	}
->  
-> +	/* Micmute LED state changed by muted/unmute switch
-> +	 * to keep syncing with actual hardware mic mute led state
-> +	 * invert will be checked to change the state switch
-> +	 */
-> +	if (invert && micmute_led_set) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1])
-> +			micmute_led = LED_OFF;
-> +		else
-> +			micmute_led = LED_ON;
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
-> +
->  	return k_changed;
->  }
->  
-> @@ -1069,6 +1110,7 @@ int rt715_sdca_io_init(struct device *dev, struct sdw_slave *slave)
->  
->  	pm_runtime_mark_last_busy(&slave->dev);
->  	pm_runtime_put_autosuspend(&slave->dev);
-> +	dmi_check_system(micmute_led_dmi_table);
->  
->  	return 0;
->  }
-> diff --git a/sound/soc/codecs/rt715.c b/sound/soc/codecs/rt715.c
-> index 1352869cc086..4dbd870009b8 100644
-> --- a/sound/soc/codecs/rt715.c
-> +++ b/sound/soc/codecs/rt715.c
-> @@ -13,6 +13,7 @@
->  #include <linux/init.h>
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/leds.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm.h>
->  #include <linux/soundwire/sdw.h>
-> @@ -25,6 +26,7 @@
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_device.h>
-> +#include <linux/dmi.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -70,6 +72,32 @@ static void rt715_get_gain(struct rt715_priv *rt715, unsigned int addr_h,
->  		pr_err("Failed to get L channel gain.\n");
->  }
->  
-> +static bool micmute_led_set;
-> +static int  dmi_matched(const struct dmi_system_id *dmi)
-> +{
-> +	micmute_led_set = 1;
-> +	return 1;
-> +}
-> +
-> +/* Some systems will need to use this to trigger mic mute LED state changed */
-> +static const struct dmi_system_id micmute_led_dmi_table[] = {
-> +	{
-> +		.callback = dmi_matched,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "0A32"),
-> +		},
-> +	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +			DMI_MATCH(DMI_PRODUCT_SKU, "0A3E"),
-> +		},
-> +	},
-> +	{},
-> +};
-> +
->  /* For Verb-Set Amplifier Gain (Verb ID = 3h) */
->  static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->  					struct snd_ctl_elem_value *ucontrol)
-> @@ -83,6 +111,7 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->  	unsigned int addr_h, addr_l, val_h, val_ll, val_lr;
->  	unsigned int read_ll, read_rl, i;
->  	unsigned int k_vol_changed = 0;
-> +	bool micmute_led;
->  
->  	for (i = 0; i < 2; i++) {
->  		if (ucontrol->value.integer.value[i] != rt715->kctl_2ch_vol_ori[i]) {
-> @@ -155,6 +184,18 @@ static int rt715_set_amp_gain_put(struct snd_kcontrol *kcontrol,
->  			break;
->  	}
->  
-> +	/* Micmute LED state changed by muted/unmute switch
-> +	 * to keep syncing with actual hardware mic mute led state
-> +	 * invert will be checked to change the state switch
-> +	 */
-> +	if (micmute_led_set) {
-> +		if (ucontrol->value.integer.value[0] || ucontrol->value.integer.value[1])
-> +			micmute_led = LED_OFF;
-> +		else
-> +			micmute_led = LED_ON;
-> +		ledtrig_audio_set(LED_AUDIO_MICMUTE, micmute_led);
-> +	}
-> +
->  	/* D0:power on state, D3: power saving mode */
->  	if (dapm->bias_level <= SND_SOC_BIAS_STANDBY)
->  		regmap_write(rt715->regmap,
-> @@ -1088,6 +1129,7 @@ int rt715_io_init(struct device *dev, struct sdw_slave *slave)
->  
->  	pm_runtime_mark_last_busy(&slave->dev);
->  	pm_runtime_put_autosuspend(&slave->dev);
-> +	dmi_check_system(micmute_led_dmi_table);
->  
->  	return 0;
->  }
-> 
+diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
+index bbc4e71..38800e8 100644
+--- a/drivers/platform/mellanox/mlxbf-tmfifo.c
++++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+@@ -294,6 +294,9 @@ static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
+ 	if (vring->next_avail == virtio16_to_cpu(vdev, vr->avail->idx))
+ 		return NULL;
+ 
++	/* Make sure 'avail->idx' is visible already. */
++	virtio_rmb(false);
++
+ 	idx = vring->next_avail % vr->num;
+ 	head = virtio16_to_cpu(vdev, vr->avail->ring[idx]);
+ 	if (WARN_ON(head >= vr->num))
+@@ -322,7 +325,7 @@ static void mlxbf_tmfifo_release_desc(struct mlxbf_tmfifo_vring *vring,
+ 	 * done or not. Add a memory barrier here to make sure the update above
+ 	 * completes before updating the idx.
+ 	 */
+-	mb();
++	virtio_mb(false);
+ 	vr->used->idx = cpu_to_virtio16(vdev, vr_idx + 1);
+ }
+ 
+@@ -733,6 +736,12 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
+ 		desc = NULL;
+ 		fifo->vring[is_rx] = NULL;
+ 
++		/*
++		 * Make sure the load/store are in order before
++		 * returning back to virtio.
++		 */
++		virtio_mb(false);
++
+ 		/* Notify upper layer that packet is done. */
+ 		spin_lock_irqsave(&fifo->spin_lock[is_rx], flags);
+ 		vring_interrupt(0, vring->vq);
+-- 
+1.8.3.1
 
