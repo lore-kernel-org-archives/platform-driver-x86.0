@@ -2,153 +2,196 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BAD_THREAD_QP_64,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D81C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D57CC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2D06145A
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3A961476
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 15:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhEGPUb (ORCPT
+        id S237985AbhEGPjq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 May 2021 11:20:31 -0400
-Received: from mail-eopbgr750075.outbound.protection.outlook.com ([40.107.75.75]:60973
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        Fri, 7 May 2021 11:39:46 -0400
+Received: from mail-dm3nam07on2062.outbound.protection.outlook.com ([40.107.95.62]:24801
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234986AbhEGPU0 (ORCPT
+        id S237951AbhEGPjp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 May 2021 11:20:26 -0400
+        Fri, 7 May 2021 11:39:45 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DQ7XLuMLoftgSHV1Io/DGeTyVeV97j8YJS6PbyqIKPt2BFF/PSmdITERCkJ105yCAwtCZZoi72bBQa2BmXG4NjOFltaC45golirogmNEQuB9PXNB8nE6ppXqE5+Rt2z7V324aFpbZIabNrsLLB87EVtkMYL9lgCqaiC/lIGjTaHELip372XNDU303UWuIUzC3SFWtmfu/EiOjjKDvqUGpnRp0tyqg33ygKw3NzVn2rtgeDGu340iRP2RkFFkDrZm9Nt9noWQzgTaDq7mAWGJtSOggTPn9vVNJDVpeFw/SXnYxp4k0ZVdEbi2uD8oGWOcvobi+7VEvj5Ma9o9gDtwDQ==
+ b=AjOuDrrVxbo0xiAAcsFApyCJyvyzbUli8GqklWyK6dYahNFQxzaAmu6VizBaGV2r62zgP/S7UFPtCUkxyEmZH77X12BSqVMjVKXqRZ4D1Ych8DFqqrKH/FqpNrbguUzMe5U1aTyjwkX4XNUf471MWz+9XbFTE/1WDI8nFcYrQMtA1Wb5J3rx8OiT44pfDuZmd5MrMQ+khnA9iJk8vSE7OXIx3ntnfFsvgnNCk1W9HqdjI/oHshsQD+sT3Z1zT3cF7UfxZLPf7IXYzwnOTeTqvRVvbk5R1UaAVlv7mASUtAaqiMxKMMRL06MuiYhUY0mUUOlTNtGBvXwA5t1mGWhpOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GbEZz2n+tapIljuUc48Fxgac9r6ElzY36Em4ewmIaxU=;
- b=QUN+AgT+qvIkm+rEwei/pjM6yF81gp6aV4cAOBf/UDAfSt+NXKpVWNl97GEP9g6cIaMRARQjwz6iMOYthgnjPmFN2oafW22BzczXZxLXxV0TfMl0MWSME3EUF+q3AsOgKLjomWt+u9KMYu1A93UBxXnSp5YOdobiBNp5/82dJeAnuIicGLVXG4+gokxNUrFzkYKUFbtWUX4Vp7eTUEmHfb3n+5bQOxR08RXQzLDPPafShZ80qUsxTbRGh1VUGGW50wuqerAsfBpX3Py7DjTLWFz6LP1pBL3sKGvoxeZKuGvz86CpKFaO5Dmawg14pQVObaMBl5SyxkCbMD4fDYSxqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
+ bh=49fV9V4ii53To7kF+6pdv9N/QuOT/Z6gr0QLV5fVLSk=;
+ b=m14rSTNLmfxReJG4sh9M3BSIOSSVAK7iT6UVF5i5JjZQAxilzLTNgKasJGGX69OLeCC48ZsAZ+fMsrKiKx/s/TJpMssTlFL/Rjdug99ufoEUy8et3WQ/Ij6mqowj4hnwaV0fOhxGs9zRuEhY7uQCiivbDpqoebrkSCh8gJgqmKFbvbq1fpGznE140DnmLvPmrbHTzif9XZpreKI5QVaIZO6DhxCADvjghYzKiPBkooyvyQZZL0KAr/eS+/kGzt75vnd6vkdObDPISPwTx/UkSOxaJ578u/BaghWx/QsfkPTI2lvMbfom1JSaNJLBU7GK7LHSHOHM2UL4mSPFkEcGLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GbEZz2n+tapIljuUc48Fxgac9r6ElzY36Em4ewmIaxU=;
- b=uWUgdvky1zW1mmkaF2O6SjWtCZ1KT2ATQglTvxU1v0jZM+T3lW4V8yO/rKKNcA9CGMYmm5NEpD9A0j0n3iDGFuqHzc6XuEuj7mftfqU6aUCfYKS0Kbt50lXIz00hiRRTXaw0wWXRBjM03OnXJ5DGbJyKqlBamdOpCDzwuAUeR7NLCNjVXq/IQwM2otHRDFQuWUQYStga2LuBpkxzwg2GlSy41poL6cDmcIwBSTFYh9OreArrzeuyzCfCZd6nsLTD6yharIsBzfOVjuqdtOQXOR7wWpIPi5GlrvAnC1tvJcoaLfTrSO3T4M8CQOjFHerrzsJ4YbdbjyM9J5HDav3v1A==
-Received: from BN9PR03CA0391.namprd03.prod.outlook.com (2603:10b6:408:111::6)
- by CO6PR12MB5457.namprd12.prod.outlook.com (2603:10b6:5:355::16) with
+ bh=49fV9V4ii53To7kF+6pdv9N/QuOT/Z6gr0QLV5fVLSk=;
+ b=uE3e4aTF1emtnwX+IlE07bNoXSIQWWSFFHVOiJ5ceBS6HSle1VLB+6haBLU0UTdeKssogbUqwkhZvaxv//opG8CKVOfrFEoPCnNmVomTa9dwBSdBrm5cA7qQX8wGLzNXJNIK4v0DOV7UoVpO7CrYVnC0z9xkKJ5k8CxzlGFHy8jPL1FKWpXISjyhSZ0GtMS8dWuDNZ+zP5msdqp57h41UcQ31vMryKWg6Gu2HvpAaZOY17sfamk3wiGj2hwyd4VQAzRhpNi2LTzuNToZ9wTP5vswh3nTX9uV8DVSCafUxM6HVHfAIqgkLJlWXy6WAtKNRXxJi9Fux3W8/JEslcqbSw==
+Received: from DM6PR12MB3898.namprd12.prod.outlook.com (2603:10b6:5:1c6::18)
+ by DM6PR12MB3290.namprd12.prod.outlook.com (2603:10b6:5:189::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Fri, 7 May
- 2021 15:19:23 +0000
-Received: from BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:111:cafe::37) by BN9PR03CA0391.outlook.office365.com
- (2603:10b6:408:111::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Fri, 7 May 2021 15:19:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.32; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.32) by
- BN8NAM11FT060.mail.protection.outlook.com (10.13.177.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4108.25 via Frontend Transport; Fri, 7 May 2021 15:19:23 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 May
- 2021 08:19:22 -0700
-Received: from vdi.nvidia.com (172.20.145.6) by mail.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 7 May 2021 15:19:21 +0000
-From:   Liming Sun <limings@nvidia.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-CC:     Liming Sun <limings@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.44; Fri, 7 May
+ 2021 15:38:43 +0000
+Received: from DM6PR12MB3898.namprd12.prod.outlook.com
+ ([fe80::dce6:427d:df17:3974]) by DM6PR12MB3898.namprd12.prod.outlook.com
+ ([fe80::dce6:427d:df17:3974%5]) with mapi id 15.20.4108.029; Fri, 7 May 2021
+ 15:38:43 +0000
+From:   Vadim Pasternak <vadimp@nvidia.com>
+To:     Liming Sun <limings@nvidia.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
         <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory barrier issue
-Date:   Fri, 7 May 2021 11:19:14 -0400
-Message-ID: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
-X-Mailer: git-send-email 1.8.3.1
+Subject: RE: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+ barrier issue
+Thread-Topic: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+ barrier issue
+Thread-Index: AQHXQ1RdUjtajmzQJUmA3Sb603ZA9qrYJvVA
+Date:   Fri, 7 May 2021 15:38:43 +0000
+Message-ID: <DM6PR12MB389868EDF9F7B1607E6E1BF0AF579@DM6PR12MB3898.namprd12.prod.outlook.com>
+References: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
+In-Reply-To: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [46.117.116.151]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 83b85837-2dd3-43e7-88fa-08d9116e31fa
+x-ms-traffictypediagnostic: DM6PR12MB3290:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB32902F99ADC9B42CEBFDA6CEAF579@DM6PR12MB3290.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:913;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: RXBqkgy1/PXiDRNVEPCWVPe6eKOaddJBoba2WVKnE/3Bk4fJiX65MCs1afCbL02JnEq6WSuIVPyy0V0XKg4aoSx4Wdr3MVMvAU5CuhH6aJ/KUhydmEUtb76waZhySWUYQKz1zz0ChtxrPBfNQgphS/QpGeYR2jQZYvxFXY47gGwZPOt2N6M7bhgUn2Fd/yJH0tyBpReqbG50xYwPczDENO6Sl40wQl1d6zPnOGX3m6/wpzQhQPKZA69AEO1dfEysoJ0zGREfqq6u697OXeJZWYTW8UAuu+voN9GrzITeeN1TPO6XfS2F4z+6eS2AU7bOcZJMY7XLrBcjsNJnD8QkQVAC5YlMOGBEaaQEAAHrE9luJlGLMb8wKuOmrfxHdMWvPMtqy5d/9b+E74odvV5Rh+i9bLSLbx4I27Va4ynaUTFfA3oySjoeEpFBj++LXQ8AH1gx79/yDsFhcAoriEMIL5eRWLbkV+aL91HpIb0ZMjsF1inTlVK8jl9f1nB7+4uuoAWpr34KNm5DJQK3Oi2kzv9W4Dkl7Qmz1QOEsAgTNoR++1Zsd7MUypUi0Av/CIdnF06l3zA001/ocThIvD8OUXotCJeMMSnu1E1VMru6/qA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3898.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(33656002)(8676002)(71200400001)(316002)(83380400001)(66946007)(5660300002)(6506007)(53546011)(9686003)(4326008)(66446008)(8936002)(2906002)(26005)(55016002)(52536014)(478600001)(186003)(66556008)(86362001)(54906003)(38100700002)(66476007)(64756008)(7696005)(76116006)(110136005)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?/ET1p4dnSWx5iFgjUqQBjhA1itkVL2LHlaqOydhW8ni4SmBDI6e+kC+Tgjh1?=
+ =?us-ascii?Q?d5Ww+PjjtJlyLOL2ZoSLTj0ViM6P/UxDMqqZrRf7s2Mhl0C4SKlV7RxOMJju?=
+ =?us-ascii?Q?cuhVQnwU0wDmaIcIG0JO7ralVHZbPfB4FlE4XTmqOJKTWgZeesktTbwuHe//?=
+ =?us-ascii?Q?OcS29FeEyb9IG1FRafTsnsadQAtX+Ky/QYn0PCRvwPrjVVSUPgw0L7gaYdaY?=
+ =?us-ascii?Q?Ifvjspy0wZK0X0nshixn1lGccrFvtAxD5ZFfsTTRhQ6TxBZ31pl9ZRnLIXXu?=
+ =?us-ascii?Q?83x+4lWkwplixDwudkdfm5rr0bBkXgA2HluEA3qLKDdAlIK2WePqqurdu0JF?=
+ =?us-ascii?Q?JGgFj3zuVHcsSQhTCOduH3ercBePCrqth6SDMzB3qQdMLvLrId+RnZM8sA7W?=
+ =?us-ascii?Q?Lvd7uUV4nZ6QdHZJVpZbMhY7b8QKDJT6eRtIDVY/IYIyIVKR62/zM4cer9id?=
+ =?us-ascii?Q?VhGtNiGbL8BTg07yghJ4L0zjpwS/5z8W/hbnIKpHE3HuzpEJN0rn47dIYDIX?=
+ =?us-ascii?Q?r7MufKeEkSwg3CgUoSdWnulAdKfi3bFCKtiaZBvSP+yHVEVKFLInv3pXlzwM?=
+ =?us-ascii?Q?J43k5kSH883FGMc2oTMaBjiV/lKNuqnNKU0hi6mp1EAkkd3SfeZObhsV+Rhq?=
+ =?us-ascii?Q?t0hR3q2bvlRT2zXEVPGxCTbf2RZ/bUWVUrK0jv8MrxDPQgw6gSXPmNsgtbsC?=
+ =?us-ascii?Q?GTX2DdYlUS/8OuikujgIf6nx7+i4u/6ZLGNPbrLj54TSUPVFy+gm0UlUQz5x?=
+ =?us-ascii?Q?uKLXlOaHsqRUBPvhXaXfNjfzP2zzSiNlNcjOqTWtAzUNPVrEhLK5v1r6BpZY?=
+ =?us-ascii?Q?oODGYpO3VbUQ3yJEHeVbpP4QglV7VIiGh+bU4hoZ1KXJ0EmJhJ/dtHEarC4h?=
+ =?us-ascii?Q?MiavrkxQTakF+tUGwKbdrCIdyJwkQVMw7QIU/Ez2Z1kBBiOjOcxZRzb+gKnd?=
+ =?us-ascii?Q?7QTOA+elODemJZQ5+EbFmYf8uX6W9W83CVf5EkBHJ1Ba/mG28PNCx8AlPMiC?=
+ =?us-ascii?Q?w++ViNsAyS8EWHAaESfE2aqh18IG/tdsN+uQvJUWGkpoQocre2d3zgSd5MNy?=
+ =?us-ascii?Q?Yrzsom88+xXAKofYUAp5NjLxbZfW+taM2OKw2F3W+SP3D5KGQY0t5xW7IAq7?=
+ =?us-ascii?Q?8gxDtQzG6cKPgADjWoRsHBExGsFn3dt4k/I5tPTLSuPgT/891nwCZv8GnBvc?=
+ =?us-ascii?Q?1AotxzT2bq5mxrH4atEK2VaHXjNF9baYUoe//QE1769VbckSH+8yfjFSmGIu?=
+ =?us-ascii?Q?1adGPiuIK4rfgvt1qLwBhlMzGEUmC9mSRk5AtVJ6Teqq7UFqX+Ekok1o5+65?=
+ =?us-ascii?Q?gI9oMYRdPorW7Rhq44EK8ZAE?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d6f82deb-a9ed-4505-a652-08d9116b7eec
-X-MS-TrafficTypeDiagnostic: CO6PR12MB5457:
-X-Microsoft-Antispam-PRVS: <CO6PR12MB5457AD4DD29212452672F25BD3579@CO6PR12MB5457.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:556;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eyl1t4kpJQiJY9L+E/7hr7sW+4MlR8PfXVuqd1p8qNfJJSFBqc560vPXdCoExQ3/iIUUbpgK0FP4Ji2bI+GWY6tcGXlwZyd5TT6f3a9wsEw3G3JOzZ2kf0pTRQQ7Zon3C/P2OlmmSRIp9Bj4SWFU2wqLlKzfqVAhfa9nklhZUGanBMy/D1w4HHbqzewrhKB8xAk5EU7NvxHj/QW97cH1xmMQhL6QtGP/hy7KJC6dYq+tGfKuMXI3RWLqrDLDt3vfq9ZFU+GARAVx6dutC7hfc2kMXf0bn6dYFDoYXOyW/x22jVzQRM/I/n1fougdUm1hBYDpGBU5Iu6/QD2o1JgcA0NwPpAmwkULRONfsOF76NTzzbydWMt9f4ftzGYFynuK+EiCimjkM2+9g+LxGLJnBM8jBFwWkqFv/712pFnsZJnD9lB7MKqfMAUThJbf7UXk7alaIfRSYpd/ac16NBo4e2nbs1nkdjAD9ULJWVWMr8M1+ABNqkdUbw3EtLomskkJBpRvPf/HFC7C5rKDVtD3sYoD4sWa4k3S92AS7KcCr1/BeXB3ObMyFIn9OUiHy9CV6JhK1HA4pjxSp/48kbTPPjZNych21ZhtmymW9bY6AVB5o9Kqrkpsy5Yr/jpIopnYAHC4kJdAoz2BR5+me82Tow==
-X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(346002)(136003)(376002)(396003)(36840700001)(46966006)(86362001)(47076005)(5660300002)(8936002)(82310400003)(70206006)(2616005)(54906003)(70586007)(82740400003)(426003)(83380400001)(110136005)(36756003)(316002)(7636003)(36860700001)(6666004)(336012)(26005)(4326008)(7696005)(186003)(8676002)(2906002)(478600001)(356005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2021 15:19:23.6148
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3898.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83b85837-2dd3-43e7-88fa-08d9116e31fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2021 15:38:43.1083
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6f82deb-a9ed-4505-a652-08d9116b7eec
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR12MB5457
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: itpSmblLuWTpR9uE4azZAPEuZw3ZPtwOF07yhddOo3SPLTVsOy2mnU41bNG4/4Ypzw/txRwoVMFcW3qVDVdb+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3290
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The virtio framework uses wmb() when updating avail->idx. It
-guarantees the write order, but not necessarily loading order
-for the code accessing the memory. This commit adds a load barrier
-after reading the avail->idx to make sure all the data in the
-descriptor is visible. It also adds a barrier when returning the
-packet to virtio framework to make sure read/writes are visible to
-the virtio code.
 
-Signed-off-by: Liming Sun <limings@nvidia.com>
----
- drivers/platform/mellanox/mlxbf-tmfifo.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index bbc4e71..38800e8 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -294,6 +294,9 @@ static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
- 	if (vring->next_avail == virtio16_to_cpu(vdev, vr->avail->idx))
- 		return NULL;
- 
-+	/* Make sure 'avail->idx' is visible already. */
-+	virtio_rmb(false);
-+
- 	idx = vring->next_avail % vr->num;
- 	head = virtio16_to_cpu(vdev, vr->avail->ring[idx]);
- 	if (WARN_ON(head >= vr->num))
-@@ -322,7 +325,7 @@ static void mlxbf_tmfifo_release_desc(struct mlxbf_tmfifo_vring *vring,
- 	 * done or not. Add a memory barrier here to make sure the update above
- 	 * completes before updating the idx.
- 	 */
--	mb();
-+	virtio_mb(false);
- 	vr->used->idx = cpu_to_virtio16(vdev, vr_idx + 1);
- }
- 
-@@ -733,6 +736,12 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
- 		desc = NULL;
- 		fifo->vring[is_rx] = NULL;
- 
-+		/*
-+		 * Make sure the load/store are in order before
-+		 * returning back to virtio.
-+		 */
-+		virtio_mb(false);
-+
- 		/* Notify upper layer that packet is done. */
- 		spin_lock_irqsave(&fifo->spin_lock[is_rx], flags);
- 		vring_interrupt(0, vring->vq);
--- 
-1.8.3.1
+> -----Original Message-----
+> From: Liming Sun <limings@nvidia.com>
+> Sent: Friday, May 7, 2021 6:19 PM
+> To: Andy Shevchenko <andy@infradead.org>; Darren Hart
+> <dvhart@infradead.org>; Vadim Pasternak <vadimp@nvidia.com>
+> Cc: Liming Sun <limings@nvidia.com>; linux-kernel@vger.kernel.org;
+> platform-driver-x86@vger.kernel.org
+> Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+> barrier issue
+>=20
+> The virtio framework uses wmb() when updating avail->idx. It guarantees
+> the write order, but not necessarily loading order for the code accessing=
+ the
+> memory. This commit adds a load barrier after reading the avail->idx to m=
+ake
+> sure all the data in the descriptor is visible. It also adds a barrier wh=
+en
+> returning the packet to virtio framework to make sure read/writes are vis=
+ible
+> to the virtio code.
+
+I suppose it should be sent as Bugfix?
+
+>=20
+> Signed-off-by: Liming Sun <limings@nvidia.com>
+> ---
+>  drivers/platform/mellanox/mlxbf-tmfifo.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> index bbc4e71..38800e8 100644
+> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> @@ -294,6 +294,9 @@ static irqreturn_t mlxbf_tmfifo_irq_handler(int irq,
+> void *arg)
+>  	if (vring->next_avail =3D=3D virtio16_to_cpu(vdev, vr->avail->idx))
+>  		return NULL;
+>=20
+> +	/* Make sure 'avail->idx' is visible already. */
+> +	virtio_rmb(false);
+> +
+>  	idx =3D vring->next_avail % vr->num;
+>  	head =3D virtio16_to_cpu(vdev, vr->avail->ring[idx]);
+>  	if (WARN_ON(head >=3D vr->num))
+> @@ -322,7 +325,7 @@ static void mlxbf_tmfifo_release_desc(struct
+> mlxbf_tmfifo_vring *vring,
+>  	 * done or not. Add a memory barrier here to make sure the update
+> above
+>  	 * completes before updating the idx.
+>  	 */
+> -	mb();
+> +	virtio_mb(false);
+>  	vr->used->idx =3D cpu_to_virtio16(vdev, vr_idx + 1);  }
+>=20
+> @@ -733,6 +736,12 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct
+> mlxbf_tmfifo_vring *vring,
+>  		desc =3D NULL;
+>  		fifo->vring[is_rx] =3D NULL;
+>=20
+> +		/*
+> +		 * Make sure the load/store are in order before
+> +		 * returning back to virtio.
+> +		 */
+> +		virtio_mb(false);
+> +
+>  		/* Notify upper layer that packet is done. */
+>  		spin_lock_irqsave(&fifo->spin_lock[is_rx], flags);
+>  		vring_interrupt(0, vring->vq);
+> --
+> 1.8.3.1
 
