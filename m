@@ -2,107 +2,211 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,PDS_BAD_THREAD_QP_64,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236D1C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 23:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46B7C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 00:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCBF761426
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  7 May 2021 23:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940346112F
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 00:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbhEGXyz (ORCPT
+        id S230140AbhEHAP4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 May 2021 19:54:55 -0400
-Received: from mail2.protonmail.ch ([185.70.40.22]:45367 "EHLO
-        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbhEGXyz (ORCPT
+        Fri, 7 May 2021 20:15:56 -0400
+Received: from mail-bn8nam11on2064.outbound.protection.outlook.com ([40.107.236.64]:3232
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229978AbhEHAP4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 May 2021 19:54:55 -0400
-Date:   Fri, 07 May 2021 23:53:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1620431633;
-        bh=pUF9ygArXXTjymauOLFgoYrPve2e0r7z5fiJ/eIXyDY=;
-        h=Date:To:From:Cc:Reply-To:Subject:From;
-        b=dvRXW7vsNtU+mxey1GGhsXAylpCHJuDV4bieKnTC3JGUwZQzuzqSyURXynbNdplom
-         kRQDgfi+mkxrCElV6WCIKRe1jwx3okbyTZJshiOGSZXQNNIt+HmL2aAbVK1J7JCtvS
-         J+ItM9H4scvtVvXk/0LPeraFRDpJsWCS2VOj6BLQ=
-To:     hdegoede@redhat.com, mgross@linux.intel.com, ike.pan@canonical.com,
-        platform-driver-x86@vger.kernel.org
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     stable@vger.kernel.org
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: [PATCH] platform/x86: ideapad-laptop: fix method name typo
-Message-ID: <20210507235333.286505-1-pobrn@protonmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Fri, 7 May 2021 20:15:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DO7Eb+KT26YXg8mNC8ElL14i7zJ8hCk60iqz4vWHN6Rrs2Eb+Zna24CF8v3ZqxvgsCf5FyHBKBtp45Yqd1sz4v+dUm2DVsJxdwllWbAFqoDdIevvKmw/7WK6BcrGmCC6w48zHE5qsWMMQYtS4HH9LEdXCq11CAqQovZogGwDFcFuu6H5ht6YVkNOnLYmd8g5Ju+99KoAGJ6Vmd1pJPnot1/HL3DS22bqE6PRG9FOhYZcIi33gVrKmEbBBA7EO9IaFDiTqE6hWQth/kTSuT5GTBZQnonCYRtY1c8uLcuHjqJmhr89HTssV0UIdlmuXsPWbaYPSV7sWFqYsc2hPa9/Sw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mr0u/enkvA8BN3YZV/TqopTo1YTU73VKV/MH55y6dqg=;
+ b=O594N6V4Zwtu6cpfCjFkmh24B6XnyLUJgu3Ht6eTt5CZ7ClwLVjADTB3u6nMDQIAFxdZPxo9dAC2+Z0Hkz3scVMLHk7iH2prYcSVxlfEe7OtRg5S/YwA7UP1XwbVStoLdVpKtBmFu3TnQHpPVxGKrJL116BF7qO9khcDGIkcNlZ078v5xG7xCBn+7x0MV37r/UTQfqO+JLi9id0togZMwroXrB77oXmGR9LghbG5qqod/y5ZOZFfC4p4i8YsKzCDjYrwlGtSqpZrvCrzUC9hRPQ6DHboOiM2qGDFOrWu3TNjz9dNl6/NCAfm+XqZyyqoZvWuz4aqEj7aGLUpWZmQ2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mr0u/enkvA8BN3YZV/TqopTo1YTU73VKV/MH55y6dqg=;
+ b=Bzy+cK6XxqQTo1FkAdNygpOyHKOLlGIzVWAuQQCDtXtmpzGmWgcirap6kUHAjaNNAAUKGSW1wA3NhSt9csTT9atTtunLUvubx+OeMk5KsjZMxGBWYkyyvndR1+pcQR2dt3lrNUnMWIADv1nbTdNCO6Gx6DOLGeK1cABsJLUG3rOOoVJ3rjv/C37bZIhPujiHKIZsnbrRPJIk28Aux7T7plWE/fhK3aK0DEKMG5tmMI+wUlWgAt0RgD4Qhdp/WLXDpFVmNUEPBStRrG1e7UAVh0lQmum7buRCCUtiEJl6WmX+z863VHLrc7VLcjP7OFLN6PPHpK95S3o3HKZfFnjC4A==
+Received: from MN2PR12MB3565.namprd12.prod.outlook.com (2603:10b6:208:c2::24)
+ by BL0PR12MB4881.namprd12.prod.outlook.com (2603:10b6:208:1c7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24; Sat, 8 May
+ 2021 00:14:52 +0000
+Received: from MN2PR12MB3565.namprd12.prod.outlook.com
+ ([fe80::c52b:46f4:9962:3d53]) by MN2PR12MB3565.namprd12.prod.outlook.com
+ ([fe80::c52b:46f4:9962:3d53%5]) with mapi id 15.20.4108.027; Sat, 8 May 2021
+ 00:14:52 +0000
+From:   Liming Sun <limings@nvidia.com>
+To:     Vadim Pasternak <vadimp@nvidia.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+ barrier issue
+Thread-Topic: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+ barrier issue
+Thread-Index: AQHXQ1Rd0aNDff8xpE27c3mU/0BwmarYJ3aAgACQCEA=
+Date:   Sat, 8 May 2021 00:14:52 +0000
+Message-ID: <MN2PR12MB3565DB8F08395AA14226AF9CD3569@MN2PR12MB3565.namprd12.prod.outlook.com>
+References: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
+ <DM6PR12MB389868EDF9F7B1607E6E1BF0AF579@DM6PR12MB3898.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB389868EDF9F7B1607E6E1BF0AF579@DM6PR12MB3898.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [173.76.169.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f780dff9-30a5-4c1d-4cfe-08d911b64d28
+x-ms-traffictypediagnostic: BL0PR12MB4881:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BL0PR12MB4881A7A3AFDE8CB1ADCCEF8AD3569@BL0PR12MB4881.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:469;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NbP/0dXKUTNHOjzDe6Cq9pPPnPl9vstLHH8vjTzzyXNarjDL2JzYqVniHiC2T1q92G+friSFsGXyYb//p0zxMreUVjb9VYmGTPL2YtzdpehXj6DlvDUP6Nc85DAJz13Un1GFWGv4Xtmhv4TLjXqzA4HTPJbbxcEBKtVELIMplPrmzd3fAtbU22eyw46IkxV99/HGN+h3p+FPe2/xacPrZju+FHvUfVl2EhvRAXhF489pxWkoGALnS4Ao5uQ4spAL4hqDc5aV1xS8zVY43uqp0EkHWzfKWz+Y10noyIw57KoRm+wSLeA3GV5kuB07Kr0pahVUhJdGDKlC/DMel5EZFxYeC9e1HXdrO3amcKoPjQYA17pKjwbaJUgyQllFHbDfLi2vkQMfUL3Lb/hPxL3qdp1XZH/imXUuvweqr1jyWAyVjaHk0N4y92HQCQT7GJnX8j/JEoQHzqUBkb2i6ePoaVqVRYbz5cO47xWAMDf3lE51rGsjIi36hdQKcKjX0F/i6NZWvO7YSm/OiZkBuNftocdpoOP4vSR8zCEl0LnPbsCI+DryCLHGV7ABBzbgMTb3JP9+FAUov9M/HxikTxVZ0GopnOVm/67f+JUgle6syyA=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3565.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(9686003)(38100700002)(186003)(8676002)(4326008)(53546011)(76116006)(316002)(110136005)(8936002)(83380400001)(6506007)(54906003)(478600001)(66946007)(55016002)(5660300002)(64756008)(66476007)(66446008)(66556008)(7696005)(71200400001)(86362001)(33656002)(2906002)(26005)(52536014)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?us-ascii?Q?gngJ1UWd9PyvNAIxx3dOOVB9IaboUuKf5IVLPj8xP6srjEs3YBslscYNcdwV?=
+ =?us-ascii?Q?UTWfSBZTickEOzIhPEglKkQZYntxKl1E1SYQoSNPmLbsSR/9aFjLlkCqYr6F?=
+ =?us-ascii?Q?YzKef61zCcdMUXaTiQOdZvRYmPcAn3JxZeofYK2K7ghS+av/cuSQakTjKhzP?=
+ =?us-ascii?Q?MpaE4lEo4H0bqHyoJxF/D6rLCO+83Dx8vcmFFpk38HvjT1qh4NzbMLsDPSwY?=
+ =?us-ascii?Q?mhJ+U4btNiH84sH89QysVHZvBvoqmC7Xn3Ypt2Tjk1Y6EVGREgYBkXKYY4B+?=
+ =?us-ascii?Q?kcnpjUDJS/rs1ADuCO0rrqn2rJOnsvVRs10DQhMTzt4pwv/LIpYQuU0a59uv?=
+ =?us-ascii?Q?kpe4d5HKfXKYIEx/FK95n26cin293R5esVeNe500ZT8FJoSPE8V8kt3q9jea?=
+ =?us-ascii?Q?9yRU0QCYj8L0qF34Wa6GtrfcQvqssPbw2JkRdNXNuZP+gge9mM98MUz2q5S0?=
+ =?us-ascii?Q?bJX79EJp4dBRC1UWFxuv5gjts01UiGh7oDVpGt/6UnAZ8Wv966op8rUT/7HO?=
+ =?us-ascii?Q?kNAFigWO7lc8TeUSebLei1752IpagrQLa0krSW7/Vgemap0FC1vSVYf6/qQb?=
+ =?us-ascii?Q?WmEMawBAwXi1lPyddPTZIRqxAOCXE7Csx1DWUgr4ikYcXQbq+lksLE2DPL4+?=
+ =?us-ascii?Q?uBwFdVbbCUnKZlatsMFZfXrEkS25xol8ywirGf3M6muZryWFrk4OA0KP0H17?=
+ =?us-ascii?Q?84ePBkdiyvbZL9Apz7ZwD5SgucfXy3qHA7V7L3B0Eh3UL+ZxhcwQ74WXubM4?=
+ =?us-ascii?Q?f9H96NHKMQHmCFVhL1YSfEtgbNOCiyONZdN+NlninHutCTC4+207TU2wBb6d?=
+ =?us-ascii?Q?Rnp3mEkN6S2GwuylAuKKSnHFsbNuxd4rJ0+35vGrU63GtA2zPZZgl/3TbQNL?=
+ =?us-ascii?Q?qWnALZfuJXHWgGjID0yWOARqvZHp3KaOc22nJSGgVOAFCIam300T3rsgibMx?=
+ =?us-ascii?Q?zfYi6zpxSojJVLMPocvCBc2aQOS4JsINx+Wuy/bEEl4jMyMw3uvjJ1LJez2r?=
+ =?us-ascii?Q?oY2EzBrDhYe2OUs/pVHczD8DkIVEIhfLGV5T7WIQHGcT0YbVmahoT+v+ypZb?=
+ =?us-ascii?Q?e5W37bwznW+eVF32zxwP0G70oi9cjG5irnD/HVnSx38lyly8Qd53/PUWB23+?=
+ =?us-ascii?Q?BO8CED+Lhbl0SWlEEtG7zGztVecMTuHvcUszzb80LpQ+Part6UPsoDZEKGmn?=
+ =?us-ascii?Q?PyuoER2vp2KA5ZHOakrhFbNyfR1wTWctkbawvPea9AA7GyahRCMSwPqKOnNH?=
+ =?us-ascii?Q?ss6BbSch8qp5cFCapCMY7MDsETR+i9NaPpE9DxjNCQbaVIptF3Q76CYjH7Gg?=
+ =?us-ascii?Q?Qu7pRRqnTT4OelmO7jw+goUo?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3565.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f780dff9-30a5-4c1d-4cfe-08d911b64d28
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2021 00:14:52.4133
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oHbDwkc/r9a/SLn6LzF6vPmJtm1bsjnd43q/fR9hMS2fR3hi+JillTCKgH0RIIlWeL48d5CEuTrvGWVAW820DA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB4881
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-"smbc" should be "sbmc". `eval_smbc()` incorrectly called
-the SMBC ACPI method instead of SBMC. This resulted in
-partial loss of functionality. Rectify that by calling
-the correct ACPI method (SBMC), and also rename
-methods and constants.
+Thanks!=20
+Sure, I'll resent it as bugfix in v2.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D212985
-Fixes: 0b765671cb80 ("platform/x86: ideapad-laptop: group and separate (un)=
-related constants into enums")
-Fixes: ff36b0d953dc ("platform/x86: ideapad-laptop: rework and create new A=
-CPI helpers")
-Cc: stable@vger.kernel.org # 5.12
-Signed-off-by: Barnab=C3=A1s P=C5=91cze <pobrn@protonmail.com>
----
- drivers/platform/x86/ideapad-laptop.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/i=
-deapad-laptop.c
-index 6cb5ad4be231..8472aa4c5017 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -57,8 +57,8 @@ enum {
- };
-
- enum {
--=09SMBC_CONSERVATION_ON  =3D 3,
--=09SMBC_CONSERVATION_OFF =3D 5,
-+=09SBMC_CONSERVATION_ON  =3D 3,
-+=09SBMC_CONSERVATION_OFF =3D 5,
- };
-
- enum {
-@@ -182,9 +182,9 @@ static int eval_gbmd(acpi_handle handle, unsigned long =
-*res)
- =09return eval_int(handle, "GBMD", res);
- }
-
--static int exec_smbc(acpi_handle handle, unsigned long arg)
-+static int exec_sbmc(acpi_handle handle, unsigned long arg)
- {
--=09return exec_simple_method(handle, "SMBC", arg);
-+=09return exec_simple_method(handle, "SBMC", arg);
- }
-
- static int eval_hals(acpi_handle handle, unsigned long *res)
-@@ -477,7 +477,7 @@ static ssize_t conservation_mode_store(struct device *d=
-ev,
- =09if (err)
- =09=09return err;
-
--=09err =3D exec_smbc(priv->adev->handle, state ? SMBC_CONSERVATION_ON : SM=
-BC_CONSERVATION_OFF);
-+=09err =3D exec_sbmc(priv->adev->handle, state ? SBMC_CONSERVATION_ON : SB=
-MC_CONSERVATION_OFF);
- =09if (err)
- =09=09return err;
-
---
-2.31.1
-
+> -----Original Message-----
+> From: Vadim Pasternak <vadimp@nvidia.com>
+> Sent: Friday, May 7, 2021 11:39 AM
+> To: Liming Sun <limings@nvidia.com>; Andy Shevchenko
+> <andy@infradead.org>; Darren Hart <dvhart@infradead.org>
+> Cc: linux-kernel@vger.kernel.org; platform-driver-x86@vger.kernel.org
+> Subject: RE: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+> barrier issue
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Liming Sun <limings@nvidia.com>
+> > Sent: Friday, May 7, 2021 6:19 PM
+> > To: Andy Shevchenko <andy@infradead.org>; Darren Hart
+> > <dvhart@infradead.org>; Vadim Pasternak <vadimp@nvidia.com>
+> > Cc: Liming Sun <limings@nvidia.com>; linux-kernel@vger.kernel.org;
+> > platform-driver-x86@vger.kernel.org
+> > Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-tmfifo: Fix a memory
+> > barrier issue
+> >
+> > The virtio framework uses wmb() when updating avail->idx. It guarantees
+> > the write order, but not necessarily loading order for the code accessi=
+ng
+> the
+> > memory. This commit adds a load barrier after reading the avail->idx to
+> make
+> > sure all the data in the descriptor is visible. It also adds a barrier =
+when
+> > returning the packet to virtio framework to make sure read/writes are
+> visible
+> > to the virtio code.
+>=20
+> I suppose it should be sent as Bugfix?
+>=20
+> >
+> > Signed-off-by: Liming Sun <limings@nvidia.com>
+> > ---
+> >  drivers/platform/mellanox/mlxbf-tmfifo.c | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > index bbc4e71..38800e8 100644
+> > --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
+> > @@ -294,6 +294,9 @@ static irqreturn_t mlxbf_tmfifo_irq_handler(int irq=
+,
+> > void *arg)
+> >  	if (vring->next_avail =3D=3D virtio16_to_cpu(vdev, vr->avail->idx))
+> >  		return NULL;
+> >
+> > +	/* Make sure 'avail->idx' is visible already. */
+> > +	virtio_rmb(false);
+> > +
+> >  	idx =3D vring->next_avail % vr->num;
+> >  	head =3D virtio16_to_cpu(vdev, vr->avail->ring[idx]);
+> >  	if (WARN_ON(head >=3D vr->num))
+> > @@ -322,7 +325,7 @@ static void mlxbf_tmfifo_release_desc(struct
+> > mlxbf_tmfifo_vring *vring,
+> >  	 * done or not. Add a memory barrier here to make sure the update
+> > above
+> >  	 * completes before updating the idx.
+> >  	 */
+> > -	mb();
+> > +	virtio_mb(false);
+> >  	vr->used->idx =3D cpu_to_virtio16(vdev, vr_idx + 1);  }
+> >
+> > @@ -733,6 +736,12 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct
+> > mlxbf_tmfifo_vring *vring,
+> >  		desc =3D NULL;
+> >  		fifo->vring[is_rx] =3D NULL;
+> >
+> > +		/*
+> > +		 * Make sure the load/store are in order before
+> > +		 * returning back to virtio.
+> > +		 */
+> > +		virtio_mb(false);
+> > +
+> >  		/* Notify upper layer that packet is done. */
+> >  		spin_lock_irqsave(&fifo->spin_lock[is_rx], flags);
+> >  		vring_interrupt(0, vring->vq);
+> > --
+> > 1.8.3.1
 
