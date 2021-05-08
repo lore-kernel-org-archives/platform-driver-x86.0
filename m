@@ -2,161 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BC6C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 00:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DCEC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 01:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB53D6113E
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 00:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE7A6044F
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  8 May 2021 01:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbhEHAcd (ORCPT
+        id S229775AbhEHBKl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 7 May 2021 20:32:33 -0400
-Received: from mail-dm6nam12on2083.outbound.protection.outlook.com ([40.107.243.83]:57440
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231396AbhEHAbR (ORCPT
+        Fri, 7 May 2021 21:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229482AbhEHBKl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 7 May 2021 20:31:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wb4Essvv5JYEN6c9lLQca2AgVOdzwstJ4lzkDqdk9Rsyi1dRtMIAQ8+IhpgLxVtiSfyreOzyNzTlXJQ2/SjPhK8og4hBA7xgnL0u2xlRaW+Pz5Upoj4o53y3THeoYIve3KhOl5s82uomNfIfKqCOSK2/7iP2hw7TZ1Uy7rmG3uhe1caCN/pYuVGRcnXYwK4l+aZ3qqtk5gymkMpB9ZumeVFKn60eo8BEy1mp303BHf4sVyuciQo1Xddc61yGtkUqon1tlHKgLEYi1VV44z/Ur0b9XA+M3LHfjanWQ8XKAssRJIcbLvB0LMsknjyiL3Lb2oTEXsm6Xn0b2jzPiPpZ1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBzeHmEa0rACwzkbn1Pjo4FgmihouGO5M9XYT+VJLlg=;
- b=IsyGntmDar7e9Pd+G3Yx1WTfWexzToiHjVesUqEENWicpMza66HGP01YLBM2b2D/5zIMT36n/iQ+bD0zPaEaNFMUaNZ6Y4i9C7Q3fwA5Qnt+aCOUbist4ZNhDJMSv+sM+Wr94JZTqxDt5uVJbZkKwXuBjFVyRhQjIummy3SD1gqigfDpSiMWViNKwkeDlH/DnhLv8QIlsB3iuALP4WJ1qQgMGhEyoDJ6RaKqlAXs/ne907OHovvFCuQK5g9eqIIyEbPNhpGilq0vYRYn7onEgl0mhE0QH7vTIX0Sezqm/r4xmukAu78kSYdc6qTxj4GpF4eFZFAmxOk1RAwolxzrOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBzeHmEa0rACwzkbn1Pjo4FgmihouGO5M9XYT+VJLlg=;
- b=BcSZl3UYk/K6kvquAfCygGQWmW8ZoIgcwkcVZqfreOCfYPcsjYcq1woz4OoxC1SEV78TR6FPtHez5Bvh7ATVJAhZcLhuSKC4Ple6+zKEwtDQ4A1yAvnvwl/mQTp74gDz+soh8aaGrBW1VeS0KVGsk3NP7YkOjnvB/cKKmjU4uV+RDIusbKqld+A7FfOUNE3f2/pogXLaceFLLjuYhfKYZt2VNw0g0umcfj36zmOpEtcnm0WMmGMEGQjsDnt6eYR+TPgUR0Hep8SJ6d0IZ0C+Mo55G5czUx/VbN4R2qot84CZ08cVpk+taUA48ErlApMMlNiIYJ/9e/tovk9tIRb2bg==
-Received: from BN8PR15CA0044.namprd15.prod.outlook.com (2603:10b6:408:80::21)
- by MN2PR12MB3021.namprd12.prod.outlook.com (2603:10b6:208:c2::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.27; Sat, 8 May
- 2021 00:30:15 +0000
-Received: from BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:80:cafe::f5) by BN8PR15CA0044.outlook.office365.com
- (2603:10b6:408:80::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Sat, 8 May 2021 00:30:15 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
- smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.32; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.32) by
- BN8NAM11FT030.mail.protection.outlook.com (10.13.177.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4108.25 via Frontend Transport; Sat, 8 May 2021 00:30:15 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 May
- 2021 17:30:15 -0700
-Received: from vdi.nvidia.com (172.20.145.6) by mail.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Sat, 8 May 2021 00:30:14 +0000
-From:   Liming Sun <limings@nvidia.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>
-CC:     Liming Sun <limings@nvidia.com>, <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2] platform/mellanox: mlxbf-tmfifo: Fix a memory barrier issue
-Date:   Fri, 7 May 2021 20:30:12 -0400
-Message-ID: <1620433812-17911-1-git-send-email-limings@nvidia.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
-References: <177d12443460bc613aa495fbdbabbbeef43ba7ff.1620400475.git.limings@nvidia.com>
+        Fri, 7 May 2021 21:10:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id A90986044F
+        for <platform-driver-x86@vger.kernel.org>; Sat,  8 May 2021 01:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1620436180;
+        bh=XnRPJFmDcHD1hifXtBuES5tZt+PM8PGAzskr3hGRa2I=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=QXLiZUrVBvF4kU7Uy5JIQHP7JzVs7RoHlrlTkHbFNTwWcNHEkdKTzeNOUOdF8ka1M
+         2qoOcNdzXq9SwABI9qFWiZAU5CpXCkuhzjSRxfvcTtn38GmG09KMuxwFt8Upr0kiu/
+         Gt8sWCQF994u8XHS5uVFpdrPo6KY1nsz6WDUq73wRugOr/aZXsf2YwXdoSQIY9Baux
+         B41uIjw7q8mbmbwrOuTONJMFRM+EF0sSGUnc4fec8CKYYmm+LReZnbJQ3v8afr6Oh4
+         cCbnogI7Drc6tvhefV9wd0mf7zJbwxNCTrpspsxidrppcuOwtzVr9/Uw1vluGFBcK2
+         bRbeZ+9M7n56Q==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 212985] ideapad_acpi: VPC2004:00: DYTC interface is not
+ available. platform_profile interface is unavailable
+Date:   Sat, 08 May 2021 01:09:40 +0000
+X-Bugzilla-Reason: AssignedTo
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: None
+X-Bugzilla-Product: Platform Specific/Hardware
+X-Bugzilla-Component: x86-64
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: pobrn@protonmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: platform-driver-x86@vger.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-212985-215701-xtoNGfx5lu@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-212985-215701@https.bugzilla.kernel.org/>
+References: <bug-212985-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e623302f-fb39-4bfa-7f32-08d911b8737a
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3021:
-X-Microsoft-Antispam-PRVS: <MN2PR12MB302157FEE11815206AF0904AD3569@MN2PR12MB3021.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:556;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Zbcj9DapSXw/gzDfbbV0r4g1+ANPFnXmb21qjfHt4M+dVIUuIwBKPYGWL24kY7epiJhYjabE/Kvm2nFP7nGZPOteI3EnsLK8JnYy9/iqiXQYL849U/ftlKeDUn10FUATI2GdeiLpUWNt3u7WEldfcDJ+2XgLmr7kPIii0ziAD4VdaLjTOY5I82zVXCsI/P6VzK31PynsKLMfd1UL1q8+u+FPZcYIzaQyytoh3umomU48X5bj7DWTC8ZDw4tD7KWs7pirbA4oaNo/6jH2OI06PppmZFusjq4EngSWk0bNC91P5pYiTcvLr3e13OJ/e4N//0QHCbIGgg6IOqrNfevX0nbzQH6mAe5JFl6b3l76PGNzImAHpq3YPghLaWDdGbg2JQQVAcXeNa16P1Iyjl6mi8GUIaOQI0cPf/HY0qyviJ5ZJCbASlRjN27OUouexk81VVoW4Q7hEHEuuqnWYGYxF9sQXHLRRuW6nGKSDCKjoQkt/muWcVYIu7sBfjxCAdOD2sulsMWqXgcqDV0SXPlK28kFPujl6/tKWYQcuEhxOyTDN9dYoRpfp/fRHPs42BnNroTo2UPTn5EllmjWzGAJTsqThcOEuM+b299EehN8wEepS2JALNdyVv+YRBuAWHa9++YQmkFi3InXvHJJGQPq9g==
-X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(46966006)(36840700001)(70206006)(8676002)(70586007)(26005)(8936002)(4326008)(478600001)(54906003)(186003)(82740400003)(5660300002)(2616005)(47076005)(336012)(110136005)(426003)(7636003)(316002)(86362001)(36756003)(356005)(2906002)(36860700001)(83380400001)(7696005)(82310400003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2021 00:30:15.6889
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e623302f-fb39-4bfa-7f32-08d911b8737a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT030.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3021
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The virtio framework uses wmb() when updating avail->idx. It
-guarantees the write order, but not necessarily loading order
-for the code accessing the memory. This commit adds a load barrier
-after reading the avail->idx to make sure all the data in the
-descriptor is visible. It also adds a barrier when returning the
-packet to virtio framework to make sure read/writes are visible to
-the virtio code.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D212985
 
-Fixes: 1357dfd7261f ("platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc")
-Signed-off-by: Liming Sun <limings@nvidia.com>
----
-v1->v2:
-  Updates for Vadim's comments:
-  - Add the 'Fixes' field in the commit message.
-v1: Initial version
----
- drivers/platform/mellanox/mlxbf-tmfifo.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+--- Comment #4 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
+> If I'm understanding correctly, you're saying to check the disassembled A=
+CPI
+> tables, right?
 
-diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-index bbc4e71..38800e8 100644
---- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-+++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-@@ -294,6 +294,9 @@ static irqreturn_t mlxbf_tmfifo_irq_handler(int irq, void *arg)
- 	if (vring->next_avail == virtio16_to_cpu(vdev, vr->avail->idx))
- 		return NULL;
- 
-+	/* Make sure 'avail->idx' is visible already. */
-+	virtio_rmb(false);
-+
- 	idx = vring->next_avail % vr->num;
- 	head = virtio16_to_cpu(vdev, vr->avail->ring[idx]);
- 	if (WARN_ON(head >= vr->num))
-@@ -322,7 +325,7 @@ static void mlxbf_tmfifo_release_desc(struct mlxbf_tmfifo_vring *vring,
- 	 * done or not. Add a memory barrier here to make sure the update above
- 	 * completes before updating the idx.
- 	 */
--	mb();
-+	virtio_mb(false);
- 	vr->used->idx = cpu_to_virtio16(vdev, vr_idx + 1);
- }
- 
-@@ -733,6 +736,12 @@ static bool mlxbf_tmfifo_rxtx_one_desc(struct mlxbf_tmfifo_vring *vring,
- 		desc = NULL;
- 		fifo->vring[is_rx] = NULL;
- 
-+		/*
-+		 * Make sure the load/store are in order before
-+		 * returning back to virtio.
-+		 */
-+		virtio_mb(false);
-+
- 		/* Notify upper layer that packet is done. */
- 		spin_lock_irqsave(&fifo->spin_lock[is_rx], flags);
- 		vring_interrupt(0, vring->vq);
--- 
-1.8.3.1
+Yes, exactly.
 
+From this part:
+
+
+            Method (DYTC, 1, Serialized)
+            {
+                ITSV =3D Zero
+                ITSM =3D Zero
+                Local0 =3D Zero
+                Local1 =3D (Arg0 & 0x01FF)
+                Local2 =3D (Arg0 & 0xFFFFFE00)
+                Switch (Local1)
+                {
+                    Case (Zero)
+                    {
+                        If (!Local2)
+                        {
+                            Local0 |=3D One
+                            Local0 |=3D 0x0100
+                            Local0 |=3D Zero
+                            Local0 |=3D 0x40000000
+                        }
+                        Else
+                        {
+                            Local0 |=3D Zero
+                            Local0 |=3D 0x04
+                        }
+                    }
+
+
+it **seems to me** that only DYTC v4 is supported on that model - although =
+I'm
+not sure. The ideapad_acpi driver will only expose the platform_profile
+functionality if it finds DYTC v5 or newer. The code was adapted from the
+thinkpad_acpi driver, and the platform_profile support was contributed to t=
+hat
+driver by Lenovo employee Mark Pearson. I cannot remember the exact reason =
+why
+earlier versions are not supported, you could possibly write to the PDx86
+mailing list (platform-driver-x86 at vger.kernel.org) and CC him if you wan=
+t to
+know more; or search back on lore.kernel.org.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are the assignee for the bug.=
