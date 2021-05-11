@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B856C43460
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 06:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4AC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 06:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54A97616EB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 06:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198F861469
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 06:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbhEKG4t (ORCPT
+        id S229984AbhEKG6A (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 May 2021 02:56:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48355 "EHLO mga06.intel.com"
+        Tue, 11 May 2021 02:58:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64374 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229931AbhEKG4s (ORCPT
+        id S229931AbhEKG57 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 May 2021 02:56:48 -0400
-IronPort-SDR: vcSwiJXO4UIcaiOvyUv3aEMqi40SmfAa12LT97tupf38n4p19CvHi75S7XP2YrY3UioPa/hMfG
- Hm/JDWN/fc/A==
-X-IronPort-AV: E=McAfee;i="6200,9189,9980"; a="260635697"
+        Tue, 11 May 2021 02:57:59 -0400
+IronPort-SDR: 2hu1sqpPNtFsM5bbjkBnbYdhwWTZnHuJRV02S45uneOlYOBmY0rRzDK3C+2QlTWGs3v3EtZrZj
+ xTp++AfWKJAA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9980"; a="199049358"
 X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
-   d="scan'208";a="260635697"
+   d="scan'208";a="199049358"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2021 23:55:42 -0700
-IronPort-SDR: ctgxOA3SIyHB7zc7AqfRBbjNXGNL/FaP4Fxv+v47gg7D3EWWK/XMD4cPJNu40uczbmXoAWn/6R
- dUG7fdh81jgw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2021 23:56:53 -0700
+IronPort-SDR: AXt6I+3BZTXV82Na/G8r1U/DmwHW+A/xtrteoQDsOcDEi74Fp05hRB+PswzxV/7z36q0dPhEXt
+ CxeX9zQOciWw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.82,290,1613462400"; 
-   d="scan'208";a="536844425"
+   d="scan'208";a="536844677"
 Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 10 May 2021 23:55:36 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 May 2021 09:55:36 +0300
-Date:   Tue, 11 May 2021 09:55:36 +0300
+  by fmsmga001.fm.intel.com with SMTP; 10 May 2021 23:56:49 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 11 May 2021 09:56:48 +0300
+Date:   Tue, 11 May 2021 09:56:48 +0300
 From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
@@ -53,96 +53,135 @@ Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         intel-gfx <intel-gfx@lists.freedesktop.org>,
         dri-devel@lists.freedesktop.org,
         platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 7/8] usb: typec: altmodes/displayport: Make
- dp_altmode_notify() more generic
-Message-ID: <YJoqaKps8L5QNJoU@kuha.fi.intel.com>
+Subject: Re: [PATCH 8/8] usb: typec: altmodes/displayport: Notify drm subsys
+ of hotplug events
+Message-ID: <YJoqsMTJnOUdg1hk@kuha.fi.intel.com>
 References: <20210505162415.531876-1-hdegoede@redhat.com>
- <20210505162415.531876-8-hdegoede@redhat.com>
+ <20210505162415.531876-9-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210505162415.531876-8-hdegoede@redhat.com>
+In-Reply-To: <20210505162415.531876-9-hdegoede@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 05, 2021 at 06:24:14PM +0200, Hans de Goede wrote:
-> Make dp_altmode_notify() handle the dp->data.conf == 0 case too,
-> rather then having separate code-paths for this in various places
-> which call it.
+On Wed, May 05, 2021 at 06:24:15PM +0200, Hans de Goede wrote:
+> Use the new drm_connector_oob_hotplug_event() functions to let drm/kms
+> drivers know about DisplayPort over Type-C hotplug events.
 > 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
 Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 > ---
->  drivers/usb/typec/altmodes/displayport.c | 35 +++++++++---------------
->  1 file changed, 13 insertions(+), 22 deletions(-)
+> Changes in v3:
+> - Only call drm_connector_oob_hotplug_event() on hpd status bit change
+> - Adjust for drm_connector_oob_hotplug_event() no longer having a data
+>   argument
 > 
+> Changes in v2:
+> - Add missing depends on DRM to TYPEC_DP_ALTMODE Kconfig entry
+> ---
+>  drivers/usb/typec/altmodes/Kconfig       |  1 +
+>  drivers/usb/typec/altmodes/displayport.c | 23 +++++++++++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/altmodes/Kconfig b/drivers/usb/typec/altmodes/Kconfig
+> index 60d375e9c3c7..1a6b5e872b0d 100644
+> --- a/drivers/usb/typec/altmodes/Kconfig
+> +++ b/drivers/usb/typec/altmodes/Kconfig
+> @@ -4,6 +4,7 @@ menu "USB Type-C Alternate Mode drivers"
+>  
+>  config TYPEC_DP_ALTMODE
+>  	tristate "DisplayPort Alternate Mode driver"
+> +	depends on DRM
+>  	help
+>  	  DisplayPort USB Type-C Alternate Mode allows DisplayPort
+>  	  displays and adapters to be attached to the USB Type-C
 > diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-> index b7f094435b00..aa669b9cf70e 100644
+> index aa669b9cf70e..c1d8c23baa39 100644
 > --- a/drivers/usb/typec/altmodes/displayport.c
 > +++ b/drivers/usb/typec/altmodes/displayport.c
-> @@ -66,10 +66,17 @@ struct dp_altmode {
+> @@ -11,8 +11,10 @@
+>  #include <linux/delay.h>
+>  #include <linux/mutex.h>
+>  #include <linux/module.h>
+> +#include <linux/property.h>
+>  #include <linux/usb/pd_vdo.h>
+>  #include <linux/usb/typec_dp.h>
+> +#include <drm/drm_connector.h>
+>  #include "displayport.h"
+>  
+>  #define DP_HEADER(_dp, ver, cmd)	(VDO((_dp)->alt->svid, 1, ver, cmd)	\
+> @@ -57,11 +59,13 @@ struct dp_altmode {
+>  	struct typec_displayport_data data;
+>  
+>  	enum dp_state state;
+> +	bool hpd;
+>  
+>  	struct mutex lock; /* device lock */
+>  	struct work_struct work;
+>  	struct typec_altmode *alt;
+>  	const struct typec_altmode *port;
+> +	struct fwnode_handle *connector_fwnode;
+>  };
 >  
 >  static int dp_altmode_notify(struct dp_altmode *dp)
+> @@ -125,6 +129,7 @@ static int dp_altmode_configure(struct dp_altmode *dp, u8 con)
+>  static int dp_altmode_status_update(struct dp_altmode *dp)
 >  {
-> -	u8 state = get_count_order(DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
-> +	unsigned long conf;
-> +	u8 state;
-> +
-> +	if (dp->data.conf) {
-> +		state = get_count_order(DP_CONF_GET_PIN_ASSIGN(dp->data.conf));
-> +		conf = TYPEC_MODAL_STATE(state);
+>  	bool configured = !!DP_CONF_GET_PIN_ASSIGN(dp->data.conf);
+> +	bool hpd = !!(dp->data.status & DP_STATUS_HPD_STATE);
+>  	u8 con = DP_STATUS_CONNECTION(dp->data.status);
+>  	int ret = 0;
+>  
+> @@ -137,6 +142,11 @@ static int dp_altmode_status_update(struct dp_altmode *dp)
+>  		ret = dp_altmode_configure(dp, con);
+>  		if (!ret)
+>  			dp->state = DP_STATE_CONFIGURE;
 > +	} else {
-> +		conf = TYPEC_STATE_USB;
-> +	}
->  
-> -	return typec_altmode_notify(dp->alt, TYPEC_MODAL_STATE(state),
-> -				   &dp->data);
-> +	return typec_altmode_notify(dp->alt, conf, &dp->data);
->  }
->  
->  static int dp_altmode_configure(struct dp_altmode *dp, u8 con)
-> @@ -137,21 +144,10 @@ static int dp_altmode_status_update(struct dp_altmode *dp)
->  
->  static int dp_altmode_configured(struct dp_altmode *dp)
->  {
-> -	int ret;
-> -
->  	sysfs_notify(&dp->alt->dev.kobj, "displayport", "configuration");
-> -
-> -	if (!dp->data.conf)
-> -		return typec_altmode_notify(dp->alt, TYPEC_STATE_USB,
-> -					    &dp->data);
-> -
-> -	ret = dp_altmode_notify(dp);
-> -	if (ret)
-> -		return ret;
-> -
->  	sysfs_notify(&dp->alt->dev.kobj, "displayport", "pin_assignment");
->  
-> -	return 0;
-> +	return dp_altmode_notify(dp);
->  }
->  
->  static int dp_altmode_configure_vdm(struct dp_altmode *dp, u32 conf)
-> @@ -172,13 +168,8 @@ static int dp_altmode_configure_vdm(struct dp_altmode *dp, u32 conf)
+> +		if (dp->hpd != hpd) {
+> +			drm_connector_oob_hotplug_event(dp->connector_fwnode);
+> +			dp->hpd = hpd;
+> +		}
 >  	}
 >  
->  	ret = typec_altmode_vdm(dp->alt, header, &conf, 2);
-> -	if (ret) {
-> -		if (DP_CONF_GET_PIN_ASSIGN(dp->data.conf))
-> -			dp_altmode_notify(dp);
-> -		else
-> -			typec_altmode_notify(dp->alt, TYPEC_STATE_USB,
-> -					     &dp->data);
-> -	}
-> +	if (ret)
-> +		dp_altmode_notify(dp);
->  
 >  	return ret;
+> @@ -512,6 +522,7 @@ static const struct attribute_group dp_altmode_group = {
+>  int dp_altmode_probe(struct typec_altmode *alt)
+>  {
+>  	const struct typec_altmode *port = typec_altmode_get_partner(alt);
+> +	struct fwnode_handle *fwnode;
+>  	struct dp_altmode *dp;
+>  	int ret;
+>  
+> @@ -540,6 +551,11 @@ int dp_altmode_probe(struct typec_altmode *alt)
+>  	alt->desc = "DisplayPort";
+>  	alt->ops = &dp_altmode_ops;
+>  
+> +	fwnode = dev_fwnode(alt->dev.parent->parent); /* typec_port fwnode */
+> +	dp->connector_fwnode = fwnode_find_reference(fwnode, "displayport", 0);
+> +	if (IS_ERR(dp->connector_fwnode))
+> +		dp->connector_fwnode = NULL;
+> +
+>  	typec_altmode_set_drvdata(alt, dp);
+>  
+>  	dp->state = DP_STATE_ENTER;
+> @@ -555,6 +571,13 @@ void dp_altmode_remove(struct typec_altmode *alt)
+>  
+>  	sysfs_remove_group(&alt->dev.kobj, &dp_altmode_group);
+>  	cancel_work_sync(&dp->work);
+> +
+> +	if (dp->connector_fwnode) {
+> +		if (dp->hpd)
+> +			drm_connector_oob_hotplug_event(dp->connector_fwnode);
+> +
+> +		fwnode_handle_put(dp->connector_fwnode);
+> +	}
 >  }
+>  EXPORT_SYMBOL_GPL(dp_altmode_remove);
+>  
 > -- 
 > 2.31.1
 
