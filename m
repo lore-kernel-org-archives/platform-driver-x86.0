@@ -2,84 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675DBC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 11:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C3FC433B4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 11:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 418B061207
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 11:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FCF611CB
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 11:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbhEKLtV (ORCPT
+        id S231392AbhEKLvA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 May 2021 07:49:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39422 "EHLO
+        Tue, 11 May 2021 07:51:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56741 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231473AbhEKLtU (ORCPT
+        by vger.kernel.org with ESMTP id S231276AbhEKLvA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 May 2021 07:49:20 -0400
+        Tue, 11 May 2021 07:51:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620733694;
+        s=mimecast20190719; t=1620733794;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tCTd+S2Axg2X1q7f2AmsrNqMwgII9y4Yy/+j9XgTu+E=;
-        b=Fj5+kR1LJgadz7sTIhDZjJ2YVjyRGrbmTl4MXsm9A/Ea/t9Mh//IZbpzY9NaZ6SMsEmUja
-        102W88HF+4bboXUXLGFasAymz7fbFtDgG7GIAirIL9PqArLpSeDKAyWXRqwbqxVh42shbo
-        HSEaWuDEMswxEpiWP0urDsJj6s+IPWY=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-bhyum2eNP5GGdNwN8UB1LA-1; Tue, 11 May 2021 07:48:12 -0400
-X-MC-Unique: bhyum2eNP5GGdNwN8UB1LA-1
-Received: by mail-ej1-f71.google.com with SMTP id j16-20020a1709062a10b02903ba544485d0so2157810eje.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 May 2021 04:48:12 -0700 (PDT)
+        bh=Whe2b92U5kVUdePQM03i2VZtj34sQh+BU4V01/Bvg3E=;
+        b=VkPze8a7NurXWz0J9+8kLQhMoCl+0Ry0K05/ZLJI121IZXILcW/GkLcK2lp5giQOMGWGIn
+        M0UpGRSxElOQFoD8dalCblY0+fJK00L8VCTLBPgjcrpMD+HfGGXZblt93M0KR7o0OzgJsJ
+        eAMmLjClIC6GT9ZbrGn5G3MyV2jtNfY=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-572-yxWhijnFPE-UdJG7uWSmVg-1; Tue, 11 May 2021 07:49:52 -0400
+X-MC-Unique: yxWhijnFPE-UdJG7uWSmVg-1
+Received: by mail-ej1-f69.google.com with SMTP id k9-20020a17090646c9b029039d323bd239so5822014ejs.16
+        for <platform-driver-x86@vger.kernel.org>; Tue, 11 May 2021 04:49:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=tCTd+S2Axg2X1q7f2AmsrNqMwgII9y4Yy/+j9XgTu+E=;
-        b=iN8rXpifnBo2Fj3vZtw3kz3z7za0E7AiIcyMB/VdbQnWabZXiaJvMcsSnkg/aZEyKG
-         41N+QuFGdAIMBlouaQkptBFfFxoe1rcgvjw0JNaq+3J1TlJtfpQOn9dX6IfXG1xQUJLh
-         ZlUfpPBhmnhsZPjebA53kemnNSCAgcI0MMvGJDcVBVVnp1j/B+8edYGEDwiG3n2ETDvw
-         Fgd7TWr68Df8gIQH07VloGPyu4EtIxu/3Iw/xjpnjQJxU0u0HtAv4yTD/ghebQA6kTq7
-         o5ms1ydAvkLN90IHcIzfM0ArXxlHsc8lnpDhbGt/RpSMGs2UcLeBjC+jkz1JdLsVE+Ut
-         T6rg==
-X-Gm-Message-State: AOAM532jUAleHxUK5gTw4EdoAXnuVqjUA+BspVVtjukbCQ3aJLbk9i/Y
-        xLQKdaThHNHxhboxLoM6hAqrQ6M7mgf5Bi+Om2XRurZxdQ3KQDmnjP4Wz1JGh5SfVJ/eUNYo4Cm
-        qCWhqpog+LzlJ99JRDxGI7NYVzmu1y/d6nQ==
-X-Received: by 2002:a17:907:f91:: with SMTP id kb17mr30722713ejc.521.1620733691344;
-        Tue, 11 May 2021 04:48:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyK1wG8GPs1uiWXaXij0uLW/nSHZ5xv/Mp/aP4/ksfEpDozfyQJa04/xi8Vel+362v042qcCA==
-X-Received: by 2002:a17:907:f91:: with SMTP id kb17mr30722691ejc.521.1620733691162;
-        Tue, 11 May 2021 04:48:11 -0700 (PDT)
+        bh=Whe2b92U5kVUdePQM03i2VZtj34sQh+BU4V01/Bvg3E=;
+        b=B2fTFtn2qORsCF0qHQdRIo53m1Z7f/HOwixhCDVHBI2ebvwxBJ9t3Pm4BnuiAEvaKJ
+         EIPJgS32e2DDnx4bPpGXpdlc66kCcwxURp3HkfVAdSE/yrak/3sKlGEVbG4CZ/4gMQPl
+         YDN5wFy2t+FdoyWUj9HImlD1TNss+KW5w5jj3jx2FgEUmUfToLzsD9vV1/J9DMyUiL7i
+         rFGPWUF55H5WRhU5Qq7b4GLLWQRKqd6JThUhGPCJe8gECN9pj7vosyvE8TOa0XyFw9TD
+         Osk7DjdSjqra7nuTkJkNRISBSAWPkwYJFvdabc/2Rnob++jMHb70xyVdyzNnCSoGKzXL
+         v0KA==
+X-Gm-Message-State: AOAM530lF/8tW/9+uuL/Y4C8hCqFJucJQnvRjZs4krdgX1Qq0RHL4mPq
+        egx1EQ6wsvlvhaPA5Oh1+Yi3slRwiHp+oT9uOie0DuYWMalSGqnKD4u/9Qthj1qxbq01ffuNFvX
+        8vROOLKUxkJAN+eIj7VIEghx0woz6m6mQhxuk/a4B9IKuuSBkb5qMeHD9H3TJx6YLtRLCOeJ4VZ
+        D4BnoeELla2Q==
+X-Received: by 2002:aa7:de9a:: with SMTP id j26mr12841052edv.269.1620733791056;
+        Tue, 11 May 2021 04:49:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwmeheoEiAUz7JXTmSswmLDu6dIzr51ECVbWaudHXxtlJjyJapE6PTe02zhoXKtSgdILGE4/g==
+X-Received: by 2002:aa7:de9a:: with SMTP id j26mr12841029edv.269.1620733790810;
+        Tue, 11 May 2021 04:49:50 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id ga28sm11316864ejc.20.2021.05.11.04.48.10
+        by smtp.gmail.com with ESMTPSA id t22sm14281817edw.29.2021.05.11.04.49.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 May 2021 04:48:10 -0700 (PDT)
-Subject: Re: [PATCH v7 1/7] MAINTAINERS: Add Advantech AHC1EC0 embedded
- controller entry
-To:     Campion Kang <campion.kang@advantech.com.tw>
-Cc:     andy.shevchenko@gmail.com, chia-lin.kao@canonical.com,
-        corbet@lwn.net, devicetree@vger.kernel.org, jdelvare@suse.com,
-        lee.jones@linaro.org, linux-doc@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux@roeck-us.net,
-        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        robh+dt@kernel.org, wim@linux-watchdog.org
-References: <cf181436-152c-7cd8-76cf-350705cd2bcb@redhat.com>
- <20210507115319.22109-1-campion.kang@advantech.com.tw>
+        Tue, 11 May 2021 04:49:50 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: hp_accel: Avoid invoking _INI to speed up
+ resume
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, mgross@linux.intel.com
+Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20210430060736.590321-1-kai.heng.feng@canonical.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0a64dcbd-25d6-ddcd-4a4e-18619e8270ba@redhat.com>
-Date:   Tue, 11 May 2021 13:48:09 +0200
+Message-ID: <37304def-9131-c6ff-896d-1062970a0236@redhat.com>
+Date:   Tue, 11 May 2021 13:49:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210507115319.22109-1-campion.kang@advantech.com.tw>
+In-Reply-To: <20210430060736.590321-1-kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,119 +89,104 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/7/21 1:53 PM, Campion Kang wrote:
-> Hi, Very thanks your time for reviewing.
+On 4/30/21 8:07 AM, Kai-Heng Feng wrote:
+> hp_accel can take almost two seconds to resume on some HP laptops.
 > 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Thursday, May 6, 2021 5:39 PM
->> Subject: Re: [PATCH v7 1/7] MAINTAINERS: Add Advantech AHC1EC0 embedded
->> controller entry
->>
->> Hi,
->>
->> On 5/6/21 11:23 AM, Andy Shevchenko wrote:
->>> On Thu, May 6, 2021 at 11:48 AM Hans de Goede <hdegoede@redhat.com>
->> wrote:
->>>> I'm replying here since this series has no cover-letter, for
->>>> the next version for a series touching so many different
->>>> sub-systems it would be good to start with a cover-letter
->>>> providing some background info on the series.
->>>>
+> The bottleneck is on evaluating _INI, which is only needed to run once.
 > 
-> Sorry about that, i will study what is cover-letter and its content.
-> Would you kindly provide me a good reference?
-> Can I resend a [Patch v7 0/7] for these patch or provide it in next version?
+> Resolve the issue by only invoking _INI when it's necessary. Namely, on
+> probe and on hibernation restore.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Please add a cover letter to the next version, which will hopefully
-also address some of the other remarks already made.
+Thank you I've added this to my review-hans branch.
+I'll also add this to my fixes branch and include it in
+a future pdx86 fixes pull-req for Linus for 5.13.
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
 
+> ---
+>  drivers/misc/lis3lv02d/lis3lv02d.h |  1 +
+>  drivers/platform/x86/hp_accel.c    | 22 +++++++++++++++++++++-
+>  2 files changed, 22 insertions(+), 1 deletion(-)
 > 
-> 
->>>> I see this is binding to an ACPI device, yet it is also using
->>>> devicetree bindings and properties.
->>>>
->>>> So I take it this means that your ACPI tables are using the
->>>> optional capability of embedded device-tree blobs inside the
->>>> ACPI tables ?
->>>>
->>>> That is an unusual combination on a x86 device, note it is
->>>> not wrong
->>>
->>> It's actually not okay. We have agreed at some point with DT people,
->>> that ACPI should not use non-native variants of natively supported
->>> things. For example, it shouldn't use "interrupt" property for IOxAPIC
->>> (or xIC) provided interrupts, rather Interrupt() has to be used and so
->>> on.
-> 
-> In our experience, most risc platforms are using devicetree, and x86/64 platforms
-> are using ACPI table or grub configure for their specific settings in different HW paltform.
-> In this case, EC chip is a LPC interface that can be integrated in whenever risc or x86/64.
-> So in my understand, I think it is not conflict.
-> (please correct me if i am misunderstanding, i will try to describe more)
-> 
-> If the EC chip is connected to the risc processor, we will bind its properties in the device-tree without modifing the source.
-> If the EC chip is connected to the X86/64 processor, we bind its the properties in the ACPI table and also without modifing the source.
-> Why do we need to bind the properties in ACPI or in the device-tree? Because it is an LPC interface, it cannot automatically load the driver like a USB or PCI device.
-> In the early days, we had to install the EC driver module in our HW platform and manually load it at every boot. Different Advantech HW platforms have different properties for HWMON and others sub-systems. This causes the EC source to be a bit dirty. It is necessary to obtain the hardware platform name from the BIOS DMI table and determine its attributes according to its platform name.
-> Now bind the attributes to ACPI table or device-tree, the EC source is more clear and universal for Advantech devices, and it is important that if the ACPI table matches, it can be automatically loaded.
-> 
->>
->> Right, but that is not the case here, they are using 2 device-tree
->> properties (1), from patch 3/7:
->>
->> +properties:
->> +  compatible:
->> +    const: advantech,ahc1ec0
->> +
->> +  advantech,hwmon-profile:
->> +    description:
->> +      The number of sub-devices specified in the platform. Defines for the
->> +      hwmon profiles can found in dt-bindings/mfd/ahc1ec0-dt.
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    maxItems: 1
->> +
->> +  advantech,has-watchdog:
->> +    description:
->> +      Some implementations of the EC include a watchdog used to monitor
->> the
->> +      system. This boolean flag is used to specify whether this watchdog is
->> +      present or not. Default is true, otherwise set to false.
->> +    type: boolean
->>
->>
->>>> but AFAIK you are the first to do this on x86.
->>>
->>> No, not the first. Once Intel tried to invent the pin control
->>> configuration and muxing properties in ACPI, it was luckily rejected
->>> (ACPI 6.x OTOH provides a set of special resources for that).
->>>
->>> So, NAK from me, *if* it's really the case. ACPI tables must be revisited.
->>
-> 
-> I am not sure it supports vendor self-defined attributes for ACPI table?
-> 
->> AFAIK Advantech are not defining things for which an ACPI standard exists,
->> although these 2 properties might just as well may be 2 simple ACPI integer
->> methods, which would actually make things a bit simpler (.e.g it would
->> allow dropping patch 2/7 and 3/7 from the set).
->>
->> Campion, any reason why you went this route; and can the ACPI tables
->> still be changed?
->>
-> 
-> If patches 2/7 and 3/7 are removed, it will be even simpler.
-> This means that there is no device-tree binding designed, in fact, the EC chip only be integrated in the x86/64 platform at present.
-> Sorry, ACPI table now is integrated in the BIOS for Advantech UNO device, 
-> it may be revert to previous rule, that is, there is no ACPI table binding and manually loaded the EC driver. If you have any suggestons I would be very grateful.
-> 
->> Regards,
->>
->> Hans
+> diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
+> index c394c0b08519a..7ac788fae1b86 100644
+> --- a/drivers/misc/lis3lv02d/lis3lv02d.h
+> +++ b/drivers/misc/lis3lv02d/lis3lv02d.h
+> @@ -271,6 +271,7 @@ struct lis3lv02d {
+>  	int			regs_size;
+>  	u8                      *reg_cache;
+>  	bool			regs_stored;
+> +	bool			init_required;
+>  	u8                      odr_mask;  /* ODR bit mask */
+>  	u8			whoami;    /* indicates measurement precision */
+>  	s16 (*read_data) (struct lis3lv02d *lis3, int reg);
+> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+> index 799cbe2ffcf36..8c0867bda8280 100644
+> --- a/drivers/platform/x86/hp_accel.c
+> +++ b/drivers/platform/x86/hp_accel.c
+> @@ -88,6 +88,9 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+>  static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+>  {
+>  	struct acpi_device *dev = lis3->bus_priv;
+> +	if (!lis3->init_required)
+> +		return 0;
+> +
+>  	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
+>  				 NULL, NULL) != AE_OK)
+>  		return -EINVAL;
+> @@ -356,6 +359,7 @@ static int lis3lv02d_add(struct acpi_device *device)
+>  	}
+>  
+>  	/* call the core layer do its init */
+> +	lis3_dev.init_required = true;
+>  	ret = lis3lv02d_init_device(&lis3_dev);
+>  	if (ret)
+>  		return ret;
+> @@ -403,11 +407,27 @@ static int lis3lv02d_suspend(struct device *dev)
+>  
+>  static int lis3lv02d_resume(struct device *dev)
+>  {
+> +	lis3_dev.init_required = false;
+> +	lis3lv02d_poweron(&lis3_dev);
+> +	return 0;
+> +}
+> +
+> +static int lis3lv02d_restore(struct device *dev)
+> +{
+> +	lis3_dev.init_required = true;
+>  	lis3lv02d_poweron(&lis3_dev);
+>  	return 0;
+>  }
+>  
+> -static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
+> +static const struct dev_pm_ops hp_accel_pm = {
+> +	.suspend = lis3lv02d_suspend,
+> +	.resume = lis3lv02d_resume,
+> +	.freeze = lis3lv02d_suspend,
+> +	.thaw = lis3lv02d_resume,
+> +	.poweroff = lis3lv02d_suspend,
+> +	.restore = lis3lv02d_restore,
+> +};
+> +
+>  #define HP_ACCEL_PM (&hp_accel_pm)
+>  #else
+>  #define HP_ACCEL_PM NULL
 > 
 
