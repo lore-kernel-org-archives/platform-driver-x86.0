@@ -2,172 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408A9C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 13:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E5AC43460
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 14:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47CA613CA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 13:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553DB6188B
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 11 May 2021 14:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230494AbhEKNJ3 (ORCPT
+        id S231489AbhEKOIL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 11 May 2021 09:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230483AbhEKNJ3 (ORCPT
+        Tue, 11 May 2021 10:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231305AbhEKOIK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 11 May 2021 09:09:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 8AC38613CA
-        for <platform-driver-x86@vger.kernel.org>; Tue, 11 May 2021 13:08:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620738502;
-        bh=fWlVLt3sdY4k3EqZs6AzQHj823W/pV1Zov1crPvojgM=;
-        h=From:To:Subject:Date:From;
-        b=YL7C4mL8NVvehmogIVBDvBBsc0Y46TNux6gN89eRQfz6iUE7m8vrWx+U+Tzmk2Ica
-         X/35GgwpF0JXvRcYbWy5Z45sJEhIFB0avIHj4qlZ75AbBF1TbBGUJIYm5a04eJPo2x
-         utkFZnWZjAVPHbLoS5lI9kVeH8cTGoP85jy7CBY9gAD/wtsycYJ4IVLiD+BxaNq9dn
-         QvPE4aTmSgAaDlpjdJ7vpcGsPltPlC3c9OemtIA+2x2jCF42G0xAGCYq/jMrcUyTxB
-         BrCDqKeVO+8zcrOEjDcNlfPhrx+515Nok3JrGJ6V2i4wOZtUBRFO7N26G3wGxoBaVx
-         eq/5pxkpWBhTg==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213029] New: [5.12 Regression] clock_gettime() a lot slower
- with Hyper-V clocksource driver
-Date:   Tue, 11 May 2021 13:08:22 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mgamal@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-213029-215701@https.bugzilla.kernel.org/>
+        Tue, 11 May 2021 10:08:10 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AC23C061574;
+        Tue, 11 May 2021 07:07:03 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id 10so16298053pfl.1;
+        Tue, 11 May 2021 07:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rzXwefmc1ZIhs0OCj+56gWFzzGTPcPcD20gXua1lobc=;
+        b=dNu7M0LLPm+SeTcspR3orrYl+jyYWCscPTpYdjAIsOfnJoe2pQGx6xVOwxFBNcYq3n
+         SLyKze5WH491Ke+DEU3G1hxnXZFgFCn6YMQTNyQkx3W2p6g2ruICICHlyvlkX7llTRRq
+         dhKBE2sJgfWV2MKzMQA9R8fpf+2BI4pfxkiXGB4ZVtR0o56Yh6eYZseHe7tGDmBd0IqZ
+         SGp+t+ADsdgQsmO/CMIQkLiWLNn8e7y/CppC3h67LVYvFxHBnJwK/6m/smcgrGeE1RH0
+         lIIKZ07y6ouJfRhtdBFT6WUjsLr6eRBp/aX6NSXkR/ZdRvNQ2iI1sqZA8lCPB1eatUw5
+         4h7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rzXwefmc1ZIhs0OCj+56gWFzzGTPcPcD20gXua1lobc=;
+        b=WooMvQda2AT25kNY7cP1vYmPBYViUjBpGnj4fu34ol6DBhOmFXo9tTEYhdKR+GvG2z
+         WtvHerFnEBcP5tP2KnzBgd67fNfh1ljxVxa1UCJI8AeHUd0gbPrd/dhVdN2mM3MUErHl
+         bUSvDC2jxdHKiBiCkGYtgBQ/lvxVc9SVDoMuZtfcokCUvs2fIVTXnlZpTqGdgwtgewYk
+         nfBm+FHewzqe2LKRCZmxAcw6ChTWeOLXzW5XyO/Ml2jkLO/lLQtKtvH24ew3YVvPVNXd
+         +xYMqQQkMt9KuspxWzInNhCwNL7tdtRJ31DyMCvQbQynpIwGeWu9X2pn4h3Paiq02GyC
+         CX3w==
+X-Gm-Message-State: AOAM533mcbUZF6NCtqLFn4OfiTrCJ42Z/nOTtCD1n9ThnCJlNQE82Bxi
+        NwL5xIXH1NQ4Z3qjWb9JwXCiVRope2uOqlyFup4=
+X-Google-Smtp-Source: ABdhPJw/R/yQBIH+1fof5HDOCKYXDxn9Cido3CVKZNHUHkje7gdVUJnfdK6+vAZcOT9gVvy9Y01zNrJA+X9rsWaAmJo=
+X-Received: by 2002:a63:cd11:: with SMTP id i17mr30564700pgg.74.1620742022626;
+ Tue, 11 May 2021 07:07:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAMW3L+1CN4ZNQZzF0w9ZziDEYHs4QaWrCzDb4ZCpRpTHu_A3PA@mail.gmail.com>
+In-Reply-To: <CAMW3L+1CN4ZNQZzF0w9ZziDEYHs4QaWrCzDb4ZCpRpTHu_A3PA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 11 May 2021 17:06:46 +0300
+Message-ID: <CAHp75VdwHiVidBr9F+XGMUCUyACY-vRvvZj_hFRELwjk=GRUDQ@mail.gmail.com>
+Subject: Re: Linux kernel: updating acer-wmi
+To:     Jafar Akhondali <jafar.akhoondali@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        jesperjuhl76@gmail.com,
+        =?UTF-8?Q?Jo=C3=A3o_Paulo_Rechi_Vita?= <jprvita@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Pavel Machek <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213029
+Thanks for your email.
 
-            Bug ID: 213029
-           Summary: [5.12 Regression] clock_gettime() a lot slower with
-                    Hyper-V clocksource driver
-           Product: Drivers
-           Version: 2.5
-    Kernel Version: 5.12
-          Hardware: x86-64
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Platform_x86
-          Assignee: drivers_platform_x86@kernel-bugs.osdl.org
-          Reporter: mgamal@redhat.com
-        Regression: No
+Do not send personal emails on OSS related matters, please.
 
-Since kernel 5.12 the performance of clock_gettime() is a lot slower. There
-seems to be a regression concerning VDSO in the Hyper-V clocksource driver.
++Cc: mailing list and certain maintainers
 
-The following code snippet runs a lot slower:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-# gcc gettime.c -o gettime
-# cat gettime.c=20
-
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
-
-int main(int argc, char *argv[]) {
-    struct timespec start;
-    unsigned long i;
-
-    for (i=3D0; i<100000000UL; i++) {
-        if( clock_gettime(CLOCK_REALTIME, &start) =3D=3D -1 ) {
-            perror( "clock gettime" );
-            exit( EXIT_FAILURE );
-        }
-    }
-
-    return 0;
-}
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-
-# cat /sys/devices/system/clocksource/clocksource0/current_clocksource
-hyperv_clocksource_tsc_page
-
-1) With kernel >=3D 5.12
-# time ./gettime=20
-real    0m48.201s
-user    0m14.788s
-sys     0m31.531s
-
-
-2) With kernel < 5.12
-# time ./gettime
-real    0m3.308s
-user    0m3.214s
-sys     0m0.003s
-
-
-I bisected the kernel and the commit that introduces the regression seems t=
-o be
-this:
-
-commit e4ab4658f1cff14c82202132f7af2cb5c2741469
-Author: Michael Kelley <mikelley@microsoft.com>
-Date:   Tue Mar 2 13:38:19 2021 -0800
-
-    clocksource/drivers/hyper-v: Handle vDSO differences inline
-
-    While the driver for the Hyper-V Reference TSC and STIMERs is architect=
-ure
-    neutral, vDSO is implemented for x86/x64, but not for ARM64.  Current c=
-ode
-    calls into utility functions under arch/x86 (and coming, under arch/arm=
-64)
-    to handle the difference.
-
-    Change this approach to handle the difference inline based on whether
-    VDSO_CLOCK_MODE_HVCLOCK is present.  The new approach removes code under
-    arch/* since the difference is tied more to the specifics of the Linux
-    implementation than to the architecture.
-
-    No functional change.
-
-    Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-    Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-    Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-    Link:
-https://lore.kernel.org/r/1614721102-2241-8-git-send-email-mikelley@microso=
-ft.com
-    Signed-off-by: Wei Liu <wei.liu@kernel.org>
-
-It does indeed not introduce any functional changes, but degradation in
-performance is quite noticeable.
+On Tue, May 11, 2021 at 4:59 PM Jafar Akhondali
+<jafar.akhoondali@gmail.com> wrote:
+>
+> Hi,
+> The Acer predator helios 300 series features a RGB 4-zone backlight keybo=
+ard, that is currently controllable only in Windows. The manager uses a spe=
+cific WMI interface which currently is not yet implemented in the Linux ker=
+nel.
+> I've implemented the support for RGB WMI on acer-wmi.c file by reverse en=
+gineering the PredatorSense(the official application on Windows which contr=
+ols gaming functions for Acer Predator series), exploring WMI functions, an=
+d decompiling WQ buffers. But I still need your help as this is my first co=
+ntribution to the Linux kernel for the correct place for the user-space com=
+munication method.
+>
+> The RGB keyboard-backlight method accepts a 16bytes(u8[16]) array input f=
+or controlling different modes, colors, speed, light intensity, direction, =
+etc. What is the most suitable way and place for controlling these paramete=
+rs via using space?
+>
+> My first choice was the "leds.h" subsystem, but it does not support array=
+ inputs, thus if I want to use this, I'll need to use 16 different subsyste=
+ms which don't look right.
+>
+> Another choice is using ioctl operation, but I'm not sure where I should =
+place it. For example "/sys/kernel", "/sys/devices/", "/sys/module" or ... =
+?
+>
+> Any working examples are extremely appreciated and will help me alot.
+>
+> It is also worth mentioning that the mentioned WMI supports other gaming =
+functions such as fan control, CPU\GPU overclocking, etc. But they are curr=
+ently out of scope of my implementation.
 
 --=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+With Best Regards,
+Andy Shevchenko
