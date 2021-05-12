@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC562C433B4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6C2C43616
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94456613FE
+	by mail.kernel.org (Postfix) with ESMTP id B1AFD61411
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244653AbhELTOG (ORCPT
+        id S244672AbhELTON (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 May 2021 15:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60146 "EHLO mail.kernel.org"
+        Wed, 12 May 2021 15:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1353174AbhELSKy (ORCPT
+        id S1353270AbhELSLH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 May 2021 14:10:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 53C9661440;
-        Wed, 12 May 2021 18:05:32 +0000 (UTC)
+        Wed, 12 May 2021 14:11:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9557161947;
+        Wed, 12 May 2021 18:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842733;
-        bh=dh175F8KQU04S24NUHvgMK/FkX88h9zpiRWP3KuMN+I=;
+        s=k20201202; t=1620842751;
+        bh=Du3FL//xbBC7vzjrkhOTwrNfrjSzBY7HDe4een0KUZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P25pJbBdtp15XBlyt8RigQnAh/EA5KrSDOtoJ1UM/PNDBM7sjkbSwGtP0hHTE4N0a
-         pyuvchC9qR9l2USMRthADbZOAD9beg1iFn2D/3a+LiikbF++fqZMrcXfWsjB7VLgNS
-         MCALXcnrs/cBG6L8iRQsbgCbhP+ZVLfeiVUYh+OFWuSsDqLxlzpAmmoSjWGaO8V898
-         hLEbNKrnng0xQVD2Ksbey4eDqU2JFaNj2+iuBYNmhf9DA8kEiAMk+2txphmwvsL+2O
-         37WhJrH8G8RCYOFjRgnH8iiLMaXgpKrvk6kaExCzmSxVJyr9T3xo3Kv2oqKin7UjIK
-         LyDmYXXgpMTvg==
+        b=agmXXvsEInPOlaIVuC8gOK9RX9ueS5hcjbYFV0IrQGVoPpTudvgLyeuOuYsti2ugU
+         tu8YanJuoDYCvFQn2kipfJYBbLEK4ZCRiaxMiqIK+bnPkcddFLrnFBwcdqMynAHmTA
+         lS+NVFquM99T7QFIcHU5DOqBLSFS0OrUOa1ltdQEuJLQxY0+rknzjkaKHlPxUBtt1A
+         nZKpW2FuuRdnoCGwM4ci1fOyyO2iJpadR2ETnpMFDMiLwrZAWHaXIYzkyXxCBH2OoZ
+         UYzjxhIAL/LDrMh9UD7KmrR4I4tUO8XNEdjryi8kOJVNuPbvBWxPqygAYPHStBnMvf
+         m/j1gaKwDioTQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/12] Input: silead - add workaround for x86 BIOS-es which bring the chip up in a stuck state
-Date:   Wed, 12 May 2021 14:05:16 -0400
-Message-Id: <20210512180522.665788-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 3/7] Input: silead - add workaround for x86 BIOS-es which bring the chip up in a stuck state
+Date:   Wed, 12 May 2021 14:05:40 -0400
+Message-Id: <20210512180545.665946-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180522.665788-1-sashal@kernel.org>
-References: <20210512180522.665788-1-sashal@kernel.org>
+In-Reply-To: <20210512180545.665946-1-sashal@kernel.org>
+References: <20210512180545.665946-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -98,7 +98,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 40 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 7c0eeef29b3c..18c866129845 100644
+index 867772878c0c..3350c0190c4a 100644
 --- a/drivers/input/touchscreen/silead.c
 +++ b/drivers/input/touchscreen/silead.c
 @@ -28,6 +28,7 @@
@@ -107,9 +107,9 @@ index 7c0eeef29b3c..18c866129845 100644
  #include <linux/pm.h>
 +#include <linux/pm_runtime.h>
  #include <linux/irq.h>
- #include <linux/regulator/consumer.h>
  
-@@ -319,10 +320,8 @@ static int silead_ts_get_id(struct i2c_client *client)
+ #include <asm/unaligned.h>
+@@ -317,10 +318,8 @@ static int silead_ts_get_id(struct i2c_client *client)
  
  	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_ID,
  					      sizeof(chip_id), (u8 *)&chip_id);
@@ -121,7 +121,7 @@ index 7c0eeef29b3c..18c866129845 100644
  
  	data->chip_id = le32_to_cpu(chip_id);
  	dev_info(&client->dev, "Silead chip ID: 0x%8X", data->chip_id);
-@@ -335,12 +334,49 @@ static int silead_ts_setup(struct i2c_client *client)
+@@ -333,12 +332,49 @@ static int silead_ts_setup(struct i2c_client *client)
  	int error;
  	u32 status;
  
