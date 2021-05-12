@@ -2,89 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DF1C43462
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 15:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A113C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB765619F1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 15:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B735161182
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233210AbhELPMB (ORCPT
+        id S240312AbhELTNy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 May 2021 11:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41568 "EHLO mail.kernel.org"
+        Wed, 12 May 2021 15:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233663AbhELPKA (ORCPT
+        id S1352067AbhELSC2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 May 2021 11:10:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id F12296162A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 12 May 2021 15:02:44 +0000 (UTC)
+        Wed, 12 May 2021 14:02:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A6A561419;
+        Wed, 12 May 2021 18:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620831765;
-        bh=1Ll5vfHofsToVuIVascTlcKiD6UMIPE/UGSKyV/KEdE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=dbe1dVauL7xh8OJNIZiPOwFLyKXYktsDJBz7dTa3QgzBX9b/T0BRPmSDLsEXZDzo2
-         2K7gM9CZ+qqJa2Ms5IeAnLWw9RXL5nss4lUmZ+lJJxyMP7ZZvlkoWuBpk77MB4LbZP
-         K7grb5hSij/dopyvLTql/DAbr+nuUnfTN7gYTWPOCPrFHXGTPwUF/bIfQcv4sAHdEi
-         UebD3ZGKC0m4oYoWDaUMd9P8Vkyhk+z6jDGfWuecJx0JAbTpSxgswgZo0fvBrcTQU/
-         XVM1hh6EreRgKEoMtM1+9Vly9RQE643EDQ9i4VbZPxZvbMi99bS7R7cWbXs+GBoy2X
-         h7IWEy2/2tOwQ==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213029] [5.12 Regression] clock_gettime() a lot slower with
- Hyper-V clocksource driver
-Date:   Wed, 12 May 2021 15:02:44 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: mhkelley@outlook.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-213029-215701-2zmdsXBpKb@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213029-215701@https.bugzilla.kernel.org/>
-References: <bug-213029-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1620842479;
+        bh=mkCBvt1/7W4P8EeI5YKbcvoKEMpNeqOd4JwgCcgdyFw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XcW9LbIK1zpEHddX0BuF1fMpkSQR8Dk2cRZceejpKTwCob7dJw0tiDw2ag35Bt4Ff
+         JqdGukAIo4eYNvY+IDUmvPlqSwpLdG1oThVy5vU2HfgomwxnSC9OafL+I+5tW48idj
+         iGKurTuPLxVDted6RlIAuOx0dy41U4lRG64DB+Xah2Ck6NOCS2bYaVSp51OiJJwF1r
+         84wC232Axr2uYiZUlYzRZxw8mtzsbjRPGpQk9fKVoFfWXQc72Mc5bemmrQfDwwdhqg
+         NB4XHp2dc4H42lEzCsCH+XTHdrQwAQdnmHkvmueLH74jLbHeYmmb7GUZfj8RNi45T1
+         tVss1aaxZgjzA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.12 10/37] Input: silead - add workaround for x86 BIOS-es which bring the chip up in a stuck state
+Date:   Wed, 12 May 2021 14:00:37 -0400
+Message-Id: <20210512180104.664121-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210512180104.664121-1-sashal@kernel.org>
+References: <20210512180104.664121-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213029
+From: Hans de Goede <hdegoede@redhat.com>
 
-Michael Kelley (mhkelley@outlook.com) changed:
+[ Upstream commit e479187748a8f151a85116a7091c599b121fdea5 ]
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |mhkelley@outlook.com
+Some buggy BIOS-es bring up the touchscreen-controller in a stuck
+state where it blocks the I2C bus. Specifically this happens on
+the Jumper EZpad 7 tablet model.
 
---- Comment #1 from Michael Kelley (mhkelley@outlook.com) ---
-And I was trying to be so clever. :-(  I see that Vitaly Kuznetsov has post=
-ed a
-patch to fix this.
+After much poking at this problem I have found that the following steps
+are necessary to unstuck the chip / bus:
 
-One thing: The commit that causes the problem was first available in 5.13-R=
-C1.=20
-But your problem statement above says that you see the problem with 5.12. C=
-an
-you confirm? The 5.12 release doesn't have the problematic commit.
+1. Turn off the Silead chip.
+2. Try to do an I2C transfer with the chip, this will fail in response to
+   which the I2C-bus-driver will call: i2c_recover_bus() which will unstuck
+   the I2C-bus. Note the unstuck-ing of the I2C bus only works if we first
+   drop the chip of the bus by turning it off.
+3. Turn the chip back on.
 
---=20
-You may reply to this email to add a comment.
+On the x86/ACPI systems were this problem is seen, step 1. and 3. require
+making ACPI calls and dealing with ACPI Power Resources. This commit adds
+a workaround which runtime-suspends the chip to turn it off, leaving it up
+to the ACPI subsystem to deal with all the ACPI specific details.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+There is no good way to detect this bug, so the workaround gets activated
+by a new "silead,stuck-controller-bug" boolean device-property. Since this
+is only used on x86/ACPI, this will be set by model specific device-props
+set by drivers/platform/x86/touchscreen_dmi.c. Therefor this new
+device-property is not documented in the DT-bindings.
+
+Dmesg will contain the following messages on systems where the workaround
+is activated:
+
+[   54.309029] silead_ts i2c-MSSL1680:00: [Firmware Bug]: Stuck I2C bus: please ignore the next 'controller timed out' error
+[   55.373593] i2c_designware 808622C1:04: controller timed out
+[   55.582186] silead_ts i2c-MSSL1680:00: Silead chip ID: 0x80360000
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20210405202745.16777-1-hdegoede@redhat.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/touchscreen/silead.c | 44 +++++++++++++++++++++++++++---
+ 1 file changed, 40 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 8fa2f3b7cfd8..e8b6c3137420 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -20,6 +20,7 @@
+ #include <linux/input/mt.h>
+ #include <linux/input/touchscreen.h>
+ #include <linux/pm.h>
++#include <linux/pm_runtime.h>
+ #include <linux/irq.h>
+ #include <linux/regulator/consumer.h>
+ 
+@@ -335,10 +336,8 @@ static int silead_ts_get_id(struct i2c_client *client)
+ 
+ 	error = i2c_smbus_read_i2c_block_data(client, SILEAD_REG_ID,
+ 					      sizeof(chip_id), (u8 *)&chip_id);
+-	if (error < 0) {
+-		dev_err(&client->dev, "Chip ID read error %d\n", error);
++	if (error < 0)
+ 		return error;
+-	}
+ 
+ 	data->chip_id = le32_to_cpu(chip_id);
+ 	dev_info(&client->dev, "Silead chip ID: 0x%8X", data->chip_id);
+@@ -351,12 +350,49 @@ static int silead_ts_setup(struct i2c_client *client)
+ 	int error;
+ 	u32 status;
+ 
++	/*
++	 * Some buggy BIOS-es bring up the chip in a stuck state where it
++	 * blocks the I2C bus. The following steps are necessary to
++	 * unstuck the chip / bus:
++	 * 1. Turn off the Silead chip.
++	 * 2. Try to do an I2C transfer with the chip, this will fail in
++	 *    response to which the I2C-bus-driver will call:
++	 *    i2c_recover_bus() which will unstuck the I2C-bus. Note the
++	 *    unstuck-ing of the I2C bus only works if we first drop the
++	 *    chip off the bus by turning it off.
++	 * 3. Turn the chip back on.
++	 *
++	 * On the x86/ACPI systems were this problem is seen, step 1. and
++	 * 3. require making ACPI calls and dealing with ACPI Power
++	 * Resources. The workaround below runtime-suspends the chip to
++	 * turn it off, leaving it up to the ACPI subsystem to deal with
++	 * this.
++	 */
++
++	if (device_property_read_bool(&client->dev,
++				      "silead,stuck-controller-bug")) {
++		pm_runtime_set_active(&client->dev);
++		pm_runtime_enable(&client->dev);
++		pm_runtime_allow(&client->dev);
++
++		pm_runtime_suspend(&client->dev);
++
++		dev_warn(&client->dev, FW_BUG "Stuck I2C bus: please ignore the next 'controller timed out' error\n");
++		silead_ts_get_id(client);
++
++		/* The forbid will also resume the device */
++		pm_runtime_forbid(&client->dev);
++		pm_runtime_disable(&client->dev);
++	}
++
+ 	silead_ts_set_power(client, SILEAD_POWER_OFF);
+ 	silead_ts_set_power(client, SILEAD_POWER_ON);
+ 
+ 	error = silead_ts_get_id(client);
+-	if (error)
++	if (error) {
++		dev_err(&client->dev, "Chip ID read error %d\n", error);
+ 		return error;
++	}
+ 
+ 	error = silead_ts_init(client);
+ 	if (error)
+-- 
+2.30.2
+
