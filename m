@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DD2C43460
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF99C43600
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3272613FE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139CB61411
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 12 May 2021 19:22:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244534AbhELTN4 (ORCPT
+        id S244557AbhELTN6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 12 May 2021 15:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52538 "EHLO mail.kernel.org"
+        Wed, 12 May 2021 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352899AbhELSEd (ORCPT
+        id S1353019AbhELSGl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 12 May 2021 14:04:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A198A6143D;
-        Wed, 12 May 2021 18:03:20 +0000 (UTC)
+        Wed, 12 May 2021 14:06:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E3E6F6145B;
+        Wed, 12 May 2021 18:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620842601;
-        bh=mkCBvt1/7W4P8EeI5YKbcvoKEMpNeqOd4JwgCcgdyFw=;
+        s=k20201202; t=1620842663;
+        bh=pzL1qU+2Rr0Nm+QO054FvBXcIonwTHJVm2YLEYIoKR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPB0zxCKlsPguOU13dM4g/I6NR4SLL4SdCZjzLsxxWHVgpzyAwnA5iaVBVFT2tZEo
-         SfAL3yiyj/QDbZEe2INp2TZ+dDLb5b4qObNEkPEylQvwmOnK64ND2muqGUmG4vBEbd
-         JVwVPz+PMTB2Lbwn2TIbtVIwmvHy/vsYYFo2zQC5z63m4fBCUSohu5sklTQPra66x3
-         qCOjjjGXSoJcJzvN/k8VvsyVlDRIRFwrWrFoGl4b1nqARuCxXXnIfHNZ3m374ThqrZ
-         fVAL3lY4jSll7Bt8Q30VZ/eXPcI/VcG4DTOwsM4aWcZZjwmPpb/MshFcdSuWmnUR7e
-         RyULFlNJE2AaA==
+        b=ElVIb0mH+oibxiH6KOAwtOVA3a0JXDRLI0NrmZKQdq0fZUfpeln1QRTEuSEX9ve5s
+         UE12b4/YS+YXpk8g8AaFypvRZF50tjErTZy6O2/Xv8ZQ+FugkOkXtjxg04jwPsc7PY
+         XQ7yUh+UWi9KcfvBA3WH21tP92yd6WCaV0zcbcxHzAjt6w03rH9ISrj3G8jrsvHJyt
+         UZUkPAJv6A6B2BRYDG4coU9W6R8Lj5FoQq3C0QiM6utH9AHqurUvGK1NL09C4Ohrs2
+         GQMnNSnUdH5DtPy6qgojKNOE20z5P2iDq82rnHmXSXMMP5AEcRdPMvgjllKhoYCRJI
+         rsuhAV3HG1jIQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 09/34] Input: silead - add workaround for x86 BIOS-es which bring the chip up in a stuck state
-Date:   Wed, 12 May 2021 14:02:40 -0400
-Message-Id: <20210512180306.664925-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 08/23] Input: silead - add workaround for x86 BIOS-es which bring the chip up in a stuck state
+Date:   Wed, 12 May 2021 14:03:52 -0400
+Message-Id: <20210512180408.665338-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210512180306.664925-1-sashal@kernel.org>
-References: <20210512180306.664925-1-sashal@kernel.org>
+In-Reply-To: <20210512180408.665338-1-sashal@kernel.org>
+References: <20210512180408.665338-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -98,7 +98,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 40 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 8fa2f3b7cfd8..e8b6c3137420 100644
+index ad8b6a2bfd36..c8776146f1d1 100644
 --- a/drivers/input/touchscreen/silead.c
 +++ b/drivers/input/touchscreen/silead.c
 @@ -20,6 +20,7 @@
