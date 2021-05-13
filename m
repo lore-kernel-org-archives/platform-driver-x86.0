@@ -8,114 +8,91 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039CAC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 May 2021 13:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02A0C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 May 2021 15:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11AA613C7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 May 2021 13:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BEEE611AB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 13 May 2021 15:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234149AbhEMNqT (ORCPT
+        id S234984AbhEMPjw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 13 May 2021 09:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33420 "EHLO
+        Thu, 13 May 2021 11:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234134AbhEMNqO (ORCPT
+        with ESMTP id S234980AbhEMPjs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 13 May 2021 09:46:14 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D2AC061574;
-        Thu, 13 May 2021 06:45:03 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id 131so8399397ljj.3;
-        Thu, 13 May 2021 06:45:03 -0700 (PDT)
+        Thu, 13 May 2021 11:39:48 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21847C061574
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 May 2021 08:38:36 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id j19so20020379qtp.7
+        for <platform-driver-x86@vger.kernel.org>; Thu, 13 May 2021 08:38:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FBPasmM/koYk8hAIqdY3f2KiMrXHrlFGMqFB3oaVE/M=;
-        b=UQZ1qIlhOC5IXhSBZjQWBA1TB8avfWoOWFC6GP8TBEI1qtuZON9be+NI4onn4ZJZKD
-         hiDB4EPhpKKp1JVinhjFeIncphN0sG0bMkBlC+l0DXSAmEqfJrYVySFxvw4HCfiH/74o
-         qID/FFNUgdyiBVdAyO4znV1qW3XKv5NuVg00rocTeOCZZm6tMiDK0bKBjmuCblILWlRU
-         REHvJta1/BZuD0P379qs+fnYWMtAajWHXL0ACRrlHdRFc+KwQwFmgjCdOM0Q0/6gcA9P
-         sqnjHbP2wNXMhNsPStHh0WQjiz0Xzqyi0HbiqmtKfPyg+5SafjZOsDca0VTytnRyUplS
-         vh9Q==
+        bh=d4ZQOZeGe3EXF7fffoOcvNZdw5onCMB34qpY3tlGdRM=;
+        b=CYdrHSDlh6HMQzySYCOOUq1Jiw0iKG8rJhSyBrzfrMvk/MXp5dylryVV0wvHbimBvy
+         oTmkhL9AFEVeBMcUFu6Z7NcPF2GhNoAYuAHrlXSUajUUMCGZrz6wWCX4nFP8ej/YIzzF
+         5hw1AeA4iI4rp05PaVzDdBtrRm+YZY23gEn/iqMo++OkkDgz5gw7cH9rj5HbGdS4bVyf
+         fSovggX34GroWAUsg69wpYTak0UZZ/XThK4gL/RmrhPGdg3om1Z10rxxumYYF6wjf+Ga
+         gtKZzeuq7GtMD6pSMCeinkWc3HHnrOXmZy4TdOoOqumP2zWZDJe6p/Z9/KKnEmKQ27S1
+         94Iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=FBPasmM/koYk8hAIqdY3f2KiMrXHrlFGMqFB3oaVE/M=;
-        b=QVFPbOkYz8L8hcdC457yFpOecgrfMptSv0lfDTjZNmaX8hsUTRiaNRwE6FlsyLcalN
-         hFH/l8nKGWIB/1xTPGHo6rYSfUqnU0yhz7qW9Tz1VsX8lFd7fXMTJlun0v6kVUf+UDkZ
-         KwbC+prManFjOj5hvPFP04qqitn2EzVPNPWoClcZ6Y5ODzEI0E9EI62D3w2fgt7OE3Gv
-         SxszRynbdg+0lz4TgKR+ocwsP1+wiOPpS5pxgJnNsrGSHBw7mdzytAIeEmtsqGD93mRG
-         8ACS7dU685IJSLQN50VQ7NqMxdHMVLR4q18jmuFmFPAYOdOpssNnx7DT6gOBIFMQoZVm
-         PyWA==
-X-Gm-Message-State: AOAM532W72DxOvHvoxltpNFFEVxKPHlCZKgo7e/CvlbrqGNaEpoKlmb3
-        +EByuc3X0w0sU0gWxbNbbBg=
-X-Google-Smtp-Source: ABdhPJx3PZf9GaKZ2dlSV2URvf6k6labAM601mYcJMAcNA/I40sQE91fIIwA6cbkASIWFs6K5jIm/Q==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr3764062lja.247.1620913501899;
-        Thu, 13 May 2021 06:45:01 -0700 (PDT)
-Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id m25sm294089lfr.288.2021.05.13.06.45.00
+        bh=d4ZQOZeGe3EXF7fffoOcvNZdw5onCMB34qpY3tlGdRM=;
+        b=DVDsOtSSoRdBeWsj4cFm0tY2O+qFAh4U7JKiOqKv2o5TacbK7bSGFDP8aQhaDIM+Yq
+         1OX4J5YrkhdXcYlZ1RiFBvmvSTi+Dn2Lfr1sNz8Ctwe9MB9xT56x0lUBLp6NK/MHb74J
+         Ls90iXAK/Vie9Eo8Oh/LTAEK1Zfs8S3lucBHbTGumHxS26DxrXLVj1cu52K3Y9Fz4FV4
+         n8JSEMP1ecSpbz8vZYFNHjfGtPpk2Ly/HCWMyyZhausG7jH/YSybt7DX7uQeMe9Q8xM+
+         dbVRdBhoSsMjqQuxhitBN0DYXzhICjFyndY6H4AcN+I5lRN3aHmiDlD7cQzVFToPi1/S
+         yDng==
+X-Gm-Message-State: AOAM530U8SS+/zvO8StwoUVxX3B8Sr/4MtZsG1xZtJnaIU7uZBsfBBSU
+        BIz9qvWqSYfZwuE8BZBTL4k=
+X-Google-Smtp-Source: ABdhPJyhCnOhWCavkV/9rgtO+BA3rNNdOehCl8lxT8UPbpb3vo9UkzmHKXCJddBfy75AzBbjbbpeYg==
+X-Received: by 2002:ac8:5e0b:: with SMTP id h11mr39109204qtx.194.1620920315351;
+        Thu, 13 May 2021 08:38:35 -0700 (PDT)
+Received: from localhost.localdomain (bras-base-toroon4216w-grc-03-184-148-68-141.dsl.bell.ca. [184.148.68.141])
+        by smtp.gmail.com with ESMTPSA id c26sm2433411qtj.92.2021.05.13.08.38.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 May 2021 06:45:01 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] platform/surface: dtx: Fix poll function
-Date:   Thu, 13 May 2021 15:44:37 +0200
-Message-Id: <20210513134437.2431022-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        Thu, 13 May 2021 08:38:34 -0700 (PDT)
+From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+To:     rajneesh.bhardwaj@amd.com, platform-driver-x86@vger.kernel.org,
+        david.e.box@linux.intel.com
+Cc:     dave.hansen@intel.com,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Subject: [PATCH] MAINTAINERS: Update info for telemetry
+Date:   Thu, 13 May 2021 11:38:25 -0400
+Message-Id: <20210513153825.77214-1-irenic.rajneesh@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The poll function should not return -ERESTARTSYS.
+ - My linux.intel.com email is no longer valid, update it to my gmail id.
 
-Furthermore, locking in this function is completely unnecessary. The
-ddev->lock protects access to the main device and controller (ddev->dev
-and ddev->ctrl), ensuring that both are and remain valid while being
-accessed by clients. Both are, however, never accessed in the poll
-function. The shutdown test (via atomic bit flags) be safely done
-without locking, so drop locking here entirely.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 1d609992832e ("platform/surface: Add DTX driver)
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Signed-off-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 ---
- drivers/platform/surface/surface_dtx.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
-index 63ce587e79e3..5d9b758a99bb 100644
---- a/drivers/platform/surface/surface_dtx.c
-+++ b/drivers/platform/surface/surface_dtx.c
-@@ -527,20 +527,14 @@ static __poll_t surface_dtx_poll(struct file *file, struct poll_table_struct *pt
- 	struct sdtx_client *client = file->private_data;
- 	__poll_t events = 0;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7fdc513392f4..dd21a6e56e17 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9209,7 +9209,7 @@ F:	include/linux/firmware/intel/stratix10-smc.h
+ F:	include/linux/firmware/intel/stratix10-svc-client.h
  
--	if (down_read_killable(&client->ddev->lock))
--		return -ERESTARTSYS;
--
--	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags)) {
--		up_read(&client->ddev->lock);
-+	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags))
- 		return EPOLLHUP | EPOLLERR;
--	}
- 
- 	poll_wait(file, &client->ddev->waitq, pt);
- 
- 	if (!kfifo_is_empty(&client->buffer))
- 		events |= EPOLLIN | EPOLLRDNORM;
- 
--	up_read(&client->ddev->lock);
- 	return events;
- }
- 
+ INTEL TELEMETRY DRIVER
+-M:	Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
++M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+ M:	"David E. Box" <david.e.box@linux.intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
 -- 
-2.31.1
+2.25.1
 
