@@ -2,50 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DF5C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 May 2021 21:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9B5C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 May 2021 21:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7A36147F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 May 2021 21:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB88E610C9
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 14 May 2021 21:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbhENVYH (ORCPT
+        id S231720AbhENV5r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 14 May 2021 17:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229504AbhENVYG (ORCPT
+        Fri, 14 May 2021 17:57:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229942AbhENV5r (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 14 May 2021 17:24:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9FA43613BB;
-        Fri, 14 May 2021 21:22:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621027375;
-        bh=0B3vRzqZ6K4f9UvjfOOfzoQhIiCFoDeVGmsMqIbrkJw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NasdIl1l9tT5rUPuIDMyvvfYYcKOQmtML694FQkUFSaJdrwROCeX4kVrVqB3kqQl8
-         e0yT5W8xzCBDInwJ8ssRxXTEX/YeuRdoq1VsNFEiFhRNENVDq5wydwdp8yaTWnS0XB
-         rB1obsszE0sc052b0QoSwIe3ZaxG9Fr76AR10Kee+CyPISsvO2T2hKx60RMHWfP3AC
-         FY4QYEtPhX0ImNwN/sWfQNvJ4i40gL8N/4O+OYYC2IFKNuAqvuW8owkfXT2CqTqC1q
-         z2rjO4OA31GY6J8C7J9fO3kobVqN/TQu+67bY+3fNPB8nRh3p3sfpWvlxglaSWnuHs
-         gwZvKaeJbhz5g==
+        Fri, 14 May 2021 17:57:47 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ABBBC06174A;
+        Fri, 14 May 2021 14:56:34 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id df21so197557edb.3;
+        Fri, 14 May 2021 14:56:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=61B9WevOpoQNzFK6pLWh/9kRzelEclfMSAISHfMU93Y=;
+        b=RNmz0J1aLaw8+M7+c0F7byA0Y4WlTDkH0/GVNq2A2Dcl+2DeFi+G/+OMM0BmVHFnKY
+         B6SHXMfoOkj2fT144kQMOmuRYumhpWpohYe0rfxh7mhuFrAwfTPHgcu2l2dzrrE8NvJh
+         Pyw6/fhUwH+s7nnvCVFOUfVawcw1p370VQE1ddLdi1lySoEies2jRVZopAvnQ0HzI1Fx
+         B8kfmr9/H7LkWyJSdKZq5B1/KAiEKYkCsZ53YpJpojnkqMfmZul6YGXR4/xSc4YEkfRI
+         7fN2b226XTAtJlDDWPPjwZfdwG44yl7Y/8ihzf08V+3C+0qJeWSQDVxD0hbMJ8615sNZ
+         IEzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=61B9WevOpoQNzFK6pLWh/9kRzelEclfMSAISHfMU93Y=;
+        b=c54TOzAIS67uetgWwsiTjkQ0le2WItMSC7VLEYlPqTUE3g/r6b0DpIasAZPaEvDV3y
+         5pugV9eC0Whu6NKL5TGg2pSO1I6ooavRFcLelZYVmkEP01QFkDvWDDgE7SYa9b5yYd7Y
+         ZnM/0NQEmTIlxC5Yj6Zj0TNhi++E67V0TeT8fpsburR5/gYfNuxnAFsN0iXRZPj0C550
+         Gc37N48lnbNEwd2A6lspe5FT7RfXHpqQgFWdk2blpKDGxURzwPopQFi/xMtFqyQfhl0N
+         kLG+Ci3cbK/gTM7XXFQ+9Pg1giLVUSTvAkNmDbbYQZN1ifzRjm1TWf2v4a66YNQCHDEY
+         1cJQ==
+X-Gm-Message-State: AOAM531RdCzDZBHhTmG0K8xRrjzlC/mCH/xSfBCpveEiucTBFA8wEsPz
+        8FVXGlcl97sXqQENBOElIkc=
+X-Google-Smtp-Source: ABdhPJz4iScXn2Q2hae1/SahmSllSASR+nHYWuz5p+ANV4IxJzRhWjtlIJyXTPmFWDyjFWUKjjFGLw==
+X-Received: by 2002:aa7:c7cc:: with SMTP id o12mr59525984eds.291.1621029392754;
+        Fri, 14 May 2021 14:56:32 -0700 (PDT)
+Received: from [192.168.2.120] (pd9e5a369.dip0.t-ipconnect.de. [217.229.163.105])
+        by smtp.gmail.com with ESMTPSA id d25sm4220668ejd.59.2021.05.14.14.56.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 May 2021 14:56:32 -0700 (PDT)
 Subject: Re: [PATCH] [v2] platform/surface: aggregator: avoid clang
  -Wconstant-conversion warning
 To:     Arnd Bergmann <arnd@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
 References: <20210514200453.1542978-1-arnd@kernel.org>
-From:   Nathan Chancellor <nathan@kernel.org>
-Message-ID: <057b5568-c4b8-820c-3dd7-2200f61a4d58@kernel.org>
-Date:   Fri, 14 May 2021 14:22:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <aa141212-ce68-5f07-c656-8489ff9e7b5f@gmail.com>
+Date:   Fri, 14 May 2021 23:56:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
 In-Reply-To: <20210514200453.1542978-1-arnd@kernel.org>
@@ -56,7 +82,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 5/14/2021 1:04 PM, Arnd Bergmann wrote:
+On 14/05/2021 22:04, Arnd Bergmann wrote:
 > From: Arnd Bergmann <arnd@arndb.de>
 > 
 > Clang complains about the assignment of SSAM_ANY_IID to
@@ -84,7 +110,9 @@ On 5/14/2021 1:04 PM, Arnd Bergmann wrote:
 > Cc: platform-driver-x86@vger.kernel.org
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Thanks! This looks good to me.
+
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
 > ---
 > v2: use __builtin_choose_expr() instead of a cast to shut up the warning
@@ -110,4 +138,3 @@ Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 >   /**
 >    * SSAM_VDEV() - Initialize a &struct ssam_device_id as virtual device with
 > 
-
