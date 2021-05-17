@@ -2,87 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0E5C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CD4C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 21:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6DE661057
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 16:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E0561355
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 21:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241069AbhEQQYf (ORCPT
+        id S238232AbhEQVpI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 May 2021 12:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244967AbhEQQXQ (ORCPT
+        Mon, 17 May 2021 17:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54302 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230508AbhEQVpH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 May 2021 12:23:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5137261019
-        for <platform-driver-x86@vger.kernel.org>; Mon, 17 May 2021 16:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621268519;
-        bh=/pIsLMIKDvXs9Rw1caWQNndEXElIZ7pyYqdZXe5QSsg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=scjcdQDZwhpJeezi6JdhHPVU43A2UarXeKzZtEBV0NKqK+9iAkrW0PxF2udqo9DmS
-         gazvpDDh1Gmd115OecAtmfwhvo0bDSWOjdaf1UNsBRk6/SMJo43UQDrJbJe0MBejag
-         AR8uPsWHOQvIu2LQeJ3A7ONex7JvK07rh4AucIgNOTWLdwLho8s43aC4uH+yXXvzbe
-         GuyGEylOp7kPabqAQKEQZaO+vJnR5JIPQakoWhlKb9mJML5JcDpznP8l2Sy+PpABgg
-         riaSck07444HDx95X+Mva1H9YsQLHF2uwdAIkr6cQmW7K+gFwkfkybrXvr6OOBrB2w
-         vZKI+8Zktm3LQ==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213109] ideapad-laptop: Regression in 5.12.x for Battery
- conservation mode
-Date:   Mon, 17 May 2021 16:21:59 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: pobrn@protonmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-213109-215701-hMlGieeigl@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213109-215701@https.bugzilla.kernel.org/>
-References: <bug-213109-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Mon, 17 May 2021 17:45:07 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E98C061573;
+        Mon, 17 May 2021 14:43:50 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id u4-20020a05600c00c4b02901774b80945cso329557wmm.3;
+        Mon, 17 May 2021 14:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kT6r2KItAdyXr6Yj4HdvbNeNJJn3Kyatb3yqGTbZ49U=;
+        b=t774CtYem/0kL0GO8c0Bs8Binz7Qh2ivYr4qAbt8k4M/ZEpxVwVSn7PxZKdCCfDPWI
+         XIgkJMHsFbL7qrWvQPHwg5hv+RiSmkr2GUqw7gLFzExzf0ujDt6WqjWkeDL9ZlT/DeY1
+         8MlFE+jjXUFRRdXRsPWDlpZnZZYIAaZNXHiKwek3g/XSWHNQrIQ0zem5rm9WEZ/Gzxap
+         Djjllf7Hbput/A9u2DDd2elcAwPIxBQMY3ST6R3TRtUat/N3bz6agPjrcHVswLkdXStY
+         vMDLot3oqKh8L0fMl2fNZTlUullwqPLKCJsEz/s2g++bn7UXXm3/RimqHr7fisUEpRQk
+         bEDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kT6r2KItAdyXr6Yj4HdvbNeNJJn3Kyatb3yqGTbZ49U=;
+        b=Haqh+uZSyT7eQyzZd/oRGqdlal2DB3M8phbyTBljlIbKluaX5LYIhXv9Vxd4B5cVSd
+         o7U1pTvkFq4fYHDuRyCO4ERh/020vy12EijRdJNIGPHPVOqZOpooeUs855lFQUj+7e5n
+         sGZb5DBIdVHodKEJhAa+V0Ax9G00+7krJ75QOixE3AMinzfp9/R5Zb8RMoq2BWQI+1fy
+         KkIOFfxBsXOtU2Tq5ms5UonvNa/Z8T5nImCNWT0DO7rQoVECIuZHQxvnQY4tyil3V53g
+         2v4LNlv304VvoS6hxSe8jGJIU1rmLrW/W5x3CZ4o/NxGV2+x5q+v+KYtNAoDvo5oUYOX
+         PqNw==
+X-Gm-Message-State: AOAM533BopXfV16uHThuzvHBXwAeBkh/90fZt/55kYXs7aDkr+Mp/JSg
+        H8E4sKVFmtsWlk9GixAb0eCgnebUUxHMmQ==
+X-Google-Smtp-Source: ABdhPJz2ABsZ8o6YhIcD0a0iLMmS93uLHc4hH1gSeT5wk1jKbW0GKfSe05V0FUr/5hs+hSkuknD6vw==
+X-Received: by 2002:a1c:f303:: with SMTP id q3mr1079231wmq.9.1621287829079;
+        Mon, 17 May 2021 14:43:49 -0700 (PDT)
+Received: from [192.168.1.158] ([91.110.20.117])
+        by smtp.gmail.com with ESMTPSA id u16sm748429wmj.27.2021.05.17.14.43.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 May 2021 14:43:48 -0700 (PDT)
+Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Rajmohan Mani <rajmohan.mani@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        kieran.bingham+renesas@ideasonboard.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>, me@fabwu.ch,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        devel@acpica.org
+References: <20210222130735.1313443-1-djrscally@gmail.com>
+ <20210222130735.1313443-6-djrscally@gmail.com>
+ <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <0241df24-11cb-fd3b-12a5-f98dea55fac5@gmail.com>
+Date:   Mon, 17 May 2021 22:43:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213109
+Hi Andy
 
-Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) changed:
+On 22/02/2021 14:58, Andy Shevchenko wrote
+>> +#include <linux/clk-provider.h>
+> 
+> This is definitely not for *.h. (Not all C files needed this)
+> 
+>> +#include <linux/gpio/machine.h>
+> 
+> Ditto.
+> 
+>> +#include <linux/regulator/driver.h>
+>> +#include <linux/regulator/machine.h>
+> 
+> Ditto.
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |pobrn@protonmail.com
-
---- Comment #1 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
-Thanks for bringing this up. The issue has already been reported in
-https://bugzilla.kernel.org/show_bug.cgi?id=3D212985 and a patch has been s=
-ent to
-fix it (
-https://lore.kernel.org/platform-driver-x86/20210507235333.286505-1-pobrn@p=
-rotonmail.com/
-).
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Bit more delayed than I wanted to be, but I'm just finishing off the v4
+of this. For these includes, I'm using the actual structs from them
+rather than pointers, so removing these would mean moving the definition
+of struct int3472_discrete_device into one of the source files; you're
+happy with that?
