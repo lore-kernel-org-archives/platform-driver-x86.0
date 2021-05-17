@@ -2,101 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2209C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E745C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB94610C9
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4202B6121F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:07:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236123AbhEQKHF (ORCPT
+        id S236209AbhEQKJH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 May 2021 06:07:05 -0400
-Received: from www.zeus03.de ([194.117.254.33]:38114 "EHLO mail.zeus03.de"
+        Mon, 17 May 2021 06:09:07 -0400
+Received: from www.zeus03.de ([194.117.254.33]:39464 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232452AbhEQKDb (ORCPT
+        id S236080AbhEQKJG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 May 2021 06:03:31 -0400
+        Mon, 17 May 2021 06:09:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=/FxvbSuKC1tmr9/+95uisDIUwuZu
-        1r+6F20Yx4PySKw=; b=AgHOb03L0EvWeU3YMajBBb1smLBdbUYpODjjrJ36Z7x6
-        nqAQRYctI4C/CUUTj8IT+1gDRmnYnS8hGJtgBHSG2JqwSEU2PHZjUb+VgLu+RfQq
-        xPQLJMBME0JAaC/M8qxBlUGBSS+AfKQMTeoIPFXQJ9MYs0sZJdlfODnH0EBJU2Y=
-Received: (qmail 2469005 invoked from network); 17 May 2021 12:02:12 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2021 12:02:12 +0200
-X-UD-Smtp-Session: l3s3148p1@r7iAr4PC7rggARa4RYY7ATBvQ5FTVwg4
-Date:   Mon, 17 May 2021 12:02:04 +0200
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=k1; bh=Z0f6aV6NsliMjT
+        tzNpWaoTKaZ24I1TbtLb9a3MIBU8E=; b=IMma1yLQIWMkbtuv0zbkIFwbyX5W5r
+        ZLnD4j2IwGmswWWiB/Jw+VrtAVRvqcKByzwJ0uPrOWfQaOEANDBnPqf01obQlfTb
+        6vDsK9Ag137TOvQF1WymA3DAUHemcFJPnmfTtQAKkOyI3mWm+iW76El4ZtM1Kkhg
+        /FnaoxL3M1GdI=
+Received: (qmail 2471414 invoked from network); 17 May 2021 12:07:48 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2021 12:07:48 +0200
+X-UD-Smtp-Session: l3s3148p1@luD9w4PC/rggARa4RYY7ATBvQ5FTVwg4
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Corentin Chary <corentin.chary@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] platform/x86: samsung-laptop: use octal numbers
- for rwx file permissions
-Message-ID: <YKI/HD7qZB6Seh/+@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+To:     linux-kernel@vger.kernel.org
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Corentin Chary <corentin.chary@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-References: <20210504170030.58447-1-wsa+renesas@sang-engineering.com>
- <CAHp75VepeO6-A9-xJqjpEDZa0XDyNbat0PBrtrgFEgJ4yxh4kA@mail.gmail.com>
- <CAHp75VdSv4Ja7+bjPDvOawuv1ukhKZ==bjQ_MQbNPUds_7mVZw@mail.gmail.com>
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 2/2] platform/x86: samsung-laptop: set debugfs blobs to read only
+Date:   Mon, 17 May 2021 12:07:45 +0200
+Message-Id: <20210517100746.29663-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210517100746.29663-1-wsa+renesas@sang-engineering.com>
+References: <20210517100746.29663-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AuwULfkSGg+bPGLa"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdSv4Ja7+bjPDvOawuv1ukhKZ==bjQ_MQbNPUds_7mVZw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Those blobs can only be read. So, don't confuse users with 'writable'
+flags. Also, remove S_IFREG because debugfs takes care of that.
 
---AuwULfkSGg+bPGLa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
+change since v2: added Andy's tag and removed S_IFREG
 
-> > > -       debugfs_create_file("call", S_IFREG | S_IRUGO, root, samsung,
-> > > +       debugfs_create_file("call", S_IFREG | 0444, root, samsung,
->=20
-> Actually you may drop IFREG as well as debugfs will add it if there is
-> no conflicting file type defined.
+ drivers/platform/x86/samsung-laptop.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Oh, I missed this back then. Quoting only relevant parts of a message
-helps me to avoid that ;)
+diff --git a/drivers/platform/x86/samsung-laptop.c b/drivers/platform/x86/samsung-laptop.c
+index 763d97cbbe53..7ee010aa740a 100644
+--- a/drivers/platform/x86/samsung-laptop.c
++++ b/drivers/platform/x86/samsung-laptop.c
+@@ -1296,12 +1296,12 @@ static void samsung_debugfs_init(struct samsung_laptop *samsung)
+ 	debugfs_create_u32("d1", 0644, root, &samsung->debug.data.d1);
+ 	debugfs_create_u16("d2", 0644, root, &samsung->debug.data.d2);
+ 	debugfs_create_u8("d3", 0644, root, &samsung->debug.data.d3);
+-	debugfs_create_blob("data", 0644, root, &samsung->debug.data_wrapper);
+-	debugfs_create_blob("f0000_segment", 0600, root,
++	debugfs_create_blob("data", 0444, root, &samsung->debug.data_wrapper);
++	debugfs_create_blob("f0000_segment", 0400, root,
+ 			    &samsung->debug.f0000_wrapper);
+-	debugfs_create_file("call", S_IFREG | 0444, root, samsung,
++	debugfs_create_file("call", 0444, root, samsung,
+ 			    &samsung_laptop_call_fops);
+-	debugfs_create_blob("sdiag", 0644, root, &samsung->debug.sdiag_wrapper);
++	debugfs_create_blob("sdiag", 0444, root, &samsung->debug.sdiag_wrapper);
+ }
+ 
+ static void samsung_sabi_exit(struct samsung_laptop *samsung)
+-- 
+2.30.2
 
-I will add this, to patch 2, though. This is only a plain conversion. v3
-coming in a minute.
-
-
---AuwULfkSGg+bPGLa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmCiPxgACgkQFA3kzBSg
-KbZfAxAAn+fNp1VOJnan7vF9NWywThmWildOGGMg40sGFK7hS1TCQS9sEgzXpXAo
-wMm0HKPlLRCSS0K+7KJNnMIOP88tJz6gedVJE6lCeookcUVtyR84tsg6w7JsPONN
-z+U0CyXszO7PXj17huNUb0J1+sstu0q/ZcmiCIFEjcHAfmKTFffCYxU6GjCkdNek
-QLRq9v9qfgb6B+YfVSkF4Md0knusaOjxQSqxxT7Pzv0RM/9ptymd2MFSDYBrKi8/
-xcuLM0wk/d88AE7ijOYGCD2Zt0Eaa8ZopgEB93QtAQOS5qf4GpLOew7HHfVZ5twp
-vacvF2s920DK3ZSkHluqY1yQ1Lwwcciv3FcnlULi3ZnqFP83HY06j5PTUnjgMzQh
-Sn7ueRnnNKExi60dP/PpcOtC4yJKdbFVk+lcS7OGPMf4VQMFbow91Wv+IsgtGc9W
-V5CErITA2WBRuAO98o0uHC2JAjVKu990CopWAE4N48D80WLK5Dbd8go8RzE7CSss
-EE59l4tkhCA7cwPPffWldor9aoLlJV9eKD08+RpIBQtSvBfPbHG1ED/m77xtTZKK
-YKGso2jKiw1MFzMX0BlEDwC+wfj6Zd0ln73mu++dOydcvkM7asre1j6vJi5A/584
-GUV36prkavJpi1qfcxQHBNevHUfLeKSOeFNUhpJ/YtqLQfPXkyw=
-=AH4s
------END PGP SIGNATURE-----
-
---AuwULfkSGg+bPGLa--
