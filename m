@@ -2,85 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE9C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 08:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2209C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382E061244
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 08:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB94610C9
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 10:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235501AbhEQIcg (ORCPT
+        id S236123AbhEQKHF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 May 2021 04:32:36 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:50005 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229755AbhEQIcg (ORCPT
+        Mon, 17 May 2021 06:07:05 -0400
+Received: from www.zeus03.de ([194.117.254.33]:38114 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232452AbhEQKDb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 May 2021 04:32:36 -0400
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-219-3UlcEW98NA-nIwfojSR38g-1; Mon, 17 May 2021 09:31:16 +0100
-X-MC-Unique: 3UlcEW98NA-nIwfojSR38g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.2; Mon, 17 May 2021 09:31:13 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.015; Mon, 17 May 2021 09:31:13 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Nathan Chancellor' <nathan@kernel.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: RE: [PATCH] [v2] platform/surface: aggregator: avoid clang
- -Wconstant-conversion warning
-Thread-Topic: [PATCH] [v2] platform/surface: aggregator: avoid clang
- -Wconstant-conversion warning
-Thread-Index: AQHXSQdQtGc3TDOhPEi9QDyAZ4cunarnW2LA
-Date:   Mon, 17 May 2021 08:31:12 +0000
-Message-ID: <16280aaedc40425295d202431ac3adc0@AcuMS.aculab.com>
-References: <20210514200453.1542978-1-arnd@kernel.org>
- <057b5568-c4b8-820c-3dd7-2200f61a4d58@kernel.org>
-In-Reply-To: <057b5568-c4b8-820c-3dd7-2200f61a4d58@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 17 May 2021 06:03:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=/FxvbSuKC1tmr9/+95uisDIUwuZu
+        1r+6F20Yx4PySKw=; b=AgHOb03L0EvWeU3YMajBBb1smLBdbUYpODjjrJ36Z7x6
+        nqAQRYctI4C/CUUTj8IT+1gDRmnYnS8hGJtgBHSG2JqwSEU2PHZjUb+VgLu+RfQq
+        xPQLJMBME0JAaC/M8qxBlUGBSS+AfKQMTeoIPFXQJ9MYs0sZJdlfODnH0EBJU2Y=
+Received: (qmail 2469005 invoked from network); 17 May 2021 12:02:12 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 May 2021 12:02:12 +0200
+X-UD-Smtp-Session: l3s3148p1@r7iAr4PC7rggARa4RYY7ATBvQ5FTVwg4
+Date:   Mon, 17 May 2021 12:02:04 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] platform/x86: samsung-laptop: use octal numbers
+ for rwx file permissions
+Message-ID: <YKI/HD7qZB6Seh/+@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Corentin Chary <corentin.chary@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+References: <20210504170030.58447-1-wsa+renesas@sang-engineering.com>
+ <CAHp75VepeO6-A9-xJqjpEDZa0XDyNbat0PBrtrgFEgJ4yxh4kA@mail.gmail.com>
+ <CAHp75VdSv4Ja7+bjPDvOawuv1ukhKZ==bjQ_MQbNPUds_7mVZw@mail.gmail.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AuwULfkSGg+bPGLa"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdSv4Ja7+bjPDvOawuv1ukhKZ==bjQ_MQbNPUds_7mVZw@mail.gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-RnJvbTogTmF0aGFuIENoYW5jZWxsb3INCj4gU2VudDogMTQgTWF5IDIwMjEgMjI6MjMNCj4gPg0K
-PiA+IENsYW5nIGNvbXBsYWlucyBhYm91dCB0aGUgYXNzaWdubWVudCBvZiBTU0FNX0FOWV9JSUQg
-dG8NCj4gPiBzc2FtX2RldmljZV91aWQtPmluc3RhbmNlOg0KDQpIYXMgdGhpcyBiZWVuIHJhaXNl
-ZCB3aXRoIGNsYW5nPw0KDQouLi4NCj4gPiAtCS50YXJnZXQgICA9ICgodGlkKSAhPSBTU0FNX0FO
-WV9USUQpID8gKHRpZCkgOiAwLAkJCVwNCj4gPiAtCS5pbnN0YW5jZSA9ICgoaWlkKSAhPSBTU0FN
-X0FOWV9JSUQpID8gKGlpZCkgOiAwLAkJCVwNCj4gPiAtCS5mdW5jdGlvbiA9ICgoZnVuKSAhPSBT
-U0FNX0FOWV9GVU4pID8gKGZ1bikgOiAwCQkJCVwNCj4gPiArCS50YXJnZXQgICA9IF9fYnVpbHRp
-bl9jaG9vc2VfZXhwcigodGlkKSAhPSBTU0FNX0FOWV9USUQsICh0aWQpLCAwKSwJXA0KPiA+ICsJ
-Lmluc3RhbmNlID0gX19idWlsdGluX2Nob29zZV9leHByKChpaWQpICE9IFNTQU1fQU5ZX0lJRCwg
-KGlpZCksIDApLAlcDQo+ID4gKwkuZnVuY3Rpb24gPSBfX2J1aWx0aW5fY2hvb3NlX2V4cHIoKGZ1
-bikgIT0gU1NBTV9BTllfRlVOLCAoZnVuKSwgMCkNCg0KQSBzaW1wbGVyIGFsdGVybmF0aXZlOg0K
-CQk9IGZ1biAqIChmdW4gIT0gU1NBTV9BTllfRlVOKQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJl
-ZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXlu
-ZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
+--AuwULfkSGg+bPGLa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+> > > -       debugfs_create_file("call", S_IFREG | S_IRUGO, root, samsung,
+> > > +       debugfs_create_file("call", S_IFREG | 0444, root, samsung,
+>=20
+> Actually you may drop IFREG as well as debugfs will add it if there is
+> no conflicting file type defined.
+
+Oh, I missed this back then. Quoting only relevant parts of a message
+helps me to avoid that ;)
+
+I will add this, to patch 2, though. This is only a plain conversion. v3
+coming in a minute.
+
+
+--AuwULfkSGg+bPGLa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmCiPxgACgkQFA3kzBSg
+KbZfAxAAn+fNp1VOJnan7vF9NWywThmWildOGGMg40sGFK7hS1TCQS9sEgzXpXAo
+wMm0HKPlLRCSS0K+7KJNnMIOP88tJz6gedVJE6lCeookcUVtyR84tsg6w7JsPONN
+z+U0CyXszO7PXj17huNUb0J1+sstu0q/ZcmiCIFEjcHAfmKTFffCYxU6GjCkdNek
+QLRq9v9qfgb6B+YfVSkF4Md0knusaOjxQSqxxT7Pzv0RM/9ptymd2MFSDYBrKi8/
+xcuLM0wk/d88AE7ijOYGCD2Zt0Eaa8ZopgEB93QtAQOS5qf4GpLOew7HHfVZ5twp
+vacvF2s920DK3ZSkHluqY1yQ1Lwwcciv3FcnlULi3ZnqFP83HY06j5PTUnjgMzQh
+Sn7ueRnnNKExi60dP/PpcOtC4yJKdbFVk+lcS7OGPMf4VQMFbow91Wv+IsgtGc9W
+V5CErITA2WBRuAO98o0uHC2JAjVKu990CopWAE4N48D80WLK5Dbd8go8RzE7CSss
+EE59l4tkhCA7cwPPffWldor9aoLlJV9eKD08+RpIBQtSvBfPbHG1ED/m77xtTZKK
+YKGso2jKiw1MFzMX0BlEDwC+wfj6Zd0ln73mu++dOydcvkM7asre1j6vJi5A/584
+GUV36prkavJpi1qfcxQHBNevHUfLeKSOeFNUhpJ/YtqLQfPXkyw=
+=AH4s
+-----END PGP SIGNATURE-----
+
+--AuwULfkSGg+bPGLa--
