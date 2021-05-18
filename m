@@ -2,203 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF78DC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 10:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6790C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 12:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD0061209
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 10:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D71611AD
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 12:50:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348658AbhERKub (ORCPT
+        id S1349139AbhERMv6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 18 May 2021 06:50:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47851 "EHLO
+        Tue, 18 May 2021 08:51:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54126 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1348653AbhERKua (ORCPT
+        by vger.kernel.org with ESMTP id S244334AbhERMvv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 18 May 2021 06:50:30 -0400
+        Tue, 18 May 2021 08:51:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621334952;
+        s=mimecast20190719; t=1621342233;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=c9o82/t1aU9A0RyJMcIxIuK9ctk3HZPsg/UH7WfdZC0=;
-        b=Kqy/kJv8NwaUPbyFInS0p3MNt6uyqnfbVvcJpLogZtGLVgVxc8IIHsdiAgIHuFl0AG8DYM
-        ah3jVfdGaZnsUpVbTWd2ewrnAs0RO2ipzDYoaSRbtUE1vwLVEm7h1qd/2VWjRK921/0y46
-        l/mx21skmntfXUU4cf0GLmSeHmdmYzM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-xYGnH7ddO2e677A9QGiD5A-1; Tue, 18 May 2021 06:49:11 -0400
-X-MC-Unique: xYGnH7ddO2e677A9QGiD5A-1
-Received: by mail-ed1-f69.google.com with SMTP id i19-20020a05640242d3b0290388cea34ed3so5513845edc.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 18 May 2021 03:49:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c9o82/t1aU9A0RyJMcIxIuK9ctk3HZPsg/UH7WfdZC0=;
-        b=qhhP6ydwP4cJQhHpEr78hlXQg4X0AJJSWTCzT7UVZ4+QytOF5SfCn4ZcwhmQQk7q0u
-         oUBJRxh45hUczaotTXGOu89kfXjaRDcSs47Hyc3gjuBlEUDx+rVgKy3tPQ1aipXcFUX4
-         ftUg1oX/nLA7UGRc9lP4dOYnW1Y0of4+Qlz2Xrr1YlBvsfFyhrbU2Zu4wGm1L6Tqz+sB
-         6hVf6lfINCgyw9pWy3+sD5ZLdQofH74re/4aHm1oInBLPheBdft+XN1j90wP7Utt7zH+
-         yhF4dNT+JdvrtCgw5/xRvKi4AvnCEp9CeX4Wszo1pAd/nyWAVrQqn+ZbAGU39R4bMeSl
-         0X6w==
-X-Gm-Message-State: AOAM5310qYvx2o+sy+Mw32TBuvNb8BEiAj3o/B/KJjuTOazBHx29XxzD
-        Wy9vsqF/Gfd5TJbqDGbyRI/5bVs7WeVgKiN2Zagvz+z/Gv7oxtCwnlWwT1x4v2m4aF7dMPtwTql
-        iEr5vE750AkFwRv52sBHEspucc4jDgghlNg==
-X-Received: by 2002:a17:906:680d:: with SMTP id k13mr5386883ejr.371.1621334949955;
-        Tue, 18 May 2021 03:49:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyh1mcxlm43khVavmHz8Zmh3/+pHSIR9oAwFtuz2qwrtj+DWSf260PGu/51LsXVMMut+7eB4A==
-X-Received: by 2002:a17:906:680d:: with SMTP id k13mr5386865ejr.371.1621334949787;
-        Tue, 18 May 2021 03:49:09 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id n13sm2080198ejk.97.2021.05.18.03.49.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 May 2021 03:49:09 -0700 (PDT)
-Subject: Re: [PATCH v7 1/2] platform/x86: dell-privacy: Add support for Dell
- hardware privacy
-To:     "Yuan, Perry" <Perry.Yuan@dell.com>,
-        "pobrn@protonmail.com" <pobrn@protonmail.com>,
-        "pierre-louis.bossart@linux.intel.com" 
-        <pierre-louis.bossart@linux.intel.com>,
-        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "mario.limonciello@outlook.com" <mario.limonciello@outlook.com>,
-        Dell Client Kernel <Dell.Client.Kernel@dell.com>
-References: <20210412091919.27608-1-Perry_Yuan@Dell.com>
- <8176ceda-cdbf-b733-128d-0766eb6d180d@redhat.com>
- <SJ0PR19MB45288D5EFF2BD8B9926E40DD84589@SJ0PR19MB4528.namprd19.prod.outlook.com>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Zhr4dTBbOAnv6O714zwyOc/9P5nJ1yhuoL6JxIvjVak=;
+        b=LZ4od4IKTjF0eMyBkqs3DtX6AlBbiV4XZtxA8/VvSNLm/LUJb7LWmG79HFoEY1iNszeOhN
+        yXjeGZ8r3V5WPtNmPci9nc3zfM3iSYHDiu11H3CWWgblZ2KCyydYnl6ttLXrj3uDIDOR13
+        oWL2KjVC02xKJCDdi+DvAkjBAxvUDfU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-NLQAAK3sNlq5Pp9huup0BA-1; Tue, 18 May 2021 08:50:31 -0400
+X-MC-Unique: NLQAAK3sNlq5Pp9huup0BA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59CA5100747C;
+        Tue, 18 May 2021 12:50:30 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-219.ams2.redhat.com [10.36.115.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E9067BA6D;
+        Tue, 18 May 2021 12:50:28 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3657cfda-02d8-85b7-a9d2-257ded63e175@redhat.com>
-Date:   Tue, 18 May 2021 12:49:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Dell.Client.Kernel@dell.com
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Subject: [PATCH] platform/x86: dell-smbios-wmi: Fix oops on rmmod dell_smbios
+Date:   Tue, 18 May 2021 14:50:27 +0200
+Message-Id: <20210518125027.21824-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <SJ0PR19MB45288D5EFF2BD8B9926E40DD84589@SJ0PR19MB4528.namprd19.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Perry,
+init_dell_smbios_wmi() only registers the dell_smbios_wmi_driver on systems
+where the Dell WMI interface is support. While exit_dell_smbios_wmi()
+unregisters it unconditionally, this leads to the following oops:
 
-On 5/6/21 11:48 AM, Yuan, Perry wrote:
-> Hi Hans.
-> I changed the driver in V8 as your comments.
-> Just one Kconfig change , It will cause some built error .
+[  175.722921] ------------[ cut here ]------------
+[  175.722925] Unexpected driver unregister!
+[  175.722939] WARNING: CPU: 1 PID: 3630 at drivers/base/driver.c:194 driver_unregister+0x38/0x40
+...
+[  175.723089] Call Trace:
+[  175.723094]  cleanup_module+0x5/0xedd [dell_smbios]
+...
+[  175.723148] ---[ end trace 064c34e1ad49509d ]---
 
-<snip>
+Make the unregister happen on the same condition the register happens
+to fix this.
 
->>> diff --git a/drivers/platform/x86/dell/Kconfig
->>> b/drivers/platform/x86/dell/Kconfig
->>> index e0a55337f51a..05d124442b25 100644
->>> --- a/drivers/platform/x86/dell/Kconfig
->>> +++ b/drivers/platform/x86/dell/Kconfig
->>> @@ -204,4 +204,18 @@ config DELL_WMI_SYSMAN
->>>  	  To compile this driver as a module, choose M here: the module will
->>>  	  be called dell-wmi-sysman.
->>>
->>> +config DELL_PRIVACY
->>> +	tristate "Dell Hardware Privacy Support"
->>> +	depends on ACPI
->>> +	depends on ACPI_WMI
->>> +	depends on INPUT
->>> +	depends on DELL_LAPTOP
->>> +	depends on LEDS_TRIGGER_AUDIO
->>> +	select DELL_WMI
->>
->> DELL_WMI is not a helper library which can be selected, please use depends
->> on here.
->>
->> More in general I'm a bit worried about the dependencies being added to dell-
->> laptop.c and dell-wmi.c on the new dell-privacy-wmi.ko module.
->>
->> What if e.g. dell-laptop.c gets builtin while dell-privacy-wmi.c is a module.
->>
->> Then we have dell-laptop.c depending on the dell_privacy_present linker-
->> symbol, but that symbol is in a module, so the main vmlinuz binary will fail to
->> link due to that missing symbol.
->>
->> To fix this you need to add:
->>
->> 	depends on DELL_PRIVACY || DELL_PRIVACY = n
->>
->> To the Kconfig sections for both DELL_WMI and DELL_LAPTOP
-> 
-> If I add "depends on DELL_PRIVACY || DELL_PRIVACY = n" to both DELL_WMI and DELL_LAPTOP
-> The compile will report error "recursive dependency detected"
-> I do not think the dell-laptop will be builtin option as we know.
-> 
-> I am confused that why the symbol will be failed to link like that ?
-> because the compiler can find the dell_privacy_present which is defined in one common header file.
+Cc: Mario Limonciello <mario.limonciello@outlook.com>
+Fixes: 1a258e670434 ("platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/dell/dell-smbios-wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The issue is that e.g the dell-laptop code may be builtin into the kernel
-(so part of the vmlinuz file) while the dell-privacy code could be build
-as a module (so as a dell-privacy.ko file) in this case building the vmlinuz
-file will fail at the linking stage since the dell_privacy_present() symbol
-is not part of vmlinuz where as the dell-laptop code which needs that
-symbol is part of vmlinuz.
-
-The reason why these circular dependency issues trigger is because the
-dell-privacy.ko module actually does not depend (at a symbol level) on
-dell-laptop / dell-wmi at all. It is the other way around dell-laptop
-and dell-wmi use symbols from dell-privacy, where as dell-privacy can
-be loaded into the kernel without dell-wmi / dell-laptop being loaded
-just fine.
-
-Now there is a functional dependency where dell-privacy does not do much
-when it is not called form the event handler in dell-wmi, but this is not
-a code-level dependency.
-
-I've been thinking a bit about this and I've come to the following
-conclusions:
-
-1. dell-privacy should not depend on dell-laptop at all, the only reason
-dell-laptop calls into dell-privacy is to not register a mic-mute LED if
-dell-laptop is not build at all then it will also not register the mic-mute
-LED, so the dependency of dell-privacy on dell-laptop can be dropped.
-
-2. Building dell-privacy without also building dell-wmi is a different story
-this will work fine, but the dell-privacy module will the mostly just sit 
-there (it will provide the sysfs files) without really doing anything.
-
-Also since dell-wmi will depend on dell-privacy when it is enabled,
-dell-privacy will always need to be loaded when dell-wmi is loaded.
-
-The dell-privacy code really is an extension to / plugin of the dell-wmi
-code; and since the 2 always need to be loaded together anyways, it would
-be better to put the code in a single kernel-module (less overhead loading
-modules that way) and this also neatly solves the builtin vs module
-dependency issue.
-
-This way we can simply make DELL_PRIVACY a boolean option which controls if
-privacy support gets added to the dell-wmi module or not, but since it is
-now built into the same module (if enabled) we can never have the case where
-one part is built into the kernel and the other into a .ko file.
-
-I'm currently preparing a set of changes which implements this, because
-this is sort of hard to describe with words and I hope that providing a
-patch implemeting the suggested change make things a bit more clear.
-
-I'll send another email when the changes are ready.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+index a1753485159c..33f823772733 100644
+--- a/drivers/platform/x86/dell/dell-smbios-wmi.c
++++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+@@ -270,7 +270,8 @@ int init_dell_smbios_wmi(void)
+ 
+ void exit_dell_smbios_wmi(void)
+ {
+-	wmi_driver_unregister(&dell_smbios_wmi_driver);
++	if (wmi_supported)
++		wmi_driver_unregister(&dell_smbios_wmi_driver);
+ }
+ 
+ MODULE_DEVICE_TABLE(wmi, dell_smbios_wmi_id_table);
+-- 
+2.31.1
 
