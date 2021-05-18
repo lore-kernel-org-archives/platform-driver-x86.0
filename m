@@ -2,125 +2,203 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E17C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 21:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF78DC433ED
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 10:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7607861059
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 17 May 2021 21:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD0061209
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 18 May 2021 10:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245518AbhEQVtZ (ORCPT
+        id S1348658AbhERKub (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 17 May 2021 17:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbhEQVtX (ORCPT
+        Tue, 18 May 2021 06:50:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47851 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1348653AbhERKua (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 17 May 2021 17:49:23 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998EFC061573;
-        Mon, 17 May 2021 14:48:06 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id t4so3923036plc.6;
-        Mon, 17 May 2021 14:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JMkvV6BdFFXMjoCPNmiDQhek94rpMVEncluqG5MRowE=;
-        b=odxstFZqYrucY4FAfwODmpJzT6jRu7CDGlVwp/MPxyAZ5p9mR28hLz1AkSgOslTZeH
-         EIDdzCusL/6HN6ufV+7hRqOUVJ33NqiOFxdJNrVI/7sRKrD4q0nalj3luYUxyM4Q5uxm
-         ZDugFjJPLXqNtbvB39cv3zngXvS9ERO4hylEjckcNaovm1kD8GuMQsNVRaOWRVnXx5fX
-         zqJgd6EM3XSGhHt60if0R4V/1ed5kazBt1Icnb3dGk6d/tmS1dM1ZSlXx1v0LFprjblB
-         DFwBVIUHdqP2N4bekTtJjXd8PkealEG31X2Lsh3wAx74Z7tAwi7gCIT1RL8YVytRlGS/
-         6oyg==
+        Tue, 18 May 2021 06:50:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621334952;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c9o82/t1aU9A0RyJMcIxIuK9ctk3HZPsg/UH7WfdZC0=;
+        b=Kqy/kJv8NwaUPbyFInS0p3MNt6uyqnfbVvcJpLogZtGLVgVxc8IIHsdiAgIHuFl0AG8DYM
+        ah3jVfdGaZnsUpVbTWd2ewrnAs0RO2ipzDYoaSRbtUE1vwLVEm7h1qd/2VWjRK921/0y46
+        l/mx21skmntfXUU4cf0GLmSeHmdmYzM=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-494-xYGnH7ddO2e677A9QGiD5A-1; Tue, 18 May 2021 06:49:11 -0400
+X-MC-Unique: xYGnH7ddO2e677A9QGiD5A-1
+Received: by mail-ed1-f69.google.com with SMTP id i19-20020a05640242d3b0290388cea34ed3so5513845edc.15
+        for <platform-driver-x86@vger.kernel.org>; Tue, 18 May 2021 03:49:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JMkvV6BdFFXMjoCPNmiDQhek94rpMVEncluqG5MRowE=;
-        b=eucsUs/s3y5lLuc7tn27WclB/joGVHWRqXCkfMZQNU7eKDivZ9YHK2Z2IjiuwZC7Rb
-         68X9gdZK5f3JCrm9RE8uK4lWY2zqjqEQjHyEs92BgVELkByxArJvc6Ace+Ip8CCov9VC
-         A7eqodnA+FFZz5VYkdK56nabkc4vR8FgICA5y0T+rQJT2dAQIx7oUDtRnb6O93Eijbuu
-         Fe8aNX2pBZNaIwj83Zt5Vj70KwHBt+2JIMZi3+FTJ2nkgPNYFOxo25YWA2efaCOWEIiG
-         F0K5//k8MsRS9T10Y0IClMCxBqn3olu518RYMRHpoSBGmfY5LXyIslxS74s59FLyqse+
-         Ihhw==
-X-Gm-Message-State: AOAM530BgE1f9pQf6OFd8uc70Nw76CVVYPltsNxMRfCubjqS/glQAFcc
-        6aTEFqA2QEs8IJ5a5TfqpO+l0HW6IomteKXjyoA=
-X-Google-Smtp-Source: ABdhPJzVb2Ly6gYRoFRDwWBuQTVhXViFr9CR8JTQUS5JsuSaXSK84r6AwxbxCyo6EbuMLLARNKHhdo+ukDZYWYSa8L0=
-X-Received: by 2002:a17:902:264:b029:eb:3d3a:a09c with SMTP id
- 91-20020a1709020264b02900eb3d3aa09cmr622880plc.0.1621288086211; Mon, 17 May
- 2021 14:48:06 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c9o82/t1aU9A0RyJMcIxIuK9ctk3HZPsg/UH7WfdZC0=;
+        b=qhhP6ydwP4cJQhHpEr78hlXQg4X0AJJSWTCzT7UVZ4+QytOF5SfCn4ZcwhmQQk7q0u
+         oUBJRxh45hUczaotTXGOu89kfXjaRDcSs47Hyc3gjuBlEUDx+rVgKy3tPQ1aipXcFUX4
+         ftUg1oX/nLA7UGRc9lP4dOYnW1Y0of4+Qlz2Xrr1YlBvsfFyhrbU2Zu4wGm1L6Tqz+sB
+         6hVf6lfINCgyw9pWy3+sD5ZLdQofH74re/4aHm1oInBLPheBdft+XN1j90wP7Utt7zH+
+         yhF4dNT+JdvrtCgw5/xRvKi4AvnCEp9CeX4Wszo1pAd/nyWAVrQqn+ZbAGU39R4bMeSl
+         0X6w==
+X-Gm-Message-State: AOAM5310qYvx2o+sy+Mw32TBuvNb8BEiAj3o/B/KJjuTOazBHx29XxzD
+        Wy9vsqF/Gfd5TJbqDGbyRI/5bVs7WeVgKiN2Zagvz+z/Gv7oxtCwnlWwT1x4v2m4aF7dMPtwTql
+        iEr5vE750AkFwRv52sBHEspucc4jDgghlNg==
+X-Received: by 2002:a17:906:680d:: with SMTP id k13mr5386883ejr.371.1621334949955;
+        Tue, 18 May 2021 03:49:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyh1mcxlm43khVavmHz8Zmh3/+pHSIR9oAwFtuz2qwrtj+DWSf260PGu/51LsXVMMut+7eB4A==
+X-Received: by 2002:a17:906:680d:: with SMTP id k13mr5386865ejr.371.1621334949787;
+        Tue, 18 May 2021 03:49:09 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id n13sm2080198ejk.97.2021.05.18.03.49.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 May 2021 03:49:09 -0700 (PDT)
+Subject: Re: [PATCH v7 1/2] platform/x86: dell-privacy: Add support for Dell
+ hardware privacy
+To:     "Yuan, Perry" <Perry.Yuan@dell.com>,
+        "pobrn@protonmail.com" <pobrn@protonmail.com>,
+        "pierre-louis.bossart@linux.intel.com" 
+        <pierre-louis.bossart@linux.intel.com>,
+        "oder_chiou@realtek.com" <oder_chiou@realtek.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "mgross@linux.intel.com" <mgross@linux.intel.com>
+Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "mario.limonciello@outlook.com" <mario.limonciello@outlook.com>,
+        Dell Client Kernel <Dell.Client.Kernel@dell.com>
+References: <20210412091919.27608-1-Perry_Yuan@Dell.com>
+ <8176ceda-cdbf-b733-128d-0766eb6d180d@redhat.com>
+ <SJ0PR19MB45288D5EFF2BD8B9926E40DD84589@SJ0PR19MB4528.namprd19.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <3657cfda-02d8-85b7-a9d2-257ded63e175@redhat.com>
+Date:   Tue, 18 May 2021 12:49:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20210222130735.1313443-1-djrscally@gmail.com> <20210222130735.1313443-6-djrscally@gmail.com>
- <CAHp75Vd2Dc2Poq7VNRXRT-0VjkYdEFY2WKpz8fWpAQViQRO4jA@mail.gmail.com> <0241df24-11cb-fd3b-12a5-f98dea55fac5@gmail.com>
-In-Reply-To: <0241df24-11cb-fd3b-12a5-f98dea55fac5@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 18 May 2021 00:47:50 +0300
-Message-ID: <CAHp75VdQ-BYs2MhKA0g+e5No6qP1-BpPBv5L9091yX9c51ZxKw@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] platform/x86: Add intel_skl_int3472 driver
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Rajmohan Mani <rajmohan.mani@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        kieran.bingham+renesas@ideasonboard.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        =?UTF-8?Q?Fabian_W=C3=BCthrich?= <me@fabwu.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SJ0PR19MB45288D5EFF2BD8B9926E40DD84589@SJ0PR19MB4528.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 18, 2021 at 12:43 AM Daniel Scally <djrscally@gmail.com> wrote:
->
-> Hi Andy
->
-> On 22/02/2021 14:58, Andy Shevchenko wrote
-> >> +#include <linux/clk-provider.h>
-> >
-> > This is definitely not for *.h. (Not all C files needed this)
-> >
-> >> +#include <linux/gpio/machine.h>
-> >
-> > Ditto.
-> >
-> >> +#include <linux/regulator/driver.h>
-> >> +#include <linux/regulator/machine.h>
-> >
-> > Ditto.
->
-> Bit more delayed than I wanted to be, but I'm just finishing off the v4
-> of this. For these includes, I'm using the actual structs from them
-> rather than pointers, so removing these would mean moving the definition
-> of struct int3472_discrete_device into one of the source files; you're
-> happy with that?
+Hi Perry,
 
-Either way, please send a v4 and we start over from a fresh view.
+On 5/6/21 11:48 AM, Yuan, Perry wrote:
+> Hi Hans.
+> I changed the driver in V8 as your comments.
+> Just one Kconfig change , It will cause some built error .
 
-Thanks!
+<snip>
 
--- 
-With Best Regards,
-Andy Shevchenko
+>>> diff --git a/drivers/platform/x86/dell/Kconfig
+>>> b/drivers/platform/x86/dell/Kconfig
+>>> index e0a55337f51a..05d124442b25 100644
+>>> --- a/drivers/platform/x86/dell/Kconfig
+>>> +++ b/drivers/platform/x86/dell/Kconfig
+>>> @@ -204,4 +204,18 @@ config DELL_WMI_SYSMAN
+>>>  	  To compile this driver as a module, choose M here: the module will
+>>>  	  be called dell-wmi-sysman.
+>>>
+>>> +config DELL_PRIVACY
+>>> +	tristate "Dell Hardware Privacy Support"
+>>> +	depends on ACPI
+>>> +	depends on ACPI_WMI
+>>> +	depends on INPUT
+>>> +	depends on DELL_LAPTOP
+>>> +	depends on LEDS_TRIGGER_AUDIO
+>>> +	select DELL_WMI
+>>
+>> DELL_WMI is not a helper library which can be selected, please use depends
+>> on here.
+>>
+>> More in general I'm a bit worried about the dependencies being added to dell-
+>> laptop.c and dell-wmi.c on the new dell-privacy-wmi.ko module.
+>>
+>> What if e.g. dell-laptop.c gets builtin while dell-privacy-wmi.c is a module.
+>>
+>> Then we have dell-laptop.c depending on the dell_privacy_present linker-
+>> symbol, but that symbol is in a module, so the main vmlinuz binary will fail to
+>> link due to that missing symbol.
+>>
+>> To fix this you need to add:
+>>
+>> 	depends on DELL_PRIVACY || DELL_PRIVACY = n
+>>
+>> To the Kconfig sections for both DELL_WMI and DELL_LAPTOP
+> 
+> If I add "depends on DELL_PRIVACY || DELL_PRIVACY = n" to both DELL_WMI and DELL_LAPTOP
+> The compile will report error "recursive dependency detected"
+> I do not think the dell-laptop will be builtin option as we know.
+> 
+> I am confused that why the symbol will be failed to link like that ?
+> because the compiler can find the dell_privacy_present which is defined in one common header file.
+
+The issue is that e.g the dell-laptop code may be builtin into the kernel
+(so part of the vmlinuz file) while the dell-privacy code could be build
+as a module (so as a dell-privacy.ko file) in this case building the vmlinuz
+file will fail at the linking stage since the dell_privacy_present() symbol
+is not part of vmlinuz where as the dell-laptop code which needs that
+symbol is part of vmlinuz.
+
+The reason why these circular dependency issues trigger is because the
+dell-privacy.ko module actually does not depend (at a symbol level) on
+dell-laptop / dell-wmi at all. It is the other way around dell-laptop
+and dell-wmi use symbols from dell-privacy, where as dell-privacy can
+be loaded into the kernel without dell-wmi / dell-laptop being loaded
+just fine.
+
+Now there is a functional dependency where dell-privacy does not do much
+when it is not called form the event handler in dell-wmi, but this is not
+a code-level dependency.
+
+I've been thinking a bit about this and I've come to the following
+conclusions:
+
+1. dell-privacy should not depend on dell-laptop at all, the only reason
+dell-laptop calls into dell-privacy is to not register a mic-mute LED if
+dell-laptop is not build at all then it will also not register the mic-mute
+LED, so the dependency of dell-privacy on dell-laptop can be dropped.
+
+2. Building dell-privacy without also building dell-wmi is a different story
+this will work fine, but the dell-privacy module will the mostly just sit 
+there (it will provide the sysfs files) without really doing anything.
+
+Also since dell-wmi will depend on dell-privacy when it is enabled,
+dell-privacy will always need to be loaded when dell-wmi is loaded.
+
+The dell-privacy code really is an extension to / plugin of the dell-wmi
+code; and since the 2 always need to be loaded together anyways, it would
+be better to put the code in a single kernel-module (less overhead loading
+modules that way) and this also neatly solves the builtin vs module
+dependency issue.
+
+This way we can simply make DELL_PRIVACY a boolean option which controls if
+privacy support gets added to the dell-wmi module or not, but since it is
+now built into the same module (if enabled) we can never have the case where
+one part is built into the kernel and the other into a .ko file.
+
+I'm currently preparing a set of changes which implements this, because
+this is sort of hard to describe with words and I hope that providing a
+patch implemeting the suggested change make things a bit more clear.
+
+I'll send another email when the changes are ready.
+
+Regards,
+
+Hans
+
