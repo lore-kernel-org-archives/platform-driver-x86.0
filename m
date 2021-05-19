@@ -8,73 +8,76 @@ X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8305C43460
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB10C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B11760FF1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262966135F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346503AbhESNN3 (ORCPT
+        id S1353550AbhESNNr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 May 2021 09:13:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60286 "EHLO
+        Wed, 19 May 2021 09:13:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22426 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346652AbhESNN3 (ORCPT
+        by vger.kernel.org with ESMTP id S1346578AbhESNNq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 May 2021 09:13:29 -0400
+        Wed, 19 May 2021 09:13:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621429929;
+        s=mimecast20190719; t=1621429946;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=awY+ia0X5V2PMZw9CViuEIoYymBZhpNSbICZiHEMEkA=;
-        b=J5/iJCbTTIdOm6icSqplIn/NyP6jeGL1jWJfPDB++j+XafGY+4etryt9EPHJdvuKTlMlJR
-        SOKCUoxr8xo5z9uWpp9kU57umlquJG2ceYrzXL3DnEVHXN9ZRayAT4YkSvHnHxtk9CL6Q8
-        qcx1638a7SBvgifPeliD7+Rb5ZIefVw=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-VdXcgJxhOxCfUI44dUp27Q-1; Wed, 19 May 2021 09:12:07 -0400
-X-MC-Unique: VdXcgJxhOxCfUI44dUp27Q-1
-Received: by mail-ed1-f72.google.com with SMTP id y17-20020a0564023591b02903886c26ada4so7654883edc.5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 06:12:07 -0700 (PDT)
+        bh=PGGZ3Ap7WMfISommx5/p4o4QgfX5H0jYWS0exbqFy2g=;
+        b=S99Bv/x3V1vapwSQ8wxTm+kHXGc3eKIRTXz1jo4eRuzbniW0jrAcA8dJjwsRWFA2oUFJCq
+        a5k1PvE8Ja7WhO0A/htNerZHB4BbU2XTS682pY3LnNOkMlJW7cFzhUAD8TJXV5IvKQ3QwR
+        d/ewkGjsx/91bsf4vlKl6bJQTjDzXUE=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-545-A3ynno2OPsCWRf_rgJvx9A-1; Wed, 19 May 2021 09:12:25 -0400
+X-MC-Unique: A3ynno2OPsCWRf_rgJvx9A-1
+Received: by mail-ed1-f71.google.com with SMTP id cy15-20020a0564021c8fb029038d26976787so6222583edb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 06:12:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=awY+ia0X5V2PMZw9CViuEIoYymBZhpNSbICZiHEMEkA=;
-        b=qC3OD8ZrUJIT5DuhshpKeks+4hUGXr0o14huZeu7y3Wq4sROeGz8sHliA9Lt24aKnR
-         9LbUXHjA5qY/NHa67O/2X/46T7zWMZfa0fsmMOYRt/6Cv60VAkCI9A1NoNpBzeqEzSsC
-         M+wcydYP4WG5cqFZcgehET0tEWsM0/muhKnoHDPLlR1Khh6VForsE/n52Y/3T1Z5RGyK
-         XZfOT61SLTmtVy30VwhdsC4zn1WMLLPEHk0Kgwo2Mh4d+xaKIEVu7t54ulLb8mLte/1c
-         4wl66aYP608NIwuSDAMy8qhwm0ichejTm83C6JBCuEeIK4ryiIhlmCPMS7CkvK9FwFPE
-         b8/Q==
-X-Gm-Message-State: AOAM531c4750TDD5ut06YhLDddiz820HfwY23EJs3axIowLAYp+fOK03
-        qvr2vyvrNGSNQpl7RYn/m93xPrsnYvjCGJAA2lz3/8gUJnIGbxBaWYd2CgYCroJX9k0kMG9u1gP
-        BAgNkg0QV++MepoK7z7bmOg1OHmPpHP8Zmw==
-X-Received: by 2002:a17:906:b756:: with SMTP id fx22mr11371742ejb.224.1621429925031;
-        Wed, 19 May 2021 06:12:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw4QPnJBz6QHSbvlK/Q6gDbHpU3S4O+QF/UVRC62KeVjtb2wygYm4JwdKvbkKoVzgZhshK5/w==
-X-Received: by 2002:a17:906:b756:: with SMTP id fx22mr11371673ejb.224.1621429924213;
-        Wed, 19 May 2021 06:12:04 -0700 (PDT)
+        bh=PGGZ3Ap7WMfISommx5/p4o4QgfX5H0jYWS0exbqFy2g=;
+        b=rgiRlC578HVm89MAXRpqH+YDP/gyJ1kLbmJXqhOwx7PLT65Fx54m1HWOKTKKPG1/tU
+         m/frlK5+kzmMWy4XOkYrCpWH/iKSQsTWnisNTZFC0w+DJMD6boKujCmMTtVqA8t5bMJj
+         qgAbIhjG8ZqFQUlsfgMt32KQutNgG0SCF1zsFh1qTIa7rtaeECtj2loekve+SO+/jBVf
+         dcaUy2Xh/PJAslk28ad7BtRnusEEYh9mtKKiTMSGgBh7ndV3H58wSgoquPqsXEVgxoH1
+         q+sZUzCvHIUfQI2BxugCzzwT60vwmTPGiOUIAHOzPVOEg4O3NR1fx8F90ziU91DM+xAt
+         ZL6g==
+X-Gm-Message-State: AOAM532ow3hBlXJuVRBH47JX4cf4KkMt7vY5yLZbf8auQBNUSDyGfqTf
+        37R0oU7jJWJRO4O93mRdG5l2WHn27Sto02yAykWAi2DmMxoDPe2ROovr5c5HFr/8C/XgAwXcbaq
+        aewooX2S25vqb4JF8o73ihiaNI48VDjewtw==
+X-Received: by 2002:a17:906:c448:: with SMTP id ck8mr12531273ejb.497.1621429943635;
+        Wed, 19 May 2021 06:12:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxBDqd6onKKCnE0ChOQlrWYabgI44IDpvYziQmUdwDelp+sRWIH3kqq3NW+MLB9wNDIjb+wRw==
+X-Received: by 2002:a17:906:c448:: with SMTP id ck8mr12531249ejb.497.1621429943447;
+        Wed, 19 May 2021 06:12:23 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id c3sm16426470edn.16.2021.05.19.06.12.03
+        by smtp.gmail.com with ESMTPSA id n17sm15690961eds.72.2021.05.19.06.12.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 06:12:03 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: dtx: Fix poll function
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20210513134437.2431022-1-luzmaximilian@gmail.com>
+        Wed, 19 May 2021 06:12:23 -0700 (PDT)
+Subject: Re: [PATCH] [v2] platform/surface: aggregator: avoid clang
+ -Wconstant-conversion warning
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, platform-driver-x86@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20210514200453.1542978-1-arnd@kernel.org>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bed4b8ed-c183-00ee-a832-2f25a4392888@redhat.com>
-Date:   Wed, 19 May 2021 15:12:03 +0200
+Message-ID: <86f09344-7e88-bad0-282d-d76df5be333b@redhat.com>
+Date:   Wed, 19 May 2021 15:12:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210513134437.2431022-1-luzmaximilian@gmail.com>
+In-Reply-To: <20210514200453.1542978-1-arnd@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,18 +87,33 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/13/21 3:44 PM, Maximilian Luz wrote:
-> The poll function should not return -ERESTARTSYS.
+On 5/14/21 10:04 PM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Furthermore, locking in this function is completely unnecessary. The
-> ddev->lock protects access to the main device and controller (ddev->dev
-> and ddev->ctrl), ensuring that both are and remain valid while being
-> accessed by clients. Both are, however, never accessed in the poll
-> function. The shutdown test (via atomic bit flags) be safely done
-> without locking, so drop locking here entirely.
+> Clang complains about the assignment of SSAM_ANY_IID to
+> ssam_device_uid->instance:
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Fixes: 1d609992832e ("platform/surface: Add DTX driver> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> drivers/platform/surface/surface_aggregator_registry.c:478:25: error: implicit conversion from 'int' to '__u8' (aka 'unsigned char') changes value from 65535 to 255 [-Werror,-Wconstant-conversion]
+>         { SSAM_VDEV(HUB, 0x02, SSAM_ANY_IID, 0x00) },
+>         ~                      ^~~~~~~~~~~~
+> include/linux/surface_aggregator/device.h:71:23: note: expanded from macro 'SSAM_ANY_IID'
+>  #define SSAM_ANY_IID            0xffff
+>                                 ^~~~~~
+> include/linux/surface_aggregator/device.h:126:63: note: expanded from macro 'SSAM_VDEV'
+>         SSAM_DEVICE(SSAM_DOMAIN_VIRTUAL, SSAM_VIRTUAL_TC_##cat, tid, iid, fun)
+>                                                                      ^~~
+> include/linux/surface_aggregator/device.h:102:41: note: expanded from macro 'SSAM_DEVICE'
+>         .instance = ((iid) != SSAM_ANY_IID) ? (iid) : 0,                        \
+>                                                ^~~
+> 
+> The assignment doesn't actually happen, but clang checks the type limits
+> before checking whether this assignment is reached. Replace the ?:
+> operator with a __builtin_choose_expr() invocation that avoids the
+> warning for the untaken part.
+> 
+> Fixes: eb0e90a82098 ("platform/surface: aggregator: Add dedicated bus and device type")
+> Cc: platform-driver-x86@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -115,35 +133,29 @@ Regards,
 
 Hans
 
+
 > ---
->  drivers/platform/surface/surface_dtx.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+> v2: use __builtin_choose_expr() instead of a cast to shut up the warning
+> ---
+>  include/linux/surface_aggregator/device.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
-> index 63ce587e79e3..5d9b758a99bb 100644
-> --- a/drivers/platform/surface/surface_dtx.c
-> +++ b/drivers/platform/surface/surface_dtx.c
-> @@ -527,20 +527,14 @@ static __poll_t surface_dtx_poll(struct file *file, struct poll_table_struct *pt
->  	struct sdtx_client *client = file->private_data;
->  	__poll_t events = 0;
+> diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
+> index 4441ad667c3f..6ff9c58b3e17 100644
+> --- a/include/linux/surface_aggregator/device.h
+> +++ b/include/linux/surface_aggregator/device.h
+> @@ -98,9 +98,9 @@ struct ssam_device_uid {
+>  		     | (((fun) != SSAM_ANY_FUN) ? SSAM_MATCH_FUNCTION : 0),	\
+>  	.domain   = d,								\
+>  	.category = cat,							\
+> -	.target   = ((tid) != SSAM_ANY_TID) ? (tid) : 0,			\
+> -	.instance = ((iid) != SSAM_ANY_IID) ? (iid) : 0,			\
+> -	.function = ((fun) != SSAM_ANY_FUN) ? (fun) : 0				\
+> +	.target   = __builtin_choose_expr((tid) != SSAM_ANY_TID, (tid), 0),	\
+> +	.instance = __builtin_choose_expr((iid) != SSAM_ANY_IID, (iid), 0),	\
+> +	.function = __builtin_choose_expr((fun) != SSAM_ANY_FUN, (fun), 0)
 >  
-> -	if (down_read_killable(&client->ddev->lock))
-> -		return -ERESTARTSYS;
-> -
-> -	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags)) {
-> -		up_read(&client->ddev->lock);
-> +	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags))
->  		return EPOLLHUP | EPOLLERR;
-> -	}
->  
->  	poll_wait(file, &client->ddev->waitq, pt);
->  
->  	if (!kfifo_is_empty(&client->buffer))
->  		events |= EPOLLIN | EPOLLRDNORM;
->  
-> -	up_read(&client->ddev->lock);
->  	return events;
->  }
->  
+>  /**
+>   * SSAM_VDEV() - Initialize a &struct ssam_device_id as virtual device with
 > 
 
