@@ -8,76 +8,74 @@ X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA67C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 16:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC755C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 16:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7296124C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 16:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF14F61244
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 16:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347409AbhESQSh (ORCPT
+        id S1347447AbhESQUi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 May 2021 12:18:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57530 "EHLO
+        Wed, 19 May 2021 12:20:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40501 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240297AbhESQSg (ORCPT
+        by vger.kernel.org with ESMTP id S1347476AbhESQUg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 May 2021 12:18:36 -0400
+        Wed, 19 May 2021 12:20:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621441036;
+        s=mimecast20190719; t=1621441156;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3UGipQuTI7e+MdyretrY3cvNtbEdJHzF2mxv3G1FVs0=;
-        b=OStotzYvGYAJowOYVRUyCUtd0Nr8PkSfhDSTwuKJb8flnClWpLpOuKqYInknGpSCpEkgtV
-        MMG8qQUjiBmfvBo4EF1CsFJNhogBRRkMKydphV68P8HkODPupdnQPOKo3AHJz3J8LQR3i0
-        EUqiATnPiZtQ+KQepScCn1YMxHqIaOc=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-5MnnKD9sNrC9js16iTHgNA-1; Wed, 19 May 2021 12:17:14 -0400
-X-MC-Unique: 5MnnKD9sNrC9js16iTHgNA-1
-Received: by mail-ej1-f69.google.com with SMTP id gt39-20020a1709072da7b02903a8f7736a08so3919188ejc.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 09:17:14 -0700 (PDT)
+        bh=zplHlqdmyh9xHo1BJSCqx1eIqMJOcDQLchn/L9ujRsk=;
+        b=Uo5jAnOW9HrKlT0HM9nAyLXdQHuBeu0cg2esiPP5fw9CHL7jlOaaCTN1GpjF9RPAXmsMMq
+        TiSCFiZSh4EPrKWBvV7gmRKWlMXJF/GoMgfO8ey/L9QTM4YJmiwnEHFDOE2dx5iCfEf7VK
+        Ue0yL0U2fgS9SrU6R+fScjCDe9ZWkPs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-386-BPN_2zIRMiKq66XJ2G6gEg-1; Wed, 19 May 2021 12:19:14 -0400
+X-MC-Unique: BPN_2zIRMiKq66XJ2G6gEg-1
+Received: by mail-ed1-f70.google.com with SMTP id d4-20020aa7ce040000b029038d1d0524d0so7234190edv.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 09:19:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3UGipQuTI7e+MdyretrY3cvNtbEdJHzF2mxv3G1FVs0=;
-        b=ZNimH1Q0a7SbtlutkFEkGjiJmCmYX8R5eJUdRW+Xhz+W5kCEq3agZrQzVyr5skxKnZ
-         KQdbdPTn+wgPACaS9l8eRMdyZKt4CPV/8rl00xCbSYtfej0JgsdAIHipogjzQnLZfuio
-         fCILn1qcGkr4vjPexiIwKrtYEIKPtyEQBjRBrxYBU07eIVT9yPl/eUSyz73SD3BYsRQg
-         KjVu2T476QW/0/vsCpt33Qxv80M5aYMcbDIvYw6SEe8MXnvwalsTu+u8IP9OpxhF2uRf
-         MamdspbhupHqPx4nP6HO1c+i6h1a0na5YXuCqNQTQDr/Swwft0OtrnFZ026eJVtYIwTC
-         1oWw==
-X-Gm-Message-State: AOAM531jXDuyzq0izM6PMA5Zlzs+gtV9LUOSfyv7LniYn4vtc9ZDvwrg
-        3myepx5Htbumcid3Z/LCNRIn+lyeRoCmi7BSGnf846S3PKQUeTMwe1NojWHduhGhXVl8EDTfc3d
-        w3yUaR2j7gQFVbZoznhHj4Y2nq/FxOdv/tQ==
-X-Received: by 2002:aa7:dd10:: with SMTP id i16mr15553310edv.274.1621441033686;
-        Wed, 19 May 2021 09:17:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzfDWO+iVGCJyRZnCIeqPhFxcGGzuQ6noJQv9/3c9BV0Xu4/m0JAwNOI8de/vf5ReYhMkgkNQ==
-X-Received: by 2002:aa7:dd10:: with SMTP id i16mr15553292edv.274.1621441033537;
-        Wed, 19 May 2021 09:17:13 -0700 (PDT)
+        bh=zplHlqdmyh9xHo1BJSCqx1eIqMJOcDQLchn/L9ujRsk=;
+        b=fXxGGdU2HJ5Y91e/YD4EkNIHBdrlwsdABETCHMXpVc6bDIC/vix1Cg6ikxJWQEswQB
+         xBO0o/95TMNXVAxL5mOc0nmbiMWWYVaBUnWt5uZpv74wWBHJJRbyTtmGXSLTt01Ob13c
+         Xy2x1kYtcryMYbZbVGC6Lt1mvfrafoMorlhkFtQ+jFpza3hqjssXAl9F0T1j4IKj6cRU
+         XayrtVq41l+lJjNbUwKFLq7pJgZMkWOTGPvCurQ+rz1GlYnoey+5fXsgek2eBb4aALuz
+         fRHv0uOd5d6/g7GWt32sJl2R9AFqpuYe39GBbSc6dd16/CcADJaCMXr+YTqw9fR8EZyc
+         8NeA==
+X-Gm-Message-State: AOAM531tfEPNOJrgUmI8xidBG5jg0dZ3xP3vcNgVy6AxmQ8gWYvdByOv
+        AW01PXzrhCCMwPERsXvHECa7cdU8mIcS3mKoTTR9Pxa82tfC0kvPrdBG+U22jxI/NjBaLBSDl/2
+        EWaAeRmxUrfGu0C9pNtsAKEYQ7jxIxcHxiw==
+X-Received: by 2002:a17:907:abc:: with SMTP id bz28mr13240346ejc.262.1621441153538;
+        Wed, 19 May 2021 09:19:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzVVI087pKCON/Xc3CtM2twam2voksurvgOz4Ee9yBcx9KabgpxrYeOLL6n1UlNwQaut8jDYg==
+X-Received: by 2002:a17:907:abc:: with SMTP id bz28mr13240334ejc.262.1621441153392;
+        Wed, 19 May 2021 09:19:13 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id g4sm6702927edm.83.2021.05.19.09.17.12
+        by smtp.gmail.com with ESMTPSA id c7sm16309837ede.37.2021.05.19.09.19.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 09:17:13 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] platform/x86: dell-wmi-sysman: Use
- firmware_attributes_class helper
+        Wed, 19 May 2021 09:19:13 -0700 (PDT)
+Subject: Re: [PATCH v2 1/3] platform/x86: firmware_attributes_class: Create
+ helper file for handling firmware-attributes class registration events
 To:     Mark Pearson <markpearson@lenovo.com>
 Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
-        divya.bharathi@dell.com, prasanth.ksr@dell.com,
-        mario.limonciello@dell.com
+        divya.bharathi@dell.com, prasanth.ksr@dell.com
 References: <markpearson@lenovo.com>
  <20210509015708.112766-1-markpearson@lenovo.com>
- <20210509015708.112766-2-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f509e9f6-9ee5-d154-0d42-5ca4fe110628@redhat.com>
-Date:   Wed, 19 May 2021 18:17:12 +0200
+Message-ID: <3bc0e76a-818f-ce2c-b534-024e6fb42056@redhat.com>
+Date:   Wed, 19 May 2021 18:19:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210509015708.112766-2-markpearson@lenovo.com>
+In-Reply-To: <20210509015708.112766-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,114 +83,138 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+p.s.
+
+I'm getting bounces for: mario.limonciello@dell.com (Mario has a new (also Linux related) job elsewhere),
+for the next version of the series please replace the Cc to Mario with a Cc to Dell.Client.Kernel@dell.com.
+
+
+
+
 
 On 5/9/21 3:57 AM, Mark Pearson wrote:
-> Update Dell WMI sysman driver to use newly implemented helper module.
+> This will be used by the Dell and Lenovo WMI management drivers to
+> prevent both drivers being active.
 > 
 > Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-(note this will need to be adjusted for the function renames in patch 1/3
- but that is trivial, so feel free to keep my Reviewed-by after those changes).
-
-Regards,
-
-Hans
-
 > ---
 > Changes in v2:
->  - firmare_attributes_class.c added as reqested during review of the
->    proposed think_lmi.c driver. Labeling as V2 to keep series
->    consistent (hope that's correct).
->  - Note, compile tested only due to lack of HW to test on. Matching
->    changes were made in the think-lmi.c driver and worked. Please let me
->    know if any problems!
+>  This is a new file requested as part of the review of the proposed
+> think_lmi.c driver. Labeling as V2 to keep series consistent (hope
+> that's correct).
 > 
->  drivers/platform/x86/dell/Kconfig              |  1 +
->  .../platform/x86/dell/dell-wmi-sysman/sysman.c | 18 ++++++++----------
->  2 files changed, 9 insertions(+), 10 deletions(-)
+>  drivers/platform/x86/Kconfig                  |  6 +++
+>  drivers/platform/x86/Makefile                 |  1 +
+>  .../platform/x86/firmware_attributes_class.c  | 51 +++++++++++++++++++
+>  .../platform/x86/firmware_attributes_class.h  | 13 +++++
+>  4 files changed, 71 insertions(+)
+>  create mode 100644 drivers/platform/x86/firmware_attributes_class.c
+>  create mode 100644 drivers/platform/x86/firmware_attributes_class.h
 > 
-> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
-> index e0a55337f..931f616ff 100644
-> --- a/drivers/platform/x86/dell/Kconfig
-> +++ b/drivers/platform/x86/dell/Kconfig
-> @@ -197,6 +197,7 @@ config DELL_WMI_SYSMAN
->  	depends on ACPI_WMI
->  	depends on DMI
->  	select NLS
-> +	select FW_ATTR_CLASS
->  	help
->  	  This driver allows changing BIOS settings on many Dell machines from
->  	  2018 and newer without the use of any additional software.
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index c8d276d78..91ecf49ab 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -13,14 +13,11 @@
->  #include <linux/kernel.h>
->  #include <linux/wmi.h>
->  #include "dell-wmi-sysman.h"
-> +#include "../../firmware_attributes_class.h"
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 2714f7c38..b0e1e5f65 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1076,6 +1076,12 @@ config TOUCHSCREEN_DMI
+>  	  the OS-image for the device. This option supplies the missing info.
+>  	  Enable this for x86 tablets with Silead or Chipone touchscreens.
 >  
->  #define MAX_TYPES  4
->  #include <linux/nls.h>
+> +config FW_ATTR_CLASS
+> +	tristate "Firmware attributes class helper module"
+> +	help
+> +	  This option should be enabled by any modules using the firmware
+> +	  attributes class.
+> +
+>  config INTEL_IMR
+>  	bool "Intel Isolated Memory Region support"
+>  	depends on X86_INTEL_QUARK && IOSF_MBI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index dcc8cdb95..147573f69 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -115,6 +115,7 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+>  obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
+>  obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
+>  obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
+> +obj-$(CONFIG_FW_ATTR_CLASS)             += firmware_attributes_class.o
 >  
-> -static struct class firmware_attributes_class = {
-> -	.name = "firmware-attributes",
-> -};
-> -
->  struct wmi_sysman_priv wmi_priv = {
->  	.mutex = __MUTEX_INITIALIZER(wmi_priv.mutex),
->  };
-> @@ -28,6 +25,7 @@ struct wmi_sysman_priv wmi_priv = {
->  /* reset bios to defaults */
->  static const char * const reset_types[] = {"builtinsafe", "lastknowngood", "factory", "custom"};
->  static int reset_option = -1;
-> +struct class *fw_attr_class;
->  
->  
->  /**
-> @@ -541,11 +539,11 @@ static int __init sysman_init(void)
->  		goto err_exit_bios_attr_pass_interface;
->  	}
->  
-> -	ret = class_register(&firmware_attributes_class);
-> +	ret = fw_attributes_class_register(&fw_attr_class);
->  	if (ret)
->  		goto err_exit_bios_attr_pass_interface;
->  
-> -	wmi_priv.class_dev = device_create(&firmware_attributes_class, NULL, MKDEV(0, 0),
-> +	wmi_priv.class_dev = device_create(fw_attr_class, NULL, MKDEV(0, 0),
->  				  NULL, "%s", DRIVER_NAME);
->  	if (IS_ERR(wmi_priv.class_dev)) {
->  		ret = PTR_ERR(wmi_priv.class_dev);
-> @@ -602,10 +600,10 @@ static int __init sysman_init(void)
->  	release_attributes_data();
->  
->  err_destroy_classdev:
-> -	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-> +	device_destroy(fw_attr_class, MKDEV(0, 0));
->  
->  err_unregister_class:
-> -	class_unregister(&firmware_attributes_class);
-> +	fw_attributes_class_remove();
->  
->  err_exit_bios_attr_pass_interface:
->  	exit_bios_attr_pass_interface();
-> @@ -619,8 +617,8 @@ static int __init sysman_init(void)
->  static void __exit sysman_exit(void)
->  {
->  	release_attributes_data();
-> -	device_destroy(&firmware_attributes_class, MKDEV(0, 0));
-> -	class_unregister(&firmware_attributes_class);
-> +	device_destroy(fw_attr_class, MKDEV(0, 0));
-> +	fw_attributes_class_remove();
->  	exit_bios_attr_set_interface();
->  	exit_bios_attr_pass_interface();
->  }
+>  # Intel uncore drivers
+>  obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
+> new file mode 100644
+> index 000000000..4ed959d6c
+> --- /dev/null
+> +++ b/drivers/platform/x86/firmware_attributes_class.c
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +
+> +/* Firmware attributes class helper module */
+> +
+> +#include <linux/mutex.h>
+> +#include <linux/device/class.h>
+> +#include <linux/module.h>
+> +
+> +static DEFINE_MUTEX(fw_attr_lock);
+> +bool fw_attr_inuse;
+> +
+> +static struct class firmware_attributes_class = {
+> +	.name = "firmware-attributes",
+> +};
+> +
+> +int fw_attributes_class_register(struct class **fw_attr_class)
+> +{
+> +	int err;
+> +
+> +	mutex_lock(&fw_attr_lock);
+> +	/* We can only have one active FW attribute class */
+> +	if (fw_attr_inuse) {
+> +		mutex_unlock(&fw_attr_lock);
+> +		return -EEXIST;
+> +	}
+> +
+> +	err = class_register(&firmware_attributes_class);
+> +	if (err) {
+> +		mutex_unlock(&fw_attr_lock);
+> +		return err;
+> +	}
+> +	fw_attr_inuse = true;
+> +	*fw_attr_class = &firmware_attributes_class;
+> +	mutex_unlock(&fw_attr_lock);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(fw_attributes_class_register);
+> +
+> +void fw_attributes_class_remove(void)
+> +{
+> +	mutex_lock(&fw_attr_lock);
+> +	fw_attr_inuse = false;
+> +	class_unregister(&firmware_attributes_class);
+> +	mutex_unlock(&fw_attr_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(fw_attributes_class_remove);
+> +
+> +MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
+> +MODULE_LICENSE("GPL");
+> +
+> +
+> diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
+> new file mode 100644
+> index 000000000..e479a5720
+> --- /dev/null
+> +++ b/drivers/platform/x86/firmware_attributes_class.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/* Firmware attributes class helper module */
+> +
+> +#ifndef FW_ATTR_CLASS_H
+> +#define FW_ATTR_CLASS_H
+> +
+> +int fw_attributes_class_register(struct class **fw_attr_class);
+> +void fw_attributes_class_remove(void);
+> +
+> +#endif /* FW_ATTR_CLASS_H */
+> +
+> +
 > 
 
