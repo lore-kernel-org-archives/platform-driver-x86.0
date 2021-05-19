@@ -2,80 +2,149 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC035C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 10:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F079C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 11:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77D361353
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 10:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2332460FE8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 11:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347371AbhESKQa (ORCPT
+        id S1346007AbhESLHG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 May 2021 06:16:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:57975 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1345568AbhESKQ2 (ORCPT
+        Wed, 19 May 2021 07:07:06 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:41234 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242675AbhESLHF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 May 2021 06:16:28 -0400
-IronPort-SDR: XNdsEjHy0FgbfjcrWMByD+lluKWTmKeQBwaWx4+YC6xZYzxoDy16VrmLFnE76F590BfFqMyWpW
- RYWq4kI+8slg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9988"; a="181218505"
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="181218505"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2021 03:15:09 -0700
-IronPort-SDR: DMZPe4j47NqIP95aGWXwVggCii9YSonKuxTJbtD3CStHjt6zKs/Ls06IhuB6N16u6sSF76sI3Y
- I6hS483HG/kQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,312,1613462400"; 
-   d="scan'208";a="394364953"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 19 May 2021 03:15:07 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 85295BA; Wed, 19 May 2021 13:15:28 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Zha Qipeng <qipeng.zha@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/x86: intel_punit_ipc: Append MODULE_DEVICE_TABLE for ACPI
-Date:   Wed, 19 May 2021 13:15:21 +0300
-Message-Id: <20210519101521.79338-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        Wed, 19 May 2021 07:07:05 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 26E141C0B7F; Wed, 19 May 2021 13:05:43 +0200 (CEST)
+Date:   Wed, 19 May 2021 13:05:42 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jafar Akhondali <jafar.akhoondali@gmail.com>, jlee@suse.com,
+        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/x86: acer-wmi: Add support for Acer Helios 300
+ RGB keyboard backlight
+Message-ID: <20210519110542.GA24621@duo.ucw.cz>
+References: <CAMW3L+24ZGowtpURUbjoCoA+eZMF0wDae1izxS+HM2uz1L9Rig@mail.gmail.com>
+ <9e455325-d9d6-557d-e9a5-779f59e2af4c@redhat.com>
+ <20210519085429.GA2025@bug>
+ <e933a326-830c-4df8-eeb0-f8e48a4b9627@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
+In-Reply-To: <e933a326-830c-4df8-eeb0-f8e48a4b9627@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The intel_punit_ipc driver might be compiled as a module.
-When udev handles the event of the devices appearing
-the intel_punit_ipc module is missing.
 
-Append MODULE_DEVICE_TABLE for ACPI case to fix the loading issue.
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_punit_ipc.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi!
+> >>> The Acer helios 300 provides gaming functions WMI that is available in
+> >>> Windows, however this was not implemented in Linux. The process of fi=
+nding
+> >>> the related method was done by decompiling PredatorSense(official Acer
+> >>> gaming functions software for Predator series) and decompiling WQ
+> >>> buffers. This patch provides a gaming interface which will then expos=
+e a
+> >>> character device named "acer-gkbbl". This character device accepts 16
+> >>> bytes long config, which is specific for the backlight method. The
+> >>> meaning of each bytes ordered by bit position is as follows:
+> >>>
+> >>> Bit 0 -> Backlight modes:
+> >>> 1: Breath
+> >>> 2: Neon
+> >>> 3: Wave
+> >>> 4: Shifting
+> >>> 5: Zoom
+> >>> Bit 1 -> Animation Speed: from 1 to 9 ( 1 is slowest, 9 is fastest)
+> >>> Bit 2 -> Brightness from 0 to 100 ( 0 is no backlight, 100 is brighte=
+st)
+> >>> Bit 3 -> Unknown. Wave effect uses 8, other modes must use 0
+> >>> Bit 4 -> Animation Direction:
+> >>> 1: Right-to-Left
+> >>> 2: Left-to-Right
+> >>> Bit 5 -> Red Color Selection
+> >>> Bit 6 -> Green Color Selection
+> >>> Bit 7 -> Blue Color Selection
+> >>> Bit 8 -> Currently unknown, or not used in known model
+> >>> Bit 9 -> Currently unknown, or not used in known model
+> >>> Bit 10 -> Currently unknown, or not used in known model
+> >>> Bit 11 -> Currently unknown, or not used in known model
+> >>> Bit 12 -> Currently unknown, or not used in known model
+> >>> Bit 13 -> Currently unknown, or not used in known model
+> >>> Bit 14 -> Currently unknown, or not used in known model
+> >>> Bit 15 -> Currently unknown, or not used in known model
+> >>>
+> >>> Filling this config is out of scope for the kernel module, and this m=
+odule
+> >>> only acts as an interface.
+> >>>
+> >>> Currently, I'm not sure with the method for communicating with user-s=
+pace,
+> >>> but since leds.h subsystem wouldn't fit for complex actions such as t=
+his
+> >>> complex config, I couldn't find any better method than char dev.
+> >>
+> >> Thank you for your patch, given that there is no existing kernel
+> >> interface which is a good match for the features exported by this
+> >> keyboard I'm fine with just having a raw interface where userspace
+> >> writes GAMING_KBBL_CONFIG_LEN bytes as you suggest.
+> >=20
+> > Keyboard backlight goes through LED interface (so please cc the mailing=
+ list) and
+> > no, passing raw bytes to hardware is not an acceptable interface.
+> >=20
+> >> But lets not use a classdev + chardev for this please, you can
+> >> just add a binary write-only sysfs-atrribute under the wmi-dev for
+> >> this with a name like (for example) gaming_kbd_backlight_config
+> >> and then userspace can write to that without needing a class + char
+> >> dev just for this single write.
+> >=20
+> > NAK. We have existing interfaces for this.
+>=20
+> I don't think we have existing interfaces for things like wave / zoom /
+> neon effects.  I guess this could use the new CONFIG_LEDS_CLASS_MULTICOLOR
+> API to set the color + overall brightness, combined with a custom sysfs a=
+ttribute
+> under the led_classdev's device's dir for selecting the things for which =
+there
+> is no standard API ?
 
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-index e0f838f0791b..b5763ca699b9 100644
---- a/drivers/platform/x86/intel_punit_ipc.c
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -320,6 +320,7 @@ static const struct acpi_device_id punit_ipc_acpi_ids[] = {
- 	{ "INT34D4", 0 },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(acpi, punit_ipc_acpi_ids);
- 
- static struct platform_driver intel_punit_ipc_driver = {
- 	.probe = intel_punit_ipc_probe,
--- 
-2.30.2
+We do have RGB LEDs, and some of them can do hardware-accelerated
+effects. We do have pattern trigger.
 
+We do have other hardware (Mauro is just trying to merge support) that
+has limited set of effects.
+
+Yes, some work remains to be done. But no, introducing custom
+interface for this is not acceptable.
+
+Best regards,
+								Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCYKTxBgAKCRAw5/Bqldv6
+8sOvAKCELBJTazSe0VLEp//QjVU3Rf/1JwCeKCfuOPK98bBB16Alx6f0fnkZvkE=
+=6gWc
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
