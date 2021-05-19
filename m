@@ -5,77 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D19C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8305C43460
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7A2760FF1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B11760FF1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346515AbhESNNE (ORCPT
+        id S1346503AbhESNN3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 May 2021 09:13:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47196 "EHLO
+        Wed, 19 May 2021 09:13:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60286 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236567AbhESNND (ORCPT
+        by vger.kernel.org with ESMTP id S1346652AbhESNN3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 May 2021 09:13:03 -0400
+        Wed, 19 May 2021 09:13:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621429903;
+        s=mimecast20190719; t=1621429929;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E4iqCQQcWH0B7eHMG9iFWGbs/tWadPcG1oUL8R8VzZU=;
-        b=EIDAmm6jrIvi9EFNgfjSs0ndEUS9DuME9tXXOhdUgl+uO8023dt2crsbWdHyjEaC3/K3ir
-        SzPVMxeQpJgOC5Dq130oMMd0gmYfdLaMhGoOlAOAysb6IsM/QrPl6jyV8xzeoDY/l4P9yH
-        PbwLeJhTwmyOWON3cGWGX7xhXgrd8cc=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-107-bIEQLJXcOvugF4yRCsXBlQ-1; Wed, 19 May 2021 09:11:41 -0400
-X-MC-Unique: bIEQLJXcOvugF4yRCsXBlQ-1
-Received: by mail-ej1-f72.google.com with SMTP id eb10-20020a170907280ab02903d65bd14481so3387188ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 06:11:41 -0700 (PDT)
+        bh=awY+ia0X5V2PMZw9CViuEIoYymBZhpNSbICZiHEMEkA=;
+        b=J5/iJCbTTIdOm6icSqplIn/NyP6jeGL1jWJfPDB++j+XafGY+4etryt9EPHJdvuKTlMlJR
+        SOKCUoxr8xo5z9uWpp9kU57umlquJG2ceYrzXL3DnEVHXN9ZRayAT4YkSvHnHxtk9CL6Q8
+        qcx1638a7SBvgifPeliD7+Rb5ZIefVw=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-VdXcgJxhOxCfUI44dUp27Q-1; Wed, 19 May 2021 09:12:07 -0400
+X-MC-Unique: VdXcgJxhOxCfUI44dUp27Q-1
+Received: by mail-ed1-f72.google.com with SMTP id y17-20020a0564023591b02903886c26ada4so7654883edc.5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 06:12:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=E4iqCQQcWH0B7eHMG9iFWGbs/tWadPcG1oUL8R8VzZU=;
-        b=a6TGlyrkJuRTgAp4EU4r69q4FtCDPHbWfhXxsvJr9Ck/0WPrJSg/IlvU5NuEEqRF/n
-         JHw3dOkt6lCaYN+o2372Y9H9JGt7Xces0rVVqorvaeI+VRsxl+5K6q7yi6og8VtdCcf5
-         lmDu4xorjlYy4UPOaahlgTlQkE4HsFdkMdct6NDFRdfB8pIkGIeAG3Nw8yhCrtQ0s9bC
-         qzOS0kGPppLdfwPD7Yn3KNoufUP4zq2UxSsscrqEENks6lbMNrW710DerVtb5YnqCTZg
-         L6f9PggzgdKWImN9GIPC3Rzu85Er/2qb+XMTDAyWc+MW7aNrc18ejS9vrXXLdy9S5s++
-         24cw==
-X-Gm-Message-State: AOAM533k0EWM0mDRLPnoteJ7DXGjKziX0SqB8kUUh2+cAgzDEYH/wTkF
-        mibEV6k2PMqWdiyTZvHRKRuQcdeXGqIE3vCICbpADld0A7eGTEYIqdhuh4i49pE2rFI455dCPJL
-        uPNj6aRcXTdoNpeVZequr8tdX4fpoC/f9NQ==
-X-Received: by 2002:a17:906:79c8:: with SMTP id m8mr12731200ejo.260.1621429900351;
-        Wed, 19 May 2021 06:11:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxpW5YZWL01KOdHo9+Pc+VXn0YrDq232IN9c3w6uGoa/uK8WQL+Qf1aFEKzZC50INEVt6tB8Q==
-X-Received: by 2002:a17:906:79c8:: with SMTP id m8mr12731184ejo.260.1621429900200;
-        Wed, 19 May 2021 06:11:40 -0700 (PDT)
+        bh=awY+ia0X5V2PMZw9CViuEIoYymBZhpNSbICZiHEMEkA=;
+        b=qC3OD8ZrUJIT5DuhshpKeks+4hUGXr0o14huZeu7y3Wq4sROeGz8sHliA9Lt24aKnR
+         9LbUXHjA5qY/NHa67O/2X/46T7zWMZfa0fsmMOYRt/6Cv60VAkCI9A1NoNpBzeqEzSsC
+         M+wcydYP4WG5cqFZcgehET0tEWsM0/muhKnoHDPLlR1Khh6VForsE/n52Y/3T1Z5RGyK
+         XZfOT61SLTmtVy30VwhdsC4zn1WMLLPEHk0Kgwo2Mh4d+xaKIEVu7t54ulLb8mLte/1c
+         4wl66aYP608NIwuSDAMy8qhwm0ichejTm83C6JBCuEeIK4ryiIhlmCPMS7CkvK9FwFPE
+         b8/Q==
+X-Gm-Message-State: AOAM531c4750TDD5ut06YhLDddiz820HfwY23EJs3axIowLAYp+fOK03
+        qvr2vyvrNGSNQpl7RYn/m93xPrsnYvjCGJAA2lz3/8gUJnIGbxBaWYd2CgYCroJX9k0kMG9u1gP
+        BAgNkg0QV++MepoK7z7bmOg1OHmPpHP8Zmw==
+X-Received: by 2002:a17:906:b756:: with SMTP id fx22mr11371742ejb.224.1621429925031;
+        Wed, 19 May 2021 06:12:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw4QPnJBz6QHSbvlK/Q6gDbHpU3S4O+QF/UVRC62KeVjtb2wygYm4JwdKvbkKoVzgZhshK5/w==
+X-Received: by 2002:a17:906:b756:: with SMTP id fx22mr11371673ejb.224.1621429924213;
+        Wed, 19 May 2021 06:12:04 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id w14sm16048395edj.6.2021.05.19.06.11.39
+        by smtp.gmail.com with ESMTPSA id c3sm16426470edn.16.2021.05.19.06.12.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 May 2021 06:11:39 -0700 (PDT)
-Subject: Re: [PATCH] platform/surface: aggregator: Do not mark interrupt as
- shared
+        Wed, 19 May 2021 06:12:03 -0700 (PDT)
+Subject: Re: [PATCH] platform/surface: dtx: Fix poll function
 To:     Maximilian Luz <luzmaximilian@gmail.com>
 Cc:     Mark Gross <mgross@linux.intel.com>,
-        Tian Tao <tiantao6@hisilicon.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210505133635.1499703-1-luzmaximilian@gmail.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+References: <20210513134437.2431022-1-luzmaximilian@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <17e63def-42ed-42d6-156d-cdde573b5e40@redhat.com>
-Date:   Wed, 19 May 2021 15:11:39 +0200
+Message-ID: <bed4b8ed-c183-00ee-a832-2f25a4392888@redhat.com>
+Date:   Wed, 19 May 2021 15:12:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210505133635.1499703-1-luzmaximilian@gmail.com>
+In-Reply-To: <20210513134437.2431022-1-luzmaximilian@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,14 +84,18 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 5/5/21 3:36 PM, Maximilian Luz wrote:
-> Having both IRQF_NO_AUTOEN and IRQF_SHARED set causes
-> request_threaded_irq() to return with -EINVAL (see comment in flag
-> validation in that function). As the interrupt is currently not shared
-> between multiple devices, drop the IRQF_SHARED flag.
+On 5/13/21 3:44 PM, Maximilian Luz wrote:
+> The poll function should not return -ERESTARTSYS.
 > 
-> Fixes: 507cf5a2f1e2 ("platform/surface: aggregator: move to use request_irq by IRQF_NO_AUTOEN flag")
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Furthermore, locking in this function is completely unnecessary. The
+> ddev->lock protects access to the main device and controller (ddev->dev
+> and ddev->ctrl), ensuring that both are and remain valid while being
+> accessed by clients. Both are, however, never accessed in the poll
+> function. The shutdown test (via atomic bit flags) be safely done
+> without locking, so drop locking here entirely.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 1d609992832e ("platform/surface: Add DTX driver> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -113,22 +116,34 @@ Regards,
 Hans
 
 > ---
->  drivers/platform/surface/aggregator/controller.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/platform/surface/surface_dtx.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 > 
-> diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
-> index 69e86cd599d3..8a70df60142c 100644
-> --- a/drivers/platform/surface/aggregator/controller.c
-> +++ b/drivers/platform/surface/aggregator/controller.c
-> @@ -2483,8 +2483,7 @@ int ssam_irq_setup(struct ssam_controller *ctrl)
->  	 * interrupt, and let the SAM resume callback during the controller
->  	 * resume process clear it.
->  	 */
-> -	const int irqf = IRQF_SHARED | IRQF_ONESHOT |
-> -			 IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
-> +	const int irqf = IRQF_ONESHOT | IRQF_TRIGGER_RISING | IRQF_NO_AUTOEN;
+> diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
+> index 63ce587e79e3..5d9b758a99bb 100644
+> --- a/drivers/platform/surface/surface_dtx.c
+> +++ b/drivers/platform/surface/surface_dtx.c
+> @@ -527,20 +527,14 @@ static __poll_t surface_dtx_poll(struct file *file, struct poll_table_struct *pt
+>  	struct sdtx_client *client = file->private_data;
+>  	__poll_t events = 0;
 >  
->  	gpiod = gpiod_get(dev, "ssam_wakeup-int", GPIOD_ASIS);
->  	if (IS_ERR(gpiod))
+> -	if (down_read_killable(&client->ddev->lock))
+> -		return -ERESTARTSYS;
+> -
+> -	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags)) {
+> -		up_read(&client->ddev->lock);
+> +	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &client->ddev->flags))
+>  		return EPOLLHUP | EPOLLERR;
+> -	}
+>  
+>  	poll_wait(file, &client->ddev->waitq, pt);
+>  
+>  	if (!kfifo_is_empty(&client->buffer))
+>  		events |= EPOLLIN | EPOLLRDNORM;
+>  
+> -	up_read(&client->ddev->lock);
+>  	return events;
+>  }
+>  
 > 
 
