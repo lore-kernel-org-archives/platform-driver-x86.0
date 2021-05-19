@@ -2,93 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8258AC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C14C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4886108D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27BB9611AE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 19 May 2021 13:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240496AbhESNr5 (ORCPT
+        id S233306AbhESN5p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 19 May 2021 09:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240231AbhESNrz (ORCPT
+        Wed, 19 May 2021 09:57:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52396 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243082AbhESN5n (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 19 May 2021 09:47:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 3858B6108D
-        for <platform-driver-x86@vger.kernel.org>; Wed, 19 May 2021 13:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621431996;
-        bh=C3x4GJAsmM7St+SsfGyZ2yjgVI4kNXcCEu13Vpq9tIU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=scbczewDWgswBY7QfJcHLgN9NWWRL//KAr0G+fc72h9SPFDKuqThDO+2I4jEYaVoA
-         Bb+H8H34HhWPrPBtwSViM3r7ozKE3CuGw11uGgXh9pkjNJF03zszChVltoFJzfiLyZ
-         VayooT0TPXWN0ofgwPvFY1bPEMPSryvOU6CXcEkHxbQwiKFIiz3GMxX1K1SKzJYlMj
-         AolqHagJRh37KX8GTNI0nflZVkmLReWrACiTB2zFtNwBMu5XIY3uLFa8g2BL1+OuAb
-         IL0Gp5RnZby565JPuLdFqwvJX6D0RSL+Y1xhXwtIfy8wJzCK2HCLgK62APBppwyMwV
-         sLMMgx+TYM69w==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213109] ideapad-laptop: Regression in 5.12.x for Battery
- conservation mode
-Date:   Wed, 19 May 2021 13:46:35 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: jwrdegoede@fedoraproject.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status cc resolution
-Message-ID: <bug-213109-215701-M3R5lIb5qG@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213109-215701@https.bugzilla.kernel.org/>
-References: <bug-213109-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 19 May 2021 09:57:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621432583;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=v8VbEQeymFTFedgn9xKe//+evW8r8aR6eUa7WQ/H85A=;
+        b=IGKBUA/atUbOBGav5lgis6tyQ85d4GdXBAiG5eXnsHxahHH+Yam6n/KJHRe2KC+LNep7pu
+        FhNXSr17oEdSB1UklwjujjODWuM9kY6VclhFKe+5bm0Oey2kqGZCCCqO3QYnqUrnhG7EaZ
+        G9VJlqqB43ObR7eOLAzu9dwZWxyiIkY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-ieBgdIB5NrqRbVCM6OiaKw-1; Wed, 19 May 2021 09:56:21 -0400
+X-MC-Unique: ieBgdIB5NrqRbVCM6OiaKw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E34E9100945F;
+        Wed, 19 May 2021 13:56:20 +0000 (UTC)
+Received: from x1.localdomain (ovpn-115-28.ams2.redhat.com [10.36.115.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA1731037EB9;
+        Wed, 19 May 2021 13:56:19 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH] platform/x86: toshiba_haps: Fix missing newline in pr_debug call in toshiba_haps_notify
+Date:   Wed, 19 May 2021 15:56:18 +0200
+Message-Id: <20210519135618.139701-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213109
+The pr_debug() call in toshiba_haps_notify() is missing a newline at the
+end of the string, add this.
 
-Hans de Goede (jwrdegoede@fedoraproject.org) changed:
+BugLink: https://bugs.debian.org/799193
+Reported-by: Salvatore Bonaccorso <carnil@debian.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/toshiba_haps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-             Status|NEW                         |RESOLVED
-                 CC|                            |jwrdegoede@fedoraproject.or
-                   |                            |g
-         Resolution|---                         |CODE_FIX
+diff --git a/drivers/platform/x86/toshiba_haps.c b/drivers/platform/x86/toshiba_haps.c
+index b237bd6b1ee5..49e84095bb01 100644
+--- a/drivers/platform/x86/toshiba_haps.c
++++ b/drivers/platform/x86/toshiba_haps.c
+@@ -131,7 +131,7 @@ static const struct attribute_group haps_attr_group = {
+  */
+ static void toshiba_haps_notify(struct acpi_device *device, u32 event)
+ {
+-	pr_debug("Received event: 0x%x", event);
++	pr_debug("Received event: 0x%x\n", event);
+ 
+ 	acpi_bus_generate_netlink_event(device->pnp.device_class,
+ 					dev_name(&device->dev),
+-- 
+2.31.1
 
---- Comment #2 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
-I've added the patch fixing this to the fixes branch of the pdx86 kernel tr=
-ee:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.=
-git/log/?h=3Dfixes
-
-The contents of this branch will be in the next pdx86-fixes pull-req which I
-send to Linus for 5.13. Since the patch has a fixes tag it will get added
-automatically to the 5.12 kernels once Linus has merged it, so this bug can=
- be
-closed now.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
