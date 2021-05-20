@@ -2,202 +2,204 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACDAC433B4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 12:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672F2C433ED
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 14:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF46C61163
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 12:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400746101E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 14:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238336AbhETMlO (ORCPT
+        id S239217AbhETOMy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 May 2021 08:41:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38645 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234963AbhETMlG (ORCPT
+        Thu, 20 May 2021 10:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237114AbhETOMB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 May 2021 08:41:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621514385;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ppo7V3Qys3eQxLvvu4Zddp5SmlJNyQzN/cEgnfzul74=;
-        b=EkM8IKmQXa7vC8Sas0uO3yhtuGvCGCEIH4VhTTUbxvzfOlZKtDxq53tAbih5joMa3K+AKM
-        R6HSPcD2sn+1/iVqzp+Z8V/mtu6G4RIFis71narr8rp6MX6ntE7dEt3QMoVc5AO8o6owTN
-        QstZxRHrewJFK+YgUWQm+gFzOcSCERk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-Y7ZhtoomNS6y0_cRK9jlig-1; Thu, 20 May 2021 08:39:43 -0400
-X-MC-Unique: Y7ZhtoomNS6y0_cRK9jlig-1
-Received: by mail-ed1-f69.google.com with SMTP id n6-20020a0564020606b029038cdc241890so9432989edv.20
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 May 2021 05:39:43 -0700 (PDT)
+        Thu, 20 May 2021 10:12:01 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0421C061352;
+        Thu, 20 May 2021 07:09:41 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id x8so17818890wrq.9;
+        Thu, 20 May 2021 07:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ITSUS5r5hEUj7pr1CVlQCx/8PA216WAC5CyHFDa3mzk=;
+        b=Q+syC+MSVJ4dladQif2oXzxSVW5bVDYGTzkmbqFKqcGtGamw+E/idAExrlrsLn3dDS
+         SIlVlOv2T/WB+GrZ9OPyfNuyWtNptJRs597wboRr9l7q2mCzuZCDvNBUyJjX6jiW0EwD
+         TFiZ6HNYI+Wwk1U+b7L6SlHuLGGPShG35f10R3xwoC1e9GrIpR4zdQGF2xz+2t1izsca
+         j5q6bpO5Q6QS9vGoO7/tIASNo2puxpTqSM7vJcLCLA2u4lmNJCP/J/tENj5Ne5R08uei
+         L2eYL6DVltK8ybr1w9Eyh4SKA3uZl1I0WIA6f6tkreFKWqC/aaIU4F0w+lky+WmWEgya
+         /Cbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=ppo7V3Qys3eQxLvvu4Zddp5SmlJNyQzN/cEgnfzul74=;
-        b=SrsRKdE59kkCa+qojuSM3qN8m1DgqBxorewHpQQ2NFcfdLp9grJ1BAZ5j+Sl9kTSJF
-         kzxxb8v9NzaJyMjGIp9upEY1yW3uk/tr3hKx4KDPk+bpLFEEqeuF7BtWBkdEOF7j/OLc
-         F2RhHhDfFhq3XnqOhRZ05yptAY7YEal6ROlLkKm1+87UfoAUx6GmJPD7x+yekiO3Nd9N
-         euDQxUPAlNgGFpMMor33OxvpP89xhYRjxzbIyeUJV0HZKu/oYt3rB0dzsExRn9XnUEPC
-         5zVK/r6sBAAR2VJwesb2w47TC3D1MF/fe0AQsusKIjtU1qdir2OgbtOs2bPjL/5iiHDs
-         9A4Q==
-X-Gm-Message-State: AOAM530u2Hc99sovmmX6eM9CbmalJ2FWWWhHMvlSmOWEO68K0JwgSQaG
-        WLiWDTPjVk51AHvL+ox69xMmUvwz+AJc8Sb9ohir8+0Nj9GFI8AZaOVMO1aH4eq55YU33NcbGaL
-        yuvsY03oPWuo3gJhroD+r4AZ5gqLo/yzHGaGOeOL+NeQ/SGtAaoL0gEBjki2XxmzK0CInL8PcHZ
-        RjYom+KqbXzw==
-X-Received: by 2002:aa7:c7d5:: with SMTP id o21mr4830899eds.166.1621514382027;
-        Thu, 20 May 2021 05:39:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzHbAh8QGZb89Mj942QW8kEi/CSiFEBWF0G+KFE7p3dHTrtL5u/Ulfu7QIA4tACHoiFztKKPA==
-X-Received: by 2002:aa7:c7d5:: with SMTP id o21mr4830866eds.166.1621514381668;
-        Thu, 20 May 2021 05:39:41 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id t14sm1325506ejc.121.2021.05.20.05.39.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 May 2021 05:39:41 -0700 (PDT)
-From:   Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] platform-drivers-x86 for 5.13-2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Message-ID: <ca5ce35d-c5d5-1803-cbb7-b47a5f44e535@redhat.com>
-Date:   Thu, 20 May 2021 14:39:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ITSUS5r5hEUj7pr1CVlQCx/8PA216WAC5CyHFDa3mzk=;
+        b=RQ9qwWK0HZ/O3YhL2wR+AMlYYyUkgvjmZOrwEc+9c6nIlo5Ptb0BHRcebAIrxrbQl5
+         U+WfaAaGA6EyNrs/k1Nq+QTARNEbNdtkA1NPoZRAcZ/pGvmFUVriAAfPbOR3yzEOGjpc
+         RhcxTatEHxfh9oLCH61p4qN4JfGGlt1ZxPRr3DChNSAq987d4rDT7ug/evdLXHaV9FR+
+         Fk3Fc00pWQ+ENfyrxYGIYaFqelvsvS16aHxKzZItM1kzRzi3LRlL1m4WwzKEBkNNKJA5
+         dUgYW7t6uA2IrUjvrGv6mNS2WVDq9QuC4zzX3q7bDI2zOMnelkBxX0Uk7XIOomK9OeYO
+         Y+SQ==
+X-Gm-Message-State: AOAM5312fyM9RiBOlVfI6Lmd9S0kq3dfqYCEDEhjq+1AdGrMatpqxxVO
+        cq4dhYoVfndlPe/CwaN6HM8=
+X-Google-Smtp-Source: ABdhPJyHTPqgQZdYYUho5mvrJ11+g7aF0gXsjQ4KRURic/VMsnbNjl4CETAc0oAYdIj7n5UCphPcgQ==
+X-Received: by 2002:adf:cc81:: with SMTP id p1mr4435946wrj.175.1621519780487;
+        Thu, 20 May 2021 07:09:40 -0700 (PDT)
+Received: from valhalla.home ([91.110.20.117])
+        by smtp.gmail.com with ESMTPSA id m6sm8411974wml.3.2021.05.20.07.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 May 2021 07:09:40 -0700 (PDT)
+From:   Daniel Scally <djrscally@gmail.com>
+To:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org
+Cc:     Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: [PATCH v4 0/8] Introduce intel_skl_int3472 module
+Date:   Thu, 20 May 2021 15:09:20 +0100
+Message-Id: <20210520140928.3252671-1-djrscally@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linus,
+Hello all
 
-Here is a set of bug-fixes and some model specific quirks for platform-drivers-x86 for 5.13.
+Apologies for the long delay since the last version of this series; the time I
+had free to work on it became somewhat restrained.
 
-Regards,
+v1 for this series was originally 14-18 of this series:
+https://lore.kernel.org/linux-media/20201130133129.1024662-1-djrscally@gmail.com/T/#m91934e12e3d033da2e768e952ea3b4a125ee3e67
 
-Hans
+v2 was here:
+https://lore.kernel.org/platform-driver-x86/20210118003428.568892-1-djrscally@gmail.com/
 
+v3 was here:
+https://lore.kernel.org/lkml/20210222130735.1313443-1-djrscally@gmail.com/
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
+Series level changelog:
 
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
+	- Added patch 5/8 to make clkdev_drop() NULL aware to simplify error
+	handling.
+	- Added patch 6/8 to add acpi_gpio_get_io_resource().
 
-are available in the Git repository at:
+This has been tested on a number of devices, but currently **not** on a device
+designed for ChromeOS, which we ideally need to do to ensure no regression
+caused by replacing the tps68470 MFD driver. Unfortunately, I don't have a
+device to test it on myself.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.13-2
+=========== Original Cover Letter ===========
 
-for you to fetch changes up to e68671e9e1275dfdda333c3e83b6d28963af16b6:
+At the moment in the kernel the ACPI _HID INT3472 is taken by the tps68470
+MFD driver, but that driver can only handle some of the cases of that _HID
+that we see. There are at least these three possibilities:
 
-  platform/x86: touchscreen_dmi: Add info for the Chuwi Hi10 Pro (CWI529) tablet (2021-05-20 14:11:03 +0200)
+1. INT3472 devices that provide GPIOs through the usual framework and run
+   power and clocks through an operation region; this is the situation that
+   the current module handles and is seen on ChromeOS devices
+2. INT3472 devices that provide GPIOs, plus clocks and regulators that are
+   meant to be driven through the usual frameworks, usually seen on devices
+   designed to run Windows
+3. INT3472 devices that don't actually represent a physical tps68470, but
+   are being used as a convenient way of grouping a bunch of system GPIO
+   lines that are intended to enable power and clocks for sensors which
+   are called out as dependent on them. Also seen on devices designed to
+   run Windows.
 
-----------------------------------------------------------------
-platform-drivers-x86 for v5.13-2
+This series introduces a new module which registers:
 
-Assorted pdx86 bug-fixes and model-specific quirks for 5.13.
+1. An i2c driver that determines which scenario (#1 or #2) applies to the
+   machine and registers platform devices to be bound to GPIO, OpRegion,
+   clock and regulator drivers as appropriate.
+2. A platform driver that binds to the dummy INT3472 devices described in
+   #3
 
-The following is an automated git shortlog grouped by driver:
+The platform driver for the dummy device registers the GPIO lines that
+enable the clocks and regulators to the sensors via those frameworks so
+that sensor drivers can consume them in the usual fashion. The existing
+GPIO and OpRegion tps68470 drivers will work with the i2c driver that's
+registered. Clock and regulator drivers are available but have not so far been
+tested, so aren't part of this series.
 
-dell-smbios-wmi:
- -  Fix oops on rmmod dell_smbios
+The existing mfd/tps68470.c driver being thus superseded, it is removed.
 
-gigabyte-wmi:
- -  add support for B550 Aorus Elite
- -  add support for X570 UD
- -  streamline dmi matching
+Thanks
+Dan
 
-hp-wireless:
- -  add AMD's hardware id to the supported list
+Daniel Scally (8):
+  ACPI: scan: Extend acpi_walk_dep_device_list()
+  ACPI: scan: Add function to fetch dependent of acpi device
+  i2c: core: Add a format macro for I2C device names
+  gpiolib: acpi: Export acpi_get_gpiod()
+  clkdev: Make clkdev_drop() null aware
+  gpiolib: acpi: Add acpi_gpio_get_io_resource()
+  platform/x86: Add intel_skl_int3472 driver
+  mfd: tps68470: Remove tps68470 MFD driver
 
-hp_accel:
- -  Avoid invoking _INI to speed up resume
+ MAINTAINERS                                   |   5 +
+ drivers/acpi/ec.c                             |   2 +-
+ drivers/acpi/pmic/Kconfig                     |   2 +-
+ drivers/acpi/pmic/intel_pmic_chtdc_ti.c       |   2 +-
+ drivers/acpi/scan.c                           | 107 ++++-
+ drivers/clk/clkdev.c                          |   3 +
+ drivers/gpio/Kconfig                          |   2 +-
+ drivers/gpio/gpiolib-acpi.c                   |  61 ++-
+ drivers/i2c/i2c-core-acpi.c                   |   8 +-
+ drivers/i2c/i2c-core-base.c                   |   4 +-
+ drivers/mfd/Kconfig                           |  18 -
+ drivers/mfd/Makefile                          |   1 -
+ drivers/mfd/tps68470.c                        |  97 -----
+ drivers/platform/surface/aggregator/core.c    |   6 +-
+ drivers/platform/surface/surface3_power.c     |  22 +-
+ .../platform/surface/surface_acpi_notify.c    |   7 +-
+ drivers/platform/x86/Kconfig                  |   2 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel-int3472/Kconfig    |  31 ++
+ drivers/platform/x86/intel-int3472/Makefile   |   5 +
+ .../intel_skl_int3472_clk_and_regulator.c     | 195 +++++++++
+ .../intel-int3472/intel_skl_int3472_common.c  | 106 +++++
+ .../intel-int3472/intel_skl_int3472_common.h  | 113 +++++
+ .../intel_skl_int3472_discrete.c              | 409 ++++++++++++++++++
+ .../intel_skl_int3472_tps68470.c              | 109 +++++
+ include/acpi/acpi_bus.h                       |   8 +
+ include/linux/acpi.h                          |  11 +-
+ include/linux/gpio/consumer.h                 |   2 +
+ include/linux/i2c.h                           |   3 +
+ 29 files changed, 1175 insertions(+), 167 deletions(-)
+ delete mode 100644 drivers/mfd/tps68470.c
+ create mode 100644 drivers/platform/x86/intel-int3472/Kconfig
+ create mode 100644 drivers/platform/x86/intel-int3472/Makefile
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_clk_and_regulator.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.h
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c
+ create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
 
-ideapad-laptop:
- -  fix method name typo
- -  fix a NULL pointer dereference
-
-intel_int0002_vgpio:
- -  Only call enable_irq_wake() when using s2idle
-
-intel_punit_ipc:
- -  Append MODULE_DEVICE_TABLE for ACPI
-
-platform/mellanox:
- -  mlxbf-tmfifo: Fix a memory barrier issue
-
-platform/surface:
- -  dtx: Fix poll function
- -  aggregator: Add platform-drivers-x86 list to MAINTAINERS entry
- -  aggregator: avoid clang -Wconstant-conversion warning
- -  aggregator: Do not mark interrupt as shared
-
-touchscreen_dmi:
- -  Add info for the Chuwi Hi10 Pro (CWI529) tablet
- -  Add info for the Mediacom Winpad 7.0 W700 tablet
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      platform/x86: intel_punit_ipc: Append MODULE_DEVICE_TABLE for ACPI
-
-Arnd Bergmann (1):
-      platform/surface: aggregator: avoid clang -Wconstant-conversion warning
-
-Barnabás Pőcze (1):
-      platform/x86: ideapad-laptop: fix method name typo
-
-Hans de Goede (3):
-      platform/x86: intel_int0002_vgpio: Only call enable_irq_wake() when using s2idle
-      platform/x86: dell-smbios-wmi: Fix oops on rmmod dell_smbios
-      platform/x86: touchscreen_dmi: Add info for the Chuwi Hi10 Pro (CWI529) tablet
-
-Kai-Heng Feng (1):
-      platform/x86: hp_accel: Avoid invoking _INI to speed up resume
-
-Liming Sun (1):
-      platform/mellanox: mlxbf-tmfifo: Fix a memory barrier issue
-
-Maximilian Luz (3):
-      platform/surface: aggregator: Do not mark interrupt as shared
-      platform/surface: aggregator: Add platform-drivers-x86 list to MAINTAINERS entry
-      platform/surface: dtx: Fix poll function
-
-Qiu Wenbo (1):
-      platform/x86: ideapad-laptop: fix a NULL pointer dereference
-
-Shyam Sundar S K (1):
-      platform/x86: hp-wireless: add AMD's hardware id to the supported list
-
-Teava Radu (1):
-      platform/x86: touchscreen_dmi: Add info for the Mediacom Winpad 7.0 W700 tablet
-
-Thomas Weißschuh (3):
-      platform/x86: gigabyte-wmi: streamline dmi matching
-      platform/x86: gigabyte-wmi: add support for X570 UD
-      platform/x86: gigabyte-wmi: add support for B550 Aorus Elite
-
- MAINTAINERS                                      |  1 +
- drivers/misc/lis3lv02d/lis3lv02d.h               |  1 +
- drivers/platform/mellanox/mlxbf-tmfifo.c         | 11 +++-
- drivers/platform/surface/aggregator/controller.c |  3 +-
- drivers/platform/surface/surface_dtx.c           |  8 +--
- drivers/platform/x86/Kconfig                     |  2 +-
- drivers/platform/x86/dell/dell-smbios-wmi.c      |  3 +-
- drivers/platform/x86/gigabyte-wmi.c              | 38 +++++------
- drivers/platform/x86/hp-wireless.c               |  2 +
- drivers/platform/x86/hp_accel.c                  | 22 ++++++-
- drivers/platform/x86/ideapad-laptop.c            | 13 ++--
- drivers/platform/x86/intel_int0002_vgpio.c       | 80 +++++++++++++++++-------
- drivers/platform/x86/intel_punit_ipc.c           |  1 +
- drivers/platform/x86/touchscreen_dmi.c           | 43 +++++++++++++
- include/linux/surface_aggregator/device.h        |  6 +-
- 15 files changed, 164 insertions(+), 70 deletions(-)
+-- 
+2.25.1
 
