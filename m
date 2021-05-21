@@ -2,123 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0EBC433ED
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 10:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA7C433B4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3E7613BD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 10:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E225613DF
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 11:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbhEUKi2 (ORCPT
+        id S231429AbhEULmo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 May 2021 06:38:28 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:57065 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229681AbhEUKi1 (ORCPT
+        Fri, 21 May 2021 07:42:44 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42215 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229639AbhEULmn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 May 2021 06:38:27 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id A9B641295;
-        Fri, 21 May 2021 06:37:03 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Fri, 21 May 2021 06:37:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=UlAe4z
-        MIKSC/bAu2xgDnm+7npvQPlo6QgeBHh4q7ikA=; b=U/nas5MDI7cVPqRMG8PSbz
-        bWa5vFII86xbinPXENT5qWvt54kex4N7cQW9kmvWFg72LRCt+5IjRV0BxZkabhV/
-        P5tI1Iks8AnLgVjB4JA9x8Wa643XlmMl+xIklrwSfGQf3TBwIoeK1Xg/zFzsI3Xw
-        Dm4FtBOxIOnSOFheMbdzJSF18kiJ+OyGhxRsJYoVaDsdiYsGwSyy2EBW/OQwlSMR
-        5tjdirFn7l6vGCNLLvNg5cwTrsOmFvb8lSTSmMUP0ZUTaOFwURlQE5e40nZ/IyqA
-        SMLv9VaRUzV7b6RJQfzztjrEXcR+BZe9bnC/TgqZlDoDWgzLkxPLpjLOxNlWylng
-        ==
-X-ME-Sender: <xms:T42nYJnVYOsGpVQQeJuAvJGTyi9oGkHI5ywrPV8c-dco0UZ3L2_8cA>
-    <xme:T42nYE2EJBcGI4hOZ-sY7cWBUyBkd5sGWJrIMmQJD_48QIBu70GIO55CMpI_bNgbJ
-    MAr8SpGbE0aXtAl4AU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdejfedgfeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    egfeegudekfeeiledugefhgfffhfeifedugfegtdffieeuvedvgfffvdejueejhfenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduudeirddvhedurdduleefrddule
-    einecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhu
-    khgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:T42nYPraxV2wcynHzGglu3-u31E7Ptu1uS4M5LIkv9ixLWrUS-czLw>
-    <xmx:T42nYJlEVp9fw6aQNPnnMNKZKBenUuG7XA5ayYKDPq29AkHIW6-6gA>
-    <xmx:T42nYH1vrIAoMOOU9sZbPEdK_dSujCJTlaNAihVV8OqQaOotGpVczQ>
-    <xmx:T42nYA_qLSsmbHJqzFXhTsenA70BKtvwYwVThogoWY-PZ9ti36bFLQ>
-Received: from [192.168.20.39] (unknown [116.251.193.196])
-        by mail.messagingengine.com (Postfix) with ESMTPA;
-        Fri, 21 May 2021 06:36:57 -0400 (EDT)
-Date:   Fri, 21 May 2021 22:36:42 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH 0/2] Remove GA14/15 quirks to acpi/video_detect
+        Fri, 21 May 2021 07:42:43 -0400
+IronPort-SDR: Q+tdHRNAiEbF6un6utvy8+tBFbOCznJZmPhhlWFxQCpnzNkXrJnyzp/XGbzzAuz9ZppVcvkKvt
+ 4j9DOh8NYdsA==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="199522139"
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="199522139"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 04:41:08 -0700
+IronPort-SDR: YIK2n34v8umkm+IAPpDeACOESV7W80LamTXMNDhNBVyAxH8Z1juHU5Snnwo+BCpD7gVo7QOa8D
+ jojbaFIOwKRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
+   d="scan'208";a="544043738"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 21 May 2021 04:41:03 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 21 May 2021 14:41:03 +0300
+Date:   Fri, 21 May 2021 14:41:03 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     corentin.chary@gmail.com, acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <6HDGTQ.I5W09JQ0U6UN@ljones.dev>
-In-Reply-To: <3559f449-7d43-bf6f-0047-3138fd303db8@redhat.com>
-References: <20210419074915.393433-1-luke@ljones.dev>
-        <3559f449-7d43-bf6f-0047-3138fd303db8@redhat.com>
-X-Mailer: geary/40.0
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org,
+        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH 0/8] drm + usb-type-c: Add support for out-of-band
+ hotplug notification (v3)
+Message-ID: <YKecT6x9hOoBkyf2@kuha.fi.intel.com>
+References: <20210505162415.531876-1-hdegoede@redhat.com>
+ <YJosrajgV9zem5lr@kuha.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YJosrajgV9zem5lr@kuha.fi.intel.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Oh, thanks Hans. I wasn't sure how a git revert was meant to work and 
-assumed that
-whatever git did was fine.
+On Tue, May 11, 2021 at 10:05:26AM +0300, Heikki Krogerus wrote:
+> On Wed, May 05, 2021 at 06:24:07PM +0200, Hans de Goede wrote:
+> > Hi All,
+> > 
+> > Here is v3 of my patchset making DP over Type-C work on devices where the
+> > Type-C controller does not drive the HPD pin on the GPU, but instead
+> > we need to forward HPD events from the Type-C controller to the DRM driver.
+> 
+> These look good to me. I can also test these next week if needed. I'll
+> give my Tested-by tag after that if these haven't been taken by
+> anybody by that.
 
-I am absolutely happy for you to take care of those issues and push 
-ahead.
+It's almost weird to see console output from the Type-C connector on
+my good old GPD printed to an actual display :-)
 
-Many thanks!
+At least in my tests, the DP alt mode driver now calls
+drm_connector_oob_hotplug_event() only when it should. This is pretty cool!
+FWIW:
 
-On Fri, May 21 2021 at 12:24:13 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi Luke,
-> 
-> On 4/19/21 9:49 AM, Luke D. Jones wrote:
->>  Revert two commits to allow a patch to acpi/video_detect to 
->> correctly
->>  set the backlight control as native.
->> 
->>  Luke D. Jones (2):
->>    Revert "platform/x86: asus-nb-wmi: Drop duplicate DMI quirk
->>      structures"
->>    Revert "platform/x86: asus-nb-wmi: add support for ASUS ROG 
->> Zephyrus
->>      G14 and G15"
-> 
-> Thank you, since the matching drivers/acpi/video_detect.c have been 
-> merged
-> by Rafael, I've added these to my review-hans branch now.
-> 
-> But there is one problem, these miss a:
-> 
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> 
-> In their commit message, I assume this was an oversight, so I've added
-> this. If you can let me know if this is ok, then I can push these to
-> for-next.
-> 
-> I've also rewritten the commit messages to explain why things are 
-> being
-> reverted, see:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> 
-> Regards,
-> 
-> Hans
-> 
+Tested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 
+thanks,
+
+-- 
+heikki
