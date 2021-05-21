@@ -2,93 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA7C433B4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 11:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BCEC43460
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 12:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E225613DF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 11:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E561261
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 12:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231429AbhEULmo (ORCPT
+        id S234464AbhEUMHJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 May 2021 07:42:44 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42215 "EHLO mga04.intel.com"
+        Fri, 21 May 2021 08:07:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:17519 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229639AbhEULmn (ORCPT
+        id S229507AbhEUMHH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 May 2021 07:42:43 -0400
-IronPort-SDR: Q+tdHRNAiEbF6un6utvy8+tBFbOCznJZmPhhlWFxQCpnzNkXrJnyzp/XGbzzAuz9ZppVcvkKvt
- 4j9DOh8NYdsA==
-X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="199522139"
+        Fri, 21 May 2021 08:07:07 -0400
+IronPort-SDR: uBklas3PM9l57jdxKDTbyjcLj+tnLq3CJQHGya7DZ7+AplbceUfCPEbvd5cNa5C9szZDZ+R2p6
+ XYztJLVwCh/Q==
+X-IronPort-AV: E=McAfee;i="6200,9189,9990"; a="188866420"
 X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="199522139"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 04:41:08 -0700
-IronPort-SDR: YIK2n34v8umkm+IAPpDeACOESV7W80LamTXMNDhNBVyAxH8Z1juHU5Snnwo+BCpD7gVo7QOa8D
- jojbaFIOwKRg==
-X-ExtLoop1: 1
+   d="scan'208";a="188866420"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:05:44 -0700
+IronPort-SDR: skltu30wB3m4YBEmmxugcZS/7efbrFzfmy7vEJWDiA5Ulgds4Dh/57hl0FKBNHSYjOP8j45TdU
+ cNmQBuSDYeMA==
 X-IronPort-AV: E=Sophos;i="5.82,319,1613462400"; 
-   d="scan'208";a="544043738"
-Received: from kuha.fi.intel.com ([10.237.72.162])
-  by fmsmga001.fm.intel.com with SMTP; 21 May 2021 04:41:03 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 21 May 2021 14:41:03 +0300
-Date:   Fri, 21 May 2021 14:41:03 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org,
-        platform-driver-x86@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 0/8] drm + usb-type-c: Add support for out-of-band
- hotplug notification (v3)
-Message-ID: <YKecT6x9hOoBkyf2@kuha.fi.intel.com>
-References: <20210505162415.531876-1-hdegoede@redhat.com>
- <YJosrajgV9zem5lr@kuha.fi.intel.com>
+   d="scan'208";a="545366534"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2021 05:05:39 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lk3uJ-00Dhdw-St; Fri, 21 May 2021 15:05:35 +0300
+Date:   Fri, 21 May 2021 15:05:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v4 6/8] gpiolib: acpi: Add acpi_gpio_get_io_resource()
+Message-ID: <YKeiD8LawbyhnDZn@smile.fi.intel.com>
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <20210520140928.3252671-7-djrscally@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YJosrajgV9zem5lr@kuha.fi.intel.com>
+In-Reply-To: <20210520140928.3252671-7-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, May 11, 2021 at 10:05:26AM +0300, Heikki Krogerus wrote:
-> On Wed, May 05, 2021 at 06:24:07PM +0200, Hans de Goede wrote:
-> > Hi All,
-> > 
-> > Here is v3 of my patchset making DP over Type-C work on devices where the
-> > Type-C controller does not drive the HPD pin on the GPU, but instead
-> > we need to forward HPD events from the Type-C controller to the DRM driver.
+On Thu, May 20, 2021 at 03:09:26PM +0100, Daniel Scally wrote:
+> Add a function to verify that a given acpi_resource represents an IO
+> type GPIO resource, and return it if so.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes since v3:
+> 	- Patch introduced
 > 
-> These look good to me. I can also test these next week if needed. I'll
-> give my Tested-by tag after that if these haven't been taken by
-> anybody by that.
-
-It's almost weird to see console output from the Type-C connector on
-my good old GPD printed to an actual display :-)
-
-At least in my tests, the DP alt mode driver now calls
-drm_connector_oob_hotplug_event() only when it should. This is pretty cool!
-FWIW:
-
-Tested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-
-thanks,
+>  drivers/gpio/gpiolib-acpi.c | 23 +++++++++++++++++++++++
+>  include/linux/acpi.h        |  7 +++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 684ddb35d83b..9887bb684575 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -196,6 +196,29 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_gpio_get_irq_resource);
+>  
+> +/**
+> + * acpi_gpio_get_io_resource - Fetch details of an ACPI resource if it is a GPIO
+> + *			       I/O resource or return False if not.
+> + * @ares:	Pointer to the ACPI resource to fetch
+> + * @agpio:	Pointer to a &struct acpi_resource_gpio to store the output pointer
+> + */
+> +bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
+> +			       struct acpi_resource_gpio **agpio)
+> +{
+> +	struct acpi_resource_gpio *gpio;
+> +
+> +	if (ares->type != ACPI_RESOURCE_TYPE_GPIO)
+> +		return false;
+> +
+> +	gpio = &ares->data.gpio;
+> +	if (gpio->connection_type != ACPI_RESOURCE_GPIO_TYPE_IO)
+> +		return false;
+> +
+> +	*agpio = gpio;
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_gpio_get_io_resource);
+> +
+>  static void acpi_gpiochip_request_irq(struct acpi_gpio_chip *acpi_gpio,
+>  				      struct acpi_gpio_event *event)
+>  {
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 170b9bebdb2b..e8ba7063c000 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1098,6 +1098,8 @@ void __acpi_handle_debug(struct _ddebug *descriptor, acpi_handle handle, const c
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_GPIOLIB)
+>  bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
+>  				struct acpi_resource_gpio **agpio);
+> +bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
+> +			       struct acpi_resource_gpio **agpio);
+>  int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index);
+>  #else
+>  static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
+> @@ -1105,6 +1107,11 @@ static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
+>  {
+>  	return false;
+>  }
+> +static inline bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
+> +					     struct acpi_resource_gpio **agpio)
+> +{
+> +	return false;
+> +}
+>  static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
+>  					   const char *name, int index)
+>  {
+> -- 
+> 2.25.1
+> 
 
 -- 
-heikki
+With Best Regards,
+Andy Shevchenko
+
+
