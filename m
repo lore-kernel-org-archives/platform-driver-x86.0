@@ -2,181 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A67C47076
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 15:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96367C47076
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 16:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF28613E2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 15:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ABCE61073
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 16:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231934AbhEUP5M (ORCPT
+        id S237762AbhEUQ4p (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 May 2021 11:57:12 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:13832 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231638AbhEUP5L (ORCPT
+        Fri, 21 May 2021 12:56:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26181 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235072AbhEUQ4p (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 May 2021 11:57:11 -0400
-Received: from [100.112.1.13] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 78/0D-49204-EF7D7A06; Fri, 21 May 2021 15:55:42 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleJIrShJLcpLzFFi42LJePGQV/ff9eU
-  JBrvvClkc2nCAyaK7ey6TxZvj05ksPndMZrFYvecFs8Wij0/YHNg8Js2cwewx72Sgx/t9V9k8
-  Pm+SC2CJYs3MS8qvSGDNmNn3ib3gmGzFmZZW1gbGAxJdjFwcQgL/GSV+X77PBuE8ZpSY2jGbq
-  YuRk0NYoEji442zrCC2iIA6ULwHrIhZYAajxPyF31hAEkICC5kkPq6tAbHZBLQltmz5xQZi8w
-  rYSpxdfY0RxGYRUJX4/qGZHcQWFQiX2N3xkgmiRlDi5MwnYHM4Bewkfvy6ABTnAFqgKbF+lz5
-  ImFlAXOLWk/lMELa8xPa3c5hBbAkBRYnlk79B2QkSPf8esU1gFJyFZOoshEmzkEyahWTSAkaW
-  VYxmSUWZ6RkluYmZObqGBga6hoZGuka6hsameolVukl6pcW6qYnFJbqGeonlxXrFlbnJOSl6e
-  aklmxiBcZNSwNS+g7H1zQe9Q4ySHExKoryHzyxPEOJLyk+pzEgszogvKs1JLT7EKMPBoSTB++
-  IaUE6wKDU9tSItMwcYwzBpCQ4eJRHe+MtAad7igsTc4sx0iNQpRkUpcd6/V4ESAiCJjNI8uDZ
-  Y2rjEKCslzMvIwMAgxFOQWpSbWYIq/4pRnINRSZh3Och2nsy8Erjpr4AWMwEtdi9fBrK4JBEh
-  JdXApGjI/TbJ2+Qqz/J301N5RcT15zr/dRfacOIAg4nqMffqFb8ZORVKZR2WsthsSsvluZkYv
-  fqe1L7IR9LzZ8t3yy89f/q85Tnx9F36rj9mx/I1821aeGX9w+1syaL6h2YzXONbsNv3vYi784
-  dLijtUj4oE/NPXn5Zyd5twqZrXTKaD8QEPvl5cojE5letr/QXj/4s0El36VN4f2ldvkeCV/sL
-  6/dZA4zkrt+l8O3kjrP/88fBbuy5NYknbP7Uy+MZiXR/W+Jds577f/Pn+7yptH+mWMLc4uxX1
-  N4TrNkzoWHivIFe7rrL/Ua3Gi507pGbeylC2vihcMT35x/NUrg2/9lt+Cp5+bd+m1ZXMF6s89
-  imxFGckGmoxFxUnAgDCgKJ+lgMAAA==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-8.tower-395.messagelabs.com!1621612542!239203!1
-X-Originating-IP: [104.232.225.13]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.75.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 28573 invoked from network); 21 May 2021 15:55:42 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-8.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 21 May 2021 15:55:42 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 1A2F24E40A1F1F265B52;
-        Fri, 21 May 2021 11:55:42 -0400 (EDT)
-Received: from [10.46.208.131] (10.46.208.131) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Fri, 21 May
- 2021 11:55:41 -0400
+        Fri, 21 May 2021 12:56:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621616121;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZfRMC6x2QsqmOUuJwpxE9Erqm6Etn3QcAzZ9jzTiwTE=;
+        b=Waew8Rsx7rsCvt51DVXP5fQ6Qku8EIL/qUILfPQW4EWfQ8X16rofe7d5siseBHV7IjJxko
+        Ygy0t3HSGNv/5X45yQUhNiDgpJ9rFSuNBZ6ukMXjeI+1vfBI+at1FGGBNCPEcOgrm35VJP
+        mLnZP3z8Jr+u8exZCGe0YstvBmtSh0Q=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-526-ZTAL__vFNpeMtzwTA_qgaA-1; Fri, 21 May 2021 12:55:20 -0400
+X-MC-Unique: ZTAL__vFNpeMtzwTA_qgaA-1
+Received: by mail-ed1-f70.google.com with SMTP id cn20-20020a0564020cb4b029038d0b0e183fso11650361edb.22
+        for <platform-driver-x86@vger.kernel.org>; Fri, 21 May 2021 09:55:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZfRMC6x2QsqmOUuJwpxE9Erqm6Etn3QcAzZ9jzTiwTE=;
+        b=Q2WsNJLy4Lt0/5Z+RhoJG0cl2vRw2Yd9dU7gaArLFC6mZqOmfrli3T9uJzDnVGUCh7
+         rS+kC8ZF9pQ+SWZTQbfepUd8Ep1R8nYObMTr0n8jrC6gVOOI+/MTII15OEHwDYe5NliY
+         pYyQfNYalIpqkd9DGj5GRCp3gDs1FhRfiedjS07oNpQUIuC70dvMTInAsNQqKI/ffTdI
+         fCbjVbQNq12bMExBy9ckC+odNhB2RCL/owI+z8w5qbEZQKCiOZili0rcdP+NjUXQK8UA
+         MzUnGmC92G/sHU0FoFAsnX5Np9mURu7Js/0lRQeaitTINii7e0GDGFv7g5OBKAKWvJud
+         lMFA==
+X-Gm-Message-State: AOAM531GuX6uEWZuXZN2qOE8zw6Gm8KDQJcr4BStQ+a9tYGQHCEfO/9b
+        1/BjzEefruHG1a5FxRzHhql4VRhaGZmPC4AvZKa857CfYNDVtURdpTM+nkH9t42FmId+xto+9Qw
+        x0dUQgczs2fmmGpdj6ENdJ8yrU0IVHd+tQw==
+X-Received: by 2002:a17:906:b14f:: with SMTP id bt15mr11771054ejb.126.1621616118815;
+        Fri, 21 May 2021 09:55:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy7YX6mHGzALuE6odkYWM0DxvfIagEZ+y2tISZ/fcOh9Qd7jKKgRUPFfh3r5IBxmKlfisXW3w==
+X-Received: by 2002:a17:906:b14f:: with SMTP id bt15mr11771039ejb.126.1621616118550;
+        Fri, 21 May 2021 09:55:18 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id y25sm4382862edr.63.2021.05.21.09.55.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 May 2021 09:55:18 -0700 (PDT)
 Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
  interface support on Lenovo platforms
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>,
-        <divya.bharathi@dell.com>, <prasanth.ksr@dell.com>,
-        <Dell.Client.Kernel@dell.com>
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        divya.bharathi@dell.com, prasanth.ksr@dell.com,
+        Dell.Client.Kernel@dell.com
 References: <markpearson@lenovo.com>
  <20210509015708.112766-1-markpearson@lenovo.com>
  <20210509015708.112766-3-markpearson@lenovo.com>
  <bbd0f3c9-63c3-2fbb-7712-ecb3131a4c0a@redhat.com>
  <ac30f95e-8398-fb11-8c94-b50050a3f88f@lenovo.com>
  <1c21c3d3-7ff1-a7b2-86d0-245050426760@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <c8b706bb-5397-758e-8ab8-1d75b2920054@lenovo.com>
-Date:   Fri, 21 May 2021 11:55:40 -0400
+ <c8b706bb-5397-758e-8ab8-1d75b2920054@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <971080ef-a9c2-6de9-c6e1-895e7c5903f2@redhat.com>
+Date:   Fri, 21 May 2021 18:55:17 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <1c21c3d3-7ff1-a7b2-86d0-245050426760@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <c8b706bb-5397-758e-8ab8-1d75b2920054@lenovo.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.46.208.131]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans
+Hi,
 
-On 2021-05-21 4:10 a.m., Hans de Goede wrote:
-> Hi Mark,
-> 
-> On 5/20/21 7:18 PM, Mark Pearson wrote:
+On 5/21/21 5:55 PM, Mark Pearson wrote:
+
 <snip>
 
->>>> + +	/* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;'
->>>> */ +	len = strlen(setting->password) +
->>>> strlen(encoding_options[setting->encoding]) +		+
->>>> strlen(setting->kbdlang) + 3 /* type */ +		+ strlen(new_pwd) +
->>>> 6 /* punctuation and terminator*/; +	auth_str = kzalloc(len,
->>>> GFP_KERNEL); +	snprintf(auth_str, len, "%s,%s,%s,%s,%s;", +
->>>> setting->pwd_type, setting->password, new_pwd, +
->>>> encoding_options[setting->encoding], setting->kbdlang); +	ret =
->>>> tlmi_simple_call(LENOVO_SET_BIOS_PASSWORD_GUID, auth_str);
->>> 
->>> So I guess on success any subsequent calls need to use the new
->>> password, so the user is expected to write the new password to
->>> the current_password file after changing the password this way?
->>> 
->>> I just checked the dell-wmi-sysman code and that does this:
->>> 
->>> /* clear current_password here and use user input from
->>> wmi_priv.current_password */ if (!ret) memset(current_password,
->>> 0, MAX_BUFF);
->>> 
->>> Where current_password points to either the user or admin cached
->>> password, depending on which one is being changed.
->>> 
->>> So that seems to work the same way as what you are doing here
->>> (the user needs to write the new password to current_password
->>> after changing it through the new_password sysfs attribute). Can
->>> you add a patch to the patch-set documenting this in
->>> Documentation/ABI/testing/sysfs-class-firmware-attributes ?
->>> 
->>> Also you may want to consider clearing out the old cached
->>> password on success like the Dell code is doing.
->>> 
->> Would you have any objections/concerns if, on a successful
->> password update, this function just updates the stored password
->> setting to the new password. Seems nicer from a user point of view
->> then having to go and feed the current_password field again. e.g:
->> strncpy(new_pwd, setting->password, TLMI_PWD_MAXLEN)
-> 
-> Please use strscpy, strncpy has horrible syntax and using it is easy 
-> to get wrong.
-> 
-> e.g. the above example is wrong if strlen(new_pwd) >=
-> TLMI_PWD_MAXLEN the resulting setting->password will not be 0
-> terminated (and you seem to have swapped src and dst, but that is
-> unrelated to strncpy being a sucky function).
-Yeah, sorry, typed as an example only, and will use strscpy
+>>> I know it would make Dell and Lenovo operate differently (I can add
+>>> that detail to the documentation) but it just feels like a nicer
+>>> design.
+>>
+>> That works for me. Perhaps you can also do a (compile tested only)
+>> RFC patch for the Dell code to do the same thing (replace the memset
+>> 0 with the strscpy) to see if the Dell folks are ok with also doing
+>> things this way ?
+>>
+> I'm not hugely comfortable with that. If for some reason it broke things
+> for Dell customers I wouldn't want to be responsible :)
 
-> 
-> This also make me realize that the code has 2 max-pwd-lengths:
-> 
-> setting->maxlen TLMI_PWD_MAXLEN
-> 
-> I think you should put a:
-> 
-> if (WARN_ON(pwdcfg.max_length > TLMI_PWD_MAXLEN)) pwdcfg.max_length =
-> TLMI_PWD_MAXLEN;
-> 
-> in tlmi_analyze() so that we get a kernel-backtrace (and thus
-> bugreports if this condition ever becomes true.
-Sounds good
-> 
-> And then use pwdcfg.max_length everywhere (e.g. also for the check
-> in current_password_store()).
-> 
-> Also the length checks in current_password_store() and
-> new_password_store() should probably also check against
-> settings->minlen ?
-Agreed - will add
-> 
-> 
->> I know it would make Dell and Lenovo operate differently (I can add
->> that detail to the documentation) but it just feels like a nicer
->> design.
-> 
-> That works for me. Perhaps you can also do a (compile tested only)
-> RFC patch for the Dell code to do the same thing (replace the memset
-> 0 with the strscpy) to see if the Dell folks are ok with also doing
-> things this way ?
-> 
-I'm not hugely comfortable with that. If for some reason it broke things
-for Dell customers I wouldn't want to be responsible :) I'd rather they
-made the changes and were able to test it - I know that's what I'd
-prefer if it was the other way around. Apologies if I'm being over cautious!
-I've added the new Dell kernel group email to the thread so they're aware :)
+Right, that is why I suggested making it a RFC patch and I would
+certainly not apply that patch without it being tested by Dell first.
 
-Mark
+The idea behind the patch is for it to be a way to get a discussion
+about this started. In my experience patches tend to get more of
+a reaction then hypothetical discussions about changes :)
+
+> I'd rather they
+> made the changes and were able to test it - I know that's what I'd
+> prefer if it was the other way around. Apologies if I'm being over cautious!
+
+If you don't feel comfortable doing this, that is fine, lets wait what
+the Dell folks have to say; and if they don't respond I might do a RFC
+myself.
+
+> I've added the new Dell kernel group email to the thread so they're aware :)
+
+Thanks.
+
+Regards,
+
+Hans
+
