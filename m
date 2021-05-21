@@ -2,101 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB211C433ED
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 21:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF377C43461
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 08:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4AD961028
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 20 May 2021 21:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E4736135B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 08:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbhETVFW (ORCPT
+        id S236650AbhEUIMZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 20 May 2021 17:05:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46732 "EHLO
+        Fri, 21 May 2021 04:12:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:32660 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229772AbhETVFV (ORCPT
+        by vger.kernel.org with ESMTP id S230101AbhEUIMF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 20 May 2021 17:05:21 -0400
+        Fri, 21 May 2021 04:12:05 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621544613;
+        s=mimecast20190719; t=1621584638;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XI1+ioIETrLNp2SjtWd5x0p8X2EPPhXZxf2J/PFrcfA=;
-        b=MS4imyqk4F60z1zyZIGDzuRKyNEEWYS1bZpaBiW6nCGhWF02Ei+8Xgqye2Sfrp/SBia9Sr
-        JkZQYaqHu/Ol0yQNzZV96j5yMPggTsDbRFTRl2wrRKTsMV+1zQjnA9E2nk6Ub/cnJ5gOlT
-        9Fb/O2aI7UmDL4lbcAHZrYUgmwmKVfQ=
+        bh=51iGChx+/n00mlAPsjC8xAI9ymxcQsl2/DbjvxZuRXI=;
+        b=RNxYtvyjvQ7uGoiTosg1dpBgyaVw8jqpUiegphHOQSYT/NBGSWGEPK2PFZvgUVgvK3hWLo
+        I7XuSum8R50+tVHiBCagnpSC27LUBdoIDKoYT7sk54jTFo1fuu/mhdGrmHvADnVosBmlLj
+        vIiAecxLqsDsIPUk0/gvYkn4caxfG/A=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-570-auOJFSuvPTWSQOJdlaQFEw-1; Thu, 20 May 2021 17:03:31 -0400
-X-MC-Unique: auOJFSuvPTWSQOJdlaQFEw-1
-Received: by mail-ed1-f70.google.com with SMTP id y17-20020a0564023591b02903886c26ada4so10133326edc.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 20 May 2021 14:03:31 -0700 (PDT)
+ us-mta-524-c5af426kPuyIosOgfRGalQ-1; Fri, 21 May 2021 04:10:37 -0400
+X-MC-Unique: c5af426kPuyIosOgfRGalQ-1
+Received: by mail-ed1-f70.google.com with SMTP id s20-20020a0564025214b029038752a2d8f3so10926163edd.2
+        for <platform-driver-x86@vger.kernel.org>; Fri, 21 May 2021 01:10:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=XI1+ioIETrLNp2SjtWd5x0p8X2EPPhXZxf2J/PFrcfA=;
-        b=MSL/xuE/eiGmHvfZkV9XjZJhbd4rfTbDnpQTa+GmiDxZclViKW+sVyGGxb2xE3df1v
-         pIbj1gAYF1TkasoqN0xF/M4fQENb+MEWYepCpTEnLfa0h7qj6UqCrnMM+KurH0k5rBmg
-         JrwOyFbFjXIzs2UYhGz3g0ZoDWgngF3DQrXpzlWZh3gWgXRY+vNu6llVRpAHnPDvZM++
-         1ef1WjtOtF5nn2DMzwyjFA9V/tFpCSirO9eM/tJ9C6egzgXVZ4cQmMrORVIwMlMt7YdX
-         P15VumOIW9wdf+7r/pwx+vq4KhM8VbiW2b7rE0RDjfVBPTsc9uL/WmR93BXH5knEfeM+
-         1qVw==
-X-Gm-Message-State: AOAM533J4sulNJWL4cHSQ18LWxIwZlftWlAF5tNMFE1cwiCZvBwz2bAW
-        V7u6YhDx+vJgrnZdSoiiimvT3fBX6IkQzwIv0ZOmATEyrXmmYjkYjxAOcwO3pqFG3JHQBIHZY/E
-        M/Mf9B/4Xszae6hVX9IqP/629fOLCPnDqEg==
-X-Received: by 2002:a17:907:2167:: with SMTP id rl7mr5145983ejb.171.1621544609613;
-        Thu, 20 May 2021 14:03:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzSKN6aQENotMx6MHh9Ta+x7pQ5H1oiUIuYHDMy+L3nexIHL26Xa8SPMVq68XG0FTTKEAjDvQ==
-X-Received: by 2002:a17:907:2167:: with SMTP id rl7mr5145897ejb.171.1621544608406;
-        Thu, 20 May 2021 14:03:28 -0700 (PDT)
+        bh=51iGChx+/n00mlAPsjC8xAI9ymxcQsl2/DbjvxZuRXI=;
+        b=ipH4KRG47GD+Q7y3yjejQME27UGt5qIINojAuaQxqpRJjvSCx1ioEYwBLDqNtQ+wi+
+         l/rsFciiMNWBJo+ANKDp0QTtkfJ0NnhO3d/AXsGMePwgTKjyNdGgHIoR1pchJLPxBsR5
+         ctWWXWwI5IQQKBvO525ITLwS1vrMug4528UhQdWVaHBQcn8MpPsjtIquWk86o3B9/EX1
+         /t96i3YmeqHydDyR52CO9t+HlNSyvKOumyiHc1uNHmKldk6YqQPpGUYP5FHpSu+/O8T8
+         MBYa2TouJ1vdLte7Nlj+RIY1x3WNSRCmfpIkIEsH5lGn35XFe10LN0NSf5sPGIDPKP2j
+         zIVg==
+X-Gm-Message-State: AOAM530+CWVEEumh11i1R64ifQWDWF3K5kMdFS6wgtpVL06lqMJ51wlw
+        yYNt6g0ZOasjDTFDlQJ+/VNwQqtR7Q25rkQIK+X1XT1X+KUj340nHV3xbZ6vF7+bzQ01qVz33dF
+        XGNyA9cKFX2SOuqrYBQPh9B7wfw7bcvRZeg==
+X-Received: by 2002:a17:906:b0cb:: with SMTP id bk11mr9279398ejb.310.1621584635774;
+        Fri, 21 May 2021 01:10:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz0u7UJEiKPis/w24mIbYDVOZLMwRbniA01Zl9+S7kMROO2BPPk0MbSUyb9SwmMx2uQFDXF+g==
+X-Received: by 2002:a17:906:b0cb:: with SMTP id bk11mr9279381ejb.310.1621584635550;
+        Fri, 21 May 2021 01:10:35 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id i2sm2138826edc.96.2021.05.20.14.03.27
+        by smtp.gmail.com with ESMTPSA id d5sm3385793edt.49.2021.05.21.01.10.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 May 2021 14:03:27 -0700 (PDT)
-Subject: Re: [PATCH v4 1/8] ACPI: scan: Extend acpi_walk_dep_device_list()
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20210520140928.3252671-1-djrscally@gmail.com>
- <20210520140928.3252671-2-djrscally@gmail.com>
- <CAJZ5v0hy=AmbBK72w+ZsVZ4x0haQerTxeDnBXKOU5bOosUHgPA@mail.gmail.com>
+        Fri, 21 May 2021 01:10:35 -0700 (PDT)
+Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+ interface support on Lenovo platforms
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        divya.bharathi@dell.com, prasanth.ksr@dell.com
+References: <markpearson@lenovo.com>
+ <20210509015708.112766-1-markpearson@lenovo.com>
+ <20210509015708.112766-3-markpearson@lenovo.com>
+ <bbd0f3c9-63c3-2fbb-7712-ecb3131a4c0a@redhat.com>
+ <ac30f95e-8398-fb11-8c94-b50050a3f88f@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f4c23507-b717-8b18-8b90-0a8d68ac60df@redhat.com>
-Date:   Thu, 20 May 2021 23:03:26 +0200
+Message-ID: <1c21c3d3-7ff1-a7b2-86d0-245050426760@redhat.com>
+Date:   Fri, 21 May 2021 10:10:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hy=AmbBK72w+ZsVZ4x0haQerTxeDnBXKOU5bOosUHgPA@mail.gmail.com>
+In-Reply-To: <ac30f95e-8398-fb11-8c94-b50050a3f88f@lenovo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -104,412 +85,222 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-On 5/20/21 8:22 PM, Rafael J. Wysocki wrote:
-> On Thu, May 20, 2021 at 4:11 PM Daniel Scally <djrscally@gmail.com> wrote:
->>
->> The acpi_walk_dep_device_list() is not as generalisable as its name
->> implies, serving only to decrement the dependency count for each
->> dependent device of the input. Extend the function to instead accept
->> a callback which can be applied to all the dependencies in acpi_dep_list.
->> Replace all existing calls to the function with calls to a wrapper, passing
->> a callback that applies the same dependency reduction.
->>
->> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> 
-> LGTM, but I will have changes depending on it.
-> 
-> If that's fine by Hans, I'll take this one and expose it in a git
-> branch that won't be rebased.
+On 5/20/21 7:18 PM, Mark Pearson wrote:
+> Thanks for the review Hans,
 
-Yes that is fine by me, just send me a pull-req when the branch
-is ready and I'll merge that into pdx86/for-next.
+You're welcome.
+
+> On 2021-05-19 1:06 p.m., Hans de Goede wrote:
+>> Hi,
+>>
+>> On 5/9/21 3:57 AM, Mark Pearson wrote:
+> <snip>
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+>>> index 8ea59fea4..31d1becfa 100644
+>>> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+>>> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+>>> @@ -185,6 +185,17 @@ Description:
+>>>  					A write only value that when used in tandem with
+>>>  					current_password will reset a system or admin password.
+>>>  
+>>> +		encoding:
+>>> +					For platforms that require it (currently Lenovo) the
+>>> +					encoding method that is used. This can be either "ascii"
+>>> +					or "scancode". Default is set to "ascii"
+>>> +
+>>> +		kbdlang:
+>>> +					For platforms that require it (currently Lenovo only) the
+>>> +					keyboard language method that is used. This is generally a
+>>> +					two char code (e.g. "us", "fr", "gr") and may vary per platform.
+>>> +					Default is set to "us"
+>>> +
+>>
+>> I should have caught this during my review of v1, these are Lenovo specific, so please prefix
+>> them with lenovo_ (the same is already done for dell specific sysfs attributes) and move them
+>> to a separate "Lenovo specific class extensions" part of the doc.
+>>
+> No problem
+> 
+> <snip>
+> 
+>>>  
+>>>  What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
+>>> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+>>> index b0e1e5f65..0511c54fc 100644
+>>> --- a/drivers/platform/x86/Kconfig
+>>> +++ b/drivers/platform/x86/Kconfig
+>>> @@ -639,6 +639,18 @@ config THINKPAD_ACPI_HOTKEY_POLL
+>>>  	  If you are not sure, say Y here.  The driver enables polling only if
+>>>  	  it is strictly necessary to do so.
+>>>  
+>>> +config THINKPAD_LMI
+>>> +	tristate "Lenovo WMI-based systems management driver"
+>>> +	default m
+>>
+>> default n (or no default at all) please.
+> Ack
+> 
+> <snip>
+>>> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+>>> new file mode 100644
+>>> index 000000000..2fa989e98
+>>> --- /dev/null
+>>> +++ b/drivers/platform/x86/think-lmi.c
+>>> @@ -0,0 +1,890 @@
+> <snip>
+>>> +
+>>> +/* ---- Authentication sysfs --------------------------------------------------------- */
+>>> +static ssize_t is_enabled_show(struct kobject *kobj, struct kobj_attribute *attr,
+>>> +					  char *buf)
+>>> +{
+>>> +	struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+>>> +
+>>> +	if (setting->valid)
+>>> +		return sysfs_emit(buf, "1\n");
+>>> +	else
+>>> +		return sysfs_emit(buf, "0\n");
+>>
+>> Maybe use:
+>>
+>> 	sysfs_emit(buf, "%d\n", settings->valid);
+>>
+>> instead?
+> Definitely :)
+> 
+>>
+>>
+>>> +}
+>>> +
+>>> +static struct kobj_attribute auth_is_pass_set = __ATTR_RO(is_enabled);
+>>> +
+>>> +static ssize_t current_password_store(struct kobject *kobj,
+>>> +				      struct kobj_attribute *attr,
+>>> +				      const char *buf, size_t count)
+>>> +{
+>>> +	struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+>>> +	int length;
+>>> +
+>>> +	length = strlen(buf);
+>>> +	if (buf[length-1] == '\n')
+>>> +		length--;
+>>> +
+>>> +	if (length >= TLMI_PWD_MAXLEN)
+>>> +		return -EINVAL;
+>>> +
+>>> +	memcpy(setting->password, buf, length);
+>>> +	setting->password[length] = '\0';
+>>> +	return count;
+>>> +}
+>>> +
+>>> +static struct kobj_attribute auth_current_password = __ATTR_WO(current_password);
+>>> +
+>>> +static ssize_t new_password_store(struct kobject *kobj,
+>>> +				  struct kobj_attribute *attr,
+>>> +				  const char *buf, size_t count)
+>>> +{
+>>> +	struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+>>> +	char *p, *new_pwd;
+>>> +	char *auth_str;
+>>> +	int ret = 0, len;
+>>> +
+>>> +	if (!capable(CAP_SYS_ADMIN))
+>>> +		return -EPERM;
+>>> +
+>>> +	if (!tlmi_priv.can_set_bios_password)
+>>> +		return -EOPNOTSUPP;
+>>> +
+>>> +	new_pwd = kstrdup(buf, GFP_KERNEL);
+>>> +	if (!new_pwd)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	p = strchr(new_pwd, '\n');
+>>> +	if (p)
+>>> +		*p = '\0';
+>>> +
+>>> +	if (strlen(new_pwd) > setting->maxlen) {
+>>> +		ret = -EINVAL;
+>>> +		goto out;
+>>> +	}
+>>> +
+>>> +	/* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
+>>> +	len = strlen(setting->password) + strlen(encoding_options[setting->encoding])
+>>> +		+ strlen(setting->kbdlang) + 3 /* type */
+>>> +		+ strlen(new_pwd) + 6 /* punctuation and terminator*/;
+>>> +	auth_str = kzalloc(len, GFP_KERNEL);
+>>> +	snprintf(auth_str, len, "%s,%s,%s,%s,%s;",
+>>> +		 setting->pwd_type, setting->password, new_pwd,
+>>> +		 encoding_options[setting->encoding], setting->kbdlang);
+>>> +	ret = tlmi_simple_call(LENOVO_SET_BIOS_PASSWORD_GUID, auth_str);
+>>
+>> So I guess on success any subsequent calls need to use the new password,
+>> so the user is expected to write the new password to the current_password
+>> file after changing the password this way?
+>>
+>> I just checked the dell-wmi-sysman code and that does this:
+>>
+>>         /* clear current_password here and use user input from wmi_priv.current_password */
+>>         if (!ret)
+>>                 memset(current_password, 0, MAX_BUFF);
+>>
+>> Where current_password points to either the user or admin cached password,
+>> depending on which one is being changed.
+>>
+>> So that seems to work the same way as what you are doing here (the user needs to
+>> write the new password to current_password after changing it through the
+>> new_password sysfs attribute). Can you add a patch to the patch-set documenting
+>> this in Documentation/ABI/testing/sysfs-class-firmware-attributes ?
+>>
+>> Also you may want to consider clearing out the old cached password on success
+>> like the Dell code is doing.
+>>
+> Would you have any objections/concerns if, on a successful password
+> update, this function just updates the stored password setting to the
+> new password.
+> Seems nicer from a user point of view then having to go and feed the
+> current_password field again.
+> e.g: strncpy(new_pwd, setting->password, TLMI_PWD_MAXLEN)
+
+Please use strscpy, strncpy has horrible syntax and using it is easy
+to get wrong.
+
+e.g. the above example is wrong if strlen(new_pwd) >= TLMI_PWD_MAXLEN
+the resulting setting->password will not be 0 terminated (and you
+seem to have swapped src and dst, but that is unrelated to strncpy
+being a sucky function).
+
+This also make me realize that the code has 2 max-pwd-lengths:
+
+setting->maxlen
+TLMI_PWD_MAXLEN
+
+I think you should put a:
+
+	if (WARN_ON(pwdcfg.max_length > TLMI_PWD_MAXLEN))
+		pwdcfg.max_length = TLMI_PWD_MAXLEN;
+
+in tlmi_analyze() so that we get a kernel-backtrace (and thus bugreports
+if this condition ever becomes true.
+
+And then use pwdcfg.max_length everywhere (e.g. also for the check in
+current_password_store()).
+
+Also the length checks in current_password_store() and new_password_store() 
+should probably also check against settings->minlen ?
+
+
+> I know it would make Dell and Lenovo operate differently (I can add that
+> detail to the documentation) but it just feels like a nicer design.
+
+That works for me. Perhaps you can also do a (compile tested only) RFC
+patch for the Dell code to do the same thing (replace the memset 0 with
+the strscpy) to see if the Dell folks are ok with also doing things this
+way ?
 
 Regards,
 
 Hans
 
-
-> 
->> ---
->> changes since v3:
->>
->>         - Most of the functions got renamed
->>         - acpi_dev_get_dependent_dev() was altered to take a struct acpi_device
->>         This had some repurcussions in the other files, mostly switching from
->>         ACPI_HANDLE() to ACPI_COMPANION().
->>         - acpi_walk_dep_device_list() was altered to check the return value of
->>         the callback on each iteration of the loop, to allow for error handling
->>         of the callbacks or breaking the loop early to save time. Andy, Wolfram,
->>         I thought this change was significant enough to drop your R-b and Ack.
->>
->>  drivers/acpi/ec.c                             |  2 +-
->>  drivers/acpi/pmic/intel_pmic_chtdc_ti.c       |  2 +-
->>  drivers/acpi/scan.c                           | 69 ++++++++++++++-----
->>  drivers/gpio/gpiolib-acpi.c                   | 10 +--
->>  drivers/i2c/i2c-core-acpi.c                   |  8 +--
->>  drivers/platform/surface/aggregator/core.c    |  6 +-
->>  drivers/platform/surface/surface3_power.c     | 22 +++---
->>  .../platform/surface/surface_acpi_notify.c    |  7 +-
->>  include/acpi/acpi_bus.h                       |  7 ++
->>  include/linux/acpi.h                          |  4 +-
->>  10 files changed, 90 insertions(+), 47 deletions(-)
->>
->> diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
->> index 13565629ce0a..3f7680a007a3 100644
->> --- a/drivers/acpi/ec.c
->> +++ b/drivers/acpi/ec.c
->> @@ -1627,7 +1627,7 @@ static int acpi_ec_add(struct acpi_device *device)
->>         WARN(!ret, "Could not request EC cmd io port 0x%lx", ec->command_addr);
->>
->>         /* Reprobe devices depending on the EC */
->> -       acpi_walk_dep_device_list(ec->handle);
->> +       acpi_dev_clear_dependencies(device);
->>
->>         acpi_handle_debug(ec->handle, "enumerated.\n");
->>         return 0;
->> diff --git a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
->> index a5101b07611a..fef7831d0d63 100644
->> --- a/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
->> +++ b/drivers/acpi/pmic/intel_pmic_chtdc_ti.c
->> @@ -117,7 +117,7 @@ static int chtdc_ti_pmic_opregion_probe(struct platform_device *pdev)
->>                 return err;
->>
->>         /* Re-enumerate devices depending on PMIC */
->> -       acpi_walk_dep_device_list(ACPI_HANDLE(pdev->dev.parent));
->> +       acpi_dev_clear_dependencies(ACPI_COMPANION(pdev->dev.parent));
->>         return 0;
->>  }
->>
->> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->> index 453eff8ec8c3..195635c3462b 100644
->> --- a/drivers/acpi/scan.c
->> +++ b/drivers/acpi/scan.c
->> @@ -47,12 +47,6 @@ static DEFINE_MUTEX(acpi_hp_context_lock);
->>   */
->>  static u64 spcr_uart_addr;
->>
->> -struct acpi_dep_data {
->> -       struct list_head node;
->> -       acpi_handle supplier;
->> -       acpi_handle consumer;
->> -};
->> -
->>  void acpi_scan_lock_acquire(void)
->>  {
->>         mutex_lock(&acpi_scan_lock);
->> @@ -2111,30 +2105,69 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
->>                 device->handler->hotplug.notify_online(device);
->>  }
->>
->> -void acpi_walk_dep_device_list(acpi_handle handle)
->> +static int acpi_scan_clear_dep(struct acpi_dep_data *dep, void *data)
->>  {
->> -       struct acpi_dep_data *dep, *tmp;
->>         struct acpi_device *adev;
->>
->> +       acpi_bus_get_device(dep->consumer, &adev);
->> +
->> +       if (adev) {
->> +               adev->dep_unmet--;
->> +               if (!adev->dep_unmet)
->> +                       acpi_bus_attach(adev, true);
->> +       }
->> +
->> +       list_del(&dep->node);
->> +       kfree(dep);
->> +
->> +       return 0;
->> +}
->> +
->> +/**
->> + * acpi_walk_dep_device_list - Apply a callback to every entry in acpi_dep_list
->> + * @handle:    The ACPI handle of the supplier device
->> + * @callback:  Pointer to the callback function to apply
->> + * @data:      Pointer to some data to pass to the callback
->> + *
->> + * The return value of the callback determines this function's behaviour. If 0
->> + * is returned we continue to iterate over acpi_dep_list. If a positive value
->> + * is returned then the loop is broken but this function returns 0. If a
->> + * negative value is returned by the callback then the loop is broken and that
->> + * value is returned as the final error.
->> + */
->> +int acpi_walk_dep_device_list(acpi_handle handle,
->> +                             int (*callback)(struct acpi_dep_data *, void *),
->> +                             void *data)
->> +{
->> +       struct acpi_dep_data *dep, *tmp;
->> +       int ret;
->> +
->>         mutex_lock(&acpi_dep_list_lock);
->>         list_for_each_entry_safe(dep, tmp, &acpi_dep_list, node) {
->>                 if (dep->supplier == handle) {
->> -                       acpi_bus_get_device(dep->consumer, &adev);
->> -
->> -                       if (adev) {
->> -                               adev->dep_unmet--;
->> -                               if (!adev->dep_unmet)
->> -                                       acpi_bus_attach(adev, true);
->> -                       }
->> -
->> -                       list_del(&dep->node);
->> -                       kfree(dep);
->> +                       ret = callback(dep, data);
->> +                       if (ret)
->> +                               break;
->>                 }
->>         }
->>         mutex_unlock(&acpi_dep_list_lock);
->> +
->> +       return ret > 0 ? 0 : ret;
->>  }
->>  EXPORT_SYMBOL_GPL(acpi_walk_dep_device_list);
->>
->> +/**
->> + * acpi_dev_clear_dependencies - Inform consumers that the device is now active
->> + * @supplier: Pointer to the supplier &struct acpi_device
->> + *
->> + * Clear dependencies on the given device.
->> + */
->> +void acpi_dev_clear_dependencies(struct acpi_device *supplier)
->> +{
->> +       acpi_walk_dep_device_list(supplier->handle, acpi_scan_clear_dep, NULL);
->> +}
->> +EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
->> +
->>  /**
->>   * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
->>   * @handle: Root of the namespace scope to scan.
->> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
->> index 3ef22a3c104d..5b4111e4be3f 100644
->> --- a/drivers/gpio/gpiolib-acpi.c
->> +++ b/drivers/gpio/gpiolib-acpi.c
->> @@ -1233,14 +1233,14 @@ static void acpi_gpiochip_scan_gpios(struct acpi_gpio_chip *achip)
->>  void acpi_gpiochip_add(struct gpio_chip *chip)
->>  {
->>         struct acpi_gpio_chip *acpi_gpio;
->> -       acpi_handle handle;
->> +       struct acpi_device *adev;
->>         acpi_status status;
->>
->>         if (!chip || !chip->parent)
->>                 return;
->>
->> -       handle = ACPI_HANDLE(chip->parent);
->> -       if (!handle)
->> +       adev = ACPI_COMPANION(chip->parent);
->> +       if (!adev)
->>                 return;
->>
->>         acpi_gpio = kzalloc(sizeof(*acpi_gpio), GFP_KERNEL);
->> @@ -1254,7 +1254,7 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
->>         INIT_LIST_HEAD(&acpi_gpio->events);
->>         INIT_LIST_HEAD(&acpi_gpio->deferred_req_irqs_list_entry);
->>
->> -       status = acpi_attach_data(handle, acpi_gpio_chip_dh, acpi_gpio);
->> +       status = acpi_attach_data(adev->handle, acpi_gpio_chip_dh, acpi_gpio);
->>         if (ACPI_FAILURE(status)) {
->>                 dev_err(chip->parent, "Failed to attach ACPI GPIO chip\n");
->>                 kfree(acpi_gpio);
->> @@ -1263,7 +1263,7 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
->>
->>         acpi_gpiochip_request_regions(acpi_gpio);
->>         acpi_gpiochip_scan_gpios(acpi_gpio);
->> -       acpi_walk_dep_device_list(handle);
->> +       acpi_dev_clear_dependencies(adev);
->>  }
->>
->>  void acpi_gpiochip_remove(struct gpio_chip *chip)
->> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
->> index 8ceaa88dd78f..6f0aa0ed3241 100644
->> --- a/drivers/i2c/i2c-core-acpi.c
->> +++ b/drivers/i2c/i2c-core-acpi.c
->> @@ -259,8 +259,8 @@ static acpi_status i2c_acpi_add_device(acpi_handle handle, u32 level,
->>   */
->>  void i2c_acpi_register_devices(struct i2c_adapter *adap)
->>  {
->> +       struct acpi_device *adev;
->>         acpi_status status;
->> -       acpi_handle handle;
->>
->>         if (!has_acpi_companion(&adap->dev))
->>                 return;
->> @@ -275,11 +275,11 @@ void i2c_acpi_register_devices(struct i2c_adapter *adap)
->>         if (!adap->dev.parent)
->>                 return;
->>
->> -       handle = ACPI_HANDLE(adap->dev.parent);
->> -       if (!handle)
->> +       adev = ACPI_COMPANION(adap->dev.parent);
->> +       if (!adev)
->>                 return;
->>
->> -       acpi_walk_dep_device_list(handle);
->> +       acpi_dev_clear_dependencies(adev);
->>  }
->>
->>  static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] = {
->> diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
->> index 8dc2c267bcd6..517f774a6e60 100644
->> --- a/drivers/platform/surface/aggregator/core.c
->> +++ b/drivers/platform/surface/aggregator/core.c
->> @@ -621,8 +621,8 @@ static const struct acpi_gpio_mapping ssam_acpi_gpios[] = {
->>
->>  static int ssam_serial_hub_probe(struct serdev_device *serdev)
->>  {
->> +       struct acpi_device *ssh = ACPI_COMPANION(&serdev->dev);
->>         struct ssam_controller *ctrl;
->> -       acpi_handle *ssh = ACPI_HANDLE(&serdev->dev);
->>         acpi_status astatus;
->>         int status;
->>
->> @@ -652,7 +652,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
->>         if (status)
->>                 goto err_devopen;
->>
->> -       astatus = ssam_serdev_setup_via_acpi(ssh, serdev);
->> +       astatus = ssam_serdev_setup_via_acpi(ssh->handle, serdev);
->>         if (ACPI_FAILURE(astatus)) {
->>                 status = -ENXIO;
->>                 goto err_devinit;
->> @@ -706,7 +706,7 @@ static int ssam_serial_hub_probe(struct serdev_device *serdev)
->>          *       For now let's thus default power/wakeup to false.
->>          */
->>         device_set_wakeup_capable(&serdev->dev, true);
->> -       acpi_walk_dep_device_list(ssh);
->> +       acpi_dev_clear_dependencies(ssh);
->>
->>         return 0;
->>
->> diff --git a/drivers/platform/surface/surface3_power.c b/drivers/platform/surface/surface3_power.c
->> index cc4f9cba6856..dea82aa1abd4 100644
->> --- a/drivers/platform/surface/surface3_power.c
->> +++ b/drivers/platform/surface/surface3_power.c
->> @@ -446,12 +446,12 @@ mshw0011_space_handler(u32 function, acpi_physical_address command,
->>
->>  static int mshw0011_install_space_handler(struct i2c_client *client)
->>  {
->> -       acpi_handle handle;
->> +       struct acpi_device *adev;
->>         struct mshw0011_handler_data *data;
->>         acpi_status status;
->>
->> -       handle = ACPI_HANDLE(&client->dev);
->> -       if (!handle)
->> +       adev = ACPI_COMPANION(&client->dev);
->> +       if (!adev)
->>                 return -ENODEV;
->>
->>         data = kzalloc(sizeof(struct mshw0011_handler_data),
->> @@ -460,25 +460,25 @@ static int mshw0011_install_space_handler(struct i2c_client *client)
->>                 return -ENOMEM;
->>
->>         data->client = client;
->> -       status = acpi_bus_attach_private_data(handle, (void *)data);
->> +       status = acpi_bus_attach_private_data(adev->handle, (void *)data);
->>         if (ACPI_FAILURE(status)) {
->>                 kfree(data);
->>                 return -ENOMEM;
->>         }
->>
->> -       status = acpi_install_address_space_handler(handle,
->> -                               ACPI_ADR_SPACE_GSBUS,
->> -                               &mshw0011_space_handler,
->> -                               NULL,
->> -                               data);
->> +       status = acpi_install_address_space_handler(adev->handle,
->> +                                                   ACPI_ADR_SPACE_GSBUS,
->> +                                                   &mshw0011_space_handler,
->> +                                                   NULL,
->> +                                                   data);
->>         if (ACPI_FAILURE(status)) {
->>                 dev_err(&client->dev, "Error installing i2c space handler\n");
->> -               acpi_bus_detach_private_data(handle);
->> +               acpi_bus_detach_private_data(adev->handle);
->>                 kfree(data);
->>                 return -ENOMEM;
->>         }
->>
->> -       acpi_walk_dep_device_list(handle);
->> +       acpi_dev_clear_dependencies(adev);
->>         return 0;
->>  }
->>
->> diff --git a/drivers/platform/surface/surface_acpi_notify.c b/drivers/platform/surface/surface_acpi_notify.c
->> index ef9c1f8e8336..8339988d95c1 100644
->> --- a/drivers/platform/surface/surface_acpi_notify.c
->> +++ b/drivers/platform/surface/surface_acpi_notify.c
->> @@ -798,7 +798,7 @@ static int san_consumer_links_setup(struct platform_device *pdev)
->>
->>  static int san_probe(struct platform_device *pdev)
->>  {
->> -       acpi_handle san = ACPI_HANDLE(&pdev->dev);
->> +       struct acpi_device *san = ACPI_COMPANION(&pdev->dev);
->>         struct ssam_controller *ctrl;
->>         struct san_data *data;
->>         acpi_status astatus;
->> @@ -821,7 +821,8 @@ static int san_probe(struct platform_device *pdev)
->>
->>         platform_set_drvdata(pdev, data);
->>
->> -       astatus = acpi_install_address_space_handler(san, ACPI_ADR_SPACE_GSBUS,
->> +       astatus = acpi_install_address_space_handler(san->handle,
->> +                                                    ACPI_ADR_SPACE_GSBUS,
->>                                                      &san_opreg_handler, NULL,
->>                                                      &data->info);
->>         if (ACPI_FAILURE(astatus))
->> @@ -835,7 +836,7 @@ static int san_probe(struct platform_device *pdev)
->>         if (status)
->>                 goto err_install_dev;
->>
->> -       acpi_walk_dep_device_list(san);
->> +       acpi_dev_clear_dependencies(san);
->>         return 0;
->>
->>  err_install_dev:
->> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
->> index 3a82faac5767..0b2c4f170f4d 100644
->> --- a/include/acpi/acpi_bus.h
->> +++ b/include/acpi/acpi_bus.h
->> @@ -280,6 +280,12 @@ struct acpi_device_power {
->>         struct acpi_device_power_state states[ACPI_D_STATE_COUNT];      /* Power states (D0-D3Cold) */
->>  };
->>
->> +struct acpi_dep_data {
->> +       struct list_head node;
->> +       acpi_handle supplier;
->> +       acpi_handle consumer;
->> +};
->> +
->>  /* Performance Management */
->>
->>  struct acpi_device_perf_flags {
->> @@ -685,6 +691,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
->>
->>  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
->>
->> +void acpi_dev_clear_dependencies(struct acpi_device *supplier);
->>  struct acpi_device *
->>  acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
->>  struct acpi_device *
->> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
->> index c60745f657e9..170b9bebdb2b 100644
->> --- a/include/linux/acpi.h
->> +++ b/include/linux/acpi.h
->> @@ -666,7 +666,9 @@ extern bool acpi_driver_match_device(struct device *dev,
->>                                      const struct device_driver *drv);
->>  int acpi_device_uevent_modalias(struct device *, struct kobj_uevent_env *);
->>  int acpi_device_modalias(struct device *, char *, int);
->> -void acpi_walk_dep_device_list(acpi_handle handle);
->> +int acpi_walk_dep_device_list(acpi_handle handle,
->> +                             int (*callback)(struct acpi_dep_data *, void *),
->> +                             void *data);
->>
->>  struct platform_device *acpi_create_platform_device(struct acpi_device *,
->>                                                     struct property_entry *);
->> --
->> 2.25.1
->>
-> 
 
