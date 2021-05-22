@@ -2,142 +2,460 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E5BC4707D
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 19:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04621C2B9F2
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 May 2021 11:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AB2613B6
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 21 May 2021 19:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB2661151
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 May 2021 11:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239025AbhEUT1A (ORCPT
+        id S231217AbhEVLGF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 21 May 2021 15:27:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52384 "EHLO
+        Sat, 22 May 2021 07:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238069AbhEUT0x (ORCPT
+        with ESMTP id S230417AbhEVLGD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 21 May 2021 15:26:53 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CB5C0613ED;
-        Fri, 21 May 2021 12:25:27 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id y14so20000433wrm.13;
-        Fri, 21 May 2021 12:25:27 -0700 (PDT)
+        Sat, 22 May 2021 07:06:03 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A203C061345
+        for <platform-driver-x86@vger.kernel.org>; Sat, 22 May 2021 04:04:35 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id ot16so10342130pjb.3
+        for <platform-driver-x86@vger.kernel.org>; Sat, 22 May 2021 04:04:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=fvwuU0+MYSgCo2emo2mby8YwzIh20quN69i/jewcdqk=;
-        b=uXhcuBR1rBX6+MjsTw0TttQu0s+mWQ+TkbkdxdvMgpVoTsU5jWPM4XDOWSAGyBZAM+
-         +mGE+1jHobO7W5yTECWFblJoy+3WfO4YzExgPDTPW0OHZGSZIHDmHD8KwW9GxFOdhVWZ
-         V0YIVPm3xtpYmmCvjGyF7NsG8LnSvGLqfd42R3GjSMxy2d8u3y4CtyHvuOcVpFy65Qnt
-         KZfwVM87W/hrfMctwAu8iji4Aj2RnDCzLPU4Pi3JiAW/JDgwCCU1KD7EYBECc3abuDWY
-         XSKfiKyOTkNTTZ9wlXY+6ENtOi6sjDk3eM/ZhxHWO3QhXGlVGsyBB1hc/eLuvIzMAUv8
-         9JFQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9pPHGt2o7jXuj2+o6ryePaOwYnm2LnWHUWOavKwoMQU=;
+        b=CaE01swKPBrvPLw8nL6OmBtcfjNYZnkzuUN6mENKMgpVX3QtdY/mWoHPj+TU/UH+65
+         EnMiWhKw61NRQ6EbCbPYZYFENDLaGBSG++ZQh7+ufvpy4msXCxmJk8tw/hSTC6uStj7D
+         N6HjVqU5lNGNjoFJbbCrPdHP1J/IjklNWAp2i4PEtlCDKAM7ve1xs9ItjnhkODPJZJU4
+         IV9u/8nTOzUVG9meyRO0vir4DBlTspH9avwLorUNG5c4I5SDX3ooXbJ49B8fDR/4SaWZ
+         QQHEIRhB+Jdsvxb/jb9lpu6sS1BrhJV55MoPQCjU8CVn3nB1HvetWW24SQZoM2yG39Uu
+         Af8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=fvwuU0+MYSgCo2emo2mby8YwzIh20quN69i/jewcdqk=;
-        b=t/btbDa6seYaJTqPFM/VYPKfPxzGF2UcijqgvfQSB9pW6W/ar6WNTw3dK8pyqyFSqa
-         ZEPaTMc/P5uUraO98mOvrU9ca905EYgUJlieqLkSY0+n5L/0Ek3S6ED5RAezHwCQOJvD
-         zKUnr2Vc6p2FIxD+RBExQv3/ZYbZbGCbseNsKDRJezUtLdPlqZI+1HhAJ4Ss9d70U+hT
-         iCy4LZR889BCrnNizPGAjgCS2xb/MJmxEV/+oF4jWYJs/zE7OdLt1hOM7Xx3aVMrY56L
-         w/KqBYTEANrJalhdRoNjFLJlGckFvzJMQw0ZF0XamdcGbFBYWZDN17coKI7Smhak04Ym
-         kjwQ==
-X-Gm-Message-State: AOAM531nW0WC7Hk2KYp0kxcK3V7301AXp1FFYbTv9zcMgfx1JLx5hMjt
-        zyMW9/beneJGioHAwPqJWNM=
-X-Google-Smtp-Source: ABdhPJzk0TMRNGjlrE+WNMAkhVgrZq75o/VspCW4P5mv6PHAMeJDLibI7fK/d+i0DIafevp/iQ/fKA==
-X-Received: by 2002:adf:fdce:: with SMTP id i14mr10800827wrs.303.1621625125977;
-        Fri, 21 May 2021 12:25:25 -0700 (PDT)
-Received: from [192.168.1.211] ([91.110.20.117])
-        by smtp.gmail.com with ESMTPSA id r2sm3233190wrv.39.2021.05.21.12.25.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 May 2021 12:25:25 -0700 (PDT)
-Subject: Re: [PATCH v4 2/8] ACPI: scan: Add function to fetch dependent of
- acpi device
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20210520140928.3252671-1-djrscally@gmail.com>
- <20210520140928.3252671-3-djrscally@gmail.com>
- <CAJZ5v0hoDswjr+7r4uf6jZvV3t+-UDtEA0V7A_MvdT_34XrbJA@mail.gmail.com>
- <CAJZ5v0hdSi4BcZvhkyrtcBQqRL8CHtOtwUeYW7EnWL2zvKhDZw@mail.gmail.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <f92cf223-9cd4-9ea5-0152-d3a3d012cc31@gmail.com>
-Date:   Fri, 21 May 2021 20:25:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9pPHGt2o7jXuj2+o6ryePaOwYnm2LnWHUWOavKwoMQU=;
+        b=covhJ75kSHiHSyOI7Y42yq9dpmGHwpe3XGn/3i9Brg2py+OB67QETmfCyV/QWQLmaz
+         Hg1JddzcECltrcfoow5ECYD+3mbuymS0xToYbDjJbrwpPwmDcLqnqnvPyg82/uK7KZIw
+         6Vp4m87/ghb0Z3Z/ZeXN8+rPTQNPrFkiKKo+gnfL4QOZt8GBsQXpEsGSpYDDJ+o2mQng
+         tJKkUTcNAUoifXo0WzJqfNu8vanIFZ9qdMXfMFVtdisYi+fEuwUhItlQKkTP+5Tp8ALj
+         u/lyXszWTEUiYgTell85rN0yyA/fRx1JH5CbO4A7UY+2W8kLF/ssHUqL50GcgrxQoKOp
+         Gidw==
+X-Gm-Message-State: AOAM532wvNDeI6qemOX2kOWSCJ0SoG3n79tza908LvWk3wjL6ShsVggb
+        OUOPKzTTnCW+pp+Aeur0Z2ZJI+RcoxhMkPV8xMI=
+X-Google-Smtp-Source: ABdhPJwAHCIC8Hm0GJpGj5LGap/nXxCw9XkzSm8F61hNVejTSNLoxTupCJ5JyIUMsRK6mja+INMix7HmgkJba74rgS4=
+X-Received: by 2002:a17:90b:1091:: with SMTP id gj17mr14073600pjb.129.1621681474875;
+ Sat, 22 May 2021 04:04:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hdSi4BcZvhkyrtcBQqRL8CHtOtwUeYW7EnWL2zvKhDZw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <markpearson@lenovo.com> <20210509015708.112766-1-markpearson@lenovo.com>
+ <20210509015708.112766-3-markpearson@lenovo.com>
+In-Reply-To: <20210509015708.112766-3-markpearson@lenovo.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 22 May 2021 14:04:18 +0300
+Message-ID: <CAHp75VfM=Vv2pe=KNYQO_hf_8Ya-m8QH481xnu+OPoZL-p8TSA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI interface support
+ on Lenovo platforms
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Prasanth KSR <prasanth.ksr@dell.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Rafael
+On Sun, May 9, 2021 at 5:02 AM Mark Pearson <markpearson@lenovo.com> wrote:
+>
+> For Lenovo platforms that support a WMI interface to the BIOS add
+> support, using the firmware-attributes class, to allow users to access
+> and modify various BIOS related settings.
 
-On 20/05/2021 19:55, Rafael J. Wysocki wrote:
-> On Thu, May 20, 2021 at 8:33 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->> On Thu, May 20, 2021 at 4:11 PM Daniel Scally <djrscally@gmail.com> wrote:
->>> In some ACPI tables we encounter, devices use the _DEP method to assert
->>> a dependence on other ACPI devices as opposed to the OpRegions that the
->>> specification intends. We need to be able to find those devices "from"
->>> the dependee, so add a callback and a wrapper to walk over the
->>> acpi_dep_list and return the dependent ACPI device.
->>>
->>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>> Signed-off-by: Daniel Scally <djrscally@gmail.com>
->>> ---
->>> Changes since v3:
->>>
->>>         Both new functions were renamed.
->>>
->>>  drivers/acpi/scan.c     | 38 ++++++++++++++++++++++++++++++++++++++
->>>  include/acpi/acpi_bus.h |  1 +
->>>  2 files changed, 39 insertions(+)
->>>
->>> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->>> index 195635c3462b..1a76fbdfa669 100644
->>> --- a/drivers/acpi/scan.c
->>> +++ b/drivers/acpi/scan.c
->>> @@ -2105,6 +2105,21 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
->>>                 device->handler->hotplug.notify_online(device);
->>>  }
->>>
->>> +static int acpi_return_dep_dev(struct acpi_dep_data *dep, void *data)
->> What about calling this acpi_get_first_consumer_cb()?
-> Or acpi_dev_get_first_consumer_dev_cb() if you want to be super-precise?
+Few comments below.
+
+...
+
+> +/* Convert BIOS WMI error string to suitable error code */
+
+Can it be rather the mapping structure? In that case you move string
+literals, error codes and comments to its entries.
+Here will be something like for-loop.
+
+...
+
+> +static int tlmi_extract_error(const struct acpi_buffer *output)
+> +{
+> +       const union acpi_object *obj;
+> +       int ret;
+> +
+> +       obj = output->pointer;
+> +       if (!obj || obj->type != ACPI_TYPE_STRING || !obj->string.pointer) {
+
+I would split !obj check, but I don't know if it is even a useful
+check. Can it be the case?
+
+> +               kfree(obj);
+
+Basically you double check for NULL (see above)
+
+Same for other similar places in the code.
+
+> +               return -EIO;
+> +       }
+> +
+> +       ret = tlmi_errstr_to_err(obj->string.pointer);
+> +       kfree(obj);
+> +       return ret;
+
+What I really do not like here is that you are freeing something out
+of the scope. Please, free it where it was acquired.
+
+> +}
+
+...
+
+> +       /*
+> +        * duplicated call required to match bios workaround for behavior
+> +        * seen when WMI accessed via scripting on other OS
+
+/*
+ * Multi-line comments
+ * should have this kind of
+ * style. Pay attention to the details.
+ */
+
+> +        */
+
+...
+
+> +       *string = kstrdup(obj->string.pointer, GFP_KERNEL);
+> +       kfree(obj);
+> +       return *string ? 0 : -ENOMEM;
+
+This breaks the principle "don't touch the output in error case".
+
+...
+
+> +       if (setting->valid)
+> +               return sysfs_emit(buf, "1\n");
+> +       else
+> +               return sysfs_emit(buf, "0\n");
+
+sysfs_emit(buf, "%d\n", !!setting->valid);
+?
+
+...
+
+> +static ssize_t current_password_store(struct kobject *kobj,
+> +                                     struct kobj_attribute *attr,
+> +                                     const char *buf, size_t count)
+> +{
+> +       struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+> +       int length;
+
+> +       length = strlen(buf);
+> +       if (buf[length-1] == '\n')
+> +               length--;
+
+This will prevent you from using \n in the password. Why?
+
+> +       if (length >= TLMI_PWD_MAXLEN)
+> +               return -EINVAL;
+
+I guess password *string* length is wrong per se. count seems the
+proper one which one should use.
+
+> +
+> +       memcpy(setting->password, buf, length);
+
+> +       setting->password[length] = '\0';
+
+Why is the password a *string*? From where that assumption comes from?
+
+> +       return count;
+> +}
+> +
+> +static struct kobj_attribute auth_current_password = __ATTR_WO(current_password);
+
+...
+
+> +       p = strchr(new_pwd, '\n');
+> +       if (p)
+> +               *p = '\0';
+
+strtrim(). But see above.
+
+> +       if (strlen(new_pwd) > setting->maxlen) {
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+
+...
+
+> +       /* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
+> +       len = strlen(setting->password) + strlen(encoding_options[setting->encoding])
+> +               + strlen(setting->kbdlang) + 3 /* type */
+> +               + strlen(new_pwd) + 6 /* punctuation and terminator*/;
+> +       auth_str = kzalloc(len, GFP_KERNEL);
+> +       snprintf(auth_str, len, "%s,%s,%s,%s,%s;",
+> +                setting->pwd_type, setting->password, new_pwd,
+> +                encoding_options[setting->encoding], setting->kbdlang);
+
+NIH of kasprintf()
+
+...
+
+> +       return ret ? ret : count;
+
+      return ret ?: count;
+
+is shorter.
+
+...
+
+> +       if (strcmp(kobj->name, "Admin") == 0)
+> +               return sprintf(buf, "bios-admin\n");
+> +       else if (strcmp(kobj->name, "System") == 0)
+
+Redundant 'else'
+
+> +               return sprintf(buf, "power-on\n");
+> +       return -EIO;
+
+...
+
+> +static struct attribute *auth_attrs[] = {
+> +       &auth_is_pass_set.attr,
+> +       &auth_min_pass_length.attr,
+> +       &auth_max_pass_length.attr,
+> +       &auth_current_password.attr,
+> +       &auth_new_password.attr,
+> +       &auth_role.attr,
+> +       &auth_mechanism.attr,
+> +       &auth_encoding.attr,
+> +       &auth_kbdlang.attr,
+> +       NULL,
+
+The terminator line doesn't need a comma.
+
+> +};
+
+...
+
+> +       new_setting = kstrdup(buf, GFP_KERNEL);
+
+strtrim(buf) ?
+
+> +       if (!new_setting)
+> +               return -ENOMEM;
+
+> +       p = strchr(new_setting, '\n');
+> +       if (p)
+> +               *p = '\0';
+
+See above.
+
+> +       alloc_len = strlen(setting->display_name) + 3 + strlen(new_setting);
+> +
+> +       if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password) {
+> +               auth_len += strlen(tlmi_priv.pwd_admin->password) + 1
+> +                       + strlen(encoding_options[tlmi_priv.pwd_admin->encoding]) + 1
+> +                       + strlen(tlmi_priv.pwd_admin->kbdlang) + 1 + 1;
+> +               auth_str = kmalloc(auth_len, GFP_KERNEL);
+> +               if (!auth_str) {
+> +                       ret = -ENOMEM;
+> +                       goto out;
+> +               }
+> +
+> +               sprintf(auth_str, "%s,%s,%s;",
+> +                               tlmi_priv.pwd_admin->password,
+> +                               encoding_options[tlmi_priv.pwd_admin->encoding],
+> +                               tlmi_priv.pwd_admin->kbdlang);
+> +               alloc_len += auth_len;
+
+HIN of kasprintf()
+
+> +       }
+> +
+> +       set_str = kmalloc(alloc_len, GFP_KERNEL);
+> +       if (!set_str) {
+> +               ret = -ENOMEM;
+> +               goto out;
+> +       }
+> +
+> +       str_ix += sprintf(set_str, "%s,%s", setting->display_name, new_setting);
+
+Ditto,
+
+> +       if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password)
+> +               sprintf(set_str + str_ix, ",%s", auth_str);
+> +       else
+> +               sprintf(set_str + str_ix, ";");
+> +
+> +       ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
+> +       if (ret)
+> +               goto out;
+> +
+> +       if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password)
+> +               ret = tlmi_save_bios_settings(auth_str);
+> +       else
+> +               ret = tlmi_save_bios_settings("");
+
+> +       if (ret)
+> +               goto out;
+
+Useless.
+
+> +out:
+> +       kfree(auth_str);
+> +       kfree(set_str);
+> +       kfree(new_setting);
+> +       return ret ? ret : count;
+
+Can be shorter.
+
+> +}
+
+> +static struct kobj_attribute attr_displ_name =
+> +               __ATTR_RO(display_name);
+
+One line (and so on for all of them).
+
+...
+
+> +static struct attribute *tlmi_attrs[] = {
+> +       &attr_displ_name.attr,
+> +       &attr_current_val.attr,
+> +       &attr_possible_values.attr,
+> +       NULL,
+
+No comma.
+
+> +};
+
+...
+
+> +       struct kobj_attribute *kattr;
+
+> +       ssize_t ret = -EIO;
+
+Useless. Use direct return.
+
+> +
+> +       kattr = container_of(attr, struct kobj_attribute, attr);
+> +       if (kattr->show)
+> +               ret = kattr->show(kobj, kattr, buf);
+> +       return ret;
+
+...
+
+> +       struct kobj_attribute *kattr;
+> +       ssize_t ret = -EIO;
+> +
+> +       kattr = container_of(attr, struct kobj_attribute, attr);
+> +       if (kattr->store)
+> +               ret = kattr->store(kobj, kattr, buf, count);
+> +       return ret;
+
+As above.
+
+...
+
+> +       for (i = 0; i < TLMI_SETTINGS_COUNT; i++) {
+> +               /*Check if index is a valid setting - skip if it isn't */
+
+Missed space.
+
+> +               if (!tlmi_priv.setting[i])
+> +                       continue;
+> +
+> +               /* build attribute */
+> +               tlmi_priv.setting[i]->kobj.kset = tlmi_priv.attribute_kset;
+> +               ret = kobject_init_and_add(&tlmi_priv.setting[i]->kobj, &attr_name_ktype,
+> +                               NULL, "%s", tlmi_priv.setting[i]->display_name);
+> +               if (ret)
+> +                       goto fail_create_attr;
+> +
+> +               ret = sysfs_create_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
+> +               if (ret)
+> +                       goto fail_create_attr;
+> +       }
+
+...
+
+> +       int i = 0;
+
+Why assignment?
+
+> +       for (i = 0; i < TLMI_SETTINGS_COUNT; ++i) {
+> +               char *item = NULL;
+> +               int spleng = 0;
+> +               int num = 0;
+> +               char *p;
+> +               struct tlmi_attr_setting *setting;
+> +
+> +               tlmi_priv.setting[i] = NULL;
+> +               status = tlmi_setting(i, &item, LENOVO_BIOS_SETTING_GUID);
+> +               if (ACPI_FAILURE(status))
+> +                       break;
+> +               if (!item)
+> +                       break;
+> +               if (!*item)
+> +                       continue;
+> +
+> +               /* It is not allowed to have '/' for file name. Convert it into '\'. */
+> +               spleng = strlen(item);
+> +               for (num = 0; num < spleng; num++) {
+> +                       if (item[num] == '/')
+> +                               item[num] = '\\';
+> +               }
+
+NIH of strreplace(), but please check its name.
+
+> +
+> +               /* Remove the value part */
+> +               p = strchr(item, ',');
+> +               if (p)
+> +                       *p = '\0';
+> +
+> +               /* Create a setting entry */
+> +               setting = kzalloc(sizeof(struct tlmi_attr_setting), GFP_KERNEL);
+> +               if (!setting) {
+> +                       ret = -ENOMEM;
+> +                       goto fail_clear_attr;
+> +               }
+> +               setting->index = i;
+> +               strscpy(setting->display_name, item, TLMI_SETTINGS_MAXLEN);
+> +               /* If BIOS selections supported, load those */
+> +               if (tlmi_priv.can_get_bios_selections) {
+> +                       ret = tlmi_get_bios_selections(setting->display_name,
+> +                                       &setting->possible_values);
+> +                       if (ret || !setting->possible_values)
+> +                               pr_info("Error retrieving possible values for %d : %s\n",
+> +                                               i, setting->display_name);
+> +               }
+> +               tlmi_priv.setting[i] = setting;
+> +               tlmi_priv.settings_count++;
+> +               kfree(item);
+> +       }
+
+I stopped here because it's full of such small issues.
+
+Basically the summary
+ - try to find the existing APIs for routines that quite often in use
+(usually string operations)
+ - try to make your code compact with the same level of readability
 
 
-Sure; fine by me, and same for the other function
-
+-- 
+With Best Regards,
+Andy Shevchenko
