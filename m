@@ -2,98 +2,103 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12E0C4707F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 May 2021 12:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26CDC47080
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 13:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94FB66138C
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 22 May 2021 12:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949D36115C
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 13:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbhEVMLG (ORCPT
+        id S231758AbhEWNrl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 22 May 2021 08:11:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230360AbhEVMLG (ORCPT
+        Sun, 23 May 2021 09:47:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231743AbhEWNrk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 22 May 2021 08:11:06 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7A73C61132;
-        Sat, 22 May 2021 12:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621685381;
-        bh=9T2kqkYRlBFg6M+r87a0QKtYHZee+OSyZCnhm0RwhGc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=nmgbmj+vh/ZbFFsNqC0MYt5yDbsp4syhZCa1TykgmUDEMYPLOctzLoSSzNJEkmFoV
-         WDL9XptsD8N0lsrE1Afbz0pfKppPcXQAf6Bte+e8NYpKzpKFsdnnkSZUsGdQyYF7YK
-         dup7VyMk6kDSgldNsHMxOEAocyh4HwNAH9QqQAREj0wrE9aqhgQlIMMnp74JZDGLEx
-         tFGEjFfQPWJZ6M2WJRREbA+F3WdmmRrYNSQdb3teQ9vIWpOMHHezfqOCJs7L+oAGlj
-         NLUuWnM211fVvaA2wOaxwNFLQNQoU6Zt/dF4JjFhaKluG4xfj8tmwgXhybUfAyDgfB
-         7zvUEMXmm2RKA==
-Received: by mail-ot1-f49.google.com with SMTP id v19-20020a0568301413b0290304f00e3d88so20539894otp.4;
-        Sat, 22 May 2021 05:09:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5303CyeEM19NAueyAs9bPlmvbDk5Lz0RfuDRU48OaGbLHY7tbmr1
-        wAOAsnFpDrsa7onNEqt4/YRlz5urhlNPiKQ/9QQ=
-X-Google-Smtp-Source: ABdhPJzuh0wK2buuGxkzuTx4IPfRmkUDwRgK2S+Q8boHOQBaDpcj40nLkeUsrnh0wLU5YjRaPIjHWPPk5bIHOm9Lxds=
-X-Received: by 2002:a9d:69c5:: with SMTP id v5mr12105901oto.108.1621685380892;
- Sat, 22 May 2021 05:09:40 -0700 (PDT)
+        Sun, 23 May 2021 09:47:40 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4887C061574;
+        Sun, 23 May 2021 06:46:12 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id z17so25718154wrq.7;
+        Sun, 23 May 2021 06:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aun+rjUfXuSI5MaBYHc3vJ7DzLorNuomgEpIPMJQ/PY=;
+        b=cDuhkep3sFM8l3q3bm1DzU0eYUy7uiW38PPhw1Kq15hH9e6zqOZ0KDnIx3Rzh4wQXk
+         6+gVKVkv+iNhyuT66Ufsb3EgcfXAu46dOUMO5Cl1iAh97RhGPTFmfslORw2OgCzv+hAn
+         ovBtaTfbkPcJPH/NmYDSNaUo1QnE6Xvjf3k4dz4hCpt7E1GBXESInf7fdeXyn5UfMLYr
+         OX1CgqatJkOoRe80HSCCYeHpe/3iPbTqdhhvDbgwLy7UiQT8A0CeKOv6aj+jT3/m+I4D
+         lxgyQ/RhmDEEUDlv1UjiP7pzt5IOTjw/mDzmV0qvAheS8RgR3EPiTi7qk9lkwPU+FyFf
+         nF1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aun+rjUfXuSI5MaBYHc3vJ7DzLorNuomgEpIPMJQ/PY=;
+        b=qNMuYBcHd6ZrdZnafDZoqSWwbi+IVHSvnJ8PF2rPOXxpgZ+mZDqTYX5QEkrngauCwP
+         mJf1sp0n3tuczygR+jylOu1u7DxWCbXZEEScYYFJmqIL3vzS2HKwPQGdU1wGlMccody6
+         ABnLGh8vq9F84yL+/+1p2aktnV0We5UWermhGVuSztEbHq62kfvEYCXG+/2DIMFmQqWh
+         66ijIKovDyO1rrktVmK4NWucAbiphQVL9+sW39VILnSnsoxuBV/2whtdhOh9Wbxyx3ET
+         6w6BNwvsnUnCPO38YC9mhSkOYyu020v20YiKpIeEJcTHYeK4vScFlPZNdDkO9BqxWbnh
+         AvqA==
+X-Gm-Message-State: AOAM5338shSXpvfRvlg2NEqQ8sKmeI5Nt2kIk57MqlM5SqiWt+IlZZkM
+        t4rnb+ocXkHZsfLlth9HN/I=
+X-Google-Smtp-Source: ABdhPJwdsxIAaX+kAs7qJ7RIe1HMUMo1jdYmhpeqlvruP0jvuemD7jGok6l7WUV92Zw9Ohr+T/wJmQ==
+X-Received: by 2002:a5d:598d:: with SMTP id n13mr18097767wri.38.1621777571533;
+        Sun, 23 May 2021 06:46:11 -0700 (PDT)
+Received: from xws.localdomain ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id z188sm5112414wme.38.2021.05.23.06.46.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 May 2021 06:46:11 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/3] platform/surface: aggregator_registry: Support for Surface Laptop 4 and cleanup
+Date:   Sun, 23 May 2021 15:45:25 +0200
+Message-Id: <20210523134528.798887-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210515081404.6334-1-pmenzel@molgen.mpg.de>
-In-Reply-To: <20210515081404.6334-1-pmenzel@molgen.mpg.de>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Sat, 22 May 2021 14:09:29 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGCGysZCk59yMjsKWX5PcENvJnyv0nV12kGYObtjE3x3w@mail.gmail.com>
-Message-ID: <CAMj1kXGCGysZCk59yMjsKWX5PcENvJnyv0nV12kGYObtjE3x3w@mail.gmail.com>
-Subject: Re: [PATCH] x86/efi: Log 32/64-bit mismatch with kernel as an error
-To:     Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 15 May 2021 at 10:14, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
->
-> Log the message
->
->     No EFI runtime due to 32/64-bit mismatch with kernel
->
-> as an error condition, as several things like efivarfs won=E2=80=99t work
-> without the EFI runtime.
->
-> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> ---
->  arch/x86/platform/efi/efi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 8a26e705cb06..147c30a81f15 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -468,7 +468,7 @@ void __init efi_init(void)
->          */
->
->         if (!efi_runtime_supported())
-> -               pr_info("No EFI runtime due to 32/64-bit mismatch with ke=
-rnel\n");
-> +               pr_err("No EFI runtime due to 32/64-bit mismatch with ker=
-nel\n");
->
->         if (!efi_runtime_supported() || efi_runtime_disabled()) {
->                 efi_memmap_unmap();
-> --
-> 2.31.1
->
+Hi,
 
-Queued up now, thanks.
+this series adds support for the 13" Intel and 15" AMD versions of the
+Surface Laptop 4 and does some small cleanup regarding duplicate node
+groups in the registry.
+
+Unfortunately I haven't heard anything of the 15" Intel version and 13"
+AMD version yet.
+
+Hans, can you apply patches 1 and 2 as fixes for v5.13? That way we'd
+have decent support for the SL4 (at least the aforementioned versions)
+in v5.13.
+
+Thanks,
+Max
+
+Maximilian Luz (3):
+  platform/surface: aggregator_registry: Update comments for 15" AMD
+    Surface Laptop 4
+  platform/surface: aggregator_registry: Add support for 13" Intel
+    Surface Laptop 4
+  platform/surface: aggregator_registry: Consolidate node groups for
+    5th- and 6th-gen devices
+
+ .../surface/surface_aggregator_registry.c     | 54 ++++++-------------
+ 1 file changed, 17 insertions(+), 37 deletions(-)
+
+-- 
+2.31.1
+
