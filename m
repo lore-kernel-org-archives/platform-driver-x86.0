@@ -2,185 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FFFC4707A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42CDC47080
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467336115C
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 13:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D40160FDC
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 23 May 2021 17:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231788AbhEWNrp (ORCPT
+        id S231917AbhEWRZG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 23 May 2021 09:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231784AbhEWNrp (ORCPT
+        Sun, 23 May 2021 13:25:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51713 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231893AbhEWRZF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 23 May 2021 09:47:45 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278ABC06138A;
-        Sun, 23 May 2021 06:46:17 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id n2so25820527wrm.0;
-        Sun, 23 May 2021 06:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Fc3G6exJieu9OL4lvjd+2d/FQ/AgmvBVDDkwAj8ehdk=;
-        b=U4H3Fgky50WtLxLLaUenJD9ELdNCml1iPrd9Ef2y7ncNA250IzIQ/Oh+wYcSvNnCpL
-         gLY6rZpLXTyrIvT5jS0KpwkM5McN2uQkpNu2ZHI/Qp/mH1Dp4/Cgwbnhi+GmiGSh/yj5
-         iK1iCaLK4IdvXYaR2bRwIMu4PVudImb08vmBjaRl23e1LImhttSXj2MkgJa/kfxsEhdo
-         TBMAk90ayJ4trPUAylNCoyblo9W0ScZv1Yd1zf8Hc8YzciMyRgQMwayKV03xP2S1W2b0
-         VsHJoSsD1HzQm73KXUeV5Vgr/sJg5I0Ly9kHMJXSBedvkBRSk9Z9+SGhYCZM7uzLX1ap
-         gtWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Fc3G6exJieu9OL4lvjd+2d/FQ/AgmvBVDDkwAj8ehdk=;
-        b=ZzK1pqoYddGIr0pYYG0W7kMJdTAtMTFjMkseXNFCK2lKGQnATzVDUkvKIpT/yjuFG1
-         YZ6IF+vGM8dQs9F49cr8LeYHCEseahbft2Xks2tHD7J4yX84wfzKZjtfG+ZoGCqZ9acL
-         O16fRS1/oL7nkuhQadkSsOW4RhNff6KvOSKf8duNra4mIWbXKif8Px6OmvcOVLnNaiQI
-         ksmoMJceExjgoyXTzRq935j+pt78xUD0ZZvaLO4AOr4YRA6zen5AGLV9hrQ+UU5U4gds
-         mR58hM7T3MF33Whe1j6+IW3pNonMU8cG+kt2xfceuEZYEMTDJYIyDsq6cT6kdD3V3GFl
-         61kg==
-X-Gm-Message-State: AOAM532wi9XJWXhm4t4du6QWIBHFjM/rA9Nb+ULcWtMqNdsuqOPGW4Ey
-        4+V4mGlcTkmrHxLzbiBskEM=
-X-Google-Smtp-Source: ABdhPJyn3eRbyc9jx8EeAu8Lf/hMfcd9sctBYbJoh+P9HAU90yp5Y/d8BOUrt5S5cKixS18nG+E4Uw==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr18579057wrv.164.1621777575779;
-        Sun, 23 May 2021 06:46:15 -0700 (PDT)
-Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id z188sm5112414wme.38.2021.05.23.06.46.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 May 2021 06:46:15 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH 3/3] platform/surface: aggregator_registry: Consolidate node groups for 5th- and 6th-gen devices
-Date:   Sun, 23 May 2021 15:45:28 +0200
-Message-Id: <20210523134528.798887-4-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210523134528.798887-1-luzmaximilian@gmail.com>
-References: <20210523134528.798887-1-luzmaximilian@gmail.com>
+        Sun, 23 May 2021 13:25:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621790618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=rPjSseOXT6wXtxewkQAgBMGC0GfkrBbGtzBL6bUaoqw=;
+        b=f+1vMGELBY9WOfJho4WB7dfYt5ORgoKkKeEUhaRkHGHuyw3+ny2SEeiIw4oVUFRekWmY0+
+        b1qsI/gBd8MqoXJt81Kk63lNZDNVqNfWIyLFsGYRHP/ycWOznmsSRH/K7O5S4foKVrBD8P
+        nHHmPsE+A33A6qy38iNbsHUxGkMz/5k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-561-B1I5jSk_MNWqE4k6a_TBog-1; Sun, 23 May 2021 13:23:35 -0400
+X-MC-Unique: B1I5jSk_MNWqE4k6a_TBog-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A5685801B14;
+        Sun, 23 May 2021 17:23:34 +0000 (UTC)
+Received: from x1.localdomain (ovpn-112-61.ams2.redhat.com [10.36.112.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B7685D767;
+        Sun, 23 May 2021 17:23:32 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        =?UTF-8?q?Barnab=C3=A1s=20P=C5=91cze?= <pobrn@protonmail.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: ideapad-laptop: Ignore VPC event bit 10
+Date:   Sun, 23 May 2021 19:23:31 +0200
+Message-Id: <20210523172331.177834-1-hdegoede@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-5th- and 6th-generation Surface devices have all SAM clients defined in
-ACPI, except for the platform profile/performance mode which his handled
-via the WSID (Windows Surface Integration Device). Thus, the node groups
-for those devices are the same and we can just use a single one instead
-of re-defining the same one over and over again.
+VPC event bit 10 gets set on a Yoga 300-11IBR when the EC believes that the
+device has changed between laptop/tent/stand/tablet mode.
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+The EC relies on getting angle info from 2 accelerometers through a special
+windows service calling a DSM on the DUAL250E ACPI-device. Linux does not
+do this, making the laptop/tent/stand/tablet mode info unreliable.
+
+Ignore VPC event bit 10 to avoid the warnings triggered by the default case
+in ideapad_acpi_notify().
+
+Note that the plan for Linux is to have iio-sensor-proxy read the 2
+accelerometers and have it provide info about which mode 360° hinges
+2-in-1s to the rest of userspace:
+https://gitlab.freedesktop.org/hadess/iio-sensor-proxy/-/issues/216
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- .../surface/surface_aggregator_registry.c     | 47 +++++--------------
- 1 file changed, 12 insertions(+), 35 deletions(-)
+ drivers/platform/x86/ideapad-laptop.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/platform/surface/surface_aggregator_registry.c b/drivers/platform/surface/surface_aggregator_registry.c
-index ef83461fa536..4428c4330229 100644
---- a/drivers/platform/surface/surface_aggregator_registry.c
-+++ b/drivers/platform/surface/surface_aggregator_registry.c
-@@ -119,8 +119,13 @@ static const struct software_node ssam_node_hid_base_iid6 = {
- 	.parent = &ssam_node_hub_base,
- };
- 
--/* Devices for Surface Book 2. */
--static const struct software_node *ssam_node_group_sb2[] = {
-+/*
-+ * Devices for 5th- and 6th-generations models:
-+ * - Surface Book 2,
-+ * - Surface Laptop 1 and 2,
-+ * - Surface Pro 5 and 6.
-+ */
-+static const struct software_node *ssam_node_group_gen5[] = {
- 	&ssam_node_root,
- 	&ssam_node_tmp_pprof,
- 	NULL,
-@@ -142,20 +147,6 @@ static const struct software_node *ssam_node_group_sb3[] = {
- 	NULL,
- };
- 
--/* Devices for Surface Laptop 1. */
--static const struct software_node *ssam_node_group_sl1[] = {
--	&ssam_node_root,
--	&ssam_node_tmp_pprof,
--	NULL,
--};
--
--/* Devices for Surface Laptop 2. */
--static const struct software_node *ssam_node_group_sl2[] = {
--	&ssam_node_root,
--	&ssam_node_tmp_pprof,
--	NULL,
--};
--
- /* Devices for Surface Laptop 3 and 4. */
- static const struct software_node *ssam_node_group_sl3[] = {
- 	&ssam_node_root,
-@@ -177,20 +168,6 @@ static const struct software_node *ssam_node_group_slg1[] = {
- 	NULL,
- };
- 
--/* Devices for Surface Pro 5. */
--static const struct software_node *ssam_node_group_sp5[] = {
--	&ssam_node_root,
--	&ssam_node_tmp_pprof,
--	NULL,
--};
--
--/* Devices for Surface Pro 6. */
--static const struct software_node *ssam_node_group_sp6[] = {
--	&ssam_node_root,
--	&ssam_node_tmp_pprof,
--	NULL,
--};
--
- /* Devices for Surface Pro 7 and Surface Pro 7+. */
- static const struct software_node *ssam_node_group_sp7[] = {
- 	&ssam_node_root,
-@@ -495,10 +472,10 @@ static struct ssam_device_driver ssam_base_hub_driver = {
- 
- static const struct acpi_device_id ssam_platform_hub_match[] = {
- 	/* Surface Pro 4, 5, and 6 (OMBR < 0x10) */
--	{ "MSHW0081", (unsigned long)ssam_node_group_sp5 },
-+	{ "MSHW0081", (unsigned long)ssam_node_group_gen5 },
- 
- 	/* Surface Pro 6 (OMBR >= 0x10) */
--	{ "MSHW0111", (unsigned long)ssam_node_group_sp6 },
-+	{ "MSHW0111", (unsigned long)ssam_node_group_gen5 },
- 
- 	/* Surface Pro 7 */
- 	{ "MSHW0116", (unsigned long)ssam_node_group_sp7 },
-@@ -507,16 +484,16 @@ static const struct acpi_device_id ssam_platform_hub_match[] = {
- 	{ "MSHW0119", (unsigned long)ssam_node_group_sp7 },
- 
- 	/* Surface Book 2 */
--	{ "MSHW0107", (unsigned long)ssam_node_group_sb2 },
-+	{ "MSHW0107", (unsigned long)ssam_node_group_gen5 },
- 
- 	/* Surface Book 3 */
- 	{ "MSHW0117", (unsigned long)ssam_node_group_sb3 },
- 
- 	/* Surface Laptop 1 */
--	{ "MSHW0086", (unsigned long)ssam_node_group_sl1 },
-+	{ "MSHW0086", (unsigned long)ssam_node_group_gen5 },
- 
- 	/* Surface Laptop 2 */
--	{ "MSHW0112", (unsigned long)ssam_node_group_sl2 },
-+	{ "MSHW0112", (unsigned long)ssam_node_group_gen5 },
- 
- 	/* Surface Laptop 3 (13", Intel) */
- 	{ "MSHW0114", (unsigned long)ssam_node_group_sl3 },
+diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
+index 387817290921..784326bd72f0 100644
+--- a/drivers/platform/x86/ideapad-laptop.c
++++ b/drivers/platform/x86/ideapad-laptop.c
+@@ -1408,6 +1408,18 @@ static void ideapad_acpi_notify(acpi_handle handle, u32 event, void *data)
+ 		case 6:
+ 			ideapad_input_report(priv, bit);
+ 			break;
++		case 10:
++			/*
++			 * This event gets send on a Yoga 300-11IBR when the EC
++			 * believes that the device has changed between laptop/
++			 * tent/stand/tablet mode. The EC relies on getting
++			 * angle info from 2 accelerometers through a special
++			 * windows service calling a DSM on the DUAL250E ACPI-
++			 * device. Linux does not do this, making the laptop/
++			 * tent/stand/tablet mode info unreliable, so we simply
++			 * ignore these events.
++			 */
++			break;
+ 		case 9:
+ 			ideapad_sync_rfk_state(priv);
+ 			break;
 -- 
 2.31.1
 
