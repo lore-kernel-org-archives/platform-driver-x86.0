@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AF8C04FF3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B890AC47084
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF8A6100C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2821610FC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233791AbhEXPPV (ORCPT
+        id S234273AbhEXPP3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 11:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
+        Mon, 24 May 2021 11:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234453AbhEXPHq (ORCPT
+        id S234494AbhEXPIK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 11:07:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F008761625;
-        Mon, 24 May 2021 14:51:27 +0000 (UTC)
+        Mon, 24 May 2021 11:08:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0016C61879;
+        Mon, 24 May 2021 14:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867888;
-        bh=GvlQdk9QCCLzZXEPL977abyqEv1/ZvCdrDypFc/1g1o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jW31B/EX9HgrJln2Wqun+MLzPePhBr15S7bbQ3pCjJxQaU5FB22bWDncY6Z2mWVfH
-         T/JkRJMz3K2zxL12EphJiyZNnNnuG7IV5YYsCR36303gqgci3UOo0cADLNHMea//qd
-         bvI5HLTSqqQ6sSIFG3mFd7sEikpHD01mROd3Cami2wLGaNoEFZJMKgzSLkBFPaReZT
-         VM5eq8A454030ucxmGxtiPCSGeePdsgMSS9B2+c6dgvWK0nI7qv5coRxG2GEyjCd/Y
-         bwREAFgsOYebWedIR0I0ZBh7pWgF3vST+ypZZtMnXik+sBYyWqCCiUprfH+UaNqGqx
-         X5XUyzuZHMxtA==
+        s=k20201202; t=1621867892;
+        bh=fluzT7fwjIXE+lJDPa2Bk62kZPmj+6G7s/3PJo2b+/0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RxekTcAuKXNNzOTr2frPDJwg+FgBmVzLoIzb6pV6eZs+u9M69FCWW9qHMEJjkoBre
+         bq9U0eFpMfhw5jUAnzUbNM8wqVwIHDuo9AXlkkM8R1yw3EKBOZ4I95XxBlKsZX49sX
+         D9tEnDK278MjtsbG0NQOCjjm93T+wkyV0gWmtyHWJbUFQWprKyWX67JNfdebkTum+n
+         hiH2YCCE4xJtlciHzx5+USBcb8K9X1m3394leqYBTMGvN9vRs+Gptaw56N9Zj0VVHc
+         hnX5nL6krtbuTtYRSTbsIRv40J6u7cN0sgawSj30EgiTZ4MXZZNQndrPysP7mfsHC3
+         l5S3Sjbartxxg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        =?UTF-8?q?=C3=89ric=20Piel?= <eric.piel@trempplin-utc.net>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/19] platform/x86: intel_punit_ipc: Append MODULE_DEVICE_TABLE for ACPI
-Date:   Mon, 24 May 2021 10:51:05 -0400
-Message-Id: <20210524145106.2499571-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 01/16] platform/x86: hp_accel: Avoid invoking _INI to speed up resume
+Date:   Mon, 24 May 2021 10:51:15 -0400
+Message-Id: <20210524145130.2499829-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210524145106.2499571-1-sashal@kernel.org>
-References: <20210524145106.2499571-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -53,36 +53,90 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit bc1eca606d8084465e6f89fd646cc71defbad490 ]
+[ Upstream commit 79d341e26ebcdbc622348aaaab6f8f89b6fdb25f ]
 
-The intel_punit_ipc driver might be compiled as a module.
-When udev handles the event of the devices appearing
-the intel_punit_ipc module is missing.
+hp_accel can take almost two seconds to resume on some HP laptops.
 
-Append MODULE_DEVICE_TABLE for ACPI case to fix the loading issue.
+The bottleneck is on evaluating _INI, which is only needed to run once.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Link: https://lore.kernel.org/r/20210519101521.79338-1-andriy.shevchenko@linux.intel.com
+Resolve the issue by only invoking _INI when it's necessary. Namely, on
+probe and on hibernation restore.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Éric Piel <eric.piel@trempplin-utc.net>
+Link: https://lore.kernel.org/r/20210430060736.590321-1-kai.heng.feng@canonical.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/intel_punit_ipc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/lis3lv02d/lis3lv02d.h |  1 +
+ drivers/platform/x86/hp_accel.c    | 22 +++++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel_punit_ipc.c
-index b7dfe06261f1..9865d11eda75 100644
---- a/drivers/platform/x86/intel_punit_ipc.c
-+++ b/drivers/platform/x86/intel_punit_ipc.c
-@@ -330,6 +330,7 @@ static const struct acpi_device_id punit_ipc_acpi_ids[] = {
- 	{ "INT34D4", 0 },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(acpi, punit_ipc_acpi_ids);
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
+index c439c827eea8..0ef759671b54 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d.h
++++ b/drivers/misc/lis3lv02d/lis3lv02d.h
+@@ -284,6 +284,7 @@ struct lis3lv02d {
+ 	int			regs_size;
+ 	u8                      *reg_cache;
+ 	bool			regs_stored;
++	bool			init_required;
+ 	u8                      odr_mask;  /* ODR bit mask */
+ 	u8			whoami;    /* indicates measurement precision */
+ 	s16 (*read_data) (struct lis3lv02d *lis3, int reg);
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+index 10ce6cba4455..a06262e91a93 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -101,6 +101,9 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+ static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+ {
+ 	struct acpi_device *dev = lis3->bus_priv;
++	if (!lis3->init_required)
++		return 0;
++
+ 	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
+ 				 NULL, NULL) != AE_OK)
+ 		return -EINVAL;
+@@ -361,6 +364,7 @@ static int lis3lv02d_add(struct acpi_device *device)
+ 	}
  
- static struct platform_driver intel_punit_ipc_driver = {
- 	.probe = intel_punit_ipc_probe,
+ 	/* call the core layer do its init */
++	lis3_dev.init_required = true;
+ 	ret = lis3lv02d_init_device(&lis3_dev);
+ 	if (ret)
+ 		return ret;
+@@ -408,11 +412,27 @@ static int lis3lv02d_suspend(struct device *dev)
+ 
+ static int lis3lv02d_resume(struct device *dev)
+ {
++	lis3_dev.init_required = false;
++	lis3lv02d_poweron(&lis3_dev);
++	return 0;
++}
++
++static int lis3lv02d_restore(struct device *dev)
++{
++	lis3_dev.init_required = true;
+ 	lis3lv02d_poweron(&lis3_dev);
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
++static const struct dev_pm_ops hp_accel_pm = {
++	.suspend = lis3lv02d_suspend,
++	.resume = lis3lv02d_resume,
++	.freeze = lis3lv02d_suspend,
++	.thaw = lis3lv02d_resume,
++	.poweroff = lis3lv02d_suspend,
++	.restore = lis3lv02d_restore,
++};
++
+ #define HP_ACCEL_PM (&hp_accel_pm)
+ #else
+ #define HP_ACCEL_PM NULL
 -- 
 2.30.2
 
