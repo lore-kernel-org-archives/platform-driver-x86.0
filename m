@@ -4,47 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12845C2B9F8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BEBC4708A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBDF161490
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E052B61622
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233296AbhEXOwE (ORCPT
+        id S233489AbhEXOwN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 10:52:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
+        Mon, 24 May 2021 10:52:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233769AbhEXOt4 (ORCPT
+        id S233800AbhEXOuL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 10:49:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2E65D61402;
-        Mon, 24 May 2021 14:47:39 +0000 (UTC)
+        Mon, 24 May 2021 10:50:11 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 643A6613B6;
+        Mon, 24 May 2021 14:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867659;
-        bh=haT+nh+kmWbPnjVh7+weBFsfIRCnUk46FOTKXK4PLWM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcAh6ythLeD3b68qPEtRO3v0muZg6Xo0M5Ej4E2RsPO2HP9osszLJAcA6/zhiH2Jr
-         TOkRS7tSQ46TS2C5nGpYz922z7ZOWyh19sx3sNLx0gDGFSWY4hL3yMi1qWD8G16QBP
-         EuhjPvS9/8SZUTK7vyDg6Hyy7XgzmTHvFU2qt0ebCL/rHYGZ6yWB65jEl1C9gGVakm
-         yZsyqkWHP0rfjwUWWwstB54E3lSjfvrOYlJWEBIRKEk3yR1YdTIscW7iRRk3NA4KSW
-         v6wTMxsSCyidMe2msjoTHMwmJRYQTFhhqybUY4/e6ty224pZ4hOb9JqB0t7ZT5Ii8s
-         53nMKGTgBGjAg==
+        s=k20201202; t=1621867666;
+        bh=Pv3bP2PMj6YOQykP7mK1HxW1+69TEd2XZ+M7eh5YLp0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jC7ayjnuyD2SpUuzU5w1PXcwjylMMkxnsTjJR1BHKnAjQOIJ+3OhgXslULQFbxV6e
+         BjmXhcYI2lPSbedTB5uhyKBSrDyzgLl354QOp57MMVOPQDt8TopAcjc+UMug+3UtRo
+         kpsX5PWo+QGILhBGLO/lcngxixv+qRNVUsTmk2c5UaEbOKrseR9Ammio8cj0WjWeRe
+         gFt00x9Wb5yzyVi8JYStKYWMRlwCTlNv9YR4jHQwPp3y3FzoO7JrwCeaHPcDa6pgWZ
+         AVqDqs+5jDpCFyC+JkW1oJmUSJNRlAgcDsOH4268F5H/YRaHNYBnfm8o9GLGd7Rbjp
+         eSUDQ61P6HxCw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        =?UTF-8?q?=C3=89ric=20Piel?= <eric.piel@trempplin-utc.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 61/63] platform/x86: touchscreen_dmi: Add info for the Chuwi Hi10 Pro (CWI529) tablet
-Date:   Mon, 24 May 2021 10:46:18 -0400
-Message-Id: <20210524144620.2497249-61-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 01/62] platform/x86: hp_accel: Avoid invoking _INI to speed up resume
+Date:   Mon, 24 May 2021 10:46:42 -0400
+Message-Id: <20210524144744.2497894-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210524144620.2497249-1-sashal@kernel.org>
-References: <20210524144620.2497249-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -52,77 +53,90 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit e68671e9e1275dfdda333c3e83b6d28963af16b6 ]
+[ Upstream commit 79d341e26ebcdbc622348aaaab6f8f89b6fdb25f ]
 
-Add touchscreen info for the Chuwi Hi10 Pro (CWI529) tablet. This includes
-info for getting the firmware directly from the UEFI, so that the user does
-not need to manually install the firmware in /lib/firmware/silead.
+hp_accel can take almost two seconds to resume on some HP laptops.
 
-This change will make the touchscreen on these devices work OOTB,
-without requiring any manual setup.
+The bottleneck is on evaluating _INI, which is only needed to run once.
 
+Resolve the issue by only invoking _INI when it's necessary. Namely, on
+probe and on hibernation restore.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Acked-by: Éric Piel <eric.piel@trempplin-utc.net>
+Link: https://lore.kernel.org/r/20210430060736.590321-1-kai.heng.feng@canonical.com
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20210520093228.7439-1-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 35 ++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ drivers/misc/lis3lv02d/lis3lv02d.h |  1 +
+ drivers/platform/x86/hp_accel.c    | 22 +++++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index 5e4eb3b36d70..8618c44106c2 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -115,6 +115,32 @@ static const struct ts_dmi_data chuwi_hi10_plus_data = {
- 	.properties     = chuwi_hi10_plus_props,
- };
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
+index c394c0b08519..7ac788fae1b8 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d.h
++++ b/drivers/misc/lis3lv02d/lis3lv02d.h
+@@ -271,6 +271,7 @@ struct lis3lv02d {
+ 	int			regs_size;
+ 	u8                      *reg_cache;
+ 	bool			regs_stored;
++	bool			init_required;
+ 	u8                      odr_mask;  /* ODR bit mask */
+ 	u8			whoami;    /* indicates measurement precision */
+ 	s16 (*read_data) (struct lis3lv02d *lis3, int reg);
+diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
+index 799cbe2ffcf3..8c0867bda828 100644
+--- a/drivers/platform/x86/hp_accel.c
++++ b/drivers/platform/x86/hp_accel.c
+@@ -88,6 +88,9 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
+ static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
+ {
+ 	struct acpi_device *dev = lis3->bus_priv;
++	if (!lis3->init_required)
++		return 0;
++
+ 	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
+ 				 NULL, NULL) != AE_OK)
+ 		return -EINVAL;
+@@ -356,6 +359,7 @@ static int lis3lv02d_add(struct acpi_device *device)
+ 	}
  
-+static const struct property_entry chuwi_hi10_pro_props[] = {
-+	PROPERTY_ENTRY_U32("touchscreen-min-x", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-min-y", 8),
-+	PROPERTY_ENTRY_U32("touchscreen-size-x", 1912),
-+	PROPERTY_ENTRY_U32("touchscreen-size-y", 1272),
-+	PROPERTY_ENTRY_BOOL("touchscreen-swapped-x-y"),
-+	PROPERTY_ENTRY_STRING("firmware-name", "gsl1680-chuwi-hi10-pro.fw"),
-+	PROPERTY_ENTRY_U32("silead,max-fingers", 10),
-+	PROPERTY_ENTRY_BOOL("silead,home-button"),
-+	{ }
+ 	/* call the core layer do its init */
++	lis3_dev.init_required = true;
+ 	ret = lis3lv02d_init_device(&lis3_dev);
+ 	if (ret)
+ 		return ret;
+@@ -403,11 +407,27 @@ static int lis3lv02d_suspend(struct device *dev)
+ 
+ static int lis3lv02d_resume(struct device *dev)
+ {
++	lis3_dev.init_required = false;
++	lis3lv02d_poweron(&lis3_dev);
++	return 0;
++}
++
++static int lis3lv02d_restore(struct device *dev)
++{
++	lis3_dev.init_required = true;
+ 	lis3lv02d_poweron(&lis3_dev);
+ 	return 0;
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
++static const struct dev_pm_ops hp_accel_pm = {
++	.suspend = lis3lv02d_suspend,
++	.resume = lis3lv02d_resume,
++	.freeze = lis3lv02d_suspend,
++	.thaw = lis3lv02d_resume,
++	.poweroff = lis3lv02d_suspend,
++	.restore = lis3lv02d_restore,
 +};
 +
-+static const struct ts_dmi_data chuwi_hi10_pro_data = {
-+	.embedded_fw = {
-+		.name	= "silead/gsl1680-chuwi-hi10-pro.fw",
-+		.prefix = { 0xf0, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00 },
-+		.length	= 42504,
-+		.sha256	= { 0xdb, 0x92, 0x68, 0xa8, 0xdb, 0x81, 0x31, 0x00,
-+			    0x1f, 0x58, 0x89, 0xdb, 0x19, 0x1b, 0x15, 0x8c,
-+			    0x05, 0x14, 0xf4, 0x95, 0xba, 0x15, 0x45, 0x98,
-+			    0x42, 0xa3, 0xbb, 0x65, 0xe3, 0x30, 0xa5, 0x93 },
-+	},
-+	.acpi_name      = "MSSL1680:00",
-+	.properties     = chuwi_hi10_pro_props,
-+};
-+
- static const struct property_entry chuwi_vi8_props[] = {
- 	PROPERTY_ENTRY_U32("touchscreen-min-x", 4),
- 	PROPERTY_ENTRY_U32("touchscreen-min-y", 6),
-@@ -889,6 +915,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
- 		},
- 	},
-+	{
-+		/* Chuwi Hi10 Prus (CWI597) */
-+		.driver_data = (void *)&chuwi_hi10_pro_data,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Hi10 pro tablet"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-+		},
-+	},
- 	{
- 		/* Chuwi Vi8 (CWI506) */
- 		.driver_data = (void *)&chuwi_vi8_data,
+ #define HP_ACCEL_PM (&hp_accel_pm)
+ #else
+ #define HP_ACCEL_PM NULL
 -- 
 2.30.2
 
