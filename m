@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B33C47084
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF69C04FF3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80BB4613E1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F856613F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 14:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233653AbhEXOvQ (ORCPT
+        id S233378AbhEXOvS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 10:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54518 "EHLO mail.kernel.org"
+        Mon, 24 May 2021 10:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233069AbhEXOt0 (ORCPT
+        id S233205AbhEXOt1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 10:49:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B7416613F2;
-        Mon, 24 May 2021 14:47:27 +0000 (UTC)
+        Mon, 24 May 2021 10:49:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 01EC5613E1;
+        Mon, 24 May 2021 14:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867648;
-        bh=++Gvob/5i3UQSKep7Q0P08CfuIhWyKIUp8gYkapj0vE=;
+        s=k20201202; t=1621867650;
+        bh=1m1lvHMZRM41MlBa4EFWZQLiMkDhEqr5cEsP18CrtqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdKBXrSXfyQ5KhIJCDh+nRhN5t+sSH6riGAlFsngJHAOOHs9vtil4aaEPxvNvhxLv
-         QkoOpTr3Et7JH20bXYCFxeacjFvizf6GwQ2qrLgOfuq18wddt0gkYrHFaIYsFMQ9tf
-         lXgeVomHjmZqp1uKi1AY9c4pvIRhk0F3g/FwpAf/nRvOXJzsc3Lp9EkoCoDf4ppiCg
-         Op9R7VSZ7W1CAb0nYORgYA0RhHkrtYp61KfM3oXbRDFc5vljh6xpKCVPqV1i9nH7Sp
-         pl+U7+KNzM0CVNVKX2+D+joJyBGsDkgqCMNxYhfAcBot+/TYILdD6GOODoW0aDZcXT
-         kcb+1h07nueiA==
+        b=QYXUE0JJVxUalFwkYy4KAawBaJKn8Oegx+WsZB7frLUC2VVQwEKc+6o7htH8YbbIZ
+         4Gea+4tRjEmqn4pbJ043VPU+XmwPPf64+BC6gJTD+0rYaaAbrDfCQEV+NHgwbdNi+o
+         AEwB89vfRRkjuP2W+7bLcslcDbDDF5D/DIHRWnzbQi4vLjBEvc6Bqa9GwMKiR8sLgl
+         YmlRC2VF0wVCXPDhAJ6u/uHsRR02nScgWCUklzbyGoN1FeQeooH8ov3HxKRjlh429R
+         EREmsFTjVjtjZpvprrAyEg4JFk/oBBtvfNVzsRwBKhvgZZWtBlp8/9zecIHRTaCinq
+         1Rj8gmwaqOkXg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+Cc:     Teava Radu <rateava@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.12 52/63] platform/x86: hp-wireless: add AMD's hardware id to the supported list
-Date:   Mon, 24 May 2021 10:46:09 -0400
-Message-Id: <20210524144620.2497249-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 54/63] platform/x86: touchscreen_dmi: Add info for the Mediacom Winpad 7.0 W700 tablet
+Date:   Mon, 24 May 2021 10:46:11 -0400
+Message-Id: <20210524144620.2497249-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210524144620.2497249-1-sashal@kernel.org>
 References: <20210524144620.2497249-1-sashal@kernel.org>
@@ -53,40 +53,41 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+From: Teava Radu <rateava@gmail.com>
 
-[ Upstream commit f048630bdd55eb5379ef35f971639fe52fabe499 ]
+[ Upstream commit 39a6172ea88b3117353ae16cbb0a53cd80a9340a ]
 
-Newer AMD based laptops uses AMDI0051 as the hardware id to support the
-airplane mode button. Adding this to the supported list.
+Add touchscreen info for the Mediacom Winpad 7.0 W700 tablet.
+Tested on 5.11 hirsute.
+Note: it's hw clone to Wintron surftab 7.
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Link: https://lore.kernel.org/r/20210514180047.1697543-1-Shyam-sundar.S-k@amd.com
+Signed-off-by: Teava Radu <rateava@gmail.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20210504185746.175461-6-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/hp-wireless.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/platform/x86/hp-wireless.c b/drivers/platform/x86/hp-wireless.c
-index 12c31fd5d5ae..0753ef18e721 100644
---- a/drivers/platform/x86/hp-wireless.c
-+++ b/drivers/platform/x86/hp-wireless.c
-@@ -17,12 +17,14 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Alex Hung");
- MODULE_ALIAS("acpi*:HPQ6001:*");
- MODULE_ALIAS("acpi*:WSTADEF:*");
-+MODULE_ALIAS("acpi*:AMDI0051:*");
- 
- static struct input_dev *hpwl_input_dev;
- 
- static const struct acpi_device_id hpwl_ids[] = {
- 	{"HPQ6001", 0},
- 	{"WSTADEF", 0},
-+	{"AMDI0051", 0},
- 	{"", 0},
- };
- 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index c44a6e8dceb8..5e4eb3b36d70 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -1070,6 +1070,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BIOS_VERSION, "jumperx.T87.KFBNEEA"),
+ 		},
+ 	},
++	{
++		/* Mediacom WinPad 7.0 W700 (same hw as Wintron surftab 7") */
++		.driver_data = (void *)&trekstor_surftab_wintron70_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MEDIACOM"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "WinPad 7 W10 - WPW700"),
++		},
++	},
+ 	{
+ 		/* Mediacom Flexbook Edge 11 (same hw as TS Primebook C11) */
+ 		.driver_data = (void *)&trekstor_primebook_c11_data,
 -- 
 2.30.2
 
