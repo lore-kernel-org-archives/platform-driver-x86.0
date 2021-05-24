@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5576FC04FF3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B62C47085
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D952613AD
+	by mail.kernel.org (Postfix) with ESMTP id C4312613AD
 	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234758AbhEXPIr (ORCPT
+        id S234768AbhEXPIt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 11:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37276 "EHLO mail.kernel.org"
+        Mon, 24 May 2021 11:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233438AbhEXPDz (ORCPT
+        id S235117AbhEXPF7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 11:03:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 80C5B61490;
-        Mon, 24 May 2021 14:50:41 +0000 (UTC)
+        Mon, 24 May 2021 11:05:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D559D61627;
+        Mon, 24 May 2021 14:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867842;
-        bh=TD042Atec4F9ZBJai4TbAhVmwzi2hnS8ajipd8FJQ0E=;
+        s=k20201202; t=1621867868;
+        bh=sQiWuScMbxy9VtWXcBE5CITdHteElPRev8Hc9wVuDYg=;
         h=From:To:Cc:Subject:Date:From;
-        b=px53FX9yBvhL0rWs4iG87Lv0BdCDNayT0I4TBw1WDe0A5qI8jijATyjPt2g7MgzG7
-         oj0EF/HHS21OXyU8HU+aDO9b0JtS02lbdBuJBDUerNv/Wj0Jzq+QsMQR7pjsf9crVm
-         yVcJQnE/wJv1oiqx2myL5F8uVTqgJ4qGMeqtVX4lHo6qmLrjikYjDoq4GBAL5Jak/J
-         aqO2OrcYiixY+NY7d61tNB8m7XTFDj7L2sZbvVjPHsp3xuXFCeBZ7I/T9L4XphaCxz
-         cLZNGQYbdE686o0GjJVo8mpOcE/X2vcYqsZqZg10ec75G9F3sQFc5UCxzlixA1b+D+
-         RPu3MQnRo1DbA==
+        b=BvVAt490x3CSmdxeS4Okss8CCsWxlngwQR9Fzaq8VvxmtaIXMZsi0g4xaA8+HVY1Z
+         6ZFVjIezwJc/XHc9luLrhK2+T17GmgeruRapm9JvZhFIlxEtewh86/6h6OJ0tF410H
+         hlztfU4243WIAO1vEX/GsP4t+dZTenzSxg6AdhZqgY1pStmK1rTbM6KblAaSRkKs0H
+         k4n6ixEm8VR+UdZkHZLM8s5pxetOw4bLFmlrfnIkwlZQdUFKfTyu2g1oGxxMwl/Fs5
+         cw2ZLT2Aa8CHmeuFRLzKVxnLXQ1OoegRdsCOpj54JFndQ3kwNGkD7ROdj2vOn9X/Ws
+         a0/9bntzqHsMw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
@@ -40,9 +40,9 @@ Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 01/21] platform/x86: hp_accel: Avoid invoking _INI to speed up resume
-Date:   Mon, 24 May 2021 10:50:20 -0400
-Message-Id: <20210524145040.2499322-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 01/19] platform/x86: hp_accel: Avoid invoking _INI to speed up resume
+Date:   Mon, 24 May 2021 10:50:48 -0400
+Message-Id: <20210524145106.2499571-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -87,7 +87,7 @@ index c439c827eea8..0ef759671b54 100644
  	u8			whoami;    /* indicates measurement precision */
  	s16 (*read_data) (struct lis3lv02d *lis3, int reg);
 diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index 7b12abe86b94..9c3c83ef445b 100644
+index abd9d83f6009..403d966223ee 100644
 --- a/drivers/platform/x86/hp_accel.c
 +++ b/drivers/platform/x86/hp_accel.c
 @@ -101,6 +101,9 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
@@ -100,7 +100,7 @@ index 7b12abe86b94..9c3c83ef445b 100644
  	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
  				 NULL, NULL) != AE_OK)
  		return -EINVAL;
-@@ -367,6 +370,7 @@ static int lis3lv02d_add(struct acpi_device *device)
+@@ -366,6 +369,7 @@ static int lis3lv02d_add(struct acpi_device *device)
  	}
  
  	/* call the core layer do its init */
@@ -108,7 +108,7 @@ index 7b12abe86b94..9c3c83ef445b 100644
  	ret = lis3lv02d_init_device(&lis3_dev);
  	if (ret)
  		return ret;
-@@ -414,11 +418,27 @@ static int lis3lv02d_suspend(struct device *dev)
+@@ -413,11 +417,27 @@ static int lis3lv02d_suspend(struct device *dev)
  
  static int lis3lv02d_resume(struct device *dev)
  {
