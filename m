@@ -2,141 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B890AC47084
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76317C2B9F8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2821610FC
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E90611CE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 15:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234273AbhEXPP3 (ORCPT
+        id S232860AbhEXP35 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 11:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234494AbhEXPIK (ORCPT
+        Mon, 24 May 2021 11:29:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52430 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233364AbhEXP2w (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 11:08:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0016C61879;
-        Mon, 24 May 2021 14:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1621867892;
-        bh=fluzT7fwjIXE+lJDPa2Bk62kZPmj+6G7s/3PJo2b+/0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RxekTcAuKXNNzOTr2frPDJwg+FgBmVzLoIzb6pV6eZs+u9M69FCWW9qHMEJjkoBre
-         bq9U0eFpMfhw5jUAnzUbNM8wqVwIHDuo9AXlkkM8R1yw3EKBOZ4I95XxBlKsZX49sX
-         D9tEnDK278MjtsbG0NQOCjjm93T+wkyV0gWmtyHWJbUFQWprKyWX67JNfdebkTum+n
-         hiH2YCCE4xJtlciHzx5+USBcb8K9X1m3394leqYBTMGvN9vRs+Gptaw56N9Zj0VVHc
-         hnX5nL6krtbuTtYRSTbsIRv40J6u7cN0sgawSj30EgiTZ4MXZZNQndrPysP7mfsHC3
-         l5S3Sjbartxxg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        =?UTF-8?q?=C3=89ric=20Piel?= <eric.piel@trempplin-utc.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/16] platform/x86: hp_accel: Avoid invoking _INI to speed up resume
-Date:   Mon, 24 May 2021 10:51:15 -0400
-Message-Id: <20210524145130.2499829-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.2
+        Mon, 24 May 2021 11:28:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1621870044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pt/de1Lgz8ygj8VZ99P7nbeMY04Wc9k2Ms4AzKs3C+E=;
+        b=dFczS98/IDSUUPFrsPsez/C9RhKp/L8yf2ou8H3hbH9UhRH9n2SOR9B6I0Taqu2/T9dBco
+        4MhhofLUzojDNJAysP3TII7Uf55BxuZ4rtSZxX+ga20AcMeeud5+CuHww4dcfMSeM9s2mW
+        x+zIoWj6hxH3Ul2U8ZY7Sn081wcoGw8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-281-G1LaJ8pHNgiAaH0cesd7Ww-1; Mon, 24 May 2021 11:27:22 -0400
+X-MC-Unique: G1LaJ8pHNgiAaH0cesd7Ww-1
+Received: by mail-ej1-f72.google.com with SMTP id la2-20020a170906ad82b02903d4bcc8de3bso7706290ejb.4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 24 May 2021 08:27:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pt/de1Lgz8ygj8VZ99P7nbeMY04Wc9k2Ms4AzKs3C+E=;
+        b=k0wIiS+ouaGHkVbeCrMlj75mtTt3/hoaqMw0/CXYTxD2gXOl056fMkPy1b6kECO3FM
+         H5jhnFJZqR9M86WY12RNKuK/pFv7LIH6FxCNRWA4r5sjFaisduPloE92YDQy2VUTFR40
+         XuYZaah7/NQX0LHbabGxMvqCFfdHmg+T+SxBUGw4cokkeRLT9+02OkBmAkju6IiEtoVW
+         8qgYAV/KsF9g7ulylFvtK3PkEf7fWWAV2hG13sgX/zbqOGOeX4dVxy3bT3UGtTiRQ+0d
+         mEADNb+UBG+1v+7pC/L0mPMnMXnCB+SNJqo0MV+9a4SgDCXcoOZlpKq2h2bDmETcSWV9
+         Dwaw==
+X-Gm-Message-State: AOAM533uQz9mDZN4RRQaIf++ZasnDabldb8Pi72O4kJxZ1utZMMaFFrY
+        RnW9Ba6P5eCtcpRAD8iKTyjjh+XqLw+ExfIbzxteRuotKB3pHF5qCdL7Wz50gG5trPSLcB1BIZS
+        zuSE/7mu8pSkjoGv+Pxp2j9PMIK2WSnZdpQ==
+X-Received: by 2002:a17:906:2b8c:: with SMTP id m12mr20368170ejg.358.1621870040917;
+        Mon, 24 May 2021 08:27:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzi3OR8wQ75Ptni43vxQcrfeoUw86savuVqbATWaUArE3wjTskCPaqPucLRWD0xu09X3hZk0w==
+X-Received: by 2002:a17:906:2b8c:: with SMTP id m12mr20368159ejg.358.1621870040669;
+        Mon, 24 May 2021 08:27:20 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id p8sm4565697eds.95.2021.05.24.08.27.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 May 2021 08:27:19 -0700 (PDT)
+Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+ interface support on Lenovo platforms
+To:     "Ksr, Prasanth" <Prasanth.Ksr@dell.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        Dell Client Kernel <Dell.Client.Kernel@dell.com>
+References: <markpearson@lenovo.com>
+ <20210509015708.112766-1-markpearson@lenovo.com>
+ <20210509015708.112766-3-markpearson@lenovo.com>
+ <bbd0f3c9-63c3-2fbb-7712-ecb3131a4c0a@redhat.com>
+ <ac30f95e-8398-fb11-8c94-b50050a3f88f@lenovo.com>
+ <1c21c3d3-7ff1-a7b2-86d0-245050426760@redhat.com>
+ <c8b706bb-5397-758e-8ab8-1d75b2920054@lenovo.com>
+ <971080ef-a9c2-6de9-c6e1-895e7c5903f2@redhat.com>
+ <CO1PR19MB5078C56213656707579025AD82269@CO1PR19MB5078.namprd19.prod.outlook.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b454148c-640e-f642-cd3d-17c71e573b95@redhat.com>
+Date:   Mon, 24 May 2021 17:27:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CO1PR19MB5078C56213656707579025AD82269@CO1PR19MB5078.namprd19.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Hi,
 
-[ Upstream commit 79d341e26ebcdbc622348aaaab6f8f89b6fdb25f ]
+On 5/24/21 12:19 PM, Ksr, Prasanth wrote:
+> Hi,
+> 
+>> -----Original Message-----
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Sent: Friday, May 21, 2021 10:25 PM
+>> To: Mark Pearson
+>> Cc: mgross@linux.intel.com; platform-driver-x86@vger.kernel.org; Bharathi,
+>> Divya; Ksr, Prasanth; Dell Client Kernel
+>> Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+>> interface support on Lenovo platforms
+>>
+>>
+>> [EXTERNAL EMAIL]
+>>
+>> Hi,
+>>
+>> On 5/21/21 5:55 PM, Mark Pearson wrote:
+>>
+>> <snip>
+>>
+>>>>> I know it would make Dell and Lenovo operate differently (I can add
+>>>>> that detail to the documentation) but it just feels like a nicer
+>>>>> design.
+>>>>
+>>>> That works for me. Perhaps you can also do a (compile tested only)
+>>>> RFC patch for the Dell code to do the same thing (replace the memset
+>>>> 0 with the strscpy) to see if the Dell folks are ok with also doing
+>>>> things this way ?
+>>>>
+>>> I'm not hugely comfortable with that. If for some reason it broke
+>>> things for Dell customers I wouldn't want to be responsible :)
+>>
+>> Right, that is why I suggested making it a RFC patch and I would certainly not
+>> apply that patch without it being tested by Dell first.
+>>
+>> The idea behind the patch is for it to be a way to get a discussion about this
+>> started. In my experience patches tend to get more of a reaction then
+>> hypothetical discussions about changes :)
+>>
+>>> I'd rather they
+>>> made the changes and were able to test it - I know that's what I'd
+>>> prefer if it was the other way around. Apologies if I'm being over cautious!
+>>
+>> If you don't feel comfortable doing this, that is fine, lets wait what the Dell
+>> folks have to say; and if they don't respond I might do a RFC myself.
+>>
+> 
+> Ack. We will implement the same from Dell side as well to have uniformity and
+> seems nicer from a user point of view rather than populating the 
+> current_password field again in case of password change scenario. 
 
-hp_accel can take almost two seconds to resume on some HP laptops.
+Great, thank you.
 
-The bottleneck is on evaluating _INI, which is only needed to run once.
+Regards,
 
-Resolve the issue by only invoking _INI when it's necessary. Namely, on
-probe and on hibernation restore.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Éric Piel <eric.piel@trempplin-utc.net>
-Link: https://lore.kernel.org/r/20210430060736.590321-1-kai.heng.feng@canonical.com
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/misc/lis3lv02d/lis3lv02d.h |  1 +
- drivers/platform/x86/hp_accel.c    | 22 +++++++++++++++++++++-
- 2 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/misc/lis3lv02d/lis3lv02d.h b/drivers/misc/lis3lv02d/lis3lv02d.h
-index c439c827eea8..0ef759671b54 100644
---- a/drivers/misc/lis3lv02d/lis3lv02d.h
-+++ b/drivers/misc/lis3lv02d/lis3lv02d.h
-@@ -284,6 +284,7 @@ struct lis3lv02d {
- 	int			regs_size;
- 	u8                      *reg_cache;
- 	bool			regs_stored;
-+	bool			init_required;
- 	u8                      odr_mask;  /* ODR bit mask */
- 	u8			whoami;    /* indicates measurement precision */
- 	s16 (*read_data) (struct lis3lv02d *lis3, int reg);
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index 10ce6cba4455..a06262e91a93 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -101,6 +101,9 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
- static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
- {
- 	struct acpi_device *dev = lis3->bus_priv;
-+	if (!lis3->init_required)
-+		return 0;
-+
- 	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
- 				 NULL, NULL) != AE_OK)
- 		return -EINVAL;
-@@ -361,6 +364,7 @@ static int lis3lv02d_add(struct acpi_device *device)
- 	}
- 
- 	/* call the core layer do its init */
-+	lis3_dev.init_required = true;
- 	ret = lis3lv02d_init_device(&lis3_dev);
- 	if (ret)
- 		return ret;
-@@ -408,11 +412,27 @@ static int lis3lv02d_suspend(struct device *dev)
- 
- static int lis3lv02d_resume(struct device *dev)
- {
-+	lis3_dev.init_required = false;
-+	lis3lv02d_poweron(&lis3_dev);
-+	return 0;
-+}
-+
-+static int lis3lv02d_restore(struct device *dev)
-+{
-+	lis3_dev.init_required = true;
- 	lis3lv02d_poweron(&lis3_dev);
- 	return 0;
- }
- 
--static SIMPLE_DEV_PM_OPS(hp_accel_pm, lis3lv02d_suspend, lis3lv02d_resume);
-+static const struct dev_pm_ops hp_accel_pm = {
-+	.suspend = lis3lv02d_suspend,
-+	.resume = lis3lv02d_resume,
-+	.freeze = lis3lv02d_suspend,
-+	.thaw = lis3lv02d_resume,
-+	.poweroff = lis3lv02d_suspend,
-+	.restore = lis3lv02d_restore,
-+};
-+
- #define HP_ACCEL_PM (&hp_accel_pm)
- #else
- #define HP_ACCEL_PM NULL
--- 
-2.30.2
+Hans
 
