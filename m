@@ -2,327 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD83C47085
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 08:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B20BC04FF3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 10:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0873E610CE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 08:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791D961028
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 24 May 2021 10:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232347AbhEXIeV (ORCPT
+        id S232606AbhEXKUt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 24 May 2021 04:34:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53223 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232424AbhEXIeU (ORCPT
+        Mon, 24 May 2021 06:20:49 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:30652 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232609AbhEXKUr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 24 May 2021 04:34:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1621845172;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J2440jf5xR5Xu8OmRT8dNrdYNpeIAuaDPlOXqgxmmMQ=;
-        b=U4qiwqlwxalft1XDefB9m7EWnDQteoe1ea+YR/LgiVOW4dkjukMqZonM5lpPhvQLleHrwa
-        yWKJqa6E3xm55S3uQDVV3HZosthLNwYu3Jc6gEoPGKaVJHe+loZeWdMEqm5klCek8s8fnC
-        F/jLLS2AS6IWH0EO0BIHIu8sd5XfaEE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-xPt4C06uPRqVjI7bRbTR4w-1; Mon, 24 May 2021 04:32:50 -0400
-X-MC-Unique: xPt4C06uPRqVjI7bRbTR4w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F76C803622;
-        Mon, 24 May 2021 08:32:48 +0000 (UTC)
-Received: from localhost (ovpn-12-68.pek2.redhat.com [10.72.12.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 70D011B49D;
-        Mon, 24 May 2021 08:32:42 +0000 (UTC)
-Date:   Mon, 24 May 2021 16:32:39 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     lijiang <lijiang@redhat.com>, andy@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, x86@kernel.org,
-        ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dvhart@infradead.org, kexec@lists.infradead.org,
-        hpa@zytor.com, Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-Message-ID: <20210524083239.GA2872@MiWiFi-R3L-srv>
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
- <20210412095231.GC4282@MiWiFi-R3L-srv>
- <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
- <20210413094515.GD4282@MiWiFi-R3L-srv>
- <CANU+ZydgWTSg+iUix8ggn-cSPpg8qtShaUQ47cOeeMxFmXp_zQ@mail.gmail.com>
- <CANU+ZydyKsctuFjPfBz7PuS=FaUtK0gs5Lq06pL5nuRJKe+J0w@mail.gmail.com>
+        Mon, 24 May 2021 06:20:47 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14OAGsRF004385;
+        Mon, 24 May 2021 06:19:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=hSKH8E57PC6zwuMkkJV1ydO9scTR6q2rD8L/QiYYkqs=;
+ b=ukYzQ/SEkEDy1MPwANaN3dErS+0fIFwJxx7Oogq2JI1wXi4bJJlV9vsXdCBQOflPDrh9
+ usN3qA4RF6J15Rc2PtYWO6x7CV9824bVuQawBnkXSKEAmiWB4vvcvgpD+8vTlaQmVtBy
+ 3Bdq9EI7qpYYeu0Sfnl39WtjSFw1DHNeHwNPKnnBaTKawVSaOz+9jjVWVYqv+63mWV5v
+ yWLHjD4fUnc2yuniqASIMe/kn4viNV+Bgub2vP3hHSi5E8K2sehjW8Zs24+vsHL2toPM
+ ft764iKGapQOSaJPix2nUN+0l2Axx0yD2BtL0T1VyCBt7d5RELlAVmFSygXnjmgkwAco cg== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 38pw40d21u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 May 2021 06:19:14 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14OA0fsp192228;
+        Mon, 24 May 2021 06:19:14 -0400
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2042.outbound.protection.outlook.com [104.47.73.42])
+        by mx0a-00154901.pphosted.com with ESMTP id 38qfm35u0x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 May 2021 06:19:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hyh+sOC7PnK5b0yhX984nP2Y8D4KdjsEaUx7sDFYGUdKYyj/PqSVEDycNEbSMfRj0d5u9LHg79M6XWEi/jldlQ/phqUQdpsKKto/yaitassx4lcrdjOLd24Et7XFV3EtdNEAuVsVpKq60DGnY1bNtdZPFLK0ju1r8d8EKJadAvze8Q/7Pc6OBavqElJcjgFjDZW83U5LHsxTAXTE83qYxxbTmc9hJZ0nKfGtpaYFECBi4aQSFHxsKE7+W9DPdJ+k2uHIMEY5IIqqiNfUbTlqLgMw53G2lx0cixeeUsjRHp/4nIzxLvpqlzI8Q0g8JbvaUonulKTrL5gK6o2GrImdsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hSKH8E57PC6zwuMkkJV1ydO9scTR6q2rD8L/QiYYkqs=;
+ b=QxF7tFeeswGhIbyGwUusULjP9psqv+eShtSnXgfNcgG2Qmo2rz5LaqPC3QavGxwSTfvOA0Fd+VH5d9OWVTeSrcXmHTlG2taxMwlATGHfnSKsgYQxcmLvx59e/A3P2wZs6JVOOJ1rxZHHqS692GtPPM/aofD6c0xESVPRZbNFtAD/CsthUU5qoZw2hrD9VZfhtNruc+lKpbztuxFrk7Kprmb7xN8nKZp/F8Mf5m0whjbg4fMz/MVoMN9sXCfco6ueSh9R3FGGWX4Ebl8Y0/jGd1zyzCkIv3WEFlg+rvlFOg+2/lhqA2/uKiRvjPoFkCdsGCFjsVk8+yeaT5+wATenMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=dell.com; dmarc=pass action=none header.from=dell.com;
+ dkim=pass header.d=dell.com; arc=none
+Received: from CO1PR19MB5078.namprd19.prod.outlook.com (2603:10b6:303:d4::15)
+ by MW3PR19MB4300.namprd19.prod.outlook.com (2603:10b6:303:49::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4150.23; Mon, 24 May
+ 2021 10:19:12 +0000
+Received: from CO1PR19MB5078.namprd19.prod.outlook.com
+ ([fe80::9d48:5ddf:f242:3c1a]) by CO1PR19MB5078.namprd19.prod.outlook.com
+ ([fe80::9d48:5ddf:f242:3c1a%7]) with mapi id 15.20.4150.027; Mon, 24 May 2021
+ 10:19:12 +0000
+From:   "Ksr, Prasanth" <Prasanth.Ksr@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>
+CC:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "Bharathi, Divya" <Divya.Bharathi@Dell.com>,
+        Dell Client Kernel <Dell.Client.Kernel@dell.com>
+Subject: RE: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+ interface support on Lenovo platforms
+Thread-Topic: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+ interface support on Lenovo platforms
+Thread-Index: AQHXRHa9Pxppr71i1EuWZEFuPvm3+6rrGZUAgAGV4QCAAPkoAIAAgfMAgAAQqICABEc5wA==
+Date:   Mon, 24 May 2021 10:19:12 +0000
+Message-ID: <CO1PR19MB5078C56213656707579025AD82269@CO1PR19MB5078.namprd19.prod.outlook.com>
+References: <markpearson@lenovo.com>
+ <20210509015708.112766-1-markpearson@lenovo.com>
+ <20210509015708.112766-3-markpearson@lenovo.com>
+ <bbd0f3c9-63c3-2fbb-7712-ecb3131a4c0a@redhat.com>
+ <ac30f95e-8398-fb11-8c94-b50050a3f88f@lenovo.com>
+ <1c21c3d3-7ff1-a7b2-86d0-245050426760@redhat.com>
+ <c8b706bb-5397-758e-8ab8-1d75b2920054@lenovo.com>
+ <971080ef-a9c2-6de9-c6e1-895e7c5903f2@redhat.com>
+In-Reply-To: <971080ef-a9c2-6de9-c6e1-895e7c5903f2@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Prasanth_Ksr@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2021-05-24T10:19:09.0991920Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=1d85d53e-c85e-4c5a-89be-918036b3175c;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=Dell.com;
+x-originating-ip: [49.207.213.97]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f382333-986c-4b13-863e-08d91e9d6049
+x-ms-traffictypediagnostic: MW3PR19MB4300:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW3PR19MB4300CB1892C01577A15D335682269@MW3PR19MB4300.namprd19.prod.outlook.com>
+x-exotenant: 2khUwGVqB6N9v58KS13ncyUmMJd8q4
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 0o51ieYmb9ROj1wbj0aPYar1IDBJ7eEnsX1YrK+nM//fDkzjAkb+i0AnMXdQpRXA0mAkUD55yiCXkWheNUyEb1k66d4qOku+GgKyi8Kt2ztmEPv1VYed0HjQk4MK8xzWk54H3nJtrz1iRxsVipE2eo/J4pWnSUhbzBBQ/gxxbpBHTSjxu7Pm5drlZT0az4iEGAS1n4svclTddFsxqPkpCem6s8Pgui3n8BLuvp4E/GSSmjOYY8Ztsg1syJ7Jv71Ezm58opUGeuwOPy8GbyPm0M12sjamdsjxtCX4Lr9appokPlO44nkZe/Sg+Ox4ixi7zgZX7ydRDMzjEHERcnI1fB2QXT4/CBz2e+81TunV+YKMY3I+4W/FV59cTTT7COrtW6ge1c6Ob2W6IvBsOahyZUwK4j2shoRGDZ+ono2dadDbng0BcvPxH5sJd1eqUzclrbzaEGL/M0ilkjTFXej8KobWoZXrxfNsWj6Lerjp467Ij/H85/pUl/bbFMdBQqZuGtEq24jwN97YSJrZ879utSVHpAsCyeQ/iKCzAToTNdCU/aobnGkSa8s0NCFL+NOCSGH9yYkkdZg2sR8ps2MEJ1daNVlfBP91x9j3EcormP8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR19MB5078.namprd19.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(39860400002)(346002)(396003)(366004)(122000001)(55236004)(71200400001)(83380400001)(26005)(8676002)(53546011)(7696005)(38100700002)(33656002)(6506007)(186003)(52536014)(786003)(66446008)(76116006)(64756008)(66556008)(66946007)(54906003)(86362001)(110136005)(107886003)(5660300002)(4326008)(478600001)(66476007)(9686003)(316002)(8936002)(55016002)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?aTBnWUxrV1pLTFZJcG9wcVNJUlJicFJSOGdFVWp3KzVrVG84UVZiZWxvUXRD?=
+ =?utf-8?B?dHJGM0djRG9NNFJtZzZrT0lQcjFBRHlrWlJ1MjVrOUtBYkx0Q3VJWW01VnNC?=
+ =?utf-8?B?SXFhZ3ZaMWhveGRteWdWQVRRc3hLa0Y0NTlYRG8vbnhOZzI1bkpBbWVlMVl5?=
+ =?utf-8?B?RmNkZHZRUWEvZ1pWNExVUThWV3dUeDkwZndIeGpTbUZGK29ZZmtNTWJTV0ZT?=
+ =?utf-8?B?bWFzajJnRjVqK05OdHVWVWIyL3VmcEZaYkFPNzVRRFRsNEVMWDdQOFB1SnQx?=
+ =?utf-8?B?WEFKTDJzUFVvWVEwdVo0OW05d1dEdEFQZVluUzFmMWFlc1FzMGZoMUJRRFMx?=
+ =?utf-8?B?NmVtdFRucDBUbVNlWDU0N3l4d3p5b0M3R01pSFV6UWFHeGdMUFNsb1gxeTlD?=
+ =?utf-8?B?NGdyMkhaSWlNWndCZTVERVNTVzhoYzBleXlEYkRGNnhQOTBxczlDZTNOWXdN?=
+ =?utf-8?B?K1ZWZEgyc1V6WmlaR1dpSmQydVc5YkNrazk3Yk15b0hnOU00bEdUVSs5UWhI?=
+ =?utf-8?B?bEE5OUZuaGlNbmo5bmFjLzB1Yndjbkozbmp3Nm8rcVB5TkZ2ZTh0TzhIUDYw?=
+ =?utf-8?B?VTZzeXppRVQ3eFBRNU5relNXN3RpeDl1VzBoU2ZFVWlzUmlMQk9DTjg2ZkQx?=
+ =?utf-8?B?QkpWYWpRaWpvNmgxbWJvOUtjc0dhN0ErbnRNUFh1dmxCbW5qNU9jcWdhdlVx?=
+ =?utf-8?B?alNzeUUwSFAxNVA0K1M3ZmszOUR3NE1LZ0JucTRGaHh6eGlPNnRKdExoeHRT?=
+ =?utf-8?B?TEVHaHo2U0J0enNrZk9LbzNGa2hXMWZZUENIYjlKYmNDc0NnTHQwVzU1VFdY?=
+ =?utf-8?B?Q0cyZk5NNXFueXRvanREL3dER0ZzMnE3RE1mUFlWeC9FdjNBM0owbFRNVFZZ?=
+ =?utf-8?B?Umt5ME9aTDBlUUNRdVE2clF0Uk8zb3QxTFZRUjJXZFZrRjNoS2NIVFI0dy9Y?=
+ =?utf-8?B?c0J2dW5JcHEvWVY1K3M1MFB1eXcvQWhlTS9EdTNJZy94OVRONTBnMC9uTXAx?=
+ =?utf-8?B?V2JpQlhUUkhYOWI4dVozSzlHbjFHUDVEWlNKUDB0d3JCOWphR000dGFNeUNP?=
+ =?utf-8?B?TG1ab2Jsa0hqOXNQQkFnZU5jeUwvMU92cVptUVR4TDlEdzcwMXAwcVdINjYx?=
+ =?utf-8?B?YTRRRE5ZQ2dGdWhUQVZsUllrUXBrLzd3K0lzWWxsMmJTeG1zSGYxOVg5QktQ?=
+ =?utf-8?B?cVVWMHYwTkRjKzlleVJKQSsvaERUWENpN0g2bncrb0lyMDBzZE44SmptTjh2?=
+ =?utf-8?B?NE8zalg3OFFuZkdYNDl2SlhQS05TcWRkdE9VWUQ1allRWERSVTB3MVpMMjhB?=
+ =?utf-8?B?QkU0cGpkVXV6RWpqbUljQi83NnJPYm12bTcxdXVJZTBiUWxpc01weUFnSEJy?=
+ =?utf-8?B?d3U2UFc5QXVLbnZtS0tjWkNlaFoyQWhVN2J2V1E3YVRyMkhxSjc3MlBNRG9w?=
+ =?utf-8?B?VFJVYmltQXFqcUVxeGV3c1NXWktLajZneVFsbitTaDltV0I1clpCRmREVnVL?=
+ =?utf-8?B?VXJXRmhTMXFyRUkxMk9SN1NseUtVTGRzUUZXOFJxcWdNVXNhR3BsNExsRmh1?=
+ =?utf-8?B?bGptVWR0bnhJVmVTVGIvVnFaSDVCYTAwY0RMQXhDWHZOYUJoTlpDZzg5akZn?=
+ =?utf-8?B?dFMyMEkyNDBiZi82RU5XUDhIRkl6RXBLdy9LL1lHcjZMeDlLMjFDVXlqb3lL?=
+ =?utf-8?B?ZnVjSFN2YTBOd3dJVHBRbXNxbllZRnFEYjA1cXpXTWs0T09RNkw1VzNBdXVq?=
+ =?utf-8?Q?8qSDsL/8tl/vrmEQ4EUtkBaxaKYSBEzu2mAFWsB?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANU+ZydyKsctuFjPfBz7PuS=FaUtK0gs5Lq06pL5nuRJKe+J0w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-OriginatorOrg: Dell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR19MB5078.namprd19.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f382333-986c-4b13-863e-08d91e9d6049
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 May 2021 10:19:12.3039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 945c199a-83a2-4e80-9f8c-5a91be5752dd
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tfEdS5+DgpzWWV8KTgfKPNMW+6vF8N4M66Bjdpv78XiHbBGGX+L3Lox45TfaC1KPwtWEzsxrKfpTsW5COPT+Ug==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR19MB4300
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-24_06:2021-05-24,2021-05-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 bulkscore=0 priorityscore=1501 adultscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105240074
+X-Proofpoint-ORIG-GUID: 7tfYWuQrkL5_JZy0NWlyHSiDFAU7IMzS
+X-Proofpoint-GUID: 7tfYWuQrkL5_JZy0NWlyHSiDFAU7IMzS
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 bulkscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
+ definitions=main-2105240075
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Lianbo,
-
-On 05/24/21 at 11:00am, lijiang wrote:
-> Also add mail lists and more people in the cc list.
-> 
-> Thanks.
-> Lianbo
-> 
-> 
-> On Fri, May 21, 2021 at 8:36 PM lijiang <lijiang@redhat.com> wrote:
-> 
-> > Hi, Baoquan, Andy
-> > Sorry for the late reply.
-> >
-> > On Tue, Apr 13, 2021 at 5:45 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> >> On 04/12/21 at 08:24am, Andy Lutomirski wrote:
-> >> > On Mon, Apr 12, 2021 at 2:52 AM Baoquan He <bhe@redhat.com> wrote:
-> >> > >
-> >> > > On 04/11/21 at 06:49pm, Andy Lutomirski wrote:
-> >> > > >
-> >> > > >
-> >> > > > > On Apr 11, 2021, at 6:14 PM, Baoquan He <bhe@redhat.com> wrote:
-> >> > > > >
-> >> > > > > ﻿On 04/09/21 at 07:59pm, H. Peter Anvin wrote:
-> >> > > > >> Why don't we do this unconditionally? At the very best we gain
-> >> half a megabyte of memory (except the trampoline, which has to live there,
-> >> but it is only a few kilobytes.)
-> >> > > > >
-> >> > > > > This is a great suggestion, thanks. I think we can fix it in this
-> >> way to
-> >> > > > > make code simpler. Then the specific caring of real mode in
-> >> > > > > efi_free_boot_services() can be removed too.
-> >> > > > >
-> >> > > >
-> >> > > > This whole situation makes me think that the code is buggy before
-> >> and buggy after.
-> >> > > >
-> >> > > > The issue here (I think) is that various pieces of code want to
-> >> reserve specific pieces of otherwise-available low memory for their own
-> >> nefarious uses. I don’t know *why* crash kernel needs this, but that
-> >> doesn’t matter too much.
-> >> > >
-> >> > > Kdump kernel also need go through real mode code path during bootup.
-> >> It
-> >> > > is not different than normal kernel except that it skips the firmware
-> >> > > resetting. So kdump kernel needs low 1M as system RAM just as normal
-> >> > > kernel does. Here we reserve the whole low 1M with memblock_reserve()
-> >> > > to avoid any later kernel or driver data reside in this area.
-> >> Otherwise,
-> >> > > we need dump the content of this area to vmcore. As we know, when
-> >> crash
-> >> > > happened, the old memory of 1st kernel should be untouched until
-> >> vmcore
-> >> > > dumping read out its content. Meanwhile, kdump kernel need reuse low
-> >> 1M.
-> >> > > In the past, we used a back up region to copy out the low 1M area, and
-> >> > > map the back up region into the low 1M area in vmcore elf file. In
-> >> > > 6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the
-> >> crashkernel
-> >> > > option is specified"), we changed to lock the whole low 1M to avoid
-> >> > > writting any kernel data into, like this we can skip this area when
-> >> > > dumping vmcore.
-> >> > >
-> >> > > Above is why we try to memblock reserve the whole low 1M. We don't
-> >> want
-> >> > > to use it, just don't want anyone to use it in 1st kernel.
-> >> > >
-> >> > > >
-> >> > > > I propose that the right solution is to give low-memory-reserving
-> >> code paths two chances to do what they need: once at the very beginning and
-> >> once after EFI boot services are freed.
-> >> > > >
-> >> > > > Alternatively, just reserve *all* otherwise unused sub 1M memory up
-> >> front, then release it right after releasing boot services, and then invoke
-> >> the special cases exactly once.
-> >> > >
-> >> > > I am not sure if I got both suggested ways clearly. They look a little
-> >> > > complicated in our case. As I explained at above, we want the whole
-> >> low
-> >> > > 1M locked up, not one piece or some pieces of it.
-> >> >
-> >> > My second suggestion is probably the better one.  Here it is,
-> >> concretely:
-> >> >
-> >> > The early (pre-free_efi_boot_services) code just reserves all
-> >> > available sub-1M memory unconditionally, but it specially marks it as
-> >> > reserved-but-available-later.  We stop allocating the trampoline page
-> >> > at this stage.
-> >> >
-> >> > In free_efi_boot_services, instead of *freeing* the sub-1M memory, we
-> >> > stick it in the pile of reserved memory created in the early step.
-> >> > This may involve splitting a block, kind of like the current
-> >> > trampoline late allocation works.
-> >> >
-> >> > Then, *after* free_efi_boot_services(), we run a single block of code
-> >> > that lets everything that wants sub-1M code claim some.  This means
-> >> > that the trampoline gets allocated and, if crashkernel wants to claim
-> >> > everything else, it can.  After that, everything still unclaimed gets
-> >> > freed.
-> >>
-> >> void __init setup_arch(char **cmdline_p)
-> >> {
-> >> ...
-> >>         efi_reserve_boot_services();
-> >>         e820__memblock_alloc_reserved_mpc_new();
-> >> #ifdef CONFIG_X86_CHECK_BIOS_CORRUPTION
-> >>         setup_bios_corruption_check();
-> >> #endif
-> >>         reserve_real_mode();
-> >>
-> >>
-> >>         trim_platform_memory_ranges();
-> >>         trim_low_memory_range();
-> >> ...
-> >> }
-> >>
-> >> After efi_reserve_boot_services(), there are several function calling to
-> >> require memory reservation under low 1M.
-> >>
-> >>
-> >> asmlinkage __visible void __init __no_sanitize_address
-> >> start_kernel(void)
-> >>
-> >> {
-> >> ...
-> >>         setup_arch(&command_line);
-> >> ...
-> >>         mm_init();
-> >>                 --> mem_init();
-> >>                          -->memblock_free_all();
-> >>
-> >> ...
-> >> #ifdef CONFIG_X86
-> >>         if (efi_enabled(EFI_RUNTIME_SERVICES))
-> >>                 efi_enter_virtual_mode();
-> >>                         -->efi_free_boot_services();
-> >>                                 -->memblock_free_late();
-> >> #endif
-> >> ...
-> >> }
-> >>
-> >> So from the code flow, we can see that buddy allocator is built in
-> >> mm_init() which puts all memory from memblock.memory excluding
-> >> memblock.reserved into buddy. And much later, we call
-> >> efi_free_boot_services() to release those reserved efi boot memory into
-> >> buddy too.
-> >>
-> >> Are you suggesting we should do the memory reservation from low 1M
-> >> after efi_free_boot_services()? To require memory pages from buddy for
-> >> them? Please help point out my misunderstanding if have any.
-> >>
-> >> With my understanding, in non-efi case, we have done the memory
-> >> reservation with memblock_reserve(), e.g
-> >> e820__memblock_alloc_reserved_mpc_new, reserve_real_mode() are calling
-> >> to do. Just efi_reserve|free_boot_services() break them when efi is
-> >>
-> >
-> >  Yes. But Andy also suggested to reserve all available sub-1M memory
-> > **unconditionally**
-> > in the early code.
-> >
-> > enabled. We can do them again in efi_free_boot_services() just like the
-> >> real_mode reservation does.
-> >>
-> >
-> > Do you mean to call the memblock_reserve() in
-> > the efi_free_boot_services()? Or anything else?
-> > Would you mind sharing more details about this?
-
-Hmm, maybe no. There's no chance to call memblock_reserve() after 
-memblock_free_late().
-
-I suggested making change in efi_free_boot_services() because the
-similar problem has been encountered by Andy himself and fixed in
-efi_free_boot_services(). Please check below commit for reference.
-The patch described the phenemenon, while explained why in code
-comment.
-
-commit 5bc653b7318217c54244a14f248f1f07abe0a865
-Author: Andy Lutomirski <luto@kernel.org>
-Date:   Wed Aug 10 02:29:17 2016 -0700
-
-    x86/efi: Allocate a trampoline if needed in efi_free_boot_services()
-
-So we could handle it in the same place by extending the area to the
-whole low-1M unconditionally. This is 1st way of three I can think of.
-
-The other two are:
-2) Move efi_reserve_boot_services() down to be above init_mem_mapping().
-until init_mem_mapping(), we stop reserving memory from low-1M with
-memblock_reserve(). The change is like below:
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 72920af0b3c0..93b2106d2050 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1067,7 +1067,6 @@ void __init setup_arch(char **cmdline_p)
- 	 * The EFI specification says that boot service code won't be
- 	 * called after ExitBootServices(). This is, in fact, a lie.
- 	 */
--	efi_reserve_boot_services();
- 
- 	/* preallocate 4k for mptable mpc */
- 	e820__memblock_alloc_reserved_mpc_new();
-@@ -1090,6 +1089,8 @@ void __init setup_arch(char **cmdline_p)
- 	 */
- 	trim_snb_memory();
- 
-+	efi_reserve_boot_services();
-+
- 	init_mem_mapping();
- 
- 	idt_setup_early_pf();
-
-
-3) Do it in efi_reserve_boot_services() as you are doing in this patch.
-
-I prefer the 1st and 2nd way.
-
-And by the way, the original code of commit 5bc653b731821("x86/efi: Allocate
-a trampoline if needed in efi_free_boot_services()") could be buggy. I
-remember you ever pasted the boot log of system where you reproduced
-issue and tested the tested patch, there are three separate pages from
-low-1M reserved by boot services. If any of them falls into real mode
-area, it will break the fix of commit 5bc653b731821.
-
-Thanks
-Baoquan
-
-> >
-> > diff --git a/arch/x86/platform/efi/quirks.c
-> > b/arch/x86/platform/efi/quirks.c
-> > index 7850111008a8..d02f12a60457 100644
-> > --- a/arch/x86/platform/efi/quirks.c
-> > +++ b/arch/x86/platform/efi/quirks.c
-> > @@ -453,6 +453,8 @@ void __init efi_free_boot_services(void)
-> >                 memblock_free_late(start, size);
-> >         }
-> >
-> > +       memblock_reserve(0, 1<<20);
-> > +
-> >         if (!num_entries)
-> >                 return;
-> >
-> > Thanks.
-> > Lianbo
-> >
-> >
-> > Thanks
-> >> Baoquan
-> >>
-> >
-
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGFucyBkZSBHb2Vk
+ZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4NCj4gU2VudDogRnJpZGF5LCBNYXkgMjEsIDIwMjEgMTA6
+MjUgUE0NCj4gVG86IE1hcmsgUGVhcnNvbg0KPiBDYzogbWdyb3NzQGxpbnV4LmludGVsLmNvbTsg
+cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc7IEJoYXJhdGhpLA0KPiBEaXZ5YTsg
+S3NyLCBQcmFzYW50aDsgRGVsbCBDbGllbnQgS2VybmVsDQo+IFN1YmplY3Q6IFJlOiBbRXh0ZXJu
+YWxdIFJlOiBbUEFUQ0ggdjIgMy8zXSBwbGF0Zm9ybS94ODY6IHRoaW5rLWxtaTogQWRkIFdNSQ0K
+PiBpbnRlcmZhY2Ugc3VwcG9ydCBvbiBMZW5vdm8gcGxhdGZvcm1zDQo+IA0KPiANCj4gW0VYVEVS
+TkFMIEVNQUlMXQ0KPiANCj4gSGksDQo+IA0KPiBPbiA1LzIxLzIxIDU6NTUgUE0sIE1hcmsgUGVh
+cnNvbiB3cm90ZToNCj4gDQo+IDxzbmlwPg0KPiANCj4gPj4+IEkga25vdyBpdCB3b3VsZCBtYWtl
+IERlbGwgYW5kIExlbm92byBvcGVyYXRlIGRpZmZlcmVudGx5IChJIGNhbiBhZGQNCj4gPj4+IHRo
+YXQgZGV0YWlsIHRvIHRoZSBkb2N1bWVudGF0aW9uKSBidXQgaXQganVzdCBmZWVscyBsaWtlIGEg
+bmljZXINCj4gPj4+IGRlc2lnbi4NCj4gPj4NCj4gPj4gVGhhdCB3b3JrcyBmb3IgbWUuIFBlcmhh
+cHMgeW91IGNhbiBhbHNvIGRvIGEgKGNvbXBpbGUgdGVzdGVkIG9ubHkpDQo+ID4+IFJGQyBwYXRj
+aCBmb3IgdGhlIERlbGwgY29kZSB0byBkbyB0aGUgc2FtZSB0aGluZyAocmVwbGFjZSB0aGUgbWVt
+c2V0DQo+ID4+IDAgd2l0aCB0aGUgc3Ryc2NweSkgdG8gc2VlIGlmIHRoZSBEZWxsIGZvbGtzIGFy
+ZSBvayB3aXRoIGFsc28gZG9pbmcNCj4gPj4gdGhpbmdzIHRoaXMgd2F5ID8NCj4gPj4NCj4gPiBJ
+J20gbm90IGh1Z2VseSBjb21mb3J0YWJsZSB3aXRoIHRoYXQuIElmIGZvciBzb21lIHJlYXNvbiBp
+dCBicm9rZQ0KPiA+IHRoaW5ncyBmb3IgRGVsbCBjdXN0b21lcnMgSSB3b3VsZG4ndCB3YW50IHRv
+IGJlIHJlc3BvbnNpYmxlIDopDQo+IA0KPiBSaWdodCwgdGhhdCBpcyB3aHkgSSBzdWdnZXN0ZWQg
+bWFraW5nIGl0IGEgUkZDIHBhdGNoIGFuZCBJIHdvdWxkIGNlcnRhaW5seSBub3QNCj4gYXBwbHkg
+dGhhdCBwYXRjaCB3aXRob3V0IGl0IGJlaW5nIHRlc3RlZCBieSBEZWxsIGZpcnN0Lg0KPiANCj4g
+VGhlIGlkZWEgYmVoaW5kIHRoZSBwYXRjaCBpcyBmb3IgaXQgdG8gYmUgYSB3YXkgdG8gZ2V0IGEg
+ZGlzY3Vzc2lvbiBhYm91dCB0aGlzDQo+IHN0YXJ0ZWQuIEluIG15IGV4cGVyaWVuY2UgcGF0Y2hl
+cyB0ZW5kIHRvIGdldCBtb3JlIG9mIGEgcmVhY3Rpb24gdGhlbg0KPiBoeXBvdGhldGljYWwgZGlz
+Y3Vzc2lvbnMgYWJvdXQgY2hhbmdlcyA6KQ0KPiANCj4gPiBJJ2QgcmF0aGVyIHRoZXkNCj4gPiBt
+YWRlIHRoZSBjaGFuZ2VzIGFuZCB3ZXJlIGFibGUgdG8gdGVzdCBpdCAtIEkga25vdyB0aGF0J3Mg
+d2hhdCBJJ2QNCj4gPiBwcmVmZXIgaWYgaXQgd2FzIHRoZSBvdGhlciB3YXkgYXJvdW5kLiBBcG9s
+b2dpZXMgaWYgSSdtIGJlaW5nIG92ZXIgY2F1dGlvdXMhDQo+IA0KPiBJZiB5b3UgZG9uJ3QgZmVl
+bCBjb21mb3J0YWJsZSBkb2luZyB0aGlzLCB0aGF0IGlzIGZpbmUsIGxldHMgd2FpdCB3aGF0IHRo
+ZSBEZWxsDQo+IGZvbGtzIGhhdmUgdG8gc2F5OyBhbmQgaWYgdGhleSBkb24ndCByZXNwb25kIEkg
+bWlnaHQgZG8gYSBSRkMgbXlzZWxmLg0KPiANCg0KQWNrLiBXZSB3aWxsIGltcGxlbWVudCB0aGUg
+c2FtZSBmcm9tIERlbGwgc2lkZSBhcyB3ZWxsIHRvIGhhdmUgdW5pZm9ybWl0eSBhbmQNCnNlZW1z
+IG5pY2VyIGZyb20gYSB1c2VyIHBvaW50IG9mIHZpZXcgcmF0aGVyIHRoYW4gcG9wdWxhdGluZyB0
+aGUgDQpjdXJyZW50X3Bhc3N3b3JkIGZpZWxkIGFnYWluIGluIGNhc2Ugb2YgcGFzc3dvcmQgY2hh
+bmdlIHNjZW5hcmlvLiANCg0KPiA+IEkndmUgYWRkZWQgdGhlIG5ldyBEZWxsIGtlcm5lbCBncm91
+cCBlbWFpbCB0byB0aGUgdGhyZWFkIHNvIHRoZXkncmUNCj4gPiBhd2FyZSA6KQ0KPiANCj4gVGhh
+bmtzLg0KPiANCj4gUmVnYXJkcywNCj4gDQo+IEhhbnMNCg0K
