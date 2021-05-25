@@ -4,65 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD53C2B9F8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1329C2B9F8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4506140F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B285061417
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232628AbhEYQwJ (ORCPT
+        id S232824AbhEYQyU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 May 2021 12:52:09 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.2]:28049 "EHLO
+        Tue, 25 May 2021 12:54:20 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.3]:29311 "EHLO
         mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230451AbhEYQwF (ORCPT
+        by vger.kernel.org with ESMTP id S232550AbhEYQyT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 May 2021 12:52:05 -0400
-Received: from [100.112.2.115] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.us-east-1.aws.symcld.net id 05/A4-49204-ADA2DA06; Tue, 25 May 2021 16:50:34 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplleJIrShJLcpLzFFi42JJl3vFrntLa22
-  CQecTLouXEw4zWnR3z2WyeHN8OpPF547JLBar97xgtlj08QmbA5vHpJkzmD12zrrL7jHvZKDH
-  +31X2Tw+b5ILYI1izcxLyq9IYM348v8kY8FykYoZT96xNDA+5e9i5OQQEvjPKLH7EV8XIxeQ/
-  ZhRYt3fw+wgCWGBIomPN86ydjGyc4gI6EvsLwMpYRa4yihxf/YrRoj640wSR37eA6tnE9CW2L
-  LlFxuIzStgK9F0dzsLiM0ioCrxYvIesBpRgXCJ3R0vmSBqBCVOznwCVsMpEChx9+8sIJsDaIO
-  mxPpd+iBhZgFxiVtP5jNB2PIS29/OYQYpkRBQlJj4TRckLCGQINHz7xHbBEbBWUiGzkIYNAvJ
-  oFlIBi1gZFnFaJZUlJmeUZKbmJmja2hgoGtoaKRrrGtkaqiXWKWbpFdarJuaWFyiC+SWF+sVV
-  +Ym56To5aWWbGIExk5KAfPvHYxdbz7oHWKU5GBSEuWV8l+dIMSXlJ9SmZFYnBFfVJqTWnyIUY
-  aDQ0mCVxwYjUKCRanpqRVpmTnAOIZJS3DwKInw3tQESvMWFyTmFmemQ6ROMSpKifPaKwAlBEA
-  SGaV5cG2w1HGJUVZKmJeRgYFBiKcgtSg3swRV/hWjOAejkjDvMpDxPJl5JXDTXwEtZgJanJSz
-  CmRxSSJCSqqBSWTrmgm1d7as+tF+dia36+ON1460TOXIy2rPfHOpM5NVkn++F9v0k56Pzlzpu
-  a2Wo6R/zti1v7Dmn8Mc9h9mxtzL3vi5zvzs7mr3Rjnu1tdLE87H8i1bm/bxxKbpvgY6EoqHtM
-  VYw358+H01ZvEq994Tzi2THpk+D5bVinQX/vuwi+v9JUm16etfBU5ddej6jFc///ssZLtQtO6
-  +r+zFPW/ljcy1BA4op3e9XRhxT8Lt2oETE0ofcZi93L5z6cP7j8+rP5Sw1zl7sahpi+3kt51M
-  Mtl62zob9ofULaw/e5D9ruGH7n237HLOH3nY/nbVzL93JZY+ffP3Ebfj9YUb5q262+H1rPOyj
-  pf27cALy96cUWIpzkg01GIuKk4EAInseZ2YAwAA
+        Tue, 25 May 2021 12:54:19 -0400
+Received: from [100.112.3.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-b.us-east-1.aws.symcld.net id 15/8E-53037-16B2DA06; Tue, 25 May 2021 16:52:49 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleJIrShJLcpLzFFi42JJl3vFrpuovTb
+  BoG0hk8XLCYcZLbq75zJZvDk+ncnic8dkFovVe14wWyz6+ITNgc1j0swZzB47Z91l95h3MtDj
+  /b6rbB6fN8kFsEaxZuYl5VcksGac//afueCxQMXlz0kNjF95uhi5OIQE/jNKfLp9gBHCecwoM
+  XXVKrYuRk4OYYEiiY83zrKC2CICoRL3JtwFK2IW2MAo0fC+gwmiYwuTxJOLvxlBqtgEtCW2bP
+  kF1s0rYCvRO/s5E4jNIqAqMf1DAzOILSoQLrG74yUTRI2gxMmZT1hAbE4BO4nDGxYD2RxAGzQ
+  l1u/SBwkzC4hL3HoynwnClpfY/nYOM0iJhICixMRvuiBhCYEEiZ5/j9gmMArOQjJ0FsKgWUgG
+  zUIyaAEjyypGs6SizPSMktzEzBxdQwMDXUNDI11DXUMjE73EKt0kvdJi3dTE4hJdQ73E8mK94
+  src5JwUvbzUkk2MwPhJKWCs2cG44M0HvUOMkhxMSqK8Uv6rE4T4kvJTKjMSizPii0pzUosPMc
+  pwcChJ8IprrU0QEixKTU+tSMvMAcYyTFqCg0dJhPemJlCat7ggMbc4Mx0idYpRUUqc114BKCE
+  AksgozYNrg6WPS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJWEeZeBjOfJzCuBm/4KaDET0OKk
+  nFUgi0sSEVJSDUyKsuuS1bUu17Aabsu4PXfvhD0+jKciKrsnKYgV21s+NFvfMem4q/Np9h+yE
+  cVxKQvrLHJ/8M0qv7bv8tcCsf0rrA01J+irthhvTKpbG5xUO/lE36epJwUr6y6f47OI0Jx7RM
+  q3ufvjoodTX7UIhqxfYTN7ymnfwzOdm6ItKu4/KTcQfz1bftnr4gt3Nwd/sOJfV/5aZVvSqdX
+  P3drCFnGvj3HSi17xJTq8+0+wivmBp4c+Ki9W3Vrhuc5ty5S3z9VCL00ITC2v/cZe/Ze1b8LF
+  e46Vp/mK3jNzNcq+qtqiFSzT9C8p8Eun1NWytac9MhpN7Gyfbnc8IPb8jsDhx2I7TCpC+7RNT
+  1qp8k+c+F6JpTgj0VCLuag4EQAxPJEGmgMAAA==
 X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-8.tower-395.messagelabs.com!1621961432!29536!1
+X-Msg-Ref: server-3.tower-395.messagelabs.com!1621961567!6057!1
 X-Originating-IP: [103.30.234.7]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.75.3; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 27099 invoked from network); 25 May 2021 16:50:33 -0000
+Received: (qmail 18340 invoked from network); 25 May 2021 16:52:48 -0000
 Received: from unknown (HELO lenovo.com) (103.30.234.7)
-  by server-8.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 25 May 2021 16:50:33 -0000
+  by server-3.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 25 May 2021 16:52:48 -0000
 Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id B7198AC320FAFACEC851;
-        Wed, 26 May 2021 00:50:30 +0800 (CST)
+        by Forcepoint Email with ESMTPS id ECC2ADB55EE6B966132D;
+        Wed, 26 May 2021 00:52:44 +0800 (CST)
 Received: from [10.46.192.114] (10.46.192.114) by reswpmail01.lenovo.com
  (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Tue, 25 May
- 2021 12:50:28 -0400
+ 2021 12:52:43 -0400
 Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
  interface support on Lenovo platforms
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Divya Bharathi <divya.bharathi@dell.com>,
         Prasanth KSR <prasanth.ksr@dell.com>
@@ -71,14 +70,14 @@ References: <markpearson@lenovo.com>
  <20210509015708.112766-3-markpearson@lenovo.com>
  <CAHp75VfM=Vv2pe=KNYQO_hf_8Ya-m8QH481xnu+OPoZL-p8TSA@mail.gmail.com>
  <f13956b5-511e-1793-c089-6f72628ea7a8@lenovo.com>
- <CAHp75VduaxS7XtcxthFts8rF2stYR3w26527_kJj_+m-XvS-NA@mail.gmail.com>
+ <d17962ca-3839-fbeb-9090-e09960678b82@redhat.com>
 From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <1782b513-9cf1-40cb-1dc3-f24c68eb9bdc@lenovo.com>
-Date:   Tue, 25 May 2021 12:50:28 -0400
+Message-ID: <fc6eaf95-39af-a381-50a1-b9a6967b12b8@lenovo.com>
+Date:   Tue, 25 May 2021 12:52:42 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VduaxS7XtcxthFts8rF2stYR3w26527_kJj_+m-XvS-NA@mail.gmail.com>
+In-Reply-To: <d17962ca-3839-fbeb-9090-e09960678b82@redhat.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -89,32 +88,21 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Andy
 
-On 2021-05-25 12:18 p.m., Andy Shevchenko wrote:
-> On Tue, May 25, 2021 at 6:14 PM Mark Pearson <markpearson@lenovo.com> wrote:
->> On 2021-05-22 7:04 a.m., Andy Shevchenko wrote:
->>> On Sun, May 9, 2021 at 5:02 AM Mark Pearson <markpearson@lenovo.com> wrote:
+
+On 2021-05-25 12:29 p.m., Hans de Goede wrote:
+> Hi,
 > 
-> ...
-> 
->>>> +       *string = kstrdup(obj->string.pointer, GFP_KERNEL);
->>>> +       kfree(obj);
->>>> +       return *string ? 0 : -ENOMEM;
->>>
->>> This breaks the principle "don't touch the output in error case".
+> On 5/25/21 5:14 PM, Mark Pearson wrote:
+>> Hi Andy,
 >>
->> But I'm not changing *string in an error case here - I'm not
->> understanding the issue here.
->> Happy to rewrite it to make it clearer though if that would help.
-> 
-> *string may be not NULL when you do assign it.
-> You need to assign it iff you are about to return 0.
-Ah - got it. I'll fix.
-
-> 
-> ...
-> 
+>>>> +static ssize_t current_password_store(struct kobject *kobj,
+>>>> +                                     struct kobj_attribute *attr,
+>>>> +                                     const char *buf, size_t count)
+>>>> +{
+>>>> +       struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+>>>> +       int length;
+>>>
 >>>> +       length = strlen(buf);
 >>>> +       if (buf[length-1] == '\n')
 >>>> +               length--;
@@ -122,52 +110,40 @@ Ah - got it. I'll fix.
 >>> This will prevent you from using \n in the password. Why?
 >> The BIOS doesn't like it - so we strip it out :)
 > 
-> I haven't checked, but if there is no description of this in the
-> documentation/commit message, should be added.
-Ack.
+> Erm, I don't believe that that is the whole story, there are 2
+> separate things at play here:
 > 
-> ...
+> 1. When entering the BIOS password at system power-on pressing
+> enter means you're done and the BIOS should check what you've
+> just entered as password before pressing the enter key, so the
+> password can never contain '\n' since the enter key is the
+> terminator for entering the password at boot
 > 
->>>> +       memcpy(setting->password, buf, length);
->>>
->>>> +       setting->password[length] = '\0';
->>>
->>> Why is the password a *string*? From where that assumption comes from?
->> Sorry, I'm not understanding the question here. It's what our BIOS is
->> expecting. I'm missing something here
+> 2. People often use sysfs files by doing things like this:
 > 
-> So, BIOS restrictions should be documented if not yet.
-Ack
+> echo mysecretpassword > /sys/.../current_password
 > 
-> ...
+> And the "echo" shell command will then add an extra '\n' this
+> is why you will see code like this to strip the '\n' in functions
+> which use the input string as is (instead of doing strtol,
+> sysfs_match_string or something else which does not care about a
+> terminating '\n' already, note that functions like sysfs_str_equals
+> and sysfs_match_string are special helpers for not caring about
+> the '\n' without needing to strip it (because stripping it
+> requires a strdup).
 > 
->>>> +       /* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
->>>> +       len = strlen(setting->password) + strlen(encoding_options[setting->encoding])
->>>> +               + strlen(setting->kbdlang) + 3 /* type */
->>>> +               + strlen(new_pwd) + 6 /* punctuation and terminator*/;
->>>> +       auth_str = kzalloc(len, GFP_KERNEL);
->>>> +       snprintf(auth_str, len, "%s,%s,%s,%s,%s;",
->>>> +                setting->pwd_type, setting->password, new_pwd,
->>>> +                encoding_options[setting->encoding], setting->kbdlang);
->>>
->>> NIH of kasprintf()
->> Not sure what NIH is -
+> So what is happening here is simply stripping the '\n' which may
+> have been added by echo (if it was added).
 > 
-> https://en.wikipedia.org/wiki/Not_invented_here
-Neat :)
+> Regards,
 > 
->> but I'm assuming I should be using kasprintf
->> instead of snprinf :)
->> I wasn't aware of it - thank you.
+> Hans
 > 
-> strlen+kmalloc+sprintf == kasprintf
-> 
-> ...
-> 
->>> The terminator line doesn't need a comma.
->> Argh. I always get this wrong as to when it is required and when it isn't.
->> I'll fix
-> 
-> If it is supposed to be the last entry (i.o.w. terminator) --> no comma.
-> 
-Thanks
+Agreed on all, I guess I was giving the story summary :)
+I've been using this method in testing and if the \n gets passed on then
+you'll get an error returned - the BIOS doesn't like it.
+
+I've no idea if this is Lenovo specific or not. I'll document it as a
+Lenovo specific case unless there are objections.
+
+Mark
