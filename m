@@ -2,104 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7CFC2B9F8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B912DC2B9F8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF23060C3D
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C291611C2
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbhEYPnD (ORCPT
+        id S231444AbhEYQUD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 May 2021 11:43:03 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:43329 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234294AbhEYPnC (ORCPT
+        Tue, 25 May 2021 12:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231419AbhEYQUA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 May 2021 11:43:02 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 61D7F1311;
-        Tue, 25 May 2021 11:41:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 25 May 2021 11:41:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tju.me; h=from
-        :to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=3dOqmWnre8Qli2mInIo3ZkkdNa
-        BOEO5L4G3nLgoVQDM=; b=nPpQn95Jvv5OpxSFlX52gjl8gbM7z4GDxvxUQkRu7u
-        BApLthnY+6468+HYVbcJfIIrrKgWWjrrHPQuWg6Nm8pP1wb7Wx9zsTcGhymsaCj4
-        Dxg9UxSvpsNKL7LrygrTMZKRF38GtYCZOfwHI5/3oJNgGpPcIRCwjv0zs7x4dli7
-        CwTZjBi8GOfqiieR45Lxz783PqVSJIQyOSLOq4kK9xDvSpyfHH29iiIhCMHUl4R2
-        YalUK3hz1VcZ7f0XTAUUH/iZyzddxZ6YuSEaDx24NSNcrCZDkmT4AreZWRcauvpu
-        buU7YWZ9tlHsqGg2FJVBb2BOpFhXBfa1wyNpEoiDZQaQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3dOqmWnre8Qli2mIn
-        Io3ZkkdNaBOEO5L4G3nLgoVQDM=; b=TS7AF0FFCubRJ8JFc7t9ge5fmzE6RRbWJ
-        mv3+MFPaez7u3IeYTfLEAqgE/9I3yUZ8HEk+myW1AngqgMFAX930CK7vArrSW+R9
-        nCeXSy61Y4bIP6R7YF1Pn/RGWfkTeRC7hDUBtTlT/e0mzzKMTyTEh916Qg2F2EXV
-        n2wsis64I3BfDAduj+nO2N2JYJdW8+1/RqiyJRVhUWCEqBh6+qgfPUHdriZ6ShuO
-        wgREp+5ai5TQ7jc7+iSuFUQhlhOduQ2P9A0uDQT+cXYHosvtYgKdbwGGVewBl1ww
-        s4hBReEv4uzW3CHHMKuxDwYVgSxY41Ug6/EMMMhuNcHjNgFbWzE2Q==
-X-ME-Sender: <xms:qRqtYCWt2xrqEw8ayfIIN7HOKpxYx2wruTOTk9ilK8PkAZnhfXOTNg>
-    <xme:qRqtYOkSKsmCT_5oH9d7sFAA1nUF8dSo90BXndfHg2aw5oocv1GO9h6FmSv3aNa8C
-    en4tQs7WQnZGg0eBw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdekuddgleefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefvihhlucflrghs
-    phgvrhcufghllhhrihgthhcuoehtjhhusehtjhhurdhmvgeqnecuggftrfgrthhtvghrnh
-    epjedugefhkeeuueekueejueefgeevjeeuvdefudfggeeuieehueelteejvdehtdfhnecu
-    kfhppeelgedrudefgedrledtrddvtdegnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepthhjuhesthhjuhdrmhgv
-X-ME-Proxy: <xmx:qRqtYGa7E-jZ01Tn8OnLccHCCTB9s-524Vrxi9b4vJO_LOSr6vJdDg>
-    <xmx:qRqtYJXarwVlrRMZV0IcT8Iw44w8j-HKH9i9x7QWu_TwuEcSCP6CfQ>
-    <xmx:qRqtYMmz4V3mk_iNdHQgZ_LaLgQcLuIAWfo7dCvryZRwC-ciyeJ3tA>
-    <xmx:qhqtYNAtXJq9Up5MzyBnE6QJ9hsLQywEyyhOLZ8SQ64x_8BapsL_ug>
-Received: from alpha.fritz.box (unknown [94.134.90.204])
-        by mail.messagingengine.com (Postfix) with ESMTPA;
-        Tue, 25 May 2021 11:41:27 -0400 (EDT)
-From:   Til Jasper Ullrich <tju@tju.me>
-To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+        Tue, 25 May 2021 12:20:00 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EC1C061574
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 May 2021 09:18:30 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id v13-20020a17090abb8db029015f9f7d7290so2074443pjr.0
+        for <platform-driver-x86@vger.kernel.org>; Tue, 25 May 2021 09:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y05Q/xqageaMqpuWZjVPY2JeD4gF4QOeU3Cbfek8o9Y=;
+        b=cpFoIs2fQ/pUuAILWjIl7rzo1F6E2aQs1taN/8NtUcbBUYfoFaAJP5zV9VdGB1rpRT
+         5vQzguRUiFjrzS/P5Ovsz/Bx6c35eCWBsuCafZgrl2TLYkABiKufSG2MG52hZguKMkEL
+         MkcQx551xSAo8vt5yPVosejKwd1gZWiq3RJdV4LnmX8HI5zOJFHT7GBtPMkQz7ebKS2B
+         c29e0aYrAzWygCSy7wf2GMVzPnQfJfGXOWn4XE8THzPVEv5a36Ips/m0vcFZ+1Emr24u
+         x9YoOuRCb2RrAsPBYLjeL46ka5zMK1LrVezn6uxPVAp3BEXXz2L5diWpqXJa2Ox3SvrC
+         eLkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y05Q/xqageaMqpuWZjVPY2JeD4gF4QOeU3Cbfek8o9Y=;
+        b=cfGwVRIX+QgqC9nnXBYP0KWNIljfYDyTTn31tcWxnyoXvryefGchtFl22OlZOB4r+/
+         39mxHT8tzeOQXa2Z8B8l3X4AtxK7sTBURY9e0zUBTFXUPDaXc4gz9CWzg79xnShgekbJ
+         6PbnXEqQeex8mQXJgtXL9Nbrij+rtizrZ6GJzje6jnZfB04PzHHFYEtEI8XnCpFp2hlO
+         2Z0/VlIYcwoPMu5bA9hFA3JyyG5fC3X9pQlal/XfRzzlwRnUHbBCx0d1g3K4TWVMOuMv
+         X8aS2knq8aJK1GHld9Y7B9xZSeEoRSiOAzOagodBwroTZKJ/mDHy0IHPDYs+k9Ppbiaf
+         I+JA==
+X-Gm-Message-State: AOAM531weY7iAhomNVlKim9Dxgw9xuNROd70o3SkE7LIpIA8jXYpw0jN
+        ExlGiQdx2/ZB9Xt4vlXIFd34M3gouabXUgxrscg=
+X-Google-Smtp-Source: ABdhPJz1zRQ09o9fGsG75M8wO07eAI+kUsH79E9P6X2aukj9uzx/AOjkMzwkjeDZBx/83T/maDmTecf56JyaDs55AIU=
+X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr5632736pja.181.1621959509526;
+ Tue, 25 May 2021 09:18:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <markpearson@lenovo.com> <20210509015708.112766-1-markpearson@lenovo.com>
+ <20210509015708.112766-3-markpearson@lenovo.com> <CAHp75VfM=Vv2pe=KNYQO_hf_8Ya-m8QH481xnu+OPoZL-p8TSA@mail.gmail.com>
+ <f13956b5-511e-1793-c089-6f72628ea7a8@lenovo.com>
+In-Reply-To: <f13956b5-511e-1793-c089-6f72628ea7a8@lenovo.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 25 May 2021 19:18:13 +0300
+Message-ID: <CAHp75VduaxS7XtcxthFts8rF2stYR3w26527_kJj_+m-XvS-NA@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
+ interface support on Lenovo platforms
+To:     Mark Pearson <markpearson@lenovo.com>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: thinkpad_acpi: add X1 Carbon Gen 9 second fan support
-Date:   Tue, 25 May 2021 17:09:52 +0200
-Message-Id: <20210525150950.14805-1-tju@tju.me>
-X-Mailer: git-send-email 2.31.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Prasanth KSR <prasanth.ksr@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The X1 Carbon Gen 9 uses two fans instead of one like the previous
-generation. This adds support for the second fan. It has been tested
-on my X1 Carbon Gen 9 (20XXS00100) and works fine.
+On Tue, May 25, 2021 at 6:14 PM Mark Pearson <markpearson@lenovo.com> wrote:
+> On 2021-05-22 7:04 a.m., Andy Shevchenko wrote:
+> > On Sun, May 9, 2021 at 5:02 AM Mark Pearson <markpearson@lenovo.com> wrote:
 
-Signed-off-by: Til Jasper Ullrich <tju@tju.me>
----
- drivers/platform/x86/thinkpad_acpi.c | 1 +
- 1 file changed, 1 insertion(+)
+...
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index dd60c9397d35..edd71e744d27 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -8853,6 +8853,7 @@ static const struct tpacpi_quirk fan_quirk_table[] __initconst = {
- 	TPACPI_Q_LNV3('N', '2', 'O', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (2nd gen) */
- 	TPACPI_Q_LNV3('N', '2', 'V', TPACPI_FAN_2CTL),	/* P1 / X1 Extreme (3nd gen) */
- 	TPACPI_Q_LNV3('N', '3', '0', TPACPI_FAN_2CTL),	/* P15 (1st gen) / P15v (1st gen) */
-+	TPACPI_Q_LNV3('N', '3', '2', TPACPI_FAN_2CTL),	/* X1 Carbon (9th gen) */
- };
+> >> +       *string = kstrdup(obj->string.pointer, GFP_KERNEL);
+> >> +       kfree(obj);
+> >> +       return *string ? 0 : -ENOMEM;
+> >
+> > This breaks the principle "don't touch the output in error case".
+>
+> But I'm not changing *string in an error case here - I'm not
+> understanding the issue here.
+> Happy to rewrite it to make it clearer though if that would help.
 
- static int __init fan_init(struct ibm_init_struct *iibm)
---
-2.31.1
+*string may be not NULL when you do assign it.
+You need to assign it iff you are about to return 0.
 
+...
+
+> >> +       length = strlen(buf);
+> >> +       if (buf[length-1] == '\n')
+> >> +               length--;
+> >
+> > This will prevent you from using \n in the password. Why?
+> The BIOS doesn't like it - so we strip it out :)
+
+I haven't checked, but if there is no description of this in the
+documentation/commit message, should be added.
+
+...
+
+> >> +       memcpy(setting->password, buf, length);
+> >
+> >> +       setting->password[length] = '\0';
+> >
+> > Why is the password a *string*? From where that assumption comes from?
+> Sorry, I'm not understanding the question here. It's what our BIOS is
+> expecting. I'm missing something here
+
+So, BIOS restrictions should be documented if not yet.
+
+...
+
+> >> +       /* Format: 'PasswordType,CurrentPw,NewPw,Encoding,KbdLang;' */
+> >> +       len = strlen(setting->password) + strlen(encoding_options[setting->encoding])
+> >> +               + strlen(setting->kbdlang) + 3 /* type */
+> >> +               + strlen(new_pwd) + 6 /* punctuation and terminator*/;
+> >> +       auth_str = kzalloc(len, GFP_KERNEL);
+> >> +       snprintf(auth_str, len, "%s,%s,%s,%s,%s;",
+> >> +                setting->pwd_type, setting->password, new_pwd,
+> >> +                encoding_options[setting->encoding], setting->kbdlang);
+> >
+> > NIH of kasprintf()
+> Not sure what NIH is -
+
+https://en.wikipedia.org/wiki/Not_invented_here
+
+> but I'm assuming I should be using kasprintf
+> instead of snprinf :)
+> I wasn't aware of it - thank you.
+
+strlen+kmalloc+sprintf == kasprintf
+
+...
+
+> > The terminator line doesn't need a comma.
+> Argh. I always get this wrong as to when it is required and when it isn't.
+> I'll fix
+
+If it is supposed to be the last entry (i.o.w. terminator) --> no comma.
+
+-- 
+With Best Regards,
+Andy Shevchenko
