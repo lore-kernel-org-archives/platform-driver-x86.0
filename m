@@ -2,148 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1329C2B9F8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F426C47089
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 22:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B285061417
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 16:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC361409
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 25 May 2021 22:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbhEYQyU (ORCPT
+        id S232992AbhEYWb5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 25 May 2021 12:54:20 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.3]:29311 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232550AbhEYQyT (ORCPT
+        Tue, 25 May 2021 18:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233006AbhEYWbw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 25 May 2021 12:54:19 -0400
-Received: from [100.112.3.43] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-3.bemta.az-b.us-east-1.aws.symcld.net id 15/8E-53037-16B2DA06; Tue, 25 May 2021 16:52:49 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleJIrShJLcpLzFFi42JJl3vFrpuovTb
-  BoG0hk8XLCYcZLbq75zJZvDk+ncnic8dkFovVe14wWyz6+ITNgc1j0swZzB47Z91l95h3MtDj
-  /b6rbB6fN8kFsEaxZuYl5VcksGac//afueCxQMXlz0kNjF95uhi5OIQE/jNKfLp9gBHCecwoM
-  XXVKrYuRk4OYYEiiY83zrKC2CICoRL3JtwFK2IW2MAo0fC+gwmiYwuTxJOLvxlBqtgEtCW2bP
-  kF1s0rYCvRO/s5E4jNIqAqMf1DAzOILSoQLrG74yUTRI2gxMmZT1hAbE4BO4nDGxYD2RxAGzQ
-  l1u/SBwkzC4hL3HoynwnClpfY/nYOM0iJhICixMRvuiBhCYEEiZ5/j9gmMArOQjJ0FsKgWUgG
-  zUIyaAEjyypGs6SizPSMktzEzBxdQwMDXUNDI11DXUMjE73EKt0kvdJi3dTE4hJdQ73E8mK94
-  src5JwUvbzUkk2MwPhJKWCs2cG44M0HvUOMkhxMSqK8Uv6rE4T4kvJTKjMSizPii0pzUosPMc
-  pwcChJ8IprrU0QEixKTU+tSMvMAcYyTFqCg0dJhPemJlCat7ggMbc4Mx0idYpRUUqc114BKCE
-  AksgozYNrg6WPS4yyUsK8jAwMDEI8BalFuZklqPKvGMU5GJWEeZeBjOfJzCuBm/4KaDET0OKk
-  nFUgi0sSEVJSDUyKsuuS1bUu17Aabsu4PXfvhD0+jKciKrsnKYgV21s+NFvfMem4q/Np9h+yE
-  cVxKQvrLHJ/8M0qv7bv8tcCsf0rrA01J+irthhvTKpbG5xUO/lE36epJwUr6y6f47OI0Jx7RM
-  q3ufvjoodTX7UIhqxfYTN7ymnfwzOdm6ItKu4/KTcQfz1bftnr4gt3Nwd/sOJfV/5aZVvSqdX
-  P3drCFnGvj3HSi17xJTq8+0+wivmBp4c+Ki9W3Vrhuc5ty5S3z9VCL00ITC2v/cZe/Ze1b8LF
-  e46Vp/mK3jNzNcq+qtqiFSzT9C8p8Eun1NWytac9MhpN7Gyfbnc8IPb8jsDhx2I7TCpC+7RNT
-  1qp8k+c+F6JpTgj0VCLuag4EQAxPJEGmgMAAA==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-3.tower-395.messagelabs.com!1621961567!6057!1
-X-Originating-IP: [103.30.234.7]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.75.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 18340 invoked from network); 25 May 2021 16:52:48 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.7)
-  by server-3.tower-395.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 25 May 2021 16:52:48 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id ECC2ADB55EE6B966132D;
-        Wed, 26 May 2021 00:52:44 +0800 (CST)
-Received: from [10.46.192.114] (10.46.192.114) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Tue, 25 May
- 2021 12:52:43 -0400
-Subject: Re: [External] Re: [PATCH v2 3/3] platform/x86: think-lmi: Add WMI
- interface support on Lenovo platforms
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Divya Bharathi <divya.bharathi@dell.com>,
-        Prasanth KSR <prasanth.ksr@dell.com>
-References: <markpearson@lenovo.com>
- <20210509015708.112766-1-markpearson@lenovo.com>
- <20210509015708.112766-3-markpearson@lenovo.com>
- <CAHp75VfM=Vv2pe=KNYQO_hf_8Ya-m8QH481xnu+OPoZL-p8TSA@mail.gmail.com>
- <f13956b5-511e-1793-c089-6f72628ea7a8@lenovo.com>
- <d17962ca-3839-fbeb-9090-e09960678b82@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <fc6eaf95-39af-a381-50a1-b9a6967b12b8@lenovo.com>
-Date:   Tue, 25 May 2021 12:52:42 -0400
+        Tue, 25 May 2021 18:31:52 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E546FC06175F;
+        Tue, 25 May 2021 15:30:20 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id y184-20020a1ce1c10000b02901769b409001so13689279wmg.3;
+        Tue, 25 May 2021 15:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ImUYHFvGSG+UrisbbQQW/hinj6UPUJsUvMf4oZNIFsA=;
+        b=SwctXnartSe2t2ZlKSoo30DfkWjkfVtq7EsUA/jcoOH6nwfSXeVbedwXKpNDSuY6qv
+         ggiMy4pWugBTe/FHagZhPTQchGAoV0N4381sQ3s5J1xPmpzzNH5vdrFALbqqWIl7TWYL
+         Xetc46DIIqJuKLAdcugWgB5J/hGdMTtbFg1YbgKFicGqA8YDvbpDGDwUTESR6KaA7VeJ
+         xq6xAyvL/ZMW3cgRPaw6cPGyDaWRViNAjC8uDAsjYInJQ4SKALvvo/PJ8BnFYYq+I9AQ
+         BzKL24iUNNEUv0Ihp9+L6rPlR1jcW1sK+4wZfAncs/mFJJ5O7rzdS/ia/CL7b75yhzti
+         wJxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ImUYHFvGSG+UrisbbQQW/hinj6UPUJsUvMf4oZNIFsA=;
+        b=bcWR0SN+cBMhdjzZs12VKKUZA4HDVdj2W+GdZ9NDKGV7VZHrwOCWFh1NKz8C4hpcvJ
+         stANGZsu2ykp2fyJph95bs7AIe8KuJZIrs316kt62P/ynOBrSviS5GgVCs6uEiSEFr7B
+         wS5IfhaJT/ar3hOJlTqRSZJ8h0DluXxhSDf+peLL2fHmteRG8wfPVR2dT2PRtKzNYGUM
+         /lYqV9ZzXYoYbLU1vm6LLju1HUM4IT6ECTL70En65pnfInRlgmZlh+y4Hf34qFxoZgaG
+         tJDXYXqVYwyaKMbWai1h0eY9BVBV+E/eDt7gpB/dRNkA3WwiSlKwSvxD+dS9n4Z6rZa5
+         cpng==
+X-Gm-Message-State: AOAM532fZwgnmQM1QYeTskvq1UzYGJNy873otbnzI+lQKi76A4jVrKt+
+        ODeP08rVY8J5JcDUpqnnH3Q=
+X-Google-Smtp-Source: ABdhPJwBtSv7vOz68pleY5h0sjS0TVpkGdHqMZuuNaP2llMqMtEV0PT0QcNqQbMlqUtP34+PhCH/+Q==
+X-Received: by 2002:a05:600c:1909:: with SMTP id j9mr26561626wmq.100.1621981819605;
+        Tue, 25 May 2021 15:30:19 -0700 (PDT)
+Received: from [192.168.1.211] ([91.110.20.117])
+        by smtp.gmail.com with ESMTPSA id s5sm12569464wmh.37.2021.05.25.15.30.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 May 2021 15:30:19 -0700 (PDT)
+Subject: Re: [PATCH v4 6/8] gpiolib: acpi: Add acpi_gpio_get_io_resource()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        devel@acpica.org, Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+References: <20210520140928.3252671-1-djrscally@gmail.com>
+ <20210520140928.3252671-7-djrscally@gmail.com>
+ <YKeiD8LawbyhnDZn@smile.fi.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <cff64c37-8c2c-f24f-cf95-e540065899df@gmail.com>
+Date:   Tue, 25 May 2021 23:30:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <d17962ca-3839-fbeb-9090-e09960678b82@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <YKeiD8LawbyhnDZn@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.46.192.114]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
+On 21/05/2021 13:05, Andy Shevchenko wrote:
+> On Thu, May 20, 2021 at 03:09:26PM +0100, Daniel Scally wrote:
+>> Add a function to verify that a given acpi_resource represents an IO
+>> type GPIO resource, and return it if so.
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 2021-05-25 12:29 p.m., Hans de Goede wrote:
-> Hi,
-> 
-> On 5/25/21 5:14 PM, Mark Pearson wrote:
->> Hi Andy,
->>
->>>> +static ssize_t current_password_store(struct kobject *kobj,
->>>> +                                     struct kobj_attribute *attr,
->>>> +                                     const char *buf, size_t count)
->>>> +{
->>>> +       struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
->>>> +       int length;
->>>
->>>> +       length = strlen(buf);
->>>> +       if (buf[length-1] == '\n')
->>>> +               length--;
->>>
->>> This will prevent you from using \n in the password. Why?
->> The BIOS doesn't like it - so we strip it out :)
-> 
-> Erm, I don't believe that that is the whole story, there are 2
-> separate things at play here:
-> 
-> 1. When entering the BIOS password at system power-on pressing
-> enter means you're done and the BIOS should check what you've
-> just entered as password before pressing the enter key, so the
-> password can never contain '\n' since the enter key is the
-> terminator for entering the password at boot
-> 
-> 2. People often use sysfs files by doing things like this:
-> 
-> echo mysecretpassword > /sys/.../current_password
-> 
-> And the "echo" shell command will then add an extra '\n' this
-> is why you will see code like this to strip the '\n' in functions
-> which use the input string as is (instead of doing strtol,
-> sysfs_match_string or something else which does not care about a
-> terminating '\n' already, note that functions like sysfs_str_equals
-> and sysfs_match_string are special helpers for not caring about
-> the '\n' without needing to strip it (because stripping it
-> requires a strdup).
-> 
-> So what is happening here is simply stripping the '\n' which may
-> have been added by echo (if it was added).
-> 
-> Regards,
-> 
-> Hans
-> 
-Agreed on all, I guess I was giving the story summary :)
-I've been using this method in testing and if the \n gets passed on then
-you'll get an error returned - the BIOS doesn't like it.
 
-I've no idea if this is Lenovo specific or not. I'll document it as a
-Lenovo specific case unless there are objections.
+Thanks Andy, and same for 1/8
 
-Mark
