@@ -2,136 +2,214 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48BC47088
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 12:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A45C47088
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 20:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B63610CC
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 12:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258B4613BF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 20:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233606AbhEZMiY (ORCPT
+        id S234832AbhEZURK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 May 2021 08:38:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25393 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233589AbhEZMiR (ORCPT
+        Wed, 26 May 2021 16:17:10 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.1]:60183 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234847AbhEZURG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 May 2021 08:38:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622032602;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
-        b=Yy2iOPvOQPOuCUbADZ8BLSpoEZ1Ylrystpzutw1Uo21w8pb2cksBGqBEKTViFzJY02VbV9
-        L0wpJD5S4mDh9UiDSfyY0EJR8m5jc5od2nvETuqdaUrkFYMZtxxN721SWcBZwqqElpZLiF
-        ELcONW10UgPJmYy1NhStOoxG2gVJYE4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-319-WPAD_eLKMYy_GbgFKSc3EA-1; Wed, 26 May 2021 08:36:40 -0400
-X-MC-Unique: WPAD_eLKMYy_GbgFKSc3EA-1
-Received: by mail-ed1-f71.google.com with SMTP id cy15-20020a0564021c8fb029038d26976787so530012edb.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 26 May 2021 05:36:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
-        b=hJu37unowzsI9XbGnLmA1GNcwmd2ZguXawK5UjjTjVX8krd6T5yr+NuAEqV3IUkrJM
-         qalR9AcvyfYRb+p9tajRio62oYNxjoiGN9Y528qLeTxadKFR66bq5u9uL25tkuPoXgxM
-         A2vIblTkP6B0rtPZgl0otUQZAqUNE+LW1A8NVGi1QSpz+yvcbE2NVAmJTZAM/jqTNx4f
-         RzBlPvzcSwV6B9LorAMYZLJdhcb7yXNiOFx1AjQ1z2S4BzrllnEzU07aycfti9y/aWqJ
-         cl+PhiUIMaMZtoWw/I1/rc7D0Z12FQlNb5N3HhOwPWzUXNxND9N1v4mfveip2vSstBBT
-         +B2A==
-X-Gm-Message-State: AOAM531qLlQcHQC+hgTQormjA1i5NJeN9YbUlYCHKNeoxIUBR055UphO
-        vaBUG+nIeQbE+64I+DZSjiEPIg2RomEg31rnG9shzcqWpsh+lEC3KNxXzmPPr2OpyANgcA9UzYZ
-        e1RNTYajtFb4OG+Y+ikOTrfo4qy7gkxM/IQ==
-X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036970eja.389.1622032599353;
-        Wed, 26 May 2021 05:36:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzCzSG2YLjcyhKgm8r3o/LZqPgFxUK6ylJOFe2YCzql+M/THNIC19JLVSjVDkUJ82LC9sNhuQ==
-X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036951eja.389.1622032599157;
-        Wed, 26 May 2021 05:36:39 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id y15sm284014ejc.48.2021.05.26.05.36.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 May 2021 05:36:38 -0700 (PDT)
-Subject: Re: [PATCH v4 0/8] Introduce intel_skl_int3472 module
-To:     Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org
-Cc:     Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-References: <20210520140928.3252671-1-djrscally@gmail.com>
- <f2d8e74f-f33b-2489-1b90-b11bf7465d19@redhat.com>
- <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <d7b7b2ba-d941-7df3-38e6-32dbbba7a36f@redhat.com>
-Date:   Wed, 26 May 2021 14:36:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Wed, 26 May 2021 16:17:06 -0400
+Received: from [100.112.3.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.us-east-1.aws.symcld.net id 1E/91-25091-56CAEA06; Wed, 26 May 2021 20:15:33 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRWlGSWpSXmKPExsWSLveKXTd1zbo
+  Eg62XxCxeTjjMaHFowwEmi+7uuUwWb45PZ7JYvecFs8Wij0/YHNg8Js2cweyxc9Zddo/3+66y
+  eXzeJBfAEsWamZeUX5HAmtFxo4+54Kp8xYkty9gbGE9KdzFycQgJ/GeUmP3jElsXIyeQ84ZRo
+  mW7FIjNJqAtsWXLL6A4B4eIgIzEh7WeIPXMApsYJe4s2MgE4ggL9DFK/H73kBWkgUVAVWLFq5
+  Vgg3gFrCSaVt1kArElBOQlTp+4xghicwLVnOl6zAKxTEXi/oMlUPWCEidnPgGLMwPVN2+dzQx
+  hS0gcfPGCGWKOgsTNF+tYIOwEiZ5/j9gmMArMQtI+C0n7LCTtCxiZVzGaJhVlpmeU5CZm5uga
+  GhjoGhoa6RrrmlvoJVbpJumVFuumJhaX6BrqJZYX6xVX5ibnpOjlpZZsYgRGQkoBs98OxkVvP
+  ugdYpTkYFIS5ZXyX50gxJeUn1KZkVicEV9UmpNafIhRhoNDSYJ34sp1CUKCRanpqRVpmTnAqI
+  RJS3DwKInwXlgKlOYtLkjMLc5Mh0idYlSUEudVWw2UEABJZJTmwbXBEsElRlkpYV5GBgYGIZ6
+  C1KLczBJU+VeM4hyMSsK8P0G282TmlcBNfwW0mAlosVAi2OKSRISUVAOT7Qnr7lpJ/plcAotn
+  fPrn+fjaSo+DviHBdg/ehs87+Gu19Z5d92W1u2bO8qm3ODDRevFvZ20dvwnWHuwJmyR1XQ2E6
+  ibX3flfEH4gRizUxK9umY25/ta4RQ9ObWxXm9gwn8XbYl7ilVfZrgxtGXnt1h6eUYtDQoMert
+  nyUd/HPni/oZGLseMjw25No6Si2HdTz658f9JT3udOiz3nx89L+FXDt4dkleclZR6xDI+z81z
+  psep8z8d88XM9ew8fU/M8tFNtc+XDegW3DH+urg0vmQK2ru1Z9H7x6SqGeb0qp1s3vjz8grVY
+  5NqMlIqOkzz2Ezw0I7nWvajv7tqxIPr4ushXi3YKZP28lr6r0k2JpTgj0VCLuag4EQBRt4mjf
+  wMAAA==
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-3.tower-396.messagelabs.com!1622060131!167223!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.75.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 16965 invoked from network); 26 May 2021 20:15:33 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-3.tower-396.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 26 May 2021 20:15:33 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id DA3CD924F9A3AA6D2CB5;
+        Thu, 27 May 2021 04:15:29 +0800 (CST)
+Received: from localhost.localdomain.com (10.64.87.238) by
+ reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2176.2; Wed, 26 May 2021 16:15:26 -0400
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <andy.shevchenko@gmail.com>,
+        <prasanth.ksr@dell.com>, <divya.bharathi@dell.com>,
+        <Dell.Client.Kernel@dell.com>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH v4 1/3] platform/x86: firmware_attributes_class: Create helper file for handling firmware-attributes class registration events
+Date:   Wed, 26 May 2021 16:14:45 -0400
+Message-ID: <20210526201447.3686-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-In-Reply-To: <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.64.87.238]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+This will be used by the Dell and Lenovo WMI management drivers to
+prevent both drivers being active.
 
-On 5/26/21 1:03 AM, Daniel Scally wrote:
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+---
+Changes in v2:
+ - This is a new file requested as part of the review of the proposed
+think_lmi.c driver. Labeling as V2 to keep series consistent
 
-<snip>
+Changes in v3:
+ - Set default in Kconfig, and removed help text
+ - Allow multiple modules to register with module. Change API names to
+    better reflect this.
 
->> 3/8 and 5/8 seem to be nice cleanups, but not really necessary. IMHO it
->> would be best to park these cleanups for later and for 3/8 add the following
->> where necessary for now:
->>
->> /* FIXME drop this once the I2C_DEV_NAME_FORMAT macro has been added to include/linux/i2c.h */
->> #ifndef I2C_DEV_NAME_FORMAT
->> #define I2C_DEV_NAME_FORMAT		"i2c-%s"
->> #endif
->>
->> This is not the prettiest but it reduces all the subsys cross-deps and things
->> like this have been done before for similar reasons.
->>
->> Likewise it would be good if you can add if (foo) as condition before any
->> clkdev_drop(foo) calls in this patch-set and then merge
->> 5/8 "clkdev: Make clkdev_drop() null aware" independently of this and then
->> once both are in Linux tree follow-up with a cleanup patch dropping the if (foo)
->> guards.
-> 
-> 
-> This is fine by me if people are happy for it to go in like that; I'll
-> just fix it up later.
+Changes in v4:
+ - version bump for consistency in series
 
-I don't expect anyone to object against these 2 small fixes going in later,
-if you can drop these 2 for v5 that would greatly help with untangling all the
-subsys dependencies. Then I can just merge an ACPI + a gpiolib-acpi immutable
-branch and then merge the big drivers/platform/x86 patch.
+ drivers/platform/x86/Kconfig                  |  4 ++
+ drivers/platform/x86/Makefile                 |  1 +
+ .../platform/x86/firmware_attributes_class.c  | 53 +++++++++++++++++++
+ .../platform/x86/firmware_attributes_class.h  | 13 +++++
+ 4 files changed, 71 insertions(+)
+ create mode 100644 drivers/platform/x86/firmware_attributes_class.c
+ create mode 100644 drivers/platform/x86/firmware_attributes_class.h
 
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 2714f7c38..57da8352d 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1076,6 +1076,10 @@ config TOUCHSCREEN_DMI
+ 	  the OS-image for the device. This option supplies the missing info.
+ 	  Enable this for x86 tablets with Silead or Chipone touchscreens.
+ 
++config FW_ATTR_CLASS
++	tristate "Firmware attributes class helper module"
++	default n
++
+ config INTEL_IMR
+ 	bool "Intel Isolated Memory Region support"
+ 	depends on X86_INTEL_QUARK && IOSF_MBI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index dcc8cdb95..147573f69 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -115,6 +115,7 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
+ obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
+ obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
+ obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
++obj-$(CONFIG_FW_ATTR_CLASS)             += firmware_attributes_class.o
+ 
+ # Intel uncore drivers
+ obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
+new file mode 100644
+index 000000000..31393ce4d
+--- /dev/null
++++ b/drivers/platform/x86/firmware_attributes_class.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++/* Firmware attributes class helper module */
++
++#include <linux/mutex.h>
++#include <linux/device/class.h>
++#include <linux/module.h>
++
++static DEFINE_MUTEX(fw_attr_lock);
++int fw_attr_inuse;
++
++static struct class firmware_attributes_class = {
++	.name = "firmware-attributes",
++};
++
++int fw_attributes_class_get(struct class **fw_attr_class)
++{
++	int err;
++
++	mutex_lock(&fw_attr_lock);
++	if (!fw_attr_inuse) { /*first time class is being used*/
++		err = class_register(&firmware_attributes_class);
++		if (err) {
++			mutex_unlock(&fw_attr_lock);
++			return err;
++		}
++	}
++	fw_attr_inuse++;
++	*fw_attr_class = &firmware_attributes_class;
++	mutex_unlock(&fw_attr_lock);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(fw_attributes_class_get);
++
++int fw_attributes_class_put(void)
++{
++	mutex_lock(&fw_attr_lock);
++	if (!fw_attr_inuse) {
++		mutex_unlock(&fw_attr_lock);
++		return -EINVAL;
++	}
++	fw_attr_inuse--;
++	if (!fw_attr_inuse) /* No more consumers */
++		class_unregister(&firmware_attributes_class);
++	mutex_unlock(&fw_attr_lock);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(fw_attributes_class_put);
++
++MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
++MODULE_LICENSE("GPL");
++
++
+diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/platform/x86/firmware_attributes_class.h
+new file mode 100644
+index 000000000..802f12b45
+--- /dev/null
++++ b/drivers/platform/x86/firmware_attributes_class.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/* Firmware attributes class helper module */
++
++#ifndef FW_ATTR_CLASS_H
++#define FW_ATTR_CLASS_H
++
++int fw_attributes_class_get(struct class **fw_attr_class);
++int fw_attributes_class_put(void);
++
++#endif /* FW_ATTR_CLASS_H */
++
++
+-- 
+2.31.1
 
