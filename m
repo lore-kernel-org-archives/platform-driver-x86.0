@@ -2,52 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25F6C47082
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 07:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB48BC47088
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 12:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38E561445
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 07:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B63610CC
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 26 May 2021 12:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232097AbhEZH5P (ORCPT
+        id S233606AbhEZMiY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 26 May 2021 03:57:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:64654 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229473AbhEZH5P (ORCPT
+        Wed, 26 May 2021 08:38:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25393 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233589AbhEZMiR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 26 May 2021 03:57:15 -0400
-IronPort-SDR: bZW7D8hrH2qec4wrfjjOuR0NqyAOY8lrMYPNZxbmRX+Toymd/jaaAvR4UYKOl8XuDdjIyPTGGT
- Zmm84QiFB57w==
-X-IronPort-AV: E=McAfee;i="6200,9189,9995"; a="189782802"
-X-IronPort-AV: E=Sophos;i="5.82,330,1613462400"; 
-   d="scan'208";a="189782802"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 00:55:42 -0700
-IronPort-SDR: 0Bjzi997d7ikL+Npbmdw4fAsjbh0FAW8KDfeWfIv838sDz/K1I89zPNhBhRfGK4I59ql8+TI/B
- sEz6o2Uvoczg==
-X-IronPort-AV: E=Sophos;i="5.82,330,1613462400"; 
-   d="scan'208";a="547105293"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2021 00:55:37 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1lloO6-00EkZD-5c; Wed, 26 May 2021 10:55:34 +0300
-Date:   Wed, 26 May 2021 10:55:34 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Wed, 26 May 2021 08:38:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622032602;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
+        b=Yy2iOPvOQPOuCUbADZ8BLSpoEZ1Ylrystpzutw1Uo21w8pb2cksBGqBEKTViFzJY02VbV9
+        L0wpJD5S4mDh9UiDSfyY0EJR8m5jc5od2nvETuqdaUrkFYMZtxxN721SWcBZwqqElpZLiF
+        ELcONW10UgPJmYy1NhStOoxG2gVJYE4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-319-WPAD_eLKMYy_GbgFKSc3EA-1; Wed, 26 May 2021 08:36:40 -0400
+X-MC-Unique: WPAD_eLKMYy_GbgFKSc3EA-1
+Received: by mail-ed1-f71.google.com with SMTP id cy15-20020a0564021c8fb029038d26976787so530012edb.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 26 May 2021 05:36:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vo3CFjgMiVFpDxJLQuQQeOIXjZuz9Jnetz8hQXS67No=;
+        b=hJu37unowzsI9XbGnLmA1GNcwmd2ZguXawK5UjjTjVX8krd6T5yr+NuAEqV3IUkrJM
+         qalR9AcvyfYRb+p9tajRio62oYNxjoiGN9Y528qLeTxadKFR66bq5u9uL25tkuPoXgxM
+         A2vIblTkP6B0rtPZgl0otUQZAqUNE+LW1A8NVGi1QSpz+yvcbE2NVAmJTZAM/jqTNx4f
+         RzBlPvzcSwV6B9LorAMYZLJdhcb7yXNiOFx1AjQ1z2S4BzrllnEzU07aycfti9y/aWqJ
+         cl+PhiUIMaMZtoWw/I1/rc7D0Z12FQlNb5N3HhOwPWzUXNxND9N1v4mfveip2vSstBBT
+         +B2A==
+X-Gm-Message-State: AOAM531qLlQcHQC+hgTQormjA1i5NJeN9YbUlYCHKNeoxIUBR055UphO
+        vaBUG+nIeQbE+64I+DZSjiEPIg2RomEg31rnG9shzcqWpsh+lEC3KNxXzmPPr2OpyANgcA9UzYZ
+        e1RNTYajtFb4OG+Y+ikOTrfo4qy7gkxM/IQ==
+X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036970eja.389.1622032599353;
+        Wed, 26 May 2021 05:36:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzCzSG2YLjcyhKgm8r3o/LZqPgFxUK6ylJOFe2YCzql+M/THNIC19JLVSjVDkUJ82LC9sNhuQ==
+X-Received: by 2002:a17:906:351a:: with SMTP id r26mr2036951eja.389.1622032599157;
+        Wed, 26 May 2021 05:36:39 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id y15sm284014ejc.48.2021.05.26.05.36.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 May 2021 05:36:38 -0700 (PDT)
+Subject: Re: [PATCH v4 0/8] Introduce intel_skl_int3472 module
+To:     Daniel Scally <djrscally@gmail.com>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Wolfram Sang <wsa@kernel.org>,
         Lee Jones <lee.jones@linaro.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        devel@acpica.org, Len Brown <lenb@kernel.org>,
+        devel@acpica.org
+Cc:     Len Brown <lenb@kernel.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,39 +81,57 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         Robert Moore <robert.moore@intel.com>,
         Erik Kaneda <erik.kaneda@intel.com>,
         laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v4 0/8] Introduce intel_skl_int3472 module
-Message-ID: <YK3+9uSpCaSYUmKl@smile.fi.intel.com>
 References: <20210520140928.3252671-1-djrscally@gmail.com>
  <f2d8e74f-f33b-2489-1b90-b11bf7465d19@redhat.com>
  <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d7b7b2ba-d941-7df3-38e6-32dbbba7a36f@redhat.com>
+Date:   Wed, 26 May 2021 14:36:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <f4664310-0975-335d-8dc3-95726f53ab67@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, May 26, 2021 at 12:03:23AM +0100, Daniel Scally wrote:
-> On 25/05/2021 14:10, Hans de Goede wrote:
-> > On 5/20/21 4:09 PM, Daniel Scally wrote:
+Hi,
 
-...
+On 5/26/21 1:03 AM, Daniel Scally wrote:
 
-> > 4/8 and 6/8 are both gpiolib-acpi patches and seem to be ready for merging
-> > now, perhaps the gpiolib-acpi maintainers can already merge these and also
-> > provide an immutable branch ?  Andy/Mika ?
+<snip>
+
+>> 3/8 and 5/8 seem to be nice cleanups, but not really necessary. IMHO it
+>> would be best to park these cleanups for later and for 3/8 add the following
+>> where necessary for now:
+>>
+>> /* FIXME drop this once the I2C_DEV_NAME_FORMAT macro has been added to include/linux/i2c.h */
+>> #ifndef I2C_DEV_NAME_FORMAT
+>> #define I2C_DEV_NAME_FORMAT		"i2c-%s"
+>> #endif
+>>
+>> This is not the prettiest but it reduces all the subsys cross-deps and things
+>> like this have been done before for similar reasons.
+>>
+>> Likewise it would be good if you can add if (foo) as condition before any
+>> clkdev_drop(foo) calls in this patch-set and then merge
+>> 5/8 "clkdev: Make clkdev_drop() null aware" independently of this and then
+>> once both are in Linux tree follow-up with a cleanup patch dropping the if (foo)
+>> guards.
 > 
 > 
-> So, Andy, you'd prefer I re-order these so they're consecutive...did I
-> understand that right?
+> This is fine by me if people are happy for it to go in like that; I'll
+> just fix it up later.
 
-Yes.
+I don't expect anyone to object against these 2 small fixes going in later,
+if you can drop these 2 for v5 that would greatly help with untangling all the
+subsys dependencies. Then I can just merge an ACPI + a gpiolib-acpi immutable
+branch and then merge the big drivers/platform/x86 patch.
 
+Regards,
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Hans
 
