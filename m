@@ -2,189 +2,316 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66D3C47089
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 12:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E3EC4708B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7851E613C0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 12:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65CE361157
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234410AbhE0MZu (ORCPT
+        id S236318AbhE0OSt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 May 2021 08:25:50 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:44492 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234333AbhE0MZt (ORCPT
+        Thu, 27 May 2021 10:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235170AbhE0OSt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 May 2021 08:25:49 -0400
-Received: from [100.112.4.65] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-c.us-east-1.aws.symcld.net id 9A/05-39641-07F8FA06; Thu, 27 May 2021 12:24:16 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileJIrShJLcpLzFFi42LJePGQRzevf32
-  CwZFjyhYvJxxmtDi04QCTRXf3XCaLN8enM1ms3vOC2WLRxydsDmwek2bOYPbYOesuu8f7fVfZ
-  PD5vkgtgiWLNzEvKr0hgzXh9SqzgmmzFwrdPmBoYT0p0MXJyCAn8Z5R4vcSyi5ELyH7MKLG+d
-  RkbiCMssJhRYunU12wgVSIC6hJTO3rAEswCsxklzn0+zgzR0s4oMXF/HztIFZuAtsSWLb/AOn
-  gFbCXWn9/GCmKzCKhKbJ7bwghiiwqES+zueMkEUSMocXLmE5YuRg4OTgE7iX/N2SAms4CmxPp
-  d+iAVzALiEreezGeCsOUltr+dwwxSIiGgKHFwigVIWEIgQaLn3yO2CYyCs5DMnIUwaBaSQbOQ
-  DFrAyLKK0SypKDM9oyQ3MTNH19DAQNfQ0EjXTNfQwlgvsUo3Wa+0WDc1sbhE11AvsbxYr7gyN
-  zknRS8vtWQTIzBqUgrYtu9g3Pv6g94hRkkOJiVR3gk66xOE+JLyUyozEosz4otKc1KLDzHKcH
-  AoSfCK9wLlBItS01Mr0jJzgBEMk5bg4FES4V3XDZTmLS5IzC3OTIdInWJUlBLnPQjSJwCSyCj
-  Ng2uDJY1LjLJSwryMDAwMQjwFqUW5mSWo8q8YxTkYlYR5O0Cm8GTmlcBNfwW0mAlosVDiOpDF
-  JYkIKakGJhatEzOKnjIILLxwtUbpanbeh4uLW96cecbKnMbfoWocVPR86uWsCwsulHc2+ST4T
-  XnTEcrzPLEgJrGx1npVZXNkrOWEkK3rpSevOMjyvHzR8pfnOkpmJh+tN5+bdjRNt/BqvXLnbR
-  0Hw9muUb5b2zK6u3cKrxMQcO4XKDHb8vtbrpF0e/AS6YkL9+5Kn7JQOe3ujNSz1nrMLes9ONr
-  TgzPUIz7qTtKoiDI+cHFpZVXBOy3H2vfxetMM++On7pg/aXPBf0MhBbt1BnmrLa9quLs8W7x9
-  w3TThmOv7OdEv8y79zz3Qc/L57YHz+4P3dzp3zDDoLfnWZ9UpcHP+S+ZPStmSbxJsRUSjV0gM
-  79ZiaU4I9FQi7moOBEA5IIl7JUDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-6.tower-416.messagelabs.com!1622118253!29635!1
-X-Originating-IP: [104.232.225.12]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.75.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 27361 invoked from network); 27 May 2021 12:24:14 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.12)
-  by server-6.tower-416.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 27 May 2021 12:24:14 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 6D1605BAB39178B90B72;
-        Thu, 27 May 2021 08:24:13 -0400 (EDT)
-Received: from [10.46.208.141] (10.46.208.141) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Thu, 27 May
- 2021 08:24:12 -0400
-Subject: Re: [External] Re: [PATCH v4 1/3] platform/x86:
- firmware_attributes_class: Create helper file for handling
- firmware-attributes class registration events
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     <andy.shevchenko@gmail.com>, <prasanth.ksr@dell.com>,
-        <divya.bharathi@dell.com>, <Dell.Client.Kernel@dell.com>,
-        <platform-driver-x86@vger.kernel.org>
-References: <markpearson@lenovo.com>
- <20210526201447.3686-1-markpearson@lenovo.com>
- <e5d5dc1e-98be-72a3-1264-7f647edc007f@redhat.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <e0ce8a91-4b00-e312-68dd-d4743f502eaa@lenovo.com>
-Date:   Thu, 27 May 2021 08:24:12 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Thu, 27 May 2021 10:18:49 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5373C061574
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 May 2021 07:17:14 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id l70so57332pga.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 May 2021 07:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pHMaMz+Q88wy4pUDLQP2p8w0+jEls8/DxQEa/0C9m2s=;
+        b=SXsQX700YERqgmqgdHlASzj2G/58uh5vNlEfh7yZDqW5ag98PXGn7ishUBopQCswIG
+         3yaOnvsfbsYi0YKSNMVz0b1ZTL/sqJt9g2lICqhEFJT0usplSZWA5PZ2b02S534bUD3g
+         Fj1ivv0ex4uShUVuUeZ/K6G1risKZZb5VKhXOx6AmVaAjM8HCIRhWzEGzeXOFojH7jQO
+         PtZfJUVBlzLav8NMukhBnENYJqtr5DogaDDrG2yd7kcDhlVof6GuOUArsa1DAmJAbpXn
+         D777CuyzmXlAjHByDJgUEI6M08kWzFTPegIDychOm3Vq1hx3QWN8q+CHl+d8s/w7Un9D
+         uEFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pHMaMz+Q88wy4pUDLQP2p8w0+jEls8/DxQEa/0C9m2s=;
+        b=tH/oipAv/4/WG7kqCpZvmdyD7afv+fNlOAFEYZY53OcAK7BWVslWnobd5kIhXZQRX3
+         jMCYyXKTcs7mUwPZKAz05q9xQ2edhxp1R3FukUeY73yekeNe1U8zaSiMD1ne2JQQfTd2
+         PXvrIFYHWWwq1GO7/gfMpEO3Zjo/uHxMfbDAR9Aw8WZtggi4oUXuXBAH93LGnK2szG/L
+         wwXLyPDpb9F2Ei695YV2qCxw6woQSJA+Ua92nHHPE4vN1rtf/YKOlG0Dygm7Qxe5O5w1
+         bOWVGMdcWk8OMvBI9s8SCInmCxMoNW1PF4bj6MP9fxfEL2BwfguzH+UkwHsgm7QFb6F1
+         vXNg==
+X-Gm-Message-State: AOAM5305NG8/xqcZGhlLWyG52QgS9C/SH6udlTj1t11aFwbZKXGoWdu6
+        nqflYg/8WPJDGkOGzF65F4jKHl3WDi/aqoFx/Wo=
+X-Google-Smtp-Source: ABdhPJxtta24Veh7vHkQsnsbMKjI0C7Zv3cOeUGym5+4emg6GaqWr2xNvOgfuqcfWHlRDekbHUS0YzKTyQTt5/Wp0Lc=
+X-Received: by 2002:a05:6a00:a1e:b029:2e2:89d8:5c87 with SMTP id
+ p30-20020a056a000a1eb02902e289d85c87mr3943853pfh.73.1622125034148; Thu, 27
+ May 2021 07:17:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e5d5dc1e-98be-72a3-1264-7f647edc007f@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.46.208.141]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+References: <markpearson@lenovo.com> <20210526201447.3686-1-markpearson@lenovo.com>
+ <20210526201447.3686-3-markpearson@lenovo.com>
+In-Reply-To: <20210526201447.3686-3-markpearson@lenovo.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 27 May 2021 17:16:57 +0300
+Message-ID: <CAHp75Vd8wowab89tCZSJNfzAYAGCW8khD0JnmYTyT=czLT+R3A@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] platform/x86: think-lmi: Add WMI interface support
+ on Lenovo platforms
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Prasanth KSR <prasanth.ksr@dell.com>,
+        Divya Bharathi <divya.bharathi@dell.com>,
+        Dell.Client.Kernel@dell.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans
+On Wed, May 26, 2021 at 11:15 PM Mark Pearson <markpearson@lenovo.com> wrote:
+>
+> For Lenovo platforms that support a WMI interface to the BIOS add
+> support, using the firmware-attributes class, to allow users to access
+> and modify various BIOS related settings.
 
-On 2021-05-27 5:12 a.m., Hans de Goede wrote:
-> Hi Mark, Andy,
-> 
-> Overall this looks pretty good. There are a few very small issues
-> remaining, but they are so small that I've decided to fix them up
-> and merge this into my review-hans branch with the issues fixed up.
-> 
-> I plan to let this sit in review-hans a bit longer then usual to
-> give you (Mark) a chance to check out the changes and ack them
-> and to give Andy the time to check if his review remarks were
-> addressed to his liking.
-> 
-> I've put remarks inline / below about the few things which
-> I've fixed up in this patch. I'll also reply to patch 3/3
-> with the fixups which I've done there.
-> 
-> On 5/26/21 10:14 PM, Mark Pearson wrote:
->> This will be used by the Dell and Lenovo WMI management drivers to
->> prevent both drivers being active.
->>
->> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
->> ---
->> Changes in v2:
->>  - This is a new file requested as part of the review of the proposed
->> think_lmi.c driver. Labeling as V2 to keep series consistent
->>
->> Changes in v3:
->>  - Set default in Kconfig, and removed help text
->>  - Allow multiple modules to register with module. Change API names to
->>     better reflect this.
->>
->> Changes in v4:
->>  - version bump for consistency in series
->>
->>  drivers/platform/x86/Kconfig                  |  4 ++
->>  drivers/platform/x86/Makefile                 |  1 +
->>  .../platform/x86/firmware_attributes_class.c  | 53 +++++++++++++++++++
->>  .../platform/x86/firmware_attributes_class.h  | 13 +++++
->>  4 files changed, 71 insertions(+)
->>  create mode 100644 drivers/platform/x86/firmware_attributes_class.c
->>  create mode 100644 drivers/platform/x86/firmware_attributes_class.h
->>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index 2714f7c38..57da8352d 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -1076,6 +1076,10 @@ config TOUCHSCREEN_DMI
->>  	  the OS-image for the device. This option supplies the missing info.
->>  	  Enable this for x86 tablets with Silead or Chipone touchscreens.
->>  
->> +config FW_ATTR_CLASS
->> +	tristate "Firmware attributes class helper module"
-> 
-> This should be just "	tristate" adding a string after the "tristate"
-> makes this user selectable, I've dropped the string.
-Ah - my bad. Thanks for fixing.
+Thanks for an update! My comments below.
 
-> 
->> +	default n
->> +
->>  config INTEL_IMR
->>  	bool "Intel Isolated Memory Region support"
->>  	depends on X86_INTEL_QUARK && IOSF_MBI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index dcc8cdb95..147573f69 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -115,6 +115,7 @@ obj-$(CONFIG_TOPSTAR_LAPTOP)	+= topstar-laptop.o
->>  obj-$(CONFIG_I2C_MULTI_INSTANTIATE)	+= i2c-multi-instantiate.o
->>  obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
->>  obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
->> +obj-$(CONFIG_FW_ATTR_CLASS)             += firmware_attributes_class.o
-> 
-> This was using spaces instead of tabs for indent before the += and
-> it did not apply because of the "platform/x86: Rename hp-wireless to wireless-hotkey"
-> patch in review-hans.
-Ack.
+...
 
-> 
-> 
->>  # Intel uncore drivers
->>  obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
->> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/platform/x86/firmware_attributes_class.c
->> new file mode 100644
->> index 000000000..31393ce4d
->> --- /dev/null
->> +++ b/drivers/platform/x86/firmware_attributes_class.c
-> 
-> This file had a couple of trailing empty lines which I've stripped.
-Ack - sorry I missed those.
-> 
->> --- /dev/null
->> +++ b/drivers/platform/x86/firmware_attributes_class.h
-> 
-> Idem, and also the same for think-lmi.c from patch 3/3>
-> Regards,
-> 
-> Hans
-> 
+> +/*
+> + * think-lmi.c - Think LMI BIOS configuration driver
 
-Mark
+It's not the best idea to include the file name into the file. If the
+file gets renamed (by whatever reason) often this either brings an
+additional burden or simply forgotten (as from my experience). I
+recommend to drop the file names from the source code.
+
+> + * Copyright(C) 2019-2021 Lenovo
+> + *
+> + * Original code from Thinkpad-wmi project https://github.com/iksaif/thinkpad-wmi
+> + * Copyright(C) 2017 Corentin Chary <corentin.chary@gmail.com>
+> + * Distributed under the GPL-2.0 license
+> + */
+
+...
+
+> +#include <linux/acpi.h>
+
+linux/errno.h ?
+
+> +#include <linux/fs.h>
+
+linux/string.h ?
+linux/types.h ?
+
+> +#include <linux/wmi.h>
+> +#include "firmware_attributes_class.h"
+> +#include "think-lmi.h"
+
+...
+
+> + * Type:
+> + *  Method
+> + * Arguments:
+> + *  "Item,Value,Password,Encoding,KbdLang;"
+> + * Example:
+> + *  "WakeOnLAN,Disable,pswd,ascii,us;"
+
+Is 'pswd' here an example of the password? Hacker's language can make
+it more visible, e.g. 'pa55w0rd'.
+Same for other examples.
+
+> + */
+
+...
+
+> +       /*
+> +        * Duplicated call required to match bios workaround for behavior
+
+bios -> BIOS
+
+> +        * seen when WMI accessed via scripting on other OS.
+> +        */
+
+...
+
+> +       struct tlmi_pwd_setting *setting = container_of(kobj, struct tlmi_pwd_setting, kobj);
+
+Candidate to have something like
+
+#define to_tlmi_pwd_setting(obj)  container_of(...)
+
+since it has appeared a few times.
+
+> +       return sysfs_emit(buf, "%d\n", setting->valid);
+> +}
+
+> +
+
+Unneeded blank line. Same for other similar places.
+
+> +static struct kobj_attribute auth_is_pass_set = __ATTR_RO(is_enabled);
+
+Hmm... We have already define_one_global_ro(). The problems with that
+are the name and location. But perhaps you can copy that macro here
+with the same name and at least we can see the common grounds to clean
+up in the future. Another possibility is to comment that it can be
+replaced with the above mentioned macro. Ideally would be to refactor
+right now, but it's not anyhow crucial or required for this series, so
+may be postponed.
+
+...
+
+> +       int pwdlen;
+
+Strictly speaking it should be size_t.
+
+> +       pwdlen = strlen(buf);
+> +       if (buf[pwdlen-1] == '\n')
+> +               pwdlen--;
+
+But the question is what will happen with the string like
+'pa55\nw0rd\n' (note all \n:s)?
+See also below.
+
+> +       /* pwdlen == 0 is allowed to clear the password */
+> +       if (pwdlen != 0 && ((pwdlen < setting->minlen) || (pwdlen > setting->maxlen)))
+
+The ' != 0' part is redundant.
+
+> +               return -EINVAL;
+
+> +       memcpy(setting->password, buf, pwdlen);
+> +       setting->password[pwdlen] = '\0';
+
+I'm not sure why we can't use strscpy() like you did in the other function.
+
+> +       return count;
+
+...
+
+> +       /* Strip out CR if one is present, setting password won't work if it is present */
+> +       strreplace(new_pwd, '\n', '\0');
+
+Basically it will stop on the first one. See the strchrnul() trick below.
+
+> +       pwdlen = strlen(new_pwd);
+> +       /* pwdlen == 0 is allowed to clear the password */
+> +       if (pwdlen != 0 && ((pwdlen < setting->minlen) || (pwdlen > setting->maxlen))) {
+
+No need for ' != 0'.
+
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+
+> +}
+
+
+...
+
+> +       int length;
+> +
+> +       length = strlen(buf);
+> +       if (buf[length-1] == '\n')
+> +               length--;
+> +
+> +       if (!length || (length >= TLMI_LANG_MAXLEN))
+> +               return -EINVAL;
+> +
+> +       memcpy(setting->kbdlang, buf, length);
+> +       setting->kbdlang[length] = '\0';
+> +       return count;
+
+Similar comments as per above.
+
+...
+
+> +       char *set_str = NULL, *new_setting = NULL;
+> +       char *auth_str = NULL;
+
+The rule of thumb is to avoid forward assignments on stack allocated
+variables. It may decrease readability, hide real issues, and simply
+be unneeded churn, like here. Please revisit all of them in entire
+series.
+
+...
+
+> +       /* Strip out CR if one is present */
+> +       strreplace(new_setting, '\n', '\0');
+
+As per above.
+
+...
+
+> +               /* Remove the value part */
+> +               strreplace(item, ',', '\0');
+
+This is kinda non-standard pattern.
+
+I would see rather something like
+
+char *p;
+
+p = strchrnul(item, ',');
+*p = '\0';
+
+Yes, it's longer, but better to understand what's going on here.
+
+> +               /* Create a setting entry */
+> +               setting = kzalloc(sizeof(struct tlmi_attr_setting), GFP_KERNEL);
+
+sizeof(*setting) ?
+
+> +               if (!setting) {
+> +                       ret = -ENOMEM;
+> +                       goto fail_clear_attr;
+> +               }
+> +               setting->index = i;
+> +               strscpy(setting->display_name, item, TLMI_SETTINGS_MAXLEN);
+
+...
+
+> +       sprintf(tlmi_priv.pwd_admin->display_name, "admin");
+> +       sprintf(tlmi_priv.pwd_admin->kbdlang, "us");
+
+Not sure why you need printf() type of function here. strcpy() or
+strscpy() should be enough.
+
+...
+
+> +       if (WARN_ON(pwdcfg.max_length >= TLMI_PWD_BUFSIZE))
+> +               pwdcfg.max_length = TLMI_PWD_BUFSIZE - 1;
+
+Not sure if WARN_ON() is really what has to be called here. But I
+haven't checked the context deeply.
+
+...
+
+> +       sprintf(tlmi_priv.pwd_power->display_name, "power-on");
+> +       sprintf(tlmi_priv.pwd_power->kbdlang, "us");
+
+As above.
+
+...
+
+> +#ifndef _THINK_LMI_H_
+> +#define _THINK_LMI_H_
+
++ linux/types.h
+
+(At leas bool is from there)
+
+
+> +#endif /* !_THINK_LMI_H_ */
+
+-- 
+With Best Regards,
+Andy Shevchenko
