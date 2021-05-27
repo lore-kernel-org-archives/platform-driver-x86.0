@@ -2,104 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD807C47089
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5471EC47089
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F756613B4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C28B613D8
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 27 May 2021 14:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236408AbhE0OUz (ORCPT
+        id S229861AbhE0Ohx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 27 May 2021 10:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236350AbhE0OUt (ORCPT
+        Thu, 27 May 2021 10:37:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22682 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229603AbhE0Ohu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 27 May 2021 10:20:49 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F395C061574
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 May 2021 07:19:15 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id pi6-20020a17090b1e46b029015cec51d7cdso494073pjb.5
-        for <platform-driver-x86@vger.kernel.org>; Thu, 27 May 2021 07:19:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I0CKAImaqWvt6i/VLWLbzKolBRGrO5enKwWdnuItjTY=;
-        b=EoMxhBE5H+5RM6WZZbMrRauzrNUbkVfDb0p17/RLsT8fxzkpxuXcR6j2u+htPcS9q5
-         lboN3FdA7Xf7YSze4HxG68/79hIg9MLNU65RAkciJBOxdEsjifUP6ltSpHDMUK8QCM0+
-         xi/TTDpO5QHL4L7C64SloeD/TeZGOkJLfGM60mjhcRcIgM11Z/b8w+Ju/v6f3rJPZehh
-         XtOerbkK9kvOER9zfJKNNK4In1AlXxpYENSV0wPN/bEbOd8X+1KHsHY+G/woDFqT/ViQ
-         BYSDt2pvwdQ+8yuOjfiRo9w959aKIj5v25nE1887jYXoyZRtjIEn6Utj41xuMmAvPU7n
-         tb9Q==
+        Thu, 27 May 2021 10:37:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1622126177;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZeFVOf86f4t/nq0seAf60R9ANBQIePkgj2C54tfhB5w=;
+        b=ftuRRxPW3xKDMExGTbRNGHGnt3DZmYIQ1UWiT2ZixyGbT/7WPo+X2ft74P8wtiGUmmKsLK
+        Nfn6cNozfac0Ywutd7hF/oddZLKAmHqSsJDVfqDneBwehqgiZvaOOC1RFmfwHij8zyfA8j
+        f/ln26DhiYtYxcc7D7lzfCxytOReR1I=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-19-ptTrZ_QHPzWXFDCGMEMNBw-1; Thu, 27 May 2021 10:36:14 -0400
+X-MC-Unique: ptTrZ_QHPzWXFDCGMEMNBw-1
+Received: by mail-ed1-f72.google.com with SMTP id e15-20020a056402148fb029038f9ac2d3afso425263edv.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 27 May 2021 07:36:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I0CKAImaqWvt6i/VLWLbzKolBRGrO5enKwWdnuItjTY=;
-        b=QDVI6mXI9fPV0RU/WQ40MbfWJxQwljXYa6zclqmw4SirJ1djqOQej9zPLdxE6z0haE
-         h99TDgrAHlXC3CagGvDL7fbNx5xM6gbCBI6oovqRDLOvo1SG8Kt+R0n+OUHbZU0i+CbI
-         g6OaWw+I89S9cXd7oRtgWHZddpb+H8xe1WdHEIFMWYkI5VtuJEskI3qbIKjlYSFWjDmc
-         LLo5CNdZ4wV1AqbANzaEh4afD3ifmHIKaVVPiJ0QwnsgPf1gsEIxV1fBS053oK8ynOJi
-         OHClNskbJj9nP/F96Fsx/5bpzULIz52TT8fwMqpXPyj+6uBUz4EoFAU5S86bPyp4uDEs
-         hODw==
-X-Gm-Message-State: AOAM530vjI3kh4XfuZFql5IGMAT5mD9vRFbBsQiK8+FEXEK+jyVyNTqd
-        MCkuOOLCTYjk6VGCDzEietGdBTuBnC3XS62Wx/k=
-X-Google-Smtp-Source: ABdhPJzduOGaBlzjnUGwP4B6PHuUeBYo6LAjx+GhIr7uRwxqkATupceLnTqQwOuLqP0MNm+/OBUWZxyxlaj3NK47edc=
-X-Received: by 2002:a17:902:a3cb:b029:f0:6ebe:3530 with SMTP id
- q11-20020a170902a3cbb02900f06ebe3530mr3453112plb.21.1622125154988; Thu, 27
- May 2021 07:19:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <markpearson@lenovo.com> <20210526201447.3686-1-markpearson@lenovo.com>
- <20210526201447.3686-3-markpearson@lenovo.com> <d7de87e0-8ce9-9da6-e2f4-71340e09890f@redhat.com>
-In-Reply-To: <d7de87e0-8ce9-9da6-e2f4-71340e09890f@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 27 May 2021 17:18:58 +0300
-Message-ID: <CAHp75VdNCzqfEt=bh3nhMHJwci-nojUU6BmRzpB8hRO_dySCVA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZeFVOf86f4t/nq0seAf60R9ANBQIePkgj2C54tfhB5w=;
+        b=hVuANl6fz181Jn+o34DGalbv89RAgbWQSCurYs+F/baz2eKbSNt09myaycERlYW3yk
+         H+KE24TfriAd9j3gqvx08lkvLrTGF+8EdaaitzSQUIo+AzM6TnTf7HodUnQ8afPNK0lC
+         +rTiK35LosPFs7NmYzDuvf/+QaVa107X8ewkiHtkj5Wloweaa7osKgQFZxL/CcBGCipF
+         a1ng2cikbvZXAuQNcGWY/PRACQgMjwi8wk+gFXtfRdXiDr8CoRoLYc4HHI4MLNXetc7f
+         /AxSxB11EbOUaUkRmd7Ilxjv7VFs7Pa1ROsQbe9qyL6+fH9te8094EVLJPk/M5+IBdfD
+         9vuw==
+X-Gm-Message-State: AOAM531gwgXzo6Y90FBz1nOm6e+5lD0E8RbIlYhbZJGGwqEprFC1H2lr
+        h1NZY8KOd2Ev/ylcJCLzrVarFN1gFckaqdrHsBYmlUcjg7/5c0UMohUKSzvBNa28IyCpSN7JORT
+        H0iAO6zRdLhAUw/JtP4nxoNI7EoQA3aOtW8bY4L0rAUnRnGBVkOtEyLWG3XYsRtoskcXteqL25k
+        xwBuHn8gWHlQ==
+X-Received: by 2002:a17:907:76b8:: with SMTP id jw24mr4122814ejc.359.1622126173418;
+        Thu, 27 May 2021 07:36:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwnlrxsFwz42pevSvbW8NY7hROtEpk2rmMi4IB9hRwyGQEaJvMI0+2caYxybzowVYFCbuavow==
+X-Received: by 2002:a17:907:76b8:: with SMTP id jw24mr4122781ejc.359.1622126173135;
+        Thu, 27 May 2021 07:36:13 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id k8sm556233ejr.86.2021.05.27.07.36.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 May 2021 07:36:12 -0700 (PDT)
 Subject: Re: [PATCH v4 3/3] platform/x86: think-lmi: Add WMI interface support
  on Lenovo platforms
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Pearson <markpearson@lenovo.com>,
-        Prasanth KSR <prasanth.ksr@dell.com>,
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     Prasanth KSR <prasanth.ksr@dell.com>,
         Divya Bharathi <divya.bharathi@dell.com>,
         Dell.Client.Kernel@dell.com,
         Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <markpearson@lenovo.com>
+ <20210526201447.3686-1-markpearson@lenovo.com>
+ <20210526201447.3686-3-markpearson@lenovo.com>
+ <CAHp75Vd8wowab89tCZSJNfzAYAGCW8khD0JnmYTyT=czLT+R3A@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <721d908d-2cbf-9ae1-9792-385544b0783a@redhat.com>
+Date:   Thu, 27 May 2021 16:36:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Vd8wowab89tCZSJNfzAYAGCW8khD0JnmYTyT=czLT+R3A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, May 27, 2021 at 12:17 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi Mark, Andy,
->
-> So as mentioned in my reply to patch 1/3, overall this looks pretty good.
-> There are a few very small issues remaining, but they are so small that
-> I've decided to fix them up and merge this into my review-hans branch
-> with the issues fixed up.
->
-> I plan to let this sit in review-hans a bit longer then usual to
-> give you (Mark) a chance to check out the changes and ack them
-> and to give Andy the time to check if his review remarks were
-> addressed to his liking.
+Hi,
 
-I looked into it again and commented on some stuff, but nothing
-serious noted, so I think the next version would be ready to go.
+On 5/27/21 4:16 PM, Andy Shevchenko wrote:
+> On Wed, May 26, 2021 at 11:15 PM Mark Pearson <markpearson@lenovo.com> wrote:
+>>
+>> For Lenovo platforms that support a WMI interface to the BIOS add
+>> support, using the firmware-attributes class, to allow users to access
+>> and modify various BIOS related settings.
+> 
+> Thanks for an update! My comments below.
 
-> I've put remarks inline / below about the 2 things which
-> I've fixed up in this patch.
->
-> Andy, thank you for your review of this. Your suggestions have
-> improved this driver, esp. the use of kasprintf has made some
-> of the functions a lot better.
+Since you have more remarks then I anticipated I guess it is best if I drop v4
+from my review-hans branch and Mark does a v5.
 
-You are welcome!
+Mark, you can then also just squash the addition of the MAINTAINERS
+entry into v5.
 
--- 
-With Best Regards,
-Andy Shevchenko
+<snip>
+
+>> +       int pwdlen;
+> 
+> Strictly speaking it should be size_t.
+> 
+>> +       pwdlen = strlen(buf);
+>> +       if (buf[pwdlen-1] == '\n')
+>> +               pwdlen--;
+> 
+> But the question is what will happen with the string like
+> 'pa55\nw0rd\n' (note all \n:s)?
+> See also below.
+
+As I already explained in a previous reply the password cannot
+contain '\n' so this cannot happen. I did miss that this was
+still there, where as new_password_store() uses strreplace()
+which is not really consistent with each other...
+
+>> +       char *set_str = NULL, *new_setting = NULL;
+>> +       char *auth_str = NULL;
+> 
+> The rule of thumb is to avoid forward assignments on stack allocated
+> variables. It may decrease readability, hide real issues, and simply
+> be unneeded churn, like here. Please revisit all of them in entire
+> series.
+
+I asked for all this to be set to NULL in my review of v2,
+since there are various "goto out"s in the function and out:
+calls kfree() on all 3, in v2 there was a path which would
+end up calling kfree() on an uninitialized char *. IMHO just
+initializing all of them up front is best here because that
+guarantees that they are either still NULL, or point to
+memory returned by kmalloc.
+
+>> +               /* Remove the value part */
+>> +               strreplace(item, ',', '\0');
+> 
+> This is kinda non-standard pattern.
+> 
+> I would see rather something like
+> 
+> char *p;
+> 
+> p = strchrnul(item, ',');
+> *p = '\0';
+> 
+> Yes, it's longer, but better to understand what's going on here.
+
+Erm, you actually suggested using strreplace() here in your previous review ...
+
+
+>> +       if (WARN_ON(pwdcfg.max_length >= TLMI_PWD_BUFSIZE))
+>> +               pwdcfg.max_length = TLMI_PWD_BUFSIZE - 1;
+> 
+> Not sure if WARN_ON() is really what has to be called here. But I
+> haven't checked the context deeply.
+
+There are 2 max_lengths, one hardcoded in the driver so we don't
+need to dynamically manage memory for the password storage and one
+which is actually queried from the BIOS, the BIOS max-length should
+always be less then the hardcoded one in the driver (and currently
+this is true for all known models).
+
+I suggested adding the WARN_ON so that if future BIOS-es ever bump
+max_length we will get a bug-report about this and then we can
+bump the driver's TLMI_PWD_BUFSIZE value.
+
+Regards,
+
+Hans
+
