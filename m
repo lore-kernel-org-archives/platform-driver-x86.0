@@ -2,274 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E28DC47096
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A507C47093
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0B0361396
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43665613AB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234328AbhFAPdV (ORCPT
+        id S234072AbhFAPdw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Jun 2021 11:33:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
+        Tue, 1 Jun 2021 11:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233059AbhFAPdT (ORCPT
+        with ESMTP id S232592AbhFAPdu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Jun 2021 11:33:19 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Jun 2021 08:31:37 PDT
-Received: from newton.telenet-ops.be (newton.telenet-ops.be [IPv6:2a02:1800:120:4::f00:d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4ECC06175F
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Jun 2021 08:31:36 -0700 (PDT)
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by newton.telenet-ops.be (Postfix) with ESMTPS id 4FvbbC459KzMrFlL
-        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Jun 2021 17:25:59 +0200 (CEST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:555:bf00:6951:b6ab])
-        by baptiste.telenet-ops.be with bizsmtp
-        id BrRp2500b35oben01rRpyb; Tue, 01 Jun 2021 17:25:59 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lo6H7-00BuxR-7b; Tue, 01 Jun 2021 17:25:49 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1lo6H6-000JYT-N5; Tue, 01 Jun 2021 17:25:48 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        x86@kernel.org, linux-omap@vger.kernel.org,
-        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 4/4] dt-bindings: gpio: pcf857x: Convert to json-schema
-Date:   Tue,  1 Jun 2021 17:25:47 +0200
-Message-Id: <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1622560799.git.geert+renesas@glider.be>
-References: <cover.1622560799.git.geert+renesas@glider.be>
+        Tue, 1 Jun 2021 11:33:50 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6585C061574
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Jun 2021 08:32:07 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id x8so3238189vso.5
+        for <platform-driver-x86@vger.kernel.org>; Tue, 01 Jun 2021 08:32:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d/JiYYhFUO04t8CGV6jIQdwSg5PSkQH6BUVjJ3YfIh4=;
+        b=FJi/AQpbfzIFBLaSRITA+QlCyoO2xWP8WhJoU4ft2ynZE/Dbk7qnDUfXx11UyG5xe5
+         Y6ImEWjTWo/s4dpEgJu7iT8ZbBBGGzbYS6d/qI51ArFbvkvt2LDL3b4darSWy+U/xGI4
+         WjSA61mqSVT2KjgEfzE2eiAKnrxntf7QD5ECWq1GcRFMPVns/U22whNi1iJMAnVCxXRS
+         TKaip/C+efrj1dPElBxwnsRuV20xEaPwgNMyabyCkRF3E0zHj6rTalt9BmLPIN+U46Qr
+         Q20UI3HLBW6bsAT/5xJ09OJl7tzPJNX8R2gWtwjQDyvb+QNsE8PrrM59bZkvC70gwj5C
+         rEzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d/JiYYhFUO04t8CGV6jIQdwSg5PSkQH6BUVjJ3YfIh4=;
+        b=TC8hEyIEVgq/eNOsu+NROlBT8R/xXPPVU+w1/MTgLAEPPd9EycH72iRu4gLnyEpvcN
+         vhhesCD/LcXOA6IfoucqjmNSasgg+FW8nEyJF2qrAr/2FV+HJWR8/F0wcY4KxlG/Zo3y
+         C2tIZd+U/823QQb2k50onJicbgg1ZCQD5f05vXlUVcL05oihxbsxGWPaBwoK/rr8Idfo
+         tn0IFv+vnRNyOgSncH0URJONLERx6pzr2g46Ef9oOO2fK4W3nTdSa8/q7pl9Hgt856bW
+         oZBdVweUbWi0tsHb1tvpxc1o/b3Cqu3RcqBgX6fsP7JMtmj0IoXY1QPGY8roBjAeMdvI
+         Roqw==
+X-Gm-Message-State: AOAM533Qj4tHmDDV0UUADIuErQmG0qsv0waHnhN9pHPsdDj6X2pcDJkp
+        3JMLwbWcpeIHwN3JaJNyh6CtbYKLHqKDk69NlJg=
+X-Google-Smtp-Source: ABdhPJygFw5MiS1g73bRd4O7g/mZExW7EW6JfpfcXXtw6r0DVbwtj6PkcKaKP6eU1Ea4ttgCb6bapVSygv6iWUWd0Go=
+X-Received: by 2002:a67:878a:: with SMTP id j132mr19228098vsd.18.1622561527002;
+ Tue, 01 Jun 2021 08:32:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210421204804.589962-1-hdegoede@redhat.com> <20210421204804.589962-3-hdegoede@redhat.com>
+In-Reply-To: <20210421204804.589962-3-hdegoede@redhat.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Tue, 1 Jun 2021 16:31:55 +0100
+Message-ID: <CACvgo50onXuRvtXySYNHJZshSkmX8ukcMitNJAKC4dEMPTyXYw@mail.gmail.com>
+Subject: Re: [Intel-gfx] [PATCH v2 2/9] drm: Add privacy-screen class (v2)
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rajat Jain <rajatja@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Marco Trevisan <marco.trevisan@canonical.com>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        platform-driver-x86@vger.kernel.org,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Convert the PCF857x-compatible I/O expanders Device Tree binding
-documentation to json-schema.
+Hi Hans,
 
-Document missing compatible values, properties, and gpio hogs.
+What happened with this series, did it fall through the cracks?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Drop support for "ti,pcf8575", as it's 100% compatible with
-    "nxp,pcf8575",
-  - Drop "hog-[0-9]+" from hog names,
-  - Rely on dt-schema/schemas/gpio/gpio-hog.yaml for hog properties.
----
- .../devicetree/bindings/gpio/gpio-pcf857x.txt |  69 ------------
- .../devicetree/bindings/gpio/nxp,pcf8575.yaml | 103 ++++++++++++++++++
- 2 files changed, 103 insertions(+), 69 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+On Wed, 21 Apr 2021 at 21:48, Hans de Goede <hdegoede@redhat.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-deleted file mode 100644
-index a482455a205b0855..0000000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-+++ /dev/null
-@@ -1,69 +0,0 @@
--* PCF857x-compatible I/O expanders
--
--The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
--driven high by a pull-up current source or driven low to ground. This combines
--the direction and output level into a single bit per line, which can't be read
--back. We can't actually know at initialization time whether a line is configured
--(a) as output and driving the signal low/high, or (b) as input and reporting a
--low/high value, without knowing the last value written since the chip came out
--of reset (if any). The only reliable solution for setting up line direction is
--thus to do it explicitly.
--
--Required Properties:
--
--  - compatible: should be one of the following.
--    - "maxim,max7328": For the Maxim MAX7378
--    - "maxim,max7329": For the Maxim MAX7329
--    - "nxp,pca8574": For the NXP PCA8574
--    - "nxp,pca8575": For the NXP PCA8575
--    - "nxp,pca9670": For the NXP PCA9670
--    - "nxp,pca9671": For the NXP PCA9671
--    - "nxp,pca9672": For the NXP PCA9672
--    - "nxp,pca9673": For the NXP PCA9673
--    - "nxp,pca9674": For the NXP PCA9674
--    - "nxp,pca9675": For the NXP PCA9675
--    - "nxp,pcf8574": For the NXP PCF8574
--    - "nxp,pcf8574a": For the NXP PCF8574A
--    - "nxp,pcf8575": For the NXP PCF8575
--
--  - reg: I2C slave address.
--
--  - gpio-controller: Marks the device node as a gpio controller.
--  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
--    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
--    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
--
--Optional Properties:
--
--  - lines-initial-states: Bitmask that specifies the initial state of each
--  line. When a bit is set to zero, the corresponding line will be initialized to
--  the input (pulled-up) state. When the  bit is set to one, the line will be
--  initialized the low-level output state. If the property is not specified
--  all lines will be initialized to the input state.
--
--  The I/O expander can detect input state changes, and thus optionally act as
--  an interrupt controller. When the expander interrupt line is connected all the
--  following properties must be set. For more information please see the
--  interrupt controller device tree bindings documentation available at
--  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
--
--  - interrupt-controller: Identifies the node as an interrupt controller.
--  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
--  - interrupts: Interrupt specifier for the controllers interrupt.
--
--
--Please refer to gpio.txt in this directory for details of the common GPIO
--bindings used by client devices.
--
--Example: PCF8575 I/O expander node
--
--	pcf8575: gpio@20 {
--		compatible = "nxp,pcf8575";
--		reg = <0x20>;
--		interrupt-parent = <&irqpin2>;
--		interrupts = <3 0>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-new file mode 100644
-index 0000000000000000..f0ff66c4c74e252d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-@@ -0,0 +1,103 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/nxp,pcf8575.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PCF857x-compatible I/O expanders
-+
-+maintainers:
-+  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-+
-+description:
-+  The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
-+  driven high by a pull-up current source or driven low to ground. This
-+  combines the direction and output level into a single bit per line, which
-+  can't be read back. We can't actually know at initialization time whether a
-+  line is configured (a) as output and driving the signal low/high, or (b) as
-+  input and reporting a low/high value, without knowing the last value written
-+  since the chip came out of reset (if any). The only reliable solution for
-+  setting up line direction is thus to do it explicitly.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxim,max7328
-+      - maxim,max7329
-+      - nxp,pca8574
-+      - nxp,pca8575
-+      - nxp,pca9670
-+      - nxp,pca9671
-+      - nxp,pca9672
-+      - nxp,pca9673
-+      - nxp,pca9674
-+      - nxp,pca9675
-+      - nxp,pcf8574
-+      - nxp,pcf8574a
-+      - nxp,pcf8575
-+
-+  reg:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+    description:
-+      The first cell is the GPIO number and the second cell specifies GPIO
-+      flags, as defined in <dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
-+      and GPIO_ACTIVE_LOW flags are supported.
-+
-+  lines-initial-states:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Bitmask that specifies the initial state of each line.
-+      When a bit is set to zero, the corresponding line will be initialized to
-+      the input (pulled-up) state.
-+      When the  bit is set to one, the line will be initialized to the
-+      low-level output state.
-+      If the property is not specified all lines will be initialized to the
-+      input state.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  wakeup-source: true
-+
-+patternProperties:
-+  "^(.+-hog(-[0-9]+)?)$":
-+    type: object
-+
-+    required:
-+      - gpio-hog
-+
-+required:
-+  - compatible
-+  - reg
-+  - gpio-controller
-+  - '#gpio-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            pcf8575: gpio@20 {
-+                    compatible = "nxp,pcf8575";
-+                    reg = <0x20>;
-+                    interrupt-parent = <&irqpin2>;
-+                    interrupts = <3 0>;
-+                    gpio-controller;
-+                    #gpio-cells = <2>;
-+                    interrupt-controller;
-+                    #interrupt-cells = <2>;
-+            };
-+    };
--- 
-2.25.1
+> --- /dev/null
+> +++ b/drivers/gpu/drm/drm_privacy_screen.c
 
+> +#include "drm_internal.h"
+
+I think we don't need this include, do we?
+
+
+> --- /dev/null
+> +++ b/include/drm/drm_privacy_screen_consumer.h
+
+> +#include <drm/drm_connector.h>
+
+Ditto
+
+> --- /dev/null
+> +++ b/include/drm/drm_privacy_screen_driver.h
+
+> +#include <drm/drm_connector.h>
+
+Ditto
+
+I like how you avoided leaking any DRM details within the new code,
+modulo the includes above. With above tweaks, the series is:
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+
+Theoretically one could also remove the `depends on DRM` from patch
+8/9 but I'm not sure how much that saves us.
+
+HTH
+-Emil
