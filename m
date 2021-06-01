@@ -2,140 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D42C47093
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB36C4708F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DF5613BD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A451613AE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234082AbhFAPcR (ORCPT
+        id S233059AbhFAPcs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Jun 2021 11:32:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbhFAPcP (ORCPT
+        Tue, 1 Jun 2021 11:32:48 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:25708 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230288AbhFAPcr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Jun 2021 11:32:15 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552D6C061574;
-        Tue,  1 Jun 2021 08:30:33 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 29so10969224pgu.11;
-        Tue, 01 Jun 2021 08:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VnnHRqo8lMttVmccO6dDOJIhxdSoTbCnFNxdSa23m9k=;
-        b=dCR8//k4wzUAjpi9CXrOlOGW78AqYU0DLmcuoADpnt6kuTWB3oHKuR7kWGoNKjZBWk
-         nT2Rf2kG8xA+4s/ch+027w4gMNPGw3+66LOETR1sDmkPj13R9fBSUETXyVbtPHnJmd2f
-         PtRDXAvsYeiT1cxgUfYXZU/y5+zuGe/Opz4rCqFp/5LtqBof6Bnvbj4TaNNIQgRmUT1V
-         vkqcROBf8OhtXQRbH8HFfDOmQhmYOhvAX6+Xa9jMjKsAjQAMQtGUc3zmcIcM1V9L1kng
-         q1S0R6oPQ4sZ++iRBLt9EPk/m8nJfrg5NtQwx0y+zEwCui0MWljDKvYaUznGYqpngATq
-         dXTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VnnHRqo8lMttVmccO6dDOJIhxdSoTbCnFNxdSa23m9k=;
-        b=EwstsPO6AVLP9OhUR57dF6alYONy/DgvOXCdCisJilYNPto/Fb6LCPzTj++ACLxxrd
-         LDngHKpKKUhamdaKWEeQ+zkqGdgpq12EzKITHowD5GdSbtx+YNi4zUUhR4Hs436qDyjV
-         Rr7AZGNj0vOHqZRz/A3KWYiG+Jwtq2aYQQyZMftL4CBKCpGzcmh+6pDYTmc92u7mqY+b
-         DsW/4mKYHn4vPO77S2knBFP/0Pa22LpTIzu9U0M869uHQix7P/szL1MN65qCIgjjXirX
-         s6Sa9N0KDoWPRZC2HOptfJYmRTTLJmc+WDRegOmmAtWvwnQT3S5j/IXOmpFsecSGj3zY
-         DFHA==
-X-Gm-Message-State: AOAM533sGhJqRe0YY3A5roXLl6Yy4NTFvuOC0je29J6X673eiEOs3GN5
-        5AFFYA25c+K7Jovojqr2jQT+JNSN+kmLj/pru2Y=
-X-Google-Smtp-Source: ABdhPJz+uV9kcio77l5lJR0eVJQmCv5st7BUfAlx30tj1gMMnCl7/JZQhPRxzzwqf3GGtFQ+rGQJPv07o5D52t1a9FY=
-X-Received: by 2002:a63:4145:: with SMTP id o66mr28745022pga.4.1622561432782;
- Tue, 01 Jun 2021 08:30:32 -0700 (PDT)
+        Tue, 1 Jun 2021 11:32:47 -0400
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 151FOKew009540;
+        Tue, 1 Jun 2021 15:30:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pps0720; bh=iCUWAj7frxQI7LsZaRn7UF3u6PLCoOjGUA7u8YvVpOY=;
+ b=DE0K03P+3llubk1hTeCxo/m2cleU7WrD5yK/sXNitoj6Obtsrh+kKX+m7F4Xb/Q5mP1Z
+ TGfBVdVULZBym+3kwCWmJvMwjpzRCQs+aNhrpEnZjeTnKQ5C8ZJnRaR2BgKi+o5yMulE
+ gSTlfeqbcKphzaJkw1fRkWfYgvFZzLzlerMnVG7Q//Ixc0mJU9+a5GEOSFJkjoTCswc5
+ ImsbfIFJoGPTIbegBsSf67FpGNj7WkbHFjhYsYBZpMGLtSE4wy6FwSvMz0DG9dlQLdFf
+ Ldl6iRdBifQ03cNKSv2bZs0HjDV14AArCOxDZNUgMXgMLnwb05ofbCftHnQkbKs1HwmD CQ== 
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0a-002e3701.pphosted.com with ESMTP id 38w2ctrp1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Jun 2021 15:30:32 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id B4D3D59;
+        Tue,  1 Jun 2021 15:30:31 +0000 (UTC)
+Received: from swahl-home.5wahls.com (unknown [16.99.164.36])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id C881448;
+        Tue,  1 Jun 2021 15:30:29 +0000 (UTC)
+Date:   Tue, 1 Jun 2021 10:30:29 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Qiheng Lin <linqiheng@huawei.com>
+Cc:     mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, steve.wahl@hpe.com,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 -next] x86/platform/uv: Remove the unneeded extern
+ keyword
+Message-ID: <YLZSlQnGETqw1da6@swahl-home.5wahls.com>
+References: <20210601063034.27433-1-linqiheng@huawei.com>
 MIME-Version: 1.0
-References: <cover.1622560799.git.geert+renesas@glider.be> <5236cf71d467bec862c4fa7849705caac195b23a.1622560799.git.geert+renesas@glider.be>
-In-Reply-To: <5236cf71d467bec862c4fa7849705caac195b23a.1622560799.git.geert+renesas@glider.be>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 1 Jun 2021 18:30:17 +0300
-Message-ID: <CAHp75VerXNJdecZKLUU1uex6-J9TC+9+yLkZqxc5UFtnZcT5mA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] x86: ce4100: Replace "ti,pcf8575" by "nxp,pcf8575"
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210601063034.27433-1-linqiheng@huawei.com>
+X-Proofpoint-GUID: YVHJYEDfOUpNWLZyyJeWvmMPjmiPeqYW
+X-Proofpoint-ORIG-GUID: YVHJYEDfOUpNWLZyyJeWvmMPjmiPeqYW
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-06-01_07:2021-06-01,2021-06-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=953 mlxscore=0
+ malwarescore=0 adultscore=0 clxscore=1011 priorityscore=1501
+ suspectscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106010104
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 1, 2021 at 6:26 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The TI part is equivalent to the NXP part, and its compatible value is
-> not documented in the DT bindings.
->
-> Note that while the Linux driver DT match table does not contain the
-> compatible value of the TI part, it could still match to this part, as
-> i2c_device_id-based matching ignores the vendor part of the compatible
-> value.
+On Tue, Jun 01, 2021 at 02:30:34PM +0800, Qiheng Lin wrote:
+> The function declarations in bios.h are already marked extern, so remove
+> them in the definition.
+> 
+> This problem was caught by the sparse tool:
+>  function 'uv_bios_get_master_nasid' with external linkage has definition
+>  function 'uv_bios_get_heapsize' with external linkage has definition
+>  function 'uv_bios_install_heap' with external linkage has definition
+>  function 'uv_bios_obj_count' with external linkage has definition
+>  function 'uv_bios_enum_objs' with external linkage has definition
+>  function 'uv_bios_enum_ports' with external linkage has definition
+>  function 'uv_bios_get_geoinfo' with external linkage has definition
+>  function 'uv_bios_get_pci_topology' with external linkage has definition
+> 
+> Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
 
-LGTM!
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 
-Maybe at some point I will find the time to resurrect the CE4100 based
-device that collects dirt on my desk...
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> v2:
->   - New.
-> ---
->  arch/x86/platform/ce4100/falconfalls.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
-> index 0ac3d43571361112..65fa3d866226ce97 100644
-> --- a/arch/x86/platform/ce4100/falconfalls.dts
-> +++ b/arch/x86/platform/ce4100/falconfalls.dts
-> @@ -249,7 +249,7 @@ i2c@1 {
->
->                                                 gpio@26 {
->                                                         #gpio-cells = <2>;
-> -                                                       compatible = "ti,pcf8575";
-> +                                                       compatible = "nxp,pcf8575";
->                                                         reg = <0x26>;
->                                                         gpio-controller;
->                                                 };
-> @@ -263,7 +263,7 @@ i2c@2 {
->
->                                                 gpio@26 {
->                                                         #gpio-cells = <2>;
-> -                                                       compatible = "ti,pcf8575";
-> +                                                       compatible = "nxp,pcf8575";
->                                                         reg = <0x26>;
->                                                         gpio-controller;
->                                                 };
-> --
-> 2.25.1
->
-
+> Changes in v2:
+>  - adjust the subject and commit message
+> 
+>  arch/x86/platform/uv/bios_uv.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
+> index bf31af3d32d6..7e7634c8be62 100644
+> --- a/arch/x86/platform/uv/bios_uv.c
+> +++ b/arch/x86/platform/uv/bios_uv.c
+> @@ -172,55 +172,55 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
+>  				(u64)decode, (u64)domain, (u64)bus, 0, 0);
+>  }
+>  
+> -extern s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
+> +s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, 0, UV_BIOS_EXTRA_MASTER_NASID, 0,
+>  				size, (u64)master_nasid);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_get_master_nasid);
+>  
+> -extern s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
+> +s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_GET_HEAPSIZE,
+>  				0, size, (u64)heap_size);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_get_heapsize);
+>  
+> -extern s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
+> +s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_INSTALL_HEAP,
+>  				0, heap_size, (u64)bios_heap);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_install_heap);
+>  
+> -extern s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
+> +s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_OBJECT_COUNT,
+>  				0, size, (u64)objcnt);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_obj_count);
+>  
+> -extern s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
+> +s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_OBJECTS,
+>  				0, size, (u64)objbuf);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_enum_objs);
+>  
+> -extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
+> +s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
+>  {
+>  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_PORTS,
+>  				obj_id, size, (u64)portbuf);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_enum_ports);
+>  
+> -extern s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
+> +s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
+>  {
+>  	return uv_bios_call(UV_BIOS_GET_GEOINFO, nasid, (u64)buf, size, 0, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(uv_bios_get_geoinfo);
+>  
+> -extern s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
+> +s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
+>  {
+>  	return uv_bios_call(UV_BIOS_GET_PCI_TOPOLOGY, (u64)buf, size, 0, 0, 0);
+>  }
+> -- 
+> 2.31.1
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Steve Wahl, Hewlett Packard Enterprise
