@@ -2,121 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB48AC47080
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 May 2021 15:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576B5C47092
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 06:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF94960FE8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 31 May 2021 15:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF9B61378
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 06:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232408AbhEaPDY (ORCPT
+        id S232906AbhFAGgS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 31 May 2021 11:03:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233906AbhEaPAg (ORCPT
+        Tue, 1 Jun 2021 02:36:18 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2810 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233143AbhFAGgR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 31 May 2021 11:00:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id B04216135A
-        for <platform-driver-x86@vger.kernel.org>; Mon, 31 May 2021 14:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622471202;
-        bh=U3yDopgIw2tO64kLTesXIO1gwXn9lxY7MY5Eraru/sE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=CsCNsbtHVbgTW2GupUQWSb5U9ydgH8rOlN9pZp/51QQ27UqMzE+5RBkxHkAOuFcMV
-         ZlfgcmYIH69HXCJc+XeZg11nf70T4q+E19Tsse8E3+T6lZT3yCfUWyCjpv7oVnlU0G
-         xNT2rJrcoIKcXwEFB/tMbgdLPt5eNE4W8w19D96ZzcwGq2jJ3jn9FU/A946V1V5WhE
-         frQXOLTyduNr31TJNkSEkN7hAtyrB2zRRkKzIME20RpoGVf1yQNbMBlO+tZPn4EeiZ
-         xMP7j+Y10Q/gIDJxhARjQb2A9t9962GB9YksoZ8t4MUxppZExYKOCXRNPUHaS8sRI+
-         LIWnQZtLg+cLw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213297] ideapad-laptop: DYTC interface not found, several
- functionalities missing
-Date:   Mon, 31 May 2021 14:26:42 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: pobrn@protonmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-213297-215701-Bpj0YQGdXD@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213297-215701@https.bugzilla.kernel.org/>
-References: <bug-213297-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 1 Jun 2021 02:36:17 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvMhc667ZzWq3w;
+        Tue,  1 Jun 2021 14:29:52 +0800 (CST)
+Received: from dggpemm500012.china.huawei.com (7.185.36.89) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 14:34:34 +0800
+Received: from DESKTOP-EFRLNPK.china.huawei.com (10.174.176.189) by
+ dggpemm500012.china.huawei.com (7.185.36.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 14:34:33 +0800
+From:   Qiheng Lin <linqiheng@huawei.com>
+To:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
+        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>
+CC:     <steve.wahl@hpe.com>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Qiheng Lin <linqiheng@huawei.com>
+Subject: [PATCH v2 -next] x86/platform/uv: Remove the unneeded extern keyword
+Date:   Tue, 1 Jun 2021 14:30:34 +0800
+Message-ID: <20210601063034.27433-1-linqiheng@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.176.189]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500012.china.huawei.com (7.185.36.89)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213297
+The function declarations in bios.h are already marked extern, so remove
+them in the definition.
 
-Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) changed:
+This problem was caught by the sparse tool:
+ function 'uv_bios_get_master_nasid' with external linkage has definition
+ function 'uv_bios_get_heapsize' with external linkage has definition
+ function 'uv_bios_install_heap' with external linkage has definition
+ function 'uv_bios_obj_count' with external linkage has definition
+ function 'uv_bios_enum_objs' with external linkage has definition
+ function 'uv_bios_enum_ports' with external linkage has definition
+ function 'uv_bios_get_geoinfo' with external linkage has definition
+ function 'uv_bios_get_pci_topology' with external linkage has definition
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |pobrn@protonmail.com
+Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
+---
+Changes in v2:
+ - adjust the subject and commit message
 
---- Comment #3 from Barnab=C3=A1s P=C5=91cze (pobrn@protonmail.com) ---
-As for /sys/firmware/acpi/platform_profile, the issue is very possible the =
-same
-as https://bugzilla.kernel.org/show_bug.cgi?id=3D212985 , that is, the driv=
-er
-only supports DYTC 5 and above, but it seems from the DSDT that version 4 is
-available on that machine.
+ arch/x86/platform/uv/bios_uv.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-As for the keyboard backlight, it's not available because the driver only
-supports and older version of the keyboard backlight control interface which
-does not seem to be available.
+diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
+index bf31af3d32d6..7e7634c8be62 100644
+--- a/arch/x86/platform/uv/bios_uv.c
++++ b/arch/x86/platform/uv/bios_uv.c
+@@ -172,55 +172,55 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
+ 				(u64)decode, (u64)domain, (u64)bus, 0, 0);
+ }
+ 
+-extern s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
++s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, 0, UV_BIOS_EXTRA_MASTER_NASID, 0,
+ 				size, (u64)master_nasid);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_get_master_nasid);
+ 
+-extern s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
++s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_GET_HEAPSIZE,
+ 				0, size, (u64)heap_size);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_get_heapsize);
+ 
+-extern s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
++s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_INSTALL_HEAP,
+ 				0, heap_size, (u64)bios_heap);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_install_heap);
+ 
+-extern s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
++s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_OBJECT_COUNT,
+ 				0, size, (u64)objcnt);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_obj_count);
+ 
+-extern s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
++s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_OBJECTS,
+ 				0, size, (u64)objbuf);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_enum_objs);
+ 
+-extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
++s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
+ {
+ 	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_PORTS,
+ 				obj_id, size, (u64)portbuf);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_enum_ports);
+ 
+-extern s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
++s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
+ {
+ 	return uv_bios_call(UV_BIOS_GET_GEOINFO, nasid, (u64)buf, size, 0, 0);
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_get_geoinfo);
+ 
+-extern s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
++s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
+ {
+ 	return uv_bios_call(UV_BIOS_GET_PCI_TOPOLOGY, (u64)buf, size, 0, 0, 0);
+ }
+-- 
+2.31.1
 
-As for "LUK2019" and "IDEA2004", those devices don't seem to be that
-interesting (I might be wrong though) at first glance since they seem to
-contain more or less nothing as far as I can see:
-
-            Device (HKDV)
-            {
-                Name (_HID, "LHK2019")  // _HID: Hardware ID
-                Name (_UID, Zero)  // _UID: Unique ID
-                Method (_STA, 0, NotSerialized)  // _STA: Status
-                {
-                    Return (0x0F)
-                }
-            }
-
-            ...
-
-            Scope (^^EC0)
-            {
-                Device (ITSD)
-                {
-                    Name (_HID, "IDEA2004")  // _HID: Hardware ID
-                    Method (_STA, 0, NotSerialized)  // _STA: Status
-                    {
-                        Return (0x0F)
-                    }
-                }
-            }
-
-As for the, I assume, screen backlight and Fn keys, unfortunately I cannot
-help.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
