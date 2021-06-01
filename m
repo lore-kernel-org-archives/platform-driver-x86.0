@@ -2,172 +2,274 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB36C4708F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E28DC47096
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A451613AE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B0361396
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 15:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233059AbhFAPcs (ORCPT
+        id S234328AbhFAPdV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Jun 2021 11:32:48 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:25708 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230288AbhFAPcr (ORCPT
+        Tue, 1 Jun 2021 11:33:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233059AbhFAPdT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Jun 2021 11:32:47 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 151FOKew009540;
-        Tue, 1 Jun 2021 15:30:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pps0720; bh=iCUWAj7frxQI7LsZaRn7UF3u6PLCoOjGUA7u8YvVpOY=;
- b=DE0K03P+3llubk1hTeCxo/m2cleU7WrD5yK/sXNitoj6Obtsrh+kKX+m7F4Xb/Q5mP1Z
- TGfBVdVULZBym+3kwCWmJvMwjpzRCQs+aNhrpEnZjeTnKQ5C8ZJnRaR2BgKi+o5yMulE
- gSTlfeqbcKphzaJkw1fRkWfYgvFZzLzlerMnVG7Q//Ixc0mJU9+a5GEOSFJkjoTCswc5
- ImsbfIFJoGPTIbegBsSf67FpGNj7WkbHFjhYsYBZpMGLtSE4wy6FwSvMz0DG9dlQLdFf
- Ldl6iRdBifQ03cNKSv2bZs0HjDV14AArCOxDZNUgMXgMLnwb05ofbCftHnQkbKs1HwmD CQ== 
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0a-002e3701.pphosted.com with ESMTP id 38w2ctrp1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Jun 2021 15:30:32 +0000
-Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id B4D3D59;
-        Tue,  1 Jun 2021 15:30:31 +0000 (UTC)
-Received: from swahl-home.5wahls.com (unknown [16.99.164.36])
-        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id C881448;
-        Tue,  1 Jun 2021 15:30:29 +0000 (UTC)
-Date:   Tue, 1 Jun 2021 10:30:29 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Qiheng Lin <linqiheng@huawei.com>
-Cc:     mike.travis@hpe.com, dimitri.sivanich@hpe.com,
-        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, steve.wahl@hpe.com,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 -next] x86/platform/uv: Remove the unneeded extern
- keyword
-Message-ID: <YLZSlQnGETqw1da6@swahl-home.5wahls.com>
-References: <20210601063034.27433-1-linqiheng@huawei.com>
+        Tue, 1 Jun 2021 11:33:19 -0400
+X-Greylist: delayed 334 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Jun 2021 08:31:37 PDT
+Received: from newton.telenet-ops.be (newton.telenet-ops.be [IPv6:2a02:1800:120:4::f00:d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4ECC06175F
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Jun 2021 08:31:36 -0700 (PDT)
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by newton.telenet-ops.be (Postfix) with ESMTPS id 4FvbbC459KzMrFlL
+        for <platform-driver-x86@vger.kernel.org>; Tue,  1 Jun 2021 17:25:59 +0200 (CEST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:555:bf00:6951:b6ab])
+        by baptiste.telenet-ops.be with bizsmtp
+        id BrRp2500b35oben01rRpyb; Tue, 01 Jun 2021 17:25:59 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lo6H7-00BuxR-7b; Tue, 01 Jun 2021 17:25:49 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1lo6H6-000JYT-N5; Tue, 01 Jun 2021 17:25:48 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        x86@kernel.org, linux-omap@vger.kernel.org,
+        linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 4/4] dt-bindings: gpio: pcf857x: Convert to json-schema
+Date:   Tue,  1 Jun 2021 17:25:47 +0200
+Message-Id: <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1622560799.git.geert+renesas@glider.be>
+References: <cover.1622560799.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210601063034.27433-1-linqiheng@huawei.com>
-X-Proofpoint-GUID: YVHJYEDfOUpNWLZyyJeWvmMPjmiPeqYW
-X-Proofpoint-ORIG-GUID: YVHJYEDfOUpNWLZyyJeWvmMPjmiPeqYW
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-06-01_07:2021-06-01,2021-06-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=953 mlxscore=0
- malwarescore=0 adultscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106010104
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 01, 2021 at 02:30:34PM +0800, Qiheng Lin wrote:
-> The function declarations in bios.h are already marked extern, so remove
-> them in the definition.
-> 
-> This problem was caught by the sparse tool:
->  function 'uv_bios_get_master_nasid' with external linkage has definition
->  function 'uv_bios_get_heapsize' with external linkage has definition
->  function 'uv_bios_install_heap' with external linkage has definition
->  function 'uv_bios_obj_count' with external linkage has definition
->  function 'uv_bios_enum_objs' with external linkage has definition
->  function 'uv_bios_enum_ports' with external linkage has definition
->  function 'uv_bios_get_geoinfo' with external linkage has definition
->  function 'uv_bios_get_pci_topology' with external linkage has definition
-> 
-> Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
+Convert the PCF857x-compatible I/O expanders Device Tree binding
+documentation to json-schema.
 
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Document missing compatible values, properties, and gpio hogs.
 
-> ---
-> Changes in v2:
->  - adjust the subject and commit message
-> 
->  arch/x86/platform/uv/bios_uv.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-> index bf31af3d32d6..7e7634c8be62 100644
-> --- a/arch/x86/platform/uv/bios_uv.c
-> +++ b/arch/x86/platform/uv/bios_uv.c
-> @@ -172,55 +172,55 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
->  				(u64)decode, (u64)domain, (u64)bus, 0, 0);
->  }
->  
-> -extern s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
-> +s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, 0, UV_BIOS_EXTRA_MASTER_NASID, 0,
->  				size, (u64)master_nasid);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_get_master_nasid);
->  
-> -extern s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
-> +s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_GET_HEAPSIZE,
->  				0, size, (u64)heap_size);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_get_heapsize);
->  
-> -extern s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
-> +s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_INSTALL_HEAP,
->  				0, heap_size, (u64)bios_heap);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_install_heap);
->  
-> -extern s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
-> +s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_OBJECT_COUNT,
->  				0, size, (u64)objcnt);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_obj_count);
->  
-> -extern s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
-> +s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_OBJECTS,
->  				0, size, (u64)objbuf);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_enum_objs);
->  
-> -extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
-> +s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
->  {
->  	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_PORTS,
->  				obj_id, size, (u64)portbuf);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_enum_ports);
->  
-> -extern s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
-> +s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
->  {
->  	return uv_bios_call(UV_BIOS_GET_GEOINFO, nasid, (u64)buf, size, 0, 0);
->  }
->  EXPORT_SYMBOL_GPL(uv_bios_get_geoinfo);
->  
-> -extern s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
-> +s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
->  {
->  	return uv_bios_call(UV_BIOS_GET_PCI_TOPOLOGY, (u64)buf, size, 0, 0, 0);
->  }
-> -- 
-> 2.31.1
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Drop support for "ti,pcf8575", as it's 100% compatible with
+    "nxp,pcf8575",
+  - Drop "hog-[0-9]+" from hog names,
+  - Rely on dt-schema/schemas/gpio/gpio-hog.yaml for hog properties.
+---
+ .../devicetree/bindings/gpio/gpio-pcf857x.txt |  69 ------------
+ .../devicetree/bindings/gpio/nxp,pcf8575.yaml | 103 ++++++++++++++++++
+ 2 files changed, 103 insertions(+), 69 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt b/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+deleted file mode 100644
+index a482455a205b0855..0000000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
++++ /dev/null
+@@ -1,69 +0,0 @@
+-* PCF857x-compatible I/O expanders
+-
+-The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
+-driven high by a pull-up current source or driven low to ground. This combines
+-the direction and output level into a single bit per line, which can't be read
+-back. We can't actually know at initialization time whether a line is configured
+-(a) as output and driving the signal low/high, or (b) as input and reporting a
+-low/high value, without knowing the last value written since the chip came out
+-of reset (if any). The only reliable solution for setting up line direction is
+-thus to do it explicitly.
+-
+-Required Properties:
+-
+-  - compatible: should be one of the following.
+-    - "maxim,max7328": For the Maxim MAX7378
+-    - "maxim,max7329": For the Maxim MAX7329
+-    - "nxp,pca8574": For the NXP PCA8574
+-    - "nxp,pca8575": For the NXP PCA8575
+-    - "nxp,pca9670": For the NXP PCA9670
+-    - "nxp,pca9671": For the NXP PCA9671
+-    - "nxp,pca9672": For the NXP PCA9672
+-    - "nxp,pca9673": For the NXP PCA9673
+-    - "nxp,pca9674": For the NXP PCA9674
+-    - "nxp,pca9675": For the NXP PCA9675
+-    - "nxp,pcf8574": For the NXP PCF8574
+-    - "nxp,pcf8574a": For the NXP PCF8574A
+-    - "nxp,pcf8575": For the NXP PCF8575
+-
+-  - reg: I2C slave address.
+-
+-  - gpio-controller: Marks the device node as a gpio controller.
+-  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
+-    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
+-    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+-
+-Optional Properties:
+-
+-  - lines-initial-states: Bitmask that specifies the initial state of each
+-  line. When a bit is set to zero, the corresponding line will be initialized to
+-  the input (pulled-up) state. When the  bit is set to one, the line will be
+-  initialized the low-level output state. If the property is not specified
+-  all lines will be initialized to the input state.
+-
+-  The I/O expander can detect input state changes, and thus optionally act as
+-  an interrupt controller. When the expander interrupt line is connected all the
+-  following properties must be set. For more information please see the
+-  interrupt controller device tree bindings documentation available at
+-  Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
+-
+-  - interrupt-controller: Identifies the node as an interrupt controller.
+-  - #interrupt-cells: Number of cells to encode an interrupt source, shall be 2.
+-  - interrupts: Interrupt specifier for the controllers interrupt.
+-
+-
+-Please refer to gpio.txt in this directory for details of the common GPIO
+-bindings used by client devices.
+-
+-Example: PCF8575 I/O expander node
+-
+-	pcf8575: gpio@20 {
+-		compatible = "nxp,pcf8575";
+-		reg = <0x20>;
+-		interrupt-parent = <&irqpin2>;
+-		interrupts = <3 0>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+new file mode 100644
+index 0000000000000000..f0ff66c4c74e252d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
+@@ -0,0 +1,103 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/nxp,pcf8575.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PCF857x-compatible I/O expanders
++
++maintainers:
++  - Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
++
++description:
++  The PCF857x-compatible chips have "quasi-bidirectional" I/O lines that can be
++  driven high by a pull-up current source or driven low to ground. This
++  combines the direction and output level into a single bit per line, which
++  can't be read back. We can't actually know at initialization time whether a
++  line is configured (a) as output and driving the signal low/high, or (b) as
++  input and reporting a low/high value, without knowing the last value written
++  since the chip came out of reset (if any). The only reliable solution for
++  setting up line direction is thus to do it explicitly.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max7328
++      - maxim,max7329
++      - nxp,pca8574
++      - nxp,pca8575
++      - nxp,pca9670
++      - nxp,pca9671
++      - nxp,pca9672
++      - nxp,pca9673
++      - nxp,pca9674
++      - nxp,pca9675
++      - nxp,pcf8574
++      - nxp,pcf8574a
++      - nxp,pcf8575
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++    description:
++      The first cell is the GPIO number and the second cell specifies GPIO
++      flags, as defined in <dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
++      and GPIO_ACTIVE_LOW flags are supported.
++
++  lines-initial-states:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Bitmask that specifies the initial state of each line.
++      When a bit is set to zero, the corresponding line will be initialized to
++      the input (pulled-up) state.
++      When the  bit is set to one, the line will be initialized to the
++      low-level output state.
++      If the property is not specified all lines will be initialized to the
++      input state.
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  '#interrupt-cells':
++    const: 2
++
++  wakeup-source: true
++
++patternProperties:
++  "^(.+-hog(-[0-9]+)?)$":
++    type: object
++
++    required:
++      - gpio-hog
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - '#gpio-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            pcf8575: gpio@20 {
++                    compatible = "nxp,pcf8575";
++                    reg = <0x20>;
++                    interrupt-parent = <&irqpin2>;
++                    interrupts = <3 0>;
++                    gpio-controller;
++                    #gpio-cells = <2>;
++                    interrupt-controller;
++                    #interrupt-cells = <2>;
++            };
++    };
 -- 
-Steve Wahl, Hewlett Packard Enterprise
+2.25.1
+
