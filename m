@@ -2,152 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3544FC47092
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 06:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DABC47092
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 07:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 196506139A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 06:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B91F613AB
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 07:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232725AbhFAGlx (ORCPT
+        id S233195AbhFAHzr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Jun 2021 02:41:53 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:6104 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232989AbhFAGlw (ORCPT
+        Tue, 1 Jun 2021 03:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233160AbhFAHzq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Jun 2021 02:41:52 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvMsL4DYjzYpFk;
-        Tue,  1 Jun 2021 14:37:26 +0800 (CST)
-Received: from dggpemm500012.china.huawei.com (7.185.36.89) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 1 Jun 2021 14:40:09 +0800
-Received: from [10.174.176.189] (10.174.176.189) by
- dggpemm500012.china.huawei.com (7.185.36.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Tue, 1 Jun 2021 14:40:08 +0800
-Subject: Re: [PATCH -next] x86/platform/uv: functions should not be declared
- extern
-To:     <mike.travis@hpe.com>, <dimitri.sivanich@hpe.com>,
-        <russ.anderson@hpe.com>, <dvhart@infradead.org>,
-        <andy@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>
-CC:     <steve.wahl@hpe.com>, <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20210531060747.21934-1-linqiheng@huawei.com>
-From:   Qiheng Lin <linqiheng@huawei.com>
-Message-ID: <06d88bb6-650d-9b94-f4e6-e274dd188ca1@huawei.com>
-Date:   Tue, 1 Jun 2021 14:40:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+        Tue, 1 Jun 2021 03:55:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E64BA6136E;
+        Tue,  1 Jun 2021 07:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622534045;
+        bh=+XAvuzMHMQcxwCnCNesqCmyb6X8V5ARJjsdHoon7pEE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vJX11QflGfehoVWetTIWOPft3Zql/d8Esr52RiXgnDt0LX43QF/OsR5I82cUSTyFr
+         hHd8Ku5eS7qpq+nBWjBNkbpRHmqWK8B4a6pfW0cxdNWNRQtdKvnXT1M+Yfk1Ly4uXC
+         4X+1t/UdvkbuXhBkBNjaWMctWMW1QZ6SxAgM0I8k40p6yGftCxnD6UD2dCYGj71uHJ
+         /apes1WW4DGlpisAA4jHON6e/zx4+RiUFImA+3CzS3zy4If+EdAEkRdjpueLJrcNP0
+         WhjYFC7TkmcF9WMeAljymC4rUZIvueGhD/CwHd6aMJ9gZD04v67b91yeVKOST+sWMA
+         CGcb7cxAoOv+A==
+From:   Mike Rapoport <rppt@kernel.org>
+To:     x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Shevchenko <andy@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Dave Young <dyoung@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: [PATCH 0/3] x86/setup: always resrve the first 1M of RAM
+Date:   Tue,  1 Jun 2021 10:53:51 +0300
+Message-Id: <20210601075354.5149-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20210531060747.21934-1-linqiheng@huawei.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.189]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500012.china.huawei.com (7.185.36.89)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-ÔÚ 2021/5/31 14:07, Qiheng Lin Ð´µÀ:
-> These function declarations in 'bios.h' are already marked extern, thus
-> their definition should not have the keyword.
-> 
-> This quiets the following sparse warnings:
->   function 'uv_bios_get_master_nasid' with external linkage has definition
->   function 'uv_bios_get_heapsize' with external linkage has definition
->   function 'uv_bios_install_heap' with external linkage has definition
->   function 'uv_bios_obj_count' with external linkage has definition
->   function 'uv_bios_enum_objs' with external linkage has definition
->   function 'uv_bios_enum_ports' with external linkage has definition
->   function 'uv_bios_get_geoinfo' with external linkage has definition
->   function 'uv_bios_get_pci_topology' with external linkage has definition
-> 
-> Signed-off-by: Qiheng Lin <linqiheng@huawei.com>
-> ---
->   arch/x86/platform/uv/bios_uv.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/platform/uv/bios_uv.c b/arch/x86/platform/uv/bios_uv.c
-> index bf31af3d32d6..7e7634c8be62 100644
-> --- a/arch/x86/platform/uv/bios_uv.c
-> +++ b/arch/x86/platform/uv/bios_uv.c
-> @@ -172,55 +172,55 @@ int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus)
->   				(u64)decode, (u64)domain, (u64)bus, 0, 0);
->   }
->   
-> -extern s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
-> +s64 uv_bios_get_master_nasid(u64 size, u64 *master_nasid)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, 0, UV_BIOS_EXTRA_MASTER_NASID, 0,
->   				size, (u64)master_nasid);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_get_master_nasid);
->   
-> -extern s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
-> +s64 uv_bios_get_heapsize(u64 nasid, u64 size, u64 *heap_size)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_GET_HEAPSIZE,
->   				0, size, (u64)heap_size);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_get_heapsize);
->   
-> -extern s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
-> +s64 uv_bios_install_heap(u64 nasid, u64 heap_size, u64 *bios_heap)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_INSTALL_HEAP,
->   				0, heap_size, (u64)bios_heap);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_install_heap);
->   
-> -extern s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
-> +s64 uv_bios_obj_count(u64 nasid, u64 size, u64 *objcnt)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_OBJECT_COUNT,
->   				0, size, (u64)objcnt);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_obj_count);
->   
-> -extern s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
-> +s64 uv_bios_enum_objs(u64 nasid, u64 size, u64 *objbuf)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_OBJECTS,
->   				0, size, (u64)objbuf);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_enum_objs);
->   
-> -extern s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
-> +s64 uv_bios_enum_ports(u64 nasid, u64 obj_id, u64 size, u64 *portbuf)
->   {
->   	return uv_bios_call(UV_BIOS_EXTRA, nasid, UV_BIOS_EXTRA_ENUM_PORTS,
->   				obj_id, size, (u64)portbuf);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_enum_ports);
->   
-> -extern s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
-> +s64 uv_bios_get_geoinfo(u64 nasid, u64 size, u64 *buf)
->   {
->   	return uv_bios_call(UV_BIOS_GET_GEOINFO, nasid, (u64)buf, size, 0, 0);
->   }
->   EXPORT_SYMBOL_GPL(uv_bios_get_geoinfo);
->   
-> -extern s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
-> +s64 uv_bios_get_pci_topology(u64 size, u64 *buf)
->   {
->   	return uv_bios_call(UV_BIOS_GET_PCI_TOPOLOGY, (u64)buf, size, 0, 0, 0);
->   }
-> 
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-I have sent a new patch with the correct subject and commit messages, 
-please ignore this version.
+Hi,
 
-Sorry for the noise.
+Commit a799c2bd29d1 ("x86/setup: Consolidate early memory reservations")
+changed the way early memory reservations are made and caused a regression
+for users that set CONFIG_X86_RESERVE_LOW to 640K in their kernel
+configuration [1] because there was no room for the real mode trampoline.
+
+My initial suggestion was to reduce the limit of CONFIG_X86_RESERVE_LOW
+from 640K to 512K [2], but in the end it seems simpler to always reserve
+the first 1M of RAM after the real mode trampoline is allocated.
+
+The first patch in the series contains the rework of early memory
+reservations so that first 64K will be reserved very early before memblock
+allocations  are possible and the remaining memory under 1M would be
+reserved after the real mode trampoline is allocated. This patch also
+update freeing of EFI boot services so that memory under 1M will remain
+reserved which is also required for crash kernel [3].
+
+The second and the third patches are cleanups that remove pieces that are
+not longer required after the first patch is applied.
+
+Randy, Hugh, I'd appreciate if you give this a whirl on your old Sandy
+Bridge laptops as it changes again the way trim_snb_memory() works.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=213177
+[2] https://lore.kernel.org/lkml/20210526081100.12239-1-rppt@kernel.org
+[3] https://lore.kernel.org/lkml/20210531090023.16471-1-lijiang@redhat.com/#r
+
+Mike Rapoport (3):
+  x86/setup: always reserve the first 1M of RAM
+  x86/setup: remove CONFIG_X86_RESERVE_LOW and reservelow options
+  x86/crash: remove crash_reserve_low_1M()
+
+ .../admin-guide/kernel-parameters.txt         |  5 --
+ arch/x86/Kconfig                              | 29 ---------
+ arch/x86/include/asm/crash.h                  |  6 --
+ arch/x86/kernel/crash.c                       | 13 ----
+ arch/x86/kernel/setup.c                       | 59 +++++++------------
+ arch/x86/platform/efi/quirks.c                | 12 ++++
+ arch/x86/realmode/init.c                      | 14 +++--
+ 7 files changed, 41 insertions(+), 97 deletions(-)
+
+
+base-commit: c4681547bcce777daf576925a966ffa824edd09d
+-- 
+2.28.0
+
