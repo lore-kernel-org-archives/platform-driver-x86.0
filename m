@@ -2,178 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95420C47080
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 09:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBABC47080
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 11:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 747B3610C9
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 09:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740426124B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  1 Jun 2021 11:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233379AbhFAJIq (ORCPT
+        id S232084AbhFALYO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 1 Jun 2021 05:08:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24850 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233291AbhFAJIp (ORCPT
+        Tue, 1 Jun 2021 07:24:14 -0400
+Received: from mail-dm3nam07on2061.outbound.protection.outlook.com ([40.107.95.61]:43488
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230308AbhFALYN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 1 Jun 2021 05:08:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622538424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wwyq+d8kaa3gE2iFZ3mOrS7Gyye0u9Y9IgFDFZTKJ9s=;
-        b=PjC+qSHS6V1NGrAXD5AscFZzz+FCrIKqy69DJ/XnCmiRBDvYVINI1hhUhBah+tNm+k7jfx
-        +kIzT5SSzULJoFP6gynBq0OCGuK5MxLyPCudF5r8OXbXpEtuv1cGH+yXWTT4tOCgIasIZ2
-        rG33uo9BqJ2ew1clunfrjinvjKu77RE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-ZIwBcJjnPNS5dwTQpNN6pw-1; Tue, 01 Jun 2021 05:07:03 -0400
-X-MC-Unique: ZIwBcJjnPNS5dwTQpNN6pw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6DEB4803624;
-        Tue,  1 Jun 2021 09:07:00 +0000 (UTC)
-Received: from localhost (ovpn-13-211.pek2.redhat.com [10.72.13.211])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 49D6469108;
-        Tue,  1 Jun 2021 09:06:56 +0000 (UTC)
-Date:   Tue, 1 Jun 2021 17:06:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Shevchenko <andy@infradead.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Dave Young <dyoung@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 1/3] x86/setup: always reserve the first 1M of RAM
-Message-ID: <20210601090653.GB361405@MiWiFi-R3L-srv>
-References: <20210601075354.5149-1-rppt@kernel.org>
- <20210601075354.5149-2-rppt@kernel.org>
+        Tue, 1 Jun 2021 07:24:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SMKhL+1LVNfO2uC3SdJFq0xpmUDsRa+zCMLaMgLJG0rsdSaFLYhQMNrW8ZO00GavzZ+NwPOjd6ER4UYzqUY0J2hDdJ0kZk+XCJhBzRxliyttRdhrEUH+oa8SzRDW5I07e0crWOu09t4RqnBg9nkkUGkYCWXCFv0+8jN03Ztrp8Otzg8C0yC2xJuSvL8lV6/M4NCfRqHgqQw5q+jmuMx+syA+YltmckO0yb5w3hvuIRjO4JVHrUHU0Y9YPUp1/M5GbAc1BEAFL22KvYPiWB+DLWnfzwZXVLyryFhz3c2Vj8MJ3cIDTt60aXeQeHiYtB3uqnjItkfcteGX8TUiUBPlpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ma0ZlVFJ9bY+Qx91eZlFFfZTML8piZTnCCWxkNrVaxo=;
+ b=iqpPUsquF2food14ZfZTjHiWYbuLZSMGoJFbR41xaXYycPvessYrTnPd6XXOpDqcEn/VWo5wNo1iC2ocYWwyTePc02ZEA7rgrngU7nEyLV8AO+pxoWNgPdDWmnNSiGSAjIud3ea2BfZnNbCl7+YbMQxYPS4Q/lu2GJ8+3YZL21gCMX/oUCEeu6VQiLG/1SqXL9vAxCO+GmECZ0HLGL18MPoTtVTJ1OOR8Wpg7A+xnBLRNRJdXyv1UHOloIh0jg48KrnDSfxiRUgkTaQ++rcFwBAgKdVtvF+fiyQQkzX8eweQwvximd693mmL9Mznx930DzJdAA0JIWCjyEFAeuxh6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ma0ZlVFJ9bY+Qx91eZlFFfZTML8piZTnCCWxkNrVaxo=;
+ b=MJyTyr8r47QqHpgsgQzC6RLnm1TPbTFNHV3X0MSfNLmJFnQqSRxToq1j2ryO+WxvOXwCWqvS2MrxyaRj0fjpZ8DGa3y7ojc8rMM4/MgnbFGXqXh03gJitqW+JKiuqLubMYi6t22jWlEmlgAoEgBlAQVEOANFv6gUoQxkqkveAIhfeP8gMZl5Hcl9KDd5kbyo1mNMTkvYWLqeBNsGeWo5sWjKZGinS24EqiJzPrrhXe4QirOy3G0SUAq8FPNSKPboBW6pWQ7ltw6ygHlz79H92Aq0NO8C9QsZk4Z3SGV7iSQ+ogg6m3bgmPWrsYklCthICQC1p8ayDG6s8rwYmG9icw==
+Received: from DM5PR06CA0025.namprd06.prod.outlook.com (2603:10b6:3:5d::11) by
+ BY5PR12MB4164.namprd12.prod.outlook.com (2603:10b6:a03:207::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.22; Tue, 1 Jun
+ 2021 11:22:31 +0000
+Received: from DM6NAM11FT036.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:5d:cafe::f6) by DM5PR06CA0025.outlook.office365.com
+ (2603:10b6:3:5d::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.20 via Frontend
+ Transport; Tue, 1 Jun 2021 11:22:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT036.mail.protection.outlook.com (10.13.172.64) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4150.30 via Frontend Transport; Tue, 1 Jun 2021 11:22:31 +0000
+Received: from dev-r-vrt-156.mtr.labs.mlnx (172.20.187.5) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 1 Jun 2021 11:22:29 +0000
+From:   Mykola Kostenok <c_mykolak@nvidia.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Mykola Kostenok <c_mykolak@nvidia.com>
+Subject: [PATCH platform] platform/mellanox: mlxreg-hotplug: remove IRQF_NO_AUTOEN flag from request_irq
+Date:   Tue, 1 Jun 2021 14:17:44 +0300
+Message-ID: <20210601111744.2247071-1-c_mykolak@nvidia.com>
+X-Mailer: git-send-email 2.8.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210601075354.5149-2-rppt@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 24c4f00a-f5b5-4bfb-2880-08d924ef8bf9
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4164:
+X-Microsoft-Antispam-PRVS: <BY5PR12MB4164A3A3EEC7E29BF2AA19CDE23E9@BY5PR12MB4164.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:741;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3T0rSwqbsIAtp89eJUbjz+XlPHN68y1XRjVwYQuOtIfV9jrhF/XUdajSND1so3Gh1/A665IwRTg2sumIwyUHMBiRVJObmYC30IsUHVoXInTkO/8NuBeCCxLbAGk5KDrnAqxzEFvmaPbcP6fRhN3urfoAlAMpGUT5ksJiJcoChGfLX1CmQ+l0ov82hAyzQ0g0gRkULrp4TMA0z0Q6FKU4CkoE7A44RpPGlSgKPX5mRRTq6IG+Ka82HBBtKrnsRuj3w1SQ1op9O55paRxlFgYyffYhUEYYIxXxsi9XIxnI2U9583a7+XauFKBcMpiPp7Zxf8lDzSz6YiiHlJnDYKSogez/SKFilfUuueGs2tHAYL5vjw++QBcvIUWu7pHl9wX0KCwMTzwSSETU3QSdIlnQuwT63tTALYNunUk3f65ZldFYDtvCPrAJNXAZACGkTcaCzMwW6/HZ1qvNRuNQ2lIFI/paLmxq5UgY3GKWsNYRXX3VxhgCgygIjqL1iUvSTiLmMIUqUDyoEpb2wcCthiE4JeJ4eiuHydNE3bihbvCr8MBii+C2WEKMiq11UUdi9Lmj8fhaDDC9B+jvrlm7yRZ6OZX9mcZYMuUJjiNskNxVQDNT9Coo/GjC+DetW7kWdqArgNvbXzw2pDcLvFwntZbPIk220GChbIJ+No8lK6EWgX4=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(136003)(39860400002)(46966006)(36840700001)(7636003)(6666004)(83380400001)(4326008)(36860700001)(86362001)(26005)(478600001)(47076005)(8676002)(8936002)(36756003)(36906005)(5660300002)(2906002)(426003)(82740400003)(186003)(16526019)(70206006)(316002)(336012)(107886003)(2616005)(1076003)(54906003)(356005)(70586007)(82310400003)(6916009);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2021 11:22:31.2422
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24c4f00a-f5b5-4bfb-2880-08d924ef8bf9
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT036.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4164
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 06/01/21 at 10:53am, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-......  
+This flag causes mlxreg-hotplug probing failure after flag "IRQF_NO_AUTOEN"
+has been added to:
+	err = devm_request_irq(&pdev->dev, priv->irq,
+			       mlxreg_hotplug_irq_handler, IRQF_TRIGGER_FALLING
+			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+			       "mlxreg-hotplug", priv);
 
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index 7850111008a8..b15ebfe40a73 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -450,6 +450,18 @@ void __init efi_free_boot_services(void)
->  			size -= rm_size;
->  		}
+This is because request_threaded_irq() returns EINVAL due to true value of
+condition:
+((irqflags & IRQF_SHARED) && (irqflags & IRQF_NO_AUTOEN))
 
-Thanks for taking care of the low-1M excluding in
-efi_free_boot_services(), Mike. You might want to remove the old real
-mode excluding code either since it's been covered by your new code.
+Fixes: bee3ecfed0fc9 ("platform/mellanox: mlxreg-hotplug: move to use request_irq by IRQF_NO_AUTOEN flag")
+Signed-off-by: Mykola Kostenok <c_mykolak@nvidia.com>
+Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index b15ebfe40a73..be814f2089ff 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -409,7 +409,6 @@ void __init efi_free_boot_services(void)
- 	for_each_efi_memory_desc(md) {
- 		unsigned long long start = md->phys_addr;
- 		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
--		size_t rm_size;
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index a9db2f32658f..07706f0a6d77 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -683,8 +683,7 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
  
- 		if (md->type != EFI_BOOT_SERVICES_CODE &&
- 		    md->type != EFI_BOOT_SERVICES_DATA) {
-@@ -430,26 +429,6 @@ void __init efi_free_boot_services(void)
- 		 */
- 		efi_unmap_pages(md);
- 
--		/*
--		 * Nasty quirk: if all sub-1MB memory is used for boot
--		 * services, we can get here without having allocated the
--		 * real mode trampoline.  It's too late to hand boot services
--		 * memory back to the memblock allocator, so instead
--		 * try to manually allocate the trampoline if needed.
--		 *
--		 * I've seen this on a Dell XPS 13 9350 with firmware
--		 * 1.4.4 with SGX enabled booting Linux via Fedora 24's
--		 * grub2-efi on a hard disk.  (And no, I don't know why
--		 * this happened, but Linux should still try to boot rather
--		 * panicking early.)
--		 */
--		rm_size = real_mode_size_needed();
--		if (rm_size && (start + rm_size) < (1<<20) && size >= rm_size) {
--			set_real_mode_mem(start);
--			start += rm_size;
--			size -= rm_size;
--		}
--
- 		/*
- 		 * Don't free memory under 1M for two reasons:
- 		 * - BIOS might clobber it
-
->  
-> +		/*
-> +		 * Don't free memory under 1M for two reasons:
-> +		 * - BIOS might clobber it
-> +		 * - Crash kernel needs it to be reserved
-> +		 */
-> +		if (start + size < SZ_1M)
-> +			continue;
-> +		if (start < SZ_1M) {
-> +			size -= (SZ_1M - start);
-> +			start = SZ_1M;
-> +		}
-> +
->  		memblock_free_late(start, size);
->  	}
->  
-> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
-> index 2e1c1bec0f9e..8ea285aca827 100644
-> --- a/arch/x86/realmode/init.c
-> +++ b/arch/x86/realmode/init.c
-> @@ -29,14 +29,16 @@ void __init reserve_real_mode(void)
->  
->  	/* Has to be under 1M so we can execute real-mode AP code. */
->  	mem = memblock_find_in_range(0, 1<<20, size, PAGE_SIZE);
-> -	if (!mem) {
-> +	if (!mem)
->  		pr_info("No sub-1M memory is available for the trampoline\n");
-> -		return;
-> -	}
-> +	else
-> +		set_real_mode_mem(mem);
->  
-> -	memblock_reserve(mem, size);
-> -	set_real_mode_mem(mem);
-> -	crash_reserve_low_1M();
-> +	/*
-> +	 * Unconditionally reserve the entire fisrt 1M, see comment in
-> +	 * setup_arch()
-> +	 */
-> +	memblock_reserve(0, SZ_1M);
->  }
->  
->  static void sme_sev_setup_real_mode(struct trampoline_header *th)
-> -- 
-> 2.28.0
-> 
+ 	err = devm_request_irq(&pdev->dev, priv->irq,
+ 			       mlxreg_hotplug_irq_handler, IRQF_TRIGGER_FALLING
+-			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+-			       "mlxreg-hotplug", priv);
++			       | IRQF_SHARED, "mlxreg-hotplug", priv);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "Failed to request irq: %d\n", err);
+ 		return err;
+-- 
+2.20.1
 
