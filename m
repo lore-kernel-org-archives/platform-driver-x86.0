@@ -2,199 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8286C636CB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415D7C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 11:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC9B6128D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E69C613CC
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 11:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232492AbhGOXvT (ORCPT
+        id S232671AbhGPL2W (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Jul 2021 19:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbhGOXvT (ORCPT
+        Fri, 16 Jul 2021 07:28:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:46140 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231680AbhGPL2V (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jul 2021 19:51:19 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BC0C061765
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 16:48:24 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d12so7197717pfj.2
-        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 16:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5OQMDn6Hx/yHVRBDOLcOoarZgTpJ6ou0lJ0Voq0OG4M=;
-        b=Xerp+3Ma+7CKr4/78JI541G8uYD8//jwvClMOF/fOO7QmiQm8HAEUnu6NpDbBLMH1q
-         bZGV9qTn+NrOGGYaOzCjTB7B/aPpvd5It43hKuUVskOmztUVNBp7D+395FsS2sQvlrxq
-         xVAo8FpFCDhowTVg4hGaiMCdbGyqn6qUNM0miSvgPCaSI49UBGL5vj48ibmF6+Rb17X0
-         w7C8AuBB8wkZlc1aeNQ5K9KigBlX9jYvbv1ccsercnerPpuW03IdweX4DvdjBnQR82bX
-         e0jajjskDBGjMsxL7Fj/B+zCTGGj135zbVxs9kViMAV8ZYC/Kcwbxlf9wsPPlckGHHm4
-         ds+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5OQMDn6Hx/yHVRBDOLcOoarZgTpJ6ou0lJ0Voq0OG4M=;
-        b=myh8+wizqC9c545Mkg+349TSnkotIXi02sYWfdfCdacM7fEHfJ6qwhy2qWiJivCueQ
-         TY7+HZCtaryaFAEsoxKZMNpvuk5lcYFZEfLijeMeboXxFARC0nS2GyJe6UnKm8A3Zal5
-         KN8P52jplN15q4sqQU//NP9iDCK0jz8fejgkQCY02os+n8Qs/AgTX3CHE0w7ZM8EE9+H
-         rgiOTy5JRpCta/GVh3XQeUmu9Twjng8iov1B5gkDSQVmVucWRZTz4CnRJQcXZ2lRt4KS
-         GiOSlZmEmdzc4vWfYGZN/BZAzCmwqRunKe0druQ8QiXcMyhl8DyJWlogUZbP0uScltet
-         Mhpw==
-X-Gm-Message-State: AOAM532YihAS5yAgO3UXWL7Me3SrOobiN/f/M+z9shLDID9i0vFrk0Rv
-        uVvZine7t44uQnqkKt2oU+mdGw==
-X-Google-Smtp-Source: ABdhPJzB/aLwcMzRnzgFsmskaKhCj/u4SogoqFPq9x0TyUcwapKqqebbwl1vM0o7pXaHZ6NJDfrs4g==
-X-Received: by 2002:a63:4e5d:: with SMTP id o29mr275121pgl.379.1626392903572;
-        Thu, 15 Jul 2021 16:48:23 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id o184sm8719553pga.18.2021.07.15.16.48.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 16:48:22 -0700 (PDT)
-Date:   Thu, 15 Jul 2021 23:48:19 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 15/40] crypto: ccp: Handle the legacy TMR
- allocation when SNP is enabled
-Message-ID: <YPDJQ0uumar8j22y@google.com>
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-16-brijesh.singh@amd.com>
+        Fri, 16 Jul 2021 07:28:21 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="210705331"
+X-IronPort-AV: E=Sophos;i="5.84,244,1620716400"; 
+   d="scan'208";a="210705331"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 04:25:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,244,1620716400"; 
+   d="scan'208";a="631046154"
+Received: from intel-tiger-lake-client-platform.iind.intel.com ([10.224.178.120])
+  by orsmga005.jf.intel.com with ESMTP; 16 Jul 2021 04:25:21 -0700
+From:   Shravan S <s.shravan@intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+Cc:     sudhakar.an@intel.com, s.shravan@intel.com
+Subject: [PATCH V3 0/1] platform/x86: Add BIOS Dynamic SAR driver for Intel M.2 Modem
+Date:   Wed,  2 Jun 2021 10:31:48 +0530
+Message-Id: <20210602050149.6230-1-s.shravan@intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210707183616.5620-16-brijesh.singh@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021, Brijesh Singh wrote:
-> The behavior and requirement for the SEV-legacy command is altered when
-> the SNP firmware is in the INIT state. See SEV-SNP firmware specification
-> for more details.
-> 
-> When SNP is INIT state, all the SEV-legacy commands that cause the
-> firmware to write memory must be in the firmware state. The TMR memory
+SAR (Specific Absorption Rate) driver is a host driver implemented for Linux
+or chrome platform to limit the exposure of human body to RF frequency by informing
+the Intel M.2 modem to regulate the RF power based on SAR data obtained from the sensors
+captured in the BIOS. ACPI interface exposes this data from the BIOS to SAR driver. The
+front end application in userspace ( eg: Modem Manager) will interact with SAR driver 
+to obtain information like the device mode (Example: tablets, laptops, etx), Antenna index,
+baseband index, SAR table index and use available communication like MBIM interface to enable
+data communication to modem for RF power regulation.
 
-It'd be helpful to spell out Trusted Memory Region, I hadn't seen that
-term before and for some reason my brain immediately thought "xAPIC register!".
+The BIOS gets notified about device mode changes through Sensor Driver. This information is 
+given to a (newly created) WWAN ACPI function driver when there is a device mode change. 
+The driver then uses a _DSM method to retrieve the required information from BIOS. 
+This information is then forwarded to the User-space using the sysfs_notify interface.
+A lookup table is maintained inside the BIOS which suggests the SAR Table index and Antenna 
+Tuner Table Index values for individual device modes.
 
-> is allocated by the host but updated by the firmware, so, it must be
-> in the firmware state.  Additionally, the TMR memory must be a 2MB aligned
-> instead of the 1MB, and the TMR length need to be 2MB instead of 1MB.
-> The helper __snp_{alloc,free}_firmware_pages() can be used for allocating
-> and freeing the memory used by the firmware.
+The SAR parameters to be used on the Modem differs for each Regulatory Mode like FCC, CE and ISED.
+Hence, the SAR parameters are stored separately in the SMBIOS table in the OEM BIOS, 
+for each of the Regulatory mode. Regulatory modes will be different based on the region and network
+available in that region.
 
-None of this actually states what the patch does, e.g. it's not clear whether
-all allocations are being converted to 2mb or just the SNP.  Looks like it's
-just SNP.  Something like this?
+Hence the entire SAR functionality handling is divided into 2 parts:
 
-  Allocate the Trusted Memory Region (TMR) as a 2mb sized/aligned region when
-  SNP is enabled to satisfy new requirements for SNP.  Continue allocating a
-  1mb region for !SNP configuration.
+•	A ACPI function driver implemented that uses a dedicated ACPI node for WWAN device.
+    Sends notifications whenever there is change in Device Mode. (each OEM has different mechanism
+    of updating this DEVICE Mode info). This is notified to User-space applications using 
+    the sysfs_notify interface.
+•	WWAN Device Service listens for sysfs_notify messages and reads the sysfs data and routes them 
+	to Modem using MBIM.
 
-> While at it, provide API that can be used by others to allocate a page
-> that can be used by the firmware. The immediate user for this API will
-> be the KVM driver. The KVM driver to need to allocate a firmware context
-> page during the guest creation. The context page need to be updated
-> by the firmware. See the SEV-SNP specification for further details.
 
-...
+Shravan S (1):
+  platform/x86: Add BIOS Dynamic SAR driver for Intel M.2 Modem
 
-> @@ -1153,8 +1269,10 @@ static void sev_firmware_shutdown(struct sev_device *sev)
->  		/* The TMR area was encrypted, flush it from the cache */
->  		wbinvd_on_all_cpus();
->  
-> -		free_pages((unsigned long)sev_es_tmr,
-> -			   get_order(SEV_ES_TMR_SIZE));
-> +
-> +		__snp_free_firmware_pages(virt_to_page(sev_es_tmr),
-> +					  get_order(sev_es_tmr_size),
-> +					  false);
->  		sev_es_tmr = NULL;
->  	}
->  
-> @@ -1204,16 +1322,6 @@ void sev_pci_init(void)
->  	    sev_update_firmware(sev->dev) == 0)
->  		sev_get_api_version();
->  
-> -	/* Obtain the TMR memory area for SEV-ES use */
-> -	tmr_page = alloc_pages(GFP_KERNEL, get_order(SEV_ES_TMR_SIZE));
-> -	if (tmr_page) {
-> -		sev_es_tmr = page_address(tmr_page);
-> -	} else {
-> -		sev_es_tmr = NULL;
-> -		dev_warn(sev->dev,
-> -			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
-> -	}
-> -
->  	/*
->  	 * If boot CPU supports the SNP, then first attempt to initialize
->  	 * the SNP firmware.
-> @@ -1229,6 +1337,16 @@ void sev_pci_init(void)
->  		}
->  	}
->  
-> +	/* Obtain the TMR memory area for SEV-ES use */
-> +	tmr_page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(sev_es_tmr_size), false);
-> +	if (tmr_page) {
-> +		sev_es_tmr = page_address(tmr_page);
-> +	} else {
-> +		sev_es_tmr = NULL;
-> +		dev_warn(sev->dev,
-> +			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
-> +	}
+ .../networking/device_drivers/wwan/index.rst  |   9 +-
+ .../device_drivers/wwan/intc_sar.rst          |  60 ++++
+ drivers/platform/x86/Kconfig                  |  12 +
+ drivers/platform/x86/Makefile                 |   1 +
+ drivers/platform/x86/intel-sar.c              | 326 ++++++++++++++++++
+ include/linux/platform_data/x86/intel-sar.h   |  89 +++++
+ 6 files changed, 493 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/networking/device_drivers/wwan/intc_sar.rst
+ create mode 100644 drivers/platform/x86/intel-sar.c
+ create mode 100644 include/linux/platform_data/x86/intel-sar.h
 
-I think your patch ordering got a bit wonky.  AFAICT, the chunk that added
-sev_snp_init() and friends in the previous patch 14 should have landed above
-the TMR allocation, i.e. the code movement here should be unnecessary.
 
->  	/* Initialize the platform */
->  	rc = sev_platform_init(&error);
->  	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
+base-commit: d936eb23874433caa3e3d841cfa16f5434b85dcf
+-- 
+2.17.1
 
-...
-
-> @@ -961,6 +965,13 @@ static inline int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *erro
->  	return -ENODEV;
->  }
->  
-> +static inline void *snp_alloc_firmware_page(gfp_t mask)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void snp_free_firmware_page(void *addr) { }
-
-Hmm, I think we should probably bite the bullet and #ifdef and/or stub out large
-swaths of svm/sev.c before adding SNP support.  sev.c is getting quite massive,
-and we're accumulating more and more stubs outside of KVM because its SEV code
-is compiled unconditionally.
