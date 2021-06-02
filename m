@@ -2,628 +2,295 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DCCC4708F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Jun 2021 11:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770AEC47083
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Jun 2021 14:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48481613D7
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Jun 2021 11:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B18E613DE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  2 Jun 2021 14:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232079AbhFBLU6 (ORCPT
+        id S230025AbhFBOG0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 2 Jun 2021 07:20:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26035 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232055AbhFBLU5 (ORCPT
+        Wed, 2 Jun 2021 10:06:26 -0400
+Received: from mail-dm6nam11on2061.outbound.protection.outlook.com ([40.107.223.61]:8225
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229654AbhFBOGZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 2 Jun 2021 07:20:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622632754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PzygKPqG3eIp4YxcoQ8AkWGfrlImF+icCQT32sQ4Ges=;
-        b=KCZhKhKvOwo/OgwK7CYeAXD92oUmStYsBVkJxZ83olQXSoN5PFOpu+/EjqG14o5pqem8ls
-        owKI4yBKP7jEb7fQ0jgFm3LjfuuiChuqeH9BKeEGKhw3Udxldo9Ql/6xmBWLKWG5CCsDG9
-        +1Y3RDwUqP4LTh+rI9aNiGkyoC7UOSQ=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-109--u4ElDniMly5URh2fHuPeA-1; Wed, 02 Jun 2021 07:19:12 -0400
-X-MC-Unique: -u4ElDniMly5URh2fHuPeA-1
-Received: by mail-ej1-f72.google.com with SMTP id w13-20020a170906384db02903d9ad6b26d8so544242ejc.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 02 Jun 2021 04:19:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PzygKPqG3eIp4YxcoQ8AkWGfrlImF+icCQT32sQ4Ges=;
-        b=mbSq+zT/Ps+ftss0I4S2s52lQVm8eXpdnjugIJbF2+x97dRXtkhRa+S4fUvawDY3uA
-         eAkx7Sm///RgnkCP8CqC36Zs5Zhoi2b4OaZORevyAUMTaFccOkPH7NkQPorDlDpE68E9
-         9Pt7xNKdlzQsnxMda/PAIEriMoheG9REFoSlYv8TetTVQ70qPWHjX/LLE0Wm8lBtNkrs
-         9n5WsBgF7IE8zr5Ntzs5M0i12yrbW5GW8V4LCsnM1XvcxAhR+DNcbPrS7SZRQ9Y4Kibm
-         RRrqlovmXq4A8J7jrrmUM67cUlHdvS9gpP9dU06PD1woXyA3VgX4fMFonaf8VdH5l/8o
-         aKNw==
-X-Gm-Message-State: AOAM531NlTe7JD4kl8Sjnt1uIQUR/6ozQcwkUZlHepZEHdBi84dc7RR9
-        UsRwGK2SqMDBki8oJaYrbq+lfovQ/3tmLsAej6s/iSjKa3L+L/Zg5ZEUeRe3MCMMMV03PoR0FP1
-        kkG6mCRym9wFTq48zUcsZXI1OH9IVhbHtfg==
-X-Received: by 2002:a05:6402:4406:: with SMTP id y6mr30300570eda.278.1622632751220;
-        Wed, 02 Jun 2021 04:19:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwjvh73C3SGLqkCzR3UozSxPNmGUjdf3X8A1BFCDvnBuV9M9mbdsXEeiK1pfm13iltIAnCrnQ==
-X-Received: by 2002:a05:6402:4406:: with SMTP id y6mr30300547eda.278.1622632750976;
-        Wed, 02 Jun 2021 04:19:10 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id dh18sm586770edb.92.2021.06.02.04.19.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jun 2021 04:19:10 -0700 (PDT)
-Subject: Re: [PATCH 1/1] ishtp: Add support for Intel ishtp eclite driver
-To:     "K Naduvalath, Sumesh" <sumesh.k.naduvalath@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>
-Cc:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chinnu, Ganapathi" <ganapathi.chinnu@intel.com>,
-        "Kumar, Nachiketa" <nachiketa.kumar@intel.com>
-References: <20210531120415.14480-1-sumesh.k.naduvalath@intel.com>
- <e28a9a7c-ec02-f71d-da6a-270f2dcbd58f@redhat.com>
- <BYAPR11MB37529B9B31E8188ABB29C683A93E9@BYAPR11MB3752.namprd11.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <1dbdb756-a87a-0ab6-4784-55e1edeb55d0@redhat.com>
-Date:   Wed, 2 Jun 2021 13:19:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Wed, 2 Jun 2021 10:06:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JNnlMZ2aWZDuIokg3Z2V4AX2J0pZmXbDCYX/COsTpYD1k1dpvkp/Ol4txWwlIwbCMS3k5kTwC+MnuNKOXwgEKx//3hZwSqBn8EOgB6IkubzBH56rnLzayWkDw9FTtK3gmulQ3oQhQ4mTzmV9GBR6RJOjv9vWNLNRUodeoUwSdcCaQzm9rqt3T7jdLH6ND72iAxIBMfsq22vXrBQaFbmZHCxFsP+QnOlpbuUd/3ElVRbKF6haOOBAbTavVBsAzStbu+EPMb25t/2S1vTPzqsv9OYdLfuc8Yb8PCMID/2mPSJUmq3JZqWzy6hzhVAHweg6ztAyjKSJWmisSjuVg1pXqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GlgrGuxx3H7C9RMUztu9tfA51vMKe9EnoBRN/d4QaVY=;
+ b=j56GGKBcTLgR3LlY4qMQS16YgzrcOkmxNfYUPIhZLxazcmJ/bcsGQ6cf5xxDXPnmQ/vhLv65VKw5m2GffWQGYTp86v072WaQIHxK3XYG3Z2g4mwEskJEr0LNcUZvz5WzfdQEk4t7X2sTPPPxKXwbcpDscsUsfeu68wssAMK6oPV81j1KqJ4Za5BVP/Ow1xPcww5OXuxhLWc/hB6/hE32lovarVOwYZpYCbtakQTR1sQyBoiwzRhz9kTfGacBYF6jiX3huNJw2KXTT5ryyDo8YZQsOYGNc5sXOOG4N5L9wK1hdpvc5AZCynWQ0MeV5kJf5mqXDCAf2ULP6le2LTp0Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GlgrGuxx3H7C9RMUztu9tfA51vMKe9EnoBRN/d4QaVY=;
+ b=VZsN9jWGQAVf/DY2t8whLnKUHWJpv4HEwoGdo6qsE/DIwS+Ux8faPCbPLhyT6m+iB2lHuPCHFtHOdu5qchY2sneXdr35ZY0hfhNrHD8aobXZz0Jtk9jNBCgd8VpIB7yAhcwthNtjMlB+DbmRsweC0B+AN0OXIlCNfcb98npeEHc=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SA0PR12MB4512.namprd12.prod.outlook.com (2603:10b6:806:71::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4173.21; Wed, 2 Jun
+ 2021 14:04:40 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::9898:5b48:a062:db94]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::9898:5b48:a062:db94%6]) with mapi id 15.20.4173.030; Wed, 2 Jun 2021
+ 14:04:40 +0000
+From:   Brijesh Singh <brijesh.singh@amd.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com, Brijesh Singh <brijesh.singh@amd.com>
+Subject: [PATCH Part1 RFC v3 00/22] Add AMD Secure Nested Paging (SEV-SNP) Guest Support
+Date:   Wed,  2 Jun 2021 09:03:54 -0500
+Message-Id: <20210602140416.23573-1-brijesh.singh@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [165.204.77.1]
+X-ClientProxiedBy: SN6PR05CA0010.namprd05.prod.outlook.com
+ (2603:10b6:805:de::23) To SN6PR12MB2718.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-In-Reply-To: <BYAPR11MB37529B9B31E8188ABB29C683A93E9@BYAPR11MB3752.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from sbrijesh-desktop.amd.com (165.204.77.1) by SN6PR05CA0010.namprd05.prod.outlook.com (2603:10b6:805:de::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.9 via Frontend Transport; Wed, 2 Jun 2021 14:04:39 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0959eafd-3a46-4f80-3c32-08d925cf5d07
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4512:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4512E7A4AD55226315AE900CE53D9@SA0PR12MB4512.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mc/t8I6w2sQcOnKEq94zlPzVKzYX8CB/7V7hm9Fx251fUDfRBdNrFTTwxeiP/p+CuqkWNmEcNP3ShD896pk26hF1HOKyyn0ndVHCJNEKOBQSUtcpeJQNfjzgTvNmBuYtNUnhQ46FYA5lB5Eq8YO8se5H4a59N3yJuOmY9yiHUA6eZ6fDf4AWO/ZrgJgG/lSICdEevQqa73cj5a1fECVvp1rMmkisbQpJwdahfyVwEWIP4XNGEnDNwQ3ZCO0ZbtXAuw62AsdcO6jkNzsCVz5/eitOx9XvmbUc2E1MSOvjZpG3y798DUcBTKGx/kHwjCpXpevj9mXBFvHgRtX7pO2wx3pcJj6uv0xCQxnqqkG+vferVjwCWhYy8/D3N4N0tydxxVK5PZ1hJENq6KOdMuKjDnOaQ7fuskAiTYGjBhn/SkgUwvj3U242kn8zvzIeXS1zYPZXki7aLAt/UJ3+D+vfq34i4bKpMmOCqQvXDs3AAAnskAK1MotCto6D6onCpLj++flk2zTJ+zbhEwtZ/toC/Y4oG5l6GbL/ex/DpismcdwnMisrXR7aND1F6vxiU9OlTZZ/NbA0rbs2p2Q21oncy8nRK70TOnuBS/SwV3g3ymIhlgky0D+GVXX3x+h4t2xhmn/44AhNqyeXy3Thj88SXx5A8FL2ebxxWjYnk4qmzls8PzbGq94eXDZOAV4cLgo+aL0bHk/IFAbVs/RjQrMZTNi0qOxm4tMnlRcol5jrzfx1TnDf4WjdX0XvsmPAJNSBUWLTmuVbFvOnGDnVmUaYBUHjlCqLZ2G1le/zxZNAEFPdEsvmEg71rxH9MT/EOaLB
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(346002)(396003)(39860400002)(136003)(966005)(6666004)(44832011)(7416002)(26005)(2906002)(8676002)(6486002)(7696005)(52116002)(38100700002)(478600001)(956004)(66556008)(186003)(1076003)(36756003)(8936002)(16526019)(66946007)(83380400001)(38350700002)(5660300002)(2616005)(54906003)(4326008)(86362001)(66476007)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?TkJUQWcvcXZpdHhIN09VU1lqVDZsR1BaQ1ZCaEdRV0dZZFZzVlV0OXBibmtC?=
+ =?utf-8?B?Y3hhU1poQUE1RElpdUVoeE9zNzRxcEdQdi9JRWhsaEQvZEJzdjYxSjkzNnNH?=
+ =?utf-8?B?bGx4WGJHcTBKTFFnY0Q0aEVUZVpPK1UzRmczbG92eUJqZittbHc4dUtwdEdT?=
+ =?utf-8?B?cXpGcFIzMWZoL3ZBUXNrY0pDWXZHcWZTcXFmeEdDTXVQckxtUVFJRVZ4eHV3?=
+ =?utf-8?B?UVMxUWNJWmJxUzlqTXc0MkZFblBoRW5kQXpEQTlBUTg2SDdRZy9vQ0FpbEVk?=
+ =?utf-8?B?ay9lYy9NcFBvbHZmZnVVL3dlS0ExOVdjZHF5TzZ0UTI2R1BIUE44U29Ya1d6?=
+ =?utf-8?B?aVEwZVF2VUlTNTU5Z2JJaTd3RUZhalkrSTgxVFY2T29aUXhPQmdOcFBHbm96?=
+ =?utf-8?B?UFdpcGM2MWt6WHVvMERlNlVXaU0wMW15WkpTVDlBMTUxMWxzbWV4TXlFYWp1?=
+ =?utf-8?B?UGVNeGp6VDBYZkZpSjkrR0dYSzZ0U3dXR1RiRFcxNVhnNWw3Y25ncjQxSmVt?=
+ =?utf-8?B?NFZ3LzMxV3NRVndLalpJb1l5RFZoajBoQ3ZleU5YT0NXSTVMTGNJZmdIOGVR?=
+ =?utf-8?B?K245Z3pjVFh0WUtkaTNXY1NRQ1BFQzkyclg4QnFER3gvZVhkWTk5YXBITkRF?=
+ =?utf-8?B?Q3kyNiswaU1kR3VPRTFWRTVNTXRwaDhKZXg1WHBkODQxYVdwVm9rd1dEVDZJ?=
+ =?utf-8?B?VjM5a1ZQcGZwL1JUdDRuMi9WMXppblpPY0NESlRhVnVaNUowV0Y2UmR3bWZn?=
+ =?utf-8?B?MjZYNXpaRzJyQVVoTEE5VDJRejRYWlR3VlA3MUVuNGFoOU4vU05IZENVSjBH?=
+ =?utf-8?B?eWwvTUVLNXp6OU5YOVdXcUprSW5oeEFWWFoySHNrSlhhTnM0Vk1JcmNmNkJo?=
+ =?utf-8?B?KzRQczBZZ2lwVWdKVnBpT2paTjVEZEkwM2lJWkJ1QldjbHNCWSsrZXIwVkdQ?=
+ =?utf-8?B?MXYvWkVDRXppU3dISmR4SW5LT0tRMHBXK0xoSTZHSit2b2ZnSGZ0Y3p2RStD?=
+ =?utf-8?B?bDR2dlB5L2ZnR1VzSnh3K3JtSnpYRExudUZDUzZKQ1NXZ1laeUhRR2VBUnBz?=
+ =?utf-8?B?akJjL1czV3R5azNVQVV2Y2x5cUphQWUwemdjVmVqVHhsNDN2TTdqNjRuZHpT?=
+ =?utf-8?B?MVB3THhUVTRzOFJXTlc4aXQyV0RYOE9vWHJNeWpKMFQyL1NEUkFWZUxnWEJm?=
+ =?utf-8?B?cmViN3lFMG5Rejl0akEzZzlmVG5TOFhld2lPZ3pHSnF3K3RvV0l6NXZ3SkxQ?=
+ =?utf-8?B?VDFTamdjVzQzTENFb2hOMUs5NlpXZTlpUmdjcjJvTXpjNG1LVkpMS1dVR29p?=
+ =?utf-8?B?ci9DamxpdDc5c0ZhVmc0dlhPN1dPell2amZ6TzFLSGpmNUVwaTZ3SjZMWWdT?=
+ =?utf-8?B?V1VGcGFEd1FWZHhMSWVqTDB0MCtyaUFzelVPUDlrNXBWeHpxeHcya3Y4ZWtZ?=
+ =?utf-8?B?eUphbTVQdzEzc2hRdVVUU214a2lyVlNGTjdNbTFTeWJzUXF3dkQxQ0lkbi9S?=
+ =?utf-8?B?SGlRVWtIeHdwQUFTRUdNL0RQd3p4QlRRaHUyTzZwNGVzNE1vWmFvN0gzTmhJ?=
+ =?utf-8?B?NFJmSGQ5c3Nnb09mWEdVMUNNYmxzZEFWblNLYThwRkhRN1F1R1hNSzJieGJW?=
+ =?utf-8?B?UlNLaE5yMm03TmU4WVN5blNVYlRaWWJKMmJ3aDVpVXBFMGZiaEpYdllOSGxT?=
+ =?utf-8?B?UVh5UUFXUmlnd0V2SzVFeGpnajdqWGJqVmRTZXl3YjFnbGx5NlJ2TDhaZ2Rt?=
+ =?utf-8?Q?uIlUyvB59JABXYDwMEb5EqP/+ckpoW1QaPUR/0l?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0959eafd-3a46-4f80-3c32-08d925cf5d07
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2021 14:04:40.1137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xfx0YwSM5TKmtbo1u07bWn3VHmytVagnMQrJRlEBw9PO3GygUOjGnMtbTfK+yFkB9/v/UQfJqdS3DFAsXdjI3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4512
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Sumesh,
+This part of Secure Encrypted Paging (SEV-SNP) series focuses on the changes
+required in a guest OS for SEV-SNP support.
 
-On 6/1/21 8:24 PM, K Naduvalath, Sumesh wrote:
-> Thank you Hans for the review comments. Please find the reply inline -
-> 
->> -----Original Message-----
->> From: Hans de Goede <hdegoede@redhat.com>
->> Sent: Monday, May 31, 2021 8:25 PM
->> To: K Naduvalath, Sumesh <sumesh.k.naduvalath@intel.com>;
->> mgross@linux.intel.com; srinivas.pandruvada@linux.intel.com
->> Cc: Pandruvada, Srinivas <srinivas.pandruvada@intel.com>; platform-driver-
->> x86@vger.kernel.org; linux-kernel@vger.kernel.org; Chinnu, Ganapathi
->> <ganapathi.chinnu@intel.com>; Kumar, Nachiketa
->> <nachiketa.kumar@intel.com>
->> Subject: Re: [PATCH 1/1] ishtp: Add support for Intel ishtp eclite driver
->>
->> Hi,
->>
->> Thank you, I've done a quick review, which has already spotted quite a few
->> issues. Note I will probably do a more thorough review later which mind find
->> more issues, but lets start with fixing the serious issues which this review has
->> found.
+SEV-SNP builds upon existing SEV and SEV-ES functionality while adding
+new hardware-based memory protections. SEV-SNP adds strong memory integrity
+protection to help prevent malicious hypervisor-based attacks like data
+replay, memory re-mapping and more in order to create an isolated memory
+encryption environment.
+ 
+This series provides the basic building blocks to support booting the SEV-SNP
+VMs, it does not cover all the security enhancement introduced by the SEV-SNP
+such as interrupt protection.
 
-<snip>
+Many of the integrity guarantees of SEV-SNP are enforced through a new
+structure called the Reverse Map Table (RMP). Adding a new page to SEV-SNP
+VM requires a 2-step process. First, the hypervisor assigns a page to the
+guest using the new RMPUPDATE instruction. This transitions the page to
+guest-invalid. Second, the guest validates the page using the new PVALIDATE
+instruction. The SEV-SNP VMs can use the new "Page State Change Request NAE"
+defined in the GHCB specification to ask hypervisor to add or remove page
+from the RMP table.
 
->>> diff --git a/drivers/platform/x86/Kconfig
->>> b/drivers/platform/x86/Kconfig index 60592fb88e7a..cfa2cb150909 100644
->>> --- a/drivers/platform/x86/Kconfig
->>> +++ b/drivers/platform/x86/Kconfig
->>> @@ -1180,6 +1180,19 @@ config INTEL_CHTDC_TI_PWRBTN
->>>  	  To compile this driver as a module, choose M here: the module
->>>  	  will be called intel_chtdc_ti_pwrbtn.
->>>
->>> +config INTEL_ISHTP_ECLITE
->>> +	tristate "Intel ISHTP eclite controller"
->>> +	depends on INTEL_ISH_HID
->>> +	depends on ACPI
->>> +	help
->>> +	  This driver is for accessing the PSE(Programmable Service Engine),
->>> +	  an Embedded Controller like IP, using ISHTP(Integratd Sensor Hub
->>> +	  Transport Protocol) to get battery, thermal and UCSI (USB Type-C
->>> +          Connector System Software Interface) related data from the
->> platform.
->>
->> This text has all the same issues as the commit message. Also please explain
->> on what sort of systems this functionality is typically found/used so that
->> users will have a better idea if this is something which they should enable on
->> their systems.
->>
-> 
-> This functionality is enabled for the first time for Intel's Elkhartlake platform.
-> Users who don't want to use discrete Embedded Controller on their platform,
-> they can leverage the integrated solution of ECLite which is part of 
-> Elkhartlake's PSE subsystem. I'll add more text for the config item.
+Each page assigned to the SEV-SNP VM can either be validated or unvalidated,
+as indicated by the Validated flag in the page's RMP entry. There are two
+approaches that can be taken for the page validation: Pre-validation and
+Lazy Validation.
 
-Thank you for the info.
+Under pre-validation, the pages are validated prior to first use. And under
+lazy validation, pages are validated when first accessed. An access to a
+unvalidated page results in a #VC exception, at which time the exception
+handler may validate the page. Lazy validation requires careful tracking of
+the validated pages to avoid validating the same GPA more than once. The
+recently introduced "Unaccepted" memory type can be used to communicate the
+unvalidated memory ranges to the Guest OS.
 
-<snip>
+At this time we only sypport the pre-validation, the OVMF guest BIOS
+validates the entire RAM before the control is handed over to the guest kernel.
+The early_set_memory_{encrypt,decrypt} and set_memory_{encrypt,decrypt} are
+enlightened to perform the page validation or invalidation while setting or
+clearing the encryption attribute from the page table.
 
->>> +static acpi_status
->>> +ecl_opregion_cmd_handler(u32 function, acpi_physical_address address,
->>> +			 u32 bits, u64 *value64,
->>> +			 void *handler_context, void *region_context) {
->>> +	struct ishtp_opregion_dev *opr_dev;
->>> +	struct opregion_cmd *cmd;
->>> +
->>> +	if (!region_context || !value64)
->>> +		return AE_BAD_PARAMETER;
->>> +
->>> +	if (function == ACPI_READ)
->>> +		return AE_ERROR;
->>> +
->>> +	opr_dev = (struct ishtp_opregion_dev *)region_context;
->>> +	cmd = &opr_dev->opr_context.cmd_area;
->>
->> This is shared between all threads, we have had issues with sharing opregion
->> context between threads like this in the past.
->>
->> What is stopping ACPI code from trying to use the opr_context from multiple
->> threads at the same time, messing things up?
->>
-> 
-> This will not happen. BIOS calls ACPI methods (cmd and data in this driver) in a
-> SERIALIZED manner. BIOS issues another call only after finishing the first one.
+This series does not provide support for the following SEV-SNP features yet:
 
-You say that this will not happen, but the problem which I have with the
-OpRegion API is that this may actually very well happen. There are no
-guarantees of this not happening. We are relying on the AML code from
-the BIOS adding the "Serialized" attribute to all functions accessing the
-OpRegion, all that is necessary is one bug in the AML code and then this
-will happen.
+* Extended Guest request
+* CPUID filtering
+* Lazy validation
+* Interrupt security
 
-And it is typically very hard to get vendors to issue BIOS updates to fix
-things like this :|
+The series is based on tip/master commit
+  493a0d4559fd (origin/master, origin/HEAD) Merge branch 'perf/core'
 
-I must honestly say that I find the whole design of the OpRegion API
-lacking. There are other options to interface AML code, like e.g. modelling
-the ISHTP as a generic serial bus, then a single OpRegion access can do the
-following:
+Additional resources
+---------------------
+SEV-SNP whitepaper
+https://www.amd.com/system/files/TechDocs/SEV-SNP-strengthening-vm-isolation-with-integrity-protection-and-more.pdf
+ 
+APM 2: https://www.amd.com/system/files/TechDocs/24593.pdf
+(section 15.36)
 
-1. AML fills a buffer
-2. OpRegion call processes buffer and writes back results (status code +
-   data read if it is a read) to buffer
-3. AML processes buffer
+GHCB spec:
+https://developer.amd.com/wp-content/resources/56421.pdf
 
-This is e.g. used in some Microsoft Surface 3 devices, see:
-drivers/platform/surface/surface3_power.c
+SEV-SNP firmware specification:
+https://developer.amd.com/sev/
 
-This would make the calls more-or-less atomic, removing the need for the
-ACPI Methods to all be Serialized.
+Changes since v2:
+ * Add support for AP startup.
+ * Add snp_prep_memory() and sev_snp_active() helper.
+ * Drop sev_snp_active() helper.
+ * Add sev_feature_enabled() helper to check which SEV feature is active.
+ * Shorten the GHCB NAE macro names.
+ * Add snp_msg_seqno() to get the message counter used while building the request for the attestation report.
+ * Sync the SNP guest message request header with latest SNP FW spec.
+ * Multiple cleanup and fixes to address the review feedbacks.
 
-This would also allow the Opregion to return an error status code when
-the EClite is not ready, instead of unregistering + reregistering the
-OpRegion, which in itself is another source of possible races (see below).
+Changes since v1:
+ * Integerate the SNP support in sev.{ch}.
+ * Add support to query the hypervisor feature and detect whether SNP is supported.
+ * Define Linux specific reason code for the SNP guest termination.
+ * Extend the setup_header provide a way for hypervisor to pass secret and cpuid page.
+ * Add support to create a platform device and driver to query the attestation report
+   and the derive a key.
+ * Multiple cleanup and fixes to address Boris's review fedback.
 
-I assume that it is too late to change the OpRegion API now, so that
-we are stuck with this ?
+Brijesh Singh (18):
+  x86/sev: shorten GHCB terminate macro names
+  x86/sev: Define the Linux specific guest termination reasons
+  x86/sev: Save the negotiated GHCB version
+  x86/mm: Add sev_feature_enabled() helper
+  x86/sev: Add support for hypervisor feature VMGEXIT
+  x86/sev: check SEV-SNP features support
+  x86/sev: Add a helper for the PVALIDATE instruction
+  x86/compressed: Add helper for validating pages in the decompression
+    stage
+  x86/compressed: Register GHCB memory when SEV-SNP is active
+  x86/sev: Register GHCB memory when SEV-SNP is active
+  x86/sev: Add helper for validating pages in early enc attribute
+    changes
+  x86/kernel: Make the bss.decrypted section shared in RMP table
+  x86/kernel: Validate rom memory before accessing when SEV-SNP is
+    active
+  x86/mm: Add support to validate memory when changing C-bit
+  KVM: SVM: define new SEV_FEATURES field in the VMCB Save State Area
+  x86/boot: Add Confidential Computing address to setup_header
+  x86/sev: Register SNP guest request platform device
+  virt: Add SEV-SNP guest driver
 
-I must say I'm disappointed about the quality of the OpRegion API design
-here. APIs should be designed so that it is easy / natural to use them in
-a correct way, where as this API seems to be dessgned in such a way that
-it is easy to use it the wrong way.
+Tom Lendacky (4):
+  KVM: SVM: Create a separate mapping for the SEV-ES save area
+  KVM: SVM: Create a separate mapping for the GHCB save area
+  KVM: SVM: Update the SEV-ES save area mapping
+  x86/sev-snp: SEV-SNP AP creation support
 
-I really expect Intel to do better the next time the introduce a new
-OpRegion for something. It would help greatly if Intel would send some
-rough sketches of how the API is going to look like to the mailinglist,
-so that we can actually correct issues like these, rather then the API
-already being set in stone and that we end up having to live with a
-not so good API.
+ Documentation/x86/boot.rst              |  27 +
+ arch/x86/boot/compressed/ident_map_64.c |  17 +-
+ arch/x86/boot/compressed/misc.h         |   6 +
+ arch/x86/boot/compressed/sev.c          |  78 ++-
+ arch/x86/boot/header.S                  |   7 +-
+ arch/x86/include/asm/mem_encrypt.h      |   9 +
+ arch/x86/include/asm/msr-index.h        |   2 +
+ arch/x86/include/asm/sev-common.h       |  76 ++-
+ arch/x86/include/asm/sev.h              |  76 ++-
+ arch/x86/include/asm/svm.h              | 167 ++++++-
+ arch/x86/include/uapi/asm/bootparam.h   |   1 +
+ arch/x86/include/uapi/asm/svm.h         |   9 +
+ arch/x86/kernel/head64.c                |   7 +
+ arch/x86/kernel/probe_roms.c            |  13 +-
+ arch/x86/kernel/sev-internal.h          |  12 +
+ arch/x86/kernel/sev-shared.c            |  74 ++-
+ arch/x86/kernel/sev.c                   | 630 +++++++++++++++++++++++-
+ arch/x86/kernel/smpboot.c               |   3 +
+ arch/x86/kvm/svm/sev.c                  |  24 +-
+ arch/x86/kvm/svm/svm.c                  |   4 +-
+ arch/x86/kvm/svm/svm.h                  |   2 +-
+ arch/x86/mm/mem_encrypt.c               |  61 ++-
+ arch/x86/mm/pat/set_memory.c            |  14 +
+ arch/x86/platform/efi/efi.c             |   2 +
+ drivers/virt/Kconfig                    |   3 +
+ drivers/virt/Makefile                   |   1 +
+ drivers/virt/sevguest/Kconfig           |  10 +
+ drivers/virt/sevguest/Makefile          |   4 +
+ drivers/virt/sevguest/snp.c             | 448 +++++++++++++++++
+ drivers/virt/sevguest/snp.h             |  63 +++
+ include/linux/efi.h                     |   1 +
+ include/linux/sev-guest.h               |  76 +++
+ include/uapi/linux/sev-guest.h          |  56 +++
+ 33 files changed, 1926 insertions(+), 57 deletions(-)
+ create mode 100644 arch/x86/kernel/sev-internal.h
+ create mode 100644 drivers/virt/sevguest/Kconfig
+ create mode 100644 drivers/virt/sevguest/Makefile
+ create mode 100644 drivers/virt/sevguest/snp.c
+ create mode 100644 drivers/virt/sevguest/snp.h
+ create mode 100644 include/linux/sev-guest.h
+ create mode 100644 include/uapi/linux/sev-guest.h
 
->> I'm especially worried about the offset + data_len used in various places,
->> even if we add checks for this, this could be changed underneath us by
->> another thread.
-> 
-> There are checks in BIOS for offset + data, but I'll add them in the driver as well.
-> There is no other thread accessing it. Flow below -
-> 
-> ACPI method --> cmd --> 
-> <--end ACPI method <-- 
-> 
-> <here no other ACPI method will execute because of serialized method>
-> 
-> ACPI method --> data--> 
-> <--end ACPI method <-- 
-> 
->>
->> You should add a mutex to the opr_dev and lock it in this function so that the
->> cmd struct cannot be changed underneath us while we are processing it.
->>
->> Note this does not fully protect against races like this:
->>
->> 1. Thread a sets offset
->> 2. Thread b sets a different offset
->> 3. Thread a writes ECL_ISH_READ to command.
-> 
-> These race conditions won't occur. No structure elements are used from two paths
-> simultaneously. Only element from the opregion structure used outside ACPI path is 
-> 
-> opr_dev->dsm_event_id from event_work workqueque.
-> 
-> But this element not accessed from anywhere else including serialized ACPI path.
-
-I understand that the intention is for all the ACPI calls to be serialized, but
-nothing is guaranteeing this. All it requires is one method not being marked as
-serialized...
-
->> This will result in thread a getting the data at the offset specified by thread b,
->> rather then at the offset which it requested. But there is nothing we can do
->> about that, that needs to be solved with synchronization at the AML level.
-> 
-> There is ASL serialization defined, But are you suggesting to put locks for the fairness
-> of coding?
-
-I don't want the kernel to read / write beyond the end of kernel-owned memory
-because the following happens (this assumes one AML method is missing the Serialized
-attribute):
-
-1. #define ECL_DATA_OPR_BUFLEN	384
-2. Thread A sets offset to 0
-3. Thread A sets len to 100
-4. Thread A writes ECL_ISH_WRITE
-5. Thread A kernel checks (offset + len) < ECL_DATA_OPR_BUFLEN, this is ok
-6. Thread B sets offset to 300
-7. Thread A kernel does memcpy(message.payload, opr_dev->opr_context.data_area.data + message.header.offset, message.header.data_len);
-
-7. Will now end up reading 100 bytes from offset 300 of opr_context.data_area.data,
-which is only 384 bytes big, which needless to say is not good.
-I see now that the offset + len are copied into message.header and then the copied
-values are used. It is tempting to think that this thus can be fixed by doing a
-check on the copied values, but the message struct is a local variable, so the
-compiler will alias the 2 values and might decide to do the check on the originals;
-and the compiler is also free to re-order things. So this making of a local copy
-does not help.
-
-This is a classic time-of-check vs time-of-use problem. Since we cannot _guarantee_
-that all users of the OpRegion are properly using the ACPI Serialized Method attribute,
-we need some other mechanism to ensure that len + offset do not change between
-checking and consuming them. The most straight forward solution here is to
-protect opr_context with a mutex so that it cannot be changed by another thread
-while one call is in progress. Since all accesses should be serialized at the AML
-level anyways this will not add extra serialization, while it will help avoid
-AML bugs turning into out-of-bounds memory accesses inside the kernel.
-
-<snip>
-
->>> +static acpi_status
->>> +ecl_opregion_data_handler(u32 function, acpi_physical_address address,
->>> +			  u32 bits, u64 *value64,
->>> +			  void *handler_context, void *region_context) {
->>> +	struct ishtp_opregion_dev *opr_dev;
->>> +	unsigned int bytes = BITS_TO_BYTES(bits);
->>> +	void *data_addr;
->>> +
->>> +	if (!region_context || !value64)
->>> +		return AE_BAD_PARAMETER;
->>> +
->>> +	if (address + bytes > ECL_DATA_OPR_BUFLEN)
->>> +		return AE_BAD_PARAMETER;
->>> +
->>> +	opr_dev = (struct ishtp_opregion_dev *)region_context;
->>> +	data_addr = &opr_dev->opr_context.data_area.data[address];
->>> +
->>> +	if (function == ACPI_READ)
->>> +		memcpy(value64, data_addr, bytes);
->>> +	else if (function == ACPI_WRITE)
->>> +		memcpy(data_addr, value64, bytes);
->>
->> What if bits is not a multiple of 8? Then we have just overwritten a bunch of
->> bits which the caller did not request us to do.
->>
->> Since the caller specifies bits, this should really do a read-modify-write of the
->> last byte when there are any "leftover" bits. ?  What does the
->> documentation say about this?
-> 
-> The request will always be multiple of 8 bits as per ASL definition/docs.
-
-Ok.
-
-
->>> +	else
->>> +		return AE_BAD_PARAMETER;
->>> +
->>> +	return AE_OK;
->>> +}
->>> +
->>> +static int acpi_opregion_init(struct ishtp_opregion_dev *opr_dev) {
->>> +	acpi_status status;
->>> +	struct acpi_device *adev;
->>> +
->>> +	/* Find ECLite device and install opregion handlers */
->>> +	adev = acpi_dev_get_first_match_dev("INTC1035", NULL, -1);
->>> +	if (!adev) {
->>> +		dev_err(cl_data_to_dev(opr_dev), "eclite ACPI device not
->> found\n");
->>> +		return -ENODEV;
->>> +	}
->>> +
->>> +	opr_dev->acpi_handle = adev->handle;
->>
->> acpi_opregion_init() seem to get called on every resume, doing the lookup is
->> only necessary once, after that the cached value in opr_dev->acpi_handle
->> can be reused.
->>
->> More importantly this whole dance of unregistering + re-registering the
->> opregion seems unnecessary. You already have ish_link_ready in case the
->> opregion gets called before things are ready; and if the opregion is called
->> when the link is not ready, still having the opregion handler in place allows
->> you to log a sensible error about what is going on which is what we want.
-> 
-> Initial approach was same as you suggested ( No uninstall, just wait in ACPI
-> Method). But after every resume, the driver gets ACPI write and read requests
-> for FAN and thermal controls which fails  because link is not ready. Also we 
-> can't wait_event_interruptible_timeout() in ACPI method until we get the 
-> link_ready( link can become ready much later until PSE fully boots up after every
-> Sx. Anything else gets executed after this wait_event timeout fail in ACPI method.
-> We can't afford to miss any critical thermal/FAN related setting from standby/
-> hibernation resume. No requests are missed by registering opregion only after
-> link_ready.
-
-I see; and since the OpRegion API does not allow returning a status code to
-communicate the link-not-ready thing you need to do this unregister + re-register
-dance instead. See this is what I meant above when I wrote that the whole OpRegion
-API seems lacking. This could all have been solved by having the OpRegion calls
-communicate back a status code.
-
-Now you are relying on communicating the availability of the link by calling
-_REG instead. This means that we better hope that all users of the OpRegion will
-correctly check the flag set by _REG, which in my experience with a lot of AML
-code is something which is often forgotten, so this will be another source
-of DSDT/AML bugs for AML code using this OpRegion <sigh>.
-
-Also note that this is racy too, on suspend we unregister the OpRegion, calling
-_REG in the process. But _REG methods typically are not Serialized so now the
-following may happen:
-
-1. Thread A is executing a function using the EClite OpRegion
-2. Thread A checks the flag set by _REG, sees the region is available
-3. Thread B is executing suspend for the EClite device, unregister the
-   OpRegion, calling _REG to clear the flag
-4. Thread A continues with actually accessing the no longer available
-   OPRegion leading to an error because there is no Opregion handler
-   registered.
-
-So this means that _REG should be marked Serialized for this device,
-I wonder if it actually is marked as such in the DSDT of your test hardware ?
-
-I think we might get away with this regardless because 3 probably takes a
-rw-lock on the ACPI namespace which it can only get if no other threads
-are executing any AML code (I'm speculating here I did not check), but this
-is yet another example about how this entire approach is less then ideal.
-
-<snip>
-
->>> +static void ecl_ishtp_cl_deinit(struct ishtp_cl *ecl_ishtp_cl) {
->>> +	ishtp_cl_unlink(ecl_ishtp_cl);
->>> +	ishtp_cl_flush_queues(ecl_ishtp_cl);
->>> +	ishtp_cl_free(ecl_ishtp_cl);
->>> +}
->>> +
->>> +static void ecl_ishtp_cl_reset_handler(struct work_struct *work) {
->>> +	struct ishtp_opregion_dev *opr_dev;
->>> +	struct ishtp_cl_device *cl_device;
->>> +	struct ishtp_cl *ecl_ishtp_cl;
->>> +	int rv;
->>> +	int retry;
->>> +
->>> +	opr_dev = container_of(work, struct ishtp_opregion_dev,
->> reset_work);
->>> +
->>> +	opr_dev->ish_link_ready = false;
->>> +
->>> +	cl_device = opr_dev->cl_device;
->>> +	ecl_ishtp_cl = opr_dev->ecl_ishtp_cl;
->>> +
->>> +	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
->>> +
->>> +	ecl_ishtp_cl = ishtp_cl_allocate(cl_device);
->>> +	if (!ecl_ishtp_cl)
->>> +		return;
->>
->> Is this whole freeing + re-alloc of the ISHTP client here really necessary ? This
->> seems like overkill.
-> 
-> This is required. reset is an asynchronous notification from ISH
-> (PSE in this case) firmware and current connection becomes stale and needs
-> to be reinitialized. All ISHTP client drivers are implemented same way. 
-> eg.
-> drivers/hid/intel-ish-hid/ishtp-hid-client.c
-> drivers/hid/intel-ish-hid/ishtp-fw-loader.c
-
-Ok.
-
-<snip>
-
->>> +static int ecl_ishtp_cl_probe(struct ishtp_cl_device *cl_device) {
->>> +	struct ishtp_cl *ecl_ishtp_cl;
->>> +	struct ishtp_opregion_dev *opr_dev;
->>> +	int rv;
->>> +
->>> +	opr_dev = devm_kzalloc(ishtp_device(cl_device), sizeof(*opr_dev),
->>> +			       GFP_KERNEL);
->>> +	if (!opr_dev)
->>> +		return -ENOMEM;
->>> +
->>> +	ecl_ishtp_cl = ishtp_cl_allocate(cl_device);
->>> +	if (!ecl_ishtp_cl)
->>> +		return -ENOMEM;
->>> +
->>> +	ishtp_set_drvdata(cl_device, ecl_ishtp_cl);
->>> +	ishtp_set_client_data(ecl_ishtp_cl, opr_dev);
->>> +	opr_dev->ecl_ishtp_cl = ecl_ishtp_cl;
->>> +	opr_dev->cl_device = cl_device;
->>> +
->>> +	init_waitqueue_head(&opr_dev->read_wait);
->>> +	INIT_WORK(&opr_dev->event_work, ecl_acpi_invoke_dsm);
->>> +	INIT_WORK(&opr_dev->reset_work, ecl_ishtp_cl_reset_handler);
->>> +
->>> +	/* Initialize ish client device */
->>> +	rv = ecl_ishtp_cl_init(ecl_ishtp_cl);
->>> +	if (rv) {
->>> +		dev_err(cl_data_to_dev(opr_dev), "Client init failed\n");
->>> +		goto err_exit;
->>> +	}
->>> +
->>> +	dev_dbg(cl_data_to_dev(opr_dev), "eclite-ishtp client
->>> +initialised\n");
->>> +
->>> +	/* Register a handler for eclite fw events */
->>> +	ishtp_register_event_cb(cl_device, ecl_ishtp_cl_event_cb);
->>> +
->>> +	ishtp_get_device(cl_device);
->>
->> This seems weird, normally in the device-model a driver being bound to a
->> device guarantees that that device cannot go away before the remove
->> callback of the driver is called.
->>
->> So it seems to me that this call + the put in both the err_exit and
->> ecl_ishtp_cl_remove() cases can be dropped.
->>
-> This platform driver has two interfaces - a)ISH and b)ACPI.
-> ISH initializes first and if successful we ishtp_get_device().
-> Then ACPI initializes after that. If ACPI init fails, driver gets cleaned with
-> ISHTP as well thus ishtp_get_device() in probe's err_exit. Both interface must be
-> Required and initialized for the functionality.
-> 
-> Do you still see a problem?
-
-I don't see a problem, but I don't think that the ishtp_get_device() here
-and the 2 ishtp_put_device() calls below are necessary.
-
-This is the probe function for a ishtp_cl_driver as long as that driver
-is bound to the cl_device (which gets passed as parameter to the probe())
-the cl_device can never go away, not until the matching remove function
-from the ishtp_cl_driver has been called, so the get at probe + the put
-at remove are not necessary, since the cl_device already must stick
-around for as long as the driver is bound.
-
-Another way of looking at this is that the linux device-model/driver core
-already does a get when it binds a driver to the device (and a put on
-remove).
-
-
->>> +
->>> +	opr_dev->ish_link_ready = true;
->>> +
->>> +	/* Now find ACPI device and init opregion handlers */
->>> +	rv = acpi_opregion_init(opr_dev);
->>> +	if (rv) {
->>> +		dev_err(cl_data_to_dev(opr_dev), "ACPI opregion init
->> failed\n");
->>> +
->>> +		goto err_exit;
->>> +	}
->>> +
->>> +	/* Reprobe devices depending on ECLite - battery, fan, etc. */
->>> +	acpi_walk_dep_device_list(opr_dev->acpi_handle);
->>> +
->>> +	return 0;
->>> +err_exit:
->>> +	ishtp_set_connection_state(ecl_ishtp_cl,
->> ISHTP_CL_DISCONNECTING);
->>> +	ishtp_cl_disconnect(ecl_ishtp_cl);
->>> +	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
->>> +
->>> +	ishtp_put_device(cl_device);
->>> +
->>> +	return rv;
->>> +}
->>> +
->>> +static int ecl_ishtp_cl_remove(struct ishtp_cl_device *cl_device) {
->>> +	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
->>> +	struct ishtp_opregion_dev *opr_dev =
->>> +		ishtp_get_client_data(ecl_ishtp_cl);
->>> +
->>> +	if (opr_dev->acpi_init_done)
->>> +		acpi_opregion_deinit(opr_dev);
->>> +
->>> +	cancel_work_sync(&opr_dev->reset_work);
->>> +	cancel_work_sync(&opr_dev->event_work);
->>> +
->>> +	ishtp_set_connection_state(ecl_ishtp_cl,
->> ISHTP_CL_DISCONNECTING);
->>> +	ishtp_cl_disconnect(ecl_ishtp_cl);
->>> +	ecl_ishtp_cl_deinit(ecl_ishtp_cl);
->>> +
->>> +	ishtp_put_device(cl_device);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int ecl_ishtp_cl_reset(struct ishtp_cl_device *cl_device) {
->>> +	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
->>> +	struct ishtp_opregion_dev *opr_dev =
->>> +		ishtp_get_client_data(ecl_ishtp_cl);
->>> +
->>> +	schedule_work(&opr_dev->reset_work);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int ecl_ishtp_cl_suspend(struct device *device) {
->>> +	struct ishtp_cl_device *cl_device = ishtp_dev_to_cl_device(device);
->>> +	struct ishtp_cl *ecl_ishtp_cl = ishtp_get_drvdata(cl_device);
->>> +	struct ishtp_opregion_dev *opr_dev =
->>> +		ishtp_get_client_data(ecl_ishtp_cl);
->>> +
->>> +	if (acpi_target_system_state() == ACPI_STATE_S0)
->>> +		return 0;
->>> +
->>> +	acpi_opregion_deinit(opr_dev);
->>> +	ecl_ish_cl_enable_events(opr_dev, false);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int ecl_ishtp_cl_resume(struct device *device) {
->>> +	/* A reset is expected to call after an Sx. At this point
->>> +	 * we are not sure if the link is up or not to restore anything,
->>> +	 * so do nothing in resume path
->>> +	 */
->>> +	return 0;
->>
->> This seems very wrong, this means that there are no resume ordering
->> guarantees meaning that drivers which are ordered to resume after this
->> driver, because they rely on the opregion may end up not being able to use
->> the opregion leading to all kind of issues.
->>
->> IMHO what should happen here is that this driver waits for the EClite to
->> become ready here. Which probably means that it itself should be only
->> resumed after the ISH HID driver is, but I assume that the ISH device is a
->> parent of this device, so that ordering should be correct automatically.
-> 
->>
->> TBH the whole lets just not resume and do a reset instead and then just
->> tearing down the entire ISHTP client struct and setting up a new one from
->> scratch, just feels very wrong.  At a minimum the teardown + bringup needs
->> to happen before the resume callback completes, but ideally this would be
->> replaced by a much lighter resume solution.
-> 
-> ISH Firmware (the PSE subsystem) can boot up/reinitialize Every Sx based on
-> usecase or sometimes PSE is always-on. So the resume path is asynchronous 
-> and unpredictable in this case. Re-initialization and clean up required if PSE
-> also boot up every Sx and might take good amount of time (Host can come alive
-> before PSE comes up). Thus using asynchronous reset notification. 
-
-Ok, so I guess we need to live with the ugly deregister + re-register
-OpRegion dance for the devices where the PSE is shutdown during suspend.
-
-You also write: "sometimes PSE is always-on", what about that case,
-I assume in this case there will be no reset after resume? So then
-unregistering the OpRegion handler at suspend (and setting link_ready=false)
-will be wrong since without the reset the OpRegion handler will never
-get reinstalled ?
-
-Regards,
-
-Hans
+-- 
+2.17.1
 
