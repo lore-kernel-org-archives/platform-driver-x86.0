@@ -2,96 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA074C47096
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 11:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2177C47082
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 13:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6AE4613D6
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 11:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904D8613E9
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 13:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbhFCMBT (ORCPT
+        id S230128AbhFCNcz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Jun 2021 08:01:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21641 "EHLO
+        Thu, 3 Jun 2021 09:32:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31763 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229747AbhFCMBT (ORCPT
+        by vger.kernel.org with ESMTP id S230056AbhFCNcz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Jun 2021 08:01:19 -0400
+        Thu, 3 Jun 2021 09:32:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622721574;
+        s=mimecast20190719; t=1622727070;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=e/FZoX4WIIm6XZW0ArQELD2C1vsdBoERWuy3oEiMfj0=;
-        b=Hkh54+7cL4aVEvsXcbUMlOUXoOBYJhyVj7nnjnd1GI9QfZKMmIumMHU8IyFGqeoHmvm6zO
-        qP/AL6b3ifcTpY8y5IJPQt4Y0I3ynSFZTmCY9eZiKXvnx8wU1ZD6gZzxD6CoaaaxbGXd1G
-        Kkc0MgAiiF9pxjddkPbYjSK//g2Zv4c=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-gPUhNNusMtePVOyGGL8Tsg-1; Thu, 03 Jun 2021 07:59:33 -0400
-X-MC-Unique: gPUhNNusMtePVOyGGL8Tsg-1
-Received: by mail-ed1-f72.google.com with SMTP id d8-20020a0564020008b0290387d38e3ce0so3148368edu.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Jun 2021 04:59:33 -0700 (PDT)
+        bh=R9mgrHnoQWfz+Lx1pNFS6pLV3bnZrTZwEJXp3OINptk=;
+        b=XXkwUSpDq6qJO4FlpQ8dDsEHl/yi7xcG1EPOQzZ8puabXN7H1eRcxFg0p0OwRUFC5e7c83
+        pR43p36khg+BfmsslUU7SwMDTpawNwToQ42fYJtK0KuyW5EpH0z1rtA1LRaZcErHvf3H4S
+        qNS5dtTmCHd2Z34a+muH/8BHVMHAb5M=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-534-LFcBsWZ0N9-e4yGE8mIPkw-1; Thu, 03 Jun 2021 09:31:00 -0400
+X-MC-Unique: LFcBsWZ0N9-e4yGE8mIPkw-1
+Received: by mail-ed1-f70.google.com with SMTP id c12-20020aa7d60c0000b029038fccdf4390so3265662edr.9
+        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Jun 2021 06:31:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=e/FZoX4WIIm6XZW0ArQELD2C1vsdBoERWuy3oEiMfj0=;
-        b=emZnK4ntBoM04CmU2bXjIQmnrXL7cn2zdRM9Myf0edtPmCBoTJ79kOIlWdTelOEKPK
-         zVvdFWesLNGg+HuMQaQ6v9xW3d7xCcUU6QigVxnKlfiwDtZtjH6OYffhz9r+kSjlwEHB
-         a4GggGryA2lS7YlLSj7ClfJlMNK+kcxEpFCdkdLGNPvb0+npTfZNx2nEyNdg0r2yoyZy
-         l3RZzf4f2SdGKxTKP/n5DVyOaVHV9PD+RcCQrwkXr0iYB70w3v2mPLhnnCy4jEvqDiq1
-         5PNt7rTKOYZk2tgXThLNa1FN7ceYxWeFD6dVkkhbnxtJomyYqxogMsFUdp2XJ7mTdpWo
-         SoRg==
-X-Gm-Message-State: AOAM532g3DrykvCaux8rkRFG1MUSNEeX3B+KmZDAVBUHHeSx5F8oteCW
-        vUa8j/phNCVaSELr0B6zcJ62u9IbPQ+DwkahewHQb4ZQJobntJhKNrnbm05HWep5jHo5K8CtweC
-        QwJkdomcy+uNH8vX52FF806U/f5GMIUgoeg==
-X-Received: by 2002:a17:906:2b85:: with SMTP id m5mr39462375ejg.141.1622721572027;
-        Thu, 03 Jun 2021 04:59:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwLrhoVTSXNrq9oOLzdqRELKVnqXPHLA//ELnJuvPrh+jVnzjKXUa2Z3o+3O301UXhhaYNPDA==
-X-Received: by 2002:a17:906:2b85:: with SMTP id m5mr39462359ejg.141.1622721571851;
-        Thu, 03 Jun 2021 04:59:31 -0700 (PDT)
+        bh=R9mgrHnoQWfz+Lx1pNFS6pLV3bnZrTZwEJXp3OINptk=;
+        b=FnqC3M7ILpjayVwyNszWNX6yfm2LMwNCEeu1iAylH8kjtuIDzsp7C5zxaMRJerZEuV
+         Y+FgyO71KZnSh9xOIy++J02Mn18mpQFtXC7baoYpUsTAUnauNJ7G724pAkF+CdKZnsuZ
+         ngJi+XBv6TyJaDr5dXTrRwl6/gwtpnZhYIhZdNiKZk3/AbkjiQ6xzUEGJwJP4TwCUe8q
+         e0j8FVeSsh/NWph9jccLrRZcJxEMO3zVT18S7dDnRza8fd1PsXmTD/Q4BEPcECO2mdLu
+         0Go5o8Bj3RINEzmIRjDOPFBTERNyzMPkkE9WP2LHhLZg+Qzkn5BlBUk0pU/4TrCXXHe8
+         v9iA==
+X-Gm-Message-State: AOAM533eFappFnTm+iC5VPBzTwY+d6AXydQ5HcyiIwppqk58OVglBSsb
+        SBmISnLlCL+0Zva5mZySGv8+VONRyyihR8XwgN7Pw1hmNqeB2W0bmhPJ/MoEjk2J/35rXeDLvHq
+        1pKwmSC94HVzVPz39lOmaWbkjz/75Hr2NkA==
+X-Received: by 2002:aa7:cd83:: with SMTP id x3mr43493332edv.373.1622727059023;
+        Thu, 03 Jun 2021 06:30:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxcYm2Vl3CGK3EAqO80FbfNrfOBMTF95+4L8PCP+46TP2GrF0hA3TK57YH+K5jlODCWPqYHww==
+X-Received: by 2002:aa7:cd83:: with SMTP id x3mr43493318edv.373.1622727058896;
+        Thu, 03 Jun 2021 06:30:58 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id j22sm1484711ejt.11.2021.06.03.04.59.31
+        by smtp.gmail.com with ESMTPSA id d17sm1511635ejp.90.2021.06.03.06.30.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jun 2021 04:59:31 -0700 (PDT)
-Subject: Re: [Intel-gfx] [PATCH v2 2/9] drm: Add privacy-screen class (v2)
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rajat Jain <rajatja@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Marco Trevisan <marco.trevisan@canonical.com>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        platform-driver-x86@vger.kernel.org,
-        Mark Pearson <markpearson@lenovo.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>
-References: <20210421204804.589962-1-hdegoede@redhat.com>
- <20210421204804.589962-3-hdegoede@redhat.com>
- <CACvgo50onXuRvtXySYNHJZshSkmX8ukcMitNJAKC4dEMPTyXYw@mail.gmail.com>
+        Thu, 03 Jun 2021 06:30:58 -0700 (PDT)
+Subject: Re: [PATCH platform] platform/mellanox: mlxreg-hotplug: remove
+ IRQF_NO_AUTOEN flag from request_irq
+To:     Mykola Kostenok <c_mykolak@nvidia.com>
+Cc:     "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Vadim Pasternak <vadimp@nvidia.com>
+References: <20210601111744.2247071-1-c_mykolak@nvidia.com>
+ <3986919a-45b0-7cde-acbe-26877c7525ab@redhat.com>
+ <DM6PR12MB4155CB9B89EE94338D2BFC8BE23E9@DM6PR12MB4155.namprd12.prod.outlook.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fb2209f1-a6d8-4a1e-de58-00ee788aa6c2@redhat.com>
-Date:   Thu, 3 Jun 2021 13:59:30 +0200
+Message-ID: <ca063c1a-1a23-eeaa-ecbb-f4f37ff885ae@redhat.com>
+Date:   Thu, 3 Jun 2021 15:30:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <CACvgo50onXuRvtXySYNHJZshSkmX8ukcMitNJAKC4dEMPTyXYw@mail.gmail.com>
+In-Reply-To: <DM6PR12MB4155CB9B89EE94338D2BFC8BE23E9@DM6PR12MB4155.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -101,124 +87,124 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/1/21 5:31 PM, Emil Velikov wrote:
-> Hi Hans,
+On 6/1/21 4:47 PM, Mykola Kostenok wrote:
+> Hi,
+> We must have IRQF_SHARED flag. This is for system interrupts (FAN, PS, cable power, ASIC health) and now it's used for new line card driver, which should be released soon (this is for new modular system).
+> Actually "mlxreg-hotplug" driver is responsible to instantiate any other driver, which Will share this IRQ line.
+> So, at the moment "mlxreg-hotplug" is probed, no other users shared this line are exist.
 > 
-> What happened with this series, did it fall through the cracks?
-
-Sorta, as Marco already mentioned I think people are waiting for the
-user-space branches which he has on his personal git repos to be submitted
-as offical merge-req-s to GNOME.
-
-> On Wed, 21 Apr 2021 at 21:48, Hans de Goede <hdegoede@redhat.com> wrote:
+> It means that " disable_irq(priv->irq);" in this driver will not impact anyone who is supposed to use this IRQ line. 
 > 
->> --- /dev/null
->> +++ b/drivers/gpu/drm/drm_privacy_screen.c
+> It was initial intension to revert commit, added IRQF_NO_AUTOEN flag.
+> However, it seems safe remove "disable_irq(priv->irq);" line.
 > 
->> +#include "drm_internal.h"
-> 
-> I think we don't need this include, do we?
+> But maybe it more logical to just move disable_irq() to mlxreg_hotplug_set_irq().
+> Until mlxreg_hotplug_set_irq() doesn't open top aggregation mask, interrupts can not get to CPU.
+> So, maybe I modify patch in this way.
 
-The drm_privacy_screen device registered by a provider
-uses /sys/class/drm as its class, quoting from
-drm_privacy_screen.c drm_privacy_screen_register():
+This talk about a top aggregation mask and about mlxreg-hotplug instantiating
+other devices sounds like this should use MFD (which I think you already do?)
+in combination with an irqchip at the MFD driver level which de-multiplexes
+the interrupt in per instantiated device interrupts and the per-instantiated-device
+drivers then use the child interrupts of this irqchip.  This is how this is normally
+done.
 
-        priv->dev.class = drm_class;
-        priv->dev.type = &drm_privacy_screen_type;
-        priv->dev.parent = parent;
-        priv->dev.release = drm_privacy_screen_device_release;
-        dev_set_name(&priv->dev, "privacy_screen-%s", dev_name(parent));
-        priv->ops = ops;
+Also if you clear the top aggregation mask *before* requesting the IRQ then the
+(temporarily) disabling of the IRQ should not be necessary.
 
-        priv->ops->get_hw_state(priv);
-
-        ret = device_register(&priv->dev);
-
-Notice the "priv->dev.class = drm_class", the drm_class
-variable is declared in "drm_internal.h".
-
-Note this was not present in v2. As I mentioned in the commit msg:
-
-Changes in v2:
-- Make CONFIG_DRM_PRIVACY_SCREEN a bool which controls if the drm_privacy
-  code gets built as part of the main drm module rather then making it
-  a tristate which builds its own module.
-- Add a #if IS_ENABLED(CONFIG_DRM_PRIVACY_SCREEN) check to
-  drm_privacy_screen_consumer.h and define stubs when the check fails.
-  Together these 2 changes fix several dependency issues.
-- Remove module related code now that this is part of the main drm.ko
-- Use drm_class as class for the privacy-screen devices instead of
-  adding a separate class for this
-
-This is something which I changed in v2. I changed this since I didn't
-really see any good reason for drm_privacy_screen devices having their
-own class, rather then just having them sit under /sys/class/drm .
-
-I'm open to changing this if people dislike this choice.
-
-
-
->> --- /dev/null
->> +++ b/include/drm/drm_privacy_screen_consumer.h
-> 
->> +#include <drm/drm_connector.h>
-> 
-> Ditto
-
-The "enum drm_privacy_screen_status" used in various places
-comes from drm/drm_connector.h (it is the same enum which is
-used for the possible values of the drm-connector properties).
-
-
->> --- /dev/null
->> +++ b/include/drm/drm_privacy_screen_driver.h
-> 
->> +#include <drm/drm_connector.h>
-> 
-> Ditto
-> 
-> I like how you avoided leaking any DRM details within the new code,
-> modulo the includes above.
-
-I'm glad you like it. I did indeed try to make the code mostly
-independent, but as you can see above there are still some
-inter-dependencies.
-
-Because of this, the CONFIG_DRM_PRIVACY_SCREEN option also does
-not control building this into a separate module. Like many other
-DRM Kconfig options, this controls if the privacy-screen code will
-be added to drm.ko or not.
-
-Despite being 99% independent, the 2 are still intertwined at such
-a level that this is necessary. Specifically drm_core_init() calls
-drm_privacy_screen_lookup_init() to initialize the static lookup
-table which is used to see if there is a privacy-screen (and to which
-GPU,output combo it should be mapped). So if CONFIG_DRM_PRIVACY_SCREEN
-is enabled and drm.ko is builtin then it must be builtin too, at which
-point it is easiest to just make it part of drm.ko .
-
-And there also is the later added dep from drm_privacy_screen.c on
-the drm_class symbol, which means there are now symbol-deps in both
-directions, which makes building the code into drm.ko the only option.
-
-> With above tweaks, the series is:
-> Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-
-As I've tried to explain, the includes are necessary, does your
-Reviewed-by still stands when I keep the includes ?
-
-> Theoretically one could also remove the `depends on DRM` from patch
-> 8/9 but I'm not sure how much that saves us.
-
-The depends in is necessary since CONFIG_DRM_PRIVACY_SCREEN just controls
-if privacy-screen support will be added to drm.ko, if it is enabled we
-still need drm.ko ti actually be built for things to work.
-
-> HTH
-
-Yes, actually getting a review of this code helps a lot, thank you.
+For now though, lets just go with a simple revert, including restoring the
+disable_irq() call, so that I can queue up this revert as a fix for 5.13.
 
 Regards,
 
 Hans
+
+
+
+> 
+> Best regards, Mykola Kostenok
+> 
+> 
+>> -----Original Message-----
+>> From: Hans de Goede <hdegoede@redhat.com>
+>> Sent: Tuesday, June 1, 2021 3:10 PM
+>> To: Mykola Kostenok <c_mykolak@nvidia.com>
+>> Cc: platform-driver-x86@vger.kernel.org
+>> Subject: Re: [PATCH platform] platform/mellanox: mlxreg-hotplug: remove
+>> IRQF_NO_AUTOEN flag from request_irq
+>>
+>> Hi,
+>>
+>> On 6/1/21 1:17 PM, Mykola Kostenok wrote:
+>>> This flag causes mlxreg-hotplug probing failure after flag
+>> "IRQF_NO_AUTOEN"
+>>> has been added to:
+>>> 	err = devm_request_irq(&pdev->dev, priv->irq,
+>>> 			       mlxreg_hotplug_irq_handler,
+>> IRQF_TRIGGER_FALLING
+>>> 			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+>>> 			       "mlxreg-hotplug", priv);
+>>
+>>
+>> Right, but if you look at commit bee3ecfed0fc9 ("platform/mellanox: mlxreg-
+>> hotplug:
+>> move to use request_irq by IRQF_NO_AUTOEN flag") then that also removes
+>> a
+>>
+>> disable_irq(priv->irq);
+>>
+>> Immediately after this call, if the IRQF_NO_AUTOEN flag is going to be
+>> dropped then that call should be re-added. In cases like this it is usually
+>> better to just do a git revert of the offending patch, that would have also re-
+>> added the disable_irq() call. Also see below.
+>>
+>>> This is because request_threaded_irq() returns EINVAL due to true
+>>> value of
+>>> condition:
+>>> ((irqflags & IRQF_SHARED) && (irqflags & IRQF_NO_AUTOEN))
+>>
+>> Is the IRQF_SHARED flag really necessary though ? IOW is the IRQ actually
+>> shared?  If it is really shared then the disable_irq() call will also block the irq
+>> for other users of the irq. Drivers which are properly coded to share
+>> interrupts should thus avoid using disable_irq().  But often the IRQF_SHARED
+>> flag has just been copied from other code without the IRQ actually being
+>> shared.
+>>
+>> Please check if the IRQF_SHARED flag is really necessary and if it is not
+>> necessary, please drop that instead.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
+>>
+>>> Fixes: bee3ecfed0fc9 ("platform/mellanox: mlxreg-hotplug: move to use
+>>> request_irq by IRQF_NO_AUTOEN flag")
+>>> Signed-off-by: Mykola Kostenok <c_mykolak@nvidia.com>
+>>> Reviewed-by: Vadim Pasternak <vadimp@nvidia.com>
+>>> ---
+>>>  drivers/platform/mellanox/mlxreg-hotplug.c | 3 +--
+>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c
+>>> b/drivers/platform/mellanox/mlxreg-hotplug.c
+>>> index a9db2f32658f..07706f0a6d77 100644
+>>> --- a/drivers/platform/mellanox/mlxreg-hotplug.c
+>>> +++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+>>> @@ -683,8 +683,7 @@ static int mlxreg_hotplug_probe(struct
+>>> platform_device *pdev)
+>>>
+>>>  	err = devm_request_irq(&pdev->dev, priv->irq,
+>>>  			       mlxreg_hotplug_irq_handler,
+>> IRQF_TRIGGER_FALLING
+>>> -			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+>>> -			       "mlxreg-hotplug", priv);
+>>> +			       | IRQF_SHARED, "mlxreg-hotplug", priv);
+>>>  	if (err) {
+>>>  		dev_err(&pdev->dev, "Failed to request irq: %d\n", err);
+>>>  		return err;
+>>>
+> 
 
