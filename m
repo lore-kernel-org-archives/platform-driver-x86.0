@@ -2,162 +2,166 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11497C47241
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 22:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD2CC47082
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E390C6120F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 22:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C62613E7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbhFCWn1 (ORCPT
+        id S229675AbhFCXrp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Jun 2021 18:43:27 -0400
-Received: from mail-wr1-f43.google.com ([209.85.221.43]:42708 "EHLO
-        mail-wr1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbhFCWn0 (ORCPT
+        Thu, 3 Jun 2021 19:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229576AbhFCXro (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Jun 2021 18:43:26 -0400
-Received: by mail-wr1-f43.google.com with SMTP id c5so7337648wrq.9;
-        Thu, 03 Jun 2021 15:41:24 -0700 (PDT)
+        Thu, 3 Jun 2021 19:47:44 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C54BC06174A;
+        Thu,  3 Jun 2021 16:45:44 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id f20so123910wmg.0;
+        Thu, 03 Jun 2021 16:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kmp6dSBMRLiq8EO1sTf6qChRpauTe2dmrjHETj38s2U=;
-        b=Q1tjpkAdYyR3Hk2RMnBthVZMhmaIQZ4b0k87Z3jNPTj+44FOAZRytw2yyZpmFnWlaW
-         cXp610ctBOV7CBq/ueEGdhM01CbNo3SARSU/8VnnJwheRDRpQn8dnJ0UEzVOKLcSKuqe
-         TiU/Q6G6YO9XGRZ0PSlqCmARuFzCE/sbI/vTUwRyVRvbc/6IH+MISv39zHItESdH+ZDG
-         9ToXHQB8vQi1V9XQ/9NYFXA9zPvV+zhdq3NiEaE7yMItpS7Fv8hbcwkXeGuW//MrOdWr
-         V7OcP9dQat4tTLOtEMT+KLclIWTizuLx/h274rT7iKIralGYKdY1tu0FVzAEP/6zQpof
-         wqmA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3CgvK6mP0QW9sFdMKMBwLGrltbNn3STDZujxPwSb3s0=;
+        b=toQvauYIYaxK+64eW0m/teo1WO7qG+E6rvyBjOo2/RsBhhRaKvtVwcsl60yfYr+1+C
+         Wv1hk3d8ezwhdH1VDu0egjpyUk/Is0EQwXmnN2xaceWcC5k8AJCKQkAa7JV3zD5dKoxd
+         baeU6vjw+BL0zTr3vaobJ+G8IzibFoVc0iBsE1RslaE1r8K00LyFnHp846rEjwWJVDeZ
+         jJ81ZKPYGmNQhF+B4GPsnDyq9ulxlaE9ibrNtVAY7fiAa3MNe7D3KV6Zh2KdqWeUU84T
+         ultGwZGoclirp6nrL3Qh1p+zCuTOXU3JWvT7iG8zu8zXBMEvhTtgpr6jFOOBIPCRTSU9
+         VXHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kmp6dSBMRLiq8EO1sTf6qChRpauTe2dmrjHETj38s2U=;
-        b=IrCg4ViJc6WJ57RwOXbYoeGMLDhH/ihxbzR7mh+hxtAIvQ71HbpdsnfvX39Nb39eHS
-         Qhn++earBwM1pLv5TXwKw77Zcnr3qTYNqiL14X9ctvUWZpHB0JYpjp/GTsvP6vwvBQFJ
-         Nx+B3PgmadYqVO66IsFuHO+Ac8U123WJhF2ehBDIcH2qIgBo2rNtLPbICDwCtXT56eI1
-         dMnlTFx3HEjOwUpCiJCETnKwSRZu8n6Djj7zg6Fmm0Ker5vDSTk7d+ZvzirOZxWCo6yW
-         tNHO8nbilDr3s0aj0YXzyx4JWKOmKKcSisWoaZqlX17c0bJmvCdVb5RZWbWm7CYha0u8
-         Xfiw==
-X-Gm-Message-State: AOAM531DgyVHkU/RSki4X91XRhmSEut0ebPsRto15eFhzqPdYVY/Ot4c
-        k3ZblyweEQO8t+eBE89JNt8=
-X-Google-Smtp-Source: ABdhPJyoBD+gzNGPlwurXFCGJJQgxkpRtARpcMsaH2I3nIg+SviaNB4pCapmAZM/YGd+mHUMvU/FPA==
-X-Received: by 2002:a5d:664c:: with SMTP id f12mr659229wrw.206.1622760023745;
-        Thu, 03 Jun 2021 15:40:23 -0700 (PDT)
-Received: from valhalla.home ([91.110.88.218])
-        by smtp.gmail.com with ESMTPSA id f14sm4612103wry.40.2021.06.03.15.40.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3CgvK6mP0QW9sFdMKMBwLGrltbNn3STDZujxPwSb3s0=;
+        b=YW9SxOR4W1mVJkGjc9OO/RI12yIrrM1bTmfw97ofKzf3yLV1WDlBrLxjWM8bjiFtI6
+         o93kqK9KBh5OmRugPdZrswpFBMHY/ra2ZeOZyBnwyTfLpj9mFPwpiYeXaiM1oBv3rWjO
+         ZV6S+ohN1jRB0bfXBpBjwzFi6UHrze+F7GKZxBUWgkAI/XHxNUWl+cISKa2vbf9mt2rY
+         U+oFcb2KdLi5+65BMihBWNjjR2Q+roWgbp2SsAGjka6MikNM4LYujrvl57D2YayEUPzy
+         ccLaijDfo7ayilJ5idnD4AnB+EowZjLRxWDfaCt/sDxjsEbxtgmQ+pFRkGfMz0oRngTO
+         wHKg==
+X-Gm-Message-State: AOAM533VHzlepbazBnboMrFb5FRG1/eZAVnNP1H7TU02lWr43zeK0R3U
+        LFSBLwzJTZ8+jcTsQOvYodk=
+X-Google-Smtp-Source: ABdhPJyfVdmAt9flIwqHJTXh5UV7De7hWH7rXeVmiO7dO7Dz0uJzG8X0y2hGWz8ChBS1YUTdW0fI/Q==
+X-Received: by 2002:a1c:e915:: with SMTP id q21mr772896wmc.110.1622763942808;
+        Thu, 03 Jun 2021 16:45:42 -0700 (PDT)
+Received: from xws.localdomain ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id a11sm4743386wrr.48.2021.06.03.16.45.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 15:40:23 -0700 (PDT)
-From:   Daniel Scally <djrscally@gmail.com>
-To:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org
-Cc:     Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
+        Thu, 03 Jun 2021 16:45:42 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v5 3/6] gpiolib: acpi: Export acpi_get_gpiod()
-Date:   Thu,  3 Jun 2021 23:40:04 +0100
-Message-Id: <20210603224007.120560-4-djrscally@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210603224007.120560-1-djrscally@gmail.com>
-References: <20210603224007.120560-1-djrscally@gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] platform/surface: aggregator: Extend user-space interface for events
+Date:   Fri,  4 Jun 2021 01:45:19 +0200
+Message-Id: <20210603234526.2503590-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-We need to be able to translate GPIO resources in an ACPI device's _CRS
-into GPIO descriptor array. Those are represented in _CRS as a pathname
-to a GPIO device plus the pin's index number: the acpi_get_gpiod()
-function is perfect for that purpose.
+Extend the user-space debug interface so that it can be used to receive
+SSAM events in user-space.
 
-As it's currently only used internally within the GPIO layer, provide and
-export a wrapper function that additionally holds a reference to the GPIO
-device.
+Currently, inspecting SSAM events requires writing a custom client
+device and corresponding driver. This is not particularly user-friendly
+for quick testing and comes with higher iteration times. Since we
+already have a user-space interface, we can extend this to forward
+events from SSAM via the controller device file to user-space. With this
+we can then essentially write user-space SSAM clients for testing and
+reverse-engineering, providing us with all the essential functionality
+that previously only a kernel driver would have access to. Note that
+this is still only intended to be an interface for debugging and
+reverse-engineering purposes.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Daniel Scally <djrscally@gmail.com>
----
-Changes since v4:
-	- None
+To achieve this, we need to extend the core to decouple events from
+notifiers. Right now, enabling an event group requires registering a
+notifier for that group. This notifier provides a callback that is
+called when the event occurs. For user-space forwarding, we need to run
+all events through the same file. In the current implementation, this
+presents a problem as, when we don't know the exact events or can't
+filter for them, multiple notifiers for the same target category will
+lead to duplicate events to be sent through the file, one per notifier.
 
- drivers/gpio/gpiolib-acpi.c   | 28 ++++++++++++++++++++++++++++
- include/linux/gpio/consumer.h |  2 ++
- 2 files changed, 30 insertions(+)
+Decoupling notifier registration from event enable-/disablement (and the
+corresponding reference counting) allows us to avoid this issue. We can
+then register one notifier for a whole target category and enable or
+disable events independently of this notifier. Since events are strictly
+separated by their target category, this will not lead to duplicate
+events.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 5b4111e4be3f..684ddb35d83b 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -128,6 +128,34 @@ static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
- 	return gpiochip_get_desc(chip, pin);
- }
- 
-+/**
-+ * acpi_get_and_request_gpiod() - Translate ACPI GPIO pin to GPIO descriptor
-+ *                               and hold a refcount to the GPIO device.
-+ * @path:      ACPI GPIO controller full path name, (e.g. "\\_SB.GPO1")
-+ * @pin:       ACPI GPIO pin number (0-based, controller-relative)
-+ * @label:     Label to pass to gpiod_request()
-+ *
-+ * This function is a simple pass-through to acpi_get_gpiod(), except that
-+ * as it is intended for use outside of the GPIO layer (in a similar fashion to
-+ * gpiod_get_index() for example) it also holds a reference to the GPIO device.
-+ */
-+struct gpio_desc *acpi_get_and_request_gpiod(char *path, int pin, char *label)
-+{
-+	struct gpio_desc *gpio;
-+	int ret;
-+
-+	gpio = acpi_get_gpiod(path, pin);
-+	if (IS_ERR(gpio))
-+		return gpio;
-+
-+	ret = gpiod_request(gpio, label);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return gpio;
-+}
-+EXPORT_SYMBOL_GPL(acpi_get_and_request_gpiod);
-+
- static irqreturn_t acpi_gpio_irq_handler(int irq, void *data)
- {
- 	struct acpi_gpio_event *event = data;
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index c73b25bc9213..566feb56601f 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -692,6 +692,8 @@ int devm_acpi_dev_add_driver_gpios(struct device *dev,
- 				   const struct acpi_gpio_mapping *gpios);
- void devm_acpi_dev_remove_driver_gpios(struct device *dev);
- 
-+struct gpio_desc *acpi_get_and_request_gpiod(char *path, int pin, char *label);
-+
- #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
- 
- struct acpi_device;
+With this, we can then provide user-space with two new IOCTLs for
+registering notifiers for a specific target category of events they are
+interested in. This allows us to forward all events received by those
+notifiers to the internal buffer of the device file, from which they can
+be read by user-space. In other words, user-space can, via those two
+IOCTLs, select which event target categories they are interested in.
+
+Furthermore, we add another two IOCTLs for enabling and disabling events
+via the controller. While events can already be enabled and disabled via
+generic requests, this does not respect the controller-internal
+reference counting mechanism. Due to that, this can lead to an event
+group being disabled even though a kernel-driver has requested it to be
+enabled. Or in other words: Without this, a user-space client cannot
+safely reset the state as it has only two options, keeping the event
+group enabled and not attempt cleanup at all, or disable the event group
+for all clients and potentially stop them from working properly.
+
+Also update the copyright lines since we're already doing some work on
+the core.
+
+Maximilian Luz (7):
+  platform/surface: aggregator: Allow registering notifiers without
+    enabling events
+  platform/surface: aggregator: Allow enabling of events without
+    notifiers
+  platform/surface: aggregator: Update copyright
+  platform/surface: aggregator_cdev: Add support for forwarding events
+    to user-space
+  platform/surface: aggregator_cdev: Allow enabling of events from
+    user-space
+  platform/surface: aggregator_cdev: Add lockdep support
+  docs: driver-api: Update Surface Aggregator user-space interface
+    documentation
+
+ .../surface_aggregator/clients/cdev.rst       | 127 ++++-
+ .../userspace-api/ioctl/ioctl-number.rst      |   2 +-
+ drivers/platform/surface/aggregator/Kconfig   |   2 +-
+ drivers/platform/surface/aggregator/Makefile  |   2 +-
+ drivers/platform/surface/aggregator/bus.c     |   2 +-
+ drivers/platform/surface/aggregator/bus.h     |   2 +-
+ .../platform/surface/aggregator/controller.c  | 206 ++++++-
+ .../platform/surface/aggregator/controller.h  |   2 +-
+ drivers/platform/surface/aggregator/core.c    |   2 +-
+ .../platform/surface/aggregator/ssh_msgb.h    |   2 +-
+ .../surface/aggregator/ssh_packet_layer.c     |   2 +-
+ .../surface/aggregator/ssh_packet_layer.h     |   2 +-
+ .../platform/surface/aggregator/ssh_parser.c  |   2 +-
+ .../platform/surface/aggregator/ssh_parser.h  |   2 +-
+ .../surface/aggregator/ssh_request_layer.c    |   2 +-
+ .../surface/aggregator/ssh_request_layer.h    |   2 +-
+ drivers/platform/surface/aggregator/trace.h   |   2 +-
+ .../surface/surface_aggregator_cdev.c         | 531 +++++++++++++++++-
+ include/linux/surface_aggregator/controller.h |  27 +-
+ include/linux/surface_aggregator/device.h     |   2 +-
+ include/linux/surface_aggregator/serial_hub.h |   2 +-
+ include/uapi/linux/surface_aggregator/cdev.h  |  73 ++-
+ 22 files changed, 921 insertions(+), 77 deletions(-)
+
 -- 
-2.25.1
+2.31.1
 
