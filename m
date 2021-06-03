@@ -2,124 +2,139 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1852C47096
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 17:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37777C47082
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 17:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE75613C9
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 17:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AA961359
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 17:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbhFCRHW (ORCPT
+        id S229894AbhFCRal (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Jun 2021 13:07:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36060 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229695AbhFCRHW (ORCPT
+        Thu, 3 Jun 2021 13:30:41 -0400
+Received: from mail-dm6nam11on2064.outbound.protection.outlook.com ([40.107.223.64]:12921
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229789AbhFCRal (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Jun 2021 13:07:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1622739937;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1JY+ThpNvUNc5MWyYcRhRJLduIKbgQwydX8JPKBcVMI=;
-        b=g9qaTnChxlpedqAz8BwtN53SLKryIy4GMSpHTe4APrJcmop4gRhN2ie9vDjGksWowkw8b6
-        R0do1xB7ckQJ8pdDwK8WYWRPthiUNSr+VGJFdg8/sT7713hiP7d/opl6KYvg7THZkVIO1y
-        DM1VKaiV65F5RH9+pjrVTxEijLjNiN4=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-450-kJKcv0jqO0q4MblPO_Cgmg-1; Thu, 03 Jun 2021 13:05:36 -0400
-X-MC-Unique: kJKcv0jqO0q4MblPO_Cgmg-1
-Received: by mail-ed1-f72.google.com with SMTP id c12-20020aa7d60c0000b029038fccdf4390so3577231edr.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 03 Jun 2021 10:05:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1JY+ThpNvUNc5MWyYcRhRJLduIKbgQwydX8JPKBcVMI=;
-        b=c97qkNQ32/3/iv0L1r7YcE+Rseo+KC4kLrlzXssAAhMgeFySi3enp5rWmCrBMGxsCO
-         5rZ7hp2BWnut1V9OXgDMiqoJSTR23GF1OtLUnmTrEd3MwQhjHXtteBokOSdhO3M8WP5g
-         CIq8qgGEkpyISbQvLKRDkJ1G/qHj2XNEVCmst8h6f/O20zF33BaYUVPY83N7iUOdahQz
-         +4e/gFwxOFT8fZDD8xGhBh/aJJK6rWg9OwgSCfCfCB72cxnFBYqYT5k+hkyH0rU70vzu
-         WZe321AvTrseb/doFZ8rxfQyOsLLtcqlWNuTdbi3TEN2eRC0su1OyX/iFoO7BvwHf2UV
-         Xedg==
-X-Gm-Message-State: AOAM531L3MYuipL7lzNB6N+cGFXYOz/O6n4RTMVhcmYrpMx45Pm3/Xz2
-        JJ7O03dGjwB61co8ZDW6MfauZMb7/C7hO92mcS4tykNFeHt8QEvtQMJsE9o4DUPZ729aW9yRFYC
-        T5IyUFpIkWyhRMX/iwD5ANZnjHvUfhwdMNQ==
-X-Received: by 2002:a17:906:80cd:: with SMTP id a13mr321834ejx.421.1622739934944;
-        Thu, 03 Jun 2021 10:05:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyCR2G4+C+bsTminQfLne6RzEYtkn/gW2hcAaGeume0x5y2/DFQE8C/1iTa1I6EVYK7cs8HkQ==
-X-Received: by 2002:a17:906:80cd:: with SMTP id a13mr321814ejx.421.1622739934783;
-        Thu, 03 Jun 2021 10:05:34 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id gg22sm309562ejb.114.2021.06.03.10.05.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jun 2021 10:05:34 -0700 (PDT)
-Subject: Re: [PATCH 1/1] ishtp: Add support for Intel ishtp eclite driver
-To:     "K Naduvalath, Sumesh" <sumesh.k.naduvalath@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>
-Cc:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chinnu, Ganapathi" <ganapathi.chinnu@intel.com>,
-        "Kumar, Nachiketa" <nachiketa.kumar@intel.com>
-References: <20210531120415.14480-1-sumesh.k.naduvalath@intel.com>
- <e28a9a7c-ec02-f71d-da6a-270f2dcbd58f@redhat.com>
- <BYAPR11MB37529B9B31E8188ABB29C683A93E9@BYAPR11MB3752.namprd11.prod.outlook.com>
- <1dbdb756-a87a-0ab6-4784-55e1edeb55d0@redhat.com>
- <BYAPR11MB3752E4A836546F1F07089249A93C9@BYAPR11MB3752.namprd11.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <a447321d-79fc-6d2c-4a07-d4a24223c5a5@redhat.com>
-Date:   Thu, 3 Jun 2021 19:05:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Thu, 3 Jun 2021 13:30:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aQZJM2wqGv7QVFJjq4vjEX0fMmvXzG5v/aB2SfURKYVdO46ddM1yOR3Z4bK6tPqU/1lfqEzaxZ61Gv5NXCqUVRekuEOjZ3S0nf4KHyNx6MBcqdpbMJ3jmQSrOXlzrrjJGZM4l0kQQaplGGH1JMvs0H1Iz/B9T2iwzKIuNIWiBVz/pSJTwSz7hKOUjIYqbE9A0TxT3Z59vjyY6eGnYEnzyPxOaHAjD8rsqLCkRY1sdtZvOV+Pib2GyMgoKI6V38TZSyz3UkbMxlzeNGc0MG50LDhU5lL2eyt4ALIUwddj2Tt8UJcvyAHRwVfHECQ62bTMkBj0JcDsBvSelg8oLgx90Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aML/nMZrIqqqnYVc6pkwPgoFF1Lj96P3wVojpjLBiz4=;
+ b=EXLc/PZ+nq0L/P4XwNiZDZ/bgP/qnM5FfEhhjEJSXO+ahchhzxjevc+qSRPs0Ap1Ji2OUWr/hI/PIls0uWFRUTo/wn5Qyft4yb0BWKoWvCg7NRVJXxshSKhVaccXy9EWD++FiCAqDTjzwxkTzhTkHpOk/wJj7Q6N3clvGJoGtHjg7EorQWyHpfycZ6D+yjvGvxtN5WzrJ15ufodSlUgHLjKC7NL8C8F/4nE9Vss4+lmLAlS131z3dH+CtbopkiXAf9+AK1Qg+4zHCctcZwZb6j22raW0ApD7zfvQ+ei4WhykER9IBP24nmTebT9LQQJyid75sSVUgnw7m8ovgk8Ajw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.34) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aML/nMZrIqqqnYVc6pkwPgoFF1Lj96P3wVojpjLBiz4=;
+ b=DJXNHhkIk25nbwt7m73/DO1KG+Ntx8Bwr+D1O7iQlRUg3CwaEStft0Qu+hJQ3SSQjpLxxvxJDAJ7JcjuLbDMRQYz++YtBFdxWV/hlNq3ie29m0Ffwt1wlt9/JANDGL2JIH5cYViK7uH4wIb4VwEkAaCIoydZHR7/fxYc/6dEBaARbnD8RLi1+NJ2yD0nsYNXHzqSrYtdpi0P0FDban2lUeSVAgd3Ic8QkfbZ0TaUClqJHwVbKMCG2gDHZi2zuCjJUcI0RHPJDx5r1Yj1aVucdt5bb3Nhaiskmk+9m/7gZgTK9hX2yga58uKTJ3mlzgLe+P8trP3ivyB0fJeGR7Ta4g==
+Received: from DM5PR19CA0050.namprd19.prod.outlook.com (2603:10b6:3:116::12)
+ by MN2PR12MB4456.namprd12.prod.outlook.com (2603:10b6:208:266::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.20; Thu, 3 Jun
+ 2021 17:28:55 +0000
+Received: from DM6NAM11FT036.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:116:cafe::ee) by DM5PR19CA0050.outlook.office365.com
+ (2603:10b6:3:116::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.15 via Frontend
+ Transport; Thu, 3 Jun 2021 17:28:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.34; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.34) by
+ DM6NAM11FT036.mail.protection.outlook.com (10.13.172.64) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4195.22 via Frontend Transport; Thu, 3 Jun 2021 17:28:54 +0000
+Received: from dev-r-vrt-156.mtr.labs.mlnx (172.20.187.5) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 3 Jun 2021 17:28:53 +0000
+From:   Mykola Kostenok <c_mykolak@nvidia.com>
+To:     <hdegoede@redhat.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <vadimp@nvidia.com>,
+        "Mykola Kostenok" <c_mykolak@nvidia.com>
+Subject: [PATCH platform] Revert "platform/mellanox: mlxreg-hotplug: move to use request_irq by IRQF_NO_AUTOEN flag"
+Date:   Thu, 3 Jun 2021 20:28:27 +0300
+Message-ID: <20210603172827.2599908-1-c_mykolak@nvidia.com>
+X-Mailer: git-send-email 2.8.4
 MIME-Version: 1.0
-In-Reply-To: <BYAPR11MB3752E4A836546F1F07089249A93C9@BYAPR11MB3752.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1104a452-044c-496b-536f-08d926b51010
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4456:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB4456FB297833951AD3A13CACE23C9@MN2PR12MB4456.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:118;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: lY2/FfJ05KoiZ4ZoZXpFHZXAL5j4TaLfRI3X5UA9jC/HvsksidWX3V2NEzpPgueOeo/ICEmkiETT521O2wUABkB6SSEj/EJ7QShRKja1tYgDsonCpb/HeFqbOmJX0LwfQTayvgQkc//AazCq/v+58E5FXTtgOH5unh2z5mlsPEzbLdQmtzNVQephYVwlg86fRdcIQ+3gvY7UjnAVSACLr68MQA/1qacwFBnINculG72q3B/34IWFns2/d8Ov7q7pE7VV8M5AfLB6C0BZPvz5fm06PnNiNkiT5PFdUtR7AjLehYpjfYgVUX+P6Fuagj7v00gB+Dg0eV+VikUIOWoqDnRfA7XC9jLnuIzjmUYWxOuW3BPnttODgzmafLZpCrZ5cD4HjZLZJgONo5iX8UsVARaG6Q03cLujvawPt3BAGtm+QLn2zAb+tUhlRLM+cMbHAEc+f8p9Sgx/06OnnICW0E5gttKksJyHtjNGOcxz4QsF9IM/vgP1jznLHXjHSTesweFmMlD1zc3VY25WLuyV8B4DBrIGg88DBKUog86W+En4Nz1atISJz7x4UMBJ7tdFrLSqEnT6UHCvl79WQWcl55HEndFpF+4+j0rgauHyFHJ/RV9KXMmjI9N5MF8khHDt2/+28KfIHvhM/7/I3IzKM1lBu42TlKy5NSK9hXfk76o=
+X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(46966006)(36840700001)(426003)(86362001)(70206006)(54906003)(6916009)(7636003)(70586007)(8676002)(36906005)(2906002)(8936002)(316002)(356005)(478600001)(26005)(36756003)(5660300002)(36860700001)(2616005)(47076005)(6666004)(4326008)(107886003)(82310400003)(82740400003)(16526019)(186003)(336012)(1076003)(83380400001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2021 17:28:54.9079
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1104a452-044c-496b-536f-08d926b51010
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT036.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4456
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+It causes mlxreg-hotplug probing failure: request_threaded_irq()
+ returns -EINVAL due to true value of condition:
+((irqflags & IRQF_SHARED) && (irqflags & IRQF_NO_AUTOEN))
+after flag "IRQF_NO_AUTOEN" has been added to:
+	err = devm_request_irq(&pdev->dev, priv->irq,
+			       mlxreg_hotplug_irq_handler, IRQF_TRIGGER_FALLING
+			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+			       "mlxreg-hotplug", priv);
 
-On 6/3/21 6:48 PM, K Naduvalath, Sumesh wrote:
-> Thank you Hans for the scrutiny. Please find my comments inline.
+This reverts commit bee3ecfed0fc9ad104722c501aac1e892b53d1e3.
 
-<snip>
+Signed-off-by: Mykola Kostenok <c_mykolak@nvidia.com>
+Acked-by: Vadim Pasternak <vadimp@nvidia.com>
+---
+ drivers/platform/mellanox/mlxreg-hotplug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->>> ISH Firmware (the PSE subsystem) can boot up/reinitialize Every Sx
->>> based on usecase or sometimes PSE is always-on. So the resume path is
->>> asynchronous and unpredictable in this case. Re-initialization and
->>> clean up required if PSE also boot up every Sx and might take good
->>> amount of time (Host can come alive before PSE comes up). Thus using
->> asynchronous reset notification.
->>
->> Ok, so I guess we need to live with the ugly deregister + re-register OpRegion
->> dance for the devices where the PSE is shutdown during suspend.
->>
->> You also write: "sometimes PSE is always-on", what about that case, I assume
->> in this case there will be no reset after resume? So then unregistering the
->> OpRegion handler at suspend (and setting link_ready=false) will be wrong
->> since without the reset the OpRegion handler will never get reinstalled ?
-> 
-> reset is called from bus after every resume. When PSE is always-on, the notification
-> comes quicky, where as there reset comes bit later in case of new boot.
-
-Ok, in that case it makes sense to treat the PSE always-on scenario the same
-as the scenario where it gets turned off during suspend.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
+index a9db2f32658f..b013445147dd 100644
+--- a/drivers/platform/mellanox/mlxreg-hotplug.c
++++ b/drivers/platform/mellanox/mlxreg-hotplug.c
+@@ -683,13 +683,13 @@ static int mlxreg_hotplug_probe(struct platform_device *pdev)
+ 
+ 	err = devm_request_irq(&pdev->dev, priv->irq,
+ 			       mlxreg_hotplug_irq_handler, IRQF_TRIGGER_FALLING
+-			       | IRQF_SHARED | IRQF_NO_AUTOEN,
+-			       "mlxreg-hotplug", priv);
++			       | IRQF_SHARED, "mlxreg-hotplug", priv);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "Failed to request irq: %d\n", err);
+ 		return err;
+ 	}
+ 
++	disable_irq(priv->irq);
+ 	spin_lock_init(&priv->lock);
+ 	INIT_DELAYED_WORK(&priv->dwork_irq, mlxreg_hotplug_work_handler);
+ 	dev_set_drvdata(&pdev->dev, priv);
+-- 
+2.20.1
 
