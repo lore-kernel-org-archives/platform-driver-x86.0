@@ -2,166 +2,333 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD2CC47082
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC5B4C47098
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C62613E7
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47F2613E7
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  3 Jun 2021 23:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbhFCXrp (ORCPT
+        id S229746AbhFCXrr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 3 Jun 2021 19:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52966 "EHLO
+        Thu, 3 Jun 2021 19:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhFCXro (ORCPT
+        with ESMTP id S229576AbhFCXrr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 3 Jun 2021 19:47:44 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C54BC06174A;
-        Thu,  3 Jun 2021 16:45:44 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id f20so123910wmg.0;
-        Thu, 03 Jun 2021 16:45:44 -0700 (PDT)
+        Thu, 3 Jun 2021 19:47:47 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61885C061756;
+        Thu,  3 Jun 2021 16:45:47 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id z8so7446560wrp.12;
+        Thu, 03 Jun 2021 16:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3CgvK6mP0QW9sFdMKMBwLGrltbNn3STDZujxPwSb3s0=;
-        b=toQvauYIYaxK+64eW0m/teo1WO7qG+E6rvyBjOo2/RsBhhRaKvtVwcsl60yfYr+1+C
-         Wv1hk3d8ezwhdH1VDu0egjpyUk/Is0EQwXmnN2xaceWcC5k8AJCKQkAa7JV3zD5dKoxd
-         baeU6vjw+BL0zTr3vaobJ+G8IzibFoVc0iBsE1RslaE1r8K00LyFnHp846rEjwWJVDeZ
-         jJ81ZKPYGmNQhF+B4GPsnDyq9ulxlaE9ibrNtVAY7fiAa3MNe7D3KV6Zh2KdqWeUU84T
-         ultGwZGoclirp6nrL3Qh1p+zCuTOXU3JWvT7iG8zu8zXBMEvhTtgpr6jFOOBIPCRTSU9
-         VXHw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=DDpKkJEpBzidYlkeMANWBeez3gCFIVHVIJwwQsDWjt0=;
+        b=I+7WZaLV9DlY4f5nogGpLDPw99qrFYNjh8wY3k4SWbJV0b9929G6I0rrLIvOD924uD
+         64eg2B0bWba+6aydiDt1OZnQNOd9lGKH6Cz0A8jOsgOLxgT8w3pVyDt3Gp8Z5lL6lDkj
+         cQxwGXg1/YFWKtDkkQG3MS36kTyK8GdNLyPKA+lPjRHJ5HbO14WEgOWTYGPgibfS1KRy
+         cXvifIEhuQF88BPheSNRedYFa0FV118GYdne3+YPYu3vVctmml+icOdXGs9MaDJYniVc
+         1o57uN0KYReGIeS+sqtnwBphMIQkEhhmgKspRbBl5UFsNIB85R97XfqEZivopqOSlPKy
+         NVyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3CgvK6mP0QW9sFdMKMBwLGrltbNn3STDZujxPwSb3s0=;
-        b=YW9SxOR4W1mVJkGjc9OO/RI12yIrrM1bTmfw97ofKzf3yLV1WDlBrLxjWM8bjiFtI6
-         o93kqK9KBh5OmRugPdZrswpFBMHY/ra2ZeOZyBnwyTfLpj9mFPwpiYeXaiM1oBv3rWjO
-         ZV6S+ohN1jRB0bfXBpBjwzFi6UHrze+F7GKZxBUWgkAI/XHxNUWl+cISKa2vbf9mt2rY
-         U+oFcb2KdLi5+65BMihBWNjjR2Q+roWgbp2SsAGjka6MikNM4LYujrvl57D2YayEUPzy
-         ccLaijDfo7ayilJ5idnD4AnB+EowZjLRxWDfaCt/sDxjsEbxtgmQ+pFRkGfMz0oRngTO
-         wHKg==
-X-Gm-Message-State: AOAM533VHzlepbazBnboMrFb5FRG1/eZAVnNP1H7TU02lWr43zeK0R3U
-        LFSBLwzJTZ8+jcTsQOvYodk=
-X-Google-Smtp-Source: ABdhPJyfVdmAt9flIwqHJTXh5UV7De7hWH7rXeVmiO7dO7Dz0uJzG8X0y2hGWz8ChBS1YUTdW0fI/Q==
-X-Received: by 2002:a1c:e915:: with SMTP id q21mr772896wmc.110.1622763942808;
-        Thu, 03 Jun 2021 16:45:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=DDpKkJEpBzidYlkeMANWBeez3gCFIVHVIJwwQsDWjt0=;
+        b=svDejBmhC1NvZd1F8qtifs0JJdfvVegJMJQ7oFPrXyHjS3mZ4OEY6z24iSaz83VxMX
+         d9HSwLb0LRd8zXyP/G7Gn6cq5+vKCbK7Zd7zOYCzSfA3CCV/S3dJ2Ds7fCInd3PWhQKJ
+         gCKtyj5XMBN2+Ttwk+zFOIdIxVDAJDpVqwkJBj5dy/hsvQGb2Bd6KCiFnkIwNsAyX0wR
+         7ZLdDpSJUUmLQzxdtE8x1vWKch0E+pJb1HfKzRi40m9F3RgwhpP73luvlS4jjPWCmqS9
+         9ZtjcL8FBdjqeBeIOuFBLaXqKocyG87yh74jHZ8lll000QxD6LNTA/PoZIK9VgOJa5ai
+         cFzg==
+X-Gm-Message-State: AOAM5319bPdJRUG5/8K6AMckpBOrHXNFvqGmYdtj4oLnd8GArwx2gRKR
+        2VbfL6ntQK+13Jesn6BS490=
+X-Google-Smtp-Source: ABdhPJwwbg+XrW8BEK/oZR2y2d6MeM9SiTh++FgE33L8v8ZDnz9T4drDUXi6z945WFUIhaUp/qAu1w==
+X-Received: by 2002:a5d:548b:: with SMTP id h11mr828738wrv.131.1622763945982;
+        Thu, 03 Jun 2021 16:45:45 -0700 (PDT)
 Received: from xws.localdomain ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id a11sm4743386wrr.48.2021.06.03.16.45.41
+        by smtp.gmail.com with ESMTPSA id a11sm4743386wrr.48.2021.06.03.16.45.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 16:45:42 -0700 (PDT)
+        Thu, 03 Jun 2021 16:45:45 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] platform/surface: aggregator: Extend user-space interface for events
-Date:   Fri,  4 Jun 2021 01:45:19 +0200
-Message-Id: <20210603234526.2503590-1-luzmaximilian@gmail.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/7] platform/surface: aggregator: Update copyright
+Date:   Fri,  4 Jun 2021 01:45:22 +0200
+Message-Id: <20210603234526.2503590-4-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210603234526.2503590-1-luzmaximilian@gmail.com>
+References: <20210603234526.2503590-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Extend the user-space debug interface so that it can be used to receive
-SSAM events in user-space.
+It's 2021, update the copyright accordingly.
 
-Currently, inspecting SSAM events requires writing a custom client
-device and corresponding driver. This is not particularly user-friendly
-for quick testing and comes with higher iteration times. Since we
-already have a user-space interface, we can extend this to forward
-events from SSAM via the controller device file to user-space. With this
-we can then essentially write user-space SSAM clients for testing and
-reverse-engineering, providing us with all the essential functionality
-that previously only a kernel driver would have access to. Note that
-this is still only intended to be an interface for debugging and
-reverse-engineering purposes.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/aggregator/Kconfig             | 2 +-
+ drivers/platform/surface/aggregator/Makefile            | 2 +-
+ drivers/platform/surface/aggregator/bus.c               | 2 +-
+ drivers/platform/surface/aggregator/bus.h               | 2 +-
+ drivers/platform/surface/aggregator/controller.c        | 2 +-
+ drivers/platform/surface/aggregator/controller.h        | 2 +-
+ drivers/platform/surface/aggregator/core.c              | 2 +-
+ drivers/platform/surface/aggregator/ssh_msgb.h          | 2 +-
+ drivers/platform/surface/aggregator/ssh_packet_layer.c  | 2 +-
+ drivers/platform/surface/aggregator/ssh_packet_layer.h  | 2 +-
+ drivers/platform/surface/aggregator/ssh_parser.c        | 2 +-
+ drivers/platform/surface/aggregator/ssh_parser.h        | 2 +-
+ drivers/platform/surface/aggregator/ssh_request_layer.c | 2 +-
+ drivers/platform/surface/aggregator/ssh_request_layer.h | 2 +-
+ drivers/platform/surface/aggregator/trace.h             | 2 +-
+ include/linux/surface_aggregator/controller.h           | 2 +-
+ include/linux/surface_aggregator/device.h               | 2 +-
+ include/linux/surface_aggregator/serial_hub.h           | 2 +-
+ 18 files changed, 18 insertions(+), 18 deletions(-)
 
-To achieve this, we need to extend the core to decouple events from
-notifiers. Right now, enabling an event group requires registering a
-notifier for that group. This notifier provides a callback that is
-called when the event occurs. For user-space forwarding, we need to run
-all events through the same file. In the current implementation, this
-presents a problem as, when we don't know the exact events or can't
-filter for them, multiple notifiers for the same target category will
-lead to duplicate events to be sent through the file, one per notifier.
-
-Decoupling notifier registration from event enable-/disablement (and the
-corresponding reference counting) allows us to avoid this issue. We can
-then register one notifier for a whole target category and enable or
-disable events independently of this notifier. Since events are strictly
-separated by their target category, this will not lead to duplicate
-events.
-
-With this, we can then provide user-space with two new IOCTLs for
-registering notifiers for a specific target category of events they are
-interested in. This allows us to forward all events received by those
-notifiers to the internal buffer of the device file, from which they can
-be read by user-space. In other words, user-space can, via those two
-IOCTLs, select which event target categories they are interested in.
-
-Furthermore, we add another two IOCTLs for enabling and disabling events
-via the controller. While events can already be enabled and disabled via
-generic requests, this does not respect the controller-internal
-reference counting mechanism. Due to that, this can lead to an event
-group being disabled even though a kernel-driver has requested it to be
-enabled. Or in other words: Without this, a user-space client cannot
-safely reset the state as it has only two options, keeping the event
-group enabled and not attempt cleanup at all, or disable the event group
-for all clients and potentially stop them from working properly.
-
-Also update the copyright lines since we're already doing some work on
-the core.
-
-Maximilian Luz (7):
-  platform/surface: aggregator: Allow registering notifiers without
-    enabling events
-  platform/surface: aggregator: Allow enabling of events without
-    notifiers
-  platform/surface: aggregator: Update copyright
-  platform/surface: aggregator_cdev: Add support for forwarding events
-    to user-space
-  platform/surface: aggregator_cdev: Allow enabling of events from
-    user-space
-  platform/surface: aggregator_cdev: Add lockdep support
-  docs: driver-api: Update Surface Aggregator user-space interface
-    documentation
-
- .../surface_aggregator/clients/cdev.rst       | 127 ++++-
- .../userspace-api/ioctl/ioctl-number.rst      |   2 +-
- drivers/platform/surface/aggregator/Kconfig   |   2 +-
- drivers/platform/surface/aggregator/Makefile  |   2 +-
- drivers/platform/surface/aggregator/bus.c     |   2 +-
- drivers/platform/surface/aggregator/bus.h     |   2 +-
- .../platform/surface/aggregator/controller.c  | 206 ++++++-
- .../platform/surface/aggregator/controller.h  |   2 +-
- drivers/platform/surface/aggregator/core.c    |   2 +-
- .../platform/surface/aggregator/ssh_msgb.h    |   2 +-
- .../surface/aggregator/ssh_packet_layer.c     |   2 +-
- .../surface/aggregator/ssh_packet_layer.h     |   2 +-
- .../platform/surface/aggregator/ssh_parser.c  |   2 +-
- .../platform/surface/aggregator/ssh_parser.h  |   2 +-
- .../surface/aggregator/ssh_request_layer.c    |   2 +-
- .../surface/aggregator/ssh_request_layer.h    |   2 +-
- drivers/platform/surface/aggregator/trace.h   |   2 +-
- .../surface/surface_aggregator_cdev.c         | 531 +++++++++++++++++-
- include/linux/surface_aggregator/controller.h |  27 +-
- include/linux/surface_aggregator/device.h     |   2 +-
- include/linux/surface_aggregator/serial_hub.h |   2 +-
- include/uapi/linux/surface_aggregator/cdev.h  |  73 ++-
- 22 files changed, 921 insertions(+), 77 deletions(-)
-
+diff --git a/drivers/platform/surface/aggregator/Kconfig b/drivers/platform/surface/aggregator/Kconfig
+index 3aaeea9f0433..fd6dc452f3e8 100644
+--- a/drivers/platform/surface/aggregator/Kconfig
++++ b/drivers/platform/surface/aggregator/Kconfig
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0+
+-# Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++# Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+ 
+ menuconfig SURFACE_AGGREGATOR
+ 	tristate "Microsoft Surface System Aggregator Module Subsystem and Drivers"
+diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
+index c112e2c7112b..c8498c41e758 100644
+--- a/drivers/platform/surface/aggregator/Makefile
++++ b/drivers/platform/surface/aggregator/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0+
+-# Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++# Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+ 
+ # For include/trace/define_trace.h to include trace.h
+ CFLAGS_core.o = -I$(src)
+diff --git a/drivers/platform/surface/aggregator/bus.c b/drivers/platform/surface/aggregator/bus.c
+index a9b660af0917..0169677c243e 100644
+--- a/drivers/platform/surface/aggregator/bus.c
++++ b/drivers/platform/surface/aggregator/bus.c
+@@ -2,7 +2,7 @@
+ /*
+  * Surface System Aggregator Module bus and device integration.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <linux/device.h>
+diff --git a/drivers/platform/surface/aggregator/bus.h b/drivers/platform/surface/aggregator/bus.h
+index 7712baaed6a5..ed032c2cbdb2 100644
+--- a/drivers/platform/surface/aggregator/bus.h
++++ b/drivers/platform/surface/aggregator/bus.h
+@@ -2,7 +2,7 @@
+ /*
+  * Surface System Aggregator Module bus and device integration.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_BUS_H
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index 49edddea417e..e91ee7e72c14 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -2,7 +2,7 @@
+ /*
+  * Main SSAM/SSH controller structure and functionality.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <linux/acpi.h>
+diff --git a/drivers/platform/surface/aggregator/controller.h b/drivers/platform/surface/aggregator/controller.h
+index 8297d34e7489..a0963c3562ff 100644
+--- a/drivers/platform/surface/aggregator/controller.h
++++ b/drivers/platform/surface/aggregator/controller.h
+@@ -2,7 +2,7 @@
+ /*
+  * Main SSAM/SSH controller structure and functionality.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_CONTROLLER_H
+diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+index 8dc2c267bcd6..5d780e55f4a1 100644
+--- a/drivers/platform/surface/aggregator/core.c
++++ b/drivers/platform/surface/aggregator/core.c
+@@ -7,7 +7,7 @@
+  * Handles communication via requests as well as enabling, disabling, and
+  * relaying of events.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <linux/acpi.h>
+diff --git a/drivers/platform/surface/aggregator/ssh_msgb.h b/drivers/platform/surface/aggregator/ssh_msgb.h
+index 1221f642dda1..e562958ffdf0 100644
+--- a/drivers/platform/surface/aggregator/ssh_msgb.h
++++ b/drivers/platform/surface/aggregator/ssh_msgb.h
+@@ -2,7 +2,7 @@
+ /*
+  * SSH message builder functions.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_SSH_MSGB_H
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+index 15d96eac6811..5e08049fc3ac 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+@@ -2,7 +2,7 @@
+ /*
+  * SSH packet transport layer.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <asm/unaligned.h>
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.h b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+index e8757d03f279..2eb329f0b91a 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.h
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.h
+@@ -2,7 +2,7 @@
+ /*
+  * SSH packet transport layer.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_SSH_PACKET_LAYER_H
+diff --git a/drivers/platform/surface/aggregator/ssh_parser.c b/drivers/platform/surface/aggregator/ssh_parser.c
+index e2dead8de94a..b77912f8f13b 100644
+--- a/drivers/platform/surface/aggregator/ssh_parser.c
++++ b/drivers/platform/surface/aggregator/ssh_parser.c
+@@ -2,7 +2,7 @@
+ /*
+  * SSH message parser.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <asm/unaligned.h>
+diff --git a/drivers/platform/surface/aggregator/ssh_parser.h b/drivers/platform/surface/aggregator/ssh_parser.h
+index 63c38d350988..3bd6e180fd16 100644
+--- a/drivers/platform/surface/aggregator/ssh_parser.h
++++ b/drivers/platform/surface/aggregator/ssh_parser.h
+@@ -2,7 +2,7 @@
+ /*
+  * SSH message parser.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_SSH_PARSER_H
+diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.c b/drivers/platform/surface/aggregator/ssh_request_layer.c
+index 52a83a8fcf82..bfe1aaf38065 100644
+--- a/drivers/platform/surface/aggregator/ssh_request_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_request_layer.c
+@@ -2,7 +2,7 @@
+ /*
+  * SSH request transport layer.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #include <asm/unaligned.h>
+diff --git a/drivers/platform/surface/aggregator/ssh_request_layer.h b/drivers/platform/surface/aggregator/ssh_request_layer.h
+index cb35815858d1..9c3cbae2d4bd 100644
+--- a/drivers/platform/surface/aggregator/ssh_request_layer.h
++++ b/drivers/platform/surface/aggregator/ssh_request_layer.h
+@@ -2,7 +2,7 @@
+ /*
+  * SSH request transport layer.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _SURFACE_AGGREGATOR_SSH_REQUEST_LAYER_H
+diff --git a/drivers/platform/surface/aggregator/trace.h b/drivers/platform/surface/aggregator/trace.h
+index eb332bb53ae4..de64cf169060 100644
+--- a/drivers/platform/surface/aggregator/trace.h
++++ b/drivers/platform/surface/aggregator/trace.h
+@@ -2,7 +2,7 @@
+ /*
+  * Trace points for SSAM/SSH.
+  *
+- * Copyright (C) 2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2020-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #undef TRACE_SYSTEM
+diff --git a/include/linux/surface_aggregator/controller.h b/include/linux/surface_aggregator/controller.h
+index 7965bdc669c5..068e1982ad37 100644
+--- a/include/linux/surface_aggregator/controller.h
++++ b/include/linux/surface_aggregator/controller.h
+@@ -6,7 +6,7 @@
+  * managing access and communication to and from the SSAM EC, as well as main
+  * communication structures and definitions.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _LINUX_SURFACE_AGGREGATOR_CONTROLLER_H
+diff --git a/include/linux/surface_aggregator/device.h b/include/linux/surface_aggregator/device.h
+index 6ff9c58b3e17..f636c5310321 100644
+--- a/include/linux/surface_aggregator/device.h
++++ b/include/linux/surface_aggregator/device.h
+@@ -7,7 +7,7 @@
+  * Provides support for non-platform/non-ACPI SSAM clients via dedicated
+  * subsystem.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _LINUX_SURFACE_AGGREGATOR_DEVICE_H
+diff --git a/include/linux/surface_aggregator/serial_hub.h b/include/linux/surface_aggregator/serial_hub.h
+index 64276fbfa1d5..c3de43edcffa 100644
+--- a/include/linux/surface_aggregator/serial_hub.h
++++ b/include/linux/surface_aggregator/serial_hub.h
+@@ -6,7 +6,7 @@
+  * Surface System Aggregator Module (SSAM). Provides the interface for basic
+  * packet- and request-based communication with the SSAM EC via SSH.
+  *
+- * Copyright (C) 2019-2020 Maximilian Luz <luzmaximilian@gmail.com>
++ * Copyright (C) 2019-2021 Maximilian Luz <luzmaximilian@gmail.com>
+  */
+ 
+ #ifndef _LINUX_SURFACE_AGGREGATOR_SERIAL_HUB_H
 -- 
 2.31.1
 
