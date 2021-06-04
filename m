@@ -8,93 +8,220 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53846C07E94
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108DFC07E94
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32F67613F1
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED75B613FA
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbhFDN1s (ORCPT
+        id S230331AbhFDNuL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Jun 2021 09:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        Fri, 4 Jun 2021 09:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbhFDN1s (ORCPT
+        with ESMTP id S230142AbhFDNuL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Jun 2021 09:27:48 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078ECC06174A;
-        Fri,  4 Jun 2021 06:26:02 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id f2so9286473wri.11;
-        Fri, 04 Jun 2021 06:26:01 -0700 (PDT)
+        Fri, 4 Jun 2021 09:50:11 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE05C061789;
+        Fri,  4 Jun 2021 06:48:24 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id m18so9400778wrv.2;
+        Fri, 04 Jun 2021 06:48:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=owsITsW7WWW5bJWpPZtkVZ9CzzbUl5LHy/XoqtgBc8A=;
-        b=WSMR1+zbalCIGTJjAs+iXa49HTsKGjOdTcRKzi8oeapJNuMzfTpJJAUS2Tb3A59Xt2
-         30VWq5RMWzZiVAUdwg9jMpN6vF60/4PNy7fNrBL45T7jJstCCAKEmOHkLJhjmZa/DG41
-         WJCtoWyC6EYXOShpyscBH3Wqj5O382nL8akhEB1SyfUM7hu6Uvle0Bdf2HRlJkik726M
-         Yt/lwCSys94IzW9MnxxQwe/rQolqLTsbKJLpDfgxgwJtuhT112/sUzpFg+ZNanSl6VJ9
-         QEb4yP6R0mKaCXIgC/ME9gpe91E3YTdnkWo80Eh7TYhkFS4NQ9AZupw+6So/6yfeXz2Q
-         hnsw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0hblWKhhVFj2BU43fxgvQPVXjbtJ6ZeAeWI+WSD8RhA=;
+        b=u7ST3EdEgOaOIXWFvUof1gorxmA3TYZ/mgsKTduDOVlRZXjTEThZG0k/1Buh2C7a1+
+         KufeqTJhSLIJD5YlfWbrDm52LwUVlqAnuGpMy9fIEHvTNQ/8pmYBCMnWihNPvAVHn+DN
+         BfpH8suKSHb3gFUrbJVAo9Pq+fHZuVc/gAvQ4GhAT03Yen7OCMuJoPvmiYWXrhAxZ5yD
+         vf3s1yjQzAF2KLwugFX7mCd8+cNard654K2AqyuYnXAk29dfXaPCZBO6cgnzCRWXIhG6
+         kLN5+gmweacY7yZbTbGAEiRZiJWCyVkhNI/HyhlmdaFEBVj+JrQn1S2lJD0y+TC+gM/+
+         V3PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=owsITsW7WWW5bJWpPZtkVZ9CzzbUl5LHy/XoqtgBc8A=;
-        b=Vd+h86vhf8fKPn/B1CoyP2QpzGZQ2q/4H5mUzDpU8xKfHNpSFV1w3p72TWmc0y4UUX
-         Z2iLx86h1+4dwi2JNJhz/cRpDs53GScY21ZLBAjLkitgIecT/nmjZRsVrXj4ICogEGFG
-         Aq00IRQ5b4bGvDOrT7vUP02gCM2hY9wKHnoCyW5oo+z0kl0arrfRFgsEGgiQX8XWBAFk
-         JWWSjxhBzqRntDg8I6sb86RI8JnTBprYeicro1OYWesy9Tc8wjz4dGvAYA2Hqb1k1XiP
-         ygEmFcNABQblE6P4PmLGc4v5WRLWQaMhD6gWb1c9eHDn1yvPwVEq2KnTcimcioQ8soG8
-         I6bQ==
-X-Gm-Message-State: AOAM530OU6IwLi7qO63ZmQ1GuJ5qorJOD7s6umE3YoH8N6DTQOAW5KM3
-        co5meyz9T6FSJK+NzKw2qYe60SkJ37s=
-X-Google-Smtp-Source: ABdhPJx+YpJKGWgpUNVl87I/p783cOw2ND2z3H7FMkJJr9ErwMVUkjeXZMA9f4dslr+6usrngvOLPw==
-X-Received: by 2002:adf:fd82:: with SMTP id d2mr4030696wrr.218.1622813159837;
-        Fri, 04 Jun 2021 06:25:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0hblWKhhVFj2BU43fxgvQPVXjbtJ6ZeAeWI+WSD8RhA=;
+        b=hmPUYds/yGIWftTeMrnUdc/m72dkTiBPkLwQTXduq3aZkRxTNgqrTbd64d3OuJJw3Z
+         l0dMIAgnmz3eRmwUCy/5Iea4FXj/KjgNXO+JwKvL3OApL4rq0S3kgFySnYitt3/I9lRd
+         FpC4moj0Kh4yUj0zvVDN3bcfAmOI7HRf1+1yWQrKH7PUNyG+XRcMmr4nhqfDeP7YpZ9C
+         pRyrapJBhO+vWCO4fNp45fCVfaGopsn+QcQMdkJjlgFM7b+SCw0aidvtGCUAihRXK/gg
+         zhi6yLsDHMaOzDAbHZSZVdo5S2JvWqRfBN304FBoseN/+ecEUSoYz9o1dBlfzaKvgISj
+         vC1w==
+X-Gm-Message-State: AOAM533opuM7PCguvcTDOkUJ3VKTrEuX0PHErAj+3sQr4/pLpMQUnbaS
+        Y/dZbeOZGChPqPiQeflpO+A=
+X-Google-Smtp-Source: ABdhPJwYwkQQL+v1anJK+ywKT4dJxqIye3itLfWqmMOGam6q54ZtNaBdTvaE2uD8+I/vbiE6b74YPg==
+X-Received: by 2002:a5d:5243:: with SMTP id k3mr4102693wrc.19.1622814503396;
+        Fri, 04 Jun 2021 06:48:23 -0700 (PDT)
 Received: from xws.localdomain (pd9e5aba0.dip0.t-ipconnect.de. [217.229.171.160])
-        by smtp.gmail.com with ESMTPSA id l16sm9009034wmj.47.2021.06.04.06.25.58
+        by smtp.gmail.com with ESMTPSA id u16sm7403167wru.56.2021.06.04.06.48.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 06:25:59 -0700 (PDT)
+        Fri, 04 Jun 2021 06:48:22 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] platform/surface: dtx: Add missing mutex_destroy() call in failure path
-Date:   Fri,  4 Jun 2021 15:25:40 +0200
-Message-Id: <20210604132540.533036-1-luzmaximilian@gmail.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/7] platform/surface: aggregator_cdev: Allow enabling of events from user-space
+Date:   Fri,  4 Jun 2021 15:47:53 +0200
+Message-Id: <20210604134755.535590-6-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210604134755.535590-1-luzmaximilian@gmail.com>
+References: <20210604134755.535590-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When we fail to open the device file due to DTX being shut down, the
-mutex is initialized but never destroyed. We are destroying it when
-releasing the file, so add the missing call in the failure path as well.
+While events can already be enabled and disabled via the generic request
+IOCTL, this bypasses the internal reference counting mechanism of the
+controller. Due to that, disabling an event will turn it off regardless
+of any other client having requested said event, which may break
+functionality of that client.
 
-Fixes: 1d609992832e ("platform/surface: Add DTX driver")
+To solve this, add IOCTLs wrapping the ssam_controller_event_enable()
+and ssam_controller_event_disable() functions, which have been
+previously introduced for this specific purpose.
+
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/surface/surface_dtx.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/surface/surface_dtx.c b/drivers/platform/surface/surface_dtx.c
-index 5d9b758a99bb..1203b9a82993 100644
---- a/drivers/platform/surface/surface_dtx.c
-+++ b/drivers/platform/surface/surface_dtx.c
-@@ -427,6 +427,7 @@ static int surface_dtx_open(struct inode *inode, struct file *file)
- 	 */
- 	if (test_bit(SDTX_DEVICE_SHUTDOWN_BIT, &ddev->flags)) {
- 		up_write(&ddev->client_lock);
-+		mutex_destroy(&client->read_lock);
- 		sdtx_device_put(client->ddev);
- 		kfree(client);
- 		return -ENODEV;
+Changes in v2:
+ - None
+
+---
+ .../surface/surface_aggregator_cdev.c         | 58 +++++++++++++++++++
+ include/uapi/linux/surface_aggregator/cdev.h  | 32 ++++++++++
+ 2 files changed, 90 insertions(+)
+
+diff --git a/drivers/platform/surface/surface_aggregator_cdev.c b/drivers/platform/surface/surface_aggregator_cdev.c
+index dcda377896b7..7b86b36eaaa0 100644
+--- a/drivers/platform/surface/surface_aggregator_cdev.c
++++ b/drivers/platform/surface/surface_aggregator_cdev.c
+@@ -387,6 +387,58 @@ static long ssam_cdev_notif_unregister(struct ssam_cdev_client *client,
+ 	return ssam_cdev_notifier_unregister(client, desc.target_category);
+ }
+ 
++static long ssam_cdev_event_enable(struct ssam_cdev_client *client,
++				   const struct ssam_cdev_event_desc __user *d)
++{
++	struct ssam_cdev_event_desc desc;
++	struct ssam_event_registry reg;
++	struct ssam_event_id id;
++	long ret;
++
++	/* Read descriptor from user-space. */
++	ret = copy_struct_from_user(&desc, sizeof(desc), d, sizeof(*d));
++	if (ret)
++		return ret;
++
++	/* Translate descriptor. */
++	reg.target_category = desc.reg.target_category;
++	reg.target_id = desc.reg.target_id;
++	reg.cid_enable = desc.reg.cid_enable;
++	reg.cid_disable = desc.reg.cid_disable;
++
++	id.target_category = desc.id.target_category;
++	id.instance = desc.id.instance;
++
++	/* Disable event. */
++	return ssam_controller_event_enable(client->cdev->ctrl, reg, id, desc.flags);
++}
++
++static long ssam_cdev_event_disable(struct ssam_cdev_client *client,
++				    const struct ssam_cdev_event_desc __user *d)
++{
++	struct ssam_cdev_event_desc desc;
++	struct ssam_event_registry reg;
++	struct ssam_event_id id;
++	long ret;
++
++	/* Read descriptor from user-space. */
++	ret = copy_struct_from_user(&desc, sizeof(desc), d, sizeof(*d));
++	if (ret)
++		return ret;
++
++	/* Translate descriptor. */
++	reg.target_category = desc.reg.target_category;
++	reg.target_id = desc.reg.target_id;
++	reg.cid_enable = desc.reg.cid_enable;
++	reg.cid_disable = desc.reg.cid_disable;
++
++	id.target_category = desc.id.target_category;
++	id.instance = desc.id.instance;
++
++	/* Disable event. */
++	return ssam_controller_event_disable(client->cdev->ctrl, reg, id, desc.flags);
++}
++
+ 
+ /* -- File operations. ------------------------------------------------------ */
+ 
+@@ -473,6 +525,12 @@ static long __ssam_cdev_device_ioctl(struct ssam_cdev_client *client, unsigned i
+ 		return ssam_cdev_notif_unregister(client,
+ 						  (struct ssam_cdev_notifier_desc __user *)arg);
+ 
++	case SSAM_CDEV_EVENT_ENABLE:
++		return ssam_cdev_event_enable(client, (struct ssam_cdev_event_desc __user *)arg);
++
++	case SSAM_CDEV_EVENT_DISABLE:
++		return ssam_cdev_event_disable(client, (struct ssam_cdev_event_desc __user *)arg);
++
+ 	default:
+ 		return -ENOTTY;
+ 	}
+diff --git a/include/uapi/linux/surface_aggregator/cdev.h b/include/uapi/linux/surface_aggregator/cdev.h
+index 4f393fafc235..08f46b60b151 100644
+--- a/include/uapi/linux/surface_aggregator/cdev.h
++++ b/include/uapi/linux/surface_aggregator/cdev.h
+@@ -90,6 +90,36 @@ struct ssam_cdev_notifier_desc {
+ 	__u8 target_category;
+ } __attribute__((__packed__));
+ 
++/**
++ * struct ssam_cdev_event_desc - Event descriptor.
++ * @reg:                 Registry via which the event will be enabled/disabled.
++ * @reg.target_category: Target category for the event registry requests.
++ * @reg.target_id:       Target ID for the event registry requests.
++ * @reg.cid_enable:      Command ID for the event-enable request.
++ * @reg.cid_disable:     Command ID for the event-disable request.
++ * @id:                  ID specifying the event.
++ * @id.target_category:  Target category of the event source.
++ * @id.instance:         Instance ID of the event source.
++ * @flags:               Flags used for enabling the event.
++ *
++ * Specifies which event should be enabled/disabled and how to do that.
++ */
++struct ssam_cdev_event_desc {
++	struct {
++		__u8 target_category;
++		__u8 target_id;
++		__u8 cid_enable;
++		__u8 cid_disable;
++	} reg;
++
++	struct {
++		__u8 target_category;
++		__u8 instance;
++	} id;
++
++	__u8 flags;
++} __attribute__((__packed__));
++
+ /**
+  * struct ssam_cdev_event - SSAM event sent by the EC.
+  * @target_category: Target category of the event source. See &enum ssam_ssh_tc.
+@@ -111,5 +141,7 @@ struct ssam_cdev_event {
+ #define SSAM_CDEV_REQUEST		_IOWR(0xA5, 1, struct ssam_cdev_request)
+ #define SSAM_CDEV_NOTIF_REGISTER	_IOW(0xA5, 2, struct ssam_cdev_notifier_desc)
+ #define SSAM_CDEV_NOTIF_UNREGISTER	_IOW(0xA5, 3, struct ssam_cdev_notifier_desc)
++#define SSAM_CDEV_EVENT_ENABLE		_IOW(0xA5, 4, struct ssam_cdev_event_desc)
++#define SSAM_CDEV_EVENT_DISABLE		_IOW(0xA5, 5, struct ssam_cdev_event_desc)
+ 
+ #endif /* _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H */
 -- 
 2.31.1
 
