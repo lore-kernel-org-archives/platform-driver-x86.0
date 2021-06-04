@@ -2,72 +2,70 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E24DC47098
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16259C07E94
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5AE61402
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37AE613C9
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230366AbhFDNuO (ORCPT
+        id S230418AbhFDNuT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Jun 2021 09:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38760 "EHLO
+        Fri, 4 Jun 2021 09:50:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbhFDNuN (ORCPT
+        with ESMTP id S230414AbhFDNuT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Jun 2021 09:50:13 -0400
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA248C061789;
-        Fri,  4 Jun 2021 06:48:26 -0700 (PDT)
-Received: by mail-wr1-x432.google.com with SMTP id l2so9405289wrw.6;
-        Fri, 04 Jun 2021 06:48:26 -0700 (PDT)
+        Fri, 4 Jun 2021 09:50:19 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B45DCC061766;
+        Fri,  4 Jun 2021 06:48:20 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id h8so9365828wrz.8;
+        Fri, 04 Jun 2021 06:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6krBnFnbTexLeYVxG8AbFbd9NK8E8A28cizYGAD8aHQ=;
-        b=GUZTByC2w73LEV/rF5oe9BKwqj+f0JyGdXjqeHM7uE85mLXvaiEoEHmTi63HrincMB
-         QhbBYcEi6OfIeVExEd1ojfxqhQr0VAeAAOxVUGDM9wEMTi2DMli2Sk4VcGun4oObiOCn
-         p3n9p0Lq4baPRnRXmLZzycUZ92IKc9auEgAzXRlioqaij+u5IUONlCF+6NfFnvgY3TMx
-         whvInVSPvP3YmnpRdfchDjGjkLTTE2n8j4xgAbcietPjZKzcfriNQzZMkAukZ5WNMG5x
-         WH5604xXWR7MRECJ+o9xYYm0m0jjHACeTTRLGXGuOdn/s+EagG630lH7eoFeKJwfmDVi
-         l3tg==
+        bh=2ETfAoIBNBhINJTqR6UlwOrmE8UtRJyCzl+e5YsJXcc=;
+        b=Y5/sBVP4cbz/fEpeuSjzALWFMDmPwCOJA2mrvlid/bj813TELrIGMRjj9XpNeivBb2
+         QK39A6Py1ovExQSub5qCZ5gmUIOYgwYypLND7gfApU27fuAlHEzhuYmZTrCfX1q4QhfF
+         7jYnGI1PpXxizM+hAMTGEF+vMv4vm8deD7ciqEKNt2S+2mxDTyZ93iCpVzqzirEoTKv0
+         FIm36+DdDGoMNwa23pgs9njH+oRUEzqFECh48sCqvegW8s4RhK/+6Zu0CqaCLT11d3Ec
+         NmszZBNjycldLPijoFtNT7Z5+cHCPSqifhZVONuyehMFoDxpudaTW3ctop2vqXrR1iVV
+         thtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6krBnFnbTexLeYVxG8AbFbd9NK8E8A28cizYGAD8aHQ=;
-        b=hIF9R1AfgLxgg6iO/PO8YM+zrxcu/yEIvXy18x8c84w9uAoWxlLs7lSjEDt2PtoDBk
-         YLjlGRmRhOKLbGC3R6Y+rtHHakSU6w9LiQkWQBgbcoQsMHKWjK3lwgm1ulGebKFXQj9t
-         pGeqRetuU2h6C14y62PJz2XHTvbj8AozDj+jF0OL26BpBiTTiScYGo2Njg5lYkkuGvna
-         2uD1jS7R9aVOitj6c9Z8aBV8oTlr1YiA1Pn+81cOns/WVijDNd6+1N21zhN6P1EhvMjx
-         8JwuBDwTQ7bzVfbS/SWKD1UK7ix4Mc5J38XOqVK+qobbcdn8EwS65P7FPbTuj8BbK8rP
-         9c6Q==
-X-Gm-Message-State: AOAM532kM26acrx+XFSasBIVAE4SGD+/vJY/JuLXmeaEiagCsmoCdzlk
-        /Ai1wGNgu1wBOo1l4vELFB4=
-X-Google-Smtp-Source: ABdhPJxg2cq/v9q3DMgdXZaHzRqz5QNMu0IoE6u1drW4SL3CFRp6Q3qz5mlvc4w2P8z54UF4O6Gatw==
-X-Received: by 2002:adf:efca:: with SMTP id i10mr4058874wrp.139.1622814505362;
-        Fri, 04 Jun 2021 06:48:25 -0700 (PDT)
+        bh=2ETfAoIBNBhINJTqR6UlwOrmE8UtRJyCzl+e5YsJXcc=;
+        b=HMhoxyj65enoLSyDEfV4j7TrQurI96fM82hYWmASmxkHTM0m3UXd7Sh/hoTHl/F4Hk
+         JibXWlQ4IecOkvc7utsFNdMp0uxhy8iQkaPi3eKGi6QNdM8z8XrYfpCztpP25Jaeh/a7
+         Pi4W2+NSqEdDlyBpP/NUOQnaWyOSTeOyh16Valo26QtNtEi1++wCIJQWyHViVA4lsYZk
+         A1PC3a4nhnmGpJATluWRjIYAIP5MBXSusY6d6BoIBnQKRcw5f7lxe8HH0VUu6c4N8SdE
+         z+0TPEbFnhKAqXwNqLSYJrAj5Bq0yTWyt0e3y0trkZaTfzN5VHgORkdZMGEuQF/JQg5R
+         YMZw==
+X-Gm-Message-State: AOAM533PwvP3fOeJrMWmwk4SegU8rKdmp/BhfIWcV9cg6isYlNy322Zr
+        jnoqqMSi7jSb9x173ym9DUg=
+X-Google-Smtp-Source: ABdhPJzKDX8t3tlny7tVWmgjExSH7DIyCceDeOv5GRO6mA5GkblNzyi8SJarKHBzbvqXoWr6qY7t7Q==
+X-Received: by 2002:a5d:4848:: with SMTP id n8mr4195817wrs.70.1622814499242;
+        Fri, 04 Jun 2021 06:48:19 -0700 (PDT)
 Received: from xws.localdomain (pd9e5aba0.dip0.t-ipconnect.de. [217.229.171.160])
-        by smtp.gmail.com with ESMTPSA id u16sm7403167wru.56.2021.06.04.06.48.24
+        by smtp.gmail.com with ESMTPSA id u16sm7403167wru.56.2021.06.04.06.48.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 06:48:25 -0700 (PDT)
+        Fri, 04 Jun 2021 06:48:18 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 7/7] docs: driver-api: Update Surface Aggregator user-space interface documentation
-Date:   Fri,  4 Jun 2021 15:47:55 +0200
-Message-Id: <20210604134755.535590-8-luzmaximilian@gmail.com>
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/7] platform/surface: aggregator: Allow registering notifiers without enabling events
+Date:   Fri,  4 Jun 2021 15:47:49 +0200
+Message-Id: <20210604134755.535590-2-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210604134755.535590-1-luzmaximilian@gmail.com>
 References: <20210604134755.535590-1-luzmaximilian@gmail.com>
@@ -77,8 +75,33 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Update the controller-device user-space interface (cdev) documentation
-for the newly introduced IOCTLs and event interface.
+Currently, each SSAM event notifier is directly tied to one group of
+events. This makes sense as registering a notifier will automatically
+take care of enabling the corresponding event group and normally drivers
+only need notifications for a very limited number of events, associated
+with different callbacks for each group.
+
+However, there are rare cases, especially for debugging, when we want to
+get notifications for a whole event target category instead of just a
+single group of events in that category. Registering multiple notifiers,
+i.e. one per group, may be infeasible due to two issues: a) we might not
+know every event enable/disable specification as some events are
+auto-enabled by the EC and b) forwarding this to the same callback will
+lead to duplicate events as we might not know the full event
+specification to perform the appropriate filtering.
+
+This commit introduces observer-notifiers, which are notifiers that are
+not tied to a specific event group and do not attempt to manage any
+events. In other words, they can be registered without enabling any
+event group or incrementing the corresponding reference count and just
+act as silent observers, listening to all currently/previously enabled
+events based on their match-specification.
+
+Essentially, this allows us to register one single notifier for a full
+event target category, meaning that we can process all events of that
+target category in a single callback without duplication. Specifically,
+this will be used in the cdev debug interface to forward events to
+user-space via a device file from which the events can be read.
 
 Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
@@ -88,169 +111,191 @@ Changes in v2:
  - None
 
 ---
- .../surface_aggregator/clients/cdev.rst       | 127 +++++++++++++++++-
- 1 file changed, 122 insertions(+), 5 deletions(-)
+ .../platform/surface/aggregator/controller.c  | 69 +++++++++++--------
+ include/linux/surface_aggregator/controller.h | 17 +++++
+ 2 files changed, 58 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/driver-api/surface_aggregator/clients/cdev.rst b/Documentation/driver-api/surface_aggregator/clients/cdev.rst
-index 248c1372d879..0134a841a079 100644
---- a/Documentation/driver-api/surface_aggregator/clients/cdev.rst
-+++ b/Documentation/driver-api/surface_aggregator/clients/cdev.rst
-@@ -1,9 +1,8 @@
- .. SPDX-License-Identifier: GPL-2.0+
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index a06964aa96e7..cd3a6b77f48d 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -2127,9 +2127,15 @@ int ssam_ctrl_notif_d0_entry(struct ssam_controller *ctrl)
+  * @ctrl: The controller to register the notifier on.
+  * @n:    The event notifier to register.
+  *
+- * Register an event notifier and increment the usage counter of the
+- * associated SAM event. If the event was previously not enabled, it will be
+- * enabled during this call.
++ * Register an event notifier. Increment the usage counter of the associated
++ * SAM event if the notifier is not marked as an observer. If the event is not
++ * marked as an observer and is currently not enabled, it will be enabled
++ * during this call. If the notifier is marked as an observer, no attempt will
++ * be made at enabling any event and no reference count will be modified.
++ *
++ * Notifiers marked as observers do not need to be associated with one specific
++ * event, i.e. as long as no event matching is performed, only the event target
++ * category needs to be set.
+  *
+  * Return: Returns zero on success, %-ENOSPC if there have already been
+  * %INT_MAX notifiers for the event ID/type associated with the notifier block
+@@ -2138,11 +2144,10 @@ int ssam_ctrl_notif_d0_entry(struct ssam_controller *ctrl)
+  * for the specific associated event, returns the status of the event-enable
+  * EC-command.
+  */
+-int ssam_notifier_register(struct ssam_controller *ctrl,
+-			   struct ssam_event_notifier *n)
++int ssam_notifier_register(struct ssam_controller *ctrl, struct ssam_event_notifier *n)
+ {
+ 	u16 rqid = ssh_tc_to_rqid(n->event.id.target_category);
+-	struct ssam_nf_refcount_entry *entry;
++	struct ssam_nf_refcount_entry *entry = NULL;
+ 	struct ssam_nf_head *nf_head;
+ 	struct ssam_nf *nf;
+ 	int status;
+@@ -2155,29 +2160,32 @@ int ssam_notifier_register(struct ssam_controller *ctrl,
  
--.. |u8| replace:: :c:type:`u8 <u8>`
--.. |u16| replace:: :c:type:`u16 <u16>`
- .. |ssam_cdev_request| replace:: :c:type:`struct ssam_cdev_request <ssam_cdev_request>`
- .. |ssam_cdev_request_flags| replace:: :c:type:`enum ssam_cdev_request_flags <ssam_cdev_request_flags>`
-+.. |ssam_cdev_event| replace:: :c:type:`struct ssam_cdev_event <ssam_cdev_event>`
+ 	mutex_lock(&nf->lock);
  
- ==============================
- User-Space EC Interface (cdev)
-@@ -23,6 +22,40 @@ These IOCTLs and their respective input/output parameter structs are defined in
- A small python library and scripts for accessing this interface can be found
- at https://github.com/linux-surface/surface-aggregator-module/tree/master/scripts/ssam.
+-	entry = ssam_nf_refcount_inc(nf, n->event.reg, n->event.id);
+-	if (IS_ERR(entry)) {
+-		mutex_unlock(&nf->lock);
+-		return PTR_ERR(entry);
+-	}
++	if (!(n->flags & SSAM_EVENT_NOTIFIER_OBSERVER)) {
++		entry = ssam_nf_refcount_inc(nf, n->event.reg, n->event.id);
++		if (IS_ERR(entry)) {
++			mutex_unlock(&nf->lock);
++			return PTR_ERR(entry);
++		}
  
-+.. contents::
-+
-+
-+Receiving Events
-+================
-+
-+Events can be received by reading from the device-file. The are represented by
-+the |ssam_cdev_event| datatype.
-+
-+Before events are available to be read, however, the desired notifiers must be
-+registered via the ``SSAM_CDEV_NOTIF_REGISTER`` IOCTL. Notifiers are, in
-+essence, callbacks, called when the EC sends an event. They are, in this
-+interface, associated with a specific target category and device-file-instance.
-+They forward any event of this category to the buffer of the corresponding
-+instance, from which it can then be read.
-+
-+Notifiers themselves do not enable events on the EC. Thus, it may additionally
-+be necessary to enable events via the ``SSAM_CDEV_EVENT_ENABLE`` IOCTL. While
-+notifiers work per-client (i.e. per-device-file-instance), events are enabled
-+globally, for the EC and all of its clients (regardless of userspace or
-+non-userspace). The ``SSAM_CDEV_EVENT_ENABLE`` and ``SSAM_CDEV_EVENT_DISABLE``
-+IOCTLs take care of reference counting the events, such that an event is
-+enabled as long as there is a client that has requested it.
-+
-+Note that enabled events are not automatically disabled once the client
-+instance is closed. Therefore any client process (or group of processes) should
-+balance their event enable calls with the corresponding event disable calls. It
-+is, however, perfectly valid to enable and disable events on different client
-+instances. For example, it is valid to set up notifiers and read events on
-+client instance ``A``, enable those events on instance ``B`` (note that these
-+will also be received by A since events are enabled/disabled globally), and
-+after no more events are desired, disable the previously enabled events via
-+instance ``C``.
-+
+-	ssam_dbg(ctrl, "enabling event (reg: %#04x, tc: %#04x, iid: %#04x, rc: %d)\n",
+-		 n->event.reg.target_category, n->event.id.target_category,
+-		 n->event.id.instance, entry->refcount);
++		ssam_dbg(ctrl, "enabling event (reg: %#04x, tc: %#04x, iid: %#04x, rc: %d)\n",
++			 n->event.reg.target_category, n->event.id.target_category,
++			 n->event.id.instance, entry->refcount);
++	}
  
- Controller IOCTLs
- =================
-@@ -45,9 +78,33 @@ The following IOCTLs are provided:
-      - ``REQUEST``
-      - Perform synchronous SAM request.
+ 	status = ssam_nfblk_insert(nf_head, &n->base);
+ 	if (status) {
+-		entry = ssam_nf_refcount_dec(nf, n->event.reg, n->event.id);
+-		if (entry->refcount == 0)
+-			kfree(entry);
++		if (entry) {
++			entry = ssam_nf_refcount_dec(nf, n->event.reg, n->event.id);
++			if (entry->refcount == 0)
++				kfree(entry);
++		}
  
-+   * - ``0xA5``
-+     - ``2``
-+     - ``W``
-+     - ``NOTIF_REGISTER``
-+     - Register event notifier.
+ 		mutex_unlock(&nf->lock);
+ 		return status;
+ 	}
  
--``REQUEST``
-------------
-+   * - ``0xA5``
-+     - ``3``
-+     - ``W``
-+     - ``NOTIF_UNREGISTER``
-+     - Unregister event notifier.
-+
-+   * - ``0xA5``
-+     - ``4``
-+     - ``W``
-+     - ``EVENT_ENABLE``
-+     - Enable event source.
-+
-+   * - ``0xA5``
-+     - ``5``
-+     - ``W``
-+     - ``EVENT_DISABLE``
-+     - Disable event source.
-+
-+
-+``SSAM_CDEV_REQUEST``
-+---------------------
+-	if (entry->refcount == 1) {
+-		status = ssam_ssh_event_enable(ctrl, n->event.reg, n->event.id,
+-					       n->event.flags);
++	if (entry && entry->refcount == 1) {
++		status = ssam_ssh_event_enable(ctrl, n->event.reg, n->event.id, n->event.flags);
+ 		if (status) {
+ 			ssam_nfblk_remove(&n->base);
+ 			kfree(ssam_nf_refcount_dec(nf, n->event.reg, n->event.id));
+@@ -2188,7 +2196,7 @@ int ssam_notifier_register(struct ssam_controller *ctrl,
  
- Defined as ``_IOWR(0xA5, 1, struct ssam_cdev_request)``.
+ 		entry->flags = n->event.flags;
  
-@@ -82,6 +139,66 @@ submitted, and completed (i.e. handed back to user-space) successfully from
- inside the IOCTL, but the request ``status`` member may still be negative in
- case the actual execution of the request failed after it has been submitted.
+-	} else if (entry->flags != n->event.flags) {
++	} else if (entry && entry->flags != n->event.flags) {
+ 		ssam_warn(ctrl,
+ 			  "inconsistent flags when enabling event: got %#04x, expected %#04x (reg: %#04x, tc: %#04x, iid: %#04x)\n",
+ 			  n->event.flags, entry->flags, n->event.reg.target_category,
+@@ -2205,17 +2213,16 @@ EXPORT_SYMBOL_GPL(ssam_notifier_register);
+  * @ctrl: The controller the notifier has been registered on.
+  * @n:    The event notifier to unregister.
+  *
+- * Unregister an event notifier and decrement the usage counter of the
+- * associated SAM event. If the usage counter reaches zero, the event will be
+- * disabled.
++ * Unregister an event notifier. Decrement the usage counter of the associated
++ * SAM event if the notifier is not marked as an observer. If the usage counter
++ * reaches zero, the event will be disabled.
+  *
+  * Return: Returns zero on success, %-ENOENT if the given notifier block has
+  * not been registered on the controller. If the given notifier block was the
+  * last one associated with its specific event, returns the status of the
+  * event-disable EC-command.
+  */
+-int ssam_notifier_unregister(struct ssam_controller *ctrl,
+-			     struct ssam_event_notifier *n)
++int ssam_notifier_unregister(struct ssam_controller *ctrl, struct ssam_event_notifier *n)
+ {
+ 	u16 rqid = ssh_tc_to_rqid(n->event.id.target_category);
+ 	struct ssam_nf_refcount_entry *entry;
+@@ -2236,6 +2243,13 @@ int ssam_notifier_unregister(struct ssam_controller *ctrl,
+ 		return -ENOENT;
+ 	}
  
--A full definition of the argument struct is provided below:
-+A full definition of the argument struct is provided below.
++	/*
++	 * If this is an observer notifier, do not attempt to disable the
++	 * event, just remove it.
++	 */
++	if (n->flags & SSAM_EVENT_NOTIFIER_OBSERVER)
++		goto remove;
 +
-+``SSAM_CDEV_NOTIF_REGISTER``
-+----------------------------
-+
-+Defined as ``_IOW(0xA5, 2, struct ssam_cdev_notifier_desc)``.
-+
-+Register a notifier for the event target category specified in the given
-+notifier description with the specified priority. Notifiers registration is
-+required to receive events, but does not enable events themselves. After a
-+notifier for a specific target category has been registered, all events of that
-+category will be forwarded to the userspace client and can then be read from
-+the device file instance. Note that events may have to be enabled, e.g. via the
-+``SSAM_CDEV_EVENT_ENABLE`` IOCTL, before the EC will send them.
-+
-+Only one notifier can be registered per target category and client instance. If
-+a notifier has already been registered, this IOCTL will fail with ``-EEXIST``.
-+
-+Notifiers will automatically be removed when the device file instance is
-+closed.
-+
-+``SSAM_CDEV_NOTIF_UNREGISTER``
-+------------------------------
-+
-+Defined as ``_IOW(0xA5, 3, struct ssam_cdev_notifier_desc)``.
-+
-+Unregisters the notifier associated with the specified target category. The
-+priority field will be ignored by this IOCTL. If no notifier has been
-+registered for this client instance and the given category, this IOCTL will
-+fail with ``-ENOENT``.
-+
-+``SSAM_CDEV_EVENT_ENABLE``
-+--------------------------
-+
-+Defined as ``_IOW(0xA5, 4, struct ssam_cdev_event_desc)``.
-+
-+Enable the event associated with the given event descriptor.
-+
-+Note that this call will not register a notifier itself, it will only enable
-+events on the controller. If you want to receive events by reading from the
-+device file, you will need to register the corresponding notifier(s) on that
-+instance.
-+
-+Events are not automatically disabled when the device file is closed. This must
-+be done manually, via a call to the ``SSAM_CDEV_EVENT_DISABLE`` IOCTL.
-+
-+``SSAM_CDEV_EVENT_DISABLE``
-+---------------------------
-+
-+Defined as ``_IOW(0xA5, 5, struct ssam_cdev_event_desc)``.
-+
-+Disable the event associated with the given event descriptor.
-+
-+Note that this will not unregister any notifiers. Events may still be received
-+and forwarded to user-space after this call. The only safe way of stopping
-+events from being received is unregistering all previously registered
-+notifiers.
-+
-+
-+Structures and Enums
-+====================
+ 	entry = ssam_nf_refcount_dec(nf, n->event.reg, n->event.id);
+ 	if (WARN_ON(!entry)) {
+ 		/*
+@@ -2260,8 +2274,7 @@ int ssam_notifier_unregister(struct ssam_controller *ctrl,
+ 	}
  
- .. kernel-doc:: include/uapi/linux/surface_aggregator/cdev.h
+ 	if (entry->refcount == 0) {
+-		status = ssam_ssh_event_disable(ctrl, n->event.reg, n->event.id,
+-						n->event.flags);
++		status = ssam_ssh_event_disable(ctrl, n->event.reg, n->event.id, n->event.flags);
+ 		kfree(entry);
+ 	}
+ 
+diff --git a/include/linux/surface_aggregator/controller.h b/include/linux/surface_aggregator/controller.h
+index 0806796eabcb..cf4bb48a850e 100644
+--- a/include/linux/surface_aggregator/controller.h
++++ b/include/linux/surface_aggregator/controller.h
+@@ -795,6 +795,20 @@ enum ssam_event_mask {
+ #define SSAM_EVENT_REGISTRY_REG \
+ 	SSAM_EVENT_REGISTRY(SSAM_SSH_TC_REG, 0x02, 0x01, 0x02)
+ 
++/**
++ * enum ssam_event_notifier_flags - Flags for event notifiers.
++ * @SSAM_EVENT_NOTIFIER_OBSERVER:
++ *	The corresponding notifier acts as observer. Registering a notifier
++ *	with this flag set will not attempt to enable any event. Equally,
++ *	unregistering will not attempt to disable any event. Note that a
++ *	notifier with this flag may not even correspond to a certain event at
++ *	all, only to a specific event target category. Event matching will not
++ *	be influenced by this flag.
++ */
++enum ssam_event_notifier_flags {
++	SSAM_EVENT_NOTIFIER_OBSERVER = BIT(0),
++};
++
+ /**
+  * struct ssam_event_notifier - Notifier block for SSAM events.
+  * @base:        The base notifier block with callback function and priority.
+@@ -803,6 +817,7 @@ enum ssam_event_mask {
+  * @event.id:    ID specifying the event.
+  * @event.mask:  Flags determining how events are matched to the notifier.
+  * @event.flags: Flags used for enabling the event.
++ * @flags:       Notifier flags (see &enum ssam_event_notifier_flags).
+  */
+ struct ssam_event_notifier {
+ 	struct ssam_notifier_block base;
+@@ -813,6 +828,8 @@ struct ssam_event_notifier {
+ 		enum ssam_event_mask mask;
+ 		u8 flags;
+ 	} event;
++
++	unsigned long flags;
+ };
+ 
+ int ssam_notifier_register(struct ssam_controller *ctrl,
 -- 
 2.31.1
 
