@@ -2,113 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAE1C07E94
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 12:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CB6C47099
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7418E610C9
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 12:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD24861107
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 13:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbhFDNAH (ORCPT
+        id S230217AbhFDNBu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Jun 2021 09:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbhFDNAH (ORCPT
+        Fri, 4 Jun 2021 09:01:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:2251 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230004AbhFDNBt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Jun 2021 09:00:07 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FC4C06174A;
-        Fri,  4 Jun 2021 05:58:10 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id q5so9251518wrm.1;
-        Fri, 04 Jun 2021 05:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SgHpQ4QoLBEs1F+YWq7Dw3mAD1i1XABsToAa1xmK68I=;
-        b=QW+WYPextBD7RVr9x+p52qil2JPfyUNsCMwaa9FMarAgtcd62l77QtUDEVdXcAzy4c
-         IvQ2IGtWUYdDOw4zaTiyF1PT1v15MLl+th2/bezk7YVC/B4WbbQMcpaGTh+IUrX2jlcE
-         xYDQfE19+U6WnPjIsuVsWHGNPAaPFo8Sz6YppWD0JDavmzgjol83zuDUWBpHVvZakdrZ
-         vqOswF1KqzPxhuGEoWG9QCoUEHABbWxsiMHersU3YCDVIXlFYmTByIz4pK62mpaVT4nz
-         iK1nOO5Z5BZi3YQUN1uNNUtz7VvXV58+HJvvHlzCY+DM0CUgz9TiJRjvtaMjJAELf/s4
-         c2gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SgHpQ4QoLBEs1F+YWq7Dw3mAD1i1XABsToAa1xmK68I=;
-        b=giviM/S1OJjkpQWHjjbFh0RZrjrz2Kh3Q5rhIDmYN2Q54dNU0k+tiQM6WpFcLP/XaT
-         qlGgt6LWTZsEnaRoHNmXbQarSisdWTUt+cu29W+YVD1mYZXSeVUTglpl2LEYdDhIESh5
-         z34uR7IGRhAO/K82osNu1FpnLZIGm20CdzSCnENQkRtFL5Sif6nVUQHDgoUMNoizT+43
-         R7IG/om2vWItWdGR6xDTBD/RSuouapm7+hIcA4dz384CQeS0OSIvgQDGUYNoPAhocPqL
-         cdYVHqqQpWE/XFVHe3XdFhBnxNce13UMAc+ltL2L59pf/cIAU+q6zTvs6qCJAT2XXtDk
-         apZQ==
-X-Gm-Message-State: AOAM5306ZUdOw7wq6LirBup1bU8u3CeKuqJZwb6nDRLZn5ywq5VTsy13
-        BaSCv4Uhkmc03B62DEeQFmpY7YEucEQ=
-X-Google-Smtp-Source: ABdhPJwo5Bjwxsjrlbwh0vAAF8goewnbqwQ2QzlG8lx0QwJ7wKtS1W5ixdXkkM5djidOdjgkH4P08g==
-X-Received: by 2002:a5d:47a3:: with SMTP id 3mr3857385wrb.42.1622811489058;
-        Fri, 04 Jun 2021 05:58:09 -0700 (PDT)
-Received: from [192.168.2.202] (pd9e5aba0.dip0.t-ipconnect.de. [217.229.171.160])
-        by smtp.gmail.com with ESMTPSA id g17sm1905073wrp.61.2021.06.04.05.58.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Jun 2021 05:58:08 -0700 (PDT)
-Subject: Re: [PATCH 0/7] platform/surface: aggregator: Extend user-space
- interface for events
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20210603234526.2503590-1-luzmaximilian@gmail.com>
- <c86a976e-64cb-ea10-486e-fa5d4482ad5b@redhat.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <a29f3acb-6a49-02a5-d9af-07baff8d9307@gmail.com>
-Date:   Fri, 4 Jun 2021 14:58:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.2
+        Fri, 4 Jun 2021 09:01:49 -0400
+IronPort-SDR: dxEaBNlq/GraAQ0w88gtMxbv0XmJeHKq/OScZamIV3AGQZ8KmdaMHHr5S43lcWcKOpi2m4cO4e
+ 0xpupnv3FKnQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10004"; a="204262151"
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="204262151"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 06:00:01 -0700
+IronPort-SDR: PepRvi61ClRrtWbdje6TMu8DIx4w/IYZ2HzVULGz6JGViajMkEJ8nFDoDeG6SQ3oRFBUjnif/K
+ 1Nfn43rfnjHg==
+X-IronPort-AV: E=Sophos;i="5.83,248,1616482800"; 
+   d="scan'208";a="551153872"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2021 05:59:57 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1lp9QY-00HE3g-Ej; Fri, 04 Jun 2021 15:59:54 +0300
+Date:   Fri, 4 Jun 2021 15:59:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, devel@acpica.org,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v5 3/6] gpiolib: acpi: Export acpi_get_gpiod()
+Message-ID: <YLojymirRB5HpFQY@smile.fi.intel.com>
+References: <20210603224007.120560-1-djrscally@gmail.com>
+ <20210603224007.120560-4-djrscally@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <c86a976e-64cb-ea10-486e-fa5d4482ad5b@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210603224007.120560-4-djrscally@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 6/4/21 1:40 PM, Hans de Goede wrote:
-> Hi Maxime,
+On Thu, Jun 03, 2021 at 11:40:04PM +0100, Daniel Scally wrote:
+> We need to be able to translate GPIO resources in an ACPI device's _CRS
+> into GPIO descriptor array. Those are represented in _CRS as a pathname
+> to a GPIO device plus the pin's index number: the acpi_get_gpiod()
+> function is perfect for that purpose.
 > 
-> On 6/4/21 1:45 AM, Maximilian Luz wrote:
->> Extend the user-space debug interface so that it can be used to receive
->> SSAM events in user-space.
->>
+> As it's currently only used internally within the GPIO layer, provide and
+> export a wrapper function that additionally holds a reference to the GPIO
+> device.
 
-[...]
+The subject is wrong, it should be "Introduce acpi_get_and_request_gpiod()
+helper" or so. I can fix when applying.
 
+Btw, do I understand correctly that I may push GPIO ACPI patches independently
+(of the ACPI changes)?
+
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Daniel Scally <djrscally@gmail.com>
+> ---
+> Changes since v4:
+> 	- None
 > 
-> Overall this series looks good to me. I've found one small issue with
-> PATCH 4/7 (see my reply to that patch) and as the kernel test robot
-> pointed out there is an used "struct ssam_nf_head *nf_head;" in
-> PATCH 2/7.
+>  drivers/gpio/gpiolib-acpi.c   | 28 ++++++++++++++++++++++++++++
+>  include/linux/gpio/consumer.h |  2 ++
+>  2 files changed, 30 insertions(+)
 > 
-> With these 2 small issues fixed you can add my:
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 5b4111e4be3f..684ddb35d83b 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -128,6 +128,34 @@ static struct gpio_desc *acpi_get_gpiod(char *path, int pin)
+>  	return gpiochip_get_desc(chip, pin);
+>  }
+>  
+> +/**
+> + * acpi_get_and_request_gpiod() - Translate ACPI GPIO pin to GPIO descriptor
+> + *                               and hold a refcount to the GPIO device.
+> + * @path:      ACPI GPIO controller full path name, (e.g. "\\_SB.GPO1")
+> + * @pin:       ACPI GPIO pin number (0-based, controller-relative)
+> + * @label:     Label to pass to gpiod_request()
+> + *
+> + * This function is a simple pass-through to acpi_get_gpiod(), except that
+> + * as it is intended for use outside of the GPIO layer (in a similar fashion to
+> + * gpiod_get_index() for example) it also holds a reference to the GPIO device.
+> + */
+> +struct gpio_desc *acpi_get_and_request_gpiod(char *path, int pin, char *label)
+> +{
+> +	struct gpio_desc *gpio;
+> +	int ret;
+> +
+> +	gpio = acpi_get_gpiod(path, pin);
+> +	if (IS_ERR(gpio))
+> +		return gpio;
+> +
+> +	ret = gpiod_request(gpio, label);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return gpio;
+> +}
+> +EXPORT_SYMBOL_GPL(acpi_get_and_request_gpiod);
+> +
+>  static irqreturn_t acpi_gpio_irq_handler(int irq, void *data)
+>  {
+>  	struct acpi_gpio_event *event = data;
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> index c73b25bc9213..566feb56601f 100644
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -692,6 +692,8 @@ int devm_acpi_dev_add_driver_gpios(struct device *dev,
+>  				   const struct acpi_gpio_mapping *gpios);
+>  void devm_acpi_dev_remove_driver_gpios(struct device *dev);
+>  
+> +struct gpio_desc *acpi_get_and_request_gpiod(char *path, int pin, char *label);
+> +
+>  #else  /* CONFIG_GPIOLIB && CONFIG_ACPI */
+>  
+>  struct acpi_device;
+> -- 
+> 2.25.1
 > 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> to v2 of the series.
 
-Thank you for your review.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Based on the issue reported by the kernel test robot I've been
-restructuring PATCH 2/7 to remove some code-duplication. I'll add your
-R-b to all except that one.
 
-Thanks,
-Max
