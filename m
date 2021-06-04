@@ -2,89 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBA3C4743C
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 21:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF30C4743E
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 21:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE69661403
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 21:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68FCB61406
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 21:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbhFDVLS (ORCPT
+        id S231286AbhFDVLV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Jun 2021 17:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51210 "EHLO
+        Fri, 4 Jun 2021 17:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbhFDVLO (ORCPT
+        with ESMTP id S231183AbhFDVLU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Jun 2021 17:11:14 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F52C061767;
-        Fri,  4 Jun 2021 14:09:27 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id r13so6121198wmq.1;
-        Fri, 04 Jun 2021 14:09:27 -0700 (PDT)
+        Fri, 4 Jun 2021 17:11:20 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6503EC061767;
+        Fri,  4 Jun 2021 14:09:33 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id z8so10532069wrp.12;
+        Fri, 04 Jun 2021 14:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NYFV0srmfGQRc7dn8dE+4bhDucZZhZ154l7f+7GwPAg=;
-        b=saapGm5k0S+8TyIp2cDmjRAhUK981fh2laRJVdALTK1hGBWzOZ5HEhgTl/YmiFWHcA
-         jbWWq61jbN99vj01OHINbHFMGM+4lLsgLxcWHlFoek2uI+dlkj0tWKk8iVgKZcQb3JPN
-         6OuGbr325nw9H5jbFx2BT6fg+i2uHzxR5tb759i0sqehLqplGgwuYkkXm0Hj3Q9tN2ek
-         /5LR+dsygODJ8mjmbOsplg4/4KuPO2zu6Rj72GENn2CNYH8tFzZuzG+L42M5qOGx/olF
-         EWBcrCJiu1h3afuKOKJEETUXevNEhHtuzUZ34zl3db96+9m+A2b+WxZWH/KDV7Ryd6PM
-         041Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jwr4pqYVJVTXgSaj9RyCCBtkW5+6pm/zrCBK13WpZL4=;
+        b=FSZdo9iPadT6850kuxLVCdvfxgEYWXzHErjNsP/9dbJ0P7F/UOQ5hQ1r8jTnE62Qwt
+         1f8ZouOGPqYtPueiPuY/MVA3C6PIyp8hI3OgO3kn8TavgR+SEHaNzeS1DpQd7g/znZ0Q
+         D3qMgUbRP9QkCaYqyL+wO+vGlwsbP4lm9UHSb/6LRcYRcDp8bLyvvL19jT3YWELVBzjN
+         nHynr/Jjm6Z6DndMLCg0YmpgrpqOElWnLuCABJ0wVU/pVr4Nap+/225xtpbu+dCXQ0Sy
+         V5o+9nBXjosTHrHl+KodgqqJdJs0nZzl8grtH3Hks5ogvmLmS1s2d+TFmXuZujinpDUA
+         m1fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NYFV0srmfGQRc7dn8dE+4bhDucZZhZ154l7f+7GwPAg=;
-        b=hzC8wzN//oSeuzbKpRkBm/4X7QbfE3XsGVcdFdBzCyburfp44OrIJ3lICYLcvaE6b2
-         MT0F37MxXDkR2xiwyogbiIfRzwmmM3OYKMEOIZLJq7bOtX34n+1kBTxodwhBxaJFJi6l
-         VAYkiT20XAiPy0SAVessy7xH2knHuvFVzTknmhfnXUxi49OLUioPOxxKP1+NCGA5nVO0
-         RWnJvDGLmOxfCRQTKBcqi+5fZozLMOxE0skrwFK6eWOOS5ZMuV8zn35tuM2IicKhicGA
-         TRx21xNdfER/JKIhuwiip/X0lkQx/upIyCr3Zv4HPNWA0xsSrb0rlobbf4Y82ekUTez1
-         iczw==
-X-Gm-Message-State: AOAM531BxD/QuS5OfP9YB+mX8ckAlPB1bp+AqiNs8Yt4bd3cO2r87kjY
-        xNLFgNXZazhGrKKMw7/W9imxD9IFxbo=
-X-Google-Smtp-Source: ABdhPJzO5GlbLLXgfwhsCaXSQUzL8+hzf65UAog/9EDdbFuIVl8kHGRUlTCTUh08eZo58NKZLVB+CQ==
-X-Received: by 2002:a05:600c:441a:: with SMTP id u26mr5404277wmn.166.1622840965909;
-        Fri, 04 Jun 2021 14:09:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jwr4pqYVJVTXgSaj9RyCCBtkW5+6pm/zrCBK13WpZL4=;
+        b=XkkTfP8qckMqptqeX0BDdZShpzXupyD3WyOOY+l8v0f7ABkcM5neIGDVJYawaoXg55
+         Jgr2Lo4VTVtHvfXam3s9BOPeenBqCbDgqbgbWJ7RKrRwN6Wa4mQuFehmb3nRzsZbmCLk
+         qgzH7dik+pAHCjpMOm9s4RPoQsQJ20S7bJhmMhGqFzzGYbEi4RnFNWVIPdVFasNeaSO6
+         Yqu414K6koscHJabUxgdOPta2UtI4198Va6RKmc6+GyMj5DfifnY42+epWNOXswuCB+r
+         zyw7rBVtswDBtMCwyCoH6/6jYD9x9bxY1nsWp424x1Sz5Kr+iSt1XJkE7MDDFt6GhG9T
+         6nCQ==
+X-Gm-Message-State: AOAM533RDlfvgCBUlBvlXJZdBq8BvoLCDGfG8IJVAn++HPnuZxDELeGB
+        kzSXtlPqIwvF5IsoXWptEZg=
+X-Google-Smtp-Source: ABdhPJymazygBQaXu5lnJW9WbD5kRmU96PK3PGH2pPkfjR7Jzc40c472A+aX4eo1tC7vsKCi/xrW0g==
+X-Received: by 2002:adf:fc90:: with SMTP id g16mr5719893wrr.183.1622840971988;
+        Fri, 04 Jun 2021 14:09:31 -0700 (PDT)
 Received: from xws.localdomain (pd9e5aba0.dip0.t-ipconnect.de. [217.229.171.160])
-        by smtp.gmail.com with ESMTPSA id l5sm9478853wmi.46.2021.06.04.14.09.25
+        by smtp.gmail.com with ESMTPSA id l5sm9478853wmi.46.2021.06.04.14.09.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 14:09:25 -0700 (PDT)
+        Fri, 04 Jun 2021 14:09:31 -0700 (PDT)
 From:   Maximilian Luz <luzmaximilian@gmail.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH 0/2] platform/surface: aggregator: Fixes for user-space interface extension series
-Date:   Fri,  4 Jun 2021 23:09:05 +0200
-Message-Id: <20210604210907.25738-1-luzmaximilian@gmail.com>
+Subject: [PATCH 2/2] platform/surface: aggregator: Drop unnecessary variable initialization
+Date:   Fri,  4 Jun 2021 23:09:07 +0200
+Message-Id: <20210604210907.25738-3-luzmaximilian@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210604210907.25738-1-luzmaximilian@gmail.com>
+References: <20210604210907.25738-1-luzmaximilian@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Small fixes for "platform/surface: aggregator: Extend user-space
-interface for events".
+The status variable in ssam_controller_event_disable() is always set, no
+need to initialize it.
 
-Specifically, prevent use of an uniniitalized variable and drop an
-unnecessary initialization.
+Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+ drivers/platform/surface/aggregator/controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maximilian Luz (2):
-  platform/surface: aggregator: Do not return uninitialized value
-  platform/surface: aggregator: Drop unnecessary variable initialization
-
- drivers/platform/surface/aggregator/controller.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/platform/surface/aggregator/controller.c b/drivers/platform/surface/aggregator/controller.c
+index 634399387d76..b8c377b3f932 100644
+--- a/drivers/platform/surface/aggregator/controller.c
++++ b/drivers/platform/surface/aggregator/controller.c
+@@ -2464,7 +2464,7 @@ int ssam_controller_event_disable(struct ssam_controller *ctrl,
+ 	u16 rqid = ssh_tc_to_rqid(id.target_category);
+ 	struct ssam_nf *nf = &ctrl->cplt.event.notif;
+ 	struct ssam_nf_refcount_entry *entry;
+-	int status = 0;
++	int status;
+ 
+ 	if (!ssh_rqid_is_event(rqid))
+ 		return -EINVAL;
 -- 
 2.31.1
 
