@@ -3,94 +3,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2ECC4743D
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 22:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF511C4743D
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 10:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9711A613F1
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  4 Jun 2021 22:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9135B613AE
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 10:53:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbhFDWIV (ORCPT
+        id S230169AbhFEKy7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 4 Jun 2021 18:08:21 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:41719 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231199AbhFDWIU (ORCPT
+        Sat, 5 Jun 2021 06:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229924AbhFEKy7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 4 Jun 2021 18:08:20 -0400
-Received: by mail-lj1-f174.google.com with SMTP id p20so13395256ljj.8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 04 Jun 2021 15:06:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Lm6qjNOSd7S3ElmBGLAdz/ltzncXw/D1BuDORLixUOY=;
-        b=RpZRBAvNmlvbMhdcUNBT1IRUNettfyipNir/0qTLXWWLR9kdY0t6lKvAuh/oaTO45F
-         5VYqft+IFQlJmmdwTQoAEFOwopCsUIMwZQlgODEkvQU8f/iH2vIB9Vv95mrSlCqO65kl
-         w3P8QlnkZgOEDDR8ulaMR/x/vWmMO0QXEzB2uFKqpthjGimkeTBdq6IOsgSHFlBfFdNV
-         afIVLhvu1AVawb5Ojf3Wd+4G2lTKMotrRitIkml6wxZ4ma3jZdfN6BNOWHtSBcSLtjL1
-         7ZyK2RFaieTful8M/iFLhhAu+Vmhy6kX2GC1MGVLHjNe8RzhdcF32ZuwkectC9wXalaG
-         0Trw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lm6qjNOSd7S3ElmBGLAdz/ltzncXw/D1BuDORLixUOY=;
-        b=dZ01/h2jg8kX+Ne9EfspgiJbC6eEpg/gWnfFsvynrM5w43fg6uaC0ttQuy+psNL5xx
-         6bU0GUlj3v9cIPwZywM5Qu8P3iPPP6cokeOUN1AgeTpnQLusCRCyDAXB3IAYM1E3JXSi
-         dEITvjJFA3/+8w6wE9nwVXj3p+HhSweAMwjrsLnTAjOxTVEYZdYN+fwPuE3tvyh10WzI
-         zJQ0gcqK5wUJWdkSKkIoxwLxFh4BKunZYOZNWR2mGS6PRzwQJGTOqHQwrG2ENIJExW8h
-         bD1VJkv9NFgQxMJ5WGifD+rHsFm0oH9CmbYwiFrxPvcu8yTWTTgnBKuUTGLmAOyYx1Hy
-         cqbA==
-X-Gm-Message-State: AOAM532XD0e3gI4Am00mYTq4ikm3nmpAeVFt6XM2FXLE1dvWdyZRFTq1
-        sSbyu62p7QRsFasMQvrPvuRkwC82XmnjaCvWq3SpgQ==
-X-Google-Smtp-Source: ABdhPJxIEjo220o67L1taBJY3zqlit/QriVesKs4aC6pDmACw4lPvVzV8qVmU/R+jsc82jo3VZQGH3X9ojeu+ohPLmw=
-X-Received: by 2002:a2e:22c3:: with SMTP id i186mr5091495lji.273.1622844333120;
- Fri, 04 Jun 2021 15:05:33 -0700 (PDT)
+        Sat, 5 Jun 2021 06:54:59 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F69BC061766;
+        Sat,  5 Jun 2021 03:53:11 -0700 (PDT)
+Received: from zn.tnic (p4fed32f0.dip0.t-ipconnect.de [79.237.50.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C2FC41EC01A2;
+        Sat,  5 Jun 2021 12:53:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1622890389;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=m4WFNDMn/F2hBFMtOb5KcbkKEA5fPujaJDdSpXTf3yI=;
+        b=b9euwxNWNDPFTyr/DO+tkH5SKsRbrIAcUy0+u+Jvmj/u6fbpiZz9u3lFXvXcgwIemAcufI
+        NyCxlLalL3M1NPfNHFgQhUWN/nBA/Vh8556EE5bzxFiKvpEO+aa9S/C6oi3V7LKg6VQ6eu
+        Z/KRkDNbfBU2ttfxGH9aWiVrTQ//cn8=
+Date:   Sat, 5 Jun 2021 12:50:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 04/22] x86/mm: Add sev_feature_enabled()
+ helper
+Message-ID: <YLtXDQHWnAvCl99M@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-5-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <cover.1622560799.git.geert+renesas@glider.be> <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
-In-Reply-To: <7caa954add90255fc177e5dbabe17d62e0242861.1622560799.git.geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Jun 2021 00:05:22 +0200
-Message-ID: <CACRpkdbSP2FEkfY74HxSUDse57iRf3MY+-i5ZDk1AeUxd=FSug@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: gpio: pcf857x: Convert to json-schema
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        platform-driver-x86 <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-5-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 1, 2021 at 5:25 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Wed, Jun 02, 2021 at 09:03:58AM -0500, Brijesh Singh wrote:
+> @@ -78,6 +85,7 @@ static inline void sev_es_init_vc_handling(void) { }
+>  static inline bool sme_active(void) { return false; }
+>  static inline bool sev_active(void) { return false; }
+>  static inline bool sev_es_active(void) { return false; }
+> +static inline bool sev_snp_active(void) { return false; }
 
-> Convert the PCF857x-compatible I/O expanders Device Tree binding
-> documentation to json-schema.
->
-> Document missing compatible values, properties, and gpio hogs.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Leftover from the previous version, can go.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> +bool sev_feature_enabled(unsigned int type)
+> +{
+> +	switch (type) {
+> +	case SEV: return sev_status & MSR_AMD64_SEV_ENABLED;
+> +	case SEV_ES: return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+> +	case SEV_SNP: return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+> +	default: return false;
+> +	}
+> +}
 
-Yours,
-Linus Walleij
+Yeah, btw, we might even do a generic one, see:
+
+https://lkml.kernel.org/r/YLkcIuL2qvo0hviU@zn.tnic
+
+and the following mail.
+
+But that doesn't matter as sev_feature_enabled()'s body can go into
+sev_protected_guest_has() or whatever we end up calling it.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
