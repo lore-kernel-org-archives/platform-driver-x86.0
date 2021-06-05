@@ -3,108 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF511C4743D
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 10:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC639C47082
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 20:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9135B613AE
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 10:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A1D613B4
+	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 20:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbhFEKy7 (ORCPT
+        id S230050AbhFEUkF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Jun 2021 06:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60332 "EHLO
+        Sat, 5 Jun 2021 16:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbhFEKy7 (ORCPT
+        with ESMTP id S230036AbhFEUkE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Jun 2021 06:54:59 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F69BC061766;
-        Sat,  5 Jun 2021 03:53:11 -0700 (PDT)
-Received: from zn.tnic (p4fed32f0.dip0.t-ipconnect.de [79.237.50.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C2FC41EC01A2;
-        Sat,  5 Jun 2021 12:53:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1622890389;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=m4WFNDMn/F2hBFMtOb5KcbkKEA5fPujaJDdSpXTf3yI=;
-        b=b9euwxNWNDPFTyr/DO+tkH5SKsRbrIAcUy0+u+Jvmj/u6fbpiZz9u3lFXvXcgwIemAcufI
-        NyCxlLalL3M1NPfNHFgQhUWN/nBA/Vh8556EE5bzxFiKvpEO+aa9S/C6oi3V7LKg6VQ6eu
-        Z/KRkDNbfBU2ttfxGH9aWiVrTQ//cn8=
-Date:   Sat, 5 Jun 2021 12:50:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 04/22] x86/mm: Add sev_feature_enabled()
- helper
-Message-ID: <YLtXDQHWnAvCl99M@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-5-brijesh.singh@amd.com>
+        Sat, 5 Jun 2021 16:40:04 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9CEC061766;
+        Sat,  5 Jun 2021 13:38:16 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id a4so16319234ljd.5;
+        Sat, 05 Jun 2021 13:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+SYsnPD+PSGWr1k+73rbBaEQQXCW1mzbtajnIfZKK7Y=;
+        b=N/O08SB0WPG4EDIqHvwZd03MzezXE6LNC0RJ04kuzBgGq6Evymc28iUVqYIApmHOAZ
+         BYF3fOyvMEMzWy36ZNsIXkUiGmLJ0DdS7ADzThydBT9U92L7pyRmqv+o1E+68sPOiU9X
+         TQELW/I0mBi1lUB2uwfa8eeD/VAipdTLkdBKlB4y1olot8gp2RfZMVzyxP/rv5BsQTdu
+         ueBM+G+YgXSVxSg+SAvhUHHnbQI/DPBBi+xZpLfLrlVY/F7kr3+BdiQn0v1a4HvGYOXn
+         zsObICll5YEZOi80m1l6uOV+mNI7SHBwKaQ4/YV764VpKn6nL0VnIneDEHYNUOZRUmYb
+         YJwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+SYsnPD+PSGWr1k+73rbBaEQQXCW1mzbtajnIfZKK7Y=;
+        b=LA0fbCwNogM/QZJaHt5MT7+RA5Mu25OX5fLw0PT4i2vB4+ZlQ84z3n4oUMlI22jKw1
+         vTJsx+1qzqtHudZ5fyEztQXk3z12/7pyXbp2gKtnyr9nNks+0cmYzI/uGK2XbbcJwIxz
+         wuDTF63Y8ysuFZZX7E4aIHpI5WfFYXYzXgeYa+DHHySlsfAvSuCH2pmbUSValdtrNx3p
+         GEFoIxeKnrKKJTLOBHGOXHxBELluZHjOgs21hY8xTmXtFl6raddC6iA8rHfOQp2i7Xnk
+         zowWw+IOg5FtO1fxdF4JkMm4BYHUrzZlBNvz0W7I4SpB/ucWdRk+BZdjxLxYQ4ARnQR9
+         40wg==
+X-Gm-Message-State: AOAM53099u3Nc43PxIslSimkkWDupQj9aUARTaDLxsEDHGaFw876bucI
+        uENBLxLN4/bj/wM9AJBFI/A=
+X-Google-Smtp-Source: ABdhPJxkWHKu6l60+QINDe697Qn10ogavq7v7L/sG4EZWHZC0dKSemwuTKQEdT239fAxX8IM+7FlOA==
+X-Received: by 2002:a2e:bf14:: with SMTP id c20mr8595860ljr.57.1622925494713;
+        Sat, 05 Jun 2021 13:38:14 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-228-193.NA.cust.bahnhof.se. [98.128.228.193])
+        by smtp.gmail.com with ESMTPSA id k24sm1170063ljg.43.2021.06.05.13.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Jun 2021 13:38:14 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Frank Seidel <frank@f-seidel.de>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Justin Ernst <justin.ernst@hpe.com>
+Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Travis <mike.travis@hpe.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH 0/4] platform/x86: Constify static attribute_group structs
+Date:   Sat,  5 Jun 2021 22:38:03 +0200
+Message-Id: <20210605203807.60547-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210602140416.23573-5-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 09:03:58AM -0500, Brijesh Singh wrote:
-> @@ -78,6 +85,7 @@ static inline void sev_es_init_vc_handling(void) { }
->  static inline bool sme_active(void) { return false; }
->  static inline bool sev_active(void) { return false; }
->  static inline bool sev_es_active(void) { return false; }
-> +static inline bool sev_snp_active(void) { return false; }
+Constify a couple of static attribute_group structs which are never
+modified to allow the compiler to put them in read-only memory.
 
-Leftover from the previous version, can go.
+Rikard Falkeborn (4):
+  platform/x86: hdaps: Constify static attribute_group struct
+  platform/x86: intel_pmt_crashlog: Constify static attribute_group
+    struct
+  platform/x86: tc1100-wmi: Constify static attribute_group struct
+  x86/platform/uv: Constify static attribute_group struct
 
-> +bool sev_feature_enabled(unsigned int type)
-> +{
-> +	switch (type) {
-> +	case SEV: return sev_status & MSR_AMD64_SEV_ENABLED;
-> +	case SEV_ES: return sev_status & MSR_AMD64_SEV_ES_ENABLED;
-> +	case SEV_SNP: return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
-> +	default: return false;
-> +	}
-> +}
-
-Yeah, btw, we might even do a generic one, see:
-
-https://lkml.kernel.org/r/YLkcIuL2qvo0hviU@zn.tnic
-
-and the following mail.
-
-But that doesn't matter as sev_feature_enabled()'s body can go into
-sev_protected_guest_has() or whatever we end up calling it.
-
-Thx.
+ drivers/platform/x86/hdaps.c              | 2 +-
+ drivers/platform/x86/intel_pmt_crashlog.c | 2 +-
+ drivers/platform/x86/tc1100-wmi.c         | 2 +-
+ drivers/platform/x86/uv_sysfs.c           | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.31.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
