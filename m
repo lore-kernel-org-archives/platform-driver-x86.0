@@ -2,81 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA61FC4743D
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 01:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7760BC47094
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F90761057
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 01:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6852B6109F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230150AbhFGBjr (ORCPT
+        id S230233AbhFGOVZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 6 Jun 2021 21:39:47 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3077 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbhFGBjq (ORCPT
+        Mon, 7 Jun 2021 10:21:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35712 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230207AbhFGOVZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 6 Jun 2021 21:39:46 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FywqP3gBczWsP5;
-        Mon,  7 Jun 2021 09:33:05 +0800 (CST)
-Received: from dggema766-chm.china.huawei.com (10.1.198.208) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Mon, 7 Jun 2021 09:37:52 +0800
-Received: from localhost.localdomain (10.175.127.227) by
- dggema766-chm.china.huawei.com (10.1.198.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Mon, 7 Jun 2021 09:37:52 +0800
-From:   yangerkun <yangerkun@huawei.com>
-To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>, <yangerkun@huawei.com>,
-        <yukuai3@huawei.com>
-Subject: [PATCH v2] platform/x86: intel_ips: fix set but unused warning in read_mgtv
-Date:   Mon, 7 Jun 2021 09:47:02 +0800
-Message-ID: <20210607014702.2981097-1-yangerkun@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        Mon, 7 Jun 2021 10:21:25 -0400
+Received: from zn.tnic (p200300ec2f0b4f00688e10502b12273b.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4f00:688e:1050:2b12:273b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED9091EC0489;
+        Mon,  7 Jun 2021 16:19:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623075572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5TOa8tTbEmXIDseKo1WMd9o3+qoCmHgbWPGnV+1d5GU=;
+        b=NjlTa0dZ0y50eG51qkp+v3j0oFZvigFNu8CDo3PSR+Gs6GrZSDorNmrNCo9sUqrP58FrNq
+        odyBUy92t/Xmg4PU61LzGhliThhDMpkF5NfW81n/WRqEqtK8g+D7By7xHCRJ61fQGNwG6h
+        +tZ1KH6wNLEt1OXRWI/3UsXC7KVr1zo=
+Date:   Mon, 7 Jun 2021 16:19:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 05/22] x86/sev: Add support for hypervisor
+ feature VMGEXIT
+Message-ID: <YL4q7jHYu65I11bZ@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-6-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggema766-chm.china.huawei.com (10.1.198.208)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-6-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-drivers/platform/x86/intel_ips.c:832:6: warning: variable ‘ret’ set but
-not used [-Wunused-but-set-variable]
-  832 |  u16 ret;
-      |      ^~~
+On Wed, Jun 02, 2021 at 09:03:59AM -0500, Brijesh Singh wrote:
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index 70f181f20d92..94957c5bdb51 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
 
-Fix it by mark ret as '__maybe_unused'.
+I'm guessing this is in sev-shared.c because it is going to be used by
+both stages?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: yangerkun <yangerkun@huawei.com>
----
- drivers/platform/x86/intel_ips.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -20,6 +20,7 @@
+>   * out when the .bss section is later cleared.
+>   */
+>  static u16 ghcb_version __section(".data");
 
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
-index bffe548187ee..4dfdbfca6841 100644
---- a/drivers/platform/x86/intel_ips.c
-+++ b/drivers/platform/x86/intel_ips.c
-@@ -829,7 +829,7 @@ static u16 calc_avg_temp(struct ips_driver *ips, u16 *array)
- 
- static u16 read_mgtv(struct ips_driver *ips)
- {
--	u16 ret;
-+	u16 __maybe_unused ret;
- 	u64 slope, offset;
- 	u64 val;
- 
+State what this is:
+
+/* Bitmap of SEV features supported by the hypervisor */
+
+> +static u64 hv_features __section(".data");
+
+Also, I'm assuming that bitmap remains immutable during the guest
+lifetime so you can do:
+
+static u64 hv_features __ro_after_init;
+
+instead, which will do:
+
+static u64 hv_features __attribute__((__section__(".data..ro_after_init")));
+
+and it'll be in the data section and then also marked read-only after
+init, after mark_rodata_ro() more specifically.
+
+Thx.
+
 -- 
-2.31.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
