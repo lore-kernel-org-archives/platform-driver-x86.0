@@ -2,166 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE autolearn=unavailable
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D9DC49EA7
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBFFC47095
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416F460FE5
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C8561107
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbhFGOzH (ORCPT
+        id S230291AbhFGO4i (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Jun 2021 10:55:07 -0400
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:40491 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231501AbhFGOzA (ORCPT
+        Mon, 7 Jun 2021 10:56:38 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41070 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231503AbhFGO41 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Jun 2021 10:55:00 -0400
-Received: by mail-oi1-f171.google.com with SMTP id r17so8056084oic.7;
-        Mon, 07 Jun 2021 07:52:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vFKKKRb67LGq4j/7jOKF7wGRXnfTmyHqm4pxSTe6iqE=;
-        b=mBQdOWvRwOxHF6ABeBC4ZKP8EUTILSIqM85QZ+mB8CMCIdkVn6x5IxwPArAI9GEkNU
-         YmgnT6mFBLVbNQQav2zxaqWW3MhRh4yC/XZHDRYVARmnS4iKsJQzyijuhUeJTQZVow40
-         aDVedgN1gWvzsZIOfTfSYsbRaOueegEQWQJFwaparxXeg9M3mlHBA7YAJe1FJti6rpC3
-         eL8fPXCb7X1xNOaRmsVAXCjaV4zb31UwJs+3bxCp/6PSxTyjg66ii5tGBlg+Hbuu4txX
-         slEPoBpDdSlj2H73XuL5l6CLaRrjhCrVArW2wkhPgYADr6Yh58K9HsMN9G7fSq5iCtUe
-         gicw==
-X-Gm-Message-State: AOAM532t9y+AIl1t/wVdl/bph5kFR+1RheBvz5FnlHpAC09YpkyV+BJK
-        q/E0pbcq32t48TOH+ao5yhHr/09n5vGdXFKdTuc=
-X-Google-Smtp-Source: ABdhPJwuRWOyfnhsiiN2oAZTElAD/OIy6HNxvm4F6pIar5hcDOtjzrcZfAXKJpjv2/tbxAHYxWHt/mSVGktoFLA+unc=
-X-Received: by 2002:aca:b406:: with SMTP id d6mr11602849oif.71.1623077574350;
- Mon, 07 Jun 2021 07:52:54 -0700 (PDT)
+        Mon, 7 Jun 2021 10:56:27 -0400
+Received: from zn.tnic (p200300ec2f0b4f0010db370b6947fb68.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4f00:10db:370b:6947:fb68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 54EC81EC04CC;
+        Mon,  7 Jun 2021 16:54:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623077674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DkskgYhv3CpcRt1UBQdVga8YOE910b/AK0zkqCeMk5Q=;
+        b=B2WSbbvqp4seSrpi84QxtYgx7pE62m2aoNK9Z7GTfQ7mrnKEVj/yNCeFXxev9C2iGtC/O9
+        hPxvkFgHhKZVdFwdXW1vGsA7BRlvbo32+Yj4opf1oUGwt9PiLczI17X425rx4GrGI5RqqL
+        W1IWDPcZ1ymoTrJQao4ERgbBhxDRfYg=
+Date:   Mon, 7 Jun 2021 16:54:29 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 06/22] x86/sev: check SEV-SNP features
+ support
+Message-ID: <YL4zJT1v6OuH+tvI@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-7-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <20210603224007.120560-1-djrscally@gmail.com> <20210603224007.120560-3-djrscally@gmail.com>
-In-Reply-To: <20210603224007.120560-3-djrscally@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 7 Jun 2021 16:52:43 +0200
-Message-ID: <CAJZ5v0j8pLo3pjuByYxJue9mr4TOGieYTHm8tghNQgk+LphL=w@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] ACPI: scan: Add function to fetch dependent of
- acpi device
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-7-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 4, 2021 at 12:41 AM Daniel Scally <djrscally@gmail.com> wrote:
->
-> In some ACPI tables we encounter, devices use the _DEP method to assert
-> a dependence on other ACPI devices as opposed to the OpRegions that the
-> specification intends. We need to be able to find those devices "from"
-> the dependee, so add a callback and a wrapper to walk over the
-> acpi_dep_list and return the dependent ACPI device.
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Daniel Scally <djrscally@gmail.com>
-> ---
-> Changes since v5:
->
->         - Functions renamed
->
->  drivers/acpi/scan.c     | 35 +++++++++++++++++++++++++++++++++++
->  include/acpi/acpi_bus.h |  1 +
->  2 files changed, 36 insertions(+)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 195635c3462b..9af64c34e286 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2105,6 +2105,20 @@ static void acpi_bus_attach(struct acpi_device *device, bool first_pass)
->                 device->handler->hotplug.notify_online(device);
->  }
->
-> +static int acpi_dev_get_first_consumer_dev_cb(struct acpi_dep_data *dep, void *data)
-> +{
-> +       struct acpi_device *adev;
-> +
-> +       adev = acpi_bus_get_acpi_device(dep->consumer);
-> +       if (!adev)
-> +               /* If we don't find an adev then we want to continue parsing */
-> +               return 0;
-> +
-> +       *(struct acpi_device **)data = adev;
-> +
-> +       return 1;
-> +}
-> +
->  static int acpi_scan_clear_dep(struct acpi_dep_data *dep, void *data)
->  {
->         struct acpi_device *adev;
-> @@ -2168,6 +2182,27 @@ void acpi_dev_clear_dependencies(struct acpi_device *supplier)
->  }
->  EXPORT_SYMBOL_GPL(acpi_dev_clear_dependencies);
->
-> +/**
-> + * acpi_dev_get_first_consumer_dev - Return ACPI device dependent on @supplier
-> + * @supplier: Pointer to the dependee device
-> + *
-> + * Returns the first &struct acpi_device which declares itself dependent on
-> + * @supplier via the _DEP buffer, parsed from the acpi_dep_list.
-> + *
-> + * The caller is responsible for putting the reference to adev when it is no
-> + * longer needed.
-> + */
-> +struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier)
-> +{
-> +       struct acpi_device *adev = NULL;
-> +
-> +       acpi_walk_dep_device_list(supplier->handle,
-> +                                 acpi_dev_get_first_consumer_dev_cb, &adev);
-> +
-> +       return adev;
-> +}
-> +EXPORT_SYMBOL_GPL(acpi_dev_get_first_consumer_dev);
-> +
->  /**
->   * acpi_bus_scan - Add ACPI device node objects in a given namespace scope.
->   * @handle: Root of the namespace scope to scan.
-> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> index 0b2c4f170f4d..4bed30e61c5b 100644
-> --- a/include/acpi/acpi_bus.h
-> +++ b/include/acpi/acpi_bus.h
-> @@ -692,6 +692,7 @@ static inline bool acpi_device_can_poweroff(struct acpi_device *adev)
->  bool acpi_dev_hid_uid_match(struct acpi_device *adev, const char *hid2, const char *uid2);
->
->  void acpi_dev_clear_dependencies(struct acpi_device *supplier);
-> +struct acpi_device *acpi_dev_get_first_consumer_dev(struct acpi_device *supplier);
->  struct acpi_device *
->  acpi_dev_get_next_match_dev(struct acpi_device *adev, const char *hid, const char *uid, s64 hrv);
->  struct acpi_device *
-> --
+On Wed, Jun 02, 2021 at 09:04:00AM -0500, Brijesh Singh wrote:
+>  static bool early_setup_sev_es(void)
 
-Applied as 5.14 material along the [1/6].
+This function is doing SNP init now too, so it should be called
+something generic like
 
-I'll expose a branch containing the 2 patches to pull from later this week.
+	do_early_sev_setup()
 
-Thanks!
+or so.
+
+>  #define GHCB_SEV_ES_GEN_REQ		0
+>  #define GHCB_SEV_ES_PROT_UNSUPPORTED	1
+> +#define GHCB_SEV_ES_SNP_UNSUPPORTED	2
+
+GHCB_SNP_UNSUPPORTED
+
+> +static bool __init sev_snp_check_hypervisor_features(void)
+
+check_hv_features()
+
+is nice and short.
+
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 77a754365ba9..9b70b7332614 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -609,6 +609,10 @@ static bool __init sev_es_setup_ghcb(void)
+
+Ditto for this one: setup_ghcb()
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
