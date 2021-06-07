@@ -2,186 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF50C47095
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0C7C47094
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5B561159
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 14:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D37E6044F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:11:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230322AbhFGPA1 (ORCPT
+        id S230269AbhFGPNm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Jun 2021 11:00:27 -0400
-Received: from mail-bn8nam11on2078.outbound.protection.outlook.com ([40.107.236.78]:28807
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230193AbhFGPA1 (ORCPT
+        Mon, 7 Jun 2021 11:13:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63736 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230237AbhFGPNm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Jun 2021 11:00:27 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J9c3rxCKCm224b94lQBWQfPkPS5l4aov4YK3D3RFD2Jcuu/eYIgXDGqXJKfgNYUtUpHyNvh2lXzJ5so8O+RYH6MVQnVhhqooPwrrzwdZRbOvp0vdjIa89tnWaCqZDSuuxh/bc65cb/g8Dqk3BPKWgYp5Z0XvhRXPH55IbvxOqKf8hc7Rovo2kheAIpI4FrF7Qko+OOfs5ym0OGIZVezw32tGgvGR1pZO/nV7oU9VS+RIXzedeFZZ5m53Mbre4HglkX45isnYxqgMwRRi49k67jD1W1U9Y/qU+lCRHfEpxihvCM31m4AnqQQrij6/A9FXcYAnK6jBDqMCEwiV8iAVlQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CEbSdwyh2OJnMmOBfBN5+urVCfuz+2CLuSc74os4IMc=;
- b=SdcGsY0RtkhU7IehhemeH7LutJ6qgvzbCKihcucD++iFxwF/NDYvxwN+N+cbGDWs/gmbThxoJDbhDN4R70UVcpFNxg9JdhdvSPKGMeWgb78wdIDDDI9O0RjhgLAd4oN9odBji1F482Gk2xISOeXTxvhuJc5e4zoZNo/XI4iugzvVOzTsfuRhyxOxVbxiFmkrSAktoP58pyEpos9+Nd2zZLtduW8XskNz3wBVHFhzmn1NeGpvi+VwqkdBU0xUbl8R7TZRgc6qHLK1PFXMXfjtceMRMapOmxWrcD8SjNxaWULmWppaQ1Vd+6fg/2pkoSAnn++raVLGiJF+5dEoWBDqsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CEbSdwyh2OJnMmOBfBN5+urVCfuz+2CLuSc74os4IMc=;
- b=c7YXXQnkCLQylCXRKz9LPMB0Pl5CN21v6w4U5QT/EhdyMVylhP8mpEW7LHPYM1S30D7+w/koAITGu0Nk8CjXMsdWyovxZ8x0GMaSYmrOKNj+oA4Iiu91yfKsPsjVwUrkH2Gpr4RJQzY0FhkC9jfbp6dtD2vnGOhdqwuF6GUt4bI=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4432.namprd12.prod.outlook.com (2603:10b6:806:98::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.30; Mon, 7 Jun
- 2021 14:58:33 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8a9:2aac:4fd1:88fa]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8a9:2aac:4fd1:88fa%3]) with mapi id 15.20.4195.030; Mon, 7 Jun 2021
- 14:58:33 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 05/22] x86/sev: Add support for hypervisor
- feature VMGEXIT
-To:     Borislav Petkov <bp@alien8.de>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-6-brijesh.singh@amd.com> <YL4q7jHYu65I11bZ@zn.tnic>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <ea332855-fed0-d44a-267f-d2274032b1ac@amd.com>
-Date:   Mon, 7 Jun 2021 09:58:30 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.10.2
-In-Reply-To: <YL4q7jHYu65I11bZ@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [70.112.153.56]
-X-ClientProxiedBy: SA0PR11CA0094.namprd11.prod.outlook.com
- (2603:10b6:806:d1::9) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Mon, 7 Jun 2021 11:13:42 -0400
+IronPort-SDR: uMy17Eh0fopsb346D8+pW+frfGALShcXAoBGxQKh2s6sYAXBNrKLkh9gV3l9jhj3mkYjbm8jNj
+ TF8aHGM0wK8g==
+X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="202779581"
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="202779581"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 08:11:49 -0700
+IronPort-SDR: Y+RITeYsFEf7KoldDvil/YWXAWmTpD2zYXUyN7wOO0g4gJnFltxSL5XOPkKuY9uAjCHyyZbDQO
+ R5iJYFZ9Uw7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
+   d="scan'208";a="440081873"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2021 08:11:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 524F3C5; Mon,  7 Jun 2021 18:12:10 +0300 (EEST)
+Date:   Mon, 7 Jun 2021 18:12:10 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [GIT PULL] intel-gpio for 5.14-1
+Message-ID: <YL43SrZ8N8H+ZHE9@black.fi.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SA0PR11CA0094.namprd11.prod.outlook.com (2603:10b6:806:d1::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4195.22 via Frontend Transport; Mon, 7 Jun 2021 14:58:31 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 95bbdb2c-ea95-40ef-1fc3-08d929c4b858
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4432:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4432634BCD6E23B20A50A5F2E5389@SA0PR12MB4432.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: DQMhzHsTqYv3wsiiPyAVcAgkAodHs0uM8c6TLcA52KzwC6/UsMAng/1mIb/f42n+DkaJOcFgrKe5T/sNPU+tdG3mRPP/VqsCRzGeEqKz9NkccVPpOk5FGIY4Ys/1jGy9YzWUpuLpsvKiuyjYXH0p/JjTp2xfK3i9tgBS0h+n5NkJIZBfnS5LprsKYIQuXRDgjwabNCAQSE8fP3O76worYHauXACKFI2Sbo7ydpXb2Z/gPZn0oxDGEG40Us2hTDEvjYm+r4tg/d64PgIacI55xxt6Teyz1l6VOsKTQ2H7Ghgfm5nf6sdLQQDaj7Q1u5TCSLKhHc1H8DY+762yzRtxz7M6jCUnPWtPkgFmbkt+ftn1qUTainKXrv47KQPcFdBjx6ijotA1HrFan9qoGCmT4iVGFq/vdoi0OwhTep6mKk/9BX6gVM8CIey8vLWXm86X9kb70RdFdJf0zL4z0y2X6TXFxIvrAU+dDxvlZIiGdihE7Bster9/hRLwkN/J2cZckVQXMvAGjvs/0COkDWtTPJsgpqyNbZloRV1TzOS4ecCCN3W2YAYv8BQT2UQ9F8bHei1jK03XZ5DbThWao7W9Fa5yxduKRFSXYhOdhx9dhfCkdNY8rUCxS5teR4Eml1VUd4GN6LAXjPOlUe+d0N2CSOqCcyBdUTXV2QXbZU6OuxLnTLR9/rs9Q1N6iWUMYQYs7IgOVAsNQiGob1u9X780u8zPNtxZKEA2lMbBNv4xybQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(346002)(396003)(39850400004)(66476007)(66556008)(478600001)(38350700002)(5660300002)(36756003)(38100700002)(66946007)(4326008)(31686004)(44832011)(6916009)(6506007)(53546011)(2616005)(8936002)(8676002)(26005)(52116002)(16526019)(956004)(6512007)(54906003)(316002)(186003)(7416002)(31696002)(2906002)(6486002)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?NEdTSHIwQVNqcjVEb0JQd3NVbEhiazY2N0IxNTl0VitCOUYzSHkyUG16a215?=
- =?utf-8?B?L3Z5QTFxbXdjWjRQaEF6U1JFd2VwTzlWS2p3OE1Jc1JYd0ppRGE3WUY0WmJ6?=
- =?utf-8?B?Q2JxQjcydk1Wb0FuSEpkUlJtMkJ1L2hsbUV1TkloZ2FvdmJkeHJoUUwxeVJa?=
- =?utf-8?B?b2sxOFN1UlJKaWdiV0drZFExQXFkUW13eWw4TXZhRGxROVh5akpkNEtXNEVr?=
- =?utf-8?B?M3hYekY5SWZwTXVPeTBqSjJMQ3BoM1U5RXBhU1VNOEJhZmhlZExpakV4STFE?=
- =?utf-8?B?eUxPVTZxMzlEbmQ5bkhQdlFDNjJxOWhWeGovNHdBUGE4RDFYSEVoNmhJNHZr?=
- =?utf-8?B?V1Nudm5mSVBOUDRSdHFyK3UyZjRUVmJGbUpuRFF2SWJ3bk5sTGFZQmc3NTdK?=
- =?utf-8?B?aG5JeEk2dE1pVllkOEppeGFvVW5NT3B2dlJma0xYc0hrMFdDM3RzM2RSUHZY?=
- =?utf-8?B?Rk9sZmYvamF5aWxCNWY0QnZWdWRiRlA5MXZIbjFCK2lVSk9lWkowZEV3OWRt?=
- =?utf-8?B?ZjQySXRhTjVramJmVzdCT3ByWVhFVEhiNGMzaWQyUUJ3Y2twcy9iajI5cnlp?=
- =?utf-8?B?czdDSUpVK2dneVh5MW14U1FpMithM3llV09GcFl5Mkd5MXU4bHgzRXp5a2Qz?=
- =?utf-8?B?RmptZWZiM28vaktDMmthWXBIUWRZY2s1MndQMHdkZ1lXYUx0WHpBeFAzRHdK?=
- =?utf-8?B?cUQwOEFNQVBPTVhxNEROYjBBck1DRWUwdGxhZ0NKblV2WldNcWhiOUpycGpW?=
- =?utf-8?B?UGkzekxVNFMwNE9CSGxCUGtZcXZ0Ykpwb0YzM2RYOW8rcytIalIxYXo2c2Js?=
- =?utf-8?B?Y2g1MVh3U3hHQ3ZmcUVPTEp6cmlBMjdTcVEyQXJpc25aYmlSUGZxelpIWXo4?=
- =?utf-8?B?OU9HODhiZ3cwLzQvSXozbENlU3M5VlU5UkhjeFpPWi9iTHZIbnNGSFJTTkNS?=
- =?utf-8?B?dGF5c0drbVZudWpvTmZhazUrWXNQcWFiQjVjRUc5QnhyeU9EWVZzSVdyRVdv?=
- =?utf-8?B?R1RlM0c4Nis3d2pJUnB4K012Z0xvOFhIN1NVRUxETWhLZmRtbmxFc3M5a3Ft?=
- =?utf-8?B?OFNpMFVDSGFxT1BhZWRMV245MlNIdFdQamtENjQrd3EzRSsxR3JIU0ZhL0xQ?=
- =?utf-8?B?SEUwNnZvL0RXNVppTVpKb1lRUmN5cklyZTB1cWh1TUc0SWFEb01RdjRIN0hM?=
- =?utf-8?B?Q0x0RHowVCszeXhLVlpxd3BMY21lQm9XNTNSTllyZnNrVXRxeGdoMW5tUmJ2?=
- =?utf-8?B?SWZJZERVaWcxQ1BGYXBpekk2S2ppcDNhMGdmWXZPWU43YmdnaEN4eS9Va1Vo?=
- =?utf-8?B?dWRTY1BPYWl3cWRydDFnQUIwcDJkNnNlWE96Y0EwYzRVY3prMlQvSGI1dS9B?=
- =?utf-8?B?MkhhUXJkaW12aUorbzdibENpNVZkMzJqM2FrZllzbkk4TnV0V1NmWXhnUC9B?=
- =?utf-8?B?YVNUNStWd0pmZnJtb2JiSjNWeUxXRnVONm1kcnhlWXRxRTRqMFFJWlJxUzFD?=
- =?utf-8?B?M1BMTE1VaklRZWREU0tjdUQ3Tm9JQU1NaVhPYU1BT1padWxJek1MREJJSys2?=
- =?utf-8?B?dFJZaDczMkRMQ1NIYm9uMjBQdjlDbHpVTWxrTy9CSnNTRklJZllmMzRTM0ti?=
- =?utf-8?B?d1dxZzJEU1Qra1FtR0ZoaUZoV2NoS1V3UDVKUGpsaTM0dWZRaGNDSUlnd0lU?=
- =?utf-8?B?OS9MUUtnZFhrR1JIVDlRS1lJcnFHbVc0ZTE2ZnVhUHV2cS8wcDh4aXlDQ1ha?=
- =?utf-8?Q?rH8kTmBMxDFrncu3XV1htcvnJ4RjsS/PfvmnJIm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95bbdb2c-ea95-40ef-1fc3-08d929c4b858
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jun 2021 14:58:33.5985
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nrdznQAaKiQydvB/hVDWA76Ov5Gngbyr81kCM2wsN/6C/W0Sk/GI05NAFp9LV3zOTNvBALdWf4kPgxJqFLCAcg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4432
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi Linux GPIO and TWIMC maintainers,
 
-On 6/7/21 9:19 AM, Borislav Petkov wrote:
-> On Wed, Jun 02, 2021 at 09:03:59AM -0500, Brijesh Singh wrote:
->> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
->> index 70f181f20d92..94957c5bdb51 100644
->> --- a/arch/x86/kernel/sev-shared.c
->> +++ b/arch/x86/kernel/sev-shared.c
-> I'm guessing this is in sev-shared.c because it is going to be used by
-> both stages?
+This is GPIO material for v5.14 cycle. It contains some stuff that other
+subsystems may take due to dependencies. Consider this tag immutable.
 
-Yes,  the function is used by both the stages.
+Thanks,
 
+With Best Regards,
+Andy Shevchenko
 
->> @@ -20,6 +20,7 @@
->>   * out when the .bss section is later cleared.
->>   */
->>  static u16 ghcb_version __section(".data");
-> State what this is:
->
-> /* Bitmap of SEV features supported by the hypervisor */
+The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
 
-Noted.
+  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
 
+are available in the Git repository at:
 
->
->> +static u64 hv_features __section(".data");
-> Also, I'm assuming that bitmap remains immutable during the guest
-> lifetime so you can do:
->
-> static u64 hv_features __ro_after_init;
->
-> instead, which will do:
->
-> static u64 hv_features __attribute__((__section__(".data..ro_after_init")));
->
-> and it'll be in the data section and then also marked read-only after
-> init, after mark_rodata_ro() more specifically.
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.14-1
 
-Yes, it should be immutable. I will set the ro_after_init section to
-mark it read-only. thanks
+for you to fetch changes up to 043d7f09bf614809c10c4acbf0695ef731958300:
+
+  gpiolib: acpi: Add acpi_gpio_get_io_resource() (2021-06-04 16:24:19 +0300)
+
+----------------------------------------------------------------
+intel-gpio for v5.14-1
+
+* Export two functions from GPIO ACPI for wider use
+* Clean up Whiskey Cove and Crystal Cove GPIO drivers
+
+The following is an automated git shortlog grouped by driver:
+
+crystalcove:
+ -  remove platform_set_drvdata() + cleanup probe
+
+gpiolib:
+ -  acpi: Add acpi_gpio_get_io_resource()
+ -  acpi: Introduce acpi_get_and_request_gpiod() helper
+
+wcove:
+ -  Split error handling for CTRL and IRQ registers
+ -  Unify style of to_reg() with to_ireg()
+ -  Use IRQ hardware number getter instead of direct access
+
+----------------------------------------------------------------
+Alexandru Ardelean (1):
+      gpio: crystalcove: remove platform_set_drvdata() + cleanup probe
+
+Andy Shevchenko (3):
+      gpio: wcove: Use IRQ hardware number getter instead of direct access
+      gpio: wcove: Unify style of to_reg() with to_ireg()
+      gpio: wcove: Split error handling for CTRL and IRQ registers
+
+Daniel Scally (2):
+      gpiolib: acpi: Introduce acpi_get_and_request_gpiod() helper
+      gpiolib: acpi: Add acpi_gpio_get_io_resource()
+
+ drivers/gpio/gpio-crystalcove.c | 10 +-------
+ drivers/gpio/gpio-wcove.c       | 39 +++++++++++++++----------------
+ drivers/gpio/gpiolib-acpi.c     | 51 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/acpi.h            |  7 ++++++
+ include/linux/gpio/consumer.h   |  2 ++
+ 5 files changed, 80 insertions(+), 29 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
