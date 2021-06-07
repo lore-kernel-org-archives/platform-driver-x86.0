@@ -2,104 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66A8C47082
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 20:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B9C4743E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 01:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF16561261
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  5 Jun 2021 20:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D8F613C8
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 01:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbhFEUlS (ORCPT
+        id S229932AbhFGBQB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 5 Jun 2021 16:41:18 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:39820 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbhFEUlR (ORCPT
+        Sun, 6 Jun 2021 21:16:01 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3076 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229894AbhFGBQB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 5 Jun 2021 16:41:17 -0400
-Received: by mail-lf1-f41.google.com with SMTP id p17so18642373lfc.6;
-        Sat, 05 Jun 2021 13:39:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XaLVsgy9EG9wzIwQnKI+lzZzmSS/nBZJSY+bai8m++4=;
-        b=JJxzS8QqJWVvMq2oNdLa0TCOzUwt8ttbq5JIxQ9sibPdy47e9nC2sDUMPfOs49LWYw
-         /AVyKzofQ9ED0D8zvmFfBTXYwTTYeDESNILRiPbMVgY0ewsvqVZ7CgMEmQN6HMcZ8Yfp
-         HU/AiyO5RpzyN59CrxwNjn1iIpGDq85CKUAMhS7KjXO6c/Xdlpg2c+KSYICgWAXTZFwR
-         iy0l5RuY8oEmpdLMzrA1F606ZWcoOo1y2ieRTDHTP7oYEIyyQUVAscWNz+J23pdQvZZA
-         DLa+yLHiaDU0SccZCUEKUaGhrECPUsi/6MWUQCnqgCQxCsu6rvHEnD5Pj9GzC3QXXYqU
-         QRxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XaLVsgy9EG9wzIwQnKI+lzZzmSS/nBZJSY+bai8m++4=;
-        b=bOm0hATwqQ4K0c6J4yvX5zHdnZswDgvpEMef9Nj2cc5vwK5ZlyVZBlxO+ORDiwz9zn
-         G579AxCmDsrrlCZ9Bxb7U2HikNm6ITU5QkyWRTo/zuicH4g4tRRt1lonRk4V3zty6x8D
-         WQ/S66XSyqz7WHR4IMkG56kpl+Q1D7w4brryK9I1HXlIzmaCLJ7wtmSaSJLHYgbsnFtG
-         VkE/TEOQa0Ij9hlrh/PRsyh15AWUEl4QXT4gjb9FqoJOWePo5B5upoPg/2t/GvepPn+G
-         5wzx4pQ448yZ/CMVJG7qzDxznvJZUX5A0bmF4fCPnTYSufwHDkxYKLs5+OeA0VpBcSSt
-         h1sA==
-X-Gm-Message-State: AOAM53023l3mccgNTrh+ggQB37CA0dmsjT2ONZVcdKZnuYSxL8TJEf5H
-        +zaLz2HrtPvUx64IcT8bA2prCAZzPI03QA==
-X-Google-Smtp-Source: ABdhPJyJ7hidi+3DNbiWdcifgU4QiJFIA/I2o4cn2i3E6QGoiEugS/2lv273qCnGOaFw9p99POnf5w==
-X-Received: by 2002:a19:691e:: with SMTP id e30mr6798624lfc.302.1622925496175;
-        Sat, 05 Jun 2021 13:38:16 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-228-193.NA.cust.bahnhof.se. [98.128.228.193])
-        by smtp.gmail.com with ESMTPSA id k24sm1170063ljg.43.2021.06.05.13.38.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jun 2021 13:38:15 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Frank Seidel <frank@f-seidel.de>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Justin Ernst <justin.ernst@hpe.com>
-Cc:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Travis <mike.travis@hpe.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 1/4] platform/x86: hdaps: Constify static attribute_group struct
-Date:   Sat,  5 Jun 2021 22:38:04 +0200
-Message-Id: <20210605203807.60547-2-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210605203807.60547-1-rikard.falkeborn@gmail.com>
-References: <20210605203807.60547-1-rikard.falkeborn@gmail.com>
+        Sun, 6 Jun 2021 21:16:01 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FywHz5XW1zWsFx;
+        Mon,  7 Jun 2021 09:09:19 +0800 (CST)
+Received: from dggema766-chm.china.huawei.com (10.1.198.208) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Mon, 7 Jun 2021 09:14:08 +0800
+Received: from [10.174.177.210] (10.174.177.210) by
+ dggema766-chm.china.huawei.com (10.1.198.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Mon, 7 Jun 2021 09:14:08 +0800
+Subject: Re: [PATCH] platform/x86: intel_ips: remove unused val in read_mgtv
+To:     Hans de Goede <hdegoede@redhat.com>, <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>, <yukuai3@huawei.com>
+References: <20210604081414.3701730-1-yangerkun@huawei.com>
+ <bf848826-b8d3-5d1f-1ae0-8d52750d2676@redhat.com>
+From:   yangerkun <yangerkun@huawei.com>
+Message-ID: <574f00c4-ae41-62b0-54b9-46a0ca294b3a@huawei.com>
+Date:   Mon, 7 Jun 2021 09:14:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.2
 MIME-Version: 1.0
+In-Reply-To: <bf848826-b8d3-5d1f-1ae0-8d52750d2676@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.210]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggema766-chm.china.huawei.com (10.1.198.208)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The only use of hdaps_attribute_group is to pass its address to
-sysfs_create_group() and sysfs_remove_group(), both which takes pointers
-to const attribute_group structs. Make it const to allow the compiler to
-put it in read-only memory.
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/platform/x86/hdaps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/hdaps.c b/drivers/platform/x86/hdaps.c
-index a72270932ec3..9996485f5295 100644
---- a/drivers/platform/x86/hdaps.c
-+++ b/drivers/platform/x86/hdaps.c
-@@ -462,7 +462,7 @@ static struct attribute *hdaps_attributes[] = {
- 	NULL,
- };
- 
--static struct attribute_group hdaps_attribute_group = {
-+static const struct attribute_group hdaps_attribute_group = {
- 	.attrs = hdaps_attributes,
- };
- 
--- 
-2.31.1
+在 2021/6/5 3:55, Hans de Goede 写道:
+> Hi,
+> 
+> On 6/4/21 10:14 AM, yangerkun wrote:
+>> drivers/platform/x86/intel_ips.c:832:6: warning: variable â€˜retâ€™ set but
+>> not used [-Wunused-but-set-variable]
+>>    832 |  u16 ret;
+>>        |      ^~~
+>>
+>> Fix it by remove the define.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: yangerkun <yangerkun@huawei.com>
+>> ---
+>>   drivers/platform/x86/intel_ips.c | 15 ++-------------
+>>   1 file changed, 2 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel_ips.c
+>> index bffe548187ee..d40a00ba859a 100644
+>> --- a/drivers/platform/x86/intel_ips.c
+>> +++ b/drivers/platform/x86/intel_ips.c
+>> @@ -829,19 +829,8 @@ static u16 calc_avg_temp(struct ips_driver *ips, u16 *array)
+>>   
+>>   static u16 read_mgtv(struct ips_driver *ips)
+>>   {
+>> -	u16 ret;
+>> -	u64 slope, offset;
+>> -	u64 val;
+>> -
+>> -	val = thm_readq(THM_MGTV);
+>> -	val = (val & TV_MASK) >> TV_SHIFT;
+>> -
+>> -	slope = offset = thm_readw(THM_MGTA);
+>> -	slope = (slope & MGTA_SLOPE_MASK) >> MGTA_SLOPE_SHIFT;
+>> -	offset = offset & MGTA_OFFSET_MASK;
+>> -
+>> -	ret = ((val * slope + 0x40) >> 7) + offset;
+>> -
+>> +	thm_readq(THM_MGTV);
+>> +	thm_readw(THM_MGTA);
+>>   	return 0; /* MCH temp reporting buggy */
+>>   }
+>>   
+>>
+> 
+> 
+> I believe it would be good to keep the code around to document how
+> the temperature can be calculated.
+> 
+> Please submit a patch marking ret as __maybe_unused instead.
 
+Thanks for your reply, will send v2.
+
+> 
+> Regards,
+> 
+> Hans
+> 
+> .
+> 
