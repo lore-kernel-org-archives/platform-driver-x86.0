@@ -2,124 +2,99 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0C7C47094
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A46AC47095
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D37E6044F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E60261185
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  7 Jun 2021 15:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbhFGPNm (ORCPT
+        id S230383AbhFGPhS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 7 Jun 2021 11:13:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63736 "EHLO mga04.intel.com"
+        Mon, 7 Jun 2021 11:37:18 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47616 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230237AbhFGPNm (ORCPT
+        id S230256AbhFGPhQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 7 Jun 2021 11:13:42 -0400
-IronPort-SDR: uMy17Eh0fopsb346D8+pW+frfGALShcXAoBGxQKh2s6sYAXBNrKLkh9gV3l9jhj3mkYjbm8jNj
- TF8aHGM0wK8g==
-X-IronPort-AV: E=McAfee;i="6200,9189,10008"; a="202779581"
-X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
-   d="scan'208";a="202779581"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 08:11:49 -0700
-IronPort-SDR: Y+RITeYsFEf7KoldDvil/YWXAWmTpD2zYXUyN7wOO0g4gJnFltxSL5XOPkKuY9uAjCHyyZbDQO
- R5iJYFZ9Uw7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,255,1616482800"; 
-   d="scan'208";a="440081873"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 07 Jun 2021 08:11:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 524F3C5; Mon,  7 Jun 2021 18:12:10 +0300 (EEST)
-Date:   Mon, 7 Jun 2021 18:12:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [GIT PULL] intel-gpio for 5.14-1
-Message-ID: <YL43SrZ8N8H+ZHE9@black.fi.intel.com>
+        Mon, 7 Jun 2021 11:37:16 -0400
+Received: from zn.tnic (p200300ec2f0b4f0010db370b6947fb68.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:4f00:10db:370b:6947:fb68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8578E1EC04CD;
+        Mon,  7 Jun 2021 17:35:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623080123;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qFFCUAag8UGkqculjLWLlTiPg+uQkNT3QZ7+KscRBoA=;
+        b=BKOlmEeKnyk5qxENdyy79PSCLvCjmvXOE3iQHPkpjK6gxXcWlNFo/wsR2nw6WKnGPIKhy6
+        Xp7JRpoEaS1wiqjd6hKFwKKCHs38CLT81t6M/lommh1TMic1r+Q4KOhijQhUK6/yA0qzCE
+        CojhJDDtfzCf0hsxub2W1TXpqykEBFM=
+Date:   Mon, 7 Jun 2021 17:35:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 07/22] x86/sev: Add a helper for the
+ PVALIDATE instruction
+Message-ID: <YL48ttHne8d6xl9n@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-8-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-8-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Linux GPIO and TWIMC maintainers,
+On Wed, Jun 02, 2021 at 09:04:01AM -0500, Brijesh Singh wrote:
+> +static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
+> +{
+> +	bool no_rmpupdate;
+> +	int rc;
 
-This is GPIO material for v5.14 cycle. It contains some stuff that other
-subsystems may take due to dependencies. Consider this tag immutable.
+From a previous review:
 
-Thanks,
+Please put over the opcode bytes line:
 
-With Best Regards,
-Andy Shevchenko
+        /* "pvalidate" mnemonic support in binutils 2.36 and newer */
 
-The following changes since commit 6efb943b8616ec53a5e444193dccf1af9ad627b5:
-
-  Linux 5.13-rc1 (2021-05-09 14:17:44 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.14-1
-
-for you to fetch changes up to 043d7f09bf614809c10c4acbf0695ef731958300:
-
-  gpiolib: acpi: Add acpi_gpio_get_io_resource() (2021-06-04 16:24:19 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v5.14-1
-
-* Export two functions from GPIO ACPI for wider use
-* Clean up Whiskey Cove and Crystal Cove GPIO drivers
-
-The following is an automated git shortlog grouped by driver:
-
-crystalcove:
- -  remove platform_set_drvdata() + cleanup probe
-
-gpiolib:
- -  acpi: Add acpi_gpio_get_io_resource()
- -  acpi: Introduce acpi_get_and_request_gpiod() helper
-
-wcove:
- -  Split error handling for CTRL and IRQ registers
- -  Unify style of to_reg() with to_ireg()
- -  Use IRQ hardware number getter instead of direct access
-
-----------------------------------------------------------------
-Alexandru Ardelean (1):
-      gpio: crystalcove: remove platform_set_drvdata() + cleanup probe
-
-Andy Shevchenko (3):
-      gpio: wcove: Use IRQ hardware number getter instead of direct access
-      gpio: wcove: Unify style of to_reg() with to_ireg()
-      gpio: wcove: Split error handling for CTRL and IRQ registers
-
-Daniel Scally (2):
-      gpiolib: acpi: Introduce acpi_get_and_request_gpiod() helper
-      gpiolib: acpi: Add acpi_gpio_get_io_resource()
-
- drivers/gpio/gpio-crystalcove.c | 10 +-------
- drivers/gpio/gpio-wcove.c       | 39 +++++++++++++++----------------
- drivers/gpio/gpiolib-acpi.c     | 51 +++++++++++++++++++++++++++++++++++++++++
- include/linux/acpi.h            |  7 ++++++
- include/linux/gpio/consumer.h   |  2 ++
- 5 files changed, 80 insertions(+), 29 deletions(-)
+> +	asm volatile(".byte 0xF2, 0x0F, 0x01, 0xFF\n\t"
+> +		     CC_SET(c)
+> +		     : CC_OUT(c) (no_rmpupdate), "=a"(rc)
+> +		     : "a"(vaddr), "c"(rmp_psize), "d"(validate)
+> +		     : "memory", "cc");
+> +
+> +	if (no_rmpupdate)
+> +		return PVALIDATE_FAIL_NOUPDATE;
+> +
+> +	return rc;
+> +}
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
