@@ -2,146 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B8C48BCD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 11:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278CFC4743E
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 15:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29AA261354
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 11:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD9461002
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 15:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231609AbhFHLOb (ORCPT
+        id S231338AbhFHPfd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Jun 2021 07:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbhFHLOa (ORCPT
+        Tue, 8 Jun 2021 11:35:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231165AbhFHPfd (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Jun 2021 07:14:30 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23111C061574;
-        Tue,  8 Jun 2021 04:12:37 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0bc9005757c3be7e9afbb5.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c900:5757:c3be:7e9a:fbb5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E0BA1EC036C;
-        Tue,  8 Jun 2021 13:12:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1623150755;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3sPDCvRlwwIpxA2b3PcLxBUFevSmv4P/XZ/ZVXKpHEY=;
-        b=pm3yWyMyq0vfbN/1lB1/7YSiZn9GqmppzRw5hFrYhvwk6G8zDGbVnobmgbVtvU5ugIyGc2
-        AvNowWwi3/OJYL2ri6TSgeqQ6tZbxnkJW1XzcRYwrpPRsJY9eY4tLQhjhK0PfmioT/M5D8
-        XquQKU68mAu73X2MJSJsE7Wl84JJeyg=
-Date:   Tue, 8 Jun 2021 13:12:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 08/22] x86/compressed: Add helper for
- validating pages in the decompression stage
-Message-ID: <YL9Qo/8ycWKZGRwt@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-9-brijesh.singh@amd.com>
+        Tue, 8 Jun 2021 11:35:33 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 39B4861002
+        for <platform-driver-x86@vger.kernel.org>; Tue,  8 Jun 2021 15:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1623166420;
+        bh=m/KriVLfz8tnMJfmvarbddqKPg1e4CdQER82ZRUqMZU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=m8tFMlYqWGPe7jZkMtPnTnbGu6TsCEiecpq/2ykr+ct6U8QkVlmQtxogo188M1yKI
+         LjUy6ddypaQbX/aeDs7V3Ww0US9DrpqQgibXa3uGMXLzCzCKW2v3+C6/2F1FZG1Mom
+         ad9rUaQ1adOkvNk8O98QXg0U00a0c1rGX8mppwhdDlNaiGY8ak0F4WTH3RFRJ7Mh+c
+         ZVCGx9O//h1yz1UlQuAfwPpm85LwJpS1rX2nnQw+sLfmxg2Y6dGF9Q3k31wSm+SW2q
+         pH0MFBPlB7jAQyuhsdDCzeRwa9rwXdxP+BXbxWSeMCvYpN8wlYAblZeAtEXsgVgqK3
+         ehyYqJKfnuZqQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 211741] amd-hid: add support for SW_TABLET_MODE
+Date:   Tue, 08 Jun 2021 15:33:39 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: luya@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-211741-215701-cHoyGmjilg@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-211741-215701@https.bugzilla.kernel.org/>
+References: <bug-211741-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210602140416.23573-9-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 09:04:02AM -0500, Brijesh Singh wrote:
-> +static void __page_state_change(unsigned long paddr, int op)
-> +{
-> +	u64 val;
-> +
-> +	if (!sev_snp_enabled())
-> +		return;
-> +
-> +	/*
-> +	 * If private -> shared then invalidate the page before requesting the
-> +	 * state change in the RMP table.
-> +	 */
-> +	if ((op == SNP_PAGE_STATE_SHARED) && pvalidate(paddr, RMP_PG_SIZE_4K, 0))
-> +		goto e_pvalidate;
-> +
-> +	/* Issue VMGEXIT to change the page state in RMP table. */
-> +	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
-> +	VMGEXIT();
-> +
-> +	/* Read the response of the VMGEXIT. */
-> +	val = sev_es_rd_ghcb_msr();
-> +	if ((GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP) || GHCB_MSR_PSC_RESP_VAL(val))
-> +		sev_es_terminate(1, GHCB_TERM_PSC);
-> +
-> +	/*
-> +	 * Now that page is added in the RMP table, validate it so that it is
-> +	 * consistent with the RMP entry.
-> +	 */
-> +	if ((op == SNP_PAGE_STATE_PRIVATE) && pvalidate(paddr, RMP_PG_SIZE_4K, 1))
-> +		goto e_pvalidate;
-> +
-> +	return;
-> +
-> +e_pvalidate:
-> +	sev_es_terminate(1, GHCB_TERM_PVALIDATE);
-> +}
+https://bugzilla.kernel.org/show_bug.cgi?id=3D211741
 
-You don't even need that label, diff ontop:
+--- Comment #3 from Luya Tshimbalanga (luya@fedoraproject.org) ---
+Latest kernel 5.12.9-300 disabled SW_TABLET_MODE on hp-wmi because it never
+worked at all due possible missing driver. The current status showed:
 
-diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-index 808fe1f6b170..dd0f22386fd2 100644
---- a/arch/x86/boot/compressed/sev.c
-+++ b/arch/x86/boot/compressed/sev.c
-@@ -146,7 +146,7 @@ static void __page_state_change(unsigned long paddr, int op)
- 	 * state change in the RMP table.
- 	 */
- 	if ((op == SNP_PAGE_STATE_SHARED) && pvalidate(paddr, RMP_PG_SIZE_4K, 0))
--		goto e_pvalidate;
-+		sev_es_terminate(1, GHCB_TERM_PVALIDATE);
- 
- 	/* Issue VMGEXIT to change the page state in RMP table. */
- 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
-@@ -162,12 +162,7 @@ static void __page_state_change(unsigned long paddr, int op)
- 	 * consistent with the RMP entry.
- 	 */
- 	if ((op == SNP_PAGE_STATE_PRIVATE) && pvalidate(paddr, RMP_PG_SIZE_4K, 1))
--		goto e_pvalidate;
--
--	return;
--
--e_pvalidate:
--	sev_es_terminate(1, GHCB_TERM_PVALIDATE);
-+		sev_es_terminate(1, GHCB_TERM_PVALIDATE);
- }
- 
- void snp_set_page_private(unsigned long paddr)
+# EVEMU 1.3
+# Kernel: 5.12.9-300.fc34.x86_64
+# DMI:
+dmi:bvnAMI:bvrF.48:bd11/26/2020:br15.48:efr92.48:svnHP:pnHPENVYx360Converti=
+ble15-cp0xxx:pvr:rvnHP:rn8497:rvr92.48:cvnHP:ct31:cvrChassisVersion:
+# Input device name: "HP WMI hotkeys"
+# Input device ID: bus 0x19 vendor 0000 product 0000 version 0000
+# Supported events:
+#   Event type 0 (EV_SYN)
+#     Event code 0 (SYN_REPORT)
+#     Event code 1 (SYN_CONFIG)
+#     Event code 2 (SYN_MT_REPORT)
+#     Event code 3 (SYN_DROPPED)
+#     Event code 4 ((null))
+#     Event code 5 ((null))
+#     Event code 6 ((null))
+#     Event code 7 ((null))
+#     Event code 8 ((null))
+#     Event code 9 ((null))
+#     Event code 10 ((null))
+#     Event code 11 ((null))
+#     Event code 12 ((null))
+#     Event code 13 ((null))
+#     Event code 14 ((null))
+#     Event code 15 (SYN_MAX)
+#   Event type 1 (EV_KEY)
+#     Event code 138 (KEY_HELP)
+#     Event code 141 (KEY_SETUP)
+#     Event code 148 (KEY_PROG1)
+#     Event code 153 (KEY_ROTATE_DISPLAY)
+#     Event code 224 (KEY_BRIGHTNESSDOWN)
+#     Event code 225 (KEY_BRIGHTNESSUP)
+#     Event code 226 (KEY_MEDIA)
+#     Event code 240 (KEY_UNKNOWN)
+#     Event code 358 (KEY_INFO)
+#   Event type 4 (EV_MSC)
+#     Event code 4 (MSC_SCAN)
+#   Event type 5 (EV_SW)
+#     Event code 5 (SW_DOCK)
+#        State 0
 
--- 
-Regards/Gruss,
-    Boris.
+The bug still remains as the keyboard still works even on tablet mode. Idea=
+lly,
+it should be disabled at that mode while the touchscreen remains active.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
