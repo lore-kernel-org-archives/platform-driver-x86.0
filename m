@@ -2,176 +2,146 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0CCC48BCD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 09:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B8C48BCD
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 11:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7471761208
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 09:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AA261354
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 11:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229937AbhFHJfo (ORCPT
+        id S231609AbhFHLOb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Jun 2021 05:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50422 "EHLO
+        Tue, 8 Jun 2021 07:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbhFHJfo (ORCPT
+        with ESMTP id S230190AbhFHLOa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Jun 2021 05:35:44 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70051C061574;
-        Tue,  8 Jun 2021 02:33:51 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 562F73E6;
-        Tue,  8 Jun 2021 11:33:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1623144829;
-        bh=OFltWdjgbl2i1zvXlb4e6VeZ33EjH6WYdsDnL6NUN0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A2xCVhCp4hsB4y/r2Ch1xBKDyPLc0U9DeHLpx8CxUxrNxj8qqHE+MqnDpGvEKjnq7
-         Ip3CexhiOlo/1sCdXGrBt3TNcbuyjpP9kJ1n91fGPc4t3hNYnp4x+zsiINKrlYg+nn
-         WpO75bogCTLyYX9kkftBFKO/j/TDEVrws9cjKBcU=
-Date:   Tue, 8 Jun 2021 12:33:34 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, devel@acpica.org,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v5 0/6] Introduce intel_skl_int3472 module
-Message-ID: <YL85bqGwuBXkoqy3@pendragon.ideasonboard.com>
-References: <20210603224007.120560-1-djrscally@gmail.com>
- <4400512a-b788-7074-d3c6-0ec228b43d7e@redhat.com>
+        Tue, 8 Jun 2021 07:14:30 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23111C061574;
+        Tue,  8 Jun 2021 04:12:37 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0bc9005757c3be7e9afbb5.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c900:5757:c3be:7e9a:fbb5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E0BA1EC036C;
+        Tue,  8 Jun 2021 13:12:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623150755;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3sPDCvRlwwIpxA2b3PcLxBUFevSmv4P/XZ/ZVXKpHEY=;
+        b=pm3yWyMyq0vfbN/1lB1/7YSiZn9GqmppzRw5hFrYhvwk6G8zDGbVnobmgbVtvU5ugIyGc2
+        AvNowWwi3/OJYL2ri6TSgeqQ6tZbxnkJW1XzcRYwrpPRsJY9eY4tLQhjhK0PfmioT/M5D8
+        XquQKU68mAu73X2MJSJsE7Wl84JJeyg=
+Date:   Tue, 8 Jun 2021 13:12:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 08/22] x86/compressed: Add helper for
+ validating pages in the decompression stage
+Message-ID: <YL9Qo/8ycWKZGRwt@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-9-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4400512a-b788-7074-d3c6-0ec228b43d7e@redhat.com>
+In-Reply-To: <20210602140416.23573-9-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Hans,
+On Wed, Jun 02, 2021 at 09:04:02AM -0500, Brijesh Singh wrote:
+> +static void __page_state_change(unsigned long paddr, int op)
+> +{
+> +	u64 val;
+> +
+> +	if (!sev_snp_enabled())
+> +		return;
+> +
+> +	/*
+> +	 * If private -> shared then invalidate the page before requesting the
+> +	 * state change in the RMP table.
+> +	 */
+> +	if ((op == SNP_PAGE_STATE_SHARED) && pvalidate(paddr, RMP_PG_SIZE_4K, 0))
+> +		goto e_pvalidate;
+> +
+> +	/* Issue VMGEXIT to change the page state in RMP table. */
+> +	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+> +	VMGEXIT();
+> +
+> +	/* Read the response of the VMGEXIT. */
+> +	val = sev_es_rd_ghcb_msr();
+> +	if ((GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP) || GHCB_MSR_PSC_RESP_VAL(val))
+> +		sev_es_terminate(1, GHCB_TERM_PSC);
+> +
+> +	/*
+> +	 * Now that page is added in the RMP table, validate it so that it is
+> +	 * consistent with the RMP entry.
+> +	 */
+> +	if ((op == SNP_PAGE_STATE_PRIVATE) && pvalidate(paddr, RMP_PG_SIZE_4K, 1))
+> +		goto e_pvalidate;
+> +
+> +	return;
+> +
+> +e_pvalidate:
+> +	sev_es_terminate(1, GHCB_TERM_PVALIDATE);
+> +}
 
-On Tue, Jun 08, 2021 at 11:00:24AM +0200, Hans de Goede wrote:
-> On 6/4/21 12:40 AM, Daniel Scally wrote:
-> > Hello all
-> > 
-> > Bit longer than hoped but here's v5.
-> > 
-> > v4:
-> > https://lore.kernel.org/lkml/20210520140928.3252671-1-djrscally@gmail.com/
-> > 
-> > v3
-> > https://lore.kernel.org/lkml/20210222130735.1313443-1-djrscally@gmail.com/
-> > 
-> > v2
-> > https://lore.kernel.org/platform-driver-x86/20210118003428.568892-1-djrscally@gmail.com/
-> > 
-> > v1
-> > https://lore.kernel.org/linux-media/20201130133129.1024662-1-djrscally@gmail.com/T/#m91934e12e3d033da2e768e952ea3b4a125ee3e67
-> > 
-> > The only changes are the dropped patches, renamed functions in 2/6 and most of
-> > Andy's suggestions on 5/6 - I didn't hit them all yet but didn't want to delay
-> > this any more.
-> > 
-> > Series level changelog:
-> > 
-> > 	- Dropped all but the essential patches to simplify merge plan - thanks
-> > 	Hans.
-> 
-> Thank you. Andy has already sends me a pull-req for the gpiolib-acpi changes
-> and I expect Rafael to send me a pull-req (from an immutable branch) for the
-> ACPI bits soon-ish.
-> 
-> When I merge those both into pdx86 I should be able to pick-up 5/6.
-> 
-> Given the long time this has been in the making I'm tempted to do that
-> (pick up 5/6 as is) and then we can do further cleanups like looking into
-> using the existing fixed-regulator code later. My mean reason to do this
-> would be to get this code into the hands of users starting with the 5.14
-> kernel.
+You don't even need that label, diff ontop:
 
-That would be great !
-
-> So question, how usable is this (from the kernel pov, I know userspace
-> needs work too) once I merge 5/6. Is the kernel-side support for the cameras
-> on some Surface devices then complete or are more patches necessary in
-> other subsystems ?
-
-Camera sensor drivers are the other piece of the puzzle that is
-required. Daniel is working on an ov5693 driver which can be found at
-https://github.com/djrscally/media_tree/tree/ov5693-v2. It's nearing
-completion too.
-
-With those two pieces, we have support for the Microsoft Surface Go 2 in
-libcamera, as well as a few other devices whose exact model escapes me
-at this minute.
-
-> Note another advantage of just merging 5/6 as is and doing the fixed-regulator
-> bits on top, is that having those in a separate commit makes it easier to
-> see if these indeed result in a nice cleanup (vs sticking with the current code).
-> 
-> > Daniel Scally (6):
-> >   ACPI: scan: Extend acpi_walk_dep_device_list()
-> >   ACPI: scan: Add function to fetch dependent of acpi device
-> >   gpiolib: acpi: Export acpi_get_gpiod()
-> >   gpiolib: acpi: Add acpi_gpio_get_io_resource()
-> >   platform/x86: Add intel_skl_int3472 driver
-> >   mfd: tps68470: Remove tps68470 MFD driver
-> > 
-> >  MAINTAINERS                                   |   5 +
-> >  drivers/acpi/ec.c                             |   2 +-
-> >  drivers/acpi/pmic/Kconfig                     |   2 +-
-> >  drivers/acpi/pmic/intel_pmic_chtdc_ti.c       |   2 +-
-> >  drivers/acpi/scan.c                           | 104 ++++-
-> >  drivers/gpio/Kconfig                          |   2 +-
-> >  drivers/gpio/gpiolib-acpi.c                   |  61 ++-
-> >  drivers/i2c/i2c-core-acpi.c                   |   8 +-
-> >  drivers/mfd/Kconfig                           |  18 -
-> >  drivers/mfd/Makefile                          |   1 -
-> >  drivers/mfd/tps68470.c                        |  97 ----
-> >  drivers/platform/surface/aggregator/core.c    |   6 +-
-> >  drivers/platform/surface/surface3_power.c     |  22 +-
-> >  .../platform/surface/surface_acpi_notify.c    |   7 +-
-> >  drivers/platform/x86/Kconfig                  |   2 +
-> >  drivers/platform/x86/Makefile                 |   1 +
-> >  drivers/platform/x86/intel-int3472/Kconfig    |  30 ++
-> >  drivers/platform/x86/intel-int3472/Makefile   |   5 +
-> >  .../intel_skl_int3472_clk_and_regulator.c     | 196 ++++++++
-> >  .../intel-int3472/intel_skl_int3472_common.c  | 106 +++++
-> >  .../intel-int3472/intel_skl_int3472_common.h  | 118 +++++
-> >  .../intel_skl_int3472_discrete.c              | 417 ++++++++++++++++++
-> >  .../intel_skl_int3472_tps68470.c              | 137 ++++++
-> >  include/acpi/acpi_bus.h                       |   8 +
-> >  include/linux/acpi.h                          |  11 +-
-> >  include/linux/gpio/consumer.h                 |   2 +
-> >  26 files changed, 1205 insertions(+), 165 deletions(-)
-> >  delete mode 100644 drivers/mfd/tps68470.c
-> >  create mode 100644 drivers/platform/x86/intel-int3472/Kconfig
-> >  create mode 100644 drivers/platform/x86/intel-int3472/Makefile
-> >  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_clk_and_regulator.c
-> >  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.c
-> >  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_common.h
-> >  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_discrete.c
-> >  create mode 100644 drivers/platform/x86/intel-int3472/intel_skl_int3472_tps68470.c
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 808fe1f6b170..dd0f22386fd2 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -146,7 +146,7 @@ static void __page_state_change(unsigned long paddr, int op)
+ 	 * state change in the RMP table.
+ 	 */
+ 	if ((op == SNP_PAGE_STATE_SHARED) && pvalidate(paddr, RMP_PG_SIZE_4K, 0))
+-		goto e_pvalidate;
++		sev_es_terminate(1, GHCB_TERM_PVALIDATE);
+ 
+ 	/* Issue VMGEXIT to change the page state in RMP table. */
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+@@ -162,12 +162,7 @@ static void __page_state_change(unsigned long paddr, int op)
+ 	 * consistent with the RMP entry.
+ 	 */
+ 	if ((op == SNP_PAGE_STATE_PRIVATE) && pvalidate(paddr, RMP_PG_SIZE_4K, 1))
+-		goto e_pvalidate;
+-
+-	return;
+-
+-e_pvalidate:
+-	sev_es_terminate(1, GHCB_TERM_PVALIDATE);
++		sev_es_terminate(1, GHCB_TERM_PVALIDATE);
+ }
+ 
+ void snp_set_page_private(unsigned long paddr)
 
 -- 
-Regards,
+Regards/Gruss,
+    Boris.
 
-Laurent Pinchart
+https://people.kernel.org/tglx/notes-about-netiquette
