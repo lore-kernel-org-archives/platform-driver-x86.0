@@ -2,109 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A365C4743D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 17:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3586EC47095
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 07:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21ABF6135D
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  8 Jun 2021 17:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C8360E0C
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 07:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233875AbhFHRul (ORCPT
+        id S234967AbhFIHRi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 8 Jun 2021 13:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233156AbhFHRul (ORCPT
+        Wed, 9 Jun 2021 03:17:38 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3810 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232746AbhFIHRh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 8 Jun 2021 13:50:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 76FD061375;
-        Tue,  8 Jun 2021 17:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623174527;
-        bh=qYxbD6+7M2rej+P/v38B/oCyf0kCWDlzg3R9EUKT8cE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HQp51Ir8sYtic+P0rL0ekA5FIBamVFpElNPMdbQhRZ33+g110rNUyn2WzSwRij9Ga
-         b3dSj1Qn1Ind5gjEW6jmq26W21gyC+RGbeZlt8/2pXbYM0UgZcOx54bhL54bM6kK8P
-         +8T8X2xObMEuhakrA2MjDfhHwupMvB/O8qlFgQAlt07QC51HSCOnXHcRE7kbkYlgVw
-         sax8dZjLUfwkvVcRoa3CWvQn8yDTDhVr4+v+eWd/l0UEJYDVssCy86VGuPI5xlTYxk
-         RYjbjPjlqsZOuoeU65/ZasQRMMVUlSKZokaz1CZvwGkhn4hCcG8tvOgTH8Q08YHcEV
-         zXSyv+9pLk4WQ==
-Date:   Tue, 8 Jun 2021 10:48:34 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Pearson <markpearson@lenovo.com>, andy.shevchenko@gmail.com,
-        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v5] platform/x86: firmware_attributes_class: Create
- helper file for handling firmware-attributes class registration events
-Message-ID: <YL+tch7KHVCAqJI+@Ryzen-9-3900X>
-References: <markpearson@lenovo.com>
- <20210530223111.25929-1-markpearson@lenovo.com>
- <98d213aa-9500-64f7-9fce-b880a6322d01@redhat.com>
+        Wed, 9 Jun 2021 03:17:37 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G0JDB2YCdzWtLx;
+        Wed,  9 Jun 2021 15:10:50 +0800 (CST)
+Received: from dggpeml500020.china.huawei.com (7.185.36.88) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Wed, 9 Jun 2021 15:15:40 +0800
+Received: from huawei.com (10.175.127.227) by dggpeml500020.china.huawei.com
+ (7.185.36.88) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Wed, 9 Jun 2021
+ 15:15:39 +0800
+From:   Baokun Li <libaokun1@huawei.com>
+To:     <linux-kernel@vger.kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>
+CC:     <weiyongjun1@huawei.com>, <yuehaibing@huawei.com>,
+        <yangjihong1@huawei.com>, <yukuai3@huawei.com>,
+        <libaokun1@huawei.com>, <platform-driver-x86@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next v2] platform/surface: aggregator: Use list_move_tail instead of list_del/list_add_tail in ssh_packet_layer.c
+Date:   Wed, 9 Jun 2021 15:24:48 +0800
+Message-ID: <20210609072448.1357524-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <98d213aa-9500-64f7-9fce-b880a6322d01@redhat.com>
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500020.china.huawei.com (7.185.36.88)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, May 31, 2021 at 03:56:41PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 5/31/21 12:31 AM, Mark Pearson wrote:
-> > This will be used by the Dell and Lenovo WMI management drivers to
-> > prevent both drivers being active.
-> > 
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Mark Pearson <markpearson@lenovo.com>
-> > ---
-> > Changes in v2:
-> >  - This is a new file requested as part of the review of the proposed
-> > think_lmi.c driver. Labeling as V2 to keep series consistent
-> > 
-> > Changes in v3:
-> >  - Set default in Kconfig, and removed help text
-> >  - Allow multiple modules to register with module. Change API names to
-> >     better reflect this.
-> > 
-> > Changes in v4:
-> >  - version bump for consistency in series
-> > 
-> > Changes in v5:
-> >  - Fix issue reported by kernel test robot. Add header file to includes
-> 
-> Thanks Mark,
-> 
-> Unfortunately you squashed the Kconfig and Makefile changes which I made
-> to v4 when fixing it up during merging into 3/3 instead of having them in
-> v5 of this patch.
-> 
-> No worries, since this was the only problem which I could see I've fixed
-> this up in my review-hans branch while merging v5 of this series there
-> (replacing v4).
-> 
-> I did notice a bit of dead code while reviewing the changes which you
-> made to 3/3 in response to Andy's review. I'll send a follow-up patch
-> fixing that.
-> 
-> I'll leave this sit in my review-hans branch for a bit to give Andy
-> a chance to give his Reviewed-by and then I'll push this to for-next.
-> 
-> Regards,
-> 
-> Hans
+Using list_move_tail() instead of list_del() + list_add_tail() in ssh_packet_layer.c.
 
-It looks like this series causes allyesconfig to break on linux-next:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+V1->V2:
+	CC mailist
 
-https://github.com/ClangBuiltLinux/continuous-integration2/runs/2773158286?check_suite_focus=true
+ .../surface/aggregator/ssh_packet_layer.c  | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-$ make -skj"$(nproc)" allyesconfig all
-ld: drivers/platform/x86/think-lmi.o:(.bss+0x0): multiple definition of `fw_attr_class'; drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:(.bss+0x0): first defined here
+diff --git a/drivers/platform/surface/aggregator/ssh_packet_layer.c b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+index 15d96eac6811..2f546ad11c4e 100644
+--- a/drivers/platform/surface/aggregator/ssh_packet_layer.c
++++ b/drivers/platform/surface/aggregator/ssh_packet_layer.c
+@@ -1567,9 +1567,7 @@ static void ssh_ptl_timeout_reap(struct work_struct *work)
+ 		clear_bit(SSH_PACKET_SF_PENDING_BIT, &p->state);
+ 
+ 		atomic_dec(&ptl->pending.count);
+-		list_del(&p->pending_node);
+-
+-		list_add_tail(&p->pending_node, &claimed);
++		list_move_tail(&p->pending_node, &claimed);
+ 	}
+ 
+ 	spin_unlock(&ptl->pending.lock);
+@@ -1957,8 +1955,7 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+ 		smp_mb__before_atomic();
+ 		clear_bit(SSH_PACKET_SF_QUEUED_BIT, &p->state);
+ 
+-		list_del(&p->queue_node);
+-		list_add_tail(&p->queue_node, &complete_q);
++		list_move_tail(&p->queue_node, &complete_q);
+ 	}
+ 	spin_unlock(&ptl->queue.lock);
+ 
+@@ -1970,8 +1967,7 @@ void ssh_ptl_shutdown(struct ssh_ptl *ptl)
+ 		smp_mb__before_atomic();
+ 		clear_bit(SSH_PACKET_SF_PENDING_BIT, &p->state);
+ 
+-		list_del(&p->pending_node);
+-		list_add_tail(&p->pending_node, &complete_q);
++		list_move_tail(&p->pending_node, &complete_q);
+ 	}
+ 	atomic_set(&ptl->pending.count, 0);
+ 	spin_unlock(&ptl->pending.lock);
 
-Cheers,
-Nathan
