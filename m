@@ -2,109 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AE6C48BCF
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 15:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFC5C48BCD
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 15:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95E1861351
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 15:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9A261359
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 15:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232656AbhFIPc4 (ORCPT
+        id S237495AbhFIPgx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Jun 2021 11:32:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56868 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233384AbhFIPc4 (ORCPT
+        Wed, 9 Jun 2021 11:36:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51134 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237425AbhFIPgr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Jun 2021 11:32:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2D544611CC;
-        Wed,  9 Jun 2021 15:31:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623252661;
-        bh=Tn5sGsqJ9rhswyilbUHFSzf4YqsMLWKhhv+b84cz6B4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iQWMl6g0pvGxeam+u4tjfidPwRpFE06ns+7gCsgspVe9Ov1UFQo2jL2gfLzHFiR7t
-         ebjg7Da+h86+vf9eEWJwZaPJ8EORML3pUB32952EA/ils9ybA8qJAhC9ybG7ABr0M3
-         8sW17PYmsIbS64IVdiGeY1fbGTX+rKYX6svsdPXxF+8AyBKJkkZbuAlaQhaB8ksX5w
-         VtfO6W4b0NN3fB9Az9FBl5owhTADDz9w/fMslX3DRx7yCfHVD37AtyuaNMt53BQ/50
-         XFsV7UQhDDxODxJ4RykNyp7A3IeKm76+S5GpgHyM5xOrjYe3r5Kwqs8Yp35XvFlE1j
-         hkBrXZ7H40eeQ==
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman/think-lmi: Make
- fw_attr_class global static
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org,
-        Mark Pearson <markpearson@lenovo.com>,
-        Dell.Client.Kernel@dell.com
-References: <20210609145952.113393-1-hdegoede@redhat.com>
-From:   Nathan Chancellor <nathan@kernel.org>
-Message-ID: <64af7560-689b-373c-607a-85e242a2b57c@kernel.org>
-Date:   Wed, 9 Jun 2021 08:31:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 9 Jun 2021 11:36:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623252892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KfiuaUysjjm6b29OnnGvmDGDVpILaJ6Wzkg1WhNxQTY=;
+        b=V2q87J4VrGkNuz2jsF3MQlQl45x+pRbbo6lBthUg9dwGwkDX6U4A6nM1DYJXmRLTlmuvjU
+        djLFgaoYQYlow7cbEGv2lwTNo5oelzzLt1fV6OSCfBeWAHRgSV7c9+W4U0rkEpz3SISulT
+        sIMBXIgWs3wK6wU9WsECHE4aBkThKM8=
+Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
+ [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-267-ZAdFkxPnP-SCf9KwPPNtjA-1; Wed, 09 Jun 2021 11:34:50 -0400
+X-MC-Unique: ZAdFkxPnP-SCf9KwPPNtjA-1
+Received: by mail-ot1-f69.google.com with SMTP id w1-20020a0568304101b02902fc17224cf5so16561483ott.3
+        for <platform-driver-x86@vger.kernel.org>; Wed, 09 Jun 2021 08:34:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KfiuaUysjjm6b29OnnGvmDGDVpILaJ6Wzkg1WhNxQTY=;
+        b=p2hZkRyYR92Fv/6fAgnCmpksE08xVGMSdi5dyO8JdU9l6nweApcoeZPsI79klyopR/
+         lueN7MgemtJrm5cumKa0rVbnTdQ28exPlM20DMHM9na5gfmHmdR7E/DbO33YPC8bR5J2
+         F7eZtyxQwzRgsOicF/U5CMAzYM+o3b7FK2DKRkjadu0V+cL70IuDe/rX8pChMZtvQmka
+         War2BhupoKz1B5A+sxAXukcHw23+vo7RNcFZbkRQYLN44DHhHbcgQDiE+gF+RNoDZg5h
+         AFg/37ClIqP1DZUsch+orqyn/3pmotfcVpQ7wqfqTNE5mPINYL4AUBrfsuRhlCEMbzdI
+         4mZg==
+X-Gm-Message-State: AOAM531+7uEoS+vEd48yiSBi+R+cd08CDj3DFuPZvqPd+M8FWqERKXgS
+        414cxOOdUZzRi1atWrvw2IAFysB3kGUi7d6cqHj923a3bOWoSRKpxEJk1lSD9vxXvRIkDO//Oso
+        JOiNjVxOOhsETU21F9wldajhoz7MMcTK90g==
+X-Received: by 2002:a4a:3796:: with SMTP id r144mr381796oor.79.1623252890233;
+        Wed, 09 Jun 2021 08:34:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxKQsKCwsCUaNvi8dryoQlutWe8ew4Y6pgm9Uel7fwtQLSf0heqhCjC/gTWWNM6m8SCKRkUug==
+X-Received: by 2002:a4a:3796:: with SMTP id r144mr381786oor.79.1623252890053;
+        Wed, 09 Jun 2021 08:34:50 -0700 (PDT)
+Received: from localhost.localdomain.com (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id j24sm12190oou.8.2021.06.09.08.34.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Jun 2021 08:34:49 -0700 (PDT)
+From:   trix@redhat.com
+To:     divya.bharathi@dell.com, prasanth.ksr@dell.com,
+        hdegoede@redhat.com, mgross@linux.intel.com
+Cc:     Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] platform/x86: dell-wmi-sysman: set fw_attr_class storage-class to static
+Date:   Wed,  9 Jun 2021 08:34:45 -0700
+Message-Id: <20210609153445.3090046-1-trix@redhat.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-In-Reply-To: <20210609145952.113393-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 6/9/2021 7:59 AM, Hans de Goede wrote:
-> The dell-wmi-sysman and think-lmi kernel modules both have a global
-> struct class *fw_attr_class variable, leading to the following compile
-> errors when both are builtin:
-> 
-> ld: drivers/platform/x86/think-lmi.o:(.bss+0x0): multiple definition of `fw_attr_class'; drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:(.bss+0x0): first defined here
-> 
-> In both cases the variable is only used in the file where it is declared.
-> Make both declarations static to avoid the linker error.
+From: Tom Rix <trix@redhat.com>
 
-I figured that would be the solution but I was not sure, hence just the 
-report rather than this patch :)
+An allyesconfig has this linking error
+drivers/platform/x86/think-lmi.o:
+  multiple definition of `fw_attr_class'
+drivers/platform/x86/dell/dell-wmi-sysman/sysman.o:
+  first defined here
 
-> Cc: Mark Pearson <markpearson@lenovo.com>
-> Cc: Dell.Client.Kernel@dell.com
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+fw_attr_class is only used locally, so change to static
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->   drivers/platform/x86/dell/dell-wmi-sysman/sysman.c | 2 +-
->   drivers/platform/x86/think-lmi.c                   | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> index 1378c1878658..636bdfa83284 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
-> @@ -25,7 +25,7 @@ struct wmi_sysman_priv wmi_priv = {
->   /* reset bios to defaults */
->   static const char * const reset_types[] = {"builtinsafe", "lastknowngood", "factory", "custom"};
->   static int reset_option = -1;
-> -struct class *fw_attr_class;
-> +static struct class *fw_attr_class;
->   
->   
->   /**
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 782d8e3fe7a1..c6413b906e4a 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -134,7 +134,7 @@ static const char * const encoding_options[] = {
->   	[TLMI_ENCODING_SCANCODE] = "scancode",
->   };
->   static struct think_lmi tlmi_priv;
-> -struct class *fw_attr_class;
-> +static struct class *fw_attr_class;
->   
->   /* ------ Utility functions ------------*/
->   /* Convert BIOS WMI error string to suitable error code */
-> 
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+index 1378c18786582..636bdfa83284d 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/sysman.c
+@@ -25,7 +25,7 @@ struct wmi_sysman_priv wmi_priv = {
+ /* reset bios to defaults */
+ static const char * const reset_types[] = {"builtinsafe", "lastknowngood", "factory", "custom"};
+ static int reset_option = -1;
+-struct class *fw_attr_class;
++static struct class *fw_attr_class;
+ 
+ 
+ /**
+-- 
+2.26.3
+
