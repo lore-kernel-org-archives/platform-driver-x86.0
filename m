@@ -7,73 +7,73 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239B2C48BCD
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 10:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FB7C48BCD
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 10:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0527A61178
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 10:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E46760FF4
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  9 Jun 2021 10:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234217AbhFIKU3 (ORCPT
+        id S234836AbhFIKpM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Jun 2021 06:20:29 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:48700 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbhFIKU3 (ORCPT
+        Wed, 9 Jun 2021 06:45:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46796 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232165AbhFIKpM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Jun 2021 06:20:29 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 159AGQDx080637;
-        Wed, 9 Jun 2021 10:18:33 GMT
+        Wed, 9 Jun 2021 06:45:12 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 159AeMuY183877;
+        Wed, 9 Jun 2021 10:43:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=W9oWCK/plopldSGPtp5hI+W8ATQx18MQkPlRiZnm0kk=;
- b=nv5hKGS0g6w+fqufqgj7rKnsRq5LXQ4sLprbIzXWlCRsozJ+ZggW8NMf/u914gkJw4vl
- Cb+2X4aquH5cUpMpVPcqBzdYjOoAZzHXvy0Z8g4MfL/OFJNIjnOg4d1EJXOJKaHxOWGo
- HhUZp1mdTE01E++y58eyeDd02VAsg6FcQDgEbxKYdoVec04jozP/Nk8uRB3VYkTbmnUM
- jYvzWEIZYVCgcPP1obWNDkuGbz0PUSpTUwfI4fTNfidnDhgDDdTI7T0c7rVAEP9Lfo4P
- APTQj7hODhAdVr6JJkjbKi+LQCfsHW5hE61zlC7fCL+0ryLNz+KMwpk8aTVjofPeNmFh Kw== 
+ bh=UVqx0PLKAH8UOBrGFGE9XeRIQRmJXZKLWyeYqeHC3Ek=;
+ b=oeK5U5HXCLPgp1h40f0Xh204KQE+eqmxH+ESUgyTj6YdPoyDDtElfMFP8hqlvv0WYAmA
+ T6aPJEHUT7RXFX4DR6a3FcIbKw/j34XDJOYqdc9D1Ccwp6Cx4jiVobmMr6IBJNiHNLDq
+ MKQFJ0rSYVz9cK3Uk1yRVJfHZGqYzafvyt6wuz1l6tB6Yi5KRvzotnbI6VP0dy6VMM1w
+ APN9/faQtNY5mzTRNlH+dmnXo3iYExBEp1yE6ZkTDzRAe75RJgtiDQ8P7HIfUDp14KNj
+ TXBKHalco1uwwC2rHt/Zxs0BzBnDXiY5aCPlTRevvV6nyWuaEaJRgjTLLw+PzUblKvHU Cg== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 38yxscgrp6-1
+        by userp2120.oracle.com with ESMTP id 3914quq8da-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Jun 2021 10:18:33 +0000
+        Wed, 09 Jun 2021 10:43:16 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 159AF56u035390;
-        Wed, 9 Jun 2021 10:18:32 GMT
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 159Af5Q9084997;
+        Wed, 9 Jun 2021 10:43:16 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 390k1rt3w0-1
+        by userp3020.oracle.com with ESMTP id 390k1rth6h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Jun 2021 10:18:32 +0000
+        Wed, 09 Jun 2021 10:43:16 +0000
 Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 159AIWou040342;
-        Wed, 9 Jun 2021 10:18:32 GMT
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 159AhFFG094586;
+        Wed, 9 Jun 2021 10:43:15 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 390k1rt3vv-1
+        by userp3020.oracle.com with ESMTP id 390k1rth6f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 09 Jun 2021 10:18:32 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 159AIVIE031481;
-        Wed, 9 Jun 2021 10:18:31 GMT
+        Wed, 09 Jun 2021 10:43:15 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 159AhESv016626;
+        Wed, 9 Jun 2021 10:43:14 GMT
 Received: from mwanda (/41.212.42.34)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 09 Jun 2021 03:18:31 -0700
-Date:   Wed, 9 Jun 2021 13:18:23 +0300
+        with ESMTP ; Wed, 09 Jun 2021 03:43:14 -0700
+Date:   Wed, 9 Jun 2021 13:43:08 +0300
 From:   Dan Carpenter <dan.carpenter@oracle.com>
 To:     markpearson@lenovo.com
 Cc:     platform-driver-x86@vger.kernel.org
 Subject: [bug report] platform/x86: think-lmi: Add WMI interface support on
  Lenovo platforms
-Message-ID: <YMCVb9IcJ5zNZCpj@mwanda>
+Message-ID: <YMCbPNqiuso+k2rk@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Proofpoint-ORIG-GUID: jGoS4FCRRFT-l-usp71fT6tqhkD0TbHT
-X-Proofpoint-GUID: jGoS4FCRRFT-l-usp71fT6tqhkD0TbHT
+X-Proofpoint-ORIG-GUID: G3XMeTPrd6zpLTcuxQZW_prCx4xWFy9I
+X-Proofpoint-GUID: G3XMeTPrd6zpLTcuxQZW_prCx4xWFy9I
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10009 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 malwarescore=0 mlxlogscore=881 clxscore=1011 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2106090049
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 phishscore=0
+ spamscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106090051
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
@@ -84,57 +84,35 @@ The patch a7314b3b1d8a: "platform/x86: think-lmi: Add WMI interface
 support on Lenovo platforms" from May 30, 2021, leads to the
 following static checker warning:
 
-drivers/platform/x86/think-lmi.c:540 current_value_store() warn: this array is probably non-NULL. 'tlmi_priv.pwd_admin->password'
-drivers/platform/x86/think-lmi.c:566 current_value_store() warn: this array is probably non-NULL. 'tlmi_priv.pwd_admin->password'
+	drivers/platform/x86/think-lmi.c:453 kbdlang_store()
+	error: iterator underflow 'setting->kbdlang' (-1),1-3
 
 drivers/platform/x86/think-lmi.c
-   533          if (!new_setting)
-   534                  return -ENOMEM;
-   535  
-   536          /* Strip out CR if one is present */
-   537          p = strchrnul(new_setting, '\n');
-   538          *p = '\0';
-   539  
-   540          if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password) {
-                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This can't be NULL
+   438  static ssize_t kbdlang_store(struct kobject *kobj,
+   439                                    struct kobj_attribute *attr,
+   440                                    const char *buf, size_t count)
+   441  {
+   442          struct tlmi_pwd_setting *setting = to_tlmi_pwd_setting(kobj);
+   443          int length;
+   444  
+   445          length = strlen(buf);
 
-   541                  auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-   542                                  tlmi_priv.pwd_admin->password,
-   543                                  encoding_options[tlmi_priv.pwd_admin->encoding],
-   544                                  tlmi_priv.pwd_admin->kbdlang);
-   545                  if (!auth_str) {
-   546                          ret = -ENOMEM;
-   547                          goto out;
-   548                  }
-   549          }
-   550  
-   551          if (auth_str)
-   552                  set_str = kasprintf(GFP_KERNEL, "%s,%s,%s", setting->display_name,
-   553                                  new_setting, auth_str);
-   554          else
-   555                  set_str = kasprintf(GFP_KERNEL, "%s,%s;", setting->display_name,
-   556                                  new_setting);
-   557          if (!set_str) {
-   558                  ret = -ENOMEM;
-   559                  goto out;
-   560          }
-   561  
-   562          ret = tlmi_simple_call(LENOVO_SET_BIOS_SETTINGS_GUID, set_str);
-   563          if (ret)
-   564                  goto out;
-   565  
-   566          if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password)
-                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Same
+"count" can never be zero, but strlen(buf) can be zero.
 
-   567                  ret = tlmi_save_bios_settings(auth_str);
-   568          else
-   569                  ret = tlmi_save_bios_settings("");
-   570  
-   571  out:
-   572          kfree(auth_str);
-   573          kfree(set_str);
+   446          if (buf[length-1] == '\n')
+                        ^^^^^^^^
+So this code can read before the start of the buffer, potentially
+leading to an Oops.
+
+   447                  length--;
+   448  
+   449          if (!length || (length >= TLMI_LANG_MAXLEN))
+   450                  return -EINVAL;
+   451  
+   452          memcpy(setting->kbdlang, buf, length);
+   453          setting->kbdlang[length] = '\0';
+   454          return count;
+   455  }
 
 regards,
 dan carpenter
