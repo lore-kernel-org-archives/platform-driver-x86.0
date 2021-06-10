@@ -2,118 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CAAC47094
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C5DC48BD1
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 22:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B41360FEA
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 16:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D7B613F1
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 22:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbhFJQIP (ORCPT
+        id S230001AbhFJWPq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Jun 2021 12:08:15 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:49736 "EHLO mail.skyhub.de"
+        Thu, 10 Jun 2021 18:15:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:52505 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230215AbhFJQIO (ORCPT
+        id S230385AbhFJWPq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Jun 2021 12:08:14 -0400
-Received: from zn.tnic (p200300ec2f0cf600591105fc6a1dcc4d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:f600:5911:5fc:6a1d:cc4d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DDC801EC047E;
-        Thu, 10 Jun 2021 18:06:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1623341177;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=zvbfcUZdo2PPbCEC0uqqnYngk3JUoL4NdQDuqHiqROE=;
-        b=rBw20HNvAR7V08L0GMft3uBM69albdHu50Ep8a4MZGOw3fZWG+UfB3UXav/Je4dU8ESW+y
-        ZPIxa2Juwmr4HNYQKQxeYeb1iwJfGFSqgGKx7tso3pjW7zOM2p3d/IkqTN/QFnstvh28uU
-        gtyPvIzRUxziNpMCQWbAfdkCvWqrpcU=
-Date:   Thu, 10 Jun 2021 18:06:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 12/22] x86/kernel: Make the bss.decrypted
- section shared in RMP table
-Message-ID: <YMI4dxkwes15c+lx@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-13-brijesh.singh@amd.com>
+        Thu, 10 Jun 2021 18:15:46 -0400
+IronPort-SDR: JOH0s2bp9WxbRo4Qz0NwLAmRt1+k4HcvI/wuPKvEm9VybeUAx+bAvjcOYTbhrEOK/kkZRe161C
+ VyJKa46A28uA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10011"; a="266568206"
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="266568206"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2021 15:13:49 -0700
+IronPort-SDR: SH3gVmaXD+vEc9AxzI1QJgZrYNCBbKjqQwb8rCEyMzDZIO7Sd7yZyrvss5D3B5q4xGORgx/Ma/
+ 30PEd30wSe6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,264,1616482800"; 
+   d="scan'208";a="483028069"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga001.jf.intel.com with ESMTP; 10 Jun 2021 15:13:49 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Thu, 10 Jun 2021 15:13:48 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Thu, 10 Jun 2021 15:13:48 -0700
+Received: from orsmsx610.amr.corp.intel.com ([10.22.229.23]) by
+ ORSMSX610.amr.corp.intel.com ([10.22.229.23]) with mapi id 15.01.2242.008;
+ Thu, 10 Jun 2021 15:13:48 -0700
+From:   "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>
+To:     "hdegoede@redhat.com" <hdegoede@redhat.com>
+CC:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "srinivas.pandruvada@linux.intel.com" 
+        <srinivas.pandruvada@linux.intel.com>,
+        "prarit@redhat.com" <prarit@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 5.14-rc1
+Thread-Topic: [GIT PULL]: tools/power/x86/intel-speed-select pull request for
+ 5.14-rc1
+Thread-Index: AQHXXkXiRliJoZf/k0SuwUhmssLxjA==
+Date:   Thu, 10 Jun 2021 22:13:48 +0000
+Message-ID: <37f1eff940cdc2113e9d6ff9848a0165380b957d.camel@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B3E36A7C6072F245BA69CAB95FEBD812@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210602140416.23573-13-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 09:04:06AM -0500, Brijesh Singh wrote:
-> The encryption attribute for the bss.decrypted region is cleared in the
-> initial page table build. This is because the section contains the data
-> that need to be shared between the guest and the hypervisor.
-> 
-> When SEV-SNP is active, just clearing the encryption attribute in the
-> page table is not enough. The page state need to be updated in the RMP
-> table.
-> 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/kernel/head64.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> index de01903c3735..f4c3e632345a 100644
-> --- a/arch/x86/kernel/head64.c
-> +++ b/arch/x86/kernel/head64.c
-> @@ -288,7 +288,14 @@ unsigned long __head __startup_64(unsigned long physaddr,
->  	if (mem_encrypt_active()) {
->  		vaddr = (unsigned long)__start_bss_decrypted;
->  		vaddr_end = (unsigned long)__end_bss_decrypted;
-> +
->  		for (; vaddr < vaddr_end; vaddr += PMD_SIZE) {
-> +			/*
-> +			 * When SEV-SNP is active then transition the page to shared in the RMP
-> +			 * table so that it is consistent with the page table attribute change.
-> +			 */
-> +			early_snp_set_memory_shared(__pa(vaddr), __pa(vaddr), PTRS_PER_PMD);
-> +
->  			i = pmd_index(vaddr);
->  			pmd[i] -= sme_get_me_mask();
->  		}
-> -- 
-
-It seems to me that all that code from the sme_encrypt_kernel(bp); call
-to the end of the function should be in a separate function in sev.c
-called sev_prepare_kernel(...args...) to be at least abstracted away
-from the main boot path.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+SGkgSGFucywNCg0KVGhlc2UgY2hhbmdlcyBhcmUgb24gdG9wIG9mDQpodHRwczovL2tlcm5lbC5n
+b29nbGVzb3VyY2UuY29tL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9wZHg4Ni9wbGF0Zm9ybS1k
+cml2ZXJzLXg4Ni9mb3ItbmV4dA0KDQpUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0
+DQo1MDFmMTg2NGU2Mzg3YmYwYWJjNWQwYmIyMmE4OWZkZDllZDViOTdmOg0KDQogIHBsYXRmb3Jt
+L3g4NjogdGhpbmstbG1pOiBBdm9pZCBwb3RlbnRpYWwgcmVhZCBiZWZvcmUgc3RhcnQgb2YgdGhl
+DQpidWZmZXIgKDIwMjEtMDYtMDkgMTc6MTg6MjUgKzAyMDApDQoNCmFyZSBhdmFpbGFibGUgaW4g
+dGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGh0dHBzOi8vZ2l0aHViLmNvbS9zcGFuZHJ1dmFk
+YS9saW51eC1rZXJuZWwuZ2l0IGludGVsLXNzdA0KDQpmb3IgeW91IHRvIGZldGNoIGNoYW5nZXMg
+dXAgdG8NCjAxOTkyMGQwZGViMDYxNThhNWZmNDhiNWJjMzhhMWU3Yzc4MDliZTU6DQoNCiAgdG9v
+bHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogdjEuMTAgcmVsZWFzZSAoMjAyMS0wNi0x
+MA0KMTQ6Mzc6MjggLTA3MDApDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClNyaW5pdmFzIFBhbmRydXZhZGEgKDIpOg0K
+ICAgICAgdG9vbHMvcG93ZXIveDg2L2ludGVsLXNwZWVkLXNlbGVjdDogRml4IHVuY29yZSBtZW1v
+cnkgZnJlcXVlbmN5DQpkaXNwbGF5DQogICAgICB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQt
+c2VsZWN0OiB2MS4xMCByZWxlYXNlDQoNCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2Vs
+ZWN0L2lzc3QtY29uZmlnLmMgIHwgMTgNCisrKysrKysrKysrKysrKysrLQ0KIHRvb2xzL3Bvd2Vy
+L3g4Ni9pbnRlbC1zcGVlZC1zZWxlY3QvaXNzdC1jb3JlLmMgICAgfCAxNSArKysrKysrKysrKysr
+KysNCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QtZGlzcGxheS5jIHwg
+IDIgKy0NCiB0b29scy9wb3dlci94ODYvaW50ZWwtc3BlZWQtc2VsZWN0L2lzc3QuaCAgICAgICAg
+IHwgIDIgKysNCiA0IGZpbGVzIGNoYW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pDQoNClRoYW5rcywNClNyaW5pdmFzDQo=
