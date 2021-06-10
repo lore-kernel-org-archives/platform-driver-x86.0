@@ -1,80 +1,94 @@
 Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.6 required=3.0 tests=BAYES_50,DATE_IN_PAST_06_12,
-	DKIMWL_BL,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6631FC48BCD
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 03:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066F0C48BCD
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 05:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4553A61418
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 03:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E9861403
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 05:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229753AbhFJDiH (ORCPT
+        id S229966AbhFJFv0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 9 Jun 2021 23:38:07 -0400
-Received: from flippie-beckerswealthser.xyz ([62.173.138.174]:43256 "EHLO
-        host.flippie-beckerswealthser.xyz" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229557AbhFJDiG (ORCPT
+        Thu, 10 Jun 2021 01:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229911AbhFJFvZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 9 Jun 2021 23:38:06 -0400
-X-Greylist: delayed 20838 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Jun 2021 23:38:06 EDT
-Received: from flippie-beckerswealthser.xyz (ec2-34-216-33-184.us-west-2.compute.amazonaws.com [34.216.33.184])
-        by host.flippie-beckerswealthser.xyz (Postfix) with ESMTPA id AF18D34DFFD6
-        for <platform-driver-x86@vger.kernel.org>; Wed,  9 Jun 2021 22:06:56 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippie-beckerswealthser.xyz AF18D34DFFD6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flippie-beckerswealthser.xyz; s=default; t=1623265617;
-        bh=h0ivQLrZuUWuyEKz/TWb+FP9AASpHhVqOsJtRcwKQV4=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=Rf2fQgeItos6RJXzB6W5vBqEmUY3nRVl0YJXjnKs83wiyT83wBQi372wvv/GIjEyN
-         sxJ3fMGHttXxPKJcEcG1yFfDHkNtQWWlyIMD6xEsgU9s8RV7u1nYeLIV3EoWmYo8Ek
-         APvhXebHGwCLc24/KXIjkwt0r/px0TSSvi29hTP4=
-DKIM-Filter: OpenDKIM Filter v2.11.0 host.flippie-beckerswealthser.xyz AF18D34DFFD6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flippie-beckerswealthser.xyz; s=default; t=1623265617;
-        bh=h0ivQLrZuUWuyEKz/TWb+FP9AASpHhVqOsJtRcwKQV4=;
-        h=Reply-To:From:To:Subject:Date:From;
-        b=Rf2fQgeItos6RJXzB6W5vBqEmUY3nRVl0YJXjnKs83wiyT83wBQi372wvv/GIjEyN
-         sxJ3fMGHttXxPKJcEcG1yFfDHkNtQWWlyIMD6xEsgU9s8RV7u1nYeLIV3EoWmYo8Ek
-         APvhXebHGwCLc24/KXIjkwt0r/px0TSSvi29hTP4=
-Reply-To: jmasuku40@flippiebeckerwealthservices.com
-From:   Jotham Masuku <jmasuku40@flippie-beckerswealthser.xyz>
-To:     platform-driver-x86@vger.kernel.org
-Subject: Project
-Date:   09 Jun 2021 19:06:56 +0000
-Message-ID: <20210609190656.D77C799009862B22@flippie-beckerswealthser.xyz>
-Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 10 Jun 2021 01:51:25 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D78F9C061574;
+        Wed,  9 Jun 2021 22:49:29 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0cf6003c3f1790b4f2bf21.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:f600:3c3f:1790:b4f2:bf21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 64CAA1EC0589;
+        Thu, 10 Jun 2021 07:49:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623304167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=RitcXYgrIWSrnu6FZ/EJXPF/tjn3PKo31V95ISXbgF0=;
+        b=qM1OQy1794JXyxVV5fsWNyyZSDAbcDerSJ88Q7muUjuvnYHleLySEJGIT9KZZI2c+v8RO9
+        AETG4d7ywrFpN6LOdY/nl/hh9bMi7nUeJZnyLsnzb/Ztow1RoHfAGsI4LJI+qI+zz6O/U8
+        M54qtas2cdYNR2624jhdc01yLKmtQ24=
+Date:   Thu, 10 Jun 2021 07:49:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 10/22] x86/sev: Register GHCB memory when
+ SEV-SNP is active
+Message-ID: <YMGn3/9t5QhS+1rp@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-11-brijesh.singh@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-11-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello there,
+On Wed, Jun 02, 2021 at 09:04:04AM -0500, Brijesh Singh wrote:
+> +++ b/arch/x86/kernel/sev-internal.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Forward declarations for sev-shared.c
+> + *
+> + * Author: Brijesh Singh <brijesh.singh@amd.com>
+> + */
+> +
+> +#ifndef _ARCH_X86_KERNEL_SEV_INTERNAL_H
 
-I hope this message finds you in good spirits especially during=20
-this challenging time of coronavirus pandemic. I hope you and=20
-your family are well and keeping safe. Anyway, I am Jotham=20
-Masuku, a broker working with Flippiebecker Wealth. I got your=20
-contact (along with few other contacts) through an online=20
-business directory and I thought I should contact you to see if=20
-you are interested in this opportunity. I am contacting you=20
-because one of my high profile clients is interested in investing=20
-abroad and has asked me to look for individuals and companies=20
-with interesting business ideas and projects that he can invest=20
-in. He wants to invest a substantial amount of asset abroad.
+	__X86_SEV_INTERNAL_H__
 
-Please kindly respond back to this email if you are interested in=20
-this opportunity. Once I receive your response, I will give you=20
-more details and we can plan a strategy that will be beneficial=20
-to all parties.
+-- 
+Regards/Gruss,
+    Boris.
 
-Best regards
-
-J Masuku
-Flippiebecker Wealth
+https://people.kernel.org/tglx/notes-about-netiquette
