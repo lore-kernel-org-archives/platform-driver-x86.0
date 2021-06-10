@@ -2,393 +2,150 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0EBC47094
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 15:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15147C47094
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 15:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64904613E3
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 15:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E162A613D0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 10 Jun 2021 15:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231712AbhFJPwz (ORCPT
+        id S230413AbhFJP5V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 10 Jun 2021 11:52:55 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47044 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230298AbhFJPwz (ORCPT
+        Thu, 10 Jun 2021 11:57:21 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35536 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230361AbhFJP5U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 10 Jun 2021 11:52:55 -0400
-Received: from zn.tnic (p200300ec2f0cf600591105fc6a1dcc4d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:f600:5911:5fc:6a1d:cc4d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1C6851EC047D;
-        Thu, 10 Jun 2021 17:50:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1623340257;
+        Thu, 10 Jun 2021 11:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623340524;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/ucDEPiAjCNgh+5QYV19aaLxDA7Gu7w2xk6M9j+LUNE=;
-        b=hw2aXx8BFfNHa4IZlkwBdukgEW8Ik8YFYC6RGLU1bKHqwQ80CVn0B0VEaJxiCjJln46oPK
-        fYImG+6j+vFbfPd4bXZgu/g/Jzv1RMvR0bmq9ul0RLWe/yTIRreFOeWAtTyiBzTg2GEPDI
-        4imoc5EragOgkErfv4T4zV31vKEHWG8=
-Date:   Thu, 10 Jun 2021 17:50:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 11/22] x86/sev: Add helper for validating
- pages in early enc attribute changes
-Message-ID: <YMI02+k2zk9eazjQ@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-12-brijesh.singh@amd.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iZQG49OMdPKGkVDjxzrA9bmQ2IiyK39OfqmeMQ/HNjI=;
+        b=coeEit+avyKcmzcCYpVE1LCRS8K10e/7XZTihkbjflRBPU2lPFkn5lEYUFD3yzh7bRcVyB
+        RBaSshaSCZo95ybNd7mw9tvZwTY3ItB/kp0ijYM51wg3gewj+p18PC+oB4ain0jBFuhgk3
+        t96O+crMgQSJ8jpkymq1mTRdzPcRJLc=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-gUNMo3x-PkWjszWM2BtJvg-1; Thu, 10 Jun 2021 11:55:23 -0400
+X-MC-Unique: gUNMo3x-PkWjszWM2BtJvg-1
+Received: by mail-ej1-f72.google.com with SMTP id p20-20020a1709064994b02903cd421d7803so6390440eju.22
+        for <platform-driver-x86@vger.kernel.org>; Thu, 10 Jun 2021 08:55:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iZQG49OMdPKGkVDjxzrA9bmQ2IiyK39OfqmeMQ/HNjI=;
+        b=GsN6tZ9ZidsriEUxTrIJCYbE3P+qPALsfkxlUPVG88lzJij65Pi34js9REFd/LiIi7
+         4yasDYEG/3ASrZT03mCTk47liz0rcG4qwtyJ1fx9wyULfj5qvoGctQJGtyjzma7QS+3g
+         ZHeYGRwgTO0Z2pln1/3LtrSla4zXKba/B/KnzC7l4GnRCNtCuh3XNyi1mqwUUPqEfGbf
+         59AulK0K8M5/iLxCA+Q5RfkbtcjwebUbfWAvOV2c/wDDArM5mEyQuI++m3Io3j+670Pe
+         h7orDtaqy9uA4nVKT07k/2k3CC4uLgSAz+fwRgjOVU/iGGdix4IhUckhLmL5Dpvx3wfI
+         45Qg==
+X-Gm-Message-State: AOAM530JyCQrXdzfdgBnYa1q/qhbFDSnnV6fMOIAe0uwUZBE+7QhnfbY
+        uFGwY1XCTkZp/98+Gg5TBlBFdvyP7Ly4L2IzIXFfbT8fqLxPYvq5KwquqPks/HXPaJUR0VbgNIq
+        vParCHXqtcUECRdVFXr93fvwBCiFFnarNog==
+X-Received: by 2002:aa7:c6c2:: with SMTP id b2mr162813eds.8.1623340520893;
+        Thu, 10 Jun 2021 08:55:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzegUSmNkouCVxXgL5EpM34N2tl0oLxPr9grZP9q3YInG4mkvVxKvf1gpjZDLfSXaCu5fvtcw==
+X-Received: by 2002:aa7:c6c2:: with SMTP id b2mr162805eds.8.1623340520764;
+        Thu, 10 Jun 2021 08:55:20 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id jp6sm1224885ejb.85.2021.06.10.08.55.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Jun 2021 08:55:20 -0700 (PDT)
+Subject: Re: Computation of return value being discarded in get_cpu_power() in
+ drivers/platform/x86/intel_ips.c
+To:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Jesse Barnes <jsbarnes@google.com>
+Cc:     platform-driver-x86@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <548dd463-3942-00a1-85c3-232897dea1a3@canonical.com>
+ <162332615476.15946.17135355064135638083@jlahtine-mobl.ger.corp.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7e13032d-1472-9c50-1dba-9dcebc76729f@redhat.com>
+Date:   Thu, 10 Jun 2021 17:55:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
+In-Reply-To: <162332615476.15946.17135355064135638083@jlahtine-mobl.ger.corp.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210602140416.23573-12-brijesh.singh@amd.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 09:04:05AM -0500, Brijesh Singh wrote:
-> @@ -65,6 +65,12 @@ extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
->  /* RMP page size */
->  #define RMP_PG_SIZE_4K			0
->  
-> +/* Memory opertion for snp_prep_memory() */
-> +enum snp_mem_op {
-> +	MEMORY_PRIVATE,
-> +	MEMORY_SHARED
+Hi,
 
-See below.
+On 6/10/21 1:55 PM, Joonas Lahtinen wrote:
+> (Address for Hans was corrupt in previous message, which confused my mail
+> client. Sorry for duplicate message, the other is without From: field).
+> 
+> + Jesse
+> 
+> Quoting Colin Ian King (2021-06-09 14:50:07)
+>> Hi,
+>>
+>> I was reviewing some old unassigned variable warnings from static
+>> analysis by Coverity and found an issue introduced with the following
+>> commit:
+>>
+>> commit aa7ffc01d254c91a36bf854d57a14049c6134c72
+>> Author: Jesse Barnes <jbarnes@virtuousgeek.org>
+>> Date:   Fri May 14 15:41:14 2010 -0700
+>>
+>>     x86 platform driver: intelligent power sharing driver
+>>
+>> The analysis is as follows:
+>>
+>> drivers/platform/x86/intel_ips.c
+>>
+>>  871 static u32 get_cpu_power(struct ips_driver *ips, u32 *last, int period)
+>>  872 {
+>>  873        u32 val;
+>>  874        u32 ret;
+>>  875
+>>  876        /*
+>>  877         * CEC is in joules/65535.  Take difference over time to
+>>  878         * get watts.
+>>  879         */
+>>  880        val = thm_readl(THM_CEC);
+>>  881
+>>  882        /* period is in ms and we want mW */
+>>  883        ret = (((val - *last) * 1000) / period);
+>>
+>> Unused value (UNUSED_VALUE)
+>> assigned_value:  Assigning value from ret * 1000U / 65535U to ret here,
+>> but that stored value is not used.
+>>
+>>  884        ret = (ret * 1000) / 65535;
+>>  885        *last = val;
+>>  886
+>>  887        return 0;
+>>  888 }
+>>
+>> I'm really not sure why ret is being calculated on lines 883,884 and not
+>> being used. Should that be *last = ret on line 885? Looks suspect anyhow.
 
-> +};
-> +
->  #ifdef CONFIG_AMD_MEM_ENCRYPT
->  extern struct static_key_false sev_es_enable_key;
->  extern void __sev_es_ist_enter(struct pt_regs *regs);
-> @@ -103,6 +109,11 @@ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate)
->  
->  	return rc;
->  }
-> +void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
-> +		unsigned int npages);
-> +void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-> +		unsigned int npages);
+This has already been fixed (yesterday actually) in linux-next:
 
-Align arguments on the opening brace.
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/commit/?h=for-next&id=13c3b4f76073d73dd81e418295902676153f6cb5
 
-> +void __init snp_prep_memory(unsigned long paddr, unsigned int sz, int op);
->  #else
->  static inline void sev_es_ist_enter(struct pt_regs *regs) { }
->  static inline void sev_es_ist_exit(void) { }
-> @@ -110,6 +121,15 @@ static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { ret
->  static inline void sev_es_nmi_complete(void) { }
->  static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
->  static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
-> +static inline void __init
-> +early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned int npages)
+Regards,
 
-Put those { } at the end of the line:
+Hans
 
-early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr, unsigned int npages) { }
-
-no need for separate lines. Ditto below.
-
-> +{
-> +}
-> +static inline void __init
-> +early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr, unsigned int npages)
-> +{
-> +}
-> +static inline void __init snp_prep_memory(unsigned long paddr, unsigned int sz, int op) { }
->  #endif
->  
->  #endif
-> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> index 455c09a9b2c2..6e9b45bb38ab 100644
-> --- a/arch/x86/kernel/sev.c
-> +++ b/arch/x86/kernel/sev.c
-> @@ -532,6 +532,111 @@ static u64 get_jump_table_addr(void)
->  	return ret;
->  }
->  
-> +static void pvalidate_pages(unsigned long vaddr, unsigned int npages, bool validate)
-> +{
-> +	unsigned long vaddr_end;
-> +	int rc;
-> +
-> +	vaddr = vaddr & PAGE_MASK;
-> +	vaddr_end = vaddr + (npages << PAGE_SHIFT);
-> +
-> +	while (vaddr < vaddr_end) {
-> +		rc = pvalidate(vaddr, RMP_PG_SIZE_4K, validate);
-> +		if (WARN(rc, "Failed to validate address 0x%lx ret %d", vaddr, rc))
-> +			sev_es_terminate(1, GHCB_TERM_PVALIDATE);
-					^^
-
-I guess that 1 should be a define too, if we have to be correct:
-
-			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
-
-or so. Ditto for all other calls of this.
-
-> +
-> +		vaddr = vaddr + PAGE_SIZE;
-> +	}
-> +}
-> +
-> +static void __init early_set_page_state(unsigned long paddr, unsigned int npages, int op)
-> +{
-> +	unsigned long paddr_end;
-> +	u64 val;
-> +
-> +	paddr = paddr & PAGE_MASK;
-> +	paddr_end = paddr + (npages << PAGE_SHIFT);
-> +
-> +	while (paddr < paddr_end) {
-> +		/*
-> +		 * Use the MSR protocol because this function can be called before the GHCB
-> +		 * is established.
-> +		 */
-> +		sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
-> +		VMGEXIT();
-> +
-> +		val = sev_es_rd_ghcb_msr();
-> +
-> +		if (GHCB_RESP_CODE(val) != GHCB_MSR_PSC_RESP)
-
-From a previous review:
-
-Does that one need a warning too or am I being too paranoid?
-
-> +			goto e_term;
-> +
-> +		if (WARN(GHCB_MSR_PSC_RESP_VAL(val),
-> +			 "Failed to change page state to '%s' paddr 0x%lx error 0x%llx\n",
-> +			 op == SNP_PAGE_STATE_PRIVATE ? "private" : "shared",
-> +			 paddr, GHCB_MSR_PSC_RESP_VAL(val)))
-> +			goto e_term;
-> +
-> +		paddr = paddr + PAGE_SIZE;
-> +	}
-> +
-> +	return;
-> +
-> +e_term:
-> +	sev_es_terminate(1, GHCB_TERM_PSC);
-> +}
-> +
-> +void __init early_snp_set_memory_private(unsigned long vaddr, unsigned long paddr,
-> +					 unsigned int npages)
-> +{
-> +	if (!sev_feature_enabled(SEV_SNP))
-> +		return;
-> +
-> +	 /* Ask hypervisor to add the memory pages in RMP table as a 'private'. */
-
-	    Ask the hypervisor to mark the memory pages as private in the RMP table.
-
-> +	early_set_page_state(paddr, npages, SNP_PAGE_STATE_PRIVATE);
-> +
-> +	/* Validate the memory pages after they've been added in the RMP table. */
-> +	pvalidate_pages(vaddr, npages, 1);
-> +}
-> +
-> +void __init early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr,
-> +					unsigned int npages)
-> +{
-> +	if (!sev_feature_enabled(SEV_SNP))
-> +		return;
-> +
-> +	/*
-> +	 * Invalidate the memory pages before they are marked shared in the
-> +	 * RMP table.
-> +	 */
-> +	pvalidate_pages(vaddr, npages, 0);
-> +
-> +	 /* Ask hypervisor to make the memory pages shared in the RMP table. */
-
-			      mark
-
-> +	early_set_page_state(paddr, npages, SNP_PAGE_STATE_SHARED);
-> +}
-> +
-> +void __init snp_prep_memory(unsigned long paddr, unsigned int sz, int op)
-> +{
-> +	unsigned long vaddr, npages;
-> +
-> +	vaddr = (unsigned long)__va(paddr);
-> +	npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
-> +
-> +	switch (op) {
-> +	case MEMORY_PRIVATE: {
-> +		early_snp_set_memory_private(vaddr, paddr, npages);
-> +		return;
-> +	}
-> +	case MEMORY_SHARED: {
-> +		early_snp_set_memory_shared(vaddr, paddr, npages);
-> +		return;
-> +	}
-> +	default:
-> +		break;
-> +	}
-> +
-> +	WARN(1, "invalid memory op %d\n", op);
-
-A lot easier, diff ontop of your patch:
-
----
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 7c2cb5300e43..2ad4b5ab3f6c 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -65,12 +65,6 @@ extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
- /* RMP page size */
- #define RMP_PG_SIZE_4K			0
- 
--/* Memory opertion for snp_prep_memory() */
--enum snp_mem_op {
--	MEMORY_PRIVATE,
--	MEMORY_SHARED
--};
--
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- extern struct static_key_false sev_es_enable_key;
- extern void __sev_es_ist_enter(struct pt_regs *regs);
-diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 2a5dce42af35..991d7964cee9 100644
---- a/arch/x86/kernel/sev.c
-+++ b/arch/x86/kernel/sev.c
-@@ -662,20 +662,13 @@ void __init snp_prep_memory(unsigned long paddr, unsigned int sz, int op)
- 	vaddr = (unsigned long)__va(paddr);
- 	npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
- 
--	switch (op) {
--	case MEMORY_PRIVATE: {
-+	if (op == SNP_PAGE_STATE_PRIVATE)
- 		early_snp_set_memory_private(vaddr, paddr, npages);
--		return;
--	}
--	case MEMORY_SHARED: {
-+	else if (op == SNP_PAGE_STATE_SHARED)
- 		early_snp_set_memory_shared(vaddr, paddr, npages);
--		return;
-+	else {
-+		WARN(1, "invalid memory page op %d\n", op);
- 	}
--	default:
--		break;
--	}
--
--	WARN(1, "invalid memory op %d\n", op);
- }
- 
- int sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
----
-
->  static char sme_early_buffer[PAGE_SIZE] __initdata __aligned(PAGE_SIZE);
->  
-> +/*
-> + * When SNP is active, changes the page state from private to shared before
-
-s/changes/change/
-
-> + * copying the data from the source to destination and restore after the copy.
-> + * This is required because the source address is mapped as decrypted by the
-> + * caller of the routine.
-> + */
-> +static inline void __init snp_memcpy(void *dst, void *src, size_t sz,
-> +				     unsigned long paddr, bool decrypt)
-> +{
-> +	unsigned long npages = PAGE_ALIGN(sz) >> PAGE_SHIFT;
-> +
-> +	if (!sev_feature_enabled(SEV_SNP) || !decrypt) {
-> +		memcpy(dst, src, sz);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * If the paddr needs to be accessed decrypted, mark the page
-
-What do you mean "If" - this is the SNP version of memcpy. Just say:
-
-	/*
-	 * With SNP, the page address needs to be ...
-	 */
-
-> +	 * shared in the RMP table before copying it.
-> +	 */
-> +	early_snp_set_memory_shared((unsigned long)__va(paddr), paddr, npages);
-> +
-> +	memcpy(dst, src, sz);
-> +
-> +	/* Restore the page state after the memcpy. */
-> +	early_snp_set_memory_private((unsigned long)__va(paddr), paddr, npages);
-> +}
-> +
->  /*
->   * This routine does not change the underlying encryption setting of the
->   * page(s) that map this memory. It assumes that eventually the memory is
-> @@ -96,8 +125,8 @@ static void __init __sme_early_enc_dec(resource_size_t paddr,
->  		 * Use a temporary buffer, of cache-line multiple size, to
->  		 * avoid data corruption as documented in the APM.
->  		 */
-> -		memcpy(sme_early_buffer, src, len);
-> -		memcpy(dst, sme_early_buffer, len);
-> +		snp_memcpy(sme_early_buffer, src, len, paddr, enc);
-> +		snp_memcpy(dst, sme_early_buffer, len, paddr, !enc);
->  
->  		early_memunmap(dst, len);
->  		early_memunmap(src, len);
-> @@ -277,9 +306,23 @@ static void __init __set_clr_pte_enc(pte_t *kpte, int level, bool enc)
->  	else
->  		sme_early_decrypt(pa, size);
->  
-> +	/*
-> +	 * If page is getting mapped decrypted in the page table, then the page state
-> +	 * change in the RMP table must happen before the page table updates.
-> +	 */
-> +	if (!enc)
-> +		early_snp_set_memory_shared((unsigned long)__va(pa), pa, 1);
-
-Merge the two branches:
-
-	/* Encrypt/decrypt the contents in-place */
-        if (enc) {
-                sme_early_encrypt(pa, size);
-        } else {
-                sme_early_decrypt(pa, size);
-
-                /*
-                 * On SNP, the page state change in the RMP table must happen
-                 * before the page table updates.
-                 */
-                early_snp_set_memory_shared((unsigned long)__va(pa), pa, 1);
-        }
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
