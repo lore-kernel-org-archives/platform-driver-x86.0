@@ -2,131 +2,130 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A00C48BCF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Jun 2021 14:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571F1C49EA2
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 11:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADB82611CE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 13 Jun 2021 14:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4328961283
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 11:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231782AbhFMOYz (ORCPT
+        id S234186AbhFNLCb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 13 Jun 2021 10:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231755AbhFMOYz (ORCPT
+        Mon, 14 Jun 2021 07:02:31 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49150 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235206AbhFNLA1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 13 Jun 2021 10:24:55 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BAFCC061574
-        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Jun 2021 07:22:39 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id ei4so8284414pjb.3
-        for <platform-driver-x86@vger.kernel.org>; Sun, 13 Jun 2021 07:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4pONQngXz4wBjkaDpA2w0y8/XycGaMQaNQOf7XiKps4=;
-        b=DQtWX+r5TqZ++kSsuqNEg/HwhTwBMa0civnV8MMGMrp8oXuxq7aPh7ooT72ZrYU99j
-         /upLfw6ZeezeiW+pZYAmrN9pzBymYus6q62x/a1tsvBoFiy9f0B/M3My+xtY0JgRpSXC
-         5MqD5Pg3nZZ6A0dtgE4ucxX89VZ+DiLPBf8CQM1WTUaJcxLS/9OOGdJXLuPkwpm24hIA
-         Y+OcjzyahiNHbrlfuaZeG8Gqr3oZs0O3UE2EeeC4z1EXUrTAcV/QSDg+o7ZSug+i9KmL
-         Z9koMJnbFbRPhwl28MrhL/iDs4FkqSdnX85ONOaJ3TIbgmZJVUIkS7LjjzHXO+hINH8h
-         iOXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4pONQngXz4wBjkaDpA2w0y8/XycGaMQaNQOf7XiKps4=;
-        b=csUk78T5eYZhje/0vVQhakiWIflSBhI7pGHPGVKT8CXceGdfS4BEc9zNhu8dx9jzBJ
-         tpZVjCOK520UJis8F1XcLknf7j/xo0vO73w6WG0Z+hO1XPsyLaCq1tbpmXbY+CtchcTY
-         huVf3eORDhiFIoAVYNnDAIDYpNv1sAsweW7S2WEsNVO0KIyiMyEhQ4CZhX5N/n7LEqyg
-         aIq9Vcv6aYNh8cofoUk37F7uIjs0XNNX7EH5VqRMy4Vgs5mNLvEjEdBlyinc31qOkHgw
-         HOgUXom22m2ksyecMgOL44kmid558B0+3QV3hm28JNePqgJeIeUprurs5R8EdfcB95lo
-         kyXQ==
-X-Gm-Message-State: AOAM532AS0t8pbbD9Me8cWCOZCk9+sFZmkpxYVijGot5kDZwm/QwQFrT
-        7t70edKze7jfbRQJr/OhdEr0gbFMzDSaQ8hRXiCE2THFJYE2/A==
-X-Google-Smtp-Source: ABdhPJyyu5u6+vmZcQF96t7UOlOUuegPNnmxT9L/KLu9Ndt+bd3BSk7jCIc75A7ZewaZS5BK6wqIQEi5iYrge7cMm7w=
-X-Received: by 2002:a17:902:d305:b029:10d:c8a3:657f with SMTP id
- b5-20020a170902d305b029010dc8a3657fmr12694249plc.0.1623594158873; Sun, 13 Jun
- 2021 07:22:38 -0700 (PDT)
+        Mon, 14 Jun 2021 07:00:27 -0400
+Received: from zn.tnic (p200300ec2f09b9002609baded98d03dc.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:b900:2609:bade:d98d:3dc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0E761EC0473;
+        Mon, 14 Jun 2021 12:58:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623668302;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=SYW7clEcJZWCOyB/bISVVphg+MXaT1CFPerY1hqPLzw=;
+        b=MWGgDm8baSNQ8T2XWCwE2vT7V1qzuf/nlGCI2H1oXH+eq9im62KqpOIArNcX+tMX12COYd
+        XG9hBXjEXfyJyXL4o7HopQ7BaOuKofQh7qnu7ySAJix2e+FKOOI/Qq4rsMO4XE2FTtl/UF
+        BzCXdMz28mmTrQXsoHPyEgJ75mtprEc=
+Date:   Mon, 14 Jun 2021 12:58:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 16/22] KVM: SVM: Create a separate mapping
+ for the SEV-ES save area
+Message-ID: <YMc2R4JRZ3yFffy/@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-17-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <20210428032224.8299-1-s.shravan@intel.com>
-In-Reply-To: <20210428032224.8299-1-s.shravan@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 13 Jun 2021 17:22:22 +0300
-Message-ID: <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
-Subject: Re: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
-To:     Shravan S <s.shravan@intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        sudhakar.an@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210602140416.23573-17-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 11, 2021 at 12:46 PM Shravan S <s.shravan@intel.com> wrote:
->
-> SAR (Specific Absorption Rate) driver is a host driver implemented for Li=
-nux
-> or chrome platform to limit the exposure of human body to RF frequency by=
- informing
-> the Intel M.2 modem to regulate the RF power based on SAR data obtained f=
-rom the sensors
-> captured in the BIOS. ACPI interface exposes this data from the BIOS to S=
-AR driver. The
-> front end application in userspace ( eg: Modem Manager) will interact wit=
-h SAR driver
-> to obtain information like the device mode (Example: tablets, laptops, et=
-x), Antenna index,
-> baseband index, SAR table index and use available communication like MBIM=
- interface to enable
-> data communication to modem for RF power regulation.
->
-> The BIOS gets notified about device mode changes through Sensor Driver. T=
-his information is
-> given to a (newly created) WWAN ACPI function driver when there is a devi=
-ce mode change.
-> The driver then uses a _DSM method to retrieve the required information f=
-rom BIOS.
-> This information is then forwarded/multicast to the User-space using the =
-NETLINK interface.
-> A lookup table is maintained inside the BIOS which suggests the SAR Table=
- index and Antenna
-> Tuner Table Index values for individual device modes.
->
-> The SAR parameters to be used on the Modem differs for each Regulatory Mo=
-de like FCC, CE and ISED.
-> Hence, the SAR parameters are stored separately in the SMBIOS table in th=
-e OEM BIOS,
-> for each of the Regulatory mode. Regulatory modes will be different based=
- on the region and network
-> available in that region.
->
-> Hence the entire SAR functionality handling is divided into 2 parts:
->
-> =E2=80=A2       A ACPI function driver implemented that uses a dedicated =
-ACPI node for WWAN device.
->     sends notifications whenever there is change in Device Mode. (each OE=
-M has different mechanism
->     of updating this DEVICE Mode info). This is notified to User-space ap=
-plications using
->     the RT-NETLINK interface.
-> =E2=80=A2       WWAN Device Service listens for RT-NETLINK messages and r=
-outes them to Modem using MBIM.
+On Wed, Jun 02, 2021 at 09:04:10AM -0500, Brijesh Singh wrote:
+> +/* Save area definition for SEV-ES and SEV-SNP guests */
+> +struct sev_es_save_area {
 
-That's a nice feature!
-Why is it not a part of some generic subsubsystem under wireless
-network subsystem?
+Can we agree on a convention here to denote SEV-ES and later
+variants VS earlier ones so that you don't have "SEV-ES" in the name
+sev_es_save_area but to mean that this applies to SNP and future stuff
+too?
 
+What about SEV-only guests? I'm assuming those use the old variant.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Which would mean you can call this
+
+struct prot_guest_save_area
+
+or so, so that it doesn't have "sev" in the name and so that there's no
+confusion...
+
+Ditto for the size defines.
+
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 5bc887e9a986..d93a1c368b61 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -542,12 +542,20 @@ static int sev_launch_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>  
+>  static int sev_es_sync_vmsa(struct vcpu_svm *svm)
+
+Not SEV-ES only anymore, so I guess sev_snp_sync_vmca() or so.
+
+> -	struct vmcb_save_area *save = &svm->vmcb->save;
+> +	struct sev_es_save_area *save = svm->vmsa;
+>  
+>  	/* Check some debug related fields before encrypting the VMSA */
+> -	if (svm->vcpu.guest_debug || (save->dr7 & ~DR7_FIXED_1))
+> +	if (svm->vcpu.guest_debug || (svm->vmcb->save.dr7 & ~DR7_FIXED_1))
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * SEV-ES will use a VMSA that is pointed to by the VMCB, not
+> +	 * the traditional VMSA that is part of the VMCB. Copy the
+> +	 * traditional VMSA as it has been built so far (in prep
+> +	 * for LAUNCH_UPDATE_VMSA) to be the initial SEV-ES state.
+
+Ditto - nomenclature.
+
+> +	 */
+> +	memcpy(save, &svm->vmcb->save, sizeof(svm->vmcb->save));
+> +
+>  	/* Sync registgers */
+		^^^^^^^^^^
+
+typo. Might as well fix while at it.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
