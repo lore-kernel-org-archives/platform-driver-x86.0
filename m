@@ -2,97 +2,89 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0E9C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 19:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04D6C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 19:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8645F61057
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 19:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBE061378
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 14 Jun 2021 19:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbhFNTtP (ORCPT
+        id S233997AbhFNTwY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 14 Jun 2021 15:49:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41552 "EHLO
+        Mon, 14 Jun 2021 15:52:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232975AbhFNTtP (ORCPT
+        with ESMTP id S233356AbhFNTwX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 14 Jun 2021 15:49:15 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC3AC061574;
-        Mon, 14 Jun 2021 12:47:00 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id n7so9587398wri.3;
-        Mon, 14 Jun 2021 12:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AG81bnuj7Ds0VoaAuYMA0QCooJitxDZ8k9RGpVjLaAU=;
-        b=IdnozBOdsyHczY/+Ljn57ccH/GHZULAC8coxhu6LQ42LbWmGg4Zn2bW4/V/EF7uzq2
-         /d4Se3uzsLLIvk1gSyb3FfllzUqjF3n63hCtnjteR22kxgUMbdiZfgslV43eeMS+Xq4S
-         JxBENZ1cK9BNWIoGOiERC/Dl+ECvpCaVh/AQzeLx1W4qxKQvfvvAIYiuWRVetKKLxNm4
-         SeIWjNX3OeIKum1rp2+f5/67705K1iPzxMJQY4XWdK6dxm2YvC7ovwT6zK+slUTegkUp
-         SzWoObUV/1dK9psbkPq/rzYxX6k5nLxHsFhlX+kLJCgrcHwpxjZNO48qThqFWpHozCt1
-         Lrpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AG81bnuj7Ds0VoaAuYMA0QCooJitxDZ8k9RGpVjLaAU=;
-        b=gaeTkezEVIGdRA1HFufJ5YvSRUo12FG4ixMNsdHnA2pqTvP5XFtyD7xMToauDIUtOy
-         wJHptXxHrg4z4/9a7yy4pduvixKUzbJ+vqr0wwLiU0kPa/49KIdCpzp5fp25Wt9OkT5e
-         oQ54yf4397qymHpSfLsjxf8ZzIAtH13yBw+11dEsHxYGCwJojyfLlAFJiSCVhOtsNsco
-         /Cvr5v8xDzTZc48piNSrTu96CANhoIyP1xcuQFU9A7Zoafroil+P7U03RS9N1zvuAvK1
-         b7fhZLX5jSwCAy7QPMXote4irdMN+Z5GcBwpTtjwq1152UaAZpAvT/i5RvPY3PLQ7YNq
-         Bp8w==
-X-Gm-Message-State: AOAM530X5lOZJ0qeIyVYyMi09V5qwiW5PX2WW2l5LkvPDT7tDrGj3Ini
-        8Do0Lsg6WJL8IhcD8ENQyck=
-X-Google-Smtp-Source: ABdhPJyporis3EOVRxPHw3JRbzRXtLa/sBpEPMXX5quijMNYP/pLxTuq8wgADodeqe4EyMTOJULeLw==
-X-Received: by 2002:adf:dcc3:: with SMTP id x3mr19757071wrm.177.1623700018037;
-        Mon, 14 Jun 2021 12:46:58 -0700 (PDT)
-Received: from xws.localdomain (p5487b5f5.dip0.t-ipconnect.de. [84.135.181.245])
-        by smtp.gmail.com with ESMTPSA id f12sm20280194wru.81.2021.06.14.12.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 12:46:57 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [PATCH] MAINTAINERS: Update IRC link for Surface System Aggregator subsystem
-Date:   Mon, 14 Jun 2021 21:46:35 +0200
-Message-Id: <20210614194635.1681519-1-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Mon, 14 Jun 2021 15:52:23 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D99C061574;
+        Mon, 14 Jun 2021 12:50:20 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f09b9000c5f6a5325ce378c.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:b900:c5f:6a53:25ce:378c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E1DE1EC04DB;
+        Mon, 14 Jun 2021 21:50:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623700219;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9YY3xAUgDz0EUh/pTeFLuR4h6BtRben1A76O8bKSCS4=;
+        b=Jt47Xz5W/6Qvfgerh3MVE24F5/Tn1CluSb47AQVTTILN/PaJ7nWjQUpDTPTGXTp0tDG21W
+        TggwwZfiPtrBh6i1M3hI1h41NT8b7ver/35pKyd0ggOpu1QJ7xqdTCqHjMXvvyG4MfMDlL
+        HlI12X8iQE4A9fA1yqcWFqkftOL+fL0=
+Date:   Mon, 14 Jun 2021 21:50:11 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 16/22] KVM: SVM: Create a separate mapping
+ for the SEV-ES save area
+Message-ID: <YMey8xMXLcB/0WnA@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-17-brijesh.singh@amd.com>
+ <YMc2R4JRZ3yFffy/@zn.tnic>
+ <f6ad5b50-f462-35e1-3be4-e7113feee3a9@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f6ad5b50-f462-35e1-3be4-e7113feee3a9@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-We have moved to libera.chat. Update the link accordingly.
+On Mon, Jun 14, 2021 at 02:34:03PM -0500, Tom Lendacky wrote:
+> I guess we can call it just prot_save_area or protected_save_area or even
+> encrypted_save_area (no need for guest, since guest is implied, e.g. we
+> don't call the normal save area guest_save_area).
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All three sound good to me.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 142d4baa4f0f..7e38764f778c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12190,7 +12190,7 @@ M:	Maximilian Luz <luzmaximilian@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- W:	https://github.com/linux-surface/surface-aggregator-module
--C:	irc://chat.freenode.net/##linux-surface
-+C:	irc://irc.libera.chat/linux-surface
- F:	Documentation/driver-api/surface_aggregator/
- F:	drivers/platform/surface/aggregator/
- F:	drivers/platform/surface/surface_acpi_notify.c
+Thx.
+
 -- 
-2.32.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
