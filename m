@@ -2,114 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78498C48BE5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 11:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A15C49361
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 12:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5591F610A3
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 11:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC59861245
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 12:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229569AbhFPLW7 (ORCPT
+        id S232757AbhFPMFa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Jun 2021 07:22:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbhFPLW7 (ORCPT
+        Wed, 16 Jun 2021 08:05:30 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:56520 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232164AbhFPMFY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Jun 2021 07:22:59 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D00FC061574;
-        Wed, 16 Jun 2021 04:20:52 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id nd37so3331075ejc.3;
-        Wed, 16 Jun 2021 04:20:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=v2H3t1ZLUf6l3uU+JY8lO7wmpQXUkTIz60TPBvkH+VM=;
-        b=ZNea7fiTfcu2/QurpI6aB+4BRBEKqdB/2B6/FLoJOJAHwyky4yMjglB5c2OQ2y44t6
-         iTgWE7EX64Cd1a3xNUdjYOuvqYQvU8BSu7kf392pke52C9SHLr1lroQNwXJvUU79bh7J
-         KlotfgsEm0+6Nix29NXQFlUghrlizZpV9kwEPItZy35ThfuRmRqI6UgRyRJBSSKWuJ8P
-         N1pfIhd6LuE9dEuWG9iIuoaUHyXzY5ccgVzQVm9goKm4SXn1Vb2Lyl3f3vNRk2PQ2OG6
-         fhD/bujK0/J0gId1nCU+JqbKZ8C3/bMKsJ7UoC6s/u+WkGKRtYWHKFZAcpyy8twjR/dF
-         WLuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v2H3t1ZLUf6l3uU+JY8lO7wmpQXUkTIz60TPBvkH+VM=;
-        b=BsI441GCHgy0ZPqglFfYYP4RPF7OYQutPj0FJhu2WTFMomx1UBGAJ7nEkYXL61lC0q
-         79+nN4SrlguIITeCxpHprvPWYWgdRvOWNTjaN15PQBj9SfrYz8JhuZwy4s2J4Qxa5chP
-         OJ3D/MVLk0fCEZ7DpMD0nJtWs7flFOCdUZuWDUmezvMh/XQOlzRKuWTlIe655zcR8yH8
-         G7ZwcO/0e9GGfIsESFISyauXv4rgUuEyXSChe+2u7PRg9nBR/yLEFROAkihlzfPonEKw
-         WbKiabWxQJPrdMVrx/etuNShdtTaUqkMTEI6aRQP4L9eo5eMlI87GdypJ8Ay70cavseL
-         gobA==
-X-Gm-Message-State: AOAM531UKireqQYML2hiDRm7ZN/8ZHRjXzNjG/KIZZB5vLcTDQ7ON34W
-        qwtQYGaKtY8zQHlmVIoYoBDRlBaZroY=
-X-Google-Smtp-Source: ABdhPJyUXYwAJAQo6+RXwFExUiBaJtU3EjZF74bYffyklBFzvCsvQ+JmLIXnvAG1C/RhC/qzhVuKIQ==
-X-Received: by 2002:a17:907:628d:: with SMTP id nd13mr4634035ejc.299.1623842450601;
-        Wed, 16 Jun 2021 04:20:50 -0700 (PDT)
-Received: from [192.168.2.202] (p5487b3a7.dip0.t-ipconnect.de. [84.135.179.167])
-        by smtp.gmail.com with ESMTPSA id x15sm1548068edd.6.2021.06.16.04.20.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jun 2021 04:20:50 -0700 (PDT)
-Subject: Re: [PATCH -next] platform/x86: think-lmi: Add missing
- MODULE_DEVICE_TABLE
-To:     Zou Wei <zou_wei@huawei.com>, markpearson@lenovo.com,
-        hdegoede@redhat.com, mgross@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1623811809-65099-1-git-send-email-zou_wei@huawei.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <be89ca5c-3484-6d02-440f-8dc89297e48b@gmail.com>
-Date:   Wed, 16 Jun 2021 13:20:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 16 Jun 2021 08:05:24 -0400
+Received: from zn.tnic (p200300ec2f0c2b00ec25a986a17212ee.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:2b00:ec25:a986:a172:12ee])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3BAEE1EC03E4;
+        Wed, 16 Jun 2021 14:03:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623844996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=qK3Y1DHOt57Qig7xfqZFQT3ydoFk9JaEiyImUpf/4h4=;
+        b=mPkX1WjdJx43H98yJ0xojjxpLkY44F46gfmAvHgRhvQxPBJMGtuYOk9hA3L8aJwckyEYjZ
+        5rQCCG8gEnwy45fVBV3wv3aILo7Xjvo6F5qham5jpiWltLR6fF3pok4WGqWjxdq/L0DgZ2
+        ArwOn584uWA7wywbnefvHhDirxUBCUM=
+Date:   Wed, 16 Jun 2021 14:03:05 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 11/22] x86/sev: Add helper for validating
+ pages in early enc attribute changes
+Message-ID: <YMnoeRcuMfAqX5Vf@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-12-brijesh.singh@amd.com>
+ <YMI02+k2zk9eazjQ@zn.tnic>
+ <d0759889-94df-73b0-4285-fa064eb187cd@amd.com>
+ <YMen5wVqR31D/Q4z@zn.tnic>
+ <70db789d-b1aa-c355-2d16-51ace4666b3f@amd.com>
+ <YMnNYNBvEEAr5kqd@zn.tnic>
+ <f7e70782-701c-13dd-43d2-67c92f8cf36f@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <1623811809-65099-1-git-send-email-zou_wei@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f7e70782-701c-13dd-43d2-67c92f8cf36f@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 6/16/21 4:50 AM, Zou Wei wrote:
-> This patch adds missing MODULE_DEVICE_TABLE definition which generates
-> correct modalias for automatic loading of this driver when it is built
-> as an external module.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zou Wei <zou_wei@huawei.com>
-> ---
->   drivers/platform/x86/think-lmi.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 7771c93..6e1fbc4 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -873,6 +873,7 @@ static const struct wmi_device_id tlmi_id_table[] = {
->   	{ .guid_string = LENOVO_BIOS_SETTING_GUID },
->   	{ }
->   };
-> +MODULE_DEVICE_TABLE(vmi, tlmi_id_table);
+On Wed, Jun 16, 2021 at 06:00:09AM -0500, Brijesh Singh wrote:
+> I am trying to be consistent with previous VMGEXIT implementations. If
+> the command itself failed then use the command specific error code to
+> tell hypervisor why we terminated but if the hypervisor violated the
+> GHCB specification then use the "general request termination".
 
-I assume this should be "wmi", i.e.
+I feel like we're running in circles here: I ask about debuggability
+and telling the user what exactly failed and you're giving me some
+explanation about what the error codes mean. I can see what they mean.
 
-     MODULE_DEVICE_TABLE(wmi, tlmi_id_table);
+So let me try again:
 
-instead of "vmi"?
+Imagine you're a guest owner and you haven't written the SNP code and
+you don't know how it works.
 
-Regards,
-Max
+You start a guest in the public cloud and it fails because the
+hypervisor violates the GHCB protocol and all that guest prints before
+it dies is
 
->   
->   static struct wmi_driver tlmi_driver = {
->   	.driver = {
-> 
+"general request termination"
+
+How are you - the guest owner - going to find out what exactly happened?
+
+Call support?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
