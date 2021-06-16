@@ -2,149 +2,142 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9C2C48BE6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 18:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F1AC48BE5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 20:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA2613B9
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 18:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D55560FF4
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 16 Jun 2021 20:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231690AbhFPSQR (ORCPT
+        id S233295AbhFPUVQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 16 Jun 2021 14:16:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21704 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230055AbhFPSQR (ORCPT
+        Wed, 16 Jun 2021 16:21:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:45322 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233255AbhFPUVQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 16 Jun 2021 14:16:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623867250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/2ZgS+GCY+zeGtNmbikEY7JDq0qDESkYvLCgyzZHxds=;
-        b=FR5mW8LOXsGtbbm2ZtV6w32vbZgdoUUymckMZPiVskpcICDNv+pXrlHJm15s3+wp1bNb4q
-        Q6VxFAs+EicHsjW9Njz4YGixmgY+pN35pHf/CgRyKanIiBBQjqqZlQN8bCax8dIl0XiFPk
-        B01YQVJYjX+Z4Az2rIJQanwD/jDu9LQ=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-B_WrRUzQNkWdUYRhx3eBGA-1; Wed, 16 Jun 2021 14:13:37 -0400
-X-MC-Unique: B_WrRUzQNkWdUYRhx3eBGA-1
-Received: by mail-ed1-f71.google.com with SMTP id q7-20020aa7cc070000b029038f59dab1c5so109490edt.23
-        for <platform-driver-x86@vger.kernel.org>; Wed, 16 Jun 2021 11:13:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/2ZgS+GCY+zeGtNmbikEY7JDq0qDESkYvLCgyzZHxds=;
-        b=qIWgqBXpM35qIj3BvxQ9GE3U84/0aL0h7EMWTITmOjpEGMjdBZ7les/QDOVogu0b97
-         CrlQzPbCDUuCqwrHb9D4DeLymEeMwWwQWKmGQKc5yQSuHEQL3RN/CX05LXyMxXtRX9R4
-         tlw6XEeRuNucsmJPRYIYGqkZLrCVLDGP9FUbWfemtxu3gHuY9qDwlbmERJeT9qV+5Yrp
-         8QxcvigSI2XQaYQ1vDcr6pwm2DdPO073J+otUVhOb/tAmPrzxsrvfumPoqPq6OejJbB/
-         lJXtvp6SpVcrtZgZMCMg1FguKBnY0ItKwIafM3OuUUz0fobIzr28BBl4pyAR0GnorjSh
-         bZdA==
-X-Gm-Message-State: AOAM532TCdE1xyTnE3eRBF3hSOXtDP/09n0rwBODdtrqlRXw7hCn373n
-        ENQuh/wNlFPSSBXeJ1Ku57bemg82hQK22FCs1vuvVn/rbRVHIII0Rr0MyqDvin0FOKXCqsm2B+L
-        T+0i+pUj7o+BqYFCd7gwofVszkcuoS3OhtQ==
-X-Received: by 2002:a05:6402:781:: with SMTP id d1mr1297298edy.32.1623867216488;
-        Wed, 16 Jun 2021 11:13:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx9vMHLTBq5mDNxgautgv3pvtkh5NJQutUbOxh1CWqXkx9hBbr+BTgHCyzxPgjYIs3J1MTEVA==
-X-Received: by 2002:a05:6402:781:: with SMTP id d1mr1297274edy.32.1623867216371;
-        Wed, 16 Jun 2021 11:13:36 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id l26sm2498581edt.40.2021.06.16.11.13.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Jun 2021 11:13:36 -0700 (PDT)
-Subject: Re: [PATCH v5 5/6] platform/x86: Add intel_skl_int3472 driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        kieran.bingham@ideasonboard.com
-References: <20210603224007.120560-1-djrscally@gmail.com>
- <20210603224007.120560-6-djrscally@gmail.com>
- <ea322abe-fa78-bbc3-b4c5-b372a4f28235@redhat.com>
- <CAHp75VccZbv8+u-jO8wYSsyQrw+Bd_zeDa==aiTvkh=fteuT3w@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0991caf2-1b7b-c8b5-8558-03b8f0dbb604@redhat.com>
-Date:   Wed, 16 Jun 2021 20:13:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Wed, 16 Jun 2021 16:21:16 -0400
+IronPort-SDR: +DQE7ceVgbiYScOisfXMSOhqoyIQ66MzwLK+5derv5V3EcDvVTrXzpBoV4wZVPAYNVwhK+/Ix2
+ 5hyiC7WiqcVQ==
+X-IronPort-AV: E=McAfee;i="6200,9189,10016"; a="206288080"
+X-IronPort-AV: E=Sophos;i="5.83,278,1616482800"; 
+   d="scan'208";a="206288080"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2021 13:19:09 -0700
+IronPort-SDR: B4ZA80f5MK8TTtS40ik3gLS+n4IzMTsxsp9Z1TasFwfr19z/imOpRv2jiJWfC5eYz1ILJhdA9J
+ LvOC8JOsj/ag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,278,1616482800"; 
+   d="scan'208";a="452486102"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Jun 2021 13:19:08 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     degoede@redhat.com, mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH 1/2] platform/x86: ISST: Optimize CPU to PCI device mapping
+Date:   Wed, 16 Jun 2021 13:18:55 -0700
+Message-Id: <20210616201856.1690143-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VccZbv8+u-jO8wYSsyQrw+Bd_zeDa==aiTvkh=fteuT3w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+It was observed that some of the high performance benchmarks are spending
+more time in kernel depending on which CPU package they are executing.
+The difference is significant and benchmark scores varies more than 10%.
+These benchmarks adjust class of service to improve thread performance
+which run in parallel. This class of service change causes access to
+MMIO region of Intel Speed Select PCI devices depending on the CPU
+package they are executing.
 
-On 6/16/21 8:08 PM, Andy Shevchenko wrote:
-> On Wed, Jun 16, 2021 at 8:58 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 6/4/21 12:40 AM, Daniel Scally wrote:
->>> ACPI devices with _HID INT3472 are currently matched to the tps68470
->>> driver, however this does not cover all situations in which that _HID
->>> occurs. We've encountered three possibilities:
->>>
->>> 1. On Chrome OS devices, an ACPI device with _HID INT3472 (representing
->>> a physical TPS68470 device) that requires a GPIO and OpRegion driver
->>> 2. On devices designed for Windows, an ACPI device with _HID INT3472
->>> (again representing a physical TPS68470 device) which requires GPIO,
->>> Clock and Regulator drivers.
->>> 3. On other devices designed for Windows, an ACPI device with _HID
->>> INT3472 which does **not** represent a physical TPS68470, and is instead
->>> used as a dummy device to group some system GPIO lines which are meant
->>> to be consumed by the sensor that is dependent on this entry.
->>>
->>> This commit adds a new module, registering a platform driver to deal
->>> with the 3rd scenario plus an i2c driver to deal with #1 and #2, by
->>> querying the CLDB buffer found against INT3472 entries to determine
->>> which is most appropriate.
->>>
->>> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> Signed-off-by: Daniel Scally <djrscally@gmail.com>
->>
->> Thank you for your patch, I've applied this patch to my review-hans
->> branch:
->> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->>
->> I've fixed up the missing static marking of skl_int3472_tps68470_calc_type()
->> spotted by lkp@intel.com while applying the patch to my tree.
-> 
-> Are you going to apply patch 6 as well?
-> IIRC it's acked by Lee.
+This mapping from CPU to PCI device instance uses a standard Linux PCI
+interface "pci_get_domain_bus_and_slot()". This function does a linear
+search to get to a PCI device. Since these platforms have 100+ PCI
+devices, this search can be expensive in fast path for benchmarks.
 
-Ah you are right, it is Acked, but I'm not sure if that ack was for
-Lee being ok with it being merged through the pdx86 tree. I'll coordinate
-this with Lee off list.
+Since the device and function of PCI device is fixed for Intel
+Speed Select PCI devices, the CPU to PCI device information can be cached
+at the same time when bus number for the CPU is read. In this way during
+runtime the cached information can be used. This improves performance
+of these benchmarks significantly.
 
-Regards,
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../intel_speed_select_if/isst_if_common.c    | 29 +++++++++++++++----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-Hans
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+index 0c2aa22c7a12..aedb8310214c 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+@@ -281,11 +281,27 @@ static int isst_if_get_platform_info(void __user *argp)
+ struct isst_if_cpu_info {
+ 	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
+ 	int bus_info[2];
++	struct pci_dev *pci_dev[2];
+ 	int punit_cpu_id;
+ };
+ 
+ static struct isst_if_cpu_info *isst_cpu_info;
+ 
++static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
++{
++	int bus_number;
++
++	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
++	    cpu >= num_possible_cpus())
++		return NULL;
++
++	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
++	if (bus_number < 0)
++		return NULL;
++
++	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
++}
++
+ /**
+  * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
+  * @cpu: Logical CPU number.
+@@ -300,17 +316,18 @@ static struct isst_if_cpu_info *isst_cpu_info;
+  */
+ struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+ {
+-	int bus_number;
++	struct pci_dev *pci_dev;
+ 
+ 	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
+ 	    cpu >= num_possible_cpus())
+ 		return NULL;
+ 
+-	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+-	if (bus_number < 0)
+-		return NULL;
++	pci_dev = isst_cpu_info[cpu].pci_dev[bus_no];
+ 
+-	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
++	if (pci_dev->devfn == PCI_DEVFN(dev, fn))
++		return pci_dev;
++
++	return _isst_if_get_pci_dev(cpu, bus_no, dev, fn);
+ }
+ EXPORT_SYMBOL_GPL(isst_if_get_pci_dev);
+ 
+@@ -327,6 +344,8 @@ static int isst_if_cpu_online(unsigned int cpu)
+ 	} else {
+ 		isst_cpu_info[cpu].bus_info[0] = data & 0xff;
+ 		isst_cpu_info[cpu].bus_info[1] = (data >> 8) & 0xff;
++		isst_cpu_info[cpu].pci_dev[0] = _isst_if_get_pci_dev(cpu, 0, 0, 1);
++		isst_cpu_info[cpu].pci_dev[1] = _isst_if_get_pci_dev(cpu, 1, 30, 1);
+ 	}
+ 
+ 	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
+-- 
+2.30.2
 
