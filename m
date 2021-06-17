@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D607DC2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6AFC2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3417613CB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5110E613CE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231276AbhFQLdP (ORCPT
+        id S232281AbhFQLdS (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 07:33:15 -0400
-Received: from mail-bn1nam07on2081.outbound.protection.outlook.com ([40.107.212.81]:36260
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        Thu, 17 Jun 2021 07:33:18 -0400
+Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:62816
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232332AbhFQLdO (ORCPT
+        id S232332AbhFQLdR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 07:33:14 -0400
+        Thu, 17 Jun 2021 07:33:17 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jQ1nQEyk9WLz9CO19yJ05sbxuPeeLN6qryLVHLeZAwq8+Zo+hTv2zHzCpGSpRBo6dUg6qTnTCERgglnbKOk/vaZ/yJsW0om/zKbiv3v4BNdBSvSsQKd0f/FmLefYf2Uh9+Z+nv/fJsu3I7ykTD9e/xZr0FWcgUG9VRNUiJgXH67gkn88uUMgubkU5KrxS8roOMXiCbMnAqnOLrdvAgKeMFE6lD8FeUfPYHxEtjpFKi7WjrmwAoXvlN/DifKzhRWOtI1pvj4X9F9SLuPqlkO3Ege5U0GfB2olcqS6DDhbdDtKCkkCQGbJyQkZW+75lSm0O55YNDc4ocYO42NkFlERMg==
+ b=O43E6AtgJzxRs/4wSoi1kjEHV9qp8re13uwJWDlOu5/P7xumJmCBFIFZaSqWjfLaOztEIQnupG2b/RXvl6R5hB+R80pymJP+Zy9St79YUD9VMpf55xJNeo2Ou+4QREeHdZCyo2F8wiUKUMKqON9rcUibmm+nQK0e8Kmjz4bdwGtKNxaqzQC6NzZcYuqPmE184uIY8Wbx541Xd+PfmDmVx7yrai+SXZ1/MFkCssXszktlsviw7nG223KOUjytasIAijGIuybva0ss5oAR1V59NSy3c5CkNLDGFEfNzLjXIKHHCMP2mc/FWuAli+fLm7qSpBIDC/U1IAWeY03dB6VoMg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F8ynnj6swLoRaMsjHJS/VNYVt/LU9n37ABXo0wLmkv0=;
- b=JNR5lUmKt0YF5b0iNlxnY/dM8L7kw1G0jKcAcRnoql4IiA6moT3+2br+m6+zVF8+Vvg0pKUUClA/QBSOdq4InDUoRjvBKrtmJft3XZGillJWlP4qeYgom+bawYXnzgxCehPuagg8mWbjMXMfcXHBH4lSfxTq/6m5AXSOFBUW/JetfcUxs9qJHdPMUPtdspqXVQ3fCZrYYeYBO0OgNzw1cdwt/4rsQxZQWm/Zzy1YtKgaWz6xTOowuS6UPXu29V9vbmvQIoQ/K35IOBXYnPPpGnJmkXf22USmaHUdzzmwWq2fcMELnpUC7WKQKwLtnclBpk2jqB37vZrk3xH19IdubA==
+ bh=B0z4v1uIZ0xHTL+nCCLTSj0X6G+Yg6QNBsbAoGmMELo=;
+ b=SzA0ii82Eu3z5hMDzjmA7rqHFo89T9bVaKA9pBhfOgAVEBUXrVbqy9Sj7OHNwxDzWMjF1ANkthP6GdWq53EYMtupOhMU78Frr9ErbF3Mu4ZohB1JWF58c+Ranf41BtBRwI5h2wqtL2tSuyVaxweI78F9wmjRhRFLFxHBGJi/dgH4wmLfR4KLuUXYYxq5Dr6G9gXwfOmpEyuawLvLBxRdsQ+OUCfMvZ9hxvl4s2UFqG4FIf5BG/CFbZ3uJHk0tTxRa9CMz6+nd27aTfX7TzfmjdjQHdqXSP/dQD0OAOhfpGvAo7uEk9L7qBxEeJd9DtXcKVAbywIbtfMIXM8CusI4cw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F8ynnj6swLoRaMsjHJS/VNYVt/LU9n37ABXo0wLmkv0=;
- b=F81ydtWg4qAPw63cDOIWIaWQADgEwUa5boZqyFHOJv+EPJ0/gH0E0iTN9+yVbLz611YMTVtgtYyQM14wAm3apt1AgfhBZa9fQULhlbHU7Vy8R2NECo0wTnkD17AeUMYZLmeDKdJE3MI428efa5+8MFJWG60DDrbLgSMHDwNGJjY=
-Received: from DM5PR13CA0055.namprd13.prod.outlook.com (2603:10b6:3:117::17)
- by SN6PR12MB2752.namprd12.prod.outlook.com (2603:10b6:805:78::21) with
+ bh=B0z4v1uIZ0xHTL+nCCLTSj0X6G+Yg6QNBsbAoGmMELo=;
+ b=YQ7xhq8SPrBjyh96Fqmf5H6BQY0QzyrASQBxTaS9gNQyKRDl1dXk6HnGh5SPov9TLQBMRz0XPT2SzaLf3/xgS9Lu39B0NBEINBAuWb9sSatkJDHKVFGv63CKcIvVay3NXzy2IBPMrlBhqSTIF7//2KaHZf6Y1T4/WunbvdVqMSU=
+Received: from DM5PR12CA0058.namprd12.prod.outlook.com (2603:10b6:3:103::20)
+ by MN2PR12MB4485.namprd12.prod.outlook.com (2603:10b6:208:269::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4219.22; Thu, 17 Jun
- 2021 11:31:05 +0000
-Received: from DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:117:cafe::61) by DM5PR13CA0055.outlook.office365.com
- (2603:10b6:3:117::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.7 via Frontend
- Transport; Thu, 17 Jun 2021 11:31:04 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18; Thu, 17 Jun
+ 2021 11:31:08 +0000
+Received: from DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:103:cafe::8f) by DM5PR12CA0058.outlook.office365.com
+ (2603:10b6:3:103::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18 via Frontend
+ Transport; Thu, 17 Jun 2021 11:31:08 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
@@ -54,20 +54,20 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT050.mail.protection.outlook.com (10.13.173.111) with Microsoft SMTP
+ DM6NAM11FT024.mail.protection.outlook.com (10.13.172.159) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4242.16 via Frontend Transport; Thu, 17 Jun 2021 11:31:04 +0000
+ 15.20.4242.16 via Frontend Transport; Thu, 17 Jun 2021 11:31:08 +0000
 Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 17 Jun
- 2021 06:31:02 -0500
+ 2021 06:31:05 -0500
 From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
 CC:     <platform-driver-x86@vger.kernel.org>,
         Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 1/6] platform/x86: amd-pmc: Fix command completion code
-Date:   Thu, 17 Jun 2021 17:00:35 +0530
-Message-ID: <20210617113040.1603970-2-Shyam-sundar.S-k@amd.com>
+Subject: [PATCH 2/6] platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+Date:   Thu, 17 Jun 2021 17:00:36 +0530
+Message-ID: <20210617113040.1603970-3-Shyam-sundar.S-k@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
 References: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
@@ -79,71 +79,109 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a9fbc58d-1210-4a5b-3242-08d93183649e
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2752:
-X-Microsoft-Antispam-PRVS: <SN6PR12MB275266924AF936652AEDC1559A0E9@SN6PR12MB2752.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Office365-Filtering-Correlation-Id: 4f6cd6b6-445c-4bb5-38ed-08d9318366c2
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4485:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB44851F5C96F3C2A2A6C765749A0E9@MN2PR12MB4485.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GRAA+YMVksG6JAmcpra7wgK4c0JFXkgjIeBga7zcv1oknMH2jaehjESAKUi7URwuOAflIbHZFn1y02jTt2a77IQlKdGat8wu+eoK54xlvhnFzqqtvotyCRKWeVYxyRJZcTwjaW/sxnY/Zg5Pbca2svzt81fYRMwUjpOA+qokmJehA1YugEbIP0lQ9pzZLvrSzmP4LRaQQb0QWuZuQJFgtgPSCtFQ3hHQi/SyNocRHkBlrz5BCuOEZvJ8kZ8h6D3OJLRuFwduYlUFlwEtmtw5T9zJ1aztyQqCMDHPE+fJfb1/0de1+GLKuuYcJ5O/MZw444MXN4Y+DQg6m/yS5E3gP8FQOJBT2KQOL1gIfCiQCZDLpPSIgOTqG13p22NXAq5V+QOD2lNlUfpNIR8G4JH61h2xqRHU5YLvCZo/Wl1h/S2QHeEqbNL9vTZfUsLRkRai3TiNYtUdbgxMpQaVn42MaxF+ZBQyC9tqSDu2fpDfjjKskrMs3nrlWKZXia9tgEJboCQLh/OKWnIMBtXdyeIJtP6MVIxBTkTFZSv1kMfiPXPwnyK5V2dEZYmI5tG3FaqZdEizJVkf1pSwCunaKZ6qZvXC8M2vEr9wyoziRjkYpnsIE6k7d34WKtFAsyv3e98ecTl/qzlYkL5HEW8/tGCGzO0co1O+lsH/1T14UKUGm3GCHXXEyGIoU1CNWCsLBpma
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(136003)(376002)(36840700001)(46966006)(7696005)(81166007)(5660300002)(83380400001)(356005)(86362001)(54906003)(70206006)(2906002)(478600001)(70586007)(82740400003)(1076003)(6666004)(110136005)(82310400003)(8676002)(4326008)(47076005)(36756003)(26005)(36860700001)(8936002)(316002)(2616005)(336012)(186003)(426003)(16526019)(36900700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Utigr3aymm1KEmwV/HIyyXug5sgAIG5V1XR/ayUEn5eOPz5rZrgPVc2z6mPm1KcgK9+/U1Z70vvw02g+m1A1Tp7O298JbUZWzf0jdpcnfT9v8wgEBCpo+KmUYLVmYhjV+dn/Cz4VryNhpzT9b0pCedZbpowzsJ7ua4Opq2uLwoucusF5sXPhW2iVvYvNmO8ok8EC0TWBKVLtjhMe+oSA+fGh6g7ZRl0Wh2eFvcYZ8sY6JFRDqKmwY4rtpnLaUMPTbeuXN+hVh46MJA9MzvmEYz4fpHGXZdZxs0UnbP0Yd+5GhDOzF4X42RBXrcr/RRlvsE2V3IP2CVZFH3qWqBpGj0OKl5kLx+Z3PcUIVMKwvWBbvbeXDceV6abKI4iBKH6EuJdU2gGI0ikzVfl6siQ2nLyL1g/eZeYzA0jzjxZVmNwhuR7x3QbEafD3HXBotAL6EiEZg0lyNxcz4/8NSvVD7Nzk8wZNqr8GPl32YzGcMijUrgwZW92q9Rn0feuZ9a7RLx+PEgnW4Q/ak34+HAipiuEYC9wufp9yEpyBrgkXp+C+DdlhZgAtQeUp2jg7dRF+LkcZg5qFOnuer1UUKVhapbIChyJJvR3jYkZcYt1iZoA20qQV6UHyWVS/K16ImYIfvUnPIsWewoxAc7LSnlOgZuYhQRBlsB48BJO9VbdUMO9tHrp8YcEMY4xE0VMiZC0e
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(346002)(136003)(39860400002)(376002)(46966006)(36840700001)(8676002)(54906003)(110136005)(336012)(1076003)(4326008)(70586007)(36756003)(186003)(70206006)(47076005)(356005)(2616005)(83380400001)(81166007)(16526019)(8936002)(82740400003)(7696005)(426003)(5660300002)(86362001)(2906002)(82310400003)(36860700001)(316002)(6666004)(26005)(478600001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 11:31:04.7232
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 11:31:08.3137
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9fbc58d-1210-4a5b-3242-08d93183649e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f6cd6b6-445c-4bb5-38ed-08d9318366c2
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT024.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2752
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4485
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The protocol to submit a job request to SMU is to wait for
-AMD_PMC_REGISTER_RESPONSE to return 1,meaning SMU is ready to take
-requests. PMC driver has to make sure that the response code is always
-AMD_PMC_RESULT_OK before making any command submissions.
+It was lately understood that the current mechanism available in the
+driver to get SMU firmware info works only on internal SMU builds and
+there is a separate way to get all the SMU logging counters (addressed
+in the next patch). Hence remove all the smu info shown via debugfs as it
+is no more useful.
 
-Also, when we submit a message to SMU, we have to wait until it processes
-the request. Adding a read_poll_timeout() check as this was missing in
-the existing code.
+Also, use dump registers routine only at one place i.e. after the command
+submission to SMU is done.
 
 Fixes: 156ec4731cb2 ("platform/x86: amd-pmc: Add AMD platform support for S2Idle")
 Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
 ---
- drivers/platform/x86/amd-pmc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/platform/x86/amd-pmc.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
 diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index b9da58ee9b1e..9c8a53120767 100644
+index 9c8a53120767..ce0e2ad94d09 100644
 --- a/drivers/platform/x86/amd-pmc.c
 +++ b/drivers/platform/x86/amd-pmc.c
-@@ -140,7 +140,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+@@ -52,7 +52,6 @@
+ #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
+ #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
  
- 	/* Wait until we get a valid response */
- 	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
--				val, val > 0, PMC_MSG_DELAY_MIN_US,
-+				val, val == AMD_PMC_RESULT_OK, PMC_MSG_DELAY_MIN_US,
- 				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
- 	if (rc) {
- 		dev_err(dev->dev, "failed to talk to SMU\n");
-@@ -156,6 +156,14 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
- 	/* Write message ID to message ID register */
- 	msg = (dev->cpu_id == AMD_CPU_ID_RN) ? MSG_OS_HINT_RN : MSG_OS_HINT_PCO;
- 	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
-+	/* Wait until we get a valid response */
-+	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
-+				val, val == AMD_PMC_RESULT_OK, PMC_MSG_DELAY_MIN_US,
-+				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
-+	if (rc) {
-+		dev_err(dev->dev, "SMU response timed out\n");
-+		return rc;
-+	}
+-#define AMD_SMU_FW_VERSION		0x0
+ #define PMC_MSG_DELAY_MIN_US		100
+ #define RESPONSE_REGISTER_LOOP_MAX	200
+ 
+@@ -88,11 +87,6 @@ static inline void amd_pmc_reg_write(struct amd_pmc_dev *dev, int reg_offset, u3
+ #ifdef CONFIG_DEBUG_FS
+ static int smu_fw_info_show(struct seq_file *s, void *unused)
+ {
+-	struct amd_pmc_dev *dev = s->private;
+-	u32 value;
+-
+-	value = ioread32(dev->smu_base + AMD_SMU_FW_VERSION);
+-	seq_printf(s, "SMU FW Info: %x\n", value);
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(smu_fw_info);
+@@ -164,6 +158,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+ 		dev_err(dev->dev, "SMU response timed out\n");
+ 		return rc;
+ 	}
++	amd_pmc_dump_registers(dev);
  	return 0;
  }
  
+@@ -176,7 +171,6 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
+ 	if (rc)
+ 		dev_err(pdev->dev, "suspend failed\n");
+ 
+-	amd_pmc_dump_registers(pdev);
+ 	return 0;
+ }
+ 
+@@ -189,7 +183,6 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+ 	if (rc)
+ 		dev_err(pdev->dev, "resume failed\n");
+ 
+-	amd_pmc_dump_registers(pdev);
+ 	return 0;
+ }
+ 
+@@ -256,17 +249,11 @@ static int amd_pmc_probe(struct platform_device *pdev)
+ 	pci_dev_put(rdev);
+ 	base_addr = ((u64)base_addr_hi << 32 | base_addr_lo);
+ 
+-	dev->smu_base = devm_ioremap(dev->dev, base_addr, AMD_PMC_MAPPING_SIZE);
+-	if (!dev->smu_base)
+-		return -ENOMEM;
+-
+ 	dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
+ 				    AMD_PMC_MAPPING_SIZE);
+ 	if (!dev->regbase)
+ 		return -ENOMEM;
+ 
+-	amd_pmc_dump_registers(dev);
+-
+ 	platform_set_drvdata(pdev, dev);
+ 	amd_pmc_dbgfs_register(dev);
+ 	return 0;
 -- 
 2.25.1
 
