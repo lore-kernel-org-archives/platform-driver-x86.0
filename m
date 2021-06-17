@@ -5,76 +5,77 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_NONE,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B308CC2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 15:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF21DC2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 15:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884E6613CB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 15:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24F6610A0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 15:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232267AbhFQPCM (ORCPT
+        id S233096AbhFQPFQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 11:02:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33763 "EHLO
+        Thu, 17 Jun 2021 11:05:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46118 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230507AbhFQPCL (ORCPT
+        by vger.kernel.org with ESMTP id S233108AbhFQPFO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 11:02:11 -0400
+        Thu, 17 Jun 2021 11:05:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1623942003;
+        s=mimecast20190719; t=1623942186;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sXIoWfedQ9MYeJgaL6RlM/c1eZELqTzyswtSVtON7p0=;
-        b=R0GkBlIHTawa+sWuti/zZ/HN87/5ITZUH0D/LyyK6aL754zpKXKd9POH3LDH6wssvoRG/y
-        YZ+8tYmx8bKp+6oL6L6hi3y3D4o+xikeLM/uefmAJFXIn48s+awD4RsiLIC5Iwh0PhWSyi
-        dDNlI37MA2EErDn34lj0UJTTxo7MQ/M=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-409-iZf1agXvMnyM65wuzwEUmw-1; Thu, 17 Jun 2021 11:00:00 -0400
-X-MC-Unique: iZf1agXvMnyM65wuzwEUmw-1
-Received: by mail-ej1-f69.google.com with SMTP id w13-20020a170906384db02903d9ad6b26d8so2394944ejc.0
-        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Jun 2021 08:00:00 -0700 (PDT)
+        bh=rz/OObxv2AnosVmNUFuvJTMtT4VRRg8fvEQd6y30KB4=;
+        b=Sq/CLkKSy5PKx9lKwNTJDN7IpALskK/Rl05bkJcZSPdXw/vbisXdMD0Asz6OESWgP/5jTd
+        bV0T61mUmIdTg42JPhW1E0v5glXlfcWTab2vzn3i9X7VyjQWlRbccMmVQ+/2Tw5U6uZW/+
+        VWeIy5kXQos31WahLHYK7t4i8ePg5bk=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-32-8f7Jc_I4N0SvR2xtK3rlPg-1; Thu, 17 Jun 2021 11:03:04 -0400
+X-MC-Unique: 8f7Jc_I4N0SvR2xtK3rlPg-1
+Received: by mail-ed1-f71.google.com with SMTP id v8-20020a0564023488b0290393873961f6so1729580edc.17
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Jun 2021 08:03:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sXIoWfedQ9MYeJgaL6RlM/c1eZELqTzyswtSVtON7p0=;
-        b=JoZpCUKUUhW51ZKnMHxqbx7jYs5/7CJJelfS2k4tZwjZx32n+8erAPBeb5ROzYMK9r
-         zLaFdYwQ4HcwAbLCTndyDrR1gtlKpvVX/APszYJBBi5lK9rD1lJ7/5o5W2+YgTAUZRR8
-         d0CEcVjXIo+WsEUUl5/8e5WKbNS7KseDHkF29UhGORaOR7XpUWN3sMQeousOWNErTdhX
-         UVuPKopfa1j9gTED6FF7nDf0srKU7dOdEY9mqsiVppm3Ze0dPXeknElPwp+s8y3oZRCp
-         vqwuQonE7aZ73eZl+qmbDpo+Z97N5Xs5WqzzNZi+quV0ItkqTgot5QACWFSZAUqKX0pT
-         PDsA==
-X-Gm-Message-State: AOAM5338+TxhtuayZCUnO5pYfquwqYjHs/QLaOgy185gUES2nW9aK82o
-        HbwXIOpV32bLVIpo+7Q9j2mS1elvGj+1K1YZanKoFWozuqVynpKERWrC090iFsStOKsIKcU0n8F
-        ooQBXAxilBd/WCAhbFez1MU1NFKqAuKvgIVL1lbbNdR4KMoV+CeQhHRsE4UdWjkaCzzBtfDbOEF
-        FC37W9Gm5YRA==
-X-Received: by 2002:a17:906:25db:: with SMTP id n27mr5585796ejb.170.1623941999141;
-        Thu, 17 Jun 2021 07:59:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyyenn6n3uuVWFMejWkgKWL25nCuBM7g/IjEvt2Mb20tSNKuvWkAGDc/+nfmOpViK4WOmmAtQ==
-X-Received: by 2002:a17:906:25db:: with SMTP id n27mr5585775ejb.170.1623941998946;
-        Thu, 17 Jun 2021 07:59:58 -0700 (PDT)
+        bh=rz/OObxv2AnosVmNUFuvJTMtT4VRRg8fvEQd6y30KB4=;
+        b=udoN1ui2nH/v6HnuW2Cm80GCtSFztwTI1EJhhivMnGYixAx9udoGlPCPVNLMdxV4ME
+         WyA1hkmdH+lCEickHK5n/tnn9ZzOfMIAGFd3ez3ymJ9nyAf2j8CpHB21187fXM5gsBtA
+         ioc514DUVclisON8CttXT3M6UGdyvVxXaLA/cfwU0JbR918/JEKStdcAu5jIHma/8X7P
+         afmOwJ1Ii5KGjNkmtLwdfdZRXewKPtKOklp6bgqvylEPCbSdygn485MHdWqy7Ev4PG6J
+         9Qmvbvmy72SEIw/nINyrK5sEWgNmrf1zkfUnf+ic1Yp7y8/KWGMvdTLv0mdKUx8onSSR
+         5RpQ==
+X-Gm-Message-State: AOAM53330aKuqLbDI2e8DzxtyVQOaJ8MGEO6dbvqXOxODCET3rATJ9VE
+        BC8mvFsaB06S1amM+iFBvsYQErH25Y2dmXiy++Tms6fXisD9N4risflssWjulPgZZu5hC/SvT9n
+        ppvRFkDjcI1w4qG5+8FBH3PJsvr64/wprwVjDMmXnx1mC7aKpEfK5Emvdx3+CtZu5PLGOaea74z
+        q7BGsM+Yh93w==
+X-Received: by 2002:a17:906:6c92:: with SMTP id s18mr5689551ejr.246.1623942180925;
+        Thu, 17 Jun 2021 08:03:00 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzkNo7xcPnkdmdBNC5ESDlLqNjAo2rW76GvXIkJxFArjGrJCptksFow+SHQ05bnk1DdKXFSPw==
+X-Received: by 2002:a17:906:6c92:: with SMTP id s18mr5689533ejr.246.1623942180685;
+        Thu, 17 Jun 2021 08:03:00 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id u12sm3895254eje.40.2021.06.17.07.59.58
+        by smtp.gmail.com with ESMTPSA id u21sm3773485ejm.89.2021.06.17.08.02.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jun 2021 07:59:58 -0700 (PDT)
-Subject: Re: [PATCH 1/6] platform/x86: amd-pmc: Fix command completion code
+        Thu, 17 Jun 2021 08:03:00 -0700 (PDT)
+Subject: Re: [PATCH 2/6] platform/x86: amd-pmc: Fix SMU firmware reporting
+ mechanism
 To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, mgross@linux.intel.com
 Cc:     platform-driver-x86@vger.kernel.org
 References: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
- <20210617113040.1603970-2-Shyam-sundar.S-k@amd.com>
+ <20210617113040.1603970-3-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <18c193be-cfea-9730-7ab2-031ff9195625@redhat.com>
-Date:   Thu, 17 Jun 2021 16:59:57 +0200
+Message-ID: <14a37253-e44b-bd1d-8df3-57a127abe5c1@redhat.com>
+Date:   Thu, 17 Jun 2021 17:02:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210617113040.1603970-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20210617113040.1603970-3-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,59 +86,106 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 6/17/21 1:30 PM, Shyam Sundar S K wrote:
-> The protocol to submit a job request to SMU is to wait for
-> AMD_PMC_REGISTER_RESPONSE to return 1,meaning SMU is ready to take
-> requests. PMC driver has to make sure that the response code is always
-> AMD_PMC_RESULT_OK before making any command submissions.
+> It was lately understood that the current mechanism available in the
+> driver to get SMU firmware info works only on internal SMU builds and
+> there is a separate way to get all the SMU logging counters (addressed
+> in the next patch). Hence remove all the smu info shown via debugfs as it
+> is no more useful.
 > 
-> Also, when we submit a message to SMU, we have to wait until it processes
-> the request. Adding a read_poll_timeout() check as this was missing in
-> the existing code.
+> Also, use dump registers routine only at one place i.e. after the command
+> submission to SMU is done.
 > 
 > Fixes: 156ec4731cb2 ("platform/x86: amd-pmc: Add AMD platform support for S2Idle")
 > Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+>  drivers/platform/x86/amd-pmc.c | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index 9c8a53120767..ce0e2ad94d09 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -52,7 +52,6 @@
+>  #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
+>  #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
+>  
+> -#define AMD_SMU_FW_VERSION		0x0
+>  #define PMC_MSG_DELAY_MIN_US		100
+>  #define RESPONSE_REGISTER_LOOP_MAX	200
+>  
+> @@ -88,11 +87,6 @@ static inline void amd_pmc_reg_write(struct amd_pmc_dev *dev, int reg_offset, u3
+>  #ifdef CONFIG_DEBUG_FS
+>  static int smu_fw_info_show(struct seq_file *s, void *unused)
+>  {
+> -	struct amd_pmc_dev *dev = s->private;
+> -	u32 value;
+> -
+> -	value = ioread32(dev->smu_base + AMD_SMU_FW_VERSION);
+> -	seq_printf(s, "SMU FW Info: %x\n", value);
+>  	return 0;
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(smu_fw_info);
+> @@ -164,6 +158,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+>  		dev_err(dev->dev, "SMU response timed out\n");
+>  		return rc;
+>  	}
+> +	amd_pmc_dump_registers(dev);
 
-Thanks, patch looks good to me:
+Is this addition instead of a removal intentional ?  If this is intentional
+this really should be done in a separate commit, with a commit message
+explaining why this change is being made.
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>  	return 0;
+>  }
+>  
+> @@ -176,7 +171,6 @@ static int __maybe_unused amd_pmc_suspend(struct device *dev)
+>  	if (rc)
+>  		dev_err(pdev->dev, "suspend failed\n");
+>  
+> -	amd_pmc_dump_registers(pdev);
+>  	return 0;
+>  }
+>  
+> @@ -189,7 +183,6 @@ static int __maybe_unused amd_pmc_resume(struct device *dev)
+>  	if (rc)
+>  		dev_err(pdev->dev, "resume failed\n");
+>  
+> -	amd_pmc_dump_registers(pdev);
+>  	return 0;
+>  }
+>  
+> @@ -256,17 +249,11 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  	pci_dev_put(rdev);
+>  	base_addr = ((u64)base_addr_hi << 32 | base_addr_lo);
+>  
+> -	dev->smu_base = devm_ioremap(dev->dev, base_addr, AMD_PMC_MAPPING_SIZE);
+> -	if (!dev->smu_base)
+> -		return -ENOMEM;
+> -
+
+Since you are now no longer setting this, I assume that this is also
+not used anywhere anymore? And thus the smu_base variable should also
+be removed from the "dev" struct.
+
+>  	dev->regbase = devm_ioremap(dev->dev, base_addr + AMD_PMC_BASE_ADDR_OFFSET,
+>  				    AMD_PMC_MAPPING_SIZE);
+>  	if (!dev->regbase)
+>  		return -ENOMEM;
+>  
+> -	amd_pmc_dump_registers(dev);
+> -
+>  	platform_set_drvdata(pdev, dev);
+>  	amd_pmc_dbgfs_register(dev);
+>  	return 0;
+
 
 Regards,
 
 Hans
 
 
+p.s.
 
-> ---
->  drivers/platform/x86/amd-pmc.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index b9da58ee9b1e..9c8a53120767 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -140,7 +140,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
->  
->  	/* Wait until we get a valid response */
->  	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
-> -				val, val > 0, PMC_MSG_DELAY_MIN_US,
-> +				val, val == AMD_PMC_RESULT_OK, PMC_MSG_DELAY_MIN_US,
->  				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
->  	if (rc) {
->  		dev_err(dev->dev, "failed to talk to SMU\n");
-> @@ -156,6 +156,14 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
->  	/* Write message ID to message ID register */
->  	msg = (dev->cpu_id == AMD_CPU_ID_RN) ? MSG_OS_HINT_RN : MSG_OS_HINT_PCO;
->  	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
-> +	/* Wait until we get a valid response */
-> +	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
-> +				val, val == AMD_PMC_RESULT_OK, PMC_MSG_DELAY_MIN_US,
-> +				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
-> +	if (rc) {
-> +		dev_err(dev->dev, "SMU response timed out\n");
-> +		return rc;
-> +	}
->  	return 0;
->  }
->  
-> 
+I don't have time to review the rest of this series today. I'll continue
+reviewing this later (probably on Monday).
 
