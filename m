@@ -2,193 +2,670 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66861C49EAB
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 18:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E78C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 21:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460B16140F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 18:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B86A61241
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 21:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232127AbhFQSs3 (ORCPT
+        id S231284AbhFQV5t (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 14:48:29 -0400
-Received: from mail-bn7nam10on2046.outbound.protection.outlook.com ([40.107.92.46]:12278
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233040AbhFQSs2 (ORCPT
+        Thu, 17 Jun 2021 17:57:49 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38628 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229816AbhFQV5t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 14:48:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A3FIaBolGyW/FQSq80i8RuYkm8h4omqESbIDoyU0yVzHAILFCfut/MSy6IwQ+h8cCOM/Cmi66n09cey20SCk895r9aOVRLJqU1WFoCyt2a+QzReQup6rT+aQLDZlbrjOadAMGWGSrwABFKLh372mxLfwb4nX7bti9jP1q9yC4VGq0wLJDW68nsDaJlDSBFmEhmvL0A8o1abElPwibW6RbF0vEfPdTpDmiDJsTmEAcdye5E0j4mInpV/UBXSA+huEPZ/DGnvfRgmLjiZkzIW8Ifs+hxD1U3TJYig01pyfcO9p8bG09ilYmq6h/NgAhV2naYgnD38LBfae0EV0jCrusg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zoB28LGbzw6CufgVrXYQ5ruVMnpRzOlNv6COUXeGkgA=;
- b=IVB7B0Z7OPSuIzVQevnidmQ4EyLwl1OS0zhmMYqQyyLtEJka2pJJ0S5goJmycz1/eQpvmgnr7BWzW+tC7x1VyweUxaS+3QJsIdcRq2mvQMp8jbUMgRCOkQgLF05cKUcTwIJ/xnKpxzsZy0zPf3if2DLsmudbHwIYBinHc12C8EofqJvVFSweyO/66M11Otb+3BwSV7VhBDvkBNIuaCpRL1h67tYWQJ4TknFt/9MLrv4Tth8IsXOYMSPINv2IpKT9wtGBMBf7nuGpMW2VmTypliYOqM9PICj2iW7c9Pubuz3nwB63R5turKp0yRb4xqx1HmURtwBxntTQDrW8mw/2iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zoB28LGbzw6CufgVrXYQ5ruVMnpRzOlNv6COUXeGkgA=;
- b=XDVYEORxaGbpCIsj7ZYO8c5HpKCF3pS03sxbFWbdCDhi1cTsRagnWGTe0eRumPrZyDvsNU4b/LDbHS/Oqcndzo9V7tHjrOfES7RcaHfZN5Y2/ST+F4yeBj4p4Z1Inr3ObGc801ptGtPa+JIjqO4FBRnQ9JucCAZTMvgy2s+FqPc=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB2714.namprd12.prod.outlook.com (2603:10b6:5:42::18) by
- DM6PR12MB3035.namprd12.prod.outlook.com (2603:10b6:5:3a::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4242.16; Thu, 17 Jun 2021 18:46:15 +0000
-Received: from DM6PR12MB2714.namprd12.prod.outlook.com
- ([fe80::7df8:b0cd:fe1b:ae7b]) by DM6PR12MB2714.namprd12.prod.outlook.com
- ([fe80::7df8:b0cd:fe1b:ae7b%5]) with mapi id 15.20.4219.022; Thu, 17 Jun 2021
- 18:46:15 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 06/22] x86/sev: check SEV-SNP features
- support
-To:     Borislav Petkov <bp@alien8.de>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-7-brijesh.singh@amd.com> <YL4zJT1v6OuH+tvI@zn.tnic>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <e617a0a1-bb8d-9d75-56a4-2ac1138ebf8b@amd.com>
-Date:   Thu, 17 Jun 2021 13:46:08 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <YL4zJT1v6OuH+tvI@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [165.204.84.11]
-X-ClientProxiedBy: BN9PR03CA0431.namprd03.prod.outlook.com
- (2603:10b6:408:113::16) To DM6PR12MB2714.namprd12.prod.outlook.com
- (2603:10b6:5:42::18)
+        Thu, 17 Jun 2021 17:57:49 -0400
+IronPort-SDR: GXjSGpVCDJg5eUClwXJiLInMVQhv6m9xWEbAkJj8Auyf19HWi8ml6gGN1NHtCz17azApEV7Tz4
+ /kaAUJTg2O2w==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="206274746"
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="206274746"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:55:41 -0700
+IronPort-SDR: FhDUH2VPtACVp5kLaKcEbjCxAE5SmOAfV+wCHuCiQBsButqXH/HTyKt7V9nWgY9R+rbjBGWIq9
+ 6pW9Tr6Zsqbw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
+   d="scan'208";a="451160377"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 17 Jun 2021 14:55:40 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id C2232580224;
+        Thu, 17 Jun 2021 14:55:40 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
+        hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 2/4] MFD: intel_pmt: Remove OOBMSM device
+Date:   Thu, 17 Jun 2021 14:54:06 -0700
+Message-Id: <20210617215408.1412409-3-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210617215408.1412409-1-david.e.box@linux.intel.com>
+References: <20210617215408.1412409-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.254.35.102] (165.204.84.11) by BN9PR03CA0431.namprd03.prod.outlook.com (2603:10b6:408:113::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16 via Frontend Transport; Thu, 17 Jun 2021 18:46:11 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 47f5ed94-eb52-4cc6-8a49-08d931c02f67
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3035:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3035E7074C11DCE4497FD261E50E9@DM6PR12MB3035.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tWmLsRq75GOFxgz5ElZdKveLYOyjCzjc803NmyHH/NgkB0W6IQObzHZ6DqwXIRvKv4GeCcaFulpv3/AvawfDRzt+nAxFsniCj2JV9XRFrhBKIBFIra8vXMWZWKJ+CPrtDbSn+8pRQWSSrq2N9+DaAoEeyvuGFj0OaT3DZ3O0fr3rst3WHK1sNG2ovB17gAXOSzpcs1zc+BbAnOkq2coPRzDF2K+Ka7WiRfKTZ4UQaQfnkQhHqZEevtD9QROPY94kmQ8o/BBjIe7mOMEHLAn1LJISd/K3etPU+QFV3PSJFjAy6ezRkMj5xR89pfJ55Grakro6jItRlwE1Eckh5fePSYSbheMiujJXSZlKFNyumNM0rcrfOXYci3maI73eitSqnZTB/VvqTpQnkuD43iaTdzH2GoyTA/aY1wgqk6AFz3KudNjKGdfSe2U34ba5nz9q/wRw5OgQDy4GuGxUraUdp21IHZaEbgxl2Y6gOH5at/ZhGtdm8WtV0OgrmhKVU2vOBDYpJgWaU3lFF8+JhgaLnP0NQQPRr5iO87EfcGkPr79Rj5JyVE2Ku6pBlRglsAI2FkGuULHApDLlZ9IG+yPpaVbbBDCado9ShZjiauBQ3VAHgQv3bCeIWHFz1PjE6j4Iydphwc4geHjIfFGqEe/J/IearrdSHvnhmyy9vc4uLzww1dffB2eBQWp9CfYERGBZoNj7+qLIl1FC2nTBeMzymA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2714.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(2906002)(8936002)(8676002)(52116002)(6666004)(66946007)(16526019)(186003)(7416002)(53546011)(26005)(31686004)(478600001)(66556008)(66476007)(83380400001)(6486002)(2616005)(31696002)(16576012)(956004)(38100700002)(38350700002)(86362001)(36756003)(54906003)(6916009)(44832011)(5660300002)(4326008)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a3paWEtzdDVWbmtMbGZ6VFJVVTllMzlyMGpEcDlmOVM4RU1qaThCcGMzcDQ5?=
- =?utf-8?B?dnBJZUlaSjdTQkxoazFGY1NNRGxQYWpJSUFWVXJ2VFdwNjN0ZjF0Q2drQjdk?=
- =?utf-8?B?U05yUzBFS0FtV0FaaUpMTys2SWdkNUc5SWZvQWFSdHVsUHA0RmpCdHpmRFRG?=
- =?utf-8?B?blRUYjkyaGpXOUUwRVQ4UGZxVDBVMFhCbjN0MGhrY0hNbmZtaHdZaCtSMDF2?=
- =?utf-8?B?TGk0bHgwazRDU1ljWUZCMGdPUUdNUGZsbkNpeDF4L1RiUmNna1FUWlVHR29F?=
- =?utf-8?B?SExWUDl2ZWNmVS9VUDEyNjR2TEMxRks3VU1NdXFNY0N4ZHBZY1puVkp4QUVh?=
- =?utf-8?B?aVgvY0tEb1BOZ0YrWnREcy8zVHRjZmdtYlNzM3F0ajI4OHVKK055VG1xanBi?=
- =?utf-8?B?SzRnT3pWY1B1TG9BNHFYcG1tVDBCNzJxQ0QwU1p2M2t1TW9hVDBiOC9rNU9N?=
- =?utf-8?B?M3FhVkErUmdaMmx4VmNLR0V4bVhReEhkMk8yMmx3S0t2RHJCbnJRUlNGYUc5?=
- =?utf-8?B?TVRWbkdrRjcvT1ZxdTM4d2JMQVRuOGErdEJtMlcvVzRKNGZyZWkwdDJYMDFI?=
- =?utf-8?B?NlZoNXc5Q0liNTl5MUxHT1JZRUR4VWk3Vmo1NUw4YlRQc3ZJUXRwZk41MUV3?=
- =?utf-8?B?UDhHdU1JQXlOQ2hqR1Uxa09DZHZjd0dESHBuNkc1YUNPSy9uNGliODUxd3Ja?=
- =?utf-8?B?QThlRUlQa3BNYVAvZ3lxdTRFT1p0SXdmbGluekNZdEZoMXZuODNvZzhFMitn?=
- =?utf-8?B?c244YkVOVU4xbmkyNFFFZHlpNGI1c1NyS3dUdnNmZk9qeWNaYmlMa01HSHk2?=
- =?utf-8?B?Wmh5dXdUUnJWYTZhYitQQWtmTk1zYStHUk8vb1R6UExEOG9JbytZYk54MDdu?=
- =?utf-8?B?OVdvOE9Ed2dQbzduaEpoQ2U3STgzemcvR1RSak5RN3EvWlNGbnlHZ0N6anZE?=
- =?utf-8?B?NlBMcDB4UkUrWHhwdFhUeHl6NUlsZXZJbDZWQWx2QnR2Q1M3M1E3czZhdG02?=
- =?utf-8?B?aVNMTGlmSC92V1ZsdEtFU3hwMnBDZHhXazRZSjMzV2xHTFJhM05hd3VBTXVj?=
- =?utf-8?B?Zmt4eHNNZDRoMFlvVFk3STlHMEROZEM2V3h2Qkg2VlRGUFI2WUt5WE4vcVZ4?=
- =?utf-8?B?eTJoYmxCcDJTcGErTStoc3hpazRkUzBwS0daNFBLbzhrcTN6YVZqSndsSlpE?=
- =?utf-8?B?QWZrNHRiMlJUSC9zcVBqNS9DWWRBWXhENXYvNURaNGtUM2IrQkYwZlJ5UHRX?=
- =?utf-8?B?dnhhaUlxS2p2WUdVa2tVcUh0K0tQUW5wdC9wVU4remhMSGY3RGxkT25ibFF2?=
- =?utf-8?B?THY2SFRYU3dBNU5QVmVZcjhBYmsxSnYvY04xSlJJOG9ZU25NYmhOblg0SFZt?=
- =?utf-8?B?MUoweWI1L2owNjgzUTRMY0l0NWdBOEQ5ZW5VZHdmZkVKdWZ1dVIvODJveHI2?=
- =?utf-8?B?V2tUVXRYRGxtaVF0U3d3UTU4ckMwREJkMzUvWGdoamtZRVNrdHArVmR5Z3JQ?=
- =?utf-8?B?THpQdE91UVU2dEVaTGJZQnlDRDFtZ0U0WW1hajNOZkYyYjFrWTREVU5ETEt3?=
- =?utf-8?B?SWtnMEhvbWlqcWZ1Wit1bTQ1Wm5MRS9xMmEwVWtSNUxhaEU2VkZhaVRCQllP?=
- =?utf-8?B?TER4dDFWUlhqOTZZeGhJNElhOFFHZE0wdmFiK2lPMFJBejRpck5JeDZUQVky?=
- =?utf-8?B?M2ZoVTJDbWhjTVhZcnFrYWxsQ2Z0Q0kxeXlTU0ppK2tEL0Q4WVBhVFB1OGNa?=
- =?utf-8?Q?HxtHEZd6vXeSVt0nslYHhOu4OTMnrjZ8miHEtoC?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47f5ed94-eb52-4cc6-8a49-08d931c02f67
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2714.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 18:46:15.1320
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b3SiVCvlB9ViIunsf6TBjQ7F5CVGYxvoRg8i3fdF1RcSatcHI/oZ0ChGzAPqr4G1S5Jj0Myhutw0lDPQl3c8EQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3035
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Boris,
+Unlike the other devices in intel_pmt, the Out of Band Management Services
+Module (OOBMSM) is actually not a PMT dedicated device. It can also be used
+to describe non-PMT capabilities. Like PMT, these capabilities are also
+enumerated using PCIe Vendor Specific registers in config space. In order
+to better support these devices without the confusion of a dependency on
+MFD_INTEL_PMT, remove the OOBMSM device from intel_pmt so that it can be
+later placed in its own driver. Since much of the same code will be used by
+intel_pmt and the new driver, create a new file with symbols to be used by
+both.
 
+While performing this split we need to also handle the creation of platform
+devices for the non-PMT capabilities. Currently PMT devices are named by
+their capability (e.g. pmt_telemetry). Instead, generically name them by
+their capability ID (e.g. intel_extnd_cap_2). This allows the IDs to be
+created automatically.  However, to ensure that unsupported devices aren't
+created, use an allow list to specify supported capabilities.
 
-On 6/7/2021 9:54 AM, Borislav Petkov wrote:
-> On Wed, Jun 02, 2021 at 09:04:00AM -0500, Brijesh Singh wrote:
->>  static bool early_setup_sev_es(void)
-> 
-> This function is doing SNP init now too, so it should be called
-> something generic like
-> 
-> 	do_early_sev_setup()
-> 
-> or so.
-> 
->>  #define GHCB_SEV_ES_GEN_REQ		0
->>  #define GHCB_SEV_ES_PROT_UNSUPPORTED	1
->> +#define GHCB_SEV_ES_SNP_UNSUPPORTED	2
-> 
-> GHCB_SNP_UNSUPPORTED
-> 
->> +static bool __init sev_snp_check_hypervisor_features(void)
-> 
-> check_hv_features()
-> 
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ MAINTAINERS                                |   1 +
+ drivers/mfd/Kconfig                        |   4 +
+ drivers/mfd/Makefile                       |   1 +
+ drivers/mfd/intel_extended_caps.c          | 208 +++++++++++++++++++++
+ drivers/mfd/intel_extended_caps.h          |  40 ++++
+ drivers/mfd/intel_pmt.c                    | 198 ++------------------
+ drivers/platform/x86/intel_pmt_crashlog.c  |   2 +-
+ drivers/platform/x86/intel_pmt_telemetry.c |   2 +-
+ 8 files changed, 270 insertions(+), 186 deletions(-)
+ create mode 100644 drivers/mfd/intel_extended_caps.c
+ create mode 100644 drivers/mfd/intel_extended_caps.h
 
-Based on your feedback on AP creation patch to not use the accessors, I am inclined to
-remove this helper and have the caller directly check the feature bit, is that okay ?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bc0ceef87b73..ebdc2a0f794b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9355,6 +9355,7 @@ F:	include/linux/mfd/intel_soc_pmic*
+ INTEL PMT DRIVER
+ M:	"David E. Box" <david.e.box@linux.intel.com>
+ S:	Maintained
++F:	drivers/mfd/intel_extended_cap.c
+ F:	drivers/mfd/intel_pmt.c
+ F:	drivers/platform/x86/intel_pmt_*
+ 
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 5c7f2b100191..4dde8e223a9e 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -673,10 +673,14 @@ config MFD_INTEL_PMC_BXT
+ 	  Register and P-unit access. In addition this creates devices
+ 	  for iTCO watchdog and telemetry that are part of the PMC.
+ 
++config MFD_INTEL_EXTENDED_CAPS
++	tristate
++
+ config MFD_INTEL_PMT
+ 	tristate "Intel Platform Monitoring Technology (PMT) support"
+ 	depends on PCI
+ 	select MFD_CORE
++	select MFD_INTEL_EXTENDED_CAPS
+ 	help
+ 	  The Intel Platform Monitoring Technology (PMT) is an interface that
+ 	  provides access to hardware monitor registers. This driver supports
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 4f6d2b8a5f76..7fa35399ec76 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -209,6 +209,7 @@ obj-$(CONFIG_MFD_AT91_USART)	+= at91-usart.o
+ obj-$(CONFIG_MFD_ATMEL_FLEXCOM)	+= atmel-flexcom.o
+ obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
+ obj-$(CONFIG_MFD_ATMEL_SMC)	+= atmel-smc.o
++obj-$(CONFIG_MFD_INTEL_EXTENDED_CAPS)	+= intel_extended_caps.o
+ obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
+ obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
+ obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
+diff --git a/drivers/mfd/intel_extended_caps.c b/drivers/mfd/intel_extended_caps.c
+new file mode 100644
+index 000000000000..89cf1ae6f65b
+--- /dev/null
++++ b/drivers/mfd/intel_extended_caps.c
+@@ -0,0 +1,208 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel Extended Capabilities module
++ *
++ * Copyright (c) 2021, Intel Corporation.
++ * All Rights Reserved.
++ *
++ * Author: David E. Box <david.e.box@linux.intel.com>
++ */
++
++#include <linux/bits.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/types.h>
++
++#include "intel_extended_caps.h"
++
++/* Intel DVSEC capability vendor space offsets */
++#define INTEL_DVSEC_ENTRIES		0xA
++#define INTEL_DVSEC_SIZE		0xB
++#define INTEL_DVSEC_TABLE		0xC
++#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
++#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
++
++/* Intel Extended Features */
++#define INTEL_EXT_CAP_ID_TELEMETRY	2
++#define INTEL_EXT_CAP_ID_WATCHER	3
++#define INTEL_EXT_CAP_ID_CRASHLOG	4
++
++#define INTEL_EXT_CAP_PREFIX		"intel_extnd_cap"
++#define FEATURE_ID_NAME_LENGTH		25
++
++static int intel_ext_cap_allow_list[] = {
++	INTEL_EXT_CAP_ID_TELEMETRY,
++	INTEL_EXT_CAP_ID_WATCHER,
++	INTEL_EXT_CAP_ID_CRASHLOG,
++};
++
++static bool intel_ext_cap_allowed(u16 id)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(intel_ext_cap_allow_list); i++)
++		if (intel_ext_cap_allow_list[i] == id)
++			return true;
++
++	return false;
++}
++
++static bool intel_ext_cap_disabled(u16 id, unsigned long quirks)
++{
++	switch (id) {
++	case INTEL_EXT_CAP_ID_WATCHER:
++		return !!(quirks & EXT_CAP_QUIRK_NO_WATCHER);
++
++	case INTEL_EXT_CAP_ID_CRASHLOG:
++		return !!(quirks & EXT_CAP_QUIRK_NO_CRASHLOG);
++
++	default:
++		return false;
++	}
++}
++
++static int intel_ext_cap_add_dev(struct pci_dev *pdev, struct intel_ext_cap_header *header,
++				 unsigned long quirks)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res, *tmp;
++	struct mfd_cell *cell;
++	char feature_id_name[FEATURE_ID_NAME_LENGTH];
++	int count = header->num_entries;
++	int size = header->entry_size;
++	int id = header->id;
++	int i;
++
++	if (!intel_ext_cap_allowed(id))
++		return -EINVAL;
++
++	if (intel_ext_cap_disabled(id, quirks))
++		return -EINVAL;
++
++	snprintf(feature_id_name, sizeof(feature_id_name), "%s_%d", INTEL_EXT_CAP_PREFIX, id);
++
++	if (!header->num_entries) {
++		dev_err(dev, "Invalid 0 entry count for %s header\n", feature_id_name);
++		return -EINVAL;
++	}
++
++	if (!header->entry_size) {
++		dev_err(dev, "Invalid 0 entry size for %s header\n", feature_id_name);
++		return -EINVAL;
++	}
++
++	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
++	if (!cell)
++		return -ENOMEM;
++
++	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
++	if (!res)
++		return -ENOMEM;
++
++	if (quirks & EXT_CAP_QUIRK_TABLE_SHIFT)
++		header->offset >>= 3;
++
++	/*
++	 * The DVSEC contains the starting offset and count for a block of
++	 * discovery tables, each providing access to monitoring facilities for
++	 * a section of the device. Create a resource list of these tables to
++	 * provide to the driver.
++	 */
++	for (i = 0, tmp = res; i < count; i++, tmp++) {
++		tmp->start = pdev->resource[header->tbir].start +
++			     header->offset + i * (size * sizeof(u32));
++		tmp->end = tmp->start + (size * sizeof(u32)) - 1;
++		tmp->flags = IORESOURCE_MEM;
++	}
++
++	cell->resources = res;
++	cell->num_resources = count;
++	cell->name = feature_id_name;
++
++	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0, NULL);
++}
++
++int intel_ext_cap_probe(struct pci_dev *pdev, struct intel_ext_cap_platform_info *info)
++{
++	unsigned long quirks = 0;
++	bool found_devices = false;
++	int ret, pos;
++
++	if (info)
++		quirks = info->quirks;
++
++	if (info && (info->quirks & EXT_CAP_QUIRK_NO_DVSEC)) {
++		struct intel_ext_cap_header **header;
++
++		header = info->capabilities;
++		while (*header) {
++			ret = intel_ext_cap_add_dev(pdev, *header, quirks);
++			if (ret)
++				dev_warn(&pdev->dev,
++					 "Failed to add device for DVSEC id %d\n",
++					 (*header)->id);
++			else
++				found_devices = true;
++
++			header++;
++		}
++	} else {
++		/* Find DVSEC features */
++		pos = 0;
++		do {
++			struct intel_ext_cap_header header;
++			u32 table, hdr;
++			u16 vid;
++
++			pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
++			if (!pos)
++				break;
++
++			pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER1, &hdr);
++			vid = PCI_DVSEC_HEADER1_VID(hdr);
++			if (vid != PCI_VENDOR_ID_INTEL)
++				continue;
++
++			/* Support only revision 1 */
++			header.rev = PCI_DVSEC_HEADER1_REV(hdr);
++			if (header.rev != 1) {
++				dev_warn(&pdev->dev, "Unsupported DVSEC revision %d\n",
++					 header.rev);
++				continue;
++			}
++
++			header.length = PCI_DVSEC_HEADER1_LEN(hdr);
++
++			pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
++					     &header.num_entries);
++			pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
++					     &header.entry_size);
++			pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
++					      &table);
++
++			header.tbir = INTEL_DVSEC_TABLE_BAR(table);
++			header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
++
++			pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2, &hdr);
++			header.id = PCI_DVSEC_HEADER2_ID(hdr);
++
++			ret = intel_ext_cap_add_dev(pdev, &header, quirks);
++			if (ret)
++				continue;
++
++			found_devices = true;
++		} while (true);
++	}
++
++	if (!found_devices)
++		return -ENODEV;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(intel_ext_cap_probe);
++
++MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
++MODULE_DESCRIPTION("Intel Extended Capability Core driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/mfd/intel_extended_caps.h b/drivers/mfd/intel_extended_caps.h
+new file mode 100644
+index 000000000000..c6722d4cb5e3
+--- /dev/null
++++ b/drivers/mfd/intel_extended_caps.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef INTEL_EXTENDED_CAPS_H
++#define INTEL_EXTENDED_CAPS_H
++
++/* Intel Extended Features */
++#define INTEL_EXT_CAP_ID_TELEMETRY	2
++#define INTEL_EXT_CAP_ID_WATCHER	3
++#define INTEL_EXT_CAP_ID_CRASHLOG	4
++
++struct intel_ext_cap_header {
++	u8	rev;
++	u16	length;
++	u16	id;
++	u8	num_entries;
++	u8	entry_size;
++	u8	tbir;
++	u32	offset;
++};
++
++enum intel_ext_cap_quirks {
++	/* Watcher capability not supported */
++	EXT_CAP_QUIRK_NO_WATCHER	= BIT(0),
++
++	/* Crashlog capability not supported */
++	EXT_CAP_QUIRK_NO_CRASHLOG	= BIT(1),
++
++	/* Use shift instead of mask to read discovery table offset */
++	EXT_CAP_QUIRK_TABLE_SHIFT	= BIT(2),
++
++	/* DVSEC not present (provided in driver data) */
++	EXT_CAP_QUIRK_NO_DVSEC	= BIT(3),
++};
++
++struct intel_ext_cap_platform_info {
++	unsigned long quirks;
++	struct intel_ext_cap_header **capabilities;
++};
++
++int intel_ext_cap_probe(struct pci_dev *pdev, struct intel_ext_cap_platform_info *info);
++#endif
+diff --git a/drivers/mfd/intel_pmt.c b/drivers/mfd/intel_pmt.c
+index dd7eb614c28e..f5205d6b5c47 100644
+--- a/drivers/mfd/intel_pmt.c
++++ b/drivers/mfd/intel_pmt.c
+@@ -8,64 +8,19 @@
+  * Author: David E. Box <david.e.box@linux.intel.com>
+  */
+ 
+-#include <linux/bits.h>
+-#include <linux/kernel.h>
+-#include <linux/mfd/core.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+-#include <linux/platform_device.h>
+-#include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/types.h>
+ 
+-/* Intel DVSEC capability vendor space offsets */
+-#define INTEL_DVSEC_ENTRIES		0xA
+-#define INTEL_DVSEC_SIZE		0xB
+-#define INTEL_DVSEC_TABLE		0xC
+-#define INTEL_DVSEC_TABLE_BAR(x)	((x) & GENMASK(2, 0))
+-#define INTEL_DVSEC_TABLE_OFFSET(x)	((x) & GENMASK(31, 3))
+-#define INTEL_DVSEC_ENTRY_SIZE		4
++#include "intel_extended_caps.h"
+ 
+-/* PMT capabilities */
+-#define DVSEC_INTEL_ID_TELEMETRY	2
+-#define DVSEC_INTEL_ID_WATCHER		3
+-#define DVSEC_INTEL_ID_CRASHLOG		4
+-
+-struct intel_dvsec_header {
+-	u16	length;
+-	u16	id;
+-	u8	num_entries;
+-	u8	entry_size;
+-	u8	tbir;
+-	u32	offset;
+-};
+-
+-enum pmt_quirks {
+-	/* Watcher capability not supported */
+-	PMT_QUIRK_NO_WATCHER	= BIT(0),
+-
+-	/* Crashlog capability not supported */
+-	PMT_QUIRK_NO_CRASHLOG	= BIT(1),
+-
+-	/* Use shift instead of mask to read discovery table offset */
+-	PMT_QUIRK_TABLE_SHIFT	= BIT(2),
+-
+-	/* DVSEC not present (provided in driver data) */
+-	PMT_QUIRK_NO_DVSEC	= BIT(3),
+-};
+-
+-struct pmt_platform_info {
+-	unsigned long quirks;
+-	struct intel_dvsec_header **capabilities;
+-};
+-
+-static const struct pmt_platform_info tgl_info = {
+-	.quirks = PMT_QUIRK_NO_WATCHER | PMT_QUIRK_NO_CRASHLOG |
+-		  PMT_QUIRK_TABLE_SHIFT,
++static const struct intel_ext_cap_platform_info tgl_info = {
++	.quirks = EXT_CAP_QUIRK_NO_WATCHER | EXT_CAP_QUIRK_NO_CRASHLOG |
++		  EXT_CAP_QUIRK_TABLE_SHIFT,
+ };
+ 
+ /* DG1 Platform with DVSEC quirk*/
+-static struct intel_dvsec_header dg1_telemetry = {
++static struct intel_ext_cap_header dg1_telemetry = {
+ 	.length = 0x10,
+ 	.id = 2,
+ 	.num_entries = 1,
+@@ -74,154 +29,31 @@ static struct intel_dvsec_header dg1_telemetry = {
+ 	.offset = 0x466000,
+ };
+ 
+-static struct intel_dvsec_header *dg1_capabilities[] = {
++static struct intel_ext_cap_header *dg1_capabilities[] = {
+ 	&dg1_telemetry,
+ 	NULL
+ };
+ 
+-static const struct pmt_platform_info dg1_info = {
+-	.quirks = PMT_QUIRK_NO_DVSEC,
++static const struct intel_ext_cap_platform_info dg1_info = {
++	.quirks = EXT_CAP_QUIRK_NO_DVSEC,
+ 	.capabilities = dg1_capabilities,
+ };
+ 
+-static int pmt_add_dev(struct pci_dev *pdev, struct intel_dvsec_header *header,
+-		       unsigned long quirks)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct resource *res, *tmp;
+-	struct mfd_cell *cell;
+-	const char *name;
+-	int count = header->num_entries;
+-	int size = header->entry_size;
+-	int id = header->id;
+-	int i;
+-
+-	switch (id) {
+-	case DVSEC_INTEL_ID_TELEMETRY:
+-		name = "pmt_telemetry";
+-		break;
+-	case DVSEC_INTEL_ID_WATCHER:
+-		if (quirks & PMT_QUIRK_NO_WATCHER) {
+-			dev_info(dev, "Watcher not supported\n");
+-			return -EINVAL;
+-		}
+-		name = "pmt_watcher";
+-		break;
+-	case DVSEC_INTEL_ID_CRASHLOG:
+-		if (quirks & PMT_QUIRK_NO_CRASHLOG) {
+-			dev_info(dev, "Crashlog not supported\n");
+-			return -EINVAL;
+-		}
+-		name = "pmt_crashlog";
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	if (!header->num_entries || !header->entry_size) {
+-		dev_err(dev, "Invalid count or size for %s header\n", name);
+-		return -EINVAL;
+-	}
+-
+-	cell = devm_kzalloc(dev, sizeof(*cell), GFP_KERNEL);
+-	if (!cell)
+-		return -ENOMEM;
+-
+-	res = devm_kcalloc(dev, count, sizeof(*res), GFP_KERNEL);
+-	if (!res)
+-		return -ENOMEM;
+-
+-	if (quirks & PMT_QUIRK_TABLE_SHIFT)
+-		header->offset >>= 3;
+-
+-	/*
+-	 * The PMT DVSEC contains the starting offset and count for a block of
+-	 * discovery tables, each providing access to monitoring facilities for
+-	 * a section of the device. Create a resource list of these tables to
+-	 * provide to the driver.
+-	 */
+-	for (i = 0, tmp = res; i < count; i++, tmp++) {
+-		tmp->start = pdev->resource[header->tbir].start +
+-			     header->offset + i * (size << 2);
+-		tmp->end = tmp->start + (size << 2) - 1;
+-		tmp->flags = IORESOURCE_MEM;
+-	}
+-
+-	cell->resources = res;
+-	cell->num_resources = count;
+-	cell->name = name;
+-
+-	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0,
+-				    NULL);
+-}
+ 
+ static int pmt_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ {
+-	struct pmt_platform_info *info;
+-	unsigned long quirks = 0;
+-	bool found_devices = false;
+-	int ret, pos = 0;
++	struct intel_ext_cap_platform_info *info;
++	int ret;
+ 
+ 	ret = pcim_enable_device(pdev);
+ 	if (ret)
+ 		return ret;
+ 
+-	info = (struct pmt_platform_info *)id->driver_data;
+-
+-	if (info)
+-		quirks = info->quirks;
+-
+-	if (info && (info->quirks & PMT_QUIRK_NO_DVSEC)) {
+-		struct intel_dvsec_header **header;
+-
+-		header = info->capabilities;
+-		while (*header) {
+-			ret = pmt_add_dev(pdev, *header, quirks);
+-			if (ret)
+-				dev_warn(&pdev->dev,
+-					 "Failed to add device for DVSEC id %d\n",
+-					 (*header)->id);
+-			else
+-				found_devices = true;
+-
+-			++header;
+-		}
+-	} else {
+-		do {
+-			struct intel_dvsec_header header;
+-			u32 table;
+-			u16 vid;
++	info = (struct intel_ext_cap_platform_info *)id->driver_data;
+ 
+-			pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
+-			if (!pos)
+-				break;
+-
+-			pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER1, &vid);
+-			if (vid != PCI_VENDOR_ID_INTEL)
+-				continue;
+-
+-			pci_read_config_word(pdev, pos + PCI_DVSEC_HEADER2,
+-					     &header.id);
+-			pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
+-					     &header.num_entries);
+-			pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
+-					     &header.entry_size);
+-			pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
+-					      &table);
+-
+-			header.tbir = INTEL_DVSEC_TABLE_BAR(table);
+-			header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
+-
+-			ret = pmt_add_dev(pdev, &header, quirks);
+-			if (ret)
+-				continue;
+-
+-			found_devices = true;
+-		} while (true);
+-	}
+-
+-	if (!found_devices)
+-		return -ENODEV;
++	ret = intel_ext_cap_probe(pdev, info);
++	if (ret)
++		return ret;
+ 
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_allow(&pdev->dev);
+@@ -237,12 +69,10 @@ static void pmt_pci_remove(struct pci_dev *pdev)
+ 
+ #define PCI_DEVICE_ID_INTEL_PMT_ADL	0x467d
+ #define PCI_DEVICE_ID_INTEL_PMT_DG1	0x490e
+-#define PCI_DEVICE_ID_INTEL_PMT_OOBMSM	0x09a7
+ #define PCI_DEVICE_ID_INTEL_PMT_TGL	0x9a0d
+ static const struct pci_device_id pmt_pci_ids[] = {
+ 	{ PCI_DEVICE_DATA(INTEL, PMT_ADL, &tgl_info) },
+ 	{ PCI_DEVICE_DATA(INTEL, PMT_DG1, &dg1_info) },
+-	{ PCI_DEVICE_DATA(INTEL, PMT_OOBMSM, NULL) },
+ 	{ PCI_DEVICE_DATA(INTEL, PMT_TGL, &tgl_info) },
+ 	{ }
+ };
+diff --git a/drivers/platform/x86/intel_pmt_crashlog.c b/drivers/platform/x86/intel_pmt_crashlog.c
+index 92d315a16cfd..6662454af5bf 100644
+--- a/drivers/platform/x86/intel_pmt_crashlog.c
++++ b/drivers/platform/x86/intel_pmt_crashlog.c
+@@ -17,7 +17,7 @@
+ 
+ #include "intel_pmt_class.h"
+ 
+-#define DRV_NAME		"pmt_crashlog"
++#define DRV_NAME		"intel_extnd_cap_4"
+ 
+ /* Crashlog discovery header types */
+ #define CRASH_TYPE_OOBMSM	1
+diff --git a/drivers/platform/x86/intel_pmt_telemetry.c b/drivers/platform/x86/intel_pmt_telemetry.c
+index 9b95ef050457..f281d1d71058 100644
+--- a/drivers/platform/x86/intel_pmt_telemetry.c
++++ b/drivers/platform/x86/intel_pmt_telemetry.c
+@@ -17,7 +17,7 @@
+ 
+ #include "intel_pmt_class.h"
+ 
+-#define TELEM_DEV_NAME		"pmt_telemetry"
++#define TELEM_DEV_NAME		"intel_extnd_cap_2"
+ 
+ #define TELEM_SIZE_OFFSET	0x0
+ #define TELEM_GUID_OFFSET	0x4
+-- 
+2.25.1
 
-something like:
-
-if (sev_snp_enabled() && !(hv_features & GHCB_HV_FT_SNP))
-	sev_es_terminate(GHCB_SNP_UNSUPPORTED);
-
-Let me know if you think I should still keep the accessors.
-
--Brijesh
-
-> is nice and short.
-> 
->> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
->> index 77a754365ba9..9b70b7332614 100644
->> --- a/arch/x86/kernel/sev.c
->> +++ b/arch/x86/kernel/sev.c
->> @@ -609,6 +609,10 @@ static bool __init sev_es_setup_ghcb(void)
-> 
-> Ditto for this one: setup_ghcb()
-> 
-> Thx.
-> 
