@@ -2,262 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1556AC49EA7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B65C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 22:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1ECB61241
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 21:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A622613B4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 22:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231598AbhFQV5x (ORCPT
+        id S232761AbhFQWwt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 17:57:53 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16700 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231474AbhFQV5u (ORCPT
+        Thu, 17 Jun 2021 18:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231911AbhFQWws (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 17:57:50 -0400
-IronPort-SDR: NEeFg25bXG5PX5/vKnnK3CEvjCseNoh2eQ7phqAo89Rn09asn76q24fSKuhYXwizUK0aIbxP9D
- +HH4K/B8hthw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="270304155"
-X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="270304155"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2021 14:55:41 -0700
-IronPort-SDR: 6ZHkDpGlx3WOn7uW+LShkGAYsoxClCtz1c8DC6jJ2sPs1sryqVMZoFaktpayaobN/Dsw27577J
- AsJSvaZ63O1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,281,1616482800"; 
-   d="scan'208";a="488810897"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 17 Jun 2021 14:55:41 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id EC13C580224;
-        Thu, 17 Jun 2021 14:55:40 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     lee.jones@linaro.org, david.e.box@linux.intel.com,
-        hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH 4/4] MFD: intel-extended-cap: Add support for PCIe VSEC structures
-Date:   Thu, 17 Jun 2021 14:54:08 -0700
-Message-Id: <20210617215408.1412409-5-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210617215408.1412409-1-david.e.box@linux.intel.com>
-References: <20210617215408.1412409-1-david.e.box@linux.intel.com>
+        Thu, 17 Jun 2021 18:52:48 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA6BC061574;
+        Thu, 17 Jun 2021 15:50:39 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id c5so8475282wrq.9;
+        Thu, 17 Jun 2021 15:50:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=KcA7PNNr/ye+bW5nAILlDnKfv5EVgNn+yBa/eTdKm3U=;
+        b=g8IJ8qA/0Jx32P3r0ImGZcGfWvJGwGrbym5CV9abUwcYEIp7GUnk+/N4mcTO5HrB41
+         9oQAF/bPwlEMnmF8DxnLxtxxnIaHaaqtkCp+gAaqa4/7JIg8jz9FBZpM9xfzALBlFEen
+         iDEGmcd3tiTsIvWNkyisLZrZ1hj5ShIlRZGyj4tZtAkLZsbMXy2uiKkS6WyrCz5V3kXu
+         wmgYjnM/XEKOu/es9m5e1asE5ptoTgJJKDSmNPteSWk2KUuL+NKtZVDLmaUdxCSq+syz
+         yvrQnkgaclfh+x+sFxpdQNc/9kju5A+WfMc5eZK5LkkEA0HYBPqKepUmtjliSseUr8C2
+         jSlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=KcA7PNNr/ye+bW5nAILlDnKfv5EVgNn+yBa/eTdKm3U=;
+        b=a/U3Rx9jY4VEuuXLxDYcG7amfAgSJdEGo0am2IC7NeEGA66X1XPNq40ou6Lc7yThic
+         KNR/liF6Si4NBH7FK1OsaMXLX7wRNEXlpYAdQo4i0MGtkt8BJaSofc7p9/0JjBbG6guf
+         /NbDfp99586R5hx6ruC0fUnIUzerx+v20pLDPJrjqCd4n96+63gWMZ4vulqXdSa+1eXR
+         fzc/476IA3e00hP+Vf6XyAKZHYio06nlhSACg5sLlqLADWZ/gmse8AwCl0OMag7n+QcE
+         Mj9SUbh2aXiIE1Ad+igH4kb8w6KqMBE7rsfhrP4zNVflPmhSwJFnYPlOiTHZrnAUCQoW
+         qw/A==
+X-Gm-Message-State: AOAM531NpZjeY+PVRc6gJ7ODE97QCPu9Y1CPW9pdYP9D6Pa696NYLnzW
+        qZG7DxGUHurewuIdHLpMjjn90e7ftGc=
+X-Google-Smtp-Source: ABdhPJywKcntEOFhYoq2xobjgyu5YSXIQ8oGDBHrzDjeyydwX9l9gFBOuUM6igWWUWIhQRsAC8Ij1A==
+X-Received: by 2002:adf:b19a:: with SMTP id q26mr8608897wra.401.1623970237833;
+        Thu, 17 Jun 2021 15:50:37 -0700 (PDT)
+Received: from [192.168.1.211] ([2.29.20.84])
+        by smtp.gmail.com with ESMTPSA id r1sm6231533wmh.32.2021.06.17.15.50.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jun 2021 15:50:37 -0700 (PDT)
+Subject: Re: [PATCH v1 2/4] platform/x86: intel_skl_int3472: Fix dependencies
+ (drop CLKDEV_LOOKUP)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>
+References: <20210617183031.70685-1-andriy.shevchenko@linux.intel.com>
+ <20210617183031.70685-2-andriy.shevchenko@linux.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <c3aec3b4-1ba1-6442-fbed-57a16febde68@gmail.com>
+Date:   Thu, 17 Jun 2021 23:50:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210617183031.70685-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Adds support for discovering Intel extended capability features from
-Vendor Specific Extended Capability (VSEC) registers in PCIe config space.
-While doing so place the existing DVSEC and new VSEC code in separate
-functions.
+Hi Andy
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/mfd/intel_extended_caps.c | 159 ++++++++++++++++++++----------
- 1 file changed, 109 insertions(+), 50 deletions(-)
+On 17/06/2021 19:30, Andy Shevchenko wrote:
+> Besides the fact that COMMON_CLK selects CLKDEV_LOOKUP
 
-diff --git a/drivers/mfd/intel_extended_caps.c b/drivers/mfd/intel_extended_caps.c
-index 89cf1ae6f65b..9b60defda856 100644
---- a/drivers/mfd/intel_extended_caps.c
-+++ b/drivers/mfd/intel_extended_caps.c
-@@ -105,7 +105,7 @@ static int intel_ext_cap_add_dev(struct pci_dev *pdev, struct intel_ext_cap_head
- 		header->offset >>= 3;
- 
- 	/*
--	 * The DVSEC contains the starting offset and count for a block of
-+	 * The DVSEC/VSEC contains the starting offset and count for a block of
- 	 * discovery tables, each providing access to monitoring facilities for
- 	 * a section of the device. Create a resource list of these tables to
- 	 * provide to the driver.
-@@ -124,11 +124,112 @@ static int intel_ext_cap_add_dev(struct pci_dev *pdev, struct intel_ext_cap_head
- 	return devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cell, 1, NULL, 0, NULL);
- }
- 
-+static bool intel_ext_cap_walk_dvsec(struct pci_dev *pdev, unsigned long quirks)
-+{
-+	int count = 0;
-+	int pos = 0;
-+
-+	do {
-+		struct intel_ext_cap_header header;
-+		u32 table, hdr;
-+		u16 vid;
-+		int ret;
-+
-+		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
-+		if (!pos)
-+			break;
-+
-+		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER1, &hdr);
-+		vid = PCI_DVSEC_HEADER1_VID(hdr);
-+		if (vid != PCI_VENDOR_ID_INTEL)
-+			continue;
-+
-+		/* Support only revision 1 */
-+		header.rev = PCI_DVSEC_HEADER1_REV(hdr);
-+		if (header.rev != 1) {
-+			dev_warn(&pdev->dev, "Unsupported DVSEC revision %d\n",
-+				 header.rev);
-+			continue;
-+		}
-+
-+		header.length = PCI_DVSEC_HEADER1_LEN(hdr);
-+
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-+				     &header.num_entries);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-+				     &header.entry_size);
-+		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-+				      &table);
-+
-+		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+
-+		pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2, &hdr);
-+		header.id = PCI_DVSEC_HEADER2_ID(hdr);
-+
-+		ret = intel_ext_cap_add_dev(pdev, &header, quirks);
-+		if (ret)
-+			continue;
-+
-+		count++;
-+	} while (true);
-+
-+	return count;
-+}
-+
-+static bool intel_ext_cap_walk_vsec(struct pci_dev *pdev, unsigned long quirks)
-+{
-+	int count = 0;
-+	int pos = 0;
-+
-+	do {
-+		struct intel_ext_cap_header header;
-+		u32 table, hdr;
-+		int ret;
-+
-+		pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_VNDR);
-+		if (!pos)
-+			break;
-+
-+		pci_read_config_dword(pdev, pos + PCI_VNDR_HEADER, &hdr);
-+
-+		/* Support only revision 1 */
-+		header.rev = PCI_VNDR_HEADER_REV(hdr);
-+		if (header.rev != 1) {
-+			dev_warn(&pdev->dev, "Unsupported VSEC revision %d\n",
-+				 header.rev);
-+			continue;
-+		}
-+
-+		header.id = PCI_VNDR_HEADER_ID(hdr);
-+		header.length = PCI_VNDR_HEADER_LEN(hdr);
-+
-+		/* entry, size, and table offset are the same as DVSEC */
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
-+				     &header.num_entries);
-+		pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
-+				     &header.entry_size);
-+		pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
-+				      &table);
-+
-+		header.tbir = INTEL_DVSEC_TABLE_BAR(table);
-+		header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
-+
-+		ret = intel_ext_cap_add_dev(pdev, &header, quirks);
-+		if (ret)
-+			continue;
-+
-+		count++;
-+	} while (true);
-+
-+	return count;
-+}
-+
- int intel_ext_cap_probe(struct pci_dev *pdev, struct intel_ext_cap_platform_info *info)
- {
- 	unsigned long quirks = 0;
--	bool found_devices = false;
--	int ret, pos;
-+	int device_count = 0;
-+	int ret;
- 
- 	if (info)
- 		quirks = info->quirks;
-@@ -144,59 +245,17 @@ int intel_ext_cap_probe(struct pci_dev *pdev, struct intel_ext_cap_platform_info
- 					 "Failed to add device for DVSEC id %d\n",
- 					 (*header)->id);
- 			else
--				found_devices = true;
-+				device_count++;
- 
- 			header++;
- 		}
--	} else {
--		/* Find DVSEC features */
--		pos = 0;
--		do {
--			struct intel_ext_cap_header header;
--			u32 table, hdr;
--			u16 vid;
--
--			pos = pci_find_next_ext_capability(pdev, pos, PCI_EXT_CAP_ID_DVSEC);
--			if (!pos)
--				break;
--
--			pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER1, &hdr);
--			vid = PCI_DVSEC_HEADER1_VID(hdr);
--			if (vid != PCI_VENDOR_ID_INTEL)
--				continue;
--
--			/* Support only revision 1 */
--			header.rev = PCI_DVSEC_HEADER1_REV(hdr);
--			if (header.rev != 1) {
--				dev_warn(&pdev->dev, "Unsupported DVSEC revision %d\n",
--					 header.rev);
--				continue;
--			}
--
--			header.length = PCI_DVSEC_HEADER1_LEN(hdr);
--
--			pci_read_config_byte(pdev, pos + INTEL_DVSEC_ENTRIES,
--					     &header.num_entries);
--			pci_read_config_byte(pdev, pos + INTEL_DVSEC_SIZE,
--					     &header.entry_size);
--			pci_read_config_dword(pdev, pos + INTEL_DVSEC_TABLE,
--					      &table);
--
--			header.tbir = INTEL_DVSEC_TABLE_BAR(table);
--			header.offset = INTEL_DVSEC_TABLE_OFFSET(table);
--
--			pci_read_config_dword(pdev, pos + PCI_DVSEC_HEADER2, &hdr);
--			header.id = PCI_DVSEC_HEADER2_ID(hdr);
--
--			ret = intel_ext_cap_add_dev(pdev, &header, quirks);
--			if (ret)
--				continue;
- 
--			found_devices = true;
--		} while (true);
-+	} else {
-+		device_count += intel_ext_cap_walk_dvsec(pdev, quirks);
-+		device_count += intel_ext_cap_walk_vsec(pdev, quirks);
- 	}
- 
--	if (!found_devices)
-+	if (!device_count)
- 		return -ENODEV;
- 
- 	return 0;
--- 
-2.25.1
 
+So it does - thanks
+
+> , the latter
+> is going to be removed from clock framework.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+
+Reviewed-by: Daniel Scally <djrscally@gmail.com>
+
+> ---
+>  drivers/platform/x86/intel-int3472/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel-int3472/Kconfig b/drivers/platform/x86/intel-int3472/Kconfig
+> index c112878e833b..62e5d4cf9ee5 100644
+> --- a/drivers/platform/x86/intel-int3472/Kconfig
+> +++ b/drivers/platform/x86/intel-int3472/Kconfig
+> @@ -1,7 +1,7 @@
+>  config INTEL_SKL_INT3472
+>  	tristate "Intel SkyLake ACPI INT3472 Driver"
+>  	depends on ACPI
+> -	depends on COMMON_CLK && CLKDEV_LOOKUP
+> +	depends on COMMON_CLK
+>  	depends on I2C
+>  	depends on GPIOLIB
+>  	depends on REGULATOR
