@@ -2,150 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B5FC2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98002C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B332A613CE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E427613FF
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 11:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232371AbhFQLdd (ORCPT
+        id S232482AbhFQLjP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 07:33:33 -0400
-Received: from mail-dm6nam08on2073.outbound.protection.outlook.com ([40.107.102.73]:48961
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232308AbhFQLdc (ORCPT
+        Thu, 17 Jun 2021 07:39:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38187 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232433AbhFQLjO (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 07:33:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hv265QLxdG9q+HCO5NxSaRuNdDqSwM/b/EoP2BoYq8qFIj5m5A4MYv3RZTrf+e7mYkoYzUT/6Aq7MWKgWJNVqWn8hTMXCoh+xIKPotduqKjLeS0PYmUkOT8IrqVpcQbOHEhjqlgD2ojAF44A3dNZA/0lsHJvJbyzet4LJAWkmWn2ktW1klWNnmx+7814w0SLT9nTSL3sFi16VEBSpbJ1zluJSVUcgu3XqL0TJdMHzQfOX2vZ2a0DfyTKJZmWiHW+OZsTU2E6eBpmfz3atEIyhQL9NTiAX0Gm+UZXl4imxClhM/IZJ3rfXvaJd5upImwzHjMLtrkzbqgjBJrNQ/gs0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FEKeRgkDIOSUlowP0jlbEcSCACxGpJmALRIuvTpq3qs=;
- b=W8YeyjYDWH8dMyIrBh/+tb35J0J9RTwt82SqvUfT5arpfC/I+4D1TY7PRlt8A7VLl3nyK84NeSmf9sARpsk1Wmjr+cdxvOoHDk2r8StOqaFAlUbmK/NsQqvnIW+uhkTiqU8vFhd6jxUQ/ZEQxH7wn9c1j0chdGoCaURbgUAlNfo5Cu2+qhWQssk10UpCZRWzdhwgHh8tp7wYgmj21gofVa2KHYSfNzCe1uwzDMEckFTxO6dL8jtUh0ni8saz3pa11Pn2FmsfWUg8JOZb4eLDNCD/kwWLI2uSCwdcGihblj8YAVJX+DlC2WnTCbHOxpaFpn16naEwyL96Cr4ZMyNWPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FEKeRgkDIOSUlowP0jlbEcSCACxGpJmALRIuvTpq3qs=;
- b=hm2lDY4FYyUo5GHOcuwr+R7dB/VgnZATaOGc5B6kc2SE6RAV956hDkL0sGKX7ryKVRienZZdcVA6KzqbXbLZK4z+eCmv7AEYGLN1aoH2/rd60gDudLMvPhcPSymJH9qtUAU8vtkghOpCZfHDrm2dk4UXXqMymaHYQng5qBQm52A=
-Received: from DM5PR11CA0010.namprd11.prod.outlook.com (2603:10b6:3:115::20)
- by DM6PR12MB4697.namprd12.prod.outlook.com (2603:10b6:5:32::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18; Thu, 17 Jun
- 2021 11:31:22 +0000
-Received: from DM6NAM11FT020.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:115:cafe::9a) by DM5PR11CA0010.outlook.office365.com
- (2603:10b6:3:115::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21 via Frontend
- Transport; Thu, 17 Jun 2021 11:31:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT020.mail.protection.outlook.com (10.13.172.224) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4242.16 via Frontend Transport; Thu, 17 Jun 2021 11:31:22 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Thu, 17 Jun
- 2021 06:31:20 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH 6/6] platform/x86: amd-pmc: Add new acpi id for future PMC controllers
-Date:   Thu, 17 Jun 2021 17:00:40 +0530
-Message-ID: <20210617113040.1603970-7-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
-References: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
+        Thu, 17 Jun 2021 07:39:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623929826;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zIsWIjmGNY76gABLgykoc5YhaI64FcwdtGn88E4ap8I=;
+        b=SsTcJ1VzLYnwMU+2MF7ne3dbLK6pULtMMFpb6KZrxPFG6dL7Zsx4/LUQ9u/gdX3a8knE0S
+        brsInEIWhnxGDVSLhsixOzaxr1g4+nbzRFou88chhiQcOEqGvBZscOtkGhmT1CfDFqDpt6
+        wFr9KjHmtadg8LZWYEqeBonaMAmAZM4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-68-QHyzSxo3MWS4__8truwfDQ-1; Thu, 17 Jun 2021 07:37:05 -0400
+X-MC-Unique: QHyzSxo3MWS4__8truwfDQ-1
+Received: by mail-ej1-f70.google.com with SMTP id p20-20020a1709064994b02903cd421d7803so2032456eju.22
+        for <platform-driver-x86@vger.kernel.org>; Thu, 17 Jun 2021 04:37:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zIsWIjmGNY76gABLgykoc5YhaI64FcwdtGn88E4ap8I=;
+        b=pIJAOpHZA/H4V/nYJv1+QD1Js2KsBkvY3frMjYXw+iLyUNUflyUPDGiUzbYBs+Vp9O
+         P5F9Z2sDwydCshxdB+Y1YIX8GlWOP0hfUxRnzt8g9tijHsMEXhoj/6bxk/H7cVW402ij
+         mGu84O8n9is5shhHvAV5pzleOzDIag13r0JOe7bCjlYnnTPjG+Jn1qTI4qNzEnfVPDVc
+         AbgOh7RZ58HaWa/6w+2TOICzQlCEXFUsbHQCP/3ohSoRSNat6o6mfWJLF0rpOvTx/lrc
+         YFEToQg6it8u5/PssN+i5ob0DBtOAS53UCsZ4uOnUn9khLxBG3tgGPBy1mmwxy7lQXVF
+         AohA==
+X-Gm-Message-State: AOAM533LLFrzbF4D7kU+gn1lEQGq2u5g50qkuFzc+juKo3OmUkLoQk6w
+        1ZxnkPRyQNUxolgaa3zI3kyxoEEuyevEf6P117oO1a+CrR6+i0nTPkcUSAeW4LOFGtpdJot7+qK
+        sg3lp4EBhteLsIWndkjuEQu3u5ZtHxI/ipg==
+X-Received: by 2002:aa7:cc19:: with SMTP id q25mr5834551edt.56.1623929823877;
+        Thu, 17 Jun 2021 04:37:03 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzmU8SgdOE57jIvv3FPAbzafJA7zuo+uXWROMxQc7Q+Imd2O7vmt+x2HrGK92DscISS0qnusg==
+X-Received: by 2002:aa7:cc19:: with SMTP id q25mr5834537edt.56.1623929823749;
+        Thu, 17 Jun 2021 04:37:03 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id e18sm3566060ejh.64.2021.06.17.04.37.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Jun 2021 04:37:03 -0700 (PDT)
+Subject: Re: [PATCH 1/2] platform/x86: ISST: Optimize CPU to PCI device
+ mapping
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210616221329.1909276-1-srinivas.pandruvada@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b93fc0c0-77f9-a9b4-e5dd-28a781332691@redhat.com>
+Date:   Thu, 17 Jun 2021 13:37:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 448daf44-3164-46d4-546d-08d931836f1e
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4697:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4697CA44BAA4CCA27532A1A99A0E9@DM6PR12MB4697.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1107;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IIBV36dAqw16uS2a1ehh/A2Ww1KtNHs5dLrdxfUuUEUFEKcVWBw77ntmb4nEKV/3mUBAACexp8Fd6j6TpxYBrCZDwasNgn4B6KpRebxEt1kfCF8jr45dHkgcGIAt1phQv47TN3X0/3MlBxs/6HEKwwzgiBUW5nlHsg8OAHeJrpTyEZVgQ6q3vYb3lCobgWPOHCh9GQJrnG+snRrMm2u87ufmV6UuwuVR0sbreiwe1PuFUHZw+XMTT0PLQFfdUZ2I/ydI3iTJSr8GKlkQxAN7C55LtYG98f+lvxMqiYmYJWoDxXsx7qmc5eaf+eNjt7JqOiES2kjXOhFVcjHU+GMqCoDqw1PeLpdDj2WzNSke8Lff5AvRcg5eL3lr013AFPZwtXBngGdXwt+/WBq99VSx1lw45yyS80tFUexwsfmU43S52JedJAYWO+2IfYfJ/ZUmtT4qe/h77EBW6yt2W1Y5BBQr8/e+lmvRoCxlJOOIB/sj3l/0TT5UZFN7YMjFblTO480L9LYzQit8oXjA3Z3Lfjr7nUjeG17oAXaWzWa4I7lHFZscqvKC2rpL5Z6x4RXRFF2cIvwE4QBi1XIgPTWkmzPSxXKIHzCL6b4zFLGi2yyvmP7l48zucHUuwAu1sjCiQG12xclrWsB+QCg1OdDD5zqUvVI64eu+wYihTvZZ/Qy/TWYuHjhnnbFzojeYt4wn
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(46966006)(36840700001)(478600001)(7696005)(186003)(16526019)(5660300002)(82740400003)(70206006)(4326008)(82310400003)(36756003)(26005)(6666004)(36860700001)(2906002)(426003)(47076005)(2616005)(1076003)(336012)(8676002)(81166007)(316002)(8936002)(86362001)(70586007)(54906003)(110136005)(356005)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2021 11:31:22.3391
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 448daf44-3164-46d4-546d-08d931836f1e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT020.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4697
+In-Reply-To: <20210616221329.1909276-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The upcoming PMC controller would have a newer acpi id, add that to
-the supported acpid device list.
+Hi Srinivas,
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
----
- drivers/platform/x86/amd-pmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 6/17/21 12:13 AM, Srinivas Pandruvada wrote:
+> It was observed that some of the high performance benchmarks are spending
+> more time in kernel depending on which CPU package they are executing.
+> The difference is significant and benchmark scores varies more than 10%.
+> These benchmarks adjust class of service to improve thread performance
+> which run in parallel. This class of service change causes access to
+> MMIO region of Intel Speed Select PCI devices depending on the CPU
+> package they are executing.
+> 
+> This mapping from CPU to PCI device instance uses a standard Linux PCI
+> interface "pci_get_domain_bus_and_slot()". This function does a linear
+> search to get to a PCI device. Since these platforms have 100+ PCI
+> devices, this search can be expensive in fast path for benchmarks.
+> 
+> Since the device and function of PCI device is fixed for Intel
+> Speed Select PCI devices, the CPU to PCI device information can be cached
+> at the same time when bus number for the CPU is read. In this way during
+> runtime the cached information can be used. This improves performance
+> of these benchmarks significantly.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> ---
+>  .../intel_speed_select_if/isst_if_common.c    | 29 +++++++++++++++----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+> index 0c2aa22c7a12..aedb8310214c 100644
+> --- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+> +++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+> @@ -281,11 +281,27 @@ static int isst_if_get_platform_info(void __user *argp)
+>  struct isst_if_cpu_info {
+>  	/* For BUS 0 and BUS 1 only, which we need for PUNIT interface */
+>  	int bus_info[2];
+> +	struct pci_dev *pci_dev[2];
+>  	int punit_cpu_id;
+>  };
+>  
+>  static struct isst_if_cpu_info *isst_cpu_info;
+>  
+> +static struct pci_dev *_isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+> +{
+> +	int bus_number;
+> +
+> +	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
+> +	    cpu >= num_possible_cpus())
+> +		return NULL;
+> +
+> +	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+> +	if (bus_number < 0)
+> +		return NULL;
+> +
+> +	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
+> +}
+> +
+>  /**
+>   * isst_if_get_pci_dev() - Get the PCI device instance for a CPU
+>   * @cpu: Logical CPU number.
+> @@ -300,17 +316,18 @@ static struct isst_if_cpu_info *isst_cpu_info;
+>   */
+>  struct pci_dev *isst_if_get_pci_dev(int cpu, int bus_no, int dev, int fn)
+>  {
+> -	int bus_number;
+> +	struct pci_dev *pci_dev;
+>  
+>  	if (bus_no < 0 || bus_no > 1 || cpu < 0 || cpu >= nr_cpu_ids ||
+>  	    cpu >= num_possible_cpus())
+>  		return NULL;
+>  
+> -	bus_number = isst_cpu_info[cpu].bus_info[bus_no];
+> -	if (bus_number < 0)
+> -		return NULL;
+> +	pci_dev = isst_cpu_info[cpu].pci_dev[bus_no];
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index e024fd36bd26..c26ac561c0d4 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -68,6 +68,7 @@
- #define AMD_CPU_ID_RN			0x1630
- #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
- #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
-+#define AMD_CPU_ID_YC			0x14B5
- 
- #define PMC_MSG_DELAY_MIN_US		100
- #define RESPONSE_REGISTER_LOOP_MAX	200
-@@ -309,6 +310,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_PCO:
- 		return MSG_OS_HINT_PCO;
- 	case AMD_CPU_ID_RN:
-+	case AMD_CPU_ID_YC:
- 		return MSG_OS_HINT_RN;
- 	}
- 	return -EINVAL;
-@@ -354,6 +356,7 @@ static const struct dev_pm_ops amd_pmc_pm_ops = {
- };
- 
- static const struct pci_device_id pmc_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
-@@ -444,6 +447,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
- static const struct acpi_device_id amd_pmc_acpi_ids[] = {
- 	{"AMDI0005", 0},
- 	{"AMDI0006", 0},
-+	{"AMDI0007", 0},
- 	{"AMD0004", 0},
- 	{ }
- };
--- 
-2.25.1
+If the _isst_if_get_pci_dev() call below fails, then pci_dev might
+end up getting set to NULL here.
+
+>  
+> -	return pci_get_domain_bus_and_slot(0, bus_number, PCI_DEVFN(dev, fn));
+> +	if (pci_dev->devfn == PCI_DEVFN(dev, fn))
+
+And then this would lead to a NULL ptr deref, I've replaced this
+the above if with:
+
+	if (pci_dev && pci_dev->devfn == PCI_DEVFN(dev, fn))
+
+to avoid this.
+
+I've applied this series with the above change
+to my review-hans  branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+
+
+
+
+> +		return pci_dev;
+> +
+> +	return _isst_if_get_pci_dev(cpu, bus_no, dev, fn);
+>  }
+>  EXPORT_SYMBOL_GPL(isst_if_get_pci_dev);
+>  
+> @@ -327,6 +344,8 @@ static int isst_if_cpu_online(unsigned int cpu)
+>  	} else {
+>  		isst_cpu_info[cpu].bus_info[0] = data & 0xff;
+>  		isst_cpu_info[cpu].bus_info[1] = (data >> 8) & 0xff;
+> +		isst_cpu_info[cpu].pci_dev[0] = _isst_if_get_pci_dev(cpu, 0, 0, 1);
+> +		isst_cpu_info[cpu].pci_dev[1] = _isst_if_get_pci_dev(cpu, 1, 30, 1);
+>  	}
+>  
+>  	ret = rdmsrl_safe(MSR_THREAD_ID_INFO, &data);
+> 
 
