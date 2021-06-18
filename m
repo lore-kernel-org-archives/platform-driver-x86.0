@@ -2,96 +2,93 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83769C49361
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 09:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A91C49361
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 12:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60BBE60230
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 09:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E92A61260
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 12:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232609AbhFRJtN (ORCPT
+        id S232895AbhFRM5K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Jun 2021 05:49:13 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34154 "EHLO mail.skyhub.de"
+        Fri, 18 Jun 2021 08:57:10 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41863 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230399AbhFRJtL (ORCPT
+        id S231437AbhFRM5J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Jun 2021 05:49:11 -0400
-Received: from zn.tnic (p200300ec2f0dd8004fc95bebb5201001.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:d800:4fc9:5beb:b520:1001])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6F1EC1EC0559;
-        Fri, 18 Jun 2021 11:46:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1624009601;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=fhCS1VjB+E7C2WKgFiWhTOQPZHXnjbEcqr3FRlWi0xU=;
-        b=mVNHyRCG/AgGBIUULY2n0rYyqbBpwtuaHTqg5MgQ8DzjcE9TF4eqo9kb51Zi7yIPdYmL1j
-        UmVDFMG5XYUnevK4WKpCAJrbwegX9Q43eENYMOjzOw/qYPF1y04M24QPeRJ9ZYw+hFFVzJ
-        pl8wgyAk+mMAdq8y2SXzcZsoQS0G0Ek=
-Date:   Fri, 18 Jun 2021 11:46:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 21/22] x86/sev: Register SNP guest request
- platform device
-Message-ID: <YMxrd5M1teku/hnA@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-22-brijesh.singh@amd.com>
+        Fri, 18 Jun 2021 08:57:09 -0400
+IronPort-SDR: +thxC2Tc8fAVIhxNZXZtHAd1dj9IjmB+arvNyLL0Bi9MmIsCervGQ54Gyudh5l3jX2kVZspv47
+ Brp98GE9Drzg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10018"; a="267692210"
+X-IronPort-AV: E=Sophos;i="5.83,283,1616482800"; 
+   d="scan'208";a="267692210"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 05:54:58 -0700
+IronPort-SDR: rD3VS5ul0snUG/7nJCTvtzScoLAUhkAQsSR9EuMZidCZDIQzyDTq7UEsJ10SZQmFYPVv/bnKFs
+ lxxuWYxlxr0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,283,1616482800"; 
+   d="scan'208";a="404970795"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2021 05:54:56 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7964C50E; Fri, 18 Jun 2021 15:55:21 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>
+Subject: [PATCH v2 1/8] platform/x86: Remove "default n" entries
+Date:   Fri, 18 Jun 2021 15:55:09 +0300
+Message-Id: <20210618125516.53510-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210602140416.23573-22-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 09:04:15AM -0500, Brijesh Singh wrote:
->  arch/x86/include/asm/sev.h      |  12 +++
->  arch/x86/include/uapi/asm/svm.h |   2 +
->  arch/x86/kernel/sev.c           | 176 ++++++++++++++++++++++++++++++++
->  arch/x86/platform/efi/efi.c     |   2 +
->  include/linux/efi.h             |   1 +
->  include/linux/sev-guest.h       |  76 ++++++++++++++
->  6 files changed, 269 insertions(+)
->  create mode 100644 include/linux/sev-guest.h
+Linus already once did that for PDx86, don't repeat our mistakes.
+TL;DR: 'n' *is* the default 'default'.
 
-This patch is at least three patches in one:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: no changes
+ drivers/platform/x86/Kconfig      | 1 -
+ drivers/platform/x86/dell/Kconfig | 1 -
+ 2 files changed, 2 deletions(-)
 
-1. EFI changes
-2. SNP_GUEST_REQUEST struct etc definitions
-3. Add the functionality.
-
-Please split it this way before I take a look.
-
-Thx.
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 4fd792f2a10a..ccb827b57f1f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1092,7 +1092,6 @@ config TOUCHSCREEN_DMI
+ 
+ config FW_ATTR_CLASS
+ 	tristate
+-	default n
+ 
+ config INTEL_IMR
+ 	bool "Intel Isolated Memory Region support"
+diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+index 9b0a4d080f43..9e7314d90bea 100644
+--- a/drivers/platform/x86/dell/Kconfig
++++ b/drivers/platform/x86/dell/Kconfig
+@@ -5,7 +5,6 @@
+ 
+ menuconfig X86_PLATFORM_DRIVERS_DELL
+ 	bool "Dell X86 Platform Specific Device Drivers"
+-	default n
+ 	depends on X86_PLATFORM_DEVICES
+ 	help
+ 	  Say Y here to get to see options for device drivers for various
 -- 
-Regards/Gruss,
-    Boris.
+2.30.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
