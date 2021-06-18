@@ -2,117 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B65C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 22:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E01C48BE8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 05:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A622613B4
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 17 Jun 2021 22:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 250E46054E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 05:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232761AbhFQWwt (ORCPT
+        id S232560AbhFRFtA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 17 Jun 2021 18:52:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
+        Fri, 18 Jun 2021 01:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbhFQWws (ORCPT
+        with ESMTP id S229671AbhFRFs7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 17 Jun 2021 18:52:48 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA6BC061574;
-        Thu, 17 Jun 2021 15:50:39 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id c5so8475282wrq.9;
-        Thu, 17 Jun 2021 15:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=KcA7PNNr/ye+bW5nAILlDnKfv5EVgNn+yBa/eTdKm3U=;
-        b=g8IJ8qA/0Jx32P3r0ImGZcGfWvJGwGrbym5CV9abUwcYEIp7GUnk+/N4mcTO5HrB41
-         9oQAF/bPwlEMnmF8DxnLxtxxnIaHaaqtkCp+gAaqa4/7JIg8jz9FBZpM9xfzALBlFEen
-         iDEGmcd3tiTsIvWNkyisLZrZ1hj5ShIlRZGyj4tZtAkLZsbMXy2uiKkS6WyrCz5V3kXu
-         wmgYjnM/XEKOu/es9m5e1asE5ptoTgJJKDSmNPteSWk2KUuL+NKtZVDLmaUdxCSq+syz
-         yvrQnkgaclfh+x+sFxpdQNc/9kju5A+WfMc5eZK5LkkEA0HYBPqKepUmtjliSseUr8C2
-         jSlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=KcA7PNNr/ye+bW5nAILlDnKfv5EVgNn+yBa/eTdKm3U=;
-        b=a/U3Rx9jY4VEuuXLxDYcG7amfAgSJdEGo0am2IC7NeEGA66X1XPNq40ou6Lc7yThic
-         KNR/liF6Si4NBH7FK1OsaMXLX7wRNEXlpYAdQo4i0MGtkt8BJaSofc7p9/0JjBbG6guf
-         /NbDfp99586R5hx6ruC0fUnIUzerx+v20pLDPJrjqCd4n96+63gWMZ4vulqXdSa+1eXR
-         fzc/476IA3e00hP+Vf6XyAKZHYio06nlhSACg5sLlqLADWZ/gmse8AwCl0OMag7n+QcE
-         Mj9SUbh2aXiIE1Ad+igH4kb8w6KqMBE7rsfhrP4zNVflPmhSwJFnYPlOiTHZrnAUCQoW
-         qw/A==
-X-Gm-Message-State: AOAM531NpZjeY+PVRc6gJ7ODE97QCPu9Y1CPW9pdYP9D6Pa696NYLnzW
-        qZG7DxGUHurewuIdHLpMjjn90e7ftGc=
-X-Google-Smtp-Source: ABdhPJywKcntEOFhYoq2xobjgyu5YSXIQ8oGDBHrzDjeyydwX9l9gFBOuUM6igWWUWIhQRsAC8Ij1A==
-X-Received: by 2002:adf:b19a:: with SMTP id q26mr8608897wra.401.1623970237833;
-        Thu, 17 Jun 2021 15:50:37 -0700 (PDT)
-Received: from [192.168.1.211] ([2.29.20.84])
-        by smtp.gmail.com with ESMTPSA id r1sm6231533wmh.32.2021.06.17.15.50.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Jun 2021 15:50:37 -0700 (PDT)
-Subject: Re: [PATCH v1 2/4] platform/x86: intel_skl_int3472: Fix dependencies
- (drop CLKDEV_LOOKUP)
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>
-References: <20210617183031.70685-1-andriy.shevchenko@linux.intel.com>
- <20210617183031.70685-2-andriy.shevchenko@linux.intel.com>
-From:   Daniel Scally <djrscally@gmail.com>
-Message-ID: <c3aec3b4-1ba1-6442-fbed-57a16febde68@gmail.com>
-Date:   Thu, 17 Jun 2021 23:50:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Fri, 18 Jun 2021 01:48:59 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF98C061574;
+        Thu, 17 Jun 2021 22:46:50 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0dd800c1c0f109d0ca36f4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:d800:c1c0:f109:d0ca:36f4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 739671EC054F;
+        Fri, 18 Jun 2021 07:46:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623995209;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Z2NcsQEXbnE2U0G6jQczPtJMf0zCLQ336536FRXg81M=;
+        b=gf8n4odDGWXwGJEBtSR/Ph2wRe/dCxc/qC6TznTV/wZrAPIanM6DBG6ZnaRQcHTW2w7jNL
+        7X76OBMJf6LrsqYa+IVNSsAA0wJdWACrEla2WhdlZQLbax/a9Joo5Vv5xqQ+MarhLrZCi2
+        E5aBSMueO9iMceLUivF9j6PX26bQGqo=
+Date:   Fri, 18 Jun 2021 07:46:38 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 06/22] x86/sev: check SEV-SNP features
+ support
+Message-ID: <YMwzPjV9s/6qW75m@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-7-brijesh.singh@amd.com>
+ <YL4zJT1v6OuH+tvI@zn.tnic>
+ <e617a0a1-bb8d-9d75-56a4-2ac1138ebf8b@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20210617183031.70685-2-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <e617a0a1-bb8d-9d75-56a4-2ac1138ebf8b@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Andy
+On Thu, Jun 17, 2021 at 01:46:08PM -0500, Brijesh Singh wrote:
+> Based on your feedback on AP creation patch to not use the accessors, I am inclined to
+> remove this helper and have the caller directly check the feature bit, is that okay ?
+> 
+> something like:
+> 
+> if (sev_snp_enabled() && !(hv_features & GHCB_HV_FT_SNP))
+> 	sev_es_terminate(GHCB_SNP_UNSUPPORTED);
+> 
+> Let me know if you think I should still keep the accessors.
 
-On 17/06/2021 19:30, Andy Shevchenko wrote:
-> Besides the fact that COMMON_CLK selects CLKDEV_LOOKUP
+Yeah, looks about right. Let's keep hv_features in a sev-specific
+header so that there are no name clashes. Or maybe we should call it
+sev_hv_features since it is going to be read-only anyway.
 
+Thx.
 
-So it does - thanks
+-- 
+Regards/Gruss,
+    Boris.
 
-> , the latter
-> is going to be removed from clock framework.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-
-Reviewed-by: Daniel Scally <djrscally@gmail.com>
-
-> ---
->  drivers/platform/x86/intel-int3472/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel-int3472/Kconfig b/drivers/platform/x86/intel-int3472/Kconfig
-> index c112878e833b..62e5d4cf9ee5 100644
-> --- a/drivers/platform/x86/intel-int3472/Kconfig
-> +++ b/drivers/platform/x86/intel-int3472/Kconfig
-> @@ -1,7 +1,7 @@
->  config INTEL_SKL_INT3472
->  	tristate "Intel SkyLake ACPI INT3472 Driver"
->  	depends on ACPI
-> -	depends on COMMON_CLK && CLKDEV_LOOKUP
-> +	depends on COMMON_CLK
->  	depends on I2C
->  	depends on GPIOLIB
->  	depends on REGULATOR
+https://people.kernel.org/tglx/notes-about-netiquette
