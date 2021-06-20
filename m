@@ -2,87 +2,76 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F3AC49361
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 15:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7139CC48BDF
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Jun 2021 11:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64E3F613BD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 18 Jun 2021 15:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41F5D6113C
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Jun 2021 11:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbhFRPHy (ORCPT
+        id S229571AbhFTLd6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 18 Jun 2021 11:07:54 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55038 "EHLO mail.skyhub.de"
+        Sun, 20 Jun 2021 07:33:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229550AbhFRPHx (ORCPT
+        id S229568AbhFTLd5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 18 Jun 2021 11:07:53 -0400
-Received: from zn.tnic (p200300ec2f0dd800f1d29af1870b9e89.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:d800:f1d2:9af1:870b:9e89])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E16551EC0529;
-        Fri, 18 Jun 2021 17:05:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1624028743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DAkmjtSEjAQW5/oSQSGY2SJZEOQXFtsl+lpahSbt7CM=;
-        b=Ol1RhoAL2zOpnn55wSrncRMqg5PShyikP6yN9Dd9Spb+mo2L1xWn7DUx8YDT6MBohBRh4j
-        r4JUcLI0Bq1CtLIQIkucqpI/IRSrlQ8P5Qg6k9hoOVYEc08pew3bLadc5ekrVfBLtZef1X
-        N+VDfH4YnAnzuSIy9dUDc4cKbLo9mC4=
-Date:   Fri, 18 Jun 2021 17:05:28 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 20/22] x86/boot: Add Confidential Computing
- address to setup_header
-Message-ID: <YMy2OGwsRzrR5bwD@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-21-brijesh.singh@amd.com>
- <YMw4UZn6AujpPSZO@zn.tnic>
- <15568c80-c9a9-5602-d940-264af87bed98@amd.com>
+        Sun, 20 Jun 2021 07:33:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 7A530610CA
+        for <platform-driver-x86@vger.kernel.org>; Sun, 20 Jun 2021 11:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624188705;
+        bh=NqE4Mxeau54y2tVsMr5wKUk8EnBZQtl79zmsJHql69U=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=J1W0xEwbr7QOMa5DaM3xZiOUBc+GunTAc5SotZjBiJ5aF6V44v2KgPDkxOy+zaLTK
+         tWZrUr0Ver7U4fRPDgYkLTPahLiagliSlaaM5gO9sLNlATl0INQWGwCInwHphsP0sb
+         1R/E7aqWnDWwDgKbKga6vhcdy+tlzySIpguChYN7UH5KiWnPb6NRU4yaTPQKikKKfK
+         Og6PeDPjzXE4b/nZIRm0gSCub7Fbf6I7Mgtu8A/P44YupVEUUf04DFuodjWNwzDFCm
+         GmI18769+bsPVrq12ROCn4/CdiongWABU6DUhmpb1xVX4cr29e5h9KhqudY0Ca4FGg
+         7y+iADC+yxhxg==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 213511] kernel panic during boot
+Date:   Sun, 20 Jun 2021 11:31:45 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: linux@brodo.de
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-213511-215701-R2oAkqjc2N@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-213511-215701@https.bugzilla.kernel.org/>
+References: <bug-213511-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <15568c80-c9a9-5602-d940-264af87bed98@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 18, 2021 at 08:57:12AM -0500, Brijesh Singh wrote:
-> Don't have any strong reason to keep it separate, I can define a new
-> type and use the setup_data to pass this information.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D213511
 
-setup_data is exactly for use cases like that - pass a bunch of data
-to the kernel. So there's no need for a separate thing. Also see that
-kernel_info thing which got added recently for read_only data.
+--- Comment #2 from Dominik Brodowski (linux@brodo.de) ---
+Created attachment 297499
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D297499&action=3Dedit
+/proc/ioports
 
-Thx.
+--=20
+You may reply to this email to add a comment.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+You are receiving this mail because:
+You are watching the assignee of the bug.=
