@@ -2,117 +2,94 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79845C48BDF
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Jun 2021 21:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D891C4743C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 13:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5869A610CA
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 20 Jun 2021 21:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1403960725
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 13:24:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbhFTVK5 (ORCPT
+        id S229719AbhFUN0O (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 20 Jun 2021 17:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230211AbhFTVK5 (ORCPT
+        Mon, 21 Jun 2021 09:26:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55069 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229707AbhFUN0O (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 20 Jun 2021 17:10:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8CF3C610EA;
-        Sun, 20 Jun 2021 21:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624223324;
-        bh=RV1dRe0q665rCNfncnH89ttrqFNtElN2unqX84acxys=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vCmKbaXvanXPec+PW1+BZooyGCUSyt4KNHWz5AQ/cxQrd8zooIkSvV3NVjDcVy1M0
-         lev8GonTnS6dA5tZcayI4PxkXuJhnhljHIVpA/itbL6f3Hy3rM1srP/s0yFR9mn71h
-         sOSjfQcEtX2rtb29fvtC0W7he5nriw5NU4S2j9lLX8OvqFWdfH4XpfMRbiVpmk7wb0
-         HS4RbaWpQMLswvjL3fLh9kmIKF0YfQcdAbDM97gN/oDe1GVh7/nT2WozhPr1wJb486
-         zORZrhVcBf5n1i4hJzCl6xrqGOTily1gQrpBUnIfn+Oamgvj6keBnnso+aDJA9lK6X
-         D5Sd9fuYoMXiw==
-Date:   Sun, 20 Jun 2021 23:08:41 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
+        Mon, 21 Jun 2021 09:26:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624281839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=44Wzss9Chv9ly4RM+cQICMs+4bnVGrqSZuTdMB9MmxM=;
+        b=J2eedt9nLd0ICqiFsp5em0hLbX/VQQNEInV3L0ihxBNLX0ISqbykbrLB2/1eRXv2myiBoE
+        aeHstQEbsn9eH2ppMIUanTAdd7CvjPaGj4KdJlhtw3Sg/LdWT+jtjGFAZ+KknWi6XYXdwa
+        AqoVraAc1/2JoTm7fuJ+Q9D218F+hq0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-121-rZ_t2hRoMfeXTU1WoPtIYA-1; Mon, 21 Jun 2021 09:23:58 -0400
+X-MC-Unique: rZ_t2hRoMfeXTU1WoPtIYA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06BAE100CEC2;
+        Mon, 21 Jun 2021 13:23:57 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-115-247.ams2.redhat.com [10.36.115.247])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB16D60871;
+        Mon, 21 Jun 2021 13:23:55 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <mgross@linux.intel.com>,
         Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, x86@kernel.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: i2c: ce4100: Replace "ti,pcf8575" by
- "nxp,pcf8575"
-Message-ID: <YM+uWXoCvi7Y/s24@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, x86@kernel.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-References: <cover.1622560799.git.geert+renesas@glider.be>
- <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+Subject: [PATCH] platform/x86: think-lmi: Return EINVAL when kbdlang gets set to a 0 length string
+Date:   Mon, 21 Jun 2021 15:23:54 +0200
+Message-Id: <20210621132354.57127-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yGK4jxv6o8Tg62fU"
-Content-Disposition: inline
-In-Reply-To: <9b560b7f5ded90430c989a211f2aee009aefc595.1622560799.git.geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Commit 0ddcf3a6b442 ("platform/x86: think-lmi: Avoid potential read before
+start of the buffer") moved the lengt == 0 up to before stripping the '\n'
+which typically gets added when users echo a value to a sysfs-attribute
+from the shell.
 
---yGK4jxv6o8Tg62fU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This avoids a potential buffer-underrun, but it also causes a behavioral
+change, prior to this change "echo > kbdlang", iow writing just a single
+'\n' would result in an EINVAL error, but after the change this gets
+accepted setting kbdlang to an empty string.
 
-On Tue, Jun 01, 2021 at 05:25:44PM +0200, Geert Uytterhoeven wrote:
-> The TI part is equivalent to the NXP part, and its compatible value is
-> not documented in the DT bindings.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Re-add the length != 0 check after stripping the '\n' to reject this
+again, as before the change.
 
-Applied to for-next, thanks!
+Fixes: 0ddcf3a6b442 ("platform/x86: think-lmi: Avoid potential read before start of the buffer")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/platform/x86/think-lmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index c6c9fbb8a53e..c22435acebbe 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -449,7 +449,7 @@ static ssize_t kbdlang_store(struct kobject *kobj,
+ 	if (buf[length-1] == '\n')
+ 		length--;
+ 
+-	if (length >= TLMI_LANG_MAXLEN)
++	if (!length || length >= TLMI_LANG_MAXLEN)
+ 		return -EINVAL;
+ 
+ 	memcpy(setting->kbdlang, buf, length);
+-- 
+2.31.1
 
---yGK4jxv6o8Tg62fU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmDPrlkACgkQFA3kzBSg
-KbZFSRAAlvHQWYn7WuznFBAm3WzUAuqHEpUbbz32vQiJxtrX+3RgQ2ylWfaEi30P
-LwMnfIUuQxQYUhNF5f+Q/zYIdcHyscL8YdYlbMl2grtmKa68Lm1SeUZj0kJbBZ6c
-0hv7k4yT0/2wRFc3pNOi2E5fnU9oKKKdXEB+7J5zrfotCIcyOfMSmekVfcg7e/Lc
-dPm3MxH4Aixm2eNxuPRiXAXRvn4WXaf42EEdwERYx/OTIEe+ndm+OmhoQFB4PsqP
-7aglnSl+5mCrlGw3mU6/qt9gE+zXd36c1Y1DOMdu6ArMOc0zRugPon57oBSWrAA1
-IwvTDnrCAtY2Z8MnDFyYT+BCrxeWHs6y66nFT1M/w9m2t6YBB0r2ZsbstRkYHzK6
-4YE3UcZc6bvulO2ds+LZPSdLD6U0CqWjMi/Wv/1tsIz1eHuwl54J/SSneY4R+fU1
-k7pzOZF6sVk1MwvZ7iGKIxXakQ0q5YLgTFHrX1XTSAmO9tKFWwaz5tP1qrP7psnY
-p6BBWNdxYDqYnyGyzV/ujdoLT/OOHWizJceV+afJNL24fj5NDJU0ERpEH+HnwA0U
-vdubHHZN7Feqm059L3EFEA/B5f9yNSpfc359yCR4jE7HbIRiFz5fgVwIF78Q8RUf
-Dbf03mWpY2Z4GKdcxPxS7D3Pmq9qtxoLF1tK+ENHSbY1mZ9QvS8=
-=fIsi
------END PGP SIGNATURE-----
-
---yGK4jxv6o8Tg62fU--
