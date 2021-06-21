@@ -2,112 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA84C48BE5
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 16:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF29C4743C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 19:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 624DF61289
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 16:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBDA6134F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 21 Jun 2021 19:23:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbhFUQTp (ORCPT
+        id S231158AbhFUTZc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 21 Jun 2021 12:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231185AbhFUQT3 (ORCPT
+        Mon, 21 Jun 2021 15:25:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:51265 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230052AbhFUTZc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 21 Jun 2021 12:19:29 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44924C061574
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Jun 2021 09:17:14 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id t19-20020a17090ae513b029016f66a73701so5577719pjy.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 21 Jun 2021 09:17:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C0LOzV26aRFDzZUQP83eH7kAKeXhNQdJY+GCIePDTAw=;
-        b=RhU+KrMa+52QqrITRoK8EtKYzB1g6M+KSU/jg8fU96lMLKl1uDcdjH5E25FcvGchQ3
-         2XyURn5sCOG+XHwNqsrwn4UzVnEH6R4843WZGBPo2923x9dzcRXOeVioFfgdCZ3qd0kB
-         KJHJiJJXxUwYSaP9HlCJSbKW5hwoLjkoGvbD4ZvZGZMGTQHRC0H84wrxfclMxHImq5NR
-         I9InCP81TqWV27oKCbHVBupORCOVfp47pKXxJoD60jKq4NRZLWrHHYUs3ycW0TZ7ol1k
-         PJm5MNwWH6ixrRx+0XxGd/f3hcQHvUb0Yk2vch0oS3YWdaeov1QsNWxt7sucgGGBFmAY
-         4hgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C0LOzV26aRFDzZUQP83eH7kAKeXhNQdJY+GCIePDTAw=;
-        b=H2vJXWSJ2gbXfU3EGPJTnASw6O1EGMqZe6eu/YFXOgiPHP+fgZaEybvQxPWmY5FWZD
-         J6Z66W4jYvtJaMSKw+bCRY3DvuMmSveuoIx+n1Z+2BHTcZrd+5eajb6+Z1qXgaDcOuoF
-         FDgEkk9ZpelRBND89VDf+mjbh4mFFlG/xZl8dLVfizGrVG/qhO3Fyg2+RiLi8CRLOJJL
-         oiBkkLcLK699QtHbmetdL2Lp7tJ2gUwOIh9PhSTvzEHWIQFpKwU42akv6MDmLG14E9/f
-         RwIVWROOzGchWvrKOc+O6CfbsVZeZKClgPUslHrA/kqBBRvvwfxq6lSQ0XVr3pkHk3Ot
-         tSdg==
-X-Gm-Message-State: AOAM532dP+sK6iKtgu1s37nCUYeCe8Q9Kpx9OpU9ZGOchmGaYvCWCUpy
-        h3WZJOuAt6M+zNQ8MWc9UVD/0uxIpuRSI+Z3rVM=
-X-Google-Smtp-Source: ABdhPJyrP6Je+Pc6vbNWeYzWeUjlTiWXhCr0n0WZE0srXZ4hzFXCk2F2lU7IClJh876Bm9oYqxXGpFK9uyP5u1u1eIM=
-X-Received: by 2002:a17:90a:bc89:: with SMTP id x9mr28247699pjr.228.1624292233777;
- Mon, 21 Jun 2021 09:17:13 -0700 (PDT)
+        Mon, 21 Jun 2021 15:25:32 -0400
+Received: from [192.168.1.155] ([95.118.106.223]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MdNwm-1lM4lE3FxI-00ZRYS; Mon, 21 Jun 2021 21:23:12 +0200
+Subject: Re: [PATCH v2] platform/x86: add support for Acer Predator LEDs
+To:     Hans de Goede <hdegoede@redhat.com>, leo60228 <leo@60228.dev>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20210615221931.18148-1-leo@60228.dev>
+ <20210616005147.26212-1-leo@60228.dev>
+ <87e6f17f-3d82-ac63-b5eb-e7f3205f59e8@metux.net>
+ <ae4e7db3-ffc5-b8f3-c08c-bba6882d44ad@60228.dev>
+ <62d2de8d-e539-5b4f-447a-5e6116844992@metux.net>
+ <0148a2e3-c91e-7422-df3d-6942c38334ed@redhat.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <436b87c1-5c24-05ce-98fd-c3664c7765e2@metux.net>
+Date:   Mon, 21 Jun 2021 21:23:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210621132354.57127-1-hdegoede@redhat.com> <CAHp75Veh-t0KO4To8gbZej1bifJbrc3ppxnLzun0BcbsOBqZnA@mail.gmail.com>
- <ca520d5f-0288-30ef-0191-96f890a2ba4c@redhat.com>
-In-Reply-To: <ca520d5f-0288-30ef-0191-96f890a2ba4c@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 21 Jun 2021 19:16:37 +0300
-Message-ID: <CAHp75Vcu+3-7dQwJDTLfQVwvSsOB9uOby7rq4w4cxLKMn1q+oA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: think-lmi: Return EINVAL when kbdlang gets
- set to a 0 length string
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0148a2e3-c91e-7422-df3d-6942c38334ed@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:pssvFtUXCsKqPabfMS3MfR5mWNP3oGs46zYpeqHlY03AhyYToJq
+ OZBUO+yvxTojMEOnEco1QsHElQQwAhiv3agEKPDigXhDclBzjgrGDdTXRwN8Z52rj98u2uG
+ wTOUokDLp5Tepye2OjEZubps/lpQB8utp9ZNGH8L0N+b61X0FVd0JLwXaxWN4JePGu0ZwcT
+ D1Uzw15IHfJHQqX6hsXkA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QCtZMNliL7o=:JyTuljuGLp200MJtuMMENa
+ h1n8vyNqcyQWSBrTSiUrsqu35I+G9Ws7dyEmgVs/1zEI+cwg5nh5HoJmcF+kRu3oiY1a17lu5
+ pUCp122Sx0K5sozf9wsrFAZ9SMlZyg4yZivzgK7m35G/rxd1DmFCSJrsN82lcVCY5m4FiQ5EL
+ e65puVTwLobzVSR6Cx26nSGyrTaZVzNFisbdd1b6FBtC1OfxoN+4iJxcAQwGgY0d7mHWTZe9t
+ CUo+eVJL+XExOku2vOeW3qsfsV5x5J/TpXbF9Tw4i1+oIF6FEjHQM2v2/KytTIvESrUwcjfxF
+ XloA6D7WpYYIUuj5WB159TEPt29tJbRKZdRjsRmYj7zZ2OgTZIrzbYY5j8kWS7V+JCyu+Jt7/
+ zbpIKdf7MEJ69a2oZe5AyVUPfLZXhIErU4F54LUmFGk6LMO06gaK1WqC1coNBE6E0XLjHCHxU
+ rL/ewgL5iwKpDnLQoMWplBUCbYhN7rHUjXir4BvwJIO6ANOVpaA07DcU1YZBFr4B6AZVfwTc3
+ Y4AuZk/3pvGzeZTAa9fZ6E=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 5:13 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 6/21/21 3:58 PM, Andy Shevchenko wrote:
-> > On Mon, Jun 21, 2021 at 4:24 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Commit 0ddcf3a6b442 ("platform/x86: think-lmi: Avoid potential read before
-> >> start of the buffer") moved the lengt == 0 up to before stripping the '\n'
-> >
-> > length
->
-> Ack, will fix.
->
-> >> which typically gets added when users echo a value to a sysfs-attribute
-> >> from the shell.
-> >>
-> >> This avoids a potential buffer-underrun, but it also causes a behavioral
-> >> change, prior to this change "echo > kbdlang", iow writing just a single
-> >> '\n' would result in an EINVAL error, but after the change this gets
-> >> accepted setting kbdlang to an empty string.
-> >
-> > And why is it a problem?
->
-> Because there are only a couple of valid string like "de", "fr", "es"
-> and "us". We don't know the exact set of valid strings for a certain
-> BIOS, but we do not for sure that an empty string is not valid.
+On 16.06.21 19:50, Hans de Goede wrote:
 
-Since we call strlen() on the buf it means we are expecting
-NUL-terminated string no matter what.
-In this case the
+Hi,
 
-  p = skip_spaces(buf);
-  length = strchrnul(buf, '\n') - p;
-  if (!length || length >= ...)
-    return ...
+>> hmm, keyboard backlight ... don't we already have something for that
+>> in input subsys ? I believe that some lone LEDs aren't the right subsys
+>> for those stuff.
+> 
+> Actually the standardized userspace API for exporting keyboard backlights
+> is using the LED class sysfs API, e.g.:
+> 
+> cat /sys/class/leds/tpacpi\:\:kbd_backlight/brightnes
 
-seems the best, no?
+Sounds like we don't have an API for that particular case at all.
+Everbody just exposes LED class devices and userland always needs
+hardware specific code to practically use it.
 
+We should at least have some standard mechanism for get least getting
+the connection between an input device and it's backlight device(s).
+
+> And the same for Dell and other kbd backlights, also the upower
+> daemon even has code for dealing with kbd-backlights:
+> https://gitlab.freedesktop.org/upower/upower/-/blob/master/src/up-kbd-backlight.c
+> exporting them over its dbus API so that non-root users can
+> control them.
+
+Looks like a very complicated way to do that. But actually I've never
+understood why I should use this strange upower thing anways :p
+
+> Basically using the LED class for kbd-backlight functionality
+> basically is the defacto standard under Linux, so exposing this
+> through the LED class is definitely the right thing to do.
+
+In general, LED class isn't so bad, as it already gives us LED control
+(*1), but I don't see any portable way for finding the corresponding
+LED for some input device. In DRM I see the backlight as subdevice.
+
+
+
+--mtx
+
+
+*1) just recognized that on my toshiba portege (TOS6208) it only works
+    for readout - writing to "brightness" does nothing at all
 -- 
-With Best Regards,
-Andy Shevchenko
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
