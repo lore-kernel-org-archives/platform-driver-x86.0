@@ -2,86 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A32C48BE5
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 10:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0132AC2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 13:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9244D60FF1
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 10:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69C86128C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 13:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbhFVKs3 (ORCPT
+        id S229988AbhFVNao (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Jun 2021 06:48:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47699 "EHLO
+        Tue, 22 Jun 2021 09:30:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46263 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229702AbhFVKs1 (ORCPT
+        by vger.kernel.org with ESMTP id S229907AbhFVNan (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Jun 2021 06:48:27 -0400
+        Tue, 22 Jun 2021 09:30:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624358766;
+        s=mimecast20190719; t=1624368507;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=F95mv06Qfw9FE8qSqdUyFC5s+2HfCly3wmTGY+I8Tyw=;
-        b=XrjJzF+uj979Wcuf4W0nXTNIqMsR4FiQLc/7U8ztnCSG4M1ezvIRsv1BV9IB502ala/60L
-        vDJWqZER1y1wBvH3UMhIDvhCO0MrqFk7wnYQgAQlnCawdEq33pmljrAaz0z64y+y/WyJwA
-        vakTgzDv3/9ZT5npWgSfUHbinm48ZA4=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-d6DdD5H7OtObJXJP-uHm7g-1; Tue, 22 Jun 2021 06:46:05 -0400
-X-MC-Unique: d6DdD5H7OtObJXJP-uHm7g-1
-Received: by mail-ej1-f69.google.com with SMTP id jw19-20020a17090776b3b0290481592f1fc4so5777680ejc.2
-        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Jun 2021 03:46:04 -0700 (PDT)
+        bh=dkpg2sKtqpq15jMgsfLQwv+OYanXgN65EUyAFmp9K8c=;
+        b=GVMkZstXpivsnHVNbx6nwpNHhCUMtPbgRxAkYyLC3NCl9PBRjNG+CpaPVcvTRwMUgRI06G
+        pMjUNzwe7OBApQ+bTZg3JH6dP4ylDFoDBLqdXd7yREMJ8fu4uXg4LZRipw6GDwSoD6PG5P
+        3abjzAs/RWZ2qylkZJkWlyXZGi9cmeU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-505-AXVvWc4TPkCg3FWJ0JGXYg-1; Tue, 22 Jun 2021 09:28:26 -0400
+X-MC-Unique: AXVvWc4TPkCg3FWJ0JGXYg-1
+Received: by mail-ej1-f71.google.com with SMTP id u4-20020a1709061244b02904648b302151so1060264eja.17
+        for <platform-driver-x86@vger.kernel.org>; Tue, 22 Jun 2021 06:28:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=F95mv06Qfw9FE8qSqdUyFC5s+2HfCly3wmTGY+I8Tyw=;
-        b=nGnGJkmsNi7ha915uzRfQL1N8afHymfnZMKJU7ws3rgG4n8nuQq22hzH6V5JvS9l9/
-         8ss3YV9xdpSfvZG40qW1G3ivuDKNGLer/6IqbnOMypI408ZMq/AMlXkqY8d1S6+AzmVs
-         NDaUbiAcMZKJ7U6PejxPZ5kR88sxymsQ0Mck2pBJHuYNextAktN88MJqI8cvH5yVwRFx
-         2uXbOBQDG/6OqXQI2qj0E/Ld+N6iVpZ6lAgyGlDi7ZGPY1Mxq/z2RHiUY1hgEMMmyyit
-         zmHL5bnocYFMjCOwi0HNF/221T3Sj+jOwDX6l9VexiXda5uiG+aJXOFqVFeXM3QQDg65
-         cCdQ==
-X-Gm-Message-State: AOAM5314cH6VcGNZHxGl7xiDYNwBpphzliiCdhghyiiBjJbNhheMuoag
-        rEqbCoY4cY/ssyZJXCRmDoYj9axmc1qRHVQw47FIbl+4XbhcjndYUK2AqdbNwkCMSd4x0LLes5a
-        LKbLQwsOZgAzR7wEZFn/YM7pT1BzHhThQGA==
-X-Received: by 2002:a17:906:7b83:: with SMTP id s3mr3309382ejo.190.1624358763980;
-        Tue, 22 Jun 2021 03:46:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyta8Gs3WoSSkCisp66z25f/bLa8LVcX5wHjFYSfP/wBKiErcVfq6IVsGKnRuPtF/XurvHfWg==
-X-Received: by 2002:a17:906:7b83:: with SMTP id s3mr3309365ejo.190.1624358763757;
-        Tue, 22 Jun 2021 03:46:03 -0700 (PDT)
+        bh=dkpg2sKtqpq15jMgsfLQwv+OYanXgN65EUyAFmp9K8c=;
+        b=pyUJ2wA6TIyGT+Kh2y0dTADcI4DZq1TYH9SDa1flbj2eFc6PjBexigJ0q0f/J42OvV
+         jD/qnrE4rdW4PxXLJkPyEX6OdGZJ588nWzXj/8no637yWDkPBdfnlzoK/Fy9ZuB1XNpI
+         csGqills47eZO4RjhMRTPolSdi/dK0XdB85ZYl34waScrhEggnreblK7uwRvhoy8+ncy
+         0xoCweWm+LGTt70+mMqLhmwtrGQ392OMbSKqPCVOX92c85mowTIRqT2hczWLUJ9bWVbl
+         ccUVp/USPHh6+anIBYlFMI00XTVDXxe/IpoIYZGDyJmRd+W72xP0Vwj2HSVP2GSAdBKR
+         VOCA==
+X-Gm-Message-State: AOAM5323RncVR3+4dK9jDciQPT/g7yJx4Zs8HvpDlAk3mrjLj4x1JfF/
+        s50Q17+WAFMVo93zVy0qHumTkuqRLsdYmn56VdnMyqAj6JJKohr40bXbOLttj5bkyW+x4rIdlzp
+        zWPczF+JyIHnjIiZPbhaRcU4xzUEpb/H3rMDVtYKrJHto6dreodddzXMe6kwqlgFWlWydkRYWPe
+        g3gfbSbyz46A==
+X-Received: by 2002:a17:906:254d:: with SMTP id j13mr4126090ejb.27.1624368504746;
+        Tue, 22 Jun 2021 06:28:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+18Ag09GPkx9puWXPFoKp25Ld0aZLHplxSz/XBI4zZ6Lq9/lEiikrCmGFW7+edb045C5dgQ==
+X-Received: by 2002:a17:906:254d:: with SMTP id j13mr4126075ejb.27.1624368504571;
+        Tue, 22 Jun 2021 06:28:24 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id ml14sm1832678ejb.27.2021.06.22.03.46.03
+        by smtp.gmail.com with ESMTPSA id f18sm12228607edu.5.2021.06.22.06.28.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Jun 2021 03:46:03 -0700 (PDT)
-Subject: Re: input devices vs. keyboard backlights [WAS: [PATCH v2]
- platform/x86: add support for Acer Predator LEDs]
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        leo60228 <leo@60228.dev>, platform-driver-x86@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-input@vger.kernel.org
-References: <20210615221931.18148-1-leo@60228.dev>
- <20210616005147.26212-1-leo@60228.dev>
- <87e6f17f-3d82-ac63-b5eb-e7f3205f59e8@metux.net>
- <ae4e7db3-ffc5-b8f3-c08c-bba6882d44ad@60228.dev>
- <62d2de8d-e539-5b4f-447a-5e6116844992@metux.net>
- <0148a2e3-c91e-7422-df3d-6942c38334ed@redhat.com>
- <436b87c1-5c24-05ce-98fd-c3664c7765e2@metux.net>
- <5661323e-9a75-cbbe-0e16-777355bba9f5@redhat.com>
- <45deb019-aca4-cddb-8edf-ae2987e31d7f@metux.net>
+        Tue, 22 Jun 2021 06:28:24 -0700 (PDT)
+Subject: Re: [PATCH 0/6] updates to amd-pmc driver
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <6a734b7a-305f-3efb-bebf-c1a3a6782bfa@redhat.com>
-Date:   Tue, 22 Jun 2021 12:46:02 +0200
+Message-ID: <b720bcaa-3b6f-2727-2159-a2bee82faeff@redhat.com>
+Date:   Tue, 22 Jun 2021 15:28:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <45deb019-aca4-cddb-8edf-ae2987e31d7f@metux.net>
+In-Reply-To: <20210617113040.1603970-1-Shyam-sundar.S-k@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,166 +82,27 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/22/21 12:19 PM, Enrico Weigelt, metux IT consult wrote:
-> On 21.06.21 21:43, Hans de Goede wrote:
+On 6/17/21 1:30 PM, Shyam Sundar S K wrote:
+> Couple of existing issues on the completion codes to SMU
+> and a newer way to get the s0ix statistics are introduced.
 > 
-> Hi,
+> Also, add acpi ids for current and future revisions of the
+> pmc controller.
 > 
->> The LED API actually has specific features which are typically
->> only used with kbd-backlights, such as the brightness_hw_changed
->> attribute which was specifically added to allow userspace to
->> monitor when a laptops embedded controller changes the kbd-backlight
->> brightness in response to a Fn + somekey hotkey keypress, so that
->> userspace can show an on-screen-display notification that the
->> kbd brightness has changed (like how it typically does for
->> audio volume changes too) and also showing the new brightness
->> level. See: Documentation/ABI/testing/sysfs-class-led for
->> the docs for the /sys/class/leds/<led>/brightness_hw_changed
-> 
-> yes, that's great. but it seems we're still lacking a direct standard
-> way for associating an input device with the corresponding backlight
-> LED.
+> Shyam Sundar S K (6):
+>   platform/x86: amd-pmc: Fix command completion code
+>   platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+>   platform/x86: amd-pmc: Add support for logging SMU metrics
+>   platform/x86: amd-pmc: Add support for logging s0ix counters
+>   platform/x86: amd-pmc: Add support for ACPI ID AMDI0006
+>   platform/x86: amd-pmc: Add new acpi id for future PMC controllers
 
-True.
+Thanks, other then my remarks on patch 2/6, the rest of
+the series looks good to me, so you may add my:
 
-> Or am I missing something ?
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-In most cases the lacking way to associate the 2 is not a problem
-because almost all systems have only a single keyboard backlight
-and all existing standard Linux userspace code around kbd-backlights
-(like upower) has been written with this assumption.
-
-This is actually a problem when you plug in a fancy USB kbd with
-backlight into a laptop where the laptop kbd also has a backlight ...
-
-Fixing this would be great, but it requires fixes all over
-the stack and associating the backlight with a specific kbd
-is probably the smallest of the issues to solve here.
-
->>> Looks like a very complicated way to do that. But actually I've never
->>> understood why I should use this strange upower thing anways :p
->>
->> Just because you don't have a use for it does not mean that it
->> is not useful (and widely used) in cases where people use Linux
->> as a desktop OS, rather then for more embedded cases.
-> 
-> I'm actually using Linux on desktop for over 25 years now.
-> 
-> But let's go back to the kernel side.
-> 
->>> In general, LED class isn't so bad, as it already gives us LED control
->>> (*1), but I don't see any portable way for finding the corresponding
->>> LED for some input device. In DRM I see the backlight as subdevice.
->>
->> With USB-HID keyboards the LED class device will have the same HID-device
->> as parent as the input device. If there is no HID parent-device, then any
->> foo_kbd_backlight device will belong to the atkbd (PS/2) input-device.
-> 
-> Still a lot of if's and guessing :(
-> 
-> Why can't we make it appear the same way like the other leds (eg. caps-
-> lock) ?
-> Here's how it looks on my Portege:
-> 
-> | ~ ls -l /dev/input/input0:
-
-So you have an input0 symlink under /dev/input to /sys/class/input/input0/
-that is non standard, but that is not really relevant you get the same
-output if you directly do:
-
-ls -l /sys/class/input/input0/
-
-> |
-> | drwxr-xr-x 2 root root    0 Jun 22 11:42 capabilities
-> | lrwxrwxrwx 1 root root    0 Jun 22 11:42 device -> ../../../serio0
-> | drwxr-xr-x 3 root root    0 Jun 22 11:42 event0
-> | drwxr-xr-x 2 root root    0 Jun 22 11:42 id
-> | drwxr-xr-x 3 root root    0 Jun 22 11:37 input0::capslock
-> | drwxr-xr-x 3 root root    0 Jun 22 11:42 input0::numlock
-> | drwxr-xr-x 3 root root    0 Jun 22 11:42 input0::scrolllock
-> | -r--r--r-- 1 root root 4096 Jun 22 11:42 modalias
-> | -r--r--r-- 1 root root 4096 Jun 22 11:42 name
-> | -r--r--r-- 1 root root 4096 Jun 22 11:42 phys
-> | drwxr-xr-x 2 root root    0 Jun 22 11:42 power
-> | -r--r--r-- 1 root root 4096 Jun 22 11:42 properties
-> | lrwxrwxrwx 1 root root    0 Jun 22 11:42 subsystem ->
-> ../../../../../../class/input
-> | -rw-r--r-- 1 root root 4096 Jun 22 11:42 uevent
-> | -r--r--r-- 1 root root 4096 Jun 22 11:42 uniq
-> 
-> I'd imagine also having some "input0::backlight" here.
-> 
-> These leds seem to be sub-devices of the keyboard device,
-
-They are child devices of the input-device instantiated for the
-keyboard device, the keyboard device itself is likely actually:
-
-/sys/devices/platform/i8042/serio0
-
-If you do "ls -l /sys/class/input/input0" then you will see
-that this is a symlink pointing to
-
-/sys/devices/platform/i8042/serio0/input/input0
-
-The LED class devices for the kbd LEDs are instantiated
-by the input-subsys itself, hence they use the input-device
-as parent.
-
-For HID based keyboards the HID device which is the parent
-of the input-device will also be the parent of the kbd-backlight
-LED class device since both are instantiated by the HID driver.
-
-E.g. if I plug in a Logitech G510 keyboard I get this:
-
-[hans@x1 ~]$ ls -l /sys/bus/hid/devices/0003:046D:C22D.000D/{leds,input}/
-'/sys/bus/hid/devices/0003:046D:C22D.000D/input/':
-total 0
-drwxr-xr-x. 6 root root 0 Jun 22 12:32 input53
-drwxr-xr-x. 6 root root 0 Jun 22 12:32 input54
-
-'/sys/bus/hid/devices/0003:046D:C22D.000D/leds/':
-total 0
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::kbd_backlight
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::macro_preset1
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::macro_preset2
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::macro_preset3
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::macro_record
-drwxr-xr-x. 3 root root 0 Jun 22 12:32 g15::power_on_backlight_val
-
-So the input and LED class devices can already be associated
-with each other by finding a common parent. This is not
-unusual, this is e.g. also how video4linux tv-apps like
-xawtv and tvtime find the alsa record/input device to get
-the audio from the tvcard, they look for an alsa device
-which has the same parent (which can be either USB or PCI)
-as the /dev/video# device from which they are grabbing the
-video.
-
-As I already mentioned, this linking the 2 by finding a
-common parent works fine for HID devices, but is a problem
-for laptops with a PS/2 kbd + embedded-controller controlled
-kbd-backlight since on one hand we have the PS/2 stack and
-on the other hand we have some drivers/platform/x86 driver
-talking some vendor specific ACPI (or WMI or some-such)
-interface to the embedded-controller for controlling the
-kbd-backlight. So in this case we have to fallback to
-some heuristics and guess that the kbd-backlight belongs
-to the keyboard registered by the atkbd driver.
-
-Now we could make the kernel do this heuristics for us
-and have it register a symlink but that brings interesting
-questions like which code is going to be responsible for
-registering the symlink + possible probe-ordering issues
-between the 2 drivers; and it would still be just a
-heuristic, which will likely need some quirk tables for
-some exceptions.
-
-We are simply better of handling these heuristics in
-userspace, so that we can e.g. use hwdb for any quirks.
-
-We could even have a udev rule adding a symlink if that
-is seen as useful, but I don't believe that these kinda
-heuristics belong in the kernel.
+To patches 1/6 and [3-6]/6 .
 
 Regards,
 
