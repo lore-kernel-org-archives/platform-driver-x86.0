@@ -2,104 +2,148 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CAEC2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 09:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FB2C48BDF
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 10:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B61D610C7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 09:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193C61040
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 22 Jun 2021 10:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbhFVJs4 (ORCPT
+        id S229890AbhFVKWA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 22 Jun 2021 05:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbhFVJsz (ORCPT
+        Tue, 22 Jun 2021 06:22:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:56187 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229612AbhFVKVy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 22 Jun 2021 05:48:55 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F44C061574;
-        Tue, 22 Jun 2021 02:46:39 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id h4so5091856pgp.5;
-        Tue, 22 Jun 2021 02:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CFYHrKmBO6teOXFvUVEzGM5v3YsBOwUfdzsp+DfrQrM=;
-        b=tR5HZiCdz8ja6LgPoyUebl9ojSVhHWK8bsDOTqP/h0hrGnyURV21NeLU1xZN0Dh7aI
-         nX7+Rmj1KRNzDC1w2MCjeLPskWufnUuya9IYX8MNCDzHASLlSv5KkWHNyeVSIXRF4W3R
-         z8nISAvbgv58nzM4ySTc1ahv/3gniHVlMp8/qm0odSbXnsjA5QDpvrIHgVFaMoRctmp1
-         PJ+vflqdGoKKOby5RwmLUAKOqfd2/EYcX3EVYNzIiDkwW3KgV9cFealZWx3/EvdMnHAW
-         FXVTM0kuslSlGE3CKKVgzIGRzwlhb0GIohMKh8oqS6sl6b31N2t3Fafv/DogASKF8fxk
-         vPQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CFYHrKmBO6teOXFvUVEzGM5v3YsBOwUfdzsp+DfrQrM=;
-        b=pg+huI/i0o2CZRpGJfQzsYIL1AlYJXT5TaJdnlOXTuqyFv6wvaD/jdSah/yu6MfaHH
-         kE3/3utj4AZLmIJSCP8t1GsGMSUYvGSlXOABqNVzr4iD2ZoLs6ijpMnuPGbRvhA5d3xy
-         zyu8b0N4B2JMSfo5pnejN9NP2B1q21b48FmgYtwrNJhPI/o5BcgLMw5Cu1IZaxANnHOJ
-         o9Yw4654uDE+OKwx5u9QvAID8QSBdMk1INV2pZuhVMUB6FT9JTJYFE+/nqCzkFd3KLkz
-         OQDZFYv8JX1h7lVSsndd1Ds4A8kYNCFGJp0M5JEhqGfVECz5SNcrqLxiUR0GRQjLpSK2
-         vsTA==
-X-Gm-Message-State: AOAM533sdvUeB/hlkOyBfPd+CVZ9T07Iw5EeQYsY2kb27Ht2ODiPCVq/
-        kbDEXZyCQHbdU3q7/f2G8I4WKviPRYw/pQ01ync=
-X-Google-Smtp-Source: ABdhPJywcVs/cNEqGHeoNRpJ5Hhh6EYNjx3Xr45ZGfshLu3yr4rbR1TDpiaPBvCJmP5dWXGQRs4hxKo+uJPZQpVjj1o=
-X-Received: by 2002:a63:df10:: with SMTP id u16mr2985686pgg.4.1624355199188;
- Tue, 22 Jun 2021 02:46:39 -0700 (PDT)
+        Tue, 22 Jun 2021 06:21:54 -0400
+Received: from [192.168.1.155] ([95.117.21.172]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N49Yn-1lDGD730KX-0102cd; Tue, 22 Jun 2021 12:19:32 +0200
+Subject: input devices vs. keyboard backlights [WAS: [PATCH v2] platform/x86:
+ add support for Acer Predator LEDs]
+To:     Hans de Goede <hdegoede@redhat.com>, leo60228 <leo@60228.dev>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20210615221931.18148-1-leo@60228.dev>
+ <20210616005147.26212-1-leo@60228.dev>
+ <87e6f17f-3d82-ac63-b5eb-e7f3205f59e8@metux.net>
+ <ae4e7db3-ffc5-b8f3-c08c-bba6882d44ad@60228.dev>
+ <62d2de8d-e539-5b4f-447a-5e6116844992@metux.net>
+ <0148a2e3-c91e-7422-df3d-6942c38334ed@redhat.com>
+ <436b87c1-5c24-05ce-98fd-c3664c7765e2@metux.net>
+ <5661323e-9a75-cbbe-0e16-777355bba9f5@redhat.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <45deb019-aca4-cddb-8edf-ae2987e31d7f@metux.net>
+Date:   Tue, 22 Jun 2021 12:19:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210618125516.53510-1-andriy.shevchenko@linux.intel.com> <9f5fc6f7-0979-5767-9929-550be74e608e@redhat.com>
-In-Reply-To: <9f5fc6f7-0979-5767-9929-550be74e608e@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 22 Jun 2021 12:46:02 +0300
-Message-ID: <CAHp75Vd_MnzbhuH0aKBNZxdQuW8P-iL5f1rFXwMc+vY9toYa+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/8] platform/x86: Remove "default n" entries
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5661323e-9a75-cbbe-0e16-777355bba9f5@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:G2FhHSPfDD/yP8f1zlgmFfE5jUiMUKzKkJ7cjr9NDOl7U+1U1wH
+ vBw1vYH9safjKCphvoPrvSJVYvtTaprD9nQkA+cYk1ziByvHIRWVafZN9p7OZ8npVocm8Mq
+ Pq35pP07IXR+dERWG0jbaQUzmM97FfwCeTLyMhyESyB/F7NoNjqgXCjS7Tcj/7Oz+sF5vgi
+ XdFHrn0pryrMSdJN2GdxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WsRL5ObH97g=:DeCKyQZt2jkBIyWYzsq15n
+ rnDOOsXQDYgWGZootoegUMga9+yarJpUvRlaukggn52SkBEEZdVSrUilQnN/sVOiNtH3Ks2z0
+ +29Y7h13L6uGEeUI8ja/c/TF+HjERxxAZlFYo7RTLS1/wcuZ2cWxeJIbqRfP7aL6stPF5N+UV
+ zB+gJINFC1T05J85rTkrXAV74roW3P8/LGMtfrClvtYXEwOdEliJxRdg4kOFMzYOTQWJ/uakF
+ WsWzclmTxk+v9fmWQHZJFebiUrHWkbjP4eQjgyqs9LdaSbHbKCQFwN4n62VvvL6imBz9NzBSw
+ MfqI3TIpaDYbmxvkXzdgWiZJY6+3jADz98L9RGvrm6lCPwY57TjFdZBr7rv3rHTiEXjBLXNyn
+ qSwQ0YGJ/XdrgNimBVPEXFgujv+wohdxd8P39Tvh/B+Kt6cNr5j00CVaNcf131R+Yj24XdmuH
+ pkFU108UU+mpY2R9lAEc2hvGsJgl3SyeXg8U3XjlGM09+5Dth8alM419hSksNVbwSrwJQjtXW
+ PmWF09yKdmNAb5FO54PoIU=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 12:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 6/18/21 2:55 PM, Andy Shevchenko wrote:
-> > Linus already once did that for PDx86, don't repeat our mistakes.
-> > TL;DR: 'n' *is* the default 'default'.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Thank you for your patch-series, I've applied the series to my
-> review-hans branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note I've squashed in the following fixup to patch 7/8:
->
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9388,7 +9388,7 @@ F:        drivers/platform/x86/intel_scu_*
->  INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
->  M:     Daniel Scally <djrscally@gmail.com>
->  S:     Maintained
-> -F:     drivers/platform/x86/intel-int3472/
-> +F:     drivers/platform/x86/intel/int3472/
+On 21.06.21 21:43, Hans de Goede wrote:
 
-> (checkpatch complained about MAINTAINERS not being updated)
+Hi,
 
-Thank you, Hans!
+> The LED API actually has specific features which are typically
+> only used with kbd-backlights, such as the brightness_hw_changed
+> attribute which was specifically added to allow userspace to
+> monitor when a laptops embedded controller changes the kbd-backlight
+> brightness in response to a Fn + somekey hotkey keypress, so that
+> userspace can show an on-screen-display notification that the
+> kbd brightness has changed (like how it typically does for
+> audio volume changes too) and also showing the new brightness
+> level. See: Documentation/ABI/testing/sysfs-class-led for
+> the docs for the /sys/class/leds/<led>/brightness_hw_changed
+
+yes, that's great. but it seems we're still lacking a direct standard
+way for associating an input device with the corresponding backlight
+LED.
+
+Or am I missing something ?
+
+>> Looks like a very complicated way to do that. But actually I've never
+>> understood why I should use this strange upower thing anways :p
+> 
+> Just because you don't have a use for it does not mean that it
+> is not useful (and widely used) in cases where people use Linux
+> as a desktop OS, rather then for more embedded cases.
+
+I'm actually using Linux on desktop for over 25 years now.
+
+But let's go back to the kernel side.
+
+>> In general, LED class isn't so bad, as it already gives us LED control
+>> (*1), but I don't see any portable way for finding the corresponding
+>> LED for some input device. In DRM I see the backlight as subdevice.
+> 
+> With USB-HID keyboards the LED class device will have the same HID-device
+> as parent as the input device. If there is no HID parent-device, then any
+> foo_kbd_backlight device will belong to the atkbd (PS/2) input-device.
+
+Still a lot of if's and guessing :(
+
+Why can't we make it appear the same way like the other leds (eg. caps-
+lock) ?
+
+Here's how it looks on my Portege:
+
+| ~ ls -l /dev/input/input0:
+|
+| drwxr-xr-x 2 root root    0 Jun 22 11:42 capabilities
+| lrwxrwxrwx 1 root root    0 Jun 22 11:42 device -> ../../../serio0
+| drwxr-xr-x 3 root root    0 Jun 22 11:42 event0
+| drwxr-xr-x 2 root root    0 Jun 22 11:42 id
+| drwxr-xr-x 3 root root    0 Jun 22 11:37 input0::capslock
+| drwxr-xr-x 3 root root    0 Jun 22 11:42 input0::numlock
+| drwxr-xr-x 3 root root    0 Jun 22 11:42 input0::scrolllock
+| -r--r--r-- 1 root root 4096 Jun 22 11:42 modalias
+| -r--r--r-- 1 root root 4096 Jun 22 11:42 name
+| -r--r--r-- 1 root root 4096 Jun 22 11:42 phys
+| drwxr-xr-x 2 root root    0 Jun 22 11:42 power
+| -r--r--r-- 1 root root 4096 Jun 22 11:42 properties
+| lrwxrwxrwx 1 root root    0 Jun 22 11:42 subsystem ->
+../../../../../../class/input
+| -rw-r--r-- 1 root root 4096 Jun 22 11:42 uevent
+| -r--r--r-- 1 root root 4096 Jun 22 11:42 uniq
+
+I'd imagine also having some "input0::backlight" here.
+
+These leds seem to be sub-devices of the keyboard device, that's perhaps
+tricky to do with the current backlight drivers - but maybe just add
+some symlink to it ?
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
