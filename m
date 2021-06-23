@@ -2,757 +2,220 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CBFC48BC2
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Jun 2021 14:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68AEC4743C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Jun 2021 14:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E216023E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Jun 2021 14:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDA36023E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 23 Jun 2021 14:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230304AbhFWOGR (ORCPT
+        id S230206AbhFWOHK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 23 Jun 2021 10:06:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:2425 "EHLO mga09.intel.com"
+        Wed, 23 Jun 2021 10:07:10 -0400
+Received: from mga07.intel.com ([134.134.136.100]:16073 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230286AbhFWOGR (ORCPT
+        id S230061AbhFWOHJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 23 Jun 2021 10:06:17 -0400
-IronPort-SDR: 5+fUG9553Zt8UXQc8uOK5UQ9qA3bg/X01COJpkZk9UjHfVaS601Kvh3qOJAFMFUtlMr7GUFvdF
- G59prrfGr0ig==
-X-IronPort-AV: E=McAfee;i="6200,9189,10024"; a="207203918"
+        Wed, 23 Jun 2021 10:07:09 -0400
+IronPort-SDR: R3GA0Clv1ZlsC+H6qmDPYJ91FR0g5DGUtQiuO1bcGoG/PqK8klu0WmaGWZdJbX9H/Rut+LwHAt
+ hNrXPeIyRSzg==
+X-IronPort-AV: E=McAfee;i="6200,9189,10024"; a="271112064"
 X-IronPort-AV: E=Sophos;i="5.83,294,1616482800"; 
-   d="scan'208";a="207203918"
+   d="scan'208";a="271112064"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2021 07:02:56 -0700
-IronPort-SDR: FKy0GFjfOw3rYC0k+BW9dbK8qxGk16z9RVCVaFANiq6p7x+8191PygadPgZHsrIhDmucLQPaFW
- 4aBqy+kC5Mkw==
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2021 07:03:56 -0700
+IronPort-SDR: lp6IbqRrDIWzPZ+qXlEfz63u8lnk+Pte+XSsSw7M2SWE7S6+D/jF0QKp1UgDekDfwxOJJhUT7d
+ fVzcHVZIefTQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,294,1616482800"; 
-   d="scan'208";a="639460221"
-Received: from intel-tiger-lake-client-platform.iind.intel.com ([10.224.178.120])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Jun 2021 07:02:54 -0700
-From:   Shravan S <s.shravan@intel.com>
-To:     hdegoede@redhat.com, mgross@linux.intel.com,
-        platform-driver-x86@vger.kernel.org
-Cc:     sudhakar.an@intel.com
-Subject: [PATCH V2 1/1] [x86]: BIOS Dynamic SAR driver for Intel M.2 Modem
-Date:   Mon, 10 May 2021 13:10:16 +0530
-Message-Id: <20210510074016.31627-2-s.shravan@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210510074016.31627-1-s.shravan@intel.com>
-References: <20210510074016.31627-1-s.shravan@intel.com>
+   d="scan'208";a="639460639"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga006.fm.intel.com with ESMTP; 23 Jun 2021 07:03:55 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Wed, 23 Jun 2021 07:03:55 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.4; Wed, 23 Jun 2021 07:03:55 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4
+ via Frontend Transport; Wed, 23 Jun 2021 07:03:55 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.176)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.4; Wed, 23 Jun 2021 07:03:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J31OHIc43RaXlWAa3rW5e2qmz94OMC1sFtZE63DmBlZF6QBd4m56mZtoExjXj6pdETuNjwhcjxYVwCACfPDb+CgUpxOdQkIXzTwh6nniOqwjItc5Rl3oIZL9j5mgmZjuHtfpzJJfrK97bsb8NAQVKVaV8Z+sgWAlbiZ6YvhAIRxr6X7XshAjCGb2eKFsVqxoINIvMwAdfpHC1VmdIyfPf8PZjR0U6mHeWO0XmSlmFNuvcSLO4F+WJWCINmNN27bSMnW/3DKmmVUepG9VwSPBvWRpGpucgFKEhZTmsCrx2oDL4hF5vOtpPkqYm3Do22H265yAsuT48ziKs6SveV0QSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nZOOMs9SHwQynHIK6rCYnCB0tuHiKwO7qBn645FVuWI=;
+ b=c3i/kRenU9IsZI92usieh2oBJmzkK2fr7oTTg+Z1uAJoq8bvodjROYVr6smBPkRQWjmC8ztoBKEbUMsqWkf7DfNJIWVzApqtmlo8yQjTtkyTWTd6m42P95Fqa+LOthvt0sZGSyaOuP/n67YkOKI/O1OFWQwcqF2YKX6HUWp5r/EFtLdr55JcjkSe2qnWkuNe1C0vMxSp1RwJUa80v3HDrttOUAnPQozZx0wE9Nv/TIKs1S/R4O/dkzhrJqA/tooZELvBvSlsIe1/K9iOsGLa8ZBoe6nwjl33yT2cVMzEif/SZNbtf3fZ1ki1BTbYHSr30kAvCDAshtmco9AYOox6dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nZOOMs9SHwQynHIK6rCYnCB0tuHiKwO7qBn645FVuWI=;
+ b=DUkzYpJJXl1IZHw35N8kDMe80LJKh7UXS0P+M59ff9lhUg6Go/VOuSvyOXrBMytjzz2Ac6QyZGyfjjGAIKZaxw/O2kUc0SyZV/CmyQb361EwDe4+Xz+o68vRFR2GJBkrz23dtnY549tCmvDN2b/JGf1KuS0VLPT740/Cy5xi5cU=
+Received: from MWHPR11MB1455.namprd11.prod.outlook.com (2603:10b6:301:9::22)
+ by CO1PR11MB5123.namprd11.prod.outlook.com (2603:10b6:303:94::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.18; Wed, 23 Jun
+ 2021 14:03:53 +0000
+Received: from MWHPR11MB1455.namprd11.prod.outlook.com
+ ([fe80::1ce1:6055:85e9:8c15]) by MWHPR11MB1455.namprd11.prod.outlook.com
+ ([fe80::1ce1:6055:85e9:8c15%11]) with mapi id 15.20.4264.019; Wed, 23 Jun
+ 2021 14:03:53 +0000
+From:   "Shravan, S" <s.shravan@intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "An, Sudhakar" <sudhakar.an@intel.com>
+Subject: RE: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
+Thread-Topic: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
+Thread-Index: AQHXYF+VeNOuLV2+ZEGiRU0i34+lPasTYxbggAH9FICAACkyAIAMES0g
+Date:   Wed, 23 Jun 2021 14:03:53 +0000
+Message-ID: <MWHPR11MB145562EBE171DD3B40595DD0E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
+References: <20210428032224.8299-1-s.shravan@intel.com>
+ <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
+ <MWHPR11MB1455D055108F1DBEA6EB9285E3319@MWHPR11MB1455.namprd11.prod.outlook.com>
+ <c7c3d395-826b-fc34-b396-a9c7631d981b@metux.net>
+ <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
+In-Reply-To: <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [49.207.224.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68fdcc88-c1e2-4465-079d-08d9364fbc19
+x-ms-traffictypediagnostic: CO1PR11MB5123:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CO1PR11MB512318B292067B7E70C5D132E3089@CO1PR11MB5123.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OaXZ6L4OfsDxFe2+hJCUZOvrzYMjQnItfrn3b0PuZgVps3EY5PPAmtr9P2Hk7sA/YX/IYZ58FjxHnAAitQqlrYT/gg6jkjf1pFUkGs4XOjq6oEXzdrCWBDf1Sbt0XTK5MMWchyNmudR/Fj/IAg1ZOld/veX0tmvP2kPmlJc3ChJgWoj07XUIsBjV+Fi9Vj1MceOSDBqet2MW/XpuRkkaUR40GUpdlQWIDj/Y7jIQomIl5CjHF3o9+Rz1QrpDPc8sDmpDlIlHGM/2c3J2DRl1pfY4j8qOjdKh1hzlUq6eNEm4v1+49K2PmbaxxtBWKkiMztisA4Gpbv1Atz+NkLyfIUgeP6pKgKe/dVd4vaQXfkotkGOEJ8QWNrtFq1QTovpPwPXxIE1Sp424EvZUe6HCvTojGxMkbOgSMZIs3G6Vjxjs6AcOM6Rca1lGOnELFbOvN+2CULv9RW2wmlj8yUqViUtMpWPuVmtU/Ti0SkBqlDd5s0NewC26wNUNyoUxe0lit1KBNMvK9nETcDPJVtpDK6kUs5OYLuoEz28g4PzLPOfR44msM5kN/KzIUwtyOPi8xe+U+xpjn8IZ852gbhFujBENknRv124Bp7ZsWSmE7hDaXY+kdYHVkp7MQAYKN1pcMy6ThSlSLk9ssvWCtJD75Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1455.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(396003)(346002)(376002)(39860400002)(55236004)(54906003)(26005)(110136005)(186003)(66446008)(52536014)(53546011)(66556008)(64756008)(76116006)(66476007)(2906002)(6506007)(83380400001)(8676002)(55016002)(8936002)(86362001)(33656002)(7696005)(9686003)(478600001)(66946007)(38100700002)(5660300002)(122000001)(316002)(4326008)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RGxGQVZTWCtZNDRVZ2xVajgyNmdmRWVwenh2a25pMmpvYTF1WC8zc0U3QjhG?=
+ =?utf-8?B?NTlRaDRrM1hTekh4eDdYSy9wTGxneDFyWUFSZHlKZUZQSDFyQWZNOUkxMEhw?=
+ =?utf-8?B?RCtKNm85cEJZYWxBR2cwS2RlWlNiNnpsbU5pOG52Sk80NU16VDVpNExHWitJ?=
+ =?utf-8?B?bGgzQWFrNkszZU1xZmJ0MnJOQ3N4Qm5RTVZuNFlNMjBpUDJ3Sm9sKzVyNkNa?=
+ =?utf-8?B?TWw0U0daYTdNaHk5VzN5cU9lMW5mL1Y0a2I2UlNkTWRNbHVoQUFJSmMyd0wy?=
+ =?utf-8?B?ZVlpdHBwSXVxYWlsMlprUVBMcW5SMzdleHA3MVBxcHhjWW9sZDR2WldobkNl?=
+ =?utf-8?B?cktJMzlveEcvS3R5T1FtaTluS3V4QWhCaGI5b0pMSzY1OGw2ZHJTVjhvR3RI?=
+ =?utf-8?B?b08rQmpWRnlIVEhVYndFckN1ZVJSMFl3UHFmNUhzbEsxMlpTQ2hScGxiNEUv?=
+ =?utf-8?B?UkRLWmZQbzlSS1g2bUp5TnNRQ09OVXlESnBxVEh2ekpKRGZhM3VBeDRiRDFD?=
+ =?utf-8?B?ODdMcjJyRmtuMXBsTURYQTlNek4wc3FidmxSZ3hFVlZVNFdpZklsMXZrSkdY?=
+ =?utf-8?B?S1cvc3J2TnZSaXlZUTNlMWg2WlhjbVJqUitSNUdzUjlYTDZRc3pJcVRGa1Vp?=
+ =?utf-8?B?dDNNNytaM3Jya3k1akRkWVdydmNrQW91cjl5eW90Rlo2ejRlYnZNU2lCbUtT?=
+ =?utf-8?B?aXA5SXlOVGNzOTVNUTR5U3NJOEhWMmdETW5taEtteDIwZ00wVDVzbXIrNjlF?=
+ =?utf-8?B?V3lwTVluL2NCbU8xZ0RNMXBHaVVqZGxRdlFMdWRuUnprSjdDdzJvWDNWS0Mr?=
+ =?utf-8?B?cVZlNGhFNUhXZXFKWGxSSTdRL2RJdUhiNDRxeFdkaU9MTHJ5UmZSckVuaDFK?=
+ =?utf-8?B?Y29ub09SSFZTbm5tbDlSQzFIYVlPdSt3RWhqNDl4SG82M0ppdVR5b1NldmVU?=
+ =?utf-8?B?L2JsWHpmdkNEU1NGVFRlYnhVTVozTkVjNGRGdEZHUHFRK0JoM3NrRGhnaFFa?=
+ =?utf-8?B?a09GdW43dlVvWXNhMUFzd3kvQ1kzZjNnbzdnQm9QdHZQVDhIb0E1aGMzOElm?=
+ =?utf-8?B?dXBMVXQrN0pZbWxhbG83MGJjWUhQRXNGQVZOZkFTU2hGem44dDhEdER3QjRJ?=
+ =?utf-8?B?bFJuckl6aDhzcWxTZEtKcDN3RlBoSzVBOWh4QlE0cWVtU0JlV2xZUjJnR1c4?=
+ =?utf-8?B?ZEdKbmlDalNyaXdtOXBTOVE2QlowZ2k4bnI5dUZ2bG5aTlU2TnRxR0FEUUc2?=
+ =?utf-8?B?cWZVY21WZVpPRzFOSjl4dFlMYjdFZjhKSk5DMXVqNWJUdWk5UUZ1L3Z1cnNj?=
+ =?utf-8?B?dnlISGE1REFWQlJqL3g0RHBhajVlNmMxYkhneC9MWUQ5dllXcmtZTjI2UmVT?=
+ =?utf-8?B?WUwzRy9tR1NSbmRvTitTaEo3WWJSVjk0QlB2RDZORWpRSkczQlQzcDVCNFhs?=
+ =?utf-8?B?OHIreThoT0ZLRkhxVDBYdUpMSVhNZWNFcGxTc0pQOTFZY0dmTGJEb0d4R0pl?=
+ =?utf-8?B?dnpKVnFkSFd2Vk0zbW1LeFh5R0VrMjBLSnhWUXZTc1BsWVV1aU1GNk9ERWdO?=
+ =?utf-8?B?M3dYdmY5QWYwd2VwQUxYRTVxSytka1VBUlJ3eVlTdjlWNTd2bU5zcWtPQnFN?=
+ =?utf-8?B?VEwyZmp3eWlPVTBSMlRKalpQUk9qbmVFdkl2ZTduTDhHbHlFL3RXUXdXSUtT?=
+ =?utf-8?B?TDJuSFBma3FQVjV6V1lVQ1AvZjhuY0E4eGJnYjB5RzNNcGZVMm52eWxvWEEw?=
+ =?utf-8?Q?sdF2T9qM5TX+z/4ugblfCsB1SwxxqUxD8vM9DEA?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1455.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68fdcc88-c1e2-4465-079d-08d9364fbc19
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jun 2021 14:03:53.3679
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QOgJgezVXdvSBb5qm1TIoKZqJCSfiMKz2wfhQdFSSC29DgAo/cq2VaKSzv4tYzciZ2LRZ2ff5XBKOgamLignKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5123
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-V2 :
-* Changes to the remove netlink and introduce sysfs to communicate to Userspace via notify
-* Handled review comments by changing ioctl calls to sysfs
-* "sar" name change for platform_device_id to "intc1092"
-* sar_init and sar_exit is modified as per review to minimal initialization
-* Inclusion of debug only enabling of device mode change parameters
-
-
----
- drivers/platform/x86/Kconfig                |  12 +
- drivers/platform/x86/Makefile               |   1 +
- drivers/platform/x86/intel-sar.c            | 550 ++++++++++++++++++++
- include/linux/platform_data/x86/intel-sar.h |  91 ++++
- 4 files changed, 654 insertions(+)
- create mode 100644 drivers/platform/x86/intel-sar.c
- create mode 100644 include/linux/platform_data/x86/intel-sar.h
-
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 60592fb88e7a..6dfa89310677 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1313,6 +1313,18 @@ config INTEL_TELEMETRY
- 	  directly via debugfs files. Various tools may use
- 	  this interface for SoC state monitoring.
- 
-+config INTEL_SAR
-+	tristate "Intel Specific Absorption Rate Driver"
-+	depends on ACPI
-+	help
-+	  This driver limit the exposure of human body to RF frequency by informing
-+	  the Intel M.2 modem to regulate the RF power based on SAR data obtained
-+	  from the sensorscaptured in the BIOS. ACPI interface exposes this data
-+	  from the BIOS to SAR driver. The front end application in userspace
-+	  will interact with SAR driver to obtain information like the device mode,
-+	  Antenna index,baseband index, SAR table index and use available communication
-+	  like MBIM interface to enable data communication to modem for RF power regulation.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index dcc8cdb95b4d..548ff663c4af 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -123,6 +123,7 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
-+obj-$(CONFIG_INTEL_SAR)				+= intel-sar.o
- 
- # Intel PMIC / PMC / P-Unit devices
- obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
-diff --git a/drivers/platform/x86/intel-sar.c b/drivers/platform/x86/intel-sar.c
-new file mode 100644
-index 000000000000..fa16ae59851b
---- /dev/null
-+++ b/drivers/platform/x86/intel-sar.c
-@@ -0,0 +1,550 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Corporation - ACPI for Specific Absorption Rate
-+ * Copyright (c) 2021, Intel Corporation.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/acpi.h>
-+#include <uapi/linux/errno.h>
-+#include <linux/kobject.h>
-+#include <linux/sysfs.h>
-+#include <linux/platform_data/x86/intel-sar.h>
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Platform device driver for INTEL MODEM BIOS SAR");
-+MODULE_AUTHOR("Shravan S <s.shravan@intel.com>");
-+
-+static struct WWAN_SAR_CONTEXT *context;
-+static int sar_add(struct platform_device *device);
-+static int sar_remove(struct platform_device *device);
-+static void sar_shutdown(struct platform_device *device);
-+static void sar_notify(acpi_handle handle, u32 event, void *data);
-+
-+/**
-+ * sar_send_notify - Send SAR data notification to userspace
-+ * Send the sar data notification to the userspace and later sent to modem
-+ * by the userspace application. The data sent is collected from the BIOS.
-+ * This data is used by userspace for further handling of the modem output.
-+ */
-+static void sar_send_notify(void)
-+{
-+		if (!context) {
-+			pr_alert("%s: context is null\n", __func__);
-+			return;
-+		}
-+		pr_debug("%s: %d, %d, %d, %d\n", __func__, context->sar_data.device_mode,
-+			 context->sar_data.bandtable_index, context->sar_data.antennatable_index,
-+			 context->sar_data.sartable_index);
-+		sysfs_notify(context->sar_kobject, NULL, "intc_data");
-+}
-+
-+/**
-+ * clear_sar_dev_mode - Clear Device Mode by freeing the allocated data
-+ * If the Device Mode Info is present and allocated, clear it. This is for
-+ * dynamic allocated memory of device_mode_info
-+ */
-+static void clear_sar_dev_mode(void)
-+{
-+		int reg = 0;
-+
-+		for (reg = 0; reg < MAX_REGULATORY; reg++) {
-+			kfree(context->config_data[reg].device_mode_info);
-+			context->config_data[reg].device_mode_info = NULL;
-+		}
-+}
-+
-+/**
-+ * get_int_value - Retrieve Integer values from ACPI Object
-+ * Value of the integer from the object of ACPI is obtained.
-+ * @obj: acpi_object pointer which gets the integer value
-+ * @out: output pointer for integer
-+ * returns 0 on success
-+ */
-+static int get_int_value(union acpi_object *obj, int *out)
-+{
-+		if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+			*out = (int)obj->integer.value;
-+			return 0;
-+		} else {
-+			return -1;
-+		}
-+}
-+
-+/**
-+ * update_sar_data - sar data is updated based on reg_value
-+ * sar_data is updated based on regulatory value
-+ */
-+static void update_sar_data(void)
-+{
-+		pr_debug("%s: Update SAR data\n", __func__);
-+		if (context->config_data[context->reg_value].device_mode_info &&
-+		    context->sar_data.device_mode <=
-+		    context->config_data[context->reg_value].total_dev_mode) {
-+			context->sar_data.antennatable_index =
-+			context->config_data[context->reg_value]
-+			.device_mode_info[context->sar_data.device_mode].antennatable_index;
-+			context->sar_data.bandtable_index =
-+			context->config_data[context->reg_value]
-+			.device_mode_info[context->sar_data.device_mode].bandtable_index;
-+			context->sar_data.sartable_index =
-+			context->config_data[context->reg_value]
-+			.device_mode_info[context->sar_data.device_mode].sartable_index;
-+			pr_debug("bandtable_index: %d\n", context->sar_data.bandtable_index);
-+			pr_debug("antennatable_index : %d\n", context->sar_data.antennatable_index);
-+			pr_debug("sartable_index: %d\n", context->sar_data.sartable_index);
-+		} else {
-+			pr_err("%s: sar data not assigned! Dev mode: %d, total_dev_mode: %d\n",
-+			       __func__, context->sar_data.device_mode,
-+			       context->config_data[context->reg_value].total_dev_mode);
-+		}
-+}
-+
-+/**
-+ * parse_guid - parse guid based on DSM UUID
-+ * returns if success or error
-+ */
-+static acpi_status parse_guid(void)
-+{
-+		if (guid_parse(SAR_DSM_UUID, &context->guid)) {
-+			pr_err("%s: UUID error\n", __func__);
-+			return AE_ERROR;
-+		}
-+		context->parse = true;
-+		return AE_OK;
-+}
-+
-+/**
-+ * parse_package - parse package for SAR
-+ * @item : acpi_object ptr
-+ * returns if success or error
-+ */
-+static acpi_status parse_package(union acpi_object *item)
-+{
-+		int value = 0, itr = 0, reg = 0;
-+		union acpi_object *num;
-+		struct WWAN_DEVICE_MODE_CONFIGURATION *data;
-+
-+		num = &item->package.elements[0];
-+		if (get_int_value(num, &value) == 0) {
-+			pr_debug("%s: Regulatory value : %d\n", __func__, value);
-+			if (value >= 0 && value < MAX_REGULATORY)
-+				reg = value;
-+			else
-+				return AE_ERROR;
-+		}
-+		data = &context->config_data[reg];
-+		if (data->total_dev_mode == 0) {
-+			pr_debug("Dev Mode count is zero, return\n");
-+			return AE_OK;
-+		}
-+		data->device_mode_info =
-+		kmalloc_array(data->total_dev_mode,
-+			      sizeof(struct WWAN_DEVICE_MODE_INFO), GFP_KERNEL);
-+		if (!data->device_mode_info) {
-+			pr_err("Cannot allocate memory in kernel\n");
-+			return AE_ERROR;
-+		}
-+		for (itr = 0; itr < data->total_dev_mode; itr++) {
-+			if (itr + 1 == item->package.count)
-+				break;
-+			num = &item->package.elements[itr + 1];
-+			if (num->type != ACPI_TYPE_PACKAGE)
-+				continue;
-+			if (get_int_value(&num->package.elements[0], &value) == 0) {
-+				pr_debug("%s: Device Mode for mode %d: %d\n", __func__,
-+					 itr, value);
-+				data->device_mode_info[itr].device_mode = value;
-+			}
-+			if (get_int_value(&num->package.elements[1], &value) == 0) {
-+				pr_debug("%s: band_index mode %d: %d\n", __func__,
-+					 itr, value);
-+				data->device_mode_info[itr].bandtable_index = value;
-+			}
-+			if (get_int_value(&num->package.elements[2], &value) == 0) {
-+				pr_debug("%s: antenna_index mode %d: %d\n", __func__,
-+					 itr, value);
-+				data->device_mode_info[itr].antennatable_index = value;
-+			}
-+			if (get_int_value(&num->package.elements[3], &value) == 0) {
-+				pr_debug("%s: sar_index for mode %d: %d\n", __func__,
-+					 itr, value);
-+				data->device_mode_info[itr].sartable_index = value;
-+			}
-+		}
-+		return AE_OK;
-+}
-+
-+/**
-+ * sar_module_probe - Extraction of information from BIOS via DSM calls
-+ * Retrieve all values related to device mode and SAR Table index,
-+ * Antenna Table index, Band Table index
-+ * @device: ACPI device for which to retrieve the data
-+ * Returns AE_OK on success
-+ */
-+static acpi_status sar_module_probe(struct platform_device *device)
-+{
-+		acpi_status status = AE_OK;
-+		union acpi_object *out, *item, req;
-+		u32 rev = 0, reg = 0;
-+		int value = 0;
-+
-+		pr_alert("%s Triggered\n", __func__);
-+		if (!device) {
-+			pr_err("%s: platform driver is null\n", __func__);
-+			return AE_ERROR;
-+		}
-+		if (!context) {
-+			pr_err("%s: context is null\n", __func__);
-+			return AE_ERROR;
-+		}
-+		pr_debug("ACPI_HANDLE : %p\n", ACPI_HANDLE(&device->dev));
-+		if (!(context->parse)) {
-+			status = parse_guid();
-+			if (status != AE_OK)
-+				return status;
-+		}
-+		context->handle = ACPI_HANDLE(&device->dev);
-+		out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-+					COMMAND_ID_DEV_MODE, NULL);
-+		pr_debug("%s: acpi_evaluate_dsm completed %d\n", __func__, out->type);
-+		if (get_int_value(out, &value) == 0) {
-+			pr_debug("%s: Device Mode is : %d\n", __func__, value);
-+			context->sar_data.device_mode = value;
-+		} else {
-+			pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_DEV_MODE);
-+			return AE_ERROR;
-+		}
-+		ACPI_FREE(out);
-+		if (!(context->data_read)) {
-+			for (reg = 0; reg < MAX_REGULATORY; reg++) {
-+				req.type = ACPI_TYPE_INTEGER;
-+				req.integer.value = reg;
-+				out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-+							COMMAND_ID_CONFIG_TABLE, &req);
-+				if (!out) {
-+					pr_err("%s: Cmd:%d Failed\n", __func__,
-+					       COMMAND_ID_CONFIG_TABLE);
-+					continue;
-+				}
-+				pr_debug("%s: acpi_evaluate_dsm  for regulatory %d completed %d\n",
-+					 __func__, reg, out->type);
-+				if (out->type == ACPI_TYPE_PACKAGE) {
-+					pr_debug("%s: ACPI_TYPE_PACKAGE, count: %d, type: %d\n",
-+						 __func__, out->package.count, out->package.type);
-+					item = &out->package.elements[0];
-+					if (get_int_value(item, &value) == 0) {
-+						pr_debug("%s: version : %d\n", __func__, value);
-+						context->config_data[reg].version = value;
-+					}
-+					item = &out->package.elements[1];
-+					if (get_int_value(item, &value) == 0) {
-+						pr_debug("%s: No of Modes: %d\n", __func__, value);
-+						context->config_data[reg].total_dev_mode = value;
-+					}
-+					if (context->config_data[reg].total_dev_mode <= 0 &&
-+					    context->config_data[reg].total_dev_mode >
-+					    MAX_DEV_MODES) {
-+						pr_err("total_dev_mode is not within range : %d\n",
-+						       context->config_data[reg].total_dev_mode);
-+						ACPI_FREE(out);
-+						return AE_ERROR;
-+					}
-+					item = &out->package.elements[2];
-+					if (item)
-+						status = parse_package(item);
-+					else
-+						status = AE_ERROR;
-+					if (status != AE_OK) {
-+						ACPI_FREE(out);
-+						return status;
-+					}
-+				}
-+				ACPI_FREE(out);
-+			}
-+			update_sar_data();
-+			context->data_read = true;
-+		}
-+		sar_send_notify();
-+		return status;
-+}
-+
-+#ifdef DEBUG
-+/**
-+ * sar_set_device_mode - To set the device mode as BIOS handling test
-+ * Test Function call to BIOS for device mode handling of data sent via
-+ * DSM calls.
-+ * @device: ACPI device for which to retrieve the data
-+ * @mode: Device Mode to be set
-+ */
-+static acpi_status sar_set_device_mode(struct platform_device *device, int mode)
-+{
-+		union acpi_object *out, req;
-+		u32 rev = 0;
-+		int value = 0;
-+		acpi_status status = AE_OK;
-+
-+		pr_debug("%s Triggered : mode : %d\n", __func__, mode);
-+		if (!device) {
-+			pr_err("%s: Device is null\n", __func__);
-+			return AE_ERROR;
-+		}
-+		if (!context->handle) {
-+			pr_err("%s: Handle is null\n", __func__);
-+			return AE_ERROR;
-+		}
-+		if (!(context->parse)) {
-+			status = parse_guid();
-+			if (status != AE_OK)
-+				return status;
-+		}
-+
-+		req.type = ACPI_TYPE_INTEGER;
-+		req.integer.value = mode;
-+		out = acpi_evaluate_dsm(context->handle, &context->guid,
-+					rev, COMMAND_TEST_SET, &req);
-+		if (get_int_value(out, &value) != 0) {
-+			pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_DEV_MODE);
-+			return AE_ERROR;
-+		}
-+		pr_debug("%s: return value is : %d\n", __func__, value);
-+		ACPI_FREE(out);
-+		return status;
-+}
-+#endif
-+
-+static const struct acpi_device_id sar_device_ids[] = {
-+		{ "INTC1092", 0},
-+		{ "", 0},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, sar_device_ids);
-+
-+static const struct platform_device_id sar_device_table[] = {
-+	{"intc1092", 0},
-+	{},
-+};
-+
-+static ssize_t sar_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+		unsigned long ret = 0;
-+
-+		pr_debug("%s triggered\n", __func__);
-+		if (!context) {
-+			pr_err("%s context is null", __func__);
-+			return -EFAULT;
-+		}
-+		ret = sprintf(buf, "%d %d %d %d\n", context->sar_data.device_mode,
-+			      context->sar_data.bandtable_index,
-+			      context->sar_data.antennatable_index,
-+			      context->sar_data.sartable_index);
-+		pr_debug("%s sent: %s\n", __func__, buf);
-+		return ret;
-+}
-+
-+static ssize_t sar_reg_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+		unsigned long ret = 0;
-+
-+		pr_debug("%s triggered\n", __func__);
-+		if (!context) {
-+			pr_err("%s context is null", __func__);
-+			return -EFAULT;
-+		}
-+		ret = sprintf(buf, "%d\n", context->reg_value);
-+		pr_debug("%s sent: %s\n", __func__, buf);
-+		return ret;
-+}
-+
-+static ssize_t sar_reg_store(struct kobject *kobj, struct kobj_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+		int value = 0, read = 0;
-+
-+		pr_debug("%s triggered\n", __func__);
-+		if (!count) {
-+			pr_err("%s count = %d", __func__, (int)count);
-+			return -EFAULT;
-+		}
-+		read = sscanf(buf, "%u", &value);
-+		pr_debug("%s received %s, integer value : %d", __func__, buf, value);
-+		if (read <= 0) {
-+			pr_alert("%s Not a integer", __func__);
-+			return -EFAULT;
-+		}
-+		if (value >= 0 && value < MAX_REGULATORY) {
-+			context->reg_value = value;
-+			update_sar_data();
-+			sar_send_notify();
-+		}
-+		return count;
-+}
-+
-+static struct kobj_attribute sar_attribute = __ATTR(intc_data, 0660, sar_show, NULL);
-+static struct kobj_attribute sar_attribute1 = __ATTR(intc_reg, 0660, sar_reg_show, sar_reg_store);
-+
-+#ifdef DEBUG
-+static ssize_t sar_dev_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
-+{
-+		unsigned long ret = 0;
-+
-+		pr_debug("%s triggered\n", __func__);
-+		if (!context) {
-+			pr_err("%s context is null\n", __func__);
-+			return -EFAULT;
-+		}
-+		ret = sprintf(buf, "%d\n", context->sar_data.device_mode);
-+		pr_debug("%s sent: %s\n", __func__, buf);
-+		return ret;
-+}
-+
-+static ssize_t sar_dev_store(struct kobject *kobj, struct kobj_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+		int value = 0, read = 0;
-+		acpi_status status = AE_OK;
-+
-+		pr_debug("%s triggered\n", __func__);
-+		if (!count) {
-+			pr_err("%s count = %d", __func__, (int)count);
-+			return -EFAULT;
-+		}
-+		read = sscanf(buf, "%u", &value);
-+		pr_debug("%s received %s, integer value : %d", __func__, buf, value);
-+		if (read <= 0) {
-+			pr_alert("%s Not a integer", __func__);
-+			return -EFAULT;
-+		}
-+		if (value < MAX_DEV_MODES) {
-+			status = sar_set_device_mode(context->sar_device, value);
-+			if (status != AE_OK) {
-+				pr_err("sar_set_device_mode failed\n");
-+				return -EINVAL;
-+			}
-+		}
-+		return count;
-+}
-+
-+static struct kobj_attribute sar_attribute2 = __ATTR(intc_dev, 0660, sar_dev_show, sar_dev_store);
-+#endif
-+
-+MODULE_DEVICE_TABLE(platform, sar_device_table);
-+
-+static struct platform_driver sar_driver = {
-+	.probe = sar_add,
-+	.remove = sar_remove,
-+	.shutdown = sar_shutdown,
-+	.driver = {
-+			.name = DRVNAME,
-+			.owner = THIS_MODULE,
-+			/* FOR ACPI HANDLING */
-+			.acpi_match_table = ACPI_PTR(sar_device_ids),
-+			},
-+	.id_table = sar_device_table,
-+};
-+
-+static int sar_add(struct platform_device *device)
-+{
-+		int result = 0;
-+
-+		pr_debug("%s Triggered\n", __func__);
-+		context = kmalloc(sizeof(*context), GFP_KERNEL);
-+		if (!context) {
-+			pr_err("Cannot allocate memory in kernel for WWAN_SAR_CONTEXT\n");
-+			return -1;
-+		}
-+		memset(context, 0, sizeof(struct WWAN_SAR_CONTEXT));
-+
-+		context->sar_kobject = kobject_create_and_add("intc_sar_object", kernel_kobj);
-+		if (!context->sar_kobject) {
-+			pr_err("Failed to create sar_kobject\n");
-+			goto r_free;
-+		}
-+
-+		result = sysfs_create_file(context->sar_kobject, &sar_attribute.attr);
-+		if (result) {
-+			pr_err("Failed to create the intc_data file in /sys/kernel/intc_sar_object\n");
-+			goto r_sys;
-+		}
-+
-+		result = sysfs_create_file(context->sar_kobject, &sar_attribute1.attr);
-+		if (result) {
-+			pr_err("Failed to create the intc_reg file in /sys/kernel/intc_sar_object\n");
-+			goto r_sys;
-+		}
-+#ifdef DEBUG
-+		result = sysfs_create_file(context->sar_kobject, &sar_attribute2.attr);
-+		if (result) {
-+			pr_err("Failed to create the intc_dev file in /sys/kernel/intc_sar_object\n");
-+			goto r_sys;
-+		}
-+#endif
-+		context->sar_device = device;
-+		if (sar_module_probe(device) != AE_OK) {
-+			pr_err("Failed sar_module_probe\n");
-+			goto r_sys;
-+		}
-+
-+		if (acpi_install_notify_handler(ACPI_HANDLE(&device->dev), ACPI_DEVICE_NOTIFY,
-+						sar_notify, (void *)device) != AE_OK) {
-+			pr_err("Failed acpi_install_notify_handler\n");
-+			goto r_sys;
-+		}
-+		return 0;
-+
-+r_sys:
-+		kobject_put(context->sar_kobject);
-+r_free:
-+		kfree(context);
-+		return -1;
-+}
-+
-+static int sar_remove(struct platform_device *device)
-+{
-+		pr_debug("%s Triggered\n", __func__);
-+		acpi_remove_notify_handler(ACPI_HANDLE(&device->dev),
-+					   ACPI_DEVICE_NOTIFY, sar_notify);
-+		kobject_put(context->sar_kobject);
-+		clear_sar_dev_mode();
-+		kfree(context);
-+		return 0;
-+}
-+
-+static void sar_shutdown(struct platform_device *device)
-+{
-+		sar_remove(device);
-+		return;
-+}
-+
-+static void sar_notify(acpi_handle handle, u32 event, void *data)
-+{
-+		struct platform_device *device = data;
-+
-+		pr_debug("%s Triggered: event: %d\n", __func__, event);
-+		if (event == SAR_EVENT) {
-+			pr_debug("%s event matched\n", __func__);
-+			if (sar_module_probe(device) != AE_OK)
-+				pr_err("sar_module_probe error");
-+		}
-+}
-+
-+static int sar_init(void)
-+{
-+		int result = 0;
-+
-+		pr_alert("SAR Init Triggered\n");
-+		result = platform_driver_register(&sar_driver);
-+		if (result < 0)
-+			pr_err("Error registering driver\n");
-+		return result;
-+}
-+
-+static void sar_exit(void)
-+{
-+		pr_alert("SAR EXIT Triggered\n");
-+		platform_driver_unregister(&sar_driver);
-+		pr_debug("Kernel Module Removed Successfully.\n");
-+}
-+
-+module_init(sar_init);
-+module_exit(sar_exit);
-diff --git a/include/linux/platform_data/x86/intel-sar.h b/include/linux/platform_data/x86/intel-sar.h
-new file mode 100644
-index 000000000000..9ed653284fa5
---- /dev/null
-+++ b/include/linux/platform_data/x86/intel-sar.h
-@@ -0,0 +1,91 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Intel Corporation Header File for Specific Absorption Rate
-+ * Copyright (c) 2021, Intel Corporation.
-+ */
-+#ifndef INTEL_SAR_H
-+#define INTEL_SAR_H
-+
-+#define DRVNAME "sar"
-+#define SAR_DSM_UUID "82737E72-3A33-4C45-A9C7-57C0411A5F13"
-+#define COMMAND_ID_DEV_MODE 1
-+#define COMMAND_ID_CONFIG_TABLE 2
-+#define COMMAND_TEST_SET 31
-+#define MAX_REGULATORY 3
-+#define SAR_EVENT 0x80
-+#define MAX_DEV_MODES 50
-+
-+/**
-+ * Structure WWAN_DEVICE_MODE_INFO - device mode information
-+ * Holds the data that needs to be passed to userspace.
-+ * The data is updated from the BIOS sensor information.
-+ * @device_mode: Specific mode of the device
-+ * @bandtable_index: Index of RF band
-+ * @antennatable_index: Index of antenna
-+ * @sartable_index: Index of SAR
-+ */
-+struct WWAN_DEVICE_MODE_INFO {
-+		int device_mode;
-+		int bandtable_index;
-+		int antennatable_index;
-+		int sartable_index;
-+};
-+
-+/**
-+ * Structure WWAN_DEVICE_MODE_CONFIGURATION - device configuration
-+ * Holds the data that is configured and obtained on probe event.
-+ * The data is updated from the BIOS sensor information.
-+ * @version: Mode configuration version
-+ * @total_dev_mode: Total number of device modes
-+ * @device_mode_info: pointer to structure WWAN_DEVICE_MODE_INFO
-+ */
-+struct WWAN_DEVICE_MODE_CONFIGURATION {
-+		int version;
-+		int total_dev_mode;
-+		struct WWAN_DEVICE_MODE_INFO *device_mode_info;
-+};
-+
-+/**
-+ * Structure WWAN_SUPPORTED_INFO - userspace datastore
-+ * Holds the data that is obtained from userspace
-+ * The data is updated from the userspace and send value back in the
-+ * structure format that is mentioned here.
-+ * @reg_mode_needed: regulatory mode set by user for tests
-+ * @bios_table_revision: Version of SAR table
-+ * @num_supported_modes: Total supported modes based on reg_mode
-+ */
-+struct WWAN_SUPPORTED_INFO {
-+		int reg_mode_needed;
-+		int bios_table_revision;
-+		int num_supported_modes;
-+};
-+
-+/**
-+ * Structure WWAN_SAR_CONTEXT - context of SAR
-+ * Holds the complete context as long as the driver is in existence
-+ * The context holds instance of the data used for different cases.
-+ * @parse: identifies if dsm is parsed
-+ * @data_read: identifies if data is already read from BIOS
-+ * @guid: Group id
-+ * @handle: store acpi handle
-+ * @reg_value: regulatory value
-+ * Regulatory 0: FCC, 1: CE, 2: ISED
-+ * @sar_device: platform_device type
-+ * @sar_kobject: kobject for sysfs
-+ * @supported_data: WWAN_SUPPORTED_INFO struct
-+ * @sar_data: WWAN_DEVICE_MODE_INFO struct
-+ * @config_data: WWAN_DEVICE_MODE_CONFIGURATION array struct
-+ */
-+struct WWAN_SAR_CONTEXT {
-+		bool parse;
-+		bool data_read;
-+		guid_t guid;
-+		acpi_handle handle;
-+		int reg_value;
-+		struct platform_device *sar_device;
-+		struct kobject *sar_kobject;
-+		struct WWAN_SUPPORTED_INFO supported_data;
-+		struct WWAN_DEVICE_MODE_INFO sar_data;
-+		struct WWAN_DEVICE_MODE_CONFIGURATION config_data[MAX_REGULATORY];
-+};
-+#endif /* INTEL_SAR_H */
--- 
-2.17.1
-
+SGksDQoNClJlc3BvbnNlIElubGluZS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogQW5keSBTaGV2Y2hlbmtvIDxhbmR5LnNoZXZjaGVua29AZ21haWwuY29tPiANCj4gU2Vu
+dDogV2VkbmVzZGF5LCBKdW5lIDE2LCAyMDIxIDE6NTkgQU0NCj4gVG86IEVucmljbyBXZWlnZWx0
+LCBtZXR1eCBJVCBjb25zdWx0IDxsa21sQG1ldHV4Lm5ldD4NCj4gQ2M6IFNocmF2YW4sIFMgPHMu
+c2hyYXZhbkBpbnRlbC5jb20+OyBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPjsg
+TWFyayBHcm9zcyA8bWdyb3NzQGxpbnV4LmludGVsLmNvbT47IFBsYXRmb3JtIERyaXZlciA8cGxh
+dGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBBbiwgU3VkaGFrYXIgPHN1ZGhha2Fy
+LmFuQGludGVsLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwLzFdIFt4ODZdIEJJT1MgU0FS
+IERyaXZlciBmb3IgTS4yIEludGVsIE1vZGVtcw0KPiANCj4gT24gVHVlLCBKdW4gMTUsIDIwMjEg
+YXQgOTowMSBQTSBFbnJpY28gV2VpZ2VsdCwgbWV0dXggSVQgY29uc3VsdCA8bGttbEBtZXR1eC5u
+ZXQ+IHdyb3RlOg0KPiA+DQo+ID4gT24gMTQuMDYuMjEgMTM6NDgsIFNocmF2YW4sIFMgd3JvdGU6
+DQo+ID4NCj4gPiBIaSwNCj4gPg0KPiA+ID4gV2h5IGlzIGl0IG5vdCBhIHBhcnQgb2Ygc29tZSBn
+ZW5lcmljIHN1YnN5c3RlbSB1bmRlciB3aXJlbGVzcyBuZXR3b3JrIHN1YnN5c3RlbT8NCj4gPiA+
+DQo+ID4gPiAtLSBUaGlzIGRyaXZlciBpcyBpbnN0YW50aWF0ZWQgb25seSB3aGVuIHRoZSBCSU9T
+IG9uIGdpdmVuIGhvc3QgZXhwb3NlcyBBQ1BJIG5vZGUgY29ycmVzcG9uZGluZyB0byB0aGUgQklP
+UyBTQVIuIFRoaXMgZGVwZW5kcyBvbiBzdXBwb3J0IG9mIHRoZSBCSU9TIFNBUiBmZWF0dXJlIGJ5
+IGdpdmVuIE9FTS4NCj4gPiA+IC0tIEl0IGlzIGFnbm9zdGljIG9mIHRoZSB3aXJlbGVzcyB0ZWNo
+bm9sb2d5IGxpa2UgV1dBTiwgV2lGaSBhbmQgQlQuIEhlbmNlLCBpdCBpcyBub3QgbWFkZSBzcGVj
+aWZpYyB0byBhbnkgZ2l2ZW4gd2lyZWxlc3MgbmV0d29yayBzdWJzeXN0ZW0uDQo+ID4gPg0KPiA+
+ID4gUGxlYXNlIGRvIGxldCBtZSBrbm93IGlmIHlvdSBuZWVkIG1vcmUgaW5mb3JtYXRpb24uDQo+
+ID4NCj4gPiB0aGUgcHJvYmxlbXMgSSBzZWUgaGVyZToNCj4gPg0KPiA+IDEuIHRoZSBkZXZpY2Ug
+dWFwaSBpcyB2ZXJ5IHZlbmRvciBzcGVjaWZpYw0KPiANCj4gV2UgaGF2ZSBhIHBsYXRmb3JtIHBy
+b2ZpbGUgd2hpY2ggaXMgYWxzbyBxdWl0ZSB2ZW5kb3Igc3BlY2lmaWMsIG5ldmVydGhlbGVzcyB3
+ZSAoYXMgdXBzdHJlYW0pIGFyZSB0cnlpbmcgdG8gaGF2ZSBwb2ludHMgb2YgdW5pZmljYXRpb25z
+Lg0KPiANCj4gSSB0aGluayB0aGlzIGRyaXZlciBzaG91bGQgYmUgcGFydCBvZiB0aGUgY29ycmVz
+cG9uZGluZyBwcm9maWxlIC8gbmV0d29yayBzdWJzeXN0ZW0gcGFydCBhbmQgYmUgYSBvbmUgKG9m
+IHRoZSkgaGFyZHdhcmUgaW1wbGVtZW50YXRpb24uDQo+IFNvbWVib2R5IGNhbiBhZGQgbW9yZS4g
+VXNlcnMgaW4gTGludXggc2hvdWxkIGhhdmUgYSBjb21tb24gQUJJIGZvciB0aGF0LiBBbmQgSSdt
+IG5vdCBzdXJlIGl0IHNob3VsZCBub3QgYmUgYSBuZXRsaW5rIGJhc2VkIG9uZS4NCj4NCg0KW1No
+cmF2YW5dICBUaGlzIGRyaXZlciBpcyBleHBvc2luZyB0aGUgU0FSIHBhcmFtZXRlcnMgc29sZWx5
+IGluZmx1ZW5jZWQgYnkgdGhlIGN1cnJlbnQgc3RhdHVzIG9mIHRoZSBob3N0IHBsYXRmb3JtIGFu
+ZCBpcyBub3Qgc3BlY2lmaWMgdG8gYW55IFJGIGRldmljZS4gSGVuY2UgaXQgaXMgcGxhY2VkIGF0
+IHRoZSBwYXRoIChQbGF0Zm9ybSBkcml2ZXIpLg0KQWxzbywgd2UgaGF2ZSByZXdvcmtlZCB0aGUg
+ZHJpdmVyIGltcGxlbWVudGF0aW9uIHRvIHJlbW92ZSBuZXRsaW5rIHVzYWdlLiBUaGlzIGlzIHJl
+cGxhY2VkIHdpdGggc3lzZnMuIFBsZWFzZSBkbyBoYXZlIGEgbG9vayBhbmQgc2hhcmUgZmVlZGJh
+Y2sgb24gdGhlIHNhbWUuDQoNCj4gPiAyLiBpdHMgdW5jbGVhciBmb3Igd2hpY2ggYWlyIGludGVy
+ZmFjZSBpcyB0aGUgZGF0YSByZWFsbHkgcmV0cmlldmVkID8NCg0KW1NocmF2YW5dICBUaGUgaW5p
+dGlhbCBpbXBsZW1lbnRhdGlvbiBzdXBwb3J0cyBwYXJhbWV0ZXJzIHJlY2VpdmVkIGZvciBXV0FO
+LiBTdWJzZXF1ZW50bHkgb3RoZXIgUkYgZGV2aWNlIHR5cGVzIChXaWZpLCBCVCkgd2lsbCBiZSBz
+dXBwb3J0ZWQuDQoNCj4gPiAzLiB1bmNsZWFyIGhvdyB1c2VybGFuZCB0aGlzIHNob3VsZCByZWFs
+bHkgaGFuZGxlIGluIGEgZ2VuZXJpYyB3YXkNCj4gPiAgICAgLS0+IGhvdyBkb2VzIGl0IGtub3cg
+d2hpY2ggZGV2aWNlIHRvIHR1bmUgPw0KDQpbU2hyYXZhbl0gVXNlcmxhbmQgd2lsbCBjb25maWd1
+cmUgdGhlc2UgcGFyYW1ldGVycyBvbiB0aGUgc3BlY2lmaWMgUkYgZGV2aWNlLiBBIFRhYmxlIG9m
+IFNBUiBwYXJhbWV0ZXJzIGlzIGFscmVhZHkgcHJvdmlzaW9uZWQgb24gdGhlIGdpdmVuIFJGIGRl
+dmljZS4gDQpUaGUgaW5mb3JtYXRpb24gcmV0cmlldmVkIGZyb20gdGhpcyBkcml2ZXIgc3BlY2lm
+aWVzIHdoaWNoIGluZGV4IGluIHRoaXMgdGFibGUgaGFzIHRvIGJlIHVzZWQgYnkgdGhlIFJGIGRl
+dmljZS4NCg0KPiA+IDQuIGRvZXMgaXQgcmVhbGx5IG5lZWQgdG8gYmUgKG5vbi1wb3J0YWJsZSkg
+aW9jdGxzID8NCj4gPg0KDQpbU2hyYXZhbl0gVXNhZ2Ugb2YgSU9DVExzIGhhdmUgYmVlbiBhdm9p
+ZGVkIGluIHRoZSBsYXRlc3QgcGF0Y2guIFRoaXMgaGFzIGJlZW4gcmVwbGFjZWQgd2l0aCBzeXNm
+cy4gUGxlYXNlIGRvIGhhdmUgYSBsb29rIGFuZCBzdWdnZXN0IGlmIHRoaXMgY29uY2VybiBpcyBh
+ZGRyZXNzZWQuDQoNCj4gPg0KPiA+IGJ5IHRoZSB3YXksIHdobyBoYXQgdGhhdCBmdW5ueSBpZGVh
+IHB1dHRpbmcgc3VjaCBpbmZvcm1hdGlvbiBpbnRvIGFjcGkgDQo+ID4gaW4gc3VjaCBhIHdlaXJk
+IHdheSA/DQo+IA0KPiBJIGJlbGlldmUgaXRzIHNvdXJjZSBpcyBhIFdpbmRvd3MgZHJpdmVyIGFu
+ZCBXaW5kb3dzICJjdWx0dXJlIiwgdGhleSBzaW1wbHkgZG9uJ3QgZ2l2ZSBhIGNyYXAgYWJvdXQg
+YW55dGhpbmcgZWxzZSBhbmQgV2luZG93cyBpcyBhIHByb2R1Y3Qtb3JpZW50ZWQgcGxhdGZvcm0g
+KGVhY2ggcHJvZHVjdCBpcyB1bmlxdWUgZXZlbiBpZiA5OS45JSBvZiB0aGUgaGFyZHdhcmUgYW5k
+IGZpcm13YXJlIGlzIHRoZSBzYW1lIHdpdGggdHdlbnR5IG1vcmUgcHJvZHVjdHMpLg0KDQpUaGFu
+a3MgYW5kIFJlZ2FyZHMsDQpTaHJhdmFuIFMNCg==
