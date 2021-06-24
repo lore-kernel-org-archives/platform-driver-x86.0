@@ -2,83 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 390D2C48BDF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Jun 2021 12:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6804CC49EA6
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Jun 2021 12:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11CB5613EC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Jun 2021 12:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52AD5613F7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 24 Jun 2021 12:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231426AbhFXMzq (ORCPT
+        id S231459AbhFXM5J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 24 Jun 2021 08:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230236AbhFXMzq (ORCPT
+        Thu, 24 Jun 2021 08:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231262AbhFXM5J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 24 Jun 2021 08:55:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 2E7E661374
-        for <platform-driver-x86@vger.kernel.org>; Thu, 24 Jun 2021 12:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624539207;
-        bh=UoGhrau9UBAIBRxCv80/vTzfCoAJRZivEHSsWEBPZcI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=b/wQqT1kP8cWkky+viZC35oKz4Ae2Ka1N3/E87JAkSdzkpU9J5HnZmsslCceCbRzO
-         InInEJhJZkkMuiM23VN25jdoVetWx/i6ypNKS7etuB6mB25+e5OTYdief7dhGFqUK9
-         q6Lmcj+G5BzEvpNt+zOvvK3ypU/5ptTTbHVx/DqCV2u1uJAKTH5/Fauzjui4YMd9lZ
-         GV/OutK1J1ma+5nyD+4HT5W0Fm40iRwUEcD6Rh5TRcoCtKdFKh/S9mAvNrtDiHDd6d
-         XKbGo8sZApfizC28Jlsmna+FDDEtjm3iSbmwl2bPAUj+f+prytGLhEPhDFHJEJHUHD
-         IsRuUnYXDdRUg==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 210457] Fan sporadically maxed on wake-up due to unavailable
- sensor temperature
-Date:   Thu, 24 Jun 2021 12:53:26 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: s-cvhajmmblfsofmpsh@thorsten-wissmann.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-210457-215701-Pe5g1v5gBd@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-210457-215701@https.bugzilla.kernel.org/>
-References: <bug-210457-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Thu, 24 Jun 2021 08:57:09 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC5FC061574;
+        Thu, 24 Jun 2021 05:54:50 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c1e00b0ee742129e64455.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:1e00:b0ee:7421:29e6:4455])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 935E01EC034B;
+        Thu, 24 Jun 2021 14:54:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1624539288;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=exWGaN5nlDIIfjw6LKdL5i6bEdP3AlfmgKU5Qi35VZs=;
+        b=OH1tJ1FWIwOyqk5pV85F5ISFN32aCDPduQ56E4e2jBVYcAbLhc0k5JTE+UAy+Gb/l4bjer
+        2TbZqRl2XDUp7GrXFn0hfpBqzyIwDdJKoBHOLDBPQ3gyuslhsDz2N/IZaxZ/JW9Kqam6h6
+        qOAkZxpCS9rabjOWu5AiS3lx0aUfhL0=
+Date:   Thu, 24 Jun 2021 14:54:44 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 20/22] x86/boot: Add Confidential Computing
+ address to setup_header
+Message-ID: <YNSAlJnXMjigpqu1@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-21-brijesh.singh@amd.com>
+ <YMw4UZn6AujpPSZO@zn.tnic>
+ <15568c80-c9a9-5602-d940-264af87bed98@amd.com>
+ <YMy2OGwsRzrR5bwD@zn.tnic>
+ <162442264313.98837.16983159316116149849@amd.com>
+ <YNMLX6fbB3PQwSpv@zn.tnic>
+ <20210624031911.eznpkbgjt4e445xj@amd.com>
+ <YNQz7ZxEaSWjcjO2@zn.tnic>
+ <20210624123447.zbfkohbtdusey66w@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210624123447.zbfkohbtdusey66w@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D210457
+On Thu, Jun 24, 2021 at 07:34:47AM -0500, Michael Roth wrote:
+> Well, that's sufficient for the boot/compressed->uncompressed parameter
+> passing, but wouldn't actual bootloaders still need something in
+> setup_data/setup_header to pass in the CC blob (for things like non-EFI
+> environments/containers)? I was under the impression that using
+> boot_params directly was more of a legacy/ad-hoc thing, is that
+> accurate?
 
---- Comment #12 from Thorsten (s-cvhajmmblfsofmpsh@thorsten-wissmann.de) ---
-After updating to kernel 5.12.12(-arch1-1), the issue still existed, but on=
-ly
-after multiple suspend/resume-cycles (I couldn't find a deterministic way to
-reproduce it). After a BIOS update I wasn't able to reproduce it anymore. T=
-he
-BIOS now reports: UEFI BIOS Version: N1MET65W (1.50), Embedded Controller
-Version: N1MHT31W (1.20), Machine Type Model: 20HQS3KG00. However, I do not
-own/hold the laptop anymore, so I can't tell whether the issue returns after
-running the laptop for a longer time (days, or so).
+/me goes and rereads your early mail.
 
---=20
-You may reply to this email to add a comment.
+I'm more confused.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+You're talking about parsing an EFI table early which contains the
+ccblob and in it is the CPUID page.
+
+Now above you say, "non-EFI environments".
+
+I'm guessing you want to support both so you want to either parse an EFI
+table on EFI environments or pass the blob in a different way in non-EFI
+envs. Yes, no?
+
+Also, you want to pass the previously parsed CPUID page address to
+kernel proper. For that I suggested to use boot_params.
+
+What else?
+
+How about you explain in a lot more detail what exactly the requirements
+and the use cases are so that we can have a common base to discuss it
+on.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
