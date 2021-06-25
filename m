@@ -2,144 +2,125 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911A0C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 14:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6730DC2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 15:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7238B61474
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 14:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4130061879
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 15:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbhFYOvU (ORCPT
+        id S229940AbhFYPCa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Jun 2021 10:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33680 "EHLO
+        Fri, 25 Jun 2021 11:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbhFYOvU (ORCPT
+        with ESMTP id S229653AbhFYPC3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Jun 2021 10:51:20 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4BBC061574;
-        Fri, 25 Jun 2021 07:48:59 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0dae0049fb297996de39ad.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:ae00:49fb:2979:96de:39ad])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C72C91EC0595;
-        Fri, 25 Jun 2021 16:48:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1624632537;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ENHDjrvHsrLVlBAdGgAmMkR2KuwDaPAvXCPilbbBf7A=;
-        b=LSXOwsdhUEbhG7vaRlM3tlHXlIL2v/KBN+RiZWsEAiLf8BjJ9w+dKv3EgevZlFNctBQ91L
-        kihWVCGWyB74ZmIbVG0UFqLQZu5TOOgdIAz2KLjcURGT5bgtWTYQC9esnD34CSJRSM4rZm
-        Ez3S06oseaAAUrkfLls9v8mOe0j+Sqk=
-Date:   Fri, 25 Jun 2021 16:48:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Roth <michael.roth@amd.com>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 20/22] x86/boot: Add Confidential Computing
- address to setup_header
-Message-ID: <YNXs1XRu31dFiR2Z@zn.tnic>
-References: <YMw4UZn6AujpPSZO@zn.tnic>
- <15568c80-c9a9-5602-d940-264af87bed98@amd.com>
- <YMy2OGwsRzrR5bwD@zn.tnic>
- <162442264313.98837.16983159316116149849@amd.com>
- <YNMLX6fbB3PQwSpv@zn.tnic>
- <20210624031911.eznpkbgjt4e445xj@amd.com>
- <YNQz7ZxEaSWjcjO2@zn.tnic>
- <20210624123447.zbfkohbtdusey66w@amd.com>
- <YNSAlJnXMjigpqu1@zn.tnic>
- <20210624141111.pzvb6gk5lzfelx26@amd.com>
+        Fri, 25 Jun 2021 11:02:29 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A3BC061574
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jun 2021 08:00:08 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id s6so13760619edu.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jun 2021 08:00:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H/QBEf2nrVzvD8mx3IRhBXf8yFIH5sJHK66wHPXIAPM=;
+        b=O0BPJkFq6Fv2zw1WZ1ZlGdLy68aMCf4CjiwfJe2xAbKEFu98OGvWchJN4ifsS29dkm
+         j2AYa07FraPIVQrh0+KdhBpx119WWrwoOmdHid3qeJ9C/ZOFtQDcJmeIaM0UFqYM55ze
+         Lxi2NGGfMvQzapbZ5fzz6Up9/pKB3SBCH8lt8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H/QBEf2nrVzvD8mx3IRhBXf8yFIH5sJHK66wHPXIAPM=;
+        b=kXJAX2npIUFTVnAnMAyHVDyCPrQnV9ha/cZWgIZMm3hUI7E4YV7ZabtM0xkVAcjppI
+         39K0+Npe7dLkf1fVBGGef/ARPw6JVDnsVZxPWrXfLkdv+xfKXnHKyP0ie7TJhwxpkzC/
+         Rise8N587SwXljGmjC1Ez84q+NVKD1yVYZDE14SVCY7v3CcH6c9sGj1/VmgZBFc/MqP4
+         Ebr5O8P+CYWdxUPnkFUjihya8S3OFoboOych3apfQhbF/P/P8i6iUfDLha3/zndaOgXT
+         M/yV6wKl9HSaidgv5CAT9ydQS/4hobgJuYQZ6crbhFsQuFRI2NFunojZ+m1qVHlyNdFB
+         anDg==
+X-Gm-Message-State: AOAM531+G4YvtneSL0xiKjoA+Rphlcfzshe5I15FUrHcCcUflVOLPu9+
+        IjiPVtB5uZod9R8JrHeRCd0H5R5GLe5H/w==
+X-Google-Smtp-Source: ABdhPJxTU5SdhOAicKa067PVVjYIVq8el6O3+pijVbYy9ZWFbEunYCKIrLxva/PcIrppcy9MH3p2DQ==
+X-Received: by 2002:a05:6402:204:: with SMTP id t4mr15113142edv.34.1624633206556;
+        Fri, 25 Jun 2021 08:00:06 -0700 (PDT)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id e6sm2902571ejm.35.2021.06.25.08.00.05
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Jun 2021 08:00:06 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id n20so13786901edv.8
+        for <platform-driver-x86@vger.kernel.org>; Fri, 25 Jun 2021 08:00:05 -0700 (PDT)
+X-Received: by 2002:a50:eb8c:: with SMTP id y12mr15179446edr.189.1624633205532;
+ Fri, 25 Jun 2021 08:00:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210624141111.pzvb6gk5lzfelx26@amd.com>
+References: <20210623200149.2518885-1-Shyam-sundar.S-k@amd.com>
+ <17e342aa-fa99-c14d-d018-2b4b65d31933@redhat.com> <b56d0232-5002-ace3-f3ce-21c506c1eeac@amd.com>
+ <030527ae-9e5c-c3b4-ea48-f1dc5a4ec805@redhat.com>
+In-Reply-To: <030527ae-9e5c-c3b4-ea48-f1dc5a4ec805@redhat.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Fri, 25 Jun 2021 08:59:54 -0600
+X-Gmail-Original-Message-ID: <CAHQZ30CXT_Vj-Kq_j-mo6ohBoJuZ2A0vSF6+m=2H9HBNzvLgLg@mail.gmail.com>
+Message-ID: <CAHQZ30CXT_Vj-Kq_j-mo6ohBoJuZ2A0vSF6+m=2H9HBNzvLgLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] updates to amd-pmc driver
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        mgross@linux.intel.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jun 24, 2021 at 09:11:11AM -0500, Michael Roth wrote:
->   We don't need anything in setup_data/setup_header. We can access the
->   CC blob table via EFI config table. However, parsing EFI config table
->   early in uncompressed/proper kernel has the complications I mentioned in my
->   initial response.
+Thanks for clarifying my comments Hans :)
 
-So since you want to parse the EFI table in the boot stage, that tells
-me that you need the blob in the early, boot kernel too, correct?
+On Fri, Jun 25, 2021 at 8:25 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> After patch 1/7 there are 2 waits:
+>
+> 1. To wait for any pending previous command to complete
+> 2. A new one introduced by patch 1/7 which waits for the just
+> send command to complete.
+>
+> 1. seems redundant since we are the only one talking to the PMC,
+> and we (now) wait for the command to complete before returning
+> from amd_pmc_send_cmd().
 
-> This is where using a new boot_params field comes into
->   play (similar to acpi_rsdp_addr), so boot/compressed can pass
->   uncompressed/proper kernel a pointer to the pre-parsed CC blob so it doesn't
->   need to re-parse EFI config table during early boot.
+I still think it's prudent to check this, just in case. It shouldn't
+be expensive.
 
-Ack.
+>
+> 2. The command could be unknown, or fail for some reason,
+> so it seems that the old wait for any response != 0
+> (after we clear the register) is the right thing to do
+> and then we should do a switch-case on the response
+> to see if the response is ok, or some error.
+>
 
-> For non-EFI case:
-> 
->   We need a "proper" mechanism that bootloaders can use. My
->   understanding is this would generally be via setup_data or
->   setup_header, and that a direct boot_params field would be frowned
->   upon.
+I should have placed my comments on the second one.
 
-So, you need to pass only an address, right?
+> Also I see no protection against 2 amd_pmc_send_cmd()
+> calls running in parallel. ATM that seems to be fine since
+> this cannot happen, but it might be good to still add a
+> mutex and take that so that this does not break in the
+> future when some new user may show up which can run in
+> parallel.
+>
+> So IMHO the right sequence here would be:
+>
+> 1. Take mutex
+> 2. Clear response register (clearing response from previous command)
+> 3. Write argument
+> 4. Write message id
+> 5. Wait for response register to become !- 0.
+> 6. release mutex
+> 7. do a switch-case on the read response, treating ok
+> as success an anything else as an error.
+>
 
-How workable would it be if you had a cmdline option:
-
-	cc_blob_address=0xb1a
-
-with which you tell the kernel where that thing is?
-
-Because then you can use this in both cases - EFI and !EFI.
-
-Or is this blob platform-dependent and the EFI table contains it and
-something needs to get it out of there, even if it were a user to
-type in the cmdline cc_blob_address or some script when it comes to
-containers...?
-
-In any case, setup_data is kinda the generic way to pass arbitrary data
-to the kernel so in this case, you can prioritize the EFI table in the
-EFI case and fall back to setup_data if there's no EFI table...
-
-> So your understanding of the situation seems correct.
-> 
-> By bringing up the non-EFI case I only meant to point out that by using a
-> field in setup_header, we could re-use that field for the EFI case as well,
-> and wouldn't need a seperate boot_params field to handle the
-> boot/compressed->uncompressed passing of the pre-parsed CC blob address
-> in the EFI case. But I don't think it makes a big difference as far as
-> my stuff goes at least. Maybe for TDX though this needs more thought.
-
-Yah, let's see what requirements they'd come back with.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+I agree.
