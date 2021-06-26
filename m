@@ -2,214 +2,364 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A56C49EAB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 18:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7757DC49EA6
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Jun 2021 15:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA80161946
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 25 Jun 2021 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5813261C3D
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Jun 2021 15:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbhFYSQu (ORCPT
+        id S230116AbhFZPOT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 25 Jun 2021 14:16:50 -0400
-Received: from mail-mw2nam12on2075.outbound.protection.outlook.com ([40.107.244.75]:6240
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229586AbhFYSQu (ORCPT
+        Sat, 26 Jun 2021 11:14:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:22924 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230098AbhFZPOR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 25 Jun 2021 14:16:50 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GShsGsrUVuZmp0btBmADpxJaLMCDqICPfv8VjZYvcRUTFkHBRTYwaKzdTTCch2y/1eRGNw2gdb4eeYvOCYa5TrcxYmpfa0sixS05nB0iwqMiVnQoX4iKOyuIxm8KkgbEmFR6wCWekmfApfB2UYbuiNBPO50tJEjUBfkYPwwGJ7ig0kFCqpeC0G3fs21EBeomrAPbcjB8rr+gzXl/rO7OC8Biha4WHApoXjelf3p35mHp+o2HunpPbBvEauRllsFFNvrTNcaDfYgu8xC0updxkKubVUmpyWF2+p6VyNDgDccoyMyOSBGPrIRbgrjsIwW+mLbq26pRGAxc0aSSvzmshw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h87/xh0YFqNHZJunHaqvsjR6z/t5Xc+32WkGw33Am8w=;
- b=gwwZ+JcwVM7c/KJc9YgXcIfMOv81/mNvOYuJ7kka/dnJ9ME5l7dvxcqHFajWy8kcMAFj06qu6SFUaABBajfiBhv9Ii8OA8vqD/l7D2HZHR/pnMf0ofh/QsmPSrV8qjwNxJn4Wg/DDjDnROeykes3FtD6tH3r5GPNaL2DXH6ttjEKP8SfyV92f/XBYyDj6BJDpDqqdUms7BxpWHtwflPinJHPCQW+Qe2X433a0ozZXRf7xN5Nzo0mpxvxa0PLF/0X4OkvtsNWzTPBZuRc2iRl6W9vlCeKO91P/Tbo1dlxLQiSDKtQ5AOSNC/lgVQJo/plmJBd8qUgz4KUdYS2q4Pocw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h87/xh0YFqNHZJunHaqvsjR6z/t5Xc+32WkGw33Am8w=;
- b=PL4YAQq5lusjcWiybpNJzlKj2spb4Pvuuo8fmu6tVXrY6oEwjG2O5KBmopkQTeL6A5gha//KBJcKLS5aB4KF5rCAjMgEdZ9RoTTSkHfTx7Vppyu2H5Gp7KRYNi1H6lBeHKGozM0lKvhiwHCjMZKXrehUpwr0kBAI6Ba5VvnAnwQ=
-Authentication-Results: alien8.de; dkim=none (message not signed)
- header.d=none;alien8.de; dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13)
- by CH2PR12MB4264.namprd12.prod.outlook.com (2603:10b6:610:a4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.19; Fri, 25 Jun
- 2021 18:14:26 +0000
-Received: from CH2PR12MB4133.namprd12.prod.outlook.com
- ([fe80::181:e51d:a4f7:af62]) by CH2PR12MB4133.namprd12.prod.outlook.com
- ([fe80::181:e51d:a4f7:af62%5]) with mapi id 15.20.4264.023; Fri, 25 Jun 2021
- 18:14:26 +0000
-Date:   Fri, 25 Jun 2021 13:14:17 -0500
-From:   Michael Roth <michael.roth@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>,
-        "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Sat, 26 Jun 2021 11:14:17 -0400
+IronPort-SDR: RVd6HZG5qs76LUAHBhvEDh9TGJNhw30GpEscNZYK+Fm+PCNqJxe/VT7heAatnjIvZBzLgADwK+
+ Tu7lRFNCM4vw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10027"; a="207613934"
+X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
+   d="scan'208";a="207613934"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 08:11:55 -0700
+X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
+   d="scan'208";a="642895562"
+Received: from mlubyani-mobl2.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.8.25])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 08:11:54 -0700
+From:   Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com
-Subject: Re: [PATCH Part1 RFC v3 20/22] x86/boot: Add Confidential Computing
- address to setup_header
-Message-ID: <20210625181417.kaylo56pz4rlwwqr@amd.com>
-References: <162442264313.98837.16983159316116149849@amd.com>
- <YNMLX6fbB3PQwSpv@zn.tnic>
- <20210624031911.eznpkbgjt4e445xj@amd.com>
- <YNQz7ZxEaSWjcjO2@zn.tnic>
- <20210624123447.zbfkohbtdusey66w@amd.com>
- <YNSAlJnXMjigpqu1@zn.tnic>
- <20210624141111.pzvb6gk5lzfelx26@amd.com>
- <YNXs1XRu31dFiR2Z@zn.tnic>
- <8faad91a-f229-dee3-0e1f-0b613596db17@amd.com>
- <YNYMAkoSoMnfhBnJ@zn.tnic>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YNYMAkoSoMnfhBnJ@zn.tnic>
-X-Originating-IP: [165.204.77.11]
-X-ClientProxiedBy: SN6PR01CA0031.prod.exchangelabs.com (2603:10b6:805:b6::44)
- To CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13)
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH v1 5/6] platform/x86: intel_tdx_attest: Add TDX Guest attestation interface driver
+Date:   Sat, 26 Jun 2021 08:11:45 -0700
+Message-Id: <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (165.204.77.11) by SN6PR01CA0031.prod.exchangelabs.com (2603:10b6:805:b6::44) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.19 via Frontend Transport; Fri, 25 Jun 2021 18:14:26 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8c188246-55d0-43c5-5a67-08d938051112
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4264:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR12MB4264AE5E5A248B0C9C707DD595069@CH2PR12MB4264.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 0l08VZzPy8EUcnUi26AInkG9hUX1oF8yNCC4I5XfCLo/VFm/WdLDBVReTgkolJQT9CXXQxCEmVLLcnaJGgecwKRb7Qh+M3ST3WGYx5E5AEwU9csDaXP+5IA21H0MpcTrQy1oMUy35jzwgWAA+S6FORKkTCuCf9p9Y9wSGSCeZz3dBg5bP690dxCwudQTYVz/YuHflgFy3gM+vhCVlSCwerwFyn536BWtLx/n1cmSLVcrAKouDEAaInqXZoqvjS5WQGS25jrirppZzaypoJZuwyrEtP/GFj1gR3/ixf5CrWLAMJrv/vCt2XPdQU6G+KEuwtruSkxAtzJlfGrbPLpPhYhOwajKJdUJbNF0NuVG+golJV8vgfZku3D+hDOJgC8mCPsOz1H+ruXIydAJp44av74c46WEcbzjCCyhHY0uhwJdi085q3ELgkbGc1CymaN3sKB7yqEX5AO/lSZA7Huwo97KvPeUrvs2yIp1aAMLb6EBoPIzzCQ6+sRHX4QhaGAP2xjUVSh3DEYUPT//w4OWPbAVgYMo+rG/aa0fe6TvxZPD8pFrycMh6XrUv1llvnhEUg5HG8K7tMXoMjVA9hhYquj2vTHS5sKwKvx2w2ZlhyLdaThKySxbh5WYFcZDwkP+O//00jjNjatWDVRwd8t/YuRVFrZ3dpPmCmKWUpXCeb6b0E8Qqfy1Izj14i3UJm7wTdF6KDdCrTfUGMcSE7SWtHzrcKflOE/MKn+TqWEtSSYulhm4JJ36rTSYGHEND3wjpGUYCdDrJrnE+Vgx952L5w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4133.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(366004)(396003)(346002)(376002)(66556008)(6496006)(66476007)(44832011)(316002)(54906003)(186003)(26005)(16526019)(2616005)(956004)(52116002)(1076003)(66946007)(86362001)(4326008)(6666004)(36756003)(7416002)(966005)(478600001)(45080400002)(2906002)(8676002)(6916009)(8936002)(38350700002)(38100700002)(83380400001)(5660300002)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3UB0A6SHxUrLBDdjzwZaDcO3Hz7DGUdWnGRniLylMWw/KgsPAuGWIp85iKGV?=
- =?us-ascii?Q?wBwm0Qt9eeC/VKHtTf7HlvrC9guiTTuLia7xkDGwRWOraewP9lu+4yqvfh1X?=
- =?us-ascii?Q?F0fmUVldjwA3+X567rJjmvmzF8Qbewtry7DbTZXCwDQgAGLVO2mXfqTYRA0b?=
- =?us-ascii?Q?FJpkgqUS8iwrSd04t/e6s69WN1d+MF7QDUb2UbZ7zsSfyTOBsEunoVNOdN6r?=
- =?us-ascii?Q?1jFKrHGMsyhn5TIzctdv5siQCUhoABK1eJc271LD/GZxgK5dYygV10VvG1s1?=
- =?us-ascii?Q?TgUzx37JiX8gE0LaaeyBBf/4mpkbCnaW9j+TI/Zz04TGsE9tI5qsHoles9S/?=
- =?us-ascii?Q?satW2yUwa91VesS1g2vfHrFGHsWEtBRnTbGClOEqCAS1jMKrU6AY47BGH2Z9?=
- =?us-ascii?Q?AZ+jisUubCwaMuhu+yIeopBEzTPNwfu22NYSeDtw+rhsmpo2mkJU5ji+fEBz?=
- =?us-ascii?Q?/tUBrHiNbq3cYs4d5lmEAYDmbPexITWPsnbwmVMi/wgocVqgor5V9j5yVFxr?=
- =?us-ascii?Q?yCVxtI98B13xi0Xnz4vQPsQeOdA4ocn5k7bIhE93sS8Og9QmM28m3Ppma/uP?=
- =?us-ascii?Q?6n8UAP2bZYxeLbHIgvvFmKxA2Otr3ifu+OR2cB764WwiLaamcQCVaWyVXyv3?=
- =?us-ascii?Q?jxHqBaCwlk991rTzmU8aWVZ2h0v6Cg8c6ShhSCTXZ/L2lU2KOfIkU5lQ/XAg?=
- =?us-ascii?Q?NRQvgZD+iqorR3cthxmrZ/M/HvVj5b2fI83QLXG2Hy3oMh79VLEJfhtHueIR?=
- =?us-ascii?Q?T+Xl4ctNKnxwm+E15JjxjsPjnBJpnibndwi4s+VKCXa6BgJjtkXoBCpovFwI?=
- =?us-ascii?Q?qb+2Wf5Jx6V9HHtSZ3bNJN68p9u9zCTjYpMZ3vlWyP8LMRN7MFCbzy7QCiJ6?=
- =?us-ascii?Q?K1pCiHWTN5S8vfKJHs6pAZejThCghF8HmJrYWmGhVz5pmLutCaUqvljWD0zQ?=
- =?us-ascii?Q?1MrwilSFYloel4sCXUYPc+eqPUgo4Ic7++doy+lfNIwBVHck97QebeFtma3Z?=
- =?us-ascii?Q?A1DIy8GmBGenqcQO2lsk76ixrDlKZH+myK3LeXYVixhMSCOB0U2sZOpAGY6A?=
- =?us-ascii?Q?HIOQk4dxPZOhGRhBrp9exv+y2rF7fC/hPvd673dOGNGySvATfO5oZ3C4dDLr?=
- =?us-ascii?Q?AE0hCKapUfWNeUbQxKO3LJwoNWJMjDPkAyt3AIbBlni/Siwvbv4mxQU7os3U?=
- =?us-ascii?Q?XjF2ve9gQDUTL9HFSiTqZGFAMoFLK15YXn0pKJ7ZSoCjoyGXt/15khRtR4O+?=
- =?us-ascii?Q?ifWDb2I0HIp9K/syUIKuhXMwPiINYJsgU8EA5rKOZWjyCMFnYw1yXa9xXwR/?=
- =?us-ascii?Q?FJlZ/7YpkWn6INqpXfAlJOGp?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c188246-55d0-43c5-5a67-08d938051112
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4133.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2021 18:14:26.6105
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 71UpN9Egw+hiwI8eJvjbDEZ3Mc95xFKofgTmF5owssHq76HvdGCSZ2HK+CxsQLbkStj9iDzgKO8cjLMawSDe/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4264
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 07:01:54PM +0200, Borislav Petkov wrote:
-> On Fri, Jun 25, 2021 at 10:24:01AM -0500, Brijesh Singh wrote:
-> > In the case of EFI, the CC blob structure is dynamically allocated
-> > and passed through the EFI configuration table. The grub will not
-> > know what value to pass in the cmdline unless we improve it to read
-> > the EFI configuration table and rebuild the cmdline.
-> 
-> Or simply parse the EFI table.
-> 
-> To repeat my question: why do you need the CC blob in the boot kernel?
+TDX guest supports encrypted disk as root or secondary drives.
+Decryption keys required to access such drives are usually maintained
+by 3rd party key servers. Attestation is required by 3rd party key
+servers to get the key for an encrypted disk volume, or possibly other
+encrypted services. Attestation is used to prove to the key server that
+the TD guest is running in a valid TD and the kernel and virtual BIOS
+and other environment are secure.
 
-We basically need to be able to access the CPUID page in any place where we
-might need to emulate a cpuid instruction, which both the boot kernel and
-proper kernel do very early on for things like probing paging support and
-checking for SEV/SME features.
+During the boot process various components before the kernel accumulate
+hashes in the TDX module, which can then combined into a report. This
+would typically include a hash of the bios, bios configuration, boot
+loader, command line, kernel, initrd.  After checking the hashes the
+key server will securely release the keys.
 
-> 
-> Then, how does it work then in the !EFI case?
+The actual details of the attestation protocol depend on the particular
+key server configuration, but some parts are common and need to
+communicate with the TDX module.
 
-Currently, based on your v3 feedback, I have the following order of
-precedence for getting at the cc blob to get the cpuid page:
+This communication is implemented in the attestation driver.
 
-For boot/compressed kernel:
+The supported steps are:
 
-  1) Search for CC blob in the following order/precedence:
-     - via linux boot protocol / setup_data entry
-     - via EFI configuration table
-  2) If found, initialize boot_params->cc_blob_address to point to the
-     blob so that uncompressed kernel can easily access it during very
-     early boot without the need to re-parse EFI config table
+  1. TD guest generates the TDREPORT that contains version information
+     about the Intel TDX module, measurement of the TD, along with a
+     TD-specified nonce.
+  2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
+     which is used by the host to generate a quote via quoting
+     enclave (QE).
+  3. Quote generation completion notification is sent to TD OS via
+     callback interrupt vector configured by TD using
+     SetupEventNotifyInterrupt hypercall.
+  4. After receiving the generated TDQUOTE, a remote verifier can be
+     used to verify the quote and confirm the trustworthiness of the
+     TD.
 
-For uncompressed/proper kernel:
+Attestation agent uses IOCTLs implemented by the attestation driver to
+complete the various steps of the attestation process.
 
-  1) Search for CC blob in the following order/precedence:
-     - via linux boot protocol / setup_data entry
-     - via boot_params->cc_blob_address
+Also note that, explicit access permissions are not enforced in this
+driver because the quote and measurements are not a secret. However
+the access permissions of the device node can be used to set any
+desired access policy. The udev default is usually root access
+only.
 
-So non-EFI case would rely purely on the setup_data entry for both (though
-we could still use boot_params->cc_blob_address to avoid the need to scan
-setup_data list in proper kernel as well, but scanning it early on doesn't
-have the same issues as with EFI config table so it's not really
-necessary there).
+TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
+host, but TDX assumes that the host is able to deal with malicious
+guest flooding it anyways.
 
-I opted to give setup_data precedence over EFI, since if a bootloader goes
-the extra mile of packaging up a setup_data argument instead of just leaving
-it to firmware/EFI config table, it might be out of some extra need.  For
-example, if we do have a shared definition for both SEV and TDX, maybe the
-bootloader needs to synthesize multiple EFI table entries, and a unified
-setup_data will be easier for the kernel to consume than replicating that same
-work, and maybe over time the fallback can be deprecated. And containers will
-more than likely prefer setup_data approach, which might drive future changes
-that aren't in lockstep with EFI definitions as well.
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Gross <mgross@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig            |   9 ++
+ drivers/platform/x86/Makefile           |   1 +
+ drivers/platform/x86/intel_tdx_attest.c | 171 ++++++++++++++++++++++++
+ include/uapi/misc/tdx.h                 |  20 +++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 drivers/platform/x86/intel_tdx_attest.c
+ create mode 100644 include/uapi/misc/tdx.h
 
-It doesn't matter much currently though since setup_data is basically just
-pointing to the CC blob allocated by EFI.
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 60592fb88e7a..7d01c473aef6 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1301,6 +1301,15 @@ config INTEL_SCU_IPC_UTIL
+ 	  low level access for debug work and updating the firmware. Say
+ 	  N unless you will be doing this on an Intel MID platform.
+ 
++config INTEL_TDX_ATTESTATION
++	tristate "Intel TDX attestation driver"
++	depends on INTEL_TDX_GUEST
++	help
++	  The TDX attestation driver provides IOCTL or MMAP interfaces to
++	  the user to request TDREPORT from the TDX module or request quote
++	  from VMM. It is mainly used to get secure disk decryption keys from
++	  the key server.
++
+ config INTEL_TELEMETRY
+ 	tristate "Intel SoC Telemetry Driver"
+ 	depends on X86_64
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index dcc8cdb95b4d..83439990ae47 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+ obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+ obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
+ obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
++obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
+ obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+ 					   intel_telemetry_pltdrv.o \
+ 					   intel_telemetry_debugfs.o
+diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
+new file mode 100644
+index 000000000000..a0225d053851
+--- /dev/null
++++ b/drivers/platform/x86/intel_tdx_attest.c
+@@ -0,0 +1,171 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * intel_tdx_attest.c - TDX guest attestation interface driver.
++ *
++ * Implements user interface to trigger attestation process and
++ * read the TD Quote result.
++ *
++ * Copyright (C) 2020 Intel Corporation
++ *
++ * Author:
++ *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
++ */
++
++#define pr_fmt(fmt) "x86/tdx: attest: " fmt
++
++#include <linux/module.h>
++#include <linux/miscdevice.h>
++#include <linux/uaccess.h>
++#include <linux/fs.h>
++#include <linux/mm.h>
++#include <linux/slab.h>
++#include <linux/set_memory.h>
++#include <linux/io.h>
++#include <asm/apic.h>
++#include <asm/tdx.h>
++#include <asm/irq_vectors.h>
++#include <uapi/misc/tdx.h>
++
++#define VERSION				"1.0"
++
++/* Used in Quote memory allocation */
++#define QUOTE_SIZE			(2 * PAGE_SIZE)
++
++/* Mutex to synchronize attestation requests */
++static DEFINE_MUTEX(attestation_lock);
++/* Completion object to track attestation status */
++static DECLARE_COMPLETION(attestation_done);
++
++static void attestation_callback_handler(void)
++{
++	complete(&attestation_done);
++}
++
++static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
++			     unsigned long arg)
++{
++	u64 data = virt_to_phys(file->private_data);
++	void __user *argp = (void __user *)arg;
++	u8 *reportdata;
++	long ret = 0;
++
++	mutex_lock(&attestation_lock);
++
++	reportdata = kzalloc(TDX_TDREPORT_LEN, GFP_KERNEL);
++	if (!reportdata) {
++		mutex_unlock(&attestation_lock);
++		return -ENOMEM;
++	}
++
++	switch (cmd) {
++	case TDX_CMD_GET_TDREPORT:
++		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
++			ret = -EFAULT;
++			break;
++		}
++
++		/* Generate TDREPORT_STRUCT */
++		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
++			ret = -EIO;
++			break;
++		}
++
++		if (copy_to_user(argp, file->private_data, TDX_TDREPORT_LEN))
++			ret = -EFAULT;
++		break;
++	case TDX_CMD_GEN_QUOTE:
++		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
++			ret = -EFAULT;
++			break;
++		}
++
++		/* Generate TDREPORT_STRUCT */
++		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
++			ret = -EIO;
++			break;
++		}
++
++		ret = set_memory_decrypted((unsigned long)file->private_data,
++					   1UL << get_order(QUOTE_SIZE));
++		if (ret)
++			break;
++
++		/* Submit GetQuote Request */
++		if (tdx_hcall_get_quote(data)) {
++			ret = -EIO;
++			goto done;
++		}
++
++		/* Wait for attestation completion */
++		wait_for_completion_interruptible(&attestation_done);
++
++		if (copy_to_user(argp, file->private_data, QUOTE_SIZE))
++			ret = -EFAULT;
++done:
++		ret = set_memory_encrypted((unsigned long)file->private_data,
++					   1UL << get_order(QUOTE_SIZE));
++
++		break;
++	case TDX_CMD_GET_QUOTE_SIZE:
++		if (put_user(QUOTE_SIZE, (u64 __user *)argp))
++			ret = -EFAULT;
++
++		break;
++	default:
++		pr_err("cmd %d not supported\n", cmd);
++		break;
++	}
++
++	mutex_unlock(&attestation_lock);
++
++	kfree(reportdata);
++
++	return ret;
++}
++
++static int tdg_attest_open(struct inode *inode, struct file *file)
++{
++	/*
++	 * Currently tdg_event_notify_handler is only used in attestation
++	 * driver. But, WRITE_ONCE is used as benign data race notice.
++	 */
++	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
++
++	file->private_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
++						      get_order(QUOTE_SIZE));
++
++	return !file->private_data ? -ENOMEM : 0;
++}
++
++static int tdg_attest_release(struct inode *inode, struct file *file)
++{
++	/*
++	 * Currently tdg_event_notify_handler is only used in attestation
++	 * driver. But, WRITE_ONCE is used as benign data race notice.
++	 */
++	WRITE_ONCE(tdg_event_notify_handler, NULL);
++	free_pages((unsigned long)file->private_data, get_order(QUOTE_SIZE));
++	file->private_data = NULL;
++
++	return 0;
++}
++
++static const struct file_operations tdg_attest_fops = {
++	.owner		= THIS_MODULE,
++	.open		= tdg_attest_open,
++	.release	= tdg_attest_release,
++	.unlocked_ioctl	= tdg_attest_ioctl,
++	.llseek		= no_llseek,
++};
++
++static struct miscdevice tdg_attest_device = {
++	.minor          = MISC_DYNAMIC_MINOR,
++	.name           = "tdx-attest",
++	.fops           = &tdg_attest_fops,
++};
++module_misc_device(tdg_attest_device);
++
++MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
++MODULE_DESCRIPTION("TDX attestation driver ver " VERSION);
++MODULE_VERSION(VERSION);
++MODULE_LICENSE("GPL");
+diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
+new file mode 100644
+index 000000000000..9afbef9079c1
+--- /dev/null
++++ b/include/uapi/misc/tdx.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _UAPI_MISC_TDX_H
++#define _UAPI_MISC_TDX_H
++
++#include <linux/types.h>
++#include <linux/ioctl.h>
++
++/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
++#define TDX_REPORT_DATA_LEN		64
++/* Output report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
++#define TDX_TDREPORT_LEN		1024
++
++/* IOCTL to request TDREPORT data from TDX Module */
++#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
++/* IOCTL to request Quote from VMM using report data */
++#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
++/* Get current size of quote */
++#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
++
++#endif /* _UAPI_MISC_TDX_H */
+-- 
+2.25.1
 
-> 
-> The script glue that starts the lightweight container goes and
-> "prepares" that blob and passes it to guest kernel? In which case
-> setup_data should do the job, methinks.
-
-Brijesh can correct me if I'm wrong, but I believe that's the intent, and the
-setup_data approach definitely seems workable for that aspect.
-
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpeople.kernel.org%2Ftglx%2Fnotes-about-netiquette&amp;data=04%7C01%7CMichael.Roth%40amd.com%7Cf927ef94d7af4819892708d937faf24b%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637602373266379986%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000&amp;sdata=t5iRKv6RcaPazLlON1oGyyEZdxX%2FAxZz8cjJwrz7UqQ%3D&amp;reserved=0
