@@ -2,191 +2,156 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13158C11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B42CC11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 20:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8A661C89
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9D761CB8
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 20:03:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233231AbhF1Ss3 (ORCPT
+        id S233004AbhF1UGL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 14:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232350AbhF1Ss1 (ORCPT
+        Mon, 28 Jun 2021 16:06:11 -0400
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.5]:58518 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235388AbhF1UGK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 14:48:27 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202FAC061574
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:46:01 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id hq39so31617363ejc.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4YN1HlcpGva7x+bpND2EnMoeDvVaHBU+ucmSR+3U5UQ=;
-        b=BTDgV1UParrZs7SmrKBC5Q4ADeHFJkHs3EtDS8mk2aSkGKCKEOhHKfyHrclbLwZpa+
-         FvG3hyP3REcEXYwcRi1UOMs2b/i5dKrCfDBhjrGJooppGAwRKtapLx8dBh46Fx2i3XEA
-         NtXvTsKppy5DW3FnLLEm7DkbxWKNYLS4grI7U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4YN1HlcpGva7x+bpND2EnMoeDvVaHBU+ucmSR+3U5UQ=;
-        b=GMQ8D4bBhJhmJfzzD6dsp0pnS/N+QLQiULtMSNi8yw5zMozPxQ7SAS19WFfds1s6pb
-         zfkWe6C1FaWp+6OHPGsBwPJQuc8zx6Mn2jEnYb69mhygC9bLvfUvrNkRGpXmkyGKEQWO
-         nP2zC2GABaEPOAB5giI/hfPS7p7Ef3Y7ZCga1sJs01BSO9wV3kmv+TI/heR5kP0y6VWv
-         S36/MZ/r6qeUeCjd/M9y+aKc8GAdrWdsJrIqTLs/oNRBJFXzzP0pUhqUrxclm6y6vHlA
-         ow4tWbgWCNdHGyU2dihmoo5Xg5E5XH6W1hdlamId+/C/rUAzyEGv4eM7hDHbagw92bmp
-         UhfA==
-X-Gm-Message-State: AOAM530v6UMRv8jO3L0qhOn0HHyVMFWsuthT98qneBRkJzhCCrrnlrad
-        r/wBedeZdlMk7SJO7YtxAxCz7pXfcQFP4w==
-X-Google-Smtp-Source: ABdhPJyI87JbGRhYlEGsimi4YehfcumAuuiw8cM9zd4MtKSg52crt3PFVjVKf7N5CGRtFX8/4WoeIA==
-X-Received: by 2002:a17:906:4a55:: with SMTP id a21mr25927983ejv.209.1624905959269;
-        Mon, 28 Jun 2021 11:45:59 -0700 (PDT)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id e16sm736284edr.86.2021.06.28.11.45.58
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
-Received: by mail-ed1-f47.google.com with SMTP id h17so27355399edw.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
-X-Received: by 2002:a05:6402:2913:: with SMTP id ee19mr34418102edb.361.1624905958072;
- Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
+        Mon, 28 Jun 2021 16:06:10 -0400
+Received: from [100.112.131.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-a.us-west-2.aws.symcld.net id F0/99-57636-B1B2AD06; Mon, 28 Jun 2021 20:03:39 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRWlGSWpSXmKPExsWS8eIhr6609q0
+  Eg+ePJC3eHJ/OZLH2zxcWi88dk1ksVu95wezA4tF66S+bx7yTgR7v911l8/i8SS6AJYo1My8p
+  vyKBNWP16kXsBVNFKponHGNrYDwn2MXIxSEk8J9R4t6mdhYI5wmjxP62o4xdjJwcbALaElu2/
+  GLrYuTgEBGQkfiw1hMkzCxQIbFp3TYWEFtYwEVi4/5TTCA2i4CqxJ35PewgNq+AlcTV18/BbA
+  kBeYnTJ66BjeQEqjnT9RisV0hAReL+gyVsEPWCEidnPmGBmC8v0bx1NjOELSFx8MULZog5ChJ
+  v3u+Dmpkg0fPvEdsERoFZSNpnIWmfhaR9ASPzKkaLpKLM9IyS3MTMHF1DAwNdQ0MjXUMjS11D
+  YxO9xCrdRL3SYt3y1OISXSO9xPJiveLK3OScFL281JJNjMCwTylobNvBOPPNB71DjJIcTEqiv
+  DnPbiYI8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuB9pnErQUiwKDU9tSItMwcYgzBpCQ4eJRHeM2
+  pAad7igsTc4sx0iNQpRkUpcV57kD4BkERGaR5cGyzuLzHKSgnzMjIwMAjxFKQW5WaWoMq/YhT
+  nYFQS5uXQBJrCk5lXAjf9FdBiJqDFi57cBFlckoiQkmpgsmSY/42Vr/VcpsE2Nt7oy3Mja5aH
+  GYi/yqiPntPzYutv3ue3DnwqnfIkuuD+ivPR5oYq03s+vXzb9vnug6hvLw2LCr4un2wpF6NzT
+  ipfdqGfmdDzKMOZ3soaN7gXcb1oS3fctP3oRB+hk9KpmXzCRe69m57mfQu7lKG89LZZ3/P9X6
+  yvMmmdtvyXYBp+cN/7uee8GCIzLY1qb10sPsGfLKAvfJ6vxiF+QmboykPMDNv50398F75g+E0
+  piy/JY/pm9xPswWrZX9y373yuMYnjRmDZR7Zp/MZNM+qfaZ7UP66iLadodSv+hUOeRF7ziSsT
+  Muqnz57qJfQ5tGee3qytp5Yv9XJTEGwvr97QP2G1EktxRqKhFnNRcSIAKC7DUHYDAAA=
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-7.tower-335.messagelabs.com!1624910618!15423!1
+X-Originating-IP: [104.232.225.13]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 18095 invoked from network); 28 Jun 2021 20:03:39 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.13)
+  by server-7.tower-335.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 28 Jun 2021 20:03:39 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 3868211D5A2442133370;
+        Mon, 28 Jun 2021 16:03:38 -0400 (EDT)
+Received: from fedora.Lenovo.com (10.38.106.36) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Mon, 28 Jun
+ 2021 16:03:37 -0400
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <platform-driver-x86@vger.kernel.org>, <mario.limnociello@amd.com>
+Subject: [PATCH] platform/x86: think-lmi: Add pending_reboot support
+Date:   Mon, 28 Jun 2021 16:03:25 -0400
+Message-ID: <20210628200325.8240-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-References: <20210628180403.236553-1-Shyam-sundar.S-k@amd.com> <20210628180403.236553-2-Shyam-sundar.S-k@amd.com>
-In-Reply-To: <20210628180403.236553-2-Shyam-sundar.S-k@amd.com>
-From:   Raul Rangel <rrangel@chromium.org>
-Date:   Mon, 28 Jun 2021 12:45:47 -0600
-X-Gmail-Original-Message-ID: <CAHQZ30COfU8PdxHMFspudWYxoJ_aqqNGicjgni3L1=J_z+amLg@mail.gmail.com>
-Message-ID: <CAHQZ30COfU8PdxHMFspudWYxoJ_aqqNGicjgni3L1=J_z+amLg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/7] platform/x86: amd-pmc: Fix command completion code
-To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, mgross@linux.intel.com,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.38.106.36]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 12:04 PM Shyam Sundar S K
-<Shyam-sundar.S-k@amd.com> wrote:
->
-> The protocol to submit a job request to SMU is to wait for
-> AMD_PMC_REGISTER_RESPONSE to return 1,meaning SMU is ready to take
-> requests. PMC driver has to make sure that the response code is always
-> AMD_PMC_RESULT_OK before making any command submissions.
->
-> When we submit a message to SMU, we have to wait until it processes
-> the request. Adding a read_poll_timeout() check as this was missing in
-> the existing code.
->
-> Also, add a mutex to protect amd_pmc_send_cmd() calls to SMU.
->
-> Fixes: 156ec4731cb2 ("platform/x86: amd-pmc: Add AMD platform support for S2Idle")
-> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-> ---
-> v2: no change
-> v3:
->  - use mutex to protect multiple calls to SMU
->  - add a switch-case to handle smu responses.
-> v4:
->  - Handle different error codes based on smu responses.
->
->  drivers/platform/x86/amd-pmc.c | 39 ++++++++++++++++++++++++++++++++--
->  1 file changed, 37 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-> index b9da58ee9b1e..e3262ed967d9 100644
-> --- a/drivers/platform/x86/amd-pmc.c
-> +++ b/drivers/platform/x86/amd-pmc.c
-> @@ -68,6 +68,7 @@ struct amd_pmc_dev {
->         u32 base_addr;
->         u32 cpu_id;
->         struct device *dev;
-> +       struct mutex lock; /* generic mutex lock */
->  #if IS_ENABLED(CONFIG_DEBUG_FS)
->         struct dentry *dbgfs_dir;
->  #endif /* CONFIG_DEBUG_FS */
-> @@ -138,9 +139,10 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
->         u8 msg;
->         u32 val;
->
-> +       mutex_lock(&dev->lock);
->         /* Wait until we get a valid response */
->         rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
-> -                               val, val > 0, PMC_MSG_DELAY_MIN_US,
-> +                               val, val != 0, PMC_MSG_DELAY_MIN_US,
->                                 PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
->         if (rc) {
->                 dev_err(dev->dev, "failed to talk to SMU\n");
-> @@ -156,7 +158,38 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
->         /* Write message ID to message ID register */
->         msg = (dev->cpu_id == AMD_CPU_ID_RN) ? MSG_OS_HINT_RN : MSG_OS_HINT_PCO;
->         amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
-> -       return 0;
-> +       /* Wait until we get a valid response */
-> +       rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
-> +                               val, val != 0, PMC_MSG_DELAY_MIN_US,
-> +                               PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
-> +       if (rc) {
-> +               dev_err(dev->dev, "SMU response timed out\n");
-> +               rc = -ETIMEDOUT;
-readx_poll_timeout will return `-ETIMEDOUT`, so no need to override the rc.
+ThetThink-lmi driver was missing pending_reboot support as it wasn't
+available from the BIOS. Turns out this is really useful to have from
+user space so implementing from a purely SW point of view.
 
-> +               goto out_unlock;
-> +       }
-> +
-> +       switch (val) {
-> +       case AMD_PMC_RESULT_OK:
-> +               break;
-> +       case AMD_PMC_RESULT_CMD_REJECT_BUSY:
-> +               dev_err(dev->dev, "SMU not ready. err: 0x%x\n", val);
-> +               rc = -EBUSY;
-> +               goto out_unlock;
-> +       case AMD_PMC_RESULT_CMD_UNKNOWN:
-> +               dev_err(dev->dev, "SMU cmd unknown. err: 0x%x\n", val);
-> +               rc = -EINVAL;
-> +               goto out_unlock;
-> +       case AMD_PMC_RESULT_CMD_REJECT_PREREQ:
-> +       case AMD_PMC_RESULT_FAILED:
-> +       default:
-> +               dev_err(dev->dev, "SMU cmd failed. err: 0x%x\n", val);
-> +               rc = -EIO;
-> +               goto out_unlock;
-> +       }
-> +
-> +out_unlock:
-> +       mutex_unlock(&dev->lock);
-> +       return rc;
->  }
->
->  static int __maybe_unused amd_pmc_suspend(struct device *dev)
-> @@ -259,6 +292,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
->
->         amd_pmc_dump_registers(dev);
->
-> +       mutex_init(&dev->lock);
->         platform_set_drvdata(pdev, dev);
->         amd_pmc_dbgfs_register(dev);
->         return 0;
-> @@ -269,6 +303,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
->         struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
->
->         amd_pmc_dbgfs_unregister(dev);
-> +       mutex_destroy(&dev->lock);
->         return 0;
->  }
->
-> --
-> 2.25.1
->
+Thanks to Mario Limonciello for guidance on how fwupd would use this.
 
-With that minor change,
-Acked-by: Raul E Rangel <rrangel@chromium.org>
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+---
+ drivers/platform/x86/think-lmi.c | 19 +++++++++++++++++++
+ drivers/platform/x86/think-lmi.h |  1 +
+ 2 files changed, 20 insertions(+)
+
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index b57061079..bcc3d6fcd 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -566,6 +566,11 @@ static ssize_t current_value_store(struct kobject *kobj,
+ 	else
+ 		ret = tlmi_save_bios_settings("");
+ 
++	if (!ret && !tlmi_priv.pending_changes) {
++		tlmi_priv.pending_changes = true;
++		/* let userland know it may need to check reboot pending again */
++		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
++	}
+ out:
+ 	kfree(auth_str);
+ 	kfree(set_str);
+@@ -641,6 +646,14 @@ static struct kobj_type tlmi_pwd_setting_ktype = {
+ 	.sysfs_ops	= &tlmi_kobj_sysfs_ops,
+ };
+ 
++static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
++				   char *buf)
++{
++	return sprintf(buf, "%d\n", tlmi_priv.pending_changes);
++}
++
++static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
++
+ /* ---- Initialisation --------------------------------------------------------- */
+ static void tlmi_release_attr(void)
+ {
+@@ -662,6 +675,7 @@ static void tlmi_release_attr(void)
+ 	sysfs_remove_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
+ 	kobject_put(&tlmi_priv.pwd_power->kobj);
+ 	kset_unregister(tlmi_priv.authentication_kset);
++	sysfs_remove_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
+ }
+ 
+ static int tlmi_sysfs_init(void)
+@@ -730,6 +744,11 @@ static int tlmi_sysfs_init(void)
+ 	if (ret)
+ 		goto fail_create_attr;
+ 
++	/* Create global sysfs files */
++	ret = sysfs_create_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
++	if (ret)
++		goto fail_create_attr;
++
+ 	return ret;
+ 
+ fail_create_attr:
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+index 6fa8da7af..eb5988466 100644
+--- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -60,6 +60,7 @@ struct think_lmi {
+ 	bool can_get_bios_selections;
+ 	bool can_set_bios_password;
+ 	bool can_get_password_settings;
++	bool pending_changes;
+ 
+ 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+ 	struct device *class_dev;
+-- 
+2.31.1
+
