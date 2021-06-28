@@ -4,139 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEA8C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 16:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258E5C11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 17:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C204E61992
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 16:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0220B61C4D
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 17:47:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231878AbhF1QnY (ORCPT
+        id S233260AbhF1Rt4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 12:43:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:36479 "EHLO
+        Mon, 28 Jun 2021 13:49:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:59883 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231818AbhF1QnY (ORCPT
+        with ESMTP id S232586AbhF1Rtz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 12:43:24 -0400
+        Mon, 28 Jun 2021 13:49:55 -0400
 Received: from [192.168.1.155] ([77.9.21.236]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MYeV1-1lkrNt2oiJ-00VdTA; Mon, 28 Jun 2021 18:40:46 +0200
-Subject: Re: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Shravan, S" <s.shravan@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MQNF3-1lcHlk2Raz-00MIOP; Mon, 28 Jun 2021 19:47:17 +0200
+Subject: Re: [PATCH V2 1/1] [x86]: BIOS Dynamic SAR driver for Intel M.2 Modem
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shravan S <s.shravan@intel.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         "An, Sudhakar" <sudhakar.an@intel.com>
-References: <20210428032224.8299-1-s.shravan@intel.com>
- <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
- <MWHPR11MB1455D055108F1DBEA6EB9285E3319@MWHPR11MB1455.namprd11.prod.outlook.com>
- <c7c3d395-826b-fc34-b396-a9c7631d981b@metux.net>
- <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
- <MWHPR11MB145562EBE171DD3B40595DD0E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
- <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
- <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+References: <20210510074016.31627-1-s.shravan@intel.com>
+ <20210510074016.31627-2-s.shravan@intel.com>
+ <CAHp75Ve_=mv5MbLvqxGwu8GAuxAjBLpRHE9KNua-yvmzUNKuKw@mail.gmail.com>
+ <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
 From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <aaf49f09-264b-1dab-b297-9b06733a5ab7@metux.net>
-Date:   Mon, 28 Jun 2021 18:40:44 +0200
+Message-ID: <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
+Date:   Mon, 28 Jun 2021 19:47:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+In-Reply-To: <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:HHeAhvm9eVunKnnGYKujW24NcxfnvY49/g/2/gaUjBi4s14dosk
- bX8xB51ysWa8ikSmg76FToKXX+H2jfV5RlTK10jXz8xBMLtPPwL99y7luMlGY8Mwo0cU47W
- 9WBaeBB6Kam4BEmzfEX7YdGFCh9tAGvLbKUaGEqSb3p+nP52cAAwsgwrut3392+I9vQykRX
- kdVNC9h/41Sn6J0hVnWng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:o/4RM3qKemo=:9vFvlBPEIAROVqEtXrSNkl
- YzaoBD88o1zRVo3Kn3jjC3jeBXo6svIo/437yZp37HkTx8jI+QzPUkRvv20jkO/b0yqq0q7mY
- S7/j09/xONZV+UAxZAjEVGhKNZ4SruLzavAUs2iQt3AnqF7OvXqkVAj59R4VbkiGM9taXalvY
- C9WUvAyGpys/hTPDcXJItgcBiogcGs4jGGMT10yuMUPGZFF3PgKXzVMQOUmZ6Thisceb+2v48
- VEN3hKVkFKC2z5v73zXGrb5cKF/DkaUzY7dhxsH8qRJ2SK5RVM18oK++WiHwJjQAb5Q6Jdfc4
- dXl+IXTlRaRQPZ3naXJEHCvW4nrI3Yal+FWeBhwnHgEomiUebPOWdUmfSQfSAL79zg1souA2f
- mty84JeUXIMnOpwIVPpL69gCoA14HmjA3CQpV6NqwdfGa1R11HYD+7Z7cZnyb1omUf1AY/4gP
- RiqQZUrvo7Bayw7i1lSw6ThdhmJVn8d/FZu5qQ//30XaWSsRixX1P0mu9tYfZJY9XSlXD6nBJ
- E7VAoMe0++srs8ROIg5hkE=
+X-Provags-ID: V03:K1:BqNzo0DqHFQC34wBLi5/jZejcGrvzxexHldPi5UQs+5fzdZnfZt
+ Pjo0GJKEvrsUUgOVRmLzi3EXDCstP/sqg8HtO43Exwt01mSafug1KAU/vhI2kj4WQ5ZAIja
+ 2IHDuV27cuZYIBRCUTmI/tpugyuwTvlwrhtXE4IYjdoUiDZa574LIojCDdfeesAzgToFs7g
+ 8FVugyLcGs0S4DngYvfNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zJ8jYAU+b/k=:+vTM7xCjBAEDBrBmfwb5Et
+ ltq7FFoB1WgUgc9jvdhfpdla+gXMhPhmYanBDoS7LskAsV/rtxpy43LXUiT4Jn2ply4wosC19
+ rjvfS0fa4L9SUa+UHFf2PmSxokb9X4uqNAhUMqHpPAY7o/Yt4VRASTI5NENLz2EbEl5k0t2uA
+ nJAQX1Md7goF3NUtIMaMTR73t2irGR1idYeHhI4C4B0yNMFWXzI9NY2Nfmumo0JBdllWAYR/O
+ vaHhZGSe1v2czA/ebt3tyZjrTE9Az3tErqWDCvvsaka5Ym14fslv/M+OZ6WfgrcDnFEffBNwO
+ IXlsvcnB0Jts+qOLyE+Fa91yyR4AGgS7HkpKpGmNWcdmaXcmZVX9wt6NLINIoPAbCCJGjoQ7g
+ Z698uUTgQ67iIruf9yvEUvlt2kPni64YeFuJuQbrQlhSilfXr0gdanbXPZgASt66zBL2/Jx7W
+ FZdxXZx5xcHkjTbR8sWI61Mw8W25y6HBi3KDEo+METGc6F96QBrljU0+eutPW60r7rxcXMJLw
+ /06Dphmll3M12LG3618DOQ=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 28.06.21 17:04, Andy Shevchenko wrote:
+On 28.06.21 17:12, Hans de Goede wrote:
 
-> But this is not the issue of ACPI, right? Maybe you should stream the
-> energy to complain and file bugs against vendors who do not know how
-> to cook ACPI?
+Hi,
 
-It's an issue of the acpi ecosystem. Mostly the fault of individual hw
-vendors that invent weird ways to abuse it for things it never had been
-designed. We're here talking with some (representative of some) hw
-vendor.
+> I'm not in favor of internal reviews, esp. not when new userspace
+> API is involved. I would greatly prefer for the discussions surrounding
+> this to be kept public.
 
-By the way: this actually isn't an issue of these specific intel modems
-at all, but the mainboards where some of these could plugged into. At
-that point I wonder why we don't hear a word from these guys, it would
-be their duty.
+ACK. Please do that in open public. There're still lots of things to
+discuss that should be discussed in wide public, instead of comittee
+behind closed doors.
 
-> Isn't it applicable to all firmwares? Have you tried to avoid wireless
-> firmwares (rhetorical question)? 
+> I agree that ideally we should have some generic userspace API for this,
+> but I'm afraid that ATM that simply is not possible. 
 
-It depends. Firmware for external controllers (which is loaded by the
-kernel) is an entirely different area. I wish we wouldn't need to care
-about it, but it's better us doing that of board or bios vendors,
-and we have reasonabley well methods to cope with it.
+Why not ? Lets collect the actual requirements and talk about some
+viable solutions (I've already got a few ideas ...)
 
-> My point is that we have to live with
-> that fortunately or unfortunately.
+> This whole notion of maximum tx power being controlled based on various 
+> sensors because of SAR reasons is pretty new (at least in the PC/laptop space) 
+> and I know of a couple of vendors who are slapping some adhoc firmware
+> interface on the sensor readings for some modem related userspace
+> process to consume.
 
-It seems that the whole thing is still under development (even sounds
-like for now only one company using it in their closed devices), so we
-might still have the chance to prevent another nightmare.
+We should bring them here onboard, public discussion. And at the same
+time we should make it crystally clear to them that weird adhoc hacks
+won't be accepted and just give them very bad reputation and
+shitstorming. Seriously, I believe we should go that route, in order
+to prevent even more damage by insane firmware interfaces.
 
->> (I need to hold back myself for not starting another rant against ACPI
->> and bios vendors :p)
-> 
-> As I said, look into the root cause, while I admit that the ACPI spec
-> is easy to abuse / misinterpret (in some cases).
+Such stuff really doesn't belong into firmware, at least not the way its
+done now. Instead there just should be a clear description of the actual
+hardware.
 
-Yes, and it's used for things it wasn't designed for. Actually, I claim
-it was a bad idea in the first place - device tree already has been
-there and the superior solution when acpi brought upon us. And even
-after that, there way plenty time to introduce a hybrid solution to add
-in device tree and leave the old acpi stuff as legacy. This actually
-would have been pretty easy to do so.
+> I don't think that it is realistic to try and layer a common userspace
+> interface over this at this point time. Actually I believe that even
+> trying to do so is a bad idea at this point in time, since this is
+> all so new that we are bound to get it badly wrong if we try to
+> design a common userspace API for this now.
 
-Yes, ACPI received several useful improvements over the time, but still
-very incomplete (anything but well thought), and ... voila ... it's even
-embedding pieces of device tree, so it becomes somewhat more useful.
-(but still in quite weird ways). At that point I really wonder why we're
-not directly using DT ?
+actually, I don't think it should go through userland (except perhaps
+a knob for switching it on/off).
 
-One of the major problems at this point is board vendors treating vital
-information of device / board composition as some kind of black magic,
-instead of just giving us a precise description how things are wired up.
+> I also don't want to wait for this to all crystallize out since that
+> will likely take years; and we should add support for this under Linux
+> in a reasonable time-frame. For laptops which ship with Linux
+> pre-installed it is important that there is feature parity between
+> Windows and Linux; and support for these new type of modems which need
+> this "SAR" integration is one of the biggest pain points with this ATM.
 
-> I haven't got it. How do you deduct that it's solely for Chrome? 
+I don't think that this should serve as an excuse for slappy and vendor 
+specific solutions, especially when userland is involved.
 
-He mentioned in one of the mails. At least it sounded that Chrome
-devices are currently the only ones that actually use it.
-
->> So, please, let's throw away that arbitrary acpi junk and engineer a
->> technically good solution.
-> 
-> ACPI has nothing to do with any solution to be "junk". If one doesn't
-> know how to cook it, it doesn't prevent them from cooking it in a
-> better way.
-
-I've been referring about this specific way to put it into acpi. Indeed
-acpi could be used to do it in a sane way, but this would look very
-differently then. I would declare any way of putting this into acpi
-functions as junk - a clean solution would be giving a precise
-description of the hardware itself, a purely declarative approach,
-that is independent of the actual baseband module.
+And if we really do that, then just as some intermediate solution,
+and lets put it under staging.
 
 
 --mtx
