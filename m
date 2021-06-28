@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B42CC11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 20:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C400DC11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 22:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9D761CB8
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 20:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9917361CED
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 22:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233004AbhF1UGL (ORCPT
+        id S235371AbhF1Wbf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 16:06:11 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.5]:58518 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235388AbhF1UGK (ORCPT
+        Mon, 28 Jun 2021 18:31:35 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:9423 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235319AbhF1Wbe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 16:06:10 -0400
-Received: from [100.112.131.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-a.us-west-2.aws.symcld.net id F0/99-57636-B1B2AD06; Mon, 28 Jun 2021 20:03:39 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrMIsWRWlGSWpSXmKPExsWS8eIhr6609q0
-  Eg+ePJC3eHJ/OZLH2zxcWi88dk1ksVu95wezA4tF66S+bx7yTgR7v911l8/i8SS6AJYo1My8p
-  vyKBNWP16kXsBVNFKponHGNrYDwn2MXIxSEk8J9R4t6mdhYI5wmjxP62o4xdjJwcbALaElu2/
-  GLrYuTgEBGQkfiw1hMkzCxQIbFp3TYWEFtYwEVi4/5TTCA2i4CqxJ35PewgNq+AlcTV18/BbA
-  kBeYnTJ66BjeQEqjnT9RisV0hAReL+gyVsEPWCEidnPmGBmC8v0bx1NjOELSFx8MULZog5ChJ
-  v3u+Dmpkg0fPvEdsERoFZSNpnIWmfhaR9ASPzKkaLpKLM9IyS3MTMHF1DAwNdQ0MjXUMjS11D
-  YxO9xCrdRL3SYt3y1OISXSO9xPJiveLK3OScFL281JJNjMCwTylobNvBOPPNB71DjJIcTEqiv
-  DnPbiYI8SXlp1RmJBZnxBeV5qQWH2KU4eBQkuB9pnErQUiwKDU9tSItMwcYgzBpCQ4eJRHeM2
-  pAad7igsTc4sx0iNQpRkUpcV57kD4BkERGaR5cGyzuLzHKSgnzMjIwMAjxFKQW5WaWoMq/YhT
-  nYFQS5uXQBJrCk5lXAjf9FdBiJqDFi57cBFlckoiQkmpgsmSY/42Vr/VcpsE2Nt7oy3Mja5aH
-  GYi/yqiPntPzYutv3ue3DnwqnfIkuuD+ivPR5oYq03s+vXzb9vnug6hvLw2LCr4un2wpF6NzT
-  ipfdqGfmdDzKMOZ3soaN7gXcb1oS3fctP3oRB+hk9KpmXzCRe69m57mfQu7lKG89LZZ3/P9X6
-  yvMmmdtvyXYBp+cN/7uee8GCIzLY1qb10sPsGfLKAvfJ6vxiF+QmboykPMDNv50398F75g+E0
-  piy/JY/pm9xPswWrZX9y373yuMYnjRmDZR7Zp/MZNM+qfaZ7UP66iLadodSv+hUOeRF7ziSsT
-  Muqnz57qJfQ5tGee3qytp5Yv9XJTEGwvr97QP2G1EktxRqKhFnNRcSIAKC7DUHYDAAA=
+        Mon, 28 Jun 2021 18:31:34 -0400
+Received: from [100.112.4.164] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-c.us-east-1.aws.symcld.net id 92/22-54191-43D4AD06; Mon, 28 Jun 2021 22:29:08 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRWlGSWpSXmKPExsWSLveKTdfY91a
+  CwZUnBhZvjk9nsli8fhmjxeeOySwWq/e8YHZg8Wi99JfNY97JQI/3+66yeXzeJBfAEsWamZeU
+  X5HAmvHo+Er2gv2iFY0rfrA1MN4S6mLk4hAS+M8o0XttMyuE84RRYvLBs0xdjJwcbALaElu2/
+  GLrYuTgEBGQkfiw1hMkzCxQITHlSRcjiC0s4C5xc95iZhCbRUBV4ujEF2CtvAJWEnsnP2EHsS
+  UE5CVOn7gGVs8JVHOm6zELiC0koCJx/8ESNoh6QYmTM5+wQMyXl2jeOpsZwpaQOPjiBTPEHAW
+  JN+/3Qc1MkOj594htAqPALCTts5C0z0LSvoCReRWjWVJRZnpGSW5iZo6uoYGBrqGhka6JrpGx
+  hV5ilW6yXmmxbmpicYmuoV5iebFecWVuck6KXl5qySZGYMinFLC828F49vUHvUOMkhxMSqK8N
+  21uJQjxJeWnVGYkFmfEF5XmpBYfYpTh4FCS4G30BsoJFqWmp1akZeYA4w8mLcHBoyTCm+wJlO
+  YtLkjMLc5Mh0idYlSUEueVBekTAElklObBtcFi/hKjrJQwLyMDA4MQT0FqUW5mCar8K0ZxDkY
+  lYd42kPE8mXklcNNfAS1mAlq86MlNkMUliQgpqQYm9amiizYtu+y2vn67oFmw5WaPtSVPpt9+
+  Ovms0ClD0e8eBd/tyx3soo7kznFeY1lzX/0FyzTe4/GVj7x3v2pfO3FrdBSXuGZwacah2r1KC
+  84Gs+62+9p5pXjpjrt17c7ldS5rxXPncJfvjuZKMdI7/OrRpzt90nM86yfZWM1wuG167316d8
+  RB+2szHXs572hrHrl9QpK5wtbgegRfru3s1Q88H3d+X2Ivm8yfEaTU++5UbcgzZt/ke2vOMr0
+  +rSidyrFWc4pe2bNDjxeZSr3ZEqvdsq2ET3zDFhbGE8IT5Z26y9Ovznbn37iiTeHw3K2BJ1Yb
+  TFm8y/DRtdKNj4U/bsqLNpCRee6ev+GbxKGpSizFGYmGWsxFxYkA+gKPTXQDAAA=
 X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-7.tower-335.messagelabs.com!1624910618!15423!1
-X-Originating-IP: [104.232.225.13]
+X-Msg-Ref: server-14.tower-415.messagelabs.com!1624919346!40344!1
+X-Originating-IP: [103.30.234.6]
 X-SYMC-ESS-Client-Auth: outbound-route-from=pass
 X-StarScan-Received: 
 X-StarScan-Version: 9.81.3; banners=-,-,-
 X-VirusChecked: Checked
-Received: (qmail 18095 invoked from network); 28 Jun 2021 20:03:39 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-7.tower-335.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 28 Jun 2021 20:03:39 -0000
+Received: (qmail 11709 invoked from network); 28 Jun 2021 22:29:07 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.6)
+  by server-14.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 28 Jun 2021 22:29:07 -0000
 Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
         (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 3868211D5A2442133370;
-        Mon, 28 Jun 2021 16:03:38 -0400 (EDT)
+        by Forcepoint Email with ESMTPS id ACC4776C00445E394572;
+        Tue, 29 Jun 2021 06:29:04 +0800 (CST)
 Received: from fedora.Lenovo.com (10.38.106.36) by reswpmail01.lenovo.com
  (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Mon, 28 Jun
- 2021 16:03:37 -0400
+ 2021 18:28:59 -0400
 From:   Mark Pearson <markpearson@lenovo.com>
 To:     <markpearson@lenovo.com>
 CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <platform-driver-x86@vger.kernel.org>, <mario.limnociello@amd.com>
-Subject: [PATCH] platform/x86: think-lmi: Add pending_reboot support
-Date:   Mon, 28 Jun 2021 16:03:25 -0400
-Message-ID: <20210628200325.8240-1-markpearson@lenovo.com>
+        <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>
+Subject: [PATCH v2] platform/x86: think-lmi: Add pending_reboot support
+Date:   Mon, 28 Jun 2021 18:28:46 -0400
+Message-ID: <20210628222846.8830-1-markpearson@lenovo.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <markpearson@lenovo.com>
 References: <markpearson@lenovo.com>
@@ -77,14 +77,19 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-ThetThink-lmi driver was missing pending_reboot support as it wasn't
+The Think-lmi driver was missing pending_reboot support as it wasn't
 available from the BIOS. Turns out this is really useful to have from
 user space so implementing from a purely SW point of view.
 
 Thanks to Mario Limonciello for guidance on how fwupd would use this.
 
+Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
 Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 ---
+Changes in v2: 
+  - added in Mario's Suggested-by tag (and will use correct email when
+    submitting patch)
+
  drivers/platform/x86/think-lmi.c | 19 +++++++++++++++++++
  drivers/platform/x86/think-lmi.h |  1 +
  2 files changed, 20 insertions(+)
