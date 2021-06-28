@@ -2,151 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B31C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEA8C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 16:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF216197F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C204E61992
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 16:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237317AbhF1PpG (ORCPT
+        id S231878AbhF1QnY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 11:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237254AbhF1Poc (ORCPT
+        Mon, 28 Jun 2021 12:43:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:36479 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231818AbhF1QnY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 11:44:32 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA47C0575D1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 08:05:36 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id a2so15689709pgi.6
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 08:05:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oAT6it4MRcZdjD2VEV/ujkGH0l7k9D7vRA+pBVqTx4g=;
-        b=vOfiOoWMbJpAF0pW7hF5usr7TNBkrwVZWP7MRAHd7wMX8Oujc9Y27UXjcN26UHUpiX
-         TcAHMZt+/SR4DpvZU1wSGoxqKe0OGKkiT+MtvSU6ofKN0jplP/YpqKz7CtwpRJXn3Jzd
-         6hWx9EO7wILfRsAkuk673RhSLVzcN7A0mLGQ64/XMSftc/63Cu9AB6ziInMKZPERdUjh
-         RvC99oLtyQ69UjyMmOkJ88sGrAlGP40X3qXe2KaiVrU12ZaumuMszih1Ay+pBUGkxpy9
-         15PvfasRaJRZOPlvY3ccXCpnL4hPrVV9fxcOPLqtqfaDEBNFHFNcsMMtOraywZJDlb9Y
-         s/eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oAT6it4MRcZdjD2VEV/ujkGH0l7k9D7vRA+pBVqTx4g=;
-        b=d2vf880STdTMv0OokmZZMvn2G/PpQNvUmjIjmuT/8TaQkEh+dM2s2Ut4Nof1B9VmDx
-         l/KGpXorgr2LGpSy3Ss46lPhBkGruIYGxVJ6FQoURSentf8JuHRgXmXF3PSXf7nKalow
-         Nf+yspuUzk3y1yzcpJ8xTjolM42kXuSbwjdBuwLb3ORlTFNvHctm+WYDvbw0aApjEMnZ
-         +3fJXDOe2AL/FNuxzpOBb/H1tvoHYEzya3vO7aQbDGeQMtO4SUNY7Fk19oozCKoGdtpr
-         1DHPEyOe8xHcsw0ZRl9UidRya/zb1hmHgYEE/+9Sg7tyyuxzbjPIcFfhmTAcwHbVBZRD
-         KPww==
-X-Gm-Message-State: AOAM533c6OEsJA4JN/+AM5zABVylf3Ly4YX1ZcMcwejO+Ufpef+MtKQo
-        j3qU0L4qFRwrLvh+Wy1zEBX/JxmDgx+KD/71cFc=
-X-Google-Smtp-Source: ABdhPJxI/D7AY7Tr54p7NBY9MoKFQxGnWibP4rkF2iAKn0lXhiV4qL0oXQpfGmrHB9tZL2S7xF48BR5HhS31NgcghA4=
-X-Received: by 2002:a63:df10:: with SMTP id u16mr23734789pgg.4.1624892735532;
- Mon, 28 Jun 2021 08:05:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210428032224.8299-1-s.shravan@intel.com> <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
- <MWHPR11MB1455D055108F1DBEA6EB9285E3319@MWHPR11MB1455.namprd11.prod.outlook.com>
- <c7c3d395-826b-fc34-b396-a9c7631d981b@metux.net> <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
- <MWHPR11MB145562EBE171DD3B40595DD0E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
- <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
-In-Reply-To: <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 28 Jun 2021 18:04:57 +0300
-Message-ID: <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+        Mon, 28 Jun 2021 12:43:24 -0400
+Received: from [192.168.1.155] ([77.9.21.236]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MYeV1-1lkrNt2oiJ-00VdTA; Mon, 28 Jun 2021 18:40:46 +0200
 Subject: Re: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     "Shravan, S" <s.shravan@intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         "An, Sudhakar" <sudhakar.an@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20210428032224.8299-1-s.shravan@intel.com>
+ <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
+ <MWHPR11MB1455D055108F1DBEA6EB9285E3319@MWHPR11MB1455.namprd11.prod.outlook.com>
+ <c7c3d395-826b-fc34-b396-a9c7631d981b@metux.net>
+ <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
+ <MWHPR11MB145562EBE171DD3B40595DD0E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
+ <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
+ <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <aaf49f09-264b-1dab-b297-9b06733a5ab7@metux.net>
+Date:   Mon, 28 Jun 2021 18:40:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: tl
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:HHeAhvm9eVunKnnGYKujW24NcxfnvY49/g/2/gaUjBi4s14dosk
+ bX8xB51ysWa8ikSmg76FToKXX+H2jfV5RlTK10jXz8xBMLtPPwL99y7luMlGY8Mwo0cU47W
+ 9WBaeBB6Kam4BEmzfEX7YdGFCh9tAGvLbKUaGEqSb3p+nP52cAAwsgwrut3392+I9vQykRX
+ kdVNC9h/41Sn6J0hVnWng==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o/4RM3qKemo=:9vFvlBPEIAROVqEtXrSNkl
+ YzaoBD88o1zRVo3Kn3jjC3jeBXo6svIo/437yZp37HkTx8jI+QzPUkRvv20jkO/b0yqq0q7mY
+ S7/j09/xONZV+UAxZAjEVGhKNZ4SruLzavAUs2iQt3AnqF7OvXqkVAj59R4VbkiGM9taXalvY
+ C9WUvAyGpys/hTPDcXJItgcBiogcGs4jGGMT10yuMUPGZFF3PgKXzVMQOUmZ6Thisceb+2v48
+ VEN3hKVkFKC2z5v73zXGrb5cKF/DkaUzY7dhxsH8qRJ2SK5RVM18oK++WiHwJjQAb5Q6Jdfc4
+ dXl+IXTlRaRQPZ3naXJEHCvW4nrI3Yal+FWeBhwnHgEomiUebPOWdUmfSQfSAL79zg1souA2f
+ mty84JeUXIMnOpwIVPpL69gCoA14HmjA3CQpV6NqwdfGa1R11HYD+7Z7cZnyb1omUf1AY/4gP
+ RiqQZUrvo7Bayw7i1lSw6ThdhmJVn8d/FZu5qQ//30XaWSsRixX1P0mu9tYfZJY9XSlXD6nBJ
+ E7VAoMe0++srs8ROIg5hkE=
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 5:07 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
-> On 23.06.21 16:03, Shravan, S wrote:
+On 28.06.21 17:04, Andy Shevchenko wrote:
 
-...
+> But this is not the issue of ACPI, right? Maybe you should stream the
+> energy to complain and file bugs against vendors who do not know how
+> to cook ACPI?
 
-> Over the last decades I had to learn to *never* trust BIOS vendors with
-> anything more than just starting the kernel, especially not trusting in
-> ACPI tables. And we certainly cant expect people doing field bios
-> upgrades anytime soon, in case some bios vendor actually manages to
-> clean up his dirt and publish some actual fixes.
+It's an issue of the acpi ecosystem. Mostly the fault of individual hw
+vendors that invent weird ways to abuse it for things it never had been
+designed. We're here talking with some (representative of some) hw
+vendor.
 
-But this is not the issue of ACPI, right? Maybe you should stream the
-energy to complain and file bugs against vendors who do not know how
-to cook ACPI?
+By the way: this actually isn't an issue of these specific intel modems
+at all, but the mainboards where some of these could plugged into. At
+that point I wonder why we don't hear a word from these guys, it would
+be their duty.
 
-> Seriously, I'd rather try to keep bios out of the loop as much as
-> possible. And if it is involved, let it describe the hardware precisely
-> instead of doing whatever magic logic.
+> Isn't it applicable to all firmwares? Have you tried to avoid wireless
+> firmwares (rhetorical question)? 
 
-Isn't it applicable to all firmwares? Have you tried to avoid wireless
-firmwares (rhetorical question)? My point is that we have to live with
-that fortunately or unfortunately.
+It depends. Firmware for external controllers (which is loaded by the
+kernel) is an entirely different area. I wish we wouldn't need to care
+about it, but it's better us doing that of board or bios vendors,
+and we have reasonabley well methods to cope with it.
 
-> (I need to hold back myself for not starting another rant against ACPI
-> and bios vendors :p)
+> My point is that we have to live with
+> that fortunately or unfortunately.
 
-As I said, look into the root cause, while I admit that the ACPI spec
-is easy to abuse / misinterpret (in some cases).
+It seems that the whole thing is still under development (even sounds
+like for now only one company using it in their closed devices), so we
+might still have the chance to prevent another nightmare.
 
-...
+>> (I need to hold back myself for not starting another rant against ACPI
+>> and bios vendors :p)
+> 
+> As I said, look into the root cause, while I admit that the ACPI spec
+> is easy to abuse / misinterpret (in some cases).
 
-> >>> 3. unclear how userland this should really handle in a generic way
-> >>>      --> how does it know which device to tune ?
-> >
-> > [Shravan] Userland will configure these parameters on the specific RF device.
->
-> So the user needs to configure it anyways. Why do we have to have that
-> acpi stuff in the first place ? If we're already involving a device
-> specific userland, everything (including the tables) could live entirely
-> in userland - and we would never ever have to touch bios or kernel
-> anymore. (remember: bios upgrades are always a total mess).
->
-> >>> by the way, who hat that funny idea putting such information into acpi
-> >>> in such a weird way ?
-> >>
-> >> I believe its source is a Windows driver and Windows "culture", they simply
-> >> don't give a crap about anything else and Windows is a product-oriented platform
-> >> (each product is unique even if 99.9% of the hardware and firmware is the same
-> >> with twenty more products).
->
-> Okay, and why are you guys (Intel) following such insanity, when this is
-> meant for Linux-based devices like Chrome ?
+Yes, and it's used for things it wasn't designed for. Actually, I claim
+it was a bad idea in the first place - device tree already has been
+there and the superior solution when acpi brought upon us. And even
+after that, there way plenty time to introduce a hybrid solution to add
+in device tree and leave the old acpi stuff as legacy. This actually
+would have been pretty easy to do so.
 
-I haven't got it. How do you deduct that it's solely for Chrome? Even
-I'm puzzled with this Yet Another Not So Portable Idea. And above is
-my speculation about the roots of it. I can't explain it any other
-way.
+Yes, ACPI received several useful improvements over the time, but still
+very incomplete (anything but well thought), and ... voila ... it's even
+embedding pieces of device tree, so it becomes somewhat more useful.
+(but still in quite weird ways). At that point I really wonder why we're
+not directly using DT ?
 
-> Sorry, but doing something just because thousands of programming minions
-> in Windoze world (which, from my personal expercience, most of them, at
-> least on driver and firmware side, I have to consider totally
-> incompetent) are doing it that way, really is a bad excuse and has
-> nothing to do with decent engineering.
->
-> So, please, let's throw away that arbitrary acpi junk and engineer a
-> technically good solution.
+One of the major problems at this point is board vendors treating vital
+information of device / board composition as some kind of black magic,
+instead of just giving us a precise description how things are wired up.
 
-ACPI has nothing to do with any solution to be "junk". If one doesn't
-know how to cook it, it doesn't prevent them from cooking it in a
-better way.
+> I haven't got it. How do you deduct that it's solely for Chrome? 
+
+He mentioned in one of the mails. At least it sounded that Chrome
+devices are currently the only ones that actually use it.
+
+>> So, please, let's throw away that arbitrary acpi junk and engineer a
+>> technically good solution.
+> 
+> ACPI has nothing to do with any solution to be "junk". If one doesn't
+> know how to cook it, it doesn't prevent them from cooking it in a
+> better way.
+
+I've been referring about this specific way to put it into acpi. Indeed
+acpi could be used to do it in a sane way, but this would look very
+differently then. I would declare any way of putting this into acpi
+functions as junk - a clean solution would be giving a precise
+description of the hardware itself, a purely declarative approach,
+that is independent of the actual baseband module.
+
+
+--mtx
 
 -- 
-With Best Regards,
-Andy Shevchenko
+---
+Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
+werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
+GPG/PGP-Schlüssel zu.
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
