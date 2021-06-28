@@ -2,155 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905F0C11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 003A4C11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A1D61C3D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D653861C7B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234853AbhF1SHP (ORCPT
+        id S234439AbhF1SWg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 14:07:15 -0400
-Received: from mail-bn7nam10on2067.outbound.protection.outlook.com ([40.107.92.67]:23073
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234838AbhF1SHP (ORCPT
+        Mon, 28 Jun 2021 14:22:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53489 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235956AbhF1SWf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 14:07:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P1piodIeUjOKQktHTWLnSRLndwhQS0CZPzwIbHuaiayXVN8UIIxIfL6iz6h4eEIZQu7CtgHtDeNNS/d8l0SYTDG6tACJHivOgCAarsZSpT3igSzY16KMgXv33KycjbqqiLfy29TonNA7so9aG2PdKqDXgcDT4/BSfBRoz+zlVZDbtgXOh3SHaKNkmH3ZAYsNcQSkfE7E3gnRcsjz9isPJD1Qsq7OuKVfw6W2ObQfXstDa4nTVr7NXTAZ64k1gKvBP337T6Q7114IPCzVSFAbjFNd9EOhW4rZyUHxoDrrbh1RHijCzYX+nYp9fqheLgJT/Qh2Cz3W22W34Trkxe79dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W5825CGhnyAVVZ5nVbgFNu5WBN94IlQpEjcYS9lmzIA=;
- b=YOu08PNZYjuViStyGVr7It2iGOtyE7wqahSKE3vc8Q2aKN/6SZ8p14aO4G8wLKIDZnCOrxy2DJGOZKHGmCiuwZseua2t2vvaoWJjckONP7/DaDuYxrQVOfnemdRuEjxmPCNOxk/Yq7/fEcr25hJNS/5dt8NaEgN9o48xY+f5gNaVp7H+7oHz+PgD1ITYFaUhhQV0FTyX5rXoocV155YURHmgI/tapYthJcHSlY0QoxW7XM6eC1cjSd5CwsiXW5WoB6LmCQ0X7clm+YWjTffrglifLCRZ1QPh9BwuuIzo8ivxDcKw+pYtsCREmmLDqcXlvtbqfmz4MvWVp+H7Oi83pA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W5825CGhnyAVVZ5nVbgFNu5WBN94IlQpEjcYS9lmzIA=;
- b=3aM/AeG7mgF8uU4UGUwpp9c2OGVaZ6JC4tPcjmD3zNSLu+fXr7RsetQQPonLXwf4yHA0DzCy83Qtben3bei7Z+Bk8lAJs9jccCoGYSj8yd9klyMuTLqEydS0X263ojrjst+UpNYYJiWJag0Dz2j45lf4libDdwHzzF+lXVwYono=
-Received: from MW4PR03CA0256.namprd03.prod.outlook.com (2603:10b6:303:b4::21)
- by DM5PR12MB1433.namprd12.prod.outlook.com (2603:10b6:3:73::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.20; Mon, 28 Jun
- 2021 18:04:48 +0000
-Received: from CO1NAM11FT014.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b4:cafe::14) by MW4PR03CA0256.outlook.office365.com
- (2603:10b6:303:b4::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.19 via Frontend
- Transport; Mon, 28 Jun 2021 18:04:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT014.mail.protection.outlook.com (10.13.175.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.4264.18 via Frontend Transport; Mon, 28 Jun 2021 18:04:47 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 28 Jun
- 2021 13:04:45 -0500
-From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <rrangel@chromium.org>
-CC:     <platform-driver-x86@vger.kernel.org>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject: [PATCH v4 7/7] platform/x86: amd-pmc: Add new acpi id for future PMC controllers
-Date:   Mon, 28 Jun 2021 23:34:03 +0530
-Message-ID: <20210628180403.236553-8-Shyam-sundar.S-k@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210628180403.236553-1-Shyam-sundar.S-k@amd.com>
-References: <20210628180403.236553-1-Shyam-sundar.S-k@amd.com>
+        Mon, 28 Jun 2021 14:22:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624904409;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tsg+g87KEhkUmU5nazBOtf6jN/bfdKdQeWq+uzYH32E=;
+        b=UBmOaIKiUas8UXC9ZsVjm+gTtaQUEIdVRnX1xntav+BkkQethesdIOPnJ7t/KhJbzINgGT
+        WHvl5f6c5/Vf5cRLzTRyufgVA5gfffC+xJVbLVjgihNMUSvVQcb0kwQRbHYTBkb6s651LJ
+        l6pUwCAcNMJTTYPNwhKcBiy2U4yJHYo=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-RmnS3pbDNqWgnC-n4g0LtQ-1; Mon, 28 Jun 2021 14:20:06 -0400
+X-MC-Unique: RmnS3pbDNqWgnC-n4g0LtQ-1
+Received: by mail-ej1-f71.google.com with SMTP id u4-20020a1709061244b02904648b302151so4714560eja.17
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:20:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tsg+g87KEhkUmU5nazBOtf6jN/bfdKdQeWq+uzYH32E=;
+        b=D5/4t/ampK7pR0fxs7CyJY/XkdMPWgYc1ZxyxRUO+eDL0CQd7nhANR+X+gVin/AIWt
+         9erhFuMb6aetGV+DlX+Qre5tN8vEGBTcNs0L19zHxwBeJUGi2Wm49lOM1mn8wJvP9eW+
+         6ANh/aGNbpMuQjsuze3LtyVXGrgzWU5zxJbKQ9nmduDWXSQPSr6MZv7Yw4GLikyfBcgf
+         lDSLf2SL8BwF/5oSMcfpYOiX5ElkrCe/4MDcBHvr8+yQp1SxRoBuHIZau+HH9OOkR9V+
+         2rOZc/U/Txrgec7xsbcx6/mFhytmhtyse0WfJ8GEpq5+j3kBt1wsWWUmu50hfirmXXc9
+         /wkw==
+X-Gm-Message-State: AOAM532eTtTUTanFxPFLCZ6bXpbkeJgYzuS6UkulvJKLkd0X4dNELJy0
+        XHbK3G67U025q0th9eV9NiGwgGPGep630c0Um1pvZjJV900iSZNUaWlW90RKDdFHdN6GrIwDhq1
+        Q4FO2OLfGPvYpX2wabX19hro2C3F64hvFaA==
+X-Received: by 2002:aa7:db94:: with SMTP id u20mr34606002edt.381.1624904404873;
+        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzsXP36MDE6r9XiKrMz03HVj2ulNai/7AJoxhivFyNkx5yhYdibTlkTD6z4ZxX5/AzZ6Uki5g==
+X-Received: by 2002:aa7:db94:: with SMTP id u20mr34605985edt.381.1624904404738;
+        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id x2sm1704493edv.61.2021.06.28.11.20.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
+Subject: Re: [PATCH V2 1/1] [x86]: BIOS Dynamic SAR driver for Intel M.2 Modem
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shravan S <s.shravan@intel.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "An, Sudhakar" <sudhakar.an@intel.com>
+References: <20210510074016.31627-1-s.shravan@intel.com>
+ <20210510074016.31627-2-s.shravan@intel.com>
+ <CAHp75Ve_=mv5MbLvqxGwu8GAuxAjBLpRHE9KNua-yvmzUNKuKw@mail.gmail.com>
+ <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
+ <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <5bcc0591-8b9c-b7c4-cbcd-7b209c4c1b69@redhat.com>
+Date:   Mon, 28 Jun 2021 20:20:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3d145f63-5132-439b-d7df-08d93a5f379f
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1433:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB14335B5B3FD8B851CDCBFC839A039@DM5PR12MB1433.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1107;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: X/nblF3TFFX13XF3SYLoIrStoOzamk8P9UR4p5+uFlp65Z4b2TBVJuApUW9iJdsRQ/pLnLkIH7u28nKv4fWPRUDcwX5fQxjvMzEoVnPQJEchPRHFEpnjeWBMUKxWe1lm9Ro6LEvUpGT1NWQgpNA62l88kwlYDODdBwpXIS7mqL707v/AcaFvkuK2XbaSiDMVFGiR7uk9htahTjut/hsu60xc1rpSrpn0/FLqY6ymGvlH0wgNQkVlU6vEGCvjce5nGoVeY9go6NoCCjd8gTcW838QnR7xuQroumrjOU0gBeOlV98UOKz5xQzv44ed9W5M7dP392u995nXfQWY/wJxh9bWP/cPwCDS182QnwD55fpEAgUKBueeQlgA/DcClHMHdhEw87xp3O8bbpvuIqeKzBOGrnssoUkItufEcpR/fQoVHdq2jVizVhsRBYFBNvmJz27HN2t/6jhE1SwB5iE2dR4I4w4m+FTTit56rko/dO2YCS8QgyGs4BAQV227tEYzJfHBujB89b8Ty05ryPhgq3fFd5To8nUW3BYda/CFL/H4klNqrWSmKlKfmKSbZofq8qQTMb8Jw47Y1cg+tgV+HcekZUqLjDeLZhvMVWmbR2IYRbR54QUyyu8DORw7KhjW/06wJ91+CWVG9sv0DpUWSJRYUpGs/3NpYVQP3dwb4+D+kRbAOMiVb10/84t8GeiDvgbO40SzyYeUPQtDrkZoCEgetTFKggoi3zodtvxPDGw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(39860400002)(396003)(136003)(376002)(346002)(36840700001)(46966006)(5660300002)(2616005)(7696005)(356005)(8936002)(81166007)(16526019)(1076003)(186003)(316002)(86362001)(26005)(82740400003)(110136005)(54906003)(4326008)(6666004)(336012)(70206006)(70586007)(426003)(478600001)(82310400003)(2906002)(36860700001)(8676002)(47076005)(36756003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2021 18:04:47.7523
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d145f63-5132-439b-d7df-08d93a5f379f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT014.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1433
+In-Reply-To: <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The upcoming PMC controller would have a newer acpi id, add that to
-the supported acpid device list.
+Hi Enrico,
 
-Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
-v2: No change
-v3: No change
-v4: No change
+On 6/28/21 7:47 PM, Enrico Weigelt, metux IT consult wrote:
+> On 28.06.21 17:12, Hans de Goede wrote:
+> 
+> Hi,
+> 
+>> I'm not in favor of internal reviews, esp. not when new userspace
+>> API is involved. I would greatly prefer for the discussions surrounding
+>> this to be kept public.
+> 
+> ACK. Please do that in open public. There're still lots of things to
+> discuss that should be discussed in wide public, instead of comittee
+> behind closed doors.
+> 
+>> I agree that ideally we should have some generic userspace API for this,
+>> but I'm afraid that ATM that simply is not possible. 
+> 
+> Why not ? Lets collect the actual requirements and talk about some
+> viable solutions (I've already got a few ideas ...)
 
- drivers/platform/x86/amd-pmc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Because we don't know the actual requirements yet. This is a very
+young technology and still evolving fast. Also whether we like it
+or not, we don't get to dictate what the involved firmware and
+hardware interfaces get to look like. So any API which we come
+up with must be capable of working with the existing fw and
+hw interfaces as shipped in actual devices.
 
-diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
-index 901f2212bd39..2761e1398b03 100644
---- a/drivers/platform/x86/amd-pmc.c
-+++ b/drivers/platform/x86/amd-pmc.c
-@@ -68,6 +68,7 @@
- #define AMD_CPU_ID_RN			0x1630
- #define AMD_CPU_ID_PCO			AMD_CPU_ID_RV
- #define AMD_CPU_ID_CZN			AMD_CPU_ID_RN
-+#define AMD_CPU_ID_YC			0x14B5
- 
- #define PMC_MSG_DELAY_MIN_US		100
- #define RESPONSE_REGISTER_LOOP_MAX	200
-@@ -332,6 +333,7 @@ static int amd_pmc_get_os_hint(struct amd_pmc_dev *dev)
- 	case AMD_CPU_ID_PCO:
- 		return MSG_OS_HINT_PCO;
- 	case AMD_CPU_ID_RN:
-+	case AMD_CPU_ID_YC:
- 		return MSG_OS_HINT_RN;
- 	}
- 	return -EINVAL;
-@@ -377,6 +379,7 @@ static const struct dev_pm_ops amd_pmc_pm_ops = {
- };
- 
- static const struct pci_device_id pmc_pci_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_YC) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_CZN) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_RN) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, AMD_CPU_ID_PCO) },
-@@ -471,6 +474,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
- static const struct acpi_device_id amd_pmc_acpi_ids[] = {
- 	{"AMDI0005", 0},
- 	{"AMDI0006", 0},
-+	{"AMDI0007", 0},
- 	{"AMD0004", 0},
- 	{ }
- };
--- 
-2.25.1
+>> This whole notion of maximum tx power being controlled based on various sensors because of SAR reasons is pretty new (at least in the PC/laptop space) and I know of a couple of vendors who are slapping some adhoc firmware
+>> interface on the sensor readings for some modem related userspace
+>> process to consume.
+> 
+> We should bring them here onboard, public discussion. And at the same
+> time we should make it crystally clear to them that weird adhoc hacks
+> won't be accepted and just give them very bad reputation and
+> shitstorming. Seriously, I believe we should go that route, in order
+> to prevent even more damage by insane firmware interfaces.
+
+<sigh> we are in no place to make demands here "standard" (non
+chrome-os / android) Linux laptop-os usage is a tiny fraction of the
+market. So new features like this are primarily developed on other OS-es
+and typically we either take the firmware interfaces as is, or we don't
+support the feature.
+
+You seem to believe in an utopia where we fully control all the layers
+and can design and implement everything to be just perfect, but the
+reality is quite different from this.
+
+You also seem to forget that perfect is the enemy of good. This case is
+an excellent example of a case where we cannot design anything close to
+the "perfect" API in one go because we don't have the necessary
+problem-domain information / experience yet.
+
+> Such stuff really doesn't belong into firmware, at least not the way its
+> done now. Instead there just should be a clear description of the actual
+> hardware.
+
+Yes you've made your opinion on this abundantly clear and I must say
+that the whole tone of your emails in this thread and the
+"I know better then everyone else" attitude in this thread seriously
+rubs me the wrong way.
+
+Don't be surprised if I do not answer any further emails from you in
+this thread. That won't be because I don't read them, but that will be
+because I deliberately choose to not answer them because IMHO your
+strong opinion on how everyone must bow to your vision of how exactly
+this all must be implemented adds very little of value to this thread.
+
+Regards,
+
+Hans
 
