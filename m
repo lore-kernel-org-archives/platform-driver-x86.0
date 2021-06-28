@@ -2,160 +2,191 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003A4C11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13158C11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D653861C7B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8A661C89
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234439AbhF1SWg (ORCPT
+        id S233231AbhF1Ss3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 14:22:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53489 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235956AbhF1SWf (ORCPT
+        Mon, 28 Jun 2021 14:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232350AbhF1Ss1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 14:22:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624904409;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tsg+g87KEhkUmU5nazBOtf6jN/bfdKdQeWq+uzYH32E=;
-        b=UBmOaIKiUas8UXC9ZsVjm+gTtaQUEIdVRnX1xntav+BkkQethesdIOPnJ7t/KhJbzINgGT
-        WHvl5f6c5/Vf5cRLzTRyufgVA5gfffC+xJVbLVjgihNMUSvVQcb0kwQRbHYTBkb6s651LJ
-        l6pUwCAcNMJTTYPNwhKcBiy2U4yJHYo=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-RmnS3pbDNqWgnC-n4g0LtQ-1; Mon, 28 Jun 2021 14:20:06 -0400
-X-MC-Unique: RmnS3pbDNqWgnC-n4g0LtQ-1
-Received: by mail-ej1-f71.google.com with SMTP id u4-20020a1709061244b02904648b302151so4714560eja.17
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:20:05 -0700 (PDT)
+        Mon, 28 Jun 2021 14:48:27 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 202FAC061574
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:46:01 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id hq39so31617363ejc.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4YN1HlcpGva7x+bpND2EnMoeDvVaHBU+ucmSR+3U5UQ=;
+        b=BTDgV1UParrZs7SmrKBC5Q4ADeHFJkHs3EtDS8mk2aSkGKCKEOhHKfyHrclbLwZpa+
+         FvG3hyP3REcEXYwcRi1UOMs2b/i5dKrCfDBhjrGJooppGAwRKtapLx8dBh46Fx2i3XEA
+         NtXvTsKppy5DW3FnLLEm7DkbxWKNYLS4grI7U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Tsg+g87KEhkUmU5nazBOtf6jN/bfdKdQeWq+uzYH32E=;
-        b=D5/4t/ampK7pR0fxs7CyJY/XkdMPWgYc1ZxyxRUO+eDL0CQd7nhANR+X+gVin/AIWt
-         9erhFuMb6aetGV+DlX+Qre5tN8vEGBTcNs0L19zHxwBeJUGi2Wm49lOM1mn8wJvP9eW+
-         6ANh/aGNbpMuQjsuze3LtyVXGrgzWU5zxJbKQ9nmduDWXSQPSr6MZv7Yw4GLikyfBcgf
-         lDSLf2SL8BwF/5oSMcfpYOiX5ElkrCe/4MDcBHvr8+yQp1SxRoBuHIZau+HH9OOkR9V+
-         2rOZc/U/Txrgec7xsbcx6/mFhytmhtyse0WfJ8GEpq5+j3kBt1wsWWUmu50hfirmXXc9
-         /wkw==
-X-Gm-Message-State: AOAM532eTtTUTanFxPFLCZ6bXpbkeJgYzuS6UkulvJKLkd0X4dNELJy0
-        XHbK3G67U025q0th9eV9NiGwgGPGep630c0Um1pvZjJV900iSZNUaWlW90RKDdFHdN6GrIwDhq1
-        Q4FO2OLfGPvYpX2wabX19hro2C3F64hvFaA==
-X-Received: by 2002:aa7:db94:: with SMTP id u20mr34606002edt.381.1624904404873;
-        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzsXP36MDE6r9XiKrMz03HVj2ulNai/7AJoxhivFyNkx5yhYdibTlkTD6z4ZxX5/AzZ6Uki5g==
-X-Received: by 2002:aa7:db94:: with SMTP id u20mr34605985edt.381.1624904404738;
-        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id x2sm1704493edv.61.2021.06.28.11.20.03
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4YN1HlcpGva7x+bpND2EnMoeDvVaHBU+ucmSR+3U5UQ=;
+        b=GMQ8D4bBhJhmJfzzD6dsp0pnS/N+QLQiULtMSNi8yw5zMozPxQ7SAS19WFfds1s6pb
+         zfkWe6C1FaWp+6OHPGsBwPJQuc8zx6Mn2jEnYb69mhygC9bLvfUvrNkRGpXmkyGKEQWO
+         nP2zC2GABaEPOAB5giI/hfPS7p7Ef3Y7ZCga1sJs01BSO9wV3kmv+TI/heR5kP0y6VWv
+         S36/MZ/r6qeUeCjd/M9y+aKc8GAdrWdsJrIqTLs/oNRBJFXzzP0pUhqUrxclm6y6vHlA
+         ow4tWbgWCNdHGyU2dihmoo5Xg5E5XH6W1hdlamId+/C/rUAzyEGv4eM7hDHbagw92bmp
+         UhfA==
+X-Gm-Message-State: AOAM530v6UMRv8jO3L0qhOn0HHyVMFWsuthT98qneBRkJzhCCrrnlrad
+        r/wBedeZdlMk7SJO7YtxAxCz7pXfcQFP4w==
+X-Google-Smtp-Source: ABdhPJyI87JbGRhYlEGsimi4YehfcumAuuiw8cM9zd4MtKSg52crt3PFVjVKf7N5CGRtFX8/4WoeIA==
+X-Received: by 2002:a17:906:4a55:: with SMTP id a21mr25927983ejv.209.1624905959269;
+        Mon, 28 Jun 2021 11:45:59 -0700 (PDT)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
+        by smtp.gmail.com with ESMTPSA id e16sm736284edr.86.2021.06.28.11.45.58
+        for <platform-driver-x86@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Jun 2021 11:20:04 -0700 (PDT)
-Subject: Re: [PATCH V2 1/1] [x86]: BIOS Dynamic SAR driver for Intel M.2 Modem
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Shravan S <s.shravan@intel.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "An, Sudhakar" <sudhakar.an@intel.com>
-References: <20210510074016.31627-1-s.shravan@intel.com>
- <20210510074016.31627-2-s.shravan@intel.com>
- <CAHp75Ve_=mv5MbLvqxGwu8GAuxAjBLpRHE9KNua-yvmzUNKuKw@mail.gmail.com>
- <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
- <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <5bcc0591-8b9c-b7c4-cbcd-7b209c4c1b69@redhat.com>
-Date:   Mon, 28 Jun 2021 20:20:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id h17so27355399edw.11
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
+X-Received: by 2002:a05:6402:2913:: with SMTP id ee19mr34418102edb.361.1624905958072;
+ Mon, 28 Jun 2021 11:45:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210628180403.236553-1-Shyam-sundar.S-k@amd.com> <20210628180403.236553-2-Shyam-sundar.S-k@amd.com>
+In-Reply-To: <20210628180403.236553-2-Shyam-sundar.S-k@amd.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Mon, 28 Jun 2021 12:45:47 -0600
+X-Gmail-Original-Message-ID: <CAHQZ30COfU8PdxHMFspudWYxoJ_aqqNGicjgni3L1=J_z+amLg@mail.gmail.com>
+Message-ID: <CAHQZ30COfU8PdxHMFspudWYxoJ_aqqNGicjgni3L1=J_z+amLg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] platform/x86: amd-pmc: Fix command completion code
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, mgross@linux.intel.com,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Enrico,
+On Mon, Jun 28, 2021 at 12:04 PM Shyam Sundar S K
+<Shyam-sundar.S-k@amd.com> wrote:
+>
+> The protocol to submit a job request to SMU is to wait for
+> AMD_PMC_REGISTER_RESPONSE to return 1,meaning SMU is ready to take
+> requests. PMC driver has to make sure that the response code is always
+> AMD_PMC_RESULT_OK before making any command submissions.
+>
+> When we submit a message to SMU, we have to wait until it processes
+> the request. Adding a read_poll_timeout() check as this was missing in
+> the existing code.
+>
+> Also, add a mutex to protect amd_pmc_send_cmd() calls to SMU.
+>
+> Fixes: 156ec4731cb2 ("platform/x86: amd-pmc: Add AMD platform support for S2Idle")
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> ---
+> v2: no change
+> v3:
+>  - use mutex to protect multiple calls to SMU
+>  - add a switch-case to handle smu responses.
+> v4:
+>  - Handle different error codes based on smu responses.
+>
+>  drivers/platform/x86/amd-pmc.c | 39 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 37 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index b9da58ee9b1e..e3262ed967d9 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -68,6 +68,7 @@ struct amd_pmc_dev {
+>         u32 base_addr;
+>         u32 cpu_id;
+>         struct device *dev;
+> +       struct mutex lock; /* generic mutex lock */
+>  #if IS_ENABLED(CONFIG_DEBUG_FS)
+>         struct dentry *dbgfs_dir;
+>  #endif /* CONFIG_DEBUG_FS */
+> @@ -138,9 +139,10 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+>         u8 msg;
+>         u32 val;
+>
+> +       mutex_lock(&dev->lock);
+>         /* Wait until we get a valid response */
+>         rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
+> -                               val, val > 0, PMC_MSG_DELAY_MIN_US,
+> +                               val, val != 0, PMC_MSG_DELAY_MIN_US,
+>                                 PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
+>         if (rc) {
+>                 dev_err(dev->dev, "failed to talk to SMU\n");
+> @@ -156,7 +158,38 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+>         /* Write message ID to message ID register */
+>         msg = (dev->cpu_id == AMD_CPU_ID_RN) ? MSG_OS_HINT_RN : MSG_OS_HINT_PCO;
+>         amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
+> -       return 0;
+> +       /* Wait until we get a valid response */
+> +       rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
+> +                               val, val != 0, PMC_MSG_DELAY_MIN_US,
+> +                               PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
+> +       if (rc) {
+> +               dev_err(dev->dev, "SMU response timed out\n");
+> +               rc = -ETIMEDOUT;
+readx_poll_timeout will return `-ETIMEDOUT`, so no need to override the rc.
 
-On 6/28/21 7:47 PM, Enrico Weigelt, metux IT consult wrote:
-> On 28.06.21 17:12, Hans de Goede wrote:
-> 
-> Hi,
-> 
->> I'm not in favor of internal reviews, esp. not when new userspace
->> API is involved. I would greatly prefer for the discussions surrounding
->> this to be kept public.
-> 
-> ACK. Please do that in open public. There're still lots of things to
-> discuss that should be discussed in wide public, instead of comittee
-> behind closed doors.
-> 
->> I agree that ideally we should have some generic userspace API for this,
->> but I'm afraid that ATM that simply is not possible. 
-> 
-> Why not ? Lets collect the actual requirements and talk about some
-> viable solutions (I've already got a few ideas ...)
+> +               goto out_unlock;
+> +       }
+> +
+> +       switch (val) {
+> +       case AMD_PMC_RESULT_OK:
+> +               break;
+> +       case AMD_PMC_RESULT_CMD_REJECT_BUSY:
+> +               dev_err(dev->dev, "SMU not ready. err: 0x%x\n", val);
+> +               rc = -EBUSY;
+> +               goto out_unlock;
+> +       case AMD_PMC_RESULT_CMD_UNKNOWN:
+> +               dev_err(dev->dev, "SMU cmd unknown. err: 0x%x\n", val);
+> +               rc = -EINVAL;
+> +               goto out_unlock;
+> +       case AMD_PMC_RESULT_CMD_REJECT_PREREQ:
+> +       case AMD_PMC_RESULT_FAILED:
+> +       default:
+> +               dev_err(dev->dev, "SMU cmd failed. err: 0x%x\n", val);
+> +               rc = -EIO;
+> +               goto out_unlock;
+> +       }
+> +
+> +out_unlock:
+> +       mutex_unlock(&dev->lock);
+> +       return rc;
+>  }
+>
+>  static int __maybe_unused amd_pmc_suspend(struct device *dev)
+> @@ -259,6 +292,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>
+>         amd_pmc_dump_registers(dev);
+>
+> +       mutex_init(&dev->lock);
+>         platform_set_drvdata(pdev, dev);
+>         amd_pmc_dbgfs_register(dev);
+>         return 0;
+> @@ -269,6 +303,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
+>         struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+>
+>         amd_pmc_dbgfs_unregister(dev);
+> +       mutex_destroy(&dev->lock);
+>         return 0;
+>  }
+>
+> --
+> 2.25.1
+>
 
-Because we don't know the actual requirements yet. This is a very
-young technology and still evolving fast. Also whether we like it
-or not, we don't get to dictate what the involved firmware and
-hardware interfaces get to look like. So any API which we come
-up with must be capable of working with the existing fw and
-hw interfaces as shipped in actual devices.
-
->> This whole notion of maximum tx power being controlled based on various sensors because of SAR reasons is pretty new (at least in the PC/laptop space) and I know of a couple of vendors who are slapping some adhoc firmware
->> interface on the sensor readings for some modem related userspace
->> process to consume.
-> 
-> We should bring them here onboard, public discussion. And at the same
-> time we should make it crystally clear to them that weird adhoc hacks
-> won't be accepted and just give them very bad reputation and
-> shitstorming. Seriously, I believe we should go that route, in order
-> to prevent even more damage by insane firmware interfaces.
-
-<sigh> we are in no place to make demands here "standard" (non
-chrome-os / android) Linux laptop-os usage is a tiny fraction of the
-market. So new features like this are primarily developed on other OS-es
-and typically we either take the firmware interfaces as is, or we don't
-support the feature.
-
-You seem to believe in an utopia where we fully control all the layers
-and can design and implement everything to be just perfect, but the
-reality is quite different from this.
-
-You also seem to forget that perfect is the enemy of good. This case is
-an excellent example of a case where we cannot design anything close to
-the "perfect" API in one go because we don't have the necessary
-problem-domain information / experience yet.
-
-> Such stuff really doesn't belong into firmware, at least not the way its
-> done now. Instead there just should be a clear description of the actual
-> hardware.
-
-Yes you've made your opinion on this abundantly clear and I must say
-that the whole tone of your emails in this thread and the
-"I know better then everyone else" attitude in this thread seriously
-rubs me the wrong way.
-
-Don't be surprised if I do not answer any further emails from you in
-this thread. That won't be because I don't read them, but that will be
-because I deliberately choose to not answer them because IMHO your
-strong opinion on how everyone must bow to your vision of how exactly
-this all must be implemented adds very little of value to this thread.
-
-Regards,
-
-Hans
-
+With that minor change,
+Acked-by: Raul E Rangel <rrangel@chromium.org>
