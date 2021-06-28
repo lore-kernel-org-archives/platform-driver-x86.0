@@ -2,131 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258E5C11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 17:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B89DC11F64
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0220B61C4D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 17:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBBD6195B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 18:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbhF1Rt4 (ORCPT
+        id S234567AbhF1SGv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 13:49:56 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:59883 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232586AbhF1Rtz (ORCPT
+        Mon, 28 Jun 2021 14:06:51 -0400
+Received: from mail-dm3nam07on2083.outbound.protection.outlook.com ([40.107.95.83]:1120
+        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233028AbhF1SGv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 13:49:55 -0400
-Received: from [192.168.1.155] ([77.9.21.236]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MQNF3-1lcHlk2Raz-00MIOP; Mon, 28 Jun 2021 19:47:17 +0200
-Subject: Re: [PATCH V2 1/1] [x86]: BIOS Dynamic SAR driver for Intel M.2 Modem
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Shravan S <s.shravan@intel.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "An, Sudhakar" <sudhakar.an@intel.com>
-References: <20210510074016.31627-1-s.shravan@intel.com>
- <20210510074016.31627-2-s.shravan@intel.com>
- <CAHp75Ve_=mv5MbLvqxGwu8GAuxAjBLpRHE9KNua-yvmzUNKuKw@mail.gmail.com>
- <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <f9e0a2b8-6e30-0b85-34d0-16a101da4686@metux.net>
-Date:   Mon, 28 Jun 2021 19:47:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Mon, 28 Jun 2021 14:06:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D47soDsPrM/Gh3YUtl1GCRYqrbC2D3LEFBh+bPypXvi7a43WQmh+cpVsPVidarO3exF1d6iVe4lwyn+fOURE9R0F4+YzuoZWGEE7oxi21rGupa0MbhsXGGpQOCzqbmC4ud0PYndUCNILhzlfZ5jeyMT0cQZmsGf/9Fj6/k3PRDDRFfxjkaD/fO3DVRtWzx5+9n56XHEScaL1fTFoY0TgEi+JmYxdbZhnph5YrV9zliwNTGuSK55bV5tq6JrjyebW/oonkI+UvV1CzY/0NTTMPQYv9gEq57W1tx+vJBzKudORl/LYPkqSige/GVwGiyISvmcT7MYdMkLWF0OhjTu6Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=evTXcMMzORmdr9CLkaeqyuxroiig5BWoBqc4csCfy9g=;
+ b=FJYQFBIpJVw09LQUshVCBSgQT4EiOhMrejWAp3yhdrRTyiqb3AkDS1U/N+c0UaKGX7jcVGhyacrw42t9FltMLn5mrtzcftKPTJXRPixe5/OSjo0jCRYm2ih4BO9jaa5el1GNWH378L1LzwsoICz8eoIH5rhkoa10RxFZVX9S7XzR8OtsL0do9PnH6Xz9dqSle45mYEa8x3zdhxSN7whNFCkR6ly1P+A2++s50pZpZ5HMdnw5BV4yPQU27l70/M1uRR3At3r3FkVF36XHmf+DoV2l4UEnCeGmYCn/nI/VHaHiqyxkhLfLW9MhI+REYEUIjaSpnc3x9LjfQkxmVGKbLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=evTXcMMzORmdr9CLkaeqyuxroiig5BWoBqc4csCfy9g=;
+ b=5k1Ew+4Ms3JdMZbfHzEGWMRfQRN1kdq8QqwOjlADK9Uc0zRr4ToUyptRAnsUFPtEytf9D2CwqFa1o3sLjd9IGcotSuiokMvn7t7lmkmGxixA8kcl3C0/50ZRMZv1kFnCa94SFQ0WHazkHCkJpIXlXkLtqd0qAhBkrb8jFKDNL4w=
+Received: from MW4PR04CA0306.namprd04.prod.outlook.com (2603:10b6:303:82::11)
+ by DM6PR12MB3147.namprd12.prod.outlook.com (2603:10b6:5:11d::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.18; Mon, 28 Jun
+ 2021 18:04:24 +0000
+Received: from CO1NAM11FT015.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:82:cafe::48) by MW4PR04CA0306.outlook.office365.com
+ (2603:10b6:303:82::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.20 via Frontend
+ Transport; Mon, 28 Jun 2021 18:04:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT015.mail.protection.outlook.com (10.13.175.130) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4264.18 via Frontend Transport; Mon, 28 Jun 2021 18:04:23 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 28 Jun
+ 2021 13:04:21 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <rrangel@chromium.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v4 0/7] updates to amd-pmc driver
+Date:   Mon, 28 Jun 2021 23:33:56 +0530
+Message-ID: <20210628180403.236553-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <79bd7236-dec1-ffde-8c23-3a500e04eedd@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:BqNzo0DqHFQC34wBLi5/jZejcGrvzxexHldPi5UQs+5fzdZnfZt
- Pjo0GJKEvrsUUgOVRmLzi3EXDCstP/sqg8HtO43Exwt01mSafug1KAU/vhI2kj4WQ5ZAIja
- 2IHDuV27cuZYIBRCUTmI/tpugyuwTvlwrhtXE4IYjdoUiDZa574LIojCDdfeesAzgToFs7g
- 8FVugyLcGs0S4DngYvfNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zJ8jYAU+b/k=:+vTM7xCjBAEDBrBmfwb5Et
- ltq7FFoB1WgUgc9jvdhfpdla+gXMhPhmYanBDoS7LskAsV/rtxpy43LXUiT4Jn2ply4wosC19
- rjvfS0fa4L9SUa+UHFf2PmSxokb9X4uqNAhUMqHpPAY7o/Yt4VRASTI5NENLz2EbEl5k0t2uA
- nJAQX1Md7goF3NUtIMaMTR73t2irGR1idYeHhI4C4B0yNMFWXzI9NY2Nfmumo0JBdllWAYR/O
- vaHhZGSe1v2czA/ebt3tyZjrTE9Az3tErqWDCvvsaka5Ym14fslv/M+OZ6WfgrcDnFEffBNwO
- IXlsvcnB0Jts+qOLyE+Fa91yyR4AGgS7HkpKpGmNWcdmaXcmZVX9wt6NLINIoPAbCCJGjoQ7g
- Z698uUTgQ67iIruf9yvEUvlt2kPni64YeFuJuQbrQlhSilfXr0gdanbXPZgASt66zBL2/Jx7W
- FZdxXZx5xcHkjTbR8sWI61Mw8W25y6HBi3KDEo+METGc6F96QBrljU0+eutPW60r7rxcXMJLw
- /06Dphmll3M12LG3618DOQ=
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d71e4b8e-8f23-4e17-fd74-08d93a5f295b
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3147:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3147BCF6096E726AE70D15879A039@DM6PR12MB3147.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3kkB5grEXek2AYP+YUVQR9yyqh/ffxak1QdJJ4CI2UCVkdH1IO6HFKA0ztqO7Xme7Txc08AZvKHyzxuxUb2242sb43CC78LlN87+LUXM2ghwjDcngw0+RfJWphBeXsCuJARmQ/aJ8O6MSGrG0KT5dxC882E5NJp9nK9wrX9qZV4o29ZQf47mRunHdTS87IGabupIVr3GDun74qE03DFtYNkUHkc8U99lrexusktRTbB6MCrq5ZRRjMvKX8XrAjHtaE0G9AQLkZDX2Mq2Qw2VwAm3rUBIUsad2He07EfpM4Zwgf1BpC/MGVIpNL0CZXI7c+RFPW6P/5Hh6c1eXKXnWct/J+ELzp38f01ATsIrDNXYhk9lumkcBmzT48exjy4Ha2elru7+1kCIXOyYRXLvzgsxYj07fVtm6yAox74aWdMG86WwK/gzMHo0nrZd5mKEtCq1v4YA2teZAudwnpTRfniw4FEV2orE/zzgHma3lgTrBPzPyazd/I7LHc3BTvnIdtmDPNmhR+C1LbJAAmV3rHj/vcrWCUMaMeszGuyA/CedXnd/BxRG0PxZgrtQXkyPYoKBhFVb9yXcDw3IFle2Vl0bv4fNJ65A/+OGHTeG0d/q4xQOSECAgQ2U1C13531vm6EgADvvnZZy/upbTOnmnLKdvM4Ig6u7U4G2/a+5KuROHz9peQkIGhvZ6le5f5SnP9++e+Z9i33swVxZKvlosZXwfPRnUO3Nf1DFK7JCm7o=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(46966006)(36840700001)(2616005)(47076005)(7696005)(86362001)(83380400001)(1076003)(36860700001)(16526019)(426003)(186003)(26005)(336012)(54906003)(82310400003)(110136005)(6666004)(70586007)(4744005)(4326008)(36756003)(82740400003)(5660300002)(81166007)(356005)(2906002)(8936002)(316002)(70206006)(478600001)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2021 18:04:23.8175
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d71e4b8e-8f23-4e17-fd74-08d93a5f295b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT015.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3147
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 28.06.21 17:12, Hans de Goede wrote:
+Couple of existing issues on the completion codes to SMU
+and a newer way to get the s0ix statistics are introduced.
 
-Hi,
+Also, add acpi ids for current and future revisions of the
+pmc controller.
 
-> I'm not in favor of internal reviews, esp. not when new userspace
-> API is involved. I would greatly prefer for the discussions surrounding
-> this to be kept public.
+Shyam Sundar S K (7):
+  platform/x86: amd-pmc: Fix command completion code
+  platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+  platform/x86: amd-pmc: call dump registers only once
+  platform/x86: amd-pmc: Add support for logging SMU metrics
+  amd-pmc: Add support for logging s0ix counters
+  platform/x86: amd-pmc: Add support for ACPI ID AMDI0006
+  platform/x86: amd-pmc: Add new acpi id for future PMC controllers
 
-ACK. Please do that in open public. There're still lots of things to
-discuss that should be discussed in wide public, instead of comittee
-behind closed doors.
-
-> I agree that ideally we should have some generic userspace API for this,
-> but I'm afraid that ATM that simply is not possible. 
-
-Why not ? Lets collect the actual requirements and talk about some
-viable solutions (I've already got a few ideas ...)
-
-> This whole notion of maximum tx power being controlled based on various 
-> sensors because of SAR reasons is pretty new (at least in the PC/laptop space) 
-> and I know of a couple of vendors who are slapping some adhoc firmware
-> interface on the sensor readings for some modem related userspace
-> process to consume.
-
-We should bring them here onboard, public discussion. And at the same
-time we should make it crystally clear to them that weird adhoc hacks
-won't be accepted and just give them very bad reputation and
-shitstorming. Seriously, I believe we should go that route, in order
-to prevent even more damage by insane firmware interfaces.
-
-Such stuff really doesn't belong into firmware, at least not the way its
-done now. Instead there just should be a clear description of the actual
-hardware.
-
-> I don't think that it is realistic to try and layer a common userspace
-> interface over this at this point time. Actually I believe that even
-> trying to do so is a bad idea at this point in time, since this is
-> all so new that we are bound to get it badly wrong if we try to
-> design a common userspace API for this now.
-
-actually, I don't think it should go through userland (except perhaps
-a knob for switching it on/off).
-
-> I also don't want to wait for this to all crystallize out since that
-> will likely take years; and we should add support for this under Linux
-> in a reasonable time-frame. For laptops which ship with Linux
-> pre-installed it is important that there is feature parity between
-> Windows and Linux; and support for these new type of modems which need
-> this "SAR" integration is one of the biggest pain points with this ATM.
-
-I don't think that this should serve as an excuse for slappy and vendor 
-specific solutions, especially when userland is involved.
-
-And if we really do that, then just as some intermediate solution,
-and lets put it under staging.
-
-
---mtx
+ drivers/platform/x86/amd-pmc.c | 245 ++++++++++++++++++++++++++++++---
+ 1 file changed, 223 insertions(+), 22 deletions(-)
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+2.25.1
+
