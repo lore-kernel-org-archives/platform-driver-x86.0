@@ -2,131 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6EC2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFACCC2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 11:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBD261584
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D5461C6A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 11:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232556AbhF1J7C (ORCPT
+        id S232749AbhF1LHg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 05:59:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23108 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230256AbhF1J7C (ORCPT
+        Mon, 28 Jun 2021 07:07:36 -0400
+Received: from mail-dm6nam10on2065.outbound.protection.outlook.com ([40.107.93.65]:2241
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232617AbhF1LHf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 05:59:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624874196;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EDFS3CEJU5dreo6hNX0WrjPWKG3+DYOm4DLbLDT7TQQ=;
-        b=bnhEsJR6eklP3YJ87RTHyaEOQnFM3rVH6foo5b4NZQk9qYofvsMJGiOvdbBI2aCmSCQRA3
-        L7YaLhFehxeLt6gbZu/yySbMeVSlSX2MvDkBDExikPzQmsrBUP3wQgH2J5gAouJwo6Dfj5
-        OEzb6jV/BBkfgRsfJClrrM/zu/errVM=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-dAUbjQ9JNryUQhmil35e1Q-1; Mon, 28 Jun 2021 05:56:34 -0400
-X-MC-Unique: dAUbjQ9JNryUQhmil35e1Q-1
-Received: by mail-ej1-f70.google.com with SMTP id f8-20020a1709064dc8b02904996ccd94c0so4136688ejw.9
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 02:56:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDFS3CEJU5dreo6hNX0WrjPWKG3+DYOm4DLbLDT7TQQ=;
-        b=aUlRYgevwmKr+/plPHYiVd3tPkHPlj8qubCme7nr2ycQC36soRs8P0F0jhAJ36seiQ
-         miC59kdaEODohHW7iZTdmh4Sj4+Lfq891LxA4TSWixHY080e7ZQuPFPmWtBsxQqnN2cQ
-         gtFS29OXWrAqmp4Y+OKVrsqOookNsXov3lznP+GMgZxd7ueQbDzZE08DGN8ebGT1haEn
-         GXG2ZdcOBRprR2LSRqjWY71cTVLO19H3GswVqoe/MQJSJ/bvHGMOaj4AEYnVCs+X8HTM
-         lNbaoXIXeyl98rNWf6myZPbK/k2czmI967tvfrm8Poxs6mk1ASfw2IR0qOYlNk0h0wr7
-         CM3Q==
-X-Gm-Message-State: AOAM533PKxvGc3PfIxz0POeGVpac08YUCBuRfLErF0QFTuL4sg9b6kXV
-        k1jFA5MJd0BKvsHKvfCbxcAzz7onXyjiUJmRmYVUGqFISMZb6TrvWEOrJMrw4YWoTyXxzTC/v0m
-        RBBz+1OUG5OHwibuhly2QdigS0m8PJhjpKE+SD+JTmj/wxZ5naqFBLokPvWTDJRFTsX2pqL+pYx
-        /LMmth68RgtA==
-X-Received: by 2002:a05:6402:358a:: with SMTP id y10mr11112436edc.125.1624874193319;
-        Mon, 28 Jun 2021 02:56:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxPuN0gni3iTyE7wzy5NzS9zeGVa3z+uGg2XgjT7nW+FtH6XOSPIFZvQfeNQpvH9NSflo/aPQ==
-X-Received: by 2002:a05:6402:358a:: with SMTP id y10mr11112394edc.125.1624874192952;
-        Mon, 28 Jun 2021 02:56:32 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id e28sm9311063edc.24.2021.06.28.02.56.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Jun 2021 02:56:32 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: think-lmi: Move
- kfree(setting->possible_values) to tlmi_attr_setting_release()
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Mark Pearson <markpearson@lenovo.com>
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210628095230.319726-1-hdegoede@redhat.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <15fcef87-5efc-0cab-9ef5-cd4ea2b26ea3@redhat.com>
-Date:   Mon, 28 Jun 2021 11:56:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Mon, 28 Jun 2021 07:07:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lHOAKSTpocCADMFVNjJJLJUpbN3hgImE5+m72gloNTzMYv/0PbntTEpZpdjkoElsRZE82ErKzqXrEO5gYR/GmcWNsyVk+/vWfjQnoRkey0INWe4pwKmVnQOJH1FEVKX23erfYryCdHCdjdnmh8r01Uki6KkG1f4HJWvKShpQ6Z+/EAi1ELaRUKQYatfSWBlppAU5m8B4/0OJ6ZByDvyaVPYG+vKUT38eFHlpQDlK53yedgfqhkFdpe4eZum4rrXpxl+lBBhzijF6B5JKadKWITlCFH9eaT07yeOSsO/iG+121Xz+BhzaKzL5T/LbTqf3YLyNKkHS1qzdcW6dFja2RA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbPTyrdC2jjjvSXj3IIrCFpwmlV19rROEHrDzocH+zk=;
+ b=PO+ODwEjyWLpZXThn9N2CnKoRzIGNvOtL8gAnrD5UigQztoUOwPnmvEPHC/k2Q7Ju+V2XINEABmBLN2qBxJNFRlIjIzB239qqxykDFbwVAxKTc1TJL73nC1aG8Amhk3kUo3FlOnIP372Zf7uuXKTV+rS6l0zgSqCMoscliTS9v2pQaK1/kooO4UHfPk4XbiOteIGQpMpqmc0f+CX5SuVgKmDBEoL2RdlKUNwy91JVB0MbcvOlJLBUbtR5uI9Yrjoxg/fP+ZJiPJD25RW0NXpbe4warq1IGmhAPdGUypYz5TI5zjEHST8GDdtEGSCsMYRKKDslOtbNPs4ENvlDBryfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kbPTyrdC2jjjvSXj3IIrCFpwmlV19rROEHrDzocH+zk=;
+ b=DIemErsaukE+Np32B/SyCGx2eXX9Nbx9IrluqXshqc0Klbd04ErmLY/vG0UINuqFAvPNQ6268pJm6CMCBNNo9Q+pcdLeoPH3avzaWjYsu7Kyxq7HjzX17QlbjAJfedvpg5G/X28aoExUDwk9M/lHGTYl6bOhvi3lLiYxPuxUvhs=
+Received: from MW4PR03CA0188.namprd03.prod.outlook.com (2603:10b6:303:b8::13)
+ by BYAPR12MB4693.namprd12.prod.outlook.com (2603:10b6:a03:98::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.23; Mon, 28 Jun
+ 2021 11:05:08 +0000
+Received: from CO1NAM11FT059.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:b8:cafe::c8) by MW4PR03CA0188.outlook.office365.com
+ (2603:10b6:303:b8::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.18 via Frontend
+ Transport; Mon, 28 Jun 2021 11:05:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT059.mail.protection.outlook.com (10.13.174.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4264.18 via Frontend Transport; Mon, 28 Jun 2021 11:05:08 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 28 Jun
+ 2021 06:05:05 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <rrangel@chromium.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v3 0/7] updates to amd-pmc driver
+Date:   Mon, 28 Jun 2021 16:34:44 +0530
+Message-ID: <20210628110451.4047142-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210628095230.319726-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 32afb948-cdd8-413e-b5fc-08d93a249769
+X-MS-TrafficTypeDiagnostic: BYAPR12MB4693:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB4693C25184D2710E7A8CB1629A039@BYAPR12MB4693.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ypDkKpw42FE1UIF+PloeGrH7bcbWOgpZQZNMo7msJcvHq23DnLi3TIINVe4taPqynioNilya5Wsbd+CX0FLRnpqWkr5e1nFEv/XK2x9qnxoANW9lSQ8QY0o2A0n2TfQ5KVCgQi6oNmWyVwrK5M5MNsg2Zjv9sNf/QB91bvw+1DxNzJVUfQbfqS0ONDBqVsfhXGjXoG9emHP8alBPnarzlNNIRZfZG8IXgnO8mj7LKYmLH/+O4p6PtdMfx37qit31VWr/9YUrwYlwrjeCtQ6doxv1j/E51hCFbhThsnKkMG8/nYZU2F+HzVRhAj3JVCWaWW2xmMIH5tM+rmRcfs4HKo2Z6Dtpsh81vKT3YOwGpAw1Ttqg2MEELXPY2iQ8W6pxY9s407lvXbvldtGyHCnSCd0wHM/CjCU0b3GX+gJykbSG5FEG5SW0TwFgNpL3BB0A0mupwKIMtzmGwIpQBa3oFp53BFtxEi5paI13jD31asob83cxWyLvsX7cJw6ZXuQkwdZVd+xqUVh0cJjiVINj8Xm6T0vDLbGnJeGjKdPZXCQu+aTi389b+rXIiJq9BsMPbnXGPBwcA3PgFAoq0RkXy3y9GpIsF0OUrCfgwKGwrRUfFHuFnIrUcDq6D8n/k1XEyocGMOywptlZfUg00MN9yBATHRkhW06bc26eWZJ4hagZJQ8WVyb3ypibIqOnM6A53rYexEvqq4HskujPhMQRb59BSE0TCuronVFrOAQTmYs=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(396003)(136003)(376002)(346002)(39860400002)(36840700001)(46966006)(70206006)(356005)(83380400001)(16526019)(70586007)(6666004)(186003)(81166007)(7696005)(110136005)(316002)(4744005)(54906003)(86362001)(26005)(82740400003)(8676002)(8936002)(2906002)(478600001)(4326008)(36756003)(336012)(5660300002)(47076005)(2616005)(82310400003)(36860700001)(1076003)(426003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2021 11:05:08.1537
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32afb948-cdd8-413e-b5fc-08d93a249769
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT059.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB4693
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Couple of existing issues on the completion codes to SMU
+and a newer way to get the s0ix statistics are introduced.
 
-On 6/28/21 11:52 AM, Hans de Goede wrote:
-> We must not free the possible_values string before we have called
-> sysfs_remove_group(kobj, &tlmi_attr_group) otherwise there is a race
-> where a sysfs read of possible_values could reference the free-ed
-> memory.
-> 
-> Move the kfree(setting->possible_values) together with the free of the
-> actual tlmi_attr_setting struct to avoid this race.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Also, add acpi ids for current and future revisions of the
+pmc controller.
 
-I've merged this into my review-hans branch.
+Shyam Sundar S K (7):
+  platform/x86: amd-pmc: Fix command completion code
+  platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+  platform/x86: amd-pmc: call dump registers only once
+  platform/x86: amd-pmc: Add support for logging SMU metrics
+  amd-pmc: Add support for logging s0ix counters
+  platform/x86: amd-pmc: Add support for ACPI ID AMDI0006
+  platform/x86: amd-pmc: Add new acpi id for future PMC controllers
 
-Regards,
+ drivers/platform/x86/amd-pmc.c | 235 ++++++++++++++++++++++++++++++---
+ 1 file changed, 213 insertions(+), 22 deletions(-)
 
-Hans
-
-
-> ---
->  drivers/platform/x86/think-lmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-> index 4cab341a3538..3671b5d20613 100644
-> --- a/drivers/platform/x86/think-lmi.c
-> +++ b/drivers/platform/x86/think-lmi.c
-> @@ -626,6 +626,7 @@ static void tlmi_attr_setting_release(struct kobject *kobj)
->  {
->  	struct tlmi_attr_setting *setting = to_tlmi_attr_setting(kobj);
->  
-> +	kfree(setting->possible_values);
->  	kfree(setting);
->  }
->  
-> @@ -654,7 +655,6 @@ static void tlmi_release_attr(void)
->  	/* Attribute structures */
->  	for (i = 0; i < TLMI_SETTINGS_COUNT; i++) {
->  		if (tlmi_priv.setting[i]) {
-> -			kfree(tlmi_priv.setting[i]->possible_values);
->  			sysfs_remove_group(&tlmi_priv.setting[i]->kobj, &tlmi_attr_group);
->  			kobject_put(&tlmi_priv.setting[i]->kobj);
->  		}
-> 
+-- 
+2.25.1
 
