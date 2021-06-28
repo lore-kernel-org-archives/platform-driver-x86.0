@@ -2,364 +2,106 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7757DC49EA6
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Jun 2021 15:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F116C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 08:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5813261C3D
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 26 Jun 2021 15:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083D260232
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 08:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbhFZPOT (ORCPT
+        id S232445AbhF1IwN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 26 Jun 2021 11:14:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22924 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230098AbhFZPOR (ORCPT
+        Mon, 28 Jun 2021 04:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231698AbhF1IwM (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 26 Jun 2021 11:14:17 -0400
-IronPort-SDR: RVd6HZG5qs76LUAHBhvEDh9TGJNhw30GpEscNZYK+Fm+PCNqJxe/VT7heAatnjIvZBzLgADwK+
- Tu7lRFNCM4vw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10027"; a="207613934"
-X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
-   d="scan'208";a="207613934"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 08:11:55 -0700
-X-IronPort-AV: E=Sophos;i="5.83,301,1616482800"; 
-   d="scan'208";a="642895562"
-Received: from mlubyani-mobl2.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.254.8.25])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2021 08:11:54 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v1 5/6] platform/x86: intel_tdx_attest: Add TDX Guest attestation interface driver
-Date:   Sat, 26 Jun 2021 08:11:45 -0700
-Message-Id: <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Mon, 28 Jun 2021 04:52:12 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1315C061574;
+        Mon, 28 Jun 2021 01:49:46 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id c7-20020a17090ad907b029016faeeab0ccso12360273pjv.4;
+        Mon, 28 Jun 2021 01:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eZ1Rz1gXRWLyBZZfCueyrqEMIScQMf1t2w1D89bLOgo=;
+        b=rfTw8XaKSHWcqHJxkheAzQ21uJzBLsplbqxEKwnI9qgIgVpYnSZGcYf1B3OYHGQID5
+         DEi/AweUbYvOcuf6umV17HOIbgBqL1cUL0tKxcJQemqhB6FElk1IocDYd/ErG6BV6Wlr
+         cZG6XSVtS3hmOMGusyRcufUgp7TD7113ElJ3C7mjMw96gmsYsR/ElwcHpEqFiIJvgVzd
+         GFcAD+QAEyebHIoXodTC0JEwex282LGKpxIBDozDp0dwrbz6w26CuIR+EVRjuUMXCnfP
+         sP35bKT3KL7iwCMuAWY+2VQnPMcbDU7akffhilqSkVjUw2aRnc0+M1jFtuN55iBe/Y2f
+         hOiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eZ1Rz1gXRWLyBZZfCueyrqEMIScQMf1t2w1D89bLOgo=;
+        b=qrGzkEYPBdBZSztQyR7rBoc6+VDZvH/KuFqiIG8BK+3yZLNfmle2mVdle6AvKF+Qak
+         PTKgYQmFSTdvekDuNdwwcbxwGHRHnMV8iMUmvfNfg79o/WKhMCoP2Hbn5bgsq8H+LGAG
+         pJK7X8MMW9wXfIvDCwp7tA0WB1v8zydBtO7kaUEsKQdPxwT4p6nthbDb6Ge17dJIxAXy
+         nu0ofUTrm9fFI0luO63U5N08oI4QbG8ZKsrbB5uBvhB2moASHZC9b4wRJE+eOeTp+nno
+         KEv0dLJJU1yIyJF2Of+EzquM4yI4ImaaXaHWO5bYUMBLnMTZC17kqYbOh27LqAiFWhP3
+         ZTrQ==
+X-Gm-Message-State: AOAM531bUXYJVHub0BQdokGi+Z3VTaVuK6Vg2eE6CwGjBOFo74W+vx7k
+        GQ9utPzlJuYn5/pGgRCuAMg=
+X-Google-Smtp-Source: ABdhPJzf+FJ+FM3ZjovOUDgK4fBx+vzkYpOfwxL7vC868dap89boW8lhRJKU51/MZ4vk5xge9NrzVw==
+X-Received: by 2002:a17:90a:ee95:: with SMTP id i21mr6081359pjz.231.1624870186501;
+        Mon, 28 Jun 2021 01:49:46 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.213.78])
+        by smtp.gmail.com with ESMTPSA id u14sm13429397pfk.10.2021.06.28.01.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jun 2021 01:49:46 -0700 (PDT)
+From:   Prasanth KSR <kosigiprasanth@gmail.com>
+X-Google-Original-From: Prasanth KSR <prasanth.ksr@dell.com>
+To:     Hans de Goede <hdegoede@redhat.com>, dvhart@infradead.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Prasanth KSR <prasanth.ksr@dell.com>,
+        Divya Bharathi <divya.bharathi@dell.com>
+Subject: [PATCH] platform/x86: dell-wmi-sysman: Change user experience when Admin/System Password is modified
+Date:   Mon, 28 Jun 2021 14:19:06 +0530
+Message-Id: <20210628084906.4233-1-prasanth.ksr@dell.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-TDX guest supports encrypted disk as root or secondary drives.
-Decryption keys required to access such drives are usually maintained
-by 3rd party key servers. Attestation is required by 3rd party key
-servers to get the key for an encrypted disk volume, or possibly other
-encrypted services. Attestation is used to prove to the key server that
-the TD guest is running in a valid TD and the kernel and virtual BIOS
-and other environment are secure.
+Whenever user has changed an Admin/System Password using the sysfs,
+then we are automatically copying the new password to existing
+password field.
 
-During the boot process various components before the kernel accumulate
-hashes in the TDX module, which can then combined into a report. This
-would typically include a hash of the bios, bios configuration, boot
-loader, command line, kernel, initrd.  After checking the hashes the
-key server will securely release the keys.
-
-The actual details of the attestation protocol depend on the particular
-key server configuration, but some parts are common and need to
-communicate with the TDX module.
-
-This communication is implemented in the attestation driver.
-
-The supported steps are:
-
-  1. TD guest generates the TDREPORT that contains version information
-     about the Intel TDX module, measurement of the TD, along with a
-     TD-specified nonce.
-  2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
-     which is used by the host to generate a quote via quoting
-     enclave (QE).
-  3. Quote generation completion notification is sent to TD OS via
-     callback interrupt vector configured by TD using
-     SetupEventNotifyInterrupt hypercall.
-  4. After receiving the generated TDQUOTE, a remote verifier can be
-     used to verify the quote and confirm the trustworthiness of the
-     TD.
-
-Attestation agent uses IOCTLs implemented by the attestation driver to
-complete the various steps of the attestation process.
-
-Also note that, explicit access permissions are not enforced in this
-driver because the quote and measurements are not a secret. However
-the access permissions of the device node can be used to set any
-desired access policy. The udev default is usually root access
-only.
-
-TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
-host, but TDX assumes that the host is able to deal with malicious
-guest flooding it anyways.
-
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Gross <mgross@linux.intel.com>
-Cc: platform-driver-x86@vger.kernel.org
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Co-developed-by: Divya Bharathi <divya.bharathi@dell.com>
+Signed-off-by: Divya Bharathi <divya.bharathi@dell.com>
+Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
 ---
- drivers/platform/x86/Kconfig            |   9 ++
- drivers/platform/x86/Makefile           |   1 +
- drivers/platform/x86/intel_tdx_attest.c | 171 ++++++++++++++++++++++++
- include/uapi/misc/tdx.h                 |  20 +++
- 4 files changed, 201 insertions(+)
- create mode 100644 drivers/platform/x86/intel_tdx_attest.c
- create mode 100644 include/uapi/misc/tdx.h
+ .../x86/dell/dell-wmi-sysman/passwordattr-interface.c         | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 60592fb88e7a..7d01c473aef6 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1301,6 +1301,15 @@ config INTEL_SCU_IPC_UTIL
- 	  low level access for debug work and updating the firmware. Say
- 	  N unless you will be doing this on an Intel MID platform.
+diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+index 339a082d6c18..86ec962aace9 100644
+--- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
++++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
+@@ -95,9 +95,9 @@ int set_new_password(const char *password_type, const char *new)
  
-+config INTEL_TDX_ATTESTATION
-+	tristate "Intel TDX attestation driver"
-+	depends on INTEL_TDX_GUEST
-+	help
-+	  The TDX attestation driver provides IOCTL or MMAP interfaces to
-+	  the user to request TDREPORT from the TDX module or request quote
-+	  from VMM. It is mainly used to get secure disk decryption keys from
-+	  the key server.
-+
- config INTEL_TELEMETRY
- 	tristate "Intel SoC Telemetry Driver"
- 	depends on X86_64
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index dcc8cdb95b4d..83439990ae47 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
- obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
- obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
-+obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
- obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
- 					   intel_telemetry_pltdrv.o \
- 					   intel_telemetry_debugfs.o
-diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
-new file mode 100644
-index 000000000000..a0225d053851
---- /dev/null
-+++ b/drivers/platform/x86/intel_tdx_attest.c
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * intel_tdx_attest.c - TDX guest attestation interface driver.
-+ *
-+ * Implements user interface to trigger attestation process and
-+ * read the TD Quote result.
-+ *
-+ * Copyright (C) 2020 Intel Corporation
-+ *
-+ * Author:
-+ *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-+ */
-+
-+#define pr_fmt(fmt) "x86/tdx: attest: " fmt
-+
-+#include <linux/module.h>
-+#include <linux/miscdevice.h>
-+#include <linux/uaccess.h>
-+#include <linux/fs.h>
-+#include <linux/mm.h>
-+#include <linux/slab.h>
-+#include <linux/set_memory.h>
-+#include <linux/io.h>
-+#include <asm/apic.h>
-+#include <asm/tdx.h>
-+#include <asm/irq_vectors.h>
-+#include <uapi/misc/tdx.h>
-+
-+#define VERSION				"1.0"
-+
-+/* Used in Quote memory allocation */
-+#define QUOTE_SIZE			(2 * PAGE_SIZE)
-+
-+/* Mutex to synchronize attestation requests */
-+static DEFINE_MUTEX(attestation_lock);
-+/* Completion object to track attestation status */
-+static DECLARE_COMPLETION(attestation_done);
-+
-+static void attestation_callback_handler(void)
-+{
-+	complete(&attestation_done);
-+}
-+
-+static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
-+			     unsigned long arg)
-+{
-+	u64 data = virt_to_phys(file->private_data);
-+	void __user *argp = (void __user *)arg;
-+	u8 *reportdata;
-+	long ret = 0;
-+
-+	mutex_lock(&attestation_lock);
-+
-+	reportdata = kzalloc(TDX_TDREPORT_LEN, GFP_KERNEL);
-+	if (!reportdata) {
-+		mutex_unlock(&attestation_lock);
-+		return -ENOMEM;
-+	}
-+
-+	switch (cmd) {
-+	case TDX_CMD_GET_TDREPORT:
-+		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
-+			ret = -EFAULT;
-+			break;
-+		}
-+
-+		/* Generate TDREPORT_STRUCT */
-+		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
-+			ret = -EIO;
-+			break;
-+		}
-+
-+		if (copy_to_user(argp, file->private_data, TDX_TDREPORT_LEN))
-+			ret = -EFAULT;
-+		break;
-+	case TDX_CMD_GEN_QUOTE:
-+		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
-+			ret = -EFAULT;
-+			break;
-+		}
-+
-+		/* Generate TDREPORT_STRUCT */
-+		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
-+			ret = -EIO;
-+			break;
-+		}
-+
-+		ret = set_memory_decrypted((unsigned long)file->private_data,
-+					   1UL << get_order(QUOTE_SIZE));
-+		if (ret)
-+			break;
-+
-+		/* Submit GetQuote Request */
-+		if (tdx_hcall_get_quote(data)) {
-+			ret = -EIO;
-+			goto done;
-+		}
-+
-+		/* Wait for attestation completion */
-+		wait_for_completion_interruptible(&attestation_done);
-+
-+		if (copy_to_user(argp, file->private_data, QUOTE_SIZE))
-+			ret = -EFAULT;
-+done:
-+		ret = set_memory_encrypted((unsigned long)file->private_data,
-+					   1UL << get_order(QUOTE_SIZE));
-+
-+		break;
-+	case TDX_CMD_GET_QUOTE_SIZE:
-+		if (put_user(QUOTE_SIZE, (u64 __user *)argp))
-+			ret = -EFAULT;
-+
-+		break;
-+	default:
-+		pr_err("cmd %d not supported\n", cmd);
-+		break;
-+	}
-+
-+	mutex_unlock(&attestation_lock);
-+
-+	kfree(reportdata);
-+
-+	return ret;
-+}
-+
-+static int tdg_attest_open(struct inode *inode, struct file *file)
-+{
-+	/*
-+	 * Currently tdg_event_notify_handler is only used in attestation
-+	 * driver. But, WRITE_ONCE is used as benign data race notice.
-+	 */
-+	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
-+
-+	file->private_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-+						      get_order(QUOTE_SIZE));
-+
-+	return !file->private_data ? -ENOMEM : 0;
-+}
-+
-+static int tdg_attest_release(struct inode *inode, struct file *file)
-+{
-+	/*
-+	 * Currently tdg_event_notify_handler is only used in attestation
-+	 * driver. But, WRITE_ONCE is used as benign data race notice.
-+	 */
-+	WRITE_ONCE(tdg_event_notify_handler, NULL);
-+	free_pages((unsigned long)file->private_data, get_order(QUOTE_SIZE));
-+	file->private_data = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct file_operations tdg_attest_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= tdg_attest_open,
-+	.release	= tdg_attest_release,
-+	.unlocked_ioctl	= tdg_attest_ioctl,
-+	.llseek		= no_llseek,
-+};
-+
-+static struct miscdevice tdg_attest_device = {
-+	.minor          = MISC_DYNAMIC_MINOR,
-+	.name           = "tdx-attest",
-+	.fops           = &tdg_attest_fops,
-+};
-+module_misc_device(tdg_attest_device);
-+
-+MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
-+MODULE_DESCRIPTION("TDX attestation driver ver " VERSION);
-+MODULE_VERSION(VERSION);
-+MODULE_LICENSE("GPL");
-diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
-new file mode 100644
-index 000000000000..9afbef9079c1
---- /dev/null
-+++ b/include/uapi/misc/tdx.h
-@@ -0,0 +1,20 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_MISC_TDX_H
-+#define _UAPI_MISC_TDX_H
-+
-+#include <linux/types.h>
-+#include <linux/ioctl.h>
-+
-+/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
-+#define TDX_REPORT_DATA_LEN		64
-+/* Output report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
-+#define TDX_TDREPORT_LEN		1024
-+
-+/* IOCTL to request TDREPORT data from TDX Module */
-+#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
-+/* IOCTL to request Quote from VMM using report data */
-+#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
-+/* Get current size of quote */
-+#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
-+
-+#endif /* _UAPI_MISC_TDX_H */
+ 	print_hex_dump_bytes("set new password data: ", DUMP_PREFIX_NONE, buffer, buffer_size);
+ 	ret = call_password_interface(wmi_priv.password_attr_wdev, buffer, buffer_size);
+-	/* clear current_password here and use user input from wmi_priv.current_password */
++	/* on success copy the new password to current password */
+ 	if (!ret)
+-		memset(current_password, 0, MAX_BUFF);
++		strscpy(current_password, new, MAX_BUFF);
+ 	/* explain to user the detailed failure reason */
+ 	else if (ret == -EOPNOTSUPP)
+ 		dev_err(&wmi_priv.password_attr_wdev->dev, "admin password must be configured\n");
 -- 
 2.25.1
 
