@@ -2,107 +2,151 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE1C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B31C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE6161457
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF216197F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 15:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236276AbhF1P2Q (ORCPT
+        id S237317AbhF1PpG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 11:28:16 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:36041 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234092AbhF1P0P (ORCPT
+        Mon, 28 Jun 2021 11:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237254AbhF1Poc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 11:26:15 -0400
-Received: from [192.168.1.155] ([77.9.21.236]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M89P3-1ltmVF43TX-005LqE; Mon, 28 Jun 2021 17:23:39 +0200
-Subject: Re: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
-To:     "Shravan, S" <s.shravan@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Cc:     "An, Sudhakar" <sudhakar.an@intel.com>
-References: <20210428032224.8299-1-s.shravan@intel.com>
- <ab991a6d-e973-9e16-8e8c-382c27f41368@redhat.com>
- <375f3643-de21-3c71-3041-86d9b54f5d3c@redhat.com>
- <MWHPR11MB14558B1E81705599C74239E5E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <d3ccbd96-7e6b-8fdf-3185-247a73964104@metux.net>
-Date:   Mon, 28 Jun 2021 17:23:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Mon, 28 Jun 2021 11:44:32 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA47C0575D1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 08:05:36 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id a2so15689709pgi.6
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 08:05:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oAT6it4MRcZdjD2VEV/ujkGH0l7k9D7vRA+pBVqTx4g=;
+        b=vOfiOoWMbJpAF0pW7hF5usr7TNBkrwVZWP7MRAHd7wMX8Oujc9Y27UXjcN26UHUpiX
+         TcAHMZt+/SR4DpvZU1wSGoxqKe0OGKkiT+MtvSU6ofKN0jplP/YpqKz7CtwpRJXn3Jzd
+         6hWx9EO7wILfRsAkuk673RhSLVzcN7A0mLGQ64/XMSftc/63Cu9AB6ziInMKZPERdUjh
+         RvC99oLtyQ69UjyMmOkJ88sGrAlGP40X3qXe2KaiVrU12ZaumuMszih1Ay+pBUGkxpy9
+         15PvfasRaJRZOPlvY3ccXCpnL4hPrVV9fxcOPLqtqfaDEBNFHFNcsMMtOraywZJDlb9Y
+         s/eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oAT6it4MRcZdjD2VEV/ujkGH0l7k9D7vRA+pBVqTx4g=;
+        b=d2vf880STdTMv0OokmZZMvn2G/PpQNvUmjIjmuT/8TaQkEh+dM2s2Ut4Nof1B9VmDx
+         l/KGpXorgr2LGpSy3Ss46lPhBkGruIYGxVJ6FQoURSentf8JuHRgXmXF3PSXf7nKalow
+         Nf+yspuUzk3y1yzcpJ8xTjolM42kXuSbwjdBuwLb3ORlTFNvHctm+WYDvbw0aApjEMnZ
+         +3fJXDOe2AL/FNuxzpOBb/H1tvoHYEzya3vO7aQbDGeQMtO4SUNY7Fk19oozCKoGdtpr
+         1DHPEyOe8xHcsw0ZRl9UidRya/zb1hmHgYEE/+9Sg7tyyuxzbjPIcFfhmTAcwHbVBZRD
+         KPww==
+X-Gm-Message-State: AOAM533c6OEsJA4JN/+AM5zABVylf3Ly4YX1ZcMcwejO+Ufpef+MtKQo
+        j3qU0L4qFRwrLvh+Wy1zEBX/JxmDgx+KD/71cFc=
+X-Google-Smtp-Source: ABdhPJxI/D7AY7Tr54p7NBY9MoKFQxGnWibP4rkF2iAKn0lXhiV4qL0oXQpfGmrHB9tZL2S7xF48BR5HhS31NgcghA4=
+X-Received: by 2002:a63:df10:: with SMTP id u16mr23734789pgg.4.1624892735532;
+ Mon, 28 Jun 2021 08:05:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <MWHPR11MB14558B1E81705599C74239E5E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: tl
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:o3rY02SKFuvYg8XJTyaLCwKmVRM9C7LdzQ7tVVEyJBwQPeQ90iH
- HHlR509yVk/2rFNbIWwchrz2jdvNynOTgSecKFfe0U+AkTjKGItu9/9UX2WPThKRk6zbFgf
- GCUESWne3hfFLHxYU3sI/dm72V0XXzWVJBI2+l/Ceiom5H2HdJdxkbZqGUg4mO3+/YUPT/c
- YdY1Q3eJwr9dObCQe6QEw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3wHD9BmeEPc=:rAaOHDKS0Z++9doqAszMeM
- 3Ii1qSuaET8Bx1pV24EHKMPOBG34YJkT5ocOTqYCvwfS6NCcE4oiXvJsbOlUjIeggZloeHdoX
- MIgke7f3YQJ0+Ou+zpPa+NmmzhDiIt9ejxIny7mii95HY+ae4I+P8kQq/6KH1n8vg2Tvg9N0J
- G8SXBWU7TFF8H0caDNeZ0jZqEaj+gDQCD4ljbW5Nm4n+SlPgMB08b+unRQzI/j0W0Ddq8bRFp
- tr6Yhc+qzTTjKJLfyplTN8ewiYWoqyGB4gXOHr+acYRq9Mi/GXGlibz9moSw/38Dp37A45oKh
- iTaRLvm/SW2KpuxrcrNb0itVUzgmN1f625cwR/AdLEILjYUM94ejSVDzYE+qorlY6xg9C5/cc
- /LBDS+PYNGfXBn8i5I+wb1UsXG7UMORJ2zxT0JzW59uDmaQMqjlliDJiSsi/Z9a29+FvNnVyC
- 8NorFg2wAHwXUO1iAJjTFUYrcKvZQqp2tlURWrLP1unDUKROoaq1HgKe9/mvn2HhCnoEuOiIf
- utvDvPMFB02DAhkPvA+sOc=
+References: <20210428032224.8299-1-s.shravan@intel.com> <CAHp75Vfq6B0=q0dsQPTP_A8sdPh9tepBooa7cW=KJYX78ekWtw@mail.gmail.com>
+ <MWHPR11MB1455D055108F1DBEA6EB9285E3319@MWHPR11MB1455.namprd11.prod.outlook.com>
+ <c7c3d395-826b-fc34-b396-a9c7631d981b@metux.net> <CAHp75VdLhxv4PqRznZGXQiWtdM7Ssx29xDkH4BaZ_DmHWa=-Nw@mail.gmail.com>
+ <MWHPR11MB145562EBE171DD3B40595DD0E3089@MWHPR11MB1455.namprd11.prod.outlook.com>
+ <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
+In-Reply-To: <c76d3ae7-a7fb-e766-d71c-c929cfde969c@metux.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 28 Jun 2021 18:04:57 +0300
+Message-ID: <CAHp75Ve8vMhJ6RxOg1XJaOaDgEBSkaamr2S_34zn21=AJvOsZA@mail.gmail.com>
+Subject: Re: [PATCH 0/1] [x86] BIOS SAR Driver for M.2 Intel Modems
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     "Shravan, S" <s.shravan@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "An, Sudhakar" <sudhakar.an@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 23.06.21 16:12, Shravan, S wrote:
+On Mon, Jun 28, 2021 at 5:07 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+> On 23.06.21 16:03, Shravan, S wrote:
 
-Hi,
+...
 
->>> 1. Listening to some sensors, which readings may impact the maximum
->>> amount of tx power which the modem may use. What kind of sensors are these ?
->>> Currently chrome-os based devices are using iio for proximity sensors,
->>> with specific labels added to each sensor to tell userspace that they
->>> indicate a human is close to one of the antennas:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com
->>> mit/Documentation/ABI/testing/sysfs-bus-iio?id=6505dfab33c519368e54ae7
->>> f3ea1bf4d9916fdc5
->>>
->>> Would it be possible to use this standardized userspace interface for
->>> your use case ?
-> 
-> [Shravan] Proximity sensors can work in scenarios where there is no other sources of information which can alter the sar handling.
-> OEMs have given feedback that the device mode (tablet mode/laptop mode/clamshell etc) also play a part in SAR handling. Hence this
-> has to be aggregated with the proximity sensor information. Also such an aggregation is specific to given host platform. As a consequence,
-> this is best realized within an entity like embedded controller available on the host platform. This new driver exposes such aggregated SAR
-> parameters that needs to be configured on specific RF device.
+> Over the last decades I had to learn to *never* trust BIOS vendors with
+> anything more than just starting the kernel, especially not trusting in
+> ACPI tables. And we certainly cant expect people doing field bios
+> upgrades anytime soon, in case some bios vendor actually manages to
+> clean up his dirt and publish some actual fixes.
 
-Since this is totally hardware specific and doesn't even tell us which
-radio interface this is about - why do we have to have this incomplete
-stuff in acpi and the kernel in the first place ? As things are right
-now, this can be completely done in userspace, including the tables.
+But this is not the issue of ACPI, right? Maybe you should stream the
+energy to complain and file bugs against vendors who do not know how
+to cook ACPI?
 
-It would be different if acpi tables could give us some precise and 
-generic hardware description, so we could handle this in a generic
-way and userland wouldn't even have to care about it.
+> Seriously, I'd rather try to keep bios out of the loop as much as
+> possible. And if it is involved, let it describe the hardware precisely
+> instead of doing whatever magic logic.
 
+Isn't it applicable to all firmwares? Have you tried to avoid wireless
+firmwares (rhetorical question)? My point is that we have to live with
+that fortunately or unfortunately.
 
---mtx
+> (I need to hold back myself for not starting another rant against ACPI
+> and bios vendors :p)
+
+As I said, look into the root cause, while I admit that the ACPI spec
+is easy to abuse / misinterpret (in some cases).
+
+...
+
+> >>> 3. unclear how userland this should really handle in a generic way
+> >>>      --> how does it know which device to tune ?
+> >
+> > [Shravan] Userland will configure these parameters on the specific RF device.
+>
+> So the user needs to configure it anyways. Why do we have to have that
+> acpi stuff in the first place ? If we're already involving a device
+> specific userland, everything (including the tables) could live entirely
+> in userland - and we would never ever have to touch bios or kernel
+> anymore. (remember: bios upgrades are always a total mess).
+>
+> >>> by the way, who hat that funny idea putting such information into acpi
+> >>> in such a weird way ?
+> >>
+> >> I believe its source is a Windows driver and Windows "culture", they simply
+> >> don't give a crap about anything else and Windows is a product-oriented platform
+> >> (each product is unique even if 99.9% of the hardware and firmware is the same
+> >> with twenty more products).
+>
+> Okay, and why are you guys (Intel) following such insanity, when this is
+> meant for Linux-based devices like Chrome ?
+
+I haven't got it. How do you deduct that it's solely for Chrome? Even
+I'm puzzled with this Yet Another Not So Portable Idea. And above is
+my speculation about the roots of it. I can't explain it any other
+way.
+
+> Sorry, but doing something just because thousands of programming minions
+> in Windoze world (which, from my personal expercience, most of them, at
+> least on driver and firmware side, I have to consider totally
+> incompetent) are doing it that way, really is a bad excuse and has
+> nothing to do with decent engineering.
+>
+> So, please, let's throw away that arbitrary acpi junk and engineer a
+> technically good solution.
+
+ACPI has nothing to do with any solution to be "junk". If one doesn't
+know how to cook it, it doesn't prevent them from cooking it in a
+better way.
 
 -- 
----
-Hinweis: unverschlüsselte E-Mails können leicht abgehört und manipuliert
-werden ! Für eine vertrauliche Kommunikation senden Sie bitte ihren
-GPG/PGP-Schlüssel zu.
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+With Best Regards,
+Andy Shevchenko
