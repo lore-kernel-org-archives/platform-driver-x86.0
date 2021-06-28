@@ -2,81 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25D8C2B9F4
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52231C2B9F4
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B15BD619AB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661C461C5F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 09:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbhF1JRk (ORCPT
+        id S232569AbhF1Jcd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 05:17:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55563 "EHLO
+        Mon, 28 Jun 2021 05:32:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43570 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232415AbhF1JRi (ORCPT
+        by vger.kernel.org with ESMTP id S232565AbhF1Jcb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 05:17:38 -0400
+        Mon, 28 Jun 2021 05:32:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624871712;
+        s=mimecast20190719; t=1624872605;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5bou4h074m3o/W74lRU3ezW0yQ1+IHLUSss8INpB7tU=;
-        b=aJC7HY04wAroFUtWkRjFshDW8rMA2AlP4zUHio0J+/h6mggLEIbb5n6IbeZlvmf7deX1Of
-        Dl6yDDhkg11PabDZUHFJFy3Vz6EwA0oyijAr64qXF7+LENsybz2Pf4Yrp88X4AjMpcx3Wz
-        ClDpaC5/poo4STu21jWGUriTDeS3NOM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-583-oq21GrvPOBGTsPowgChTUQ-1; Mon, 28 Jun 2021 05:15:11 -0400
-X-MC-Unique: oq21GrvPOBGTsPowgChTUQ-1
-Received: by mail-ed1-f70.google.com with SMTP id o8-20020aa7dd480000b02903954c05c938so2254822edw.3
-        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 02:15:10 -0700 (PDT)
+        bh=Gl9ZhOuHXpnDBUGpWJMkF1nOG6+GrTQHJxNnLTXVmws=;
+        b=hyDRFdLH0ylKe8mO8z6GK/ius3ONK7aNz1lwVidmcjBROD3IPZ5+V8JXXNJI3EoJRlrvO7
+        LT0sW91LIZIyu/rfiMXb/cPdmCHFSR6qHIW7fol+1qon1xVQT+f9XSED0eiYeQ93elG5cc
+        dVqlP6ijvgHbn8mgoUTnM4mPOtY2gaU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-RjzzHFy2O3uPFb6SQQwUHQ-1; Mon, 28 Jun 2021 05:30:03 -0400
+X-MC-Unique: RjzzHFy2O3uPFb6SQQwUHQ-1
+Received: by mail-ej1-f70.google.com with SMTP id p5-20020a17090653c5b02903db1cfa514dso4107067ejo.13
+        for <platform-driver-x86@vger.kernel.org>; Mon, 28 Jun 2021 02:30:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=5bou4h074m3o/W74lRU3ezW0yQ1+IHLUSss8INpB7tU=;
-        b=SRDkgNWR1KGkFqLs93dJTW3YCvqOIuPRlmBVSJwB+XG9Q7NvcxXEpOgKv52sj+Nv9m
-         oWUi8bJJlt5GYKrsrIA9AbDGganXB5xfavDpWV/v7pRPdAGKtkLyIajIqfSgngoSY5nN
-         5ujdFPMgEspIbmdZqFTWYSKn3Eavrgq3964D2Gv5lXj76NjLN/YSg0WLfqcJEkZkHlRr
-         PPXtxLh7rZaMMzods4EFIXLZ7jl8qnYN3MVoPqp/RKL26m2pgM54kFIF+GxV1Zl20KWu
-         wgU/hX6+xG9/ll21SKvt5UBrSvjhaTUdfkMG5cagmCxo86jpcOG7sLup5MG0DwVEchpf
-         7XrQ==
-X-Gm-Message-State: AOAM530xeXSuDGtDcVLSsgDCHlGkp+DvjjEa98YjO21XhVinjQvjqDkx
-        advBfAd3Y9OAFe2c+VO73jBH9BBLNZ2qgy1z3Y0L9Wp6VRPueX2mrGKbGxIRAKnOZ9HSAGJZSbU
-        YxeKxVuViHPmm2zMUmIWjGtjUc+je28dZMw==
-X-Received: by 2002:a17:906:31d4:: with SMTP id f20mr22633333ejf.383.1624871709979;
-        Mon, 28 Jun 2021 02:15:09 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy8mJSO5fIGvt8yQ58Tc6tauoJdaypg9Uo0BH/ZKvCHDRQqrU5UpRKRWSg513d19BQXRr3ZXg==
-X-Received: by 2002:a17:906:31d4:: with SMTP id f20mr22633314ejf.383.1624871709795;
-        Mon, 28 Jun 2021 02:15:09 -0700 (PDT)
+        bh=Gl9ZhOuHXpnDBUGpWJMkF1nOG6+GrTQHJxNnLTXVmws=;
+        b=QRajkIlb3YyoMbM4K3y/6HOErjSOUkAxGGiTUwBl76+XacEgnX+dHExdYtsOh5dYRF
+         OF3oasP6zMjq2cmHF5+eklJ12eMF61N31mZIt3sPCc85HVxCm2tly76fue1mRdJw6kyo
+         jzX9hLxHQn0gH/46JDWMrHEE31fWBcryyE0y0gEA+4hGZM0rZpsIM0hHJJZ4Gvu85+Oz
+         ltC0SSURZq9EYI76Iy4ct3bIKky0Q3pf/U1oLhvao94RpuldSRW/VpdXUnLHChy6UgBd
+         t/kRkMBR7UapTuqwHiGrGcy6hTZfpWyU/neLL8ykgzFjRIN/iGvcjaPXnaw4rPP/lM6x
+         q+lA==
+X-Gm-Message-State: AOAM5316QYfO+QiAkHdJEgQWhG1E3UxK8tZ/NxgP0xFWWXG3w9vsZQ39
+        NZxnUtbz9L2PbXeugGDGzVT2pYfpm9LCnY5L8En1MCYYElfDVe5bDkgSC80MdQIZsrcKcLBz6bA
+        UhEEmxGgQyAMFEgdRFEZ2AzNIReZ6Cr0c2g==
+X-Received: by 2002:a17:906:4e44:: with SMTP id g4mr23547498ejw.216.1624872602589;
+        Mon, 28 Jun 2021 02:30:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzkhBT22tEJn5nmP/jXYVM71L7EU1iRdnB7+3jgKn3FgK10tK246EfATU6e9+gVdJMwjgjRIg==
+X-Received: by 2002:a17:906:4e44:: with SMTP id g4mr23547486ejw.216.1624872602378;
+        Mon, 28 Jun 2021 02:30:02 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id bq1sm6582042ejb.66.2021.06.28.02.15.09
+        by smtp.gmail.com with ESMTPSA id s20sm9329919edr.50.2021.06.28.02.30.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Jun 2021 02:15:09 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: dell-wmi-sysman: Change user experience
- when Admin/System Password is modified
-To:     Prasanth KSR <kosigiprasanth@gmail.com>, dvhart@infradead.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org,
-        Prasanth KSR <prasanth.ksr@dell.com>,
-        Divya Bharathi <divya.bharathi@dell.com>
-References: <20210628084906.4233-1-prasanth.ksr@dell.com>
+        Mon, 28 Jun 2021 02:30:02 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] platform/x86: think-lmi: Fix issues with duplicate
+ attributes
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>, markpearson@lenovo.com
+References: <20210622200755.12379-1-mario.limonciello@amd.com>
+ <20210622200755.12379-2-mario.limonciello@amd.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <f4ec848d-735b-68aa-bee2-de9a2fbbe195@redhat.com>
-Date:   Mon, 28 Jun 2021 11:15:08 +0200
+Message-ID: <21e896f7-69d8-e6fe-cc4e-55d3ecd44be1@redhat.com>
+Date:   Mon, 28 Jun 2021 11:30:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
 MIME-Version: 1.0
-In-Reply-To: <20210628084906.4233-1-prasanth.ksr@dell.com>
+In-Reply-To: <20210622200755.12379-2-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,51 +86,74 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 6/28/21 10:49 AM, Prasanth KSR wrote:
-> Whenever user has changed an Admin/System Password using the sysfs,
-> then we are automatically copying the new password to existing
-> password field.
+On 6/22/21 10:07 PM, Mario Limonciello wrote:
+> On an AMD based Lenovo T14, I find that the module doesn't work at
+> all, and instead has a traceback with messages like:
 > 
-> Co-developed-by: Divya Bharathi <divya.bharathi@dell.com>
-> Signed-off-by: Divya Bharathi <divya.bharathi@dell.com>
-> Signed-off-by: Prasanth KSR <prasanth.ksr@dell.com>
+> ```
+> sysfs: cannot create duplicate filename '/devices/virtual/firmware-attributes/thinklmi/attributes/Reserved'
+> ```
+> 
+> Duplicate and reserved values showing up appear to be a firmware bug,
+> but they shouldn't make the driver explode.  So catch them and skip
+> them.
+> 
+> Fixes: a40cd7ef22fb ("platform/x86: think-lmi: Add WMI interface support on Lenovo platforms")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Thank you.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+> ---
+>  drivers/platform/x86/think-lmi.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> V1->V2 changes:
+>  * Don't show reserved objects either
+>  * Clear the object so it doesn't explode on module unload
+> 
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index d2644230b91f..4d8b5c185f8e 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -691,6 +691,16 @@ static int tlmi_sysfs_init(void)
+>  		if (!tlmi_priv.setting[i])
+>  			continue;
+>  
+> +		/* check for duplicate or reserved values */
+> +		if (kset_find_obj(tlmi_priv.attribute_kset, tlmi_priv.setting[i]->display_name) ||
+> +		    !strcmp(tlmi_priv.setting[i]->display_name, "Reserved")) {
+> +			pr_debug("duplicate or reserved attribute name found - %s\n",
+> +				tlmi_priv.setting[i]->display_name);
+> +			kfree(tlmi_priv.setting[i]->possible_values);
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+You are missing a:
+
+			kfree(tlmi_priv.setting[i]);
+
+here, this is done through the kobj_put in tlmi_release_attr(), but since we will
+now never register the kobj we should just free this directly to avoid a memleak.
+
+Since I want to include this important fix in my first pull-req for 5.14 I've fixed
+this up locally and merged this into my review-hans branch, so there is no need to
+send out a new version.
+
+I've a non AMD ThinkPad (X1C8) which does have a single "Reserved" entry, so I'll
+make sure to test the modified patch myself before sending out the 5.14 pdx86
+pull-req.
 
 Regards,
 
 Hans
 
 
-> ---
->  .../x86/dell/dell-wmi-sysman/passwordattr-interface.c         | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-> index 339a082d6c18..86ec962aace9 100644
-> --- a/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-> +++ b/drivers/platform/x86/dell/dell-wmi-sysman/passwordattr-interface.c
-> @@ -95,9 +95,9 @@ int set_new_password(const char *password_type, const char *new)
->  
->  	print_hex_dump_bytes("set new password data: ", DUMP_PREFIX_NONE, buffer, buffer_size);
->  	ret = call_password_interface(wmi_priv.password_attr_wdev, buffer, buffer_size);
-> -	/* clear current_password here and use user input from wmi_priv.current_password */
-> +	/* on success copy the new password to current password */
->  	if (!ret)
-> -		memset(current_password, 0, MAX_BUFF);
-> +		strscpy(current_password, new, MAX_BUFF);
->  	/* explain to user the detailed failure reason */
->  	else if (ret == -EOPNOTSUPP)
->  		dev_err(&wmi_priv.password_attr_wdev->dev, "admin password must be configured\n");
+
+
+> +			tlmi_priv.setting[i] = NULL;
+> +			continue;
+> +		}
+> +
+>  		/* Build attribute */
+>  		tlmi_priv.setting[i]->kobj.kset = tlmi_priv.attribute_kset;
+>  		ret = kobject_init_and_add(&tlmi_priv.setting[i]->kobj, &tlmi_attr_setting_ktype,
 > 
 
