@@ -2,161 +2,122 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C400DC11F64
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 22:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2A2C11F66
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Jun 2021 08:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9917361CED
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 28 Jun 2021 22:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B325861D4D
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 29 Jun 2021 08:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235371AbhF1Wbf (ORCPT
+        id S232577AbhF2Iuv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 28 Jun 2021 18:31:35 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:9423 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235319AbhF1Wbe (ORCPT
+        Tue, 29 Jun 2021 04:50:51 -0400
+Received: from mail-mw2nam10on2051.outbound.protection.outlook.com ([40.107.94.51]:42849
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232487AbhF2Iuv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 28 Jun 2021 18:31:34 -0400
-Received: from [100.112.4.164] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-c.us-east-1.aws.symcld.net id 92/22-54191-43D4AD06; Mon, 28 Jun 2021 22:29:08 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIIsWRWlGSWpSXmKPExsWSLveKTdfY91a
-  CwZUnBhZvjk9nsli8fhmjxeeOySwWq/e8YHZg8Wi99JfNY97JQI/3+66yeXzeJBfAEsWamZeU
-  X5HAmvHo+Er2gv2iFY0rfrA1MN4S6mLk4hAS+M8o0XttMyuE84RRYvLBs0xdjJwcbALaElu2/
-  GLrYuTgEBGQkfiw1hMkzCxQITHlSRcjiC0s4C5xc95iZhCbRUBV4ujEF2CtvAJWEnsnP2EHsS
-  UE5CVOn7gGVs8JVHOm6zELiC0koCJx/8ESNoh6QYmTM5+wQMyXl2jeOpsZwpaQOPjiBTPEHAW
-  JN+/3Qc1MkOj594htAqPALCTts5C0z0LSvoCReRWjWVJRZnpGSW5iZo6uoYGBrqGhka6JrpGx
-  hV5ilW6yXmmxbmpicYmuoV5iebFecWVuck6KXl5qySZGYMinFLC828F49vUHvUOMkhxMSqK8N
-  21uJQjxJeWnVGYkFmfEF5XmpBYfYpTh4FCS4G30BsoJFqWmp1akZeYA4w8mLcHBoyTCm+wJlO
-  YtLkjMLc5Mh0idYlSUEueVBekTAElklObBtcFi/hKjrJQwLyMDA4MQT0FqUW5mCar8K0ZxDkY
-  lYd42kPE8mXklcNNfAS1mAlq86MlNkMUliQgpqQYm9amiizYtu+y2vn67oFmw5WaPtSVPpt9+
-  Ovms0ClD0e8eBd/tyx3soo7kznFeY1lzX/0FyzTe4/GVj7x3v2pfO3FrdBSXuGZwacah2r1KC
-  84Gs+62+9p5pXjpjrt17c7ldS5rxXPncJfvjuZKMdI7/OrRpzt90nM86yfZWM1wuG167316d8
-  RB+2szHXs572hrHrl9QpK5wtbgegRfru3s1Q88H3d+X2Ivm8yfEaTU++5UbcgzZt/ke2vOMr0
-  +rSidyrFWc4pe2bNDjxeZSr3ZEqvdsq2ET3zDFhbGE8IT5Z26y9Ovznbn37iiTeHw3K2BJ1Yb
-  TFm8y/DRtdKNj4U/bsqLNpCRee6ev+GbxKGpSizFGYmGWsxFxYkA+gKPTXQDAAA=
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-14.tower-415.messagelabs.com!1624919346!40344!1
-X-Originating-IP: [103.30.234.6]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 11709 invoked from network); 28 Jun 2021 22:29:07 -0000
-Received: from unknown (HELO lenovo.com) (103.30.234.6)
-  by server-14.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 28 Jun 2021 22:29:07 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id ACC4776C00445E394572;
-        Tue, 29 Jun 2021 06:29:04 +0800 (CST)
-Received: from fedora.Lenovo.com (10.38.106.36) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Mon, 28 Jun
- 2021 18:28:59 -0400
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <platform-driver-x86@vger.kernel.org>, <mario.limonciello@amd.com>
-Subject: [PATCH v2] platform/x86: think-lmi: Add pending_reboot support
-Date:   Mon, 28 Jun 2021 18:28:46 -0400
-Message-ID: <20210628222846.8830-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+        Tue, 29 Jun 2021 04:50:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AxyHvcyH48okNgtWeeOvjvX6Jx5OfPEsVae45cE2AqbucOT+HVpcsDEfOYKChcaYchsFeY47GyVGCjYni4WL6ktyADIeclLw3s37PfR2gjmF6Bw1K6ydq5MIlWjX7rn3GYw63K+7QX09MpFMCR36HXlt+bM+18WxXFMIP6RoHi1I4W/HWjuoBebvi3TvraY2+qr5Lj9J4eVP0YTvW5KOwE/uI6FSMtl/5HCY1X4W6f7+SU/2gj35Csf9beMiQZbMvUhRjJk9NjFMzYOf4ycDmCWJIPqudgWo+cPP7ESSwiMZboC7/lToOS4BUOUumpt0VYVBSrdZguMqQyQJXZ8FeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kuAkxEpDniZeOJnx3c3vt0m0SKQVBsnZx7jJzgI6tOM=;
+ b=ThhFaN7LmXtebSyb+XFgq8sIDsEBqVwPgAkYGMslpna4Dz5EdTdo3hsKh5Wl037NzRBIzX0PW3mh846jVJwrW7Sp6VFz7kTFZnK4dIo8TkfUQdNjzEPLk8VXqwotWhpeb/HmORdEEAM4/QMdsXJP/rbbAJzCsaRUwW178QVZo3dfSJrTQ9Ti3iQIzZfOdpQpEyXWf5eM8iPRhT9B/s9adOg5K24zcEMojRU2smww7BVAWfw1s1nChG0/XEfHck700McBzoKqMNZe84h5HsoZ9S3vme+nsUmKQa/M9E9b4UPex4WBsDeJrRbeImrkLa5CaQbJkWreWZLfLpQNIPWNCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kuAkxEpDniZeOJnx3c3vt0m0SKQVBsnZx7jJzgI6tOM=;
+ b=ZrkWeZp0aYVx9yW+64OoP8kN6Skyi6PUdju09/YQwGsaDeGFEs7XljyVyPdZiMfgvLmewf4kbyAbY9IVTxu/lZpI722qm1Udp7PmXm5g0k0LJANKTKGqdJYATalYPkfXknhnX1mbMNOsQHZ4rncnZqdlAlg4PJD1plyjYfSn/iM=
+Received: from MW4PR03CA0057.namprd03.prod.outlook.com (2603:10b6:303:8e::32)
+ by SA0PR12MB4367.namprd12.prod.outlook.com (2603:10b6:806:94::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.21; Tue, 29 Jun
+ 2021 08:48:22 +0000
+Received: from CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8e:cafe::6b) by MW4PR03CA0057.outlook.office365.com
+ (2603:10b6:303:8e::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.20 via Frontend
+ Transport; Tue, 29 Jun 2021 08:48:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT044.mail.protection.outlook.com (10.13.175.188) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4264.18 via Frontend Transport; Tue, 29 Jun 2021 08:48:22 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 29 Jun
+ 2021 03:48:19 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <rrangel@chromium.org>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+Subject: [PATCH v5 0/7] updates to amd-pmc driver
+Date:   Tue, 29 Jun 2021 14:17:56 +0530
+Message-ID: <20210629084803.248498-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.38.106.36]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 749fd2ba-31b7-453e-5435-08d93adaa6d8
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4367:
+X-Microsoft-Antispam-PRVS: <SA0PR12MB43678E0E0C98029FCE2BC76D9A029@SA0PR12MB4367.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J/V/VNVsHD6jHPd9fU2SIsNONTrFsnBNfKnYjyu0bK6q4qfBhFA/pK+4RFctTBNnCEILMdkflI3v6cIWrLD8gSknm125jxXC+3T0H0a4Na0fh/uGxLNYhOdPVxz8vZwf4ngicFCxfALXJt6DX17slGgfjiphzSXObR3gVmg+LG5ilzC3BSCr5XkCnkloI2KIRlVT6Bu/NXtlffxuojzTj7LeEKlwjMibl14jhYuKWfPQy+PpVfdlcUxkT9T1v0oKaYrX8eO39b6ktQSE40a4Ha8DWQCOVY2tmk6CyEYzpcHpm5Kp8tc5qNYya8Xg3nRXoRoGlbPfXKiZUcsuZB28DxZYeICDixhuVNWUa2r2zHa0VqMaB/4LdcPL3OTfwHT98uVIZZTiEcKvDtXfOo0k88gLhqFkklH/hR1+/HNTNCRy5qOlrakAGhMxjPxuOAOKf3hQCQWq+j2sMMKNWeWLh5DHwCY65aho8dSiZqS1a+UTZhtv77YP9PWTXHOZGvNzHfQkwC+C/GmHxFtZMsCRPrjI0KNp5o+FyBWnUrEfRrARN+mnxXik6kwBDh5uHvVCptRCgvTqbmjANgYKHnVGZTHE8m24LA/cNnwtmMbkSFWA0SIz1grMEMsx3oXH9OD9pcBM7rgnW1Ll9in2ZFcb7jkEiLNPLD1incx8hjgMGwdE/yF2MIRcDF/FWH4jXUw7ANw/oKiOT0C6TKX09aDB1Ypf4/7SDvc4Rb0hDrXvJg4=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(346002)(39860400002)(376002)(136003)(396003)(36840700001)(46966006)(4744005)(2616005)(70206006)(70586007)(1076003)(36860700001)(336012)(426003)(26005)(478600001)(47076005)(82310400003)(82740400003)(16526019)(186003)(8936002)(8676002)(6666004)(36756003)(7696005)(54906003)(110136005)(316002)(4326008)(86362001)(5660300002)(2906002)(356005)(83380400001)(81166007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2021 08:48:22.4343
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 749fd2ba-31b7-453e-5435-08d93adaa6d8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT044.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4367
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The Think-lmi driver was missing pending_reboot support as it wasn't
-available from the BIOS. Turns out this is really useful to have from
-user space so implementing from a purely SW point of view.
+Couple of existing issues on the completion codes to SMU
+and a newer way to get the s0ix statistics are introduced.
 
-Thanks to Mario Limonciello for guidance on how fwupd would use this.
+Also, add acpi ids for current and future revisions of the
+pmc controller.
 
-Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
----
-Changes in v2: 
-  - added in Mario's Suggested-by tag (and will use correct email when
-    submitting patch)
+Shyam Sundar S K (7):
+  platform/x86: amd-pmc: Fix command completion code
+  platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+  platform/x86: amd-pmc: call dump registers only once
+  platform/x86: amd-pmc: Add support for logging SMU metrics
+  amd-pmc: Add support for logging s0ix counters
+  platform/x86: amd-pmc: Add support for ACPI ID AMDI0006
+  platform/x86: amd-pmc: Add new acpi id for future PMC controllers
 
- drivers/platform/x86/think-lmi.c | 19 +++++++++++++++++++
- drivers/platform/x86/think-lmi.h |  1 +
- 2 files changed, 20 insertions(+)
+ drivers/platform/x86/amd-pmc.c | 244 ++++++++++++++++++++++++++++++---
+ 1 file changed, 222 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index b57061079..bcc3d6fcd 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -566,6 +566,11 @@ static ssize_t current_value_store(struct kobject *kobj,
- 	else
- 		ret = tlmi_save_bios_settings("");
- 
-+	if (!ret && !tlmi_priv.pending_changes) {
-+		tlmi_priv.pending_changes = true;
-+		/* let userland know it may need to check reboot pending again */
-+		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-+	}
- out:
- 	kfree(auth_str);
- 	kfree(set_str);
-@@ -641,6 +646,14 @@ static struct kobj_type tlmi_pwd_setting_ktype = {
- 	.sysfs_ops	= &tlmi_kobj_sysfs_ops,
- };
- 
-+static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				   char *buf)
-+{
-+	return sprintf(buf, "%d\n", tlmi_priv.pending_changes);
-+}
-+
-+static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
-+
- /* ---- Initialisation --------------------------------------------------------- */
- static void tlmi_release_attr(void)
- {
-@@ -662,6 +675,7 @@ static void tlmi_release_attr(void)
- 	sysfs_remove_group(&tlmi_priv.pwd_power->kobj, &auth_attr_group);
- 	kobject_put(&tlmi_priv.pwd_power->kobj);
- 	kset_unregister(tlmi_priv.authentication_kset);
-+	sysfs_remove_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
- }
- 
- static int tlmi_sysfs_init(void)
-@@ -730,6 +744,11 @@ static int tlmi_sysfs_init(void)
- 	if (ret)
- 		goto fail_create_attr;
- 
-+	/* Create global sysfs files */
-+	ret = sysfs_create_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
-+	if (ret)
-+		goto fail_create_attr;
-+
- 	return ret;
- 
- fail_create_attr:
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-index 6fa8da7af..eb5988466 100644
---- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -60,6 +60,7 @@ struct think_lmi {
- 	bool can_get_bios_selections;
- 	bool can_set_bios_password;
- 	bool can_get_password_settings;
-+	bool pending_changes;
- 
- 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
- 	struct device *class_dev;
 -- 
-2.31.1
+2.25.1
 
