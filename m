@@ -5,239 +5,472 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801E5C11F65
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Jun 2021 10:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDD6C11F65
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Jun 2021 13:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6364961CF6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Jun 2021 10:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF7CD613DD
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 30 Jun 2021 13:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234103AbhF3KTy (ORCPT
+        id S234849AbhF3NiM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 30 Jun 2021 06:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+        Wed, 30 Jun 2021 09:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbhF3KTx (ORCPT
+        with ESMTP id S234723AbhF3NiL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 30 Jun 2021 06:19:53 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A3BC061756
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Jun 2021 03:17:23 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id i94so2950620wri.4
-        for <platform-driver-x86@vger.kernel.org>; Wed, 30 Jun 2021 03:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=8nIzMejevNlcayC5ysEAr8LTPQnvQ1k4Qis/Zmzckfs=;
-        b=AMTJyNglTori0IxVNpucKG+59a7Jt+/Au26IZkPquBgEfc7jBsmIimc5Az4UWR6Seh
-         1pHxNefyU5KyQtM2bS4AhwrXu8JD1Bboj2jvRsXTnbbDVBbd/fpFOeQ3ZLG8J6dBRI1g
-         EjpuLlJ4dWElA8vwZRaHuU/D4ZzKfVXC7MPpEI8ER/7CJPMFg3cGZ02zMdwxW/3jedgf
-         gymz8FSTJYY/4t2t8mHuYJ6wOzgyPkr3Uji0sJG/Pyky95qd+wIZIR8bZamp07VJMoqa
-         J+nOBdym/Hypdk8DH4F2+WM95MhEnFSf7fUJEQLUCG8NRuW/9vVKR5BBWtkICo/HriP+
-         Rx7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=8nIzMejevNlcayC5ysEAr8LTPQnvQ1k4Qis/Zmzckfs=;
-        b=U0LNUGqVCk6VuznoUd2O91oxqg+4BjN+u6iz0by9wzNj12dO4ngz4Pnbiq7Ad1Frof
-         k3UsXUzKQuxsQGfk1y7CtUfT7cM9pUcbaMNaFzZTxDPbe5bd6jZOl6dvmSumBAieeGcX
-         TUWReyvi00c1eFux7GXsUgnR4Uw2jkNqaQIK5OQZVZnynu99hoSc54VYG5E7chYymVx0
-         sYqyyZgE/26uh/0wQxJ1gS3lgmGgcKTizUJ//Vfd43m1CTGDbXqprhEDxrhK4DLh+0vp
-         Pi4p2sJ20cLhCmg0UeuyBgNUOkX4nER2W7hCT0kLng9YcNaKnVNb2Ti+Ag5dZVdUjggn
-         x4Mg==
-X-Gm-Message-State: AOAM533HPJCpC1U73KdMQEL8S3WcAOzZFv52oOYPlZ4lFmwWIwVN50Ec
-        fjlFNF8kaZ/5zFMusEvgGPeftVUhv4FLXg==
-X-Google-Smtp-Source: ABdhPJyBy0lJW8EeksUz43z1dVZXdAyVcITFlfhSYrJrftXGur0j7mj0Ix0a5MfMwE/o+4bu5w77uA==
-X-Received: by 2002:adf:f850:: with SMTP id d16mr17863257wrq.258.1625048242462;
-        Wed, 30 Jun 2021 03:17:22 -0700 (PDT)
-Received: from dell ([95.144.13.171])
-        by smtp.gmail.com with ESMTPSA id o33sm15060349wms.32.2021.06.30.03.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Jun 2021 03:17:22 -0700 (PDT)
-Date:   Wed, 30 Jun 2021 11:17:19 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 3/4] MFD: Intel Out of Band Management Services Module
- (OOBMSM) driver
-Message-ID: <YNxEr+X8GozvxNrW@dell>
-References: <20210617215408.1412409-1-david.e.box@linux.intel.com>
- <20210617215408.1412409-4-david.e.box@linux.intel.com>
+        Wed, 30 Jun 2021 09:38:11 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23D6C061756;
+        Wed, 30 Jun 2021 06:35:42 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f12c300d5c967e0b00ce97c.dip0.t-ipconnect.de [IPv6:2003:ec:2f12:c300:d5c9:67e0:b00c:e97c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E006F1EC046E;
+        Wed, 30 Jun 2021 15:35:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1625060141;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wPPCQp4f4RUBchaxZp4/uDs+S7WG+9WZBgFuIygun4Y=;
+        b=Qs0HTTFiFAa90rUyUBxepT0u0N2z+f59oFvbyO82BqhoqE/Gbv+Tw8E/F7ocjZDitIlU00
+        53xqBC1vnJL82h158EqaU70gt8t1kjb6bO4/Fzjs7CIOgdV2ag1iGwU7XtpsbRKKC1hdPh
+        DoropWwCO0f3PMQwTceqlWuVZAeqR5U=
+Date:   Wed, 30 Jun 2021 15:35:35 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
+        npmccallum@redhat.com
+Subject: Re: [PATCH Part1 RFC v3 22/22] virt: Add SEV-SNP guest driver
+Message-ID: <YNxzJ2I3ZumTELLb@zn.tnic>
+References: <20210602140416.23573-1-brijesh.singh@amd.com>
+ <20210602140416.23573-23-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210617215408.1412409-4-david.e.box@linux.intel.com>
+In-Reply-To: <20210602140416.23573-23-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, 17 Jun 2021, David E. Box wrote:
-
-> The Intel Out of Band Management Services Module (OOBMSM) is a device
-> that provides access to Intel capabilities described in PCIE vendor
-> specific extended capability registers (both VSEC and DVSEC). These
-> capabilities include features like Intel Platform Monitoring Technology
-> as well as others that are not supported by the intel_pmt driver. Add a
-> driver for creating platform devices for these capabilities coming from
-> OOBMSM.
+On Wed, Jun 02, 2021 at 09:04:16AM -0500, Brijesh Singh wrote:
+> SEV-SNP specification provides the guest a mechanism to communicate with
+> the PSP without risk from a malicious hypervisor who wishes to read, alter,
+> drop or replay the messages sent. The driver uses snp_issue_guest_request()
+> to issue GHCB SNP_GUEST_REQUEST NAE event. This command constructs a
+> trusted channel between the guest and the PSP firmware.
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> The userspace can use the following ioctls provided by the driver:
+> 
+> 1. Request an attestation report that can be used to assume the identity
+>    and security configuration of the guest.
+> 2. Ask the firmware to provide a key derived from a root key.
+> 
+> See SEV-SNP spec section Guest Messages for more details.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > ---
->  MAINTAINERS                  |  1 +
->  drivers/mfd/Kconfig          | 11 +++++++
->  drivers/mfd/Makefile         |  1 +
->  drivers/mfd/intel_oobmsm.c   | 61 ++++++++++++++++++++++++++++++++++++
->  drivers/platform/x86/Kconfig |  4 +--
->  5 files changed, 76 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/intel_oobmsm.c
+>  drivers/virt/Kconfig           |   3 +
+>  drivers/virt/Makefile          |   1 +
+>  drivers/virt/sevguest/Kconfig  |  10 +
+>  drivers/virt/sevguest/Makefile |   4 +
+>  drivers/virt/sevguest/snp.c    | 448 +++++++++++++++++++++++++++++++++
+>  drivers/virt/sevguest/snp.h    |  63 +++++
+>  include/uapi/linux/sev-guest.h |  56 +++++
+>  7 files changed, 585 insertions(+)
+>  create mode 100644 drivers/virt/sevguest/Kconfig
+>  create mode 100644 drivers/virt/sevguest/Makefile
+>  create mode 100644 drivers/virt/sevguest/snp.c
+>  create mode 100644 drivers/virt/sevguest/snp.h
+>  create mode 100644 include/uapi/linux/sev-guest.h
+
+Seeing how there are a bunch of such driver things for SEV stuff, I'd
+say to put it under:
+
+	drivers/virt/coco/
+
+where we can collect all those confidential computing supporting
+drivers.
+
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ebdc2a0f794b..0961e3f89497 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9356,6 +9356,7 @@ INTEL PMT DRIVER
->  M:	"David E. Box" <david.e.box@linux.intel.com>
->  S:	Maintained
->  F:	drivers/mfd/intel_extended_cap.c
-> +F:	drivers/mfd/intel_oobmsm.c
->  F:	drivers/mfd/intel_pmt.c
->  F:	drivers/platform/x86/intel_pmt_*
+> diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+> index 8061e8ef449f..4de714c5ee9a 100644
+> --- a/drivers/virt/Kconfig
+> +++ b/drivers/virt/Kconfig
+> @@ -36,4 +36,7 @@ source "drivers/virt/vboxguest/Kconfig"
+>  source "drivers/virt/nitro_enclaves/Kconfig"
 >  
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 4dde8e223a9e..269312de2666 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -687,6 +687,17 @@ config MFD_INTEL_PMT
->  	  Telemetry, Watcher, and Crashlog PMT capabilities/devices for
->  	  platforms starting from Tiger Lake.
->  
-> +config MFD_INTEL_OOBMSM
-> +	tristate "Intel Out Of Band Management Services Module (OOBMSM) support"
-> +	depends on PCI
-> +	select MFD_INTEL_EXTENDED_CAPS
-> +	help
-> +	  The Intel Out of Band Management Service Module driver is used to
-> +	  enumerate auxiliary platform features described in both Vendor
-> +	  Specific and Designated Vendor Specific PCIe config space. Supported
-> +	  features include Intel Platform Monitoring Technology (PMT) as well
-> +	  as other non-PMT capabilities.
+>  source "drivers/virt/acrn/Kconfig"
 > +
->  config MFD_IPAQ_MICRO
->  	bool "Atmel Micro ASIC (iPAQ h3100/h3600/h3700) Support"
->  	depends on SA1100_H3100 || SA1100_H3600
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 7fa35399ec76..50fa38810bbd 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -213,6 +213,7 @@ obj-$(CONFIG_MFD_INTEL_EXTENDED_CAPS)	+= intel_extended_caps.o
->  obj-$(CONFIG_MFD_INTEL_LPSS)	+= intel-lpss.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_PCI)	+= intel-lpss-pci.o
->  obj-$(CONFIG_MFD_INTEL_LPSS_ACPI)	+= intel-lpss-acpi.o
-> +obj-$(CONFIG_MFD_INTEL_OOBMSM)	+= intel_oobmsm.o
->  obj-$(CONFIG_MFD_INTEL_PMC_BXT)	+= intel_pmc_bxt.o
->  obj-$(CONFIG_MFD_INTEL_PMT)	+= intel_pmt.o
->  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> diff --git a/drivers/mfd/intel_oobmsm.c b/drivers/mfd/intel_oobmsm.c
+> +source "drivers/virt/sevguest/Kconfig"
+> +
+>  endif
+> diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
+> index 3e272ea60cd9..b2d1a8131c90 100644
+> --- a/drivers/virt/Makefile
+> +++ b/drivers/virt/Makefile
+> @@ -8,3 +8,4 @@ obj-y				+= vboxguest/
+>  
+>  obj-$(CONFIG_NITRO_ENCLAVES)	+= nitro_enclaves/
+>  obj-$(CONFIG_ACRN_HSM)		+= acrn/
+> +obj-$(CONFIG_SEV_GUEST)		+= sevguest/
+> diff --git a/drivers/virt/sevguest/Kconfig b/drivers/virt/sevguest/Kconfig
 > new file mode 100644
-> index 000000000000..c66532f11c29
+> index 000000000000..e88a85527bf6
 > --- /dev/null
-> +++ b/drivers/mfd/intel_oobmsm.c
-> @@ -0,0 +1,61 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/drivers/virt/sevguest/Kconfig
+> @@ -0,0 +1,10 @@
+> +config SEV_GUEST
+> +	tristate "AMD SEV Guest driver"
+> +	default y
+> +	depends on AMD_MEM_ENCRYPT
+> +	help
+> +	  Provides AMD SNP guest request driver. The driver can be used by the
+
+s/Provides AMD SNP guest request driver. //
+
+> +	  guest to communicate with the hypervisor to request the attestation report
+
+to communicate with the PSP, I thought, not the hypervisor?
+
+> +	  and more.
+> +
+> +	  If you choose 'M' here, this module will be called sevguest.
+> diff --git a/drivers/virt/sevguest/Makefile b/drivers/virt/sevguest/Makefile
+> new file mode 100644
+> index 000000000000..1505df437682
+> --- /dev/null
+> +++ b/drivers/virt/sevguest/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +sevguest-y := snp.o
+
+What's that for?
+
+Why isn't the filename simply called:
+
+drivers/virt/coco/sevguest.c
+
+?
+
+Or is more coming?
+
+And below there's
+
+	.name = "snp-guest",
+
+so you need to get the naming in order here.
+
+> +obj-$(CONFIG_SEV_GUEST) += sevguest.o
+> diff --git a/drivers/virt/sevguest/snp.c b/drivers/virt/sevguest/snp.c
+> new file mode 100644
+> index 000000000000..00d8e8fddf2c
+> --- /dev/null
+> +++ b/drivers/virt/sevguest/snp.c
+> @@ -0,0 +1,448 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 > +/*
-> + * Intel Out of Band Management Services Module driver
+> + * AMD Secure Encrypted Virtualization Nested Paging (SEV-SNP) guest request interface
 > + *
-> + * Copyright (c) 2021, Intel Corporation.
-> + * All Rights Reserved.
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
 > + *
-> + * Author: David E. Box <david.e.box@linux.intel.com>
+> + * Author: Brijesh Singh <brijesh.singh@amd.com>
 > + */
 > +
 > +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/pm_runtime.h>
-
-This doesn't appear to have anything to do with MFD?
-
-> +#include "intel_extended_caps.h"
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <linux/mutex.h>
+> +#include <linux/io.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/set_memory.h>
+> +#include <linux/fs.h>
+> +#include <crypto/aead.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/sev-guest.h>
+> +#include <uapi/linux/sev-guest.h>
 > +
-> +static int intel_oobmsm_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> +#include "snp.h"
+> +
+> +#define DEVICE_NAME	"sev-guest"
+> +#define AAD_LEN		48
+> +#define MSG_HDR_VER	1
+> +
+> +struct snp_guest_crypto {
+> +	struct crypto_aead *tfm;
+> +	uint8_t *iv, *authtag;
+> +	int iv_len, a_len;
+> +};
+> +
+> +struct snp_guest_dev {
+> +	struct device *dev;
+> +	struct miscdevice misc;
+> +
+> +	struct snp_guest_crypto *crypto;
+> +	struct snp_guest_msg *request, *response;
+> +};
+> +
+> +static DEFINE_MUTEX(snp_cmd_mutex);
+> +
+> +static inline struct snp_guest_dev *to_snp_dev(struct file *file)
 > +{
-> +	struct intel_ext_cap_platform_info *info;
+> +	struct miscdevice *dev = file->private_data;
+> +
+> +	return container_of(dev, struct snp_guest_dev, misc);
+> +}
+> +
+> +static struct snp_guest_crypto *init_crypto(struct snp_guest_dev *snp_dev, uint8_t *key,
+> +					    size_t keylen)
+> +{
+> +	struct snp_guest_crypto *crypto;
+> +
+> +	crypto = kzalloc(sizeof(*crypto), GFP_KERNEL_ACCOUNT);
+> +	if (!crypto)
+> +		return NULL;
+> +
+> +	crypto->tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
+
+I know that it is hard to unselect CONFIG_CRYPTO_AEAD2 which provides
+this but you better depend on it in the Makefile so that some random
+config still builds.
+
+> +	if (IS_ERR(crypto->tfm))
+> +		goto e_free;
+> +
+> +	if (crypto_aead_setkey(crypto->tfm, key, keylen))
+> +		goto e_free_crypto;
+> +
+> +	crypto->iv_len = crypto_aead_ivsize(crypto->tfm);
+> +	if (crypto->iv_len < 12) {
+> +		dev_err(snp_dev->dev, "IV length is less than 12.\n");
+> +		goto e_free_crypto;
+> +	}
+> +
+> +	crypto->iv = kmalloc(crypto->iv_len, GFP_KERNEL_ACCOUNT);
+> +	if (!crypto->iv)
+> +		goto e_free_crypto;
+> +
+> +	if (crypto_aead_authsize(crypto->tfm) > MAX_AUTHTAG_LEN) {
+> +		if (crypto_aead_setauthsize(crypto->tfm, MAX_AUTHTAG_LEN)) {
+> +			dev_err(snp_dev->dev, "failed to set authsize to %d\n", MAX_AUTHTAG_LEN);
+> +			goto e_free_crypto;
+> +		}
+> +	}
+> +
+> +	crypto->a_len = crypto_aead_authsize(crypto->tfm);
+> +	crypto->authtag = kmalloc(crypto->a_len, GFP_KERNEL_ACCOUNT);
+> +	if (!crypto->authtag)
+> +		goto e_free_crypto;
+> +
+> +	return crypto;
+> +
+> +e_free_crypto:
+> +	crypto_free_aead(crypto->tfm);
+> +e_free:
+> +	kfree(crypto->iv);
+> +	kfree(crypto->authtag);
+> +	kfree(crypto);
+> +
+> +	return NULL;
+> +}
+
+...
+
+> +static int handle_guest_request(struct snp_guest_dev *snp_dev, int msg_type,
+> +				struct snp_user_guest_request *input, void *req_buf,
+> +				size_t req_len, void __user *resp_buf, size_t resp_len)
+> +{
+> +	struct snp_guest_crypto *crypto = snp_dev->crypto;
+> +	struct page *page;
+> +	size_t msg_len;
 > +	int ret;
 > +
-> +	ret = pcim_enable_device(pdev);
+> +	/* Allocate the buffer to hold response */
+> +	resp_len += crypto->a_len;
+> +	page = alloc_pages(GFP_KERNEL_ACCOUNT, get_order(resp_len));
+> +	if (!page)
+> +		return -ENOMEM;
+> +
+> +	ret = __handle_guest_request(snp_dev, msg_type, input, req_buf, req_len,
+> +			page_address(page), resp_len, &msg_len);
+
+Align arguments on the opening brace.
+
+Check the whole patch too for other similar cases.
+
 > +	if (ret)
-> +		return ret;
+> +		goto e_free;
 > +
-> +	info = (struct intel_ext_cap_platform_info *)id->driver_data;
+> +	if (copy_to_user(resp_buf, page_address(page), msg_len))
+> +		ret = -EFAULT;
 > +
-> +	ret = intel_ext_cap_probe(pdev, info);
-> +	if (ret)
-> +		return ret;
+> +e_free:
+> +	__free_pages(page, get_order(resp_len));
 > +
-> +	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_allow(&pdev->dev);
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static void intel_oobmsm_pci_remove(struct pci_dev *pdev)
+> +static int get_report(struct snp_guest_dev *snp_dev, struct snp_user_guest_request *input)
 > +{
-> +	pm_runtime_forbid(&pdev->dev);
-> +	pm_runtime_get_sync(&pdev->dev);
+> +	struct snp_user_report __user *report = (struct snp_user_report *)input->data;
+> +	struct snp_user_report_req req;
+> +
+> +	if (copy_from_user(&req, &report->req, sizeof(req)))
+
+What guarantees that that __user report thing is valid and is not going
+to trick the kernel into doing a NULL pointer access in the ->req access
+here?
+
+IOW, you need to verify all your user data being passed through before
+using it.
+
+> +		return -EFAULT;
+> +
+> +	return handle_guest_request(snp_dev, SNP_MSG_REPORT_REQ, input, &req.user_data,
+> +			sizeof(req.user_data), report->response, sizeof(report->response));
 > +}
 > +
-> +#define PCI_DEVICE_ID_INTEL_PMT_OOBMSM	0x09a7
-> +static const struct pci_device_id intel_oobmsm_pci_ids[] = {
-> +	{ PCI_DEVICE_DATA(INTEL, PMT_OOBMSM, NULL) },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, intel_oobmsm_pci_ids);
+> +static int derive_key(struct snp_guest_dev *snp_dev, struct snp_user_guest_request *input)
+> +{
+> +	struct snp_user_derive_key __user *key = (struct snp_user_derive_key *)input->data;
+> +	struct snp_user_derive_key_req req;
 > +
-> +static struct pci_driver intel_oobmsm_pci_driver = {
-> +	.name = "intel-oobmsm",
-> +	.id_table = intel_oobmsm_pci_ids,
-> +	.probe = intel_oobmsm_pci_probe,
-> +	.remove = intel_oobmsm_pci_remove,
-> +};
-> +module_pci_driver(intel_oobmsm_pci_driver);
+> +	if (copy_from_user(&req, &key->req, sizeof(req)))
+> +		return -EFAULT;
 > +
-> +MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
-> +MODULE_DESCRIPTION("Intel Out of Band Management Services Module driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 60592fb88e7a..4dd3af9f848e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1226,7 +1226,7 @@ config INTEL_PMT_CLASS
->  
->  config INTEL_PMT_TELEMETRY
->  	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
-> -	depends on MFD_INTEL_PMT
-> +	depends on MFD_INTEL_PMT || MFD_INTEL_OOBMSM
->  	select INTEL_PMT_CLASS
->  	help
->  	  The Intel Platform Monitory Technology (PMT) Telemetry driver provides
-> @@ -1238,7 +1238,7 @@ config INTEL_PMT_TELEMETRY
->  
->  config INTEL_PMT_CRASHLOG
->  	tristate "Intel Platform Monitoring Technology (PMT) Crashlog driver"
-> -	depends on MFD_INTEL_PMT
-> +	depends on MFD_INTEL_PMT || MFD_INTEL_OOBMSM
->  	select INTEL_PMT_CLASS
->  	help
->  	  The Intel Platform Monitoring Technology (PMT) crashlog driver provides
+> +	return handle_guest_request(snp_dev, SNP_MSG_KEY_REQ, input, &req, sizeof(req),
+> +			key->response, sizeof(key->response));
+> +}
+> +
+> +static long snp_guest_ioctl(struct file *file, unsigned int ioctl, unsigned long arg)
+> +{
+> +	struct snp_guest_dev *snp_dev = to_snp_dev(file);
+> +	struct snp_user_guest_request input;
+> +	void __user *argp = (void __user *)arg;
+> +	int ret = -ENOTTY;
+> +
+> +	if (copy_from_user(&input, argp, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	mutex_lock(&snp_cmd_mutex);
+> +	switch (ioctl) {
+> +	case SNP_GET_REPORT: {
+> +		ret = get_report(snp_dev, &input);
+> +		break;
+> +	}
+> +	case SNP_DERIVE_KEY: {
+> +		ret = derive_key(snp_dev, &input);
+> +		break;
+> +	}
+> +	default:
+> +		break;
+> +	}
+
+If only two ioctls, you don't need the switch-case thing.
+
+> +
+> +	mutex_unlock(&snp_cmd_mutex);
+> +
+> +	if (copy_to_user(argp, &input, sizeof(input)))
+> +		return -EFAULT;
+> +
+> +	return ret;
+> +}
+
+...
+
+> diff --git a/include/uapi/linux/sev-guest.h b/include/uapi/linux/sev-guest.h
+> new file mode 100644
+> index 000000000000..0a8454631605
+> --- /dev/null
+> +++ b/include/uapi/linux/sev-guest.h
+> @@ -0,0 +1,56 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+> +/*
+> + * Userspace interface for AMD SEV and SEV-SNP guest driver.
+> + *
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Brijesh Singh <brijesh.singh@amd.com>
+> + *
+> + * SEV-SNP API specification is available at: https://developer.amd.com/sev/
+> + */
+> +
+> +#ifndef __UAPI_LINUX_SEV_GUEST_H_
+> +#define __UAPI_LINUX_SEV_GUEST_H_
+> +
+> +#include <linux/types.h>
+> +
+> +struct snp_user_report_req {
+> +	__u8 user_data[64];
+> +};
+> +
+> +struct snp_user_report {
+> +	struct snp_user_report_req req;
+> +
+> +	/* see SEV-SNP spec for the response format */
+> +	__u8 response[4000];
+> +};
+> +
+> +struct snp_user_derive_key_req {
+> +	__u8 root_key_select;
+> +	__u64 guest_field_select;
+> +	__u32 vmpl;
+> +	__u32 guest_svn;
+> +	__u64 tcb_version;
+> +};
+> +
+> +struct snp_user_derive_key {
+> +	struct snp_user_derive_key_req req;
+> +
+> +	/* see SEV-SNP spec for the response format */
+> +	__u8 response[64];
+> +};
+> +
+> +struct snp_user_guest_request {
+> +	/* Message version number (must be non-zero) */
+> +	__u8 msg_version;
+> +	__u64 data;
+> +
+> +	/* firmware error code on failure (see psp-sev.h) */
+> +	__u32 fw_err;
+> +};
+
+All those struct names have a "snp_user" prefix. It seems to me that
+that "user" is superfluous.
+
+> +
+> +#define SNP_GUEST_REQ_IOC_TYPE	'S'
+> +#define SNP_GET_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x0, struct snp_user_guest_request)
+> +#define SNP_DERIVE_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_user_guest_request)
+
+Where are those ioctls documented so that userspace can know how to use
+them?
+
+Thx.
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
