@@ -2,141 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C65C07E97
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Jul 2021 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977B1C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 09:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A70F613E2
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  3 Jul 2021 16:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7528D6144E
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 09:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbhGCQWa (ORCPT
+        id S229502AbhGDJrw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 3 Jul 2021 12:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbhGCQWa (ORCPT
+        Sun, 4 Jul 2021 05:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229476AbhGDJrv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 3 Jul 2021 12:22:30 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AECC061762;
-        Sat,  3 Jul 2021 09:19:56 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f289e0085c7d3fefeb66b8e.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:9e00:85c7:d3fe:feb6:6b8e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1282F1EC047F;
-        Sat,  3 Jul 2021 18:19:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1625329195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=upKFgpUh0zZ782nZABcY/RNBj8bd/OadOyw5te8iHZc=;
-        b=NudzYXsG646/+XcrvCCfobxDIXDqoINAGQsj0E1AkwVZlvZjqXEC4Q/LmnHdK/BN54pmaw
-        JFsqB2fy+zUTz07NLLpEzLpX8tb+BSpe+VA0CqnOJO8wCl7siWJe7RndUF0FD5wSiMEe/r
-        qnuIbLGmBy99uqaqdSvureQd8IDQa2A=
-Date:   Sat, 3 Jul 2021 18:19:47 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>, tony.luck@intel.com,
-        npmccallum@redhat.com, Dov Murik <dovmurik@linux.ibm.com>
-Subject: Re: [PATCH Part1 RFC v3 22/22] virt: Add SEV-SNP guest driver
-Message-ID: <YOCOIy1AW5RUfbx4@zn.tnic>
-References: <20210602140416.23573-1-brijesh.singh@amd.com>
- <20210602140416.23573-23-brijesh.singh@amd.com>
- <YNxzJ2I3ZumTELLb@zn.tnic>
- <46499161-0106-3ae9-9688-0afd9076b28b@amd.com>
- <YN4DixahyShxyyCv@zn.tnic>
- <5b4d20db-3013-4411-03b9-708dd18dbe64@amd.com>
+        Sun, 4 Jul 2021 05:47:51 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 78867613FB
+        for <platform-driver-x86@vger.kernel.org>; Sun,  4 Jul 2021 09:45:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625391916;
+        bh=CZm/oOIhXlJkW545zgGReOoG5/f8vK0mVKlyXZGWkZg=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=bfnJZz4JAbPPF6dgz8MeLz3kuVc+nbY8bx72act2RHLh2eM4Xdv1ZHkyzVNY8VByV
+         bzvm3ES0Le+mtZGsvQmmCO55ZYhm5gzoXow8ZSnpVlWS6oIPF8qyJP+xxYu92m13YI
+         pS1fPdKAhlLMLhwiuAtk+vPzoEWlCuK6yC7hGBJq6crDfgYlBy0dA8/aQB8ZyfWvP/
+         tGqEZ0ok+qolEIBsqRZWoGN+CN2rQbTmJuSs1vTqm5b4TkULWWn0tLMe+TpehuQOjL
+         61g25hIzBL+iZJ4PdyqIhAFIJwXkNpNz04HFsN5s+npVyTBL6MazUqzbrplb11fEak
+         k4/iSpuU8hf1g==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 204807] Hardware monitoring sensor nct6798d doesn't work unless
+ acpi_enforce_resources=lax is enabled
+Date:   Sun, 04 Jul 2021 09:45:15 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: me@rebtoor.com
+X-Bugzilla-Status: CLOSED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-204807-215701-56Yd2xDFu9@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-204807-215701@https.bugzilla.kernel.org/>
+References: <bug-204807-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <5b4d20db-3013-4411-03b9-708dd18dbe64@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 04:32:25PM -0500, Brijesh Singh wrote:
-> The spec definition is present in include/linux/psp-sev.h but sometime
-> we don't expose the spec defs as-is to userspace.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
 
-Why?
+Vittorio Roberto Alfieri (me@rebtoor.com) changed:
 
-Having such undocumented and maybe unwarranted differences - I still
-don't see a clear reason why - is calling for additional and unnecessary
-confusion.
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |me@rebtoor.com
 
-> Several SEV/SEV-SNP does not need to be exposed to the userspace,
-> those which need to be expose we provide a bit modified Linux uapi for
-> it, and for SEV drivers we choose "_user" prefix.
+--- Comment #77 from Vittorio Roberto Alfieri (me@rebtoor.com) ---
+(In reply to Bernhard Seibold from comment #75)
+> Created attachment 296645 [details]
+> Add support for access via Asus WMI to nct6775 (Rev 2)
+>=20
+> Here's an updated patch that also accesses the Super-I/O ports via WMI.
+> Please note that it also adds an ACPI resource check for that IO region. =
+So
+> it might actually make the driver work on less hardware, although that ch=
+eck
+> should probably have been there in the first place.
 
-Is that documented somewhere?
+Hi,
+I can confirm that this patch works for me too.=20
 
-Because "user" doesn't tell me it is a modified structure which is
-different from the spec.
+dmesg |grep nct6775
+[   43.723698] nct6775: Found NCT6798D or compatible chip at 0x0:0x290
+[   43.723890] nct6775: Using Asus WMI to access chip
 
-> e.g
-> a spec definition for the PEK import in include/linux/psp-sev.h is:
-> struct sev_data_pek_cert_import {
-> 	u64 pdh_cert_address;  /* system physical address */
-> 	u32 pdh_cert_len;
-> 	u32 reserved;
-> 	...
-> };
-> 
-> But its corresponding userspace structure def in include/uapi/linux/psp-sev.h is:
-> struct sev_user_data_pek_cert_import {
-> 	__u64 pek_cert_uaddr; /* userspace address */
-> 	__u32 pek_cert_len;
-> 	...
-> };
+sensors nct6798-* | head -2
+nct6798-isa-0000
+Adapter: ISA adapter
 
-And the difference is a single "u32 reserved"?
+mobo: ASUS ROG STRIX B550-F GAMING (WI-FI) - bios version 2403
+kernel: 5.13.0 (patched)
 
-Dunno, from where I'm standing this looks like unnecessary confusion to
-me.
+Thanks Bernhard!
 
-> The ioctl handling takes care of mapping from uaddr to pa and other
-> things as required. So, I took similar approach for the SEV-SNP guest
-> ioctl. In this particular case the guest request structure defined in
-> the spec contains multiple field but many of those fields are managed
-> internally by the kernel (e.g seqno, IV, etc etc).
+Have a nice sunday everyone.
 
-Ok, multiple fields sounds like you wanna save on the data that is
-shovelled between kernel and user space and then some of the fields
-don't mean a thing for the user API. Ok.
+--=20
+You may reply to this email to add a comment.
 
-But again, where is this documented and stated clear so that people are
-aware?
-
-Or are you assuming that since the user counterparts are in
-
-include/uapi/linux/psp-sev.h
-	^^^^
-
-and it being an uapi header, then that should state that?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+You are receiving this mail because:
+You are watching the assignee of the bug.=
