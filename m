@@ -2,77 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A725C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 15:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E577DC07E95
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 22:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F29613E1
-	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 15:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D8461380
+	for <platform-driver-x86@archiver.kernel.org>; Sun,  4 Jul 2021 22:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbhGDPIE (ORCPT
+        id S229614AbhGDWYk (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 4 Jul 2021 11:08:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229492AbhGDPID (ORCPT
+        Sun, 4 Jul 2021 18:24:40 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:47867 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229549AbhGDWYk (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 4 Jul 2021 11:08:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5C2FF613E1
-        for <platform-driver-x86@vger.kernel.org>; Sun,  4 Jul 2021 15:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625411128;
-        bh=/nRW5rkV54wzkprDkRE5lq5PtHxjaye2KyOc4dzuVXE=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=U4sd3o5kZuzX+k9ScCbt6AF2r7hNC7uczIIwbYcUrIBEO4vmfxF+N4e1BzVehsrX0
-         8SF1Pcf7Jxzt11LMpgHk3sqiUkUfvtP6/un+StPsVRn4LnPYYlS//f2lIQCgpjZWpl
-         h4opDKdZ1PHIVB69/oKN6GgkS00kn8v5L3l39lZTNjXHjBMeGXsK5NEVeUDqccB5uu
-         5NFJ6Xwz1U43u6nyTcndPBcYZC2lz+BTw9eZmtOCImtJBnBsjdCsgpFpZIItAu3g8v
-         KcAfvlUCsJkzVeapGnU60K5JHVGSH0iW6ExMVe32xgKsO2QY/KLxBa1Ryucge5yoHj
-         /sx1MhY+GQUkA==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
- can't be used as IRQ)
-Date:   Sun, 04 Jul 2021 15:05:27 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: patacca@autistici.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-213579-215701-xtANShYMt1@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
-References: <bug-213579-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Sun, 4 Jul 2021 18:24:40 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 1D2083200916;
+        Sun,  4 Jul 2021 18:22:04 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sun, 04 Jul 2021 18:22:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=1hNB6T+0Ialzugd8z
+        0lQ/Tva8umLGtrGXvvMQ6eqavM=; b=Y4VpfZNhxSDWm2iUsDX+y81X4TpVAaFCU
+        aoCiJeIBM40g5YB+qZeXBmM47pSFHZqBOr8bTL98/uB+N46XezvHIJr1yPRyGT4z
+        WFd74+A0NznMcn/47/Xs643JdeET9B8i1d7fqbdW3KSxBRTdAiCU9R5Re0ADv1rJ
+        7+vX9x5+taP3E5C30aZdIE4PWJqSkhTaaWU0ZvrejdkVso2Mmf3ceQUIrnJ9v2vC
+        HJzIe3yEELf2z1oj4yUVGZ7R7x1W3v/KHL8Da45KtRfp3k4kFs1q3GKlrjFIJM19
+        ulaS3VxTzy7U7C1ZonGnEx4vHyeTZTCQmAUYXGrq7bLzyIUoGMeNA==
+X-ME-Sender: <xms:ijTiYBty3ZAVpQrAW-7FpHWvGZN3MpijLbRrXwvXZTnSNK_Jypx4Uw>
+    <xme:ijTiYKfzp4XzgAnVaq26AnGxFntVbhei6-7LpiMkFfZ4K-I0ikVk5IZOh9vbU6Pga
+    O5VCx94DRkc-P7Apbo>
+X-ME-Received: <xmr:ijTiYEwgvzQbl34fQdK5_F6Kziat8Iv_USZ2U2qT8fArR6uN2TE5LPA4TyNM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrfeejfedgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhjohhn
+    vghsrdguvghvqeenucggtffrrghtthgvrhhnpeelffelhfeltdfhtdevuefgveeuueekge
+    etiefgiefhgfejvdetvdeuvedthfdvkeenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:ijTiYIN0WB8OqzEIkA8u160dkfXd2PkM69cFgQNh5330c0MD8eGJ2A>
+    <xmx:ijTiYB8SXxCBXynUvvg6IyTP3kxK4PGuL_GPT9zKmYcTYjkFbFoOMg>
+    <xmx:ijTiYIUtPXrUSS-qIjlRMd2wgN3m_gAkbFMJGEo5qBdwmHPfcHNk2w>
+    <xmx:izTiYEku2Pw2jX17VtmiuR6sEpOH9sK1eh_ZNd3r4aMpm52KmyjSnQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 4 Jul 2021 18:21:59 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     corentin.chary@gmail.com, mgross@linux.intel.com,
+        jdelvare@suse.com, linux@roeck-us.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH 0/3] Support for ASUS egpu, dpgu disable, panel overdrive
+Date:   Mon,  5 Jul 2021 10:21:45 +1200
+Message-Id: <20210704222148.880848-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
+This patch series adds support for some functions that are found on newer
+ASUS gaming laptops:
 
---- Comment #9 from Riccardo Mori (patacca@autistici.org) ---
-Created attachment 297751
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D297751&action=3Dedit
-acpidump
+- Panel overdrive: Some laptops can drive the LCD matrix slightly faster
+  to eliminate or reduce ghosting artifacts
 
---=20
-You may reply to this email to add a comment.
+- dGPU disable: ASUS added a function in ACPI to disable or enable the dGPU
+  which removes it from the PCI bus. Presumably this was to help prevent
+  Windows apps from using the dGPU when the user didn't want them to but
+  because of how it works it also means that when rebooted to Linux the dGPU
+  no-longer exits. This patch enables a user to echo 0/1 to a WMI path to
+  re-enable it (or disable, but the drivers *must* be unloaded first).
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+- eGPU enable: The ASUS x-flow lpatop has an iGPU, a dGPU, and an optional
+  eGPU. This patch enables the user to echo 0/1 to a WMI path to enable or
+  disable the eGPU. In ACPI this also appears to remove the dGPU from the
+  PCI bus.
+
+All of the above patches have been tested over the course of a few months.
+There is a small possibility of user error perhaps, where the user tries to
+enable or disable the dGPU/eGPU while drivers are loaded which would cause
+a system hang, but it is expected that almost all users would be using the
+`asusctl` daemon and dbus methods to manage the above which then eliminates
+these issues.
+
+Luke D. Jones (3):
+  asus-wmi: Add panel overdrive functionality
+  asus-wmi: Add dgpu disable method
+  asus-wmi: Add egpu enable method
+
+ drivers/platform/x86/asus-wmi.c            | 282 +++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |   7 +
+ 2 files changed, 289 insertions(+)
+
+--
+2.31.1
+
