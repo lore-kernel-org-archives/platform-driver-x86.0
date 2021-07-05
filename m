@@ -7,44 +7,43 @@ X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834B3C07E99
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14150C11F6C
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63942619AE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E95DB61991
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232184AbhGEPby (ORCPT
+        id S232206AbhGEPcN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jul 2021 11:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        Mon, 5 Jul 2021 11:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232173AbhGEPbk (ORCPT
+        id S232288AbhGEPb7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:31:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F17961979;
-        Mon,  5 Jul 2021 15:29:02 +0000 (UTC)
+        Mon, 5 Jul 2021 11:31:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 02D0E619AC;
+        Mon,  5 Jul 2021 15:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625498943;
-        bh=UjwFXX3T+Hb0fCkcc/G0mlQuGqcAz2UCHejWJTH1wFo=;
+        s=k20201202; t=1625498962;
+        bh=B7DA+b3ltaaXrWpMhVn9fgrYsaiqobW8Rvmr22V+Zr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sXo7vGeqASuXNLuCqmJ9f9mS1DDCGeeeisFIY+ywvggOyh/IWtWc+naMfOdS+xlPN
-         1fZgtkpFAx6Ja2mPw6J9cRfVkvspViRR4CwcLlufRyhh9d6W9mLjaUrgXPqUZQ2lHE
-         1VdE+8cqvdBdtJxnJFXqDpqGdERgsBE0SxVSPOZNFLWeHyteBZhZ4ZpsSouTQtEKcn
-         SrxDgam93TXX6o7RO9l8CoFvwvdqbmHJ+f0Wk+nZ3AYm+lyxfcoYgyTVfoMsNI/4q8
-         OUIeYc1C7SdDR+2SNHVXzB3B/i9lQj8I0JaomHbxi2DGGNsHVoxThdTbGtwNQPnFyY
-         54ahB6iXOdzlw==
+        b=jzFwY18xtCt8u6EY4UfyjYHNzrFHPL6LuDhEdKORmYIDswGY2HYSb5f3TM2oRW7Kq
+         fMWesznnxeobG63NY6BMTZeX/PAev1jxY68vIgJ2naE1xDzgGChp6E2BV3aJ3Flt31
+         my3lFPbvHm3jpmxlCC6b9OzpQtrvq/4HZvtQl8+G/RNKVBVkEtorytxoYb30K9CcmM
+         lTiBXTtWPh0BwebcoGRvlfu6sGMzsmniIsyMN2aIliwFaQv2JxNu3wx1ZK0sC+Vid2
+         tpCeBQTVkYWhCp8Clk4o2je+BztR/ZLlobdj7R/zY16IjAxwLnGtYYCmpvGnrSi+GK
+         PX493DCxLm8pA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 36/59] tools/power/x86/intel-speed-select: Fix uncore memory frequency display
-Date:   Mon,  5 Jul 2021 11:27:52 -0400
-Message-Id: <20210705152815.1520546-36-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.12 07/52] Input: goodix - platform/x86: touchscreen_dmi - Move upside down quirks to touchscreen_dmi.c
+Date:   Mon,  5 Jul 2021 11:28:28 -0400
+Message-Id: <20210705152913.1521036-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210705152815.1520546-1-sashal@kernel.org>
-References: <20210705152815.1520546-1-sashal@kernel.org>
+In-Reply-To: <20210705152913.1521036-1-sashal@kernel.org>
+References: <20210705152913.1521036-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -53,111 +52,189 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 159f130f60f402273b235801d1fde3fc115c6795 ]
+[ Upstream commit 5a6f0dbe621a5c20dc912ac474debf9f11129e03 ]
 
-The uncore memory frequency value from the mailbox command
-CONFIG_TDP_GET_MEM_FREQ needs to be scaled based on the platform for
-display. There is no single constant multiplier.
+Move the DMI quirks for upside-down mounted Goodix touchscreens from
+drivers/input/touchscreen/goodix.c to
+drivers/platform/x86/touchscreen_dmi.c,
+where all the other x86 touchscreen quirks live.
 
-This change introduces CPU model specific memory frequency multiplier.
+Note the touchscreen_dmi.c code attaches standard touchscreen
+device-properties to an i2c-client device based on a combination of a
+DMI match + a device-name match. I've verified that the: Teclast X98 Pro,
+WinBook TW100 and WinBook TW700 uses an ACPI devicename of "GDIX1001:00"
+based on acpidumps and/or dmesg output available on the web.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+This patch was tested on a Teclast X89 tablet.
+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20210504185746.175461-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/intel-speed-select/isst-config.c | 16 ++++++++++++++++
- tools/power/x86/intel-speed-select/isst-core.c   | 15 +++++++++++++++
- .../power/x86/intel-speed-select/isst-display.c  |  2 +-
- tools/power/x86/intel-speed-select/isst.h        |  2 ++
- 4 files changed, 34 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/goodix.c     | 52 ------------------------
+ drivers/platform/x86/touchscreen_dmi.c | 56 ++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 52 deletions(-)
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index ab940c508ef0..d4f0a7872e49 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -106,6 +106,22 @@ int is_skx_based_platform(void)
- 	return 0;
- }
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index c682b028f0a2..4f53d3c57e69 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -178,51 +178,6 @@ static const unsigned long goodix_irq_flags[] = {
+ 	IRQ_TYPE_LEVEL_HIGH,
+ };
  
-+int is_spr_platform(void)
-+{
-+	if (cpu_model == 0x8F)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+int is_icx_platform(void)
-+{
-+	if (cpu_model == 0x6A || cpu_model == 0x6C)
-+		return 1;
-+
-+	return 0;
-+}
-+
- static int update_cpu_model(void)
- {
- 	unsigned int ebx, ecx, edx;
-diff --git a/tools/power/x86/intel-speed-select/isst-core.c b/tools/power/x86/intel-speed-select/isst-core.c
-index 6a26d5769984..4431c8a0d40a 100644
---- a/tools/power/x86/intel-speed-select/isst-core.c
-+++ b/tools/power/x86/intel-speed-select/isst-core.c
-@@ -201,6 +201,7 @@ void isst_get_uncore_mem_freq(int cpu, int config_index,
- {
- 	unsigned int resp;
- 	int ret;
-+
- 	ret = isst_send_mbox_command(cpu, CONFIG_TDP, CONFIG_TDP_GET_MEM_FREQ,
- 				     0, config_index, &resp);
- 	if (ret) {
-@@ -209,6 +210,20 @@ void isst_get_uncore_mem_freq(int cpu, int config_index,
+-/*
+- * Those tablets have their coordinates origin at the bottom right
+- * of the tablet, as if rotated 180 degrees
+- */
+-static const struct dmi_system_id rotated_screen[] = {
+-#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+-	{
+-		.ident = "Teclast X89",
+-		.matches = {
+-			/* tPAD is too generic, also match on bios date */
+-			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
+-			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
+-			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
+-		},
+-	},
+-	{
+-		.ident = "Teclast X98 Pro",
+-		.matches = {
+-			/*
+-			 * Only match BIOS date, because the manufacturers
+-			 * BIOS does not report the board name at all
+-			 * (sometimes)...
+-			 */
+-			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
+-			DMI_MATCH(DMI_BIOS_DATE, "10/28/2015"),
+-		},
+-	},
+-	{
+-		.ident = "WinBook TW100",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
+-		}
+-	},
+-	{
+-		.ident = "WinBook TW700",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
+-		},
+-	},
+-#endif
+-	{}
+-};
+-
+ static const struct dmi_system_id nine_bytes_report[] = {
+ #if defined(CONFIG_DMI) && defined(CONFIG_X86)
+ 	{
+@@ -1123,13 +1078,6 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ 				  ABS_MT_POSITION_Y, ts->prop.max_y);
  	}
  
- 	ctdp_level->mem_freq = resp & GENMASK(7, 0);
-+	if (is_spr_platform()) {
-+		ctdp_level->mem_freq *= 200;
-+	} else if (is_icx_platform()) {
-+		if (ctdp_level->mem_freq < 7) {
-+			ctdp_level->mem_freq = (12 - ctdp_level->mem_freq) * 133.33 * 2 * 10;
-+			ctdp_level->mem_freq /= 10;
-+			if (ctdp_level->mem_freq % 10 > 5)
-+				ctdp_level->mem_freq++;
-+		} else {
-+			ctdp_level->mem_freq = 0;
-+		}
-+	} else {
-+		ctdp_level->mem_freq = 0;
-+	}
- 	debug_printf(
- 		"cpu:%d ctdp:%d CONFIG_TDP_GET_MEM_FREQ resp:%x uncore mem_freq:%d\n",
- 		cpu, config_index, resp, ctdp_level->mem_freq);
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 3bf1820c0da1..f97d8859ada7 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -446,7 +446,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 		if (ctdp_level->mem_freq) {
- 			snprintf(header, sizeof(header), "mem-frequency(MHz)");
- 			snprintf(value, sizeof(value), "%d",
--				 ctdp_level->mem_freq * DISP_FREQ_MULTIPLIER);
-+				 ctdp_level->mem_freq);
- 			format_and_print(outf, level + 2, header, value);
- 		}
+-	if (dmi_check_system(rotated_screen)) {
+-		ts->prop.invert_x = true;
+-		ts->prop.invert_y = true;
+-		dev_dbg(&ts->client->dev,
+-			"Applying '180 degrees rotated screen' quirk\n");
+-	}
+-
+ 	if (dmi_check_system(nine_bytes_report)) {
+ 		ts->contact_size = 9;
  
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index 0cac6c54be87..1aa15d5ea57c 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -257,5 +257,7 @@ extern int get_cpufreq_base_freq(int cpu);
- extern int isst_read_pm_config(int cpu, int *cp_state, int *cp_cap);
- extern void isst_display_error_info_message(int error, char *msg, int arg_valid, int arg);
- extern int is_skx_based_platform(void);
-+extern int is_spr_platform(void);
-+extern int is_icx_platform(void);
- extern void isst_trl_display_information(int cpu, FILE *outf, unsigned long long trl);
- #endif
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 8618c44106c2..222f6c9f0b45 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -299,6 +299,23 @@ static const struct ts_dmi_data estar_beauty_hd_data = {
+ 	.properties	= estar_beauty_hd_props,
+ };
+ 
++/* Generic props + data for upside-down mounted GDIX1001 touchscreens */
++static const struct property_entry gdix1001_upside_down_props[] = {
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
++	{ }
++};
++
++static const struct ts_dmi_data gdix1001_00_upside_down_data = {
++	.acpi_name	= "GDIX1001:00",
++	.properties	= gdix1001_upside_down_props,
++};
++
++static const struct ts_dmi_data gdix1001_01_upside_down_data = {
++	.acpi_name	= "GDIX1001:01",
++	.properties	= gdix1001_upside_down_props,
++};
++
+ static const struct property_entry gp_electronic_t701_props[] = {
+ 	PROPERTY_ENTRY_U32("touchscreen-size-x", 960),
+ 	PROPERTY_ENTRY_U32("touchscreen-size-y", 640),
+@@ -1295,6 +1312,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
+ 		},
+ 	},
++	{
++		/* Teclast X89 (Windows version / BIOS) */
++		.driver_data = (void *)&gdix1001_01_upside_down_data,
++		.matches = {
++			/* tPAD is too generic, also match on bios date */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
++			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
++		},
++	},
+ 	{
+ 		/* Teclast X98 Plus II */
+ 		.driver_data = (void *)&teclast_x98plus2_data,
+@@ -1303,6 +1330,19 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
+ 		},
+ 	},
++	{
++		/* Teclast X98 Pro */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			/*
++			 * Only match BIOS date, because the manufacturers
++			 * BIOS does not report the board name at all
++			 * (sometimes)...
++			 */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BIOS_DATE, "10/28/2015"),
++		},
++	},
+ 	{
+ 		/* Trekstor Primebook C11 */
+ 		.driver_data = (void *)&trekstor_primebook_c11_data,
+@@ -1378,6 +1418,22 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "VINGA Twizzle J116"),
+ 		},
+ 	},
++	{
++		/* "WinBook TW100" */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
++		}
++	},
++	{
++		/* WinBook TW700 */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
++		},
++	},
+ 	{
+ 		/* Yours Y8W81, same case and touchscreen as Chuwi Vi8 */
+ 		.driver_data = (void *)&chuwi_vi8_data,
 -- 
 2.30.2
 
