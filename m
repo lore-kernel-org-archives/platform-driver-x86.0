@@ -2,45 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F7C07E9B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11457C07E9B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EBB461261
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16BC619B7
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231843AbhGEPbJ (ORCPT
+        id S232214AbhGEPbp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jul 2021 11:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
+        Mon, 5 Jul 2021 11:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231883AbhGEPbF (ORCPT
+        id S232097AbhGEPbe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:31:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4F0B36196A;
-        Mon,  5 Jul 2021 15:28:27 +0000 (UTC)
+        Mon, 5 Jul 2021 11:31:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3E23561990;
+        Mon,  5 Jul 2021 15:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625498908;
-        bh=rO/R9O6Nf0ZBXxZxkMffWHJCtxXIkGTKWnKSZx6gvX4=;
+        s=k20201202; t=1625498935;
+        bh=DtKzevK9mx9JWos5XHHq3fhiw8NE8RpYSofLHes60QM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ht8S9Jj5FmZ0a06KyxW8pkyZk0qliKkGExOC0dJ9untotQdFaVeLJi9wpY8A/0lUk
-         B3nD2/R1vIXLy6dCGpAe5IDqJc9VpuP6908JwzBNAxN7nsKDZdEc2a3oxGqOzHNLTT
-         7s4eEB+Aaxx8et4Aw5ifjKbY2jHdzCe+MvyVlmcg7/oK7wXbT5o3K2mhmhQhcT3Oeg
-         9tF3u/ZEEABEMUpAlc5hm2ArIiD1TvkK3oWBSeVkn90bF2i+Ec8cwdcz16H+XE2775
-         6teEdWFjYSAjGND5tY6x5CJvEfnW1FrG5MPuVxi+Zwrd9mx6V2pKsS01mhWm7mv8tY
-         y/bmDafX72Bjg==
+        b=Hlin/v6Xn/EOHRtptGgIB8PxaYA1NMncuiP9BkroWzyD1VMSJCG5Ls4Lb+ZyYvRZE
+         wBxqMWRxVnjUV7GPfeWZzLJNNos9lrSR6Cg6gBBVseWQhcishs3QB4hhcXgplLrhT2
+         e+OlqYyOBc824dmezkZ0L5/MmwVABlsMUwcMmffxqZgvXpLpLv7fTYKlzQ8rM4rUBQ
+         3OPcO8nIGmuBR1WSpfBZtTimXkmyNy0tzwGnZb0lm7EED0HHY6TeXjsgGk9xKC5opp
+         DDdGCZiam9ztSJFYChmGaQW66gDzpGmiYANthKZnL/MiUJKW8fEwS4Zkif+Bvd9GDR
+         tr30lS6B0q6Zw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
+Cc:     "Luke D. Jones" <luke@ljones.dev>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 09/59] platform/x86: touchscreen_dmi: Add an extra entry for the upside down Goodix touchscreen on Teclast X89 tablets
-Date:   Mon,  5 Jul 2021 11:27:25 -0400
-Message-Id: <20210705152815.1520546-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 30/59] platform/x86: asus-nb-wmi: Revert "Drop duplicate DMI quirk structures"
+Date:   Mon,  5 Jul 2021 11:27:46 -0400
+Message-Id: <20210705152815.1520546-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210705152815.1520546-1-sashal@kernel.org>
 References: <20210705152815.1520546-1-sashal@kernel.org>
@@ -52,45 +54,113 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: "Luke D. Jones" <luke@ljones.dev>
 
-[ Upstream commit a22e3803f2a4d947ff0083a9448a169269ea0f62 ]
+[ Upstream commit 98c0c85b1040db24f0d04d3e1d315c6c7b05cc07 ]
 
-Teclast X89 tablets come in 2 versions, with Windows pre-installed and with
-Android pre-installed. These 2 versions have different DMI strings.
+This is a preparation revert for reverting the "add support for ASUS ROG
+Zephyrus G14 and G15" change. This reverts
+commit 67186653c903 ("platform/x86: asus-nb-wmi: Drop duplicate DMI quirk
+structures")
 
-Add a match for the DMI strings used by the Android version BIOS.
-
-Note the Android version BIOS has a bug in the DSDT where no IRQ is
-provided, so for the touchscreen to work a DSDT override fixing this
-is necessary as well.
-
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+Link: https://lore.kernel.org/r/20210419074915.393433-2-luke@ljones.dev
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20210504185746.175461-4-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/platform/x86/asus-nb-wmi.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index b452865da2a1..8b9926a9db7e 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -1347,6 +1347,14 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index d41d7ad14be0..b07b1288346e 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -110,7 +110,12 @@ static struct quirk_entry quirk_asus_forceals = {
+ 	.wmi_force_als_set = true,
+ };
+ 
+-static struct quirk_entry quirk_asus_vendor_backlight = {
++static struct quirk_entry quirk_asus_ga401i = {
++	.wmi_backlight_power = true,
++	.wmi_backlight_set_devstate = true,
++};
++
++static struct quirk_entry quirk_asus_ga502i = {
+ 	.wmi_backlight_power = true,
+ 	.wmi_backlight_set_devstate = true,
+ };
+@@ -432,7 +437,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
  		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga401i,
  	},
-+	{
-+		/* Teclast X89 (Android version / BIOS) */
-+		.driver_data = (void *)&gdix1001_00_upside_down_data,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "WISKY"),
-+			DMI_MATCH(DMI_BOARD_NAME, "3G062i"),
-+		},
-+	},
  	{
- 		/* Teclast X89 (Windows version / BIOS) */
- 		.driver_data = (void *)&gdix1001_01_upside_down_data,
+ 		.callback = dmi_matched,
+@@ -441,7 +446,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga401i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -450,7 +455,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga401i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -459,7 +464,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga401i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -468,7 +473,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga401i,
+ 	},
+ 		{
+ 		.callback = dmi_matched,
+@@ -477,7 +482,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga502i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -486,7 +491,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga502i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
+@@ -495,7 +500,7 @@ static const struct dmi_system_id asus_quirks[] = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
+ 		},
+-		.driver_data = &quirk_asus_vendor_backlight,
++		.driver_data = &quirk_asus_ga502i,
+ 	},
+ 	{
+ 		.callback = dmi_matched,
 -- 
 2.30.2
 
