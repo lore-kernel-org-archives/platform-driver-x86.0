@@ -2,285 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C70C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3BC07E98
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 09:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F89611AD
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 00:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A36613C2
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 09:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbhGEAuL (ORCPT
+        id S230241AbhGEJGP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 4 Jul 2021 20:50:11 -0400
-Received: from mail-0201.mail-europe.com ([51.77.79.158]:51889 "EHLO
-        mail-0201.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbhGEAuL (ORCPT
+        Mon, 5 Jul 2021 05:06:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230223AbhGEJGP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 4 Jul 2021 20:50:11 -0400
-Date:   Mon, 05 Jul 2021 00:47:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail; t=1625446052;
-        bh=6b16QE5YQHT72Z9ghl2TeHay/lu1wSrBZbhnT2txrMI=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=sPH3SIpc+HDSyLnmdcaST2qeMedh8vZYY1vXW7OiDySNzLDTt/IAQdn5eUaKWIpQD
-         lvnGqJbOzhehCpUiLP5WLNfYE+PzN8xdAPgD1GgUOiVEIp/Y8DGYx4/+cKyBCojzTi
-         BxSVAdHu/wIL23bUET368aGPu6mgx76HGgeWPyAQ=
-To:     "Luke D. Jones" <luke@ljones.dev>
-From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Cc:     hdegoede@redhat.com, corentin.chary@gmail.com,
-        mgross@linux.intel.com, jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
-Subject: Re: [PATCH 2/3] asus-wmi: Add dgpu disable method
-Message-ID: <knw744OJB1AYrrFpo77N1Eei0JZC3SjKzg6SMoMhOsEchAiE8-klOIPTyFCAUSiVeTopPNqgFSefQJ2av6Gs_cS4TuIRXVQcHUxvw8YvSl0=@protonmail.com>
-In-Reply-To: <20210704222148.880848-3-luke@ljones.dev>
-References: <20210704222148.880848-1-luke@ljones.dev> <20210704222148.880848-3-luke@ljones.dev>
+        Mon, 5 Jul 2021 05:06:15 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEF0C061574
+        for <platform-driver-x86@vger.kernel.org>; Mon,  5 Jul 2021 02:03:38 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id m1so22810355edq.8
+        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Jul 2021 02:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4IBVSwu5GomtKJRSCgsvXFvZd61ehj48dOdrbBGoQkI=;
+        b=Iw5UyVuiT7T2SjC4qNDSYnI2kvyQmEgiMDvaIdmuIuqETt1QQCvJA5r5rxTfpJe1GH
+         1lK8SJKtFd7YyWAtkd1dEAyNAFXAxzLdld41BB1cS86zdvOGAHLf6vKd/BPnEmGD7RN1
+         VtgaOmY6t3uC7HeKGgj5QHAV2Kc9sPZi0M37HzU9u5wBMDxrpRvTZqwQQB2YMK9qGkN/
+         Q7+Yopjedy+ZecY784XOCGp1hTeAT2tITcjMEStG4HLtHr0YV+gmKa0tOE5VJLT08LLk
+         Itb2EnnzJcMDVwrJ19moKF/SzTzxeUZeT7OBojPRl9+qxP16o9xEsKV9USwrKm8SvXH5
+         MmSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4IBVSwu5GomtKJRSCgsvXFvZd61ehj48dOdrbBGoQkI=;
+        b=SPOlhj8VbzkAyJ1TcaK5lAeGKZ9oEN966p6tF2UqLKg5U7gLjoe/n0k27gQKCdTrUz
+         Ha5Dd02IjQYpMKU7gcIKkEN0nA9sA1b1NIK3XIDDJ2Q6UOclz5bmZzBJHd6fYPCBplTY
+         E96kP56mAF9T1vI1A8mPYeNxBW8sJvbAOwFGf3nYhxzMGxtol3Nf4JeYYZsjqivTSP8z
+         6qMn0vaPsA7fjyZuNyWYlVd8ESo2lp4f/JoHzeBy5wT9VBe8WEpLg+3Ksqy5Ob5sSDh2
+         LQ+qBbCbfV/u/PrOua9ji7AMwP/RljMCOLga4TQfeGzW/2qjjnl0/dgG8dG51sDKaKBY
+         8IDQ==
+X-Gm-Message-State: AOAM5338YuwqxvcWxQNj5gf6otSAKQdlwxw7pcSutvSZzZDQoODegoH/
+        FFxiZfnEHAxQy+Vs3nAwNJppiMorw2RRrgLFoMtlFQ==
+X-Google-Smtp-Source: ABdhPJzI4o7DR7HHYlcIPJSNkB3+ccsaO+zAIBEfCuedleNNnkuXHg5/ZOBvalxkeIrnb/TgJCGHyTDQdp8E53c5Ccg=
+X-Received: by 2002:aa7:cf93:: with SMTP id z19mr12462002edx.214.1625475817209;
+ Mon, 05 Jul 2021 02:03:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <YL43SrZ8N8H+ZHE9@black.fi.intel.com> <YMdw6WdEQdGATBNJ@smile.fi.intel.com>
+In-Reply-To: <YMdw6WdEQdGATBNJ@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Jul 2021 11:03:26 +0200
+Message-ID: <CAMRc=MfphPFqCaBRG6jLUFUwOB3_HTA73WXoCBg5S9GagTDeaw@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.14-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi
-
-I have added a couple comments inline.
-
-
-2021. j=C3=BAlius 5., h=C3=A9tf=C5=91 0:21 keltez=C3=A9ssel, Luke D. Jones =
-=C3=ADrta:
-
-> In Windows the ASUS Armory Crate progrm can enable or disable the
-                                        ^
-"program"
-
-
-> dGPU via a WMI call. This functions much the same as various Linux
-> methods in software where the dGPU is removed from the device tree.
+On Mon, Jun 14, 2021 at 5:09 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> However the WMI call saves the state of dGPU enabled or not and this
-
-I think "[...] the WMI call saves whether the dGPU is enabled or not, and [=
-...]"
-might be better.
-Or "[...] the WMI call saves the state of the dGPU (enabled or not) and [..=
-.]".
-
-
-> then changes the dGPU visibility in Linux with no way for Linux
-> users to re-enable it. We expose the WMI method so users can see
-> and change the dGPU ACPI state.
+> On Mon, Jun 07, 2021 at 06:12:10PM +0300, Andy Shevchenko wrote:
+> > Hi Linux GPIO and TWIMC maintainers,
+> >
+> > This is GPIO material for v5.14 cycle. It contains some stuff that other
+> > subsystems may take due to dependencies. Consider this tag immutable.
 >
-> Signed-off-by: Luke D. Jones <luke@ljones.dev>
-> ---
->  drivers/platform/x86/asus-wmi.c            | 98 ++++++++++++++++++++++
->  include/linux/platform_data/x86/asus-wmi.h |  3 +
->  2 files changed, 101 insertions(+)
+> Bart, any comments on this? Can you, please, pull?
 >
-> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-=
-wmi.c
-> index 2468076d6cd8..8dc3f7ed021f 100644
-> --- a/drivers/platform/x86/asus-wmi.c
-> +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -210,6 +210,9 @@ struct asus_wmi {
->  =09u8 fan_boost_mode_mask;
->  =09u8 fan_boost_mode;
->
-> +=09bool dgpu_disable_available;
-> +=09u8 dgpu_disable_mode;
-> +
->  =09bool throttle_thermal_policy_available;
->  =09u8 throttle_thermal_policy_mode;
->
-> @@ -427,6 +430,93 @@ static void lid_flip_tablet_mode_get_state(struct as=
-us_wmi *asus)
->  =09}
->  }
->
-> +/* dGPU ****************************************************************=
-****/
-> +static int dgpu_disable_check_present(struct asus_wmi *asus)
-> +{
-> +=09u32 result;
-> +=09int err;
-> +
-> +=09asus->dgpu_disable_available =3D false;
-> +
-> +=09err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_DGPU, &result);
-> +=09if (err) {
-> +=09=09if (err =3D=3D -ENODEV)
-> +=09=09=09return 0;
-> +=09=09return err;
-> +=09}
-> +
-> +=09if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-> +=09=09asus->dgpu_disable_available =3D true;
-> +=09=09asus->dgpu_disable_mode =3D result & ASUS_WMI_DSTS_STATUS_BIT;
-> +
-
-Aren't braces missing here?
-
-
-> +=09return 0;
-> +}
-> +
-> +static int dgpu_disable_write(struct asus_wmi *asus)
-> +{
-> +=09int err;
-> +=09u8 value;
-> +=09u32 retval;
-> +
-> +=09value =3D asus->dgpu_disable_mode;
-> +
-> +=09err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, value, &retval);
-> +
-> +=09sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> +=09=09=09"dgpu_disable");
-
-A similar line with the exact same length in patch 3/3 is not broken in two=
-.
-And shouldn't the notification be sent if the operation succeeded?
-
-
-> +
-> +=09if (err) {
-> +=09=09pr_warn("Failed to set dgpu disable: %d\n", err);
-> +=09=09return err;
-> +=09}
-> +
-> +=09if (retval > 1 || retval < 0) {
-> +=09=09pr_warn("Failed to set dgpu disable (retval): 0x%x\n",
-> +=09=09=09retval);
-> +=09=09return -EIO;
-> +=09}
-> +
-> +=09return 0;
-> +}
-> +
-> +static ssize_t dgpu_disable_show(struct device *dev,
-> +=09=09=09=09   struct device_attribute *attr, char *buf)
-> +{
-> +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> +=09u8 mode =3D asus->dgpu_disable_mode;
-> +
-> +=09return scnprintf(buf, PAGE_SIZE, "%d\n", mode);
-
-You could use `sysfs_emit()`.
-
-
-> +}
-> +
-> +static ssize_t dgpu_disable_store(struct device *dev,
-> +=09=09=09=09    struct device_attribute *attr,
-> +=09=09=09=09    const char *buf, size_t count)
-> +{
-> +=09int result;
-> +=09u8 disable;
-> +=09struct asus_wmi *asus =3D dev_get_drvdata(dev);
-> +
-> +=09result =3D kstrtou8(buf, 10, &disable);
-
-You could use `kstrtobool()`. I think that would be better since it accepts
-'y', 'n', etc. in addition to 0 and 1.
-
-
-> +=09if (result < 0)
-> +=09=09return result;
-> +
-> +=09if (disable > 1 || disable < 0)
-> +=09=09return -EINVAL;
-> +
-> +=09asus->dgpu_disable_mode =3D disable;
-> +=09/*
-> +=09 * The ACPI call used does not save the mode unless the call is run t=
-wice.
-> +=09 * Once to disable, then once to check status and save - this is two =
-code
-> +=09 * paths in the method in the ACPI dumps.
-> +=09*/
-> +=09dgpu_disable_write(asus);
-> +=09dgpu_disable_write(asus);
-
-Is there any reason the potential error codes are not returned?
-
-
-> +
-> +=09return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(dgpu_disable);
-> +
->  /* Battery *************************************************************=
-*******/
->
->  /* The battery maximum charging percentage */
-> @@ -2412,6 +2502,7 @@ static struct attribute *platform_attributes[] =3D =
-{
->  =09&dev_attr_camera.attr,
->  =09&dev_attr_cardr.attr,
->  =09&dev_attr_touchpad.attr,
-> +=09&dev_attr_dgpu_disable.attr,
->  =09&dev_attr_lid_resume.attr,
->  =09&dev_attr_als_enable.attr,
->  =09&dev_attr_fan_boost_mode.attr,
-> @@ -2438,6 +2529,8 @@ static umode_t asus_sysfs_is_visible(struct kobject=
- *kobj,
->  =09=09devid =3D ASUS_WMI_DEVID_LID_RESUME;
->  =09else if (attr =3D=3D &dev_attr_als_enable.attr)
->  =09=09devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
-> +=09else if (attr =3D=3D &dev_attr_dgpu_disable.attr)
-> +=09=09ok =3D asus->dgpu_disable_available;
->  =09else if (attr =3D=3D &dev_attr_fan_boost_mode.attr)
->  =09=09ok =3D asus->fan_boost_mode_available;
->  =09else if (attr =3D=3D &dev_attr_throttle_thermal_policy.attr)
-> @@ -2699,6 +2792,10 @@ static int asus_wmi_add(struct platform_device *pd=
-ev)
->  =09if (err)
->  =09=09goto fail_platform;
->
-> +=09err =3D dgpu_disable_check_present(asus);
-> +=09if (err)
-> +=09=09goto fail_dgpu_disable;
-> +
-
-Should this really be considered a "fatal" error?
-
-
->  =09err =3D fan_boost_mode_check_present(asus);
->  =09if (err)
->  =09=09goto fail_fan_boost_mode;
-> @@ -2799,6 +2896,7 @@ static int asus_wmi_add(struct platform_device *pde=
-v)
->  fail_sysfs:
->  fail_throttle_thermal_policy:
->  fail_fan_boost_mode:
-> +fail_dgpu_disable:
->  fail_platform:
->  fail_panel_od:
->  =09kfree(asus);
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/p=
-latform_data/x86/asus-wmi.h
-> index 428aea701c7b..a528f9d0e4b7 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -90,6 +90,9 @@
->  /* Keyboard dock */
->  #define ASUS_WMI_DEVID_KBD_DOCK=09=090x00120063
->
-> +/* dgpu on/off */
-> +#define ASUS_WMI_DEVID_DGPU=09=090x00090020
-> +
->  /* DSTS masks */
->  #define ASUS_WMI_DSTS_STATUS_BIT=090x00000001
->  #define ASUS_WMI_DSTS_UNKNOWN_BIT=090x00000002
 > --
-> 2.31.1
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
+Hi Andy,
 
-Regards,
-Barnab=C3=A1s P=C5=91cze
+I was looking for you PR for this cycle and couldn't find it in my
+inbox. Somehow this went into spam. I'll make sure your email never
+goes to spam again. Sorry. I'm seeing Hand pulled it, is that right?
+
+Hans: did you take the entire thing?
+
+Bart
