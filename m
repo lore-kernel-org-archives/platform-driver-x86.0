@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB621C11F67
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B39DC11F67
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A31C61983
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C676198B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233171AbhGEPez (ORCPT
+        id S233486AbhGEPgN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jul 2021 11:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58050 "EHLO mail.kernel.org"
+        Mon, 5 Jul 2021 11:36:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232744AbhGEPd5 (ORCPT
+        id S233217AbhGEPfF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:33:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6C90619A9;
-        Mon,  5 Jul 2021 15:30:57 +0000 (UTC)
+        Mon, 5 Jul 2021 11:35:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D7033619CE;
+        Mon,  5 Jul 2021 15:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625499058;
-        bh=4ZubIff2fmio7UuOFSVEgZ6YWTOPgS/Esx4R+R5wBc8=;
+        s=k20201202; t=1625499090;
+        bh=bbUbZC0xZMGejeXQvj4I7kJ61/nswm3ZXZCX0CQqbOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1KiJAvSvc7GfM46pwC0ANViTLqimtnejaeHZl/a0SWZPYG22wm/KFTct+LE5NBSv
-         E+WTGjJ/0l/zBVxKwaUj4RL/Wjg9eThh5oTnPn8tVLscJyJB+gwCIPqCSE6PpP4wm6
-         QR+xcifcV8RqQMM9zOP89qF6sAfEMnEUslSnG6c5mt084V1F297Ow4NfVBpn/5e6Lk
-         glfGEiu2+yXoEr3nuc7GmN8r7eB5vj3ge+ZowIYeL3X8xzdWZO9buXzTAed1FbdBJy
-         Mj48oiyf+0YDBGxiEj8VVQ0PPQxsWfD+3CwKa287FZwMA+SDMFIKbcZjnTWJ9lYUUD
-         I/DaAFY37xRYg==
+        b=WerXBrjWjL6cDFJSSgqkV0WYv3vS3NfcgspdU4mvq3QaCdTVeu0y7z5j3TiNl9d0U
+         GvekwOsZbbB445wI8sYnXyKkuI2djYyDFi5RZwC+brrhejAPu8oWRk5bXfPzXWJSrS
+         FAcMEg15jjVnno10D7gG0iPEZeF8zSUDSEAaq+jtCCWkeFpusC0lRobZ52DOObFCIV
+         CbFD5sMwZ4NgkKOxr1esxyinv9yWZoaNtQ8PCYbX02aZqzh750UJ/3pCtnWBkkhM+a
+         ocNyzxGhAAWSLVvMUILR8Qrme/PR5mjSZzyGh6SRfT6ftGR6bOIQ3+Xafum0Obk0KX
+         K2nKabGoPjrLQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
@@ -40,12 +40,12 @@ Cc:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/26] platform/x86: toshiba_acpi: Fix missing error code in toshiba_acpi_setup_keyboard()
-Date:   Mon,  5 Jul 2021 11:30:28 -0400
-Message-Id: <20210705153039.1521781-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 13/17] platform/x86: toshiba_acpi: Fix missing error code in toshiba_acpi_setup_keyboard()
+Date:   Mon,  5 Jul 2021 11:31:09 -0400
+Message-Id: <20210705153114.1522046-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210705153039.1521781-1-sashal@kernel.org>
-References: <20210705153039.1521781-1-sashal@kernel.org>
+In-Reply-To: <20210705153114.1522046-1-sashal@kernel.org>
+References: <20210705153114.1522046-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -76,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/toshiba_acpi.c b/drivers/platform/x86/toshiba_acpi.c
-index 71a969fc3b20..f202fc0dd1ff 100644
+index 8c3e9bac4754..bed2fd56a6d0 100644
 --- a/drivers/platform/x86/toshiba_acpi.c
 +++ b/drivers/platform/x86/toshiba_acpi.c
-@@ -2841,6 +2841,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
+@@ -2853,6 +2853,7 @@ static int toshiba_acpi_setup_keyboard(struct toshiba_acpi_dev *dev)
  
  	if (!dev->info_supported && !dev->system_event_supported) {
  		pr_warn("No hotkey query interface found\n");
