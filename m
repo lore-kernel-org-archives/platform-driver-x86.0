@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE993C11F70
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA1DC11F79
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E5161997
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145EA61A3E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 15:30:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232136AbhGEPdX (ORCPT
+        id S232801AbhGEPdZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jul 2021 11:33:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58632 "EHLO mail.kernel.org"
+        Mon, 5 Jul 2021 11:33:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232549AbhGEPcs (ORCPT
+        id S231846AbhGEPcq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jul 2021 11:32:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BAB7619A0;
-        Mon,  5 Jul 2021 15:30:10 +0000 (UTC)
+        Mon, 5 Jul 2021 11:32:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B878E619A2;
+        Mon,  5 Jul 2021 15:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625499011;
-        bh=5YQzn5VTPGA3RcWIpzC4eQz/17IKiMjdivRT+lqiYjk=;
+        s=k20201202; t=1625499009;
+        bh=eM8hCoUT7pQxHAolavTM2YgZVGuSIS2E+h8/fmFb1wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEEEwOhwHp+V7rgXgtQGwWAx+Z/bChQbMQ2pu2B45bF8B61WAdV1psqfM3jdFZwjN
-         aCGKu0Dxx7ck8CtZwejarb4GaPOB0dsnXrZFHRPJJe4WIfPXs4+L0rD1ZN4vSJddyo
-         sJhvGkZQpWdDqadJDigmn+lS8/m81IEFOg2rFXShhAlgYKF+QWunhky5cs2qcsrkHl
-         AWDtj/cGkGleklV0djPgCafd8iMFkC4cUK6uRzix8lk0EgiHGCuMFkmovDy7Jdoj7c
-         /bg/ECU73HcwT+Fx4A8S0tOb6lVu1Yn6u3WS1SCAyaSY4VExzX+UO5cxBqg8qAxNR/
-         9EUqUJlXJSNew==
+        b=C7/HNE/YLTi42XKK4qvAUzPbG4Ra7xK9biMAbMlqunSdqM+yAvRZvggmt8yKfm8GV
+         mkiylfZw/H9Qrql8EiVUEASDIqWNvvMI5oCBWKOTEtOXrSx63m+wMERY2GAIZOyP0q
+         lbjuhS8s5+UBQZnfYhOGMIy5LUF1nAJVoiwfVGeOG96bPfFQ0Nf0Lx7h5niAjgz1UL
+         iyMZPXQResvKgQN1oIngNoKYNhZdbP9etE9NpP1OPbaHsdKNNK8WGEJllmiF+4oIHv
+         k1MPj/CK52S02ssFIpoYxLE3Q4BJEkoDsXQBmbHoUWgastn28VZjT9WKbd+JRN5EKj
+         tnPgd/pnAbSTg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 08/41] platform/x86: touchscreen_dmi: Add info for the Goodix GT912 panel of TM800A550L tablets
-Date:   Mon,  5 Jul 2021 11:29:28 -0400
-Message-Id: <20210705153001.1521447-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 06/41] Input: goodix - platform/x86: touchscreen_dmi - Move upside down quirks to touchscreen_dmi.c
+Date:   Mon,  5 Jul 2021 11:29:26 -0400
+Message-Id: <20210705153001.1521447-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210705153001.1521447-1-sashal@kernel.org>
 References: <20210705153001.1521447-1-sashal@kernel.org>
@@ -55,71 +54,187 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit fcd8cf0e3e48f4c66af82c8e799c37cb0cccffe0 ]
+[ Upstream commit 5a6f0dbe621a5c20dc912ac474debf9f11129e03 ]
 
-The Bay Trail Glavey TM800A550L tablet, which ships with Android installed
-from the factory, uses a GT912 touchscreen controller which needs to have
-its firmware uploaded by the OS to work (this is a first for a x86 based
-device with a Goodix touchscreen controller).
+Move the DMI quirks for upside-down mounted Goodix touchscreens from
+drivers/input/touchscreen/goodix.c to
+drivers/platform/x86/touchscreen_dmi.c,
+where all the other x86 touchscreen quirks live.
 
-Add a touchscreen_dmi entry for this which specifies the filenames
-to use for the firmware and config files needed for this.
+Note the touchscreen_dmi.c code attaches standard touchscreen
+device-properties to an i2c-client device based on a combination of a
+DMI match + a device-name match. I've verified that the: Teclast X98 Pro,
+WinBook TW100 and WinBook TW700 uses an ACPI devicename of "GDIX1001:00"
+based on acpidumps and/or dmesg output available on the web.
 
-Note this matches on a GDIX1001 ACPI HID, while the original DSDT uses
-a HID of GODX0911. For the touchscreen to work on these devices a DSDT
-override is necessary to fix a missing IRQ and broken GPIO settings in
-the ACPI-resources for the touchscreen. This override also changes the
-HID to the standard GDIX1001 id typically used for Goodix touchscreens.
-The DSDT override is available here:
-https://fedorapeople.org/~jwrdegoede/glavey-tm800a550l-dsdt-override/
+This patch was tested on a Teclast X89 tablet.
 
-Reviewed-by: Bastien Nocera <hadess@hadess.net>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20210504185746.175461-5-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20210504185746.175461-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/touchscreen_dmi.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/input/touchscreen/goodix.c     | 52 ------------------------
+ drivers/platform/x86/touchscreen_dmi.c | 56 ++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-index ebae21b78327..99260915122c 100644
---- a/drivers/platform/x86/touchscreen_dmi.c
-+++ b/drivers/platform/x86/touchscreen_dmi.c
-@@ -316,6 +316,18 @@ static const struct ts_dmi_data gdix1001_01_upside_down_data = {
- 	.properties	= gdix1001_upside_down_props,
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index 45113767db96..a06385c55af2 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -178,51 +178,6 @@ static const unsigned long goodix_irq_flags[] = {
+ 	IRQ_TYPE_LEVEL_HIGH,
  };
  
-+static const struct property_entry glavey_tm800a550l_props[] = {
-+	PROPERTY_ENTRY_STRING("firmware-name", "gt912-glavey-tm800a550l.fw"),
-+	PROPERTY_ENTRY_STRING("goodix,config-name", "gt912-glavey-tm800a550l.cfg"),
-+	PROPERTY_ENTRY_U32("goodix,main-clk", 54),
+-/*
+- * Those tablets have their coordinates origin at the bottom right
+- * of the tablet, as if rotated 180 degrees
+- */
+-static const struct dmi_system_id rotated_screen[] = {
+-#if defined(CONFIG_DMI) && defined(CONFIG_X86)
+-	{
+-		.ident = "Teclast X89",
+-		.matches = {
+-			/* tPAD is too generic, also match on bios date */
+-			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
+-			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
+-			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
+-		},
+-	},
+-	{
+-		.ident = "Teclast X98 Pro",
+-		.matches = {
+-			/*
+-			 * Only match BIOS date, because the manufacturers
+-			 * BIOS does not report the board name at all
+-			 * (sometimes)...
+-			 */
+-			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
+-			DMI_MATCH(DMI_BIOS_DATE, "10/28/2015"),
+-		},
+-	},
+-	{
+-		.ident = "WinBook TW100",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
+-		}
+-	},
+-	{
+-		.ident = "WinBook TW700",
+-		.matches = {
+-			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+-			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
+-		},
+-	},
+-#endif
+-	{}
+-};
+-
+ static const struct dmi_system_id nine_bytes_report[] = {
+ #if defined(CONFIG_DMI) && defined(CONFIG_X86)
+ 	{
+@@ -1121,13 +1076,6 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
+ 				  ABS_MT_POSITION_Y, ts->prop.max_y);
+ 	}
+ 
+-	if (dmi_check_system(rotated_screen)) {
+-		ts->prop.invert_x = true;
+-		ts->prop.invert_y = true;
+-		dev_dbg(&ts->client->dev,
+-			"Applying '180 degrees rotated screen' quirk\n");
+-	}
+-
+ 	if (dmi_check_system(nine_bytes_report)) {
+ 		ts->contact_size = 9;
+ 
+diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
+index 3743d895399e..e52ff09b81de 100644
+--- a/drivers/platform/x86/touchscreen_dmi.c
++++ b/drivers/platform/x86/touchscreen_dmi.c
+@@ -299,6 +299,23 @@ static const struct ts_dmi_data estar_beauty_hd_data = {
+ 	.properties	= estar_beauty_hd_props,
+ };
+ 
++/* Generic props + data for upside-down mounted GDIX1001 touchscreens */
++static const struct property_entry gdix1001_upside_down_props[] = {
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-x"),
++	PROPERTY_ENTRY_BOOL("touchscreen-inverted-y"),
 +	{ }
 +};
 +
-+static const struct ts_dmi_data glavey_tm800a550l_data = {
++static const struct ts_dmi_data gdix1001_00_upside_down_data = {
 +	.acpi_name	= "GDIX1001:00",
-+	.properties	= glavey_tm800a550l_props,
++	.properties	= gdix1001_upside_down_props,
++};
++
++static const struct ts_dmi_data gdix1001_01_upside_down_data = {
++	.acpi_name	= "GDIX1001:01",
++	.properties	= gdix1001_upside_down_props,
 +};
 +
  static const struct property_entry gp_electronic_t701_props[] = {
  	PROPERTY_ENTRY_U32("touchscreen-size-x", 960),
  	PROPERTY_ENTRY_U32("touchscreen-size-y", 640),
-@@ -1012,6 +1024,15 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "eSTAR BEAUTY HD Intel Quad core"),
+@@ -1268,6 +1285,16 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "X3 Plus"),
  		},
  	},
-+	{	/* Glavey TM800A550L */
-+		.driver_data = (void *)&glavey_tm800a550l_data,
++	{
++		/* Teclast X89 (Windows version / BIOS) */
++		.driver_data = (void *)&gdix1001_01_upside_down_data,
 +		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Aptio CRB"),
-+			/* Above strings are too generic, also match on BIOS version */
-+			DMI_MATCH(DMI_BIOS_VERSION, "ZY-8-BI-PX4S70VTR400-X423B-005-D"),
++			/* tPAD is too generic, also match on bios date */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
++			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
 +		},
 +	},
  	{
- 		/* GP-electronic T701 */
- 		.driver_data = (void *)&gp_electronic_t701_data,
+ 		/* Teclast X98 Plus II */
+ 		.driver_data = (void *)&teclast_x98plus2_data,
+@@ -1276,6 +1303,19 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "X98 Plus II"),
+ 		},
+ 	},
++	{
++		/* Teclast X98 Pro */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			/*
++			 * Only match BIOS date, because the manufacturers
++			 * BIOS does not report the board name at all
++			 * (sometimes)...
++			 */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BIOS_DATE, "10/28/2015"),
++		},
++	},
+ 	{
+ 		/* Trekstor Primebook C11 */
+ 		.driver_data = (void *)&trekstor_primebook_c11_data,
+@@ -1351,6 +1391,22 @@ const struct dmi_system_id touchscreen_dmi_table[] = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "VINGA Twizzle J116"),
+ 		},
+ 	},
++	{
++		/* "WinBook TW100" */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW100")
++		}
++	},
++	{
++		/* WinBook TW700 */
++		.driver_data = (void *)&gdix1001_00_upside_down_data,
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TW700")
++		},
++	},
+ 	{
+ 		/* Yours Y8W81, same case and touchscreen as Chuwi Vi8 */
+ 		.driver_data = (void *)&chuwi_vi8_data,
 -- 
 2.30.2
 
