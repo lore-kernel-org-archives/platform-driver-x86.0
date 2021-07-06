@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA92C07E96
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36454C07E96
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BA5619A2
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1648F619A1
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbhGFKJm (ORCPT
+        id S231255AbhGFKLQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jul 2021 06:09:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45657 "EHLO
+        Tue, 6 Jul 2021 06:11:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39243 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231213AbhGFKJm (ORCPT
+        by vger.kernel.org with ESMTP id S231194AbhGFKLQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jul 2021 06:09:42 -0400
+        Tue, 6 Jul 2021 06:11:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625566023;
+        s=mimecast20190719; t=1625566117;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2/MVrnqb5uxllS/19PtIANIOuWif4VbTqwukGRi/dgw=;
-        b=hYPNWt3iIrEC51gv9sPUiFVCJhxJfWZiyj6pYcv2ySYas3G5qqQISMhy6awyBs+ee25IWD
-        3WEOLvTL2kkPDOgIYC1JimC4dRT/2782QhRsV+Xoq1AXHUx1GQGm/jBWhj/oEktqMQ39No
-        qCIELcspQV7n88Dc3KDyyZlJlrU3UYE=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-QesmxP1yMS217Cbj6Q1Ivg-1; Tue, 06 Jul 2021 06:07:02 -0400
-X-MC-Unique: QesmxP1yMS217Cbj6Q1Ivg-1
-Received: by mail-ed1-f70.google.com with SMTP id d5-20020a0564020785b02903958939248aso10491929edy.15
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 03:07:02 -0700 (PDT)
+        bh=fkUL5b8YgAi/G+425pjIUtZ7clWR3x75JHUPwUSdKOA=;
+        b=OkMJxT42psywl/dxtdB5uTyHxR3V/Ck19+LaunFWSUVlVMIaQJOpMZhxmTDjA1H4NtufXB
+        pyd01ylQGDBG1FHJNLilmCOMzEdxDUdLSRBdfrNuJk2UzP1BgqBa6UzBtHHftZIhtsQawB
+        unlsloh2o9DyBXeqrpgt3DefF4yKkac=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-7YbvK13uMyeVIUFPwH1W9w-1; Tue, 06 Jul 2021 06:08:36 -0400
+X-MC-Unique: 7YbvK13uMyeVIUFPwH1W9w-1
+Received: by mail-ej1-f72.google.com with SMTP id hy7-20020a1709068a67b02904cdf8737a75so4789768ejc.9
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 03:08:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=2/MVrnqb5uxllS/19PtIANIOuWif4VbTqwukGRi/dgw=;
-        b=fbqzRPdrZEP6isowaC5yrOzbf2yxseHL5Wu/nZ+mtAzVRZ41gg0xXgZIYLQJgHN+0V
-         RqFXGeWrrSlaeQhe3amsW7atAxePrpEnqs6PwRXXwfzeFuXl+06w38coV1go+GewfjRl
-         PVejUfx1FLSSQAAOr1+tR2unPr/SrtweltyrO34MYSW+PMJTjDdLqNv4JNa7IfKL8y7q
-         KdxQAgfZ8cr8RCJjyb465e7Iute211kVZiFL3EyCuY18JzTsM9bZSG6qRhla++PYPbRJ
-         XyYso/m8pz7W7rQNiZG79hPU1Z1UbJJpFx4l0lNdEOqAMo1zdP4WNlaYc3Z1l+2D4xjj
-         pYag==
-X-Gm-Message-State: AOAM532iXKETkDZfo4Y0LTiiPJQGo5Z9+RbY9rCr8SQCxtt2kKCGMd7V
-        xIb0OkK4xTjgTBkJNpTEWAZzOTwaDXxKVObYglWNE54EK+m0J1VAFuchDFsbhHMUvT/Iu6NFMfo
-        11A+fFz+xzVLQZXwSKo/L/nGd95prLmntIw==
-X-Received: by 2002:a17:907:9872:: with SMTP id ko18mr17335069ejc.505.1625566021631;
-        Tue, 06 Jul 2021 03:07:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzzMmMXTD2fUMRWtgHoW+In5dlnYgof82wTZOCTNRRRuC0zSmS3pRqo7GRptoROxPwPdnof2w==
-X-Received: by 2002:a17:907:9872:: with SMTP id ko18mr17335054ejc.505.1625566021449;
-        Tue, 06 Jul 2021 03:07:01 -0700 (PDT)
+        bh=fkUL5b8YgAi/G+425pjIUtZ7clWR3x75JHUPwUSdKOA=;
+        b=Xx6wn9jWG0W02zavsKx02FCo3MKUlbRkuLhPap52Y4ay+NRcN+qbRFaQn3qbPKbm9w
+         rA1/+mjV19iJWVzmr+XbqzKm49Mk2c5fsydLO6yIu6zFjAiFmSSiJGACAzZGupsJHYIi
+         nmfH9XE4Q7qM6lS7rjcjA9ucSARa6fAzBj+qGd0t9njk5Tikzjz70YYpTIk4D/ox+oBO
+         5bvyGp9jLXhiAr2t8D455S0rWAOwS5QdpHgvF8cnir5eFxtR94Zm3eQROCY06YcHjRAo
+         lxm1zfnI7SXh9OoFCmNoTaP9mS5dSCx7Gj6oIy4o7t+Cz+WJV/qd55C+qThBpEiVDY+H
+         dnpw==
+X-Gm-Message-State: AOAM532r6ymCsbMzxtci3UocR4d1ggYBvQPYyYuicxcplVnpw5Y/0XlH
+        S0pu//LYmCCJRreE42YkzIB1chdfp6y37swz/gT0/qzLgK6Ex+x/g0+ttV66F10Lk1Ml4HAXwgN
+        Ek4ycIV8mnOLOfEwNyT/OO6fvvle1SdqPWg==
+X-Received: by 2002:a17:906:1284:: with SMTP id k4mr13111089ejb.329.1625566115564;
+        Tue, 06 Jul 2021 03:08:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyI2oIY2Q+GKYwex6EIiIxA4L1dDu4N//GmIomNoCTAnkVBF4rfHyYmntgD3gGsPyBHTM8GOA==
+X-Received: by 2002:a17:906:1284:: with SMTP id k4mr13111077ejb.329.1625566115426;
+        Tue, 06 Jul 2021 03:08:35 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id c28sm5426881ejc.102.2021.07.06.03.07.00
+        by smtp.gmail.com with ESMTPSA id t27sm5442382eje.86.2021.07.06.03.08.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jul 2021 03:07:00 -0700 (PDT)
+        Tue, 06 Jul 2021 03:08:35 -0700 (PDT)
 Subject: Re: [PATCH 1/3] asus-wmi: Add panel overdrive functionality
 To:     "Luke D. Jones" <luke@ljones.dev>
 Cc:     corentin.chary@gmail.com, mgross@linux.intel.com,
@@ -70,22 +70,22 @@ Cc:     corentin.chary@gmail.com, mgross@linux.intel.com,
 References: <20210704222148.880848-1-luke@ljones.dev>
  <20210704222148.880848-2-luke@ljones.dev>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <db045e4c-cac7-2984-b0e1-367e1a58cde9@redhat.com>
-Date:   Tue, 6 Jul 2021 12:07:00 +0200
+Message-ID: <176320b4-7461-3a97-2958-0c35dbdac0ae@redhat.com>
+Date:   Tue, 6 Jul 2021 12:08:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
 In-Reply-To: <20210704222148.880848-2-luke@ljones.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-Thank you for your patches, I've added several remarks inline (below);
+One more remark inline:
 
 On 7/5/21 12:21 AM, Luke D. Jones wrote:
 > Some ASUS ROG laptops have the ability to drive the display panel
@@ -101,79 +101,9 @@ On 7/5/21 12:21 AM, Luke D. Jones wrote:
 > index ebaeb7bb80f5..2468076d6cd8 100644
 > --- a/drivers/platform/x86/asus-wmi.c
 > +++ b/drivers/platform/x86/asus-wmi.c
-> @@ -216,6 +216,9 @@ struct asus_wmi {
->  	// The RSOC controls the maximum charging percentage.
->  	bool battery_rsoc_available;
->  
-> +	bool panel_overdrive_available;
-> +	u8 panel_overdrive;
-> +
->  	struct hotplug_slot hotplug_slot;
->  	struct mutex hotplug_lock;
->  	struct mutex wmi_lock;
-> @@ -1221,6 +1224,87 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
->  	return result;
->  }
->  
-> +/* Panel Overdrive ************************************************************/
-> +static int panel_od_check_present(struct asus_wmi *asus)
-> +{
-> +	u32 result;
-> +	int err;
-> +
-> +	asus->panel_overdrive_available = false;
-> +
-> +	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_PANEL_OD, &result);
-> +	if (err) {
-> +		if (err == -ENODEV)
-> +			return 0;
-> +		return err;
-> +	}
-> +
-> +	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
-> +		asus->panel_overdrive_available = true;
-> +		asus->panel_overdrive = result & ASUS_WMI_DSTS_STATUS_BIT;
 
-As the kernel-test-robot pointed out this if is missing { } around the
-2 statements which should only be executed if the condition is true.
+<snip>
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int panel_od_write(struct asus_wmi *asus)
-> +{
-> +	int err;
-> +	u8 value;
-> +	u32 retval;
-> +
-> +	value = asus->panel_overdrive;
-> +
-> +	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PANEL_OD, value, &retval);
-> +
-> +	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
-> +			"panel_od");
-
-Please make this a single line.
-
-> +
-> +	if (err) {
-> +		pr_warn("Failed to set panel overdrive: %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	if (retval > 1 || retval < 0) {
-> +		pr_warn("Failed to set panel overdrive (retval): 0x%x\n",
-> +			retval);
-
-Please make this a single line too.
-
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
 > +static ssize_t panel_od_show(struct device *dev,
 > +				   struct device_attribute *attr, char *buf)
 > +{
@@ -181,89 +111,9 @@ Please make this a single line too.
 > +	u8 mode = asus->panel_overdrive;
 > +
 > +	return scnprintf(buf, PAGE_SIZE, "%d\n", mode);
-> +}
-> +
-> +static ssize_t panel_od_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
-> +{
-> +	int result;
-> +	u8 overdrive;
-> +	struct asus_wmi *asus = dev_get_drvdata(dev);
-> +
-> +	result = kstrtou8(buf, 10, &overdrive);
-> +	if (result < 0)
-> +		return result;
-> +
-> +	if (overdrive > 1 || overdrive < 0)
 
-An u8 can never be < 0, so please drop that check
-(it will likely trigger compiler warnings in some cases).
-
-> +		return -EINVAL;
-> +
-> +	asus->panel_overdrive = overdrive;
-> +	panel_od_write(asus);
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR_RW(panel_od);
-> +
->  /* Quirks *********************************************************************/
->  
->  static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
-> @@ -2332,6 +2416,7 @@ static struct attribute *platform_attributes[] = {
->  	&dev_attr_als_enable.attr,
->  	&dev_attr_fan_boost_mode.attr,
->  	&dev_attr_throttle_thermal_policy.attr,
-> +	&dev_attr_panel_od.attr,
->  	NULL
->  };
->  
-> @@ -2357,6 +2442,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->  		ok = asus->fan_boost_mode_available;
->  	else if (attr == &dev_attr_throttle_thermal_policy.attr)
->  		ok = asus->throttle_thermal_policy_available;
-> +	else if (attr == &dev_attr_panel_od.attr)
-> +		ok = asus->panel_overdrive_available;
->  
->  	if (devid != -1)
->  		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
-> @@ -2622,6 +2709,10 @@ static int asus_wmi_add(struct platform_device *pdev)
->  	else
->  		throttle_thermal_policy_set_default(asus);
->  
-> +	err = panel_od_check_present(asus);
-> +	if (err)
-> +		goto fail_panel_od;
-> +
->  	err = asus_wmi_sysfs_init(asus->platform_device);
->  	if (err)
->  		goto fail_sysfs;
-> @@ -2709,6 +2800,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->  fail_throttle_thermal_policy:
->  fail_fan_boost_mode:
->  fail_platform:
-> +fail_panel_od:
->  	kfree(asus);
->  	return err;
->  }
-> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-> index 2f274cf52805..428aea701c7b 100644
-> --- a/include/linux/platform_data/x86/asus-wmi.h
-> +++ b/include/linux/platform_data/x86/asus-wmi.h
-> @@ -61,6 +61,7 @@
->  #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
->  
->  /* Misc */
-> +#define ASUS_WMI_DEVID_PANEL_OD		0x00050019
->  #define ASUS_WMI_DEVID_CAMERA		0x00060013
->  #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
->  
-> 
-
-Otherwise this looks good to me,
+As Barnabás pointed out in his review of patch 2/3, please
+use sysfs_emit here.
 
 Regards,
 
