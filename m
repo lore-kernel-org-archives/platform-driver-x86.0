@@ -2,236 +2,447 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B57C07E9C
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 17:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD9C07E9B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D50AB61981
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  5 Jul 2021 17:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C79619A1
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbhGERLo (ORCPT
+        id S231258AbhGFJ4u (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 5 Jul 2021 13:11:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31824 "EHLO
+        Tue, 6 Jul 2021 05:56:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38031 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229713AbhGERLo (ORCPT
+        by vger.kernel.org with ESMTP id S231233AbhGFJ4t (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 5 Jul 2021 13:11:44 -0400
+        Tue, 6 Jul 2021 05:56:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625504946;
+        s=mimecast20190719; t=1625565250;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1cpP3oLwWEvN7Jmq0aeYg9XO29HaHfIVyRVLgI+GVHg=;
-        b=Mdl6JQ2EBstUMXg99UNdBMJz3UuhSlVdNKb1rpRhNQvi3giO+fMUANSCAd5vb18v8uTWXi
-        A+FOleZwBRMpOL+s3k22qQtUCyuZr8onEYXuyTRH7XGWionWzaLDQUaq6v6qXf2U5TQ+Tn
-        O95l/hi8ifvG0Myma1hqaz93PufmIGU=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-hYtuFMIXPDCfGot-AFi9NA-1; Mon, 05 Jul 2021 13:09:05 -0400
-X-MC-Unique: hYtuFMIXPDCfGot-AFi9NA-1
-Received: by mail-ed1-f70.google.com with SMTP id w15-20020a05640234cfb02903951279f8f3so9388250edc.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 05 Jul 2021 10:09:05 -0700 (PDT)
+        bh=2xR95T2J3dWhMOyNl49XXMuxn8gzB+hpEf04jtC4aNI=;
+        b=Hwu+47fvlA8qz57gId2F099o8T7Hx2xG6zBV1pRZsMRNydYOuPmVoYymIovbn7d65h7Vbq
+        G+Q2nVSJ12O5AHLcbkav5HSnI6p4W53LYfZs2ovqEwtrUqE0yOUvPWYzDqdAdwBdbUwqPs
+        UmMG9BExRwYVcEcPOlfmN5mwh8pXHc4=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-123-R8QRo2msNkWaN7nL8IAa8A-1; Tue, 06 Jul 2021 05:54:09 -0400
+X-MC-Unique: R8QRo2msNkWaN7nL8IAa8A-1
+Received: by mail-lf1-f72.google.com with SMTP id z1-20020a195e410000b0290229c07c3305so5010055lfi.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 02:54:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=1cpP3oLwWEvN7Jmq0aeYg9XO29HaHfIVyRVLgI+GVHg=;
-        b=WNdph+jY5lQ6ls+rXG7MgPlKm1p82lJcfxowfx+A7jCk414ERu2bItgUqxVvghXK4+
-         MHIH41nJN6uIJz8/5x3azYgd5I9zdw1bXOcw42jWkX6OAMcZCO6Fi8Li9XE7olmrN+dA
-         g3sJE7lHbuhb3heCQ6Re0r6v2e5wGYg+XX14yhV1tYeX62tHu0GQESgqAcljIA8jtvSa
-         pCAhGmHg+XBj+SgT278Jq3+ZoV57wiaQgXGySP3Hr9qEP/fTDUYbEIgkLsxqyyz3gea9
-         mYDJN1pW/GqMxvE7Wymm2UEQGO8urHXHH5NaoIx8sRFQBzv1Uz6JTHbXWsEw7VrZy4Ix
-         dcIw==
-X-Gm-Message-State: AOAM532dIVmqLPnbMEvufowItowhPzEN6C8EK3HrKTwqn0EGsZdesDyj
-        ezsK2jQ12Z6PYLl2cWFgRA5kgtkgNxJyUlxvLGQVbyaXIAdajhxPmb6lSA9t7h8DZMm7L97UEkD
-        xoHPvTPUycoKtW3IQLX9PW5o7LmvI9EpCuIBumagJdZUy8TzteQr0HUo5PB0Zdgvvz6YXeeymVv
-        1z1gb2WV8eMw==
-X-Received: by 2002:a17:907:778a:: with SMTP id ky10mr14229506ejc.32.1625504944320;
-        Mon, 05 Jul 2021 10:09:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJznvs4TNbweq++v2M52oWrHrhml8/xf8BwbB+rq4lN75LXV93FLEJhvo1YPWvz+cU/HEU6hKw==
-X-Received: by 2002:a17:907:778a:: with SMTP id ky10mr14229485ejc.32.1625504944025;
-        Mon, 05 Jul 2021 10:09:04 -0700 (PDT)
+        bh=2xR95T2J3dWhMOyNl49XXMuxn8gzB+hpEf04jtC4aNI=;
+        b=t2kXMyVSCMj3HGJ8IEk8GO9Fq1Tpcyq3ty5vVh8G48Zc97iHPwXeiVZDed0AQ9gxzq
+         W3WwXouQRrJjwtpT0U88oUXIo9dAdcA3CA8/ongeDRHjIsikvlpbSqagdZMsoOg4CyI6
+         PMTRjQtYyGz447KaCyYzl6/t0YzQqVTZU6x3bY7SPlbyiF+Lfw70Q3nEpRzXDNOCVq9V
+         8gGlxu5n9q6hWBBWaUWdZnqQdLRnuPm2wgWFVblwlLkaGq1AZ2InAoVtfjmh8UQjCQBu
+         k9z2NBecfXTI+OCL/YX3qA5y6yBOhf8KXR4j1yabWzuMSsK7/JNZM8Me4B1ds3T3CPPX
+         1qbQ==
+X-Gm-Message-State: AOAM530j/6YmtzUkypBUZvgc1bjLxI2Ws8SK1UJqNXgUi6mNHUhvtuLL
+        yw+nY3VIhNWxAG5plaXFJmyi3USI9p8Ku6E0hcAoN6YDRfsGH3pAZgGOTYSJLdkK/dgEltCjXqp
+        X7h+Bqx9/n+FZ5W2wEhGc8GZxAEt31ThepHc8bwBJ2CdlWQnN4rGEparxihxCnoYyybnrzfpxeB
+        BaudHwA4tupg==
+X-Received: by 2002:a50:81c1:: with SMTP id 59mr22123121ede.3.1625564882566;
+        Tue, 06 Jul 2021 02:48:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw/wh8Kr3Twf9rZNj9LR3LOBsk2U7y25jp5IO7hbmm8Zb1hsGe/IrwHr+OIYzLulBIuPNZX1A==
+X-Received: by 2002:a50:81c1:: with SMTP id 59mr22123071ede.3.1625564882226;
+        Tue, 06 Jul 2021 02:48:02 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id x1sm5527174edd.25.2021.07.05.10.09.03
+        by smtp.gmail.com with ESMTPSA id dd24sm5446528ejb.10.2021.07.06.02.48.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Jul 2021 10:09:03 -0700 (PDT)
-Subject: Re: [PATCH AUTOSEL 5.13 31/59] platform/x86: asus-nb-wmi: Revert "add
- support for ASUS ROG Zephyrus G14 and G15"
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Cc:     "Luke D. Jones" <luke@ljones.dev>,
-        acpi4asus-user@lists.sourceforge.net,
+        Tue, 06 Jul 2021 02:48:01 -0700 (PDT)
+Subject: Re: [PATCH v1 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>,
         platform-driver-x86@vger.kernel.org
-References: <20210705152815.1520546-1-sashal@kernel.org>
- <20210705152815.1520546-31-sashal@kernel.org>
- <c8ecb9c4-d6b7-bff5-e070-2504069d57f5@redhat.com>
-Message-ID: <826c32c5-0b00-b3ad-008f-7264bf5254e6@redhat.com>
-Date:   Mon, 5 Jul 2021 19:09:03 +0200
+References: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c6e53fcf-c4eb-064a-787f-632a4b0c02bc@redhat.com>
+Date:   Tue, 6 Jul 2021 11:48:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <c8ecb9c4-d6b7-bff5-e070-2504069d57f5@redhat.com>
+In-Reply-To: <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 7/5/21 7:08 PM, Hans de Goede wrote:
-> Hi,
+On 6/26/21 5:11 PM, Kuppuswamy Sathyanarayanan wrote:
+> TDX guest supports encrypted disk as root or secondary drives.
+> Decryption keys required to access such drives are usually maintained
+> by 3rd party key servers. Attestation is required by 3rd party key
+> servers to get the key for an encrypted disk volume, or possibly other
+> encrypted services. Attestation is used to prove to the key server that
+> the TD guest is running in a valid TD and the kernel and virtual BIOS
+> and other environment are secure.
 > 
-> On 7/5/21 5:27 PM, Sasha Levin wrote:
->> From: "Luke D. Jones" <luke@ljones.dev>
->>
->> [ Upstream commit 28117f3a5c3c8375a3304af76357d5bf9cf30f0b ]
->>
->> The quirks added to asus-nb-wmi for the ASUS ROG Zephyrus G14 and G15 are
->> wrong, they tell the asus-wmi code to use the vendor specific WMI backlight
->> interface. But there is no such interface on these laptops.
->>
->> As a side effect, these quirks stop the acpi_video driver to register since
->> they make acpi_video_get_backlight_type() return acpi_backlight_vendor,
->> leaving only the native AMD backlight driver in place, which is the one we
->> want. This happy coincidence is being replaced with a new quirk in
->> drivers/acpi/video_detect.c which actually sets the backlight_type to
->> acpi_backlight_native fixinf this properly. This reverts
->> commit 13bceda68fb9 ("platform/x86: asus-nb-wmi: add support for ASUS ROG
->> Zephyrus G14 and G15").
->>
->> Signed-off-by: Luke D. Jones <luke@ljones.dev>
->> Link: https://lore.kernel.org/r/20210419074915.393433-3-luke@ljones.dev
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> During the boot process various components before the kernel accumulate
+> hashes in the TDX module, which can then combined into a report. This
+> would typically include a hash of the bios, bios configuration, boot
+> loader, command line, kernel, initrd.  After checking the hashes the
+> key server will securely release the keys.
 > 
-> Note this should only be cherry-picked if commit 2dfbacc65d1d
-> ("ACPI: video: use native backlight for GA401/GA502/GA503"):
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2dfbacc65d1d2eae587ccb6b93f6280542641858
+> The actual details of the attestation protocol depend on the particular
+> key server configuration, but some parts are common and need to
+> communicate with the TDX module.
 > 
-> Is also being cherry-picked, since the quirk added in that commit
-> replaces the quirks which are being reverted here.
+> This communication is implemented in the attestation driver.
+> 
+> The supported steps are:
+> 
+>   1. TD guest generates the TDREPORT that contains version information
+>      about the Intel TDX module, measurement of the TD, along with a
+>      TD-specified nonce.
+>   2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
+>      which is used by the host to generate a quote via quoting
+>      enclave (QE).
+>   3. Quote generation completion notification is sent to TD OS via
+>      callback interrupt vector configured by TD using
+>      SetupEventNotifyInterrupt hypercall.
+>   4. After receiving the generated TDQUOTE, a remote verifier can be
+>      used to verify the quote and confirm the trustworthiness of the
+>      TD.
+> 
+> Attestation agent uses IOCTLs implemented by the attestation driver to
+> complete the various steps of the attestation process.
+> 
+> Also note that, explicit access permissions are not enforced in this
+> driver because the quote and measurements are not a secret. However
+> the access permissions of the device node can be used to set any
+> desired access policy. The udev default is usually root access
+> only.
+> 
+> TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
+> host, but TDX assumes that the host is able to deal with malicious
+> guest flooding it anyways.
+> 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mark Gross <mgross@linux.intel.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-p.s.
+You have only send this single patch of the 6 patch series to me /
+to platform-driver-x86@vger.kernel.org, you did not send any of the
+other patches, including the cover-letter to me nor to the
+platform-driver-x86 list.
 
-The same remark also replies to the 5.12 and 5.10 cherry-picks of
-this commit.
+This means I don't have any context for this patch.
+Worse this also means I won't receive any replies to the other emails
+in this thread, thus missing out on any relevant discussion about
+this series unless I manually search the archives for this which
+I do not have time for.
+
+So I'm simply going to drop this patch, for the next version please
+make sure that you send the entire series, including the cover-letter
+to me and to the platform-driver-x86 list.
+
+Since this is part of a series, I assume that the code relies on
+functions exported in earlier patches in the series, so that this
+cannot be merged as a standalone patch ?
+
+I also noticed that this patch introduces new userspace API in the
+form of a new misc-device with IOCTLs, this is lacking 2 very
+important things:
+
+1. ioctls are generally seen as usually not the best interface to use
+for new userspace API due to there multiplexing behavior where there is
+no strong type checking on the passed arguments. Why did you e.g. not
+choose to use a sysfs attribute interface instead ? Please explain
+why this was done in the commit message for the next version.
+
+2. Please add some documentation for the new userspace API.
+
+Regards,
+
+Hans
 
 
 
->> ---
->>  drivers/platform/x86/asus-nb-wmi.c | 82 ------------------------------
->>  1 file changed, 82 deletions(-)
->>
->> diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
->> index b07b1288346e..0cb927f0f301 100644
->> --- a/drivers/platform/x86/asus-nb-wmi.c
->> +++ b/drivers/platform/x86/asus-nb-wmi.c
->> @@ -110,16 +110,6 @@ static struct quirk_entry quirk_asus_forceals = {
->>  	.wmi_force_als_set = true,
->>  };
->>  
->> -static struct quirk_entry quirk_asus_ga401i = {
->> -	.wmi_backlight_power = true,
->> -	.wmi_backlight_set_devstate = true,
->> -};
->> -
->> -static struct quirk_entry quirk_asus_ga502i = {
->> -	.wmi_backlight_power = true,
->> -	.wmi_backlight_set_devstate = true,
->> -};
->> -
->>  static struct quirk_entry quirk_asus_use_kbd_dock_devid = {
->>  	.use_kbd_dock_devid = true,
->>  };
->> @@ -430,78 +420,6 @@ static const struct dmi_system_id asus_quirks[] = {
->>  		},
->>  		.driver_data = &quirk_asus_forceals,
->>  	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA401IH",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IH"),
->> -		},
->> -		.driver_data = &quirk_asus_ga401i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA401II",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA401II"),
->> -		},
->> -		.driver_data = &quirk_asus_ga401i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA401IU",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IU"),
->> -		},
->> -		.driver_data = &quirk_asus_ga401i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA401IV",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IV"),
->> -		},
->> -		.driver_data = &quirk_asus_ga401i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA401IVC",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA401IVC"),
->> -		},
->> -		.driver_data = &quirk_asus_ga401i,
->> -	},
->> -		{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA502II",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA502II"),
->> -		},
->> -		.driver_data = &quirk_asus_ga502i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA502IU",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IU"),
->> -		},
->> -		.driver_data = &quirk_asus_ga502i,
->> -	},
->> -	{
->> -		.callback = dmi_matched,
->> -		.ident = "ASUSTeK COMPUTER INC. GA502IV",
->> -		.matches = {
->> -			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->> -			DMI_MATCH(DMI_PRODUCT_NAME, "GA502IV"),
->> -		},
->> -		.driver_data = &quirk_asus_ga502i,
->> -	},
->>  	{
->>  		.callback = dmi_matched,
->>  		.ident = "Asus Transformer T100TA / T100HA / T100CHI",
->>
+
+
+
+
+
+
+
+
+> ---
+>  drivers/platform/x86/Kconfig            |   9 ++
+>  drivers/platform/x86/Makefile           |   1 +
+>  drivers/platform/x86/intel_tdx_attest.c | 171 ++++++++++++++++++++++++
+>  include/uapi/misc/tdx.h                 |  20 +++
+>  4 files changed, 201 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_tdx_attest.c
+>  create mode 100644 include/uapi/misc/tdx.h
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 60592fb88e7a..7d01c473aef6 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1301,6 +1301,15 @@ config INTEL_SCU_IPC_UTIL
+>  	  low level access for debug work and updating the firmware. Say
+>  	  N unless you will be doing this on an Intel MID platform.
+>  
+> +config INTEL_TDX_ATTESTATION
+> +	tristate "Intel TDX attestation driver"
+> +	depends on INTEL_TDX_GUEST
+> +	help
+> +	  The TDX attestation driver provides IOCTL or MMAP interfaces to
+> +	  the user to request TDREPORT from the TDX module or request quote
+> +	  from VMM. It is mainly used to get secure disk decryption keys from
+> +	  the key server.
+> +
+>  config INTEL_TELEMETRY
+>  	tristate "Intel SoC Telemetry Driver"
+>  	depends on X86_64
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index dcc8cdb95b4d..83439990ae47 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+>  obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+>  obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
+>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+> +obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+>  					   intel_telemetry_pltdrv.o \
+>  					   intel_telemetry_debugfs.o
+> diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
+> new file mode 100644
+> index 000000000000..a0225d053851
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_tdx_attest.c
+> @@ -0,0 +1,171 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * intel_tdx_attest.c - TDX guest attestation interface driver.
+> + *
+> + * Implements user interface to trigger attestation process and
+> + * read the TD Quote result.
+> + *
+> + * Copyright (C) 2020 Intel Corporation
+> + *
+> + * Author:
+> + *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> + */
+> +
+> +#define pr_fmt(fmt) "x86/tdx: attest: " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/fs.h>
+> +#include <linux/mm.h>
+> +#include <linux/slab.h>
+> +#include <linux/set_memory.h>
+> +#include <linux/io.h>
+> +#include <asm/apic.h>
+> +#include <asm/tdx.h>
+> +#include <asm/irq_vectors.h>
+> +#include <uapi/misc/tdx.h>
+> +
+> +#define VERSION				"1.0"
+> +
+> +/* Used in Quote memory allocation */
+> +#define QUOTE_SIZE			(2 * PAGE_SIZE)
+> +
+> +/* Mutex to synchronize attestation requests */
+> +static DEFINE_MUTEX(attestation_lock);
+> +/* Completion object to track attestation status */
+> +static DECLARE_COMPLETION(attestation_done);
+> +
+> +static void attestation_callback_handler(void)
+> +{
+> +	complete(&attestation_done);
+> +}
+> +
+> +static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
+> +			     unsigned long arg)
+> +{
+> +	u64 data = virt_to_phys(file->private_data);
+> +	void __user *argp = (void __user *)arg;
+> +	u8 *reportdata;
+> +	long ret = 0;
+> +
+> +	mutex_lock(&attestation_lock);
+> +
+> +	reportdata = kzalloc(TDX_TDREPORT_LEN, GFP_KERNEL);
+> +	if (!reportdata) {
+> +		mutex_unlock(&attestation_lock);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	switch (cmd) {
+> +	case TDX_CMD_GET_TDREPORT:
+> +		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Generate TDREPORT_STRUCT */
+> +		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		if (copy_to_user(argp, file->private_data, TDX_TDREPORT_LEN))
+> +			ret = -EFAULT;
+> +		break;
+> +	case TDX_CMD_GEN_QUOTE:
+> +		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Generate TDREPORT_STRUCT */
+> +		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		ret = set_memory_decrypted((unsigned long)file->private_data,
+> +					   1UL << get_order(QUOTE_SIZE));
+> +		if (ret)
+> +			break;
+> +
+> +		/* Submit GetQuote Request */
+> +		if (tdx_hcall_get_quote(data)) {
+> +			ret = -EIO;
+> +			goto done;
+> +		}
+> +
+> +		/* Wait for attestation completion */
+> +		wait_for_completion_interruptible(&attestation_done);
+> +
+> +		if (copy_to_user(argp, file->private_data, QUOTE_SIZE))
+> +			ret = -EFAULT;
+> +done:
+> +		ret = set_memory_encrypted((unsigned long)file->private_data,
+> +					   1UL << get_order(QUOTE_SIZE));
+> +
+> +		break;
+> +	case TDX_CMD_GET_QUOTE_SIZE:
+> +		if (put_user(QUOTE_SIZE, (u64 __user *)argp))
+> +			ret = -EFAULT;
+> +
+> +		break;
+> +	default:
+> +		pr_err("cmd %d not supported\n", cmd);
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&attestation_lock);
+> +
+> +	kfree(reportdata);
+> +
+> +	return ret;
+> +}
+> +
+> +static int tdg_attest_open(struct inode *inode, struct file *file)
+> +{
+> +	/*
+> +	 * Currently tdg_event_notify_handler is only used in attestation
+> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
+> +	 */
+> +	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
+> +
+> +	file->private_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
+> +						      get_order(QUOTE_SIZE));
+> +
+> +	return !file->private_data ? -ENOMEM : 0;
+> +}
+> +
+> +static int tdg_attest_release(struct inode *inode, struct file *file)
+> +{
+> +	/*
+> +	 * Currently tdg_event_notify_handler is only used in attestation
+> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
+> +	 */
+> +	WRITE_ONCE(tdg_event_notify_handler, NULL);
+> +	free_pages((unsigned long)file->private_data, get_order(QUOTE_SIZE));
+> +	file->private_data = NULL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations tdg_attest_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= tdg_attest_open,
+> +	.release	= tdg_attest_release,
+> +	.unlocked_ioctl	= tdg_attest_ioctl,
+> +	.llseek		= no_llseek,
+> +};
+> +
+> +static struct miscdevice tdg_attest_device = {
+> +	.minor          = MISC_DYNAMIC_MINOR,
+> +	.name           = "tdx-attest",
+> +	.fops           = &tdg_attest_fops,
+> +};
+> +module_misc_device(tdg_attest_device);
+> +
+> +MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
+> +MODULE_DESCRIPTION("TDX attestation driver ver " VERSION);
+> +MODULE_VERSION(VERSION);
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
+> new file mode 100644
+> index 000000000000..9afbef9079c1
+> --- /dev/null
+> +++ b/include/uapi/misc/tdx.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _UAPI_MISC_TDX_H
+> +#define _UAPI_MISC_TDX_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+> +/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
+> +#define TDX_REPORT_DATA_LEN		64
+> +/* Output report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
+> +#define TDX_TDREPORT_LEN		1024
+> +
+> +/* IOCTL to request TDREPORT data from TDX Module */
+> +#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
+> +/* IOCTL to request Quote from VMM using report data */
+> +#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
+> +/* Get current size of quote */
+> +#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
+> +
+> +#endif /* _UAPI_MISC_TDX_H */
+> 
 
