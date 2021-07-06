@@ -2,214 +2,212 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0845C11F77
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CE2C07E96
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86A1D61996
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C19619A1
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231337AbhGFJ7g (ORCPT
+        id S231216AbhGFKBe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jul 2021 05:59:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231181AbhGFJ7a (ORCPT
+        Tue, 6 Jul 2021 06:01:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:39025 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231197AbhGFKBe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jul 2021 05:59:30 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C838BC061760;
-        Tue,  6 Jul 2021 02:56:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=16iZcd8UM9edxy0w5wY5BQzXODSiQ7QkmW3vxkbk5D0=; b=a3mzSZ9zhXvQ7z72FKA8Fdnpk
-        LWcvpcuWofwRYcFCjviYZJk1oPXrs7M3uQJ+ywY1LHJEnj+NRwjgrzF1fC0F4Her/0HY+w0mU3H3Y
-        10CG8a1oWmfqpRlDsr7HNnDdAy6f+2/u33SyEsVG77yaTgZQwrs2MZiscSAA5F+AnLuDVz82jgC0J
-        lYqY2gLTqCI0RBtuMN88P4U2IEdFt2eygNpGPrRxU5Qv7iomPheSViajY02rYqXloTzTH8q6Js++w
-        YBqCoH4+kucnPqJUrbotraNf2h/vP6y9RzvkP75RGSjwQMJ9WI7C7sCONSx2yqdBujcUYV4c5FTfO
-        peWj6rYRg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45790)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1m0hoi-0006RU-5N; Tue, 06 Jul 2021 10:56:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1m0hoO-0001sr-Ht; Tue, 06 Jul 2021 10:56:16 +0100
-Date:   Tue, 6 Jul 2021 10:56:16 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Frank Li <lznuaa@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        SeongJae Park <sjpark@amazon.de>,
-        Julien Grall <jgrall@amazon.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] bus: Make remove callback return void
-Message-ID: <20210706095616.GQ22278@shell.armlinux.org.uk>
-References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
+        Tue, 6 Jul 2021 06:01:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625565535;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bYRgebn7PYIgTZFREmOXOgblBinIU0GLGKnvnPvdfvM=;
+        b=KIFlQlCCzsrtvbRtlRo9//xIARQ/WmyEnBAbDlAsfTAJHYcOgAzTXD6iTOwqhX9La/XY6+
+        bo7QYDlqa4Iz1iVnCV8ORaLF/bQ5IeI8rdeLi+rQ2jD3ATlMOMiPDk0ryCitYbQG6+7BV3
+        T2wKybVeMNKYZZ1ykXe4UogYhDAiLdo=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-479-hz6MaFaAME6fLFcMLy1KhA-1; Tue, 06 Jul 2021 05:58:54 -0400
+X-MC-Unique: hz6MaFaAME6fLFcMLy1KhA-1
+Received: by mail-ed1-f70.google.com with SMTP id y18-20020a0564022712b029038ffac1995eso10596948edd.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 02:58:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bYRgebn7PYIgTZFREmOXOgblBinIU0GLGKnvnPvdfvM=;
+        b=gnBCdHRzy4Ya33hR/9IjAMofJYGf+THu59phmvfHGpDQ5agEBOXawvCYep9W6c0528
+         nNT0YW2T9mvngmhyouYLx+WyMOEzyf5YHM5jN8Oh6te19z3w/oh0Gq0U9zPO2eaobv9I
+         txOFcOOkN/d/e4ov+fsCUU3JIC9vuxCUMPhgmZZv3QI4UGj+WcyQIR6Pq8of+r5Tb+rg
+         Tmkv2yMdyQ9GaWnddxcBYctC551OC7VQ43OB8ige22im8CwZHrkBkPidBU2e0ZYgolCa
+         LL8WU6r9iyFP679rw1OnDTyGjLxAVkoR033UAaog8oQVzr2m6wB/s6B4I+MB9PWRcZwB
+         +tpA==
+X-Gm-Message-State: AOAM5323MaCUT4cUbW8A7doUVM4CIg0fEFo3FgOWegFlWJBwfWBqFQKx
+        Y2eoQ37ZFwiX2LiUoz2CgsgZ6p5BWSUWRwKP6NzB4XUb36dW0+0UmSux0p9rGx0U+2jTgzfSwQC
+        wmBhOrHV5vK4VYPYduzPbOMHzzJz8nFDUtFuSF5PzXnZHcDc8LdbUjIY20aZs9UhqItMTeBOiUX
+        reOll6cP3/gA==
+X-Received: by 2002:a17:907:3f94:: with SMTP id hr20mr17775709ejc.448.1625565532990;
+        Tue, 06 Jul 2021 02:58:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyIoD1m8T1n1OAVOCKEqKmn3ormYEvMQKIergTocKOzNnK/KXNQF/PEuMM9KArLa5i4BOLY0w==
+X-Received: by 2002:a17:907:3f94:: with SMTP id hr20mr17775692ejc.448.1625565532751;
+        Tue, 06 Jul 2021 02:58:52 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id f12sm5348435ejt.96.2021.07.06.02.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jul 2021 02:58:52 -0700 (PDT)
+Subject: Re: [PATCH v5 1/7] platform/x86: amd-pmc: Fix command completion code
+To:     Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        mgross@linux.intel.com, rrangel@chromium.org
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20210629084803.248498-1-Shyam-sundar.S-k@amd.com>
+ <20210629084803.248498-2-Shyam-sundar.S-k@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b67da325-19fc-d132-8bc7-23c2a4c940db@redhat.com>
+Date:   Tue, 6 Jul 2021 11:58:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20210629084803.248498-2-Shyam-sundar.S-k@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 06, 2021 at 11:50:37AM +0200, Uwe Kleine-König wrote:
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
-> 
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
-> 
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Hi,
 
-Yay! For ARM, Amba and related parts:
+On 6/29/21 10:47 AM, Shyam Sundar S K wrote:
+> The protocol to submit a job request to SMU is to wait for
+> AMD_PMC_REGISTER_RESPONSE to return 1,meaning SMU is ready to take
+> requests. PMC driver has to make sure that the response code is always
+> AMD_PMC_RESULT_OK before making any command submissions.
+> 
+> When we submit a message to SMU, we have to wait until it processes
+> the request. Adding a read_poll_timeout() check as this was missing in
+> the existing code.
+> 
+> Also, add a mutex to protect amd_pmc_send_cmd() calls to SMU.
+> 
+> Fixes: 156ec4731cb2 ("platform/x86: amd-pmc: Add AMD platform support for S2Idle")
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> Acked-by: Raul E Rangel <rrangel@chromium.org>
+> ---
+> v2: no change
+> v3:
+>  - use mutex to protect multiple calls to SMU
+>  - add a switch-case to handle smu responses.
+> v4:
+>  - Handle different error codes based on smu responses.
+> v5:
+>  - Remove redundant rc assignment as pointed by Raul
 
-Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Thanks, patch looks good to me:
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+I'll apply this to the platform-drivers-x86 tree once 5.14-rc1 out,
+since this is just a bunch of fixes + some new hw-ids I'll also
+include this series in my next pdx86-fixes for 5.14 pull-req to Linus.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+>  drivers/platform/x86/amd-pmc.c | 38 ++++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index b9da58ee9b1e..1b5f149932c1 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -68,6 +68,7 @@ struct amd_pmc_dev {
+>  	u32 base_addr;
+>  	u32 cpu_id;
+>  	struct device *dev;
+> +	struct mutex lock; /* generic mutex lock */
+>  #if IS_ENABLED(CONFIG_DEBUG_FS)
+>  	struct dentry *dbgfs_dir;
+>  #endif /* CONFIG_DEBUG_FS */
+> @@ -138,9 +139,10 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+>  	u8 msg;
+>  	u32 val;
+>  
+> +	mutex_lock(&dev->lock);
+>  	/* Wait until we get a valid response */
+>  	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
+> -				val, val > 0, PMC_MSG_DELAY_MIN_US,
+> +				val, val != 0, PMC_MSG_DELAY_MIN_US,
+>  				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
+>  	if (rc) {
+>  		dev_err(dev->dev, "failed to talk to SMU\n");
+> @@ -156,7 +158,37 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set)
+>  	/* Write message ID to message ID register */
+>  	msg = (dev->cpu_id == AMD_CPU_ID_RN) ? MSG_OS_HINT_RN : MSG_OS_HINT_PCO;
+>  	amd_pmc_reg_write(dev, AMD_PMC_REGISTER_MESSAGE, msg);
+> -	return 0;
+> +	/* Wait until we get a valid response */
+> +	rc = readx_poll_timeout(ioread32, dev->regbase + AMD_PMC_REGISTER_RESPONSE,
+> +				val, val != 0, PMC_MSG_DELAY_MIN_US,
+> +				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
+> +	if (rc) {
+> +		dev_err(dev->dev, "SMU response timed out\n");
+> +		goto out_unlock;
+> +	}
+> +
+> +	switch (val) {
+> +	case AMD_PMC_RESULT_OK:
+> +		break;
+> +	case AMD_PMC_RESULT_CMD_REJECT_BUSY:
+> +		dev_err(dev->dev, "SMU not ready. err: 0x%x\n", val);
+> +		rc = -EBUSY;
+> +		goto out_unlock;
+> +	case AMD_PMC_RESULT_CMD_UNKNOWN:
+> +		dev_err(dev->dev, "SMU cmd unknown. err: 0x%x\n", val);
+> +		rc = -EINVAL;
+> +		goto out_unlock;
+> +	case AMD_PMC_RESULT_CMD_REJECT_PREREQ:
+> +	case AMD_PMC_RESULT_FAILED:
+> +	default:
+> +		dev_err(dev->dev, "SMU cmd failed. err: 0x%x\n", val);
+> +		rc = -EIO;
+> +		goto out_unlock;
+> +	}
+> +
+> +out_unlock:
+> +	mutex_unlock(&dev->lock);
+> +	return rc;
+>  }
+>  
+>  static int __maybe_unused amd_pmc_suspend(struct device *dev)
+> @@ -259,6 +291,7 @@ static int amd_pmc_probe(struct platform_device *pdev)
+>  
+>  	amd_pmc_dump_registers(dev);
+>  
+> +	mutex_init(&dev->lock);
+>  	platform_set_drvdata(pdev, dev);
+>  	amd_pmc_dbgfs_register(dev);
+>  	return 0;
+> @@ -269,6 +302,7 @@ static int amd_pmc_remove(struct platform_device *pdev)
+>  	struct amd_pmc_dev *dev = platform_get_drvdata(pdev);
+>  
+>  	amd_pmc_dbgfs_unregister(dev);
+> +	mutex_destroy(&dev->lock);
+>  	return 0;
+>  }
+>  
+> 
+
