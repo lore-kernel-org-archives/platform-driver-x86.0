@@ -2,320 +2,223 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EA4C07E9C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 18:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F4CC07E9B
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 18:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2C961C6C
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 18:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7259B61C71
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 18:51:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231341AbhGFSuU (ORCPT
+        id S231360AbhGFSyF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jul 2021 14:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        Tue, 6 Jul 2021 14:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbhGFSuU (ORCPT
+        with ESMTP id S231569AbhGFSyD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jul 2021 14:50:20 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FE0C061574;
-        Tue,  6 Jul 2021 11:47:40 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id q2so11191604iot.11;
-        Tue, 06 Jul 2021 11:47:40 -0700 (PDT)
+        Tue, 6 Jul 2021 14:54:03 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549CFC0613DD
+        for <platform-driver-x86@vger.kernel.org>; Tue,  6 Jul 2021 11:51:24 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id f20so12436420pfa.1
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 11:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qw53PpKvTHHYFgRL4ikMm5dijf8wi4j4l6mqLH9Qzvs=;
-        b=ImUKrNqep9RMFy2ANLDJFB8CJJG//0cEbOChsk4ZDyMi+YvSxohMxYephLp2pkxTiR
-         OosdKiZ3FqP+2pt69MIXzqKZyJou3e62qOl1+ccn8HZlvkgu9rHp747+cD6UatVL7wn/
-         1Fc7CYKHEivZ5ZeXAV1SB0Pm8x9o4M4DxSFFhmWV5gP4zkT6WOReD1IOhGeVUmhhuBQF
-         iKjmRUErC7pmK/jybiOZrE8/yBSuLoolZJnE0oJHtFYy9gwQ6mH968onmZHbjt6Xzk3U
-         VcsXpMBL1Jrc3Ulkef7Xn3qgGgh9Sej5W1IEFpOmYKsn+xqFMXqUB6tc5xgGPWjF3bcH
-         d8/A==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CUB/wg8JoGmq3NIMuzXfvTu1/LaQA3sJa9mgD0RKZNM=;
+        b=NCdUcCEYBEoF+OVX9fy25TDeiKDiyu7MS8rvWeBmnwWDnPpc5+QhpNeuAg5+M01lgv
+         DRH8QNEoIXVvsAW/9oBoS2NReA9bsV6Hj2cFB9jLLFtRzn+HzyElennnBW9tDomDrZF/
+         XkbSLC4duPiBx+pb77e5uH0fYLMkjK217pwgB1wYqGKrM1h34OqVCa5M9I67oCpiuU+f
+         pbgZ3PKaRiScHxRehdZaD+636T/YBbbzOrYq9ouzPlMVA0x6yucHaPT19ze0f0ZjxqqZ
+         KMetsaE3O5ReiI2mpGtW6/n68aQ7RKzzGVSyyRz/qTwzg+JiHPzeut5+sQawTaXHwNB/
+         HKBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qw53PpKvTHHYFgRL4ikMm5dijf8wi4j4l6mqLH9Qzvs=;
-        b=S6pYevSLUpoALHRY7tvbVv6P9hM5916Q4RAcanywSsZa2gOPb8JhgoV5shfBSndPkv
-         Fx8ivPFtSJ3tCNNlTm2pbCaDd6t5e80abofuKS/gxoGIIvUKGw5KhkR7ZkPRUIiec3Nf
-         Q1j6z3WNaL/YiFviLXU8a7qIuIo3ZPod0r2ErLCxYFXiXdnV266733aNgXunBS88ysPF
-         52UNm6x3Wq/QU2GIUnyT6jKF7AnwNPBI7L/lgjs3usXgZeZzutlkX0IpiOZVwMNcosVs
-         shbXLOuhOjK1xxOcT2KJLHM8AHlyzrC8NraUC1TQSllKHVqHtkpLh0sQl1C44hw4WCdy
-         x0TQ==
-X-Gm-Message-State: AOAM533Cd6E1A12vuiG2cw8c5d0JXvHEx02YeXVqJQMVR8mo00iBRIP7
-        fmJfWdPs86r80Xpu5QlRMXtZnRG6wurnJw==
-X-Google-Smtp-Source: ABdhPJyqV3ntOgM5PjHiVtrC3iiUuZYVlk5IFnA+bqn+e5XjjmYvlJP53ZZ3Ah7p6iT1Pk48ja0Iqg==
-X-Received: by 2002:a05:6602:2205:: with SMTP id n5mr16594080ion.92.1625597259946;
-        Tue, 06 Jul 2021 11:47:39 -0700 (PDT)
-Received: from Crosshair-VIII-Hero.lan (047-012-004-136.res.spectrum.com. [47.12.4.136])
-        by smtp.gmail.com with ESMTPSA id b24sm9524823iob.4.2021.07.06.11.47.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 11:47:39 -0700 (PDT)
-From:   Chris Blake <chrisrblake93@gmail.com>
-To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        chunkeey@gmail.com
-Cc:     Chris Blake <chrisrblake93@gmail.com>
-Subject: [PATCH] platform/x86: add meraki-mx100 platform driver
-Date:   Tue,  6 Jul 2021 13:47:30 -0500
-Message-Id: <20210706184730.14951-1-chrisrblake93@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CUB/wg8JoGmq3NIMuzXfvTu1/LaQA3sJa9mgD0RKZNM=;
+        b=fAhNgUhJqOIAvpwEnruRFDUP6yIHw5Wa+xldN5ZYVFEZNDGS/IZpS8hDCeoEZtLx2H
+         gzDFbdmdJfj/D33iXrDhAWiwWSIP3EbLQhLP1mYcuFQ2mXiTJTb0m0RHIdgpUIgUeUOD
+         W2qazMO5LHH/553mXBiJUMb8BxJPCZ/RMf5wQ86frGibE0FnReQU/dASz6AmHsgddiv+
+         AxilaWqy1/rAQ4+YPLI7u4DLzpJdVO8H/s+NMD/JC6FN5BWSFIHudn1f0+6aVMlXUDjP
+         0EW4SIuX41duK4ajLaTBKMYTIXb/WDUsT0zBABkDBl0QPdVFQcllbvXUbHZdA/OlX7+8
+         fRKg==
+X-Gm-Message-State: AOAM531VT3sDVx53iWqW2ERcHNmJBzajn4GjnjY05C/HmtYxueMLRead
+        6tKOFBrzGFVjo7/DcHQlrSuL49QvHb5sTt4dKJctpw==
+X-Google-Smtp-Source: ABdhPJyL0D13WbWlA6qnw/Xmlwa19pDI+XNQ21Npie/wgUkDgmHM1zT9YORdF5DHiOOYSSe1zuHfWr+DfQo+lHkX354=
+X-Received: by 2002:a63:4c3:: with SMTP id 186mr12014592pge.240.1625597483385;
+ Tue, 06 Jul 2021 11:51:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de> <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20210706154803.1631813-5-u.kleine-koenig@pengutronix.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 6 Jul 2021 11:51:12 -0700
+Message-ID: <CAPcyv4gxjV7Xj8AN6aCkSLSi=yT6GdcAyigK6Au3mZQ1idBxJg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] bus: Make remove callback return void
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, Cornelia Huck <cohuck@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Johannes Thumshirn <jth@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
-network appliance. This sets up the network LEDs and Reset
-button. Note that this patch requires
-mfd: lpc_ich: Enable GPIO driver for DH89xxCC which has been accepted
-and is currently targeted for 5.15.
+On Tue, Jul 6, 2021 at 8:51 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
+>
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
+>
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
+>
 
-Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
-Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
----
- drivers/platform/x86/Kconfig        |  13 ++
- drivers/platform/x86/Makefile       |   3 +
- drivers/platform/x86/meraki-mx100.c | 185 ++++++++++++++++++++++++++++
- 3 files changed, 201 insertions(+)
- create mode 100644 drivers/platform/x86/meraki-mx100.c
+>  drivers/cxl/core.c                        | 3 +--
+>  drivers/dax/bus.c                         | 4 +---
+>  drivers/nvdimm/bus.c                      | 3 +--
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7d385c3b2239..8d70176e335f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -302,6 +302,19 @@ config ASUS_NB_WMI
- 	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
- 	  here.
- 
-+config MERAKI_MX100
-+	tristate "Cisco Meraki MX100 Platform Driver"
-+	depends on GPIOLIB
-+	depends on GPIO_ICH
-+	depends on LEDS_CLASS
-+	select LEDS_GPIO
-+	help
-+	  This driver provides support for the front button and LEDs on
-+	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called meraki-mx100.
-+
- config EEEPC_LAPTOP
- 	tristate "Eee PC Hotkey Driver"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 7ee369aab10d..25c5aee1cde7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
- obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
- obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
- 
-+# Cisco/Meraki
-+obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
-+
- # Dell
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
- 
-diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
-new file mode 100644
-index 000000000000..12b17ef06d14
---- /dev/null
-+++ b/drivers/platform/x86/meraki-mx100.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Cisco Meraki MX100 (Tinkerbell) board platform driver
-+ *
-+ * Based off of arch/x86/platform/meraki/tink.c from the
-+ * Meraki GPL release meraki-firmware-sources-r23-20150601
-+ *
-+ * Format inspired by platform/x86/pcengines-apuv2.c
-+ *
-+ * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/dmi.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio_keys.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define TINK_GPIO_OFFSET	436
-+
-+/* LEDs */
-+static const struct gpio_led tink_leds[] = {
-+	{
-+		.name = "mx100:green:internet", 
-+		.gpio = TINK_GPIO_OFFSET + 11,
-+		.active_low = 1,
-+		.default_trigger = "default-on",
-+	},
-+	{
-+		.name = "mx100:green:lan2",
-+		.gpio = TINK_GPIO_OFFSET + 18,
-+	},
-+	{
-+		.name = "mx100:green:lan3",
-+		.gpio = TINK_GPIO_OFFSET + 20,
-+	},
-+	{
-+		.name = "mx100:green:lan4",
-+		.gpio = TINK_GPIO_OFFSET + 22,
-+	},
-+	{
-+		.name = "mx100:green:lan5",
-+		.gpio = TINK_GPIO_OFFSET + 23,
-+	},
-+	{
-+		.name = "mx100:green:lan6",
-+		.gpio = TINK_GPIO_OFFSET + 32,
-+	},
-+	{
-+		.name = "mx100:green:lan7",
-+		.gpio = TINK_GPIO_OFFSET + 34,
-+	},
-+	{
-+		.name = "mx100:green:lan8",
-+		.gpio = TINK_GPIO_OFFSET + 35,
-+	},
-+	{
-+		.name = "mx100:green:lan9",
-+		.gpio = TINK_GPIO_OFFSET + 36,
-+	},
-+	{
-+		.name = "mx100:green:lan10",
-+		.gpio = TINK_GPIO_OFFSET + 37,
-+	},
-+	{
-+		.name = "mx100:green:lan11",
-+		.gpio = TINK_GPIO_OFFSET + 48,
-+	},
-+	{
-+		.name = "mx100:green:ha",
-+		.gpio = TINK_GPIO_OFFSET + 16,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:orange:ha",
-+		.gpio = TINK_GPIO_OFFSET + 7,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:green:usb",
-+		.gpio = TINK_GPIO_OFFSET + 21,
-+		.active_low = 1,
-+	},
-+	{
-+		.name = "mx100:orange:usb",
-+		.gpio = TINK_GPIO_OFFSET + 19,
-+		.active_low = 1,
-+	},
-+};
-+
-+static const struct gpio_led_platform_data tink_leds_pdata = {
-+	.num_leds	= ARRAY_SIZE(tink_leds),
-+	.leds		= tink_leds,
-+};
-+
-+/* Reset Button */
-+static struct gpio_keys_button tink_buttons[] = {
-+	{
-+		.desc			= "Reset",
-+		.type			= EV_KEY,
-+		.code			= KEY_RESTART,
-+		.gpio			= TINK_GPIO_OFFSET + 60,
-+		.active_low             = 1,
-+		.debounce_interval      = 100,
-+	},
-+};
-+
-+static const struct gpio_keys_platform_data tink_buttons_pdata = {
-+	.buttons	= tink_buttons,
-+	.nbuttons	= ARRAY_SIZE(tink_buttons),
-+	.poll_interval  = 20,
-+	.rep		= 0,
-+	.name		= "mx100-keys",
-+};
-+
-+/* Board setup */
-+
-+static struct platform_device *tink_leds_pdev;
-+static struct platform_device *tink_keys_pdev;
-+
-+static struct platform_device * __init tink_create_dev(
-+	const char *name,
-+	const void *pdata,
-+	size_t sz)
-+{
-+	struct platform_device *pdev;
-+
-+	pdev = platform_device_register_data(NULL,
-+		name,
-+		PLATFORM_DEVID_NONE,
-+		pdata,
-+		sz);
-+
-+	if (IS_ERR(pdev))
-+		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
-+
-+	return pdev;
-+}
-+
-+static int __init tink_board_init(void)
-+{
-+	if (!dmi_match(DMI_SYS_VENDOR, "Cisco") || !dmi_match(DMI_PRODUCT_NAME, "MX100-HW")) {
-+		return -ENODEV;
-+	}
-+
-+	/* We need to make sure that GPIO60 isn't set to native mode as is default since it's our 
-+	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
-+	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
-+	 */
-+	outl(inl(0x530) | BIT(28), 0x530);
-+
-+	tink_leds_pdev = tink_create_dev(
-+		"leds-gpio",
-+		&tink_leds_pdata,
-+		sizeof(tink_leds_pdata));
-+
-+	tink_keys_pdev = tink_create_dev(
-+		"gpio-keys-polled",
-+		&tink_buttons_pdata,
-+		sizeof(tink_buttons_pdata));
-+
-+	return 0;
-+}
-+
-+static void __exit tink_board_exit(void)
-+{
-+	platform_device_unregister(tink_keys_pdev);
-+	platform_device_unregister(tink_leds_pdev);
-+}
-+
-+module_init(tink_board_init);
-+module_exit(tink_board_exit);
-+
-+MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
-+MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:meraki-mx100");
-+MODULE_SOFTDEP("pre: platform:gpio_ich platform:leds-gpio platform:gpio_keys_polled");
--- 
-2.25.1
+For CXL, DAX, and NVDIMM
 
+Acked-by: Dan Williams <dan.j.williams@intel.com>
