@@ -2,225 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A171CC07E9E
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862BBC07E96
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 11:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD58619CE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 10:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6438A61C1A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 11:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231817AbhGFLA2 (ORCPT
+        id S231569AbhGFLNo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jul 2021 07:00:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32932 "EHLO
+        Tue, 6 Jul 2021 07:13:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48095 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231786AbhGFLAY (ORCPT
+        by vger.kernel.org with ESMTP id S229834AbhGFLNn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jul 2021 07:00:24 -0400
+        Tue, 6 Jul 2021 07:13:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625569065;
+        s=mimecast20190719; t=1625569864;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QUyu+xoe1E6BsQbSDzUeyLIXRBJKwC/I/FCZr8qcsPA=;
-        b=OP4A90nDzTdDH9pCXS7i40kzev43201L9fvpI05/FOaAr4ypll9zerTW1tnWG2pVUobSLV
-        5YFAi7Lu1vHtT/b1ik2su9r4VEpddHnvDOEQAzXUOJoJQZpoOkbqUTBZG6gMdSg7YoZmEg
-        +KZpcKWJmRVHRXrJDWx6RU5iQ5QNt1U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-459-bJl2kziYOtaGttG1OZkYHQ-1; Tue, 06 Jul 2021 06:57:43 -0400
-X-MC-Unique: bJl2kziYOtaGttG1OZkYHQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 47DE81800D41;
-        Tue,  6 Jul 2021 10:57:36 +0000 (UTC)
-Received: from localhost (ovpn-113-13.ams2.redhat.com [10.36.113.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 95A0A60CC6;
-        Tue,  6 Jul 2021 10:57:19 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kernel@pengutronix.de, linux-kernel@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        =?utf-8?Q?Rafa=C5=82_Mi=C5=82eck?= =?utf-8?Q?i?= 
-        <zajec5@gmail.com>, Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84sk?= =?utf-8?Q?i?= 
-        <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
-        Sven Van Asbroeck <TheSven73@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Qinglang Miao <miaoqinglang@huawei.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Frank Li <lznuaa@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Hannes Reinecke <hare@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        SeongJae Park <sjpark@amazon.de>,
-        Julien Grall <jgrall@amazon.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
-        industrypack-devel@lists.sourceforge.net,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH] bus: Make remove callback return void
-In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
-Organization: Red Hat GmbH
-References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Notmuch/0.32.1 (https://notmuchmail.org)
-Date:   Tue, 06 Jul 2021 12:57:17 +0200
-Message-ID: <87pmvvhfqq.fsf@redhat.com>
+        bh=9kuUHAECMKavLk/WcvBJoLEIR+Gp7azqYD++WDj4XmA=;
+        b=SfTWRaqBSZuy3AVkCzs3z3GApoxF6NDEiicimhBRZbFQyJSyg//fPavlKFrcg40uvSUShQ
+        cBHOrKrziUcIw4RQY49mJk+ftjUUlGVVAhHNHcdtc+yF+wzjZY9UuYevdou6IZ466VAPXU
+        sooRDCeEkdMejJ9HUO6h/9Uo8xm34+M=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-120-0AiL3Zo7NiWvb_CUUdOXyg-1; Tue, 06 Jul 2021 07:11:03 -0400
+X-MC-Unique: 0AiL3Zo7NiWvb_CUUdOXyg-1
+Received: by mail-ej1-f70.google.com with SMTP id d21-20020a1709063455b02904c609ed19f1so5681195ejb.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 04:11:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9kuUHAECMKavLk/WcvBJoLEIR+Gp7azqYD++WDj4XmA=;
+        b=L0InINGSnSpt2zC8u8nKBGf7GFpMKzjmRDFdZLzcZcUc1ieZEMK/yVDzO8rQ0luvN4
+         0aAcBDNOD9MbBc4oFAdR76hAOh10WfjB4+qTquL32qYLXn0ynylDw8K7GKfBskUCiAgF
+         LMk4uj/q+vcbnYZBE3Tb+1pYUn+u2Xl+AEG9x47a7ij4hzDj348WnVvHapicr8+VCsGs
+         n8CNdJ+3hxHL4ta0eZFQjz+rtOISwZhEKp36Y4TUUGJHnZDoN47LoMcO2sHrgvWKIWOM
+         7gbTRbEf2tlZXnwh5mMKAfcU+L8YemvctY4maa67ljsOqzztToau7LfeyYgaAIX/V2lL
+         24Pg==
+X-Gm-Message-State: AOAM5336s6oDJiMt2nEHn3WTlMPREeF3CslBksZagE6bfrM/+9vIfu3g
+        fnyapcvksl/YegCWFAwfkTBmcRB/gT5Jy5eRHzsMYkbieuB/pZI1PNbul78q+LbixKKyQAmi5AZ
+        7U+rMJsILWej1myP0JZaA2io462/2ZqfqsA==
+X-Received: by 2002:a17:906:bc2:: with SMTP id y2mr17811022ejg.489.1625569862093;
+        Tue, 06 Jul 2021 04:11:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxFkzHYBJ5IZYwRgpEVIVxWy11ry/uHTPEE7IZRVW6Or/SV39pT3eEI+kiKq0Q6wS7X1IMuZw==
+X-Received: by 2002:a17:906:bc2:: with SMTP id y2mr17811006ejg.489.1625569861873;
+        Tue, 06 Jul 2021 04:11:01 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id ar7sm2196707ejc.64.2021.07.06.04.11.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Jul 2021 04:11:01 -0700 (PDT)
+Subject: Re: [PATCH v1 0/4] Add Alder Lake PCH-S support to PMC core driver
+To:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        platform-driver-x86@vger.kernel.org
+Cc:     mgross@linux.intel.com, irenic.rajneesh@gmail.com,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Box <david.e.box@intel.com>
+References: <cover.1625191274.git.gayatri.kammela@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <730127ef-9569-9c16-08f9-6d86b4e18337@redhat.com>
+Date:   Tue, 6 Jul 2021 13:11:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <cover.1625191274.git.gayatri.kammela@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 06 2021, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>=
- wrote:
+Hi,
 
-> The driver core ignores the return value of this callback because there
-> is only little it can do when a device disappears.
->
-> This is the final bit of a long lasting cleanup quest where several
-> buses were converted to also return void from their remove callback.
-> Additionally some resource leaks were fixed that were caused by drivers
-> returning an error code in the expectation that the driver won't go
-> away.
->
-> With struct bus_type::remove returning void it's prevented that newly
-> implemented buses return an ignored error code and so don't anticipate
-> wrong expectations for driver authors.
+On 7/2/21 4:19 AM, Gayatri Kammela wrote:
+> Hi,
+> The patch series add Alder Lake PCH-S support to PMC core driver.
+> 
+> Patch 1: Add Alderlake support to pmc_core driver
+> Patch 2: Add Latency Tolerance Reporting (LTR) support to Alder Lake
+> Patch 3: Add Alder Lake low power mode support for pmc_core
+> Patch 4: Add GBE Package C10 fix for Alder Lake
+> 
+> David E. Box (1):
+>   platform/x86: intel_pmc_core: Add GBE Package C10 fix for Alder Lake
+>     PCH
+> 
+> Gayatri Kammela (3):
+>   platform/x86: intel_pmc_core: Add Alderlake support to pmc_core driver
+>   platform/x86: intel_pmc_core: Add Latency Tolerance Reporting (LTR)
+>     support to Alder Lake
+>   platform/x86: intel_pmc_core: Add Alder Lake low power mode support
+>     for pmc_core
+> 
+>  drivers/platform/x86/intel_pmc_core.c | 307 +++++++++++++++++++++++++-
+>  drivers/platform/x86/intel_pmc_core.h |  17 ++
+>  2 files changed, 321 insertions(+), 3 deletions(-)
+> 
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: David Box <david.e.box@intel.com>
+> 
+> base-commit: 62fb9874f5da54fdb243003b386128037319b219
 
-Yay!
+Thanks, the series looks good to me:
 
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
->
-> this patch depends on "PCI: endpoint: Make struct pci_epf_driver::remove
-> return void" that is not yet applied, see
-> https://lore.kernel.org/r/20210223090757.57604-1-u.kleine-koenig@pengutro=
-nix.de.
->
-> I tested it using allmodconfig on amd64 and arm, but I wouldn't be
-> surprised if I still missed to convert a driver. So it would be great to
-> get this into next early after the merge window closes.
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-I'm afraid you missed the s390-specific busses in drivers/s390/cio/
-(css/ccw/ccwgroup).
+For the series. As Andy already mentioned we are trying to move all
+the Intel files to drivers/platform/x86/intel. Can you please send
+a new version with an extra patch which first moves all the
+
+drivers/platform/x86/intel_pmc_*.c files to: drivers/platform/x86/intel/pmc
+and then apply the 4 patches from this series on top, see:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=72fbcac2f40e690e1a5584358750e546a2678c2c
+
+For an example of a commit moving files to under drivers/platform/x86/intel/<subdir>
+
+Regards,
+
+Hans
 
