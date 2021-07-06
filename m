@@ -2,447 +2,214 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD9C07E9B
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0845C11F77
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82C79619A1
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A1D61996
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  6 Jul 2021 09:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbhGFJ4u (ORCPT
+        id S231337AbhGFJ7g (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 6 Jul 2021 05:56:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:38031 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231233AbhGFJ4t (ORCPT
+        Tue, 6 Jul 2021 05:59:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231181AbhGFJ7a (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 6 Jul 2021 05:56:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625565250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2xR95T2J3dWhMOyNl49XXMuxn8gzB+hpEf04jtC4aNI=;
-        b=Hwu+47fvlA8qz57gId2F099o8T7Hx2xG6zBV1pRZsMRNydYOuPmVoYymIovbn7d65h7Vbq
-        G+Q2nVSJ12O5AHLcbkav5HSnI6p4W53LYfZs2ovqEwtrUqE0yOUvPWYzDqdAdwBdbUwqPs
-        UmMG9BExRwYVcEcPOlfmN5mwh8pXHc4=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-R8QRo2msNkWaN7nL8IAa8A-1; Tue, 06 Jul 2021 05:54:09 -0400
-X-MC-Unique: R8QRo2msNkWaN7nL8IAa8A-1
-Received: by mail-lf1-f72.google.com with SMTP id z1-20020a195e410000b0290229c07c3305so5010055lfi.11
-        for <platform-driver-x86@vger.kernel.org>; Tue, 06 Jul 2021 02:54:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2xR95T2J3dWhMOyNl49XXMuxn8gzB+hpEf04jtC4aNI=;
-        b=t2kXMyVSCMj3HGJ8IEk8GO9Fq1Tpcyq3ty5vVh8G48Zc97iHPwXeiVZDed0AQ9gxzq
-         W3WwXouQRrJjwtpT0U88oUXIo9dAdcA3CA8/ongeDRHjIsikvlpbSqagdZMsoOg4CyI6
-         PMTRjQtYyGz447KaCyYzl6/t0YzQqVTZU6x3bY7SPlbyiF+Lfw70Q3nEpRzXDNOCVq9V
-         8gGlxu5n9q6hWBBWaUWdZnqQdLRnuPm2wgWFVblwlLkaGq1AZ2InAoVtfjmh8UQjCQBu
-         k9z2NBecfXTI+OCL/YX3qA5y6yBOhf8KXR4j1yabWzuMSsK7/JNZM8Me4B1ds3T3CPPX
-         1qbQ==
-X-Gm-Message-State: AOAM530j/6YmtzUkypBUZvgc1bjLxI2Ws8SK1UJqNXgUi6mNHUhvtuLL
-        yw+nY3VIhNWxAG5plaXFJmyi3USI9p8Ku6E0hcAoN6YDRfsGH3pAZgGOTYSJLdkK/dgEltCjXqp
-        X7h+Bqx9/n+FZ5W2wEhGc8GZxAEt31ThepHc8bwBJ2CdlWQnN4rGEparxihxCnoYyybnrzfpxeB
-        BaudHwA4tupg==
-X-Received: by 2002:a50:81c1:: with SMTP id 59mr22123121ede.3.1625564882566;
-        Tue, 06 Jul 2021 02:48:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw/wh8Kr3Twf9rZNj9LR3LOBsk2U7y25jp5IO7hbmm8Zb1hsGe/IrwHr+OIYzLulBIuPNZX1A==
-X-Received: by 2002:a50:81c1:: with SMTP id 59mr22123071ede.3.1625564882226;
-        Tue, 06 Jul 2021 02:48:02 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id dd24sm5446528ejb.10.2021.07.06.02.48.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Jul 2021 02:48:01 -0700 (PDT)
-Subject: Re: [PATCH v1 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
+        Tue, 6 Jul 2021 05:59:30 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C838BC061760;
+        Tue,  6 Jul 2021 02:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=16iZcd8UM9edxy0w5wY5BQzXODSiQ7QkmW3vxkbk5D0=; b=a3mzSZ9zhXvQ7z72FKA8Fdnpk
+        LWcvpcuWofwRYcFCjviYZJk1oPXrs7M3uQJ+ywY1LHJEnj+NRwjgrzF1fC0F4Her/0HY+w0mU3H3Y
+        10CG8a1oWmfqpRlDsr7HNnDdAy6f+2/u33SyEsVG77yaTgZQwrs2MZiscSAA5F+AnLuDVz82jgC0J
+        lYqY2gLTqCI0RBtuMN88P4U2IEdFt2eygNpGPrRxU5Qv7iomPheSViajY02rYqXloTzTH8q6Js++w
+        YBqCoH4+kucnPqJUrbotraNf2h/vP6y9RzvkP75RGSjwQMJ9WI7C7sCONSx2yqdBujcUYV4c5FTfO
+        peWj6rYRg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45790)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1m0hoi-0006RU-5N; Tue, 06 Jul 2021 10:56:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1m0hoO-0001sr-Ht; Tue, 06 Jul 2021 10:56:16 +0100
+Date:   Tue, 6 Jul 2021 10:56:16 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
+        Dave Jiang <dave.jiang@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Wu Hao <hao.wu@intel.com>, Tom Rix <trix@redhat.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-References: <cover.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c6e53fcf-c4eb-064a-787f-632a4b0c02bc@redhat.com>
-Date:   Tue, 6 Jul 2021 11:48:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, Michael Buesch <m@bues.ch>,
+        Sven Van Asbroeck <TheSven73@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Marc Zyngier <maz@kernel.org>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Qinglang Miao <miaoqinglang@huawei.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Frank Li <lznuaa@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Hannes Reinecke <hare@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        SeongJae Park <sjpark@amazon.de>,
+        Julien Grall <jgrall@amazon.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-acpi@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-sunxi@lists.linux.dev, linux-cxl@vger.kernel.org,
+        nvdimm@lists.linux.dev, dmaengine@vger.kernel.org,
+        linux1394-devel@lists.sourceforge.net, linux-fpga@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-i3c@lists.infradead.org,
+        industrypack-devel@lists.sourceforge.net,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
+        greybus-dev@lists.linaro.org, target-devel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-serial@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH] bus: Make remove callback return void
+Message-ID: <20210706095616.GQ22278@shell.armlinux.org.uk>
+References: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <f23e348d7fe48c5e926fb8cfa02a33726835a950.1624719668.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210706095037.1425211-1-u.kleine-koenig@pengutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 6/26/21 5:11 PM, Kuppuswamy Sathyanarayanan wrote:
-> TDX guest supports encrypted disk as root or secondary drives.
-> Decryption keys required to access such drives are usually maintained
-> by 3rd party key servers. Attestation is required by 3rd party key
-> servers to get the key for an encrypted disk volume, or possibly other
-> encrypted services. Attestation is used to prove to the key server that
-> the TD guest is running in a valid TD and the kernel and virtual BIOS
-> and other environment are secure.
+On Tue, Jul 06, 2021 at 11:50:37AM +0200, Uwe Kleine-König wrote:
+> The driver core ignores the return value of this callback because there
+> is only little it can do when a device disappears.
 > 
-> During the boot process various components before the kernel accumulate
-> hashes in the TDX module, which can then combined into a report. This
-> would typically include a hash of the bios, bios configuration, boot
-> loader, command line, kernel, initrd.  After checking the hashes the
-> key server will securely release the keys.
+> This is the final bit of a long lasting cleanup quest where several
+> buses were converted to also return void from their remove callback.
+> Additionally some resource leaks were fixed that were caused by drivers
+> returning an error code in the expectation that the driver won't go
+> away.
 > 
-> The actual details of the attestation protocol depend on the particular
-> key server configuration, but some parts are common and need to
-> communicate with the TDX module.
+> With struct bus_type::remove returning void it's prevented that newly
+> implemented buses return an ignored error code and so don't anticipate
+> wrong expectations for driver authors.
 > 
-> This communication is implemented in the attestation driver.
-> 
-> The supported steps are:
-> 
->   1. TD guest generates the TDREPORT that contains version information
->      about the Intel TDX module, measurement of the TD, along with a
->      TD-specified nonce.
-> Â  2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
->      which is used by the host to generate a quote via quoting
->      enclave (QE).
-> Â  3. Quote generation completion notification is sent to TD OS via
->      callback interrupt vector configured by TD using
->      SetupEventNotifyInterrupt hypercall.
-> Â  4. After receiving the generated TDQUOTE, a remote verifier can be
->      used to verify the quote and confirm the trustworthiness of the
->      TD.
-> 
-> Attestation agent uses IOCTLs implemented by the attestation driver to
-> complete the various steps of the attestation process.
-> 
-> Also note that, explicit access permissions are not enforced in this
-> driver because the quote and measurements are not a secret. However
-> the access permissions of the device node can be used to set any
-> desired access policy. The udev default is usually root access
-> only.
-> 
-> TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
-> host, but TDX assumes that the host is able to deal with malicious
-> guest flooding it anyways.
-> 
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Mark Gross <mgross@linux.intel.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-You have only send this single patch of the 6 patch series to me /
-to platform-driver-x86@vger.kernel.org, you did not send any of the
-other patches, including the cover-letter to me nor to the
-platform-driver-x86 list.
+Yay! For ARM, Amba and related parts:
 
-This means I don't have any context for this patch.
-Worse this also means I won't receive any replies to the other emails
-in this thread, thus missing out on any relevant discussion about
-this series unless I manually search the archives for this which
-I do not have time for.
+Acked-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-So I'm simply going to drop this patch, for the next version please
-make sure that you send the entire series, including the cover-letter
-to me and to the platform-driver-x86 list.
-
-Since this is part of a series, I assume that the code relies on
-functions exported in earlier patches in the series, so that this
-cannot be merged as a standalone patch ?
-
-I also noticed that this patch introduces new userspace API in the
-form of a new misc-device with IOCTLs, this is lacking 2 very
-important things:
-
-1. ioctls are generally seen as usually not the best interface to use
-for new userspace API due to there multiplexing behavior where there is
-no strong type checking on the passed arguments. Why did you e.g. not
-choose to use a sysfs attribute interface instead ? Please explain
-why this was done in the commit message for the next version.
-
-2. Please add some documentation for the new userspace API.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-
-
-
-> ---
->  drivers/platform/x86/Kconfig            |   9 ++
->  drivers/platform/x86/Makefile           |   1 +
->  drivers/platform/x86/intel_tdx_attest.c | 171 ++++++++++++++++++++++++
->  include/uapi/misc/tdx.h                 |  20 +++
->  4 files changed, 201 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_tdx_attest.c
->  create mode 100644 include/uapi/misc/tdx.h
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 60592fb88e7a..7d01c473aef6 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1301,6 +1301,15 @@ config INTEL_SCU_IPC_UTIL
->  	  low level access for debug work and updating the firmware. Say
->  	  N unless you will be doing this on an Intel MID platform.
->  
-> +config INTEL_TDX_ATTESTATION
-> +	tristate "Intel TDX attestation driver"
-> +	depends on INTEL_TDX_GUEST
-> +	help
-> +	  The TDX attestation driver provides IOCTL or MMAP interfaces to
-> +	  the user to request TDREPORT from the TDX module or request quote
-> +	  from VMM. It is mainly used to get secure disk decryption keys from
-> +	  the key server.
-> +
->  config INTEL_TELEMETRY
->  	tristate "Intel SoC Telemetry Driver"
->  	depends on X86_64
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index dcc8cdb95b4d..83439990ae47 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
->  obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
->  obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
->  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
-> +obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
->  obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
->  					   intel_telemetry_pltdrv.o \
->  					   intel_telemetry_debugfs.o
-> diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
-> new file mode 100644
-> index 000000000000..a0225d053851
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_tdx_attest.c
-> @@ -0,0 +1,171 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * intel_tdx_attest.c - TDX guest attestation interface driver.
-> + *
-> + * Implements user interface to trigger attestation process and
-> + * read the TD Quote result.
-> + *
-> + * Copyright (C) 2020 Intel Corporation
-> + *
-> + * Author:
-> + *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> + */
-> +
-> +#define pr_fmt(fmt) "x86/tdx: attest: " fmt
-> +
-> +#include <linux/module.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/fs.h>
-> +#include <linux/mm.h>
-> +#include <linux/slab.h>
-> +#include <linux/set_memory.h>
-> +#include <linux/io.h>
-> +#include <asm/apic.h>
-> +#include <asm/tdx.h>
-> +#include <asm/irq_vectors.h>
-> +#include <uapi/misc/tdx.h>
-> +
-> +#define VERSION				"1.0"
-> +
-> +/* Used in Quote memory allocation */
-> +#define QUOTE_SIZE			(2 * PAGE_SIZE)
-> +
-> +/* Mutex to synchronize attestation requests */
-> +static DEFINE_MUTEX(attestation_lock);
-> +/* Completion object to track attestation status */
-> +static DECLARE_COMPLETION(attestation_done);
-> +
-> +static void attestation_callback_handler(void)
-> +{
-> +	complete(&attestation_done);
-> +}
-> +
-> +static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
-> +			     unsigned long arg)
-> +{
-> +	u64 data = virt_to_phys(file->private_data);
-> +	void __user *argp = (void __user *)arg;
-> +	u8 *reportdata;
-> +	long ret = 0;
-> +
-> +	mutex_lock(&attestation_lock);
-> +
-> +	reportdata = kzalloc(TDX_TDREPORT_LEN, GFP_KERNEL);
-> +	if (!reportdata) {
-> +		mutex_unlock(&attestation_lock);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	switch (cmd) {
-> +	case TDX_CMD_GET_TDREPORT:
-> +		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		/* Generate TDREPORT_STRUCT */
-> +		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
-> +			ret = -EIO;
-> +			break;
-> +		}
-> +
-> +		if (copy_to_user(argp, file->private_data, TDX_TDREPORT_LEN))
-> +			ret = -EFAULT;
-> +		break;
-> +	case TDX_CMD_GEN_QUOTE:
-> +		if (copy_from_user(reportdata, argp, TDX_REPORT_DATA_LEN)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		/* Generate TDREPORT_STRUCT */
-> +		if (tdx_mcall_tdreport(data, virt_to_phys(reportdata))) {
-> +			ret = -EIO;
-> +			break;
-> +		}
-> +
-> +		ret = set_memory_decrypted((unsigned long)file->private_data,
-> +					   1UL << get_order(QUOTE_SIZE));
-> +		if (ret)
-> +			break;
-> +
-> +		/* Submit GetQuote Request */
-> +		if (tdx_hcall_get_quote(data)) {
-> +			ret = -EIO;
-> +			goto done;
-> +		}
-> +
-> +		/* Wait for attestation completion */
-> +		wait_for_completion_interruptible(&attestation_done);
-> +
-> +		if (copy_to_user(argp, file->private_data, QUOTE_SIZE))
-> +			ret = -EFAULT;
-> +done:
-> +		ret = set_memory_encrypted((unsigned long)file->private_data,
-> +					   1UL << get_order(QUOTE_SIZE));
-> +
-> +		break;
-> +	case TDX_CMD_GET_QUOTE_SIZE:
-> +		if (put_user(QUOTE_SIZE, (u64 __user *)argp))
-> +			ret = -EFAULT;
-> +
-> +		break;
-> +	default:
-> +		pr_err("cmd %d not supported\n", cmd);
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&attestation_lock);
-> +
-> +	kfree(reportdata);
-> +
-> +	return ret;
-> +}
-> +
-> +static int tdg_attest_open(struct inode *inode, struct file *file)
-> +{
-> +	/*
-> +	 * Currently tdg_event_notify_handler is only used in attestation
-> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
-> +	 */
-> +	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
-> +
-> +	file->private_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-> +						      get_order(QUOTE_SIZE));
-> +
-> +	return !file->private_data ? -ENOMEM : 0;
-> +}
-> +
-> +static int tdg_attest_release(struct inode *inode, struct file *file)
-> +{
-> +	/*
-> +	 * Currently tdg_event_notify_handler is only used in attestation
-> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
-> +	 */
-> +	WRITE_ONCE(tdg_event_notify_handler, NULL);
-> +	free_pages((unsigned long)file->private_data, get_order(QUOTE_SIZE));
-> +	file->private_data = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct file_operations tdg_attest_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= tdg_attest_open,
-> +	.release	= tdg_attest_release,
-> +	.unlocked_ioctl	= tdg_attest_ioctl,
-> +	.llseek		= no_llseek,
-> +};
-> +
-> +static struct miscdevice tdg_attest_device = {
-> +	.minor          = MISC_DYNAMIC_MINOR,
-> +	.name           = "tdx-attest",
-> +	.fops           = &tdg_attest_fops,
-> +};
-> +module_misc_device(tdg_attest_device);
-> +
-> +MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
-> +MODULE_DESCRIPTION("TDX attestation driver ver " VERSION);
-> +MODULE_VERSION(VERSION);
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
-> new file mode 100644
-> index 000000000000..9afbef9079c1
-> --- /dev/null
-> +++ b/include/uapi/misc/tdx.h
-> @@ -0,0 +1,20 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_MISC_TDX_H
-> +#define _UAPI_MISC_TDX_H
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +
-> +/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
-> +#define TDX_REPORT_DATA_LEN		64
-> +/* Output report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
-> +#define TDX_TDREPORT_LEN		1024
-> +
-> +/* IOCTL to request TDREPORT data from TDX Module */
-> +#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
-> +/* IOCTL to request Quote from VMM using report data */
-> +#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
-> +/* Get current size of quote */
-> +#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
-> +
-> +#endif /* _UAPI_MISC_TDX_H */
-> 
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
