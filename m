@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8680CC07E9E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C84C11F67
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jul 2021 18:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7256861CB0
+	by mail.kernel.org (Postfix) with ESMTP id 8883361CD0
 	for <platform-driver-x86@archiver.kernel.org>; Wed,  7 Jul 2021 18:18:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbhGGSVT (ORCPT
+        id S232611AbhGGSVW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jul 2021 14:21:19 -0400
-Received: from mail-bn8nam08on2046.outbound.protection.outlook.com ([40.107.100.46]:38144
+        Wed, 7 Jul 2021 14:21:22 -0400
+Received: from mail-bn8nam08on2080.outbound.protection.outlook.com ([40.107.100.80]:33248
         "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232296AbhGGSUZ (ORCPT
+        id S232532AbhGGSU2 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jul 2021 14:20:25 -0400
+        Wed, 7 Jul 2021 14:20:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mYmibSsd1an9rpJ6i4zVE993/QAMWrSPzesCwJwajqWIp/P+ngu9F8HfSHELFQ70usKMkm/jgKHsK1af9+WaRo+l9yTX0gBxObso6qkfQIvh2tm9ACh1AoOJmOfnY31TAI9prF1eYd7lnJNba+NgaEPK6iggusO7NOdI8+nzSpWmChNdnLVVFdu4n1yxkOFznoD3gj4YWxyJWwjS5cbBZFQ31zvGrOHnFrNLDn7QnXCof0nTGuO+Y/J1EXI6NuGYTv5wKAKg3AnkC+cZgS5cErrUNWvAl+4IJOyrufMnTsmrZXUqcbMIpGuZ/bE8aOI+QsKVcq78XVe5bnW2KVKzqA==
+ b=ZEYPkTjpnev5RIH6zVLT20O9VZdfCwHS95tPvPdId2CFE8ZxzKexURo92e+R6cTXFwsfhQFBKt+2+PNPtio/NH15k7KxpoNIeD+BI8yyehevu2xkC80mdmZDC59ixFfr+SxSGhR2IeHN58pX1M/BFrdHSI9Y6mzP03MJutYtOqtOKA9UATZ9EHbsN1MBjcmmq8+k+y126NYIfewZM3EaZwu8iusSr6UulYW1cPIRWN9vY61R0ohWzve0XqfAqgSbxwOUNqeWxi1t73vejVdEDIk5Y00ne/kt+ozx5uoy+34fBZZzx7MPC1z0U0TIkmoX/kGZW4IEdEqZwhoDCQE8ng==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0B6FiFCaDmM5RZo5rPzgiexy2y5sO1Pr34P5srvJpVg=;
- b=Xj1nyMCylZAkTyO79kq2fphqMros1v4rapVAh08xZ2ujP1SHSmiR6+tPBVZ9GrrTeXnXGwRNIVWE3lT/eNVYvwbo/UwMgZbQXGp//uaLejRtQDEyJymZHOo4KQ7bp2To4BybEFILosB/f5hTr7Vipncr7Yzd3RnoGRPazNllGBM5d+QTKOS7JBDqITnD3hGEQPbt8Qy6szJQtpFyr8fLmiihy3U6wY/BVqmWo828s9JsQE/cxmoE5vuQK50ihWBETLokRT8kkuVqbPKVdPpRjRrOepK8MBxLR4a+T6e1WizXK1jnYSWC1ggNirMKtZMyqNhxKeaO1XApL5IiFagR7A==
+ bh=1F+SidK1HDpN6741TNeAYv7xj0tMTlfPEyf+prS85qw=;
+ b=mTqWjDDsL3YY2iAV23WcQFN8M+0Gdotyqe9XNUbgef/NKGKIBFG16AOj6f3iobEq90WX3KhlCzLvKREXBHnq8XxXx8N7JKaSqlI08rpgu/r0TD+svHFh6tWinOpRKzh7e9Hq23O8hV4xvQos6OxURF6Taf3jhQq9TFbfho1vrAkAJDdB6DRh6S7ZtNCwZ2lR3EK9ZP/b64rsE+ErtT2b7yrBpHZt89JCi1d6xVPU19C0IWI0QHZRYKHfuWufCoH0x2+ZGzDPVq0O22joZg2CTZVtPIPANBg/JjjRCMHwGC8nZhZoHQXtQ+G5eCxYREOOwOwAr1+xcwSVo2u1UybNRQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0B6FiFCaDmM5RZo5rPzgiexy2y5sO1Pr34P5srvJpVg=;
- b=uuSpKkHMX2zlER3mgpcXzAh7KoI+YNnygi/zEQyOj62ouJnAKisTmp8eWFwrOG/SH2k6+bWjylzqpKZCPo1XI3t4xmVYPRNUVx6GNyB068b4zvZUuqm6bYjg5Zl7uJCg5j74OBXPbfmIP7cyIvU6nP6a99X37+h1WidXJoXhioc=
+ bh=1F+SidK1HDpN6741TNeAYv7xj0tMTlfPEyf+prS85qw=;
+ b=vwT7CdvaaL2AtJzyEowNJUWOa9lnZO8vCcW41+SgaYpgaM/HfY/yZKb86Pes7gXnfz1jnHxw74i27Q82CcwfN3v865ACYPy/t+G8+20nciSpxfKOPmgmQLz8w/88mPIE4aunU4QahGPLjTzd4Thmc/t9DEafaNB3UH5kQG1avag=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
 Received: from BYAPR12MB2711.namprd12.prod.outlook.com (2603:10b6:a03:63::10)
  by BY5PR12MB3683.namprd12.prod.outlook.com (2603:10b6:a03:1a5::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.27; Wed, 7 Jul
- 2021 18:16:48 +0000
+ 2021 18:16:53 +0000
 Received: from BYAPR12MB2711.namprd12.prod.outlook.com
  ([fe80::40e3:aade:9549:4bed]) by BYAPR12MB2711.namprd12.prod.outlook.com
  ([fe80::40e3:aade:9549:4bed%7]) with mapi id 15.20.4287.033; Wed, 7 Jul 2021
- 18:16:48 +0000
+ 18:16:53 +0000
 From:   Brijesh Singh <brijesh.singh@amd.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
@@ -74,9 +74,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
         npmccallum@redhat.com, brijesh.ksingh@gmail.com,
         Brijesh Singh <brijesh.singh@amd.com>
-Subject: [PATCH Part1 RFC v4 31/36] x86/sev: Provide support for SNP guest request NAEs
-Date:   Wed,  7 Jul 2021 13:15:01 -0500
-Message-Id: <20210707181506.30489-32-brijesh.singh@amd.com>
+Subject: [PATCH Part1 RFC v4 33/36] x86/sev: Register SNP guest request platform device
+Date:   Wed,  7 Jul 2021 13:15:03 -0500
+Message-Id: <20210707181506.30489-34-brijesh.singh@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210707181506.30489-1-brijesh.singh@amd.com>
 References: <20210707181506.30489-1-brijesh.singh@amd.com>
@@ -86,221 +86,185 @@ X-ClientProxiedBy: SA0PR11CA0104.namprd11.prod.outlook.com
  (2603:10b6:a03:63::10)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from sbrijesh-desktop.amd.com (165.204.77.1) by SA0PR11CA0104.namprd11.prod.outlook.com (2603:10b6:806:d1::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.19 via Frontend Transport; Wed, 7 Jul 2021 18:16:46 +0000
+Received: from sbrijesh-desktop.amd.com (165.204.77.1) by SA0PR11CA0104.namprd11.prod.outlook.com (2603:10b6:806:d1::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.19 via Frontend Transport; Wed, 7 Jul 2021 18:16:51 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 85c1362f-5533-4479-f492-08d941736294
+X-MS-Office365-Filtering-Correlation-Id: 890d6e5f-21a7-483b-0e3a-08d941736589
 X-MS-TrafficTypeDiagnostic: BY5PR12MB3683:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR12MB36835A9E1EB36DF9FBA1311BE51A9@BY5PR12MB3683.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Microsoft-Antispam-PRVS: <BY5PR12MB3683DAFCE99B76674183EF7BE51A9@BY5PR12MB3683.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tyjYEU5u4AjayshIni8i0raGxh4dY4Sea/xwOo6jRcYsWxl6AV4qo91NQeP5VmioGElgpw/fI63gWd5ekrAhaEvRSsDaTpQhrqAC7sJLCAolEkHNM/TltuFkTRadvxa2luF1BImyWbdDP+3hnAUSazmdDMxUADQI9vgGd9Sh3scK7U+moDXomyLpAnM2825XatAUMbxsQVbu0QzCEZqevaZPc6r3FvCcI73NlJtro7TEe4c0+kKx03kXfKOLVixMy2HpMzq3pHeIlmWhUdBT/d2znH5yDUKM4z2rYtp/gVR3HScMqUx2kgejv8GCCU9/V+EhXZLuQ4mkMkQi828WlxLCnb/hg/FtVklnCs/WbApdv+LpSlm9P19MpYlz3s5ZLOzCl5yPX+sWT9JwC0SeCPfALF4GP45aempSz6ZMGOhzL9snVbI94iXl8ki+0vYYjw+DVafRkv2mOjGeBlBkp8qcVQwUlbNTgZG0fyZZypb2OVeVmqgZVB+uCwwb0740aLuyFnVV7HL24ON299/O6CErRmS96sc37oe/9DXXGqCkYtEYxih5q9lUcycujyuRIO3Co7Ch7xQLY8yrygLwjQjRhn+TKQHaT9pGA2cs2xwN40AdTt1rflrJT4wtgcnf+8z80iABO4osNklauWbB1TdpsR2sGV1YpYLZOWPhL/T2AOXNhU0Vn5aZnV60OjomZq5jUE6K+GwVScmxbpomXg==
+X-Microsoft-Antispam-Message-Info: yDheqtBnUvDWQClSVVqfv5AqD01RZreWYWFtZvBW6rwnhLnx1XOvFYmHrNOlodZGI2K0Y2W8CS8ml6LGNwamHtkb5ueT5kzCyPge8pYt/2xlUCevZrxxvWO5kf3BCFkx++F24mIFCN83qK2wfbOZ9+2yWZdi6U8yPI0gYTUGJ5doPhpss5WOinljEv4XyMhYYPZ1z08ej6xXbZEijm3x3EvbwL2tNVMHE41JOuXPmZFwGSjVBiuxd+R/LPeBBo7Tn+JWBvSV2/bZBcmdmA0mMxQRZG9P8eatR2/SooDu25Am47MDAldzAonbBh0GE+9CleUxTfHF9OUtAWKoVw4M+jFvINO4VnNoMJi5AAzxo0ziWZ1Le/nDBZ3h1edJqD7gU1QDRjslRu4uPdGSK8vc0i1MN6IIdbqvSq1A19NzxldaJGiGtywvZ7RK3YrC4sFzrI2MAhzQc66mA/wxd1/fdz+SZO5KQ4eUYisLYtpceKQQXdDjsjAvx/aBgOHC1Z5UErnz8VmTxgapipmI5Af4sx23eod7Xt9a6CH4ZZGpXlMsHRjO9zsjqXRKP1xAgN7/IZgvvbBy8mr5rY5JRDrQ4EidBostsIRS7V/PHBMptCWkWg6EGtKuXXSFIVVhg7cL0hjoY43zq8n/L8c3zU2ifsi9Zv+oEaryDNzxFwflp1sHh/+TAImcAWefAQkmZSTeHE+jRVHVV3unqUn9Og6ZGg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2711.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(136003)(346002)(376002)(396003)(5660300002)(8936002)(2616005)(44832011)(956004)(38350700002)(26005)(6666004)(7406005)(83380400001)(7416002)(1076003)(66946007)(4326008)(54906003)(66476007)(8676002)(66556008)(2906002)(36756003)(38100700002)(52116002)(186003)(6486002)(7696005)(478600001)(86362001)(316002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5sEiQH5zWHPUb4BKoyI9e9/07O3Oc1gzzD4+AMFTi9jfnUXPcO0+rFCogAVL?=
- =?us-ascii?Q?21aJUebMFF8DkU6QmYz8ycHHNApVj1q+qifzZpJlgwjnCOdkaVujvYh1AO3g?=
- =?us-ascii?Q?U+km/Qna7MJ+czWL/rdfKiacBJNFC7tNZsZB9p5bbVcMXFEYmaODQY/Pmh03?=
- =?us-ascii?Q?R5PaB+hVYzKjQuJUpOfMVTrGvT8x3o4NwVTIqvYsyMpv+bkRLxUPy8/H3FtL?=
- =?us-ascii?Q?u0ztkoMIeyb4vgiIJCEV9a3CtaRUpcAlrggPDocHr8eQb/TD0vqTGlWVzAW9?=
- =?us-ascii?Q?HSGGa2F3jNqyWiHZumX1aBAmIWk/oaTVhBOdqiEpUu4LHNUtbudpw+8t0mwb?=
- =?us-ascii?Q?kObpNxByUGhZCk/4yibIu0ByGU4hWUcZF96at0CfQDiANRyTNf0f/NyigPCv?=
- =?us-ascii?Q?jyabBNlRn5F9iB7XSifGMXXKiQXbyusMeIWgBn8tMtf7YSPrBgnUUrUgtu4V?=
- =?us-ascii?Q?15oDoJd7Us3pAUEeTRXWC2TdHjlCXouH/GZ3RYGj9AhtL0lS3wV/NkChBvav?=
- =?us-ascii?Q?W8wznJcatMHNtQiLVHfIWbmk222KR+STthXCZSYYt31JBD6EVwulULscMFd8?=
- =?us-ascii?Q?w6ooq9iKHvd8rbQ8ccWE42jL6by6QLv+2aw5mDLgOwVtKBj/QJIWJhlebQT2?=
- =?us-ascii?Q?ppLj4cJixK9yt2UrCuW1YH1sIR1ypQ+p9THc2pey9Xc441umsUqgdPbzoln0?=
- =?us-ascii?Q?a1jwT3pV7iGRB1xE1BoUU7BPt4PKcv9zMrO10+O03kBvGmz8FdgTBmcW+uf3?=
- =?us-ascii?Q?Inmmr/ATql1HtL/SKTNIAHneavIA6bMhPRm3/y3o8+BQeQIy2h6TZ5qVOMRM?=
- =?us-ascii?Q?YU5ivsdhjY0wso6XWtVuDbUCIqakzOY2aoiqVVQxka5fXJq297kft4pbyImi?=
- =?us-ascii?Q?3uaY1fCwBVsKjBlV72Q7iE/RI22l/HKmnlWKD7ZN0bRApjIaHK+jRpedPMrM?=
- =?us-ascii?Q?3dU2PVxgvK903mKl8QT+eCLPT7UVsQaEOI1Lg3JaH9HArzNrSv9M1lsQKC8i?=
- =?us-ascii?Q?vwNhtVPVRuYG1b7/G4V5EfsImRmSOKTv2a8FtBJrNCcIzoUlaxYhPymT9LhZ?=
- =?us-ascii?Q?IVrz+ytAzfd/KN3RJystfL2Nvj3XaMohdZ5h8FFm4EI0efj99pm5wXx2F5fY?=
- =?us-ascii?Q?cxst1lrT425o5TnZYpQrtX/rfL6INYMSYeZoM75r4zS0rAvpghlYHoYx5bMc?=
- =?us-ascii?Q?p237qxTct7weT9vqz6Y+a/Ws080vsxOSBV9zEkWYthbVnhzApnt4eaRkcudM?=
- =?us-ascii?Q?rxOAaLSRacPCedQqK1d6G4mPaSYct4giCl8lbljnZXffxzRupMuxY/cYh16T?=
- =?us-ascii?Q?2SofXJsuaT7iBmYwosJX5GPD?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nx3CUrdxLNe6yaY5Hc+KuyUA6nW2xKtTmJh8MnURR0nYz0fibS8FOuRj8ciF?=
+ =?us-ascii?Q?lV8kp6xTlLLNyOR27CiLx14xY4DA/qaqAom4jArLZZ/MnM6e7xPFf47rrWJJ?=
+ =?us-ascii?Q?rV3PjLAbD9MrjG4lIIRSy3POF3PeqzKbkiSkNZUb7BiAD7Tjv07m5zQOmSrK?=
+ =?us-ascii?Q?sFZhMRO/m+o9EaQzPwiR1j/HDPBBqfC1kaTb6n9O5kNUaMQspRWnHqMiw+6j?=
+ =?us-ascii?Q?ilXjPODj/2c6nZFXaD3PHwLHfUci6vjrEI88scr4rJJ3KzGKAhDRwKzrEABX?=
+ =?us-ascii?Q?HOGVRbTBUNL3iC+ag+PNdSilVAw/EgvN8ytTP973l/cs8hmtAfTshq8smswa?=
+ =?us-ascii?Q?CUuAQZXV339XGLGqzjDK6mApL99nyoPt6eyhZuSEf+cF/Iglq3SNTvNpLSvg?=
+ =?us-ascii?Q?cONzFc5dk1b6FlCWbDz/5k1yKqgL53V4pPoO7xIQZYbOntpwQgs+rTkGPCvF?=
+ =?us-ascii?Q?BZmlrn07JKT1QtkOPtb8/guBt4kw6eZAgc3tCJpmo65OD4Y/OEVJTaFRFjsh?=
+ =?us-ascii?Q?HIpe/14wwV1bNL9fuk1cihQVNZcw6ZLQJxjiZDlbO53HX8fzvX/q6XArstw4?=
+ =?us-ascii?Q?5HWOIvH/LqgEHD4lPt7Iu8PwY+WhUmniApAKUgdDO3LkZrkadN5ZiTdFk2Rp?=
+ =?us-ascii?Q?Dgu2pz5JMjwTF2OVKFgqcQXlPWRa/NXidwninr2B899KSPFSO/ab8on19mDD?=
+ =?us-ascii?Q?vOrYSssGCxk8V934UV7fvtrFNEKA4wr88OvaSCEZpisHVBSME0NIzJ9tGC0k?=
+ =?us-ascii?Q?nHYGYLNzliYKfNvuy3szP6//RQ48QcXhFRzGYRA53FHZoHsvFDhyGGA2YXTX?=
+ =?us-ascii?Q?MCV9d8MVKlDMIB9NneASGDvzX39RXMS3Tr4ZMygIX0s9u7Zggc3h+5VlxMET?=
+ =?us-ascii?Q?3Y5pr6ySX8FWtVwGQ6VHb543u4IY8YKG8YNTO+LMOUdWMKPuLUjGhSYG6KOn?=
+ =?us-ascii?Q?tIJwdXNLp3umTu1d52fMwiSQGjH21dmLwdvjn/ESc3KqAZP6sKdz20pja1Wm?=
+ =?us-ascii?Q?YkWEN+AeZsSgYYhjnFO83OsL5udOjSRcHuIU7bH+jUSLfY4By5TaVryemzFs?=
+ =?us-ascii?Q?o4+JhqZLHHKl7aR4hs1fCd0qFg6bVuHSPfzJw3J9Iu/FKFg+QrHzLaNs0u7q?=
+ =?us-ascii?Q?0ogy0HwpYAhgiohM1dK1GLzWFKsLjMsuqlPtdPapCfd3+VbsulnomjW8RrBy?=
+ =?us-ascii?Q?AywGaLZoJ4fEZyTppYLJVgpqg6L5JdGQA+pIU51po4lh8uclUC+brl8zVbkB?=
+ =?us-ascii?Q?55m3GuyxtjFOXv3eOiAQ6L7OuRpYZgxQD7PFloyfz0Oq7QU3iO4vlTtx0oHY?=
+ =?us-ascii?Q?nUrEXnpT26cdxBVoJ4OQQNBt?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85c1362f-5533-4479-f492-08d941736294
+X-MS-Exchange-CrossTenant-Network-Message-Id: 890d6e5f-21a7-483b-0e3a-08d941736589
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2711.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2021 18:16:48.2618
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2021 18:16:53.1980
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GO+JN6d5AuR/WVWKlDC2OmzZh+FkGHHRJRBwJY0IVE2mgkvtWVhslo+dy1kuzNPGMiO6wYtVMnwIrCnO3eauKQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5t56lFF2VF5/ka9Gvif3ywC0jgEWPE7AYKS8pkBo3WOZik2f5opfG2rknFYBdfP3nd7RQjBjJiHxv/7NSnv3sA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3683
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Version 2 of GHCB specification provides SNP_GUEST_REQUEST and
-SNP_EXT_GUEST_REQUEST NAE that can be used by the SNP guest to communicate
-with the PSP.
+Version 2 of GHCB specification provides NAEs that can be used by the SNP
+guest to communicate with the PSP without risk from a malicious hypervisor
+who wishes to read, alter, drop or replay the messages sent.
 
-While at it, add a snp_issue_guest_request() helper that can be used by
-driver or other subsystem to issue the request to PSP.
+In order to communicate with the PSP, the guest need to locate the secrets
+page inserted by the hypervisor during the SEV-SNP guest launch. The
+secrets page contains the communication keys used to send and receive the
+encrypted messages between the guest and the PSP.
 
-See SEV-SNP and GHCB spec for more details.
+The secrets page is location is passed through the setup_data.
+
+Create a platform device that the SNP guest driver can bind to get the
+platform resources such as encryption key and message id to use to
+communicate with the PSP. The SNP guest driver can provide userspace
+interface to get the attestation report, key derivation, extended
+attestation report etc.
 
 Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 ---
- arch/x86/include/uapi/asm/svm.h |  4 +++
- arch/x86/kernel/sev.c           | 57 +++++++++++++++++++++++++++++++++
- include/linux/sev-guest.h       | 48 +++++++++++++++++++++++++++
- 3 files changed, 109 insertions(+)
- create mode 100644 include/linux/sev-guest.h
+ arch/x86/kernel/sev.c     | 68 +++++++++++++++++++++++++++++++++++++++
+ include/linux/sev-guest.h |  5 +++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index 997918f0a89a..9aaf0ab386ef 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -109,6 +109,8 @@
- #define SVM_VMGEXIT_SET_AP_JUMP_TABLE		0
- #define SVM_VMGEXIT_GET_AP_JUMP_TABLE		1
- #define SVM_VMGEXIT_PSC				0x80000010
-+#define SVM_VMGEXIT_GUEST_REQUEST		0x80000011
-+#define SVM_VMGEXIT_EXT_GUEST_REQUEST		0x80000012
- #define SVM_VMGEXIT_AP_CREATION			0x80000013
- #define SVM_VMGEXIT_AP_CREATE_ON_INIT		0
- #define SVM_VMGEXIT_AP_CREATE			1
-@@ -221,6 +223,8 @@
- 	{ SVM_VMGEXIT_NMI_COMPLETE,	"vmgexit_nmi_complete" }, \
- 	{ SVM_VMGEXIT_AP_HLT_LOOP,	"vmgexit_ap_hlt_loop" }, \
- 	{ SVM_VMGEXIT_AP_JUMP_TABLE,	"vmgexit_ap_jump_table" }, \
-+	{ SVM_VMGEXIT_GUEST_REQUEST,	"vmgexit_guest_request" }, \
-+	{ SVM_VMGEXIT_EXT_GUEST_REQUEST,	"vmgexit_ext_guest_request" }, \
- 	{ SVM_VMGEXIT_PSC,	"vmgexit_page_state_change" }, \
- 	{ SVM_VMGEXIT_AP_CREATION,	"vmgexit_ap_creation" }, \
- 	{ SVM_VMGEXIT_HYPERVISOR_FEATURES,	"vmgexit_hypervisor_feature" }, \
 diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-index 04ef5e79fa12..b85cab838372 100644
+index 663cfe96c186..566625707132 100644
 --- a/arch/x86/kernel/sev.c
 +++ b/arch/x86/kernel/sev.c
-@@ -21,6 +21,7 @@
- #include <linux/cpumask.h>
+@@ -22,6 +22,8 @@
  #include <linux/log2.h>
  #include <linux/efi.h>
-+#include <linux/sev-guest.h>
+ #include <linux/sev-guest.h>
++#include <linux/platform_device.h>
++#include <linux/io.h>
  
  #include <asm/cpu_entry_area.h>
  #include <asm/stacktrace.h>
-@@ -2024,3 +2025,59 @@ bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
- 	while (true)
- 		halt();
+@@ -37,6 +39,7 @@
+ #include <asm/apic.h>
+ #include <asm/efi.h>
+ #include <asm/cpuid-indexed.h>
++#include <asm/setup.h>
+ 
+ #include "sev-internal.h"
+ 
+@@ -2160,3 +2163,68 @@ int snp_issue_guest_request(int type, struct snp_guest_request_data *input, unsi
+ 	return ret;
  }
+ EXPORT_SYMBOL_GPL(snp_issue_guest_request);
 +
-+int snp_issue_guest_request(int type, struct snp_guest_request_data *input, unsigned long *fw_err)
++static struct platform_device guest_req_device = {
++	.name		= "snp-guest",
++	.id		= -1,
++};
++
++static u64 find_secrets_paddr(void)
 +{
-+	struct ghcb_state state;
-+	unsigned long id, flags;
-+	struct ghcb *ghcb;
-+	int ret;
++	u64 pa_data = boot_params.cc_blob_address;
++	struct cc_blob_sev_info info;
++	void *map;
++
++	/*
++	 * The CC blob contains the address of the secrets page, check if the
++	 * blob is present.
++	 */
++	if (!pa_data)
++		return 0;
++
++	map = early_memremap(pa_data, sizeof(info));
++	memcpy(&info, map, sizeof(info));
++	early_memunmap(map, sizeof(info));
++
++	/* Verify that secrets page address is passed */
++	if ((info.secrets_phys && (info.secrets_len == PAGE_SIZE)))
++		return info.secrets_phys;
++
++	return 0;
++}
++
++static int __init add_snp_guest_request(void)
++{
++	struct snp_secrets_page_layout *layout;
++	struct snp_guest_platform_data data;
 +
 +	if (!sev_feature_enabled(SEV_SNP))
 +		return -ENODEV;
 +
-+
-+	local_irq_save(flags);
-+
-+	ghcb = __sev_get_ghcb(&state);
-+	if (!ghcb)
++	snp_secrets_phys = find_secrets_paddr();
++	if (!snp_secrets_phys)
 +		return -ENODEV;
 +
-+	vc_ghcb_invalidate(ghcb);
++	layout = snp_map_secrets_page();
++	if (layout == NULL)
++		return -ENODEV;
 +
-+	if (type == GUEST_REQUEST) {
-+		id = SVM_VMGEXIT_GUEST_REQUEST;
-+	} else if (type == EXT_GUEST_REQUEST) {
-+		id = SVM_VMGEXIT_EXT_GUEST_REQUEST;
-+		ghcb_set_rax(ghcb, input->data_gpa);
-+		ghcb_set_rbx(ghcb, input->data_npages);
-+	} else {
-+		ret = -EINVAL;
-+		goto e_put;
-+	}
++	/*
++	 * The secrets page contains three VMPCK that can be used for
++	 * communicating with the PSP. We choose the VMPCK0 to encrypt guest
++	 * messages send and receive by the Linux. Provide the key and
++	 * id through the platform data to the driver.
++	 */
++	data.vmpck_id = 0;
++	memcpy_fromio(data.vmpck, layout->vmpck0, sizeof(data.vmpck));
 +
++	iounmap(layout);
 +
-+	ret = sev_es_ghcb_hv_call(ghcb, NULL, id, input->req_gpa, input->resp_gpa);
-+	if (ret)
-+		goto e_put;
++	platform_device_add_data(&guest_req_device, &data, sizeof(data));
 +
-+	if (ghcb->save.sw_exit_info_2) {
++	if (!platform_device_register(&guest_req_device))
++		dev_info(&guest_req_device.dev, "secret phys 0x%llx\n", snp_secrets_phys);
 +
-+		/* Number of expected pages are returned in RBX */
-+		if (id == EXT_GUEST_REQUEST)
-+			input->data_npages = ghcb_get_rbx(ghcb);
-+
-+		if (fw_err)
-+			*fw_err = ghcb->save.sw_exit_info_2;
-+
-+		ret = -EIO;
-+		goto e_put;
-+	}
-+
-+e_put:
-+	__sev_put_ghcb(&state);
-+	local_irq_restore(flags);
-+
-+	return ret;
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(snp_issue_guest_request);
++device_initcall(add_snp_guest_request);
 diff --git a/include/linux/sev-guest.h b/include/linux/sev-guest.h
-new file mode 100644
-index 000000000000..24dd17507789
---- /dev/null
+index 5f6c4d634e1f..d13f2e2cd367 100644
+--- a/include/linux/sev-guest.h
 +++ b/include/linux/sev-guest.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * AMD Secure Encrypted Virtualization (SEV) guest driver interface
-+ *
-+ * Copyright (C) 2021 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Brijesh Singh <brijesh.singh@amd.com>
-+ *
-+ */
-+
-+#ifndef __LINUX_SEV_GUEST_H_
-+#define __LINUX_SEV_GUEST_H_
-+
-+#include <linux/types.h>
-+
-+enum vmgexit_type {
-+	GUEST_REQUEST,
-+	EXT_GUEST_REQUEST,
-+
-+	GUEST_REQUEST_MAX
+@@ -68,6 +68,11 @@ struct snp_guest_request_data {
+ 	unsigned int data_npages;
+ };
+ 
++struct snp_guest_platform_data {
++	u8 vmpck_id;
++	char vmpck[VMPCK_KEY_LEN];
 +};
 +
-+/*
-+ * The error code when the data_npages is too small. The error code
-+ * is defined in the GHCB specification.
-+ */
-+#define SNP_GUEST_REQ_INVALID_LEN	0x100000000ULL
-+
-+struct snp_guest_request_data {
-+	unsigned long req_gpa;
-+	unsigned long resp_gpa;
-+	unsigned long data_gpa;
-+	unsigned int data_npages;
-+};
-+
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+int snp_issue_guest_request(int vmgexit_type, struct snp_guest_request_data *input,
-+			    unsigned long *fw_err);
-+#else
-+
-+static inline int snp_issue_guest_request(int type, struct snp_guest_request_data *input,
-+					  unsigned long *fw_err)
-+{
-+	return -ENODEV;
-+}
-+
-+#endif /* CONFIG_AMD_MEM_ENCRYPT */
-+#endif /* __LINUX_SEV_GUEST_H__ */
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ int snp_issue_guest_request(int vmgexit_type, struct snp_guest_request_data *input,
+ 			    unsigned long *fw_err);
 -- 
 2.17.1
 
