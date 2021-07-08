@@ -2,152 +2,249 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7E9C07E96
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 17:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA04C07E9C
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 18:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EEF61920
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 17:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688476143F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 18:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbhGHRgC (ORCPT
+        id S230082AbhGHS7T (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jul 2021 13:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbhGHRgC (ORCPT
+        Thu, 8 Jul 2021 14:59:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33358 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229497AbhGHS7T (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jul 2021 13:36:02 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE171C06175F;
-        Thu,  8 Jul 2021 10:33:19 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id a6so3688991ljq.3;
-        Thu, 08 Jul 2021 10:33:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p8as5+U+fUkwkcmcZ2ww9hFTp+JN+Md67nryC+hBSxw=;
-        b=mv6qxhLzloqaQsgg3yWnQ0bdog4KqbISrbYI6fgzLD93cJXjkgieBVJh+0D2pPab9w
-         ccbsyGQ0pDGL2hLlfagR03fJ3z/R3+QpWlUSpAmnTwSXL/sdpFSMDt7Mf7HmTdERXC+7
-         uYnXR2H0kSl2LiFt2qFJoOU2Jw/xxIxFh47RLHpxG6kxrIZ7Za7RaBj+7tzlBMxQUveI
-         4M9OGZZXI3Qsg79XqsTsCGTIlOhCVbqlLi5Kl8eY3eu8Ai4JQKmiByPsUqe5qILpEHvh
-         B+QPUKO1Iyh3Uc5nF2ti1jD+vY0rz6yJKWWp56WcKb7YQggivRT8V2fJt/nd2OfAM92/
-         YmdQ==
+        Thu, 8 Jul 2021 14:59:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625770596;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1va5nv4AZF0iU5FnZEUJ2+LCm5h8PaUbvUsoxAiHxDY=;
+        b=SnoPYTLQ2uxAUwAg0q7Z1p5+m/rGSe+DRm71vbsaEZIaRLOxwPE/ZUcnI/OdCLFmc7xjzB
+        LSWieuRvIo58pZkq0aFkM23E3ArKEKZ3e9cVXL8JGp5rhd46LctdvoCaM7Bmf9Ptedcj93
+        3A3KiM/FZ25MEndxO/erXVqT/a2tZbQ=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-SLSStSEBMYiizV6sk94lcg-1; Thu, 08 Jul 2021 14:56:35 -0400
+X-MC-Unique: SLSStSEBMYiizV6sk94lcg-1
+Received: by mail-wm1-f71.google.com with SMTP id d16-20020a1c73100000b02901f2d21e46efso2774977wmb.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 08 Jul 2021 11:56:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8as5+U+fUkwkcmcZ2ww9hFTp+JN+Md67nryC+hBSxw=;
-        b=WBy6cElgJ/uLmZmUv5BTI4wUKLs3dvgGvq90lNnkClTSiAj/CaR5syXsOKS+Uft+Nh
-         qb5ttr5V8szNCOYsV9NGJCQtasFuDN4yi0y7AscsTVF/qoDyxiJ1snil7KlW5urScyBh
-         NibjZcO+EsT+DenX/E5oN8SXRwKajaA6kVLOVpAe9MNqhh+1NeTxfQX5bkK1bzJa5iSH
-         ewx6SwalLVZhJif5XIYtwTGXpk3t5+17fPmdzgbDV7uLfau2JrEYf1+alXUgsrLFtL11
-         Yviz/y6Iko9aJaeRALpBYKxJ/ezc3uhMEmgYdQ9oLKC+JyZrektuyO9ckmymGpLyUUJq
-         hmuQ==
-X-Gm-Message-State: AOAM530bm6q0pOQjkElKziURDoa0tdTCtwp+TwGXMa5lRwlDPSmV95WK
-        euQxP8dXAWGqcktKG2vyreT7BBZw27yDpms4gYs=
-X-Google-Smtp-Source: ABdhPJzXcWFdXI1S+Xc+K3K4T+wc48lSqLmrmir6aVgVYqsoemEs48d+917E8MnXcUgOZuzfYfJvrbBi4OL6KIBSVrM=
-X-Received: by 2002:a2e:bb98:: with SMTP id y24mr12341008lje.507.1625765597906;
- Thu, 08 Jul 2021 10:33:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1va5nv4AZF0iU5FnZEUJ2+LCm5h8PaUbvUsoxAiHxDY=;
+        b=N5qkz8LL9mFCtZYQOHRFKCHeXD0x0AyCGFv0icEHQjNnEWzcIWL767cZpfGTPiOzBf
+         fF9P2yDZGNZejsixIsTp7FnH9SI/Wg4d+WyxymuUhpirAqw62ea3w3oPgrUe2TiXB3bD
+         kcRz/hXyQFJMGNo6IKazICpWCTbpnvFVKleCaZerbQhZm77pC+JYr0BaU8Mo2FjVWtDJ
+         cb+PNeUBonFZk0y+/E5oe2gdwHs9X2fptqehiffYS2kAsTRsWGtr61qPqQAnn607ONRZ
+         B762AgSzZJ3gSfcJekhaNfR2lu0jFL307fx+r7bZb9me7Ex5ryJRwqD7bezvmIz4I/4l
+         6SbQ==
+X-Gm-Message-State: AOAM530BP3d4hRHKtnvfQPHBMnwfnDiVbn1rxCfOAhqEds3nQ1f/mHNu
+        r6XrzPaQaITAkp4YQFCiCsCKnQuoBuBTAtdatSyxHR5A2FCJ/sQX0VNSwFuGKExhaZnwi2nPajS
+        rFzORxjoyAn/4GDE3ZVZvdShKrXrudXFnyw==
+X-Received: by 2002:a05:6000:1361:: with SMTP id q1mr35672357wrz.179.1625770594558;
+        Thu, 08 Jul 2021 11:56:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwhquME75eUWVHFrrZ+V9pwudJ25ehwm0sVcMEMSNcf4tH+Xhq/bHqTeFabCsx2g8CMjSfcTw==
+X-Received: by 2002:a05:6000:1361:: with SMTP id q1mr35672310wrz.179.1625770594307;
+        Thu, 08 Jul 2021 11:56:34 -0700 (PDT)
+Received: from work-vm (cpc109021-salf6-2-0-cust453.10-2.cable.virginm.net. [82.29.237.198])
+        by smtp.gmail.com with ESMTPSA id o11sm10760305wmc.2.2021.07.08.11.56.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jul 2021 11:56:33 -0700 (PDT)
+Date:   Thu, 8 Jul 2021 19:56:31 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 14/40] crypto:ccp: Provide APIs to issue
+ SEV-SNP commands
+Message-ID: <YOdKX/3cTytIiGYM@work-vm>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-15-brijesh.singh@amd.com>
 MIME-Version: 1.0
-References: <cover.1625709047.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1625709047.git.gayatri.kammela@intel.com>
-From:   Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Date:   Thu, 8 Jul 2021 13:32:51 -0400
-Message-ID: <CAE2upjQK80HF+hADt+q9PQKpX6MntqQFQ+mcXRKkus1FvxvvRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Add Alder Lake PCH-S support to PMC core driver
-To:     Gayatri Kammela <gayatri.kammela@intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, mgross@linux.intel.com,
-        hdegoede@redhat.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        vicamo.yang@canonical.com,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        linux-kernel@vger.kernel.org, tamar.mashiah@intel.com,
-        gregkh@linuxfoundation.org, rajatja@google.com,
-        Shyam-sundar.S-k@amd.com, Alexander.Deucher@amd.com,
-        mlimonci@amd.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210707183616.5620-15-brijesh.singh@amd.com>
+User-Agent: Mutt/2.0.7 (2021-05-04)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Series looks good to me.
+* Brijesh Singh (brijesh.singh@amd.com) wrote:
+> Provide the APIs for the hypervisor to manage an SEV-SNP guest. The
+> commands for SEV-SNP is defined in the SEV-SNP firmware specification.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  drivers/crypto/ccp/sev-dev.c | 24 ++++++++++++
+>  include/linux/psp-sev.h      | 74 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 98 insertions(+)
+> 
+> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+> index 84c91bab00bd..ad9a0c8111e0 100644
+> --- a/drivers/crypto/ccp/sev-dev.c
+> +++ b/drivers/crypto/ccp/sev-dev.c
+> @@ -1017,6 +1017,30 @@ int sev_guest_df_flush(int *error)
+>  }
+>  EXPORT_SYMBOL_GPL(sev_guest_df_flush);
+>  
+> +int snp_guest_decommission(struct sev_data_snp_decommission *data, int *error)
+> +{
+> +	return sev_do_cmd(SEV_CMD_SNP_DECOMMISSION, data, error);
+> +}
+> +EXPORT_SYMBOL_GPL(snp_guest_decommission);
+> +
+> +int snp_guest_df_flush(int *error)
+> +{
+> +	return sev_do_cmd(SEV_CMD_SNP_DF_FLUSH, NULL, error);
+> +}
+> +EXPORT_SYMBOL_GPL(snp_guest_df_flush);
+> +
+> +int snp_guest_page_reclaim(struct sev_data_snp_page_reclaim *data, int *error)
+> +{
+> +	return sev_do_cmd(SEV_CMD_SNP_PAGE_RECLAIM, data, error);
+> +}
+> +EXPORT_SYMBOL_GPL(snp_guest_page_reclaim);
+> +
+> +int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *error)
+> +{
+> +	return sev_do_cmd(SEV_CMD_SNP_DBG_DECRYPT, data, error);
+> +}
+> +EXPORT_SYMBOL_GPL(snp_guest_dbg_decrypt);
+> +
+>  static void sev_exit(struct kref *ref)
+>  {
+>  	misc_deregister(&misc_dev->misc);
+> diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
+> index 1b53e8782250..63ef766cbd7a 100644
+> --- a/include/linux/psp-sev.h
+> +++ b/include/linux/psp-sev.h
+> @@ -860,6 +860,65 @@ int sev_guest_df_flush(int *error);
+>   */
+>  int sev_guest_decommission(struct sev_data_decommission *data, int *error);
+>  
+> +/**
+> + * snp_guest_df_flush - perform SNP DF_FLUSH command
+> + *
+> + * @sev_ret: sev command return code
+> + *
+> + * Returns:
+> + * 0 if the sev successfully processed the command
+> + * -%ENODEV    if the sev device is not available
+> + * -%ENOTSUPP  if the sev does not support SEV
 
-Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Weird wording.
 
-+ AMD folks
-
-Hi Alex, Mario and Shaym - Perhaps AMD PMC files should also follow
-the similar convention and it could probably evolve in future where
-both x86 based PMC drivers might use some common library helper
-functions. What do you think?
-
-
-On Wed, Jul 7, 2021 at 10:10 PM Gayatri Kammela
-<gayatri.kammela@intel.com> wrote:
->
-> Hi,
-> The patch series move intel_pmc_core* files to pmc subfolder as well as
-> add Alder Lake PCH-S support to PMC core driver.
->
-> Patch 1: Move intel_pmc_core* files to pmc subfolder
-> Patch 2: Add Alderlake support to pmc_core driver
-> Patch 3: Add Latency Tolerance Reporting (LTR) support to Alder Lake
-> Patch 4: Add Alder Lake low power mode support for pmc_core
-> Patch 5: Add GBE Package C10 fix for Alder Lake
->
-> Changes since v1:
-> 1) Add patch 1 to v2 i.e., Move intel_pmc_core* files to pmc subfolder
-> 2) Modify commit message for patch 2.
->
-> David E. Box (1):
->   platform/x86: intel_pmc_core: Add GBE Package C10 fix for Alder Lake
->     PCH
->
-> Gayatri Kammela (4):
->   platform/x86: intel_pmc_core: Move intel_pmc_core* files to pmc
->     subfolder
->   platform/x86/intel: intel_pmc_core: Add Alderlake support to pmc_core
->     driver
->   platform/x86/intel: intel_pmc_core: Add Latency Tolerance Reporting
->     (LTR) support to Alder Lake
->   platform/x86/intel: intel_pmc_core: Add Alder Lake low power mode
->     support for pmc_core
->
->  drivers/platform/x86/Kconfig                  |  21 --
->  drivers/platform/x86/Makefile                 |   1 -
->  drivers/platform/x86/intel/Kconfig            |   1 +
->  drivers/platform/x86/intel/Makefile           |   1 +
->  drivers/platform/x86/intel/pmc/Kconfig        |  22 ++
->  drivers/platform/x86/intel/pmc/Makefile       |   5 +
->  .../x86/{ => intel/pmc}/intel_pmc_core.c      | 307 +++++++++++++++++-
->  .../x86/{ => intel/pmc}/intel_pmc_core.h      |  17 +
->  .../{ => intel/pmc}/intel_pmc_core_pltdrv.c   |   0
->  9 files changed, 350 insertions(+), 25 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
->  create mode 100644 drivers/platform/x86/intel/pmc/Makefile
->  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.c (85%)
->  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.h (95%)
->  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core_pltdrv.c (100%)
->
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: David Box <david.e.box@intel.com>
-> Cc: You-Sheng Yang <vicamo.yang@canonical.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
->
-> base-commit: a931dd33d370896a683236bba67c0d6f3d01144d
-> --
-> 2.25.1
->
-
-
+> + * -%ETIMEDOUT if the sev command timed out
+> + * -%EIO       if the sev returned a non-zero return code
+> + */
+> +int snp_guest_df_flush(int *error);
+> +
+> +/**
+> + * snp_guest_decommission - perform SNP_DECOMMISSION command
+> + *
+> + * @decommission: sev_data_decommission structure to be processed
+> + * @sev_ret: sev command return code
+> + *
+> + * Returns:
+> + * 0 if the sev successfully processed the command
+> + * -%ENODEV    if the sev device is not available
+> + * -%ENOTSUPP  if the sev does not support SEV
+> + * -%ETIMEDOUT if the sev command timed out
+> + * -%EIO       if the sev returned a non-zero return code
+> + */
+> +int snp_guest_decommission(struct sev_data_snp_decommission *data, int *error);
+> +
+> +/**
+> + * snp_guest_page_reclaim - perform SNP_PAGE_RECLAIM command
+> + *
+> + * @decommission: sev_snp_page_reclaim structure to be processed
+> + * @sev_ret: sev command return code
+> + *
+> + * Returns:
+> + * 0 if the sev successfully processed the command
+> + * -%ENODEV    if the sev device is not available
+> + * -%ENOTSUPP  if the sev does not support SEV
+> + * -%ETIMEDOUT if the sev command timed out
+> + * -%EIO       if the sev returned a non-zero return code
+> + */
+> +int snp_guest_page_reclaim(struct sev_data_snp_page_reclaim *data, int *error);
+> +
+> +/**
+> + * snp_guest_dbg_decrypt - perform SEV SNP_DBG_DECRYPT command
+> + *
+> + * @sev_ret: sev command return code
+> + *
+> + * Returns:
+> + * 0 if the sev successfully processed the command
+> + * -%ENODEV    if the sev device is not available
+> + * -%ENOTSUPP  if the sev does not support SEV
+> + * -%ETIMEDOUT if the sev command timed out
+> + * -%EIO       if the sev returned a non-zero return code
+> + */
+> +int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *error);
+> +
+> +
+>  void *psp_copy_user_blob(u64 uaddr, u32 len);
+>  
+>  #else	/* !CONFIG_CRYPTO_DEV_SP_PSP */
+> @@ -887,6 +946,21 @@ sev_issue_cmd_external_user(struct file *filep, unsigned int id, void *data, int
+>  
+>  static inline void *psp_copy_user_blob(u64 __user uaddr, u32 len) { return ERR_PTR(-EINVAL); }
+>  
+> +static inline int
+> +snp_guest_decommission(struct sev_data_snp_decommission *data, int *error) { return -ENODEV; }
+> +
+> +static inline int snp_guest_df_flush(int *error) { return -ENODEV; }
+> +
+> +static inline int snp_guest_page_reclaim(struct sev_data_snp_page_reclaim *data, int *error)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *error)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>  #endif	/* CONFIG_CRYPTO_DEV_SP_PSP */
+>  
+>  #endif	/* __PSP_SEV_H__ */
+> -- 
+> 2.17.1
+> 
+> 
 -- 
-Thanks,
-Rajneesh
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+
