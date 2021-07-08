@@ -2,88 +2,226 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C17C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 02:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5AFC11F67
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 05:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5F161CC1
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 02:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B9661CDF
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 05:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbhGHCNX (ORCPT
+        id S229766AbhGHFlq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 7 Jul 2021 22:13:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:61851 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230295AbhGHCNX (ORCPT
+        Thu, 8 Jul 2021 01:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229767AbhGHFlp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 7 Jul 2021 22:13:23 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10038"; a="209246227"
-X-IronPort-AV: E=Sophos;i="5.84,222,1620716400"; 
-   d="scan'208";a="209246227"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2021 19:10:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,222,1620716400"; 
-   d="scan'208";a="449770535"
-Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
-  by orsmga007.jf.intel.com with ESMTP; 07 Jul 2021 19:10:42 -0700
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
-        irenic.rajneesh@gmail.com, andriy.shevchenko@linux.intel.com,
-        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
-        david.e.box@intel.com, linux-kernel@vger.kernel.org,
-        tamar.mashiah@intel.com, gregkh@linuxfoundation.org,
-        rajatja@google.com, "David E. Box" <david.e.box@linux.intel.com>
-Subject: [PATCH v2 5/5] platform/x86/intel: intel_pmc_core: Add GBE Package C10 fix for Alder Lake PCH
-Date:   Wed,  7 Jul 2021 19:07:25 -0700
-Message-Id: <cea5cf09ddecface98712e5db877a70e8c41d581.1625709047.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1625709047.git.gayatri.kammela@intel.com>
-References: <cover.1625709047.git.gayatri.kammela@intel.com>
+        Thu, 8 Jul 2021 01:41:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E9BC06175F
+        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jul 2021 22:39:04 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1MkA-0006EE-1O; Thu, 08 Jul 2021 07:38:38 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1Mk9-00030H-1D; Thu, 08 Jul 2021 07:38:37 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m1Mk8-0007Hx-U3; Thu, 08 Jul 2021 07:38:36 +0200
+Date:   Thu, 8 Jul 2021 07:38:13 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     nvdimm@lists.linux.dev, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
+        Jens Taprogge <jens.taprogge@taprogge.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Jaroslav Kysela <perex@perex.cz>, linux-fpga@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Maxim Levitsky <maximlevitsky@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alex Elder <elder@kernel.org>, linux-parisc@vger.kernel.org,
+        Geoff Levand <geoff@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Thorsten Scherer <t.scherer@eckelmann.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Jon Mason <jdmason@kudzu.us>, linux-ntb@googlegroups.com,
+        Wu Hao <hao.wu@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Manohar Vanga <manohar.vanga@gmail.com>,
+        linux-wireless@vger.kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        virtualization@lists.linux-foundation.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        target-devel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Ira Weiny <ira.weiny@intel.com>, Helge Deller <deller@gmx.de>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        industrypack-devel@lists.sourceforge.net,
+        linux-mips@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
+        linux-media <linux-media@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Johannes Thumshirn <morbidrsa@gmail.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Joey Pabalan <jpabalanb@gmail.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Bodo Stroesser <bostroesser@gmail.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tom Rix <trix@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        SeongJae Park <sjpark@amazon.de>, linux-hyperv@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, Frank Li <lznuaa@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        linux-staging@lists.linux.dev, Dexuan Cui <decui@microsoft.com>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Allen Hubbe <allenbh@gmail.com>, Alex Dubov <oakad@yahoo.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Ben Widawsky <ben.widawsky@intel.com>,
+        Moritz Fischer <mdf@kernel.org>, linux-cxl@vger.kernel.org,
+        Michael Buesch <m@bues.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-mmc@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        linux-remoteproc@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Andreas Noever <andreas.noever@gmail.com>,
+        linux-i3c@lists.infradead.org,
+        linux1394-devel@lists.sourceforge.net,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andy Gross <agross@kernel.org>, linux-serial@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Michael Jamet <michael.jamet@intel.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Juergen Gross <jgross@suse.com>, linuxppc-dev@lists.ozlabs.org,
+        Takashi Iwai <tiwai@suse.com>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Marc Zyngier <maz@kernel.org>, dmaengine@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH v2 0/4] bus: Make remove callback return void
+Message-ID: <20210708053813.pem2ufjuwkacptv3@pengutronix.de>
+References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
+ <CAGngYiWm4u27o-yy5L5tokMB5G1RUR5uYmKf2oXah2P3J=hK2A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bpxpm3lcta7ifhrg"
+Content-Disposition: inline
+In-Reply-To: <CAGngYiWm4u27o-yy5L5tokMB5G1RUR5uYmKf2oXah2P3J=hK2A@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "David E. Box" <david.e.box@linux.intel.com>
 
-Alder PCH uses the same Gigabit Ethernet (GBE) device as Tiger Lake PCH
-which cannot achieve PC10 without ignoring the PMC GBE LTR. Add this
-work around for Alder Lake PCH as well.
+--bpxpm3lcta7ifhrg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: You-Sheng Yang <vicamo.yang@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/intel_pmc_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Wed, Jul 07, 2021 at 10:08:53PM -0400, Sven Van Asbroeck wrote:
+> On Tue, Jul 6, 2021 at 11:50 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> >  drivers/staging/fieldbus/anybuss/host.c   | 4 +---
+>=20
+> Awesome !
+>=20
+> Acked-by: Sven Van Asbroeck <TheSven73@gmail.com>
 
-diff --git a/drivers/platform/x86/intel/pmc/intel_pmc_core.c b/drivers/platform/x86/intel/pmc/intel_pmc_core.c
-index 27346ff5a924..84b58b557a49 100644
---- a/drivers/platform/x86/intel/pmc/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel/pmc/intel_pmc_core.c
-@@ -1983,10 +1983,10 @@ static int pmc_core_probe(struct platform_device *pdev)
- 		pmc_core_get_tgl_lpm_reqs(pdev);
- 
- 	/*
--	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
--	 * a cable is attached. Tell the PMC to ignore it.
-+	 * On TGL and ADL, due to a hardware limitation, the GBE LTR blocks PC10
-+	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
--	if (pmcdev->map == &tgl_reg_map) {
-+	if (pmcdev->map == &tgl_reg_map || pmcdev->map == &adl_reg_map) {
- 		dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
- 		pmc_core_send_ltr_ignore(pmcdev, 3);
- 	}
--- 
-2.25.1
+I note that as an Ack for patch 4 only, as the others don't touch this
+file.
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bpxpm3lcta7ifhrg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDmjzsACgkQwfwUeK3K
+7Alp5wf+LJkpxzkaW2ldAtFhGuqT1XfOqbe9d5vNgqvqupJS1Q+aeie0kH0038ba
+uN3KDJ2V2DAmMf6OIKUFucVxBpCC92myb63zIHRJs5kGzTu41BRp3yt/I650Xzdr
++MB/xdEr/XFy2f9gDr/QdCojwh44TXqKzZPG6a7r6uQu8/AAUOdVEcfK6o01hN8W
+szxNTR1qtdQMHj9Ji8fo0wADdSPEez1kGe+HEOJVWBZnhdyCqS0jh774r7GsLjqY
+l8S7HhKPoY6/CCbEHKfYA15GUvexTA14O2tn6vuQPtiTTdDoh/Nl0wj0z5/WbWjX
+HF/tKnNb3l18s65PbEmxEKa2XonjFQ==
+=+Y+1
+-----END PGP SIGNATURE-----
+
+--bpxpm3lcta7ifhrg--
