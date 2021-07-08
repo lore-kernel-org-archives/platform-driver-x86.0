@@ -2,126 +2,139 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECF9C07E9C
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 22:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20153C07E96
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 22:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7340A61878
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 22:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F4109617ED
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 22:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbhGHWiN (ORCPT
+        id S230438AbhGHWpU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jul 2021 18:38:13 -0400
-Received: from mga05.intel.com ([192.55.52.43]:19171 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229497AbhGHWiN (ORCPT
+        Thu, 8 Jul 2021 18:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230379AbhGHWpS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jul 2021 18:38:13 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10039"; a="295248108"
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="295248108"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 15:35:26 -0700
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="646108012"
-Received: from kezheong-mobl.gar.corp.intel.com (HELO [10.212.152.178]) ([10.212.152.178])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 15:35:25 -0700
-Subject: Re: [PATCH v2 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-To:     Andy Lutomirski <luto@kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     Peter H Anvin <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20210707204249.3046665-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210707204249.3046665-6-sathyanarayanan.kuppuswamy@linux.intel.com>
- <06c85c19-e16c-3121-ed47-075cfa779b67@kernel.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <169451ef-e8f6-5a07-f47a-61eaa085b4ef@intel.com>
-Date:   Thu, 8 Jul 2021 15:35:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 8 Jul 2021 18:45:18 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D38C061760;
+        Thu,  8 Jul 2021 15:42:36 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id h18-20020a05600c3512b029020e4ceb9588so7836179wmq.5;
+        Thu, 08 Jul 2021 15:42:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x621fK8buUAY43nsSreHPxG4n57Hwycv+IeTs0hwv44=;
+        b=kacOgh+tpoNLdrl/WLS2B/svr+FPlBFONhfiNK38T2Ozs0tZHAH79mF0XlI4oICMRD
+         LwCFiz8iCzpC5H9ijG4Bq5hhBaeuCMwIBDrLMsqvYTZWEFLNputHGP3FEc+KWgQkc66U
+         5OpXPZxmj+RTAtImF3Ma3Om6gI0LrfTBpKon7GnsxCw70VvsmYyJc8KTb/OxoA8zvDQJ
+         uCW07YbSvYglI/Rj3eqSrd0xn7ZScyxA7qWQoJdkJUQKNL3fmFImfkC9iKv04WZDCW8A
+         sXzRo38zJvDMp2mwviojNR6sNf9NyKMammilyCFxnqVWWQz5YyTSotBFh6kLT6yMVZCC
+         4/Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x621fK8buUAY43nsSreHPxG4n57Hwycv+IeTs0hwv44=;
+        b=DU2h6OGIhzwofahVNo3+QDBEMCLcma/JNJL8OTlysXWmVQr5OOsW8Gt4W7tRDvDYBh
+         S+nFtjVddgTBlZ46737HrmiSBuhgat81aJBWgZxVPxIDrPSkP1lGtPmGegUgagkNTXje
+         OJULU0s6Ihrix0K/sM8Z0IR/4rdKSPQhaI2iIpbZJtx7v2kyEjJ1VmvO9yZ1rGycrzqm
+         0dqThR+2O/+P7BRbZjg0X565xp3KXb7qDRH3h3W1d9J38d/Nabgr0fdEgxdOtoJ9ZuAU
+         VmT0CtjhjgPEz4vWiPc08C2Giv0kOziLXLbIjY1bxvqOaxX5UW3LymZ/flhDEWXOLabg
+         32jg==
+X-Gm-Message-State: AOAM531r16TY+LiUVi4tamEuBrv78bkJd+QUUNPk0Md6Uu9ZUgb+vhlT
+        f6Hnam+0jaTZMdrUSiHFBwTdsi+YxNk=
+X-Google-Smtp-Source: ABdhPJyscBYDf8HkS1yoc4z3nE1AKSrRaUThPbLRD0IqAKmnJwRLf8/K8213zb9xsYF5pGkwbyZotQ==
+X-Received: by 2002:a05:600c:2281:: with SMTP id 1mr12955472wmf.10.1625784154691;
+        Thu, 08 Jul 2021 15:42:34 -0700 (PDT)
+Received: from valhalla.home ([2.29.20.111])
+        by smtp.gmail.com with ESMTPSA id l4sm3080655wme.26.2021.07.08.15.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jul 2021 15:42:34 -0700 (PDT)
+From:   Daniel Scally <djrscally@gmail.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        andy.shevchenko@gmail.com, laurent.pinchart@ideasonboard.com,
+        kieran.bingham@ideasonboard.com
+Subject: [RFC PATCH 0/2] Add software node support to regulator framework
+Date:   Thu,  8 Jul 2021 23:42:24 +0100
+Message-Id: <20210708224226.457224-1-djrscally@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <06c85c19-e16c-3121-ed47-075cfa779b67@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/8/21 3:21 PM, Andy Lutomirski wrote:
->> +		ret = set_memory_decrypted((unsigned long)file->private_data,
->> +					   1UL << get_order(QUOTE_SIZE));
->> +		if (ret)
->> +			break;
-> Now private_data is decrypted.  (And this operation is *expensive*.  Why
-> is it done at ioctl time?)
+Hello all
 
-Expensive and permanently fractures the direct map.
+See previous series for some background context [1]
 
-I'm struggling to figure out why the direct map is even touched here.
-Why not just use a vmalloc area mapping?  You really just need *a*
-decrypted mapping to the page.  You don't need to make *every* mapping
-to the page decrypted.
+Some x86 laptops with ACPI tables designed for Windows have a TPS68470
+PMIC providing regulators and clocks to camera modules. The DSDT tables for
+those cameras lack any power control methods, declaring only a
+dependency on the ACPI device representing the TPS68470. This leaves the
+regulator framework with no means of determining appropriate voltages for the
+regulators provided by the PMIC, or of determining which regulators relate to
+which of the sensor's requested supplies. 
+
+This series is a prototype of an emulation of the device tree regulator
+initialisation and lookup functions, using software nodes. Software nodes
+relating to each regulator are registered as children of the TPS68470's ACPI
+firmware node. Those regulators have properties describing their constraints
+(for example "regulator-min-microvolt"). Similarly, software nodes are
+registered and assigned as secondary to the Camera's firmware node - these
+software nodes have reference properties named after the supply in the same
+way as device tree's phandles, for example "avdd-supply", and linking to the
+software node assigned to the appropriate regulator. We can then use those
+constraints to specify the appropriate voltages and the references to allow the
+camera drivers to look up the correct regulator device. 
+
+Although not included in this series, I would plan to use a similar method for
+linking the clocks provided by the TPS68470 to the sensor so that it can be
+discovered too.
+
+I'm posting this to see if people agree it's a good approach for tackling the 
+problem; I may be overthinking this and there's a much easier way that I should
+be looking at instead. It will have knock-ons in the cio2-bridge code [2], as
+that is adding software nodes to the same sensors to connect them to the media
+graph. Similarly, is the board file an acceptable solution, or should we just
+define the configuration for these devices (there's three orf our laptop models
+in scope) in int3472-tps68470 instead?
+
+Thanks
+Dan
+
+[1] https://lore.kernel.org/lkml/20210603224007.120560-1-djrscally@gmail.com/
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/media/pci/intel/ipu3/cio2-bridge.c#L166
+
+
+Daniel Scally (2):
+  regulator: Add support for software node connections
+  platform/surface: Add Surface Go 2 board file
+
+ MAINTAINERS                                |   6 +
+ drivers/platform/surface/Kconfig           |  10 ++
+ drivers/platform/surface/Makefile          |   1 +
+ drivers/platform/surface/surface_go_2.c    | 135 +++++++++++++++++++++
+ drivers/regulator/Kconfig                  |   6 +
+ drivers/regulator/Makefile                 |   1 +
+ drivers/regulator/core.c                   |  23 ++++
+ drivers/regulator/swnode_regulator.c       | 111 +++++++++++++++++
+ include/linux/regulator/swnode_regulator.h |  33 +++++
+ 9 files changed, 326 insertions(+)
+ create mode 100644 drivers/platform/surface/surface_go_2.c
+ create mode 100644 drivers/regulator/swnode_regulator.c
+ create mode 100644 include/linux/regulator/swnode_regulator.h
+
+-- 
+2.25.1
+
