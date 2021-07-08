@@ -2,226 +2,238 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5AFC11F67
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 05:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72D9C07E96
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 07:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B9661CDF
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 05:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A25361CDD
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  8 Jul 2021 07:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229766AbhGHFlq (ORCPT
+        id S230496AbhGHH7e (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jul 2021 01:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44004 "EHLO
+        Thu, 8 Jul 2021 03:59:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbhGHFlp (ORCPT
+        with ESMTP id S230495AbhGHH7d (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jul 2021 01:41:45 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46E9BC06175F
-        for <platform-driver-x86@vger.kernel.org>; Wed,  7 Jul 2021 22:39:04 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m1MkA-0006EE-1O; Thu, 08 Jul 2021 07:38:38 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m1Mk9-00030H-1D; Thu, 08 Jul 2021 07:38:37 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1m1Mk8-0007Hx-U3; Thu, 08 Jul 2021 07:38:36 +0200
-Date:   Thu, 8 Jul 2021 07:38:13 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     nvdimm@lists.linux.dev, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Samuel Iglesias Gonsalvez <siglesias@igalia.com>,
-        Jens Taprogge <jens.taprogge@taprogge.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jaroslav Kysela <perex@perex.cz>, linux-fpga@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alex Elder <elder@kernel.org>, linux-parisc@vger.kernel.org,
-        Geoff Levand <geoff@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Thorsten Scherer <t.scherer@eckelmann.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Jon Mason <jdmason@kudzu.us>, linux-ntb@googlegroups.com,
-        Wu Hao <hao.wu@intel.com>, David Woodhouse <dwmw@amazon.co.uk>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Manohar Vanga <manohar.vanga@gmail.com>,
-        linux-wireless@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        virtualization@lists.linux-foundation.org,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        target-devel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Ira Weiny <ira.weiny@intel.com>, Helge Deller <deller@gmx.de>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        industrypack-devel@lists.sourceforge.net,
-        linux-mips@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
-        linux-media <linux-media@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Johan Hovold <johan@kernel.org>, greybus-dev@lists.linaro.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Johannes Thumshirn <morbidrsa@gmail.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Joey Pabalan <jpabalanb@gmail.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Bodo Stroesser <bostroesser@gmail.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Tom Rix <trix@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        SeongJae Park <sjpark@amazon.de>, linux-hyperv@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, Frank Li <lznuaa@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        linux-staging@lists.linux.dev, Dexuan Cui <decui@microsoft.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Allen Hubbe <allenbh@gmail.com>, Alex Dubov <oakad@yahoo.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Ben Widawsky <ben.widawsky@intel.com>,
-        Moritz Fischer <mdf@kernel.org>, linux-cxl@vger.kernel.org,
-        Michael Buesch <m@bues.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-mmc@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        linux-remoteproc@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Andreas Noever <andreas.noever@gmail.com>,
-        linux-i3c@lists.infradead.org,
-        linux1394-devel@lists.sourceforge.net,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andy Gross <agross@kernel.org>, linux-serial@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>,
-        Michael Jamet <michael.jamet@intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Juergen Gross <jgross@suse.com>, linuxppc-dev@lists.ozlabs.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Marc Zyngier <maz@kernel.org>, dmaengine@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH v2 0/4] bus: Make remove callback return void
-Message-ID: <20210708053813.pem2ufjuwkacptv3@pengutronix.de>
-References: <20210706154803.1631813-1-u.kleine-koenig@pengutronix.de>
- <CAGngYiWm4u27o-yy5L5tokMB5G1RUR5uYmKf2oXah2P3J=hK2A@mail.gmail.com>
+        Thu, 8 Jul 2021 03:59:33 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C3AC061574;
+        Thu,  8 Jul 2021 00:56:51 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id ie21so3090379pjb.0;
+        Thu, 08 Jul 2021 00:56:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H49TTePA4MNINpDUvjXg8h5z2g+u65TAF2/0pD6oCxk=;
+        b=hvF+73nRlvnE1hgKnSaKV0tVVnWAIKzmi9O3fpjvbgdkw8t+6Z9Y0/f7dBtgx0lpTy
+         /dqsoKFZpn+mMd4pJ3Uuqx3eDEXWDx7YDVx8RKBBtonycdEcfClY/0t5m1VQFd4zWE79
+         E8UouTeu+kfi+zVoYkJ41CBtq0Qf6Y4/dI63COg9FdeicNzHar1gWCjerJk+R01UtvWl
+         sfUgOoHVGs4FA0jSn43vMEJF5Cv5hTOiAmf7AUau9j2obm50/aTD80sKpxjUr80jJpHD
+         RQNiVGhzVH2M6XEzuy5pgm0VtChTYNxjI+DB0O47EkHCgAEvdpDc3e+ZnSXdvqPoOeJR
+         h1eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H49TTePA4MNINpDUvjXg8h5z2g+u65TAF2/0pD6oCxk=;
+        b=n4ED3CzdDFVBK8RvXH/s1Mcn0zodTSZwsJA9WFgUpyrLVFyu+0fL3vE1q+4KSs0Uzk
+         rl4QlKUddm/tKBtC1oToAGVV6z+TTqwpGwDJDHdlbo5mVKoKiWms91TTr+PJfGHF6/eI
+         +PFk/vTUvrVdiPlpWAhq7o4+FGL+0h1kNDaWEoZ7ux4r1xEl3ljL5wps4/lKQwTbJu9i
+         MdJKf9uqqrnrDkF2unijaSuCBwMC2CI4Pmo0NoBdndtYuLWhEWx4hTnPkPJKKVjxWToK
+         9QaogKOuyTZmePhk8qYCeDVsx5KketFT+sPk5btm5CHrm4lXIhQTk+JHUvCCGZkmixta
+         l+BA==
+X-Gm-Message-State: AOAM531+wcIzuSQG4Syr93MDKwdnkJWEkErlleYdLu0o0k8k6csnDINW
+        b8NV7W05NMivmUMqLaTdDgmE4+Fm4OIvhgC03SE=
+X-Google-Smtp-Source: ABdhPJw8qkV/I1wIeO5JvBSngmjoJiLuq8SqSkTXhW3YeDaPn1KIaeruOvoW5CrAWEo24Egkia9SYF+sJ31tLc5NGxk=
+X-Received: by 2002:a17:90b:85:: with SMTP id bb5mr18488396pjb.228.1625731011208;
+ Thu, 08 Jul 2021 00:56:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bpxpm3lcta7ifhrg"
-Content-Disposition: inline
-In-Reply-To: <CAGngYiWm4u27o-yy5L5tokMB5G1RUR5uYmKf2oXah2P3J=hK2A@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: platform-driver-x86@vger.kernel.org
+References: <cover.1625709047.git.gayatri.kammela@intel.com> <ffbbbc22605014d0de6eabaf7f1441a761456cb2.1625709047.git.gayatri.kammela@intel.com>
+In-Reply-To: <ffbbbc22605014d0de6eabaf7f1441a761456cb2.1625709047.git.gayatri.kammela@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 8 Jul 2021 10:56:15 +0300
+Message-ID: <CAHp75VdFpJBEWBJMJexK3muvWt+EEqMMyVtxMvm9sSXhkysaww@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] platform/x86/intel: intel_pmc_core: Move
+ intel_pmc_core* files to pmc subfolder
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, Jul 8, 2021 at 5:10 AM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
+>
+> As part of collecting Intel x86 specific drivers in their own
+> folder, move intel_pmc_core* files to its own subfolder there.
 
---bpxpm3lcta7ifhrg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm fine with this, it is also possible I think to drop intel_pmc_
+prefix from the file names (core.c, core.h, pltdrv.c). In any case it
+may be done later on.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-On Wed, Jul 07, 2021 at 10:08:53PM -0400, Sven Van Asbroeck wrote:
-> On Tue, Jul 6, 2021 at 11:50 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> >
-> >  drivers/staging/fieldbus/anybuss/host.c   | 4 +---
->=20
-> Awesome !
->=20
-> Acked-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+> Cc: David Box <david.e.box@intel.com>
+> Cc: You-Sheng Yang <vicamo.yang@canonical.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+> ---
+>  drivers/platform/x86/Kconfig                  | 21 ------------------
+>  drivers/platform/x86/Makefile                 |  1 -
+>  drivers/platform/x86/intel/Kconfig            |  1 +
+>  drivers/platform/x86/intel/Makefile           |  1 +
+>  drivers/platform/x86/intel/pmc/Kconfig        | 22 +++++++++++++++++++
+>  drivers/platform/x86/intel/pmc/Makefile       |  5 +++++
+>  .../x86/{ => intel/pmc}/intel_pmc_core.c      |  0
+>  .../x86/{ => intel/pmc}/intel_pmc_core.h      |  0
+>  .../{ => intel/pmc}/intel_pmc_core_pltdrv.c   |  0
+>  9 files changed, 29 insertions(+), 22 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/pmc/Makefile
+>  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.c (100%)
+>  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.h (100%)
+>  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core_pltdrv.c (100%)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7d385c3b2239..cae72922f448 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1184,27 +1184,6 @@ config INTEL_MRFLD_PWRBTN
+>           To compile this driver as a module, choose M here: the module
+>           will be called intel_mrfld_pwrbtn.
+>
+> -config INTEL_PMC_CORE
+> -       tristate "Intel PMC Core driver"
+> -       depends on PCI
+> -       depends on ACPI
+> -       help
+> -         The Intel Platform Controller Hub for Intel Core SoCs provides access
+> -         to Power Management Controller registers via various interfaces. This
+> -         driver can utilize debugging capabilities and supported features as
+> -         exposed by the Power Management Controller. It also may perform some
+> -         tasks in the PMC in order to enable transition into the SLPS0 state.
+> -         It should be selected on all Intel platforms supported by the driver.
+> -
+> -         Supported features:
+> -               - SLP_S0_RESIDENCY counter
+> -               - PCH IP Power Gating status
+> -               - LTR Ignore / LTR Show
+> -               - MPHY/PLL gating status (Sunrisepoint PCH only)
+> -               - SLPS0 Debug registers (Cannonlake/Icelake PCH)
+> -               - Low Power Mode registers (Tigerlake and beyond)
+> -               - PMC quirks as needed to enable SLPS0/S0ix
+> -
+>  config INTEL_PMT_CLASS
+>         tristate
+>         help
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7ee369aab10d..43d36f8c36f1 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -128,7 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)             += intel-uncore-frequency.o
+>  obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)     += intel_bxtwc_tmu.o
+>  obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)    += intel_chtdc_ti_pwrbtn.o
+>  obj-$(CONFIG_INTEL_MRFLD_PWRBTN)       += intel_mrfld_pwrbtn.o
+> -obj-$(CONFIG_INTEL_PMC_CORE)           += intel_pmc_core.o intel_pmc_core_pltdrv.o
+>  obj-$(CONFIG_INTEL_PMT_CLASS)          += intel_pmt_class.o
+>  obj-$(CONFIG_INTEL_PMT_TELEMETRY)      += intel_pmt_telemetry.o
+>  obj-$(CONFIG_INTEL_PMT_CRASHLOG)       += intel_pmt_crashlog.o
+> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+> index f2eef337eb98..8ca021785f67 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -18,5 +18,6 @@ if X86_PLATFORM_DRIVERS_INTEL
+>
+>  source "drivers/platform/x86/intel/int33fe/Kconfig"
+>  source "drivers/platform/x86/intel/int3472/Kconfig"
+> +source "drivers/platform/x86/intel/pmc/Kconfig"
+>
+>  endif # X86_PLATFORM_DRIVERS_INTEL
+> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+> index 0653055942d5..49962f4dfdec 100644
+> --- a/drivers/platform/x86/intel/Makefile
+> +++ b/drivers/platform/x86/intel/Makefile
+> @@ -6,3 +6,4 @@
+>
+>  obj-$(CONFIG_INTEL_CHT_INT33FE)                += int33fe/
+>  obj-$(CONFIG_INTEL_SKL_INT3472)                += int3472/
+> +obj-$(CONFIG_INTEL_PMC_CORE)           += pmc/
+> diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
+> new file mode 100644
+> index 000000000000..b4c955a35674
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmc/Kconfig
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config INTEL_PMC_CORE
+> +       tristate "Intel PMC Core driver"
+> +       depends on PCI
+> +       depends on ACPI
+> +       help
+> +         The Intel Platform Controller Hub for Intel Core SoCs provides access
+> +         to Power Management Controller registers via various interfaces. This
+> +         driver can utilize debugging capabilities and supported features as
+> +         exposed by the Power Management Controller. It also may perform some
+> +         tasks in the PMC in order to enable transition into the SLPS0 state.
+> +         It should be selected on all Intel platforms supported by the driver.
+> +
+> +         Supported features:
+> +               - SLP_S0_RESIDENCY counter
+> +               - PCH IP Power Gating status
+> +               - LTR Ignore / LTR Show
+> +               - MPHY/PLL gating status (Sunrisepoint PCH only)
+> +               - SLPS0 Debug registers (Cannonlake/Icelake PCH)
+> +               - Low Power Mode registers (Tigerlake and beyond)
+> +               - PMC quirks as needed to enable SLPS0/S0ix
+> diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
+> new file mode 100644
+> index 000000000000..633a7598d6d6
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmc/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +
+> +obj-$(CONFIG_INTEL_PMC_CORE)   += intel_pmc_core.o
+> +obj-$(CONFIG_INTEL_PMC_CORE)   += intel_pmc_core_pltdrv.o
+> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel/pmc/intel_pmc_core.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmc_core.c
+> rename to drivers/platform/x86/intel/pmc/intel_pmc_core.c
+> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel/pmc/intel_pmc_core.h
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmc_core.h
+> rename to drivers/platform/x86/intel/pmc/intel_pmc_core.h
+> diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel/pmc/intel_pmc_core_pltdrv.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmc_core_pltdrv.c
+> rename to drivers/platform/x86/intel/pmc/intel_pmc_core_pltdrv.c
+> --
+> 2.25.1
+>
 
-I note that as an Ack for patch 4 only, as the others don't touch this
-file.
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bpxpm3lcta7ifhrg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmDmjzsACgkQwfwUeK3K
-7Alp5wf+LJkpxzkaW2ldAtFhGuqT1XfOqbe9d5vNgqvqupJS1Q+aeie0kH0038ba
-uN3KDJ2V2DAmMf6OIKUFucVxBpCC92myb63zIHRJs5kGzTu41BRp3yt/I650Xzdr
-+MB/xdEr/XFy2f9gDr/QdCojwh44TXqKzZPG6a7r6uQu8/AAUOdVEcfK6o01hN8W
-szxNTR1qtdQMHj9Ji8fo0wADdSPEez1kGe+HEOJVWBZnhdyCqS0jh774r7GsLjqY
-l8S7HhKPoY6/CCbEHKfYA15GUvexTA14O2tn6vuQPtiTTdDoh/Nl0wj0z5/WbWjX
-HF/tKnNb3l18s65PbEmxEKa2XonjFQ==
-=+Y+1
------END PGP SIGNATURE-----
-
---bpxpm3lcta7ifhrg--
+-- 
+With Best Regards,
+Andy Shevchenko
