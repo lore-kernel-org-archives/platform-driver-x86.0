@@ -2,37 +2,38 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BDEC07E99
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C50C07E99
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:27:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92A2161249
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C07613C1
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbhGIRHo (ORCPT
+        id S229563AbhGIRaF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 9 Jul 2021 13:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
+        Fri, 9 Jul 2021 13:30:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229503AbhGIRHo (ORCPT
+        id S229459AbhGIRaE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 9 Jul 2021 13:07:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A269611B0;
-        Fri,  9 Jul 2021 17:05:00 +0000 (UTC)
+        Fri, 9 Jul 2021 13:30:04 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B5CA9613BD;
+        Fri,  9 Jul 2021 17:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625850300;
-        bh=3MIvlgM7Pep+oN8czuF6Ie0rH7/jYQOo7WsCFv5z/AE=;
+        s=k20201202; t=1625851641;
+        bh=hunFLVyp1kxN8ZqWSRfrDVs7gY3ARFHi3Rol7iZHrco=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BQ74sLgCunCPF+x5zXhF8b47XY0e5wrs7r20dQ4aLBwjJP3+79OWzgW/BJIEhGPOU
-         GF/teFKTIFqw0bWo6+stC0HoTXfA40FXwKfVEKAfOAs5CQ/iq0ixnfWZUHQMzFYZbS
-         Q29gOCi9bL8VGc4lg/eTTksV3eej6ZbjM24wAWLs1seHK5ehzyt83ChJgNxzDV5L/w
-         vY49fHpDDH0q1VZey/KRlqdzXDjDa6k0JksYh9c8VtfpfMCeawt5HMs8alihIlkCoS
-         Lu85dswNOO0j6+sYkSpj2TUpZg7jXI7jRSkUzpOaQexG77h79xmd0NiwUwNnBlsYgR
-         hF4LGb79kND/w==
-Date:   Fri, 9 Jul 2021 18:04:26 +0100
+        b=Wf1XfEtMdv9XkXqtMNKUuDOw4edZpH7GIsgFaNVhsmvtyHeSQuOJHBQRI39IM8SMC
+         yPt4nCUaHxngzGfc0B6B2T73Aqjyiuenivhlq11yXQuQ9rkHErqxJxTOiBAJIhBPMd
+         mkz8LA3Ui4BFpmW+qSspe79/SPtBo5FKGnO7w9d9BF9f8VDaklotsL4zVM3s2d/cLx
+         G7EL694eFvYJb/c8FrqHsk5wG451XNCh9aMMZbkV8Y7OQFCzJvW/Ywmq7Jws7/gfI+
+         Um4ZpFNFXl2AC94i9/zsElLG9eAPRLUvRgq1iL66p7JBuPnaPQE4sZDUxBiiPH5F57
+         b6WY8b5AYItSw==
+Date:   Fri, 9 Jul 2021 18:26:47 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     Daniel Scally <djrscally@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
@@ -40,14 +41,16 @@ Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         luzmaximilian@gmail.com, lgirdwood@gmail.com,
         andy.shevchenko@gmail.com, laurent.pinchart@ideasonboard.com,
         kieran.bingham@ideasonboard.com
-Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210709170426.GC4112@sirena.org.uk>
+Subject: Re: [RFC PATCH 1/2] regulator: Add support for software node
+ connections
+Message-ID: <20210709172647.GE4112@sirena.org.uk>
 References: <20210708224226.457224-1-djrscally@gmail.com>
+ <20210708224226.457224-2-djrscally@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+        protocol="application/pgp-signature"; boundary="SNIs70sCzqvszXB4"
 Content-Disposition: inline
-In-Reply-To: <20210708224226.457224-1-djrscally@gmail.com>
+In-Reply-To: <20210708224226.457224-2-djrscally@gmail.com>
 X-Cookie: This fortune intentionally left blank.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
@@ -55,70 +58,73 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
---E/DnYTRukya0zdZ1
+--SNIs70sCzqvszXB4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
+On Thu, Jul 08, 2021 at 11:42:25PM +0100, Daniel Scally wrote:
 
-> See previous series for some background context [1]
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_OF) += of_regulator.o
+>  obj-$(CONFIG_REGULATOR_FIXED_VOLTAGE) += fixed.o
+>  obj-$(CONFIG_REGULATOR_VIRTUAL_CONSUMER) += virtual.o
+>  obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+> +obj-$(CONFIG_REGULATOR_SWNODE) += swnode_regulator.o
 
-That's a link to a series "[PATCH v5 0/6] Introduce intel_skl_int3472
-module" which doesn't have any explanatory text as to what it's doing in
-the cover letter (just an inter version changelog) nor any obvious
-relevance to this series, are you sure that's the right link?  In
-general it's best if your patch series contains enough explanatory
-information to allow someone to have a reasonable idea what the series
-does without having to follow links like this.
+This appears to be sorted with regulator drivers but as far as I
+understand it this is not a driver?  I'd put it next to the OF file.
 
-> This series is a prototype of an emulation of the device tree regulator
-> initialisation and lookup functions, using software nodes. Software nodes
+> @@ -1785,6 +1788,22 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
 
-What is a software node and why would we want to use one here?
+The line numbers here look off...
 
-> relating to each regulator are registered as children of the TPS68470's A=
-CPI
-> firmware node. Those regulators have properties describing their constrai=
-nts
-> (for example "regulator-min-microvolt"). Similarly, software nodes are
-> registered and assigned as secondary to the Camera's firmware node - these
-> software nodes have reference properties named after the supply in the sa=
-me
-> way as device tree's phandles, for example "avdd-supply", and linking to =
-the
-> software node assigned to the appropriate regulator. We can then use those
-> constraints to specify the appropriate voltages and the references to all=
-ow the
-> camera drivers to look up the correct regulator device.=20
+> +++ b/drivers/regulator/swnode_regulator.c
+> @@ -0,0 +1,111 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Author: Dan Scally <djrscally@gmail.com> */
+> +
 
-So these systems lack an enumerable description of the system provided
-by hardware or firmware (or given that these are ACPI systems I guess
-the firmware description is just broken) so we need to use board files.
-Why are we not just using board files, what does this new abstraction
-solve?
+Please make the entire comment a C++ one so things look more
+intentional.
 
-> I'm posting this to see if people agree it's a good approach for tackling=
- the=20
-> problem; I may be overthinking this and there's a much easier way that I =
-should
+> +static struct fwnode_handle *
+> +regulator_swnode_get_init_node(struct fwnode_handle *fwnode,
+> +			       const struct regulator_desc *desc)
+> +{
+> +	const struct software_node *parent, *child;
+> +
+> +	parent = to_software_node(fwnode->secondary);
+> +
+> +	if (desc->regulators_node)
+> +		child = software_node_find_by_name(parent,
+> +						   desc->regulators_node);
+> +	else
+> +		child = software_node_find_by_name(parent, desc->name);
+> +
+> +	return software_node_fwnode(child);
+> +}
 
-I don't think I understand what the problem you are trying to solve is
-so it's hard to say if this is a good approach to solving it.
+Nothing is documenting what the binding for these swnodes is supposed to
+be so it's hard to tell if any of this is correct and makes sense, nor
+how someone is supposed to take this stuff and integrate it into a
+system.  I think this needs some more explicit documentation of what's
+going on adding to the tree, this will help with review and help anyone
+who needs to use this stuff figure out how to do so.
 
---E/DnYTRukya0zdZ1
+--SNIs70sCzqvszXB4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDogZoACgkQJNaLcl1U
-h9ANAQf+M9TONsSRsQlmFBCA2aVGotSOwxvK2eI+A5nP2zHCa4CxUR10Y1P80SvC
-iPCQxqN2JO0E3jgcMgbXubCMN38zqMGKDVY1EQ9J4l8iChUdwshdGqjIRAy1Xtib
-d2QWqJ2ucO6fjzPfFh5SB9nbPCI23nOipXuPmu7Cz3qWCGj3otBwPHSf51mLRdbV
-vzO5L1KV2DAxcJ5vhP1TUZLWvOfbhgeAxYoLXrLdK/lchq0bcthknQt2Ml64b9CF
-UgzbKV0hDjRKcUsatCD9VMqp5UBVIgjFzf9+pVN1Ad1pT5RZR/ZbMS2BThys5y5A
-jsdef9OYk/m9QNn6TRIhW3dEtKSFXw==
-=2klv
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDohtYACgkQJNaLcl1U
+h9CaHQf9Edt3jgRyz64Jm4Y5r8Skn4xhgKSAiteLjulAe+KgRAPsBgrRwAd3sqbf
+5PWZ7hkFBUC7w3XEyuZgDrf38n7cS8G2bREIriH+yjxsvTQY3HhgmUEDokKooVei
+LP1xvCIefyjnraWftsrUvXu61WgqgkuSEJZukhR8e71XbmSIpLNfZ5o2mMZkgfpJ
++F66ARC2BoWZCsEfG4xbeJz21X8odvNIcDmgxegLuYeaTVx4gusike8N8tE1rp/T
+WQ064w0XnZVrcYs+u8eCHzXJOBbiLV7aDO8hs9xnsMHYWUIDFRyWYFZzUY8eJzUG
+g5fKXBObe504GP1a6iS+RndCQzULyQ==
+=agHe
 -----END PGP SIGNATURE-----
 
---E/DnYTRukya0zdZ1--
+--SNIs70sCzqvszXB4--
