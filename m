@@ -2,94 +2,123 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9841C07E99
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 02:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BDEC07E99
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F7E6145E
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 02:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A2161249
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  9 Jul 2021 17:05:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230453AbhGICqZ (ORCPT
+        id S229546AbhGIRHo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 8 Jul 2021 22:46:25 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36767 "EHLO mga01.intel.com"
+        Fri, 9 Jul 2021 13:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230336AbhGICqZ (ORCPT
+        id S229503AbhGIRHo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 8 Jul 2021 22:46:25 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10039"; a="231399821"
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="231399821"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 19:43:42 -0700
-X-IronPort-AV: E=Sophos;i="5.84,225,1620716400"; 
-   d="scan'208";a="564861698"
-Received: from npujari-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.213.167.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2021 19:43:41 -0700
-Subject: Re: [PATCH v2 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>
-References: <20210707204249.3046665-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210707204249.3046665-6-sathyanarayanan.kuppuswamy@linux.intel.com>
- <CAPcyv4h8SaVL_QGLv1DT0JuoyKmSBvxJQw0aamMuzarexaU7VA@mail.gmail.com>
- <24d8fd58-36c1-0e89-4142-28f29e2c434b@linux.intel.com>
- <CAPcyv4heA8gps2K_ckUV1gGJdjGeB+5dOSntS=TREEX5-0rtwQ@mail.gmail.com>
- <4972fc1a-1ffb-2b6d-e764-471210df96a3@linux.intel.com>
- <CAPcyv4gwsT4rJzemkofk6SP5cAp9=nr5T6vtu+i6wTbU91R_Bg@mail.gmail.com>
- <ca608162-2a48-0816-4302-c2a5b2766a7a@linux.intel.com>
- <CAPcyv4jPqv43Hh836bpDUwMYAsPHDrjUhXoJ0Ufgjbqc3h2eyQ@mail.gmail.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4b22be93-a401-6b96-48e1-18a71a6a17bc@linux.intel.com>
-Date:   Thu, 8 Jul 2021 19:43:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Fri, 9 Jul 2021 13:07:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A269611B0;
+        Fri,  9 Jul 2021 17:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625850300;
+        bh=3MIvlgM7Pep+oN8czuF6Ie0rH7/jYQOo7WsCFv5z/AE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BQ74sLgCunCPF+x5zXhF8b47XY0e5wrs7r20dQ4aLBwjJP3+79OWzgW/BJIEhGPOU
+         GF/teFKTIFqw0bWo6+stC0HoTXfA40FXwKfVEKAfOAs5CQ/iq0ixnfWZUHQMzFYZbS
+         Q29gOCi9bL8VGc4lg/eTTksV3eej6ZbjM24wAWLs1seHK5ehzyt83ChJgNxzDV5L/w
+         vY49fHpDDH0q1VZey/KRlqdzXDjDa6k0JksYh9c8VtfpfMCeawt5HMs8alihIlkCoS
+         Lu85dswNOO0j6+sYkSpj2TUpZg7jXI7jRSkUzpOaQexG77h79xmd0NiwUwNnBlsYgR
+         hF4LGb79kND/w==
+Date:   Fri, 9 Jul 2021 18:04:26 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, lgirdwood@gmail.com,
+        andy.shevchenko@gmail.com, laurent.pinchart@ideasonboard.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+Message-ID: <20210709170426.GC4112@sirena.org.uk>
+References: <20210708224226.457224-1-djrscally@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jPqv43Hh836bpDUwMYAsPHDrjUhXoJ0Ufgjbqc3h2eyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+Content-Disposition: inline
+In-Reply-To: <20210708224226.457224-1-djrscally@gmail.com>
+X-Cookie: This fortune intentionally left blank.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
+--E/DnYTRukya0zdZ1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 7/8/21 7:04 PM, Dan Williams wrote:
-> Ok, not my first choice for how to handle the allocation side of that,
-> but not broken.
-> 
-> I'd still feel better if there was an actual data structure assigned
-> to file->private_data rather than using that 'void *' pointer directly
-> and casting throughout the driver.
+On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
 
-We can add a data structure if we have more member requirements. Currently
-we only need to pass the memory pointer. But after moving memory allocation
-to init code (even for vmap), we may not need to use this private pointer.
+> See previous series for some background context [1]
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+That's a link to a series "[PATCH v5 0/6] Introduce intel_skl_int3472
+module" which doesn't have any explanatory text as to what it's doing in
+the cover letter (just an inter version changelog) nor any obvious
+relevance to this series, are you sure that's the right link?  In
+general it's best if your patch series contains enough explanatory
+information to allow someone to have a reasonable idea what the series
+does without having to follow links like this.
+
+> This series is a prototype of an emulation of the device tree regulator
+> initialisation and lookup functions, using software nodes. Software nodes
+
+What is a software node and why would we want to use one here?
+
+> relating to each regulator are registered as children of the TPS68470's A=
+CPI
+> firmware node. Those regulators have properties describing their constrai=
+nts
+> (for example "regulator-min-microvolt"). Similarly, software nodes are
+> registered and assigned as secondary to the Camera's firmware node - these
+> software nodes have reference properties named after the supply in the sa=
+me
+> way as device tree's phandles, for example "avdd-supply", and linking to =
+the
+> software node assigned to the appropriate regulator. We can then use those
+> constraints to specify the appropriate voltages and the references to all=
+ow the
+> camera drivers to look up the correct regulator device.=20
+
+So these systems lack an enumerable description of the system provided
+by hardware or firmware (or given that these are ACPI systems I guess
+the firmware description is just broken) so we need to use board files.
+Why are we not just using board files, what does this new abstraction
+solve?
+
+> I'm posting this to see if people agree it's a good approach for tackling=
+ the=20
+> problem; I may be overthinking this and there's a much easier way that I =
+should
+
+I don't think I understand what the problem you are trying to solve is
+so it's hard to say if this is a good approach to solving it.
+
+--E/DnYTRukya0zdZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDogZoACgkQJNaLcl1U
+h9ANAQf+M9TONsSRsQlmFBCA2aVGotSOwxvK2eI+A5nP2zHCa4CxUR10Y1P80SvC
+iPCQxqN2JO0E3jgcMgbXubCMN38zqMGKDVY1EQ9J4l8iChUdwshdGqjIRAy1Xtib
+d2QWqJ2ucO6fjzPfFh5SB9nbPCI23nOipXuPmu7Cz3qWCGj3otBwPHSf51mLRdbV
+vzO5L1KV2DAxcJ5vhP1TUZLWvOfbhgeAxYoLXrLdK/lchq0bcthknQt2Ml64b9CF
+UgzbKV0hDjRKcUsatCD9VMqp5UBVIgjFzf9+pVN1Ad1pT5RZR/ZbMS2BThys5y5A
+jsdef9OYk/m9QNn6TRIhW3dEtKSFXw==
+=2klv
+-----END PGP SIGNATURE-----
+
+--E/DnYTRukya0zdZ1--
