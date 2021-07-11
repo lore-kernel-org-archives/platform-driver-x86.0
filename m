@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF6AC07E9E
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 01:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC56C07E9B
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 01:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FCB061374
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 01:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D461361185
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 01:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhGKB12 (ORCPT
+        id S231630AbhGKB1c (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 10 Jul 2021 21:27:28 -0400
+        Sat, 10 Jul 2021 21:27:32 -0400
 Received: from mga09.intel.com ([134.134.136.24]:35491 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231140AbhGKB11 (ORCPT
+        id S231140AbhGKB1b (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 10 Jul 2021 21:27:27 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10041"; a="209819771"
+        Sat, 10 Jul 2021 21:27:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10041"; a="209819783"
 X-IronPort-AV: E=Sophos;i="5.84,230,1620716400"; 
-   d="scan'208";a="209819771"
+   d="scan'208";a="209819783"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2021 18:24:41 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2021 18:24:45 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,230,1620716400"; 
-   d="scan'208";a="567281862"
+   d="scan'208";a="567281871"
 Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2021 18:24:40 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 10 Jul 2021 18:24:45 -0700
 From:   Gayatri Kammela <gayatri.kammela@intel.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
@@ -42,9 +42,9 @@ Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
         Alexander.Deucher@amd.com, mlimonci@amd.com,
         Gayatri Kammela <gayatri.kammela@intel.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v4 1/5] platform/x86/intel: intel_pmc_core: Move intel_pmc_core* files to pmc subfolder
-Date:   Sat, 10 Jul 2021 18:21:40 -0700
-Message-Id: <a5221897fa451e5f1cd3657e7025ecd3e8f96d96.1625965477.git.gayatri.kammela@intel.com>
+Subject: [PATCH v4 3/5] platform/x86/intel: pmc/core: Add Latency Tolerance Reporting (LTR) support to Alder Lake
+Date:   Sat, 10 Jul 2021 18:21:42 -0700
+Message-Id: <d4e43550641b9a55e863ced398df27ba6d2193bc.1625965477.git.gayatri.kammela@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1625965476.git.gayatri.kammela@intel.com>
 References: <cover.1625965476.git.gayatri.kammela@intel.com>
@@ -54,161 +54,98 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-As part of collecting Intel x86 specific drivers in their own
-folder, move intel_pmc_core* files to its own subfolder there.
+Add support to show the Latency Tolerance Reporting for the IPs on
+the Alder Lake PCH as reported by the PMC. This LTR support on
+Alder Lake is slightly different from the Cannon lake PCH that is being
+reused by all platforms till Tiger Lake.
 
 Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: David Box <david.e.box@intel.com>
-Cc: You-Sheng Yang <vicamo.yang@canonical.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: You-Sheng Yang <vicamo.yang@canonical.com>
 Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
 ---
- drivers/platform/x86/Kconfig                  | 21 ------------------
- drivers/platform/x86/Makefile                 |  1 -
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  1 +
- drivers/platform/x86/intel/pmc/Kconfig        | 22 +++++++++++++++++++
- drivers/platform/x86/intel/pmc/Makefile       |  5 +++++
- .../{intel_pmc_core.c => intel/pmc/core.c}    |  2 +-
- .../{intel_pmc_core.h => intel/pmc/core.h}    |  0
- .../pmc/pltdrv.c}                             |  0
- 9 files changed, 30 insertions(+), 23 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
- create mode 100644 drivers/platform/x86/intel/pmc/Makefile
- rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/core.c} (99%)
- rename drivers/platform/x86/{intel_pmc_core.h => intel/pmc/core.h} (100%)
- rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pltdrv.c} (100%)
+ drivers/platform/x86/intel/pmc/core.c | 39 +++++++++++++++++++++++++++
+ drivers/platform/x86/intel/pmc/core.h |  2 ++
+ 2 files changed, 41 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7d385c3b2239..cae72922f448 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1184,27 +1184,6 @@ config INTEL_MRFLD_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_mrfld_pwrbtn.
- 
--config INTEL_PMC_CORE
--	tristate "Intel PMC Core driver"
--	depends on PCI
--	depends on ACPI
--	help
--	  The Intel Platform Controller Hub for Intel Core SoCs provides access
--	  to Power Management Controller registers via various interfaces. This
--	  driver can utilize debugging capabilities and supported features as
--	  exposed by the Power Management Controller. It also may perform some
--	  tasks in the PMC in order to enable transition into the SLPS0 state.
--	  It should be selected on all Intel platforms supported by the driver.
--
--	  Supported features:
--		- SLP_S0_RESIDENCY counter
--		- PCH IP Power Gating status
--		- LTR Ignore / LTR Show
--		- MPHY/PLL gating status (Sunrisepoint PCH only)
--		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
--		- Low Power Mode registers (Tigerlake and beyond)
--		- PMC quirks as needed to enable SLPS0/S0ix
--
- config INTEL_PMT_CLASS
- 	tristate
- 	help
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 7ee369aab10d..43d36f8c36f1 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -128,7 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
- obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
- obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
--obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= intel_pmt_class.o
- obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= intel_pmt_telemetry.o
- obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= intel_pmt_crashlog.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index f2eef337eb98..8ca021785f67 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -18,5 +18,6 @@ if X86_PLATFORM_DRIVERS_INTEL
- 
- source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
-+source "drivers/platform/x86/intel/pmc/Kconfig"
- 
- endif # X86_PLATFORM_DRIVERS_INTEL
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 0653055942d5..49962f4dfdec 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -6,3 +6,4 @@
- 
- obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
-+obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-new file mode 100644
-index 000000000000..b4c955a35674
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+config INTEL_PMC_CORE
-+	tristate "Intel PMC Core driver"
-+	depends on PCI
-+	depends on ACPI
-+	help
-+	  The Intel Platform Controller Hub for Intel Core SoCs provides access
-+	  to Power Management Controller registers via various interfaces. This
-+	  driver can utilize debugging capabilities and supported features as
-+	  exposed by the Power Management Controller. It also may perform some
-+	  tasks in the PMC in order to enable transition into the SLPS0 state.
-+	  It should be selected on all Intel platforms supported by the driver.
-+
-+	  Supported features:
-+		- SLP_S0_RESIDENCY counter
-+		- PCH IP Power Gating status
-+		- LTR Ignore / LTR Show
-+		- MPHY/PLL gating status (Sunrisepoint PCH only)
-+		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
-+		- Low Power Mode registers (Tigerlake and beyond)
-+		- PMC quirks as needed to enable SLPS0/S0ix
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-new file mode 100644
-index 000000000000..e0182e10a035
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+
-+obj-$(CONFIG_INTEL_PMC_CORE)	+= core.o
-+obj-$(CONFIG_INTEL_PMC_CORE)	+= pltdrv.o
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel/pmc/core.c
-similarity index 99%
-rename from drivers/platform/x86/intel_pmc_core.c
-rename to drivers/platform/x86/intel/pmc/core.c
-index b0e486a6bdfb..f9de78b08e5d 100644
---- a/drivers/platform/x86/intel_pmc_core.c
+diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+index d4be15897d04..f2646fdf6c90 100644
+--- a/drivers/platform/x86/intel/pmc/core.c
 +++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -31,7 +31,7 @@
- #include <asm/msr.h>
- #include <asm/tsc.h>
+@@ -699,10 +699,48 @@ static const struct pmc_bit_map *ext_adl_pfear_map[] = {
+ 	NULL
+ };
  
--#include "intel_pmc_core.h"
-+#include "core.h"
++static const struct pmc_bit_map adl_ltr_show_map[] = {
++	{"SOUTHPORT_A",		CNP_PMC_LTR_SPA},
++	{"SOUTHPORT_B",		CNP_PMC_LTR_SPB},
++	{"SATA",		CNP_PMC_LTR_SATA},
++	{"GIGABIT_ETHERNET",	CNP_PMC_LTR_GBE},
++	{"XHCI",		CNP_PMC_LTR_XHCI},
++	{"SOUTHPORT_F",		ADL_PMC_LTR_SPF},
++	{"ME",			CNP_PMC_LTR_ME},
++	/* EVA is Enterprise Value Add, doesn't really exist on PCH */
++	{"SATA1",		CNP_PMC_LTR_EVA},
++	{"SOUTHPORT_C",		CNP_PMC_LTR_SPC},
++	{"HD_AUDIO",		CNP_PMC_LTR_AZ},
++	{"CNV",			CNP_PMC_LTR_CNV},
++	{"LPSS",		CNP_PMC_LTR_LPSS},
++	{"SOUTHPORT_D",		CNP_PMC_LTR_SPD},
++	{"SOUTHPORT_E",		CNP_PMC_LTR_SPE},
++	{"SATA2",		CNP_PMC_LTR_CAM},
++	{"ESPI",		CNP_PMC_LTR_ESPI},
++	{"SCC",			CNP_PMC_LTR_SCC},
++	{"ISH",			CNP_PMC_LTR_ISH},
++	{"UFSX2",		CNP_PMC_LTR_UFSX2},
++	{"EMMC",		CNP_PMC_LTR_EMMC},
++	/*
++	 * Check intel_pmc_core_ids[] users of cnp_reg_map for
++	 * a list of core SoCs using this.
++	 */
++	{"WIGIG",		ICL_PMC_LTR_WIGIG},
++	{"THC0",		TGL_PMC_LTR_THC0},
++	{"THC1",		TGL_PMC_LTR_THC1},
++	{"SOUTHPORT_G",		CNP_PMC_LTR_RESERVED},
++
++	/* Below two cannot be used for LTR_IGNORE */
++	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
++	{"AGGREGATED_SYSTEM",	CNP_PMC_LTR_CUR_ASLT},
++	{}
++};
++
+ static const struct pmc_reg_map adl_reg_map = {
+ 	.pfear_sts = ext_adl_pfear_map,
+ 	.slp_s0_offset = ADL_PMC_SLP_S0_RES_COUNTER_OFFSET,
+ 	.slp_s0_res_counter_step = TGL_PMC_SLP_S0_RES_COUNTER_STEP,
++	.ltr_show_sts = adl_ltr_show_map,
+ 	.msr_sts = msr_map,
+ 	.ltr_ignore_offset = CNP_PMC_LTR_IGNORE_OFFSET,
+ 	.regmap_length = CNP_PMC_MMIO_REG_LEN,
+@@ -710,6 +748,7 @@ static const struct pmc_reg_map adl_reg_map = {
+ 	.ppfear_buckets = CNP_PPFEAR_NUM_ENTRIES,
+ 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
+ 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
++	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
+ };
  
- #define ACPI_S0IX_DSM_UUID		"57a6512e-3979-4e9d-9708-ff13b2508972"
- #define ACPI_GET_LOW_MODE_REGISTERS	1
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel/pmc/core.h
-similarity index 100%
-rename from drivers/platform/x86/intel_pmc_core.h
-rename to drivers/platform/x86/intel/pmc/core.h
-diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel/pmc/pltdrv.c
-similarity index 100%
-rename from drivers/platform/x86/intel_pmc_core_pltdrv.c
-rename to drivers/platform/x86/intel/pmc/pltdrv.c
+ static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
+diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+index c0ca20b32c6b..45b352ece6db 100644
+--- a/drivers/platform/x86/intel/pmc/core.h
++++ b/drivers/platform/x86/intel/pmc/core.h
+@@ -197,6 +197,8 @@ enum ppfear_regs {
+ #define TGL_NUM_IP_IGN_ALLOWED			23
+ #define TGL_PMC_LPM_RES_COUNTER_STEP_X2		61	/* 30.5us * 2 */
+ 
++#define ADL_PMC_LTR_SPF				0x1C00
++#define ADL_NUM_IP_IGN_ALLOWED			23
+ #define ADL_PMC_SLP_S0_RES_COUNTER_OFFSET	0x1098
+ 
+ /*
 -- 
 2.25.1
 
