@@ -2,142 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F28CC07E96
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 09:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D30CC07E96
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 16:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA4761279
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 09:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10764610CD
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 11 Jul 2021 16:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbhGKJkN (ORCPT
+        id S229801AbhGKQ71 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 11 Jul 2021 05:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
+        Sun, 11 Jul 2021 12:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbhGKJkN (ORCPT
+        with ESMTP id S229660AbhGKQ71 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 11 Jul 2021 05:40:13 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E957C0613DD;
-        Sun, 11 Jul 2021 02:37:26 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id a2so14881876pgi.6;
-        Sun, 11 Jul 2021 02:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AyADryaaKYb3XAJJutH0DbN4r3ZI4tbb2wHJF+sttgU=;
-        b=W/H/7C0Ak3Jx02rZBj1OXQxYsjcjKGTztXrp+V5BRx+YB0vgdM6WxpPTU2p3GKN9Sv
-         0PrKzwocabO3OVacDUdkqlzjgQ5hAY2D8oHPrqSuNBUpB9OkLiXRGNoXLrEZi5b/Ja2q
-         htNBG/Mx4xOSbB0M/Y8VpP+3FKHtsq3BB/+ijJ5gJ7bh+M/pdEEpEqIGVh5qqxPx/AjY
-         X3+tM/zG+7RPfRj2s2eBJrOcz/UWCl9XOprR0du8efIiusbz6bR+xK0Ir7RqjLrCj72V
-         7dnBX5z7SqTWU1SokqpFVPIa7ZYkuj8xH8dT0MX0QFHcuAxWpJvrJpe/b++cCbjSK08M
-         04ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AyADryaaKYb3XAJJutH0DbN4r3ZI4tbb2wHJF+sttgU=;
-        b=oP2hsI2br2540X14ZJGndv4Mky/9G4MaGzhOkLOl81RDT01BhscifPKmuN9GDrTNmL
-         il8BFg5pC8/yZ0LtBXWWvVZC6hEGmkUYpvPUjSbSjg/JQ/2KuSkw+tyyUn7gxbsC1uzl
-         Cmb959CxtbGHZ6EZuKK3k6fUXwyby6IuBWXoCKx0ZzDbxgZ9CgvzpM/917B4iRUQoW4e
-         iWlmUgG1prIGOTlLi3kTkf3rpUKwEY0ommxszxfMRGzagua2vk+NGWZ1KNjohAwWVtPx
-         j8j/8Db8KmnRZ7RjIPVqxREbvQuoxfooBnMIgeJhQdCmVqBEKXliyPVVm61jNeFEbbX3
-         2ecg==
-X-Gm-Message-State: AOAM533PaBseNGHQ01bewjEtvtK7YVK173FyPGCpd5qp6HdFxqSoEnPu
-        2v/i74qAtoO5EAnWi/fMRnQFKivwRdDdAfDD18c=
-X-Google-Smtp-Source: ABdhPJy/GzHGpUoIcFb9z2sihphy2dHy8FVvpfWYgU/TXe2xy04Z/o5yaDVp9rMIhcP/NE6xaKN6PMjRG9dOcxT0ynQ=
-X-Received: by 2002:a63:f609:: with SMTP id m9mr47774568pgh.74.1625996245771;
- Sun, 11 Jul 2021 02:37:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210708224226.457224-1-djrscally@gmail.com> <20210709170426.GC4112@sirena.org.uk>
-In-Reply-To: <20210709170426.GC4112@sirena.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 11 Jul 2021 12:37:03 +0300
-Message-ID: <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+        Sun, 11 Jul 2021 12:59:27 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 073EFC0613DD;
+        Sun, 11 Jul 2021 09:56:40 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D8625CC;
+        Sun, 11 Jul 2021 18:56:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1626022598;
+        bh=OAV9028X7mooFx38v1481CRNJKaYwJ6Njdf6WbNJJ6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aQS/Akx5nj/Qr995P43WPtUrHuQ5ch4efl+rkYUEpHr2pJn9CQQLaHh8PHRIZnplm
+         odqkuKoYaHhj2b75Jddda6S3aRwBfggjh8mdNtyIVaE66LChAzkT4KKKNelSqTiDOi
+         n1/1suVJjajgcov4gYKYIY/uT1UmfzcasnTd0FZg=
+Date:   Sun, 11 Jul 2021 19:55:52 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        andy.shevchenko@gmail.com, kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, luzmaximilian@gmail.com,
-        lgirdwood@gmail.com, laurent.pinchart@ideasonboard.com,
-        kieran.bingham@ideasonboard.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <YOsimBVS/mElfiA7@pendragon.ideasonboard.com>
+References: <20210708224226.457224-1-djrscally@gmail.com>
+ <YOofAUshZQBPsBR0@pendragon.ideasonboard.com>
+ <4381a32a-e6ca-a456-887d-6b343182aed4@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4381a32a-e6ca-a456-887d-6b343182aed4@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 9, 2021 at 8:05 PM Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
+Hi Dan,
 
-> > This series is a prototype of an emulation of the device tree regulator
-> > initialisation and lookup functions, using software nodes. Software nodes
->
-> What is a software node and why would we want to use one here?
+On Sat, Jul 10, 2021 at 11:54:26PM +0100, Daniel Scally wrote:
+> On 10/07/2021 23:28, Laurent Pinchart wrote:
+> > On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
+> >> Hello all
+> >>
+> >> See previous series for some background context [1]
+> >>
+> >> Some x86 laptops with ACPI tables designed for Windows have a TPS68470
+> >> PMIC providing regulators and clocks to camera modules. The DSDT tables for
+> >> those cameras lack any power control methods, declaring only a
+> >> dependency on the ACPI device representing the TPS68470. This leaves the
+> >> regulator framework with no means of determining appropriate voltages for the
+> >> regulators provided by the PMIC, or of determining which regulators relate to
+> >> which of the sensor's requested supplies. 
+> >>
+> >> This series is a prototype of an emulation of the device tree regulator
+> >> initialisation and lookup functions, using software nodes. Software nodes
+> >> relating to each regulator are registered as children of the TPS68470's ACPI
+> >> firmware node. Those regulators have properties describing their constraints
+> >> (for example "regulator-min-microvolt"). Similarly, software nodes are
+> >> registered and assigned as secondary to the Camera's firmware node - these
+> >> software nodes have reference properties named after the supply in the same
+> >> way as device tree's phandles, for example "avdd-supply", and linking to the
+> >> software node assigned to the appropriate regulator. We can then use those
+> >> constraints to specify the appropriate voltages and the references to allow the
+> >> camera drivers to look up the correct regulator device. 
+> >>
+> >> Although not included in this series, I would plan to use a similar method for
+> >> linking the clocks provided by the TPS68470 to the sensor so that it can be
+> >> discovered too.
+> >>
+> >> I'm posting this to see if people agree it's a good approach for tackling the 
+> >> problem; I may be overthinking this and there's a much easier way that I should
+> >> be looking at instead. It will have knock-ons in the cio2-bridge code [2], as
+> >> that is adding software nodes to the same sensors to connect them to the media
+> >> graph. Similarly, is the board file an acceptable solution, or should we just
+> >> define the configuration for these devices (there's three orf our laptop models
+> >> in scope) in int3472-tps68470 instead?
+> >
+> > I may have missed something, but if you load the SGo2 board file, won't
+> > it create the regulator software nodes if it finds an INT3472,
+> > regardless of whether the device is an SGo2 ? If you happen to do so on
+> > a machine that requires different voltages, that sounds dangerous.
+> 
+> Ah, yes - hadn't thought of that. If a driver registered regulators with
+> those names, it would try to apply those voltages during registration.
+> Good point.
+> 
+> > Given that INT3472 models the virtual "Intel Skylake and Kabylake camera
+> > PMIC", I think moving device-specific information to the int3472 driver
+> > may make sense. I'm unsure what option is best though, having all the
+> > data (regulators, clocks, but also data currently stored in the
+> > cio2-bridge driver) in a single file (or a single file per machine) is
+> > tempting.
+> 
+> It is tempting, particularly because (assuming we do end up using this
+> approach) setting the references to the supplies in a board file like
+> this complicated the cio2-bridge code quite a bit, since it then needs
+> to extend the properties array against an already-existing software node
+> rather than registering a new one. But then, I don't particularly want
+> to handle that aspect of the problem in two separate places.
 
-Software node is a representation of (missed and / or quirked)
-firmware nodes in the code.
+If technically feasible, gathering all the data in a single place would
+be my preference. Whether that should take the form of software nodes in
+all cases, or be modelled as custom data that the int3472 driver would
+interpret to create the regulators and clocks is a different (but
+related) question.
 
-> Why are we not just using board files, what does this new abstraction
-> solve?
+The very important part is to ensure that the correct board data will be
+used, as otherwise we could damage the hardware.
 
-Software node _is_ a board file part. The idea behind that is that the
-driver, which requires any additional / necessary property that has
-been missed in the firmware nodes, wouldn't need special treatment if
-that property comes from a board file rather than firmware.
+> >> [1] https://lore.kernel.org/lkml/20210603224007.120560-1-djrscally@gmail.com/
+> >> [2] https://elixir.bootlin.com/linux/latest/source/drivers/media/pci/intel/ipu3/cio2-bridge.c#L166
+> >>
+> >>
+> >> Daniel Scally (2):
+> >>   regulator: Add support for software node connections
+> >>   platform/surface: Add Surface Go 2 board file
+> >>
+> >>  MAINTAINERS                                |   6 +
+> >>  drivers/platform/surface/Kconfig           |  10 ++
+> >>  drivers/platform/surface/Makefile          |   1 +
+> >>  drivers/platform/surface/surface_go_2.c    | 135 +++++++++++++++++++++
+> >>  drivers/regulator/Kconfig                  |   6 +
+> >>  drivers/regulator/Makefile                 |   1 +
+> >>  drivers/regulator/core.c                   |  23 ++++
+> >>  drivers/regulator/swnode_regulator.c       | 111 +++++++++++++++++
+> >>  include/linux/regulator/swnode_regulator.h |  33 +++++
+> >>  9 files changed, 326 insertions(+)
+> >>  create mode 100644 drivers/platform/surface/surface_go_2.c
+> >>  create mode 100644 drivers/regulator/swnode_regulator.c
+> >>  create mode 100644 include/linux/regulator/swnode_regulator.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-On Fri, Jul 9, 2021 at 8:05 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
->
-> > See previous series for some background context [1]
->
-> That's a link to a series "[PATCH v5 0/6] Introduce intel_skl_int3472
-> module" which doesn't have any explanatory text as to what it's doing in
-> the cover letter (just an inter version changelog) nor any obvious
-> relevance to this series, are you sure that's the right link?  In
-> general it's best if your patch series contains enough explanatory
-> information to allow someone to have a reasonable idea what the series
-> does without having to follow links like this.
->
-> > This series is a prototype of an emulation of the device tree regulator
-> > initialisation and lookup functions, using software nodes. Software nodes
->
-> What is a software node and why would we want to use one here?
->
-> > relating to each regulator are registered as children of the TPS68470's ACPI
-> > firmware node. Those regulators have properties describing their constraints
-> > (for example "regulator-min-microvolt"). Similarly, software nodes are
-> > registered and assigned as secondary to the Camera's firmware node - these
-> > software nodes have reference properties named after the supply in the same
-> > way as device tree's phandles, for example "avdd-supply", and linking to the
-> > software node assigned to the appropriate regulator. We can then use those
-> > constraints to specify the appropriate voltages and the references to allow the
-> > camera drivers to look up the correct regulator device.
->
-> So these systems lack an enumerable description of the system provided
-> by hardware or firmware (or given that these are ACPI systems I guess
-> the firmware description is just broken) so we need to use board files.
-> Why are we not just using board files, what does this new abstraction
-> solve?
->
-> > I'm posting this to see if people agree it's a good approach for tackling the
-> > problem; I may be overthinking this and there's a much easier way that I should
->
-> I don't think I understand what the problem you are trying to solve is
-> so it's hard to say if this is a good approach to solving it.
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Laurent Pinchart
