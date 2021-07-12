@@ -2,76 +2,177 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63522C07E99
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 10:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7F1C07E99
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 11:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E629601FE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 10:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2656861006
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 11:51:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235564AbhGLKQL (ORCPT
+        id S232548AbhGLLyR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 06:16:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:4281 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235108AbhGLKPz (ORCPT
+        Mon, 12 Jul 2021 07:54:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231224AbhGLLyQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 06:15:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10042"; a="209929068"
-X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="209929068"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 03:13:01 -0700
-X-IronPort-AV: E=Sophos;i="5.84,232,1620716400"; 
-   d="scan'208";a="429593435"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 03:12:57 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1m2svj-00Byl3-D6; Mon, 12 Jul 2021 13:12:51 +0300
-Date:   Mon, 12 Jul 2021 13:12:51 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Gayatri Kammela <gayatri.kammela@intel.com>
-Cc:     platform-driver-x86@vger.kernel.org, mgross@linux.intel.com,
-        hdegoede@redhat.com, irenic.rajneesh@gmail.com,
-        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
-        david.e.box@intel.com, linux-kernel@vger.kernel.org,
-        tamar.mashiah@intel.com, gregkh@linuxfoundation.org,
-        rajatja@google.com, Shyam-sundar.S-k@amd.com,
-        Alexander.Deucher@amd.com, mlimonci@amd.com
-Subject: Re: [PATCH v4 1/5] platform/x86/intel: intel_pmc_core: Move
- intel_pmc_core* files to pmc subfolder
-Message-ID: <YOwVo0tMJ/olJs1U@smile.fi.intel.com>
-References: <cover.1625965476.git.gayatri.kammela@intel.com>
- <a5221897fa451e5f1cd3657e7025ecd3e8f96d96.1625965477.git.gayatri.kammela@intel.com>
+        Mon, 12 Jul 2021 07:54:16 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F90C0613DD;
+        Mon, 12 Jul 2021 04:51:28 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7E848CC;
+        Mon, 12 Jul 2021 13:51:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1626090686;
+        bh=7TcVQ4yh3dSbP0vuHCvcjaY/7cRXY8pWIiND8ayoUF0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=doekmjL5WH0N/tRcYMRHt0rJKXOCYcDSHIpiCHUXKsUpGJojV3RZCjzgu6+io6WcP
+         Wac8tVeCvZ2K/urUJ1sTHNq4EiqdLXnAvQ0gigdmvFq7crmBvHyq2fHMhtvJXnOVTO
+         5GETnhJLoxqNOmMaTUYOikURtpt8R9hxNpFD+/7I=
+Date:   Mon, 12 Jul 2021 14:50:40 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Daniel Scally <djrscally@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        hdegoede@redhat.com, mgross@linux.intel.com,
+        luzmaximilian@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        andy.shevchenko@gmail.com, kieran.bingham@ideasonboard.com
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+Message-ID: <YOwskGqqOZnwZWy5@pendragon.ideasonboard.com>
+References: <20210708224226.457224-1-djrscally@gmail.com>
+ <YOofAUshZQBPsBR0@pendragon.ideasonboard.com>
+ <4381a32a-e6ca-a456-887d-6b343182aed4@gmail.com>
+ <YOsimBVS/mElfiA7@pendragon.ideasonboard.com>
+ <1944291d-1486-fe7f-376b-fe3250ee6b7d@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a5221897fa451e5f1cd3657e7025ecd3e8f96d96.1625965477.git.gayatri.kammela@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1944291d-1486-fe7f-376b-fe3250ee6b7d@gmail.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jul 10, 2021 at 06:21:40PM -0700, Gayatri Kammela wrote:
-> As part of collecting Intel x86 specific drivers in their own
-> folder, move intel_pmc_core* files to its own subfolder there.
+Hi Dan,
 
+On Mon, Jul 12, 2021 at 09:13:00AM +0100, Daniel Scally wrote:
+> On 11/07/2021 17:55, Laurent Pinchart wrote:
+> > On Sat, Jul 10, 2021 at 11:54:26PM +0100, Daniel Scally wrote:
+> >> On 10/07/2021 23:28, Laurent Pinchart wrote:
+> >>> On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
+> >>>> Hello all
+> >>>>
+> >>>> See previous series for some background context [1]
+> >>>>
+> >>>> Some x86 laptops with ACPI tables designed for Windows have a TPS68470
+> >>>> PMIC providing regulators and clocks to camera modules. The DSDT tables for
+> >>>> those cameras lack any power control methods, declaring only a
+> >>>> dependency on the ACPI device representing the TPS68470. This leaves the
+> >>>> regulator framework with no means of determining appropriate voltages for the
+> >>>> regulators provided by the PMIC, or of determining which regulators relate to
+> >>>> which of the sensor's requested supplies. 
+> >>>>
+> >>>> This series is a prototype of an emulation of the device tree regulator
+> >>>> initialisation and lookup functions, using software nodes. Software nodes
+> >>>> relating to each regulator are registered as children of the TPS68470's ACPI
+> >>>> firmware node. Those regulators have properties describing their constraints
+> >>>> (for example "regulator-min-microvolt"). Similarly, software nodes are
+> >>>> registered and assigned as secondary to the Camera's firmware node - these
+> >>>> software nodes have reference properties named after the supply in the same
+> >>>> way as device tree's phandles, for example "avdd-supply", and linking to the
+> >>>> software node assigned to the appropriate regulator. We can then use those
+> >>>> constraints to specify the appropriate voltages and the references to allow the
+> >>>> camera drivers to look up the correct regulator device. 
+> >>>>
+> >>>> Although not included in this series, I would plan to use a similar method for
+> >>>> linking the clocks provided by the TPS68470 to the sensor so that it can be
+> >>>> discovered too.
+> >>>>
+> >>>> I'm posting this to see if people agree it's a good approach for tackling the 
+> >>>> problem; I may be overthinking this and there's a much easier way that I should
+> >>>> be looking at instead. It will have knock-ons in the cio2-bridge code [2], as
+> >>>> that is adding software nodes to the same sensors to connect them to the media
+> >>>> graph. Similarly, is the board file an acceptable solution, or should we just
+> >>>> define the configuration for these devices (there's three orf our laptop models
+> >>>> in scope) in int3472-tps68470 instead?
+> >>>
+> >>> I may have missed something, but if you load the SGo2 board file, won't
+> >>> it create the regulator software nodes if it finds an INT3472,
+> >>> regardless of whether the device is an SGo2 ? If you happen to do so on
+> >>> a machine that requires different voltages, that sounds dangerous.
+> >>
+> >> Ah, yes - hadn't thought of that. If a driver registered regulators with
+> >> those names, it would try to apply those voltages during registration.
+> >> Good point.
+> >>
+> >>> Given that INT3472 models the virtual "Intel Skylake and Kabylake camera
+> >>> PMIC", I think moving device-specific information to the int3472 driver
+> >>> may make sense. I'm unsure what option is best though, having all the
+> >>> data (regulators, clocks, but also data currently stored in the
+> >>> cio2-bridge driver) in a single file (or a single file per machine) is
+> >>> tempting.
+> >>
+> >> It is tempting, particularly because (assuming we do end up using this
+> >> approach) setting the references to the supplies in a board file like
+> >> this complicated the cio2-bridge code quite a bit, since it then needs
+> >> to extend the properties array against an already-existing software node
+> >> rather than registering a new one. But then, I don't particularly want
+> >> to handle that aspect of the problem in two separate places.
+> >
+> > If technically feasible, gathering all the data in a single place would
+> > be my preference. Whether that should take the form of software nodes in
+> > all cases, or be modelled as custom data that the int3472 driver would
+> > interpret to create the regulators and clocks is a different (but
+> > related) question.
+> 
+> I'll have to think on that one then; the problem there is that the
+> cio2-bridge is just given ACPI HIDs for the sensors as "ok to parse
+> this", and of course the INT347A that is being dealt with here should
+> already be supported on most Surface platforms via the intel-skl-int3472
+> stuff, so once the ov8865 edits are (posted and) accepted and that
+> driver is supported my plan would be to add it into the bridge. So we'd
+> need a way to exclude Go2 from that if we wanted to define all the
+> software nodes parts in a single board file instead.
+> 
+> > The very important part is to ensure that the correct board data will be
+> > used, as otherwise we could damage the hardware.
+> 
+> Not sure how this is usually guarded against; we could do a DMI match at
+> the start of the init function to confirm it's running on a Go2 and exit
+> if not?
 
->  drivers/platform/x86/Kconfig                  | 21 ------------------
->  drivers/platform/x86/Makefile                 |  1 -
->  drivers/platform/x86/intel/Kconfig            |  1 +
->  drivers/platform/x86/intel/Makefile           |  1 +
->  drivers/platform/x86/intel/pmc/Kconfig        | 22 +++++++++++++++++++
->  drivers/platform/x86/intel/pmc/Makefile       |  5 +++++
+Unless the information is available in ACPI properties that the CIO2
+bridge driver can access (and I wouldn't be surprised if it was the case
+in some way, there's are different IDs that we're not sure how to use,
+the Windows driver may very well map them to a set of reference
+designs), then a DMI match is likely the best option.
 
-Missed MAINTAINERS.
+> >>>> [1] https://lore.kernel.org/lkml/20210603224007.120560-1-djrscally@gmail.com/
+> >>>> [2] https://elixir.bootlin.com/linux/latest/source/drivers/media/pci/intel/ipu3/cio2-bridge.c#L166
+> >>>>
+> >>>>
+> >>>> Daniel Scally (2):
+> >>>>   regulator: Add support for software node connections
+> >>>>   platform/surface: Add Surface Go 2 board file
+> >>>>
+> >>>>  MAINTAINERS                                |   6 +
+> >>>>  drivers/platform/surface/Kconfig           |  10 ++
+> >>>>  drivers/platform/surface/Makefile          |   1 +
+> >>>>  drivers/platform/surface/surface_go_2.c    | 135 +++++++++++++++++++++
+> >>>>  drivers/regulator/Kconfig                  |   6 +
+> >>>>  drivers/regulator/Makefile                 |   1 +
+> >>>>  drivers/regulator/core.c                   |  23 ++++
+> >>>>  drivers/regulator/swnode_regulator.c       | 111 +++++++++++++++++
+> >>>>  include/linux/regulator/swnode_regulator.h |  33 +++++
+> >>>>  9 files changed, 326 insertions(+)
+> >>>>  create mode 100644 drivers/platform/surface/surface_go_2.c
+> >>>>  create mode 100644 drivers/regulator/swnode_regulator.c
+> >>>>  create mode 100644 include/linux/regulator/swnode_regulator.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Laurent Pinchart
