@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BEFC07E99
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 19:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF130C07E9C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 19:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9CD6120A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 19:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9764C6120A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 19:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236160AbhGLTRq (ORCPT
+        id S234805AbhGLTU7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 15:17:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36524 "EHLO
+        Mon, 12 Jul 2021 15:20:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43477 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234343AbhGLTRp (ORCPT
+        by vger.kernel.org with ESMTP id S236357AbhGLTU6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 15:17:45 -0400
+        Mon, 12 Jul 2021 15:20:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626117296;
+        s=mimecast20190719; t=1626117489;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=CVTBXmlc1KlfbPCnlnQZrk3QOXIlqtMP83I/1NBE4MI=;
-        b=RVBnYnFjpLQ47jUBThH42Yvw4CeGjrnivs9BS5FuvZihV6m8TuXJlT0Y1cJMjZMcd2SOFB
-        Swxrw49+ra8Lp62u8IZ6kQHBnEyCbSxCKgLHArf6qJP9D2VgEyKfDuiYNxcOkVc9F3gfNx
-        TiXlePzfasV8YebPz82V2wdmmtwIkTE=
+        bh=9+B8Cs96m8Tk6yz8GyFwpVEyj+NJGm4/5wM0pHmi1Oc=;
+        b=O4IufwuboVypodysivQ480G/w7vH4gP59IuOGT24/uIGop+BEWjo8nhBWTHoy9urV75zgI
+        wuRRPwut+VlK3z0zxOBD4bl/wrLi2KLVybXnL3b5znVr1gqmgWQxy1rNbnikqoaceMGIKR
+        PJujzzAc7JeHPeJFI5IPZv/l4pC6P9E=
 Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
  [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-N6oS7MREMtSUtwSX2QN-6Q-1; Mon, 12 Jul 2021 15:14:55 -0400
-X-MC-Unique: N6oS7MREMtSUtwSX2QN-6Q-1
-Received: by mail-ed1-f70.google.com with SMTP id w15-20020a05640234cfb02903951279f8f3so10663701edc.11
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 12:14:54 -0700 (PDT)
+ us-mta-161-O0dIVq5ZNgCJWFlDDuUcMg-1; Mon, 12 Jul 2021 15:18:06 -0400
+X-MC-Unique: O0dIVq5ZNgCJWFlDDuUcMg-1
+Received: by mail-ed1-f70.google.com with SMTP id z3-20020a05640240c3b02903a2e355fd6eso5305758edb.23
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 12:18:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=CVTBXmlc1KlfbPCnlnQZrk3QOXIlqtMP83I/1NBE4MI=;
-        b=MkutWeI8FryLguO3z3T0tmtHJGnyK0p0EChRY0FMZNFndQb1GFd1UZP2Y68zetVQpF
-         krrb7gFskXEwAr5yj27BWRgfegzYtEvnepQvM97sMuBwKwAJcPXE2QajXRr1/6Y1RmSE
-         Uiv4FQgOXEt4fGIF0kj3hyU50sUgQN/52hy+KAP/2ZSu4eJ05NzihnIdEwaz0zm6/wfs
-         VI5458U7AgZwvtn3cOdTDLdmAWlWcsQJKtjT6Ho/37O6vYuzJiOuDbFJO+oL4u40/Cqa
-         SIwDaYOjn+NmkFGxZto4e9G7mmRFtwvPVP5ETuG6xsgB8xR4bgKQFQ/yKjAMCLG5I2EO
-         PZpQ==
-X-Gm-Message-State: AOAM530wNPayz0jSGEKp8zd9onHGOqc/KvmSCA+HtCVqKcr0zWIeCdT6
-        X9+HIaNcZjxAqwa1dZVLhDVQ+otVzRI55Bf51wHOQR5p8Gl8EtipSDX8DZDHf2zWU3jl+wwaAIC
-        kfYfWSWJSHBaDIgYrxky3JtNS5vhpdk4OzQ==
-X-Received: by 2002:a17:907:7212:: with SMTP id dr18mr675908ejc.552.1626117293835;
-        Mon, 12 Jul 2021 12:14:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzohVh8SqOld+WdfTLNHdU2vu9ecABwqS4VIeNqKx5MZVghxbQ5WtTmSkX0DdP1rtGH1lHuAA==
-X-Received: by 2002:a17:907:7212:: with SMTP id dr18mr675886ejc.552.1626117293627;
-        Mon, 12 Jul 2021 12:14:53 -0700 (PDT)
+        bh=9+B8Cs96m8Tk6yz8GyFwpVEyj+NJGm4/5wM0pHmi1Oc=;
+        b=PRUndUnxalGp0YjZisz7dhckwm8e4C5sZwaVqKNdQC0/MaRXPTDWi86FViYPVgP3Y8
+         CZ8X6PolVq5INb01YXXYj0tqZXjEFYIdfA4ZL/+1Rmrw7XflHwsRU8h6QeiwDVSyEn3J
+         B79Lb+4hIqf2utUslvCzQ1Mx/Fn1LZNkV+CG2y7a7jwbnqzpcMOX8acNoXpSIq74FxXQ
+         TqyIHT/vCl5vA7KwdDjnYp1RAnOQCSMLSN/BuiDAea/szTaocMWWw6x3oGGERxTb8/Np
+         hsq4mXl1QzfmUdLc0zyvGPgn/DAeTRpxDRBazHK8tvxh8c/LGxnLf/UF/uZjKbfSO1hi
+         YJwQ==
+X-Gm-Message-State: AOAM533ZxtZGZn2ayg7jDZ1sc/Jh00O9atXnCtk1jklefDWNN9q39/gq
+        53by0aT8xnP8DxkYttRnZ2EKRjJsbCDeYQKaYhYxoPA7AtWnInGb7Wibo+jIZ6oB4NHS1qSEIXT
+        TrKVjLhPuIh0suyO5cSFxMhjPeixzewBpGA==
+X-Received: by 2002:a17:906:cec1:: with SMTP id si1mr706989ejb.18.1626117484822;
+        Mon, 12 Jul 2021 12:18:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy1D5eXP/1jAjupMZ9f+UtNOLG33D9ZhGPJSg6mI1QAXl4/ooQmZzlNRN1YDzO+IV/Po6rgEA==
+X-Received: by 2002:a17:906:cec1:: with SMTP id si1mr706952ejb.18.1626117484505;
+        Mon, 12 Jul 2021 12:18:04 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id j6sm8767098eds.58.2021.07.12.12.14.52
+        by smtp.gmail.com with ESMTPSA id s12sm8221508edd.68.2021.07.12.12.18.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jul 2021 12:14:52 -0700 (PDT)
+        Mon, 12 Jul 2021 12:18:04 -0700 (PDT)
 Subject: Re: [RESEND PATCH v2 1/1] ishtp: Add support for Intel ishtp eclite
  driver
 To:     sumesh.k.naduvalath@intel.com, mgross@linux.intel.com,
@@ -71,8 +71,8 @@ Cc:     srinivas.pandruvada@intel.com, platform-driver-x86@vger.kernel.org,
         nachiketa.kumar@intel.com
 References: <20210712180434.7789-1-sumesh.k.naduvalath@intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9b0b97b1-645f-d7d3-a18e-349ff187663f@redhat.com>
-Date:   Mon, 12 Jul 2021 21:14:52 +0200
+Message-ID: <ef1d0c44-05f7-b4f3-a6c7-7f93d22a4e95@redhat.com>
+Date:   Mon, 12 Jul 2021 21:18:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
@@ -84,18 +84,7 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Sumesh,
-
-Why this resend? You send the original v2 4 days ago, with
-a weekend in between and during the merge window.
-
-Please be patient when sending patches ande give people a
-chance to review the code before resending.
-
-Regards,
-
-Hans
-
+Hi again,
 
 On 7/12/21 8:04 PM, sumesh.k.naduvalath@intel.com wrote:
 > From: "K Naduvalath, Sumesh" <sumesh.k.naduvalath@intel.com>
@@ -116,6 +105,20 @@ On 7/12/21 8:04 PM, sumesh.k.naduvalath@intel.com wrote:
 > -Opregion length check added in various functions
 > -ishtp_get_device and ishtp_put_device are removed
 > -acpi_walk_dep_device_list() changed to acpi_dev_clear_dependencies()
+
+I see now that this change, which addresses a lkp found issue with v2,
+is new. So this was not a needless resend (good, you sould only resend
+if not hearing anything for say 2 weeks). But this also means that
+this is not really a resend at all, this really is a v3 and you could
+have avoided a lot of confusion by simply labelling this as v3.
+
+Regards, 
+
+Hans
+
+
+
+
 > -Kconfig text, cosmetic and minor corrections
 > 
 > v1:
