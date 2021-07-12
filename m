@@ -2,107 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C71C07E99
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2374C07E99
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13EFF6120A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7770610D1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234179AbhGLQ7A (ORCPT
+        id S234300AbhGLREo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 12:59:00 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:56160 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234208AbhGLQ65 (ORCPT
+        Mon, 12 Jul 2021 13:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234184AbhGLREo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 12:58:57 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CC46FCC;
-        Mon, 12 Jul 2021 18:56:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1626108968;
-        bh=LnlGq5h8vhemkjb4YPOI1+jY+cg7vy+BSFWvwOxd3+U=;
+        Mon, 12 Jul 2021 13:04:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2BFDD611C0;
+        Mon, 12 Jul 2021 17:01:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626109315;
+        bh=JNSRRDX8lmDZ3Nlw/mdJuTp13Ocxa2nqOa9AIYtvYQw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UTWHk5c1ifR/hzOYihQbVOQ5lc1KjdKOCKfLJMxt+VSyA5LEJi2Q4Oiy5TXcUhqmf
-         EuH/+uOYGXK7io9uxg2Tl4yiSoKvKNDx8xDrKt9bjUZNxxDw4qZfb1mm3wIzGQPBh6
-         bu4N2z1zmAA6BNtRzUqhIEd3hddy6BBl7oWt70ps=
-Date:   Mon, 12 Jul 2021 19:55:21 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
-        mgross@linux.intel.com, luzmaximilian@gmail.com,
-        lgirdwood@gmail.com, andy.shevchenko@gmail.com,
+        b=pYMQZkotFylopqYUbk/z/JVO9hwu3eH4WfvL1xkbiaQn1Y4xiB9Sv3RJxjdpqQOom
+         48FnElMguFAYGgczxhzs4VhdBb3znsxP9v3zVuLeuk8zQFzbYpGhc83RMawJ8K+S5W
+         Yhb++uKmxNq1Opy4Fb0ErI3iGozi/6yrC6a+KhjC5P5p4Xkpn+xwHcW5igkF4MORuE
+         F5U92ijIo5Q0zkTC4ag9HWkbBBra/G9i5N420wfemVnhx7QUAeH3LvOQB/ILyDvm+d
+         CQs+9tEIqo0K1sfCE//kimRL+fPTBZh8PJBVC8C/79v7MFMgt6jv6U4isr/ofxSxM7
+         Wrt21j7x9a5Nw==
+Date:   Mon, 12 Jul 2021 18:01:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <YOxz+b/giZTKoJkk@pendragon.ideasonboard.com>
+Message-ID: <20210712170120.GG4435@sirena.org.uk>
 References: <20210708224226.457224-1-djrscally@gmail.com>
  <20210709170426.GC4112@sirena.org.uk>
- <c95da883-581b-d1f4-4c8a-2162b8b58b64@gmail.com>
- <20210712141528.GE4435@sirena.org.uk>
+ <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+ <20210712124223.GB4435@sirena.org.uk>
+ <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
+ <20210712133428.GD4435@sirena.org.uk>
+ <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Sw7tCqrGA+HQ0/zt"
 Content-Disposition: inline
-In-Reply-To: <20210712141528.GE4435@sirena.org.uk>
+In-Reply-To: <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+X-Cookie: Hailing frequencies open, Captain.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Mark,
 
-On Mon, Jul 12, 2021 at 03:15:28PM +0100, Mark Brown wrote:
-> On Sat, Jul 10, 2021 at 11:48:33PM +0100, Daniel Scally wrote:
-> 
-> > I went with this approach because the ACPI isn't entirely lacking, it
-> > enumerates the TPS68470 as an i2c device for its driver to bind to
-> > without a problem which results in the regulator driver registering the
-> > regulator devices (7 of them for this chip), so I was thinking along the
-> > lines of repairing the problems with ACPI to give those rdevs the right
-> > init_data rather than sidestepping it altogether. I could register the
-> > platform devices for the regulator driver to bind to in a board file
-> > instead if that's the preferred option...usually this would involve
-> > using i2c_board_info I think but as ACPI will enumerate the i2c device
-> > for the chip independently we'd need to handle that somehow to stop them
-> > racing each other I guess.
-> 
-> Like I said elsewhere it seems a lot easier to just have the I2C driver
-> set platform data based on parsing DMI information like we do elsewhere.
-> I really don't see any benefit to introducing an additional layer of
-> abstraction and binding here, it just seems to be making things more
-> fragile.
+--Sw7tCqrGA+HQ0/zt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The idea behind software nodes is that individual device drivers
-shouldn't care about where platform-specific data come from. They can
-use the same fwnode API, regardless of whether the device is described
-through OF, ACPI, or software nodes created by a board file in the
-kernel. It allows grouping all platform data that should be provided by
-firmware in a single place, conditioned by a DMI match, instead of
-distributing DMI matches to lots of drivers.
+On Mon, Jul 12, 2021 at 07:08:23PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 12, 2021 at 4:35 PM Mark Brown <broonie@kernel.org> wrote:
 
-> I'm not sure what you mean by "register the platform devices for the
-> regualtor to bind to" - if the PMIC is an I2C device it's going to need
-> to be an I2C device, and if the device is enumerated by firmware we'd
-> need to suppress that firmware enumeration to replace it.
+> > But why?  I'm not seeing the advantage over providing platform data
+> > based on DMI quirks here, it seems like a bunch of work for no reason.
 
-We can't. ACPI describes the device, and that's how it's enumerated.
-ACPI does provide information (as well as ACPI methods) needed by the
-driver, but fails to provide all the required information. That's why a
-mechanism to supplement the information provided by ACPI is needed.
+> What do you mean by additional work? It's exactly opposite since most
+> of the drivers in the kernel are using the fwnode interface rather
+> than platform data. Why should we _add_ the specific platform data
+> handling code in the certain drivers instead of not touching them at
+> all?
 
-> > I'll take a look and see if I can make it work that way.
-> > 
-> > >> I'm posting this to see if people agree it's a good approach for tackling the 
-> > >> problem; I may be overthinking this and there's a much easier way that I should
-> > > I don't think I understand what the problem you are trying to solve is
-> > > so it's hard to say if this is a good approach to solving it.
-> > 
-> > Hope this is a bit clearer now?
+It's adding an entirely new representation of standard data with less
+validation support than either DT or platform data which seems like a
+needlessly roundabout and error prone way of moving the data about with
+less tooling support.  As far as I can tell the only advantage is that
+it lets you write the quirk in a different source file but I'm finding
+it hard to get excited about that.  If we were fixing up an existing
+ACPI binding or something this approach would make sense to me but it's
+making something entirely new out of whole cloth here.
 
--- 
-Regards,
+We already have generic platform data support for the regulator API so
+driver modifications would just be the DMI matching which is going to
+have to happen somewhere anyway, I don't see a huge win from putting
+them in one file rather than another.  It should basically just boil
+down to being another data table, I imagine you could write a helper for
+it, or probably even come up with some generic thing that let you
+register a platform data/DMI combo independently of the driver to get it
+out of the driver code (looking more like the existing GPIO code which
+is already being used in another bit of this quirking).
 
-Laurent Pinchart
+It feels like this should be making more use of existing stuff than it
+is.  If you look at what the core part of the code does it's taking data
+which was provided by one part of the kernel in one set of C structs and
+parsing those into a struct init_data which is what the core actually
+wants to consume.  This seems like an entirely redundant process, we
+should be able to just write the machine configuration into some struct
+init_datas and get that associated with the regulators without creating
+an otherwise entirely unused intermediate representation of the data.
+
+--Sw7tCqrGA+HQ0/zt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDsdV8ACgkQJNaLcl1U
+h9BEDQf/WQn5d+/awi3jCC+wt4pHwv6odLp0riNPio2YVlNA4fynyreMQIbNM7TB
+xB45jAnwI3p2eH6FHF4tN8U6JTuDdvSAFkv9WKnRG1KvFRjWRoufUXY+pB1RAnHc
+NpnnIj9mVKdAf9F4ZM3MZVAO8lds8q4JzX2DWFpTPT3iNYhrXrzg4Hq/oYcZSX+7
+VZQc9WIKH7fqGGOV9zAHb87efkfTK7DZQdDp7zFolAxeq4Hkdj/M8KiedFbXxJtA
+OLKW0vx8L/3ln6/kJ9mgUx5gCD+iMEz6bJOUnewjDZzszc6dRflUnxTUeXJXweUX
+XI4vL8nrDtXSJywJJBtpFjZPtJqkuQ==
+=Ooz1
+-----END PGP SIGNATURE-----
+
+--Sw7tCqrGA+HQ0/zt--
