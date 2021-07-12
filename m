@@ -2,179 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D363C07E9A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 12:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8526C07E99
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 12:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6460361158
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 12:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9138261026
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 12:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbhGLMZG (ORCPT
+        id S233903AbhGLMpr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 08:25:06 -0400
-Received: from david.siemens.de ([192.35.17.14]:36492 "EHLO david.siemens.de"
+        Mon, 12 Jul 2021 08:45:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229746AbhGLMZF (ORCPT
+        id S233685AbhGLMpq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 08:25:05 -0400
-X-Greylist: delayed 2766 seconds by postgrey-1.27 at vger.kernel.org; Mon, 12 Jul 2021 08:25:04 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 16CBZkZ8021112
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Jul 2021 13:35:46 +0200
-Received: from md1za8fc.ad001.siemens.net ([139.25.0.120])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 16CBZjto003872;
-        Mon, 12 Jul 2021 13:35:45 +0200
-Date:   Mon, 12 Jul 2021 13:35:43 +0200
-From:   Henning Schild <henning.schild@siemens.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-watchdog@vger.kernel.org,
-        Srikanth Krishnakar <skrishnakar@gmail.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Gerd Haeussler <gerd.haeussler.ext@siemens.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>, Enrico Weigelt <lkml@metux.net>
-Subject: Re: [PATCH v3 0/4] add device drivers for Siemens Industrial PCs
-Message-ID: <20210712133543.074aad80@md1za8fc.ad001.siemens.net>
-In-Reply-To: <857d6cd4-839d-c42a-0aa7-8d45243981ee@redhat.com>
-References: <20210329174928.18816-1-henning.schild@siemens.com>
-        <857d6cd4-839d-c42a-0aa7-8d45243981ee@redhat.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 12 Jul 2021 08:45:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 027E36101E;
+        Mon, 12 Jul 2021 12:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626093778;
+        bh=ZLUQlbYl3sNIYsakvpyyvP24BJXkLmZ1qwg3VR1I4aM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gKnsxXNS2n/2DGBJvyCY4Qy55w+leeUb5zJNlDaVXvdx14qKf24rKzdnUiQJC63M+
+         a0PdLdRZF72/09jk9CXPZ7AmnG9KRjN1jzUBSXeNZe38ivRtH43Nrc1excWqFbk1l1
+         p1DbbuCBO3jezX2tpSSshsswWgQILpQcOnorshcyv0erxpGYzjti7klOndYrXeEiD6
+         39cLodf/Y8kFELEygEG5/6kI8abRRji3B+w5pgzx3b74/HrBRQcHThNYv1iC5qhZJw
+         yqu4irEG79TEC3KyZofPTEUbWINZmkF7Nc4f/unExZqQeEpVBQ8SYeStx/4WO7FuCn
+         BlrOwpx3G01Xw==
+Date:   Mon, 12 Jul 2021 13:42:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
+        mgross@linux.intel.com, luzmaximilian@gmail.com,
+        lgirdwood@gmail.com, laurent.pinchart@ideasonboard.com,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+Message-ID: <20210712124223.GB4435@sirena.org.uk>
+References: <20210708224226.457224-1-djrscally@gmail.com>
+ <20210709170426.GC4112@sirena.org.uk>
+ <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+X-Cookie: Hailing frequencies open, Captain.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This series is basically stuck because people rightfully want me to use
-the GPIO subsystem for the LEDs and the watchdog bits that are
-connected to GPIO.
 
-Problem is that the GPIO subsystem does not initialize on the machines
-in question. It is a combination of hidden P2SB and missing ACPI table
-entries. The GPIO subsystem (intel pinctrl) needs either P2SB or ACPI do
-come up ...
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Andy proposed some patches for initializing the intel pinctrl stuff for
-one of the machines by falling back to SoC detection in case there is
-no ACPI or visible P2SB. While that works it would need to be done for
-any Intel SoC to be consistent and discussions seem to go nowhere.
+On Sun, Jul 11, 2021 at 12:37:03PM +0300, Andy Shevchenko wrote:
+> On Fri, Jul 9, 2021 at 8:05 PM Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Jul 08, 2021 at 11:42:24PM +0100, Daniel Scally wrote:
 
-I would be willing to port over to "intel pintctl" and help with
-testing, but not so much with actual coding. Andy is that moving at all?
+> > What is a software node and why would we want to use one here?
 
-Since my drivers do reserve the mmio regions properly and the intel
-pinctrl will never come up anyways, i do not see a conflict merging my
-proposed drivers in the current codebase. The wish to use the pinctrl
-infrastructure can not be fulfilled if that infra is not in place. Once
-intel pinctrl works, we can change those drivers to work with that.
+> Software node is a representation of (missed and / or quirked)
+> firmware nodes in the code.
 
-I do not want to take shortcuts ... but also do not want to get stuck
-here. So maybe one way to serialize the merge is to allow my changes
-like proposed and rebase on intel pinctrl once that subsystem actually
-initializes on these machines. We could even have two code paths ... if
-region can not be reserved, try gpio ... or the other way around.
+> > Why are we not just using board files, what does this new abstraction
+> > solve?
 
-regards,
-Henning
+> Software node _is_ a board file part. The idea behind that is that the
+> driver, which requires any additional / necessary property that has
+> been missed in the firmware nodes, wouldn't need special treatment if
+> that property comes from a board file rather than firmware.
 
-Am Wed, 7 Apr 2021 13:36:40 +0200
-schrieb Hans de Goede <hdegoede@redhat.com>:
+This doesn't seem to correspond with what these patches are doing,
+they're creating something which bears no relation to any firmware
+interface and the code is specifically looking for swnodes.
 
-> Hi,
-> 
-> On 3/29/21 7:49 PM, Henning Schild wrote:
-> > changes since v2:
-> > 
-> > - remove "simatic-ipc" prefix from LED names
-> > - fix style issues found in v2, mainly LED driver
-> > - fix OEM specific dmi code, and remove magic numbers
-> > - more "simatic_ipc" name prefixing
-> > - improved pmc quirk code using callbacks
-> > 
-> > changes since v1:
-> > 
-> > - fixed lots of style issues found in v1
-> >   - (debug) printing
-> >   - header ordering
-> > - fixed license issues GPLv2 and SPDX in all files
-> > - module_platform_driver instead of __init __exit
-> > - wdt simplifications cleanup
-> > - lots of fixes in wdt driver, all that was found in v1
-> > - fixed dmi length in dmi helper
-> > - changed LED names to allowed ones
-> > - move led driver to simple/
-> > - switched pmc_atom to dmi callback with global variable
-> > 
-> > --
-> > 
-> > This series adds support for watchdogs and leds of several x86
-> > devices from Siemens.
-> > 
-> > It is structured with a platform driver that mainly does
-> > identification of the machines. It might trigger loading of the
-> > actual device drivers by attaching devices to the platform bus.
-> > 
-> > The identification is vendor specific, parsing a special binary DMI
-> > entry. The implementation of that platform identification is
-> > applied on pmc_atom clock quirks in the final patch.
-> > 
-> > It is all structured in a way that we can easily add more devices
-> > and more platform drivers later. Internally we have some more code
-> > for hardware monitoring, more leds, watchdogs etc. This will follow
-> > some day.  
-> 
-> IT seems there still is significant discussion surrounding the LED
-> and watchdog drivers which use patch 1/4 as parent-driver.
-> 
-> I'm going to hold of on merging 1/4 and 4/4 until there is more
-> consensus surrounding this series.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> > 
-> > Henning Schild (4):
-> >   platform/x86: simatic-ipc: add main driver for Siemens devices
-> >   leds: simatic-ipc-leds: add new driver for Siemens Industial PCs
-> >   watchdog: simatic-ipc-wdt: add new driver for Siemens Industrial
-> > PCs platform/x86: pmc_atom: improve critclk_systems matching for
-> > Siemens PCs
-> > 
-> >  drivers/leds/Kconfig                          |   3 +
-> >  drivers/leds/Makefile                         |   3 +
-> >  drivers/leds/simple/Kconfig                   |  11 +
-> >  drivers/leds/simple/Makefile                  |   2 +
-> >  drivers/leds/simple/simatic-ipc-leds.c        | 202
-> > ++++++++++++++++ drivers/platform/x86/Kconfig                  |
-> > 12 + drivers/platform/x86/Makefile                 |   3 +
-> >  drivers/platform/x86/pmc_atom.c               |  57 +++--
-> >  drivers/platform/x86/simatic-ipc.c            | 169 ++++++++++++++
-> >  drivers/watchdog/Kconfig                      |  11 +
-> >  drivers/watchdog/Makefile                     |   1 +
-> >  drivers/watchdog/simatic-ipc-wdt.c            | 215
-> > ++++++++++++++++++ .../platform_data/x86/simatic-ipc-base.h      |
-> > 29 +++ include/linux/platform_data/x86/simatic-ipc.h |  72 ++++++
-> >  14 files changed, 769 insertions(+), 21 deletions(-)
-> >  create mode 100644 drivers/leds/simple/Kconfig
-> >  create mode 100644 drivers/leds/simple/Makefile
-> >  create mode 100644 drivers/leds/simple/simatic-ipc-leds.c
-> >  create mode 100644 drivers/platform/x86/simatic-ipc.c
-> >  create mode 100644 drivers/watchdog/simatic-ipc-wdt.c
-> >  create mode 100644
-> > include/linux/platform_data/x86/simatic-ipc-base.h create mode
-> > 100644 include/linux/platform_data/x86/simatic-ipc.h 
-> 
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDsOK4ACgkQJNaLcl1U
+h9CgZgf/awL7UyQNHdgqbZR+gMkAr4D2ldjhbOFFPWziSR5jV6YsiUJFxNEfHg1E
+BwEyHB1b/AjuSY0b8wDY8qpizohjZZCZh8pyWtXGgwbOp2PAucCyrHfviehRMO1D
+cdvVJCi3Z9CaWdSBscKYhji4uAhzn8RPzd82Brfph1wsIeQZSwcr0RqraJje8JQo
+0dL5L5RJUNaU5ws/vbR61QNOMLKeqvaTPkuqGEWWOYzmHm8eFk+uUXVHn0C1a7Mt
+j+p15phNwxCL6lAHJrlkXFvvAt+awwFteMSJscyWACU2IctwqBCrgNSoCm2BcfKR
+Rx7qz92J2prvzLYIWFdh4Grfdvyfug==
+=KgX4
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
