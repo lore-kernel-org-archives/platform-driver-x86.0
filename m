@@ -2,171 +2,104 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E872C07E9C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40D4C07E99
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47B12610C7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99575611CD
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 16:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233719AbhGLQD6 (ORCPT
+        id S230434AbhGLQLw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 12:03:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5970 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229475AbhGLQD6 (ORCPT
+        Mon, 12 Jul 2021 12:11:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229465AbhGLQLv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 12:03:58 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10043"; a="208187470"
-X-IronPort-AV: E=Sophos;i="5.84,234,1620716400"; 
-   d="scan'208";a="208187470"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 09:01:01 -0700
-X-IronPort-AV: E=Sophos;i="5.84,234,1620716400"; 
-   d="scan'208";a="459231372"
-Received: from kpurma-mobl.amr.corp.intel.com (HELO [10.212.163.17]) ([10.212.163.17])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 09:00:59 -0700
-Subject: Re: [PATCH Part2 RFC v4 10/40] x86/fault: Add support to handle the
- RMP fault for user address
-To:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-11-brijesh.singh@amd.com>
- <3c6b6fc4-05b2-8d18-2eb8-1bd1a965c632@intel.com>
- <2b4accb6-b68e-02d3-6fed-975f90558099@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
- CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
- 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
- K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
- VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
- e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
- ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
- kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
- rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
- f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
- mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
- UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
- sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
- 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
- cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
- UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
- db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
- lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
- kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
- gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
- AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
- XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
- e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
- pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
- YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
- lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
- M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
- 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
- 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
- OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
- ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
- z5cecg==
-Message-ID: <a249b101-87d1-2e66-d7d6-af737c045cc3@intel.com>
-Date:   Mon, 12 Jul 2021 09:00:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 12 Jul 2021 12:11:51 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8487EC0613DD;
+        Mon, 12 Jul 2021 09:09:03 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id k20so11765817pgg.7;
+        Mon, 12 Jul 2021 09:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rLWwArdw3WJ78Jh1viBr73LCB/P7OLCQZa0RIq5R7bA=;
+        b=FX+FDFs4CpB2lqn39HrlK+3mIySS0wpd8KwkvXWmUFXlwoFWEmiQ3ti+V4EJ7+ChvI
+         N5LeknNX06pjr7sLBL9emtd0h4YxZ2SbHkOPqxMHNGClNhthRDGNu2xCVimJLeLXqmdE
+         dX68G8g/ix4xNWmmGl4klagfCRrbFYXKILCLI49iJO/py3wUd7eN/jXai0He5oEXq+N6
+         Az6t4GqMZYllTkpS3wP2GeeJ2qOoIWC7neyrp41SqEbFPNoNHUvgbJwFGZrF7Pi4G5ab
+         8uJ2Jii2bvlHS9Kn7LhhTkucSX/a+h7A5L6AQHTmsYk2jVHMIQJtPwv4S9/MXG9/FiiX
+         3Vug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rLWwArdw3WJ78Jh1viBr73LCB/P7OLCQZa0RIq5R7bA=;
+        b=qaqPiqs83UOVEszzA0MiZxB7tB7Z1POISZbTSWHIHpDMH2SjQN+ZerzVJsfNedQXjq
+         wmA+kf7uzWTfbncs7t6hIpCfrvBUfZDG4iwrnIAb1TJjlZQaX4E6BXsbJioJpmAcAjLb
+         8/isu2Kgt/g+1N0a3YNi6e/i2OPUVh6ZnHMpi1iIZf5aDTMX4ZvXUWMEUdf0E3pgjaR2
+         PWbft1ZR+kWEwoA/2SBQjg5g/9XAwpfyr/Arc4t5FaJH3uJjzQkLY8BibYMMFHVZeYjc
+         D6hC/MCBMq6MeWZD5Saf5iSi4MWJE8lEo+EC8jlmrHRZg9YNxmoFt70IX3mzSowcyE6c
+         dsLw==
+X-Gm-Message-State: AOAM532GzRXYtpuuECvqYfQdMZZCeAk1gGhCjke4oAZefGfkylRfmYqj
+        5+O/JqKR0XCeh8Z2kryAxkTkqCeWGDUNQpBoqMo=
+X-Google-Smtp-Source: ABdhPJxCF21a8BjCJ3aoG+5ZrAAswsoye7CQYhZVQ/l/or1h1pLBMlNHf4f2oqSXRptfEbsgmE6wNN6ibOdkNykMplA=
+X-Received: by 2002:a65:434a:: with SMTP id k10mr44360501pgq.4.1626106143006;
+ Mon, 12 Jul 2021 09:09:03 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2b4accb6-b68e-02d3-6fed-975f90558099@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210708224226.457224-1-djrscally@gmail.com> <20210709170426.GC4112@sirena.org.uk>
+ <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+ <20210712124223.GB4435@sirena.org.uk> <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
+ <20210712133428.GD4435@sirena.org.uk>
+In-Reply-To: <20210712133428.GD4435@sirena.org.uk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 12 Jul 2021 19:08:23 +0300
+Message-ID: <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kieran.bingham@ideasonboard.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/12/21 8:43 AM, Brijesh Singh wrote:
->>> +    /*
->>> +     * The backing page level is higher than the RMP page level,
->>> request
->>> +     * to split the page.
->>> +     */
->>> +    if (level > rmp_level)
->>> +        return RMP_FAULT_PAGE_SPLIT;
->>
->> This can theoretically trigger on a hugetlbfs page.  Right?
-> 
-> Yes, theoretically.
-> 
-> In the current implementation, the VMM is enlightened to not use the
-> hugetlbfs for backing page when creating the SEV-SNP guests.
+On Mon, Jul 12, 2021 at 4:35 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, Jul 12, 2021 at 04:01:05PM +0300, Andy Shevchenko wrote:
+>
+> > The software nodes shouldn't appear on its own in the generic code.
+> > When we use software nodes API in it, it means that we have tried
+> > other providers _explicitly_ and haven't found what we are looking for
+> > and hence we have to check if software nodes are providing the same.
+> > For example, here it's done that way:
+> > https://elixir.bootlin.com/linux/v5.14-rc1/source/kernel/irq/irqdomain.c#L178.
+>
+> > In all other cases it shouldn't be called explicitly.
+>
+> But why?  I'm not seeing the advantage over providing platform data
+> based on DMI quirks here, it seems like a bunch of work for no reason.
 
-"The VMM"?
+What do you mean by additional work? It's exactly opposite since most
+of the drivers in the kernel are using the fwnode interface rather
+than platform data. Why should we _add_ the specific platform data
+handling code in the certain drivers instead of not touching them at
+all?
 
-We try to write kernel code so that it "works" and doesn't do unexpected
-things with whatever userspace might throw at it.  This seems to be
-written with an assumption that no VMM will ever use hugetlbfs with SEV-SNP.
-
-That worries me.  Not only because someone is sure to try it, but it's
-the kind of assumption that an attacker or a fuzzer might try.
-
-Could you please test this kernel code in practice with hugetblfs?
-
->> I also suspect you can just set VM_FAULT_SIGBUS and let the do_sigbus()
->> call later on in the function do its work.
->>>   +static int handle_split_page_fault(struct vm_fault *vmf)
->>> +{
->>> +    if (!IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
->>> +        return VM_FAULT_SIGBUS;
->>> +
->>> +    __split_huge_pmd(vmf->vma, vmf->pmd, vmf->address, false, NULL);
->>> +    return 0;
->>> +}
->>
->> What will this do when you hand it a hugetlbfs page?
-> 
-> VMM is updated to not use the hugetlbfs when creating SEV-SNP guests.
-> So, we should not run into it.
-
-Please fix this code to handle hugetlbfs along with any other non-THP
-source of level>0 mappings.  DAX comes to mind.  "Handle" can mean
-rejecting these.  You don't have to find some way to split them and make
-the VM work, just fail safely, ideally as early as possible.
-
-To me, this is a fundamental requirement before this code can be accepted.
-
-How many more parts of this series are predicated on the behavior of the
-VMM like this?
+-- 
+With Best Regards,
+Andy Shevchenko
