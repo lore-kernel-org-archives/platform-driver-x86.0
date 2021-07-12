@@ -2,65 +2,64 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11EBC07E9C
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 18:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA5AC11F67
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 18:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8FA611CB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 18:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87676120A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 18:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbhGLSr2 (ORCPT
+        id S236019AbhGLStA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 14:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        Mon, 12 Jul 2021 14:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235629AbhGLSr1 (ORCPT
+        with ESMTP id S235996AbhGLSs7 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 14:47:27 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03B4C0613E8
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 11:44:37 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id q16so8979490lfa.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 11:44:37 -0700 (PDT)
+        Mon, 12 Jul 2021 14:48:59 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4B7C0613E5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 11:46:10 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id a12so136880lfb.7
+        for <platform-driver-x86@vger.kernel.org>; Mon, 12 Jul 2021 11:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PiEei4/RLF9jTsxsrsUBV60BJotPkybau7lkhBzo5/I=;
-        b=s5pTurZ13T3fHlyrCaThZOVUofr0Cky2/zld5yC8l0myWNX69BvnBNc9Opj6HMkCfc
-         y3CjiuyOByMOeSBVV+o4qu5xJGAw4E/i0pQADCVD/2UOoJrIHi3478hpZZLuoqg1WGst
-         OcCnt2jSO0vJrOopZchNBQ9+MjglGj0qNJPE/zKAtnQq1YJa/gtnDpyh4R1JAsZBUefy
-         UEn4mtsvyV/dfykaoHSxiB9rtcJ7XqsA3Zf+EHYgfdQgNtp/YlSs2jWfDZvn7iwNgCp8
-         ndBvPbOGbkTvsCYluNITw35znBdI+ATFOMw1rixRW4qkI/Kx/zacoIs85goZ2XGThimw
-         JBFQ==
+        bh=gxxKGdA+5qR/PqDl5JcB6bRGhDZ950mjZMdzjeHwe9A=;
+        b=v+epGUGrho+waSY/qXypfEen9g1FP1Y1I3VGFmt+FSd8NqjlYzx0xWVOhBij1bXxVe
+         1rOMkUh+FfFAQKz6Akh9cS91jlTHunIs6MU8tC+0vMNPOFx98/BXd7VJi6NojikBw66S
+         xuwJowHMP2SBEQFM0RFdRoPaFvfDUyTB7fKOIxuLad2FbLmwa9di03QUYyalRYiFy63E
+         OoZWfSLwumDFV/ZpiHpbtTOWfBntcWKDkqVeu+r2G9Hf0MXJoq259JaXexCZPI/Usx02
+         XIW38qdRKAXxDFSmfWCH6K/zlOqcrI8i7CPB7Euz7D0RucnOFsrWxxu0vLIJA0aOG0xp
+         4vjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PiEei4/RLF9jTsxsrsUBV60BJotPkybau7lkhBzo5/I=;
-        b=lof4l9kKVIok/tHFZShGoT28XabSvl0mombVc5AmBNr6AVWNKU5QOIzL4YazGY9Oli
-         RfFUUd1IovaWXZqE+AZ0UfRPykME16vODFUwnNsrI8UlAbhJaqs5p6Vyupet8TiJk0MH
-         OwT0vtHWSpCFrWMMCsK1kOAIwP9BnuAk6hJ1Ws2kMnflGYvYhGtM+91aL/xLI+BacgbB
-         n9EGRiideqOVJkmCDwcURwUjvK2+BPxaOQ+nnVYBX4bW/O1tHYeHpjIpALn8RSORbew7
-         OVPB7+atESteH+OH56zQzl/clgo/8iGDBVwKjFXiuoFj0PIYPj1BPNbkavwDsAbIWZrR
-         dP1g==
-X-Gm-Message-State: AOAM531tI+5nQyASUNIBYuBQWjGLr9YZSBHwl00Wdo2kt7n84POWTHEt
-        Ff21/G5xLsgzx0U7kprQtlh4U6RLbhKY6PBK6XyCSg==
-X-Google-Smtp-Source: ABdhPJw+0tMpJcSV02e9y5OpgohRH2ByLJzW2eRxTjnkHhxkF0WhBTLMKzB5LpXi+sxeGsfF6oUSnjAO+65wVmAaEuA=
-X-Received: by 2002:ac2:5b1e:: with SMTP id v30mr136916lfn.226.1626115475779;
- Mon, 12 Jul 2021 11:44:35 -0700 (PDT)
+        bh=gxxKGdA+5qR/PqDl5JcB6bRGhDZ950mjZMdzjeHwe9A=;
+        b=TjjdDr/yu35n9swVUuVvKsa0kErTCo13vQnG/WiFyWVmDQ+kVOpvSnbUZHe95Gsi90
+         jGLN+kMtLQIsvDQVkU5M6PoGMcXNaomNrLg3hAZrylL21wODnDYb13AevgN1FH8FeBKr
+         a+5NEgkiX9ainDia2Kmr+K7PCrqj1Q0yK8JIOjMNmqXanHE0NZHoe/Gm4om/LtcINiK5
+         f16+f4DP8jjfRkAyc0KHF27h3v07YUlpPPN4FWQpC/6fiqhGvkrD94SgR6zxiZ900S6q
+         VeHGM9do7RMiyESRJy25XIsDubCsmMnQqQ2yFGBj/tol60sQkQmfjkc1uuGkfDUgm22T
+         Fa9w==
+X-Gm-Message-State: AOAM533BThQpWFBI1WMwr40Z9ItskaKDOBf0rYsmTFqqYyZq0bc9wYaH
+        FrKYL0y+E5gb//D2HVIC+BQ2H1NVqfS+ZOUD3Rnv4g==
+X-Google-Smtp-Source: ABdhPJzsnk7g8zQbTcCI707MmRveOtRone01I/489DLAAbH6SqY0xHeKZ2mm1i8batQMfCx2LW4ztu4s6lovd6kKRS4=
+X-Received: by 2002:a19:f710:: with SMTP id z16mr115428lfe.455.1626115568191;
+ Mon, 12 Jul 2021 11:46:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210707183616.5620-1-brijesh.singh@amd.com> <20210707183616.5620-7-brijesh.singh@amd.com>
-In-Reply-To: <20210707183616.5620-7-brijesh.singh@amd.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com> <20210707183616.5620-24-brijesh.singh@amd.com>
+In-Reply-To: <20210707183616.5620-24-brijesh.singh@amd.com>
 From:   Peter Gonda <pgonda@google.com>
-Date:   Mon, 12 Jul 2021 12:44:24 -0600
-Message-ID: <CAMkAt6quzRMiEJ=iYDocRvpaYuNcV5vm=swbowK+KG=j7FjyKA@mail.gmail.com>
-Subject: Re: [PATCH Part2 RFC v4 06/40] x86/sev: Add helper functions for
- RMPUPDATE and PSMASH instruction
+Date:   Mon, 12 Jul 2021 12:45:56 -0600
+Message-ID: <CAMkAt6q5Zjyn798fbhyQhmy+2drwSVRnCzMWxTUR-QUFzY9kEg@mail.gmail.com>
+Subject: Re: [PATCH Part2 RFC v4 23/40] KVM: SVM: Add KVM_SEV_SNP_LAUNCH_START command
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
@@ -93,28 +92,56 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-> +int psmash(struct page *page)
+>
+> +static int snp_decommission_context(struct kvm *kvm)
 > +{
-> +       unsigned long spa = page_to_pfn(page) << PAGE_SHIFT;
+> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +       struct sev_data_snp_decommission data = {};
 > +       int ret;
 > +
-> +       if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-> +               return -ENXIO;
+> +       /* If context is not created then do nothing */
+> +       if (!sev->snp_context)
+> +               return 0;
 > +
-> +       /* Retry if another processor is modifying the RMP entry. */
-> +       do {
-> +               /* Binutils version 2.36 supports the PSMASH mnemonic. */
-> +               asm volatile(".byte 0xF3, 0x0F, 0x01, 0xFF"
-> +                             : "=a"(ret)
-> +                             : "a"(spa)
-> +                             : "memory", "cc");
-> +       } while (ret == FAIL_INUSE);
+> +       data.gctx_paddr = __sme_pa(sev->snp_context);
+> +       ret = snp_guest_decommission(&data, NULL);
+> +       if (ret)
+> +               return ret;
 
-Should there be some retry limit here for safety? Or do we know that
-we'll never be stuck in this loop? Ditto for the loop in rmpupdate.
+Should we WARN or pr_err here? I see in the case of
+snp_launch_start's e_free_context we do not warn the user they have
+leaked a firmware page.
 
+>
 > +
-> +       return ret;
+> +       /* free the context page now */
+> +       snp_free_firmware_page(sev->snp_context);
+> +       sev->snp_context = NULL;
+> +
+> +       return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(psmash);
+> +
+>  void sev_vm_destroy(struct kvm *kvm)
+>  {
+>         struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> @@ -1847,7 +1969,15 @@ void sev_vm_destroy(struct kvm *kvm)
+>
+>         mutex_unlock(&kvm->lock);
+>
+> -       sev_unbind_asid(kvm, sev->handle);
+> +       if (sev_snp_guest(kvm)) {
+> +               if (snp_decommission_context(kvm)) {
+> +                       pr_err("Failed to free SNP guest context, leaking asid!\n");
+
+Should these errors be a WARN since we are leaking some state?
+
+
+> +                       return;
+> +               }
+> +       } else {
+> +               sev_unbind_asid(kvm, sev->handle);
+> +       }
+> +
+>         sev_asid_free(sev);
+>  }
 >
