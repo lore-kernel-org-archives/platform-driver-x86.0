@@ -6,58 +6,52 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2374C07E99
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23E1C11F66
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7770610D1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8557761178
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 12 Jul 2021 17:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234300AbhGLREo (ORCPT
+        id S235723AbhGLRfc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 12 Jul 2021 13:04:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54928 "EHLO mail.kernel.org"
+        Mon, 12 Jul 2021 13:35:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234184AbhGLREo (ORCPT
+        id S235721AbhGLRfb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 12 Jul 2021 13:04:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2BFDD611C0;
-        Mon, 12 Jul 2021 17:01:54 +0000 (UTC)
+        Mon, 12 Jul 2021 13:35:31 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 78517606A5;
+        Mon, 12 Jul 2021 17:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626109315;
-        bh=JNSRRDX8lmDZ3Nlw/mdJuTp13Ocxa2nqOa9AIYtvYQw=;
+        s=k20201202; t=1626111163;
+        bh=VtGEF+ZZROmXiAjI6Vgr8SHZ3R5D6D8GlzKCE5P9jNo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pYMQZkotFylopqYUbk/z/JVO9hwu3eH4WfvL1xkbiaQn1Y4xiB9Sv3RJxjdpqQOom
-         48FnElMguFAYGgczxhzs4VhdBb3znsxP9v3zVuLeuk8zQFzbYpGhc83RMawJ8K+S5W
-         Yhb++uKmxNq1Opy4Fb0ErI3iGozi/6yrC6a+KhjC5P5p4Xkpn+xwHcW5igkF4MORuE
-         F5U92ijIo5Q0zkTC4ag9HWkbBBra/G9i5N420wfemVnhx7QUAeH3LvOQB/ILyDvm+d
-         CQs+9tEIqo0K1sfCE//kimRL+fPTBZh8PJBVC8C/79v7MFMgt6jv6U4isr/ofxSxM7
-         Wrt21j7x9a5Nw==
-Date:   Mon, 12 Jul 2021 18:01:20 +0100
+        b=gU5DP/H6vV/hR98Y71TuN3Sf5Lc4/CFIim5CLt2kqn/gVAuVkJdTi80w56phLHXi/
+         vvoht6AyduTE13L4uvzrEdGc5O9JnnTltLyOC7wj9xsKDbBWNzqseHNN1fNbP+31Ax
+         hoh92BovgXHy9AvlleHw9KXX5tkru6ekx8W4MRomclMoqLyRXPfUP7EP391yHjVWaw
+         43uOhGIHZqOGz9+4ORtbP1oJRPHKhMlzTrSHjTBqMZkR3xkE4EVbByWv2ADzhCtOOd
+         hbUN6Vx+hj6l66SNffZxot+EOJU9L0JoTUKZKzNao2SaFNpvFuEjjo5gJQYIt5gUlN
+         U+JcXeqWryCWg==
+Date:   Mon, 12 Jul 2021 18:32:06 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, hdegoede@redhat.com,
+        mgross@linux.intel.com, luzmaximilian@gmail.com,
+        lgirdwood@gmail.com, andy.shevchenko@gmail.com,
         kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210712170120.GG4435@sirena.org.uk>
+Message-ID: <20210712173206.GH4435@sirena.org.uk>
 References: <20210708224226.457224-1-djrscally@gmail.com>
  <20210709170426.GC4112@sirena.org.uk>
- <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
- <20210712124223.GB4435@sirena.org.uk>
- <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
- <20210712133428.GD4435@sirena.org.uk>
- <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+ <c95da883-581b-d1f4-4c8a-2162b8b58b64@gmail.com>
+ <20210712141528.GE4435@sirena.org.uk>
+ <YOxz+b/giZTKoJkk@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Sw7tCqrGA+HQ0/zt"
+        protocol="application/pgp-signature"; boundary="Uu2n37VG4rOBDVuR"
 Content-Disposition: inline
-In-Reply-To: <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+In-Reply-To: <YOxz+b/giZTKoJkk@pendragon.ideasonboard.com>
 X-Cookie: Hailing frequencies open, Captain.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
@@ -65,63 +59,63 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
---Sw7tCqrGA+HQ0/zt
+--Uu2n37VG4rOBDVuR
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 12, 2021 at 07:08:23PM +0300, Andy Shevchenko wrote:
-> On Mon, Jul 12, 2021 at 4:35 PM Mark Brown <broonie@kernel.org> wrote:
+On Mon, Jul 12, 2021 at 07:55:21PM +0300, Laurent Pinchart wrote:
+> On Mon, Jul 12, 2021 at 03:15:28PM +0100, Mark Brown wrote:
 
-> > But why?  I'm not seeing the advantage over providing platform data
-> > based on DMI quirks here, it seems like a bunch of work for no reason.
+> > Like I said elsewhere it seems a lot easier to just have the I2C driver
+> > set platform data based on parsing DMI information like we do elsewhere.
+> > I really don't see any benefit to introducing an additional layer of
+> > abstraction and binding here, it just seems to be making things more
+> > fragile.
 
-> What do you mean by additional work? It's exactly opposite since most
-> of the drivers in the kernel are using the fwnode interface rather
-> than platform data. Why should we _add_ the specific platform data
-> handling code in the certain drivers instead of not touching them at
-> all?
+> The idea behind software nodes is that individual device drivers
+> shouldn't care about where platform-specific data come from. They can
+> use the same fwnode API, regardless of whether the device is described
+> through OF, ACPI, or software nodes created by a board file in the
 
-It's adding an entirely new representation of standard data with less
-validation support than either DT or platform data which seems like a
-needlessly roundabout and error prone way of moving the data about with
-less tooling support.  As far as I can tell the only advantage is that
-it lets you write the quirk in a different source file but I'm finding
-it hard to get excited about that.  If we were fixing up an existing
-ACPI binding or something this approach would make sense to me but it's
-making something entirely new out of whole cloth here.
+That's much more fwnode than swnode.  fwnode is a cute hack for letting
+ACPI based systems that don't fit the ACPI model reuse DT bindings which
+can work well for some things which are just outside the scope of ACPI
+completely but is a really bad idea for things where there's specific
+firmware modelling for the thing being handled, in those cases it should
+be avoided and firmware specific handling used instead.  Power handling
+(including regulators) is one of those areas - ACPI has really strong
+opinions on how it should be done and we don't want to be encouraging
+systems to go against that model.  AFAICT swnode is mostly just a way of
+patching up firmware that could be getting away with fwnode but didn't
+for some reason, in this case we don't want to ever see ACPI systems
+trying to use the DT regulator bindings in their firmware descriptions.
 
-We already have generic platform data support for the regulator API so
-driver modifications would just be the DMI matching which is going to
-have to happen somewhere anyway, I don't see a huge win from putting
-them in one file rather than another.  It should basically just boil
-down to being another data table, I imagine you could write a helper for
-it, or probably even come up with some generic thing that let you
-register a platform data/DMI combo independently of the driver to get it
-out of the driver code (looking more like the existing GPIO code which
-is already being used in another bit of this quirking).
+> kernel. It allows grouping all platform data that should be provided by
+> firmware in a single place, conditioned by a DMI match, instead of
+> distributing DMI matches to lots of drivers.
 
-It feels like this should be making more use of existing stuff than it
-is.  If you look at what the core part of the code does it's taking data
-which was provided by one part of the kernel in one set of C structs and
-parsing those into a struct init_data which is what the core actually
-wants to consume.  This seems like an entirely redundant process, we
-should be able to just write the machine configuration into some struct
-init_datas and get that associated with the regulators without creating
-an otherwise entirely unused intermediate representation of the data.
+Like I said in reply to Andy's mail if we're essentially filling in a C
+struct through a massive pile of indirection involving writing C code
+containing a bunch of static initialisations of less specific structs
+that doesn't seem great.  We can probably arrange to pass the init_data
+=66rom different files rather than putting the quirks in the driver,
+that'd be fine if a bit more work, but swnodes only seem to be adding
+problems here.
 
---Sw7tCqrGA+HQ0/zt
+--Uu2n37VG4rOBDVuR
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDsdV8ACgkQJNaLcl1U
-h9BEDQf/WQn5d+/awi3jCC+wt4pHwv6odLp0riNPio2YVlNA4fynyreMQIbNM7TB
-xB45jAnwI3p2eH6FHF4tN8U6JTuDdvSAFkv9WKnRG1KvFRjWRoufUXY+pB1RAnHc
-NpnnIj9mVKdAf9F4ZM3MZVAO8lds8q4JzX2DWFpTPT3iNYhrXrzg4Hq/oYcZSX+7
-VZQc9WIKH7fqGGOV9zAHb87efkfTK7DZQdDp7zFolAxeq4Hkdj/M8KiedFbXxJtA
-OLKW0vx8L/3ln6/kJ9mgUx5gCD+iMEz6bJOUnewjDZzszc6dRflUnxTUeXJXweUX
-XI4vL8nrDtXSJywJJBtpFjZPtJqkuQ==
-=Ooz1
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDsfJUACgkQJNaLcl1U
+h9Abjgf/Vk3i0rqEkOhCAV+ivVYXecph/yluBT06Xil1LFQhiK9prVwCfZJ93k0S
+D6dkPcnM1RZKmFQq3uRBfDY/5SNQlka3uoCrZqJuNhMnphjOviUgOp6HxTXVnalQ
+Fsx3Pp/khYOcwjmt7Me3i8xKcIrvphG2FddKYqGTrH3R5MuDDVRvFmtF9Ay74BMG
+6+g2XUmTLF8G4MhVMHH3SS9U0bzkbhNaFzFrShf/aVtjgZVo5RL858KqsQZ2PSr7
+H4h7d0nJxvjqMQUo0pkH5VB+tiX+tUvo52nnAIYpo3gi1abz6IpuhXIAfY0vNoCD
+WTNUTLOqkY4/N7AOKj8dvfFlOft15Q==
+=BBO2
 -----END PGP SIGNATURE-----
 
---Sw7tCqrGA+HQ0/zt--
+--Uu2n37VG4rOBDVuR--
