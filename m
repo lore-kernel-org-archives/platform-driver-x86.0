@@ -2,71 +2,66 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED517C11F67
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 19:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B0C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 22:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD8D61360
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 19:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFAC61363
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 22:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234788AbhGMTuA (ORCPT
+        id S235756AbhGMWJf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jul 2021 15:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60856 "EHLO
+        Tue, 13 Jul 2021 18:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234728AbhGMTt7 (ORCPT
+        with ESMTP id S234947AbhGMWJf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jul 2021 15:49:59 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851BDC0613DD;
-        Tue, 13 Jul 2021 12:47:09 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id cu14so7420856pjb.0;
-        Tue, 13 Jul 2021 12:47:09 -0700 (PDT)
+        Tue, 13 Jul 2021 18:09:35 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD56C0613DD;
+        Tue, 13 Jul 2021 15:06:44 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id r11so575006wro.9;
+        Tue, 13 Jul 2021 15:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hUO4z88FjFShb0tr7ebTCI1mlDYypbUNdBXF8PiD+/Q=;
-        b=S2gpv6iuoIz8KMmME9waddrFut/+xO1c/4fJ0KphbAOcyf7xLe4QKpsyQelvdnLhcD
-         hxCt7L77sSih+iTVfj+VAcaCzDp2/GbnGrVFT119jUVnEDPZr0AVJJBQ/eaKK06E0Q/H
-         9LPxKtXJyl+5rlCReHeEoEnvWiHdlffy9tiWNmyzsaTSFuD1TzIcMYN3DhKGYsP5qYZZ
-         nRALrm9DVfdD5tqNfx8iile/54ugLaVcLzDZIrcbjyMJjGR0vMAvWyb+7lO0ve0mAiaf
-         h8hpteyD0NzKDZw5lEuJovSDjBEx8d4GLticXBfNjCV2mplHAFtHPab5uXvpdM1MjmTe
-         TN1Q==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=/3zV46goqXUufTjHSFOtqe+Hqag8yZnkCH1OaEMysKQ=;
+        b=n0QPSF25EsEC1AeBM4B9dxXPcvnK+2gVjFLBEDJdhtKh3H0hxOQDU932QyNeo/XCS1
+         YgRVvfNZcsJ2kQWIlj8/qj7DCRYvjmIGurOR5ZoxRQwXNpbSA3bfeCf86C9lfoEefQRz
+         CgWULPNnt47FPuNc7X2BOTR75gJeZCp2j7Vhb1IyLbNYI3q9SjEzPy7zvzo7ToKaVGUi
+         XuU2XkBi2kdSbR3qWIdHmEd1yWiHTZGRGsf4nq8vAKDvSgQy9/Qe9Xrs8qKuVHaNYq19
+         l6+aH9wiN51yayOMJiT7p4keA/7z6IYW9hwenUvtFZcIgJsCr0Wei+Xe25XOlIbVeCZx
+         BcbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hUO4z88FjFShb0tr7ebTCI1mlDYypbUNdBXF8PiD+/Q=;
-        b=VJWJZ43y97rrSu9AMJjQHgdZDfE56Chea/Abad1DsWQSG9Bhky4w/K6LRjpaOkIZZI
-         u9Xy/iBXvKb1dcw7jeVItpQhhjwb2sOU2ci3zdQ94vUdLuYuoVZItdLfYAvoi0pfSJeD
-         XK8X1GroiaHll35CcYtPv5B+9ipEt+BHkT+jLfYeLCFpVTCwU8N3MeXs22fJrZzmb6sn
-         wR90wKXEd4XlQ4eem2t3l3KUpaxsV/EkZZeIeiCrKokFFvIniyOXnhxAR6oEpgjfoHWR
-         djOlG+Nsc2Vv6VIgSkJowObxZ4OkCkwc8E7rpnzkBXrOQ3ZTWOaYvL/LMcjAmdb+WfbD
-         Lv+A==
-X-Gm-Message-State: AOAM530hW+eZZKs9GdA9d2g6Cx/HtryCpSfRTVYEgrgH0R7hF9weo2Hb
-        hoKjEKic2ffjz7bpYiaNFZAR6tw2BvY6h2paoxk=
-X-Google-Smtp-Source: ABdhPJw/cLrySdmiuHtHgNMWFAAQecmL2CP6a9Y251qzuozfAeeYM95TWi09nfpSbz0tdoHKY8xH+caVRBWV2Avivmc=
-X-Received: by 2002:a17:90a:17ad:: with SMTP id q42mr900534pja.181.1626205629007;
- Tue, 13 Jul 2021 12:47:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210709170426.GC4112@sirena.org.uk> <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
- <20210712124223.GB4435@sirena.org.uk> <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
- <20210712133428.GD4435@sirena.org.uk> <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
- <20210712170120.GG4435@sirena.org.uk> <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
- <20210713152454.GC4098@sirena.org.uk> <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
- <20210713181837.GE4098@sirena.org.uk>
-In-Reply-To: <20210713181837.GE4098@sirena.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 13 Jul 2021 22:46:29 +0300
-Message-ID: <CAHp75Vfwz-cDrAhOnXaeUSDN-K+YJv8ahmvZ3aJwm2sKqc8HeQ@mail.gmail.com>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=/3zV46goqXUufTjHSFOtqe+Hqag8yZnkCH1OaEMysKQ=;
+        b=dxGaAqY1LMSAfeqI4pCj1JAdp27QrBP+PmvB1uHga00Dzk/8aj709Z4kINUwLBe5p0
+         axRfmUPgdk8YskdFJZ0hoYEwV8vjgOm1gfJ6Vj/Hr4amADo30QsYTr31zmpO0xkhVsdK
+         PvdWjcXkS6wK/RkWtoULMv2J72srd3tlyHRuN+tpFhmm4epRMqmUOvAT1v1zeIqB4uDl
+         q2+kDIhbb6bTReAXPWa7GKxaDGtQ2cmBe3Toub/7Wi7T6LgHylr0dyHGw+V3eSQF8EgZ
+         BDWcbU1JGKEvJPFCbH106tMIV29p39KZSzLaeo1ZrDRl+/XT69n7IeMBfEBc6/lSkiH6
+         1sXQ==
+X-Gm-Message-State: AOAM532BpkyiLACyPiHfJC/72wsZIzzBTG2SeSPqSh81igFVZjSyZ4zQ
+        MIPiV1gJBq3koBjgOy6D6xM=
+X-Google-Smtp-Source: ABdhPJw/JkqZaExSL3QACAADMzVi5VIANMS8RRK6A99eHr3IY7iRN17vaZD8XqKWQnhydt9RvyUi5Q==
+X-Received: by 2002:a5d:6506:: with SMTP id x6mr8326125wru.86.1626214003069;
+        Tue, 13 Jul 2021 15:06:43 -0700 (PDT)
+Received: from [192.168.1.211] ([2.29.20.111])
+        by smtp.gmail.com with ESMTPSA id s1sm3517330wmj.8.2021.07.13.15.06.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Jul 2021 15:06:42 -0700 (PDT)
+From:   Daniel Scally <djrscally@gmail.com>
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
 To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>,
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -75,70 +70,98 @@ Cc:     Daniel Scally <djrscally@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         kieran.bingham@ideasonboard.com
-Content-Type: text/plain; charset="UTF-8"
+References: <20210708224226.457224-1-djrscally@gmail.com>
+ <20210709170426.GC4112@sirena.org.uk>
+ <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+ <20210712124223.GB4435@sirena.org.uk>
+ <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
+ <20210712133428.GD4435@sirena.org.uk>
+ <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+ <20210712170120.GG4435@sirena.org.uk>
+ <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
+ <20210713152454.GC4098@sirena.org.uk>
+Message-ID: <94cbb11d-c697-44cf-75e3-6c7c4789cc94@gmail.com>
+Date:   Tue, 13 Jul 2021 23:06:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <20210713152454.GC4098@sirena.org.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 9:19 PM Mark Brown <broonie@kernel.org> wrote:
+Hi Mark
+
+On 13/07/2021 16:24, Mark Brown wrote:
+> On Tue, Jul 13, 2021 at 12:32:26AM +0100, Daniel Scally wrote:
 >
-> On Tue, Jul 13, 2021 at 06:55:59PM +0300, Andy Shevchenko wrote:
-> > On Tue, Jul 13, 2021 at 6:25 PM Mark Brown <broonie@kernel.org> wrote:
->
-> > > The driver code is trivial boilerplate, assuming someone doesn't go and
-> > > implement a helper to register stuff separately like I suggested.  The
-> > > proposed swnode stuff would involve duplicating the DT parsing code.
-> > > This seems like a whole lot of effort for something that provides a
-> > > worse result than either of the existing things.
->
-> > I'm not sure I follow. Where did you see the duplication when I saw
-> > the other way around?
->
-> The current patch consists entirely of additions, it does not remove any
-> existing code at all, the diffstat is:
->
->  5 files changed, 174 insertions(+)
+>> I do think it can simplify driver code too; a lot of them aren't written
+>> to parse platform data to get the init data, as they're just relying on
+>> reading it from devicetree so in the event that we get more cases like
+>> this, we need to modify those drivers to look for platform data too. On
+>> the other hand, even the drivers that don't directly call
+>> of_get_regulator_init_data() still do that lookup during the
+>> regulator_of_get_init_data() call in regulator_register(), so the ones
+>> that do parse platform data for init_data structs will check DT as part
+>> of regulator_register() anyway. Imitating that seems simpler to me.
+> The driver code is trivial boilerplate, assuming someone doesn't go and
+> implement a helper to register stuff separately like I suggested.  The
+> proposed swnode stuff would involve duplicating the DT parsing code.
+> This seems like a whole lot of effort for something that provides a
+> worse result than either of the existing things.
 
-Ah, okay, you are talking with regard to the current patch. I talked
-in generic terms.
 
-> > Converting code from OF to fwnode APIs in most cases is smooth and
-> > doesn't add any overhead to the codebase,
->
-> We explicitly do not want to attempt to parse regulator properties out
-> of ACPI platform descriptions because using the regulator binding on
-> ACPI platforms conflicts with the ACPI model for power management and
-> we really don't want to encourage platforms to attempt to mix and match
-> here, it's not going to lead to anything robust.  System integrators
-> that need this sort of OS visible low level power management really
-> should be working with the UEFI forum to get an ACPI specification for
-> it, or if they don't really need it fixing up their AML to DTRT.
+Alright - let me look at adding a helper to register them instead then.
 
-No-one is objecting to this. I agree that integration of regulators
-and ACPI should be done in a specific way if needed at all.
+>> It also creates some problems to suppress the enumeration of the i2c
+>> device via ACPI (which we'll have to do in a machine specific fashion,
+>> because some laptops have this chip with properly configured ACPI and
+> To be clear I think that's a terrible idea.
 
-> If you were to say that we could bodge around that by somehow forcing
-> this binding to exist only for swnodes when running on ACPI systems then
-> we'd still have the problems with creating something with worse tooling
-> than what's there already.
 
-Of course, no objections to this.
+Me too. I thought you were suggesting that I do that - sorry to have
+misunderstood there. The problem we're trying to resolve here is kinda
+exacerbated by a lot non-standard stuff within the ACPI for these
+devices, so for example, on top of not having any power management AML
+(which is what I'm trying to fix up here), the ACPI device can actually
+represent a bunch of different things that might be a TPS68470 PMIC, a
+different PMIC entirely or even not a physical PMIC at all, but rather
+just a convenient dummy device to collect a bunch of GPIOs under. Which
+one it is is revealed by parsing a buffer out of the device's ACPI, so
+we need the ACPI enumeration to be able to use that properly.
 
-> Like I said in the other mail fwnode is a nice hack for systems that are
-> using ACPI but have hardware that's doing something totally outside the
-> ACPI model to allow them to reuse work that's been done for DT, it's not
-> a universal solution to the lack of appropriate support for describing
-> modern systems in ACPI.
 
-In some (I suppose rear) cases it may be used by DT-enabled platforms as well.
-I can imagine the case when you have a system in ROM and only what you
-can do to change DTB there is either use DT overlays (which seems to
-be not working, plenty of gaps there according to a Wiki I saw once)
-or do something in the board files.
+Part of the reasons I went with addressing this with software nodes is
+that we've used them to correct other deficiencies in the ACPI on the
+same devices, like the references between the cameras and the image
+signal processor ought to be described in _DSD packages [1], but are
+again just hidden inside a buffer that we need to parse to figure out
+the right way to make the connection, and then we used software nodes to
+represent that. The difference there is that that's implementing
+something that should have been there in the first place, whereas the
+regulators wouldn't ordinarily be described in this way.
 
-So, if you replace "ACPI" with the "firmware resource provider" in the
-above paragraph, I will agree 100% with you.
+>>> down to being another data table, I imagine you could write a helper for
+>>> it, or probably even come up with some generic thing that let you
+>>> register a platform data/DMI combo independently of the driver to get it
+>>> out of the driver code (looking more like the existing GPIO code which
+>>> is already being used in another bit of this quirking).
+>> The advantage of the GPIO lookups is there's no need to have the pointer
+>> to the registered devices to register the lookup table; we could imitate
+>> that, by adding entries to a list with the lookup values being device
+>> and regulator name (with the init data as the thing that's "looked up")
+>> and check for those during regulator_register() maybe?
+> Like I keep saying I think that's a much better approach than trying to
+> use swnodes, they just seem like a terrible fit for the problem.
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+Okedokey; I'm happy to take another look at it from this angle then -
+thanks for the feedback.
+
+
+[1]
+https://www.kernel.org/doc/html/latest/firmware-guide/acpi/dsd/graph.html
+
