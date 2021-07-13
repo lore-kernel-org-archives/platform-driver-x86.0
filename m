@@ -2,108 +2,109 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B34C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 15:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DD1C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 16:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0E9610A7
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 15:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EE4B61164
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 16:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237121AbhGMP73 (ORCPT
+        id S229449AbhGMQGZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jul 2021 11:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237091AbhGMP72 (ORCPT
+        Tue, 13 Jul 2021 12:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229437AbhGMQGZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jul 2021 11:59:28 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D90CAC0613DD;
-        Tue, 13 Jul 2021 08:56:38 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id w15so21980272pgk.13;
-        Tue, 13 Jul 2021 08:56:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FkUgRBuDDTuqSHeo8ZDHf6GNDnL7WlSVrrAS8awCmls=;
-        b=gf0iGBX6WEkKHEx5ckstlflxSmHtZ5pqmRY2XWAPU0zIsNdXL3qkkkomZqAb8Txu5G
-         MR5MfE1LLk0UAPdLcRvhcmco4g3ZyHdjWgqS3aVG/dAA2bgKvzMnNzcUtmgNkE3q/qDQ
-         1HyDEtxtPN7gPn8ri156mEAh49yZS4WVs0Ojbd77+fMU/r9NXqcNcaJET5WmKMatqEBk
-         A9wqKP5P2Z0EULu71ssrDsMf41XDTSBpL5lRtA1GuAuAX5OoOUbGdJh+eSwRIEyCikZV
-         G0/12w8OUyKayhpFW7cU/nu8LBdZQA3H6hy3LcSV6z6ubYQ4GcS3dJbjKCiKqMxq9YSA
-         h+fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FkUgRBuDDTuqSHeo8ZDHf6GNDnL7WlSVrrAS8awCmls=;
-        b=rtPH4ilMXpiebx7D/lzvPYoFlNzelOMzy+g/IltssfRxtfV9/G8/N7ZnjcwYZyfTKy
-         v4AEn86gzLmOW/cCAMzIq2IVHrspVTyDqDaZRHtlqZBm1QrX4RBpXqAEVmKrLYA3DmTb
-         TJS8KrhAHroHk1YrdjORuXMr47LMsBCG44ppT7Rl1SZ4jkwPqxxls5SUsuxzK+Fcz2q2
-         BjAWVmQnLVkjCIleIYGAKpbJYphrMP1yfzf8emXPhbIrjhW9RWclMBOpOB0KRAHE42Vz
-         sxmXur0LOKJ12mK1bHnbSykKhP8WGG/rCxr+JZ5BYlwt7FUlu4ulSCHT0qsJmY3CtHM4
-         mxoA==
-X-Gm-Message-State: AOAM532rCpB9LG78jkkZmYZ7agP9PBxLS3SAGCD+KollE9i13hEEy/6P
-        rR5WLfsSo5bgLacPnGrPaZXoLGpgxw7AvDXZQkw=
-X-Google-Smtp-Source: ABdhPJxan9EflnhwmIouyYlhigesmxK4vLk5tZ2D7f8d76++4SNktmkv0Rk1kAGD/vXHsqATGr0E+TfD6rTthFEEtjU=
-X-Received: by 2002:a63:d014:: with SMTP id z20mr4898653pgf.203.1626191798398;
- Tue, 13 Jul 2021 08:56:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210708224226.457224-1-djrscally@gmail.com> <20210709170426.GC4112@sirena.org.uk>
- <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
- <20210712124223.GB4435@sirena.org.uk> <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
- <20210712133428.GD4435@sirena.org.uk> <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
- <20210712170120.GG4435@sirena.org.uk> <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
- <20210713152454.GC4098@sirena.org.uk>
-In-Reply-To: <20210713152454.GC4098@sirena.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 13 Jul 2021 18:55:59 +0300
-Message-ID: <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-To:     Mark Brown <broonie@kernel.org>
+        Tue, 13 Jul 2021 12:06:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A9B8610A6;
+        Tue, 13 Jul 2021 16:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626192214;
+        bh=w/5d+mY536564LEOSl91Pnt7ica9jIgGgJp5tvlohYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=auY08qT1ThnVLrat9fPM4HI2xognoFLaQAFCk8+yNNmRW2b77vNuewad3R091V4Fp
+         nEt0srLCoMNiLXZ2AXC7QbgHVerZYLx+2Aebcotgv6KEPAjg51QpfihFj0efTfKgF3
+         8VcLg6wT8XRpvXO8akEwsc+GUZX5QqtXEfdccLfVdEPRkzMLKQzU746OFRxsb359Mm
+         C7tvPg0woGjpeu3ZE8HIBN+9I0hsmmyFffCNuXIqICEdNbZIEyk2HyYycI8aO66aLX
+         mPa+VDx6PGTpRBYC2klKiXdbekEwObyxiLMfNwqFg4QXcLYyUevS4LJkPdR5qnuxia
+         nFlvGKGuxoaUQ==
+Date:   Tue, 13 Jul 2021 17:02:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Daniel Scally <djrscally@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         kieran.bingham@ideasonboard.com
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+Message-ID: <20210713160259.GD4098@sirena.org.uk>
+References: <20210709170426.GC4112@sirena.org.uk>
+ <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
+ <20210712124223.GB4435@sirena.org.uk>
+ <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
+ <20210712133428.GD4435@sirena.org.uk>
+ <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+ <20210712170120.GG4435@sirena.org.uk>
+ <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
+ <20210713152454.GC4098@sirena.org.uk>
+ <YO20aXWkqLgwHkku@pendragon.ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
+Content-Disposition: inline
+In-Reply-To: <YO20aXWkqLgwHkku@pendragon.ideasonboard.com>
+X-Cookie: Keep away from fire or flame.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 6:25 PM Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Jul 13, 2021 at 12:32:26AM +0100, Daniel Scally wrote:
 
-> > I do think it can simplify driver code too; a lot of them aren't written
-> > to parse platform data to get the init data, as they're just relying on
-> > reading it from devicetree so in the event that we get more cases like
-> > this, we need to modify those drivers to look for platform data too. On
-> > the other hand, even the drivers that don't directly call
-> > of_get_regulator_init_data() still do that lookup during the
-> > regulator_of_get_init_data() call in regulator_register(), so the ones
-> > that do parse platform data for init_data structs will check DT as part
-> > of regulator_register() anyway. Imitating that seems simpler to me.
->
-> The driver code is trivial boilerplate, assuming someone doesn't go and
-> implement a helper to register stuff separately like I suggested.  The
-> proposed swnode stuff would involve duplicating the DT parsing code.
-> This seems like a whole lot of effort for something that provides a
-> worse result than either of the existing things.
+--VMt1DrMGOVs3KQwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not sure I follow. Where did you see the duplication when I saw
-the other way around?
-Converting code from OF to fwnode APIs in most cases is smooth and
-doesn't add any overhead to the codebase,
+On Tue, Jul 13, 2021 at 06:42:33PM +0300, Laurent Pinchart wrote:
+> On Tue, Jul 13, 2021 at 04:24:54PM +0100, Mark Brown wrote:
+> > On Tue, Jul 13, 2021 at 12:32:26AM +0100, Daniel Scally wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > > It also creates some problems to suppress the enumeration of the i2c
+> > > device via ACPI (which we'll have to do in a machine specific fashion,
+> > > because some laptops have this chip with properly configured ACPI and
+
+> > To be clear I think that's a terrible idea.
+
+> If you're talking about the ACPI implementation on those machines,
+> nobody disagrees :-)
+
+> To make sure I understand you correctly, do you advocate for suppressing
+> registration of the I2C devices from ACPI and instantiate them from
+> board code instead, or to somehow supplement the I2C device with
+> board-specific data ?
+
+No, to repeat yet again that is what I think is a terrible idea.
+
+--VMt1DrMGOVs3KQwf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDtuTIACgkQJNaLcl1U
+h9AECQf/ZGEMmqj125P5a/SJoFykM+yrqls7LDNT92phSmxy6smHqTxkVAdM4kNY
+6DjwGVT6oJNwWlNQbPdku/hi76Y+mp/FxTY+hpfJp7U6XkddgHeZAg3TXZKrkFss
+sU6cFTgmI68wLeefe3I/Otu7d9uJT1mrCDGkOUC0xCM0Taw7ymEYQnKHZgC77MZY
+4nxZg6CF/keLClI8gin03AmZiBEcymsrh8DwLpbmW0MtT5BlWMlyh0qGlJL6xuDL
+eVziJmZZ57Ujqqzu9BxlJwGtokm9CNpkRXetrHwxm+zAX2SSj+8prMgGzsnbDOec
+FVvTXcSkYhXI05opsC63m1MGhw7Qeg==
+=QASs
+-----END PGP SIGNATURE-----
+
+--VMt1DrMGOVs3KQwf--
