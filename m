@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E85C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7B1C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321A8613AB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD8B361026
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbhGMSWE (ORCPT
+        id S229650AbhGMS2L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jul 2021 14:22:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33374 "EHLO mail.kernel.org"
+        Tue, 13 Jul 2021 14:28:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229478AbhGMSWE (ORCPT
+        id S229478AbhGMS2K (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jul 2021 14:22:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 984E06136D;
-        Tue, 13 Jul 2021 18:19:13 +0000 (UTC)
+        Tue, 13 Jul 2021 14:28:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F08F601FC;
+        Tue, 13 Jul 2021 18:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626200354;
-        bh=cMdO8+EgP81LfDfTGGuhCMJIV2cTg8n2Vt2uLKZKQvY=;
+        s=k20201202; t=1626200720;
+        bh=IQfDA3nMscoDfTsnxUrZjXrPXJ9ASjeGuNtZQgnPzKo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AYagHoxmuuhdYYALTMy0Q2QzsYQKQo64SCjxbrQFNSmccdgFZZYj5FhbCWle8irZ4
-         ZX3aK0KibU+ac/zl9UoKgsz2NM5X1E3JxiO7AenjX7Jn94Zk2gV96yi8DLX0C8jpgE
-         wRtfjCW1lnWQrIvGmGqc31NrCAqW6SNAfcB77sqq0dV3d1J6QLwI/b1LAKmHzgMh9O
-         +sVCiQHKSKl2NgahMzCbjgoUv5Yql6QfkcUbbNDSqmLU0J0efFDeiltdUT3Nz8iUh8
-         pyKdo6GXMgPySplfafVMb7+DDVzrEuwRFI2kj0gTxoxpBsYJlgPqXQa9eYNbsf29W+
-         1CLKwFhM5PgZQ==
-Date:   Tue, 13 Jul 2021 19:18:37 +0100
+        b=EmVrqOE2MxV+BInmj0mN5BiHb8LgIclMeUJkW86w3vYcOGH2DWYQ3xu6QINiMTSoG
+         4VSS6xPJf2ikd3/jX7gpDEnMJH4BVM+0lGJlKVp0eKh99AT+JznEC1DRr00gfkE4bH
+         6ONfV4wmFuxtsZVKR1iZrvq0fwxhtxmCL34Mu1M8u8MftutNk6XzIp2ruugx99bzG+
+         7ZyUwqXr1G9iNxRihcyDi+VJF8Nnra2E9/+v4a8GL2S9NdtvwW9WFOwkSU+6YVwY8s
+         7VIZOWl/4XTdGk2+CdW6nVf1jt7gX2/KmC/8r/J/Dijnj4+hZk8L1bRbM4RkkWZbff
+         s2OD13g3Y8oQw==
+Date:   Tue, 13 Jul 2021 19:24:45 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Daniel Scally <djrscally@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210713181837.GE4098@sirena.org.uk>
-References: <20210709170426.GC4112@sirena.org.uk>
- <CAHp75VeugcuwWAq5p_rx+8J2FsX7igV+UJ3QKw3XG6BiDqTtNQ@mail.gmail.com>
- <20210712124223.GB4435@sirena.org.uk>
+Message-ID: <20210713182445.GF4098@sirena.org.uk>
+References: <20210712124223.GB4435@sirena.org.uk>
  <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
  <20210712133428.GD4435@sirena.org.uk>
  <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
  <20210712170120.GG4435@sirena.org.uk>
  <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
  <20210713152454.GC4098@sirena.org.uk>
- <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
+ <YO20aXWkqLgwHkku@pendragon.ideasonboard.com>
+ <20210713160259.GD4098@sirena.org.uk>
+ <YO25/IAD0J40R7bH@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k3qmt+ucFURmlhDS"
+        protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
+In-Reply-To: <YO25/IAD0J40R7bH@pendragon.ideasonboard.com>
 X-Cookie: Keep away from fire or flame.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
@@ -68,63 +68,40 @@ List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
---k3qmt+ucFURmlhDS
+--IvGM3kKqwtniy32b
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jul 13, 2021 at 06:55:59PM +0300, Andy Shevchenko wrote:
-> On Tue, Jul 13, 2021 at 6:25 PM Mark Brown <broonie@kernel.org> wrote:
+On Tue, Jul 13, 2021 at 07:06:20PM +0300, Laurent Pinchart wrote:
+> On Tue, Jul 13, 2021 at 05:02:59PM +0100, Mark Brown wrote:
 
-> > The driver code is trivial boilerplate, assuming someone doesn't go and
-> > implement a helper to register stuff separately like I suggested.  The
-> > proposed swnode stuff would involve duplicating the DT parsing code.
-> > This seems like a whole lot of effort for something that provides a
-> > worse result than either of the existing things.
+> > > To make sure I understand you correctly, do you advocate for suppressing
+> > > registration of the I2C devices from ACPI and instantiate them from
+> > > board code instead, or to somehow supplement the I2C device with
+> > > board-specific data ?
 
-> I'm not sure I follow. Where did you see the duplication when I saw
-> the other way around?
+> > No, to repeat yet again that is what I think is a terrible idea.
 
-The current patch consists entirely of additions, it does not remove any
-existing code at all, the diffstat is:
+> Which of those two ? :-)
 
- 5 files changed, 174 insertions(+)
+Suppressing the registration data.  Frankly the way that ACPI systems
+rely so extensively on OS provided fixups on non-server systems while
+still being deployed routinely there is also a substantial failure, but
+it's not quite so bad.
 
-> Converting code from OF to fwnode APIs in most cases is smooth and
-> doesn't add any overhead to the codebase,
-
-We explicitly do not want to attempt to parse regulator properties out
-of ACPI platform descriptions because using the regulator binding on
-ACPI platforms conflicts with the ACPI model for power management and
-we really don't want to encourage platforms to attempt to mix and match
-here, it's not going to lead to anything robust.  System integrators
-that need this sort of OS visible low level power management really
-should be working with the UEFI forum to get an ACPI specification for
-it, or if they don't really need it fixing up their AML to DTRT.
-
-If you were to say that we could bodge around that by somehow forcing
-this binding to exist only for swnodes when running on ACPI systems then
-we'd still have the problems with creating something with worse tooling
-than what's there already.
-
-Like I said in the other mail fwnode is a nice hack for systems that are
-using ACPI but have hardware that's doing something totally outside the
-ACPI model to allow them to reuse work that's been done for DT, it's not
-a universal solution to the lack of appropriate support for describing
-modern systems in ACPI.
-
---k3qmt+ucFURmlhDS
+--IvGM3kKqwtniy32b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDt2PwACgkQJNaLcl1U
-h9AIYggAhPNHiBwlKUk6c+lvxWX8ALjqQ6kBBP2KDmwrMIuFZsvdXTXhHUQ1vPkb
-w7PG6FcToLxXp/CBQlzstZ9A6UP992Bd750Amcwy/ewXy4iI0EDrxsfcVmFYIonv
-KPs1YEint4jWFqG2RshAqI47K1HFFlIMVMdg/ml/RS86ZKYbJ69IzJ0swPfD0yZo
-zQ5fmFAStFmy16NRb6TdzWgU3fhulaKZsNrNXAvc7yNK4kuoE5OPfxl+oth46L6k
-T3uE9qCP3uTF3IWQLTjdWIvRUpe1fKtkvhedS9BQvgluaECF+bilchTHDkl/oERO
-FAXsZvvu/qRAoXEzYBTezPTelH3/BA==
-=wdNf
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDt2mwACgkQJNaLcl1U
+h9CzZQf/WWsaoTKwpAmcDK5OieBy/NO01P/xPTHASrZZPX/PggTwK9I53p1jcWsY
+tcl5a0kjn5oSewTuaiy2/Xr3AbgiJGwNDNELdyn7xHzp3yOHlalqiNE3+iaw3DmU
+BngVVe7sfg6SQnptFukN2HMmb4MyAfyZZCulQwTC+5DE/mWK8aaD0zZ+Z0vCYGoE
+t2ms3qLN0St4i4X/Qty6OMelAUqDM0VSXycds3TfeWvWa790rHHvdvfzqpbD1S2B
+4MSDncETZ0VA/NpkRib5G7SdMQ/eE+CYd93/mdOelK/+mN7kQ+uTnmM1uMOxD5pa
+GDlx6AUVZ5Lw8nEmXqJn4uvJdqIQ/g==
+=52Rr
 -----END PGP SIGNATURE-----
 
---k3qmt+ucFURmlhDS--
+--IvGM3kKqwtniy32b--
