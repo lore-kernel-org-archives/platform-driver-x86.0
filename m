@@ -2,106 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7B1C07E95
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924CCC11F66
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 19:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD8B361026
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 18:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7432661183
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 13 Jul 2021 19:26:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbhGMS2L (ORCPT
+        id S234452AbhGMT3J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 13 Jul 2021 14:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229478AbhGMS2K (ORCPT
+        Tue, 13 Jul 2021 15:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231499AbhGMT3H (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 13 Jul 2021 14:28:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F08F601FC;
-        Tue, 13 Jul 2021 18:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626200720;
-        bh=IQfDA3nMscoDfTsnxUrZjXrPXJ9ASjeGuNtZQgnPzKo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EmVrqOE2MxV+BInmj0mN5BiHb8LgIclMeUJkW86w3vYcOGH2DWYQ3xu6QINiMTSoG
-         4VSS6xPJf2ikd3/jX7gpDEnMJH4BVM+0lGJlKVp0eKh99AT+JznEC1DRr00gfkE4bH
-         6ONfV4wmFuxtsZVKR1iZrvq0fwxhtxmCL34Mu1M8u8MftutNk6XzIp2ruugx99bzG+
-         7ZyUwqXr1G9iNxRihcyDi+VJF8Nnra2E9/+v4a8GL2S9NdtvwW9WFOwkSU+6YVwY8s
-         7VIZOWl/4XTdGk2+CdW6nVf1jt7gX2/KmC/8r/J/Dijnj4+hZk8L1bRbM4RkkWZbff
-         s2OD13g3Y8oQw==
-Date:   Tue, 13 Jul 2021 19:24:45 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210713182445.GF4098@sirena.org.uk>
-References: <20210712124223.GB4435@sirena.org.uk>
- <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
- <20210712133428.GD4435@sirena.org.uk>
- <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
- <20210712170120.GG4435@sirena.org.uk>
- <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
- <20210713152454.GC4098@sirena.org.uk>
- <YO20aXWkqLgwHkku@pendragon.ideasonboard.com>
- <20210713160259.GD4098@sirena.org.uk>
- <YO25/IAD0J40R7bH@pendragon.ideasonboard.com>
+        Tue, 13 Jul 2021 15:29:07 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58D8C0613DD
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jul 2021 12:26:16 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id u25so31616228ljj.11
+        for <platform-driver-x86@vger.kernel.org>; Tue, 13 Jul 2021 12:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AbX9Xu9c06giO/U+v639pJu8KA6hGm26Zdj5YP+EUss=;
+        b=wJkZmqOLp3rfXdWR0LRg0m1k77k9osElwcslBYsP5olnnrFdbmizZCuiAyJGUbNDrj
+         RhP1BkAqsytHhIRPh1S2nuT2JzNd9vOolTErTK/OtfRAD3coj7OqigabzAQgL1vWLCnU
+         2j4EBRkGHXIMGhgGfbtH1wK1GumCaRRLyLZKm6mqbRR7ky4VeP5tM9K1Q0/OuImTzIEZ
+         Pi4I0sF+5FyuE0HP9tGRK4aUGl3m1Xd4IGaVgNbvlI4PWkh0UnE65BP39sJRy8lH8Nrq
+         k2wUNGjLxwwVJsGXQJRcg5t0GovPby8hSzWzHuEArLCOl1tDO2RxyBlwERWmMOuBsIO+
+         KIAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AbX9Xu9c06giO/U+v639pJu8KA6hGm26Zdj5YP+EUss=;
+        b=CDD3DEhtX7FVZUc+9Xvh7d3B2CCeRPzmXy37myPtXuTCKfVLVwsVI4zH2beVIgNWh4
+         37QHuhd1LkrLW+YsJPFX26ikTYAqesX8CSE4aIv6EEFqZcD6XLjDNh5/aXF5Jvg6HVj0
+         QwrmSmHHgLprLlXNmnhzQxJ9lXFDofxGKRc8aunIalVITOeLfoIqq2a06bARTCMCrodK
+         ue8sVeTiYW1TLNKeOtze5pmKnj2IwCgqp52UgLqZ3OP6vIUwgbQtzQ6Vwr9oqRTTuvrr
+         kX5sEL5n+HSgAFj3iWTdzGSDWrLUHJPvbNRsfEv9JEIVhYkRBsz9b2iYpvbn0FXqoUBi
+         WEbg==
+X-Gm-Message-State: AOAM533asWT3XqINxzFQe44MICqLR2/0hcLeWG5dVcrzwwUsK44+Dx9w
+        8LCRfjBP90hQgAugCy+MrZqMLlN4uLuCIWtCNhRWaw==
+X-Google-Smtp-Source: ABdhPJwazSjMBKSD1KsMMqLDNHfhs748K2fCEmgqZmF3JvX9SK0I+hv55CRW5kFDjp5Stk4bfpPF2SoviRNY7ckKzGI=
+X-Received: by 2002:a2e:8909:: with SMTP id d9mr5534574lji.65.1626204374759;
+ Tue, 13 Jul 2021 12:26:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
-Content-Disposition: inline
-In-Reply-To: <YO25/IAD0J40R7bH@pendragon.ideasonboard.com>
-X-Cookie: Keep away from fire or flame.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <88ad0981-0763-9c8d-fb57-70278bcaffd4@redhat.com> <0D708B40-20DB-4D5C-BFAD-74A30D5DE477@getmailspring.com>
+In-Reply-To: <0D708B40-20DB-4D5C-BFAD-74A30D5DE477@getmailspring.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 13 Jul 2021 12:25:33 -0700
+Message-ID: <CACK8Z6FPsywe49fP=5pVc5DFm--4xt0daYLDzpbujA1_qoK7Dg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector properties
+To:     Marco Trevisan <marco.trevisan@canonical.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Simon Ser <contact@emersion.fr>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hello Hans, Marco, et al,
 
---IvGM3kKqwtniy32b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Apr 27, 2021 at 10:03 AM Marco Trevisan
+<marco.trevisan@canonical.com> wrote:
+>
+> Hi,
+>
+> >>> There now is GNOME userspace code using the new properties:
+> >>> https://hackmd.io/@3v1n0/rkyIy3BOw
+> >>
+> >> Thanks for working on this.
+> >>
+> >> Can these patches be submitted as merge requests against the upstream
+> >> projects? It would be nice to get some feedback from the maintainers,
+> >> and be able to easily leave some comments there as well.
+>
+> FYI, I've discussed with other uptream developers about these while
+> doing them, and afterwards on how to improve them.
+>
+> > I guess Marco was waiting for the kernel bits too land before
+> > submitting these,
+> > but I agree that it would probably be good to have these submitted
+> > now, we
+> > can mark them as WIP to avoid them getting merged before the kernel side
+> > is finalized.
+>
+> I'll submit them in the next days once I'm done with the refactor I've
+> in mind, and will notify the list.
 
-On Tue, Jul 13, 2021 at 07:06:20PM +0300, Laurent Pinchart wrote:
-> On Tue, Jul 13, 2021 at 05:02:59PM +0100, Mark Brown wrote:
+Any updates on the privacy-screen patchset? Can Hans' patchset be
+accepted upstream now?
 
-> > > To make sure I understand you correctly, do you advocate for suppressing
-> > > registration of the I2C devices from ACPI and instantiate them from
-> > > board code instead, or to somehow supplement the I2C device with
-> > > board-specific data ?
+Thanks,
 
-> > No, to repeat yet again that is what I think is a terrible idea.
+Rajat
 
-> Which of those two ? :-)
-
-Suppressing the registration data.  Frankly the way that ACPI systems
-rely so extensively on OS provided fixups on non-server systems while
-still being deployed routinely there is also a substantial failure, but
-it's not quite so bad.
-
---IvGM3kKqwtniy32b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDt2mwACgkQJNaLcl1U
-h9CzZQf/WWsaoTKwpAmcDK5OieBy/NO01P/xPTHASrZZPX/PggTwK9I53p1jcWsY
-tcl5a0kjn5oSewTuaiy2/Xr3AbgiJGwNDNELdyn7xHzp3yOHlalqiNE3+iaw3DmU
-BngVVe7sfg6SQnptFukN2HMmb4MyAfyZZCulQwTC+5DE/mWK8aaD0zZ+Z0vCYGoE
-t2ms3qLN0St4i4X/Qty6OMelAUqDM0VSXycds3TfeWvWa790rHHvdvfzqpbD1S2B
-4MSDncETZ0VA/NpkRib5G7SdMQ/eE+CYd93/mdOelK/+mN7kQ+uTnmM1uMOxD5pa
-GDlx6AUVZ5Lw8nEmXqJn4uvJdqIQ/g==
-=52Rr
------END PGP SIGNATURE-----
-
---IvGM3kKqwtniy32b--
+>
+> And for sure we can keep them in WIP till the final bits aren't completed.
+>
+> Cheers
