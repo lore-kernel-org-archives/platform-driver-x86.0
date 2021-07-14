@@ -2,39 +2,40 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF549C07E9A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C3C07E9A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DC4613C0
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE0F613AB
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbhGNRcP (ORCPT
+        id S229738AbhGNRoX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jul 2021 13:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229592AbhGNRcP (ORCPT
+        Wed, 14 Jul 2021 13:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229685AbhGNRoW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jul 2021 13:32:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 005B360FF1;
-        Wed, 14 Jul 2021 17:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626283763;
-        bh=oQjr3iu7tXHT5XdQo184Sz9Za+0jKH7IEfRHCYXDz+s=;
+        Wed, 14 Jul 2021 13:44:22 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8A4C06175F;
+        Wed, 14 Jul 2021 10:41:31 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5787BCC;
+        Wed, 14 Jul 2021 19:41:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1626284488;
+        bh=mO8N+B/iHyg8PhJT0Ov+6j+X77k5KOjgU3MVEamebX8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nj3RIkuBjAv5n5GsY1kvCcGysnYPrRwqsSBrBuoL+5LQGPoDVPH7Z931cIsuNf5Ns
-         b11jOWmf7+8v+Un8z/76dXF0gt3ZBn5pqDrZFr6Szxqg0qKdG6ruphcaLkOiMIFTPc
-         8VSkZBPEfnCp3NLw2erMloz1P/xznvy2vE+NRO3dTbwVMfJnbd8xP0U7r/xoSQklRJ
-         J44GIefwjbDwZWDpMi/U6dxiFeh0zPSyRkJuIMizejTTKMySCgU2GumI/CkUKBwYUu
-         4ItRQZ8HR4LIc4wMl4B460FCDAkw5R8DybW8FN7ay/1BuTCSzZvxUN1kIG+Aslkqnh
-         z3tCWhUnRstqQ==
-Date:   Wed, 14 Jul 2021 18:28:46 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        b=taPSFyeVCgKD+NKlY5NCh5DNc+7BaKJpbG7P/TFPIaNnnp0LAlTY8f0Z7RV8DQuNC
+         NAcacbDqJVNW3pnF00+tBLuhHnnsDoyukNguf1LNGEbUrCFxWqMiP/n+YLtXZEUOkb
+         CduFcgC0zSRSIlpROQgWYxpX1IXCumte/5oN5Zi8=
+Date:   Wed, 14 Jul 2021 20:41:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Daniel Scally <djrscally@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -45,9 +46,8 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210714172846.GI4719@sirena.org.uk>
-References: <20210712133428.GD4435@sirena.org.uk>
- <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+Message-ID: <YO8hxyrHqY7K43wp@pendragon.ideasonboard.com>
+References: <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
  <20210712170120.GG4435@sirena.org.uk>
  <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
  <20210713152454.GC4098@sirena.org.uk>
@@ -56,57 +56,46 @@ References: <20210712133428.GD4435@sirena.org.uk>
  <YO6RTh8ngNKZxzj+@pendragon.ideasonboard.com>
  <20210714165948.GG4719@sirena.org.uk>
  <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
+ <20210714172846.GI4719@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WHz+neNWvhIGAO8A"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
-X-Cookie: C for yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210714172846.GI4719@sirena.org.uk>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Jul 14, 2021 at 06:28:46PM +0100, Mark Brown wrote:
+> On Wed, Jul 14, 2021 at 08:18:13PM +0300, Laurent Pinchart wrote:
+> > On Wed, Jul 14, 2021 at 05:59:48PM +0100, Mark Brown wrote:
+> 
+> > > really look like each other and AIUI this stuff isn't getting adopted
+> > > for actual firmware (as opposed to swnodes) outside of the embedded x86
+> > > space.
+> 
+> > It's only one data point, but we're seeing adoption of the ACPI
+> > DT-in-DSD for camera. It's still not pretty of course.
+> 
+> By non-Linux system vendors?
 
---WHz+neNWvhIGAO8A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+For Windows-based machines, yes. It's fairly new, and the information I
+have is that those machines may ship DSDT containing both Windows-style
+(read: crap) data and Linux-style data for the same nodes. My fear is
+that only the former will be properly tested and the latter will thus be
+incorrect. The future will tell (I'm as usual very hopeful).
 
-On Wed, Jul 14, 2021 at 08:18:13PM +0300, Laurent Pinchart wrote:
-> On Wed, Jul 14, 2021 at 05:59:48PM +0100, Mark Brown wrote:
+> My understanding has been that for audio people are just unwilling to
+> provide the level of firmware description required to avoid quirks,
+> there was some limited stuff with the NHLT table but it still required
+> system software to quirk things.  If there's progress elsewhere
+> perhaps the relevant people can be persuaded to have another go...
+> 
+> > Once travel will be easier again, we'll plot a take over of the world in
+> > a bar. Dealing with ACPI requires lots of whisky :-)
+> 
+> Indeed!
 
-> > really look like each other and AIUI this stuff isn't getting adopted
-> > for actual firmware (as opposed to swnodes) outside of the embedded x86
-> > space.
+-- 
+Regards,
 
-> It's only one data point, but we're seeing adoption of the ACPI
-> DT-in-DSD for camera. It's still not pretty of course.
-
-By non-Linux system vendors?  My understanding has been that for audio
-people are just unwilling to provide the level of firmware description
-required to avoid quirks, there was some limited stuff with the NHLT
-table but it still required system software to quirk things.  If there's
-progress elsewhere perhaps the relevant people can be persuaded to have
-another go...
-
-> Once travel will be easier again, we'll plot a take over of the world in
-> a bar. Dealing with ACPI requires lots of whisky :-)
-
-Indeed!
-
---WHz+neNWvhIGAO8A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDvHs0ACgkQJNaLcl1U
-h9BpVQf/ZwDGOuXDd1Ddz3ZHe8HDdBd9aiLpP0rIGJD5b97HQ29Cen4aLxkStQ1l
-8rLMCNuA452jN+AOWKio8TgRDYx9fK80kzkXGzjErsjax+G1yLLstMWpR5SsCLTB
-nsPXpMXyE+GXqT7BNJYHw4PUhwl6QhGKrJkTmPVz5G2CUrq1hjF9kZ5idBMNsM8E
-U6jXpXFuyaN2ur6HUtNad5SUKsCJ61UG7SpDvkUmRvxoS9cKFH/6q1dhNN6nT23f
-kMud9UAYs0RSaOqaZ8iCCgtv6zmQ6yt3/o5Z9uiJZCVIq9PZMoNoSZAi9+vYIk0L
-auWi/xr0KSW6p6E9XzdwTCZVtVHn8w==
-=4IKh
------END PGP SIGNATURE-----
-
---WHz+neNWvhIGAO8A--
+Laurent Pinchart
