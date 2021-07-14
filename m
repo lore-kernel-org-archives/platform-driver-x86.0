@@ -2,37 +2,39 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8546EC07E9A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF549C07E9A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66CD5613BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DC4613C0
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbhGNRVI (ORCPT
+        id S229756AbhGNRcP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jul 2021 13:21:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:56190 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbhGNRVI (ORCPT
+        Wed, 14 Jul 2021 13:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229592AbhGNRcP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jul 2021 13:21:08 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D3FC8CC;
-        Wed, 14 Jul 2021 19:18:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1626283095;
-        bh=ZGkMV8sDWIogo+fVef+xYu8TVBeuYIR2zPF/V59CSjI=;
+        Wed, 14 Jul 2021 13:32:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 005B360FF1;
+        Wed, 14 Jul 2021 17:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626283763;
+        bh=oQjr3iu7tXHT5XdQo184Sz9Za+0jKH7IEfRHCYXDz+s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=go82Ez756GWFpyWT00c5spMYfJOmtnUfukPm4ZLdDiKOvOnpm9Tkop0iNqrgxZHJU
-         KBHONmJDj9W+P2wc5QKBEkBNerVZbZl3G0+qYnjAHobS73E9aGNqnPudvN9o+uNC1L
-         k300l/44mowdcYgFdBpaUmngm5cSlVsjod6gWZpI=
-Date:   Wed, 14 Jul 2021 20:18:13 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mark Brown <broonie@kernel.org>
+        b=nj3RIkuBjAv5n5GsY1kvCcGysnYPrRwqsSBrBuoL+5LQGPoDVPH7Z931cIsuNf5Ns
+         b11jOWmf7+8v+Un8z/76dXF0gt3ZBn5pqDrZFr6Szxqg0qKdG6ruphcaLkOiMIFTPc
+         8VSkZBPEfnCp3NLw2erMloz1P/xznvy2vE+NRO3dTbwVMfJnbd8xP0U7r/xoSQklRJ
+         J44GIefwjbDwZWDpMi/U6dxiFeh0zPSyRkJuIMizejTTKMySCgU2GumI/CkUKBwYUu
+         4ItRQZ8HR4LIc4wMl4B460FCDAkw5R8DybW8FN7ay/1BuTCSzZvxUN1kIG+Aslkqnh
+         z3tCWhUnRstqQ==
+Date:   Wed, 14 Jul 2021 18:28:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Daniel Scally <djrscally@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -43,9 +45,8 @@ Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         kieran.bingham@ideasonboard.com
 Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
-References: <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
- <20210712133428.GD4435@sirena.org.uk>
+Message-ID: <20210714172846.GI4719@sirena.org.uk>
+References: <20210712133428.GD4435@sirena.org.uk>
  <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
  <20210712170120.GG4435@sirena.org.uk>
  <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
@@ -54,67 +55,58 @@ References: <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
  <20210713181837.GE4098@sirena.org.uk>
  <YO6RTh8ngNKZxzj+@pendragon.ideasonboard.com>
  <20210714165948.GG4719@sirena.org.uk>
+ <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WHz+neNWvhIGAO8A"
 Content-Disposition: inline
-In-Reply-To: <20210714165948.GG4719@sirena.org.uk>
+In-Reply-To: <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
+X-Cookie: C for yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 05:59:48PM +0100, Mark Brown wrote:
-> On Wed, Jul 14, 2021 at 10:25:02AM +0300, Laurent Pinchart wrote:
-> > On Tue, Jul 13, 2021 at 07:18:37PM +0100, Mark Brown wrote:
-> 
-> > > Like I said in the other mail fwnode is a nice hack for systems that are
-> > > using ACPI but have hardware that's doing something totally outside the
-> > > ACPI model to allow them to reuse work that's been done for DT, it's not
-> > > a universal solution to the lack of appropriate support for describing
-> > > modern systems in ACPI.
-> 
-> > fwnode, as an abstraction of ACPI and OF, is quite useful for camera
-> > sensor drivers for instance. They need to read firmware properties (for
-> > instance to identify whether a camera is located on the front or back of
-> > the device, or to what port of the SoC it's connected), and being able
-> > to do so without duplicating OF and ACPI code in drivers is useful.
-> 
-> I'd still say that's a bit of a hack, it's the sort of area where ACPI
-> just has absolutely no handling at all and so picking up the DT bindings
-> will work effectively although it results in something that's really not
-> at all idiomatic for ACPI since idiomatic DT and idiomatic ACPI don't
-> really look like each other and AIUI this stuff isn't getting adopted
-> for actual firmware (as opposed to swnodes) outside of the embedded x86
-> space.
 
-It's only one data point, but we're seeing adoption of the ACPI
-DT-in-DSD for camera. It's still not pretty of course.
+--WHz+neNWvhIGAO8A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > swnode, on the other hand, is indeed more of a workaround for a
-> > more-often-than-not broken ACPI implementation. It's ironic to think
-> > that x86 ACPI-based systems, touted as being superior to ARM, are now in
-> > a worst state than OF-based systems.
-> 
-> The unfortunate thing is that ACPI is super limited in what systems it
-> models, making assumptions that only really work for fairly simple
-> server class systems.  Outside of that the models it's offering just
-> can't cope with actual hardware yet people still insist on building
-> those systems with ACPI system descriptions so you end up with huge
-> piles of platform quirks.  Audio support for modern x86 laptops is just
-> an endless procession of quirks :(
+On Wed, Jul 14, 2021 at 08:18:13PM +0300, Laurent Pinchart wrote:
+> On Wed, Jul 14, 2021 at 05:59:48PM +0100, Mark Brown wrote:
 
-I feel your pain. On the camera side, we have a case of an I2C
-controller that has a PCI driver in the kernel used when dealing with
-the camera sensor, and an AML "driver" used by an I2C GPIO expander,
-completely modelled in the DSDT. Both poke the same PCI registers of the
-I2C controller. I tried to get information from Intel on how this was
-meant to be handled, but I think the people responsible for the design
-have been exfiltrated to Guantanamo, or are expiating their sins in a
-monastery lost in a mountain.
+> > really look like each other and AIUI this stuff isn't getting adopted
+> > for actual firmware (as opposed to swnodes) outside of the embedded x86
+> > space.
 
-Once travel will be easier again, we'll plot a take over of the world in
-a bar. Dealing with ACPI requires lots of whisky :-)
+> It's only one data point, but we're seeing adoption of the ACPI
+> DT-in-DSD for camera. It's still not pretty of course.
 
--- 
-Regards,
+By non-Linux system vendors?  My understanding has been that for audio
+people are just unwilling to provide the level of firmware description
+required to avoid quirks, there was some limited stuff with the NHLT
+table but it still required system software to quirk things.  If there's
+progress elsewhere perhaps the relevant people can be persuaded to have
+another go...
 
-Laurent Pinchart
+> Once travel will be easier again, we'll plot a take over of the world in
+> a bar. Dealing with ACPI requires lots of whisky :-)
+
+Indeed!
+
+--WHz+neNWvhIGAO8A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDvHs0ACgkQJNaLcl1U
+h9BpVQf/ZwDGOuXDd1Ddz3ZHe8HDdBd9aiLpP0rIGJD5b97HQ29Cen4aLxkStQ1l
+8rLMCNuA452jN+AOWKio8TgRDYx9fK80kzkXGzjErsjax+G1yLLstMWpR5SsCLTB
+nsPXpMXyE+GXqT7BNJYHw4PUhwl6QhGKrJkTmPVz5G2CUrq1hjF9kZ5idBMNsM8E
+U6jXpXFuyaN2ur6HUtNad5SUKsCJ61UG7SpDvkUmRvxoS9cKFH/6q1dhNN6nT23f
+kMud9UAYs0RSaOqaZ8iCCgtv6zmQ6yt3/o5Z9uiJZCVIq9PZMoNoSZAi9+vYIk0L
+auWi/xr0KSW6p6E9XzdwTCZVtVHn8w==
+=4IKh
+-----END PGP SIGNATURE-----
+
+--WHz+neNWvhIGAO8A--
