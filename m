@@ -2,100 +2,153 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 534C3C07E9A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3AAC11F66
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 18:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE0F613AB
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 17:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2804613C8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 18:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbhGNRoX (ORCPT
+        id S239994AbhGNSRq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jul 2021 13:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49234 "EHLO
+        Wed, 14 Jul 2021 14:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229685AbhGNRoW (ORCPT
+        with ESMTP id S239092AbhGNSRq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jul 2021 13:44:22 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8A4C06175F;
-        Wed, 14 Jul 2021 10:41:31 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5787BCC;
-        Wed, 14 Jul 2021 19:41:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1626284488;
-        bh=mO8N+B/iHyg8PhJT0Ov+6j+X77k5KOjgU3MVEamebX8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=taPSFyeVCgKD+NKlY5NCh5DNc+7BaKJpbG7P/TFPIaNnnp0LAlTY8f0Z7RV8DQuNC
-         NAcacbDqJVNW3pnF00+tBLuhHnnsDoyukNguf1LNGEbUrCFxWqMiP/n+YLtXZEUOkb
-         CduFcgC0zSRSIlpROQgWYxpX1IXCumte/5oN5Zi8=
-Date:   Wed, 14 Jul 2021 20:41:27 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        kieran.bingham@ideasonboard.com
-Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <YO8hxyrHqY7K43wp@pendragon.ideasonboard.com>
-References: <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
- <20210712170120.GG4435@sirena.org.uk>
- <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
- <20210713152454.GC4098@sirena.org.uk>
- <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
- <20210713181837.GE4098@sirena.org.uk>
- <YO6RTh8ngNKZxzj+@pendragon.ideasonboard.com>
- <20210714165948.GG4719@sirena.org.uk>
- <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
- <20210714172846.GI4719@sirena.org.uk>
+        Wed, 14 Jul 2021 14:17:46 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7881BC061765
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 11:14:54 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id s193so2521170qke.4
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 11:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3WKLZGhjXG90Fatu5wm7XoigXrQeEPeI0ZySxgtrf1E=;
+        b=K34aiEbq6IThsKWJBJDDGsckcOYXonTslRsCf6xEi7ghhFV+UbwNIfzQP6Tq5ldAxz
+         x/gfvgeDt8i9UmUFByP8JylSs7uppp+LheXconENxXR/wPDkP+0iUfG5YhfwPEmQU1fy
+         4tTjvgWpmY3o7IvTFaQR7Z34VuSgQbU+YmK0iN4AE41bZtFsm7nGfsIz6oRpkXpW6axf
+         6b+9SsmHKDPDXxNXQY2L0ih10uAe1HpuGUVydXvTdbXoxG4rjZrIfD2Nskrohj6TdZDI
+         j2Q+YXsv7xUpGHDh1ZKrJ93dEG0SbTKyIkbyJdcn2EcTIo/QYOSql+60mVB0ixujp++K
+         tFqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3WKLZGhjXG90Fatu5wm7XoigXrQeEPeI0ZySxgtrf1E=;
+        b=IdUKGsFEGCuTDBOeoXwsyhsllFdfWhz3e1OyvqxgwmGbwId9Hak2fqbx5vKqL9AH9A
+         Gbb/aJbdHnHhnT346o58IsZs5fxjhQufNcBrduIEoRdKQ0mxHtcLvzN6xE3ImUxjEiHZ
+         aV7+wRKnuGmwXAEoMwDygMdP0+LbIEkbr0tSM2tsRfwaKVpzIsgxHJ1iMdPtAbE/8f6c
+         Tj9A5Dbb1KTyi9HBBolcfJ8xhI+uTA364ixzdl3Ry+v0vEi8q3vhj3ogRN3BQzSH98We
+         wmv/v3TBCovR+GXUHOLXY7SPpjiMEHdzsNhzWmZq5MY2QF2/T/oNWu5SDY+01NRWJB9r
+         aA9w==
+X-Gm-Message-State: AOAM532mevxIADW2rdKQlW4n60sUVamcI4IWBnS2hkO+3p40afQKo3HL
+        TmmRcn6317BNwKMroELa3vAHj7Nr1LtMWgsS305SNQ==
+X-Google-Smtp-Source: ABdhPJxM1wp8nSe3bkx8dg/pQpdxw78kl5esOD57NTfXsDoAxivKWcg01aZjKeev4L+fz4X+d7136TERrs+FRe6NY50=
+X-Received: by 2002:a05:620a:a90:: with SMTP id v16mr11085310qkg.150.1626286493309;
+ Wed, 14 Jul 2021 11:14:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210714172846.GI4719@sirena.org.uk>
+References: <20210707183616.5620-1-brijesh.singh@amd.com> <20210707183616.5620-16-brijesh.singh@amd.com>
+ <CAA03e5HA_vjhOtTPL-vKFJvPxseLRMs5=s90ffUwDWQxtG7aCQ@mail.gmail.com> <98ac737d-83a8-6ee8-feac-554bab673191@amd.com>
+In-Reply-To: <98ac737d-83a8-6ee8-feac-554bab673191@amd.com>
+From:   Marc Orr <marcorr@google.com>
+Date:   Wed, 14 Jul 2021 11:14:41 -0700
+Message-ID: <CAA03e5EKn=X28jKwK10V2MxY9e5Kj0+8obG4vnU=X8oooNzRxQ@mail.gmail.com>
+Subject: Re: [PATCH Part2 RFC v4 15/40] crypto: ccp: Handle the legacy TMR
+ allocation when SNP is enabled
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
+        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com,
+        Alper Gun <alpergun@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 06:28:46PM +0100, Mark Brown wrote:
-> On Wed, Jul 14, 2021 at 08:18:13PM +0300, Laurent Pinchart wrote:
-> > On Wed, Jul 14, 2021 at 05:59:48PM +0100, Mark Brown wrote:
-> 
-> > > really look like each other and AIUI this stuff isn't getting adopted
-> > > for actual firmware (as opposed to swnodes) outside of the embedded x86
-> > > space.
-> 
-> > It's only one data point, but we're seeing adoption of the ACPI
-> > DT-in-DSD for camera. It's still not pretty of course.
-> 
-> By non-Linux system vendors?
+> > Should this return a non-zero value -- maybe `-ENODEV`? Otherwise, the
+> > `snp_alloc_firmware_page()` API will return a page that the caller
+> > believes is suitable to use with FW. My concern is that someone
+> > decides to use this API to stash a page very early on during kernel
+> > boot and that page becomes a time bomb.
+>
+> But that means the caller now need to know that SNP is enabled before
+> calling the APIs. The idea behind the API was that caller does not need
+> to know whether the firmware is in the INIT state. If the firmware has
+> initialized the SNP, then it will transparently set the immutable bit in
+> the RMP table.
 
-For Windows-based machines, yes. It's fairly new, and the information I
-have is that those machines may ship DSDT containing both Windows-style
-(read: crap) data and Linux-style data for the same nodes. My fear is
-that only the former will be properly tested and the latter will thus be
-incorrect. The future will tell (I'm as usual very hopeful).
+For SNP, isn't that already the case? There are three scenarios:
 
-> My understanding has been that for audio people are just unwilling to
-> provide the level of firmware description required to avoid quirks,
-> there was some limited stuff with the NHLT table but it still required
-> system software to quirk things.  If there's progress elsewhere
-> perhaps the relevant people can be persuaded to have another go...
-> 
-> > Once travel will be easier again, we'll plot a take over of the world in
-> > a bar. Dealing with ACPI requires lots of whisky :-)
-> 
-> Indeed!
+#1: The PSP driver is loaded and `snp_inited` is `true`: These returns
+are never hit.
 
--- 
-Regards,
+#2: The PSP driver is not loaded. The first return, `!psp ||
+!psp->sev_data` fires. As written, it returns `0`, indicating success.
+However, we never called RMPUPDATE on the page. Thus, later, when the
+PSP driver is loaded, the page that was previously returned as usable
+with FW is in fact not usable with FW. Unless SNP is disabled (e.g.,
+SEV, SEV-ES only). In which case I guess the page is OK.
 
-Laurent Pinchart
+#3 The PSP driver is loaded but the SNP_INIT command has not been
+issued. Looking at this again, I guess `return 0` is OK. Because if we
+got this far, then `sev_pci_init()` has been called, and the SNP_INIT
+command has been issued if we're supporting SNP VMs.
+
+So in summary, I think we should change the first return to return an
+error and leave the 2nd return as is.
+
+> > If we initialize `rc` to `-ENODEV` (or something similar), then every
+> > return in this function can be `return rc`.
+> >
+> >> +
+> >> +       /* If SEV-SNP is initialized then add the page in RMP table. */
+> >> +       sev = psp->sev_data;
+> >> +       if (!sev->snp_inited)
+> >> +               return 0;
+> >
+> > Ditto. Should this turn a non-zero value?
+> >
+> >> +
+> >> +       while (pfn < pfn_end) {
+> >> +               if (need_reclaim)
+> >> +                       if (snp_reclaim_page(pfn_to_page(pfn), locked))
+> >> +                               return -EFAULT;
+> >> +
+> >> +               rc = rmpupdate(pfn_to_page(pfn), val);
+> >> +               if (rc)
+> >> +                       return rc;
+> >> +
+> >> +               pfn++;
+> >> +       }
+> >> +
+> >> +       return 0;
+> >> +}
