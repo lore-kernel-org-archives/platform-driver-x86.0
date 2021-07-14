@@ -2,274 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E4DC07E9A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 13:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6DDC07E9A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 16:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D553613C2
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 13:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE87613B2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 16:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbhGNNia (ORCPT
+        id S231338AbhGNQIa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jul 2021 09:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231935AbhGNNi3 (ORCPT
+        Wed, 14 Jul 2021 12:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231260AbhGNQIa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jul 2021 09:38:29 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B75C061764
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 06:35:37 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id w13so1894064qtc.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 06:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gezvR5OfWZEWK2TINd2PVmo/b1ZbFygnVhycPzHy+1c=;
-        b=iIy+9GSk+zYyAeMPjHL4uxaQ+VRSxHyvLemv6SdeDForAaOLO96KR6F4Oirhi6E4mT
-         dRQSiEO63qs8RIylfOlbHut9wIAE3UKvoUwo1dHevzTGpDEVY/ZjLw4piW1Bxy0tIC1p
-         FZD21VNTrLIh/awNsx50LT0NfrI5d85JM6UaNeCwk4t9KcRv2XADcMeepIWVgx2Xsqx9
-         q3AgIVFayuSe7UduLS/mKtyGoeabwpwL8292TftpMQZzaYhYSI0P3uBXw9/OMIDLn9+F
-         mpjW5cGWLQBjpT33lLmlgQwgcwipQg86TKe44W3/kRJBp4S818Njgg4CFZo8kjEVY450
-         A7Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gezvR5OfWZEWK2TINd2PVmo/b1ZbFygnVhycPzHy+1c=;
-        b=hihBbL396hw9gBNLEL1MJNLIG2bcRa+wNQEwbe5U1Ok2HQ7K4BWvoezgH7AHUeMeFZ
-         Qc+JrigT7Dr04sjo7LVX3pWjKcBKDX/EnO5JHCHN2qhbGYBnFzAiwyuydLbjWsA/NMK3
-         KIVTY6uekYTpUNzBXEXKz+cf1rOdcSZW6jYmAQG8F1kggaX0h13Nk4pNrjj0anr9BxUQ
-         CMZQ5tSkK9U63ixDaVaDz9xITe6pPj8b88AuUbUjzXxciU0/IHO4hVitKIY9Len6DMAR
-         cs52iG9S1mkhL2aYc6I9kJpcNYxOxtvMo4dEMHWx7SZYjJM9/tObI69RQwGcg56vnN4f
-         1AWg==
-X-Gm-Message-State: AOAM533cSxfGTlHmaPqUZVq5QK1XW+jKb1Pw6hBEoi2cLY8/8awsVNQ2
-        KmSme26YcsQQDeuOd502BDLiAOY1DKwzliTjdtjRPw==
-X-Google-Smtp-Source: ABdhPJypSv0TU7nBnxqsDHmSUMM1jMnGMe3CBMSxE5apXqTiTt8f2xDtYPwfN2OTi2rinidVsdixs65t6ruo5TJDyGw=
-X-Received: by 2002:a05:622a:409:: with SMTP id n9mr9370891qtx.261.1626269736594;
- Wed, 14 Jul 2021 06:35:36 -0700 (PDT)
+        Wed, 14 Jul 2021 12:08:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0BFB560FF2;
+        Wed, 14 Jul 2021 16:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626278738;
+        bh=72/oQiQdsT/Cwo5iJX87YvVtTW9vsj6VkU2MnEgEThU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PPDfDuzJbULpPqRzSkd30cv8qpee9WwAZEfW55Qh3TcbHN9xNXxRF+hMZipYm6XsK
+         fO9pQz7amDQSmYPFLoxGqBqStfk9jLjg0ZV2CVS6CYrKaG/S8NZhZ4v32VtpKPd4Cz
+         lIfTRcRG/EpqSC6ovT0GdSjhJw77bbp2u+cBky1IJJJTZ8c2T72+VHdY0heiLZat6z
+         T/D7OHEXThINNQyxrxOXKPu7098NXvQZ5dFB+MSdrNQ6LQ03Sa1EiIB0UX1xy+idoF
+         MRRt7kvneZC+5uvKl+cbgpoNAfh60P29wRQp6WgcRo9hMQO0woGHoy4PjNPigitgCR
+         8ZmcxuCL4OG2g==
+Date:   Wed, 14 Jul 2021 17:05:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        kieran.bingham@ideasonboard.com
+Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
+Message-ID: <20210714160501.GC4719@sirena.org.uk>
+References: <20210712124223.GB4435@sirena.org.uk>
+ <CAHp75VeyNyYSbTMgS+5tXxOZehfxt6Wws9jScKYRKQhRRGDwsg@mail.gmail.com>
+ <20210712133428.GD4435@sirena.org.uk>
+ <CAHp75VcQUUDdLYbpvTXSMPvjBzbHtBxywVBPS_xfY5JXyo9XxA@mail.gmail.com>
+ <20210712170120.GG4435@sirena.org.uk>
+ <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
+ <20210713152454.GC4098@sirena.org.uk>
+ <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
+ <20210713181837.GE4098@sirena.org.uk>
+ <CAHp75Vfwz-cDrAhOnXaeUSDN-K+YJv8ahmvZ3aJwm2sKqc8HeQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210707183616.5620-1-brijesh.singh@amd.com> <20210707183616.5620-21-brijesh.singh@amd.com>
-In-Reply-To: <20210707183616.5620-21-brijesh.singh@amd.com>
-From:   Marc Orr <marcorr@google.com>
-Date:   Wed, 14 Jul 2021 06:35:25 -0700
-Message-ID: <CAA03e5FMD8xvvBdf9gqdoR05xF9+scLZBNLpx9iP6WVWK84xdw@mail.gmail.com>
-Subject: Re: [PATCH Part2 RFC v4 20/40] KVM: SVM: Make AVIC backing, VMSA and
- VMCB memory allocation SNP safe
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        kvm list <kvm@vger.kernel.org>, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-coco@lists.linux.dev,
-        linux-mm@kvack.org, linux-crypto@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YD3LsXFS42OYHhNZ"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vfwz-cDrAhOnXaeUSDN-K+YJv8ahmvZ3aJwm2sKqc8HeQ@mail.gmail.com>
+X-Cookie: C for yourself.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 7, 2021 at 11:38 AM Brijesh Singh <brijesh.singh@amd.com> wrote:
->
-> When SEV-SNP is globally enabled on a system, the VMRUN instruction
-> performs additional security checks on AVIC backing, VMSA, and VMCB page.
-> On a successful VMRUN, these pages are marked "in-use" by the
-> hardware in the RMP entry, and any attempt to modify the RMP entry for
-> these pages will result in page-fault (RMP violation check).
->
-> While performing the RMP check, hardware will try to create a 2MB TLB
-> entry for the large page accesses. When it does this, it first reads
-> the RMP for the base of 2MB region and verifies that all this memory is
-> safe. If AVIC backing, VMSA, and VMCB memory happen to be the base of
-> 2MB region, then RMP check will fail because of the "in-use" marking for
-> the base entry of this 2MB region.
->
-> e.g.
->
-> 1. A VMCB was allocated on 2MB-aligned address.
-> 2. The VMRUN instruction marks this RMP entry as "in-use".
-> 3. Another process allocated some other page of memory that happened to be
->    within the same 2MB region.
-> 4. That process tried to write its page using physmap.
->
-> If the physmap entry in step #4 uses a large (1G/2M) page, then the
-> hardware will attempt to create a 2M TLB entry. The hardware will find
-> that the "in-use" bit is set in the RMP entry (because it was a
-> VMCB page) and will cause an RMP violation check.
->
-> See APM2 section 15.36.12 for more information on VMRUN checks when
-> SEV-SNP is globally active.
->
-> A generic allocator can return a page which are 2M aligned and will not
-> be safe to be used when SEV-SNP is globally enabled. Add a
-> snp_safe_alloc_page() helper that can be used for allocating the
-> SNP safe memory. The helper allocated 2 pages and splits them into order-1
-> allocation. It frees one page and keeps one of the page which is not
-> 2M aligned.
->
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 
-Co-developed-by: Marc Orr <marcorr@google.com>
+--YD3LsXFS42OYHhNZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The original version of this patch had this tag. I think it got
-dropped on accident.
+On Tue, Jul 13, 2021 at 10:46:29PM +0300, Andy Shevchenko wrote:
+> On Tue, Jul 13, 2021 at 9:19 PM Mark Brown <broonie@kernel.org> wrote:
 
-> ---
->  arch/x86/include/asm/kvm_host.h |  1 +
->  arch/x86/kvm/lapic.c            |  5 ++++-
->  arch/x86/kvm/svm/sev.c          | 27 +++++++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.c          | 16 ++++++++++++++--
->  arch/x86/kvm/svm/svm.h          |  1 +
->  5 files changed, 47 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 55efbacfc244..188110ab2c02 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1383,6 +1383,7 @@ struct kvm_x86_ops {
->         int (*complete_emulated_msr)(struct kvm_vcpu *vcpu, int err);
->
->         void (*vcpu_deliver_sipi_vector)(struct kvm_vcpu *vcpu, u8 vector);
-> +       void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
->  };
->
->  struct kvm_x86_nested_ops {
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index c0ebef560bd1..d4c77f66d7d5 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -2441,7 +2441,10 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
->
->         vcpu->arch.apic = apic;
->
-> -       apic->regs = (void *)get_zeroed_page(GFP_KERNEL_ACCOUNT);
-> +       if (kvm_x86_ops.alloc_apic_backing_page)
-> +               apic->regs = kvm_x86_ops.alloc_apic_backing_page(vcpu);
-> +       else
-> +               apic->regs = (void *)get_zeroed_page(GFP_KERNEL_ACCOUNT);
->         if (!apic->regs) {
->                 printk(KERN_ERR "malloc apic regs error for vcpu %x\n",
->                        vcpu->vcpu_id);
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index b8505710c36b..411ed72f63af 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -2692,3 +2692,30 @@ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
->                 break;
->         }
->  }
-> +
-> +struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu)
-> +{
-> +       unsigned long pfn;
-> +       struct page *p;
-> +
-> +       if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-> +               return alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +
-> +       p = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
-> +       if (!p)
-> +               return NULL;
-> +
-> +       /* split the page order */
-> +       split_page(p, 1);
-> +
-> +       /* Find a non-2M aligned page */
-> +       pfn = page_to_pfn(p);
-> +       if (IS_ALIGNED(__pfn_to_phys(pfn), PMD_SIZE)) {
-> +               pfn++;
-> +               __free_page(p);
-> +       } else {
-> +               __free_page(pfn_to_page(pfn + 1));
-> +       }
-> +
-> +       return pfn_to_page(pfn);
-> +}
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 2acf187a3100..a7adf6ca1713 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1336,7 +1336,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
->         svm = to_svm(vcpu);
->
->         err = -ENOMEM;
-> -       vmcb01_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +       vmcb01_page = snp_safe_alloc_page(vcpu);
->         if (!vmcb01_page)
->                 goto out;
->
-> @@ -1345,7 +1345,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
->                  * SEV-ES guests require a separate VMSA page used to contain
->                  * the encrypted register state of the guest.
->                  */
-> -               vmsa_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +               vmsa_page = snp_safe_alloc_page(vcpu);
->                 if (!vmsa_page)
->                         goto error_free_vmcb_page;
->
-> @@ -4439,6 +4439,16 @@ static int svm_vm_init(struct kvm *kvm)
->         return 0;
->  }
->
-> +static void *svm_alloc_apic_backing_page(struct kvm_vcpu *vcpu)
-> +{
-> +       struct page *page = snp_safe_alloc_page(vcpu);
-> +
-> +       if (!page)
-> +               return NULL;
-> +
-> +       return page_address(page);
-> +}
-> +
->  static struct kvm_x86_ops svm_x86_ops __initdata = {
->         .hardware_unsetup = svm_hardware_teardown,
->         .hardware_enable = svm_hardware_enable,
-> @@ -4564,6 +4574,8 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
->         .complete_emulated_msr = svm_complete_emulated_msr,
->
->         .vcpu_deliver_sipi_vector = svm_vcpu_deliver_sipi_vector,
-> +
-> +       .alloc_apic_backing_page = svm_alloc_apic_backing_page,
->  };
->
->  static struct kvm_x86_init_ops svm_init_ops __initdata = {
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 5f874168551b..1175edb02d33 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -554,6 +554,7 @@ void sev_es_create_vcpu(struct vcpu_svm *svm);
->  void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
->  void sev_es_prepare_guest_switch(struct vcpu_svm *svm, unsigned int cpu);
->  void sev_es_unmap_ghcb(struct vcpu_svm *svm);
-> +struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu);
->
->  /* vmenter.S */
->
-> --
-> 2.17.1
->
->
+> > Like I said in the other mail fwnode is a nice hack for systems that are
+> > using ACPI but have hardware that's doing something totally outside the
+> > ACPI model to allow them to reuse work that's been done for DT, it's not
+> > a universal solution to the lack of appropriate support for describing
+> > modern systems in ACPI.
+
+> In some (I suppose rear) cases it may be used by DT-enabled platforms as well.
+> I can imagine the case when you have a system in ROM and only what you
+> can do to change DTB there is either use DT overlays (which seems to
+> be not working, plenty of gaps there according to a Wiki I saw once)
+> or do something in the board files.
+
+DT overlays are pretty extensively deployed, it's just that there's very
+few use cases where it's done in the kernel - it tends to be better to
+do them in either the firmware or a thin wrapper around the kernel so
+that the kernel never has to see an unfixed DT, and we don't have to
+try to do fixups super early in the boot on a supposedly generic kernel.
+The main kernel use cases are things like FPGAs loading a dynamic image
+and matching DT at runtime which is a whole additional ball of fun.
+
+--YD3LsXFS42OYHhNZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDvCy0ACgkQJNaLcl1U
+h9DWJQf+ITAL3NEkBDUGUKxXlzZU7IrAMJVdxNeE4V8QLBXZy5os6tWB+dCeQ+cz
+g03rkbrcMXIjBGbWtyxb+ydDqpn4DUI7+sm0L6vZTQHIgpFZCrTBZj2kKbpbq0La
+9Q6cy5pMzf5bCtd93nUj0O7jF6GriGyFq7x78aWS4SWPcQApOIPAmRtELPpaBy2b
+3vQIhaBYHQqSYaqPCYw8xTXT/k2GpUEiETBXv4gPO0eL7uKsZN7cmO07f6nWHsm0
+k9OPwoLp3CqQ4ZaHQ5foR62G3LlGHa1zELv+KeXzqyJmA5BKvpoTrUQS//riWQ94
+bHo5P4GTsQSXbIl5juoJBRHpNkA/OQ==
+=Z0yY
+-----END PGP SIGNATURE-----
+
+--YD3LsXFS42OYHhNZ--
