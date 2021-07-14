@@ -2,115 +2,243 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4372EC12002
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 19:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B331EC12002
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 20:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 235D3613BF
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 19:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953EA613CF
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 14 Jul 2021 20:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240060AbhGNTWY (ORCPT
+        id S239629AbhGNUU1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 14 Jul 2021 15:22:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240041AbhGNTWY (ORCPT
+        Wed, 14 Jul 2021 16:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238390AbhGNUU0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 14 Jul 2021 15:22:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B88F86128C;
-        Wed, 14 Jul 2021 19:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626290372;
-        bh=beLOUwWVLHcFi6OQ4XgMyD1YDiMXWf0uyYl982G2sBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BlmBx6/t/oNjv+7kXRaETo7xe5BslEzIiNNDshcfiR3jHF57acOW+Z2Uyk9PSijRa
-         vSm5nGhAcbEPXYcrfe1Y8CLZyd0fv54EyT1i694xMBy4c/EbAM1NZE/8nvAbsDEQyE
-         Jo4hxCKMRriVg2/iviJNlpg+R3cTY9RO+ztISNzzsZaUv70XwG568or4IumFI2g2Nz
-         vf3/WE/HoWvuu2i5zi9cR8Kb76Xy0rdlnrL53vjIJnz/T0SNepbILF3cFzaafKzMVc
-         j1vQz+apGImddp8z38/oWq9WH13L3UzWhtM1FX4TjaUlyt5A/Et2uNj0xic6YRcL/o
-         hhKfvs5aqPeWg==
-Date:   Wed, 14 Jul 2021 20:18:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        kieran.bingham@ideasonboard.com,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-Subject: Re: [RFC PATCH 0/2] Add software node support to regulator framework
-Message-ID: <20210714191855.GJ4719@sirena.org.uk>
-References: <20210712170120.GG4435@sirena.org.uk>
- <e17af9dc-78c0-adb8-1dfb-0698e7a4e394@gmail.com>
- <20210713152454.GC4098@sirena.org.uk>
- <CAHp75Ve=eY2KaPFgq3JDv1aGo_ajcNuKTV9rZQ+1f8uMJBocUw@mail.gmail.com>
- <20210713181837.GE4098@sirena.org.uk>
- <YO6RTh8ngNKZxzj+@pendragon.ideasonboard.com>
- <20210714165948.GG4719@sirena.org.uk>
- <YO8cVWNmUvU/LKGi@pendragon.ideasonboard.com>
- <20210714172846.GI4719@sirena.org.uk>
- <YO8hxyrHqY7K43wp@pendragon.ideasonboard.com>
+        Wed, 14 Jul 2021 16:20:26 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227D4C06175F
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 13:17:34 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id y17so3651739pgf.12
+        for <platform-driver-x86@vger.kernel.org>; Wed, 14 Jul 2021 13:17:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gI+EA8/Nf0J6cK0TpEGVYGTiyDY2bGvR4CfRf7LwiKE=;
+        b=g5d0iCWIXzMtG9uTu4/WlfhcZDBDTSjF3SH5HB9h4kkyFWdS7ZFPeo0oNtlcStWvtn
+         OANE7EZVNP4nmKgWq8tgYnWAvrvGJWebyAdeeXhf96uLFGMcFQsamzdhmuuzVPYGOyb8
+         O5RDhJG8U68pCLJi5ASJNrLwnUrnkZNoF7FD6XOsrw74H2NswKJvPvJgBvUDCkLvprwV
+         NLId20507N3qid+yv8cijIDtEser1wyOco2oH3TW+xXgGAo00hgYD3DO+d60Or3VkQeb
+         Wx27yxaXGRcyWXv3NnYcW7bUilesUtohyflmFOm3jAn7bgNguf6V8uYVWOpKM14JokT9
+         aPoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gI+EA8/Nf0J6cK0TpEGVYGTiyDY2bGvR4CfRf7LwiKE=;
+        b=HQA6ElX1EN0Q+SuE58ttDBZFsRg1LuOVcmq5WtsYEXBW7fEqdWKC2Cbn0pTpxB+cOk
+         ibg5gqtTxWjk47Gy1FCYjo2/3Ku/sS3v3SQKG8+cPPQU2cWphTs7sMKs5zL7gYsS1Y70
+         UXOSbbc/B+B5bInxHzcYVRlruiPk8zbqoj4ReOxolXicEayBxCBi8q9nAOuWySeUp/Tk
+         4letviZK1wjw9B57z1FXc3Uan8eYcWrpIZz3NRkMndx0+CnzisB2GwFqNmtBSC6Hzt0S
+         8ms2pLcO39JLpUOGGZRNesDZmK/+ERzLUPbjOUvXutNeDJCecHATfmAtqIn+RwGW8nui
+         wPug==
+X-Gm-Message-State: AOAM5337A8BCA/I0r1U6lqRk/ykn9l/OuV0pvBz40VneQEyOOgzkastc
+        sNUjb7gqevJSsx19dc8YID1HVA==
+X-Google-Smtp-Source: ABdhPJxZmb+DhcGTDT/5mCgrCU1UlHYl4NvPyzbchWS9bE34G11Vek+44z/cDUPxjy/753noD0t2Cw==
+X-Received: by 2002:a63:471b:: with SMTP id u27mr11470643pga.301.1626293853407;
+        Wed, 14 Jul 2021 13:17:33 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id p1sm3784881pfp.137.2021.07.14.13.17.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jul 2021 13:17:32 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 20:17:29 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 01/40] KVM: SVM: Add support to handle AP
+ reset MSR protocol
+Message-ID: <YO9GWVsZmfXJ4BRl@google.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-2-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Re2uCLPLNzqOLVJA"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YO8hxyrHqY7K43wp@pendragon.ideasonboard.com>
-X-Cookie: C for yourself.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210707183616.5620-2-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Jul 07, 2021, Brijesh Singh wrote:
+> From: Tom Lendacky <thomas.lendacky@amd.com>
+> 
+> Add support for AP Reset Hold being invoked using the GHCB MSR protocol,
+> available in version 2 of the GHCB specification.
 
---Re2uCLPLNzqOLVJA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please provide a brief overview of the protocol, and why it's needed.  I assume
+it's to allow AP wakeup without a shared GHCB?
 
-On Wed, Jul 14, 2021 at 08:41:27PM +0300, Laurent Pinchart wrote:
-> On Wed, Jul 14, 2021 at 06:28:46PM +0100, Mark Brown wrote:
-> > On Wed, Jul 14, 2021 at 08:18:13PM +0300, Laurent Pinchart wrote:
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
 
-> > > It's only one data point, but we're seeing adoption of the ACPI
-> > > DT-in-DSD for camera. It's still not pretty of course.
+...
 
-> > By non-Linux system vendors?
+>  static u8 sev_enc_bit;
+>  static DECLARE_RWSEM(sev_deactivate_lock);
+>  static DEFINE_MUTEX(sev_bitmap_lock);
+> @@ -2199,6 +2203,9 @@ static int sev_es_validate_vmgexit(struct vcpu_svm *svm)
+>  
+>  void sev_es_unmap_ghcb(struct vcpu_svm *svm)
+>  {
+> +	/* Clear any indication that the vCPU is in a type of AP Reset Hold */
+> +	svm->ap_reset_hold_type = AP_RESET_HOLD_NONE;
+> +
+>  	if (!svm->ghcb)
+>  		return;
+>  
+> @@ -2404,6 +2411,22 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
+>  				  GHCB_MSR_INFO_POS);
+>  		break;
+>  	}
+> +	case GHCB_MSR_AP_RESET_HOLD_REQ:
+> +		svm->ap_reset_hold_type = AP_RESET_HOLD_MSR_PROTO;
+> +		ret = kvm_emulate_ap_reset_hold(&svm->vcpu);
 
-> For Windows-based machines, yes. It's fairly new, and the information I
-> have is that those machines may ship DSDT containing both Windows-style
-> (read: crap) data and Linux-style data for the same nodes. My fear is
-> that only the former will be properly tested and the latter will thus be
-> incorrect. The future will tell (I'm as usual very hopeful).
+The hold type feels like it should be a param to kvm_emulate_ap_reset_hold().
 
-Adding the Intel audio people - it'd be good if we could get some
-similar stuff started for the audio things.  Sadly in these sorts of
-cases AIUI the Windows thing is broadly to match DMI data and supply
-platform data so it's more a case of just not having essential
-information in firmware, a bad format would be better TBH (assuming it's
-accurate which also requires loads of quirks...).
+> +
+> +		/*
+> +		 * Preset the result to a non-SIPI return and then only set
+> +		 * the result to non-zero when delivering a SIPI.
+> +		 */
+> +		set_ghcb_msr_bits(svm, 0,
+> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_MASK,
+> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_POS);
+> +
+> +		set_ghcb_msr_bits(svm, GHCB_MSR_AP_RESET_HOLD_RESP,
+> +				  GHCB_MSR_INFO_MASK,
+> +				  GHCB_MSR_INFO_POS);
 
---Re2uCLPLNzqOLVJA
-Content-Type: application/pgp-signature; name="signature.asc"
+It looks like all uses set an arbitrary value and then the response.  I think
+folding the response into the helper would improve both readability and robustness.
+I also suspect the helper needs to do WRITE_ONCE() to guarantee the guest sees
+what it's supposed to see, though memory ordering is not my strong suit.
 
------BEGIN PGP SIGNATURE-----
+Might even be able to squeeze in a build-time assertion.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmDvOJ4ACgkQJNaLcl1U
-h9DBDQf/SwJ2OWeD+iAMUkoL0J1X03nE6813Cn0bcaAbWca8fSOF3fyoda7+J0+R
-CN93zStnEUI5WjEA5RnWXp7cA95uNuky9m/h7ngmEYnuyK/73DuOTo3SZM8FOLIb
-hqAohnFWrNqpM4wLWKIkWhnYJYASKE+NcOez3QD1sAyeFCIvN7wHmy/gRciIOBx4
-70HKVhb9H/xPKt3TWR5TXeoLDexF2wqWf3n+NIOjbaJ8mUPiNakx1la7xyaKoZHf
-U7G7WNEXl8OtFhh1z+QyAW1MZwe9+NgLXcHGT1z58y7hhSbclBb5oOvr4W9vCHQ3
-/NdcFTYHbGeS+cPiKIpTRGR6yr1k6Q==
-=+e4p
------END PGP SIGNATURE-----
+Also, do the guest-provided contents actually need to be preserved?  That seems
+somewhat odd.
 
---Re2uCLPLNzqOLVJA--
+E.g. can it be
+
+static void set_ghcb_msr_response(struct vcpu_svm *svm, u64 response, u64 value,
+				  u64 mask, unsigned int pos)
+{
+	u64 val = (response << GHCB_MSR_INFO_POS) | (val << pos);
+
+	WRITE_ONCE(svm->vmcb->control.ghcb_gpa |= (value & mask) << pos;
+}
+
+and
+
+		set_ghcb_msr_response(svm, GHCB_MSR_AP_RESET_HOLD_RESP,
+				      GHCB_MSR_AP_RESET_HOLD_RESULT_MASK,
+				      GHCB_MSR_AP_RESET_HOLD_RESULT_POS);
+
+> +		break;
+>  	case GHCB_MSR_TERM_REQ: {
+>  		u64 reason_set, reason_code;
+>  
+> @@ -2491,6 +2514,7 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
+>  		ret = svm_invoke_exit_handler(vcpu, SVM_EXIT_IRET);
+>  		break;
+>  	case SVM_VMGEXIT_AP_HLT_LOOP:
+> +		svm->ap_reset_hold_type = AP_RESET_HOLD_NAE_EVENT;
+>  		ret = kvm_emulate_ap_reset_hold(vcpu);
+>  		break;
+>  	case SVM_VMGEXIT_AP_JUMP_TABLE: {
+> @@ -2628,13 +2652,29 @@ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
+>  		return;
+>  	}
+>  
+> -	/*
+> -	 * Subsequent SIPI: Return from an AP Reset Hold VMGEXIT, where
+> -	 * the guest will set the CS and RIP. Set SW_EXIT_INFO_2 to a
+> -	 * non-zero value.
+> -	 */
+> -	if (!svm->ghcb)
+> -		return;
+> +	/* Subsequent SIPI */
+> +	switch (svm->ap_reset_hold_type) {
+> +	case AP_RESET_HOLD_NAE_EVENT:
+> +		/*
+> +		 * Return from an AP Reset Hold VMGEXIT, where the guest will
+> +		 * set the CS and RIP. Set SW_EXIT_INFO_2 to a non-zero value.
+> +		 */
+> +		ghcb_set_sw_exit_info_2(svm->ghcb, 1);
+> +		break;
+> +	case AP_RESET_HOLD_MSR_PROTO:
+> +		/*
+> +		 * Return from an AP Reset Hold VMGEXIT, where the guest will
+> +		 * set the CS and RIP. Set GHCB data field to a non-zero value.
+> +		 */
+> +		set_ghcb_msr_bits(svm, 1,
+> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_MASK,
+> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_POS);
+>  
+> -	ghcb_set_sw_exit_info_2(svm->ghcb, 1);
+> +		set_ghcb_msr_bits(svm, GHCB_MSR_AP_RESET_HOLD_RESP,
+> +				  GHCB_MSR_INFO_MASK,
+> +				  GHCB_MSR_INFO_POS);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  }
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 0b89aee51b74..ad12ca26b2d8 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -174,6 +174,7 @@ struct vcpu_svm {
+>  	struct ghcb *ghcb;
+>  	struct kvm_host_map ghcb_map;
+>  	bool received_first_sipi;
+> +	unsigned int ap_reset_hold_type;
+
+Can't this be a u8?
+
+>  
+>  	/* SEV-ES scratch area support */
+>  	void *ghcb_sa;
+> -- 
+> 2.17.1
+> 
