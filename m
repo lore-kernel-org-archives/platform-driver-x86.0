@@ -2,490 +2,128 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0719DC07E96
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 08:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9192BC47E50
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 09:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B9F61362
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 08:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8D561167
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 09:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240269AbhGOIjc (ORCPT
+        id S240840AbhGOJ1x (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Jul 2021 04:39:32 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:36368 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbhGOIjc (ORCPT
+        Thu, 15 Jul 2021 05:27:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40602 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240822AbhGOJ1w (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jul 2021 04:39:32 -0400
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E7DF31FDF9;
-        Thu, 15 Jul 2021 08:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1626338197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        Thu, 15 Jul 2021 05:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626341098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2PWjr+0c7psZzyw1qFaM/XPj81wb2xNcBw94sKXKDHs=;
-        b=qrNDU29dDXzvPD1erWBKcRFYJo36GDE2FyTiUgXz1zL12YE+BbmgrUhmZLT0caFBr6YRfU
-        K8BgmhrRni2LYKEGw9TrxJVRDofdcBg+/mLdpuLl1uPjqWthfUbQ2wfVaIwKe1Rsu3YRh9
-        kbyfbqTZlEnM+NHutFqFeHFcCFw2LbY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1626338197;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2PWjr+0c7psZzyw1qFaM/XPj81wb2xNcBw94sKXKDHs=;
-        b=x3B01zgznpgM2ZmkjseydG7jP09ccXKdOIA12Lc4ru8QZ5AWFg6KZ8i6DqXk46LbHRzVRE
-        noZ2UjFTeWpBlnAQ==
-Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 3C3BE13AB1;
-        Thu, 15 Jul 2021 08:36:37 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap1.suse-dmz.suse.de with ESMTPSA
-        id TEODDJXz72BKcwAAGKfGzw
-        (envelope-from <ykaukab@suse.de>); Thu, 15 Jul 2021 08:36:37 +0000
-Date:   Thu, 15 Jul 2021 10:36:35 +0200
-From:   Mian Yousaf Kaukab <ykaukab@suse.de>
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] tools/tdx: Add a sample attestation user app
-Message-ID: <20210715083635.GA112769@suse.de>
-References: <20210707204249.3046665-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210707204249.3046665-7-sathyanarayanan.kuppuswamy@linux.intel.com>
+        bh=1jDol43uaBrThBboocyGhY5CKkpKp9TG07WBkyzgyCI=;
+        b=Ke3RgQBxSLYA5JDsZSYOjJk3/kdFDk43cyCXrsR596/OL6Rl8oRXI1T4r5w1DkQXLXRpsK
+        fCGQXIkd60SEfnMkMi17aBdhCg2fZLEJ7LbbaF26ho3JdyEh+GbFn6Z8lFdaDM8mlRXEMd
+        4h7GgVA3FJ4twenJCJOdI3yc8A2xvdY=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-178-5iOxDSXhMly-G7XaQ6vrHQ-1; Thu, 15 Jul 2021 05:24:57 -0400
+X-MC-Unique: 5iOxDSXhMly-G7XaQ6vrHQ-1
+Received: by mail-ed1-f71.google.com with SMTP id v4-20020a50a4440000b02903ab1f22e1dcso2764156edb.23
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 02:24:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1jDol43uaBrThBboocyGhY5CKkpKp9TG07WBkyzgyCI=;
+        b=gYjOJwAnJZxa3ALQaY8sR5yrIvhLOZ0p0dWkva7UtG/5NUCh1JM4WPWIsT+DnqMrXI
+         uI08pISh3jgxH3b+RoPsSlCKH2rvQ+iVAV0Uzfg/G4dWaco73GqdyHUVzlJs8pMsU0Cm
+         xcX5PKFS2rppFyuf0qez97BkjkyMtJMZV4vF63A0BpUVyvKhZFx2U9nAQ1gMgMHkISJl
+         fEFp9rRG7LQgSjOpJDKrHtot4UXqQgJlypY93CnQACKvMxvL6qJoAl1otHIIAy/2lrsu
+         V4dk7IvP4XsVj0B/pkctKrxYoUftytqCEtZ2GtjwQl2kQ0xNF50EPZdjhQZvr01IsLKO
+         hydQ==
+X-Gm-Message-State: AOAM530Q5wOxJP20r5DDMb+zHgcQUYtqmefdNNCXQJrlt+CCu0mk/Yu8
+        YnpJz8DfvOt2WGvp5UD3lnk3d1+G7Gfx4IxlPYjCWrYkTwedul161MjBpVd1aS5al5ff7VMkHFR
+        jZERo59miXwHd+W9a/wl7dLQbEMgCvTvWFg==
+X-Received: by 2002:a05:6402:1242:: with SMTP id l2mr5460942edw.97.1626341096223;
+        Thu, 15 Jul 2021 02:24:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyKmu2RI1E6WG+yViRLzAr6ZJVjzj0/Y5Mevmcq+nX/LqpIgKVJ1wQ9A9ofjL/TIUYlcGss3w==
+X-Received: by 2002:a05:6402:1242:: with SMTP id l2mr5460926edw.97.1626341096095;
+        Thu, 15 Jul 2021 02:24:56 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id hq9sm1572816ejc.0.2021.07.15.02.24.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Jul 2021 02:24:55 -0700 (PDT)
+Subject: Re: [PATCH -next] platform/x86: amd-pmc: Fix missing unlock on error
+ in amd_pmc_send_cmd()
+To:     Yang Yingliang <yangyingliang@huawei.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc:     Shyam-sundar.S-k@amd.com, mgross@linux.intel.com
+References: <20210715074327.1966083-1-yangyingliang@huawei.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <bf672394-1d52-d84c-3358-767b773ab305@redhat.com>
+Date:   Thu, 15 Jul 2021 11:24:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <20210715074327.1966083-1-yangyingliang@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210707204249.3046665-7-sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 01:42:49PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> This application uses the misc device /dev/tdx-attest to get TDREPORT
-> from the TDX Module or request quote from the VMM.
-> 
-> It tests following attestation features:
-> 
->   - Get report using TDX_CMD_GET_TDREPORT IOCTL.
->   - Using report data request quote from VMM using TDX_CMD_GEN_QUOTE IOCTL.
->   - Get the quote size using TDX_CMD_GET_QUOTE_SIZE IOCTL.
-> 
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  tools/Makefile                     |  13 +-
->  tools/tdx/Makefile                 |  19 +++
->  tools/tdx/attest/.gitignore        |   2 +
->  tools/tdx/attest/Makefile          |  24 +++
->  tools/tdx/attest/tdx-attest-test.c | 232 +++++++++++++++++++++++++++++
->  5 files changed, 284 insertions(+), 6 deletions(-)
->  create mode 100644 tools/tdx/Makefile
->  create mode 100644 tools/tdx/attest/.gitignore
->  create mode 100644 tools/tdx/attest/Makefile
->  create mode 100644 tools/tdx/attest/tdx-attest-test.c
-> 
-> diff --git a/tools/Makefile b/tools/Makefile
-> index 7e9d34ddd74c..5d68084511cb 100644
-> --- a/tools/Makefile
-> +++ b/tools/Makefile
-> @@ -30,6 +30,7 @@ help:
->  	@echo '  selftests              - various kernel selftests'
->  	@echo '  bootconfig             - boot config tool'
->  	@echo '  spi                    - spi tools'
-> +	@echo '  tdx                    - TDX related test tools'
->  	@echo '  tmon                   - thermal monitoring and tuning tool'
->  	@echo '  tracing                - misc tracing tools'
->  	@echo '  turbostat              - Intel CPU idle stats and freq reporting tool'
-> @@ -65,7 +66,7 @@ acpi: FORCE
->  cpupower: FORCE
->  	$(call descend,power/$@)
->  
-> -cgroup firewire hv guest bootconfig spi usb virtio vm bpf iio gpio objtool leds wmi pci firmware debugging tracing: FORCE
-> +cgroup firewire hv guest bootconfig spi usb virtio vm bpf iio gpio objtool leds wmi pci firmware debugging tracing tdx: FORCE
->  	$(call descend,$@)
->  
->  bpf/%: FORCE
-> @@ -104,7 +105,7 @@ all: acpi cgroup cpupower gpio hv firewire liblockdep \
->  		perf selftests bootconfig spi turbostat usb \
->  		virtio vm bpf x86_energy_perf_policy \
->  		tmon freefall iio objtool kvm_stat wmi \
-> -		pci debugging tracing
-> +		pci debugging tracing tdx
->  
->  acpi_install:
->  	$(call descend,power/$(@:_install=),install)
-> @@ -112,7 +113,7 @@ acpi_install:
->  cpupower_install:
->  	$(call descend,power/$(@:_install=),install)
->  
-> -cgroup_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install vm_install bpf_install objtool_install wmi_install pci_install debugging_install tracing_install:
-> +cgroup_install firewire_install gpio_install hv_install iio_install perf_install bootconfig_install spi_install usb_install virtio_install vm_install bpf_install objtool_install wmi_install pci_install debugging_install tracing_install tdx_install:
->  	$(call descend,$(@:_install=),install)
->  
->  liblockdep_install:
-> @@ -139,7 +140,7 @@ install: acpi_install cgroup_install cpupower_install gpio_install \
->  		virtio_install vm_install bpf_install x86_energy_perf_policy_install \
->  		tmon_install freefall_install objtool_install kvm_stat_install \
->  		wmi_install pci_install debugging_install intel-speed-select_install \
-> -		tracing_install
-> +		tracing_install tdx_install
->  
->  acpi_clean:
->  	$(call descend,power/acpi,clean)
-> @@ -147,7 +148,7 @@ acpi_clean:
->  cpupower_clean:
->  	$(call descend,power/cpupower,clean)
->  
-> -cgroup_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean tracing_clean:
-> +cgroup_clean hv_clean firewire_clean bootconfig_clean spi_clean usb_clean virtio_clean vm_clean wmi_clean bpf_clean iio_clean gpio_clean objtool_clean leds_clean pci_clean firmware_clean debugging_clean tracing_clean tdx_clean:
->  	$(call descend,$(@:_clean=),clean)
->  
->  liblockdep_clean:
-> @@ -186,6 +187,6 @@ clean: acpi_clean cgroup_clean cpupower_clean hv_clean firewire_clean \
->  		vm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
->  		freefall_clean build_clean libbpf_clean libsubcmd_clean liblockdep_clean \
->  		gpio_clean objtool_clean leds_clean wmi_clean pci_clean firmware_clean debugging_clean \
-> -		intel-speed-select_clean tracing_clean
-> +		intel-speed-select_clean tracing_clean tdx_clean
->  
->  .PHONY: FORCE
-> diff --git a/tools/tdx/Makefile b/tools/tdx/Makefile
-> new file mode 100644
-> index 000000000000..e2564557d463
-> --- /dev/null
-> +++ b/tools/tdx/Makefile
-> @@ -0,0 +1,19 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +include ../scripts/Makefile.include
-> +
-> +all: attest
-> +
-> +clean: attest_clean
-> +
-> +install: attest_install
-> +
-> +attest:
-> +	$(call descend,attest)
-> +
-> +attest_install:
-> +	$(call descend,attest,install)
-> +
-> +attest_clean:
-> +	$(call descend,attest,clean)
-> +
-> +.PHONY: all install clean attest latency_install latency_clean
-> diff --git a/tools/tdx/attest/.gitignore b/tools/tdx/attest/.gitignore
-> new file mode 100644
-> index 000000000000..5f819a8a6c49
-> --- /dev/null
-> +++ b/tools/tdx/attest/.gitignore
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +tdx-attest-test
-> diff --git a/tools/tdx/attest/Makefile b/tools/tdx/attest/Makefile
-> new file mode 100644
-> index 000000000000..bf47ba718386
-> --- /dev/null
-> +++ b/tools/tdx/attest/Makefile
-> @@ -0,0 +1,24 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Makefile for vm tools
-> +#
-> +VAR_CFLAGS := $(shell pkg-config --cflags libtracefs 2>/dev/null)
-> +VAR_LDLIBS := $(shell pkg-config --libs libtracefs 2>/dev/null)
-> +
-> +TARGETS = tdx-attest-test
-> +CFLAGS = -static -Wall -Wextra -g -O2 $(VAR_CFLAGS)
-> +LDFLAGS = -lpthread $(VAR_LDLIBS)
-> +
-> +all: $(TARGETS)
-> +
-> +%: %.c
-> +	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
-> +
-> +clean:
-> +	$(RM) tdx-attest-test
-> +
-> +prefix ?= /usr/local
-> +sbindir ?= ${prefix}/sbin
-> +
-> +install: all
-> +	install -d $(DESTDIR)$(sbindir)
-> +	install -m 755 -p $(TARGETS) $(DESTDIR)$(sbindir)
-> diff --git a/tools/tdx/attest/tdx-attest-test.c b/tools/tdx/attest/tdx-attest-test.c
-> new file mode 100644
-> index 000000000000..7634ec6a084c
-> --- /dev/null
-> +++ b/tools/tdx/attest/tdx-attest-test.c
-> @@ -0,0 +1,232 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * tdx-attest-test.c - utility to test TDX attestation feature.
-> + *
-> + * Copyright (C) 2020 - 2021 Intel Corporation. All rights reserved.
-> + *
-> + * Author: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> + *
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/stat.h>
-> +#include <sys/types.h>
-> +#include <stdio.h>
-> +#include <ctype.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <unistd.h>
-> +#include <string.h>
-> +#include <limits.h>
-> +#include <stdbool.h>
-> +#include <getopt.h>
-> +#include <stdint.h> /* uintmax_t */
-> +#include <sys/mman.h>
-> +#include <unistd.h> /* sysconf */
-> +#include <time.h>
-> +
-> +#include "../../../include/uapi/misc/tdx.h"
-> +
-> +#define devname		"/dev/tdx-attest"
-> +
-> +#define HEX_DUMP_SIZE	16
-> +#define MAX_ROW_SIZE	70
-> +
-> +#define ATTESTATION_TEST_BIN_VERSION "0.1"
-> +
-> +struct tdx_attest_args {
-> +	bool is_dump_data;
-> +	bool is_get_tdreport;
-> +	bool is_get_quote_size;
-> +	bool is_gen_quote;
-> +	bool debug_mode;
-> +	char *out_file;
-> +};
-> +
-> +static void print_hex_dump(const char *title, const char *prefix_str,
-> +			   const void *buf, int len)
-> +{
-> +	const __u8 *ptr = buf;
-> +	int i, rowsize = HEX_DUMP_SIZE;
-> +
-> +	if (!len || !buf)
-> +		return;
-> +
-> +	printf("\t\t%s", title);
-> +
-> +	for (i = 0; i < len; i++) {
-> +		if (!(i % rowsize))
-> +			printf("\n%s%.8x:", prefix_str, i);
-> +		printf(" %.2x", ptr[i])
-> +	}
-> +
-> +	printf("\n");
-> +}
-> +
-> +static void gen_report_data(__u8 *report_data, bool dump_data)
-> +{
-> +	int i;
-> +
-> +	srand(time(NULL));
-> +
-> +	for (i = 0; i < TDX_REPORT_DATA_LEN; i++)
-> +		report_data[i] = rand();
-> +
-> +	if (dump_data)
-> +		print_hex_dump("\n\t\tTDX report data\n", " ",
-> +			       report_data, TDX_REPORT_DATA_LEN);
-> +}
-> +
-> +static int get_tdreport(int devfd, bool dump_data, __u8 *report_data)
-> +{
-> +	__u8 tdrdata[TDX_TDREPORT_LEN] = {0};
-> +	int ret;
-> +
-> +	if (!report_data)
-> +		report_data = tdrdata;
-> +
-> +	gen_report_data(report_data, dump_data);
-> +
-> +	ret = ioctl(devfd, TDX_CMD_GET_TDREPORT, report_data);
-> +	if (ret) {
-> +		printf("TDX_CMD_GET_TDREPORT ioctl() %d failed\n", ret);
-> +		return -EIO;
-> +	}
-> +
-> +	if (dump_data)
-> +		print_hex_dump("\n\t\tTDX tdreport data\n", " ", report_data,
-> +			       TDX_TDREPORT_LEN);
-> +
-> +	return 0;
-> +}
-> +
-> +static __u64 get_quote_size(int devfd)
-> +{
-> +	int ret;
-> +	__u64 quote_size;
-> +
-> +	ret = ioctl(devfd, TDX_CMD_GET_QUOTE_SIZE, &quote_size);
-> +	if (ret) {
-> +		printf("TDX_CMD_GET_QUOTE_SIZE ioctl() %d failed\n", ret);
-> +		return -EIO;
-> +	}
-> +
-> +	printf("Quote size: %lld\n", quote_size);
-> +
-> +	return quote_size;
-> +}
-> +
-> +static int gen_quote(int devfd, bool dump_data)
-> +{
-> +	__u8 *quote_data;
-> +	__u64 quote_size;
-> +	int ret;
-> +
-> +	quote_size = get_quote_size(devfd);
-> +
-> +	quote_data = malloc(sizeof(char) * quote_size);
-> +	if (!quote_data) {
-> +		printf("%s queue data alloc failed\n", devname);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = get_tdreport(devfd, dump_data, quote_data);
-In tdg_attest_ioctl() TDX_CMD_GEN_QUOTE case is calling
-tdx_mcall_tdreport() same as TDX_CMD_GET_TDREPORT case. Then what is
-the point of calling get_tdreport() here? Do you mean to call
-gen_report_data()?
-> +	if (ret) {
-> +		printf("TDX_CMD_GET_TDREPORT ioctl() %d failed\n", ret);
-> +		goto done;
-> +	}
-> +
-> +	ret = ioctl(devfd, TDX_CMD_GEN_QUOTE, quote_data);
-> +	if (ret) {
-> +		printf("TDX_CMD_GEN_QUOTE ioctl() %d failed\n", ret);
-> +		goto done;
-> +	}
-> +
-> +	print_hex_dump("\n\t\tTDX Quote MMIO data\n", " ", quote_data,
-> +		       quote_size);
-> +
-> +done:
-> +	free(quote_data);
-> +
-> +	return ret;
-> +}
-> +
-> +static void usage(void)
-> +{
-> +	puts("\nUsage:\n");
-> +	puts("tdx_attest [options] \n");
-> +
-> +	puts("Attestation device test utility.");
-> +
-> +	puts("\nOptions:\n");
-> +	puts(" -d, --dump                Dump tdreport/tdquote data");
-> +	puts(" -r, --get-tdreport        Get TDREPORT data");
-> +	puts(" -g, --gen-quote           Generate TDQUOTE");
-> +	puts(" -s, --get-quote-size      Get TDQUOTE size");
-> +}
-> +
-> +int main(int argc, char **argv)
-> +{
-> +	int ret, devfd;
-> +	struct tdx_attest_args args = {0};
-> +
-> +	static const struct option longopts[] = {
-> +		{ "dump",           no_argument,       NULL, 'd' },
-> +		{ "get-tdreport",   required_argument, NULL, 'r' },
-> +		{ "gen-quote",      required_argument, NULL, 'g' },
-> +		{ "gen-quote-size", required_argument, NULL, 's' },
-> +		{ "version",        no_argument,       NULL, 'V' },
-> +		{ NULL,             0, NULL, 0 }
-> +	};
-> +
-> +	while ((ret = getopt_long(argc, argv, "hdrgsV", longopts,
-> +				  NULL)) != -1) {
-> +		switch (ret) {
-> +		case 'd':
-> +			args.is_dump_data = true;
-> +			break;
-> +		case 'r':
-> +			args.is_get_tdreport = true;
-> +			break;
-> +		case 'g':
-> +			args.is_gen_quote = true;
-> +			break;
-> +		case 's':
-> +			args.is_get_quote_size = true;
-> +			break;
-> +		case 'h':
-> +			usage();
-> +			return 0;
-> +		case 'V':
-> +			printf("Version: %s\n", ATTESTATION_TEST_BIN_VERSION);
-> +			return 0;
-> +		default:
-> +			printf("Invalid options\n");
-> +			usage();
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	devfd = open(devname, O_RDWR | O_SYNC);
-> +	if (devfd < 0) {
-> +		printf("%s open() failed\n", devname);
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (args.is_get_quote_size)
-> +		get_quote_size(devfd);
-> +
-> +	if (args.is_get_tdreport)
-> +		get_tdreport(devfd, args.is_dump_data, NULL);
-> +
-> +	if (args.is_gen_quote)
-> +		gen_quote(devfd, args.is_dump_data);
-> +
-> +	close(devfd);
-> +
-> +	return 0;
-> +}
-> -- 
-> 2.25.1
+Hi,
 
-BR,
-Yousaf
+On 7/15/21 9:43 AM, Yang Yingliang wrote:
+> Add the missing unlock before return from function amd_pmc_send_cmd()
+> in the error handling case.
+> 
+> Fixes: 95e1b60f8dc8 ("platform/x86: amd-pmc: Fix command completion code")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+I will also apply this to the fixes branch and include it in my
+upcoming v5.14 pdx86 fixes pull-req to Linus.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
+
+Regards,
+
+Hans
+
+> ---
+>  drivers/platform/x86/amd-pmc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+> index 680f94c7e075..663a4ca0580d 100644
+> --- a/drivers/platform/x86/amd-pmc.c
+> +++ b/drivers/platform/x86/amd-pmc.c
+> @@ -275,7 +275,7 @@ static int amd_pmc_send_cmd(struct amd_pmc_dev *dev, bool set, u32 *data, u8 msg
+>  				PMC_MSG_DELAY_MIN_US * RESPONSE_REGISTER_LOOP_MAX);
+>  	if (rc) {
+>  		dev_err(dev->dev, "failed to talk to SMU\n");
+> -		return rc;
+> +		goto out_unlock;
+>  	}
+>  
+>  	/* Write zero to response register */
+> 
+
