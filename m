@@ -2,257 +2,199 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F70C636C9
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8286C636CB
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C46613DF
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC9B6128D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 23:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231274AbhGOXMA (ORCPT
+        id S232492AbhGOXvT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Jul 2021 19:12:00 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.116]:10980 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231246AbhGOXMA (ORCPT
+        Thu, 15 Jul 2021 19:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231649AbhGOXvT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jul 2021 19:12:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1626390546; i=@lenovo.com;
-        bh=BJ8cKkkz1RhLQfBA/D+VHdOxxM2T+KEr31KAwUlcAQE=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Transfer-Encoding:Content-Type;
-        b=jGn3K1fjTYjboTQHuI3coSN4Wo+tFkYkC+8V+GR748ydDLmRXXiule0Trtu+29pj7
-         5amA6BqfGJa8LcBFA0ZKoiZpPlTS7pyDqA+TMvYHTvgK3Q75Gi6PyqNjGhbj//Nv1V
-         5oPAkf9e9V7kJEfJItnYNzO0fvIy4r9fx0qR90wbxp4+as8mrbuBpTQDoR+GExu6GP
-         CxPRiWf2vj5b5CdnyqPoYqVP2hFY959PD2Bz292HiAfynhJ9BfHZNIiKB+4nR+4I2s
-         w9znJ77oHICh+zhUjCyW8J1UEGymx0DpsNR1yapj/j/NVnD4aP+Qj7BCDmS6Fiy/V6
-         E6wCRbFhQbrPw==
-Received: from [100.112.134.162] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-b.us-west-2.aws.symcld.net id 8D/FE-26959-110C0F06; Thu, 15 Jul 2021 23:09:05 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOIsWRWlGSWpSXmKPExsWS8eIhj67ggQ8
-  JBhe/CFm8OT6dyeJzx2QWi9V7XjA7MHvMOxno8X7fVTaPz5vkApijWDPzkvIrElgzpnz+zl6w
-  Rqdi585LzA2M09W6GLk4hAT+M0o8a+hkhXDeMErMXHqTsYuRk4NNQFtiy5ZfbF2MHBwiAjISH
-  9Z6goSZBaIlmt9eYQWxhQXMJc6ePM8IUsIioCqx+7QQSJhXwEbi4ZpzTCC2hIC8xOkT18Amcg
-  KVnOl6zAJiCwmoSNx/sIQNol5Q4uTMJywQ4+UlmrfOZoawJSQOvnjBDDFHQeLW8xYWCDtBouf
-  fI7YJjAKzkLTPQtI+C0n7AkbmVYzmSUWZ6RkluYmZObqGBga6hoZGuobGRrpmxnqJVbpJeqXF
-  uuWpxSW6RnqJ5cV6xZW5yTkpenmpJZsYgeGdUtBiv4NxxpsPeocYJTmYlER5t9R/SBDiS8pPq
-  cxILM6ILyrNSS0+xCjDwaEkwdu9DygnWJSanlqRlpkDjDWYtAQHj5IIb9x2oDRvcUFibnFmOk
-  TqFKOilDhvPEifAEgiozQPrg0W35cYZaWEeRkZGBiEeApSi3IzS1DlXzGKczAqCfNGgUzhycw
-  rgZv+CmgxE9Bi7TVvQRaXJCKkpBqYlvt8qpmt8/9O5xLtuzeNT0VdDqxVLEq7oaFuO6PrvWec
-  eNxF3c+q+yPjr6zWt+O0ki0p5S+R8t//s0hfxoWjZ0ekDPtTrdXMs3PvPpavEU9v3J/1p03PW
-  rrJ4V3lF6ucqNeFt25cnR7ueXKZa/vydEZjzXSr2hVJSyb08jw9JN+q73z08utb9RPSLT63tW
-  fOY+MqyVxjWrQlTTA3hHPJf+dtwdmZqQIe119ca23MLPtlXWwRsGu2EOvC+Lb9tn6L7u+sOLg
-  q/oF78Imb1mmz1j2b+79ca4mvRkbXl+p86zVXUr9MmvJKIpKv1v5z1rrtM17/nXB/6u3Ge3dU
-  P3Fd4j9jcn2Ou7D+19ZjcUeUWIozEg21mIuKEwHLFilGagMAAA==
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-3.tower-346.messagelabs.com!1626390544!31108!1
-X-Originating-IP: [104.232.225.12]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 12313 invoked from network); 15 Jul 2021 23:09:05 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.12)
-  by server-3.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 15 Jul 2021 23:09:05 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id ECB87E75B949E489881B;
-        Thu, 15 Jul 2021 19:09:03 -0400 (EDT)
-Received: from localhost.localdomain.com (10.38.110.74) by
- reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2176.2; Thu, 15 Jul 2021 19:09:03 -0400
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH] platform/x86: think-lmi: add debug_cmd
-Date:   Thu, 15 Jul 2021 19:08:50 -0400
-Message-ID: <20210715230850.389961-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+        Thu, 15 Jul 2021 19:51:19 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BC0C061765
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 16:48:24 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d12so7197717pfj.2
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 16:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5OQMDn6Hx/yHVRBDOLcOoarZgTpJ6ou0lJ0Voq0OG4M=;
+        b=Xerp+3Ma+7CKr4/78JI541G8uYD8//jwvClMOF/fOO7QmiQm8HAEUnu6NpDbBLMH1q
+         bZGV9qTn+NrOGGYaOzCjTB7B/aPpvd5It43hKuUVskOmztUVNBp7D+395FsS2sQvlrxq
+         xVAo8FpFCDhowTVg4hGaiMCdbGyqn6qUNM0miSvgPCaSI49UBGL5vj48ibmF6+Rb17X0
+         w7C8AuBB8wkZlc1aeNQ5K9KigBlX9jYvbv1ccsercnerPpuW03IdweX4DvdjBnQR82bX
+         e0jajjskDBGjMsxL7Fj/B+zCTGGj135zbVxs9kViMAV8ZYC/Kcwbxlf9wsPPlckGHHm4
+         ds+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5OQMDn6Hx/yHVRBDOLcOoarZgTpJ6ou0lJ0Voq0OG4M=;
+        b=myh8+wizqC9c545Mkg+349TSnkotIXi02sYWfdfCdacM7fEHfJ6qwhy2qWiJivCueQ
+         TY7+HZCtaryaFAEsoxKZMNpvuk5lcYFZEfLijeMeboXxFARC0nS2GyJe6UnKm8A3Zal5
+         KN8P52jplN15q4sqQU//NP9iDCK0jz8fejgkQCY02os+n8Qs/AgTX3CHE0w7ZM8EE9+H
+         rgiOTy5JRpCta/GVh3XQeUmu9Twjng8iov1B5gkDSQVmVucWRZTz4CnRJQcXZ2lRt4KS
+         GiOSlZmEmdzc4vWfYGZN/BZAzCmwqRunKe0druQ8QiXcMyhl8DyJWlogUZbP0uScltet
+         Mhpw==
+X-Gm-Message-State: AOAM532YihAS5yAgO3UXWL7Me3SrOobiN/f/M+z9shLDID9i0vFrk0Rv
+        uVvZine7t44uQnqkKt2oU+mdGw==
+X-Google-Smtp-Source: ABdhPJzB/aLwcMzRnzgFsmskaKhCj/u4SogoqFPq9x0TyUcwapKqqebbwl1vM0o7pXaHZ6NJDfrs4g==
+X-Received: by 2002:a63:4e5d:: with SMTP id o29mr275121pgl.379.1626392903572;
+        Thu, 15 Jul 2021 16:48:23 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id o184sm8719553pga.18.2021.07.15.16.48.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jul 2021 16:48:22 -0700 (PDT)
+Date:   Thu, 15 Jul 2021 23:48:19 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 15/40] crypto: ccp: Handle the legacy TMR
+ allocation when SNP is enabled
+Message-ID: <YPDJQ0uumar8j22y@google.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-16-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.38.110.74]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210707183616.5620-16-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Many Lenovo BIOS's support the ability to send a debug command which
-is useful for debugging and testing unreleased or early features.
-Adding support for this feature.
+On Wed, Jul 07, 2021, Brijesh Singh wrote:
+> The behavior and requirement for the SEV-legacy command is altered when
+> the SNP firmware is in the INIT state. See SEV-SNP firmware specification
+> for more details.
+> 
+> When SNP is INIT state, all the SEV-legacy commands that cause the
+> firmware to write memory must be in the firmware state. The TMR memory
 
-Also moved the pending_reboot node under attributes dir where it should
-correctly live. Got that wrong in my last commit and realised as I was
-updating the documentation for debug_cmd
+It'd be helpful to spell out Trusted Memory Region, I hadn't seen that
+term before and for some reason my brain immediately thought "xAPIC register!".
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
----
- .../testing/sysfs-class-firmware-attributes   | 11 +++
- drivers/platform/x86/think-lmi.c              | 77 ++++++++++++++++++-
- drivers/platform/x86/think-lmi.h              |  1 +
- 3 files changed, 88 insertions(+), 1 deletion(-)
+> is allocated by the host but updated by the firmware, so, it must be
+> in the firmware state.  Additionally, the TMR memory must be a 2MB aligned
+> instead of the 1MB, and the TMR length need to be 2MB instead of 1MB.
+> The helper __snp_{alloc,free}_firmware_pages() can be used for allocating
+> and freeing the memory used by the firmware.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 3348bf80a37c..db0aa2939efc 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -272,3 +272,14 @@ Description:
- 
- 		Note that any changes to this attribute requires a reboot
- 		for changes to take effect.
-+
-+What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
-+Date:		July 2021
-+KernelVersion:	5.14
-+Contact:	Mark Pearson <markpearson@lenovo.com>
-+Description:
-+		This write only attribute can be used to send debug commands to the BIOS.
-+		This should only be used when recommended by the BIOS vendor. Vendors may
-+		use it to enable extra debug attributes or BIOS features for testing purposes.
-+
-+		Note that any changes to this attribute requires a reboot for changes to take effect.
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 64dcec53a7a0..d58d4b155139 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -116,6 +116,14 @@
-  */
- #define LENOVO_GET_BIOS_SELECTIONS_GUID	"7364651A-132F-4FE7-ADAA-40C6C7EE2E3B"
- 
-+/*
-+ * Name:
-+ *  Lenovo_DebugCmdGUID
-+ * Description
-+ *  Debug entry GUID method for entering debug commands to the BIOS
-+ */
-+#define LENOVO_DEBUG_CMD_GUID "7FF47003-3B6C-4E5E-A227-E979824A85D1"
-+
- #define TLMI_POP_PWD (1 << 0)
- #define TLMI_PAP_PWD (1 << 1)
- #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
-@@ -660,6 +668,63 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
- 
- static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
- 
-+/* ---- Debug interface--------------------------------------------------------- */
-+static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	char *set_str = NULL, *new_setting = NULL;
-+	char *auth_str = NULL;
-+	char *p;
-+	int ret;
-+
-+	if (!tlmi_priv.can_debug_cmd)
-+		return -EOPNOTSUPP;
-+
-+	new_setting = kstrdup(buf, GFP_KERNEL);
-+	if (!new_setting)
-+		return -ENOMEM;
-+
-+	/* Strip out CR if one is present */
-+	p = strchrnul(new_setting, '\n');
-+	*p = '\0';
-+
-+	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-+				tlmi_priv.pwd_admin->password,
-+				encoding_options[tlmi_priv.pwd_admin->encoding],
-+				tlmi_priv.pwd_admin->kbdlang);
-+		if (!auth_str) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+	}
-+
-+	if (auth_str)
-+		set_str = kasprintf(GFP_KERNEL, "%s,%s", new_setting, auth_str);
-+	else
-+		set_str = kasprintf(GFP_KERNEL, "%s;", new_setting);
-+	if (!set_str) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = tlmi_simple_call(LENOVO_DEBUG_CMD_GUID, set_str);
-+	if (ret)
-+		goto out;
-+
-+	if (!ret && !tlmi_priv.pending_changes) {
-+		tlmi_priv.pending_changes = true;
-+		/* let userland know it may need to check reboot pending again */
-+		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-+	}
-+out:
-+	kfree(auth_str);
-+	kfree(set_str);
-+	kfree(new_setting);
-+	return ret ?: count;
-+}
-+static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
-+
- /* ---- Initialisation --------------------------------------------------------- */
- static void tlmi_release_attr(void)
- {
-@@ -681,6 +746,8 @@ static void tlmi_release_attr(void)
- 	kobject_put(&tlmi_priv.pwd_power->kobj);
- 	kset_unregister(tlmi_priv.authentication_kset);
- 	sysfs_remove_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
-+	if (tlmi_priv.can_debug_cmd)
-+		sysfs_remove_file(&tlmi_priv.class_dev->kobj, &debug_cmd.attr);
- }
- 
- static int tlmi_sysfs_init(void)
-@@ -761,10 +828,15 @@ static int tlmi_sysfs_init(void)
- 		goto fail_create_attr;
- 
- 	/* Create global sysfs files */
--	ret = sysfs_create_file(&tlmi_priv.class_dev->kobj, &pending_reboot.attr);
-+	ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
- 	if (ret)
- 		goto fail_create_attr;
- 
-+	if (tlmi_priv.can_debug_cmd) {
-+		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
-+		if (ret)
-+			goto fail_create_attr;
-+	}
- 	return ret;
- 
- fail_create_attr:
-@@ -796,6 +868,9 @@ static int tlmi_analyze(void)
- 	if (wmi_has_guid(LENOVO_BIOS_PASSWORD_SETTINGS_GUID))
- 		tlmi_priv.can_get_password_settings = true;
- 
-+	if (wmi_has_guid(LENOVO_DEBUG_CMD_GUID))
-+		tlmi_priv.can_debug_cmd = true;
-+
- 	/*
- 	 * Try to find the number of valid settings of this machine
- 	 * and use it to create sysfs attributes.
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-index eb598846628a..f8e26823075f 100644
---- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -61,6 +61,7 @@ struct think_lmi {
- 	bool can_set_bios_password;
- 	bool can_get_password_settings;
- 	bool pending_changes;
-+	bool can_debug_cmd;
- 
- 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
- 	struct device *class_dev;
--- 
-2.31.1
+None of this actually states what the patch does, e.g. it's not clear whether
+all allocations are being converted to 2mb or just the SNP.  Looks like it's
+just SNP.  Something like this?
 
+  Allocate the Trusted Memory Region (TMR) as a 2mb sized/aligned region when
+  SNP is enabled to satisfy new requirements for SNP.  Continue allocating a
+  1mb region for !SNP configuration.
+
+> While at it, provide API that can be used by others to allocate a page
+> that can be used by the firmware. The immediate user for this API will
+> be the KVM driver. The KVM driver to need to allocate a firmware context
+> page during the guest creation. The context page need to be updated
+> by the firmware. See the SEV-SNP specification for further details.
+
+...
+
+> @@ -1153,8 +1269,10 @@ static void sev_firmware_shutdown(struct sev_device *sev)
+>  		/* The TMR area was encrypted, flush it from the cache */
+>  		wbinvd_on_all_cpus();
+>  
+> -		free_pages((unsigned long)sev_es_tmr,
+> -			   get_order(SEV_ES_TMR_SIZE));
+> +
+> +		__snp_free_firmware_pages(virt_to_page(sev_es_tmr),
+> +					  get_order(sev_es_tmr_size),
+> +					  false);
+>  		sev_es_tmr = NULL;
+>  	}
+>  
+> @@ -1204,16 +1322,6 @@ void sev_pci_init(void)
+>  	    sev_update_firmware(sev->dev) == 0)
+>  		sev_get_api_version();
+>  
+> -	/* Obtain the TMR memory area for SEV-ES use */
+> -	tmr_page = alloc_pages(GFP_KERNEL, get_order(SEV_ES_TMR_SIZE));
+> -	if (tmr_page) {
+> -		sev_es_tmr = page_address(tmr_page);
+> -	} else {
+> -		sev_es_tmr = NULL;
+> -		dev_warn(sev->dev,
+> -			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
+> -	}
+> -
+>  	/*
+>  	 * If boot CPU supports the SNP, then first attempt to initialize
+>  	 * the SNP firmware.
+> @@ -1229,6 +1337,16 @@ void sev_pci_init(void)
+>  		}
+>  	}
+>  
+> +	/* Obtain the TMR memory area for SEV-ES use */
+> +	tmr_page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(sev_es_tmr_size), false);
+> +	if (tmr_page) {
+> +		sev_es_tmr = page_address(tmr_page);
+> +	} else {
+> +		sev_es_tmr = NULL;
+> +		dev_warn(sev->dev,
+> +			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
+> +	}
+
+I think your patch ordering got a bit wonky.  AFAICT, the chunk that added
+sev_snp_init() and friends in the previous patch 14 should have landed above
+the TMR allocation, i.e. the code movement here should be unnecessary.
+
+>  	/* Initialize the platform */
+>  	rc = sev_platform_init(&error);
+>  	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
+
+...
+
+> @@ -961,6 +965,13 @@ static inline int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *erro
+>  	return -ENODEV;
+>  }
+>  
+> +static inline void *snp_alloc_firmware_page(gfp_t mask)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void snp_free_firmware_page(void *addr) { }
+
+Hmm, I think we should probably bite the bullet and #ifdef and/or stub out large
+swaths of svm/sev.c before adding SNP support.  sev.c is getting quite massive,
+and we're accumulating more and more stubs outside of KVM because its SEV code
+is compiled unconditionally.
