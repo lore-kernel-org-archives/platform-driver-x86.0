@@ -2,87 +2,202 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB23C07E96
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 15:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6027C07E96
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 15:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2D1613CC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 15:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8998613D0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 15 Jul 2021 15:46:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232994AbhGOPWc (ORCPT
+        id S239378AbhGOPsx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 15 Jul 2021 11:22:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37631 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238380AbhGOPWb (ORCPT
+        Thu, 15 Jul 2021 11:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239371AbhGOPsw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 15 Jul 2021 11:22:31 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="232393404"
-X-IronPort-AV: E=Sophos;i="5.84,242,1620716400"; 
-   d="scan'208";a="232393404"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 08:19:12 -0700
-X-IronPort-AV: E=Sophos;i="5.84,242,1620716400"; 
-   d="scan'208";a="495513685"
-Received: from bmookkia-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.123.85])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2021 08:19:11 -0700
-Subject: Re: [PATCH v2 6/6] tools/tdx: Add a sample attestation user app
-To:     Mian Yousaf Kaukab <ykaukab@suse.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 15 Jul 2021 11:48:52 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A182BC061760
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 08:45:59 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id b12so5805740pfv.6
+        for <platform-driver-x86@vger.kernel.org>; Thu, 15 Jul 2021 08:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JGShUfArb1jvxyvk/PluPuoZRLwcvoX9Y9zVRmEA/LE=;
+        b=cvMFpY/OwXDzNZaxDIn8hCltxnXPgoxZFD59snXEi3mihiSlY3m0PQ5CTgOpg4squZ
+         AalmskJzdync5QA4IQCm5ffqiWDxrBvwFYYoNj4OuvK7gHrBpci2GtTUFW9X2DHQN0dR
+         HFbEerlqGDC1d4sIS9bwC7aNuwwnKpggKW6noufPRcHWlNV1y8HITB7LrzR6AarPqQ0y
+         0YNBcIldHRlrOP0V/M5EsmhAkdJeLG9FECbestqwaA742zw0BGPP1fqk0lZKvrFbreFl
+         hdSX1/zFa2nbrcaIeXkSea65z702JJp8xh2Zp3ZabADykfikzrxIsq/POXNItxZrpDTl
+         Z3yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JGShUfArb1jvxyvk/PluPuoZRLwcvoX9Y9zVRmEA/LE=;
+        b=ip3JFbKjSd6WF5B1Te7AfXYvDQVkvwZ3miniJFO4p8XA8kgAqQwK80t07rO2rsegDM
+         X5HbswA7Ptd+xspzviDq2fppBSY+Jq4P04Jzhk3KGZczW/TDz4bXRinLEhBkjEYtjoIt
+         pyRFxpTEIKwNlk7aY4kciRt5X3pV19S6pROw13dKcfUsr+DySVSU45IsQ2UemsUSvlUJ
+         21vCt2P60nLPjnhOTd4Vo3OLzSdu2onlWlLWTEJRX0U8ErkoM+wHoeH4+gR7BiZcyrpz
+         JsfDkz7HnwSxotx3GQ2gI2iuwxTf88QYL2/3nlUZ4xtKJrp3669P3Z4PLRuDi8iH7XB5
+         dr+g==
+X-Gm-Message-State: AOAM5312TO+hSwyUl/Duy63cE8nThvZyXX7Jy+7V6uEAtOCnM5ap3euY
+        hUdyjnDMWjdreghzUaoNOyo4ag==
+X-Google-Smtp-Source: ABdhPJwQyW7bUtVpri0q5g8r0vZu8sEyqzBKIbVZWvT5YFaKDe5mAIuTkn7DhgaMa4VDH0TCblUGFA==
+X-Received: by 2002:a65:6a0a:: with SMTP id m10mr5244127pgu.145.1626363958878;
+        Thu, 15 Jul 2021 08:45:58 -0700 (PDT)
+Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
+        by smtp.gmail.com with ESMTPSA id t37sm7049539pfg.14.2021.07.15.08.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jul 2021 08:45:58 -0700 (PDT)
+Date:   Thu, 15 Jul 2021 15:45:54 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
         Andy Lutomirski <luto@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Peter H Anvin <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20210707204249.3046665-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210707204249.3046665-7-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210715083635.GA112769@suse.de>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <a7757efc-cb62-013f-8976-427b354ff0f1@linux.intel.com>
-Date:   Thu, 15 Jul 2021 08:19:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 01/40] KVM: SVM: Add support to handle AP
+ reset MSR protocol
+Message-ID: <YPBYMiOB44dhhPfr@google.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-2-brijesh.singh@amd.com>
+ <YO9GWVsZmfXJ4BRl@google.com>
+ <e634061d-78f4-dcb2-b7e5-ebcb25585765@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20210715083635.GA112769@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e634061d-78f4-dcb2-b7e5-ebcb25585765@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Thu, Jul 15, 2021, Tom Lendacky wrote:
+> On 7/14/21 3:17 PM, Sean Christopherson wrote:
+> >> +	case GHCB_MSR_AP_RESET_HOLD_REQ:
+> >> +		svm->ap_reset_hold_type = AP_RESET_HOLD_MSR_PROTO;
+> >> +		ret = kvm_emulate_ap_reset_hold(&svm->vcpu);
+> > 
+> > The hold type feels like it should be a param to kvm_emulate_ap_reset_hold().
+> 
+> I suppose it could be, but then the type would have to be tracked in the
+> kvm_vcpu_arch struct instead of the vcpu_svm struct, so I opted for the
+> latter. Maybe a helper function, sev_ap_reset_hold(), that sets the type
+> and then calls kvm_emulate_ap_reset_hold(), but I'm not seeing a big need
+> for it.
 
+Huh.  Why is kvm_emulate_ap_reset_hold() in x86.c?  That entire concept is very
+much SEV specific.  And if anyone argues its not SEV specific, then the hold type
+should also be considered generic, i.e. put in kvm_vcpu_arch.
 
-On 7/15/21 1:36 AM, Mian Yousaf Kaukab wrote:
-> In tdg_attest_ioctl() TDX_CMD_GEN_QUOTE case is calling
-> tdx_mcall_tdreport() same as TDX_CMD_GET_TDREPORT case. Then what is
-> the point of calling get_tdreport() here? Do you mean to call
-> gen_report_data()?
+> >> +
+> >> +		/*
+> >> +		 * Preset the result to a non-SIPI return and then only set
+> >> +		 * the result to non-zero when delivering a SIPI.
+> >> +		 */
+> >> +		set_ghcb_msr_bits(svm, 0,
+> >> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_MASK,
+> >> +				  GHCB_MSR_AP_RESET_HOLD_RESULT_POS);
+> >> +
+> >> +		set_ghcb_msr_bits(svm, GHCB_MSR_AP_RESET_HOLD_RESP,
+> >> +				  GHCB_MSR_INFO_MASK,
+> >> +				  GHCB_MSR_INFO_POS);
+> > 
+> > It looks like all uses set an arbitrary value and then the response.  I think
+> > folding the response into the helper would improve both readability and robustness.
+> 
+> Joerg pulled this patch out and submitted it as part of a small, three
+> patch series, so it might be best to address this in general in the
+> SEV-SNP patches or as a follow-on series specifically for this re-work.
+> 
+> > I also suspect the helper needs to do WRITE_ONCE() to guarantee the guest sees
+> > what it's supposed to see, though memory ordering is not my strong suit.
+> 
+> This is writing to the VMCB that is then used to set the value of the
+> guest MSR. I don't see anything done in general for writes to the VMCB, so
+> I wouldn't think this should be any different.
 
-Yes, I also noticed this issue and fixed the attestation driver to
-to get TDREPORT data as input to get TDQUOTE.
+Ooooh, right.  I was thinking this was writing memory that's shared with the
+guest, but this is KVM's copy of the GCHB MSR, not the GHCB itself.  Thanks!
 
-I will be posting the fixed version of attestation driver today.
+> > Might even be able to squeeze in a build-time assertion.
+> > 
+> > Also, do the guest-provided contents actually need to be preserved?  That seems
+> > somewhat odd.
+> 
+> Hmmm... not sure I see where the guest contents are being preserved.
 
+The fact that set_ghcb_msr_bits() is a RMW flow implies _something_ is being
+preserved.  And unless KVM explicitly zeros/initializes control.ghcb_gpa, the
+value being preserved is the value last written by the guest.  E.g. for CPUID
+emulation, KVM reads the guest-requested function and register from ghcb_gpa,
+then writes back the result.  But set_ghcb_msr_bits() is a RMW on a subset of
+bits, and thus it's preserving the guest's value for the bits not being written.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Unless there is an explicit need to preserve the guest value, the whole RMW thing
+is unnecessary and confusing.
+
+	case GHCB_MSR_CPUID_REQ: {
+		u64 cpuid_fn, cpuid_reg, cpuid_value;
+
+		cpuid_fn = get_ghcb_msr_bits(svm,
+					     GHCB_MSR_CPUID_FUNC_MASK,
+					     GHCB_MSR_CPUID_FUNC_POS);
+
+		/* Initialize the registers needed by the CPUID intercept */
+		vcpu->arch.regs[VCPU_REGS_RAX] = cpuid_fn;
+		vcpu->arch.regs[VCPU_REGS_RCX] = 0;
+
+		ret = svm_invoke_exit_handler(vcpu, SVM_EXIT_CPUID);
+		if (!ret) {
+			ret = -EINVAL;
+			break;
+		}
+
+		cpuid_reg = get_ghcb_msr_bits(svm,
+					      GHCB_MSR_CPUID_REG_MASK,
+					      GHCB_MSR_CPUID_REG_POS);
+		if (cpuid_reg == 0)
+			cpuid_value = vcpu->arch.regs[VCPU_REGS_RAX];
+		else if (cpuid_reg == 1)
+			cpuid_value = vcpu->arch.regs[VCPU_REGS_RBX];
+		else if (cpuid_reg == 2)
+			cpuid_value = vcpu->arch.regs[VCPU_REGS_RCX];
+		else
+			cpuid_value = vcpu->arch.regs[VCPU_REGS_RDX];
+
+		set_ghcb_msr_bits(svm, cpuid_value,
+				  GHCB_MSR_CPUID_VALUE_MASK,
+				  GHCB_MSR_CPUID_VALUE_POS);
+
+		set_ghcb_msr_bits(svm, GHCB_MSR_CPUID_RESP,
+				  GHCB_MSR_INFO_MASK,
+				  GHCB_MSR_INFO_POS);
+		break;
+	}
