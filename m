@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4CCC636CD
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 19:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8D4C636CB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 19:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D2D613EB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F119613EB
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 19:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232625AbhGPTe3 (ORCPT
+        id S233158AbhGPTgd (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 15:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54626 "EHLO
+        Fri, 16 Jul 2021 15:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232609AbhGPTe3 (ORCPT
+        with ESMTP id S233135AbhGPTgc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 15:34:29 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569FBC061764
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 12:31:34 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id u126so2048798pfb.8
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 12:31:34 -0700 (PDT)
+        Fri, 16 Jul 2021 15:36:32 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9BFC06175F
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 12:33:36 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id k20so10932044pgg.7
+        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 12:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=/hHZcYMza7NE4Psi5qcc23pedu+uGbkYbTmPoTjnedM=;
-        b=BN12JV2QP6xeOYm+P7hOWRg91H97OO5pAZkKmHIYIuBIsE6PXqOVX7aRlVHXE+qBaj
-         jJsjE1orHInfKykBM3svTQcefVtGB158y9NKaAtpTnV2FoHRr0MElSWAxuo65Dyp+b5T
-         VSYqHWDHjILxcboknF11CscuZbazyHg4SrSNNazKexI2pjjaz7dlJLS9L3JomRvDK4DZ
-         4NChiXc+J8PrnRle1d+qfVMEaxEBnB08RcOA/+rXxoNxfQyOBCpaxai418Ls7VTz1/hZ
-         yrp4XyPno2exnVEcQ4oP8W1q6dCyvwk7MDe+/6l2RkOTxbT5ZO/dKqe4MwDga+yEqmdl
-         /P1g==
+        bh=bTfimW7x83FCVFcfi2WAn0Cbjb2ZgRjY254vPotYxPM=;
+        b=gLImRTTcl99pctFwFn9UCqCov03WvN5lkMsW6nWwr384I/+cmwj+1ZHSGlrrZdl7d5
+         TLN+/m5Nfv5qKcE2GQunEOLzJB7L3PP6ZDyVbn6JNFdvHjmFxu78glmP3iIRHsw9wr+a
+         H824qnog8pZlEDCRCTJ6HOP2L3o2UP8efLhLfBaXUcKxAoDb5znXSQWleWyBbWLEJj9B
+         jvBCxQWNgzkeVM92UjyzQFGU1mQBnWXpAZcxh7SQ0MCcRlHittiWeZLW69P6RW1mT8FQ
+         u3D6YbSXZKiUPT2FPaQRh65zBcahuVR55fkNhWuKOqwKOyjpx+kmRB+UTrj4/4D9JKvI
+         s10w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=/hHZcYMza7NE4Psi5qcc23pedu+uGbkYbTmPoTjnedM=;
-        b=QaKdUjmJQWmeHCAUcEF4etOgDrk/3yKjCrwGbFe6GEFjVLgBZspCk1zhuFPb8Mdw5m
-         Tpn1K7kYbpurW4Qs45memLaHBRUuUBcTlOAvR3au+4kufAR0nV8QgN6DEdYaArcMyRJV
-         TseVY3iLNpXT0QWSQjJGqmKq2ykfWwWqnsLYOX0ovOWoTUXDmmM5NjY0yv6wp4miD5mr
-         1LVKWCntY5wulSg++EepI9N9ZTOdJCae1kgzPn2AAs7zNJGVumV+ULGHkgM8RgRDMwYO
-         uL0l0Mz6A+ugfoeYYmmf6fcV7z9B9J19UANLc/dH3ifg4C+HRgQw3R4arVm4lAtgS3xw
-         WDFw==
-X-Gm-Message-State: AOAM532F32FwkenpvsQT42MFCvFdvlvaOV//fyLNLUA5UtzQgDUugDXx
-        79mb4YPMd54rj820KrPJXzUGFw==
-X-Google-Smtp-Source: ABdhPJw/Tl6imvxSRs9HdGQZlRO+Ko27yJBuT5jRtOwEVQDmy165qXol9Cy0ASigSmkGWdJ7jWp16w==
-X-Received: by 2002:a65:450d:: with SMTP id n13mr11562222pgq.13.1626463893304;
-        Fri, 16 Jul 2021 12:31:33 -0700 (PDT)
+        bh=bTfimW7x83FCVFcfi2WAn0Cbjb2ZgRjY254vPotYxPM=;
+        b=Bv63HaBGWYzVOPuwd7Xk/fEbF0ir9mYBAGqt83XbvQ4zf/mCxkvElTe7Ioc5vbqhrM
+         mRlmZ42LQBTtfztVHNSyEj3exhrkHAETLeV/dmUprnHjyrl5Bgs+oewDHuSrfR5vcbf9
+         I+IlsFWLgZzTz1fL/0L/YuSGEyNb80mXEyTjY0wXyKQGRKU/QJgULzuQtRJSGUZSCHrY
+         xZ6hKbsZO8clh0hMvMzU4lx9wPwq3vxMqi7mcfNTLFfGcobTPXaapho6CrM83z0Af0cy
+         9r08rxgayoFuqX589pGDnw8I83IPED8MaVHUtxlTAgwkrB85NCKoFw3cX2GU5lrlHOSM
+         icLg==
+X-Gm-Message-State: AOAM530eGozZ2v3yVGq38WwFIQ572nsPK4ldzGz9t0BET038ulbOTvHC
+        xMnozI/BkuX+Vi+HdFm2G+okyQ==
+X-Google-Smtp-Source: ABdhPJzOniqffULuzP8aWisOtiLK+NTXPgX8ACLtySTB0tER8yPBpCPFaT3MWTs6mE953cLz2x0NBQ==
+X-Received: by 2002:a63:f901:: with SMTP id h1mr11601639pgi.69.1626464015722;
+        Fri, 16 Jul 2021 12:33:35 -0700 (PDT)
 Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id v7sm3142968pjk.37.2021.07.16.12.31.32
+        by smtp.gmail.com with ESMTPSA id c10sm10695587pfo.129.2021.07.16.12.33.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 12:31:32 -0700 (PDT)
-Date:   Fri, 16 Jul 2021 19:31:29 +0000
+        Fri, 16 Jul 2021 12:33:35 -0700 (PDT)
+Date:   Fri, 16 Jul 2021 19:33:31 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -83,134 +83,34 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Michael Roth <michael.roth@amd.com>,
         Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
         npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 21/40] KVM: SVM: Add initial SEV-SNP support
-Message-ID: <YPHekXKC/XhWYlZE@google.com>
+Subject: Re: [PATCH Part2 RFC v4 22/40] KVM: SVM: Add KVM_SNP_INIT command
+Message-ID: <YPHfC1mI8dQkkzyV@google.com>
 References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-22-brijesh.singh@amd.com>
- <YPHJOmUOR65QY+YY@google.com>
- <ae47ae6b-16b1-f282-38d5-429d813243a8@amd.com>
+ <20210707183616.5620-23-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae47ae6b-16b1-f282-38d5-429d813243a8@amd.com>
+In-Reply-To: <20210707183616.5620-23-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 16, 2021, Brijesh Singh wrote:
-> 
-> On 7/16/21 1:00 PM, Sean Christopherson wrote:
-> > On Wed, Jul 07, 2021, Brijesh Singh wrote:
-> >> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> >> index 411ed72f63af..abca2b9dee83 100644
-> >> --- a/arch/x86/kvm/svm/sev.c
-> >> +++ b/arch/x86/kvm/svm/sev.c
-> >> @@ -52,9 +52,14 @@ module_param_named(sev, sev_enabled, bool, 0444);
-> >>  /* enable/disable SEV-ES support */
-> >>  static bool sev_es_enabled = true;
-> >>  module_param_named(sev_es, sev_es_enabled, bool, 0444);
-> >> +
-> >> +/* enable/disable SEV-SNP support */
-> >> +static bool sev_snp_enabled = true;
-> > Is it safe to incrementally introduce SNP support?  Or should the module param
-> > be hidden until all support is in place?  E.g. what will happen when KVM allows
-> > userspace to create SNP guests but doesn't yet have the RMP management added?
-> 
-> The SNP support depends on the RMP management. At least the patch
-> ordering in this series adds the RMP management first then updates
-> drivers to use the RMP specific APIs.
+On Wed, Jul 07, 2021, Brijesh Singh wrote:
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index 3fd9a7e9d90c..989a64aa1ae5 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1678,6 +1678,9 @@ enum sev_cmd_id {
+>  	/* Guest Migration Extension */
+>  	KVM_SEV_SEND_CANCEL,
+>  
+> +	/* SNP specific commands */
+> +	KVM_SEV_SNP_INIT = 256,
 
-Yep, got that.
+Is there any meaning behind '256'?  If not, why skip a big chunk?  I wouldn't be
+concerned if it weren't for KVM_SEV_NR_MAX, whose existence arguably implies that
+0-KVM_SEV_NR_MAX-1 are all valid SEV commands.
 
-> If RMP is not initialized due to someone not picking the commits in the
-> order, then SNP guest creation will fail.
-
-That's not what I was asking.  My question is if KVM will break/fail if someone
-runs a KVM build with SNP enabled halfway through the series.  E.g. if I make a
-KVM build at patch 22, "KVM: SVM: Add KVM_SNP_INIT command", what will happen if
-I attempt to launch an SNP guest?  Obviously it won't fully succeed, but will KVM
-fail gracefully and do all the proper cleanup?  Repeat the question for all patches
-between this one and the final patch of the series.
-
-SNP simply not working is ok, but if KVM explodes or does weird things without
-"full" SNP support, then at minimum the module param should be off by default
-until it's safe to enable.  E.g. for the TDP MMU, I believe the approach was to
-put all the machinery in place but not actually let userspace flip on the module
-param until the full implementation was ready.  Bisecting and testing the
-individual commits is a bit painful because it requires modifying KVM code, but
-on the plus side unrelated bisects won't stumble into a half-baked state.
-
-> >> +module_param_named(sev_snp, sev_snp_enabled, bool, 0444);
-> >>  #else
-> >>  #define sev_enabled false
-> >>  #define sev_es_enabled false
-> >> +#define sev_snp_enabled  false
-> >>  #endif /* CONFIG_KVM_AMD_SEV */
-> >>  
-> >>  #define AP_RESET_HOLD_NONE		0
-> >> @@ -1825,6 +1830,7 @@ void __init sev_hardware_setup(void)
-> >>  {
-> >>  #ifdef CONFIG_KVM_AMD_SEV
-> >>  	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
-> >> +	bool sev_snp_supported = false;
-> >>  	bool sev_es_supported = false;
-> >>  	bool sev_supported = false;
-> >>  
-> >> @@ -1888,9 +1894,21 @@ void __init sev_hardware_setup(void)
-> >>  	pr_info("SEV-ES supported: %u ASIDs\n", sev_es_asid_count);
-> >>  	sev_es_supported = true;
-> >>  
-> >> +	/* SEV-SNP support requested? */
-> >> +	if (!sev_snp_enabled)
-> >> +		goto out;
-> >> +
-> >> +	/* Is SEV-SNP enabled? */
-> >> +	if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-> > Random question, why use cpu_feature_enabled?  Did something change in cpufeatures
-> > that prevents using boot_cpu_has() here?
-> 
-> 
-> During the boot the kernel initialize the RMP table. If RMP table
-> initialization fail, then X86_FEATURE_SEV_SNP is cleared. In that case,
-> the cpu_feature_enabled() should return false. The idea is,
-> cpu_feature_enabled() will be set only when the RMP table is
-> successfully initialized and SYSCFG.SNP is set.
-
-Ya, got that, but again not what I was asking :-)  Why use cpu_feature_enabled()
-instead of boot_cpu_has()?  As a random developer, I would fully expect that
-boot_cpu_has(X86_FEATURE_SEV_SNP) is true iff SNP is fully enabled by the kernel.
-
-> >> +		goto out;
-> >> +
-> >> +	pr_info("SEV-SNP supported: %u ASIDs\n", min_sev_asid - 1);
-> > Use sev_es_asid_count instead of manually recomputing the same; the latter
-> > obfuscates the fact that ES and SNP share the same ASID pool.
-> >
-> > Even better would be to report ES+SNP together, otherwise the user could easily
-> > interpret ES and SNP having separate ASID pools.  And IMO the gotos for SNP are
-> > overkill, e.g.
-> >
-> > 	sev_es_supported = true;
-> > 	sev_snp_supported = sev_snp_enabled &&
-> > 			    cpu_feature_enabled(X86_FEATURE_SEV_SNP);
-> >
-> > 	pr_info("SEV-ES %ssupported: %u ASIDs\n",
-> > 		sev_snp_supported ? "and SEV-SNP " : "", sev_es_asid_count);
-> >
-> >> +static inline bool sev_snp_guest(struct kvm *kvm)
-> >> +{
-> >> +#ifdef CONFIG_KVM_AMD_SEV
-> >> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> >> +
-> >> +	return sev_es_guest(kvm) && sev->snp_active;
-> > Can't this be reduced to:
-> >
-> > 	return to_kvm_svm(kvm)->sev_info.snp_active;
-> >
-> > KVM should never set snp_active without also setting es_active.
-> 
-> 
-> The approach here is similar to SEV/ES. IIRC, it was done mainly to
-> avoid adding dead code when CONFIG_KVM_AMD_SEV is disabled.
-
-But this is already in an #ifdef, checking sev_es_guest() is pointless.
+> +
+>  	KVM_SEV_NR_MAX,
+>  };
