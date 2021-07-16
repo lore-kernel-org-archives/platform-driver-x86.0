@@ -2,628 +2,275 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0C9C636CA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 11:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFCCC12002
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 12:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763CB613F1
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 11:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0FE613E3
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 12:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231680AbhGPL2W (ORCPT
+        id S239503AbhGPM6m (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 07:28:22 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46140 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232646AbhGPL2W (ORCPT
+        Fri, 16 Jul 2021 08:58:42 -0400
+Received: from mail-mw2nam10on2058.outbound.protection.outlook.com ([40.107.94.58]:44195
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232804AbhGPM6l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 07:28:22 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10046"; a="210705333"
-X-IronPort-AV: E=Sophos;i="5.84,244,1620716400"; 
-   d="scan'208";a="210705333"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 04:25:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,244,1620716400"; 
-   d="scan'208";a="631046156"
-Received: from intel-tiger-lake-client-platform.iind.intel.com ([10.224.178.120])
-  by orsmga005.jf.intel.com with ESMTP; 16 Jul 2021 04:25:23 -0700
-From:   Shravan S <s.shravan@intel.com>
-To:     hdegoede@redhat.com, mgross@linux.intel.com,
-        platform-driver-x86@vger.kernel.org
-Cc:     sudhakar.an@intel.com, s.shravan@intel.com
-Subject: [PATCH V3 1/1] platform/x86: Add BIOS Dynamic SAR driver for Intel M.2 Modem
-Date:   Wed,  2 Jun 2021 10:31:49 +0530
-Message-Id: <20210602050149.6230-2-s.shravan@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210602050149.6230-1-s.shravan@intel.com>
-References: <20210602050149.6230-1-s.shravan@intel.com>
+        Fri, 16 Jul 2021 08:58:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mYKJLsyno1dde62rtvq4SWMS6SLshjx/8xlHMzR3ELJyytvLja2OZ1gAPOFA8tz07UR6Xgf3bLCf2/Kp2vlqlabZ+9m6k1hp7H56bBNY6LmbEcnhPFD2WKDHSp//tj1NRd+do3IdtyUTVdsWdnu+dWURHThVRId/9z15Q6W8uKTm4F7tG/c2MrbXQTpK7EaYZ77qslv/ubiARpyTmf7Bb+CS2WhTBZBdO0GdP/8EscjHyWCvn/Q3+XD+OY0zSPHj5mFfyGdSLvieOxkZ1K26szYsMvncAmNwl2zcpJh9Xy3e3as/+Kn8Fq7O//hkPmzX4UZ9GRuy/oZrFnleZxycMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4BG+Lxu0G0wP2C2Vz1nthm/cvWAv6jOnqOX5czl/i1o=;
+ b=h9sFcTKungtRvsn1x3pWjIABFBJ0TWLEi13rpDR33bx4OpaF59Y2gWQ2XoO58D6EaUXdpo3iXHPOMs2OyBYVBJYm0nPlty7muNT65nlu1pxByvC7dH//N1i3/h9t9j0afvgd12uhraA61NVnD9vW1xV9FWk2+U9MFktFnAtj7QNFI0LndD+6KXWMsVyPEaIkPKkQ/IgM6ZIoEN/2LIxWgos7tOPU3jBj+dHQf0OML9zcCbkXyuME4vZBELaOSxC46asR3W0hkOlcGdvuRNf2fPqeHU/yPitRlGAeTx0Sad0CHpS1I+LdL5uB5TYO1kXMYqNUtTM6tdEPIL02Tx99Ag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4BG+Lxu0G0wP2C2Vz1nthm/cvWAv6jOnqOX5czl/i1o=;
+ b=Sf0vLpF18/sUvmhjraKCqGOy+WH/aUgGMMfv+HFyi/fuakEfrZl/GpneZ+APQq6MEl0B7PZmBMS749hug5Z3cGL+RgDoPR8ai7BRif//gNFl/urkUVtVRBddKTWm0s1qzXIWeBSSNJ2CSjaf6THr+BdixhRPMueR4Oa5leG3d8Q=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SN6PR12MB2640.namprd12.prod.outlook.com (2603:10b6:805:6c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.23; Fri, 16 Jul
+ 2021 12:55:43 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::a8a9:2aac:4fd1:88fa]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::a8a9:2aac:4fd1:88fa%3]) with mapi id 15.20.4331.024; Fri, 16 Jul 2021
+ 12:55:43 +0000
+Cc:     brijesh.singh@amd.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 15/40] crypto: ccp: Handle the legacy TMR
+ allocation when SNP is enabled
+To:     Sean Christopherson <seanjc@google.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-16-brijesh.singh@amd.com> <YPDJQ0uumar8j22y@google.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <dfa4ccb5-f85e-6294-6a80-9e4aa6d93c1e@amd.com>
+Date:   Fri, 16 Jul 2021 07:55:40 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.11.0
+In-Reply-To: <YPDJQ0uumar8j22y@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: SN4PR0801CA0020.namprd08.prod.outlook.com
+ (2603:10b6:803:29::30) To SN6PR12MB2718.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SN4PR0801CA0020.namprd08.prod.outlook.com (2603:10b6:803:29::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 12:55:41 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8b117778-c9c1-4c2d-3656-08d948590584
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2640:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB2640DF66D426B46D0BE34D57E5119@SN6PR12MB2640.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /aR+b1BdDbiYARNZyZXmdjdrN5p/DD2dMGw+con4y5Y2FZ1CIGaZl0L34B6P5u2QNKav/y8AdONWLLC3anJSaBJ/LcSXsLb3i9H/pyJk7pj3F3w3hSt15h1nibdBzTpVlNLQ8zS6nE+tNJNSz7IT01t4VxTvnSmnYGtOMizy9L7QszusAS7ohG3RepouMQA8n/CIOsudFRZEiPn5xnj8+Mf39UfuBsveaPs6gJG/bJgJmDjB9zlDLKx+NY08bztOsexRVemNLdybXoMcN6tRSubxGLAUQVMIiFcmFaMT09vg569nWJbTfvQiAtc1+YDTD1fesCK3DUgkGzkKpJJysDCMBWYMt6YSOUotEnooqjUBGtK9en5WvDM+oRbqjlrP0gcUfgimN4Jp3wfo6/t3A0k18ZrYVNaZejEBXWvLl1ekY4Nd1oKvl85NhasgMmu/trjiL6OBlIF7OoUGUG6jJOrEdEWz5HTGhtCF13QsXj1r07pJzG0WvDlo/GpDkfW1/23Qvf90VmGY9nKClKGXi0m/37SMNfT+K160NqC2Odmcao3mvlkQLwwxCaxEQnNXuOzQYGxbnWK01aqMKnUGSgNPI4kO9S1VXV76W8A5/wzbmpp2WOCw+z8nrzczIcBYVgEYwuaO+5Fy8PBMhAzmYih4rT7oL9eQVzjCET7o1bznDAQALsM6k4ebKHlPyPOFSRD+PHd9cUY4PIjegi2duN9xmiZdbhZDnEBkkPEUec83c4JsAO0E/dz04NpFWnG31vMf3JwvuVYlo//8wXh72Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(396003)(366004)(346002)(6486002)(6506007)(53546011)(66946007)(38350700002)(8676002)(66476007)(66556008)(52116002)(38100700002)(478600001)(36756003)(31686004)(956004)(4326008)(6916009)(86362001)(54906003)(2616005)(186003)(44832011)(83380400001)(8936002)(6512007)(2906002)(7406005)(7416002)(5660300002)(316002)(26005)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cjluak84cmkvaFB4Zm1URTVMWHdsdU5vSmlvL01lRDZlcGhFdlVFVy9IVzk1?=
+ =?utf-8?B?dHMzeDZTRUdnaU9zbVZVVGRnRkFZOXc5cHd6Tk5GZTZTazdPWE1EQ1Q1Yitp?=
+ =?utf-8?B?enRnVEw4bFNiMUU4MFhPV1ovbnZjdUc5ZzR2NUU4d2hVWjFJWkIveVZGSEVs?=
+ =?utf-8?B?M1BodTZ4UDZEZmNFQWxWTVhPYVlQVGtibWw2OFNFU0tXVFFZN0swM0tWWFhO?=
+ =?utf-8?B?TWZkZlp0dG1QazNyeS9hWGhNS0lLSUlhcXI2cUNLUXpJa2hndDA0MzBFNzRW?=
+ =?utf-8?B?N2N6MGpLQXV0OFgrc2lPN0txNmVXN2dPbVBWQ1h3NzMzb2V2cWVSeGhRQ2dZ?=
+ =?utf-8?B?NTZtaGdVZ2ZpcnVlU3pnMCtDaDNqRm1ZN3V5d1doWWhKV2dEQUJwOWNrMDdt?=
+ =?utf-8?B?di8wZDRwMFNWd0I5ZnJ2aGtmMnI0cmhTYUlwNlduSS9jTE9wMmZKRDg0NVJT?=
+ =?utf-8?B?Q2xPN3p6TmV3a0ZXeFpVODV5dGt1bzZ0Ym5VK1dWUGREazVYbDMzRk00SDVj?=
+ =?utf-8?B?eTcyTEt0UTdobUhqNjBSN0MrblRCczJMd1JwSEFiRzVkNEFXcGtyMlRJTUhn?=
+ =?utf-8?B?WmsvY1cyTWJSMDhMZXJxa0F3WlRGWlhoR3FocUpqNm9Sd1FoTDFxSTZPK0w3?=
+ =?utf-8?B?eVYyZ212UGxhTmMrTEsvYWF4VU9aYUhVQXRBUTBHM011MFhvWGlPQ1BWZnZl?=
+ =?utf-8?B?Rm10M2p2TWZ5RENBdFZQUDh3M2E2ZkdvbTlPZ1ZnOWNlM2tHQkRWWTVhMWFM?=
+ =?utf-8?B?YkVJS2xnSGYxTldUaE9mdnVzQVo3TEllOUpLQjR4Y2M5WldaUks2aGZEcnVz?=
+ =?utf-8?B?Ri96QjJMM3pIa2M4aEdKQXcxVGF3TlhzOE5mVmo4QlZTQVBhMVhUeEdodFRN?=
+ =?utf-8?B?S3FQUkxHZGh4Ynh0WDh3aUxML3lIMEdCa3hhV0pxMEpBQUtUQzBsMkhMQUpX?=
+ =?utf-8?B?NitiazY4T2xLN1poQ3UxVk9rM1RRait2SHFoTm9GYmdINE1JOGsxeFQ1Qk00?=
+ =?utf-8?B?UENKRm5mT0xZTzArL0daVjd5aWduYm5UM1J4SmhoWjhFazlCVGdPcUtUeWIx?=
+ =?utf-8?B?VDZldGNOOGtZcWs0eTVIc3FpUDQ4ck5CUEVyeDRvRjY5SkhNMXF0OHRjc3RC?=
+ =?utf-8?B?YXdyMjE2TmVjaUZCUUxFbmFFcURGUGhpdWJHQjhIbGxldEZPV2hXcXplOHZ5?=
+ =?utf-8?B?VkZVOS9zV1FyanlMMUdqb3hPbXhndXBWRHJkSncyTUoybkd6TEMzeCtmdWVv?=
+ =?utf-8?B?T0tCK1pxY2dLTHZNb0JuV3EvQjVjbHl4ajdlRzJ3QzluaFNpdXlObEJabzlx?=
+ =?utf-8?B?SkdmTlZ2SStVN1E5SFovVGI2K0ZWR0FLL2JzWTZNNVByRVVpZHhISnVpcnhq?=
+ =?utf-8?B?alUvMzV2eGw0UWV2eVR2T3Vma04rUUxDRUN2ams5Mzc3VFlCbEFZUmU5dWs2?=
+ =?utf-8?B?N2pUU3lrMHdxeVBLNGRiNE1ZTGZWeFhrZ1JaSEJEOUFjcDI2RmdzZ21hZkFF?=
+ =?utf-8?B?YkxvT3FxYUZzTnN4dEFleDVRdXZZSHBvRk80aTdSQnFhWWRRZWJGdC9Ea1Jz?=
+ =?utf-8?B?ZUtZZUNubXdCL1lrNHVQTEZ5QnZCY2lNUWlpbU91L3FDcHBpNkJYcEJ1K1VX?=
+ =?utf-8?B?cHBtMTFaanAyT0pVNDkzZ1RvdnhNMno3ZEk2N1BqcVpOVDNmdnJDYktJWjZy?=
+ =?utf-8?B?b3pGSEhWd1VNeDcwNjR4N3krbEY0bUFzcm1nUk01dWIybVVSK1NZMjZ2TVlU?=
+ =?utf-8?Q?B6/UbNWW0vDrCw7J4WkJ0ZLoFGZKkZl+Gncncqs?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8b117778-c9c1-4c2d-3656-08d948590584
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 12:55:43.3614
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GcnMAHVtBM4EP7CmHMf11NHrg78ad6I604+QgPQfiaKclwGpcE4WLx0NsiMIj4OvsO34AnmNY8takHzdMvQOtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2640
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-BIOS SAR (Specific Absorption Rate) driver for RF power regulation on Intel M.2 Modem.
-Limits the exposure of human body to RF frequencies.
-Uses ACPI to communicate to BIOS to retrieve SAR information data.
-Uses Sysfs to communicate this data to userspace via read and notify.
-Userspace will further use MBIM interface to enable data communication to modem.
 
-Signed-off-by: Shravan S <s.shravan@intel.com>
----
-V3 :
-* Changes to the remove netlink and introduce sysfs to communicate to Userspace via notify
-* Handled review comments by changing ioctl calls to sysfs
-* "sar" name change for platform_device_id to "intc1092"
-* sar_init and sar_exit is modified as per review to minimal initialization
-* logging reduction and cleanup based on reviews.
+On 7/15/21 6:48 PM, Sean Christopherson wrote:
+> On Wed, Jul 07, 2021, Brijesh Singh wrote:
+>> The behavior and requirement for the SEV-legacy command is altered when
+>> the SNP firmware is in the INIT state. See SEV-SNP firmware specification
+>> for more details.
+>>
+>> When SNP is INIT state, all the SEV-legacy commands that cause the
+>> firmware to write memory must be in the firmware state. The TMR memory
+> It'd be helpful to spell out Trusted Memory Region, I hadn't seen that
+> term before and for some reason my brain immediately thought "xAPIC register!".
 
----
- .../networking/device_drivers/wwan/index.rst  |   9 +-
- .../device_drivers/wwan/intc_sar.rst          |  60 ++++
- drivers/platform/x86/Kconfig                  |  12 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/intel-sar.c              | 326 ++++++++++++++++++
- include/linux/platform_data/x86/intel-sar.h   |  89 +++++
- 6 files changed, 493 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/networking/device_drivers/wwan/intc_sar.rst
- create mode 100644 drivers/platform/x86/intel-sar.c
- create mode 100644 include/linux/platform_data/x86/intel-sar.h
+Noted.
 
-diff --git a/Documentation/networking/device_drivers/wwan/index.rst b/Documentation/networking/device_drivers/wwan/index.rst
-index 1cb8c7371401..93dfd89f76e8 100644
---- a/Documentation/networking/device_drivers/wwan/index.rst
-+++ b/Documentation/networking/device_drivers/wwan/index.rst
-@@ -1,14 +1,15 @@
--.. SPDX-License-Identifier: GPL-2.0-only
-+.. SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- 
--WWAN Device Drivers
--===================
-+Classic WAN Device Drivers
-+==========================
- 
- Contents:
- 
- .. toctree::
-    :maxdepth: 2
- 
--   iosm
-+   z8530book
-+   intc_sar
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/networking/device_drivers/wwan/intc_sar.rst b/Documentation/networking/device_drivers/wwan/intc_sar.rst
-new file mode 100644
-index 000000000000..7319d6e593ed
---- /dev/null
-+++ b/Documentation/networking/device_drivers/wwan/intc_sar.rst
-@@ -0,0 +1,60 @@
-+.. SPDX-License-Identifier: GPL-2.0-only
-+
-+.. Copyright (C) 2020-21 Intel Corporation
-+
-+.. _INTEL_SAR_driver_doc:
-+
-+===========================================
-+BIOS Dynamic SAR driver for Intel M.2 Modem
-+===========================================
-+SAR (Specific Absorption Rate) driver is a host driver implemented for Linux
-+or chrome platform to limit the exposure of human body to RF frequency by
-+informing the Intel M.2 modem to regulate the RF power based on SAR data
-+obtained from the sensors captured in the BIOS.
-+
-+Basic usage
-+===========
-+ACPI interface exposes this data from the BIOS to SAR driver. The front end
-+application in userspace ( eg: Modem Manager) will interact with SAR driver 
-+to obtain information like the device mode (Example: tablets, laptops, etx),
-+Antenna index, baseband index, SAR table index and use available communication
-+like MBIM interface to enable data communication to modem for power regulation.
-+
-+Applications to carry out below required actions for establishing connection
-+with driver for data communication with the SAR driver:
-+- open the sysfs file for communication
-+- read the data to get the information
-+- get notification from sysfs if data is changed
-+- write into sysfs to change regulatory mode.
-+
-+Management application development
-+==================================
-+The driver and userspace interfaces are described below.
-+
-+sysfs channel for communication to userspace
-+--------------------------------------------
-+
-+/sys/bus/platform/devices/INTC1092:00/intc_reg
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+The driver exposes an sysfs entry in the kernel which is used for sending and
-+receiving regulatory information. The regulatory modes are depending on network.
-+FCC(0), CE(1), ISED(2)
-+
-+/sys/bus/platform/devices/INTC1092:00/intc_reg write()
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+The regulatory modes should not exceed the allowed reguulatory worldwide.
-+
-+/sys/bus/platform/devices/INTC1092:00/intc_reg read()
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+The application can read the current regulatory mode that is set in the
-+driver.
-+
-+/sys/bus/platform/devices/INTC1092:00/intc_data
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+The driver exposes an sysfs entry in the kernel which is used for receiving
-+information sent by BIOS.
-+
-+/sys/bus/platform/devices/INTC1092:00/intc_data read()
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+The SAR index, Band index and Antenna index along with the device modes are
-+obtained from this sysfs.
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7d385c3b2239..f3abf935a976 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1306,6 +1306,18 @@ config INTEL_TELEMETRY
- 	  directly via debugfs files. Various tools may use
- 	  this interface for SoC state monitoring.
- 
-+config INTEL_SAR
-+	tristate "Intel Specific Absorption Rate Driver"
-+	depends on ACPI
-+	help
-+	  This driver limit the exposure of human body to RF frequency by informing
-+	  the Intel M.2 modem to regulate the RF power based on SAR data obtained
-+	  from the sensors captured in the BIOS. ACPI interface exposes this data
-+	  from the BIOS to SAR driver. The front end application in userspace
-+	  will interact with SAR driver to obtain information like the device mode,
-+	  Antenna index, baseband index, SAR table index and use available communication
-+	  like MBIM interface to enable data communication to modem for RF power regulation.
-+
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 7ee369aab10d..3610ab7a12df 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -123,6 +123,7 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
-+obj-$(CONFIG_INTEL_SAR)				+= intel-sar.o
- 
- # Intel PMIC / PMC / P-Unit devices
- obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
-diff --git a/drivers/platform/x86/intel-sar.c b/drivers/platform/x86/intel-sar.c
-new file mode 100644
-index 000000000000..9906eb4d79a7
---- /dev/null
-+++ b/drivers/platform/x86/intel-sar.c
-@@ -0,0 +1,326 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Corporation - ACPI for Specific Absorption Rate
-+ * Copyright (c) 2021, Intel Corporation.
-+ */
-+
-+#include <asm/errno.h>
-+#include <linux/acpi.h>
-+#include <linux/kobject.h>
-+#include <linux/platform_data/x86/intel-sar.h>
-+#include <linux/platform_device.h>
-+#include <linux/sysfs.h>
-+
-+/**
-+ * get_int_value - Retrieve Integer values from ACPI Object
-+ * Value of the integer from the object of ACPI is obtained.
-+ * @obj: acpi_object pointer which has the integer value
-+ * @out: output pointer will get integer value
-+ * returns 0 on success
-+ */
-+static int get_int_value(union acpi_object *obj, int *out)
-+{
-+	if (obj && obj->type == ACPI_TYPE_INTEGER) {
-+		*out = (int)obj->integer.value;
-+		return 0;
-+	} else {
-+		return -EFAULT;
-+	}
-+}
-+
-+/**
-+ * update_sar_data - sar data is updated based on reg_value
-+ * sar_data is updated based on regulatory value
-+ * context->reg_value will never exceed MAX_REGULATORY
-+ * @context: context pointer used for data
-+ */
-+static void update_sar_data(struct wwan_sar_context *context)
-+{
-+	struct wwan_device_mode_configuration *config =
-+	&context->config_data[context->reg_value];
-+
-+	if (config->device_mode_info &&
-+	    context->sar_data.device_mode <= config->total_dev_mode) {
-+		struct wwan_device_mode_info *dev_mode =
-+		&config->device_mode_info[context->sar_data.device_mode];
-+		context->sar_data.antennatable_index = dev_mode->antennatable_index;
-+		context->sar_data.bandtable_index = dev_mode->bandtable_index;
-+		context->sar_data.sartable_index = dev_mode->sartable_index;
-+	}
-+}
-+
-+/**
-+ * parse_package - parse package for SAR
-+ * @context: context pointer used for data
-+ * @item : acpi_object ptr
-+ * returns if success or error
-+ */
-+static acpi_status parse_package(struct wwan_sar_context *context, union acpi_object *item)
-+{
-+	int value = 0, itr = 0, reg = 0;
-+	union acpi_object *num;
-+	struct wwan_device_mode_configuration *data;
-+
-+	num = &item->package.elements[0];
-+	if (get_int_value(num, &value) == 0) {
-+		if (value >= 0 && value < MAX_REGULATORY)
-+			reg = value;
-+		else
-+			return AE_ERROR;
-+	}
-+	data = &context->config_data[reg];
-+	if (data->total_dev_mode > MAX_DEV_MODES)
-+		return AE_ERROR;
-+	data->device_mode_info =
-+	kmalloc_array(data->total_dev_mode, sizeof(struct wwan_device_mode_info), GFP_KERNEL);
-+	if (!data->device_mode_info) {
-+		pr_err("Cannot allocate memory in kernel\n");
-+		return AE_ERROR;
-+	}
-+	for (itr = 0; itr < data->total_dev_mode; itr++) {
-+		if (itr + 1 == item->package.count)
-+			break;
-+		num = &item->package.elements[itr + 1];
-+		if (num->type != ACPI_TYPE_PACKAGE)
-+			continue;
-+		if (num->package.count < TOTAL_DATA)
-+			break;
-+		if (get_int_value(&num->package.elements[0], &value) == 0)
-+			data->device_mode_info[itr].device_mode = value;
-+		if (get_int_value(&num->package.elements[1], &value) == 0)
-+			data->device_mode_info[itr].bandtable_index = value;
-+		if (get_int_value(&num->package.elements[2], &value) == 0)
-+			data->device_mode_info[itr].antennatable_index = value;
-+		if (get_int_value(&num->package.elements[3], &value) == 0)
-+			data->device_mode_info[itr].sartable_index = value;
-+	}
-+	return AE_OK;
-+}
-+
-+/**
-+ * sar_module_probe - Extraction of information from BIOS via DSM calls
-+ * Retrieve all values related to device mode, SAR Table index,
-+ * Antenna Table index, Band Table index
-+ * @device: ACPI device for which to retrieve the data
-+ * Returns AE_OK on success
-+ */
-+static acpi_status sar_module_probe(struct platform_device *device)
-+{
-+	acpi_status status = AE_OK;
-+	union acpi_object *out;
-+	u32 rev = 0;
-+	int value = 0;
-+	struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
-+
-+	pr_alert("%s Triggered\n", __func__);
-+	out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-+				COMMAND_ID_DEV_MODE, NULL);
-+	if (get_int_value(out, &value) == 0) {
-+		context->sar_data.device_mode = value;
-+	} else {
-+		pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_DEV_MODE);
-+		ACPI_FREE(out);
-+		return AE_ERROR;
-+	}
-+	ACPI_FREE(out);
-+	dev_set_drvdata(&device->dev, context);
-+	sysfs_notify(context->sar_kobject, NULL, SYSFS_DATANAME);
-+	return status;
-+}
-+
-+static const struct acpi_device_id sar_device_ids[] = {
-+	{ "INTC1092", 0},
-+	{ "", 0},
-+};
-+
-+MODULE_DEVICE_TABLE(acpi, sar_device_ids);
-+
-+static const struct platform_device_id sar_device_table[] = {
-+	{"intc1092", 0},
-+	{},
-+};
-+
-+static ssize_t intc_data_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	unsigned long ret = 0;
-+	struct wwan_sar_context *context = dev_get_drvdata(dev);
-+
-+	ret = sprintf(buf, "%d %d %d %d\n", context->sar_data.device_mode,
-+		      context->sar_data.bandtable_index,
-+		      context->sar_data.antennatable_index,
-+		      context->sar_data.sartable_index);
-+	return ret;
-+}
-+
-+static ssize_t intc_reg_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	unsigned long ret = 0;
-+	struct wwan_sar_context *context = dev_get_drvdata(dev);
-+
-+	ret = sprintf(buf, "%d\n", context->reg_value);
-+	return ret;
-+}
-+
-+static ssize_t intc_reg_store(struct device *dev, struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	int value = 0, read = 0;
-+	struct wwan_sar_context *context = dev_get_drvdata(dev);
-+
-+	if (!count) {
-+		pr_err("%s count = %d", __func__, (int)count);
-+		return -EFAULT;
-+	}
-+	read = sscanf(buf, "%u", &value);
-+	if (read <= 0) {
-+		pr_alert("%s Not a integer", __func__);
-+		return -EFAULT;
-+	}
-+	if (value >= 0 && value < MAX_REGULATORY) {
-+		context->reg_value = value;
-+		update_sar_data(context);
-+		dev_set_drvdata(dev, context);
-+		sysfs_notify(context->sar_kobject, NULL, SYSFS_DATANAME);
-+	}
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RO(intc_data);
-+static DEVICE_ATTR_RW(intc_reg);
-+
-+static struct attribute *intcsar_attrs[] = {
-+	&dev_attr_intc_data.attr,
-+	&dev_attr_intc_reg.attr,
-+	NULL
-+};
-+
-+static struct attribute_group intcsar_group = {
-+	.attrs = intcsar_attrs,
-+};
-+
-+static void sar_notify(acpi_handle handle, u32 event, void *data)
-+{
-+	struct platform_device *device = data;
-+
-+	if (event == SAR_EVENT) {
-+		if (sar_module_probe(device) != AE_OK)
-+			pr_err("sar_module_probe error");
-+	}
-+}
-+
-+static int sar_probe(struct platform_device *device)
-+{
-+	int result = 0;
-+	struct wwan_sar_context *context;
-+	union acpi_object *out, *item, req;
-+	acpi_status status = AE_OK;
-+	u32 rev = 0, reg = 0;
-+	int value = 0;
-+
-+	context = kmalloc(sizeof(*context), GFP_KERNEL);
-+	if (!context)
-+		return -ENOMEM;
-+	memset(context, 0, sizeof(struct wwan_sar_context));
-+	result = sysfs_create_group(&device->dev.kobj, &intcsar_group);
-+	if (result) {
-+		pr_err("sysfs creation failed\n");
-+		goto r_free;
-+	}
-+	context->sar_kobject = &device->dev.kobj;
-+	context->sar_device = device;
-+	dev_set_drvdata(&device->dev, context);
-+	if (guid_parse(SAR_DSM_UUID, &context->guid)) {
-+		pr_err("%s: UUID error\n", __func__);
-+		goto r_sys;
-+	}
-+	context->handle = ACPI_HANDLE(&device->dev);
-+	for (reg = 0; reg < MAX_REGULATORY; reg++) {
-+		req.type = ACPI_TYPE_INTEGER;
-+		req.integer.value = reg;
-+		out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-+					COMMAND_ID_CONFIG_TABLE, &req);
-+		if (!out) {
-+			pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_CONFIG_TABLE);
-+			continue;
-+		}
-+		if (out->type == ACPI_TYPE_PACKAGE && out->package.count >= 3) {
-+			item = &out->package.elements[0];
-+			if (get_int_value(item, &value) == 0)
-+				context->config_data[reg].version = value;
-+			item = &out->package.elements[1];
-+			if (get_int_value(item, &value) == 0)
-+				context->config_data[reg].total_dev_mode = value;
-+			if (context->config_data[reg].total_dev_mode <= 0 &&
-+			    context->config_data[reg].total_dev_mode >
-+				MAX_DEV_MODES) {
-+				pr_err("total_dev_mode is not within range : %d\n",
-+				       context->config_data[reg].total_dev_mode);
-+				ACPI_FREE(out);
-+				continue;
-+			}
-+			item = &out->package.elements[2];
-+			if (item->type == ACPI_TYPE_PACKAGE && item->package.count > 0)
-+				status = parse_package(context, item);
-+			else
-+				status = AE_ERROR;
-+			if (status != AE_OK) {
-+				ACPI_FREE(out);
-+				continue;
-+			}
-+		}
-+		ACPI_FREE(out);
-+	}
-+	update_sar_data(context);
-+	if (sar_module_probe(device) != AE_OK) {
-+		pr_err("Failed sar_module_probe\n");
-+		goto r_sys;
-+	}
-+	if (acpi_install_notify_handler(ACPI_HANDLE(&device->dev), ACPI_DEVICE_NOTIFY,
-+					sar_notify, (void *)device) != AE_OK) {
-+		pr_err("Failed acpi_install_notify_handler\n");
-+		goto r_sys;
-+	}
-+	return 0;
-+
-+r_sys:
-+	sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-+r_free:
-+	kfree(context);
-+	return -1;
-+}
-+
-+static int sar_remove(struct platform_device *device)
-+{
-+	struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
-+	int reg = 0;
-+
-+	acpi_remove_notify_handler(ACPI_HANDLE(&device->dev),
-+				   ACPI_DEVICE_NOTIFY, sar_notify);
-+	sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-+	for (reg = 0; reg < MAX_REGULATORY; reg++) {
-+		kfree(context->config_data[reg].device_mode_info);
-+		context->config_data[reg].device_mode_info = NULL;
-+	}
-+	kfree(context);
-+	return 0;
-+}
-+
-+MODULE_DEVICE_TABLE(platform, sar_device_table);
-+
-+static struct platform_driver sar_driver = {
-+	.probe = sar_probe,
-+	.remove = sar_remove,
-+	.driver = {
-+			.name = DRVNAME,
-+			.owner = THIS_MODULE,
-+			/* FOR ACPI HANDLING */
-+			.acpi_match_table = ACPI_PTR(sar_device_ids),
-+			},
-+	.id_table = sar_device_table,
-+};
-+
-+module_platform_driver(sar_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Platform device driver for INTEL MODEM BIOS SAR");
-+MODULE_AUTHOR("Shravan S <s.shravan@intel.com>");
-diff --git a/include/linux/platform_data/x86/intel-sar.h b/include/linux/platform_data/x86/intel-sar.h
-new file mode 100644
-index 000000000000..6e2ac93a3ebc
---- /dev/null
-+++ b/include/linux/platform_data/x86/intel-sar.h
-@@ -0,0 +1,89 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Intel Corporation Header File for Specific Absorption Rate
-+ * Copyright (c) 2021, Intel Corporation.
-+ */
-+#ifndef INTEL_SAR_H
-+#define INTEL_SAR_H
-+
-+#define DRVNAME "intc_sar"
-+#define SYSFS_DATANAME "intc_data"
-+#define SAR_DSM_UUID "82737E72-3A33-4C45-A9C7-57C0411A5F13"
-+#define COMMAND_ID_DEV_MODE 1
-+#define COMMAND_ID_CONFIG_TABLE 2
-+#define COMMAND_TEST_SET 31
-+#define MAX_REGULATORY 3
-+#define SAR_EVENT 0x80
-+#define MAX_DEV_MODES 50
-+#define TOTAL_DATA 4
-+
-+/**
-+ * Structure wwan_device_mode_info - device mode information
-+ * Holds the data that needs to be passed to userspace.
-+ * The data is updated from the BIOS sensor information.
-+ * @device_mode: Specific mode of the device
-+ * @bandtable_index: Index of RF band
-+ * @antennatable_index: Index of antenna
-+ * @sartable_index: Index of SAR
-+ */
-+struct wwan_device_mode_info {
-+		int device_mode;
-+		int bandtable_index;
-+		int antennatable_index;
-+		int sartable_index;
-+};
-+
-+/**
-+ * Structure wwan_device_mode_configuration - device configuration
-+ * Holds the data that is configured and obtained on probe event.
-+ * The data is updated from the BIOS sensor information.
-+ * @version: Mode configuration version
-+ * @total_dev_mode: Total number of device modes
-+ * @device_mode_info: pointer to structure wwan_device_mode_info
-+ */
-+struct wwan_device_mode_configuration {
-+		int version;
-+		int total_dev_mode;
-+		struct wwan_device_mode_info *device_mode_info;
-+};
-+
-+/**
-+ * Structure wwan_supported_info - userspace datastore
-+ * Holds the data that is obtained from userspace
-+ * The data is updated from the userspace and send value back in the
-+ * structure format that is mentioned here.
-+ * @reg_mode_needed: regulatory mode set by user for tests
-+ * @bios_table_revision: Version of SAR table
-+ * @num_supported_modes: Total supported modes based on reg_mode
-+ */
-+struct wwan_supported_info {
-+		int reg_mode_needed;
-+		int bios_table_revision;
-+		int num_supported_modes;
-+};
-+
-+/**
-+ * Structure wwan_sar_context - context of SAR
-+ * Holds the complete context as long as the driver is in existence
-+ * The context holds instance of the data used for different cases.
-+ * @guid: Group id
-+ * @handle: store acpi handle
-+ * @reg_value: regulatory value
-+ * Regulatory 0: FCC, 1: CE, 2: ISED
-+ * @sar_device: platform_device type
-+ * @sar_kobject: kobject for sysfs
-+ * @supported_data: wwan_supported_info struct
-+ * @sar_data: wwan_device_mode_info struct
-+ * @config_data: wwan_device_mode_configuration array struct
-+ */
-+struct wwan_sar_context {
-+		guid_t guid;
-+		acpi_handle handle;
-+		int reg_value;
-+		struct platform_device *sar_device;
-+		struct kobject *sar_kobject;
-+		struct wwan_supported_info supported_data;
-+		struct wwan_device_mode_info sar_data;
-+		struct wwan_device_mode_configuration config_data[MAX_REGULATORY];
-+};
-+#endif /* INTEL_SAR_H */
--- 
-2.17.1
 
+>
+>> is allocated by the host but updated by the firmware, so, it must be
+>> in the firmware state.  Additionally, the TMR memory must be a 2MB aligned
+>> instead of the 1MB, and the TMR length need to be 2MB instead of 1MB.
+>> The helper __snp_{alloc,free}_firmware_pages() can be used for allocating
+>> and freeing the memory used by the firmware.
+> None of this actually states what the patch does, e.g. it's not clear whether
+> all allocations are being converted to 2mb or just the SNP.  Looks like it's
+> just SNP.  Something like this?
+>
+>   Allocate the Trusted Memory Region (TMR) as a 2mb sized/aligned region when
+>   SNP is enabled to satisfy new requirements for SNP.  Continue allocating a
+>   1mb region for !SNP configuration.
+>
+Only the TMR allocation is converted to use the 2mb when SNP is enabled.
+
+
+>> While at it, provide API that can be used by others to allocate a page
+>> that can be used by the firmware. The immediate user for this API will
+>> be the KVM driver. The KVM driver to need to allocate a firmware context
+>> page during the guest creation. The context page need to be updated
+>> by the firmware. See the SEV-SNP specification for further details.
+> ...
+>
+>> @@ -1153,8 +1269,10 @@ static void sev_firmware_shutdown(struct sev_device *sev)
+>>  		/* The TMR area was encrypted, flush it from the cache */
+>>  		wbinvd_on_all_cpus();
+>>  
+>> -		free_pages((unsigned long)sev_es_tmr,
+>> -			   get_order(SEV_ES_TMR_SIZE));
+>> +
+>> +		__snp_free_firmware_pages(virt_to_page(sev_es_tmr),
+>> +					  get_order(sev_es_tmr_size),
+>> +					  false);
+>>  		sev_es_tmr = NULL;
+>>  	}
+>>  
+>> @@ -1204,16 +1322,6 @@ void sev_pci_init(void)
+>>  	    sev_update_firmware(sev->dev) == 0)
+>>  		sev_get_api_version();
+>>  
+>> -	/* Obtain the TMR memory area for SEV-ES use */
+>> -	tmr_page = alloc_pages(GFP_KERNEL, get_order(SEV_ES_TMR_SIZE));
+>> -	if (tmr_page) {
+>> -		sev_es_tmr = page_address(tmr_page);
+>> -	} else {
+>> -		sev_es_tmr = NULL;
+>> -		dev_warn(sev->dev,
+>> -			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
+>> -	}
+>> -
+>>  	/*
+>>  	 * If boot CPU supports the SNP, then first attempt to initialize
+>>  	 * the SNP firmware.
+>> @@ -1229,6 +1337,16 @@ void sev_pci_init(void)
+>>  		}
+>>  	}
+>>  
+>> +	/* Obtain the TMR memory area for SEV-ES use */
+>> +	tmr_page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(sev_es_tmr_size), false);
+>> +	if (tmr_page) {
+>> +		sev_es_tmr = page_address(tmr_page);
+>> +	} else {
+>> +		sev_es_tmr = NULL;
+>> +		dev_warn(sev->dev,
+>> +			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
+>> +	}
+> I think your patch ordering got a bit wonky.  AFAICT, the chunk that added
+> sev_snp_init() and friends in the previous patch 14 should have landed above
+> the TMR allocation, i.e. the code movement here should be unnecessary.
+
+I was debating about it whether to include all the SNP supports in one
+patch or divide it up. If I had included all legacy support new
+requirement in the same patch which adds the SNP then it will be a big
+patch. I had feeling that others may ask me to split it. So my approach is:
+
+* In the first patch adds SNP support only
+
+* Improve the legacy SEV/ES for the requirement when SNP is enabled.
+Once SNP is enabled,  there are two new requirement for the legacy
+SEV/ES guests
+
+  1) TMR must be 2mb
+
+  2) The buffer given to the firmware for the write must be in the
+firmware state.
+
+I also divided both of the new requirement in separate patches so that
+its easy to review.
+
+
+>
+>>  	/* Initialize the platform */
+>>  	rc = sev_platform_init(&error);
+>>  	if (rc && (error == SEV_RET_SECURE_DATA_INVALID)) {
+> ...
+>
+>> @@ -961,6 +965,13 @@ static inline int snp_guest_dbg_decrypt(struct sev_data_snp_dbg *data, int *erro
+>>  	return -ENODEV;
+>>  }
+>>  
+>> +static inline void *snp_alloc_firmware_page(gfp_t mask)
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>> +static inline void snp_free_firmware_page(void *addr) { }
+> Hmm, I think we should probably bite the bullet and #ifdef and/or stub out large
+> swaths of svm/sev.c before adding SNP support.  sev.c is getting quite massive,
+> and we're accumulating more and more stubs outside of KVM because its SEV code
+> is compiled unconditionally.
