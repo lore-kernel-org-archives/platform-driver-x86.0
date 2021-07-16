@@ -2,145 +2,117 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB0AC636CB
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 18:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C95C636CA
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 18:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1D8613F2
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 18:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12B0613F1
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 18:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231640AbhGPSSC (ORCPT
+        id S229803AbhGPSoe (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 14:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231660AbhGPSSC (ORCPT
+        Fri, 16 Jul 2021 14:44:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56652 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229611AbhGPSoe (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 14:18:02 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A9CC061765
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 11:15:07 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id w15so10702315pgk.13
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 11:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wVN/iDIudUuTtvffNdHVJek4W2vj0jwmUlaVHOVcX6g=;
-        b=k5qWLNHzSnnWN0UAxjp03hvk7WlSuNe7oMs/qkUkZqoD+Gh+CjdDdFA5IriWV0hLXc
-         St1QHeoPM6fZ3bDQT70Et/jissBJZoORHIo/zH6SP5BK7LLS/HGEI5LUnlAn3Kx4P72B
-         CvCxJ7wDGFaawPhPzbVHO5mJ9ka40eSz+E3wwCB4hbNr+m38+X8VxlrKd3Z9QEe52f9z
-         y8lMZUeY3UOdsXfE7aCDTt47ep3SpBzp5pE4RgxW3jl76KgTaRDPdeQYBD7MArSGDC1a
-         tH4v2gktiah865XZOC00Z3Yk7yp+iyIFok/BsUV0/mfjqR0xGbA7YikRaIKzJsmi4jTX
-         u2uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wVN/iDIudUuTtvffNdHVJek4W2vj0jwmUlaVHOVcX6g=;
-        b=K4wQ1lBIzsMTnlmQzQhdjF79s2QJ+r6IH5bOVDpvilYZ1Nkh4JK5b0GWKYNgkh1uHD
-         tOVZXzy+X34NW4aPTfB+wEd1qtkc2J+GqMnDDUrxk83zJ8oQvyOZ4o4n/4t0lisNycVl
-         TPv+XcDipz6yy+KXigatS7Am+2H2UAjZW33UxtY/A94wIcUQKLMVWwAGMZC3nzCQDfPK
-         YKBtIX4nzaehnVrYQSF/t0n1AHtm46qMaka6ssvqbrIVOmEgRQvXWxXaMCZF0yRC/V1t
-         8luxTxhrQX370CsbGcol/0pKFqRsAW67Sk+m4DghM/XwmecNhWSUzZasEQxfyEF/dWee
-         c5Nw==
-X-Gm-Message-State: AOAM532R2335O06ZYzNbHlvfPpAmzNDwWujvRnicx3eAegY0Q1ZyIMhf
-        Xgc6IHNDmYndIGiSv3UyeI1jDQ==
-X-Google-Smtp-Source: ABdhPJwqkeRsF0AqS7WZlEi3YZgikjlqMKKoxNpFJjn1zdkxP4d6bPR7B7wmtTWFz4cDReGQ2fcWdA==
-X-Received: by 2002:a63:4302:: with SMTP id q2mr11128659pga.428.1626459306182;
-        Fri, 16 Jul 2021 11:15:06 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id k8sm2825228pfu.116.2021.07.16.11.15.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 11:15:05 -0700 (PDT)
-Date:   Fri, 16 Jul 2021 18:15:01 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 28/40] KVM: X86: Introduce
- kvm_mmu_map_tdp_page() for use by SEV
-Message-ID: <YPHMpep+AqGQg6sX@google.com>
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-29-brijesh.singh@amd.com>
+        Fri, 16 Jul 2021 14:44:34 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10047"; a="191144864"
+X-IronPort-AV: E=Sophos;i="5.84,245,1620716400"; 
+   d="scan'208";a="191144864"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2021 11:41:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,245,1620716400"; 
+   d="scan'208";a="460843442"
+Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
+  by orsmga008.jf.intel.com with ESMTP; 16 Jul 2021 11:41:38 -0700
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
+        irenic.rajneesh@gmail.com, andriy.shevchenko@linux.intel.com,
+        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
+        david.e.box@intel.com, linux-kernel@vger.kernel.org,
+        tamar.mashiah@intel.com, gregkh@linuxfoundation.org,
+        rajatja@google.com, Shyam-sundar.S-k@amd.com,
+        Alexander.Deucher@amd.com, mlimonci@amd.com,
+        Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v5 0/5] Add Alder Lake PCH-S support to PMC core driver
+Date:   Fri, 16 Jul 2021 11:38:32 -0700
+Message-Id: <cover.1626459866.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210707183616.5620-29-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021, Brijesh Singh wrote:
-> +int kvm_mmu_map_tdp_page(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code, int max_level)
-> +{
-> +	int r;
-> +
-> +	/*
-> +	 * Loop on the page fault path to handle the case where an mmu_notifier
-> +	 * invalidation triggers RET_PF_RETRY.  In the normal page fault path,
-> +	 * KVM needs to resume the guest in case the invalidation changed any
-> +	 * of the page fault properties, i.e. the gpa or error code.  For this
-> +	 * path, the gpa and error code are fixed by the caller, and the caller
-> +	 * expects failure if and only if the page fault can't be fixed.
-> +	 */
-> +	do {
-> +		r = direct_page_fault(vcpu, gpa, error_code, false, max_level, true);
-> +	} while (r == RET_PF_RETRY);
-> +
-> +	return r;
+Hi,
+The patch series move intel_pmc_core* files to pmc subfolder as well as
+add Alder Lake PCH-S support to PMC core driver.
 
-This implementation is completely broken, which in turn means that the page state
-change code is not well tested.  The mess is likely masked to some extent because
-the call is bookendeda by calls to kvm_mmu_get_tdp_walk(), i.e. most of the time
-it's not called, and when it is called, the bugs are hidden by the second walk
-detecting that the mapping was not installed.
+Patch 1: Move intel_pmc_core* files to pmc subfolder
+Patch 2: Add Alderlake support to pmc core driver
+Patch 3: Add Latency Tolerance Reporting (LTR) support to Alder Lake
+Patch 4: Add Alder Lake low power mode support for pmc core
+Patch 5: Add GBE Package C10 fix for Alder Lake
 
-  1. direct_page_fault() does not return a pfn, it returns the action that should
-     be taken by the caller.
-  2. The while() can be optimized to bail on no_slot PFNs.
-  3. mmu_topup_memory_caches() needs to be called here, otherwise @pfn will be
-     uninitialized.  The alternative would be to set @pfn when that fails in
-     direct_page_fault().
-  4. The 'int' return value is wrong, it needs to be kvm_pfn_t.
+Changes since v1:
+1) Add patch 1 to v2 i.e., Move intel_pmc_core* files to pmc subfolder.
+2) Modify commit message for patch 2.
 
-A correct implementation can be found in the TDX series, the easiest thing would
-be to suck in those patches.
+Changes since v2:
+1) Dropped intel_pmc_ prefix from the file names.
 
-https://lore.kernel.org/kvm/ceffc7ef0746c6064330ef5c30bc0bb5994a1928.1625186503.git.isaku.yamahata@intel.com/
-https://lore.kernel.org/kvm/a7e7602375e1f63b32eda19cb8011f11794ebe28.1625186503.git.isaku.yamahata@intel.com/
+Changes since v3:
+1) Fixed an error reported by lkp.
 
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_mmu_map_tdp_page);
-> +
->  static void nonpaging_init_context(struct kvm_vcpu *vcpu,
->  				   struct kvm_mmu *context)
->  {
-> -- 
-> 2.17.1
-> 
+Changes since v4:
+1) Updated MAINTAINERS
+
+
+David E. Box (1):
+  platform/x86/intel: pmc/core: Add GBE Package C10 fix for Alder Lake
+    PCH
+
+Gayatri Kammela (4):
+  platform/x86/intel: intel_pmc_core: Move intel_pmc_core* files to pmc
+    subfolder
+  platform/x86/intel: pmc/core: Add Alderlake support to pmc core driver
+  platform/x86/intel: pmc/core: Add Latency Tolerance Reporting (LTR)
+    support to Alder Lake
+  platform/x86/intel: pmc/core: Add Alder Lake low power mode support
+    for pmc core
+
+ MAINTAINERS                                   |   2 +-
+ drivers/platform/x86/Kconfig                  |  21 --
+ drivers/platform/x86/Makefile                 |   1 -
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/pmc/Kconfig        |  22 ++
+ drivers/platform/x86/intel/pmc/Makefile       |   5 +
+ .../{intel_pmc_core.c => intel/pmc/core.c}    | 309 +++++++++++++++++-
+ .../{intel_pmc_core.h => intel/pmc/core.h}    |  17 +
+ .../pmc/pltdrv.c}                             |   0
+ 10 files changed, 352 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
+ create mode 100644 drivers/platform/x86/intel/pmc/Makefile
+ rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/core.c} (85%)
+ rename drivers/platform/x86/{intel_pmc_core.h => intel/pmc/core.h} (95%)
+ rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pltdrv.c} (100%)
+
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+Cc: You-Sheng Yang <vicamo.yang@canonical.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+
+base-commit: d936eb23874433caa3e3d841cfa16f5434b85dcf
+-- 
+2.25.1
+
