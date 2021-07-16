@@ -2,150 +2,138 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3571AC636CA
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 15:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC96AC07E95
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 15:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C5360238
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 15:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AE36102A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 15:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241030AbhGPPiH (ORCPT
+        id S233195AbhGPPmX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 11:38:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241008AbhGPPiG (ORCPT
+        Fri, 16 Jul 2021 11:42:23 -0400
+Received: from mail-mw2nam10on2085.outbound.protection.outlook.com ([40.107.94.85]:51264
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233204AbhGPPmU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 11:38:06 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C57EC061760
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 08:35:11 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id g4-20020a17090ace84b029017554809f35so8981792pju.5
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 08:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0cTnZy2I4CZKY1bHPxJLKssBACveTIPG9X+4FMx1/uQ=;
-        b=afSs59INL/oaaVSpQPeRtiIcJrpZwqHHpaDKcKMQGA6aWrOaBsFQgpUgROlc1OHvsr
-         R8+DUt0nxbzW92N5jyf1GQnF/hr52cuxKwcH10Pr8I7RED3k1ryiX7DXdXuaA7APN6m4
-         XWPOS5SwXn7SL7HD5a2j5vD6dOKAEQY9m1vnGiABnDA5fHtdH2zr8Y5fdOgg0bb0iuku
-         DojBvVx1otGchwtODy/S4//wZ2V3ziB+XpzqgAvJEq/hlGIebWzzQh0E5JJgub29thOP
-         YmvVF0HsEbccSVc12R6sAKoXRNAtlV+kh3t3D5Xb8MzS29UsDlX4R1djNaCtt7Rgc/uW
-         jh4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0cTnZy2I4CZKY1bHPxJLKssBACveTIPG9X+4FMx1/uQ=;
-        b=gJlYnyrjl+PHGsVOsPZOJ2xCeB1HIEchxisBDYtbb/9HaQUuxKbDeeiHBdopvZa8BI
-         I8n1CyhPlA9hMOjNbLjSv/FO0G+e4o7hU1ZnB+7ISBlLDwgYbTrFvlonqa0CH2CT9Bpx
-         V/k3wbGR1+w52epgxYY3EzykwcyeFS9SpUrO8MCQe28KQs0u6UMJNDiadrMqsrQNqRGb
-         v+hSGczZbGdKPs7Feg1NmyxW3FGondO1ONIjOrJwn5L2MtrrWGxHR5uBNg43bh9Vnmu+
-         MDB9Qtw4gpPl/Hy/P04eaX+c9LbagcA0ZNzQ+NFee6jZdJx5ay5mHJ7Mo36l9giJ62VY
-         /HRA==
-X-Gm-Message-State: AOAM532BSe5jS6lORu4SX7Yv5gvMBNTwFvW1glDuv7+QYgzsicQfYtwA
-        XUMHsqIiK/QTmZUpnDIL3rCy+g==
-X-Google-Smtp-Source: ABdhPJzO0czTiC4lrspMK8pptIQ8UcgEuTYWN2rX0ygskl7xaEBTKiH2YjQzLJUVfWfhZQnvHsTqCA==
-X-Received: by 2002:a17:902:ed82:b029:ef:48c8:128e with SMTP id e2-20020a170902ed82b02900ef48c8128emr8350696plj.72.1626449710421;
-        Fri, 16 Jul 2021 08:35:10 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id j21sm8548916pjz.26.2021.07.16.08.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 08:35:09 -0700 (PDT)
-Date:   Fri, 16 Jul 2021 15:35:05 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 15/40] crypto: ccp: Handle the legacy TMR
- allocation when SNP is enabled
-Message-ID: <YPGnKfDvmgzHCwbI@google.com>
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-16-brijesh.singh@amd.com>
- <YPDJQ0uumar8j22y@google.com>
- <dfa4ccb5-f85e-6294-6a80-9e4aa6d93c1e@amd.com>
+        Fri, 16 Jul 2021 11:42:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HD+TEYNGPry2DKDo6SZNKgIWxruPwytWT/ec/68B74IPHf8uZX1+G6xWIRr6Fge2yGvFqJVF/n7TbnHIOuTnbPa1/VB12DZrdnKePgsditpETEfohHM8yAea1kldVCiWi1dV/QlTK7HICFxSWi9hPZuZfMnArCAxH9bqQlg8Zg0r+dfg57KzmEf5O9atCbikUNpxBO5fkgH7Mx6/2dkWnquENzMQTSZFMULds67+fUkwqcIVFiFD2M5iXXiYA5I+O2vn5bUG0qvYHcqnke12MGQy+1y76cahzL3rdtPujmc42dr5yH2VmTUCopfXsnrREfHjwRrxSH7AFd/zHxdGwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ehBH4GMY8qBWAfh15RPQjRRIPKB4f2MSbAgPPI94nYQ=;
+ b=WksfdstfbE2I0YwRj3eR87sPgcLrkHzDqFF7AG/lKeFmKu47DpbHMvJ0Q+5rmyoUbKIiBtw/XhnkdgkM61RF21KyHRXrhMfmnabvkbmtd+nVFGDmbvofcq2hyh30wOUEjVZA0P9VW73rkrxDYImr5U8JWUoY727uOtitOnjn/xPVj8ml6DlUXjUsxFV31wae7QKa2rEBzM5lT+cwWqcCGAL4a1f0THxtc/zblMUj6NM8m3WCyzJkAjpfZoEeXCqsjxy0rMyUNQpGxY1ZSwcRya7MP6XHnMMNslamYUN3cdEHOZxxqtnZyf42/Sa34zSHaYX+kgq49asMR1sz2ThXiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ehBH4GMY8qBWAfh15RPQjRRIPKB4f2MSbAgPPI94nYQ=;
+ b=0eOYgGHGbxrbmlwzU4v7QmcgOhPiLKBW5Jx3xk7G70PJX97QMkVhN4CyLkyJn0qcIXLBTN4jKWm/P9OwDSudvL7dMvWD1c0vfP6HXZ0Rjw5kXSPaGRzsvpa0hwvFsrEDPclcxu3k91KlUvcRIRzL1hacmIAcGKC4hwo3FcdEMIw=
+Received: from BN9PR03CA0526.namprd03.prod.outlook.com (2603:10b6:408:131::21)
+ by CH2PR12MB3974.namprd12.prod.outlook.com (2603:10b6:610:2e::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.22; Fri, 16 Jul
+ 2021 15:39:24 +0000
+Received: from BN8NAM11FT046.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:131:cafe::a8) by BN9PR03CA0526.outlook.office365.com
+ (2603:10b6:408:131::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend
+ Transport; Fri, 16 Jul 2021 15:39:23 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT046.mail.protection.outlook.com (10.13.177.127) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4331.21 via Frontend Transport; Fri, 16 Jul 2021 15:39:23 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 16 Jul
+ 2021 10:39:21 -0500
+From:   Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+To:     <hdegoede@redhat.com>, <mgross@linux.intel.com>
+CC:     <platform-driver-x86@vger.kernel.org>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] platform/x86: amd-pmc: Fix undefined reference to __udivdi3
+Date:   Fri, 16 Jul 2021 21:08:02 +0530
+Message-ID: <20210716153802.2929670-1-Shyam-sundar.S-k@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfa4ccb5-f85e-6294-6a80-9e4aa6d93c1e@amd.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: fa023a07-20c8-43f2-201b-08d9486fe315
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3974:
+X-Microsoft-Antispam-PRVS: <CH2PR12MB39744733A16B44C8A32D73FF9A119@CH2PR12MB3974.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:619;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Duri2wCgGYFq+mXLuvIF1M+iklL3Qs639czj+tIR8RNJPz3gdPrqVw5Vj5F0fIDdG5tSiKbnapaOHRJUnmLfVSebm/0ZS0yxydTkyLz3/CfqvywZrTgpu8JjyB88XpAKvnkmKIh897aTGYtOGqxEdEyIF85SUMJP1i9DKhW7Lx+Rv4PvduJ1e45EGKiqNLSHm+IVbsd25sYJzvDKid1yKOKuNzGBHKv6g2ARZ0d2yPBJgJmkcT65fM2RMnkgLgxhfprcWdHrl9GPSYf5UdaZOIaKUnXTCbpnu9Vsjgy9TxiNaO0Z51Nv3f+h8s2ZLFhpiJgRjq0KECwdBCecJ/XFIq2xWUbZCXOXhD2ZVnVHNCONfNb8xwdlXJVxqroABM6wC9p94pxkw9/poLmUT3s+f+VkM9XOA311gJGSJYcOBCQHjaNKMJ5KP3nifjxPC13x9v+jSVkjbvyJlhfsdDVjLnFXtkTnT7n2i2cH1vBQ5Un4PJ+wYWWsOrxuWWnPwmTozbImgywwKSi0KI0OMAL726K9hNAfCd6I34V1MDuwM4w7uDG2o1b5gxa7bOAI/qL3GzhNqi5fbA4WtUNrSY6cbyreP9glxT2hxGbWme76QpuYxnrjhoLMfhoOP/ALCzhv4a9BIZUnHHXIrdND2fcRekNr0H8VfKzntP8zX00KadHdOnsNF5XxlIz6b8v8cGWDmzoB9nK2Njlwuvk5zgJpNXFcQWPkw/Ilvwb8TsQoYqo=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(36840700001)(46966006)(26005)(8936002)(82740400003)(82310400003)(2616005)(36860700001)(336012)(54906003)(1076003)(186003)(70586007)(110136005)(426003)(478600001)(81166007)(316002)(70206006)(16526019)(86362001)(356005)(83380400001)(7696005)(4326008)(6666004)(5660300002)(47076005)(2906002)(36756003)(8676002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2021 15:39:23.7488
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa023a07-20c8-43f2-201b-08d9486fe315
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT046.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3974
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 16, 2021, Brijesh Singh wrote:
-> 
-> On 7/15/21 6:48 PM, Sean Christopherson wrote:
-> > On Wed, Jul 07, 2021, Brijesh Singh wrote:
-> >> @@ -1204,16 +1322,6 @@ void sev_pci_init(void)
-> >>  	    sev_update_firmware(sev->dev) == 0)
-> >>  		sev_get_api_version();
-> >>  
-> >> -	/* Obtain the TMR memory area for SEV-ES use */
-> >> -	tmr_page = alloc_pages(GFP_KERNEL, get_order(SEV_ES_TMR_SIZE));
-> >> -	if (tmr_page) {
-> >> -		sev_es_tmr = page_address(tmr_page);
-> >> -	} else {
-> >> -		sev_es_tmr = NULL;
-> >> -		dev_warn(sev->dev,
-> >> -			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
-> >> -	}
-> >> -
-> >>  	/*
-> >>  	 * If boot CPU supports the SNP, then first attempt to initialize
-> >>  	 * the SNP firmware.
-> >> @@ -1229,6 +1337,16 @@ void sev_pci_init(void)
-> >>  		}
-> >>  	}
-> >>  
-> >> +	/* Obtain the TMR memory area for SEV-ES use */
-> >> +	tmr_page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(sev_es_tmr_size), false);
-> >> +	if (tmr_page) {
-> >> +		sev_es_tmr = page_address(tmr_page);
-> >> +	} else {
-> >> +		sev_es_tmr = NULL;
-> >> +		dev_warn(sev->dev,
-> >> +			 "SEV: TMR allocation failed, SEV-ES support unavailable\n");
-> >> +	}
-> > I think your patch ordering got a bit wonky.  AFAICT, the chunk that added
-> > sev_snp_init() and friends in the previous patch 14 should have landed above
-> > the TMR allocation, i.e. the code movement here should be unnecessary.
-> 
-> I was debating about it whether to include all the SNP supports in one
-> patch or divide it up. If I had included all legacy support new
-> requirement in the same patch which adds the SNP then it will be a big
-> patch. I had feeling that others may ask me to split it.
+It was reported that on i386 config
 
-It wasn't comment on the patch organization, rather that the code added in patch 14
-appears to have landed in the wrong location within the code.  The above diff shows
-that the TMR allocation is being moved around the SNP initialization code that was
-added in patch 14 (the immediately prior patch).  Presumably the required order
-doesn't magically change just because the TMR is now being allocated as a 2mb blob,
-so either the code movement is unnecessary churn or the original location was wrong.
-In either case, landing the SNP initialization code above the TMR allocation in
-patch 14 would eliminate the above code movement.
+------
+on i386:
+
+ld: drivers/platform/x86/amd-pmc.o: in function `s0ix_stats_show':
+amd-pmc.c:(.text+0x100): undefined reference to `__udivdi3'
+-------
+
+The reason for this is that 64-bit integer division is not supported
+on 32-bit architecture. Use do_div macro to fix this.
+
+Fixes: b9a4fa6978be ("platform/x86: amd-pmc: Add support for logging s0ix counters")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+---
+ drivers/platform/x86/amd-pmc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/amd-pmc.c b/drivers/platform/x86/amd-pmc.c
+index 680f94c7e075..45ce1d5e1e6d 100644
+--- a/drivers/platform/x86/amd-pmc.c
++++ b/drivers/platform/x86/amd-pmc.c
+@@ -189,7 +189,8 @@ static int s0ix_stats_show(struct seq_file *s, void *unused)
+ 	exit_time = exit_time << 32 | ioread32(dev->fch_virt_addr + FCH_S0I3_EXIT_TIME_L_OFFSET);
+ 
+ 	/* It's in 48MHz. We need to convert it */
+-	residency = (exit_time - entry_time) / 48;
++	residency = exit_time - entry_time;
++	do_div(residency, 48);
+ 
+ 	seq_puts(s, "=== S0ix statistics ===\n");
+ 	seq_printf(s, "S0ix Entry Time: %lld\n", entry_time);
+-- 
+2.25.1
+
