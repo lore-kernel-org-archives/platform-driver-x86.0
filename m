@@ -2,196 +2,231 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479D6C636CA
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 00:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528D1C636CA
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 08:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28342613DA
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 00:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A933613C0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 08:13:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232814AbhGQAtg (ORCPT
+        id S232995AbhGQIQi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 20:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbhGQAte (ORCPT
+        Sat, 17 Jul 2021 04:16:38 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:55307 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231862AbhGQIQc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 20:49:34 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354E0C061764
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 17:46:39 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id p9so7378202pjl.3
-        for <platform-driver-x86@vger.kernel.org>; Fri, 16 Jul 2021 17:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u/IsvU1kqurQZC76XNFVOghfUpyMawBFCFuK0AQGEPM=;
-        b=NuCt8dbb8sG/61BzzDfSqZdk1jTtBf3jihYSLd2BtQD1axvderSNU/SgNFmdYw9yVF
-         CPsb6YE00bicpuzx4V/RNNSkWuQ1sd0VhHol83yyNvPkrQGOlnbPs9ITEow4f49hdw9z
-         YDYlNHFx5vt+MgN/Y51hhSiDu9BrX8ZWKnI4AtF1f5OkN/gldMEAGVZppOMdp4rQv5IA
-         +wJ170ZMv1RCOwHSztImvpX9LKSn0tHn/B9uhbFcDdIwyXrMfIJfHUANecYKm2exm1QQ
-         7WySfTfcqN7JP8GUbUmnvRv3aGtutSGWprJDzeeeRiXmCJ3HOgNfyphJ5fDz6kf7hTSz
-         RPCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u/IsvU1kqurQZC76XNFVOghfUpyMawBFCFuK0AQGEPM=;
-        b=HEIgeuCMe79wtSlyPRrK4EivD7LPYAn2K0ScTl5x2IXICgtR22vBb8Id0b/+VtAmDd
-         SbDOG8YM7cwli4PqAUjLrpxffiwTfZ3H4EJgRLv6Viyn9LUDfF2jNdQ/W+gnIQuKLLAB
-         Z/r3fRY3HDkkOCYBXiAnNv1lD+S984iAuodrOm9fNqTO2ahk9sHhZFdSJPCJjEH+DM09
-         E2Xko6cDk4DZsVg8p4BLhVl8Y4R2N1R0qleTYX18i97yqDJOR3WtTUKwCQfFKs9aVtIC
-         iipcZ6zeKPL+fjyKOLbPBbuO69glhTQwB9FS2IWSi2OCcGYKcYBDK6AdaP/wt3rCAB+4
-         9Vmw==
-X-Gm-Message-State: AOAM533gk8Kx8sVOFkIOlBUpIlupTm0m/sTmJb38xPDd6Ieie7DbFrQG
-        QrBLGHoxRIhyBtawMuLCqtjAxA==
-X-Google-Smtp-Source: ABdhPJxrswPajbOgVL6Nn4Vj+gROMrISPPW53TbQlFyRjN5Y9ZDDm/vzxRO3O2TefotPh/hbXLdwIA==
-X-Received: by 2002:a17:902:9890:b029:120:1299:678e with SMTP id s16-20020a1709029890b02901201299678emr9822840plp.32.1626482798329;
-        Fri, 16 Jul 2021 17:46:38 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id j2sm11921868pfb.53.2021.07.16.17.46.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 17:46:37 -0700 (PDT)
-Date:   Sat, 17 Jul 2021 00:46:34 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 25/40] KVM: SVM: Reclaim the guest pages
- when SEV-SNP VM terminates
-Message-ID: <YPIoaoDCjNVzn2ZM@google.com>
-References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-26-brijesh.singh@amd.com>
- <YPHnb5pW9IoTcwWU@google.com>
- <2711d9f9-21a0-7baa-d0ff-2c0f69ca6949@amd.com>
+        Sat, 17 Jul 2021 04:16:32 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 38A9732007F9;
+        Sat, 17 Jul 2021 04:13:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sat, 17 Jul 2021 04:13:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OL8LS2RF3uwborwIE
+        ay0AbN5xC77/xl6wasXY6aVF7Q=; b=QoOhWMoyeemJfdDdqd814u3GRHQ011dDM
+        grj0lsZUnX4YtcJpEeLqNzbdq3HbHEWDs3T9IqrzDNA0RY9fSThBwDZAikJKqCcR
+        cFayhbwGVykP2qkXUtAH5EjV+qsg0WSlrQjj7TA2Xm1rDLOB6sTt3RrygdaebSZO
+        YMPM2LwGZmHY1nUJQUgyd4IRWmsKXj9BkXlzFd7wCbP76rf6HXuRH6vOaB41W7jV
+        yvAZA72YY/39Fk29Ok+o/bGPrWIU3UJfvPdbqkMvUQO2tXj1ZGjVVEAQze0TFSIx
+        HGbsYpjNzuQW+hepjlYYXZjLI8yE1k7DKLeX3bIjpncSBUJBy5quA==
+X-ME-Sender: <xms:LZHyYFpbhGBa2Tzc5aaZin0YdHt7OK7xi4aw9ajNMjJaPebWb88OMg>
+    <xme:LZHyYHrdW40j4yZ3FB7HavPnbT1Q40LnxXlxEluCY5O8DZBgc3QF5U-ek839hWOWs
+    Q8e348SdyGEgxXzjv4>
+X-ME-Received: <xmr:LZHyYCNB8agK-iCYuX5neJaQHzLfHzHiqNTWofrcZWN0W9dyyjKPtFeEgn7P>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvdeggdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonhgv
+    shdruggvvheqnecuggftrfgrthhtvghrnheplefflefhledthfdtveeugfevueeukeegte
+    eigfeihffgjedvtedvueevtdfhvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:LZHyYA6aZVrG6ys485i6gyEs9szC5XUTMf27xOUn38FM9BmkIz8j6A>
+    <xmx:LZHyYE7w1ipUnrLsDstVBJKL92pOT29C3XZKOUvtp5Ht9zK-ORpz0A>
+    <xmx:LZHyYIgBOQbKqEj_Dt7TLKu1Qf1hSR6CSsipifGkfZPI1kYDTVS17A>
+    <xmx:LZHyYORNRZf6QiznBU7rkycUPM3uywCheXpPMNY3o8xdV7PKCg8xmw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 17 Jul 2021 04:13:29 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     hdegoede@redhat.com
+Cc:     pobrn@protonmail.com, mgross@linux.intel.com,
+        corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH 1/4] asus-wmi: Add panel overdrive functionality
+Date:   Sat, 17 Jul 2021 20:13:21 +1200
+Message-Id: <20210717081323.7925-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2711d9f9-21a0-7baa-d0ff-2c0f69ca6949@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 16, 2021, Brijesh Singh wrote:
-> 
-> On 7/16/21 3:09 PM, Sean Christopherson wrote:
-> > On Wed, Jul 07, 2021, Brijesh Singh wrote:
-> >> +			e = snp_lookup_page_in_rmptable(region->pages[i], &level);
-> >> +			if (unlikely(!e))
-> >> +				continue;
-> >> +
-> >> +			/* If its not a guest assigned page then skip it. */
-> >> +			if (!rmpentry_assigned(e))
-> >> +				continue;
-> >> +
-> >> +			/* Is the page part of a 2MB RMP entry? */
-> >> +			if (level == PG_LEVEL_2M) {
-> >> +				val.pagesize = RMP_PG_SIZE_2M;
-> >> +				pfn &= ~(KVM_PAGES_PER_HPAGE(PG_LEVEL_2M) - 1);
-> >> +			} else {
-> >> +				val.pagesize = RMP_PG_SIZE_4K;
-> > This raises yet more questions (for me) as to the interaction between Page-Size
-> > and Hyperivsor-Owned flags in the RMP.  It also raises questions on the correctness
-> > of zeroing the RMP entry if KVM_SEV_SNP_LAUNCH_START (in the previous patch).
-> 
-> I assume you mean the LAUNCH_UPDATE because that's when we need to
-> perform the RMPUPDATE.
+Some ASUS ROG laptops have the ability to drive the display panel
+a higher rate to eliminate or reduce ghosting.
 
-Doh, yes.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c            | 91 ++++++++++++++++++++++
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 92 insertions(+)
 
-> The hypervisor owned means all zero in the RMP entry.
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index ebaeb7bb80f5..cd881443bc2f 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -216,6 +216,9 @@ struct asus_wmi {
+ 	// The RSOC controls the maximum charging percentage.
+ 	bool battery_rsoc_available;
+ 
++	bool panel_overdrive_available;
++	bool panel_overdrive;
++
+ 	struct hotplug_slot hotplug_slot;
+ 	struct mutex hotplug_lock;
+ 	struct mutex wmi_lock;
+@@ -1221,6 +1224,86 @@ static int asus_wmi_rfkill_init(struct asus_wmi *asus)
+ 	return result;
+ }
+ 
++/* Panel Overdrive ************************************************************/
++static int panel_od_check_present(struct asus_wmi *asus)
++{
++	u32 result;
++	int err;
++
++	asus->panel_overdrive_available = false;
++
++	err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_PANEL_OD, &result);
++	if (err) {
++		if (err == -ENODEV)
++			return 0;
++		return err;
++	}
++
++	if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
++		asus->panel_overdrive_available = true;
++		asus->panel_overdrive = result & ASUS_WMI_DSTS_STATUS_BIT;
++	}
++
++	return 0;
++}
++
++static int panel_od_write(struct asus_wmi *asus)
++{
++	int err;
++	u8 value;
++	u32 retval;
++
++	value = asus->panel_overdrive;
++
++	err = asus_wmi_set_devstate(ASUS_WMI_DEVID_PANEL_OD, value, &retval);
++
++	if (err) {
++		pr_warn("Failed to set panel overdrive: %d\n", err);
++		return err;
++	}
++
++	if (retval > 1 || retval < 0) {
++		pr_warn("Failed to set panel overdrive (retval): 0x%x\n", retval);
++		return -EIO;
++	}
++
++	sysfs_notify(&asus->platform_device->dev.kobj, NULL, "panel_od");
++
++	return 0;
++}
++
++static ssize_t panel_od_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++	bool mode = asus->panel_overdrive;
++
++	return sysfs_emit(buf, "%d\n", mode);
++}
++
++static ssize_t panel_od_store(struct device *dev,
++				    struct device_attribute *attr,
++				    const char *buf, size_t count)
++{
++	int result;
++	bool overdrive;
++	struct asus_wmi *asus = dev_get_drvdata(dev);
++
++	result = kstrtobool(buf, &overdrive);
++	if (result == -EINVAL)
++		return result;
++
++	asus->panel_overdrive = overdrive;
++	result = panel_od_write(asus);
++
++	if (result != 0)
++		return result;
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(panel_od);
++
+ /* Quirks *********************************************************************/
+ 
+ static void asus_wmi_set_xusb2pr(struct asus_wmi *asus)
+@@ -2332,6 +2415,7 @@ static struct attribute *platform_attributes[] = {
+ 	&dev_attr_als_enable.attr,
+ 	&dev_attr_fan_boost_mode.attr,
+ 	&dev_attr_throttle_thermal_policy.attr,
++	&dev_attr_panel_od.attr,
+ 	NULL
+ };
+ 
+@@ -2357,6 +2441,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
+ 		ok = asus->fan_boost_mode_available;
+ 	else if (attr == &dev_attr_throttle_thermal_policy.attr)
+ 		ok = asus->throttle_thermal_policy_available;
++	else if (attr == &dev_attr_panel_od.attr)
++		ok = asus->panel_overdrive_available;
+ 
+ 	if (devid != -1)
+ 		ok = !(asus_wmi_get_devstate_simple(asus, devid) < 0);
+@@ -2622,6 +2708,10 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	else
+ 		throttle_thermal_policy_set_default(asus);
+ 
++	err = panel_od_check_present(asus);
++	if (err)
++		goto fail_panel_od;
++
+ 	err = asus_wmi_sysfs_init(asus->platform_device);
+ 	if (err)
+ 		goto fail_sysfs;
+@@ -2709,6 +2799,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+ fail_throttle_thermal_policy:
+ fail_fan_boost_mode:
+ fail_platform:
++fail_panel_od:
+ 	kfree(asus);
+ 	return err;
+ }
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index 2f274cf52805..428aea701c7b 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -61,6 +61,7 @@
+ #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY 0x00120075
+ 
+ /* Misc */
++#define ASUS_WMI_DEVID_PANEL_OD		0x00050019
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
+ 
+-- 
+2.31.1
 
-Figured out where I went wrong after reading the RMPUDPATE pseudocode.  RMPUPDATE
-takes the page size as a parameter even though it unconditionally zeros the page
-size flag in the RMP entry for unassigned pages.
-
-A wrapper around rmpupdate() would definitely help, e.g. (though level might need
-to be an "int" to avoid a bunch of casts).
-
-  int rmp_make_shared(u64 pfn, enum pg_level level);
-
-Wrappers for "private" and "firmware" would probably be helpful too.  And if you
-do that, I think you can bury both "struct rmpupdate", rmpupdate(), and
-X86_TO_RMP_PG_LEVEL() in arch/x86/kernel/sev.c.  snp_set_rmptable_state() might
-need some refactoring to avoid three booleans, but I guess maybe that could be
-an exception?  Not sure.  Anyways, was thinking something like:
-
-  int rmp_make_private(u64 pfn, u64 gpa, enum pg_level level, int asid);
-  int rmp_make_firmware(u64 pfn);
-
-It would consolidate a bit of code, and more importantly it would give visual
-cues to the reader, e.g. it's easy to overlook "val = {0}" meaning "make shared".
-
-Side topic, what happens if a firmware entry is configured with page_size=1?
-
-And one architectural question: what prevents a malicious VMM from punching a 4k
-shared page into a 2mb private page?  E.g.
-
-  rmpupdate(1 << 20, [private, 2mb]);
-  rmpupdate(1 << 20 + 4096, [shared, 4kb]);
-
-I don't see any checks in the pseudocode that will detect this, and presumably the
-whole point of a 2mb private RMP entry is to not have to go walk the individual
-4kb entries on a private access.
-
-  NEW_RMP = READ_MEM.o [NEW_RMP_PTR]
-
-  IF ((NEW_RMP.PAGE_SIZE == 2MB) && (SYSTEM_PA[20:12] != 0))  <-- not taken, 4kb entry
-          EAX = FAIL_INPUT
-          EXIT
-
-  IF (!NEW_RMP.ASSIGNED && (NEW_RMP.IMMUTABLE || (NEW_RMP.ASID != 0))  <-- not taken, new entry valid
-          EAX = FAIL_INPUT
-          EXIT
-
-  RMP_ENTRY_PA = RMP_BASE + 0x4000 + (SYSTEM_PA / 0x1000) * 16
-  IF (RMP_ENTRY_PA > RMP_END)
-          EAX = FAIL_INPUT
-          EXIT
-
-  // System address must have an RMP entry
-  OLD_RMP = READ_MEM_PA.o [RMP_ENTRY_PA]
-  IF (OLD_RMP.IMMUTABLE) <-- passes, private entry not immutable
-          EAX = FAIL_PERMISSION
-          EXIT
-
-  IF (NEW_RMP.PAGE_SIZE == 4KB)
-          IF ((SYSTEM_PA[20:12] == 0) && (OLD_RMP.PAGE_SIZE == 2MB)) <- not taken, PA[12] == 1
-                  EAX = FAIL_OVERLAP
-                  EXIT
-  ELSE
-          IF (Any 4KB RMP entry with (RMP.ASSIGNED == 1) exists in 2MB region)
-                  EAX = FAIL_OVERLAP
-                  EXIT
-          ELSE
-                  FOR (I = 1; I < 512, I++) {
-                          temp_RMP = 0
-                          temp_RMP.ASSIGNED = NEW_RMP.ASSIGNED
-                          WRITE_MEM.o [RMP_ENTRY_PA + I * 16] = temp_RMP;
-                  }
