@@ -2,296 +2,168 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2932FC12002
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 23:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA72C636CA
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 00:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FEB613DF
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 16 Jul 2021 23:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF0761073
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 17 Jul 2021 00:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232154AbhGPXPw (ORCPT
+        id S230211AbhGQAhi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 16 Jul 2021 19:15:52 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:48955 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231293AbhGPXPw (ORCPT
+        Fri, 16 Jul 2021 20:37:38 -0400
+Received: from mail-bn8nam11on2059.outbound.protection.outlook.com ([40.107.236.59]:50209
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229578AbhGQAhh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 16 Jul 2021 19:15:52 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 50742320090B;
-        Fri, 16 Jul 2021 19:12:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Fri, 16 Jul 2021 19:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=fA+1HODoZQcutj798yq9JulkSr255lZt5DkzNMvK9
-        Do=; b=oRvFvChLCLTyOJOq14eWCBueyuxDZIJ9KEOg+znza11TPiYdO27FzlXGD
-        W869JSQwD0732/MVYAeA/JHCeBTInVpaFUyf176YV4LJcklte6bn4nfhZ+Nt7z6R
-        FsWr3qsUJdhLCov3cCRniReg2vkNuwMRMPZvxVN/bx+bvXPEsWsxyAlpuFdmv+a8
-        FqaR5teI2IuPIto0rdDH96QcGG03rK99fw88NGw4qew1MBZTIgpt1ZuOK9PrVdaO
-        BmU/UCVjmYmNDFokiefiVFkP23fXtnVQU/w6FQT3XiRRgjDRWphkZiJqjbgipqdK
-        DOiVNK1fsENAkKCUe8FaXiMLNUCcA==
-X-ME-Sender: <xms:dhLyYM3mDjEasbkbE8eyimTykasQfEJt_1Vjd-1hiv60kHD7AXOJlQ>
-    <xme:dhLyYHGPphkeux5Il8GzTKUZT9Qx1l9YhiVN-So-fua-Mer7IsP82XBoyX-D7Gutd
-    WPybWWUtkj5632l4RU>
-X-ME-Received: <xmr:dhLyYE7xVsL0C0O8EESL4b5PTHu_akyYvHAH8F4mhifDDD8SbmKRMRBd1TKgHdw59mJe_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvdeggdduvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffuvffkjghfofggtgfgsehtqhertdertddunecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    dvvdeufefhvdfhgedukeffudejfeejleefkefgheeujeefjeejkeeviefgueduudenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslh
-    hjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:dhLyYF0-nDiSy5TeD5bdYmq3Ca98ZLqHbpe0y5EA4Pl-EhuywtzUHA>
-    <xmx:dhLyYPHfjdpHOKy-qra5-3Z-vJkM0276nGvMOCc3LtoQrcEYjiuszQ>
-    <xmx:dhLyYO97rXZQXl53Xcrh3S-PZ7RNeps6Qo-BkRrj2HyhYxw92JodEg>
-    <xmx:dxLyYDj_xYctAW5OwWH1mL8chzj-tdXLsw0f741sr5QWXtMqx5NQHA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 16 Jul 2021 19:12:47 -0400 (EDT)
-Date:   Sat, 17 Jul 2021 11:12:31 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH 2/3] asus-wmi: Add dgpu disable method
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     corentin.chary@gmail.com, mgross@linux.intel.com,
-        jdelvare@suse.com, linux@roeck-us.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <VS1DWQ.9BA41EL19VZC1@ljones.dev>
-In-Reply-To: <fa826d11-6cc6-be22-2a8b-b8a76248a5d4@redhat.com>
-References: <20210704222148.880848-1-luke@ljones.dev>
-        <20210704222148.880848-3-luke@ljones.dev>
-        <fa826d11-6cc6-be22-2a8b-b8a76248a5d4@redhat.com>
-X-Mailer: geary/40.0
+        Fri, 16 Jul 2021 20:37:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mpW6Pes960qV7if849CtANrkIgiZiGlxD7gTbaXvAzvT5gFrI/dQZjS924v2oMMvxLHVL8qrzJfP13o/YBb14W0X+nm3MCl1WnS4V/i1OhS2aMQKtlJFC1BLJOQe5fDI19yJt7LS6HNwuQOT1GtYQIWHEOUOFnUhUxFeaPzfFFzE5+q1SRocoS2FgoZEfuPB+8VLOJIvTNPHp+g61sLhQ8DzCDz1fF6gPrLHcw/jsfwZt5My97p2b3GfHXr9E3bqYd3PiIKXOqZ04BI7b79HXwUCaGT7d4MNxsmeLfuoZfkdzJs/7HN2Fw4RWDQwS/Ff02J0tO9Ad3jUOUG6XoZEEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xD3+nIttIhQ22FM88Y6fgZ9Caf2hrD4jJK2Jfl0W8L4=;
+ b=lgN9B4PHBz0kAW3+60DP+dqJwkMMwB7esTl48vzl/fUe/UO2njjt04zp3IDhQgqEIrTE3XRef/6LgE/4DR+mKoLgs/d2jj3uPq1cJUfsgdm36LFi9VfmjWV/ZHINmZDG84mKN3wI/i9mRh+ESteOoUYXvJtzZ2j6L7Ddkm8Bxl/0PvW+f9nBCXVnN7/Cz4ZFazcMDOg9HjgJyrgOpk06C8YL7WmthR8PtgZIojb/mm1JOV53VxrMrfq5teZBp+12N5Zro0GsLtNfaYJ70SOqJnRlaGes5EaC5iRC04NfC2M6zmOQ4bUDRHutynWg7yfcEvlwR7uerguUghVsKpG6uA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xD3+nIttIhQ22FM88Y6fgZ9Caf2hrD4jJK2Jfl0W8L4=;
+ b=s6asUY42XQAAJB6hHpNtJL8JEfTLMKDRykEKVqFuCemtJbPAGcqFcKMMNXb5ociY6ALtSpr7CVAGye36NktR49sW1u+96c72NcqmRIvL8FWywsfQKURhC1aa5Wo8XHT8+3w9J0YT4+o7Hz/gytCf2V/3EjCh5yNxVOZ1LooE1Pg=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
+ by SN6PR12MB4672.namprd12.prod.outlook.com (2603:10b6:805:12::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4308.22; Sat, 17 Jul
+ 2021 00:34:39 +0000
+Received: from SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::a8a9:2aac:4fd1:88fa]) by SN6PR12MB2718.namprd12.prod.outlook.com
+ ([fe80::a8a9:2aac:4fd1:88fa%3]) with mapi id 15.20.4331.024; Sat, 17 Jul 2021
+ 00:34:38 +0000
+Cc:     brijesh.singh@amd.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part2 RFC v4 30/40] KVM: X86: Define new RMP check related
+ #NPF error bits
+To:     Sean Christopherson <seanjc@google.com>
+References: <20210707183616.5620-1-brijesh.singh@amd.com>
+ <20210707183616.5620-31-brijesh.singh@amd.com> <YPHqo+KefHLrAclx@google.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <68ce337d-bdba-ea42-03f4-ea7a30da91c5@amd.com>
+Date:   Fri, 16 Jul 2021 19:34:31 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.12.0
+In-Reply-To: <YPHqo+KefHLrAclx@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: SN6PR2101CA0022.namprd21.prod.outlook.com
+ (2603:10b6:805:106::32) To SN6PR12MB2718.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::22)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by SN6PR2101CA0022.namprd21.prod.outlook.com (2603:10b6:805:106::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.4 via Frontend Transport; Sat, 17 Jul 2021 00:34:32 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c99d3527-08ea-413f-5b61-08d948baa8cf
+X-MS-TrafficTypeDiagnostic: SN6PR12MB4672:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB46726E535A7C3630E7AB4647E5109@SN6PR12MB4672.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ctuBUKz/u7BMIzEGpb/UMKfxYB133SoZT79N7qePB5J/agmR156HlcHDhr1PbRaRXzIS16iYntS0HpasWdt0nZZVRp0EZlhry8VO+JtfUOouPU9TT2HAeCBwjiSwCAoknfWcKFJmX+TQ8Wdvj3rR49mRhHst6UWV9JDZosx0KBv2O8fljTVscfiBygFSdYtmLAJYytxIsLePcduIjjSWAZEWr3tPdsUujesZo3lRx5ZgqCPPXk3FCpr0KxgWQahnWrRUQOJiBmksgsx1yVCb7EsMIlXwDz5E5wvX4IRcv6fo5ch5OBWqwTMd0lO1/PTxK5SNoNr6rM0YGVuTpAAOhByMuBavTcqpm4VX0+EfgrPT00pJmVJok7Z5mpWRvyaGIb9kPpGqnHfaNHIEMmeMhN1A8WmWctcgnqHiV8UyQWBppHgfiHQpD0xF9vgXzLC0FrNp27SiY6vu/AJcwk+g1dyRhOQnTub3mD1nT/yGSuAYf/HH1is2jWVRh534W5n1azb9zqEcvglWgK5SJL5O1yjfUvFSsiUiODu5ChwzM8hFRlhMvCeVzrVqLzEAT9G507zla4Y2Dn/xgBc+O0Lfp5LehL2hJ9x1A1KGpZnTOIQmZrrLSVsoi0kd+91Eo7Qfg/osymCL+i+SSNKnTzVMwIgGlsOIABboDcnqf3OUVbfqunH664Vjnc77FDI3G+bJhPsQyzPUH+w584xxaW7zMqMDndVKTZPHWUJj3lgxRYlRHI2/VhxIs8NEOS84NPOCVQJKNj+0OtewTTpzrBMLog==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(346002)(366004)(376002)(7406005)(7416002)(83380400001)(8676002)(4326008)(2616005)(31686004)(6916009)(956004)(186003)(66476007)(66946007)(44832011)(66556008)(26005)(31696002)(478600001)(5660300002)(8936002)(38100700002)(38350700002)(6486002)(316002)(2906002)(36756003)(52116002)(54906003)(4744005)(86362001)(6506007)(6512007)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UnpvSzFrNTl4WGI1SHd2VUVzZzJHL21GK2M5UWk3Vjc2eWdnZE5qWnRtdWlK?=
+ =?utf-8?B?SW9nQU94R3Qrd3ZjUmhWQVNGOWY0eTlRT1hKeE9sYnVEZjlOWXVBYk5KdG9M?=
+ =?utf-8?B?SnQrVTUxczNQeFBhdEEveHhwaldId25hdmgvL0lUeG8zcnIrZ1paMm56NGM1?=
+ =?utf-8?B?aHI4djNYWlhZdlRJKzVRUDlTRWtLSC9keTFSWDFnU3BYWTNtSzhMV2N1TzZG?=
+ =?utf-8?B?emFLS3MrR0ZyaGtRdkNDYld2K2tiNUhZcVRLZzFEZ0tsSHRqZ2xGU09VZEh0?=
+ =?utf-8?B?KzhEeS9uWXVYd3ZGa05udlpDQUp4emR6RXBJOC9LS0VrZ2o3d0ZNVS93bnVI?=
+ =?utf-8?B?NVVQUHZDb3V2aUVZbGdNY0MrdXFDdU0zdG1mbFRaNXUzcWpCR2VIaDlocll2?=
+ =?utf-8?B?K3RXTlMrOHhDSklGQ1JrZ1V1Q2lKQXIraXlTLzFROFhzckxZbENuSkRpTmdJ?=
+ =?utf-8?B?ZXlWeU9paEdkaXdDR1RiVXJJM2V5UE5nZ2pCRDFHQ3c2VFhNUFFPejdzQVNE?=
+ =?utf-8?B?bkRyMURFeFlobTRwRVhNZE5YMGl5TmtaaGxMS2hFUnhqVy81QVBiRWw1UUVD?=
+ =?utf-8?B?TnFoNlE1a3NkcnQxdmhyMnVNN09KQUJYd1pCZ2xxTWVUTEVUWHdsTXlOQVY4?=
+ =?utf-8?B?ZnBUR1RLcVZXbUpNQzcrUDc1cmlBTDNhYndJb1p3NGFuT01YVk5RaUFhVmxy?=
+ =?utf-8?B?N3dzMlZta2Y2N1NXemFBcnIrNTFydkZGWFRoSzFkUjR2d1JwS28vQXY3SFcr?=
+ =?utf-8?B?V3A0SlhIcGdUby9QcStWSkVVc05LY2dJNjA2eUFqLytzVnVoVVNNbGZDNC94?=
+ =?utf-8?B?b0l0Mm5OcHpYMVg5VzZtZG9oSENSWk1QSk9tY3BCMXBERks5K2VoeVp2RXRF?=
+ =?utf-8?B?TEhCd2JZZ3kxeG5rb01icUJVQjlsLzMzbit5MVNtTFZxR2VJK2FKKzR6U0NO?=
+ =?utf-8?B?alhBS3pVY2VjRmoreU1YYXpQRlh4QjZzWnFXMzV3OUdOdHhuTVBYNGcrdVZw?=
+ =?utf-8?B?S1U3S1d5U090NG5FSGdOMWx3ZEc2LzBJOHJ2VG15Y0hVZjRtSFd6WC9acHVO?=
+ =?utf-8?B?a0Y5TDBpL20wYlhWZU5oOERKUm1qRzFZZmdHcURodHNhekU4QVQ0NUNOOXZ6?=
+ =?utf-8?B?RkpqSU44VEw1K3RDc1J0R3hIOGdnT2kxU2ZVSVlHbk1pMUhiMEhPQTJUK2pl?=
+ =?utf-8?B?TUtzWVpiaUlKMExJZjRhNFJNSTRFL3VLbTJkR0RlYlpsbVBLSHBYMkp3c1Nr?=
+ =?utf-8?B?REloRmZWVGdqZXJjWmlRWGZ0Sy9sQnBaQnZMRzV2VTJDM3RVZGVDNHk1d3F1?=
+ =?utf-8?B?Wi92QjlJamJIQVdEcE9MSUh6d0JjMHBxd1lUTVdOWnRMTG55NEFOcGdlaW5W?=
+ =?utf-8?B?OVVmYXRtSEpmQUdjeVFBQmgwOTVFNkl3N1NwZ0x6am8zdjl6YnpGOXVibmJQ?=
+ =?utf-8?B?TVBSNW5ucDB4em5BTmRUOEZ2cEJjRkVWdEpLMEUyWnBSd2daNTgrTHlranlu?=
+ =?utf-8?B?WXkzTkQ1UFNhY0RjNUUzL25EUllvKy9IM0h6aFl4THpjRHhRYjVSdEpIbGc2?=
+ =?utf-8?B?OFc3NW52dStTbG4xSFFxVVdHNXh1dXBYUldyRTR1N2ovakhJVFNEdk0ycVlL?=
+ =?utf-8?B?amx0S0cxYW9LaXcyNDhUaUZxY2creWthVGpEOHRHNGpxWlk5NGFZVTM2R0py?=
+ =?utf-8?B?OXJLZzR0MHE2dkQ0SFNsTWwyVFdORkhaWUcrRkFyQUVIU3NWZFBNSUpZZlFn?=
+ =?utf-8?Q?gcJpBbWgXkKrZIBY2fO4NCrTVgE/GXdZYOLMauQ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c99d3527-08ea-413f-5b61-08d948baa8cf
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2021 00:34:38.7151
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GQ98VnQIRADX4Qq1iyJPdavJjvvfs2QgeVPJJkrOG+IAklEJm8B6l7fFjjMONfNSK/oLH8188I0odjtUC12jTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4672
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Thanks Hans, all feedback applied.
 
-On Tue, Jul 6 2021 at 12:10:45 +0200, Hans de Goede=20
-<hdegoede@redhat.com> wrote:
-> Hi,
->=20
-> Some review remarks inline (mostly just echo-ing what Barnab=E1s=20
-> already said):
->=20
-> On 7/5/21 12:21 AM, Luke D. Jones wrote:
->>  In Windows the ASUS Armory Crate progrm can enable or disable the
->>  dGPU via a WMI call. This functions much the same as various Linux
->>  methods in software where the dGPU is removed from the device tree.
->>=20
->>  However the WMI call saves the state of dGPU enabled or not and this
->>  then changes the dGPU visibility in Linux with no way for Linux
->>  users to re-enable it. We expose the WMI method so users can see
->>  and change the dGPU ACPI state.
->>=20
->>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>  ---
->>   drivers/platform/x86/asus-wmi.c            | 98=20
->> ++++++++++++++++++++++
->>   include/linux/platform_data/x86/asus-wmi.h |  3 +
->>   2 files changed, 101 insertions(+)
->>=20
->>  diff --git a/drivers/platform/x86/asus-wmi.c=20
->> b/drivers/platform/x86/asus-wmi.c
->>  index 2468076d6cd8..8dc3f7ed021f 100644
->>  --- a/drivers/platform/x86/asus-wmi.c
->>  +++ b/drivers/platform/x86/asus-wmi.c
->>  @@ -210,6 +210,9 @@ struct asus_wmi {
->>   	u8 fan_boost_mode_mask;
->>   	u8 fan_boost_mode;
->>=20
->>  +	bool dgpu_disable_available;
->>  +	u8 dgpu_disable_mode;
->>  +
->>   	bool throttle_thermal_policy_available;
->>   	u8 throttle_thermal_policy_mode;
->>=20
->>  @@ -427,6 +430,93 @@ static void=20
->> lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
->>   	}
->>   }
->>=20
->>  +/* dGPU=20
->> ********************************************************************/
->>  +static int dgpu_disable_check_present(struct asus_wmi *asus)
->>  +{
->>  +	u32 result;
->>  +	int err;
->>  +
->>  +	asus->dgpu_disable_available =3D false;
->>  +
->>  +	err =3D asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_DGPU, &result);
->>  +	if (err) {
->>  +		if (err =3D=3D -ENODEV)
->>  +			return 0;
->>  +		return err;
->>  +	}
->>  +
->>  +	if (result & ASUS_WMI_DSTS_PRESENCE_BIT)
->>  +		asus->dgpu_disable_available =3D true;
->>  +		asus->dgpu_disable_mode =3D result & ASUS_WMI_DSTS_STATUS_BIT;
->=20
-> Missing {}
->=20
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static int dgpu_disable_write(struct asus_wmi *asus)
->>  +{
->>  +	int err;
->>  +	u8 value;
->>  +	u32 retval;
->>  +
->>  +	value =3D asus->dgpu_disable_mode;
->>  +
->>  +	err =3D asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, value, &retval);
->>  +
->>  +	sysfs_notify(&asus->platform_device->dev.kobj, NULL,
->>  +			"dgpu_disable");
->=20
-> Make this one line please.
->=20
->>  +
->>  +	if (err) {
->>  +		pr_warn("Failed to set dgpu disable: %d\n", err);
->>  +		return err;
->>  +	}
->>  +
->>  +	if (retval > 1 || retval < 0) {
->>  +		pr_warn("Failed to set dgpu disable (retval): 0x%x\n",
->>  +			retval);
->=20
-> Make this one line please.
->=20
->>  +		return -EIO;
->>  +	}
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static ssize_t dgpu_disable_show(struct device *dev,
->>  +				   struct device_attribute *attr, char *buf)
->>  +{
->>  +	struct asus_wmi *asus =3D dev_get_drvdata(dev);
->>  +	u8 mode =3D asus->dgpu_disable_mode;
->>  +
->>  +	return scnprintf(buf, PAGE_SIZE, "%d\n", mode);
->=20
-> sysfs_emit() please.
->=20
->>  +}
->>  +
->>  +static ssize_t dgpu_disable_store(struct device *dev,
->>  +				    struct device_attribute *attr,
->>  +				    const char *buf, size_t count)
->>  +{
->>  +	int result;
->>  +	u8 disable;
->>  +	struct asus_wmi *asus =3D dev_get_drvdata(dev);
->>  +
->>  +	result =3D kstrtou8(buf, 10, &disable);
->>  +	if (result < 0)
->>  +		return result;
->>  +
->>  +	if (disable > 1 || disable < 0)
->>  +		return -EINVAL;
->=20
-> Drop the "disable < 0" check please.
->=20
->>  +
->>  +	asus->dgpu_disable_mode =3D disable;
->>  +	/*
->>  +	 * The ACPI call used does not save the mode unless the call is=20
->> run twice.
->>  +	 * Once to disable, then once to check status and save - this is=20
->> two code
->>  +	 * paths in the method in the ACPI dumps.
->>  +	*/
->>  +	dgpu_disable_write(asus);
->>  +	dgpu_disable_write(asus);
->>  +
->>  +	return count;
->>  +}
->>  +
->>  +static DEVICE_ATTR_RW(dgpu_disable);
->>  +
->>   /* Battery=20
->> ********************************************************************/
->>=20
->>   /* The battery maximum charging percentage */
->>  @@ -2412,6 +2502,7 @@ static struct attribute=20
->> *platform_attributes[] =3D {
->>   	&dev_attr_camera.attr,
->>   	&dev_attr_cardr.attr,
->>   	&dev_attr_touchpad.attr,
->>  +	&dev_attr_dgpu_disable.attr,
->>   	&dev_attr_lid_resume.attr,
->>   	&dev_attr_als_enable.attr,
->>   	&dev_attr_fan_boost_mode.attr,
->>  @@ -2438,6 +2529,8 @@ static umode_t asus_sysfs_is_visible(struct=20
->> kobject *kobj,
->>   		devid =3D ASUS_WMI_DEVID_LID_RESUME;
->>   	else if (attr =3D=3D &dev_attr_als_enable.attr)
->>   		devid =3D ASUS_WMI_DEVID_ALS_ENABLE;
->>  +	else if (attr =3D=3D &dev_attr_dgpu_disable.attr)
->>  +		ok =3D asus->dgpu_disable_available;
->>   	else if (attr =3D=3D &dev_attr_fan_boost_mode.attr)
->>   		ok =3D asus->fan_boost_mode_available;
->>   	else if (attr =3D=3D &dev_attr_throttle_thermal_policy.attr)
->>  @@ -2699,6 +2792,10 @@ static int asus_wmi_add(struct=20
->> platform_device *pdev)
->>   	if (err)
->>   		goto fail_platform;
->>=20
->>  +	err =3D dgpu_disable_check_present(asus);
->>  +	if (err)
->>  +		goto fail_dgpu_disable;
->>  +
->>   	err =3D fan_boost_mode_check_present(asus);
->>   	if (err)
->>   		goto fail_fan_boost_mode;
->>  @@ -2799,6 +2896,7 @@ static int asus_wmi_add(struct=20
->> platform_device *pdev)
->>   fail_sysfs:
->>   fail_throttle_thermal_policy:
->>   fail_fan_boost_mode:
->>  +fail_dgpu_disable:
->>   fail_platform:
->>   fail_panel_od:
->>   	kfree(asus);
->>  diff --git a/include/linux/platform_data/x86/asus-wmi.h=20
->> b/include/linux/platform_data/x86/asus-wmi.h
->>  index 428aea701c7b..a528f9d0e4b7 100644
->>  --- a/include/linux/platform_data/x86/asus-wmi.h
->>  +++ b/include/linux/platform_data/x86/asus-wmi.h
->>  @@ -90,6 +90,9 @@
->>   /* Keyboard dock */
->>   #define ASUS_WMI_DEVID_KBD_DOCK		0x00120063
->>=20
->>  +/* dgpu on/off */
->>  +#define ASUS_WMI_DEVID_DGPU		0x00090020
->>  +
->>   /* DSTS masks */
->>   #define ASUS_WMI_DSTS_STATUS_BIT	0x00000001
->>   #define ASUS_WMI_DSTS_UNKNOWN_BIT	0x00000002
->>=20
->=20
-> Otherwise this looks good to me.
->=20
-> Regards,
->=20
-> Hans
->=20
+On 7/16/21 3:22 PM, Sean Christopherson wrote:
+> Nit, please use "KVM: x86:" for the shortlogs.  And ubernit, the "new" part is
+> redundant and/or misleading, e.g. implies that more error code bits are being
+> added to existing SNP/RMP checks.  E.g.
+>
+>   KVM: x86: Define RMP page fault error code bits for #NPT
+
+Noted.
+
+
+> On Wed, Jul 07, 2021, Brijesh Singh wrote:
+>> When SEV-SNP is enabled globally, the hardware places restrictions on all
+>> memory accesses based on the RMP entry, whether the hyperviso or a VM,
+> Another typo.
+
+Noted. thanks
 
 
