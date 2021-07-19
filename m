@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DF0C07E9B
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 21:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA3C07E95
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 21:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16D0610C7
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 21:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945C16100C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 21:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1388835AbhGSVDR (ORCPT
+        id S234780AbhGSVDY (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 19 Jul 2021 17:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34188 "EHLO
+        Mon, 19 Jul 2021 17:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1384177AbhGSSYi (ORCPT
+        with ESMTP id S1384742AbhGSSfR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 19 Jul 2021 14:24:38 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E45AC0613E0
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jul 2021 11:52:23 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id h6-20020a17090a6486b029017613554465so611364pjj.4
-        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jul 2021 12:03:11 -0700 (PDT)
+        Mon, 19 Jul 2021 14:35:17 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55595C0613E4
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jul 2021 12:04:27 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id j4so3333261pgk.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 19 Jul 2021 12:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=9m2rZHOVB1NoZtYoNA6EFBVCz7Bbir+fDae0NyH8yOk=;
-        b=cKMSuskXfTZmYOL+qFY2CjsQm3HSNuYn6k9NptZ+JPJvmISriI4cZ3yoIyeYtyxvv1
-         7oGLcbXabYb6lI+2vVxKFEJvm0ak02KG+H7bbNvqNZVkkmSiKcPJdAFjSPe2MDdu91II
-         l5JB7D82QfrUjFShHZTnPAy+smnwbQuWDI0w462/H1ygcKedZSNtC5I7u7xO9JNeg7vg
-         JqJAwxUtVLVBsS9kTMF9Thfv1hSTtzrZlIZ31izAavsZjUTXVHIXgvyzcT/qV9CGue75
-         c7WuDs77rTWCMSdOjcww3bR8tv6L5H28sqTZcJJbnPEzgwpVo2WWSvCNXmrmWKdZYdE+
-         Hl1g==
+        bh=2XllpOUOhhdBvpd5Av+f2na/9hRxJV/QURDHxqubmW8=;
+        b=TAK2LJLZI6u4VHRX2CtOxDwgftlqvQHU1lzhdQy0LcCcpbcr9ralpKcma3Fe1DAXVB
+         YEbBG2X95V7PcYiO0NGfbsi3Mq0cpEE3BWadst6/qrqSI45eUiSf3Qjvvs6crWGL9pAk
+         f2S4uAxDH1tnD8dXBw6emsJHGIQpk2eykj7mExtMmKVHuA7Vr+eL6Oey1hzAPDg0oa7c
+         OqiF98AMx5gJrcAFkQlYE7iIsV7JKMNqh9RKqeBFp/4OqS+g0z1Kqo7z2BDexEgHIRFG
+         OcCF2FjqNIBEhh9hv1V9N0corxEGyzsVRPh6ngPwFo0wqMpY3VZZiMwxPSWpMijKQ4qA
+         4xYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9m2rZHOVB1NoZtYoNA6EFBVCz7Bbir+fDae0NyH8yOk=;
-        b=YxDKLqO//6SfCtyFemyruFuN1gxjaAjmy6a7ZxSEn6MXk6kmD0r/wy5TfnCh47KlzU
-         BYe3/jxtUkxGoZUXBaKhvAf5kNsZawlt8nXAb+dL+HfLoh0DdDhPkYI1ZDF05uR3BusR
-         jlNVYZqWRDdFNmMgrfph4WhskCqSAEnIFVXNTcK+abq5CF0BVSZD5yp+SGTB8r3tbUke
-         zMfrXZ1dAFi38l9lQYoeVhAG7+jobpxkJvq6VSUz4Er1/74CvHsja1/7fx198A4d39xj
-         gwCS9HfXv3LA6sTX7bD3woxc9pgf93aMZyalK71TJGaThtEBcOPwbvEq7NwFEj6vaHzo
-         40Ew==
-X-Gm-Message-State: AOAM530Bb01pPCzYAVZ5HOQrLw5y1xO1x7WKQL73dfyh0r9CISxnVhNY
-        JDYI5khMF3elo8EgeVCIheaT8g==
-X-Google-Smtp-Source: ABdhPJzKRz7pQLf5Lk3Ijby/XshCZupalvr6olwQaiWS02HChg4VytvEL0vS1aw+zs+u/vaUP8R/OA==
-X-Received: by 2002:a17:90a:d486:: with SMTP id s6mr26678412pju.142.1626721391280;
-        Mon, 19 Jul 2021 12:03:11 -0700 (PDT)
+        bh=2XllpOUOhhdBvpd5Av+f2na/9hRxJV/QURDHxqubmW8=;
+        b=tOeQ0acN3Z8IIKwm7+YhCBecZzrJsNIjXSfT9O+JBcTvEH4Ok5FtBsdzw3Vo0sC1pJ
+         0bYseoQ5+S+gpdOpPMSVHXolumByDWLgBpbu/dFfGwVYmIO20+gpHeFtJpPBX7jfLks+
+         h5J7xCBm9gXYxKTfU4o23TiDvnNy2a+3ELPbYErYL7oHygCyLAY77EHDMc4o0uQsaSRw
+         uWcExkqBDIla04t/vRWtgTAxceLwwMilfs58ihwUo1/5aDnfrCDoaijwOf2gTPxIxDp6
+         iA7fpvJ9J4+5rxH5EoeQm2M8MBe8xwpTv/JWM3KgPOjOvSezBOqSGTjCjtLDu0edHYcq
+         sJ0w==
+X-Gm-Message-State: AOAM532jIwZyy8TVVBZ9tYHBxZXQuRsxv1RyttWuqXtT4uZY6J/feiUi
+        kqGNcP6e2TXawZA9W6PFQikWCA==
+X-Google-Smtp-Source: ABdhPJx+EzDcqa/llq3nQF6Vq0NHWvv5j8Tkv3O31Pzz7AmNV8hJdli78mh1Sa+ATMQeYmFd5XN3Uw==
+X-Received: by 2002:a63:5059:: with SMTP id q25mr26911779pgl.9.1626722059360;
+        Mon, 19 Jul 2021 12:14:19 -0700 (PDT)
 Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id f7sm20453955pfc.111.2021.07.19.12.03.10
+        by smtp.gmail.com with ESMTPSA id u24sm22109816pfm.141.2021.07.19.12.14.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 12:03:10 -0700 (PDT)
-Date:   Mon, 19 Jul 2021 19:03:06 +0000
+        Mon, 19 Jul 2021 12:14:18 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 19:14:15 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -85,7 +85,7 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         npmccallum@redhat.com, brijesh.ksingh@gmail.com
 Subject: Re: [PATCH Part2 RFC v4 25/40] KVM: SVM: Reclaim the guest pages
  when SEV-SNP VM terminates
-Message-ID: <YPXMas+9O1Y5910b@google.com>
+Message-ID: <YPXPB1WMW8WY9cZ7@google.com>
 References: <20210707183616.5620-1-brijesh.singh@amd.com>
  <20210707183616.5620-26-brijesh.singh@amd.com>
  <YPHnb5pW9IoTcwWU@google.com>
@@ -94,30 +94,47 @@ References: <20210707183616.5620-1-brijesh.singh@amd.com>
  <e1cc1e21-e7b7-5930-1c01-8f4bb6e43b3a@amd.com>
  <YPWz6YwjDZcla5/+@google.com>
  <912c929c-06ba-a391-36bb-050384907d81@amd.com>
+ <YPXMas+9O1Y5910b@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <912c929c-06ba-a391-36bb-050384907d81@amd.com>
+In-Reply-To: <YPXMas+9O1Y5910b@google.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Jul 19, 2021, Brijesh Singh wrote:
-> 
-> On 7/19/21 12:18 PM, Sean Christopherson wrote:
-> > > 
-> > > Okay, I will add helper to make things easier. One case where we will
-> > > need to directly call the rmpupdate() is during the LAUNCH_UPDATE
-> > > command. In that case the page is private and its immutable bit is also
-> > > set. This is because the firmware makes change to the page, and we are
-> > > required to set the immutable bit before the call.
+On Mon, Jul 19, 2021, Sean Christopherson wrote:
+> On Mon, Jul 19, 2021, Brijesh Singh wrote:
 > > 
-> > Or do "int rmp_make_firmware(u64 pfn, bool immutable)"?
+> > On 7/19/21 12:18 PM, Sean Christopherson wrote:
+> > > > 
+> > > > Okay, I will add helper to make things easier. One case where we will
+> > > > need to directly call the rmpupdate() is during the LAUNCH_UPDATE
+> > > > command. In that case the page is private and its immutable bit is also
+> > > > set. This is because the firmware makes change to the page, and we are
+> > > > required to set the immutable bit before the call.
+> > > 
+> > > Or do "int rmp_make_firmware(u64 pfn, bool immutable)"?
+> > 
+> > That's not what we need.
+> > 
+> > We need 'rmp_make_private() + immutable' all in one RMPUPDATE.  Here is the
+> > snippet from SNP_LAUNCH_UPDATE.
 > 
-> That's not what we need.
-> 
-> We need 'rmp_make_private() + immutable' all in one RMPUPDATE.  Here is the
-> snippet from SNP_LAUNCH_UPDATE.
+> Ah, not firmwrare, gotcha.  But we can still use a helper, e.g. an inner
+> double-underscore helper, __rmp_make_private().
 
-Ah, not firmwrare, gotcha.  But we can still use a helper, e.g. an inner
-double-underscore helper, __rmp_make_private().
+Hmm, looking at it again, I think I also got confused by the comment for the VMSA
+page:
+
+	/* Transition the VMSA page to a firmware state. */
+ 	e.assigned = 1;
+	e.immutable = 1;
+	e.asid = sev->asid;
+	e.gpa = -1;
+	e.pagesize = RMP_PG_SIZE_4K;
+
+Unlike __snp_alloc_firmware_pages() in the CCP code, the VMSA is associated with
+the guest's ASID, just not a GPA.  I.e. the VMSA is more of a specialized guest
+private page, as opposed to a dedicated firmware page.  I.e. a __rmp_make_private()
+and/or rmp_make_private_immutable() definitely seems like a good idea.
