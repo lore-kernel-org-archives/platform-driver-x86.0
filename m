@@ -2,324 +2,147 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108E4C636C8
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Jul 2021 23:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9252C07E9B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 12:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D196C610C7
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 18 Jul 2021 23:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE72460FF3
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 19 Jul 2021 12:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232724AbhGRXiL (ORCPT
+        id S236831AbhGSMGG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 18 Jul 2021 19:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232582AbhGRXiL (ORCPT
+        Mon, 19 Jul 2021 08:06:06 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.5]:41372 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236571AbhGSMGF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 18 Jul 2021 19:38:11 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DACC061762;
-        Sun, 18 Jul 2021 16:35:12 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id w188so18652208oif.10;
-        Sun, 18 Jul 2021 16:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=mHwcGS2ysH6z8g2U68l6pdbm2masP2qn+PDIg206EN0=;
-        b=RmNb+70LbTthCKs32OMIBI/VlOkmFNkSgVWaQkxFFlXw4whim+aBFNu8BjS8S5m4Eu
-         H6pdmmcXagAk7OkThNoYNQ1NfKZmB6o7G7VbhmsCWiLmn/kDbCRFXl8KRBDU8L/6AIGt
-         kEcHRqGXTwLDmTRSa3Vd/1xf89nGAOyr6oEjoi290SeWYsiEYkC+5nQwzr1AtfdGM64q
-         Y/j+MjBKrLD12tO7Uz55AFaiQRp8ItFB8QGA+ZtKHNObkZHt7tEtqSeSRLCyApn6iwg/
-         O+f2ZWnt7XmUOMMbnpFGOEhGHULxDdrvQTLFsDsRjxkwIxUmYxIu1/uFWWfMILHi7CH/
-         DwTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=mHwcGS2ysH6z8g2U68l6pdbm2masP2qn+PDIg206EN0=;
-        b=F512ATW19entb80jrgRBS9So8oDVlzrP0aDPFxKytT6xNfwz1+tQNoLU9WC2zvBwfu
-         gxWU9niI3GrpCER+hNpNJ801Iof+PuBEwKVc7uvVgoAIEoelzqJmf5TiTxgd01qt5UqJ
-         uzcBap/OS5ndRqA9x+A4JMafSbBJQuCb0s2qEa5r8320W/UBHBfV9em9PwDHeT/k4LSn
-         U5ITPfj44i1cTBhw3lJASgOpS6aF3ssnpsF9K9vIlpgEm+u3+qNP1EluDLotnu2eJsU5
-         k7IZcnbokq6ZXSBo6c15d6+MvDVdHW29uxAaXu30rbZV/qS9vtKo0imAg6S+aiqBbrlC
-         NN8g==
-X-Gm-Message-State: AOAM5316daBKPA5OHX18sJj68RVQf12Ztus1qZkpyoczl/nT0n7+8+6o
-        DzXaG7d4cTaAP2M0s9D50WYpVPPVTHG/2XuagMU2/XP0hqkkbg==
-X-Google-Smtp-Source: ABdhPJwPzaes+Ut/nQ9UxEH1qC0Iotkuf1w8a8Ty0fBonvFiOKqZa2FoZMErzSAE2pLpKFCZICbWcTYcfmwWvAjvD2U=
-X-Received: by 2002:a54:4398:: with SMTP id u24mr15705649oiv.81.1626651312153;
- Sun, 18 Jul 2021 16:35:12 -0700 (PDT)
+        Mon, 19 Jul 2021 08:06:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1626698805; i=@lenovo.com;
+        bh=wXIbEL4OU+wH0Yqf0ujILx1sSuW/zoSUlpUdphLDPOY=;
+        h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+         In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        b=AjsoYgtXfMZl4VQzeqkgQQEkAD1W2AuDs8dKF/7kDB5ahmmyuy2PHrTgjAzcychFl
+         JL/OulE17c9phmURInzdxW257rFKCnb0rjeSBThX0kvq06Gh+h5pusVP6KteOWcxGq
+         b2a3u+KBzTdg7S1TDmXZ6JPp7P5iCvHS42DukmZO8ArpsU4VaIWWVfaoYDP8N2f6vZ
+         irBrU+YOmnBV62gB3okVruutmeCjkYnfBjwpMI6p9rXnhVSlAv4pCds7rQ5/Q4IO8U
+         fdD42+zJGYhkH4D3hFCjVlN158yLEWRf9qJT3GjtuQnhPqpFIQtFvbRrdfctcDWzxt
+         ceOUYxIL8PjKA==
+Received: from [100.112.3.19] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-b.us-east-1.aws.symcld.net id 98/FE-07014-53475F06; Mon, 19 Jul 2021 12:46:45 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPIsWRWlGSWpSXmKPExsWS8eIhr65Jydc
+  Eg+vLtS3eHJ/OZPG5YzKLxeo9L5gdmD3mnQz0eL/vKpvH501yAcxRrJl5SfkVCawZ7eevsBds
+  E65o3nCIuYHxAX8XIxeHkMB/Ron/u+6wQTjPGSW2XNrN3MXIySEs4Cnxuf0jE4gtIqAuMbWjh
+  w3EZhZwlpjUMgGqoZNRYvGBVSwgCTYBbYktW34BJTg4eAVsJW7MUAEJswioSuzdtBOsV1QgQu
+  Lhzi2MIDavgKDEyZlPwFo5BewkDvVcZ4SYbyExc/55KFtc4taT+UwQtrzE9rdzwG6TALL/n/3
+  OCGEnSPT8e8Q2gVFwFpKxs5CMmoVk1CwkoxYwsqxiNE0qykzPKMlNzMzRNTQw0DU0NNIFkXqJ
+  VbpJeqXFuqmJxSW6QG55sV5xZW5yTopeXmrJJkZgPKQUMHDvYNz65oPeIUZJDiYlUd4Gia8JQ
+  nxJ+SmVGYnFGfFFpTmpxYcYZTg4lCR43QqBcoJFqempFWmZOcDYhElLcPAoifD25AOleYsLEn
+  OLM9MhUqcYFaXEeUWKgRICIImM0jy4Nlg6uMQoKyXMy8jAwCDEU5BalJtZgir/ilGcg1FJmDc
+  bZApPZl4J3PRXQIuZgBazLvwIsrgkESEl1cA07+XrOVPz6lntzoQmXrP6ErhlOWN6SWWjxLJl
+  9sdbdprwn+OYssJ15m/xiWqSb+vu3jwZoPKFWcfbcO/JYxWhOr9tLM7Wnnn9KyTN9v9z+cA52
+  +qMNk25vPD2XL6Y7sWRqk3BTG9D1AxsT3/8LOX2f+fpjdlJfQYKC195LWGddvKTkcvzfVZTPf
+  mU4sTKlT6Hc37K+CTj8oNv1e7nD2486P0dvrmlcnuw6LtvIZ76hz8JtC3rLi///kXw1E9eo+L
+  XC2Y3xnxKf/jp2mE3KdONW6zu79rjZTMrbMKxk9zWu/PvfuecvyJWi/Put03xTwTPLfxeKn/w
+  y/T+ImXXtpz2zo12DVpWZjWBNfvK8rZ/UGIpzkg01GIuKk4EADAEsByCAwAA
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-16.tower-386.messagelabs.com!1626698804!264507!1
+X-Originating-IP: [104.232.225.13]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 12487 invoked from network); 19 Jul 2021 12:46:44 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.13)
+  by server-16.tower-386.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 19 Jul 2021 12:46:44 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 7F481FDF5620DECBF548;
+        Mon, 19 Jul 2021 08:46:44 -0400 (EDT)
+Received: from localhost.localdomain (10.38.63.73) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Mon, 19 Jul
+ 2021 08:46:43 -0400
+Subject: Re: [External]Re: [PATCH] platform/x86: think-lmi: add debug_cmd
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     <mgross@linux.intel.com>, <platform-driver-x86@vger.kernel.org>
+References: <markpearson@lenovo.com>
+ <20210715230850.389961-1-markpearson@lenovo.com>
+ <4e59c26c-d58b-dfd5-ed21-f9cd83fc43b6@redhat.com>
+From:   Mark Pearson <markpearson@lenovo.com>
+Message-ID: <fc392326-9d19-dc78-bf06-da85b3b53fb2@lenovo.com>
+Date:   Mon, 19 Jul 2021 08:46:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210706184730.14951-1-chrisrblake93@gmail.com>
-In-Reply-To: <20210706184730.14951-1-chrisrblake93@gmail.com>
-From:   Chris <chrisrblake93@gmail.com>
-Date:   Sun, 18 Jul 2021 18:35:01 -0500
-Message-ID: <CALpBJjqOYYwDuZXJHnCi23u9me5g=1UMV08U07=LzwLfNE=kPA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: add meraki-mx100 platform driver
-To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Christian Lamparter <chunkeey@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4e59c26c-d58b-dfd5-ed21-f9cd83fc43b6@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.38.63.73]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 6, 2021 at 1:47 PM Chris Blake <chrisrblake93@gmail.com> wrote:
->
-> This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
-> network appliance. This sets up the network LEDs and Reset
-> button. Note that this patch requires
-> mfd: lpc_ich: Enable GPIO driver for DH89xxCC which has been accepted
-> and is currently targeted for 5.15.
->
-> Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
-> Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-> ---
->  drivers/platform/x86/Kconfig        |  13 ++
->  drivers/platform/x86/Makefile       |   3 +
->  drivers/platform/x86/meraki-mx100.c | 185 ++++++++++++++++++++++++++++
->  3 files changed, 201 insertions(+)
->  create mode 100644 drivers/platform/x86/meraki-mx100.c
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 7d385c3b2239..8d70176e335f 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -302,6 +302,19 @@ config ASUS_NB_WMI
->           If you have an ACPI-WMI compatible Asus Notebook, say Y or M
->           here.
->
-> +config MERAKI_MX100
-> +       tristate "Cisco Meraki MX100 Platform Driver"
-> +       depends on GPIOLIB
-> +       depends on GPIO_ICH
-> +       depends on LEDS_CLASS
-> +       select LEDS_GPIO
-> +       help
-> +         This driver provides support for the front button and LEDs on
-> +         the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
-> +
-> +         To compile this driver as a module, choose M here: the module
-> +         will be called meraki-mx100.
-> +
->  config EEEPC_LAPTOP
->         tristate "Eee PC Hotkey Driver"
->         depends on ACPI
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 7ee369aab10d..25c5aee1cde7 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)     += asus-nb-wmi.o
->  obj-$(CONFIG_EEEPC_LAPTOP)     += eeepc-laptop.o
->  obj-$(CONFIG_EEEPC_WMI)                += eeepc-wmi.o
->
-> +# Cisco/Meraki
-> +obj-$(CONFIG_MERAKI_MX100)     += meraki-mx100.o
-> +
->  # Dell
->  obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)                += dell/
->
-> diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
-> new file mode 100644
-> index 000000000000..12b17ef06d14
-> --- /dev/null
-> +++ b/drivers/platform/x86/meraki-mx100.c
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +/*
-> + * Cisco Meraki MX100 (Tinkerbell) board platform driver
-> + *
-> + * Based off of arch/x86/platform/meraki/tink.c from the
-> + * Meraki GPL release meraki-firmware-sources-r23-20150601
-> + *
-> + * Format inspired by platform/x86/pcengines-apuv2.c
-> + *
-> + * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
-> + */
-> +
-> +#define pr_fmt(fmt)    KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/dmi.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio.h>
-> +#include <linux/gpio_keys.h>
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define TINK_GPIO_OFFSET       436
-> +
-> +/* LEDs */
-> +static const struct gpio_led tink_leds[] = {
-> +       {
-> +               .name = "mx100:green:internet",
-> +               .gpio = TINK_GPIO_OFFSET + 11,
-> +               .active_low = 1,
-> +               .default_trigger = "default-on",
-> +       },
-> +       {
-> +               .name = "mx100:green:lan2",
-> +               .gpio = TINK_GPIO_OFFSET + 18,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan3",
-> +               .gpio = TINK_GPIO_OFFSET + 20,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan4",
-> +               .gpio = TINK_GPIO_OFFSET + 22,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan5",
-> +               .gpio = TINK_GPIO_OFFSET + 23,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan6",
-> +               .gpio = TINK_GPIO_OFFSET + 32,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan7",
-> +               .gpio = TINK_GPIO_OFFSET + 34,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan8",
-> +               .gpio = TINK_GPIO_OFFSET + 35,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan9",
-> +               .gpio = TINK_GPIO_OFFSET + 36,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan10",
-> +               .gpio = TINK_GPIO_OFFSET + 37,
-> +       },
-> +       {
-> +               .name = "mx100:green:lan11",
-> +               .gpio = TINK_GPIO_OFFSET + 48,
-> +       },
-> +       {
-> +               .name = "mx100:green:ha",
-> +               .gpio = TINK_GPIO_OFFSET + 16,
-> +               .active_low = 1,
-> +       },
-> +       {
-> +               .name = "mx100:orange:ha",
-> +               .gpio = TINK_GPIO_OFFSET + 7,
-> +               .active_low = 1,
-> +       },
-> +       {
-> +               .name = "mx100:green:usb",
-> +               .gpio = TINK_GPIO_OFFSET + 21,
-> +               .active_low = 1,
-> +       },
-> +       {
-> +               .name = "mx100:orange:usb",
-> +               .gpio = TINK_GPIO_OFFSET + 19,
-> +               .active_low = 1,
-> +       },
-> +};
-> +
-> +static const struct gpio_led_platform_data tink_leds_pdata = {
-> +       .num_leds       = ARRAY_SIZE(tink_leds),
-> +       .leds           = tink_leds,
-> +};
-> +
-> +/* Reset Button */
-> +static struct gpio_keys_button tink_buttons[] = {
-> +       {
-> +               .desc                   = "Reset",
-> +               .type                   = EV_KEY,
-> +               .code                   = KEY_RESTART,
-> +               .gpio                   = TINK_GPIO_OFFSET + 60,
-> +               .active_low             = 1,
-> +               .debounce_interval      = 100,
-> +       },
-> +};
-> +
-> +static const struct gpio_keys_platform_data tink_buttons_pdata = {
-> +       .buttons        = tink_buttons,
-> +       .nbuttons       = ARRAY_SIZE(tink_buttons),
-> +       .poll_interval  = 20,
-> +       .rep            = 0,
-> +       .name           = "mx100-keys",
-> +};
-> +
-> +/* Board setup */
-> +
-> +static struct platform_device *tink_leds_pdev;
-> +static struct platform_device *tink_keys_pdev;
-> +
-> +static struct platform_device * __init tink_create_dev(
-> +       const char *name,
-> +       const void *pdata,
-> +       size_t sz)
-> +{
-> +       struct platform_device *pdev;
-> +
-> +       pdev = platform_device_register_data(NULL,
-> +               name,
-> +               PLATFORM_DEVID_NONE,
-> +               pdata,
-> +               sz);
-> +
-> +       if (IS_ERR(pdev))
-> +               pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
-> +
-> +       return pdev;
-> +}
-> +
-> +static int __init tink_board_init(void)
-> +{
-> +       if (!dmi_match(DMI_SYS_VENDOR, "Cisco") || !dmi_match(DMI_PRODUCT_NAME, "MX100-HW")) {
-> +               return -ENODEV;
-> +       }
-> +
-> +       /* We need to make sure that GPIO60 isn't set to native mode as is default since it's our
-> +        * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
-> +        * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
-> +        */
-> +       outl(inl(0x530) | BIT(28), 0x530);
-> +
-> +       tink_leds_pdev = tink_create_dev(
-> +               "leds-gpio",
-> +               &tink_leds_pdata,
-> +               sizeof(tink_leds_pdata));
-> +
-> +       tink_keys_pdev = tink_create_dev(
-> +               "gpio-keys-polled",
-> +               &tink_buttons_pdata,
-> +               sizeof(tink_buttons_pdata));
-> +
-> +       return 0;
-> +}
-> +
-> +static void __exit tink_board_exit(void)
-> +{
-> +       platform_device_unregister(tink_keys_pdev);
-> +       platform_device_unregister(tink_leds_pdev);
-> +}
-> +
-> +module_init(tink_board_init);
-> +module_exit(tink_board_exit);
-> +
-> +MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
-> +MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:meraki-mx100");
-> +MODULE_SOFTDEP("pre: platform:gpio_ich platform:leds-gpio platform:gpio_keys_polled");
-> --
-> 2.25.1
->
+Thanks for the review Hans
 
-Hello,
+On 2021-07-17 9:59 a.m., Hans de Goede wrote:
+> Hi Mark,
+> 
+> On 7/16/21 1:08 AM, Mark Pearson wrote:
+>> Many Lenovo BIOS's support the ability to send a debug command which
+>> is useful for debugging and testing unreleased or early features.
+>> Adding support for this feature.
+>>
+>> Also moved the pending_reboot node under attributes dir where it should
+>> correctly live. Got that wrong in my last commit and realised as I was
+>> updating the documentation for debug_cmd
+>>
+>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+> 
+> Thank you for the patch, I'm not entirely sure if we want this in its
+> current form though, isn't this new debug_cmd file not something which
+> would be better under debugfs ?  Or maybe have it only show up if
+> a module parameter is passed to enable it ?
+> 
+> Note that both have implications wrt secureboot. debugfs is only
+> writeable when secureboot is disabled; and ATM module options are
+> not protected by secureboot, but at least in Fedora we would actually
+> like to change that in the future.
+> 
+> Anyways, lets discuss this a bit further and then merge something
+> for this later.
+> 
+I wasn't sure about debugfs but did consider it. It seemed to be adding 
+a whole extra layer. I'm happy to do that if that's what is recommended 
+but not having it available with secureboot could be annoying for users.
 
-Just following up to see what is required to get this reviewed. Thanks!
+This feature is mostly used internally (which is fine) but we have had 
+occasions where we've used it with customers; and with the WMI interface 
+it's usually the enterprise customers who do have secure boot enabled. 
+I'd like to avoid that limitation if possible.
 
-Regards,
-Chris B
+> The pending_reboot move is good to have. You really should have
+> submitted this as a separate patch. Hint as soon as you write
+> "Also ...", or e.g. "This commit does the following 3 things:
+> 1... 2... 3..." or some such in the commit message that is a hint
+> that you should split the patch.
+> 
+> I've split out the pending_reboot changes (and also updated the
+> remove path which you left unchanged) now. While looking into
+> the remove path, I also found a couple of other probe-failure
+> related issues so I'll be sending out a patch-set with a > few small fixes (including the pending_reboot move) soon.
+
+Yeah - apologies. It was such a tiny change that I was being lazy.
+Thanks you for splitting them out but if you're busy let me know and 
+I'll happily clean that myself. I had missed the remove part completely.
+
+Thanks
+Mark
