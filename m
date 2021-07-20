@@ -2,51 +2,51 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DCC636CA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 15:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E266C636C9
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 16:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F134A6023B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 15:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5377561244
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 16:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238529AbhGTOXm (ORCPT
+        id S237924AbhGTPYx (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jul 2021 10:23:42 -0400
-Received: from mail-dm6nam10on2055.outbound.protection.outlook.com ([40.107.93.55]:48993
+        Tue, 20 Jul 2021 11:24:53 -0400
+Received: from mail-dm6nam10on2052.outbound.protection.outlook.com ([40.107.93.52]:50465
         "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237295AbhGTN47 (ORCPT
+        id S239888AbhGTOeo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jul 2021 09:56:59 -0400
+        Tue, 20 Jul 2021 10:34:44 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YDk+0tb7xKDPU+voWehSMCUto4hkbRHaTDXp9LOVl3xWfxJkY61a+j5YGByoZlu6VJUiEApLRYEzjaajF3B5WN2ZrW/Wq8xmyK506R284RzSByg6QrBH/Jz9TLJT0RRvPLirZboRxfWUYp5g3+GouAwB79W1ynFMeHrdSLEW/kSwOS2h1XIRY18h06iLrjHOwLJsJDLbuAYM6iCglds/4aJsg9ZLYGGtZs5kNk7KwjLRWbYKfJRW67JCdQmdnbbZq05OfPjyq+FpkUrqLIFef22WgRzUSMj8TY/CR2HVO8qPJ77C/6QjY3ULBNJOaMa1bMGUGzm5cCTRYtFXgJFCPA==
+ b=YQqVsdyN5qA/gsfIBdVV1+zpx7q5KN0vnlrYNHpWMJLehiScu40UAuxlDDKS1bPvLwB0F9uLheYrHF6adKYH5TBLrLCyJni/dCdLOr1lWSCcMfnq9SlZYTLMgwmwL8X4b8rdhFXfZz3mAJmMF7LCbDTo1FV16Gnay6fFQ6PTvoUlaN/XMSsW3ixGAlhumI6SKo6pyJxk2WOXdQzwx7RLDD3P1OUrQyRKix+ASsA3bCITmT2BGkOji8I96n1WanGyWQhhDgkEmWV36ZRLOs25p1uGTLhl8MCWBpEz54BixpBY/ghSj1pjvS3M/nIw2VbK4DJ9qkJeoGMFkpahkyw06A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uH7ehnnxhRu0ahip1dqwYRc3YAk259GorxYGnDSTluo=;
- b=lU0i6dDE4geeX/+i1x3nthGxkqBtEZkY23TceA8qWMHUafTot/x9n4NhIsEvTUENJcO/u2mqZdp0DOirv7+Y71+hvl+q4CB6jmA4EUwHoNVKZea3OyurFSKYBg2Js6Z3abJrEMYV9aU4+AisctNT2gV/rO6ZS0ARAQlXeYO9fHhCr4OUPZCsZZy9xhJqgeCLm04Af6AzZ+RrJnJ/4Y8O6xHcaqvO1s+G9pG3zgRyN2zoEqfwagBUyUc7KxUw0pq6jglG30q1EIzMSkMVhdVjsaHYB9bceETSG/LcJi+DTbhesBzg6/klU3RRK6oby4jiqmNEy3+M/AkxZaiEvoqrzQ==
+ bh=sTgst8U5HGd8fa4h78KgvbfawLz9emEzbOPzAeE0J38=;
+ b=YWrjoacL/UtMlXo8LoiRQnGP+yZ20CuGQ5KgOiljGMrhlCdipib6BZbRqahVH1ER0Fo0FBfTp1j+4tgjtSYdTJnJs4SrKHL487KecQhAeGN+TyccKGfZXRIuyj7pQa3KI5CmkcJTQ+OpbkY76ZZCfhm1J0qKq9O6tUEZK0AX3rdmBTIN5w7c90wPt28abm5zrgxXrLh6D1TNlQBCJRVBcnhwNOq5ZmZQ9sAPp3HVl05+Koa6dcuRWoJuaZlXMsXO4+9KXKBd6w5qQpPF3BwGYAuzSfk4b8OIkr8uhHbbhJ7EfNXh6+uS0U1bGcWHHAh5mv2OroSfcoqsghThSzAiHQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uH7ehnnxhRu0ahip1dqwYRc3YAk259GorxYGnDSTluo=;
- b=mnBjvHi9+uZEAN9U92dS1W9pkp2wDLO3InIN85YuETbjtKQb/76m5heZCh1UUDllG6+KhkzPSzpHjDcOiIPmVerVSN6RoBiOmpwVjVO7j1tcRukfN9QrTWqDhJN/2QSRhXVqezN/ui80O0L1y4JfaxUQocuAlNdsE3WvmKNaxFM=
+ bh=sTgst8U5HGd8fa4h78KgvbfawLz9emEzbOPzAeE0J38=;
+ b=LcPF5x2OsDjTrRrvcru25gE4Ui2HVQSqxLUde6uVbCh6OMMz/5ms4+1/DpOuT/6JyXJmfnscbpkvGsFFWB654UDJCfgWfgmztrWV/6kU150dWSQlMb+s9ti9iRuVQJj/252fFMnqILtT2m9equzFYVRkHqKBCGXib7I9idNkBuc=
 Authentication-Results: gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=none action=none header.from=amd.com;
 Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
+ by SA0PR12MB4592.namprd12.prod.outlook.com (2603:10b6:806:9b::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.23; Tue, 20 Jul
- 2021 14:37:34 +0000
+ 2021 15:15:20 +0000
 Received: from SN6PR12MB2718.namprd12.prod.outlook.com
  ([fe80::a8a9:2aac:4fd1:88fa]) by SN6PR12MB2718.namprd12.prod.outlook.com
  ([fe80::a8a9:2aac:4fd1:88fa%3]) with mapi id 15.20.4331.034; Tue, 20 Jul 2021
- 14:37:34 +0000
+ 15:15:19 +0000
 Cc:     brijesh.singh@amd.com, x86@kernel.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
@@ -71,208 +71,150 @@ Cc:     brijesh.singh@amd.com, x86@kernel.org,
         Michael Roth <michael.roth@amd.com>,
         Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
         npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 38/40] KVM: SVM: Provide support for
- SNP_GUEST_REQUEST NAE event
+Subject: Re: [PATCH Part2 RFC v4 35/40] KVM: Add arch hooks to track the host
+ write to guest memory
 To:     Sean Christopherson <seanjc@google.com>
 References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-39-brijesh.singh@amd.com> <YPYBmlCuERUIO5+M@google.com>
+ <20210707183616.5620-36-brijesh.singh@amd.com> <YPYLEksyzOWHZwpA@google.com>
 From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <68ea014c-51bc-6ed4-a77e-dd7ce1a09aaf@amd.com>
-Date:   Tue, 20 Jul 2021 09:37:32 -0500
+Message-ID: <1f65ccb2-a627-8631-7638-d02186f7e1bc@amd.com>
+Date:   Tue, 20 Jul 2021 10:15:17 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
-In-Reply-To: <YPYBmlCuERUIO5+M@google.com>
+In-Reply-To: <YPYLEksyzOWHZwpA@google.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN1PR12CA0086.namprd12.prod.outlook.com
- (2603:10b6:802:21::21) To SN6PR12MB2718.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0170.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::25) To SN6PR12MB2718.namprd12.prod.outlook.com
  (2603:10b6:805:6f::22)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.95] (165.204.77.1) by SN1PR12CA0086.namprd12.prod.outlook.com (2603:10b6:802:21::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend Transport; Tue, 20 Jul 2021 14:37:33 +0000
+Received: from [10.236.31.95] (165.204.77.1) by SA0PR11CA0170.namprd11.prod.outlook.com (2603:10b6:806:1bb::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.22 via Frontend Transport; Tue, 20 Jul 2021 15:15:18 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40068fd9-7cab-44ac-bb4d-08d94b8be99f
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4446:
+X-MS-Office365-Filtering-Correlation-Id: eed7d445-ca15-452d-8aec-08d94b912fdc
+X-MS-TrafficTypeDiagnostic: SA0PR12MB4592:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4446C4833E76099E761CBB4BE5E29@SA0PR12MB4446.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Microsoft-Antispam-PRVS: <SA0PR12MB4592F514E01D86926B4DBB06E5E29@SA0PR12MB4592.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ckiEHNeE1FfvR1tfWJeEkYkL9Rnk1WQXc8baSA7AXESsMwE54P3xHfhuvXdx7WwIVF258yk+Wh6/02keVzyL9XMhJ0tbFCw9+F1VkTxI/FoPrYypkKzZJ2NyXF7Oi7KXtFRJ6nSm6UdRAnqCBnx65MU2L90DpCOCjrjtX3rLpccwRbTRvdAjj9O+r2bSD+7HtQMxL3jhPTOPkFLCS9GJ4j6cJXQRRzzJOw/c0rDsG0v78R1q3Zypf9vO9T2/xdvM9agK+l7hxStDeTSxghUuCxzUCficFZd0weRZJVHQ9DDk+gH23PFx3p0rD47p4ocUkjwEWqVSqBB3821sStGqMKrc9INnop7lWYu+STEbozUB2tLzEIc7YZtBpBJfeFYJNHL9qTqObADNV3srp+pMHOSoyInDgvi7+s4ItLDwhAQIVgZ7pSHfInUl1jHDwFH1cCJmoGJaWXU83gabbTaoemUadpYL/JAQ1sHo6M243AxlKC9QgLJE+mbCbm51sf+rzdLwbjbeuJOUGBowzR6o6Jpr8SByM+Wt9M8uaXq45UFFQMsvThEvlSv6JEjjBgEaL1U5SzoiepxT9HWR4sPnRqBYY1TT+hcRmwwUjFsDeMd2MNdM1Hw/tvrwbofJTlg6cNzyC+0w0rroTTB+KTNUE6eEJQU9GtvVZ7cJf83bIJPwb0Cwsj4C5OHV6pEvmuuAeDXyE1ROVgnUBMoy9qWugkAmbWj1tHlNcxNT2N1uBbl6ic+h6ivYMaefzMCBaWeJ6QdeBi0TYejcx+XRt/Iv2Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(36756003)(31696002)(83380400001)(44832011)(53546011)(86362001)(38350700002)(31686004)(66476007)(16576012)(66946007)(54906003)(956004)(2616005)(66556008)(38100700002)(316002)(186003)(2906002)(6916009)(8676002)(6486002)(7406005)(4326008)(5660300002)(7416002)(8936002)(52116002)(26005)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: KqkfqpO4QiGdrTulybgw/CCbYjcDaSzlksB0B3geox8MuOn436W2krgRPDUNlh8XcluquGx4iyXb9fl1qcPaqPA2PxDYVkUXqmGiDOfz8mm67zwOMtCaKPcWXeFnZEm/t25nYkY5CYMDwINLeZrd7SBYpn55muVberaWNfLfkeoR2AlHgvKGfCPLxVVIxIspz6q/YlvXVecEQ6i+vm9+YSGriSK0yUKkQkHOVt9JjDAt7Nxu3KMSWDlet5vPy3B2ySN86aZe3IwSwPaen9vWTQ+LRsVGPSwYOYmWhyqlCrhM1ByD38wMctEMyxYVqeoyEGL01vLLm/ZpbDag2flVNkappeIDz94BCN3W2r31OR3j9AHu2+7ltp79KDj8NxCa7Co8icnYvPRaSNdj0mg83KxQj27brB6YMT8FrqKl+Rtjc7TOkGGy6WD8Xqd0a/HDyeIUYwTxDuwEjho7A1yN4iJt/9a8nqAs8vKNjEIsvLxJqxjLizzkntbBbcbZr2S8yEiby6MgD9G9RkuP998D17c6sBDPd7/n99ebuz9+mfq9c9xw0nAYePTHIrsVFaR0AJk+eR/EfHYZVT29vQnMRKTluE2Ydy+vT2GjUGWqCO7c/8Pab2zh1qOWHigTNqG0yT+jzmOupMqfPhrds8sFGeM5G6sw44hA7u+LT9ATSPRGXYrl/xyaPtLBBvufbTNVSZgFLkcQyRu3fBsM2lLrOENUoa9o2Swl8CkoKROSdgTuvIXvTQD3wY+e3qGf7+I+
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(31686004)(66946007)(7416002)(956004)(2616005)(54906003)(6916009)(5660300002)(52116002)(478600001)(53546011)(4326008)(7406005)(66556008)(66476007)(8676002)(86362001)(2906002)(16576012)(316002)(186003)(8936002)(83380400001)(36756003)(38350700002)(38100700002)(26005)(31696002)(6486002)(44832011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NkpGZTB5ZVQ3TjIzSm42N2hJV1VMRGFKdElvM0hsQXNXbVNydU0rdFp1VmNv?=
- =?utf-8?B?ODBERWk5bTB5TEs4Z3J5K2lLTllzaVQ2WXNVZDlCWXpJR0xwVUQzazJvSktU?=
- =?utf-8?B?eXdaZ25KMWsxODdKd1pOQkczejIzaWFXc3R6TDArQ3l0UnE4VlJBWDB1dW9y?=
- =?utf-8?B?VTV0QzdZczVySE5QeUFERlozMGNoNVdCVHFJRyt6NlpjTFdyY0FhTmFVRHNm?=
- =?utf-8?B?UGVKRjBwU1ZUZXZxelhyWTFrRjN5L1I1M2lSYzZpWU14V2trTUoySk11Uyt6?=
- =?utf-8?B?REYxeTJTWGtKUGlYSjJGNGFEaUxpSDJ6RnBqSFcvRmRLQVplNStnaXozbUwz?=
- =?utf-8?B?R0lOMU5GZDNtbTFLZ3BaY0xmTWxCMmJkU2EzTmhMaGpuSUF5ZndXRzV3QS9L?=
- =?utf-8?B?RmV4UytMYjJZSjZzVzNNVElFRlJmZXdNZ2s1NzNySGl2YzI4N1RLV0dEbXRz?=
- =?utf-8?B?NEE1SjdLaXpFQWdkRnFraDVzY0lISEpCRFVWT05oclQ2b0E3SWRWOWhoUUlE?=
- =?utf-8?B?anFOWC9ORWppejhIdThHK3dmclJQZWMyQVhGL0k0RDl5U0NlRk0zUExYVTFQ?=
- =?utf-8?B?ZVMxNHQ4cnRZWWNIdzIrUjlGM0FEVXNqZkVzY2lobU83MitoNk9JTTNiNys0?=
- =?utf-8?B?R212MTducGhwbm84Ry9kVkxtYlpuTi9QeTE2d2k2QlVpYjQ1VTZMS3lhMGVy?=
- =?utf-8?B?OTRQK2QrcUdiZkRLRWd2WHF1MnVJYU1XYzBvMFFzYTBWOVI4cUlLbzBxTGEx?=
- =?utf-8?B?V1R4Q0tVbFc3WWEyb1BGckw4Um1iaVJ0Qm1YWEZCTUdRaU9DR3FhdTJrSlVG?=
- =?utf-8?B?SzJBQ1R1K05TMFZETUFQdFd2Ylg0UVIxWldBRXRneEMwVVpKTC92eUhtR3hX?=
- =?utf-8?B?bFhWLzd0c3J3RzF4L3ZGVUJYSGcybDlTcW9xb0lXdUtoVU1sMnMrL2dTL0E1?=
- =?utf-8?B?d3BlYmRRcklVQTcxUG5SK0p5RjZYdzR2dE02OHM4dU02QnJ6TTRub0J3b0tB?=
- =?utf-8?B?bjhCSnNtWUg3S2RGWnZEbUJ0dnRCVHcvUkhrSGM3anVlRkNMbDIrcXR4dXFa?=
- =?utf-8?B?bDhNNFNodk9jWlhGZ3FYMEhjZVp3bnJWWmVTUDNTR1NzbnRQVGNCcEJxUGU1?=
- =?utf-8?B?bWdNZXUraTNBbG9JRVFVV0xHbEp1cDFuZENoVjdTamU4ekZOSG5nUXpJK3Yz?=
- =?utf-8?B?VkpkcjhjbHpFUG16SDVXRU1pejFxMEppcmtYRzBIQldvSmhtQ3VBNXRGVVNV?=
- =?utf-8?B?Ti9vNHE2TlB6VHNCdXovK2VLNDdTZ05WRXF1T1lSWVdrdWhveWhMbTlnS0xK?=
- =?utf-8?B?K2J6VGxaWmRxd3lIYzRzdXc1RmY1ZkpxaHRIaytmcm5lWHZwOEJCdDNvVC9H?=
- =?utf-8?B?UndxYmdxY1J1OWxpaHZpeUt2YVoxMGpSQUpmaTUvdHZoQmowTFpENjNlRmRS?=
- =?utf-8?B?bFFQWjB4TWlaRU10cnZlVlpvMXNJblRxakttM21LUFowbHpHNmo4ZFVhdWZz?=
- =?utf-8?B?OVRUR21tVGlKSXZOZzBXREc0bGlnNVpLNDJGazhmRHlDcGVwbmc3WHVoOGhI?=
- =?utf-8?B?RmFrNlNvL20xZkVTbi95RCtMdTQzR2RVOTI3bG50TVdyeXg1NTNSZTB2bjVW?=
- =?utf-8?B?TlhnTHVnMUxucU4yWXR6WkFKSCtLR2V5eW5kcVNQUU5iS2k3RTU5eFF0Yk9p?=
- =?utf-8?B?QUtUQ2t0R3RUcjUvWGN6RUFSaVNHV3ZFdzdtZmF0MUs0UnpoTmxWY1I3Nkc2?=
- =?utf-8?Q?YrmyJ9eC40pVoSNDSCz00vFcewOPGB0bZOkr/Pa?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TktCUlVMTHovNmNwcnhTUERxU1JSK1Rjd1h1UWRYRjdlM1lESlBJdndHOVY5?=
+ =?utf-8?B?Q2NyTDFqZUNPNW85MFYzbGdFemZwdkQ3RHNWNkxkSzZlTEZyWkpMbEtseFA0?=
+ =?utf-8?B?ZGxlVjRHS0h4eXovb2lVd2l3V0F1c1hycHRaa1d4MGRlNkhkOXplSEh3TzBF?=
+ =?utf-8?B?LzRRT2l1VnVadXhlbkV3WUtRUkdXQnRIWkNMN0gwamIrRU1PaDNPUjQrN0Ja?=
+ =?utf-8?B?bEsxNXN2b1NvTTJJcWU2MloxK1ZSbjYrRlNzL1MvU3VtWUhTdHVQZTN5S3Az?=
+ =?utf-8?B?QzdlSFhCZWd3M0hNcnlrRFMxN0ZXa3VlYmo3S1pSem5aZEF0ZDVqeTcyTkxQ?=
+ =?utf-8?B?NXlRNGNtblI0U3BNSFd4S0xXc2VTd1NlRDVKdWN1UllYTjZmcG1QZk8wVS9M?=
+ =?utf-8?B?UzJZem5rb3JhS1pUcHVqYmRqOEQ4MUFJZllCZnFRcmowSU90alJTVUJTTlZn?=
+ =?utf-8?B?NXlremRiWGx1K3V6OTBRMXd2aFgxM3ZQZjIreHlIUTlkRkpIMDA0WXMwNVN0?=
+ =?utf-8?B?Qlp5bWIyRnNKSUU5cUl1TVh0ZzZtMUl2OTVvb2MvU2xiZ0Rob0RXV2tQL2hN?=
+ =?utf-8?B?U3VIdDl5VVB3d3VwNzJPSTgvVTBTQzIwQWtJQUZMdGRqSGlRZEZBcmJrQnM5?=
+ =?utf-8?B?M0lWeTRLM203ejlVMnFVdlFENVlNcGRocmhZeStUTXltUUlsdjRMM2tlRkEr?=
+ =?utf-8?B?WHBNRnJwb2Ixd0FRclVWcWpmZ1hKcGtYWFV5eGw5VjM0RHByMUxJOXVMYWs2?=
+ =?utf-8?B?bDQrUGs2K0MvOEFwY21PU001bkpadGRBOGF0VHdUbmNtSngvTy8weGdpTUs2?=
+ =?utf-8?B?QXp1dWlMaTlYUEJUeDlhNkI0bzJHbHlleGR6TldBTEp2SzBSdnZXYno5b2RX?=
+ =?utf-8?B?WCt5c0dra2JRUWoyZVFXZUN1bDVOQ3RRb3RwYndsMVdvN0xvaFdVVkZMMkl0?=
+ =?utf-8?B?SVIvNm1lWmZIdEZxdTd0em0ySTducWNrVnpKbFRRdEFWY1pIdDhITmZFWU1Q?=
+ =?utf-8?B?V0ZRTHl6UDBxaE1FOTdqVXkzT2NBU1JPbGdPdVovWVBWQm5VejZIdWZKVG9W?=
+ =?utf-8?B?dHRLallXM1dHY0M1b2dZNnh1aW91ZzQvZVQyMEFUeTdaaGZnM1VMSkdjR1pB?=
+ =?utf-8?B?eDlPM1EzT0g3aGF0dGZGZWFlR0Qybk5GVFNvZGVtUmpzUDJaZks4cFRSK1I1?=
+ =?utf-8?B?cHYxVWFEcWpxT29VUmMxZ1gxcyt3SytyV1FJaER6ckcvTFphb0dRZ3pnaWRt?=
+ =?utf-8?B?QzBrWmlrdjZ1Q2hVd2Z2TktWMnVITUJvT1JoVnhid0hhNEJpNVkwTWl2bU1H?=
+ =?utf-8?B?OEpRNkUzaXN4WTE2c2laSmFaWEszUXcwY2hOSXZRR0k1bVF2b1IwUnN4VXd3?=
+ =?utf-8?B?TitSZW9BQzNhZkRVY2V4a0FBOGlndFU3aU1VZERSWUtFTnhhMzdQbGQrWWdj?=
+ =?utf-8?B?Zm1nZXBkWlVqM3VQSDJVNmY1MDlQMnhBWlVCSHl6aW9idjUvQXdDVGVhV2p4?=
+ =?utf-8?B?R2JFUjFlTUNJcjdVaHpyd3AzTGxqWVMvMzd2R1RNRlhWWkNsU1BYM2JudHBB?=
+ =?utf-8?B?d3puMnpYSzNzdXhLRDFoTkFGWUlSUzZmQ1JTbjQ0RFdCL1NycmdqRCtSWXNt?=
+ =?utf-8?B?bGJiRGtGUG5BZW0vSXVDSU9kNVk3SFZJbkRYdFc2RFFBVEZzeVJPc1dLUGlK?=
+ =?utf-8?B?N1B1Sm5nRTNnTmQ1UWl2dE1JaklvVGkvKzY0M0hQYlA1Q1MxOW85RUtNdjJr?=
+ =?utf-8?Q?zgprbwhv0F+AGBLNgRyjdsrpSVCQL1I6yPB99dk?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40068fd9-7cab-44ac-bb4d-08d94b8be99f
+X-MS-Exchange-CrossTenant-Network-Message-Id: eed7d445-ca15-452d-8aec-08d94b912fdc
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2021 14:37:34.4421
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2021 15:15:19.7807
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Zs+QjrXg6Im9cAn5s1YOTWyCiqGpNhQhYcOnK/gGtLW6iK4Sql0W46mwICrrtlh+K/pxsbDSNFzvtrzBaw+meQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
+X-MS-Exchange-CrossTenant-UserPrincipalName: yOJWzogUwb3x2Jr0DcuWXwk8tm7R+PWjcPKt8yGLpX37pycvJmYx7EdlDiXZInH/STGHFp+3AOkN61oSvSGzxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4592
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
 
-On 7/19/21 5:50 PM, Sean Christopherson wrote:
-...
-> 
-> IIUC, this snippet in the spec means KVM can't restrict what requests are made
-> by the guests.  If so, that makes it difficult to detect/ratelimit a misbehaving
-> guest, and also limits our options if there are firmware issues (hopefully there
-> aren't).  E.g. ratelimiting a guest after KVM has explicitly requested it to
-> migrate is not exactly desirable.
+On 7/19/21 6:30 PM, Sean Christopherson wrote:
+...>
+> NAK on converting RMP entries in response to guest accesses.  Corrupting guest
+> data (due to dropping the "validated" flag) on a rogue/incorrect guest emulation
+> request or misconfigured PV feature is double ungood.  The potential kernel panic
+> below isn't much better.
 > 
 
-The guest message page contains a message header followed by the 
-encrypted payload. So, technically KVM can peek into the message header 
-format to determine the message request type. If needed, we can 
-ratelimit based on the message type.
+I also debated myself whether its okay to transition the page state to 
+shared to complete the write operation. I am good with removing the 
+converting RMP entries from the patch, and that will also remove the 
+kernel panic code.
 
-In the current series we don't support migration etc so I decided to 
-ratelimit unconditionally.
 
-...
+> And I also don't think we need this heavyweight flow for user access, e.g.
+> __copy_to_user(), just eat the RMP violation #PF like all other #PFs and exit
+> to userspace with -EFAULT.
+>
+
+Yes, we could improve the __copy_to_user() to eat the RMP violation. I 
+was tempted to go on that path but struggled to find a strong reason for 
+it and was not sure if that accepted. I can add that support in next rev.
+
+
+
+> kvm_vcpu_map() and friends might need the manual lookup, at least initially, 
+
+Yes, the enhancement to the __copy_to_user() does not solve this problem 
+and for it we need to do the manually lookup.
+
+
+but
+> in an ideal world that would be naturally handled by gup(), e.g. by unmapping
+> guest private memory or whatever approach TDX ends up employing to avoid #MCs.
+
 > 
->> Now that KVM supports all the VMGEXIT NAEs required for the base SEV-SNP
->> feature, set the hypervisor feature to advertise it.
-> 
-> It would helpful if this changelog listed the Guest Requests that are required
-> for "base" SNP, e.g. to provide some insight as to why we care about guest
-> requests.
-> 
-
-Sure, I'll add more.
-
-
->>   static int snp_bind_asid(struct kvm *kvm, int *error)
->> @@ -1618,6 +1631,12 @@ static int snp_launch_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->>   	if (rc)
->>   		goto e_free_context;
->>   
->> +	/* Used for rate limiting SNP guest message request, use the default settings */
->> +	ratelimit_default_init(&sev->snp_guest_msg_rs);
-> 
-> Is this exposed to userspace in any way?  This feels very much like a knob that
-> needs to be configurable per-VM.
-> 
-
-It's not exposed to the userspace and I am not sure if userspace care 
-about this knob.
-
-
-> Also, what are the estimated latencies of a guest request?  If the worst case
-> latency is >200ms, a default ratelimit frequency of 5hz isn't going to do a whole
-> lot.
-> 
-
-The latency will depend on what else is going in the system at the time 
-the request comes to the hypervisor. Access to the PSP is serialized so 
-other parallel PSP command execution will contribute to the latency.
-
-...
->> +
->> +	if (!__ratelimit(&sev->snp_guest_msg_rs)) {
->> +		pr_info_ratelimited("svm: too many guest message requests\n");
->> +		rc = -EAGAIN;
-> 
-> What guarantee do we have that the guest actually understands -EAGAIN?  Ditto
-> for -EINVAL returned by snp_build_guest_buf().  AFAICT, our options are to return
-> one of the error codes defined in "Table 95. Status Codes for SNP_GUEST_REQUEST"
-> of the firmware ABI, kill the guest, or ratelimit the guest without returning
-> control to the guest.
-> 
-
-Yes, let me look into passing one of the status code defined in the spec.
-
->> +		goto e_fail;
+>> +	 */
+>> +	if (rmpentry_assigned(e)) {
+>> +		pr_err("SEV-SNP: write to guest private gfn %llx\n", gfn);
+>> +		rc = snp_make_page_shared(kvm_get_vcpu(kvm, 0),
+>> +				gfn << PAGE_SHIFT, pfn, PG_LEVEL_4K);
+>> +		BUG_ON(rc != 0);
 >> +	}
->> +
->> +	rc = snp_build_guest_buf(svm, &data, req_gpa, resp_gpa);
->> +	if (rc)
->> +		goto e_fail;
->> +
->> +	sev = &to_kvm_svm(kvm)->sev_info;
->> +
->> +	mutex_lock(&kvm->lock);
+>> +}
 > 
-> Question on the VMPCK sequences.  The firmware ABI says:
+> ...
 > 
->     Each guest has four VMPCKs ... Each message contains a sequence number per
->     VMPCK. The sequence number is incremented with each message sent. Messages
->     sent by the guest to the firmware and by the firmware to the guest must be
->     delivered in order. If not, the firmware will reject subsequent messages ...
+>> +void kvm_arch_write_gfn_begin(struct kvm *kvm, struct kvm_memory_slot *slot, gfn_t gfn)
+>> +{
+>> +	update_gfn_track(slot, gfn, KVM_PAGE_TRACK_WRITE, 1);
 > 
-> Does that mean there are four independent sequences, i.e. four streams the guest
-> can use "concurrently", or does it mean the overall freshess/integrity check is
-> composed from four VMPCK sequences, all of which must be correct for the message
-> to be valid?
+> Tracking only writes isn't correct, as KVM reads to guest private memory will
+> return garbage.  Pulling the rug out from under KVM reads won't fail as
+> spectacularly as writes (at least not right away), but they'll still fail.  I'm
+> actually ok reading garbage if the guest screws up, but KVM needs consistent
+> semantics.
 > 
-
-There are four independent sequence counter and in theory guest can use 
-them concurrently. But the access to the PSP must be serialized. 
-Currently, the guest driver uses the VMPCK0 key to communicate with the PSP.
-
-
-> If it's the latter, then a traditional mutex isn't really necessary because the
-> guest must implement its own serialization, e.g. it's own mutex or whatever, to
-> ensure there is at most one request in-flight at any given time.  
-
-The guest driver uses the its own serialization to ensure that there is 
-*exactly* one request in-flight.
-
-The mutex used here is to protect the KVM's internal firmware response 
-buffer.
-
-
-And on the KVM
-> side it means KVM can simpy reject requests if there is already an in-flight
-> request.  It might also give us more/better options for ratelimiting?
+> Good news is that per-gfn tracking is probably overkill anyways.  As mentioned
+> above, user access don't need extra magic, they either fail or they don't.
+> 
+> For kvm_vcpu_map(), one thought would be to add a "short-term" map variant that
+> is not allowed to be retained across VM-Entry, and then use e.g. SRCU to block
+> PSC requests until there are no consumers.
 > 
 
-I don't think we should be running into this scenario unless there is a 
-bug in the guest kernel. The guest kernel support and CCP driver both 
-ensure that request to the PSP is serialized.
-
-In normal operation we may see 1 to 2 quest requests for the entire 
-guest lifetime. I am thinking first request maybe for the attestation 
-report and second maybe to derive keys etc. It may change slightly when 
-we add the migration command; I have not looked into a great detail yet.
+Sounds good to me, i will add the support in the next rev.
 
 thanks
