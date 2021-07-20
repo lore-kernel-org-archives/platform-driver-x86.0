@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D683C636C9
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 22:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B65C636C8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 22:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8AB961019
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 22:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 866F261004
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 20 Jul 2021 22:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbhGTVZx (ORCPT
+        id S231543AbhGTV3J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 20 Jul 2021 17:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32974 "EHLO
+        Tue, 20 Jul 2021 17:29:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbhGTVZx (ORCPT
+        with ESMTP id S231445AbhGTV3C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 20 Jul 2021 17:25:53 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6432CC061574
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jul 2021 15:06:29 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id jx7-20020a17090b46c7b02901757deaf2c8so492823pjb.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jul 2021 15:06:29 -0700 (PDT)
+        Tue, 20 Jul 2021 17:29:02 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE498C0613DC
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jul 2021 15:09:33 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id q10so671181pfj.12
+        for <platform-driver-x86@vger.kernel.org>; Tue, 20 Jul 2021 15:09:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BB0NGsGv3epWhxiQYCc03cLFHcDOFlK36/5xOhr9iGo=;
-        b=G60QHWuyRH6eWtLou5HaWRxEN7Yq6nKV9T1iAIqyAq6fVrq1WWQgHIEV53g1ohgNc9
-         EQohQSGMoRnwcSERx2WtsFUY2oBHP2L7o6RLWdjM/8DnxS/jS2gR62e2ZdzQzsD/Cfqi
-         t26NKDlXSIHcL8jfXQ4F7qrg5pPOvQuoI2mBqA5sqIxf4jaH3gQ080WBkK8r5zzKZj6Q
-         G/9z8dSeMgvga8DzcwvEltKCTyVWefclmiDtlzTovNTWLqmL4Y7wltkF8n7JL2lbJV27
-         Rqq2Y/zqOcIZ3UnQEC1ynwVVGlNk1MtMr3wIXyYacV1olaGdhCMiOjk/TQIOvra62SgO
-         XgXg==
+         :content-disposition:in-reply-to;
+        bh=g1KpDtcbagCdJ8ZcB9ERipK82kYWQJWAaZ7siOAOkMw=;
+        b=iC5/q3Dl6pQ0rDuXXIFsUAbTTQ6Y1iAmt2YRVwiDFilqazfKQ9eEEPIayC2+XoUaT9
+         usur5pgbsW0fNlZwnXjGODqmC21M5aICjnd0qHR+a8GO8IcdohO4/jlCmYaIlbW9IpQ/
+         9icYBfvLFjmRAGsIv2RA8ekw4kWlpmiVwY66u3OydYL7Z53+N5wZpVGiQAecWFBlLpLe
+         sL9R9oq4gKRFUvlIZCwk423cdnRZmAN89qaHYNxWqXrQ1h70ThRegG+2GEW+VV4D7E6W
+         We1DWyHavLAYbXFybe4gmSLh43r2YhL50quM4zqfHfvjJeqPygE3Sbq/iA1L8bSDsgIo
+         MW0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BB0NGsGv3epWhxiQYCc03cLFHcDOFlK36/5xOhr9iGo=;
-        b=NG0JH5gFNOWXqyNL1SQuPX0uHRcAn85ZaqdrZjeCse9rCeEra83Za9pbG362Uc1bcD
-         r4zbiY4GQjwx1nqJTs/Or3BLrfHqAmh+6W65YrBFG34A3N1GTOu97M3PkChn7fNkQAM3
-         EA/wZI0tjJbzdz3VYosXkgTCScTMk324pH/Y7OC7u6TDW8HzdiAyJ5d/BUqOAOeQ7edO
-         Uux9ze271JxtmSneW33Q/sOccvfJwGK6eoBAb+koBoQuhhXHmZ1snIHuCzezqrJmA4cU
-         rUBSgPtrKNOl/dPpt13iYfdKmu4B+BqiDOxl4IyCvnUD2CkaVxXUqv4l0z8b241p+9b7
-         ZGJA==
-X-Gm-Message-State: AOAM533bRMhbb7JDVPTDxcljuAXap7DhGMsVpwnRoHim4+0kqjt/5hAn
-        DgEYZ9eihohIZTmDkaND91TKz1Yc11BXGA==
-X-Google-Smtp-Source: ABdhPJwDD9+zuJ6DYICNGOinctEj1Edxq+hD2yj+AdZXjLWVr+ao/12i42Q3S8W5xw+1pKf5QwmK4Q==
-X-Received: by 2002:a17:90a:4295:: with SMTP id p21mr30863822pjg.149.1626818788641;
-        Tue, 20 Jul 2021 15:06:28 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=g1KpDtcbagCdJ8ZcB9ERipK82kYWQJWAaZ7siOAOkMw=;
+        b=in48pRBzCirhb0yGyIp955yoAxymtJZWVfJoJN74HHLe6GQj+7Vw5rv6RORzTZAWQV
+         agQosVJ0C1T8JC8u1pwd50UqyeFkWPDedwaO7ZcGcXxQoXI3SejphzQtMos/vgzICn3w
+         oqWAw2bIScw4jDz+8KeDi1cYy7bmQf1Qs2apsZxUbfXEIpto1THZeIJzzEyb8WHtB/SY
+         EQCxowHwCy0ouRXRf7+sCRE9k9iyqzsdmNFpRqul/xt+KfHbIcfc0y2zyDNZoltiQVpt
+         MivZEplU5IBJkzX4W+L9aled4t0gyLzlgtnYlBWzOcERvD9f0fWJ4w2bzM7XTJ0kSX7L
+         qTvQ==
+X-Gm-Message-State: AOAM533am4koQZki9nY5fDZQNCifZNxZMfx3E/SpYCrGK80Mwl1f9aAv
+        2FXwMfSiNyLhX/KB0gh6L8fo1w==
+X-Google-Smtp-Source: ABdhPJx8WtrWjs7nIJb96K+K/6fJyf4kxrPOkag79GDpR0/USJYJ5ph8uncx7oovExjawasHg85EEw==
+X-Received: by 2002:a63:5059:: with SMTP id q25mr32834341pgl.9.1626818972887;
+        Tue, 20 Jul 2021 15:09:32 -0700 (PDT)
 Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id w184sm419793pfw.85.2021.07.20.15.06.27
+        by smtp.gmail.com with ESMTPSA id p5sm24369675pfn.46.2021.07.20.15.09.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jul 2021 15:06:27 -0700 (PDT)
-Date:   Tue, 20 Jul 2021 22:06:24 +0000
+        Tue, 20 Jul 2021 15:09:32 -0700 (PDT)
+Date:   Tue, 20 Jul 2021 22:09:28 +0000
 From:   Sean Christopherson <seanjc@google.com>
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -84,90 +83,35 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Michael Roth <michael.roth@amd.com>,
         Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
         npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part2 RFC v4 05/40] x86/sev: Add RMP entry lookup helpers
-Message-ID: <YPdI4JLrJJdPxy7e@google.com>
+Subject: Re: [PATCH Part2 RFC v4 38/40] KVM: SVM: Provide support for
+ SNP_GUEST_REQUEST NAE event
+Message-ID: <YPdJmKXhXKOZdlld@google.com>
 References: <20210707183616.5620-1-brijesh.singh@amd.com>
- <20210707183616.5620-6-brijesh.singh@amd.com>
- <YPCAZaROOHNskGlO@google.com>
- <437a5230-64fc-64ab-9378-612c34e1b641@amd.com>
- <39be0f79-e8e4-fd4a-5c4a-47731c61740d@amd.com>
+ <20210707183616.5620-39-brijesh.singh@amd.com>
+ <YPYBmlCuERUIO5+M@google.com>
+ <68ea014c-51bc-6ed4-a77e-dd7ce1a09aaf@amd.com>
+ <YPb5yfKEyJjvDbOl@google.com>
+ <0641fdec-48a0-b3b7-9926-3ce5a6e53eb0@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <39be0f79-e8e4-fd4a-5c4a-47731c61740d@amd.com>
+In-Reply-To: <0641fdec-48a0-b3b7-9926-3ce5a6e53eb0@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Jul 16, 2021, Brijesh Singh wrote:
+On Tue, Jul 20, 2021, Brijesh Singh wrote:
 > 
-> On 7/15/21 2:28 PM, Brijesh Singh wrote:
-> >> Looking at the future patches, dump_rmpentry() is the only power user,
-> >> e.g.  everything else mostly looks at "assigned" and "level" (and one
-> >> ratelimited warn on "validated" in snp_make_page_shared(), but I suspect
-> >> that particular check can and should be dropped).
-> >
-> > Yes, we need "assigned" and "level" and other entries are mainly for
-> > the debug purposes.
-> >
-> For the debug purposes, we would like to dump additional RMP entries. If
-> we go with your proposed function then how do we get those information
-> in the dump_rmpentry()?
+> On 7/20/21 11:28 AM, Sean Christopherson wrote:
+> > Out of curiosity, why 4 VMPCKs?  It seems completely arbitrary.
+> > 
+> 
+> I believe the thought process was by providing 4 keys it can provide
+> flexibility for each VMPL levels to use a different keys (if they wish). The
+> firmware does not care about the vmpl level during the guest request
+> handling, it just want to know which key is used for encrypting the payload
+> so that he can decrypt and provide the  response for it.
 
-As suggested below, move dump_rmpentry() into sev.c so that it can use the
-microarchitectural version.  For debug, I'm pretty that's what we'll want anyways,
-e.g. dump the raw value along with the meaning of various bits.
+Ah, I forgot about VMPLs.  That makes sense.
 
-> How about if we provide two functions; the first
-> function provides architectural format and second provides the raw
-> values which can be used by the dump_rmpentry() helper.
-> 
-> struct rmpentry *snp_lookup_rmpentry(unsigned long paddr, int *level);
-> 
-> The 'struct rmpentry' uses the format defined in APM Table 15-36.
-> 
-> struct _rmpentry *_snp_lookup_rmpentry(unsigned long paddr, int *level);
-> 
-> The 'struct _rmpentry' will use include the PPR definition (basically
-> what we have today in this patch).
-> 
-> Thoughts ?
-
-Why define an architectural "struct rmpentry"?  IIUC, there isn't a true
-architectural RMP entry; the APM defines architectural fields but doesn't define
-a layout.  Functionally, making up our own struct isn't a problem, I just don't
-see the point since all use cases only care about Assigned and Page-Size, and
-we can do them a favor by translating Page-Size to X86_PG_LEVEL.
-
-> >> /*
-> >>   * Returns 1 if the RMP entry is assigned, 0 if it exists but is not
-> >>   * assigned, and -errno if there is no corresponding RMP entry.
-> >>   */
-> >> int snp_lookup_rmpentry(struct page *page, int *level)
-> >> {
-> >>     unsigned long phys = page_to_pfn(page) << PAGE_SHIFT;
-> >>     struct rmpentry *entry, *large_entry;
-> >>     unsigned long vaddr;
-> >>
-> >>     if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-> >>         return -ENXIO;
-> >>
-> >>     vaddr = rmptable_start + rmptable_page_offset(phys);
-> >>     if (unlikely(vaddr > rmptable_end))
-> >>         return -EXNIO;
-> >>
-> >>     entry = (struct rmpentry *)vaddr;
-> >>
-> >>     /* Read a large RMP entry to get the correct page level used in
-> >> RMP entry. */
-> >>     vaddr = rmptable_start + rmptable_page_offset(phys & PMD_MASK);
-> >>     large_entry = (struct rmpentry *)vaddr;
-> >>     *level = RMP_TO_X86_PG_LEVEL(rmpentry_pagesize(large_entry));
-> >>
-> >>     return !!entry->assigned;
-> >> }
-> >>
-> >>
-> >> And then move dump_rmpentry() (or add a helper) in sev.c so that "struct
-> >> rmpentry" can be declared in sev.c.
+Thanks!
