@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C96DC07E9B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCF1C636CA
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 09:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FF66120A
+	by mail.kernel.org (Postfix) with ESMTP id DD3AC611CE
 	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 09:27:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235407AbhGUIqE (ORCPT
+        id S236692AbhGUIp6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jul 2021 04:46:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        Wed, 21 Jul 2021 04:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236428AbhGUIgi (ORCPT
+        id S237190AbhGUIdl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jul 2021 04:36:38 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id D71666120C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 09:17:10 +0000 (UTC)
+        Wed, 21 Jul 2021 04:33:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id F335E611CE
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 09:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626859030;
-        bh=W8WxmgYHVYmisiKCAsEm1xTd25oO13CdG3JGVnzewKQ=;
+        s=k20201202; t=1626858851;
+        bh=TSsDJq0qd75/TgtlDhSs1DMrwev/jA3UibNn4kfIK+I=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=jgPP7+OVBrN7jIJfLfWAF0atFXGlrW3B4kQxQkCFvTaS1j7T2VB+MaMWzdbNhuLIv
-         k6DLvRlxBzWpaY8P/XZUaVwH/FlQ9Rd/7HlX7Td+UAqT9Egwc0XOBkYNctlouCNF5K
-         7qb0YuCObVdyNWphIK8cQxh8MnTVTST8eYZXTIFsCZ4CULtE08Zg8vi8c3ar2Z5Wxt
-         YkmxuPys/DjUnr/THIBgzIqNVjeqlornl9PsCjToBr3LMdsc0F5a3qMAwgmUJiAYVK
-         9osNZKzQ+xpP7lv8WoAdsPzZX98pu1Wbhnrw6sN9kzIxVkHZdtlJDU7uIIS+w+hw90
-         SRUB2Z12owKjw==
+        b=R03V0a9rNk1fs6tw2gyxdK8CSPXuKXnf5pt+J70+gcLqFu+yNxwveWlnFRiA5p/5H
+         zcZ+sVPzkjLf63QPAgmeSl/1sXybHCA8LkJTBFFb2pXP83ERRbnjxJ0fdLpLx2TAs2
+         rboyKlNs5c7qLUmjCahD3LrD3wvvjq5bYkE9DWlk0iy/jZSyPJ84QCVqpl2H+lQrSF
+         ddAnjDyx+Fl6CFDjJXCwXBZyaKMp6JTI6sjWL70XswsYcBywPi7920agL3Kam3aGN5
+         ftmNNMegE/tu61rEXr9I5A7UM8HWGCQCx05Qz8Abi79Pbu8rbsU8v2gOlUWu0NDyf4
+         b3120yL7OFBFw==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Wed, 21 Jul 2021 09:17:10 +0000
+Date:   Wed, 21 Jul 2021 09:14:10 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -52,7 +52,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-QLoAZ5ZVsX@https.bugzilla.kernel.org/>
+Message-ID: <bug-213579-215701-ipMqIIoTO4@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,20 +66,14 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
---- Comment #16 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-(In reply to Riccardo Mori from comment #14)
-> This isn't an issue related only to Clevo laptop though, see the dmesg lo=
-gs
-> for this MSI with AMI BIOS https://linux-hardware.org/?probe=3D3f205f2881
->=20
-> I can also confirm that it works on Windows, can we get at least a
-> workaround?
+--- Comment #15 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+(In reply to Rod Thomas from comment #13)
+> Are we doomed if no BIOS update is available or can this be worked around?
+If it will be evident that there is no driver bug (see above mentioned bug
+#213463 comment #9 for the details), then yes. OS may not affect this in any
+way on any of the levels of the access available.
 
-If there is no bug in the GPIO driver, from its perspective there is nothin=
-g we
-can do. Period.
-
-Perhaps it's possible to work around via I=C2=B2C HID driver or so.
+Mark, any comment from Lenovo?
 
 --=20
 You may reply to this email to add a comment.
