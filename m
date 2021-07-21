@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2C4C12002
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A9CC6377B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 18:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A84C60E0C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214BE61222
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 18:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbhGURSp (ORCPT
+        id S238815AbhGURoF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jul 2021 13:18:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        Wed, 21 Jul 2021 13:44:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229948AbhGURSp (ORCPT
+        id S236157AbhGURoD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jul 2021 13:18:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id DCF9760E0C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 17:59:21 +0000 (UTC)
+        Wed, 21 Jul 2021 13:44:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0D05061208
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 18:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626890361;
-        bh=SRnQYMSIY0nymk+sUH1yx0tlrFAakne4n7W4r50h/pc=;
+        s=k20201202; t=1626891880;
+        bh=LV9kX8eGipgMm8pw9uV3H0hARImzJUCxXtA0ZJW513M=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KDJML6bppt0VpBsQwfL/utzuo6Fa/lEhFw2rUrIpTz3qCrjWgPY1/aTWjpjpySkrA
-         g34E5aeJgT1BpuoL0WuIqyVSFGTyiyzDSIATtPQvEM9f1UpA0kYasyvVFN4B2cAL+M
-         +0P/wpyoqkSoGMAmT73Evb1WIEVVOFzgvE9IsscqY4vNRu/j5QYRAmlNzCJ8jpJokD
-         eodgiqFO7Kh6o5vpWsgiHvbZ7uOMIk72QMB3daUPcw2C6kaXAnjvukGGe93G6CDz6z
-         8kmvHdhEv0jf3nA3HKp5xN0qopQhRGpRijGNkW5cX9Bw6eOs+3IS5ZtPCnfndUZT+p
-         RVwW2W6graW3g==
+        b=dm3Btjr+k5N/Ms7x38tDMtcw+d1Tje+/kduKWzM4Cp/HFbW0uH5bpMnuNosSmJA5w
+         COEeogz8YeI1B3heh7Gxxlm8ai0KnpGGFUUirkJdWy4s+M7WvwAZHumi61H1lNnHTz
+         hROi8O0FnIAAmypS5w9NmiXRXKm1ySNKpgF4iyKX3mu5xlsHGN63zL5y5n9egWbq96
+         o4ikK/Xn/+IafDbxrB8GoXhZ67sRFxR3um551/fxGxOYDVyrBzLd5URcLQ6dXbVofJ
+         UOVRhfxc8qNIU+V4UspdvL5kOROsgNKiTXVYFVQPxnQZsNcCleMr6+6fQ6OdTd/57E
+         dw6yT8tdqJ36w==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Wed, 21 Jul 2021 17:59:21 +0000
+Date:   Wed, 21 Jul 2021 18:24:39 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -51,8 +51,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-JMRQAsEqKA@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: attachments.created
+Message-ID: <bug-213579-215701-WDn8Qgmuhj@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,8 +66,12 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
---- Comment #30 from Riccardo Mori (patacca@autistici.org) ---
-I am going to test it soon
+--- Comment #31 from Riccardo Mori (patacca@autistici.org) ---
+Created attachment 297989
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D297989&action=3Dedit
+dmesg
+
+Unfortunately even after the hack it is still trying to use pin 57
 
 --=20
 You may reply to this email to add a comment.
