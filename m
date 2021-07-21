@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BF6C07E9B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 07:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BFBC12002
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 09:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A744F606A5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 07:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CFE6113C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 09:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235171AbhGUGxR (ORCPT
+        id S235987AbhGUIVv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jul 2021 02:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        Wed, 21 Jul 2021 04:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235061AbhGUGxN (ORCPT
+        id S236719AbhGUILy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jul 2021 02:53:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7B9BF6113C
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 07:33:40 +0000 (UTC)
+        Wed, 21 Jul 2021 04:11:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0718D6120A
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 08:52:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626852820;
-        bh=YhfOH2VaDcpPJkX4gszeP22U7jPhEI/w2nyiqNgzaj8=;
+        s=k20201202; t=1626857551;
+        bh=6a9mFdK3tFXSCXnKi+HvsAEcIHcLVMUNk+tkEyy3Ek0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=tq5G/DBg4Lg/VAzlzIxf/W/wDBXlQwdJeaS2AkKqAgYtH0Q1p+2KsqRtxNEnZMSkj
-         qYRSOA2YIjuWu00sWvEekFBl44D+xnDaxTqewuFbodgm4lgls05zErRxKeznYQ7QuV
-         BrDs6drecYUCQoGCD2goSeJBLC8JBWq2hFnxtoy7+OLpSH7Zd5LfoXCs/1mAjoFrZo
-         fgExB6aGOXLcI65bd9VWyHhulGNLj6u+UP754C/Rmr8uV4Y10KALSakTGrGLlGdka+
-         Pe3hz3A4hjl8nzxwAA/B/H1XNz8sznULZ7JCfh6wxoCbpAXVpoKnUDSglVpBFNPUym
-         y3EfZ3bMsI4WQ==
+        b=WrUfB8Yobt/aJhcuP0i9d9BK84OBP9HEHxMJ8oj/wLAn/55l0uq7okRcGPattQJ6K
+         igOVU0EpCvkN1h6s4coFrkF5Fd79FyklERWU5A6e2bn5XSy1tcCEn7u2/JWDG2PdtA
+         HiVgAommS+6Ge9YhecNhDzTmYYQWDJ+c7cXHhP+IR2HU4mpcjReWlYUDBt8LCgfpch
+         kQFDt//b/D8uPyuIX3dg2pJE6/pOMjQy8tnkQXyM5zDVswU8iNjm57utbAuSjh2dLA
+         0iPK+woWIUeIF4RndUk7njRZdvKfkQjjxKE9QlV0C0BJ6pYzpy5q2kLMXUdcwKmFV6
+         hiQOZ9+yjYl7Q==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Wed, 21 Jul 2021 07:33:40 +0000
+Date:   Wed, 21 Jul 2021 08:52:30 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
+X-Bugzilla-Who: rod.thomas@talktalk.net
 X-Bugzilla-Status: NEEDINFO
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_status cc
-Message-ID: <bug-213579-215701-zS5v5BMwkv@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-213579-215701-2wEMbg6bI6@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,41 +66,38 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
-Andy Shevchenko (andy.shevchenko@gmail.com) changed:
+Rod Thomas (rod.thomas@talktalk.net) changed:
 
            What    |Removed                     |Added
 ----------------------------------------------------------------------------
-             Status|NEW                         |NEEDINFO
-                 CC|                            |markpearson@lenovo.com
+                 CC|                            |rod.thomas@talktalk.net
 
---- Comment #11 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-In both cases it's about this pin
+--- Comment #12 from Rod Thomas (rod.thomas@talktalk.net) ---
+Also seen on Clevo NH77HJ
 
-pin 57 (SLP_S0B) 44:INT34C6:00 mode 1 0x44000700 0x00000051 0x00000000 [LOC=
-KED
-full, ACPI]
-
-The 'ACPI' marker makes it impossible to the driver to use as IRQ and on to=
-p of
-that the pin is in a wrong mode and locked which makes impossible to do
-anything about this on the driver side. There are few possibilities of the =
-root
-cause of this (Cc'ed also to Mark from Lenovo):
-1. Bug in firmware:
-  a) wrong pin number;
-  b) wrong pin configuration;
-  c) wrong ASL code that makes 1a) to happen;
-  d) combination of aboves.
-2. Bug in the driver. The only possibility so far is the broken offsets for
-LOCK and/or PADOWN register sets, but the only possible commit that may aff=
-ect
-this, i.e. cb8cc18508fb ("pinctrl: tigerlake: Fix register offsets for TGL-H
-variant"),  has been discussed in the bug #213463 comment #9 (also useful to
-read the entire discussion) and not confirmed to be a culprit.
-
-So, to me it sounds quite likely that the issue is on firmware side. But I'm
-all ears for the information that may help to eliminate it from the equatio=
-n.
+[  +0.000242] idma64 idma64.0: Found Intel integrated DMA 64-bit
+[  +0.003073] tigerlake-pinctrl INT34C6:00: pin 57 cannot be used as IRQ
+[  +0.000002] genirq: Setting trigger mode 8 for irq 140 failed
+(intel_gpio_irq_type+0x0/0x140)
+[  +0.001386] libphy: r8169: probed
+[  +0.000140] r8169 0000:02:00.0 eth0: RTL8168h/8111h, 80:fa:5b:97:31:f8, X=
+ID
+541, IRQ 141
+[  +0.000003] r8169 0000:02:00.0 eth0: jumbo features [frames: 9194 bytes, =
+tx
+checksumming: ko]
+[  +0.000421] gpio gpiochip0: (INT34C6:00): gpiochip_lock_as_irq: cannot get
+GPIO direction
+[  +0.000003] gpio gpiochip0: (INT34C6:00): unable to lock HW IRQ 44 for IRQ
+[  +0.000001] genirq: Failed to request resources for ELAN0412:01 (irq 140)=
+ on
+irqchip INT34C6:00
+[  +0.000023] i2c_hid_acpi i2c-ELAN0412:01: Could not register for ELAN0412=
+:01
+interrupt, irq =3D 140, ret =3D -22
+[  +0.000042] i2c_hid_acpi: probe of i2c-ELAN0412:01 failed with error -22
+[  +0.011757] random: crng init done
+[  +0.000003] random: 3 urandom warning(s) missed due to ratelimiting
 
 --=20
 You may reply to this email to add a comment.
