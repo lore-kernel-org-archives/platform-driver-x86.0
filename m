@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DA6C12002
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 12:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26474C12002
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 13:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A576120C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 12:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DA56120C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 21 Jul 2021 13:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233417AbhGUMQP (ORCPT
+        id S234331AbhGUM0y (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 21 Jul 2021 08:16:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56918 "EHLO mail.kernel.org"
+        Wed, 21 Jul 2021 08:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232654AbhGUMQO (ORCPT
+        id S231791AbhGUM0y (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 21 Jul 2021 08:16:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 4CE136120A
-        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 12:56:47 +0000 (UTC)
+        Wed, 21 Jul 2021 08:26:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 162836120C
+        for <platform-driver-x86@vger.kernel.org>; Wed, 21 Jul 2021 13:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626872207;
-        bh=GYfMhgITFSWMcC+xxPbm1/G4r97HAPVCcP2/MqnJbi8=;
+        s=k20201202; t=1626872851;
+        bh=wGuXb0RsqqE4974he4s5/TGNYFZn9AaTWUHDkqi1DTM=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=T+49BfFUVIB4GGZ2OB37DEAWc0UCz57TFQYpScc+BVg1btpY8e1hU9jeyZSW7CoTT
-         dsGI3j0tljUqdFlZld+owHotLJnwV+6XZq2M6xbcu8GEaX//kqY8COiI+1yG9sYkpi
-         Bu0Rhb81Scn6qwn7aqD3TgDwGj/WzEyGR5bQydR3gWcA5w7JKiz+AtX/T8ICb3fuXG
-         3EleGhYI3TQD/dibgxhAWBPN8fKlQZvwk6FpFv1bWjNE871/5kvv0+G56PksbIkAok
-         m8gKDV3LoWzWGypkDCpawYrYM5HqyF9sW7DhSRL4y+yte/q9nAIvW0pEICH/087PAT
-         f/ZFa0NeytaIA==
+        b=tETOU6gv0b1/3S0nKq2qasZ7D7E3g6vR3KKsp1yK8n8QC4eBTOrqHuUpt3JahDe5m
+         m8ECTmpZUF4KG3vjCA2GXjVmHrWY/OlfPFYOJR8USjW8KKf1GQazBAq3MxrJSxpYMr
+         CuOrQMJvvwDR3cDA0Ot+h59mpPl6yuuNv1Al3X2dT6+fJEku+AQZGPqUS9glp8oJn9
+         cH5OcPob8OPLswsciKp9xTjb3aQmsxg70/uwIA2uk4/rTjVR898MEp9dnpC28o36mY
+         K7kWWCcAFdygGtCrZMn+VbpvC2NFpfMtx0Fb687EDyu+OzA285z5khDa4p9OTcPhIn
+         K0V7pw8o0ZcBg==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Wed, 21 Jul 2021 12:56:47 +0000
+Date:   Wed, 21 Jul 2021 13:07:30 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -52,7 +52,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-nzm5CnuL5G@https.bugzilla.kernel.org/>
+Message-ID: <bug-213579-215701-s597Ad8ldb@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,38 +66,23 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
---- Comment #18 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-Citing the hardware level documentation:
+--- Comment #19 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+(In reply to wse from comment #17)
+> pin 57 (SLP_S0B) 44:INT34C6:00 mode 1 0x84000500 0x00000051 0x00000000 [A=
+CPI]
 
-"Each GPIO pad ownership assignment is pre-determined via OEM system
-configuration through BIOS, soft strap and/or embedded subsystems=E2=80=99 =
-firmware
-settings with corresponding pin list documentation.
-
-...
-
-In summary the pad ownership bit is used to determine:
-  =EF=82=B7 GPIO input event notification/status update to the subsystem ow=
-ning the pad
-    o setting of Host=E2=80=99s various interrupt status bits
-    ...
-  ...
-
-PAD Ownership (PAD_OWN)
-This register can be written by [Firmware] only.
-
-...
-
-00 =3D Host software (ACPI Mode or GPIO Driver Mode) has ownership of the p=
-ad. In
-Host GPIO Driver Mode (refer to HOSTSW_OWN), GPIO input event update is lim=
-ited
-to GPI_STS update only. While in Host ACPI Mode, updates are limited to
-GPI_GPE_STS, GPI_NMI_STS and/or GPI_SMI_STS."
-
-Sorry, but OEM has to fix this. I love to know how Windows works around thi=
-s.
-If anybody has that information, please share.
+What I'm wondering is if the pin list is broken and actual pin 57 is someth=
+ing
+else (+- few pins according to the current driver). May be someone can inst=
+all
+libgpiod tools (such as `gpiomon`) and run with pins that are already in GP=
+IO
+mode without [ACPI] bit set. Something like `gpiomon gpiochip0 43` (for pin
+#56) and `gpiomon gpiochip0 47` (for pin #60). Then if touchpad (when being
+touched I presume) generates the interrupts this will show them. But it's
+unlikely as=20
+per success story described in the bug #211957 where pin under question has
+much higher number and any pin list disturbance will be noticed immediately.
 
 --=20
 You may reply to this email to add a comment.
