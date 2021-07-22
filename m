@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9037C6377D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jul 2021 12:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4CFC6377D
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jul 2021 13:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C597A6135D
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jul 2021 12:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E85760FF2
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 22 Jul 2021 13:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231712AbhGVL2G (ORCPT
+        id S232101AbhGVMuI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 22 Jul 2021 07:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51930 "EHLO mail.kernel.org"
+        Thu, 22 Jul 2021 08:50:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231724AbhGVL2F (ORCPT
+        id S232064AbhGVMuH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 22 Jul 2021 07:28:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 807A261353
-        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jul 2021 12:08:40 +0000 (UTC)
+        Thu, 22 Jul 2021 08:50:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 59B6160FED
+        for <platform-driver-x86@vger.kernel.org>; Thu, 22 Jul 2021 13:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626955720;
-        bh=qsm1PHp/X289uqkkFoZuINQgMtPtMg128Fgy8GSMp5o=;
+        s=k20201202; t=1626960642;
+        bh=R3St8WYY3jGi2eK9RAoeFOSuAAlQKD4oiTndHP0Upqg=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Bjg8oauJAhz/jlB2nOTvhdTFFcqCwJrHqqJ73pPdnafEr+zsWIjMkgXLRLSNCPLNw
-         zSZ7zVFYKoMBYd4LvRqZIQblU+/9wpnLqyboAKJtxHor3OZbc/LyclFmmTU/d4xWMT
-         v4sLR5nlGMBdbgJKgHSapXJ6fgnNrPcNHSRS+1ArdWlv3vXGgFe2k/tHS4sYkh/U1x
-         kTkwSmczyJO2nFHfOL+w1n5hWlgRJ+pRMC8+9F/zeljcLxchbr86NHIY+d+Zby5cYl
-         +Q4oIA7rGMcaLCSqRqJRCNfnHUNo3qbDWgb35NoyCa1QspGW/Ao23rg8rwb6cP98BY
-         cguXGUWQrwn6A==
+        b=Su3RX4DyT1i1QNtmIAEZRxWkE6cNF2x1qcmFJp+f37BJ7+pjmRJHFuEXAthxYFMQI
+         cGzW656I3y2Mi2hr0TaUzZuMX1sdkYClN9CsitLh0zAk+yYHh8pkEKs7rz5tbP7wdc
+         HyBSZPPxlSW5F2D15ynmSETKWD9KkSBpFbZcNL/pmdaGfTTFvlYvF3grkf4YiX8mjO
+         ZHnpJ6aMU2/lwaGyyUFFvFQs+qhCPnPOL8+Ot4ToD/AOxiKuSpOpAmo/NfKp1law2B
+         YIokn1uhb/N4sz4hl5K3Y0ixEYxqmo9kgXb7/q/wNJAtsEX7dOjaX7DVimzBCxxKPD
+         AAX1lNHgWOplg==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Thu, 22 Jul 2021 12:08:40 +0000
+Date:   Thu, 22 Jul 2021 13:30:42 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -45,14 +45,14 @@ X-Bugzilla-Component: Platform_x86
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: rod.thomas@talktalk.net
+X-Bugzilla-Who: wse@tuxedocomputers.com
 X-Bugzilla-Status: NEEDINFO
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-5BJe4ychIg@https.bugzilla.kernel.org/>
+Message-ID: <bug-213579-215701-s1Bq1NrXAv@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,27 +66,17 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
---- Comment #37 from Rod Thomas (rod.thomas@talktalk.net) ---
-(In reply to Riccardo Mori from comment #33)
-> Created attachment 297991 [details]
-> dmesg working
->=20
-> Ok, with the map from pin 44 to pin 140 it is indeed working
-> So the issue is actually a wrong pin number.
-> At least now we have a workaround for this.
->=20
-> Thank you very much to everyone that helped.
-
-Sorry to be a noob but just want to understand this before I embark on my f=
-irst
-kernel build.
-My situation is identical to Riccardo's so presumably I can use the same ha=
-ck.
-However I don't fully understand:
-a) Where 44 comes from - is this the GPIO pin that corresponds to acpi pin =
-57?
-b) Where the replacement 140 is obtained from - is this just a free pin?
-Thanks
+--- Comment #38 from wse@tuxedocomputers.com ---
+a) CPU Pin 57 =3D GPIO Pin 44
+b) CPU PIN 37 =3D GPIO PIN 140
+I don't know where one can look up the mapping CPU Pin <> GPIO Pin, Andy
+Shevchenko did.
+Pin 37/140 is not choosen randomly, but it's the pin the touchpad interrupt
+line is physically attached to on the mainboards of the Tongfang GMxTGxx and
+the Clevo NH5xHP.
+I found this out by looking up the schematics of the Clevo and the linux so=
+urce
+code: https://bugzilla.kernel.org/show_bug.cgi?id=3D213579#c28
 
 --=20
 You may reply to this email to add a comment.
