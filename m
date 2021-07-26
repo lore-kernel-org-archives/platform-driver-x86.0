@@ -2,123 +2,299 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B1C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 24 Jul 2021 20:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B298C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Jul 2021 09:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3D460E09
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 24 Jul 2021 20:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC00160F02
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 26 Jul 2021 09:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbhGXTpN (ORCPT
+        id S233002AbhGZI6M (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 24 Jul 2021 15:45:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbhGXTpM (ORCPT
+        Mon, 26 Jul 2021 04:58:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46757 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232760AbhGZI6F (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 24 Jul 2021 15:45:12 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483D5C061575;
-        Sat, 24 Jul 2021 13:25:44 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id g23-20020a17090a5797b02901765d605e14so8601608pji.5;
-        Sat, 24 Jul 2021 13:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oX5fp2Nd3pjI/G9YdONxiLdBOXyu28WtsV/xr2FFBcM=;
-        b=MleA1nfsh6fJ0gs2dghL4xrngg8YiagMbY7B66ZlCMD2z5AztzMGSQPwrXyhZd8MkQ
-         L8oT1tz+xo/ioxQk/QOP6XONFYOZr7bosbTJXlqX2uDnQh4yLsqWnifbQ+BHLoaV9tKp
-         EFLASh3QItzEHlx+pq40+jRlGFM9dSKxNmcCVadldLbikD69tYE6f0xgwUMBWG4bCrl/
-         TTwXZOAz2c7G2aLRhX6hDMeuj9A87fLkG26utfBsREOVhnXkdWtTqrA7ga24EuM3R0jJ
-         q+4HpZIyf8Ihat9zxU0sJrAAd+OJUGnthorkRyUF+Yk1B9IqQ7iZrHylwmU1XgxyeRUP
-         SntA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oX5fp2Nd3pjI/G9YdONxiLdBOXyu28WtsV/xr2FFBcM=;
-        b=PcS06fYUA9R1NQfxFHJFidPPYhKqNi/vdaUIEArMDxUwRv4pIR2SigbAskAS92bRQ6
-         m8KJI2ABAim8unIsF05B6xX5NKZKn3Zlr2EX9ci8j2nZGtaBphE0fBeFWDdDU6rqgsRw
-         OaMwutVn/27pQEpbH+X0WMTqkQBlOZZjc4DSyjmmVwbAqePu9dzCo6FjnI5MYI++hjqP
-         EvrqfEqSKogm4e0/ZIQovCu9Yj/J9fjqC+TAKsKQVYdS5eiBB6vdcu2rSAfbcj/y5pvB
-         kMsLd4BM57Y5J18rOcAgtYRHzeswobJD1SSHkm8YH+ifcOo1tRjZ+POJ+Por0+0rll9v
-         i3lA==
-X-Gm-Message-State: AOAM533TnOcBer4TWC87C/usFagTX+mNX0Dw8uYl/+1S/D0knRN6jG6I
-        rH1K9/10laPoPXIRpwU8SjlHL7O2usSEy7+KyCY=
-X-Google-Smtp-Source: ABdhPJwUTRel3gjPkDQOX+a2yHZ/w3me8pjMINp3dKxourGyiImC63ckIod43RoF5q1yN0p8t9bUdUAmzFZPdlxmw7M=
-X-Received: by 2002:a17:90b:1194:: with SMTP id gk20mr19462244pjb.181.1627158343731;
- Sat, 24 Jul 2021 13:25:43 -0700 (PDT)
+        Mon, 26 Jul 2021 04:58:05 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10056"; a="199433893"
+X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
+   d="scan'208";a="199433893"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 02:38:32 -0700
+X-IronPort-AV: E=Sophos;i="5.84,270,1620716400"; 
+   d="scan'208";a="504830106"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2021 02:38:31 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1m7x44-000fdS-OR; Mon, 26 Jul 2021 12:38:24 +0300
+Date:   Mon, 26 Jul 2021 12:38:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/x86/intel: Move Intel PMT drivers to new
+ subfolder
+Message-ID: <YP6CkOQlqCVFz54N@smile.fi.intel.com>
+References: <20210724025132.2726164-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-References: <20210723202157.2425-1-michael.a.bottini@linux.intel.com>
- <20210723202157.2425-2-michael.a.bottini@linux.intel.com> <CAHp75Ve2Ls9KVM0KZ2GMgbrQvc6wXvAXP1CqSLzQ4JWMTAcZ0A@mail.gmail.com>
- <27751c8ff02d98cabd512472b29078b11f4bdf0e.camel@linux.intel.com>
-In-Reply-To: <27751c8ff02d98cabd512472b29078b11f4bdf0e.camel@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 24 Jul 2021 23:25:06 +0300
-Message-ID: <CAHp75VfbDXW5DTfmV1r+=Q+7m=qta1p3h0uRk8D1rctxG_kDvg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/x86/intel/pmc: Add PSON residency counter
-To:     David Box <david.e.box@linux.intel.com>
-Cc:     Michael Bottini <michael.a.bottini@linux.intel.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210724025132.2726164-1-david.e.box@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Jul 24, 2021 at 10:49 PM David E. Box
-<david.e.box@linux.intel.com> wrote:
-> On Sat, 2021-07-24 at 11:29 +0300, Andy Shevchenko wrote:
-> > On Friday, July 23, 2021, Michael Bottini
-> > <michael.a.bottini@linux.intel.com> wrote:
-> > > Tiger Lake devices have the capability to track the duration
-> > > of time that their Power Supply Units (PSUs) are turned off during
-> > > S0ix.
-> > > This patch adds a debugfs file `pson_residency_usec` to provide
-> > > access to this counter.
-> > >
-> > > In order to determine whether the device is capable of PSON,
-> > > use acpi_init_properties() to reevaluate _DSD.
-> > >
-> > >
-> >
-> > It=E2=80=99s direct abuse of ACPI specification as I read it:
-> >
-> > =E2=80=9C_DSD must return the same data each time it is evaluated. Firm=
-ware
-> > should not expect it to be evaluated every time (in case it is
-> > implemented as a method).=E2=80=9D
-> >
-> >
-> > NAK to the series.
->
-> Okay, we'll check with the BIOS folks. They are setting this property
-> from _STA. They may not expect OSPM to reevaluate _DSD.
+On Fri, Jul 23, 2021 at 07:51:32PM -0700, David E. Box wrote:
+> Move all Intel Platform Monitoring Technology drivers to
+> drivers/platform/x86/intel/pmt.
 
-Does it matter?
+Not sure we need the pmt part in the file names (dup with a folder name). If
+you have module parameters just keep the module / driver name to be the same.
 
-> But they may
-> have expected that OSPM doesn't attempt to read _DSD until after _STA
-> is executed.
+Either way up to Hans, I'm fine with this
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-They may study a bit of ACPI specification perhaps?
-Or if there is indeed an issue with the specification language (so
-native-speaking people misinterpret above) then ECR to ASWG should be
-submitted?
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> ---
+>  MAINTAINERS                                   |  2 +-
+>  drivers/platform/x86/Kconfig                  | 36 -----------------
+>  drivers/platform/x86/Makefile                 |  3 --
+>  drivers/platform/x86/intel/Kconfig            |  1 +
+>  drivers/platform/x86/intel/Makefile           |  1 +
+>  drivers/platform/x86/intel/pmt/Kconfig        | 40 +++++++++++++++++++
+>  drivers/platform/x86/intel/pmt/Makefile       |  9 +++++
+>  .../pmt/pmt_class.c}                          |  2 +-
+>  .../pmt/pmt_class.h}                          |  0
+>  .../pmt/pmt_crashlog.c}                       |  2 +-
+>  .../pmt/pmt_telemetry.c}                      |  2 +-
+>  11 files changed, 55 insertions(+), 43 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/pmt/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/pmt/Makefile
+>  rename drivers/platform/x86/{intel_pmt_class.c => intel/pmt/pmt_class.c} (99%)
+>  rename drivers/platform/x86/{intel_pmt_class.h => intel/pmt/pmt_class.h} (100%)
+>  rename drivers/platform/x86/{intel_pmt_crashlog.c => intel/pmt/pmt_crashlog.c} (99%)
+>  rename drivers/platform/x86/{intel_pmt_telemetry.c => intel/pmt/pmt_telemetry.c} (99%)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index ffed30dc86b0..ffd741306dcf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9494,7 +9494,7 @@ INTEL PMT DRIVER
+>  M:	"David E. Box" <david.e.box@linux.intel.com>
+>  S:	Maintained
+>  F:	drivers/mfd/intel_pmt.c
+> -F:	drivers/platform/x86/intel_pmt_*
+> +F:	drivers/platform/x86/intel/pmt/pmt_*
+>  
+>  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
+>  M:	Stanislav Yakovlev <stas.yakovlev@gmail.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index cae72922f448..f06ccd00f6c4 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1184,42 +1184,6 @@ config INTEL_MRFLD_PWRBTN
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called intel_mrfld_pwrbtn.
+>  
+> -config INTEL_PMT_CLASS
+> -	tristate
+> -	help
+> -	  The Intel Platform Monitoring Technology (PMT) class driver provides
+> -	  the basic sysfs interface and file hierarchy used by PMT devices.
+> -
+> -	  For more information, see:
+> -	  <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
+> -
+> -	  To compile this driver as a module, choose M here: the module
+> -	  will be called intel_pmt_class.
+> -
+> -config INTEL_PMT_TELEMETRY
+> -	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
+> -	depends on MFD_INTEL_PMT
+> -	select INTEL_PMT_CLASS
+> -	help
+> -	  The Intel Platform Monitory Technology (PMT) Telemetry driver provides
+> -	  access to hardware telemetry metrics on devices that support the
+> -	  feature.
+> -
+> -	  To compile this driver as a module, choose M here: the module
+> -	  will be called intel_pmt_telemetry.
+> -
+> -config INTEL_PMT_CRASHLOG
+> -	tristate "Intel Platform Monitoring Technology (PMT) Crashlog driver"
+> -	depends on MFD_INTEL_PMT
+> -	select INTEL_PMT_CLASS
+> -	help
+> -	  The Intel Platform Monitoring Technology (PMT) crashlog driver provides
+> -	  access to hardware crashlog capabilities on devices that support the
+> -	  feature.
+> -
+> -	  To compile this driver as a module, choose M here: the module
+> -	  will be called intel_pmt_crashlog.
+> -
+>  config INTEL_PUNIT_IPC
+>  	tristate "Intel P-Unit IPC Driver"
+>  	help
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 43d36f8c36f1..d517d5cbc9ca 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -128,9 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+>  obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+>  obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+>  obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+> -obj-$(CONFIG_INTEL_PMT_CLASS)		+= intel_pmt_class.o
+> -obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= intel_pmt_telemetry.o
+> -obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= intel_pmt_crashlog.o
+>  obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+> index 8ca021785f67..0b238026c082 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -19,5 +19,6 @@ if X86_PLATFORM_DRIVERS_INTEL
+>  source "drivers/platform/x86/intel/int33fe/Kconfig"
+>  source "drivers/platform/x86/intel/int3472/Kconfig"
+>  source "drivers/platform/x86/intel/pmc/Kconfig"
+> +source "drivers/platform/x86/intel/pmt/Kconfig"
+>  
+>  endif # X86_PLATFORM_DRIVERS_INTEL
+> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+> index 49962f4dfdec..93026884ae03 100644
+> --- a/drivers/platform/x86/intel/Makefile
+> +++ b/drivers/platform/x86/intel/Makefile
+> @@ -7,3 +7,4 @@
+>  obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
+>  obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
+>  obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
+> +obj-y					+= pmt/
+> diff --git a/drivers/platform/x86/intel/pmt/Kconfig b/drivers/platform/x86/intel/pmt/Kconfig
+> new file mode 100644
+> index 000000000000..d630f883a717
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmt/Kconfig
+> @@ -0,0 +1,40 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Intel Platform Monitoring Technology drivers
+> +#
+> +
+> +config INTEL_PMT_CLASS
+> +	tristate
+> +	help
+> +	  The Intel Platform Monitoring Technology (PMT) class driver provides
+> +	  the basic sysfs interface and file hierarchy used by PMT devices.
+> +
+> +	  For more information, see:
+> +	  <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called intel_pmt_class.
+> +
+> +config INTEL_PMT_TELEMETRY
+> +	tristate "Intel Platform Monitoring Technology (PMT) Telemetry driver"
+> +	depends on MFD_INTEL_PMT
+> +	select INTEL_PMT_CLASS
+> +	help
+> +	  The Intel Platform Monitory Technology (PMT) Telemetry driver provides
+> +	  access to hardware telemetry metrics on devices that support the
+> +	  feature.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called intel_pmt_telemetry.
+> +
+> +config INTEL_PMT_CRASHLOG
+> +	tristate "Intel Platform Monitoring Technology (PMT) Crashlog driver"
+> +	depends on MFD_INTEL_PMT
+> +	select INTEL_PMT_CLASS
+> +	help
+> +	  The Intel Platform Monitoring Technology (PMT) crashlog driver provides
+> +	  access to hardware crashlog capabilities on devices that support the
+> +	  feature.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called intel_pmt_crashlog.
+> diff --git a/drivers/platform/x86/intel/pmt/Makefile b/drivers/platform/x86/intel/pmt/Makefile
+> new file mode 100644
+> index 000000000000..5c95cdbb57b1
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmt/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/x86/intel/pmt
+> +# Intel Platform Monitoring Technology Drivers
+> +#
+> +
+> +obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt_class.o
+> +obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= pmt_telemetry.o
+> +obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= pmt_crashlog.o
+> diff --git a/drivers/platform/x86/intel_pmt_class.c b/drivers/platform/x86/intel/pmt/pmt_class.c
+> similarity index 99%
+> rename from drivers/platform/x86/intel_pmt_class.c
+> rename to drivers/platform/x86/intel/pmt/pmt_class.c
+> index c86ff15b1ed5..05c16a812e00 100644
+> --- a/drivers/platform/x86/intel_pmt_class.c
+> +++ b/drivers/platform/x86/intel/pmt/pmt_class.c
+> @@ -13,7 +13,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/pci.h>
+>  
+> -#include "intel_pmt_class.h"
+> +#include "pmt_class.h"
+>  
+>  #define PMT_XA_START		0
+>  #define PMT_XA_MAX		INT_MAX
+> diff --git a/drivers/platform/x86/intel_pmt_class.h b/drivers/platform/x86/intel/pmt/pmt_class.h
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmt_class.h
+> rename to drivers/platform/x86/intel/pmt/pmt_class.h
+> diff --git a/drivers/platform/x86/intel_pmt_crashlog.c b/drivers/platform/x86/intel/pmt/pmt_crashlog.c
+> similarity index 99%
+> rename from drivers/platform/x86/intel_pmt_crashlog.c
+> rename to drivers/platform/x86/intel/pmt/pmt_crashlog.c
+> index 56963ceb6345..e869dfcdce31 100644
+> --- a/drivers/platform/x86/intel_pmt_crashlog.c
+> +++ b/drivers/platform/x86/intel/pmt/pmt_crashlog.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/overflow.h>
+>  
+> -#include "intel_pmt_class.h"
+> +#include "pmt_class.h"
+>  
+>  #define DRV_NAME		"pmt_crashlog"
+>  
+> diff --git a/drivers/platform/x86/intel_pmt_telemetry.c b/drivers/platform/x86/intel/pmt/pmt_telemetry.c
+> similarity index 99%
+> rename from drivers/platform/x86/intel_pmt_telemetry.c
+> rename to drivers/platform/x86/intel/pmt/pmt_telemetry.c
+> index 9b95ef050457..b90ae25caba5 100644
+> --- a/drivers/platform/x86/intel_pmt_telemetry.c
+> +++ b/drivers/platform/x86/intel/pmt/pmt_telemetry.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/overflow.h>
+>  
+> -#include "intel_pmt_class.h"
+> +#include "pmt_class.h"
+>  
+>  #define TELEM_DEV_NAME		"pmt_telemetry"
+>  
+> -- 
+> 2.25.1
+> 
 
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
