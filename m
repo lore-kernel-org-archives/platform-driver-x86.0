@@ -2,96 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17202C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 14:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3173C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 16:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE2C061AFB
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5FB61176
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 16:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232570AbhG0Oxn (ORCPT
+        id S229529AbhG0QpI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Jul 2021 10:53:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59456 "EHLO mga05.intel.com"
+        Tue, 27 Jul 2021 12:45:08 -0400
+Received: from mga18.intel.com ([134.134.136.126]:55043 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232499AbhG0Oxm (ORCPT
+        id S229815AbhG0QpI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Jul 2021 10:53:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="298036781"
+        Tue, 27 Jul 2021 12:45:08 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10057"; a="199708198"
 X-IronPort-AV: E=Sophos;i="5.84,274,1620716400"; 
-   d="scan'208";a="298036781"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2021 07:53:42 -0700
+   d="scan'208";a="199708198"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jul 2021 09:45:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,274,1620716400"; 
-   d="scan'208";a="416901405"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 27 Jul 2021 07:53:42 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.160])
-        by linux.intel.com (Postfix) with ESMTP id EAA3A58086A;
-        Tue, 27 Jul 2021 07:53:41 -0700 (PDT)
-Message-ID: <00527c09b0d4f22652f9cd5c2fde4e091df2d610.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform/x86/intel: Move Intel PMT drivers to new
- subfolder
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Joe Perches <joe@perches.com>, hdegoede@redhat.com,
-        mgross@linux.intel.com, andriy.shevchenko@linux.intel.com
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Date:   Tue, 27 Jul 2021 07:53:41 -0700
-In-Reply-To: <45ccb9e8c610678e72f461b1e9d61de0a4c9bc79.camel@perches.com>
-References: <20210727022550.3083745-1-david.e.box@linux.intel.com>
-         <45ccb9e8c610678e72f461b1e9d61de0a4c9bc79.camel@perches.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+   d="scan'208";a="662895381"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
+  by fmsmga006.fm.intel.com with ESMTP; 27 Jul 2021 09:45:04 -0700
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] platform/x86: ISST: Fix optimization with use of numa
+Date:   Tue, 27 Jul 2021 09:44:54 -0700
+Message-Id: <20210727164454.426905-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, 2021-07-26 at 20:36 -0700, Joe Perches wrote:
-> On Mon, 2021-07-26 at 19:25 -0700, David E. Box wrote:
-> > Move all Intel Platform Monitoring Technology drivers to
-> > drivers/platform/x86/intel/pmt.
-> []
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> []
-> > @@ -9494,7 +9494,7 @@ INTEL PMT DRIVER
-> >  M:     "David E. Box" <david.e.box@linux.intel.com>
-> >  S:     Maintained
-> >  F:     drivers/mfd/intel_pmt.c
-> > -F:     drivers/platform/x86/intel_pmt_*
-> > +F:     drivers/platform/x86/intel/pmt/*
-> 
-> Unless you are suggesting you are not maintainer of any files
-> in any subdirectories below this directory, you should not use
-> a *
-> 
-> F:      drivers/platform/x86/intel/pmt/
+When numa is used to map CPU to PCI device, the optimized path to read
+from cached data is not working and still calls _isst_if_get_pci_dev().
 
-Ack
+The reason is that when caching the mapping, numa information is not
+available as it is read later. So move the assignment of
+isst_cpu_info[cpu].numa_node before calling _isst_if_get_pci_dev().
 
-> 
-> > diff --git a/drivers/platform/x86/intel/Makefile
-> > b/drivers/platform/x86/intel/Makefile
-> []
-> > @@ -7,3 +7,4 @@
-> >  obj-$(CONFIG_INTEL_CHT_INT33FE)                += int33fe/
-> >  obj-$(CONFIG_INTEL_SKL_INT3472)                += int3472/
-> >  obj-$(CONFIG_INTEL_PMC_CORE)           += pmc/
-> > +obj-y                                  += pmt/
-> 
-> This seems odd.  Perhaps:
-> 
-> obj-$(CONFIG_PMT_CLASS)                         += pmt/
+Fixes: 96891f347865 ("ISST: Fix optimization with use of numa")
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+This patch can wait for next merge window as these systems are not
+shipped.
 
-This would work.
+ drivers/platform/x86/intel_speed_select_if/isst_if_common.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks
-
+diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+index 6f0cc679c8e5..8a4d52a9028d 100644
+--- a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
++++ b/drivers/platform/x86/intel_speed_select_if/isst_if_common.c
+@@ -379,6 +379,8 @@ static int isst_if_cpu_online(unsigned int cpu)
+ 	u64 data;
+ 	int ret;
+ 
++	isst_cpu_info[cpu].numa_node = cpu_to_node(cpu);
++
+ 	ret = rdmsrl_safe(MSR_CPU_BUS_NUMBER, &data);
+ 	if (ret) {
+ 		/* This is not a fatal error on MSR mailbox only I/F */
+@@ -397,7 +399,6 @@ static int isst_if_cpu_online(unsigned int cpu)
+ 		return ret;
+ 	}
+ 	isst_cpu_info[cpu].punit_cpu_id = data;
+-	isst_cpu_info[cpu].numa_node = cpu_to_node(cpu);
+ 
+ 	isst_restore_msr_local(cpu);
+ 
+-- 
+2.31.1
 
