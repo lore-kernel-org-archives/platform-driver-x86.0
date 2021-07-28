@@ -2,87 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504D9C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42891C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9E260F23
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B2D60EB2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbhG1Q17 (ORCPT
+        id S229607AbhG1QtG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 12:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbhG1Q16 (ORCPT
+        Wed, 28 Jul 2021 12:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229537AbhG1QtF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 12:27:58 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7B1C061757;
-        Wed, 28 Jul 2021 09:27:56 -0700 (PDT)
-Received: from nazgul.tnic (unknown [109.121.183.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8F24F1EC0527;
-        Wed, 28 Jul 2021 18:27:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1627489669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=GOEYhGPYQ4YUbo4gftj4JX0Uz5V/Qj9S6dris+AXSaA=;
-        b=LxjG3gFIJCDuOQDGzY+hiG0vN+dfpBr7Vq5w2ORdpOETiJfx6X9JMDFJJMxIan0ujoNNw7
-        KMi/vJ5Nq5Vi/Nq5x7JcXDHRAXe8ptcsnGwT9j1ZZa1hhOAXVDNeta9RonTrMrxsR3lvLV
-        KIVjknjki6FEc0QGw1JCe7AU529aFu0=
-Date:   Wed, 28 Jul 2021 18:28:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH 01/11] mm: Introduce a function to check for
- virtualization protection features
-Message-ID: <YQGFh3BlaD8RAEBz@nazgul.tnic>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
- <YQFY5/cq2thyHzUe@infradead.org>
+        Wed, 28 Jul 2021 12:49:05 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4AF1260EB9;
+        Wed, 28 Jul 2021 16:49:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627490943;
+        bh=FKqbqCd321Vu1qA1WxXaxi8ArsIJvFzWb9kp8ZOmwMk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=H/9sm8PTk+VoIljeox2RDuudekoouVrSp33e2Zdv2061pbDYGzMTFOhSqQz52l/FY
+         mc0R/OLWt+SUQ0s1oZ96JFjxGaWhHGdloz/xCh7Xrsf6ErkFg8Hsfy9fzrhyFgz4nX
+         g0fR45atZzpbk92CMrkXXyUQLmuEKaRsd0IkZfb7PPO9Lcs4+Zxuar3eyJbZIMnx7D
+         W3tqGe1G9JdxiERZdrDgDIRtoGaODKrfNpHHrX3Ow/JJ6eUvvNJHaHgj+I/OzLlaff
+         fNQowHh3dkuPPwjJ2qwmW90uJlb4QvKlBTVtfLnJxtEksUXdTntqD7Gq1lQyk6qeh4
+         bKXfvkM3+O9uw==
+From:   Mark Brown <broonie@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mark.gross@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: linux-next: build failure after merge of the drivers-x86 tree
+Date:   Wed, 28 Jul 2021 17:48:47 +0100
+Message-Id: <20210728164847.46855-1-broonie@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YQFY5/cq2thyHzUe@infradead.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 28, 2021 at 02:17:27PM +0100, Christoph Hellwig wrote:
-> So common checks obviously make sense, but I really hate the stupid
-> multiplexer.  Having one well-documented helper per feature is much
-> easier to follow.
+Hi all,
 
-We had that in x86 - it was called cpu_has_<xxx> where xxx is the
-feature bit. It didn't scale with the sheer amount of feature bits that
-kept getting added so we do cpu_feature_enabled(X86_FEATURE_XXX) now.
+After merging the drivers-x86 tree, today's linux-next build
+(x86 allmodconfig) failed like this:
 
-The idea behind this is very similar - those protected guest flags
-will only grow in the couple of tens range - at least - so having a
-multiplexer is a lot simpler, I'd say, than having a couple of tens of
-helpers. And those PATTR flags should have good, readable names, btw.
+error: the following would cause module name conflict:
+  drivers/misc/c2port/core.ko
+  drivers/platform/x86/intel/pmc/core.ko
 
-Thx.
+Caused by commit
 
--- 
-Regards/Gruss,
-    Boris.
+  29036fcc92b22d ("platform/x86/intel: intel_pmc_core: Move intel_pmc_core* files to pmc subfolder")
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Since there was nothing in the branch yesterday I've just dropped the
+tree entirely.
