@@ -2,506 +2,578 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F73C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 07:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761F4C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 08:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B48B760F91
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 07:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4666023B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 08:45:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233732AbhG1Hat (ORCPT
+        id S232229AbhG1Ipz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 03:30:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30800 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233336AbhG1Har (ORCPT
+        Wed, 28 Jul 2021 04:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231324AbhG1Ipz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 03:30:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627457446;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SRjnjdMuqaRLPlBJge7OUEIBVRiZnSvX4Fcwy4DB6+E=;
-        b=Bmv9DZxl8xknE+f3vM5Q+a6/nRIcAlZmhuFD4zJ3bhb4k4WSHLW31MMMMpfEMAlvw5Mzrd
-        XFTrx0GO8XjYoFXP21EZLGfNhjgJTrOoUrvGpRkFFaupq3oM6dFc98Ke/mZhP8/4K0N8Y4
-        JyiUZFpUSOqLJ4gSep02xBg5J1R2UBc=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-saUf1-4EPrCOMZ0wF6fyGg-1; Wed, 28 Jul 2021 03:30:45 -0400
-X-MC-Unique: saUf1-4EPrCOMZ0wF6fyGg-1
-Received: by mail-ed1-f72.google.com with SMTP id b4-20020a05640202c4b02903948bc39fd5so806505edx.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 00:30:44 -0700 (PDT)
+        Wed, 28 Jul 2021 04:45:55 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DD26C061757;
+        Wed, 28 Jul 2021 01:45:53 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id c2-20020a0568303482b029048bcf4c6bd9so1321322otu.8;
+        Wed, 28 Jul 2021 01:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PMMCLcPJVgcGCj/avVty54K/TQgpNAa+k5yTqQuOHhA=;
+        b=U5X5pJgXseiDMghw6fLUnztURtLfErd0jIcftTOZu0cux6U1BAvtCSNrTB4eX/vIZ1
+         vznHKQU9BVeBiEoOHvtanrbGBVTo7OX8JXybFtuSPhfz9wI27qKE68IE/hcB11O2DJpH
+         cIMygMd5Fo//6FSMGcv8iFWInr6ZjoiskeEB4ZY4ZAoSIOpsNU3j1AGbbtfFikBlDy7P
+         Y5sj9QnfljWgIyCdHEbjUZaY9RozLRQLg5j9ydBzArMZVZsFvyTKcwmgbQkCz6iRNzsW
+         WWABgej+JjD4DoLoUe0//UAqg7IIKAdXJd0MAW9MXNoa/CEreArNi+CCSxD1A/u2mqz2
+         cscQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SRjnjdMuqaRLPlBJge7OUEIBVRiZnSvX4Fcwy4DB6+E=;
-        b=mFn95swGkhTgdXG11Ea6eeh+I8itXO049mgsC0RGx8eAu6UxQrIkUr2o/8Ug5JtPb8
-         o2dyO+9zbOwK8rGix9fBo2ZUh6FScwAV2IHhbeUkqP6llAlcGBJX5P7jzIRrvOBumuEY
-         tMjugdO2OuBm1v3anXAR2foOx0ASajBpaiKG5R3kS1qVxO/mTppCxd5P3+NMejzqgPAK
-         SJXgGERxGacXyLG/Okyl2MA7WpXo21mQVk2UzErqyQRTOS6DLA+hNHXv4LAMKEV/Z4+v
-         6exbjI8Hmb9y4KHKRtpmxUpvpMGFaQwkPjYX49LM2xYT8i0BBlLrzlaUC8NdzVSiPwr8
-         pgJQ==
-X-Gm-Message-State: AOAM533mXG99U/7VpiAed8m6IG8hbB3M9WrBlDzfuraG0Na09CSDpbZL
-        M4BDAUnKgMjadn0mSnRLWgUuC7YPx67q7LSgB90T7M86SUz/f7bhoIQrpoNkSr6UbBpR6ShKYxD
-        U3ctkpLD538/o3LSRjYoeMZY6cO2ffP/DMg==
-X-Received: by 2002:a17:906:7050:: with SMTP id r16mr19296436ejj.397.1627457443896;
-        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxAIOz0VsrgF6lKMSUFPftB1KGD1JfG9sJ0zcc+XNcr2YNKWVKynV46ZwNkeXneNaTv/xbQMw==
-X-Received: by 2002:a17:906:7050:: with SMTP id r16mr19296404ejj.397.1627457443605;
-        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id e7sm1694356ejt.80.2021.07.28.00.30.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
-Subject: Re: [PATCH v3 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
- attestation interface driver
-To:     Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20210720045552.2124688-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20210720045552.2124688-6-sathyanarayanan.kuppuswamy@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <e7bda09b-48ce-d593-a308-75a9cc31c139@redhat.com>
-Date:   Wed, 28 Jul 2021 09:30:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PMMCLcPJVgcGCj/avVty54K/TQgpNAa+k5yTqQuOHhA=;
+        b=At+QXYkIwzOJ3Q1xhf5Lxw+0zAN5v6yUqMQV0sCWXdynGPcmppc5G5GJeSAqHuJi8j
+         LHe/sgAu00oXlonnRo5lraEsRQNAEdmrhRPCg12bMB1nC1Ya2Lrxi9STIMCMDMzBYEQ2
+         D7wtQKKzQ58RZL+UcIxVyP787UNs2oKqRTeLkzgjMtW3IojCUv056+ioPD7Mh9zOJVOP
+         35liBLgiM7SQyf9BrVR8DnkmFL9vkC8VPeR+juy9rijig0I+X5GSSOOXwW8LibofI53H
+         T4TS4IL1lKqu0EQ0G2MDswSN/HM1TZXTi/MTNxsfTaaAstgEZIeFBYs0vp2d0+ygdEmc
+         dHzA==
+X-Gm-Message-State: AOAM531wmTV3NAMjTk/lFTd1IheSRS16MSvPM+jFdGtoqozyPyGEoSia
+        O+GNgkMhhiowMgCzxpL9C0s90vLugOh/w6iXG10=
+X-Google-Smtp-Source: ABdhPJwJvGnbfGjlMExpj/WwdfKnxRos3y8l2Y3xFIIrETl6gCOxLCZYI4oQ+W3jliBBtKAAGznt3CcP2eeOzEcHLRk=
+X-Received: by 2002:a05:6830:544:: with SMTP id l4mr17959770otb.164.1627461952569;
+ Wed, 28 Jul 2021 01:45:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210720045552.2124688-6-sathyanarayanan.kuppuswamy@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CAMW3L+2yurdggGpYSHZw6x07SboxqYRrDA6B699=SagAVp6Euw@mail.gmail.com>
+In-Reply-To: <CAMW3L+2yurdggGpYSHZw6x07SboxqYRrDA6B699=SagAVp6Euw@mail.gmail.com>
+From:   Jafar Akhondali <jafar.akhoondali@gmail.com>
+Date:   Wed, 28 Jul 2021 13:15:41 +0430
+Message-ID: <CAMW3L+03N2bFK2YFwQDgc_S9ajDpT2GbCL9H4+WWEchGq58Ogg@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add Turbo Mode support for
+ Acer PH315-53
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     jlee@suse.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, mgross@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hello,
+I'm looking forward to comments on this patch.
+Also as turbo mode is usually available only in gaming laptops, I've
+also uploaded a demo video using this patch:
+https://www.youtube.com/watch?v=sQ5TW30VuFc
 
-On 7/20/21 6:55 AM, Kuppuswamy Sathyanarayanan wrote:
-> TDX guest supports encrypted disk as root or secondary drives.
-> Decryption keys required to access such drives are usually maintained
-> by 3rd party key servers. Attestation is required by 3rd party key
-> servers to get the key for an encrypted disk volume, or possibly other
-> encrypted services. Attestation is used to prove to the key server that
-> the TD guest is running in a valid TD and the kernel and virtual BIOS
-> and other environment are secure.
-> 
-> During the boot process various components before the kernel accumulate
-> hashes in the TDX module, which can then combined into a report. This
-> would typically include a hash of the bios, bios configuration, boot
-> loader, command line, kernel, initrd.  After checking the hashes the
-> key server will securely release the keys.
-> 
-> The actual details of the attestation protocol depend on the particular
-> key server configuration, but some parts are common and need to
-> communicate with the TDX module.
-> 
-> This communication is implemented in the attestation driver.
-> 
-> The supported steps are:
-> 
->   1. TD guest generates the TDREPORT that contains version information
->      about the Intel TDX module, measurement of the TD, along with a
->      TD-specified nonce.
->   2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
->      which is used by the host to generate a quote via quoting
->      enclave (QE).
->   3. Quote generation completion notification is sent to TD OS via
->      callback interrupt vector configured by TD using
->      SetupEventNotifyInterrupt hypercall.
->   4. After receiving the generated TDQUOTE, a remote verifier can be
->      used to verify the quote and confirm the trustworthiness of the
->      TD.
-> 
-> Attestation agent uses IOCTLs implemented by the attestation driver to
-> complete the various steps of the attestation process.
-> 
-> Also note that, explicit access permissions are not enforced in this
-> driver because the quote and measurements are not a secret. However
-> the access permissions of the device node can be used to set any
-> desired access policy. The udev default is usually root access
-> only.
-> 
-> TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
-> host, but TDX assumes that the host is able to deal with malicious
-> guest flooding it anyways.
-> 
-> The interaction with the TDX module is like a RPM protocol here. There
-> are several operations (get tdreport, get quote) that need to input a
-> blob, and then output another blob. It was considered to use a sysfs
-> interface for this, but it doesn't fit well into the standard sysfs
-> model for configuring values. It would be possible to do read/write on
-> files, but it would need multiple file descriptors, which would be
-> somewhat messy. ioctls seems to be the best fitting and simplest model
-> here. There is one ioctl per operation, that takes the input blob and
-> returns the output blob, and as well as auxiliary ioctls to return the
-> blob lengths. The ioctls are documented in the header file. 
-> 
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Thanks in Advance
+
+
+On Mon, Jul 12, 2021 at 2:55 AM Jafar Akhondali
+<jafar.akhoondali@gmail.com> wrote:
+>
+> Looks like the previous patch got some indentation problems, here is
+> the fixed version.
+>
+> The Acer Predator Helios series (usually denoted by PHxxx-yy) features
+> a special key above the keyboard named "TURBO". The turbo key does 3
+> things:
+> 1. Set all fan's speeds to TURBO mode
+> 2. Overclocks the CPU and GPU in the safe range
+> 3. Turn on an LED just below the turbo button
+>
+> All of these actions are done by WMI function calls, and there is no
+> custom OC level for turbo. It acts as a flag for enabling turbo
+> mode instead of telling processors to use 1.3x of power.
+>
+> I've run some benchmark tests and it worked fine:
+>
+> GpuTest 0.7.0
+> http://www.geeks3d.com
+>
+> Module: FurMark
+> Normal mode Score: 7289 points (FPS: 121)
+> Turbo mode Score: 7675 points (FPS: 127)
+> Settings:
+> - 1920x1080 fullscreen
+> - antialiasing: Off
+> - duration: 60000 ms
+>
+> Renderer:
+> - GeForce RTX 2060/PCIe/SSE2
+> - OpenGL: 4.6.0 NVIDIA 460.32.03
+>
+> This feature is presented by Acer officially and should not harm
+> hardware in any case.
+>
+> A challenging part of implementing this feature is that calling overclocking
+> the function requires knowing the exact count of fans for CPU and GPU
+> for each model, which to the best of my knowledge is not available in
+> the kernel.
+>
+> So after checking the official PredatorSense application methods, it
+> turned out they have provided the software the list of fans in each model.
+> I have access to the mentioned list, and all similar PH-iii-jj can be
+> added easily by matching "DMI_PRODUCT_NAME".
+>
+> Creating a separate file for the gaming interface was not possible because
+> the current WMI event GUID is needed for the turbo button, and it's not possible
+> to register multiple functions on the same event GUID.
+>
+>
+> Some small indent problems have been also fixed.
+>
+> Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
 > ---
-> 
-> Changes since v2:
->  * Removed MMIO reference in Kconfig help text.
->  * Added support for GetQuote completion timeout.
->  * Moved quote and report data memory allocation logic to module init code.
->  * Removed tdg_attest_open() and tdg_attest_release().
->  * Removed MODULE_VERSION as per Dan's suggestion.
->  * Added check for put_user() return value in TDX_CMD_GET_QUOTE_SIZE case.
->  * Modified TDX_CMD_GEN_QUOTE IOCTL to depend on TDREPORT data instead of
->    report data.
->  * Added tdg_attest_init() and tdg_attest_exit().
->  * Instead of using set_memory_{de/en}crypted() for sharing/unsharing guest
->    pages, modified the driver to use dma_alloc APIs.
-> 
->  drivers/platform/x86/Kconfig            |   9 +
->  drivers/platform/x86/Makefile           |   1 +
->  drivers/platform/x86/intel_tdx_attest.c | 208 ++++++++++++++++++++++++
->  include/uapi/misc/tdx.h                 |  37 +++++
->  4 files changed, 255 insertions(+)
->  create mode 100644 drivers/platform/x86/intel_tdx_attest.c
-
-Starting with 5.14-rc1 we have a new drivers/platform/x86/intel
-directory and we are slowly moving all Intel drivers there since
-there were too much files directly under drivers/platform/x86.
-
-For the next version please put this under drivers/platform/x86/intel.
-
-Also the cover letter misses any information about how this is planned
-to get merged even though this patch-set touches multiple sub-systems.
-
-I believe it is best for the entire set to be picked up by the tip tree,
-here is my ack for this:
-
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-
-Note this will lead to conflicts in drivers/platform/x86/intel/Kconfig and
-drivers/platform/x86//intel/Makefile as more and more Intel code is being
-moved there, but those should be trivial to resolve.
-
-Regards,
-
-Hans
-
-
-
-
->  create mode 100644 include/uapi/misc/tdx.h
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 7d385c3b2239..1eee29b76fd1 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -1294,6 +1294,15 @@ config INTEL_SCU_IPC_UTIL
->  	  low level access for debug work and updating the firmware. Say
->  	  N unless you will be doing this on an Intel MID platform.
->  
-> +config INTEL_TDX_ATTESTATION
-> +	tristate "Intel TDX attestation driver"
-> +	depends on INTEL_TDX_GUEST
-> +	help
-> +	  The TDX attestation driver provides IOCTL interfaces to the user to
-> +	  request TDREPORT from the TDX module or request quote from the VMM
-> +	  or to get quote buffer size. It is mainly used to get secure disk
-> +	  decryption keys from the key server.
+>  drivers/platform/x86/acer-wmi.c | 243 ++++++++++++++++++++++++++++++--
+>  1 file changed, 231 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 85db9403cc14..06b25ddf04ee 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -30,10 +30,12 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <acpi/video.h>
+>
 > +
->  config INTEL_TELEMETRY
->  	tristate "Intel SoC Telemetry Driver"
->  	depends on X86_64
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 7ee369aab10d..b5a5834e3f52 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
->  obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
->  obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
->  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
-> +obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
->  obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
->  					   intel_telemetry_pltdrv.o \
->  					   intel_telemetry_debugfs.o
-> diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
-> new file mode 100644
-> index 000000000000..b9656ccca540
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel_tdx_attest.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * intel_tdx_attest.c - TDX guest attestation interface driver.
-> + *
-> + * Implements user interface to trigger attestation process and
-> + * read the TD Quote result.
-> + *
-> + * Copyright (C) 2020 Intel Corporation
-> + *
-> + * Author:
-> + *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> + */
+>  MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+>  MODULE_LICENSE("GPL");
+>
 > +
-> +#define pr_fmt(fmt) "x86/tdx: attest: " fmt
+>  /*
+>   * Magic Number
+>   * Meaning is unknown - this number is required for writing to ACPI for AMW0
+> @@ -59,7 +61,10 @@ MODULE_LICENSE("GPL");
+>  #define ACER_WMID_SET_BRIGHTNESS_METHODID    6
+>  #define ACER_WMID_GET_THREEG_METHODID        10
+>  #define ACER_WMID_SET_THREEG_METHODID        11
+> -
+> +#define ACER_WMID_SET_GAMING_LED_METHODID 2
+> +#define ACER_WMID_GET_GAMING_LED_METHODID 4
+> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+> +#define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+>  /*
+>   * Acer ACPI method GUIDs
+>   */
+> @@ -68,6 +73,7 @@ MODULE_LICENSE("GPL");
+>  #define WMID_GUID1        "6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
+>  #define WMID_GUID2        "95764E09-FB56-4E83-B31A-37761F60994A"
+>  #define WMID_GUID3        "61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+> +#define WMID_GUID4        "7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56"
+>
+>  /*
+>   * Acer ACPI event GUIDs
+> @@ -81,6 +87,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+>  enum acer_wmi_event_ids {
+>      WMID_HOTKEY_EVENT = 0x1,
+>      WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
+> +    WMID_GAMING_TURBO_KEY_EVENT = 0x7,
+>  };
+>
+>  static const struct key_entry acer_wmi_keymap[] __initconst = {
+> @@ -144,6 +151,7 @@ struct event_return_value {
+>
+>  #define ACER_WMID3_GDS_TOUCHPAD        (1<<1)    /* Touchpad */
+>
 > +
-> +#include <linux/module.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/fs.h>
-> +#include <linux/mm.h>
-> +#include <linux/slab.h>
-> +#include <linux/set_memory.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/io.h>
-> +#include <asm/apic.h>
-> +#include <asm/tdx.h>
-> +#include <asm/irq_vectors.h>
-> +#include <uapi/misc/tdx.h>
+>  /* Hotkey Customized Setting and Acer Application Status.
+>   * Set Device Default Value and Report Acer Application Status.
+>   * When Acer Application starts, it will run this method to inform
+> @@ -215,6 +223,9 @@ struct hotkey_function_type_aa {
+>  #define ACER_CAP_THREEG            BIT(4)
+>  #define ACER_CAP_SET_FUNCTION_MODE    BIT(5)
+>  #define ACER_CAP_KBD_DOCK        BIT(6)
+> +#define ACER_CAP_TURBO_OC     BIT(7)
+> +#define ACER_CAP_TURBO_LED     BIT(8)
+> +#define ACER_CAP_TURBO_FAN     BIT(9)
+>
+>  /*
+>   * Interface type flags
+> @@ -224,6 +235,7 @@ enum interface_flags {
+>      ACER_AMW0_V2,
+>      ACER_WMID,
+>      ACER_WMID_v2,
+> +    ACER_WMID_GAMING,
+>  };
+>
+>  #define ACER_DEFAULT_WIRELESS  0
+> @@ -290,6 +302,9 @@ struct wmi_interface {
+>  /* The static interface pointer, points to the currently detected interface */
+>  static struct wmi_interface *interface;
+>
+> +/* The static gaming interface pointer, points to the currently
+> detected gaming interface */
+> +static struct wmi_interface *gaming_interface;
 > +
-> +/* Used in Quote memory allocation */
-> +#define QUOTE_SIZE			(2 * PAGE_SIZE)
-> +/* Get Quote timeout in msec */
-> +#define GET_QUOTE_TIMEOUT		(5000)
+>  /*
+>   * Embedded Controller quirks
+>   * Some laptops require us to directly access the EC to either enable or query
+> @@ -301,6 +316,9 @@ struct quirk_entry {
+>      u8 mailled;
+>      s8 brightness;
+>      u8 bluetooth;
+> +    u8 turbo;
+> +    u8 cpu_fans;
+> +    u8 gpu_fans;
+>  };
+>
+>  static struct quirk_entry *quirks;
+> @@ -312,6 +330,10 @@ static void __init set_quirks(void)
+>
+>      if (quirks->brightness)
+>          interface->capability |= ACER_CAP_BRIGHTNESS;
 > +
-> +/* Mutex to synchronize attestation requests */
-> +static DEFINE_MUTEX(attestation_lock);
-> +/* Completion object to track attestation status */
-> +static DECLARE_COMPLETION(attestation_done);
-> +/* Buffer used to copy report data in attestation handler */
-> +static u8 report_data[TDX_REPORT_DATA_LEN];
-> +/* Data pointer used to get TD Quote data in attestation handler */
-> +static void *tdquote_data;
-> +/* Data pointer used to get TDREPORT data in attestation handler */
-> +static void *tdreport_data;
-> +/* DMA handle used to allocate and free tdquote DMA buffer */
-> +dma_addr_t tdquote_dma_handle;
-> +
-> +static void attestation_callback_handler(void)
-> +{
-> +	complete(&attestation_done);
-> +}
-> +
-> +static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
-> +			     unsigned long arg)
-> +{
-> +	void __user *argp = (void __user *)arg;
-> +	long ret = 0;
-> +
-> +	mutex_lock(&attestation_lock);
-> +
-> +	switch (cmd) {
-> +	case TDX_CMD_GET_TDREPORT:
-> +		if (copy_from_user(report_data, argp, TDX_REPORT_DATA_LEN)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		/* Generate TDREPORT_STRUCT */
-> +		if (tdx_mcall_tdreport(virt_to_phys(tdreport_data),
-> +				       virt_to_phys(report_data))) {
-> +			ret = -EIO;
-> +			break;
-> +		}
-> +
-> +		if (copy_to_user(argp, tdreport_data, TDX_TDREPORT_LEN))
-> +			ret = -EFAULT;
-> +		break;
-> +	case TDX_CMD_GEN_QUOTE:
-> +		/* Copy TDREPORT data from user buffer */
-> +		if (copy_from_user(tdquote_data, argp, TDX_TDREPORT_LEN)) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		/* Submit GetQuote Request */
-> +		if (tdx_hcall_get_quote(virt_to_phys(tdquote_data))) {
-> +			ret = -EIO;
-> +			break;
-> +		}
-> +
-> +		/* Wait for attestation completion */
-> +		ret = wait_for_completion_interruptible_timeout(
-> +				&attestation_done,
-> +				msecs_to_jiffies(GET_QUOTE_TIMEOUT));
-> +		if (ret <= 0) {
-> +			ret = -EIO;
-> +			break;
-> +		}
-> +
-> +		if (copy_to_user(argp, tdquote_data, QUOTE_SIZE))
-> +			ret = -EFAULT;
-> +
-> +		break;
-> +	case TDX_CMD_GET_QUOTE_SIZE:
-> +		ret = put_user(QUOTE_SIZE, (u64 __user *)argp);
-> +		break;
-> +	default:
-> +		pr_err("cmd %d not supported\n", cmd);
-> +		break;
-> +	}
-> +
-> +	mutex_unlock(&attestation_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct file_operations tdg_attest_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.unlocked_ioctl	= tdg_attest_ioctl,
-> +	.llseek		= no_llseek,
+> +    if (quirks->turbo)
+> +        gaming_interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
+> +                | ACER_CAP_TURBO_FAN;
+>  }
+>
+>  static int __init dmi_matched(const struct dmi_system_id *dmi)
+> @@ -340,6 +362,12 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
+>      .mailled = 1,
+>  };
+>
+> +static struct quirk_entry quirk_acer_predator_ph315_53 = {
+> +    .turbo = 1,
+> +    .cpu_fans = 1,
+> +    .gpu_fans = 1,
 > +};
 > +
-> +static struct miscdevice tdg_attest_device = {
-> +	.minor          = MISC_DYNAMIC_MINOR,
-> +	.name           = "tdx-attest",
-> +	.fops           = &tdg_attest_fops,
+>  /* This AMW0 laptop has no bluetooth */
+>  static struct quirk_entry quirk_medion_md_98300 = {
+>      .wireless = 1,
+> @@ -507,6 +535,15 @@ static const struct dmi_system_id acer_quirks[]
+> __initconst = {
+>          },
+>          .driver_data = &quirk_acer_travelmate_2490,
+>      },
+> +    {
+> +        .callback = dmi_matched,
+> +        .ident = "Acer Predator PH315-53",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +            DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH315-53"),
+> +        },
+> +        .driver_data = &quirk_acer_predator_ph315_53,
+> +    },
+>      {
+>          .callback = set_force_caps,
+>          .ident = "Acer Aspire Switch 10E SW3-016",
+> @@ -903,7 +940,7 @@ static acpi_status __init AMW0_set_capabilities(void)
+>       */
+>      if (wmi_has_guid(AMW0_GUID2)) {
+>          if ((quirks != &quirk_unknown) ||
+> -            !AMW0_set_cap_acpi_check_device())
+> +            !AMW0_set_cap_acpi_check_device())
+>              interface->capability |= ACER_CAP_WIRELESS;
+>          return AE_OK;
+>      }
+> @@ -1344,6 +1381,93 @@ static struct wmi_interface wmid_v2_interface = {
+>      .type = ACER_WMID_v2,
+>  };
+>
+> +
+> +/*
+> + * WMID Gaming interface
+> + */
+> +
+> +static struct wmi_interface wmid_gaming_interface = {
+> +    .type = ACER_WMID_GAMING
 > +};
 > +
-> +static int __init tdg_attest_init(void)
+> +static acpi_status
+> +WMI_gaming_execute_u64(u32 method_id, u64 in, u64 *out)
 > +{
-> +	dma_addr_t handle;
-> +	long ret = 0;
+> +    struct acpi_buffer input = { (acpi_size) sizeof(u64), (void *)(&in) };
+> +    struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> +    union acpi_object *obj;
+> +    u32 tmp = 0;
+> +    acpi_status status;
 > +
-> +	ret = misc_register(&tdg_attest_device);
-> +	if (ret) {
-> +		pr_err("misc device registration failed\n");
-> +		return ret;
-> +	}
+> +    status = wmi_evaluate_method(WMID_GUID4, 0, method_id, &input, &result);
 > +
-> +	tdreport_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 0);
-> +	if (!tdreport_data) {
-> +		ret = -ENOMEM;
-> +		goto failed;
-> +	}
+> +    if (ACPI_FAILURE(status))
+> +        return status;
+> +    obj = (union acpi_object *) result.pointer;
 > +
-> +	ret = dma_set_coherent_mask(tdg_attest_device.this_device,
-> +				    DMA_BIT_MASK(64));
-> +	if (ret) {
-> +		pr_err("dma set coherent mask failed\n");
-> +		goto failed;
-> +	}
+> +    if (obj) {
+> +        if (obj->type == ACPI_TYPE_BUFFER &&
+> +            (obj->buffer.length == sizeof(u32) ||
+> +             obj->buffer.length == sizeof(u64))) {
+> +            tmp = *((u64 *) obj->buffer.pointer);
+> +        } else if (obj->type == ACPI_TYPE_INTEGER) {
+> +            tmp = (u64) obj->integer.value;
+> +        }
+> +    }
 > +
-> +	/* Allocate DMA buffer to get TDQUOTE data from the VMM */
-> +	tdquote_data = dma_alloc_coherent(tdg_attest_device.this_device,
-> +					  QUOTE_SIZE, &handle,
-> +					  GFP_KERNEL | __GFP_ZERO);
-> +	if (!tdquote_data) {
-> +		ret = -ENOMEM;
-> +		goto failed;
-> +	}
+> +    if (out)
+> +        *out = tmp;
 > +
-> +	tdquote_dma_handle =  handle;
+> +    kfree(result.pointer);
 > +
-> +	/*
-> +	 * Currently tdg_event_notify_handler is only used in attestation
-> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
-> +	 */
-> +	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
-> +
-> +	pr_debug("module initialization success\n");
-> +
-> +	return 0;
-> +
-> +failed:
-> +	if (tdreport_data)
-> +		free_pages((unsigned long)tdreport_data, 0);
-> +
-> +	misc_deregister(&tdg_attest_device);
-> +
-> +	pr_debug("module initialization failed\n");
-> +
-> +	return ret;
+> +    return status;
 > +}
 > +
-> +static void __exit tdg_attest_exit(void)
+> +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
 > +{
-> +	mutex_lock(&attestation_lock);
+> +    u32 method_id = 0;
 > +
-> +	dma_free_coherent(tdg_attest_device.this_device, QUOTE_SIZE,
-> +			  tdquote_data, tdquote_dma_handle);
-> +	free_pages((unsigned long)tdreport_data, 0);
-> +	misc_deregister(&tdg_attest_device);
-> +	/*
-> +	 * Currently tdg_event_notify_handler is only used in attestation
-> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
-> +	 */
-> +	WRITE_ONCE(tdg_event_notify_handler, NULL);
-> +	mutex_unlock(&attestation_lock);
-> +	pr_debug("module is successfully removed\n");
+> +    switch (cap) {
+> +    case ACER_CAP_TURBO_LED:
+> +        method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+> +        break;
+> +    case ACER_CAP_TURBO_FAN:
+> +        method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> +        break;
+> +    case ACER_CAP_TURBO_OC:
+> +        method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+> +        break;
+> +    default:
+> +        return AE_ERROR;
+> +    }
+> +    return WMI_gaming_execute_u64(method_id, value, NULL);
 > +}
 > +
-> +module_init(tdg_attest_init);
-> +module_exit(tdg_attest_exit);
+> +static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
+> +{
+> +    acpi_status status;
+> +    u64 result;
+> +    u64 input;
+> +    u32 method_id;
 > +
-> +MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
-> +MODULE_DESCRIPTION("TDX attestation driver");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
-> new file mode 100644
-> index 000000000000..da4b3866ea1b
-> --- /dev/null
-> +++ b/include/uapi/misc/tdx.h
-> @@ -0,0 +1,37 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _UAPI_MISC_TDX_H
-> +#define _UAPI_MISC_TDX_H
 > +
-> +#include <linux/types.h>
-> +#include <linux/ioctl.h>
+> +    switch (cap) {
+> +    case ACER_CAP_TURBO_LED:
+> +        method_id = ACER_WMID_GET_GAMING_LED_METHODID;
+> +        input = 0x1;
+> +        break;
+> +    default:
+> +        return AE_ERROR;
+> +    }
 > +
-> +/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
-> +#define TDX_REPORT_DATA_LEN		64
+> +    status = WMI_gaming_execute_u64(method_id, input, &result);
+> +    if (ACPI_SUCCESS(status))
+> +        *value = (u64) result;
 > +
-> +/* Output TD report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
-> +#define TDX_TDREPORT_LEN		1024
+> +    return status;
+> +}
 > +
+> +
+>  /*
+>   * Generic Device (interface-independent)
+>   */
+> @@ -1374,7 +1498,6 @@ static acpi_status get_u32(u32 *value, u32 cap)
+>              status = WMID_get_u32(value, cap);
+>          break;
+>      }
+> -
+>      return status;
+>  }
+>
+> @@ -1422,6 +1545,34 @@ static acpi_status set_u32(u32 value, u32 cap)
+>      return AE_BAD_PARAMETER;
+>  }
+>
+> +static acpi_status set_u64(u64 value, u32 cap)
+> +{
+> +    if (gaming_interface->capability & cap) {
+> +        switch (gaming_interface->type) {
+> +        case ACER_WMID_GAMING:
+> +            return WMID_gaming_set_u64(value, cap);
+> +        default:
+> +            return AE_BAD_PARAMETER;
+> +        }
+> +    }
+> +    return AE_BAD_PARAMETER;
+> +}
+> +
+> +
+> +static acpi_status get_u64(u64 *value, u32 cap)
+> +{
+> +    acpi_status status = AE_ERROR;
+> +
+> +    if (gaming_interface->capability & cap) {
+> +        switch (gaming_interface->type) {
+> +        case ACER_WMID_GAMING:
+> +            status = WMID_gaming_get_u64(value, cap);
+> +            break;
+> +        }
+> +    }
+> +    return status;
+> +}
+> +
+>  static void __init acer_commandline_init(void)
+>  {
+>      /*
+> @@ -1501,7 +1652,7 @@ static int acer_backlight_init(struct device *dev)
+>      props.type = BACKLIGHT_PLATFORM;
+>      props.max_brightness = max_brightness;
+>      bd = backlight_device_register("acer-wmi", dev, NULL, &acer_bl_ops,
+> -                       &props);
+> +                       &props);
+>      if (IS_ERR(bd)) {
+>          pr_err("Could not register Acer backlight device\n");
+>          acer_backlight_device = NULL;
+> @@ -1575,6 +1726,67 @@ static int acer_gsensor_event(void)
+>      return 0;
+>  }
+>
 > +/*
-> + * TDX_CMD_GET_TDREPORT IOCTL is used to get TDREPORT data from the TDX
-> + * Module. Users should pass report data of size TDX_REPORT_DATA_LEN bytes
-> + * via user input buffer of size TDX_TDREPORT_LEN. Once IOCTL is successful
-> + * TDREPORT data is copied to the user buffer.
+> + *  Predator series turbo button
 > + */
-> +#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
+> +static int acer_toggle_turbo(void)
+> +{
+> +    /* Get current state from turbo button */
+> +    u64 turbo_led_state, gpu_fan_config1, gpu_fan_config2;
+> +    u8 i;
 > +
-> +/*
-> + * TDX_CMD_GEN_QUOTE IOCTL is used to request TD QUOTE from the VMM. User
-> + * should pass TD report data of size TDX_TDREPORT_LEN bytes via user input
-> + * buffer of quote size. Once IOCTL is successful quote data is copied back to
-> + * the user buffer.
-> + */
-> +#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
+> +    if (ACPI_FAILURE(get_u64(&turbo_led_state, ACER_CAP_TURBO_LED)))
+> +        return -1;
 > +
-> +/*
-> + * TDX_CMD_GET_QUOTE_SIZE IOCTL is used to get the TD Quote size info in bytes.
-> + * This will be used for determining the input buffer allocation size when
-> + * using TDX_CMD_GEN_QUOTE IOCTL.
-> + */
-> +#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
+> +    if (turbo_led_state) {
+> +        // turns off turbo led
+> +        set_u64(0x1, ACER_CAP_TURBO_LED);
 > +
-> +#endif /* _UAPI_MISC_TDX_H */
-> 
-
+> +        // set FAN mode to auto
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config2 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config2 |= 1 << (i + 1);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config2 |= 1 << (i + 3);
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config1 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config1 |= 1 << (2 * i + 2);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config1 |= 1 << (2 * i + 6);
+> +        set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+> +
+> +        // set OC to normal
+> +        set_u64(0x5, ACER_CAP_TURBO_OC);
+> +        set_u64(0x7, ACER_CAP_TURBO_OC);
+> +    } else {
+> +        // turn on turbo led
+> +        set_u64(0x10001, ACER_CAP_TURBO_LED);
+> +
+> +        // set FAN to turbo mode
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config2 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config2 |= 1 << (i + 1);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config2 |= 1 << (i + 3);
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config1 |= 2;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config1 |= 2 << (2 * i + 2);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config1 |= 2 << (2 * i + 6);
+> +        set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+> +
+> +        // set OC to turbo mode
+> +        set_u64(0x205, ACER_CAP_TURBO_OC);
+> +        set_u64(0x207, ACER_CAP_TURBO_OC);
+> +    }
+> +    return turbo_led_state;
+> +}
+> +
+> +
+>  /*
+>   * Switch series keyboard dock status
+>   */
+> @@ -1605,7 +1817,7 @@ static void acer_kbd_dock_get_initial_state(void)
+>      status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input_buf, &output_buf);
+>      if (ACPI_FAILURE(status)) {
+>          pr_err("Error getting keyboard-dock initial status: %s\n",
+> -               acpi_format_exception(status));
+> +               acpi_format_exception(status));
+>          return;
+>      }
+>
+> @@ -1618,7 +1830,7 @@ static void acer_kbd_dock_get_initial_state(void)
+>      output = obj->buffer.pointer;
+>      if (output[0] != 0x00 || (output[3] != 0x05 && output[3] != 0x45)) {
+>          pr_err("Unexpected output [0]=0x%02x [3]=0x%02x getting
+> keyboard-dock initial status\n",
+> -               output[0], output[3]);
+> +               output[0], output[3]);
+>          goto out_free_obj;
+>      }
+>
+> @@ -1759,7 +1971,7 @@ static int acer_rfkill_init(struct device *dev)
+>      rfkill_inited = true;
+>
+>      if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+> -        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+> +        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+>          schedule_delayed_work(&acer_rfkill_work,
+>              round_jiffies_relative(HZ));
+>
+> @@ -1782,7 +1994,7 @@ static int acer_rfkill_init(struct device *dev)
+>  static void acer_rfkill_exit(void)
+>  {
+>      if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+> -        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+> +        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+>          cancel_delayed_work_sync(&acer_rfkill_work);
+>
+>      if (has_cap(ACER_CAP_WIRELESS)) {
+> @@ -1872,6 +2084,10 @@ static void acer_wmi_notify(u32 value, void *context)
+>          acer_gsensor_event();
+>          acer_kbd_dock_event(&return_value);
+>          break;
+> +    case WMID_GAMING_TURBO_KEY_EVENT:
+> +        if (return_value.key_num == 0x4)
+> +            acer_toggle_turbo();
+> +        break;
+>      default:
+>          pr_warn("Unknown function number - %d - %d\n",
+>              return_value.function, return_value.key_num);
+> @@ -2251,8 +2467,8 @@ static int __init acer_wmi_init(void)
+>       * in the past quirk list.
+>       */
+>      if (wmi_has_guid(AMW0_GUID1) &&
+> -        !dmi_check_system(amw0_whitelist) &&
+> -        quirks == &quirk_unknown) {
+> +        !dmi_check_system(amw0_whitelist) &&
+> +        quirks == &quirk_unknown) {
+>          pr_debug("Unsupported machine has AMW0_GUID1, unable to load\n");
+>          return -ENODEV;
+>      }
+> @@ -2266,8 +2482,11 @@ static int __init acer_wmi_init(void)
+>      if (!wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
+>          interface = &wmid_interface;
+>
+> -    if (wmi_has_guid(WMID_GUID3))
+> +    if (wmi_has_guid(WMID_GUID3)) {
+>          interface = &wmid_v2_interface;
+> +        if (wmi_has_guid(WMID_GUID4))
+> +            gaming_interface = &wmid_gaming_interface;
+> +    }
+>
+>      if (interface)
+>          dmi_walk(type_aa_dmi_decode, NULL);
+> @@ -2316,7 +2535,7 @@ static int __init acer_wmi_init(void)
+>          interface->capability = force_caps;
+>
+>      if (wmi_has_guid(WMID_GUID3) &&
+> -        (interface->capability & ACER_CAP_SET_FUNCTION_MODE)) {
+> +        (interface->capability & ACER_CAP_SET_FUNCTION_MODE)) {
+>          if (ACPI_FAILURE(acer_wmi_enable_rf_button()))
+>              pr_warn("Cannot enable RF Button Driver\n");
+>
+> --
+> 2.27.0
