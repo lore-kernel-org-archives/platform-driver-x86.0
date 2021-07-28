@@ -2,108 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60500C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 13:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E6DC43214
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 13:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3907760E09
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 13:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718576103B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 13:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235263AbhG1NCd (ORCPT
+        id S235343AbhG1NTT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 09:02:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235954AbhG1NCd (ORCPT
+        Wed, 28 Jul 2021 09:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234771AbhG1NTS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 09:02:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id CA6AE60E09
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 13:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627477351;
-        bh=spFve4aAQsbuZfnwZDLro6vKyB/5h4uPU388t7NKkfw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=cfiQ2I+1Qn/JtpnYzmLnNvYKWAMbAYbmRASZ9MNRODLteyBcuFP2ZhuGaZgLzgDqK
-         pXAbTjqd7N+EXQQD8J8OHRqDzTHevWjImdeTOg1LezEzO5a4ghTuK7j8oT5Ej20TZa
-         Lguz0/1dulY0+Bg+G07iG4HGAH1fGDnoNO6gbZ+ke83UVJrVIDLXi0NLa6O+05u7xB
-         7XeA40OCwHj+GuwvMWcVZsLWsnH/hY0myhO4hA7dm4JOTB+r8ddp1SQO9mv9VRoITk
-         dKaEy4KLmYmVBoXOBIT16wFCx1AdokZe+944+Cn6IM4D44xbh3XUZ+SuIcaObHn2w4
-         RbQOO2p+lo0Yw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 209011] asus-wmi always reports tablet mode on a ZenBook
- UX390UAK
-Date:   Wed, 28 Jul 2021 13:02:31 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: julius@devpi.de
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-209011-215701-OUzEzjzNaT@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-209011-215701@https.bugzilla.kernel.org/>
-References: <bug-209011-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 28 Jul 2021 09:19:18 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8295AC061757;
+        Wed, 28 Jul 2021 06:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bU/Ms46JtnXaVrVhQUyi3qsSgcv2ZUBgkJZ69baP/Pk=; b=l/t/Xn+txpO1+X8wtS8Uk4aaqG
+        m2+T0SHpVqEnt0/9mZr65K2ueB1kLi0Gx/E9Ov/NZNfcfbm0aSIoCXUBZDMdD7FMkHtRpiECduJr7
+        Rt4ArgG6CcLFJpfB7mhR9ochKMyUK4sUQhYvpLwmW49Gs9J06Mvyg5y94GM6d6rLaXR9BaAbWOIpZ
+        10T8RMs/K27IkXLp/vjCX+SQ8wtLiH+hDMOJw4D/h2g1l8zP6PGPE8V75qPmB6DklI1zsDwON4VTT
+        tuN/D97KN3CBoRNqQG3rooTGaJ8SPBZlGmhA5MCb/K3ZPko/3eWBLi9x75g/uvwD+FrvCC64M+RgR
+        Pk0dHV9A==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m8jR9-00G4xh-78; Wed, 28 Jul 2021 13:17:52 +0000
+Date:   Wed, 28 Jul 2021 14:17:27 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH 01/11] mm: Introduce a function to check for
+ virtualization protection features
+Message-ID: <YQFY5/cq2thyHzUe@infradead.org>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D209011
+On Tue, Jul 27, 2021 at 05:26:04PM -0500, Tom Lendacky via iommu wrote:
+> In prep for other protected virtualization technologies, introduce a
+> generic helper function, prot_guest_has(), that can be used to check
+> for specific protection attributes, like memory encryption. This is
+> intended to eliminate having to add multiple technology-specific checks
+> to the code (e.g. if (sev_active() || tdx_active())).
 
---- Comment #12 from Julius Lehmann (julius@devpi.de) ---
-Created attachment 298077
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D298077&action=3Dedit
-dmesg output 2 - TP412UA
+So common checks obviously make sense, but I really hate the stupid
+multiplexer.  Having one well-documented helper per feature is much
+easier to follow.
 
-1) Yes, I did that. To be sure, I redid the 360 turn and posted another dme=
-sg.
+> +#define PATTR_MEM_ENCRYPT		0	/* Encrypted memory */
+> +#define PATTR_HOST_MEM_ENCRYPT		1	/* Host encrypted memory */
+> +#define PATTR_GUEST_MEM_ENCRYPT		2	/* Guest encrypted memory */
+> +#define PATTR_GUEST_PROT_STATE		3	/* Guest encrypted state */
 
-2) output of "grep . /sys/class/dmi/id/* 2> /dev/null"
-
-/sys/class/dmi/id/bios_date:07/25/2019
-/sys/class/dmi/id/bios_release:5.12
-/sys/class/dmi/id/bios_vendor:American Megatrends Inc.
-/sys/class/dmi/id/bios_version:TP412UA.308
-/sys/class/dmi/id/board_asset_tag:ATN12345678901234567
-/sys/class/dmi/id/board_name:TP412UA
-/sys/class/dmi/id/board_vendor:ASUSTeK COMPUTER INC.
-/sys/class/dmi/id/board_version:1.0
-/sys/class/dmi/id/chassis_asset_tag: No  Asset  Tag=20
-/sys/class/dmi/id/chassis_type:31
-/sys/class/dmi/id/chassis_vendor:ASUSTeK COMPUTER INC.
-/sys/class/dmi/id/chassis_version:1.0
-/sys/class/dmi/id/ec_firmware_release:1.7
-/sys/class/dmi/id/modalias:dmi:bvnAmericanMegatrendsInc.:bvrTP412UA.308:bd0=
-7/25/2019:br5.12:efr1.7:svnASUSTeKCOMPUTERINC.:pnVivoBookFlip14_ASUSFlipTP4=
-12UA:pvr1.0:sku:rvnASUSTeKCOMPUTERINC.:rnTP412UA:rvr1.0:cvnASUSTeKCOMPUTERI=
-NC.:ct31:cvr1.0:
-/sys/class/dmi/id/product_family:VivoBook Flip
-/sys/class/dmi/id/product_name:VivoBook Flip 14_ASUS Flip TP412UA
-/sys/class/dmi/id/product_version:1.0
-/sys/class/dmi/id/sys_vendor:ASUSTeK COMPUTER INC.
-/sys/class/dmi/id/uevent:MODALIAS=3Ddmi:bvnAmericanMegatrendsInc.:bvrTP412U=
-A.308:bd07/25/2019:br5.12:efr1.7:svnASUSTeKCOMPUTERINC.:pnVivoBookFlip14_AS=
-USFlipTP412UA:pvr1.0:sku:rvnASUSTeKCOMPUTERINC.:rnTP412UA:rvr1.0:cvnASUSTeK=
-COMPUTERINC.:ct31:cvr1.0:
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+The kerneldoc comments on these individual helpers will give you plenty
+of space to properly document what they indicate and what a (potential)
+caller should do based on them.  Something the above comments completely
+fail to.
