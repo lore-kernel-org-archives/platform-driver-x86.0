@@ -2,133 +2,180 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60260C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 10:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CF0C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 10:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E01E60E78
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 10:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9FD60EB2
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 10:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235573AbhG1KDk (ORCPT
+        id S236007AbhG1Kef (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 06:03:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32181 "EHLO
+        Wed, 28 Jul 2021 06:34:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41970 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231852AbhG1KDg (ORCPT
+        by vger.kernel.org with ESMTP id S235986AbhG1Kee (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 06:03:36 -0400
+        Wed, 28 Jul 2021 06:34:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627466614;
+        s=mimecast20190719; t=1627468472;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GwhmQ7C85F230rECddooLFcsBp3jRhki99AY7vjwwSc=;
-        b=jBck7HWmF5qrX7PN9wuNbalHkyLxRc9KHljc+Vu6sP7kCW1ognJBJjQ4rf3wO6yKRwVnou
-        b2JIrOn+onVK3dhCxez5yxjfzhQc4Giq2erZkrXO/VUmebyhgyfr72ztWq+ZsqVtR4ANSe
-        5JPHUeHeUspaEuw8CiGq+N+ReDpucpY=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-151-e9Ir5XoeP8WkHvjI8Zk3Fw-1; Wed, 28 Jul 2021 06:03:33 -0400
-X-MC-Unique: e9Ir5XoeP8WkHvjI8Zk3Fw-1
-Received: by mail-ej1-f70.google.com with SMTP id e8-20020a1709060808b02904f7606bd58fso642815ejd.11
-        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 03:03:33 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding;
+        bh=WqbYlFVczMjefGq/E8hjUCD6IN/H9aL+LJX308Bbaeg=;
+        b=R+0KIYVs6f6dz93RygEojWRGvZHS1GU1G6Lc4xjcsxVkgjZih89DXzdk1ipDxe+oCBH/vS
+        ihuhSLcmFXKVe4h6I6zpbM6uiNTOsNJIwdqqRqPmVX2LLlhPeGCZL4304Ls0CjhILWpdCa
+        UKtV+G+JG69yf8FqEe8tB1WCspQ2/nE=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-172-rAQVIhqpO9iKrRMl3fSslw-1; Wed, 28 Jul 2021 06:34:31 -0400
+X-MC-Unique: rAQVIhqpO9iKrRMl3fSslw-1
+Received: by mail-ed1-f71.google.com with SMTP id l10-20020aa7caca0000b02903b874f26036so1011378edt.20
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 03:34:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GwhmQ7C85F230rECddooLFcsBp3jRhki99AY7vjwwSc=;
-        b=et42rycPmED94WEypzRnnlmEvXYdoFZ5vN1DqJbLuMKXIO9/SbKTK+1m1C5qng3dpQ
-         kbhgaCYeaDEb3LxyYhq+H6CgAOumZfcs6MwlrJuQ/rzLIm+xwu0CB0bnNDU99yLiyLXG
-         r/lqEckGP8PRrjqFrb5e3k6Y0Dpvgrq/2yDS99n/zYr1gVvIEg1cji8JMSqzuJJRhWm0
-         9PuxTFztyGMB6Pe4UEcSbDb54kMR4pBshPIwkjlwNeOSf69TUcy7UJxhufP3k9ECJWOk
-         nvKyNs7FEoXZp3sA2ObVvDgMzqBsQlfRpPpG6Jz+wTDDmFkRwmvSdfPgDhpkcOpOiKuD
-         TFpw==
-X-Gm-Message-State: AOAM530JW/yDIMw/dvNkPfIKkD4go5hn6D14pxFdarjGqXZGeLXdbBBF
-        bsdu6tyF7XOuqw+TyJY8zg1E4hdK78RNwbkEh/G11xzV5MzxCcMT532tXQEUTfVjRyEsVFaeClG
-        fPOWh00bInXFNs6y66USJD6TFd4Pn1kfM2Q==
-X-Received: by 2002:a05:6402:10d7:: with SMTP id p23mr32984443edu.74.1627466612374;
-        Wed, 28 Jul 2021 03:03:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwpaH4qZjVq5c1C3noTeH4oiEzRUqwERoQjxEjilavD9APIZ85teEGEaAN6otJBruhsQND5gA==
-X-Received: by 2002:a05:6402:10d7:: with SMTP id p23mr32984419edu.74.1627466612195;
-        Wed, 28 Jul 2021 03:03:32 -0700 (PDT)
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=WqbYlFVczMjefGq/E8hjUCD6IN/H9aL+LJX308Bbaeg=;
+        b=Yt2aw9ikBRxNDpdkxnIlMisFKUA3twOn5x361FXIJa8Sid8Xo/RZQ5Z43KPy4JaSeC
+         a/NrkcimmP2Mdw6L52La+whgSnOAQZAf0nP1J2/gMQUxRukJcfR0fH0Kokigw4BF69vQ
+         4aXBZuObG+cJZJ6Zt4apa4NxDJVbdT0DLseujEUAOv0uEV+zrVtpFlSHVvioguc+Rhc0
+         jHIiicCT0RJlrfOCaWDMzwOI2agZ1jEvOckCwimXnZZvhwzUYP1P56eR4uXEV0ABNB7L
+         tcK0HvzS+Ls4X3x6epfo5ZR7ygYUMUqT5ZkiAu0kSEErV/KpdxaR9giaDh2lltslNfQ9
+         X68g==
+X-Gm-Message-State: AOAM531bDwuHA9viUQ46kHkXJhGgi6MeQtD0OgP2lJgHCjJbBJ/JLxAy
+        R0GCM/FxX7e8v7vscqSlWw7nNotKlxjx1cJP27YM38Ch8Oo3lvnuzLoZDIOqKF9Z41SS6WGMoC6
+        7kgND9EBii4CeoJaGRG5EHGJkbojkhKeEP96GERy6jyivNj2tHZj2ztRl//N83SYaK9ajZWDbQn
+        tsGFI/e3Tz4g==
+X-Received: by 2002:a17:906:3006:: with SMTP id 6mr27197630ejz.73.1627468469786;
+        Wed, 28 Jul 2021 03:34:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw7JwMzC99Ym6dFiISGnF85kJMEhce47Kwas0P1ncLLr2Or9f+7pd5G3HAGd/vW91ItZkzukg==
+X-Received: by 2002:a17:906:3006:: with SMTP id 6mr27197610ejz.73.1627468469567;
+        Wed, 28 Jul 2021 03:34:29 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id aq24sm1888816ejc.48.2021.07.28.03.03.31
+        by smtp.gmail.com with ESMTPSA id f12sm1883953ejz.99.2021.07.28.03.34.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jul 2021 03:03:31 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: intel-hid: add Alder Lake ACPI device ID
-To:     Ping Bao <pingbao@gmail.com>, Alex Hung <alex.hung@canonical.com>
-Cc:     Ping Bao <ping.a.bao@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:INTEL HID EVENT DRIVER" 
-        <platform-driver-x86@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20210721225615.20575-1-ping.a.bao@intel.com>
+        Wed, 28 Jul 2021 03:34:29 -0700 (PDT)
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9e95f7df-f12c-7a04-2234-279da65145f8@redhat.com>
-Date:   Wed, 28 Jul 2021 12:03:31 +0200
+Subject: [GIT PULL] platform-drivers-x86 for 5.14-2
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Message-ID: <093f84b2-d058-40f1-e888-1cafe1846b12@redhat.com>
+Date:   Wed, 28 Jul 2021 12:34:28 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210721225615.20575-1-ping.a.bao@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-On 7/22/21 12:56 AM, Ping Bao wrote:
-> Alder Lake has a new ACPI ID for Intel HID event filter device.
-> 
-> Signed-off-by: Ping Bao <ping.a.bao@intel.com>
-
-[hans@x1 platform-drivers-x86]$ scripts/checkpatch.pl 00*
----------------------------------------------------------------
-0001-platform-x86-intel-hid-add-Alder-Lake-ACPI-device-ID.patch
----------------------------------------------------------------
-WARNING: From:/Signed-off-by: email address mismatch: 'From: Ping Bao <pingbao@gmail.com>' != 'Signed-off-by: Ping Bao <ping.a.bao@intel.com>'
-
-total: 0 errors, 1 warnings, 7 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
-
-0001-platform-x86-intel-hid-add-Alder-Lake-ACPI-device-ID.patch has style problems, please review.
-
-I'll fix this up locally now, but please fix your email setup
-so that the Author field of the patch gets set to
-"Ping Bao <ping.a.bao@intel.com>"
+Here is a set of bug-fixes and new hardware-ids for platform-drivers-x86 for 5.14.
 
 Regards,
 
 Hans
 
 
+The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
 
-> ---
->  drivers/platform/x86/intel-hid.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-> index 078648a9201b..e5fbe017f8e1 100644
-> --- a/drivers/platform/x86/intel-hid.c
-> +++ b/drivers/platform/x86/intel-hid.c
-> @@ -25,6 +25,7 @@ static const struct acpi_device_id intel_hid_ids[] = {
->  	{"INT33D5", 0},
->  	{"INTC1051", 0},
->  	{"INTC1054", 0},
-> +	{"INTC1070", 0},
->  	{"", 0},
->  };
->  MODULE_DEVICE_TABLE(acpi, intel_hid_ids);
-> 
+  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.14-2
+
+for you to fetch changes up to 2b2c66f607d00d17f879c0d946d44340bfbdc501:
+
+  platform/x86: gigabyte-wmi: add support for B550 Aorus Elite V2 (2021-07-28 12:05:33 +0200)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.14-2
+
+Highlights:
+-amd-pmc fixes
+-think-lmi fixes
+-Various new hardware-ids
+
+The following is an automated git shortlog grouped by driver:
+
+amd-pmc:
+ -  Fix undefined reference to __udivdi3
+ -  Fix missing unlock on error in amd_pmc_send_cmd()
+ -  Use return code on suspend
+ -  Add new acpi id for future PMC controllers
+ -  Add support for ACPI ID AMDI0006
+ -  Add support for logging s0ix counters
+ -  Add support for logging SMU metrics
+ -  call dump registers only once
+ -  Fix SMU firmware reporting mechanism
+ -  Fix command completion code
+
+gigabyte-wmi:
+ -  add support for B550 Aorus Elite V2
+
+intel-hid:
+ -  add Alder Lake ACPI device ID
+
+think-lmi:
+ -  Fix possible mem-leaks on tlmi_analyze() error-exit
+ -  Split kobject_init() and kobject_add() calls
+ -  Move pending_reboot_attr to the attributes sysfs dir
+ -  Add pending_reboot support
+
+wireless-hotkey:
+ -  remove hardcoded "hp" from the error message
+
+----------------------------------------------------------------
+Alex Hung (1):
+      platform/x86: wireless-hotkey: remove hardcoded "hp" from the error message
+
+Hans de Goede (2):
+      platform/x86: think-lmi: Split kobject_init() and kobject_add() calls
+      platform/x86: think-lmi: Fix possible mem-leaks on tlmi_analyze() error-exit
+
+Mario Limonciello (1):
+      platform/x86: amd-pmc: Use return code on suspend
+
+Mark Pearson (2):
+      platform/x86: think-lmi: Add pending_reboot support
+      platform/x86: think-lmi: Move pending_reboot_attr to the attributes sysfs dir
+
+Ping Bao (1):
+      platform/x86: intel-hid: add Alder Lake ACPI device ID
+
+Shyam Sundar S K (8):
+      platform/x86: amd-pmc: Fix command completion code
+      platform/x86: amd-pmc: Fix SMU firmware reporting mechanism
+      platform/x86: amd-pmc: call dump registers only once
+      platform/x86: amd-pmc: Add support for logging SMU metrics
+      platform/x86: amd-pmc: Add support for logging s0ix counters
+      platform/x86: amd-pmc: Add support for ACPI ID AMDI0006
+      platform/x86: amd-pmc: Add new acpi id for future PMC controllers
+      platform/x86: amd-pmc: Fix undefined reference to __udivdi3
+
+Thomas Weißschuh (1):
+      platform/x86: gigabyte-wmi: add support for B550 Aorus Elite V2
+
+Yang Yingliang (1):
+      platform/x86: amd-pmc: Fix missing unlock on error in amd_pmc_send_cmd()
+
+ drivers/platform/x86/amd-pmc.c         | 249 +++++++++++++++++++++++++++++----
+ drivers/platform/x86/gigabyte-wmi.c    |   1 +
+ drivers/platform/x86/intel-hid.c       |   1 +
+ drivers/platform/x86/think-lmi.c       |  45 ++++--
+ drivers/platform/x86/think-lmi.h       |   1 +
+ drivers/platform/x86/wireless-hotkey.c |   2 +-
+ 6 files changed, 265 insertions(+), 34 deletions(-)
 
