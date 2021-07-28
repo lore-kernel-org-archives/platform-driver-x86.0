@@ -2,163 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC728C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E31C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 17:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 943B861038
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 16:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45D26101B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 17:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231186AbhG1Q53 (ORCPT
+        id S229793AbhG1RCb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 12:57:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51739 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230101AbhG1Q5Q (ORCPT
+        Wed, 28 Jul 2021 13:02:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229515AbhG1RC3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 12:57:16 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10059"; a="192300304"
-X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="192300304"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2021 09:57:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,276,1620716400"; 
-   d="scan'208";a="417827554"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 28 Jul 2021 09:57:13 -0700
-Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.160])
-        by linux.intel.com (Postfix) with ESMTP id 79C2158086A;
-        Wed, 28 Jul 2021 09:57:13 -0700 (PDT)
-Message-ID: <d5972bd061a00c2b8e9e7953a4472a853336f359.camel@linux.intel.com>
-Subject: Re: [PATCH 1/2] acpi: Add acpi_init_properties to ACPI driver code
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Michael Bottini <michael.a.bottini@linux.intel.com>,
-        rjw@rjwysocki.net, lenb@kernel.org, irenic.rajneesh@gmail.com,
-        mgross@linux.intel.com
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 28 Jul 2021 09:57:13 -0700
-In-Reply-To: <1fd1a48e-3756-e933-9038-cb3f3e247144@redhat.com>
-References: <20210723202157.2425-1-michael.a.bottini@linux.intel.com>
-         <d8e4f0f3-7282-50d4-16ac-2f67b210373c@redhat.com>
-         <1fd1a48e-3756-e933-9038-cb3f3e247144@redhat.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
+        Wed, 28 Jul 2021 13:02:29 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CB5C061757;
+        Wed, 28 Jul 2021 10:02:25 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id j1so6098497pjv.3;
+        Wed, 28 Jul 2021 10:02:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JGFDDjacBRjxyAnzN4CvLDDxGvGaTiT/tmmgH6BU6SE=;
+        b=n2QuhUDGM48atZWRY/aljXhxd9/Ay3bGpZVPfiM9Nt0A+y3sCcsfMa46IuBp/Zdy3B
+         LqCgFGmGrhfp1datijDUx+gY1Jar9Guez8AlxGKcaNgXlJzD891dOtZCWhsnznDzhi4A
+         zlcMXd4RuWrF1xrz3KM4Itl9JYllp8AJMQfLgl/Y+mKszdZDuZM32+wR/u/fIxO8P6oc
+         8Xtc97OQALykME7uo1zctiMLSZ7rxJRnJWUpNc9vcNW1ee1Pl5aMugQnGgbHSkRbZL+W
+         N2dhyLEfuva8CJX0e6fFI/ol2Qu1kLL6Gtl8ZrppsmeTiU08PTQshXimEAVi8ANkvXUf
+         Kalw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JGFDDjacBRjxyAnzN4CvLDDxGvGaTiT/tmmgH6BU6SE=;
+        b=pwRusiS/S5zmKMyFIrARimXTnVowxypSFF65El/yigCsbHD5yFAE6IpLjSzEdKKvS+
+         VdoCmOsYvsSE4b4MPtCJzJgX2BxlvxD/7D+rwCgbOVWwVqLJKkbcLom2nPzC1Z1FzXLr
+         mSD4nKZnupkS5QHvxrKpdw0370w425LswU3lEoRC70lNTmTPt5UcLbvVsj6v87OxSvGD
+         Z5CjfTFwfSd4hqtlCtodvJvneeEF128xtUGwMBAxlSvW/g7KKjXO/1tgTAx26kPMnzCj
+         Yu3iFFcc1Es5Y1H7WlJk+jOpnI8x7ptgOWvNc+IqgJj41CrmYlTOGbkjPbmYVxb81QXW
+         dREA==
+X-Gm-Message-State: AOAM530WqlLMGboki95746g2sCOscQ9X4FbF02qUV6SXHQPhxp7IuE3D
+        OcuDuEc5MWAkQo86JUH/k3cG9E9tdZ+1i145d8s=
+X-Google-Smtp-Source: ABdhPJyW8YD9ucztMeB9MdK83Zh6EDesq/+KxR0bBFUhv5UtQd61jJyeNfi0FOOJsVZ9hRC7PJTyc97iovetydrjlHU=
+X-Received: by 2002:a17:90a:7146:: with SMTP id g6mr733453pjs.228.1627491744801;
+ Wed, 28 Jul 2021 10:02:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210728164847.46855-1-broonie@kernel.org>
+In-Reply-To: <20210728164847.46855-1-broonie@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 28 Jul 2021 20:01:45 +0300
+Message-ID: <CAHp75VcP2V2j_ZHtc9y9Jw527E8PZaoFngsXD3oA0Yvmm=L4SA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the drivers-x86 tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mark.gross@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, 2021-07-28 at 11:10 +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 7/28/21 11:08 AM, Hans de Goede wrote:
-> > Hi,
-> > 
-> > On 7/23/21 10:21 PM, Michael Bottini wrote:
-> > > Some products in the field, like Intel Rocket Lake systems,
-> > > contain
-> > > AML code that can modify _DSD properties after they have been
-> > > evaluated by ACPI init code. Therefore, there is a need for
-> > > drivers
-> > > to be able to reevaluate _DSDs so that the updated property
-> > > values can
-> > > be read. Export acpi_init_properties() for this purpose.
-> > > 
-> > > Signed-off-by: Michael Bottini
-> > > <michael.a.bottini@linux.intel.com>
-> > 
-> > My first instinct here is this is a firmware bug and we should
-> > go out of our way here to not support this and to instead apply
-> > pressure on the vendor to get the firmware fixed.
-> > 
-> > Let me explain, the standard use of _DSD is to allow embedding
-> > open-firmware/devicetree style properties inside ACPI nodes.
-> > 
-> > devicetree files, unlike AML contain static information, which
-> > is parsed once and only once.
-> > 
-> > Allowing AML code to dynamically change _DSD results pretty
-> > much breaks this entire model.
-> > 
-> > So I might be shooting from the hip a bit here:
-> > "no, just no". IOW nack.
-> 
-> I should have read the rest of the thread first I guess.
-> 
-> I see that Andy and Rafael are saying the same thing.
-> 
-> So here we have 3 people who all 3 are somewhat experts in ACPI
-> saying no to this. So yes please talk to the BIOS team as you
-> indicated elsewhere in the thread.
-> 
-> Regards,
-> 
-> Hans
+On Wed, Jul 28, 2021 at 7:49 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> Hi all,
+>
+> After merging the drivers-x86 tree, today's linux-next build
+> (x86 allmodconfig) failed like this:
+>
+> error: the following would cause module name conflict:
+>   drivers/misc/c2port/core.ko
+>   drivers/platform/x86/intel/pmc/core.ko
+>
+> Caused by commit
+>
+>   29036fcc92b22d ("platform/x86/intel: intel_pmc_core: Move intel_pmc_core* files to pmc subfolder")
+>
+> Since there was nothing in the branch yesterday I've just dropped the
+> tree entirely.
 
-We get that reevaluating the _DSD would be against spec. We have taken
-this back to the firmware team as a bug and asked for a fix or
-different solution. Thanks.
+Yeah, PMC Makefile should keep the object name the same, something like
 
-> 
-> 
-> 
-> 
-> > > ---
-> > >  drivers/acpi/property.c | 1 +
-> > >  include/linux/acpi.h    | 6 ++++++
-> > >  2 files changed, 7 insertions(+)
-> > > 
-> > > diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> > > index e312ebaed8db..2c1f8cf1a8f0 100644
-> > > --- a/drivers/acpi/property.c
-> > > +++ b/drivers/acpi/property.c
-> > > @@ -432,6 +432,7 @@ void acpi_init_properties(struct acpi_device
-> > > *adev)
-> > >         if (!adev->data.pointer)
-> > >                 acpi_extract_apple_properties(adev);
-> > >  }
-> > > +EXPORT_SYMBOL(acpi_init_properties);
-> > >  
-> > >  static void acpi_destroy_nondev_subnodes(struct list_head *list)
-> > >  {
-> > > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> > > index 72e4f7fd268c..57defc3bc9b9 100644
-> > > --- a/include/linux/acpi.h
-> > > +++ b/include/linux/acpi.h
-> > > @@ -716,6 +716,8 @@ static inline u64
-> > > acpi_arch_get_root_pointer(void)
-> > >  
-> > >  int acpi_get_local_address(acpi_handle handle, u32 *addr);
-> > >  
-> > > +void acpi_init_properties(struct acpi_device *adev);
-> > > +
-> > >  #else  /* !CONFIG_ACPI */
-> > >  
-> > >  #define acpi_disabled 1
-> > > @@ -976,6 +978,10 @@ static inline int
-> > > acpi_get_local_address(acpi_handle handle, u32 *addr)
-> > >         return -ENODEV;
-> > >  }
-> > >  
-> > > +static inline void acpi_init_properties(struct acpi_device
-> > > *adev)
-> > > +{
-> > > +}
-> > > +
-> > >  #endif /* !CONFIG_ACPI */
-> > >  
-> > >  #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
-> > > 
-> 
+obj-$(..._PMC_...) += intel_pmc_....o
+intel-pmc_...-y := core.o ...
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
