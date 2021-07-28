@@ -2,90 +2,506 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DAFC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 23:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F73C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 07:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF46660F6C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 27 Jul 2021 23:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48B760F91
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 07:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233081AbhG0Xny (ORCPT
+        id S233732AbhG1Hat (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 27 Jul 2021 19:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232766AbhG0Xny (ORCPT
+        Wed, 28 Jul 2021 03:30:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30800 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233336AbhG1Har (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 27 Jul 2021 19:43:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 72AF260F6C
-        for <platform-driver-x86@vger.kernel.org>; Tue, 27 Jul 2021 23:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627429433;
-        bh=Y7r4Nk/U6ghwgF1WkJtH6stjsZqsTaEwZphZ+5YvVmk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ehr9U3FqOP8Y+L9ZTFqTCZdzCiHqn9k2xelkuPvO/lV609I6PBvd7gxbsekYPLTyK
-         mbuj1msVJlbzgWb7UF0L81TfZdY7Grm+lsh+3PjZ3S14WU6gp/miVSNhqyQkZoLbCY
-         +sZPvBqyCNTejZtmfxiuNlU0NN8N5bZmQgbFly2qUS+F8ox8p5rj7j7GYViPF2SKsd
-         wbwhMQHGIOSvwVdgXkbq4AWMVvF52k1oG/WPLa07nv4yC90EzySW1uoNxEmWyMZ3B1
-         n/pfkd41W+v3YOsrSTJfQzmrZGK5+PARVbKnV8S31vnmSk9i6Z/Qt6xbK1sbfsafVo
-         gpLeqGezP7u2w==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
- can't be used as IRQ)
-Date:   Tue, 27 Jul 2021 23:43:52 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: james.a.munsch@gmail.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-UGf9ltMH6H@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
-References: <bug-213579-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 28 Jul 2021 03:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627457446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SRjnjdMuqaRLPlBJge7OUEIBVRiZnSvX4Fcwy4DB6+E=;
+        b=Bmv9DZxl8xknE+f3vM5Q+a6/nRIcAlZmhuFD4zJ3bhb4k4WSHLW31MMMMpfEMAlvw5Mzrd
+        XFTrx0GO8XjYoFXP21EZLGfNhjgJTrOoUrvGpRkFFaupq3oM6dFc98Ke/mZhP8/4K0N8Y4
+        JyiUZFpUSOqLJ4gSep02xBg5J1R2UBc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-saUf1-4EPrCOMZ0wF6fyGg-1; Wed, 28 Jul 2021 03:30:45 -0400
+X-MC-Unique: saUf1-4EPrCOMZ0wF6fyGg-1
+Received: by mail-ed1-f72.google.com with SMTP id b4-20020a05640202c4b02903948bc39fd5so806505edx.13
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 00:30:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SRjnjdMuqaRLPlBJge7OUEIBVRiZnSvX4Fcwy4DB6+E=;
+        b=mFn95swGkhTgdXG11Ea6eeh+I8itXO049mgsC0RGx8eAu6UxQrIkUr2o/8Ug5JtPb8
+         o2dyO+9zbOwK8rGix9fBo2ZUh6FScwAV2IHhbeUkqP6llAlcGBJX5P7jzIRrvOBumuEY
+         tMjugdO2OuBm1v3anXAR2foOx0ASajBpaiKG5R3kS1qVxO/mTppCxd5P3+NMejzqgPAK
+         SJXgGERxGacXyLG/Okyl2MA7WpXo21mQVk2UzErqyQRTOS6DLA+hNHXv4LAMKEV/Z4+v
+         6exbjI8Hmb9y4KHKRtpmxUpvpMGFaQwkPjYX49LM2xYT8i0BBlLrzlaUC8NdzVSiPwr8
+         pgJQ==
+X-Gm-Message-State: AOAM533mXG99U/7VpiAed8m6IG8hbB3M9WrBlDzfuraG0Na09CSDpbZL
+        M4BDAUnKgMjadn0mSnRLWgUuC7YPx67q7LSgB90T7M86SUz/f7bhoIQrpoNkSr6UbBpR6ShKYxD
+        U3ctkpLD538/o3LSRjYoeMZY6cO2ffP/DMg==
+X-Received: by 2002:a17:906:7050:: with SMTP id r16mr19296436ejj.397.1627457443896;
+        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxAIOz0VsrgF6lKMSUFPftB1KGD1JfG9sJ0zcc+XNcr2YNKWVKynV46ZwNkeXneNaTv/xbQMw==
+X-Received: by 2002:a17:906:7050:: with SMTP id r16mr19296404ejj.397.1627457443605;
+        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id e7sm1694356ejt.80.2021.07.28.00.30.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Jul 2021 00:30:43 -0700 (PDT)
+Subject: Re: [PATCH v3 5/6] platform/x86: intel_tdx_attest: Add TDX Guest
+ attestation interface driver
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>
+Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20210720045552.2124688-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20210720045552.2124688-6-sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e7bda09b-48ce-d593-a308-75a9cc31c139@redhat.com>
+Date:   Wed, 28 Jul 2021 09:30:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <20210720045552.2124688-6-sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
+Hi,
 
---- Comment #43 from James Munsch (james.a.munsch@gmail.com) ---
-I've learned alot with this thread. Thanks.
+On 7/20/21 6:55 AM, Kuppuswamy Sathyanarayanan wrote:
+> TDX guest supports encrypted disk as root or secondary drives.
+> Decryption keys required to access such drives are usually maintained
+> by 3rd party key servers. Attestation is required by 3rd party key
+> servers to get the key for an encrypted disk volume, or possibly other
+> encrypted services. Attestation is used to prove to the key server that
+> the TD guest is running in a valid TD and the kernel and virtual BIOS
+> and other environment are secure.
+> 
+> During the boot process various components before the kernel accumulate
+> hashes in the TDX module, which can then combined into a report. This
+> would typically include a hash of the bios, bios configuration, boot
+> loader, command line, kernel, initrd.  After checking the hashes the
+> key server will securely release the keys.
+> 
+> The actual details of the attestation protocol depend on the particular
+> key server configuration, but some parts are common and need to
+> communicate with the TDX module.
+> 
+> This communication is implemented in the attestation driver.
+> 
+> The supported steps are:
+> 
+>   1. TD guest generates the TDREPORT that contains version information
+>      about the Intel TDX module, measurement of the TD, along with a
+>      TD-specified nonce.
+>   2. TD guest shares the TDREPORT with TD host via GetQuote hypercall
+>      which is used by the host to generate a quote via quoting
+>      enclave (QE).
+>   3. Quote generation completion notification is sent to TD OS via
+>      callback interrupt vector configured by TD using
+>      SetupEventNotifyInterrupt hypercall.
+>   4. After receiving the generated TDQUOTE, a remote verifier can be
+>      used to verify the quote and confirm the trustworthiness of the
+>      TD.
+> 
+> Attestation agent uses IOCTLs implemented by the attestation driver to
+> complete the various steps of the attestation process.
+> 
+> Also note that, explicit access permissions are not enforced in this
+> driver because the quote and measurements are not a secret. However
+> the access permissions of the device node can be used to set any
+> desired access policy. The udev default is usually root access
+> only.
+> 
+> TDX_CMD_GEN_QUOTE IOCTL can be used to create an computation on the
+> host, but TDX assumes that the host is able to deal with malicious
+> guest flooding it anyways.
+> 
+> The interaction with the TDX module is like a RPM protocol here. There
+> are several operations (get tdreport, get quote) that need to input a
+> blob, and then output another blob. It was considered to use a sysfs
+> interface for this, but it doesn't fit well into the standard sysfs
+> model for configuring values. It would be possible to do read/write on
+> files, but it would need multiple file descriptors, which would be
+> somewhat messy. ioctls seems to be the best fitting and simplest model
+> here. There is one ioctl per operation, that takes the input blob and
+> returns the output blob, and as well as auxiliary ioctls to return the
+> blob lengths. The ioctls are documented in the header file. 
+> 
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> Changes since v2:
+>  * Removed MMIO reference in Kconfig help text.
+>  * Added support for GetQuote completion timeout.
+>  * Moved quote and report data memory allocation logic to module init code.
+>  * Removed tdg_attest_open() and tdg_attest_release().
+>  * Removed MODULE_VERSION as per Dan's suggestion.
+>  * Added check for put_user() return value in TDX_CMD_GET_QUOTE_SIZE case.
+>  * Modified TDX_CMD_GEN_QUOTE IOCTL to depend on TDREPORT data instead of
+>    report data.
+>  * Added tdg_attest_init() and tdg_attest_exit().
+>  * Instead of using set_memory_{de/en}crypted() for sharing/unsharing guest
+>    pages, modified the driver to use dma_alloc APIs.
+> 
+>  drivers/platform/x86/Kconfig            |   9 +
+>  drivers/platform/x86/Makefile           |   1 +
+>  drivers/platform/x86/intel_tdx_attest.c | 208 ++++++++++++++++++++++++
+>  include/uapi/misc/tdx.h                 |  37 +++++
+>  4 files changed, 255 insertions(+)
+>  create mode 100644 drivers/platform/x86/intel_tdx_attest.c
 
-Confirmed also working for the equipment I was using as well.
+Starting with 5.14-rc1 we have a new drivers/platform/x86/intel
+directory and we are slowly moving all Intel drivers there since
+there were too much files directly under drivers/platform/x86.
 
-CLEVO NH58HPQ
+For the next version please put this under drivers/platform/x86/intel.
 
-06:36:29 jm@jm ~ =E2=86=92 lsb_release -a
-No LSB modules are available.
-Distributor ID: Ubuntu
-Description:    Ubuntu 20.04.2 LTS
-Release:        20.04
-Codename:       focal
+Also the cover letter misses any information about how this is planned
+to get merged even though this patch-set touches multiple sub-systems.
 
-06:41:26 jm@jm ~ =E2=86=92 uname -a
-Linux jm 5.10.0+ #3 SMP Tue Jul 27 18:08:55 CDT 2021 x86_64 x86_64 x86_64
-GNU/Linux
+I believe it is best for the entire set to be picked up by the tip tree,
+here is my ack for this:
 
---=20
-You may reply to this email to add a comment.
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Note this will lead to conflicts in drivers/platform/x86/intel/Kconfig and
+drivers/platform/x86//intel/Makefile as more and more Intel code is being
+moved there, but those should be trivial to resolve.
+
+Regards,
+
+Hans
+
+
+
+
+>  create mode 100644 include/uapi/misc/tdx.h
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7d385c3b2239..1eee29b76fd1 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1294,6 +1294,15 @@ config INTEL_SCU_IPC_UTIL
+>  	  low level access for debug work and updating the firmware. Say
+>  	  N unless you will be doing this on an Intel MID platform.
+>  
+> +config INTEL_TDX_ATTESTATION
+> +	tristate "Intel TDX attestation driver"
+> +	depends on INTEL_TDX_GUEST
+> +	help
+> +	  The TDX attestation driver provides IOCTL interfaces to the user to
+> +	  request TDREPORT from the TDX module or request quote from the VMM
+> +	  or to get quote buffer size. It is mainly used to get secure disk
+> +	  decryption keys from the key server.
+> +
+>  config INTEL_TELEMETRY
+>  	tristate "Intel SoC Telemetry Driver"
+>  	depends on X86_64
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7ee369aab10d..b5a5834e3f52 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -138,6 +138,7 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+>  obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+>  obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
+>  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+> +obj-$(CONFIG_INTEL_TDX_ATTESTATION)	+= intel_tdx_attest.o
+>  obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+>  					   intel_telemetry_pltdrv.o \
+>  					   intel_telemetry_debugfs.o
+> diff --git a/drivers/platform/x86/intel_tdx_attest.c b/drivers/platform/x86/intel_tdx_attest.c
+> new file mode 100644
+> index 000000000000..b9656ccca540
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel_tdx_attest.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * intel_tdx_attest.c - TDX guest attestation interface driver.
+> + *
+> + * Implements user interface to trigger attestation process and
+> + * read the TD Quote result.
+> + *
+> + * Copyright (C) 2020 Intel Corporation
+> + *
+> + * Author:
+> + *     Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> + */
+> +
+> +#define pr_fmt(fmt) "x86/tdx: attest: " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/fs.h>
+> +#include <linux/mm.h>
+> +#include <linux/slab.h>
+> +#include <linux/set_memory.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/io.h>
+> +#include <asm/apic.h>
+> +#include <asm/tdx.h>
+> +#include <asm/irq_vectors.h>
+> +#include <uapi/misc/tdx.h>
+> +
+> +/* Used in Quote memory allocation */
+> +#define QUOTE_SIZE			(2 * PAGE_SIZE)
+> +/* Get Quote timeout in msec */
+> +#define GET_QUOTE_TIMEOUT		(5000)
+> +
+> +/* Mutex to synchronize attestation requests */
+> +static DEFINE_MUTEX(attestation_lock);
+> +/* Completion object to track attestation status */
+> +static DECLARE_COMPLETION(attestation_done);
+> +/* Buffer used to copy report data in attestation handler */
+> +static u8 report_data[TDX_REPORT_DATA_LEN];
+> +/* Data pointer used to get TD Quote data in attestation handler */
+> +static void *tdquote_data;
+> +/* Data pointer used to get TDREPORT data in attestation handler */
+> +static void *tdreport_data;
+> +/* DMA handle used to allocate and free tdquote DMA buffer */
+> +dma_addr_t tdquote_dma_handle;
+> +
+> +static void attestation_callback_handler(void)
+> +{
+> +	complete(&attestation_done);
+> +}
+> +
+> +static long tdg_attest_ioctl(struct file *file, unsigned int cmd,
+> +			     unsigned long arg)
+> +{
+> +	void __user *argp = (void __user *)arg;
+> +	long ret = 0;
+> +
+> +	mutex_lock(&attestation_lock);
+> +
+> +	switch (cmd) {
+> +	case TDX_CMD_GET_TDREPORT:
+> +		if (copy_from_user(report_data, argp, TDX_REPORT_DATA_LEN)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Generate TDREPORT_STRUCT */
+> +		if (tdx_mcall_tdreport(virt_to_phys(tdreport_data),
+> +				       virt_to_phys(report_data))) {
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		if (copy_to_user(argp, tdreport_data, TDX_TDREPORT_LEN))
+> +			ret = -EFAULT;
+> +		break;
+> +	case TDX_CMD_GEN_QUOTE:
+> +		/* Copy TDREPORT data from user buffer */
+> +		if (copy_from_user(tdquote_data, argp, TDX_TDREPORT_LEN)) {
+> +			ret = -EFAULT;
+> +			break;
+> +		}
+> +
+> +		/* Submit GetQuote Request */
+> +		if (tdx_hcall_get_quote(virt_to_phys(tdquote_data))) {
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		/* Wait for attestation completion */
+> +		ret = wait_for_completion_interruptible_timeout(
+> +				&attestation_done,
+> +				msecs_to_jiffies(GET_QUOTE_TIMEOUT));
+> +		if (ret <= 0) {
+> +			ret = -EIO;
+> +			break;
+> +		}
+> +
+> +		if (copy_to_user(argp, tdquote_data, QUOTE_SIZE))
+> +			ret = -EFAULT;
+> +
+> +		break;
+> +	case TDX_CMD_GET_QUOTE_SIZE:
+> +		ret = put_user(QUOTE_SIZE, (u64 __user *)argp);
+> +		break;
+> +	default:
+> +		pr_err("cmd %d not supported\n", cmd);
+> +		break;
+> +	}
+> +
+> +	mutex_unlock(&attestation_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct file_operations tdg_attest_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.unlocked_ioctl	= tdg_attest_ioctl,
+> +	.llseek		= no_llseek,
+> +};
+> +
+> +static struct miscdevice tdg_attest_device = {
+> +	.minor          = MISC_DYNAMIC_MINOR,
+> +	.name           = "tdx-attest",
+> +	.fops           = &tdg_attest_fops,
+> +};
+> +
+> +static int __init tdg_attest_init(void)
+> +{
+> +	dma_addr_t handle;
+> +	long ret = 0;
+> +
+> +	ret = misc_register(&tdg_attest_device);
+> +	if (ret) {
+> +		pr_err("misc device registration failed\n");
+> +		return ret;
+> +	}
+> +
+> +	tdreport_data = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO, 0);
+> +	if (!tdreport_data) {
+> +		ret = -ENOMEM;
+> +		goto failed;
+> +	}
+> +
+> +	ret = dma_set_coherent_mask(tdg_attest_device.this_device,
+> +				    DMA_BIT_MASK(64));
+> +	if (ret) {
+> +		pr_err("dma set coherent mask failed\n");
+> +		goto failed;
+> +	}
+> +
+> +	/* Allocate DMA buffer to get TDQUOTE data from the VMM */
+> +	tdquote_data = dma_alloc_coherent(tdg_attest_device.this_device,
+> +					  QUOTE_SIZE, &handle,
+> +					  GFP_KERNEL | __GFP_ZERO);
+> +	if (!tdquote_data) {
+> +		ret = -ENOMEM;
+> +		goto failed;
+> +	}
+> +
+> +	tdquote_dma_handle =  handle;
+> +
+> +	/*
+> +	 * Currently tdg_event_notify_handler is only used in attestation
+> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
+> +	 */
+> +	WRITE_ONCE(tdg_event_notify_handler, attestation_callback_handler);
+> +
+> +	pr_debug("module initialization success\n");
+> +
+> +	return 0;
+> +
+> +failed:
+> +	if (tdreport_data)
+> +		free_pages((unsigned long)tdreport_data, 0);
+> +
+> +	misc_deregister(&tdg_attest_device);
+> +
+> +	pr_debug("module initialization failed\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit tdg_attest_exit(void)
+> +{
+> +	mutex_lock(&attestation_lock);
+> +
+> +	dma_free_coherent(tdg_attest_device.this_device, QUOTE_SIZE,
+> +			  tdquote_data, tdquote_dma_handle);
+> +	free_pages((unsigned long)tdreport_data, 0);
+> +	misc_deregister(&tdg_attest_device);
+> +	/*
+> +	 * Currently tdg_event_notify_handler is only used in attestation
+> +	 * driver. But, WRITE_ONCE is used as benign data race notice.
+> +	 */
+> +	WRITE_ONCE(tdg_event_notify_handler, NULL);
+> +	mutex_unlock(&attestation_lock);
+> +	pr_debug("module is successfully removed\n");
+> +}
+> +
+> +module_init(tdg_attest_init);
+> +module_exit(tdg_attest_exit);
+> +
+> +MODULE_AUTHOR("Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>");
+> +MODULE_DESCRIPTION("TDX attestation driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/uapi/misc/tdx.h b/include/uapi/misc/tdx.h
+> new file mode 100644
+> index 000000000000..da4b3866ea1b
+> --- /dev/null
+> +++ b/include/uapi/misc/tdx.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +#ifndef _UAPI_MISC_TDX_H
+> +#define _UAPI_MISC_TDX_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+> +/* Input report data length for TDX_CMD_GET_TDREPORT IOCTL request */
+> +#define TDX_REPORT_DATA_LEN		64
+> +
+> +/* Output TD report data length after TDX_CMD_GET_TDREPORT IOCTL execution */
+> +#define TDX_TDREPORT_LEN		1024
+> +
+> +/*
+> + * TDX_CMD_GET_TDREPORT IOCTL is used to get TDREPORT data from the TDX
+> + * Module. Users should pass report data of size TDX_REPORT_DATA_LEN bytes
+> + * via user input buffer of size TDX_TDREPORT_LEN. Once IOCTL is successful
+> + * TDREPORT data is copied to the user buffer.
+> + */
+> +#define TDX_CMD_GET_TDREPORT		_IOWR('T', 0x01, __u64)
+> +
+> +/*
+> + * TDX_CMD_GEN_QUOTE IOCTL is used to request TD QUOTE from the VMM. User
+> + * should pass TD report data of size TDX_TDREPORT_LEN bytes via user input
+> + * buffer of quote size. Once IOCTL is successful quote data is copied back to
+> + * the user buffer.
+> + */
+> +#define TDX_CMD_GEN_QUOTE		_IOR('T', 0x02, __u64)
+> +
+> +/*
+> + * TDX_CMD_GET_QUOTE_SIZE IOCTL is used to get the TD Quote size info in bytes.
+> + * This will be used for determining the input buffer allocation size when
+> + * using TDX_CMD_GEN_QUOTE IOCTL.
+> + */
+> +#define TDX_CMD_GET_QUOTE_SIZE		_IOR('T', 0x03, __u64)
+> +
+> +#endif /* _UAPI_MISC_TDX_H */
+> 
+
