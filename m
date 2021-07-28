@@ -2,226 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19441C4320E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 11:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1142EC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F8560F93
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 11:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA5560F9D
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236073AbhG1LvE (ORCPT
+        id S235246AbhG1MbW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 07:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234835AbhG1LvD (ORCPT
+        Wed, 28 Jul 2021 08:31:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46942 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234676AbhG1MbV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 07:51:03 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBEE7C061757;
-        Wed, 28 Jul 2021 04:51:00 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id l18so2168567wrv.5;
-        Wed, 28 Jul 2021 04:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=yp5cWmb4AkxFKBl8NuqRHF/Fj+1O+kz07eQ9B1cFrTM=;
-        b=rjufznQpIgT9Y4X5wATRAu5BDsSd6HgqZ5d9ZbD1tV5XqwI37bp4dlZn7sEU3roUWH
-         clGVPK5HZt0ibEg3n3rnQO/LLfCGXNB1z/OcJviBqX5BnDvPAT6ovSqtf2GG9z+b2bf5
-         hNRMQ5K1GU2t5utAkiIOYPFplsyDtoOtGyLrHrE0gjJStx3UlTxodAu66P1SUyVqHuRo
-         M6T6x8SRy36Ns7u7LeNWzv4QGHqMLlVM5YZOdZC2fd6M+9vcopSschELbxKP610fuQ0E
-         cnkAxdbpF2osQv7uYuvrxQu8i8zU9T8kP5ggNwdog+ispko+yCugJr87oZyjOacGVREA
-         620A==
+        Wed, 28 Jul 2021 08:31:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627475479;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0YfHQ1c8AlhSTo8Nz6yuEFurOHEQ5PZvC6jO6hUcFJM=;
+        b=hK86s1UccMZ/l7JKyGwfeelaJzscaMzpFmQsrXuY565QYyrmluS/OmqxewH96RiXgpNGT2
+        AJK2S88zhSW1SmYE6qNdenSxxjZ2NJQbzcOciiRx7DA3sPTY8Bggks1Y4TFUVexYtXikhq
+        dJpvRcbLG+8O/MfjXM0klf4DPuFwvX4=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-175-bYQHQ7XiPgSsEz1Z8TR3Eg-1; Wed, 28 Jul 2021 08:31:18 -0400
+X-MC-Unique: bYQHQ7XiPgSsEz1Z8TR3Eg-1
+Received: by mail-ed1-f69.google.com with SMTP id d6-20020a50f6860000b02903bc068b7717so1172394edn.11
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 05:31:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=yp5cWmb4AkxFKBl8NuqRHF/Fj+1O+kz07eQ9B1cFrTM=;
-        b=QPuryN1fLc/VPu6yEAvogl5fia8uovJAdD5soyvzbh84n3HUPMW+hTkIgVHJtGMrE1
-         nKQ2jii29LcsxjHkisvumT1oAy2ADr1pz5KqxEzu5jHoMij+kNTiIBxwT8VLZiIEjnZp
-         7mOdcvzPrbNAaMPE3XlRqsNZmE+RJ0MYwPs5X8F3fXxjK2ZzYVk9i4VTyklWjqIJTqCg
-         6zcMSr6WQrv5MYAvttKw3SNWXQwlXfl9AfaaV8biVmyeEyU9yx6cxUwkWrDD63AV30xY
-         ZE9SbLvjy/vIu8YhoD/NK3JrU6c1YMlquXYJDov8lJu/LKPfWFjJgRzl7Hg5CBQzxCZ3
-         k6tA==
-X-Gm-Message-State: AOAM530Ia0096yhmBDQwaQ+HSKaF4EE/BOpyfIV1bBc8AtuXPKqRweLr
-        e58feEfqg/+IXQMk5+0JKt0=
-X-Google-Smtp-Source: ABdhPJxnFTfpGwAmyL+B5BY1p5oMjCoBMdD/Omxoq7nc4R8MHgQpLQLkqKXCOPeVLSKKDmRSYkfgVw==
-X-Received: by 2002:adf:d1c7:: with SMTP id b7mr22336082wrd.108.1627473059546;
-        Wed, 28 Jul 2021 04:50:59 -0700 (PDT)
-Received: from ?IPv6:2a02:908:1252:fb60:6a5d:b580:2891:cbac? ([2a02:908:1252:fb60:6a5d:b580:2891:cbac])
-        by smtp.gmail.com with ESMTPSA id q72sm7758671wme.14.2021.07.28.04.50.57
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0YfHQ1c8AlhSTo8Nz6yuEFurOHEQ5PZvC6jO6hUcFJM=;
+        b=h51N4PNa0YgY99d48SohrNmVTaFW3zvQvfhm+UrNO6ARhw5EJIc321UH/8ISUtXx2b
+         FZgIPk5/yf1VsZUx1/DRQ2yA+PbqUpQvPpZ0rJrwKiA78E9s3uhf6wGnm9F652h4PO0e
+         UNa0IE6tjNkcNwbkUzrM8CyA4i0kW+asPLC8Wt/+Ah0zMGLATE8Isz71C50BYoRFe6Lm
+         ib16GrMj5oTlkqFl6C0R/2I73QYbGzOZlBn749bTs8Ip0TAbb4Wq6QpEWJH6JH2M4ZxF
+         iEz/35Ffv/hV2W4YPv0f3x9e1XrWV7bzw+vqhcHH9BI+sUzMPCOeHh9LGCvVJbODtGmz
+         bDkw==
+X-Gm-Message-State: AOAM5333IR9oG93IjK2voUCTxgq6wCBVhbjcHT29oUvV8ZxBXt19w/I0
+        Q+wJl9sINmnJezSiEHBy9QGzgKqiM/ZB54pZ6JBG/feO+YBtINqANQlQmhJN5aKs1Co6nifOm9W
+        9ZDwtoLQJ12Jbyo2X+HPINOKAocjsFlVlCoY5nKd5vz1fIzesc/thSzgD74RSoyaNplwPvPV9eF
+        1F6yiqKR0LFQ==
+X-Received: by 2002:a17:906:7f16:: with SMTP id d22mr5561469ejr.135.1627475477084;
+        Wed, 28 Jul 2021 05:31:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwV8taebjBVrQfFNIWZ9be9DdCxYdOhsuVB8kCWIIlP35ys8TCT85xHBF701PGsdV3Tf1APPw==
+X-Received: by 2002:a17:906:7f16:: with SMTP id d22mr5561454ejr.135.1627475476904;
+        Wed, 28 Jul 2021 05:31:16 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id l17sm2595664edt.52.2021.07.28.05.31.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Jul 2021 04:50:59 -0700 (PDT)
-Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, Baoquan He <bhe@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <joro@8bytes.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-Message-ID: <5cd35ae7-a7ff-eca4-5d2a-f0dad94e1d7a@gmail.com>
-Date:   Wed, 28 Jul 2021 13:50:57 +0200
+        Wed, 28 Jul 2021 05:31:16 -0700 (PDT)
+Subject: Re: [PATCH] platform/x86: Kconfig: Make wireless-hotkey depend on
+ RFKILL
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:X86 PLATFORM DRIVERS" 
+        <platform-driver-x86@vger.kernel.org>
+References: <20210720025351.1819-1-mario.limonciello@amd.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2f223058-3401-5c0a-d216-df32113e11f5@redhat.com>
+Date:   Wed, 28 Jul 2021 14:31:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1627424773.git.thomas.lendacky@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210720025351.1819-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Am 28.07.21 um 00:26 schrieb Tom Lendacky:
-> This patch series provides a generic helper function, prot_guest_has(),
-> to replace the sme_active(), sev_active(), sev_es_active() and
-> mem_encrypt_active() functions.
->
-> It is expected that as new protected virtualization technologies are
-> added to the kernel, they can all be covered by a single function call
-> instead of a collection of specific function calls all called from the
-> same locations.
->
-> The powerpc and s390 patches have been compile tested only. Can the
-> folks copied on this series verify that nothing breaks for them.
+Hi,
 
-As GPU driver dev I'm only one end user of this, but at least from the 
-high level point of view that makes totally sense to me.
+On 7/20/21 4:53 AM, Mario Limonciello wrote:
+> This driver can be built on a kernel without rfkill, but events
+> won't work which causes an unexpected experience.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Feel free to add an Acked-by: Christian König <christian.koenig@amd.com>.
+Mario I can understand where you are coming from here, but Kconfig
+dependencies are meant to express true in kernel dependencies.
 
-We could run that through the AMD GPU unit tests, but I fear we actually 
-don't test on a system with SEV/SME active.
+The wireless-hotkey driver is purely an ACPI based input driver
+from the kernel pov and as such it works fine without RFKILL
+being enabled.
 
-Going to raise that on our team call today.
+So adding a RFKILL dependency is the wrong thing to do here IMHO.
 
 Regards,
-Christian.
 
->
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
-> Cc: Will Deacon <will@kernel.org>
->
+Hans
+
+
+
 > ---
->
-> Patches based on:
->    https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
->    commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
->
-> Tom Lendacky (11):
->    mm: Introduce a function to check for virtualization protection
->      features
->    x86/sev: Add an x86 version of prot_guest_has()
->    powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
->    x86/sme: Replace occurrences of sme_active() with prot_guest_has()
->    x86/sev: Replace occurrences of sev_active() with prot_guest_has()
->    x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
->    treewide: Replace the use of mem_encrypt_active() with
->      prot_guest_has()
->    mm: Remove the now unused mem_encrypt_active() function
->    x86/sev: Remove the now unused mem_encrypt_active() function
->    powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
->      function
->    s390/mm: Remove the now unused mem_encrypt_active() function
->
->   arch/Kconfig                               |  3 ++
->   arch/powerpc/include/asm/mem_encrypt.h     |  5 --
->   arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
->   arch/powerpc/platforms/pseries/Kconfig     |  1 +
->   arch/s390/include/asm/mem_encrypt.h        |  2 -
->   arch/x86/Kconfig                           |  1 +
->   arch/x86/include/asm/kexec.h               |  2 +-
->   arch/x86/include/asm/mem_encrypt.h         | 13 +----
->   arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
->   arch/x86/kernel/crash_dump_64.c            |  4 +-
->   arch/x86/kernel/head64.c                   |  4 +-
->   arch/x86/kernel/kvm.c                      |  3 +-
->   arch/x86/kernel/kvmclock.c                 |  4 +-
->   arch/x86/kernel/machine_kexec_64.c         | 19 +++----
->   arch/x86/kernel/pci-swiotlb.c              |  9 ++--
->   arch/x86/kernel/relocate_kernel_64.S       |  2 +-
->   arch/x86/kernel/sev.c                      |  6 +--
->   arch/x86/kvm/svm/svm.c                     |  3 +-
->   arch/x86/mm/ioremap.c                      | 16 +++---
->   arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
->   arch/x86/mm/mem_encrypt_identity.c         |  3 +-
->   arch/x86/mm/pat/set_memory.c               |  3 +-
->   arch/x86/platform/efi/efi_64.c             |  9 ++--
->   arch/x86/realmode/init.c                   |  8 +--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
->   drivers/gpu/drm/drm_cache.c                |  4 +-
->   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
->   drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
->   drivers/iommu/amd/init.c                   |  7 +--
->   drivers/iommu/amd/iommu.c                  |  3 +-
->   drivers/iommu/amd/iommu_v2.c               |  3 +-
->   drivers/iommu/iommu.c                      |  3 +-
->   fs/proc/vmcore.c                           |  6 +--
->   include/linux/mem_encrypt.h                |  4 --
->   include/linux/protected_guest.h            | 37 +++++++++++++
->   kernel/dma/swiotlb.c                       |  4 +-
->   36 files changed, 218 insertions(+), 104 deletions(-)
->   create mode 100644 arch/powerpc/include/asm/protected_guest.h
->   create mode 100644 arch/x86/include/asm/protected_guest.h
->   create mode 100644 include/linux/protected_guest.h
->
+>  drivers/platform/x86/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7d385c3b2239..22b6e7e3da13 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -419,6 +419,7 @@ config WIRELESS_HOTKEY
+>  	tristate "Wireless hotkey button"
+>  	depends on ACPI
+>  	depends on INPUT
+> +	depends on RFKILL
+>  	help
+>  	 This driver provides supports for the wireless buttons found on some AMD,
+>  	 HP, & Xioami laptops.
+> 
 
