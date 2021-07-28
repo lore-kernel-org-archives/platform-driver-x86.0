@@ -2,64 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60E9C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10EAC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39BC6023D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63A260F9E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 28 Jul 2021 12:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234979AbhG1MgD (ORCPT
+        id S236130AbhG1MoC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 28 Jul 2021 08:36:03 -0400
-Received: from todd.t-8ch.de ([159.69.126.157]:51791 "EHLO todd.t-8ch.de"
+        Wed, 28 Jul 2021 08:44:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234683AbhG1MgD (ORCPT
+        id S236108AbhG1MoB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 28 Jul 2021 08:36:03 -0400
-Date:   Wed, 28 Jul 2021 14:35:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=weissschuh.net;
-        s=mail; t=1627475757;
-        bh=TvHYmPpZwPVftzAxkx91mGu8M+DltKnGumbfjAWcsF8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gD/jBPkxO3umiOH8mUZWDecHKAivY8jFaRpEsJgtJs8ZqQTmGtX2A9UMSnXY8Tw1p
-         iKkNJIO7PtvytYtxIWCGyQTL1c9RFNIyPQsq/+p0ZnvtiKTs43MDI0lMjk5GhyBMfG
-         O1yqBYgKYplMhCh1KNOWkunpNDmck5wASYZuWMHk=
-From:   Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: gigabyte-wmi: add support for B550 Aorus
- Elite V2
-Message-ID: <087f704d-1cc0-4035-9561-74a0d569f2b9@t-8ch.de>
-References: <20210726153630.65213-1-linux@weissschuh.net>
- <bba2f992-d392-4087-c32d-ae60bf05d9ff@redhat.com>
+        Wed, 28 Jul 2021 08:44:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 938BC60F9E
+        for <platform-driver-x86@vger.kernel.org>; Wed, 28 Jul 2021 12:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627476239;
+        bh=rX5YXzv7OSVXbEuaNtXV52+WtKo0OPJuU/0R3PnHg5Y=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=o6iEQm5QvBEBrGzhc6yXorj+j/aJRxl5p8Xr3kvhXyDk1KtcHjVSHgapg6rwcGOUK
+         c64fahgH+abWjqTlDh86OSgmyKZ9kNKd8NHwKacH8v0YUECPVEaS1rk6mXNjj23Jts
+         EYZu8/TiR8UNhJdhhMfuMT4XqmoRB5bM9+WsBqhGTciRUcHVXM99IRl3pHxvbZD3VO
+         y0zUihjkdn3PTrf1VVl8ys0HRIa9DsSHyuWEElxG2Vp4vp/w7cXeoh9BjIydFodO1a
+         +F2wPh5RT0Yxxxrxljw3iOHtLxTBhKmxmsSkyaNvYZk/fnCAluz+Odsm3hzuY0XUiR
+         LZi91YnGyoz1Q==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 209011] asus-wmi always reports tablet mode on a ZenBook
+ UX390UAK
+Date:   Wed, 28 Jul 2021 12:43:59 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: jwrdegoede@fedoraproject.org
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-209011-215701-NbIUAGwlWA@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-209011-215701@https.bugzilla.kernel.org/>
+References: <bug-209011-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bba2f992-d392-4087-c32d-ae60bf05d9ff@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mi, 2021-07-28T12:01+0200, Hans de Goede wrote:
-> On 7/26/21 5:36 PM, Thomas Weißschuh wrote:
-> > Reported as working here:
-> > https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/1#issuecomment-879398883
-> > 
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-> 
-> Thank you for your patch, I've applied this patch to my review-hans 
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> 
-> I will also add this to the pdx86/fixes branch and include it in
-> the pdx86 fixes pull-req for 5.14 which I plan to send to Linus soon.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D209011
 
-Thanks!
+--- Comment #11 from Hans de Goede (jwrdegoede@fedoraproject.org) ---
+Thank you for the logs. I think I know what is going on here.
+
+2 more questions:
+
+1) Did you do "fold the device into tablet-mode and back to laptop-mode onc=
+e"
+before collecting the dmesg.txt ?
+
+2) Can you run "grep . /sys/class/dmi/id/* 2> /dev/null" and copy and paste=
+ the
+output here ?
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
