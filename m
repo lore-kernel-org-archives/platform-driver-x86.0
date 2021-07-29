@@ -2,66 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8733C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 08:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A85C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 11:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFAFD60E9B
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 08:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A31260F0F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 11:14:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234986AbhG2IvS (ORCPT
+        id S236701AbhG2LO6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Jul 2021 04:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234972AbhG2IvR (ORCPT
+        Thu, 29 Jul 2021 07:14:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:24548 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236312AbhG2LO6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Jul 2021 04:51:17 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB5DC061757;
-        Thu, 29 Jul 2021 01:51:14 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id a20so6228091plm.0;
-        Thu, 29 Jul 2021 01:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dUj1P0AzqgAchl6jA4S00J/qZkPPxZhkbN+Xiq2WGLg=;
-        b=KE/xuk+tQes5WMjruTwfyOGEf/oypE+UxtXolXbVeER79Jx0e0A6DzTemjPsErkjl4
-         aToUKo1z40Rizuuc+jAY1VMpMphzGOjMzcfhkcrnPybXx5GVZuNhUpt7J0eLIy44YSfM
-         sHfdKj+giWFH1ArUTporkXUkNu1b2/V6OUIjbGzV1Ard4qGfyyFh7hJSdiUso0ZGtYgg
-         MRYgDWy08RaLZt1ZuNs5FOKaEycDzUac+jHIPWN/11YySfe+1+y0Nkk4rq+ul1oI/ZG5
-         0UJbCKAdcJmv8pqjZ2Rat1tZyiuI/4vag/yqqDSYl4DAyxBO1T0HGG6bZS/AxYAEnl9J
-         FbFA==
+        Thu, 29 Jul 2021 07:14:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627557294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zddsjIu0dWD/zBHYUlwQGei6rq9GfZwXJkwTqXkgrBc=;
+        b=bggmLgB2Piunh26v0eGOaC4K1fFzZ7dvqTilEHE5Nq1kb1CaCKLPwEXjgZLpIGXfTk2VCw
+        tVU2tczV1PTMApE6u9pP4l8HMSiOi0ur+0HeTO0mgj+b8xEQ2jMPyT3Mmn0/NwtFlDhjG0
+        j5TohJmmjopHe6DpqhbbjY06WCVAtCs=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-l6oH6IOGO9Gv-SHd2606Hw-1; Thu, 29 Jul 2021 07:14:53 -0400
+X-MC-Unique: l6oH6IOGO9Gv-SHd2606Hw-1
+Received: by mail-ed1-f72.google.com with SMTP id j22-20020a50ed160000b02903ab03a06e86so2767626eds.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Jul 2021 04:14:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dUj1P0AzqgAchl6jA4S00J/qZkPPxZhkbN+Xiq2WGLg=;
-        b=ECWtgcgWZALf+mRDmSqguecqu0NZBV5PBkpEgu5BJwaoOBgtjS6fc6sX8qj415CtiT
-         kIt9xhBggzQq7uQh97074otI+LkRZUakY5stwHwp8d9IdPXD24ar63RLtnzgI7UHg5uc
-         /YpDrENoeTomFMSQlrJ9TalSKyUtF1SgWa/TAKxsZTPEtoF0GxTJk21SNyXLAYIfEIQM
-         mF1dRtOLNsHb5QQijz0HUPiSNA/t2Ke0I1CaeHDsZM4QpFX36VNLx+8fwzAORN7w430h
-         dXXZuehqfeeLqBMr0nOmAAf8/FLoK1ZnGrGfPiYz/lXjCiMFlcAod1kSydzDVzlphyBv
-         bv4w==
-X-Gm-Message-State: AOAM530yr4Pi0Lnzmw4PhGPvQ9dgwRyQ59vOPaoyW4vKGXMxnYqvt/4b
-        KHSYe/qHSD1G1ww9gc2M/GeGNwMd3MOhy5vGF4Y=
-X-Google-Smtp-Source: ABdhPJxGvvBYQQfLVOUEU+msxBkX/nG2hHGPlAr9mzt1LgWZM8NbXWxR0DObemlrxKoczMEPnACKb4uFOb/MPU4UYw4=
-X-Received: by 2002:a63:d014:: with SMTP id z20mr2853429pgf.203.1627548673835;
- Thu, 29 Jul 2021 01:51:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210729082134.6683-1-hdegoede@redhat.com> <CAHp75VepyNqwLSDaDmc+XCk+_gC5+zGUQ51DOo7KUt2-Gaty-Q@mail.gmail.com>
- <7e6402dd-ec83-5014-8165-95e45cd3169f@redhat.com>
-In-Reply-To: <7e6402dd-ec83-5014-8165-95e45cd3169f@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 29 Jul 2021 11:50:34 +0300
-Message-ID: <CAHp75VeeN7KYifZ7K82CKmj4QKexAu2cK1pqXaj_coMPO4Q8ZQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zddsjIu0dWD/zBHYUlwQGei6rq9GfZwXJkwTqXkgrBc=;
+        b=mPhSI6IFGMyNqg+pU0eHDs+v2o+xVpr+pF83l9mIXp1dShtZlCGSFTUBwz7KVJJ9ok
+         WD8xOu9/B3rYkJpZFR8o/95seJHdaU6sB1I+g2rhI7szblFLhWDthKtTwfAlSNltMRxw
+         Y5aBuhck0F6B+4G4ftrzbkda2FlQHoQuX7lLviD70CRH+qg1AvofiKDug1DQtdCPsNun
+         CvQtjD/kU0y0xrdls6JiORqDI4bf95yJCl8tdVYRtsBgLqMZnXHVsKBgSG/ZhRZCErfV
+         HGcKNy6sBmJ6sQbIfTGQ81IPD9Sr61E/sjwJc5EG/lgsqjqTAZFn/sbV4n+hNPHD9HgP
+         2U1A==
+X-Gm-Message-State: AOAM5322/qsrxsKCiYaYhDWAZp5auRjs3RwenokTce2J+9CF1xMwVUXE
+        yB1qh/24oMfXOKKxJoT6+yuqFYSujTpDIWGq5XaWCworaCrOFh2NHHLx+D3mazOQSWe6iS/0py5
+        TCW2Yp2yiw+QkKhFMmXdAOtLS5JyhJKMP5A==
+X-Received: by 2002:a17:907:3f9a:: with SMTP id hr26mr4155797ejc.110.1627557291965;
+        Thu, 29 Jul 2021 04:14:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyh6/UAmcpC1SzCmUrQ6YUOFMFK5NQwX4HGs0UJJtJ8aLT2g3TQh+Dcyixf6mHMxqTaSarLlw==
+X-Received: by 2002:a17:907:3f9a:: with SMTP id hr26mr4155784ejc.110.1627557291790;
+        Thu, 29 Jul 2021 04:14:51 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id o14sm1069481eds.55.2021.07.29.04.14.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jul 2021 04:14:51 -0700 (PDT)
 Subject: Re: [PATCH] platform/x86: Add and use a dual_accel_detect() helper
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Mark Gross <mgross@linux.intel.com>,
         Andy Shevchenko <andy@infradead.org>,
         Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
@@ -70,110 +71,121 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
         Julius Lehmann <julius@devpi.de>
-Content-Type: text/plain; charset="UTF-8"
+References: <20210729082134.6683-1-hdegoede@redhat.com>
+ <CAHp75VepyNqwLSDaDmc+XCk+_gC5+zGUQ51DOo7KUt2-Gaty-Q@mail.gmail.com>
+ <7e6402dd-ec83-5014-8165-95e45cd3169f@redhat.com>
+ <CAHp75VeeN7KYifZ7K82CKmj4QKexAu2cK1pqXaj_coMPO4Q8ZQ@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <06bd005c-2cf0-00e1-be87-c953b0db5cb5@redhat.com>
+Date:   Thu, 29 Jul 2021 13:14:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VeeN7KYifZ7K82CKmj4QKexAu2cK1pqXaj_coMPO4Q8ZQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 11:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 7/29/21 10:37 AM, Andy Shevchenko wrote:
-> > On Thu, Jul 29, 2021 at 11:21 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> Various 360 degree hinges (yoga) style 2-in-1 devices use 2 accelerometers
-> >> to allow the OS to determine the angle between the display and the base of
-> >> the device.
-> >>
-> >> On Windows these are read by a special HingeAngleService process which
-> >> calls undocumented ACPI methods, to let the firmware know if the 2-in-1 is
-> >> in tablet- or laptop-mode. The firmware may use this to disable the kbd and
-> >> touchpad to avoid spurious input in tablet-mode as well as to report
-> >> SW_TABLET_MODE info to the OS.
-> >>
-> >> Since Linux does not call these undocumented methods, the SW_TABLET_MODE
-> >> info reported by various pdx86 drivers is incorrect on these devices.
-> >>
-> >> Before this commit the intel-hid and thinkpad_acpi code already had 2
-> >> hardcoded checks for ACPI hardware-ids of dual-accel sensors to avoid
-> >> reporting broken info.
-> >>
-> >> And now we also have a bug-report about the same problem in the intel-vbtn
-> >> code. Since there are at least 3 different ACPI hardware-ids in play, add
-> >> a new dual_accel_detect() helper which checks for all 3, rather then
-> >> adding different hardware-ids to the drivers as bug-reports trickle in.
-> >> Having shared code which checks all known hardware-ids is esp. important
-> >> for the intel-hid and intel-vbtn drivers as these are generic drivers
-> >> which are used on a lot of devices.
-> >>
-> >> The BOSC0200 hardware-id requires special handling, because often it is
-> >> used for a single-accelerometer setup. Only in a few cases it refers to
-> >> a dual-accel setup, in which case there will be 2 I2cSerialBus resources
-> >> in the device's resource-list, so the helper checks for this.
-> >
-> > ...
-> >
-> >> +static int dual_accel_i2c_resource_count(struct acpi_resource *ares, void *data)
-> >> +{
-> >> +       struct acpi_resource_i2c_serialbus *sb;
-> >> +       int *count = data;
-> >> +
-> >> +       if (i2c_acpi_get_i2c_resource(ares, &sb))
-> >> +               *count = *count + 1;
-> >> +
-> >> +       return 1;
-> >> +}
-> >
-> > It will be a third copy of this in the kernel.
-> > Let's put it to i2c.h or somewhere available for all these users.
-> >
-> >> +
-> >> +static int dual_accel_i2c_client_count(struct acpi_device *adev)
-> >> +{
-> >> +       int ret, count = 0;
-> >> +       LIST_HEAD(r);
-> >> +
-> >> +       ret = acpi_dev_get_resources(adev, &r, dual_accel_i2c_resource_count, &count);
-> >> +       if (ret < 0)
-> >> +               return ret;
-> >> +
-> >> +       acpi_dev_free_resource_list(&r);
-> >> +       return count;
-> >> +}
-> >
-> > So does this.
-> >
-> > Taking into account that this is a bug fix, I'm okay if you do above
-> > as an additional patch (or patches) on top of this.
->
-> Right, I had a note about this behind the cut (---) line, but I dropped
-> the patch and git-am-ed it while reworking my tree for some other issue
-> dropping the note (sorry), the note was:
->
-> """
-> ---
-> Note the counting of the number of I2cSerialBus resources in an
-> ACPI-device's resource-list is becoming a common pattern. I plan
-> to add a new shared helper for this in a follow-up patch-set.
-> I've deliberately not made use of such a new helper in this patch
-> for easier backporting to the stable series.
-> """
->
-> In other words, I fully agree. I've already added an item to my
-> TODO list about doing a followup series to replace the 3 copies in:
+Hi,
 
-With this promise taken
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On 7/29/21 10:50 AM, Andy Shevchenko wrote:
+> On Thu, Jul 29, 2021 at 11:45 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi,
+>>
+>> On 7/29/21 10:37 AM, Andy Shevchenko wrote:
+>>> On Thu, Jul 29, 2021 at 11:21 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> Various 360 degree hinges (yoga) style 2-in-1 devices use 2 accelerometers
+>>>> to allow the OS to determine the angle between the display and the base of
+>>>> the device.
+>>>>
+>>>> On Windows these are read by a special HingeAngleService process which
+>>>> calls undocumented ACPI methods, to let the firmware know if the 2-in-1 is
+>>>> in tablet- or laptop-mode. The firmware may use this to disable the kbd and
+>>>> touchpad to avoid spurious input in tablet-mode as well as to report
+>>>> SW_TABLET_MODE info to the OS.
+>>>>
+>>>> Since Linux does not call these undocumented methods, the SW_TABLET_MODE
+>>>> info reported by various pdx86 drivers is incorrect on these devices.
+>>>>
+>>>> Before this commit the intel-hid and thinkpad_acpi code already had 2
+>>>> hardcoded checks for ACPI hardware-ids of dual-accel sensors to avoid
+>>>> reporting broken info.
+>>>>
+>>>> And now we also have a bug-report about the same problem in the intel-vbtn
+>>>> code. Since there are at least 3 different ACPI hardware-ids in play, add
+>>>> a new dual_accel_detect() helper which checks for all 3, rather then
+>>>> adding different hardware-ids to the drivers as bug-reports trickle in.
+>>>> Having shared code which checks all known hardware-ids is esp. important
+>>>> for the intel-hid and intel-vbtn drivers as these are generic drivers
+>>>> which are used on a lot of devices.
+>>>>
+>>>> The BOSC0200 hardware-id requires special handling, because often it is
+>>>> used for a single-accelerometer setup. Only in a few cases it refers to
+>>>> a dual-accel setup, in which case there will be 2 I2cSerialBus resources
+>>>> in the device's resource-list, so the helper checks for this.
+>>>
+>>> ...
+>>>
+>>>> +static int dual_accel_i2c_resource_count(struct acpi_resource *ares, void *data)
+>>>> +{
+>>>> +       struct acpi_resource_i2c_serialbus *sb;
+>>>> +       int *count = data;
+>>>> +
+>>>> +       if (i2c_acpi_get_i2c_resource(ares, &sb))
+>>>> +               *count = *count + 1;
+>>>> +
+>>>> +       return 1;
+>>>> +}
+>>>
+>>> It will be a third copy of this in the kernel.
+>>> Let's put it to i2c.h or somewhere available for all these users.
+>>>
+>>>> +
+>>>> +static int dual_accel_i2c_client_count(struct acpi_device *adev)
+>>>> +{
+>>>> +       int ret, count = 0;
+>>>> +       LIST_HEAD(r);
+>>>> +
+>>>> +       ret = acpi_dev_get_resources(adev, &r, dual_accel_i2c_resource_count, &count);
+>>>> +       if (ret < 0)
+>>>> +               return ret;
+>>>> +
+>>>> +       acpi_dev_free_resource_list(&r);
+>>>> +       return count;
+>>>> +}
+>>>
+>>> So does this.
+>>>
+>>> Taking into account that this is a bug fix, I'm okay if you do above
+>>> as an additional patch (or patches) on top of this.
+>>
+>> Right, I had a note about this behind the cut (---) line, but I dropped
+>> the patch and git-am-ed it while reworking my tree for some other issue
+>> dropping the note (sorry), the note was:
+>>
+>> """
+>> ---
+>> Note the counting of the number of I2cSerialBus resources in an
+>> ACPI-device's resource-list is becoming a common pattern. I plan
+>> to add a new shared helper for this in a follow-up patch-set.
+>> I've deliberately not made use of such a new helper in this patch
+>> for easier backporting to the stable series.
+>> """
+>>
+>> In other words, I fully agree. I've already added an item to my
+>> TODO list about doing a followup series to replace the 3 copies in:
+> 
+> With this promise taken
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
->  drivers/platform/x86/dual_accel_detect.h
->  drivers/platform/x86/i2c-multi-instantiate.c
->  drivers/platform/x86/intel/int33fe/intel_cht_int33fe_common.c
->
-> With a new helper in drivers/i2c/i2c-core-acpi.c, like the
-> i2c_acpi_get_i2c_resource() helper which was recently added.
+Thank you, I've added this to the review-hans and fixes branches now.
 
+Regards,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hans
+
