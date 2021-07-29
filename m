@@ -2,164 +2,138 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54554C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 14:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109F2C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 17:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F87E60F5C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 14:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9EC60E9B
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 29 Jul 2021 17:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237432AbhG2OYo (ORCPT
+        id S232080AbhG2Rej (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 29 Jul 2021 10:24:44 -0400
-Received: from mail-dm6nam08on2062.outbound.protection.outlook.com ([40.107.102.62]:53936
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S234975AbhG2OYm (ORCPT
+        Thu, 29 Jul 2021 13:34:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55383 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229739AbhG2Rej (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 29 Jul 2021 10:24:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oBPOZblI+D9q77pDFBSyLNHXzTrAz5IsLvp2O2F8c60Kl6isOKWXRrwlt1ZJxP3/O9ABpgyEyl210S07fUIJqdg6MUASfOl2zQ7DfbQdSdD3TJlTnn+soHx0lrQjWn4H/IsE1EHvsgYyFzAgj8m0mJ3BVcF7oNBEz++uZmFT/XcoMJeCanhq68znsaTFif9wI3z7l1YU2grMOV8MsDw2aIqKlHFCIqr/zXgvsvGeteEuII2MzBvf8t1W6U6EANqJK972jsXpjU4+bZPZmFvuJLYuQ2RJyRTlCPTp6TR+QOrt8uxMMiv2OCB/wN0Vg/GqSubLzK0Z70Sxszll2sv+Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HxOGcG2LsSuPhPcirirqQ/LcY/hiKUspD1DVlba2L3c=;
- b=TGC1W3GPQplOEI5Vu2rfdFM4EFWQu+dpNHlxxgTIHstcNsVx0E3Famfug+SaKINOZc8CI27DVXnchwAStUX9Y0Wxm5SfMO7U2e1HDnEyzPlh4Ui+GvlPX7pO37ejeNDoyL47nyZAQPcbY9nAN60RQ5ghlApHSr58+Cc53i+hdnnWsKAOUPh4Ql6MS1mxDKj5Gc90fOAB/vpFZ2/E3nKLKarwRsM0xwZf7f2ykK/J0UEH4duD2JYU8D3/JRZxMFaIrmkgelAem7yS+kwF7IIiMSrt9SmLdSH1YvBiNKQQUckxrDqczNrXV2y125ykG+cUCvXSioaga4XWmm4S3+mONQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HxOGcG2LsSuPhPcirirqQ/LcY/hiKUspD1DVlba2L3c=;
- b=LIvpt20J02/WWVx2KsVWfVez16+ttvk4SPIxCg8AldfS1gQBEvUPs21El1F7ZZw72jymteXfSvkaKTKHdDouFQLMyVqLaIyECNno18DfU8UrRC0LdGZQ9hBN87q29w6BBNuiu43RoIZlFfQ8drIWnNQBz/d1QmlQIzU6wVunksA=
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by DM4PR12MB5296.namprd12.prod.outlook.com (2603:10b6:5:39d::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19; Thu, 29 Jul
- 2021 14:24:38 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::73:2581:970b:3208]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::73:2581:970b:3208%3]) with mapi id 15.20.4373.020; Thu, 29 Jul 2021
- 14:24:38 +0000
-Subject: Re: [PATCH 02/11] x86/sev: Add an x86 version of prot_guest_has()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <b3e929a77303dd47fd2adc2a1011009d3bfcee20.1627424774.git.thomas.lendacky@amd.com>
- <YQFaM7nOhD2d6SUQ@infradead.org>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <9f371091-7f73-8f60-e537-166984c650c1@amd.com>
-Date:   Thu, 29 Jul 2021 09:24:34 -0500
+        Thu, 29 Jul 2021 13:34:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627580075;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N3IraJdEilssUFQ+/UjwCkbDSBGh8IXc7v9bkIq+gbU=;
+        b=Ysm/OKLkvhFrANQN1gGucBXJgPvrDqqHAu7qtMkJagmtbubHlERywTCCS7HUQZOckk+Ka2
+        KR+pTrbwLoSoapi9XL4wW8De5ozoE16MZk7LRs0d4X36pxjGBqXI3lQSvYrxv9lLqjihM2
+        mHPDOhta68AKsTXwdwr5bgT4KjgldiA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-162-8zDI6XvTOq2spc2oDk464Q-1; Thu, 29 Jul 2021 13:34:34 -0400
+X-MC-Unique: 8zDI6XvTOq2spc2oDk464Q-1
+Received: by mail-ej1-f69.google.com with SMTP id q19-20020a1709064cd3b02904c5f93c0124so2229157ejt.14
+        for <platform-driver-x86@vger.kernel.org>; Thu, 29 Jul 2021 10:34:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N3IraJdEilssUFQ+/UjwCkbDSBGh8IXc7v9bkIq+gbU=;
+        b=hSmrpnY50v6u1Vhh7XQC0QYlBlFlPnbVQPC/85wdpad+/uwtvuzKWOu2zIdnzpE3wS
+         yFi44LtGmnBY/xNvLX74HVsM5x6q59xpdQwOPbeI7bokpW/i0hLt9E4+uFL8LfTZfTul
+         0vzdzYeoqua3mVjgISsecWr0/OBZnUnveBXVQyeqjWfEMs7jxurHJY58haOF1G/+LnAh
+         EOoVL9AUq6LKvIB2NqOkqVITVOKkZ6WAgIOpql1TjNifgZl19rk/45tDqcjBqpD3fAak
+         E1YF1rtjkXv276dGrM5neLnxAZKF1fV4Sntv1lso5s+J2aPgOol0fWm8PdpGZlub5t9/
+         GVCA==
+X-Gm-Message-State: AOAM533ywHXpm4n6fzBDitA+Kt7GxvDl/Ybf2I13Pa+A6PLFBVxfjg4n
+        YIudPVJLo+YVK+8mtaxH20nliV801tawZ4eJxTEkOUbqItXATuwW23hflL/qOFJ95k61WNKpwis
+        CzbbH+GMSmcyYmDWagiEN6CuTT3drLTsnhMcOJ2C1ck6NoUe+w+L/wdS77dLZCynziQmc79c8jD
+        VaESL/2EVyBQ==
+X-Received: by 2002:a17:906:6d4e:: with SMTP id a14mr5634113ejt.328.1627580072929;
+        Thu, 29 Jul 2021 10:34:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyoF0tecMLDi2xG/O7wdIk3NSRqOBp7DnadEElytUZzleMWkFK/XvFcl/w51awv8ahL5nfX2Q==
+X-Received: by 2002:a17:906:6d4e:: with SMTP id a14mr5634093ejt.328.1627580072640;
+        Thu, 29 Jul 2021 10:34:32 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id m13sm1190759ejg.76.2021.07.29.10.34.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jul 2021 10:34:32 -0700 (PDT)
+Subject: Re: [External]Re: [PATCH] platform/x86: think-lmi: add debug_cmd
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20210715230850.389961-1-markpearson@lenovo.com>
+ <4e59c26c-d58b-dfd5-ed21-f9cd83fc43b6@redhat.com>
+ <fc392326-9d19-dc78-bf06-da85b3b53fb2@lenovo.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <985c01bb-76f4-a7c1-e614-470cb5009576@redhat.com>
+Date:   Thu, 29 Jul 2021 19:34:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-In-Reply-To: <YQFaM7nOhD2d6SUQ@infradead.org>
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <fc392326-9d19-dc78-bf06-da85b3b53fb2@lenovo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0158.namprd13.prod.outlook.com
- (2603:10b6:806:28::13) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-ryzen.texastahm.com (67.79.209.213) by SA9PR13CA0158.namprd13.prod.outlook.com (2603:10b6:806:28::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.9 via Frontend Transport; Thu, 29 Jul 2021 14:24:36 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c51be881-a8ee-4f10-1d19-08d9529c9870
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5296:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5296FD585C0C26204D6AB48BECEB9@DM4PR12MB5296.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: g8YoiZL9oeNXf2hggdEMEReQ+f+DiLp2r9FTfxn88t2YLUE3pWUNn8K9VtxgI8iolh3GEkoas+UVQIrSlwwsn0ddWqksQBUcCLc4Uzf6H5rqzpW5qSn3OUEU7heA2gQpwQchJ/M19G+awOq+zZRXLe/2h5RbYxk931+1rw4HdoHwWoMSiGKwq+M1Jo/zWiDQvzLS4Kymdi27/i4xNFaGO/3NdVa4f2HkR3bWK8Npg4xGKFk3D9GV9PLQF6rTDrNk4pm2Z3HJJW7dxn29XFfNYIvhvkyYoeWKrzNgEMqGPktb27iDoOkEdvbGZDCOvEfusrO0GCbZrnqxrRiT/fDS1VQg6BU+Jql0WSzrT8jGbM0+bIzhtM9uIheXwtYjd5NlULBUjxcOdNLm/vHUDMSl24DqKpvBDHkaF31ZatgpoIKTudS+qRgeXy/onmmD0u7oIrZXGV3F/WJZAgXOZRkW/JsJIyE6WBIqmxAfHBPazdIeruy0Gs6bslyx9jWuHbX4JprQGnbAbbii71eN07uJ1TTYpUtj2M/P7OGEd1HcAoqjNDli+R7sOf+12ENRM0/tm4w6UF1XN3jjLJVwlG+A36O+bO9nvyJlIMmZKNKmSNbDnZtUwruXFh+x1i4No1RYrXFgyNIoqsiVN/cetcApGCTZ7xHqcxe6y1raQ1GK19K5lIaQncIMmHmhZztRCPInZdsbdwihBrS2ZVlEdkrhB7N+rO8CFWLP1X9/idqL/1c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(366004)(5660300002)(6486002)(4744005)(31696002)(38100700002)(36756003)(6916009)(478600001)(6512007)(31686004)(316002)(8676002)(26005)(8936002)(4326008)(7416002)(6506007)(956004)(2906002)(66476007)(66946007)(86362001)(53546011)(66556008)(186003)(54906003)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WDdDZ1VyMGZLZGtueGNoY1o0TTBwTEUyNnhuc3NiOFF1QVQ5QnlZN3FWS3g1?=
- =?utf-8?B?dDlqSzZsWkdIdTFIWUVMc1NxaVptTStJMENLbERqQkg4eTdkOGlXeHFEckpH?=
- =?utf-8?B?VTF0aWljYXlKTW9QVkc3YWRlMHN6Z005MW5VSm9aYmErVjBHWmdxY3N2ZHpL?=
- =?utf-8?B?V0p5VE5WUVBnMTdlbkx2VHNDNDZlUDAxTW5adUxuVGRoMi9tNzdTTVk5bU5L?=
- =?utf-8?B?c05WdVRpUDZuMllJYjFmVkZLUmh4REVtVHVXTXQ1elhjbVlreVR2WlcyWkJp?=
- =?utf-8?B?NUVzQURpNytGa2VpcXJ0OEoyVVg0NzM3TmZZdXAyQ1FORnpCV2taUlNiVnZQ?=
- =?utf-8?B?R1U1RTREbVV3bkEwRTFkcU0rdE5mVnpmQkVRMnAxb2U5OXdsVXNrSTJnNjQz?=
- =?utf-8?B?T21oWU5Sb21aeE1KckRnaFJvVGJPZWY3Y0J6ZmkzSzRjd1BEWjltS055OGFz?=
- =?utf-8?B?V285VEdqalN6TmhCcmM4NlFLYlZZOXJMOTZaN0luNW9Scm9VTjRVYTVXYU4x?=
- =?utf-8?B?MU1FZGxXRktjYzdseHF0WElkbU5EMU9yNE9DdFlkMGczMzlGQnQ0V1RzMkpp?=
- =?utf-8?B?NWFRRlFYK0JwTG40SHhkS3VIOHltUXlVSG41N2h6UkVBOW93WWMrRE9KL0g2?=
- =?utf-8?B?SXQwVWRCZGVvRUE0YytDVzdYWmJKTnRmYm01SHZudnhHZmQyTHRJbEhlRmow?=
- =?utf-8?B?NWVSKzN0TmtFSk1zWmxqRTZoOG5GWDdhZFpBNTBPY1VUOTR6eXEzQTZmNytt?=
- =?utf-8?B?VnRGSjZtUlBIOGpFZStSUVA0VkN3dm5MS3BTTnBFSzNUK1NJUWtyaDhsV1ZY?=
- =?utf-8?B?eGd1ZHVkbnh4MEJPS3RxY3FLQzNLakoyL0lERW9UVzV3dlFxYnFpY0RIdTZR?=
- =?utf-8?B?QzZtbTVETTNUQnNQSytZVS8ySnVEQmFEczdzeUkvSkxlUEU5SkhaWTJGQUh6?=
- =?utf-8?B?MktRVkFObjFtdkhTdnNvRlkwVUZzZUxNSFhDaFdtTzVHWmJtS2E4a29JUVEy?=
- =?utf-8?B?NnYvaFhtMDhyOVltNTBlNDJwMWg5MmFCUXpjVjRkWCtZR1F5aE81VHpFclp0?=
- =?utf-8?B?ejFnWGJVM2g1Q0hMSVRSTWxDNkNwNGxsWVdrYnA3eUdaUGZ2dlZ4TEtoNXo2?=
- =?utf-8?B?OTVPNDE5YjQvZFU4alFmeUg5Q3kwRGxoUjBkZjJiOFFPNkl2OTBkWmt0ZExN?=
- =?utf-8?B?c3l6TEI0RkdvZnpSZzJPMTNzYXJnRUUza0pRUzFmcWhERk1zZVRSVktlYUZQ?=
- =?utf-8?B?MjZHNTdtL1A1MkxSUmN4bm1IZzNQaCt6WmpXSUlDWGxQUm9BVk1sUGE4b0RS?=
- =?utf-8?B?QUcweUozYjVpeG5jZ01lUTMxeGd0WVd2bkduZmNCM0RxNWNhdk4rNzlSMENl?=
- =?utf-8?B?Q1lEMGthSzVSYmNxNmg0TUFTdU45TGtOMGpkc0JReVlzTi9SZFE1aWJSUWds?=
- =?utf-8?B?YVFZQnVRQ1UrYld4S1BtVTQyc0hoVEJqdlBYOEtZaWx2dHBvUW53bU9GYUNH?=
- =?utf-8?B?TUc3V0d4WWltS0FDcytocVpHdDVPRyttVGtzUXoxTHl3aTNXWW55WlpDOXEw?=
- =?utf-8?B?RnZnU1RSOVFpNUNuNGsrSyt3VjhEMERpb280a3Bud1FTME5yZEtwV0x0dERP?=
- =?utf-8?B?Q0YwbVVwL1Q4bElrM3owdSt5dUUraTdDaU8zRi9DWWRQaWx1Q0tsTzNHVkh1?=
- =?utf-8?B?RXhYbTlsbVlKRjVHMkJvZE01alRWdFdsREJmV2ZlaTU3enJud2NIMnVCNTVO?=
- =?utf-8?Q?q4A8SyjXWCqV9AOU5580L5phdBMDoaGT3lNqj8e?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c51be881-a8ee-4f10-1d19-08d9529c9870
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2021 14:24:37.8233
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x1yJKZYpE3WkuJiRwixNSm6zZLvrS6IgOGEpCjzchdd6GSdW+MSbiMQLNDM2RswlYPSEsW5kcYKeKwZNqRb27Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5296
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 7/28/21 8:22 AM, Christoph Hellwig wrote:
-> On Tue, Jul 27, 2021 at 05:26:05PM -0500, Tom Lendacky via iommu wrote:
->> Introduce an x86 version of the prot_guest_has() function. This will be
->> used in the more generic x86 code to replace vendor specific calls like
->> sev_active(), etc.
->>
->> While the name suggests this is intended mainly for guests, it will
->> also be used for host memory encryption checks in place of sme_active().
->>
->> The amd_prot_guest_has() function does not use EXPORT_SYMBOL_GPL for the
->> same reasons previously stated when changing sme_active(), sev_active and
+Hi Mark,
+
+On 7/19/21 2:46 PM, Mark Pearson wrote:
+> Thanks for the review Hans
 > 
-> None of that applies here as none of the callers get pulled into
-> random macros.  The only case of that is sme_me_mask through
-> sme_mask, but that's not something this series replaces as far as I can
-> tell.
+> On 2021-07-17 9:59 a.m., Hans de Goede wrote:
+>> Hi Mark,
+>>
+>> On 7/16/21 1:08 AM, Mark Pearson wrote:
+>>> Many Lenovo BIOS's support the ability to send a debug command which
+>>> is useful for debugging and testing unreleased or early features.
+>>> Adding support for this feature.
+>>>
+>>> Also moved the pending_reboot node under attributes dir where it should
+>>> correctly live. Got that wrong in my last commit and realised as I was
+>>> updating the documentation for debug_cmd
+>>>
+>>> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+>>
+>> Thank you for the patch, I'm not entirely sure if we want this in its
+>> current form though, isn't this new debug_cmd file not something which
+>> would be better under debugfs ?  Or maybe have it only show up if
+>> a module parameter is passed to enable it ?
+>>
+>> Note that both have implications wrt secureboot. debugfs is only
+>> writeable when secureboot is disabled; and ATM module options are
+>> not protected by secureboot, but at least in Fedora we would actually
+>> like to change that in the future.
+>>
+>> Anyways, lets discuss this a bit further and then merge something
+>> for this later.
+>>
+> I wasn't sure about debugfs but did consider it. It seemed to be adding a whole extra layer. I'm happy to do that if that's what is recommended but not having it available with secureboot could be annoying for users.
 
-Ok, let me make sure of that and I'll change to EXPORT_SYMBOL_GPL if
-that's the case.
+I agree that adding debugfs support just for a single file seems a bit overkill.
 
-Thanks,
-Tom
+> This feature is mostly used internally (which is fine) but we have had occasions where we've used it with customers; and with the WMI interface it's usually the enterprise customers who do have secure boot enabled. I'd like to avoid that limitation if possible.
 
-> 
+So given that using debugfs seems a bit overkill and it has issues with
+selinux I think that it might be best to hide this file behind a module
+option (and mention that in the docs, or maybe not document it at all?).
+
+At least for now kernel commandline options an be set without breaking
+secureboot and even if secureboot ever starts verifying the cmdline then
+we can always use a /etc/modprobe.d/*.conf file to specify the option
+instead of passing it through the kernel cmdline.
+
+Would using a module option to enable the debug_cmd file
+work for you ?
+
+Regards,
+
+Hans
+
