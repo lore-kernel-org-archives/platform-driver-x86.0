@@ -2,94 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B043C43214
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 06:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F2C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 08:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43F0A6069E
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 06:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7CC60EB5
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 08:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237420AbhGaGK5 (ORCPT
+        id S232048AbhGaIm3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 31 Jul 2021 02:10:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:54747 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237290AbhGaGKz (ORCPT
+        Sat, 31 Jul 2021 04:42:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229703AbhGaIm3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 31 Jul 2021 02:10:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10061"; a="200417342"
-X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
-   d="scan'208";a="200417342"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 23:10:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
-   d="scan'208";a="508566316"
-Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
-  by FMSMGA003.fm.intel.com with ESMTP; 30 Jul 2021 23:10:48 -0700
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
-        irenic.rajneesh@gmail.com, andriy.shevchenko@linux.intel.com,
-        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
-        david.e.box@intel.com, chao.qin@intel.com,
-        linux-kernel@vger.kernel.org, tamar.mashiah@intel.com,
-        gregkh@linuxfoundation.org, rajatja@google.com,
-        Shyam-sundar.S-k@amd.com, Alexander.Deucher@amd.com,
-        mlimonci@amd.com, "David E. Box" <david.e.box@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v6 5/5] platform/x86/intel: pmc/core: Add GBE Package C10 fix for Alder Lake PCH
-Date:   Fri, 30 Jul 2021 23:07:16 -0700
-Message-Id: <41f013b885b19ee7362272bb646ddd8a46d09fbb.1627710766.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1627710765.git.gayatri.kammela@intel.com>
-References: <cover.1627710765.git.gayatri.kammela@intel.com>
+        Sat, 31 Jul 2021 04:42:29 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52642C06175F;
+        Sat, 31 Jul 2021 01:42:22 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id b6so18583758pji.4;
+        Sat, 31 Jul 2021 01:42:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ui2pGTgUv990ujOpW+RfTTCACQki1tm456MMej0JWyo=;
+        b=n0PXG9BiZXmTzVaMKXWYkI/+doL8qEI0mJQ5Uhwk8vfdiG+Bvp3NKK99FmwRlMU0i3
+         XpjgGYvxxZ+KaKjFNF1SqjKU2jq0D4IyG6EEURII3fgtECBV8qiKxz1bzMivESSrVEUG
+         njC2qTdwEQLEbFB5KJwqfDyOnBcZNYwoaZxW0BwkVCBTTIHv9CdeGpTXLfV3/ICOUIi+
+         vtM9AuQJ7Gx6entAXyHRkSi/EqQ8cUe1tUSliOR0FRWYwQ6mLKegAR/vVWGxX7p340ed
+         tcj9Uhd4imVvxiAKMd0obPdYZYLpAQ70EwPbiyvs4lB7ks1o8J8SslppOgJfu8DzKSFx
+         pkWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ui2pGTgUv990ujOpW+RfTTCACQki1tm456MMej0JWyo=;
+        b=fSeOIWPOj7pK/hVZAX+Ps+W68cPzOyZE7XenXakRqvh8Kl5HOK2POc3jsYQSNHHiMt
+         OkQHR3sCC2n+B4ZofJGO+fQUOzbo2EHcP4tl9B+e8Kt8CYyvtGOWzraS6P/f0eWlt50a
+         Khf+i31RBxuSm9pf5mqs/t3iXO8di1f6MB6Uw6c+HlCS7exb/z1nsl8abszrb1pXuGTe
+         a6vBI9cLalITA3+89FG3Sf4DOg3AZGQOrkm8rcV3DgeAh+IPKIbhl6HvPCTbIcv/yp/j
+         /qsmQEeOdqdMuiPwgXc8Ynnqhr1o4FM1ezYTqyymxXycdcT5YCn09N9oNPnek5z1SSdy
+         5ilQ==
+X-Gm-Message-State: AOAM53118V2McHramXaHysyGMF1Gr9Uhc8a7CGHnC1G1fHbh6NsBAdnH
+        yBemclaQE5cLVYiNc85vmsPPOZt1cTRGTnVn23M=
+X-Google-Smtp-Source: ABdhPJziS+K5e82HcDPJvDeHq8wenSVByUY2IdakU03rc5WgEtSV32ey5sxUpIZBlQTDtDMUDlLfB2g7rJZbCPRKiKo=
+X-Received: by 2002:a63:cf0a:: with SMTP id j10mr5618173pgg.4.1627720941716;
+ Sat, 31 Jul 2021 01:42:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1627710765.git.gayatri.kammela@intel.com> <fa72dfad9282e2c24b99327d08cbe032d7034bbf.1627710766.git.gayatri.kammela@intel.com>
+In-Reply-To: <fa72dfad9282e2c24b99327d08cbe032d7034bbf.1627710766.git.gayatri.kammela@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 31 Jul 2021 11:41:45 +0300
+Message-ID: <CAHp75VeAu2fs5zesQE0YqsOSTVO8zPacpW9e89adYBoZnGToOg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/5] platform/x86/intel: intel_pmc_core: Move
+ intel_pmc_core* files to pmc subfolder
+To:     Gayatri Kammela <gayatri.kammela@intel.com>
+Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        You-Sheng Yang <vicamo.yang@canonical.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Box, David E" <david.e.box@intel.com>, chao.qin@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tamar Mashiah <tamar.mashiah@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Alex Deucher <Alexander.Deucher@amd.com>, mlimonci@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: "David E. Box" <david.e.box@linux.intel.com>
+On Sat, Jul 31, 2021 at 9:10 AM Gayatri Kammela
+<gayatri.kammela@intel.com> wrote:
+>
+> As part of collecting Intel x86 specific drivers in their own
+> folder, move intel_pmc_core* files to its own subfolder there.
 
-Alder PCH uses the same Gigabit Ethernet (GBE) device as Tiger Lake PCH
-which cannot achieve PC10 without ignoring the PMC GBE LTR. Add this
-work around for Alder Lake PCH as well.
+...
 
-Cc: Chao Qin <chao.qin@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: You-Sheng Yang <vicamo.yang@canonical.com>
-Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>  .../pmc/pltdrv.c}                             |  0
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index e645ede591d8..7c4bf7d22fd5 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1983,10 +1983,10 @@ static int pmc_core_probe(struct platform_device *pdev)
- 		pmc_core_get_tgl_lpm_reqs(pdev);
- 
- 	/*
--	 * On TGL, due to a hardware limitation, the GBE LTR blocks PC10 when
--	 * a cable is attached. Tell the PMC to ignore it.
-+	 * On TGL and ADL, due to a hardware limitation, the GBE LTR blocks PC10
-+	 * when a cable is attached. Tell the PMC to ignore it.
- 	 */
--	if (pmcdev->map == &tgl_reg_map) {
-+	if (pmcdev->map == &tgl_reg_map || pmcdev->map == &adl_reg_map) {
- 		dev_dbg(&pdev->dev, "ignoring GBE LTR\n");
- 		pmc_core_send_ltr_ignore(pmcdev, 3);
- 	}
+I would go further and spell it as platform.c.
+
+...
+
+> -F:     drivers/platform/x86/intel_pmc_core*
+> +F:     drivers/platform/x86/intel/pmc/core*
+
+This seems incorrect.
+
+...
+
+> +         Supported features:
+> +               - SLP_S0_RESIDENCY counter
+> +               - PCH IP Power Gating status
+> +               - LTR Ignore / LTR Show
+
+> +               - MPHY/PLL gating status (Sunrisepoint PCH only)
+> +               - SLPS0 Debug registers (Cannonlake/Icelake PCH)
+> +               - Low Power Mode registers (Tigerlake and beyond)
+
+Perhaps you may use the opportunity to spell codenames in a better way, i.e.
+Sunrise Point
+Cannon Lake
+Ice Lake
+Tiger Lake
+
+as it's done almost everywhere else in the kernel.
+
+...
+
+> +obj-$(CONFIG_INTEL_PMC_CORE)   += intel_pmc_core.o
+> +intel_pmc_core-objs            += core.o
+
+objs suffix is not for kernel modules.
+Moreover, := has a difference to +=. Why is the latter in use?
+
+> +obj-$(CONFIG_INTEL_PMC_CORE)   += pltdrv.o
+
+This will have the very same issue as with the core module. On top of
+that, do you need a separate module for it? If so, why?
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
