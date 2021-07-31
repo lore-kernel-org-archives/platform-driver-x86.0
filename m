@@ -2,115 +2,120 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1E3C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Jul 2021 22:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E47C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 06:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9236A60FED
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 30 Jul 2021 22:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EB26069E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 31 Jul 2021 06:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233372AbhG3Weu (ORCPT
+        id S231768AbhGaGKq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 30 Jul 2021 18:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbhG3Wet (ORCPT
+        Sat, 31 Jul 2021 02:10:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54747 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229683AbhGaGKp (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 30 Jul 2021 18:34:49 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2A4C061765
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jul 2021 15:34:43 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id l19so17340151pjz.0
-        for <platform-driver-x86@vger.kernel.org>; Fri, 30 Jul 2021 15:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2B8bmMK1MWV0IKBzZFhJ4QQnRCCDWLQwwtmcrrRzShw=;
-        b=UfW+Uyhy937lSOvlfCbvzUSHfPBdVvhcTOaILHqlmzjEQeZkE7CJS1pDjY85yLeTrk
-         ZUbJvCXGnG9V4YR8YvLqiCoHxoAuC0RJHo8xznM5u3dhr6dkJI9BNq9mI/HgcDxL19UV
-         T0+Bsg6O2a3etVDRUOMu6je3JU33B5pFqiYpolqwzc84ASrmmPyryuwH24+FPODl2NK0
-         /jswqbw3cLYGC3s8tw+3+64iNj05CofMOCHjsjPmhNsSGF6fZGX5s2X6UpkAmOT82yEf
-         KD+vMh5N6wzurqnoLV7GP3bDuQRiamzrkbH5J6wxueQVfjy9YKlsV1lqKUCTBLbTMy1G
-         tbIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2B8bmMK1MWV0IKBzZFhJ4QQnRCCDWLQwwtmcrrRzShw=;
-        b=nStzMrCrhavFqI00v92OAT/s3MvReJSriz3p5WGgd2OKwp8wZe4VPCbMPQyCcn8Grm
-         TnsueOBrmEU054+yrLIaeAF/knvkyKfcqmez/3EudapBDMSTuAoSC53+EE8sLBBPBDqs
-         3ZWIPhSzlEiKotmpMMQf1ptoy+6Lhyw0sz3TlplqKpVVyjfJjNP2xCQvL/F02Z3cUrpN
-         NdwAGmABNGCWdgxc3GuXANWTuihVhZ9wPZvTlfdynVunndaEAtG2V8Suy3TH0eyYRk8i
-         HEkNjxB1baxIEtirtOTxXhD6dV3Nd4hTu2rYI05q5vLROO7H0AzTn0O/uuXtY/Y5Kuzy
-         AX8Q==
-X-Gm-Message-State: AOAM531yx+Bpfsul0pjP4kWrUrxgxNL7166sxnYDptHm74ssOiF24I6K
-        +caTr/Dn48Llndje3i3neXIqeg==
-X-Google-Smtp-Source: ABdhPJzSqN3B7Go3MtNjE9VY5h0clk+hYXj3ladZ5/S+PnXE8W92M9c05HKB4nGF1ekuX4eoULgjrQ==
-X-Received: by 2002:a17:90b:1bcc:: with SMTP id oa12mr5239612pjb.113.1627684481796;
-        Fri, 30 Jul 2021 15:34:41 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id b184sm3525033pfg.72.2021.07.30.15.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 15:34:41 -0700 (PDT)
-Date:   Fri, 30 Jul 2021 22:34:37 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-Message-ID: <YQR+ffO92gMfGDbs@google.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+        Sat, 31 Jul 2021 02:10:45 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10061"; a="200417325"
+X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
+   d="scan'208";a="200417325"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2021 23:10:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,284,1620716400"; 
+   d="scan'208";a="508566287"
+Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Jul 2021 23:10:36 -0700
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
+        irenic.rajneesh@gmail.com, andriy.shevchenko@linux.intel.com,
+        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
+        david.e.box@intel.com, chao.qin@intel.com,
+        linux-kernel@vger.kernel.org, tamar.mashiah@intel.com,
+        gregkh@linuxfoundation.org, rajatja@google.com,
+        Shyam-sundar.S-k@amd.com, Alexander.Deucher@amd.com,
+        mlimonci@amd.com, Gayatri Kammela <gayatri.kammela@intel.com>
+Subject: [PATCH v6 0/5] Add Alder Lake PCH-S support to PMC core driver
+Date:   Fri, 30 Jul 2021 23:07:11 -0700
+Message-Id: <cover.1627710765.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Jul 27, 2021, Tom Lendacky wrote:
-> @@ -451,7 +450,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
->  	 * The unused memory range was mapped decrypted, change the encryption
->  	 * attribute from decrypted to encrypted before freeing it.
->  	 */
-> -	if (mem_encrypt_active()) {
-> +	if (sme_me_mask) {
+Hi,
+The patch series move intel_pmc_core* files to pmc subfolder as well as
+add Alder Lake PCH-S support to PMC core driver.
 
-Any reason this uses sme_me_mask?  The helper it calls, __set_memory_enc_dec(),
-uses prot_guest_has(PATTR_MEM_ENCRYPT) so I assume it's available?
+Patch 1: Move intel_pmc_core* files to pmc subfolder
+Patch 2: Add Alderlake support to pmc core driver
+Patch 3: Add Latency Tolerance Reporting (LTR) support to Alder Lake
+Patch 4: Add Alder Lake low power mode support for pmc core
+Patch 5: Add GBE Package C10 fix for Alder Lake
 
->  		r = set_memory_encrypted(vaddr, npages);
->  		if (r) {
->  			pr_warn("failed to free unused decrypted pages\n");
+Changes since v1:
+1) Add patch 1 to v2 i.e., Move intel_pmc_core* files to pmc subfolder.
+2) Modify commit message for patch 2.
+
+Changes since v2:
+1) Dropped intel_pmc_ prefix from the file names.
+
+Changes since v3:
+1) Fixed an error reported by lkp.
+
+Changes since v4:
+1) Updated MAINTAINERS
+
+Changes since v5:
+1) Fixed an module name error reported by Chao Qin
+
+David E. Box (1):
+  platform/x86/intel: pmc/core: Add GBE Package C10 fix for Alder Lake
+    PCH
+
+Gayatri Kammela (4):
+  platform/x86/intel: intel_pmc_core: Move intel_pmc_core* files to pmc
+    subfolder
+  platform/x86/intel: pmc/core: Add Alderlake support to pmc core driver
+  platform/x86/intel: pmc/core: Add Latency Tolerance Reporting (LTR)
+    support to Alder Lake
+  platform/x86/intel: pmc/core: Add Alder Lake low power mode support
+    for pmc core
+
+ MAINTAINERS                                   |   2 +-
+ drivers/platform/x86/Kconfig                  |  21 --
+ drivers/platform/x86/Makefile                 |   1 -
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/pmc/Kconfig        |  22 ++
+ drivers/platform/x86/intel/pmc/Makefile       |   6 +
+ .../{intel_pmc_core.c => intel/pmc/core.c}    | 309 +++++++++++++++++-
+ .../{intel_pmc_core.h => intel/pmc/core.h}    |  17 +
+ .../pmc/pltdrv.c}                             |   0
+ 10 files changed, 353 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
+ create mode 100644 drivers/platform/x86/intel/pmc/Makefile
+ rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/core.c} (85%)
+ rename drivers/platform/x86/{intel_pmc_core.h => intel/pmc/core.h} (95%)
+ rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pltdrv.c} (100%)
+
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Box <david.e.box@intel.com>
+Cc: You-Sheng Yang <vicamo.yang@canonical.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
+Cc: Chao Qin <chao.qin@intel.com>
+
+base-commit: c7d102232649226a69dddd58a4942cf13cff4f7c
+-- 
+2.25.1
 
