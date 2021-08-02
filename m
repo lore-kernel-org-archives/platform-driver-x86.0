@@ -8,338 +8,664 @@ X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E39C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 10:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8BCC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 11:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0480060FD8
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 10:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FD760F6D
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 11:39:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233176AbhHBKza (ORCPT
+        id S233463AbhHBLjm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 Aug 2021 06:55:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48481 "EHLO
+        Mon, 2 Aug 2021 07:39:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37112 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233167AbhHBKz3 (ORCPT
+        by vger.kernel.org with ESMTP id S233513AbhHBLjl (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Aug 2021 06:55:29 -0400
+        Mon, 2 Aug 2021 07:39:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627901718;
+        s=mimecast20190719; t=1627904370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5o/a06yfnFBviosRbiOcmSJO5qx6JCpa3jU9bEMZ6Jk=;
-        b=CrSU/e1i6mgUHFHeojyNe5EoEyZJjfgoEhfvx4Ec6FCzfyy0+SC2nn+hz8cZ2uDPp4SVWL
-        DjOcUJEy9yudunLjX2qr8ONH7pRtLf8sftx10tlSYOMSHCwRoQEi9ejsHwlM1ukM/JkJBO
-        FSoE8WtOendo1b65aizwqrIx/K0tVLU=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-227-wVK-Tb7KPlaGTlNtpknBOw-1; Mon, 02 Aug 2021 06:55:17 -0400
-X-MC-Unique: wVK-Tb7KPlaGTlNtpknBOw-1
-Received: by mail-ed1-f72.google.com with SMTP id dn10-20020a05640222eab02903bd023ea9f6so3686356edb.14
-        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Aug 2021 03:55:17 -0700 (PDT)
+        bh=1eb11UNcu8mEFKIdPzmiDn9WkPTsh759ib8CnfJVbb8=;
+        b=BzX0HVGqh+GvfEPC7/S1kw2nwxwE2wBgCQLo79N5yV6/VKlmKUSv65xqy6z+470zSrk3Hj
+        gsjtpSKOQUKmO1XCKW0R/jeMCcR4JYg3cehyggHuBVpZx4DdQqAFbPqlEF9faVyoZilKeV
+        4p8MZjQg5hpza3bEZZW115c+MeEJP0E=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-561-EII7n9lNPIC2MT7otDtqKQ-1; Mon, 02 Aug 2021 07:39:29 -0400
+X-MC-Unique: EII7n9lNPIC2MT7otDtqKQ-1
+Received: by mail-ed1-f71.google.com with SMTP id c1-20020aa7df010000b02903bb5c6f746eso8519733edy.10
+        for <platform-driver-x86@vger.kernel.org>; Mon, 02 Aug 2021 04:39:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=5o/a06yfnFBviosRbiOcmSJO5qx6JCpa3jU9bEMZ6Jk=;
-        b=VPkQBeNsEc8nrJc9wotyvlKSMbyjw9h83aL/X7yf26Z8l5+aNk08Ozg3kss/p4SclO
-         pUdkOMIFdjm+6A9XGWGSAvD+nms41ZLWZdYaXB/uU6LV+qLXVWSDYFi7oFebnGuvRyB1
-         ZmbTy1Bq4K7nxdJdvFbya7+FtH2eekNsIrV+HvSQLAwD6+javMayc+xFc7Tq8eYPELts
-         3l23zPvj1Rz4xs5NfStonTLD73vBLwE8qe2dAVrJBPDGktccDg7ZoA5KOsxBT4qsiJ3n
-         GpGGIC10ZyH60T0mfhON/6mMRgaJ9CFSbDObad9l5tlhka9Dtpn57I6vaPpAFLZKCicn
-         fmHg==
-X-Gm-Message-State: AOAM531uQ1nv9Aw6LSke2rR6mq/GXC3aA6hO7vFWTirIesD9Pu5VLGSl
-        Mk2ytomWT50sb3rX7lzqb+/IjxU50ytDQVnESKkb8zjdUJHmGLwyIxCCTfDWSj/hIHxd8613B2R
-        xi9gLdvWMRkawNzgip8xBgoP47SkQlSht6w==
-X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr15707713ejb.87.1627901716582;
-        Mon, 02 Aug 2021 03:55:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwB8NLPv396gFrOWKXN8fy/pkBG8Jhv72bjUPXZoLBiOYiesHC9qww6qEr4MOFiB3KXDp0Dnw==
-X-Received: by 2002:a17:906:e241:: with SMTP id gq1mr15707685ejb.87.1627901716305;
-        Mon, 02 Aug 2021 03:55:16 -0700 (PDT)
+        bh=1eb11UNcu8mEFKIdPzmiDn9WkPTsh759ib8CnfJVbb8=;
+        b=cDKuBaWkocwP33m7UbYSqoXpUP5I/CXYnethGGHXgkLW+a1up5dkCjjZ3XYrReOfDp
+         VsJvaOEQKMhLczPdP7fgkJpdzHDKYhfx9ATjvIW8sU2ffMO/W3vZ9wQQPj8CGrb5WiUU
+         3qyy4scvqfLhN/gSalyjU50xXkzhPq2tPtHDFKbmBqO4mDYOmInsy9RgFqPsX30hkX+G
+         CQLTyWzGWMqQQ9EswIPk4ET2Kvr33TRYqWGpETEZcMZWjkJ0MjKq3eG3f2HdczgZMtet
+         9cXIReN4FvDgKGhdwCyYR7k+LEDt3WcMyZSg2jrAKd5UpMSquV3tGrdAzw3kdjukiTJc
+         R3Rw==
+X-Gm-Message-State: AOAM531oL1ON6A0ZC5rB3UJXmEQkB+lH/T2BUY6Nix2EbsZdjxXffNfF
+        3EHXtqQR0Ac9ih3cLIXT9L3As6HWndOaB461ULCQb1tD5n6Tm/j5PFA+FZamVNGqoEQ6pFzynvj
+        M8+a6KOoeqKl+EJMlulrlKT8buoepvHd+7Q==
+X-Received: by 2002:a17:907:11c4:: with SMTP id va4mr14928981ejb.37.1627904368024;
+        Mon, 02 Aug 2021 04:39:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwq9nd/zxRa7CiPUAPjpBkilNRPRt0iJW8XDKU/0rI04YBuKmPTU6QNCQOab711B8+Dud4Xmw==
+X-Received: by 2002:a17:907:11c4:: with SMTP id va4mr14928965ejb.37.1627904367762;
+        Mon, 02 Aug 2021 04:39:27 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id ec38sm5859312edb.40.2021.08.02.03.55.15
+        by smtp.gmail.com with ESMTPSA id dn18sm5931780edb.42.2021.08.02.04.39.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Aug 2021 03:55:15 -0700 (PDT)
-Subject: Re: [PATCH 2/4] asus-wmi: Add dgpu disable method
-To:     Luke Jones <luke@ljones.dev>
-Cc:     pobrn@protonmail.com, mgross@linux.intel.com,
-        corentin.chary@gmail.com, platform-driver-x86@vger.kernel.org,
-        linux-kernel@vger.kernel.org, acpi4asus-user@lists.sourceforge.net
-References: <20210717081323.7925-1-luke@ljones.dev>
- <20210717081323.7925-2-luke@ljones.dev>
- <eed70640-6252-45f8-848f-bc5890f7807b@redhat.com>
- <8YYQWQ.1825YSKLVR7B3@ljones.dev>
+        Mon, 02 Aug 2021 04:39:27 -0700 (PDT)
+Subject: Re: [PATCH v2] platform/x86: acer-wmi: Add Turbo Mode support for
+ Acer PH315-53
+To:     Jafar Akhondali <jafar.akhoondali@gmail.com>, jlee@suse.com,
+        mgross@linux.intel.com, platform-driver-x86@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <CAMW3L+2yurdggGpYSHZw6x07SboxqYRrDA6B699=SagAVp6Euw@mail.gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9b78e6a5-71b8-fda7-9798-903c7e460de4@redhat.com>
-Date:   Mon, 2 Aug 2021 12:55:15 +0200
+Message-ID: <f50d9ced-a2c3-7d46-01a0-794b31ee73a2@redhat.com>
+Date:   Mon, 2 Aug 2021 13:39:27 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <8YYQWQ.1825YSKLVR7B3@ljones.dev>
+In-Reply-To: <CAMW3L+2yurdggGpYSHZw6x07SboxqYRrDA6B699=SagAVp6Euw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Luke,
+Hi,
 
-On 7/24/21 1:37 PM, Luke Jones wrote:
-> Great feedback and thorough, thank you. I feel I need to describe the full issue this patch tries to address now as it is causing some headaches.
-> 
-> ASUS have added an ACPI method that enables or disables the dGPU on these particular ROG laptops, presumably because they are unable to reliably deal with the dGPU waking and being used by processes in Windows. The ACPI method works similar to what we do in software (with asusctl and system76-power) by removing the device from the device tree so nothing can attach to it - but here it is ejected via ACPI and really does not exist anymore until enabled again.
-> 
-> So the problem is two-fold:
-> - A user can disable it in Windows via Armoury Crate, then reboot to Linux and not be able to use the dGPU as it is just not there.
-> - They can use the patch here to enable it, but this comes with caveats..
-> 
-> Proper enable of the dGPU again as far as my testing goes works such that:
-> 1. call the ACPI method
-> 2. rescan PCI bus to ensure the device is powered
-> 3. call the ACPI method again to save the setting
-> 
-> But it appears that recent work in-kernel for many things AMD related has broken this for us: if the 3 steps are attempted then there is a fail with the parent device not able to pull out of D3cold. But only if the kernel is fully loaded.
-> ```
-> acpi device:03: Cannot transition to power state D0 for parent in D3cold
-> ```
-> 
-> If I patch the kernel to run the ACPI call as a default setting to enable it, then it occurs early enough in boot that it can be enabled correctly with userspace issuing step 3 to save it.
-> 
-> Getting down to brass tacks, I need to solve:
-> a. the D3cold issue so that a write does: write, power up, write again, or,
-> b. find how to set the default in 3 steps.
+On 7/12/21 12:25 AM, Jafar Akhondali wrote:
+> Looks like the previous patch got some indentation problems, here is
+> the fixed version.
 
-I  think we should try to get b. to work (again), we really don't want to add
-something highly Asus specific to the standard ACPI boot-patrhs. IOW ideally
-this should all be contained inside the asus-wmi.ko file which I believe
-means that we need b.
+Thank you for the new version, this is much better.
 
-I think the best way forward here is to send an email to the authors of the
-recent changes which broke b. +  the linux-acpi and linux-pci mailinglists and
-then try to solve things with those folks.
+> 
+> The Acer Predator Helios series (usually denoted by PHxxx-yy) features
+> a special key above the keyboard named "TURBO". The turbo key does 3
+> things:
+> 1. Set all fan's speeds to TURBO mode
+> 2. Overclocks the CPU and GPU in the safe range
+> 3. Turn on an LED just below the turbo button
+> 
+> All of these actions are done by WMI function calls, and there is no
+> custom OC level for turbo. It acts as a flag for enabling turbo
+> mode instead of telling processors to use 1.3x of power.
+> 
+> I've run some benchmark tests and it worked fine:
+> 
+> GpuTest 0.7.0
+> http://www.geeks3d.com
+> 
+> Module: FurMark
+> Normal mode Score: 7289 points (FPS: 121)
+> Turbo mode Score: 7675 points (FPS: 127)
+> Settings:
+> - 1920x1080 fullscreen
+> - antialiasing: Off
+> - duration: 60000 ms
+> 
+> Renderer:
+> - GeForce RTX 2060/PCIe/SSE2
+> - OpenGL: 4.6.0 NVIDIA 460.32.03
+> 
+> This feature is presented by Acer officially and should not harm
+> hardware in any case.
+> 
+> A challenging part of implementing this feature is that calling overclocking
+> the function requires knowing the exact count of fans for CPU and GPU
+> for each model, which to the best of my knowledge is not available in
+> the kernel.
+> 
+> So after checking the official PredatorSense application methods, it
+> turned out they have provided the software the list of fans in each model.
+> I have access to the mentioned list, and all similar PH-iii-jj can be
+> added easily by matching "DMI_PRODUCT_NAME".
+> 
+> Creating a separate file for the gaming interface was not possible because
+> the current WMI event GUID is needed for the turbo button, and it's not possible
+> to register multiple functions on the same event GUID.
+> 
+> 
+> Some small indent problems have been also fixed.
+> 
+> Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
+> ---
+>  drivers/platform/x86/acer-wmi.c | 243 ++++++++++++++++++++++++++++++--
+>  1 file changed, 231 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 85db9403cc14..06b25ddf04ee 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -30,10 +30,12 @@
+>  #include <linux/input/sparse-keymap.h>
+>  #include <acpi/video.h>
+> 
+> +
+>  MODULE_AUTHOR("Carlos Corbacho");
+>  MODULE_DESCRIPTION("Acer Laptop WMI Extras Driver");
+>  MODULE_LICENSE("GPL");
+> 
+> +
+>  /*
+>   * Magic Number
+>   * Meaning is unknown - this number is required for writing to ACPI for AMW0
 
-I guess it would be good if you can first figure out which recent commit
-exactly broke b.
+These 2 whitespace changes are unrelated to the turbo feature, please drop.
+
+> @@ -59,7 +61,10 @@ MODULE_LICENSE("GPL");
+>  #define ACER_WMID_SET_BRIGHTNESS_METHODID    6
+>  #define ACER_WMID_GET_THREEG_METHODID        10
+>  #define ACER_WMID_SET_THREEG_METHODID        11
+> -
+
+Please keep the empty line here.
+ 
+> +#define ACER_WMID_SET_GAMING_LED_METHODID 2
+> +#define ACER_WMID_GET_GAMING_LED_METHODID 4
+> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+> +#define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+
+And add an extra empty line here.
+
+>  /*
+>   * Acer ACPI method GUIDs
+>   */
+> @@ -68,6 +73,7 @@ MODULE_LICENSE("GPL");
+>  #define WMID_GUID1        "6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
+>  #define WMID_GUID2        "95764E09-FB56-4E83-B31A-37761F60994A"
+>  #define WMID_GUID3        "61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+> +#define WMID_GUID4        "7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56"
+> 
+>  /*
+>   * Acer ACPI event GUIDs
+> @@ -81,6 +87,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+>  enum acer_wmi_event_ids {
+>      WMID_HOTKEY_EVENT = 0x1,
+>      WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
+> +    WMID_GAMING_TURBO_KEY_EVENT = 0x7,
+>  };
+> 
+>  static const struct key_entry acer_wmi_keymap[] __initconst = {
+> @@ -144,6 +151,7 @@ struct event_return_value {
+> 
+>  #define ACER_WMID3_GDS_TOUCHPAD        (1<<1)    /* Touchpad */
+> 
+> +
+>  /* Hotkey Customized Setting and Acer Application Status.
+>   * Set Device Default Value and Report Acer Application Status.
+>   * When Acer Application starts, it will run this method to inform
+
+Unrelated whitespace change, please drop.
+
+> @@ -215,6 +223,9 @@ struct hotkey_function_type_aa {
+>  #define ACER_CAP_THREEG            BIT(4)
+>  #define ACER_CAP_SET_FUNCTION_MODE    BIT(5)
+>  #define ACER_CAP_KBD_DOCK        BIT(6)
+> +#define ACER_CAP_TURBO_OC     BIT(7)
+> +#define ACER_CAP_TURBO_LED     BIT(8)
+> +#define ACER_CAP_TURBO_FAN     BIT(9)
+> 
+>  /*
+>   * Interface type flags
+> @@ -224,6 +235,7 @@ enum interface_flags {
+>      ACER_AMW0_V2,
+>      ACER_WMID,
+>      ACER_WMID_v2,
+> +    ACER_WMID_GAMING,
+>  };
+> 
+>  #define ACER_DEFAULT_WIRELESS  0
+> @@ -290,6 +302,9 @@ struct wmi_interface {
+>  /* The static interface pointer, points to the currently detected interface */
+>  static struct wmi_interface *interface;
+> 
+> +/* The static gaming interface pointer, points to the currently
+> detected gaming interface */
+> +static struct wmi_interface *gaming_interface;
+> +
+
+The interface pointer stuff is intended to point to one of the
+4 types of main Acer WMI interfaces, since there is only one
+gamig interface, there is no need for this separate
+gaming_interface pointer, please drop it.
+
+
+>  /*
+>   * Embedded Controller quirks
+>   * Some laptops require us to directly access the EC to either enable or query
+> @@ -301,6 +316,9 @@ struct quirk_entry {
+>      u8 mailled;
+>      s8 brightness;
+>      u8 bluetooth;
+> +    u8 turbo;
+> +    u8 cpu_fans;
+> +    u8 gpu_fans;
+>  };
+> 
+>  static struct quirk_entry *quirks;
+> @@ -312,6 +330,10 @@ static void __init set_quirks(void)
+> 
+>      if (quirks->brightness)
+>          interface->capability |= ACER_CAP_BRIGHTNESS;
+> +
+> +    if (quirks->turbo)
+> +        gaming_interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
+> +                | ACER_CAP_TURBO_FAN;
+
+Just use interface->capability here.
+
+>  }
+> 
+>  static int __init dmi_matched(const struct dmi_system_id *dmi)
+> @@ -340,6 +362,12 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
+>      .mailled = 1,
+>  };
+> 
+> +static struct quirk_entry quirk_acer_predator_ph315_53 = {
+> +    .turbo = 1,
+> +    .cpu_fans = 1,
+> +    .gpu_fans = 1,
+> +};
+> +
+>  /* This AMW0 laptop has no bluetooth */
+>  static struct quirk_entry quirk_medion_md_98300 = {
+>      .wireless = 1,
+> @@ -507,6 +535,15 @@ static const struct dmi_system_id acer_quirks[]
+> __initconst = {
+>          },
+>          .driver_data = &quirk_acer_travelmate_2490,
+>      },
+> +    {
+> +        .callback = dmi_matched,
+> +        .ident = "Acer Predator PH315-53",
+> +        .matches = {
+> +            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +            DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH315-53"),
+> +        },
+> +        .driver_data = &quirk_acer_predator_ph315_53,
+> +    },
+>      {
+>          .callback = set_force_caps,
+>          .ident = "Acer Aspire Switch 10E SW3-016",
+> @@ -903,7 +940,7 @@ static acpi_status __init AMW0_set_capabilities(void)
+>       */
+>      if (wmi_has_guid(AMW0_GUID2)) {
+>          if ((quirks != &quirk_unknown) ||
+> -            !AMW0_set_cap_acpi_check_device())
+> +            !AMW0_set_cap_acpi_check_device())
+>              interface->capability |= ACER_CAP_WIRELESS;
+>          return AE_OK;
+>      }
+
+Unrelated whitespace change, please drop.
+
+> @@ -1344,6 +1381,93 @@ static struct wmi_interface wmid_v2_interface = {
+>      .type = ACER_WMID_v2,
+>  };
+> 
+> +
+> +/*
+> + * WMID Gaming interface
+> + */
+> +
+> +static struct wmi_interface wmid_gaming_interface = {
+> +    .type = ACER_WMID_GAMING
+> +};
+
+Not necessary, please drop.
+
+> +
+> +static acpi_status
+> +WMI_gaming_execute_u64(u32 method_id, u64 in, u64 *out)
+> +{
+> +    struct acpi_buffer input = { (acpi_size) sizeof(u64), (void *)(&in) };
+> +    struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> +    union acpi_object *obj;
+> +    u32 tmp = 0;
+> +    acpi_status status;
+> +
+> +    status = wmi_evaluate_method(WMID_GUID4, 0, method_id, &input, &result);
+> +
+> +    if (ACPI_FAILURE(status))
+> +        return status;
+> +    obj = (union acpi_object *) result.pointer;
+> +
+> +    if (obj) {
+> +        if (obj->type == ACPI_TYPE_BUFFER &&
+> +            (obj->buffer.length == sizeof(u32) ||
+> +             obj->buffer.length == sizeof(u64))) {
+> +            tmp = *((u64 *) obj->buffer.pointer);
+
+You need to have a separate case for length == sizeof(u32), in that
+case you must use:
+
+		tmp = *((u32 *) obj->buffer.pointer);
+
+So that you don't read beyond the end of the buffer.
+
+> +        } else if (obj->type == ACPI_TYPE_INTEGER) {
+> +            tmp = (u64) obj->integer.value;
+> +        }
+> +    }
+> +
+> +    if (out)
+> +        *out = tmp;
+> +
+> +    kfree(result.pointer);
+> +
+> +    return status;
+> +}
+> +
+> +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
+> +{
+> +    u32 method_id = 0;
+> +
+> +    switch (cap) {
+> +    case ACER_CAP_TURBO_LED:
+> +        method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+> +        break;
+> +    case ACER_CAP_TURBO_FAN:
+> +        method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> +        break;
+> +    case ACER_CAP_TURBO_OC:
+> +        method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+> +        break;
+> +    default:
+> +        return AE_ERROR;
+
+AE_BAD_PARAMETER ?
+
+> +    }
+> +    return WMI_gaming_execute_u64(method_id, value, NULL);
+> +}
+> +
+> +static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
+> +{
+> +    acpi_status status;
+> +    u64 result;
+> +    u64 input;
+> +    u32 method_id;
+> +
+> +
+> +    switch (cap) {
+> +    case ACER_CAP_TURBO_LED:
+> +        method_id = ACER_WMID_GET_GAMING_LED_METHODID;
+> +        input = 0x1;
+> +        break;
+> +    default:
+> +        return AE_ERROR;
+
+AE_BAD_PARAMETER ?
+
+> +    }
+> +
+> +    status = WMI_gaming_execute_u64(method_id, input, &result);
+> +    if (ACPI_SUCCESS(status))
+> +        *value = (u64) result;
+> +
+> +    return status;
+> +}
+> +
+> +
+>  /*
+>   * Generic Device (interface-independent)
+>   */
+> @@ -1374,7 +1498,6 @@ static acpi_status get_u32(u32 *value, u32 cap)
+>              status = WMID_get_u32(value, cap);
+>          break;
+>      }
+> -
+>      return status;
+>  }
+> 
+
+Unrelated whitespace change, please drop.
+
+> @@ -1422,6 +1545,34 @@ static acpi_status set_u32(u32 value, u32 cap)
+>      return AE_BAD_PARAMETER;
+>  }
+> 
+> +static acpi_status set_u64(u64 value, u32 cap)
+> +{
+> +    if (gaming_interface->capability & cap) {
+
+Just use interface->capability here and move this
+check into WMID_gaming_set_u64() and drop this
+(set_u64) function and instead use WMID_gaming_set_u64()
+directly.
+
+If the WMID_GUID4 GUID does not exist then wmi_evaluate_method()
+will catch this.
+
+
+> +        switch (gaming_interface->type) {
+> +        case ACER_WMID_GAMING:
+> +            return WMID_gaming_set_u64(value, cap);
+> +        default:
+> +            return AE_BAD_PARAMETER;
+> +        }
+> +    }
+> +    return AE_BAD_PARAMETER;
+> +}
+> +
+> +
+> +static acpi_status get_u64(u64 *value, u32 cap)
+> +{
+> +    acpi_status status = AE_ERROR;
+> +
+> +    if (gaming_interface->capability & cap) {
+
+Same here.
+
+> +        switch (gaming_interface->type) {
+> +        case ACER_WMID_GAMING:
+> +            status = WMID_gaming_get_u64(value, cap);
+> +            break;
+> +        }
+> +    }
+> +    return status;
+> +}
+> +
+>  static void __init acer_commandline_init(void)
+>  {
+>      /*
+> @@ -1501,7 +1652,7 @@ static int acer_backlight_init(struct device *dev)
+>      props.type = BACKLIGHT_PLATFORM;
+>      props.max_brightness = max_brightness;
+>      bd = backlight_device_register("acer-wmi", dev, NULL, &acer_bl_ops,
+> -                       &props);
+> +                       &props);
+>      if (IS_ERR(bd)) {
+>          pr_err("Could not register Acer backlight device\n");
+>          acer_backlight_device = NULL;
+
+Unrelated whitespace change, please drop.
+
+> @@ -1575,6 +1726,67 @@ static int acer_gsensor_event(void)
+>      return 0;
+>  }
+> 
+> +/*
+> + *  Predator series turbo button
+> + */
+> +static int acer_toggle_turbo(void)
+> +{
+> +    /* Get current state from turbo button */
+> +    u64 turbo_led_state, gpu_fan_config1, gpu_fan_config2;
+> +    u8 i;
+> +
+> +    if (ACPI_FAILURE(get_u64(&turbo_led_state, ACER_CAP_TURBO_LED)))
+> +        return -1;
+> +
+> +    if (turbo_led_state) {
+> +        // turns off turbo led
+> +        set_u64(0x1, ACER_CAP_TURBO_LED);
+> +
+> +        // set FAN mode to auto
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config2 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config2 |= 1 << (i + 1);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config2 |= 1 << (i + 3);
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config1 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config1 |= 1 << (2 * i + 2);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config1 |= 1 << (2 * i + 6);
+> +        set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+> +
+> +        // set OC to normal
+> +        set_u64(0x5, ACER_CAP_TURBO_OC);
+> +        set_u64(0x7, ACER_CAP_TURBO_OC);
+> +    } else {
+> +        // turn on turbo led
+> +        set_u64(0x10001, ACER_CAP_TURBO_LED);
+> +
+> +        // set FAN to turbo mode
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config2 |= 1;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config2 |= 1 << (i + 1);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config2 |= 1 << (i + 3);
+> +        if (quirks->cpu_fans > 0)
+> +            gpu_fan_config1 |= 2;
+> +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +            gpu_fan_config1 |= 2 << (2 * i + 2);
+> +        for (i = 0; i < quirks->gpu_fans; ++i)
+> +            gpu_fan_config1 |= 2 << (2 * i + 6);
+> +        set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+> +
+> +        // set OC to turbo mode
+> +        set_u64(0x205, ACER_CAP_TURBO_OC);
+> +        set_u64(0x207, ACER_CAP_TURBO_OC);
+> +    }
+> +    return turbo_led_state;
+> +}
+> +
+> +
+>  /*
+>   * Switch series keyboard dock status
+>   */
+> @@ -1605,7 +1817,7 @@ static void acer_kbd_dock_get_initial_state(void)
+>      status = wmi_evaluate_method(WMID_GUID3, 0, 0x2, &input_buf, &output_buf);
+>      if (ACPI_FAILURE(status)) {
+>          pr_err("Error getting keyboard-dock initial status: %s\n",
+> -               acpi_format_exception(status));
+> +               acpi_format_exception(status));
+>          return;
+>      }
+>
+
+Unrelated whitespace change, please drop.
+ 
+> @@ -1618,7 +1830,7 @@ static void acer_kbd_dock_get_initial_state(void)
+>      output = obj->buffer.pointer;
+>      if (output[0] != 0x00 || (output[3] != 0x05 && output[3] != 0x45)) {
+>          pr_err("Unexpected output [0]=0x%02x [3]=0x%02x getting
+> keyboard-dock initial status\n",
+> -               output[0], output[3]);
+> +               output[0], output[3]);
+>          goto out_free_obj;
+>      }
+> 
+
+Unrelated whitespace change, please drop.
+
+> @@ -1759,7 +1971,7 @@ static int acer_rfkill_init(struct device *dev)
+>      rfkill_inited = true;
+> 
+>      if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+> -        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+> +        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+>          schedule_delayed_work(&acer_rfkill_work,
+>              round_jiffies_relative(HZ));
+> 
+
+Unrelated whitespace change, please drop.
+
+> @@ -1782,7 +1994,7 @@ static int acer_rfkill_init(struct device *dev)
+>  static void acer_rfkill_exit(void)
+>  {
+>      if ((ec_raw_mode || !wmi_has_guid(ACERWMID_EVENT_GUID)) &&
+> -        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+> +        has_cap(ACER_CAP_WIRELESS | ACER_CAP_BLUETOOTH | ACER_CAP_THREEG))
+>          cancel_delayed_work_sync(&acer_rfkill_work);
+> 
+>      if (has_cap(ACER_CAP_WIRELESS)) {
+
+Unrelated whitespace change, please drop.
+
+> @@ -1872,6 +2084,10 @@ static void acer_wmi_notify(u32 value, void *context)
+>          acer_gsensor_event();
+>          acer_kbd_dock_event(&return_value);
+>          break;
+> +    case WMID_GAMING_TURBO_KEY_EVENT:
+> +        if (return_value.key_num == 0x4)
+> +            acer_toggle_turbo();
+> +        break;
+>      default:
+>          pr_warn("Unknown function number - %d - %d\n",
+>              return_value.function, return_value.key_num);
+> @@ -2251,8 +2467,8 @@ static int __init acer_wmi_init(void)
+>       * in the past quirk list.
+>       */
+>      if (wmi_has_guid(AMW0_GUID1) &&
+> -        !dmi_check_system(amw0_whitelist) &&
+> -        quirks == &quirk_unknown) {
+> +        !dmi_check_system(amw0_whitelist) &&
+> +        quirks == &quirk_unknown) {
+>          pr_debug("Unsupported machine has AMW0_GUID1, unable to load\n");
+>          return -ENODEV;
+>      }
+
+Unrelated whitespace change, please drop.
+
+> @@ -2266,8 +2482,11 @@ static int __init acer_wmi_init(void)
+>      if (!wmi_has_guid(AMW0_GUID1) && wmi_has_guid(WMID_GUID1))
+>          interface = &wmid_interface;
+> 
+> -    if (wmi_has_guid(WMID_GUID3))
+> +    if (wmi_has_guid(WMID_GUID3)) {
+>          interface = &wmid_v2_interface;
+> +        if (wmi_has_guid(WMID_GUID4))
+> +            gaming_interface = &wmid_gaming_interface;
+> +    }
+> 
+
+Since we don't need the gaming_interface this entire chunk
+can be dropped too.
+
+>      if (interface)
+>          dmi_walk(type_aa_dmi_decode, NULL);
+> @@ -2316,7 +2535,7 @@ static int __init acer_wmi_init(void)
+>          interface->capability = force_caps;
+> 
+>      if (wmi_has_guid(WMID_GUID3) &&
+> -        (interface->capability & ACER_CAP_SET_FUNCTION_MODE)) {
+> +        (interface->capability & ACER_CAP_SET_FUNCTION_MODE)) {
+>          if (ACPI_FAILURE(acer_wmi_enable_rf_button()))
+>              pr_warn("Cannot enable RF Button Driver\n");
+> 
+
+Unrelated whitespace change, please drop.
+
 
 Regards,
 
 Hans
-
-
-
-> 
-> We would be perfectly fine to set a default on boot. First set and save takes time due to while-loops in acpi but subsequent runs after proper save return early. We do not suffer the same consequences as Windows does either, as we can do what windows does (ASUS really) in software rather than ACPI.
-> 
-> The reason this particular patch is required is because users of laptops with this function are unable to use the dGPU at all if disabled via windows. The only thing we really need to do here is enable it on boot and ensure the setting is saved so reboots do not stick on the ACPI while loop (which is approx 5 seconds).
-> 
-> I hope the above is clear.
-> 
-> Many thanks,
-> Luke.
-> 
-> On Sat, Jul 17 2021 at 18:05:03 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 7/17/21 10:13 AM, Luke D. Jones wrote:
->>>  In Windows the ASUS Armory Crate program can enable or disable the
->>>  dGPU via a WMI call. This functions much the same as various Linux
->>>  methods in software where the dGPU is removed from the device tree.
->>>
->>>  However the WMI call saves the state of dGPU (enabled or not) and
->>>  this then changes the dGPU visibility in Linux with no way for
->>>  Linux users to re-enable it. We expose the WMI method so users can
->>>  see and change the dGPU ACPI state.
->>>
->>>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>>  ---
->>>   drivers/platform/x86/asus-wmi.c            | 99 ++++++++++++++++++++++
->>>   include/linux/platform_data/x86/asus-wmi.h |  3 +
->>>   2 files changed, 102 insertions(+)
->>>
->>>  diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
->>>  index cd881443bc2f..02762a60d27a 100644
->>>  --- a/drivers/platform/x86/asus-wmi.c
->>>  +++ b/drivers/platform/x86/asus-wmi.c
->>>  @@ -210,6 +210,9 @@ struct asus_wmi {
->>>       u8 fan_boost_mode_mask;
->>>       u8 fan_boost_mode;
->>>
->>>  +    bool dgpu_disable_available;
->>>  +    bool dgpu_disable;
->>>  +
->>>       bool throttle_thermal_policy_available;
->>>       u8 throttle_thermal_policy_mode;
->>>
->>>  @@ -427,6 +430,94 @@ static void lid_flip_tablet_mode_get_state(struct asus_wmi *asus)
->>>       }
->>>   }
->>>
->>>  +/* dGPU ********************************************************************/
->>>  +static int dgpu_disable_check_present(struct asus_wmi *asus)
->>>  +{
->>>  +    u32 result;
->>>  +    int err;
->>>  +
->>>  +    asus->dgpu_disable_available = false;
->>>  +
->>>  +    err = asus_wmi_get_devstate(asus, ASUS_WMI_DEVID_DGPU, &result);
->>>  +    if (err) {
->>>  +        if (err == -ENODEV)
->>>  +            return 0;
->>>  +        return err;
->>>  +    }
->>>  +
->>>  +    if (result & ASUS_WMI_DSTS_PRESENCE_BIT) {
->>>  +        asus->dgpu_disable_available = true;
->>>  +        asus->dgpu_disable = result & ASUS_WMI_DSTS_STATUS_BIT;
->>>  +    }
->>>  +
->>>  +    return 0;
->>>  +}
->>>  +
->>>  +static int dgpu_disable_write(struct asus_wmi *asus)
->>>  +{
->>>  +    int err;
->>>  +    u8 value;
->>>  +    u32 retval;
->>
->> Upside-down-christmastree declaration order please.
->>
->>>  +
->>>  +    value = asus->dgpu_disable;
->>>  +
->>>  +    err = asus_wmi_set_devstate(ASUS_WMI_DEVID_DGPU, value, &retval);
->>>  +
->>>  +    if (err) {
->>>  +        pr_warn("Failed to set dgpu disable: %d\n", err);
->>>  +        return err;
->>>  +    }
->>>  +
->>>  +    if (retval > 1 || retval < 0) {
->>>  +        pr_warn("Failed to set dgpu disable (retval): 0x%x\n", retval);
->>>  +        return -EIO;
->>>  +    }
->>>  +
->>>  +    sysfs_notify(&asus->platform_device->dev.kobj, NULL, "dgpu_disable");
->>>  +
->>>  +    return 0;
->>>  +}
->>>  +
->>>  +static ssize_t dgpu_disable_show(struct device *dev,
->>>  +                   struct device_attribute *attr, char *buf)
->>>  +{
->>>  +    struct asus_wmi *asus = dev_get_drvdata(dev);
->>>  +    bool mode = asus->dgpu_disable;
->>
->> This bool local variable is not really necessary, instead you can just do:
->>
->>     return sysfs_emit(buf, "%d\n", asus->dgpu_disable);
->>
->> The same applies to patch 1/3 btw.
->>
->>>  +
->>>  +    return sysfs_emit(buf, "%d\n", mode);
->>>  +}
->>>  +
->>>  +static ssize_t dgpu_disable_store(struct device *dev,
->>>  +                    struct device_attribute *attr,
->>>  +                    const char *buf, size_t count)
->>>  +{
->>>  +    int result;
->>>  +    bool disable;
->>>  +    struct asus_wmi *asus = dev_get_drvdata(dev);
->>
->> Upside-down-christmastree declaration order please.
->>
->>>  +
->>>  +    result = kstrtobool(buf, &disable);
->>>  +    if (result == -EINVAL)
->>>  +        return result;
->>
->> Just "if (result) ..." please.
->>
->>>  +
->>>  +    asus->dgpu_disable = disable;
->>>  +    /*
->>>  +     * The ACPI call used does not save the mode unless the call is run twice.
->>>  +     * Once to disable, then once to check status and save - this is two code
->>>  +     * paths in the method in the ACPI dumps.
->>>  +    */
->>>  +    result = dgpu_disable_write(asus);
->>>  +    if (result != 0)
->>>  +        return result;
->>>  +
->>>  +    result = dgpu_disable_write(asus);
->>>  +    if (result != 0)
->>>  +        return result;
->>>  +
->>>  +    return count;
->>>  +}
->>>  +
->>>  +static DEVICE_ATTR_RW(dgpu_disable);
->>>  +
->>>   /* Battery ********************************************************************/
->>>
->>>   /* The battery maximum charging percentage */
->>>  @@ -2411,6 +2502,7 @@ static struct attribute *platform_attributes[] = {
->>>       &dev_attr_camera.attr,
->>>       &dev_attr_cardr.attr,
->>>       &dev_attr_touchpad.attr,
->>>  +    &dev_attr_dgpu_disable.attr,
->>>       &dev_attr_lid_resume.attr,
->>>       &dev_attr_als_enable.attr,
->>>       &dev_attr_fan_boost_mode.attr,
->>>  @@ -2437,6 +2529,8 @@ static umode_t asus_sysfs_is_visible(struct kobject *kobj,
->>>           devid = ASUS_WMI_DEVID_LID_RESUME;
->>>       else if (attr == &dev_attr_als_enable.attr)
->>>           devid = ASUS_WMI_DEVID_ALS_ENABLE;
->>>  +    else if (attr == &dev_attr_dgpu_disable.attr)
->>>  +        ok = asus->dgpu_disable_available;
->>>       else if (attr == &dev_attr_fan_boost_mode.attr)
->>>           ok = asus->fan_boost_mode_available;
->>>       else if (attr == &dev_attr_throttle_thermal_policy.attr)
->>>  @@ -2698,6 +2792,10 @@ static int asus_wmi_add(struct platform_device *pdev)
->>>       if (err)
->>>           goto fail_platform;
->>>
->>>  +    err = dgpu_disable_check_present(asus);
->>>  +    if (err)
->>>  +        goto fail_dgpu_disable;
->>>  +
->>>       err = fan_boost_mode_check_present(asus);
->>>       if (err)
->>>           goto fail_fan_boost_mode;
->>>  @@ -2798,6 +2896,7 @@ static int asus_wmi_add(struct platform_device *pdev)
->>>   fail_sysfs:
->>>   fail_throttle_thermal_policy:
->>>   fail_fan_boost_mode:
->>>  +fail_dgpu_disable:
->>>   fail_platform:
->>>   fail_panel_od:
->>>       kfree(asus);
->>>  diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
->>>  index 428aea701c7b..a528f9d0e4b7 100644
->>>  --- a/include/linux/platform_data/x86/asus-wmi.h
->>>  +++ b/include/linux/platform_data/x86/asus-wmi.h
->>>  @@ -90,6 +90,9 @@
->>>   /* Keyboard dock */
->>>   #define ASUS_WMI_DEVID_KBD_DOCK        0x00120063
->>>
->>>  +/* dgpu on/off */
->>>  +#define ASUS_WMI_DEVID_DGPU        0x00090020
->>>  +
->>>   /* DSTS masks */
->>>   #define ASUS_WMI_DSTS_STATUS_BIT    0x00000001
->>>   #define ASUS_WMI_DSTS_UNKNOWN_BIT    0x00000002
->>>
->>
->> Regards,
->>
->> Hans
->>
-> 
-> 
 
