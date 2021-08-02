@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A86C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 14:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78D9C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 14:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 135D360555
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 14:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED516023B
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  2 Aug 2021 14:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236199AbhHBOHN (ORCPT
+        id S234729AbhHBOHb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 2 Aug 2021 10:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
+        Mon, 2 Aug 2021 10:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233976AbhHBOFE (ORCPT
+        id S235787AbhHBOF1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 2 Aug 2021 10:05:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 981BC61151
-        for <platform-driver-x86@vger.kernel.org>; Mon,  2 Aug 2021 14:02:46 +0000 (UTC)
+        Mon, 2 Aug 2021 10:05:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 38F3B60F41
+        for <platform-driver-x86@vger.kernel.org>; Mon,  2 Aug 2021 14:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627912966;
-        bh=zkR5fxia88myK+KKicUG3caoE5wnm/jDUxqU9JktYts=;
+        s=k20201202; t=1627913118;
+        bh=1UnZQ811DdE5RU0L3RTifnBHiUFmBTtV8H4+IMlQO9Y=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=OJu6TULKU4B/WrLE/ABk1IYOyqz1dTVvlpIvS1U1wnZcULpsXEkXDoHIobJ81Qmar
-         J4P5ItJcErxVzwdM8sySWoqpk2DYTA+qKzGHD5qCg19gDlGa9Reon5XIXUBtAWSp9r
-         ZgJWqqvkJcSwoLWrFpb6ScIvCKIPi/aUqPH0UE5AURgSMvlOK4PqWdL/5e1BVY63NU
-         OXg9SB+pzEPp2H7PpWVBXh+0IadwER7PI0xRsH/YSmn2rbCoklhV57X2raUq+WA81i
-         pFn/+6w4pLwthISO4H/XFLQqAvfVdWU9GGaCBW2L76SGYt58wi0eeD6w9iXRre3fLI
-         A6QTPF3KEgdVg==
+        b=Xk+yAvrPDujR4R4N5ypJiiYOuQxcVj/HhTDGrsCNRRdnMmpNVnS04XjjTUs3mSHJV
+         lp0e78PMDG2ufggVDabGpM7HZ0y+PFN+sYyDLI8rMT8R7LayGnV65XKg7MmObJ6mID
+         pVanP4EIssRP1mM8fgZT+FPrsFsdEtowJQyG0rdgIBWWAF38RV2A1B9yiPX923/fXq
+         kNF5bEpEgt7HpX8ImZvlVrbPlyh6gKJwiA3wIul4Nv/RN83v6AU6oWozaFKElF3vef
+         T4nUipFLTQD+a4gnp5gXPaWmqFtSWgJzKskZq2tsKkc9/AyDcEO51Yp+PSZ7gdyaB1
+         2MJwZxlhSSmZg==
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     platform-driver-x86@vger.kernel.org
 Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
  can't be used as IRQ)
-Date:   Mon, 02 Aug 2021 14:02:46 +0000
+Date:   Mon, 02 Aug 2021 14:05:17 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
@@ -52,7 +52,7 @@ X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-FxTMELkmYJ@https.bugzilla.kernel.org/>
+Message-ID: <bug-213579-215701-XirTMEi33m@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
 References: <bug-213579-215701@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -66,32 +66,34 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
---- Comment #44 from wse@tuxedocomputers.com ---
-Found the offending code bit in the dsdt:
+--- Comment #45 from wse@tuxedocomputers.com ---
+(In reply to wse from comment #44)
+> Found the offending code bit in the dsdt:
+>=20
+>     Scope (_SB.PC00.I2C0)
+>     {
+>         Device (TPAD)
+>         {
+>             [...]
+>             Method (_INI, 0, NotSerialized)  // _INI: Initialize
+>             {
+>                 BADR =3D SADR /* \_SB_.PC00.I2C0.TPAD.SADR */
+>                 INTA =3D GNUM (0x0801000C)
+>             }
+>             [...]
+>         }
+>     }
+>=20
+> INTA should evaluate to 0x8C (140), but does evaluate to 0x2c (44).
+> GNUM is some kind of offset calculation, ignoring the 0x08, taking values
+> from an array based on the 0x01 and adding it to the 0x000C. You can check
+> it in the disassembled dsdt. I don't know ofcourse if GNUM is buggy, the
+> array is wrong, or the 0x0801000C input value is wrong (you can choose an
+> input value that makes GNUM evaluate to 0x8C).
 
-    Scope (_SB.PC00.I2C0)
-    {
-        Device (TPAD)
-        {
-            [...]
-            Method (_INI, 0, NotSerialized)  // _INI: Initialize
-            {
-                BADR =3D SADR /* \_SB_.PC00.I2C0.TPAD.SADR */
-                INTA =3D GNUM (0x0801000C)
-            }
-            [...]
-        }
-    }
-
-INTA should evaluate to 0x8C (140), but does evaluate to 0x2c (44).
-GNUM is some kind of offset calculation, ignoring the 0x08, taking values f=
-rom
-an array based on the 0x01 and adding it to the 0x000C. You can check it in=
- the
-disassembled dsdt. I don't know ofcourse if GNUM is buggy, the array is wro=
-ng,
-or the 0x0801000C input value is wrong (you can choose an input value that
-makes GNUM evaluate to 0x8C).
+However: Building and using a dsdt with INTA hardcoded to 0x8C makes the
+touchpad work on arbitrary kernels. Maybe a better workaround then a self
+compiled kernel.
 
 --=20
 You may reply to this email to add a comment.
