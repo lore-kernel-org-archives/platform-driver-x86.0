@@ -2,79 +2,136 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B9C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 14:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9E3C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C0260F56
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 14:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C940D60295
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235844AbhHCO7u (ORCPT
+        id S235880AbhHCPNL (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 10:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235773AbhHCO7u (ORCPT
+        Tue, 3 Aug 2021 11:13:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235607AbhHCPNK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 10:59:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 049E860F56
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Aug 2021 14:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628002779;
-        bh=j4Jk3DVff0/Qu0QTwx1pj5nXo9lRhZMav+RDiUEqhOA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=b0XYsxsavCnDCDwEtCZJ2HcbRR0g8VXGMhbRFknubxFdNaaf2YPNYQoltigBEsvGs
-         UtGh16h+QVDiwYB5OsGC/chC8cbtkPDSif1hxZbJOYv1+xv6E1FoJ479W52NOiIbNH
-         psTW5gbhT4eFSy07qfED3iWuCiVmbk3+XTVsG7LbnTdfMlwfx7BrSzRw40DMr6Ag/3
-         bJKfKZT8MEuSKYuAR1saTxGcRPSLOnxRe7A0D0NXwTnhcED+Xn9rFN4sJjV5ZiV7fV
-         43P71c+GEMmE4s1RJAZiNuIR0sRXBQEwWVZ5YRqA20rRXaWhK+GGeisRa1t/+mSy4Y
-         k+UVusnvbZaVw==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
- can't be used as IRQ)
-Date:   Tue, 03 Aug 2021 14:59:38 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: wse@tuxedocomputers.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-213579-215701-VSILDLyw1S@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
-References: <bug-213579-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Tue, 3 Aug 2021 11:13:10 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA82BC061757;
+        Tue,  3 Aug 2021 08:12:58 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id p145so19741390ybg.6;
+        Tue, 03 Aug 2021 08:12:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0MA4yBUv23BbJVAOn10I0A8H8/n6Yml4qJZDjujIkSo=;
+        b=JjNxfdKHLCtFD2XS5K70ZXQA2WcJLb5IdcPen4uyEfQUBbimCjc171tfxZeYtP8rM4
+         W9ZQg3+D+c81v3CGYG7ucquebzCRHerHH57GzrfHk1wx3KwcRf4KYl7iW0Y7hqH/f2yM
+         s5FZcMsUo6tS4xeHdOwu9fUh0HRZH5bmNgcDsASGJ3zsGXSFfd5uEEv06J7Btj/OEz6B
+         rNrGMnqAykS8PGrxzAAkX+eTBi5aZ87b3C0OXAs2KyndgwKGaO1IjkaEJu5tC0vmcGdI
+         C0F6dweKUaDb/wqnP48Fxj+h4GmLm3pRWDpHPGgMvDmr9k81fuCq6T47L4XfkvWMSIZL
+         zfCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0MA4yBUv23BbJVAOn10I0A8H8/n6Yml4qJZDjujIkSo=;
+        b=lz2DsAw8cIouHxgFkixv3irzu0uBVZQwoVEFsOdww01kMnKqIzjgVndrFaygw6vUbf
+         o4CMkCG7U1m6VhHjKGzbiLuGQEFcSxbE+3+4VejrDq3CrZEuWxM43f+6sQPwK6n794r6
+         LyMeCB0Ur0LOHeBX0e+hwOJfBkGX7+cyPmpvHq6r/G3ZYJFIF9H6eO2IExR/jiiMpvCC
+         kI56guRT0SNcO4TkFudMl7nknFbBvMBxkkQCp3mvSK2qQoZkZ1+LdwbDCUQtF626w+zP
+         QcV0VXOvrEOlsnnJoUC96j4Vevcku6wQ2Cvq1ZhHBan721EQ8pgR8VRP16rrfzfYc/Fp
+         T9uQ==
+X-Gm-Message-State: AOAM533lGBPtTQy+xK2JDfM628Pk2vBb2jVZdsrJQJ3ntag3OFkaZWK7
+        WOlxVoIKjsjge/vZPSST8mVRPgpBkHNbNBuyjBs=
+X-Google-Smtp-Source: ABdhPJxLLhOuge4lnR2ARgHXuM36tY3HcPDFl47HIWEO4m4676WjV7JTLeLnfVbbWsXbk5W2gMxOcuEvnlYqvQJpYLA=
+X-Received: by 2002:a25:3046:: with SMTP id w67mr29095940ybw.134.1628003578010;
+ Tue, 03 Aug 2021 08:12:58 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210803113531.30720-1-lukas.bulwahn@gmail.com> <f9074e8d-9314-9d7d-7bf5-5b5538c8be8d@intel.com>
+In-Reply-To: <f9074e8d-9314-9d7d-7bf5-5b5538c8be8d@intel.com>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Tue, 3 Aug 2021 17:12:47 +0200
+Message-ID: <CAKXUXMxQ83T7beOTuZ928=-eo2Tsr94TGxsaYh3+MHOJrDO8Bg@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Kconfig symbol clean-up on ./arch/x86/
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
+On Tue, Aug 3, 2021 at 4:32 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 8/3/21 4:35 AM, Lukas Bulwahn wrote:
+> >   - a reference to STRICT_IOMEM in arch/x86/mm/init.c
+> >     unclear to me: which exact config this refers to
+>
+> Are you referring to the reference in this comment?
+>
+> > +       /*
+> > +        * This must follow RAM test, since System RAM is considered a
+> > +        * restricted resource under CONFIG_STRICT_IOMEM.
+> > +        */
+> > +       if (iomem_is_exclusive(pagenr << PAGE_SHIFT)) {
+> > +               /* Low 1MB bypasses iomem restrictions. */
+> > +               if (pagenr < 256)
+> > +                       return 1;
+> ...
+>
 
---- Comment #53 from wse@tuxedocomputers.com ---
-I know it's a linux bugtracker, but does anyone actually know where pins co=
-uld
-be checked on windows? Aka if I can check that the touchpad is really using
-0x8C and what it is trying to use with a manipulated DSDT (to see if it's an
-offset or a mapping issue).
+Yes, that is what I referred to.
 
---=20
-You may reply to this email to add a comment.
+> That came from here:
+>
+> > commit a4866aa812518ed1a37d8ea0c881dc946409de94
+> > Author: Kees Cook <keescook@chromium.org>
+> > Date:   Wed Apr 5 09:39:08 2017 -0700
+> >
+> >     mm: Tighten x86 /dev/mem with zeroing reads
+>
+> Which also added this hunk:
+>
+> >  #ifdef CONFIG_STRICT_DEVMEM
+> > +static inline int page_is_allowed(unsigned long pfn)
+> > +{
+> > +       return devmem_is_allowed(pfn);
+> > +}
+>
+> and talks about CONFIG_STRICT_DEVMEM in the changelog:
+>
+> >     mm: Tighten x86 /dev/mem with zeroing reads
+> >
+> >     Under CONFIG_STRICT_DEVMEM, reading System RAM through /dev/mem is
+> >     disallowed. However, on x86, the first 1MB was always allowed for BIOS
+> ...
+>
+> It's a pretty safe guess that STRICT_IOMEM refers to CONFIG_STRICT_DEVMEM.
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks, Dave.
+
+If the maintainers consider updates to comments making them consistent
+with the code as worth being picked, I will turn your analysis into a
+proper commit message and provide a patch to update that comment.
+
+Lukas
