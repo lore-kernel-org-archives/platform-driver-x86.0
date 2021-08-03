@@ -2,98 +2,134 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0CAC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BF8C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68A3E60F01
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ABE60F58
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238805AbhHCSbL (ORCPT
+        id S237272AbhHCSk0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 14:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34818 "EHLO
+        Tue, 3 Aug 2021 14:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238797AbhHCSbK (ORCPT
+        with ESMTP id S239128AbhHCSk0 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 14:31:10 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FFB8C061757;
-        Tue,  3 Aug 2021 11:30:57 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id o44-20020a17090a0a2fb0290176ca3e5a2fso5977062pjo.1;
-        Tue, 03 Aug 2021 11:30:57 -0700 (PDT)
+        Tue, 3 Aug 2021 14:40:26 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D89C061757;
+        Tue,  3 Aug 2021 11:40:13 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id qk33so37780499ejc.12;
+        Tue, 03 Aug 2021 11:40:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p5iqjTciOiC6yi4s+mjSx7ItW2TPHDqiCWQgXvzLb4E=;
-        b=CuorEacKFE5HZK1zFVR8UkMmhrjl8k3iEMPr5QBr60z+j+HWX5jo5SYGXnJtsEn81u
-         uGsxejzdxy4rRrfMwX/YwCSSSVrjA6OTz/UAcJGqyuM5bipSGyZSzoAUz0GKgbgVHK7x
-         bk/55TQzW/nRN/+sLEZ1AQX3M/hUb8HcZs6GRXgQ9MslnAVSPDkQeCk3Q54dpR5MDMRK
-         ige64fepIcc4UAiaMlKlIMaTOlzOUY15k64te6Mr96bVwdxzR82SEVipHuB6+2bMRTLR
-         VLVQGB18wclKoMiKvZc4Kban8nKlszsuw9qT2WjKNJY5S52VRBxGhbB5E3Dh/U4VvSmy
-         FiAg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fNMGun6SQ8nSYdEPy7DaDO9KQJS0mMRcRHdAkGT9rf8=;
+        b=GclFGnuJ7cDuD4jUtlGwrm5/gX3W8RQXGTIJnUnNaYZd23lltKgk8pLDnSp26WZjrd
+         JgdMTfRdh1VU4iSE8umDSwXENTY/62ui+3Q7AdYHRwxs0d9ZEhcLdaz6LoI79w+tzZ7T
+         ttdJXGpVWT5fuwFgULe/1Xo+05brSc2UclYuYe9obupJgFiAMy9OmEPoywfletyi4Dm9
+         qMUud/plearhNnTyFr5z4sWUi3P9cWe+p48oLvU9vkz+8IiUON38TKQTYhqniFDiMP8H
+         B9YhP7RS60ROKuzzIusPVtEckjn0DQyf1jlCplJuHlVFt0q1Fefi6rsLHnF7UYTyxJvC
+         vmbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p5iqjTciOiC6yi4s+mjSx7ItW2TPHDqiCWQgXvzLb4E=;
-        b=aJUhcX3ZVyBIQbfYpHEoi+4VerLJk3jRFnsDika0rp/c8f2bHT7kSRcXmNREQmvAH1
-         8buKVk/7BOCxUJUGQSVPtPVkag8dLRANx77Fonn/WUk6WmhBRk+aPeGQBpf7vxWk/Nwj
-         /aZFbusqr2eMDxuhUA+ZxDVH/ps2IBu7WHS5dDcLLJPOu3gYGL6bZPv+C5EQB+HDoUw2
-         UWAjMCKulW5vtDPGUbGIOh3hBiqjXcSJktFf3lWWk6pPTroHcbu84r1/jZUR4TroDQ8O
-         xyN8E2OSZFbh7/g5gbJNYH0+sdlrIE6SbVov77uXqz7mBaZN7zuIU2y+9cRyIWlvi/ZY
-         YqLw==
-X-Gm-Message-State: AOAM5321BZJ8cXE2UK+D9+KhJs7XlV45Gi1BnB6YP5+YM8OLlATEtrMn
-        GslPqEA+6vSXM6C1H5t94z66Zc8jbBPk8nzwNGE=
-X-Google-Smtp-Source: ABdhPJwmGcz7zTGVTu8e9UTD3rOBBNeMQLZtw6w4tAJYjDNHnTgb9OguJAlVIzlV5lI6xLFfhbb7XuIKNYHvIMwEwJo=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr5729155pjq.181.1628015457154;
- Tue, 03 Aug 2021 11:30:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210803181135.22298-1-novikov@ispras.ru> <CAHp75Vde1RAKTCTzmt0eHjNGrKUyi7r1rtNo934WW6wqi9T=ng@mail.gmail.com>
-In-Reply-To: <CAHp75Vde1RAKTCTzmt0eHjNGrKUyi7r1rtNo934WW6wqi9T=ng@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 3 Aug 2021 21:30:17 +0300
-Message-ID: <CAHp75VfVCk1ueQZiGnJqwhD=j+zpVZ3Q-GmLMKX9AfP_BFMPNA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Fix potential buffer overflows
-To:     Evgeny Novikov <novikov@ispras.ru>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fNMGun6SQ8nSYdEPy7DaDO9KQJS0mMRcRHdAkGT9rf8=;
+        b=mphhYEY+QWNLgpqaAt/npVevF+zvG2fkWu4XKxtFfAvIyycB/JwV0+1BhDN8OniBrB
+         1C2/aakWZxm5jEy3Q1P/69aCCViBMxfA0TGSpQxLJezmky6itXOzRwlg4C21cTcZCUTe
+         4IUO+Doy17gBsGq/2/KLYhAenUBTBDX2v0HGLNR2UfOQ7078iTEjgrdpajPA+5J2dAsz
+         QrQ3TVbfeYfkcSaXRtDi7AsGR48C4Ki2qs+2R24lBl8wV7sI4lx5G4lNF6/JRpVCuNj9
+         mh9KuVW4twfiCEPHQyL1Jno/J6vvaaS56r4GklLo5tA7PoeZ7T8gZcehWHhJNodw3BDB
+         oszw==
+X-Gm-Message-State: AOAM532J1M62Zan6riJuJleqiJCQUTxgx+ccPXplDJj0nKnRfRMOeHwE
+        nbnaQxIk61aUhNXucj3JZTM=
+X-Google-Smtp-Source: ABdhPJzLs6aqqBhWr8P9X5oqgwyPBr/qsI3k1NEFOThGxEcXZZ2LprWA7Nvjo2FSySAffDSka7uwZw==
+X-Received: by 2002:a17:906:d54c:: with SMTP id cr12mr22222691ejc.227.1628016012465;
+        Tue, 03 Aug 2021 11:40:12 -0700 (PDT)
+Received: from [10.18.0.36] ([37.58.58.229])
+        by smtp.gmail.com with ESMTPSA id i11sm8475735edu.97.2021.08.03.11.40.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Aug 2021 11:40:12 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] platform/surface: aggregator: Ouse y instead of
+ objs in Makefile
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ldv-project@linuxtesting.org
-Content-Type: text/plain; charset="UTF-8"
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>
+References: <20210803175000.72880-1-andriy.shevchenko@linux.intel.com>
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Message-ID: <d8d1837a-583b-3926-5057-755acc84a5c9@gmail.com>
+Date:   Tue, 3 Aug 2021 20:40:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
+MIME-Version: 1.0
+In-Reply-To: <20210803175000.72880-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 3, 2021 at 9:26 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Aug 3, 2021 at 9:21 PM Evgeny Novikov <novikov@ispras.ru> wrote:
-> >
-> > It looks like pmc_core_get_low_power_modes() mixes up modes and
-> > priorities. In addition to invalid behavior, potentially this can
-> > cause buffer overflows since the driver reads priorities from the
-> > register and then it uses them as indexes for array lpm_priority
-> > that can contain 8 elements at most. The patch swaps modes and
-> > priorities.
-> >
-> > Found by Linux Driver Verification project (linuxtesting.org).
->
-> Seems legit.
+On 8/3/21 7:50 PM, Andy Shevchenko wrote:
+> The 'objs' is for user space tools, for the kernel modules
+> we should use 'y'.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hold on, but then it follows with another loop where actually it reads
-modes by priority index. Can you elaborate what exactly is the problem
-you think?
+Thank you! I was previously not aware of that distinction. Two small
+notes:
 
--- 
-With Best Regards,
-Andy Shevchenko
+  - There is a typo in the subject line.
+  - With that change, the ifeq could be placed in-line (see note below).
+
+All in all looks good to me (assuming the typo gets fixed).
+
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+
+> ---
+>   drivers/platform/surface/aggregator/Makefile | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
+> index c8498c41e758..ce548dba1d4b 100644
+> --- a/drivers/platform/surface/aggregator/Makefile
+> +++ b/drivers/platform/surface/aggregator/Makefile
+> @@ -6,12 +6,12 @@ CFLAGS_core.o = -I$(src)
+>   
+>   obj-$(CONFIG_SURFACE_AGGREGATOR) += surface_aggregator.o
+>   
+> -surface_aggregator-objs := core.o
+> -surface_aggregator-objs += ssh_parser.o
+> -surface_aggregator-objs += ssh_packet_layer.o
+> -surface_aggregator-objs += ssh_request_layer.o
+> -surface_aggregator-objs += controller.o
+> +surface_aggregator-y := core.o
+> +surface_aggregator-y += ssh_parser.o
+> +surface_aggregator-y += ssh_packet_layer.o
+> +surface_aggregator-y += ssh_request_layer.o
+> +surface_aggregator-y += controller.o
+>   
+>   ifeq ($(CONFIG_SURFACE_AGGREGATOR_BUS),y)
+> -surface_aggregator-objs += bus.o
+> +surface_aggregator-y += bus.o
+>   endif
+
+I believe it should now be possible to write this as
+
+     surface_aggregator-$(CONFIG_SURFACE_AGGREGATOR_BUS) += bus.o
+
+which might be a bit cleaner. Don't have much of a preference though so
+I'd also be fine with keeping the ifeq.
+
+Regards,
+Max
