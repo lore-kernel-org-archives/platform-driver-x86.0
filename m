@@ -2,164 +2,119 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F990C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E88C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 21:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E524460EEA
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C536C61040
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 21:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231469AbhHCUvo (ORCPT
+        id S230051AbhHCVtc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 16:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
+        Tue, 3 Aug 2021 17:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbhHCUvn (ORCPT
+        with ESMTP id S229577AbhHCVtc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 16:51:43 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF3FC061757
-        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Aug 2021 13:51:32 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id u2so525238plg.10
-        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Aug 2021 13:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sfftEtgrcdAgJtxxMxV/AMJLSicv+M22mjPBU5y8w/g=;
-        b=BmjanVsIy8h7SrXm9eU8iVoxNLRh8Rh2h+NopTulkEHAAKAzGlP0N7s6ioaz9n6j6J
-         PIikGOYDwnnmVI9UvPSdZ5YWpEz2XtSqexX1QIWzoM9ELP8AgLiMtLhnk3Y83qElZf65
-         9x/znzLAuGTjhm5IFY0VoqMPJykhZ/nEquLa9M3WqZ4mY0GWZD+ToCfuTU7GYvpq6gs1
-         J9RQySgCSmenkSOmfcO3akg1qB5sSYEFMTGieXsDUOI0Z2v8R1a/oECtyRVXbrO+pY49
-         m1wT61slzmYQ1m2WVgBUvFmBksXzAmO+LY9bKpQnv4rwGm4NaLRlYwea+9yW4xgNsBcr
-         MNig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sfftEtgrcdAgJtxxMxV/AMJLSicv+M22mjPBU5y8w/g=;
-        b=nT+P1iBbTQCPzacOqlL7filwlBnOpjvbWATbnd0XjpHUmF6xiBHP5QwP/VX8uGCBTu
-         RYfhvYeUzV6uFBSkKaMV3BMzkEIQvOB6ZnQ8O+gGzIY3Ad7/XkkzNBRtarY3ogZY3Nrd
-         y0uVOCCNufQVCjepgKzoJtcb9roW+quTbvicykFlyb1K8Xf6kKjfQ+/JKTEC7bAeCPcZ
-         6qKPzMEYkFas2bTSBalmMS3MdVQukcqFhiBxcyQeXnTcY3mt7cOwWNgIJX1/9GrHXwRe
-         pjU47x6BscF6dQBLV3Vf5Ji/WrSV97TUee9/euiKO6TgG3E1bMtPMdr3LBfha7sbm9cl
-         Xfww==
-X-Gm-Message-State: AOAM532FhKo6DsggUg7XLJ0ouIZb3qKYSzikZTPzCsFwbaJXhaNamBtO
-        GzF64Eiu5dTfWoRA00aQMbXnWL5EzqAwiVb1ofOMfA==
-X-Google-Smtp-Source: ABdhPJzzMdFIoC4FUQ+5qAmfespQhMKsyzKO9ckAU+1wZnDV562/fTMPvuOXAVghyfE86/6uh2oy9WY2X7eHNFJHgh0=
-X-Received: by 2002:a17:90b:4ad1:: with SMTP id mh17mr22649805pjb.164.1628023891241;
- Tue, 03 Aug 2021 13:51:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACK8Z6FPsywe49fP=5pVc5DFm--4xt0daYLDzpbujA1_qoK7Dg@mail.gmail.com>
- <78260D21-AD73-4EBC-8E69-A5B16F1A72D5@getmailspring.com>
-In-Reply-To: <78260D21-AD73-4EBC-8E69-A5B16F1A72D5@getmailspring.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 3 Aug 2021 13:50:55 -0700
-Message-ID: <CACK8Z6ErDLW76hXwK4wFhOdMj4eyOZpceJPt7WX+KT6C2oWO7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector properties
-To:     Marco Trevisan <marco.trevisan@canonical.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Simon Ser <contact@emersion.fr>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
+        Tue, 3 Aug 2021 17:49:32 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EC8C061757;
+        Tue,  3 Aug 2021 14:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=nylKBfKJ8dD/OzgOpJIt5TOaQTcYQ2HiRYJZ04qvB98=; b=hsy43JUcZIEkkkUKqn6G2ORK03
+        tu6pZY5Ykzu+SYrijRhwM+jh5XseO4CzfreS7DCkaMcv37zxNUlb9OoQTUkhTdDiVdz2eXE1FoHMp
+        UMu8oQUvQI+1IVtgW97/TppC25OsPAjBMZF9T1GcQDYxj9vweAIdUzYv/pnZVtIxiFpUZ4K0kDxq9
+        hgh9qkaDRkbRDul/D0lgP+A0rq6UD0mkxzP8JnrL433cBghHAhkpk+02fQ+UbgB5we7H/rEoYyJ/L
+        xODuGdgyEwUEY3/tY+BEqgXdAAqRginZ/y6cN0GaBHvOrS00wHHC+TC3FrqkNt+dIwVeWUfq+uJ8X
+        Yry0BY4Q==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mB2Hi-005YGP-Sd; Tue, 03 Aug 2021 21:49:15 +0000
+Subject: Re: [PATCH 0/9] Kconfig symbol clean-up on ./arch/x86/
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H . Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
         Andy Shevchenko <andy@infradead.org>,
-        Pekka Paalanen <pekka.paalanen@collabora.com>,
-        Sebastien Bacher <seb128@ubuntu.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Mario Limonciello <mario.limonciello@outlook.com>
-Content-Type: text/plain; charset="UTF-8"
+        Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d693d351-7c93-693f-4bf5-3ccd5db46e60@infradead.org>
+Date:   Tue, 3 Aug 2021 14:49:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
+MIME-Version: 1.0
+In-Reply-To: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hello DRM / GPU maintainers,
+On 8/3/21 4:35 AM, Lukas Bulwahn wrote:
+> Dear x86 maintainers,
+> 
+> 
+> Randy Dunlap pointed out that ./scripts/checkkconfigsymbols.py warns on
+> invalid references to Kconfig symbols (often, minor typos, name confusions
+> or outdated references): see Link below.
+> 
+> This is a first patch series addressing the issues reported by
+> ./scripts/checkkconfigsymbols.py in the ./arch/x86/ directories, quickly
+> filtered down with:
+> 
+>    ./scripts/checkkconfigsymbols.py | grep "arch/x86" -B 1 -A 2
+> 
+> It addresses some issues I considered to be "true positives";
+> so, issues that should be addressed and cleaned up.
+> 
+...
 
-On Tue, Aug 3, 2021 at 8:20 AM Marco Trevisan
-<marco.trevisan@canonical.com> wrote:
->
-> Hi Rajat,
->
-> The merge proposals are now in place after discussing a bit more with upstream:
->
->  - https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/merge_requests/49
->  - https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1952
->  - https://gitlab.gnome.org/GNOME/gnome-control-center/-/merge_requests/1032
+for the series:
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-It seems that the subject kernel patch series (privacy screen support)
-from Hans, has now satisfied all the requirements that were needed for
-it to be accepted upstream, and there aren't any open comments that
-need to be addressed.
-
-I was wondering when would it be applied to the upstream kernel?
-
-Thanks,
-
-Rajat
+Thanks.
 
 
->
-> This is all implemented and working for the wayland backend, for X11 I'm
-> looking at it right now, even though it seems that we don't get any
-> RRScreenChangeNotify on hotkey changes, and monitoring udev directly
-> seems overkill. Anything should be adjusted at lower levels?
->
-> Cheers
->
-> On lug 13 2021, at 9:25 pm, Rajat Jain <rajatja@google.com> wrote:
->
-> > Hello Hans, Marco, et al,
-> >
-> > On Tue, Apr 27, 2021 at 10:03 AM Marco Trevisan
-> > <marco.trevisan@canonical.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> >>> There now is GNOME userspace code using the new properties:
-> >> >>> https://hackmd.io/@3v1n0/rkyIy3BOw
-> >> >>
-> >> >> Thanks for working on this.
-> >> >>
-> >> >> Can these patches be submitted as merge requests against the upstream
-> >> >> projects? It would be nice to get some feedback from the maintainers,
-> >> >> and be able to easily leave some comments there as well.
-> >>
-> >> FYI, I've discussed with other uptream developers about these while
-> >> doing them, and afterwards on how to improve them.
-> >>
-> >> > I guess Marco was waiting for the kernel bits too land before
-> >> > submitting these,
-> >> > but I agree that it would probably be good to have these submitted
-> >> > now, we
-> >> > can mark them as WIP to avoid them getting merged before the kernel side
-> >> > is finalized.
-> >>
-> >> I'll submit them in the next days once I'm done with the refactor I've
-> >> in mind, and will notify the list.
-> >
-> > Any updates on the privacy-screen patchset? Can Hans' patchset be
-> > accepted upstream now?
-> >
-> > Thanks,
-> >
-> > Rajat
-> >
-> >>
-> >> And for sure we can keep them in WIP till the final bits aren't completed.
-> >>
-> >> Cheers
-> >
+> 
+> Lukas Bulwahn (9):
+>    x86/entry: correct reference to intended CONFIG_64_BIT
+>    x86, olpc: correct condition to intended CONFIG_OLPC_XO15_SCI
+>    x86/Kconfig: correct reference to MWINCHIP3D
+>    x86/Kconfig: remove reference to obsolete MFD_INTEL_MSIC config
+>    x86/Kconfig: remove reference to obsolete APB_TIMER config
+>    x86/irq: fix slightly wrong reference in comment
+>    x86/uaccess: adjust comment for endif of CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+>    x86: page_32.h: adjust comment for endif of CONFIG_X86_USE_3DNOW
+>    x86: ia32.h: adjust comment for endif of CONFIG_IA32_EMULATION
+> 
+>   arch/x86/Kconfig                    | 4 +---
+>   arch/x86/include/asm/entry-common.h | 2 +-
+>   arch/x86/include/asm/ia32.h         | 2 +-
+>   arch/x86/include/asm/irq_stack.h    | 2 +-
+>   arch/x86/include/asm/page_32.h      | 2 +-
+>   arch/x86/include/asm/uaccess.h      | 2 +-
+>   arch/x86/platform/olpc/olpc.c       | 2 +-
+>   7 files changed, 7 insertions(+), 9 deletions(-)
+> 
+
+
+-- 
+~Randy
+
