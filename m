@@ -2,232 +2,164 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819ECC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F990C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8F8601FD
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E524460EEA
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 20:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240098AbhHCUIJ (ORCPT
+        id S231469AbhHCUvo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 16:08:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14659 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240085AbhHCUII (ORCPT
+        Tue, 3 Aug 2021 16:51:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231351AbhHCUvn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 16:08:08 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="213803078"
-X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
-   d="scan'208";a="213803078"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 13:07:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
-   d="scan'208";a="479714672"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Aug 2021 13:07:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id B05EFB9; Tue,  3 Aug 2021 23:08:22 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Subject: [RFT, PATCH v1 1/1] platform/x86: hp_accel: Convert to be a platform driver
-Date:   Tue,  3 Aug 2021 23:08:20 +0300
-Message-Id: <20210803200820.3259-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        Tue, 3 Aug 2021 16:51:43 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF3FC061757
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Aug 2021 13:51:32 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id u2so525238plg.10
+        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Aug 2021 13:51:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sfftEtgrcdAgJtxxMxV/AMJLSicv+M22mjPBU5y8w/g=;
+        b=BmjanVsIy8h7SrXm9eU8iVoxNLRh8Rh2h+NopTulkEHAAKAzGlP0N7s6ioaz9n6j6J
+         PIikGOYDwnnmVI9UvPSdZ5YWpEz2XtSqexX1QIWzoM9ELP8AgLiMtLhnk3Y83qElZf65
+         9x/znzLAuGTjhm5IFY0VoqMPJykhZ/nEquLa9M3WqZ4mY0GWZD+ToCfuTU7GYvpq6gs1
+         J9RQySgCSmenkSOmfcO3akg1qB5sSYEFMTGieXsDUOI0Z2v8R1a/oECtyRVXbrO+pY49
+         m1wT61slzmYQ1m2WVgBUvFmBksXzAmO+LY9bKpQnv4rwGm4NaLRlYwea+9yW4xgNsBcr
+         MNig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sfftEtgrcdAgJtxxMxV/AMJLSicv+M22mjPBU5y8w/g=;
+        b=nT+P1iBbTQCPzacOqlL7filwlBnOpjvbWATbnd0XjpHUmF6xiBHP5QwP/VX8uGCBTu
+         RYfhvYeUzV6uFBSkKaMV3BMzkEIQvOB6ZnQ8O+gGzIY3Ad7/XkkzNBRtarY3ogZY3Nrd
+         y0uVOCCNufQVCjepgKzoJtcb9roW+quTbvicykFlyb1K8Xf6kKjfQ+/JKTEC7bAeCPcZ
+         6qKPzMEYkFas2bTSBalmMS3MdVQukcqFhiBxcyQeXnTcY3mt7cOwWNgIJX1/9GrHXwRe
+         pjU47x6BscF6dQBLV3Vf5Ji/WrSV97TUee9/euiKO6TgG3E1bMtPMdr3LBfha7sbm9cl
+         Xfww==
+X-Gm-Message-State: AOAM532FhKo6DsggUg7XLJ0ouIZb3qKYSzikZTPzCsFwbaJXhaNamBtO
+        GzF64Eiu5dTfWoRA00aQMbXnWL5EzqAwiVb1ofOMfA==
+X-Google-Smtp-Source: ABdhPJzzMdFIoC4FUQ+5qAmfespQhMKsyzKO9ckAU+1wZnDV562/fTMPvuOXAVghyfE86/6uh2oy9WY2X7eHNFJHgh0=
+X-Received: by 2002:a17:90b:4ad1:: with SMTP id mh17mr22649805pjb.164.1628023891241;
+ Tue, 03 Aug 2021 13:51:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACK8Z6FPsywe49fP=5pVc5DFm--4xt0daYLDzpbujA1_qoK7Dg@mail.gmail.com>
+ <78260D21-AD73-4EBC-8E69-A5B16F1A72D5@getmailspring.com>
+In-Reply-To: <78260D21-AD73-4EBC-8E69-A5B16F1A72D5@getmailspring.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 3 Aug 2021 13:50:55 -0700
+Message-ID: <CACK8Z6ErDLW76hXwK4wFhOdMj4eyOZpceJPt7WX+KT6C2oWO7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector properties
+To:     Marco Trevisan <marco.trevisan@canonical.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Simon Ser <contact@emersion.fr>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-ACPI core in conjunction with platform driver core provides
-an infrastructure to enumerate ACPI devices. Use it in order
-to remove a lot of boilerplate code.
+Hello DRM / GPU maintainers,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+On Tue, Aug 3, 2021 at 8:20 AM Marco Trevisan
+<marco.trevisan@canonical.com> wrote:
+>
+> Hi Rajat,
+>
+> The merge proposals are now in place after discussing a bit more with upstream:
+>
+>  - https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/merge_requests/49
+>  - https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1952
+>  - https://gitlab.gnome.org/GNOME/gnome-control-center/-/merge_requests/1032
 
-Not sure what buys us to run _INI on PM calls. It's against the spec AFAICT.
-In any case ACPICA runs _INI as per specification when devices are
-instantiated.
+It seems that the subject kernel patch series (privacy screen support)
+from Hans, has now satisfied all the requirements that were needed for
+it to be accepted upstream, and there aren't any open comments that
+need to be addressed.
 
- drivers/platform/x86/hp_accel.c | 74 +++++++--------------------------
- 1 file changed, 14 insertions(+), 60 deletions(-)
+I was wondering when would it be applied to the upstream kernel?
 
-diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-index 8c0867bda828..69f86b761c7f 100644
---- a/drivers/platform/x86/hp_accel.c
-+++ b/drivers/platform/x86/hp_accel.c
-@@ -29,7 +29,6 @@
- #include "../../misc/lis3lv02d/lis3lv02d.h"
- 
- #define DRIVER_NAME     "hp_accel"
--#define ACPI_MDPS_CLASS "accelerometer"
- 
- /* Delayed LEDs infrastructure ------------------------------------ */
- 
-@@ -78,7 +77,6 @@ static const struct acpi_device_id lis3lv02d_device_ids[] = {
- };
- MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
- 
--
- /**
-  * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
-  * @lis3: pointer to the device struct
-@@ -87,14 +85,6 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
-  */
- static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
- {
--	struct acpi_device *dev = lis3->bus_priv;
--	if (!lis3->init_required)
--		return 0;
--
--	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
--				 NULL, NULL) != AE_OK)
--		return -EINVAL;
--
- 	return 0;
- }
- 
-@@ -278,30 +268,6 @@ static struct delayed_led_classdev hpled_led = {
- 	.set_brightness = hpled_set,
- };
- 
--static acpi_status
--lis3lv02d_get_resource(struct acpi_resource *resource, void *context)
--{
--	if (resource->type == ACPI_RESOURCE_TYPE_EXTENDED_IRQ) {
--		struct acpi_resource_extended_irq *irq;
--		u32 *device_irq = context;
--
--		irq = &resource->data.extended_irq;
--		*device_irq = irq->interrupts[0];
--	}
--
--	return AE_OK;
--}
--
--static void lis3lv02d_enum_resources(struct acpi_device *device)
--{
--	acpi_status status;
--
--	status = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
--					lis3lv02d_get_resource, &lis3_dev.irq);
--	if (ACPI_FAILURE(status))
--		printk(KERN_DEBUG DRIVER_NAME ": Error getting resources\n");
--}
--
- static bool hp_accel_i8042_filter(unsigned char data, unsigned char str,
- 				  struct serio *port)
- {
-@@ -331,23 +297,19 @@ static bool hp_accel_i8042_filter(unsigned char data, unsigned char str,
- 	return false;
- }
- 
--static int lis3lv02d_add(struct acpi_device *device)
-+static int lis3lv02d_probe(struct platform_device *device)
- {
- 	int ret;
- 
--	if (!device)
--		return -EINVAL;
--
--	lis3_dev.bus_priv = device;
-+	lis3_dev.bus_priv = ACPI_COMPANION(&device->dev);
- 	lis3_dev.init = lis3lv02d_acpi_init;
- 	lis3_dev.read = lis3lv02d_acpi_read;
- 	lis3_dev.write = lis3lv02d_acpi_write;
--	strcpy(acpi_device_name(device), DRIVER_NAME);
--	strcpy(acpi_device_class(device), ACPI_MDPS_CLASS);
--	device->driver_data = &lis3_dev;
- 
- 	/* obtain IRQ number of our device from ACPI */
--	lis3lv02d_enum_resources(device);
-+	ret = platform_get_irq_optional(device, 0);
-+	if (ret > 0)
-+		lis3_dev.irq = ret;
- 
- 	/* If possible use a "standard" axes order */
- 	if (lis3_dev.ac.x && lis3_dev.ac.y && lis3_dev.ac.z) {
-@@ -359,7 +321,6 @@ static int lis3lv02d_add(struct acpi_device *device)
- 	}
- 
- 	/* call the core layer do its init */
--	lis3_dev.init_required = true;
- 	ret = lis3lv02d_init_device(&lis3_dev);
- 	if (ret)
- 		return ret;
-@@ -381,11 +342,8 @@ static int lis3lv02d_add(struct acpi_device *device)
- 	return ret;
- }
- 
--static int lis3lv02d_remove(struct acpi_device *device)
-+static int lis3lv02d_remove(struct platform_device *device)
- {
--	if (!device)
--		return -EINVAL;
--
- 	i8042_remove_filter(hp_accel_i8042_filter);
- 	lis3lv02d_joystick_disable(&lis3_dev);
- 	lis3lv02d_poweroff(&lis3_dev);
-@@ -396,7 +354,6 @@ static int lis3lv02d_remove(struct acpi_device *device)
- 	return lis3lv02d_remove_fs(&lis3_dev);
- }
- 
--
- #ifdef CONFIG_PM_SLEEP
- static int lis3lv02d_suspend(struct device *dev)
- {
-@@ -407,14 +364,12 @@ static int lis3lv02d_suspend(struct device *dev)
- 
- static int lis3lv02d_resume(struct device *dev)
- {
--	lis3_dev.init_required = false;
- 	lis3lv02d_poweron(&lis3_dev);
- 	return 0;
- }
- 
- static int lis3lv02d_restore(struct device *dev)
- {
--	lis3_dev.init_required = true;
- 	lis3lv02d_poweron(&lis3_dev);
- 	return 0;
- }
-@@ -434,17 +389,16 @@ static const struct dev_pm_ops hp_accel_pm = {
- #endif
- 
- /* For the HP MDPS aka 3D Driveguard */
--static struct acpi_driver lis3lv02d_driver = {
--	.name  = DRIVER_NAME,
--	.class = ACPI_MDPS_CLASS,
--	.ids   = lis3lv02d_device_ids,
--	.ops = {
--		.add     = lis3lv02d_add,
--		.remove  = lis3lv02d_remove,
-+static struct platform_driver lis3lv02d_driver = {
-+	.probe	= lis3lv02d_probe,
-+	.remove	= lis3lv02d_remove,
-+	.driver	= {
-+		.name	= DRIVER_NAME,
-+		.pm	= HP_ACCEL_PM,
-+		.acpi_match_table = lis3lv02d_device_ids,
- 	},
--	.drv.pm = HP_ACCEL_PM,
- };
--module_acpi_driver(lis3lv02d_driver);
-+module_platform_driver(lis3lv02d_driver);
- 
- MODULE_DESCRIPTION("Glue between LIS3LV02Dx and HP ACPI BIOS and support for disk protection LED.");
- MODULE_AUTHOR("Yan Burman, Eric Piel, Pavel Machek");
--- 
-2.30.2
+Thanks,
 
+Rajat
+
+
+>
+> This is all implemented and working for the wayland backend, for X11 I'm
+> looking at it right now, even though it seems that we don't get any
+> RRScreenChangeNotify on hotkey changes, and monitoring udev directly
+> seems overkill. Anything should be adjusted at lower levels?
+>
+> Cheers
+>
+> On lug 13 2021, at 9:25 pm, Rajat Jain <rajatja@google.com> wrote:
+>
+> > Hello Hans, Marco, et al,
+> >
+> > On Tue, Apr 27, 2021 at 10:03 AM Marco Trevisan
+> > <marco.trevisan@canonical.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> >>> There now is GNOME userspace code using the new properties:
+> >> >>> https://hackmd.io/@3v1n0/rkyIy3BOw
+> >> >>
+> >> >> Thanks for working on this.
+> >> >>
+> >> >> Can these patches be submitted as merge requests against the upstream
+> >> >> projects? It would be nice to get some feedback from the maintainers,
+> >> >> and be able to easily leave some comments there as well.
+> >>
+> >> FYI, I've discussed with other uptream developers about these while
+> >> doing them, and afterwards on how to improve them.
+> >>
+> >> > I guess Marco was waiting for the kernel bits too land before
+> >> > submitting these,
+> >> > but I agree that it would probably be good to have these submitted
+> >> > now, we
+> >> > can mark them as WIP to avoid them getting merged before the kernel side
+> >> > is finalized.
+> >>
+> >> I'll submit them in the next days once I'm done with the refactor I've
+> >> in mind, and will notify the list.
+> >
+> > Any updates on the privacy-screen patchset? Can Hans' patchset be
+> > accepted upstream now?
+> >
+> > Thanks,
+> >
+> > Rajat
+> >
+> >>
+> >> And for sure we can keep them in WIP till the final bits aren't completed.
+> >>
+> >> Cheers
+> >
