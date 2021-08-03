@@ -2,114 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6610C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B056C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91DE760560
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788D461037
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235864AbhHCLhE (ORCPT
+        id S236404AbhHCLpZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 07:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235816AbhHCLg7 (ORCPT
+        Tue, 3 Aug 2021 07:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236332AbhHCLoz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 07:36:59 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93002C061798;
-        Tue,  3 Aug 2021 04:36:35 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id m12so20180095wru.12;
-        Tue, 03 Aug 2021 04:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PrYYzdKoM6W71eqcIHLFEPh0q9EP2OIxcHsT7WnN/G4=;
-        b=hRhks1I/oGA0EkKtCA2m6OnUsrR4kk50TWZcVSV1Z0RKa99ytTBUVMKy9/PxwYb95D
-         D+bWcdJG/COXWFCnNLyeij46Lyz/OpFW7A4vzbSSShKZW7CD3eHAk1Y/DNS3vCW65nDS
-         uOMvXKuofwaqdZsyM7SVTZHT2fEYWRm52aDDZnfRk1qHQENOFCMuL5vUbNtuQHaxImu4
-         5PvPumBnfau4XeZlcRcDdnc2livLnNAnqQGY3m7hSBQamexBoDeM5YTfLjZhdxT/ZjD3
-         OpEisDyABlAQJxjeB67ENr559aEc7bMTbc8XL6sBoj9OWCfdcJnWVoW/94I3M0C2ucrF
-         F5pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PrYYzdKoM6W71eqcIHLFEPh0q9EP2OIxcHsT7WnN/G4=;
-        b=hZ+wQHP3zDZvidah6SUO7cVajGBTTsLo9JHo3JIqMZIyLptlfVKQJjmmpRFxq3O0oz
-         DmmkCbLCg+pE33rNVzLmpB99IT91XODM6b1pN9+lijesh/jwBxEuFbu/SnQ1FVDtFVmN
-         WVndUhEWKOaViqcRZRrVZcMieWec/bmTOJ5vzIfDp4+bnWo14xGIdR1r90mn4or3KlPt
-         FRlkCzLg9HE4H2mgDP+V6M6/frc16xwb8qtsECYOh1hWj3yKQzCz3DfFcCrdCAJnrJEX
-         dkXfuX2mQ0kVXU/uvUX40WdYyf7pGCxnTuyxqNj4xLyPBaka5Ax+FgUuccfaQSVLOjxQ
-         r4Jw==
-X-Gm-Message-State: AOAM530ZuukVC9jNlXrJ/41vCCorDFuAs4eLYwM+pCu2IMiIgAVfRiv/
-        DxMlIAekh/unYDaepUPphwo=
-X-Google-Smtp-Source: ABdhPJwNNZqZUBOfqtvhzzeT/J3aPn60sYQPoG3Pyi6vu7iyq7tWarSXcurlyIFKuR3whMTHs4alWw==
-X-Received: by 2002:a5d:4688:: with SMTP id u8mr22699843wrq.65.1627990594165;
-        Tue, 03 Aug 2021 04:36:34 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2de7:c500:a5d6:9db:2c2c:b89d])
-        by smtp.gmail.com with ESMTPSA id m14sm13961364wrs.56.2021.08.03.04.36.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 04:36:32 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Cc:     "H . Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 9/9] x86: ia32.h: adjust comment for endif of CONFIG_IA32_EMULATION
-Date:   Tue,  3 Aug 2021 13:35:31 +0200
-Message-Id: <20210803113531.30720-10-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
-References: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
+        Tue, 3 Aug 2021 07:44:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 46375610A0
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Aug 2021 11:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627991084;
+        bh=s02tD0y7OdN2473cg8cOEgA+urqFTg6HItbb5lxiCPc=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=qFzECPwFOM8SIojT1yiy52/+mnl7eWWNFLT88lmlVqkmRPsbzhRMby2cWVb4p/18R
+         MXp40Yefzzc7MMEfGusxBzLEOZTZp9buG+jBrgrmXF02cngmM2LIw2mQEM+hDTf+SD
+         AJRkQ5bvgE51cmv+rZ5GwKq6M2u+UriqNr6fEgyiHLRsGo0braKk8qlIfRugh5DpWs
+         XgaRmVnTEijUHz+RCFxZS3MkYaClnH389TA0DAUoAKLvxiRaeRpyZ+M3DlrD0qWZfb
+         u5WF5tLIOFA/I1l3p1TySjHo9WW+jKDHa94n7ztlCz06Qz9e4BQyxZwoM0ss1oxQIJ
+         G55E2de8n4gVQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
+ can't be used as IRQ)
+Date:   Tue, 03 Aug 2021 11:44:44 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: wse@tuxedocomputers.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-213579-215701-a8szQ6HjzF@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
+References: <bug-213579-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The content of the ia32 header is guarded by
-"ifdef CONFIG_IA32_EMULATION". The comment on the corresponding endif
-refers slightly mismatching to CONFIG_IA32_SUPPORT instead.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
-Hence, ./scripts/checkkconfigsymbols.py warns:
+--- Comment #48 from wse@tuxedocomputers.com ---
+More testing with same result: Hardcoding the adress to 0x2C works on widno=
+ws,
+but breaks on other values including 0x8C
 
-IA32_SUPPORT
-Referencing files: arch/x86/include/asm/ia32.h
+--=20
+You may reply to this email to add a comment.
 
-Adjust the comment on endif to the actual ifdef condition.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- arch/x86/include/asm/ia32.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/ia32.h b/arch/x86/include/asm/ia32.h
-index 2c5f7861d373..fada857f0a1e 100644
---- a/arch/x86/include/asm/ia32.h
-+++ b/arch/x86/include/asm/ia32.h
-@@ -68,6 +68,6 @@ extern void ia32_pick_mmap_layout(struct mm_struct *mm);
- 
- #endif
- 
--#endif /* !CONFIG_IA32_SUPPORT */
-+#endif /* CONFIG_IA32_EMULATION */
- 
- #endif /* _ASM_X86_IA32_H */
--- 
-2.17.1
-
+You are receiving this mail because:
+You are watching the assignee of the bug.=
