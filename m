@@ -2,136 +2,160 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9E3C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C547CC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C940D60295
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55F460184
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 15:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235880AbhHCPNL (ORCPT
+        id S234206AbhHCPUt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 11:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235607AbhHCPNK (ORCPT
+        Tue, 3 Aug 2021 11:20:49 -0400
+Received: from smtp-relay-canonical-1.canonical.com ([185.125.188.121]:57814
+        "EHLO smtp-relay-canonical-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236321AbhHCPUo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 11:13:10 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA82BC061757;
-        Tue,  3 Aug 2021 08:12:58 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id p145so19741390ybg.6;
-        Tue, 03 Aug 2021 08:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0MA4yBUv23BbJVAOn10I0A8H8/n6Yml4qJZDjujIkSo=;
-        b=JjNxfdKHLCtFD2XS5K70ZXQA2WcJLb5IdcPen4uyEfQUBbimCjc171tfxZeYtP8rM4
-         W9ZQg3+D+c81v3CGYG7ucquebzCRHerHH57GzrfHk1wx3KwcRf4KYl7iW0Y7hqH/f2yM
-         s5FZcMsUo6tS4xeHdOwu9fUh0HRZH5bmNgcDsASGJ3zsGXSFfd5uEEv06J7Btj/OEz6B
-         rNrGMnqAykS8PGrxzAAkX+eTBi5aZ87b3C0OXAs2KyndgwKGaO1IjkaEJu5tC0vmcGdI
-         C0F6dweKUaDb/wqnP48Fxj+h4GmLm3pRWDpHPGgMvDmr9k81fuCq6T47L4XfkvWMSIZL
-         zfCA==
+        Tue, 3 Aug 2021 11:20:44 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPS id 5564E3F248
+        for <platform-driver-x86@vger.kernel.org>; Tue,  3 Aug 2021 15:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1628004030;
+        bh=HaHeoSpc0/w45l3bVizKObUtZFG4/fyFOXwhQ5XDWl8=;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+         MIME-Version:Content-Type;
+        b=SleQ2M9HASkOwKeWRJta7iwZATA0OSbLb7hZUsODPiE+cbc115+wy5TWfEMG7uc7q
+         lQTlWHnqUjeF+YKNaWyXEdG0DfLtxylcmDWLJCS7IR1+WKKh1mAvCka5RJeBa8HKyT
+         O4axDJf3WIYpTT3vCW6xK6kYtRTp3FaE8wo6EtD0kHYoz3iVQl0hKma2zmuSs/ly1R
+         v4NWXcu4e4tdQWQBm4G4YVoTiWM7+1hgM7NXJFJZZU8R6EmmUQMwy/Fbpp2DWHfSyh
+         F7vjzxmp9aioA3eSNH4LLPJdIpBcVnifup66rMNGgFe5mypJugoDWBPzAf8E1Juhx3
+         WgfQ+Y5wKzGbQ==
+Received: by mail-wr1-f70.google.com with SMTP id j16-20020a5d44900000b02901549fdfd4fcso637365wrq.6
+        for <platform-driver-x86@vger.kernel.org>; Tue, 03 Aug 2021 08:20:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0MA4yBUv23BbJVAOn10I0A8H8/n6Yml4qJZDjujIkSo=;
-        b=lz2DsAw8cIouHxgFkixv3irzu0uBVZQwoVEFsOdww01kMnKqIzjgVndrFaygw6vUbf
-         o4CMkCG7U1m6VhHjKGzbiLuGQEFcSxbE+3+4VejrDq3CrZEuWxM43f+6sQPwK6n794r6
-         LyMeCB0Ur0LOHeBX0e+hwOJfBkGX7+cyPmpvHq6r/G3ZYJFIF9H6eO2IExR/jiiMpvCC
-         kI56guRT0SNcO4TkFudMl7nknFbBvMBxkkQCp3mvSK2qQoZkZ1+LdwbDCUQtF626w+zP
-         QcV0VXOvrEOlsnnJoUC96j4Vevcku6wQ2Cvq1ZhHBan721EQ8pgR8VRP16rrfzfYc/Fp
-         T9uQ==
-X-Gm-Message-State: AOAM533lGBPtTQy+xK2JDfM628Pk2vBb2jVZdsrJQJ3ntag3OFkaZWK7
-        WOlxVoIKjsjge/vZPSST8mVRPgpBkHNbNBuyjBs=
-X-Google-Smtp-Source: ABdhPJxLLhOuge4lnR2ARgHXuM36tY3HcPDFl47HIWEO4m4676WjV7JTLeLnfVbbWsXbk5W2gMxOcuEvnlYqvQJpYLA=
-X-Received: by 2002:a25:3046:: with SMTP id w67mr29095940ybw.134.1628003578010;
- Tue, 03 Aug 2021 08:12:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210803113531.30720-1-lukas.bulwahn@gmail.com> <f9074e8d-9314-9d7d-7bf5-5b5538c8be8d@intel.com>
-In-Reply-To: <f9074e8d-9314-9d7d-7bf5-5b5538c8be8d@intel.com>
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date:   Tue, 3 Aug 2021 17:12:47 +0200
-Message-ID: <CAKXUXMxQ83T7beOTuZ928=-eo2Tsr94TGxsaYh3+MHOJrDO8Bg@mail.gmail.com>
-Subject: Re: [PATCH 0/9] Kconfig symbol clean-up on ./arch/x86/
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding
+         :content-disposition;
+        bh=HaHeoSpc0/w45l3bVizKObUtZFG4/fyFOXwhQ5XDWl8=;
+        b=DVvyd93xdBk+HSvzREiAdcoHWZiNFc+nwDXHDjYbdUHVYbQNt/nJKjjshZZXotE/BF
+         yCw+ScHIApb9rIAOR75hu6UJuNeeTPgR2Kx/OoNRfVudkwFR4RgT28KipI4n5FejQDsK
+         hAiGLus2hlD3szcup1EZBoiw9wtnikNTSFJI4cyM/JVOGz0GG6KGwZVEy9Q7NhSq5gZG
+         FX2qk5I8L4+RhLG8x4JFbTzPOAZyoO91x9ls81cCOecgY6qTQs/K++RTxQOzHrhbUv3Y
+         TLlPYsy5rTBlvpRr79YmlRvigc5VF9RfqSsFPHFYxcRB1q3WPB4jcuHS4mD61s4R5zcJ
+         Zz+w==
+X-Gm-Message-State: AOAM531XEulhRN1pZKC3igSrSA7CANZGAD4nuqcwTW5fO/sj6xiA2DF3
+        CuZgjHIjTHBrRfE48nXWKLhCbjKf80hK1xlAVMNGbckrJmutbp1trEoJdRRNhIwJKhbVeE+6wFE
+        Ma5c0ZKHPyjTqrVd6ZeABuOgwUSyEKz+COdNjhO9s58Eqdeh8oBI=
+X-Received: by 2002:a1c:7e85:: with SMTP id z127mr22444739wmc.11.1628004029954;
+        Tue, 03 Aug 2021 08:20:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwEzjC+/pW0C1Sqw4ydhWVDqpDLVx+zCm1JU0utSrWeKobmQxeo9gpJI0BDCGIcWIUMPwlMxA==
+X-Received: by 2002:a1c:7e85:: with SMTP id z127mr22444711wmc.11.1628004029751;
+        Tue, 03 Aug 2021 08:20:29 -0700 (PDT)
+Received: from tricky (net-93-71-200-33.cust.vodafonedsl.it. [93.71.200.33])
+        by smtp.gmail.com with ESMTPSA id d16sm14876581wrx.76.2021.08.03.08.20.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Aug 2021 08:20:29 -0700 (PDT)
+Date:   Tue, 3 Aug 2021 17:20:33 +0200
+From:   Marco Trevisan <marco.trevisan@canonical.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Simon Ser <contact@emersion.fr>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
         Andy Shevchenko <andy@infradead.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Pekka Paalanen <pekka.paalanen@collabora.com>,
+        Sebastien Bacher <seb128@ubuntu.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        "=?utf-8?Q?dri-devel=40lists.freedesktop.org?=" 
+        <dri-devel@lists.freedesktop.org>,
+        "=?utf-8?Q?platform-driver-x86=40vger.kernel.org?=" 
+        <platform-driver-x86@vger.kernel.org>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Mario Limonciello <mario.limonciello@outlook.com>
+Message-ID: <78260D21-AD73-4EBC-8E69-A5B16F1A72D5@getmailspring.com>
+In-Reply-To: <CACK8Z6FPsywe49fP=5pVc5DFm--4xt0daYLDzpbujA1_qoK7Dg@mail.gmail.com>
+References: <CACK8Z6FPsywe49fP=5pVc5DFm--4xt0daYLDzpbujA1_qoK7Dg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] drm: Add privacy-screen class and connector
+ properties
+X-Mailer: Mailspring
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 3, 2021 at 4:32 PM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 8/3/21 4:35 AM, Lukas Bulwahn wrote:
-> >   - a reference to STRICT_IOMEM in arch/x86/mm/init.c
-> >     unclear to me: which exact config this refers to
->
-> Are you referring to the reference in this comment?
->
-> > +       /*
-> > +        * This must follow RAM test, since System RAM is considered a
-> > +        * restricted resource under CONFIG_STRICT_IOMEM.
-> > +        */
-> > +       if (iomem_is_exclusive(pagenr << PAGE_SHIFT)) {
-> > +               /* Low 1MB bypasses iomem restrictions. */
-> > +               if (pagenr < 256)
-> > +                       return 1;
-> ...
->
+Hi Rajat,
 
-Yes, that is what I referred to.
+The merge proposals are now in place after discussing a bit more with upstream:
 
-> That came from here:
->
-> > commit a4866aa812518ed1a37d8ea0c881dc946409de94
-> > Author: Kees Cook <keescook@chromium.org>
-> > Date:   Wed Apr 5 09:39:08 2017 -0700
-> >
-> >     mm: Tighten x86 /dev/mem with zeroing reads
->
-> Which also added this hunk:
->
-> >  #ifdef CONFIG_STRICT_DEVMEM
-> > +static inline int page_is_allowed(unsigned long pfn)
-> > +{
-> > +       return devmem_is_allowed(pfn);
-> > +}
->
-> and talks about CONFIG_STRICT_DEVMEM in the changelog:
->
-> >     mm: Tighten x86 /dev/mem with zeroing reads
-> >
-> >     Under CONFIG_STRICT_DEVMEM, reading System RAM through /dev/mem is
-> >     disallowed. However, on x86, the first 1MB was always allowed for BIOS
-> ...
->
-> It's a pretty safe guess that STRICT_IOMEM refers to CONFIG_STRICT_DEVMEM.
+ - https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/merge_requests/49
+ - https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1952
+ - https://gitlab.gnome.org/GNOME/gnome-control-center/-/merge_requests/1032
 
-Thanks, Dave.
+This is all implemented and working for the wayland backend, for X11 I'm
+looking at it right now, even though it seems that we don't get any
+RRScreenChangeNotify on hotkey changes, and monitoring udev directly
+seems overkill. Anything should be adjusted at lower levels?
 
-If the maintainers consider updates to comments making them consistent
-with the code as worth being picked, I will turn your analysis into a
-proper commit message and provide a patch to update that comment.
+Cheers
 
-Lukas
+On lug 13 2021, at 9:25 pm, Rajat Jain <rajatja@google.com> wrote:
+
+> Hello Hans, Marco, et al,
+> 
+> On Tue, Apr 27, 2021 at 10:03 AM Marco Trevisan
+> <marco.trevisan@canonical.com> wrote:
+>> 
+>> Hi,
+>> 
+>> >>> There now is GNOME userspace code using the new properties:
+>> >>> https://hackmd.io/@3v1n0/rkyIy3BOw
+>> >>
+>> >> Thanks for working on this.
+>> >>
+>> >> Can these patches be submitted as merge requests against the upstream
+>> >> projects? It would be nice to get some feedback from the maintainers,
+>> >> and be able to easily leave some comments there as well.
+>> 
+>> FYI, I've discussed with other uptream developers about these while
+>> doing them, and afterwards on how to improve them.
+>> 
+>> > I guess Marco was waiting for the kernel bits too land before
+>> > submitting these,
+>> > but I agree that it would probably be good to have these submitted
+>> > now, we
+>> > can mark them as WIP to avoid them getting merged before the kernel side
+>> > is finalized.
+>> 
+>> I'll submit them in the next days once I'm done with the refactor I've
+>> in mind, and will notify the list.
+> 
+> Any updates on the privacy-screen patchset? Can Hans' patchset be
+> accepted upstream now?
+> 
+> Thanks,
+> 
+> Rajat
+> 
+>> 
+>> And for sure we can keep them in WIP till the final bits aren't completed.
+>> 
+>> Cheers
+> 
