@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5907C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D2D4C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD68360560
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CB0600EF
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 11:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235630AbhHCLga (ORCPT
+        id S235765AbhHCLgb (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 07:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43410 "EHLO
+        Tue, 3 Aug 2021 07:36:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235706AbhHCLg1 (ORCPT
+        with ESMTP id S235700AbhHCLg3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 07:36:27 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21008C061764;
-        Tue,  3 Aug 2021 04:36:12 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id h13so11493990wrp.1;
-        Tue, 03 Aug 2021 04:36:12 -0700 (PDT)
+        Tue, 3 Aug 2021 07:36:29 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15A3C06179A;
+        Tue,  3 Aug 2021 04:36:17 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id o7-20020a05600c5107b0290257f956e02dso1519783wms.1;
+        Tue, 03 Aug 2021 04:36:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sTKYBnBKKsh1beNAYDR2xmYVPiIYdU0sotGuAnpEEyI=;
-        b=c1DRXF4SH9nGuIlcc07AgsTIPweMjNjGI03eK91dNJovsSwh8jQC4hwurUWVFZX+zo
-         eiZbcynA5kgxO/Zdqp3lCVBzi2a/4o4IWsHR8jTla3xsctpRxOzIQ40MbsjbvYbuPdtd
-         yW6KC5cAlj6nQeof+Gy26NpZd7FQvN5FQF1eWCGb7vdgl5a//AIy8Y7eCEsW+vkybQlG
-         NZssOv34eduvrNP51VOyuwasukTnkl/mhXEiWR26wKwE8RiiLHDTWto2H06vz0IZW7iy
-         /jteWituQMVjRmq/mCCgiRf7utWVTBFMOnvxsGpxhoLqradL9+Bq26fKOkZth+5VIGo2
-         Nl0g==
+        bh=PnI+xpj+tguuxhwECLNvUTwNInWMqG1pkkM+TYmvSjg=;
+        b=NvpkBpgyvq8U/+BAhz73CUo1alYLmpRGSyMroht4sD/rfiJ/iRN9mWReSOtWqGoMbz
+         nfpOJHFRe0NLbT9uN6OzxEtoEWptxxNoEe/IlEYiTJdswl2SMa9WvtbxhzUAGY81sRTp
+         romfHNN1fXLKp1x8bbfQmsuZbjlTs3Ifl5nDM779BG0aKulZpZ4gq6RLxvIRcusUVK2Y
+         TFScGKOkvxgQEimyB6ngc2EB8WIxwkRXiZlq6z9dVdnndN6wYQSJcr1T9k9GU+gem9Wm
+         vU+cksyQs3okmALu9B6fB2zJHHOr5z3XMKqyMqfXFZ49tZPuOiDUu63ZdZyE9owV1lkv
+         5erg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=sTKYBnBKKsh1beNAYDR2xmYVPiIYdU0sotGuAnpEEyI=;
-        b=hjLAjegYxFl0owvlFeHNtRg3Kt2ALEj+CxP5ho+QrGjCDaaYymcioSkYrlbMJvH5eQ
-         b3z/X9APxE4SXNx+hkPQoJHu3RsH0QZ7KX1Q2e3z6NsVyJenmf2M52FdtshrPX5W1FNV
-         m7AnIM+QSDF739qEVdozguVErB6HYrschn+S3wOuEdBKAQzP71YrFMC5UR3TAsLoEI1n
-         nXCu+mZq8z44CkLBoxtNDeAq/f4CnYbZlnXcCU6iyti0LrbYJlJoRzPRUk5qL34rWYqT
-         8U48yJZIcifDVJEGO0MsW87J7+pwGfdBbX2jV8Sj4u+cfR5/DpBnn3TSQsuqmg5C6wIx
-         l9dw==
-X-Gm-Message-State: AOAM533SKRmX4CN4tYghjqrhQtbb95UYXJTAZk724+68g3GlCuXIVaIc
-        7lXGg6lxOlkGVx04t3R8NMg=
-X-Google-Smtp-Source: ABdhPJxTzq4/0XGZJ0WFxWUhPJ0fqA4GhoGMSdqkYTT4aCMU87bvwqyrcnlnnN8RUg5QYaTyPV+lCw==
-X-Received: by 2002:a05:6000:120f:: with SMTP id e15mr22049966wrx.399.1627990570652;
-        Tue, 03 Aug 2021 04:36:10 -0700 (PDT)
+        bh=PnI+xpj+tguuxhwECLNvUTwNInWMqG1pkkM+TYmvSjg=;
+        b=dy2hZB56pKhXmxl9CEHDl2lS5hs0D7C3qU8SJ3HXbU7Xcsra1b/uTaiXHpO+IeHJ85
+         cYC6/Yp9kPTFuPk0fBFM8lLdgS7a3apWQMOvHzPpvd73hN9ezf9D5lnT5X3AWqY8grHe
+         H0DOABM/rGFus4hbuGeqb5A/JyF6GmIbPrQqRQ6qDW3M/EjRjeyxgfbWFNf+s5R/ntiG
+         1Loj52wcBXLLAebB/iMJJQfvMJMs8aGvtwaOVYn9Vr+qwmNvrNqjRuMmN8sZQfgEzq5o
+         JB5p6mZIxHWL2lMYT+L6fzm0+LgGgR7jApy7nzhBKN6220xk0ThKj7l3I19/M8WcGjgD
+         vxxg==
+X-Gm-Message-State: AOAM530Soih1Nue02QSKgiMf1Ft9f6E77M535k41aS2XjIxK5/kzP1RS
+        K6wjjEUjzDbzfWWfbvLoj/4=
+X-Google-Smtp-Source: ABdhPJzNIytWoPgjmoQqVBAzQ3LD/dm1XNvLdz6ZY+nvAwf/c04PoZ22pBHRezmdM66Oyl8/vRQ8wA==
+X-Received: by 2002:a7b:c386:: with SMTP id s6mr3767101wmj.93.1627990575850;
+        Tue, 03 Aug 2021 04:36:15 -0700 (PDT)
 Received: from felia.fritz.box ([2001:16b8:2de7:c500:a5d6:9db:2c2c:b89d])
-        by smtp.gmail.com with ESMTPSA id m14sm13961364wrs.56.2021.08.03.04.36.05
+        by smtp.gmail.com with ESMTPSA id m14sm13961364wrs.56.2021.08.03.04.36.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Aug 2021 04:36:07 -0700 (PDT)
+        Tue, 03 Aug 2021 04:36:13 -0700 (PDT)
 From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -72,9 +72,9 @@ Cc:     "H . Peter Anvin" <hpa@zytor.com>,
         platform-driver-x86@vger.kernel.org,
         kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 2/9] x86, olpc: correct condition to intended CONFIG_OLPC_XO15_SCI
-Date:   Tue,  3 Aug 2021 13:35:24 +0200
-Message-Id: <20210803113531.30720-3-lukas.bulwahn@gmail.com>
+Subject: [PATCH 3/9] x86/Kconfig: correct reference to MWINCHIP3D
+Date:   Tue,  3 Aug 2021 13:35:25 +0200
+Message-Id: <20210803113531.30720-4-lukas.bulwahn@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
 References: <20210803113531.30720-1-lukas.bulwahn@gmail.com>
@@ -82,38 +82,37 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The refactoring in commit ec9964b48033 ("Platform: OLPC: Move
-EC-specific functionality out from x86") introduces an
-ifdef CONFIG_OLPC_XO1_5_SCI, however the config is actually called
-"CONFIG_OLPC_XO15_SCI".
+Commit 69b8d3fcabdc ("x86/Kconfig: Exclude i586-class CPUs lacking PAE
+support from the HIGHMEM64G Kconfig group") intends to exclude the Winchip
+architectures and refers to CONFIG_WINCHIP3D, but the config is called
+CONFIG_MWINCHIP3D.
 
-Fortunately, ./scripts/checkkconfigsymbols.py warns:
+Hence, ./scripts/checkkconfigsymbols.py warns:
 
-OLPC_XO1_5_SCI
-Referencing files: arch/x86/platform/olpc/olpc.c
+WINCHIP3D
+Referencing files: arch/x86/Kconfig
 
-Correct this ifdef condition to the intended config symbol.
+Correct the reference to the intended config symbol.
 
-Fixes: ec9964b48033 ("Platform: OLPC: Move EC-specific functionality out from x86")
 Suggested-by: Randy Dunlap <rdunlap@infradead.org>
 Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- arch/x86/platform/olpc/olpc.c | 2 +-
+ arch/x86/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/olpc/olpc.c b/arch/x86/platform/olpc/olpc.c
-index ee2beda590d0..1d4a00e767ec 100644
---- a/arch/x86/platform/olpc/olpc.c
-+++ b/arch/x86/platform/olpc/olpc.c
-@@ -274,7 +274,7 @@ static struct olpc_ec_driver ec_xo1_driver = {
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 45962aaf2b2c..79e7457db5c9 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1401,7 +1401,7 @@ config HIGHMEM4G
  
- static struct olpc_ec_driver ec_xo1_5_driver = {
- 	.ec_cmd = olpc_xo1_ec_cmd,
--#ifdef CONFIG_OLPC_XO1_5_SCI
-+#ifdef CONFIG_OLPC_XO15_SCI
- 	/*
- 	 * XO-1.5 EC wakeups are available when olpc-xo15-sci driver is
- 	 * compiled in
+ config HIGHMEM64G
+ 	bool "64GB"
+-	depends on !M486SX && !M486 && !M586 && !M586TSC && !M586MMX && !MGEODE_LX && !MGEODEGX1 && !MCYRIXIII && !MELAN && !MWINCHIPC6 && !WINCHIP3D && !MK6
++	depends on !M486SX && !M486 && !M586 && !M586TSC && !M586MMX && !MGEODE_LX && !MGEODEGX1 && !MCYRIXIII && !MELAN && !MWINCHIPC6 && !MWINCHIP3D && !MK6
+ 	select X86_PAE
+ 	help
+ 	  Select this if you have a 32-bit processor and more than 4
 -- 
 2.17.1
 
