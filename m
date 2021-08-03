@@ -2,134 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BF8C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D04C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 19:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36ABE60F58
-	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 18:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9572F61029
+	for <platform-driver-x86@archiver.kernel.org>; Tue,  3 Aug 2021 19:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237272AbhHCSk0 (ORCPT
+        id S239503AbhHCTV7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 3 Aug 2021 14:40:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239128AbhHCSk0 (ORCPT
+        Tue, 3 Aug 2021 15:21:59 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6860 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239475AbhHCTV6 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 3 Aug 2021 14:40:26 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4D89C061757;
-        Tue,  3 Aug 2021 11:40:13 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id qk33so37780499ejc.12;
-        Tue, 03 Aug 2021 11:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fNMGun6SQ8nSYdEPy7DaDO9KQJS0mMRcRHdAkGT9rf8=;
-        b=GclFGnuJ7cDuD4jUtlGwrm5/gX3W8RQXGTIJnUnNaYZd23lltKgk8pLDnSp26WZjrd
-         JgdMTfRdh1VU4iSE8umDSwXENTY/62ui+3Q7AdYHRwxs0d9ZEhcLdaz6LoI79w+tzZ7T
-         ttdJXGpVWT5fuwFgULe/1Xo+05brSc2UclYuYe9obupJgFiAMy9OmEPoywfletyi4Dm9
-         qMUud/plearhNnTyFr5z4sWUi3P9cWe+p48oLvU9vkz+8IiUON38TKQTYhqniFDiMP8H
-         B9YhP7RS60ROKuzzIusPVtEckjn0DQyf1jlCplJuHlVFt0q1Fefi6rsLHnF7UYTyxJvC
-         vmbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fNMGun6SQ8nSYdEPy7DaDO9KQJS0mMRcRHdAkGT9rf8=;
-        b=mphhYEY+QWNLgpqaAt/npVevF+zvG2fkWu4XKxtFfAvIyycB/JwV0+1BhDN8OniBrB
-         1C2/aakWZxm5jEy3Q1P/69aCCViBMxfA0TGSpQxLJezmky6itXOzRwlg4C21cTcZCUTe
-         4IUO+Doy17gBsGq/2/KLYhAenUBTBDX2v0HGLNR2UfOQ7078iTEjgrdpajPA+5J2dAsz
-         QrQ3TVbfeYfkcSaXRtDi7AsGR48C4Ki2qs+2R24lBl8wV7sI4lx5G4lNF6/JRpVCuNj9
-         mh9KuVW4twfiCEPHQyL1Jno/J6vvaaS56r4GklLo5tA7PoeZ7T8gZcehWHhJNodw3BDB
-         oszw==
-X-Gm-Message-State: AOAM532J1M62Zan6riJuJleqiJCQUTxgx+ccPXplDJj0nKnRfRMOeHwE
-        nbnaQxIk61aUhNXucj3JZTM=
-X-Google-Smtp-Source: ABdhPJzLs6aqqBhWr8P9X5oqgwyPBr/qsI3k1NEFOThGxEcXZZ2LprWA7Nvjo2FSySAffDSka7uwZw==
-X-Received: by 2002:a17:906:d54c:: with SMTP id cr12mr22222691ejc.227.1628016012465;
-        Tue, 03 Aug 2021 11:40:12 -0700 (PDT)
-Received: from [10.18.0.36] ([37.58.58.229])
-        by smtp.gmail.com with ESMTPSA id i11sm8475735edu.97.2021.08.03.11.40.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Aug 2021 11:40:12 -0700 (PDT)
+        Tue, 3 Aug 2021 15:21:58 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="200931592"
+X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
+   d="scan'208";a="200931592"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 12:21:46 -0700
+X-IronPort-AV: E=Sophos;i="5.84,292,1620716400"; 
+   d="scan'208";a="667346964"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2021 12:21:44 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mAzys-004qDK-DC; Tue, 03 Aug 2021 22:21:38 +0300
+Date:   Tue, 3 Aug 2021 22:21:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>
 Subject: Re: [PATCH v1 1/1] platform/surface: aggregator: Ouse y instead of
  objs in Makefile
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>
+Message-ID: <YQmXQlZqoUCHhSdn@smile.fi.intel.com>
 References: <20210803175000.72880-1-andriy.shevchenko@linux.intel.com>
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Message-ID: <d8d1837a-583b-3926-5057-755acc84a5c9@gmail.com>
-Date:   Tue, 3 Aug 2021 20:40:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+ <d8d1837a-583b-3926-5057-755acc84a5c9@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210803175000.72880-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8d1837a-583b-3926-5057-755acc84a5c9@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 8/3/21 7:50 PM, Andy Shevchenko wrote:
-> The 'objs' is for user space tools, for the kernel modules
-> we should use 'y'.
+On Tue, Aug 03, 2021 at 08:40:10PM +0200, Maximilian Luz wrote:
+> On 8/3/21 7:50 PM, Andy Shevchenko wrote:
+> > The 'objs' is for user space tools, for the kernel modules
+> > we should use 'y'.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Thank you! I was previously not aware of that distinction. Two small
-notes:
-
-  - There is a typo in the subject line.
-  - With that change, the ifeq could be placed in-line (see note below).
-
-All in all looks good to me (assuming the typo gets fixed).
-
-Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
-
-> ---
->   drivers/platform/surface/aggregator/Makefile | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
+> Thank you! I was previously not aware of that distinction. Two small
+> notes:
 > 
-> diff --git a/drivers/platform/surface/aggregator/Makefile b/drivers/platform/surface/aggregator/Makefile
-> index c8498c41e758..ce548dba1d4b 100644
-> --- a/drivers/platform/surface/aggregator/Makefile
-> +++ b/drivers/platform/surface/aggregator/Makefile
-> @@ -6,12 +6,12 @@ CFLAGS_core.o = -I$(src)
->   
->   obj-$(CONFIG_SURFACE_AGGREGATOR) += surface_aggregator.o
->   
-> -surface_aggregator-objs := core.o
-> -surface_aggregator-objs += ssh_parser.o
-> -surface_aggregator-objs += ssh_packet_layer.o
-> -surface_aggregator-objs += ssh_request_layer.o
-> -surface_aggregator-objs += controller.o
-> +surface_aggregator-y := core.o
-> +surface_aggregator-y += ssh_parser.o
-> +surface_aggregator-y += ssh_packet_layer.o
-> +surface_aggregator-y += ssh_request_layer.o
-> +surface_aggregator-y += controller.o
->   
->   ifeq ($(CONFIG_SURFACE_AGGREGATOR_BUS),y)
-> -surface_aggregator-objs += bus.o
-> +surface_aggregator-y += bus.o
->   endif
+>  - There is a typo in the subject line.
+>  - With that change, the ifeq could be placed in-line (see note below).
 
-I believe it should now be possible to write this as
+Will address both.
 
-     surface_aggregator-$(CONFIG_SURFACE_AGGREGATOR_BUS) += bus.o
+> All in all looks good to me (assuming the typo gets fixed).
+> 
+> Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
 
-which might be a bit cleaner. Don't have much of a preference though so
-I'd also be fine with keeping the ifeq.
+Thanks!
 
-Regards,
-Max
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
