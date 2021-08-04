@@ -2,81 +2,95 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D7CC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79133C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 14:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF52A60F41
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D17160F58
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 14:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236857AbhHDMMu (ORCPT
+        id S238800AbhHDObM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Aug 2021 08:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34318 "EHLO mail.kernel.org"
+        Wed, 4 Aug 2021 10:31:12 -0400
+Received: from mga01.intel.com ([192.55.52.88]:14739 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235697AbhHDMMt (ORCPT
+        id S238820AbhHDOaq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Aug 2021 08:12:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7259061004
-        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Aug 2021 12:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628079157;
-        bh=+n5GaKN6e9xX7V3WqaicQZXZqVR/5pupVbtlKlShgJ8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=VTCXRWJYYV/TxRF14FOY1RZKRKYyRQcdlF3Mp0Uqen/+wpjz/S9A64xmxkj8XvUAf
-         ShByZ6RmLdDszHamH3BCSXDTkbGbX9XGlAZMbEeNuOKUBhg9/qrZPKxQ43oeXtff8U
-         BSf/Y4W+WGTMXv8tTl2Pj+L2szaNKzbaq04r5CMvm7fDv/e/Uw19AwpxV0y7NMlG0y
-         Oqdt4J4c0wGVfqqDRNfUrgOuTp1r5QxgV2lJgNkKRoseGILIlAnIzXf7y4ic6wVTN7
-         Y/ceZeNXh7R5qIdr3gznUE2Zo9TdjHT6S/uDC0Gcb9CtYUapjyr3Lk1huIq28FsynA
-         nWcNIuLZT+lyA==
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     platform-driver-x86@vger.kernel.org
-Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
- can't be used as IRQ)
-Date:   Wed, 04 Aug 2021 12:12:36 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Product: Drivers
-X-Bugzilla-Component: Platform_x86
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: andy.shevchenko@gmail.com
-X-Bugzilla-Status: NEEDINFO
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-213579-215701-Y7rY9CUKtl@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
-References: <bug-213579-215701@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        Wed, 4 Aug 2021 10:30:46 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="235883635"
+X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
+   d="scan'208";a="235883635"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 07:29:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
+   d="scan'208";a="636996840"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 04 Aug 2021 07:29:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id C0484142; Wed,  4 Aug 2021 17:30:01 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Mark Gross <mgross@linux.intel.com>, Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>
+Subject: [PATCH v2 2/2] platform/surface: aggregator: Use serdev_acpi_get_uart_resource() helper
+Date:   Wed,  4 Aug 2021 17:29:59 +0300
+Message-Id: <20210804142959.67981-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210804142959.67981-1-andriy.shevchenko@linux.intel.com>
+References: <20210804142959.67981-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
+serdev provides a generic helper to get UART Serial Bus resources.
+Use it instead of an open coded variant.
 
-Andy Shevchenko (andy.shevchenko@gmail.com) changed:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Maximilian Luz <luzmaximilian@gmail.com>
+---
+v2: added Rb tag (Maximilian)
+ drivers/platform/surface/aggregator/core.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |lovesh.bond@gmail.com
+diff --git a/drivers/platform/surface/aggregator/core.c b/drivers/platform/surface/aggregator/core.c
+index 279d9df19c01..c61bbeeec2df 100644
+--- a/drivers/platform/surface/aggregator/core.c
++++ b/drivers/platform/surface/aggregator/core.c
+@@ -301,20 +301,13 @@ static acpi_status ssam_serdev_setup_via_acpi_crs(struct acpi_resource *rsc,
+ 						  void *ctx)
+ {
+ 	struct serdev_device *serdev = ctx;
+-	struct acpi_resource_common_serialbus *serial;
+ 	struct acpi_resource_uart_serialbus *uart;
+ 	bool flow_control;
+ 	int status = 0;
+ 
+-	if (rsc->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
++	if (!serdev_acpi_get_uart_resource(rsc, &uart))
+ 		return AE_OK;
+ 
+-	serial = &rsc->data.common_serial_bus;
+-	if (serial->type != ACPI_RESOURCE_SERIAL_TYPE_UART)
+-		return AE_OK;
+-
+-	uart = &rsc->data.uart_serial_bus;
+-
+ 	/* Set up serdev device. */
+ 	serdev_device_set_baudrate(serdev, uart->default_baud_rate);
+ 
+-- 
+2.30.2
 
---- Comment #55 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
-*** Bug 213857 has been marked as a duplicate of this bug. ***
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
