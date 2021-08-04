@@ -2,97 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0487C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC26C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B15460F6F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF4E60F35
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237985AbhHDMHg (ORCPT
+        id S236290AbhHDMMZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Aug 2021 08:07:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:30393 "EHLO mga09.intel.com"
+        Wed, 4 Aug 2021 08:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236857AbhHDMHf (ORCPT
+        id S235697AbhHDMMZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Aug 2021 08:07:35 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="213889133"
-X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
-   d="scan'208";a="213889133"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 05:07:22 -0700
-X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
-   d="scan'208";a="467087460"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 05:07:19 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mBFg0-0056Cy-3X; Wed, 04 Aug 2021 15:07:12 +0300
-Date:   Wed, 4 Aug 2021 15:07:12 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH v1 1/5] serdev: Split and export
- serdev_acpi_get_uart_resource()
-Message-ID: <YQqC8JOfH6BqTpW6@smile.fi.intel.com>
-References: <20210803192905.72246-1-andriy.shevchenko@linux.intel.com>
- <035d2579-f64c-b5c2-45ff-4421ad7db6ca@redhat.com>
+        Wed, 4 Aug 2021 08:12:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 1DE1B61004
+        for <platform-driver-x86@vger.kernel.org>; Wed,  4 Aug 2021 12:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628079133;
+        bh=WEYN9gSXfD0+YS1Php1TWQhLNfaiQOpMebND5qD/gJ4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=JYgyYVCUliboRmpe0Pgj9A9BroodE0mDVmJbomzNLgd2pRAfQ+9VvUMPv+AzJNPxN
+         ap0to7zWI0cTGBCt5Nk4GsGs4qt4O4ctakuYZxyMmKmpYfPQq8S7EQXScLR4297/SI
+         RE4u+pUYol0TyJ2Bj/htJk5iVxTgo2FKrikv9f7w+zGuJ+auma8SScRwGUZFFXxnY3
+         HudE20wYdF+4TkvT/UGDUqrU5E/W6N+YP+kyNm21QFqPKH6Ue7uR2ruwdWdvVY3UhA
+         wLgQOEyMOdUeXnleDrf0s9ZSeRgh+UXtnsaJqN33YIhhycYb5lgDdjvHXoZM/bsccz
+         QgEWPMhkJbbPQ==
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     platform-driver-x86@vger.kernel.org
+Subject: [Bug 213579] Clevo NH55HJ (intel tigerlake) touchpad support (GPIO
+ can't be used as IRQ)
+Date:   Wed, 04 Aug 2021 12:12:12 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Product: Drivers
+X-Bugzilla-Component: Platform_x86
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: andy.shevchenko@gmail.com
+X-Bugzilla-Status: NEEDINFO
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: drivers_platform_x86@kernel-bugs.osdl.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: cc
+Message-ID: <bug-213579-215701-ShF3MZLsNu@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-213579-215701@https.bugzilla.kernel.org/>
+References: <bug-213579-215701@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <035d2579-f64c-b5c2-45ff-4421ad7db6ca@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 04, 2021 at 10:08:01AM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 8/3/21 9:29 PM, Andy Shevchenko wrote:
-> > The same as for I²C Serial Bus resource split and export
-> > serdev_acpi_get_uart_resource(). We have already 3 users
-> > one of which is converted here.
-> > 
-> > Rationale of this is to consolidate parsing UART Serial Bus
-> > resource in one place as it's done, e.g., for I²C Serial Bus.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Thanks, patch looks good to me:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> *for this patch*
-> 
-> We do need to talk about how to merge this series, I've
-> NACK-ed patches 3/5 and 4/5 (see my reply there) so that
-> leaves just 2/5  as depending on this one. I believe it
-> would be easiest to just merge 1/5 + 2/5 to the tree
-> which caries serdev patches, which I guess is Greg's
-> tty tree ?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D213579
 
-I can resend a v2 with tags and dropped mentioned patches.
-I think it will be easier to everyone to handle.
+Andy Shevchenko (andy.shevchenko@gmail.com) changed:
 
--- 
-With Best Regards,
-Andy Shevchenko
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+                 CC|                            |kai.heng.feng@canonical.com
 
+--- Comment #54 from Andy Shevchenko (andy.shevchenko@gmail.com) ---
+*** Bug 213463 has been marked as a duplicate of this bug. ***
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
