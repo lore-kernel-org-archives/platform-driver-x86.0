@@ -2,103 +2,97 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC411C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 10:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0487C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5DFF60EE5
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 10:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B15460F6F
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 12:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237610AbhHDKti (ORCPT
+        id S237985AbhHDMHg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Aug 2021 06:49:38 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:56590 "EHLO mail.ispras.ru"
+        Wed, 4 Aug 2021 08:07:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:30393 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236736AbhHDKtI (ORCPT
+        id S236857AbhHDMHf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Aug 2021 06:49:08 -0400
-Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 21450405A19B;
-        Wed,  4 Aug 2021 10:48:54 +0000 (UTC)
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Prevent possibile overflow
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        irenic.rajneesh@gmail.com, gayatri.kammela@intel.com,
-        hdegoede@redhat.com, mgross@linux.intel.com,
-        andy.shevchenko@gmail.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <facd47b64a5efa4e0e70cd29586173e44a8929c2.camel@linux.intel.com>
- <20210804003039.359138-1-david.e.box@linux.intel.com>
-From:   Evgeny Novikov <novikov@ispras.ru>
-Message-ID: <159dec07-9f05-3a92-8b7d-3d2f27448f70@ispras.ru>
-Date:   Wed, 4 Aug 2021 13:48:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Wed, 4 Aug 2021 08:07:35 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="213889133"
+X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
+   d="scan'208";a="213889133"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 05:07:22 -0700
+X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
+   d="scan'208";a="467087460"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 05:07:19 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mBFg0-0056Cy-3X; Wed, 04 Aug 2021 15:07:12 +0300
+Date:   Wed, 4 Aug 2021 15:07:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maximilian Luz <luzmaximilian@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-serial@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>
+Subject: Re: [PATCH v1 1/5] serdev: Split and export
+ serdev_acpi_get_uart_resource()
+Message-ID: <YQqC8JOfH6BqTpW6@smile.fi.intel.com>
+References: <20210803192905.72246-1-andriy.shevchenko@linux.intel.com>
+ <035d2579-f64c-b5c2-45ff-4421ad7db6ca@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210804003039.359138-1-david.e.box@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <035d2579-f64c-b5c2-45ff-4421ad7db6ca@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
+On Wed, Aug 04, 2021 at 10:08:01AM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 8/3/21 9:29 PM, Andy Shevchenko wrote:
+> > The same as for I²C Serial Bus resource split and export
+> > serdev_acpi_get_uart_resource(). We have already 3 users
+> > one of which is converted here.
+> > 
+> > Rationale of this is to consolidate parsing UART Serial Bus
+> > resource in one place as it's done, e.g., for I²C Serial Bus.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Thanks, patch looks good to me:
+> 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> 
+> *for this patch*
+> 
+> We do need to talk about how to merge this series, I've
+> NACK-ed patches 3/5 and 4/5 (see my reply there) so that
+> leaves just 2/5  as depending on this one. I believe it
+> would be easiest to just merge 1/5 + 2/5 to the tree
+> which caries serdev patches, which I guess is Greg's
+> tty tree ?
 
-Your patch fixes the out of bound issue, but I have another concern 
-regarding possible incomplete initialization of first 8 elements of the 
-lpm_priority array that is declared on the stack and is not initialized, 
-say, with zeroes. Yet again due to some invalid values coming from the 
-register, it is not guaranteed that something meaningful will be 
-assigned for all first 8 elements of lpm_priority in the first cycle in 
-pmc_core_get_low_power_modes(). In the second cycle this function 
-accesses all these elements from lpm_priority. Though there is test 
-"!(BIT(mode) & lpm_en)", it can pass accidentally, thus some unexpected 
-values can be stored to "pmcdev->lpm_en_modes[i++]" and exposed later.
+I can resend a v2 with tags and dropped mentioned patches.
+I think it will be easier to everyone to handle.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Best regards,
-Evgeny Novikov
-
-
-On 04.08.2021 03:30, David E. Box wrote:
-> Low Power Mode (LPM) priority is encoded in 4 bits. Yet, this value is used
-> as an index to an array whose element size was less than 16, leading to the
-> possibility of overflow should we read a larger than expected priority. Set
-> the array size to 16 to prevent this.
->
-> Reported-by: Evgeny Novikov <novikov@ispras.ru>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->   drivers/platform/x86/intel_pmc_core.c | 2 +-
->   drivers/platform/x86/intel_pmc_core.h | 1 +
->   2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index b0e486a6bdfb..2a761fe98277 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1451,7 +1451,7 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
->   
->   static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
->   {
-> -	u8 lpm_priority[LPM_MAX_NUM_MODES];
-> +	u8 lpm_priority[LPM_MAX_PRI];
->   	u32 lpm_en;
->   	int mode, i, p;
->   
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index e8dae9c6c45f..b98c2b44c938 100644
-> --- a/drivers/platform/x86/intel_pmc_core.h
-> +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -190,6 +190,7 @@ enum ppfear_regs {
->   #define LPM_MAX_NUM_MODES			8
->   #define GET_X2_COUNTER(v)			((v) >> 1)
->   #define LPM_STS_LATCH_MODE			BIT(31)
-> +#define LPM_MAX_PRI				16	/* size of 4 bits */
->   
->   #define TGL_PMC_SLP_S0_RES_COUNTER_STEP		0x7A
->   #define TGL_PMC_LTR_THC0			0x1C04
