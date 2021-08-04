@@ -2,161 +2,87 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B48C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 14:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB32FC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 16:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70AD660FC3
-	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 14:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFA660E78
+	for <platform-driver-x86@archiver.kernel.org>; Wed,  4 Aug 2021 16:12:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238821AbhHDObN (ORCPT
+        id S234348AbhHDQM7 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 4 Aug 2021 10:31:13 -0400
-Received: from mga14.intel.com ([192.55.52.115]:29074 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238816AbhHDOaq (ORCPT
+        Wed, 4 Aug 2021 12:12:59 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40050 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236839AbhHDQK5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 4 Aug 2021 10:30:46 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10065"; a="213660110"
-X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
-   d="scan'208";a="213660110"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2021 07:29:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,294,1620716400"; 
-   d="scan'208";a="420052084"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 04 Aug 2021 07:29:31 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2391AB9; Wed,  4 Aug 2021 17:30:00 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Mark Gross <mgross@linux.intel.com>, Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v2 1/2] serdev: Split and export serdev_acpi_get_uart_resource()
-Date:   Wed,  4 Aug 2021 17:29:58 +0300
-Message-Id: <20210804142959.67981-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+        Wed, 4 Aug 2021 12:10:57 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2E07E1C0B7A; Wed,  4 Aug 2021 18:10:39 +0200 (CEST)
+Date:   Wed, 4 Aug 2021 18:10:38 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     =?utf-8?B?eXVlY2hhby56aGFvKOi1tei2iui2hSk=?= 
+        <yuechao.zhao@advantech.com.cn>
+Cc:     "345351830@qq.com" <345351830@qq.com>,
+        =?utf-8?B?UmFpbmJvdy5aaGFuZyjlvLXnjokp?= 
+        <Rainbow.Zhang@advantech.com.cn>,
+        =?utf-8?B?eXVueGlhLmxpKOadjuS6kemcnik=?= 
+        <yunxia.li@advantech.com.cn>,
+        =?utf-8?B?SmlhLlN1aSjotL7nnaIp?= <Jia.Sui@advantech.com.cn>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [v2,1/1] adv_mix955x is a scheme that multiplexes
+ PCA9554/PCA9555 into LED and GPIO
+Message-ID: <20210804161038.GE25072@amd>
+References: <tencent_17A7BBC4D15D331C1A25B4075294E5D67706@qq.com>
+ <cb03b75a018e4bec83eac6898eb1d2af@ACNMB2.ACN.ADVANTECH.CORP>
+ <20210427135356.GA2426@duo.ucw.cz>
+ <859d8fcef654414c9ba55993adc93104@ACNMB2.ACN.ADVANTECH.CORP>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="maH1Gajj2nflutpK"
+Content-Disposition: inline
+In-Reply-To: <859d8fcef654414c9ba55993adc93104@ACNMB2.ACN.ADVANTECH.CORP>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The same as for I²C Serial Bus resource split and export
-serdev_acpi_get_uart_resource(). We have already a few users
-one of which is converted here.
 
-Rationale of this is to consolidate parsing UART Serial Bus
-resource in one place as it's done, e.g., for I²C Serial Bus.
+--maH1Gajj2nflutpK
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
----
-v2: added Rb tag (Hans)
- drivers/tty/serdev/core.c | 36 +++++++++++++++++++++++++++++-------
- include/linux/serdev.h    | 14 ++++++++++++++
- 2 files changed, 43 insertions(+), 7 deletions(-)
+On Wed 2021-04-28 01:51:04, yuechao.zhao(=E8=B5=B5=E8=B6=8A=E8=B6=85) wrote:
+> Hi Pavel
+> As for " Please Cc LED drivers to the LED maintainers...", does it mean t=
+hat I only need to Cc LED drivers to LED maintainers?
+> Or do I need to send this driver to linux-leds@vger.kernel.org instead of=
+ platform-driver-x86@vger.kernel.org.
+>
 
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index 92498961fd92..436e3d1ba92c 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -562,23 +562,45 @@ struct acpi_serdev_lookup {
- 	int index;
- };
- 
-+/**
-+ * serdev_acpi_get_uart_resource - Gets UARTSerialBus resource if type matches
-+ * @ares:	ACPI resource
-+ * @uart:	Pointer to UARTSerialBus resource will be returned here
-+ *
-+ * Checks if the given ACPI resource is of type UARTSerialBus.
-+ * In this case, returns a pointer to it to the caller.
-+ *
-+ * Returns true if resource type is of UARTSerialBus, otherwise false.
-+ */
-+bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
-+				   struct acpi_resource_uart_serialbus **uart)
-+{
-+	struct acpi_resource_uart_serialbus *sb;
-+
-+	if (ares->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
-+		return false;
-+
-+	sb = &ares->data.uart_serial_bus;
-+	if (sb->type != ACPI_RESOURCE_SERIAL_TYPE_UART)
-+		return false;
-+
-+	*uart = sb;
-+	return true;
-+}
-+EXPORT_SYMBOL_GPL(serdev_acpi_get_uart_resource);
-+
- static int acpi_serdev_parse_resource(struct acpi_resource *ares, void *data)
- {
- 	struct acpi_serdev_lookup *lookup = data;
- 	struct acpi_resource_uart_serialbus *sb;
- 	acpi_status status;
- 
--	if (ares->type != ACPI_RESOURCE_TYPE_SERIAL_BUS)
--		return 1;
--
--	if (ares->data.common_serial_bus.type != ACPI_RESOURCE_SERIAL_TYPE_UART)
-+	if (!serdev_acpi_get_uart_resource(ares, &sb))
- 		return 1;
- 
- 	if (lookup->index != -1 && lookup->n++ != lookup->index)
- 		return 1;
- 
--	sb = &ares->data.uart_serial_bus;
--
- 	status = acpi_get_handle(lookup->device_handle,
- 				 sb->resource_source.string_ptr,
- 				 &lookup->controller_handle);
-@@ -586,7 +608,7 @@ static int acpi_serdev_parse_resource(struct acpi_resource *ares, void *data)
- 		return 1;
- 
- 	/*
--	 * NOTE: Ideally, we would also want to retreive other properties here,
-+	 * NOTE: Ideally, we would also want to retrieve other properties here,
- 	 * once setting them before opening the device is supported by serdev.
- 	 */
- 
-diff --git a/include/linux/serdev.h b/include/linux/serdev.h
-index 9f14f9c12ec4..3368c261ab62 100644
---- a/include/linux/serdev.h
-+++ b/include/linux/serdev.h
-@@ -327,4 +327,18 @@ static inline int serdev_tty_port_unregister(struct tty_port *port)
- }
- #endif /* CONFIG_SERIAL_DEV_CTRL_TTYPORT */
- 
-+struct acpi_resource;
-+struct acpi_resource_uart_serialbus;
-+
-+#ifdef CONFIG_ACPI
-+bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
-+				   struct acpi_resource_uart_serialbus **uart);
-+#else
-+static inline bool serdev_acpi_get_uart_resource(struct acpi_resource *ares,
-+						 struct acpi_resource_uart_serialbus **uart)
-+{
-+	return false;
-+}
-+#endif /* CONFIG_ACPI */
-+
- #endif /*_LINUX_SERDEV_H */
--- 
-2.30.2
+You should probably send to both lists.
+						Pavel
+--=20
+http://www.livejournal.com/~pavelmachek
 
+--maH1Gajj2nflutpK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAmEKu/4ACgkQMOfwapXb+vKqIACgo41uosR8j5SCMB5EKAuTjLxU
+0WUAn1pIakBew+CKSHsFVlyKI5eC/1Cu
+=4+bK
+-----END PGP SIGNATURE-----
+
+--maH1Gajj2nflutpK--
