@@ -2,128 +2,137 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B13C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD91C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 16:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E953E610CD
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039BD6112F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 16:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239650AbhHEIkv (ORCPT
+        id S229591AbhHEQWQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Aug 2021 04:40:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:24542 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232749AbhHEIkv (ORCPT
+        Thu, 5 Aug 2021 12:22:16 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:45126 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229437AbhHEQWQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Aug 2021 04:40:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628152837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fCMotf9NGHpviMDaMObiw2KipWwkcnOeBWdBBm4nl2E=;
-        b=OSWcK0IiPqPP7UK22qBMprb4DhtmBkE7tYp3P3cwVs9t2GPcBa2wxAmhtmnRWRRiETr0Qr
-        RR4ebeEAwGwjnh+7rl7zt+SKguSY9IT2Q05+1GoPclLCvHWsVYHSALiPqarvgO+MxJ/b4K
-        htr96on5hkRbTG09GMmp4J+S9NtZlBA=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-o4f53AxgMAqGZ1wRCC3fyQ-1; Thu, 05 Aug 2021 04:40:36 -0400
-X-MC-Unique: o4f53AxgMAqGZ1wRCC3fyQ-1
-Received: by mail-ed1-f72.google.com with SMTP id d6-20020a50f6860000b02903bc068b7717so2801816edn.11
-        for <platform-driver-x86@vger.kernel.org>; Thu, 05 Aug 2021 01:40:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fCMotf9NGHpviMDaMObiw2KipWwkcnOeBWdBBm4nl2E=;
-        b=hwmwQYMeHz/m6lKt6W4L7GKyiqsrbZGRAHqUMXDS6QV3u8DEkCAnVicVspRqwmqGwN
-         gTLWMDCYx7oT83wDSUIp24/znbjvcXOG8qr4WC2Uzt9R+QbnHLbobVhS9RsScnDe9TSu
-         ymRC4JUysS9l8hyd/iiCt+s7DJu+eLSSQW4mp0qBLgEnYLpGx/xfL1JJHDLgHnXLdK9F
-         MIXnS9zFJLMIudN+bKQtJVeUJkOaTjCmsnZmmtRLrLTmMK53VkqV/Ge7KMXcbO7br5gl
-         T9BOUiCvYCN6Jo3nczMX9u2eS6a6wwczltwzFVgFofhiNRdrqlAItL+HFyQR9RUx0wIa
-         eMQQ==
-X-Gm-Message-State: AOAM533ZnHeycKa/XSQ0wVpL690VIX2lsE1Bejwppwak7Sd+3JCN204t
-        4rE8PqtKsNl9XbK6y5T/z/ualWiqZQiDv56qwcUldLGN2WCQqgO8LDXEBWZHk4tzYnogqCoHmeV
-        dpq40Vw9cJ+JKfMKTJYP54m/jUxvRaCgkhg==
-X-Received: by 2002:a17:906:af86:: with SMTP id mj6mr3750164ejb.144.1628152832017;
-        Thu, 05 Aug 2021 01:40:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxOiWA4T9Yurh7IrUVWe62zfCVCLr8GfjYhdMlD6qzd0Wc1dz9ezbQY4IN8z3+YFtdKSL2Fdw==
-X-Received: by 2002:a17:906:af86:: with SMTP id mj6mr3750149ejb.144.1628152831781;
-        Thu, 05 Aug 2021 01:40:31 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id yc29sm1467505ejb.104.2021.08.05.01.40.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Aug 2021 01:40:31 -0700 (PDT)
-Subject: Re: Mario's email is bounced
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Cc:     Mark Gross <mgross@linux.intel.com>, mario.limonciello@outlook.com
-References: <CAHp75Ve_vzrojizyA4J3+z480LspsK4YeS-K2Am0dYggtDUrvw@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0b40bc5e-7070-bb53-5de4-b5fde4832a0e@redhat.com>
-Date:   Thu, 5 Aug 2021 10:40:30 +0200
+        Thu, 5 Aug 2021 12:22:16 -0400
+Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 6B6B040D4004;
+        Thu,  5 Aug 2021 16:21:57 +0000 (UTC)
+Subject: Re: [PATCH] platform/x86: intel_pmc_core: Prevent possibile overflow
+To:     david.e.box@linux.intel.com, irenic.rajneesh@gmail.com,
+        gayatri.kammela@intel.com, hdegoede@redhat.com,
+        mgross@linux.intel.com, andy.shevchenko@gmail.com
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <facd47b64a5efa4e0e70cd29586173e44a8929c2.camel@linux.intel.com>
+ <20210804003039.359138-1-david.e.box@linux.intel.com>
+ <159dec07-9f05-3a92-8b7d-3d2f27448f70@ispras.ru>
+ <7308291f26a3f225fca069461d9ac26170f0ba66.camel@linux.intel.com>
+From:   Evgeny Novikov <novikov@ispras.ru>
+Message-ID: <457033ea-93ce-709d-39e7-8664b3731e71@ispras.ru>
+Date:   Thu, 5 Aug 2021 19:21:57 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Ve_vzrojizyA4J3+z480LspsK4YeS-K2Am0dYggtDUrvw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <7308291f26a3f225fca069461d9ac26170f0ba66.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Hi David,
 
-On 8/5/21 10:35 AM, Andy Shevchenko wrote:
-> Since I have noticed that Mario's [old] mail is bounced (yeah, I know
-> that it is my script downside by not checking each email) I was
-> curious about his address in the meaningful files and what we have now
-> is the below.
-> 
-> Documentation/ABI/testing/dell-smbios-wmi:4:Contact:    "Mario
-> Limonciello" <mario.limonciello@dell.com>
-> Documentation/ABI/testing/sysfs-bus-thunderbolt:235:Contact:    Mario
-> Limonciello <mario.limonciello@dell.com>
-> Documentation/ABI/testing/sysfs-class-firmware-attributes:5:
->  Mario Limonciello <mario.limonciello@dell.com>,
-> Documentation/ABI/testing/sysfs-class-firmware-attributes:133:
->  Mario Limonciello <mario.limonciello@dell.com>,
-> Documentation/ABI/testing/sysfs-class-firmware-attributes:223:
->  Mario Limonciello <mario.limonciello@dell.com>,
-> Documentation/ABI/testing/sysfs-class-firmware-attributes:252:
->  Mario Limonciello <mario.limonciello@dell.com>,
-> Documentation/ABI/testing/sysfs-platform-dell-smbios:4:Contact: "Mario
-> Limonciello" <mario.limonciello@dell.com>
-> Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt:4:Contact:
->       "Mario Limonciello" <mario.limonciello@dell.com>
-> Documentation/ABI/testing/sysfs-power:298:Contact:      Mario
-> Limonciello <mario.limonciello@dell.com>
-> 
-> I think it needs to be fixed one way or another.
+On 05.08.2021 00:51, David E. Box wrote:
+> Hi Evgeny,
+>
+> On Wed, 2021-08-04 at 13:48 +0300, Evgeny Novikov wrote:
+>> Hi David,
+>>
+>> Your patch fixes the out of bound issue, but I have another concern
+>> regarding possible incomplete initialization of first 8 elements of
+>> the
+>> lpm_priority array that is declared on the stack and is not
+>> initialized,
+>> say, with zeroes. Yet again due to some invalid values coming from
+>> the
+>> register, it is not guaranteed that something meaningful will be
+>> assigned for all first 8 elements of lpm_priority in the first cycle
+>> in
+>> pmc_core_get_low_power_modes(). In the second cycle this function
+>> accesses all these elements from lpm_priority. Though there is test
+>> "!(BIT(mode) & lpm_en)", it can pass accidentally, thus some
+>> unexpected
+>> values can be stored to "pmcdev->lpm_en_modes[i++]" and exposed
+>> later.
+> I sent out a v2 that validates the priority levels are within bounds
+> and meaningful before reordering them to set the lpm_en_modes. Thanks.
 
-Right, we have 2 alternatives email addresses here:
+Now it looks that you fixed both issues. Our verification framework does 
+not report warnings after application of the patch. I can not reason 
+about functional correctness of this code since I am not familiar with 
+the corresponding documentation and, thus, expected behavior.
 
-1. mario.limonciello@outlook.com
-2. Dell.Client.Kernel@dell.com
+Likely there is a small misprint in the comment "contains gives".
 
-I thank that in the following the address should be changed to the Dell.Client.Kernel address:
-Documentation/ABI/testing/dell-smbios-wmi
-Documentation/ABI/testing/sysfs-platform-dell-smbios
+Best regards,
+Evgeny Novikov
 
-And in the rest it is probably best to use Mario's new
-personal address.
-
-Mario, do you agree with this?
-
-Regards,
-
-Hans
-
+> David
+>
+>>
+>> Best regards,
+>> Evgeny Novikov
+>>
+>>
+>> On 04.08.2021 03:30, David E. Box wrote:
+>>> Low Power Mode (LPM) priority is encoded in 4 bits. Yet, this value
+>>> is used
+>>> as an index to an array whose element size was less than 16,
+>>> leading to the
+>>> possibility of overflow should we read a larger than expected
+>>> priority. Set
+>>> the array size to 16 to prevent this.
+>>>
+>>> Reported-by: Evgeny Novikov <novikov@ispras.ru>
+>>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+>>> ---
+>>>    drivers/platform/x86/intel_pmc_core.c | 2 +-
+>>>    drivers/platform/x86/intel_pmc_core.h | 1 +
+>>>    2 files changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/platform/x86/intel_pmc_core.c
+>>> b/drivers/platform/x86/intel_pmc_core.c
+>>> index b0e486a6bdfb..2a761fe98277 100644
+>>> --- a/drivers/platform/x86/intel_pmc_core.c
+>>> +++ b/drivers/platform/x86/intel_pmc_core.c
+>>> @@ -1451,7 +1451,7 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
+>>>    
+>>>    static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+>>>    {
+>>> -       u8 lpm_priority[LPM_MAX_NUM_MODES];
+>>> +       u8 lpm_priority[LPM_MAX_PRI];
+>>>          u32 lpm_en;
+>>>          int mode, i, p;
+>>>    
+>>> diff --git a/drivers/platform/x86/intel_pmc_core.h
+>>> b/drivers/platform/x86/intel_pmc_core.h
+>>> index e8dae9c6c45f..b98c2b44c938 100644
+>>> --- a/drivers/platform/x86/intel_pmc_core.h
+>>> +++ b/drivers/platform/x86/intel_pmc_core.h
+>>> @@ -190,6 +190,7 @@ enum ppfear_regs {
+>>>    #define LPM_MAX_NUM_MODES                     8
+>>>    #define GET_X2_COUNTER(v)                     ((v) >> 1)
+>>>    #define LPM_STS_LATCH_MODE                    BIT(31)
+>>> +#define LPM_MAX_PRI                            16      /* size of
+>>> 4 bits */
+>>>    
+>>>    #define TGL_PMC_SLP_S0_RES_COUNTER_STEP               0x7A
+>>>    #define TGL_PMC_LTR_THC0                      0x1C04
+>
