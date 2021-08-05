@@ -7,115 +7,98 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB02C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E01EC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C881660F43
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9633610CD
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 08:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239452AbhHEIVz (ORCPT
+        id S237384AbhHEIaa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Aug 2021 04:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42148 "EHLO
+        Thu, 5 Aug 2021 04:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbhHEIVz (ORCPT
+        with ESMTP id S236850AbhHEIaa (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Aug 2021 04:21:55 -0400
+        Thu, 5 Aug 2021 04:30:30 -0400
 Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C2CEC061765;
-        Thu,  5 Aug 2021 01:21:41 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id mz5-20020a17090b3785b0290176ecf64922so12909196pjb.3;
-        Thu, 05 Aug 2021 01:21:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84104C061765;
+        Thu,  5 Aug 2021 01:30:16 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id s22-20020a17090a1c16b0290177caeba067so13044578pjs.0;
+        Thu, 05 Aug 2021 01:30:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KN00QyUePsg/nfcJcgy2UYBcl0jMuOx+ehoRGZbZcX4=;
-        b=Zjl8qznF1QgqiUJuycxBpGxXHqxwRQhTCI3RXTSfNUoaXb6q6QBOaQNYzesrJKl20b
-         UAqWwZY0fx6/3hG63OJUH+fLSg/onSppLd3kYf7A3zrB5cFWKym37DdIYC+NEHrgk5sx
-         fSIjlzcQ9zV7Rar/GhB0X4Lmjlw+pSlSVMVrdfq+K2MCIeF6JjVY7hFCi81M9a8BH263
-         Hz8kha5k2kF+WgayGmw3ZjwAPKutYm4H11BG+l2dAgxHaESdGWoLj6Ab0ujXSpvfcMQv
-         XPjdKXSnwF4k4UPyDOIAhUVE7j1UpWB0RfWhu4+PUrA7RsHcFCIpNlx4ca5TuI+GIzF4
-         X9TQ==
+         :cc:content-transfer-encoding;
+        bh=YItJSibc+CAMFtQEZMwaq2dvhMYrma7YcIcK5m+EbL8=;
+        b=HT5pP9GMNDhhn6oyvBggfa72VRmyYoU1Sh8zhEWwlDN0haTuvBNGDWcnOEa178ANZH
+         0aSSNdss8gIS1scw2nx7kb+Rs4CQiroO8uuK2f0wJlqf921wTBSIWQNPdIKRE3GnKFE9
+         t9MhUtfebtJChZq1UdsXtjgLZgYHaxEB75Bda3JcrDHu7JDDXRA4nJr3tnpp1ODos/Bi
+         MGFUb10LQbBYkF7DfahQIGbL3gI+9pHq2UUPV0QzXiu2nlzNWKWgfUMtSwUkkIZmqf4Q
+         NqRWDCOahg8Kd7mFmIO8DRKFqefsGX3pZl9/TkLZ/+t9zsA3YLagK0SyYhtn7/CreHRw
+         apzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KN00QyUePsg/nfcJcgy2UYBcl0jMuOx+ehoRGZbZcX4=;
-        b=Je/F5/Z7ly8W9NMv3zEE48Tb1P3C6pwTwBmvtWZNZrGKMgDgN4hyLp4Y670F2aqRzA
-         K4RKyUYTsxQnTtsShPoeqXLo7vHPDrxJX0EKTr/kJtvX5VinnTl+lC8AS6NkO1mufoUR
-         NBTZ/1iHPI2vUNj5mSeyh1k4lirpiCzI8TrG6FKuh5+GVzCmi1YOYZx1V1dE5MKdPr+H
-         BRn0RyX9UapG3EUXHGeBwGmpwagII/T6e1RU3dAkG7Y9oXhhAvql7Ah2cnjvwN6fRDkH
-         9T/pxU1HDYocz63NgpDZhAUJRW+5ZxqxstiljbJbakIKyW3rwtJgEaZ5K+GPBlrFA0si
-         GK9w==
-X-Gm-Message-State: AOAM5319YmHaAXMw04xPtoZj2Tpl0j2InHypP5Bp2f7pMJFizk7ByAoI
-        xL57rndS2lTPLkJZCb529t1zWpg2fPWZmvqHKVc=
-X-Google-Smtp-Source: ABdhPJztRzTRnYhc1zuSCEMBALMx9NoK8WeoBL24jmVXJI6AnTZaiOOAeBp4l+SSdKjI/j0TRotXmkWbiyz+f6FXF/I=
-X-Received: by 2002:a17:90b:912:: with SMTP id bo18mr3531824pjb.228.1628151700671;
- Thu, 05 Aug 2021 01:21:40 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YItJSibc+CAMFtQEZMwaq2dvhMYrma7YcIcK5m+EbL8=;
+        b=DrN51bj7mw4LPUHQyrqUGEq5AFuNIIHxB21qW2G7QJPAHfe8V0R7tNzbjl6vH2Rcvm
+         9l10U+mPiX6Gdb2CfIdj20FEdrXoRVWn1/VA8O/GAN+GmvuCep6KN8FHxkkEWlPsgCIX
+         K9/UHHjXMw+lrs+1Ds25M5DQpEMXj0W6Dlu1TpQlTmXPQAn8KizfrOZ32mkAI/7c/afr
+         NmNfDBKDZF0IS8ZoGRjlCcrghHcxX05VbNcVyXkA8RrdbZlikxdCT524JuiDs6ndK/gX
+         uwJuM4eHHn2UK8bcjMBy+xDU9MKx0raZajbI+S5v5YWVfSNLvQkbEPLEE1aDco+thVT0
+         sYhw==
+X-Gm-Message-State: AOAM5323W7KdQLChXcI0eEAsshkueLgNWG1jpmh/OEmX8HyUl21LtZF4
+        HUcDO1G4vVDDr12Gr/tVztIMaQTBOQGDtQrQupw=
+X-Google-Smtp-Source: ABdhPJwUJIY6nbNCYrr0RZgIog7RvAFy7ewt+QG1scAo5DpRxx6Ni3SF5nm5xLPhhFE7Ao61jMVmFAQ8d6LabVabOQY=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr14266847pjq.181.1628152216075;
+ Thu, 05 Aug 2021 01:30:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210804142959.67981-1-andriy.shevchenko@linux.intel.com> <e34fdf56-4fdb-b422-17d6-0b35779e37b7@kernel.org>
-In-Reply-To: <e34fdf56-4fdb-b422-17d6-0b35779e37b7@kernel.org>
+References: <20210803194039.35083-1-andriy.shevchenko@linux.intel.com>
+ <20210804200025.iqsvknddoxix7yw7@pali> <CAHp75Vc1r+9N6_BiJzO3JYppgaokKiQwk4sLrp72kPEDgYEweg@mail.gmail.com>
+ <20210805081153.5exc6iih2yu5a3ph@pali>
+In-Reply-To: <20210805081153.5exc6iih2yu5a3ph@pali>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 5 Aug 2021 11:21:01 +0300
-Message-ID: <CAHp75VfSt=vibmiSEVP68UkAHmkDJ3tXt0W7yxmQ8UH-CTYCAA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] serdev: Split and export serdev_acpi_get_uart_resource()
-To:     Jiri Slaby <jirislaby@kernel.org>
+Date:   Thu, 5 Aug 2021 11:29:36 +0300
+Message-ID: <CAHp75VcioyOPfTWV-z-_6EYna5jk7N2zaxuK+nXiUOPV-qnCUQ@mail.gmail.com>
+Subject: Re: [RFT, PATCH v1 1/1] platform/x86: dell-smo8800: Convert to be a
+ platform driver
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Rob Herring <robh@kernel.org>
+        Mario Limonciello <mario.limonciello@dell.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 5, 2021 at 10:36 AM Jiri Slaby <jirislaby@kernel.org> wrote:
-> On 04. 08. 21, 16:29, Andy Shevchenko wrote:
+On Thu, Aug 5, 2021 at 11:11 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> On Thursday 05 August 2021 10:20:40 Andy Shevchenko wrote:
+> > On Wednesday, August 4, 2021, Pali Roh=C3=A1r <pali@kernel.org> wrote:
+> > > On Tuesday 03 August 2021 22:40:39 Andy Shevchenko wrote:
 
 ...
 
-> > +/**
-> > + * serdev_acpi_get_uart_resource - Gets UARTSerialBus resource if type matches
-> > + * @ares:    ACPI resource
-> > + * @uart:    Pointer to UARTSerialBus resource will be returned here
-> > + *
-> > + * Checks if the given ACPI resource is of type UARTSerialBus.
-> > + * In this case, returns a pointer to it to the caller.
-> > + *
-> > + * Returns true if resource type is of UARTSerialBus, otherwise false.
+> > > And in which kernel
+> > > version is (or will be) introduced this ACPI infrastructure?
+> >
+> >
+> > I don=E2=80=99t remember, I think it is in v3 era or even v2.6.x.
 >
-> Better to write:
->   * Return: True if resource type is of UARTSerialBus, otherwise false.
-> which is recognized by sphinx.
+> ... and this answers why.
 
-Will fix it in v3.
+Since you have asked, it's v3.8-rc1 with the commit
+91e568780588 ("ACPI: Add support for platform bus type")
 
-> > + */
+> I will try to find some time to test this change on a real hw.
 
-...
+Thanks in advance!
 
-> Why don't you return NULL, or sb, thus eliminating the parameter?
-
-1. That's how other similar APIs are done.
-2. It will save a line of code in the callers. Usual pattern
-  if (...get_res(..., &sb))
-   return ERR_or_so;
-
-With your proposal
-
-  sb = get_res(...);
-  if (!sb)
-    return ERR_or_so;
-
-> > +}
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
