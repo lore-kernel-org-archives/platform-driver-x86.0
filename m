@@ -2,137 +2,226 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD91C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 16:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD901C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 19:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039BD6112F
-	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 16:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5B260BD3
+	for <platform-driver-x86@archiver.kernel.org>; Thu,  5 Aug 2021 19:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbhHEQWQ (ORCPT
+        id S242558AbhHETWm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Aug 2021 12:22:16 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:45126 "EHLO mail.ispras.ru"
+        Thu, 5 Aug 2021 15:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229437AbhHEQWQ (ORCPT
+        id S231721AbhHETWj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Aug 2021 12:22:16 -0400
-Received: from hellwig.intra.ispras.ru (unknown [10.10.2.182])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 6B6B040D4004;
-        Thu,  5 Aug 2021 16:21:57 +0000 (UTC)
-Subject: Re: [PATCH] platform/x86: intel_pmc_core: Prevent possibile overflow
-To:     david.e.box@linux.intel.com, irenic.rajneesh@gmail.com,
-        gayatri.kammela@intel.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, andy.shevchenko@gmail.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <facd47b64a5efa4e0e70cd29586173e44a8929c2.camel@linux.intel.com>
- <20210804003039.359138-1-david.e.box@linux.intel.com>
- <159dec07-9f05-3a92-8b7d-3d2f27448f70@ispras.ru>
- <7308291f26a3f225fca069461d9ac26170f0ba66.camel@linux.intel.com>
-From:   Evgeny Novikov <novikov@ispras.ru>
-Message-ID: <457033ea-93ce-709d-39e7-8664b3731e71@ispras.ru>
-Date:   Thu, 5 Aug 2021 19:21:57 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+        Thu, 5 Aug 2021 15:22:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC32160D07;
+        Thu,  5 Aug 2021 19:22:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628191345;
+        bh=PDqOkls0GEDq0f0pDTQyuCsQX/wdh++bPMoHW+nMMwE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DnM5XHtq2zEM/XaP/bzSI8gZqaaGnM1Zo7LXlIVTd7UlpCmlGQJuWg5OztDT+ghBP
+         jaGChiurTGlVOY74Gd8mGm9jdMCQgIJ3L8cnOrHBAfc/Awa/UqwwyR0gX0pFEQUJCU
+         RNQfmzhljNmkyp+B5D3ZP6JYAwSR4Ib5jWx9Xnqs/8K/R+RFa3hLHyOJ9v4W8aiDw2
+         py4Vdw2mVYirSYsAYGU/AhqMfyBg8yM1D64fXuxGUs+oupm2nVL3AifdxyKGjQ1pnF
+         NaOrM+DuMBfQhB5dY8rlRvEQJig4ZUllq2c/NMLNrzQs0q1on4L2GeI9WP8sW+ydmS
+         53KqTdhio3K9w==
+Received: by pali.im (Postfix)
+        id F0EEA817; Thu,  5 Aug 2021 21:22:21 +0200 (CEST)
+Date:   Thu, 5 Aug 2021 21:22:21 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>
+Subject: Re: [RFT, PATCH v1 1/1] platform/x86: dell-smo8800: Convert to be a
+ platform driver
+Message-ID: <20210805192221.s7uoi5gh6zzkqinh@pali>
+References: <20210803194039.35083-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <7308291f26a3f225fca069461d9ac26170f0ba66.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+In-Reply-To: <20210803194039.35083-1-andriy.shevchenko@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi David,
+On Tuesday 03 August 2021 22:40:39 Andy Shevchenko wrote:
+> ACPI core in conjunction with platform driver core provides
+> an infrastructure to enumerate ACPI devices. Use it in order
+> to remove a lot of boilerplate code.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 05.08.2021 00:51, David E. Box wrote:
-> Hi Evgeny,
->
-> On Wed, 2021-08-04 at 13:48 +0300, Evgeny Novikov wrote:
->> Hi David,
->>
->> Your patch fixes the out of bound issue, but I have another concern
->> regarding possible incomplete initialization of first 8 elements of
->> the
->> lpm_priority array that is declared on the stack and is not
->> initialized,
->> say, with zeroes. Yet again due to some invalid values coming from
->> the
->> register, it is not guaranteed that something meaningful will be
->> assigned for all first 8 elements of lpm_priority in the first cycle
->> in
->> pmc_core_get_low_power_modes(). In the second cycle this function
->> accesses all these elements from lpm_priority. Though there is test
->> "!(BIT(mode) & lpm_en)", it can pass accidentally, thus some
->> unexpected
->> values can be stored to "pmcdev->lpm_en_modes[i++]" and exposed
->> later.
-> I sent out a v2 that validates the priority levels are within bounds
-> and meaningful before reordering them to set the lpm_en_modes. Thanks.
+Tested on Dell Latitude E6440. After applying this patch /dev/freefall
+device is created and can be opened (for waiting for disk fall). Also
+interrupt is registered in /proc/interrupts file:
 
-Now it looks that you fixed both issues. Our verification framework does 
-not report warnings after application of the patch. I can not reason 
-about functional correctness of this code since I am not familiar with 
-the corresponding documentation and, thus, expected behavior.
+ 23:          0          0          0          0  IR-IO-APIC  23-edge      smo8800
 
-Likely there is a small misprint in the comment "contains gives".
+But I have not done real hard disk fall on this machine :-) so I guess
+it would work as before applying this patch.
 
-Best regards,
-Evgeny Novikov
+Reviewed-by: Pali Rohár <pali@kernel.org>
+Tested-by: Pali Rohár <pali@kernel.org>
 
-> David
->
->>
->> Best regards,
->> Evgeny Novikov
->>
->>
->> On 04.08.2021 03:30, David E. Box wrote:
->>> Low Power Mode (LPM) priority is encoded in 4 bits. Yet, this value
->>> is used
->>> as an index to an array whose element size was less than 16,
->>> leading to the
->>> possibility of overflow should we read a larger than expected
->>> priority. Set
->>> the array size to 16 to prevent this.
->>>
->>> Reported-by: Evgeny Novikov <novikov@ispras.ru>
->>> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
->>> ---
->>>    drivers/platform/x86/intel_pmc_core.c | 2 +-
->>>    drivers/platform/x86/intel_pmc_core.h | 1 +
->>>    2 files changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/platform/x86/intel_pmc_core.c
->>> b/drivers/platform/x86/intel_pmc_core.c
->>> index b0e486a6bdfb..2a761fe98277 100644
->>> --- a/drivers/platform/x86/intel_pmc_core.c
->>> +++ b/drivers/platform/x86/intel_pmc_core.c
->>> @@ -1451,7 +1451,7 @@ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
->>>    
->>>    static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
->>>    {
->>> -       u8 lpm_priority[LPM_MAX_NUM_MODES];
->>> +       u8 lpm_priority[LPM_MAX_PRI];
->>>          u32 lpm_en;
->>>          int mode, i, p;
->>>    
->>> diff --git a/drivers/platform/x86/intel_pmc_core.h
->>> b/drivers/platform/x86/intel_pmc_core.h
->>> index e8dae9c6c45f..b98c2b44c938 100644
->>> --- a/drivers/platform/x86/intel_pmc_core.h
->>> +++ b/drivers/platform/x86/intel_pmc_core.h
->>> @@ -190,6 +190,7 @@ enum ppfear_regs {
->>>    #define LPM_MAX_NUM_MODES                     8
->>>    #define GET_X2_COUNTER(v)                     ((v) >> 1)
->>>    #define LPM_STS_LATCH_MODE                    BIT(31)
->>> +#define LPM_MAX_PRI                            16      /* size of
->>> 4 bits */
->>>    
->>>    #define TGL_PMC_SLP_S0_RES_COUNTER_STEP               0x7A
->>>    #define TGL_PMC_LTR_THC0                      0x1C04
->
+> ---
+>  drivers/platform/x86/dell/Kconfig        |  2 +-
+>  drivers/platform/x86/dell/dell-smo8800.c | 74 ++++++------------------
+>  2 files changed, 20 insertions(+), 56 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell/Kconfig b/drivers/platform/x86/dell/Kconfig
+> index 9e7314d90bea..821aba31821c 100644
+> --- a/drivers/platform/x86/dell/Kconfig
+> +++ b/drivers/platform/x86/dell/Kconfig
+> @@ -140,7 +140,7 @@ config DELL_SMBIOS_SMM
+>  config DELL_SMO8800
+>  	tristate "Dell Latitude freefall driver (ACPI SMO88XX)"
+>  	default m
+> -	depends on ACPI
+> +	depends on ACPI || COMPILE_TEST
+>  	help
+>  	  Say Y here if you want to support SMO88XX freefall devices
+>  	  on Dell Latitude laptops.
+> diff --git a/drivers/platform/x86/dell/dell-smo8800.c b/drivers/platform/x86/dell/dell-smo8800.c
+> index 5d9304a7de1b..3385e852104c 100644
+> --- a/drivers/platform/x86/dell/dell-smo8800.c
+> +++ b/drivers/platform/x86/dell/dell-smo8800.c
+> @@ -10,13 +10,14 @@
+>  
+>  #define DRIVER_NAME "smo8800"
+>  
+> -#include <linux/kernel.h>
+> -#include <linux/module.h>
+> -#include <linux/acpi.h>
+> +#include <linux/fs.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+>  #include <linux/miscdevice.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/uaccess.h>
+> -#include <linux/fs.h>
+>  
+>  struct smo8800_device {
+>  	u32 irq;                     /* acpi device irq */
+> @@ -44,37 +45,6 @@ static irqreturn_t smo8800_interrupt_thread(int irq, void *data)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static acpi_status smo8800_get_resource(struct acpi_resource *resource,
+> -					void *context)
+> -{
+> -	struct acpi_resource_extended_irq *irq;
+> -
+> -	if (resource->type != ACPI_RESOURCE_TYPE_EXTENDED_IRQ)
+> -		return AE_OK;
+> -
+> -	irq = &resource->data.extended_irq;
+> -	if (!irq || !irq->interrupt_count)
+> -		return AE_OK;
+> -
+> -	*((u32 *)context) = irq->interrupts[0];
+> -	return AE_CTRL_TERMINATE;
+> -}
+> -
+> -static u32 smo8800_get_irq(struct acpi_device *device)
+> -{
+> -	u32 irq = 0;
+> -	acpi_status status;
+> -
+> -	status = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
+> -				     smo8800_get_resource, &irq);
+> -	if (ACPI_FAILURE(status)) {
+> -		dev_err(&device->dev, "acpi_walk_resources failed\n");
+> -		return 0;
+> -	}
+> -
+> -	return irq;
+> -}
+> -
+>  static ssize_t smo8800_misc_read(struct file *file, char __user *buf,
+>  				 size_t count, loff_t *pos)
+>  {
+> @@ -136,7 +106,7 @@ static const struct file_operations smo8800_misc_fops = {
+>  	.release = smo8800_misc_release,
+>  };
+>  
+> -static int smo8800_add(struct acpi_device *device)
+> +static int smo8800_probe(struct platform_device *device)
+>  {
+>  	int err;
+>  	struct smo8800_device *smo8800;
+> @@ -160,14 +130,12 @@ static int smo8800_add(struct acpi_device *device)
+>  		return err;
+>  	}
+>  
+> -	device->driver_data = smo8800;
+> +	platform_set_drvdata(device, smo8800);
+>  
+> -	smo8800->irq = smo8800_get_irq(device);
+> -	if (!smo8800->irq) {
+> -		dev_err(&device->dev, "failed to obtain IRQ\n");
+> -		err = -EINVAL;
+> +	err = platform_get_irq(device, 0);
+> +	if (err < 0)
+>  		goto error;
+> -	}
+> +	smo8800->irq = err;
+>  
+>  	err = request_threaded_irq(smo8800->irq, smo8800_interrupt_quick,
+>  				   smo8800_interrupt_thread,
+> @@ -189,9 +157,9 @@ static int smo8800_add(struct acpi_device *device)
+>  	return err;
+>  }
+>  
+> -static int smo8800_remove(struct acpi_device *device)
+> +static int smo8800_remove(struct platform_device *device)
+>  {
+> -	struct smo8800_device *smo8800 = device->driver_data;
+> +	struct smo8800_device *smo8800 = platform_get_drvdata(device);
+>  
+>  	free_irq(smo8800->irq, smo8800);
+>  	misc_deregister(&smo8800->miscdev);
+> @@ -211,21 +179,17 @@ static const struct acpi_device_id smo8800_ids[] = {
+>  	{ "SMO8831", 0 },
+>  	{ "", 0 },
+>  };
+> -
+>  MODULE_DEVICE_TABLE(acpi, smo8800_ids);
+>  
+> -static struct acpi_driver smo8800_driver = {
+> -	.name = DRIVER_NAME,
+> -	.class = "Latitude",
+> -	.ids = smo8800_ids,
+> -	.ops = {
+> -		.add = smo8800_add,
+> -		.remove = smo8800_remove,
+> +static struct platform_driver smo8800_driver = {
+> +	.probe = smo8800_probe,
+> +	.remove = smo8800_remove,
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.acpi_match_table = smo8800_ids,
+>  	},
+> -	.owner = THIS_MODULE,
+>  };
+> -
+> -module_acpi_driver(smo8800_driver);
+> +module_platform_driver(smo8800_driver);
+>  
+>  MODULE_DESCRIPTION("Dell Latitude freefall driver (ACPI SMO88XX)");
+>  MODULE_LICENSE("GPL");
+> -- 
+> 2.30.2
+> 
