@@ -2,80 +2,82 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB26C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 13:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2769C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 13:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7E261078
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 13:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B2561078
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 13:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240955AbhHFNnA (ORCPT
+        id S1344390AbhHFNov (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Aug 2021 09:43:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35647 "EHLO
+        Fri, 6 Aug 2021 09:44:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26222 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238638AbhHFNnA (ORCPT
+        by vger.kernel.org with ESMTP id S1344410AbhHFNot (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Aug 2021 09:43:00 -0400
+        Fri, 6 Aug 2021 09:44:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628257363;
+        s=mimecast20190719; t=1628257473;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=M/UqUcyoK0Gz7dJ8bseYtoRK9cLAYk3EsEW0lh8ULus=;
-        b=fiqicerrg7gm8ttudCR5/QrrA1GIKJqBa0j8aipO1RsOXyqIjZ58W5P0n2SfMRlV4ZlAqc
-        WUOpM8v7up//atdx/D4zLLXB3al9wGCpMHqZJIGm2ek5SX/mhJ0l/7/rUgvFlxFkHYWWb7
-        HPwyF43FMFDnJARJTLbC6RYeLDFNOzY=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-536-CrBqAQQVOQy1cvETfeRY6g-1; Fri, 06 Aug 2021 09:42:42 -0400
-X-MC-Unique: CrBqAQQVOQy1cvETfeRY6g-1
-Received: by mail-ed1-f69.google.com with SMTP id l3-20020aa7c3030000b02903bccf1897f9so4928726edq.19
-        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Aug 2021 06:42:42 -0700 (PDT)
+        bh=LUNCaljoh6zNjohyhM8u6lXSLeXe2hyYUThfCWY505I=;
+        b=KqY9RmX4+ljommeFqdQwC5T+xZt+izV1rTISlDb5FDhyiLgVV9lb3QLWaVj4tx3zzHTAKD
+        2UPgdpGeaiTTqQWGTGkm3hQ1A89G8XxMMSFYVO8UC1GH1rwIIbrHG06eWQ7noq8gS/BJOk
+        zM0kxh7nn8ieceSFIltMDXBXVUTIQHo=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-584-k12OCU4PP2qRzwgHPry8TQ-1; Fri, 06 Aug 2021 09:44:32 -0400
+X-MC-Unique: k12OCU4PP2qRzwgHPry8TQ-1
+Received: by mail-ed1-f71.google.com with SMTP id y39-20020a50bb2a0000b02903bc05daccbaso4955291ede.5
+        for <platform-driver-x86@vger.kernel.org>; Fri, 06 Aug 2021 06:44:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=M/UqUcyoK0Gz7dJ8bseYtoRK9cLAYk3EsEW0lh8ULus=;
-        b=npklFW3uxZU6DadmCM8IZfn/NvldCAwuTSGrnGkzMKgQuJLCiB/egin7RUFvnrboi9
-         YbKhGDvMPdjfF2vrynukOK9TBaQeoja4YT9B5xLZeSntzJDScjpxbrbZt3Xfx4LhNbC6
-         4w7vBeCqNut0UmWYPmWrZoNPKT/yFhka14ycLI9qKllj7I9G4LuAeXVhPSt40TGddBGI
-         JqQ5ikVKM3Mb1/+6pgRLUPY6c88GCZmkqO9SwjWiOdWwNIGhF3dhTiSNsCtXw8n4ObhB
-         TPQopm7sEr0/9nftH8stKyZX/JATf+326eAL4Dj4ZNtwO0htUX17HfsBmjJyg1Jo7ZaP
-         TLvA==
-X-Gm-Message-State: AOAM532UxlLb5IgGA5umXp/7zY2ujZnvrk3pgbwcfXjqpSAw2Mf4+lYb
-        m9g7Vl5DMJzpqXvxDJpG4UoE2I4GygNgwzrPBC3tnfhacPPhhJSYwlEt8y71VqXcdZ/LQpDifSP
-        9ddym8a7Ol5Vg+5z24zAVY/pOwA08l6OEHg==
-X-Received: by 2002:a05:6402:291d:: with SMTP id ee29mr13169679edb.289.1628257361408;
-        Fri, 06 Aug 2021 06:42:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyFfxzVuVeMpXupRjOlALuObFtLtK+bIJcovZf39hkS7NpoGg+2PN9MMOhdwZdB2Gcc3o6pPA==
-X-Received: by 2002:a05:6402:291d:: with SMTP id ee29mr13169666edb.289.1628257361260;
-        Fri, 06 Aug 2021 06:42:41 -0700 (PDT)
+        bh=LUNCaljoh6zNjohyhM8u6lXSLeXe2hyYUThfCWY505I=;
+        b=HIAm2GzXh7JTWbEUS7XKJNeOC+3hF6njuYNYiFJUTEuEhQDUTGJtuF9i6CBsPccv6k
+         gAQQtoLy1kLnMWVVI+plHS+AGakHPe0qua+XEaArf9OoErUeMNpsW/Hg+e/AeuT2zEG7
+         WwgrvCKnKNmRFS6VxH+/95D7WfZPJ+B7TXtjpyoe4fFHzD1Ctwyj6zgdz+l1zUY4OSq1
+         Z6zyxyLlM+giW8JWhmPWOBoRENyNGL3bx5+aogZuyxw0nYV49A/9DJBCjbWgznb+5nH4
+         P9tG7Rv4zxbjSL9X9lJTia6HEXpUbwvL3AZlgI97RIjpayghis+s2DOsxjWfJmRIET8y
+         xfqw==
+X-Gm-Message-State: AOAM531ZRzJqE24oQVeAA71quB1U/q3Y71bWAScyc3OfQf25YEDPH6st
+        rqBmKM4V9+ubutHbx2alGXaVM3Eaa2e0ODd0TQAGGB8bC1Y/nL6cj05wGn10EVGh66mIxN3pWop
+        eQzG1etXtAcH0RjH8A9OCpNpkbMi+ew15yw==
+X-Received: by 2002:a05:6402:d7:: with SMTP id i23mr13112206edu.291.1628257471157;
+        Fri, 06 Aug 2021 06:44:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyL7vlaTOy3c5YZFIfiw2sjAwyw1MSYfWQwVF2pH8QLK/4mhX/K1TBAPijCqcDV0hx7gFIzdw==
+X-Received: by 2002:a05:6402:d7:: with SMTP id i23mr13112187edu.291.1628257471004;
+        Fri, 06 Aug 2021 06:44:31 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id o7sm2860221ejy.48.2021.08.06.06.42.40
+        by smtp.gmail.com with ESMTPSA id f9sm3693201edy.57.2021.08.06.06.44.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Aug 2021 06:42:40 -0700 (PDT)
-Subject: Re: [RFT, PATCH v1 1/1] platform/x86: hp_accel: Convert to be a
- platform driver
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Eric Piel <eric.piel@tremplin-utc.net>,
-        Mark Gross <mgross@linux.intel.com>
-References: <20210803200820.3259-1-andriy.shevchenko@linux.intel.com>
+        Fri, 06 Aug 2021 06:44:30 -0700 (PDT)
+Subject: Re: [PATCH 1/4] i2c: acpi: Add an i2c_acpi_client_count() helper
+ function
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+References: <20210803160044.158802-1-hdegoede@redhat.com>
+ <20210803160044.158802-2-hdegoede@redhat.com> <YQlzzy933V9XMHqt@lahna>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <48332796-1b9a-c897-c695-e66b116386be@redhat.com>
-Date:   Fri, 6 Aug 2021 15:42:40 +0200
+Message-ID: <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com>
+Date:   Fri, 6 Aug 2021 15:44:30 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210803200820.3259-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <YQlzzy933V9XMHqt@lahna>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,203 +87,22 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/3/21 10:08 PM, Andy Shevchenko wrote:
-> ACPI core in conjunction with platform driver core provides
-> an infrastructure to enumerate ACPI devices. Use it in order
-> to remove a lot of boilerplate code.
+On 8/3/21 6:50 PM, Mika Westerberg wrote:
+> On Tue, Aug 03, 2021 at 06:00:41PM +0200, Hans de Goede wrote:
+>> We have 3 files now which have the need to count the number of
+>> I2cSerialBus resources in an ACPI-device's resource-list.
+>>
+>> Currently all implement their own helper function for this,
+>> add a generic helper function to replace the 3 implementations.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> 
-> Not sure what buys us to run _INI on PM calls. It's against the spec AFAICT.
-> In any case ACPICA runs _INI as per specification when devices are
-> instantiated.
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-_INI used to also be ran on resume for some reason, but that was recently
-changed.
-
-You're right that calling it is no longer necessary now that we no longer
-do that.
-
-But the changes related to this are really separate from the platform
-driver conversion, please split this into 2 patches.
-
-Also for the next version please Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
-and ask him to test, I think he has access to hardware to test this.
+Thank you, Wolfram are you also ok with me merging this
+patch through the pdx86 tree?
 
 Regards,
 
 Hans
-
-
-> 
->  drivers/platform/x86/hp_accel.c | 74 +++++++--------------------------
->  1 file changed, 14 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/hp_accel.c b/drivers/platform/x86/hp_accel.c
-> index 8c0867bda828..69f86b761c7f 100644
-> --- a/drivers/platform/x86/hp_accel.c
-> +++ b/drivers/platform/x86/hp_accel.c
-> @@ -29,7 +29,6 @@
->  #include "../../misc/lis3lv02d/lis3lv02d.h"
->  
->  #define DRIVER_NAME     "hp_accel"
-> -#define ACPI_MDPS_CLASS "accelerometer"
->  
->  /* Delayed LEDs infrastructure ------------------------------------ */
->  
-> @@ -78,7 +77,6 @@ static const struct acpi_device_id lis3lv02d_device_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
->  
-> -
->  /**
->   * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
->   * @lis3: pointer to the device struct
-> @@ -87,14 +85,6 @@ MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
->   */
->  static int lis3lv02d_acpi_init(struct lis3lv02d *lis3)
->  {
-> -	struct acpi_device *dev = lis3->bus_priv;
-> -	if (!lis3->init_required)
-> -		return 0;
-> -
-> -	if (acpi_evaluate_object(dev->handle, METHOD_NAME__INI,
-> -				 NULL, NULL) != AE_OK)
-> -		return -EINVAL;
-> -
->  	return 0;
->  }
->  
-> @@ -278,30 +268,6 @@ static struct delayed_led_classdev hpled_led = {
->  	.set_brightness = hpled_set,
->  };
->  
-> -static acpi_status
-> -lis3lv02d_get_resource(struct acpi_resource *resource, void *context)
-> -{
-> -	if (resource->type == ACPI_RESOURCE_TYPE_EXTENDED_IRQ) {
-> -		struct acpi_resource_extended_irq *irq;
-> -		u32 *device_irq = context;
-> -
-> -		irq = &resource->data.extended_irq;
-> -		*device_irq = irq->interrupts[0];
-> -	}
-> -
-> -	return AE_OK;
-> -}
-> -
-> -static void lis3lv02d_enum_resources(struct acpi_device *device)
-> -{
-> -	acpi_status status;
-> -
-> -	status = acpi_walk_resources(device->handle, METHOD_NAME__CRS,
-> -					lis3lv02d_get_resource, &lis3_dev.irq);
-> -	if (ACPI_FAILURE(status))
-> -		printk(KERN_DEBUG DRIVER_NAME ": Error getting resources\n");
-> -}
-> -
->  static bool hp_accel_i8042_filter(unsigned char data, unsigned char str,
->  				  struct serio *port)
->  {
-> @@ -331,23 +297,19 @@ static bool hp_accel_i8042_filter(unsigned char data, unsigned char str,
->  	return false;
->  }
->  
-> -static int lis3lv02d_add(struct acpi_device *device)
-> +static int lis3lv02d_probe(struct platform_device *device)
->  {
->  	int ret;
->  
-> -	if (!device)
-> -		return -EINVAL;
-> -
-> -	lis3_dev.bus_priv = device;
-> +	lis3_dev.bus_priv = ACPI_COMPANION(&device->dev);
->  	lis3_dev.init = lis3lv02d_acpi_init;
->  	lis3_dev.read = lis3lv02d_acpi_read;
->  	lis3_dev.write = lis3lv02d_acpi_write;
-> -	strcpy(acpi_device_name(device), DRIVER_NAME);
-> -	strcpy(acpi_device_class(device), ACPI_MDPS_CLASS);
-> -	device->driver_data = &lis3_dev;
->  
->  	/* obtain IRQ number of our device from ACPI */
-> -	lis3lv02d_enum_resources(device);
-> +	ret = platform_get_irq_optional(device, 0);
-> +	if (ret > 0)
-> +		lis3_dev.irq = ret;
->  
->  	/* If possible use a "standard" axes order */
->  	if (lis3_dev.ac.x && lis3_dev.ac.y && lis3_dev.ac.z) {
-> @@ -359,7 +321,6 @@ static int lis3lv02d_add(struct acpi_device *device)
->  	}
->  
->  	/* call the core layer do its init */
-> -	lis3_dev.init_required = true;
->  	ret = lis3lv02d_init_device(&lis3_dev);
->  	if (ret)
->  		return ret;
-> @@ -381,11 +342,8 @@ static int lis3lv02d_add(struct acpi_device *device)
->  	return ret;
->  }
->  
-> -static int lis3lv02d_remove(struct acpi_device *device)
-> +static int lis3lv02d_remove(struct platform_device *device)
->  {
-> -	if (!device)
-> -		return -EINVAL;
-> -
->  	i8042_remove_filter(hp_accel_i8042_filter);
->  	lis3lv02d_joystick_disable(&lis3_dev);
->  	lis3lv02d_poweroff(&lis3_dev);
-> @@ -396,7 +354,6 @@ static int lis3lv02d_remove(struct acpi_device *device)
->  	return lis3lv02d_remove_fs(&lis3_dev);
->  }
->  
-> -
->  #ifdef CONFIG_PM_SLEEP
->  static int lis3lv02d_suspend(struct device *dev)
->  {
-> @@ -407,14 +364,12 @@ static int lis3lv02d_suspend(struct device *dev)
->  
->  static int lis3lv02d_resume(struct device *dev)
->  {
-> -	lis3_dev.init_required = false;
->  	lis3lv02d_poweron(&lis3_dev);
->  	return 0;
->  }
->  
->  static int lis3lv02d_restore(struct device *dev)
->  {
-> -	lis3_dev.init_required = true;
->  	lis3lv02d_poweron(&lis3_dev);
->  	return 0;
->  }
-> @@ -434,17 +389,16 @@ static const struct dev_pm_ops hp_accel_pm = {
->  #endif
->  
->  /* For the HP MDPS aka 3D Driveguard */
-> -static struct acpi_driver lis3lv02d_driver = {
-> -	.name  = DRIVER_NAME,
-> -	.class = ACPI_MDPS_CLASS,
-> -	.ids   = lis3lv02d_device_ids,
-> -	.ops = {
-> -		.add     = lis3lv02d_add,
-> -		.remove  = lis3lv02d_remove,
-> +static struct platform_driver lis3lv02d_driver = {
-> +	.probe	= lis3lv02d_probe,
-> +	.remove	= lis3lv02d_remove,
-> +	.driver	= {
-> +		.name	= DRIVER_NAME,
-> +		.pm	= HP_ACCEL_PM,
-> +		.acpi_match_table = lis3lv02d_device_ids,
->  	},
-> -	.drv.pm = HP_ACCEL_PM,
->  };
-> -module_acpi_driver(lis3lv02d_driver);
-> +module_platform_driver(lis3lv02d_driver);
->  
->  MODULE_DESCRIPTION("Glue between LIS3LV02Dx and HP ACPI BIOS and support for disk protection LED.");
->  MODULE_AUTHOR("Yan Burman, Eric Piel, Pavel Machek");
-> 
 
