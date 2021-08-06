@@ -2,179 +2,85 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB1AC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 07:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65842C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 09:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAD2610FC
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 07:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36D1961159
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 09:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbhHFHwz (ORCPT
+        id S243869AbhHFJEi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Aug 2021 03:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235894AbhHFHwy (ORCPT
+        Fri, 6 Aug 2021 05:04:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:10069 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243794AbhHFJEi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Aug 2021 03:52:54 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249FDC06179B;
-        Fri,  6 Aug 2021 00:52:37 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id u21-20020a17090a8915b02901782c36f543so12511421pjn.4;
-        Fri, 06 Aug 2021 00:52:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rc7uret13niyCIVXJ1YRvTucG/7HWeoFTut9F0hkboo=;
-        b=mmU4ad6/KzkutzMXgYardMWrocI0yTvJbjuCbJYWoyvt9fVf5AIzj+vklyc3fgMSRX
-         jVscRJ0ikaCbXLMDluT1qCkCfUvDFt+OTU4RhRyy7V3w/IIC7m7BFk262fopKBWQahR9
-         5p+57WuTfBmFIlbmNIjkD8AdwI9d3dMJWyOCFTMIXemgpgj+3mnP7sw7JTpRcFHLWiMv
-         C0C52YVjRhAs4bsD9swsh8i0GKnPu+MchCc3+mWV+EvlOx6jMGbPHeGPyi0mNN938H73
-         tKu097HTwY+Do8PJtN3vD/goxOFQ4qgDc5NPL5ftbcUCXaFtqAebZxR4SSxzPxekZs0m
-         HtpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rc7uret13niyCIVXJ1YRvTucG/7HWeoFTut9F0hkboo=;
-        b=OgIMTxeYP5Je4PatXccpW1Xw/AJQpJQlRrDopqNPaLkPNNfXkQUKAPBrd6/qsPYccG
-         G/z47kB8sz/OUyKPaRF/6HIXfsKyp2/rzSW/RBwnYNcq4RhjmgcA/b0O4TTDUthA4Wsa
-         TqSoUXpbaX/EzhVW2k7bmk6TcO5f0qAOs4L8wLn0fYQVm5kmWmSx1WawUvU5VJfcPwlQ
-         sJBB82dorkXp+FlDkKcLHCaDj58B8f98VM7yUkGED/E/WC31hcywXdWVFqQx9oUH1gXO
-         3o8fc6tWHfYjAF0y92mHcACOk9y1Plm9K2zJ+SU89xgJCSdVaAMn+1rP9Sh9OpNO9nh1
-         8Ziw==
-X-Gm-Message-State: AOAM533Z1emSsJ1dwJUEwoUsstjxou2jTPI6hDoZh14JHGmkW6vi9T34
-        nNWsRSQWL4KBhnXLxPmQm4Md2X9ewtXqKj+sNoQ=
-X-Google-Smtp-Source: ABdhPJwpLUZJwo7/G1igvLBOgf3ykCUZdsk8nzSi+wFW7rZb/ctc95xTQKA29AoAq0bscciPq4NmehqZ8QoOb7XP9jQ=
-X-Received: by 2002:a65:5ccd:: with SMTP id b13mr860372pgt.203.1628236357392;
- Fri, 06 Aug 2021 00:52:37 -0700 (PDT)
+        Fri, 6 Aug 2021 05:04:38 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10067"; a="211233378"
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="211233378"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 02:04:21 -0700
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="672125541"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 02:04:19 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mBvm1-005lgs-Rb; Fri, 06 Aug 2021 12:04:13 +0300
+Date:   Fri, 6 Aug 2021 12:04:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Gross <mgross@linux.intel.com>
+Subject: Re: [RFT, PATCH v1 1/1] platform/x86: dell-smo8800: Convert to be a
+ platform driver
+Message-ID: <YQz7DV4lOSD7+RJ8@smile.fi.intel.com>
+References: <20210803194039.35083-1-andriy.shevchenko@linux.intel.com>
+ <20210805192221.s7uoi5gh6zzkqinh@pali>
 MIME-Version: 1.0
-References: <20210806005755.2295193-1-chrisrblake93@gmail.com>
-In-Reply-To: <20210806005755.2295193-1-chrisrblake93@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 6 Aug 2021 10:52:01 +0300
-Message-ID: <CAHp75VenSw9BanwH58VSCNpw4cNFf7h3uSWTXLb5n0+OPtnDTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: add meraki-mx100 platform driver
-To:     Chris Blake <chrisrblake93@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210805192221.s7uoi5gh6zzkqinh@pali>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 6, 2021 at 5:47 AM Chris Blake <chrisrblake93@gmail.com> wrote:
->
-> This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
-> network appliance. This sets up the network LEDs and Reset
-> button. Note that this patch requires
+On Thu, Aug 05, 2021 at 09:22:21PM +0200, Pali Rohár wrote:
+> On Tuesday 03 August 2021 22:40:39 Andy Shevchenko wrote:
+> > ACPI core in conjunction with platform driver core provides
+> > an infrastructure to enumerate ACPI devices. Use it in order
+> > to remove a lot of boilerplate code.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Tested on Dell Latitude E6440. After applying this patch /dev/freefall
+> device is created and can be opened (for waiting for disk fall). Also
+> interrupt is registered in /proc/interrupts file:
+> 
+>  23:          0          0          0          0  IR-IO-APIC  23-edge      smo8800
+> 
+> But I have not done real hard disk fall on this machine :-) so I guess
+> it would work as before applying this patch.
 
-> mfd: lpc_ich: Enable GPIO driver for DH89xxCC
+At least the change doesn't touch any functional parts except device driver
+enumeration.
 
-Use standard format for the commits, and you may find its SHA in the
-repository of respective maintainer I suppose.
+> Reviewed-by: Pali Rohár <pali@kernel.org>
+> Tested-by: Pali Rohár <pali@kernel.org>
 
-> which has been accepted
-> and is currently targeted for 5.15.
->
-> Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
-
-> Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
-
-Missed SoB of co-developer.
-
-...
-
-> +#include <linux/gpio.h>
-
-This is wrong. Mustn't be included in the new code.
-
-> +#include <linux/gpio_keys.h>
-
-> +#include <linux/gpio/machine.h>
-
-Does this provide a GPIO controller driver? I don't think so.
-
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-
-...
-
-> +static struct platform_device * __init tink_create_dev(
-> +       const char *name,
-> +       const void *pdata,
-> +       size_t sz)
-
-Use less LOCs for this...
-
-...
-
-> +       pdev = platform_device_register_data(NULL,
-> +               name,
-> +               PLATFORM_DEVID_NONE,
-> +               pdata,
-> +               sz);
-
-...and for this (put name and sz to the respective previous lines).
-
-> +
-
-Unneeded blank line.
-
-> +       if (IS_ERR(pdev))
-> +               pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
-> +
-
-...
-
-> +       /* We need to make sure that GPIO60 isn't set to native mode as is default since it's our
-> +        * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
-> +        * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
-> +        */
-
-/*
- * Multi-line comment style is not
- * for this subsystem.
- */
-
-...
-
-> +       tink_leds_pdev = tink_create_dev(
-> +               "leds-gpio",
-> +               &tink_leds_pdata,
-> +               sizeof(tink_leds_pdata));
-> +
-> +       tink_keys_pdev = tink_create_dev(
-> +               "gpio-keys-polled",
-> +               &tink_buttons_pdata,
-> +               sizeof(tink_buttons_pdata));
-
-Again, use less LOCs.
-
-...
-
-> +
-
-Unneeded blank line, attach the below to the respective functions
-
-> +module_init(tink_board_init);
-> +module_exit(tink_board_exit);
-
-...
-
-> +MODULE_DEVICE_TABLE(dmi, tink_systems);
-Put this closer to the structure.
+Thank you!
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
