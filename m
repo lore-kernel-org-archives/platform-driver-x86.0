@@ -2,168 +2,352 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE44C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 00:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE917C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 00:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3DB661052
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 00:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF42361176
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 00:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242702AbhHFAKq (ORCPT
+        id S242852AbhHFA6T (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 5 Aug 2021 20:10:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:45281 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242724AbhHFAKU (ORCPT
+        Thu, 5 Aug 2021 20:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232902AbhHFA6S (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 5 Aug 2021 20:10:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10067"; a="212422372"
-X-IronPort-AV: E=Sophos;i="5.84,299,1620716400"; 
-   d="scan'208";a="212422372"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2021 17:10:05 -0700
-X-IronPort-AV: E=Sophos;i="5.84,299,1620716400"; 
-   d="scan'208";a="420562717"
-Received: from rmgular-mobl2.amr.corp.intel.com (HELO skuppusw-desk1.amr.corp.intel.com) ([10.251.138.25])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2021 17:10:03 -0700
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     Peter H Anvin <hpa@zytor.com>, Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kuppuswamy Sathyanarayanan <knsathya@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH v4 3/7] x86/tdx: Add GetQuote TDX hypercall support
-Date:   Thu,  5 Aug 2021 17:09:41 -0700
-Message-Id: <20210806000946.2951441-4-sathyanarayanan.kuppuswamy@linux.intel.com>
+        Thu, 5 Aug 2021 20:58:18 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B38C0613D5;
+        Thu,  5 Aug 2021 17:58:02 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id k3so7068308ilu.2;
+        Thu, 05 Aug 2021 17:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaFqxs2ibbd66JSfHZiGtBRKx+hbncn5lf2tbbdXTmw=;
+        b=VFjiJ4eSRSRQbK7EXNw9PSj+Agjd7gN5JXgwx+bkZNRUHTQB16PWvBKCxSTo0YlwSc
+         /5LPv+3EyeHo5/4nkpYmUXX6aFFc5Texa5vauSVgEtyrD0yUwJqOinKf4r9QE9Eeym1j
+         2bUtp9fGsrpTW9NSGVcbpb8XF9tC8wKZXF8ghsrkPX86o1yHrXVp+xBoOR/uOGN2LaTy
+         ogS1MlgKrmLgZG+20YTsNqyxJXMC8IeZnwnDx5Fzpav4kquqmU810N4yeaFn80w+Crqx
+         sq6ELF1ZszPx/nt+uMdwo4z/hbXpiShR5USr43nhDhuY72NZBB2LP9BE7UQrFSF6qErg
+         LbiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZaFqxs2ibbd66JSfHZiGtBRKx+hbncn5lf2tbbdXTmw=;
+        b=kM/PWELZWTcMD2BKlXe5sMCZlSeMKvZ3KgUJu+VYjz+t0R9Qy2RCjK0nPiWLbfAjY1
+         +C7A4iiAInKUr62iqiD8bX50pcF4ZfZaNAiN5N8TvMOOyJjUZhCBV+PFZtYNpRIHosNX
+         gkwYWVyWf8K8Fqvxc2GG+ZwAFW+fkaZTNWu6UQwBinzzQJtebJPM4Pjg97gN1sePkF95
+         v6b53X3TMXX20REqLea5LpqvBpJ2lCHX2ZfApdTp9i+fknmfWT6Hwj4U2e5t3uLqmRaL
+         nxjnQp+aK2BuXuatw/nBA4wWMlzZ1hMeboBjqbrjB/iDaeYRERrK0AuVQieczQGm0Uy7
+         zHJA==
+X-Gm-Message-State: AOAM533fQlCP/wUMbD729vXmIAYTlJ+bYeKJu0x4qYLfH1sQF/g+5knj
+        wvZ8QMPVR0GhGsue3bjPGH8pdAEYNsfhmfcd
+X-Google-Smtp-Source: ABdhPJzmGbgsIAiqwQhPT9J+aINMQXd/dXr93285q2Qowm2uZupWv9fvSBGIi5Jxx8RWGJGKu7hQ8Q==
+X-Received: by 2002:a92:c746:: with SMTP id y6mr664489ilp.211.1628211481953;
+        Thu, 05 Aug 2021 17:58:01 -0700 (PDT)
+Received: from Crosshair-VIII-Hero.lan ([2600:6c46:7d7f:ec00::a11])
+        by smtp.gmail.com with ESMTPSA id p131sm1359588iod.31.2021.08.05.17.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Aug 2021 17:58:01 -0700 (PDT)
+From:   Chris Blake <chrisrblake93@gmail.com>
+To:     platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        chunkeey@gmail.com, hdegoede@redhat.com
+Cc:     Chris Blake <chrisrblake93@gmail.com>
+Subject: [PATCH v2] platform/x86: add meraki-mx100 platform driver
+Date:   Thu,  5 Aug 2021 19:57:55 -0500
+Message-Id: <20210806005755.2295193-1-chrisrblake93@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210806000946.2951441-1-sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20210806000946.2951441-1-sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The second stage in the attestation process is for the guest to
-request the VMM generate and sign a quote based on the TDREPORT
-acquired earlier.
+This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
+network appliance. This sets up the network LEDs and Reset
+button. Note that this patch requires
+mfd: lpc_ich: Enable GPIO driver for DH89xxCC which has been accepted
+and is currently targeted for 5.15.
 
-Add tdx_hcall_get_quote() helper function to implement the GetQuote
-hypercall.
-
-More details about the GetQuote TDVMCALL are in the Guest-Host
-Communication Interface (GHCI) Specification, sec 3.3, titled
-"TDG.VP.VMCALL<GetQuote>".
-
-This will be used by the TD attestation driver in follow-on patches.
-
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
+Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
 ---
 
-Changes since v3
- * Rebased on top of Tom Lendacky's protected guest
-   changes (https://lore.kernel.org/patchwork/cover/1468760/)
+Changelog:
+V2: Move to using gpiod lookup tables, misc cleanups
+V1: Initial Patch
 
-Change since v2:
- * Included TDVMCALL_SUCCESS case check in tdx_hcall_get_quote().
+ drivers/platform/x86/Kconfig        |  13 ++
+ drivers/platform/x86/Makefile       |   3 +
+ drivers/platform/x86/meraki-mx100.c | 212 ++++++++++++++++++++++++++++
+ 3 files changed, 228 insertions(+)
+ create mode 100644 drivers/platform/x86/meraki-mx100.c
 
- arch/x86/include/asm/tdx.h |  2 ++
- arch/x86/kernel/tdx.c      | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
-
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 6e6abd2b0894..34d14766b3bc 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -97,6 +97,8 @@ extern int tdx_hcall_gpa_intent(phys_addr_t gpa, int numpages,
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 7d385c3b2239..8d70176e335f 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -302,6 +302,19 @@ config ASUS_NB_WMI
+ 	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+ 	  here.
  
- int tdx_mcall_tdreport(u64 data, u64 reportdata);
- 
-+int tdx_hcall_get_quote(u64 data);
++config MERAKI_MX100
++	tristate "Cisco Meraki MX100 Platform Driver"
++	depends on GPIOLIB
++	depends on GPIO_ICH
++	depends on LEDS_CLASS
++	select LEDS_GPIO
++	help
++	  This driver provides support for the front button and LEDs on
++	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
 +
- /*
-  * To support I/O port access in decompressor or early kernel init
-  * code, since #VE exception handler cannot be used, use paravirt
-diff --git a/arch/x86/kernel/tdx.c b/arch/x86/kernel/tdx.c
-index 5eed2e660546..203ddc4c8412 100644
---- a/arch/x86/kernel/tdx.c
-+++ b/arch/x86/kernel/tdx.c
-@@ -27,6 +27,7 @@
- 
- /* TDX hypercall Leaf IDs */
- #define TDVMCALL_MAP_GPA		0x10001
-+#define TDVMCALL_GET_QUOTE		0x10002
- 
- /* TDX Module call error codes */
- #define TDX_PAGE_ALREADY_ACCEPTED	0x00000b0a00000000
-@@ -36,6 +37,11 @@
- #define TDCALL_SUCCESS			0x0
- #define TDCALL_RETURN_CODE(a)		((a) & TDCALL_RETURN_CODE_MASK)
- 
-+/* TDX hypercall error codes */
-+#define TDVMCALL_SUCCESS		0x0
-+#define TDVMCALL_INVALID_OPERAND	0x8000000000000000
-+#define TDVMCALL_TDREPORT_FAILED	0x8000000000000001
++	  To compile this driver as a module, choose M here: the module
++	  will be called meraki-mx100.
 +
- #define VE_IS_IO_OUT(exit_qual)		(((exit_qual) & 8) ? 0 : 1)
- #define VE_GET_IO_SIZE(exit_qual)	(((exit_qual) & 7) + 1)
- #define VE_GET_PORT_NUM(exit_qual)	((exit_qual) >> 16)
-@@ -173,6 +179,34 @@ int tdx_mcall_tdreport(u64 data, u64 reportdata)
- }
- EXPORT_SYMBOL_GPL(tdx_mcall_tdreport);
+ config EEEPC_LAPTOP
+ 	tristate "Eee PC Hotkey Driver"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 7ee369aab10d..25c5aee1cde7 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
+ obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+ obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
  
++# Cisco/Meraki
++obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
++
+ # Dell
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+ 
+diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+new file mode 100644
+index 000000000000..d64508aeb92c
+--- /dev/null
++++ b/drivers/platform/x86/meraki-mx100.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0+
++
 +/*
-+ * tdx_hcall_get_quote() - Generate TDQUOTE using TDREPORT_STRUCT.
++ * Cisco Meraki MX100 (Tinkerbell) board platform driver
 + *
-+ * @data        : Physical address of 4KB GPA memory which contains
-+ *                TDREPORT_STRUCT.
++ * Based off of arch/x86/platform/meraki/tink.c from the
++ * Meraki GPL release meraki-firmware-sources-r23-20150601
 + *
-+ * return 0 on success or failure error number.
++ * Format inspired by platform/x86/pcengines-apuv2.c
++ *
++ * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
 + */
-+int tdx_hcall_get_quote(u64 data)
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/dmi.h>
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/gpio_keys.h>
++#include <linux/gpio/machine.h>
++#include <linux/input.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#define TINK_GPIO_DRIVER_NAME "gpio_ich"
++
++/* LEDs */
++static const struct gpio_led tink_leds[] = {
++	{
++		.name = "mx100:green:internet",
++		.default_trigger = "default-on",
++	},
++	{
++		.name = "mx100:green:lan2",
++	},
++	{
++		.name = "mx100:green:lan3",
++	},
++	{
++		.name = "mx100:green:lan4",
++	},
++	{
++		.name = "mx100:green:lan5",
++	},
++	{
++		.name = "mx100:green:lan6",
++	},
++	{
++		.name = "mx100:green:lan7",
++	},
++	{
++		.name = "mx100:green:lan8",
++	},
++	{
++		.name = "mx100:green:lan9",
++	},
++	{
++		.name = "mx100:green:lan10",
++	},
++	{
++		.name = "mx100:green:lan11",
++	},
++};
++
++static const struct gpio_led_platform_data tink_leds_pdata = {
++	.num_leds	= ARRAY_SIZE(tink_leds),
++	.leds		= tink_leds,
++};
++
++static struct gpiod_lookup_table tink_leds_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 11,
++				NULL, 0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 18,
++				NULL, 1, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 20,
++				NULL, 2, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 22,
++				NULL, 3, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 23,
++				NULL, 4, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 32,
++				NULL, 5, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 34,
++				NULL, 6, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 35,
++				NULL, 7, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 36,
++				NULL, 8, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 37,
++				NULL, 9, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 48,
++				NULL, 10, GPIO_ACTIVE_HIGH),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 16,
++				NULL, 11, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 7,
++				NULL, 12, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 21,
++				NULL, 13, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 19,
++				NULL, 14, GPIO_ACTIVE_LOW),
++	}
++};
++
++/* Reset Button */
++static struct gpio_keys_button tink_buttons[] = {
++	{
++		.desc			= "Reset",
++		.type			= EV_KEY,
++		.code			= KEY_RESTART,
++		.active_low             = 1,
++		.debounce_interval      = 100,
++	},
++};
++
++static const struct gpio_keys_platform_data tink_buttons_pdata = {
++	.buttons	= tink_buttons,
++	.nbuttons	= ARRAY_SIZE(tink_buttons),
++	.poll_interval  = 20,
++	.rep		= 0,
++	.name		= "mx100-keys",
++};
++
++static struct gpiod_lookup_table tink_keys_table = {
++	.dev_id = "gpio-keys-polled",
++	.table = {
++		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 60,
++				NULL, 0, GPIO_ACTIVE_LOW),
++	}
++};
++
++/* Board setup */
++
++static const struct dmi_system_id tink_systems[] __initconst = {
++	{
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Cisco"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MX100-HW"),
++		},
++	},
++	{} /* Terminating entry */
++};
++
++static struct platform_device *tink_leds_pdev;
++static struct platform_device *tink_keys_pdev;
++
++static struct platform_device * __init tink_create_dev(
++	const char *name,
++	const void *pdata,
++	size_t sz)
 +{
-+	u64 ret;
++	struct platform_device *pdev;
 +
-+	if (!data || !prot_guest_has(PATTR_GUEST_TDX))
-+		return -EINVAL;
++	pdev = platform_device_register_data(NULL,
++		name,
++		PLATFORM_DEVID_NONE,
++		pdata,
++		sz);
 +
-+	ret = _trace_tdx_hypercall(TDVMCALL_GET_QUOTE, data, 0, 0, 0, NULL);
++	if (IS_ERR(pdev))
++		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
 +
-+	if (ret == TDVMCALL_SUCCESS)
-+		return 0;
-+	else if (ret == TDVMCALL_INVALID_OPERAND)
-+		return -EINVAL;
-+	else if (ret == TDVMCALL_TDREPORT_FAILED)
-+		return -EBUSY;
-+
-+	return -EIO;
++	return pdev;
 +}
-+EXPORT_SYMBOL_GPL(tdx_hcall_get_quote);
 +
- static void tdg_get_info(void)
- {
- 	u64 ret;
++static int __init tink_board_init(void)
++{
++	if (!dmi_first_match(tink_systems))
++                return -ENODEV;
++
++	/* We need to make sure that GPIO60 isn't set to native mode as is default since it's our 
++	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
++	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
++	 */
++	outl(inl(0x530) | BIT(28), 0x530);
++
++	gpiod_add_lookup_table(&tink_leds_table);
++	gpiod_add_lookup_table(&tink_keys_table);
++
++	tink_leds_pdev = tink_create_dev(
++		"leds-gpio",
++		&tink_leds_pdata,
++		sizeof(tink_leds_pdata));
++
++	tink_keys_pdev = tink_create_dev(
++		"gpio-keys-polled",
++		&tink_buttons_pdata,
++		sizeof(tink_buttons_pdata));
++
++	return 0;
++}
++
++static void __exit tink_board_exit(void)
++{
++	platform_device_unregister(tink_keys_pdev);
++	platform_device_unregister(tink_leds_pdev);
++	gpiod_remove_lookup_table(&tink_keys_table);
++	gpiod_remove_lookup_table(&tink_leds_table);
++}
++
++module_init(tink_board_init);
++module_exit(tink_board_exit);
++
++MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
++MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:meraki-mx100");
++MODULE_DEVICE_TABLE(dmi, tink_systems);
++MODULE_SOFTDEP("pre: platform:" TINK_GPIO_DRIVER_NAME);
 -- 
 2.25.1
 
