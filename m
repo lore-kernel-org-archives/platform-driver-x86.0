@@ -2,81 +2,111 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0275CC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 15:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F6C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC3EF61002
-	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 15:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF98561181
+	for <platform-driver-x86@archiver.kernel.org>; Fri,  6 Aug 2021 22:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244944AbhHFP4s (ORCPT
+        id S242409AbhHFWNz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 6 Aug 2021 11:56:48 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5382 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244860AbhHFP4r (ORCPT
+        Fri, 6 Aug 2021 18:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231577AbhHFWNz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 6 Aug 2021 11:56:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10068"; a="278139335"
-X-IronPort-AV: E=Sophos;i="5.84,301,1620716400"; 
-   d="scan'208";a="278139335"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 08:56:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,301,1620716400"; 
-   d="scan'208";a="523545116"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Aug 2021 08:56:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id EBA69DE; Fri,  6 Aug 2021 18:50:18 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Fri, 6 Aug 2021 18:13:55 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B53C0613CF;
+        Fri,  6 Aug 2021 15:13:38 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id e25-20020a05600c4b99b0290253418ba0fbso7065431wmp.1;
+        Fri, 06 Aug 2021 15:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=MwkPdmSVqFf0U29VqiGUo990SLi1yES6UWHs7zA7Im4=;
+        b=jO8QswNBVJGHgpRYrK6EeX0qgkq4CkvlD6XUbhJAYfpa3I343FZlDp8a0RzF/M1oA+
+         +db1CDzDWmmZFjyFwVE2Sa9ZzFpoRIxOuR9ticPQPKYBKqrcpXg2EqXeoEATlbL/M3dx
+         3pRSQjUdQ3kbP4M39Oz+xXKUSulSComrNAOQuvAxFAqRkVol/oGGnzzycpm50U7rE9K5
+         9qizz7sul3w0mMTZXGI4jlA8erZmIa1VD0Wn+6Jhwe899R9S5py2kr1DQzfySAdN8wpa
+         Sf9btNz0KOGGC/QwmNuhr7Xfk9adDk/7ve6QPIQDQqe0Ozer6JR7sPjah8gTx2tmk5ay
+         Do7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=MwkPdmSVqFf0U29VqiGUo990SLi1yES6UWHs7zA7Im4=;
+        b=Wyq4cweYP4fiSkZMWBQgr/9Q2U6P7U3ndFgaflJ4k3wOycrlR7JZTQ0WN4cj+a/7D8
+         9qYm8p6zr0Mu4Sl2jARsKM1yVsfb6JASoR+qA3tJnkk9hRVwEwdgLy80MKdHMf+AuSzf
+         tdSOQIysWfed0VS2cqxLXYC7PHyiHF54zXPhD1YWqV4fTl2FFtXieSfUiQTr33d7Ln+t
+         BK6Dt1GgXgn+Ki4r48WdI92qMx8kQGMHIpKnjYGuirR1L1dRoOnwiiEf0UsxtRmKBH5g
+         z/MBQsVGD7Zga/lIjn6e9X1qypppx22bVu1JxrD2HjHlG55JRZn5eaCKvt73PcSG13r1
+         IItg==
+X-Gm-Message-State: AOAM532Rdv0FEeyFeS9UmetRrTxUXHUIIUw8CUXnIT7dpEt2Jzyy2pWW
+        biPs9+g8y3OmDvuPlhIDn8lygj2FCj0=
+X-Google-Smtp-Source: ABdhPJxNNnwlSjdalr6tAMyxSJ0JaPvBNnftvbyqAOYnnuKCH1g5wxNC/e/CRN0e15btbFwh1OrxEA==
+X-Received: by 2002:a1c:cc12:: with SMTP id h18mr23141432wmb.12.1628288016719;
+        Fri, 06 Aug 2021 15:13:36 -0700 (PDT)
+Received: from [192.168.0.14] (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
+        by smtp.gmail.com with ESMTPSA id q5sm11102953wrx.33.2021.08.06.15.13.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Aug 2021 15:13:35 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] platform/x86/intel: int3472: Use y instead of objs
+ in Makefile
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>
-Subject: [PATCH v1 1/1] platform/x86/intel: pmt: Use y instead of objs in Makefile
-Date:   Fri,  6 Aug 2021 18:50:17 +0300
-Message-Id: <20210806155017.4633-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
+References: <20210806154951.4564-1-andriy.shevchenko@linux.intel.com>
+From:   Daniel Scally <djrscally@gmail.com>
+Message-ID: <fdf5b050-2c8d-f3f1-f8bd-0dbc616c9bc6@gmail.com>
+Date:   Fri, 6 Aug 2021 23:13:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210806154951.4564-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-The 'objs' is for user space tools, for the kernel modules
-we should use 'y'.
+Hi Andy
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+On 06/08/2021 16:49, Andy Shevchenko wrote:
+> The 'objs' is for user space tools, for the kernel modules
+> we should use 'y'.
 
-Hans, feel free to fold in the original commit
 
- drivers/platform/x86/intel/pmt/Makefile | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Oops, now you mention it I remember you saying that for the cio2-bridge
+code too - thanks.
 
-diff --git a/drivers/platform/x86/intel/pmt/Makefile b/drivers/platform/x86/intel/pmt/Makefile
-index 019103ee6522..279e158c7c23 100644
---- a/drivers/platform/x86/intel/pmt/Makefile
-+++ b/drivers/platform/x86/intel/pmt/Makefile
-@@ -4,9 +4,9 @@
- # Intel Platform Monitoring Technology Drivers
- #
- 
--pmt_class-objs				+= class.o
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt_class.o
--pmt_telemetry-objs			+= telemetry.o
-+pmt_class-y				:= class.o
- obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= pmt_telemetry.o
--pmt_crashlog-objs			+= crashlog.o
-+pmt_telemetry-y				:= telemetry.o
- obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= pmt_crashlog.o
-+pmt_crashlog-y				:= crashlog.o
--- 
-2.30.2
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+
+Reviewed-by: Daniel Scally <djrscally@gmail.com>
+
+> ---
+>  drivers/platform/x86/intel/int3472/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/intel/int3472/Makefile b/drivers/platform/x86/intel/int3472/Makefile
+> index 48bd97f0a04e..2362e04db18d 100644
+> --- a/drivers/platform/x86/intel/int3472/Makefile
+> +++ b/drivers/platform/x86/intel/int3472/Makefile
+> @@ -1,5 +1,5 @@
+>  obj-$(CONFIG_INTEL_SKL_INT3472)		+= intel_skl_int3472.o
+> -intel_skl_int3472-objs			:= intel_skl_int3472_common.o \
+> +intel_skl_int3472-y			:= intel_skl_int3472_common.o \
+>  					   intel_skl_int3472_discrete.o \
+>  					   intel_skl_int3472_tps68470.o \
+>  					   intel_skl_int3472_clk_and_regulator.o
