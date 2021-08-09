@@ -2,484 +2,198 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E040BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Aug 2021 10:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CF3C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 01:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1A1B610FC
-	for <platform-driver-x86@archiver.kernel.org>; Sat,  7 Aug 2021 10:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2018D60524
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 01:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbhHGKdF (ORCPT
+        id S231324AbhHIBmV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 7 Aug 2021 06:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231687AbhHGKdE (ORCPT
+        Sun, 8 Aug 2021 21:42:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16048 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232678AbhHIBmU (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 7 Aug 2021 06:33:04 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E22C0613CF
-        for <platform-driver-x86@vger.kernel.org>; Sat,  7 Aug 2021 03:32:47 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id u16so10659635ple.2
-        for <platform-driver-x86@vger.kernel.org>; Sat, 07 Aug 2021 03:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rr80ttEZdruta2rkbj+QxN0hHtV6qurcu7r40s8iefg=;
-        b=gINgVdxvsev3W5USPuMRsfU+ktRvbqu0f4l9lUJ4b3fhPkwAqJ/Z2FMkLDPsYhH03C
-         aqzXH1R1p1RMiBnaTfnuHcb3oqJyzKhunDQOHHLUuFkP7p+rKMAanp6apNEm6DryVc8O
-         Wmo3Uh3wUNci0hOyphGRxm9BpBQjLLb+7GyhIMne9XYyviWyL3f1KKICzWfLcOSocbIN
-         teP6N1Xl520cvk+KjtBYrjtRrRZzOe+EwU9drulKXPCjDIQfrnAjuB8xpPuPtQFJ/jtd
-         bnWV5+OaZx1re39r0UffwkmOSJJY292KPHiwNQm8RFhvgGiwaIpKCDsdCJ5Yqe6VSgUe
-         71uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rr80ttEZdruta2rkbj+QxN0hHtV6qurcu7r40s8iefg=;
-        b=s8gkkT8oNngdhuZ3jwRNzn01mW6Yl6sLUks/6xqppvOSqyykag+5ldBje8JBuk2xXv
-         2S1IhV8tx7z6ZokNXwOHUU5Bw4zwFcnOHHEKK+8zZYZC9bGbIKnwxD9wMm8zDhLePmpr
-         nvZ/K7w0YZNl6ivZhfzq3fbkGcibA7kxhgErVwc5hkWeB3YnNqkfabmCnS8+nm8lKYeX
-         TQ3ZVzoxb459rnx+U7vlUe394IeNrYwMc5vGbugI2+ZyoKkS/hRHJiRXsjpSMxt72C6i
-         oBFcNOYjHXbjvVBXWESFd+KJbO6wqnBxEkiQB2nuBPz0+/HfGpMOxrvwjDWdLHKw4t5I
-         s2AQ==
-X-Gm-Message-State: AOAM5327XUlmGCQU0QBe4coHNnC1PjoLgmsdWp4tPQPkrEdyrhrdjTbb
-        /1l5GYLsFRbmfF+2C+zqoXLQGKkkYPbZGvCd7Yk=
-X-Google-Smtp-Source: ABdhPJy4WFXDcSjH80cMNzhjGVFeb4FHWoKAhskOuxkEW1vYEG+bancm1f0ngt/rPAPx41GkxNfJW+rOGWA2CQglPAw=
-X-Received: by 2002:aa7:800b:0:b029:330:455f:57a8 with SMTP id
- j11-20020aa7800b0000b0290330455f57a8mr14940534pfi.7.1628332366550; Sat, 07
- Aug 2021 03:32:46 -0700 (PDT)
+        Sun, 8 Aug 2021 21:42:20 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="194200409"
+X-IronPort-AV: E=Sophos;i="5.84,305,1620716400"; 
+   d="scan'208";a="194200409"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2021 18:41:59 -0700
+X-IronPort-AV: E=Sophos;i="5.84,305,1620716400"; 
+   d="scan'208";a="670624711"
+Received: from ctrondse-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.77.4])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2021 18:41:57 -0700
+Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will@kernel.org>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <0d75f283-50b7-460d-3165-185cb955bd70@linux.intel.com>
+Date:   Sun, 8 Aug 2021 18:41:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210806145630.8858-1-s.shravan@intel.com> <20210806145630.8858-2-s.shravan@intel.com>
-In-Reply-To: <20210806145630.8858-2-s.shravan@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 7 Aug 2021 13:32:10 +0300
-Message-ID: <CAHp75VfhiX+TmsY9UFJ0_aZM7wRhohP8QHNpTEXFYM+0fQs-4g@mail.gmail.com>
-Subject: Re: [PATCH V4 1/1] platform/x86: Add BIOS Dynamic SAR driver for
- Intel M.2 Modem
-To:     Shravan S <s.shravan@intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "An, Sudhakar" <sudhakar.an@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cover.1627424773.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-(Side note, most of the comments you may have avoided if you had read
-an internal Wiki page about popular style mistakes)
-Another note, comments given even against one occurrence of similar
-code should be considered for the others.
-
-On Sat, Aug 7, 2021 at 12:24 AM Shravan S <s.shravan@intel.com> wrote:
->
-> BIOS SAR driver for RF power regulation on Intel M.2 Modem.
-> Uses ACPI to communicate to BIOS to retrieve SAR information data.
-> Uses Sysfs to communicate this data to userspace via read and notify.
-> Userspace will use MBIM interface to enable data communication to modem.
-
-This is going to be a commit message. The one above is poorly written
-to the reader. E.g. what should I get from it "Uses ACPI"? Perhaps
-something more elaborative like "It uses ACPI specific methods FOO and
-BAR to retrieve this and that information". "The driver provides a
-custom sysfs interface, documented in Documentation/...."
-
-...
-
->  drivers/platform/x86/Kconfig                  |  15 +
->  drivers/platform/x86/Makefile                 |   1 +
->  drivers/platform/x86/intel-sar.c              | 317 ++++++++++++++++++
-
-Use intel/ subfolder, please.
-
-...
-
-> +               derived based on information like mcc/mnc that is available for
-
-What are the mcc/mnc TLAs?
-
-...
-
-> +INTEL BIOS SAR DRIVER
-> +M:     Shravan S <s.shravan@intel.com>
-> +M:     Intel Corporation <linuxwwan@intel.com>
-> +L:     platform-driver-x86@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/platform/x86/intel-sar.c
-
-And nicely misses the file brought in this patch...
-
-...
-
-> +#include <asm/errno.h>
-
-Why asm?
-Why at the beginning of the inclusion list?
-
-> +#include <linux/acpi.h>
-
-> +#include <linux/kobject.h>
-> +#include <linux/platform_data/x86/intel-sar.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/sysfs.h>
-
-...
-
-> +/**
-> + * get_int_value - Retrieve Integer values from ACPI Object
-
-> + * Value of the integer from the object of ACPI is obtained.
-
-Put this after field descriptions. Same for all kernel doc descriptions.
-
-> + * @obj: acpi_object pointer which has the integer value
-> + * @out: output pointer will get integer value
-
-> + * returns 0 on success
-
-and that's it?
-
-Besides that, your style doesn't follow the grammar and punctuation rules.
-
-> + */
-> +static int get_int_value(union acpi_object *obj, int *out)
-> +{
-> +       if (obj && obj->type == ACPI_TYPE_INTEGER) {
-> +               *out = (int)obj->integer.value;
-> +               return 0;
-
-> +       } else {
-
-Redundant.
-
-> +               return -EIO;
-> +       }
-
-Besides above, use standard pattern
-
-  if (foo != expected)
-    return error;
-
-> +}
-
-...
-
-> +static acpi_status parse_package(struct wwan_sar_context *context, union acpi_object *item)
-> +{
-> +       struct wwan_device_mode_configuration *data;
-
-> +       int value = 0, itr = 0, reg = 0, count = 0;
-
-Why redundant assignments? They actually may hide the real errors.
-
-> +       union acpi_object *num;
-> +
-> +       num = &item->package.elements[0];
-
-> +       if ((get_int_value(num, &value) != 0) || (value < 0 || value >= MAX_REGULATORY))
-
-Too many parentheses. " != 0" is redundant (this applies to many
-places in the proposed patch).
-
-> +               return AE_ERROR;
-> +
-> +       reg = value;
-> +
-> +       data = &context->config_data[reg];
-> +       if (data->total_dev_mode > MAX_DEV_MODES || data->total_dev_mode == 0)
-> +               return AE_ERROR;
-> +       count = (data->total_dev_mode < item->package.count) ?
-> +                        data->total_dev_mode : item->package.count;
-> +       data->device_mode_info = kmalloc_array(data->total_dev_mode,
-> +                                              sizeof(struct wwan_device_mode_info), GFP_KERNEL);
-> +       if (!data->device_mode_info)
-> +               return AE_ERROR;
-> +       for (itr = 0; itr < count; itr++) {
-> +               struct wwan_device_mode_info temp = { 0 };
-> +
-> +               num = &item->package.elements[itr + 1];
-> +               if (num->type != ACPI_TYPE_PACKAGE || num->package.count < TOTAL_DATA)
-> +                       continue;
-> +               if (get_int_value(&num->package.elements[0], &temp.device_mode) != 0)
-> +                       continue;
-> +               if (get_int_value(&num->package.elements[1], &temp.bandtable_index) != 0)
-> +                       continue;
-> +               if (get_int_value(&num->package.elements[2], &temp.antennatable_index) != 0)
-> +                       continue;
-> +               if (get_int_value(&num->package.elements[3], &temp.sartable_index) != 0)
-> +                       continue;
-> +               data->device_mode_info[itr] = temp;
-> +       }
-> +       return AE_OK;
-> +}
-
-...
-
-> +static acpi_status sar_get_device_mode(struct platform_device *device)
-> +{
-> +       struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
-> +       acpi_status status = AE_OK;
-> +       union acpi_object *out;
-> +       int value = 0;
-> +       u32 rev = 0;
-> +
-> +       out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-> +                               COMMAND_ID_DEV_MODE, NULL);
-> +       if (get_int_value(out, &value) != 0) {
-
-> +               pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_DEV_MODE);
-
-Use dev_err() and similar when you have a struct device.
-The message itself looks like debugging, to be an error you have to
-provide a human readable one and without __func__.
-
-> +               status = AE_ERROR;
-> +               goto dev_mode_error;
-> +       }
-> +       context->sar_data.device_mode = value;
-> +       sysfs_notify(&device->dev.kobj, NULL, SYSFS_DATANAME);
-> +
-> +dev_mode_error:
-> +       ACPI_FREE(out);
-> +       return status;
-> +}
-> +
-> +static const struct acpi_device_id sar_device_ids[] = {
-> +       { "INTC1092", 0},
-
-> +       { "", 0},
-
-No comma for terminator, moreover the { } is enough.
-
-> +};
-
-> +
-
-Redundant blank line.
-
-> +MODULE_DEVICE_TABLE(acpi, sar_device_ids);
-
-...
-
-> +static const struct platform_device_id sar_device_table[] = {
-> +       {"intc1092", 0},
-> +       {},
-
-No comma.
-
-> +};
-
-...
-
-> +static ssize_t intc_reg_store(struct device *dev, struct device_attribute *attr,
-> +                             const char *buf, size_t count)
-> +{
-> +       struct wwan_sar_context *context = dev_get_drvdata(dev);
-> +       unsigned long value = 0;
-> +       int read = 0;
-
-> +       if (!count) {
-> +               pr_err("%s count = %d", __func__, (int)count);
-> +               return -EFAULT;
-> +       }
-
-Is it ever possible?
-
-> +       read = kstrtoul(buf, 0, &value);
-> +       if (read <= 0) {
-> +               pr_err("%s Not a integer", __func__);
-> +               return -EINVAL;
-
-Don't shadow an error code.
-
-> +       }
-
-
-> +       if (value >= MAX_REGULATORY)
-> +               return -EINVAL;
-
-ERANGE?
-EOVERFLOW?
-
-> +       context->reg_value = (int)value;
-
-Why to use unsigned long in then cast to int? Maybe use int in the first place?
-
-> +       update_sar_data(context);
-
-> +       dev_set_drvdata(dev, context);
-
-This seems a misuse of the field.
-
-> +       sysfs_notify(&dev->kobj, NULL, SYSFS_DATANAME);
-> +       return count;
-> +}
-
-> +
-
-Redundant.
-
-> +static DEVICE_ATTR_RO(intc_data);
-> +static DEVICE_ATTR_RW(intc_reg);
-
-Attach each of them to the respective functions.
-
-...
-
-> +static int sar_probe(struct platform_device *device)
-> +{
-> +       union acpi_object *out, *item, req;
-> +       struct wwan_sar_context *context;
-> +       acpi_status status = AE_OK;
-> +       u32 rev = 0, reg = 0;
-> +       int result = 0;
-
-Why assignments?
-
-> +       context = kmalloc(sizeof(*context), GFP_KERNEL);
-> +       if (!context)
-> +               return -ENOMEM;
-> +       memset(context, 0, sizeof(struct wwan_sar_context));
-
-NIH kzalloc().
-
-> +       context->sar_device = device;
-> +       dev_set_drvdata(&device->dev, context);
-
-> +       if (guid_parse(SAR_DSM_UUID, &context->guid)) {
-
-Shadowed error code
-
-> +               pr_err("%s: UUID error\n", __func__);
-> +               goto r_free;
-> +       }
-> +       context->handle = ACPI_HANDLE(&device->dev);
-
-> +       for (reg = 0; reg < MAX_REGULATORY; reg++) {
-> +               req.type = ACPI_TYPE_INTEGER;
-> +               req.integer.value = reg;
-> +               out = acpi_evaluate_dsm(context->handle, &context->guid, rev,
-> +                                       COMMAND_ID_CONFIG_TABLE, &req);
-> +               if (!out) {
-> +                       pr_err("%s: Cmd:%d Failed\n", __func__, COMMAND_ID_CONFIG_TABLE);
-> +                       continue;
-> +               }
-> +               if (out->type == ACPI_TYPE_PACKAGE && out->package.count >= 3 &&
-> +                   out->package.elements[0].type == ACPI_TYPE_INTEGER &&
-> +                   out->package.elements[1].type == ACPI_TYPE_INTEGER &&
-> +                   out->package.elements[2].type == ACPI_TYPE_PACKAGE) {
-> +                       context->config_data[reg].version = out->package.elements[0].integer.value;
-> +                       context->config_data[reg].total_dev_mode =
-> +                               out->package.elements[1].integer.value;
-> +                       if (context->config_data[reg].total_dev_mode <= 0 ||
-> +                           context->config_data[reg].total_dev_mode > MAX_DEV_MODES) {
-> +                               pr_err("total_dev_mode is not within range : %d\n",
-> +                                      context->config_data[reg].total_dev_mode);
-> +                               ACPI_FREE(out);
-> +                               continue;
-> +                       }
-> +                       item = &out->package.elements[2];
-> +                       if (item->package.count > 0)
-> +                               status = parse_package(context, item);
-> +                       else
-> +                               status = AE_ERROR;
-> +                       if (status != AE_OK) {
-> +                               ACPI_FREE(out);
-> +                               continue;
-> +                       }
-> +               }
-> +               ACPI_FREE(out);
-> +       }
-
-Try to refactor this for-loop. Perhaps even move it out to a function or so.
-
-> +       update_sar_data(context);
-> +       result = sysfs_create_group(&device->dev.kobj, &intcsar_group);
-> +       if (result) {
-> +               pr_err("sysfs creation failed\n");
-> +               goto r_free;
-> +       }
-> +       if (sar_get_device_mode(device) != AE_OK) {
-> +               pr_err("Failed sar_get_device_mode\n");
-> +               goto r_sys;
-> +       }
-> +       if (acpi_install_notify_handler(ACPI_HANDLE(&device->dev), ACPI_DEVICE_NOTIFY,
-> +                                       sar_notify, (void *)device) != AE_OK) {
-> +               pr_err("Failed acpi_install_notify_handler\n");
-> +               goto r_sys;
-> +       }
-> +       return 0;
-> +
-> +r_sys:
-> +       sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-> +r_free:
-> +       kfree(context);
-
-> +       return -1;
-
-What is this?
-
-> +}
-> +
-> +static int sar_remove(struct platform_device *device)
-> +{
-> +       struct wwan_sar_context *context = dev_get_drvdata(&device->dev);
-> +       int reg = 0;
-> +
-> +       acpi_remove_notify_handler(ACPI_HANDLE(&device->dev),
-> +                                  ACPI_DEVICE_NOTIFY, sar_notify);
-> +       sysfs_remove_group(&device->dev.kobj, &intcsar_group);
-> +       for (reg = 0; reg < MAX_REGULATORY; reg++) {
-> +               kfree(context->config_data[reg].device_mode_info);
-> +               context->config_data[reg].device_mode_info = NULL;
-> +       }
-> +       kfree(context);
-> +       return 0;
-> +}
-
-...
-
-> +MODULE_DEVICE_TABLE(platform, sar_device_table);
-
-Besides the misplaced line in the code, why do you need this?
-
-...
-
-> +                       /* FOR ACPI HANDLING */
-
-Useless.
-
-...
-
-> +       .id_table = sar_device_table,
-
-Why?
-
-> +};
-
-> +
-
-Redundant blank line.
-
-...
-
-> +/*
-> + * Intel Corporation Header File for Specific Absorption Rate
-
-What is this supposed to mean?
-
-> + * Copyright (c) 2021, Intel Corporation.
-> + */
-
-It seems like your header lacks the inclusion of the needed headers
-and/or type forward declarations.
+Hi Tom,
+
+On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> This patch series provides a generic helper function, prot_guest_has(),
+> to replace the sme_active(), sev_active(), sev_es_active() and
+> mem_encrypt_active() functions.
+> 
+> It is expected that as new protected virtualization technologies are
+> added to the kernel, they can all be covered by a single function call
+> instead of a collection of specific function calls all called from the
+> same locations.
+> 
+> The powerpc and s390 patches have been compile tested only. Can the
+> folks copied on this series verify that nothing breaks for them.
+
+With this patch set, select ARCH_HAS_PROTECTED_GUEST and set
+CONFIG_AMD_MEM_ENCRYPT=n, creates following error.
+
+ld: arch/x86/mm/ioremap.o: in function `early_memremap_is_setup_data':
+arch/x86/mm/ioremap.c:672: undefined reference to `early_memremap_decrypted'
+
+It looks like early_memremap_is_setup_data() is not protected with
+appropriate config.
+
+
+> 
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
+> Cc: Will Deacon <will@kernel.org>
+> 
+> ---
+> 
+> Patches based on:
+>    https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+>    commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
+> 
+> Tom Lendacky (11):
+>    mm: Introduce a function to check for virtualization protection
+>      features
+>    x86/sev: Add an x86 version of prot_guest_has()
+>    powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
+>    x86/sme: Replace occurrences of sme_active() with prot_guest_has()
+>    x86/sev: Replace occurrences of sev_active() with prot_guest_has()
+>    x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
+>    treewide: Replace the use of mem_encrypt_active() with
+>      prot_guest_has()
+>    mm: Remove the now unused mem_encrypt_active() function
+>    x86/sev: Remove the now unused mem_encrypt_active() function
+>    powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
+>      function
+>    s390/mm: Remove the now unused mem_encrypt_active() function
+> 
+>   arch/Kconfig                               |  3 ++
+>   arch/powerpc/include/asm/mem_encrypt.h     |  5 --
+>   arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
+>   arch/powerpc/platforms/pseries/Kconfig     |  1 +
+>   arch/s390/include/asm/mem_encrypt.h        |  2 -
+>   arch/x86/Kconfig                           |  1 +
+>   arch/x86/include/asm/kexec.h               |  2 +-
+>   arch/x86/include/asm/mem_encrypt.h         | 13 +----
+>   arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
+>   arch/x86/kernel/crash_dump_64.c            |  4 +-
+>   arch/x86/kernel/head64.c                   |  4 +-
+>   arch/x86/kernel/kvm.c                      |  3 +-
+>   arch/x86/kernel/kvmclock.c                 |  4 +-
+>   arch/x86/kernel/machine_kexec_64.c         | 19 +++----
+>   arch/x86/kernel/pci-swiotlb.c              |  9 ++--
+>   arch/x86/kernel/relocate_kernel_64.S       |  2 +-
+>   arch/x86/kernel/sev.c                      |  6 +--
+>   arch/x86/kvm/svm/svm.c                     |  3 +-
+>   arch/x86/mm/ioremap.c                      | 16 +++---
+>   arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
+>   arch/x86/mm/mem_encrypt_identity.c         |  3 +-
+>   arch/x86/mm/pat/set_memory.c               |  3 +-
+>   arch/x86/platform/efi/efi_64.c             |  9 ++--
+>   arch/x86/realmode/init.c                   |  8 +--
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
+>   drivers/gpu/drm/drm_cache.c                |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
+>   drivers/iommu/amd/init.c                   |  7 +--
+>   drivers/iommu/amd/iommu.c                  |  3 +-
+>   drivers/iommu/amd/iommu_v2.c               |  3 +-
+>   drivers/iommu/iommu.c                      |  3 +-
+>   fs/proc/vmcore.c                           |  6 +--
+>   include/linux/mem_encrypt.h                |  4 --
+>   include/linux/protected_guest.h            | 37 +++++++++++++
+>   kernel/dma/swiotlb.c                       |  4 +-
+>   36 files changed, 218 insertions(+), 104 deletions(-)
+>   create mode 100644 arch/powerpc/include/asm/protected_guest.h
+>   create mode 100644 arch/x86/include/asm/protected_guest.h
+>   create mode 100644 include/linux/protected_guest.h
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
