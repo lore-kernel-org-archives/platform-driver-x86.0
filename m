@@ -2,154 +2,176 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABD0C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 12:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8B6C4320E
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 21:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7586761019
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 12:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6F060F25
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 21:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233310AbhHIMrE (ORCPT
+        id S236414AbhHIV4V (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Aug 2021 08:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233279AbhHIMrE (ORCPT
+        Mon, 9 Aug 2021 17:56:21 -0400
+Received: from mail-bn8nam11on2051.outbound.protection.outlook.com ([40.107.236.51]:1857
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232193AbhHIV4U (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Aug 2021 08:47:04 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02F77C0613D3;
-        Mon,  9 Aug 2021 05:46:44 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id c2-20020a0568303482b029048bcf4c6bd9so17754764otu.8;
-        Mon, 09 Aug 2021 05:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QMYvGEawfVzLXF55MEuHd1fUgYBElHTIUYmhiEV2ZcQ=;
-        b=orISg8SyCRGEJGRgvxU7cDy51dWJW+9U2faRRQLU2FO/kZUqDRk+7Nt/SRzWLwKjVn
-         AkCHs3skqH4oKIjcyejGGwKcXniaOUaQm1nyEEUKfqEtiZMlV0n9kwhzcOrbojmZeupH
-         zIaNTEPWdqp14ZiMjpsYRgK80kL1KGyabWChmincY78jZtGQJl4PjIlmrYOVmrN4Plwf
-         /U21GaWzut4DC8R5na8DNG/LaJXABb3ssjAyMGV5D1quPulq5kV8QUsB2uZSCxoY1H8K
-         GvcC6fiTeCFSb2UkllCGP5OCN4zr+nVj9Aah1QFHAfzXkEdrjv7BYibtpYRg7nPxmHsG
-         HcUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QMYvGEawfVzLXF55MEuHd1fUgYBElHTIUYmhiEV2ZcQ=;
-        b=eVqhHUpV+hvDVmhEEWXevwi5z5SyuLZSuTvLN4Q9luM93rwNfuWvOX/+FK8u9leYmd
-         Vj5ykrOguGxxF1dhNi8zeOIDHuso+YfYXaPjIfrQbb4/MjUyUk/G5FQiEj7QT6IQwKSK
-         r+QbBD/dXFYuynPP1NASv69miNwkatQEelE50+59oA0qiC4C4+wOWzKRtu7AFtYx7Z/d
-         a3iapMpVh4/2UQiqzCSeTMpa8EWt+hmp/dnLTCp0iyWYy9h2VnalSKRZ+YDTfpJG7m3P
-         0VzHBIkg+W4IE7e47rUgtSAXfpc5O6oabzQFSjgllg5J9CRFy496EGOsT+CxzgTHZV5k
-         EAow==
-X-Gm-Message-State: AOAM5333A+p2jsaHEcQqUMgx/nMWautcZDcqrlibl24qwo5oRwKjpMy1
-        4OfH9SUS1RqcO8C8MLLL/20ji+9FdtH0RvD64to=
-X-Google-Smtp-Source: ABdhPJxiRsUdAbBSgT8JJtyLoBMkZNP9a9fJHxKKP7WTD69T1GqvNSdvfMw1BxSMYI2warFIn34i0SDFKoBaRqUSn1E=
-X-Received: by 2002:a9d:2609:: with SMTP id a9mr575028otb.365.1628513203319;
- Mon, 09 Aug 2021 05:46:43 -0700 (PDT)
+        Mon, 9 Aug 2021 17:56:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nzg0JsJe3+u5NO7aRkKN43ICh00ZXDe+OW0A/RD+LlkuqiLbY1DiZIZ4GRoqcQ0HfrFjnlrql/9bLYpYcdcki+UkmR8suztzR8D7Ofvrs/qtBc0JEC2MLS8Uj9b+nysfWTlozzkLTBDZE+EuiXOt43VOWTTMe5u55Eqz/1pgAHj5iWrDsezF6QeAFuQOGQQHqyT2zq8opGmwl21gpHb7TeTSz+MAKWrcbiec8ze8ROsQ2/4qiOz/J8XJCQ96HGWfTGfw7LdXcq+5erG9O0JNlXONqoJ1gzXfXPJdu4RjEbSbavorWVnGzHtIJZEomBNICCA2fKXPQynPfVFe7WO5KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qjfqcuynl6MNwWd/ZCoVZg3ncqANglufLbMbDorr4IU=;
+ b=Eb5d+tU/FMpC17fcA7BgpwhTd6835rEtKJcRmEEujF3wEqDplREPU+VwQi4GUQG/WInOQGQvrU6vcpNJ10PEYJs3Z8z9dXlsd01NMq3KVysnNHTW1f3hbDXYOnCcuM5naCStFg4Cq45qJnuHh1qNfZT2zZjNVCzQWiZRIvrGcItUqQgq3rB9QrndI2S3GhcaKOUoI7Mm47JXy3O+vdcSMbaOAmrffV8pjZxsZ9hdiu24b/LfeojqdICMK6OtkW6K7b9bmqTVczsOTqtAEcME66aGbdwR4AyqJ6BAmB88zxSQWptANlVu5PxJqpsqMR7QNc9u8hYxr5WkuziVd+fBUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qjfqcuynl6MNwWd/ZCoVZg3ncqANglufLbMbDorr4IU=;
+ b=FSu0tPPV2gwlr3Lx/QgZ8K7q+i6UTH800vC3B/j13KkRO4q11lhf8CsgVCTAE1Afmq9X19QEvU7K86G5wtvIKaSvoxY4CZ83uzbbzyCtuC56huvJQ5jaWMywx+Hpitpemfmt19cEiO+rG0DC6Ea9WR61BFiGYd1louHCe8DLLxE=
+Authentication-Results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
+ by DM4PR12MB5295.namprd12.prod.outlook.com (2603:10b6:5:39f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.17; Mon, 9 Aug
+ 2021 21:55:56 +0000
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::73:2581:970b:3208]) by DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::73:2581:970b:3208%3]) with mapi id 15.20.4394.023; Mon, 9 Aug 2021
+ 21:55:56 +0000
+Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
+ with prot_guest_has()
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
+        Baoquan He <bhe@redhat.com>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+ <YQR+ffO92gMfGDbs@google.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <a8a6a63e-3bb7-47a1-1427-55633f1bf211@amd.com>
+Date:   Mon, 9 Aug 2021 16:55:53 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+In-Reply-To: <YQR+ffO92gMfGDbs@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P220CA0014.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::19) To DM4PR12MB5229.namprd12.prod.outlook.com
+ (2603:10b6:5:398::12)
 MIME-Version: 1.0
-References: <20210809121345.967597-1-chrisrblake93@gmail.com>
- <CAHp75VfQr6XKQ0UDQDq0pH7TK=_WUGBhRKcC_=-zzUGOwO8tWQ@mail.gmail.com>
- <CALpBJjpSJQquzaT14TkoEbTHrvtN8kiQWKLs3n0ZNiziB=iwCA@mail.gmail.com> <CAHp75Ve2i-5x-Xuoo3Z=JATFXqjV76aGyrnmEz+4d5qR7tLPJw@mail.gmail.com>
-In-Reply-To: <CAHp75Ve2i-5x-Xuoo3Z=JATFXqjV76aGyrnmEz+4d5qR7tLPJw@mail.gmail.com>
-From:   Chris <chrisrblake93@gmail.com>
-Date:   Mon, 9 Aug 2021 07:46:32 -0500
-Message-ID: <CALpBJjp7bRJF_ivPhxf=PKbZbB+1UZXOH=+soNLxoYxA_F4Sww@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: add meraki-mx100 platform driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.236.30.241] (165.204.77.1) by SN7P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:806:123::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4394.15 via Frontend Transport; Mon, 9 Aug 2021 21:55:54 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0c9c3def-6ac3-4a7f-ad85-08d95b807723
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5295:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM4PR12MB5295F82C01BEDC78DB002AEAECF69@DM4PR12MB5295.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: va1GgnlgkQoGJwHV4u/vWPT7qTpos8azTAmvWS6mQTBalS5XDFQ7rPECEiFxbzhVX4g9ynz6AYUXHBRPGK/BG4lHF214foWL5qc8Ipuv0n5mmNDzMO6Hv31jefLDxr2WadSnaBSsjhcOlIOeTWLFx35539aLQslnZfOQcrR9HIQ/6Jd3qwyUn+WpQhxX+RMaadPnpPiWvT9tSAdv9jKY2wvGt+n0iyJAStAkjw27F0ml616aW8od/L4TyCN/Rsf541EY8pzky7JXzvLU7/IGPLbkS9Hvxze0OonQm7R88g9MhsEH3AoxCa1Dm0lfC8HR3hmxX1uEP24QfIQXKcPZfwRKBPLq0NW1sw827/Ze3N7ol42kAYvvUSlkfJ1fdqtgA1kGUUXPxnFYsMw2nJtU9v6jqjnhxQynBDVvxyErLtGxsYZAlEmTNvdX+nmrFLK4DICPDMozvwfe4Oj00+8tawhx77i/3HhvN/VZYNdWL+sJYOkHz2yNX+Lwy5LNmgFVKmK14mEy7WoQSf1Xy8xi5vf+Mxe7pordAYQihwWwnshQp3BI/u3xhBqUxlGblRIQPkCHfOBx98RbAX43hywnlXnNdkX/s+2X2x6Pi/xKfx8gAVBEPaD5OgvLqBbD091GXXkIopa3grc0gvtmehCybzehCkXBaWrV8m3OjyvmpEFoODxwI3Yf98qWX4ZcfLXnsmSKLIhNbAq0Hm0Db0p2zYqIPigk2iJAVqz1CHGYfUQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(396003)(346002)(39860400002)(956004)(16576012)(186003)(6486002)(8936002)(31696002)(86362001)(8676002)(53546011)(7406005)(54906003)(7416002)(478600001)(316002)(2906002)(4326008)(6916009)(26005)(2616005)(36756003)(66556008)(38100700002)(31686004)(4744005)(5660300002)(66476007)(66946007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YmZMNW96ZEk2QzY2UndOajg2OTJLTVYzanlKMlhka2FENy9NeEFGRXJETkdQ?=
+ =?utf-8?B?aWtaNU9oOCtFYkhVWnJpME9QQTdwT3Q2cXdlT1lxRzhuTHkwdmFaT2p1Y1NU?=
+ =?utf-8?B?VFVveHVIdERHcXNDOGs3Rks1dXlGeUhsc2FqT1BDTlZkNFRuQndsQTl0OFo4?=
+ =?utf-8?B?UllFdXU3RWVUOUFoSnkrOUE5SDVmVCs1YVV1SytqVHNEQW1zQnA1VnIwQW5Q?=
+ =?utf-8?B?TGpld0lkSWZOWEw2OThaZlY3NGs5RG5vSTlKRkFlbUxveThTL2dEM0g3dVpv?=
+ =?utf-8?B?TzZXWkl4WkRhZFViMTc5dk43UHVqRlNWTVdHRDM3N1BRelVrbHVhaDM4N09u?=
+ =?utf-8?B?Rm0wcVRTYS9wSzRhZEdUUkVBRTAyb01zUkdsU1pNRlhPanpvdXlBd2RLV2NJ?=
+ =?utf-8?B?RWN0YjRZTXVSVG1tK0k5cFRuRkd5Z1hiRFJ3dGNYQnU5dUtqVDl4aGtWemhz?=
+ =?utf-8?B?czdBOG4zSzZhQ3ZhK2Z3R2Z3c2xDVnRqc0VyWFZIeThXR054LzF4QTlOMXg3?=
+ =?utf-8?B?N1h2bDRieDB0VEczcXpTSjNyTUJkY3ZtNVB1amhjTmVGQXdUWlVVcVk0L0FF?=
+ =?utf-8?B?N1Q0L1pxUHljbjBXZHY2TWNMZGpUSTlra3ZHV2NNdWE0bmNoVFNvWEtHanR5?=
+ =?utf-8?B?Y3BsTUdwODJXSjhDMS9oNSt0WExzMDUyYkdzWFE3Mm9ZUmdsRy9BYnZjM2R0?=
+ =?utf-8?B?RFVuWlBheFpWejN6S09HSVQwNnA0WVJGZUhkUnhIamhGN1dQajgwSWtLNlVO?=
+ =?utf-8?B?a0JpbTNQWTZUZHRlRkZKWlg5TnpTcE9yN1BmZmN3WE01YXgwMjlJMSs1cXdx?=
+ =?utf-8?B?QzVOMUtoeWN4bytkVjByd0drZlJBNmFtblluOEwvMEpMcGl2T3I4c2tYbERZ?=
+ =?utf-8?B?U014OFVoRUVxSGl1RGo4YnhTSTFrcUQ4ZmYwMSszc2x3OFovZEhLUnFWSlRk?=
+ =?utf-8?B?aDNJWnJwaFhTUTEvZitBMkZPRkZPNE1xc1Z6aC9JaFdrOFFQbUlkb2hJOGlH?=
+ =?utf-8?B?MG9iL01CbERyeWtHRDJTd3pUVDlMS3hod2tNVW1qbTRJN2pzbzRIS0cxSXg3?=
+ =?utf-8?B?cVhLZzdZbjAzMmIwL0VvcStiQkJVSEVuMmw3cFkwQmw0Yzh5Z0tSWlVQNXp6?=
+ =?utf-8?B?cTM4bGx3cjVtV0ZBU1dOZlN3eEJNVk9NdDBaMG4wWEpPeU1mdmJrbmhVM2VJ?=
+ =?utf-8?B?RkMvZ0M2TDkxQXdnbWxKbWN6UkdIaS8wdDFZS1hGRXdsZ2JRcU9PREhOMmp0?=
+ =?utf-8?B?Wk9LcFk4eWQyV3BJTTNyMEl1Y2YrL0JPTDRWckd6OUFLbjBGZmFFbGdja2N5?=
+ =?utf-8?B?KzQ3WE8rODBHSDRxLytmSXBFbDZVL3R1TStDM1ZicjVKOG9aU0tWZGVLb1Fa?=
+ =?utf-8?B?Y1hjUGFscjNhUjRaV25ldllCdGthamREMVFiZ3Q2UThMTTNCbThLNlVnb0g1?=
+ =?utf-8?B?ZXQ1R0tZWWZkL1RjTlYzY2J3NncvNXplQSttT3R1MjFrZDJXSDd2WFhNMUJx?=
+ =?utf-8?B?VXlyQmNFSDR2VzhRVTFUK1V4M3h5L3l6WnNPZ0lteFprQkhNK1JTS3h2cmxq?=
+ =?utf-8?B?YTdMVjd4Nm9zYkdiMit1bGF3VlJIdHdlQUdRMFVvQzlKWktFeWJ3bVFvVlhr?=
+ =?utf-8?B?Y3E2dVFvK2NROUdqZXJmWEtWYStMTW42bWR5K2g2aERiOVRHZytIWGtqQ0tZ?=
+ =?utf-8?B?clhaZVV3blo0L2dRbDJYMUM0QmVFTGQyRjVjenYrN0xoeVhYblUzcFJHb3lu?=
+ =?utf-8?Q?hU5Nt3rVA6gzUChUx3/nd3C3z1WuFX1/ao0tSAJ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9c3def-6ac3-4a7f-ad85-08d95b807723
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Aug 2021 21:55:56.4514
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gVMUdJrJtSzpeS/OVG6KXOyXh5yqKz+0hfHnt6FLUw5aHfd3whCwKAMeR092Kk8k7apxnVxc1jIYxygM9OqnpQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5295
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
- On Mon, Aug 9, 2021 at 7:32 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Aug 9, 2021 at 3:29 PM Chris <chrisrblake93@gmail.com> wrote:
-> > On Mon, Aug 9, 2021 at 7:22 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Mon, Aug 9, 2021 at 3:13 PM Chris Blake <chrisrblake93@gmail.com> wrote:
->
-> (I left below context on purpose)
->
-> > > > +static struct platform_device * __init tink_create_dev(
-> > > > +       const char *name, const void *pdata, size_t sz)
-> > > > +{
-> > > > +       struct platform_device *pdev;
-> > > > +
-> > > > +       pdev = platform_device_register_data(NULL,
-> > > > +               name, PLATFORM_DEVID_NONE, pdata, sz);
-> > > > +       if (IS_ERR(pdev))
-> > > > +               pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
-> > > > +
-> > > > +       return pdev;
-> > > > +}
-> > > > +
-> > > > +static int __init tink_board_init(void)
-> > > > +{
-> > > > +       if (!dmi_first_match(tink_systems))
-> > > > +               return -ENODEV;
-> > > > +
-> > > > +       /*
-> > > > +        * We need to make sure that GPIO60 isn't set to native mode as is default since it's our
-> > > > +        * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
-> > > > +        * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
-> > > > +        */
-> > > > +       outl(inl(0x530) | BIT(28), 0x530);
-> > > > +
-> > > > +       gpiod_add_lookup_table(&tink_leds_table);
-> > > > +       gpiod_add_lookup_table(&tink_keys_table);
-> > > > +
-> > > > +       tink_leds_pdev = tink_create_dev("leds-gpio",
-> > > > +               &tink_leds_pdata, sizeof(tink_leds_pdata));
-> > >
-> > > Seems you forgot to add
-> > > if (IS_ERR())
-> > >   return PTR_ERR();
-> > >
-> > > here...
-> > >
-> > > > +       tink_keys_pdev = tink_create_dev("gpio-keys-polled",
-> > > > +               &tink_buttons_pdata, sizeof(tink_buttons_pdata));
-> > >
-> > > and
-> > >
-> > > if (IS_ERR()) {
-> > >  pdev_unreg();
-> > >  return PTR_ERR();
-> > > }
-> > >
-> > > here.
-> >
-> > Are these IS_ERR catches needed since they are done in the
-> > tink_create_dev struct? This is the same structure as currently done
-> > in drivers/platform/x86/pcengines-apuv2.c. Adding these 2x additions
-> > feels a bit redundant, but if I am wrong please correct me.
->
-> Care to describe how it's supposed to be taken into account in your opinion?
+On 7/30/21 5:34 PM, Sean Christopherson wrote:
+> On Tue, Jul 27, 2021, Tom Lendacky wrote:
+>> @@ -451,7 +450,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
+>>  	 * The unused memory range was mapped decrypted, change the encryption
+>>  	 * attribute from decrypted to encrypted before freeing it.
+>>  	 */
+>> -	if (mem_encrypt_active()) {
+>> +	if (sme_me_mask) {
+> 
+> Any reason this uses sme_me_mask?  The helper it calls, __set_memory_enc_dec(),
+> uses prot_guest_has(PATTR_MEM_ENCRYPT) so I assume it's available?
 
-I don't mind adding those blocks in, I am just trying to understand
-the benefit. In tink_create_dev() we do if (IS_ERR(pdev)) right after
-platform_device_register_data is called, so I am just curious why we
-would add another if (IS_ERR()) conditional after the 2x calls to
-tink_create_dev(). I don't have a ton of work in the kernel, so
-knowing why this was requested will help me improve any future PRs.
+Probably just a slip on my part. I was debating at one point calling the
+helper vs. referencing the variables/functions directly in the
+mem_encrypt.c file.
 
->
-> > > > +       return 0;
-> > > > +}
->
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+Thanks,
+Tom
+
+> 
+>>  		r = set_memory_encrypted(vaddr, npages);
+>>  		if (r) {
+>>  			pr_warn("failed to free unused decrypted pages\n");
+> 
