@@ -2,198 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CF3C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 01:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1835C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 08:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2018D60524
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 01:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9563760232
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 08:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231324AbhHIBmV (ORCPT
+        id S233962AbhHIIcF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 8 Aug 2021 21:42:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16048 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232678AbhHIBmU (ORCPT
+        Mon, 9 Aug 2021 04:32:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56591 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233963AbhHIIcF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 8 Aug 2021 21:42:20 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="194200409"
-X-IronPort-AV: E=Sophos;i="5.84,305,1620716400"; 
-   d="scan'208";a="194200409"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2021 18:41:59 -0700
-X-IronPort-AV: E=Sophos;i="5.84,305,1620716400"; 
-   d="scan'208";a="670624711"
-Received: from ctrondse-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.77.4])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2021 18:41:57 -0700
-Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will@kernel.org>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <0d75f283-50b7-460d-3165-185cb955bd70@linux.intel.com>
-Date:   Sun, 8 Aug 2021 18:41:54 -0700
+        Mon, 9 Aug 2021 04:32:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628497904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XKLlxgOYHIXDGZqKNU3L4WkyKtyN1anFPB3c2MZ6gG8=;
+        b=edjJi8y7EYw6GHA8GaiwfPjHjyZLjuGxVC01cgXfvxIhNC35H8lnyaiDOirbP6BZ1snsMm
+        NiSVuzEBi4r4lH1/gozlgfYjkZim8lX/EeY50aFrDRVzE6nnMKmGfCWkGU6JmJAwbfGirm
+        txsBOn5jMn1oBxLJm7Xl3HqGO+gEUFA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-482-9aoJwKlWPfW8lfyJ_AQcqg-1; Mon, 09 Aug 2021 04:31:41 -0400
+X-MC-Unique: 9aoJwKlWPfW8lfyJ_AQcqg-1
+Received: by mail-ej1-f70.google.com with SMTP id a19-20020a1709063e93b0290551ea218ea2so855856ejj.5
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Aug 2021 01:31:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XKLlxgOYHIXDGZqKNU3L4WkyKtyN1anFPB3c2MZ6gG8=;
+        b=ShSth725cm/T21kGAqvicVcQ1VDzRg95Bsrcet/JIS7n+mktz1jFZojspffndA1tOM
+         nbgdn8ctjKbRC7y4JMQiORhUDc6Ln+XEoRLiqDleHZJbyoF7CdwiaaRrKAeF2piueze/
+         Ml5vBSEYIdEQkh5BVnh/GH1Mgc7UCVkUu9Ix97mbTCAkJPBIPqPC/ZJsfdeItIfVZ64e
+         U/m5hFu+boz4eTZlJzIufnQNYfRFgxw6RKrwt7AfJCZDkUqRNDx6ceUBAb+hPAXuQPDD
+         kOtF4eWJdJt0ailMGhBjNk9LfATo1fDzD/KeUEaxNYrgjX57CSloJB7/rZNRhMZNuwhm
+         MFDg==
+X-Gm-Message-State: AOAM533VI6p4Lg6STW0wQzWR1Dd0+RVOV8d/FktTMBHkZq7bj/P1nQl8
+        oKep3TjPqaSD8WwpSqXJN9a2lMSBkIdc2WbBCgsoLSO48XKG5x1lFXmu/3kKKI0TmyPT/zU6emX
+        D+y2FKxfbt47ZiPygeRFu5YnXgQ4BDMLEoQ==
+X-Received: by 2002:a17:906:4109:: with SMTP id j9mr2512021ejk.320.1628497900207;
+        Mon, 09 Aug 2021 01:31:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzPISJe76Dug4VBATf9KCILWQXuNroes4fC6inRmva+zqKsZn86mWWhhguGlZ8h0Bp4qzrb1w==
+X-Received: by 2002:a17:906:4109:: with SMTP id j9mr2512011ejk.320.1628497900031;
+        Mon, 09 Aug 2021 01:31:40 -0700 (PDT)
+Received: from x1.localdomain ([81.30.35.201])
+        by smtp.gmail.com with ESMTPSA id p5sm5679991ejl.73.2021.08.09.01.31.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Aug 2021 01:31:39 -0700 (PDT)
+Subject: Re: [PATCH V4 0/1] platform/x86: Add BIOS Dynamic SAR driver for
+ Intel M.2 Modem
+To:     Shravan S <s.shravan@intel.com>, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+Cc:     sudhakar.an@intel.com
+References: <20210806145630.8858-1-s.shravan@intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <e35c176a-2cbd-0c7a-bd83-09765dbd3838@redhat.com>
+Date:   Mon, 9 Aug 2021 10:31:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.11.0
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1627424773.git.thomas.lendacky@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20210806145630.8858-1-s.shravan@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Tom,
+Hi,
 
-On 7/27/21 3:26 PM, Tom Lendacky wrote:
-> This patch series provides a generic helper function, prot_guest_has(),
-> to replace the sme_active(), sev_active(), sev_es_active() and
-> mem_encrypt_active() functions.
+On 8/6/21 4:56 PM, Shravan S wrote:
+> SAR (Specific Absorption Rate) driver is a host driver implemented for Linux or chrome platform to limit the exposure of human body to RF frequency by informing the Intel M.2 modem to regulate the RF power based on SAR data obtained from the sensors captured in the BIOS. ACPI interface exposes this data from the BIOS to SAR driver. The front end application in userspace ( eg: Modem Manager) will interact with SAR driver to obtain information like the device mode (Example: tablets, laptops, etx), Antenna index, baseband index, SAR table index and use available communication like MBIM interface to enable data communication to modem for RF power regulation.
 > 
-> It is expected that as new protected virtualization technologies are
-> added to the kernel, they can all be covered by a single function call
-> instead of a collection of specific function calls all called from the
-> same locations.
+> The BIOS gets notified about device mode changes through Sensor Driver. This information is given to a (newly created) WWAN ACPI function driver when there is a device mode change. 
+> The driver then uses a _DSM method to retrieve the required information from BIOS. 
+> This information is then forwarded to the User-space using the sysfs_notify interface.
+> A lookup table is maintained inside the BIOS which suggests the SAR Table index and Antenna Tuner Table Index values for individual device modes.
 > 
-> The powerpc and s390 patches have been compile tested only. Can the
-> folks copied on this series verify that nothing breaks for them.
+> The SAR parameters to be used on the Modem differs for each Regulatory Mode like FCC, CE and ISED.
+> Hence, the SAR parameters are stored separately in the SMBIOS table in the OEM BIOS, for each of the Regulatory mode. Regulatory modes will be different based on the region and network available in that region.
+> 
+> Hence the entire SAR functionality handling is divided into 2 parts:
+> 
+> •	A ACPI function driver implemented that uses a dedicated ACPI node for WWAN device.
+>     Sends notifications whenever there is change in Device Mode. (each OEM has different mechanism
+>     of updating this DEVICE Mode info). This is notified to User-space applications using 
+>     the sysfs_notify interface.
+> •	WWAN Device Service listens for sysfs_notify messages and reads the sysfs data and routes them 
+> 	to Modem using MBIM.
 
-With this patch set, select ARCH_HAS_PROTECTED_GUEST and set
-CONFIG_AMD_MEM_ENCRYPT=n, creates following error.
+Thank you for the new version.
 
-ld: arch/x86/mm/ioremap.o: in function `early_memremap_is_setup_data':
-arch/x86/mm/ioremap.c:672: undefined reference to `early_memremap_decrypted'
+I expect that you will send a new version addressing Andy's remarks,
+so I'm going to drop this version from my queue.
 
-It looks like early_memremap_is_setup_data() is not protected with
-appropriate config.
+Regards,
 
+Hans
 
-> 
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
-> Cc: Will Deacon <will@kernel.org>
-> 
-> ---
-> 
-> Patches based on:
->    https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
->    commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
-> 
-> Tom Lendacky (11):
->    mm: Introduce a function to check for virtualization protection
->      features
->    x86/sev: Add an x86 version of prot_guest_has()
->    powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
->    x86/sme: Replace occurrences of sme_active() with prot_guest_has()
->    x86/sev: Replace occurrences of sev_active() with prot_guest_has()
->    x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
->    treewide: Replace the use of mem_encrypt_active() with
->      prot_guest_has()
->    mm: Remove the now unused mem_encrypt_active() function
->    x86/sev: Remove the now unused mem_encrypt_active() function
->    powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
->      function
->    s390/mm: Remove the now unused mem_encrypt_active() function
-> 
->   arch/Kconfig                               |  3 ++
->   arch/powerpc/include/asm/mem_encrypt.h     |  5 --
->   arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
->   arch/powerpc/platforms/pseries/Kconfig     |  1 +
->   arch/s390/include/asm/mem_encrypt.h        |  2 -
->   arch/x86/Kconfig                           |  1 +
->   arch/x86/include/asm/kexec.h               |  2 +-
->   arch/x86/include/asm/mem_encrypt.h         | 13 +----
->   arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
->   arch/x86/kernel/crash_dump_64.c            |  4 +-
->   arch/x86/kernel/head64.c                   |  4 +-
->   arch/x86/kernel/kvm.c                      |  3 +-
->   arch/x86/kernel/kvmclock.c                 |  4 +-
->   arch/x86/kernel/machine_kexec_64.c         | 19 +++----
->   arch/x86/kernel/pci-swiotlb.c              |  9 ++--
->   arch/x86/kernel/relocate_kernel_64.S       |  2 +-
->   arch/x86/kernel/sev.c                      |  6 +--
->   arch/x86/kvm/svm/svm.c                     |  3 +-
->   arch/x86/mm/ioremap.c                      | 16 +++---
->   arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
->   arch/x86/mm/mem_encrypt_identity.c         |  3 +-
->   arch/x86/mm/pat/set_memory.c               |  3 +-
->   arch/x86/platform/efi/efi_64.c             |  9 ++--
->   arch/x86/realmode/init.c                   |  8 +--
->   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
->   drivers/gpu/drm/drm_cache.c                |  4 +-
->   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
->   drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
->   drivers/iommu/amd/init.c                   |  7 +--
->   drivers/iommu/amd/iommu.c                  |  3 +-
->   drivers/iommu/amd/iommu_v2.c               |  3 +-
->   drivers/iommu/iommu.c                      |  3 +-
->   fs/proc/vmcore.c                           |  6 +--
->   include/linux/mem_encrypt.h                |  4 --
->   include/linux/protected_guest.h            | 37 +++++++++++++
->   kernel/dma/swiotlb.c                       |  4 +-
->   36 files changed, 218 insertions(+), 104 deletions(-)
->   create mode 100644 arch/powerpc/include/asm/protected_guest.h
->   create mode 100644 arch/x86/include/asm/protected_guest.h
->   create mode 100644 include/linux/protected_guest.h
-> 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
