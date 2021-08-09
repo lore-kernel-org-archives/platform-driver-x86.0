@@ -8,73 +8,74 @@ X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9725AC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 09:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62FAC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 09:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 739B16103B
-	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 09:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCEE61056
+	for <platform-driver-x86@archiver.kernel.org>; Mon,  9 Aug 2021 09:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234095AbhHIJAm (ORCPT
+        id S233940AbhHIJBD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 9 Aug 2021 05:00:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35003 "EHLO
+        Mon, 9 Aug 2021 05:01:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43187 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233926AbhHIJAl (ORCPT
+        by vger.kernel.org with ESMTP id S234153AbhHIJBD (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 9 Aug 2021 05:00:41 -0400
+        Mon, 9 Aug 2021 05:01:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628499621;
+        s=mimecast20190719; t=1628499642;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bM9kpP02f9r/g3VdMnj8Zaen8YVGN2Vayf0/HbSkdec=;
-        b=RHf4lumHJOJr5ypwBCmTRbJo0ki6fMp0L9tKWvrQSG7yBQ37T/bwXqu2W4EJYu4rVkXPqr
-        Gyd1R82SqoUy8IaK6xIaCZDY/O5ZMki9R9n9e2p3hmjgrMpgfcwk6IPolpv6Hf6JhEncQs
-        DHxeA9mRsuo9YPHzQaW/+D+fYZsDslg=
+        bh=L8HttrntNZPFs0juELsB3vTreBKXm0ssKSUN1T2UgVs=;
+        b=aGJcQ/6Q0ejeQwUttWqOrAc5Ue0l+T9GQn2EEYkmjNXSHppFkUqBaPbiKMz/w1fkIfiHOX
+        yBMODoxvg4wWmz9E94DeymT3/4GtVXHuicVv+zJirMc3NzWfRlCP86WR4xn2SFAPMAQJZe
+        y4XgAtJoUkYethnPShxi/xj4k14P6OE=
 Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
  [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-583-vtNwiuwzPrOqGXDenwgWyA-1; Mon, 09 Aug 2021 05:00:19 -0400
-X-MC-Unique: vtNwiuwzPrOqGXDenwgWyA-1
-Received: by mail-ed1-f71.google.com with SMTP id c16-20020aa7d6100000b02903bc4c2a387bso4080899edr.21
-        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Aug 2021 02:00:19 -0700 (PDT)
+ us-mta-51-zvIJT2qhOHWTQdNLtPC6uw-1; Mon, 09 Aug 2021 05:00:41 -0400
+X-MC-Unique: zvIJT2qhOHWTQdNLtPC6uw-1
+Received: by mail-ed1-f71.google.com with SMTP id l3-20020aa7c3030000b02903bccf1897f9so8540621edq.19
+        for <platform-driver-x86@vger.kernel.org>; Mon, 09 Aug 2021 02:00:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=bM9kpP02f9r/g3VdMnj8Zaen8YVGN2Vayf0/HbSkdec=;
-        b=dINBFCI7KmdLU4n4e1SyjZrVdfvbrrh8AMD8Wz6WY6TsEhUICi1feQEXNZfQjbOV2J
-         SuD892CNYIoCRq3abMmslVqxDP8Y6ehVJN3NQhPuAfc1T5bPJuGFH93aQ5yLuE91slwd
-         NpNlfNoKbx/hXze96xMoE29H/dcTUWFFQmjIXNz2WsucN3OXP8gte1q1KwdF18A2sRzf
-         KQ32TBNBHw63THw/p3xqzDEYMmUG0Cv8enydltBHx4ZSvK0QH16mr/Tyvdyau4w2oaxT
-         a8WsP8T1DgpWOrZCU9GQyz/o+A2xzOZmpU8iKQLpSn/X59vXrVln14EW3msKMPT8sT/5
-         e+Fw==
-X-Gm-Message-State: AOAM530wrfsFvwwYj1ZqwKcHpkVjx7qOhkzQoxNpEMRNxGiLA5k+rft2
-        iILGY5MNirgRGaDGO15xm7JnF3WFvN33Od/NFJJCBXQov7rGACeqwXvchcz9c6QVqPjZ/SEsjOH
-        xPSM0c0kl0SRXypwy/tfqjaEb9lKMl4VpGg==
-X-Received: by 2002:a50:bb43:: with SMTP id y61mr28265779ede.22.1628499618626;
-        Mon, 09 Aug 2021 02:00:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwxejhDaFK1lU/Mdj22pcgEsWm+7KHeAaq6avCqQ1xtRDNgVuNPgWKj4yk7Zt+RqYFU6xdF8A==
-X-Received: by 2002:a50:bb43:: with SMTP id y61mr28265764ede.22.1628499618446;
-        Mon, 09 Aug 2021 02:00:18 -0700 (PDT)
+        bh=L8HttrntNZPFs0juELsB3vTreBKXm0ssKSUN1T2UgVs=;
+        b=HG6oN91/v5OSwbrY8YdHy9Aj8sBD7Xu4vxxS0Zm98r7S+Reph0wtafi8iTRvtQChjD
+         o+hkWNDQDepw4qXjBnhc7M5VakfMlnDlIH86bgpmKU5atLGiZ7W0/jHbSAHHqeZQg79/
+         HYP1XhhtotZ2WQt3JDD6jZ8paaPUX2diMFMuWOVbMHeZAUGG54O9YygjQ3KZSsx1SPCe
+         dR3n+5QrdAc3j2AhkMbrxkwqu8Wh+6w8gGzo7mXpOOar7NKHB/z1fB4CxRaWlSsf4PeJ
+         2YoB47R1mNyTuicF8LIumDLAGTh9kmJ4EcJm9V+tfuTabNVk+YsLZ30Xeqg3Jq8zXsuu
+         874w==
+X-Gm-Message-State: AOAM533hPnF8ItYnUGro5NFUQmSftQVbar89NUyYdpLbbnzu6ikY4UhS
+        um2vZeMA2fe4DaF+fhPBZiBmYiks/r5yuIEsBKdGWI1/KccZnLTNN5+0hcqbha0iqxZ8gVmWDNr
+        HZ6PhKMBlmJhueRvHxK1MzBCQefV34jmgoA==
+X-Received: by 2002:a17:906:5e45:: with SMTP id b5mr21620422eju.301.1628499640127;
+        Mon, 09 Aug 2021 02:00:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw09sn2gDpVU46Yw+tmDb/2htDgapIE6hFOQ5zm1XmYLbdAv6Pp+VPMXn88sB/Yp0DTV5l6UA==
+X-Received: by 2002:a17:906:5e45:: with SMTP id b5mr21620400eju.301.1628499639906;
+        Mon, 09 Aug 2021 02:00:39 -0700 (PDT)
 Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id s3sm5690626ejm.49.2021.08.09.02.00.18
+        by smtp.gmail.com with ESMTPSA id v13sm5669377ejh.62.2021.08.09.02.00.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Aug 2021 02:00:18 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] platform/x86/intel: int33fe: Use y instead of objs
- in Makefile
+        Mon, 09 Aug 2021 02:00:39 -0700 (PDT)
+Subject: Re: [PATCH v1 1/1] platform/x86/intel: pmt: Use y instead of objs in
+ Makefile
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Mark Gross <mgross@linux.intel.com>
-References: <20210806154941.4491-1-andriy.shevchenko@linux.intel.com>
+References: <20210806155017.4633-1-andriy.shevchenko@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <bcd685c8-645e-eeff-6815-1251b28e1945@redhat.com>
-Date:   Mon, 9 Aug 2021 11:00:17 +0200
+Message-ID: <a6b48303-1a43-5cc2-ec4a-41fed5ae02cb@redhat.com>
+Date:   Mon, 9 Aug 2021 11:00:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210806154941.4491-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20210806155017.4633-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,7 +85,7 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/6/21 5:49 PM, Andy Shevchenko wrote:
+On 8/6/21 5:50 PM, Andy Shevchenko wrote:
 > The 'objs' is for user space tools, for the kernel modules
 > we should use 'y'.
 > 
@@ -106,20 +107,30 @@ Regards,
 
 Hans
 
+
 > ---
->  drivers/platform/x86/intel/int33fe/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/platform/x86/intel/int33fe/Makefile b/drivers/platform/x86/intel/int33fe/Makefile
-> index cc11183ce179..9456e3b37f6f 100644
-> --- a/drivers/platform/x86/intel/int33fe/Makefile
-> +++ b/drivers/platform/x86/intel/int33fe/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  obj-$(CONFIG_INTEL_CHT_INT33FE)		+= intel_cht_int33fe.o
-> -intel_cht_int33fe-objs			:= intel_cht_int33fe_common.o \
-> +intel_cht_int33fe-y			:= intel_cht_int33fe_common.o \
->  					   intel_cht_int33fe_typec.o \
->  					   intel_cht_int33fe_microb.o
+> Hans, feel free to fold in the original commit
+> 
+>  drivers/platform/x86/intel/pmt/Makefile | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmt/Makefile b/drivers/platform/x86/intel/pmt/Makefile
+> index 019103ee6522..279e158c7c23 100644
+> --- a/drivers/platform/x86/intel/pmt/Makefile
+> +++ b/drivers/platform/x86/intel/pmt/Makefile
+> @@ -4,9 +4,9 @@
+>  # Intel Platform Monitoring Technology Drivers
+>  #
+>  
+> -pmt_class-objs				+= class.o
+>  obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt_class.o
+> -pmt_telemetry-objs			+= telemetry.o
+> +pmt_class-y				:= class.o
+>  obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= pmt_telemetry.o
+> -pmt_crashlog-objs			+= crashlog.o
+> +pmt_telemetry-y				:= telemetry.o
+>  obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= pmt_crashlog.o
+> +pmt_crashlog-y				:= crashlog.o
 > 
 
