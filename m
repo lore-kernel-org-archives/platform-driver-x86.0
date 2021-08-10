@@ -2,103 +2,107 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6EC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5916C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 21:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E783610FE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B87B60FDA
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 21:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234018AbhHJUyB (ORCPT
+        id S235007AbhHJVwO (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 16:54:01 -0400
-Received: from sauhun.de ([88.99.104.3]:49056 "EHLO pokefinder.org"
+        Tue, 10 Aug 2021 17:52:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53452 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234169AbhHJUx5 (ORCPT
+        id S234545AbhHJVwN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 16:53:57 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Aug 2021 16:53:56 EDT
-Received: from localhost (p5486ce3a.dip0.t-ipconnect.de [84.134.206.58])
-        by pokefinder.org (Postfix) with ESMTPSA id 725B22C00D7;
-        Tue, 10 Aug 2021 22:44:38 +0200 (CEST)
-Date:   Tue, 10 Aug 2021 22:44:38 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 1/4] i2c: acpi: Add an i2c_acpi_client_count() helper
- function
-Message-ID: <YRLlNh4MrHyVobvR@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-References: <20210803160044.158802-1-hdegoede@redhat.com>
- <20210803160044.158802-2-hdegoede@redhat.com>
- <YQlzzy933V9XMHqt@lahna>
- <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com>
+        Tue, 10 Aug 2021 17:52:13 -0400
+Received: from zn.tnic (p200300ec2f0d6500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6500:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 95C511EC0347;
+        Tue, 10 Aug 2021 23:51:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1628632305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bhrvSWnua4QgXGDLToC7m7WROlxA3VPxoYeGWv6d9b4=;
+        b=p7oMu+RhNEK0R7x19i+M996JIz9jAolp9gSi95HKMhewjNccujQhOtGEXBac5xmuyWnoQ8
+        VtNpb/aUb4bne0yLrWo++9p6EawNSD7KAttCXyDPqb0UwUAg1MTrP2eFAOM1Zm3RyuHGj4
+        2kVcVvuDB8EtlmSykCB6fmc5ev+4LKM=
+Date:   Tue, 10 Aug 2021 23:52:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part1 RFC v4 05/36] x86/sev: Define the Linux specific
+ guest termination reasons
+Message-ID: <YRL1GSmdJhoUCXZv@zn.tnic>
+References: <20210707181506.30489-1-brijesh.singh@amd.com>
+ <20210707181506.30489-6-brijesh.singh@amd.com>
+ <YRJkDhcbUi9xQemM@zn.tnic>
+ <955b4f50-5a7b-8c60-d31e-864bc29638f5@amd.com>
+ <65c53556-94e1-b372-7fb1-64bb78c7ae15@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XUVmFIGdhrbGtadj"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com>
+In-Reply-To: <65c53556-94e1-b372-7fb1-64bb78c7ae15@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Tue, Aug 10, 2021 at 02:30:44PM -0500, Tom Lendacky wrote:
+> IIRC, during the review of the first GHCB version there was discussion
+> about assigning reason sets outside of 0 within the spec and the overall
+> feeling was to not do that as part of the spec.
+> 
+> We can re-open that discussion for the next version of the GHCB document.
 
---XUVmFIGdhrbGtadj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My worry is that if nothing documents which sets are allocated to which
+vendor, it'll become a mess.
 
+Imagine a Linux SNP guest and a windoze one, both running on a KVM
+hypervisor (is that even possible?) and both using the same termination
+reason set with conflicting reason numbers.
 
-> >> We have 3 files now which have the need to count the number of
-> >> I2cSerialBus resources in an ACPI-device's resource-list.
-> >>
-> >> Currently all implement their own helper function for this,
-> >> add a generic helper function to replace the 3 implementations.
-> >>
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >=20
-> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->=20
-> Thank you, Wolfram are you also ok with me merging this
-> patch through the pdx86 tree?
+Unneeded confusion.
 
-Sure!
+Unless the spec says, "reason set 1 is allocated to Linux, set 2 to
+windoze, etc"
 
-Acked-by: Wolfram Sang <wsa@kernel.org>
+Then all know which is which.
 
+And so on...
 
---XUVmFIGdhrbGtadj
-Content-Type: application/pgp-signature; name="signature.asc"
+Thx.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Regards/Gruss,
+    Boris.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmES5TUACgkQFA3kzBSg
-KbaqcA/+PD08vkVwJP3H6+FYae3PadhO8O+PXXrjdZ4o4HT0gsn/SrSxO1Vcqntt
-H1s6IfOlwKtfxwb7vH7SM/0XFpBISC0xnc2HKssRg2E0qV2A5M58QYOgGuiv+1y6
-ozSOyA1T8AWRwIkujdYoGamTnDiyGMZdR59lm8TWFTgYfAebJWh5TTdiPOaMwv2N
-1/yqbRSiCe9+6E0J2TAzHf24dPPj1uhLYBLkjluimoKZvHKt1UCet6hdQyVAhyL+
-MPDKkmFZBY0PJNK3TV+bXihTpJg3Xc6ECkDTrUOYe4SX4aOWprB9cXgVdgxd0Kjy
-AovrnIbUT5hgv5mpZbu4b5wwzv5cVyqC9rmp8KVTkVit2lGbw0iWbk1mU+Fl2HTU
-asZ/zKHnDhYnw91fCiJY2OwrQhug3NmYY1Ax4b+70ZD9VUvXbERTV7mp75twjjMZ
-z+4EQJKp5WtiHAzF7eBwf/8/W5ms0tLPwFjU/AVBN7XpibdLIODXfROyn8xKdUKh
-BoIzcPwNqRa0XAL7L0rU4K89bv2S/HNd9nssqnH3kZIWuZ+prkFrsYry/u+O/swN
-RcJbJ5l76ZrJe4gmM7jiQaJzkpEzpsWIgCc3dT0JwmAhoBq8grFNqc/wFAz5twBB
-axB+fsVAStwSkgEoDntD9xWtgIw8xWf9WdQuyFylrTwzQsHVpXg=
-=WnY9
------END PGP SIGNATURE-----
-
---XUVmFIGdhrbGtadj--
+https://people.kernel.org/tglx/notes-about-netiquette
