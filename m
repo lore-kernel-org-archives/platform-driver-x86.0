@@ -2,92 +2,78 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A2AC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 14:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E071C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 14:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56BF860E52
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 14:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554FC60F02
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 14:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240483AbhHJOF5 (ORCPT
+        id S241168AbhHJOnG (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 10:05:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36833 "EHLO
+        Tue, 10 Aug 2021 10:43:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33535 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241666AbhHJOFz (ORCPT
+        by vger.kernel.org with ESMTP id S241191AbhHJOnG (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:05:55 -0400
+        Tue, 10 Aug 2021 10:43:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628604332;
+        s=mimecast20190719; t=1628606563;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mtiTmzY3pIaUti/y98d4Ixo2WE46mGIXl0wbf5FBYy0=;
-        b=EuhCrg+m4b2Z+fSC9jqFmCqx9VrKiZ1TJe3ttk2rT+dwATgBbBccKVRTszwYA1fzdVGfuv
-        rNuB6T44bK4TDxd0qFxoU8uynsRa3xwkjqACdInccFfOKbS1kq4XN9cSEP8YanO6JDfC4N
-        Cq+jNEHLIiuROaCCvvSzo/rcxnl37Gc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-84-qRHO6jtaOFuEjrPBZ8AQnA-1; Tue, 10 Aug 2021 10:05:31 -0400
-X-MC-Unique: qRHO6jtaOFuEjrPBZ8AQnA-1
-Received: by mail-ed1-f70.google.com with SMTP id ec47-20020a0564020d6fb02903be5e0a8cd2so4481372edb.0
-        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Aug 2021 07:05:30 -0700 (PDT)
+        bh=4Dc26PGvhWfJCbpEYmmOqvpg1pULUQMdUnO3A+JmJuk=;
+        b=dw8R0GhWcyq0uVRbHtufCjmYIuP9nn/Ki2CHDSERFOwljvwPmMyeC30+vTpUVAzNvkMe0h
+        3DgKcwHy83VCm30u0Esn/rGyvDRhmONl3Cw0rGKnmGP/JLO2piZqNm6oqOUYz7T/9PNrLf
+        y+6isiYCYP5epjvsmi7a0NKi7RH80Q4=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-T0BtGG92PSO9VXED3vON8w-1; Tue, 10 Aug 2021 10:42:42 -0400
+X-MC-Unique: T0BtGG92PSO9VXED3vON8w-1
+Received: by mail-ej1-f70.google.com with SMTP id ne21-20020a1709077b95b029057eb61c6fdfso5676656ejc.22
+        for <platform-driver-x86@vger.kernel.org>; Tue, 10 Aug 2021 07:42:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=mtiTmzY3pIaUti/y98d4Ixo2WE46mGIXl0wbf5FBYy0=;
-        b=YhTs2gSAUAxmh4Ra3P47Xl1vLqVfZLjIKR2Aolz0L4m6fGry3cx33wNEuIBTe8WUdz
-         1+ixAF3KKjqiZ+b4iRXVVDtCFw+Bd9AbRlzajigi54HQ0wHOqfD52piGKf+n30Yd7Gu8
-         CB4ch5GircMjofpL/5zU2q47LMXtrcF4+cyvTXZ71EVMX72J1vahBYGN7cZtRuG5DU0j
-         BZ0bYFRIPsYlksGr7AfqgkHIImPcoG9BYWi93Jaevny0rRCaXCA2XxXJ2TdAZDHtvTj8
-         dqm5IR3zJlo4lEGh3KNrKUQGe0X6HrgjuKPPu4Y6nj3llrACP9f1PO8XkW2HP3U3TOjt
-         XSuw==
-X-Gm-Message-State: AOAM531HpUgXkAsrU/epC5Hu/CqBCuNV9rfAbpK3hlwpcKKFC8F9ZC7j
-        0/ks8pp1xd+sNzoNYBZCRmp1TpMIZyNRLYThgPn4AH4zZIdM9D1CxG0z2kgAG6j+mAEHLWnYjnW
-        Ia651HuYpu2MH4d9oDKG4nSTLtmyZOD+GNDUg9za/khUojTivdxuLgWeFiYDcbw2k22GHe++U74
-        6aVP5SuZBlcQ==
-X-Received: by 2002:aa7:cb19:: with SMTP id s25mr5352501edt.194.1628604329753;
-        Tue, 10 Aug 2021 07:05:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybam4OK95KbfGTLT4qq0iECd7wk03OvxM2UwWYWGuLqGngIPy8YL2ZVNDIh9/U8JQIo11BzA==
-X-Received: by 2002:aa7:cb19:: with SMTP id s25mr5352472edt.194.1628604329536;
-        Tue, 10 Aug 2021 07:05:29 -0700 (PDT)
+        bh=4Dc26PGvhWfJCbpEYmmOqvpg1pULUQMdUnO3A+JmJuk=;
+        b=WnU3fUBLfApJXMEUiwzM2/cCK9e9vwYesi5sz9CLaeHrQIm1AUayo706InbiggvN/6
+         WkFE8avJca5Z8AKqR7/AelxLemN1lcv1t7SzTRJdZdRHh21lUE1E6vNmipulydyHC6o9
+         sup3aFfcKF9FQk9aYI1y50/4YQsjwAxIysDtkbS0agbZHNAG+Cq0YKChl7vnVnL7Nofm
+         4FXQyZwRJEMaEGqUxDAzn3EVLREzAQIirtJDOOr+YQSLbDhBJyjXgcVIMJmR/1xCz45j
+         V7cSP/PMlIje6P+/cMyZMMrBR98eHtj9AOlxhI4Xbt7k1qMKeHLJtdmOw3WjkSLQnWJs
+         hZSA==
+X-Gm-Message-State: AOAM530QFJ5VdzBnBHingZgocSlHt/r3ECjo8YykLJKYouC0DStzjNlf
+        QgqmDg7jFqKc2hG/WV784wzxIRdpjHi2VDlFd+n1qTPkAN7euW7r7h4aOK+FnhlboVJooCD6uUD
+        u7W+K2+unP8qewgh2kDiP1TyuxZ6aywq+9w==
+X-Received: by 2002:a17:906:1784:: with SMTP id t4mr20330943eje.445.1628606561136;
+        Tue, 10 Aug 2021 07:42:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwOCYJLlnR5LAEZ34Aiz0Xhgni3OxEGPFJCeIgt08sVruHV7L2EXNi1MUKP9e3xd3cVhZ/cag==
+X-Received: by 2002:a17:906:1784:: with SMTP id t4mr20330912eje.445.1628606560895;
+        Tue, 10 Aug 2021 07:42:40 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id h8sm7004440ejj.22.2021.08.10.07.05.28
+        by smtp.gmail.com with ESMTPSA id hb7sm6887368ejc.33.2021.08.10.07.42.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Aug 2021 07:05:29 -0700 (PDT)
-Subject: Re: [PATCH 00/20] Move Intel platform drivers to intel directory to
- improve readability.
-To:     Kate Hsuan <hpa@redhat.com>, Mark Gross <mgross@linux.intel.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210810095832.4234-1-hpa@redhat.com>
+        Tue, 10 Aug 2021 07:42:40 -0700 (PDT)
+Subject: Re: [PATCH v4] platform/x86: add meraki-mx100 platform driver
+To:     Chris Blake <chrisrblake93@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        chunkeey@gmail.com, andy.shevchenko@gmail.com
+References: <20210810004021.2538308-1-chrisrblake93@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <3a69ebb0-b27d-e8d5-e219-c6ee388cd628@redhat.com>
-Date:   Tue, 10 Aug 2021 16:05:28 +0200
+Message-ID: <9efa5687-f35c-bfcc-43e9-58becbb69d68@redhat.com>
+Date:   Tue, 10 Aug 2021 16:42:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
+In-Reply-To: <20210810004021.2538308-1-chrisrblake93@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -95,130 +81,337 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Kate,
+Hi,
 
-On 8/10/21 11:58 AM, Kate Hsuan wrote:
-> All the intel platform specific drivers are moved to intel/.
-> It makes more clear file structure to improve the readability.
+On 8/10/21 2:40 AM, Chris Blake wrote:
+> This adds platform support for the Cisco Meraki MX100 (Tinkerbell)
+> network appliance. This sets up the network LEDs and Reset
+> button.
 > 
-> Kate Hsuan (20):
->   Move Intel hid of pdx86 to intel directory to improve readability.
->   Move Intel WMI driver of pdx86 to intel/ directory to improve
->     readability.
->   Move Intel bxtwc driver of pdx86 to intel/ directory to improve
->     readability.
->   Move Intel chtdc_ti driver of pdx86 to improve readability.
->   Move MRFLD power button driver of pdx86 to intel directory to improve
->     readability.
->   Move Intel PMC core of pdx86 to intel/ directory to improve
->     readability.
->   Move Intel PMT driver of pdx86 to intel/ to improve readability.
->   Move Intel P-Unit of pdx86 to intel/ directory to improve readability.
->   Move Intel SCU IPC of pdx86 to intel directory to increase
->     readability.
->   Move Intel SoC telemetry driver to intel directory to improve
->     readability.
->   Move Intel IPS driver of pdx86 to improve readability.
->   Move Intel RST driver of pdx86 to intel directory to improve
->     readability.
->   Move Intel smartconnect driver of pdx86 to intel/ directory to improve
->     readability.
->   Move Intel SST driver to intel/ directory to improve readability.
->   Move Intel turbo max 3 driver to intel/ directory to improve
->     readability.
->   Move Intel uncore freq driver to intel/ directory to improve
->     readability.
->   Move Intel int0002 vgpio driver to intel/ directory to inprove
->     readability.
->   Move Intel thermal driver for menlow platform driver to intel/
->     directory to improve readability.
->   Move OakTrail driver to the intel/ directory to improve readability.
->   Move Intel virtual botton driver to intel/ directory to improve
->     readability.
+> Depends-on: ef0eea5b151ae ("mfd: lpc_ich: Enable GPIO driver for DH89xxCC")
+> Co-developed-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Chris Blake <chrisrblake93@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> ---
+> 
+> Changelog:
+> v4: Added missing LEDs, better error handling on pdev register
 
-Thank you for doing this. I have a couple of remarks which I would
-like to see addressed for version 2 of this series:
+Unfortunately there is an error in the better error handling,
+see comments inline. Note for me this gives a compiler warning,
+next time please check for compiler warnings.
 
-1. The commit messages are currently all one line, so basically
-only a Subject and they are missing a Body describing the change
-in more detail (as already pointed out by Mika).
+This is trivial to fix though and everything else looks good,
+so I've fixed this locally and added the patch to my review-hans
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Note it will show up in my review-hans branch once I've pushed my
+local branch there, which might take a while.
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 
-2. Kernel patch subjects (the first line of the commit message)
-should always be prefixed with the subsystem + component which they
-are for, so instead of e.g.
 
-"Move Intel hid of pdx86 to intel directory to improve readability."
+> V3: Additional cleanups, formatting changes
+> V2: Move to using gpiod lookup tables, misc cleanups
+> V1: Initial Patch
+> 
+>  drivers/platform/x86/Kconfig        |  13 ++
+>  drivers/platform/x86/Makefile       |   3 +
+>  drivers/platform/x86/meraki-mx100.c | 230 ++++++++++++++++++++++++++++
+>  3 files changed, 246 insertions(+)
+>  create mode 100644 drivers/platform/x86/meraki-mx100.c
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 7d385c3b2239..8d70176e335f 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -302,6 +302,19 @@ config ASUS_NB_WMI
+>  	  If you have an ACPI-WMI compatible Asus Notebook, say Y or M
+>  	  here.
+>  
+> +config MERAKI_MX100
+> +	tristate "Cisco Meraki MX100 Platform Driver"
+> +	depends on GPIOLIB
+> +	depends on GPIO_ICH
+> +	depends on LEDS_CLASS
+> +	select LEDS_GPIO
+> +	help
+> +	  This driver provides support for the front button and LEDs on
+> +	  the Cisco Meraki MX100 (Tinkerbell) 1U appliance.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called meraki-mx100.
+> +
+>  config EEEPC_LAPTOP
+>  	tristate "Eee PC Hotkey Driver"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7ee369aab10d..25c5aee1cde7 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -39,6 +39,9 @@ obj-$(CONFIG_ASUS_NB_WMI)	+= asus-nb-wmi.o
+>  obj-$(CONFIG_EEEPC_LAPTOP)	+= eeepc-laptop.o
+>  obj-$(CONFIG_EEEPC_WMI)		+= eeepc-wmi.o
+>  
+> +# Cisco/Meraki
+> +obj-$(CONFIG_MERAKI_MX100)	+= meraki-mx100.o
+> +
+>  # Dell
+>  obj-$(CONFIG_X86_PLATFORM_DRIVERS_DELL)		+= dell/
+>  
+> diff --git a/drivers/platform/x86/meraki-mx100.c b/drivers/platform/x86/meraki-mx100.c
+> new file mode 100644
+> index 000000000000..1235529483cb
+> --- /dev/null
+> +++ b/drivers/platform/x86/meraki-mx100.c
+> @@ -0,0 +1,230 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +
+> +/*
+> + * Cisco Meraki MX100 (Tinkerbell) board platform driver
+> + *
+> + * Based off of arch/x86/platform/meraki/tink.c from the
+> + * Meraki GPL release meraki-firmware-sources-r23-20150601
+> + *
+> + * Format inspired by platform/x86/pcengines-apuv2.c
+> + *
+> + * Copyright (C) 2021 Chris Blake <chrisrblake93@gmail.com>
+> + */
+> +
+> +#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/dmi.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio_keys.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/input.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define TINK_GPIO_DRIVER_NAME "gpio_ich"
+> +
+> +/* LEDs */
+> +static const struct gpio_led tink_leds[] = {
+> +	{
+> +		.name = "mx100:green:internet",
+> +		.default_trigger = "default-on",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan2",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan3",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan4",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan5",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan6",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan7",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan8",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan9",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan10",
+> +	},
+> +	{
+> +		.name = "mx100:green:lan11",
+> +	},
+> +	{
+> +		.name = "mx100:green:ha",
+> +	},
+> +	{
+> +		.name = "mx100:orange:ha",
+> +	},
+> +	{
+> +		.name = "mx100:green:usb",
+> +	},
+> +	{
+> +		.name = "mx100:orange:usb",
+> +	},
+> +};
+> +
+> +static const struct gpio_led_platform_data tink_leds_pdata = {
+> +	.num_leds	= ARRAY_SIZE(tink_leds),
+> +	.leds		= tink_leds,
+> +};
+> +
+> +static struct gpiod_lookup_table tink_leds_table = {
+> +	.dev_id = "leds-gpio",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 11,
+> +				NULL, 0, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 18,
+> +				NULL, 1, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 20,
+> +				NULL, 2, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 22,
+> +				NULL, 3, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 23,
+> +				NULL, 4, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 32,
+> +				NULL, 5, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 34,
+> +				NULL, 6, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 35,
+> +				NULL, 7, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 36,
+> +				NULL, 8, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 37,
+> +				NULL, 9, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 48,
+> +				NULL, 10, GPIO_ACTIVE_HIGH),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 16,
+> +				NULL, 11, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 7,
+> +				NULL, 12, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 21,
+> +				NULL, 13, GPIO_ACTIVE_LOW),
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 19,
+> +				NULL, 14, GPIO_ACTIVE_LOW),
+> +		{} /* Terminating entry */
+> +	}
+> +};
+> +
+> +/* Reset Button */
+> +static struct gpio_keys_button tink_buttons[] = {
+> +	{
+> +		.desc			= "Reset",
+> +		.type			= EV_KEY,
+> +		.code			= KEY_RESTART,
+> +		.active_low             = 1,
+> +		.debounce_interval      = 100,
+> +	},
+> +};
+> +
+> +static const struct gpio_keys_platform_data tink_buttons_pdata = {
+> +	.buttons	= tink_buttons,
+> +	.nbuttons	= ARRAY_SIZE(tink_buttons),
+> +	.poll_interval  = 20,
+> +	.rep		= 0,
+> +	.name		= "mx100-keys",
+> +};
+> +
+> +static struct gpiod_lookup_table tink_keys_table = {
+> +	.dev_id = "gpio-keys-polled",
+> +	.table = {
+> +		GPIO_LOOKUP_IDX(TINK_GPIO_DRIVER_NAME, 60,
+> +				NULL, 0, GPIO_ACTIVE_LOW),
+> +		{} /* Terminating entry */
+> +	}
+> +};
+> +
+> +/* Board setup */
+> +static const struct dmi_system_id tink_systems[] __initconst = {
+> +	{
+> +		.matches = {
+> +			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Cisco"),
+> +			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MX100-HW"),
+> +		},
+> +	},
+> +	{} /* Terminating entry */
+> +};
+> +MODULE_DEVICE_TABLE(dmi, tink_systems);
+> +
+> +static struct platform_device *tink_leds_pdev;
+> +static struct platform_device *tink_keys_pdev;
+> +
+> +static struct platform_device * __init tink_create_dev(
+> +	const char *name, const void *pdata, size_t sz)
+> +{
+> +	struct platform_device *pdev;
+> +
+> +	pdev = platform_device_register_data(NULL,
+> +		name, PLATFORM_DEVID_NONE, pdata, sz);
+> +	if (IS_ERR(pdev))
+> +		pr_err("failed registering %s: %ld\n", name, PTR_ERR(pdev));
+> +
+> +	return pdev;
+> +}
+> +
+> +static int __init tink_board_init(void)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!dmi_first_match(tink_systems))
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * We need to make sure that GPIO60 isn't set to native mode as is default since it's our
+> +	 * Reset Button. To do this, write to GPIO_USE_SEL2 to have GPIO60 set to GPIO mode.
+> +	 * This is documented on page 1609 of the PCH datasheet, order number 327879-005US
+> +	 */
+> +	outl(inl(0x530) | BIT(28), 0x530);
+> +
+> +	gpiod_add_lookup_table(&tink_leds_table);
+> +	gpiod_add_lookup_table(&tink_keys_table);
+> +
+> +	tink_leds_pdev = tink_create_dev("leds-gpio",
+> +		&tink_leds_pdata, sizeof(tink_leds_pdata));
+> +	if (IS_ERR(tink_leds_pdev)) {
+> +		ret = ERR_PTR(tink_leds_pdev);
 
-you would use:
+This should be PTR_ERR (pointer-to-error).
 
-"platform/x86: intel-hid: Move to intel sub-directory to improve readability."
+> +		goto err;
+> +	}
+> +
+> +	tink_keys_pdev = tink_create_dev("gpio-keys-polled",
+> +		&tink_buttons_pdata, sizeof(tink_buttons_pdata));
+> +	if (IS_ERR(tink_keys_pdev)) {
+> +		ret = ERR_PTR(tink_keys_pdev);
 
-But that is a bit long; and normally the Subject line is just
-a summary while the body explains things like the why, so this should
-probably be shorted to:
+idem.
 
-"platform/x86: intel-hid: Move to intel sub-directory"
+> +		platform_device_unregister(tink_leds_pdev);
+> +		goto err;
+> +	}
+> +
+> +	return ret;
 
-For the Subject, with the Body explaining what exactly is being changed
-and why.
+You can just use "return 0" here.
 
+> +
+> +err:
+> +	gpiod_remove_lookup_table(&tink_keys_table);
+> +	gpiod_remove_lookup_table(&tink_leds_table);
+> +	return ret;
+> +}
+> +module_init(tink_board_init);
+> +
+> +static void __exit tink_board_exit(void)
+> +{
+> +	platform_device_unregister(tink_keys_pdev);
+> +	platform_device_unregister(tink_leds_pdev);
+> +	gpiod_remove_lookup_table(&tink_keys_table);
+> +	gpiod_remove_lookup_table(&tink_leds_table);
+> +}
+> +module_exit(tink_board_exit);
+> +
+> +MODULE_AUTHOR("Chris Blake <chrisrblake93@gmail.com>");
+> +MODULE_DESCRIPTION("Cisco Meraki MX100 Platform Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:meraki-mx100");
+> 
 
-3. You are using new sub-directories for all drivers which you
-are moving, but for drivers which are currently just 1 c-file, this 
-means going from 1 c-file to 3 files (c-file + Kconfig + Makefile)
-this seems a bit too much. I believe that it would be better for
-the single file drivers (e.g. intel-hid.c, intel-vbtn.c) to be moved
-directly under drivers/platform/x86/intel and for there Kconfig
-and Makefile bits to be moved to the already existing Kconfig
-and Makefile files there.
-
-
-4. As Andy already mentioned when moving a file like
-"intel_scu_ipc.c" to drivers/platform/x86/intel/scu then the
-whole path becomes:
-
-drivers/platform/x86/intel/scu/intel_scu_ipc.c
-
-Which is quite long / quite a lot to type and repeats
-intel + scu twice, so it would be better to drop the intel_scu
-prefix from the filenames in this case resulting in:
-
-drivers/platform/x86/intel/scu/ipc.c
-
-in this example's case. This requires some extrea work:
-
-4.1 You will need to adjust private includes to the new
-filenames
-
-4.2 If you simply adjust say this Makefile line:
-
-obj-$(CONFIG_INTEL_SCU_PCI)             += intel_scu_pcidrv.o
-
-to:
-
-obj-$(CONFIG_INTEL_SCU_PCI)             += pcidrv.o
-
-a pcidrv.ko will get build, but that is a very generic name
-and then we end up with module-name clashes which are not
-allowed.
-
-So the Makefile needs to become a bit more complicated like this:
-
-intel_scu_pcidrv-y			:= pcidrv.o
-obj-$(CONFIG_INTEL_SCU_PCI)             += intel_scu_pcidrv.o
-
-See for example:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/tree/drivers/platform/x86/intel/pmt/Makefile?h=for-next
-
-
-5. Some of the files which you are moving are mentioned in the
-MAINTAINERS file. For each file which you are moving please check if
-it is listed in the MAINTAINERS file, keeping wildcards in mind,
-so search e.g. for intel_scu for the intel_scu_* move.
-
-And if the file is listed then update the MAINTAINERS entry to
-point to the new location.
 
 Regards,
 
