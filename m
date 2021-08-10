@@ -2,209 +2,207 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22E1C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8003BC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE75D6056C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A536056C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239622AbhHJKBq (ORCPT
+        id S239651AbhHJKBt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 06:01:46 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:58868 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238651AbhHJKBn (ORCPT
+        Tue, 10 Aug 2021 06:01:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60041 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239600AbhHJKBs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 06:01:43 -0400
-Received: from zn.tnic (p200300ec2f0d6500ceb5d19a4916b1c0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6500:ceb5:d19a:4916:b1c0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A5ADF1EC0345;
-        Tue, 10 Aug 2021 12:01:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1628589673;
+        Tue, 10 Aug 2021 06:01:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628589685;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=oTu32iVimlCJBEs9G1dT+aamyt1Soz6HOUNPS9Il/NU=;
-        b=TKlN1ORdP1WE5hFE8kj3cV4QVXztsG+Uhq/HNqW/PUNvAPMXh9iebvzxOqUgmOn9CEUyg9
-        H2Ah1rvZ/TxW5aJyn+hR2a3k/BzYHVrYksOd7opuEhBdNF4GReu+6sXDIgaqXEsu5dtTE2
-        n0I7l+sppyJahrjxyF5KpRagkqDQxJU=
-Date:   Tue, 10 Aug 2021 12:01:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5d+6XgOj4LD2qVdHtgUEpReX5vcnxWh9th3O6j9UtBA=;
+        b=ESb5KiRvZf9gHAxcai/eW5GvtIRe13LkpTOpN+j6ZZg2Axcrm9toNb5q8UkIiMB+cWKveH
+        xHPQwe/SLZvCmqv+nUv2hUQ8NbeMKIGYJHMyf8F2mhXQZE9uV5x8FXfX++jkjqhcCs/2Os
+        qJShFD6Y1OgfzxTlXMfOkjRhyQ7wgos=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-553-bATr_xOSOuWXbcC54mZGkw-1; Tue, 10 Aug 2021 06:01:24 -0400
+X-MC-Unique: bATr_xOSOuWXbcC54mZGkw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 375162E97;
+        Tue, 10 Aug 2021 10:01:22 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.64.242.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7C3560BF1;
+        Tue, 10 Aug 2021 10:01:14 +0000 (UTC)
+From:   Kate Hsuan <hpa@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part1 RFC v4 02/36] x86/sev: Save the negotiated GHCB
- version
-Message-ID: <YRJOkQe0W9/HyjjQ@zn.tnic>
-References: <20210707181506.30489-1-brijesh.singh@amd.com>
- <20210707181506.30489-3-brijesh.singh@amd.com>
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH 17/20] Move Intel int0002 vgpio driver to intel/ directory to inprove readability.
+Date:   Tue, 10 Aug 2021 17:58:29 +0800
+Message-Id: <20210810095832.4234-18-hpa@redhat.com>
+In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
+References: <20210810095832.4234-1-hpa@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210707181506.30489-3-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 01:14:32PM -0500, Brijesh Singh wrote:
-> The SEV-ES guest calls the sev_es_negotiate_protocol() to negotiate the
-> GHCB protocol version before establishing the GHCB. Cache the negotiated
-> GHCB version so that it can be used later.
-> 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/include/asm/sev.h   |  2 +-
->  arch/x86/kernel/sev-shared.c | 17 ++++++++++++++---
->  2 files changed, 15 insertions(+), 4 deletions(-)
-
-Also, while looking at this, all those defines in sev-common.h were
-bothering me for a while now because they're an unreadable mess because
-I have to go look at the GHCB spec, decode the corresponding MSR
-protocol request and then go and piece together each request value by
-verifying the masks...
-
-So I did the below which is, IMO, a lot more readable as you can follow
-it directly with the spec opened in parallel.
-
-Thus, if you don't have a better idea, I'd ask you to please add this to
-your set and continue defining the new MSR protocol requests this way so
-that it can be readable.
-
-Thx.
-
+Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
-From: Borislav Petkov <bp@suse.de>
-Date: Tue, 10 Aug 2021 11:39:57 +0200
-Subject: [PATCH] x86/sev: Get rid of excessive use of defines
+ drivers/platform/x86/Kconfig                  | 19 ---------------
+ drivers/platform/x86/Makefile                 |  1 -
+ drivers/platform/x86/intel/Kconfig            |  1 +
+ drivers/platform/x86/intel/Makefile           |  2 ++
+ drivers/platform/x86/intel/int0002/Kconfig    | 23 +++++++++++++++++++
+ drivers/platform/x86/intel/int0002/Makefile   |  6 +++++
+ .../{ => intel/int0002}/intel_int0002_vgpio.c |  0
+ 7 files changed, 32 insertions(+), 20 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/int0002/Kconfig
+ create mode 100644 drivers/platform/x86/intel/int0002/Makefile
+ rename drivers/platform/x86/{ => intel/int0002}/intel_int0002_vgpio.c (100%)
 
-Remove all the defines of masks and bit positions for the GHCB MSR
-protocol and use comments instead which correspond directly to the spec
-so that following those can be a lot easier and straightforward with the
-spec opened in parallel to the code.
-
-Aligh vertically while at it.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/include/asm/sev-common.h | 51 +++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 23 deletions(-)
-
-diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-index 855b0ec9c4e8..28244f8ebde2 100644
---- a/arch/x86/include/asm/sev-common.h
-+++ b/arch/x86/include/asm/sev-common.h
-@@ -18,20 +18,19 @@
- /* SEV Information Request/Response */
- #define GHCB_MSR_SEV_INFO_RESP		0x001
- #define GHCB_MSR_SEV_INFO_REQ		0x002
--#define GHCB_MSR_VER_MAX_POS		48
--#define GHCB_MSR_VER_MAX_MASK		0xffff
--#define GHCB_MSR_VER_MIN_POS		32
--#define GHCB_MSR_VER_MIN_MASK		0xffff
--#define GHCB_MSR_CBIT_POS		24
--#define GHCB_MSR_CBIT_MASK		0xff
--#define GHCB_MSR_SEV_INFO(_max, _min, _cbit)				\
--	((((_max) & GHCB_MSR_VER_MAX_MASK) << GHCB_MSR_VER_MAX_POS) |	\
--	 (((_min) & GHCB_MSR_VER_MIN_MASK) << GHCB_MSR_VER_MIN_POS) |	\
--	 (((_cbit) & GHCB_MSR_CBIT_MASK) << GHCB_MSR_CBIT_POS) |	\
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index ba760d1cb873..b9c0d2d97793 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -632,25 +632,6 @@ config THINKPAD_LMI
+ 
+ source "drivers/platform/x86/intel/Kconfig"
+ 
+-config INTEL_INT0002_VGPIO
+-	tristate "Intel ACPI INT0002 Virtual GPIO driver"
+-	depends on GPIOLIB && ACPI && PM_SLEEP
+-	select GPIOLIB_IRQCHIP
+-	help
+-	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
+-	  Power Management Event (PME) to the Power Management Controller (PMC)
+-	  to wakeup the system. When this happens software needs to explicitly
+-	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+-	  IRQ storm on IRQ 9.
+-
+-	  This is modelled in ACPI through the INT0002 ACPI device, which is
+-	  called a "Virtual GPIO controller" in ACPI because it defines the
+-	  event handler to call when the PME triggers through _AEI and _L02
+-	  methods as would be done for a real GPIO interrupt in ACPI.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called intel_int0002_vgpio.
+-
+ config INTEL_MENLOW
+ 	tristate "Thermal Management driver for Intel menlow platform"
+ 	depends on ACPI_THERMAL
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index a657eef9e10f..f4c6ced59da1 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -67,7 +67,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
+ 
+ 
+-obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index f1f09c7bd992..4efb5ad3e3e1 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -35,6 +35,7 @@ source "drivers/platform/x86/intel/smartconnect/Kconfig"
+ source "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
+ source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
+ source "drivers/platform/x86/intel/uncore_freq/Kconfig"
++source "drivers/platform/x86/intel/int0002/Kconfig"
+ 
+ 
+ endif # X86_PLATFORM_DRIVERS_INTEL
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index a4993248cfde..fe5058c3af18 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= atomisp2/
+ obj-$(CONFIG_INTEL_HID_EVENT)		+= hid/
+ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
+ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= wmi/
++obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
+ 
+ 
+ # Intel PMIC / PMC / P-Unit devices
+@@ -36,3 +37,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)		+= smartconnect/
+ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
+ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
 +
-+#define GHCB_MSR_SEV_INFO(_max, _min, _cbit)	\
-+	/* GHCBData[63:48] */			\
-+	((((_max) & 0xffff) << 48) |		\
-+	 /* GHCBData[47:32] */			\
-+	 (((_min) & 0xffff) << 32) |		\
-+	 /* GHCBData[31:24] */			\
-+	 (((_cbit) & 0xff)  << 24) |		\
- 	 GHCB_MSR_SEV_INFO_RESP)
+diff --git a/drivers/platform/x86/intel/int0002/Kconfig b/drivers/platform/x86/intel/int0002/Kconfig
+new file mode 100644
+index 000000000000..b1368f3c9f31
+--- /dev/null
++++ b/drivers/platform/x86/intel/int0002/Kconfig
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Intel x86 Platform Specific Drivers
++#
 +
- #define GHCB_MSR_INFO(v)		((v) & 0xfffUL)
--#define GHCB_MSR_PROTO_MAX(v)		(((v) >> GHCB_MSR_VER_MAX_POS) & GHCB_MSR_VER_MAX_MASK)
--#define GHCB_MSR_PROTO_MIN(v)		(((v) >> GHCB_MSR_VER_MIN_POS) & GHCB_MSR_VER_MIN_MASK)
-+#define GHCB_MSR_PROTO_MAX(v)		(((v) >> 48) & 0xffff)
-+#define GHCB_MSR_PROTO_MIN(v)		(((v) >> 32) & 0xffff)
- 
- /* CPUID Request/Response */
- #define GHCB_MSR_CPUID_REQ		0x004
-@@ -46,27 +45,33 @@
- #define GHCB_CPUID_REQ_EBX		1
- #define GHCB_CPUID_REQ_ECX		2
- #define GHCB_CPUID_REQ_EDX		3
--#define GHCB_CPUID_REQ(fn, reg)		\
--		(GHCB_MSR_CPUID_REQ | \
--		(((unsigned long)reg & GHCB_MSR_CPUID_REG_MASK) << GHCB_MSR_CPUID_REG_POS) | \
--		(((unsigned long)fn) << GHCB_MSR_CPUID_FUNC_POS))
-+#define GHCB_CPUID_REQ(fn, reg)				\
-+	/* GHCBData[11:0] */				\
-+	(GHCB_MSR_CPUID_REQ |				\
-+	/* GHCBData[31:12] */				\
-+	(((unsigned long)reg & 0x3) << 30) |		\
-+	/* GHCBData[63:32] */				\
-+	(((unsigned long)fn) << 32))
- 
- /* AP Reset Hold */
--#define GHCB_MSR_AP_RESET_HOLD_REQ		0x006
--#define GHCB_MSR_AP_RESET_HOLD_RESP		0x007
-+#define GHCB_MSR_AP_RESET_HOLD_REQ	0x006
-+#define GHCB_MSR_AP_RESET_HOLD_RESP	0x007
- 
- /* GHCB Hypervisor Feature Request/Response */
--#define GHCB_MSR_HV_FT_REQ			0x080
--#define GHCB_MSR_HV_FT_RESP			0x081
-+#define GHCB_MSR_HV_FT_REQ		0x080
-+#define GHCB_MSR_HV_FT_RESP		0x081
- 
- #define GHCB_MSR_TERM_REQ		0x100
- #define GHCB_MSR_TERM_REASON_SET_POS	12
- #define GHCB_MSR_TERM_REASON_SET_MASK	0xf
- #define GHCB_MSR_TERM_REASON_POS	16
- #define GHCB_MSR_TERM_REASON_MASK	0xff
--#define GHCB_SEV_TERM_REASON(reason_set, reason_val)						  \
--	(((((u64)reason_set) &  GHCB_MSR_TERM_REASON_SET_MASK) << GHCB_MSR_TERM_REASON_SET_POS) | \
--	((((u64)reason_val) & GHCB_MSR_TERM_REASON_MASK) << GHCB_MSR_TERM_REASON_POS))
++config INTEL_INT0002_VGPIO
++	tristate "Intel ACPI INT0002 Virtual GPIO driver"
++	depends on GPIOLIB && ACPI && PM_SLEEP
++	select GPIOLIB_IRQCHIP
++	help
++	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
++	  Power Management Event (PME) to the Power Management Controller (PMC)
++	  to wakeup the system. When this happens software needs to explicitly
++	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
++	  IRQ storm on IRQ 9.
 +
-+#define GHCB_SEV_TERM_REASON(reason_set, reason_val)	\
-+	/* GHCBData[15:12] */				\
-+	(((((u64)reason_set) &  0xf) << 12) |		\
-+	 /* GHCBData[23:16] */				\
-+	((((u64)reason_val) & 0xff) << 16))
- 
- #define GHCB_SEV_ES_GEN_REQ		0
- #define GHCB_SEV_ES_PROT_UNSUPPORTED	1
++	  This is modelled in ACPI through the INT0002 ACPI device, which is
++	  called a "Virtual GPIO controller" in ACPI because it defines the
++	  event handler to call when the PME triggers through _AEI and _L02
++	  methods as would be done for a real GPIO interrupt in ACPI.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_int0002_vgpio.
+diff --git a/drivers/platform/x86/intel/int0002/Makefile b/drivers/platform/x86/intel/int0002/Makefile
+new file mode 100644
+index 000000000000..a4040416bcf6
+--- /dev/null
++++ b/drivers/platform/x86/intel/int0002/Makefile
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Intel x86 Platform Specific Drivers
++#
++
++obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel/int0002/intel_int0002_vgpio.c
+similarity index 100%
+rename from drivers/platform/x86/intel_int0002_vgpio.c
+rename to drivers/platform/x86/intel/int0002/intel_int0002_vgpio.c
 -- 
-2.29.2
+2.31.1
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
