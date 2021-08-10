@@ -2,107 +2,494 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5916C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 21:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DB8C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 23:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B87B60FDA
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 21:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC48A60F11
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 23:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235007AbhHJVwO (ORCPT
+        id S235380AbhHJXbI (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 17:52:14 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53452 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234545AbhHJVwN (ORCPT
+        Tue, 10 Aug 2021 19:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235358AbhHJXbI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 17:52:13 -0400
-Received: from zn.tnic (p200300ec2f0d6500329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6500:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 95C511EC0347;
-        Tue, 10 Aug 2021 23:51:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1628632305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bhrvSWnua4QgXGDLToC7m7WROlxA3VPxoYeGWv6d9b4=;
-        b=p7oMu+RhNEK0R7x19i+M996JIz9jAolp9gSi95HKMhewjNccujQhOtGEXBac5xmuyWnoQ8
-        VtNpb/aUb4bne0yLrWo++9p6EawNSD7KAttCXyDPqb0UwUAg1MTrP2eFAOM1Zm3RyuHGj4
-        2kVcVvuDB8EtlmSykCB6fmc5ev+4LKM=
-Date:   Tue, 10 Aug 2021 23:52:25 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part1 RFC v4 05/36] x86/sev: Define the Linux specific
- guest termination reasons
-Message-ID: <YRL1GSmdJhoUCXZv@zn.tnic>
-References: <20210707181506.30489-1-brijesh.singh@amd.com>
- <20210707181506.30489-6-brijesh.singh@amd.com>
- <YRJkDhcbUi9xQemM@zn.tnic>
- <955b4f50-5a7b-8c60-d31e-864bc29638f5@amd.com>
- <65c53556-94e1-b372-7fb1-64bb78c7ae15@amd.com>
+        Tue, 10 Aug 2021 19:31:08 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 547D5C061765;
+        Tue, 10 Aug 2021 16:30:45 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 6so589049wme.5;
+        Tue, 10 Aug 2021 16:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HzVYz0I9tMz/V/0e9usq3xNp2PAwwzYP6LLcSRC4qJs=;
+        b=YiT4/kcNnM9qpbRto80QIzVYZHssyFgmviTBXksHGvYDkdHngQJh/QFX4i5v2IY6Ed
+         Ypivtqh6XVuoV4t9eUmvcm/XDTyawlFcWgN1ZpZxMSbntaS7DntukE38zA8mjiXiTwn0
+         rALKdJtPN6UxmB7dLMyCF32QYvWeFXfkvQah/kOyuc++bo1ygNB9tzueezabhzKJbRes
+         1/FzSEFgFZId3JCdQfcpdGmKOV8+gA6xgYXChxvFfUITmxJTGkVyXUgIRp15MLgw5ZI0
+         HmT8NkC4+WKltpnfHDh7NVwkhW6e8SOI0kIAnZ96nYk9XRn/Q86cFuA1IY9G0/iUwyVO
+         1UTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HzVYz0I9tMz/V/0e9usq3xNp2PAwwzYP6LLcSRC4qJs=;
+        b=ZF+byj2SlXUmthFpP+NjpmQKdYRGmfjA0wlI/+AonW90G1alvgi0wwbp2/sgiPOViU
+         ayfotFA7AiB6kTd1ndATJU6ZS/WICvUpEUjh/jExD48NC6eIP2umvgH3TKOunpPCDieT
+         jHrW5hyQ+R73sAG8n3MmNKZmUVAth2Sgwv6me1hiKn276QOy1YxwRUyflb4X8v0A6VJl
+         Rr8D/bm7pyike6fdFxxqtIOgA3WK7Fiwc75uhO43iH8r9UVolVNDKdIAwnYFssCwGhBE
+         DIGlO1qfBLQwcF0ocltQZck7CPxIziFhvoe78dQtWIsnxSJstS201Xp/yJpQSwjIdftN
+         ci3g==
+X-Gm-Message-State: AOAM5314eUrhfkLTQzu3IIsJHU58+JpkjXdgYwMB1YLBqKqZX0mwn4cn
+        6KmLIwuotA0AMG7ex50mpvgxO21nNxplrFj2LQw=
+X-Google-Smtp-Source: ABdhPJy/UZ3jXiJXkfTUHOEw4qFYMcWdwJJIxSmkIanHSLVW9e9DTLANvhxzpuIPPa3LBRsbn1+nu7KjTnAbgQ0XEag=
+X-Received: by 2002:a05:600c:4101:: with SMTP id j1mr24475878wmi.110.1628638243906;
+ Tue, 10 Aug 2021 16:30:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <65c53556-94e1-b372-7fb1-64bb78c7ae15@amd.com>
+References: <CAMW3L+3hxZAazcq-Je=EH=aCAWuzhBRGsDHDfSy349OG0QLNbQ@mail.gmail.com>
+ <fbadc766-3120-7b80-3c46-9e9505bd313b@redhat.com>
+In-Reply-To: <fbadc766-3120-7b80-3c46-9e9505bd313b@redhat.com>
+From:   jafar akhondali <jafar.akhoondali@gmail.com>
+Date:   Wed, 11 Aug 2021 04:00:32 +0430
+Message-ID: <CAE+bDgcWYVbJphwEvB0Krsp64mMCY6W8__77PkO+aRxRO4uNzw@mail.gmail.com>
+Subject: Re: [PATCH v3] platform/x86: acer-wmi: Add Turbo Mode support for
+ Acer PH315-53
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     jlee@suse.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, mgross@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 02:30:44PM -0500, Tom Lendacky wrote:
-> IIRC, during the review of the first GHCB version there was discussion
-> about assigning reason sets outside of 0 within the spec and the overall
-> feeling was to not do that as part of the spec.
-> 
-> We can re-open that discussion for the next version of the GHCB document.
+Hi Hans,
 
-My worry is that if nothing documents which sets are allocated to which
-vendor, it'll become a mess.
+Thanks for your comments.
+You are right about the email client, too bad I didn't notice it sooner.
+I've got the mentioned problems fixed and will send the patch as version 4 soon.
 
-Imagine a Linux SNP guest and a windoze one, both running on a KVM
-hypervisor (is that even possible?) and both using the same termination
-reason set with conflicting reason numbers.
 
-Unneeded confusion.
+Best,
 
-Unless the spec says, "reason set 1 is allocated to Linux, set 2 to
-windoze, etc"
+Jafar
 
-Then all know which is which.
-
-And so on...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On Mon, Aug 9, 2021 at 1:43 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> Thank you for the new version, unfortunately your email client has
+> damaged the patch. A couple of long lines were wrapped, and worse
+> all tabs were replaced with 4 spaces.
+>
+> I also have 2 small remarks below/inline.
+>
+> Please fix those 2 remarks and then send a new version using
+> "git send-email", so that your email-client does not mangle the patch
+> again.
+>
+>
+> On 8/7/21 12:48 AM, Jafar Akhondali wrote:
+> > Hi,
+> >
+> > The Acer Predator Helios series (usually denoted by PHxxx-yy) features
+> > a special key above the keyboard named "TURBO". The turbo key does 3
+> > things:
+> > 1. Set all fan's speeds to TURBO mode
+> > 2. Overclocks the CPU and GPU in the safe range
+> > 3. Turn on an LED just below the turbo button
+> >
+> > All of these actions are done by WMI function calls, and there is no
+> > custom OC level for turbo. It acts as a flag for enabling turbo
+> > mode instead of telling processors to use 1.3x of power.
+> >
+> > I've run some benchmark tests and it worked fine:
+> >
+> > GpuTest 0.7.0
+> > http://www.geeks3d.com
+> >
+> > Module: FurMark
+> > Normal mode Score: 7289 points (FPS: 121)
+> > Turbo mode Score: 7675 points (FPS: 127)
+> > Settings:
+> > - 1920x1080 fullscreen
+> > - antialiasing: Off
+> > - duration: 60000 ms
+> >
+> > Renderer:
+> > - GeForce RTX 2060/PCIe/SSE2
+> > - OpenGL: 4.6.0 NVIDIA 460.32.03
+> >
+> > This feature is presented by Acer officially and should not harm
+> > hardware in any case.
+> >
+> > A challenging part of implementing this feature is that calling overclocking
+> > the function requires knowing the exact count of fans for CPU and GPU
+> > for each model, which to the best of my knowledge is not available in
+> > the kernel.
+> >
+> > So after checking the official PredatorSense application methods, it
+> > turned out they have provided the software the list of fans in each model.
+> > I have access to the mentioned list, and all similar PH-iii-jj can be
+> > added easily by matching "DMI_PRODUCT_NAME".
+> >
+> > Creating a separate file for the gaming interface was not possible because
+> > the current WMI event GUID is needed for the turbo button, and it's not possible
+> > to register multiple functions on the same event GUID.
+> >
+> >
+> > Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
+> >
+> >
+> > ---
+> >  Changes in v3:
+> >  - Remove usages of gaming_interface
+> >  - Add ACPI output for u32 buffer length
+> >  - Remove set_u64 and get_u64 functions
+> >  - Remove unrelated whitespace changes for to this patch
+> >
+> >  Changes in v2:
+> >  - Fix formatting problems
+> >
+> >  drivers/platform/x86/acer-wmi.c | 181 ++++++++++++++++++++++++++++++++
+> >  1 file changed, 181 insertions(+)
+> >
+> > diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> > index 85db9403cc14..3952d15fbd0b 100644
+> > --- a/drivers/platform/x86/acer-wmi.c
+> > +++ b/drivers/platform/x86/acer-wmi.c
+> > @@ -60,6 +60,11 @@ MODULE_LICENSE("GPL");
+> >  #define ACER_WMID_GET_THREEG_METHODID        10
+> >  #define ACER_WMID_SET_THREEG_METHODID        11
+> >
+> > +#define ACER_WMID_SET_GAMING_LED_METHODID 2
+> > +#define ACER_WMID_GET_GAMING_LED_METHODID 4
+> > +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+> > +#define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+> > +
+> >  /*
+> >   * Acer ACPI method GUIDs
+> >   */
+> > @@ -68,6 +73,7 @@ MODULE_LICENSE("GPL");
+> >  #define WMID_GUID1        "6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
+> >  #define WMID_GUID2        "95764E09-FB56-4E83-B31A-37761F60994A"
+> >  #define WMID_GUID3        "61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+> > +#define WMID_GUID4        "7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56"
+> >
+> >  /*
+> >   * Acer ACPI event GUIDs
+> > @@ -81,6 +87,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+> >  enum acer_wmi_event_ids {
+> >      WMID_HOTKEY_EVENT = 0x1,
+> >      WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
+> > +    WMID_GAMING_TURBO_KEY_EVENT = 0x7,
+> >  };
+> >
+> >  static const struct key_entry acer_wmi_keymap[] __initconst = {
+> > @@ -215,6 +222,9 @@ struct hotkey_function_type_aa {
+> >  #define ACER_CAP_THREEG            BIT(4)
+> >  #define ACER_CAP_SET_FUNCTION_MODE    BIT(5)
+> >  #define ACER_CAP_KBD_DOCK        BIT(6)
+> > +#define ACER_CAP_TURBO_OC     BIT(7)
+> > +#define ACER_CAP_TURBO_LED     BIT(8)
+> > +#define ACER_CAP_TURBO_FAN     BIT(9)
+> >
+> >  /*
+> >   * Interface type flags
+> > @@ -301,6 +311,9 @@ struct quirk_entry {
+> >      u8 mailled;
+> >      s8 brightness;
+> >      u8 bluetooth;
+> > +    u8 turbo;
+> > +    u8 cpu_fans;
+> > +    u8 gpu_fans;
+> >  };
+> >
+> >  static struct quirk_entry *quirks;
+> > @@ -312,6 +325,10 @@ static void __init set_quirks(void)
+> >
+> >      if (quirks->brightness)
+> >          interface->capability |= ACER_CAP_BRIGHTNESS;
+> > +
+> > +    if (quirks->turbo)
+> > +        interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
+> > +                        | ACER_CAP_TURBO_FAN;
+> >  }
+> >
+> >  static int __init dmi_matched(const struct dmi_system_id *dmi)
+> > @@ -340,6 +357,12 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
+> >      .mailled = 1,
+> >  };
+> >
+> > +static struct quirk_entry quirk_acer_predator_ph315_53 = {
+> > +    .turbo = 1,
+> > +    .cpu_fans = 1,
+> > +    .gpu_fans = 1,
+> > +};
+> > +
+> >  /* This AMW0 laptop has no bluetooth */
+> >  static struct quirk_entry quirk_medion_md_98300 = {
+> >      .wireless = 1,
+> > @@ -507,6 +530,15 @@ static const struct dmi_system_id acer_quirks[]
+> > __initconst = {
+> >          },
+> >          .driver_data = &quirk_acer_travelmate_2490,
+> >      },
+> > +    {
+> > +        .callback = dmi_matched,
+> > +        .ident = "Acer Predator PH315-53",
+> > +        .matches = {
+> > +            DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> > +            DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH315-53"),
+> > +        },
+> > +        .driver_data = &quirk_acer_predator_ph315_53,
+> > +    },
+> >      {
+> >          .callback = set_force_caps,
+> >          .ident = "Acer Aspire Switch 10E SW3-016",
+> > @@ -1344,6 +1376,91 @@ static struct wmi_interface wmid_v2_interface = {
+> >      .type = ACER_WMID_v2,
+> >  };
+> >
+> > +/*
+> > + * WMID Gaming interface
+> > + */
+> > +
+> > +static acpi_status
+> > +WMI_gaming_execute_u64(u32 method_id, u64 in, u64 *out)
+> > +{
+> > +    struct acpi_buffer input = { (acpi_size) sizeof(u64), (void *)(&in) };
+> > +    struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> > +    union acpi_object *obj;
+> > +    u32 tmp = 0;
+> > +    acpi_status status;
+> > +
+> > +    status = wmi_evaluate_method(WMID_GUID4, 0, method_id, &input, &result);
+> > +
+> > +    if (ACPI_FAILURE(status))
+> > +        return status;
+> > +    obj = (union acpi_object *) result.pointer;
+> > +
+> > +    if (obj) {
+> > +        if (obj->type == ACPI_TYPE_BUFFER) {
+> > +            if (obj->buffer.length == sizeof(u32))
+> > +                tmp = *((u32 *) obj->buffer.pointer);
+> > +            else if (obj->buffer.length == sizeof(u64))
+> > +                tmp = *((u64 *) obj->buffer.pointer);
+> > +        } else if (obj->type == ACPI_TYPE_INTEGER) {
+> > +            tmp = (u64) obj->integer.value;
+> > +        }
+> > +    }
+> > +
+> > +    if (out)
+> > +        *out = tmp;
+> > +
+> > +    kfree(result.pointer);
+> > +
+> > +    return status;
+> > +}
+> > +
+> > +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
+> > +{
+> > +    u32 method_id = 0;
+> > +    if (interface->capability & cap){
+> > +        switch (cap) {
+> > +        case ACER_CAP_TURBO_LED:
+> > +            method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+> > +            break;
+> > +        case ACER_CAP_TURBO_FAN:
+> > +            method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> > +            break;
+> > +        case ACER_CAP_TURBO_OC:
+> > +            method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+> > +            break;
+> > +        default:
+> > +            return AE_BAD_PARAMETER;
+> > +        }
+> > +        return WMI_gaming_execute_u64(method_id, value, NULL);
+> > +    }
+> > +    return AE_BAD_PARAMETER;
+> > +}
+>
+> It would be cleaner / easier to read to change the capability check to:
+>
+>         if (!(interface->capability & cap))
+>                 return AE_BAD_PARAMETER;
+>
+> And then drop the ident level of the rest of the code by 1 level,
+> resulting in:
+>
+> static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
+> {
+>         u32 method_id = 0;
+>
+>         if (!(interface->capability & cap))
+>                 return AE_BAD_PARAMETER;
+>
+>         switch (cap) {
+>         case ACER_CAP_TURBO_LED:
+>                 method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+>                 break;
+>         case ACER_CAP_TURBO_FAN:
+>                 method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+>                 break;
+>         case ACER_CAP_TURBO_OC:
+>                 method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+>                 break;
+>         default:
+>                 return AE_BAD_PARAMETER;
+>         }
+>
+>         return WMI_gaming_execute_u64(method_id, value, NULL);
+> }
+>
+> > +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
+> > +{
+> > +    u32 method_id = 0;
+> > +    if (interface->capability & cap){
+> > +        switch (cap) {
+> > +        case ACER_CAP_TURBO_LED:
+> > +            method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+> > +            break;
+> > +        case ACER_CAP_TURBO_FAN:
+> > +            method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> > +            break;
+> > +        case ACER_CAP_TURBO_OC:
+> > +            method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+> > +            break;
+> > +        default:
+> > +            return AE_BAD_PARAMETER;
+> > +        }
+> > +        return WMI_gaming_execute_u64(method_id, value, NULL);
+> > +    }
+> > +    return AE_BAD_PARAMETER;
+> > +}
+>
+> And the same for this function.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> > +
+> > +static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
+> > +{
+> > +    acpi_status status;
+> > +    u64 result;
+> > +    u64 input;
+> > +    u32 method_id;
+> > +
+> > +    if (interface->capability & cap) {
+> > +        switch (cap) {
+> > +        case ACER_CAP_TURBO_LED:
+> > +            method_id = ACER_WMID_GET_GAMING_LED_METHODID;
+> > +            input = 0x1;
+> > +            break;
+> > +        default:
+> > +            return AE_BAD_PARAMETER;
+> > +        }
+> > +        status = WMI_gaming_execute_u64(method_id, input, &result);
+> > +        if (ACPI_SUCCESS(status))
+> > +            *value = (u64) result;
+> > +
+> > +        return status;
+> > +    }
+> > +    return AE_BAD_PARAMETER;
+> > +}
+> > +
+> >  /*
+> >   * Generic Device (interface-independent)
+> >   */
+> > @@ -1575,6 +1692,66 @@ static int acer_gsensor_event(void)
+> >      return 0;
+> >  }
+> >
+> > +/*
+> > + *  Predator series turbo button
+> > + */
+> > +static int acer_toggle_turbo(void)
+> > +{
+> > +    /* Get current state from turbo button */
+> > +    u64 turbo_led_state, gpu_fan_config1, gpu_fan_config2;
+> > +    u8 i;
+> > +
+> > +    if (ACPI_FAILURE(WMID_gaming_get_u64(&turbo_led_state,
+> > ACER_CAP_TURBO_LED)))
+> > +        return -1;
+> > +
+> > +    if (turbo_led_state) {
+> > +        // turns off turbo led
+> > +        WMID_gaming_set_u64(0x1, ACER_CAP_TURBO_LED);
+> > +
+> > +        // set FAN mode to auto
+> > +        if (quirks->cpu_fans > 0)
+> > +            gpu_fan_config2 |= 1;
+> > +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> > +            gpu_fan_config2 |= 1 << (i + 1);
+> > +        for (i = 0; i < quirks->gpu_fans; ++i)
+> > +            gpu_fan_config2 |= 1 << (i + 3);
+> > +        if (quirks->cpu_fans > 0)
+> > +            gpu_fan_config1 |= 1;
+> > +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> > +            gpu_fan_config1 |= 1 << (2 * i + 2);
+> > +        for (i = 0; i < quirks->gpu_fans; ++i)
+> > +            gpu_fan_config1 |= 1 << (2 * i + 6);
+> > +        WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16,
+> > ACER_CAP_TURBO_FAN);
+> > +
+> > +        // set OC to normal
+> > +        WMID_gaming_set_u64(0x5, ACER_CAP_TURBO_OC);
+> > +        WMID_gaming_set_u64(0x7, ACER_CAP_TURBO_OC);
+> > +    } else {
+> > +        // turn on turbo led
+> > +        WMID_gaming_set_u64(0x10001, ACER_CAP_TURBO_LED);
+> > +
+> > +        // set FAN to turbo mode
+> > +        if (quirks->cpu_fans > 0)
+> > +            gpu_fan_config2 |= 1;
+> > +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> > +            gpu_fan_config2 |= 1 << (i + 1);
+> > +        for (i = 0; i < quirks->gpu_fans; ++i)
+> > +            gpu_fan_config2 |= 1 << (i + 3);
+> > +        if (quirks->cpu_fans > 0)
+> > +            gpu_fan_config1 |= 2;
+> > +        for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> > +            gpu_fan_config1 |= 2 << (2 * i + 2);
+> > +        for (i = 0; i < quirks->gpu_fans; ++i)
+> > +            gpu_fan_config1 |= 2 << (2 * i + 6);
+> > +        WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16,
+> > ACER_CAP_TURBO_FAN);
+> > +
+> > +        // set OC to turbo mode
+> > +        WMID_gaming_set_u64(0x205, ACER_CAP_TURBO_OC);
+> > +        WMID_gaming_set_u64(0x207, ACER_CAP_TURBO_OC);
+> > +    }
+> > +    return turbo_led_state;
+> > +}
+> > +
+> >  /*
+> >   * Switch series keyboard dock status
+> >   */
+> > @@ -1872,6 +2049,10 @@ static void acer_wmi_notify(u32 value, void *context)
+> >          acer_gsensor_event();
+> >          acer_kbd_dock_event(&return_value);
+> >          break;
+> > +    case WMID_GAMING_TURBO_KEY_EVENT:
+> > +        if (return_value.key_num == 0x4)
+> > +            acer_toggle_turbo();
+> > +        break;
+> >      default:
+> >          pr_warn("Unknown function number - %d - %d\n",
+> >              return_value.function, return_value.key_num);
+> >
+>
