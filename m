@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0B6C4320A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA574C4320E
 	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1244960EBB
+	by mail.kernel.org (Postfix) with ESMTP id D2FA1601FA
 	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239556AbhHJKA7 (ORCPT
+        id S239564AbhHJKBA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 06:00:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39213 "EHLO
+        Tue, 10 Aug 2021 06:01:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47160 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239570AbhHJKA6 (ORCPT
+        by vger.kernel.org with ESMTP id S237695AbhHJKAv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 06:00:58 -0400
+        Tue, 10 Aug 2021 06:00:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628589636;
+        s=mimecast20190719; t=1628589629;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=z0iOhFOiHCE75l+M+6ygTcfw1Md7cOy6sIwCci05tYg=;
-        b=SFedppQrchFaK6RWRGep8Xp8DFjFtSl+H6krWqX0kaVx3dZUOq2I9/y5hQW6Tc5Jw0oQFY
-        Zgx0JDn7L6HOh9ViD9SSw8getZ0zO+ZYM/dE3BU0wCETY/EoLvIVtbNn3V72HS501pu7gL
-        XUa8IChWx5lMRWPx1GIPmL+AFIJSfok=
+        bh=F8znhXIMZK1L533fRVbwQtjY4m/p0PYIZqhn054nSVg=;
+        b=MzEBvhg1ozxM6yQsQrzoEsCB+oQ4HiJkgMF2SC9/1c2PYzjz1VWr20Uik8/+ZnHUB5xS8l
+        ryXkF6QawgOLyD9Dx32Jcg7OpAprUUJmEYfxn/+78SZki3rOlPRbBphUBFCmKrCmPbB2AJ
+        sHPq+S5wwrLYEuk328mPgOziNAsu5Ug=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-70-S2yMeDnOP1WsJBTZinuq0w-1; Tue, 10 Aug 2021 06:00:35 -0400
-X-MC-Unique: S2yMeDnOP1WsJBTZinuq0w-1
+ us-mta-345-UP_SmvIAMbubgzaGbdI8pw-1; Tue, 10 Aug 2021 06:00:27 -0400
+X-MC-Unique: UP_SmvIAMbubgzaGbdI8pw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2626B107ACF5;
-        Tue, 10 Aug 2021 10:00:33 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CF7D8799F6;
+        Tue, 10 Aug 2021 10:00:25 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D522360BF1;
-        Tue, 10 Aug 2021 10:00:27 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3622660BF1;
+        Tue, 10 Aug 2021 10:00:16 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -61,9 +61,9 @@ To:     Hans de Goede <hdegoede@redhat.com>,
         Daniel Scally <djrscally@gmail.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH 11/20] Move Intel IPS driver of pdx86 to improve readability.
-Date:   Tue, 10 Aug 2021 17:58:23 +0800
-Message-Id: <20210810095832.4234-12-hpa@redhat.com>
+Subject: [PATCH 10/20] Move Intel SoC telemetry driver to intel directory to improve readability.
+Date:   Tue, 10 Aug 2021 17:58:22 +0800
+Message-Id: <20210810095832.4234-11-hpa@redhat.com>
 In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
 References: <20210810095832.4234-1-hpa@redhat.com>
 MIME-Version: 1.0
@@ -75,107 +75,130 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
- drivers/platform/x86/Makefile                    |  7 +------
+ drivers/platform/x86/Kconfig                     | 13 -------------
+ drivers/platform/x86/Makefile                    |  3 ---
  drivers/platform/x86/intel/Kconfig               |  1 +
- drivers/platform/x86/intel/Makefile              |  3 +++
- drivers/platform/x86/intel/ips/Kconfig           | 14 ++++++++++++++
- drivers/platform/x86/intel/ips/Makefile          |  6 ++++++
- drivers/platform/x86/{ => intel/ips}/intel_ips.c |  0
- drivers/platform/x86/{ => intel/ips}/intel_ips.h |  0
- 7 files changed, 25 insertions(+), 6 deletions(-)
- create mode 100644 drivers/platform/x86/intel/ips/Kconfig
- create mode 100644 drivers/platform/x86/intel/ips/Makefile
- rename drivers/platform/x86/{ => intel/ips}/intel_ips.c (100%)
- rename drivers/platform/x86/{ => intel/ips}/intel_ips.h (100%)
+ drivers/platform/x86/intel/Makefile              |  1 +
+ drivers/platform/x86/intel/telemetry/Kconfig     | 16 ++++++++++++++++
+ drivers/platform/x86/intel/telemetry/Makefile    |  9 +++++++++
+ .../{ => intel/telemetry}/intel_telemetry_core.c |  0
+ .../telemetry}/intel_telemetry_debugfs.c         |  0
+ .../telemetry}/intel_telemetry_pltdrv.c          |  0
+ 9 files changed, 27 insertions(+), 16 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/telemetry/Kconfig
+ create mode 100644 drivers/platform/x86/intel/telemetry/Makefile
+ rename drivers/platform/x86/{ => intel/telemetry}/intel_telemetry_core.c (100%)
+ rename drivers/platform/x86/{ => intel/telemetry}/intel_telemetry_debugfs.c (100%)
+ rename drivers/platform/x86/{ => intel/telemetry}/intel_telemetry_pltdrv.c (100%)
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index c8c58a8f0ef9..b14c3a2953db 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1085,19 +1085,6 @@ config INTEL_UNCORE_FREQ_CONTROL
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel-uncore-frequency.
+ 
+-
+-config INTEL_TELEMETRY
+-	tristate "Intel SoC Telemetry Driver"
+-	depends on X86_64
+-	depends on MFD_INTEL_PMC_BXT
+-	depends on INTEL_PUNIT_IPC
+-	help
+-	  This driver provides interfaces to configure and use
+-	  telemetry for INTEL SoC from APL onwards. It is also
+-	  used to get various SoC events and parameters
+-	  directly via debugfs files. Various tools may use
+-	  this interface for SoC state monitoring.
+-
+ endif # X86_PLATFORM_DEVICES
+ 
+ config PMC_ATOM
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1d7acccf5e3a..a755736341a0 100644
+index 72b1a4782d48..1d7acccf5e3a 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -113,17 +113,12 @@ obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
- obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
+@@ -126,7 +126,4 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
  
- # Intel uncore drivers
--obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
-+
- obj-$(CONFIG_INTEL_RST)				+= intel-rst.o
- obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
  
--# Intel PMIC / PMC / P-Unit devices
--
--
--
--
  
+-obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+-					   intel_telemetry_pltdrv.o \
+-					   intel_telemetry_debugfs.o
  obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 02e7792d34b0..5cbc1e4a4756 100644
+index 0f1543dc5299..02e7792d34b0 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -29,6 +29,7 @@ source "drivers/platform/x86/intel/pmt/Kconfig"
+@@ -28,6 +28,7 @@ source "drivers/platform/x86/intel/pmc_core/Kconfig"
+ source "drivers/platform/x86/intel/pmt/Kconfig"
  source "drivers/platform/x86/intel/punit/Kconfig"
  source "drivers/platform/x86/intel/scu/Kconfig"
- source "drivers/platform/x86/intel/telemetry/Kconfig"
-+source "drivers/platform/x86/intel/ips/Kconfig"
++source "drivers/platform/x86/intel/telemetry/Kconfig"
  
  
  endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 3edbd5209072..b87767623f94 100644
+index 6fff503ba998..3edbd5209072 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -28,3 +28,6 @@ obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= scu/
+@@ -27,3 +27,4 @@ obj-$(CONFIG_INTEL_SCU_PCI)		+= scu/
+ obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= scu/
  obj-$(CONFIG_INTEL_SCU_WDT)		+= scu/
  obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= scu/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
-+
-+# Intel uncore drivers
-+obj-$(CONFIG_INTEL_IPS)				+= ips/
-diff --git a/drivers/platform/x86/intel/ips/Kconfig b/drivers/platform/x86/intel/ips/Kconfig
++obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
+diff --git a/drivers/platform/x86/intel/telemetry/Kconfig b/drivers/platform/x86/intel/telemetry/Kconfig
 new file mode 100644
-index 000000000000..3417f3586d73
+index 000000000000..af7a712ae90e
 --- /dev/null
-+++ b/drivers/platform/x86/intel/ips/Kconfig
-@@ -0,0 +1,14 @@
++++ b/drivers/platform/x86/intel/telemetry/Kconfig
+@@ -0,0 +1,16 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
 +# Intel x86 Platform Specific Drivers
 +#
 +
-+config INTEL_IPS
-+	tristate "Intel Intelligent Power Sharing"
-+	depends on ACPI && PCI
++config INTEL_TELEMETRY
++	tristate "Intel SoC Telemetry Driver"
++	depends on X86_64
++	depends on MFD_INTEL_PMC_BXT
++	depends on INTEL_PUNIT_IPC
 +	help
-+	  Intel Calpella platforms support dynamic power sharing between the
-+	  CPU and GPU, maximizing performance in a given TDP.  This driver,
-+	  along with the CPU frequency and i915 drivers, provides that
-+	  functionality.  If in doubt, say Y here; it will only load on
-+	  supported platforms.
++	  This driver provides interfaces to configure and use
++	  telemetry for INTEL SoC from APL onwards. It is also
++	  used to get various SoC events and parameters
++	  directly via debugfs files. Various tools may use
++	  this interface for SoC state monitoring.
 \ No newline at end of file
-diff --git a/drivers/platform/x86/intel/ips/Makefile b/drivers/platform/x86/intel/ips/Makefile
+diff --git a/drivers/platform/x86/intel/telemetry/Makefile b/drivers/platform/x86/intel/telemetry/Makefile
 new file mode 100644
-index 000000000000..a76450b840c8
+index 000000000000..c28c45ee5e9c
 --- /dev/null
-+++ b/drivers/platform/x86/intel/ips/Makefile
-@@ -0,0 +1,6 @@
++++ b/drivers/platform/x86/intel/telemetry/Makefile
+@@ -0,0 +1,9 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
 +# Intel x86 Platform Specific Drivers
 +#
 +
-+obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
++
++obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
++					   intel_telemetry_pltdrv.o \
++					   intel_telemetry_debugfs.o
 \ No newline at end of file
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel/ips/intel_ips.c
+diff --git a/drivers/platform/x86/intel_telemetry_core.c b/drivers/platform/x86/intel/telemetry/intel_telemetry_core.c
 similarity index 100%
-rename from drivers/platform/x86/intel_ips.c
-rename to drivers/platform/x86/intel/ips/intel_ips.c
-diff --git a/drivers/platform/x86/intel_ips.h b/drivers/platform/x86/intel/ips/intel_ips.h
+rename from drivers/platform/x86/intel_telemetry_core.c
+rename to drivers/platform/x86/intel/telemetry/intel_telemetry_core.c
+diff --git a/drivers/platform/x86/intel_telemetry_debugfs.c b/drivers/platform/x86/intel/telemetry/intel_telemetry_debugfs.c
 similarity index 100%
-rename from drivers/platform/x86/intel_ips.h
-rename to drivers/platform/x86/intel/ips/intel_ips.h
+rename from drivers/platform/x86/intel_telemetry_debugfs.c
+rename to drivers/platform/x86/intel/telemetry/intel_telemetry_debugfs.c
+diff --git a/drivers/platform/x86/intel_telemetry_pltdrv.c b/drivers/platform/x86/intel/telemetry/intel_telemetry_pltdrv.c
+similarity index 100%
+rename from drivers/platform/x86/intel_telemetry_pltdrv.c
+rename to drivers/platform/x86/intel/telemetry/intel_telemetry_pltdrv.c
 -- 
 2.31.1
 
