@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8003BC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B05C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A536056C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C067960FD8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239651AbhHJKBt (ORCPT
+        id S239632AbhHJKCN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 06:01:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60041 "EHLO
+        Tue, 10 Aug 2021 06:02:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28160 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239600AbhHJKBs (ORCPT
+        by vger.kernel.org with ESMTP id S239688AbhHJKCK (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 06:01:48 -0400
+        Tue, 10 Aug 2021 06:02:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628589685;
+        s=mimecast20190719; t=1628589702;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5d+6XgOj4LD2qVdHtgUEpReX5vcnxWh9th3O6j9UtBA=;
-        b=ESb5KiRvZf9gHAxcai/eW5GvtIRe13LkpTOpN+j6ZZg2Axcrm9toNb5q8UkIiMB+cWKveH
-        xHPQwe/SLZvCmqv+nUv2hUQ8NbeMKIGYJHMyf8F2mhXQZE9uV5x8FXfX++jkjqhcCs/2Os
-        qJShFD6Y1OgfzxTlXMfOkjRhyQ7wgos=
+        bh=8eycIdSAELO2BZpcPDa4Yqaz6UsFPGywf7kXBBnISRM=;
+        b=LI7WsEWDr0lS8sLBE5ROrowANBUqWpsSgm3CYkXKWfrDQCFQWm5KgNXqh3RX1RsaOeBld2
+        33I+CilM/50YSAU2K1pC7N3+EE39aMwvEZmx/nijLoxTmsbSvTefnwIOcx/pt3v67uylKa
+        U1oVO8muJZb5NRmukduFO2e7XPI4iW4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-553-bATr_xOSOuWXbcC54mZGkw-1; Tue, 10 Aug 2021 06:01:24 -0400
-X-MC-Unique: bATr_xOSOuWXbcC54mZGkw-1
+ us-mta-237-fGTzcjgOOzu0IxxCZtw3tw-1; Tue, 10 Aug 2021 06:01:41 -0400
+X-MC-Unique: fGTzcjgOOzu0IxxCZtw3tw-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 375162E97;
-        Tue, 10 Aug 2021 10:01:22 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D202A100A24F;
+        Tue, 10 Aug 2021 10:01:38 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7C3560BF1;
-        Tue, 10 Aug 2021 10:01:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFE3D60BF1;
+        Tue, 10 Aug 2021 10:01:32 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -61,9 +61,9 @@ To:     Hans de Goede <hdegoede@redhat.com>,
         Daniel Scally <djrscally@gmail.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH 17/20] Move Intel int0002 vgpio driver to intel/ directory to inprove readability.
-Date:   Tue, 10 Aug 2021 17:58:29 +0800
-Message-Id: <20210810095832.4234-18-hpa@redhat.com>
+Subject: [PATCH 19/20] Move OakTrail driver to the intel/ directory to improve readability.
+Date:   Tue, 10 Aug 2021 17:58:31 +0800
+Message-Id: <20210810095832.4234-20-hpa@redhat.com>
 In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
 References: <20210810095832.4234-1-hpa@redhat.com>
 MIME-Version: 1.0
@@ -75,134 +75,114 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
- drivers/platform/x86/Kconfig                  | 19 ---------------
- drivers/platform/x86/Makefile                 |  1 -
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  2 ++
- drivers/platform/x86/intel/int0002/Kconfig    | 23 +++++++++++++++++++
- drivers/platform/x86/intel/int0002/Makefile   |  6 +++++
- .../{ => intel/int0002}/intel_int0002_vgpio.c |  0
- 7 files changed, 32 insertions(+), 20 deletions(-)
- create mode 100644 drivers/platform/x86/intel/int0002/Kconfig
- create mode 100644 drivers/platform/x86/intel/int0002/Makefile
- rename drivers/platform/x86/{ => intel/int0002}/intel_int0002_vgpio.c (100%)
+ drivers/platform/x86/Kconfig                      |  9 ---------
+ drivers/platform/x86/Makefile                     |  3 ---
+ drivers/platform/x86/intel/Kconfig                |  1 +
+ drivers/platform/x86/intel/Makefile               |  2 +-
+ drivers/platform/x86/intel/oaktrail/Kconfig       | 15 +++++++++++++++
+ drivers/platform/x86/intel/oaktrail/Makefile      |  6 ++++++
+ .../x86/{ => intel/oaktrail}/intel_oaktrail.c     |  0
+ 7 files changed, 23 insertions(+), 13 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/oaktrail/Kconfig
+ create mode 100644 drivers/platform/x86/intel/oaktrail/Makefile
+ rename drivers/platform/x86/{ => intel/oaktrail}/intel_oaktrail.c (100%)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index ba760d1cb873..b9c0d2d97793 100644
+index 50ded236a841..2426f8feb41f 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -632,25 +632,6 @@ config THINKPAD_LMI
+@@ -634,15 +634,6 @@ source "drivers/platform/x86/intel/Kconfig"
  
- source "drivers/platform/x86/intel/Kconfig"
  
--config INTEL_INT0002_VGPIO
--	tristate "Intel ACPI INT0002 Virtual GPIO driver"
--	depends on GPIOLIB && ACPI && PM_SLEEP
--	select GPIOLIB_IRQCHIP
+ 
+-config INTEL_OAKTRAIL
+-	tristate "Intel Oaktrail Platform Extras"
+-	depends on ACPI
+-	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
 -	help
--	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
--	  Power Management Event (PME) to the Power Management Controller (PMC)
--	  to wakeup the system. When this happens software needs to explicitly
--	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
--	  IRQ storm on IRQ 9.
--
--	  This is modelled in ACPI through the INT0002 ACPI device, which is
--	  called a "Virtual GPIO controller" in ACPI because it defines the
--	  event handler to call when the PME triggers through _AEI and _L02
--	  methods as would be done for a real GPIO interrupt in ACPI.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called intel_int0002_vgpio.
--
- config INTEL_MENLOW
- 	tristate "Thermal Management driver for Intel menlow platform"
- 	depends on ACPI_THERMAL
+-	  Intel Oaktrail platform need this driver to provide interfaces to
+-	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+-	  here; it will only load on supported platforms.
+ 
+ config INTEL_VBTN
+ 	tristate "INTEL VIRTUAL BUTTON"
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index a657eef9e10f..f4c6ced59da1 100644
+index ea5f5dd3f78a..d3992588408a 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -67,7 +67,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+@@ -66,9 +66,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
  obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
- 
--obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+-
+-
+-obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+ 
+ # MSI
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index f1f09c7bd992..4efb5ad3e3e1 100644
+index 59c9b602c784..afc0f70c45ac 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -35,6 +35,7 @@ source "drivers/platform/x86/intel/smartconnect/Kconfig"
- source "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
- source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
+@@ -37,6 +37,7 @@ source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
  source "drivers/platform/x86/intel/uncore_freq/Kconfig"
-+source "drivers/platform/x86/intel/int0002/Kconfig"
+ source "drivers/platform/x86/intel/int0002/Kconfig"
+ source "drivers/platform/x86/intel/menlow/Kconfig"
++source "drivers/platform/x86/intel/oaktrail/Kconfig"
  
  
  endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index a4993248cfde..fe5058c3af18 100644
+index b2326554bd84..6acf5db0e847 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= atomisp2/
- obj-$(CONFIG_INTEL_HID_EVENT)		+= hid/
- obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
+@@ -13,7 +13,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= wmi/
-+obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
- 
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
+ obj-$(CONFIG_INTEL_MENLOW)		+= menlow/
+-
++obj-$(CONFIG_INTEL_OAKTRAIL)		+= oaktrail/
  
  # Intel PMIC / PMC / P-Unit devices
-@@ -36,3 +37,4 @@ obj-$(CONFIG_INTEL_SMARTCONNECT)		+= smartconnect/
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
-+
-diff --git a/drivers/platform/x86/intel/int0002/Kconfig b/drivers/platform/x86/intel/int0002/Kconfig
+ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= bxtwc/
+diff --git a/drivers/platform/x86/intel/oaktrail/Kconfig b/drivers/platform/x86/intel/oaktrail/Kconfig
 new file mode 100644
-index 000000000000..b1368f3c9f31
+index 000000000000..6063fd4e19ca
 --- /dev/null
-+++ b/drivers/platform/x86/intel/int0002/Kconfig
-@@ -0,0 +1,23 @@
++++ b/drivers/platform/x86/intel/oaktrail/Kconfig
+@@ -0,0 +1,15 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
 +# Intel x86 Platform Specific Drivers
 +#
 +
-+config INTEL_INT0002_VGPIO
-+	tristate "Intel ACPI INT0002 Virtual GPIO driver"
-+	depends on GPIOLIB && ACPI && PM_SLEEP
-+	select GPIOLIB_IRQCHIP
++config INTEL_OAKTRAIL
++	tristate "Intel Oaktrail Platform Extras"
++	depends on ACPI
++	depends on ACPI_VIDEO || ACPI_VIDEO = n
++	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
 +	help
-+	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
-+	  Power Management Event (PME) to the Power Management Controller (PMC)
-+	  to wakeup the system. When this happens software needs to explicitly
-+	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
-+	  IRQ storm on IRQ 9.
++	  Intel Oaktrail platform need this driver to provide interfaces to
++	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
++	  here; it will only load on supported platforms.
 +
-+	  This is modelled in ACPI through the INT0002 ACPI device, which is
-+	  called a "Virtual GPIO controller" in ACPI because it defines the
-+	  event handler to call when the PME triggers through _AEI and _L02
-+	  methods as would be done for a real GPIO interrupt in ACPI.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_int0002_vgpio.
-diff --git a/drivers/platform/x86/intel/int0002/Makefile b/drivers/platform/x86/intel/int0002/Makefile
+diff --git a/drivers/platform/x86/intel/oaktrail/Makefile b/drivers/platform/x86/intel/oaktrail/Makefile
 new file mode 100644
-index 000000000000..a4040416bcf6
+index 000000000000..dc2a7e850153
 --- /dev/null
-+++ b/drivers/platform/x86/intel/int0002/Makefile
++++ b/drivers/platform/x86/intel/oaktrail/Makefile
 @@ -0,0 +1,6 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
 +# Intel x86 Platform Specific Drivers
 +#
 +
-+obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel/int0002/intel_int0002_vgpio.c
++obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel/oaktrail/intel_oaktrail.c
 similarity index 100%
-rename from drivers/platform/x86/intel_int0002_vgpio.c
-rename to drivers/platform/x86/intel/int0002/intel_int0002_vgpio.c
+rename from drivers/platform/x86/intel_oaktrail.c
+rename to drivers/platform/x86/intel/oaktrail/intel_oaktrail.c
 -- 
 2.31.1
 
