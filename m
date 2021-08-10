@@ -2,190 +2,236 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5A8C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 16:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4EEC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 16:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF369610CC
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 16:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3ABA60527
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 16:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231439AbhHJQJc (ORCPT
+        id S229609AbhHJQwR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 12:09:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54898 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233058AbhHJQJa (ORCPT
+        Tue, 10 Aug 2021 12:52:17 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30178 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229516AbhHJQwQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 12:09:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628611747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bzgkW3LsTO9l2MG/+ZO2oR4zGUytRooe1G5e6npTltk=;
-        b=RATPos0oMfAPumVIjaLID083NdDjRsFxO7YNlQ59Tg7HybYp6A0cO2c01pXoNc4cliG/Rp
-        kjf8tmTEj531WT1HYP4qBjnM7gEUSsjw5rEkkIwiX8vhwiGW4nHXwQyzNPk0vvRr99nQ4y
-        VfTShQp07XPvHkr/t9Su5iMpyU9zoZs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-548-4rpzxcEgP0WGi3hTdvqLlQ-1; Tue, 10 Aug 2021 12:09:04 -0400
-X-MC-Unique: 4rpzxcEgP0WGi3hTdvqLlQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3FDDA1026200;
-        Tue, 10 Aug 2021 16:09:03 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07D83669ED;
-        Tue, 10 Aug 2021 16:09:01 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        Mario Limonciello <mario.limonciello@outlook.com>
-Subject: [PATCH] platform/x86: Update Mario Limonciello's email address in the docs
-Date:   Tue, 10 Aug 2021 18:09:00 +0200
-Message-Id: <20210810160900.106512-1-hdegoede@redhat.com>
+        Tue, 10 Aug 2021 12:52:16 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="194533719"
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="194533719"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 09:51:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="439352106"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 10 Aug 2021 09:51:52 -0700
+Received: from debox1-desk1.jf.intel.com (debox1-desk1.jf.intel.com [10.54.75.53])
+        by linux.intel.com (Postfix) with ESMTP id 76BE7580922;
+        Tue, 10 Aug 2021 09:51:52 -0700 (PDT)
+Message-ID: <f6aba0db06b375f2df18934241deaad5b926ac4a.camel@linux.intel.com>
+Subject: Re: [PATCH 07/20] Move Intel PMT driver of pdx86 to intel/ to
+ improve readability.
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Kate Hsuan <hpa@redhat.com>, Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Cc:     platform-driver-x86@vger.kernel.org
+Date:   Tue, 10 Aug 2021 09:51:52 -0700
+In-Reply-To: <20210810095832.4234-8-hpa@redhat.com>
+References: <20210810095832.4234-1-hpa@redhat.com>
+         <20210810095832.4234-8-hpa@redhat.com>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.4 (3.38.4-1.fc33) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Various pdx86 docs under Documentation/ABI/testing still use Mario's
-old, now defunct, <mario.limonciello@dell.com> address.
+On Tue, 2021-08-10 at 17:58 +0800, Kate Hsuan wrote:
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 
-Update the docs to point to either the new Dell.Client.Kernel@dell.com
-email alias for Dell specific drivers, or to Mario's new @outlook.com
-address for other drivers.
+Already done for these drivers in pdx86 for-next. Thanks.
 
-Cc: Dell.Client.Kernel@dell.com
-Cc: Mario Limonciello <mario.limonciello@outlook.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/ABI/testing/dell-smbios-wmi                 | 2 +-
- Documentation/ABI/testing/sysfs-bus-thunderbolt           | 2 +-
- Documentation/ABI/testing/sysfs-class-firmware-attributes | 8 ++++----
- Documentation/ABI/testing/sysfs-platform-dell-smbios      | 2 +-
- .../ABI/testing/sysfs-platform-intel-wmi-thunderbolt      | 2 +-
- Documentation/ABI/testing/sysfs-power                     | 2 +-
- 6 files changed, 9 insertions(+), 9 deletions(-)
+> ---
+>  drivers/platform/x86/Makefile                 |  4 +-
+>  drivers/platform/x86/intel/Kconfig            |  2 +
+>  drivers/platform/x86/intel/Makefile           |  3 ++
+>  drivers/platform/x86/intel/pmt/Kconfig        | 41
+> +++++++++++++++++++
+>  drivers/platform/x86/intel/pmt/Makefile       |  9 ++++
+>  .../x86/{ => intel/pmt}/intel_pmt_class.c     |  0
+>  .../x86/{ => intel/pmt}/intel_pmt_class.h     |  0
+>  .../x86/{ => intel/pmt}/intel_pmt_crashlog.c  |  0
+>  .../x86/{ => intel/pmt}/intel_pmt_telemetry.c |  0
+>  9 files changed, 56 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/pmt/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/pmt/Makefile
+>  rename drivers/platform/x86/{ => intel/pmt}/intel_pmt_class.c (100%)
+>  rename drivers/platform/x86/{ => intel/pmt}/intel_pmt_class.h (100%)
+>  rename drivers/platform/x86/{ => intel/pmt}/intel_pmt_crashlog.c
+> (100%)
+>  rename drivers/platform/x86/{ => intel/pmt}/intel_pmt_telemetry.c
+> (100%)
+> 
+> diff --git a/drivers/platform/x86/Makefile
+> b/drivers/platform/x86/Makefile
+> index 30771dd51a84..1310b1ebc3f0 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -123,9 +123,7 @@ obj-
+> $(CONFIG_INTEL_UNCORE_FREQ_CONTROL)             += intel-uncore-
+> frequency.o
+>  # Intel PMIC / PMC / P-Unit devices
+>  
+>  
+> -obj-$(CONFIG_INTEL_PMT_CLASS)          += intel_pmt_class.o
+> -obj-$(CONFIG_INTEL_PMT_TELEMETRY)      += intel_pmt_telemetry.o
+> -obj-$(CONFIG_INTEL_PMT_CRASHLOG)       += intel_pmt_crashlog.o
+> +
+>  obj-$(CONFIG_INTEL_PUNIT_IPC)          += intel_punit_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_IPC)            += intel_scu_ipc.o
+>  obj-$(CONFIG_INTEL_SCU_PCI)            += intel_scu_pcidrv.o
+> diff --git a/drivers/platform/x86/intel/Kconfig
+> b/drivers/platform/x86/intel/Kconfig
+> index 2565b676b911..38bfca25940d 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -25,5 +25,7 @@ source "drivers/platform/x86/intel/bxtwc/Kconfig"
+>  source "drivers/platform/x86/intel/chtdc_ti/Kconfig"
+>  source "drivers/platform/x86/intel/mrfld/Kconfig"
+>  source "drivers/platform/x86/intel/pmc_core/Kconfig"
+> +source "drivers/platform/x86/intel/pmt/Kconfig"
+> +
+>  
+>  endif # X86_PLATFORM_DRIVERS_INTEL
+> diff --git a/drivers/platform/x86/intel/Makefile
+> b/drivers/platform/x86/intel/Makefile
+> index 7a9faf15bfb9..746bee1db055 100644
+> --- a/drivers/platform/x86/intel/Makefile
+> +++ b/drivers/platform/x86/intel/Makefile
+> @@ -18,3 +18,6 @@ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)    += bxtwc/
+>  obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)    += chtdc_ti/
+>  obj-$(CONFIG_INTEL_MRFLD_PWRBTN)       += mrfld/
+>  obj-$(CONFIG_INTEL_PMC_CORE)           += pmc_core/
+> +obj-$(CONFIG_INTEL_PMT_CLASS)          += pmt/
+> +obj-$(CONFIG_INTEL_PMT_TELEMETRY)      += pmt/
+> +obj-$(CONFIG_INTEL_PMT_CRASHLOG)       += pmt/
+> diff --git a/drivers/platform/x86/intel/pmt/Kconfig
+> b/drivers/platform/x86/intel/pmt/Kconfig
+> new file mode 100644
+> index 000000000000..1a5f0fa789e0
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmt/Kconfig
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Intel x86 Platform Specific Drivers
+> +#
+> +
+> +config INTEL_PMT_CLASS
+> +       tristate
+> +       help
+> +         The Intel Platform Monitoring Technology (PMT) class driver
+> provides
+> +         the basic sysfs interface and file hierarchy used by PMT
+> devices.
+> +
+> +         For more information, see:
+> +         <file:Documentation/ABI/testing/sysfs-class-intel_pmt>
+> +
+> +         To compile this driver as a module, choose M here: the
+> module
+> +         will be called intel_pmt_class.
+> +
+> +config INTEL_PMT_TELEMETRY
+> +       tristate "Intel Platform Monitoring Technology (PMT)
+> Telemetry driver"
+> +       depends on MFD_INTEL_PMT
+> +       select INTEL_PMT_CLASS
+> +       help
+> +         The Intel Platform Monitory Technology (PMT) Telemetry
+> driver provides
+> +         access to hardware telemetry metrics on devices that
+> support the
+> +         feature.
+> +
+> +         To compile this driver as a module, choose M here: the
+> module
+> +         will be called intel_pmt_telemetry.
+> +
+> +config INTEL_PMT_CRASHLOG
+> +       tristate "Intel Platform Monitoring Technology (PMT) Crashlog
+> driver"
+> +       depends on MFD_INTEL_PMT
+> +       select INTEL_PMT_CLASS
+> +       help
+> +         The Intel Platform Monitoring Technology (PMT) crashlog
+> driver provides
+> +         access to hardware crashlog capabilities on devices that
+> support the
+> +         feature.
+> +
+> +         To compile this driver as a module, choose M here: the
+> module
+> +         will be called intel_pmt_crashlog.
+> +
+> diff --git a/drivers/platform/x86/intel/pmt/Makefile
+> b/drivers/platform/x86/intel/pmt/Makefile
+> new file mode 100644
+> index 000000000000..b41f52e09f27
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/pmt/Makefile
+> @@ -0,0 +1,9 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Intel x86 Platform Specific Drivers
+> +#
+> +
+> +
+> +obj-$(CONFIG_INTEL_PMT_CLASS)          += intel_pmt_class.o
+> +obj-$(CONFIG_INTEL_PMT_TELEMETRY)      += intel_pmt_telemetry.o
+> +obj-$(CONFIG_INTEL_PMT_CRASHLOG)       += intel_pmt_crashlog.o
+> diff --git a/drivers/platform/x86/intel_pmt_class.c
+> b/drivers/platform/x86/intel/pmt/intel_pmt_class.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmt_class.c
+> rename to drivers/platform/x86/intel/pmt/intel_pmt_class.c
+> diff --git a/drivers/platform/x86/intel_pmt_class.h
+> b/drivers/platform/x86/intel/pmt/intel_pmt_class.h
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmt_class.h
+> rename to drivers/platform/x86/intel/pmt/intel_pmt_class.h
+> diff --git a/drivers/platform/x86/intel_pmt_crashlog.c
+> b/drivers/platform/x86/intel/pmt/intel_pmt_crashlog.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmt_crashlog.c
+> rename to drivers/platform/x86/intel/pmt/intel_pmt_crashlog.c
+> diff --git a/drivers/platform/x86/intel_pmt_telemetry.c
+> b/drivers/platform/x86/intel/pmt/intel_pmt_telemetry.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_pmt_telemetry.c
+> rename to drivers/platform/x86/intel/pmt/intel_pmt_telemetry.c
 
-diff --git a/Documentation/ABI/testing/dell-smbios-wmi b/Documentation/ABI/testing/dell-smbios-wmi
-index 5f3a0dc67050..f58229084469 100644
---- a/Documentation/ABI/testing/dell-smbios-wmi
-+++ b/Documentation/ABI/testing/dell-smbios-wmi
-@@ -1,7 +1,7 @@
- What:		/dev/wmi/dell-smbios
- Date:		November 2017
- KernelVersion:	4.15
--Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-+Contact:	Dell.Client.Kernel@dell.com
- Description:
- 		Perform SMBIOS calls on supported Dell machines.
- 		through the Dell ACPI-WMI interface.
-diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-index 95c21d6c9a84..b7e87f6c7d47 100644
---- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-+++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-@@ -232,7 +232,7 @@ Description:	When new NVM image is written to the non-active NVM
- What:		/sys/bus/thunderbolt/devices/.../nvm_authenticate_on_disconnect
- Date:		Oct 2020
- KernelVersion:	v5.9
--Contact:	Mario Limonciello <mario.limonciello@dell.com>
-+Contact:	Mario Limonciello <mario.limonciello@outlook.com>
- Description:	For supported devices, automatically authenticate the new Thunderbolt
- 		image when the device is disconnected from the host system.
- 
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 3348bf80a37c..0b43997b76e3 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -2,8 +2,8 @@ What:		/sys/class/firmware-attributes/*/attributes/*/
- Date:		February 2021
- KernelVersion:	5.11
- Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
--		Mario Limonciello <mario.limonciello@dell.com>,
- 		Prasanth KSR <prasanth.ksr@dell.com>
-+		Dell.Client.Kernel@dell.com
- Description:
- 		A sysfs interface for systems management software to enable
- 		configuration capability on supported systems.  This directory
-@@ -130,8 +130,8 @@ What:		/sys/class/firmware-attributes/*/authentication/
- Date:		February 2021
- KernelVersion:	5.11
- Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
--		Mario Limonciello <mario.limonciello@dell.com>,
- 		Prasanth KSR <prasanth.ksr@dell.com>
-+		Dell.Client.Kernel@dell.com
- Description:
- 		Devices support various authentication mechanisms which can be exposed
- 		as a separate configuration object.
-@@ -220,8 +220,8 @@ What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
- Date:		February 2021
- KernelVersion:	5.11
- Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
--		Mario Limonciello <mario.limonciello@dell.com>,
- 		Prasanth KSR <prasanth.ksr@dell.com>
-+		Dell.Client.Kernel@dell.com
- Description:
- 		A read-only attribute reads 1 if a reboot is necessary to apply
- 		pending BIOS attribute changes. Also, an uevent_KOBJ_CHANGE is
-@@ -249,8 +249,8 @@ What:		/sys/class/firmware-attributes/*/attributes/reset_bios
- Date:		February 2021
- KernelVersion:	5.11
- Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
--		Mario Limonciello <mario.limonciello@dell.com>,
- 		Prasanth KSR <prasanth.ksr@dell.com>
-+		Dell.Client.Kernel@dell.com
- Description:
- 		This attribute can be used to reset the BIOS Configuration.
- 		Specifically, it tells which type of reset BIOS configuration is being
-diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-index e6e0f7f834a7..5583da581025 100644
---- a/Documentation/ABI/testing/sysfs-platform-dell-smbios
-+++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-@@ -1,7 +1,7 @@
- What:		/sys/devices/platform/<platform>/tokens/*
- Date:		November 2017
- KernelVersion:	4.15
--Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-+Contact:	Dell.Client.Kernel@dell.com
- Description:
- 		A read-only description of Dell platform tokens
- 		available on the machine.
-diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-index e19144fd5d86..fd3a7ec79760 100644
---- a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-+++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-@@ -1,7 +1,7 @@
- What:		/sys/devices/platform/<platform>/force_power
- Date:		September 2017
- KernelVersion:	4.15
--Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-+Contact:	"Mario Limonciello" <mario.limonciello@outlook.com>
- Description:
- 		Modify the platform force power state, influencing
- 		Thunderbolt controllers to turn on or off when no
-diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-index 51c0f578bfce..90ec4987074b 100644
---- a/Documentation/ABI/testing/sysfs-power
-+++ b/Documentation/ABI/testing/sysfs-power
-@@ -295,7 +295,7 @@ Description:
- 
- What:		/sys/power/resume_offset
- Date:		April 2018
--Contact:	Mario Limonciello <mario.limonciello@dell.com>
-+Contact:	Mario Limonciello <mario.limonciello@outlook.com>
- Description:
- 		This file is used for telling the kernel an offset into a disk
- 		to use when hibernating the system such as with a swap file.
--- 
-2.31.1
 
