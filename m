@@ -2,188 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92CBC4320E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22E1C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBD76056C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE75D6056C
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239578AbhHJKBq (ORCPT
+        id S239622AbhHJKBq (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Tue, 10 Aug 2021 06:01:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41315 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237339AbhHJKBm (ORCPT
+Received: from mail.skyhub.de ([5.9.137.197]:58868 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238651AbhHJKBn (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 06:01:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628589677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q2bO85DnkavYMnz1uCIxRVuphnYKv0bSlUDaFLxQXPI=;
-        b=O46ss8CvquZVGS5nRQaNLHKU4jMPJlCUySJDav6bFR1wptkujeoyldFhKYA5rLcYF4WEWI
-        dnx5PNpCXWA+7CEoY8YY+ZMjjHjQ0OyklYxfg0jeQbXNPHSvPyrob2rrEh6yxocukB97M4
-        gxAfBoLqKoRpPh/zqGnZHES7WLkwNyI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-6CVLsDqMM4uNOr_SN3i9Fw-1; Tue, 10 Aug 2021 06:01:14 -0400
-X-MC-Unique: 6CVLsDqMM4uNOr_SN3i9Fw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 10 Aug 2021 06:01:43 -0400
+Received: from zn.tnic (p200300ec2f0d6500ceb5d19a4916b1c0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6500:ceb5:d19a:4916:b1c0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39C188799E0;
-        Tue, 10 Aug 2021 10:01:12 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.64.242.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE14460BF1;
-        Tue, 10 Aug 2021 10:01:06 +0000 (UTC)
-From:   Kate Hsuan <hpa@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A5ADF1EC0345;
+        Tue, 10 Aug 2021 12:01:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1628589673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oTu32iVimlCJBEs9G1dT+aamyt1Soz6HOUNPS9Il/NU=;
+        b=TKlN1ORdP1WE5hFE8kj3cV4QVXztsG+Uhq/HNqW/PUNvAPMXh9iebvzxOqUgmOn9CEUyg9
+        H2Ah1rvZ/TxW5aJyn+hR2a3k/BzYHVrYksOd7opuEhBdNF4GReu+6sXDIgaqXEsu5dtTE2
+        n0I7l+sppyJahrjxyF5KpRagkqDQxJU=
+Date:   Tue, 10 Aug 2021 12:01:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH 16/20] Move Intel uncore freq driver to intel/ directory to improve readability.
-Date:   Tue, 10 Aug 2021 17:58:28 +0800
-Message-Id: <20210810095832.4234-17-hpa@redhat.com>
-In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
-References: <20210810095832.4234-1-hpa@redhat.com>
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part1 RFC v4 02/36] x86/sev: Save the negotiated GHCB
+ version
+Message-ID: <YRJOkQe0W9/HyjjQ@zn.tnic>
+References: <20210707181506.30489-1-brijesh.singh@amd.com>
+ <20210707181506.30489-3-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210707181506.30489-3-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
+On Wed, Jul 07, 2021 at 01:14:32PM -0500, Brijesh Singh wrote:
+> The SEV-ES guest calls the sev_es_negotiate_protocol() to negotiate the
+> GHCB protocol version before establishing the GHCB. Cache the negotiated
+> GHCB version so that it can be used later.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/include/asm/sev.h   |  2 +-
+>  arch/x86/kernel/sev-shared.c | 17 ++++++++++++++---
+>  2 files changed, 15 insertions(+), 4 deletions(-)
+
+Also, while looking at this, all those defines in sev-common.h were
+bothering me for a while now because they're an unreadable mess because
+I have to go look at the GHCB spec, decode the corresponding MSR
+protocol request and then go and piece together each request value by
+verifying the masks...
+
+So I did the below which is, IMO, a lot more readable as you can follow
+it directly with the spec opened in parallel.
+
+Thus, if you don't have a better idea, I'd ask you to please add this to
+your set and continue defining the new MSR protocol requests this way so
+that it can be readable.
+
+Thx.
+
 ---
- drivers/platform/x86/Kconfig                      | 13 -------------
- drivers/platform/x86/Makefile                     |  5 -----
- drivers/platform/x86/intel/Kconfig                |  1 +
- drivers/platform/x86/intel/Makefile               |  1 +
- drivers/platform/x86/intel/uncore_freq/Kconfig    | 15 +++++++++++++++
- drivers/platform/x86/intel/uncore_freq/Makefile   |  6 ++++++
- .../uncore_freq}/intel-uncore-frequency.c         |  0
- 7 files changed, 23 insertions(+), 18 deletions(-)
- create mode 100644 drivers/platform/x86/intel/uncore_freq/Kconfig
- create mode 100644 drivers/platform/x86/intel/uncore_freq/Makefile
- rename drivers/platform/x86/{ => intel/uncore_freq}/intel-uncore-frequency.c (100%)
+From: Borislav Petkov <bp@suse.de>
+Date: Tue, 10 Aug 2021 11:39:57 +0200
+Subject: [PATCH] x86/sev: Get rid of excessive use of defines
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 735949c406d3..ba760d1cb873 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1026,19 +1026,6 @@ config INTEL_IMR
- 
- 	  If you are running on a Galileo/Quark say Y here.
- 
--
--
--config INTEL_UNCORE_FREQ_CONTROL
--	tristate "Intel Uncore frequency control driver"
--	depends on X86_64
--	help
--	  This driver allows control of uncore frequency limits on
--	  supported server platforms.
--	  Uncore frequency controls RING/LLC (last-level cache) clocks.
--
--	  To compile this driver as a module, choose M here: the module
--	  will be called intel-uncore-frequency.
--
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index e3ea8bf3647b..a657eef9e10f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -112,10 +112,5 @@ obj-$(CONFIG_MLX_PLATFORM)		+= mlx-platform.o
- obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
- obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
- 
--# Intel uncore drivers
--
--
--obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
--
- 
- obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index d3f1be45a25f..f1f09c7bd992 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -34,6 +34,7 @@ source "drivers/platform/x86/intel/rst/Kconfig"
- source "drivers/platform/x86/intel/smartconnect/Kconfig"
- source "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
- source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
-+source "drivers/platform/x86/intel/uncore_freq/Kconfig"
- 
- 
- endif # X86_PLATFORM_DRIVERS_INTEL
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 040109e2908a..a4993248cfde 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -35,3 +35,4 @@ obj-$(CONFIG_INTEL_RST)				+= rst/
- obj-$(CONFIG_INTEL_SMARTCONNECT)		+= smartconnect/
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
-+obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
-diff --git a/drivers/platform/x86/intel/uncore_freq/Kconfig b/drivers/platform/x86/intel/uncore_freq/Kconfig
-new file mode 100644
-index 000000000000..dd237195fb81
---- /dev/null
-+++ b/drivers/platform/x86/intel/uncore_freq/Kconfig
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
+Remove all the defines of masks and bit positions for the GHCB MSR
+protocol and use comments instead which correspond directly to the spec
+so that following those can be a lot easier and straightforward with the
+spec opened in parallel to the code.
+
+Aligh vertically while at it.
+
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/include/asm/sev-common.h | 51 +++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
+index 855b0ec9c4e8..28244f8ebde2 100644
+--- a/arch/x86/include/asm/sev-common.h
++++ b/arch/x86/include/asm/sev-common.h
+@@ -18,20 +18,19 @@
+ /* SEV Information Request/Response */
+ #define GHCB_MSR_SEV_INFO_RESP		0x001
+ #define GHCB_MSR_SEV_INFO_REQ		0x002
+-#define GHCB_MSR_VER_MAX_POS		48
+-#define GHCB_MSR_VER_MAX_MASK		0xffff
+-#define GHCB_MSR_VER_MIN_POS		32
+-#define GHCB_MSR_VER_MIN_MASK		0xffff
+-#define GHCB_MSR_CBIT_POS		24
+-#define GHCB_MSR_CBIT_MASK		0xff
+-#define GHCB_MSR_SEV_INFO(_max, _min, _cbit)				\
+-	((((_max) & GHCB_MSR_VER_MAX_MASK) << GHCB_MSR_VER_MAX_POS) |	\
+-	 (((_min) & GHCB_MSR_VER_MIN_MASK) << GHCB_MSR_VER_MIN_POS) |	\
+-	 (((_cbit) & GHCB_MSR_CBIT_MASK) << GHCB_MSR_CBIT_POS) |	\
 +
-+config INTEL_UNCORE_FREQ_CONTROL
-+	tristate "Intel Uncore frequency control driver"
-+	depends on X86_64
-+	help
-+	  This driver allows control of uncore frequency limits on
-+	  supported server platforms.
-+	  Uncore frequency controls RING/LLC (last-level cache) clocks.
++#define GHCB_MSR_SEV_INFO(_max, _min, _cbit)	\
++	/* GHCBData[63:48] */			\
++	((((_max) & 0xffff) << 48) |		\
++	 /* GHCBData[47:32] */			\
++	 (((_min) & 0xffff) << 32) |		\
++	 /* GHCBData[31:24] */			\
++	 (((_cbit) & 0xff)  << 24) |		\
+ 	 GHCB_MSR_SEV_INFO_RESP)
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel-uncore-frequency.
-diff --git a/drivers/platform/x86/intel/uncore_freq/Makefile b/drivers/platform/x86/intel/uncore_freq/Makefile
-new file mode 100644
-index 000000000000..c1516bed69e5
---- /dev/null
-+++ b/drivers/platform/x86/intel/uncore_freq/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
+ #define GHCB_MSR_INFO(v)		((v) & 0xfffUL)
+-#define GHCB_MSR_PROTO_MAX(v)		(((v) >> GHCB_MSR_VER_MAX_POS) & GHCB_MSR_VER_MAX_MASK)
+-#define GHCB_MSR_PROTO_MIN(v)		(((v) >> GHCB_MSR_VER_MIN_POS) & GHCB_MSR_VER_MIN_MASK)
++#define GHCB_MSR_PROTO_MAX(v)		(((v) >> 48) & 0xffff)
++#define GHCB_MSR_PROTO_MIN(v)		(((v) >> 32) & 0xffff)
+ 
+ /* CPUID Request/Response */
+ #define GHCB_MSR_CPUID_REQ		0x004
+@@ -46,27 +45,33 @@
+ #define GHCB_CPUID_REQ_EBX		1
+ #define GHCB_CPUID_REQ_ECX		2
+ #define GHCB_CPUID_REQ_EDX		3
+-#define GHCB_CPUID_REQ(fn, reg)		\
+-		(GHCB_MSR_CPUID_REQ | \
+-		(((unsigned long)reg & GHCB_MSR_CPUID_REG_MASK) << GHCB_MSR_CPUID_REG_POS) | \
+-		(((unsigned long)fn) << GHCB_MSR_CPUID_FUNC_POS))
++#define GHCB_CPUID_REQ(fn, reg)				\
++	/* GHCBData[11:0] */				\
++	(GHCB_MSR_CPUID_REQ |				\
++	/* GHCBData[31:12] */				\
++	(((unsigned long)reg & 0x3) << 30) |		\
++	/* GHCBData[63:32] */				\
++	(((unsigned long)fn) << 32))
+ 
+ /* AP Reset Hold */
+-#define GHCB_MSR_AP_RESET_HOLD_REQ		0x006
+-#define GHCB_MSR_AP_RESET_HOLD_RESP		0x007
++#define GHCB_MSR_AP_RESET_HOLD_REQ	0x006
++#define GHCB_MSR_AP_RESET_HOLD_RESP	0x007
+ 
+ /* GHCB Hypervisor Feature Request/Response */
+-#define GHCB_MSR_HV_FT_REQ			0x080
+-#define GHCB_MSR_HV_FT_RESP			0x081
++#define GHCB_MSR_HV_FT_REQ		0x080
++#define GHCB_MSR_HV_FT_RESP		0x081
+ 
+ #define GHCB_MSR_TERM_REQ		0x100
+ #define GHCB_MSR_TERM_REASON_SET_POS	12
+ #define GHCB_MSR_TERM_REASON_SET_MASK	0xf
+ #define GHCB_MSR_TERM_REASON_POS	16
+ #define GHCB_MSR_TERM_REASON_MASK	0xff
+-#define GHCB_SEV_TERM_REASON(reason_set, reason_val)						  \
+-	(((((u64)reason_set) &  GHCB_MSR_TERM_REASON_SET_MASK) << GHCB_MSR_TERM_REASON_SET_POS) | \
+-	((((u64)reason_val) & GHCB_MSR_TERM_REASON_MASK) << GHCB_MSR_TERM_REASON_POS))
 +
-+obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
-diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel/uncore_freq/intel-uncore-frequency.c
-similarity index 100%
-rename from drivers/platform/x86/intel-uncore-frequency.c
-rename to drivers/platform/x86/intel/uncore_freq/intel-uncore-frequency.c
++#define GHCB_SEV_TERM_REASON(reason_set, reason_val)	\
++	/* GHCBData[15:12] */				\
++	(((((u64)reason_set) &  0xf) << 12) |		\
++	 /* GHCBData[23:16] */				\
++	((((u64)reason_val) & 0xff) << 16))
+ 
+ #define GHCB_SEV_ES_GEN_REQ		0
+ #define GHCB_SEV_ES_PROT_UNSUPPORTED	1
 -- 
-2.31.1
+2.29.2
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
