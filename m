@@ -2,56 +2,45 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B7C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E038AC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E643260F25
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF770601FD
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 10:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239654AbhHJKCY (ORCPT
+        id S239674AbhHJKGQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 06:02:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23578 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239644AbhHJKCR (ORCPT
+        Tue, 10 Aug 2021 06:06:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59569 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239669AbhHJKGP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 06:02:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628589715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=m3LCly5veAM5JbmBfqRiWB5Ea8URtl1A80G69rdPHuE=;
-        b=P96GSDfrVCciTN9xmUk2utx1TmJ4kHwC26kxaNMUJA2VuGxWWEV1ZQGgAsW6Ye5m24hJc2
-        5GkWt9td9K0KQbIEeGU63QNsjbDcNoK4ED5Sh3lDeeEtpxKqExGk9hu9c2iiFnqdF+w1Q6
-        h3/NBln2WcazqSK9UAuZsE+AE5z6YaE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-hKKRCu8VNTODHrV7nhqvmw-1; Tue, 10 Aug 2021 06:01:52 -0400
-X-MC-Unique: hKKRCu8VNTODHrV7nhqvmw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6421190A7AA;
-        Tue, 10 Aug 2021 10:01:49 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.64.242.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB98D78C00;
-        Tue, 10 Aug 2021 10:01:40 +0000 (UTC)
-From:   Kate Hsuan <hpa@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
+        Tue, 10 Aug 2021 06:06:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="278619487"
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="278619487"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 03:05:53 -0700
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="638755375"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 03:05:48 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 10 Aug 2021 13:05:45 +0300
+Date:   Tue, 10 Aug 2021 13:05:45 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kate Hsuan <hpa@redhat.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Alex Hung <alex.hung@canonical.com>,
         Sujith Thomas <sujith.thomas@intel.com>,
         Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         David E Box <david.e.box@intel.com>,
         Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
@@ -59,165 +48,49 @@ To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH 20/20] Move Intel virtual botton driver to intel/ directory to improve readability.
-Date:   Tue, 10 Aug 2021 17:58:32 +0800
-Message-Id: <20210810095832.4234-21-hpa@redhat.com>
-In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 09/20] Move Intel SCU IPC of pdx86 to intel directory to
+ increase readability.
+Message-ID: <YRJPebbK3uQBU9K8@lahna>
 References: <20210810095832.4234-1-hpa@redhat.com>
+ <20210810095832.4234-10-hpa@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210810095832.4234-10-hpa@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
----
- drivers/platform/x86/Kconfig                  | 15 ---------------
- drivers/platform/x86/Makefile                 |  2 --
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           | 19 +++++++++----------
- drivers/platform/x86/intel/vbtn/Kconfig       | 16 ++++++++++++++++
- drivers/platform/x86/intel/vbtn/Makefile      |  6 ++++++
- .../x86/{ => intel/vbtn}/intel-vbtn.c         |  0
- 7 files changed, 32 insertions(+), 27 deletions(-)
- create mode 100644 drivers/platform/x86/intel/vbtn/Kconfig
- create mode 100644 drivers/platform/x86/intel/vbtn/Makefile
- rename drivers/platform/x86/{ => intel/vbtn}/intel-vbtn.c (100%)
+Hi,
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2426f8feb41f..a27584b77c52 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -632,21 +632,6 @@ config THINKPAD_LMI
- 
- source "drivers/platform/x86/intel/Kconfig"
- 
--
--
--
--config INTEL_VBTN
--	tristate "INTEL VIRTUAL BUTTON"
--	depends on ACPI
--	depends on INPUT
--	select INPUT_SPARSEKMAP
--	help
--	  This driver provides support for the Intel Virtual Button interface.
--	  Some laptops require this driver for power button support.
--
--	  To compile this driver as a module, choose M here: the module will
--	  be called intel_vbtn.
--
- config MSI_LAPTOP
- 	tristate "MSI Laptop Extras"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index d3992588408a..a797e3444e63 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -66,8 +66,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- # Intel
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
- 
--obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
--
- # MSI
- obj-$(CONFIG_MSI_LAPTOP)	+= msi-laptop.o
- obj-$(CONFIG_MSI_WMI)		+= msi-wmi.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index afc0f70c45ac..2f376edab328 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -38,6 +38,7 @@ source "drivers/platform/x86/intel/uncore_freq/Kconfig"
- source "drivers/platform/x86/intel/int0002/Kconfig"
- source "drivers/platform/x86/intel/menlow/Kconfig"
- source "drivers/platform/x86/intel/oaktrail/Kconfig"
-+source "drivers/platform/x86/intel/vbtn/Kconfig"
- 
- 
- endif # X86_PLATFORM_DRIVERS_INTEL
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 6acf5db0e847..5decc9eb1b0e 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -12,8 +12,9 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= hid/
- obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
- obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= wmi/
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
--obj-$(CONFIG_INTEL_MENLOW)		+= menlow/
-+obj-$(CONFIG_INTEL_MENLOW)			+= menlow/
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= oaktrail/
-+obj-$(CONFIG_INTEL_VBTN)			+= vbtn/
- 
- # Intel PMIC / PMC / P-Unit devices
- obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= bxtwc/
-@@ -24,19 +25,17 @@ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
- obj-$(CONFIG_INTEL_PMT_TELEMETRY)	+= pmt/
- obj-$(CONFIG_INTEL_PMT_CRASHLOG)	+= pmt/
- obj-$(CONFIG_INTEL_PUNIT_IPC)		+= punit/
--obj-$(CONFIG_INTEL_SCU_IPC)		+= scu/
--obj-$(CONFIG_INTEL_SCU_PCI)		+= scu/
-+obj-$(CONFIG_INTEL_SCU_IPC)			+= scu/
-+obj-$(CONFIG_INTEL_SCU_PCI)			+= scu/
- obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= scu/
--obj-$(CONFIG_INTEL_SCU_WDT)		+= scu/
-+obj-$(CONFIG_INTEL_SCU_WDT)			+= scu/
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= scu/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
- 
- # Intel uncore drivers
--obj-$(CONFIG_INTEL_IPS)				+= ips/
--obj-$(CONFIG_INTEL_RST)				+= rst/
--obj-$(CONFIG_INTEL_SMARTCONNECT)		+= smartconnect/
-+obj-$(CONFIG_INTEL_IPS)						+= ips/
-+obj-$(CONFIG_INTEL_RST)						+= rst/
-+obj-$(CONFIG_INTEL_SMARTCONNECT)			+= smartconnect/
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
--obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
-+obj-$(CONFIG_INTEL_TURBO_MAX_3)				+= turbo_max_3/
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
--
--
-diff --git a/drivers/platform/x86/intel/vbtn/Kconfig b/drivers/platform/x86/intel/vbtn/Kconfig
-new file mode 100644
-index 000000000000..c5dfd520530d
---- /dev/null
-+++ b/drivers/platform/x86/intel/vbtn/Kconfig
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+config INTEL_VBTN
-+	tristate "INTEL VIRTUAL BUTTON"
-+	depends on ACPI
-+	depends on INPUT
-+	select INPUT_SPARSEKMAP
-+	help
-+	  This driver provides support for the Intel Virtual Button interface.
-+	  Some laptops require this driver for power button support.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_vbtn.
-diff --git a/drivers/platform/x86/intel/vbtn/Makefile b/drivers/platform/x86/intel/vbtn/Makefile
-new file mode 100644
-index 000000000000..596833e13a31
---- /dev/null
-+++ b/drivers/platform/x86/intel/vbtn/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel/vbtn/intel-vbtn.c
-similarity index 100%
-rename from drivers/platform/x86/intel-vbtn.c
-rename to drivers/platform/x86/intel/vbtn/intel-vbtn.c
--- 
-2.31.1
+No objections, I think this is good idea but..
 
+On Tue, Aug 10, 2021 at 05:58:21PM +0800, Kate Hsuan wrote:
+
+.. I suggest to add proper commit message here. Many maintainers ignore
+patches that don't have one.
+
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> ---
+>  drivers/platform/x86/Kconfig                  | 47 -----------------
+>  drivers/platform/x86/Makefile                 |  6 +--
+>  drivers/platform/x86/intel/Kconfig            |  1 +
+>  drivers/platform/x86/intel/Makefile           |  5 ++
+>  drivers/platform/x86/intel/scu/Kconfig        | 52 +++++++++++++++++++
+>  drivers/platform/x86/intel/scu/Makefile       | 11 ++++
+>  .../x86/{ => intel/scu}/intel_scu_ipc.c       |  0
+>  .../x86/{ => intel/scu}/intel_scu_ipcutil.c   |  0
+>  .../x86/{ => intel/scu}/intel_scu_pcidrv.c    |  0
+>  .../x86/{ => intel/scu}/intel_scu_pltdrv.c    |  0
+>  .../x86/{ => intel/scu}/intel_scu_wdt.c       |  0
+>  11 files changed, 70 insertions(+), 52 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/scu/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/scu/Makefile
+>  rename drivers/platform/x86/{ => intel/scu}/intel_scu_ipc.c (100%)
+>  rename drivers/platform/x86/{ => intel/scu}/intel_scu_ipcutil.c (100%)
+>  rename drivers/platform/x86/{ => intel/scu}/intel_scu_pcidrv.c (100%)
+>  rename drivers/platform/x86/{ => intel/scu}/intel_scu_pltdrv.c (100%)
+>  rename drivers/platform/x86/{ => intel/scu}/intel_scu_wdt.c (100%)
