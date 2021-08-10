@@ -2,136 +2,103 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8B9C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6EC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F40D260F41
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E783610FE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 20:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232851AbhHJUJa (ORCPT
+        id S234018AbhHJUyB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 16:09:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:55710 "EHLO mga18.intel.com"
+        Tue, 10 Aug 2021 16:54:01 -0400
+Received: from sauhun.de ([88.99.104.3]:49056 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229788AbhHJUJa (ORCPT
+        id S234169AbhHJUx5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 16:09:30 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="202152493"
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="202152493"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 13:09:06 -0700
-X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
-   d="scan'208";a="515971399"
-Received: from pdmuelle-desk2.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.213.166.202])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 13:09:05 -0700
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
- <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
- <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <4f9effcb-055b-51ee-6722-c9f0cc1d8acf@linux.intel.com>
-Date:   Tue, 10 Aug 2021 13:09:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.11.0
+        Tue, 10 Aug 2021 16:53:57 -0400
+X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Aug 2021 16:53:56 EDT
+Received: from localhost (p5486ce3a.dip0.t-ipconnect.de [84.134.206.58])
+        by pokefinder.org (Postfix) with ESMTPSA id 725B22C00D7;
+        Tue, 10 Aug 2021 22:44:38 +0200 (CEST)
+Date:   Tue, 10 Aug 2021 22:44:38 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 1/4] i2c: acpi: Add an i2c_acpi_client_count() helper
+ function
+Message-ID: <YRLlNh4MrHyVobvR@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+References: <20210803160044.158802-1-hdegoede@redhat.com>
+ <20210803160044.158802-2-hdegoede@redhat.com>
+ <YQlzzy933V9XMHqt@lahna>
+ <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XUVmFIGdhrbGtadj"
+Content-Disposition: inline
+In-Reply-To: <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
+--XUVmFIGdhrbGtadj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 8/10/21 12:48 PM, Tom Lendacky wrote:
-> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
->>
->>
->> On 7/27/21 3:26 PM, Tom Lendacky wrote:
->>> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
->>> index de01903c3735..cafed6456d45 100644
->>> --- a/arch/x86/kernel/head64.c
->>> +++ b/arch/x86/kernel/head64.c
->>> @@ -19,7 +19,7 @@
->>>    #include <linux/start_kernel.h>
->>>    #include <linux/io.h>
->>>    #include <linux/memblock.h>
->>> -#include <linux/mem_encrypt.h>
->>> +#include <linux/protected_guest.h>
->>>    #include <linux/pgtable.h>
->>>      #include <asm/processor.h>
->>> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
->>> physaddr,
->>>         * there is no need to zero it after changing the memory encryption
->>>         * attribute.
->>>         */
->>> -    if (mem_encrypt_active()) {
->>> +    if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
->>>            vaddr = (unsigned long)__start_bss_decrypted;
->>>            vaddr_end = (unsigned long)__end_bss_decrypted;
->>
->>
->> Since this change is specific to AMD, can you replace PATTR_MEM_ENCRYPT with
->> prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not used in
->> TDX.
-> 
-> This is a direct replacement for now. I think the change you're requesting
-> should be done as part of the TDX support patches so it's clear why it is
-> being changed.
 
-Ok. I will include it part of TDX changes.
+> >> We have 3 files now which have the need to count the number of
+> >> I2cSerialBus resources in an ACPI-device's resource-list.
+> >>
+> >> Currently all implement their own helper function for this,
+> >> add a generic helper function to replace the 3 implementations.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >=20
+> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>=20
+> Thank you, Wolfram are you also ok with me merging this
+> patch through the pdx86 tree?
 
-> 
-> But, wouldn't TDX still need to do something with this shared/unencrypted
-> area, though? Or since it is shared, there's actually nothing you need to
-> do (the bss decrpyted section exists even if CONFIG_AMD_MEM_ENCRYPT is not
-> configured)?
+Sure!
 
-Kirill had a requirement to turn on CONFIG_AMD_MEM_ENCRYPT for adding lazy
-accept support in TDX guest kernel. Kirill, can you add details here?
+Acked-by: Wolfram Sang <wsa@kernel.org>
 
-> 
-> Thanks,
-> Tom
-> 
->>
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+--XUVmFIGdhrbGtadj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmES5TUACgkQFA3kzBSg
+KbaqcA/+PD08vkVwJP3H6+FYae3PadhO8O+PXXrjdZ4o4HT0gsn/SrSxO1Vcqntt
+H1s6IfOlwKtfxwb7vH7SM/0XFpBISC0xnc2HKssRg2E0qV2A5M58QYOgGuiv+1y6
+ozSOyA1T8AWRwIkujdYoGamTnDiyGMZdR59lm8TWFTgYfAebJWh5TTdiPOaMwv2N
+1/yqbRSiCe9+6E0J2TAzHf24dPPj1uhLYBLkjluimoKZvHKt1UCet6hdQyVAhyL+
+MPDKkmFZBY0PJNK3TV+bXihTpJg3Xc6ECkDTrUOYe4SX4aOWprB9cXgVdgxd0Kjy
+AovrnIbUT5hgv5mpZbu4b5wwzv5cVyqC9rmp8KVTkVit2lGbw0iWbk1mU+Fl2HTU
+asZ/zKHnDhYnw91fCiJY2OwrQhug3NmYY1Ax4b+70ZD9VUvXbERTV7mp75twjjMZ
+z+4EQJKp5WtiHAzF7eBwf/8/W5ms0tLPwFjU/AVBN7XpibdLIODXfROyn8xKdUKh
+BoIzcPwNqRa0XAL7L0rU4K89bv2S/HNd9nssqnH3kZIWuZ+prkFrsYry/u+O/swN
+RcJbJ5l76ZrJe4gmM7jiQaJzkpEzpsWIgCc3dT0JwmAhoBq8grFNqc/wFAz5twBB
+axB+fsVAStwSkgEoDntD9xWtgIw8xWf9WdQuyFylrTwzQsHVpXg=
+=WnY9
+-----END PGP SIGNATURE-----
+
+--XUVmFIGdhrbGtadj--
