@@ -2,99 +2,105 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E77EC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 13:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EA6C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 13:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640846101E
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 13:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893D060EE7
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 10 Aug 2021 13:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239614AbhHJNY5 (ORCPT
+        id S238701AbhHJN2J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 10 Aug 2021 09:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239647AbhHJNY5 (ORCPT
+        Tue, 10 Aug 2021 09:28:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:16224 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235376AbhHJN2J (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 10 Aug 2021 09:24:57 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35323C0613D3;
-        Tue, 10 Aug 2021 06:24:35 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id oa17so8242925pjb.1;
-        Tue, 10 Aug 2021 06:24:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wTld1j5C9iELzw+HFUUgfHK9dJLHFW+XXXF2zLVUiLA=;
-        b=tSO1nPziwxj96S2vnyuQnRLStktazMPl8UWjSQKZHIyj2QP+G/xmukbn3zEUSkWb5D
-         pFXTuD4PMcnj5eCPz46pYIc9DLiqy7mSQ4JrS6dnbrGU3pXyyhPd3xLf9WGo/z5SgG1S
-         sZqwF7+c9tF9EKOD04Q/kTHs9GvrGpfndEaG/iCVgWgUQlCRgzYgIYMxB3syVzrXYVax
-         OHVoJzVQg4Haa/m7WI1cjuehuL92Q98JknJ4xUkbBlJQdDNe+UppxSV5/PI2UglHPxl/
-         Qmrj0fdl5m+mEv7zhd4GRSP49YPevvhmYACJ/oLMmkpNmDtY68B4KcgBHvJ6i9URZaOx
-         DiSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wTld1j5C9iELzw+HFUUgfHK9dJLHFW+XXXF2zLVUiLA=;
-        b=Zp/tWOlqpxktUGCt6aYU3xSUOnpeA5sElxgTKbTimSU8wVveoV2iC7sqmG3p1zNRUr
-         wiEhn1LA7y8AX3VFM94VPEJj2cZ7aCch42jtIWTgeQOoBCw4rqUpYInAoymLXUFrMKZQ
-         7eYXnLJYwaGFdYQui2iABeb/VBbC8fKAXAnFm+IRmy/jFpNx9NhoLkLag2OhDVxUFOdk
-         u/5LsATGo9nW2qE31hl2quOe0b3OzDo3YG+xY0GSp3s1PeLuCd3Q18Qh+ggv2FRqUi0d
-         +n3uYI7p2fRMybyBahwt0nNg9iDJNA5+bGemMy7c/ADhOMf6rFUC03k9gwuxs0kXfQqD
-         ABoQ==
-X-Gm-Message-State: AOAM531ZkwZFInFwCayDMDP3Ncy3+E5yPB//sbKU8yjhbZOvID02Xrau
-        AkoMd3+yZ/r1d7ylNSpjnuyKKDYZkUoU4mYuoN0=
-X-Google-Smtp-Source: ABdhPJxitYE9+0tmGCAfQKTa9uqO6ddpD9sAYGpZvTGHHVKcT9ZzQhtVkQ9L+yySQvH/nXDP8d1mLVGVC9IT+iRsxRo=
-X-Received: by 2002:aa7:860e:0:b029:3bd:7e49:7a14 with SMTP id
- p14-20020aa7860e0000b02903bd7e497a14mr29575198pfn.40.1628601874568; Tue, 10
- Aug 2021 06:24:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210810095832.4234-1-hpa@redhat.com>
-In-Reply-To: <20210810095832.4234-1-hpa@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 10 Aug 2021 16:23:57 +0300
-Message-ID: <CAHp75Vde0yWoKh4KOP46iwXK6SBAcw1Y7Snw4PWoi1HRspHJDQ@mail.gmail.com>
-Subject: Re: [PATCH 00/20] Move Intel platform drivers to intel directory to
- improve readability.
+        Tue, 10 Aug 2021 09:28:09 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10070"; a="214886544"
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="214886544"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 06:27:46 -0700
+X-IronPort-AV: E=Sophos;i="5.84,310,1620716400"; 
+   d="scan'208";a="506142307"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2021 06:27:42 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mDRn5-007PyS-SM; Tue, 10 Aug 2021 16:27:35 +0300
+Date:   Tue, 10 Aug 2021 16:27:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Kate Hsuan <hpa@redhat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Alex Hung <alex.hung@canonical.com>,
         Sujith Thomas <sujith.thomas@intel.com>,
         Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
         David E Box <david.e.box@intel.com>,
         Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Daniel Scally <djrscally@gmail.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
         platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 09/20] Move Intel SCU IPC of pdx86 to intel directory to
+ increase readability.
+Message-ID: <YRJ+x7s+xYgzme/w@smile.fi.intel.com>
+References: <20210810095832.4234-1-hpa@redhat.com>
+ <20210810095832.4234-10-hpa@redhat.com>
+ <YRJPebbK3uQBU9K8@lahna>
+ <CAEth8oE5we991RS12AJdFHtfD4kJkzFd4A0wHdEFKkX-i6kmvg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEth8oE5we991RS12AJdFHtfD4kJkzFd4A0wHdEFKkX-i6kmvg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 4:20 PM Kate Hsuan <hpa@redhat.com> wrote:
->
-> All the intel platform specific drivers are moved to intel/.
-> It makes more clear file structure to improve the readability.
+On Tue, Aug 10, 2021 at 07:43:42PM +0800, Kate Hsuan wrote:
+> Hi Mika,
+> 
+> Thanks for your suggestion.
+> I'll add them to the patches and resend them again.
+> 
+> Thank you.
 
-Thanks for doing this!
-I'll review it later on (this or next week), meanwhile can you rebase
-it on top of PDx86 for-next?
+Please, do not top post!
 
+> On Tue, Aug 10, 2021 at 6:06 PM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > Hi,
+> >
+> > No objections, I think this is good idea but..
+> >
+> > On Tue, Aug 10, 2021 at 05:58:21PM +0800, Kate Hsuan wrote:
+> >
+> > .. I suggest to add proper commit message here. Many maintainers ignore
+> > patches that don't have one.
+
+> > >  rename drivers/platform/x86/{ => intel/scu}/intel_scu_ipc.c (100%)
+> > >  rename drivers/platform/x86/{ => intel/scu}/intel_scu_ipcutil.c (100%)
+> > >  rename drivers/platform/x86/{ => intel/scu}/intel_scu_pcidrv.c (100%)
+> > >  rename drivers/platform/x86/{ => intel/scu}/intel_scu_pltdrv.c (100%)
+> > >  rename drivers/platform/x86/{ => intel/scu}/intel_scu_wdt.c (100%)
+
+Besides what Mika said this should follow the example of pmt, like dropping the
+intel_scu prefix from the files, but leave it for the module (see Makefile
+tricks for the details how to achieve this).
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
