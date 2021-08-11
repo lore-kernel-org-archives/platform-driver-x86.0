@@ -2,112 +2,172 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E801C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 09:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7114EC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA2160F21
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 09:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A656023B
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236462AbhHKJfO (ORCPT
+        id S237312AbhHKMTl (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Aug 2021 05:35:14 -0400
-Received: from m12-12.163.com ([220.181.12.12]:56982 "EHLO m12-12.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236320AbhHKJfN (ORCPT
+        Wed, 11 Aug 2021 08:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237351AbhHKMTc (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Aug 2021 05:35:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Wbsn2
-        O/J6vFmAj3DGGFuogIXi2AVx6ruHiH1V6mPGMk=; b=mupELqWa8QDZuSQTK1/9h
-        eVwrby7tqv0uOCLao7iDjrTz22QNbNkbAay0bgkc88Fslpnfausg7N3jxA6zvgiT
-        oRBusb8R1W7LMgliZuKiznA2BomQ2+tDpSK42HjmzRvw69p7c/uAJzb/+zcKpsf4
-        dVcLztd50wQlCDfrjTF9Ok=
-Received: from localhost.localdomain (unknown [223.104.68.7])
-        by smtp8 (Coremail) with SMTP id DMCowABHuySZmRNhgrW4TQ--.1768S2;
-        Wed, 11 Aug 2021 17:34:21 +0800 (CST)
-From:   Slark Xiao <slark_xiao@163.com>
-To:     hmh@hmh.eng.br, hdegoede@redhat.com
-Cc:     ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Slark Xiao <slark_xiao@163.com>
-Subject: [PATCH] [v2,1/1] Fix WWAN device disabled issue after S3 deep
-Date:   Wed, 11 Aug 2021 17:34:07 +0800
-Message-Id: <20210811093407.5583-1-slark_xiao@163.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 11 Aug 2021 08:19:32 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD71C0613D5
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Aug 2021 05:19:07 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id p38so5406649lfa.0
+        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Aug 2021 05:19:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QRfjFOudnOiwA+M7/UAaVDTJpihSFBYjea6mHo6NSYA=;
+        b=FrdABWFOYFHYVQYvsn9eIFG1XXIqUnaFBCPEPrWXTbkImjcaYqnfbbDKJbjXTj8n2z
+         XKpeeMl+HDYMaw1njH7BCzSmXb2GWH1pBn4+E1w1Zkax9zqjTCMN0ceFLpN0oNSL7p4h
+         tTOYo06jVnb3EuSp9CAkw3RajLjCGRh5DcWWOVaUC3oCLa3fiXHjMHrKiPKxkbd9MHf4
+         XWiG9YDES/j+Q6K8AbBgatHhy3Ey7EF4Mw9l8egNLjOvPiIJBkLqlDJHfGJd1OD2IwY9
+         /Dj5oeYRUTA55X3eykWwXtvq+RdRhaXu8H17iGSYXfRtDXdJr3ACYPa147h4M5kexh1Q
+         1YFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QRfjFOudnOiwA+M7/UAaVDTJpihSFBYjea6mHo6NSYA=;
+        b=ZO9wUEMzSKvHT/LU7+RfS/oYg7L0PAcVLDEpvzt6gBul6i4LHvXEV12K2N58cbVieU
+         alBh0Oy6MDvENyxwz4QTMdN3nWl4/W5pTpYns0JPpqpANxe4LqP8V2ySfZ2bj90VTvU8
+         qdRYHh0J+OguF67qUfOu6Y2vR7r+mAC3vZ+bBugrEreKduN4JGDvt8u9kEiit8MJXOhK
+         4BDUGa59Zk1ILP3aE3sJqWBALKpra9SIswLa0aPvezaE2pt6j71wnKa7UfhwJLsN1BPi
+         lX3KoEfAOyUMtv3B/0MKq3oCFjTsfVgBfTGv6YmRnoE+qjjjMAMf/6diJuhpe5dubCaP
+         Z9Gw==
+X-Gm-Message-State: AOAM531RDCEj0GGB/9IibCM5ssSJjuV5bD4cGLwzfDiSRH2VXgci2xAO
+        AFLXbyBddZf+phTWBKd9mHcGIQ==
+X-Google-Smtp-Source: ABdhPJwYqCmmrayYkwT8dKOh/tHUuUvcGTl6bQD02skpgV77PxIfPFHOo1k2HSgXk2Z2qwWhaj6ksA==
+X-Received: by 2002:ac2:50d8:: with SMTP id h24mr4762329lfm.631.1628684346244;
+        Wed, 11 Aug 2021 05:19:06 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id w7sm2337599lft.285.2021.08.11.05.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Aug 2021 05:19:05 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id A68EB102A2E; Wed, 11 Aug 2021 15:19:17 +0300 (+03)
+Date:   Wed, 11 Aug 2021 15:19:17 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
+ with prot_guest_has()
+Message-ID: <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+ <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
+ <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: DMCowABHuySZmRNhgrW4TQ--.1768S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AryUuF17Gr1rJFWxury7trb_yoW8tr4xpr
-        Z0yFW0yFW7K3yYg3WxAw4UWay5Cr98C3yxKFZFkw109FWqgFyrJ3yxtFWSqF43Gry8Ja12
-        va1kXr48Aa1UZ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jaa0PUUUUU=
-X-Originating-IP: [223.104.68.7]
-X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbivx3rZFWBvNSAzgAAsf
+In-Reply-To: <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-When WWAN device wake from S3 deep, under thinkpad platform,
-WWAN would be disabled. This disable status could be checked
- by command 'nmcli r wwan' or 'rfkill list'.
-Issue analysis as below:
-  When host resume from S3 deep, thinkpad_acpi driver would
-call hotkey_resume() function. Finnaly, it will use
-wan_get_status to check the current status of WWAN device.
-During this resume progress, wan_get_status would always
-return off even WWAN boot up completely.
-  If wan_get_status() return off, rfkill_set_sw_state() would set WWAN's
-status as disabled.
-  This may be a fault of LENOVO BIOS.
-  Workaround is add a WWAN device check before rfkill_set_sw_state().
-If it's a Foxconn WWAN device, then we will ignore to do a status update.
+On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
+> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
+> > 
+> > 
+> > On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> >> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> >> index de01903c3735..cafed6456d45 100644
+> >> --- a/arch/x86/kernel/head64.c
+> >> +++ b/arch/x86/kernel/head64.c
+> >> @@ -19,7 +19,7 @@
+> >>   #include <linux/start_kernel.h>
+> >>   #include <linux/io.h>
+> >>   #include <linux/memblock.h>
+> >> -#include <linux/mem_encrypt.h>
+> >> +#include <linux/protected_guest.h>
+> >>   #include <linux/pgtable.h>
+> >>     #include <asm/processor.h>
+> >> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
+> >> physaddr,
+> >>        * there is no need to zero it after changing the memory encryption
+> >>        * attribute.
+> >>        */
+> >> -    if (mem_encrypt_active()) {
+> >> +    if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
+> >>           vaddr = (unsigned long)__start_bss_decrypted;
+> >>           vaddr_end = (unsigned long)__end_bss_decrypted;
+> > 
+> > 
+> > Since this change is specific to AMD, can you replace PATTR_MEM_ENCRYPT with
+> > prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not used in
+> > TDX.
+> 
+> This is a direct replacement for now.
 
-Signed-off-by: Slark Xiao <slark_xiao@163.com>
----
- drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+With current implementation of prot_guest_has() for TDX it breaks boot for
+me.
 
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index 603156a6e3ed..e3b7bc0e7a33 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -1159,6 +1159,13 @@ struct tpacpi_rfk_ops {
- 
- static struct tpacpi_rfk *tpacpi_rfkill_switches[TPACPI_RFK_SW_MAX];
- 
-+/*Foxconn SDX55 T77W175 products. All available device ID*/
-+static const struct pci_device_id foxconn_device_ids[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AB) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AF) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0B4) },
-+	{}
-+};
- /* Query FW and update rfkill sw state for a given rfkill switch */
- static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
- {
-@@ -1182,8 +1189,13 @@ static void tpacpi_rfk_update_swstate_all(void)
- {
- 	unsigned int i;
- 
--	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
--		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
-+	for (i = 0; i < TPACPI_RFK_SW_MAX; i++) {
-+		if (pci_dev_present(foxconn_device_ids) && i == 1)
-+			pr_info("Find Foxconn wwan device, ignore to update rfkill switch status\n");
-+		else
-+			tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
-+
-+	}
- }
- 
- /*
+Looking at code agains, now I *think* the reason is accessing a global
+variable from __startup_64() inside TDX version of prot_guest_has().
+
+__startup_64() is special. If you access any global variable you need to
+use fixup_pointer(). See comment before __startup_64().
+
+I'm not sure how you get away with accessing sme_me_mask directly from
+there. Any clues? Maybe just a luck and complier generates code just right
+for your case, I donno.
+
+A separate point is that TDX version of prot_guest_has() relies on
+cpu_feature_enabled() which is not ready at this point.
+
+I think __bss_decrypted fixup has to be done if sme_me_mask is non-zero.
+Or just do it uncoditionally because it's NOP for sme_me_mask == 0.
+
+> I think the change you're requesting
+> should be done as part of the TDX support patches so it's clear why it is
+> being changed.
+> 
+> But, wouldn't TDX still need to do something with this shared/unencrypted
+> area, though? Or since it is shared, there's actually nothing you need to
+> do (the bss decrpyted section exists even if CONFIG_AMD_MEM_ENCRYPT is not
+> configured)?
+
+AFAICS, only kvmclock uses __bss_decrypted. We don't enable kvmclock in
+TDX at the moment. It may change in the future.
+
 -- 
-2.25.1
-
-
+ Kirill A. Shutemov
