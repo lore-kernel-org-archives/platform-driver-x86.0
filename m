@@ -2,172 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7114EC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC90C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51A656023B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE5E610A7
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237312AbhHKMTl (ORCPT
+        id S229933AbhHKMhh (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Aug 2021 08:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237351AbhHKMTc (ORCPT
+        Wed, 11 Aug 2021 08:37:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39987 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230091AbhHKMhg (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Aug 2021 08:19:32 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD71C0613D5
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Aug 2021 05:19:07 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id p38so5406649lfa.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 11 Aug 2021 05:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=QRfjFOudnOiwA+M7/UAaVDTJpihSFBYjea6mHo6NSYA=;
-        b=FrdABWFOYFHYVQYvsn9eIFG1XXIqUnaFBCPEPrWXTbkImjcaYqnfbbDKJbjXTj8n2z
-         XKpeeMl+HDYMaw1njH7BCzSmXb2GWH1pBn4+E1w1Zkax9zqjTCMN0ceFLpN0oNSL7p4h
-         tTOYo06jVnb3EuSp9CAkw3RajLjCGRh5DcWWOVaUC3oCLa3fiXHjMHrKiPKxkbd9MHf4
-         XWiG9YDES/j+Q6K8AbBgatHhy3Ey7EF4Mw9l8egNLjOvPiIJBkLqlDJHfGJd1OD2IwY9
-         /Dj5oeYRUTA55X3eykWwXtvq+RdRhaXu8H17iGSYXfRtDXdJr3ACYPa147h4M5kexh1Q
-         1YFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=QRfjFOudnOiwA+M7/UAaVDTJpihSFBYjea6mHo6NSYA=;
-        b=ZO9wUEMzSKvHT/LU7+RfS/oYg7L0PAcVLDEpvzt6gBul6i4LHvXEV12K2N58cbVieU
-         alBh0Oy6MDvENyxwz4QTMdN3nWl4/W5pTpYns0JPpqpANxe4LqP8V2ySfZ2bj90VTvU8
-         qdRYHh0J+OguF67qUfOu6Y2vR7r+mAC3vZ+bBugrEreKduN4JGDvt8u9kEiit8MJXOhK
-         4BDUGa59Zk1ILP3aE3sJqWBALKpra9SIswLa0aPvezaE2pt6j71wnKa7UfhwJLsN1BPi
-         lX3KoEfAOyUMtv3B/0MKq3oCFjTsfVgBfTGv6YmRnoE+qjjjMAMf/6diJuhpe5dubCaP
-         Z9Gw==
-X-Gm-Message-State: AOAM531RDCEj0GGB/9IibCM5ssSJjuV5bD4cGLwzfDiSRH2VXgci2xAO
-        AFLXbyBddZf+phTWBKd9mHcGIQ==
-X-Google-Smtp-Source: ABdhPJwYqCmmrayYkwT8dKOh/tHUuUvcGTl6bQD02skpgV77PxIfPFHOo1k2HSgXk2Z2qwWhaj6ksA==
-X-Received: by 2002:ac2:50d8:: with SMTP id h24mr4762329lfm.631.1628684346244;
-        Wed, 11 Aug 2021 05:19:06 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w7sm2337599lft.285.2021.08.11.05.19.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Aug 2021 05:19:05 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A68EB102A2E; Wed, 11 Aug 2021 15:19:17 +0300 (+03)
-Date:   Wed, 11 Aug 2021 15:19:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-Message-ID: <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
- <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
- <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
+        Wed, 11 Aug 2021 08:37:36 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="300702499"
+X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
+   d="scan'208";a="300702499"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 05:37:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
+   d="scan'208";a="484850479"
+Received: from intel-tiger-lake-client-platform.iind.intel.com ([10.224.178.120])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Aug 2021 05:37:10 -0700
+From:   Shravan S <s.shravan@intel.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com,
+        platform-driver-x86@vger.kernel.org
+Cc:     sudhakar.an@intel.com, s.shravan@intel.com
+Subject: [PATCH V5 0/1] platform/x86: BIOS SAR driver for Intel M.2 Modem
+Date:   Wed, 11 Aug 2021 18:06:06 +0530
+Message-Id: <20210811123607.14169-1-s.shravan@intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
-> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
-> > 
-> > 
-> > On 7/27/21 3:26 PM, Tom Lendacky wrote:
-> >> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> >> index de01903c3735..cafed6456d45 100644
-> >> --- a/arch/x86/kernel/head64.c
-> >> +++ b/arch/x86/kernel/head64.c
-> >> @@ -19,7 +19,7 @@
-> >>   #include <linux/start_kernel.h>
-> >>   #include <linux/io.h>
-> >>   #include <linux/memblock.h>
-> >> -#include <linux/mem_encrypt.h>
-> >> +#include <linux/protected_guest.h>
-> >>   #include <linux/pgtable.h>
-> >>     #include <asm/processor.h>
-> >> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
-> >> physaddr,
-> >>        * there is no need to zero it after changing the memory encryption
-> >>        * attribute.
-> >>        */
-> >> -    if (mem_encrypt_active()) {
-> >> +    if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
-> >>           vaddr = (unsigned long)__start_bss_decrypted;
-> >>           vaddr_end = (unsigned long)__end_bss_decrypted;
-> > 
-> > 
-> > Since this change is specific to AMD, can you replace PATTR_MEM_ENCRYPT with
-> > prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not used in
-> > TDX.
-> 
-> This is a direct replacement for now.
+SAR (Specific Absorption Rate) driver is a host driver implemented for Linux or chrome platform to limit the exposure of human body to RF frequency by informing the Intel M.2 modem to regulate the RF power based on SAR data obtained from the sensors captured in the BIOS. ACPI interface exposes this data from the BIOS to SAR driver. The front end application in userspace ( eg: Modem Manager) will interact with SAR driver to obtain information like the device mode (Example: tablets, laptops, etx), Antenna index, baseband index, SAR table index and use available communication like MBIM interface to enable data communication to modem for RF power regulation.
 
-With current implementation of prot_guest_has() for TDX it breaks boot for
-me.
+The BIOS gets notified about device mode changes through Sensor Driver. This information is given to a (newly created) WWAN ACPI function driver when there is a device mode change. 
+The driver then uses a _DSM method to retrieve the required information from BIOS. 
+This information is then forwarded to the User-space using the sysfs_notify interface.
+A lookup table is maintained inside the BIOS which suggests the SAR Table index and Antenna Tuner Table Index values for individual device modes.
 
-Looking at code agains, now I *think* the reason is accessing a global
-variable from __startup_64() inside TDX version of prot_guest_has().
+The SAR parameters to be used on the Modem differs for each Regulatory Mode like FCC, CE and ISED.
+Hence, the SAR parameters are stored separately in the SMBIOS table in the OEM BIOS, for each of the Regulatory mode. Regulatory modes will be different based on the region and network available in that region.
 
-__startup_64() is special. If you access any global variable you need to
-use fixup_pointer(). See comment before __startup_64().
+Hence the entire SAR functionality handling is divided into 2 parts:
 
-I'm not sure how you get away with accessing sme_me_mask directly from
-there. Any clues? Maybe just a luck and complier generates code just right
-for your case, I donno.
+â€¢	A ACPI function driver implemented that uses a dedicated ACPI node for WWAN device.
+	Sends notifications whenever there is change in Device Mode. (each OEM has different mechanism
+	of updating this DEVICE Mode info). This is notified to User-space applications using
+	the sysfs_notify interface.
+â€¢	WWAN Device Service listens for sysfs_notify messages and reads the sysfs data and routes them
+	to Modem using MBIM.
 
-A separate point is that TDX version of prot_guest_has() relies on
-cpu_feature_enabled() which is not ready at this point.
+Shravan S (1):
+  platform/x86: BIOS SAR driver for Intel M.2 Modem
 
-I think __bss_decrypted fixup has to be done if sme_me_mask is non-zero.
-Or just do it uncoditionally because it's NOP for sme_me_mask == 0.
+ .../ABI/testing/sysfs-driver-intc_sar         |  57 ++++
+ MAINTAINERS                                   |   7 +
+ drivers/platform/x86/intel/Kconfig            |   1 +
+ drivers/platform/x86/intel/Makefile           |   1 +
+ drivers/platform/x86/intel/int1092/Kconfig    |  14 +
+ drivers/platform/x86/intel/int1092/Makefile   |   1 +
+ .../platform/x86/intel/int1092/intel_sar.c    | 319 ++++++++++++++++++
+ .../platform/x86/intel/int1092/intel_sar.h    |  86 +++++
+ 8 files changed, 486 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intc_sar
+ create mode 100644 drivers/platform/x86/intel/int1092/Kconfig
+ create mode 100644 drivers/platform/x86/intel/int1092/Makefile
+ create mode 100644 drivers/platform/x86/intel/int1092/intel_sar.c
+ create mode 100644 drivers/platform/x86/intel/int1092/intel_sar.h
 
-> I think the change you're requesting
-> should be done as part of the TDX support patches so it's clear why it is
-> being changed.
-> 
-> But, wouldn't TDX still need to do something with this shared/unencrypted
-> area, though? Or since it is shared, there's actually nothing you need to
-> do (the bss decrpyted section exists even if CONFIG_AMD_MEM_ENCRYPT is not
-> configured)?
 
-AFAICS, only kvmclock uses __bss_decrypted. We don't enable kvmclock in
-TDX at the moment. It may change in the future.
-
+base-commit: 761c6d7ec820f123b931e7b8ef7ec7c8564e450f
 -- 
- Kirill A. Shutemov
+2.17.1
+
