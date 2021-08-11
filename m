@@ -2,85 +2,126 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205BDC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99566C43214
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 14:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 030DE60C41
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 12:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C21D60FE6
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 11 Aug 2021 14:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbhHKMlp (ORCPT
+        id S232606AbhHKOyH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 11 Aug 2021 08:41:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55612 "EHLO mga03.intel.com"
+        Wed, 11 Aug 2021 10:54:07 -0400
+Received: from mga11.intel.com ([192.55.52.93]:65238 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229593AbhHKMlp (ORCPT
+        id S232456AbhHKOyH (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 11 Aug 2021 08:41:45 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="215140331"
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="215140331"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 05:41:21 -0700
-X-IronPort-AV: E=Sophos;i="5.84,311,1620716400"; 
-   d="scan'208";a="506927791"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 05:41:17 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mDnXi-007p9m-O4; Wed, 11 Aug 2021 15:41:10 +0300
-Date:   Wed, 11 Aug 2021 15:41:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kate Hsuan <hpa@redhat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 00/20] Move Intel platform drivers to intel directory to
- improve readability.
-Message-ID: <YRPFZsimSiSfLWqK@smile.fi.intel.com>
-References: <20210810095832.4234-1-hpa@redhat.com>
- <CAHp75Vde0yWoKh4KOP46iwXK6SBAcw1Y7Snw4PWoi1HRspHJDQ@mail.gmail.com>
+        Wed, 11 Aug 2021 10:54:07 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10072"; a="212026946"
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="212026946"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 07:53:42 -0700
+X-IronPort-AV: E=Sophos;i="5.84,313,1620716400"; 
+   d="scan'208";a="571158048"
+Received: from watoney1-mobl.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.209.129.121])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2021 07:53:40 -0700
+Subject: Re: [PATCH 01/11] mm: Introduce a function to check for
+ virtualization protection features
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <805946e3-5138-3565-65eb-3cb8ac6f0b3e@linux.intel.com>
+Date:   Wed, 11 Aug 2021 07:53:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vde0yWoKh4KOP46iwXK6SBAcw1Y7Snw4PWoi1HRspHJDQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 10, 2021 at 04:23:57PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 10, 2021 at 4:20 PM Kate Hsuan <hpa@redhat.com> wrote:
-> >
-> > All the intel platform specific drivers are moved to intel/.
-> > It makes more clear file structure to improve the readability.
-> 
-> Thanks for doing this!
-> I'll review it later on (this or next week), meanwhile can you rebase
-> it on top of PDx86 for-next?
 
-Okay, most of the basic comments were given by a few people already, I'll wait
-for v2.
 
+On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> diff --git a/include/linux/protected_guest.h b/include/linux/protected_guest.h
+> new file mode 100644
+> index 000000000000..f8ed7b72967b
+> --- /dev/null
+> +++ b/include/linux/protected_guest.h
+> @@ -0,0 +1,32 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Protected Guest (and Host) Capability checks
+> + *
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Tom Lendacky<thomas.lendacky@amd.com>
+> + */
+> +
+> +#ifndef _PROTECTED_GUEST_H
+> +#define _PROTECTED_GUEST_H
+> +
+> +#ifndef __ASSEMBLY__
+
+Can you include headers for bool type and false definition?
+
+--- a/include/linux/protected_guest.h
++++ b/include/linux/protected_guest.h
+@@ -12,6 +12,9 @@
+
+  #ifndef __ASSEMBLY__
+
++#include <linux/types.h>
++#include <linux/stddef.h>
+
+Otherwise, I see following errors in multi-config auto testing.
+
+include/linux/protected_guest.h:40:15: error: unknown type name 'bool'
+include/linux/protected_guest.h:40:63: error: 'false' undeclared (first use in this functi
+
+
+> +
+> +#define PATTR_MEM_ENCRYPT		0	/* Encrypted memory */
+> +#define PATTR_HOST_MEM_ENCRYPT		1	/* Host encrypted memory */
+> +#define PATTR_GUEST_MEM_ENCRYPT		2	/* Guest encrypted memory */
+> +#define PATTR_GUEST_PROT_STATE		3	/* Guest encrypted state */
+> +
+> +#ifdef CONFIG_ARCH_HAS_PROTECTED_GUEST
+> +
+> +#include <asm/protected_guest.h>
+> +
+> +#else	/* !CONFIG_ARCH_HAS_PROTECTED_GUEST */
+> +
+> +static inline bool prot_guest_has(unsigned int attr) { return false; }
+> +
+> +#endif	/* CONFIG_ARCH_HAS_PROTECTED_GUEST */
+> +
+> +#endif	/* __ASSEMBLY__ */
+> +
+> +#endif	/* _PROTECTED_GUEST_H */
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
