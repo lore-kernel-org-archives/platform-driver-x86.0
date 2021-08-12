@@ -2,203 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA5BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 15:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 096CFC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 15:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 054156108C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 15:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3BC6610A3
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 15:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238273AbhHLPDN (ORCPT
+        id S236311AbhHLP2A (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Aug 2021 11:03:13 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.115]:58454 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238194AbhHLPDN (ORCPT
+        Thu, 12 Aug 2021 11:28:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36655 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238055AbhHLP17 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Aug 2021 11:03:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1628780567; i=@lenovo.com;
-        bh=PnBCs8XTOgukMMgR2rWJHuBoEv9+2kvo7irygF4vrVU=;
-        h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        b=L9Fr4JmzPnn3IfSSuDWB4r6k/WUWoRjqOmY+WRi/iOEfN3kfyC1060Jef2Js4vKeZ
-         MGgMo/AuhM+jjnHwObaABIgsgabCwjS+mqGYus17K5o9zST3/XMG9vuSesV85u4Ay3
-         mts+x4xO9+S6i1mYpCDXCLDc2ofan3QPex4jskeISf2wRE6SoB8Nfa2IxZ1GHicb5m
-         sjWAiGPnJbCgUPbnlR/UjqjwaNHgjBUltD2GsObGe3oqFJKgvD/sROG47A49wJqNg7
-         Kji+2D+acetlfn1z7jPIfQt3k1rrrvMLlyzwtc/1z+UrrTrMYlVsqhMJE4xKUfwWe1
-         i8JhJZHLEe1MQ==
-Received: from [100.112.6.161] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-4.bemta.az-c.us-east-1.aws.symcld.net id D5/19-07005-71835116; Thu, 12 Aug 2021 15:02:47 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleJIrShJLcpLzFFi42LJePGQV1fMQjT
-  RoKvTxOLN8elMFut/r2SxmH3YxuLyrjlsFqv3vGC2eHbxFYsDm8fiFVNYPX4fYPTYveAzk8f7
-  fVfZPD5vkgtgjWLNzEvKr0hgzTj/eDlzwVu5ioanx5kaGHdKdjFycQgJ/GeUmLRgLyOE85xR4
-  tfW1+xdjJwcwgIxEo3/z7CC2CICHhINa96xgNjMAqsYJW4+cIVoWATU0DSRGSTBJqAtsWXLLz
-  YQm1fAVuLJ6/dMIDaLgKpEy/dTYINEBSIkHu7cwghRIyhxcuYTsKGcAi4SF043MEEsMJN4MXs
-  XK4QtLnHryXyouLzE9rdzwHZJANmrth9jhbATJHr+PWKbwCg4C8nYWUhGzUIyahaSUQsYWVYx
-  miYVZaZnlOQmZuboGhoY6BoaGuma6ZqZ6SVW6SbrlRbrpiYWl+ga6iWWF+sVV+Ym56To5aWWb
-  GIERlBKAZvTDsbbrz/oHWKU5GBSEuXdcFYkUYgvKT+lMiOxOCO+qDQntfgQowwHh5IE7/GdQD
-  nBotT01Iq0zBxgNMOkJTh4lER4tU1FE4V4iwsSc4sz0yFSpxgVpcR5fxgCJQRAEhmleXBtsAR
-  yiVFWSpiXkYGBQYinILUoN7MEVf4VozgHo5Iw716Q8TyZeSVw018BLWYCWrzDXRBkcUkiQkoK
-  GBW3Z7W4Vq75fGN/gVXkmdKJaUUbXu772FwVvUd8rtyfk5FVqRMnv/3kybl/S9ZVk5S1Pr7H9
-  yxY4/8zcl6FZIPxwT2p31Wdjk7drb/D+w2Hbq+ntqZRnO+UtXFNGm6PvPeeV7O6tiFZXLLeIj
-  JnoWfRj9CtvtOm1To8VA3ZpNjjxzJ7wS/LdXNqUvbeNE+SNdPMP66yVsvJvobFSPL+mgbm04k
-  vjLueLHzWyy+3vdyyfCmzoI/pasv0NBVHE/n8szv71C/bfG3p/Heqfp7KlLuvLZ+f3+bupFuh
-  573GaPncRC0J3ZusimEX1kvdrioM+Wg76Wjp9KTXN/qSBf7fv/rg4M1rR4X2Sh5+t06vU4mlO
-  CPRUIu5qDgRAF9VemabAwAA
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-2.tower-415.messagelabs.com!1628780566!257632!1
-X-Originating-IP: [104.232.225.13]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 27604 invoked from network); 12 Aug 2021 15:02:46 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-2.tower-415.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Aug 2021 15:02:46 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id 9E66F65880BD362F98EF;
-        Thu, 12 Aug 2021 11:02:46 -0400 (EDT)
-Received: from localhost.localdomain (10.38.51.60) by reswpmail01.lenovo.com
- (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Thu, 12 Aug
- 2021 11:02:45 -0400
-Subject: Re: [External]Re:Re: [PATCH] [v2,1/1] Fix WWAN device disabled issue
- after S3 deep
-To:     Slark Xiao <slark_xiao@163.com>,
-        Hans de Goede <hdegoede@redhat.com>
-CC:     <hmh@hmh.eng.br>, <ibm-acpi-devel@lists.sourceforge.net>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, "Nitin Joshi1" <njoshi1@lenovo.com>
-References: <20210811093407.5583-1-slark_xiao@163.com>
- <70e53b58-4785-5a3d-9525-a7f9e93cd0d2@redhat.com>
- <1e3450a4.7c75.17b3a259499.Coremail.slark_xiao@163.com>
-From:   Mark Pearson <markpearson@lenovo.com>
-Message-ID: <6f60ac5a-91fb-948f-a5a6-f01f4971783e@lenovo.com>
-Date:   Thu, 12 Aug 2021 11:02:44 -0400
+        Thu, 12 Aug 2021 11:27:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628782053;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TA43mTMVbiIVQ6dhmdTyeMp0SQjli5MTAeYmJDtnicw=;
+        b=BPrkcfqKeXlyf3EX8nPQ7RolHXPV7j5FAFKiPV0itaEs9NLZkO7RwN6y1j0gAQpA/Z0fiM
+        5oO1C53tzuc38UUX+v7syIi5Kkl2wgEXKHhPIZbKWwrJh2P4No8sZckJJM/NTEqSCptfpc
+        iaDcztX1nzQINjh4pH8Of5797Fwu9ks=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-228-KDb5O7VQMCydP-qEh7oq5g-1; Thu, 12 Aug 2021 11:27:31 -0400
+X-MC-Unique: KDb5O7VQMCydP-qEh7oq5g-1
+Received: by mail-ed1-f71.google.com with SMTP id y22-20020a0564023596b02903bd9452ad5cso3185822edc.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Aug 2021 08:27:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TA43mTMVbiIVQ6dhmdTyeMp0SQjli5MTAeYmJDtnicw=;
+        b=JZ93BSNSRdBAcpGS2bU5T6iO6PZAv9FR/vEUBz5mJgadMMhqcP++UwNy6zt/JlILMU
+         W7tJB/9orvvEuO3epYR09kvJzx7jy8e57GndtxTigw8O8MGRpRp2L3BHKrcFOxmVbnif
+         r4piHHbjxS6AEgQ6Lx970irRD+G+k4+MKQA90JNmWCYZb9Qlu5NW6bvCiacNgt/U+JQ0
+         xUW0b5E/pDynAQhMnkaq+9n5luYxBYqdn8sWSzX21yGfJ+hXIen+u81P8Pl8U6xllRoV
+         khpIlZSBLNOjuNdVKhrU9tLEf4stHAdvm1BFm1XLN8FhOkMN4aW1sF8rCd9l5HYeVAPB
+         TU1g==
+X-Gm-Message-State: AOAM530TqYWSOenElVrdpnikpU/9b9efBSzT9QaZyQ814nztNTuodw/u
+        +2dAZJnkl7fnAvenRHvUxAGIL4ABuOcnOvHVbhwyw6Sl8IolTHYus277i944TbRV1AqTmzdSC4O
+        AKd5wQAdqxZpJDIqaa4Hyg6YE6fg00QzlpA==
+X-Received: by 2002:a17:906:3699:: with SMTP id a25mr4172177ejc.452.1628782050588;
+        Thu, 12 Aug 2021 08:27:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxpILZdmucUro1fJ64BfQNPV6SuGjTwtVbrBbBvEFyx8GHmFvspoTgFJocAtBVCS59l9cOYWQ==
+X-Received: by 2002:a17:906:3699:: with SMTP id a25mr4172160ejc.452.1628782050459;
+        Thu, 12 Aug 2021 08:27:30 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id h8sm1293286edv.30.2021.08.12.08.27.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Aug 2021 08:27:30 -0700 (PDT)
+Subject: Re: [PATCH 1/4] i2c: acpi: Add an i2c_acpi_client_count() helper
+ function
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+References: <20210803160044.158802-1-hdegoede@redhat.com>
+ <20210803160044.158802-2-hdegoede@redhat.com> <YQlzzy933V9XMHqt@lahna>
+ <9fbf0d6a-2df3-4765-ccf5-788b86994d71@redhat.com> <YRLlNh4MrHyVobvR@kunai>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <8b624c87-21dd-e051-d3f5-400212ed590c@redhat.com>
+Date:   Thu, 12 Aug 2021 17:27:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <1e3450a4.7c75.17b3a259499.Coremail.slark_xiao@163.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
+In-Reply-To: <YRLlNh4MrHyVobvR@kunai>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.38.51.60]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 2021-08-12 7:35 a.m., Slark Xiao wrote:
-> At 2021-08-12 16:03:50, "Hans de Goede" <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 8/11/21 11:34 AM, Slark Xiao wrote:
->>> When WWAN device wake from S3 deep, under thinkpad platform,
->>> WWAN would be disabled. This disable status could be checked
->>>   by command 'nmcli r wwan' or 'rfkill list'.
->>> Issue analysis as below:
->>>    When host resume from S3 deep, thinkpad_acpi driver would
->>> call hotkey_resume() function. Finnaly, it will use
->>> wan_get_status to check the current status of WWAN device.
->>> During this resume progress, wan_get_status would always
->>> return off even WWAN boot up completely.
->>>    If wan_get_status() return off, rfkill_set_sw_state() would set WWAN's
->>> status as disabled.
->>>    This may be a fault of LENOVO BIOS.
->>>    Workaround is add a WWAN device check before rfkill_set_sw_state().
->>> If it's a Foxconn WWAN device, then we will ignore to do a status update.
->>>
->>> Signed-off-by: Slark Xiao <slark_xiao@163.com>
->>
->> Thank you for debugging this and thank you for the patch.
->>
->> I'm not in favor of using a pci-device-id list here. Maybe we should
->> simply just never update the sw-rfkill state after a suspend-resume ?
->>
->> I mean the sw_state should be unchanged after a suspend/resume.
->>
->> Only the hw_state on older devices which still have a physical
->> radio on/off slider on the side might have changed during suspend.
->>
->> So I think it might be better to just drop the tpacpi_rfk_update_swstate
->> call all together from the resume path?
->>
->> Mark do you have any input here?
->>
->> Regards,
->>
->> Hans
->>
-> Hi Hans,
->    Thanks you for your recognition.
->    I think your solution would be better. My solution only fix the WWAN device behavior from Foxconn.
->    And Mark, you can contact with gicay@lenovo.com for the details.
+Hi,
+
+On 8/10/21 10:44 PM, Wolfram Sang wrote:
 > 
-> Thanks
-> Slark Xiao
-Thanks Hans & Slark,
-
-Slark - so I assume are you working with the Foxconn team and Lenovo on 
-this issue? I know we've been tracking the fact that suspend doesn't 
-work with S3 but haven't been paying attention to the details.
-
-My main concern is 'This may be a fault of LENOVO BIOS' - if the BIOS is 
-wrong then we should fix the BIOS rather than kludging the kernel for 
-one modem on one platform. Let me know if this needs escalating to the 
-BIOS team (or work with Grace).
-
-I've added in Nitin as he's my goto for WWAN related issues and might be 
-interested.
-
-Mark
-
->>
->>
->>> ---
->>>   drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
->>>   1 file changed, 14 insertions(+), 2 deletions(-)
+>>>> We have 3 files now which have the need to count the number of
+>>>> I2cSerialBus resources in an ACPI-device's resource-list.
+>>>>
+>>>> Currently all implement their own helper function for this,
+>>>> add a generic helper function to replace the 3 implementations.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >>>
->>> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
->>> index 603156a6e3ed..e3b7bc0e7a33 100644
->>> --- a/drivers/platform/x86/thinkpad_acpi.c
->>> +++ b/drivers/platform/x86/thinkpad_acpi.c
->>> @@ -1159,6 +1159,13 @@ struct tpacpi_rfk_ops {
->>>   
->>>   static struct tpacpi_rfk *tpacpi_rfkill_switches[TPACPI_RFK_SW_MAX];
->>>   
->>> +/*Foxconn SDX55 T77W175 products. All available device ID*/
->>> +static const struct pci_device_id foxconn_device_ids[] = {
->>> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AB) },
->>> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AF) },
->>> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0B4) },
->>> +	{}
->>> +};
->>>   /* Query FW and update rfkill sw state for a given rfkill switch */
->>>   static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
->>>   {
->>> @@ -1182,8 +1189,13 @@ static void tpacpi_rfk_update_swstate_all(void)
->>>   {
->>>   	unsigned int i;
->>>   
->>> -	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
->>> -		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
->>> +	for (i = 0; i < TPACPI_RFK_SW_MAX; i++) {
->>> +		if (pci_dev_present(foxconn_device_ids) && i == 1)
->>> +			pr_info("Find Foxconn wwan device, ignore to update rfkill switch status\n");
->>> +		else
->>> +			tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
->>> +
->>> +	}
->>>   }
->>>   
->>>   /*
->>>
+>>> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>
+>> Thank you, Wolfram are you also ok with me merging this
+>> patch through the pdx86 tree?
+> 
+> Sure!
+> 
+> Acked-by: Wolfram Sang <wsa@kernel.org>
+
+Thank you. I've added this series to my review-hans branch now.
+
+I'll push it out to pdx86/for-next after some (build) testing.
+
+Regards,
+
+Hans
+
