@@ -2,195 +2,116 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74562C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 10:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EB2C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 11:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3B7B610CC
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 10:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E1560F91
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 11:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235761AbhHLKHo (ORCPT
+        id S233956AbhHLLvv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Aug 2021 06:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235727AbhHLKHj (ORCPT
+        Thu, 12 Aug 2021 07:51:51 -0400
+Received: from m13101.mail.163.com ([220.181.13.101]:21586 "EHLO
+        m13101.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231392AbhHLLvu (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Aug 2021 06:07:39 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A143EC061765
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Aug 2021 03:07:13 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id m17so6015200ljp.7
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Aug 2021 03:07:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=MYArfwyoBo3dGsKUJMsxwhHgYqZKbCcsgh7gGUNtDK4=;
-        b=i5pl2dc+IIZq62s73J165t7SbTE/a6uwhQcs74jwe9KmwHHHprhV6B7adGgzY2ul5F
-         h3ad9IJiBKNdQ1Yy+0atN7ISXCxsrMGXnfmJsO6X4rAencCuDMvqer1gR8DISUT+MUdX
-         mFWLcuQYXLFjOzlL0+b+7kJuGkuB4wCN/YMkw/r+eyS6zgywYe+L6amtdlG3N+EOpGsE
-         J1HMLNEKBn3QeV3/WPSCpmI5s5ySDG9/4fJ+UJO1H5Xch03iP3WdOduEdYUt1pTqbuK7
-         XsqkYhAszn/r202BsWcaBlPgkZHQ5nFUcQEBqetJcuzusrxc9TEefXgeJD4qBlDR12PM
-         /RWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=MYArfwyoBo3dGsKUJMsxwhHgYqZKbCcsgh7gGUNtDK4=;
-        b=q9hvRudvDcia73chyujFcGFDBa4Nz80ROint5nYIwXLTXP3CVkphsfKsdw8usqgzlI
-         mf2+OdiqE1f+PfnrVl2h1CocOm/MCaoJHWjnbzYonzlvFKQ7sCltbd4wUZi6hGpqZcJu
-         1oYGAaehja46bGL7cubkwL8DsyMq3F6pXyhHdHg61/quURRFUtIlqFKPN91IbGVMM73F
-         WizzDBMv3RAcz9jxjbb9zgUG6n4jN2Ep7SLajXU2ObcLpP8ZiCW3NCUNyRFOL/XdYiL0
-         oUrTRZyg+VTE1E2U3jg4HpCw+nxwBFYI8b+58lNuj/9EtJabZMsiWJ+b8Y72/+CIch8f
-         G4gQ==
-X-Gm-Message-State: AOAM533iRebRCaEj7KyfZ1sAQBIIozAexbUtAcH53Dsfn64bvlA3v+Uw
-        trD/PE3wzTTHR4E6viUpGt/gCg==
-X-Google-Smtp-Source: ABdhPJzegmFCE5odxbsD4HArsZ9uuMjN7H8TkJnoN55vikWCUHEpo/5436B3LFAXNhCNvYbyx3Wtvw==
-X-Received: by 2002:a2e:814a:: with SMTP id t10mr2410500ljg.318.1628762831975;
-        Thu, 12 Aug 2021 03:07:11 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id o8sm212528lfo.292.2021.08.12.03.07.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Aug 2021 03:07:11 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id B75B41028BC; Thu, 12 Aug 2021 13:07:24 +0300 (+03)
-Date:   Thu, 12 Aug 2021 13:07:24 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-Message-ID: <20210812100724.t4cdh7xbkuqgnsc3@box.shutemov.name>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
- <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
- <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
- <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
- <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
+        Thu, 12 Aug 2021 07:51:50 -0400
+X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Aug 2021 07:51:49 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=fLaen
+        5fGJjy5YBS58lcE2pqFVuwftBf/jg4QjtkP+Lo=; b=njaD9bRlYbCgaZipIkC/C
+        ktZiSNeBcTmAiFw0lBYA5Kn2T98LT+zxRsKvTHgXI/pyD4mh0utr+XU1W99mAyCZ
+        Hx8H4IFEdfwfpfdN0PYSicEzSW5S+98+mp4O8Nka5aJ24C9qNhAzV66n4zzM5Kbq
+        oz31h4K1nnhXk7tUR01tqQ=
+Received: from slark_xiao$163.com ( [223.104.68.9] ) by
+ ajax-webmail-wmsvr101 (Coremail) ; Thu, 12 Aug 2021 19:35:46 +0800 (CST)
+X-Originating-IP: [223.104.68.9]
+Date:   Thu, 12 Aug 2021 19:35:46 +0800 (CST)
+From:   "Slark Xiao" <slark_xiao@163.com>
+To:     "Hans de Goede" <hdegoede@redhat.com>
+Cc:     hmh@hmh.eng.br, "Mark Pearson" <markpearson@lenovo.com>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] [v2,1/1] Fix WWAN device disabled issue after S3
+ deep
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.13 build 20210622(1d4788a8)
+ Copyright (c) 2002-2021 www.mailtech.cn 163com
+In-Reply-To: <70e53b58-4785-5a3d-9525-a7f9e93cd0d2@redhat.com>
+References: <20210811093407.5583-1-slark_xiao@163.com>
+ <70e53b58-4785-5a3d-9525-a7f9e93cd0d2@redhat.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
+Message-ID: <1e3450a4.7c75.17b3a259499.Coremail.slark_xiao@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: ZcGowADnUjWSBxVhzkKDAQ--.51803W
+X-CM-SenderInfo: xvod2y5b0lt0i6rwjhhfrp/1tbiowTsZFUMYhCaxAABsb
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 11, 2021 at 10:52:55AM -0500, Tom Lendacky wrote:
-> On 8/11/21 7:19 AM, Kirill A. Shutemov wrote:
-> > On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
-> >> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
-> >>>
-> >>>
-> >>> On 7/27/21 3:26 PM, Tom Lendacky wrote:
-> >>>> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-> >>>> index de01903c3735..cafed6456d45 100644
-> >>>> --- a/arch/x86/kernel/head64.c
-> >>>> +++ b/arch/x86/kernel/head64.c
-> >>>> @@ -19,7 +19,7 @@
-> >>>>   #include <linux/start_kernel.h>
-> >>>>   #include <linux/io.h>
-> >>>>   #include <linux/memblock.h>
-> >>>> -#include <linux/mem_encrypt.h>
-> >>>> +#include <linux/protected_guest.h>
-> >>>>   #include <linux/pgtable.h>
-> >>>>     #include <asm/processor.h>
-> >>>> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
-> >>>> physaddr,
-> >>>>        * there is no need to zero it after changing the memory encryption
-> >>>>        * attribute.
-> >>>>        */
-> >>>> -    if (mem_encrypt_active()) {
-> >>>> +    if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
-> >>>>           vaddr = (unsigned long)__start_bss_decrypted;
-> >>>>           vaddr_end = (unsigned long)__end_bss_decrypted;
-> >>>
-> >>>
-> >>> Since this change is specific to AMD, can you replace PATTR_MEM_ENCRYPT with
-> >>> prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not used in
-> >>> TDX.
-> >>
-> >> This is a direct replacement for now.
-> > 
-> > With current implementation of prot_guest_has() for TDX it breaks boot for
-> > me.
-> > 
-> > Looking at code agains, now I *think* the reason is accessing a global
-> > variable from __startup_64() inside TDX version of prot_guest_has().
-> > 
-> > __startup_64() is special. If you access any global variable you need to
-> > use fixup_pointer(). See comment before __startup_64().
-> > 
-> > I'm not sure how you get away with accessing sme_me_mask directly from
-> > there. Any clues? Maybe just a luck and complier generates code just right
-> > for your case, I donno.
-> 
-> Hmm... yeah, could be that the compiler is using rip-relative addressing
-> for it because it lives in the .data section?
-
-I guess. It has to be fixed. It may break with complier upgrade or any
-random change around the code.
-
-BTW, does it work with clang for you?
-
-> For the static variables in mem_encrypt_identity.c I did an assembler rip
-> relative LEA, but probably could have passed physaddr to sme_enable() and
-> used a fixup_pointer() style function, instead.
-
-Sounds like a plan.
-
-> > A separate point is that TDX version of prot_guest_has() relies on
-> > cpu_feature_enabled() which is not ready at this point.
-> 
-> Does TDX have to do anything special to make memory able to be shared with
-> the hypervisor?
-
-Yes. But there's nothing that required any changes in early boot. It
-handled in ioremap/set_memory.
-
-> You might have to use something that is available earlier
-> than cpu_feature_enabled() in that case (should you eventually support
-> kvmclock).
-
-Maybe.
-
-> > I think __bss_decrypted fixup has to be done if sme_me_mask is non-zero.
-> > Or just do it uncoditionally because it's NOP for sme_me_mask == 0.
-> 
-> For SNP, we'll have to additionally call the HV to update the RMP to make
-> the memory shared. But that could also be done unconditionally since the
-> early_snp_set_memory_shared() routine will check for SNP before doing
-> anything.
-
--- 
- Kirill A. Shutemov
+CgoKCgoKCgoKCgoKCgoKCgpBdCAyMDIxLTA4LTEyIDE2OjAzOjUwLCAiSGFucyBkZSBHb2VkZSIg
+PGhkZWdvZWRlQHJlZGhhdC5jb20+IHdyb3RlOgo+SGksCj4KPk9uIDgvMTEvMjEgMTE6MzQgQU0s
+IFNsYXJrIFhpYW8gd3JvdGU6Cj4+IFdoZW4gV1dBTiBkZXZpY2Ugd2FrZSBmcm9tIFMzIGRlZXAs
+IHVuZGVyIHRoaW5rcGFkIHBsYXRmb3JtLAo+PiBXV0FOIHdvdWxkIGJlIGRpc2FibGVkLiBUaGlz
+IGRpc2FibGUgc3RhdHVzIGNvdWxkIGJlIGNoZWNrZWQKPj4gIGJ5IGNvbW1hbmQgJ25tY2xpIHIg
+d3dhbicgb3IgJ3Jma2lsbCBsaXN0Jy4KPj4gSXNzdWUgYW5hbHlzaXMgYXMgYmVsb3c6Cj4+ICAg
+V2hlbiBob3N0IHJlc3VtZSBmcm9tIFMzIGRlZXAsIHRoaW5rcGFkX2FjcGkgZHJpdmVyIHdvdWxk
+Cj4+IGNhbGwgaG90a2V5X3Jlc3VtZSgpIGZ1bmN0aW9uLiBGaW5uYWx5LCBpdCB3aWxsIHVzZQo+
+PiB3YW5fZ2V0X3N0YXR1cyB0byBjaGVjayB0aGUgY3VycmVudCBzdGF0dXMgb2YgV1dBTiBkZXZp
+Y2UuCj4+IER1cmluZyB0aGlzIHJlc3VtZSBwcm9ncmVzcywgd2FuX2dldF9zdGF0dXMgd291bGQg
+YWx3YXlzCj4+IHJldHVybiBvZmYgZXZlbiBXV0FOIGJvb3QgdXAgY29tcGxldGVseS4KPj4gICBJ
+ZiB3YW5fZ2V0X3N0YXR1cygpIHJldHVybiBvZmYsIHJma2lsbF9zZXRfc3dfc3RhdGUoKSB3b3Vs
+ZCBzZXQgV1dBTidzCj4+IHN0YXR1cyBhcyBkaXNhYmxlZC4KPj4gICBUaGlzIG1heSBiZSBhIGZh
+dWx0IG9mIExFTk9WTyBCSU9TLgo+PiAgIFdvcmthcm91bmQgaXMgYWRkIGEgV1dBTiBkZXZpY2Ug
+Y2hlY2sgYmVmb3JlIHJma2lsbF9zZXRfc3dfc3RhdGUoKS4KPj4gSWYgaXQncyBhIEZveGNvbm4g
+V1dBTiBkZXZpY2UsIHRoZW4gd2Ugd2lsbCBpZ25vcmUgdG8gZG8gYSBzdGF0dXMgdXBkYXRlLgo+
+PiAKPj4gU2lnbmVkLW9mZi1ieTogU2xhcmsgWGlhbyA8c2xhcmtfeGlhb0AxNjMuY29tPgo+Cj5U
+aGFuayB5b3UgZm9yIGRlYnVnZ2luZyB0aGlzIGFuZCB0aGFuayB5b3UgZm9yIHRoZSBwYXRjaC4K
+Pgo+SSdtIG5vdCBpbiBmYXZvciBvZiB1c2luZyBhIHBjaS1kZXZpY2UtaWQgbGlzdCBoZXJlLiBN
+YXliZSB3ZSBzaG91bGQKPnNpbXBseSBqdXN0IG5ldmVyIHVwZGF0ZSB0aGUgc3ctcmZraWxsIHN0
+YXRlIGFmdGVyIGEgc3VzcGVuZC1yZXN1bWUgPwo+Cj5JIG1lYW4gdGhlIHN3X3N0YXRlIHNob3Vs
+ZCBiZSB1bmNoYW5nZWQgYWZ0ZXIgYSBzdXNwZW5kL3Jlc3VtZS4KPgo+T25seSB0aGUgaHdfc3Rh
+dGUgb24gb2xkZXIgZGV2aWNlcyB3aGljaCBzdGlsbCBoYXZlIGEgcGh5c2ljYWwKPnJhZGlvIG9u
+L29mZiBzbGlkZXIgb24gdGhlIHNpZGUgbWlnaHQgaGF2ZSBjaGFuZ2VkIGR1cmluZyBzdXNwZW5k
+Lgo+Cj5TbyBJIHRoaW5rIGl0IG1pZ2h0IGJlIGJldHRlciB0byBqdXN0IGRyb3AgdGhlIHRwYWNw
+aV9yZmtfdXBkYXRlX3N3c3RhdGUKPmNhbGwgYWxsIHRvZ2V0aGVyIGZyb20gdGhlIHJlc3VtZSBw
+YXRoPwo+Cj5NYXJrIGRvIHlvdSBoYXZlIGFueSBpbnB1dCBoZXJlPwo+Cj5SZWdhcmRzLAo+Cj5I
+YW5zCj4KSGkgSGFucywKICBUaGFua3MgeW91IGZvciB5b3VyIHJlY29nbml0aW9uLgogIEkgdGhp
+bmsgeW91ciBzb2x1dGlvbiB3b3VsZCBiZSBiZXR0ZXIuIE15IHNvbHV0aW9uIG9ubHkgZml4IHRo
+ZSBXV0FOIGRldmljZSBiZWhhdmlvciBmcm9tIEZveGNvbm4uCiAgQW5kIE1hcmssIHlvdSBjYW4g
+Y29udGFjdCB3aXRoIGdpY2F5QGxlbm92by5jb20gZm9yIHRoZSBkZXRhaWxzLgoKVGhhbmtzClNs
+YXJrIFhpYW8KPgo+Cj4+IC0tLQo+PiAgZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNw
+aS5jIHwgMTYgKysrKysrKysrKysrKystLQo+PiAgMSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pCj4+IAo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wbGF0Zm9y
+bS94ODYvdGhpbmtwYWRfYWNwaS5jIGIvZHJpdmVycy9wbGF0Zm9ybS94ODYvdGhpbmtwYWRfYWNw
+aS5jCj4+IGluZGV4IDYwMzE1NmE2ZTNlZC4uZTNiN2JjMGU3YTMzIDEwMDY0NAo+PiAtLS0gYS9k
+cml2ZXJzL3BsYXRmb3JtL3g4Ni90aGlua3BhZF9hY3BpLmMKPj4gKysrIGIvZHJpdmVycy9wbGF0
+Zm9ybS94ODYvdGhpbmtwYWRfYWNwaS5jCj4+IEBAIC0xMTU5LDYgKzExNTksMTMgQEAgc3RydWN0
+IHRwYWNwaV9yZmtfb3BzIHsKPj4gIAo+PiAgc3RhdGljIHN0cnVjdCB0cGFjcGlfcmZrICp0cGFj
+cGlfcmZraWxsX3N3aXRjaGVzW1RQQUNQSV9SRktfU1dfTUFYXTsKPj4gIAo+PiArLypGb3hjb25u
+IFNEWDU1IFQ3N1cxNzUgcHJvZHVjdHMuIEFsbCBhdmFpbGFibGUgZGV2aWNlIElEKi8KPj4gK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBmb3hjb25uX2RldmljZV9pZHNbXSA9IHsK
+Pj4gKwl7IFBDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9GT1hDT05OLCAweEUwQUIpIH0sCj4+ICsJ
+eyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURfRk9YQ09OTiwgMHhFMEFGKSB9LAo+PiArCXsgUENJ
+X0RFVklDRShQQ0lfVkVORE9SX0lEX0ZPWENPTk4sIDB4RTBCNCkgfSwKPj4gKwl7fQo+PiArfTsK
+Pj4gIC8qIFF1ZXJ5IEZXIGFuZCB1cGRhdGUgcmZraWxsIHN3IHN0YXRlIGZvciBhIGdpdmVuIHJm
+a2lsbCBzd2l0Y2ggKi8KPj4gIHN0YXRpYyBpbnQgdHBhY3BpX3Jma191cGRhdGVfc3dzdGF0ZShj
+b25zdCBzdHJ1Y3QgdHBhY3BpX3JmayAqdHBfcmZrKQo+PiAgewo+PiBAQCAtMTE4Miw4ICsxMTg5
+LDEzIEBAIHN0YXRpYyB2b2lkIHRwYWNwaV9yZmtfdXBkYXRlX3N3c3RhdGVfYWxsKHZvaWQpCj4+
+ICB7Cj4+ICAJdW5zaWduZWQgaW50IGk7Cj4+ICAKPj4gLQlmb3IgKGkgPSAwOyBpIDwgVFBBQ1BJ
+X1JGS19TV19NQVg7IGkrKykKPj4gLQkJdHBhY3BpX3Jma191cGRhdGVfc3dzdGF0ZSh0cGFjcGlf
+cmZraWxsX3N3aXRjaGVzW2ldKTsKPj4gKwlmb3IgKGkgPSAwOyBpIDwgVFBBQ1BJX1JGS19TV19N
+QVg7IGkrKykgewo+PiArCQlpZiAocGNpX2Rldl9wcmVzZW50KGZveGNvbm5fZGV2aWNlX2lkcykg
+JiYgaSA9PSAxKQo+PiArCQkJcHJfaW5mbygiRmluZCBGb3hjb25uIHd3YW4gZGV2aWNlLCBpZ25v
+cmUgdG8gdXBkYXRlIHJma2lsbCBzd2l0Y2ggc3RhdHVzXG4iKTsKPj4gKwkJZWxzZQo+PiArCQkJ
+dHBhY3BpX3Jma191cGRhdGVfc3dzdGF0ZSh0cGFjcGlfcmZraWxsX3N3aXRjaGVzW2ldKTsKPj4g
+Kwo+PiArCX0KPj4gIH0KPj4gIAo+PiAgLyoKPj4gCg==
