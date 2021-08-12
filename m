@@ -5,76 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BBEC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 07:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76BFC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 08:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFFA161038
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 07:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44566103E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 12 Aug 2021 08:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232348AbhHLH7q (ORCPT
+        id S235075AbhHLIE2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 12 Aug 2021 03:59:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:31309 "EHLO
+        Thu, 12 Aug 2021 04:04:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30215 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231520AbhHLH7q (ORCPT
+        by vger.kernel.org with ESMTP id S235092AbhHLIEV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 12 Aug 2021 03:59:46 -0400
+        Thu, 12 Aug 2021 04:04:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628755161;
+        s=mimecast20190719; t=1628755434;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=D+dzKNm48/cahGNh0e4kgt/hHDqDP+Lhc1dI/DEnfBM=;
-        b=Sz7l3xcuw30v/SaOB478g0wK67EIezVPO/E5wlT6SmbcB+DliBXF2B9Zug90v1kf4nsB+2
-        5Cjl2i5YA3JZ+limwLNeAlG+a8co98x+xBJJ4jXZZLuouqpF4Zyz+yFEj2NyVilhVodtE/
-        P8wy4LmXcafHoycGVbvUd/Ma63K2Lv0=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-584-nmiW6z9vN8m1yJjJWzkpiQ-1; Thu, 12 Aug 2021 03:59:20 -0400
-X-MC-Unique: nmiW6z9vN8m1yJjJWzkpiQ-1
-Received: by mail-ed1-f72.google.com with SMTP id d12-20020a50fe8c0000b02903a4b519b413so2669526edt.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Aug 2021 00:59:19 -0700 (PDT)
+        bh=Qx8Shhu7rI5wSD137gu2JFMhjeGxiRtny4lEcXGkPMA=;
+        b=J3EYoA6VCrzv4glvRvrozkjw7DuCG/0b3ZvjqpQHLIGIiBST7ox5u6r2YrsuFHahRbkwRh
+        JkrA/OkvcStIGPOjEdZv2nKRyYem0Ja0P5UqeQKf/fmlcWHUgRzjkLcfOMy8e/kkWvOY2w
+        SXkBtsneP6IJWqjjcnw/SwvhIBNKgh0=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-8rRwZNTvNI24mF4AF01dVQ-1; Thu, 12 Aug 2021 04:03:52 -0400
+X-MC-Unique: 8rRwZNTvNI24mF4AF01dVQ-1
+Received: by mail-ej1-f72.google.com with SMTP id gg35-20020a17090689a3b0290580ff45a075so1483871ejc.20
+        for <platform-driver-x86@vger.kernel.org>; Thu, 12 Aug 2021 01:03:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=D+dzKNm48/cahGNh0e4kgt/hHDqDP+Lhc1dI/DEnfBM=;
-        b=AKZLYdmYNXm3SWYBXe3eS/T/mig8XMSbiXvZjiis8wSEyuDOUzY0mJCcabe22He1Zy
-         JtK/QUlyjfOKsw1rM3OcA7pLBg1gJCYul9CYpSfe4kwqTzcm2hzLELCxd3lf0fVV8xyj
-         1XnUe1BshbQG3IRgE9Zsx8roRo5/fbkp0zh63i5Me//GRhaVowbcVOq0ThKDFeqKdaFr
-         Pcj7m4PcWXh5DiC407biyHekWWGCOcvWFnIIJdra8F7GghVg/vsTNNKwOk4V76v5g9DZ
-         wB3mW1qIGUX3xOui+7zMVOhQWwPu6iybqGYOu5RaqScNj0SMr2kY7ZxIsKTAEimqyd3K
-         s+pg==
-X-Gm-Message-State: AOAM5304vCUzs7b3v5pMKBZPgCnfzGbjA+TVZH1pM3cYPja1RoMyL2uC
-        RJyFdb1nmMnVr3Nx+DWZojQixPgqYgAAUiQp91WyYsV5wuA6tL7mNlxKCRL0bc+mbdrwXnx3nnU
-        J/3a7Jmr/u6a9PPKimkdMEc3+Ji+JGg4UDA==
-X-Received: by 2002:a17:906:2792:: with SMTP id j18mr2474707ejc.168.1628755158632;
-        Thu, 12 Aug 2021 00:59:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzc04rd5YY+0VVrazWdG/5oamRQqmcGkI7ODDDwqWHgKrb4OyFH7bPQyojZiDobjcVFpWWawA==
-X-Received: by 2002:a17:906:2792:: with SMTP id j18mr2474693ejc.168.1628755158433;
-        Thu, 12 Aug 2021 00:59:18 -0700 (PDT)
+        bh=Qx8Shhu7rI5wSD137gu2JFMhjeGxiRtny4lEcXGkPMA=;
+        b=tTrbP/puv+6RnbdbXm4mcHUqlNiiN5fzpYhtKvGWkyrZBUEGdKg2jPlSV++3rvLnjy
+         Ry/KyxcGcMRmCYQiczXHPnLLa/s+ZOjLmObxpjWCWN5v2Lc53zU1ACPHsuPElZpEBzmT
+         /ByUJZV+57p2SlLXRUOMktB4iCDgraZ/zgJ1oYOzZGNpkjPACgiNCjW60IzGFH7QHbPN
+         mNdHzQyh3lveg83DgMT5pfPkri4eBs8Klq7oOnbrC8yxidFy5l8f0JNtiTYWSNP4oxaU
+         5DjuoylW45Y4bvrcMze4TP+zKRsWJ52UuqrW1d6akg3R9ZDoI2ywDjZLiyWOZ3ffdDps
+         pUMQ==
+X-Gm-Message-State: AOAM532XzJkvRNcyE6+A8Sso5QCuElo0MwwVUw8flxZjcxNkHLlVM85Q
+        iyxkMbc5cx22qmi0aPXsM3kfbWdv0Tec0KFK3I8KNUgj2a90jJqK7mzObL6YVU/Kq3cyCZiWL53
+        R8kK/EgFISCs0po2OToNivrk5qrNa+nXfbQ==
+X-Received: by 2002:a17:906:bc5a:: with SMTP id s26mr2477539ejv.11.1628755431616;
+        Thu, 12 Aug 2021 01:03:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwR4xlL1YR/rmqfWDucvZuyWYsjA0UpggBan/Z0inZ6za/Ebs0DG0Wy65jZeP+BSORL/b5YrQ==
+X-Received: by 2002:a17:906:bc5a:: with SMTP id s26mr2477528ejv.11.1628755431470;
+        Thu, 12 Aug 2021 01:03:51 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id o22sm760440edr.19.2021.08.12.00.59.17
+        by smtp.gmail.com with ESMTPSA id d22sm517201ejj.47.2021.08.12.01.03.50
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Aug 2021 00:59:17 -0700 (PDT)
-Subject: Re: [PATCH v4] platform/x86: acer-wmi: Add Turbo Mode support for
- Acer PH315-53
-To:     JafarAkhondali <jafar.akhoondali@gmail.com>, jlee@suse.com,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        mgross@linux.intel.com
-References: <20210810233928.1389320-1-jafar.akhoondali@gmail.com>
+        Thu, 12 Aug 2021 01:03:51 -0700 (PDT)
+Subject: Re: [PATCH] [v2,1/1] Fix WWAN device disabled issue after S3 deep
+To:     Slark Xiao <slark_xiao@163.com>, hmh@hmh.eng.br,
+        Mark Pearson <markpearson@lenovo.com>
+Cc:     ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210811093407.5583-1-slark_xiao@163.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <8f295c56-1963-f1f9-b88c-062b71f7f0e6@redhat.com>
-Date:   Thu, 12 Aug 2021 09:59:17 +0200
+Message-ID: <70e53b58-4785-5a3d-9525-a7f9e93cd0d2@redhat.com>
+Date:   Thu, 12 Aug 2021 10:03:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210810233928.1389320-1-jafar.akhoondali@gmail.com>
+In-Reply-To: <20210811093407.5583-1-slark_xiao@163.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -82,402 +82,84 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Jafar,
+Hi,
 
-On 8/11/21 1:39 AM, JafarAkhondali wrote:
-> Hi,
+On 8/11/21 11:34 AM, Slark Xiao wrote:
+> When WWAN device wake from S3 deep, under thinkpad platform,
+> WWAN would be disabled. This disable status could be checked
+>  by command 'nmcli r wwan' or 'rfkill list'.
+> Issue analysis as below:
+>   When host resume from S3 deep, thinkpad_acpi driver would
+> call hotkey_resume() function. Finnaly, it will use
+> wan_get_status to check the current status of WWAN device.
+> During this resume progress, wan_get_status would always
+> return off even WWAN boot up completely.
+>   If wan_get_status() return off, rfkill_set_sw_state() would set WWAN's
+> status as disabled.
+>   This may be a fault of LENOVO BIOS.
+>   Workaround is add a WWAN device check before rfkill_set_sw_state().
+> If it's a Foxconn WWAN device, then we will ignore to do a status update.
 > 
-> The Acer Predator Helios series (usually denoted by PHxxx-yy) features
-> a special key above the keyboard named "TURBO". The turbo key does 3
-> things:
-> 1. Set all fan's speeds to TURBO mode
-> 2. Overclocks the CPU and GPU in the safe range
-> 3. Turn on an LED just below the turbo button
-> 
-> All of these actions are done by WMI function calls, and there is no
-> custom OC level for turbo. It acts as a flag for enabling turbo
-> mode instead of telling processors to use 1.3x of power.
-> 
-> I've run some benchmark tests and it worked fine:
-> 
-> GpuTest 0.7.0
-> http://www.geeks3d.com
-> 
-> Module: FurMark
-> Normal mode Score: 7289 points (FPS: 121)
-> Turbo mode Score: 7675 points (FPS: 127)
-> Settings:
-> - 1920x1080 fullscreen
-> - antialiasing: Off
-> - duration: 60000 ms
-> 
-> Renderer:
-> - GeForce RTX 2060/PCIe/SSE2
-> - OpenGL: 4.6.0 NVIDIA 460.32.03
-> 
-> This feature is presented by Acer officially and should not harm
-> hardware in any case.
-> 
-> A challenging part of implementing this feature is that calling
-> overclocking the function requires knowing the exact count of fans for CPU
-> and GPU for each model, which to the best of my knowledge is not
-> available in the kernel.
-> 
-> So after checking the official PredatorSense application methods, it
-> turned out they have provided the software the list of fans in each model.
-> I have access to the mentioned list, and all similar PH-iii-jj can be
-> added easily by matching "DMI_PRODUCT_NAME".
-> 
-> Creating a separate file for the gaming interface was not possible because
-> the current WMI event GUID is needed for the turbo button, and it's not
-> possible to register multiple functions on the same event GUID.
-> 
-> 
-> Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
-> ---
->  Changes in v4:
->  - Fix Indents
->  - Make functions return early
+> Signed-off-by: Slark Xiao <slark_xiao@163.com>
 
-This is looking good, the kernel-buildbot (which finally has managed
-to build the patch now that the indents are fixed) found one last
-small thing to fix.
+Thank you for debugging this and thank you for the patch.
 
-And while looking at that I also found one last small thing to
-improve, see my comments inline / below.
+I'm not in favor of using a pci-device-id list here. Maybe we should
+simply just never update the sw-rfkill state after a suspend-resume ?
 
-So we will need one more version and then this should be ready to
-get merged.
+I mean the sw_state should be unchanged after a suspend/resume.
 
+Only the hw_state on older devices which still have a physical
+radio on/off slider on the side might have changed during suspend.
 
+So I think it might be better to just drop the tpacpi_rfk_update_swstate
+call all together from the resume path?
 
->  Changes in v3:
->  - Remove usages of gaming_interface
->  - Add ACPI output for u32 buffer length
->  - Remove set_u64 and get_u64 functions
->  - Remove unrelated whitespace changes for to this patch
-> 
->  Changes in v2:
->  - Fix formatting problems
-> 
-> 
->  drivers/platform/x86/acer-wmi.c | 183 ++++++++++++++++++++++++++++++++
->  1 file changed, 183 insertions(+)
-> 
-> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-> index 85db9403cc14..183faa6db4b2 100644
-> --- a/drivers/platform/x86/acer-wmi.c
-> +++ b/drivers/platform/x86/acer-wmi.c
-> @@ -60,6 +60,11 @@ MODULE_LICENSE("GPL");
->  #define ACER_WMID_GET_THREEG_METHODID		10
->  #define ACER_WMID_SET_THREEG_METHODID		11
->  
-> +#define ACER_WMID_SET_GAMING_LED_METHODID 2
-> +#define ACER_WMID_GET_GAMING_LED_METHODID 4
-> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
-> +#define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
-> +
->  /*
->   * Acer ACPI method GUIDs
->   */
-> @@ -68,6 +73,7 @@ MODULE_LICENSE("GPL");
->  #define WMID_GUID1		"6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
->  #define WMID_GUID2		"95764E09-FB56-4E83-B31A-37761F60994A"
->  #define WMID_GUID3		"61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
-> +#define WMID_GUID4		"7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56"
->  
->  /*
->   * Acer ACPI event GUIDs
-> @@ -81,6 +87,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
->  enum acer_wmi_event_ids {
->  	WMID_HOTKEY_EVENT = 0x1,
->  	WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
-> +	WMID_GAMING_TURBO_KEY_EVENT = 0x7,
->  };
->  
->  static const struct key_entry acer_wmi_keymap[] __initconst = {
-> @@ -215,6 +222,9 @@ struct hotkey_function_type_aa {
->  #define ACER_CAP_THREEG			BIT(4)
->  #define ACER_CAP_SET_FUNCTION_MODE	BIT(5)
->  #define ACER_CAP_KBD_DOCK		BIT(6)
-> +#define ACER_CAP_TURBO_OC     BIT(7)
-> +#define ACER_CAP_TURBO_LED     BIT(8)
-> +#define ACER_CAP_TURBO_FAN     BIT(9)
->  
->  /*
->   * Interface type flags
-> @@ -301,6 +311,9 @@ struct quirk_entry {
->  	u8 mailled;
->  	s8 brightness;
->  	u8 bluetooth;
-> +	u8 turbo;
-> +	u8 cpu_fans;
-> +	u8 gpu_fans;
->  };
->  
->  static struct quirk_entry *quirks;
-> @@ -312,6 +325,10 @@ static void __init set_quirks(void)
->  
->  	if (quirks->brightness)
->  		interface->capability |= ACER_CAP_BRIGHTNESS;
-> +
-> +	if (quirks->turbo)
-> +		interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
-> +					 | ACER_CAP_TURBO_FAN;
->  }
->  
->  static int __init dmi_matched(const struct dmi_system_id *dmi)
-> @@ -340,6 +357,12 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
->  	.mailled = 1,
->  };
->  
-> +static struct quirk_entry quirk_acer_predator_ph315_53 = {
-> +	.turbo = 1,
-> +	.cpu_fans = 1,
-> +	.gpu_fans = 1,
-> +};
-> +
->  /* This AMW0 laptop has no bluetooth */
->  static struct quirk_entry quirk_medion_md_98300 = {
->  	.wireless = 1,
-> @@ -507,6 +530,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
->  		},
->  		.driver_data = &quirk_acer_travelmate_2490,
->  	},
-> +	{
-> +		.callback = dmi_matched,
-> +		.ident = "Acer Predator PH315-53",
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-> +			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH315-53"),
-> +		},
-> +		.driver_data = &quirk_acer_predator_ph315_53,
-> +	},
->  	{
->  		.callback = set_force_caps,
->  		.ident = "Acer Aspire Switch 10E SW3-016",
-> @@ -1344,6 +1376,93 @@ static struct wmi_interface wmid_v2_interface = {
->  	.type = ACER_WMID_v2,
->  };
->  
-> +/*
-> + * WMID Gaming interface
-> + */
-> +
-> +static acpi_status
-> +WMI_gaming_execute_u64(u32 method_id, u64 in, u64 *out)
-> +{
-> +	struct acpi_buffer input = { (acpi_size) sizeof(u64), (void *)(&in) };
-> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
-> +	union acpi_object *obj;
-> +	u32 tmp = 0;
-> +	acpi_status status;
-> +
-> +	status = wmi_evaluate_method(WMID_GUID4, 0, method_id, &input, &result);
-> +
-> +	if (ACPI_FAILURE(status))
-> +		return status;
-> +	obj = (union acpi_object *) result.pointer;
-> +
-> +	if (obj) {
-> +		if (obj->type == ACPI_TYPE_BUFFER) {
-> +			if (obj->buffer.length == sizeof(u32))
-> +				tmp = *((u32 *) obj->buffer.pointer);
-> +			else if (obj->buffer.length == sizeof(u64))
-> +				tmp = *((u64 *) obj->buffer.pointer);
-> +		} else if (obj->type == ACPI_TYPE_INTEGER) {
-> +			tmp = (u64) obj->integer.value;
-> +		}
-> +	}
-> +
-> +	if (out)
-> +		*out = tmp;
-> +
-> +	kfree(result.pointer);
-> +
-> +	return status;
-> +}
-> +
-> +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
-> +{
-> +	u32 method_id = 0;
-> +
-> +	if (!(interface->capability & cap))
-> +		return AE_BAD_PARAMETER;
-> +
-> +	switch (cap) {
-> +	case ACER_CAP_TURBO_LED:
-> +		method_id = ACER_WMID_SET_GAMING_LED_METHODID;
-> +		break;
-> +	case ACER_CAP_TURBO_FAN:
-> +		method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
-> +		break;
-> +	case ACER_CAP_TURBO_OC:
-> +		method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
-> +		break;
-> +	default:
-> +		return AE_BAD_PARAMETER;
-> +	}
-> +
-> +	return WMI_gaming_execute_u64(method_id, value, NULL);
-> +}
-> +
-> +static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
-> +{
-> +	acpi_status status;
-> +	u64 result;
-> +	u64 input;
-> +	u32 method_id;
-> +
-> +	if (!(interface->capability & cap))
-> +		return AE_BAD_PARAMETER;
-> +
-> +	switch (cap) {
-> +	case ACER_CAP_TURBO_LED:
-> +		method_id = ACER_WMID_GET_GAMING_LED_METHODID;
-> +		input = 0x1;
-> +		break;
-> +	default:
-> +		return AE_BAD_PARAMETER;
-> +	}
-> +	status = WMI_gaming_execute_u64(method_id, input, &result);
-> +	if (ACPI_SUCCESS(status))
-> +		*value = (u64) result;
-> +
-> +	return status;
-> +}
-> +
->  /*
->   * Generic Device (interface-independent)
->   */
-> @@ -1575,6 +1694,66 @@ static int acer_gsensor_event(void)
->  	return 0;
->  }
->  
-> +/*
-> + *  Predator series turbo button
-> + */
-> +static int acer_toggle_turbo(void)
-> +{
-> +	/* Get current state from turbo button */
-> +	u64 turbo_led_state, gpu_fan_config1, gpu_fan_config2;
+Mark do you have any input here?
 
-As the buildbot pointed out these should be initialized to 0.
-
-
-> +	u8 i;
-> +
-> +	if (ACPI_FAILURE(WMID_gaming_get_u64(&turbo_led_state, ACER_CAP_TURBO_LED)))
-> +		return -1;
-> +
-> +	if (turbo_led_state) {
-> +		// turns off turbo led
-> +		WMID_gaming_set_u64(0x1, ACER_CAP_TURBO_LED);
-> +> +		// set FAN mode to auto
-
-From here...
-
-> +		if (quirks->cpu_fans > 0)
-> +			gpu_fan_config2 |= 1;
-> +		for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> +			gpu_fan_config2 |= 1 << (i + 1);
-> +		for (i = 0; i < quirks->gpu_fans; ++i)
-> +			gpu_fan_config2 |= 1 << (i + 3);
-> +		if (quirks->cpu_fans > 0)
-> +			gpu_fan_config1 |= 1;
-> +		for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> +			gpu_fan_config1 |= 1 << (2 * i + 2);
-> +		for (i = 0; i < quirks->gpu_fans; ++i)
-> +			gpu_fan_config1 |= 1 << (2 * i + 6);
-> +		WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
-
-Till here...
-
-> +
-> +		// set OC to normal
-> +		WMID_gaming_set_u64(0x5, ACER_CAP_TURBO_OC);
-> +		WMID_gaming_set_u64(0x7, ACER_CAP_TURBO_OC);
-> +	} else {
-> +		// turn on turbo led
-> +		WMID_gaming_set_u64(0x10001, ACER_CAP_TURBO_LED);
-> +
-> +		// set FAN to turbo mode
-
-The code is identical as the code from here...
-
-> +		if (quirks->cpu_fans > 0)
-> +			gpu_fan_config2 |= 1;
-> +		for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> +			gpu_fan_config2 |= 1 << (i + 1);
-> +		for (i = 0; i < quirks->gpu_fans; ++i)
-> +			gpu_fan_config2 |= 1 << (i + 3);
-> +		if (quirks->cpu_fans > 0)
-> +			gpu_fan_config1 |= 2;
-> +		for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-> +			gpu_fan_config1 |= 2 << (2 * i + 2);
-> +		for (i = 0; i < quirks->gpu_fans; ++i)
-> +			gpu_fan_config1 |= 2 << (2 * i + 6);
-> +		WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
-
-Till here. With the exception of the value being or-ed into gpu_fan_config1, being 1 in the
-"// set FAN mode to auto" case and 2 in the "// set FAN to turbo mode" mode case.
-
-Please add a new helper for this like this:
-
-void WMID_gaming_set_fan_mode(u8 value)
-{
-	u64 gpu_fan_config1 = 0, gpu_fan_config2 = 0;
-	int i;
-
-	if (quirks->cpu_fans > 0)
-		gpu_fan_config2 |= 1;
-	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-		gpu_fan_config2 |= 1 << (i + 1);
-	for (i = 0; i < quirks->gpu_fans; ++i)
-		gpu_fan_config2 |= 1 << (i + 3);
-	if (quirks->cpu_fans > 0)
-		gpu_fan_config1 |= value;
-	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
-		gpu_fan_config1 |= value << (2 * i + 2);
-	for (i = 0; i < quirks->gpu_fans; ++i)
-		gpu_fan_config1 |= value << (2 * i + 6);
-	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
-}
-
-And call that in both places to remove the duplication.
-
-
-Also I just noticed that you are using c++ style '//' comments here. Please use
-standard C-style '/* ... */' comments instead like we do every where else in
-the drivers/platform/x86 code.
-
-Thanks & Regards,
+Regards,
 
 Hans
 
 
 
+> ---
+>  drivers/platform/x86/thinkpad_acpi.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 603156a6e3ed..e3b7bc0e7a33 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -1159,6 +1159,13 @@ struct tpacpi_rfk_ops {
+>  
+>  static struct tpacpi_rfk *tpacpi_rfkill_switches[TPACPI_RFK_SW_MAX];
+>  
+> +/*Foxconn SDX55 T77W175 products. All available device ID*/
+> +static const struct pci_device_id foxconn_device_ids[] = {
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AB) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0AF) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_FOXCONN, 0xE0B4) },
+> +	{}
+> +};
+>  /* Query FW and update rfkill sw state for a given rfkill switch */
+>  static int tpacpi_rfk_update_swstate(const struct tpacpi_rfk *tp_rfk)
+>  {
+> @@ -1182,8 +1189,13 @@ static void tpacpi_rfk_update_swstate_all(void)
+>  {
+>  	unsigned int i;
+>  
+> -	for (i = 0; i < TPACPI_RFK_SW_MAX; i++)
+> -		tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
+> +	for (i = 0; i < TPACPI_RFK_SW_MAX; i++) {
+> +		if (pci_dev_present(foxconn_device_ids) && i == 1)
+> +			pr_info("Find Foxconn wwan device, ignore to update rfkill switch status\n");
+> +		else
+> +			tpacpi_rfk_update_swstate(tpacpi_rfkill_switches[i]);
 > +
-> +		// set OC to turbo mode
-> +		WMID_gaming_set_u64(0x205, ACER_CAP_TURBO_OC);
-> +		WMID_gaming_set_u64(0x207, ACER_CAP_TURBO_OC);
 > +	}
-> +	return turbo_led_state;
-> +}
-> +
+>  }
+>  
 >  /*
->   * Switch series keyboard dock status
->   */
-> @@ -1872,6 +2051,10 @@ static void acer_wmi_notify(u32 value, void *context)
->  		acer_gsensor_event();
->  		acer_kbd_dock_event(&return_value);
->  		break;
-> +	case WMID_GAMING_TURBO_KEY_EVENT:
-> +		if (return_value.key_num == 0x4)
-> +			acer_toggle_turbo();
-> +		break;
->  	default:
->  		pr_warn("Unknown function number - %d - %d\n",
->  			return_value.function, return_value.key_num);
 > 
 
