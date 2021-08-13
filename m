@@ -8,74 +8,73 @@ X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23F5C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 11:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29FBC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 11:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C702A6104F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 11:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99E861038
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 11:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239683AbhHMLS4 (ORCPT
+        id S240288AbhHMLWw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 07:18:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30151 "EHLO
+        Fri, 13 Aug 2021 07:22:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54330 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239428AbhHMLS4 (ORCPT
+        by vger.kernel.org with ESMTP id S239428AbhHMLWv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 07:18:56 -0400
+        Fri, 13 Aug 2021 07:22:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1628853509;
+        s=mimecast20190719; t=1628853745;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=B1YAoDB2tVdVkwW31D/57wP+jmLuaBJs6eYuBTaRpCA=;
-        b=KYZUfABexpL5BGuPvCjBOp+/K8o9L/UD1gYZysDh2i/S+heIK2qWiBYnkk/5/dYMCd48vV
-        8fSzDe5g2vPN9L8NuqZUOuhrH9D3zMZg6iZ7VtW5pyf610FJh/9og56YM1J9nmB2/9SlWp
-        vW69vlyKGEJH4OK2U6OZJxjdF3xPNkk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-hyrsW-qyPz-d7MxdO_e3xA-1; Fri, 13 Aug 2021 07:18:28 -0400
-X-MC-Unique: hyrsW-qyPz-d7MxdO_e3xA-1
-Received: by mail-ed1-f72.google.com with SMTP id n4-20020aa7c6840000b02903be94ce771fso4182072edq.11
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 04:18:27 -0700 (PDT)
+        bh=CHsYpsXnONe0m6Jf2XDQ6cAZsrogT4OL8dQf/YW2jvA=;
+        b=AUJpJSTBYiNKAB1uiGynFRLV9YRPUULDYRGLjFMIt1J1Q76pfVNrsTATA/IPHtnfW92GSL
+        rx+2taO46SQR4z9/u8UI6CsimVe7EUQalOJj4CeCOnBrHK4I4kSgwK+lW8zTKaO/yVAlO5
+        vWHRMNKDdLhvfMor3fgwujZMmPT+A4w=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-Hu75hCspM6uY9XjK8UW-3A-1; Fri, 13 Aug 2021 07:22:23 -0400
+X-MC-Unique: Hu75hCspM6uY9XjK8UW-3A-1
+Received: by mail-ed1-f69.google.com with SMTP id m16-20020a056402511000b003bead176527so2171607edd.10
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 04:22:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=B1YAoDB2tVdVkwW31D/57wP+jmLuaBJs6eYuBTaRpCA=;
-        b=ra3aFpEfby6DPEVsjlUzJw3V+nFiUVZhea9ISAOf3wQEctimt1VdwAFoClTX+hh/ug
-         fMZQsVSY6QBE+aHp+uhKpkJrbp6OtIny9HLK6DrE1HCiXL2juvZ2/DF4LxsaSF1RUJXC
-         0LFY+1gqHE0UGPcJLH+2WljaCMShnebHwQ48JshG+Ei3ly1b3qCZCSrosNwfXDUzWjXG
-         gpnfdXP3GG7IRxh73B8HxyUrZfcyFdxlEAu1agSsrcV2598HL+mibshGWFNWg8/wHYq1
-         pTvZ2rlTCK6DTLwcn/Y6M34kfuD7Fs6Pu1FSEVo6jtTAeQ7Rwm2Ek3bAYUVqH2nkztDg
-         LvJg==
-X-Gm-Message-State: AOAM532Ul6ZGoF7p+4zxpmCalSNYD9jAugppMRefMG4t6U/4uzT7y4LN
-        jopSiEULEk7GHwkrg45PxSHFdxEyQSMJOuNVWcMJcRwZZStK+x1Tpb0QupuN2bvnRQOhFLghAXo
-        DqDcmFvDdLqJaI0uRosBsTaJ5B+ZeCfcLSA==
-X-Received: by 2002:a05:6402:cb9:: with SMTP id cn25mr2436205edb.271.1628853507016;
-        Fri, 13 Aug 2021 04:18:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxA3N6Ogi9ZcphDRsJSWT9CUAXF5A4SNj/CljSRgFDjcGGHCFK9t0C6FF3Eze3xLODmpSCiDA==
-X-Received: by 2002:a05:6402:cb9:: with SMTP id cn25mr2436182edb.271.1628853506848;
-        Fri, 13 Aug 2021 04:18:26 -0700 (PDT)
+        bh=CHsYpsXnONe0m6Jf2XDQ6cAZsrogT4OL8dQf/YW2jvA=;
+        b=eg5PoqCBNFF/vi7OrazLil5egZYRiz6dv8QI20+gwnDi/TWEd/WIyHi2SqnlbXSByW
+         9XPNIvh8/tcwTssOj2TG4kN9wY3n0wPT3560nXhFMwqfGga2Lhntwi3zrPw/Btme+lD0
+         eMgcwKeRv/fgQ+lu93s3s1NUsLtw7oQp6oDudHDcdCjuHuqX9libHhOJQoWhCEuniAxF
+         xJv5n3IWqK8taJVGB/3diBH+ZkfgRlrS6TE38l89/90PdsySUKn787HNII5j8CGkfylB
+         IcNdemJpxRwwIdJQZnKZ+2b56OvRZxcMceAYSUDkYGMdpLepFMXe8vmsaSxGxUPpM8kH
+         uKHA==
+X-Gm-Message-State: AOAM5321YYXM4NYhrAlrD37/MbtjfU9B5RefNFcV5LCz9Slm7PAKs6Il
+        OAaJTor6AzgEmidLOxvrPHBcReL/vJh7dCuAnhtm03gDAX2kTIR9ewOtgU22RzVyOdWrcOQNo8c
+        zrFnUyVXYTgpcTM1SkLZqZL6ZQexVLZGsIw==
+X-Received: by 2002:a17:907:20e7:: with SMTP id rh7mr1988828ejb.390.1628853742182;
+        Fri, 13 Aug 2021 04:22:22 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxtyySp1QwjKY6+nn+OysDUNR8yR2IL+u4UEC/FwtXY7UVmd+tuokOG9RfmkVMbEoQojkA90w==
+X-Received: by 2002:a17:907:20e7:: with SMTP id rh7mr1988789ejb.390.1628853741551;
+        Fri, 13 Aug 2021 04:22:21 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id x15sm494448ejv.95.2021.08.13.04.18.26
+        by smtp.gmail.com with ESMTPSA id x20sm494429ejb.100.2021.08.13.04.22.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Aug 2021 04:18:26 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: Update Mario Limonciello's email address in
- the docs
-To:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>
-Cc:     platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        Mario Limonciello <mario.limonciello@outlook.com>
-References: <20210810160900.106512-1-hdegoede@redhat.com>
+        Fri, 13 Aug 2021 04:22:21 -0700 (PDT)
+Subject: Re: [PATCH v5] platform/x86: acer-wmi: Add Turbo Mode support for
+ Acer PH315-53
+To:     JafarAkhondali <jafar.akhoondali@gmail.com>, jlee@suse.com,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        mgross@linux.intel.com
+References: <20210812125307.1749207-1-jafar.akhoondali@gmail.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0f446d01-1f38-8b49-369c-891068e756dd@redhat.com>
-Date:   Fri, 13 Aug 2021 13:18:25 +0200
+Message-ID: <77aab2df-b3c3-541d-461a-8755277fd425@redhat.com>
+Date:   Fri, 13 Aug 2021 13:22:20 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210810160900.106512-1-hdegoede@redhat.com>
+In-Reply-To: <20210812125307.1749207-1-jafar.akhoondali@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -85,25 +84,57 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/10/21 6:09 PM, Hans de Goede wrote:
-> Various pdx86 docs under Documentation/ABI/testing still use Mario's
-> old, now defunct, <mario.limonciello@dell.com> address.
+On 8/12/21 2:53 PM, JafarAkhondali wrote:
+> Hi,
 > 
-> Update the docs to point to either the new Dell.Client.Kernel@dell.com
-> email alias for Dell specific drivers, or to Mario's new @outlook.com
-> address for other drivers.
+> The Acer Predator Helios series (usually denoted by PHxxx-yy) features
+> a particular key above the keyboard named "TURBO".
+> The turbo key does 3 things:
+> 1. Set all fan's speeds to TURBO mode
+> 2. Overclocks the CPU and GPU in the safe range
+> 3. Turn on an LED just below the turbo button
 > 
-> Cc: Dell.Client.Kernel@dell.com
-> Cc: Mario Limonciello <mario.limonciello@outlook.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/ABI/testing/dell-smbios-wmi                 | 2 +-
->  Documentation/ABI/testing/sysfs-bus-thunderbolt           | 2 +-
->  Documentation/ABI/testing/sysfs-class-firmware-attributes | 8 ++++----
->  Documentation/ABI/testing/sysfs-platform-dell-smbios      | 2 +-
->  .../ABI/testing/sysfs-platform-intel-wmi-thunderbolt      | 2 +-
->  Documentation/ABI/testing/sysfs-power                     | 2 +-
->  6 files changed, 9 insertions(+), 9 deletions(-)
+> All the above actions are operating using WMI function calls,
+> and there is no custom OC level for turbo. It acts as a flag
+> for enabling turbo mode instead of telling processors to use
+> a specific multiply of power (e.g. 1.3x of power).
+> 
+> I've run some benchmark tests and it worked fine:
+> 
+> GpuTest 0.7.0
+> http://www.geeks3d.com
+> 
+> Module: FurMark
+> Normal mode Score: 7289 points (FPS: 121)
+> Turbo mode Score: 7675 points (FPS: 127)
+> Settings:
+> - 1920x1080 fullscreen
+> - antialiasing: Off
+> - duration: 60000 ms
+> 
+> Renderer:
+> - GeForce RTX 2060/PCIe/SSE2
+> - OpenGL: 4.6.0 NVIDIA 460.32.03
+> 
+> This feature is presented by Acer officially and should not harm
+> hardware in any case.
+> 
+> A challenging part of implementing this feature is that calling
+> overclock function requires knowing the exact count of fans
+> for CPU and GPU of each model, which to the best of my
+> knowledge is not available in the kernel.
+> 
+> So after checking the official PredatorSense application methods, it
+> turned out they have provided the software the list of fans in each model.
+> I have access to the mentioned list, and all similar PH-iii-jj can be
+> added easily by matching "DMI_PRODUCT_NAME".
+> 
+> Creating a specific file for the Acer gaming features is not possible
+> because the current in use WMI event GUID is required for the turbo button
+> and it's not possible to register multiple listeners on a single WMI event.
+> 
+> 
+> Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
 
 Thank you for your patch, I've applied this patch to my review-hans 
 branch:
@@ -123,115 +154,288 @@ Hans
 
 
 
+
+> ---
+>  Changes in v5:
+>  - Use helper for Turbo fan mode
+>  - Initialize OC GPU config variables
 > 
-> diff --git a/Documentation/ABI/testing/dell-smbios-wmi b/Documentation/ABI/testing/dell-smbios-wmi
-> index 5f3a0dc67050..f58229084469 100644
-> --- a/Documentation/ABI/testing/dell-smbios-wmi
-> +++ b/Documentation/ABI/testing/dell-smbios-wmi
-> @@ -1,7 +1,7 @@
->  What:		/dev/wmi/dell-smbios
->  Date:		November 2017
->  KernelVersion:	4.15
-> -Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-> +Contact:	Dell.Client.Kernel@dell.com
->  Description:
->  		Perform SMBIOS calls on supported Dell machines.
->  		through the Dell ACPI-WMI interface.
-> diff --git a/Documentation/ABI/testing/sysfs-bus-thunderbolt b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> index 95c21d6c9a84..b7e87f6c7d47 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> +++ b/Documentation/ABI/testing/sysfs-bus-thunderbolt
-> @@ -232,7 +232,7 @@ Description:	When new NVM image is written to the non-active NVM
->  What:		/sys/bus/thunderbolt/devices/.../nvm_authenticate_on_disconnect
->  Date:		Oct 2020
->  KernelVersion:	v5.9
-> -Contact:	Mario Limonciello <mario.limonciello@dell.com>
-> +Contact:	Mario Limonciello <mario.limonciello@outlook.com>
->  Description:	For supported devices, automatically authenticate the new Thunderbolt
->  		image when the device is disconnected from the host system.
+>  Changes in v4:
+>  - Fix Indents
+>  - Make functions return early
+> 
+>  Changes in v3:
+>  - Remove usages of gaming_interface
+>  - Add ACPI output for u32 buffer length
+>  - Remove set_u64 and get_u64 functions
+>  - Remove unrelated whitespace changes for to this patch
+> 
+>  Changes in v2:
+>  - Fix formatting problems
+> 
+> 
+>  drivers/platform/x86/acer-wmi.c | 179 ++++++++++++++++++++++++++++++++
+>  1 file changed, 179 insertions(+)
+> 
+> diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
+> index 85db9403cc14..c8f118fe04ac 100644
+> --- a/drivers/platform/x86/acer-wmi.c
+> +++ b/drivers/platform/x86/acer-wmi.c
+> @@ -60,6 +60,11 @@ MODULE_LICENSE("GPL");
+>  #define ACER_WMID_GET_THREEG_METHODID		10
+>  #define ACER_WMID_SET_THREEG_METHODID		11
 >  
-> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> index 3348bf80a37c..0b43997b76e3 100644
-> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-> @@ -2,8 +2,8 @@ What:		/sys/class/firmware-attributes/*/attributes/*/
->  Date:		February 2021
->  KernelVersion:	5.11
->  Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> -		Mario Limonciello <mario.limonciello@dell.com>,
->  		Prasanth KSR <prasanth.ksr@dell.com>
-> +		Dell.Client.Kernel@dell.com
->  Description:
->  		A sysfs interface for systems management software to enable
->  		configuration capability on supported systems.  This directory
-> @@ -130,8 +130,8 @@ What:		/sys/class/firmware-attributes/*/authentication/
->  Date:		February 2021
->  KernelVersion:	5.11
->  Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> -		Mario Limonciello <mario.limonciello@dell.com>,
->  		Prasanth KSR <prasanth.ksr@dell.com>
-> +		Dell.Client.Kernel@dell.com
->  Description:
->  		Devices support various authentication mechanisms which can be exposed
->  		as a separate configuration object.
-> @@ -220,8 +220,8 @@ What:		/sys/class/firmware-attributes/*/attributes/pending_reboot
->  Date:		February 2021
->  KernelVersion:	5.11
->  Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> -		Mario Limonciello <mario.limonciello@dell.com>,
->  		Prasanth KSR <prasanth.ksr@dell.com>
-> +		Dell.Client.Kernel@dell.com
->  Description:
->  		A read-only attribute reads 1 if a reboot is necessary to apply
->  		pending BIOS attribute changes. Also, an uevent_KOBJ_CHANGE is
-> @@ -249,8 +249,8 @@ What:		/sys/class/firmware-attributes/*/attributes/reset_bios
->  Date:		February 2021
->  KernelVersion:	5.11
->  Contact:	Divya Bharathi <Divya.Bharathi@Dell.com>,
-> -		Mario Limonciello <mario.limonciello@dell.com>,
->  		Prasanth KSR <prasanth.ksr@dell.com>
-> +		Dell.Client.Kernel@dell.com
->  Description:
->  		This attribute can be used to reset the BIOS Configuration.
->  		Specifically, it tells which type of reset BIOS configuration is being
-> diff --git a/Documentation/ABI/testing/sysfs-platform-dell-smbios b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-> index e6e0f7f834a7..5583da581025 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-dell-smbios
-> +++ b/Documentation/ABI/testing/sysfs-platform-dell-smbios
-> @@ -1,7 +1,7 @@
->  What:		/sys/devices/platform/<platform>/tokens/*
->  Date:		November 2017
->  KernelVersion:	4.15
-> -Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-> +Contact:	Dell.Client.Kernel@dell.com
->  Description:
->  		A read-only description of Dell platform tokens
->  		available on the machine.
-> diff --git a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-> index e19144fd5d86..fd3a7ec79760 100644
-> --- a/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-> +++ b/Documentation/ABI/testing/sysfs-platform-intel-wmi-thunderbolt
-> @@ -1,7 +1,7 @@
->  What:		/sys/devices/platform/<platform>/force_power
->  Date:		September 2017
->  KernelVersion:	4.15
-> -Contact:	"Mario Limonciello" <mario.limonciello@dell.com>
-> +Contact:	"Mario Limonciello" <mario.limonciello@outlook.com>
->  Description:
->  		Modify the platform force power state, influencing
->  		Thunderbolt controllers to turn on or off when no
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
-> index 51c0f578bfce..90ec4987074b 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -295,7 +295,7 @@ Description:
+> +#define ACER_WMID_SET_GAMING_LED_METHODID 2
+> +#define ACER_WMID_GET_GAMING_LED_METHODID 4
+> +#define ACER_WMID_SET_GAMING_FAN_BEHAVIOR 14
+> +#define ACER_WMID_SET_GAMING_MISC_SETTING_METHODID 22
+> +
+>  /*
+>   * Acer ACPI method GUIDs
+>   */
+> @@ -68,6 +73,7 @@ MODULE_LICENSE("GPL");
+>  #define WMID_GUID1		"6AF4F258-B401-42FD-BE91-3D4AC2D7C0D3"
+>  #define WMID_GUID2		"95764E09-FB56-4E83-B31A-37761F60994A"
+>  #define WMID_GUID3		"61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
+> +#define WMID_GUID4		"7A4DDFE7-5B5D-40B4-8595-4408E0CC7F56"
 >  
->  What:		/sys/power/resume_offset
->  Date:		April 2018
-> -Contact:	Mario Limonciello <mario.limonciello@dell.com>
-> +Contact:	Mario Limonciello <mario.limonciello@outlook.com>
->  Description:
->  		This file is used for telling the kernel an offset into a disk
->  		to use when hibernating the system such as with a swap file.
+>  /*
+>   * Acer ACPI event GUIDs
+> @@ -81,6 +87,7 @@ MODULE_ALIAS("wmi:676AA15E-6A47-4D9F-A2CC-1E6D18D14026");
+>  enum acer_wmi_event_ids {
+>  	WMID_HOTKEY_EVENT = 0x1,
+>  	WMID_ACCEL_OR_KBD_DOCK_EVENT = 0x5,
+> +	WMID_GAMING_TURBO_KEY_EVENT = 0x7,
+>  };
+>  
+>  static const struct key_entry acer_wmi_keymap[] __initconst = {
+> @@ -215,6 +222,9 @@ struct hotkey_function_type_aa {
+>  #define ACER_CAP_THREEG			BIT(4)
+>  #define ACER_CAP_SET_FUNCTION_MODE	BIT(5)
+>  #define ACER_CAP_KBD_DOCK		BIT(6)
+> +#define ACER_CAP_TURBO_OC     BIT(7)
+> +#define ACER_CAP_TURBO_LED     BIT(8)
+> +#define ACER_CAP_TURBO_FAN     BIT(9)
+>  
+>  /*
+>   * Interface type flags
+> @@ -301,6 +311,9 @@ struct quirk_entry {
+>  	u8 mailled;
+>  	s8 brightness;
+>  	u8 bluetooth;
+> +	u8 turbo;
+> +	u8 cpu_fans;
+> +	u8 gpu_fans;
+>  };
+>  
+>  static struct quirk_entry *quirks;
+> @@ -312,6 +325,10 @@ static void __init set_quirks(void)
+>  
+>  	if (quirks->brightness)
+>  		interface->capability |= ACER_CAP_BRIGHTNESS;
+> +
+> +	if (quirks->turbo)
+> +		interface->capability |= ACER_CAP_TURBO_OC | ACER_CAP_TURBO_LED
+> +					 | ACER_CAP_TURBO_FAN;
+>  }
+>  
+>  static int __init dmi_matched(const struct dmi_system_id *dmi)
+> @@ -340,6 +357,12 @@ static struct quirk_entry quirk_acer_travelmate_2490 = {
+>  	.mailled = 1,
+>  };
+>  
+> +static struct quirk_entry quirk_acer_predator_ph315_53 = {
+> +	.turbo = 1,
+> +	.cpu_fans = 1,
+> +	.gpu_fans = 1,
+> +};
+> +
+>  /* This AMW0 laptop has no bluetooth */
+>  static struct quirk_entry quirk_medion_md_98300 = {
+>  	.wireless = 1,
+> @@ -507,6 +530,15 @@ static const struct dmi_system_id acer_quirks[] __initconst = {
+>  		},
+>  		.driver_data = &quirk_acer_travelmate_2490,
+>  	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "Acer Predator PH315-53",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "Predator PH315-53"),
+> +		},
+> +		.driver_data = &quirk_acer_predator_ph315_53,
+> +	},
+>  	{
+>  		.callback = set_force_caps,
+>  		.ident = "Acer Aspire Switch 10E SW3-016",
+> @@ -1344,6 +1376,114 @@ static struct wmi_interface wmid_v2_interface = {
+>  	.type = ACER_WMID_v2,
+>  };
+>  
+> +/*
+> + * WMID Gaming interface
+> + */
+> +
+> +static acpi_status
+> +WMI_gaming_execute_u64(u32 method_id, u64 in, u64 *out)
+> +{
+> +	struct acpi_buffer input = { (acpi_size) sizeof(u64), (void *)(&in) };
+> +	struct acpi_buffer result = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	union acpi_object *obj;
+> +	u32 tmp = 0;
+> +	acpi_status status;
+> +
+> +	status = wmi_evaluate_method(WMID_GUID4, 0, method_id, &input, &result);
+> +
+> +	if (ACPI_FAILURE(status))
+> +		return status;
+> +	obj = (union acpi_object *) result.pointer;
+> +
+> +	if (obj) {
+> +		if (obj->type == ACPI_TYPE_BUFFER) {
+> +			if (obj->buffer.length == sizeof(u32))
+> +				tmp = *((u32 *) obj->buffer.pointer);
+> +			else if (obj->buffer.length == sizeof(u64))
+> +				tmp = *((u64 *) obj->buffer.pointer);
+> +		} else if (obj->type == ACPI_TYPE_INTEGER) {
+> +			tmp = (u64) obj->integer.value;
+> +		}
+> +	}
+> +
+> +	if (out)
+> +		*out = tmp;
+> +
+> +	kfree(result.pointer);
+> +
+> +	return status;
+> +}
+> +
+> +static acpi_status WMID_gaming_set_u64(u64 value, u32 cap)
+> +{
+> +	u32 method_id = 0;
+> +
+> +	if (!(interface->capability & cap))
+> +		return AE_BAD_PARAMETER;
+> +
+> +	switch (cap) {
+> +	case ACER_CAP_TURBO_LED:
+> +		method_id = ACER_WMID_SET_GAMING_LED_METHODID;
+> +		break;
+> +	case ACER_CAP_TURBO_FAN:
+> +		method_id = ACER_WMID_SET_GAMING_FAN_BEHAVIOR;
+> +		break;
+> +	case ACER_CAP_TURBO_OC:
+> +		method_id = ACER_WMID_SET_GAMING_MISC_SETTING_METHODID;
+> +		break;
+> +	default:
+> +		return AE_BAD_PARAMETER;
+> +	}
+> +
+> +	return WMI_gaming_execute_u64(method_id, value, NULL);
+> +}
+> +
+> +static acpi_status WMID_gaming_get_u64(u64 *value, u32 cap)
+> +{
+> +	acpi_status status;
+> +	u64 result;
+> +	u64 input;
+> +	u32 method_id;
+> +
+> +	if (!(interface->capability & cap))
+> +		return AE_BAD_PARAMETER;
+> +
+> +	switch (cap) {
+> +	case ACER_CAP_TURBO_LED:
+> +		method_id = ACER_WMID_GET_GAMING_LED_METHODID;
+> +		input = 0x1;
+> +		break;
+> +	default:
+> +		return AE_BAD_PARAMETER;
+> +	}
+> +	status = WMI_gaming_execute_u64(method_id, input, &result);
+> +	if (ACPI_SUCCESS(status))
+> +		*value = (u64) result;
+> +
+> +	return status;
+> +}
+> +
+> +void WMID_gaming_set_fan_mode(u8 fan_mode)
+> +{
+> +	/* fan_mode = 1 is used for auto, fan_mode = 2 used for turbo*/
+> +	u64 gpu_fan_config1 = 0, gpu_fan_config2 = 0;
+> +	int i;
+> +
+> +	if (quirks->cpu_fans > 0)
+> +		gpu_fan_config2 |= 1;
+> +	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +		gpu_fan_config2 |= 1 << (i + 1);
+> +	for (i = 0; i < quirks->gpu_fans; ++i)
+> +		gpu_fan_config2 |= 1 << (i + 3);
+> +	if (quirks->cpu_fans > 0)
+> +		gpu_fan_config1 |= fan_mode;
+> +	for (i = 0; i < (quirks->cpu_fans + quirks->gpu_fans); ++i)
+> +		gpu_fan_config1 |= fan_mode << (2 * i + 2);
+> +	for (i = 0; i < quirks->gpu_fans; ++i)
+> +		gpu_fan_config1 |= fan_mode << (2 * i + 6);
+> +	WMID_gaming_set_u64(gpu_fan_config2 | gpu_fan_config1 << 16, ACER_CAP_TURBO_FAN);
+> +}
+> +
+>  /*
+>   * Generic Device (interface-independent)
+>   */
+> @@ -1575,6 +1715,41 @@ static int acer_gsensor_event(void)
+>  	return 0;
+>  }
+>  
+> +/*
+> + *  Predator series turbo button
+> + */
+> +static int acer_toggle_turbo(void)
+> +{
+> +	u64 turbo_led_state;
+> +
+> +	/* Get current state from turbo button */
+> +	if (ACPI_FAILURE(WMID_gaming_get_u64(&turbo_led_state, ACER_CAP_TURBO_LED)))
+> +		return -1;
+> +
+> +	if (turbo_led_state) {
+> +		/* Turn off turbo led */
+> +		WMID_gaming_set_u64(0x1, ACER_CAP_TURBO_LED);
+> +
+> +		/* Set FAN mode to auto */
+> +		WMID_gaming_set_fan_mode(0x1);
+> +
+> +		/* Set OC to normal */
+> +		WMID_gaming_set_u64(0x5, ACER_CAP_TURBO_OC);
+> +		WMID_gaming_set_u64(0x7, ACER_CAP_TURBO_OC);
+> +	} else {
+> +		/* Turn on turbo led */
+> +		WMID_gaming_set_u64(0x10001, ACER_CAP_TURBO_LED);
+> +
+> +		/* Set FAN mode to turbo */
+> +		WMID_gaming_set_fan_mode(0x2);
+> +
+> +		/* Set OC to turbo mode */
+> +		WMID_gaming_set_u64(0x205, ACER_CAP_TURBO_OC);
+> +		WMID_gaming_set_u64(0x207, ACER_CAP_TURBO_OC);
+> +	}
+> +	return turbo_led_state;
+> +}
+> +
+>  /*
+>   * Switch series keyboard dock status
+>   */
+> @@ -1872,6 +2047,10 @@ static void acer_wmi_notify(u32 value, void *context)
+>  		acer_gsensor_event();
+>  		acer_kbd_dock_event(&return_value);
+>  		break;
+> +	case WMID_GAMING_TURBO_KEY_EVENT:
+> +		if (return_value.key_num == 0x4)
+> +			acer_toggle_turbo();
+> +		break;
+>  	default:
+>  		pr_warn("Unknown function number - %d - %d\n",
+>  			return_value.function, return_value.key_num);
 > 
 
