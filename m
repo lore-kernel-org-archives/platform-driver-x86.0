@@ -2,199 +2,213 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82F5C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 20:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3811DC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 22:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8407D610CC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 20:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE276103A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 22:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234385AbhHMURs (ORCPT
+        id S235073AbhHMWMR (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 16:17:48 -0400
-Received: from mail-mw2nam12on2067.outbound.protection.outlook.com ([40.107.244.67]:62944
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233890AbhHMURq (ORCPT
+        Fri, 13 Aug 2021 18:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235029AbhHMWMR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 16:17:46 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WGw0U9FkgKp4hxsvcFdS+Z7DUF2Um0cW04RoIpgi//zy5IZ39Kz1fCX2rVhK9AfVPCzIZx/VN+/c0vKLjcELXtCeqlZEkPZhhS2XiAfPgWhgMPuEdvIhHN7rBVvbCQams9QlvgTp5FsR8jCKuu39Gtbgm0OZ+Qn86bPCokiEi4UDBO+eeCQ7XyeWjdlfMm4hv3airl6E+yaPDId+2s512TtyQbjafNM0Gx3IYB4zzGH0ejWseKFeD1hF5InIjfRLO3d/akqNGHR0KClTwfFZljax2IYs8nKrhO2BbTW5mosq8j6ZERwGi2ni9faElRKE+XquZXbgcBbdvP+h87A36Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DpwOvDM3GnwNTNcL815T+RSOydEG+h+3oDIg9dnFcc8=;
- b=EMLZ5P4NMpgY2QIUrBxnmxGsz5hDMG67hy4Mog8GvtOJgYyqUItuz59aeYyBFPlRSns5aRKJYaYuB3r4WULP65T9OWtOv0RdVSGJu0Icg+VGxcNNUCgbMZFTV5Uairek2h2CXjpfoW01HVKZlpw3q+v1wM6g42M2n7dbFRJFxyWX+84zq9k25c7lFC0po7sv/rVgzcUxwaLNRYDAgcB61bcpPj46NVIOv6g5OLvE+va68vyZ8p1ex93HYhmoQhFd2O3SSzsJQZf/jjzLOe85x3iisIzBrCByNHjGXWr4CYrcpUHLMJmnaVZvTfqUucinEUcYywOo3H00deM7niXn4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DpwOvDM3GnwNTNcL815T+RSOydEG+h+3oDIg9dnFcc8=;
- b=MyTmwlzgKeBu9Kr9AdaSE1zoak8QxWlRT/g45sd8A3BxVuycfnUWDTtSlbv7kbm+wPD+NOE8KuxfMaVbm1BHq28hmB5OTiCq1m8BAT98u8NbbFWus7koWMgW2ellOLwPUjgB57RbR3+znK3BrbrvmdTSLWxPBzjHKCg3KahE5E4=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
- by DM4PR12MB5056.namprd12.prod.outlook.com (2603:10b6:5:38b::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.16; Fri, 13 Aug
- 2021 20:17:17 +0000
-Received: from DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d560:d21:cd59:9418]) by DM4PR12MB5229.namprd12.prod.outlook.com
- ([fe80::d560:d21:cd59:9418%6]) with mapi id 15.20.4415.019; Fri, 13 Aug 2021
- 20:17:17 +0000
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>,
-        Baoquan He <bhe@redhat.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
- <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
- <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
- <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
- <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
- <20210812100724.t4cdh7xbkuqgnsc3@box.shutemov.name>
- <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
-Message-ID: <f6399958-d161-fd58-fac7-9b849bc4f05e@amd.com>
-Date:   Fri, 13 Aug 2021 15:17:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR13CA0015.namprd13.prod.outlook.com
- (2603:10b6:806:21::20) To DM4PR12MB5229.namprd12.prod.outlook.com
- (2603:10b6:5:398::12)
+        Fri, 13 Aug 2021 18:12:17 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D05C061756
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 15:11:49 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id w21-20020a7bc1150000b02902e69ba66ce6so7801580wmi.1
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 15:11:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=svgalib-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version;
+        bh=UX+4u3V1Y2tPHth8Wcu+SDOOt5/oAqcVMwJA7Wy8hAE=;
+        b=vXY7eoQBDSJQXsd0I1FR5zUwZyVhkVucb6Q2ZI6OBEsQLTiojaybFNhbgthGtenPne
+         9SUKzDhzLdxN0mQqeV6/DeBd8zgKmEBHmq1VICyOsHvKAhyFdpaTPXRAZVTltgJglKo/
+         l03nL2WblUeaiqK9gpiAqbIEVAxnU4tGPMqMmGR6i6j+WfoSUJkWalIGCdFnOlQF9CE+
+         X6rzawQmUhesx93y5PT6E/MAbsnfXV9KhGJJyXYfRuL1UCj3MF7/MK1LAqRaWmAitsR+
+         L/quNHRqc/TAWWtA/Nsb6UVfrOTuZL4cb/PoGBxPEDhc5XGk308Rgrwp1U4BYcayTD+I
+         o4zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version;
+        bh=UX+4u3V1Y2tPHth8Wcu+SDOOt5/oAqcVMwJA7Wy8hAE=;
+        b=rZ+scTgclwPlAVvvOexGW5ZI16FdIBuTdba1pR74PFTiOBe8zsKMwyjheZqPotNJvJ
+         T1LsNUnTmAD7xzO2zOWPKdbxkYPkGg2qNQzImvAiQIzznoO7yasm8AnQEUA6mMgg6Rpc
+         Cbq4n50LV7Vz2H/hlDQsaJ/HNzZsUqR/m85ozfij4z73WFAL/UAzp4hZUeIzYMhB42HW
+         6+5zOdJHehsQEWFEKoY4D8gohd6QlckzV7Fp7h9XB6lbSoUp9WOube0qRrMPx71bB164
+         A1J2X+WFN7wJgZE17Be2wQsm7zEM3UduO7D6mlqcORHNf/n1ydTs1CTLV+h/OKeYMcTD
+         zlEA==
+X-Gm-Message-State: AOAM530hLHxmqxQgaisjryNHF+NYI11bFYcd09SZyU/Wh85DDNh0PWZF
+        Ai3tnmSnAWoCXwnPMeCh/WMB3TPe36OUB5M=
+X-Google-Smtp-Source: ABdhPJyHLmoOaT0pa+OErIQaiQz5b093/9nkjOUJZ0E+mWcdYRtko6EFJUOgX8eiD0yzB5xqMDuq2g==
+X-Received: by 2002:a1c:ac05:: with SMTP id v5mr4408683wme.13.1628892708184;
+        Fri, 13 Aug 2021 15:11:48 -0700 (PDT)
+Received: from localhost ([2a00:a040:195:275f:b5f4:a59c:7c43:6667])
+        by smtp.gmail.com with ESMTPSA id a9sm2899591wrv.37.2021.08.13.15.11.46
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Aug 2021 15:11:47 -0700 (PDT)
+Received: from 127.0.0.1 (ident=unknown) by matan.home with esmtp
+ (masqmail 0.2.21) id 1mEfOx-RWt-00; Sat, 14 Aug 2021 01:11:43 +0300
+Date:   Sat, 14 Aug 2021 01:11:43 +0300 (IDT)
+From:   Matan Ziv-Av <matan@svgalib.org>
+To:     Platform Driver <platform-driver-x86@vger.kernel.org>
+cc:     Andy Shevchenko <andy@infradead.org>
+Subject: [PATCH] platform/x86: lg-laptop: Support for battery charge limit
+ on newer models
+Message-ID: <9338b0b1-e76e-68f5-36de-a642745ba6ad@svgalib.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-ryzen.texastahm.com (67.79.209.213) by SA9PR13CA0015.namprd13.prod.outlook.com (2603:10b6:806:21::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.9 via Frontend Transport; Fri, 13 Aug 2021 20:17:14 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fb04504a-2bc8-4b11-096f-08d95e97582d
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5056:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5056CC972FC97575617C9C45ECFA9@DM4PR12MB5056.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HeKYrRV7+y6fb+GcsgwZgLn6m+17BeFDzSYIRsWs+5gk/EvKWEu2gSmv8RvTO/nfbvLfTRsKb1Rmu/IiexH4OmM5yzL1S1M0b1KCFnlSqI8q07PgcARl23shuBOwuXMPNwYrnU2x5cFzlC5kpomANRa9DYwDAdniG9jn0sUdyUssSht9Fj45WNk5kKyCNOwzQkl4Uwfx4ThxvNPm/2ZDWUUaD9h4KXaJfbXl7FOnHluKIb2zyecyHHGHT9LymYEJz5S7RJOMqqWviTNVR18VwG2DXy3EdmYfOUSweCmgr1F5+YNeYL0xuLozBRA3iCSoJ8z186DXgEqoQzPLgGIGWaJStbn3sjliQijGiQArX8StUtsSdv7beBuRfFRJgjp+PMjE74m12pIzia7y7ArUN+9FQfFGXdeMHBWOuZEkY7sXKBpAYhVZL+IzHjCsiTDaKb1dI/aEvOT+HEP3+0pFhWM+gj7aw1TS6rvljuEKICCuVKQxw/iZMHPFqMACRshww9+CkZF74+BBgpYEEwnfE4ZD2OYbNPPAX6HfzpgGABkpn12jKR5rTpzx/1EipOB3U2sOxGm7Mj13MUhqX7AkZsVTyrgswRhjfQpHB54uounI8FMHqOtfgpkX9CKnV73XHRj3NzUtA9k4wwtBs2k808QhRQvjOOhAoq+3kMA1KWhfE7oPISSKTsZBbqCFcKnt8I9jsZEFVs34Lo4rTbbD3u/3KCSJ0GktcSNcge0JTXo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(366004)(8936002)(7416002)(86362001)(31696002)(6506007)(83380400001)(36756003)(6486002)(7406005)(66476007)(66556008)(53546011)(6512007)(31686004)(478600001)(316002)(2616005)(38100700002)(956004)(8676002)(66946007)(26005)(6916009)(2906002)(5660300002)(4326008)(186003)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QTZOV216SVRjR2pvTmN0RGhmT3VtRnJiQzVwZ1JSSTNSZXpET1RESUUzYVNY?=
- =?utf-8?B?L1lpY2EreHNqWE1JTUpwRDhRckxnWmJSNHlqdmxva21GRXFTM2o4Q2tPeVlK?=
- =?utf-8?B?N3UrZkNkcGhLc210WFlYTmtVL3FYcWVqamloTC9PWDVVSE5ySjQ0R2RyMHc4?=
- =?utf-8?B?dFE4SmZDSFJUWnl4VldYNlFIbld2RTBCUVF2dVhuYm5UVnUwOVBRWHEyUGQ4?=
- =?utf-8?B?amdPNGxtNkxBNkRsSXJhK0lPT2lIMUdNVlBaV1FwTWNNeE95c0hYZjQ0RlpZ?=
- =?utf-8?B?YTJ5aEVHeE9VeXB0bWs0MVY4cVdqRzAyYUZLK21ScE9rbXdDNWh5a0lnZFlT?=
- =?utf-8?B?aFVTaWlGUXBrYnNhcVExR1N6V1h2K01IU0JramhHeWZvV3M0RkZERkQ1M3NK?=
- =?utf-8?B?TW5iaU1EcGEzS2hYUklXUkdLR3FmYTg0NmFPWTdmKzI4RzBUcGNnTzcxeElw?=
- =?utf-8?B?NTVTeUJwcUVvWWFMWHp2ZjYvTEtuc09wQWF1MVErdHBodGlFQVZxRWVQMVNZ?=
- =?utf-8?B?N01IbmEyQjRkUFZxcDFCOVc3SG9ERVJETnViSFBCQW1obzdUQS9ENmZ0aG9n?=
- =?utf-8?B?OHhVamdFRXRWRnJNYWlJRTVIenVoK0Y2NE42V3FBS3R6Z0dEeFpRWVRSZXps?=
- =?utf-8?B?WTNmZUNtYm5sRG8yL3RZa2FkNjQvVklLT2owWmNzUHd0K3NIQ1NZYXdIdjUr?=
- =?utf-8?B?Wi92VG9pMG5NamNVeDF5YUpkaW9rUkRGM05EdXZUcTlDQk10ZjRpMVQrb3hr?=
- =?utf-8?B?NDdjZzVZKy9XYUp1VmZSa3Rveng3RG9SOFhGWmtHVlBRVEdoV3orajVsRVlt?=
- =?utf-8?B?bFJSNnJNMWV5WmRCbkFDYm5JQXF4cEtJZ2VRR1VPZ0NiOWdyUENHUUdqTERn?=
- =?utf-8?B?NmxKM2tja0tDc2JPYUxsVFdMNXZQai96Z1c0VlgzTWxsdGFNaHFTRmI2cDNZ?=
- =?utf-8?B?VTVMV0VBaUZBVjZlZVJ0aFhKWVBvZjZCZVhzb1NneG1wMlZtK0dTRTAveWsw?=
- =?utf-8?B?V0lVYmxuNzBENlhibkV2bVVTdEZZSVhXK3B0TEozZGpZYzd4c2ZRNjE5cVhw?=
- =?utf-8?B?RjB1Tk1DbkFDUXJycElqK0t5NGVaM3B6cTcvNVlReUxiR29jVnpVK0VOcFQy?=
- =?utf-8?B?Q2xYR1JoYlJFYXlvZlJxUCtQeERlTCt5ZEl1WEsxQ3R1eVhuSUNpVEVaaE9o?=
- =?utf-8?B?VHFwNnVzU0FPOHRQaUhFUWtLU1lBNlBtZ3RsNDBIMW5EMVhQYXVSZVpKREVN?=
- =?utf-8?B?c21HQjV2RHVTK3hsazFzVEJPSzhVM1BWeEgyajZRcjk3Y0FWbG9NTWV2OXNQ?=
- =?utf-8?B?WGQweHhuMURwc00xK0UvTVB1ek9VL2ZPcVNCdFNncWRzWm9ybFlvU2V2VnNB?=
- =?utf-8?B?MlhiaThjc2FYbTdGNENXM3dRby83cTUvYWtJTmpMdjdUVlliL251QVh3QVNH?=
- =?utf-8?B?MjBoTVpQOTMraUpGcnUvY1Z1aFJDQm5pQk9vY3JmaDJqYXY1QUtqQ1BIamo4?=
- =?utf-8?B?MzRCVjJqYmdUbXRJUEN5cWJWdi8yNUZBejlPdkZVdjFwQjJoWDJtVFdGS0Q0?=
- =?utf-8?B?d0MvU1JpZm4xKzNoejhlRlhaMUVEaUN3anJHdFJhdjcxUFh5OXlRd011R3RC?=
- =?utf-8?B?NFFlVzhUcmFJcm1rL2xCY1hwK0YvVVdua0ZNSi9TaTg0cjl5YTFjbjJ4UTJ1?=
- =?utf-8?B?TnQvbnVIS2Vvb2dsMWtQTFBPRFRmNFNDc0Q4dU1oLzNPYUZXTTJ0L0Z4aTdV?=
- =?utf-8?Q?X4j/QZYAY5VhEB8ISJ7ENzxDr6z08b94zP1ag1f?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb04504a-2bc8-4b11-096f-08d95e97582d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2021 20:17:17.8323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5rYKyb1eg9llUGfYKNWymW6AFqmswxWINdi5GxJCtmBK1fz+zhjdQgfi1wjlNeI3FFBkBzHHXR4HqtkxkzDSzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5056
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 8/13/21 12:08 PM, Tom Lendacky wrote:
-> On 8/12/21 5:07 AM, Kirill A. Shutemov wrote:
->> On Wed, Aug 11, 2021 at 10:52:55AM -0500, Tom Lendacky wrote:
->>> On 8/11/21 7:19 AM, Kirill A. Shutemov wrote:
->>>> On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
->>>>> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
-> ...
->>>> Looking at code agains, now I *think* the reason is accessing a global
->>>> variable from __startup_64() inside TDX version of prot_guest_has().
->>>>
->>>> __startup_64() is special. If you access any global variable you need to
->>>> use fixup_pointer(). See comment before __startup_64().
->>>>
->>>> I'm not sure how you get away with accessing sme_me_mask directly from
->>>> there. Any clues? Maybe just a luck and complier generates code just 
->>>> right
->>>> for your case, I donno.
->>>
->>> Hmm... yeah, could be that the compiler is using rip-relative addressing
->>> for it because it lives in the .data section?
->>
->> I guess. It has to be fixed. It may break with complier upgrade or any
->> random change around the code.
-> 
-> I'll look at doing that separate from this series.
-> 
->>
->> BTW, does it work with clang for you?
-> 
-> I haven't tried with clang, I'll check on that.
 
-Just as an fyi, clang also uses rip relative addressing for those 
-variables. No issues booting SME and SEV guests built with clang.
+Add support for the difference between various models:
 
-Thanks,
-Tom
+- Use dmi to detect laptop model.
+- 2019 and newer models use _wmbb method to set battery charge limit.
 
-> 
-> Thanks,
-> Tom
-> 
->>
+Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
+---
+ drivers/platform/x86/lg-laptop.c | 75 ++++++++++++++++++++++++++++----
+ 1 file changed, 66 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+index 20145b539335..12b0257c0bdd 100644
+--- a/drivers/platform/x86/lg-laptop.c
++++ b/drivers/platform/x86/lg-laptop.c
+@@ -8,6 +8,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
+ #include <linux/acpi.h>
++#include <linux/dmi.h>
+ #include <linux/input.h>
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/kernel.h>
+@@ -69,6 +70,8 @@ static u32 inited;
+ #define INIT_INPUT_ACPI         0x04
+ #define INIT_SPARSE_KEYMAP      0x80
+ 
++static int battery_limit_use_wmbb;
++
+ static const struct key_entry wmi_keymap[] = {
+ 	{KE_KEY, 0x70, {KEY_F15} },	 /* LG control panel (F1) */
+ 	{KE_KEY, 0x74, {KEY_F13} },	 /* Touchpad toggle (F5) */
+@@ -461,7 +464,10 @@ static ssize_t battery_care_limit_store(struct device *dev,
+ 	if (value == 100 || value == 80) {
+ 		union acpi_object *r;
+ 
+-		r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
++		if (!battery_limit_use_wmbb)
++			r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
++		else
++			r = lg_wmbb(WMBB_BATT_LIMIT, WM_SET, value);
+ 		if (!r)
+ 			return -EIO;
+ 
+@@ -479,16 +485,29 @@ static ssize_t battery_care_limit_show(struct device *dev,
+ 	unsigned int status;
+ 	union acpi_object *r;
+ 
+-	r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
+-	if (!r)
+-		return -EIO;
++	if (!battery_limit_use_wmbb) {
++		r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
++		if (!r)
++			return -EIO;
+ 
+-	if (r->type != ACPI_TYPE_INTEGER) {
+-		kfree(r);
+-		return -EIO;
+-	}
++		if (r->type != ACPI_TYPE_INTEGER) {
++			kfree(r);
++			return -EIO;
++		}
+ 
+-	status = r->integer.value;
++		status = r->integer.value;
++	} else {
++		r = lg_wmbb(WMBB_BATT_LIMIT, WM_GET, 0);
++		if (!r)
++			return -EIO;
++
++		if (r->type != ACPI_TYPE_BUFFER) {
++			kfree(r);
++			return -EIO;
++		}
++
++		status = r->buffer.pointer[0x10];
++	}
+ 	kfree(r);
+ 	if (status != 80 && status != 100)
+ 		status = 0;
+@@ -602,6 +621,8 @@ static struct platform_driver pf_driver = {
+ static int acpi_add(struct acpi_device *device)
+ {
+ 	int ret;
++	const char *product;
++	int year = 2017;
+ 
+ 	if (pf_device)
+ 		return 0;
+@@ -619,6 +640,42 @@ static int acpi_add(struct acpi_device *device)
+ 		pr_err("unable to register platform device\n");
+ 		goto out_platform_registered;
+ 	}
++	product = dmi_get_system_info(DMI_PRODUCT_NAME);
++	if (strlen(product) > 4)
++		switch (product[4]) {
++		case '5':
++		case '6':
++			year = 2016;
++			break;
++		case '7':
++			year = 2017;
++			break;
++		case '8':
++			year = 2018;
++			break;
++		case '9':
++			year = 2019;
++			break;
++		case '0':
++			if (strlen(product) > 5)
++				switch (product[5]) {
++				case 'N':
++					year = 2020;
++					break;
++				case 'P':
++					year = 2021;
++					break;
++				default:
++					year = 2022;
++				}
++			break;
++		default:
++			year = 2019;
++		}
++	pr_info("product: %s  year: %d\n", product, year);
++
++	if (year >= 2019)
++		battery_limit_use_wmbb = 1;
+ 
+ 	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
+ 	if (ret)
+-- 
+2.31.1
+
+
+-- 
+Matan.
+
