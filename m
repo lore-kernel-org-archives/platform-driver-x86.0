@@ -2,179 +2,209 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8FAC4320E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A674C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90811610E9
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029DC61042
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239371AbhHMHZu (ORCPT
+        id S239568AbhHMHlN (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 03:25:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbhHMHZt (ORCPT
+        Fri, 13 Aug 2021 03:41:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44274 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239572AbhHMHk4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:25:49 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521B8C061756;
-        Fri, 13 Aug 2021 00:25:22 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0a0d00146e00bd62432576.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d00:146e:bd:6243:2576])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BD9B61EC0502;
-        Fri, 13 Aug 2021 09:25:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1628839515;
+        Fri, 13 Aug 2021 03:40:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1628840429;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nmXWc9Mx9goU+spJZe7CxGWS9UU2OCWKW5H4SIieayM=;
-        b=YzhQynmWvBYmCnTxz52HlGAcyETIX4lCAmHip19viBHA47bWQM34G1oyUksbAyP47NXuGy
-        fbDAoaWjtaE7Gdv+1KkneUSRpCVtePRPFqO32TIFPpxaCuCanybmK+pAl9SZP0WvHYc0vk
-        6QIdMtDry0XYn2lNKza17EYBAYV1CHM=
-Date:   Fri, 13 Aug 2021 09:25:54 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
-        npmccallum@redhat.com, brijesh.ksingh@gmail.com
-Subject: Re: [PATCH Part1 RFC v4 08/36] x86/sev: check the vmpl level
-Message-ID: <YRYegqsigZfrbFbk@zn.tnic>
-References: <20210707181506.30489-1-brijesh.singh@amd.com>
- <20210707181506.30489-9-brijesh.singh@amd.com>
+        bh=wXEfPRzNWd5RXj0Z8Y3rqxIsKUmpWVUoNiXS+NF/iPs=;
+        b=Vuo8XYo7yRpF6jq7AnBAQ2s8PJgeiXma8AFa9FaZB1pxCSVhSX2XteAJYDPpaSKdveRPnl
+        AASnmOiIxGZIi/UZ81hGDxPPr3DSpAnDJ2+ovevjjYt+kTZxbthPiN5a4uZ4rrzZPKiSYH
+        HGtvNPTB9488n73qoC4tINN7dsE0yqw=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-200-PIH5WqRQPhqXxhk0y5Jx7A-1; Fri, 13 Aug 2021 03:40:28 -0400
+X-MC-Unique: PIH5WqRQPhqXxhk0y5Jx7A-1
+Received: by mail-ed1-f72.google.com with SMTP id z4-20020a05640240c4b02903be90a10a52so4421744edb.19
+        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 00:40:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wXEfPRzNWd5RXj0Z8Y3rqxIsKUmpWVUoNiXS+NF/iPs=;
+        b=OznlqUG4FhE3bNSCodQS63b3V7Lms5awG97O01Pe1OcKc1LKV8ga/JjaHFNMMpCWgO
+         mCCziIO2wwhOK2x6jcpwBDMWgW7uGBAOAEAxrcADPwNrM61Fo3xFmApuQ1d52CrDMBFK
+         xpmYd/xfGuIOYCQiSQiEfQ/P9dfI6oQSV+jfFmiDy9optPmZhyNUa6VXwzEhhJEc1Y8a
+         rffZoSEofwtRVE42CAnSUVfmeb11HozOd0nSmuxCSEqEJRjWUJ2puBzaqsejk3Qi3uy/
+         pHo1q1sYfKSP7rqrMViFP6nDnaE474tFGyfRWHhI4EeI28VRCEQjMGgbIkjnySdVSron
+         YHPQ==
+X-Gm-Message-State: AOAM5335GzdqaUigkrm0v3I6pz5/pi7S66dGOcRzuaJjztqWj6nDNnab
+        X5OLp4fPtOea3iRIyD6jdwXd/JnvYcd9th971n4w2aFrYdhT6f8JmF4Hm3vDUWl0+yMXAaXByeV
+        M/62yOpeIf7+NamsZ6C1MGjucJ9IrUlL0PlZdmVMdTo78qPPbobWVvBaOTrhlGlTJL+VRl9pHS1
+        o/qVzu6DZIlw==
+X-Received: by 2002:aa7:db47:: with SMTP id n7mr1419376edt.15.1628840427260;
+        Fri, 13 Aug 2021 00:40:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy86kWxaBeskfaokouXmjV1/C/nnkBiktQGEm/xnDqmgPiNff4L2dqRf90ebHsEOF3jWQKLYA==
+X-Received: by 2002:aa7:db47:: with SMTP id n7mr1419359edt.15.1628840427046;
+        Fri, 13 Aug 2021 00:40:27 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id ko11sm265848ejc.54.2021.08.13.00.40.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Aug 2021 00:40:26 -0700 (PDT)
+Subject: Re: [PATCH] asus-wmi: Add support for platform_profile
+To:     Luke Jones <luke@ljones.dev>, Bastien Nocera <hadess@hadess.net>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20210813024201.9518-1-luke@ljones.dev>
+ <35JRXQ.1ZW8QHWM1YRG@ljones.dev>
+ <9cceb3cb-f6d3-ade4-b219-87b2bbce5798@redhat.com>
+ <R1ORXQ.WGLIPS8I54X63@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <5b503320-c1a3-2653-b269-ba8d40568edf@redhat.com>
+Date:   Fri, 13 Aug 2021 09:40:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
+In-Reply-To: <R1ORXQ.WGLIPS8I54X63@ljones.dev>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210707181506.30489-9-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 01:14:38PM -0500, Brijesh Singh wrote:
-> Virtual Machine Privilege Level (VMPL) is an optional feature in the
-> SEV-SNP architecture, which allows a guest VM to divide its address space
-> into four levels. The level can be used to provide the hardware isolated
-> abstraction layers with a VM. The VMPL0 is the highest privilege, and
-> VMPL3 is the least privilege. Certain operations must be done by the VMPL0
-> software, such as:
+Hi,
+
+On 8/13/21 9:13 AM, Luke Jones wrote:
 > 
-> * Validate or invalidate memory range (PVALIDATE instruction)
-> * Allocate VMSA page (RMPADJUST instruction when VMSA=1)
 > 
-> The initial SEV-SNP support assumes that the guest kernel is running on
-> VMPL0. Let's add a check to make sure that kernel is running at VMPL0
-> before continuing the boot. There is no easy method to query the current
-> VMPL level, so use the RMPADJUST instruction to determine whether its
-> booted at the VMPL0.
+> On Fri, Aug 13 2021 at 09:03:04 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
+>>
+>> On 8/13/21 7:27 AM, Luke Jones wrote:
+>>>  I'm unsure of how to update the existing code for fn+f5 (next thermal profile) used by laptops like the TUF series that have keyboard over i2c. I was thinking of the following:
+>>>
+>>>  static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
+>>>  {
+>>>  struct platform_profile_handler *handler = &asus->platform_profile_handler; // added
+>>>  u8 new_mode = asus->throttle_thermal_policy_mode + 1;
+>>>
+>>>  if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
+>>>   new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+>>>
+>>>  // asus->throttle_thermal_policy_mode = new_mode;
+>>>  // return throttle_thermal_policy_write(asus);
+>>>  return handler->profile_set(&asus->platform_profile_handler, new_mode); // added
+>>>  }
+>>>
+>>>  * two lines added, two commented
+>>
+>> I was going to say it is best to just send a key-press event to userspace
+>> (we can define a new EV_KEY_.... code for this) and then let userspace
+>> handle things. But I see that this is currently already handled by the kernel,
+>> so that is not really an option.
+>>
+>>>  I'm not able to test this though, and there are very few active people in my discord with TUF/i2c laptops to ask for testing also.
+>>>
+>>>  My concern here is to get the platform_profile correctly updated. Simply updating asus->throttle_thermal_policy_mode isn't going to achieve what we'll want.
+>>
+>> Right, there is no need to go through handler->profile_set() you have defined
+>> profile_set yourself after all and it does not do anything different then the
+>> old code you are replacing here.
+>>
+>> The trick is to call platform_profile_notify() after throttle_thermal_policy_write()
+>> this will let userspace, e.g. power-profiles-daemon know that the profile has
+>> been changed and it will re-read it then, resulting in a call to
+>> handler->profile_get()
+>>
+>> So the new throttle_thermal_policy_switch_next() would look like this:
+>>
+>> static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
+>> {
+>>         u8 new_mode = asus->throttle_thermal_policy_mode + 1;
+>>     int err; // new
+>>
+>>         if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
+>>                 new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+>>
+>>         asus->throttle_thermal_policy_mode = new_mode;
+>>
+>>         err = throttle_thermal_policy_write(asus); // changed
+>>     if (err == 0)                              // new
+>>         platform_profile_notify();         // new
+>>
+>>     return err;                                // new
+>> }
+>>
+>> As you can see the only new thing here is the
+>> platform_profile_notify() call on a successful write,
+>> which is such a small change that I'm not overly worried about
+>> not being able to test this.
+>>
+>> I hope this helps.
+>>
+>> Regards,
+>>
+>> Hans
+
+<snip>
+
+> Hi Hans,
 > 
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  arch/x86/boot/compressed/sev.c    | 41 ++++++++++++++++++++++++++++---
->  arch/x86/include/asm/sev-common.h |  1 +
->  arch/x86/include/asm/sev.h        |  3 +++
->  3 files changed, 42 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
-> index 7be325d9b09f..2f3081e9c78c 100644
-> --- a/arch/x86/boot/compressed/sev.c
-> +++ b/arch/x86/boot/compressed/sev.c
-> @@ -134,6 +134,36 @@ static inline bool sev_snp_enabled(void)
->  	return msr_sev_status & MSR_AMD64_SEV_SNP_ENABLED;
->  }
->  
-> +static bool is_vmpl0(void)
-> +{
-> +	u64 attrs, va;
-> +	int err;
-> +
-> +	/*
-> +	 * There is no straightforward way to query the current VMPL level. The
+> Very helpful, thanks. I'd completely failed to notice platform_profile_notify in the platform_profile.h :| I've now put that in throttle_thermal_policy_write() just after sysfs_notify().
 
-So this is not nice at all.
+That means that the notify will also happen when the setting is
+changed through handler->profile_set() this is not necessarily
+a bad thing since there could be multiple user-space
+processes accessing the profile and then others will be
+notified when one of the processes makes a change.
 
-And this VMPL level checking can't be part of the GHCB MSR protocol
-because the HV can tell us any VPML level it wants to.
+But ATM the other drivers which use platform_profile_notify()
+only do this when the profile is changed from outside of
+userspace. Specifically by a hotkey handled directly by the
+embedded-controller, this in kernel turbo-key handling is
+very similar to that.
 
-Is there a way to disable VMPL levels and say, this guest should run
-only at VMPL0?
+So if you add the platform_profile_notify() to 
+throttle_thermal_policy_write() then asus-wmi will behave
+differently from the other existing implementations.
 
-Err, I see SYSCFG[VMPLEn]:
+So I think we need to do a couple of things here:
 
-"VMPLEn. Bit 25. Setting this bit to 1 enables the VMPL feature (Section
-15.36.7 “Virtual Machine Privilege Levels,” on page 580). Software
-should set this bit to 1 when SecureNestedPagingEn is being set to 1.
-Once SecureNestedPagingEn is set to 1, VMPLEn cannot be changed."
+1. Decided what notify behavior is the correct behavior.
+Bastien, since power-profiles-daemon is the main consumer,
+what behavior do you want / expect?  If we make the assumption
+that there will only be 1 userspace process accessing the
+profile settings (e.g. p-p-d) then the current behavior
+of e.g. thinkpad_acpi to only do the notify (send POLLPRI)
+when the profile is changed by a source outside userspace
+seems to make sense. OTOH as I mentioned above if we
+assume there might be multiple userspace processes touching
+the profile (it could even be an echo from a shell) then
+it makes more sense to do the notify on all changes so that
+p-p-d's notion of the active profile is always correct.
 
-But why should that bit be set if SNP is enabled? Can I run a SNP guest
-without VPMLs, i.e, at an implicit VPML level 0?
+Thinking more about this always doing the notify seems
+like the right thing to do to me.
 
-It says above VPML is optional...
+2. Once we have an answer to 1. we need to documented the
+expected behavior in Documentation/ABI/testing/sysfs-platform_profile
 
-Also, why do you even need to do this at all since the guest controls
-and validates its memory with the RMP? It can simply go and check the
-VMPLs of every page it owns to make sure it is 0.
+3. If we go for doing a notify on any change, then we need
+to update the existing drivers to do this.
 
-Also, if you really wanna support guests with multiple VMPLs, then
-prevalidating its memory is going to be a useless exercise because it'll
-have to go and revalidate the VMPL levels...
+Regards,
 
-I also see this:
-
-"When the hypervisor assigns a page to a guest using RMPUPDATE, full
-permissions are enabled for VMPL0 and are disabled for all other VMPLs."
-
-so you get your memory at VMPL0 by the HV. So what is that check for?
-
-Questions over questions, I'm sure I'm missing an aspect.
-
-> +	 * simplest method is to use the RMPADJUST instruction to change a page
-> +	 * permission to a VMPL level-1, and if the guest kernel is launched at
-> +	 * at a level <= 1, then RMPADJUST instruction will return an error.
+Hans
 
 
-WARNING: Possible repeated word: 'at'
-#156: FILE: arch/x86/boot/compressed/sev.c:146:
-+        * permission to a VMPL level-1, and if the guest kernel is launched at
-+        * at a level <= 1, then RMPADJUST instruction will return an error.
-
-
-How many times do I have to say:
-
-Please integrate scripts/checkpatch.pl into your patch creation
-workflow. Some of the warnings/errors *actually* make sense.
-
-?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
