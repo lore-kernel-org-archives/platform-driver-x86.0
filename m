@@ -2,309 +2,179 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71A3C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8FAC4320E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815E66103E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90811610E9
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 07:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238794AbhHMHVQ (ORCPT
+        id S239371AbhHMHZu (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 03:21:16 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:54015 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236982AbhHMHVP (ORCPT
+        Fri, 13 Aug 2021 03:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230194AbhHMHZt (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 03:21:15 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id 139E03200921;
-        Fri, 13 Aug 2021 03:20:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 13 Aug 2021 03:20:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=SRw5Rc
-        bBaxDf8ZMBr0a6INE1g+SFXFHLMN3zcQf9cn8=; b=a3m18m7m7DlHAla1RTDVEN
-        pj0+igk+0xk21P3ojHw1mnBCU1uqDtNYQksWPyfMolPtq0rEWZ5OubcQ9KzsFUHc
-        tTWmy1nvKmxlSYtTiKzQYl9NRNtCEMySpptYzRAS5RkC5+b5a7aml/+aBTCtwnYf
-        +2XfW0mQAdVs/l8TTbRRy9KNkc/iJ60W9/KTII+0Gin0wjDP0HuZkJGy8seqNeef
-        4LPJ2bh7ofcY51WFcd5cf+GSzu7mmFWXvskfoqvkok9MY5Zddx8vDNO89ocFhUZ1
-        I5lTgyBtx++Ia/j+oR7qqy0Qz0McKx9Y9sVS7B0LQWUhNNW/BgYbQlNHsieO21TQ
-        ==
-X-ME-Sender: <xms:Tx0WYdYFZTj7HPC4fnLONWuv2WjFbAWwWYMyAszRGs-c5LzOlnsj3g>
-    <xme:Tx0WYUbcfwM1lVpKrtucQrJ-SMDoWqv8l-vZKU94alU5-gIFdcZOtXANIRroNX331
-    ZUjNJFRnu_q72WUIMA>
-X-ME-Received: <xmr:Tx0WYf8FQBkGe5B1KlL8DsdefHdMFzo90HPTd9G8h2vATxupRTpkNz0X3KafWypRXbHJGg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeggdduudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    fgfeefudffhffgueehgeffffeggeevieefueethfeijefftedugfeuveethedtteenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslh
-    hjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:Tx0WYboTnTPezRuYNI0iFhpx0wZlCCMPr07l_ToqkxbFamBsnsCRAg>
-    <xmx:Tx0WYYpGVtHEdG_H4FcHlYAdmgHubAOVe3IAclR7KKuTtLN_7Zl_lg>
-    <xmx:Tx0WYRShOtmvN3HvjVvnQvW28J4tObH-5rbjxpF2puAAfLA8TZLsWQ>
-    <xmx:UB0WYVAcubFNznvvlZGQrQRt_Jx6YwuxUiRtM6su-ogwnWDBGLGV5g>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 13 Aug 2021 03:20:44 -0400 (EDT)
-Date:   Fri, 13 Aug 2021 19:20:29 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH] asus-wmi: Add support for platform_profile
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, hadess@hadess.net,
-        platform-driver-x86@vger.kernel.org
-Message-Id: <5EORXQ.4I9IMHJZVTB93@ljones.dev>
-In-Reply-To: <c1cbd0eb-9680-3ede-bae8-977c03c1ebd2@redhat.com>
-References: <20210813024201.9518-1-luke@ljones.dev>
-        <c1cbd0eb-9680-3ede-bae8-977c03c1ebd2@redhat.com>
-X-Mailer: geary/40.0
+        Fri, 13 Aug 2021 03:25:49 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521B8C061756;
+        Fri, 13 Aug 2021 00:25:22 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0a0d00146e00bd62432576.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:d00:146e:bd:6243:2576])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BD9B61EC0502;
+        Fri, 13 Aug 2021 09:25:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1628839515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nmXWc9Mx9goU+spJZe7CxGWS9UU2OCWKW5H4SIieayM=;
+        b=YzhQynmWvBYmCnTxz52HlGAcyETIX4lCAmHip19viBHA47bWQM34G1oyUksbAyP47NXuGy
+        fbDAoaWjtaE7Gdv+1KkneUSRpCVtePRPFqO32TIFPpxaCuCanybmK+pAl9SZP0WvHYc0vk
+        6QIdMtDry0XYn2lNKza17EYBAYV1CHM=
+Date:   Fri, 13 Aug 2021 09:25:54 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part1 RFC v4 08/36] x86/sev: check the vmpl level
+Message-ID: <YRYegqsigZfrbFbk@zn.tnic>
+References: <20210707181506.30489-1-brijesh.singh@amd.com>
+ <20210707181506.30489-9-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210707181506.30489-9-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Jul 07, 2021 at 01:14:38PM -0500, Brijesh Singh wrote:
+> Virtual Machine Privilege Level (VMPL) is an optional feature in the
+> SEV-SNP architecture, which allows a guest VM to divide its address space
+> into four levels. The level can be used to provide the hardware isolated
+> abstraction layers with a VM. The VMPL0 is the highest privilege, and
+> VMPL3 is the least privilege. Certain operations must be done by the VMPL0
+> software, such as:
+> 
+> * Validate or invalidate memory range (PVALIDATE instruction)
+> * Allocate VMSA page (RMPADJUST instruction when VMSA=1)
+> 
+> The initial SEV-SNP support assumes that the guest kernel is running on
+> VMPL0. Let's add a check to make sure that kernel is running at VMPL0
+> before continuing the boot. There is no easy method to query the current
+> VMPL level, so use the RMPADJUST instruction to determine whether its
+> booted at the VMPL0.
+> 
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/boot/compressed/sev.c    | 41 ++++++++++++++++++++++++++++---
+>  arch/x86/include/asm/sev-common.h |  1 +
+>  arch/x86/include/asm/sev.h        |  3 +++
+>  3 files changed, 42 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+> index 7be325d9b09f..2f3081e9c78c 100644
+> --- a/arch/x86/boot/compressed/sev.c
+> +++ b/arch/x86/boot/compressed/sev.c
+> @@ -134,6 +134,36 @@ static inline bool sev_snp_enabled(void)
+>  	return msr_sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+>  }
+>  
+> +static bool is_vmpl0(void)
+> +{
+> +	u64 attrs, va;
+> +	int err;
+> +
+> +	/*
+> +	 * There is no straightforward way to query the current VMPL level. The
+
+So this is not nice at all.
+
+And this VMPL level checking can't be part of the GHCB MSR protocol
+because the HV can tell us any VPML level it wants to.
+
+Is there a way to disable VMPL levels and say, this guest should run
+only at VMPL0?
+
+Err, I see SYSCFG[VMPLEn]:
+
+"VMPLEn. Bit 25. Setting this bit to 1 enables the VMPL feature (Section
+15.36.7 “Virtual Machine Privilege Levels,” on page 580). Software
+should set this bit to 1 when SecureNestedPagingEn is being set to 1.
+Once SecureNestedPagingEn is set to 1, VMPLEn cannot be changed."
+
+But why should that bit be set if SNP is enabled? Can I run a SNP guest
+without VPMLs, i.e, at an implicit VPML level 0?
+
+It says above VPML is optional...
+
+Also, why do you even need to do this at all since the guest controls
+and validates its memory with the RMP? It can simply go and check the
+VMPLs of every page it owns to make sure it is 0.
+
+Also, if you really wanna support guests with multiple VMPLs, then
+prevalidating its memory is going to be a useless exercise because it'll
+have to go and revalidate the VMPL levels...
+
+I also see this:
+
+"When the hypervisor assigns a page to a guest using RMPUPDATE, full
+permissions are enabled for VMPL0 and are disabled for all other VMPLs."
+
+so you get your memory at VMPL0 by the HV. So what is that check for?
+
+Questions over questions, I'm sure I'm missing an aspect.
+
+> +	 * simplest method is to use the RMPADJUST instruction to change a page
+> +	 * permission to a VMPL level-1, and if the guest kernel is launched at
+> +	 * at a level <= 1, then RMPADJUST instruction will return an error.
 
 
-On Fri, Aug 13 2021 at 08:47:56 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi Luke,
-> 
-> Thank you for this patch, it is great to see more and more laptop
-> models getting support for the standard platform_profile userspace 
-> API.
-> 
-> On 8/13/21 4:42 AM, Luke D. Jones wrote:
->>  Add initial support for platform_profile where the support is
->>  based on availability of ASUS_THROTTLE_THERMAL_POLICY.
->> 
->>  Signed-off-by: Luke D. Jones <luke@ljones.dev>
->>  ---
->>   drivers/platform/x86/asus-wmi.c | 112 
->> ++++++++++++++++++++++++++++++++
->>   1 file changed, 112 insertions(+)
->> 
->>  diff --git a/drivers/platform/x86/asus-wmi.c 
->> b/drivers/platform/x86/asus-wmi.c
->>  index 90a6a0d00deb..62260043c15c 100644
->>  --- a/drivers/platform/x86/asus-wmi.c
->>  +++ b/drivers/platform/x86/asus-wmi.c
->>  @@ -26,6 +26,7 @@
->>   #include <linux/rfkill.h>
->>   #include <linux/pci.h>
->>   #include <linux/pci_hotplug.h>
->>  +#include <linux/platform_profile.h>
->>   #include <linux/power_supply.h>
->>   #include <linux/hwmon.h>
->>   #include <linux/hwmon-sysfs.h>
->>  @@ -219,6 +220,9 @@ struct asus_wmi {
->>   	bool throttle_thermal_policy_available;
->>   	u8 throttle_thermal_policy_mode;
->> 
->>  +	struct platform_profile_handler platform_profile_handler;
->>  +	bool platform_profile_support;
->>  +
->>   	// The RSOC controls the maximum charging percentage.
->>   	bool battery_rsoc_available;
->> 
->>  @@ -2144,6 +2148,106 @@ static ssize_t 
->> throttle_thermal_policy_store(struct device *dev,
->>   // Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
->>   static DEVICE_ATTR_RW(throttle_thermal_policy);
->> 
->>  +/* Platform profile 
->> ***********************************************************/
->>  +static int platform_profile_get(struct platform_profile_handler 
->> *pprof,
->>  +				enum platform_profile_option *profile)
->>  +{
->>  +	struct asus_wmi *asus;
->>  +	int tp;
->>  +
->>  +	asus = container_of(pprof, struct asus_wmi, 
->> platform_profile_handler);
->>  +
->>  +	/* All possible toggles like throttle_thermal_policy here */
->>  +	if (asus->throttle_thermal_policy_available) {
->>  +		tp = asus->throttle_thermal_policy_mode;
->>  +	} else {
->>  +		return -1;
->>  +	}
->>  +
->>  +	if (tp < 0)
->>  +		return tp;
->>  +
->>  +	switch (tp) {
->>  +	case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
->>  +		*profile = PLATFORM_PROFILE_BALANCED;
->>  +		break;
->>  +	case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
->>  +		*profile = PLATFORM_PROFILE_PERFORMANCE;
->>  +		break;
->>  +	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
->>  +		*profile = PLATFORM_PROFILE_QUIET;
->>  +		break;
->>  +	default:
->>  +		return -EINVAL;
->>  +	}
->>  +
->>  +	return 0;
->>  +}
->>  +
->>  +static int platform_profile_set(struct platform_profile_handler 
->> *pprof,
->>  +				enum platform_profile_option profile)
->>  +{
->>  +	struct asus_wmi *asus;
->>  +	int tp;
->>  +
->>  +	asus = container_of(pprof, struct asus_wmi, 
->> platform_profile_handler);
->>  +
->>  +	/* All possible toggles like throttle_thermal_policy here */
->>  +	if (!asus->throttle_thermal_policy_available) {
->>  +		return -1;
->>  +	}
->>  +
->>  +	switch (profile) {
->>  +	case PLATFORM_PROFILE_PERFORMANCE:
->>  +		tp = ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
->>  +		break;
->>  +	case PLATFORM_PROFILE_BALANCED:
->>  +		tp = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
->>  +		break;
->>  +	case PLATFORM_PROFILE_QUIET:
->>  +		tp = ASUS_THROTTLE_THERMAL_POLICY_SILENT;
->>  +		break;
->>  +	default:
->>  +		return -EOPNOTSUPP;
->>  +	}
->>  +
->>  +	if (asus->throttle_thermal_policy_available) {
-> 
-> You already check for asus->throttle_thermal_policy_available a couple
-> of lines higher in this function and you return when it is not
-> available ...
-> 
-> I guess this was intended to also have a second if () for
-> fan-boost mode ?
-
-Yes, sorry I missed that. I'd initially looked at adding fan-boost also 
-but as it is *fans only* I didn't see the value in adding it. I've also 
-not seen any use of this in the wild bar one laptop which was likely to 
-be retired many months ago.
-
-> 
-> Since you are not adding support for fan-boost mode at this time,
-> it would be best (IMHO) to drop this second if for now and
-> just take this path unconditionally.
-> 
-
-Adjusted now.
-
-> 
->>  +		asus->throttle_thermal_policy_mode = tp;
->>  +		return throttle_thermal_policy_write(asus);
->>  +	}
->>  +	return 0;
->>  +}
->>  +
->>  +static int platform_profile_setup(struct asus_wmi *asus)
->>  +{
->>  +	int err;
->>  +
->>  +	if (asus->throttle_thermal_policy_available) {
->>  +		pr_info("Using throttle_thermal_policy for platform_profile 
->> support\n");
->>  +	} else {
->>  +		/*
->>  +		 * Not an error if a component platform_profile relies on is 
->> unavailable
->>  +		 * so early return, skipping the setup of platform_profile.
->>  +		*/
->>  +		return 0;
->>  +	}
->>  +	asus->platform_profile_handler.profile_get = platform_profile_get;
->>  +	asus->platform_profile_handler.profile_set = platform_profile_set;
->>  +
->>  +	set_bit(PLATFORM_PROFILE_QUIET, 
->> asus->platform_profile_handler.choices);
->>  +	set_bit(PLATFORM_PROFILE_BALANCED,
->>  +		asus->platform_profile_handler.choices);
->>  +	set_bit(PLATFORM_PROFILE_PERFORMANCE,
->>  +		asus->platform_profile_handler.choices);
->>  +
->>  +	err = platform_profile_register(&asus->platform_profile_handler);
->>  +	if (err)
->>  +		return err;
->>  +
->>  +	asus->platform_profile_support = true;
->>  +	return 0;
->>  +}
->>  +
->>   /* Backlight 
->> ******************************************************************/
->> 
->>   static int read_backlight_power(struct asus_wmi *asus)
->>  @@ -2904,6 +3008,10 @@ static int asus_wmi_add(struct 
->> platform_device *pdev)
->>   	else
->>   		throttle_thermal_policy_set_default(asus);
->> 
->>  +	err = platform_profile_setup(asus);
->>  +	if (err)
->>  +		goto fail_platform_profile_setup;
->>  +
->>   	err = panel_od_check_present(asus);
->>   	if (err)
->>   		goto fail_panel_od;
->>  @@ -2993,6 +3101,7 @@ static int asus_wmi_add(struct 
->> platform_device *pdev)
->>   	asus_wmi_sysfs_exit(asus->platform_device);
->>   fail_sysfs:
->>   fail_throttle_thermal_policy:
->>  +fail_platform_profile_setup:
->>   fail_fan_boost_mode:
-> 
-> I think you need to add this:
-> 
-> 	if (asus->platform_profile_support)
-> 		platform_profile_remove();
-> 
-> here so that if later fail-exit paths are taken the platform_profile
-> support gets unregistered again.
-
-Good catch, thanks! :)
-
-Next version will come after some testing.
-
-> 
->>   fail_egpu_enable:
->>   fail_dgpu_disable:
->>  @@ -3017,6 +3126,9 @@ static int asus_wmi_remove(struct 
->> platform_device *device)
->>   	asus_fan_set_auto(asus);
->>   	asus_wmi_battery_exit(asus);
->> 
->>  +	if (asus->platform_profile_support)
->>  +		platform_profile_remove();
->>  +
->>   	kfree(asus);
->>   	return 0;
->>   }
->> 
-> 
-> Regards,
-> 
-> Hans
-> 
+WARNING: Possible repeated word: 'at'
+#156: FILE: arch/x86/boot/compressed/sev.c:146:
++        * permission to a VMPL level-1, and if the guest kernel is launched at
++        * at a level <= 1, then RMPADJUST instruction will return an error.
 
 
+How many times do I have to say:
+
+Please integrate scripts/checkpatch.pl into your patch creation
+workflow. Some of the warnings/errors *actually* make sense.
+
+?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
