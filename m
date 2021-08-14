@@ -2,200 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E841BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 01:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A97C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 04:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9ED96103A
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 01:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D30960F9E
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 04:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236420AbhHNBuV (ORCPT
+        id S229453AbhHNEO4 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 21:50:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23992 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236200AbhHNBuV (ORCPT
+        Sat, 14 Aug 2021 00:14:56 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46727 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229441AbhHNEO4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 21:50:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="195238741"
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="195238741"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 18:49:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
-   d="scan'208";a="674660337"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2021 18:49:53 -0700
-Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id 07CFF5807C5;
-        Fri, 13 Aug 2021 18:49:53 -0700 (PDT)
-From:   "David E. Box" <david.e.box@linux.intel.com>
-To:     irenic.rajneesh@gmail.com, novikov@ispras.ru,
-        gayatri.kammela@intel.com, hdegoede@redhat.com,
-        mgross@linux.intel.com, andy.shevchenko@gmail.com
-Cc:     "David E. Box" <david.e.box@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] platform/x86: intel_pmc_core: Prevent possibile overflow
-Date:   Fri, 13 Aug 2021 18:47:28 -0700
-Message-Id: <20210814014728.520856-1-david.e.box@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Sat, 14 Aug 2021 00:14:56 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id D0A1D5C012C;
+        Sat, 14 Aug 2021 00:14:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sat, 14 Aug 2021 00:14:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=qD9/C4/DTi5elKfbH
+        zB+50Zeob4PmdZYE9Kxnev/By0=; b=EdaRg4I96Z2iEVke+BY7F/u36KJa/85rw
+        Jl3hipyvNBci7WPX7LQ6RiTm00pOvhnNGpiz6Zf7xEnETFJymQydMqWDVWyAC506
+        rXMkBu5Ri6DBZoQvYrzkWZfQ0dYfbdj2aIh8DEFNU1wr1TCPchRkNQ/1L16RJqC2
+        YPsQj8O4BXtRqeoj866Q4jgXSiW5A93Ada8gN3yuXQxpXvzxkP5TLpQLs/FCuCHw
+        wNYFoUDDmTa3jNFs8sueTLBzMmKI0zNoAYvl9c1tfABx29tLKlhoBZ/HW1NMGnIz
+        8jOLvMvikxHmkZR8vTxhJuhYFzz2CwDsLf7y8HKoOTRakaSZWpKeg==
+X-ME-Sender: <xms:IkMXYS3Z3qxKn1OzQIopeW9XxP9Km557OD03K4zwViis6-DgHc6Xtg>
+    <xme:IkMXYVECc1VJqgO3tkLO5TLJbqhTM7BJER_oByschRbuSSyRwEcvizXuEY8ZDbopI
+    fXE8ZfwlGNoS2PwP4E>
+X-ME-Received: <xmr:IkMXYa4aGQ60M1iYQvg6T-U1S5pbN8VmudfbTYYQiG56DC7pJ_UV3fPBBhtW>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeigdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonhgv
+    shdruggvvheqnecuggftrfgrthhtvghrnheplefflefhledthfdtveeugfevueeukeegte
+    eigfeihffgjedvtedvueevtdfhvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:IkMXYT0c9E8yLq0dgqqUKnjfo1ykU8AnUs1YdECwsOmvDQNb33ySBg>
+    <xmx:IkMXYVGYzobwnqqz5cI4sicMFg10q33XW3HqvUJNL-qEzNNITKVJsA>
+    <xmx:IkMXYc88YiyKOzQ_1KfipWzClD9iT4ZWSBusKi_2fAxlSwnK3D3Myw>
+    <xmx:I0MXYaT-u8Bnt872ZUE7XhK6Uc5pKZ2CXMffkf3wy0FuP5RjcB2p6Q>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 14 Aug 2021 00:14:24 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     linux-kernel@vger.kernel.org
+Cc:     hdegoede@redhat.com, hadess@hadess.net,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v2 0/1] asus-wmi: add platform_profile support
+Date:   Sat, 14 Aug 2021 16:14:08 +1200
+Message-Id: <20210814041409.2128394-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Substate priority levels are encoded in 4 bits in the LPM_PRI register.
-This value was used as an index to an array whose element size was less
-than 16, leading to the possibility of overflow should we read a larger
-than expected priority.  In addition to the overflow, bad values could lead
-to incorrect state reporting.  So rework the priority code to prevent the
-overflow and perform some validation of the register. Use the priority
-register values if they give an ordering of unique numbers between 0 and
-the maximum number of states.  Otherwise, use a default ordering instead.
+Changelog:
+- Correctly unregister from platform_profile if throttle_thermal_policy
+  fails
+- Do platform_profile_notify() in both throttle_thermal_policy_store()
+  and in throttle_thermal_policy_switch_next()
+- Remove unnecessary prep for possible fan-boost modes as this doesn't
+  match expected platform_profile behaviour
 
-Reported-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
-v3:	Modifying Andy's suggestion, just place the entire verification
-	in a separate function. If it fails, then keep the default
-	ordering. If it passes, overwrite with the verified ordering.
+Luke D. Jones (1):
+  asus-wmi: Add support for platform_profile
 
-	Fix error in default order array.
+ drivers/platform/x86/asus-wmi.c | 134 +++++++++++++++++++++++++++++++-
+ 1 file changed, 132 insertions(+), 2 deletions(-)
 
-	Also fix spelling noted by Andy drop the size comment since
-	the array size is set when declared.
-
-v2:	Remove lpm_priority size increase. Instead, remove that array and
-	create 2 new local arrays, one to save priority levels in mode order,
-	and one to save modes in priority order. Use the mode_order list to
-	validate that no priority level is above the maximum and to validate
-	that they are all unique values. Then we can safely create a
-	priority_order list that will be the basis of how we report substate
-	information.
-
- drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
- drivers/platform/x86/intel_pmc_core.h |  2 +
- 2 files changed, 53 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index b0e486a6bdfb..ae410a358ffe 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
- }
- DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
- 
--static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
-+static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
- {
--	u8 lpm_priority[LPM_MAX_NUM_MODES];
-+	int i, j;
-+
-+	if (!lpm_pri)
-+		return false;
-+	/*
-+	 * Each byte contains the priority level for 2 modes (7:4 and 3:0).
-+	 * In a 32 bit register this allows for describing 8 modes. Store the
-+	 * levels and look for values out of range.
-+	 */
-+	for (i = 0; i < 8; i++) {
-+		int level = lpm_pri & GENMASK(3, 0);
-+
-+		if (level >= LPM_MAX_NUM_MODES)
-+			return false;
-+
-+		mode_order[i] = level;
-+		lpm_pri >>= 4;
-+	}
-+
-+	/* Check that we have unique values */
-+	for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
-+		for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
-+			if (mode_order[i] == mode_order[j])
-+				return false;
-+
-+	return true;
-+}
-+
-+static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-+{
-+	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-+	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
-+	u8 mode_order[LPM_MAX_NUM_MODES];
-+	u32 lpm_pri;
- 	u32 lpm_en;
- 	int mode, i, p;
- 
-@@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
- 	lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
- 	pmcdev->num_lpm_modes = hweight32(lpm_en);
- 
--	/* Each byte contains information for 2 modes (7:4 and 3:0) */
--	for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
--		u8 priority = pmc_core_reg_read_byte(pmcdev,
--				pmcdev->map->lpm_priority_offset + (mode / 2));
--		int pri0 = GENMASK(3, 0) & priority;
--		int pri1 = (GENMASK(7, 4) & priority) >> 4;
-+	/* Read 32 bit LPM_PRI register */
-+	lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
- 
--		lpm_priority[pri0] = mode;
--		lpm_priority[pri1] = mode + 1;
--	}
- 
- 	/*
--	 * Loop though all modes from lowest to highest priority,
-+	 * If lpm_pri value passes verification, then override the default
-+	 * modes here. Otherwise stick with the default.
-+	 */
-+	if (pmc_core_pri_verify(lpm_pri, mode_order))
-+		/* Get list of modes in priority order */
-+		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
-+			pri_order[mode_order[mode]] = mode;
-+	else
-+		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-+
-+	/*
-+	 * Loop through all modes from lowest to highest priority,
- 	 * and capture all enabled modes in order
- 	 */
- 	i = 0;
- 	for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
--		int mode = lpm_priority[p];
-+		int mode = pri_order[p];
- 
- 		if (!(BIT(mode) & lpm_en))
- 			continue;
-@@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
- 	mutex_init(&pmcdev->lock);
- 
- 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
--	pmc_core_get_low_power_modes(pmcdev);
-+	pmc_core_get_low_power_modes(pdev);
- 	pmc_core_do_dmi_quirks(pmcdev);
- 
- 	if (pmcdev->map == &tgl_reg_map)
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-index e8dae9c6c45f..b9bf3d3d6f7a 100644
---- a/drivers/platform/x86/intel_pmc_core.h
-+++ b/drivers/platform/x86/intel_pmc_core.h
-@@ -188,6 +188,8 @@ enum ppfear_regs {
- #define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
- 
- #define LPM_MAX_NUM_MODES			8
-+#define LPM_DEFAULT_PRI				{ 7, 6, 2, 5, 4, 1, 3, 0 }
-+
- #define GET_X2_COUNTER(v)			((v) >> 1)
- #define LPM_STS_LATCH_MODE			BIT(31)
- 
-
-base-commit: e4ec7a49ef8bb4edc85a0eee005d59fa65c94a0e
--- 
-2.25.1
+--
+2.31.1
 
