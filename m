@@ -2,234 +2,221 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BD8C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 09:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755A4C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 10:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAEB960C40
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 09:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CBB60F36
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 10:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232648AbhHNJvg (ORCPT
+        id S237914AbhHNKkc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 05:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43444 "EHLO
+        Sat, 14 Aug 2021 06:40:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbhHNJvf (ORCPT
+        with ESMTP id S237870AbhHNKkY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 05:51:35 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B0CC06175F;
-        Sat, 14 Aug 2021 02:51:06 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id nt11so18979080pjb.2;
-        Sat, 14 Aug 2021 02:51:06 -0700 (PDT)
+        Sat, 14 Aug 2021 06:40:24 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C8EC061764
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Aug 2021 03:39:55 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id o1-20020a05600c5101b02902e676fe1f04so8887270wms.1
+        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Aug 2021 03:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HQfuO2pI9uFYWxwEDte8cxNRbaiuAcZuYVvJlMnd/rg=;
-        b=PezVZdqH9GAKZUNcEc1cqJDutVYelOfyOcDe5nUqfB0Yv04r1TDd62qtVw2qNzC84W
-         UlvuSnyjuFg45Ocj5mc1nuFRjADNdaISYCdb06WH/8BwNzK1l7DsO/Yv6WBJJyAtYwOv
-         EyO34ABM+PlW2HlN54qHpmGYcO4yHhV7e4vn1CRHr4gy7DlRWBzIJSxyHJ+SarrksI03
-         aJGIohDrQMoY7NTiz7NP4KOkzrhcI3hjHVGu+RSp5RGOfsZ4cAUapL7kUVht4zlT/+2P
-         8hmQFHbt8hcFjK8FEwkmKe2dUIMksZ3uy6CJUGX/JZhLIxrygg1f/sECKY9ayWcTNVUs
-         A+lw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AjtBntReMJGpNPGRQcNNDdIRXr/5WmXLSjQN1TRNwcM=;
+        b=Bn/vziQkg530r29jS6+PdUl1chWice+vbrCzGWDBk4mqC8l0HKPNmPLOdHdaX2LtyG
+         Ai1V4yiLeqMqZE/i1XI26p7qyjU3MBfpVH7XfA92ps7/q6ZISVhiiqJZKV4DFEqdU8JW
+         kguIHhjPFpbWsF8mrZIieiDlU+2O+MMwiQd6t9HDoTn+pLuH049bssii9+hPHJLvnYb9
+         x1oMsaNYr4HLsNpRE0SD3bGRGv32CayiyOub3ItHmeWdyUbPdGK5FQEyKH11ddOlUrnM
+         aKe2RsX9+Qqf+nNEm/5k8PCQEobzQIbY3hdnfIcN3iuJw6U7lpOI4rfFcobgGx3lJPTf
+         V96w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HQfuO2pI9uFYWxwEDte8cxNRbaiuAcZuYVvJlMnd/rg=;
-        b=VYSrjb2sd0EC1W7BsRlyniBxS3GgMYYYBUPs/Gi0OHNODUpuToCyoLpJ9GUilCgdeE
-         z7Ux8hGXifjHK6+qnoZ+/CvL/lus+hcrw5pm1xjWxVo1ECB3iHWd4/kUqHHX1CN4ex2W
-         veM81siPl530xC9ypwBREdnOdSjFEAsr6wR8BK0ucee3hcJkUGt2uHWLaPfuOWzPIFbB
-         kFBVV0gA/i+Dn4Y88UouHs/CfBf3CK+JVydcu4x/p8roq3yIBW/VIfg+GOsB4B/5CJRs
-         kQ0NHhLi1IIlI2b+A6HLSkQoL4PEtPR//ERkpisdapmR5T8Gmhcnc3p+5eD6XjKaCRFj
-         VHeg==
-X-Gm-Message-State: AOAM533a8bdjPTW2pKVrFnSBUIwb2KqBJzEV8YMk9hkgubW76xDKl+pQ
-        IBK76fvdhd5oKs4Ntw4/dDu20mN/CBxGlH7NBe4=
-X-Google-Smtp-Source: ABdhPJyyUAnuSomcRieIpZYmEFGJ9Ld4LgqT2KYgi+uHK7zrALGlFCkP7P1cBom/dfoybs96X+NADs2AEVHrUc17CHk=
-X-Received: by 2002:a63:cf0a:: with SMTP id j10mr6271475pgg.4.1628934666309;
- Sat, 14 Aug 2021 02:51:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210814014728.520856-1-david.e.box@linux.intel.com>
-In-Reply-To: <20210814014728.520856-1-david.e.box@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 14 Aug 2021 12:50:30 +0300
-Message-ID: <CAHp75Ve0G=Bh-D710R6CcdkVMrud82sw8Y4zvu7sdt=ZF4r-+A@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: intel_pmc_core: Prevent possibile overflow
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Evgeny Novikov <novikov@ispras.ru>,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AjtBntReMJGpNPGRQcNNDdIRXr/5WmXLSjQN1TRNwcM=;
+        b=SPyz8av6amd1GH0pgsjbZvIjdErhropXD+EqpE8PLgpHnj5bZ87yU5+Dez4U7BqzpJ
+         OR8rhj9r/F58b47mBW2RiNlkY+hcUbo/SdR35Jt/qbH7tMP7d7DzfIgGXQqYzAmZYGwq
+         +P3zHneaWk37UWkLJuco6OZgWZ4frMF7+zdCzdsVycQ+lni3ITquXmHEsc1C05fjFJq0
+         eQA+xOMmFNITKaCVVTru++c0ZOFoeCs8RC4/rBwdwkGHs0hfHPtNed41ZIj6gSyRLesd
+         8HUmglAfWfs6tbds3fkzppSCO0nWTYmSZ/Q1/IBjfMos9s2G4KKSjp6sAclSdQzfB5NT
+         REHg==
+X-Gm-Message-State: AOAM532qQ7DmjiB2iy78S58yc3ztG9TImDEPrpvUUznGG33g0EPManpr
+        wua8GJ2UA8GNE4zy70/vSn+LqYDVscVHGRKu
+X-Google-Smtp-Source: ABdhPJzBALGrCf8MxWf9h62cOgtFY5oMK4xDQgub5sOUQBmLCT2fQvu9N1PDpNMhJ56z3BplMyOPFw==
+X-Received: by 2002:a7b:c354:: with SMTP id l20mr6781859wmj.159.1628937594242;
+        Sat, 14 Aug 2021 03:39:54 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:5df3:d0eb:3945:640d? ([2a01:e34:ed2f:f020:5df3:d0eb:3945:640d])
+        by smtp.googlemail.com with ESMTPSA id z137sm4359508wmc.14.2021.08.14.03.39.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 14 Aug 2021 03:39:51 -0700 (PDT)
+Subject: Re: [PATCH 18/20] Move Intel thermal driver for menlow platform
+ driver to intel/ directory to improve readability.
+To:     Kate Hsuan <hpa@redhat.com>, Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alex Hung <alex.hung@canonical.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Cc:     platform-driver-x86@vger.kernel.org
+References: <20210810095832.4234-1-hpa@redhat.com>
+ <20210810095832.4234-19-hpa@redhat.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <95801e67-f09e-64f3-abd6-f38a8f1f1d51@linaro.org>
+Date:   Sat, 14 Aug 2021 12:39:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <20210810095832.4234-19-hpa@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Aug 14, 2021 at 4:49 AM David E. Box
-<david.e.box@linux.intel.com> wrote:
->
-> Substate priority levels are encoded in 4 bits in the LPM_PRI register.
-> This value was used as an index to an array whose element size was less
-> than 16, leading to the possibility of overflow should we read a larger
-> than expected priority.  In addition to the overflow, bad values could lead
-> to incorrect state reporting.  So rework the priority code to prevent the
-> overflow and perform some validation of the register. Use the priority
-> register values if they give an ordering of unique numbers between 0 and
-> the maximum number of states.  Otherwise, use a default ordering instead.
+On 10/08/2021 11:58, Kate Hsuan wrote:
 
-Thanks! Looks much better now. A couple of minor comments below. With
-or without them being addressed
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> Reported-by: Evgeny Novikov <novikov@ispras.ru>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Why not move it into drivers/thermal/intel ?
+
+
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 > ---
-> v3:     Modifying Andy's suggestion, just place the entire verification
->         in a separate function. If it fails, then keep the default
->         ordering. If it passes, overwrite with the verified ordering.
->
->         Fix error in default order array.
->
->         Also fix spelling noted by Andy drop the size comment since
->         the array size is set when declared.
->
-> v2:     Remove lpm_priority size increase. Instead, remove that array and
->         create 2 new local arrays, one to save priority levels in mode order,
->         and one to save modes in priority order. Use the mode_order list to
->         validate that no priority level is above the maximum and to validate
->         that they are all unique values. Then we can safely create a
->         priority_order list that will be the basis of how we report substate
->         information.
->
->  drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
->  drivers/platform/x86/intel_pmc_core.h |  2 +
->  2 files changed, 53 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index b0e486a6bdfb..ae410a358ffe 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
->  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
->
-> -static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
-> +static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
->  {
-> -       u8 lpm_priority[LPM_MAX_NUM_MODES];
-> +       int i, j;
+>  drivers/platform/x86/Kconfig                       |  8 --------
+>  drivers/platform/x86/Makefile                      |  2 +-
+>  drivers/platform/x86/intel/Kconfig                 |  1 +
+>  drivers/platform/x86/intel/Makefile                |  2 ++
+>  drivers/platform/x86/intel/menlow/Kconfig          | 14 ++++++++++++++
+>  drivers/platform/x86/intel/menlow/Makefile         |  6 ++++++
+>  .../platform/x86/{ => intel/menlow}/intel_menlow.c |  0
+>  7 files changed, 24 insertions(+), 9 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/menlow/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/menlow/Makefile
+>  rename drivers/platform/x86/{ => intel/menlow}/intel_menlow.c (100%)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index b9c0d2d97793..50ded236a841 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -632,15 +632,7 @@ config THINKPAD_LMI
+>  
+>  source "drivers/platform/x86/intel/Kconfig"
+>  
+> -config INTEL_MENLOW
+> -	tristate "Thermal Management driver for Intel menlow platform"
+> -	depends on ACPI_THERMAL
+> -	select THERMAL
+> -	help
+> -	  ACPI thermal management enhancement driver on
+> -	  Intel Menlow platform.
+>  
+> -	  If unsure, say N.
+>  
+>  config INTEL_OAKTRAIL
+>  	tristate "Intel Oaktrail Platform Extras"
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index f4c6ced59da1..ea5f5dd3f78a 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -67,7 +67,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+>  obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
+>  
+>  
+> -obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
 > +
-> +       if (!lpm_pri)
-> +               return false;
-> +       /*
-> +        * Each byte contains the priority level for 2 modes (7:4 and 3:0).
-> +        * In a 32 bit register this allows for describing 8 modes. Store the
-> +        * levels and look for values out of range.
-> +        */
-> +       for (i = 0; i < 8; i++) {
-> +               int level = lpm_pri & GENMASK(3, 0);
+>  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+>  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+>  
+> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+> index 4efb5ad3e3e1..59c9b602c784 100644
+> --- a/drivers/platform/x86/intel/Kconfig
+> +++ b/drivers/platform/x86/intel/Kconfig
+> @@ -36,6 +36,7 @@ source "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
+>  source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
+>  source "drivers/platform/x86/intel/uncore_freq/Kconfig"
+>  source "drivers/platform/x86/intel/int0002/Kconfig"
+> +source "drivers/platform/x86/intel/menlow/Kconfig"
+>  
+>  
+>  endif # X86_PLATFORM_DRIVERS_INTEL
+> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+> index fe5058c3af18..b2326554bd84 100644
+> --- a/drivers/platform/x86/intel/Makefile
+> +++ b/drivers/platform/x86/intel/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= hid/
+>  obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
+>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= wmi/
+>  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
+> +obj-$(CONFIG_INTEL_MENLOW)		+= menlow/
+>  
+>  
+>  # Intel PMIC / PMC / P-Unit devices
+> @@ -38,3 +39,4 @@ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
+>  obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
+>  obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
+>  
 > +
-> +               if (level >= LPM_MAX_NUM_MODES)
-> +                       return false;
+> diff --git a/drivers/platform/x86/intel/menlow/Kconfig b/drivers/platform/x86/intel/menlow/Kconfig
+> new file mode 100644
+> index 000000000000..b2920d259ff7
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/menlow/Kconfig
+> @@ -0,0 +1,14 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Intel x86 Platform Specific Drivers
+> +#
 > +
-> +               mode_order[i] = level;
-> +               lpm_pri >>= 4;
-> +       }
-
-> +       /* Check that we have unique values */
-> +       for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
-> +               for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
-> +                       if (mode_order[i] == mode_order[j])
-> +                               return false;
-
-There are ways to optimize this from O(n^2) to O(n), but it's not critical here.
-
-> +       return true;
-> +}
+> +config INTEL_MENLOW
+> +	tristate "Thermal Management driver for Intel menlow platform"
+> +	depends on ACPI_THERMAL
+> +	select THERMAL
+> +	help
+> +	  ACPI thermal management enhancement driver on
+> +	  Intel Menlow platform.
 > +
-> +static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-> +{
-> +       struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-> +       u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
-> +       u8 mode_order[LPM_MAX_NUM_MODES];
-> +       u32 lpm_pri;
->         u32 lpm_en;
->         int mode, i, p;
->
-> @@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
->         lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
->         pmcdev->num_lpm_modes = hweight32(lpm_en);
->
-> -       /* Each byte contains information for 2 modes (7:4 and 3:0) */
-> -       for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
-> -               u8 priority = pmc_core_reg_read_byte(pmcdev,
-> -                               pmcdev->map->lpm_priority_offset + (mode / 2));
-> -               int pri0 = GENMASK(3, 0) & priority;
-> -               int pri1 = (GENMASK(7, 4) & priority) >> 4;
-> +       /* Read 32 bit LPM_PRI register */
-> +       lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
->
-> -               lpm_priority[pri0] = mode;
-> -               lpm_priority[pri1] = mode + 1;
-> -       }
->
->         /*
-> -        * Loop though all modes from lowest to highest priority,
-> +        * If lpm_pri value passes verification, then override the default
-> +        * modes here. Otherwise stick with the default.
-> +        */
-> +       if (pmc_core_pri_verify(lpm_pri, mode_order))
-> +               /* Get list of modes in priority order */
-> +               for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
-> +                       pri_order[mode_order[mode]] = mode;
-> +       else
-> +               dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
+> +	  If unsure, say N.
+> diff --git a/drivers/platform/x86/intel/menlow/Makefile b/drivers/platform/x86/intel/menlow/Makefile
+> new file mode 100644
+> index 000000000000..0e9fda9bff98
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/menlow/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Intel x86 Platform Specific Drivers
+> +#
 > +
-> +       /*
-> +        * Loop through all modes from lowest to highest priority,
->          * and capture all enabled modes in order
->          */
->         i = 0;
->         for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
-> -               int mode = lpm_priority[p];
-> +               int mode = pri_order[p];
->
->                 if (!(BIT(mode) & lpm_en))
->                         continue;
-> @@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
->         mutex_init(&pmcdev->lock);
->
->         pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
-> -       pmc_core_get_low_power_modes(pmcdev);
-> +       pmc_core_get_low_power_modes(pdev);
->         pmc_core_do_dmi_quirks(pmcdev);
->
->         if (pmcdev->map == &tgl_reg_map)
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index e8dae9c6c45f..b9bf3d3d6f7a 100644
-> --- a/drivers/platform/x86/intel_pmc_core.h
-> +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -188,6 +188,8 @@ enum ppfear_regs {
->  #define ICL_PMC_SLP_S0_RES_COUNTER_STEP                0x64
->
->  #define LPM_MAX_NUM_MODES                      8
-> +#define LPM_DEFAULT_PRI                                { 7, 6, 2, 5, 4, 1, 3, 0 }
-
-What I meant here is to add static_assert() to avoid ARRAY_SIZE() != NUM_MODES.
-
->  #define GET_X2_COUNTER(v)                      ((v) >> 1)
->  #define LPM_STS_LATCH_MODE                     BIT(31)
+> +obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel/menlow/intel_menlow.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_menlow.c
+> rename to drivers/platform/x86/intel/menlow/intel_menlow.c
+> 
 
 
 -- 
-With Best Regards,
-Andy Shevchenko
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
