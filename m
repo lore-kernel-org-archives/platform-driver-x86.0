@@ -2,213 +2,200 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3811DC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 22:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E841BC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 01:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE276103A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 13 Aug 2021 22:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ED96103A
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 01:49:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235073AbhHMWMR (ORCPT
+        id S236420AbhHNBuV (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 13 Aug 2021 18:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235029AbhHMWMR (ORCPT
+        Fri, 13 Aug 2021 21:50:21 -0400
+Received: from mga12.intel.com ([192.55.52.136]:23992 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236200AbhHNBuV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 13 Aug 2021 18:12:17 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D05C061756
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 15:11:49 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id w21-20020a7bc1150000b02902e69ba66ce6so7801580wmi.1
-        for <platform-driver-x86@vger.kernel.org>; Fri, 13 Aug 2021 15:11:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=svgalib-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version;
-        bh=UX+4u3V1Y2tPHth8Wcu+SDOOt5/oAqcVMwJA7Wy8hAE=;
-        b=vXY7eoQBDSJQXsd0I1FR5zUwZyVhkVucb6Q2ZI6OBEsQLTiojaybFNhbgthGtenPne
-         9SUKzDhzLdxN0mQqeV6/DeBd8zgKmEBHmq1VICyOsHvKAhyFdpaTPXRAZVTltgJglKo/
-         l03nL2WblUeaiqK9gpiAqbIEVAxnU4tGPMqMmGR6i6j+WfoSUJkWalIGCdFnOlQF9CE+
-         X6rzawQmUhesx93y5PT6E/MAbsnfXV9KhGJJyXYfRuL1UCj3MF7/MK1LAqRaWmAitsR+
-         L/quNHRqc/TAWWtA/Nsb6UVfrOTuZL4cb/PoGBxPEDhc5XGk308Rgrwp1U4BYcayTD+I
-         o4zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version;
-        bh=UX+4u3V1Y2tPHth8Wcu+SDOOt5/oAqcVMwJA7Wy8hAE=;
-        b=rZ+scTgclwPlAVvvOexGW5ZI16FdIBuTdba1pR74PFTiOBe8zsKMwyjheZqPotNJvJ
-         T1LsNUnTmAD7xzO2zOWPKdbxkYPkGg2qNQzImvAiQIzznoO7yasm8AnQEUA6mMgg6Rpc
-         Cbq4n50LV7Vz2H/hlDQsaJ/HNzZsUqR/m85ozfij4z73WFAL/UAzp4hZUeIzYMhB42HW
-         6+5zOdJHehsQEWFEKoY4D8gohd6QlckzV7Fp7h9XB6lbSoUp9WOube0qRrMPx71bB164
-         A1J2X+WFN7wJgZE17Be2wQsm7zEM3UduO7D6mlqcORHNf/n1ydTs1CTLV+h/OKeYMcTD
-         zlEA==
-X-Gm-Message-State: AOAM530hLHxmqxQgaisjryNHF+NYI11bFYcd09SZyU/Wh85DDNh0PWZF
-        Ai3tnmSnAWoCXwnPMeCh/WMB3TPe36OUB5M=
-X-Google-Smtp-Source: ABdhPJyHLmoOaT0pa+OErIQaiQz5b093/9nkjOUJZ0E+mWcdYRtko6EFJUOgX8eiD0yzB5xqMDuq2g==
-X-Received: by 2002:a1c:ac05:: with SMTP id v5mr4408683wme.13.1628892708184;
-        Fri, 13 Aug 2021 15:11:48 -0700 (PDT)
-Received: from localhost ([2a00:a040:195:275f:b5f4:a59c:7c43:6667])
-        by smtp.gmail.com with ESMTPSA id a9sm2899591wrv.37.2021.08.13.15.11.46
-        for <platform-driver-x86@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Aug 2021 15:11:47 -0700 (PDT)
-Received: from 127.0.0.1 (ident=unknown) by matan.home with esmtp
- (masqmail 0.2.21) id 1mEfOx-RWt-00; Sat, 14 Aug 2021 01:11:43 +0300
-Date:   Sat, 14 Aug 2021 01:11:43 +0300 (IDT)
-From:   Matan Ziv-Av <matan@svgalib.org>
-To:     Platform Driver <platform-driver-x86@vger.kernel.org>
-cc:     Andy Shevchenko <andy@infradead.org>
-Subject: [PATCH] platform/x86: lg-laptop: Support for battery charge limit
- on newer models
-Message-ID: <9338b0b1-e76e-68f5-36de-a642745ba6ad@svgalib.org>
+        Fri, 13 Aug 2021 21:50:21 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10075"; a="195238741"
+X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
+   d="scan'208";a="195238741"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 18:49:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,320,1620716400"; 
+   d="scan'208";a="674660337"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Aug 2021 18:49:53 -0700
+Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
+        by linux.intel.com (Postfix) with ESMTP id 07CFF5807C5;
+        Fri, 13 Aug 2021 18:49:53 -0700 (PDT)
+From:   "David E. Box" <david.e.box@linux.intel.com>
+To:     irenic.rajneesh@gmail.com, novikov@ispras.ru,
+        gayatri.kammela@intel.com, hdegoede@redhat.com,
+        mgross@linux.intel.com, andy.shevchenko@gmail.com
+Cc:     "David E. Box" <david.e.box@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] platform/x86: intel_pmc_core: Prevent possibile overflow
+Date:   Fri, 13 Aug 2021 18:47:28 -0700
+Message-Id: <20210814014728.520856-1-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Substate priority levels are encoded in 4 bits in the LPM_PRI register.
+This value was used as an index to an array whose element size was less
+than 16, leading to the possibility of overflow should we read a larger
+than expected priority.  In addition to the overflow, bad values could lead
+to incorrect state reporting.  So rework the priority code to prevent the
+overflow and perform some validation of the register. Use the priority
+register values if they give an ordering of unique numbers between 0 and
+the maximum number of states.  Otherwise, use a default ordering instead.
 
-Add support for the difference between various models:
-
-- Use dmi to detect laptop model.
-- 2019 and newer models use _wmbb method to set battery charge limit.
-
-Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
+Reported-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/lg-laptop.c | 75 ++++++++++++++++++++++++++++----
- 1 file changed, 66 insertions(+), 9 deletions(-)
+v3:	Modifying Andy's suggestion, just place the entire verification
+	in a separate function. If it fails, then keep the default
+	ordering. If it passes, overwrite with the verified ordering.
 
-diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-index 20145b539335..12b0257c0bdd 100644
---- a/drivers/platform/x86/lg-laptop.c
-+++ b/drivers/platform/x86/lg-laptop.c
-@@ -8,6 +8,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+	Fix error in default order array.
+
+	Also fix spelling noted by Andy drop the size comment since
+	the array size is set when declared.
+
+v2:	Remove lpm_priority size increase. Instead, remove that array and
+	create 2 new local arrays, one to save priority levels in mode order,
+	and one to save modes in priority order. Use the mode_order list to
+	validate that no priority level is above the maximum and to validate
+	that they are all unique values. Then we can safely create a
+	priority_order list that will be the basis of how we report substate
+	information.
+
+ drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
+ drivers/platform/x86/intel_pmc_core.h |  2 +
+ 2 files changed, 53 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index b0e486a6bdfb..ae410a358ffe 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+ }
+ DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
  
- #include <linux/acpi.h>
-+#include <linux/dmi.h>
- #include <linux/input.h>
- #include <linux/input/sparse-keymap.h>
- #include <linux/kernel.h>
-@@ -69,6 +70,8 @@ static u32 inited;
- #define INIT_INPUT_ACPI         0x04
- #define INIT_SPARSE_KEYMAP      0x80
- 
-+static int battery_limit_use_wmbb;
-+
- static const struct key_entry wmi_keymap[] = {
- 	{KE_KEY, 0x70, {KEY_F15} },	 /* LG control panel (F1) */
- 	{KE_KEY, 0x74, {KEY_F13} },	 /* Touchpad toggle (F5) */
-@@ -461,7 +464,10 @@ static ssize_t battery_care_limit_store(struct device *dev,
- 	if (value == 100 || value == 80) {
- 		union acpi_object *r;
- 
--		r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
-+		if (!battery_limit_use_wmbb)
-+			r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
-+		else
-+			r = lg_wmbb(WMBB_BATT_LIMIT, WM_SET, value);
- 		if (!r)
- 			return -EIO;
- 
-@@ -479,16 +485,29 @@ static ssize_t battery_care_limit_show(struct device *dev,
- 	unsigned int status;
- 	union acpi_object *r;
- 
--	r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
--	if (!r)
--		return -EIO;
-+	if (!battery_limit_use_wmbb) {
-+		r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
-+		if (!r)
-+			return -EIO;
- 
--	if (r->type != ACPI_TYPE_INTEGER) {
--		kfree(r);
--		return -EIO;
--	}
-+		if (r->type != ACPI_TYPE_INTEGER) {
-+			kfree(r);
-+			return -EIO;
-+		}
- 
--	status = r->integer.value;
-+		status = r->integer.value;
-+	} else {
-+		r = lg_wmbb(WMBB_BATT_LIMIT, WM_GET, 0);
-+		if (!r)
-+			return -EIO;
-+
-+		if (r->type != ACPI_TYPE_BUFFER) {
-+			kfree(r);
-+			return -EIO;
-+		}
-+
-+		status = r->buffer.pointer[0x10];
-+	}
- 	kfree(r);
- 	if (status != 80 && status != 100)
- 		status = 0;
-@@ -602,6 +621,8 @@ static struct platform_driver pf_driver = {
- static int acpi_add(struct acpi_device *device)
+-static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
++static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
  {
- 	int ret;
-+	const char *product;
-+	int year = 2017;
- 
- 	if (pf_device)
- 		return 0;
-@@ -619,6 +640,42 @@ static int acpi_add(struct acpi_device *device)
- 		pr_err("unable to register platform device\n");
- 		goto out_platform_registered;
- 	}
-+	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-+	if (strlen(product) > 4)
-+		switch (product[4]) {
-+		case '5':
-+		case '6':
-+			year = 2016;
-+			break;
-+		case '7':
-+			year = 2017;
-+			break;
-+		case '8':
-+			year = 2018;
-+			break;
-+		case '9':
-+			year = 2019;
-+			break;
-+		case '0':
-+			if (strlen(product) > 5)
-+				switch (product[5]) {
-+				case 'N':
-+					year = 2020;
-+					break;
-+				case 'P':
-+					year = 2021;
-+					break;
-+				default:
-+					year = 2022;
-+				}
-+			break;
-+		default:
-+			year = 2019;
-+		}
-+	pr_info("product: %s  year: %d\n", product, year);
+-	u8 lpm_priority[LPM_MAX_NUM_MODES];
++	int i, j;
 +
-+	if (year >= 2019)
-+		battery_limit_use_wmbb = 1;
++	if (!lpm_pri)
++		return false;
++	/*
++	 * Each byte contains the priority level for 2 modes (7:4 and 3:0).
++	 * In a 32 bit register this allows for describing 8 modes. Store the
++	 * levels and look for values out of range.
++	 */
++	for (i = 0; i < 8; i++) {
++		int level = lpm_pri & GENMASK(3, 0);
++
++		if (level >= LPM_MAX_NUM_MODES)
++			return false;
++
++		mode_order[i] = level;
++		lpm_pri >>= 4;
++	}
++
++	/* Check that we have unique values */
++	for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
++		for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
++			if (mode_order[i] == mode_order[j])
++				return false;
++
++	return true;
++}
++
++static void pmc_core_get_low_power_modes(struct platform_device *pdev)
++{
++	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
++	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
++	u8 mode_order[LPM_MAX_NUM_MODES];
++	u32 lpm_pri;
+ 	u32 lpm_en;
+ 	int mode, i, p;
  
- 	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
- 	if (ret)
--- 
-2.31.1
+@@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
+ 	lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
+ 	pmcdev->num_lpm_modes = hweight32(lpm_en);
+ 
+-	/* Each byte contains information for 2 modes (7:4 and 3:0) */
+-	for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
+-		u8 priority = pmc_core_reg_read_byte(pmcdev,
+-				pmcdev->map->lpm_priority_offset + (mode / 2));
+-		int pri0 = GENMASK(3, 0) & priority;
+-		int pri1 = (GENMASK(7, 4) & priority) >> 4;
++	/* Read 32 bit LPM_PRI register */
++	lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
+ 
+-		lpm_priority[pri0] = mode;
+-		lpm_priority[pri1] = mode + 1;
+-	}
+ 
+ 	/*
+-	 * Loop though all modes from lowest to highest priority,
++	 * If lpm_pri value passes verification, then override the default
++	 * modes here. Otherwise stick with the default.
++	 */
++	if (pmc_core_pri_verify(lpm_pri, mode_order))
++		/* Get list of modes in priority order */
++		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
++			pri_order[mode_order[mode]] = mode;
++	else
++		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
++
++	/*
++	 * Loop through all modes from lowest to highest priority,
+ 	 * and capture all enabled modes in order
+ 	 */
+ 	i = 0;
+ 	for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
+-		int mode = lpm_priority[p];
++		int mode = pri_order[p];
+ 
+ 		if (!(BIT(mode) & lpm_en))
+ 			continue;
+@@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	mutex_init(&pmcdev->lock);
+ 
+ 	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
+-	pmc_core_get_low_power_modes(pmcdev);
++	pmc_core_get_low_power_modes(pdev);
+ 	pmc_core_do_dmi_quirks(pmcdev);
+ 
+ 	if (pmcdev->map == &tgl_reg_map)
+diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
+index e8dae9c6c45f..b9bf3d3d6f7a 100644
+--- a/drivers/platform/x86/intel_pmc_core.h
++++ b/drivers/platform/x86/intel_pmc_core.h
+@@ -188,6 +188,8 @@ enum ppfear_regs {
+ #define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
+ 
+ #define LPM_MAX_NUM_MODES			8
++#define LPM_DEFAULT_PRI				{ 7, 6, 2, 5, 4, 1, 3, 0 }
++
+ #define GET_X2_COUNTER(v)			((v) >> 1)
+ #define LPM_STS_LATCH_MODE			BIT(31)
+ 
 
-
+base-commit: e4ec7a49ef8bb4edc85a0eee005d59fa65c94a0e
 -- 
-Matan.
+2.25.1
 
