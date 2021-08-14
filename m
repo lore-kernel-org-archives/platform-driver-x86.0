@@ -2,221 +2,182 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755A4C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 10:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA075C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56CBB60F36
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 10:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD6760F36
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237914AbhHNKkc (ORCPT
+        id S238215AbhHNLlU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 06:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        Sat, 14 Aug 2021 07:41:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237870AbhHNKkY (ORCPT
+        with ESMTP id S238064AbhHNLlT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 06:40:24 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C8EC061764
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Aug 2021 03:39:55 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id o1-20020a05600c5101b02902e676fe1f04so8887270wms.1
-        for <platform-driver-x86@vger.kernel.org>; Sat, 14 Aug 2021 03:39:55 -0700 (PDT)
+        Sat, 14 Aug 2021 07:41:19 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F94C061764;
+        Sat, 14 Aug 2021 04:40:51 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id 108-20020a9d01750000b029050e5cc11ae3so15220002otu.5;
+        Sat, 14 Aug 2021 04:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AjtBntReMJGpNPGRQcNNDdIRXr/5WmXLSjQN1TRNwcM=;
-        b=Bn/vziQkg530r29jS6+PdUl1chWice+vbrCzGWDBk4mqC8l0HKPNmPLOdHdaX2LtyG
-         Ai1V4yiLeqMqZE/i1XI26p7qyjU3MBfpVH7XfA92ps7/q6ZISVhiiqJZKV4DFEqdU8JW
-         kguIHhjPFpbWsF8mrZIieiDlU+2O+MMwiQd6t9HDoTn+pLuH049bssii9+hPHJLvnYb9
-         x1oMsaNYr4HLsNpRE0SD3bGRGv32CayiyOub3ItHmeWdyUbPdGK5FQEyKH11ddOlUrnM
-         aKe2RsX9+Qqf+nNEm/5k8PCQEobzQIbY3hdnfIcN3iuJw6U7lpOI4rfFcobgGx3lJPTf
-         V96w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jVLxEjda5D29Pt6xaEnOJAaMILEeaysFTL2PyZG0dws=;
+        b=tPdb5ZbX5iFAOtJNNBC8HM4aOyIejf6LOFK5tAezBDDAW74fn3x9f9cGtr2pw3FnNi
+         NZtgZdauz1EoiJDo8ePAS6gtEYFTEMS54fvcsTPAzBUDK1EkrGhSPnkN15jfaBvgaSH6
+         vuhj+YeGT8tCfWzsNdbuVXRj0je6t4Bchy2yv5wdeig4vmtd7xLiSbPvtcue23whLkDW
+         8XxNZu8LlqGPXzhWAx41deJLrgqOhI4zetebRYtvub3klt2688d+dn/YAKq+hgNGnGYH
+         ffXWwA3TmAH+ihsfiHqwHceE11v+pXbJ7a3MvXtHx/Rrd3s7MM7ukSV9VBflWmJ+Jbv/
+         BkDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AjtBntReMJGpNPGRQcNNDdIRXr/5WmXLSjQN1TRNwcM=;
-        b=SPyz8av6amd1GH0pgsjbZvIjdErhropXD+EqpE8PLgpHnj5bZ87yU5+Dez4U7BqzpJ
-         OR8rhj9r/F58b47mBW2RiNlkY+hcUbo/SdR35Jt/qbH7tMP7d7DzfIgGXQqYzAmZYGwq
-         +P3zHneaWk37UWkLJuco6OZgWZ4frMF7+zdCzdsVycQ+lni3ITquXmHEsc1C05fjFJq0
-         eQA+xOMmFNITKaCVVTru++c0ZOFoeCs8RC4/rBwdwkGHs0hfHPtNed41ZIj6gSyRLesd
-         8HUmglAfWfs6tbds3fkzppSCO0nWTYmSZ/Q1/IBjfMos9s2G4KKSjp6sAclSdQzfB5NT
-         REHg==
-X-Gm-Message-State: AOAM532qQ7DmjiB2iy78S58yc3ztG9TImDEPrpvUUznGG33g0EPManpr
-        wua8GJ2UA8GNE4zy70/vSn+LqYDVscVHGRKu
-X-Google-Smtp-Source: ABdhPJzBALGrCf8MxWf9h62cOgtFY5oMK4xDQgub5sOUQBmLCT2fQvu9N1PDpNMhJ56z3BplMyOPFw==
-X-Received: by 2002:a7b:c354:: with SMTP id l20mr6781859wmj.159.1628937594242;
-        Sat, 14 Aug 2021 03:39:54 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:5df3:d0eb:3945:640d? ([2a01:e34:ed2f:f020:5df3:d0eb:3945:640d])
-        by smtp.googlemail.com with ESMTPSA id z137sm4359508wmc.14.2021.08.14.03.39.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Aug 2021 03:39:51 -0700 (PDT)
-Subject: Re: [PATCH 18/20] Move Intel thermal driver for menlow platform
- driver to intel/ directory to improve readability.
-To:     Kate Hsuan <hpa@redhat.com>, Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Alex Hung <alex.hung@canonical.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        David E Box <david.e.box@intel.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
-Cc:     platform-driver-x86@vger.kernel.org
-References: <20210810095832.4234-1-hpa@redhat.com>
- <20210810095832.4234-19-hpa@redhat.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <95801e67-f09e-64f3-abd6-f38a8f1f1d51@linaro.org>
-Date:   Sat, 14 Aug 2021 12:39:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jVLxEjda5D29Pt6xaEnOJAaMILEeaysFTL2PyZG0dws=;
+        b=EdvMmr3BuVqjVRNYBW0J/0cuXMkU0bBl/UOMzJq3NlXg33RZa33/Lz0f08Iv6XI7F6
+         7z0qbN90Qo8XCqlmJ9U+cIJ2fTemDKf0S/yVm6FangICg+BtN6zT2jEs7Kc3ACXnj3iQ
+         qGWle1OFDZfmBsV3vr9NRTZ6MHTyYfjMURvbATxIUkn99Qx7JKlL64uMhNAYjKXPrcJk
+         7lfZjFQsRc5dy9VX7U4O75K4Ucg0cCw+2OCIsoumT4/64ZASpRV9C6dVmdUorNbNcQxw
+         dz8iG2oMz0LzBJHKnUTAi5nqRniIa/ywVLUz8tTyG5qpOfMwsUmHI+KE1lw2xiDINovK
+         qb1Q==
+X-Gm-Message-State: AOAM532KZsm7HtO+xlknAdCQqsp3NOsQp/U0TYxOum3RTyVI9PuZH1AF
+        2H/gkwRwQh+Jpmkk96HEajqb2H8cnvshYMuIbFM=
+X-Google-Smtp-Source: ABdhPJya8kzDZmc+7fqeltjb0glf4wYeofy0PJ3huxBs99yFsY/nzHGMfQcZeN+mCWYepCxMH1Qmy3yLFu87mbKxJiY=
+X-Received: by 2002:a05:6830:544:: with SMTP id l4mr5718649otb.164.1628941250605;
+ Sat, 14 Aug 2021 04:40:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210810095832.4234-19-hpa@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20210812125307.1749207-1-jafar.akhoondali@gmail.com> <77aab2df-b3c3-541d-461a-8755277fd425@redhat.com>
+In-Reply-To: <77aab2df-b3c3-541d-461a-8755277fd425@redhat.com>
+From:   Jafar Akhondali <jafar.akhoondali@gmail.com>
+Date:   Sat, 14 Aug 2021 16:10:39 +0430
+Message-ID: <CAMW3L+3WUCXx60fALT=2J8TjK_BO3jOTb+8+JQQrKA1_F9pLTQ@mail.gmail.com>
+Subject: Re: [PATCH v5] platform/x86: acer-wmi: Add Turbo Mode support for
+ Acer PH315-53
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     jlee@suse.com, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, mgross@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 10/08/2021 11:58, Kate Hsuan wrote:
+ Hi Hans,
+Thank you for your efforts on the patch, I've sure learned a lot from
+your comments as this
+was my first contribution to Linux kernel.
 
+Just an extra question, for the next patch I'm gonna send turbo mode support for
+14 other Acer Predator laptops. The only required change is that I should add
+"quirk_entry" for GPU and CPU fan count, and match product names to their quirk.
 
-Why not move it into drivers/thermal/intel ?
+12 of these Predator laptops have exactly 1 fan for CPU and 1 fan for GPU,
+but two of them have 2 fans for GPU and 1 for CPU. So my question is should
+I add the quirks per product (which will end up to have 14 quirks,
+same as current patch) like:
 
+static struct quirk_entry quirk_acer_predator_ph315_53 = {
+      .turbo = 1,
+      .cpu_fans = 1,
+      .gpu_fans = 1,
+};
 
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> ---
->  drivers/platform/x86/Kconfig                       |  8 --------
->  drivers/platform/x86/Makefile                      |  2 +-
->  drivers/platform/x86/intel/Kconfig                 |  1 +
->  drivers/platform/x86/intel/Makefile                |  2 ++
->  drivers/platform/x86/intel/menlow/Kconfig          | 14 ++++++++++++++
->  drivers/platform/x86/intel/menlow/Makefile         |  6 ++++++
->  .../platform/x86/{ => intel/menlow}/intel_menlow.c |  0
->  7 files changed, 24 insertions(+), 9 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/menlow/Kconfig
->  create mode 100644 drivers/platform/x86/intel/menlow/Makefile
->  rename drivers/platform/x86/{ => intel/menlow}/intel_menlow.c (100%)
-> 
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index b9c0d2d97793..50ded236a841 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -632,15 +632,7 @@ config THINKPAD_LMI
->  
->  source "drivers/platform/x86/intel/Kconfig"
->  
-> -config INTEL_MENLOW
-> -	tristate "Thermal Management driver for Intel menlow platform"
-> -	depends on ACPI_THERMAL
-> -	select THERMAL
-> -	help
-> -	  ACPI thermal management enhancement driver on
-> -	  Intel Menlow platform.
->  
-> -	  If unsure, say N.
->  
->  config INTEL_OAKTRAIL
->  	tristate "Intel Oaktrail Platform Extras"
-> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index f4c6ced59da1..ea5f5dd3f78a 100644
-> --- a/drivers/platform/x86/Makefile
-> +++ b/drivers/platform/x86/Makefile
-> @@ -67,7 +67,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
->  obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
->  
->  
-> -obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
-> +
->  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
->  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
->  
-> diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-> index 4efb5ad3e3e1..59c9b602c784 100644
-> --- a/drivers/platform/x86/intel/Kconfig
-> +++ b/drivers/platform/x86/intel/Kconfig
-> @@ -36,6 +36,7 @@ source "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
->  source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
->  source "drivers/platform/x86/intel/uncore_freq/Kconfig"
->  source "drivers/platform/x86/intel/int0002/Kconfig"
-> +source "drivers/platform/x86/intel/menlow/Kconfig"
->  
->  
->  endif # X86_PLATFORM_DRIVERS_INTEL
-> diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-> index fe5058c3af18..b2326554bd84 100644
-> --- a/drivers/platform/x86/intel/Makefile
-> +++ b/drivers/platform/x86/intel/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= hid/
->  obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= wmi/
->  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= wmi/
->  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= int0002/
-> +obj-$(CONFIG_INTEL_MENLOW)		+= menlow/
->  
->  
->  # Intel PMIC / PMC / P-Unit devices
-> @@ -38,3 +39,4 @@ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
->  obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= turbo_max_3/
->  obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= uncore_freq/
->  
-> +
-> diff --git a/drivers/platform/x86/intel/menlow/Kconfig b/drivers/platform/x86/intel/menlow/Kconfig
-> new file mode 100644
-> index 000000000000..b2920d259ff7
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/menlow/Kconfig
-> @@ -0,0 +1,14 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Intel x86 Platform Specific Drivers
-> +#
-> +
-> +config INTEL_MENLOW
-> +	tristate "Thermal Management driver for Intel menlow platform"
-> +	depends on ACPI_THERMAL
-> +	select THERMAL
-> +	help
-> +	  ACPI thermal management enhancement driver on
-> +	  Intel Menlow platform.
-> +
-> +	  If unsure, say N.
-> diff --git a/drivers/platform/x86/intel/menlow/Makefile b/drivers/platform/x86/intel/menlow/Makefile
-> new file mode 100644
-> index 000000000000..0e9fda9bff98
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/menlow/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# Intel x86 Platform Specific Drivers
-> +#
-> +
-> +obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
-> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/platform/x86/intel/menlow/intel_menlow.c
-> similarity index 100%
-> rename from drivers/platform/x86/intel_menlow.c
-> rename to drivers/platform/x86/intel/menlow/intel_menlow.c
-> 
+or should I specify the quirk per fan count like this one:
 
+static struct quirk_entry quirk_acer_predator_gpu_fan_one_cpu_fan_one = {
+      .turbo = 1,
+      .cpu_fans = 1,
+      .gpu_fans = 1,
+};
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+and then set different matched DMI product names to the above quirk?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The first approach is more verbose, the second uses less code.
+If possible, I would like to know your thoughts on this.
+
+Thanks in advance,
+
+Best,
+
+Jafar
+
+On Fri, Aug 13, 2021 at 3:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 8/12/21 2:53 PM, JafarAkhondali wrote:
+> > Hi,
+> >
+> > The Acer Predator Helios series (usually denoted by PHxxx-yy) features
+> > a particular key above the keyboard named "TURBO".
+> > The turbo key does 3 things:
+> > 1. Set all fan's speeds to TURBO mode
+> > 2. Overclocks the CPU and GPU in the safe range
+> > 3. Turn on an LED just below the turbo button
+> >
+> > All the above actions are operating using WMI function calls,
+> > and there is no custom OC level for turbo. It acts as a flag
+> > for enabling turbo mode instead of telling processors to use
+> > a specific multiply of power (e.g. 1.3x of power).
+> >
+> > I've run some benchmark tests and it worked fine:
+> >
+> > GpuTest 0.7.0
+> > http://www.geeks3d.com
+> >
+> > Module: FurMark
+> > Normal mode Score: 7289 points (FPS: 121)
+> > Turbo mode Score: 7675 points (FPS: 127)
+> > Settings:
+> > - 1920x1080 fullscreen
+> > - antialiasing: Off
+> > - duration: 60000 ms
+> >
+> > Renderer:
+> > - GeForce RTX 2060/PCIe/SSE2
+> > - OpenGL: 4.6.0 NVIDIA 460.32.03
+> >
+> > This feature is presented by Acer officially and should not harm
+> > hardware in any case.
+> >
+> > A challenging part of implementing this feature is that calling
+> > overclock function requires knowing the exact count of fans
+> > for CPU and GPU of each model, which to the best of my
+> > knowledge is not available in the kernel.
+> >
+> > So after checking the official PredatorSense application methods, it
+> > turned out they have provided the software the list of fans in each model.
+> > I have access to the mentioned list, and all similar PH-iii-jj can be
+> > added easily by matching "DMI_PRODUCT_NAME".
+> >
+> > Creating a specific file for the Acer gaming features is not possible
+> > because the current in use WMI event GUID is required for the turbo button
+> > and it's not possible to register multiple listeners on a single WMI event.
+> >
+> >
+> > Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
+>
+> Thank you for your patch, I've applied this patch to my review-hans
+> branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>
+> Note it will show up in my review-hans branch once I've pushed my
+> local branch there, which might take a while.
+>
+> Once I've run some tests on this branch the patches there will be
+> added to the platform-drivers-x86/for-next branch and eventually
+> will be included in the pdx86 pull-request to Linus for the next
+> merge-window.
+>
+> Regards,
+>
+> Hans
+>
