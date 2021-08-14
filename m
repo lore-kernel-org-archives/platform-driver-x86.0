@@ -2,193 +2,108 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98440C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 12:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694CAC43214
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 15:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2BA604AC
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 12:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA9360F42
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 15:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbhHNMsE (ORCPT
+        id S238724AbhHNPZC (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 08:48:04 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35663 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229549AbhHNMsE (ORCPT
+        Sat, 14 Aug 2021 11:25:02 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36246 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238554AbhHNPZB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 08:48:04 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id 9ECD532001C6;
-        Sat, 14 Aug 2021 08:47:35 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Sat, 14 Aug 2021 08:47:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RtYFiE
-        MHz6FIwyIETFo/SymU19AOSe5BNvM77FSnom0=; b=b41eb5YcjAXQU2S5+schE7
-        rgYmo1xtQoz5Ifip5RRSVR+p7vDRKMuz1S5KkDhx5Sa5uSpG45lS96ahV798uwA2
-        6+GtA96+zGMtkPy/D8gz5kLVpspalvU9oIe95AKG2ziovqmIlQQAdZcma7vZqHBZ
-        iuB1OPiAPDE/SYCac+T0NjBBoBtF/yaGW62DPYCeaDXAOV+Iz6Wlj2jEB93utgYD
-        cx2lt2MZcboTacolpnJg2X9DHolquzUsnxkRPfx6fG6at+XTEK4bEkBqBOxi2cRE
-        0R5xA7vKitsfBrHoy1oa60VwjD0Prfru9Ur5USfCm4KNP+K6VOuGczmzN8C/GHvg
-        ==
-X-ME-Sender: <xms:ZrsXYcqyUp1YZWSfSSnASzHdyga-iLIdhrHZGhmhk3l0zH1txz4C-A>
-    <xme:ZrsXYSq4BY-HNaD9Y5i6eP2URryFr1nxNTrz5FSLkVIcgOX5w7Szc-nYaW3O44JpQ
-    zQvT2LJcYh84xi9Ha4>
-X-ME-Received: <xmr:ZrsXYRN-_TLedoJxAY9yH5z2Sw-FMi4tCyxRqCvELIQOsjq-5SypRcZgPXqDlTRkCiCnsw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeejgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffuvffkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgvucfl
-    ohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgf
-    effedufffhgfeuheegffffgeegveeifeeutefhieejffetudfgueevteehtdetnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljh
-    honhgvshdruggvvh
-X-ME-Proxy: <xmx:ZrsXYT4sm20A3akEDlXnsh1Gey2-gATPPWyfb5qsiYhtAYLfww_IrA>
-    <xmx:ZrsXYb5OPd4OOtnUPg9BchxIlC7LTZ8EUAEUTZ-4k0-VAj1ODT6D9w>
-    <xmx:ZrsXYTjX55CdyJQVeraAUF0tOLcejvfv_dBkdvboyNAWdukdA3GnAQ>
-    <xmx:Z7sXYbE1ENrlK98fx6dQ6NILLWFKhXL0_HmZuMpWoO9oEzwtOjjN6g>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 14 Aug 2021 08:47:30 -0400 (EDT)
-Date:   Sun, 15 Aug 2021 00:47:17 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 1/1] asus-wmi: Add support for platform_profile
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Message-Id: <T6YTXQ.N7QG3527OXWU1@ljones.dev>
-In-Reply-To: <UCVTXQ.8ME64G0S1BQ8@ljones.dev>
-References: <20210814043103.2535842-1-luke@ljones.dev>
-        <20210814043103.2535842-2-luke@ljones.dev>
-        <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com>
-        <UCVTXQ.8ME64G0S1BQ8@ljones.dev>
-X-Mailer: geary/40.0
+        Sat, 14 Aug 2021 11:25:01 -0400
+Received: from zn.tnic (p200300ec2f1db9002f4996680da31890.dip0.t-ipconnect.de [IPv6:2003:ec:2f1d:b900:2f49:9668:da3:1890])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C4181EC0570;
+        Sat, 14 Aug 2021 17:24:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1628954665;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=sbUZXYrGBCnkdsaMVDuLw+c4h20LmEtsdOYx/LANX0Q=;
+        b=C00yjn7cBmQqRpOaWrEEj5l68AxFibYiJHAi3z1eBk5RnJifb6ywdjAO9bEEyQcQGDqW2O
+        EISCtsZnVhg2cwZvHYBEu32siB+BgLQO9Fc7VRjIta+kozXWnAdLDck7yaUcVc1AXUpVdO
+        qhH8pNHGUmDKEa/M9P+kxf+ZpIhdVbo=
+Date:   Sat, 14 Aug 2021 17:25:03 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 01/12] x86/ioremap: Selectively build arch override
+ encryption functions
+Message-ID: <YRfgTzhKCn7otSzy@zn.tnic>
+References: <cover.1628873970.git.thomas.lendacky@amd.com>
+ <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-A very quick question: should I be enabling platform_profile by default 
-if asus_wmi is enabled in kconfig?
+On Fri, Aug 13, 2021 at 11:59:20AM -0500, Tom Lendacky wrote:
+> In prep for other uses of the prot_guest_has() function besides AMD's
+> memory encryption support, selectively build the AMD memory encryption
+> architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
+> functions are:
+> - early_memremap_pgprot_adjust()
+> - arch_memremap_can_ram_remap()
+> 
+> Additionally, routines that are only invoked by these architecture
+> override functions can also be conditionally built. These functions are:
+> - memremap_should_map_decrypted()
+> - memremap_is_efi_data()
+> - memremap_is_setup_data()
+> - early_memremap_is_setup_data()
+> 
+> And finally, phys_mem_access_encrypted() is conditionally built as well,
+> but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
+> not set.
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/io.h | 8 ++++++++
+>  arch/x86/mm/ioremap.c     | 2 +-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
 
-On Sat, Aug 14 2021 at 23:46:06 +1200, Luke Jones <luke@ljones.dev> 
-wrote:
-> Hi Andy, thanks for the feedback. All is addressed, and some inline 
-> comment/reply. New version incoming pending pr_info() vs dev_info()
-> 
-> On Sat, Aug 14 2021 at 12:40:39 +0300, Andy Shevchenko 
-> <andy.shevchenko@gmail.com> wrote:
->> On Sat, Aug 14, 2021 at 7:33 AM Luke D. Jones <luke@ljones.dev> 
->> wrote:
->>> 
->>>  Add initial support for platform_profile where the support is
->>>  based on availability of ASUS_THROTTLE_THERMAL_POLICY.
->>> 
->>>  Because throttle_thermal_policy is used by platform_profile and is
->>>  writeable separately to platform_profile any userspace changes to
->>>  throttle_thermal_policy need to notify platform_profile.
->>> 
->>>  In future throttle_thermal_policy sysfs should be removed so that
->>>  only one method controls the laptop power profile.
->> 
->> Some comments below.
->> 
->> ...
->> 
->>>  +       /*
->>>  +        * Ensure that platform_profile updates userspace with the 
->>> change to ensure
->>>  +        * that platform_profile and throttle_thermal_policy_mode 
->>> are in sync
->> 
->> Missed period here and in other multi-line comments.
->> 
->>>  +        */
->> 
->> ...
->> 
->>>  +       /* All possible toggles like throttle_thermal_policy here 
->>> */
->>>  +       if (asus->throttle_thermal_policy_available) {
->>>  +               tp = asus->throttle_thermal_policy_mode;
->>>  +       } else {
->>>  +               return -1;
->>>  +       }
->>>  +
->>>  +       if (tp < 0)
->>>  +               return tp;
->> 
->> This will be better in a form
->> 
->>     if (!..._available)
->>         return -ENODATA; // what -1 means?
->> 
-> 
-> I wasn't sure what the best return was here. On your suggestion I've 
-> changed to ENODATA
-> 
->>     tp = ...;
->>     if (tp < 0)
->>         return tp;
->> 
->> ...
->> 
->>>  +       /* All possible toggles like throttle_thermal_policy here 
->>> */
->>>  +       if (!asus->throttle_thermal_policy_available) {
->>>  +               return -1;
->> 
->> See above.
->> 
->>>  +       }
->> 
->> ...
->> 
->>>  +       if (asus->throttle_thermal_policy_available) {
->>>  +               pr_info("Using throttle_thermal_policy for 
->>> platform_profile support\n");
->> 
->> Why pr_*()?
-> 
-> That seemed to be the convention? I see there is also dev_info(), so 
-> I've switched to that as it seems more appropriate.
-> 
->> 
->>>  +       } else {
->>>  +               /*
->>>  +                * Not an error if a component platform_profile 
->>> relies on is unavailable
->>>  +                * so early return, skipping the setup of 
->>> platform_profile.
->>>  +               */
->>>  +               return 0;
->> 
->> Do it other way around,
->> 
->> /*
->>  * Comment
->>  */
->> if (!...)
->>   return 0;
-> 
-> Thanks, I think I was transliterating thought process to code as I 
-> went along.
-> All updated now.
-> 
->> 
->>>  +       }
->> 
->> 
->> --
->> With Best Regards,
->> Andy Shevchenko
-> 
+LGTM.
 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
