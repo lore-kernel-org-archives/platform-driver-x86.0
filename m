@@ -7,59 +7,61 @@ X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7864AC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 19:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563BEC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 19:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDAC60EE0
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 19:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374BA60EE0
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 19:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbhHNTu2 (ORCPT
+        id S229489AbhHNTwX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 15:50:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34518 "EHLO
+        Sat, 14 Aug 2021 15:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbhHNTu0 (ORCPT
+        with ESMTP id S229532AbhHNTwW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 15:50:26 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E37AC061764;
-        Sat, 14 Aug 2021 12:49:57 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id a8so20345499pjk.4;
-        Sat, 14 Aug 2021 12:49:57 -0700 (PDT)
+        Sat, 14 Aug 2021 15:52:22 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A98C061764;
+        Sat, 14 Aug 2021 12:51:53 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d1so16210125pll.1;
+        Sat, 14 Aug 2021 12:51:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=H55D/hatpxv6wsHj/kV2cIDtO8yZ68G4AWzJyEwImqI=;
-        b=vIwpytlXpOqYADP4f+RqCmpmRzgGJtLie3NhxzperJCgH6Bfh17xTDj5mG+xpvs5pX
-         XWm11d2R0Y90jxAUO5Nno0ZRT7qtG+AOOVF8JuJZsxjhfDZXppx6W8i7NGbno0v1IMap
-         l83zpPjqZxW/QU6mHx51RLXsRlOymfAwvdSPuxKNi13fjMaN/Yqs1QCxanl7cDT5gqTe
-         Hu/AKa3wygl1xDlt2gu6dPgxSgaeCyN1EXLuxw3x9t2Gq33JcX7VD5qqDGrOIxr+VAg1
-         LiK+RiTto13a6cY7IgG5AKR9OqI3Hu8RykdFvvt7x44FGVvyIj4iWUk8+pnxvPTVPu4n
-         wkig==
+        bh=MxxGG+b1/SO8O7pZQFU6nsAVt6WPk1hghVx+kIHzs1U=;
+        b=ce4Hm7thxTM0nRMTHfVtf7tM3GYn+4Kc3WuDFAzeUQ+kuQzj+aokoG92fDE9WfMJ8R
+         9DDZGwmCb3o1iWicjVTFKKjr64stYimATPF8dT2Q1BAFQLmVZ7DnZVGyH7ZYE9tYf+zx
+         gDdb/hCYQqbFwx64yHLefc/l9oKhyiFDC+mU/6LhumT2SsMZsZH8vStKRqcRn0xsWxE6
+         knXkZ9ZKjzGRkmGf+otJglsgitOsUJo84edaFIuMkv5bk5EFKANxYqvFK7D2XrLsnyBj
+         oqykMyQT5IcyyS8SnJjwmsrCmEEn4HkSj8amL09pMDDmEhYch3tkA9K7xS/Dfr8FqXgk
+         12LQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=H55D/hatpxv6wsHj/kV2cIDtO8yZ68G4AWzJyEwImqI=;
-        b=Mdw514ryYDXlJ5UwK5796QU+kx0ZN7l0DLjO7y3VSw6WorRFewaH5WE4/lpT4zKGz5
-         dwuO/akXUllKDFmBdeByVQ52bNQkE3t646itRdnykMySXC+nSCvBZV1W/8m86JGxVWOQ
-         S5WKCO19rn2pfhcYPGz7FHkVcsYGrP3PV5PsTq7pY83+2DJTUJBBI722JUMeyc2lyLyZ
-         8PMWCWkhbF54sMGeRf4X+pKwuBw7W+Ju/0RT71CF1PhN+ocluA6sffMlr6u0PBuQdnUX
-         l8/HWVvl8d7oCCjroYECiO/WMnvqkXnS/gt2+K0RH1c43xeuhNLV7grNzjNa7GEeFtTY
-         JpfQ==
-X-Gm-Message-State: AOAM531uvRgUiK3M39vBL1t9eQ9kL4dik7qBy/+FSGQzDZtjU1pUpPZJ
-        dvWCB/c4uAOhGDk+4+wf3zE5ppnZWlvtv4H2lrlH/G1y0Ctgxw==
-X-Google-Smtp-Source: ABdhPJz5JIrjdib84kyhpEN0ITHSybOUFi+IHRxmLBBQjG6+xQJOflN3m3h/gdDrt5UWfd9mZW5qZScjG2stKZqP2eo=
-X-Received: by 2002:a17:90a:cf18:: with SMTP id h24mr8693629pju.228.1628970597029;
- Sat, 14 Aug 2021 12:49:57 -0700 (PDT)
+        bh=MxxGG+b1/SO8O7pZQFU6nsAVt6WPk1hghVx+kIHzs1U=;
+        b=N00TYuBJEXxjZkzoIKuIoHJo8HZQSExPhoiFhlHQUBZxYMDGJbwHBlcvVFrGp7YLtP
+         dC1QEp0pdLWZHNGiqzO+AZI5D1gMfdjRvi2huRxUBFxhYKhwTeaDdroCuXQwI1m1RZLI
+         4TUuILQ2l1PZysg3rtiA15YIsFdT7numiAIayppsS74O99fVRa54qsaLguiluu+tR8Rb
+         voVEuruitMMOQ6KrbqafAGNvhJFwisX7T77WCB/2PkSH8o5vLopxoQ5q8ueA4kLtWeC9
+         nrooYcrFtR6UQq5uQj/JghP4vAIB+z9WyOCg2snPEfHnekyNfXrvQXTwNvVpd+N+wYdu
+         v1Lw==
+X-Gm-Message-State: AOAM531EqMVsUGRlD+VKJY5rE+vgbGo4IHeNtm1c+nTLS9d48u/84F7c
+        wP/AkLrsH0HM6nF5rnpbKpyH2FAk+IvZ7NIdneg=
+X-Google-Smtp-Source: ABdhPJz1RVJrAZDM6jzLNgZfJaGyWPQ09MSmLz9bOP3ak1gQUnqkZmLyTc9guQBg+sr6l6+wAKk64xTN4MWnpZj8fUU=
+X-Received: by 2002:aa7:800b:0:b029:330:455f:57a8 with SMTP id
+ j11-20020aa7800b0000b0290330455f57a8mr8355749pfi.7.1628970713254; Sat, 14 Aug
+ 2021 12:51:53 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210814043103.2535842-1-luke@ljones.dev> <20210814043103.2535842-2-luke@ljones.dev>
- <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com> <UCVTXQ.8ME64G0S1BQ8@ljones.dev>
-In-Reply-To: <UCVTXQ.8ME64G0S1BQ8@ljones.dev>
+ <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com>
+ <UCVTXQ.8ME64G0S1BQ8@ljones.dev> <T6YTXQ.N7QG3527OXWU1@ljones.dev>
+In-Reply-To: <T6YTXQ.N7QG3527OXWU1@ljones.dev>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 14 Aug 2021 22:49:21 +0300
-Message-ID: <CAHp75VdS5v_wGEs5vWcyc1Y2NZ7pXbamSHn7MgWj6ie8ahnoBQ@mail.gmail.com>
+Date:   Sat, 14 Aug 2021 22:51:17 +0300
+Message-ID: <CAHp75VfytvCwAgFdo+J_MnRJ3knYmmD8MR80ZbyX0re4hB0vTg@mail.gmail.com>
 Subject: Re: [PATCH v3 1/1] asus-wmi: Add support for platform_profile
 To:     Luke Jones <luke@ljones.dev>
 Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -71,25 +73,15 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, Aug 14, 2021 at 2:46 PM Luke Jones <luke@ljones.dev> wrote:
-> On Sat, Aug 14 2021 at 12:40:39 +0300, Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Sat, Aug 14, 2021 at 7:33 AM Luke D. Jones <luke@ljones.dev> wrote:
+On Sat, Aug 14, 2021 at 3:47 PM Luke Jones <luke@ljones.dev> wrote:
+> A very quick question: should I be enabling platform_profile by default
+> if asus_wmi is enabled in kconfig?
 
-...
+Very quick for you, but me. I dunno. I think the best thing is what
+Hans can tell here.
 
-> >>  +               pr_info("Using throttle_thermal_policy for
-> >> platform_profile support\n");
-> >
-> > Why pr_*()?
->
-> That seemed to be the convention? I see there is also dev_info(), so
-> I've switched to that as it seems more appropriate.
-
-The rule of thumb is if you have the device the message belongs to,
-use dev_*(), if it's really stuff before we know anything about
-devices, use pr_*(). In some cases if you have ACPI handle, you may
-use acpi_handle_*().
+Nevertheless, I think that this kind of default should be applied to
+all modules (yes, I know there might be possible exceptions).
 
 -- 
 With Best Regards,
