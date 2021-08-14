@@ -2,121 +2,155 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4170BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 07:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4797DC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 09:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1425B604D7
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 07:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1116C60F00
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 09:41:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237144AbhHNHwR (ORCPT
+        id S237651AbhHNJlp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 03:52:17 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54191 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236519AbhHNHwQ (ORCPT
+        Sat, 14 Aug 2021 05:41:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236824AbhHNJlo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 03:52:16 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 826F75C00EE;
-        Sat, 14 Aug 2021 03:51:48 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sat, 14 Aug 2021 03:51:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=r7z4wj
-        tS+5cvW6c8Afk88EXJJL+Kwa5QXm4fkgHzNpA=; b=DQF8I0D9YkUUr38GZ9oQ4q
-        ZnM6irqRgP7mK5XjC+8vdUT/mEqw38h2aNrXu02nLcBWJihLJpq8GYk+FPwE+ADC
-        w6fD+HE0b7SNfxR7/MapTCVBjcfwMc9xs0uESEyhq8jxqnmMJODUnZygmm1GHokx
-        u7xhC9J2WASa9DCuaueZrXTy0WCHF6RvCRPO/SkXSvZ1AAuRzEb8SNl7ddjHylK1
-        GKP1cb+EM1piQ4yQX4VBXHRHxPsbBquBN901BfLxc3B/2TmxihylKDm4oEZYOeaT
-        z1qpJwJYpz81PWmVSzctdFDyM89NM1abMmy5YIN6ik0dKLRYnAtgw03xVX4ZHVaw
-        ==
-X-ME-Sender: <xms:E3YXYXDgFaD_EUvRULYLLZju8AVEKlVRpUtXTrmFhdZwqZ3fvOLmrw>
-    <xme:E3YXYdhLKyANl8RAgRnX8zR_tRRMHLAnnj33BdB4RG94-EAa9zR_p5JvrpJhvsBLz
-    78ytdqc9m0ZAFl2I_8>
-X-ME-Received: <xmr:E3YXYSmzE8sjMFONtgHC0qaguejrTMyMOSor4tVuhpzM1NnusqfO2NN2ql7cFElUxcKe-w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeeigdduvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvffkjghfofggtgesthdtre
-    dtredtvdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdr
-    uggvvheqnecuggftrfgrthhtvghrnhepgfeffedufffhgfeuheegffffgeegveeifeeute
-    fhieejffetudfgueevteehtdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
-X-ME-Proxy: <xmx:E3YXYZyKCScxwsJ6OykOqSFZxRrWymnWJvhHK5dveGgBEhSna3XlYw>
-    <xmx:E3YXYcTwq31rcRZuqaCHFzn7UYsE6ybFCA0yvPT8pX_FuaH9avbBZA>
-    <xmx:E3YXYcY3HGqw9eKvpBNc9mIJH1MIhvmKZiWYa35c0TrEBASL_bQXaw>
-    <xmx:FHYXYXLNNP2myXKJld2baGWzmhdshTpG2xLedVb8y0i51IUN60HoGw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 14 Aug 2021 03:51:43 -0400 (EDT)
-Date:   Sat, 14 Aug 2021 19:51:29 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 0/1] asus-wmi: add platform_profile support
-To:     linux-kernel@vger.kernel.org
-Cc:     hdegoede@redhat.com, hadess@hadess.net,
-        platform-driver-x86@vger.kernel.org
-Message-Id: <THKTXQ.ELSNF0TA7RAV1@ljones.dev>
-In-Reply-To: <20210814043103.2535842-1-luke@ljones.dev>
-References: <20210814043103.2535842-1-luke@ljones.dev>
-X-Mailer: geary/40.0
+        Sat, 14 Aug 2021 05:41:44 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13A8C06175F;
+        Sat, 14 Aug 2021 02:41:16 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id a20so15181432plm.0;
+        Sat, 14 Aug 2021 02:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XyuDZlwBiPoWoWGJzxCdc8Deaw0UN+jSJdhqBxitwE8=;
+        b=uLM6TRFmvYT6dULUfJfkeaEbbdKYdxM46SUDZaDxUjDEcpTT7Kdu6n0bqWgyRGBp2t
+         pnnWkNN2Y5usrq9OFg2aPewb9cgYmd+yjsXL2KbTmI7/iQaorLNNbAKxq2SCr1i8TIB/
+         pilkpNEuWlQBibC6EtwJ0Bv5WXlvS+K8JiROE6YPLtw5o2tIuK/u4wL7suw6BHYxR7b+
+         0Q7WFM+DL/Ju3YWJCho6pz9W+WkPOXVF4jS2Zh0kS5Ef/zZIR8UDNv797G6Ic69esOmI
+         F67a2eRSfTFFzkBQm1/yUoVEgoIwAYPWXbqqy4ck4WWY/Rv+Mk3qix8ozYMS9cDxGoIc
+         1A/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XyuDZlwBiPoWoWGJzxCdc8Deaw0UN+jSJdhqBxitwE8=;
+        b=PjCnOZmBMWAGarLDjJxGRfnTxDV9Ng0WoQC0boXzPylCpkMFgdUprkXArZAcmlVEgH
+         RO6zmFxGmATqrMniwe7om40TochwkiY/ZeZyAv5NwPicIS735yft4ALe5cOZaxXcjF3C
+         2cWNikh45uN5vWyN3N/kl0QU+F+hP6HbUUZqFIQ20JGkPALjc8yJN8QkMYgdTEdNH85Z
+         BQ851XIstGuRGD5XkxvRIIaxqOWbPNNL1Fg5DRNq2KSw6uFexGTga9wL90Jk1aYsQ5hK
+         pxm4eViSwZR0r6oyI6fLI8icaEy9ZhyUEEUTBvt69u9LS7FBV9X6b1Zqh/4YXVfMgSvW
+         xDOw==
+X-Gm-Message-State: AOAM533v3BPSPnfeMQ1s8kS7MHZeqeVw3Rtn7e/ViTjMhYOY0YjLyFBE
+        t5NYZJ/TSRexhs8okzx5cCr6fbad2rD9UYCUgEjhKWnik/0ngDRt
+X-Google-Smtp-Source: ABdhPJxI2pl/kKvpnICTDHUe3oGKhvtzIHAbXdBKZhchFTfpiPEliSAtvo38F6eq7qCyvy3LkiUPDBHNIfEYqZ0XEFQ=
+X-Received: by 2002:aa7:800b:0:b029:330:455f:57a8 with SMTP id
+ j11-20020aa7800b0000b0290330455f57a8mr6423874pfi.7.1628934076343; Sat, 14 Aug
+ 2021 02:41:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+References: <20210814043103.2535842-1-luke@ljones.dev> <20210814043103.2535842-2-luke@ljones.dev>
+In-Reply-To: <20210814043103.2535842-2-luke@ljones.dev>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 14 Aug 2021 12:40:39 +0300
+Message-ID: <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] asus-wmi: Add support for platform_profile
+To:     "Luke D. Jones" <luke@ljones.dev>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Sat, Aug 14, 2021 at 7:33 AM Luke D. Jones <luke@ljones.dev> wrote:
+>
+> Add initial support for platform_profile where the support is
+> based on availability of ASUS_THROTTLE_THERMAL_POLICY.
+>
+> Because throttle_thermal_policy is used by platform_profile and is
+> writeable separately to platform_profile any userspace changes to
+> throttle_thermal_policy need to notify platform_profile.
+>
+> In future throttle_thermal_policy sysfs should be removed so that
+> only one method controls the laptop power profile.
+
+Some comments below.
+
+...
+
+> +       /*
+> +        * Ensure that platform_profile updates userspace with the change to ensure
+> +        * that platform_profile and throttle_thermal_policy_mode are in sync
+
+Missed period here and in other multi-line comments.
+
+> +        */
+
+...
+
+> +       /* All possible toggles like throttle_thermal_policy here */
+> +       if (asus->throttle_thermal_policy_available) {
+> +               tp = asus->throttle_thermal_policy_mode;
+> +       } else {
+> +               return -1;
+> +       }
+> +
+> +       if (tp < 0)
+> +               return tp;
+
+This will be better in a form
+
+    if (!..._available)
+        return -ENODATA; // what -1 means?
+
+    tp = ...;
+    if (tp < 0)
+        return tp;
+
+...
+
+> +       /* All possible toggles like throttle_thermal_policy here */
+> +       if (!asus->throttle_thermal_policy_available) {
+> +               return -1;
+
+See above.
+
+> +       }
+
+...
+
+> +       if (asus->throttle_thermal_policy_available) {
+> +               pr_info("Using throttle_thermal_policy for platform_profile support\n");
+
+Why pr_*()?
+
+> +       } else {
+> +               /*
+> +                * Not an error if a component platform_profile relies on is unavailable
+> +                * so early return, skipping the setup of platform_profile.
+> +               */
+> +               return 0;
+
+Do it other way around,
+
+/*
+ * Comment
+ */
+if (!...)
+  return 0;
+
+> +       }
 
 
-On Sat, Aug 14 2021 at 16:31:02 +1200, Luke D. Jones <luke@ljones.dev> 
-wrote:
-> Changelog:
-> - V2
->   + Correctly unregister from platform_profile if
->     throttle_thermal_policy fails
->   + Do platform_profile_notify() in both 
-> throttle_thermal_policy_store()
->     and in throttle_thermal_policy_switch_next()
->   + Remove unnecessary prep for possible fan-boost modes as this
->     doesn't match expected platform_profile behaviour
-> - V3
->   + Add missing declaration for err in
->     throttle_thermal_policy_switch_next
-> 
-> Luke D. Jones (1):
->   asus-wmi: Add support for platform_profile
-> 
->  drivers/platform/x86/asus-wmi.c | 139 
-> +++++++++++++++++++++++++++++++-
->  1 file changed, 135 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.31.1
-
-Hi,
-
-I teested the patch again and it appears that the 
-platform_profile_notify() in both throttle_thermal_policy_store() and 
-throttle_thermal_policy_switch_next() updates the 
-/sys/firmware/acpi/platform_profile sysfs path fine, but userspace 
-isn't updated?
-
-The way I'm checking is:
-1. echo 1 |sudo tee 
-/sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
-2. cat -p /sys/firmware/acpi/platform_profile
-   - performance (updated correctly by platform_profile_notify)
-3. Check gnome-settings, not updated.
-
-Doing `echo "performance" |sudo tee 
-/sys/firmware/acpi/platform_profile` updates both 
-throttle_thermal_policy and userspace as expected. I'm wondering if 
-I've missed something?
-
-Cheers,
-Luke.
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
