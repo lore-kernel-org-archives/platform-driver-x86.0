@@ -2,182 +2,183 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA075C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BCCC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD6760F36
-	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698E860EB4
+	for <platform-driver-x86@archiver.kernel.org>; Sat, 14 Aug 2021 11:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238215AbhHNLlU (ORCPT
+        id S238227AbhHNLqy (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sat, 14 Aug 2021 07:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238064AbhHNLlT (ORCPT
+        Sat, 14 Aug 2021 07:46:54 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55939 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238185AbhHNLqx (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sat, 14 Aug 2021 07:41:19 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F94C061764;
-        Sat, 14 Aug 2021 04:40:51 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id 108-20020a9d01750000b029050e5cc11ae3so15220002otu.5;
-        Sat, 14 Aug 2021 04:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jVLxEjda5D29Pt6xaEnOJAaMILEeaysFTL2PyZG0dws=;
-        b=tPdb5ZbX5iFAOtJNNBC8HM4aOyIejf6LOFK5tAezBDDAW74fn3x9f9cGtr2pw3FnNi
-         NZtgZdauz1EoiJDo8ePAS6gtEYFTEMS54fvcsTPAzBUDK1EkrGhSPnkN15jfaBvgaSH6
-         vuhj+YeGT8tCfWzsNdbuVXRj0je6t4Bchy2yv5wdeig4vmtd7xLiSbPvtcue23whLkDW
-         8XxNZu8LlqGPXzhWAx41deJLrgqOhI4zetebRYtvub3klt2688d+dn/YAKq+hgNGnGYH
-         ffXWwA3TmAH+ihsfiHqwHceE11v+pXbJ7a3MvXtHx/Rrd3s7MM7ukSV9VBflWmJ+Jbv/
-         BkDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jVLxEjda5D29Pt6xaEnOJAaMILEeaysFTL2PyZG0dws=;
-        b=EdvMmr3BuVqjVRNYBW0J/0cuXMkU0bBl/UOMzJq3NlXg33RZa33/Lz0f08Iv6XI7F6
-         7z0qbN90Qo8XCqlmJ9U+cIJ2fTemDKf0S/yVm6FangICg+BtN6zT2jEs7Kc3ACXnj3iQ
-         qGWle1OFDZfmBsV3vr9NRTZ6MHTyYfjMURvbATxIUkn99Qx7JKlL64uMhNAYjKXPrcJk
-         7lfZjFQsRc5dy9VX7U4O75K4Ucg0cCw+2OCIsoumT4/64ZASpRV9C6dVmdUorNbNcQxw
-         dz8iG2oMz0LzBJHKnUTAi5nqRniIa/ywVLUz8tTyG5qpOfMwsUmHI+KE1lw2xiDINovK
-         qb1Q==
-X-Gm-Message-State: AOAM532KZsm7HtO+xlknAdCQqsp3NOsQp/U0TYxOum3RTyVI9PuZH1AF
-        2H/gkwRwQh+Jpmkk96HEajqb2H8cnvshYMuIbFM=
-X-Google-Smtp-Source: ABdhPJya8kzDZmc+7fqeltjb0glf4wYeofy0PJ3huxBs99yFsY/nzHGMfQcZeN+mCWYepCxMH1Qmy3yLFu87mbKxJiY=
-X-Received: by 2002:a05:6830:544:: with SMTP id l4mr5718649otb.164.1628941250605;
- Sat, 14 Aug 2021 04:40:50 -0700 (PDT)
+        Sat, 14 Aug 2021 07:46:53 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 156C05C00E3;
+        Sat, 14 Aug 2021 07:46:25 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sat, 14 Aug 2021 07:46:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=QzUIRd
+        aYTQ9jmi1Wxf/eLSw7zIX+FKz+RZjpUwwoIZY=; b=mbnrw8GiRS19Go/KzCOsdQ
+        eV13re8IxqaGsI+bAyAsaaUkIrfrhdikb+ZsJOv9Th3CspqsTE2GDAMhC47dSOQV
+        +da40QCjXu/2QBLJyYlxCdPY3mCDU7E4OhQ/0CXZaEOT7N1iSOsIQYV4GU5FWzmO
+        m0EJ1Sb0zgzH9e9r3DEVKDbaAd8t5CkJlOtW0eaRUaHWa9/wgYCjAV7qX4vinfyr
+        +kvcukdUH5xL4VvqXEVnG/CYHmnDn8qLouSjUzvrO57cHnlh9IdcjWi7W2KfxTh+
+        cCRW8jmKlcPqNZ4EXLrIXJ6h+Rc1y3OpMnHr2kOKcWAQZ50UzbBQnPxn7T7+UpTg
+        ==
+X-ME-Sender: <xms:EK0XYQZbrhq0m21uyBNG_VAwyDlWsOg57-SKR3m8C3onOq2OXz2XmQ>
+    <xme:EK0XYbZBgmeNeirPUozN6fRrH6i-VINgwnLJIBKHpSk0ses9PFpzf_zdzr99ijr3d
+    dTnzw0sUzQgGBNfynM>
+X-ME-Received: <xmr:EK0XYa_Wp3jiudO3BUck3YX6eSdcbFcDnr6K_070YDTG4U4HXjj5B4wFnGZ0O4PHBTxrZw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrkeejgdeghecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffuvffkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgvucfl
+    ohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgf
+    effedufffhgfeuheegffffgeegveeifeeutefhieejffetudfgueevteehtdetnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljh
+    honhgvshdruggvvh
+X-ME-Proxy: <xmx:EK0XYaoOjxoHKKb-Wg-Y7GlZ5op4AX0aOtUvI3KM-tSDz4I6pDtGLg>
+    <xmx:EK0XYbq-EQNCD7BezRkuyWH8gANrkZKWww9xpVhSERTrfbW50d1ALg>
+    <xmx:EK0XYYTtR-DoDDThOrKCSH0dBMTsTawtajN9qQiaQyoVSrJK8IMK0w>
+    <xmx:Ea0XYS0pbD6EhTqi5Dss1eSpAWo-SLCYXlSrUrFx16w3EXqRS6nfMg>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 14 Aug 2021 07:46:20 -0400 (EDT)
+Date:   Sat, 14 Aug 2021 23:46:06 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH v3 1/1] asus-wmi: Add support for platform_profile
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Message-Id: <UCVTXQ.8ME64G0S1BQ8@ljones.dev>
+In-Reply-To: <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com>
+References: <20210814043103.2535842-1-luke@ljones.dev>
+        <20210814043103.2535842-2-luke@ljones.dev>
+        <CAHp75VcCzjb7TKZ84iVjJr27+nCcA10n38nwCAGATucfAAMkKA@mail.gmail.com>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-References: <20210812125307.1749207-1-jafar.akhoondali@gmail.com> <77aab2df-b3c3-541d-461a-8755277fd425@redhat.com>
-In-Reply-To: <77aab2df-b3c3-541d-461a-8755277fd425@redhat.com>
-From:   Jafar Akhondali <jafar.akhoondali@gmail.com>
-Date:   Sat, 14 Aug 2021 16:10:39 +0430
-Message-ID: <CAMW3L+3WUCXx60fALT=2J8TjK_BO3jOTb+8+JQQrKA1_F9pLTQ@mail.gmail.com>
-Subject: Re: [PATCH v5] platform/x86: acer-wmi: Add Turbo Mode support for
- Acer PH315-53
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     jlee@suse.com, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, mgross@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
- Hi Hans,
-Thank you for your efforts on the patch, I've sure learned a lot from
-your comments as this
-was my first contribution to Linux kernel.
+Hi Andy, thanks for the feedback. All is addressed, and some inline 
+comment/reply. New version incoming pending pr_info() vs dev_info()
 
-Just an extra question, for the next patch I'm gonna send turbo mode support for
-14 other Acer Predator laptops. The only required change is that I should add
-"quirk_entry" for GPU and CPU fan count, and match product names to their quirk.
+On Sat, Aug 14 2021 at 12:40:39 +0300, Andy Shevchenko 
+<andy.shevchenko@gmail.com> wrote:
+> On Sat, Aug 14, 2021 at 7:33 AM Luke D. Jones <luke@ljones.dev> wrote:
+>> 
+>>  Add initial support for platform_profile where the support is
+>>  based on availability of ASUS_THROTTLE_THERMAL_POLICY.
+>> 
+>>  Because throttle_thermal_policy is used by platform_profile and is
+>>  writeable separately to platform_profile any userspace changes to
+>>  throttle_thermal_policy need to notify platform_profile.
+>> 
+>>  In future throttle_thermal_policy sysfs should be removed so that
+>>  only one method controls the laptop power profile.
+> 
+> Some comments below.
+> 
+> ...
+> 
+>>  +       /*
+>>  +        * Ensure that platform_profile updates userspace with the 
+>> change to ensure
+>>  +        * that platform_profile and throttle_thermal_policy_mode 
+>> are in sync
+> 
+> Missed period here and in other multi-line comments.
+> 
+>>  +        */
+> 
+> ...
+> 
+>>  +       /* All possible toggles like throttle_thermal_policy here */
+>>  +       if (asus->throttle_thermal_policy_available) {
+>>  +               tp = asus->throttle_thermal_policy_mode;
+>>  +       } else {
+>>  +               return -1;
+>>  +       }
+>>  +
+>>  +       if (tp < 0)
+>>  +               return tp;
+> 
+> This will be better in a form
+> 
+>     if (!..._available)
+>         return -ENODATA; // what -1 means?
+> 
 
-12 of these Predator laptops have exactly 1 fan for CPU and 1 fan for GPU,
-but two of them have 2 fans for GPU and 1 for CPU. So my question is should
-I add the quirks per product (which will end up to have 14 quirks,
-same as current patch) like:
+I wasn't sure what the best return was here. On your suggestion I've 
+changed to ENODATA
 
-static struct quirk_entry quirk_acer_predator_ph315_53 = {
-      .turbo = 1,
-      .cpu_fans = 1,
-      .gpu_fans = 1,
-};
+>     tp = ...;
+>     if (tp < 0)
+>         return tp;
+> 
+> ...
+> 
+>>  +       /* All possible toggles like throttle_thermal_policy here */
+>>  +       if (!asus->throttle_thermal_policy_available) {
+>>  +               return -1;
+> 
+> See above.
+> 
+>>  +       }
+> 
+> ...
+> 
+>>  +       if (asus->throttle_thermal_policy_available) {
+>>  +               pr_info("Using throttle_thermal_policy for 
+>> platform_profile support\n");
+> 
+> Why pr_*()?
 
-or should I specify the quirk per fan count like this one:
+That seemed to be the convention? I see there is also dev_info(), so 
+I've switched to that as it seems more appropriate.
 
-static struct quirk_entry quirk_acer_predator_gpu_fan_one_cpu_fan_one = {
-      .turbo = 1,
-      .cpu_fans = 1,
-      .gpu_fans = 1,
-};
+> 
+>>  +       } else {
+>>  +               /*
+>>  +                * Not an error if a component platform_profile 
+>> relies on is unavailable
+>>  +                * so early return, skipping the setup of 
+>> platform_profile.
+>>  +               */
+>>  +               return 0;
+> 
+> Do it other way around,
+> 
+> /*
+>  * Comment
+>  */
+> if (!...)
+>   return 0;
 
-and then set different matched DMI product names to the above quirk?
+Thanks, I think I was transliterating thought process to code as I went 
+along.
+All updated now.
 
-The first approach is more verbose, the second uses less code.
-If possible, I would like to know your thoughts on this.
+> 
+>>  +       }
+> 
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Thanks in advance,
 
-Best,
-
-Jafar
-
-On Fri, Aug 13, 2021 at 3:52 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 8/12/21 2:53 PM, JafarAkhondali wrote:
-> > Hi,
-> >
-> > The Acer Predator Helios series (usually denoted by PHxxx-yy) features
-> > a particular key above the keyboard named "TURBO".
-> > The turbo key does 3 things:
-> > 1. Set all fan's speeds to TURBO mode
-> > 2. Overclocks the CPU and GPU in the safe range
-> > 3. Turn on an LED just below the turbo button
-> >
-> > All the above actions are operating using WMI function calls,
-> > and there is no custom OC level for turbo. It acts as a flag
-> > for enabling turbo mode instead of telling processors to use
-> > a specific multiply of power (e.g. 1.3x of power).
-> >
-> > I've run some benchmark tests and it worked fine:
-> >
-> > GpuTest 0.7.0
-> > http://www.geeks3d.com
-> >
-> > Module: FurMark
-> > Normal mode Score: 7289 points (FPS: 121)
-> > Turbo mode Score: 7675 points (FPS: 127)
-> > Settings:
-> > - 1920x1080 fullscreen
-> > - antialiasing: Off
-> > - duration: 60000 ms
-> >
-> > Renderer:
-> > - GeForce RTX 2060/PCIe/SSE2
-> > - OpenGL: 4.6.0 NVIDIA 460.32.03
-> >
-> > This feature is presented by Acer officially and should not harm
-> > hardware in any case.
-> >
-> > A challenging part of implementing this feature is that calling
-> > overclock function requires knowing the exact count of fans
-> > for CPU and GPU of each model, which to the best of my
-> > knowledge is not available in the kernel.
-> >
-> > So after checking the official PredatorSense application methods, it
-> > turned out they have provided the software the list of fans in each model.
-> > I have access to the mentioned list, and all similar PH-iii-jj can be
-> > added easily by matching "DMI_PRODUCT_NAME".
-> >
-> > Creating a specific file for the Acer gaming features is not possible
-> > because the current in use WMI event GUID is required for the turbo button
-> > and it's not possible to register multiple listeners on a single WMI event.
-> >
-> >
-> > Signed-off-by: JafarAkhondali <jafar.akhoondali@gmail.com>
->
-> Thank you for your patch, I've applied this patch to my review-hans
-> branch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
->
-> Note it will show up in my review-hans branch once I've pushed my
-> local branch there, which might take a while.
->
-> Once I've run some tests on this branch the patches there will be
-> added to the platform-drivers-x86/for-next branch and eventually
-> will be included in the pdx86 pull-request to Linus for the next
-> merge-window.
->
-> Regards,
->
-> Hans
->
