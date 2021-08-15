@@ -2,94 +2,158 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F425C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 14:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD5BC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36FF56113A
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 14:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DEA61373
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238479AbhHOOjI (ORCPT
+        id S230077AbhHOXAv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 15 Aug 2021 10:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232465AbhHOOjH (ORCPT
+        Sun, 15 Aug 2021 19:00:51 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:57785 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229814AbhHOXAv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 15 Aug 2021 10:39:07 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F42C061764;
-        Sun, 15 Aug 2021 07:38:37 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f26310039d0ba97aac93c10.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:3100:39d0:ba97:aac9:3c10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5FF7A1EC0505;
-        Sun, 15 Aug 2021 16:38:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1629038311;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=jL5qXq5tPSUlQog/FJ5eZ1GT2YpJvvVnQmTTUk0cbrA=;
-        b=Ynjh7QDJnobQuRzRBtXZMflPEf0vTQxZ/1e/DI2MnZmP0BU3+0pTK5ZZQ5Gk5RnrPuYHa6
-        IdpdAyOEUiLJZd8HI6wSzceOtBbAWAY0K9LHdKOg+Qfc/RBmkhxNql4Enc7Gc4LTKOJnaI
-        0ETWtaeGc2m89ri2xInjGo/yEh1iYis=
-Date:   Sun, 15 Aug 2021 16:39:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
-Message-ID: <YRknDQGUJJ/j9pth@zn.tnic>
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
- <YRgUxyhoqVJ0Kxvt@zn.tnic>
- <4710eb91-d054-7b31-5106-09e3e54bba9e@amd.com>
+        Sun, 15 Aug 2021 19:00:51 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.west.internal (Postfix) with ESMTP id 3101432008FE;
+        Sun, 15 Aug 2021 19:00:20 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 15 Aug 2021 19:00:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8iTDKu
+        Ff6sIK5qkD+04LYSEIHov0bH0Yf7Smj73cGDo=; b=urQujKKqso9YornYGdsq6C
+        hMcJS95tNpEOqYksQuKfLkauJNN0k4432D+hApYbs8asGc8OV9hAK+VdiLUdH0tF
+        dmu0lFoEwSn46YZjifE1qRvsAvZw/EO3LlDlWpp9/0PdW+6aKsldR+1i3gh5uxxH
+        shs6F6TBvLsUqQDI06CzqjF9RE/S0NLnFyCh5xcmO1TjAAMVB3Mk92fDA2B+cS52
+        nnZVXNFSbIWIcyn8uR12OqiqAl+DHq+3bh7OzKcA5P1d3cR8cLKzK8qn8XU7yjSI
+        NEZpzuZeDR7oITh3o61CgxBVbYXVt9hJun+buPvoy3xir0q0ziviZ/tDgY3GWj0A
+        ==
+X-ME-Sender: <xms:g5wZYdKZN8AJCclERsW4_6JTg7vITB5VvmENytFdNsudWNC4P6cgcg>
+    <xme:g5wZYZJGbf0kim1j4COjwACv4GZaN0mJuNUybWWAO5nY0YyawSdSHZzPqG5z5iG4l
+    VzONj4Qp1Kkks2B9l8>
+X-ME-Received: <xmr:g5wZYVuQ5raiC1w4-fe0Q1pbs7mgXRIoHfdju-f6GehLaiP7KXCGiiiRQ07ZnLtUkdAL7A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrledtgdduiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffuvffkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgvucfl
+    ohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgf
+    effedufffhgfeuheegffffgeegveeifeeutefhieejffetudfgueevteehtdetnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljh
+    honhgvshdruggvvh
+X-ME-Proxy: <xmx:g5wZYeakpEiLJpVzpe8t5yXJj627QSJvL7QiCgaY2kZqvX8fHAUWoA>
+    <xmx:g5wZYUaejI6VhoLYNkrP9E-DQUDnhSlrrJoM-wdh0lwiNUrAfAztTg>
+    <xmx:g5wZYSDkgCXv5KvGdYzU_ESSW-TeMa76lrRx_iztegpZGv_EhxNwPA>
+    <xmx:g5wZYfwmOWoxWnC2bwsgsQbnAoRhVYJJPUWAcsPhkX4OjRELlOp9HQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 15 Aug 2021 19:00:15 -0400 (EDT)
+Date:   Mon, 16 Aug 2021 11:00:01 +1200
+From:   Luke Jones <luke@ljones.dev>
+Subject: Re: [PATCH v3 0/1] asus-wmi: add platform_profile support
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, hadess@hadess.net,
+        platform-driver-x86@vger.kernel.org
+Message-Id: <18LWXQ.AIB2DGCZUVMW@ljones.dev>
+In-Reply-To: <a918bfe0-03c4-e7d3-8a99-efb1d11333e4@redhat.com>
+References: <20210814043103.2535842-1-luke@ljones.dev>
+        <THKTXQ.ELSNF0TA7RAV1@ljones.dev>
+        <a918bfe0-03c4-e7d3-8a99-efb1d11333e4@redhat.com>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4710eb91-d054-7b31-5106-09e3e54bba9e@amd.com>
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sun, Aug 15, 2021 at 08:53:31AM -0500, Tom Lendacky wrote:
-> It's not a cross-vendor thing as opposed to a KVM or other hypervisor
-> thing where the family doesn't have to be reported as AMD or HYGON.
 
-What would be the use case? A HV starts a guest which is supposed to be
-encrypted using the AMD's confidential guest technology but the HV tells
-the guest that it is not running on an AMD SVM HV but something else?
 
-Is that even an actual use case?
+On Sun, Aug 15 2021 at 15:48:49 +0200, Hans de Goede 
+<hdegoede@redhat.com> wrote:
+> Hi,
+> 
+> On 8/14/21 9:51 AM, Luke Jones wrote:
+>> 
+>> 
+>>  On Sat, Aug 14 2021 at 16:31:02 +1200, Luke D. Jones 
+>> <luke@ljones.dev> wrote:
+>>>  Changelog:
+>>>  - V2
+>>>    + Correctly unregister from platform_profile if
+>>>      throttle_thermal_policy fails
+>>>    + Do platform_profile_notify() in both 
+>>> throttle_thermal_policy_store()
+>>>      and in throttle_thermal_policy_switch_next()
+>>>    + Remove unnecessary prep for possible fan-boost modes as this
+>>>      doesn't match expected platform_profile behaviour
+>>>  - V3
+>>>    + Add missing declaration for err in
+>>>      throttle_thermal_policy_switch_next
+>>> 
+>>>  Luke D. Jones (1):
+>>>    asus-wmi: Add support for platform_profile
+>>> 
+>>>   drivers/platform/x86/asus-wmi.c | 139 
+>>> +++++++++++++++++++++++++++++++-
+>>>   1 file changed, 135 insertions(+), 4 deletions(-)
+>>> 
+>>>  --
+>>>  2.31.1
+>> 
+>>  Hi,
+>> 
+>>  I teested the patch again and it appears that the 
+>> platform_profile_notify() in both throttle_thermal_policy_store() 
+>> and throttle_thermal_policy_switch_next() updates the 
+>> /sys/firmware/acpi/platform_profile sysfs path fine, but userspace 
+>> isn't updated?
+>> 
+>>  The way I'm checking is:
+>>  1. echo 1 |sudo tee 
+>> /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
+>>  2. cat -p /sys/firmware/acpi/platform_profile
+>>    - performance (updated correctly by platform_profile_notify)
+>>  3. Check gnome-settings, not updated.
+>> 
+>>  Doing `echo "performance" |sudo tee 
+>> /sys/firmware/acpi/platform_profile` updates both 
+>> throttle_thermal_policy and userspace as expected. I'm wondering if 
+>> I've missed something?
+> 
+> If you add a printk where you call platform_profile_notify() and you 
+> see that
+> happening, then you are likely seeing a userspace bug. Possibly your
+> power-profile-daemon is simply a bit old and therefor does not support
+> the combination of profiles which asus-wmi offers, IIRC it falls back 
+> to
+> using intel-pstate in that case.
 
-Or am I way off?
+It's possible that it's a userspace bug then. The power-profile-daemon 
+I'm using is fresh from git (0.9+). To be clear updating via 
+/sys/firmware/acpi/platform_profile works perfectly fine and 
+power-profile-daemon updates etc. But if I do platform_profile_notify() 
+then it doesn't seem to be updated. Nevertheless I will finalise the 
+patch as it is and submit for merging and we can go from there.
 
-I know we have talked about this in the past but this still sounds
-insane.
+> 
+> You could try building the latest power-profile-daemon from git and 
+> run
+> it in verbose mode. If it sees the changes and the control-panel 
+> applet is
+> still not updating then I would not worry about that. The userspace 
+> code
+> is still somewhat new and I'm not sure which version your distro is
+> running and how well it is keeping up with gnome-updates.
+> 
+> Regards,
+> 
+> Hans
+> 
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
