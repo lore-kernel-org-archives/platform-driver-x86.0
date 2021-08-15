@@ -2,158 +2,96 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD5BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E13CC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DEA61373
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2611261244
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 15 Aug 2021 23:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbhHOXAv (ORCPT
+        id S230295AbhHOXGi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 15 Aug 2021 19:00:51 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:57785 "EHLO
+        Sun, 15 Aug 2021 19:06:38 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:60441 "EHLO
         wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229814AbhHOXAv (ORCPT
+        by vger.kernel.org with ESMTP id S229814AbhHOXGi (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 15 Aug 2021 19:00:51 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.west.internal (Postfix) with ESMTP id 3101432008FE;
-        Sun, 15 Aug 2021 19:00:20 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Sun, 15 Aug 2021 19:00:20 -0400
+        Sun, 15 Aug 2021 19:06:38 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 9638C320085B;
+        Sun, 15 Aug 2021 19:06:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sun, 15 Aug 2021 19:06:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8iTDKu
-        Ff6sIK5qkD+04LYSEIHov0bH0Yf7Smj73cGDo=; b=urQujKKqso9YornYGdsq6C
-        hMcJS95tNpEOqYksQuKfLkauJNN0k4432D+hApYbs8asGc8OV9hAK+VdiLUdH0tF
-        dmu0lFoEwSn46YZjifE1qRvsAvZw/EO3LlDlWpp9/0PdW+6aKsldR+1i3gh5uxxH
-        shs6F6TBvLsUqQDI06CzqjF9RE/S0NLnFyCh5xcmO1TjAAMVB3Mk92fDA2B+cS52
-        nnZVXNFSbIWIcyn8uR12OqiqAl+DHq+3bh7OzKcA5P1d3cR8cLKzK8qn8XU7yjSI
-        NEZpzuZeDR7oITh3o61CgxBVbYXVt9hJun+buPvoy3xir0q0ziviZ/tDgY3GWj0A
-        ==
-X-ME-Sender: <xms:g5wZYdKZN8AJCclERsW4_6JTg7vITB5VvmENytFdNsudWNC4P6cgcg>
-    <xme:g5wZYZJGbf0kim1j4COjwACv4GZaN0mJuNUybWWAO5nY0YyawSdSHZzPqG5z5iG4l
-    VzONj4Qp1Kkks2B9l8>
-X-ME-Received: <xmr:g5wZYVuQ5raiC1w4-fe0Q1pbs7mgXRIoHfdju-f6GehLaiP7KXCGiiiRQ07ZnLtUkdAL7A>
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=XHbBRH0L3KAymBDA9
+        G00PGhNL9yADvJ8zwNcZhydFZw=; b=UWad02sNDVnmhJK+bQj3HIjk+UBoKd6XZ
+        W6lqRwYCQIcQu8m3YelLGsanteFdpQpMr800UbtFS/cZ6hESbRE0tkZ1nXbTqOTN
+        /SuRKDGtSIjWSwF0GBEgVEfBGoxu4yeom7V1+byNSS1gltFAsvgnN6lcC0iN+Ogj
+        gtFyDJyod7TYH4O86WRtZrTZlfd1X1P+F/GU34ArZzSyxEADPw1w0u9BCJ/ingAV
+        mmv7cepkovqPAuWB2VSyICjPVOBqrjgFEALIjrQugZAWN0kxLbSZRUC7/D/AxHqP
+        S7kQAaygZIzw3Jsp4pC2nuFXqXqDmCHhpjPJMVZFXEWaBna5pTunA==
+X-ME-Sender: <xms:3p0ZYbKMzHpDj1DDeOgUS2kRfHx1TQj2BnfewhvNabpDSfvgrnh99A>
+    <xme:3p0ZYfLvjWc_7qBLdkHS9O3wbbJJPSwESYSJvjEIfNq4KI8ztffaxGzomXgFXbASU
+    II83-eH-Dt6bfOMv6c>
+X-ME-Received: <xmr:3p0ZYTvueqMIgm5vmYyzgFLu1hUR749S1VdhadGVtHzrEAYL95rX7FTfaHdr>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrledtgdduiecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffuvffkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgvucfl
-    ohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnhepgf
-    effedufffhgfeuheegffffgeegveeifeeutefhieejffetudfgueevteehtdetnecuvehl
-    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljh
-    honhgvshdruggvvh
-X-ME-Proxy: <xmx:g5wZYeakpEiLJpVzpe8t5yXJj627QSJvL7QiCgaY2kZqvX8fHAUWoA>
-    <xmx:g5wZYUaejI6VhoLYNkrP9E-DQUDnhSlrrJoM-wdh0lwiNUrAfAztTg>
-    <xmx:g5wZYSDkgCXv5KvGdYzU_ESSW-TeMa76lrRx_iztegpZGv_EhxNwPA>
-    <xmx:g5wZYfwmOWoxWnC2bwsgsQbnAoRhVYJJPUWAcsPhkX4OjRELlOp9HQ>
+    uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffoggfgsedtkeertdertd
+    dtnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonhgv
+    shdruggvvheqnecuggftrfgrthhtvghrnheplefflefhledthfdtveeugfevueeukeegte
+    eigfeihffgjedvtedvueevtdfhvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghr
+    rghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:3p0ZYUbdpxruyVNjmQAnuhAy5oSVkk3xCi2Lhs5JLqmQc27JUocp5w>
+    <xmx:3p0ZYSbfERcVuwlQO-ZUiQvguq2oW2cw21XJW6G0Bzy-hmX1g6iVdw>
+    <xmx:3p0ZYYDDBg2pTyNLL903pniOFT99CtL3iGdvqB_9F12rpabL9j412g>
+    <xmx:350ZYRlrL6rUJaiaXNJHkDKqLV1iRPMlgoei4vbFZJ686ZYRtdEnkg>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 15 Aug 2021 19:00:15 -0400 (EDT)
-Date:   Mon, 16 Aug 2021 11:00:01 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v3 0/1] asus-wmi: add platform_profile support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, hadess@hadess.net,
-        platform-driver-x86@vger.kernel.org
-Message-Id: <18LWXQ.AIB2DGCZUVMW@ljones.dev>
-In-Reply-To: <a918bfe0-03c4-e7d3-8a99-efb1d11333e4@redhat.com>
-References: <20210814043103.2535842-1-luke@ljones.dev>
-        <THKTXQ.ELSNF0TA7RAV1@ljones.dev>
-        <a918bfe0-03c4-e7d3-8a99-efb1d11333e4@redhat.com>
-X-Mailer: geary/40.0
+ 15 Aug 2021 19:06:04 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     linux-kernel@vger.kernel.org
+Cc:     hdegoede@redhat.com, hadess@hadess.net,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v4 0/1] asus-wmi: add platform_profile support
+Date:   Mon, 16 Aug 2021 11:05:57 +1200
+Message-Id: <20210815230558.5860-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Changelog:
+- V2
+  + Correctly unregister from platform_profile if
+    throttle_thermal_policy fails
+  + Do platform_profile_notify() in both throttle_thermal_policy_store()
+    and in throttle_thermal_policy_switch_next()
+  + Remove unnecessary prep for possible fan-boost modes as this
+    doesn't match expected platform_profile behaviour
+- V3
+  + Add missing declaration for err in
+    throttle_thermal_policy_switch_next
+- V4
+  + Update some return codes to use -ENODATA
+  + Switch pr_info() to dev_info()
+  + Restructure some if/else blocks
+  + Add "select ACPI_PLATFORM_PROFILE" to ASUS_WMI kconfig
 
+Luke D. Jones (1):
+  asus-wmi: Add support for platform_profile
 
-On Sun, Aug 15 2021 at 15:48:49 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi,
-> 
-> On 8/14/21 9:51 AM, Luke Jones wrote:
->> 
->> 
->>  On Sat, Aug 14 2021 at 16:31:02 +1200, Luke D. Jones 
->> <luke@ljones.dev> wrote:
->>>  Changelog:
->>>  - V2
->>>    + Correctly unregister from platform_profile if
->>>      throttle_thermal_policy fails
->>>    + Do platform_profile_notify() in both 
->>> throttle_thermal_policy_store()
->>>      and in throttle_thermal_policy_switch_next()
->>>    + Remove unnecessary prep for possible fan-boost modes as this
->>>      doesn't match expected platform_profile behaviour
->>>  - V3
->>>    + Add missing declaration for err in
->>>      throttle_thermal_policy_switch_next
->>> 
->>>  Luke D. Jones (1):
->>>    asus-wmi: Add support for platform_profile
->>> 
->>>   drivers/platform/x86/asus-wmi.c | 139 
->>> +++++++++++++++++++++++++++++++-
->>>   1 file changed, 135 insertions(+), 4 deletions(-)
->>> 
->>>  --
->>>  2.31.1
->> 
->>  Hi,
->> 
->>  I teested the patch again and it appears that the 
->> platform_profile_notify() in both throttle_thermal_policy_store() 
->> and throttle_thermal_policy_switch_next() updates the 
->> /sys/firmware/acpi/platform_profile sysfs path fine, but userspace 
->> isn't updated?
->> 
->>  The way I'm checking is:
->>  1. echo 1 |sudo tee 
->> /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
->>  2. cat -p /sys/firmware/acpi/platform_profile
->>    - performance (updated correctly by platform_profile_notify)
->>  3. Check gnome-settings, not updated.
->> 
->>  Doing `echo "performance" |sudo tee 
->> /sys/firmware/acpi/platform_profile` updates both 
->> throttle_thermal_policy and userspace as expected. I'm wondering if 
->> I've missed something?
-> 
-> If you add a printk where you call platform_profile_notify() and you 
-> see that
-> happening, then you are likely seeing a userspace bug. Possibly your
-> power-profile-daemon is simply a bit old and therefor does not support
-> the combination of profiles which asus-wmi offers, IIRC it falls back 
-> to
-> using intel-pstate in that case.
+ drivers/platform/x86/Kconfig    |   1 +
+ drivers/platform/x86/asus-wmi.c | 138 +++++++++++++++++++++++++++++++-
+ 2 files changed, 135 insertions(+), 4 deletions(-)
 
-It's possible that it's a userspace bug then. The power-profile-daemon 
-I'm using is fresh from git (0.9+). To be clear updating via 
-/sys/firmware/acpi/platform_profile works perfectly fine and 
-power-profile-daemon updates etc. But if I do platform_profile_notify() 
-then it doesn't seem to be updated. Nevertheless I will finalise the 
-patch as it is and submit for merging and we can go from there.
-
-> 
-> You could try building the latest power-profile-daemon from git and 
-> run
-> it in verbose mode. If it sees the changes and the control-panel 
-> applet is
-> still not updating then I would not worry about that. The userspace 
-> code
-> is still somewhat new and I'm not sure which version your distro is
-> running and how well it is keeping up with gnome-updates.
-> 
-> Regards,
-> 
-> Hans
-> 
-
+-- 
+2.31.1
 
