@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCEBC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D360EC4320A
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44B8A61C16
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8E763217
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236242AbhHPKyP (ORCPT
+        id S236410AbhHPKy3 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 06:54:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33394 "EHLO
+        Mon, 16 Aug 2021 06:54:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:44565 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236314AbhHPKyM (ORCPT
+        by vger.kernel.org with ESMTP id S236288AbhHPKyY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:54:12 -0400
+        Mon, 16 Aug 2021 06:54:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629111221;
+        s=mimecast20190719; t=1629111232;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=45FSMZY66a+NaN5uLJ6dvqEAZwM0dYmYPL4W0EaFBjk=;
-        b=g4Yb+6/CVpLQ048bpnKNbtxfkEvaMm1pYBIkFzCEf/5359FHcdgqruP+Q7MvSswPJSMvaR
-        TcblfOt30le/MrnC0pmyn20Ecpmqt3Jpk+YRP8YNKslX1nXaWUkVo986LIuKnMBHxdrPg4
-        Vy+X2rwzv78LleNvhbDsuvhcaIDz/1U=
+        bh=NwXdfMbTU7iCEMFmM5n0iQzUa/Khps05w/TJ9eU1f9k=;
+        b=TL5zvXteXGxEj/Oignh/L//pTbwDmnRScyqzTsSteUE/KTUrrDq5ByYRe9vkxq8yYkqy40
+        xDT7j2ZaB1Qe1sweUYKVDA3/k6Uo0jFVvxCDpHbSODdP96OOrzvrGB0YyRt/CpKnAVvOJZ
+        qXhXU1x7duehcc3ORB4xBTzjiga8Wr0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-yFU2Md6OPvWQzlURVrJCxQ-1; Mon, 16 Aug 2021 06:53:39 -0400
-X-MC-Unique: yFU2Md6OPvWQzlURVrJCxQ-1
+ us-mta-347-kB8x77z8PnmRi_AYQvkZDQ-1; Mon, 16 Aug 2021 06:53:48 -0400
+X-MC-Unique: kB8x77z8PnmRi_AYQvkZDQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06DE51008060;
-        Mon, 16 Aug 2021 10:53:38 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C33E802CB3;
+        Mon, 16 Aug 2021 10:53:46 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E51A5C23A;
-        Mon, 16 Aug 2021 10:53:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D29395C23A;
+        Mon, 16 Aug 2021 10:53:41 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -58,9 +58,9 @@ To:     Alex Hung <alex.hung@canonical.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v2 08/20] platform/x86: intel_ips: Move to intel sub-directory
-Date:   Mon, 16 Aug 2021 18:51:07 +0800
-Message-Id: <20210816105119.704302-9-hpa@redhat.com>
+Subject: [PATCH v2 09/20] platform/x86: intel-rst: Move to intel sub-directory
+Date:   Mon, 16 Aug 2021 18:51:08 +0800
+Message-Id: <20210816105119.704302-10-hpa@redhat.com>
 In-Reply-To: <20210816105119.704302-1-hpa@redhat.com>
 References: <20210816105119.704302-1-hpa@redhat.com>
 MIME-Version: 1.0
@@ -70,91 +70,93 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move intel_ips to intel sub-directory to improve readability
-and rename it from intel_ips.c to ips.c
+Move intel-rst to intel sub-directory to improve readability
+and rename it from intel-rst.c to ips.c
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
- drivers/platform/x86/Kconfig                      | 10 ----------
+ drivers/platform/x86/Kconfig                      | 12 ------------
  drivers/platform/x86/Makefile                     |  2 +-
- drivers/platform/x86/intel/Kconfig                | 10 ++++++++++
- drivers/platform/x86/intel/Makefile               |  7 +++++++
- drivers/platform/x86/{intel_ips.c => intel/ips.c} |  0
- 5 files changed, 18 insertions(+), 11 deletions(-)
- rename drivers/platform/x86/{intel_ips.c => intel/ips.c} (100%)
+ drivers/platform/x86/intel/Kconfig                | 12 ++++++++++++
+ drivers/platform/x86/intel/Makefile               |  3 ++-
+ drivers/platform/x86/{intel-rst.c => intel/rst.c} |  0
+ 5 files changed, 15 insertions(+), 14 deletions(-)
+ rename drivers/platform/x86/{intel-rst.c => intel/rst.c} (100%)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index fdc8b4c259ee..eca113f6dd0c 100644
+index eca113f6dd0c..c3682ea48af0 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1109,16 +1109,6 @@ config INTEL_IMR
+@@ -1109,18 +1109,6 @@ config INTEL_IMR
  
  	  If you are running on a Galileo/Quark say Y here.
  
--config INTEL_IPS
--	tristate "Intel Intelligent Power Sharing"
--	depends on ACPI && PCI
+-config INTEL_RST
+-        tristate "Intel Rapid Start Technology Driver"
+-	depends on ACPI
 -	help
--	  Intel Calpella platforms support dynamic power sharing between the
--	  CPU and GPU, maximizing performance in a given TDP.  This driver,
--	  along with the CPU frequency and i915 drivers, provides that
--	  functionality.  If in doubt, say Y here; it will only load on
--	  supported platforms.
+-	  This driver provides support for modifying parameters on systems
+-	  equipped with Intel's Rapid Start Technology. When put in an ACPI
+-	  sleep state, these devices will wake after either a configured
+-	  timeout or when the system battery reaches a critical state,
+-	  automatically copying memory contents to disk. On resume, the
+-	  firmware will copy the memory contents back to RAM and resume the OS
+-	  as usual.
 -
- config INTEL_RST
-         tristate "Intel Rapid Start Technology Driver"
+ config INTEL_SMARTCONNECT
+         tristate "Intel Smart Connect disabling driver"
  	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index bd9754dfa37d..fdbaaf9486df 100644
+index fdbaaf9486df..16d9f142ca7a 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -120,7 +120,7 @@ obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
- obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
+@@ -121,7 +121,7 @@ obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
  
  # Intel uncore drivers
--obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+ 
+-obj-$(CONFIG_INTEL_RST)				+= intel-rst.o
 +
- obj-$(CONFIG_INTEL_RST)				+= intel-rst.o
  obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
  obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
+ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index fb409f044e27..300fc8bbc907 100644
+index 300fc8bbc907..b0b2566be981 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -62,4 +62,14 @@ source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/scu/Kconfig"
- source "drivers/platform/x86/intel/telemetry/Kconfig"
+@@ -72,4 +72,16 @@ config INTEL_IPS
+ 	  functionality.  If in doubt, say Y here; it will only load on
+ 	  supported platforms.
  
-+config INTEL_IPS
-+	tristate "Intel Intelligent Power Sharing"
-+	depends on ACPI && PCI
++config INTEL_RST
++        tristate "Intel Rapid Start Technology Driver"
++	depends on ACPI
 +	help
-+	  Intel Calpella platforms support dynamic power sharing between the
-+	  CPU and GPU, maximizing performance in a given TDP.  This driver,
-+	  along with the CPU frequency and i915 drivers, provides that
-+	  functionality.  If in doubt, say Y here; it will only load on
-+	  supported platforms.
++	  This driver provides support for modifying parameters on systems
++	  equipped with Intel's Rapid Start Technology. When put in an ACPI
++	  sleep state, these devices will wake after either a configured
++	  timeout or when the system battery reaches a critical state,
++	  automatically copying memory contents to disk. On resume, the
++	  firmware will copy the memory contents back to RAM and resume the OS
++	  as usual.
 +
  endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 51ea5ee1f833..adb61cf3a387 100644
+index adb61cf3a387..cc72262d9283 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -25,3 +25,10 @@ obj-$(CONFIG_INTEL_SCU_WDT)			+= scu/
- obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= scu/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
+@@ -29,6 +29,7 @@ obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
+ CFLAGS_ips.o				:= -I./drivers/platform/x86
+ intel_ips-y							:= ips.o
+ obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+-
++intel-rst-y							:= rst.o
++obj-$(CONFIG_INTEL_RST)				+= intel-rst.o
  
-+# Intel uncore drivers
-+CFLAGS_ips.o				:= -I./drivers/platform/x86
-+intel_ips-y							:= ips.o
-+obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
-+
-+
-+
-diff --git a/drivers/platform/x86/intel_ips.c b/drivers/platform/x86/intel/ips.c
+ 
+diff --git a/drivers/platform/x86/intel-rst.c b/drivers/platform/x86/intel/rst.c
 similarity index 100%
-rename from drivers/platform/x86/intel_ips.c
-rename to drivers/platform/x86/intel/ips.c
+rename from drivers/platform/x86/intel-rst.c
+rename to drivers/platform/x86/intel/rst.c
 -- 
 2.31.1
 
