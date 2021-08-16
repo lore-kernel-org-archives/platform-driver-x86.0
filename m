@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAD0C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2ACC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3DD61C16
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8C861C4F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236375AbhHPKzR (ORCPT
+        id S236506AbhHPKz0 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 06:55:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60223 "EHLO
+        Mon, 16 Aug 2021 06:55:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57078 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236368AbhHPKzK (ORCPT
+        by vger.kernel.org with ESMTP id S236377AbhHPKzQ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:55:10 -0400
+        Mon, 16 Aug 2021 06:55:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629111279;
+        s=mimecast20190719; t=1629111284;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QJsyXOdlJYM2//fxWzSx0kKAbedvDwh5E29u/1ymh/M=;
-        b=WFu1bqhpoQksu+Cqt/BRD4t118cxkoUP+W98AuHuBz4lek1ncMHvOnk7/T2gjBtXg6izqL
-        m0D1jmJP3latR0GfCbuIhRlXQ7H/pPd1zPDDjIzde6Uowbbz8TxM5mVLfO9ByTpA7bpIwf
-        CKuNCQYY8tBIi5BdndR1ivL1dDio3E4=
+        bh=fjEg73jM+U3AjsSdxssEfiMhYP5By0BSc2pVM9r+sCc=;
+        b=WBxazjfkp4QAKTencAYuTQwgQZ4uFP/DJkZOQseobctC6OOMl+qIJHvFqPs3cqOcvXyEgi
+        gqE02jD4N6LVFfuyy4sL7ZL+VQTFk/Mn8mYAgHhSoeqspgD7/RfYCQFLfem2EXDwv93rT/
+        a5LE3PLmn9o8a/xvKrZkPpipJPBsOVQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-FoVhOtuPONm3-7VkgzKR7g-1; Mon, 16 Aug 2021 06:54:35 -0400
-X-MC-Unique: FoVhOtuPONm3-7VkgzKR7g-1
+ us-mta-380-PmrOPWY9PMWz3KPBQ9s0dQ-1; Mon, 16 Aug 2021 06:54:41 -0400
+X-MC-Unique: PmrOPWY9PMWz3KPBQ9s0dQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97946192D789;
-        Mon, 16 Aug 2021 10:54:33 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C112287D54A;
+        Mon, 16 Aug 2021 10:54:39 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 59C185FC25;
-        Mon, 16 Aug 2021 10:54:30 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 84AB45FC23;
+        Mon, 16 Aug 2021 10:54:36 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -58,9 +58,9 @@ To:     Alex Hung <alex.hung@canonical.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v2 15/20] platform/x86: intel-hid: Move to intel sub-directory
-Date:   Mon, 16 Aug 2021 18:51:14 +0800
-Message-Id: <20210816105119.704302-16-hpa@redhat.com>
+Subject: [PATCH v2 16/20] platform/x86: intel_int0002_vgpio: Move to intel sub-directory
+Date:   Mon, 16 Aug 2021 18:51:15 +0800
+Message-Id: <20210816105119.704302-17-hpa@redhat.com>
 In-Reply-To: <20210816105119.704302-1-hpa@redhat.com>
 References: <20210816105119.704302-1-hpa@redhat.com>
 MIME-Version: 1.0
@@ -70,105 +70,108 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move intel-hid to intel sub-directory to improve
-readability. Also, add CFLAGS to tweak the including path
-of dual_accel_detect.
+Move intel_int0002_vgpio to intel sub-directory to improve
+readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
- drivers/platform/x86/Kconfig                      | 13 -------------
- drivers/platform/x86/Makefile                     |  1 -
- drivers/platform/x86/intel/Kconfig                | 13 +++++++++++++
- drivers/platform/x86/intel/Makefile               |  5 ++++-
- drivers/platform/x86/{intel-hid.c => intel/hid.c} |  0
- 5 files changed, 17 insertions(+), 15 deletions(-)
- rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (100%)
+ drivers/platform/x86/Kconfig                  | 19 -------------------
+ drivers/platform/x86/Makefile                 |  1 -
+ drivers/platform/x86/intel/Kconfig            | 19 +++++++++++++++++++
+ drivers/platform/x86/intel/Makefile           |  2 ++
+ .../int0002_vgpio.c}                          |  0
+ 5 files changed, 21 insertions(+), 20 deletions(-)
+ rename drivers/platform/x86/{intel_int0002_vgpio.c => intel/int0002_vgpio.c} (100%)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index ac4ec4e2534a..84865e1cf043 100644
+index 84865e1cf043..7274b586170d 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -667,19 +667,6 @@ config THINKPAD_LMI
+@@ -667,25 +667,6 @@ config THINKPAD_LMI
  
  source "drivers/platform/x86/intel/Kconfig"
  
--config INTEL_HID_EVENT
--	tristate "INTEL HID Event"
--	depends on ACPI
--	depends on INPUT
--	depends on I2C
--	select INPUT_SPARSEKMAP
+-config INTEL_INT0002_VGPIO
+-	tristate "Intel ACPI INT0002 Virtual GPIO driver"
+-	depends on GPIOLIB && ACPI && PM_SLEEP
+-	select GPIOLIB_IRQCHIP
 -	help
--	  This driver provides support for the Intel HID Event hotkey interface.
--	  Some laptops require this driver for hotkey support.
+-	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
+-	  Power Management Event (PME) to the Power Management Controller (PMC)
+-	  to wakeup the system. When this happens software needs to explicitly
+-	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+-	  IRQ storm on IRQ 9.
+-
+-	  This is modelled in ACPI through the INT0002 ACPI device, which is
+-	  called a "Virtual GPIO controller" in ACPI because it defines the
+-	  event handler to call when the PME triggers through _AEI and _L02
+-	  methods as would be done for a real GPIO interrupt in ACPI.
 -
 -	  To compile this driver as a module, choose M here: the module will
--	  be called intel_hid.
+-	  be called intel_int0002_vgpio.
 -
- config INTEL_INT0002_VGPIO
- 	tristate "Intel ACPI INT0002 Virtual GPIO driver"
- 	depends on GPIOLIB && ACPI && PM_SLEEP
+ config INTEL_MENLOW
+ 	tristate "Thermal Management driver for Intel menlow platform"
+ 	depends on ACPI_THERMAL
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index b5327b6f774a..734a6c266025 100644
+index 734a6c266025..4c9a47936e65 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
 @@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
  # Intel
  obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
--obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+-obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
  obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 443554133f20..4ca7bec080e7 100644
+index 4ca7bec080e7..cf56a1c4474b 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -21,6 +21,19 @@ source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
- source "drivers/platform/x86/intel/atomisp2/Kconfig"
+@@ -34,6 +34,25 @@ config INTEL_HID_EVENT
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_hid.
  
-+config INTEL_HID_EVENT
-+	tristate "INTEL HID Event"
-+	depends on ACPI
-+	depends on INPUT
-+	depends on I2C
-+	select INPUT_SPARSEKMAP
++config INTEL_INT0002_VGPIO
++	tristate "Intel ACPI INT0002 Virtual GPIO driver"
++	depends on GPIOLIB && ACPI && PM_SLEEP
++	select GPIOLIB_IRQCHIP
 +	help
-+	  This driver provides support for the Intel HID Event hotkey interface.
-+	  Some laptops require this driver for hotkey support.
++	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
++	  Power Management Event (PME) to the Power Management Controller (PMC)
++	  to wakeup the system. When this happens software needs to explicitly
++	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
++	  IRQ storm on IRQ 9.
++
++	  This is modelled in ACPI through the INT0002 ACPI device, which is
++	  called a "Virtual GPIO controller" in ACPI because it defines the
++	  event handler to call when the PME triggers through _AEI and _L02
++	  methods as would be done for a real GPIO interrupt in ACPI.
 +
 +	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_hid.
++	  be called intel_int0002_vgpio.
 +
  config INTEL_BXTWC_PMIC_TMU
  	tristate "Intel BXT Whiskey Cove TMU Driver"
  	depends on REGMAP
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index fd2d274f294f..e47e6ac4b5eb 100644
+index e47e6ac4b5eb..23503798b533 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -9,6 +9,9 @@ obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
- obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= atomisp2/
- obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= atomisp2/
-+CFLAGS_hid.o			:= -I./drivers/platform/x86
-+intel-hid-y				:= hid.o
-+obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+@@ -12,6 +12,8 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= atomisp2/
+ CFLAGS_hid.o			:= -I./drivers/platform/x86
+ intel-hid-y				:= hid.o
+ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
++intel_int0002_vgpio-y				:= int0002_vgpio.o
++obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
  
  # Intel PMIC / PMC / P-Unit devices
  intel_bxtwc_tmu-y 					:= bxtwc_tmu.o
-@@ -39,4 +42,4 @@ intel_turbo_max_3-y						:= turbo_max_3.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- intel-uncore-frequency-y					:= uncore-frequency.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
--obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= speed_select_if/
-\ No newline at end of file
-+obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= speed_select_if/
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel/hid.c
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
 similarity index 100%
-rename from drivers/platform/x86/intel-hid.c
-rename to drivers/platform/x86/intel/hid.c
+rename from drivers/platform/x86/intel_int0002_vgpio.c
+rename to drivers/platform/x86/intel/int0002_vgpio.c
 -- 
 2.31.1
 
