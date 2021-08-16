@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 371BFC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E82FC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216BF61BE1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F17D61BE1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236348AbhHPKzD (ORCPT
+        id S236384AbhHPKzF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 06:55:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48348 "EHLO
+        Mon, 16 Aug 2021 06:55:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22264 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236325AbhHPKyr (ORCPT
+        by vger.kernel.org with ESMTP id S236332AbhHPKzA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:54:47 -0400
+        Mon, 16 Aug 2021 06:55:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629111255;
+        s=mimecast20190719; t=1629111269;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XpgrqGwkw5mwbulPoD3Fxo/iS16n8LULyYMORd5VUH0=;
-        b=Res0st3bHNkl5qHDx7P2K8qswBsU7rYYM6IlTqX1vMs8bZDcMxNYCRQae+Pdw9XK0GIMtS
-        p4NWd6v0Txz4zq7PT475cBbWfLoR2UETu7r7xE0oSU4GfynLb00SQjsT/1q+Ci40adNKG+
-        lBkXuVKk83ogQ956oRJ6w1prwotc0h8=
+        bh=J6YQwz0m6qTbdSvroo1C1n+ZVy1/P811PkKLVx7WHvc=;
+        b=AjThJEmxtaPriFw79tGSqzLFa8YHn4Q9urYX1mKt/D8pUwKbSTlifrb0wLKFfugV4R+/FD
+        la8E+Hcllf+bm3mcgWcYnIXb2shXMKwCOIxuCCrbKHa2iTjtpriLxpMoctiwEW+XDd8mXW
+        7lDBt3FrVn5vDoW5PU7yG3xwrlG+hYc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-123-1g3ycN8wOQivmJqOqvXYzw-1; Mon, 16 Aug 2021 06:54:14 -0400
-X-MC-Unique: 1g3ycN8wOQivmJqOqvXYzw-1
+ us-mta-152-LdnkM4Z4M1OkMw9Lm9X4UA-1; Mon, 16 Aug 2021 06:54:28 -0400
+X-MC-Unique: LdnkM4Z4M1OkMw9Lm9X4UA-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 005EC87D544;
-        Mon, 16 Aug 2021 10:54:12 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3809087D542;
+        Mon, 16 Aug 2021 10:54:26 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A20AA5FC23;
-        Mon, 16 Aug 2021 10:54:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D304618017;
+        Mon, 16 Aug 2021 10:54:22 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -58,9 +58,9 @@ To:     Alex Hung <alex.hung@canonical.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v2 12/20] platform/x86: intel-uncore-frequency: Move to intel sub-directory
-Date:   Mon, 16 Aug 2021 18:51:11 +0800
-Message-Id: <20210816105119.704302-13-hpa@redhat.com>
+Subject: [PATCH v2 14/20] platform/x86: intel_atomisp2_led: Move to intel sub-directory
+Date:   Mon, 16 Aug 2021 18:51:13 +0800
+Message-Id: <20210816105119.704302-15-hpa@redhat.com>
 In-Reply-To: <20210816105119.704302-1-hpa@redhat.com>
 References: <20210816105119.704302-1-hpa@redhat.com>
 MIME-Version: 1.0
@@ -70,99 +70,168 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Move intel-uncore-frequency to intel sub-directory to improve
-readability and rename it from intel-uncore-frequency.c to uncore-frequency.c
+Move intel_atomisp2_led to intel sub-directory to improve
+readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 ---
- drivers/platform/x86/Kconfig                         | 10 ----------
- drivers/platform/x86/Makefile                        |  5 -----
- drivers/platform/x86/intel/Kconfig                   | 12 +++++++++++-
- drivers/platform/x86/intel/Makefile                  |  2 ++
- .../uncore-frequency.c}                              |  0
- 5 files changed, 13 insertions(+), 16 deletions(-)
- rename drivers/platform/x86/{intel-uncore-frequency.c => intel/uncore-frequency.c} (100%)
+ drivers/platform/x86/Kconfig                  | 34 ------------------
+ drivers/platform/x86/Makefile                 |  2 --
+ drivers/platform/x86/intel/Kconfig            |  1 +
+ drivers/platform/x86/intel/Makefile           |  2 ++
+ drivers/platform/x86/intel/atomisp2/Kconfig   | 35 +++++++++++++++++++
+ drivers/platform/x86/intel/atomisp2/Makefile  |  5 +++
+ .../atomisp2/led.c}                           |  0
+ .../atomisp2/pm.c}                            |  0
+ 8 files changed, 43 insertions(+), 36 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
+ create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
+ rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
+ rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 666103c7f0de..f0e3d9dc71a4 100644
+index b864e37c6781..ac4ec4e2534a 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1111,16 +1111,6 @@ config INTEL_IMR
+@@ -667,40 +667,6 @@ config THINKPAD_LMI
  
- source "drivers/platform/x86/intel_speed_select_if/Kconfig"
+ source "drivers/platform/x86/intel/Kconfig"
  
--config INTEL_UNCORE_FREQ_CONTROL
--	tristate "Intel Uncore frequency control driver"
--	depends on X86_64
+-config INTEL_ATOMISP2_LED
+-	tristate "Intel AtomISP2 camera LED driver"
+-	depends on GPIOLIB && LEDS_GPIO
 -	help
--	  This driver allows control of uncore frequency limits on
--	  supported server platforms.
--	  Uncore frequency controls RING/LLC (last-level cache) clocks.
+-	  Many Bay Trail and Cherry Trail devices come with a camera attached
+-	  to Intel's Image Signal Processor. Linux currently does not have a
+-	  driver for these, so they do not work as a camera. Some of these
+-	  camera's have a LED which is controlled through a GPIO.
+-
+-	  Some of these devices have a firmware issue where the LED gets turned
+-	  on at boot. This driver will turn the LED off at boot and also allows
+-	  controlling the LED (repurposing it) through the sysfs LED interface.
+-
+-	  Which GPIO is attached to the LED is usually not described in the
+-	  ACPI tables, so this driver contains per-system info about the GPIO
+-	  inside the driver, this means that this driver only works on systems
+-	  the driver knows about.
 -
 -	  To compile this driver as a module, choose M here: the module
--	  will be called intel-uncore-frequency.
- 
- endif # X86_PLATFORM_DEVICES
- 
+-	  will be called intel_atomisp2_led.
+-
+-config INTEL_ATOMISP2_PM
+-	tristate "Intel AtomISP2 dummy / power-management driver"
+-	depends on PCI && IOSF_MBI && PM
+-	depends on !INTEL_ATOMISP
+-	help
+-	  Power-management driver for Intel's Image Signal Processor found on
+-	  Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
+-	  is to turn the ISP off (put it in D3) to save power and to allow
+-	  entering of S0ix modes.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called intel_atomisp2_pm.
+-
+ config INTEL_HID_EVENT
+ 	tristate "INTEL HID Event"
+ 	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index fb39644db7f9..e028c8dbb7cc 100644
+index f30cee767252..b5327b6f774a 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -120,11 +120,6 @@ obj-$(CONFIG_TOUCHSCREEN_DMI)		+= touchscreen_dmi.o
- obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
+@@ -71,8 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
- # Intel uncore drivers
--
--
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- 
--obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
--
--
- obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
+-obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
+-obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
+ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 8070804fe916..3763ed816919 100644
+index 01c73d184461..443554133f20 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -98,7 +98,6 @@ config INTEL_SMARTCONNECT
- 	  This driver checks to determine whether the device has Intel Smart
- 	  Connect enabled, and if so disables it.
+@@ -19,6 +19,7 @@ if X86_PLATFORM_DRIVERS_INTEL
+ source "drivers/platform/x86/intel/int33fe/Kconfig"
+ source "drivers/platform/x86/intel/int3472/Kconfig"
+ source "drivers/platform/x86/intel/pmt/Kconfig"
++source "drivers/platform/x86/intel/atomisp2/Kconfig"
  
--
- config INTEL_TURBO_MAX_3
- 	bool "Intel Turbo Boost Max Technology 3.0 enumeration driver"
- 	depends on X86_64 && SCHED_MC_PRIO
-@@ -109,4 +108,15 @@ config INTEL_TURBO_MAX_3
- 	  This driver is only required when the system is not using Hardware
- 	  P-States (HWP). In HWP mode, priority can be read from ACPI tables.
- 
-+config INTEL_UNCORE_FREQ_CONTROL
-+	tristate "Intel Uncore frequency control driver"
-+	depends on X86_64
-+	help
-+	  This driver allows control of uncore frequency limits on
-+	  supported server platforms.
-+	  Uncore frequency controls RING/LLC (last-level cache) clocks.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel-uncore-frequency.
-+
- endif # X86_PLATFORM_DRIVERS_INTEL
+ config INTEL_BXTWC_PMIC_TMU
+ 	tristate "Intel BXT Whiskey Cove TMU Driver"
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index cff65fa2b1aa..44b1fe372b44 100644
+index ae2a3cec8d82..fd2d274f294f 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -35,3 +35,5 @@ intel-smartconnect-y				:= smartconnect.o
- obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
- intel_turbo_max_3-y						:= turbo_max_3.o
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
-+intel-uncore-frequency-y					:= uncore-frequency.o
-+obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
-\ No newline at end of file
-diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency.c
+@@ -7,6 +7,8 @@
+ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
+ obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
+ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
++obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= atomisp2/
++obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= atomisp2/
+ 
+ # Intel PMIC / PMC / P-Unit devices
+ intel_bxtwc_tmu-y 					:= bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel/atomisp2/Kconfig b/drivers/platform/x86/intel/atomisp2/Kconfig
+new file mode 100644
+index 000000000000..49305b8605fe
+--- /dev/null
++++ b/drivers/platform/x86/intel/atomisp2/Kconfig
+@@ -0,0 +1,35 @@
++
++config INTEL_ATOMISP2_LED
++	tristate "Intel AtomISP2 camera LED driver"
++	depends on GPIOLIB && LEDS_GPIO
++	help
++	  Many Bay Trail and Cherry Trail devices come with a camera attached
++	  to Intel's Image Signal Processor. Linux currently does not have a
++	  driver for these, so they do not work as a camera. Some of these
++	  camera's have a LED which is controlled through a GPIO.
++
++	  Some of these devices have a firmware issue where the LED gets turned
++	  on at boot. This driver will turn the LED off at boot and also allows
++	  controlling the LED (repurposing it) through the sysfs LED interface.
++
++	  Which GPIO is attached to the LED is usually not described in the
++	  ACPI tables, so this driver contains per-system info about the GPIO
++	  inside the driver, this means that this driver only works on systems
++	  the driver knows about.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_atomisp2_led.
++
++config INTEL_ATOMISP2_PM
++	tristate "Intel AtomISP2 dummy / power-management driver"
++	depends on PCI && IOSF_MBI && PM
++	depends on !INTEL_ATOMISP
++	help
++	  Power-management driver for Intel's Image Signal Processor found on
++	  Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
++	  is to turn the ISP off (put it in D3) to save power and to allow
++	  entering of S0ix modes.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_atomisp2_pm.
++
+diff --git a/drivers/platform/x86/intel/atomisp2/Makefile b/drivers/platform/x86/intel/atomisp2/Makefile
+new file mode 100644
+index 000000000000..6937ff24861e
+--- /dev/null
++++ b/drivers/platform/x86/intel/atomisp2/Makefile
+@@ -0,0 +1,5 @@
++
++intel_atomisp2_led-y 				:= led.o
++obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
++intel_atomisp2_pm-y					+= pm.o
++obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
+diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel/atomisp2/led.c
 similarity index 100%
-rename from drivers/platform/x86/intel-uncore-frequency.c
-rename to drivers/platform/x86/intel/uncore-frequency.c
+rename from drivers/platform/x86/intel_atomisp2_led.c
+rename to drivers/platform/x86/intel/atomisp2/led.c
+diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
+similarity index 100%
+rename from drivers/platform/x86/intel_atomisp2_pm.c
+rename to drivers/platform/x86/intel/atomisp2/pm.c
 -- 
 2.31.1
 
