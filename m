@@ -2,113 +2,77 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20676C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 11:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44FFC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 11:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC54963219
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 11:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0BD6323B
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 11:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236118AbhHPLbL (ORCPT
+        id S236348AbhHPLtU (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 07:31:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51142 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231758AbhHPLbL (ORCPT
+        Mon, 16 Aug 2021 07:49:20 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:42855 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236598AbhHPLtT (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 07:31:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629113439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FI/eHQB74IQIC2qpQ/Xncvk17iFUa0PElL4kPSDcR0s=;
-        b=jCA1jXo4vBhhdP6gXbSNvuVeTueQgzfFAeA5WxC8ekC7HYgOfPAl1AAd3ECbkjpZaZQL3J
-        LaPdXTCSoREOhH9lGFd6LAZ86VQ73rPJpy3BXKC7lRJlgqqERWYachty7cBk5wfqgF6GkK
-        y3Zg9ABSzNeLinR8lpQbthJQkkOJ5VU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-591-PGUG3SmDMPepkt_pKqkB6w-1; Mon, 16 Aug 2021 07:30:38 -0400
-X-MC-Unique: PGUG3SmDMPepkt_pKqkB6w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 16 Aug 2021 07:49:19 -0400
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB5CD1853028;
-        Mon, 16 Aug 2021 11:30:36 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.194.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C9E7D6E0B7;
-        Mon, 16 Aug 2021 11:30:08 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Len Brown <lenb@kernel.org>, Andy Shevchenko <andy@kernel.org>,
-        "Luke D . Jones" <luke@ljones.dev>, linux-acpi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] ACPI: platform-profile: call sysfs_notify() from platform_profile_store()
-Date:   Mon, 16 Aug 2021 13:30:07 +0200
-Message-Id: <20210816113007.88902-1-hdegoede@redhat.com>
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E8DF361E5FE02;
+        Mon, 16 Aug 2021 13:48:45 +0200 (CEST)
+Subject: Re: Dell laptop function keys stopped working between 5.10.46 and
+ 5.13.9
+To:     Hans de Goede <hdegoede@redhat.com>, Dell.Client.Kernel@dell.com,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <b8ff8f68-4d5a-7ec6-4c4f-9f5be6e70ab5@molgen.mpg.de>
+ <1d4ce7d6-3213-45af-0467-7548f69b7d9e@molgen.mpg.de>
+ <7857ead5-6ccf-3290-9e86-4f16d2bf360f@redhat.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <77ac6d35-9c9a-bab9-5203-47c814ec5fb8@molgen.mpg.de>
+Date:   Mon, 16 Aug 2021 13:48:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <7857ead5-6ccf-3290-9e86-4f16d2bf360f@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Drivers like thinkpad_acpi and ideapad_laptop call the
-platform_profile_notify() helper when the profile is changed by hardware
-(the embedded-controller/EC) in response to an EC handled hotkey.
+Dear Hans,
 
-This allows userspace to monitor for such changes by polling for POLLPRI
-on the platform_profile sysfs file. But the profile can also be changed
-underneath a userspace program monitoring it by anonther userspace program
-storing a new value.
 
-Add a sysfs_notify() call to platform_profile_store(), so that userspace
-programs monitoring for changes also get notified in this case.
+Am 16.08.21 um 12:34 schrieb Hans de Goede:
+> Hi,
+> 
+> On 8/16/21 12:22 PM, Paul Menzel wrote:
+>> [attach Linux 5.13.9 messages (output of `dmesg`)]
+> 
+> Does "lsmod" output include any Dell modules like dell-laptop or
+> dell-wmi ?
+> 
+> How about on the 5.10 kernel?  It looks like the 5.13 kernel simply
+> does not have these modules enabled / loaded.
 
-Also update the documentation to document that POLLPRI polling can be
-used to watch for changes.
+Indeed. Good find. The Kconfig option was renamed, and Debian does not 
+select it yet, so I submitted a report [1].
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/ABI/testing/sysfs-platform_profile | 7 +++++++
- drivers/acpi/platform_profile.c                  | 3 +++
- 2 files changed, 10 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-platform_profile b/Documentation/ABI/testing/sysfs-platform_profile
-index dae9c8941905..baf1d125f9f8 100644
---- a/Documentation/ABI/testing/sysfs-platform_profile
-+++ b/Documentation/ABI/testing/sysfs-platform_profile
-@@ -26,3 +26,10 @@ Contact:	Hans de Goede <hdegoede@redhat.com>
- Description:	Reading this file gives the current selected profile for this
- 		device. Writing this file with one of the strings from
- 		platform_profile_choices changes the profile to the new value.
-+
-+		This file can be monitored for changes by polling for POLLPRI,
-+		POLLPRI will be signalled on any changes, independent of those
-+		changes coming from a userspace write; or coming from another
-+		source such as e.g. a hotkey triggered profile change handled
-+		either directly by the embedded-controller or fully handled
-+		inside the kernel.
-diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_profile.c
-index dd2fbf38e414..d418462ab791 100644
---- a/drivers/acpi/platform_profile.c
-+++ b/drivers/acpi/platform_profile.c
-@@ -106,6 +106,9 @@ static ssize_t platform_profile_store(struct device *dev,
- 	}
- 
- 	err = cur_profile->profile_set(cur_profile, i);
-+	if (!err)
-+		sysfs_notify(acpi_kobj, NULL, "platform_profile");
-+
- 	mutex_unlock(&profile_lock);
- 	if (err)
- 		return err;
--- 
-2.31.1
 
+Kind regards,
+
+Paul
+
+
+[1]: https://bugs.debian.org/992251
