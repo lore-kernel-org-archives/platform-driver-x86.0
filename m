@@ -2,46 +2,47 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9CC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D881C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3FC61BE1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A0361C57
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236115AbhHPKw5 (ORCPT
+        id S232390AbhHPKxJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 06:52:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21613 "EHLO
+        Mon, 16 Aug 2021 06:53:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52368 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235951AbhHPKwz (ORCPT
+        by vger.kernel.org with ESMTP id S235883AbhHPKxI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:52:55 -0400
+        Mon, 16 Aug 2021 06:53:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629111143;
+        s=mimecast20190719; t=1629111156;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BIzgbmYZkr1EEatnyen10+GPtx+Y05HjwFLgssfCMqU=;
-        b=IvPGiQ5Bfnu0Hpu321fnuK8BpeoSOkP6+feGwkV6azY6vsv2+qQihB8ecTYr7duvGu40Dq
-        yQ50U0VatyLX194ZwkQo1MLpB/sfIQqLL+5ML4qCe7re9JD2Xja4bJxsw75kPuNUgtWDoU
-        nZu/xlGMvcIazPm2Iy6D519VmdaelFE=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z44Anr20YgU89oDOMqQx3+MrkexN78PZip+zNikWlWI=;
+        b=FjSHP5qbqPVB5XXPg2Vr+Wp1ItSzEaAdtibylmEbz42Pl6+r5VoK2U2D6j/zbFIEpp2Cq8
+        7CuaOZ1JEKEJX3OZ+wgfgTfph9hUB2arfxB9BuKbMSksuMnd2i2B3fv7Ay69fkiI73aREz
+        F1LjuYs2fbbKm2eihxKDramdN9gwRJ8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-di-BVEugNmWftIhtt-udVg-1; Mon, 16 Aug 2021 06:52:20 -0400
-X-MC-Unique: di-BVEugNmWftIhtt-udVg-1
+ us-mta-466-rTbwzBE4MkK7P_N7oSUy9A-1; Mon, 16 Aug 2021 06:52:35 -0400
+X-MC-Unique: rTbwzBE4MkK7P_N7oSUy9A-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2C1A87D541;
-        Mon, 16 Aug 2021 10:52:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 87DAD1051476;
+        Mon, 16 Aug 2021 10:52:33 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.64.242.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E8796788D;
-        Mon, 16 Aug 2021 10:52:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09A465FC25;
+        Mon, 16 Aug 2021 10:52:26 +0000 (UTC)
 From:   Kate Hsuan <hpa@redhat.com>
 To:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -57,9 +58,11 @@ To:     Alex Hung <alex.hung@canonical.com>,
         "David E . Box" <david.e.box@linux.intel.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
-Subject: [PATCH v2 00/20] Intel platform driver code movement.
-Date:   Mon, 16 Aug 2021 18:50:59 +0800
-Message-Id: <20210816105119.704302-1-hpa@redhat.com>
+Subject: [PATCH v2 01/20] platform/x86: intel_bxtwc_tmu: Move to intel sub-directory
+Date:   Mon, 16 Aug 2021 18:51:00 +0800
+Message-Id: <20210816105119.704302-2-hpa@redhat.com>
+In-Reply-To: <20210816105119.704302-1-hpa@redhat.com>
+References: <20210816105119.704302-1-hpa@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
@@ -67,132 +70,87 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Here is the version 2 of code movement for Intel platform drivers. 
-All the Intel related platform drivers were moved to intel sub-directory
-to improve readability. The filenames with prefix intel_ were removed
-and all the module ko files kept their original names.
+Move intel_bxtwc_tmu to intel sub-directory to
+improve readability.
 
-Since intel_ips.h was refered by Intel i915 GPU DRM driver, it
-was ketp in original localtion.
-
-Kate Hsuan (20):
-  platform/x86: intel_bxtwc_tmu: Move to intel sub-directory
-  platform/x86: intel_chtdc_ti_pwrbtn: Move to intel sub-directory
-  platform/x86: intel_mrfld_pwrbtn: Move to intel sub-directory
-  platform/x86: intel_punit_ipc: Move to intel sub-directory
-  platform/x86: intel_pmc_core: Move to intel sub-directory
-  platform/x86: intel_scu: Move to intel sub-directory
-  platform/x86: intel_telemetry: Move to intel sub-directory
-  platform/x86: intel_ips: Move to intel sub-directory
-  platform/x86: intel-rst: Move to intel sub-directory
-  platform/x86: intel-smartconnect: Move to intel sub-directory
-  platform/x86: intel_turbo_max_3: Move to intel sub-directory
-  platform/x86: intel-uncore-frequency: Move to intel sub-directory
-  platform/x86: intel_speed_select_if: Move to intel sub-directory
-  platform/x86: intel_atomisp2_led: Move to intel sub-directory
-  platform/x86: intel-hid: Move to intel sub-directory
-  platform/x86: intel_int0002_vgpio: Move to intel sub-directory
-  platform/x86: intel_oaktrail.c: Move to intel sub-directory
-  platform/x86: intel-vbtn: Move to intel sub-directory
-  platform/x86: intel-wmi-sbl-fw-updat: Move to intel sub-directory
-  platform/x86: intel-wmi-thunderbolt: Move to intel sub-directory
-
- drivers/platform/x86/Kconfig                  | 287 ------------------
- drivers/platform/x86/Makefile                 |  32 +-
- drivers/platform/x86/intel/Kconfig            | 160 ++++++++++
- drivers/platform/x86/intel/Makefile           |  47 +++
- drivers/platform/x86/intel/atomisp2/Kconfig   |  35 +++
- drivers/platform/x86/intel/atomisp2/Makefile  |   5 +
- .../atomisp2/led.c}                           |   0
- .../atomisp2/pm.c}                            |   0
- .../{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c}  |   0
- .../chtdc_ti_pwrbtn.c}                        |   0
- .../platform/x86/{intel-hid.c => intel/hid.c} |   0
- .../int0002_vgpio.c}                          |   0
- .../platform/x86/{intel_ips.c => intel/ips.c} |   0
- .../mrfld_pwrbtn.c}                           |   0
- .../{intel_oaktrail.c => intel/oaktrail.c}    |   0
- drivers/platform/x86/intel/pmc/Kconfig        |  26 ++
- drivers/platform/x86/intel/pmc/Makefile       |   9 +
- .../x86/{ => intel/pmc}/intel_pmc_core.h      |   0
- .../pmc/pmc_core.c}                           |   0
- .../pmc/pmc_core_pltdrv.c}                    |   0
- .../{intel_punit_ipc.c => intel/punit_ipc.c}  |   0
- .../platform/x86/{intel-rst.c => intel/rst.c} |   0
- drivers/platform/x86/intel/scu/Kconfig        |  52 ++++
- drivers/platform/x86/intel/scu/Makefile       |  16 +
- .../x86/{intel_scu_ipc.c => intel/scu/ipc.c}  |   0
- .../scu/ipcutil.c}                            |   0
- .../scu/pcidrv.c}                             |   0
- .../scu/pltdrv.c}                             |   0
- .../x86/{intel_scu_wdt.c => intel/scu/wdt.c}  |   0
- .../smartconnect.c}                           |   0
- .../speed_select_if}/Kconfig                  |   0
- .../speed_select_if}/Makefile                 |   0
- .../speed_select_if}/isst_if_common.c         |   0
- .../speed_select_if}/isst_if_common.h         |   0
- .../speed_select_if}/isst_if_mbox_msr.c       |   0
- .../speed_select_if}/isst_if_mbox_pci.c       |   0
- .../speed_select_if}/isst_if_mmio.c           |   0
- drivers/platform/x86/intel/telemetry/Kconfig  |  16 +
- drivers/platform/x86/intel/telemetry/Makefile |  11 +
- .../telemetry/telemetry_core.c}               |   0
- .../telemetry/telemetry_debugfs.c}            |   0
- .../telemetry/telemetry_pltdrv.c}             |   0
- .../turbo_max_3.c}                            |   0
- .../uncore-frequency.c}                       |   0
- .../x86/{intel-vbtn.c => intel/vbtn.c}        |   0
- drivers/platform/x86/intel/wmi/Kconfig        |  26 ++
- drivers/platform/x86/intel/wmi/Makefile       |   9 +
- .../wmi/sbl-fw-update.c}                      |   0
- .../wmi/thunderbolt.c}                        |   0
- 49 files changed, 413 insertions(+), 318 deletions(-)
- create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
- create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
- rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
- rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
+Signed-off-by: Kate Hsuan <hpa@redhat.com>
+---
+ drivers/platform/x86/Kconfig                           | 10 ----------
+ drivers/platform/x86/Makefile                          |  1 -
+ drivers/platform/x86/intel/Kconfig                     | 10 ++++++++++
+ drivers/platform/x86/intel/Makefile                    |  4 ++++
+ .../x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c}       |  0
+ 5 files changed, 14 insertions(+), 11 deletions(-)
  rename drivers/platform/x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c} (100%)
- rename drivers/platform/x86/{intel_chtdc_ti_pwrbtn.c => intel/chtdc_ti_pwrbtn.c} (100%)
- rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (100%)
- rename drivers/platform/x86/{intel_int0002_vgpio.c => intel/int0002_vgpio.c} (100%)
- rename drivers/platform/x86/{intel_ips.c => intel/ips.c} (100%)
- rename drivers/platform/x86/{intel_mrfld_pwrbtn.c => intel/mrfld_pwrbtn.c} (100%)
- rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
- create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
- create mode 100644 drivers/platform/x86/intel/pmc/Makefile
- rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.h (100%)
- rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/pmc_core.c} (100%)
- rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pmc_core_pltdrv.c} (100%)
- rename drivers/platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c} (100%)
- rename drivers/platform/x86/{intel-rst.c => intel/rst.c} (100%)
- create mode 100644 drivers/platform/x86/intel/scu/Kconfig
- create mode 100644 drivers/platform/x86/intel/scu/Makefile
- rename drivers/platform/x86/{intel_scu_ipc.c => intel/scu/ipc.c} (100%)
- rename drivers/platform/x86/{intel_scu_ipcutil.c => intel/scu/ipcutil.c} (100%)
- rename drivers/platform/x86/{intel_scu_pcidrv.c => intel/scu/pcidrv.c} (100%)
- rename drivers/platform/x86/{intel_scu_pltdrv.c => intel/scu/pltdrv.c} (100%)
- rename drivers/platform/x86/{intel_scu_wdt.c => intel/scu/wdt.c} (100%)
- rename drivers/platform/x86/{intel-smartconnect.c => intel/smartconnect.c} (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Kconfig (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Makefile (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.h (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_msr.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_pci.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mmio.c (100%)
- create mode 100644 drivers/platform/x86/intel/telemetry/Kconfig
- create mode 100644 drivers/platform/x86/intel/telemetry/Makefile
- rename drivers/platform/x86/{intel_telemetry_core.c => intel/telemetry/telemetry_core.c} (100%)
- rename drivers/platform/x86/{intel_telemetry_debugfs.c => intel/telemetry/telemetry_debugfs.c} (100%)
- rename drivers/platform/x86/{intel_telemetry_pltdrv.c => intel/telemetry/telemetry_pltdrv.c} (100%)
- rename drivers/platform/x86/{intel_turbo_max_3.c => intel/turbo_max_3.c} (100%)
- rename drivers/platform/x86/{intel-uncore-frequency.c => intel/uncore-frequency.c} (100%)
- rename drivers/platform/x86/{intel-vbtn.c => intel/vbtn.c} (100%)
- create mode 100644 drivers/platform/x86/intel/wmi/Kconfig
- create mode 100644 drivers/platform/x86/intel/wmi/Makefile
- rename drivers/platform/x86/{intel-wmi-sbl-fw-update.c => intel/wmi/sbl-fw-update.c} (100%)
- rename drivers/platform/x86/{intel-wmi-thunderbolt.c => intel/wmi/thunderbolt.c} (100%)
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 432d72170b00..15d66892ea92 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1168,16 +1168,6 @@ config INTEL_UNCORE_FREQ_CONTROL
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel-uncore-frequency.
+ 
+-config INTEL_BXTWC_PMIC_TMU
+-	tristate "Intel BXT Whiskey Cove TMU Driver"
+-	depends on REGMAP
+-	depends on MFD_INTEL_PMC_BXT
+-	depends on INTEL_SOC_PMIC_BXTWC
+-	help
+-	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
+-	  This driver enables the alarm wakeup functionality in the TMU unit
+-	  of Whiskey Cove PMIC.
+-
+ config INTEL_CHTDC_TI_PWRBTN
+ 	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
+ 	depends on INTEL_SOC_PMIC_CHTDC_TI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 9bb3c3f77386..2477d46937c2 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -128,7 +128,6 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+ 
+ # Intel PMIC / PMC / P-Unit devices
+-obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 6eec084d9bf9..b274ff4192b2 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -20,4 +20,14 @@ source "drivers/platform/x86/intel/int33fe/Kconfig"
+ source "drivers/platform/x86/intel/int3472/Kconfig"
+ source "drivers/platform/x86/intel/pmt/Kconfig"
+ 
++config INTEL_BXTWC_PMIC_TMU
++	tristate "Intel BXT Whiskey Cove TMU Driver"
++	depends on REGMAP
++	depends on MFD_INTEL_PMC_BXT
++	depends on INTEL_SOC_PMIC_BXTWC
++	help
++	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
++	  This driver enables the alarm wakeup functionality in the TMU unit
++	  of Whiskey Cove PMIC.
++
+ endif # X86_PLATFORM_DRIVERS_INTEL
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index ca0ec2c85b05..92ab6fa7438f 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -7,3 +7,7 @@
+ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
+ obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
+ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
++
++# Intel PMIC / PMC / P-Unit devices
++intel_bxtwc_tmu-y 					:= bxtwc_tmu.o
++obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel/bxtwc_tmu.c
+similarity index 100%
+rename from drivers/platform/x86/intel_bxtwc_tmu.c
+rename to drivers/platform/x86/intel/bxtwc_tmu.c
 -- 
 2.31.1
 
