@@ -2,80 +2,81 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4BEC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 08:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5781CC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 08:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9404E61ABB
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 08:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36EF361AFC
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 08:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbhHPIFy (ORCPT
+        id S234594AbhHPIKJ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 04:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234645AbhHPIFs (ORCPT
+        Mon, 16 Aug 2021 04:10:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20252 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234572AbhHPIKJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 04:05:48 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4474DC0613C1
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 01:05:16 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id u16so5135328wrn.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 01:05:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=iuo4P3aOYxmIblUk1PEMPyd6NT9m8+FMiJyH8cVATb8=;
-        b=o/GJ+fQE0H57ygkbM+yW3lP8DFaw4BS/O/CyXCPlYBfUS74RfTXftG+KvROuHmoLzI
-         t0XtbY9VdHhmrziiA07Fh/OXdKyXV0fcwMhkp7kt8RKsmfYareh1jpny23eiFSLgo8yV
-         W6HNX9sN0qd7l5e2L1ikTYT+8KA4ODNUnYs4idiPI4bIhGBBWrJoFOYhGgbvvTWc9I+H
-         B363DNa2pA8tTjjGDgBOC0i3vKbA829YpDJbvi3qkCf+mi7yUOpvvEJKavu0mIDp3ilT
-         eBnX0D4B8irWjTp2+h7I4USd9RUbOpSlvtDrqQ2ULGlB9d9uNGa91Q3fewm3C5IDjwzz
-         BDsA==
+        Mon, 16 Aug 2021 04:10:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629101377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=U3Mqsy1GHKuneyt6DRg4gzQIMwS0siPfZTWPenyoskM=;
+        b=Vzu7+k4lUPrepYbiDhxHyxvnPNQhxhnuz6j5Ohd/eBi/L6QKqwz4RogXgVPH/lJBrL6KNO
+        CQ3gcE41mnZ2Caa57my76yutknRY8zIA3Wmo2Bb2/QVAggqZN5qE2C1YYJjiGH8g56Rnux
+        ZNeat+i2AeDfCXMwMffxeKFlEjWYrqM=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-16-zAm1VWA4OkqUj1xO8dgyJA-1; Mon, 16 Aug 2021 04:09:36 -0400
+X-MC-Unique: zAm1VWA4OkqUj1xO8dgyJA-1
+Received: by mail-ed1-f72.google.com with SMTP id a23-20020a50ff170000b02903b85a16b672so8462743edu.1
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 01:09:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=iuo4P3aOYxmIblUk1PEMPyd6NT9m8+FMiJyH8cVATb8=;
-        b=UXzsjGc6u2WbZtyDz3LtxUhleTmqPgZ8CX6lqVCP5uMpJH+QeR3EeXt9zMDAv48qZn
-         xspPaS46PnAX/uXwYUSTn4OB+fvOByv1Ndl5ewjWBUjD5VEObVdQiKYuAtAK2Z3s8zr6
-         mgBKhJ+17QkNaW23Z+8VED9B6GwjdzCD5SNCV90EAxevI5akkYuMfrNpRflk/Q0Wr5HZ
-         H0yWWcw5wjesvjMWNEzy2y3H63Ul6Hib0Nw3gPwo4gHQVV0NfsKYbJtGxgGgR8XVM6So
-         EoTA0YRSJRq6U6+6Ov7Cq0m0VQuvmDTk5JC2mygNC+/SWTrL3zK8Or1Ue6Nkom7651z9
-         WIUw==
-X-Gm-Message-State: AOAM531k8cCUsSE1AeVlAx203S3krrIRF2UMCbVFBBvaTfoJGEsY3+Ml
-        LlhPPT/lJtwNtr5XqKGkH6b/VqxfdPLRTKSv
-X-Google-Smtp-Source: ABdhPJx5gPb1V3hZSaF3VRhAPOMSGHWI8aqq0Dy3vuY8uWSNPv+rR6qygzrhEC6rvBOVHVNUjbaEjg==
-X-Received: by 2002:adf:f64a:: with SMTP id x10mr16965816wrp.287.1629101114752;
-        Mon, 16 Aug 2021 01:05:14 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:e1b0:48c1:6199:9cb4? ([2a01:e34:ed2f:f020:e1b0:48c1:6199:9cb4])
-        by smtp.googlemail.com with ESMTPSA id m6sm3061984wms.42.2021.08.16.01.05.13
+        bh=U3Mqsy1GHKuneyt6DRg4gzQIMwS0siPfZTWPenyoskM=;
+        b=g/ZRL/jB+wqWuksRc0tbp6gSqF2i/YIYX7474Vqj33kXVVZPxhOtW6q/qfIzSC294Y
+         wmPrXklC06sXiyHpMvxg2fn8YsfuVjsP7+SwuatilVn8dd+r4fyJeCYkuB6JQONLmXrk
+         QtkdGmlOjYJmnRgHHPD37HTaWznmlix6mvOvSkcx/i8/iQx0h83IJeGWK/opA5vIUSGG
+         7XmUnXkyi/rjBsIzyS3kE4voSdPSFjQSjlZR5ur8Vp6zLsUbrfZq7Edmwt1eYQGkxXM3
+         bk5Y2qxKc2hajN1IRjvxOLjFcFQZRleQhsejg21X7sNQCDCmucwRLN4lb9enTOv1qLPc
+         fVqw==
+X-Gm-Message-State: AOAM530/5oKpausRtY/qHB5VUluVDtGmyaSXNDQnfRGmITSlP/7ffxw+
+        oSHM/LnkaduvHj5zNebWxkcJBUbi9VWSIg9PF1I0tLRVQhtpOEbKl1qWgbvNaHnx3k0DEwyyMtw
+        Cgy3GVDYBOmhqWNB0Vl7+yABlRduXh9LWWuDyDXTQmxZQuEOvuR8FdqxVIUsd4DYFH8CmDtuukJ
+        IZEbhcQDL2JQ==
+X-Received: by 2002:a17:907:9152:: with SMTP id l18mr14786266ejs.190.1629101375025;
+        Mon, 16 Aug 2021 01:09:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyCnJMoW0dCCmdt9W9cemZ1R/FKf2hJMNAv2uOfJxbHeXCpy370r7r26LpY3sYc4fYUaLzn8g==
+X-Received: by 2002:a17:907:9152:: with SMTP id l18mr14786247ejs.190.1629101374810;
+        Mon, 16 Aug 2021 01:09:34 -0700 (PDT)
+Received: from x1.localdomain ([81.30.35.201])
+        by smtp.gmail.com with ESMTPSA id j29sm2562664ejo.10.2021.08.16.01.09.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Aug 2021 01:05:14 -0700 (PDT)
-Subject: Re: [PATCH] thermal/drivers/intel: Move intel_menlow to thermal
- drivers
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        rui.zhang@intel.com, hpa@redhat.com, mgross@linux.intel.com,
-        alex.hung@canonical.com, sujith.thomas@intel.com,
-        andriy.shevchenko@linux.intel.com
-Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20210816035356.1955982-1-srinivas.pandruvada@linux.intel.com>
- <4d1c20ab-6c81-8e9f-6d0f-180ecaa92812@redhat.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <144b2a35-bd24-2a88-c538-5c7c4a6c4fd1@linaro.org>
-Date:   Mon, 16 Aug 2021 10:05:13 +0200
+        Mon, 16 Aug 2021 01:09:34 -0700 (PDT)
+Subject: Re: [PATCH v3 0/1] asus-wmi: add platform_profile support
+To:     Luke Jones <luke@ljones.dev>
+Cc:     linux-kernel@vger.kernel.org, hadess@hadess.net,
+        platform-driver-x86@vger.kernel.org
+References: <20210814043103.2535842-1-luke@ljones.dev>
+ <THKTXQ.ELSNF0TA7RAV1@ljones.dev>
+ <a918bfe0-03c4-e7d3-8a99-efb1d11333e4@redhat.com>
+ <18LWXQ.AIB2DGCZUVMW@ljones.dev>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <2636766d-4f17-2a5d-92d4-73f7f2bb26a7@redhat.com>
+Date:   Mon, 16 Aug 2021 10:09:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <4d1c20ab-6c81-8e9f-6d0f-180ecaa92812@redhat.com>
+In-Reply-To: <18LWXQ.AIB2DGCZUVMW@ljones.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -83,133 +84,64 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+Hi,
 
-Hi Hans,
-
-On 16/08/2021 09:55, Hans de Goede wrote:
-> Hi,
+On 8/16/21 1:00 AM, Luke Jones wrote:
 > 
-> On 8/16/21 5:53 AM, Srinivas Pandruvada wrote:
->> Moved drivers/platform/x86/intel_menlow.c to drivers/thermal/intel.
+> 
+> On Sun, Aug 15 2021 at 15:48:49 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi,
 >>
->> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> 
-> Thank you.
-> 
-> Rui, with this upcoming patch-series:
-> 
-> https://lore.kernel.org/platform-driver-x86/c6a90704-5080-d479-0022-58e5d106c026@infradead.org/T/#t
-> 
-> drivers/platform/x86/Kconfig + Makefile
-> 
-> Are going to see quite a bit of churn, is it ok if I merge this patch
-> through the pdx86 tree to avoid conflicts with all those changes?
-> 
-> Rui, if this is ok, may I have your ack for this then ?
-
-As co-maintainer:
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
-
->> ---
->>  MAINTAINERS                                            |  4 ++--
->>  drivers/platform/x86/Kconfig                           | 10 ----------
->>  drivers/platform/x86/Makefile                          |  1 -
->>  drivers/thermal/intel/Kconfig                          |  9 +++++++++
->>  drivers/thermal/intel/Makefile                         |  1 +
->>  drivers/{platform/x86 => thermal/intel}/intel_menlow.c |  0
->>  6 files changed, 12 insertions(+), 13 deletions(-)
->>  rename drivers/{platform/x86 => thermal/intel}/intel_menlow.c (100%)
+>> On 8/14/21 9:51 AM, Luke Jones wrote:
+>>>
+>>>
+>>>  On Sat, Aug 14 2021 at 16:31:02 +1200, Luke D. Jones <luke@ljones.dev> wrote:
+>>>>  Changelog:
+>>>>  - V2
+>>>>    + Correctly unregister from platform_profile if
+>>>>      throttle_thermal_policy fails
+>>>>    + Do platform_profile_notify() in both throttle_thermal_policy_store()
+>>>>      and in throttle_thermal_policy_switch_next()
+>>>>    + Remove unnecessary prep for possible fan-boost modes as this
+>>>>      doesn't match expected platform_profile behaviour
+>>>>  - V3
+>>>>    + Add missing declaration for err in
+>>>>      throttle_thermal_policy_switch_next
+>>>>
+>>>>  Luke D. Jones (1):
+>>>>    asus-wmi: Add support for platform_profile
+>>>>
+>>>>   drivers/platform/x86/asus-wmi.c | 139 +++++++++++++++++++++++++++++++-
+>>>>   1 file changed, 135 insertions(+), 4 deletions(-)
+>>>>
+>>>>  --
+>>>>  2.31.1
+>>>
+>>>  Hi,
+>>>
+>>>  I teested the patch again and it appears that the platform_profile_notify() in both throttle_thermal_policy_store() and throttle_thermal_policy_switch_next() updates the /sys/firmware/acpi/platform_profile sysfs path fine, but userspace isn't updated?
+>>>
+>>>  The way I'm checking is:
+>>>  1. echo 1 |sudo tee /sys/devices/platform/asus-nb-wmi/throttle_thermal_policy
+>>>  2. cat -p /sys/firmware/acpi/platform_profile
+>>>    - performance (updated correctly by platform_profile_notify)
+>>>  3. Check gnome-settings, not updated.
+>>>
+>>>  Doing `echo "performance" |sudo tee /sys/firmware/acpi/platform_profile` updates both throttle_thermal_policy and userspace as expected. I'm wondering if I've missed something?
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index fd25e4ecf0b9..4231aea31a6f 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -9459,10 +9459,10 @@ F:	include/linux/mfd/intel-m10-bmc.h
->>  
->>  INTEL MENLOW THERMAL DRIVER
->>  M:	Sujith Thomas <sujith.thomas@intel.com>
->> -L:	platform-driver-x86@vger.kernel.org
->> +L:	linux-pm@vger.kernel.org
->>  S:	Supported
->>  W:	https://01.org/linux-acpi
->> -F:	drivers/platform/x86/intel_menlow.c
->> +F:	drivers/thermal/intel/intel_menlow.c
->>  
->>  INTEL P-Unit IPC DRIVER
->>  M:	Zha Qipeng <qipeng.zha@intel.com>
->> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
->> index d12db6c316ea..da312426b4a5 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -720,16 +720,6 @@ config INTEL_INT0002_VGPIO
->>  	  To compile this driver as a module, choose M here: the module will
->>  	  be called intel_int0002_vgpio.
->>  
->> -config INTEL_MENLOW
->> -	tristate "Thermal Management driver for Intel menlow platform"
->> -	depends on ACPI_THERMAL
->> -	select THERMAL
->> -	help
->> -	  ACPI thermal management enhancement driver on
->> -	  Intel Menlow platform.
->> -
->> -	  If unsure, say N.
->> -
->>  config INTEL_OAKTRAIL
->>  	tristate "Intel Oaktrail Platform Extras"
->>  	depends on ACPI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
->> index 7ee369aab10d..0d3af23f1186 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -72,7 +72,6 @@ obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
->>  obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
->>  obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
->>  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
->> -obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
->>  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
->>  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
->>  
->> diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfig
->> index e4299ca3423c..c83ea5d04a1d 100644
->> --- a/drivers/thermal/intel/Kconfig
->> +++ b/drivers/thermal/intel/Kconfig
->> @@ -90,3 +90,12 @@ config INTEL_TCC_COOLING
->>  	  Note that, on different platforms, the behavior might be different
->>  	  on how fast the setting takes effect, and how much the CPU frequency
->>  	  is reduced.
->> +
->> +config INTEL_MENLOW
->> +	tristate "Thermal Management driver for Intel menlow platform"
->> +	depends on ACPI_THERMAL
->> +	help
->> +	  ACPI thermal management enhancement driver on
->> +	  Intel Menlow platform.
->> +
->> +	  If unsure, say N.
->> diff --git a/drivers/thermal/intel/Makefile b/drivers/thermal/intel/Makefile
->> index 5ff2afa388f7..960b56268b4a 100644
->> --- a/drivers/thermal/intel/Makefile
->> +++ b/drivers/thermal/intel/Makefile
->> @@ -12,3 +12,4 @@ obj-$(CONFIG_INTEL_BXT_PMIC_THERMAL) += intel_bxt_pmic_thermal.o
->>  obj-$(CONFIG_INTEL_PCH_THERMAL)	+= intel_pch_thermal.o
->>  obj-$(CONFIG_INTEL_TCC_COOLING)	+= intel_tcc_cooling.o
->>  obj-$(CONFIG_X86_THERMAL_VECTOR) += therm_throt.o
->> +obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
->> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/thermal/intel/intel_menlow.c
->> similarity index 100%
->> rename from drivers/platform/x86/intel_menlow.c
->> rename to drivers/thermal/intel/intel_menlow.c
->>
+>> If you add a printk where you call platform_profile_notify() and you see that
+>> happening, then you are likely seeing a userspace bug. Possibly your
+>> power-profile-daemon is simply a bit old and therefor does not support
+>> the combination of profiles which asus-wmi offers, IIRC it falls back to
+>> using intel-pstate in that case.
 > 
+> It's possible that it's a userspace bug then. The power-profile-daemon I'm using is fresh from git (0.9+). To be clear updating via /sys/firmware/acpi/platform_profile works perfectly fine and power-profile-daemon updates etc. But if I do platform_profile_notify() then it doesn't seem to be updated. Nevertheless I will finalise the patch as it is and submit for merging and we can go from there.
 
+This is weird, I wonder if there is a difference in glib versions used, where one does
+include polling for POLLPRI on sysfs files in GFileMonitor and the other only uses
+inotify which only catches changes from another userspace write ?
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Regards,
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Hans
+
