@@ -2,273 +2,204 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-21.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE1BC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 07:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ABFC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 07:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E0561ACF
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 07:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571C461B01
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 07:57:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234475AbhHPHoh (ORCPT
+        id S234400AbhHPH6J (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 03:44:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50400 "EHLO
+        Mon, 16 Aug 2021 03:58:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30524 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234168AbhHPHof (ORCPT
+        by vger.kernel.org with ESMTP id S234475AbhHPH4k (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 03:44:35 -0400
+        Mon, 16 Aug 2021 03:56:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629099844;
+        s=mimecast20190719; t=1629100561;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QIX04iLjnCf2vT5vquc36H0oSWZk+G6f4T6BcmkOvGo=;
-        b=gPMF0HHtfkWqKvuBdB0xbhzCONsD+Fzdxd8Ov3Gm/ZUkf2oDZQyvEAE4vtSbBQiYkMlbDq
-        hQ2YyGyUgkuxdC5E8li17pA9bMH7uB5tDcLHsw6O453GY6UiBI2HD2CeMTQr7LmBi4TSas
-        hY1Ap+6o7k3dY0O2r0BVXNuP37Qw8vU=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-602-fQX_87fsMTKSJlnjrI2Qog-1; Mon, 16 Aug 2021 03:44:01 -0400
-X-MC-Unique: fQX_87fsMTKSJlnjrI2Qog-1
-Received: by mail-lf1-f70.google.com with SMTP id z26-20020a0565120c1a00b003cf39d5ed62so335978lfu.16
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 00:44:01 -0700 (PDT)
+        bh=4WLMRCY3MaQIbeqgGRKL4QjepI64qJGmJ1RWeY5+QEA=;
+        b=bJVr+4n6fOVfjDE6ypCjGapl9Po1xxV2p5G/CzoMlyG4jimLn70ICGnv0SFm8H71PVbnwL
+        GMaaoAJiAb9mtqiP80KnPpjrqsfWMzGCEIx/TUFpLm/Go5CODejQprOJRiLcJXOZEfgYeH
+        CIXAdv/jG/qe6zuJ7W6glXxEvsWm9Ks=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-kZeVR9ORMtmVG4eP4IPeyg-1; Mon, 16 Aug 2021 03:55:59 -0400
+X-MC-Unique: kZeVR9ORMtmVG4eP4IPeyg-1
+Received: by mail-ej1-f71.google.com with SMTP id j10-20020a17090686cab02905b86933b59dso3886332ejy.18
+        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 00:55:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QIX04iLjnCf2vT5vquc36H0oSWZk+G6f4T6BcmkOvGo=;
-        b=jgF2vHAqBJwb+mvgyo46jyXDjWvt6Pxay7YwJDSltQMNvJ+hDM/qB4e+5CAS97Jye4
-         D4aHX/Dmxp9JO+oXWbi0xPzNBCCn8/mnebYfxurpWVOpqUhvzjDOVoyU7gZevD+pHlY3
-         vXp0ap80UA/FEbMBDsd2zjFerZbpPFTNEKPI1ImOrahwttUel7YcxfBFGqE+1zPEsQOy
-         oMmFvF1nxlTaNMkLLom8xk1oZYbywlILbTu/Exf+SguNemx4iRodHj/amGskM6VTPgQQ
-         YBLaEk8V0u6SXp23RPWNjWOVNPqogr10kz2h3Y4Ou1rW7VQgsSzQ/Y1gir0VavvRdT7x
-         uEWg==
-X-Gm-Message-State: AOAM532bDw70IqQJ0EhQt1wcYV6j9H4kSBAIHkCniDzDRMulRi3KeST9
-        7sRKfHniPouTLMbPcjNZbTd7bKDmBGoh2OnsYqq/YokfaVDOlHaHWL5jCJbV5DRd6Y0DpG74vAh
-        Y3VLB7tU7iCGvE0LOVcfDqRbZk+s6Ibkod/bD42xRWMsYLAv0lw==
-X-Received: by 2002:a05:6512:3f82:: with SMTP id x2mr10397731lfa.108.1629099839759;
-        Mon, 16 Aug 2021 00:43:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvRSNzROcYYK6EadpNVDBwFmCb8c3uDhuU5GBcLxcE6RgVpcKxQHBPHENxIALF2lINTj7GYITh8XLBqLNJrxw=
-X-Received: by 2002:a05:6512:3f82:: with SMTP id x2mr10397716lfa.108.1629099839460;
- Mon, 16 Aug 2021 00:43:59 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4WLMRCY3MaQIbeqgGRKL4QjepI64qJGmJ1RWeY5+QEA=;
+        b=W2U/mHj9MUq73btttFDJoQF88a3vm2ZJ3rzK1qpDGS5lRE7MdeODD1qPZ3E7r0v2oj
+         qqkvxojC1FzqI5fZ5EAQG4ulwTd/nZYfCEz4e7HJ4zpmB4iithDNe0qgu/Vgy9RkvkXC
+         LUTaEXy/LY8SLUK05Y4S2TwDX2JIi4TU4OGBSBBQ/RTJ0GZPwo0+MlM0Coq1zt9ImDGe
+         jAoVy+dSYwmwQQ6tPJYIOayJOwAptw715BNsC8cXIHUAyL/TJMZn0iIDPQ9VOifrAKVd
+         cN3+IepJ66Jg1x3MND5gNCPtHmU206H7ueVpbJ4GNryzo+yVdG0jw0UiSgPk774Vo3U6
+         VrIQ==
+X-Gm-Message-State: AOAM530RsqZ0jaKxovE154RtK9G00O0LD3HV3Ne3w4Oexu1Q3vQDCa0A
+        L13WtdcOgjgiJ54QdOw7G2SLRJ21Ln7TcuZtnO8LBVS89YDClJWRJnX9jY2njuAgPIJsk40CSZN
+        aBt1wMXh+75L/++8WgccXzYrmxPLD3XNIhu57y1YcIyEsjI08kAFvi4Qq861ajjLp77uKAQ9448
+        KKr1yOFNNtTQ==
+X-Received: by 2002:a05:6402:2049:: with SMTP id bc9mr18571058edb.130.1629100558483;
+        Mon, 16 Aug 2021 00:55:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx/dQRHTp4gm57mB2M9kVE4ksN3mLS0UrQioeKyBVDhkMCwEy2XtatfC5h9w6zqLNOBJrF7tw==
+X-Received: by 2002:a05:6402:2049:: with SMTP id bc9mr18571037edb.130.1629100558329;
+        Mon, 16 Aug 2021 00:55:58 -0700 (PDT)
+Received: from x1.localdomain ([81.30.35.201])
+        by smtp.gmail.com with ESMTPSA id f20sm3369243ejz.30.2021.08.16.00.55.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Aug 2021 00:55:58 -0700 (PDT)
+Subject: Re: [PATCH] thermal/drivers/intel: Move intel_menlow to thermal
+ drivers
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org, hpa@redhat.com,
+        mgross@linux.intel.com, alex.hung@canonical.com,
+        sujith.thomas@intel.com, andriy.shevchenko@linux.intel.com
+Cc:     linux-pm@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20210816035356.1955982-1-srinivas.pandruvada@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <4d1c20ab-6c81-8e9f-6d0f-180ecaa92812@redhat.com>
+Date:   Mon, 16 Aug 2021 09:55:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210810095832.4234-1-hpa@redhat.com> <20210810095832.4234-19-hpa@redhat.com>
- <95801e67-f09e-64f3-abd6-f38a8f1f1d51@linaro.org> <2cc45082-692d-1a0e-cb44-7e2393c95152@redhat.com>
- <5a80a56e41369204b7729d25f72dfcdd09919033.camel@intel.com> <e76e99b1-e66b-6339-00a7-b3e2aa0ab8a8@redhat.com>
-In-Reply-To: <e76e99b1-e66b-6339-00a7-b3e2aa0ab8a8@redhat.com>
-From:   Kate Hsuan <hpa@redhat.com>
-Date:   Mon, 16 Aug 2021 15:43:48 +0800
-Message-ID: <CAEth8oF29LwJq3iEdW5KNqYdZcV04F9L91857LaoX_V+q+vwCQ@mail.gmail.com>
-Subject: Re: [PATCH 18/20] Move Intel thermal driver for menlow platform
- driver to intel/ directory to improve readability.
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "djrscally@gmail.com" <djrscally@gmail.com>,
-        "Thomas, Sujith" <sujith.thomas@intel.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Zha, Qipeng" <qipeng.zha@intel.com>,
-        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
-        "Joseph, Jithu" <jithu.joseph@intel.com>,
-        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "acelan.kao@canonical.com" <acelan.kao@canonical.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Dell.Client.Kernel@dell.com" <Dell.Client.Kernel@dell.com>,
-        "alex.hung@canonical.com" <alex.hung@canonical.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Ma, Maurice" <maurice.ma@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210816035356.1955982-1-srinivas.pandruvada@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 16, 2021 at 3:40 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 8/16/21 5:11 AM, Pandruvada, Srinivas wrote:
-> > On Sun, 2021-08-15 at 16:08 +0200, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 8/14/21 12:39 PM, Daniel Lezcano wrote:
-> >>> On 10/08/2021 11:58, Kate Hsuan wrote:
-> >>>
-> >>>
-> >>> Why not move it into drivers/thermal/intel ?
-> >>
-> >> This cleanup is really something which Intel should have been doing
-> >> itself, but they have not done that, so now Kate has stepped up to
-> >> do this.
-> >>
-> >> Figuring out if there is a better home for each of these drivers
-> >> really falls outside of the scope of this. If Intel and specifically
-> >> Sujith Thomas, the maintainer for that driver who is in the Cc,
-> >> believe that drivers/thermal/intel is a better place then they
-> >> can submit a patch for this themselves.
-> >>
-> >> If Intel does that right away, then this patch can be dropped from
-> >> Kate's patch-set. Otherwise this can be moved a second time once
-> >> someone from Intel gets around to it.
-> > We can move to thermal/intel. I will submit a change to do that.
->
-> Great, I see that you've already send a patch for this, thank you.
->
-> Kate, please drop this patch from your series.
->
-> Regards,
->
-> Hans
->
+Hi,
 
-Got it. I have dropped it.
+On 8/16/21 5:53 AM, Srinivas Pandruvada wrote:
+> Moved drivers/platform/x86/intel_menlow.c to drivers/thermal/intel.
+> 
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
---
-BR,
-Kate
+Thank you.
 
->
->
-> >>>> Signed-off-by: Kate Hsuan <hpa@redhat.com>
-> >>>> ---
-> >>>>  drivers/platform/x86/Kconfig                       |  8 --------
-> >>>>  drivers/platform/x86/Makefile                      |  2 +-
-> >>>>  drivers/platform/x86/intel/Kconfig                 |  1 +
-> >>>>  drivers/platform/x86/intel/Makefile                |  2 ++
-> >>>>  drivers/platform/x86/intel/menlow/Kconfig          | 14
-> >>>> ++++++++++++++
-> >>>>  drivers/platform/x86/intel/menlow/Makefile         |  6 ++++++
-> >>>>  .../platform/x86/{ => intel/menlow}/intel_menlow.c |  0
-> >>>>  7 files changed, 24 insertions(+), 9 deletions(-)
-> >>>>  create mode 100644 drivers/platform/x86/intel/menlow/Kconfig
-> >>>>  create mode 100644 drivers/platform/x86/intel/menlow/Makefile
-> >>>>  rename drivers/platform/x86/{ => intel/menlow}/intel_menlow.c
-> >>>> (100%)
-> >>>>
-> >>>> diff --git a/drivers/platform/x86/Kconfig
-> >>>> b/drivers/platform/x86/Kconfig
-> >>>> index b9c0d2d97793..50ded236a841 100644
-> >>>> --- a/drivers/platform/x86/Kconfig
-> >>>> +++ b/drivers/platform/x86/Kconfig
-> >>>> @@ -632,15 +632,7 @@ config THINKPAD_LMI
-> >>>>
-> >>>>  source "drivers/platform/x86/intel/Kconfig"
-> >>>>
-> >>>> -config INTEL_MENLOW
-> >>>> -       tristate "Thermal Management driver for Intel menlow
-> >>>> platform"
-> >>>> -       depends on ACPI_THERMAL
-> >>>> -       select THERMAL
-> >>>> -       help
-> >>>> -         ACPI thermal management enhancement driver on
-> >>>> -         Intel Menlow platform.
-> >>>>
-> >>>> -         If unsure, say N.
-> >>>>
-> >>>>  config INTEL_OAKTRAIL
-> >>>>         tristate "Intel Oaktrail Platform Extras"
-> >>>> diff --git a/drivers/platform/x86/Makefile
-> >>>> b/drivers/platform/x86/Makefile
-> >>>> index f4c6ced59da1..ea5f5dd3f78a 100644
-> >>>> --- a/drivers/platform/x86/Makefile
-> >>>> +++ b/drivers/platform/x86/Makefile
-> >>>> @@ -67,7 +67,7 @@ obj-$(CONFIG_THINKPAD_LMI)    += think-lmi.o
-> >>>>  obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)               += intel/
-> >>>>
-> >>>>
-> >>>> -obj-$(CONFIG_INTEL_MENLOW)             += intel_menlow.o
-> >>>> +
-> >>>>  obj-$(CONFIG_INTEL_OAKTRAIL)           += intel_oaktrail.o
-> >>>>  obj-$(CONFIG_INTEL_VBTN)               += intel-vbtn.o
-> >>>>
-> >>>> diff --git a/drivers/platform/x86/intel/Kconfig
-> >>>> b/drivers/platform/x86/intel/Kconfig
-> >>>> index 4efb5ad3e3e1..59c9b602c784 100644
-> >>>> --- a/drivers/platform/x86/intel/Kconfig
-> >>>> +++ b/drivers/platform/x86/intel/Kconfig
-> >>>> @@ -36,6 +36,7 @@ source
-> >>>> "drivers/platform/x86/intel/intel_speed_select_if/Kconfig"
-> >>>>  source "drivers/platform/x86/intel/turbo_max_3/Kconfig"
-> >>>>  source "drivers/platform/x86/intel/uncore_freq/Kconfig"
-> >>>>  source "drivers/platform/x86/intel/int0002/Kconfig"
-> >>>> +source "drivers/platform/x86/intel/menlow/Kconfig"
-> >>>>
-> >>>>
-> >>>>  endif # X86_PLATFORM_DRIVERS_INTEL
-> >>>> diff --git a/drivers/platform/x86/intel/Makefile
-> >>>> b/drivers/platform/x86/intel/Makefile
-> >>>> index fe5058c3af18..b2326554bd84 100644
-> >>>> --- a/drivers/platform/x86/intel/Makefile
-> >>>> +++ b/drivers/platform/x86/intel/Makefile
-> >>>> @@ -12,6 +12,7 @@ obj-$(CONFIG_INTEL_HID_EVENT)         += hid/
-> >>>>  obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)  += wmi/
-> >>>>  obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)    += wmi/
-> >>>>  obj-$(CONFIG_INTEL_INT0002_VGPIO)      += int0002/
-> >>>> +obj-$(CONFIG_INTEL_MENLOW)             += menlow/
-> >>>>
-> >>>>
-> >>>>  # Intel PMIC / PMC / P-Unit devices
-> >>>> @@ -38,3 +39,4 @@ obj-
-> >>>> $(CONFIG_INTEL_SPEED_SELECT_INTERFACE)    +=
-> >>>> intel_speed_select_if/
-> >>>>  obj-$(CONFIG_INTEL_TURBO_MAX_3)                        +=
-> >>>> turbo_max_3/
-> >>>>  obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)                +=
-> >>>> uncore_freq/
-> >>>>
-> >>>> +
-> >>>> diff --git a/drivers/platform/x86/intel/menlow/Kconfig
-> >>>> b/drivers/platform/x86/intel/menlow/Kconfig
-> >>>> new file mode 100644
-> >>>> index 000000000000..b2920d259ff7
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/platform/x86/intel/menlow/Kconfig
-> >>>> @@ -0,0 +1,14 @@
-> >>>> +# SPDX-License-Identifier: GPL-2.0-only
-> >>>> +#
-> >>>> +# Intel x86 Platform Specific Drivers
-> >>>> +#
-> >>>> +
-> >>>> +config INTEL_MENLOW
-> >>>> +       tristate "Thermal Management driver for Intel menlow
-> >>>> platform"
-> >>>> +       depends on ACPI_THERMAL
-> >>>> +       select THERMAL
-> >>>> +       help
-> >>>> +         ACPI thermal management enhancement driver on
-> >>>> +         Intel Menlow platform.
-> >>>> +
-> >>>> +         If unsure, say N.
-> >>>> diff --git a/drivers/platform/x86/intel/menlow/Makefile
-> >>>> b/drivers/platform/x86/intel/menlow/Makefile
-> >>>> new file mode 100644
-> >>>> index 000000000000..0e9fda9bff98
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/platform/x86/intel/menlow/Makefile
-> >>>> @@ -0,0 +1,6 @@
-> >>>> +# SPDX-License-Identifier: GPL-2.0-only
-> >>>> +#
-> >>>> +# Intel x86 Platform Specific Drivers
-> >>>> +#
-> >>>> +
-> >>>> +obj-$(CONFIG_INTEL_MENLOW)             += intel_menlow.o
-> >>>> diff --git a/drivers/platform/x86/intel_menlow.c
-> >>>> b/drivers/platform/x86/intel/menlow/intel_menlow.c
-> >>>> similarity index 100%
-> >>>> rename from drivers/platform/x86/intel_menlow.c
-> >>>> rename to drivers/platform/x86/intel/menlow/intel_menlow.c
-> >>>>
-> >>>
-> >>>
-> >>
-> >
->
+Rui, with this upcoming patch-series:
+
+https://lore.kernel.org/platform-driver-x86/c6a90704-5080-d479-0022-58e5d106c026@infradead.org/T/#t
+
+drivers/platform/x86/Kconfig + Makefile
+
+Are going to see quite a bit of churn, is it ok if I merge this patch
+through the pdx86 tree to avoid conflicts with all those changes?
+
+Rui, if this is ok, may I have your ack for this then ?
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  MAINTAINERS                                            |  4 ++--
+>  drivers/platform/x86/Kconfig                           | 10 ----------
+>  drivers/platform/x86/Makefile                          |  1 -
+>  drivers/thermal/intel/Kconfig                          |  9 +++++++++
+>  drivers/thermal/intel/Makefile                         |  1 +
+>  drivers/{platform/x86 => thermal/intel}/intel_menlow.c |  0
+>  6 files changed, 12 insertions(+), 13 deletions(-)
+>  rename drivers/{platform/x86 => thermal/intel}/intel_menlow.c (100%)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fd25e4ecf0b9..4231aea31a6f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9459,10 +9459,10 @@ F:	include/linux/mfd/intel-m10-bmc.h
+>  
+>  INTEL MENLOW THERMAL DRIVER
+>  M:	Sujith Thomas <sujith.thomas@intel.com>
+> -L:	platform-driver-x86@vger.kernel.org
+> +L:	linux-pm@vger.kernel.org
+>  S:	Supported
+>  W:	https://01.org/linux-acpi
+> -F:	drivers/platform/x86/intel_menlow.c
+> +F:	drivers/thermal/intel/intel_menlow.c
+>  
+>  INTEL P-Unit IPC DRIVER
+>  M:	Zha Qipeng <qipeng.zha@intel.com>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index d12db6c316ea..da312426b4a5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -720,16 +720,6 @@ config INTEL_INT0002_VGPIO
+>  	  To compile this driver as a module, choose M here: the module will
+>  	  be called intel_int0002_vgpio.
+>  
+> -config INTEL_MENLOW
+> -	tristate "Thermal Management driver for Intel menlow platform"
+> -	depends on ACPI_THERMAL
+> -	select THERMAL
+> -	help
+> -	  ACPI thermal management enhancement driver on
+> -	  Intel Menlow platform.
+> -
+> -	  If unsure, say N.
+> -
+>  config INTEL_OAKTRAIL
+>  	tristate "Intel Oaktrail Platform Extras"
+>  	depends on ACPI
+> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+> index 7ee369aab10d..0d3af23f1186 100644
+> --- a/drivers/platform/x86/Makefile
+> +++ b/drivers/platform/x86/Makefile
+> @@ -72,7 +72,6 @@ obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
+>  obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
+>  obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+>  obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+> -obj-$(CONFIG_INTEL_MENLOW)		+= intel_menlow.o
+>  obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+>  obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+>  
+> diff --git a/drivers/thermal/intel/Kconfig b/drivers/thermal/intel/Kconfig
+> index e4299ca3423c..c83ea5d04a1d 100644
+> --- a/drivers/thermal/intel/Kconfig
+> +++ b/drivers/thermal/intel/Kconfig
+> @@ -90,3 +90,12 @@ config INTEL_TCC_COOLING
+>  	  Note that, on different platforms, the behavior might be different
+>  	  on how fast the setting takes effect, and how much the CPU frequency
+>  	  is reduced.
+> +
+> +config INTEL_MENLOW
+> +	tristate "Thermal Management driver for Intel menlow platform"
+> +	depends on ACPI_THERMAL
+> +	help
+> +	  ACPI thermal management enhancement driver on
+> +	  Intel Menlow platform.
+> +
+> +	  If unsure, say N.
+> diff --git a/drivers/thermal/intel/Makefile b/drivers/thermal/intel/Makefile
+> index 5ff2afa388f7..960b56268b4a 100644
+> --- a/drivers/thermal/intel/Makefile
+> +++ b/drivers/thermal/intel/Makefile
+> @@ -12,3 +12,4 @@ obj-$(CONFIG_INTEL_BXT_PMIC_THERMAL) += intel_bxt_pmic_thermal.o
+>  obj-$(CONFIG_INTEL_PCH_THERMAL)	+= intel_pch_thermal.o
+>  obj-$(CONFIG_INTEL_TCC_COOLING)	+= intel_tcc_cooling.o
+>  obj-$(CONFIG_X86_THERMAL_VECTOR) += therm_throt.o
+> +obj-$(CONFIG_INTEL_MENLOW)	+= intel_menlow.o
+> diff --git a/drivers/platform/x86/intel_menlow.c b/drivers/thermal/intel/intel_menlow.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_menlow.c
+> rename to drivers/thermal/intel/intel_menlow.c
+> 
 
