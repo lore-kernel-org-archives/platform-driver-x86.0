@@ -2,129 +2,197 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02762C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E9CC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBDB661AA3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3FC61BE1
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 10:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230124AbhHPKev (ORCPT
+        id S236115AbhHPKw5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 06:34:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60051 "EHLO
+        Mon, 16 Aug 2021 06:52:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21613 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230118AbhHPKeo (ORCPT
+        by vger.kernel.org with ESMTP id S235951AbhHPKwz (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 06:34:44 -0400
+        Mon, 16 Aug 2021 06:52:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629110050;
+        s=mimecast20190719; t=1629111143;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o56kFl5Q5JRPj00nvRvdyzY+Pmj2K5yYLBsvpdrfXvw=;
-        b=H6UJRbi9U4ZRRhsYtr0Y6DaSflieOZwWoVlGP3VCXTc2vMWSZg7/t3lSW5AYIP4fFsqXow
-        ORXzLvh6H62IKTu4kWNlvyoPAWCVTS2QOHeQg+HfMFpoDJf2UFfZzwvkKm0L/mCKuujMbB
-        cNQ6VtUEjSEltfo9NQzvOt6JJTrlpvQ=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-38-Q7q6MeQVOzeBl13tFPxJFw-1; Mon, 16 Aug 2021 06:34:09 -0400
-X-MC-Unique: Q7q6MeQVOzeBl13tFPxJFw-1
-Received: by mail-ed1-f69.google.com with SMTP id y39-20020a50bb2a0000b02903bc05daccbaso8630288ede.5
-        for <platform-driver-x86@vger.kernel.org>; Mon, 16 Aug 2021 03:34:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o56kFl5Q5JRPj00nvRvdyzY+Pmj2K5yYLBsvpdrfXvw=;
-        b=jd2t3yHKTKRietHearMwI1igTylohypDFFu6K8dwCT8gtmswtEGbVjiwTxZvmUCDbb
-         /oapcKuv0G7exg9FRO1w4h5twGtE3vbV6NSxQ9y32aHtVpGzkEeSMdrX+0fISyVDrxEi
-         yeQ6WoRl9/tc0GnD7jlqb4pzBzBWz7zfxfwdqsqJqRdeU5ybFkRhMsom0FvgkfgLMMpB
-         lwkfE7CHjlb2JPcUOUXme51rhhJxaS+r1xbl4WZ5NOgaBPfEQJg9l5de+zMdGYKl2JlC
-         CVuRfZVi1FN+ahZqlDLpI83jrKuk7sDRTWXmlLK9H8+/KHeM/ipExMhy0XirYPwch9wT
-         mehg==
-X-Gm-Message-State: AOAM530VqU+MnrSMoW1wOT88RbzJO3HiItt8TsZOTSCD4qX7lY3phUrd
-        XJm2rx1uZPLrQ7Sl3M6/sSQdSkqmo7C1SysFtEvHJ8BUxJg0e6UqJ6HWATIPgHueZ0FPPsGyAoL
-        ilL+1Dmw248hrh3FpaStGK/oXUGaEf2G0bQ==
-X-Received: by 2002:a17:906:4c8c:: with SMTP id q12mr15471553eju.254.1629110047819;
-        Mon, 16 Aug 2021 03:34:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz6IwEDCl7PI2ndYdWGeb/zTJgMPtufIMxffeaVGBWYu8pAxTCTS/9YLBFhzdYlw1He9oe73A==
-X-Received: by 2002:a17:906:4c8c:: with SMTP id q12mr15471541eju.254.1629110047668;
-        Mon, 16 Aug 2021 03:34:07 -0700 (PDT)
-Received: from x1.localdomain ([81.30.35.201])
-        by smtp.gmail.com with ESMTPSA id r16sm4621263edt.15.2021.08.16.03.34.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Aug 2021 03:34:07 -0700 (PDT)
-Subject: Re: Dell laptop function keys stopped working between 5.10.46 and
- 5.13.9
-To:     Paul Menzel <pmenzel@molgen.mpg.de>, Dell.Client.Kernel@dell.com,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <b8ff8f68-4d5a-7ec6-4c4f-9f5be6e70ab5@molgen.mpg.de>
- <1d4ce7d6-3213-45af-0467-7548f69b7d9e@molgen.mpg.de>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7857ead5-6ccf-3290-9e86-4f16d2bf360f@redhat.com>
-Date:   Mon, 16 Aug 2021 12:34:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BIzgbmYZkr1EEatnyen10+GPtx+Y05HjwFLgssfCMqU=;
+        b=IvPGiQ5Bfnu0Hpu321fnuK8BpeoSOkP6+feGwkV6azY6vsv2+qQihB8ecTYr7duvGu40Dq
+        yQ50U0VatyLX194ZwkQo1MLpB/sfIQqLL+5ML4qCe7re9JD2Xja4bJxsw75kPuNUgtWDoU
+        nZu/xlGMvcIazPm2Iy6D519VmdaelFE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-di-BVEugNmWftIhtt-udVg-1; Mon, 16 Aug 2021 06:52:20 -0400
+X-MC-Unique: di-BVEugNmWftIhtt-udVg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2C1A87D541;
+        Mon, 16 Aug 2021 10:52:18 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.64.242.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E8796788D;
+        Mon, 16 Aug 2021 10:52:15 +0000 (UTC)
+From:   Kate Hsuan <hpa@redhat.com>
+To:     Alex Hung <alex.hung@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
+Cc:     platform-driver-x86@vger.kernel.org, Kate Hsuan <hpa@redhat.com>
+Subject: [PATCH v2 00/20] Intel platform driver code movement.
+Date:   Mon, 16 Aug 2021 18:50:59 +0800
+Message-Id: <20210816105119.704302-1-hpa@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1d4ce7d6-3213-45af-0467-7548f69b7d9e@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Here is the version 2 of code movement for Intel platform drivers. 
+All the Intel related platform drivers were moved to intel sub-directory
+to improve readability. The filenames with prefix intel_ were removed
+and all the module ko files kept their original names.
 
-On 8/16/21 12:22 PM, Paul Menzel wrote:
-> [attach Linux 5.13.9 messages (output of `dmesg`)]
+Since intel_ips.h was refered by Intel i915 GPU DRM driver, it
+was ketp in original localtion.
 
-Does "lsmod" output include any Dell modules like dell-laptop or
-dell-wmi ?
+Kate Hsuan (20):
+  platform/x86: intel_bxtwc_tmu: Move to intel sub-directory
+  platform/x86: intel_chtdc_ti_pwrbtn: Move to intel sub-directory
+  platform/x86: intel_mrfld_pwrbtn: Move to intel sub-directory
+  platform/x86: intel_punit_ipc: Move to intel sub-directory
+  platform/x86: intel_pmc_core: Move to intel sub-directory
+  platform/x86: intel_scu: Move to intel sub-directory
+  platform/x86: intel_telemetry: Move to intel sub-directory
+  platform/x86: intel_ips: Move to intel sub-directory
+  platform/x86: intel-rst: Move to intel sub-directory
+  platform/x86: intel-smartconnect: Move to intel sub-directory
+  platform/x86: intel_turbo_max_3: Move to intel sub-directory
+  platform/x86: intel-uncore-frequency: Move to intel sub-directory
+  platform/x86: intel_speed_select_if: Move to intel sub-directory
+  platform/x86: intel_atomisp2_led: Move to intel sub-directory
+  platform/x86: intel-hid: Move to intel sub-directory
+  platform/x86: intel_int0002_vgpio: Move to intel sub-directory
+  platform/x86: intel_oaktrail.c: Move to intel sub-directory
+  platform/x86: intel-vbtn: Move to intel sub-directory
+  platform/x86: intel-wmi-sbl-fw-updat: Move to intel sub-directory
+  platform/x86: intel-wmi-thunderbolt: Move to intel sub-directory
 
-How about on the 5.10 kernel?  It looks like the 5.13 kernel simply
-does not have these modules enabled / loaded.
+ drivers/platform/x86/Kconfig                  | 287 ------------------
+ drivers/platform/x86/Makefile                 |  32 +-
+ drivers/platform/x86/intel/Kconfig            | 160 ++++++++++
+ drivers/platform/x86/intel/Makefile           |  47 +++
+ drivers/platform/x86/intel/atomisp2/Kconfig   |  35 +++
+ drivers/platform/x86/intel/atomisp2/Makefile  |   5 +
+ .../atomisp2/led.c}                           |   0
+ .../atomisp2/pm.c}                            |   0
+ .../{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c}  |   0
+ .../chtdc_ti_pwrbtn.c}                        |   0
+ .../platform/x86/{intel-hid.c => intel/hid.c} |   0
+ .../int0002_vgpio.c}                          |   0
+ .../platform/x86/{intel_ips.c => intel/ips.c} |   0
+ .../mrfld_pwrbtn.c}                           |   0
+ .../{intel_oaktrail.c => intel/oaktrail.c}    |   0
+ drivers/platform/x86/intel/pmc/Kconfig        |  26 ++
+ drivers/platform/x86/intel/pmc/Makefile       |   9 +
+ .../x86/{ => intel/pmc}/intel_pmc_core.h      |   0
+ .../pmc/pmc_core.c}                           |   0
+ .../pmc/pmc_core_pltdrv.c}                    |   0
+ .../{intel_punit_ipc.c => intel/punit_ipc.c}  |   0
+ .../platform/x86/{intel-rst.c => intel/rst.c} |   0
+ drivers/platform/x86/intel/scu/Kconfig        |  52 ++++
+ drivers/platform/x86/intel/scu/Makefile       |  16 +
+ .../x86/{intel_scu_ipc.c => intel/scu/ipc.c}  |   0
+ .../scu/ipcutil.c}                            |   0
+ .../scu/pcidrv.c}                             |   0
+ .../scu/pltdrv.c}                             |   0
+ .../x86/{intel_scu_wdt.c => intel/scu/wdt.c}  |   0
+ .../smartconnect.c}                           |   0
+ .../speed_select_if}/Kconfig                  |   0
+ .../speed_select_if}/Makefile                 |   0
+ .../speed_select_if}/isst_if_common.c         |   0
+ .../speed_select_if}/isst_if_common.h         |   0
+ .../speed_select_if}/isst_if_mbox_msr.c       |   0
+ .../speed_select_if}/isst_if_mbox_pci.c       |   0
+ .../speed_select_if}/isst_if_mmio.c           |   0
+ drivers/platform/x86/intel/telemetry/Kconfig  |  16 +
+ drivers/platform/x86/intel/telemetry/Makefile |  11 +
+ .../telemetry/telemetry_core.c}               |   0
+ .../telemetry/telemetry_debugfs.c}            |   0
+ .../telemetry/telemetry_pltdrv.c}             |   0
+ .../turbo_max_3.c}                            |   0
+ .../uncore-frequency.c}                       |   0
+ .../x86/{intel-vbtn.c => intel/vbtn.c}        |   0
+ drivers/platform/x86/intel/wmi/Kconfig        |  26 ++
+ drivers/platform/x86/intel/wmi/Makefile       |   9 +
+ .../wmi/sbl-fw-update.c}                      |   0
+ .../wmi/thunderbolt.c}                        |   0
+ 49 files changed, 413 insertions(+), 318 deletions(-)
+ create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
+ create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
+ rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
+ rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
+ rename drivers/platform/x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c} (100%)
+ rename drivers/platform/x86/{intel_chtdc_ti_pwrbtn.c => intel/chtdc_ti_pwrbtn.c} (100%)
+ rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (100%)
+ rename drivers/platform/x86/{intel_int0002_vgpio.c => intel/int0002_vgpio.c} (100%)
+ rename drivers/platform/x86/{intel_ips.c => intel/ips.c} (100%)
+ rename drivers/platform/x86/{intel_mrfld_pwrbtn.c => intel/mrfld_pwrbtn.c} (100%)
+ rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
+ create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
+ create mode 100644 drivers/platform/x86/intel/pmc/Makefile
+ rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.h (100%)
+ rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/pmc_core.c} (100%)
+ rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pmc_core_pltdrv.c} (100%)
+ rename drivers/platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c} (100%)
+ rename drivers/platform/x86/{intel-rst.c => intel/rst.c} (100%)
+ create mode 100644 drivers/platform/x86/intel/scu/Kconfig
+ create mode 100644 drivers/platform/x86/intel/scu/Makefile
+ rename drivers/platform/x86/{intel_scu_ipc.c => intel/scu/ipc.c} (100%)
+ rename drivers/platform/x86/{intel_scu_ipcutil.c => intel/scu/ipcutil.c} (100%)
+ rename drivers/platform/x86/{intel_scu_pcidrv.c => intel/scu/pcidrv.c} (100%)
+ rename drivers/platform/x86/{intel_scu_pltdrv.c => intel/scu/pltdrv.c} (100%)
+ rename drivers/platform/x86/{intel_scu_wdt.c => intel/scu/wdt.c} (100%)
+ rename drivers/platform/x86/{intel-smartconnect.c => intel/smartconnect.c} (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Kconfig (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Makefile (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.c (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.h (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_msr.c (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_pci.c (100%)
+ rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mmio.c (100%)
+ create mode 100644 drivers/platform/x86/intel/telemetry/Kconfig
+ create mode 100644 drivers/platform/x86/intel/telemetry/Makefile
+ rename drivers/platform/x86/{intel_telemetry_core.c => intel/telemetry/telemetry_core.c} (100%)
+ rename drivers/platform/x86/{intel_telemetry_debugfs.c => intel/telemetry/telemetry_debugfs.c} (100%)
+ rename drivers/platform/x86/{intel_telemetry_pltdrv.c => intel/telemetry/telemetry_pltdrv.c} (100%)
+ rename drivers/platform/x86/{intel_turbo_max_3.c => intel/turbo_max_3.c} (100%)
+ rename drivers/platform/x86/{intel-uncore-frequency.c => intel/uncore-frequency.c} (100%)
+ rename drivers/platform/x86/{intel-vbtn.c => intel/vbtn.c} (100%)
+ create mode 100644 drivers/platform/x86/intel/wmi/Kconfig
+ create mode 100644 drivers/platform/x86/intel/wmi/Makefile
+ rename drivers/platform/x86/{intel-wmi-sbl-fw-update.c => intel/wmi/sbl-fw-update.c} (100%)
+ rename drivers/platform/x86/{intel-wmi-thunderbolt.c => intel/wmi/thunderbolt.c} (100%)
 
-Regards,
-
-Hans
-
-
-> 
-> Am 16.08.21 um 11:48 schrieb Paul Menzel:
->> Dear Linux folks,
->>
->>
->> On a Dell Latitude E7250, updating Linux from 5.10.46 to 5.13.9 (Debian sid/unstable) the two function keys to (un-)mute the microphone, and enable/disable Wifi stopped working. The other function keys continue to work. The `evtest` output did not change.
->>
->>      Linux version 5.10.0-8-amd64 (debian-kernel@lists.debian.org) (gcc-10 (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2) #1 SMP Debian 5.10.46-4 (2021-08-03)
->>
->>      Event: time 1629104514.184947, type 4 (EV_MSC), code 4 (MSC_SCAN), value 88
->>      Event: time 1629104514.184947, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 2
->>
->>      Linux version 5.13.0-trunk-amd64 (debian-kernel@lists.debian.org) (gcc-10 (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2) #1 SMP Debian 5.13.9-1~exp2 (2021-08-10)
->>
->>      Event: time 1629103829.341409, type 4 (EV_MSC), code 4 (MSC_SCAN), value 88
->>      Event: time 1629103829.341409, type 1 (EV_KEY), code 240 (KEY_UNKNOWN), value 2
->>
->> The output of `acpi_listen` also did not change.
->>
->>      $ acpi_listen
->>       9DBB5994-A997- 000000d0 00000000
->>
->> Are you aware of such reports?
->>
->>
->> Kind regards,
->>
->> Paul
+-- 
+2.31.1
 
