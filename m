@@ -2,323 +2,239 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB73C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 17:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3FEC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 17:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 536BE60E76
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 17:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE3B60F36
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 17:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbhHPRC5 (ORCPT
+        id S231799AbhHPREX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 13:02:57 -0400
-Received: from mga12.intel.com ([192.55.52.136]:11949 "EHLO mga12.intel.com"
+        Mon, 16 Aug 2021 13:04:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:63257 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232164AbhHPRCx (ORCPT
+        id S229761AbhHPREW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 13:02:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="195483068"
+        Mon, 16 Aug 2021 13:04:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="215625610"
 X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="195483068"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 10:02:20 -0700
+   d="scan'208";a="215625610"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 10:03:47 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="509814925"
-Received: from otcpl-manager.jf.intel.com (HELO localhost.localdomain) ([10.54.39.234])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Aug 2021 10:02:20 -0700
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     mgross@linux.intel.com, hdegoede@redhat.com,
-        irenic.rajneesh@gmail.com, andriy.shevchenko@linux.intel.com,
-        vicamo.yang@canonical.com, srinivas.pandruvada@intel.com,
-        david.e.box@intel.com, chao.qin@intel.com,
-        linux-kernel@vger.kernel.org, tamar.mashiah@intel.com,
-        gregkh@linuxfoundation.org, rajatja@google.com,
-        Shyam-sundar.S-k@amd.com, Alexander.Deucher@amd.com,
-        mlimonci@amd.com, Gayatri Kammela <gayatri.kammela@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v7 4/5] platform/x86/intel: pmc/core: Add Alder Lake low power mode support for pmc core
-Date:   Mon, 16 Aug 2021 09:58:33 -0700
-Message-Id: <d27ec98589a5aaa569bbce0e937ed03779fc0a22.1629091915.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1629091915.git.gayatri.kammela@intel.com>
-References: <cover.1629091915.git.gayatri.kammela@intel.com>
+   d="scan'208";a="504999463"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga001.jf.intel.com with ESMTP; 16 Aug 2021 10:03:47 -0700
+Received: from orsmsx609.amr.corp.intel.com (10.22.229.22) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.10; Mon, 16 Aug 2021 10:03:47 -0700
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX609.amr.corp.intel.com (10.22.229.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.10; Mon, 16 Aug 2021 10:03:47 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.10 via Frontend Transport; Mon, 16 Aug 2021 10:03:47 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.47) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2242.10; Mon, 16 Aug 2021 10:03:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WbK7s3J2wI6Eauw51aZfO1GuVWK6DXhf5UdoZ4SFhTlulR9kKt6bPlY+QMnUeXlQQ0kqqcuE/aGcSdzVjURU/2kZ4ot8tAuFIenGOPhaaQFdFIq7ACLSlPVCrdHeLboggyf+c2ocJHSbxSoYf+WmtF+CVXPcKI26qUR2qBcjGn831yk3zK2E2Tjmb/cJioasxhru7Ob/IqmrlD77BH3EFLjL27PrOQRHqJungwI2dWjjJvCfedU+V5RRkdCtW/4eMxY/ti1+y9YYuQl8XcZUdZ6O/jJhALJRE615g0Ywf0l5R8g0NwpWEpIFKiTUNZmIK4GivIFXA3VIcXe8l2kZbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hWM9uYtu0eUeeNdiKBaBEcaraSIz77/vD4Rwj9gVa0s=;
+ b=h0bnumFXfv28/lZVN8QGRFDbuhwJD830olWmNGGTvk8T2RGF8TOw9hStBvFFCSRrTGulRCXP9yanI9CbGyCP/5/HoNd/qJIZuK+dbdCpkvEwv0gqNqfNapKY01vgp+3pM77ojSqc3Lnt6sp/xqWHA94tomEVHjaFyLKjl0OMdHTXacN3YcGRzzJJlwh5Bbd+8V/mN2BgO44tTGLifelMZnnTwlyE1TxLtK4DaeKF3OERlf+w6z2dfE1m4rKQQloGjrCPKx2nD85HHzU2EWuZqtucINiv2oxgjixvZkpdvHZ+Kx0gb5Xg5Z0wQxZYBDFAuHeLWXyzym8keMH7pG7/xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hWM9uYtu0eUeeNdiKBaBEcaraSIz77/vD4Rwj9gVa0s=;
+ b=T5vC60dWBH9X3pXUCgLWIvBEQZ36fkh9ddjvPfpBemu+9b3MKoWFx+T1jXIp5hZvhwN75uN0Mj7154u2w9Xrns5VkCrwxkAOM6TScStG57cFx1I9fBncFPvlysYwRjZt9oBE/wvzQSHLrVvAp9s56kPAncVsoe0SWBV6bxJc92U=
+Received: from MW3PR11MB4523.namprd11.prod.outlook.com (2603:10b6:303:5b::16)
+ by MWHPR1101MB2335.namprd11.prod.outlook.com (2603:10b6:300:73::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.19; Mon, 16 Aug
+ 2021 17:03:45 +0000
+Received: from MW3PR11MB4523.namprd11.prod.outlook.com
+ ([fe80::c5d2:7f65:9e5b:8f96]) by MW3PR11MB4523.namprd11.prod.outlook.com
+ ([fe80::c5d2:7f65:9e5b:8f96%8]) with mapi id 15.20.4415.023; Mon, 16 Aug 2021
+ 17:03:45 +0000
+From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+CC:     "mgross@linux.intel.com" <mgross@linux.intel.com>,
+        "irenic.rajneesh@gmail.com" <irenic.rajneesh@gmail.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "vicamo.yang@canonical.com" <vicamo.yang@canonical.com>,
+        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
+        "Box, David E" <david.e.box@intel.com>,
+        "Qin, Chao" <chao.qin@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rajatja@google.com" <rajatja@google.com>,
+        "Shyam-sundar.S-k@amd.com" <Shyam-sundar.S-k@amd.com>,
+        "Alexander.Deucher@amd.com" <Alexander.Deucher@amd.com>,
+        "mlimonci@amd.com" <mlimonci@amd.com>
+Subject: RE: [PATCH v6 0/5] Add Alder Lake PCH-S support to PMC core driver
+Thread-Topic: [PATCH v6 0/5] Add Alder Lake PCH-S support to PMC core driver
+Thread-Index: AQHXhdLKczsnrIIfoku46xyXUizJUKtht+wAgBS9e5A=
+Date:   Mon, 16 Aug 2021 17:03:45 +0000
+Message-ID: <MW3PR11MB4523FCC5DAC0F92DD2E8BD4CF2FD9@MW3PR11MB4523.namprd11.prod.outlook.com>
+References: <cover.1627710765.git.gayatri.kammela@intel.com>
+ <e28d7d75-a7f2-eae2-f884-9a21ff6555d7@redhat.com>
+In-Reply-To: <e28d7d75-a7f2-eae2-f884-9a21ff6555d7@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.6.100.41
+dlp-reaction: no-action
+dlp-product: dlpe-windows
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 065dce40-487a-4f0c-7ade-08d960d7cecd
+x-ms-traffictypediagnostic: MWHPR1101MB2335:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR1101MB233545ABA5FCF4AC38B5103AF2FD9@MWHPR1101MB2335.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:538;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CM0l9XfiImjTBEPN9fESaDH1edmx//a+Y9Z1KdrtNRvT6zrbCroYxeFurLZSkG8FAyt8y6Mv1BNX67Zjl9wAVJiQQ07rO8LzsyZrrIz+jouBxfXt22HkgjBurqjktGkq5J4NlazzcXBmNVgzjTSxaE9qS/lK/NWSAFM803n9ErAmmEx0NUgKGwMnaMX5NYYdsNJacavNjpyxT/sq6bum68Et8nW4kvF3tFeiKCDYit8fw89CGAWQoXQcT8JlezbfpXzBpcKsP3Tn5c7JgCksGHFS7Z38Lz/6OuTWj8hzV9zSl/GYDeJvSMMKzEhYEF/Fo7X5OXT/DHFpTYK/bx2DKaJaEyMje7I4DqFu+MTkK3CTCbTVviV4ANySNfv45RNZc6a/i8KyqMUjQC1EviU6HvEUjyymufegrT/hAeQ+kDYgTrYFeNUvSxluuTB6IHuvOetYq0rwG3bDcr0KkGEPrwCk68PenoWDhvH43kvIZvZwCjLKRrHzP0kEv9wGM9EANX/k0Wbma/1VbEgcsylWUHWdBTuW9THL2utpHCY6mqjBlZMO2W+j038pML0AL6ZUgoACidohxIYl9xPvbFWaD24qJEZv0Iw8LbH5xHw6CxhiXXSfvzrDYbtQVS7qwcOfTa5zIUFBLYxwqDm98Z0p2WloB3m3BPvCCtStEJadjcpyF/3MfLD+S2UpWpDTyMvVnGNvGBslzWrnwIogTC+xpkJ5VL5tFyeoVG/iWUvfxpz3WXnouGIiJTTrr62ObQ1Lq59foN/zLGooHtKmSSc2vw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR11MB4523.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(8676002)(186003)(2906002)(6506007)(316002)(53546011)(38100700002)(26005)(7416002)(66476007)(122000001)(76116006)(54906003)(8936002)(110136005)(33656002)(86362001)(64756008)(66556008)(66946007)(66446008)(4326008)(9686003)(7696005)(71200400001)(5660300002)(55016002)(478600001)(38070700005)(52536014)(83380400001)(88260200001)(226253002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWxnZW5sQVVjMGpDaERnYzJXMUdrU2JtZ0VMdWZOVVFObmpOcmZGWjVzZUxy?=
+ =?utf-8?B?Z0RsL0xiYTJNd000V1Q3UXZ1WDhYYzlsdExOUVdYak1qVVN6dzBLK1Q4Qll4?=
+ =?utf-8?B?K21UYjNtZTR2M0tyWit1dUZaOWgvdEVhdnNoclZpcWhSZzhNNktCb21SL1JO?=
+ =?utf-8?B?S1JQNk9Hbk4wNGhTMk5vN2FuRUFmZHBCNytSMllRUXdSUWNyUy91b0xzaTJM?=
+ =?utf-8?B?THRzckZIeDZCZytxR0tWSk1PVkZ2bWtVU2VBenZpZFkrS0NmMkFMNmlXVGxZ?=
+ =?utf-8?B?dE9hMDYvRkdhUHRnOUZrbVZvdWMrQTVUVnZOa0V6Q0lhNU5TWUdOc0tZTVZS?=
+ =?utf-8?B?RTJEVVh6WUIwaU5DVzNmZnJBUFlvc24yWml5RnkxU0RrMUhZN2lTY3pmcHVo?=
+ =?utf-8?B?eHJFWlo2Rk9KM21OODB1YVlJd2h6aDBrU3NHdk1rM1A2YXdPaERCelV4cHdE?=
+ =?utf-8?B?YUFaeFI0NzFiNlNqK05FTlJwRGdnNHcyeWxDRWNQWFFvM0paVHYwKzNaeHo0?=
+ =?utf-8?B?WFNJbTJkN0VuT0RvRDNFd01HK0N0cGhoRmlBR05nUmhVdDY0dEU0R2RWOFdl?=
+ =?utf-8?B?Z1lZc1hTZVlGVmtocTNtSW1GZzBTYVpPRFJweG1QUC9FVTVSOFlMei9zdFI1?=
+ =?utf-8?B?VmRDZkwwV25LbE9Yd2hXenl2cHM0enJKZ0ZsNUhXbTlKeFB4MTJzaXhqZCt1?=
+ =?utf-8?B?dm1OakFtYWpPeGdsQUNreUNVRkRzK2lCaWFGMzhpNXpSUkRDKzBnME95THNE?=
+ =?utf-8?B?VDJwMjNQQXFpc0RZMkFZbUowMDFmbmNCRVd2VWVuUTVnNml5dmloK0NaOXRW?=
+ =?utf-8?B?WFZJSUV3ZnhCdGpsMDBFcEQ4a3NiMUxXeXcxeUpvQlRCWStkVUxhWU9hQXBO?=
+ =?utf-8?B?dUVPYmNSMmdxYXhkWkNodGZjUXpTQ2Evd2NiVCtkY3NLYkJaeTB3UENCbVRK?=
+ =?utf-8?B?WEVKclh6Nmd2Q3FVYTRuME1laEhuUXNkK2FpZFJQZHhLK3hjeGR0RGliaWlX?=
+ =?utf-8?B?UkR0bnpKcDluaGs2YkFERFRCZFRFWk13MklqeEoyaWEvVGdvYzlsTzJ0eDM2?=
+ =?utf-8?B?VHVhb0QzN09uNklJbmVuMmlISmtJRVBBaDBXUXljYXBXcjVqd3Q3NGZJQ2Fz?=
+ =?utf-8?B?MHNsd09XZmtEdzUzSWVFdFRScGVtMWRIYVNCZGVaOGd6TW10NkJ4dXpxdmRr?=
+ =?utf-8?B?SGlpdDVZRzNRenZJdVNLUFZ4ckorL2dXZkprMVp4M0g2VkxycXFZOHdFWTU5?=
+ =?utf-8?B?Q01Sd0tteDM2ck1Yb3BDQzVnMTRodkpMUlVHamdjZmtPSUFmMkhIWDFpc2VY?=
+ =?utf-8?B?dU9kN0NXek1uVDBJaFRFM2VMTXZNeTFHSWU3eDNUQXd6Ty9UaWY0cWxrWHcv?=
+ =?utf-8?B?NGRKSmtFR2R4SFRTbWJkMCtRUTBoUElNc0dvVDJzM0FRd3ZzN2djNEx2MDQ2?=
+ =?utf-8?B?ZFJpMDFjdlpvYTRUTWcvOGJxc0Y3TzV2SjA4UHRKdlFYUW5KbitGY3JGZEg3?=
+ =?utf-8?B?dHJucDlESndrbU5vV1RadmNJUUxNNWhwVVczNWZ2YjhDUFJTWDVBdVQ4QnMz?=
+ =?utf-8?B?aVc4aUFwcmE2ZmdUQ3NyYjZHdFkxd2hyWC9HcWtlSXZ4RGtaK1ZhbVU3cjJp?=
+ =?utf-8?B?bmFlZHI1dVdva3RPK0gzRTdBb3ZWZXNyN09nbG5XUDR3eDlUeCtHNENnM281?=
+ =?utf-8?B?QVp6SWNRbWViU0FXcmxBbWR6RkVjcCtsckZ4Sk9WcDVLZGUvWXE4QlF6Q3lP?=
+ =?utf-8?Q?KafC1jnXZ1dGweTpbk=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR11MB4523.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 065dce40-487a-4f0c-7ade-08d960d7cecd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2021 17:03:45.2916
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qEgBBSeIeTwsPuh65c1YjMK6KquRoPMSCdN6EUs/ceOGUUDe0qrVWrMC/9cFGUmrHA9MpUQfHvSkp64r0R+vEsrkMRANWix9VWhfg8TZUYo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1101MB2335
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Alder Lake has 14 status registers that are memory mapped. These
-registers show the status of the low power mode requirements. The
-registers are latched on every C10 entry or exit and on every s0ix.y
-entry/exit. Accessing these registers is useful for debugging any low
-power related activities.
-
-Thus, add debugfs entry to access low power mode status registers.
-
-Cc: Chao Qin <chao.qin@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Box <david.e.box@intel.com>
-Tested-by: You-Sheng Yang <vicamo.yang@canonical.com>
-Acked-by: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 194 ++++++++++++++++++++++++++
- drivers/platform/x86/intel/pmc/core.h |  13 ++
- 2 files changed, 207 insertions(+)
-
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index f2646fdf6c90..e645ede591d8 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -736,6 +736,189 @@ static const struct pmc_bit_map adl_ltr_show_map[] = {
- 	{}
- };
- 
-+static const struct pmc_bit_map adl_clocksource_status_map[] = {
-+	{"CLKPART1_OFF_STS",			BIT(0)},
-+	{"CLKPART2_OFF_STS",			BIT(1)},
-+	{"CLKPART3_OFF_STS",			BIT(2)},
-+	{"CLKPART4_OFF_STS",			BIT(3)},
-+	{"CLKPART5_OFF_STS",			BIT(4)},
-+	{"CLKPART6_OFF_STS",			BIT(5)},
-+	{"CLKPART7_OFF_STS",			BIT(6)},
-+	{"CLKPART8_OFF_STS",			BIT(7)},
-+	{"PCIE0PLL_OFF_STS",			BIT(10)},
-+	{"PCIE1PLL_OFF_STS",			BIT(11)},
-+	{"PCIE2PLL_OFF_STS",			BIT(12)},
-+	{"PCIE3PLL_OFF_STS",			BIT(13)},
-+	{"PCIE4PLL_OFF_STS",			BIT(14)},
-+	{"PCIE5PLL_OFF_STS",			BIT(15)},
-+	{"PCIE6PLL_OFF_STS",			BIT(16)},
-+	{"USB2PLL_OFF_STS",			BIT(18)},
-+	{"OCPLL_OFF_STS",			BIT(22)},
-+	{"AUDIOPLL_OFF_STS",			BIT(23)},
-+	{"GBEPLL_OFF_STS",			BIT(24)},
-+	{"Fast_XTAL_Osc_OFF_STS",		BIT(25)},
-+	{"AC_Ring_Osc_OFF_STS",			BIT(26)},
-+	{"MC_Ring_Osc_OFF_STS",			BIT(27)},
-+	{"SATAPLL_OFF_STS",			BIT(29)},
-+	{"USB3PLL_OFF_STS",			BIT(31)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_power_gating_status_0_map[] = {
-+	{"PMC_PGD0_PG_STS",			BIT(0)},
-+	{"DMI_PGD0_PG_STS",			BIT(1)},
-+	{"ESPISPI_PGD0_PG_STS",			BIT(2)},
-+	{"XHCI_PGD0_PG_STS",			BIT(3)},
-+	{"SPA_PGD0_PG_STS",			BIT(4)},
-+	{"SPB_PGD0_PG_STS",			BIT(5)},
-+	{"SPC_PGD0_PG_STS",			BIT(6)},
-+	{"GBE_PGD0_PG_STS",			BIT(7)},
-+	{"SATA_PGD0_PG_STS",			BIT(8)},
-+	{"DSP_PGD0_PG_STS",			BIT(9)},
-+	{"DSP_PGD1_PG_STS",			BIT(10)},
-+	{"DSP_PGD2_PG_STS",			BIT(11)},
-+	{"DSP_PGD3_PG_STS",			BIT(12)},
-+	{"SPD_PGD0_PG_STS",			BIT(13)},
-+	{"LPSS_PGD0_PG_STS",			BIT(14)},
-+	{"SMB_PGD0_PG_STS",			BIT(16)},
-+	{"ISH_PGD0_PG_STS",			BIT(17)},
-+	{"NPK_PGD0_PG_STS",			BIT(19)},
-+	{"PECI_PGD0_PG_STS",			BIT(21)},
-+	{"XDCI_PGD0_PG_STS",			BIT(25)},
-+	{"EXI_PGD0_PG_STS",			BIT(26)},
-+	{"CSE_PGD0_PG_STS",			BIT(27)},
-+	{"KVMCC_PGD0_PG_STS",			BIT(28)},
-+	{"PMT_PGD0_PG_STS",			BIT(29)},
-+	{"CLINK_PGD0_PG_STS",			BIT(30)},
-+	{"PTIO_PGD0_PG_STS",			BIT(31)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_power_gating_status_1_map[] = {
-+	{"USBR0_PGD0_PG_STS",			BIT(0)},
-+	{"SMT1_PGD0_PG_STS",			BIT(2)},
-+	{"CSMERTC_PGD0_PG_STS",			BIT(6)},
-+	{"CSMEPSF_PGD0_PG_STS",			BIT(7)},
-+	{"CNVI_PGD0_PG_STS",			BIT(19)},
-+	{"DSP_PGD4_PG_STS",			BIT(26)},
-+	{"SPG_PGD0_PG_STS",			BIT(27)},
-+	{"SPE_PGD0_PG_STS",			BIT(28)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_power_gating_status_2_map[] = {
-+	{"THC0_PGD0_PG_STS",			BIT(7)},
-+	{"THC1_PGD0_PG_STS",			BIT(8)},
-+	{"SPF_PGD0_PG_STS",			BIT(14)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_d3_status_0_map[] = {
-+	{"ISH_D3_STS",				BIT(2)},
-+	{"LPSS_D3_STS",				BIT(3)},
-+	{"XDCI_D3_STS",				BIT(4)},
-+	{"XHCI_D3_STS",				BIT(5)},
-+	{"SPA_D3_STS",				BIT(12)},
-+	{"SPB_D3_STS",				BIT(13)},
-+	{"SPC_D3_STS",				BIT(14)},
-+	{"SPD_D3_STS",				BIT(15)},
-+	{"SPE_D3_STS",				BIT(16)},
-+	{"DSP_D3_STS",				BIT(19)},
-+	{"SATA_D3_STS",				BIT(20)},
-+	{"DMI_D3_STS",				BIT(22)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_d3_status_1_map[] = {
-+	{"GBE_D3_STS",				BIT(19)},
-+	{"CNVI_D3_STS",				BIT(27)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_d3_status_2_map[] = {
-+	{"CSMERTC_D3_STS",			BIT(1)},
-+	{"CSE_D3_STS",				BIT(4)},
-+	{"KVMCC_D3_STS",			BIT(5)},
-+	{"USBR0_D3_STS",			BIT(6)},
-+	{"SMT1_D3_STS",				BIT(8)},
-+	{"PTIO_D3_STS",				BIT(16)},
-+	{"PMT_D3_STS",				BIT(17)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_d3_status_3_map[] = {
-+	{"THC0_D3_STS",				BIT(14)},
-+	{"THC1_D3_STS",				BIT(15)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_vnn_req_status_0_map[] = {
-+	{"ISH_VNN_REQ_STS",			BIT(2)},
-+	{"ESPISPI_VNN_REQ_STS",			BIT(18)},
-+	{"DSP_VNN_REQ_STS",			BIT(19)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_vnn_req_status_1_map[] = {
-+	{"NPK_VNN_REQ_STS",			BIT(4)},
-+	{"EXI_VNN_REQ_STS",			BIT(9)},
-+	{"GBE_VNN_REQ_STS",			BIT(19)},
-+	{"SMB_VNN_REQ_STS",			BIT(25)},
-+	{"CNVI_VNN_REQ_STS",			BIT(27)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_vnn_req_status_2_map[] = {
-+	{"CSMERTC_VNN_REQ_STS",			BIT(1)},
-+	{"CSE_VNN_REQ_STS",			BIT(4)},
-+	{"SMT1_VNN_REQ_STS",			BIT(8)},
-+	{"CLINK_VNN_REQ_STS",			BIT(14)},
-+	{"GPIOCOM4_VNN_REQ_STS",		BIT(20)},
-+	{"GPIOCOM3_VNN_REQ_STS",		BIT(21)},
-+	{"GPIOCOM2_VNN_REQ_STS",		BIT(22)},
-+	{"GPIOCOM1_VNN_REQ_STS",		BIT(23)},
-+	{"GPIOCOM0_VNN_REQ_STS",		BIT(24)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_vnn_req_status_3_map[] = {
-+	{"GPIOCOM5_VNN_REQ_STS",		BIT(11)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map adl_vnn_misc_status_map[] = {
-+	{"CPU_C10_REQ_STS",			BIT(0)},
-+	{"PCIe_LPM_En_REQ_STS",			BIT(3)},
-+	{"ITH_REQ_STS",				BIT(5)},
-+	{"CNVI_REQ_STS",			BIT(6)},
-+	{"ISH_REQ_STS",				BIT(7)},
-+	{"USB2_SUS_PG_Sys_REQ_STS",		BIT(10)},
-+	{"PCIe_Clk_REQ_STS",			BIT(12)},
-+	{"MPHY_Core_DL_REQ_STS",		BIT(16)},
-+	{"Break-even_En_REQ_STS",		BIT(17)},
-+	{"MPHY_SUS_REQ_STS",			BIT(22)},
-+	{"xDCI_attached_REQ_STS",		BIT(24)},
-+	{}
-+};
-+
-+static const struct pmc_bit_map *adl_lpm_maps[] = {
-+	adl_clocksource_status_map,
-+	adl_power_gating_status_0_map,
-+	adl_power_gating_status_1_map,
-+	adl_power_gating_status_2_map,
-+	adl_d3_status_0_map,
-+	adl_d3_status_1_map,
-+	adl_d3_status_2_map,
-+	adl_d3_status_3_map,
-+	adl_vnn_req_status_0_map,
-+	adl_vnn_req_status_1_map,
-+	adl_vnn_req_status_2_map,
-+	adl_vnn_req_status_3_map,
-+	adl_vnn_misc_status_map,
-+	tgl_signal_status_map,
-+	NULL
-+};
-+
- static const struct pmc_reg_map adl_reg_map = {
- 	.pfear_sts = ext_adl_pfear_map,
- 	.slp_s0_offset = ADL_PMC_SLP_S0_RES_COUNTER_OFFSET,
-@@ -749,6 +932,17 @@ static const struct pmc_reg_map adl_reg_map = {
- 	.pm_cfg_offset = CNP_PMC_PM_CFG_OFFSET,
- 	.pm_read_disable_bit = CNP_PMC_READ_DISABLE_BIT,
- 	.ltr_ignore_max = ADL_NUM_IP_IGN_ALLOWED,
-+	.lpm_num_modes = ADL_LPM_NUM_MODES,
-+	.lpm_num_maps = ADL_LPM_NUM_MAPS,
-+	.lpm_res_counter_step_x2 = TGL_PMC_LPM_RES_COUNTER_STEP_X2,
-+	.etr3_offset = ETR3_OFFSET,
-+	.lpm_sts_latch_en_offset = ADL_LPM_STATUS_LATCH_EN_OFFSET,
-+	.lpm_priority_offset = ADL_LPM_PRI_OFFSET,
-+	.lpm_en_offset = ADL_LPM_EN_OFFSET,
-+	.lpm_residency_offset = ADL_LPM_RESIDENCY_OFFSET,
-+	.lpm_sts = adl_lpm_maps,
-+	.lpm_status_offset = ADL_LPM_STATUS_OFFSET,
-+	.lpm_live_status_offset = ADL_LPM_LIVE_STATUS_OFFSET,
- };
- 
- static inline u32 pmc_core_reg_read(struct pmc_dev *pmcdev, int reg_offset)
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 45b352ece6db..333e25981e8e 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -222,6 +222,18 @@ enum ppfear_regs {
- /* Extended Test Mode Register LPM bits (TGL and later */
- #define ETR3_CLEAR_LPM_EVENTS			BIT(28)
- 
-+/* Alder Lake Power Management Controller register offsets */
-+#define ADL_LPM_EN_OFFSET			0x179C
-+#define ADL_LPM_RESIDENCY_OFFSET		0x17A4
-+#define ADL_LPM_NUM_MODES			2
-+#define ADL_LPM_NUM_MAPS			14
-+
-+/* Alder Lake Low Power Mode debug registers */
-+#define ADL_LPM_STATUS_OFFSET			0x170C
-+#define ADL_LPM_PRI_OFFSET			0x17A0
-+#define ADL_LPM_STATUS_LATCH_EN_OFFSET		0x1704
-+#define ADL_LPM_LIVE_STATUS_OFFSET		0x1764
-+
- const char *pmc_lpm_modes[] = {
- 	"S0i2.0",
- 	"S0i2.1",
-@@ -281,6 +293,7 @@ struct pmc_reg_map {
- 	const u32 pm_vric1_offset;
- 	/* Low Power Mode registers */
- 	const int lpm_num_maps;
-+	const int lpm_num_modes;
- 	const int lpm_res_counter_step_x2;
- 	const u32 lpm_sts_latch_en_offset;
- 	const u32 lpm_en_offset;
--- 
-2.25.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVn
+b2VkZUByZWRoYXQuY29tPg0KPiBTZW50OiBUdWVzZGF5LCBBdWd1c3QgMywgMjAyMSA1OjE5IEFN
+DQo+IFRvOiBLYW1tZWxhLCBHYXlhdHJpIDxnYXlhdHJpLmthbW1lbGFAaW50ZWwuY29tPjsgcGxh
+dGZvcm0tZHJpdmVyLQ0KPiB4ODZAdmdlci5rZXJuZWwub3JnDQo+IENjOiBtZ3Jvc3NAbGludXgu
+aW50ZWwuY29tOyBpcmVuaWMucmFqbmVlc2hAZ21haWwuY29tOw0KPiBhbmRyaXkuc2hldmNoZW5r
+b0BsaW51eC5pbnRlbC5jb207IHZpY2Ftby55YW5nQGNhbm9uaWNhbC5jb207DQo+IFBhbmRydXZh
+ZGEsIFNyaW5pdmFzIDxzcmluaXZhcy5wYW5kcnV2YWRhQGludGVsLmNvbT47IEJveCwgRGF2aWQg
+RQ0KPiA8ZGF2aWQuZS5ib3hAaW50ZWwuY29tPjsgUWluLCBDaGFvIDxjaGFvLnFpbkBpbnRlbC5j
+b20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgTWFzaGlhaCwgVGFtYXIgPHRh
+bWFyLm1hc2hpYWhAaW50ZWwuY29tPjsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJh
+amF0amFAZ29vZ2xlLmNvbTsgU2h5YW0tc3VuZGFyLlMtDQo+IGtAYW1kLmNvbTsgQWxleGFuZGVy
+LkRldWNoZXJAYW1kLmNvbTsgbWxpbW9uY2lAYW1kLmNvbQ0KPiBTdWJqZWN0OiBSZTogW1BBVENI
+IHY2IDAvNV0gQWRkIEFsZGVyIExha2UgUENILVMgc3VwcG9ydCB0byBQTUMgY29yZSBkcml2ZXIN
+Cj4gDQo+IEhpIEdheWF0cmksDQo+IA0KPiANCj4gT24gNy8zMS8yMSA4OjA3IEFNLCBHYXlhdHJp
+IEthbW1lbGEgd3JvdGU6DQo+ID4gSGksDQo+ID4gVGhlIHBhdGNoIHNlcmllcyBtb3ZlIGludGVs
+X3BtY19jb3JlKiBmaWxlcyB0byBwbWMgc3ViZm9sZGVyIGFzIHdlbGwNCj4gPiBhcyBhZGQgQWxk
+ZXIgTGFrZSBQQ0gtUyBzdXBwb3J0IHRvIFBNQyBjb3JlIGRyaXZlci4NCj4gPg0KPiA+IFBhdGNo
+IDE6IE1vdmUgaW50ZWxfcG1jX2NvcmUqIGZpbGVzIHRvIHBtYyBzdWJmb2xkZXIgUGF0Y2ggMjog
+QWRkDQo+ID4gQWxkZXJsYWtlIHN1cHBvcnQgdG8gcG1jIGNvcmUgZHJpdmVyIFBhdGNoIDM6IEFk
+ZCBMYXRlbmN5IFRvbGVyYW5jZQ0KPiA+IFJlcG9ydGluZyAoTFRSKSBzdXBwb3J0IHRvIEFsZGVy
+IExha2UgUGF0Y2ggNDogQWRkIEFsZGVyIExha2UgbG93DQo+ID4gcG93ZXIgbW9kZSBzdXBwb3J0
+IGZvciBwbWMgY29yZSBQYXRjaCA1OiBBZGQgR0JFIFBhY2thZ2UgQzEwIGZpeCBmb3INCj4gPiBB
+bGRlciBMYWtlDQo+ID4NCj4gPiBDaGFuZ2VzIHNpbmNlIHYxOg0KPiA+IDEpIEFkZCBwYXRjaCAx
+IHRvIHYyIGkuZS4sIE1vdmUgaW50ZWxfcG1jX2NvcmUqIGZpbGVzIHRvIHBtYyBzdWJmb2xkZXIu
+DQo+ID4gMikgTW9kaWZ5IGNvbW1pdCBtZXNzYWdlIGZvciBwYXRjaCAyLg0KPiA+DQo+ID4gQ2hh
+bmdlcyBzaW5jZSB2MjoNCj4gPiAxKSBEcm9wcGVkIGludGVsX3BtY18gcHJlZml4IGZyb20gdGhl
+IGZpbGUgbmFtZXMuDQo+ID4NCj4gPiBDaGFuZ2VzIHNpbmNlIHYzOg0KPiA+IDEpIEZpeGVkIGFu
+IGVycm9yIHJlcG9ydGVkIGJ5IGxrcC4NCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgdjQ6DQo+ID4g
+MSkgVXBkYXRlZCBNQUlOVEFJTkVSUw0KPiA+DQo+ID4gQ2hhbmdlcyBzaW5jZSB2NToNCj4gPiAx
+KSBGaXhlZCBhbiBtb2R1bGUgbmFtZSBlcnJvciByZXBvcnRlZCBieSBDaGFvIFFpbg0KPiANCj4g
+VGhhbmsgeW91IGZvciBmaXhpbmcgdGhpcy4NCj4gDQo+IEkgZXhwZWN0IHRoYXQgeW91IHdpbGwg
+c2VuZCBhIG5ldyB2ZXJzaW9uIGFkZHJlc3NpbmcgQW5keSdzIHJlbWFya3MsIHNvIEknbQ0KPiBn
+b2luZyB0byBkcm9wIHRoaXMgdmVyc2lvbiBmcm9tIG15IHF1ZXVlLg0KSGkgSGFucyEgSSBqdXN0
+IHNlbnQgYSBuZXcgdmVyc2lvbiBhZGRyZXNzaW5nIEFuZHkncyBjb21tZW50cy4gVGhhbmtzIQ0K
+PiANCj4gUmVnYXJkcywNCj4gDQo+IEhhbnMNCj4gDQo+IA0KPiA+IERhdmlkIEUuIEJveCAoMSk6
+DQo+ID4gICBwbGF0Zm9ybS94ODYvaW50ZWw6IHBtYy9jb3JlOiBBZGQgR0JFIFBhY2thZ2UgQzEw
+IGZpeCBmb3IgQWxkZXIgTGFrZQ0KPiA+ICAgICBQQ0gNCj4gPg0KPiA+IEdheWF0cmkgS2FtbWVs
+YSAoNCk6DQo+ID4gICBwbGF0Zm9ybS94ODYvaW50ZWw6IGludGVsX3BtY19jb3JlOiBNb3ZlIGlu
+dGVsX3BtY19jb3JlKiBmaWxlcyB0byBwbWMNCj4gPiAgICAgc3ViZm9sZGVyDQo+ID4gICBwbGF0
+Zm9ybS94ODYvaW50ZWw6IHBtYy9jb3JlOiBBZGQgQWxkZXJsYWtlIHN1cHBvcnQgdG8gcG1jIGNv
+cmUgZHJpdmVyDQo+ID4gICBwbGF0Zm9ybS94ODYvaW50ZWw6IHBtYy9jb3JlOiBBZGQgTGF0ZW5j
+eSBUb2xlcmFuY2UgUmVwb3J0aW5nIChMVFIpDQo+ID4gICAgIHN1cHBvcnQgdG8gQWxkZXIgTGFr
+ZQ0KPiA+ICAgcGxhdGZvcm0veDg2L2ludGVsOiBwbWMvY29yZTogQWRkIEFsZGVyIExha2UgbG93
+IHBvd2VyIG1vZGUgc3VwcG9ydA0KPiA+ICAgICBmb3IgcG1jIGNvcmUNCj4gPg0KPiA+ICBNQUlO
+VEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKy0NCj4gPiAg
+ZHJpdmVycy9wbGF0Zm9ybS94ODYvS2NvbmZpZyAgICAgICAgICAgICAgICAgIHwgIDIxIC0tDQo+
+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L01ha2VmaWxlICAgICAgICAgICAgICAgICB8ICAgMSAt
+DQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL0tjb25maWcgICAgICAgICAgICB8ICAg
+MSArDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL01ha2VmaWxlICAgICAgICAgICB8
+ICAgMSArDQo+ID4gIGRyaXZlcnMvcGxhdGZvcm0veDg2L2ludGVsL3BtYy9LY29uZmlnICAgICAg
+ICB8ICAyMiArKw0KPiA+ICBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9wbWMvTWFrZWZpbGUg
+ICAgICAgfCAgIDYgKw0KPiA+ICAuLi4ve2ludGVsX3BtY19jb3JlLmMgPT4gaW50ZWwvcG1jL2Nv
+cmUuY30gICAgfCAzMDkgKysrKysrKysrKysrKysrKystDQo+ID4gIC4uLi97aW50ZWxfcG1jX2Nv
+cmUuaCA9PiBpbnRlbC9wbWMvY29yZS5ofSAgICB8ICAxNyArDQo+ID4gIC4uLi9wbWMvcGx0ZHJ2
+LmN9ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMA0KPiA+ICAxMCBmaWxlcyBjaGFu
+Z2VkLCAzNTMgaW5zZXJ0aW9ucygrKSwgMjcgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+
+IDEwMDY0NCBkcml2ZXJzL3BsYXRmb3JtL3g4Ni9pbnRlbC9wbWMvS2NvbmZpZw0KPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wbGF0Zm9ybS94ODYvaW50ZWwvcG1jL01ha2VmaWxlDQo+
+ID4gIHJlbmFtZSBkcml2ZXJzL3BsYXRmb3JtL3g4Ni97aW50ZWxfcG1jX2NvcmUuYyA9PiBpbnRl
+bC9wbWMvY29yZS5jfQ0KPiA+ICg4NSUpICByZW5hbWUgZHJpdmVycy9wbGF0Zm9ybS94ODYve2lu
+dGVsX3BtY19jb3JlLmggPT4NCj4gPiBpbnRlbC9wbWMvY29yZS5ofSAoOTUlKSAgcmVuYW1lDQo+
+ID4gZHJpdmVycy9wbGF0Zm9ybS94ODYve2ludGVsX3BtY19jb3JlX3BsdGRydi5jID0+IGludGVs
+L3BtYy9wbHRkcnYuY30NCj4gPiAoMTAwJSkNCj4gPg0KPiA+IENjOiBTcmluaXZhcyBQYW5kcnV2
+YWRhIDxzcmluaXZhcy5wYW5kcnV2YWRhQGludGVsLmNvbT4NCj4gPiBDYzogQW5keSBTaGV2Y2hl
+bmtvIDxhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20+DQo+ID4gQ2M6IERhdmlkIEJv
+eCA8ZGF2aWQuZS5ib3hAaW50ZWwuY29tPg0KPiA+IENjOiBZb3UtU2hlbmcgWWFuZyA8dmljYW1v
+LnlhbmdAY2Fub25pY2FsLmNvbT4NCj4gPiBDYzogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVk
+aGF0LmNvbT4NCj4gPiBDYzogUmFqbmVlc2ggQmhhcmR3YWogPGlyZW5pYy5yYWpuZWVzaEBnbWFp
+bC5jb20+DQo+ID4gQ2M6IENoYW8gUWluIDxjaGFvLnFpbkBpbnRlbC5jb20+DQo+ID4NCj4gPiBi
+YXNlLWNvbW1pdDogYzdkMTAyMjMyNjQ5MjI2YTY5ZGRkZDU4YTQ5NDJjZjEzY2ZmNGY3Yw0KPiA+
+DQoNCg==
