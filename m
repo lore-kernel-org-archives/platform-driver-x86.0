@@ -2,124 +2,284 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27DCC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 119A1C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 17:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C07860C40
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F272D60231
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 17:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbhHQRMm (ORCPT
+        id S232060AbhHQR1C (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 13:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbhHQRMl (ORCPT
+        Tue, 17 Aug 2021 13:27:02 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39710 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230311AbhHQR1B (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 13:12:41 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B23C5C061764
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Aug 2021 10:12:08 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d17so25529733plr.12
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Aug 2021 10:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PXdNlja+rCoKgd0kcEEgLVGGuIxN7Yz0fiYwWYb4vvg=;
-        b=R6ROpAjxPqcpMN4Fkk5+guMbtbNkUC1vUUsseFFjol53wtA5KC8WJvXclu+OQ+oRDM
-         u5x4lEXUOVgD7R4/fJ0aCscPTDG3JtKqiT8elP9NUsS05Yruryyrz6TirbHclMIi4ztn
-         /Ur6l+32jSwHjdXHbuVE6AQnTd2iOTSOYhDgKJzzddHGQI2Sg+P5Msdxb7/s0fNUc3dJ
-         yM4cqvCLfdsCKZP+hR7n5q13lR6LQlOAKoIOnEXUKkeXAGaru0NA65u4yOBfezMVAYgn
-         Vtp0xzBF1p7Neox2Sq2oAqIYC1Y7IqB77X3xf9cxNk8jUgamJdkeDc2U+rSU1/w7vuVI
-         3dRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PXdNlja+rCoKgd0kcEEgLVGGuIxN7Yz0fiYwWYb4vvg=;
-        b=Z921Dx55P5FbK63d9PhOnlBw+kWk5XXebXuCPIxB6MScesEghAITYJiKmoIn4lDAQr
-         83ubvd4H417v2NsKDxlU0a4SE6h+r6k+BUAddLn9cJUAsDS+KyHmq7HMqvxpd6d8UUw7
-         VS5EYAVgSc8ahR227Q0TU7UhoVZVcR7eDgcv3iPkLK5fP8oCOg11v5qvIPkH7viivKeW
-         q5QNWd8Oq7Xkuy6Fq3w2E3jZ3M1/qV4rfYCBQ192zNWmA5GkSj1jZATYcLOdHfQpTIGW
-         Su8Icn9KBpyITiJUHBr5tdIBIqsl8SrvXc1YnhzHSixU8miDt36AoxBCmOdBlkUsnoHD
-         vNiw==
-X-Gm-Message-State: AOAM530FpVrvcrA9RWFVDEZuV5YUeOe0anchUyhugEqAhinTmKkg9deY
-        i0tQGPavFGXJfCVetlgO9lA=
-X-Google-Smtp-Source: ABdhPJx1/PowRTicFi7XrOBAo2PohQ6m7VSG2WPl6F8XWXdpnZ1t3OzcUkByixe6H7nXkdMfLQrstw==
-X-Received: by 2002:a65:400a:: with SMTP id f10mr4498566pgp.327.1629220328311;
-        Tue, 17 Aug 2021 10:12:08 -0700 (PDT)
-Received: from localhost ([2604:e8c0::a:1005])
-        by smtp.gmail.com with ESMTPSA id x1sm3074408pfn.64.2021.08.17.10.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 10:12:08 -0700 (PDT)
-From:   Meng Dong <whenov@gmail.com>
-To:     Ike Panhc <ike.pan@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     Meng Dong <whenov@gmail.com>
-Subject: [PATCH] ideapad-laptop: Fix Legion 5 Fn lock LED
-Date:   Wed, 18 Aug 2021 01:12:03 +0800
-Message-Id: <20210817171203.12855-1-whenov@gmail.com>
-X-Mailer: git-send-email 2.32.0
+        Tue, 17 Aug 2021 13:27:01 -0400
+Received: from zn.tnic (p200300ec2f1175006a73053df3c19379.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:7500:6a73:53d:f3c1:9379])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D659F1EC01B5;
+        Tue, 17 Aug 2021 19:26:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629221183;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DNJ7vQbeipIQzVqoNzpebqgTcO1JqCy5VA8Wf98/yoc=;
+        b=g1khrBdad75yo8euxQQm3YXRG/lrWYNNavOA/yqhWhFYsf3+kH3fltXo+mjEjOxrwlbahA
+        RK9GLTwIgfvCxq0DaaKZDczWmhZrDoJ9xvCOsd6/ajPMdZM8QuqEalus8YDh1p3DgNhY7s
+        IIh11MTwqipTCOwGaV0F1PgcV7NUGrw=
+Date:   Tue, 17 Aug 2021 19:27:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part1 RFC v4 15/36] x86/mm: Add support to validate
+ memory when changing C-bit
+Message-ID: <YRvxZtLkVNda9xwX@zn.tnic>
+References: <20210707181506.30489-1-brijesh.singh@amd.com>
+ <20210707181506.30489-16-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210707181506.30489-16-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This patch fixes the bug 212671.
-Althrough the Fn lock (Fn + Esc) works on Legion 5 (R7000P), its LED
-light does not change with the state. This modification sets the Fn lock
-state to its current value on receiving the wmi event
-8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 to update the LED state.
+On Wed, Jul 07, 2021 at 01:14:45PM -0500, Brijesh Singh wrote:
+> +struct __packed psc_hdr {
+> +	u16 cur_entry;
+> +	u16 end_entry;
+> +	u32 reserved;
+> +};
+> +
+> +struct __packed psc_entry {
+> +	u64	cur_page	: 12,
+> +		gfn		: 40,
+> +		operation	: 4,
+> +		pagesize	: 1,
+> +		reserved	: 7;
+> +};
+> +
+> +struct __packed snp_psc_desc {
+> +	struct psc_hdr hdr;
+> +	struct psc_entry entries[VMGEXIT_PSC_MAX_ENTRY];
+> +};
 
-Signed-off-by: Meng Dong <whenov@gmail.com>
----
-Another possible approach is to call `ideapad_input_report(priv, value)`
-to send a keycode and let the user handle the LED by echoing the current
-value of /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fn_lock back
-into itself. But the problem with this approach is Fn+F9 and Fn+Esc
-trigger the same WMI GUID and event value and I have no idea how to
-distinguish them.
+The majority of kernel code puts __packed after the struct definition,
+let's put it there too pls, out of the way.
 
- drivers/platform/x86/ideapad-laptop.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+...
 
-diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-index 784326bd72f0..48561b666547 100644
---- a/drivers/platform/x86/ideapad-laptop.c
-+++ b/drivers/platform/x86/ideapad-laptop.c
-@@ -41,6 +41,7 @@
- static const char *const ideapad_wmi_fnesc_events[] = {
- 	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
- 	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-+	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
- };
- #endif
- 
-@@ -1464,6 +1465,15 @@ static void ideapad_wmi_notify(u32 value, void *context)
- 	case 128:
- 		ideapad_input_report(priv, value);
- 		break;
-+	case 208:
-+		unsigned long result;
-+
-+		if (!eval_hals(priv->adev->handle, &result)) {
-+			bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
-+
-+			exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
-+		}
-+		break;
- 	default:
- 		dev_info(&priv->platform_device->dev,
- 			 "Unknown WMI event: %u\n", value);
+> +static int vmgexit_psc(struct snp_psc_desc *desc)
+> +{
+> +	int cur_entry, end_entry, ret;
+> +	struct snp_psc_desc *data;
+> +	struct ghcb_state state;
+> +	struct ghcb *ghcb;
+> +	struct psc_hdr *hdr;
+> +	unsigned long flags;
+> +
+> +	local_irq_save(flags);
+> +
+> +	ghcb = __sev_get_ghcb(&state);
+> +	if (unlikely(!ghcb))
+> +		panic("SEV-SNP: Failed to get GHCB\n");
+> +
+> +	/* Copy the input desc into GHCB shared buffer */
+> +	data = (struct snp_psc_desc *)ghcb->shared_buffer;
+> +	memcpy(ghcb->shared_buffer, desc, sizeof(*desc));
+> +
+> +	hdr = &data->hdr;
+> +	cur_entry = hdr->cur_entry;
+> +	end_entry = hdr->end_entry;
+> +
+> +	/*
+> +	 * As per the GHCB specification, the hypervisor can resume the guest
+> +	 * before processing all the entries. Checks whether all the entries
+> +	 * are processed. If not, then keep retrying.
+> +	 *
+> +	 * The stragtegy here is to wait for the hypervisor to change the page
+> +	 * state in the RMP table before guest access the memory pages. If the
+> +	 * page state was not successful, then later memory access will result
+> +	 * in the crash.
+> +	 */
+> +	while (hdr->cur_entry <= hdr->end_entry) {
+> +		ghcb_set_sw_scratch(ghcb, (u64)__pa(data));
+> +
+> +		ret = sev_es_ghcb_hv_call(ghcb, NULL, SVM_VMGEXIT_PSC, 0, 0);
+> +
+> +		/*
+> +		 * Page State Change VMGEXIT can pass error code through
+> +		 * exit_info_2.
+> +		 */
+> +		if (WARN(ret || ghcb->save.sw_exit_info_2,
+> +			 "SEV-SNP: page state change failed ret=%d exit_info_2=%llx\n",
+> +			 ret, ghcb->save.sw_exit_info_2))
+> +			return 1;
+
+Yikes, you return here and below with interrupts disabled.
+
+All your returns need to be "goto out;" instead where you do
+
+out:
+        __sev_put_ghcb(&state);
+        local_irq_restore(flags);
+
+Yap, you very likely need to put the GHCB too.
+
+> +		/*
+> +		 * Lets do some sanity check that entry processing is not going
+> +		 * backward. This will happen only if hypervisor is tricking us.
+> +		 */
+> +		if (WARN((hdr->end_entry > end_entry) || (cur_entry > hdr->cur_entry),
+> +			"SEV-SNP: page state change processing going backward, end_entry "
+> +			"(expected %d got %d) cur_entry (expected %d got %d)\n",
+> +			end_entry, hdr->end_entry, cur_entry, hdr->cur_entry))
+> +			return 1;
+
+WARNING: quoted string split across lines
+#293: FILE: arch/x86/kernel/sev.c:750:
++			"SEV-SNP: page state change processing going backward, end_entry "
++			"(expected %d got %d) cur_entry (expected %d got %d)\n",
+
+If you're wondering what to do, yes, you can really stretch that string
+and shorten it too:
+
+                if (WARN((hdr->end_entry > end_entry) || (cur_entry > hdr->cur_entry),
+"SEV-SNP: PSC processing going backwards, end_entry %d (got %d) cur_entry: %d (got %d)\n",
+                         end_entry, hdr->end_entry, cur_entry, hdr->cur_entry))
+                        return 1;
+
+so that it fits on a single line and grepping can find it.
+
+> +		/* Lets verify that reserved bit is not set in the header*/
+> +		if (WARN(hdr->reserved, "Reserved bit is set in the PSC header\n"))
+
+psc_entry has a ->reserved field too and since we're iterating over the
+entries...
+
+> +			return 1;
+> +	}
+> +
+> +	__sev_put_ghcb(&state);
+> +	local_irq_restore(flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static void __set_page_state(struct snp_psc_desc *data, unsigned long vaddr,
+> +			     unsigned long vaddr_end, int op)
+> +{
+> +	struct psc_hdr *hdr;
+> +	struct psc_entry *e;
+> +	unsigned long pfn;
+> +	int i;
+> +
+> +	hdr = &data->hdr;
+> +	e = data->entries;
+> +
+> +	memset(data, 0, sizeof(*data));
+> +	i = 0;
+> +
+> +	while (vaddr < vaddr_end) {
+> +		if (is_vmalloc_addr((void *)vaddr))
+> +			pfn = vmalloc_to_pfn((void *)vaddr);
+> +		else
+> +			pfn = __pa(vaddr) >> PAGE_SHIFT;
+> +
+> +		e->gfn = pfn;
+> +		e->operation = op;
+> +		hdr->end_entry = i;
+> +
+> +		/*
+> +		 * The GHCB specification provides the flexibility to
+> +		 * use either 4K or 2MB page size in the RMP table.
+> +		 * The current SNP support does not keep track of the
+> +		 * page size used in the RMP table. To avoid the
+> +		 * overlap request, use the 4K page size in the RMP
+> +		 * table.
+> +		 */
+> +		e->pagesize = RMP_PG_SIZE_4K;
+> +
+> +		vaddr = vaddr + PAGE_SIZE;
+> +		e++;
+> +		i++;
+> +	}
+> +
+> +	/* Terminate the guest on page state change failure. */
+
+That comment is kinda obvious :)
+
+> +	if (vmgexit_psc(data))
+> +		sev_es_terminate(1, GHCB_TERM_PSC);
+> +}
+> +
+> +static void set_page_state(unsigned long vaddr, unsigned int npages, int op)
+> +{
+> +	unsigned long vaddr_end, next_vaddr;
+> +	struct snp_psc_desc *desc;
+> +
+> +	vaddr = vaddr & PAGE_MASK;
+> +	vaddr_end = vaddr + (npages << PAGE_SHIFT);
+> +
+> +	desc = kmalloc(sizeof(*desc), GFP_KERNEL_ACCOUNT);
+
+kzalloc() so that you don't have to memset() later in
+__set_page_state().
+
+> +	if (!desc)
+> +		panic("failed to allocate memory");
+
+Make that error message more distinctive so that *if* it happens, one
+can pinpoint the place in the code where the panic comes from.
+
+> +	while (vaddr < vaddr_end) {
+> +		/*
+> +		 * Calculate the last vaddr that can be fit in one
+> +		 * struct snp_psc_desc.
+> +		 */
+> +		next_vaddr = min_t(unsigned long, vaddr_end,
+> +				(VMGEXIT_PSC_MAX_ENTRY * PAGE_SIZE) + vaddr);
+> +
+> +		__set_page_state(desc, vaddr, next_vaddr, op);
+> +
+> +		vaddr = next_vaddr;
+> +	}
+> +
+> +	kfree(desc);
+> +}
+> +
+
 -- 
-2.32.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
