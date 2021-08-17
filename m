@@ -2,37 +2,36 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0D5C19F37
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 22:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09FFC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 22:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADF346103A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 22:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796A260BD3
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 22:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbhHQWnX (ORCPT
+        id S236318AbhHQWnZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 18:43:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15594 "EHLO mga14.intel.com"
+        Tue, 17 Aug 2021 18:43:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58065 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236063AbhHQWnV (ORCPT
+        id S236220AbhHQWnX (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 18:43:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="215940914"
+        Tue, 17 Aug 2021 18:43:23 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10079"; a="216209991"
 X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="215940914"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 15:42:47 -0700
+   d="scan'208";a="216209991"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 15:42:46 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,330,1620716400"; 
-   d="scan'208";a="573066699"
+   d="scan'208";a="462555358"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 17 Aug 2021 15:42:46 -0700
+  by orsmga007.jf.intel.com with ESMTP; 17 Aug 2021 15:42:46 -0700
 Received: from debox1-desk2.jf.intel.com (debox1-desk2.jf.intel.com [10.54.75.16])
-        by linux.intel.com (Postfix) with ESMTP id AF018580975;
+        by linux.intel.com (Postfix) with ESMTP id 5CD455808DB;
         Tue, 17 Aug 2021 15:42:46 -0700 (PDT)
 From:   "David E. Box" <david.e.box@linux.intel.com>
 To:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
@@ -41,48 +40,44 @@ To:     lee.jones@linaro.org, hdegoede@redhat.com, mgross@linux.intel.com,
 Cc:     "David E. Box" <david.e.box@linux.intel.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: [PATCH v2 4/5] platform/x86: intel_pmt_telemetry: Ignore zero sized entries
-Date:   Tue, 17 Aug 2021 15:40:17 -0700
-Message-Id: <20210817224018.1013192-5-david.e.box@linux.intel.com>
+Subject: [PATCH v2 0/5] MFD: intel_pmt: Add general DVSEC/VSEC support
+Date:   Tue, 17 Aug 2021 15:40:13 -0700
+Message-Id: <20210817224018.1013192-1-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210817224018.1013192-1-david.e.box@linux.intel.com>
-References: <20210817224018.1013192-1-david.e.box@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Some devices may expose non-functioning entries that are reserved for
-future use. These entries have zero size. Ignore them during probe.
+This patch enables general support for Intel defined PCIe VSEC and DVSEC
+capabilities in the Intel Platform Monitoring Technology (PMT) driver.
+Though the driver was written exclusively for PMT capabilities, newer DVSEC
+and VSEC IDs for other capabilities can exist on the same device requiring
+that the driver handle them.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
----
+This 2nd revision drops the creation of a separate OOBMSM driver. Instead,
+all cell drivers will have a dependency on CONFIG_MFD_INTEL_PMT, whether or
+not they are PMT. Changes in this patchset to the current cell drivers
+located in platform/x86 are based on Hans for-next branch where they have
+been moved to the intel/pmt subfolder.
 
-V2:	New patch
+David E. Box (5):
+  PCI: Add #defines for accessing PCIE DVSEC fields
+  MFD: intel_pmt: Support non-PMT capabilities
+  MFD: intel_pmt: Add support for PCIe VSEC structures
+  platform/x86: intel_pmt_telemetry: Ignore zero sized entries
+  MFD: intel_pmt: Add DG2 support
 
- drivers/platform/x86/intel/pmt/telemetry.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/mfd/intel_pmt.c                    | 256 +++++++++++++++------
+ drivers/platform/x86/intel/pmt/class.c     |   2 +
+ drivers/platform/x86/intel/pmt/crashlog.c  |   2 +-
+ drivers/platform/x86/intel/pmt/telemetry.c |  10 +-
+ include/uapi/linux/pci_regs.h              |   4 +
+ 5 files changed, 197 insertions(+), 77 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-index 3559f6e7b388..d93d02672679 100644
---- a/drivers/platform/x86/intel/pmt/telemetry.c
-+++ b/drivers/platform/x86/intel/pmt/telemetry.c
-@@ -61,6 +61,14 @@ static int pmt_telem_header_decode(struct intel_pmt_entry *entry,
- 	/* Size is measured in DWORDS, but accessor returns bytes */
- 	header->size = TELEM_SIZE(readl(disc_table));
- 
-+	/*
-+	 * Some devices may expose non-functioning entries that are
-+	 * reserved for future use. They have zero size. Do not fail
-+	 * probe for these. Just ignore them.
-+	 */
-+	if (header->size == 0)
-+		return 1;
-+
- 	return 0;
- }
- 
+
+base-commit: ca42c119fc6746e65423257e7eddf5fc9e96edc2
 -- 
 2.25.1
 
