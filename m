@@ -2,170 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A582C43216
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DBC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B1760F5C
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4323D60295
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235315AbhHQJBA (ORCPT
+        id S235320AbhHQJQj (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 05:01:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:53982 "EHLO mail.skyhub.de"
+        Tue, 17 Aug 2021 05:16:39 -0400
+Received: from mga02.intel.com ([134.134.136.20]:43009 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234339AbhHQJA5 (ORCPT
+        id S234347AbhHQJQj (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 05:00:57 -0400
-Received: from zn.tnic (p200300ec2f1175003091845243004ed4.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:7500:3091:8452:4300:4ed4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C31EA1EC01B5;
-        Tue, 17 Aug 2021 11:00:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1629190817;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=CTZxwlhCTYBphd87lvceDZBtTDENyNB6RWw2n2fhNqo=;
-        b=cLyGe6Vfp/ZbXlGAJcu8s+oDyI+Cek5fSPumAUCPjd+TtrDcq8WnlTuq148AmmSefmwouf
-        U4RljFOl7bpVd/jo/MMo7NW5c66AcB8pntylvfCw1TSAnl6S3l0D/M7WEba3xU2EPv7jkK
-        R7PUFWJBwQxeCIeQqdKssk1UJ8FLB8Y=
-Date:   Tue, 17 Aug 2021 11:00:56 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v2 05/12] x86/sme: Replace occurrences of sme_active()
- with prot_guest_has()
-Message-ID: <YRt6yCNCBLwyyx5X@zn.tnic>
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <c6c38d6253dc78381f9ff0f1823b6ee5ddeefacc.1628873970.git.thomas.lendacky@amd.com>
+        Tue, 17 Aug 2021 05:16:39 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="203228154"
+X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
+   d="scan'208";a="203228154"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 02:16:06 -0700
+X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
+   d="scan'208";a="572825561"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 02:16:01 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 17 Aug 2021 12:15:58 +0300
+Date:   Tue, 17 Aug 2021 12:15:58 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Kate Hsuan <hpa@redhat.com>
+Cc:     Alex Hung <alex.hung@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2 06/20] platform/x86: intel_scu: Move to intel
+ sub-directory
+Message-ID: <YRt+Tnt4tvULM4MP@lahna>
+References: <20210816105119.704302-1-hpa@redhat.com>
+ <20210816105119.704302-7-hpa@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c6c38d6253dc78381f9ff0f1823b6ee5ddeefacc.1628873970.git.thomas.lendacky@amd.com>
+In-Reply-To: <20210816105119.704302-7-hpa@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 11:59:24AM -0500, Tom Lendacky wrote:
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index edc67ddf065d..5635ca9a1fbe 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -144,7 +144,7 @@ void __init sme_unmap_bootdata(char *real_mode_data)
->  	struct boot_params *boot_data;
->  	unsigned long cmdline_paddr;
->  
-> -	if (!sme_active())
-> +	if (!amd_prot_guest_has(PATTR_SME))
->  		return;
->  
->  	/* Get the command line address before unmapping the real_mode_data */
-> @@ -164,7 +164,7 @@ void __init sme_map_bootdata(char *real_mode_data)
->  	struct boot_params *boot_data;
->  	unsigned long cmdline_paddr;
->  
-> -	if (!sme_active())
-> +	if (!amd_prot_guest_has(PATTR_SME))
->  		return;
->  
->  	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), true);
-> @@ -378,7 +378,7 @@ bool sev_active(void)
->  	return sev_status & MSR_AMD64_SEV_ENABLED;
->  }
->  
-> -bool sme_active(void)
-> +static bool sme_active(void)
+On Mon, Aug 16, 2021 at 06:51:05PM +0800, Kate Hsuan wrote:
+> Move intel_scu to intel sub-directory to improve readability.
+> 
+> Signed-off-by: Kate Hsuan <hpa@redhat.com>
 
-Just get rid of it altogether. Also, there's an
-
-EXPORT_SYMBOL_GPL(sev_active);
-
-which needs to go under the actual function. Here's a diff ontop:
-
----
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 5635ca9a1fbe..a3a2396362a5 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -364,8 +364,9 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
- /*
-  * SME and SEV are very similar but they are not the same, so there are
-  * times that the kernel will need to distinguish between SME and SEV. The
-- * sme_active() and sev_active() functions are used for this.  When a
-- * distinction isn't needed, the mem_encrypt_active() function can be used.
-+ * PATTR_HOST_MEM_ENCRYPT and PATTR_GUEST_MEM_ENCRYPT flags to
-+ * amd_prot_guest_has() are used for this. When a distinction isn't needed,
-+ * the mem_encrypt_active() function can be used.
-  *
-  * The trampoline code is a good example for this requirement.  Before
-  * paging is activated, SME will access all memory as decrypted, but SEV
-@@ -377,11 +378,6 @@ bool sev_active(void)
- {
- 	return sev_status & MSR_AMD64_SEV_ENABLED;
- }
--
--static bool sme_active(void)
--{
--	return sme_me_mask && !sev_active();
--}
- EXPORT_SYMBOL_GPL(sev_active);
- 
- /* Needs to be called from non-instrumentable code */
-@@ -398,7 +394,7 @@ bool amd_prot_guest_has(unsigned int attr)
- 
- 	case PATTR_SME:
- 	case PATTR_HOST_MEM_ENCRYPT:
--		return sme_active();
-+		return sme_me_mask && !sev_active();
- 
- 	case PATTR_SEV:
- 	case PATTR_GUEST_MEM_ENCRYPT:
-
->  {
->  	return sme_me_mask && !sev_active();
->  }
-> @@ -428,7 +428,7 @@ bool force_dma_unencrypted(struct device *dev)
->  	 * device does not support DMA to addresses that include the
->  	 * encryption mask.
->  	 */
-> -	if (sme_active()) {
-> +	if (amd_prot_guest_has(PATTR_SME)) {
-
-So I'm not sure: you add PATTR_SME which you call with
-amd_prot_guest_has() and PATTR_HOST_MEM_ENCRYPT which you call with
-prot_guest_has() and they both end up being the same thing on AMD.
-
-So why even bother with PATTR_SME?
-
-This is only going to cause confusion later and I'd say let's simply use
-prot_guest_has(PATTR_HOST_MEM_ENCRYPT) everywhere...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
