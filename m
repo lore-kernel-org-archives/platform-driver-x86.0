@@ -2,101 +2,110 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BFCC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 12:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C2AC4320E
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 12:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F57060E76
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 12:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901CA60231
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 12:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231478AbhHQMbl (ORCPT
+        id S237282AbhHQMjD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 08:31:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:55710 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230354AbhHQMbj (ORCPT
+        Tue, 17 Aug 2021 08:39:03 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59053 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230323AbhHQMjC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 08:31:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629203465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=l9WuU7cYAYKJNJSQJYvnJwi7OnY5SKMEuReQStHmD5c=;
-        b=g2cSRWpJNVeIT+hmrieNoOq9CZMqq63vhDA23/Z1mhYJlfCi0jnbnkJ1+5Bz35mVTRfk+x
-        hxvyqlirIs56tqsAk1HIDedpt2/GPJdrzxSTZh+if2wUclCqiVNuTW3NIuHyWnoT1QMHcx
-        9f326Wd2ztfjkhbYRor84s0lzp5KzPA=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-446-8ZE7PzFfNdu1wPRqGNd4lw-1; Tue, 17 Aug 2021 08:31:04 -0400
-X-MC-Unique: 8ZE7PzFfNdu1wPRqGNd4lw-1
-Received: by mail-lj1-f198.google.com with SMTP id u3-20020a2e9b030000b02901b787d7d260so7300662lji.3
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Aug 2021 05:31:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l9WuU7cYAYKJNJSQJYvnJwi7OnY5SKMEuReQStHmD5c=;
-        b=gc9TjDgvkRG+j4JUu5FmjpKZFzQyJCPwUrG3KBo0U0SGlrXxJwtOMnt6XAM0lR/vDB
-         L2TwvsAoTY94eYWlPFN5ZGTqfvI84rBvdOqlPSctLnNK1by5PDn2VpACUIEjzW0Q3dkg
-         exwH6nHMTDrP+lOzR7oGEIqsBlHvnsPMsIVj1lrCwVrPQXGKUr4GzS1pb+CL+F73RaIk
-         4gfJgkciTX5oIeXvptFvPXZgWW9W+CKjp3jmxhVveH1gadux6TTTnr4FZnZCM8RiVoMn
-         kmU8LD+XksqeAoXZ1iRydxJInq/uSSJwNsYcLNxTJVW/dN/MZ0NtCoAkOdgXs49p5jJ6
-         UF/w==
-X-Gm-Message-State: AOAM533h16JKekulvJMNRltukkQbq4GdX2EgZ+I3I/dJyOHVajEg/6wR
-        Fov6yw52PrK0TK3gFYDTuLmTz9iTPtDFPzW/q5+XtDJA4l47GrKm6XRzjJONd5IKAgtLddBED2x
-        Kj5Wy7s62hROvPsOFX0fBX6lHFS2qMGESzbCQMAjho8vSJ2lXOg==
-X-Received: by 2002:a05:6512:3f08:: with SMTP id y8mr2061041lfa.221.1629203462738;
-        Tue, 17 Aug 2021 05:31:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJybPSuwd/cHGg1jI+YCben7Tu95Hhn1Pf3wlgLk+sravd7yNqCyi9y75i+PPeb4osilTXEvMDNRNSkEayvjHTM=
-X-Received: by 2002:a05:6512:3f08:: with SMTP id y8mr2061030lfa.221.1629203462497;
- Tue, 17 Aug 2021 05:31:02 -0700 (PDT)
+        Tue, 17 Aug 2021 08:39:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4GprDF2h3Tz9sSn;
+        Tue, 17 Aug 2021 22:38:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+        s=201909; t=1629203905;
+        bh=NQyXzwQlAo0xsgc18yZpAOusgLGX71Fk6ueV1qdw5rA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=KYXSccDfXzjB2hBx15MoEIDf+kWmkDX50zC9GoNA+zRe2h6A0PbLhChR5Cdkwlare
+         Skall5IaM+JNYijtEffokiKW2vk3GcnrIXL9w6cyu8ks9EO2+V9EOw5R+GGu1PiYQv
+         D9NxQxRHQN8/BYGs83P6DhfXjoNRsufAILW0QoxjiCBqx4FvSdnLWb7NReYqLmQl3x
+         p3W/80//lGcl/AzT+8dWLeaLNqPIEQLIUJX653gw3u6fYoSlh4acLTdYAto8S4VL1T
+         o4r+VgRPi55oy+/sUiu+QbwiFA1DMF8zLkBn1HY/7VQPrYtD408/c7FtLIJoHUe5Qi
+         Ap9BkljmAJJGw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH v2 04/12] powerpc/pseries/svm: Add a powerpc version of
+ prot_guest_has()
+In-Reply-To: <000f627ce20c6504dd8d118d85bd69e7717b752f.1628873970.git.thomas.lendacky@amd.com>
+References: <cover.1628873970.git.thomas.lendacky@amd.com>
+ <000f627ce20c6504dd8d118d85bd69e7717b752f.1628873970.git.thomas.lendacky@amd.com>
+Date:   Tue, 17 Aug 2021 22:38:19 +1000
+Message-ID: <874kbogsas.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20210816105119.704302-1-hpa@redhat.com> <20210816105119.704302-7-hpa@redhat.com>
- <YRt+Tnt4tvULM4MP@lahna>
-In-Reply-To: <YRt+Tnt4tvULM4MP@lahna>
-From:   Kate Hsuan <hpa@redhat.com>
-Date:   Tue, 17 Aug 2021 20:30:51 +0800
-Message-ID: <CAEth8oH=kEb76CP578A7YnS3CN28aSDgUSjgNeGQgUnCTMXPWQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/20] platform/x86: intel_scu: Move to intel sub-directory
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 17, 2021 at 5:16 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+Tom Lendacky <thomas.lendacky@amd.com> writes:
+> Introduce a powerpc version of the prot_guest_has() function. This will
+> be used to replace the powerpc mem_encrypt_active() implementation, so
+> the implementation will initially only support the PATTR_MEM_ENCRYPT
+> attribute.
 >
-> On Mon, Aug 16, 2021 at 06:51:05PM +0800, Kate Hsuan wrote:
-> > Move intel_scu to intel sub-directory to improve readability.
-> >
-> > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/powerpc/include/asm/protected_guest.h | 30 ++++++++++++++++++++++
+>  arch/powerpc/platforms/pseries/Kconfig     |  1 +
+>  2 files changed, 31 insertions(+)
+>  create mode 100644 arch/powerpc/include/asm/protected_guest.h
 >
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->
+> diff --git a/arch/powerpc/include/asm/protected_guest.h b/arch/powerpc/include/asm/protected_guest.h
+> new file mode 100644
+> index 000000000000..ce55c2c7e534
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/protected_guest.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Protected Guest (and Host) Capability checks
+> + *
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
+> + */
+> +
+> +#ifndef _POWERPC_PROTECTED_GUEST_H
+> +#define _POWERPC_PROTECTED_GUEST_H
 
-I'll add this to the commit message.
-Thanks
+Minor nit, we would usually use _ASM_POWERPC_PROTECTED_GUEST_H
 
--- 
-BR,
-Kate
+Otherwise looks OK to me.
 
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+cheers
