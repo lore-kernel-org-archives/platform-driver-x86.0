@@ -2,255 +2,127 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-24.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A557FC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 18:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03518C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 20:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8595E60F58
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 18:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCFF561052
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 20:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232923AbhHQS5F (ORCPT
+        id S233179AbhHQUEW (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 14:57:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48304 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229821AbhHQS5F (ORCPT
+        Tue, 17 Aug 2021 16:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233607AbhHQUEW (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 14:57:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629226591;
+        Tue, 17 Aug 2021 16:04:22 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A138C061764;
+        Tue, 17 Aug 2021 13:03:48 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f117500b0ae8110978caeec.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:7500:b0ae:8110:978c:aeec])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D4D9E1EC0345;
+        Tue, 17 Aug 2021 22:03:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629230623;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yAhyO3KKXBKNO36+f4gsCKDB/3643Px/UhEi2O3/Wpg=;
-        b=biCk0U5O/UhpOjPDWseOqy5WmGPvruQVqVbBufg0RJKhDQUim4SBFZ7FmdDzSC6YcsdEid
-        yC6Yblxa2MX4+OcJoop+QIMNfZz1WAV+SB0S6WxPo/IZOK7T4c3Ca0HaY9Op9YTvK+NjVo
-        SGrTMW6MsNdyTWNtA7En/xqsso5ITpQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-495-YBDfjuYzNLa22LS8n7RpZQ-1; Tue, 17 Aug 2021 14:56:30 -0400
-X-MC-Unique: YBDfjuYzNLa22LS8n7RpZQ-1
-Received: by mail-ej1-f71.google.com with SMTP id gv53-20020a1709072bf500b005c0428ef7e7so29308ejc.21
-        for <platform-driver-x86@vger.kernel.org>; Tue, 17 Aug 2021 11:56:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yAhyO3KKXBKNO36+f4gsCKDB/3643Px/UhEi2O3/Wpg=;
-        b=NmVgz7CQVGynF1/iFq0KYxN6SUQxnFGUZ7Ze5ZOxN6w7ZrocMBYgDagHEAK77pMI3K
-         2N1uHTBY5m79zOR008FemPlHvCDCcRatOXs11Rb64MU9CnLCB03t81nD+ShlddI2UX7h
-         4Z1oK/6RchIzxx0XvZ7cnrhZu/NJ8hOzIGeBUW73wWAtU74ayh0Gw93+xJ87KfukmZFu
-         8GWmR/Mg9i2BRhnFjPax5uqrmOgQ0Eof9WL/j0eqsTCSn7UkNIyybVV77AM8CdJ4O4XA
-         z28EWonP0mzUmcMdPThevJJOL78NidhSbCXhOxTaq7OUHxvZk9EBM5DiDR8f3YirZhzs
-         zShA==
-X-Gm-Message-State: AOAM532FcUzMoodgTintHy+CnHkF4BoyQJAM4k+AUTxqDu8FTlonGXj3
-        aYkdiRMTHHrrzlHyOw/aa+M4Akjj0MnT1Qaj22cRQLMF5dpzkpctvw7aGs36tF5lCPbozLtQSF/
-        dJZn3zXYiM+HVBT+OeMA123Nzx01VUO0Ajg==
-X-Received: by 2002:a05:6402:17d7:: with SMTP id s23mr5718603edy.344.1629226588947;
-        Tue, 17 Aug 2021 11:56:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy9SYE8cKVX4JvfftdJpEX6NAdu/ypoLgHzLsEsiQxGY2ZuvjShq0CIJ5GDv//Fjj28VYurEw==
-X-Received: by 2002:a05:6402:17d7:: with SMTP id s23mr5718586edy.344.1629226588779;
-        Tue, 17 Aug 2021 11:56:28 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id lb12sm1084318ejc.28.2021.08.17.11.56.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Aug 2021 11:56:28 -0700 (PDT)
-Subject: Re: [PATCH v3] platform/x86: intel_pmc_core: Prevent possibile
- overflow
-To:     "David E. Box" <david.e.box@linux.intel.com>,
-        irenic.rajneesh@gmail.com, novikov@ispras.ru,
-        gayatri.kammela@intel.com, mgross@linux.intel.com,
-        andy.shevchenko@gmail.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210814014728.520856-1-david.e.box@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <41bb0f96-4429-9a6f-959f-fa5511a89911@redhat.com>
-Date:   Tue, 17 Aug 2021 20:56:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hlrAOTjcGhSiVF38sesNGSXysJAosWC4JS6gPbRDYjE=;
+        b=lEBb9cFqHss2Qh+SWkKaPfkcT+XCWQi6ZwRJO1znLMRyHy8ndzt+bMBbQGKHfgpR/Mi5UK
+        xp+FNG1a5wfY0SRimD370ynq5yQG0hm/AGaYbLNBugb+YiEOpbgsIS9PSONZNC++SVKjlb
+        zhefgWkKrFZmOWf0nrXPRLZ/eBQKh80=
+Date:   Tue, 17 Aug 2021 22:04:26 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        linux-crypto@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>, tony.luck@intel.com,
+        npmccallum@redhat.com, brijesh.ksingh@gmail.com
+Subject: Re: [PATCH Part1 RFC v4 20/36] x86/sev: Use SEV-SNP AP creation to
+ start secondary CPUs
+Message-ID: <YRwWSizr/xoWXivV@zn.tnic>
+References: <20210707181506.30489-1-brijesh.singh@amd.com>
+ <20210707181506.30489-21-brijesh.singh@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <20210814014728.520856-1-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20210707181506.30489-21-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
-
-On 8/14/21 3:47 AM, David E. Box wrote:
-> Substate priority levels are encoded in 4 bits in the LPM_PRI register.
-> This value was used as an index to an array whose element size was less
-> than 16, leading to the possibility of overflow should we read a larger
-> than expected priority.  In addition to the overflow, bad values could lead
-> to incorrect state reporting.  So rework the priority code to prevent the
-> overflow and perform some validation of the register. Use the priority
-> register values if they give an ordering of unique numbers between 0 and
-> the maximum number of states.  Otherwise, use a default ordering instead.
-> 
-> Reported-by: Evgeny Novikov <novikov@ispras.ru>
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
-
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
-
-Regards,
-
-Hans
-
-
-
-> ---
-> v3:	Modifying Andy's suggestion, just place the entire verification
-> 	in a separate function. If it fails, then keep the default
-> 	ordering. If it passes, overwrite with the verified ordering.
-> 
-> 	Fix error in default order array.
-> 
-> 	Also fix spelling noted by Andy drop the size comment since
-> 	the array size is set when declared.
-> 
-> v2:	Remove lpm_priority size increase. Instead, remove that array and
-> 	create 2 new local arrays, one to save priority levels in mode order,
-> 	and one to save modes in priority order. Use the mode_order list to
-> 	validate that no priority level is above the maximum and to validate
-> 	that they are all unique values. Then we can safely create a
-> 	priority_order list that will be the basis of how we report substate
-> 	information.
-> 
->  drivers/platform/x86/intel_pmc_core.c | 65 +++++++++++++++++++++------
->  drivers/platform/x86/intel_pmc_core.h |  2 +
->  2 files changed, 53 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-> index b0e486a6bdfb..ae410a358ffe 100644
-> --- a/drivers/platform/x86/intel_pmc_core.c
-> +++ b/drivers/platform/x86/intel_pmc_core.c
-> @@ -1449,9 +1449,42 @@ static int pmc_core_pkgc_show(struct seq_file *s, void *unused)
+On Wed, Jul 07, 2021 at 01:14:50PM -0500, Brijesh Singh wrote:
+> @@ -854,6 +858,207 @@ void snp_set_memory_private(unsigned long vaddr, unsigned int npages)
+>  	pvalidate_pages(vaddr, npages, 1);
 >  }
->  DEFINE_SHOW_ATTRIBUTE(pmc_core_pkgc);
 >  
-> -static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
-> +static bool pmc_core_pri_verify(u32 lpm_pri, u8 *mode_order)
->  {
-> -	u8 lpm_priority[LPM_MAX_NUM_MODES];
-> +	int i, j;
-> +
-> +	if (!lpm_pri)
-> +		return false;
-> +	/*
-> +	 * Each byte contains the priority level for 2 modes (7:4 and 3:0).
-> +	 * In a 32 bit register this allows for describing 8 modes. Store the
-> +	 * levels and look for values out of range.
-> +	 */
-> +	for (i = 0; i < 8; i++) {
-> +		int level = lpm_pri & GENMASK(3, 0);
-> +
-> +		if (level >= LPM_MAX_NUM_MODES)
-> +			return false;
-> +
-> +		mode_order[i] = level;
-> +		lpm_pri >>= 4;
-> +	}
-> +
-> +	/* Check that we have unique values */
-> +	for (i = 0; i < LPM_MAX_NUM_MODES - 1; i++)
-> +		for (j = i + 1; j < LPM_MAX_NUM_MODES; j++)
-> +			if (mode_order[i] == mode_order[j])
-> +				return false;
-> +
-> +	return true;
-> +}
-> +
-> +static void pmc_core_get_low_power_modes(struct platform_device *pdev)
-> +{
-> +	struct pmc_dev *pmcdev = platform_get_drvdata(pdev);
-> +	u8 pri_order[LPM_MAX_NUM_MODES] = LPM_DEFAULT_PRI;
-> +	u8 mode_order[LPM_MAX_NUM_MODES];
-> +	u32 lpm_pri;
->  	u32 lpm_en;
->  	int mode, i, p;
->  
-> @@ -1462,24 +1495,28 @@ static void pmc_core_get_low_power_modes(struct pmc_dev *pmcdev)
->  	lpm_en = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_en_offset);
->  	pmcdev->num_lpm_modes = hweight32(lpm_en);
->  
-> -	/* Each byte contains information for 2 modes (7:4 and 3:0) */
-> -	for (mode = 0; mode < LPM_MAX_NUM_MODES; mode += 2) {
-> -		u8 priority = pmc_core_reg_read_byte(pmcdev,
-> -				pmcdev->map->lpm_priority_offset + (mode / 2));
-> -		int pri0 = GENMASK(3, 0) & priority;
-> -		int pri1 = (GENMASK(7, 4) & priority) >> 4;
-> +	/* Read 32 bit LPM_PRI register */
-> +	lpm_pri = pmc_core_reg_read(pmcdev, pmcdev->map->lpm_priority_offset);
->  
-> -		lpm_priority[pri0] = mode;
-> -		lpm_priority[pri1] = mode + 1;
-> -	}
->  
->  	/*
-> -	 * Loop though all modes from lowest to highest priority,
-> +	 * If lpm_pri value passes verification, then override the default
-> +	 * modes here. Otherwise stick with the default.
-> +	 */
-> +	if (pmc_core_pri_verify(lpm_pri, mode_order))
-> +		/* Get list of modes in priority order */
-> +		for (mode = 0; mode < LPM_MAX_NUM_MODES; mode++)
-> +			pri_order[mode_order[mode]] = mode;
-> +	else
-> +		dev_warn(&pdev->dev, "Assuming a default substate order for this platform\n");
-> +
-> +	/*
-> +	 * Loop through all modes from lowest to highest priority,
->  	 * and capture all enabled modes in order
->  	 */
->  	i = 0;
->  	for (p = LPM_MAX_NUM_MODES - 1; p >= 0; p--) {
-> -		int mode = lpm_priority[p];
-> +		int mode = pri_order[p];
->  
->  		if (!(BIT(mode) & lpm_en))
->  			continue;
-> @@ -1675,7 +1712,7 @@ static int pmc_core_probe(struct platform_device *pdev)
->  	mutex_init(&pmcdev->lock);
->  
->  	pmcdev->pmc_xram_read_bit = pmc_core_check_read_lock_bit(pmcdev);
-> -	pmc_core_get_low_power_modes(pmcdev);
-> +	pmc_core_get_low_power_modes(pdev);
->  	pmc_core_do_dmi_quirks(pmcdev);
->  
->  	if (pmcdev->map == &tgl_reg_map)
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel_pmc_core.h
-> index e8dae9c6c45f..b9bf3d3d6f7a 100644
-> --- a/drivers/platform/x86/intel_pmc_core.h
-> +++ b/drivers/platform/x86/intel_pmc_core.h
-> @@ -188,6 +188,8 @@ enum ppfear_regs {
->  #define ICL_PMC_SLP_S0_RES_COUNTER_STEP		0x64
->  
->  #define LPM_MAX_NUM_MODES			8
-> +#define LPM_DEFAULT_PRI				{ 7, 6, 2, 5, 4, 1, 3, 0 }
-> +
->  #define GET_X2_COUNTER(v)			((v) >> 1)
->  #define LPM_STS_LATCH_MODE			BIT(31)
->  
-> 
-> base-commit: e4ec7a49ef8bb4edc85a0eee005d59fa65c94a0e
-> 
+> +static int vmsa_rmpadjust(void *va, bool vmsa)
 
+I know, I know it gets a bool vmsa param but you can still call it
+simply rmpadjust() because this is what it does - it is a wrapper around
+the insn. Just like pvalidate() and so on.
+
+...
+
+> +static int wakeup_cpu_via_vmgexit(int apic_id, unsigned long start_ip)
+> +{
+> +	struct sev_es_save_area *cur_vmsa, *vmsa;
+> +	struct ghcb_state state;
+> +	unsigned long flags;
+> +	struct ghcb *ghcb;
+> +	int cpu, err, ret;
+> +	u8 sipi_vector;
+> +	u64 cr4;
+> +
+> +	if ((sev_hv_features & GHCB_HV_FT_SNP_AP_CREATION) != GHCB_HV_FT_SNP_AP_CREATION)
+> +		return -EOPNOTSUPP;
+> +
+> +	/*
+> +	 * Verify the desired start IP against the known trampoline start IP
+> +	 * to catch any future new trampolines that may be introduced that
+> +	 * would require a new protected guest entry point.
+> +	 */
+> +	if (WARN_ONCE(start_ip != real_mode_header->trampoline_start,
+> +		      "unsupported SEV-SNP start_ip: %lx\n", start_ip))
+
+"Unsupported... " - with a capital letter
+
+> +		return -EINVAL;
+> +
+> +	/* Override start_ip with known protected guest start IP */
+> +	start_ip = real_mode_header->sev_es_trampoline_start;
+> +
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
