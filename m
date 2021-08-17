@@ -2,68 +2,178 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1DBC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4BAC43214
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 10:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4323D60295
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 09:16:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406C760F38
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 10:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235320AbhHQJQj (ORCPT
+        id S236453AbhHQKCi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 17 Aug 2021 05:16:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43009 "EHLO mga02.intel.com"
+        Tue, 17 Aug 2021 06:02:38 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35848 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234347AbhHQJQj (ORCPT
+        id S236269AbhHQKCh (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 17 Aug 2021 05:16:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="203228154"
-X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
-   d="scan'208";a="203228154"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 02:16:06 -0700
-X-IronPort-AV: E=Sophos;i="5.84,328,1620716400"; 
-   d="scan'208";a="572825561"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2021 02:16:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 17 Aug 2021 12:15:58 +0300
-Date:   Tue, 17 Aug 2021 12:15:58 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Kate Hsuan <hpa@redhat.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2 06/20] platform/x86: intel_scu: Move to intel
- sub-directory
-Message-ID: <YRt+Tnt4tvULM4MP@lahna>
-References: <20210816105119.704302-1-hpa@redhat.com>
- <20210816105119.704302-7-hpa@redhat.com>
+        Tue, 17 Aug 2021 06:02:37 -0400
+Received: from zn.tnic (p200300ec2f1175001ae0093e4550657c.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:7500:1ae0:93e:4550:657c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 57D521EC054F;
+        Tue, 17 Aug 2021 12:01:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629194518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=WTPf14ct0XA4iOYwdI5oL7MvZipF8JjQX6hZ6lRE9MY=;
+        b=fSXk9kI1A4dqwAfQ2WDnRaBmlG6VM+SiBeMVvip4VZs3w5s1AzSaytXWQQ5Yn8ealzmvXH
+        KdrTT1+QlW923OfJovhcp46q+BWi+Do6B8wIFr88BWgiJmyPQxnoxaRFFymeYKfWAJB7a5
+        8hnATecakWJhm6ba4VFjUkS+uTtiwBI=
+Date:   Tue, 17 Aug 2021 12:02:38 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-graphics-maintainer@vmware.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v2 06/12] x86/sev: Replace occurrences of sev_active()
+ with prot_guest_has()
+Message-ID: <YRuJPqxFZ6ItZd++@zn.tnic>
+References: <cover.1628873970.git.thomas.lendacky@amd.com>
+ <2b3a8fc4659f2e7617399cecdcca549e0fa1dcb7.1628873970.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210816105119.704302-7-hpa@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <2b3a8fc4659f2e7617399cecdcca549e0fa1dcb7.1628873970.git.thomas.lendacky@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Mon, Aug 16, 2021 at 06:51:05PM +0800, Kate Hsuan wrote:
-> Move intel_scu to intel sub-directory to improve readability.
-> 
-> Signed-off-by: Kate Hsuan <hpa@redhat.com>
+On Fri, Aug 13, 2021 at 11:59:25AM -0500, Tom Lendacky wrote:
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 8e7b517ad738..66ff788b79c9 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -167,7 +167,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+>  	}
+>  	pte = pte_offset_kernel(pmd, vaddr);
+>  
+> -	if (sev_active())
+> +	if (prot_guest_has(PATTR_GUEST_MEM_ENCRYPT))
+>  		prot = PAGE_KERNEL_EXEC;
+>  
+>  	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
+> @@ -207,7 +207,7 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+>  	level4p = (pgd_t *)__va(start_pgtable);
+>  	clear_page(level4p);
+>  
+> -	if (sev_active()) {
+> +	if (prot_guest_has(PATTR_GUEST_MEM_ENCRYPT)) {
+>  		info.page_flag   |= _PAGE_ENC;
+>  		info.kernpg_flag |= _PAGE_ENC;
+>  	}
+> @@ -570,12 +570,12 @@ void arch_kexec_unprotect_crashkres(void)
+>   */
+>  int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
+>  {
+> -	if (sev_active())
+> +	if (!prot_guest_has(PATTR_HOST_MEM_ENCRYPT))
+>  		return 0;
+>  
+>  	/*
+> -	 * If SME is active we need to be sure that kexec pages are
+> -	 * not encrypted because when we boot to the new kernel the
+> +	 * If host memory encryption is active we need to be sure that kexec
+> +	 * pages are not encrypted because when we boot to the new kernel the
+>  	 * pages won't be accessed encrypted (initially).
+>  	 */
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+That hunk belongs logically into the previous patch which removes
+sme_active().
+
+>  	return set_memory_decrypted((unsigned long)vaddr, pages);
+> @@ -583,12 +583,12 @@ int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages, gfp_t gfp)
+>  
+>  void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
+>  {
+> -	if (sev_active())
+> +	if (!prot_guest_has(PATTR_HOST_MEM_ENCRYPT))
+>  		return;
+>  
+>  	/*
+> -	 * If SME is active we need to reset the pages back to being
+> -	 * an encrypted mapping before freeing them.
+> +	 * If host memory encryption is active we need to reset the pages back
+> +	 * to being an encrypted mapping before freeing them.
+>  	 */
+>  	set_memory_encrypted((unsigned long)vaddr, pages);
+>  }
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index e8ccab50ebf6..b69f5ac622d5 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/pagemap.h>
+>  #include <linux/swap.h>
+>  #include <linux/rwsem.h>
+> +#include <linux/protected_guest.h>
+>  
+>  #include <asm/apic.h>
+>  #include <asm/perf_event.h>
+> @@ -457,7 +458,7 @@ static int has_svm(void)
+>  		return 0;
+>  	}
+>  
+> -	if (sev_active()) {
+> +	if (prot_guest_has(PATTR_SEV)) {
+>  		pr_info("KVM is unsupported when running as an SEV guest\n");
+>  		return 0;
+
+Same question as for PATTR_SME. PATTR_GUEST_MEM_ENCRYPT should be enough.
+
+> @@ -373,7 +373,7 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
+>   * up under SME the trampoline area cannot be encrypted, whereas under SEV
+>   * the trampoline area must be encrypted.
+>   */
+> -bool sev_active(void)
+> +static bool sev_active(void)
+>  {
+>  	return sev_status & MSR_AMD64_SEV_ENABLED;
+>  }
+> @@ -382,7 +382,6 @@ static bool sme_active(void)
+>  {
+>  	return sme_me_mask && !sev_active();
+>  }
+> -EXPORT_SYMBOL_GPL(sev_active);
+
+Just get rid of it altogether.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
