@@ -2,194 +2,265 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE66C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 20:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A261C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 363036023D
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 16 Aug 2021 20:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC3360F46
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233170AbhHPUvt (ORCPT
+        id S232924AbhHQAQB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 16:51:49 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41018 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231783AbhHPUvs (ORCPT
+        Mon, 16 Aug 2021 20:16:01 -0400
+Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:50573 "EHLO
+        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232903AbhHQAQB (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 16:51:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10078"; a="215938347"
-X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="215938347"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2021 13:51:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,326,1620716400"; 
-   d="scan'208";a="448818954"
-Received: from orsmsx605.amr.corp.intel.com ([10.22.229.18])
-  by fmsmga007.fm.intel.com with ESMTP; 16 Aug 2021 13:51:15 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.4; Mon, 16 Aug 2021 13:51:15 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10; Mon, 16 Aug 2021 13:51:14 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2242.10 via Frontend Transport; Mon, 16 Aug 2021 13:51:14 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+        Mon, 16 Aug 2021 20:16:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
+        s=Selector; t=1629159328; i=@lenovo.com;
+        bh=NoAf1mi8p//4IyNxm3rjZpkFGZ923mCKdQeTPoT0VEk=;
+        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+         MIME-Version:Content-Transfer-Encoding:Content-Type;
+        b=mKG+syC0kg3vw/Rq88cD/1tbJ1H8xvOCSv/nSFiHnY0jDHt7AQOne4Oy1AxJshTOb
+         vUTqKJrSMSuoMrapfGcPnkKGptLAlY3Yyk0zZqMDMvykwHpFfDTYXYRIHnWMGrlsOR
+         vujT9SzouoiUK3eENHHbnt10mTcCLdBOzhEOPtgSX0Q3m8o4yaNvb07uWPoAH+Brk6
+         wXF6SniT8rwfPGWakSzG63dSf1kVzYRKaXweqOd2JIv1XTOcFZu1MgPQ88t+dfV7Yt
+         YAr3AM5C+B0hjalFQBajcFxkkRwiYd7l4TkNvbS0a9urlVlWqRTWZZlVNdKPK+vMjC
+         gKnZEki+bKbzg==
+Received: from [100.112.6.161] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-5.bemta.az-c.us-east-1.aws.symcld.net id EB/18-20821-0AFFA116; Tue, 17 Aug 2021 00:15:28 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRWlGSWpSXmKPExsWS8eIhr+6C/1K
+  JBvdnM1u8OT6dyeJzx2QWi9V7XjA7MHvMOxno8X7fVTaPz5vkApijWDPzkvIrElgz1j7ZwlSw
+  Qbdi6/mzTA2Mv9W6GLk4hAT+M0rsOXiWBcJ5wygxf/EF9i5GTg42AW2JLVt+sXUxcnCICMhIf
+  FjrCRJmFoiWaH57hRXEFhawkug4uY8RxGYRUJU4/bOZFaScV8BG4tM/P5CwhIC8xOkT18BKOI
+  FKznQ9ZgGxhQRUJO4/WMIGYvMKCEqcnPmEBWK8vETz1tnMELaExMEXL5hh5iw5tIkFwk6Q6Pn
+  3iG0Co8AsJO2zkLTPQtK+gJF5FaNZUlFmekZJbmJmjq6hgYGuoaGRromukaGZXmKVbrJeabFu
+  amJxia6hXmJ5sV5xZW5yTopeXmrJJkZgcKcUsNzYwXjv9Qe9Q4ySHExKory3TkklCvEl5adUZ
+  iQWZ8QXleakFh9ilOHgUJLgXXUWKCdYlJqeWpGWmQOMNJi0BAePkgiv4j+gNG9xQWJucWY6RO
+  oUo6KUOO+yFUAJAZBERmkeXBssui8xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEuYNBhnPk5l
+  XAjf9FdBiJqDFPgaSIItLEhFSUg1M080bsq/7nr981/rl3KCVvzrXnuXfPaXOVXxOldjzvI3u
+  HNdXcGe2Wb5bZbvg+tOcq9ENwled37Om5Wk9DDDKVrr+IIGFO2dy9z7uk6z3phVrytau2RGiv
+  qw6X8HtQO7kWPbuUy+7FsXPaj7rmXyjXFn5i1qv3aFDLMErnZsPCNoanyn/+X3FQwN+ud8yZw
+  w4booKbQ/9f8/bdpr3pOeaE/P3q7a0px02/7D8gYqE24/zLx6pPqj7F1H6Y39NgOqcOTOv/ON
+  f8u+OaLPW72f+9dOeFIdtsvy907ig/Cq77q4nS14uV7He18MxObWV41DkyujMPpmGnz4/hMSf
+  CVV4O56+MMX67aYXvQ9cDp0QV2Ipzkg01GIuKk4EAKhlThBpAwAA
+X-Env-Sender: markpearson@lenovo.com
+X-Msg-Ref: server-5.tower-406.messagelabs.com!1629159327!22713!1
+X-Originating-IP: [104.232.225.13]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.81.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 9438 invoked from network); 17 Aug 2021 00:15:28 -0000
+Received: from unknown (HELO lenovo.com) (104.232.225.13)
+  by server-5.tower-406.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Aug 2021 00:15:28 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id D379CD2C9E48270EAC7F;
+        Mon, 16 Aug 2021 20:15:27 -0400 (EDT)
+Received: from localhost.localdomain.com (10.38.59.27) by
+ reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.10; Mon, 16 Aug 2021 13:51:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Idk7MBFC3tyf/2pO7voDiT+bB4CYqDuE+yoFzMadfcjbxszas1SY3PhUm518NcVJCLJMZ07Kcw1DMkiM8ahnjpXY5JSXPVyyNZww2GWaWm5SE6cnfyguc7098vUyEAuJZalkuqbgqeL9CEEAGlyt+FFyONt3+y+UMnoIe1xWYHKzFdO0ejATps939a0a8vxTTIB3VWffs4gSPa/x8PoI5SePlbPqYiJq4U2H3oe0IyZqSPhw7ownn2EU7VGy7f17Fhhfx94bPneLcBA8U6830nNmIQqREmOnXvH50/Q7mMqt2nVM3OarLVZ13j1ikqduMeFXTnAFfAzTue+CCRVngg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1HADgDTtyChRMoTvjQ0GAQ0EySXRTDQdX+nXqUhVI/U=;
- b=JlMaJi4S5/LOIgVAv5Of8CXIh1C+edrtaq8kAN8S3KcEfZec9lMWIbn6mCYv6wqRI6h0sPrC2HWeJ3SRG5nftGTemMSjNHa6fOG3e1BM44EUHLM4z312PiVVqlsXdWyR4UAXRdhfFRbD0gvTvHRpUYx5G7V2DwIjwjr2VZoB0/oOlHxw4B5OjqQJMIwW7WF0meZUnqP2+91ZiV8YzEDrgNunLRjVkFIBpAToyJfEKkFOr/a5Qc6p1WwjD/rgpkYlCkVsN95v6AL6pWcQB8Kqhk+OPdH4YTkvaaMNBOFj/bPvp2oAtwdPjlGFO1+M7oVf6K1aZSCEWQfQhx1J6YNLzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1HADgDTtyChRMoTvjQ0GAQ0EySXRTDQdX+nXqUhVI/U=;
- b=n2hMeHWvNpk68t0W2om1F2Ti7ffIwVENnrPK5hvQl31Bc8XBSgglJYZHjI2WrVTfM0vekSuFAoZm3+WIL+zsbEsYcnqvngwY/ajRcV+pr0arBDt/q1gLilYoffATjdWvHwx0uYoCaSdCrL9utUpb1L4ZvIJVSpzga4PKwEPXFBA=
-Received: from MW3PR11MB4523.namprd11.prod.outlook.com (2603:10b6:303:5b::16)
- by MWHPR11MB1967.namprd11.prod.outlook.com (2603:10b6:300:111::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.18; Mon, 16 Aug
- 2021 20:51:14 +0000
-Received: from MW3PR11MB4523.namprd11.prod.outlook.com
- ([fe80::c5d2:7f65:9e5b:8f96]) by MW3PR11MB4523.namprd11.prod.outlook.com
- ([fe80::c5d2:7f65:9e5b:8f96%8]) with mapi id 15.20.4415.023; Mon, 16 Aug 2021
- 20:51:14 +0000
-From:   "Kammela, Gayatri" <gayatri.kammela@intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Rajneesh Bhardwaj" <irenic.rajneesh@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        You-Sheng Yang <vicamo.yang@canonical.com>,
-        "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "Box, David E" <david.e.box@intel.com>,
-        "Qin, Chao" <chao.qin@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Mashiah, Tamar" <tamar.mashiah@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "Alex Deucher" <Alexander.Deucher@amd.com>,
-        "mlimonci@amd.com" <mlimonci@amd.com>
-Subject: RE: [PATCH v7 1/5] platform/x86/intel: intel_pmc_core: Move
- intel_pmc_core* files to pmc subfolder
-Thread-Topic: [PATCH v7 1/5] platform/x86/intel: intel_pmc_core: Move
- intel_pmc_core* files to pmc subfolder
-Thread-Index: AQHXksCEeOYy2Rlf7kO8G/jc8wYLmKt2hSCAgAAWL0A=
-Date:   Mon, 16 Aug 2021 20:51:13 +0000
-Message-ID: <MW3PR11MB45239757C4BA080700537DEEF2FD9@MW3PR11MB4523.namprd11.prod.outlook.com>
-References: <cover.1629091915.git.gayatri.kammela@intel.com>
- <81b6292e50af54fb7eeabfefde6f4a3d283b0b96.1629091915.git.gayatri.kammela@intel.com>
- <CAHp75VegAcEeWQXPfufcDC1cHLbC3JRsChm2zKATGWnYWfGEfg@mail.gmail.com>
-In-Reply-To: <CAHp75VegAcEeWQXPfufcDC1cHLbC3JRsChm2zKATGWnYWfGEfg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.6.100.41
-dlp-reaction: no-action
-dlp-product: dlpe-windows
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f88e4f2f-b30c-4eea-6fc2-08d960f79611
-x-ms-traffictypediagnostic: MWHPR11MB1967:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1967E4A57C17102108076F1FF2FD9@MWHPR11MB1967.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1091;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CFvV+I6XBr6LTmtbSiQxAnSHD74SwzEY1FsNX9KYGhglktdCh8qR6Mws02urwaB9i4ct2ZtIuv75glHUirD6GqFruEI0mtmhGcxYs3lQoGvA0EHRbTOc1BLcYpi6aQm2psfEVeyX9/evGyPsd0YlBgGRt1O+SiR4RSdpDj1Q7gDC1p2jS3qvx7HX2H5mhuLVZTzxkT5pD5NDkEuaIY0a6whW4+gvsAVpQW0h0W2t7W8t4Js+a89uwGGWXa0zJRSqiEDblwIq3aw5Hplc4rvotOOcjrbJw9I/81QlVLBrWLotCdma8g2QKJM9TJc3lGlbokNmSKt3m16sj9D1ECDSvJCdc99Zz4VrmzNPG1Yi82O3wLV1eeJdyol4Fx4H87e1p1MiyjOulXSQ4l/lQ7xZjdY+lHMz/V0U4JsZEDjoiH1rw0ADlKQvKSfuMqZIlQNI4WK8YK0tQK2OiCF2OwVVNv88KLrAguQMLBzU4HxmULtDsP+qhMQY6TbVJEV0YAjwl1IiCBNPXktTZvu1wVGDisy18k/h+fvGoufUvkoUItkaoh2U2l9ZUeszOEUcGLdHtC/1olGmsdPtEeLp4GHsAmxRFaNRV52U4K6rBj7cMHfL6Wl5a1HvtL8ZNfkPF35DSa2Mf/sBcZous0RiwypH3G2nSPmAMZXwPy0SESWmV+tJNqC6pdKrrd2I9lbAYShBqPlqtlZ9cSPRmCmj9G/GSw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR11MB4523.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(66446008)(9686003)(7696005)(4326008)(71200400001)(54906003)(64756008)(38070700005)(76116006)(83380400001)(8676002)(316002)(52536014)(66556008)(8936002)(6916009)(6506007)(122000001)(2906002)(66946007)(38100700002)(33656002)(478600001)(26005)(66476007)(7416002)(86362001)(53546011)(4744005)(5660300002)(55016002)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZndkUnFoaisvNlhFRGZWK1R3Ykt3SGpKMExnbTBhTXh2RStpc3VGa0NWanYx?=
- =?utf-8?B?ajBMbTRGOGtlZUg5bUlvc3hLOFZXeGptb09QNzAvME4yYy9DZSsrYUQxV09S?=
- =?utf-8?B?a1VBWWJGNEhITktUZ0dEbTJjSjZNL1BONlQzSGd3U1NYVGVGeWgxWWNUT2No?=
- =?utf-8?B?Yy9yUVVYcUI4bmd4SW5pNHgvbGx6b1hma3FhRzRIL1BZVkg4dEhZZldNYXMy?=
- =?utf-8?B?L29PTkJ0MnJlS01Tc0hxWlFVczJ6NWd2ZUhmTnQ1UUVpYXIyL2ZuSkY3RHEy?=
- =?utf-8?B?ZTVsc0ExQncxMlVUQmFjWlVIeUZlM3liWEw4cC9sY0pBOENXYmg5WXNreVpU?=
- =?utf-8?B?WitRWE5XaGkyelhaTTAwZzZBRkQ4ajJsQ0hiQXFYdE42NDQyR0NuZ0l2UHJF?=
- =?utf-8?B?R2pLL2VVbTZMaEpYL2VSL1JZenljbmZYdVprb1dnZEVmT2dUbW5iZDlXbWVi?=
- =?utf-8?B?UEpNNm85MFJ6WllQKzNxVkdHRHFEeWFxTkZQT3l5elNJNHZEeDNYaktIZFcr?=
- =?utf-8?B?VGlVOWZteU1ub1h5eEZQUzMwWXZLYmV1cXFXZ0hkM2U1bXhKNUdzTzFFUzlD?=
- =?utf-8?B?RWN5d3hjMXV4M1lYVHdGOERJNWVUZWFET0VHZFVuMnVIMjd2TkszOElQN1h5?=
- =?utf-8?B?UGo3ZHZTTWFEbnFHb1ZPOWp3RCtqMEhlUzE3dDlaeWVERTB3SDdlWE1tUC9s?=
- =?utf-8?B?NGVkZ1EyelZaTnNHaUpIdFcrYkRzeGo2VCtGbUI5UVNLblBMSERSeDhnOS94?=
- =?utf-8?B?OGo0MmZYbjRlN21zTWMzWWp2bThIUldPSGZGc3BxN09IZm5pNnlUOGV5bnRz?=
- =?utf-8?B?WFNTVkZPSk82RUdublFia1FPLzlSYkVnTUdDYWVVaU91UDUxenNuc2NvTi8r?=
- =?utf-8?B?cGhvVUtqdGhxZ1BKL1dqaVRnemlSUzVuR3BiOFl3ZysxaTU3bnBVNU9VcENH?=
- =?utf-8?B?NzdBeUFwbDN3WjlIdUduZld2ejFPOFFJT1BVNDI5bDZOOFZHL2kyRk94RUx4?=
- =?utf-8?B?bytsLzRndXRjRzNVZ2haVFhCNWVtd2JhM09kaFc2Sjh2UEVUendFU2oxRXMw?=
- =?utf-8?B?UVRkSFgwSjhmVWhyVHRnUklMcDI5VGJOY1FXQVIrcjRxbVJGTWZMNFc3TGFE?=
- =?utf-8?B?b2dqRmpONnBGaUZoSWVmYnFKTmhXOU4wazRyRDFUV0dmK3ZTeFJXc0x6YVI5?=
- =?utf-8?B?RFVjbFZPMWY3TkRzbi9pTTNVY0MxTE5CVVVTZ0VWTHdUV3RQS2pLcC90empV?=
- =?utf-8?B?NFVKYm1ISGFxQXQ5Zm5FemJQdm1Xa080TGxIeUgvamNEZHVCdzhlbzhlem5i?=
- =?utf-8?B?ejFXbjU3MjdnY0dVb0kwMVBFNW81NUJJM0VVMHVnU2tGQnl1a3hhUXVvZHUw?=
- =?utf-8?B?UWdScWRVT0lvTWpoMG9yYitXNm0rMW5VTTFGN213eDJpNUt3WExMZGRPVkpw?=
- =?utf-8?B?alJiVXUvVzBETnFBUnZaVzlnd2NYeWMrRmMvVXdKQVFZdjZVYnNQUkh4aWFr?=
- =?utf-8?B?Rm5TQzh6UEpYQmg0T0xMTEphOElHYkVjZTQvNGVpR0oxbkhFL0VSVUlTUnFr?=
- =?utf-8?B?eURRczNLVlZXNjBSbjQ3QllTeXM0QXgzeGV4QXpxWDBTMkowT0RNaUZjMWxs?=
- =?utf-8?B?UTNrSTJ3S01qRGQ4enlxbzRnNndWdTh6MlFURytlWDVBZUdnWnJpbjBRbVZI?=
- =?utf-8?B?RVA1cFNodlIzSXIyZ0o1REV3UnRFMnFYSEdVZlF3L0xNd0RLVG1xVWNCSjlw?=
- =?utf-8?Q?NvPYUPeBq+Mx+5W8iU=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.1.2242.12; Mon, 16 Aug 2021 20:15:27 -0400
+From:   Mark Pearson <markpearson@lenovo.com>
+To:     <markpearson@lenovo.com>
+CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: [PATCH v2] platform/x86: think-lmi: add debug_cmd
+Date:   Mon, 16 Aug 2021 20:15:01 -0400
+Message-ID: <20210817001501.293501-1-markpearson@lenovo.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <markpearson@lenovo.com>
+References: <markpearson@lenovo.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR11MB4523.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f88e4f2f-b30c-4eea-6fc2-08d960f79611
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Aug 2021 20:51:13.9076
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dmF7g4l9htAzdUzQ2Qe5jLN3WwO6QEnbNQItj+0ykkw4Gi53DzuhfqEsS95emvd7Wo+zjlLMpFeThk0M6Ew/zA88/IN9yLniZFIUXQPGoOg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1967
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.38.59.27]
+X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
+ reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmR5IFNoZXZjaGVua28gPGFu
-ZHkuc2hldmNoZW5rb0BnbWFpbC5jb20+DQo+IFNlbnQ6IE1vbmRheSwgQXVndXN0IDE2LCAyMDIx
-IDEyOjMyIFBNDQo+IFRvOiBLYW1tZWxhLCBHYXlhdHJpIDxnYXlhdHJpLmthbW1lbGFAaW50ZWwu
-Y29tPg0KPiBDYzogUGxhdGZvcm0gRHJpdmVyIDxwbGF0Zm9ybS1kcml2ZXIteDg2QHZnZXIua2Vy
-bmVsLm9yZz47IE1hcmsgR3Jvc3MNCj4gPG1ncm9zc0BsaW51eC5pbnRlbC5jb20+OyBIYW5zIGRl
-IEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPjsNCj4gUmFqbmVlc2ggQmhhcmR3YWogPGlyZW5p
-Yy5yYWpuZWVzaEBnbWFpbC5jb20+OyBBbmR5IFNoZXZjaGVua28NCj4gPGFuZHJpeS5zaGV2Y2hl
-bmtvQGxpbnV4LmludGVsLmNvbT47IFlvdS1TaGVuZyBZYW5nDQo+IDx2aWNhbW8ueWFuZ0BjYW5v
-bmljYWwuY29tPjsgUGFuZHJ1dmFkYSwgU3Jpbml2YXMNCj4gPHNyaW5pdmFzLnBhbmRydXZhZGFA
-aW50ZWwuY29tPjsgQm94LCBEYXZpZCBFIDxkYXZpZC5lLmJveEBpbnRlbC5jb20+Ow0KPiBRaW4s
-IENoYW8gPGNoYW8ucWluQGludGVsLmNvbT47IExpbnV4IEtlcm5lbCBNYWlsaW5nIExpc3QgPGxp
-bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgTWFzaGlhaCwgVGFtYXIgPHRhbWFyLm1h
-c2hpYWhAaW50ZWwuY29tPjsNCj4gR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3Vu
-ZGF0aW9uLm9yZz47IFJhamF0IEphaW4NCj4gPHJhamF0amFAZ29vZ2xlLmNvbT47IFNoeWFtIFN1
-bmRhciBTIEsgPFNoeWFtLXN1bmRhci5TLWtAYW1kLmNvbT47DQo+IEFsZXggRGV1Y2hlciA8QWxl
-eGFuZGVyLkRldWNoZXJAYW1kLmNvbT47IG1saW1vbmNpQGFtZC5jb20NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCB2NyAxLzVdIHBsYXRmb3JtL3g4Ni9pbnRlbDogaW50ZWxfcG1jX2NvcmU6IE1vdmUN
-Cj4gaW50ZWxfcG1jX2NvcmUqIGZpbGVzIHRvIHBtYyBzdWJmb2xkZXINCj4gDQo+IE9uIE1vbiwg
-QXVnIDE2LCAyMDIxIGF0IDg6MDIgUE0gR2F5YXRyaSBLYW1tZWxhDQo+IDxnYXlhdHJpLmthbW1l
-bGFAaW50ZWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFzIHBhcnQgb2YgY29sbGVjdGluZyBJbnRl
-bCB4ODYgc3BlY2lmaWMgZHJpdmVycyBpbiB0aGVpciBvd24gZm9sZGVyLA0KPiA+IG1vdmUgaW50
-ZWxfcG1jX2NvcmUqIGZpbGVzIHRvIGl0cyBvd24gc3ViZm9sZGVyIHRoZXJlLg0KPiANCj4gPiAg
-Li4uL3BtYy9jb3JlX3BsYXRmb3JtLmN9ICAgICAgICAgICAgICAgICAgICAgIHwgIDANCj4gDQo+
-IHBsYXRmb3JtLmMgaXMgZW5vdWdoLg0KU3VyZSwgdGhhbmtzIEFuZHkhDQo+IA0KPiAtLQ0KPiBX
-aXRoIEJlc3QgUmVnYXJkcywNCj4gQW5keSBTaGV2Y2hlbmtvDQo=
+Many Lenovo BIOS's support the ability to send a debug command which
+is useful for debugging and testing unreleased or early features.
+
+Adding support for this feature as a module parameter.
+
+Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+---
+Changes in v2: 
+ - Updated to use debug_support parameter to enable feature
+ - remove changes to pending_reboot as that was integrated separately
+
+ .../testing/sysfs-class-firmware-attributes   | 11 +++
+ drivers/platform/x86/think-lmi.c              | 80 +++++++++++++++++++
+ drivers/platform/x86/think-lmi.h              |  1 +
+ 3 files changed, 92 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+index 0b43997b76e3..90fdf935aa5e 100644
+--- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
++++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+@@ -272,3 +272,14 @@ Description:
+ 
+ 		Note that any changes to this attribute requires a reboot
+ 		for changes to take effect.
++
++What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
++Date:		July 2021
++KernelVersion:	5.14
++Contact:	Mark Pearson <markpearson@lenovo.com>
++Description:
++		This write only attribute can be used to send debug commands to the BIOS.
++		This should only be used when recommended by the BIOS vendor. Vendors may
++		use it to enable extra debug attributes or BIOS features for testing purposes.
++
++		Note that any changes to this attribute requires a reboot for changes to take effect.
+diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+index 6cfed4427fb0..4d246bfe4907 100644
+--- a/drivers/platform/x86/think-lmi.c
++++ b/drivers/platform/x86/think-lmi.c
+@@ -20,6 +20,10 @@
+ #include "firmware_attributes_class.h"
+ #include "think-lmi.h"
+ 
++static bool debug_support;
++module_param(debug_support, bool, 0644);
++MODULE_PARM_DESC(debug_support, "Enable debug command support");
++
+ /*
+  * Name:
+  *  Lenovo_BiosSetting
+@@ -116,6 +120,14 @@
+  */
+ #define LENOVO_GET_BIOS_SELECTIONS_GUID	"7364651A-132F-4FE7-ADAA-40C6C7EE2E3B"
+ 
++/*
++ * Name:
++ *  Lenovo_DebugCmdGUID
++ * Description
++ *  Debug entry GUID method for entering debug commands to the BIOS
++ */
++#define LENOVO_DEBUG_CMD_GUID "7FF47003-3B6C-4E5E-A227-E979824A85D1"
++
+ #define TLMI_POP_PWD (1 << 0)
+ #define TLMI_PAP_PWD (1 << 1)
+ #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
+@@ -660,6 +672,64 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
+ 
+ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+ 
++/* ---- Debug interface--------------------------------------------------------- */
++static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
++				const char *buf, size_t count)
++{
++	char *set_str = NULL, *new_setting = NULL;
++	char *auth_str = NULL;
++	char *p;
++	int ret;
++
++	if (!tlmi_priv.can_debug_cmd)
++		return -EOPNOTSUPP;
++
++	new_setting = kstrdup(buf, GFP_KERNEL);
++	if (!new_setting)
++		return -ENOMEM;
++
++	/* Strip out CR if one is present */
++	p = strchrnul(new_setting, '\n');
++	*p = '\0';
++
++	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
++		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
++				tlmi_priv.pwd_admin->password,
++				encoding_options[tlmi_priv.pwd_admin->encoding],
++				tlmi_priv.pwd_admin->kbdlang);
++		if (!auth_str) {
++			ret = -ENOMEM;
++			goto out;
++		}
++	}
++
++	if (auth_str)
++		set_str = kasprintf(GFP_KERNEL, "%s,%s", new_setting, auth_str);
++	else
++		set_str = kasprintf(GFP_KERNEL, "%s;", new_setting);
++	if (!set_str) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = tlmi_simple_call(LENOVO_DEBUG_CMD_GUID, set_str);
++	if (ret)
++		goto out;
++
++	if (!ret && !tlmi_priv.pending_changes) {
++		tlmi_priv.pending_changes = true;
++		/* let userland know it may need to check reboot pending again */
++		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
++	}
++out:
++	kfree(auth_str);
++	kfree(set_str);
++	kfree(new_setting);
++	return ret ?: count;
++}
++
++static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
++
+ /* ---- Initialisation --------------------------------------------------------- */
+ static void tlmi_release_attr(void)
+ {
+@@ -673,6 +743,8 @@ static void tlmi_release_attr(void)
+ 		}
+ 	}
+ 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
++	if (tlmi_priv.can_debug_cmd && debug_support)
++		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+ 	kset_unregister(tlmi_priv.attribute_kset);
+ 
+ 	/* Authentication structures */
+@@ -737,6 +809,11 @@ static int tlmi_sysfs_init(void)
+ 	if (ret)
+ 		goto fail_create_attr;
+ 
++	if (tlmi_priv.can_debug_cmd && debug_support) {
++		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
++		if (ret)
++			goto fail_create_attr;
++	}
+ 	/* Create authentication entries */
+ 	tlmi_priv.authentication_kset = kset_create_and_add("authentication", NULL,
+ 								&tlmi_priv.class_dev->kobj);
+@@ -793,6 +870,9 @@ static int tlmi_analyze(void)
+ 	if (wmi_has_guid(LENOVO_BIOS_PASSWORD_SETTINGS_GUID))
+ 		tlmi_priv.can_get_password_settings = true;
+ 
++	if (wmi_has_guid(LENOVO_DEBUG_CMD_GUID))
++		tlmi_priv.can_debug_cmd = true;
++
+ 	/*
+ 	 * Try to find the number of valid settings of this machine
+ 	 * and use it to create sysfs attributes.
+diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+index eb598846628a..f8e26823075f 100644
+--- a/drivers/platform/x86/think-lmi.h
++++ b/drivers/platform/x86/think-lmi.h
+@@ -61,6 +61,7 @@ struct think_lmi {
+ 	bool can_set_bios_password;
+ 	bool can_get_password_settings;
+ 	bool pending_changes;
++	bool can_debug_cmd;
+ 
+ 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+ 	struct device *class_dev;
+-- 
+2.31.1
+
