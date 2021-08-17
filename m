@@ -2,265 +2,365 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A261C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F4DC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDC3360F46
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1484360F55
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 17 Aug 2021 00:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232924AbhHQAQB (ORCPT
+        id S235437AbhHQAgQ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 16 Aug 2021 20:16:01 -0400
-Received: from mail1.bemta23.messagelabs.com ([67.219.246.116]:50573 "EHLO
-        mail1.bemta23.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232903AbhHQAQB (ORCPT
+        Mon, 16 Aug 2021 20:36:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235457AbhHQAgP (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 16 Aug 2021 20:16:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lenovo.com;
-        s=Selector; t=1629159328; i=@lenovo.com;
-        bh=NoAf1mi8p//4IyNxm3rjZpkFGZ923mCKdQeTPoT0VEk=;
-        h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-         MIME-Version:Content-Transfer-Encoding:Content-Type;
-        b=mKG+syC0kg3vw/Rq88cD/1tbJ1H8xvOCSv/nSFiHnY0jDHt7AQOne4Oy1AxJshTOb
-         vUTqKJrSMSuoMrapfGcPnkKGptLAlY3Yyk0zZqMDMvykwHpFfDTYXYRIHnWMGrlsOR
-         vujT9SzouoiUK3eENHHbnt10mTcCLdBOzhEOPtgSX0Q3m8o4yaNvb07uWPoAH+Brk6
-         wXF6SniT8rwfPGWakSzG63dSf1kVzYRKaXweqOd2JIv1XTOcFZu1MgPQ88t+dfV7Yt
-         YAr3AM5C+B0hjalFQBajcFxkkRwiYd7l4TkNvbS0a9urlVlWqRTWZZlVNdKPK+vMjC
-         gKnZEki+bKbzg==
-Received: from [100.112.6.161] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-5.bemta.az-c.us-east-1.aws.symcld.net id EB/18-20821-0AFFA116; Tue, 17 Aug 2021 00:15:28 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGIsWRWlGSWpSXmKPExsWS8eIhr+6C/1K
-  JBvdnM1u8OT6dyeJzx2QWi9V7XjA7MHvMOxno8X7fVTaPz5vkApijWDPzkvIrElgz1j7ZwlSw
-  Qbdi6/mzTA2Mv9W6GLk4hAT+M0rsOXiWBcJ5wygxf/EF9i5GTg42AW2JLVt+sXUxcnCICMhIf
-  FjrCRJmFoiWaH57hRXEFhawkug4uY8RxGYRUJU4/bOZFaScV8BG4tM/P5CwhIC8xOkT18BKOI
-  FKznQ9ZgGxhQRUJO4/WMIGYvMKCEqcnPmEBWK8vETz1tnMELaExMEXL5hh5iw5tIkFwk6Q6Pn
-  3iG0Co8AsJO2zkLTPQtK+gJF5FaNZUlFmekZJbmJmjq6hgYGuoaGRromukaGZXmKVbrJeabFu
-  amJxia6hXmJ5sV5xZW5yTopeXmrJJkZgcKcUsNzYwXjv9Qe9Q4ySHExKory3TkklCvEl5adUZ
-  iQWZ8QXleakFh9ilOHgUJLgXXUWKCdYlJqeWpGWmQOMNJi0BAePkgiv4j+gNG9xQWJucWY6RO
-  oUo6KUOO+yFUAJAZBERmkeXBssui8xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEuYNBhnPk5l
-  XAjf9FdBiJqDFPgaSIItLEhFSUg1M080bsq/7nr981/rl3KCVvzrXnuXfPaXOVXxOldjzvI3u
-  HNdXcGe2Wb5bZbvg+tOcq9ENwled37Om5Wk9DDDKVrr+IIGFO2dy9z7uk6z3phVrytau2RGiv
-  qw6X8HtQO7kWPbuUy+7FsXPaj7rmXyjXFn5i1qv3aFDLMErnZsPCNoanyn/+X3FQwN+ud8yZw
-  w4booKbQ/9f8/bdpr3pOeaE/P3q7a0px02/7D8gYqE24/zLx6pPqj7F1H6Y39NgOqcOTOv/ON
-  f8u+OaLPW72f+9dOeFIdtsvy907ig/Cq77q4nS14uV7He18MxObWV41DkyujMPpmGnz4/hMSf
-  CVV4O56+MMX67aYXvQ9cDp0QV2Ipzkg01GIuKk4EAKhlThBpAwAA
-X-Env-Sender: markpearson@lenovo.com
-X-Msg-Ref: server-5.tower-406.messagelabs.com!1629159327!22713!1
-X-Originating-IP: [104.232.225.13]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.81.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 9438 invoked from network); 17 Aug 2021 00:15:28 -0000
-Received: from unknown (HELO lenovo.com) (104.232.225.13)
-  by server-5.tower-406.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 17 Aug 2021 00:15:28 -0000
-Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by Forcepoint Email with ESMTPS id D379CD2C9E48270EAC7F;
-        Mon, 16 Aug 2021 20:15:27 -0400 (EDT)
-Received: from localhost.localdomain.com (10.38.59.27) by
- reswpmail01.lenovo.com (10.62.32.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2242.12; Mon, 16 Aug 2021 20:15:27 -0400
-From:   Mark Pearson <markpearson@lenovo.com>
-To:     <markpearson@lenovo.com>
-CC:     <hdegoede@redhat.com>, <mgross@linux.intel.com>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: [PATCH v2] platform/x86: think-lmi: add debug_cmd
-Date:   Mon, 16 Aug 2021 20:15:01 -0400
-Message-ID: <20210817001501.293501-1-markpearson@lenovo.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <markpearson@lenovo.com>
-References: <markpearson@lenovo.com>
+        Mon, 16 Aug 2021 20:36:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 02CFD60F58;
+        Tue, 17 Aug 2021 00:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629160542;
+        bh=/HcD1gZjW68MD8xhS0+XUFDfAo6EZrmRC8YzTyDeRH8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lBbfbUVZ4hcDsBT1mekWiwsiQ1IwPn3juWOELD86n6qlD2aVbY2UBOBzOFpKzgOua
+         jYfQ3pSIt8LEvlIy+zqMs69MgWPtmP3pxLZQPLRnbJ9oclvwfwcrqrMVDYZkCis/7F
+         pO5CiX5Zxqp+Z3BQW6It+5zh2hY3sMMaEO/kNNKqd7kPgFQxKjOD3Yhz9IyaXTLW2U
+         Ki5sg5eLC6YuYhWe780ydI0PXatlmaFJs3uatsOb/beI/iGvqNdI8h91t9XbPUR90j
+         6kRioCKnqy7Bh3zSe20iZaH9omYq5JFEg2QqaMhkYLmAEMbYY0nJO4k4gCK+k99Yw7
+         OvTVUoE0sxrJA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Julius Lehmann <julius@devpi.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        ibm-acpi-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.13 04/12] platform/x86: Add and use a dual_accel_detect() helper
+Date:   Mon, 16 Aug 2021 20:35:28 -0400
+Message-Id: <20210817003536.83063-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210817003536.83063-1-sashal@kernel.org>
+References: <20210817003536.83063-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.38.59.27]
-X-ClientProxiedBy: reswpmail04.lenovo.com (10.62.32.23) To
- reswpmail01.lenovo.com (10.62.32.20)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Many Lenovo BIOS's support the ability to send a debug command which
-is useful for debugging and testing unreleased or early features.
+From: Hans de Goede <hdegoede@redhat.com>
 
-Adding support for this feature as a module parameter.
+[ Upstream commit 153cca9caa81ca8912a70528daca4b9a523c6898 ]
 
-Signed-off-by: Mark Pearson <markpearson@lenovo.com>
+Various 360 degree hinges (yoga) style 2-in-1 devices use 2 accelerometers
+to allow the OS to determine the angle between the display and the base of
+the device.
+
+On Windows these are read by a special HingeAngleService process which
+calls undocumented ACPI methods, to let the firmware know if the 2-in-1 is
+in tablet- or laptop-mode. The firmware may use this to disable the kbd and
+touchpad to avoid spurious input in tablet-mode as well as to report
+SW_TABLET_MODE info to the OS.
+
+Since Linux does not call these undocumented methods, the SW_TABLET_MODE
+info reported by various pdx86 drivers is incorrect on these devices.
+
+Before this commit the intel-hid and thinkpad_acpi code already had 2
+hardcoded checks for ACPI hardware-ids of dual-accel sensors to avoid
+reporting broken info.
+
+And now we also have a bug-report about the same problem in the intel-vbtn
+code. Since there are at least 3 different ACPI hardware-ids in play, add
+a new dual_accel_detect() helper which checks for all 3, rather then
+adding different hardware-ids to the drivers as bug-reports trickle in.
+Having shared code which checks all known hardware-ids is esp. important
+for the intel-hid and intel-vbtn drivers as these are generic drivers
+which are used on a lot of devices.
+
+The BOSC0200 hardware-id requires special handling, because often it is
+used for a single-accelerometer setup. Only in a few cases it refers to
+a dual-accel setup, in which case there will be 2 I2cSerialBus resources
+in the device's resource-list, so the helper checks for this.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209011
+Reported-and-tested-by: Julius Lehmann <julius@devpi.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/20210729082134.6683-1-hdegoede@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in v2: 
- - Updated to use debug_support parameter to enable feature
- - remove changes to pending_reboot as that was integrated separately
+ drivers/platform/x86/Kconfig             |  3 +
+ drivers/platform/x86/dual_accel_detect.h | 75 ++++++++++++++++++++++++
+ drivers/platform/x86/intel-hid.c         | 21 ++-----
+ drivers/platform/x86/intel-vbtn.c        | 18 +++++-
+ drivers/platform/x86/thinkpad_acpi.c     |  3 +-
+ 5 files changed, 101 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/platform/x86/dual_accel_detect.h
 
- .../testing/sysfs-class-firmware-attributes   | 11 +++
- drivers/platform/x86/think-lmi.c              | 80 +++++++++++++++++++
- drivers/platform/x86/think-lmi.h              |  1 +
- 3 files changed, 92 insertions(+)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-index 0b43997b76e3..90fdf935aa5e 100644
---- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
-+++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
-@@ -272,3 +272,14 @@ Description:
- 
- 		Note that any changes to this attribute requires a reboot
- 		for changes to take effect.
-+
-+What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
-+Date:		July 2021
-+KernelVersion:	5.14
-+Contact:	Mark Pearson <markpearson@lenovo.com>
-+Description:
-+		This write only attribute can be used to send debug commands to the BIOS.
-+		This should only be used when recommended by the BIOS vendor. Vendors may
-+		use it to enable extra debug attributes or BIOS features for testing purposes.
-+
-+		Note that any changes to this attribute requires a reboot for changes to take effect.
-diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
-index 6cfed4427fb0..4d246bfe4907 100644
---- a/drivers/platform/x86/think-lmi.c
-+++ b/drivers/platform/x86/think-lmi.c
-@@ -20,6 +20,10 @@
- #include "firmware_attributes_class.h"
- #include "think-lmi.h"
- 
-+static bool debug_support;
-+module_param(debug_support, bool, 0644);
-+MODULE_PARM_DESC(debug_support, "Enable debug command support");
-+
- /*
-  * Name:
-  *  Lenovo_BiosSetting
-@@ -116,6 +120,14 @@
-  */
- #define LENOVO_GET_BIOS_SELECTIONS_GUID	"7364651A-132F-4FE7-ADAA-40C6C7EE2E3B"
- 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 60592fb88e7a..e878ac192758 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -507,6 +507,7 @@ config THINKPAD_ACPI
+ 	depends on RFKILL || RFKILL = n
+ 	depends on ACPI_VIDEO || ACPI_VIDEO = n
+ 	depends on BACKLIGHT_CLASS_DEVICE
++	depends on I2C
+ 	select ACPI_PLATFORM_PROFILE
+ 	select HWMON
+ 	select NVRAM
+@@ -701,6 +702,7 @@ config INTEL_HID_EVENT
+ 	tristate "INTEL HID Event"
+ 	depends on ACPI
+ 	depends on INPUT
++	depends on I2C
+ 	select INPUT_SPARSEKMAP
+ 	help
+ 	  This driver provides support for the Intel HID Event hotkey interface.
+@@ -752,6 +754,7 @@ config INTEL_VBTN
+ 	tristate "INTEL VIRTUAL BUTTON"
+ 	depends on ACPI
+ 	depends on INPUT
++	depends on I2C
+ 	select INPUT_SPARSEKMAP
+ 	help
+ 	  This driver provides support for the Intel Virtual Button interface.
+diff --git a/drivers/platform/x86/dual_accel_detect.h b/drivers/platform/x86/dual_accel_detect.h
+new file mode 100644
+index 000000000000..1a069159da91
+--- /dev/null
++++ b/drivers/platform/x86/dual_accel_detect.h
+@@ -0,0 +1,75 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Name:
-+ *  Lenovo_DebugCmdGUID
-+ * Description
-+ *  Debug entry GUID method for entering debug commands to the BIOS
++ * Helper code to detect 360 degree hinges (yoga) style 2-in-1 devices using 2 accelerometers
++ * to allow the OS to determine the angle between the display and the base of the device.
++ *
++ * On Windows these are read by a special HingeAngleService process which calls undocumented
++ * ACPI methods, to let the firmware know if the 2-in-1 is in tablet- or laptop-mode.
++ * The firmware may use this to disable the kbd and touchpad to avoid spurious input in
++ * tablet-mode as well as to report SW_TABLET_MODE info to the OS.
++ *
++ * Since Linux does not call these undocumented methods, the SW_TABLET_MODE info reported
++ * by various drivers/platform/x86 drivers is incorrect. These drivers use the detection
++ * code in this file to disable SW_TABLET_MODE reporting to avoid reporting broken info
++ * (instead userspace can derive the status itself by directly reading the 2 accels).
 + */
-+#define LENOVO_DEBUG_CMD_GUID "7FF47003-3B6C-4E5E-A227-E979824A85D1"
 +
- #define TLMI_POP_PWD (1 << 0)
- #define TLMI_PAP_PWD (1 << 1)
- #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
-@@ -660,6 +672,64 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
- 
- static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
- 
-+/* ---- Debug interface--------------------------------------------------------- */
-+static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
-+				const char *buf, size_t count)
++#include <linux/acpi.h>
++#include <linux/i2c.h>
++
++static int dual_accel_i2c_resource_count(struct acpi_resource *ares, void *data)
 +{
-+	char *set_str = NULL, *new_setting = NULL;
-+	char *auth_str = NULL;
-+	char *p;
-+	int ret;
++	struct acpi_resource_i2c_serialbus *sb;
++	int *count = data;
 +
-+	if (!tlmi_priv.can_debug_cmd)
-+		return -EOPNOTSUPP;
++	if (i2c_acpi_get_i2c_resource(ares, &sb))
++		*count = *count + 1;
 +
-+	new_setting = kstrdup(buf, GFP_KERNEL);
-+	if (!new_setting)
-+		return -ENOMEM;
-+
-+	/* Strip out CR if one is present */
-+	p = strchrnul(new_setting, '\n');
-+	*p = '\0';
-+
-+	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
-+		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
-+				tlmi_priv.pwd_admin->password,
-+				encoding_options[tlmi_priv.pwd_admin->encoding],
-+				tlmi_priv.pwd_admin->kbdlang);
-+		if (!auth_str) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+	}
-+
-+	if (auth_str)
-+		set_str = kasprintf(GFP_KERNEL, "%s,%s", new_setting, auth_str);
-+	else
-+		set_str = kasprintf(GFP_KERNEL, "%s;", new_setting);
-+	if (!set_str) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	ret = tlmi_simple_call(LENOVO_DEBUG_CMD_GUID, set_str);
-+	if (ret)
-+		goto out;
-+
-+	if (!ret && !tlmi_priv.pending_changes) {
-+		tlmi_priv.pending_changes = true;
-+		/* let userland know it may need to check reboot pending again */
-+		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
-+	}
-+out:
-+	kfree(auth_str);
-+	kfree(set_str);
-+	kfree(new_setting);
-+	return ret ?: count;
++	return 1;
 +}
 +
-+static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
++static int dual_accel_i2c_client_count(struct acpi_device *adev)
++{
++	int ret, count = 0;
++	LIST_HEAD(r);
 +
- /* ---- Initialisation --------------------------------------------------------- */
- static void tlmi_release_attr(void)
++	ret = acpi_dev_get_resources(adev, &r, dual_accel_i2c_resource_count, &count);
++	if (ret < 0)
++		return ret;
++
++	acpi_dev_free_resource_list(&r);
++	return count;
++}
++
++static bool dual_accel_detect_bosc0200(void)
++{
++	struct acpi_device *adev;
++	int count;
++
++	adev = acpi_dev_get_first_match_dev("BOSC0200", NULL, -1);
++	if (!adev)
++		return false;
++
++	count = dual_accel_i2c_client_count(adev);
++
++	acpi_dev_put(adev);
++
++	return count == 2;
++}
++
++static bool dual_accel_detect(void)
++{
++	/* Systems which use a pair of accels with KIOX010A / KIOX020A ACPI ids */
++	if (acpi_dev_present("KIOX010A", NULL, -1))
++		return true;
++
++	/* Systems which use a single DUAL250E ACPI device to model 2 accels */
++	if (acpi_dev_present("DUAL250E", NULL, -1))
++		return true;
++
++	/* Systems which use a single BOSC0200 ACPI device to model 2 accels */
++	if (dual_accel_detect_bosc0200())
++		return true;
++
++	return false;
++}
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
+index 078648a9201b..7135d720af60 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel-hid.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/suspend.h>
++#include "dual_accel_detect.h"
+ 
+ /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
+ #define TABLET_MODE_FLAG BIT(6)
+@@ -121,6 +122,7 @@ struct intel_hid_priv {
+ 	struct input_dev *array;
+ 	struct input_dev *switches;
+ 	bool wakeup_mode;
++	bool dual_accel;
+ };
+ 
+ #define HID_EVENT_FILTER_UUID	"eeec56b3-4442-408f-a792-4edd4d758054"
+@@ -450,22 +452,9 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	 * SW_TABLET_MODE report, in these cases we enable support when receiving
+ 	 * the first event instead of during driver setup.
+ 	 *
+-	 * Some 360 degree hinges (yoga) style 2-in-1 devices use 2 accelerometers
+-	 * to allow the OS to determine the angle between the display and the base
+-	 * of the device. On Windows these are read by a special HingeAngleService
+-	 * process which calls an ACPI DSM (Device Specific Method) on the
+-	 * ACPI KIOX010A device node for the sensor in the display, to let the
+-	 * firmware know if the 2-in-1 is in tablet- or laptop-mode so that it can
+-	 * disable the kbd and touchpad to avoid spurious input in tablet-mode.
+-	 *
+-	 * The linux kxcjk1013 driver calls the DSM for this once at probe time
+-	 * to ensure that the builtin kbd and touchpad work. On some devices this
+-	 * causes a "spurious" 0xcd event on the intel-hid ACPI dev. In this case
+-	 * there is not a functional tablet-mode switch, so we should not register
+-	 * the tablet-mode switch device.
++	 * See dual_accel_detect.h for more info on the dual_accel check.
+ 	 */
+-	if (!priv->switches && (event == 0xcc || event == 0xcd) &&
+-	    !acpi_dev_present("KIOX010A", NULL, -1)) {
++	if (!priv->switches && !priv->dual_accel && (event == 0xcc || event == 0xcd)) {
+ 		dev_info(&device->dev, "switch event received, enable switches supports\n");
+ 		err = intel_hid_switches_setup(device);
+ 		if (err)
+@@ -606,6 +595,8 @@ static int intel_hid_probe(struct platform_device *device)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&device->dev, priv);
+ 
++	priv->dual_accel = dual_accel_detect();
++
+ 	err = intel_hid_input_setup(device);
+ 	if (err) {
+ 		pr_err("Failed to setup Intel HID hotkeys\n");
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 888a764efad1..309166431063 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -14,6 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/suspend.h>
++#include "dual_accel_detect.h"
+ 
+ /* Returned when NOT in tablet mode on some HP Stream x360 11 models */
+ #define VGBS_TABLET_MODE_FLAG_ALT	0x10
+@@ -66,6 +67,7 @@ static const struct key_entry intel_vbtn_switchmap[] = {
+ struct intel_vbtn_priv {
+ 	struct input_dev *buttons_dev;
+ 	struct input_dev *switches_dev;
++	bool dual_accel;
+ 	bool has_buttons;
+ 	bool has_switches;
+ 	bool wakeup_mode;
+@@ -160,6 +162,10 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 		input_dev = priv->buttons_dev;
+ 	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+ 		if (!priv->has_switches) {
++			/* See dual_accel_detect.h for more info */
++			if (priv->dual_accel)
++				return;
++
+ 			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+ 			ret = input_register_device(priv->switches_dev);
+ 			if (ret)
+@@ -248,11 +254,15 @@ static const struct dmi_system_id dmi_switches_allow_list[] = {
+ 	{} /* Array terminator */
+ };
+ 
+-static bool intel_vbtn_has_switches(acpi_handle handle)
++static bool intel_vbtn_has_switches(acpi_handle handle, bool dual_accel)
  {
-@@ -673,6 +743,8 @@ static void tlmi_release_attr(void)
- 		}
- 	}
- 	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
-+	if (tlmi_priv.can_debug_cmd && debug_support)
-+		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
- 	kset_unregister(tlmi_priv.attribute_kset);
+ 	unsigned long long vgbs;
+ 	acpi_status status;
  
- 	/* Authentication structures */
-@@ -737,6 +809,11 @@ static int tlmi_sysfs_init(void)
- 	if (ret)
- 		goto fail_create_attr;
- 
-+	if (tlmi_priv.can_debug_cmd && debug_support) {
-+		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
-+		if (ret)
-+			goto fail_create_attr;
-+	}
- 	/* Create authentication entries */
- 	tlmi_priv.authentication_kset = kset_create_and_add("authentication", NULL,
- 								&tlmi_priv.class_dev->kobj);
-@@ -793,6 +870,9 @@ static int tlmi_analyze(void)
- 	if (wmi_has_guid(LENOVO_BIOS_PASSWORD_SETTINGS_GUID))
- 		tlmi_priv.can_get_password_settings = true;
- 
-+	if (wmi_has_guid(LENOVO_DEBUG_CMD_GUID))
-+		tlmi_priv.can_debug_cmd = true;
++	/* See dual_accel_detect.h for more info */
++	if (dual_accel)
++		return false;
 +
- 	/*
- 	 * Try to find the number of valid settings of this machine
- 	 * and use it to create sysfs attributes.
-diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
-index eb598846628a..f8e26823075f 100644
---- a/drivers/platform/x86/think-lmi.h
-+++ b/drivers/platform/x86/think-lmi.h
-@@ -61,6 +61,7 @@ struct think_lmi {
- 	bool can_set_bios_password;
- 	bool can_get_password_settings;
- 	bool pending_changes;
-+	bool can_debug_cmd;
+ 	if (!dmi_check_system(dmi_switches_allow_list))
+ 		return false;
  
- 	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
- 	struct device *class_dev;
+@@ -263,13 +273,14 @@ static bool intel_vbtn_has_switches(acpi_handle handle)
+ static int intel_vbtn_probe(struct platform_device *device)
+ {
+ 	acpi_handle handle = ACPI_HANDLE(&device->dev);
+-	bool has_buttons, has_switches;
++	bool dual_accel, has_buttons, has_switches;
+ 	struct intel_vbtn_priv *priv;
+ 	acpi_status status;
+ 	int err;
+ 
++	dual_accel = dual_accel_detect();
+ 	has_buttons = acpi_has_method(handle, "VBDL");
+-	has_switches = intel_vbtn_has_switches(handle);
++	has_switches = intel_vbtn_has_switches(handle, dual_accel);
+ 
+ 	if (!has_buttons && !has_switches) {
+ 		dev_warn(&device->dev, "failed to read Intel Virtual Button driver\n");
+@@ -281,6 +292,7 @@ static int intel_vbtn_probe(struct platform_device *device)
+ 		return -ENOMEM;
+ 	dev_set_drvdata(&device->dev, priv);
+ 
++	priv->dual_accel = dual_accel;
+ 	priv->has_buttons = has_buttons;
+ 	priv->has_switches = has_switches;
+ 
+diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+index edd71e744d27..f8cfb529d1a2 100644
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -73,6 +73,7 @@
+ #include <linux/uaccess.h>
+ #include <acpi/battery.h>
+ #include <acpi/video.h>
++#include "dual_accel_detect.h"
+ 
+ /* ThinkPad CMOS commands */
+ #define TP_CMOS_VOLUME_DOWN	0
+@@ -3232,7 +3233,7 @@ static int hotkey_init_tablet_mode(void)
+ 		 * the laptop/tent/tablet mode to the EC. The bmc150 iio driver
+ 		 * does not support this, so skip the hotkey on these models.
+ 		 */
+-		if (has_tablet_mode && !acpi_dev_present("BOSC0200", "1", -1))
++		if (has_tablet_mode && !dual_accel_detect())
+ 			tp_features.hotkey_tablet = TP_HOTKEY_TABLET_USES_GMMS;
+ 		type = "GMMS";
+ 	} else if (acpi_evalf(hkey_handle, &res, "MHKG", "qd")) {
 -- 
-2.31.1
+2.30.2
 
