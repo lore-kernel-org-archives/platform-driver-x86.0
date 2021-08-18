@@ -2,107 +2,306 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61557C4320E
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 19:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833A6C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 19:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49CE6610E6
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 19:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADC0610FD
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 19:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233522AbhHRTJP (ORCPT
+        id S233271AbhHRTI2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Aug 2021 15:09:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55286 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233729AbhHRTJD (ORCPT
+        Wed, 18 Aug 2021 15:08:28 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:36681 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233554AbhHRTIV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Aug 2021 15:09:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629313707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tp216Z1B4x9IQEM6aUrfFJCsyNTBB/9H6ygLcXZZWwk=;
-        b=cmKFuQDmJZFn4x0AW7tkBxDeowExcQZ4PiMpW/FyoTazxLZrls0c1ZrOukMqLpSbGmMHaT
-        LKRvwH7q6Hd7re6dnUyZYSzKR/XZ3J3ud8RG9T1XnhEikA2EEiTXWGHdxgsRCbypOky4oI
-        OEehertdRB2haBOjdZslC3P3P4isPAY=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-465-R_73-i8KMs-Y0vCkUGnhUg-1; Wed, 18 Aug 2021 15:08:23 -0400
-X-MC-Unique: R_73-i8KMs-Y0vCkUGnhUg-1
-Received: by mail-ed1-f71.google.com with SMTP id o17-20020aa7d3d1000000b003beaf992d17so1540784edr.13
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Aug 2021 12:08:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tp216Z1B4x9IQEM6aUrfFJCsyNTBB/9H6ygLcXZZWwk=;
-        b=XxwwdnvsrIEhw3lnn8dSOg7/8XgcwOymMAq2lp4ERUIBaw+IBnlWo8/2R7J6dFMulS
-         3HVorvuZOxLmFPAA0Tq0L7XN1ySIJo92MldRLmpe/0QduXdb+nwl5Sj04FncGBTqd2ot
-         2JplWZ/hATuzKZ5p0JIqljTvZ/ynXQbY9UZdrGzpC7asKsmvcTYqfG4RXysSXJ7dZhuv
-         iDbofTXoUJ9OtAueqEuO4puwn1036ONyiVgPtBul2EX3gwqXIKl+Bne5KZmcrcPCzHT1
-         VvuqnOp7pHMWXmQs8COnwdEYFAPDRtbwUGWCNLZJiwC6vM8WRus9xdF/YSX5d6Cthas7
-         dzBQ==
-X-Gm-Message-State: AOAM532W+Tx8TEQhzp392PvRz7abO9kD7lZW5MPOIvtgaFw7yVN/yCLw
-        cv5TsYCEM74lBW3ZngyLySSSvcgs1yC/r3Q04Wib/51hLVaKKZgWajYNYo70hjussjAhK0iQH5u
-        nv2bbuu6x8t/RaGMxX0VTlfIPmLtiwXR1EA==
-X-Received: by 2002:a17:907:265b:: with SMTP id ar27mr11542555ejc.300.1629313702875;
-        Wed, 18 Aug 2021 12:08:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw1Pn1PI04Ekx2RrFjzRalquNFFmkOsafXBNm2k44DoJGPJZYiaYMhaIvJ1EocB56ZAMkilmg==
-X-Received: by 2002:a17:907:265b:: with SMTP id ar27mr11542546ejc.300.1629313702745;
-        Wed, 18 Aug 2021 12:08:22 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id k21sm261695ejj.55.2021.08.18.12.08.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 12:08:22 -0700 (PDT)
-Subject: Re: [RESEND PATCH v2 1/1] ishtp: Add support for Intel ishtp eclite
- driver
-To:     "K Naduvalath, Sumesh" <sumesh.k.naduvalath@intel.com>,
-        "mgross@linux.intel.com" <mgross@linux.intel.com>,
-        "srinivas.pandruvada@linux.intel.com" 
-        <srinivas.pandruvada@linux.intel.com>
-Cc:     "Pandruvada, Srinivas" <srinivas.pandruvada@intel.com>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chinnu, Ganapathi" <ganapathi.chinnu@intel.com>,
-        "Kumar, Nachiketa" <nachiketa.kumar@intel.com>
-References: <20210730155801.15513-1-sumesh.k.naduvalath@intel.com>
- <e27afe05-77b0-f9e5-fb8a-c4a820b3ea60@redhat.com>
- <BYAPR11MB37528C0BE125D5E877A4C9A8A9FF9@BYAPR11MB3752.namprd11.prod.outlook.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <c68f2888-a4ee-f3f5-8907-e0916985e2f4@redhat.com>
-Date:   Wed, 18 Aug 2021 21:08:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        Wed, 18 Aug 2021 15:08:21 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 93CD55C00F4;
+        Wed, 18 Aug 2021 15:07:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 18 Aug 2021 15:07:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=ltI0PDs6CvDFzKiqlDBrtdYOA/DP8RpaCuL19rintps=; b=CmmUDHFf
+        umualgywEfgEOBzhuhAsOwcGeR2/1VH8Z8WAk1KOZ77COoroN5WVkog1PEzm+kim
+        yFu3pZRnqLE3tDAltjuehonYMOfv86LiLEZW2zuqG/GbYw8FKjSu3ieiUIahxsVi
+        t4XpBNj6fJO81Gzx31yv19I8vxAGcoP8k/PoADPmXn+VQWqv70tguhguGj7wQ1zL
+        QCvusHgfxpmISH7Mp/V0cN5DUeSWq/F1phu5wrtFItkP1+oK025uat3F3YrP4jl5
+        l36XFynjZE6cSP0auOyT1XpeTGKkI3KLx+UBd7133F5/sCCcCS1wyzWudaQJIWnc
+        j1badiDdiY3OYg==
+X-ME-Sender: <xms:glodYbeVdotPh0HqpgVBnxmiVsSJ1QC1m_UGRZ1W8jlyZ4ZavDCpEQ>
+    <xme:glodYRNFqurSD_fnYGV1KMDbu8Sz6kPs99QUTrtdsC3onGsnt6cd8TLNeZd2G-D8B
+    EihltjRmidED69QJW0>
+X-ME-Received: <xmr:glodYUjTcgOOmjh0WrJjHJZzcP3LcjNS-oYqClXjJX43PmiAzNwlpRgnVdbZ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrleehgddufedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
+    dtredttdenucfhrhhomhepfdfnuhhkvgcuffdrucflohhnvghsfdcuoehluhhkvgeslhhj
+    ohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpedvteekvdeuhedthfeuudelheejie
+    fhvddtteelleeghfekhfeugfehgeekffdtheenucevlhhushhtvghrufhiiigvpedtnecu
+    rfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:glodYc8R-hwxvO5--x2vG9hYrupzmA19pdex-Fv4idstiZJfqByEwg>
+    <xmx:glodYXtTkSt2B1xVWSif6MVayfDCyb5Gj5-i1PLY2zZbICiW3kAizQ>
+    <xmx:glodYbGpKz7ydfhwKXwSQ4QQddm-XK28rqtLMe_ytvuXOOjnCUm-Wg>
+    <xmx:glodYQ41JxO84WaVjt7HBp6uCy4I83R63R3xJVvErxSUx597q5tv9A>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Aug 2021 15:07:43 -0400 (EDT)
+From:   "Luke D. Jones" <luke@ljones.dev>
+To:     linux-kernel@vger.kernel.org
+Cc:     hdegoede@redhat.com, hadess@hadess.net,
+        platform-driver-x86@vger.kernel.org,
+        "Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH v5 1/1] asus-wmi: Add support for platform_profile
+Date:   Thu, 19 Aug 2021 07:07:31 +1200
+Message-Id: <20210818190731.19170-2-luke@ljones.dev>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210818190731.19170-1-luke@ljones.dev>
+References: <20210818190731.19170-1-luke@ljones.dev>
 MIME-Version: 1.0
-In-Reply-To: <BYAPR11MB37528C0BE125D5E877A4C9A8A9FF9@BYAPR11MB3752.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
+Add initial support for platform_profile where the support is
+based on availability of ASUS_THROTTLE_THERMAL_POLICY.
 
-On 8/18/21 8:25 PM, K Naduvalath, Sumesh wrote:
-> Thank you Hans for your review comments, and my apologies for the delayed response.
-> Please find my reply inline -
+Because throttle_thermal_policy is used by platform_profile and is
+writeable separately to platform_profile any userspace changes to
+throttle_thermal_policy need to notify platform_profile.
 
-<snip>
+In future throttle_thermal_policy sysfs should be removed so that
+only one method controls the laptop power profile.
 
-> I'll put through some tests and submit V3 if you don't have any other comments.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/Kconfig    |   1 +
+ drivers/platform/x86/asus-wmi.c | 130 +++++++++++++++++++++++++++++++-
+ 2 files changed, 127 insertions(+), 4 deletions(-)
 
-I've no further comments, splease send v3 when it is ready.
-
-Regards,
-
-Hans
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d12db6c316ea..46dec48a36c1 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -281,6 +281,7 @@ config ASUS_WMI
+ 	select INPUT_SPARSEKMAP
+ 	select LEDS_CLASS
+ 	select NEW_LEDS
++	select ACPI_PLATFORM_PROFILE
+ 	help
+ 	  Say Y here if you have a WMI aware Asus laptop (like Eee PCs or new
+ 	  Asus Notebooks).
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 90a6a0d00deb..cc5811844012 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -26,6 +26,7 @@
+ #include <linux/rfkill.h>
+ #include <linux/pci.h>
+ #include <linux/pci_hotplug.h>
++#include <linux/platform_profile.h>
+ #include <linux/power_supply.h>
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+@@ -219,6 +220,9 @@ struct asus_wmi {
+ 	bool throttle_thermal_policy_available;
+ 	u8 throttle_thermal_policy_mode;
+ 
++	struct platform_profile_handler platform_profile_handler;
++	bool platform_profile_support;
++
+ 	// The RSOC controls the maximum charging percentage.
+ 	bool battery_rsoc_available;
+ 
+@@ -2103,12 +2107,23 @@ static int throttle_thermal_policy_set_default(struct asus_wmi *asus)
+ static int throttle_thermal_policy_switch_next(struct asus_wmi *asus)
+ {
+ 	u8 new_mode = asus->throttle_thermal_policy_mode + 1;
++	int err;
+ 
+ 	if (new_mode > ASUS_THROTTLE_THERMAL_POLICY_SILENT)
+ 		new_mode = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+ 
+ 	asus->throttle_thermal_policy_mode = new_mode;
+-	return throttle_thermal_policy_write(asus);
++	err = throttle_thermal_policy_write(asus);
++	if (err)
++		return err;
++
++	/*
++	 * Ensure that platform_profile updates userspace with the change to ensure
++	 * that platform_profile and throttle_thermal_policy_mode are in sync.
++	 */
++	platform_profile_notify();
++
++	return 0;
+ }
+ 
+ static ssize_t throttle_thermal_policy_show(struct device *dev,
+@@ -2124,9 +2139,10 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *buf, size_t count)
+ {
+-	int result;
+-	u8 new_mode;
+ 	struct asus_wmi *asus = dev_get_drvdata(dev);
++	u8 new_mode;
++	int result;
++	int err;
+ 
+ 	result = kstrtou8(buf, 10, &new_mode);
+ 	if (result < 0)
+@@ -2136,7 +2152,15 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	asus->throttle_thermal_policy_mode = new_mode;
+-	throttle_thermal_policy_write(asus);
++	err = throttle_thermal_policy_write(asus);
++	if (err)
++		return err;
++
++	/*
++	 * Ensure that platform_profile updates userspace with the change to ensure
++	 * that platform_profile and throttle_thermal_policy_mode are in sync.
++	 */
++	platform_profile_notify();
+ 
+ 	return count;
+ }
+@@ -2144,6 +2168,94 @@ static ssize_t throttle_thermal_policy_store(struct device *dev,
+ // Throttle thermal policy: 0 - default, 1 - overboost, 2 - silent
+ static DEVICE_ATTR_RW(throttle_thermal_policy);
+ 
++/* Platform profile ***********************************************************/
++static int platform_profile_get(struct platform_profile_handler *pprof,
++				enum platform_profile_option *profile)
++{
++	struct asus_wmi *asus;
++	int tp;
++
++	asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
++
++	tp = asus->throttle_thermal_policy_mode;
++
++	if (tp < 0)
++		return tp;
++
++	switch (tp) {
++	case ASUS_THROTTLE_THERMAL_POLICY_DEFAULT:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
++		*profile = PLATFORM_PROFILE_QUIET;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int platform_profile_set(struct platform_profile_handler *pprof,
++				enum platform_profile_option profile)
++{
++	struct asus_wmi *asus;
++	int tp;
++
++	asus = container_of(pprof, struct asus_wmi, platform_profile_handler);
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp = ASUS_THROTTLE_THERMAL_POLICY_OVERBOOST;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
++		break;
++	case PLATFORM_PROFILE_QUIET:
++		tp = ASUS_THROTTLE_THERMAL_POLICY_SILENT;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	asus->throttle_thermal_policy_mode = tp;
++	return throttle_thermal_policy_write(asus);
++}
++
++static int platform_profile_setup(struct asus_wmi *asus)
++{
++	struct device *dev = &asus->platform_device->dev;
++	int err;
++
++	/*
++	 * Not an error if a component platform_profile relies on is unavailable
++	 * so early return, skipping the setup of platform_profile.
++	 */
++	if (!asus->throttle_thermal_policy_available)
++		return 0;
++
++	dev_info(dev, "Using throttle_thermal_policy for platform_profile support\n");
++
++	asus->platform_profile_handler.profile_get = platform_profile_get;
++	asus->platform_profile_handler.profile_set = platform_profile_set;
++
++	set_bit(PLATFORM_PROFILE_QUIET, asus->platform_profile_handler.choices);
++	set_bit(PLATFORM_PROFILE_BALANCED,
++		asus->platform_profile_handler.choices);
++	set_bit(PLATFORM_PROFILE_PERFORMANCE,
++		asus->platform_profile_handler.choices);
++
++	err = platform_profile_register(&asus->platform_profile_handler);
++	if (err)
++		return err;
++
++	asus->platform_profile_support = true;
++	return 0;
++}
++
+ /* Backlight ******************************************************************/
+ 
+ static int read_backlight_power(struct asus_wmi *asus)
+@@ -2904,6 +3016,10 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	else
+ 		throttle_thermal_policy_set_default(asus);
+ 
++	err = platform_profile_setup(asus);
++	if (err)
++		goto fail_platform_profile_setup;
++
+ 	err = panel_od_check_present(asus);
+ 	if (err)
+ 		goto fail_panel_od;
+@@ -2993,6 +3109,9 @@ static int asus_wmi_add(struct platform_device *pdev)
+ 	asus_wmi_sysfs_exit(asus->platform_device);
+ fail_sysfs:
+ fail_throttle_thermal_policy:
++fail_platform_profile_setup:
++	if (asus->platform_profile_support)
++		platform_profile_remove();
+ fail_fan_boost_mode:
+ fail_egpu_enable:
+ fail_dgpu_disable:
+@@ -3017,6 +3136,9 @@ static int asus_wmi_remove(struct platform_device *device)
+ 	asus_fan_set_auto(asus);
+ 	asus_wmi_battery_exit(asus);
+ 
++	if (asus->platform_profile_support)
++		platform_profile_remove();
++
+ 	kfree(asus);
+ 	return 0;
+ }
+-- 
+2.31.1
 
