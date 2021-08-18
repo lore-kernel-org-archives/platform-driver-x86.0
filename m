@@ -2,79 +2,79 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59427C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB74C43214
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A44F6108B
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC6B660FDA
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238231AbhHRHeD (ORCPT
+        id S239128AbhHRHpP (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Aug 2021 03:34:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60991 "EHLO
+        Wed, 18 Aug 2021 03:45:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45592 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237348AbhHRHeC (ORCPT
+        by vger.kernel.org with ESMTP id S239297AbhHRHpN (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Aug 2021 03:34:02 -0400
+        Wed, 18 Aug 2021 03:45:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629272008;
+        s=mimecast20190719; t=1629272679;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PIcvfCaXeBajh0eD+TBomFpThyGY3aYHbJ8JpsCQnno=;
-        b=PVv8krzrlhhbn7PYK2vcYjn3B5mVOS8DnXaAG1ZMSh7H0tVdPI2iL+yigyaM3vSQz9o2j0
-        EmNXpZumiyJwJm+wmqXgLfuErJe0RWjwwO/dHqiqDK4Jx/F3XuM+tMT3rFcWV+TX6I1sBb
-        Nneha1WKUbY/WkQfW9BOZBxcukk0c8s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-h_gPvu9VP7-dKyDC0WJ4PQ-1; Wed, 18 Aug 2021 03:33:26 -0400
-X-MC-Unique: h_gPvu9VP7-dKyDC0WJ4PQ-1
-Received: by mail-ej1-f71.google.com with SMTP id r21-20020a1709067055b02904be5f536463so564744ejj.0
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Aug 2021 00:33:26 -0700 (PDT)
+        bh=MI1DMsHbp62Or49BgJmJk6BLknMCFVLiGYypueRUiB0=;
+        b=ZCo1mv4a1FgLFlzBJANSIaWi0Kd3rbsrf4VUDc6EzAdFz7/ljTLcA5FD+Do5dbm4ksbrLm
+        BDsSP/H8e3TVjIdJYyY+Ja9iy3vGKNlpIz5VsJ/7X1vgPmHaEZI68tzw3QECxEeRlqaYFd
+        LOq5afdmUOPOUNUvY+NSQqNh02O5J+o=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-467-cwUYf8lENUOyZoIF-kRohg-1; Wed, 18 Aug 2021 03:44:37 -0400
+X-MC-Unique: cwUYf8lENUOyZoIF-kRohg-1
+Received: by mail-ed1-f70.google.com with SMTP id x4-20020a50d9c4000000b003bed5199871so591965edj.14
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Aug 2021 00:44:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PIcvfCaXeBajh0eD+TBomFpThyGY3aYHbJ8JpsCQnno=;
-        b=CesJeIw+npHPAvtbBbweOIGKUf+urb7eSrGHfu+AszkejnKuUSqaowaSiDUpeqkxmr
-         Yb8oz6gQTGxBY350Z//rcpU/mEjIBsFtL82hlckl7oBA3tDHkCeNM97fRrwO6ANzdpUp
-         WeNH80whH7Sjf+LF2XCpYIHT0nI/GznSSqqWnPVX64vUojipOJzF3bzyZGlpEr4pF6N9
-         bF8caaT7tcmj9oKs5YzlRDnvdxk9CIrIolzosg7inRZ1Gbt4S7PRM2TVEErtTo944Tyo
-         F7FxjWglxM2IlyUloIqpeEzmBg/2zO3TDd2wBo0mYm8OFRUjHsXxJLxtYDt9ocMJ9JEv
-         4itQ==
-X-Gm-Message-State: AOAM531y6vVvJOTAxuM94LKJDrTZuvtHYS14yCUXpmJYTH2vpgnonyXr
-        1kbYmamr1AaG/XX7hJFyJOpo+vGC58vlfY2mqyxRDSwEh6OwLB5S03pjEFndgquX73S0EDK7s9o
-        fCP2yiSpV9AnXj3bWt5BGPco9iuz2OaPXaw==
-X-Received: by 2002:a17:906:e291:: with SMTP id gg17mr8529287ejb.477.1629272005843;
-        Wed, 18 Aug 2021 00:33:25 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvywahg4UoLCC0dClS8Q069f3CBwn2uR5l/SVzkteTeaqIsaID5WRQ1Uq9qwBoIDP/Q981cA==
-X-Received: by 2002:a17:906:e291:: with SMTP id gg17mr8529269ejb.477.1629272005622;
-        Wed, 18 Aug 2021 00:33:25 -0700 (PDT)
+        bh=MI1DMsHbp62Or49BgJmJk6BLknMCFVLiGYypueRUiB0=;
+        b=TVRFnRRgwehU6ZxbU8hUBPQXISwxV7GF3nS8JEK4FfBcsZQBwYz0/QQb//WcM+0f23
+         ibM7iTkV0C2HnvOVonwcM6o9kZtTsVXWgW8zQ5uVJJm6+Y3XxSnkkGmRIwJ1MK9CpY67
+         1isrH2Q36rXBoOxMbqrGReIwxGlvL6CtxzgnRTsa60BEE5RbvfPoXW5Q+m8j18sJn4ZC
+         aBeJrtdWBsgm0DmIULhWGfmE9+fPpVt/LiFVd5P9tUo3C7KZqRfcL80qGpKLhEMhJZgQ
+         WLVwPqTpgdKvtumKwAOqTLSbzQU6gTvCFzaNd7zwY/SdjMsAN8mtje96IDKSL1YhzOym
+         aJTA==
+X-Gm-Message-State: AOAM533yKFsBBaYcdQxHj8lDOmzUJNe7jJdfsJsSP31auvfNUFlfIlI8
+        101vUQx0ot+FRxrKoRSomd/BDRhIGNxTUoVrwrIo9Ues598jVvy6HhQOmcUYDv/YAmUyBur7UuG
+        oesswblu8wyfvy/dIbtPP1xKoqos63zV6Xauye5aWBve+cs0Bw8ix7QP6fi2ziyJdVFwYwIQQS7
+        ZwLkAyq2BivA==
+X-Received: by 2002:a05:6402:2158:: with SMTP id bq24mr8835544edb.8.1629272676514;
+        Wed, 18 Aug 2021 00:44:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxm3kW4iIijdLYyoWflDqHhbXxvrKXJuTFtoBuGhWgHvXpT6CgsF82qpyPAVsO7GoHMyshjvA==
+X-Received: by 2002:a05:6402:2158:: with SMTP id bq24mr8835532edb.8.1629272676357;
+        Wed, 18 Aug 2021 00:44:36 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id g10sm1627537ejj.44.2021.08.18.00.33.25
+        by smtp.gmail.com with ESMTPSA id v1sm2164982edx.69.2021.08.18.00.44.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 00:33:25 -0700 (PDT)
-Subject: Re: [PATCH] platform/x86: lg-laptop: Support for battery charge limit
- on newer models
-To:     Matan Ziv-Av <matan@svgalib.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Cc:     Andy Shevchenko <andy@infradead.org>
-References: <9338b0b1-e76e-68f5-36de-a642745ba6ad@svgalib.org>
+        Wed, 18 Aug 2021 00:44:36 -0700 (PDT)
+Subject: Re: [PATCH v2] platform/x86: think-lmi: add debug_cmd
+To:     Mark Pearson <markpearson@lenovo.com>
+Cc:     mgross@linux.intel.com, platform-driver-x86@vger.kernel.org
+References: <markpearson@lenovo.com>
+ <20210817001501.293501-1-markpearson@lenovo.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7d2ea9fc-6942-d7c9-c6cf-61072dc13ba9@redhat.com>
-Date:   Wed, 18 Aug 2021 09:33:24 +0200
+Message-ID: <07f7c7d6-176a-9328-ffd2-2ca5cb8040c8@redhat.com>
+Date:   Wed, 18 Aug 2021 09:44:35 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <9338b0b1-e76e-68f5-36de-a642745ba6ad@svgalib.org>
+In-Reply-To: <20210817001501.293501-1-markpearson@lenovo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,205 +84,204 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/14/21 12:11 AM, Matan Ziv-Av wrote:
+On 8/17/21 2:15 AM, Mark Pearson wrote:
+> Many Lenovo BIOS's support the ability to send a debug command which
+> is useful for debugging and testing unreleased or early features.
 > 
-> Add support for the difference between various models:
+> Adding support for this feature as a module parameter.
 > 
-> - Use dmi to detect laptop model.
-> - 2019 and newer models use _wmbb method to set battery charge limit.
-> 
-> Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
-
-Thank you for the patch, some small comments inline.
-
-
+> Signed-off-by: Mark Pearson <markpearson@lenovo.com>
 > ---
->  drivers/platform/x86/lg-laptop.c | 75 ++++++++++++++++++++++++++++----
->  1 file changed, 66 insertions(+), 9 deletions(-)
+> Changes in v2: 
+>  - Updated to use debug_support parameter to enable feature
+>  - remove changes to pending_reboot as that was integrated separately
 > 
-> diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
-> index 20145b539335..12b0257c0bdd 100644
-> --- a/drivers/platform/x86/lg-laptop.c
-> +++ b/drivers/platform/x86/lg-laptop.c
-> @@ -8,6 +8,7 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>  .../testing/sysfs-class-firmware-attributes   | 11 +++
+>  drivers/platform/x86/think-lmi.c              | 80 +++++++++++++++++++
+>  drivers/platform/x86/think-lmi.h              |  1 +
+>  3 files changed, 92 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-firmware-attributes b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> index 0b43997b76e3..90fdf935aa5e 100644
+> --- a/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> +++ b/Documentation/ABI/testing/sysfs-class-firmware-attributes
+> @@ -272,3 +272,14 @@ Description:
 >  
->  #include <linux/acpi.h>
-> +#include <linux/dmi.h>
->  #include <linux/input.h>
->  #include <linux/input/sparse-keymap.h>
->  #include <linux/kernel.h>
-> @@ -69,6 +70,8 @@ static u32 inited;
->  #define INIT_INPUT_ACPI         0x04
->  #define INIT_SPARSE_KEYMAP      0x80
->  
-> +static int battery_limit_use_wmbb;
+>  		Note that any changes to this attribute requires a reboot
+>  		for changes to take effect.
 > +
->  static const struct key_entry wmi_keymap[] = {
->  	{KE_KEY, 0x70, {KEY_F15} },	 /* LG control panel (F1) */
->  	{KE_KEY, 0x74, {KEY_F13} },	 /* Touchpad toggle (F5) */
-> @@ -461,7 +464,10 @@ static ssize_t battery_care_limit_store(struct device *dev,
->  	if (value == 100 || value == 80) {
->  		union acpi_object *r;
->  
-> -		r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
-> +		if (!battery_limit_use_wmbb)
-> +			r = lg_wmab(WM_BATT_LIMIT, WM_SET, value);
-> +		else
-> +			r = lg_wmbb(WMBB_BATT_LIMIT, WM_SET, value);
-
-Please drop the ! from the if condition and swap the 2 branches.
-
->  		if (!r)
->  			return -EIO;
->  
-> @@ -479,16 +485,29 @@ static ssize_t battery_care_limit_show(struct device *dev,
->  	unsigned int status;
->  	union acpi_object *r;
->  
-> -	r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
-> -	if (!r)
-> -		return -EIO;
-> +	if (!battery_limit_use_wmbb) {
-> +		r = lg_wmab(WM_BATT_LIMIT, WM_GET, 0);
-> +		if (!r)
-> +			return -EIO;
->  
-> -	if (r->type != ACPI_TYPE_INTEGER) {
-> -		kfree(r);
-> -		return -EIO;
-> -	}
-> +		if (r->type != ACPI_TYPE_INTEGER) {
-> +			kfree(r);
-> +			return -EIO;
-> +		}
->  
-> -	status = r->integer.value;
-> +		status = r->integer.value;
-> +	} else {
-> +		r = lg_wmbb(WMBB_BATT_LIMIT, WM_GET, 0);
-> +		if (!r)
-> +			return -EIO;
+> +What:		/sys/class/firmware-attributes/*/attributes/debug_cmd
+> +Date:		July 2021
+> +KernelVersion:	5.14
+> +Contact:	Mark Pearson <markpearson@lenovo.com>
+> +Description:
+> +		This write only attribute can be used to send debug commands to the BIOS.
+> +		This should only be used when recommended by the BIOS vendor. Vendors may
+> +		use it to enable extra debug attributes or BIOS features for testing purposes.
 > +
-> +		if (r->type != ACPI_TYPE_BUFFER) {
-> +			kfree(r);
-> +			return -EIO;
-> +		}
-> +
-> +		status = r->buffer.pointer[0x10];
-> +	}
-
-Idem (Please drop the ! from the if condition and swap the 2 branches).
-
->  	kfree(r);
->  	if (status != 80 && status != 100)
->  		status = 0;
-> @@ -602,6 +621,8 @@ static struct platform_driver pf_driver = {
->  static int acpi_add(struct acpi_device *device)
->  {
->  	int ret;
-> +	const char *product;
-> +	int year = 2017;
+> +		Note that any changes to this attribute requires a reboot for changes to take effect.
+> diff --git a/drivers/platform/x86/think-lmi.c b/drivers/platform/x86/think-lmi.c
+> index 6cfed4427fb0..4d246bfe4907 100644
+> --- a/drivers/platform/x86/think-lmi.c
+> +++ b/drivers/platform/x86/think-lmi.c
+> @@ -20,6 +20,10 @@
+>  #include "firmware_attributes_class.h"
+>  #include "think-lmi.h"
 >  
->  	if (pf_device)
->  		return 0;
-> @@ -619,6 +640,42 @@ static int acpi_add(struct acpi_device *device)
->  		pr_err("unable to register platform device\n");
->  		goto out_platform_registered;
->  	}
-> +	product = dmi_get_system_info(DMI_PRODUCT_NAME);
-> +	if (strlen(product) > 4)
-> +		switch (product[4]) {
-> +		case '5':
-> +		case '6':
-> +			year = 2016;
-> +			break;
-> +		case '7':
-> +			year = 2017;
-> +			break;
-> +		case '8':
-> +			year = 2018;
-> +			break;
-> +		case '9':
-> +			year = 2019;
-> +			break;
-> +		case '0':
-> +			if (strlen(product) > 5)
-> +				switch (product[5]) {
-> +				case 'N':
-> +					year = 2020;
-> +					break;
-> +				case 'P':
-> +					year = 2021;
-> +					break;
-> +				default:
-> +					year = 2022;
-> +				}
-> +			break;
-> +		default:
-> +			year = 2019;
-> +		}
-> +	pr_info("product: %s  year: %d\n", product, year);
-> +
-> +	if (year >= 2019)
-> +		battery_limit_use_wmbb = 1;
->  
->  	ret = sysfs_create_group(&pf_device->dev.kobj, &dev_attribute_group);
->  	if (ret)
+> +static bool debug_support;
+> +module_param(debug_support, bool, 0644);
 
-This does not feel very robust how about doing a strstr for "201" and if that
-fails for "202" to find the year ?
+0644 implies the setting can be changed at runtime, but it is checked
+only at driver bind + unbind time, so this should be 0444.
+
+Since the rest of the patch looks good, I've fixed this up while merging
+the patch.
+
+###
+
+Thank you for your patch, I've applied this patch to my review-hans 
+branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+
+Once I've run some tests on this branch the patches there will be
+added to the platform-drivers-x86/for-next branch and eventually
+will be included in the pdx86 pull-request to Linus for the next
+merge-window.
 
 Regards,
 
 Hans
 
-p.s.
-
-While reviewing this I also took a quick look at the existing lg-laptop.c
-and the wmi_keymap stood out to me, specifically:
-
-        {KE_KEY, 0x74, {KEY_F13} },      /* Touchpad toggle (F5) */
-
-If that key just sends this event and does not actually change the
-touchpad settings, IOW userspace is supposed to react this (e.g.
-filter out touchpad events in software after the toggle), then the
-correct key to send here would be KEY_F21, this has been the standard
-key-code to send for this for a while now and GNOME and KDE will
-automatically do the right thing when sending that, including a
-nice on-screen-display (OSD)notifcation (like when changing the volume)
-indicating the new (software) state (on or off) of the touchpad.
-
-If the hw does actually handle the touchpad on/off itself
-(I see there also is a touchpad-led?) then the right thing to do
-would be to send f22 (Touchpad toggle off-to-on) and f23
-(Touchpad toggle on-to-off). This assumes that you can figure
-out the new touchpad state. When receiving f22 / f23 GNOME will
-display the OSD without making any other settings changes.
-
-Also see: /lib/udev/hwdb.d/60-keyboard.hwdb
 
 
-        {KE_KEY, 0x10000000, {KEY_F16} },/* Keyboard backlight (F8) - pressing
-                                          * this key both sends an event and
-                                          * changes backlight level.
-                                          */
 
-If this hotkey changes the kbd-backlight level "in hardware"
-then it should not send a key-press instead you should specify
-
-led_classdev.flags = LED_BRIGHT_HW_CHANGED
-
-For the kbd-backlight led_classdev and then call:
-
-	led_classdev_notify_brightness_hw_changed(&kbd_backlight, new_backlight_level);
-
-When receiving the event. upower will pick the event send by this up
-and then notify interested parties such as e.g. gnome-settings-daemon
-which will then show a nice OSD with the new backlight level similar
-to how it is done for e.g. volume controls.
-
-
-If you can also send patches to change these 2 things, so that lg-laptop
-conforms with the standard userspace APIs used for this that would be great.
+> +MODULE_PARM_DESC(debug_support, "Enable debug command support");
+> +
+>  /*
+>   * Name:
+>   *  Lenovo_BiosSetting
+> @@ -116,6 +120,14 @@
+>   */
+>  #define LENOVO_GET_BIOS_SELECTIONS_GUID	"7364651A-132F-4FE7-ADAA-40C6C7EE2E3B"
+>  
+> +/*
+> + * Name:
+> + *  Lenovo_DebugCmdGUID
+> + * Description
+> + *  Debug entry GUID method for entering debug commands to the BIOS
+> + */
+> +#define LENOVO_DEBUG_CMD_GUID "7FF47003-3B6C-4E5E-A227-E979824A85D1"
+> +
+>  #define TLMI_POP_PWD (1 << 0)
+>  #define TLMI_PAP_PWD (1 << 1)
+>  #define to_tlmi_pwd_setting(kobj)  container_of(kobj, struct tlmi_pwd_setting, kobj)
+> @@ -660,6 +672,64 @@ static ssize_t pending_reboot_show(struct kobject *kobj, struct kobj_attribute *
+>  
+>  static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+>  
+> +/* ---- Debug interface--------------------------------------------------------- */
+> +static ssize_t debug_cmd_store(struct kobject *kobj, struct kobj_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	char *set_str = NULL, *new_setting = NULL;
+> +	char *auth_str = NULL;
+> +	char *p;
+> +	int ret;
+> +
+> +	if (!tlmi_priv.can_debug_cmd)
+> +		return -EOPNOTSUPP;
+> +
+> +	new_setting = kstrdup(buf, GFP_KERNEL);
+> +	if (!new_setting)
+> +		return -ENOMEM;
+> +
+> +	/* Strip out CR if one is present */
+> +	p = strchrnul(new_setting, '\n');
+> +	*p = '\0';
+> +
+> +	if (tlmi_priv.pwd_admin->valid && tlmi_priv.pwd_admin->password[0]) {
+> +		auth_str = kasprintf(GFP_KERNEL, "%s,%s,%s;",
+> +				tlmi_priv.pwd_admin->password,
+> +				encoding_options[tlmi_priv.pwd_admin->encoding],
+> +				tlmi_priv.pwd_admin->kbdlang);
+> +		if (!auth_str) {
+> +			ret = -ENOMEM;
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	if (auth_str)
+> +		set_str = kasprintf(GFP_KERNEL, "%s,%s", new_setting, auth_str);
+> +	else
+> +		set_str = kasprintf(GFP_KERNEL, "%s;", new_setting);
+> +	if (!set_str) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	ret = tlmi_simple_call(LENOVO_DEBUG_CMD_GUID, set_str);
+> +	if (ret)
+> +		goto out;
+> +
+> +	if (!ret && !tlmi_priv.pending_changes) {
+> +		tlmi_priv.pending_changes = true;
+> +		/* let userland know it may need to check reboot pending again */
+> +		kobject_uevent(&tlmi_priv.class_dev->kobj, KOBJ_CHANGE);
+> +	}
+> +out:
+> +	kfree(auth_str);
+> +	kfree(set_str);
+> +	kfree(new_setting);
+> +	return ret ?: count;
+> +}
+> +
+> +static struct kobj_attribute debug_cmd = __ATTR_WO(debug_cmd);
+> +
+>  /* ---- Initialisation --------------------------------------------------------- */
+>  static void tlmi_release_attr(void)
+>  {
+> @@ -673,6 +743,8 @@ static void tlmi_release_attr(void)
+>  		}
+>  	}
+>  	sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &pending_reboot.attr);
+> +	if (tlmi_priv.can_debug_cmd && debug_support)
+> +		sysfs_remove_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+>  	kset_unregister(tlmi_priv.attribute_kset);
+>  
+>  	/* Authentication structures */
+> @@ -737,6 +809,11 @@ static int tlmi_sysfs_init(void)
+>  	if (ret)
+>  		goto fail_create_attr;
+>  
+> +	if (tlmi_priv.can_debug_cmd && debug_support) {
+> +		ret = sysfs_create_file(&tlmi_priv.attribute_kset->kobj, &debug_cmd.attr);
+> +		if (ret)
+> +			goto fail_create_attr;
+> +	}
+>  	/* Create authentication entries */
+>  	tlmi_priv.authentication_kset = kset_create_and_add("authentication", NULL,
+>  								&tlmi_priv.class_dev->kobj);
+> @@ -793,6 +870,9 @@ static int tlmi_analyze(void)
+>  	if (wmi_has_guid(LENOVO_BIOS_PASSWORD_SETTINGS_GUID))
+>  		tlmi_priv.can_get_password_settings = true;
+>  
+> +	if (wmi_has_guid(LENOVO_DEBUG_CMD_GUID))
+> +		tlmi_priv.can_debug_cmd = true;
+> +
+>  	/*
+>  	 * Try to find the number of valid settings of this machine
+>  	 * and use it to create sysfs attributes.
+> diff --git a/drivers/platform/x86/think-lmi.h b/drivers/platform/x86/think-lmi.h
+> index eb598846628a..f8e26823075f 100644
+> --- a/drivers/platform/x86/think-lmi.h
+> +++ b/drivers/platform/x86/think-lmi.h
+> @@ -61,6 +61,7 @@ struct think_lmi {
+>  	bool can_set_bios_password;
+>  	bool can_get_password_settings;
+>  	bool pending_changes;
+> +	bool can_debug_cmd;
+>  
+>  	struct tlmi_attr_setting *setting[TLMI_SETTINGS_COUNT];
+>  	struct device *class_dev;
+> 
 
