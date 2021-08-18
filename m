@@ -2,79 +2,80 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-24.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1CAC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301BDC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 193D06108D
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F3A6108E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 18 Aug 2021 07:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239532AbhHRHqh (ORCPT
+        id S239131AbhHRHwZ (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 18 Aug 2021 03:46:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:20522 "EHLO
+        Wed, 18 Aug 2021 03:52:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41779 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239959AbhHRHqP (ORCPT
+        by vger.kernel.org with ESMTP id S239115AbhHRHwY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 18 Aug 2021 03:46:15 -0400
+        Wed, 18 Aug 2021 03:52:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629272741;
+        s=mimecast20190719; t=1629273110;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=F+IPI7fH7JimWy1VkqrSd45ZcybbOntV4Dvzf6QmLYU=;
-        b=ZVMyR/NKgEh1BFUlEmKqLCMzr6OYen1vJ018OzhWGP7zW06uHhDWdgK1b0J2LSDyMUkxN0
-        h+MxBdFbq2WkYOUhdaxowmot8sIx7dVc+EHg9Z5oA5AdmyrExYICx4NCtp2EEUa9yULV10
-        jzl6VTXWAjdNsmU0g16gJLtHQHvTQKk=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-49-5Kz_fqXlMN2m7JV7zKY0VA-1; Wed, 18 Aug 2021 03:44:59 -0400
-X-MC-Unique: 5Kz_fqXlMN2m7JV7zKY0VA-1
-Received: by mail-ed1-f70.google.com with SMTP id j15-20020aa7c40f0000b02903be5fbe68a9so609530edq.2
-        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Aug 2021 00:44:59 -0700 (PDT)
+        bh=PsxIbByc4MeeA9mh65w0Ji9CgAEac75Emzhzuys71nU=;
+        b=EGr+bKQ3gMnODMk3faMARyrz27tfcuhW42G5W7KKa9SkOqlXoy/w8//avTX/2Y82rwWtH/
+        p1nvQfq0IajaTtPcYYTZBXF/eBaQGBCc3aflOQksv1EtY5p2kB//W07dk/NCSQbZswIOH8
+        cdVfRjIybUTdQYBw1TlM0AnsRFnxi14=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-561-0LPopINENFqQ_TDogjBbgw-1; Wed, 18 Aug 2021 03:51:49 -0400
+X-MC-Unique: 0LPopINENFqQ_TDogjBbgw-1
+Received: by mail-ed1-f69.google.com with SMTP id v20-20020aa7d9d40000b02903be68450bf3so594189eds.23
+        for <platform-driver-x86@vger.kernel.org>; Wed, 18 Aug 2021 00:51:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=F+IPI7fH7JimWy1VkqrSd45ZcybbOntV4Dvzf6QmLYU=;
-        b=E414UiiUhALMVGRnINi6rEk0ImD1QWXQskSIW5WnKIEO4aksarFKCWf26J4LZufKgC
-         gu4H1fS4P1etr5uw5m2PLly0E8X65pyJy+Cb/XSYdnQANqYDvkIAJymhpQMp9BAgAN9m
-         b1Nb1UlIVBIDhQPRTHWj8y5d7fh/ci7fusuZFPI6BnjDTohZxUIQubhLw3oPT37gL9fy
-         zOwDyJXl5fLl7YYAeBCmtOnNn/WgVmGIhRutN7q/SnCwtqJtddxZSRVC9wxy2y70gAjA
-         6vw0WdSMEUqVju0pwl7/nPYLAN+qzn929Y1qG9Sf6lpEGneO7CoPS+I/BgUe0oEaLZcx
-         M3lQ==
-X-Gm-Message-State: AOAM533T5vHLlluUxigc7Y4IBwTvOF1lCrcvaaKe+Ola7tmfZSmf6KbM
-        mCBpWxLQGMpDmmkCP6yg4L0Lrk1hpzjvIHdGdjZIkHRrEFr0YTYB5btWWJVGNwwrIjCSOBUcfKS
-        jVY7U3g6IxjX+MhimREjx1b7nD+M/UmiiVr7TNHs8VTnJS8y1bGQBiaxZ+JSZ9vvJ/dBr/Hrp17
-        LMvOYNHqSTdQ==
-X-Received: by 2002:a05:6402:1c03:: with SMTP id ck3mr8740637edb.312.1629272698380;
-        Wed, 18 Aug 2021 00:44:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxK3azjfCrpMlDDbS5/Ni6i0N/GnE5kkVkqOISzcRLX3C8eQI5JkB4pBMXXGZw43fzfVUz/QQ==
-X-Received: by 2002:a05:6402:1c03:: with SMTP id ck3mr8740625edb.312.1629272698234;
-        Wed, 18 Aug 2021 00:44:58 -0700 (PDT)
+        bh=PsxIbByc4MeeA9mh65w0Ji9CgAEac75Emzhzuys71nU=;
+        b=m/rCenwzwhmcYpkE5jJbHtut4c+3lLljGnS7wYDjd/xrZUsJl9qAGmAJVO7OYfUTOA
+         x4hfZVgwQjnriIu/pqohNNhYMkVi2hfDQqpUcUU12lpT2TutTxvLHYSM6/61QmNzpKgN
+         1G4FpR532O4xJmTWug+V64f39n+zytyPMPdljnjYJZrloMYewJgWF3il8v9XMy3Kporb
+         cF8PfMS9KdVQ/Kk3UCJAbnpLFRxcjvc7CfpsP396wvrXq6EMzWWdpf5i6ts31nZLcshw
+         2pWBrxA35KThoWNvU5VMLvT4rX1v2kh8cobWwyDPOJQbiRv8/s6lwSPzo6L0UpUNbfNQ
+         zCvg==
+X-Gm-Message-State: AOAM532SxiG13fafiQ1ce7+E2LXHxwTWWig82bKsTopHhT9UAPHDRIdn
+        NC6HSRXAdeVdImmML2VCAya24zJXqAMHb4K7TxKRa/1kqyXiVaNUwdzGFSpLTlACYz3X8Vl7XUl
+        NETIqy5JqlR9VSdHPuqlm1crCUuebkbZciw==
+X-Received: by 2002:a50:d68e:: with SMTP id r14mr8766737edi.136.1629273106578;
+        Wed, 18 Aug 2021 00:51:46 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzq4bdN4/sZhvMzrI99gJ/UuBSRKuLfjrHyCXV6VEehTVciR93QOuMDBXhi00XCU33E70OJwA==
+X-Received: by 2002:a50:d68e:: with SMTP id r14mr8766723edi.136.1629273106446;
+        Wed, 18 Aug 2021 00:51:46 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id c21sm1650928ejz.69.2021.08.18.00.44.57
+        by smtp.gmail.com with ESMTPSA id be23sm2154520edb.68.2021.08.18.00.51.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 00:44:57 -0700 (PDT)
-Subject: Re: [PATCH] ideapad-laptop: Fix Legion 5 Fn lock LED
-To:     Meng Dong <whenov@gmail.com>, Ike Panhc <ike.pan@canonical.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20210817171203.12855-1-whenov@gmail.com>
+        Wed, 18 Aug 2021 00:51:46 -0700 (PDT)
+Subject: Re: [PATCH v2 0/5] MFD: intel_pmt: Add general DVSEC/VSEC support
+To:     "David E. Box" <david.e.box@linux.intel.com>, lee.jones@linaro.org,
+        mgross@linux.intel.com, bhelgaas@google.com,
+        srinivas.pandruvada@intel.com, andy.shevchenko@gmail.com
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20210817224018.1013192-1-david.e.box@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <b5905cfc-db0e-72ff-745a-3439333f35b0@redhat.com>
-Date:   Wed, 18 Aug 2021 09:44:57 +0200
+Message-ID: <21f59d91-c9b9-2a7e-e5d9-a7697979b4bf@redhat.com>
+Date:   Wed, 18 Aug 2021 09:51:45 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210817171203.12855-1-whenov@gmail.com>
+In-Reply-To: <20210817224018.1013192-1-david.e.box@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,70 +85,63 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 Hi,
 
-On 8/17/21 7:12 PM, Meng Dong wrote:
-> This patch fixes the bug 212671.
-> Althrough the Fn lock (Fn + Esc) works on Legion 5 (R7000P), its LED
-> light does not change with the state. This modification sets the Fn lock
-> state to its current value on receiving the wmi event
-> 8FC0DE0C-B4E4-43FD-B0F3-8871711C1294 to update the LED state.
+On 8/18/21 12:40 AM, David E. Box wrote:
+> This patch enables general support for Intel defined PCIe VSEC and DVSEC
+> capabilities in the Intel Platform Monitoring Technology (PMT) driver.
+> Though the driver was written exclusively for PMT capabilities, newer DVSEC
+> and VSEC IDs for other capabilities can exist on the same device requiring
+> that the driver handle them.
 > 
-> Signed-off-by: Meng Dong <whenov@gmail.com>
+> This 2nd revision drops the creation of a separate OOBMSM driver. Instead,
+> all cell drivers will have a dependency on CONFIG_MFD_INTEL_PMT, whether or
+> not they are PMT. Changes in this patchset to the current cell drivers
+> located in platform/x86 are based on Hans for-next branch where they have
+> been moved to the intel/pmt subfolder.
+> 
+> David E. Box (5):
+>   PCI: Add #defines for accessing PCIE DVSEC fields
+>   MFD: intel_pmt: Support non-PMT capabilities
+>   MFD: intel_pmt: Add support for PCIe VSEC structures
+>   platform/x86: intel_pmt_telemetry: Ignore zero sized entries
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Since this patch is pretty much a stand alone patch I've picked
+this one (4/5) up now.
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+The rest of the patches touch both MFD and pdx86 files, so these
+should be picked up by Lee. But they rely on the patch moving
+the pdx86 pmt code into the drivers/platform/x86/intel/pmt dir
+which is currently only available in my for-next branch.
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+I think it is probably best to wait for 5.15-rc1 and then Lee
+can merge the rest. Here is my ack for Lee picking up
+the pdx86 bits:
+
+Acked-by: Hans de Goede <hdegoede@redhat.com>
+
+Lee, alternatively you could also merge commit e184b1e589a7fbb80bfdd0364c11422999a17a26
+from the pdx86 tree, that is only 1 commit ahead of my latest fixes
+pull-req to Linus for 5.14, so in essence that is 5.14-rc? (?=5 I think)
++ just the commit which you need as base, then you could still merge
+these this cycle. If you wish I can put a signed tag on that
+for you (I will treat it as immutable either way).
 
 Regards,
 
 Hans
 
 
-> ---
-> Another possible approach is to call `ideapad_input_report(priv, value)`
-> to send a keycode and let the user handle the LED by echoing the current
-> value of /sys/bus/platform/drivers/ideapad_acpi/VPC2004:00/fn_lock back
-> into itself. But the problem with this approach is Fn+F9 and Fn+Esc
-> trigger the same WMI GUID and event value and I have no idea how to
-> distinguish them.
+
+
+>   MFD: intel_pmt: Add DG2 support
 > 
->  drivers/platform/x86/ideapad-laptop.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  drivers/mfd/intel_pmt.c                    | 256 +++++++++++++++------
+>  drivers/platform/x86/intel/pmt/class.c     |   2 +
+>  drivers/platform/x86/intel/pmt/crashlog.c  |   2 +-
+>  drivers/platform/x86/intel/pmt/telemetry.c |  10 +-
+>  include/uapi/linux/pci_regs.h              |   4 +
+>  5 files changed, 197 insertions(+), 77 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86/ideapad-laptop.c
-> index 784326bd72f0..48561b666547 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -41,6 +41,7 @@
->  static const char *const ideapad_wmi_fnesc_events[] = {
->  	"26CAB2E5-5CF1-46AE-AAC3-4A12B6BA50E6", /* Yoga 3 */
->  	"56322276-8493-4CE8-A783-98C991274F5E", /* Yoga 700 */
-> +	"8FC0DE0C-B4E4-43FD-B0F3-8871711C1294", /* Legion 5 */
->  };
->  #endif
->  
-> @@ -1464,6 +1465,15 @@ static void ideapad_wmi_notify(u32 value, void *context)
->  	case 128:
->  		ideapad_input_report(priv, value);
->  		break;
-> +	case 208:
-> +		unsigned long result;
-> +
-> +		if (!eval_hals(priv->adev->handle, &result)) {
-> +			bool state = test_bit(HALS_FNLOCK_STATE_BIT, &result);
-> +
-> +			exec_sals(priv->adev->handle, state ? SALS_FNLOCK_ON : SALS_FNLOCK_OFF);
-> +		}
-> +		break;
->  	default:
->  		dev_info(&priv->platform_device->dev,
->  			 "Unknown WMI event: %u\n", value);
+> 
+> base-commit: ca42c119fc6746e65423257e7eddf5fc9e96edc2
 > 
 
