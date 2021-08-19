@@ -2,84 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D34C43216
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 19:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AFFC4320A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 21:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA2E61100
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 19:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126AD60E76
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 21:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234903AbhHST6a (ORCPT
+        id S235628AbhHSVCg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 15:58:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65242 "EHLO mga14.intel.com"
+        Thu, 19 Aug 2021 17:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233995AbhHST62 (ORCPT
+        id S235429AbhHSVCf (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 15:58:28 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="216366474"
-X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="216366474"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 12:57:52 -0700
-X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="532641597"
-Received: from kfrangia-mobl1.amr.corp.intel.com (HELO skuppusw-mobl5.amr.corp.intel.com) ([10.212.58.216])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 12:57:50 -0700
-Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
-To:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-graphics-maintainer@vmware.com,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
- <YR4p9TqKTLdN1A96@infradead.org>
- <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <90316f17-e853-fd23-2ec2-4d03cf283b0b@linux.intel.com>
-Date:   Thu, 19 Aug 2021 12:57:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 19 Aug 2021 17:02:35 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id D67A36108E;
+        Thu, 19 Aug 2021 21:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629406918;
+        bh=x0x/4H/rYRswW9kt5kIosil99IC/TVKjXM+G9KmjS98=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=rjQ7u+trZ8IL26wIkye64nKZj3YRMSty6y7qU6HiEOpxfhjuOQ8XPGxVgZf9ziNEo
+         9EwNkEw9BBCQ5Csx1U0EoI88OflWv3803hgMzMlt7rftG1+AzOelScZqI0soUcmh6F
+         pw39Qxy7GKR5dK06nalsdvEbULn5qpc1f1kb8R4Qw7lBZh5InAH/4MC7NZstaCF/Tf
+         WSipxpd1V6BvlXLlw6AQz1ca9ktzfRg7zqCgSd5GNIM0zoSXH6c4T1GEs7oYTOykGU
+         DOM+ElnvSPywa/Hrxy2l7kCNEruDR43dldMYdES7k4SvCZ2kEe4+urQiStVoAkhPvv
+         k3dYgQgMRMaJA==
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.14-4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <2c41a5a1-f773-06c5-71ab-05537cb276b0@redhat.com>
+References: <2c41a5a1-f773-06c5-71ab-05537cb276b0@redhat.com>
+X-PR-Tracked-List-Id: <platform-driver-x86.vger.kernel.org>
+X-PR-Tracked-Message-Id: <2c41a5a1-f773-06c5-71ab-05537cb276b0@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.14-4
+X-PR-Tracked-Commit-Id: 1e35b8a7780a0c043cc5389420f069b69343f5d9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e649e4c806b4ee41120bc51ee6698e87b3edc1fc
+Message-Id: <162940691884.11714.12956903838959578715.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Aug 2021 21:01:58 +0000
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+The pull request you sent on Thu, 19 Aug 2021 09:36:34 +0200:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v5.14-4
 
-On 8/19/21 11:33 AM, Tom Lendacky wrote:
-> There was some talk about this on the mailing list where TDX and SEV may
-> need to be differentiated, so we wanted to reserve a range of values per
-> technology. I guess I can remove them until they are actually needed.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e649e4c806b4ee41120bc51ee6698e87b3edc1fc
 
-In TDX also we have similar requirements and we need some flags for
-TDX specific checks. So I think it is fine to leave some space for vendor
-flags.
+Thank you!
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
