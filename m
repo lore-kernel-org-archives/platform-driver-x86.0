@@ -2,66 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3AC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EA4C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 13:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC0660F5E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E2761042
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 13:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238615AbhHSMrv (ORCPT
+        id S238488AbhHSNbo (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 08:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbhHSMrv (ORCPT
+        Thu, 19 Aug 2021 09:31:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36000 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238469AbhHSNbo (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 08:47:51 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B07DC061575;
-        Thu, 19 Aug 2021 05:47:15 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id o2so5793443pgr.9;
-        Thu, 19 Aug 2021 05:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ixqCxE/RtYaj+rEgBZfu98gHaJ0UMZzaRlA+CP4jLJ0=;
-        b=PQjRpg9CYqMymtIf87U4U9QWo37O7Mux4b/YqN20VY8GaB6uMuhBBZOouqyFOwN5MJ
-         Ic7Hw6GpMOXZCs2GTJg+tIAwvtFgt2cBId1sG080BEcwtQQ51kjIM2NjFxEIJUtjyw5o
-         muxvgt1y2EzIPUsYy7UiiSVxwO3xMgcKd8suaEL9hy2Z/czuWosh2Q7lQagc/cjSEef+
-         LdaKLime+346Jzuy5pAPKab7haVt3ocKOoWC7ToVxNwpaw8J4tEt+Vy0pQufOsJ5vUQY
-         Yb+7a3F4RZnkPrS6CSOyxQnh/SIUh3tLZuXpuQ71HdbYmF4hnOlVHR326+eHACRB1ed4
-         tb7Q==
+        Thu, 19 Aug 2021 09:31:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629379867;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZMxPO4Hsb+ECqs+fN77FMO4kFLr98qHqe4Bnv69c3Jg=;
+        b=Kck7FIUYivf6J9cvOeYwdA+OtMGDW/iI3wuByVtEczhYkXJy2wC7eagjmpEpfK45HVLX2J
+        lDbaR5NmGOlPEvbToN1H83KCcyPmJmscg9egFRtfLv0TeV4HV+t+AlghKnlbyQnzJFIM5+
+        YfUT79YhpJId2Lqt8QHrtsOHjFhs1y0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-588-P8QuZzumNEaxN7qmRgJzMA-1; Thu, 19 Aug 2021 09:31:06 -0400
+X-MC-Unique: P8QuZzumNEaxN7qmRgJzMA-1
+Received: by mail-ed1-f72.google.com with SMTP id a23-20020a50ff170000b02903b85a16b672so2832694edu.1
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Aug 2021 06:31:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ixqCxE/RtYaj+rEgBZfu98gHaJ0UMZzaRlA+CP4jLJ0=;
-        b=ANVzjl6lSU6pUFe6+btThEkAiSTPXhZTsTQcqdKJgarfoob9xebkVTpTtfJXsSmTkc
-         3o9IVwmiBB0CdRb/BrNlFaZHVj6N1LgpsqU/ycv4fnRWEEBQzTnAQVqRkN2oTKcuHEvC
-         X1Jk6/qooUja1QUWZzA6eom7ZyampkbHxro7v3o+8uIumKdxDUp8eRnco0gDfIgGh40j
-         fF6N/FoOVeC+fflnN4vdo0jiL9zb3wndSZTSN0U5wxGghOIMGKwQrRK7JK94C4xjtSAP
-         2opRDtuL0f4hYfBvEPRPrJZu87Su8WDJwwUCpjPVj1/8vWT1RityNaaOdnrEYhtvclcp
-         rt2Q==
-X-Gm-Message-State: AOAM533a/aZQFwjYXUqUGf+KsJkLppa9bHD/WtFBOC9X66cMVtQIpG/P
-        4NKYQSmPy0gF4mGH5A7m1LfnjRChVKkzIDlxvm4=
-X-Google-Smtp-Source: ABdhPJzYnGNeAN5xyb9jVGO4rbETTnVMZor7yAcJLPq8/nGlzbaPKhbD61Pu2kb36029cdMW5srkAnjRx5cJLBx1Vk8=
-X-Received: by 2002:a65:45c3:: with SMTP id m3mr13945248pgr.203.1629377234728;
- Thu, 19 Aug 2021 05:47:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210819033001.20136-1-hpa@redhat.com> <1360c64f-b695-a4b8-8b61-a4dfb0e896f0@redhat.com>
- <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com> <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
-In-Reply-To: <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Aug 2021 15:46:35 +0300
-Message-ID: <CAHp75VfhhwDzREn79cN67J-u0nhNuoXDehU8aXiH8B73qc8VVQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZMxPO4Hsb+ECqs+fN77FMO4kFLr98qHqe4Bnv69c3Jg=;
+        b=n9OPjjfm/kleeRMWK4rkClYkNR1MzKRcyiNchDKXQyGvpCJ88WO52/8qoFQNPzNhXn
+         LCXenkXy3JA40GVhumPIh51ZE6Cy7dPkp5e+uvw58cR9z71WWawkES9oYMsz6FESteqb
+         b3/i/p7e3kVwamgx7Hw1KOhBZ1gTRBsvtgDfE7zVUGJDuiBMvdFmVweljZxWZYRkZ2nJ
+         XmdiIUKacLZd0RTgqIJfJr+pQ02Gb7QB2zC4DX4WCpPXF5tW/2mQhwJqfj9eZ4XHll2R
+         8uiiqYpFPcQInPHSxaE0C2URklPwV327T5uj0P44u4JMfZ/zMd+wXSfte6o41WsYsf90
+         vY2A==
+X-Gm-Message-State: AOAM533GDw+GOmCnr9B/t15WlVxF/aBXRFk+ZJY14fCB44swcvSnEUH8
+        QysWOYUWm2HKvTo/XwF8IJkFFM/m2NZR73MNAi7z7gzsl3bf8Z3o1YyxLKNBjSJv6JJmN/NJcc2
+        doA5C1PvfqTQDI+Ukkg9mOvyqDNAva6OG8fTsU8yIjrq/F7DYagDY7azZJKwu7s+ukeLsupjWKH
+        pGARy5oDhBNg==
+X-Received: by 2002:a50:ff06:: with SMTP id a6mr4145081edu.220.1629379865288;
+        Thu, 19 Aug 2021 06:31:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwGnmmdalfHADjyQGbyzstD3BtvbvvSJ6O7IbgTbECK8QY8ELWP/34Dn+fihz1l1FIIItPynA==
+X-Received: by 2002:a50:ff06:: with SMTP id a6mr4145049edu.220.1629379865120;
+        Thu, 19 Aug 2021 06:31:05 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id b3sm1298090ejb.7.2021.08.19.06.31.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Aug 2021 06:31:04 -0700 (PDT)
 Subject: Re: [PATCH v3 00/20] Intel platform driver code movement
-To:     Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
         Mark Gross <mgross@linux.intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
@@ -76,36 +78,58 @@ Cc:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Dell.Client.Kernel@dell.com,
         Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20210819033001.20136-1-hpa@redhat.com>
+ <1360c64f-b695-a4b8-8b61-a4dfb0e896f0@redhat.com>
+ <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com>
+ <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <a5e52890-c162-ab48-4858-3eb0e971e5a1@redhat.com>
+Date:   Thu, 19 Aug 2021 15:31:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 3:14 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+Hi,
+
+On 8/19/21 2:14 PM, Andy Shevchenko wrote:
 > On Thu, Aug 19, 2021 at 3:03 PM Andy Shevchenko
 > <andy.shevchenko@gmail.com> wrote:
-> > On Thu, Aug 19, 2021 at 1:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> >
-> > > Thank you for your patch-series, I've applied the series to my
-> > > review-hans branch:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
-> > >
-> > > With the changes mentioned in replies to individual patches.
-> >
-> > Can we postpone this a bit, please?
-> >
-> > I have a few comments here and there. I'll send asap.
->
+>> On Thu, Aug 19, 2021 at 1:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>>
+>>> Thank you for your patch-series, I've applied the series to my
+>>> review-hans branch:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+>>>
+>>> With the changes mentioned in replies to individual patches.
+>>
+>> Can we postpone this a bit, please?
+>>
+>> I have a few comments here and there. I'll send asap.
+> 
 > Hmm... It seems it will take less time if I simply take what you have
 > in your repo and produce a v4.
 > Would it work?
 
-Oh, there are more issues with the patches. Kconfigs have copy'n'paste
-text from Makefiles.
-Anyway, it seems I will do a v4.
+That is fine by me, I might be better to just do a small follow-up patch
+though, given that you seem to only have a few small remarks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+But if you prefer to do a v4 that is fine too. I was planning on
+keeping this in review-hans for a while anyways.
+
+I did notice the couple of stray changes which you pointed out but
+they get corrected by other commits (or are removal of extra whitespace
+left-over from other commits), so I decided that they were harmless
+since the end-result Makefile / Kconfig files were good.
+
+Regards,
+
+Hans
+
