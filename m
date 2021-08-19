@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C108C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F550C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FDF610A0
+	by mail.kernel.org (Postfix) with ESMTP id 02C53610A0
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbhHSQis (ORCPT
+        id S231237AbhHSQis (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Thu, 19 Aug 2021 12:38:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7324 "EHLO mga01.intel.com"
+Received: from mga18.intel.com ([134.134.136.126]:1247 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230430AbhHSQin (ORCPT
+        id S230416AbhHSQim (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 12:38:43 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238716210"
+        Thu, 19 Aug 2021 12:38:42 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="203745255"
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="238716210"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:05 -0700
+   d="scan'208";a="203745255"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="506153684"
+   d="scan'208";a="679529685"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2021 09:38:01 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 19 Aug 2021 09:38:01 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7A5EDB05; Thu, 19 Aug 2021 19:37:53 +0300 (EEST)
+        id 56E0995F; Thu, 19 Aug 2021 19:37:53 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -50,9 +50,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v4 20/21] platform/x86: intel-wmi-thunderbolt: Move to intel sub-directory
-Date:   Thu, 19 Aug 2021 19:37:34 +0300
-Message-Id: <20210819163735.81803-21-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 17/21] platform/x86: intel_oaktrail: Move to intel sub-directory
+Date:   Thu, 19 Aug 2021 19:37:31 +0300
+Message-Id: <20210819163735.81803-18-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
 References: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
@@ -64,105 +64,91 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel WMI Thunderbolt driver to intel sub-directory
-to improve readability.
+Move Intel Oaktrail driver to intel sub-directory to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                         |  2 +-
- drivers/platform/x86/Kconfig                        | 12 ------------
- drivers/platform/x86/Makefile                       |  1 -
- drivers/platform/x86/intel/wmi/Kconfig              | 13 +++++++++++++
- drivers/platform/x86/intel/wmi/Makefile             |  2 ++
- .../wmi/thunderbolt.c}                              |  0
- 6 files changed, 16 insertions(+), 14 deletions(-)
- rename drivers/platform/x86/{intel-wmi-thunderbolt.c => intel/wmi/thunderbolt.c} (100%)
+ drivers/platform/x86/Kconfig                           | 10 ----------
+ drivers/platform/x86/Makefile                          |  1 -
+ drivers/platform/x86/intel/Kconfig                     | 10 ++++++++++
+ drivers/platform/x86/intel/Makefile                    |  2 ++
+ .../x86/{intel_oaktrail.c => intel/oaktrail.c}         |  0
+ 5 files changed, 12 insertions(+), 11 deletions(-)
+ rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee49f50f317a..cf9b2a501552 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9597,7 +9597,7 @@ F:	drivers/platform/x86/intel/wmi/sbl-fw-update.c
- INTEL WMI THUNDERBOLT FORCE POWER DRIVER
- L:	Dell.Client.Kernel@dell.com
- S:	Maintained
--F:	drivers/platform/x86/intel-wmi-thunderbolt.c
-+F:	drivers/platform/x86/intel/wmi/thunderbolt.c
- 
- INTEL WWAN IOSM DRIVER
- M:	M Chetan Kumar <m.chetan.kumar@intel.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 7bbbc5e2053b..f850ac7a7dec 100644
+index c3693ea68e71..abbafb42b7ca 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -77,18 +77,6 @@ config UV_SYSFS
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called uv_sysfs.
+@@ -668,16 +668,6 @@ config THINKPAD_LMI
  
--config INTEL_WMI_THUNDERBOLT
--	tristate "Intel WMI thunderbolt force power driver"
--	depends on ACPI_WMI
+ source "drivers/platform/x86/intel/Kconfig"
+ 
+-config INTEL_OAKTRAIL
+-	tristate "Intel Oaktrail Platform Extras"
+-	depends on ACPI
+-	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
 -	help
--	  Say Y here if you want to be able to use the WMI interface on select
--	  systems to force the power control of Intel Thunderbolt controllers.
--	  This is useful for updating the firmware when devices are not plugged
--	  into the controller.
+-	  Intel Oaktrail platform need this driver to provide interfaces to
+-	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+-	  here; it will only load on supported platforms.
 -
--	  To compile this driver as a module, choose M here: the module will
--	  be called intel-wmi-thunderbolt.
--
- config MXM_WMI
-        tristate "WMI support for MXM Laptop Graphics"
-        depends on ACPI_WMI
+ config INTEL_VBTN
+ 	tristate "INTEL VIRTUAL BUTTON"
+ 	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 9a4309c93c0d..97194707b9d7 100644
+index a7be69a2afd2..044c430e8e6f 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -10,7 +10,6 @@ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
+@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
- # WMI drivers
- obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
--obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
- obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
-diff --git a/drivers/platform/x86/intel/wmi/Kconfig b/drivers/platform/x86/intel/wmi/Kconfig
-index c5753b1e8f43..8e159f712179 100644
---- a/drivers/platform/x86/intel/wmi/Kconfig
-+++ b/drivers/platform/x86/intel/wmi/Kconfig
-@@ -16,3 +16,16 @@ config INTEL_WMI_SBL_FW_UPDATE
+-obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
  
+ # MSI
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index a72fa2157b6e..66a9284dc3f8 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -58,6 +58,16 @@ config INTEL_INT0002_VGPIO
  	  To compile this driver as a module, choose M here: the module will
- 	  be called intel-wmi-sbl-fw-update.
-+
-+config INTEL_WMI_THUNDERBOLT
-+	tristate "Intel WMI thunderbolt force power driver"
-+	depends on ACPI_WMI
-+	select INTEL_WMI
-+	help
-+	  Say Y here if you want to be able to use the WMI interface on select
-+	  systems to force the power control of Intel Thunderbolt controllers.
-+	  This is useful for updating the firmware when devices are not plugged
-+	  into the controller.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel-wmi-thunderbolt.
-diff --git a/drivers/platform/x86/intel/wmi/Makefile b/drivers/platform/x86/intel/wmi/Makefile
-index bf1f118b6839..c2d56d25dea0 100644
---- a/drivers/platform/x86/intel/wmi/Makefile
-+++ b/drivers/platform/x86/intel/wmi/Makefile
-@@ -5,3 +5,5 @@
+ 	  be called intel_int0002_vgpio.
  
- intel-wmi-sbl-fw-update-y				:= sbl-fw-update.o
- obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
-+intel-wmi-thunderbolt-y					:= thunderbolt.o
-+obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
-diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel/wmi/thunderbolt.c
++config INTEL_OAKTRAIL
++	tristate "Intel Oaktrail Platform Extras"
++	depends on ACPI
++	depends on ACPI_VIDEO || ACPI_VIDEO=n
++	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
++	help
++	  Intel Oaktrail platform need this driver to provide interfaces to
++	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
++	  here; it will only load on supported platforms.
++
+ config INTEL_BXTWC_PMIC_TMU
+ 	tristate "Intel Broxton Whiskey Cove TMU Driver"
+ 	depends on INTEL_SOC_PMIC_BXTWC
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index 12647076ea0d..dfcf44ad02ed 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -21,6 +21,8 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ # Intel miscellaneous drivers
+ intel_int0002_vgpio-y			:= int0002_vgpio.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
++intel_oaktrail-y			:= oaktrail.o
++obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ 
+ # Intel PMIC / PMC / P-Unit drivers
+ intel_bxtwc_tmu-y			:= bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel/oaktrail.c
 similarity index 100%
-rename from drivers/platform/x86/intel-wmi-thunderbolt.c
-rename to drivers/platform/x86/intel/wmi/thunderbolt.c
+rename from drivers/platform/x86/intel_oaktrail.c
+rename to drivers/platform/x86/intel/oaktrail.c
 -- 
 2.32.0
 
