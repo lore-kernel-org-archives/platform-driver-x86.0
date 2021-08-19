@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED60C4320E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5344C19F39
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28FA060FDC
+	by mail.kernel.org (Postfix) with ESMTP id C974260FDC
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231293AbhHSQio (ORCPT
+        id S231455AbhHSQip (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 12:38:44 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38697 "EHLO mga03.intel.com"
+        Thu, 19 Aug 2021 12:38:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:1924 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229580AbhHSQil (ORCPT
+        id S230260AbhHSQim (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 12:38:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="216630826"
+        Thu, 19 Aug 2021 12:38:42 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="280332712"
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="216630826"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:04 -0700
+   d="scan'208";a="280332712"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="489731330"
+   d="scan'208";a="681847603"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2021 09:37:57 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2021 09:38:01 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C174D3B0; Thu, 19 Aug 2021 19:37:52 +0300 (EEST)
+        id 3D7EB707; Thu, 19 Aug 2021 19:37:53 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -50,9 +50,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v4 06/21] platform/x86: intel_scu: Move to intel sub-directory
-Date:   Thu, 19 Aug 2021 19:37:20 +0300
-Message-Id: <20210819163735.81803-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 15/21] platform/x86: intel-hid: Move to intel sub-directory
+Date:   Thu, 19 Aug 2021 19:37:29 +0300
+Message-Id: <20210819163735.81803-16-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
 References: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
@@ -64,243 +64,125 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel SCU drivers to intel sub-directory to improve readability.
+Move Intel HID driver to intel sub-directory to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                   |  2 +-
- drivers/platform/x86/Kconfig                  | 47 -----------------
- drivers/platform/x86/Makefile                 |  5 --
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  1 +
- drivers/platform/x86/intel/scu/Kconfig        | 51 +++++++++++++++++++
- drivers/platform/x86/intel/scu/Makefile       | 15 ++++++
- .../x86/{intel_scu_ipc.c => intel/scu/ipc.c}  |  0
- .../scu/ipcutil.c}                            |  0
- .../scu/pcidrv.c}                             |  0
- .../scu/pltdrv.c}                             |  0
- .../x86/{intel_scu_wdt.c => intel/scu/wdt.c}  |  0
- 12 files changed, 69 insertions(+), 53 deletions(-)
- create mode 100644 drivers/platform/x86/intel/scu/Kconfig
- create mode 100644 drivers/platform/x86/intel/scu/Makefile
- rename drivers/platform/x86/{intel_scu_ipc.c => intel/scu/ipc.c} (100%)
- rename drivers/platform/x86/{intel_scu_ipcutil.c => intel/scu/ipcutil.c} (100%)
- rename drivers/platform/x86/{intel_scu_pcidrv.c => intel/scu/pcidrv.c} (100%)
- rename drivers/platform/x86/{intel_scu_pltdrv.c => intel/scu/pltdrv.c} (100%)
- rename drivers/platform/x86/{intel_scu_wdt.c => intel/scu/wdt.c} (100%)
+ MAINTAINERS                                       |  2 +-
+ drivers/platform/x86/Kconfig                      | 13 -------------
+ drivers/platform/x86/Makefile                     |  1 -
+ drivers/platform/x86/intel/Kconfig                | 13 +++++++++++++
+ drivers/platform/x86/intel/Makefile               |  4 ++++
+ drivers/platform/x86/{intel-hid.c => intel/hid.c} |  2 +-
+ 6 files changed, 19 insertions(+), 16 deletions(-)
+ rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (99%)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index eefe4edb1b3d..aa08fdb02ecb 100644
+index ce79ad253afe..5d25d0d9f1a6 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9527,7 +9527,7 @@ INTEL SCU DRIVERS
- M:	Mika Westerberg <mika.westerberg@linux.intel.com>
+@@ -9321,7 +9321,7 @@ INTEL HID EVENT DRIVER
+ M:	Alex Hung <alex.hung@canonical.com>
+ L:	platform-driver-x86@vger.kernel.org
  S:	Maintained
- F:	arch/x86/include/asm/intel_scu_ipc.h
--F:	drivers/platform/x86/intel_scu_*
-+F:	drivers/platform/x86/intel/scu/
+-F:	drivers/platform/x86/intel-hid.c
++F:	drivers/platform/x86/intel/hid.c
  
- INTEL SKYLAKE INT3472 ACPI DEVICE DRIVER
- M:	Daniel Scally <djrscally@gmail.com>
+ INTEL I/OAT DMA DRIVER
+ M:	Dave Jiang <dave.jiang@intel.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index aed7570388ef..1b85a1f6fc5f 100644
+index feca8ae551a1..7f3912c16338 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1159,53 +1159,6 @@ config INTEL_UNCORE_FREQ_CONTROL
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel-uncore-frequency.
+@@ -668,19 +668,6 @@ config THINKPAD_LMI
  
--config INTEL_SCU_IPC
--	bool
--
--config INTEL_SCU
--	bool
--	select INTEL_SCU_IPC
--
--config INTEL_SCU_PCI
--	bool "Intel SCU PCI driver"
--	depends on PCI
--	select INTEL_SCU
--	help
--	  This driver is used to bridge the communications between kernel
--	  and SCU on some embedded Intel x86 platforms. It also creates
--	  devices that are connected to the SoC through the SCU.
--	  Platforms supported:
--	    Medfield
--	    Clovertrail
--	    Merrifield
--	    Broxton
--	    Apollo Lake
--
--config INTEL_SCU_PLATFORM
--	tristate "Intel SCU platform driver"
+ source "drivers/platform/x86/intel/Kconfig"
+ 
+-config INTEL_HID_EVENT
+-	tristate "INTEL HID Event"
 -	depends on ACPI
--	select INTEL_SCU
+-	depends on INPUT
+-	depends on I2C
+-	select INPUT_SPARSEKMAP
 -	help
--	  This driver is used to bridge the communications between kernel
--	  and SCU (sometimes called PMC as well). The driver currently
--	  supports Intel Elkhart Lake and compatible platforms.
+-	  This driver provides support for the Intel HID Event hotkey interface.
+-	  Some laptops require this driver for hotkey support.
 -
--config INTEL_SCU_WDT
--	bool
--	default INTEL_SCU_PCI
--	depends on INTEL_MID_WATCHDOG
--	help
--	  This is a specific platform code to instantiate watchdog device
--	  on ACPI-based Intel MID platforms.
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called intel_hid.
 -
--config INTEL_SCU_IPC_UTIL
--	tristate "Intel SCU IPC utility driver"
--	depends on INTEL_SCU
--	help
--	  The IPC Util driver provides an interface with the SCU enabling
--	  low level access for debug work and updating the firmware. Say
--	  N unless you will be doing this on an Intel MID platform.
--
- config INTEL_TELEMETRY
- 	tristate "Intel SoC Telemetry Driver"
- 	depends on X86_64
+ config INTEL_INT0002_VGPIO
+ 	tristate "Intel ACPI INT0002 Virtual GPIO driver"
+ 	depends on GPIOLIB && ACPI && PM_SLEEP
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1668f7360833..026c97ba68f6 100644
+index 1f3e48a1721f..2a8f03f89273 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -127,11 +127,6 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
- # Intel PMIC / PMC / P-Unit devices
--obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
--obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
--obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
--obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
--obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
- obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
- 					   intel_telemetry_pltdrv.o \
- 					   intel_telemetry_debugfs.o
+-obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 7de11636904d..72f4a5b79342 100644
+index 351640511eee..b97061e85a3d 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -21,6 +21,7 @@ source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
-+source "drivers/platform/x86/intel/scu/Kconfig"
+@@ -26,6 +26,19 @@ source "drivers/platform/x86/intel/scu/Kconfig"
+ source "drivers/platform/x86/intel/speed_select_if/Kconfig"
+ source "drivers/platform/x86/intel/telemetry/Kconfig"
  
++config INTEL_HID_EVENT
++	tristate "Intel HID Event"
++	depends on ACPI
++	depends on INPUT
++	depends on I2C
++	select INPUT_SPARSEKMAP
++	help
++	  This driver provides support for the Intel HID Event hotkey interface.
++	  Some laptops require this driver for hotkey support.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_hid.
++
  config INTEL_BXTWC_PMIC_TMU
  	tristate "Intel Broxton Whiskey Cove TMU Driver"
+ 	depends on INTEL_SOC_PMIC_BXTWC
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index a1555a1e421d..15e5124d70ec 100644
+index e5ea0e8ba516..8bfa9fb0a528 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
-+obj-$(CONFIG_INTEL_SCU)			+= scu/
+@@ -14,6 +14,10 @@ obj-$(CONFIG_INTEL_SCU)			+= scu/
+ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += speed_select_if/
+ obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
  
++# Intel input drivers
++intel-hid-y				:= hid.o
++obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
++
  # Intel PMIC / PMC / P-Unit drivers
  intel_bxtwc_tmu-y			:= bxtwc_tmu.o
-diff --git a/drivers/platform/x86/intel/scu/Kconfig b/drivers/platform/x86/intel/scu/Kconfig
-new file mode 100644
-index 000000000000..5ce2554e2b90
---- /dev/null
-+++ b/drivers/platform/x86/intel/scu/Kconfig
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Intel x86 Platform-Specific Drivers
-+#
-+
-+config INTEL_SCU_IPC
-+	bool
-+
-+config INTEL_SCU_IPC_UTIL
-+	tristate "Intel SCU IPC utility driver"
-+	depends on INTEL_SCU
-+	help
-+	  The IPC utility driver provides an interface with the SCU enabling
-+	  low level access for debug work and updating the firmware.
-+	  Say N unless you will be doing this on an Intel MID platform.
-+
-+config INTEL_SCU
-+	bool
-+	select INTEL_SCU_IPC
-+
-+config INTEL_SCU_PCI
-+	bool "Intel SCU PCI driver"
-+	depends on PCI
-+	select INTEL_SCU
-+	help
-+	  This driver is used to bridge the communications between kernel
-+	  and SCU on some embedded Intel x86 platforms. It also creates
-+	  devices that are connected to the SoC through the SCU.
-+	  Platforms supported:
-+	    Medfield
-+	    Clovertrail
-+	    Merrifield
-+	    Broxton
-+	    Apollo Lake
-+
-+config INTEL_SCU_PLATFORM
-+	tristate "Intel SCU platform driver"
-+	depends on ACPI
-+	select INTEL_SCU
-+	help
-+	  This driver is used to bridge the communications between kernel
-+	  and SCU (sometimes called PMC as well). The driver currently
-+	  supports Intel Elkhart Lake and compatible platforms.
-+
-+config INTEL_SCU_WDT
-+	bool
-+	default INTEL_SCU_PCI
-+	depends on INTEL_MID_WATCHDOG
-+	help
-+	  This is a specific platform code to instantiate watchdog device
-+	  on ACPI-based Intel MID platforms.
-diff --git a/drivers/platform/x86/intel/scu/Makefile b/drivers/platform/x86/intel/scu/Makefile
-new file mode 100644
-index 000000000000..601a720f97dc
---- /dev/null
-+++ b/drivers/platform/x86/intel/scu/Makefile
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Intel x86 Platform-Specific Drivers
-+#
-+
-+intel_scu_ipc-y				:= ipc.o
-+obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
-+intel_scu_ipcutil-y			:= ipcutil.o
-+obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
-+intel_scu_pci-y				:= pcidrv.o
-+obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
-+intel_scu_pltdrv-y			:= pltdrv.o
-+obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
-+intel_scu_wdt-y				:= wdt.o
-+obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel/scu/ipc.c
-similarity index 100%
-rename from drivers/platform/x86/intel_scu_ipc.c
-rename to drivers/platform/x86/intel/scu/ipc.c
-diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel/scu/ipcutil.c
-similarity index 100%
-rename from drivers/platform/x86/intel_scu_ipcutil.c
-rename to drivers/platform/x86/intel/scu/ipcutil.c
-diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel/scu/pcidrv.c
-similarity index 100%
-rename from drivers/platform/x86/intel_scu_pcidrv.c
-rename to drivers/platform/x86/intel/scu/pcidrv.c
-diff --git a/drivers/platform/x86/intel_scu_pltdrv.c b/drivers/platform/x86/intel/scu/pltdrv.c
-similarity index 100%
-rename from drivers/platform/x86/intel_scu_pltdrv.c
-rename to drivers/platform/x86/intel/scu/pltdrv.c
-diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel/scu/wdt.c
-similarity index 100%
-rename from drivers/platform/x86/intel_scu_wdt.c
-rename to drivers/platform/x86/intel/scu/wdt.c
+ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel/hid.c
+similarity index 99%
+rename from drivers/platform/x86/intel-hid.c
+rename to drivers/platform/x86/intel/hid.c
+index 2e4e97a626a5..a33a5826e81a 100644
+--- a/drivers/platform/x86/intel-hid.c
++++ b/drivers/platform/x86/intel/hid.c
+@@ -14,7 +14,7 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/suspend.h>
+-#include "dual_accel_detect.h"
++#include "../dual_accel_detect.h"
+ 
+ /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
+ #define TABLET_MODE_FLAG BIT(6)
 -- 
 2.32.0
 
