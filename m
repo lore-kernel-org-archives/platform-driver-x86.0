@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7BFC4338F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24BAC4320A
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A4160FDC
+	by mail.kernel.org (Postfix) with ESMTP id 918C261053
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbhHSQid (ORCPT
+        id S229804AbhHSQie (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 12:38:33 -0400
-Received: from mga01.intel.com ([192.55.52.88]:7324 "EHLO mga01.intel.com"
+        Thu, 19 Aug 2021 12:38:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38070 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229560AbhHSQid (ORCPT
+        id S229610AbhHSQid (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Thu, 19 Aug 2021 12:38:33 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238716181"
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="214754454"
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="238716181"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:37:56 -0700
+   d="scan'208";a="214754454"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:37:56 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="424684829"
+   d="scan'208";a="442321494"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2021 09:37:52 -0700
+  by orsmga002.jf.intel.com with ESMTP; 19 Aug 2021 09:37:52 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AD1D939B; Thu, 19 Aug 2021 19:37:52 +0300 (EEST)
+        id 9259C107; Thu, 19 Aug 2021 19:37:52 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -50,9 +50,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v4 04/21] platform/x86: intel_punit_ipc: Move to intel sub-directory
-Date:   Thu, 19 Aug 2021 19:37:18 +0300
-Message-Id: <20210819163735.81803-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 02/21] platform/x86: intel_chtdc_ti_pwrbtn: Move to intel sub-directory
+Date:   Thu, 19 Aug 2021 19:37:16 +0300
+Message-Id: <20210819163735.81803-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
 References: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
@@ -64,92 +64,89 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel P-Unit IPC driver to intel sub-directory to improve readability.
+Move Intel Cherry Trail Dollar Cove TI power button driver
+to intel sub-directory to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                                 | 2 +-
- drivers/platform/x86/Kconfig                                | 6 ------
- drivers/platform/x86/Makefile                               | 1 -
- drivers/platform/x86/intel/Kconfig                          | 6 ++++++
- drivers/platform/x86/intel/Makefile                         | 2 ++
- .../platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c}   | 0
- 6 files changed, 9 insertions(+), 8 deletions(-)
- rename drivers/platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c} (100%)
+ drivers/platform/x86/Kconfig                          | 11 -----------
+ drivers/platform/x86/Makefile                         |  1 -
+ drivers/platform/x86/intel/Kconfig                    | 11 +++++++++++
+ drivers/platform/x86/intel/Makefile                   |  2 ++
+ .../chtdc_ti_pwrbtn.c}                                |  0
+ 5 files changed, 13 insertions(+), 12 deletions(-)
+ rename drivers/platform/x86/{intel_chtdc_ti_pwrbtn.c => intel/chtdc_ti_pwrbtn.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b731988a4452..21813a0e00eb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9475,7 +9475,7 @@ M:	Zha Qipeng <qipeng.zha@intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	arch/x86/include/asm/intel_punit_ipc.h
--F:	drivers/platform/x86/intel_punit_ipc.c
-+F:	drivers/platform/x86/intel/punit_ipc.c
- 
- INTEL PMC CORE DRIVER
- M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 2d6723bb6459..9cadce7908ea 100644
+index 084167d70f1b..ba0454450335 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1180,12 +1180,6 @@ config INTEL_PMC_CORE
- 		- Low Power Mode registers (Tigerlake and beyond)
- 		- PMC quirks as needed to enable SLPS0/S0ix
+@@ -1159,17 +1159,6 @@ config INTEL_UNCORE_FREQ_CONTROL
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel-uncore-frequency.
  
--config INTEL_PUNIT_IPC
--	tristate "Intel P-Unit IPC Driver"
+-config INTEL_CHTDC_TI_PWRBTN
+-	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
+-	depends on INTEL_SOC_PMIC_CHTDC_TI
+-	depends on INPUT
 -	help
--	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
--	  which is used to bridge the communications between kernel and P-Unit.
+-	  This option adds a power button driver driver for Dollar Cove TI
+-	  PMIC on Intel Cherry Trail devices.
 -
- config INTEL_SCU_IPC
- 	bool
- 
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called intel_chtdc_ti_pwrbtn.
+-
+ config INTEL_MRFLD_PWRBTN
+ 	tristate "Intel Merrifield Basin Cove power button driver"
+ 	depends on INTEL_SOC_PMIC_MRFLD
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index f70c0aa30cdd..776370ce8fbb 100644
+index bcdd75a48a80..bf94af0749f5 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -128,7 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+@@ -127,7 +127,6 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
  
  # Intel PMIC / PMC / P-Unit devices
+-obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
  obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
--obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
- obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
- obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
- obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+ obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 9e719db8450c..c4ceb5ee83f3 100644
+index 46db129bee7f..3792a5492a8a 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -53,4 +53,10 @@ config INTEL_MRFLD_PWRBTN
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel_mrfld_pwrbtn.
+@@ -31,4 +31,15 @@ config INTEL_BXTWC_PMIC_TMU
+ 	  This driver enables the alarm wakeup functionality in the TMU unit of
+ 	  Whiskey Cove PMIC.
  
-+config INTEL_PUNIT_IPC
-+	tristate "Intel P-Unit IPC Driver"
++config INTEL_CHTDC_TI_PWRBTN
++	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
++	depends on INTEL_SOC_PMIC_CHTDC_TI
++	depends on INPUT
 +	help
-+	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
-+	  which is used to bridge the communications between kernel and P-Unit.
++	  This option adds a power button driver for Dollar Cove TI
++	  PMIC on Intel Cherry Trail devices.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel_chtdc_ti_pwrbtn.
 +
  endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 4ff755a11770..58fc8e7a3b62 100644
+index dbdf4877ad10..52d7bc0948f3 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -16,3 +16,5 @@ intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
- obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
- intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
- obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
-+intel_punit_ipc-y			:= punit_ipc.o
-+obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
-diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel/punit_ipc.c
+@@ -12,3 +12,5 @@ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
+ # Intel PMIC / PMC / P-Unit drivers
+ intel_bxtwc_tmu-y			:= bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
++intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
++obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+diff --git a/drivers/platform/x86/intel_chtdc_ti_pwrbtn.c b/drivers/platform/x86/intel/chtdc_ti_pwrbtn.c
 similarity index 100%
-rename from drivers/platform/x86/intel_punit_ipc.c
-rename to drivers/platform/x86/intel/punit_ipc.c
+rename from drivers/platform/x86/intel_chtdc_ti_pwrbtn.c
+rename to drivers/platform/x86/intel/chtdc_ti_pwrbtn.c
 -- 
 2.32.0
 
