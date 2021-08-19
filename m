@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F550C4320A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6891DC43214
 	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C53610A0
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52744610A0
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 16:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231237AbhHSQis (ORCPT
+        id S231449AbhHSQis (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
         Thu, 19 Aug 2021 12:38:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:1247 "EHLO mga18.intel.com"
+Received: from mga17.intel.com ([192.55.52.151]:5089 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230416AbhHSQim (ORCPT
+        id S230440AbhHSQin (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 12:38:42 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="203745255"
+        Thu, 19 Aug 2021 12:38:43 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="196853741"
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="203745255"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:06 -0700
+   d="scan'208";a="196853741"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2021 09:38:06 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,335,1620716400"; 
-   d="scan'208";a="679529685"
+   d="scan'208";a="522506764"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Aug 2021 09:38:01 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Aug 2021 09:38:01 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 56E0995F; Thu, 19 Aug 2021 19:37:53 +0300 (EEST)
+        id 860B7B2E; Thu, 19 Aug 2021 19:37:53 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,10 +49,11 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         "David E. Box" <david.e.box@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
-        Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v4 17/21] platform/x86: intel_oaktrail: Move to intel sub-directory
-Date:   Thu, 19 Aug 2021 19:37:31 +0300
-Message-Id: <20210819163735.81803-18-andriy.shevchenko@linux.intel.com>
+        Maurice Ma <maurice.ma@intel.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v4 21/21] platform/x86/intel: scu: Fix doc of intel_scu_ipc_dev_command_with_size()
+Date:   Thu, 19 Aug 2021 19:37:35 +0300
+Message-Id: <20210819163735.81803-22-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
 References: <20210819163735.81803-1-andriy.shevchenko@linux.intel.com>
@@ -62,93 +63,31 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kate Hsuan <hpa@redhat.com>
+The kernel doc validator complains:
 
-Move Intel Oaktrail driver to intel sub-directory to improve readability.
+.../ipc.c:478: warning: expecting prototype for intel_scu_ipc_command_with_size(). Prototype was for intel_scu_ipc_dev_command_with_size() instead
 
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Fix the prototype name in the kernel documentation.
+
+Reported-by: kernel test robot <lkp@intel.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/Kconfig                           | 10 ----------
- drivers/platform/x86/Makefile                          |  1 -
- drivers/platform/x86/intel/Kconfig                     | 10 ++++++++++
- drivers/platform/x86/intel/Makefile                    |  2 ++
- .../x86/{intel_oaktrail.c => intel/oaktrail.c}         |  0
- 5 files changed, 12 insertions(+), 11 deletions(-)
- rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
+ drivers/platform/x86/intel/scu/ipc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index c3693ea68e71..abbafb42b7ca 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -668,16 +668,6 @@ config THINKPAD_LMI
+diff --git a/drivers/platform/x86/intel/scu/ipc.c b/drivers/platform/x86/intel/scu/ipc.c
+index 9171a46a9e3f..bfa0cc20750d 100644
+--- a/drivers/platform/x86/intel/scu/ipc.c
++++ b/drivers/platform/x86/intel/scu/ipc.c
+@@ -457,7 +457,7 @@ int intel_scu_ipc_dev_simple_command(struct intel_scu_ipc_dev *scu, int cmd,
+ EXPORT_SYMBOL(intel_scu_ipc_dev_simple_command);
  
- source "drivers/platform/x86/intel/Kconfig"
- 
--config INTEL_OAKTRAIL
--	tristate "Intel Oaktrail Platform Extras"
--	depends on ACPI
--	depends on ACPI_VIDEO || ACPI_VIDEO = n
--	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
--	help
--	  Intel Oaktrail platform need this driver to provide interfaces to
--	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
--	  here; it will only load on supported platforms.
--
- config INTEL_VBTN
- 	tristate "INTEL VIRTUAL BUTTON"
- 	depends on ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index a7be69a2afd2..044c430e8e6f 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- # Intel
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
- 
--obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
- obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
- 
- # MSI
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index a72fa2157b6e..66a9284dc3f8 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -58,6 +58,16 @@ config INTEL_INT0002_VGPIO
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called intel_int0002_vgpio.
- 
-+config INTEL_OAKTRAIL
-+	tristate "Intel Oaktrail Platform Extras"
-+	depends on ACPI
-+	depends on ACPI_VIDEO || ACPI_VIDEO=n
-+	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
-+	help
-+	  Intel Oaktrail platform need this driver to provide interfaces to
-+	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
-+	  here; it will only load on supported platforms.
-+
- config INTEL_BXTWC_PMIC_TMU
- 	tristate "Intel Broxton Whiskey Cove TMU Driver"
- 	depends on INTEL_SOC_PMIC_BXTWC
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 12647076ea0d..dfcf44ad02ed 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -21,6 +21,8 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
- # Intel miscellaneous drivers
- intel_int0002_vgpio-y			:= int0002_vgpio.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
-+intel_oaktrail-y			:= oaktrail.o
-+obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
- 
- # Intel PMIC / PMC / P-Unit drivers
- intel_bxtwc_tmu-y			:= bxtwc_tmu.o
-diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel/oaktrail.c
-similarity index 100%
-rename from drivers/platform/x86/intel_oaktrail.c
-rename to drivers/platform/x86/intel/oaktrail.c
+ /**
+- * intel_scu_ipc_command_with_size() - Command with data
++ * intel_scu_ipc_dev_command_with_size() - Command with data
+  * @scu: Optional SCU IPC instance
+  * @cmd: Command
+  * @sub: Sub type
 -- 
 2.32.0
 
