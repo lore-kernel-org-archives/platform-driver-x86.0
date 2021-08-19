@@ -2,68 +2,67 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E76C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1068C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0E3A61131
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F31D610A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238398AbhHSMOf (ORCPT
+        id S239297AbhHSMP6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 08:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39666 "EHLO
+        Thu, 19 Aug 2021 08:15:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238286AbhHSMOe (ORCPT
+        with ESMTP id S239281AbhHSMP5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 08:14:34 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE4DEC061575;
-        Thu, 19 Aug 2021 05:13:58 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id e15so3786385plh.8;
-        Thu, 19 Aug 2021 05:13:58 -0700 (PDT)
+        Thu, 19 Aug 2021 08:15:57 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F71C061575;
+        Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id mq3so4765841pjb.5;
+        Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IM2mYCmkC0prP0hBmF9stY4gtLvEtM2Yq4TDeR9YyUE=;
-        b=Cg5DBxLQT2Q7B/7VzYAHrkNDepnxurGaSq0PNIPtLK7A8AkKPV5H2n0tSFFtAbqk1m
-         U+aI5r7f0FAzWhW0FQ/2RzyU3mVJyfLJGzVvbW3hfc19EQpQcp9tbr9CZ2Qlx1+Th0sk
-         NZ0blc6tcoxWJXQoMzZe3n6h1PgJ2tTITdlk6se8nKwfPFQKLliq93MJ5qcVbjEvbqu2
-         gPl306pwN6JoXDud+vMeOpO+xz0Yy2SI0tmFEUppqQ1AhmDnBJ3MVRaJmzwsU00VdDa6
-         wu7DCT41mN36Yxl+eouRVNyI9XLWy+NZi3XviBTrcL8V9DHhz+4ngXtDN0hqqFjwS4hY
-         V7ig==
+        bh=fztjrUxdZEGqbexbhasq+sSk3wApfe0OIx2v0wDlJzY=;
+        b=bKdMjI8NAJFzuSl1FIMfWW2ST9E3Xw5D7ATeV+JVCvgbRsL2WXuRLbgaB/BLs09gtq
+         UAV18MFqviWSmL7/GZKyOddobts6Vtu9GcpDEyE8IzF4ZrA0CCtC6c6yg2FB6xjK3lgY
+         cw+wLmnyYX+KCYnu00fyGTIdGyn78N0WuYXCmTlWatxyA2wFWi/69mXZBJiVID/1GZMZ
+         dmWvMf78Om/63av6tbWRANCJEZDAhagryZVaiIX8jT//F0fqARkGn8uH3RzUj69veUL2
+         8TL8axQRarsmSrmi6taY9JZojQvEHtFhGCTncWak+XLx+4S4kYQAf7yfHI6glp3Xne9G
+         HbCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IM2mYCmkC0prP0hBmF9stY4gtLvEtM2Yq4TDeR9YyUE=;
-        b=NYg4aguMrcUroYN7nd242qQAAqf1Sg4gizRWMN0Do88YNr+qZcdhS1gB9ybS47ycZO
-         H1LVMuldgfqs706XckELf+xbSDkQsmrpPdTwm4pgnbjNrxyTYL1G5My8jV8KDo/oZPJh
-         XpfPJs8VHSRaeq4Q1Flf1VFx+r+GSZhl6nthuF32Vf1J/b+0MWJWuoqlLQE5u9oc2MlS
-         lxHFvxpsdnGXsVf5wOiOiqtiwyZDlli8fUaTd54PEVdjFuxxseNtiSe0PaapK3OYTSDw
-         t9UnMjHVoqQiPDRrlN7pAFhbQ7380yqpJmZPI2Why5W3LcfFU6fcDJRQWsS3PGh6TFdO
-         YkWg==
-X-Gm-Message-State: AOAM531FCvIJ+zbfOcq9vVx2Z71TVmxPD/xMd5awPl/wcw/ji8Hw81nC
-        tOSc5xfVnLrSqrZoXI5sntbDgHs6Adksia/zcLc=
-X-Google-Smtp-Source: ABdhPJwrAMhj1+VsMUo9xcKg8irtQT0sHo3dYgi7cP2NtzM7H7G5eEyRJfFdUzNd/JEmfl3MMO2ypChQ6+9Oz396+sY=
-X-Received: by 2002:a17:902:bb81:b0:12d:a7ec:3d85 with SMTP id
- m1-20020a170902bb8100b0012da7ec3d85mr11653878pls.17.1629375238446; Thu, 19
- Aug 2021 05:13:58 -0700 (PDT)
+        bh=fztjrUxdZEGqbexbhasq+sSk3wApfe0OIx2v0wDlJzY=;
+        b=nKC/yzdQEiHnqK9w0OHq0NMDY1JGorNaVoE7FRsn//K2hURAcI/3XvQYQhhsF7+tQt
+         VsX+oCLQE3EY32DQf3dCLlun1spkzFswHD4kYO89wduvrd26gbhFZdu3hC3rqRlEg8qy
+         jPzer1NqgMI6b/Y5eoqTni1d8b8sHAy/ybpGMx7AKYn+zLFRK3b+OOyvmSGn1C9Dgpg7
+         wUYJTDhH09IoKk6z3VR7pFVw3jSRDI+9x0xgJkNb6BJ84um1S+GjY9RxpF0tiERFl6kT
+         GNmwq9F82XXCr3I/IvkO2SDkX8wNddQxgT2qmA8eD/joKM2aP4XHoWOwNVeHLPFX5DRG
+         y5fg==
+X-Gm-Message-State: AOAM531nqBe1Fufsk4EEBWSIS7qBjG3s/cJv6VKt7hJHB6Gz5DAeDsV6
+        RDX+g+8GnlRoVmmqM0AYfYKWZoYcMNHDdoULLz8=
+X-Google-Smtp-Source: ABdhPJyYHDss0jUoLyH5uB5xnms0tcgzX/qqtvZOOoF7OoDKpZTSP9tmz9R2WVpYgLYuRLdqUFN0xcyYMbjjwqhBZZc=
+X-Received: by 2002:a17:90a:604e:: with SMTP id h14mr14846390pjm.181.1629375321054;
+ Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210819033001.20136-1-hpa@redhat.com> <20210819033001.20136-10-hpa@redhat.com>
-In-Reply-To: <20210819033001.20136-10-hpa@redhat.com>
+References: <20210819033001.20136-1-hpa@redhat.com> <1360c64f-b695-a4b8-8b61-a4dfb0e896f0@redhat.com>
+ <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com>
+In-Reply-To: <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Aug 2021 15:13:18 +0300
-Message-ID: <CAHp75VetJekXwZmyMu+YTp3o_L3TS9P7hru=WKBM6TKsbGJiRQ@mail.gmail.com>
-Subject: Re: [PATCH v3 09/20] platform/x86: intel-rst: Move to intel sub-directory
-To:     Kate Hsuan <hpa@redhat.com>
-Cc:     Alex Hung <alex.hung@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
+Date:   Thu, 19 Aug 2021 15:14:41 +0300
+Message-ID: <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/20] Intel platform driver code movement
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
         Mark Gross <mgross@linux.intel.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
@@ -82,27 +81,24 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 6:34 AM Kate Hsuan <hpa@redhat.com> wrote:
+On Thu, Aug 19, 2021 at 3:03 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Aug 19, 2021 at 1:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Move intel-rst to intel sub-directory to improve readability
-> and rename it from intel-rst.c to ips.c
-
-
->  # Intel uncore drivers
 >
-> -obj-$(CONFIG_INTEL_RST)                                += intel-rst.o
-> +
+> > Thank you for your patch-series, I've applied the series to my
+> > review-hans branch:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> >
+> > With the changes mentioned in replies to individual patches.
+>
+> Can we postpone this a bit, please?
+>
+> I have a few comments here and there. I'll send asap.
 
-Stray change.
-
-...
-
-> -
-
-Ditto.
-
-> +intel-rst-y                                                    := rst.o
-> +obj-$(CONFIG_INTEL_RST)                                += intel-rst.o
+Hmm... It seems it will take less time if I simply take what you have
+in your repo and produce a v4.
+Would it work?
 
 -- 
 With Best Regards,
