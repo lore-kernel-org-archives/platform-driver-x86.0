@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57189C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FEDC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3C06112E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1079361152
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:09:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238286AbhHSMHQ (ORCPT
+        id S238357AbhHSMKM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 08:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37992 "EHLO
+        Thu, 19 Aug 2021 08:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238105AbhHSMHQ (ORCPT
+        with ESMTP id S238105AbhHSMKI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 08:07:16 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 372EBC061575;
-        Thu, 19 Aug 2021 05:06:37 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id w68so5268574pfd.0;
-        Thu, 19 Aug 2021 05:06:37 -0700 (PDT)
+        Thu, 19 Aug 2021 08:10:08 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E2BC061575;
+        Thu, 19 Aug 2021 05:09:31 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id bo18so4865131pjb.0;
+        Thu, 19 Aug 2021 05:09:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=A/owt6hoNTtsQ/QXnLoTF97Mvv/lqQX+CifZi81HKaY=;
-        b=PwdWiFnCd8wYI312sJ6r26K55pTqgxZl4txuUejdFuo5texYq0N5FWBqK7WJeO97VU
-         7Oo/cLx+01LgiVeG9D3aGoVJEka4XtmyZDQJtWa06hjEzUPDNj3HqsD0/AHSHap2TJqe
-         KS7fyIVpVAdi4T4Q4D9aThZp2n7FdvarLaqt6FuWnu8y0N5iGJRkSHEJAzyw+8eUNjdt
-         wFgQaiM8BM+qwUM6HUOXXgefMTxH/RlzqBcqYunueJAFvrki8dnqdkavLvldrIdWGJyL
-         COdI035mB6hf3N8aSGn5mNGvotpczLjQT/Dw58FwZjdeEcJNucrpAkWNcEGt6FvblVzg
-         jpcg==
+        bh=7uXZKtKn5mEESRiEMx9wZAubOh9wcO7ElwkkE5uoIRQ=;
+        b=MC2y3QRqWBk+wOI8OeskXUNNzrIJNe8OG2EoTzClSmy40srYQnthO/84qQ3wHQ+Kqq
+         VDGREqzBLqb8+Q8pjSnDegyhYuIVNOUYnVfIJHupDG+TGjS8/OdEBFlW0PRHzHhpVDRQ
+         9BKmZXd9DQYeKVlwEioJwn6tTtZwQo5iT1nnm+naQuierv61w5Yfc12MqYee8LD87sBr
+         SKEka1YuzZhHP9rR1Yl0mVI3Eo6wWYP58tLCoxHkq1lC2oqsAOPWf8TssBxp2QTw25TG
+         ct5hYklquc5GZa/6a+xWcrlcvz+YuggZrDCv+D2ID3bLHbp+ZXLBA9Ak37RnDzfKQ2PZ
+         ZdgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=A/owt6hoNTtsQ/QXnLoTF97Mvv/lqQX+CifZi81HKaY=;
-        b=JgOTc95cFQzSvcJRxY/gHyhvbP/usK/UtwqSAd3U+SRjEK3KWABDOesHphF1TkefZL
-         dnjyvm5ctMcG+KdjOyGm28g+z3SVStOza1g8D6sU8/uZ57UofRMMW9MdasCRgZKO4S8y
-         VloYWdJVY2KJjWtYFq+jZCQSLR11hA34Uic1N9s5QiJFwMWPIlCK2NcEflHMD4AVc7jP
-         FVxyAVAOQoBFujCDOi6uD4rX+fB4THI/Dr4ZlosrlRbVPssO91ueHwBfiLS9SCrk3UXt
-         Nj0HSa/YelEdIdaOHfCbJhXqEuB0+GtyoEZgPMHs92R/CdDsl3s4nqjgYFx7Lrl3g0i5
-         pvUg==
-X-Gm-Message-State: AOAM53365aNUKK9XfzE6+P5dJ4HqtmxAbtz3JLV5bLYGpiu/TziFII05
-        XbOqM4geeHJQoFiMusbOhjXk/jrxK0vXbrZjqSI=
-X-Google-Smtp-Source: ABdhPJyFvwCm11gUzXWLrChXtuULcoSIURh4Rz1eMv+B4wTFouPBrU83bmAjt9MJxxx2N9f7hhKUMPgvCgLKNYZjPco=
-X-Received: by 2002:a65:45c3:: with SMTP id m3mr13809086pgr.203.1629374796666;
- Thu, 19 Aug 2021 05:06:36 -0700 (PDT)
+        bh=7uXZKtKn5mEESRiEMx9wZAubOh9wcO7ElwkkE5uoIRQ=;
+        b=kzyukOfjE1tLfvxFTrVS06H/cbY7V4fuAdreO6hCx5UG0rPrcAYeXl2WkIm98ONlSU
+         86llqFaDmRU/8UhprtqJoYULtyOiCou/9CnEPvDmQp48XcTNJth7XxxuZ7eZS+Y4p783
+         YujxOmCO8HZcf/408gRIRgQWsJMHdSvx3XVU9AFs06sFNl+4P0PYal6lmhoHjltGEN5k
+         8XF+37FLjs5Xba0j3V1tZFG3w+JH8pgJQHGZOqxDhvfKFTkoQ5EADvWCtosGWSuDKqoF
+         kjmG+SvQ7Dx3m819e4jWDH3x36l4TvP7KQnd9lqZQPiGf83BrtasRBZnNGQ3V7ARkceh
+         zvYA==
+X-Gm-Message-State: AOAM530OMw6zcfCSaMgZhtSQLEjrRpFrpdvPn09M2/GTAnFyEVMDmt8f
+        f2WvSugsd0oXc/H8jq8OZn3xYQhpkczk0QXukVs=
+X-Google-Smtp-Source: ABdhPJy8KxFALf0J6axJaJlVn7dZh6TFC9TteWgrxVqRQJpfTLSu3OtbmCx/QAxCO1Id5YN9Bk53qAT4aFRmSqm3ADA=
+X-Received: by 2002:a17:902:ced0:b029:12d:4ce1:ce3a with SMTP id
+ d16-20020a170902ced0b029012d4ce1ce3amr11567603plg.0.1629374971229; Thu, 19
+ Aug 2021 05:09:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210819033001.20136-1-hpa@redhat.com> <20210819033001.20136-6-hpa@redhat.com>
-In-Reply-To: <20210819033001.20136-6-hpa@redhat.com>
+References: <20210819033001.20136-1-hpa@redhat.com> <20210819033001.20136-7-hpa@redhat.com>
+In-Reply-To: <20210819033001.20136-7-hpa@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Aug 2021 15:05:57 +0300
-Message-ID: <CAHp75Vd8tG+_FVapEMjj7_QMBjAzf2r-W95Am=sOPh5DG+V7Tg@mail.gmail.com>
-Subject: Re: [PATCH v3 05/20] platform/x86: intel_pmc_core: Move to intel sub-directory
+Date:   Thu, 19 Aug 2021 15:08:51 +0300
+Message-ID: <CAHp75VdtXa=WXEFmvDP+zjmodzvJ+FmOpVZ6dq0C=nKnK=_zXA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/20] platform/x86: intel_scu: Move to intel sub-directory
 To:     Kate Hsuan <hpa@redhat.com>
 Cc:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -81,18 +82,46 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 6:32 AM Kate Hsuan <hpa@redhat.com> wrote:
+On Thu, Aug 19, 2021 at 6:33 AM Kate Hsuan <hpa@redhat.com> wrote:
 >
-> Move intel_pmc_core to intel sub-directory
-> to improve readability.
+> Move intel_scu to intel sub-directory to improve readability.
 
->  .../pmc/pmc_core.c}                           |  0
->  .../pmc/pmc_core_pltdrv.c}                    |  0
+Intel SCU
 
-As per SCU patch this can be done as
+...
 
-pmc_core -> core
-pmc_core_pltdrv -> pltdrv
+> -obj-$(CONFIG_INTEL_SCU_IPC)            += intel_scu_ipc.o
+> -obj-$(CONFIG_INTEL_SCU_PCI)            += intel_scu_pcidrv.o
+> -obj-$(CONFIG_INTEL_SCU_PLATFORM)       += intel_scu_pltdrv.o
+> -obj-$(CONFIG_INTEL_SCU_WDT)            += intel_scu_wdt.o
+> -obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
+
+> +
+
+Stray change?
+
+...
+
+> +obj-$(CONFIG_INTEL_SCU_IPC)            += scu/
+> +obj-$(CONFIG_INTEL_SCU_PCI)            += scu/
+> +obj-$(CONFIG_INTEL_SCU_PLATFORM)       += scu/
+> +obj-$(CONFIG_INTEL_SCU_WDT)            += scu/
+> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += scu/
+
+One entry is enough.
+
+...
+
+> +obj-$(CONFIG_INTEL_SCU_IPC)            += ipc.o
+> +obj-$(CONFIG_INTEL_SCU_PCI)            += pcidrv.o
+> +obj-$(CONFIG_INTEL_SCU_WDT)            += wdt.o
+
+This is not an equivalent. Please, use the same approach as below.
+
+> +intel_scu_pltdrv-y                     := pltdrv.o
+> +obj-$(CONFIG_INTEL_SCU_PLATFORM)       += intel_scu_pltdrv.o
+> +intel_scu_ipcutil-y                    := ipcutil.o
+> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
 
 -- 
 With Best Regards,
