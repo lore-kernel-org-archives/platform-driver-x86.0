@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-20.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49477C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 08:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FF2C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 08:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFE26109E
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 08:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDC161131
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 08:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232653AbhHSIie (ORCPT
+        id S237604AbhHSItp (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 04:38:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46896 "EHLO
+        Thu, 19 Aug 2021 04:49:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30359 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231494AbhHSIic (ORCPT
+        by vger.kernel.org with ESMTP id S237526AbhHSItY (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 04:38:32 -0400
+        Thu, 19 Aug 2021 04:49:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629362276;
+        s=mimecast20190719; t=1629362925;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sz0NgiSgU+Z4nktzfIXkPz0Dp7P4RXuvtmVDyU4WmU8=;
-        b=JMj9OJZBLHurXxqW9L94l8HNvGU/DfU8Dg9j02ndd3c/38QUywRTqh2DYiQqArjJB+fLOk
-        CLr4jATsyYPIB/0sauP7t/Qgj32dlRF05YNVdDpQwPv1PSdl+lpKKQ7zL5erf/2HLa52UH
-        jyjA++1GJnQkQno660sKko+vpDXSeeE=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-331-eM2figkGMVOrKFckjD0bwQ-1; Thu, 19 Aug 2021 04:37:55 -0400
-X-MC-Unique: eM2figkGMVOrKFckjD0bwQ-1
-Received: by mail-ed1-f72.google.com with SMTP id x24-20020aa7dad8000000b003bed477317eso2463049eds.18
-        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Aug 2021 01:37:54 -0700 (PDT)
+        bh=EsSd1bot3DME93pxd8YXHXKyar3E/IXKipF+XPH6ikY=;
+        b=E9UK2nAqF88NVvaFJ+RrBgOlwCypGmrI9EBC4kVWZxsBfekjXJPZt7g02urSkEDimGaq+/
+        uWTGqx1tPFj5cZPMour+WXNyqcJwT3Snb+QRVySae1UXYLvxy/MlNpt+/yC13Ed8YNB8/V
+        BIw0zKuWOOarkEBy8TGF5l7EeMp8bVI=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-dpsua41NOaakSY8inXMYhA-1; Thu, 19 Aug 2021 04:48:44 -0400
+X-MC-Unique: dpsua41NOaakSY8inXMYhA-1
+Received: by mail-ej1-f71.google.com with SMTP id lf30-20020a170907175e00b005bc47d01a39so1947717ejc.16
+        for <platform-driver-x86@vger.kernel.org>; Thu, 19 Aug 2021 01:48:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=sz0NgiSgU+Z4nktzfIXkPz0Dp7P4RXuvtmVDyU4WmU8=;
-        b=nwRYJDVwcDmmGJD7zOmo03MrDmP1S7j+LjnpT63EUlIHfHhJbV577MIMWfUJd0JBmz
-         sC5eGw6rIMIlrwHwyXXtO+PxAYRLwfWx20RdZncsEgIbTf/aAo2UkXJ3J3qWFYcxs0/M
-         Q85U/zUD7zBLKqmKE/QZU4c6RGCGN8zlJbGz0bZifhrpw8AU7PHqyHx2RCVEElrCN2q5
-         QdWiCMF0pTZugvkTAqTgy5/Vtd8WEPCD028yWADjJPwFYtNckVQiX4BwISfWgV6hWGVl
-         kx5Jk8lxzh07qAUKRqzljxZNk8hfKksRfWkVQSAtzAc5En2E70OEwpLpM0GYYyUEUDqr
-         +Vkg==
-X-Gm-Message-State: AOAM533n9DZfYi9XfsYyUaBtmJ4ocf17VphgLJnIlIhjI4+Ro5QLuw8B
-        vXIa/fVev/tSAv2N41bAbsmRqpTNfJF1HZfqg/p5WzP+ftjgeL0GolHpka9crA016RXbzMEZ/bv
-        +x46wZ3oPQaj8Nxw8S8Dh81OG3POA/paA8G/57NWQ8UccSR2P/UDrjJ28L4f9kPx8KiK0sKnKZF
-        q34onqrHv2/g==
-X-Received: by 2002:a17:906:5306:: with SMTP id h6mr14379083ejo.248.1629362273757;
-        Thu, 19 Aug 2021 01:37:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxX8Qn7QL1l8AxChiZJBh5dZ54BL4lTZVS7SNV51he/yI1vgqN3ESle8/jDESsrhr6m/C1olA==
-X-Received: by 2002:a17:906:5306:: with SMTP id h6mr14379072ejo.248.1629362273600;
-        Thu, 19 Aug 2021 01:37:53 -0700 (PDT)
+        bh=EsSd1bot3DME93pxd8YXHXKyar3E/IXKipF+XPH6ikY=;
+        b=r932T3erosHaaNO9f4ns2TnpQRr3Z93f63jft+SoQb8WINp/yIqiOM8e4JPqjajq94
+         TGM6d6AzgZEc7s5/9vN68T3c/wrRQBf+sE7icLgZulvBCAemugYnKdJFvcf4NGE5Ccm/
+         ejvjjZ1ZnrZgUD2a+tBpB2d3vaPNAPc/fYHoIrUxzHBIfGC+p5KsicdD6R8GcV5TIZM1
+         a18UZBEtME42t6JyGUqMeUADx0rDgcE9rFn46ijAP+E6whh5V8BkOmlRh9xFFBRgD6bs
+         3r9WgCMRzX5Qp1knDWxSRgOZH4ayh8UUC+09f9+9TqMEwO0jsz72MCLpS+zWmCqEpIjh
+         3tnQ==
+X-Gm-Message-State: AOAM532iXrLx/GoitwDVdofYdnWQln6mua9n07zqNNzjle7cAAUv6wFP
+        0KhSHvMARhnJvhIMqfA0ppvig+mmxYLlOac6XMwpV7WGp967PcDE8WFmFtlxkXJ02jcJxUdc79v
+        qxA8QdFofRUVeQ7NUrqNom0FTDC7yy7voZaMnz5XBxGYtPe1IFryq1fPA4KFUX1gHyvmyEhAebD
+        fcK4cOIgyC4A==
+X-Received: by 2002:a17:907:7896:: with SMTP id ku22mr15092091ejc.166.1629362923073;
+        Thu, 19 Aug 2021 01:48:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzwBEn7v5zF6AJGnuPgb4biohFVw3Pg7V7dDmt35hStvvUP+WhWtKexsBxJE/5+W1tTw4dq1Q==
+X-Received: by 2002:a17:907:7896:: with SMTP id ku22mr15092069ejc.166.1629362922877;
+        Thu, 19 Aug 2021 01:48:42 -0700 (PDT)
 Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id b8sm1313079edv.96.2021.08.19.01.37.52
+        by smtp.gmail.com with ESMTPSA id g23sm964270ejm.26.2021.08.19.01.48.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Aug 2021 01:37:52 -0700 (PDT)
-Subject: Re: [PATCH v3 05/20] platform/x86: intel_pmc_core: Move to intel
+        Thu, 19 Aug 2021 01:48:42 -0700 (PDT)
+Subject: Re: [PATCH v3 06/20] platform/x86: intel_scu: Move to intel
  sub-directory
 To:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
         Mark Gross <mgross@linux.intel.com>,
@@ -79,14 +79,14 @@ To:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
         linux-kernel@vger.kernel.org, Dell.Client.Kernel@dell.com
 Cc:     platform-driver-x86@vger.kernel.org
 References: <20210819033001.20136-1-hpa@redhat.com>
- <20210819033001.20136-6-hpa@redhat.com>
+ <20210819033001.20136-7-hpa@redhat.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fdab924d-e318-9f8b-d651-ab348db2a7d1@redhat.com>
-Date:   Thu, 19 Aug 2021 10:37:52 +0200
+Message-ID: <77b2cc07-6883-df05-67cd-e98a1123806f@redhat.com>
+Date:   Thu, 19 Aug 2021 10:48:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210819033001.20136-6-hpa@redhat.com>
+In-Reply-To: <20210819033001.20136-7-hpa@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -97,148 +97,136 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 Hi,
 
 On 8/19/21 5:29 AM, Kate Hsuan wrote:
-> Move intel_pmc_core to intel sub-directory
-> to improve readability.
+> Move intel_scu to intel sub-directory to improve readability.
 > 
 > Signed-off-by: Kate Hsuan <hpa@redhat.com>
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 > ---
->  drivers/platform/x86/Kconfig                  | 21 ---------------
->  drivers/platform/x86/Makefile                 |  2 --
->  drivers/platform/x86/intel/Kconfig            |  2 ++
->  drivers/platform/x86/intel/Makefile           |  1 +
->  drivers/platform/x86/intel/pmc/Kconfig        | 26 +++++++++++++++++++
->  drivers/platform/x86/intel/pmc/Makefile       |  9 +++++++
->  .../x86/{ => intel/pmc}/intel_pmc_core.h      |  0
->  .../pmc/pmc_core.c}                           |  0
->  .../pmc/pmc_core_pltdrv.c}                    |  0
->  9 files changed, 38 insertions(+), 23 deletions(-)
->  create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
->  create mode 100644 drivers/platform/x86/intel/pmc/Makefile
->  rename drivers/platform/x86/{ => intel/pmc}/intel_pmc_core.h (100%)
->  rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/pmc_core.c} (100%)
->  rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pmc_core_pltdrv.c} (100%)
+>  drivers/platform/x86/Kconfig                  | 46 ----------------
+>  drivers/platform/x86/Makefile                 |  6 +--
+>  drivers/platform/x86/intel/Kconfig            |  1 +
+>  drivers/platform/x86/intel/Makefile           |  6 +++
+>  drivers/platform/x86/intel/scu/Kconfig        | 52 +++++++++++++++++++
+>  drivers/platform/x86/intel/scu/Makefile       | 13 +++++
+>  .../x86/{intel_scu_ipc.c => intel/scu/ipc.c}  |  0
+>  .../scu/ipcutil.c}                            |  0
+>  .../scu/pcidrv.c}                             |  0
+>  .../scu/pltdrv.c}                             |  0
+>  .../x86/{intel_scu_wdt.c => intel/scu/wdt.c}  |  0
+>  11 files changed, 73 insertions(+), 51 deletions(-)
+>  create mode 100644 drivers/platform/x86/intel/scu/Kconfig
+>  create mode 100644 drivers/platform/x86/intel/scu/Makefile
+>  rename drivers/platform/x86/{intel_scu_ipc.c => intel/scu/ipc.c} (100%)
+>  rename drivers/platform/x86/{intel_scu_ipcutil.c => intel/scu/ipcutil.c} (100%)
+>  rename drivers/platform/x86/{intel_scu_pcidrv.c => intel/scu/pcidrv.c} (100%)
+>  rename drivers/platform/x86/{intel_scu_pltdrv.c => intel/scu/pltdrv.c} (100%)
+>  rename drivers/platform/x86/{intel_scu_wdt.c => intel/scu/wdt.c} (100%)
 > 
 > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 019a625f1fa3..79b6e0abc2ab 100644
+> index 79b6e0abc2ab..baad2c2bdf5f 100644
 > --- a/drivers/platform/x86/Kconfig
 > +++ b/drivers/platform/x86/Kconfig
-> @@ -1158,27 +1158,6 @@ config INTEL_UNCORE_FREQ_CONTROL
+> @@ -1158,52 +1158,6 @@ config INTEL_UNCORE_FREQ_CONTROL
 >  	  To compile this driver as a module, choose M here: the module
 >  	  will be called intel-uncore-frequency.
 >  
-> -config INTEL_PMC_CORE
-> -	tristate "Intel PMC Core driver"
+> -config INTEL_SCU_IPC
+> -	bool
+> -
+> -config INTEL_SCU
+> -	bool
+> -	select INTEL_SCU_IPC
+> -
+> -config INTEL_SCU_PCI
+> -	bool "Intel SCU PCI driver"
 > -	depends on PCI
-> -	depends on ACPI
+> -	select INTEL_SCU
 > -	help
-> -	  The Intel Platform Controller Hub for Intel Core SoCs provides access
-> -	  to Power Management Controller registers via various interfaces. This
-> -	  driver can utilize debugging capabilities and supported features as
-> -	  exposed by the Power Management Controller. It also may perform some
-> -	  tasks in the PMC in order to enable transition into the SLPS0 state.
-> -	  It should be selected on all Intel platforms supported by the driver.
+> -	  This driver is used to bridge the communications between kernel
+> -	  and SCU on some embedded Intel x86 platforms. It also creates
+> -	  devices that are connected to the SoC through the SCU.
+> -	  Platforms supported:
+> -	    Medfield
+> -	    Clovertrail
+> -	    Merrifield
+> -	    Broxton
+> -	    Apollo Lake
 > -
-> -	  Supported features:
-> -		- SLP_S0_RESIDENCY counter
-> -		- PCH IP Power Gating status
-> -		- LTR Ignore / LTR Show
-> -		- MPHY/PLL gating status (Sunrisepoint PCH only)
-> -		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
-> -		- Low Power Mode registers (Tigerlake and beyond)
-> -		- PMC quirks as needed to enable SLPS0/S0ix
+> -config INTEL_SCU_PLATFORM
+> -	tristate "Intel SCU platform driver"
+> -	depends on ACPI
+> -	select INTEL_SCU
+> -	help
+> -	  This driver is used to bridge the communications between kernel
+> -	  and SCU (sometimes called PMC as well). The driver currently
+> -	  supports Intel Elkhart Lake and compatible platforms.
 > -
->  config INTEL_SCU_IPC
->  	bool
+> -config INTEL_SCU_WDT
+> -	bool
+> -	default INTEL_SCU_PCI
+> -	depends on INTEL_MID_WATCHDOG
+> -	help
+> -	  This is a specific platform code to instantiate watchdog device
+> -	  on ACPI-based Intel MID platforms.
+> -
+> -config INTEL_SCU_IPC_UTIL
+> -	tristate "Intel SCU IPC utility driver"
+> -	depends on INTEL_SCU
+> -	help
+> -	  The IPC Util driver provides an interface with the SCU enabling
+> -	  low level access for debug work and updating the firmware. Say
+> -	  N unless you will be doing this on an Intel MID platform.
 >  
+>  config INTEL_TELEMETRY
+>  	tristate "Intel SoC Telemetry Driver"
 > diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-> index 344d7a4a33f0..37ad6a436dda 100644
+> index 37ad6a436dda..e6667008fc56 100644
 > --- a/drivers/platform/x86/Makefile
 > +++ b/drivers/platform/x86/Makefile
-> @@ -128,8 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+> @@ -128,11 +128,7 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
 >  
 >  # Intel PMIC / PMC / P-Unit devices
 >  
-> -obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
-> -
->  obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
->  obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
->  obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+> -obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+> -obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+> -obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+> -obj-$(CONFIG_INTEL_SCU_WDT)		+= intel_scu_wdt.o
+> -obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+> +
+>  obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+>  					   intel_telemetry_pltdrv.o \
+>  					   intel_telemetry_debugfs.o
 > diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-> index 78314ca39786..e59ff836b592 100644
+> index e59ff836b592..7ad715f65c01 100644
 > --- a/drivers/platform/x86/intel/Kconfig
 > +++ b/drivers/platform/x86/intel/Kconfig
-> @@ -58,4 +58,6 @@ config INTEL_PUNIT_IPC
->  	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
+> @@ -59,5 +59,6 @@ config INTEL_PUNIT_IPC
 >  	  which is used to bridge the communications between kernel and P-Unit.
 >  
-> +source "drivers/platform/x86/intel/pmc/Kconfig"
-> +
+>  source "drivers/platform/x86/intel/pmc/Kconfig"
+> +source "drivers/platform/x86/intel/scu/Kconfig"
+>  
 >  endif # X86_PLATFORM_DRIVERS_INTEL
 > diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-> index a9aa5e15e8bd..1f343ee7c9b4 100644
+> index 1f343ee7c9b4..71ae5db00864 100644
 > --- a/drivers/platform/x86/intel/Makefile
 > +++ b/drivers/platform/x86/intel/Makefile
-> @@ -17,3 +17,4 @@ intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
->  obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+> @@ -18,3 +18,9 @@ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
 >  intel_punit_ipc-y			:= punit_ipc.o
 >  obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
-> +obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
+>  obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
+> +obj-$(CONFIG_INTEL_SCU_IPC)		+= scu/
+> +obj-$(CONFIG_INTEL_SCU_PCI)		+= scu/
+> +obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= scu/
+> +obj-$(CONFIG_INTEL_SCU_WDT)		+= scu/
+> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= scu/
 
-Please keep the Makefile line for diving into subdirs together at the top.
+This will cause make to dive into the scu subdir multiple times.
 
-> diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-> new file mode 100644
-> index 000000000000..d44a3e34210f
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/pmc/Kconfig
-> @@ -0,0 +1,26 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for linux/drivers/platform/x86
-> +# x86 Platform-Specific Drivers
-> +#
-> +
-> +config INTEL_PMC_CORE
-> +	tristate "Intel PMC Core driver"
-> +	depends on PCI
-> +	depends on ACPI
-> +	help
-> +	  The Intel Platform Controller Hub for Intel Core SoCs provides access
-> +	  to Power Management Controller registers via various interfaces. This
-> +	  driver can utilize debugging capabilities and supported features as
-> +	  exposed by the Power Management Controller. It also may perform some
-> +	  tasks in the PMC in order to enable transition into the SLPS0 state.
-> +	  It should be selected on all Intel platforms supported by the driver.
-> +
-> +	  Supported features:
-> +		- SLP_S0_RESIDENCY counter
-> +		- PCH IP Power Gating status
-> +		- LTR Ignore / LTR Show
-> +		- MPHY/PLL gating status (Sunrisepoint PCH only)
-> +		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
-> +		- Low Power Mode registers (Tigerlake and beyond)
-> +		- PMC quirks as needed to enable SLPS0/S0ix
-> diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-> new file mode 100644
-> index 000000000000..db305c9e5f37
-> --- /dev/null
-> +++ b/drivers/platform/x86/intel/pmc/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Makefile for linux/drivers/platform/x86
-> +# x86 Platform-Specific Drivers
-> +#
-> +
-> +intel_pmc_core-y			:= pmc_core.o
-> +intel_pmc_core_pltdrv-y			:= pmc_core_pltdrv.o
-> +obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o intel_pmc_core.o
-> diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel/pmc/intel_pmc_core.h
-> similarity index 100%
-> rename from drivers/platform/x86/intel_pmc_core.h
-> rename to drivers/platform/x86/intel/pmc/intel_pmc_core.h
+All CONFIG_INTEL_SCU* symbols either select or depend on CONFIG_INTEL_SCU, so we
+can dive into the subdir only once based on this.
 
-You did not drop the intel prefix on the intel_pmc_core.h file.
+Also the Makefile line for diving into subdirs should be kept together.
 
 I'll fix both up while merging the series there is no need for
 a new version.
@@ -248,13 +236,106 @@ Regards,
 Hans
 
 
-> diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel/pmc/pmc_core.c
+
+
+
+> +
+> diff --git a/drivers/platform/x86/intel/scu/Kconfig b/drivers/platform/x86/intel/scu/Kconfig
+> new file mode 100644
+> index 000000000000..9e9910ef5349
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/scu/Kconfig
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for drivers/platform/x86/intel
+> +# Intel x86 Platform-Specific Drivers
+> +#
+> +
+> +config INTEL_SCU_IPC
+> +	bool
+> +
+> +config INTEL_SCU
+> +	bool
+> +	select INTEL_SCU_IPC
+> +
+> +config INTEL_SCU_PCI
+> +	bool "Intel SCU PCI driver"
+> +	depends on PCI
+> +	select INTEL_SCU
+> +	help
+> +	  This driver is used to bridge the communications between kernel
+> +	  and SCU on some embedded Intel x86 platforms. It also creates
+> +	  devices that are connected to the SoC through the SCU.
+> +	  Platforms supported:
+> +	    Medfield
+> +	    Clovertrail
+> +	    Merrifield
+> +	    Broxton
+> +	    Apollo Lake
+> +
+> +config INTEL_SCU_PLATFORM
+> +	tristate "Intel SCU platform driver"
+> +	depends on ACPI
+> +	select INTEL_SCU
+> +	help
+> +	  This driver is used to bridge the communications between kernel
+> +	  and SCU (sometimes called PMC as well). The driver currently
+> +	  supports Intel Elkhart Lake and compatible platforms.
+> +
+> +config INTEL_SCU_WDT
+> +	bool
+> +	default INTEL_SCU_PCI
+> +	depends on INTEL_MID_WATCHDOG
+> +	help
+> +	  This is a specific platform code to instantiate watchdog device
+> +	  on ACPI-based Intel MID platforms.
+> +
+> +config INTEL_SCU_IPC_UTIL
+> +	tristate "Intel SCU IPC utility driver"
+> +	depends on INTEL_SCU
+> +	help
+> +	  The IPC Util driver provides an interface with the SCU enabling
+> +	  low level access for debug work and updating the firmware. Say
+> +	  N unless you will be doing this on an Intel MID platform.
+> diff --git a/drivers/platform/x86/intel/scu/Makefile b/drivers/platform/x86/intel/scu/Makefile
+> new file mode 100644
+> index 000000000000..27af4ba3be89
+> --- /dev/null
+> +++ b/drivers/platform/x86/intel/scu/Makefile
+> @@ -0,0 +1,13 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for drivers/platform/x86/intel
+> +# Intel x86 Platform-Specific Drivers
+> +#
+> +
+> +obj-$(CONFIG_INTEL_SCU_IPC)		+= ipc.o
+> +obj-$(CONFIG_INTEL_SCU_PCI)		+= pcidrv.o
+> +obj-$(CONFIG_INTEL_SCU_WDT)		+= wdt.o
+> +intel_scu_pltdrv-y			:= pltdrv.o
+> +obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+> +intel_scu_ipcutil-y			:= ipcutil.o
+> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+> diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel/scu/ipc.c
 > similarity index 100%
-> rename from drivers/platform/x86/intel_pmc_core.c
-> rename to drivers/platform/x86/intel/pmc/pmc_core.c
-> diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel/pmc/pmc_core_pltdrv.c
+> rename from drivers/platform/x86/intel_scu_ipc.c
+> rename to drivers/platform/x86/intel/scu/ipc.c
+> diff --git a/drivers/platform/x86/intel_scu_ipcutil.c b/drivers/platform/x86/intel/scu/ipcutil.c
 > similarity index 100%
-> rename from drivers/platform/x86/intel_pmc_core_pltdrv.c
-> rename to drivers/platform/x86/intel/pmc/pmc_core_pltdrv.c
+> rename from drivers/platform/x86/intel_scu_ipcutil.c
+> rename to drivers/platform/x86/intel/scu/ipcutil.c
+> diff --git a/drivers/platform/x86/intel_scu_pcidrv.c b/drivers/platform/x86/intel/scu/pcidrv.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_scu_pcidrv.c
+> rename to drivers/platform/x86/intel/scu/pcidrv.c
+> diff --git a/drivers/platform/x86/intel_scu_pltdrv.c b/drivers/platform/x86/intel/scu/pltdrv.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_scu_pltdrv.c
+> rename to drivers/platform/x86/intel/scu/pltdrv.c
+> diff --git a/drivers/platform/x86/intel_scu_wdt.c b/drivers/platform/x86/intel/scu/wdt.c
+> similarity index 100%
+> rename from drivers/platform/x86/intel_scu_wdt.c
+> rename to drivers/platform/x86/intel/scu/wdt.c
 > 
 
