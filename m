@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FEDC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36162C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1079361152
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2107F610A7
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238357AbhHSMKM (ORCPT
+        id S239187AbhHSMM5 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 08:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
+        Thu, 19 Aug 2021 08:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238105AbhHSMKI (ORCPT
+        with ESMTP id S239151AbhHSMM4 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 08:10:08 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1E2BC061575;
-        Thu, 19 Aug 2021 05:09:31 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id bo18so4865131pjb.0;
-        Thu, 19 Aug 2021 05:09:31 -0700 (PDT)
+        Thu, 19 Aug 2021 08:12:56 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A68C061575;
+        Thu, 19 Aug 2021 05:12:20 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id om1-20020a17090b3a8100b0017941c44ce4so11139857pjb.3;
+        Thu, 19 Aug 2021 05:12:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7uXZKtKn5mEESRiEMx9wZAubOh9wcO7ElwkkE5uoIRQ=;
-        b=MC2y3QRqWBk+wOI8OeskXUNNzrIJNe8OG2EoTzClSmy40srYQnthO/84qQ3wHQ+Kqq
-         VDGREqzBLqb8+Q8pjSnDegyhYuIVNOUYnVfIJHupDG+TGjS8/OdEBFlW0PRHzHhpVDRQ
-         9BKmZXd9DQYeKVlwEioJwn6tTtZwQo5iT1nnm+naQuierv61w5Yfc12MqYee8LD87sBr
-         SKEka1YuzZhHP9rR1Yl0mVI3Eo6wWYP58tLCoxHkq1lC2oqsAOPWf8TssBxp2QTw25TG
-         ct5hYklquc5GZa/6a+xWcrlcvz+YuggZrDCv+D2ID3bLHbp+ZXLBA9Ak37RnDzfKQ2PZ
-         ZdgQ==
+        bh=Lz6ZTqf/54ImmUiBimm1pwt9LHrmxlW/CupKtaG8WMU=;
+        b=DvHNmuWoca5xtE44zYFkU6FUrmF0RF9uNLhEFuOfPTUPwjWbB7HLcph9WHGDZNOGTe
+         4ZUI6sHJd9eZ4pDRdTjN6d1skApcCcCSLVcxhQyHKLSc6usovllUhyDffeMRzq8IjvdA
+         i1E/VTHch9g8G531OYEYPoGxFl6zkyLqZjHcmkL9ayVldikVAQmYo3ZnAeSrEbfZ0Pil
+         tu7RfogFcbmEDc1pqGJUcKogx82oJMillIrWVekIG54AKaibvRGFBRqcP3m5ELSHbdgU
+         aXO0V5PX8TU9bR5Qg+gNNzO0o7QD0eYgdvr1KQUMj2Q7BTl+XVA2WuglCXRkBfyIxoWM
+         VhRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7uXZKtKn5mEESRiEMx9wZAubOh9wcO7ElwkkE5uoIRQ=;
-        b=kzyukOfjE1tLfvxFTrVS06H/cbY7V4fuAdreO6hCx5UG0rPrcAYeXl2WkIm98ONlSU
-         86llqFaDmRU/8UhprtqJoYULtyOiCou/9CnEPvDmQp48XcTNJth7XxxuZ7eZS+Y4p783
-         YujxOmCO8HZcf/408gRIRgQWsJMHdSvx3XVU9AFs06sFNl+4P0PYal6lmhoHjltGEN5k
-         8XF+37FLjs5Xba0j3V1tZFG3w+JH8pgJQHGZOqxDhvfKFTkoQ5EADvWCtosGWSuDKqoF
-         kjmG+SvQ7Dx3m819e4jWDH3x36l4TvP7KQnd9lqZQPiGf83BrtasRBZnNGQ3V7ARkceh
-         zvYA==
-X-Gm-Message-State: AOAM530OMw6zcfCSaMgZhtSQLEjrRpFrpdvPn09M2/GTAnFyEVMDmt8f
-        f2WvSugsd0oXc/H8jq8OZn3xYQhpkczk0QXukVs=
-X-Google-Smtp-Source: ABdhPJy8KxFALf0J6axJaJlVn7dZh6TFC9TteWgrxVqRQJpfTLSu3OtbmCx/QAxCO1Id5YN9Bk53qAT4aFRmSqm3ADA=
-X-Received: by 2002:a17:902:ced0:b029:12d:4ce1:ce3a with SMTP id
- d16-20020a170902ced0b029012d4ce1ce3amr11567603plg.0.1629374971229; Thu, 19
- Aug 2021 05:09:31 -0700 (PDT)
+        bh=Lz6ZTqf/54ImmUiBimm1pwt9LHrmxlW/CupKtaG8WMU=;
+        b=otCyQ26mS3vn5nnlHmX9gJ6NGqq34TPzWhsjpJrYCz/trzfQAR5mFIoyqRRU1+fKiu
+         b3QLAT3nQCLmMx8b8kiDBP5O8g+5IrLdD0sIi/MN1ZI4n6S6rAlzUvFtn9zzxCr6f4ME
+         RPHA6o2Wql7F5s7ddb/3ErW9L89+tBzE3yUWMjLooL9S29NexvRJuhPirYz+j2nATWw+
+         VB8jAPnoIP4kCN15Kmo25eYojvcvLbQ8Jegsfe7egOw7DbXo6myWa9/xJAzp4Q1fqjWl
+         8eNAEmyIjhQdbCfDDMGflX9lJFHcnsmqm22kke8JxigeWwxgtJDkgbiuH0AkXl+ATi/j
+         uQPw==
+X-Gm-Message-State: AOAM532AP2HDOQwqkG1rx9WOTUoSYxZGbbN4+0osMmyAY4/PNUS9yoo2
+        iVV6W9ajvz/sXG38fSD0l/LHj4l9y1t88SeKGUM=
+X-Google-Smtp-Source: ABdhPJzfFKIuAeULsnK7FfOivilpl+NjZolryfU0dT2q/X3HSPKvmsqES7gsNfCMyXS9HaXueda/c4XqU7xnbyNu3hE=
+X-Received: by 2002:a17:90a:6502:: with SMTP id i2mr8917123pjj.129.1629375140432;
+ Thu, 19 Aug 2021 05:12:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210819033001.20136-1-hpa@redhat.com> <20210819033001.20136-7-hpa@redhat.com>
-In-Reply-To: <20210819033001.20136-7-hpa@redhat.com>
+References: <20210819033001.20136-1-hpa@redhat.com> <20210819033001.20136-8-hpa@redhat.com>
+In-Reply-To: <20210819033001.20136-8-hpa@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Aug 2021 15:08:51 +0300
-Message-ID: <CAHp75VdtXa=WXEFmvDP+zjmodzvJ+FmOpVZ6dq0C=nKnK=_zXA@mail.gmail.com>
-Subject: Re: [PATCH v3 06/20] platform/x86: intel_scu: Move to intel sub-directory
+Date:   Thu, 19 Aug 2021 15:11:41 +0300
+Message-ID: <CAHp75VcNDrMEMGkMsLZ6xPkDY_DTOiXVrM4OAXeNEGqGbQBzjg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/20] platform/x86: intel_telemetry: Move to intel sub-directory
 To:     Kate Hsuan <hpa@redhat.com>
 Cc:     Alex Hung <alex.hung@canonical.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -82,46 +81,27 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 6:33 AM Kate Hsuan <hpa@redhat.com> wrote:
->
-> Move intel_scu to intel sub-directory to improve readability.
+On Thu, Aug 19, 2021 at 6:32 AM Kate Hsuan <hpa@redhat.com> wrote:
+> Move intel_telemetry to intel sub-directory to improve readability.
 
-Intel SCU
 
-...
+> +intel_telemetry_core-y                 := core.o
+> +intel_telemetry_pltdrv-y               := pltdrv.o
+> +intel_telemetry_debugfs-y              := debugfs.o
 
-> -obj-$(CONFIG_INTEL_SCU_IPC)            += intel_scu_ipc.o
-> -obj-$(CONFIG_INTEL_SCU_PCI)            += intel_scu_pcidrv.o
-> -obj-$(CONFIG_INTEL_SCU_PLATFORM)       += intel_scu_pltdrv.o
-> -obj-$(CONFIG_INTEL_SCU_WDT)            += intel_scu_wdt.o
-> -obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
+> +obj-$(CONFIG_INTEL_TELEMETRY)          += intel_telemetry_core.o \
+> +                                       intel_telemetry_pltdrv.o \
+> +                                       intel_telemetry_debugfs.o
 
-> +
+I know it is in the original, but we make take a chance to split this
+per three separate lines
 
-Stray change?
-
-...
-
-> +obj-$(CONFIG_INTEL_SCU_IPC)            += scu/
-> +obj-$(CONFIG_INTEL_SCU_PCI)            += scu/
-> +obj-$(CONFIG_INTEL_SCU_PLATFORM)       += scu/
-> +obj-$(CONFIG_INTEL_SCU_WDT)            += scu/
-> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += scu/
-
-One entry is enough.
-
-...
-
-> +obj-$(CONFIG_INTEL_SCU_IPC)            += ipc.o
-> +obj-$(CONFIG_INTEL_SCU_PCI)            += pcidrv.o
-> +obj-$(CONFIG_INTEL_SCU_WDT)            += wdt.o
-
-This is not an equivalent. Please, use the same approach as below.
-
-> +intel_scu_pltdrv-y                     := pltdrv.o
-> +obj-$(CONFIG_INTEL_SCU_PLATFORM)       += intel_scu_pltdrv.o
-> +intel_scu_ipcutil-y                    := ipcutil.o
-> +obj-$(CONFIG_INTEL_SCU_IPC_UTIL)       += intel_scu_ipcutil.o
+intel_telemetry_core-y                 := core.o
+obj-$(CONFIG_INTEL_TELEMETRY)          += intel_telemetry_core.o
+intel_telemetry_pltdrv-y               := pltdrv.o
+obj-$(CONFIG_INTEL_TELEMETRY)          += intel_telemetry_pltdrv.o
+intel_telemetry_debugfs-y              := debugfs.o
+obj-$(CONFIG_INTEL_TELEMETRY)          += intel_telemetry_debugfs.o
 
 -- 
 With Best Regards,
