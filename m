@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1068C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3AC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F31D610A7
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC0660F5E
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 19 Aug 2021 12:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239297AbhHSMP6 (ORCPT
+        id S238615AbhHSMrv (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 19 Aug 2021 08:15:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40028 "EHLO
+        Thu, 19 Aug 2021 08:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239281AbhHSMP5 (ORCPT
+        with ESMTP id S229577AbhHSMrv (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 19 Aug 2021 08:15:57 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F71C061575;
-        Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id mq3so4765841pjb.5;
-        Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
+        Thu, 19 Aug 2021 08:47:51 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B07DC061575;
+        Thu, 19 Aug 2021 05:47:15 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id o2so5793443pgr.9;
+        Thu, 19 Aug 2021 05:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fztjrUxdZEGqbexbhasq+sSk3wApfe0OIx2v0wDlJzY=;
-        b=bKdMjI8NAJFzuSl1FIMfWW2ST9E3Xw5D7ATeV+JVCvgbRsL2WXuRLbgaB/BLs09gtq
-         UAV18MFqviWSmL7/GZKyOddobts6Vtu9GcpDEyE8IzF4ZrA0CCtC6c6yg2FB6xjK3lgY
-         cw+wLmnyYX+KCYnu00fyGTIdGyn78N0WuYXCmTlWatxyA2wFWi/69mXZBJiVID/1GZMZ
-         dmWvMf78Om/63av6tbWRANCJEZDAhagryZVaiIX8jT//F0fqARkGn8uH3RzUj69veUL2
-         8TL8axQRarsmSrmi6taY9JZojQvEHtFhGCTncWak+XLx+4S4kYQAf7yfHI6glp3Xne9G
-         HbCQ==
+        bh=ixqCxE/RtYaj+rEgBZfu98gHaJ0UMZzaRlA+CP4jLJ0=;
+        b=PQjRpg9CYqMymtIf87U4U9QWo37O7Mux4b/YqN20VY8GaB6uMuhBBZOouqyFOwN5MJ
+         Ic7Hw6GpMOXZCs2GTJg+tIAwvtFgt2cBId1sG080BEcwtQQ51kjIM2NjFxEIJUtjyw5o
+         muxvgt1y2EzIPUsYy7UiiSVxwO3xMgcKd8suaEL9hy2Z/czuWosh2Q7lQagc/cjSEef+
+         LdaKLime+346Jzuy5pAPKab7haVt3ocKOoWC7ToVxNwpaw8J4tEt+Vy0pQufOsJ5vUQY
+         Yb+7a3F4RZnkPrS6CSOyxQnh/SIUh3tLZuXpuQ71HdbYmF4hnOlVHR326+eHACRB1ed4
+         tb7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fztjrUxdZEGqbexbhasq+sSk3wApfe0OIx2v0wDlJzY=;
-        b=nKC/yzdQEiHnqK9w0OHq0NMDY1JGorNaVoE7FRsn//K2hURAcI/3XvQYQhhsF7+tQt
-         VsX+oCLQE3EY32DQf3dCLlun1spkzFswHD4kYO89wduvrd26gbhFZdu3hC3rqRlEg8qy
-         jPzer1NqgMI6b/Y5eoqTni1d8b8sHAy/ybpGMx7AKYn+zLFRK3b+OOyvmSGn1C9Dgpg7
-         wUYJTDhH09IoKk6z3VR7pFVw3jSRDI+9x0xgJkNb6BJ84um1S+GjY9RxpF0tiERFl6kT
-         GNmwq9F82XXCr3I/IvkO2SDkX8wNddQxgT2qmA8eD/joKM2aP4XHoWOwNVeHLPFX5DRG
-         y5fg==
-X-Gm-Message-State: AOAM531nqBe1Fufsk4EEBWSIS7qBjG3s/cJv6VKt7hJHB6Gz5DAeDsV6
-        RDX+g+8GnlRoVmmqM0AYfYKWZoYcMNHDdoULLz8=
-X-Google-Smtp-Source: ABdhPJyYHDss0jUoLyH5uB5xnms0tcgzX/qqtvZOOoF7OoDKpZTSP9tmz9R2WVpYgLYuRLdqUFN0xcyYMbjjwqhBZZc=
-X-Received: by 2002:a17:90a:604e:: with SMTP id h14mr14846390pjm.181.1629375321054;
- Thu, 19 Aug 2021 05:15:21 -0700 (PDT)
+        bh=ixqCxE/RtYaj+rEgBZfu98gHaJ0UMZzaRlA+CP4jLJ0=;
+        b=ANVzjl6lSU6pUFe6+btThEkAiSTPXhZTsTQcqdKJgarfoob9xebkVTpTtfJXsSmTkc
+         3o9IVwmiBB0CdRb/BrNlFaZHVj6N1LgpsqU/ycv4fnRWEEBQzTnAQVqRkN2oTKcuHEvC
+         X1Jk6/qooUja1QUWZzA6eom7ZyampkbHxro7v3o+8uIumKdxDUp8eRnco0gDfIgGh40j
+         fF6N/FoOVeC+fflnN4vdo0jiL9zb3wndSZTSN0U5wxGghOIMGKwQrRK7JK94C4xjtSAP
+         2opRDtuL0f4hYfBvEPRPrJZu87Su8WDJwwUCpjPVj1/8vWT1RityNaaOdnrEYhtvclcp
+         rt2Q==
+X-Gm-Message-State: AOAM533a/aZQFwjYXUqUGf+KsJkLppa9bHD/WtFBOC9X66cMVtQIpG/P
+        4NKYQSmPy0gF4mGH5A7m1LfnjRChVKkzIDlxvm4=
+X-Google-Smtp-Source: ABdhPJzYnGNeAN5xyb9jVGO4rbETTnVMZor7yAcJLPq8/nGlzbaPKhbD61Pu2kb36029cdMW5srkAnjRx5cJLBx1Vk8=
+X-Received: by 2002:a65:45c3:: with SMTP id m3mr13945248pgr.203.1629377234728;
+ Thu, 19 Aug 2021 05:47:14 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210819033001.20136-1-hpa@redhat.com> <1360c64f-b695-a4b8-8b61-a4dfb0e896f0@redhat.com>
- <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com>
-In-Reply-To: <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com>
+ <CAHp75VcdOc+G1Yov9HcGhMbEqzGwemmD7=SHd3qOOsEdAqjg2Q@mail.gmail.com> <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
+In-Reply-To: <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Aug 2021 15:14:41 +0300
-Message-ID: <CAHp75VfvjVeq716d=aGvZXvmzbpW4+XG66ryVYrBxk5G5Wd6cg@mail.gmail.com>
+Date:   Thu, 19 Aug 2021 15:46:35 +0300
+Message-ID: <CAHp75VfhhwDzREn79cN67J-u0nhNuoXDehU8aXiH8B73qc8VVQ@mail.gmail.com>
 Subject: Re: [PATCH v3 00/20] Intel platform driver code movement
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Kate Hsuan <hpa@redhat.com>, Alex Hung <alex.hung@canonical.com>,
@@ -81,24 +81,30 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 19, 2021 at 3:03 PM Andy Shevchenko
+On Thu, Aug 19, 2021 at 3:14 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
-> On Thu, Aug 19, 2021 at 1:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
->
-> > Thank you for your patch-series, I've applied the series to my
-> > review-hans branch:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> On Thu, Aug 19, 2021 at 3:03 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Aug 19, 2021 at 1:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
 > >
-> > With the changes mentioned in replies to individual patches.
+> >
+> > > Thank you for your patch-series, I've applied the series to my
+> > > review-hans branch:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+> > >
+> > > With the changes mentioned in replies to individual patches.
+> >
+> > Can we postpone this a bit, please?
+> >
+> > I have a few comments here and there. I'll send asap.
 >
-> Can we postpone this a bit, please?
->
-> I have a few comments here and there. I'll send asap.
+> Hmm... It seems it will take less time if I simply take what you have
+> in your repo and produce a v4.
+> Would it work?
 
-Hmm... It seems it will take less time if I simply take what you have
-in your repo and produce a v4.
-Would it work?
+Oh, there are more issues with the patches. Kconfigs have copy'n'paste
+text from Makefiles.
+Anyway, it seems I will do a v4.
 
 -- 
 With Best Regards,
