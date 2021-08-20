@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FD7C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2A8C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCB560FE8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A90E160FE8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239788AbhHTLGG (ORCPT
+        id S239990AbhHTLGH (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:06:06 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54047 "EHLO mga11.intel.com"
+        Fri, 20 Aug 2021 07:06:07 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30934 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239978AbhHTLF7 (ORCPT
+        id S239899AbhHTLGC (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:05:59 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="213630979"
+        Fri, 20 Aug 2021 07:06:02 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="214913370"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="213630979"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:08 -0700
+   d="scan'208";a="214913370"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="463363432"
+   d="scan'208";a="680060293"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2021 04:05:04 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2021 04:05:09 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id CE0A6411; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
+        id 5CD6EA2A; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 06/20] platform/x86: intel_pmc_core: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:44 +0300
-Message-Id: <20210820110458.73018-7-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 17/20] platform/x86: intel_oaktrail: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:55 +0300
+Message-Id: <20210820110458.73018-18-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -63,180 +63,91 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel PMC core driver to intel sub-directory to improve readability.
+Move Intel Oaktrail driver to intel sub-directory to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                   |  2 +-
- drivers/platform/x86/Kconfig                  | 21 ----------------
- drivers/platform/x86/Makefile                 |  1 -
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  1 +
- drivers/platform/x86/intel/pmc/Kconfig        | 25 +++++++++++++++++++
- drivers/platform/x86/intel/pmc/Makefile       |  9 +++++++
- .../{intel_pmc_core.c => intel/pmc/core.c}    |  2 +-
- .../{intel_pmc_core.h => intel/pmc/core.h}    |  0
- .../pmc/pltdrv.c}                             |  0
- 10 files changed, 38 insertions(+), 24 deletions(-)
- create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
- create mode 100644 drivers/platform/x86/intel/pmc/Makefile
- rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/core.c} (99%)
- rename drivers/platform/x86/{intel_pmc_core.h => intel/pmc/core.h} (100%)
- rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pltdrv.c} (100%)
+ drivers/platform/x86/Kconfig                           | 10 ----------
+ drivers/platform/x86/Makefile                          |  1 -
+ drivers/platform/x86/intel/Kconfig                     | 10 ++++++++++
+ drivers/platform/x86/intel/Makefile                    |  2 ++
+ .../x86/{intel_oaktrail.c => intel/oaktrail.c}         |  0
+ 5 files changed, 12 insertions(+), 11 deletions(-)
+ rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 21813a0e00eb..eefe4edb1b3d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9483,7 +9483,7 @@ M:	David E Box <david.e.box@intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
--F:	drivers/platform/x86/intel_pmc_core*
-+F:	drivers/platform/x86/intel/pmc/
- 
- INTEL PMIC GPIO DRIVERS
- M:	Andy Shevchenko <andy@kernel.org>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 9cadce7908ea..aed7570388ef 100644
+index 6bdcf197b550..34a57352568e 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1159,27 +1159,6 @@ config INTEL_UNCORE_FREQ_CONTROL
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called intel-uncore-frequency.
+@@ -668,16 +668,6 @@ config THINKPAD_LMI
  
--config INTEL_PMC_CORE
--	tristate "Intel PMC Core driver"
--	depends on PCI
+ source "drivers/platform/x86/intel/Kconfig"
+ 
+-config INTEL_OAKTRAIL
+-	tristate "Intel Oaktrail Platform Extras"
 -	depends on ACPI
+-	depends on ACPI_VIDEO || ACPI_VIDEO = n
+-	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
 -	help
--	  The Intel Platform Controller Hub for Intel Core SoCs provides access
--	  to Power Management Controller registers via various interfaces. This
--	  driver can utilize debugging capabilities and supported features as
--	  exposed by the Power Management Controller. It also may perform some
--	  tasks in the PMC in order to enable transition into the SLPS0 state.
--	  It should be selected on all Intel platforms supported by the driver.
+-	  Intel Oaktrail platform need this driver to provide interfaces to
+-	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
+-	  here; it will only load on supported platforms.
 -
--	  Supported features:
--		- SLP_S0_RESIDENCY counter
--		- PCH IP Power Gating status
--		- LTR Ignore / LTR Show
--		- MPHY/PLL gating status (Sunrisepoint PCH only)
--		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
--		- Low Power Mode registers (Tigerlake and beyond)
--		- PMC quirks as needed to enable SLPS0/S0ix
--
- config INTEL_SCU_IPC
- 	bool
- 
+ config INTEL_VBTN
+ 	tristate "INTEL VIRTUAL BUTTON"
+ 	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 776370ce8fbb..1668f7360833 100644
+index 75bcf6fe33b9..e88c24dde627 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -127,7 +127,6 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
  
- # Intel PMIC / PMC / P-Unit devices
--obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
- obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
- obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
- obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
+-obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+ 
+ # MSI
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index c4ceb5ee83f3..7de11636904d 100644
+index 53b2d5858ad0..aab516aaf2fe 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -19,6 +19,7 @@ if X86_PLATFORM_DRIVERS_INTEL
- source "drivers/platform/x86/intel/int1092/Kconfig"
- source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
-+source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
+@@ -57,6 +57,16 @@ config INTEL_INT0002_VGPIO
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_int0002_vgpio.
  
++config INTEL_OAKTRAIL
++	tristate "Intel Oaktrail Platform Extras"
++	depends on ACPI
++	depends on ACPI_VIDEO || ACPI_VIDEO=n
++	depends on RFKILL && BACKLIGHT_CLASS_DEVICE && ACPI
++	help
++	  Intel Oaktrail platform need this driver to provide interfaces to
++	  enable/disable the Camera, WiFi, BT etc. devices. If in doubt, say Y
++	  here; it will only load on supported platforms.
++
  config INTEL_BXTWC_PMIC_TMU
+ 	tristate "Intel Broxton Whiskey Cove TMU Driver"
+ 	depends on INTEL_SOC_PMIC_BXTWC
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 58fc8e7a3b62..a1555a1e421d 100644
+index 7fdf35ab70bf..cd254c3e8c37 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -7,6 +7,7 @@
- obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
- obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
-+obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
+@@ -20,6 +20,8 @@ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ # Intel miscellaneous drivers
+ intel_int0002_vgpio-y			:= int0002_vgpio.o
+ obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
++intel_oaktrail-y			:= oaktrail.o
++obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
  
  # Intel PMIC / PMC / P-Unit drivers
-diff --git a/drivers/platform/x86/intel/pmc/Kconfig b/drivers/platform/x86/intel/pmc/Kconfig
-new file mode 100644
-index 000000000000..b526597e4deb
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/Kconfig
-@@ -0,0 +1,25 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Intel x86 Platform-Specific Drivers
-+#
-+
-+config INTEL_PMC_CORE
-+	tristate "Intel PMC Core driver"
-+	depends on PCI
-+	depends on ACPI
-+	help
-+	  The Intel Platform Controller Hub for Intel Core SoCs provides access
-+	  to Power Management Controller registers via various interfaces. This
-+	  driver can utilize debugging capabilities and supported features as
-+	  exposed by the Power Management Controller. It also may perform some
-+	  tasks in the PMC in order to enable transition into the SLPS0 state.
-+	  It should be selected on all Intel platforms supported by the driver.
-+
-+	  Supported features:
-+		- SLP_S0_RESIDENCY counter
-+		- PCH IP Power Gating status
-+		- LTR Ignore / LTR Show
-+		- MPHY/PLL gating status (Sunrisepoint PCH only)
-+		- SLPS0 Debug registers (Cannonlake/Icelake PCH)
-+		- Low Power Mode registers (Tigerlake and beyond)
-+		- PMC quirks as needed to enable SLPS0/S0ix
-diff --git a/drivers/platform/x86/intel/pmc/Makefile b/drivers/platform/x86/intel/pmc/Makefile
-new file mode 100644
-index 000000000000..8966fcdc0e1d
---- /dev/null
-+++ b/drivers/platform/x86/intel/pmc/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Intel x86 Platform-Specific Drivers
-+#
-+
-+intel_pmc_core-y			:= core.o
-+obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o
-+intel_pmc_core_pltdrv-y			:= pltdrv.o
-+obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core_pltdrv.o
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel/pmc/core.c
-similarity index 99%
-rename from drivers/platform/x86/intel_pmc_core.c
-rename to drivers/platform/x86/intel/pmc/core.c
-index ae410a358ffe..9963bc3d470c 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -31,7 +31,7 @@
- #include <asm/msr.h>
- #include <asm/tsc.h>
- 
--#include "intel_pmc_core.h"
-+#include "core.h"
- 
- #define ACPI_S0IX_DSM_UUID		"57a6512e-3979-4e9d-9708-ff13b2508972"
- #define ACPI_GET_LOW_MODE_REGISTERS	1
-diff --git a/drivers/platform/x86/intel_pmc_core.h b/drivers/platform/x86/intel/pmc/core.h
+ intel_bxtwc_tmu-y			:= bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel_oaktrail.c b/drivers/platform/x86/intel/oaktrail.c
 similarity index 100%
-rename from drivers/platform/x86/intel_pmc_core.h
-rename to drivers/platform/x86/intel/pmc/core.h
-diff --git a/drivers/platform/x86/intel_pmc_core_pltdrv.c b/drivers/platform/x86/intel/pmc/pltdrv.c
-similarity index 100%
-rename from drivers/platform/x86/intel_pmc_core_pltdrv.c
-rename to drivers/platform/x86/intel/pmc/pltdrv.c
+rename from drivers/platform/x86/intel_oaktrail.c
+rename to drivers/platform/x86/intel/oaktrail.c
 -- 
 2.32.0
 
