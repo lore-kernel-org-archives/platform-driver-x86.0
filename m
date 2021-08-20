@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFD0C4338F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB014C432BE
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A75F604AC
+	by mail.kernel.org (Postfix) with ESMTP id C9E4060F45
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240076AbhHTLGf (ORCPT
+        id S240329AbhHTLGg (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:06:35 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54053 "EHLO mga11.intel.com"
+        Fri, 20 Aug 2021 07:06:36 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54047 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240067AbhHTLGV (ORCPT
+        id S240229AbhHTLGV (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 20 Aug 2021 07:06:21 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="213630985"
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="213630982"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="213630985"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:13 -0700
+   d="scan'208";a="213630982"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:09 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="452747422"
+   d="scan'208";a="573922367"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Aug 2021 04:05:09 -0700
+  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 759DEB2E; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
+        id 1325E683; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 19/20] platform/x86: intel-wmi-sbl-fw-update: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:57 +0300
-Message-Id: <20210820110458.73018-20-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 11/20] platform/x86: intel_turbo_max_3: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:49 +0300
+Message-Id: <20210820110458.73018-12-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -63,137 +63,89 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel WMI Slim Bootloader FW update driver to intel sub-directory
-to improve readability.
+Move Intel Turbo Max 3 driver to intel sub-directory to improve readability
+and rename it from intel_turbo_max_3.c to turbo_max_3.c.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                    |  2 +-
- drivers/platform/x86/Kconfig                   | 10 ----------
- drivers/platform/x86/Makefile                  |  1 -
- drivers/platform/x86/intel/Kconfig             |  1 +
- drivers/platform/x86/intel/Makefile            |  1 +
- drivers/platform/x86/intel/wmi/Kconfig         | 18 ++++++++++++++++++
- drivers/platform/x86/intel/wmi/Makefile        |  7 +++++++
- .../wmi/sbl-fw-update.c}                       |  0
- 8 files changed, 28 insertions(+), 12 deletions(-)
- create mode 100644 drivers/platform/x86/intel/wmi/Kconfig
- create mode 100644 drivers/platform/x86/intel/wmi/Makefile
- rename drivers/platform/x86/{intel-wmi-sbl-fw-update.c => intel/wmi/sbl-fw-update.c} (100%)
+ drivers/platform/x86/Kconfig                          | 10 ----------
+ drivers/platform/x86/Makefile                         |  1 -
+ drivers/platform/x86/intel/Kconfig                    | 11 +++++++++++
+ drivers/platform/x86/intel/Makefile                   |  2 ++
+ .../x86/{intel_turbo_max_3.c => intel/turbo_max_3.c}  |  0
+ 5 files changed, 13 insertions(+), 11 deletions(-)
+ rename drivers/platform/x86/{intel_turbo_max_3.c => intel/turbo_max_3.c} (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4662d4d4db5d..3ca5102ed811 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9592,7 +9592,7 @@ M:	Jithu Joseph <jithu.joseph@intel.com>
- R:	Maurice Ma <maurice.ma@intel.com>
- S:	Maintained
- W:	https://slimbootloader.github.io/security/firmware-update.html
--F:	drivers/platform/x86/intel-wmi-sbl-fw-update.c
-+F:	drivers/platform/x86/intel/wmi/sbl-fw-update.c
- 
- INTEL WMI THUNDERBOLT FORCE POWER DRIVER
- L:	Dell.Client.Kernel@dell.com
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a98f8cafada1..7248f20c467a 100644
+index 709f990243b6..0c645fcb09c5 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -77,16 +77,6 @@ config UV_SYSFS
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called uv_sysfs.
+@@ -1112,16 +1112,6 @@ config INTEL_IPS
  
--config INTEL_WMI_SBL_FW_UPDATE
--	tristate "Intel WMI Slim Bootloader firmware update signaling driver"
--	depends on ACPI_WMI
+ source "drivers/platform/x86/intel_speed_select_if/Kconfig"
+ 
+-config INTEL_TURBO_MAX_3
+-	bool "Intel Turbo Boost Max Technology 3.0 enumeration driver"
+-	depends on X86_64 && SCHED_MC_PRIO
 -	help
--	  Say Y here if you want to be able to use the WMI interface to signal
--	  Slim Bootloader to trigger update on next reboot.
+-	  This driver reads maximum performance ratio of each CPU and set up
+-	  the scheduler priority metrics. In this way scheduler can prefer
+-	  CPU with higher performance to schedule tasks.
+-	  This driver is only required when the system is not using Hardware
+-	  P-States (HWP). In HWP mode, priority can be read from ACPI tables.
 -
--	  To compile this driver as a module, choose M here: the module will
--	  be called intel-wmi-sbl-fw-update.
--
- config INTEL_WMI_THUNDERBOLT
- 	tristate "Intel WMI thunderbolt force power driver"
- 	depends on ACPI_WMI
+ config INTEL_UNCORE_FREQ_CONTROL
+ 	tristate "Intel Uncore frequency control driver"
+ 	depends on X86_64
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 3f9a2db12353..a39986fa7f68 100644
+index c0d367455c7a..531cdac793d8 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -10,7 +10,6 @@ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
+@@ -121,7 +121,6 @@ obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
+ # Intel uncore drivers
+ obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
+ obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
+-obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
  
- # WMI drivers
- obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
--obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
- obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
- obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
- obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
+ # Intel PMIC / PMC / P-Unit devices
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index e81276cd2168..e633482b82df 100644
+index 39494a8b6a05..ccaaf93717bd 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -24,6 +24,7 @@ source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
- source "drivers/platform/x86/intel/speed_select_if/Kconfig"
- source "drivers/platform/x86/intel/telemetry/Kconfig"
-+source "drivers/platform/x86/intel/wmi/Kconfig"
+@@ -92,4 +92,15 @@ config INTEL_SMARTCONNECT
+ 	  This driver checks to determine whether the device has Intel Smart
+ 	  Connect enabled, and if so disables it.
  
- config INTEL_HID_EVENT
- 	tristate "Intel HID Event"
++config INTEL_TURBO_MAX_3
++	bool "Intel Turbo Boost Max Technology 3.0 enumeration driver"
++	depends on X86_64 && SCHED_MC_PRIO
++	help
++	  This driver reads maximum performance ratio of each CPU and set up
++	  the scheduler priority metrics. In this way scheduler can prefer
++	  CPU with higher performance to schedule tasks.
++
++	  This driver is only required when the system is not using Hardware
++	  P-States (HWP). In HWP mode, priority can be read from ACPI tables.
++
+ endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 7fb890488e6b..f2c902a57763 100644
+index a62f593b90fa..ffeeecd513d8 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += speed_select_if/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
-+obj-$(CONFIG_INTEL_WMI)			+= wmi/
- 
- # Intel input drivers
- intel-hid-y				:= hid.o
-diff --git a/drivers/platform/x86/intel/wmi/Kconfig b/drivers/platform/x86/intel/wmi/Kconfig
-new file mode 100644
-index 000000000000..c5753b1e8f43
---- /dev/null
-+++ b/drivers/platform/x86/intel/wmi/Kconfig
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+config INTEL_WMI
-+	bool
-+
-+config INTEL_WMI_SBL_FW_UPDATE
-+	tristate "Intel WMI Slim Bootloader firmware update signaling driver"
-+	depends on ACPI_WMI
-+	select INTEL_WMI
-+	help
-+	  Say Y here if you want to be able to use the WMI interface to signal
-+	  Slim Bootloader to trigger update on next reboot.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called intel-wmi-sbl-fw-update.
-diff --git a/drivers/platform/x86/intel/wmi/Makefile b/drivers/platform/x86/intel/wmi/Makefile
-new file mode 100644
-index 000000000000..bf1f118b6839
---- /dev/null
-+++ b/drivers/platform/x86/intel/wmi/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+intel-wmi-sbl-fw-update-y				:= sbl-fw-update.o
-+obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
-diff --git a/drivers/platform/x86/intel-wmi-sbl-fw-update.c b/drivers/platform/x86/intel/wmi/sbl-fw-update.c
+@@ -27,3 +27,5 @@ intel-rst-y				:= rst.o
+ obj-$(CONFIG_INTEL_RST)			+= intel-rst.o
+ intel-smartconnect-y			:= smartconnect.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
++intel_turbo_max_3-y			:= turbo_max_3.o
++obj-$(CONFIG_INTEL_TURBO_MAX_3)		+= intel_turbo_max_3.o
+diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel/turbo_max_3.c
 similarity index 100%
-rename from drivers/platform/x86/intel-wmi-sbl-fw-update.c
-rename to drivers/platform/x86/intel/wmi/sbl-fw-update.c
+rename from drivers/platform/x86/intel_turbo_max_3.c
+rename to drivers/platform/x86/intel/turbo_max_3.c
 -- 
 2.32.0
 
