@@ -2,36 +2,37 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975E1C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1B1C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763AE60FE8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3AA6103B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239830AbhHTLGB (ORCPT
+        id S240040AbhHTLGD (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:06:01 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45785 "EHLO mga09.intel.com"
+        Fri, 20 Aug 2021 07:06:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30934 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239910AbhHTLF4 (ORCPT
+        id S239403AbhHTLF5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:05:56 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="216753819"
+        Fri, 20 Aug 2021 07:05:57 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="214913369"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="216753819"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:04 -0700
+   d="scan'208";a="214913369"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="424376359"
+   d="scan'208";a="680060291"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 20 Aug 2021 04:05:00 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2021 04:05:09 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 91CB7199; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
+        id 50482990; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -48,148 +49,126 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 00/20] platform/x86: Intel platform driver code movement
-Date:   Fri, 20 Aug 2021 14:04:38 +0300
-Message-Id: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 16/20] platform/x86: intel_int0002_vgpio: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:54 +0300
+Message-Id: <20210820110458.73018-17-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
+References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-This is v5 of the Intel drivers move on in the source tree.
-v4: https://lore.kernel.org/platform-driver-x86/20210819163735.81803-1-andriy.shevchenko@linux.intel.com/
-v3 has been done by Kate:
-https://lore.kernel.org/platform-driver-x86/20210819033001.20136-1-hpa@redhat.com/
+From: Kate Hsuan <hpa@redhat.com>
 
-I have taken the initial set from review-hans branch and removed Hans' SoB
-along with Link, while leaving others' tags.
+Move Intel vGPIO (INT0002) driver to intel sub-directory
+to improve readability.
 
-Changelog v5:
-- dropped SCU and IPS patches since there are somehow problematic
-- added Intel Atom PMC driver move
-- moved SCU kernel doc fix to be first in the series
-
-Changelog v4:
-- spelled fully the driver names in the commit messages
-- fixed SCU *.ko module names
-- dropped extra prefix in PMC files
-- dropped stray changes within the series
-- removed confusing comments in Makefile and Kconfig files
-- embedded a few of Kconfig improvements here and there (ordering, spelling)
-- split miscellaneous group
-- added a patch to fix kernel doc issue in SCU IPC code
-
-Andy Shevchenko (2):
-  platform/x86: intel_scu_ipc: Fix doc of
-    intel_scu_ipc_dev_command_with_size()
-  platform/x86: pmc_atom: Move to intel sub-directory
-
-Kate Hsuan (18):
-  platform/x86: intel_bxtwc_tmu: Move to intel sub-directory
-  platform/x86: intel_chtdc_ti_pwrbtn: Move to intel sub-directory
-  platform/x86: intel_mrfld_pwrbtn: Move to intel sub-directory
-  platform/x86: intel_punit_ipc: Move to intel sub-directory
-  platform/x86: intel_pmc_core: Move to intel sub-directory
-  platform/x86: intel_telemetry: Move to intel sub-directory
-  platform/x86: intel-rst: Move to intel sub-directory
-  platform/x86: intel-smartconnect: Move to intel sub-directory
-  platform/x86: intel_turbo_max_3: Move to intel sub-directory
-  platform/x86: intel-uncore-frequency: Move to intel sub-directory
-  platform/x86: intel_speed_select_if: Move to intel sub-directory
-  platform/x86: intel_atomisp2: Move to intel sub-directory
-  platform/x86: intel-hid: Move to intel sub-directory
-  platform/x86: intel_int0002_vgpio: Move to intel sub-directory
-  platform/x86: intel_oaktrail: Move to intel sub-directory
-  platform/x86: intel-vbtn: Move to intel sub-directory
-  platform/x86: intel-wmi-sbl-fw-update: Move to intel sub-directory
-  platform/x86: intel-wmi-thunderbolt: Move to intel sub-directory
-
- MAINTAINERS                                   |  22 +-
- drivers/platform/x86/Kconfig                  | 236 ------------------
- drivers/platform/x86/Makefile                 |  23 --
- drivers/platform/x86/intel/Kconfig            | 152 +++++++++++
- drivers/platform/x86/intel/Makefile           |  38 +++
- drivers/platform/x86/intel/atomisp2/Kconfig   |  43 ++++
- drivers/platform/x86/intel/atomisp2/Makefile  |   9 +
- .../atomisp2/led.c}                           |   0
- .../atomisp2/pm.c}                            |   0
- .../{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c}  |   0
- .../chtdc_ti_pwrbtn.c}                        |   0
- .../platform/x86/{intel-hid.c => intel/hid.c} |   2 +-
- .../int0002_vgpio.c}                          |   0
- .../mrfld_pwrbtn.c}                           |   0
- .../{intel_oaktrail.c => intel/oaktrail.c}    |   0
- drivers/platform/x86/intel/pmc/Kconfig        |  25 ++
- drivers/platform/x86/intel/pmc/Makefile       |   9 +
- .../{intel_pmc_core.c => intel/pmc/core.c}    |   2 +-
- .../{intel_pmc_core.h => intel/pmc/core.h}    |   0
- .../pmc/pltdrv.c}                             |   0
- drivers/platform/x86/{ => intel}/pmc_atom.c   |   0
- .../{intel_punit_ipc.c => intel/punit_ipc.c}  |   0
- .../platform/x86/{intel-rst.c => intel/rst.c} |   0
- .../smartconnect.c}                           |   0
- .../speed_select_if}/Kconfig                  |   0
- .../speed_select_if}/Makefile                 |   0
- .../speed_select_if}/isst_if_common.c         |   0
- .../speed_select_if}/isst_if_common.h         |   0
- .../speed_select_if}/isst_if_mbox_msr.c       |   0
- .../speed_select_if}/isst_if_mbox_pci.c       |   0
- .../speed_select_if}/isst_if_mmio.c           |   0
- drivers/platform/x86/intel/telemetry/Kconfig  |  16 ++
- drivers/platform/x86/intel/telemetry/Makefile |  11 +
- .../telemetry/core.c}                         |   0
- .../telemetry/debugfs.c}                      |   0
- .../telemetry/pltdrv.c}                       |   0
- .../turbo_max_3.c}                            |   0
- .../uncore-frequency.c}                       |   0
- .../x86/{intel-vbtn.c => intel/vbtn.c}        |   2 +-
- drivers/platform/x86/intel/wmi/Kconfig        |  31 +++
- drivers/platform/x86/intel/wmi/Makefile       |   9 +
- .../wmi/sbl-fw-update.c}                      |   0
- .../wmi/thunderbolt.c}                        |   0
- drivers/platform/x86/intel_scu_ipc.c          |   2 +-
- 44 files changed, 358 insertions(+), 274 deletions(-)
- create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
- create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
- rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
- rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
- rename drivers/platform/x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c} (100%)
- rename drivers/platform/x86/{intel_chtdc_ti_pwrbtn.c => intel/chtdc_ti_pwrbtn.c} (100%)
- rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (99%)
+Signed-off-by: Kate Hsuan <hpa@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig                  | 19 -------------------
+ drivers/platform/x86/Makefile                 |  1 -
+ drivers/platform/x86/intel/Kconfig            | 19 +++++++++++++++++++
+ drivers/platform/x86/intel/Makefile           |  4 ++++
+ .../int0002_vgpio.c}                          |  0
+ 5 files changed, 23 insertions(+), 20 deletions(-)
  rename drivers/platform/x86/{intel_int0002_vgpio.c => intel/int0002_vgpio.c} (100%)
- rename drivers/platform/x86/{intel_mrfld_pwrbtn.c => intel/mrfld_pwrbtn.c} (100%)
- rename drivers/platform/x86/{intel_oaktrail.c => intel/oaktrail.c} (100%)
- create mode 100644 drivers/platform/x86/intel/pmc/Kconfig
- create mode 100644 drivers/platform/x86/intel/pmc/Makefile
- rename drivers/platform/x86/{intel_pmc_core.c => intel/pmc/core.c} (99%)
- rename drivers/platform/x86/{intel_pmc_core.h => intel/pmc/core.h} (100%)
- rename drivers/platform/x86/{intel_pmc_core_pltdrv.c => intel/pmc/pltdrv.c} (100%)
- rename drivers/platform/x86/{ => intel}/pmc_atom.c (100%)
- rename drivers/platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c} (100%)
- rename drivers/platform/x86/{intel-rst.c => intel/rst.c} (100%)
- rename drivers/platform/x86/{intel-smartconnect.c => intel/smartconnect.c} (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Kconfig (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Makefile (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.h (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_msr.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_pci.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mmio.c (100%)
- create mode 100644 drivers/platform/x86/intel/telemetry/Kconfig
- create mode 100644 drivers/platform/x86/intel/telemetry/Makefile
- rename drivers/platform/x86/{intel_telemetry_core.c => intel/telemetry/core.c} (100%)
- rename drivers/platform/x86/{intel_telemetry_debugfs.c => intel/telemetry/debugfs.c} (100%)
- rename drivers/platform/x86/{intel_telemetry_pltdrv.c => intel/telemetry/pltdrv.c} (100%)
- rename drivers/platform/x86/{intel_turbo_max_3.c => intel/turbo_max_3.c} (100%)
- rename drivers/platform/x86/{intel-uncore-frequency.c => intel/uncore-frequency.c} (100%)
- rename drivers/platform/x86/{intel-vbtn.c => intel/vbtn.c} (99%)
- create mode 100644 drivers/platform/x86/intel/wmi/Kconfig
- create mode 100644 drivers/platform/x86/intel/wmi/Makefile
- rename drivers/platform/x86/{intel-wmi-sbl-fw-update.c => intel/wmi/sbl-fw-update.c} (100%)
- rename drivers/platform/x86/{intel-wmi-thunderbolt.c => intel/wmi/thunderbolt.c} (100%)
 
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 79480826f816..6bdcf197b550 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -668,25 +668,6 @@ config THINKPAD_LMI
+ 
+ source "drivers/platform/x86/intel/Kconfig"
+ 
+-config INTEL_INT0002_VGPIO
+-	tristate "Intel ACPI INT0002 Virtual GPIO driver"
+-	depends on GPIOLIB && ACPI && PM_SLEEP
+-	select GPIOLIB_IRQCHIP
+-	help
+-	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
+-	  Power Management Event (PME) to the Power Management Controller (PMC)
+-	  to wakeup the system. When this happens software needs to explicitly
+-	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
+-	  IRQ storm on IRQ 9.
+-
+-	  This is modelled in ACPI through the INT0002 ACPI device, which is
+-	  called a "Virtual GPIO controller" in ACPI because it defines the
+-	  event handler to call when the PME triggers through _AEI and _L02
+-	  methods as would be done for a real GPIO interrupt in ACPI.
+-
+-	  To compile this driver as a module, choose M here: the module will
+-	  be called intel_int0002_vgpio.
+-
+ config INTEL_OAKTRAIL
+ 	tristate "Intel Oaktrail Platform Extras"
+ 	depends on ACPI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 4294843ead8a..75bcf6fe33b9 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
+ # Intel
+ obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
+ 
+-obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
+ obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
+ 
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 048dfdd02ee7..53b2d5858ad0 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -38,6 +38,25 @@ config INTEL_HID_EVENT
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel_hid.
+ 
++config INTEL_INT0002_VGPIO
++	tristate "Intel ACPI INT0002 Virtual GPIO driver"
++	depends on GPIOLIB && ACPI && PM_SLEEP
++	select GPIOLIB_IRQCHIP
++	help
++	  Some peripherals on Bay Trail and Cherry Trail platforms signal a
++	  Power Management Event (PME) to the Power Management Controller (PMC)
++	  to wakeup the system. When this happens software needs to explicitly
++	  clear the PME bus 0 status bit in the GPE0a_STS register to avoid an
++	  IRQ storm on IRQ 9.
++
++	  This is modelled in ACPI through the INT0002 ACPI device, which is
++	  called a "Virtual GPIO controller" in ACPI because it defines the
++	  event handler to call when the PME triggers through _AEI and _L02
++	  methods as would be done for a real GPIO interrupt in ACPI.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called intel_int0002_vgpio.
++
+ config INTEL_BXTWC_PMIC_TMU
+ 	tristate "Intel Broxton Whiskey Cove TMU Driver"
+ 	depends on INTEL_SOC_PMIC_BXTWC
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index e63d03d86e20..7fdf35ab70bf 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -17,6 +17,10 @@ obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
+ intel-hid-y				:= hid.o
+ obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
+ 
++# Intel miscellaneous drivers
++intel_int0002_vgpio-y			:= int0002_vgpio.o
++obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
++
+ # Intel PMIC / PMC / P-Unit drivers
+ intel_bxtwc_tmu-y			:= bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel/int0002_vgpio.c
+similarity index 100%
+rename from drivers/platform/x86/intel_int0002_vgpio.c
+rename to drivers/platform/x86/intel/int0002_vgpio.c
 -- 
 2.32.0
 
