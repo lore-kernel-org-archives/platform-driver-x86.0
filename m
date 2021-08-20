@@ -2,75 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E416C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 10:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDCFC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 10:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E7260C3E
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 10:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6A860FDA
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 10:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234768AbhHTKvt (ORCPT
+        id S234768AbhHTLAT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 06:51:49 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:47225 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237674AbhHTKvs (ORCPT
+        Fri, 20 Aug 2021 07:00:19 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:37289 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229847AbhHTLAS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 06:51:48 -0400
-Received: (Authenticated sender: hadess@hadess.net)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3A5D540003;
-        Fri, 20 Aug 2021 10:51:09 +0000 (UTC)
-Message-ID: <c19dfdde11754c234ca8a45c4af2187699498ee8.camel@hadess.net>
+        Fri, 20 Aug 2021 07:00:18 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id C1A773200368;
+        Fri, 20 Aug 2021 06:59:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 20 Aug 2021 06:59:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=TaQBSg
+        vqUCrWUfWtlGrPX2smT3iPxXowskDyFRH3cAQ=; b=YSE9v4z7Lssi/h0nmXQFhe
+        vjePeecBql/ENblAUfx5fNEa0AuN3b1pvrereMbWvYn3s7zFXqPTUW0vCicZhExm
+        /d0DXIBUct26XMrXO6b9cfEDAKUn06ceMxHO+MKAZqlw4hdfYQNaeIodrQbyWDo5
+        hOExq9YWpt5TjDWrslqs4I1OYpzRqt7FEuqvUh705v3Oyfg56wN49wKzPosGDJN0
+        Vk+sKFU32L7yNyRkzPSCaNySsB15/zCxbAbgGhO/2BLpa//IGN2yLFGqEhP+H9h+
+        X6t8DyuDi6LpDClqGYKr0qAhw44lLP6GweE0zCORVIIFLwcAXARDhtd5s0V2Gr1w
+        ==
+X-ME-Sender: <xms:G4sfYbcGY2ugxOWYPazGWYfPc1U2kozBePJ2iYC-xeTczIkQfIs0Ag>
+    <xme:G4sfYRNi3NtulCca5ZUfWbdQPjvw_HmNTVSdQp2qimSQHdQej7tNSNDM4ykIe3iw3
+    nFgYo1g1bLObywXmfA>
+X-ME-Received: <xmr:G4sfYUgs13f-tC9SJwpucCgk8SxOCTAxf-DCcXuscCCkZVZD0-xVL1gsPHrfCOm-8m5XyA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrleelgdefgecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhuffvkfgjfhfogggtsehttdertd
+    ertddvnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdgu
+    vghvqeenucggtffrrghtthgvrhhnpefgfeefudffhffgueehgeffffeggeevieefueethf
+    eijefftedugfeuveethedtteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
+X-ME-Proxy: <xmx:G4sfYc_2qd_zJ1dEsR_4NpnaRIduKiLRCZGLyIPlctiUG0As7ChEog>
+    <xmx:G4sfYXvUMzSx6dtxSjJ5WwI9g3Se4DHOmV7a4pP27jhOSBePb2tNqQ>
+    <xmx:G4sfYbGWQtdZdm7RHp2nh1r16wUsQeZTypFjPSuszHD4jvk5jRyjlg>
+    <xmx:HIsfYQVtdb1pdAuOHG6plDOjqn22mompa3cWc6PbLN87sHeGoPVz5w>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 20 Aug 2021 06:59:34 -0400 (EDT)
+Date:   Fri, 20 Aug 2021 22:59:17 +1200
+From:   Luke Jones <luke@ljones.dev>
 Subject: Re: [PATCH v4 1/1] asus-wmi: Add support for custom fan curves
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Luke Jones <luke@ljones.dev>
+To:     Bastien Nocera <hadess@hadess.net>
 Cc:     linux-kernel@vger.kernel.org, hdegoede@redhat.com,
         platform-driver-x86@vger.kernel.org
-Date:   Fri, 20 Aug 2021 12:51:08 +0200
+Message-Id: <T6X4YQ.G4UP78QP23941@ljones.dev>
 In-Reply-To: <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
 References: <20210820095726.14131-1-luke@ljones.dev>
-         <20210820095726.14131-2-luke@ljones.dev>
-         <321afe1a293be3a623a9be53feea3a008e044b31.camel@hadess.net>
-         <L0W4YQ.ZVWQDLFJE8NR2@ljones.dev>
-         <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        <20210820095726.14131-2-luke@ljones.dev>
+        <321afe1a293be3a623a9be53feea3a008e044b31.camel@hadess.net>
+        <L0W4YQ.ZVWQDLFJE8NR2@ljones.dev>
+        <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, 2021-08-20 at 12:43 +0200, Bastien Nocera wrote:
+
+
+On Fri, Aug 20 2021 at 12:43:17 +0200, Bastien Nocera 
+<hadess@hadess.net> wrote:
 > On Fri, 2021-08-20 at 22:33 +1200, Luke Jones wrote:
-> > > Am I going to get bug reports from Asus users that will complain
-> > > that
-> > > power-profiles-daemon doesn't work correctly, where I will have
-> > > to
-> > > wearily ask if they're using an Asus Rog laptop?
-> > 
-> > No. Definitely not. The changes to fan curves per-profile need to
-> > be 
-> > explicitly enabled and set. So a new user will be unaware that this
-> > control exists (until they look for it) and their laptop will
-> > behave 
-> > exactly as default.
+>>  > Am I going to get bug reports from Asus users that will complain
+>>  > that
+>>  > power-profiles-daemon doesn't work correctly, where I will have to
+>>  > wearily ask if they're using an Asus Rog laptop?
+>> 
+>>  No. Definitely not. The changes to fan curves per-profile need to be
+>>  explicitly enabled and set. So a new user will be unaware that this
+>>  control exists (until they look for it) and their laptop will behave
+>>  exactly as default.
 > 
 > "The user will need to change the fan curves manually so will
 > definitely remember to mention it in bug reports" is a very different
 > thing to "the user can't change the fan curves to be nonsensical and
 > mean opposite things".
+
+I get the impression that if I add something in-kernel to disable 
+platform_profile if curves are enabled we'll end up with a very similar 
+situation regardless ("Why did platform_profile disappear?" or "Why is 
+platform_profile not responding?").
+
+There is minimal validity checking in the patch, such as ensuring the 
+curve is either flat or trends up, never down.
+
 > 
 > I can assure you that I will eventually get bug reports from "power
-> users" who break their setup and wonder why things don't work
+> users" who break their setup and wonder why things don't work 
 > properly,
 > without ever mentioning the changes they made changes to the fan
 > curves, or anything else they might have changed.
 
-A way to taint the settings that power-profiles-daemon could catch
-would be fine by me. I absolutely don't want to have to support
-somebody's tweaks until they undo them.
+Yes I can imagine. I deal with this a lot in the asus-linux discord. No 
+matter what I do to alleviate it, it happens - I've kind of taken it as 
+a given now. This patch doesn't change the behaviour of 
+platform_profile at all however.
+
+If possible I'd very much like to continue with the current behaviour 
+and see where it takes us.
+
+Kind regards,
+Luke.
+
 
