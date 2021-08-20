@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061B3C4338F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E57C4320E
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD3D561056
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D411D60FE8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240012AbhHTLGW (ORCPT
+        id S240078AbhHTLGX (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:06:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54047 "EHLO mga11.intel.com"
+        Fri, 20 Aug 2021 07:06:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54053 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240106AbhHTLGF (ORCPT
+        id S237651AbhHTLGF (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 20 Aug 2021 07:06:05 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="213630986"
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="213630987"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="213630986"
+   d="scan'208";a="213630987"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:13 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:14 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="463363497"
+   d="scan'208";a="463363504"
 Received: from black.fi.intel.com ([10.237.72.28])
   by orsmga007.jf.intel.com with ESMTP; 20 Aug 2021 04:05:09 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 445C895F; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
+        id 82ACDB9D; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 15/20] platform/x86: intel-hid: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:53 +0300
-Message-Id: <20210820110458.73018-16-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 20/20] platform/x86: intel-wmi-thunderbolt: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:58 +0300
+Message-Id: <20210820110458.73018-21-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -63,125 +63,105 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel HID driver to intel sub-directory to improve readability.
+Move Intel WMI Thunderbolt driver to intel sub-directory
+to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                       |  2 +-
- drivers/platform/x86/Kconfig                      | 13 -------------
- drivers/platform/x86/Makefile                     |  1 -
- drivers/platform/x86/intel/Kconfig                | 13 +++++++++++++
- drivers/platform/x86/intel/Makefile               |  4 ++++
- drivers/platform/x86/{intel-hid.c => intel/hid.c} |  2 +-
- 6 files changed, 19 insertions(+), 16 deletions(-)
- rename drivers/platform/x86/{intel-hid.c => intel/hid.c} (99%)
+ MAINTAINERS                                         |  2 +-
+ drivers/platform/x86/Kconfig                        | 12 ------------
+ drivers/platform/x86/Makefile                       |  1 -
+ drivers/platform/x86/intel/wmi/Kconfig              | 13 +++++++++++++
+ drivers/platform/x86/intel/wmi/Makefile             |  2 ++
+ .../wmi/thunderbolt.c}                              |  0
+ 6 files changed, 16 insertions(+), 14 deletions(-)
+ rename drivers/platform/x86/{intel-wmi-thunderbolt.c => intel/wmi/thunderbolt.c} (100%)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 429b8b5c5283..5339b210d6a5 100644
+index 3ca5102ed811..60ee48c71c83 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9321,7 +9321,7 @@ INTEL HID EVENT DRIVER
- M:	Alex Hung <alex.hung@canonical.com>
- L:	platform-driver-x86@vger.kernel.org
+@@ -9597,7 +9597,7 @@ F:	drivers/platform/x86/intel/wmi/sbl-fw-update.c
+ INTEL WMI THUNDERBOLT FORCE POWER DRIVER
+ L:	Dell.Client.Kernel@dell.com
  S:	Maintained
--F:	drivers/platform/x86/intel-hid.c
-+F:	drivers/platform/x86/intel/hid.c
+-F:	drivers/platform/x86/intel-wmi-thunderbolt.c
++F:	drivers/platform/x86/intel/wmi/thunderbolt.c
  
- INTEL I/OAT DMA DRIVER
- M:	Dave Jiang <dave.jiang@intel.com>
+ INTEL WWAN IOSM DRIVER
+ M:	M Chetan Kumar <m.chetan.kumar@intel.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 81eaa00983bd..79480826f816 100644
+index 7248f20c467a..38c133ca78a4 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -668,19 +668,6 @@ config THINKPAD_LMI
+@@ -77,18 +77,6 @@ config UV_SYSFS
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called uv_sysfs.
  
- source "drivers/platform/x86/intel/Kconfig"
- 
--config INTEL_HID_EVENT
--	tristate "INTEL HID Event"
--	depends on ACPI
--	depends on INPUT
--	depends on I2C
--	select INPUT_SPARSEKMAP
+-config INTEL_WMI_THUNDERBOLT
+-	tristate "Intel WMI thunderbolt force power driver"
+-	depends on ACPI_WMI
 -	help
--	  This driver provides support for the Intel HID Event hotkey interface.
--	  Some laptops require this driver for hotkey support.
+-	  Say Y here if you want to be able to use the WMI interface on select
+-	  systems to force the power control of Intel Thunderbolt controllers.
+-	  This is useful for updating the firmware when devices are not plugged
+-	  into the controller.
 -
 -	  To compile this driver as a module, choose M here: the module will
--	  be called intel_hid.
+-	  be called intel-wmi-thunderbolt.
 -
- config INTEL_INT0002_VGPIO
- 	tristate "Intel ACPI INT0002 Virtual GPIO driver"
- 	depends on GPIOLIB && ACPI && PM_SLEEP
+ config MXM_WMI
+        tristate "WMI support for MXM Laptop Graphics"
+        depends on ACPI_WMI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 6c682114e4fe..4294843ead8a 100644
+index a39986fa7f68..a4277032c952 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -71,7 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- # Intel
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
+@@ -10,7 +10,6 @@ obj-$(CONFIG_WMI_BMOF)		+= wmi-bmof.o
  
--obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
- obj-$(CONFIG_INTEL_VBTN)		+= intel-vbtn.o
-diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index e8e1bad38113..048dfdd02ee7 100644
---- a/drivers/platform/x86/intel/Kconfig
-+++ b/drivers/platform/x86/intel/Kconfig
-@@ -25,6 +25,19 @@ source "drivers/platform/x86/intel/pmt/Kconfig"
- source "drivers/platform/x86/intel/speed_select_if/Kconfig"
- source "drivers/platform/x86/intel/telemetry/Kconfig"
+ # WMI drivers
+ obj-$(CONFIG_HUAWEI_WMI)		+= huawei-wmi.o
+-obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+ obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+diff --git a/drivers/platform/x86/intel/wmi/Kconfig b/drivers/platform/x86/intel/wmi/Kconfig
+index c5753b1e8f43..8e159f712179 100644
+--- a/drivers/platform/x86/intel/wmi/Kconfig
++++ b/drivers/platform/x86/intel/wmi/Kconfig
+@@ -16,3 +16,16 @@ config INTEL_WMI_SBL_FW_UPDATE
  
-+config INTEL_HID_EVENT
-+	tristate "Intel HID Event"
-+	depends on ACPI
-+	depends on INPUT
-+	depends on I2C
-+	select INPUT_SPARSEKMAP
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called intel-wmi-sbl-fw-update.
++
++config INTEL_WMI_THUNDERBOLT
++	tristate "Intel WMI thunderbolt force power driver"
++	depends on ACPI_WMI
++	select INTEL_WMI
 +	help
-+	  This driver provides support for the Intel HID Event hotkey interface.
-+	  Some laptops require this driver for hotkey support.
++	  Say Y here if you want to be able to use the WMI interface on select
++	  systems to force the power control of Intel Thunderbolt controllers.
++	  This is useful for updating the firmware when devices are not plugged
++	  into the controller.
 +
 +	  To compile this driver as a module, choose M here: the module will
-+	  be called intel_hid.
-+
- config INTEL_BXTWC_PMIC_TMU
- 	tristate "Intel Broxton Whiskey Cove TMU Driver"
- 	depends on INTEL_SOC_PMIC_BXTWC
-diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 8ce9894e5efe..e63d03d86e20 100644
---- a/drivers/platform/x86/intel/Makefile
-+++ b/drivers/platform/x86/intel/Makefile
-@@ -13,6 +13,10 @@ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += speed_select_if/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
++	  be called intel-wmi-thunderbolt.
+diff --git a/drivers/platform/x86/intel/wmi/Makefile b/drivers/platform/x86/intel/wmi/Makefile
+index bf1f118b6839..c2d56d25dea0 100644
+--- a/drivers/platform/x86/intel/wmi/Makefile
++++ b/drivers/platform/x86/intel/wmi/Makefile
+@@ -5,3 +5,5 @@
  
-+# Intel input drivers
-+intel-hid-y				:= hid.o
-+obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
-+
- # Intel PMIC / PMC / P-Unit drivers
- intel_bxtwc_tmu-y			:= bxtwc_tmu.o
- obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel/hid.c
-similarity index 99%
-rename from drivers/platform/x86/intel-hid.c
-rename to drivers/platform/x86/intel/hid.c
-index 2e4e97a626a5..a33a5826e81a 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel/hid.c
-@@ -14,7 +14,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/suspend.h>
--#include "dual_accel_detect.h"
-+#include "../dual_accel_detect.h"
- 
- /* When NOT in tablet mode, VGBS returns with the flag 0x40 */
- #define TABLET_MODE_FLAG BIT(6)
+ intel-wmi-sbl-fw-update-y				:= sbl-fw-update.o
+ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
++intel-wmi-thunderbolt-y					:= thunderbolt.o
++obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+diff --git a/drivers/platform/x86/intel-wmi-thunderbolt.c b/drivers/platform/x86/intel/wmi/thunderbolt.c
+similarity index 100%
+rename from drivers/platform/x86/intel-wmi-thunderbolt.c
+rename to drivers/platform/x86/intel/wmi/thunderbolt.c
 -- 
 2.32.0
 
