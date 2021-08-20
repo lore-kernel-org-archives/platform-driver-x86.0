@@ -2,116 +2,152 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DAFC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14710C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B3860FE8
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC8E6103B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237509AbhHTLB3 (ORCPT
+        id S239217AbhHTLFm (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:01:29 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:37771 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236783AbhHTLB3 (ORCPT
+        Fri, 20 Aug 2021 07:05:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32882 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233437AbhHTLFm (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:01:29 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id DE69D320093C;
-        Fri, 20 Aug 2021 07:00:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 20 Aug 2021 07:00:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=dJKGL4
-        F0jfdJf4O3ZKguyRrO1H7CYdNtVqRZZ9k8DUQ=; b=Mz+uuVbdLmz4FDkB9GY3E5
-        9uEIMfyMi+8xNJx39oyV5IptyH7FPZ76nIfD2BOiRVmj+2anILJLGY/7ymMZsykx
-        M5Z3aSEYf5rzo+nlRAF05N1kz3/8D16e7z83EoYLohezgOdpNdicl+jBKdPxJICs
-        oePs8Osf2ys4IFUyWFkyZwA9dE4P1xUO1e4hdbRwVmFCP0H1qrB39VzAi2H+5Y8a
-        rYWtbbXBYcZI7ID0hB4JqwERgd3AqdNvwJXJbmElbq8ZpwkbU+9pVHwr36/35eeQ
-        tyLpcyzqxuscym1F0HGWL5Q641NzlbADxbprhfsBf25SehhmsAVIBd9+MLT+NM0g
-        ==
-X-ME-Sender: <xms:YYsfYZkRLLW0qwBEIiXGgPGmuDMdk9rkyqHeUSUNVvXhlZ4-K-HDgQ>
-    <xme:YYsfYU0Qleo1EALvJupVfMx6rdJMAVWeNnSPzkycW26J2oatZwxjSXq-NlUiO6RrY
-    yJJPkKldJD6bRei6Rg>
-X-ME-Received: <xmr:YYsfYfp2eZIF2tn4vnKRR0LAq-dZYKfYmn_kaW7pNXrPmuKHcp_U27f5A6fZKLbtj965tw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrleelgdeffecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhuffvkfgjfhfogggtsehttdertd
-    ertddvnecuhfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdgu
-    vghvqeenucggtffrrghtthgvrhhnpefgfeefudffhffgueehgeffffeggeevieefueethf
-    eijefftedugfeuveethedtteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:YYsfYZmw9z2jrM7Gsstg0JIXb6VUrfOdpRtC-AGqp0s1N-hzxJjtcA>
-    <xmx:YYsfYX1rb6KG6tBNlWZiMxJ-6gPlWoubTeMJgdMEIhok6touJgaRjw>
-    <xmx:YYsfYYuuJUJ3J1BU3AtDAac2-05jVglEGQX5tcKLzVG85ziByFHCrQ>
-    <xmx:YosfYQ_WEHwnP2xMYlywX4ix5Qdw9R5JPhqeeQGXHTCkBeUmkWqMQA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 20 Aug 2021 07:00:45 -0400 (EDT)
-Date:   Fri, 20 Aug 2021 23:00:30 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v4 1/1] asus-wmi: Add support for custom fan curves
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        platform-driver-x86@vger.kernel.org
-Message-Id: <U8X4YQ.79I8GZJ1LDW02@ljones.dev>
-In-Reply-To: <c19dfdde11754c234ca8a45c4af2187699498ee8.camel@hadess.net>
-References: <20210820095726.14131-1-luke@ljones.dev>
-        <20210820095726.14131-2-luke@ljones.dev>
-        <321afe1a293be3a623a9be53feea3a008e044b31.camel@hadess.net>
-        <L0W4YQ.ZVWQDLFJE8NR2@ljones.dev>
-        <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
-        <c19dfdde11754c234ca8a45c4af2187699498ee8.camel@hadess.net>
-X-Mailer: geary/40.0
+        Fri, 20 Aug 2021 07:05:42 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="197011200"
+X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
+   d="scan'208";a="197011200"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
+   d="scan'208";a="472272198"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2021 04:05:00 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id A661539B; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Dell.Client.Kernel@dell.com
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
+        David E Box <david.e.box@intel.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Jithu Joseph <jithu.joseph@intel.com>,
+        Maurice Ma <maurice.ma@intel.com>
+Subject: [PATCH v5 02/20] platform/x86: intel_bxtwc_tmu: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:40 +0300
+Message-Id: <20210820110458.73018-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
+References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+From: Kate Hsuan <hpa@redhat.com>
 
+Move Intel Broxton Whiskey Cove TMU driver to intel sub-directory
+to improve readability.
 
-On Fri, Aug 20 2021 at 12:51:08 +0200, Bastien Nocera 
-<hadess@hadess.net> wrote:
-> On Fri, 2021-08-20 at 12:43 +0200, Bastien Nocera wrote:
->>  On Fri, 2021-08-20 at 22:33 +1200, Luke Jones wrote:
->>  > > Am I going to get bug reports from Asus users that will complain
->>  > > that
->>  > > power-profiles-daemon doesn't work correctly, where I will have
->>  > > to
->>  > > wearily ask if they're using an Asus Rog laptop?
->>  >
->>  > No. Definitely not. The changes to fan curves per-profile need to
->>  > be
->>  > explicitly enabled and set. So a new user will be unaware that 
->> this
->>  > control exists (until they look for it) and their laptop will
->>  > behave
->>  > exactly as default.
->> 
->>  "The user will need to change the fan curves manually so will
->>  definitely remember to mention it in bug reports" is a very 
->> different
->>  thing to "the user can't change the fan curves to be nonsensical and
->>  mean opposite things".
->> 
->>  I can assure you that I will eventually get bug reports from "power
->>  users" who break their setup and wonder why things don't work
->>  properly,
->>  without ever mentioning the changes they made changes to the fan
->>  curves, or anything else they might have changed.
-> 
-> A way to taint the settings that power-profiles-daemon could catch
-> would be fine by me. I absolutely don't want to have to support
-> somebody's tweaks until they undo them.
+While at it, spell BXT fully in the Kconfig and switch to select REGMAP.
 
-Definitely understood. Do you have something in mind?
+Signed-off-by: Kate Hsuan <hpa@redhat.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/Kconfig                           | 10 ----------
+ drivers/platform/x86/Makefile                          |  1 -
+ drivers/platform/x86/intel/Kconfig                     | 10 ++++++++++
+ drivers/platform/x86/intel/Makefile                    |  4 ++++
+ .../x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c}       |  0
+ 5 files changed, 14 insertions(+), 11 deletions(-)
+ rename drivers/platform/x86/{intel_bxtwc_tmu.c => intel/bxtwc_tmu.c} (100%)
 
-> 
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 9868e26b37ed..084167d70f1b 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1159,16 +1159,6 @@ config INTEL_UNCORE_FREQ_CONTROL
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel-uncore-frequency.
+ 
+-config INTEL_BXTWC_PMIC_TMU
+-	tristate "Intel BXT Whiskey Cove TMU Driver"
+-	depends on REGMAP
+-	depends on MFD_INTEL_PMC_BXT
+-	depends on INTEL_SOC_PMIC_BXTWC
+-	help
+-	  Select this driver to use Intel BXT Whiskey Cove PMIC TMU feature.
+-	  This driver enables the alarm wakeup functionality in the TMU unit
+-	  of Whiskey Cove PMIC.
+-
+ config INTEL_CHTDC_TI_PWRBTN
+ 	tristate "Intel Cherry Trail Dollar Cove TI power button driver"
+ 	depends on INTEL_SOC_PMIC_CHTDC_TI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 03a1fc20bba5..bcdd75a48a80 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -127,7 +127,6 @@ obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
+ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+ 
+ # Intel PMIC / PMC / P-Unit devices
+-obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
+diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
+index 4dd1fd4450ad..46db129bee7f 100644
+--- a/drivers/platform/x86/intel/Kconfig
++++ b/drivers/platform/x86/intel/Kconfig
+@@ -21,4 +21,14 @@ source "drivers/platform/x86/intel/int33fe/Kconfig"
+ source "drivers/platform/x86/intel/int3472/Kconfig"
+ source "drivers/platform/x86/intel/pmt/Kconfig"
+ 
++config INTEL_BXTWC_PMIC_TMU
++	tristate "Intel Broxton Whiskey Cove TMU Driver"
++	depends on INTEL_SOC_PMIC_BXTWC
++	depends on MFD_INTEL_PMC_BXT
++	select REGMAP
++	help
++	  Select this driver to use Intel Broxton Whiskey Cove PMIC TMU feature.
++	  This driver enables the alarm wakeup functionality in the TMU unit of
++	  Whiskey Cove PMIC.
++
+ endif # X86_PLATFORM_DRIVERS_INTEL
+diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
+index dc6baf420808..dbdf4877ad10 100644
+--- a/drivers/platform/x86/intel/Makefile
++++ b/drivers/platform/x86/intel/Makefile
+@@ -8,3 +8,7 @@ obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
+ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
+ obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
+ obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
++
++# Intel PMIC / PMC / P-Unit drivers
++intel_bxtwc_tmu-y			:= bxtwc_tmu.o
++obj-$(CONFIG_INTEL_BXTWC_PMIC_TMU)	+= intel_bxtwc_tmu.o
+diff --git a/drivers/platform/x86/intel_bxtwc_tmu.c b/drivers/platform/x86/intel/bxtwc_tmu.c
+similarity index 100%
+rename from drivers/platform/x86/intel_bxtwc_tmu.c
+rename to drivers/platform/x86/intel/bxtwc_tmu.c
+-- 
+2.32.0
 
