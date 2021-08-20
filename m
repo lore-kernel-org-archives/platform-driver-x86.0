@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ADDC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421E8C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E86C16103B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD3F60FE8
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239585AbhHTLFx (ORCPT
+        id S239783AbhHTLF6 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:05:53 -0400
-Received: from mga02.intel.com ([134.134.136.20]:1505 "EHLO mga02.intel.com"
+        Fri, 20 Aug 2021 07:05:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:30934 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239496AbhHTLFs (ORCPT
+        id S239619AbhHTLFw (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:05:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="203951731"
+        Fri, 20 Aug 2021 07:05:52 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="214913367"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="203951731"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:09 -0700
+   d="scan'208";a="214913367"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="642096225"
+   d="scan'208";a="680060274"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2BD8A707; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
+        id D7632487; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 13/20] platform/x86: intel_speed_select_if: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:51 +0300
-Message-Id: <20210820110458.73018-14-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 07/20] platform/x86: pmc_atom: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:45 +0300
+Message-Id: <20210820110458.73018-8-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -61,126 +61,67 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Kate Hsuan <hpa@redhat.com>
+Move Intel Atom PMC driver to intel sub-directory to improve readability.
 
-Move Intel Speed Select interface driver to intel sub-directory to improve
-readability and rename it from intel_speed_select_if to speed_select_if.
-
-Signed-off-by: Kate Hsuan <hpa@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                                     | 2 +-
- drivers/platform/x86/Kconfig                                    | 2 --
- drivers/platform/x86/Makefile                                   | 1 -
- drivers/platform/x86/intel/Kconfig                              | 1 +
- drivers/platform/x86/intel/Makefile                             | 1 +
- .../{intel_speed_select_if => intel/speed_select_if}/Kconfig    | 0
- .../{intel_speed_select_if => intel/speed_select_if}/Makefile   | 0
- .../speed_select_if}/isst_if_common.c                           | 0
- .../speed_select_if}/isst_if_common.h                           | 0
- .../speed_select_if}/isst_if_mbox_msr.c                         | 0
- .../speed_select_if}/isst_if_mbox_pci.c                         | 0
- .../speed_select_if}/isst_if_mmio.c                             | 0
- 12 files changed, 3 insertions(+), 4 deletions(-)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Kconfig (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/Makefile (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_common.h (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_msr.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mbox_pci.c (100%)
- rename drivers/platform/x86/{intel_speed_select_if => intel/speed_select_if}/isst_if_mmio.c (100%)
+ drivers/platform/x86/Kconfig                | 5 -----
+ drivers/platform/x86/Makefile               | 1 -
+ drivers/platform/x86/intel/Kconfig          | 5 +++++
+ drivers/platform/x86/intel/Makefile         | 1 +
+ drivers/platform/x86/{ => intel}/pmc_atom.c | 0
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+ rename drivers/platform/x86/{ => intel}/pmc_atom.c (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5fe92c8e9214..cf29f7154889 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9538,7 +9538,7 @@ INTEL SPEED SELECT TECHNOLOGY
- M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/intel_speed_select_if/
-+F:	drivers/platform/x86/intel/speed_select_if/
- F:	include/uapi/linux/isst_if.h
- F:	tools/power/x86/intel-speed-select/
- 
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 138c44d08e93..55820fc60a63 100644
+index aed7570388ef..e6fb3eb70ee7 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1110,8 +1110,6 @@ config INTEL_IPS
- 	  functionality.  If in doubt, say Y here; it will only load on
- 	  supported platforms.
+@@ -1219,8 +1219,3 @@ config INTEL_TELEMETRY
+ 	  this interface for SoC state monitoring.
  
--source "drivers/platform/x86/intel_speed_select_if/Kconfig"
+ endif # X86_PLATFORM_DEVICES
 -
- config INTEL_SCU_IPC
- 	bool
- 
+-config PMC_ATOM
+-       def_bool y
+-       depends on PCI
+-       select COMMON_CLK
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index fe064b303732..1b1f4337a77f 100644
+index 1668f7360833..de7f45b8e4f6 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -120,7 +120,6 @@ obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
- 
- # Intel uncore drivers
- obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
--obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- 
- # Intel PMIC / PMC / P-Unit devices
- obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+@@ -135,4 +135,3 @@ obj-$(CONFIG_INTEL_SCU_IPC_UTIL)	+= intel_scu_ipcutil.o
+ obj-$(CONFIG_INTEL_TELEMETRY)		+= intel_telemetry_core.o \
+ 					   intel_telemetry_pltdrv.o \
+ 					   intel_telemetry_debugfs.o
+-obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 9c682e8c2972..0c044b31e822 100644
+index 7de11636904d..c4d74dff3a14 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -21,6 +21,7 @@ source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
- source "drivers/platform/x86/intel/pmc/Kconfig"
- source "drivers/platform/x86/intel/pmt/Kconfig"
-+source "drivers/platform/x86/intel/speed_select_if/Kconfig"
- source "drivers/platform/x86/intel/telemetry/Kconfig"
+@@ -60,4 +60,9 @@ config INTEL_PUNIT_IPC
+ 	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
+ 	  which is used to bridge the communications between kernel and P-Unit.
  
- config INTEL_BXTWC_PMIC_TMU
++config PMC_ATOM
++       def_bool y
++       depends on PCI
++       select COMMON_CLK
++
+ endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index b16c17b317dc..9858657f3f39 100644
+index a1555a1e421d..8595f8b92f40 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
- obj-$(CONFIG_INTEL_PMC_CORE)		+= pmc/
- obj-$(CONFIG_INTEL_PMT_CLASS)		+= pmt/
-+obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += speed_select_if/
- obj-$(CONFIG_INTEL_TELEMETRY)		+= telemetry/
- 
- # Intel PMIC / PMC / P-Unit drivers
-diff --git a/drivers/platform/x86/intel_speed_select_if/Kconfig b/drivers/platform/x86/intel/speed_select_if/Kconfig
+@@ -19,3 +19,4 @@ intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
+ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
+ intel_punit_ipc-y			:= punit_ipc.o
+ obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
++obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
+diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/intel/pmc_atom.c
 similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/Kconfig
-rename to drivers/platform/x86/intel/speed_select_if/Kconfig
-diff --git a/drivers/platform/x86/intel_speed_select_if/Makefile b/drivers/platform/x86/intel/speed_select_if/Makefile
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/Makefile
-rename to drivers/platform/x86/intel/speed_select_if/Makefile
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.c b/drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/isst_if_common.c
-rename to drivers/platform/x86/intel/speed_select_if/isst_if_common.c
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_common.h b/drivers/platform/x86/intel/speed_select_if/isst_if_common.h
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/isst_if_common.h
-rename to drivers/platform/x86/intel/speed_select_if/isst_if_common.h
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/isst_if_mbox_msr.c
-rename to drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/isst_if_mbox_pci.c
-rename to drivers/platform/x86/intel/speed_select_if/isst_if_mbox_pci.c
-diff --git a/drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c b/drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
-similarity index 100%
-rename from drivers/platform/x86/intel_speed_select_if/isst_if_mmio.c
-rename to drivers/platform/x86/intel/speed_select_if/isst_if_mmio.c
+rename from drivers/platform/x86/pmc_atom.c
+rename to drivers/platform/x86/intel/pmc_atom.c
 -- 
 2.32.0
 
