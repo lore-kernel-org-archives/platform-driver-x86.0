@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33360C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655FAC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E15D60FDC
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE3F60FDC
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239528AbhHTLFu (ORCPT
+        id S239786AbhHTLFw (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:05:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:15764 "EHLO mga01.intel.com"
+        Fri, 20 Aug 2021 07:05:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:15568 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239601AbhHTLFs (ORCPT
+        id S239549AbhHTLFs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
         Fri, 20 Aug 2021 07:05:48 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238881733"
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="203900787"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="238881733"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:09 -0700
+   d="scan'208";a="203900787"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:09 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="532953486"
+   d="scan'208";a="506440632"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
+  by orsmga001.jf.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 061DC647; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
+        id 1FF776D5; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 10/20] platform/x86: intel-smartconnect: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:48 +0300
-Message-Id: <20210820110458.73018-11-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 12/20] platform/x86: intel-uncore-frequency: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:50 +0300
+Message-Id: <20210820110458.73018-13-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -63,95 +63,105 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel Smart Connect driver to intel sub-directory to improve readability
-and rename it from intel-smartconnect.c to smartconnect.c.
+Move Intel Uncore frequency driver to intel sub-directory to improve
+readability and rename it from intel-uncore-frequency.c to
+uncore-frequency.c.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/Kconfig                       | 14 --------------
- drivers/platform/x86/Makefile                      |  1 -
- drivers/platform/x86/intel/Kconfig                 | 14 ++++++++++++++
- drivers/platform/x86/intel/Makefile                |  2 ++
- .../{intel-smartconnect.c => intel/smartconnect.c} |  0
- 5 files changed, 16 insertions(+), 15 deletions(-)
- rename drivers/platform/x86/{intel-smartconnect.c => intel/smartconnect.c} (100%)
+ MAINTAINERS                                          |  2 +-
+ drivers/platform/x86/Kconfig                         | 11 -----------
+ drivers/platform/x86/Makefile                        |  1 -
+ drivers/platform/x86/intel/Kconfig                   | 12 ++++++++++++
+ drivers/platform/x86/intel/Makefile                  |  2 ++
+ .../uncore-frequency.c}                              |  0
+ 6 files changed, 15 insertions(+), 13 deletions(-)
+ rename drivers/platform/x86/{intel-uncore-frequency.c => intel/uncore-frequency.c} (100%)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bb0fcf309cc8..5fe92c8e9214 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9565,7 +9565,7 @@ INTEL UNCORE FREQUENCY CONTROL
+ M:	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+ L:	platform-driver-x86@vger.kernel.org
+ S:	Maintained
+-F:	drivers/platform/x86/intel-uncore-frequency.c
++F:	drivers/platform/x86/intel/uncore-frequency.c
+ 
+ INTEL VIRTUAL BUTTON DRIVER
+ M:	AceLan Kao <acelan.kao@canonical.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 5d5c4046deb6..709f990243b6 100644
+index 0c645fcb09c5..138c44d08e93 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -1110,20 +1110,6 @@ config INTEL_IPS
- 	  functionality.  If in doubt, say Y here; it will only load on
- 	  supported platforms.
+@@ -1112,17 +1112,6 @@ config INTEL_IPS
  
--config INTEL_SMARTCONNECT
--        tristate "Intel Smart Connect disabling driver"
--	depends on ACPI
--	help
--	  Intel Smart Connect is a technology intended to permit devices to
--	  update state by resuming for a short period of time at regular
--	  intervals. If a user enables this functionality under Windows and
--	  then reboots into Linux, the system may remain configured to resume
--	  on suspend. In the absence of any userspace to support it, the system
--	  will then remain awake until something triggers another suspend.
--
--	  This driver checks to determine whether the device has Intel Smart
--	  Connect enabled, and if so disables it.
--
  source "drivers/platform/x86/intel_speed_select_if/Kconfig"
  
- config INTEL_TURBO_MAX_3
+-config INTEL_UNCORE_FREQ_CONTROL
+-	tristate "Intel Uncore frequency control driver"
+-	depends on X86_64
+-	help
+-	  This driver allows control of uncore frequency limits on
+-	  supported server platforms.
+-	  Uncore frequency controls RING/LLC (last-level cache) clocks.
+-
+-	  To compile this driver as a module, choose M here: the module
+-	  will be called intel-uncore-frequency.
+-
+ config INTEL_SCU_IPC
+ 	bool
+ 
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index dd07f40a5927..c0d367455c7a 100644
+index 531cdac793d8..fe064b303732 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -120,7 +120,6 @@ obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
- 
+@@ -121,7 +121,6 @@ obj-$(CONFIG_WIRELESS_HOTKEY)		+= wireless-hotkey.o
  # Intel uncore drivers
  obj-$(CONFIG_INTEL_IPS)				+= intel_ips.o
--obj-$(CONFIG_INTEL_SMARTCONNECT)		+= intel-smartconnect.o
  obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE)	+= intel_speed_select_if/
- obj-$(CONFIG_INTEL_TURBO_MAX_3)			+= intel_turbo_max_3.o
- obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+-obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
+ 
+ # Intel PMIC / PMC / P-Unit devices
+ obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index e4faa7db6b62..39494a8b6a05 100644
+index ccaaf93717bd..9c682e8c2972 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -78,4 +78,18 @@ config INTEL_RST
- 	  firmware will copy the memory contents back to RAM and resume the OS
- 	  as usual.
+@@ -103,4 +103,16 @@ config INTEL_TURBO_MAX_3
+ 	  This driver is only required when the system is not using Hardware
+ 	  P-States (HWP). In HWP mode, priority can be read from ACPI tables.
  
-+config INTEL_SMARTCONNECT
-+	tristate "Intel Smart Connect disabling driver"
-+	depends on ACPI
++config INTEL_UNCORE_FREQ_CONTROL
++	tristate "Intel Uncore frequency control driver"
++	depends on X86_64
 +	help
-+	  Intel Smart Connect is a technology intended to permit devices to
-+	  update state by resuming for a short period of time at regular
-+	  intervals. If a user enables this functionality under Windows and
-+	  then reboots into Linux, the system may remain configured to resume
-+	  on suspend. In the absence of any userspace to support it, the system
-+	  will then remain awake until something triggers another suspend.
++	  This driver allows control of Uncore frequency limits on
++	  supported server platforms.
 +
-+	  This driver checks to determine whether the device has Intel Smart
-+	  Connect enabled, and if so disables it.
++	  Uncore frequency controls RING/LLC (last-level cache) clocks.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called intel-uncore-frequency.
 +
  endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 76afe3ca66b8..a62f593b90fa 100644
+index ffeeecd513d8..b16c17b317dc 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -25,3 +25,5 @@ obj-$(CONFIG_PMC_ATOM)			+= pmc_atom.o
- # Intel Uncore drivers
- intel-rst-y				:= rst.o
- obj-$(CONFIG_INTEL_RST)			+= intel-rst.o
-+intel-smartconnect-y			:= smartconnect.o
-+obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
-diff --git a/drivers/platform/x86/intel-smartconnect.c b/drivers/platform/x86/intel/smartconnect.c
+@@ -29,3 +29,5 @@ intel-smartconnect-y			:= smartconnect.o
+ obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+ intel_turbo_max_3-y			:= turbo_max_3.o
+ obj-$(CONFIG_INTEL_TURBO_MAX_3)		+= intel_turbo_max_3.o
++intel-uncore-frequency-y		:= uncore-frequency.o
++obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency.o
+diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel/uncore-frequency.c
 similarity index 100%
-rename from drivers/platform/x86/intel-smartconnect.c
-rename to drivers/platform/x86/intel/smartconnect.c
+rename from drivers/platform/x86/intel-uncore-frequency.c
+rename to drivers/platform/x86/intel/uncore-frequency.c
 -- 
 2.32.0
 
