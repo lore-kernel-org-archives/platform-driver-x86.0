@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CBC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14402C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9186113E
+	by mail.kernel.org (Postfix) with ESMTP id 0170B60FE8
 	for <platform-driver-x86@archiver.kernel.org>; Fri, 20 Aug 2021 11:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239196AbhHTLFs (ORCPT
+        id S239508AbhHTLFt (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 20 Aug 2021 07:05:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:15764 "EHLO mga01.intel.com"
+        Fri, 20 Aug 2021 07:05:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1505 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239539AbhHTLFr (ORCPT
+        id S239533AbhHTLFs (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 20 Aug 2021 07:05:47 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="238881730"
+        Fri, 20 Aug 2021 07:05:48 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10081"; a="203951728"
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="238881730"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:09 -0700
+   d="scan'208";a="203951728"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2021 04:05:08 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,337,1620716400"; 
-   d="scan'208";a="523530304"
+   d="scan'208";a="642096221"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Aug 2021 04:05:05 -0700
+  by orsmga005.jf.intel.com with ESMTP; 20 Aug 2021 04:05:04 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3854A924; Fri, 20 Aug 2021 14:05:01 +0300 (EEST)
+        id C42B53C5; Fri, 20 Aug 2021 14:05:00 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mark Gross <mgross@linux.intel.com>,
         AceLan Kao <acelan.kao@canonical.com>,
         Jithu Joseph <jithu.joseph@intel.com>,
         Maurice Ma <maurice.ma@intel.com>
-Subject: [PATCH v5 14/20] platform/x86: intel_atomisp2: Move to intel sub-directory
-Date:   Fri, 20 Aug 2021 14:04:52 +0300
-Message-Id: <20210820110458.73018-15-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v5 05/20] platform/x86: intel_punit_ipc: Move to intel sub-directory
+Date:   Fri, 20 Aug 2021 14:04:43 +0300
+Message-Id: <20210820110458.73018-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
 References: <20210820110458.73018-1-andriy.shevchenko@linux.intel.com>
@@ -63,202 +63,92 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Kate Hsuan <hpa@redhat.com>
 
-Move Intel AtomISP v2 drivers to intel sub-directory
-to improve readability.
+Move Intel P-Unit IPC driver to intel sub-directory to improve readability.
 
 Signed-off-by: Kate Hsuan <hpa@redhat.com>
 Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS                                   |  4 +-
- drivers/platform/x86/Kconfig                  | 34 ---------------
- drivers/platform/x86/Makefile                 |  2 -
- drivers/platform/x86/intel/Kconfig            |  1 +
- drivers/platform/x86/intel/Makefile           |  1 +
- drivers/platform/x86/intel/atomisp2/Kconfig   | 43 +++++++++++++++++++
- drivers/platform/x86/intel/atomisp2/Makefile  |  9 ++++
- .../atomisp2/led.c}                           |  0
- .../atomisp2/pm.c}                            |  0
- 9 files changed, 56 insertions(+), 38 deletions(-)
- create mode 100644 drivers/platform/x86/intel/atomisp2/Kconfig
- create mode 100644 drivers/platform/x86/intel/atomisp2/Makefile
- rename drivers/platform/x86/{intel_atomisp2_led.c => intel/atomisp2/led.c} (100%)
- rename drivers/platform/x86/{intel_atomisp2_pm.c => intel/atomisp2/pm.c} (100%)
+ MAINTAINERS                                                 | 2 +-
+ drivers/platform/x86/Kconfig                                | 6 ------
+ drivers/platform/x86/Makefile                               | 1 -
+ drivers/platform/x86/intel/Kconfig                          | 6 ++++++
+ drivers/platform/x86/intel/Makefile                         | 2 ++
+ .../platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c}   | 0
+ 6 files changed, 9 insertions(+), 8 deletions(-)
+ rename drivers/platform/x86/{intel_punit_ipc.c => intel/punit_ipc.c} (100%)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index cf29f7154889..429b8b5c5283 100644
+index b731988a4452..21813a0e00eb 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -9212,13 +9212,13 @@ INTEL ATOMISP2 DUMMY / POWER-MANAGEMENT DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
+@@ -9475,7 +9475,7 @@ M:	Zha Qipeng <qipeng.zha@intel.com>
  L:	platform-driver-x86@vger.kernel.org
  S:	Maintained
--F:	drivers/platform/x86/intel_atomisp2_pm.c
-+F:	drivers/platform/x86/intel/atomisp2/pm.c
+ F:	arch/x86/include/asm/intel_punit_ipc.h
+-F:	drivers/platform/x86/intel_punit_ipc.c
++F:	drivers/platform/x86/intel/punit_ipc.c
  
- INTEL ATOMISP2 LED DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/intel_atomisp2_led.c
-+F:	drivers/platform/x86/intel/atomisp2/led.c
- 
- INTEL BIOS SAR INT1092 DRIVER
- M:	Shravan S <s.shravan@intel.com>
+ INTEL PMC CORE DRIVER
+ M:	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
 diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 55820fc60a63..81eaa00983bd 100644
+index 2d6723bb6459..9cadce7908ea 100644
 --- a/drivers/platform/x86/Kconfig
 +++ b/drivers/platform/x86/Kconfig
-@@ -668,40 +668,6 @@ config THINKPAD_LMI
+@@ -1180,12 +1180,6 @@ config INTEL_PMC_CORE
+ 		- Low Power Mode registers (Tigerlake and beyond)
+ 		- PMC quirks as needed to enable SLPS0/S0ix
  
- source "drivers/platform/x86/intel/Kconfig"
+-config INTEL_PUNIT_IPC
+-	tristate "Intel P-Unit IPC Driver"
+-	help
+-	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
+-	  which is used to bridge the communications between kernel and P-Unit.
+-
+ config INTEL_SCU_IPC
+ 	bool
  
--config INTEL_ATOMISP2_LED
--	tristate "Intel AtomISP2 camera LED driver"
--	depends on GPIOLIB && LEDS_GPIO
--	help
--	  Many Bay Trail and Cherry Trail devices come with a camera attached
--	  to Intel's Image Signal Processor. Linux currently does not have a
--	  driver for these, so they do not work as a camera. Some of these
--	  camera's have a LED which is controlled through a GPIO.
--
--	  Some of these devices have a firmware issue where the LED gets turned
--	  on at boot. This driver will turn the LED off at boot and also allows
--	  controlling the LED (repurposing it) through the sysfs LED interface.
--
--	  Which GPIO is attached to the LED is usually not described in the
--	  ACPI tables, so this driver contains per-system info about the GPIO
--	  inside the driver, this means that this driver only works on systems
--	  the driver knows about.
--
--	  To compile this driver as a module, choose M here: the module
--	  will be called intel_atomisp2_led.
--
--config INTEL_ATOMISP2_PM
--	tristate "Intel AtomISP2 dummy / power-management driver"
--	depends on PCI && IOSF_MBI && PM
--	depends on !INTEL_ATOMISP
--	help
--	  Power-management driver for Intel's Image Signal Processor found on
--	  Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
--	  is to turn the ISP off (put it in D3) to save power and to allow
--	  entering of S0ix modes.
--
--	  To compile this driver as a module, choose M here: the module
--	  will be called intel_atomisp2_pm.
--
- config INTEL_HID_EVENT
- 	tristate "INTEL HID Event"
- 	depends on ACPI
 diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 1b1f4337a77f..6c682114e4fe 100644
+index f70c0aa30cdd..776370ce8fbb 100644
 --- a/drivers/platform/x86/Makefile
 +++ b/drivers/platform/x86/Makefile
-@@ -71,8 +71,6 @@ obj-$(CONFIG_THINKPAD_LMI)	+= think-lmi.o
- # Intel
- obj-$(CONFIG_X86_PLATFORM_DRIVERS_INTEL)		+= intel/
+@@ -128,7 +128,6 @@ obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)		+= intel-uncore-frequency.o
  
--obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
--obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
- obj-$(CONFIG_INTEL_HID_EVENT)		+= intel-hid.o
- obj-$(CONFIG_INTEL_INT0002_VGPIO)	+= intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_OAKTRAIL)		+= intel_oaktrail.o
+ # Intel PMIC / PMC / P-Unit devices
+ obj-$(CONFIG_INTEL_PMC_CORE)		+= intel_pmc_core.o intel_pmc_core_pltdrv.o
+-obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
+ obj-$(CONFIG_INTEL_SCU_IPC)		+= intel_scu_ipc.o
+ obj-$(CONFIG_INTEL_SCU_PCI)		+= intel_scu_pcidrv.o
+ obj-$(CONFIG_INTEL_SCU_PLATFORM)	+= intel_scu_pltdrv.o
 diff --git a/drivers/platform/x86/intel/Kconfig b/drivers/platform/x86/intel/Kconfig
-index 0c044b31e822..e8e1bad38113 100644
+index 9e719db8450c..c4ceb5ee83f3 100644
 --- a/drivers/platform/x86/intel/Kconfig
 +++ b/drivers/platform/x86/intel/Kconfig
-@@ -16,6 +16,7 @@ menuconfig X86_PLATFORM_DRIVERS_INTEL
+@@ -53,4 +53,10 @@ config INTEL_MRFLD_PWRBTN
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called intel_mrfld_pwrbtn.
  
- if X86_PLATFORM_DRIVERS_INTEL
- 
-+source "drivers/platform/x86/intel/atomisp2/Kconfig"
- source "drivers/platform/x86/intel/int1092/Kconfig"
- source "drivers/platform/x86/intel/int33fe/Kconfig"
- source "drivers/platform/x86/intel/int3472/Kconfig"
++config INTEL_PUNIT_IPC
++	tristate "Intel P-Unit IPC Driver"
++	help
++	  This driver provides support for Intel P-Unit Mailbox IPC mechanism,
++	  which is used to bridge the communications between kernel and P-Unit.
++
+ endif # X86_PLATFORM_DRIVERS_INTEL
 diff --git a/drivers/platform/x86/intel/Makefile b/drivers/platform/x86/intel/Makefile
-index 9858657f3f39..8ce9894e5efe 100644
+index 4ff755a11770..58fc8e7a3b62 100644
 --- a/drivers/platform/x86/intel/Makefile
 +++ b/drivers/platform/x86/intel/Makefile
-@@ -4,6 +4,7 @@
- # Intel x86 Platform-Specific Drivers
- #
- 
-+obj-$(CONFIG_INTEL_ATOMISP2_PDX86)	+= atomisp2/
- obj-$(CONFIG_INTEL_SAR_INT1092)		+= int1092/
- obj-$(CONFIG_INTEL_CHT_INT33FE)		+= int33fe/
- obj-$(CONFIG_INTEL_SKL_INT3472)		+= int3472/
-diff --git a/drivers/platform/x86/intel/atomisp2/Kconfig b/drivers/platform/x86/intel/atomisp2/Kconfig
-new file mode 100644
-index 000000000000..35dd2be9d2a1
---- /dev/null
-+++ b/drivers/platform/x86/intel/atomisp2/Kconfig
-@@ -0,0 +1,43 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+config INTEL_ATOMISP2_PDX86
-+	bool
-+
-+config INTEL_ATOMISP2_LED
-+	tristate "Intel AtomISP v2 camera LED driver"
-+	depends on GPIOLIB && LEDS_GPIO
-+	select INTEL_ATOMISP2_PDX86
-+	help
-+	  Many Bay Trail and Cherry Trail devices come with a camera attached
-+	  to Intel's Image Signal Processor. Linux currently does not have a
-+	  driver for these, so they do not work as a camera. Some of these
-+	  camera's have a LED which is controlled through a GPIO.
-+
-+	  Some of these devices have a firmware issue where the LED gets turned
-+	  on at boot. This driver will turn the LED off at boot and also allows
-+	  controlling the LED (repurposing it) through the sysfs LED interface.
-+
-+	  Which GPIO is attached to the LED is usually not described in the
-+	  ACPI tables, so this driver contains per-system info about the GPIO
-+	  inside the driver, this means that this driver only works on systems
-+	  the driver knows about.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_atomisp2_led.
-+
-+config INTEL_ATOMISP2_PM
-+	tristate "Intel AtomISP v2 dummy / power-management driver"
-+	depends on PCI && IOSF_MBI && PM
-+	depends on !INTEL_ATOMISP
-+	select INTEL_ATOMISP2_PDX86
-+	help
-+	  Power-management driver for Intel's Image Signal Processor found on
-+	  Bay Trail and Cherry Trail devices. This dummy driver's sole purpose
-+	  is to turn the ISP off (put it in D3) to save power and to allow
-+	  entering of S0ix modes.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel_atomisp2_pm.
-diff --git a/drivers/platform/x86/intel/atomisp2/Makefile b/drivers/platform/x86/intel/atomisp2/Makefile
-new file mode 100644
-index 000000000000..96b1e877d1f1
---- /dev/null
-+++ b/drivers/platform/x86/intel/atomisp2/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# Intel x86 Platform Specific Drivers
-+#
-+
-+intel_atomisp2_led-y			:= led.o
-+obj-$(CONFIG_INTEL_ATOMISP2_LED)	+= intel_atomisp2_led.o
-+intel_atomisp2_pm-y			+= pm.o
-+obj-$(CONFIG_INTEL_ATOMISP2_PM)		+= intel_atomisp2_pm.o
-diff --git a/drivers/platform/x86/intel_atomisp2_led.c b/drivers/platform/x86/intel/atomisp2/led.c
+@@ -16,3 +16,5 @@ intel_chtdc_ti_pwrbtn-y			:= chtdc_ti_pwrbtn.o
+ obj-$(CONFIG_INTEL_CHTDC_TI_PWRBTN)	+= intel_chtdc_ti_pwrbtn.o
+ intel_mrfld_pwrbtn-y			:= mrfld_pwrbtn.o
+ obj-$(CONFIG_INTEL_MRFLD_PWRBTN)	+= intel_mrfld_pwrbtn.o
++intel_punit_ipc-y			:= punit_ipc.o
++obj-$(CONFIG_INTEL_PUNIT_IPC)		+= intel_punit_ipc.o
+diff --git a/drivers/platform/x86/intel_punit_ipc.c b/drivers/platform/x86/intel/punit_ipc.c
 similarity index 100%
-rename from drivers/platform/x86/intel_atomisp2_led.c
-rename to drivers/platform/x86/intel/atomisp2/led.c
-diff --git a/drivers/platform/x86/intel_atomisp2_pm.c b/drivers/platform/x86/intel/atomisp2/pm.c
-similarity index 100%
-rename from drivers/platform/x86/intel_atomisp2_pm.c
-rename to drivers/platform/x86/intel/atomisp2/pm.c
+rename from drivers/platform/x86/intel_punit_ipc.c
+rename to drivers/platform/x86/intel/punit_ipc.c
 -- 
 2.32.0
 
