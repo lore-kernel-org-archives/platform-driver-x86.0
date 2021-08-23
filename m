@@ -2,117 +2,237 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01148C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 14:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD54C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA5EC613B1
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 14:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62BA361371
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 16:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbhHWORK (ORCPT
+        id S229674AbhHWQl1 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 10:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229909AbhHWORF (ORCPT
+        Mon, 23 Aug 2021 12:41:27 -0400
+Received: from mail-0201.mail-europe.com ([51.77.79.158]:35820 "EHLO
+        mail-0201.mail-europe.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229632AbhHWQl1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 10:17:05 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5323C061757;
-        Mon, 23 Aug 2021 07:16:21 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f07d900e826476efa1e0ef3.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:d900:e826:476e:fa1e:ef3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E7C151EC01DF;
-        Mon, 23 Aug 2021 16:16:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1629728176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gKD+/8Qbv6yv6nIGV7iJbsxCYPsTuanF1BGer6VcD3Q=;
-        b=fl2Qa5G0kimY8dlcx57nwjuUVsOyw/YTDGgTJJIaA2N0r2c9wtb47MYkDSQbAUPKdcccji
-        exXZ8QJN7O52aXOlT0T1CVQQE8Da6aBbgEZZ2YOE263xSzLuAcAFM7fQ+bCZmZl9FGXEjh
-        HzbE1JM09KsuZt4AnEG95Z4di2Vt2ws=
-Date:   Mon, 23 Aug 2021 16:16:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 11/38] x86/compressed: Add helper for validating
- pages in the decompression stage
-Message-ID: <YSOt01Qk9KOsTVj/@zn.tnic>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-12-brijesh.singh@amd.com>
+        Mon, 23 Aug 2021 12:41:27 -0400
+Date:   Mon, 23 Aug 2021 16:40:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail; t=1629736810;
+        bh=F3EF5WxojsooUUF0sHpA+KrD9wrIyMIIOAHopVh5mGw=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+        b=MvaEuVPN5mJ43lA/0fk3e1WUDGAgA4O04eOaQ9bN0GNpmsby1oBDOyxv/3biSuao4
+         9PpaCain+HopNO03YwLeWPRKuGyJgXn27Q1Zns0vBDlVTvKFAUUEGUGW9mwj//Lqfu
+         Q5uttXgTwkJMBzRthAg9mcfm6caZ7RIcEyNm6Q0A=
+To:     Enver Balalic <balalic.enver@gmail.com>
+From:   =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Cc:     hdegoede@redhat.com, mgross@linux.intel.com, jdelvare@suse.com,
+        linux@roeck-us.net, platform-driver-x86@vger.kernel.org
+Reply-To: =?utf-8?Q?Barnab=C3=A1s_P=C5=91cze?= <pobrn@protonmail.com>
+Subject: Re: [PATCH v2] platform/x86: hp-wmi: add support for omen laptops
+Message-ID: <hAisOfmIeiaMvSxmFY6D-GL2f-Fo94dNFcQj5bl4j0Lj08YDiTXMzfOHErbNqkGJ_2vrdadsbcv27qIB-YMliEfqs3H7QAzrpEdQZ0rLc0o=@protonmail.com>
+In-Reply-To: <20210823141521.2gxhsoqx7brrovfl@omen.localdomain>
+References: <20210823141521.2gxhsoqx7brrovfl@omen.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210820151933.22401-12-brijesh.singh@amd.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 10:19:06AM -0500, Brijesh Singh wrote:
-> diff --git a/arch/x86/include/asm/sev-common.h b/arch/x86/include/asm/sev-common.h
-> index d426c30ae7b4..1cd8ce838af8 100644
-> --- a/arch/x86/include/asm/sev-common.h
-> +++ b/arch/x86/include/asm/sev-common.h
-> @@ -57,6 +57,26 @@
->  #define GHCB_MSR_AP_RESET_HOLD_REQ	0x006
->  #define GHCB_MSR_AP_RESET_HOLD_RESP	0x007
->  
-> +/* SNP Page State Change */
+Hi
 
-Let's make it very clear here that those cmd numbers below are actually
-part of the protocol and not randomly chosen:
 
-/*
- * ...
- *
- * 0x014 – SNP Page State Change Request
- *
- * GHCBData[55:52] – Page operation:
- *   0x0001 – Page assignment, Private
- *   0x0002 – Page assignment, Shared
- */
+2021. augusztus 23., h=C3=A9tf=C5=91 16:15 keltez=C3=A9ssel, Enver Balalic =
+=C3=ADrta:
+> This patch adds support for HP Omen laptops.
+> It adds support for most things that can be controlled via the
+> Windows Omen Command Center application.
+>
+>  - Fan speed monitoring through hwmon
+>  - Platform Profile support (cool, balanced, performance)
+>  - Max fan speed function toggle
+>
+> Also exposes the existing HDD temperature through hwmon since
+> this driver didn't use hwmon before this patch.
+>
+> This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
+>
+>  - V1
+>    Initial Patch
+>  - V2
+>    Use standard hwmon ABI attributes
+>    Add existing non-standard "hddtemp" to hwmon
+>
+> Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
+> ---
+>  drivers/platform/x86/Kconfig  |   1 +
+>  drivers/platform/x86/hp-wmi.c | 302 ++++++++++++++++++++++++++++++++--
+>  2 files changed, 292 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index d12db6c316ea..f0b3d94e182b 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -431,6 +431,7 @@ config HP_WMI
+>  =09tristate "HP WMI extras"
+>  =09depends on ACPI_WMI
+>  =09depends on INPUT
+> +=09depends on HWMON
+>  =09depends on RFKILL || RFKILL =3D n
+>  =09select INPUT_SPARSEKMAP
+>  =09select ACPI_PLATFORM_PROFILE
+> diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.=
+c
+> index 027a1467d009..20cf8a32e76e 100644
+> --- a/drivers/platform/x86/hp-wmi.c
+> +++ b/drivers/platform/x86/hp-wmi.c
+> @@ -22,6 +22,7 @@
+> [...]
+>  enum hp_wmi_command {
+>  =09HPWMI_READ=09=3D 0x01,
+>  =09HPWMI_WRITE=09=3D 0x02,
+>  =09HPWMI_ODM=09=3D 0x03,
+> +=09HPWMI_GM    =3D 0x20008,
+                ^^^^
+The other command values are aligned using a single tab.
 
-> +enum psc_op {
-> +	SNP_PAGE_STATE_PRIVATE = 1,
-> +	SNP_PAGE_STATE_SHARED,
-> +};
+
+>  };
+> [...]
+> +static int hp_wmi_get_fan_speed(int fan)
+> +{
+> +=09int fsh, fsl, fan_speed;
+> +=09char fan_data[4] =3D { fan, 0, 0, 0 };
 > +
+> +=09int ret =3D hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
+> +=09=09=09=09       &fan_data, sizeof(fan_data),
+> +=09=09=09=09       sizeof(fan_data));
+> +
+> +=09if (ret !=3D 0)
+> +=09=09return -EINVAL;
+> +
+> +=09fsh =3D fan_data[2];
+> +=09fsl =3D fan_data[3];
+> +
+> +=09// sometimes one of these can be negative
 
--- 
-Regards/Gruss,
-    Boris.
+If the speed is e.g. 1279 RPM, that's 0x04FF, which will be 4 and -1 if you=
+ interpret
+the bytes as a signed values on x86. Isn't this what's happening here? Or i=
+s the
+reason known?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+> +=09fan_speed =3D ((fsh > 0 ? fsh : 0) << 8) | (fsl > 0 ? fsl : 0);
+> +
+> +=09return fan_speed;
+> +}
+> [...]
+> +static int omen_thermal_profile_set(int mode)
+> +{
+> +=09char buffer[2] =3D {0, mode};
+> +=09int ret;
+> +
+> +=09if (mode < 0 || mode > 2)
+> +=09=09return -EINVAL;
+> +
+> +=09ret =3D hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
+> +=09=09=09=09   &buffer, sizeof(buffer), sizeof(buffer));
+> +
+> +=09if (ret)
+> +=09=09return ret < 0 ? ret : -EINVAL;
+
+I think something like EIO would be more appropriate than EINVAL.
+(In other functions, too.)
+
+
+> +
+> +=09return mode;
+> +}
+> [...]
+> +static int omen_thermal_profile_get(void)
+
+I would put this function next to `omen_thermal_profile_set`.
+
+
+> +{
+> +=09u8 data;
+> +
+> +=09int ret =3D ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
+> +
+> +=09if (ret)
+> +=09=09return ret;
+> +
+> +=09return data;
+> +}
+> [...]
+> +static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types=
+ type,
+> +=09=09=09u32 attr, int channel, long *val)
+> +{
+> +=09switch (type) {
+> +=09case hwmon_temp:
+> +=09=09return hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
+> +=09case hwmon_fan:
+> +=09=09int ret =3D hp_wmi_get_fan_speed(channel);
+> +
+> +=09=09if (ret < 0)
+> +=09=09=09return -EINVAL;
+> +=09=09*val =3D ret;
+> +=09=09return 0;
+> +=09case hwmon_pwm:
+> +=09=09return hp_wmi_fan_speed_max_get();
+
+Shouldn't this "mapped back"? 1 -> 0, 0 -> 2?
+
+
+> +=09default:
+> +=09=09return -EINVAL;
+> +=09};
+         ^
+This semicolon is not needed.
+
+
+> +}
+> +
+> +static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_type=
+s type,
+> +=09=09=09u32 attr, int channel, long val)
+> +{
+> +=09switch (type) {
+> +=09case hwmon_pwm:
+> +=09=09switch (val) {
+> +=09=09case 0:
+> +=09=09=09// 1 is no fan speed control(automatic), which is 1 for us
+                                                   ^^
+Small thing, but I'd put a space there.
+
+
+> +=09=09=09return hp_wmi_fan_speed_max_set(1);
+> +=09=09case 2:
+> +=09=09=09// 2 is automatic speed control, which is 0 for us
+> +=09=09=09return hp_wmi_fan_speed_max_set(0);
+> +=09=09default:
+> +=09=09=09// we don't support manual fan speed control
+> +=09=09=09return -EOPNOTSUPP;
+
+/* this type of comments is preferred */
+
+
+> +=09=09}
+> +=09default:
+> +=09=09return -EOPNOTSUPP;
+> +=09}
+> +}
+> [...]
+
+
+Best regards,
+Barnab=C3=A1s P=C5=91cze
