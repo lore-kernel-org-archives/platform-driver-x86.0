@@ -2,130 +2,181 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AE7C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 10:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCD0C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 11:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF23061373
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 10:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542306120C
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 11:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236219AbhHWK3K (ORCPT
+        id S235953AbhHWL1q (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 06:29:10 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:37149 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236096AbhHWK3F (ORCPT
+        Mon, 23 Aug 2021 07:27:46 -0400
+Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:50557 "EHLO
+        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234997AbhHWL1p (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 06:29:05 -0400
-Received: (Authenticated sender: hadess@hadess.net)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C5E40240006;
-        Mon, 23 Aug 2021 10:28:21 +0000 (UTC)
-Message-ID: <7a8a8d56c4e6addfc41b5dd5262968bd169f538f.camel@hadess.net>
+        Mon, 23 Aug 2021 07:27:45 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id ADA563200922;
+        Mon, 23 Aug 2021 07:27:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 23 Aug 2021 07:27:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=t1veiu
+        KjOsnBwnABF/fE0dElfCh4AAyj7JifPOqt5cM=; b=llC1UQ6PIUA57O5DmEdXyS
+        1DDESElQ9d4iLmD47z02fv2hq2uEDK0X/LtwF6krtWOq+1ZLCtNTb30asv/zJMoP
+        H7qck0wrM0Xyjdgv6kKxhV+cKgR0DzX1yI2oMv/JOEpeFIRFkzX08/xfR+m+diPE
+        0OHIGUWMHcDGlM7mp8lIYC4b3IJbHMn6Hju+PEa4FXRVB0+nj7RA7gLmateEwp/2
+        V9AxOFo6qiPfmy1yp5+beAPM/mwtJBAme9H2iJfQcbPIQbzkvVpKCBGsfnlmunvZ
+        CFfoLfCD3I4RRI3ZWysL2IYYP08ajv2pXgr326qgZ4ggC6EAOXikOythTbp0BxHQ
+        ==
+X-ME-Sender: <xms:BYYjYacOAG-ExEKJEAjYsrOfKrY0-Uoi1CRHAaYgtRzo7Itw6uW29g>
+    <xme:BYYjYUNjGuzxvghgt5MnsEBCNSqeZawgWrH9rewM0sW8rhpUcO1Ootfi5ybiWQI2r
+    yBd5lxJQq9jKvNGnSM>
+X-ME-Received: <xmr:BYYjYbjNjs_Lia0aF4ZgF16P5r9u8BiryvHaFEl4DA3r-cqUXsxctsdJZK3O8-zsQNSbbQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddthedggedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffuvffkjghfofggtgesthdtre
+    dtredtvdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdr
+    uggvvheqnecuggftrfgrthhtvghrnhepgfeffedufffhgfeuheegffffgeegveeifeeute
+    fhieejffetudfgueevteehtdetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:BYYjYX9TJCfEXvoArnu5Sso20eNms8Ajg-Mw3xMp9X5KSLWYprXbdA>
+    <xmx:BYYjYWtr06Rpve3GbVVeXNlpon5depx8QNLOYbU7EvTWWZaTwf-eWw>
+    <xmx:BYYjYeF6EXLpAY_hmK8IwCErBjAniLUa55UwBTaQN-NIP5Zlc0KxFg>
+    <xmx:BoYjYbWvPKnAekwixs8ZPU0Qcg6ZcwgY3CJfeE00sjMyWAgtnCWqng>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 23 Aug 2021 07:26:56 -0400 (EDT)
+Date:   Mon, 23 Aug 2021 23:26:40 +1200
+From:   Luke Jones <luke@ljones.dev>
 Subject: Re: [PATCH v4 1/1] asus-wmi: Add support for custom fan curves
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Luke Jones <luke@ljones.dev>
+To:     Bastien Nocera <hadess@hadess.net>
 Cc:     linux-kernel@vger.kernel.org, hdegoede@redhat.com,
         platform-driver-x86@vger.kernel.org
-Date:   Mon, 23 Aug 2021 12:28:21 +0200
-In-Reply-To: <1EQ5YQ.6O8MNIPTU6V4@ljones.dev>
+Message-Id: <GGIAYQ.PS5EB67PH64N@ljones.dev>
+In-Reply-To: <7a8a8d56c4e6addfc41b5dd5262968bd169f538f.camel@hadess.net>
 References: <20210820095726.14131-1-luke@ljones.dev>
-         <20210820095726.14131-2-luke@ljones.dev>
-         <321afe1a293be3a623a9be53feea3a008e044b31.camel@hadess.net>
-         <L0W4YQ.ZVWQDLFJE8NR2@ljones.dev>
-         <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
-         <c19dfdde11754c234ca8a45c4af2187699498ee8.camel@hadess.net>
-         <U8X4YQ.79I8GZJ1LDW02@ljones.dev>
-         <b20a879dce98f27dfc68b86aaf486be9e623eacf.camel@hadess.net>
-         <1EQ5YQ.6O8MNIPTU6V4@ljones.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        <20210820095726.14131-2-luke@ljones.dev>
+        <321afe1a293be3a623a9be53feea3a008e044b31.camel@hadess.net>
+        <L0W4YQ.ZVWQDLFJE8NR2@ljones.dev>
+        <e7fbcf85f61b5c727a93df07b3bfe1624547067f.camel@hadess.net>
+        <c19dfdde11754c234ca8a45c4af2187699498ee8.camel@hadess.net>
+        <U8X4YQ.79I8GZJ1LDW02@ljones.dev>
+        <b20a879dce98f27dfc68b86aaf486be9e623eacf.camel@hadess.net>
+        <1EQ5YQ.6O8MNIPTU6V4@ljones.dev>
+        <7a8a8d56c4e6addfc41b5dd5262968bd169f538f.camel@hadess.net>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Sat, 2021-08-21 at 09:30 +1200, Luke Jones wrote:
-> 
-> 
-> On Fri, Aug 20 2021 at 13:39:02 +0200, Bastien Nocera 
-> <hadess@hadess.net> wrote:
-> > On Fri, 2021-08-20 at 23:00 +1200, Luke Jones wrote:
-> > > 
-> > > 
-> > >  On Fri, Aug 20 2021 at 12:51:08 +0200, Bastien Nocera
-> > >  <hadess@hadess.net> wrote:
-> > >  > On Fri, 2021-08-20 at 12:43 +0200, Bastien Nocera wrote:
-> > >  > >  On Fri, 2021-08-20 at 22:33 +1200, Luke Jones wrote:
-> > >  > >  > > Am I going to get bug reports from Asus users that will
-> > >  > > complain
-> > >  > >  > > that
-> > >  > >  > > power-profiles-daemon doesn't work correctly, where I
-> > > will
-> > >  > > have
-> > >  > >  > > to
-> > >  > >  > > wearily ask if they're using an Asus Rog laptop?
-> > >  > >  >
-> > >  > >  > No. Definitely not. The changes to fan curves per-profile
-> > > need
-> > >  > > to
-> > >  > >  > be
-> > >  > >  > explicitly enabled and set. So a new user will be unaware
-> > > that
-> > >  > > this
-> > >  > >  > control exists (until they look for it) and their laptop
-> > > will
-> > >  > >  > behave
-> > >  > >  > exactly as default.
-> > >  > >
-> > >  > >  "The user will need to change the fan curves manually so
-> > > will
-> > >  > >  definitely remember to mention it in bug reports" is a very
-> > >  > > different
-> > >  > >  thing to "the user can't change the fan curves to be 
-> > > nonsensical
-> > >  > > and
-> > >  > >  mean opposite things".
-> > >  > >
-> > >  > >  I can assure you that I will eventually get bug reports
-> > > from
-> > >  > > "power
-> > >  > >  users" who break their setup and wonder why things don't
-> > > work
-> > >  > >  properly,
-> > >  > >  without ever mentioning the changes they made changes to
-> > > the 
-> > > fan
-> > >  > >  curves, or anything else they might have changed.
-> > >  >
-> > >  > A way to taint the settings that power-profiles-daemon could
-> > > catch
-> > >  > would be fine by me. I absolutely don't want to have to
-> > > support
-> > >  > somebody's tweaks until they undo them.
-> > > 
-> > >  Definitely understood. Do you have something in mind?
-> > 
-> > A sysfs attribute with boolean data that shows whether custom fan
-> > curves are used would be enough.
-> 
-> The path /sys/devices/platform/asus-nb-wmi/active_fan_curve_profiles 
-> should be usable like this? I added this as the method for
-> controlling 
-> which fan curves for which profiles are active.
-> 
-> If empty, then no custom fan curves are active at all. If it contains
-> any combination of strings "quiet, balanced, performance" then those 
-> associated (named) platform_profiles have an active fan curve and you
-> can throw up a general warning, maybe add the contents of that file
-> too?
 
-That works for me, although I would probably have preferred a way that
-wasn't specific to the asus-wmi module, I'm sure I can made do with
-that.
 
-Thanks
+On Mon, Aug 23 2021 at 12:28:21 +0200, Bastien Nocera 
+<hadess@hadess.net> wrote:
+> On Sat, 2021-08-21 at 09:30 +1200, Luke Jones wrote:
+>> 
+>> 
+>>  On Fri, Aug 20 2021 at 13:39:02 +0200, Bastien Nocera
+>>  <hadess@hadess.net> wrote:
+>>  > On Fri, 2021-08-20 at 23:00 +1200, Luke Jones wrote:
+>>  > >
+>>  > >
+>>  > >  On Fri, Aug 20 2021 at 12:51:08 +0200, Bastien Nocera
+>>  > >  <hadess@hadess.net> wrote:
+>>  > >  > On Fri, 2021-08-20 at 12:43 +0200, Bastien Nocera wrote:
+>>  > >  > >  On Fri, 2021-08-20 at 22:33 +1200, Luke Jones wrote:
+>>  > >  > >  > > Am I going to get bug reports from Asus users that 
+>> will
+>>  > >  > > complain
+>>  > >  > >  > > that
+>>  > >  > >  > > power-profiles-daemon doesn't work correctly, where I
+>>  > > will
+>>  > >  > > have
+>>  > >  > >  > > to
+>>  > >  > >  > > wearily ask if they're using an Asus Rog laptop?
+>>  > >  > >  >
+>>  > >  > >  > No. Definitely not. The changes to fan curves 
+>> per-profile
+>>  > > need
+>>  > >  > > to
+>>  > >  > >  > be
+>>  > >  > >  > explicitly enabled and set. So a new user will be 
+>> unaware
+>>  > > that
+>>  > >  > > this
+>>  > >  > >  > control exists (until they look for it) and their laptop
+>>  > > will
+>>  > >  > >  > behave
+>>  > >  > >  > exactly as default.
+>>  > >  > >
+>>  > >  > >  "The user will need to change the fan curves manually so
+>>  > > will
+>>  > >  > >  definitely remember to mention it in bug reports" is a 
+>> very
+>>  > >  > > different
+>>  > >  > >  thing to "the user can't change the fan curves to be
+>>  > > nonsensical
+>>  > >  > > and
+>>  > >  > >  mean opposite things".
+>>  > >  > >
+>>  > >  > >  I can assure you that I will eventually get bug reports
+>>  > > from
+>>  > >  > > "power
+>>  > >  > >  users" who break their setup and wonder why things don't
+>>  > > work
+>>  > >  > >  properly,
+>>  > >  > >  without ever mentioning the changes they made changes to
+>>  > > the
+>>  > > fan
+>>  > >  > >  curves, or anything else they might have changed.
+>>  > >  >
+>>  > >  > A way to taint the settings that power-profiles-daemon could
+>>  > > catch
+>>  > >  > would be fine by me. I absolutely don't want to have to
+>>  > > support
+>>  > >  > somebody's tweaks until they undo them.
+>>  > >
+>>  > >  Definitely understood. Do you have something in mind?
+>>  >
+>>  > A sysfs attribute with boolean data that shows whether custom fan
+>>  > curves are used would be enough.
+>> 
+>>  The path /sys/devices/platform/asus-nb-wmi/active_fan_curve_profiles
+>>  should be usable like this? I added this as the method for
+>>  controlling
+>>  which fan curves for which profiles are active.
+>> 
+>>  If empty, then no custom fan curves are active at all. If it 
+>> contains
+>>  any combination of strings "quiet, balanced, performance" then those
+>>  associated (named) platform_profiles have an active fan curve and 
+>> you
+>>  can throw up a general warning, maybe add the contents of that file
+>>  too?
+> 
+> That works for me, although I would probably have preferred a way that
+> wasn't specific to the asus-wmi module, I'm sure I can made do with
+> that.
+
+Oh I see, you were looking to get a more general solution implemented? 
+Maybe something like 
+"/sys/devices/platform/asus-nb-wmi/platform_profile_tainted"? This 
+could be an opportunity to maybe make a standardised naming scheme for 
+it.
+
+If you want something like that I'll get it done for asus-wmi.
+
+> 
+> Thanks
+> 
+
 
