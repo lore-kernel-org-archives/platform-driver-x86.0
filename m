@@ -2,199 +2,532 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A366C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 18:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637EAC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 18:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCCC613A6
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 18:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45CD960E93
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 18:54:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230506AbhHWSfh (ORCPT
+        id S229883AbhHWSyz (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 14:35:37 -0400
-Received: from mail-bn8nam12on2053.outbound.protection.outlook.com ([40.107.237.53]:65376
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229883AbhHWSfh (ORCPT
+        Mon, 23 Aug 2021 14:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229969AbhHWSyy (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 14:35:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PTYg4jXHRKkuzWFFzE/GnCXhYqHDdN8ORZhMTp2ZJ0bWUdTUVNkX+szsUgtj7nPlTqw4C5FNvkm5FyTrxWniFKoweJUqaqAo2yl7wha0RoJ7leiLSRtDSJRsmDPAdvaJCcK8itDjPBPZdvGwzsB8OFGiduKbAe7VBMDa2Dp+ye8t+wCedF3J4etdIBHnAlfMMfBIpvT4u/mDtgw9E38L4Eo16UYP9C96VyQguTex0JoSU+o9CAGq01V3L8FrYuSa2Q+wsU42WRwZLY1leR6bNmeNd+zonhQiJofDdXIA41cKZrQCS3nlIZmOisexTmXjKv0OQ4O7Nm7l8VL60qOv7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sRiV8vEkSGXwRbuEj+SNMRB1u2uguCBnuAL0Vs33Clc=;
- b=d2Y0aTdRueGwa2DPRthwXDB8L7mRWAaCnblmz/7jEMHwDhvgXb6LaxM7rVsQixsXCCMEtRKHBT12P0CRr0gsL3BrMdVvIxJa7sT6zx/zKxMoDFe3J2gNyM68RhqWfYTyOMe+uP8D9d34q6ltEzYlsRDwh/0JM0wVP+KPlkSk1CbUETgc/GwBr+4YQv39o2VtWjtrcGrkyJ79tZNd5cIHYARwHBymlc6O5qRBqe0oV6ZmegX16gScrod/bWFWllAqHhs92EpWaf6oS5aVfyZVkQyisraNpA9/dIcQsrhjmYw6LW8AtPhzvlNH443C9313/oiZuc0ozV9PI/lNWIkxJA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sRiV8vEkSGXwRbuEj+SNMRB1u2uguCBnuAL0Vs33Clc=;
- b=D1sGChAY7sH/RgKQLZzpftlE2QeIzXzjKTe8Sfnie7ns3H80J5JIihrOXUzHentahiz8kkdFvESi+3QgsBv9EHc2v+QtH++/dJprzkUVhSDysBchkRWUH+M7xOXX+n91LLkMUmb6/WS3Zo8Ud15P3alaEBEn0eEweoCzrN3/8iM=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4431.namprd12.prod.outlook.com (2603:10b6:806:95::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Mon, 23 Aug
- 2021 18:34:52 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3%6]) with mapi id 15.20.4436.024; Mon, 23 Aug 2021
- 18:34:52 +0000
-Cc:     brijesh.singh@amd.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 07/38] x86/sev: Add support for hypervisor
- feature VMGEXIT
-To:     Borislav Petkov <bp@alien8.de>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-8-brijesh.singh@amd.com> <YSNutt/E0bm0kKsl@zn.tnic>
- <844774cc-4a6f-daa3-89cc-4d2dc6ca22a5@amd.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <634e4d5f-1b44-e715-0232-351d0ab57405@amd.com>
-Date:   Mon, 23 Aug 2021 13:34:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <844774cc-4a6f-daa3-89cc-4d2dc6ca22a5@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR16CA0043.namprd16.prod.outlook.com
- (2603:10b6:805:ca::20) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Mon, 23 Aug 2021 14:54:54 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E1DC061575
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Aug 2021 11:54:11 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id f10so11194008wml.2
+        for <platform-driver-x86@vger.kernel.org>; Mon, 23 Aug 2021 11:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=498D4LzJTzx1WASLBYvZklTdoEFfZmnBQ6+gbg+3Xqc=;
+        b=Gz1mc9YexbjwMF3QCOJIPlc++/J6QepEu8DBiqNw1vT3kkc7/zqMaYThNBgVgLlgP8
+         xJOi37MhhBEWTZ+YB2328WjYsgh4Yb4fs06aP4fBBb7PwbX8btTdLQLJNx38SacIiTwG
+         B3hnwB0MNEqVWPDuh402gJzqTN934St9ZzefUgyxhoyA0fRHhPOkk0RqwpuNKDEDgY0z
+         T0LNZrZVHvSDuEyfi4SzzErabb9C8/XMMbmsk4gBtzsHkKuQGIXAlbHNA13bLOmYdcCP
+         xU9teGLf7h+HfFyJi3pwCwZE68PBkRrGAV3ugbEAyRJXDNnM7wOYAjx4B0bKJJ3f9Dy3
+         LHaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=498D4LzJTzx1WASLBYvZklTdoEFfZmnBQ6+gbg+3Xqc=;
+        b=kKSE7OAwsrNh4sM4T9ThvtVKPDiueSGYkGMSgGQofrOcPv9UgdbCwkSmadTERZngQv
+         jmrtNi6fVmBBaraTEesnU/hukSrqh3s4RioPj1gfER6Q4H3iVB6JyHTGvDoeNUY7NWGY
+         4Ne0qbYD2PemfpzZoZKMPQZ3tIsx4W6Q16po80A+k75OZthspOQ9lOMnkXuk307buQ4k
+         61OZ9SB+VR4+vYo/gDcClbTNxYE/jIvI5UV9X4H0mQp03DJFegMzBWEbYpnpLTXISiLq
+         ybJZUIRZdJQxhUdqZVhvtVa8S2OuxQkxEffmeN38VNIEDYwLEaO64w8AXN4cYYSLPf46
+         gCkQ==
+X-Gm-Message-State: AOAM531SQTEI2dcbBK6B2OePhHmj71pfGnAGE8trPToJVX6pp9tTQg5J
+        wunsjUWY06oPcjptI8pMnOE=
+X-Google-Smtp-Source: ABdhPJzS1A+KYXjc/+0X4Tb2e/0XoMKeMOv/tRAI6aeyhItRabFAUbINjkJVZ2Mgy4Fd3u0Hc7gz/A==
+X-Received: by 2002:a05:600c:2245:: with SMTP id a5mr7087wmm.19.1629744849998;
+        Mon, 23 Aug 2021 11:54:09 -0700 (PDT)
+Received: from omen.localdomain ([188.127.120.115])
+        by smtp.gmail.com with ESMTPSA id y11sm19039911wru.0.2021.08.23.11.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Aug 2021 11:54:09 -0700 (PDT)
+Date:   Mon, 23 Aug 2021 20:54:07 +0200
+From:   Enver Balalic <balalic.enver@gmail.com>
+To:     hdegoede@redhat.com, mgross@linux.intel.com, jdelvare@suse.com,
+        linux@roeck-us.net, platform-driver-x86@vger.kernel.org,
+        pobrn@protonmail.com
+Subject: [PATCH v3] platform/x86: hp-wmi: add support for omen laptops
+Message-ID: <20210823185407.i7tk5bgofedqxfxf@omen.localdomain>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.95] (165.204.77.1) by SN6PR16CA0043.namprd16.prod.outlook.com (2603:10b6:805:ca::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Mon, 23 Aug 2021 18:34:50 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e8a1f72d-d3ba-4e76-a352-08d96664b1e3
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4431:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB44317C802A5097B6A1DA7E61E5C49@SA0PR12MB4431.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uIBQLhjFh/H/8ZbWkcDOaf2a4CcKlPAMT2uHjRv1AVoNC+MHERJOBTwUm2zPhmeggIeiCQrx/q0Cc3/ompU+W8cswZV/fXlSkJ2iZIddZn7twlrLPotsxzgdZCiY1H7yc9i3ce/Fupy5QQSpr3w4GSa6W1SFrkg/mQ7aZj+s48D1G1Z3jDLLfC1b5QYPbUgbe7XU+RcQze3DErbvu0ieAWbRjJwZM24wo3dCtWXELjKyyCgsbzlvxQ9TJyY+yiNHyKdrCF5OFEEWJiFXpo+Fs1zdXaVO1J313853+2PDbpZsnK5XjTFsoQzdKCTtR8hrDyccwEl02co4R9XU8oMZsjYm1vOU1xAis1B/e4fvQrXiHS/VUH3oJKUAOwyJO9rT/n5vCmqKtp0HYjkYJ7GpErkqBiZKx4sjDWuslL5EEr5ghgsL8Dy+pBegNuw0tiGkOP2jU0OM7x6DYn5ILGDSIQ0kSt8YxXEpUD0uQcUt30zyIqInVUFzT8z58psa3HgIEwfC4yRPrceh9lHDjUUn8Ed7N2+McXiQUF/a/USUWSEJK+nXaNXG4bbPf4ExLZOl4n3g2FrEWnHolwWbahVd9pzX+R066nFOBSTsR/omnj6Vo68ybDcI9CUop4z7rj9BAP11UMIU1de4USzVOJUBJRXM9bB1HldJIYx/xiWI1+nydg09b3j3+LnkVbHbYtjqlyiGPo6DFWHTW08zYv//aOPC2OW8TqjN1YXQhbmJiFFNqpqhMkp955uelxiOMk6fcgX5phCcPPo+YrNyG9Idlw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(396003)(346002)(366004)(7416002)(7406005)(6916009)(26005)(31696002)(478600001)(52116002)(4326008)(86362001)(5660300002)(31686004)(54906003)(38100700002)(36756003)(8676002)(6486002)(956004)(2616005)(44832011)(8936002)(53546011)(16576012)(316002)(186003)(38350700002)(66946007)(66556008)(66476007)(2906002)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V1BlYnJxWjZQbCtEMURTNTRBQngzVEhLYWxIQzBTamRnWFJQSnFPeDIwNDVV?=
- =?utf-8?B?Vy8vVkdLY0VlR09BV2VIdVlPZzlkT2t6L0hRMlZDbklab09wemgwckhYeFhQ?=
- =?utf-8?B?blV6eTNmMVhGQVNCY0Jxc2QrUUFaM2V1YkE5ZUNpelZpdUhtMkhrMTVJYlhN?=
- =?utf-8?B?dktjRnRSOFFNWHdmWElrQWgwbVlRWFdnMS9rMXhQVjlvQWpOYWIxMWt3QTRj?=
- =?utf-8?B?VUFUb3ZTWFZHaDd4cFBuSkRFWHFENmFjelJUQmZ6TE9SYUZML09BVTVEZFov?=
- =?utf-8?B?NUxvdUEvaGhUMng0aktXMk5yQ2ljYlFBOXhpUTU2OEtYRW1rdFI2Wk54NGg0?=
- =?utf-8?B?S3hBSFcwUVRjbUI0ZmNRR1NoOW9KaENnL1haS2NMRm5IMm1mZVVxSEt4N0FB?=
- =?utf-8?B?aHY4RXJFSSs5d212VHZSQVJURGYvaGtIbU5LUm5Zd2hWOWJ0OHFiWFZUT3di?=
- =?utf-8?B?Qk16Rm5zYkpDM2dPWDNLaVYvSUpOTmJreFdwbVF3UG1ZeW9MM2syY3NHSmlT?=
- =?utf-8?B?VDR6eG9WMWgraHljT0RWTDg0RkVRRVNpZG94M0dkMTF3c3RMTmtWb0UvbFZL?=
- =?utf-8?B?cDBlYVNCTTRuNzJ0b0VXUjI4Q3dKY1phdVl3SFE1Zll4QVRVR1hwWWtyZWsw?=
- =?utf-8?B?Uy9MQ1lmM21rMVhtRG5rQU9rTUxid3Qrd1pZSTRyQkJPSHhFOCtxcllmT2c3?=
- =?utf-8?B?VUtyanpjdGREbURnaVlTZldPUHp1Sy9kaThSdmFpTmNieW1FVkN6SWx5N0pR?=
- =?utf-8?B?RXVTVVhkRE1EcW5FS2lkQ1NJZlBQRU8xelBTTGdYRUtTRTlWZ21aS3ZpdnpI?=
- =?utf-8?B?ZHQrTGtwbkNEV2RqVGFHdUxIdTVJaVVFdjdNeVJHdm1xUnFueXduSSthdUQv?=
- =?utf-8?B?WFVpS3lOS2VROURBcGlaMTEwSGZQS1dSZXJZeXgwckZRVWJoYXdSdi9KUm5t?=
- =?utf-8?B?Y2M0dTNiZG1Sa3F4b1VHZGt3T2pJSDJRUjNlTGw2QmVsZWRZd1JERUV1MVY0?=
- =?utf-8?B?aUxZcTl4N3hBejRUdkM0OS9FRUpxT1MrMEJzNHdHcXdQcFRKNkhJYUhRMkxi?=
- =?utf-8?B?K09nRVVNZDBCWERTYjZ5UnE4N3d2TTU5MTVMQjNKUURGYnUyTG1HYitqUGN3?=
- =?utf-8?B?MlhEdnN5dWNMYUt4WjJYMmxWTlU1VXpkbG1HRTNNaVkrbUl3NTZ3WUlaV3pj?=
- =?utf-8?B?WitIUmIranYxRml3blV5NS9mYXdxTVpTQjF6djVYcVBXclJoMXZIbVUzUXVW?=
- =?utf-8?B?OUpaNFhMNjluL2xNWGthL1RENXhseUJabE5seGtJUU5vZ09WcU1zZmJKalpF?=
- =?utf-8?B?dHBDNVBJTDJrc1huZjBxZkZHWXF0MmdycG00NTFSM04vdUtaeWtHWlhvY2RN?=
- =?utf-8?B?b25sUEdFWUk1WE5NeHYxRWJZdWxpSzhCWW9EM2tNMGJtY0F6VXorZHlRK0Jr?=
- =?utf-8?B?ZkNBMVJ4NUFINEZ0Nk1JUjZJd0pEcDQ5SGYxQUg5WnVhQkF1NUE4d05TMkxV?=
- =?utf-8?B?Q1Mzd2ZOcytvcGh3VTh3aWkwL01yRVZoUm5hQjNyL3VHMFJpUlV0eWtJaGNi?=
- =?utf-8?B?Rkl6NmRMN3dRM2N5Skg1d0ZIOENPQVJPaVI4Zm03Wkc1WGVFSlJVK1gyc2JY?=
- =?utf-8?B?cy9wRlVsV1VvZFhsRWh2NXRLbmhHWDJldys1TjA0RkkrQWpJZWdkVWh6eHNv?=
- =?utf-8?B?NU5tZ0JIQTlibEpPMEE1M2xyT1B2T2YxWmE4QkZaVXU3ZWw5enJzWDVlT0Ra?=
- =?utf-8?Q?nbVgPrB/A71JvwhrTgk3ooQAyqgzhnbWePpkXv7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8a1f72d-d3ba-4e76-a352-08d96664b1e3
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Aug 2021 18:34:51.9093
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pHD0+oQbPg7qJEgvus2Ts7hhrAd45Ez4Q3IoD4RzldFDw7ODtypQkX7wVu8nNcMpJmyf4PIt8OpPNzqbq+IPMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4431
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+This patch adds support for HP Omen laptops.
+It adds support for most things that can be controlled via the
+Windows Omen Command Center application.
 
+ - Fan speed monitoring through hwmon
+ - Platform Profile support (cool, balanced, performance)
+ - Max fan speed function toggle
 
-On 8/23/21 1:25 PM, Brijesh Singh wrote:
-> 
-> 
-> On 8/23/21 4:47 AM, Borislav Petkov wrote:
->> On Fri, Aug 20, 2021 at 10:19:02AM -0500, Brijesh Singh wrote:
->>> Version 2 of GHCB specification introduced advertisement of a features
->>> that are supported by the hypervisor. Add support to query the HV
->>> features on boot.
->>>
->>> Version 2 of GHCB specification adds several new NAEs, most of them are
->>> optional except the hypervisor feature. Now that hypervisor feature NAE
->>> is implemented, so bump the GHCB maximum support protocol version.
->>>
->>> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
->>> ---
->>>   arch/x86/include/asm/mem_encrypt.h |  2 ++
->>>   arch/x86/include/asm/sev-common.h  |  3 +++
->>>   arch/x86/include/asm/sev.h         |  2 +-
->>>   arch/x86/include/uapi/asm/svm.h    |  2 ++
->>>   arch/x86/kernel/sev-shared.c       | 23 +++++++++++++++++++++++
->>>   5 files changed, 31 insertions(+), 1 deletion(-)
->>
->> I think you can simplify more.
->>
->> The HV features are read twice - once in the decompressor stub and again
->> in kernel proper - but I guess that's not such a big deal.
->>
->> Also, sev_hv_features can be static.
->>
->> Diff ontop:
->>
-> 
-> The sev_hv_features is also referred during the AP creation. By caching 
-> the value in sev-shared.c and exporting it to others, we wanted to 
-> minimize VMGEXITs during the AP creation.
-> 
-> If we go with your patch below, then we will need to cache the 
-> sev_hv_features in sev.c, so that it can be later used by the AP 
-> creation code (see patch#22).
-> 
+Also exposes the existing HDD temperature through hwmon since
+this driver didn't use hwmon before this patch.
 
-Let me take it back, I didn't realize that sev.c includes the 
-sev-shared.c. So your patch will work fine. sorry about the noise.
+This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
 
+ - V1
+   Initial Patch
+ - V2
+   Use standard hwmon ABI attributes
+   Add existing non-standard "hddtemp" to hwmon
+ - V3
+   Fix overflow issue in "hp_wmi_get_fan_speed"
+   Map max fan speed value back to hwmon values on read
+   Code style fixes
+   Fix issue with returning values from "hp_wmi_hwmon_read",
+   the value to return should be written to val and not just
+   returned from the function
+
+Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
+---
+ drivers/platform/x86/Kconfig  |   1 +
+ drivers/platform/x86/hp-wmi.c | 320 ++++++++++++++++++++++++++++++++--
+ 2 files changed, 310 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d12db6c316ea..f0b3d94e182b 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -431,6 +431,7 @@ config HP_WMI
+ 	tristate "HP WMI extras"
+ 	depends on ACPI_WMI
+ 	depends on INPUT
++	depends on HWMON
+ 	depends on RFKILL || RFKILL = n
+ 	select INPUT_SPARSEKMAP
+ 	select ACPI_PLATFORM_PROFILE
+diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
+index 027a1467d009..8c1fe1df6462 100644
+--- a/drivers/platform/x86/hp-wmi.c
++++ b/drivers/platform/x86/hp-wmi.c
+@@ -22,6 +22,7 @@
+ #include <linux/input/sparse-keymap.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_profile.h>
++#include <linux/hwmon.h>
+ #include <linux/acpi.h>
+ #include <linux/rfkill.h>
+ #include <linux/string.h>
+@@ -39,6 +40,7 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
+ 
+ #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
+ #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
++#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
+ 
+ enum hp_wmi_radio {
+ 	HPWMI_WIFI	= 0x0,
+@@ -89,10 +91,18 @@ enum hp_wmi_commandtype {
+ 	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
+ };
+ 
++enum hp_wmi_gm_commandtype {
++	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
++	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
++	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
++	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
++};
++
+ enum hp_wmi_command {
+ 	HPWMI_READ	= 0x01,
+ 	HPWMI_WRITE	= 0x02,
+ 	HPWMI_ODM	= 0x03,
++	HPWMI_GM	= 0x20008,
+ };
+ 
+ enum hp_wmi_hardware_mask {
+@@ -120,12 +130,23 @@ enum hp_wireless2_bits {
+ 	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
+ };
+ 
++
++enum hp_thermal_profile_omen {
++	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
++	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
++	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
++};
++
+ enum hp_thermal_profile {
+ 	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
+ 	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
+ 	HP_THERMAL_PROFILE_COOL			= 0x02
+ };
+ 
++static const char *const hp_wmi_temp_label[] = {
++	"HDD",
++};
++
+ #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
+ #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
+ 
+@@ -279,6 +300,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
+ 	return ret;
+ }
+ 
++static int hp_wmi_get_fan_speed(int fan)
++{
++	u8 fsh, fsl;
++	char fan_data[4] = { fan, 0, 0, 0 };
++
++	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
++				       &fan_data, sizeof(fan_data),
++				       sizeof(fan_data));
++
++	if (ret != 0)
++		return -EINVAL;
++
++	fsh = fan_data[2];
++	fsl = fan_data[3];
++
++	return (fsh << 8) | fsl;
++}
++
+ static int hp_wmi_read_int(int query)
+ {
+ 	int val = 0, ret;
+@@ -302,6 +341,61 @@ static int hp_wmi_hw_state(int mask)
+ 	return !!(state & mask);
+ }
+ 
++static int omen_thermal_profile_set(int mode)
++{
++	char buffer[2] = {0, mode};
++	int ret;
++
++	if (mode < 0 || mode > 2)
++		return -EINVAL;
++
++	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
++				   &buffer, sizeof(buffer), sizeof(buffer));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return mode;
++}
++
++static int omen_thermal_profile_get(void)
++{
++	u8 data;
++
++	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
++
++	if (ret)
++		return ret;
++
++	return data;
++}
++
++static int hp_wmi_fan_speed_max_set(int enabled)
++{
++	int ret;
++
++	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
++				   &enabled, sizeof(enabled), sizeof(enabled));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return enabled;
++}
++
++static int hp_wmi_fan_speed_max_get(void)
++{
++	int val = 0, ret;
++
++	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
++				   &val, sizeof(val), sizeof(val));
++
++	if (ret)
++		return ret < 0 ? ret : -EINVAL;
++
++	return val;
++}
++
+ static int __init hp_wmi_bios_2008_later(void)
+ {
+ 	int state = 0;
+@@ -878,6 +972,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
+ 	return err;
+ }
+ 
++static int platform_profile_omen_get(struct platform_profile_handler *pprof,
++				enum platform_profile_option *profile)
++{
++	int tp;
++
++	tp = omen_thermal_profile_get();
++	if (tp < 0)
++		return tp;
++
++	switch (tp) {
++	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
++		*profile = PLATFORM_PROFILE_PERFORMANCE;
++		break;
++	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
++		*profile = PLATFORM_PROFILE_BALANCED;
++		break;
++	case HP_OMEN_THERMAL_PROFILE_COOL:
++		*profile = PLATFORM_PROFILE_COOL;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int platform_profile_omen_set(struct platform_profile_handler *pprof,
++				enum platform_profile_option profile)
++{
++	int err, tp;
++
++	switch (profile) {
++	case PLATFORM_PROFILE_PERFORMANCE:
++		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
++		break;
++	case PLATFORM_PROFILE_BALANCED:
++		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
++		break;
++	case PLATFORM_PROFILE_COOL:
++		tp = HP_OMEN_THERMAL_PROFILE_COOL;
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++
++	err = omen_thermal_profile_set(tp);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int thermal_profile_get(void)
+ {
+ 	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
+@@ -946,19 +1092,34 @@ static int thermal_profile_setup(void)
+ 	int err, tp;
+ 
+ 	tp = thermal_profile_get();
+-	if (tp < 0)
+-		return tp;
++	if (tp >= 0) {
++		/*
++		* call thermal profile write command to ensure that the firmware correctly
++		* sets the OEM variables for the DPTF
++		*/
++		err = thermal_profile_set(tp);
++		if (err)
++			return err;
+ 
+-	/*
+-	 * call thermal profile write command to ensure that the firmware correctly
+-	 * sets the OEM variables for the DPTF
+-	 */
+-	err = thermal_profile_set(tp);
+-	if (err)
+-		return err;
++		platform_profile_handler.profile_get = platform_profile_get;
++		platform_profile_handler.profile_set = platform_profile_set;
++	}
+ 
+-	platform_profile_handler.profile_get = platform_profile_get,
+-	platform_profile_handler.profile_set = platform_profile_set,
++	tp = omen_thermal_profile_get();
++	if (tp >= 0) {
++		/*
++		* call thermal profile write command to ensure that the firmware correctly
++		* sets the OEM variables
++		*/
++		err = omen_thermal_profile_set(tp);
++		if (err < 0)
++			return err;
++
++		platform_profile_handler.profile_get = platform_profile_omen_get;
++		platform_profile_handler.profile_set = platform_profile_omen_set;
++	} else {
++		return tp;
++	}
+ 
+ 	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
+@@ -973,6 +1134,8 @@ static int thermal_profile_setup(void)
+ 	return 0;
+ }
+ 
++static int hp_wmi_hwmon_init(void);
++
+ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ {
+ 	/* clear detected rfkill devices */
+@@ -984,6 +1147,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
+ 	if (hp_wmi_rfkill_setup(device))
+ 		hp_wmi_rfkill2_setup(device);
+ 
++	hp_wmi_hwmon_init();
++
+ 	thermal_profile_setup();
+ 
+ 	return 0;
+@@ -1068,6 +1233,139 @@ static struct platform_driver hp_wmi_driver = {
+ 	.remove = __exit_p(hp_wmi_bios_remove),
+ };
+ 
++static umode_t hp_wmi_hwmon_is_visible(const void *data,
++					enum hwmon_sensor_types type,
++					u32 attr, int channel)
++{
++	switch (type) {
++	case hwmon_temp:
++		if (hp_wmi_read_int(HPWMI_HDDTEMP_QUERY) >= 0)
++			return 0444;
++		else
++			return 0;
++	case hwmon_pwm:
++		return 0644;
++	case hwmon_fan:
++		if (hp_wmi_get_fan_speed(channel) >= 0)
++			return 0444;
++		else
++			return 0;
++	default:
++		return 0;
++	}
++}
++
++static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			u32 attr, int channel, long *val)
++{
++	int ret;
++
++	switch (type) {
++	case hwmon_temp:
++		ret = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
++
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return 0;
++	case hwmon_fan:
++		ret = hp_wmi_get_fan_speed(channel);
++
++		if (ret < 0)
++			return ret;
++		*val = ret;
++		return 0;
++	case hwmon_pwm:
++		switch (hp_wmi_fan_speed_max_get()) {
++		case 0:
++			/* 0 is automatic fan, which is 2 for hwmon */
++			*val = 2;
++			return 0;
++		case 1:
++			/* 1 is max fan, which is 0
++			 * (no fan speed control) for hwmon
++			 */
++			*val = 0;
++			return 0;
++		default:
++			/* shouldn't happen */
++			return -EINVAL;
++		}
++	default:
++		return -EINVAL;
++	}
++}
++
++static int hp_wmi_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			u32 attr, int channel, long val)
++{
++	switch (type) {
++	case hwmon_pwm:
++		switch (val) {
++		case 0:
++			/* 0 is no fan speed control (max), which is 1 for us */
++			return hp_wmi_fan_speed_max_set(1);
++		case 2:
++			/* 2 is automatic speed control, which is 0 for us */
++			return hp_wmi_fan_speed_max_set(0);
++		default:
++			/* we don't support manual fan speed control */
++			return -EOPNOTSUPP;
++		}
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int hp_wmi_hwmon_read_string(struct device *dev,
++				enum hwmon_sensor_types type,
++				u32 attr, int channel, const char **str)
++{
++	switch (type) {
++	case hwmon_temp:
++		*str = hp_wmi_temp_label[channel];
++		break;
++	default:
++		return -EOPNOTSUPP; /* unreachable */
++	}
++	return 0;
++}
++
++static const struct hwmon_channel_info *info[] = {
++	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT, HWMON_F_INPUT),
++	HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT | HWMON_T_LABEL),
++	HWMON_CHANNEL_INFO(pwm, HWMON_PWM_ENABLE),
++	NULL
++};
++
++static const struct hwmon_ops ops = {
++	.is_visible = hp_wmi_hwmon_is_visible,
++	.read = hp_wmi_hwmon_read,
++	.read_string = hp_wmi_hwmon_read_string,
++	.write = hp_wmi_hwmon_write,
++};
++
++static const struct hwmon_chip_info chip_info = {
++	.ops = &ops,
++	.info = info,
++};
++
++static int hp_wmi_hwmon_init(void)
++{
++	struct device *dev = &hp_wmi_platform_dev->dev;
++	struct device *hwmon;
++
++	hwmon = devm_hwmon_device_register_with_info(dev, "hp", &hp_wmi_driver,
++				&chip_info, NULL);
++
++	if (IS_ERR(hwmon)) {
++		pr_err("Could not register hp hwmon device\n");
++		return PTR_ERR(hwmon);
++	}
++
++	return 0;
++}
++
+ static int __init hp_wmi_init(void)
+ {
+ 	int event_capable = wmi_has_guid(HPWMI_EVENT_GUID);
+-- 
+2.33.0
 
