@@ -2,87 +2,177 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEE4C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 09:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016EAC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 09:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1068F613A3
-	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 09:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41E961373
+	for <platform-driver-x86@archiver.kernel.org>; Mon, 23 Aug 2021 09:47:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236475AbhHWJe2 (ORCPT
+        id S232101AbhHWJrs (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 05:34:28 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6662 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235980AbhHWJeL (ORCPT
+        Mon, 23 Aug 2021 05:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230118AbhHWJrr (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 05:34:11 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10084"; a="204265295"
-X-IronPort-AV: E=Sophos;i="5.84,344,1620716400"; 
-   d="scan'208";a="204265295"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 02:33:26 -0700
-X-IronPort-AV: E=Sophos;i="5.84,344,1620716400"; 
-   d="scan'208";a="443386575"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 02:33:24 -0700
-Received: from andy by smile with local (Exim 4.94.2)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mI6KU-00CjMZ-Se; Mon, 23 Aug 2021 12:33:18 +0300
-Date:   Mon, 23 Aug 2021 12:33:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        Mark Gross <mgross@linux.intel.com>
-Subject: Re: [RFT, PATCH v1 1/1] platform/x86: hp_accel: Convert to be a
- platform driver
-Message-ID: <YSNrXkDpG0k3eTgd@smile.fi.intel.com>
-References: <20210803200820.3259-1-andriy.shevchenko@linux.intel.com>
- <48332796-1b9a-c897-c695-e66b116386be@redhat.com>
+        Mon, 23 Aug 2021 05:47:47 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A71AC061575;
+        Mon, 23 Aug 2021 02:47:05 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f07d9000a71bbbd2fefb12e.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:d900:a71:bbbd:2fef:b12e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C78C11EC0236;
+        Mon, 23 Aug 2021 11:46:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629712019;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=hTGqJSB99PZEZoaa2JK7dAiOoUAbusV7wq0edRHIa4g=;
+        b=Xl+0l4zzO8gkqhdQvxLoxh3KL93gUcH3KDD59hvOgRQE36+mZUnrVYTwCnD+iTjmwHCIiP
+        osVL7c/3rUhL3Adl9pKRURCPUI5Q8LTL2zMZhvpc1mdFy8wydrUlp+nOJZXEKF1/wJX6Gb
+        OG9ruTq3Y/JCAN274stHJ5fgoZNgwzo=
+Date:   Mon, 23 Aug 2021 11:47:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 07/38] x86/sev: Add support for hypervisor
+ feature VMGEXIT
+Message-ID: <YSNutt/E0bm0kKsl@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-8-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <48332796-1b9a-c897-c695-e66b116386be@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20210820151933.22401-8-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 06, 2021 at 03:42:40PM +0200, Hans de Goede wrote:
-> Hi,
+On Fri, Aug 20, 2021 at 10:19:02AM -0500, Brijesh Singh wrote:
+> Version 2 of GHCB specification introduced advertisement of a features
+> that are supported by the hypervisor. Add support to query the HV
+> features on boot.
 > 
-> On 8/3/21 10:08 PM, Andy Shevchenko wrote:
-> > ACPI core in conjunction with platform driver core provides
-> > an infrastructure to enumerate ACPI devices. Use it in order
-> > to remove a lot of boilerplate code.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > 
-> > Not sure what buys us to run _INI on PM calls. It's against the spec AFAICT.
-> > In any case ACPICA runs _INI as per specification when devices are
-> > instantiated.
+> Version 2 of GHCB specification adds several new NAEs, most of them are
+> optional except the hypervisor feature. Now that hypervisor feature NAE
+> is implemented, so bump the GHCB maximum support protocol version.
 > 
-> _INI used to also be ran on resume for some reason, but that was recently
-> changed.
-> 
-> You're right that calling it is no longer necessary now that we no longer
-> do that.
-> 
-> But the changes related to this are really separate from the platform
-> driver conversion, please split this into 2 patches.
-> 
-> Also for the next version please Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> and ask him to test, I think he has access to hardware to test this.
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/include/asm/mem_encrypt.h |  2 ++
+>  arch/x86/include/asm/sev-common.h  |  3 +++
+>  arch/x86/include/asm/sev.h         |  2 +-
+>  arch/x86/include/uapi/asm/svm.h    |  2 ++
+>  arch/x86/kernel/sev-shared.c       | 23 +++++++++++++++++++++++
+>  5 files changed, 31 insertions(+), 1 deletion(-)
 
-v2 has been sent.
+I think you can simplify more.
+
+The HV features are read twice - once in the decompressor stub and again
+in kernel proper - but I guess that's not such a big deal.
+
+Also, sev_hv_features can be static.
+
+Diff ontop:
+
+---
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index fb857f2e72cb..df14291d65de 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -26,7 +26,6 @@ enum sev_feature_type {
+ 
+ extern u64 sme_me_mask;
+ extern u64 sev_status;
+-extern u64 sev_hv_features;
+ 
+ void sme_encrypt_execute(unsigned long encrypted_kernel_vaddr,
+ 			 unsigned long decrypted_kernel_vaddr,
+@@ -67,7 +66,6 @@ bool sev_feature_enabled(unsigned int feature_type);
+ #else	/* !CONFIG_AMD_MEM_ENCRYPT */
+ 
+ #define sme_me_mask	0ULL
+-#define sev_hv_features	0ULL
+ 
+ static inline void __init sme_early_encrypt(resource_size_t paddr,
+ 					    unsigned long size) { }
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index 8bd67087d79e..d657c2c5a1ee 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -24,7 +24,7 @@
+ static u16 __ro_after_init ghcb_version;
+ 
+ /* Bitmap of SEV features supported by the hypervisor */
+-u64 __ro_after_init sev_hv_features = 0;
++static u64 __ro_after_init sev_hv_features;
+ 
+ static bool __init sev_es_check_cpu_features(void)
+ {
+@@ -51,10 +51,18 @@ static void __noreturn sev_es_terminate(unsigned int set, unsigned int reason)
+ 		asm volatile("hlt\n" : : : "memory");
+ }
+ 
++/*
++ * The hypervisor features are available from GHCB version 2 onward.
++ */
+ static bool get_hv_features(void)
+ {
+ 	u64 val;
+ 
++	sev_hv_features = 0;
++
++	if (ghcb_version < 2)
++		return false;
++
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_HV_FT_REQ);
+ 	VMGEXIT();
+ 
+@@ -85,8 +93,7 @@ static bool sev_es_negotiate_protocol(void)
+ 
+ 	ghcb_version = min_t(size_t, GHCB_MSR_PROTO_MAX(val), GHCB_PROTOCOL_MAX);
+ 
+-	/* The hypervisor features are available from version 2 onward. */
+-	if (ghcb_version >= 2 && !get_hv_features())
++	if (!get_hv_features())
+ 		return false;
+ 
+ 	return true;
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+https://people.kernel.org/tglx/notes-about-netiquette
