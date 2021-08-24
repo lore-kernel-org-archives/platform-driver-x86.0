@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A93DC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 23:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6309CC43214
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 23:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515DE61374
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 23:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A11A61373
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 23:06:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232651AbhHXXH2 (ORCPT
+        id S233422AbhHXXHa (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Aug 2021 19:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56274 "EHLO
+        Tue, 24 Aug 2021 19:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbhHXXH1 (ORCPT
+        with ESMTP id S232919AbhHXXH3 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Aug 2021 19:07:27 -0400
+        Tue, 24 Aug 2021 19:07:29 -0400
 Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883F4C061757;
-        Tue, 24 Aug 2021 16:06:42 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id f5so33516973wrm.13;
-        Tue, 24 Aug 2021 16:06:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26AA5C061757;
+        Tue, 24 Aug 2021 16:06:44 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id h4so3376089wro.7;
+        Tue, 24 Aug 2021 16:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OoN9j7V42I1ib2rD7x6CdjLS7PodaYT54taKk3BzX5Y=;
-        b=rnX9gRPOU/6hmcIDVFhSxv5iJhqOBnXvlZ69RXFrcx/X5YTbwm7+f60VRSizP4zs1V
-         WJJpaicKA8JpZ3pXNfcFlzSaPLP3D+0Iv6WB1JDdOSwUXi1F8q79j8WDVvyTtRMXMlat
-         X4j62MU1mzNYJ7iAP3MTv1oQGkyXjobgQm0jL2jlmgYtt4WFoN/5rwbzww1CPFDRJtIP
-         DuOIBCY2StjULS4OyQzxlpxzQ8MZGb/RBK8QkpsMd2t1SryZ+BkbyEltFbBDUNuAoXbm
-         QY/P/iQZdLXdc4gnKGg+LeBwocfwXGgDTKAWC3B2Nrn0a/oNucV65wh48PBDEbc6IVAz
-         P5yA==
+        bh=mu/ag5GKGBWwht6VOzxJtXe0HGbioRW+arz4tUnbIYc=;
+        b=LkW75YZSVVPiT/65SEiDzspNP9FZxl2SU4G/PXTkJdntISBsCc2FPrja2aWbKvsNfF
+         3/v6z/0IBmBWO4lHItKIj4YEQCG2IcT9O0O6DU+tHTGWOM/FsbBy4uvZiwEMH+qto8RW
+         sZMB4zzUI8SuHpgloJiBV8SQVB7/Xws+53MJcLXj0kPjEdN64WZevyWQfB6T3MLTjp9H
+         YLDOl9MK+3c6qk1Xw/vrJobLrzHlLBGSqC1EHIpY+Hmrm4V5FUL2DhoItnpSerhkaz2N
+         aceikHlNweQYywRt2CL2hZbGe0MI8mk5l/UusCO4haMJV4G212daRacfgfXpVMATPvS1
+         3xNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OoN9j7V42I1ib2rD7x6CdjLS7PodaYT54taKk3BzX5Y=;
-        b=Z88hPVTX+Sq/pxDNYn/0P1Xi3TSSU5HG5sYQe6T7r/cpto5D70GuiwOHtcokcFdUIt
-         UZTNCPGr9QjN8WIBmqPF283BDWMt6Ykw30R15or21siSYyMcw81HoDL/nK+aobYPyeeJ
-         ydy7a1FVtzzNKnd+gx7Y/AnMgyFFjceT/a2LA6odSMag12nMSemo4nCAoJsa0aoqN0rF
-         OtPhYnTAfEtSDpjxcJ4IylJL7YjqsQcV9JZINjgCQdr+6vSlS9X0QkPzYaY4GhBOrghj
-         RUYvk2zmvjAD7vw+nFeDHCtIkEmS7EY5Iq7s3e/UFb0GA8+yAXYfZLu4/px19QLQAhRE
-         SrVg==
-X-Gm-Message-State: AOAM533bLoV6G+IFuDV+MXXJS+SJSa6FPwRxGQP5auasox3GPUl9IJeu
-        06+rH+IW/tZMfRDFOncPFPaF6pUYYQM=
-X-Google-Smtp-Source: ABdhPJxvat4MW/z0z+eNhao1qXJeiBWsmljhvv7oV0sVQyscDs3YYr+6cxWS0EcD8WR0ymaLl3ZK+g==
-X-Received: by 2002:a5d:6107:: with SMTP id v7mr21893655wrt.408.1629846401151;
-        Tue, 24 Aug 2021 16:06:41 -0700 (PDT)
+        bh=mu/ag5GKGBWwht6VOzxJtXe0HGbioRW+arz4tUnbIYc=;
+        b=UgCkAz++TEdD6UHsKumB3EvXNktBvdiqiUnDlxnggjmfiiixIMwqOXAXHREx2+Tjj8
+         v1iIlmwGTpyKcLrBnVP92zBT7yqs1hD3O1uGbbw5JNns4JylWkjJjgWUBWl4/2+BqLLG
+         UwvjGnjjcm+cQpkfvZS4wrhezuvQVYnzQsqsttQQlinhoKwVYDw+9ysaqaxwPUMSehBg
+         kQXW7Z8WrZEM1jUriqtx7Qvrb3dGbLIujXnCQBcErzqlAUJAmBjBneSRxSZXAfI4dRPO
+         hgW8EOt29trDRQQDGKwr5nhUrCkJQOrVk1caRg+CB/B7XphhUXmTi3SHU9xSrAry6DQ3
+         vK5A==
+X-Gm-Message-State: AOAM532wRV2CynyH4f/cJErDDOTSpscMd3hEj0R5saU9z/dWtC+jvVIA
+        a/94oDeaos0JYqI5zZtxo1yJxzx0MnM=
+X-Google-Smtp-Source: ABdhPJz9aSFUhjHO9rdvkv/AwEQ8ILRGQfgxClpFlpzsJOn7iGzHHxFubEpRwL8DpodssWAVyZtx+w==
+X-Received: by 2002:a5d:6c6a:: with SMTP id r10mr21470327wrz.380.1629846402807;
+        Tue, 24 Aug 2021 16:06:42 -0700 (PDT)
 Received: from localhost.localdomain (cpc141996-chfd3-2-0-cust928.12-3.cable.virginm.net. [86.13.91.161])
-        by smtp.gmail.com with ESMTPSA id q10sm3477868wmq.12.2021.08.24.16.06.40
+        by smtp.gmail.com with ESMTPSA id q10sm3477868wmq.12.2021.08.24.16.06.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 16:06:40 -0700 (PDT)
+        Tue, 24 Aug 2021 16:06:42 -0700 (PDT)
 From:   Daniel Scally <djrscally@gmail.com>
 To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Date:   Wed, 25 Aug 2021 00:06:18 +0100
-Message-Id: <20210824230620.1003828-2-djrscally@gmail.com>
+Subject: [RFC PATCH v2 3/3] platform/surface: Add Surface Go 2 board file
+Date:   Wed, 25 Aug 2021 00:06:20 +0100
+Message-Id: <20210824230620.1003828-4-djrscally@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210824230620.1003828-1-djrscally@gmail.com>
 References: <20210824230620.1003828-1-djrscally@gmail.com>
@@ -79,237 +79,181 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-In some situations regulator devices can be enumerated via either
-devicetree or ACPI and bound to regulator drivers but without any
-init data being provided in firmware. This leaves their consumers
-unable to acquire them via regulator_get().
+The DSDT tables on the Surface Go 2 contain no power control methods for
+the world facing camera, so the regulator, gpio and clk frameworks have no
+way to discover the appropriate connections and settings.
 
-To fix the issue, add the ability to register a lookup table to a
-list within regulator core, which will allow board files to provide
-init data via matching against the regulator name and device name in
-the same fashion as the gpiod lookup table.
+To compensate for the shortcomings, define the connections and other
+parameters in a board file for this device.
 
 Signed-off-by: Daniel Scally <djrscally@gmail.com>
 ---
 Changes in v2:
-	- Patch introduced
+	- Re-written to use regulator_add_lookup() instead of the software
+	node api from v1.
+	- Added a dmi check to prevent the lookups from being added where the
+	platform running the code is not a Microsoft Surface Go 2 (Laurent)
 
- drivers/regulator/core.c          | 119 +++++++++++++++++++++++++++++-
- include/linux/regulator/machine.h |  23 ++++++
- 2 files changed, 141 insertions(+), 1 deletion(-)
+ MAINTAINERS                             |  6 ++
+ drivers/platform/surface/Kconfig        | 10 +++
+ drivers/platform/surface/Makefile       |  1 +
+ drivers/platform/surface/surface_go_2.c | 97 +++++++++++++++++++++++++
+ 4 files changed, 114 insertions(+)
+ create mode 100644 drivers/platform/surface/surface_go_2.c
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index ca6caba8a191..6a6c1f34d9d6 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -36,6 +36,8 @@
- static DEFINE_WW_CLASS(regulator_ww_class);
- static DEFINE_MUTEX(regulator_nesting_mutex);
- static DEFINE_MUTEX(regulator_list_mutex);
-+static DEFINE_MUTEX(regulator_lookup_mutex);
-+static LIST_HEAD(regulator_lookup_list);
- static LIST_HEAD(regulator_map_list);
- static LIST_HEAD(regulator_ena_gpio_list);
- static LIST_HEAD(regulator_supply_alias_list);
-@@ -1868,6 +1870,7 @@ static struct regulator_dev *regulator_lookup_by_name(const char *name)
- static struct regulator_dev *regulator_dev_lookup(struct device *dev,
- 						  const char *supply)
- {
-+	struct regulator_lookup *lookup;
- 	struct regulator_dev *r = NULL;
- 	struct device_node *node;
- 	struct regulator_map *map;
-@@ -1917,7 +1920,34 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
- 	if (r)
- 		return r;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index dc24e97d5386..891189cecd51 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12329,6 +12329,12 @@ F:	Documentation/driver-api/surface_aggregator/clients/dtx.rst
+ F:	drivers/platform/surface/surface_dtx.c
+ F:	include/uapi/linux/surface_aggregator/dtx.h
  
--	return ERR_PTR(-ENODEV);
-+	/*
-+	 * The regulator might still exist and be called out in a lookup table,
-+	 * but simply not yet have probed. Check to see if the consumer device
-+	 * is referenced in any init data in the lookups.
-+	 */
++MICROSOFT SURFACE GO 2 SUPPORT
++M:	Daniel Scally <djrscally@gmail.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Maintained
++F:	drivers/platform/surface/surface_go_2.c
 +
-+	mutex_lock(&regulator_lookup_mutex);
-+	list_for_each_entry(lookup, &regulator_lookup_list, list) {
-+		struct regulator_init_data *init_data = &lookup->init_data;
-+		unsigned int i;
-+
-+		if (!devname)
-+			break;
-+
-+		for (i = 0; i < init_data->num_consumer_supplies; i++) {
-+			if (strcmp(init_data->consumer_supplies[i].dev_name, devname))
-+				continue;
-+
-+			r = ERR_PTR(-EPROBE_DEFER);
-+			goto out;
-+		}
-+	}
-+
-+	r = ERR_PTR(-ENODEV);
-+
-+out:
-+	mutex_unlock(&regulator_lookup_mutex);
-+	return r;
- }
+ MICROSOFT SURFACE GPE LID SUPPORT DRIVER
+ M:	Maximilian Luz <luzmaximilian@gmail.com>
+ L:	platform-driver-x86@vger.kernel.org
+diff --git a/drivers/platform/surface/Kconfig b/drivers/platform/surface/Kconfig
+index 3105f651614f..0c55bd531592 100644
+--- a/drivers/platform/surface/Kconfig
++++ b/drivers/platform/surface/Kconfig
+@@ -124,6 +124,16 @@ config SURFACE_DTX
+ 	  Aggregator Bus (i.e. CONFIG_SURFACE_AGGREGATOR_BUS=n). In that case,
+ 	  some devices, specifically the Surface Book 3, will not be supported.
  
- static int regulator_resolve_supply(struct regulator_dev *rdev)
-@@ -5302,6 +5332,54 @@ static struct regulator_coupler generic_regulator_coupler = {
- 	.attach_regulator = generic_coupler_attach,
- };
- 
-+/**
-+ * regulator_lookup_init_data - Check regulator_lookup_list for matching entries
-+ * @desc:	Regulator desc containing name of the regulator
-+ * @cfg:	Regulator config containing pointer to the registering device
-+ *
-+ * Calling this function scans the regulator_lookup_list and checks each entry
-+ * to see if the .device_name and .regulator_name fields match the device name
-+ * and regulator name contained in @cfg and @desc. If so, a pointer to the
-+ * embedded &struct regulator_init_data is returned. No matches returns NULL.
-+ */
-+struct regulator_init_data *
-+regulator_lookup_init_data(const struct regulator_desc *desc,
-+			   const struct regulator_config *cfg)
-+{
-+	struct regulator_lookup *lookup;
++config SURFACE_GO_2
++	bool "Surface Go 2 Specific Driver"
++	help
++	  This board file performs some platform specific configuration to help
++	  the regulator, gpio and clk frameworks link those resources to the
++	  consuming devices - specifically the world facing camera.
 +
-+	if (!desc || !cfg || !cfg->dev)
-+		return NULL;
++	  Select Y here if your device is a Microsoft Surface Go 2, otherwise
++	  select N.
 +
-+	mutex_lock(&regulator_lookup_mutex);
+ config SURFACE_GPE
+ 	tristate "Surface GPE/Lid Support Driver"
+ 	depends on DMI
+diff --git a/drivers/platform/surface/Makefile b/drivers/platform/surface/Makefile
+index 32889482de55..9f858d2a3d77 100644
+--- a/drivers/platform/surface/Makefile
++++ b/drivers/platform/surface/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_SURFACE_AGGREGATOR)	+= aggregator/
+ obj-$(CONFIG_SURFACE_AGGREGATOR_CDEV)	+= surface_aggregator_cdev.o
+ obj-$(CONFIG_SURFACE_AGGREGATOR_REGISTRY) += surface_aggregator_registry.o
+ obj-$(CONFIG_SURFACE_DTX)		+= surface_dtx.o
++obj-$(CONFIG_SURFACE_GO_2)		+= surface_go_2.o
+ obj-$(CONFIG_SURFACE_GPE)		+= surface_gpe.o
+ obj-$(CONFIG_SURFACE_HOTPLUG)		+= surface_hotplug.o
+ obj-$(CONFIG_SURFACE_PLATFORM_PROFILE)	+= surface_platform_profile.o
+diff --git a/drivers/platform/surface/surface_go_2.c b/drivers/platform/surface/surface_go_2.c
+new file mode 100644
+index 000000000000..31fd6a3ca4aa
+--- /dev/null
++++ b/drivers/platform/surface/surface_go_2.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Author: Dan Scally <djrscally@gmail.com> */
 +
-+	list_for_each_entry(lookup, &regulator_lookup_list, list) {
-+		/*
-+		 * We need the lookup to have at least a device_name or there's
-+		 * no guarantee of a match, and regulator_register() checks to
-+		 * make sure that desc->name is not null, so any entry with
-+		 * either field null is invalid.
-+		 */
-+		if (!lookup->device_name || !lookup->regulator_name)
-+			continue;
++#include <linux/dmi.h>
++#include <linux/gpio/machine.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/regulator/machine.h>
 +
-+		if (strcmp(lookup->device_name, dev_name(cfg->dev)))
-+			continue;
-+
-+		if (strcmp(lookup->regulator_name, desc->name))
-+			continue;
-+
-+		goto found;
-+	}
-+
-+	lookup = NULL;
-+
-+found:
-+	mutex_unlock(&regulator_lookup_mutex);
-+
-+	return lookup ? &lookup->init_data : NULL;
-+}
-+
- /**
-  * regulator_register - register regulator
-  * @regulator_desc: regulator to register
-@@ -5386,6 +5464,9 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 	init_data = regulator_of_get_init_data(dev, regulator_desc, config,
- 					       &rdev->dev.of_node);
- 
-+	if (!init_data)
-+		init_data = regulator_lookup_init_data(regulator_desc, config);
-+
- 	/*
- 	 * Sometimes not all resources are probed already so we need to take
- 	 * that into account. This happens most the time if the ena_gpiod comes
-@@ -5740,6 +5821,42 @@ void *regulator_get_init_drvdata(struct regulator_init_data *reg_init_data)
- }
- EXPORT_SYMBOL_GPL(regulator_get_init_drvdata);
- 
-+/**
-+ * regulator_add_lookup - Add an entry to regulator_lookup_list
-+ * @lookup:	Pointer to the &struct regulator_lookup to add to the list
-+ *
-+ * This function can be used in board files to add an entry to the
-+ * regulator_lookup_list. During regulator_register(), entries will be checked
-+ * for matching device name and regulator name and when matching, the associated
-+ * &struct regulator_init_data will be used.
-+ */
-+void regulator_add_lookup(struct regulator_lookup *lookup)
-+{
-+	mutex_lock(&regulator_lookup_mutex);
-+
-+	list_add_tail(&lookup->list, &regulator_lookup_list);
-+
-+	mutex_unlock(&regulator_lookup_mutex);
-+}
-+EXPORT_SYMBOL_GPL(regulator_add_lookup);
-+
-+/**
-+ * regulator_remove_lookup - Remove an entry from regulator_lookup_list
-+ * @lookup:	Pointer to the &struct regulator_lookup to remove from the list
-+ *
-+ * Calling this function will remove the passed regulator_lookup from the list,
-+ * intended for error handling paths in board files.
-+ */
-+void regulator_remove_lookup(struct regulator_lookup *lookup)
-+{
-+	mutex_lock(&regulator_lookup_mutex);
-+
-+	list_del(&lookup->list);
-+
-+	mutex_unlock(&regulator_lookup_mutex);
-+}
-+EXPORT_SYMBOL_GPL(regulator_remove_lookup);
-+
- #ifdef CONFIG_DEBUG_FS
- static int supply_map_show(struct seq_file *sf, void *data)
- {
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index 68b4a514a410..d1b62a3962d8 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -12,6 +12,7 @@
- #ifndef __LINUX_REGULATOR_MACHINE_H_
- #define __LINUX_REGULATOR_MACHINE_H_
- 
-+#include <linux/list.h>
- #include <linux/regulator/consumer.h>
- #include <linux/suspend.h>
- 
-@@ -272,12 +273,34 @@ struct regulator_init_data {
- 	void *driver_data;	/* core does not touch this */
- };
- 
-+/**
-+ * struct regulator_lookup - lookup table entry for regulator_init_data
-+ *
-+ * @device_name:	The name of the device from regulator_config.dev
-+ * @regulator_name:	The name of the regulator from the &struct regulator_desc
-+ *			to match to during regulator_register()
-+ * @init_data:		An instance of &struct regulator_init_data that you
-+ *			wish to pass to the regulator during regulator_register()
-+ */
-+struct regulator_lookup {
-+	const char *device_name;
-+	const char *regulator_name;
-+
-+	struct regulator_init_data init_data;
-+
-+	struct list_head list;
++static const struct dmi_system_id surface_go_2_dmi_table[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Microsoft Corporation"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Surface Go 2"),
++		},
++	},
++	{ }
 +};
 +
- #ifdef CONFIG_REGULATOR
- void regulator_has_full_constraints(void);
-+void regulator_add_lookup(struct regulator_lookup *lookup);
-+void regulator_remove_lookup(struct regulator_lookup *lookup);
- #else
- static inline void regulator_has_full_constraints(void)
- {
- }
-+static inline void regulator_add_lookup(struct regulator_lookup *lookup) { }
-+static inline void regulator_remove_lookup(struct regulator_lookup *lookup) { }
- #endif
- 
- static inline int regulator_suspend_prepare(suspend_state_t state)
++static struct regulator_consumer_supply ana_consumer_supplies[] = {
++	REGULATOR_SUPPLY("avdd", "i2c-INT347A:00"),
++};
++
++static struct regulator_lookup ana_lookup = {
++	.device_name = "i2c-INT3472:05",
++	.regulator_name = "ANA",
++	.init_data = {
++		.constraints = {
++			.min_uV = 2815200,
++			.max_uV = 2815200,
++			.apply_uV = 1,
++			.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++		},
++		.num_consumer_supplies = ARRAY_SIZE(ana_consumer_supplies),
++		.consumer_supplies = ana_consumer_supplies,
++	},
++};
++
++static struct regulator_consumer_supply vsio_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dovdd", "i2c-INT347A:00"),
++};
++
++static struct regulator_lookup vsio_lookup = {
++	.device_name = "i2c-INT3472:05",
++	.regulator_name = "VSIO",
++	.init_data = {
++		.constraints = {
++			.min_uV = 1800600,
++			.max_uV = 1800600,
++			.apply_uV = 1,
++			.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++		},
++		.num_consumer_supplies = ARRAY_SIZE(vsio_consumer_supplies),
++		.consumer_supplies = vsio_consumer_supplies,
++	},
++};
++
++static struct regulator_consumer_supply core_consumer_supplies[] = {
++	REGULATOR_SUPPLY("dvdd", "i2c-INT347A:00"),
++};
++
++static struct regulator_lookup core_lookup = {
++	.device_name = "i2c-INT3472:05",
++	.regulator_name = "CORE",
++	.init_data = {
++		.constraints = {
++			.min_uV = 1200000,
++			.max_uV = 1200000,
++			.apply_uV = 1,
++			.valid_ops_mask = REGULATOR_CHANGE_STATUS,
++		},
++		.num_consumer_supplies = ARRAY_SIZE(core_consumer_supplies),
++		.consumer_supplies = core_consumer_supplies,
++	},
++};
++
++static struct gpiod_lookup_table surface_go_2_gpios = {
++	.dev_id = "i2c-INT347A:00",
++	.table = {
++		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW)
++	}
++};
++
++static int __init surface_go_2_init(void)
++{
++	if (!dmi_check_system(surface_go_2_dmi_table))
++		return -EINVAL;
++
++	regulator_add_lookup(&ana_lookup);
++	regulator_add_lookup(&vsio_lookup);
++	regulator_add_lookup(&core_lookup);
++	gpiod_add_lookup_table(&surface_go_2_gpios);
++
++	return 0;
++}
++device_initcall(surface_go_2_init);
 -- 
 2.25.1
 
