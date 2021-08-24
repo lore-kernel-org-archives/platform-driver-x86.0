@@ -2,50 +2,51 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-24.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D0DC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20FEC4320A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681246147F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D56D6142A
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234123AbhHXAzP (ORCPT
+        id S233585AbhHXAzi (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 20:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47514 "EHLO mail.kernel.org"
+        Mon, 23 Aug 2021 20:55:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233782AbhHXAy4 (ORCPT
+        id S234007AbhHXAzI (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 20:54:56 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1458361406;
-        Tue, 24 Aug 2021 00:54:11 +0000 (UTC)
+        Mon, 23 Aug 2021 20:55:08 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6120A61414;
+        Tue, 24 Aug 2021 00:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629766452;
-        bh=h4u0Bx6aeNoGpapTXM+eifytyobrG/LQIW8hVQOGC7Y=;
+        s=k20201202; t=1629766462;
+        bh=7s5V+XLCi58mMZ1aJ4NhjrK5fu6oh+cvwdC8oHgwZww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FLKLXO1BGbM3zrBFRJT1bm++GW9YTqMRXJ+bN0sWjudEMNWMPWdMmmiaSQlSV1VlB
-         NXXkBSlXUvdY/yUJutLhy2IS7iSUxw/IYXPdvjRl7lEbm5H280fMC9Igj+a8ymJDcl
-         cAU8ySjQVdKErOip0Fq1MG7Q16WyLrbuqdSpY94fdFQMXBuk1/nb1DwZiUJiFyguhr
-         QdybZiSQW6fvGVQ31CbyPpdte9sgGiGjjPs5dXm4WalI77IjkLhuwTdwHosFhiIl25
-         cc5Y5gdcMy+sB2e4EUYjuQwwDikvmCfTUwLhm5vR/qVF0YQqFx+FVT1w6Th6jT683a
-         dYkjVbVkiFRiQ==
+        b=hXxyirE2mT9iHAGxdBVdHmxhIJNykRZObbPv5Hr3rlXcc6eJ8Kvg08UuEa3iPGmOy
+         dfF9wik8qk+ntMAtkDULk7iNhcQ/+KQzOuPDGvqV8mSMPOwHc6UqH3Kro6SpLzb0s5
+         mMJBJlFeXA/NrBg3OWoP/QNbjGMzFQWkqP8a3xvwXdgBewNGuzU+XCbK9gZG+eCiFR
+         x4vX9mRQ3rLc8lZD9BYMchldrNz+Arc3483zGdjJztKYUOX5RdULvahwlEK2rup8da
+         lxbV+9mei+OK8sOqHa7Gz08RUzFLXHyITxKMx427oXSmBeXcZyriQF0zUk2Zh5Bb4c
+         p8xxZgeLPubkQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 12/26] platform/x86: asus-nb-wmi: Add tablet_mode_sw=lid-flip quirk for the TP200s
-Date:   Mon, 23 Aug 2021 20:53:42 -0400
-Message-Id: <20210824005356.630888-12-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 19/26] platform/x86: gigabyte-wmi: add support for X570 GAMING X
+Date:   Mon, 23 Aug 2021 20:53:49 -0400
+Message-Id: <20210824005356.630888-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210824005356.630888-1-sashal@kernel.org>
 References: <20210824005356.630888-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -53,42 +54,33 @@ Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Thomas Weißschuh <linux@weissschuh.net>
 
-[ Upstream commit 73fcbad691110ece47a487c9e584822070e3626f ]
+[ Upstream commit b9570f5c9240cadf87fb5f9313e8f425aa9e788f ]
 
-The Asus TP200s / E205SA 360 degree hinges 2-in-1 supports reporting
-SW_TABLET_MODE info through the ASUS_WMI_DEVID_LID_FLIP WMI device-id.
-Add a quirk to enable this.
+Reported as working here:
+https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/1#issuecomment-900263115
 
-BugLink: https://gitlab.freedesktop.org/libinput/libinput/-/issues/639
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+Link: https://lore.kernel.org/r/20210817154628.84992-1-linux@weissschuh.net
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20210812145513.39117-2-hdegoede@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/gigabyte-wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 9929eedf7dd8..a81dc4b191b7 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -462,6 +462,15 @@ static const struct dmi_system_id asus_quirks[] = {
- 		},
- 		.driver_data = &quirk_asus_use_lid_flip_devid,
- 	},
-+	{
-+		.callback = dmi_matched,
-+		.ident = "ASUS TP200s / E205SA",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "E205SA"),
-+		},
-+		.driver_data = &quirk_asus_use_lid_flip_devid,
-+	},
- 	{},
- };
- 
+diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
+index fbb224a82e34..9e8cfac403d3 100644
+--- a/drivers/platform/x86/gigabyte-wmi.c
++++ b/drivers/platform/x86/gigabyte-wmi.c
+@@ -147,6 +147,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
+ 	{ }
 -- 
 2.30.2
 
