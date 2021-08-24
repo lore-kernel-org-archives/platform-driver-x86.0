@@ -2,522 +2,380 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67EBC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 19:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC33C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 22:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E6060FD8
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 19:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427DC611C8
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 22:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234404AbhHXTd3 (ORCPT
+        id S231792AbhHXWKB (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 24 Aug 2021 15:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbhHXTd2 (ORCPT
+        Tue, 24 Aug 2021 18:10:01 -0400
+Received: from mail-dm6nam11on2070.outbound.protection.outlook.com ([40.107.223.70]:23009
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230374AbhHXWJ5 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 24 Aug 2021 15:33:28 -0400
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70842C061757
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Aug 2021 12:32:44 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id i3-20020a056830210300b0051af5666070so39324096otc.4
-        for <platform-driver-x86@vger.kernel.org>; Tue, 24 Aug 2021 12:32:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iSVNTz5pyGKKMqQCpHwjX4ZxYnz8CgWZdBOXIyHWXHE=;
-        b=qZndeCpoQJoZQ6ig2oaWTzGj9DlH9GVK1YIN4BEZ1rhhouGk8n0LpULf6jntxlYCyO
-         vk4RkJ9CNFiuzoLngzjiDn5OuD1oL8VfcZpHcI91ao5Ps2lDMB6fyOEyb0NvDzJMG5s7
-         o7QpbY9zHmJX+51gJtgYE63GYL52RtbRgCCuqA/8fyiFKcU3nDlFJ38DMbp3L1OAuJwu
-         2hQ4Gb9NAvkdREpZG7HAxQTBVe0hID/SR9+9qJDdVRS79aE0D8jvkQNocN5OqkbKjeot
-         V5zA0Zpb5CzHpWJLEIXQy3lhslFdPXdHNR3LHYoIKwv9rlJnEnNKwN9I61YLQ/VZR5Sq
-         KMlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=iSVNTz5pyGKKMqQCpHwjX4ZxYnz8CgWZdBOXIyHWXHE=;
-        b=cue0k396Wne4mu5Mb3RBIpdONSTbEo1tSSwCySKIB/nSmDNl6Ur2kIK/yGYDNFGip5
-         6XhKC1uXq3FwNpSwnpaK1PkqFcEBpEY6AUWucxc+QiWBuxucY3XrTDA9qyqsgjSJuavu
-         E1+6JPdlJDecj5P8d488TbrZnNCNd0RUxrWfBw1P0h15rsqp3mEwnZOFvmKP7hL00th6
-         NJDorn9pKqwMmKHLSPpAXd1btEjxgMjpNBY7gAMSUO2H7dkANr6XKqTVYLNOf/nL5qc0
-         4pffediNaL1rDYmEVJ8EL06LHpdXQRNOHcjSozpMfLW9ObfYHPuRSMQkaz5DwIXuRdqo
-         3W7g==
-X-Gm-Message-State: AOAM531NJRKmmsiZKGPnWibuulOxFcfx52wen+cStRdbDgIsvq3k4qI5
-        veFP6DmdjBdp4On4vTn4rI4=
-X-Google-Smtp-Source: ABdhPJxprs+HpnSM20ubRR7JD4hOKI2OaMH2TSKWMSepamJHxKqVbNdSZNYqFSGcrPCr+W3PaxwFlg==
-X-Received: by 2002:a05:6808:f04:: with SMTP id m4mr875352oiw.86.1629833563813;
-        Tue, 24 Aug 2021 12:32:43 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z78sm4184557ooa.29.2021.08.24.12.32.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 12:32:43 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Tue, 24 Aug 2021 12:32:41 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Enver Balalic <balalic.enver@gmail.com>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: add support for omen laptops
-Message-ID: <20210824193241.GA3414880@roeck-us.net>
-References: <20210823185407.i7tk5bgofedqxfxf@omen.localdomain>
- <20210824173501.GA3402937@roeck-us.net>
- <20210824191132.o2eym6rq7pjgsxqy@omen.localdomain>
+        Tue, 24 Aug 2021 18:09:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TgQbAt/XfdIIURmp9p+EDee4r09YDG0idGN5v/OzB5WTQniyMEuYbPXtNHUYCwb1IlTK85XlnG5pIViAfagQLamA6KPYS+4NuZ0/LW+smp1vEfownsL8cYfksZgWsyyxTA9dNzJtXC8PpNS3VjGdnf4Rdcid0vKitQR6wuu2ZOtpXamSScChqRoI7/Kur8LVb7nyeXWUVfwBDK4nD0yHOkoJSMNHfaRZBG28YPlwkVeYYG9lV4ufxw4lc8fa5sfF/VE5Pg9w9rYBRE5UeMfYFt1yglhndpLMTPrihpMQweOsUSS28AHpo/gBuQK+ZL3jB3cxPcjD0WbRINqYpoPfpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JrD7Hbk8T3ClnfQizRLbo6AjXQ/F/D/cGi5DcatEZBk=;
+ b=fymt7inAgzQTpceU+kaXXypPr9+eHYka6iAf47QmRaaVKfkO/RnT/Rpci3iLn8gRtW1AydORABssvffvtbATRe83rHfiCqJtprKAXGAfQsNVqmnkmH9Lsxb4RNLSDMOOVemCHXcwXY3gZzfkBwteufplvLqhvaSOb80fu6hOvY5RGFIXj12cLkyG7z9ZvINXUHbFWmxpvjVlv7GB3ci70b7zaOvX/WiJisKw+DrDrpsrAbQ6tEBpSjZP6MgjBNVl0WSofxO8h5bTuAkAjjwIs64YcurUAdECRYrY5GeqrMNzwjRSM2cJLWAGWo4vRTwdty94mDeW6a1ulQiisdKwhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.32) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JrD7Hbk8T3ClnfQizRLbo6AjXQ/F/D/cGi5DcatEZBk=;
+ b=no+gzLIU6d8KynH6IYkk6wF7TbiskfUpPiWzRnbn3SLmXyhhyzKmpspFnLmK3Ik+Mt+RPMdMuCqxzW/nwX4uMDkn0lBJgFXNRxVwWMKgSHzKtgU+3Y6jUwqn5twkC0vj+FdOOwFspXAnRkeFZrriZkU7xb8UQc5xgw35+jWOVb3eRU1HXYniRDiniCYfAWGstRfeYR/IG2wIslEiFgTUz13xEce8pr3B0na0TfRQaxXNR84/5zpnuJFq9KyCFwS/2pXh2r4t1QMcAvihO5PRo8Wr1vCpbaLgXP7ehkGXJOpVp9Ms4fcMtm0NtjK0TPqrlu2Cw+Kw2eLabvSa7NKteg==
+Received: from DM5PR15CA0028.namprd15.prod.outlook.com (2603:10b6:4:4b::14) by
+ MN2PR12MB3151.namprd12.prod.outlook.com (2603:10b6:208:d1::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4436.19; Tue, 24 Aug 2021 22:09:10 +0000
+Received: from DM6NAM11FT021.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:4b:cafe::44) by DM5PR15CA0028.outlook.office365.com
+ (2603:10b6:4:4b::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend
+ Transport; Tue, 24 Aug 2021 22:09:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.32; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.32) by
+ DM6NAM11FT021.mail.protection.outlook.com (10.13.173.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4436.19 via Frontend Transport; Tue, 24 Aug 2021 22:09:10 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 24 Aug
+ 2021 15:09:09 -0700
+Received: from dude.nvidia.com (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 24 Aug
+ 2021 22:09:07 +0000
+From:   Daniel Dadap <ddadap@nvidia.com>
+To:     <platform-driver-x86@vger.kernel.org>, <hdegoede@redhat.com>,
+        <mario.limonciello@outlook.com>, <pobrn@protonmail.org>
+CC:     <andy@infradead.org>, <dvhart@infradead.org>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Aaron Plattner <aplattner@nvidia.com>
+Subject: [PATCH v3] platform/x86: Add driver for ACPI WMAA EC-based backlight control
+Date:   Tue, 24 Aug 2021 17:04:38 -0500
+Message-ID: <20210824220437.14175-1-ddadap@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <877ae34b-dcbb-a0a4-7d76-d9d78d12fd00@redhat.com>
+References: <877ae34b-dcbb-a0a4-7d76-d9d78d12fd00@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210824191132.o2eym6rq7pjgsxqy@omen.localdomain>
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a19f472a-f9ef-47ec-c51b-08d9674bcc97
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3151:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB315113066A32C24BF737BA0BBCC59@MN2PR12MB3151.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:321;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r2S/onJ6w17MZ0vAU0gNbyZhSKkvPRvDuSUvODuCJDtxJWs780nsJXVVaSzcOfGZlcX47XSJr9hKNf+xWc3HB1Ivz+NTBwRUDFDw+52VJuZgne4cd/cipJ2R5OItIr4jAgpQcQ83icr8qe4lGDosZZeVgkTrM7JvBB32YsEdLgGXj24i2wwSSjk8r2UbTb3k3zAsp/7xC/+Xed1ADMzwnpIslEfxm79w+I+lsGizU04/k0pEdiWMJB3dmsDyy3ef1q7g68F9wioYm7KHcr0Kk1+Or7EXpamVTlXEt4+GzmIQsbNk+20cEonB+fO8gOivLvmOQjLYiMD0b1Za28t+k6+sWf2vWoNfjJdaBM/SM/KW8mHeq2/aG/IMYeizUcXaEtuIarrnCebA/fIDPlww4znel/Q0UYXVZwN5jBKsrkmUKPyHeHULf+l7ETh0WTUIcfLtDa6KtZbeEhsJhjHBJc6tQK9akc7R8HovrI4QdHtSJp9+i3r/6SVpe3tPa2MUGjyD4krdGKmd7SuAfsmaYu9kt+VunKjmEhpzEfCfu7jPss2yOzER2EiNku3wqL8znqLLwkauuWY40aU2IbaCdCRW0XV9+gRtdZ27LUEXLSGSYp2xvWAKznMnXonOQPGhQ5P+QeFoGVzCM92A6NP8Ks59vwpcRY5iqPTJ5IpeS3Q77dKiONBbrvQ2CLPVqI50
+X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(36840700001)(83380400001)(2616005)(36860700001)(2906002)(45080400002)(26005)(16526019)(66574015)(478600001)(36756003)(32650700002)(1076003)(336012)(70586007)(426003)(186003)(7696005)(82310400003)(316002)(5660300002)(356005)(4326008)(8936002)(54906003)(7636003)(6666004)(70206006)(107886003)(82740400003)(8676002)(110136005)(86362001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2021 22:09:10.0913
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a19f472a-f9ef-47ec-c51b-08d9674bcc97
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT021.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3151
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Tue, Aug 24, 2021 at 09:11:32PM +0200, Enver Balalic wrote:
-> On Tue, Aug 24, 2021 at 10:35:01AM -0700, Guenter Roeck wrote:
-> > On Mon, Aug 23, 2021 at 08:54:07PM +0200, Enver Balalic wrote:
-> > > This patch adds support for HP Omen laptops.
-> > > It adds support for most things that can be controlled via the
-> > > Windows Omen Command Center application.
-> > > 
-> > >  - Fan speed monitoring through hwmon
-> > >  - Platform Profile support (cool, balanced, performance)
-> > >  - Max fan speed function toggle
-> > > 
-> > > Also exposes the existing HDD temperature through hwmon since
-> > > this driver didn't use hwmon before this patch.
-> > > 
-> > > This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
-> > > 
-> > >  - V1
-> > >    Initial Patch
-> > >  - V2
-> > >    Use standard hwmon ABI attributes
-> > >    Add existing non-standard "hddtemp" to hwmon
-> > >  - V3
-> > >    Fix overflow issue in "hp_wmi_get_fan_speed"
-> > >    Map max fan speed value back to hwmon values on read
-> > >    Code style fixes
-> > >    Fix issue with returning values from "hp_wmi_hwmon_read",
-> > >    the value to return should be written to val and not just
-> > >    returned from the function
-> > > 
-> > > Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
-> > > ---
-> > >  drivers/platform/x86/Kconfig  |   1 +
-> > >  drivers/platform/x86/hp-wmi.c | 320 ++++++++++++++++++++++++++++++++--
-> > >  2 files changed, 310 insertions(+), 11 deletions(-)
-> > > 
-> > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > > index d12db6c316ea..f0b3d94e182b 100644
-> > > --- a/drivers/platform/x86/Kconfig
-> > > +++ b/drivers/platform/x86/Kconfig
-> > > @@ -431,6 +431,7 @@ config HP_WMI
-> > >  	tristate "HP WMI extras"
-> > >  	depends on ACPI_WMI
-> > >  	depends on INPUT
-> > > +	depends on HWMON
-> > >  	depends on RFKILL || RFKILL = n
-> > >  	select INPUT_SPARSEKMAP
-> > >  	select ACPI_PLATFORM_PROFILE
-> > > diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> > > index 027a1467d009..8c1fe1df6462 100644
-> > > --- a/drivers/platform/x86/hp-wmi.c
-> > > +++ b/drivers/platform/x86/hp-wmi.c
-> > > @@ -22,6 +22,7 @@
-> > >  #include <linux/input/sparse-keymap.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/platform_profile.h>
-> > > +#include <linux/hwmon.h>
-> > >  #include <linux/acpi.h>
-> > >  #include <linux/rfkill.h>
-> > >  #include <linux/string.h>
-> > > @@ -39,6 +40,7 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
-> > >  
-> > >  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
-> > >  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-> > > +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-> > >  
-> > >  enum hp_wmi_radio {
-> > >  	HPWMI_WIFI	= 0x0,
-> > > @@ -89,10 +91,18 @@ enum hp_wmi_commandtype {
-> > >  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
-> > >  };
-> > >  
-> > > +enum hp_wmi_gm_commandtype {
-> > > +	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> > > +	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> > > +	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> > > +	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> > > +};
-> > > +
-> > >  enum hp_wmi_command {
-> > >  	HPWMI_READ	= 0x01,
-> > >  	HPWMI_WRITE	= 0x02,
-> > >  	HPWMI_ODM	= 0x03,
-> > > +	HPWMI_GM	= 0x20008,
-> > >  };
-> > >  
-> > >  enum hp_wmi_hardware_mask {
-> > > @@ -120,12 +130,23 @@ enum hp_wireless2_bits {
-> > >  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
-> > >  };
-> > >  
-> > > +
-> > > +enum hp_thermal_profile_omen {
-> > > +	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
-> > > +	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
-> > > +	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
-> > > +};
-> > > +
-> > >  enum hp_thermal_profile {
-> > >  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
-> > >  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> > >  	HP_THERMAL_PROFILE_COOL			= 0x02
-> > >  };
-> > >  
-> > > +static const char *const hp_wmi_temp_label[] = {
-> > > +	"HDD",
-> > > +};
-> > > +
-> > >  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
-> > >  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
-> > >  
-> > > @@ -279,6 +300,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +static int hp_wmi_get_fan_speed(int fan)
-> > > +{
-> > > +	u8 fsh, fsl;
-> > > +	char fan_data[4] = { fan, 0, 0, 0 };
-> > > +
-> > > +	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
-> > > +				       &fan_data, sizeof(fan_data),
-> > > +				       sizeof(fan_data));
-> > > +
-> > > +	if (ret != 0)
-> > > +		return -EINVAL;
-> > > +
-> > > +	fsh = fan_data[2];
-> > > +	fsl = fan_data[3];
-> > > +
-> > > +	return (fsh << 8) | fsl;
-> > > +}
-> > > +
-> > >  static int hp_wmi_read_int(int query)
-> > >  {
-> > >  	int val = 0, ret;
-> > > @@ -302,6 +341,61 @@ static int hp_wmi_hw_state(int mask)
-> > >  	return !!(state & mask);
-> > >  }
-> > >  
-> > > +static int omen_thermal_profile_set(int mode)
-> > > +{
-> > > +	char buffer[2] = {0, mode};
-> > > +	int ret;
-> > > +
-> > > +	if (mode < 0 || mode > 2)
-> > > +		return -EINVAL;
-> > > +
-> > > +	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> > > +				   &buffer, sizeof(buffer), sizeof(buffer));
-> > > +
-> > > +	if (ret)
-> > > +		return ret < 0 ? ret : -EINVAL;
-> > > +
-> > > +	return mode;
-> > > +}
-> > > +
-> > > +static int omen_thermal_profile_get(void)
-> > > +{
-> > > +	u8 data;
-> > > +
-> > > +	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
-> > > +
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	return data;
-> > > +}
-> > > +
-> > > +static int hp_wmi_fan_speed_max_set(int enabled)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
-> > > +				   &enabled, sizeof(enabled), sizeof(enabled));
-> > > +
-> > > +	if (ret)
-> > > +		return ret < 0 ? ret : -EINVAL;
-> > > +
-> > > +	return enabled;
-> > > +}
-> > > +
-> > > +static int hp_wmi_fan_speed_max_get(void)
-> > > +{
-> > > +	int val = 0, ret;
-> > > +
-> > > +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
-> > > +				   &val, sizeof(val), sizeof(val));
-> > > +
-> > > +	if (ret)
-> > > +		return ret < 0 ? ret : -EINVAL;
-> > > +
-> > > +	return val;
-> > > +}
-> > > +
-> > >  static int __init hp_wmi_bios_2008_later(void)
-> > >  {
-> > >  	int state = 0;
-> > > @@ -878,6 +972,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
-> > >  	return err;
-> > >  }
-> > >  
-> > > +static int platform_profile_omen_get(struct platform_profile_handler *pprof,
-> > > +				enum platform_profile_option *profile)
-> > > +{
-> > > +	int tp;
-> > > +
-> > > +	tp = omen_thermal_profile_get();
-> > > +	if (tp < 0)
-> > > +		return tp;
-> > > +
-> > > +	switch (tp) {
-> > > +	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
-> > > +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> > > +		break;
-> > > +	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
-> > > +		*profile = PLATFORM_PROFILE_BALANCED;
-> > > +		break;
-> > > +	case HP_OMEN_THERMAL_PROFILE_COOL:
-> > > +		*profile = PLATFORM_PROFILE_COOL;
-> > > +		break;
-> > > +	default:
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int platform_profile_omen_set(struct platform_profile_handler *pprof,
-> > > +				enum platform_profile_option profile)
-> > > +{
-> > > +	int err, tp;
-> > > +
-> > > +	switch (profile) {
-> > > +	case PLATFORM_PROFILE_PERFORMANCE:
-> > > +		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
-> > > +		break;
-> > > +	case PLATFORM_PROFILE_BALANCED:
-> > > +		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
-> > > +		break;
-> > > +	case PLATFORM_PROFILE_COOL:
-> > > +		tp = HP_OMEN_THERMAL_PROFILE_COOL;
-> > > +		break;
-> > > +	default:
-> > > +		return -EOPNOTSUPP;
-> > > +	}
-> > > +
-> > > +	err = omen_thermal_profile_set(tp);
-> > > +	if (err < 0)
-> > > +		return err;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int thermal_profile_get(void)
-> > >  {
-> > >  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
-> > > @@ -946,19 +1092,34 @@ static int thermal_profile_setup(void)
-> > >  	int err, tp;
-> > >  
-> > >  	tp = thermal_profile_get();
-> > > -	if (tp < 0)
-> > > -		return tp;
-> > > +	if (tp >= 0) {
-> > > +		/*
-> > > +		* call thermal profile write command to ensure that the firmware correctly
-> > > +		* sets the OEM variables for the DPTF
-> > > +		*/
-> > > +		err = thermal_profile_set(tp);
-> > > +		if (err)
-> > > +			return err;
-> > >  
-> > > -	/*
-> > > -	 * call thermal profile write command to ensure that the firmware correctly
-> > > -	 * sets the OEM variables for the DPTF
-> > > -	 */
-> > > -	err = thermal_profile_set(tp);
-> > > -	if (err)
-> > > -		return err;
-> > > +		platform_profile_handler.profile_get = platform_profile_get;
-> > > +		platform_profile_handler.profile_set = platform_profile_set;
-> > > +	}
-> > 
-> > I don't really understand the above logic change. Why is
-> > the error from thermal_profile_get() now ignored ?
-> > 
-> > >  
-> > > -	platform_profile_handler.profile_get = platform_profile_get,
-> > > -	platform_profile_handler.profile_set = platform_profile_set,
-> > > +	tp = omen_thermal_profile_get();
-> > > +	if (tp >= 0) {
-> > > +		/*
-> > > +		* call thermal profile write command to ensure that the firmware correctly
-> > > +		* sets the OEM variables
-> > > +		*/
-> > > +		err = omen_thermal_profile_set(tp);
-> > > +		if (err < 0)
-> > > +			return err;
-> > > +
-> > > +		platform_profile_handler.profile_get = platform_profile_omen_get;
-> > > +		platform_profile_handler.profile_set = platform_profile_omen_set;
-> > 
-> > It looks like omen_thermal_profile_get() has priority over
-> > thermal_profile_get(). If so, it might make more sense to execute it first
-> > and only call thermal_profile_get() if omen_thermal_profile_get() returned
-> > an error. If ignoring the result from thermal_profile_get() is on purpose,
-> > it might make sense to drop that code entirely.
-> > 
-> > I am not entirely sure I understand what this code is supposed to be doing,
-> > though. Some comments might be useful.
-> Looking at it again, as it stands this is wrong, the omen code should only
-> run if the regular thermal_profile_get() returns an error, and not how it
-> is now.
-> 
-> Background to this is that the thermal_profile_get() code doesn't work on
-> the Omen, so the omen specific path is needed, but only in the case that
-> the regular, non-omen code fails.
-> 
-> As for ignoring the errors, I guess that in the case that both the regular
-> thermal_profile_get, and omen_thermal_profile_get fail, this function
-> should just return -EOPNOTSUPP instead of returning the error code of the
-> last function that ran (omen one) like it does now ?
+A number of upcoming notebook computer designs drive the internal
+display panel's backlight PWM through the Embedded Controller (EC).
+This EC-based backlight control can be plumbed through to an ACPI
+"WMAA" method interface, which in turn can be wrapped by WMI with
+the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
 
-I can't really say since I am not that involved in the driver.
-All I noticed is that the code is odd and difficult to understand.
-There should be a better means to determine if the system is an
-"Omen" than trial and error, possibly from its DMI data or maybe
-from its WMI GUIDs.
+Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
+backlight class driver to control backlight levels on systems with
+EC-driven backlights.
 
-> > 
-> > > +	} else {
-> > > +		return tp;
-> > > +	}
-> > 
-> > 	if (tp < 0)
-> > 		return tp;
-> > 
-> > followed by non-error code would be more common.
-> > 
-> > >  
-> > >  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
-> > >  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
-> > > @@ -973,6 +1134,8 @@ static int thermal_profile_setup(void)
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static int hp_wmi_hwmon_init(void);
-> > > +
-> > >  static int __init hp_wmi_bios_setup(struct platform_device *device)
-> > >  {
-> > >  	/* clear detected rfkill devices */
-> > > @@ -984,6 +1147,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
-> > >  	if (hp_wmi_rfkill_setup(device))
-> > >  		hp_wmi_rfkill2_setup(device);
-> > >  
-> > > +	hp_wmi_hwmon_init();
-> > > +
-> > This doesn't really make sense. If it is critical, it should abort here.
-> > If it isn't, the function should not return an error only for it to be
-> > ignored.
-> > 
-> > Also, if hwmon functionality isn't critical, the driver should not depend
-> > on HWMON since it performs perfectly fine without it.
-> Here if it's running on an omen and HWMON isn't there, there is no reporting
-> of fan speeds and the max/auto toggle won't work. So I don't know if that is
-> considered `critical`. I would guess not ?
+Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+---
 
-The point I am trying to make is
+v2: Convert to WMI subsystem driver, suggested by Mario Limonciello
+    <mario.limonciello@outlook.com>; various cleanups suggested by
+    Barnabás Pőcze <pobrn@protonmail.com>
+v3: Address assorted style nits raised by Andy Shevchenko
+    <andy.shevchenko@gmail.com> in response to a related patch; remove
+    additional behavior change to WMI subsystem from patch series as
+    recommended by Hans de Goede <hdegoede@redhat.com>
 
-1) If the return value from hp_wmi_hwmon_init() is ignored,
-   hp_wmi_hwmon_init() should not return a value.
+ MAINTAINERS                               |   6 +
+ drivers/platform/x86/Kconfig              |  10 ++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/wmaa-backlight-wmi.c | 184 ++++++++++++++++++++++
+ 4 files changed, 201 insertions(+)
+ create mode 100644 drivers/platform/x86/wmaa-backlight-wmi.c
 
-2) If the return value from hp_wmi_hwmon_init() is ignored, the hwmon
-   functionality is not critical, and the driver should not depend on HWMON.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bbaecde94aa0..fd7362a86c6d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20008,6 +20008,12 @@ L:	linux-wireless@vger.kernel.org
+ S:	Odd fixes
+ F:	drivers/net/wireless/wl3501*
+ 
++WMAA BACKLIGHT DRIVER
++M:	Daniel Dadap <ddadap@nvidia.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/wmaa-backlight-wmi.c
++
+ WOLFSON MICROELECTRONICS DRIVERS
+ L:	patches@opensource.cirrus.com
+ S:	Supported
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d12db6c316ea..e54449c16d03 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -113,6 +113,16 @@ config PEAQ_WMI
+ 	help
+ 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+ 
++config WMAA_BACKLIGHT_WMI
++	tristate "ACPI WMAA Backlight Driver"
++	depends on ACPI_WMI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  This driver provides a sysfs backlight interface for notebook
++	  systems which expose the WMAA ACPI method and an associated WMI
++	  wrapper to drive LCD backlight levels through the system's
++	  Embedded Controller.
++
+ config XIAOMI_WMI
+ 	tristate "Xiaomi WMI key driver"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 7ee369aab10d..109c1714237d 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
+ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+ obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
++obj-$(CONFIG_WMAA_BACKLIGHT_WMI)	+= wmaa-backlight-wmi.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+ obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+ 
+diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
+new file mode 100644
+index 000000000000..b607d3f88fc2
+--- /dev/null
++++ b/drivers/platform/x86/wmaa-backlight-wmi.c
+@@ -0,0 +1,184 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/acpi.h>
++#include <linux/backlight.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
++
++struct wmi_wmaa_priv {
++	struct backlight_device *backlight;
++};
++
++enum wmaa_method {
++	WMAA_BRIGHTNESS_LEVEL = 1,
++	WMAA_BRIGHTNESS_SOURCE = 2,
++};
++
++enum wmaa_get_or_set {
++	WMAA_GET = 0,
++	WMAA_SET = 1,
++	WMAA_GET_MAX = 2, // for WMAA_BRIGHTNESS_LEVEL only
++};
++
++enum wmaa_source {
++	WMAA_SOURCE_CLEAR = 0,
++	WMAA_SOURCE_GPU = 1,
++	WMAA_SOURCE_EC = 2,
++	WMAA_SOURCE_AUX = 3,
++	WMAA_SOURCE_COUNT
++};
++
++struct wmaa_args {
++	u32 set;
++	u32 val;
++	u32 ret;
++	u32 ignored[3];
++};
++
++static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
++	{ .guid_string = WMAA_WMI_GUID },
++	{ },
++};
++
++static struct wmi_device *wdev;
++
++static int wmi_call_wmaa(enum wmaa_method method, enum wmaa_get_or_set set, u32 *val)
++{
++	struct wmaa_args args = {
++		.set = set,
++		.val = 0,
++		.ret = 0,
++	};
++	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
++	acpi_status status;
++
++	if (set == WMAA_SET)
++		args.val = *val;
++
++	status = wmidev_evaluate_method(wdev, 0, method, &buf, &buf);
++	if (ACPI_FAILURE(status)) {
++		pr_err("ACPI WMAA failed with %s\n", acpi_format_exception(status));
++		return -EIO;
++	}
++
++	if (set != WMAA_SET)
++		*val = args.ret;
++
++	return 0;
++}
++
++static int wmaa_get_brightness(u32 *level)
++{
++	return wmi_call_wmaa(WMAA_BRIGHTNESS_LEVEL, WMAA_GET, level);
++}
++
++static int wmaa_set_brightness(u32 level)
++{
++	return wmi_call_wmaa(WMAA_BRIGHTNESS_LEVEL, WMAA_SET, &level);
++}
++
++static int wmaa_backlight_update_status(struct backlight_device *bd)
++{
++	return wmaa_set_brightness(bd->props.brightness);
++}
++
++static int wmaa_backlight_get_brightness(struct backlight_device *bd)
++{
++	u32 level;
++	int ret;
++
++	ret = wmaa_get_brightness(&level);
++
++	WARN_ON(ret != 0);
++	return ret == 0 ? level : 0;
++}
++
++static const struct backlight_ops wmaa_backlight_ops = {
++	.update_status = wmaa_backlight_update_status,
++	.get_brightness = wmaa_backlight_get_brightness,
++};
++
++static int wmaa_get_max_brightness(u32 *level)
++{
++	return wmi_call_wmaa(WMAA_BRIGHTNESS_LEVEL, WMAA_GET_MAX, level);
++}
++
++static int wmaa_get_brightness_source(u32 *source)
++{
++	return wmi_call_wmaa(WMAA_BRIGHTNESS_SOURCE, WMAA_GET, source);
++}
++
++static int wmaa_backlight_wmi_probe(struct wmi_device *w, const void *ctx)
++{
++	struct backlight_properties props = {0};
++	struct wmi_wmaa_priv *priv;
++	u32 source;
++	int ret;
++
++	priv = devm_kmalloc(&w->dev, sizeof(*priv), GFP_KERNEL);
++	if(!priv)
++		return -ENOMEM;
++
++	wdev = w;
++
++	ret = wmaa_get_brightness_source(&source);
++	if (ret)
++		goto done;
++
++	if (source != WMAA_SOURCE_EC) {
++		ret = -ENODEV;
++		goto done;
++	}
++
++	// Register a backlight handler
++	props.type = BACKLIGHT_PLATFORM;
++	ret = wmaa_get_max_brightness(&props.max_brightness);
++	if (ret)
++		goto done;
++
++	ret = wmaa_get_brightness(&props.brightness);
++	if (ret)
++		goto done;
++
++	priv->backlight = backlight_device_register("wmaa_backlight",
++		NULL, NULL, &wmaa_backlight_ops, &props);
++	if (IS_ERR(priv->backlight))
++		return PTR_ERR(priv->backlight);
++
++	dev_set_drvdata(&w->dev, priv);
++
++done:
++	return ret;
++}
++
++static void wmaa_backlight_wmi_remove(struct wmi_device *wdev)
++{
++	struct wmi_wmaa_priv *priv = dev_get_drvdata(&wdev->dev);
++
++	backlight_device_unregister(priv->backlight);
++}
++
++static struct wmi_driver wmaa_backlight_wmi_driver = {
++	.driver = {
++		.name = "wmaa-backlight",
++	},
++	.probe = wmaa_backlight_wmi_probe,
++	.remove = wmaa_backlight_wmi_remove,
++	.id_table = wmaa_backlight_wmi_id_table,
++};
++
++module_wmi_driver(wmaa_backlight_wmi_driver);
++
++MODULE_AUTHOR("Aaron Plattner <aplattner@nvidia.com>");
++MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
++MODULE_DESCRIPTION("WMAA Backlight WMI driver");
++MODULE_LICENSE("GPL v2");
++
++MODULE_ALIAS("wmi:"WMAA_WMI_GUID);
+-- 
+2.20.1
 
-"critical", in the sense I meant, means critical to system operation.
-The meaning depends on the driver author, of course. I can not really say
-if the driver should depend on HWMON or not. All I can say is that it is
-inconsistent to make the driver depend on HWMON and then to ignore that
-hwmon device instantiation failed.
-
-> > 
-> > >  	thermal_profile_setup();
-> > >  
-> > >  	return 0;
-> > > @@ -1068,6 +1233,139 @@ static struct platform_driver hp_wmi_driver = {
-> > >  	.remove = __exit_p(hp_wmi_bios_remove),
-> > >  };
-> > >  
-> > > +static umode_t hp_wmi_hwmon_is_visible(const void *data,
-> > > +					enum hwmon_sensor_types type,
-> > > +					u32 attr, int channel)
-> > > +{
-> > > +	switch (type) {
-> > > +	case hwmon_temp:
-> > > +		if (hp_wmi_read_int(HPWMI_HDDTEMP_QUERY) >= 0)
-> > > +			return 0444;
-> > > +		else
-> > 
-> > else after return is unnecessary (static analyzers will complain).
-> > 
-> > > +			return 0;
-> > > +	case hwmon_pwm:
-> > > +		return 0644;
-> > > +	case hwmon_fan:
-> > > +		if (hp_wmi_get_fan_speed(channel) >= 0)
-> > > +			return 0444;
-> > > +		else
-> > 
-> > Same as above.
-> > 
-> > > +			return 0;
-> > > +	default:
-> > > +		return 0;
-> > > +	}
-> > > +}
-> > > +
-> > > +static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > > +			u32 attr, int channel, long *val)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	switch (type) {
-> > > +	case hwmon_temp:
-> > > +		ret = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
-> > > +
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +		*val = ret;
-> > 
-> > hddtemp is not documented, so the reported units are unknown.
-> > Is this in milli-degrees C ? If yes, a comment might be useful.
-> > If not, please adjust.
-> The previous version of this patch added hwmon to this driver,
-> before this value was exposed via a non-standard hddtemp param.
-> That param didn't have a specified unit, so that's an unknown to
-> me. It isn't documented anywhere in the driver.
-> The old hddtemp param just printed out the integer value.
-> Should this be removed then since it's an unknown ?
-
-Question is what that integer value reflects. Presumably you have the
-system, so you should be able to see the value. From there it should be
-possible to determine the scale and if it is reported in degrees C or
-in Kelvin.
-
-Guenter
