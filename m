@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-24.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20FEC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEF7C00143
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D56D6142A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB69C613E6
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 24 Aug 2021 00:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233585AbhHXAzi (ORCPT
+        id S233810AbhHXA4L (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Mon, 23 Aug 2021 20:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
+        Mon, 23 Aug 2021 20:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234007AbhHXAzI (ORCPT
+        id S233797AbhHXAzR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Mon, 23 Aug 2021 20:55:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6120A61414;
-        Tue, 24 Aug 2021 00:54:21 +0000 (UTC)
+        Mon, 23 Aug 2021 20:55:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EC63A61462;
+        Tue, 24 Aug 2021 00:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629766462;
-        bh=7s5V+XLCi58mMZ1aJ4NhjrK5fu6oh+cvwdC8oHgwZww=;
+        s=k20201202; t=1629766468;
+        bh=/yfbhdg/LeFCR5Vt31anJKUzSxxgsUSUGF1icSjmWVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hXxyirE2mT9iHAGxdBVdHmxhIJNykRZObbPv5Hr3rlXcc6eJ8Kvg08UuEa3iPGmOy
-         dfF9wik8qk+ntMAtkDULk7iNhcQ/+KQzOuPDGvqV8mSMPOwHc6UqH3Kro6SpLzb0s5
-         mMJBJlFeXA/NrBg3OWoP/QNbjGMzFQWkqP8a3xvwXdgBewNGuzU+XCbK9gZG+eCiFR
-         x4vX9mRQ3rLc8lZD9BYMchldrNz+Arc3483zGdjJztKYUOX5RdULvahwlEK2rup8da
-         lxbV+9mei+OK8sOqHa7Gz08RUzFLXHyITxKMx427oXSmBeXcZyriQF0zUk2Zh5Bb4c
-         p8xxZgeLPubkQ==
+        b=owqD93nuRXP5J+sA0bFlAdEin95X0itNuw//bLU3PryK3vEgn+GgA+DAUM5Tnrz7r
+         rcrQtNGqK7CmdPkpK4gi/8jBCYSrApmICYyrAxeO3s7/zaR0XAGTzfPUaBH9idYE1H
+         F73pXyg8EVpq+bgfIvBIQZe0AaXgrI0bMUhOVFIobXTym89HO1L8LMIHpYfs3Pu0HT
+         8rPMurPyic/qTcvUxMRuN466notZVeNro4z1Ypsb4p7Q0X7x+VjdVxd/bftj2aJk3E
+         lGhHGjssEo52iIXuWs52FgINByaWEYNKmGWihwXlF3vBMKT+TnZsxU4DOgHsCO6Hk/
+         9qe1wUTj5uxRA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.13 19/26] platform/x86: gigabyte-wmi: add support for X570 GAMING X
-Date:   Mon, 23 Aug 2021 20:53:49 -0400
-Message-Id: <20210824005356.630888-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 24/26] platform/x86: gigabyte-wmi: add support for B450M S2H V2
+Date:   Mon, 23 Aug 2021 20:53:54 -0400
+Message-Id: <20210824005356.630888-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210824005356.630888-1-sashal@kernel.org>
 References: <20210824005356.630888-1-sashal@kernel.org>
@@ -56,13 +56,13 @@ X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 From: Thomas Weißschuh <linux@weissschuh.net>
 
-[ Upstream commit b9570f5c9240cadf87fb5f9313e8f425aa9e788f ]
+[ Upstream commit 1e35b8a7780a0c043cc5389420f069b69343f5d9 ]
 
 Reported as working here:
-https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/1#issuecomment-900263115
+https://github.com/t-8ch/linux-gigabyte-wmi-driver/issues/1#issuecomment-901207693
 
 Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Link: https://lore.kernel.org/r/20210817154628.84992-1-linux@weissschuh.net
+Link: https://lore.kernel.org/r/20210818164435.99821-1-linux@weissschuh.net
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -70,17 +70,17 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/platform/x86/gigabyte-wmi.c b/drivers/platform/x86/gigabyte-wmi.c
-index fbb224a82e34..9e8cfac403d3 100644
+index 9e8cfac403d3..7f3a03f937f6 100644
 --- a/drivers/platform/x86/gigabyte-wmi.c
 +++ b/drivers/platform/x86/gigabyte-wmi.c
-@@ -147,6 +147,7 @@ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550M DS3H"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("Z390 I AORUS PRO WIFI-CF"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 AORUS ELITE"),
-+	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 GAMING X"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 I AORUS PRO WIFI"),
- 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("X570 UD"),
- 	{ }
+@@ -140,6 +140,7 @@ static u8 gigabyte_wmi_detect_sensor_usability(struct wmi_device *wdev)
+ 	}}
+ 
+ static const struct dmi_system_id gigabyte_wmi_known_working_platforms[] = {
++	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B450M S2H V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 AORUS ELITE V2"),
+ 	DMI_EXACT_MATCH_GIGABYTE_BOARD_NAME("B550 GAMING X V2"),
 -- 
 2.30.2
 
