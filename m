@@ -2,94 +2,84 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF6BC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BDBC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C849B61052
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7FF6108F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241063AbhHYP2s (ORCPT
+        id S240180AbhHYPne (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 11:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240735AbhHYP2s (ORCPT
+        Wed, 25 Aug 2021 11:43:34 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42458 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241121AbhHYPna (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 11:28:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1198C61027;
-        Wed, 25 Aug 2021 15:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629905282;
-        bh=UXG/9B0dxNUKG1o93UdkxmcN2LyXV1JOlgRgyr1YEus=;
+        Wed, 25 Aug 2021 11:43:30 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6B18424F;
+        Wed, 25 Aug 2021 17:42:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1629906162;
+        bh=z+pGs7ptzS2pWN5a//5s422Ig5ykca/VKKLgcOkqcck=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l3OZbx3a24jw9ulVpPwToBebd524Qs76xf3E4E+Tnnh1m+78nMKS3hn3dbgGPDRP1
-         exO4HJgMdte3i5H1lPALpOY5AxzADwoe8mp98clb7SYwBrUn+N7UpC7KwFrPOocj6Z
-         C8qCaszVBKICXTMHgI+TWTIMwbu59ogHndHspqH8+q4lp8XH36rZoTX8B6cKeT/63r
-         FdQ6Lm+jRu47epsUCf7U8bBVH0/YRvUHQQUgIFDZ1Kx+Pm/TNqKAbdhz0Cw4LEN2P3
-         +vDftAAvEnctrcfbAi5qyjrq0em0HL+SO1schocGvdFAqmoBQ+ynFH9XulrviQ+Ztd
-         S4G6IPbX4541w==
-Date:   Wed, 25 Aug 2021 16:27:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
+        b=HpLVDgUyv9p+Lvjvv4W3jq+s+YF5NoVGTMRTEAFR8Og9jXeyuVgvon699aTEJaokF
+         K2ymO/VhXZYP0OPhh/UBw06ZdbF1S9lIeQ9tVvRbVqyjnOZVeY5zirFMySSE2/XiVq
+         KqiF5WvtuLk5k3lzpgciLmUimBzgzS8tBKOg6RME=
+Date:   Wed, 25 Aug 2021 18:42:30 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Daniel Scally <djrscally@gmail.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         Mark Gross <mgross@linux.intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Sakari Ailus <sakari.ailus@iki.fi>
 Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Message-ID: <20210825152735.GJ5186@sirena.org.uk>
+Message-ID: <YSZk5tyAxZoosXS3@pendragon.ideasonboard.com>
 References: <20210824230620.1003828-1-djrscally@gmail.com>
  <20210824230620.1003828-2-djrscally@gmail.com>
  <20210825103301.GC5186@sirena.org.uk>
  <cc65098e-b459-b20a-f6e2-ee521fc20ca7@redhat.com>
+ <20210825152735.GJ5186@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MzdA25v054BPvyZa"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cc65098e-b459-b20a-f6e2-ee521fc20ca7@redhat.com>
-X-Cookie: MY income is ALL disposable!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210825152735.GJ5186@sirena.org.uk>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Aug 25, 2021 at 04:27:35PM +0100, Mark Brown wrote:
+> On Wed, Aug 25, 2021 at 04:48:15PM +0200, Hans de Goede wrote:
+> 
+> > Daniel, I believe that what Mark wants here is something similar to what
+> > we already do for the 5v boost converter regulator in the TI bq24190 charger
+> > chip used on some Cherry Trail devices.
+> 
+> Yeah, that or something like a generalized version of it which lets a
+> separate quirk file like they seem to have register the data to insert -
+> I'd be happy enough with the simple thing too given that it's not
+> visible to anything, or with DMI quirks in the regulator driver too for
+> that matter if it's just one or two platforms but there do seem to be
+> rather a lot of these platforms which need quirks.
 
---MzdA25v054BPvyZa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let's also remember that we have to handle not just regulators, but also
+GPIOs and clocks. And I'm pretty sure there will be more. We could have
+a mechanism specific to the tps68470 driver to pass platform data from
+the board file to the driver, and replicate that mechanism in different
+drivers (for other regulators, clocks and GPIOs), but I really would
+like to avoid splitting the DMI-conditioned platform data in those
+drivers directly. I'd like to store all the init data for a given
+platform in a single "board" file.
 
-On Wed, Aug 25, 2021 at 04:48:15PM +0200, Hans de Goede wrote:
+-- 
+Regards,
 
-> Daniel, I believe that what Mark wants here is something similar to what
-> we already do for the 5v boost converter regulator in the TI bq24190 charger
-> chip used on some Cherry Trail devices.
-
-Yeah, that or something like a generalized version of it which lets a
-separate quirk file like they seem to have register the data to insert -
-I'd be happy enough with the simple thing too given that it's not
-visible to anything, or with DMI quirks in the regulator driver too for
-that matter if it's just one or two platforms but there do seem to be
-rather a lot of these platforms which need quirks.
-
---MzdA25v054BPvyZa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmYWYACgkQJNaLcl1U
-h9AN0Qf9GZXR6MRcgZLrLwXX9NdTHOuh35/SlGHOp95zERw3wce7RqgcszLL4olD
-9lV3JpkwB78vwF819b9hxbGjIAqyoqK0kpTcwlctaVEpHylRPYhvHXkpekCVMFY6
-A4uroOX1rYOrWvPwhcnUBKfUAa3o2SoW8wm40LIvfFoOB638MBGx4lvsB2PhqK0g
-upRHkmceCgo/B/OBxvuzhiwcJdYxZ48UcBuyisiG6plQZY+JFtRPj/MTKcfiq+ip
-OSVL+44MuUGws4rR6YPJXvAiHZJgmyfpnLyufbBQv7i7XievCgw8AaDyHikeNpjd
-sS3FSvj/+l42fzIImV8TEAZwZeQODw==
-=o1zp
------END PGP SIGNATURE-----
-
---MzdA25v054BPvyZa--
+Laurent Pinchart
