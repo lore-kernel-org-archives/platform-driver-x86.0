@@ -2,143 +2,211 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA35C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D89CDC4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D280F610CD
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B95610F9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:28:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241318AbhHYOXt (ORCPT
+        id S241235AbhHYO32 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 10:23:49 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:41392 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241314AbhHYOXs (ORCPT
+        Wed, 25 Aug 2021 10:29:28 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34544 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240965AbhHYO32 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 10:23:48 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 30F2D24F;
-        Wed, 25 Aug 2021 16:23:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1629901381;
-        bh=PSIK20B8tbTzNH+tojgaixK9PnBAHo/jHaLwhljixbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DFFuvJcdFUK6QQFKrRsH3wXTFOa/8UzMXOMwKhiCMwchqZBufCp5HGE5KY7LoJk+o
-         7LPGWzLYmqYVK+rf88RmSoKZcQ+5dV6dXCxd4hJ+Ab9Q43GOGoQ3OxDmI+KCmo9+Ww
-         CLGc7/CHg0kapQRM5sjZoFhoDKQASrDahBOqgH0g=
-Date:   Wed, 25 Aug 2021 17:22:49 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Daniel Scally <djrscally@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Message-ID: <YSZSOZXxSac307/A@pendragon.ideasonboard.com>
-References: <20210824230620.1003828-1-djrscally@gmail.com>
- <20210824230620.1003828-2-djrscally@gmail.com>
- <20210825103301.GC5186@sirena.org.uk>
- <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
- <20210825113013.GD5186@sirena.org.uk>
- <CAHp75VfKJgux8k_mPauYB3MHcEOcnnzhSpoUDi4mVFDgtmNXeg@mail.gmail.com>
- <20210825131139.GG5186@sirena.org.uk>
- <YSZMxxJ76vF316Pi@pendragon.ideasonboard.com>
- <4ac0acb9-83ea-7fcd-cde3-669ba3b699c6@gmail.com>
+        Wed, 25 Aug 2021 10:29:28 -0400
+Received: from zn.tnic (p200300ec2f0ea7006bb4dcd1613a8626.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a700:6bb4:dcd1:613a:8626])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5A5871EC0105;
+        Wed, 25 Aug 2021 16:28:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629901716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3v7laBTLPusI9805TqhSEWh/kBZlYAamedfXZbBSnLU=;
+        b=dLCHo7HWETYfS7H4XHg00/WGizadW5nY9mPEki9CYXa9RCKzGzDE5ttcA117vyw9s+6syQ
+        pX96sdHhQBnXZohHx4U1syr2ruibQoXqL3vY6pzNZ/EH0jo2c6T2XZtCmohYx5rvQu98x3
+        uGe059IFPH2Te0eqdKzxS559VD+aBhw=
+Date:   Wed, 25 Aug 2021 16:29:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 23/38] x86/head/64: set up a startup %gs for
+ stack protector
+Message-ID: <YSZTubkROktMMSba@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-24-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4ac0acb9-83ea-7fcd-cde3-669ba3b699c6@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210820151933.22401-24-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi Dan,
-
-On Wed, Aug 25, 2021 at 03:12:25PM +0100, Daniel Scally wrote:
-> On 25/08/2021 14:59, Laurent Pinchart wrote:
-> > Hello,
-> >
-> > CC'ing Sakari.
-> >
-> > On Wed, Aug 25, 2021 at 02:11:39PM +0100, Mark Brown wrote:
-> >> On Wed, Aug 25, 2021 at 03:26:37PM +0300, Andy Shevchenko wrote:
-> >>> On Wed, Aug 25, 2021 at 2:30 PM Mark Brown <broonie@kernel.org> wrote:
-> >>>> No, what was proposed for regulator was to duplicate all the the DT
-> >>>> binding code in the regulator framework so it parses fwnodes then have
-> >>>> an API for encoding fwnodes from C data structures at runtime.  The bit
-> >>>> where the data gets joined up with the devices isn't the problem, it's
-> >>>> the duplication and fragility introduced by encoding everything into
-> >>>> an intermediate representation that has no purpose and passing that
-> >>>> around which is the problem.
-> >>> The whole exercise with swnode is to minimize the driver intrusion and
-> >>> evolving a unified way for (some) of the device properties. V4L2 won't
-> >> The practical implementation for regulators was to duplicate a
-> >> substantial amount of code in the core in order to give us a less type
-> >> safe and more indirect way of passing data from onen C file in the
-> >> kernel to another.  This proposal is a lot better in that it uses the
-> >> existing init_data and avoids the huge amounts of duplication, it's just
-> >> not clear from the changelog why it's doing this in a regulator specific
-> >> manner.
-> >>
-> >> *Please* stop trying to force swnodes in everywhere, take on board the
-> >> feedback about why the swnode implementation is completely inappropriate
-> >> for regulators.  I don't understand why you continue to push this so
-> >> hard.  swnodes and fwnodes are a solution to a specific problem, they're
-> >> not the answer to every problem out there and having to rehash this
-> >> continually is getting in the way of actually discussing practical
-> >> workarounds for these poorly implemented ACPI platforms.
-> >>
-> >>> like what you are suggesting exactly because they don't like the idea
-> >>> of spreading the board code over the drivers. In some cases it might
-> >>> even be not so straightforward and easy.
-> >>> Laurent, do I understand correctly the v4l2 expectations?
-> >> There will be some cases where swnodes make sense, for example where the
-> >> data is going to be read through the fwnode API since the binding is
-> >> firmware neutral which I think is the v4l case.  On the other hand
-> >> having a direct C representation is a very common way of implementing
-> >> DMI quirk tables, and we have things like the regulator API where
-> >> there's off the shelf platform data support and we actively don't want
-> >> to support fwnode.
-> > From a camera sensor point of view, we want to avoid code duplication.
-> > Having to look for regulators using OF lookups *and* platform data in
-> > every single sensor driver is not a good solution. This means that, from
-> > a camera sensor driver point of view, we want to call regulator_get()
-> > (or the devm_ version) with a name, without caring about who establishes
-> > the mapping and how the lookup is performed. I don't care much
-> > personally if this would be implemented through swnode or a different
-> > mechanism, as long as the implementation can be centralized.
+On Fri, Aug 20, 2021 at 10:19:18AM -0500, Brijesh Singh wrote:
+> From: Michael Roth <michael.roth@amd.com>
 > 
-> I think rather than sensor drivers, the idea would be just to have the
-> tps68470-regulator driver check platform data for the init_data instead,
-> like the tps65023-regulator driver [1] does. I'm sure that'll work, but
-> it's not particularly centralized from the regulator driver's point of
-> view.
+> As of commit 103a4908ad4d ("x86/head/64: Disable stack protection for
+> head$(BITS).o") kernel/head64.c is compiled with -fno-stack-protector
+> to allow a call to set_bringup_idt_handler(), which would otherwise
+> have stack protection enabled with CONFIG_STACKPROTECTOR_STRONG. While
+> sufficient for that case, this will still cause issues if we attempt to
+> call out to any external functions that were compiled with stack
+> protection enabled that in-turn make stack-protected calls, or if the
+> exception handlers set up by set_bringup_idt_handler() make calls to
+> stack-protected functions.
+> 
+> Subsequent patches for SEV-SNP CPUID validation support will introduce
+> both such cases. Attempting to disable stack protection for everything
+> in scope to address that is prohibitive since much of the code, like
+> SEV-ES #VC handler, is shared code that remains in use after boot and
+> could benefit from having stack protection enabled. Attempting to inline
+> calls is brittle and can quickly balloon out to library/helper code
+> where that's not really an option.
+> 
+> Instead, set up %gs to point a buffer that stack protector can use for
+> canary values when needed.
+> 
+> In doing so, it's likely we can stop using -no-stack-protector for
+> head64.c, but that hasn't been tested yet, and head32.c would need a
+> similar solution to be safe, so that is left as a potential follow-up.
 
-That would obviously be less of an issue from a V4L2 point of view :-)
-Given that the situation we're facing doesn't affect (to our knowledge)
-a very large number of regulators, it may not be too bad in practice. If
-I were to maintain the regulator subsystem I'd probably want a
-centralized implementation there, but that's certainly a personal
-preference, at least partly.
+That...
 
-On a side note, this RFC looks quite similar to what the GPIO subsystem
-does, which I personally consider nice as differences between regulator
-and GPIO in these areas are confusing for users.
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> ---
+>  arch/x86/kernel/Makefile |  2 +-
+>  arch/x86/kernel/head64.c | 20 ++++++++++++++++++++
+>  2 files changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 3e625c61f008..5abdfd0dbbc3 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -46,7 +46,7 @@ endif
+>  # non-deterministic coverage.
+>  KCOV_INSTRUMENT		:= n
+>  
+> -CFLAGS_head$(BITS).o	+= -fno-stack-protector
+> +CFLAGS_head32.o		+= -fno-stack-protector
 
-> [1]
-> https://elixir.bootlin.com/linux/latest/source/drivers/regulator/tps65023-regulator.c#L268
+... and that needs to be taken care of too.
+
+>  CFLAGS_irq.o := -I $(srctree)/$(src)/../include/asm/trace
+>  
+> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> index a1711c4594fa..f1b76a54c84e 100644
+> --- a/arch/x86/kernel/head64.c
+> +++ b/arch/x86/kernel/head64.c
+> @@ -74,6 +74,11 @@ static struct desc_struct startup_gdt[GDT_ENTRIES] = {
+>  	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
+>  };
+>  
+> +/* For use by stack protector code before switching to virtual addresses */
+> +#if CONFIG_STACKPROTECTOR
+
+That's "#ifdef". Below too.
+
+Did you even build this with CONFIG_STACKPROTECTOR disabled?
+
+Because if you did, you would've seen this:
+
+arch/x86/kernel/head64.c:78:5: warning: "CONFIG_STACKPROTECTOR" is not defined, evaluates to 0 [-Wundef]
+   78 | #if CONFIG_STACKPROTECTOR
+      |     ^~~~~~~~~~~~~~~~~~~~~
+arch/x86/kernel/head64.c: In function ‘startup_64_setup_env’:
+arch/x86/kernel/head64.c:613:35: error: ‘startup_gs_area’ undeclared (first use in this function)
+  613 |  u64 gs_area = (u64)fixup_pointer(startup_gs_area, physbase);
+      |                                   ^~~~~~~~~~~~~~~
+arch/x86/kernel/head64.c:613:35: note: each undeclared identifier is reported only once for each function it appears in
+arch/x86/kernel/head64.c:632:5: warning: "CONFIG_STACKPROTECTOR" is not defined, evaluates to 0 [-Wundef]
+  632 | #if CONFIG_STACKPROTECTOR
+      |     ^~~~~~~~~~~~~~~~~~~~~
+arch/x86/kernel/head64.c:613:6: warning: unused variable ‘gs_area’ [-Wunused-variable]
+  613 |  u64 gs_area = (u64)fixup_pointer(startup_gs_area, physbase);
+      |      ^~~~~~~
+make[2]: *** [scripts/Makefile.build:271: arch/x86/kernel/head64.o] Error 1
+make[1]: *** [scripts/Makefile.build:514: arch/x86/kernel] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1851: arch/x86] Error 2
+make: *** Waiting for unfinished jobs....
+
+> +static char startup_gs_area[64];
+> +#endif
+> +
+>  /*
+>   * Address needs to be set at runtime because it references the startup_gdt
+>   * while the kernel still uses a direct mapping.
+> @@ -605,6 +610,8 @@ void early_setup_idt(void)
+>   */
+>  void __head startup_64_setup_env(unsigned long physbase)
+>  {
+> +	u64 gs_area = (u64)fixup_pointer(startup_gs_area, physbase);
+> +
+>  	/* Load GDT */
+>  	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
+>  	native_load_gdt(&startup_gdt_descr);
+> @@ -614,5 +621,18 @@ void __head startup_64_setup_env(unsigned long physbase)
+>  		     "movl %%eax, %%ss\n"
+>  		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
+>  
+> +	/*
+> +	 * GCC stack protection needs a place to store canary values. The
+> +	 * default is %gs:0x28, which is what the kernel currently uses.
+> +	 * Point GS base to a buffer that can be used for this purpose.
+> +	 * Note that newer GCCs now allow this location to be configured,
+> +	 * so if we change from the default in the future we need to ensure
+> +	 * that this buffer overlaps whatever address ends up being used.
+> +	 */
+> +#if CONFIG_STACKPROTECTOR
+> +	asm volatile("movl %%eax, %%gs\n" : : "a"(__KERNEL_DS) : "memory");
+> +	native_wrmsr(MSR_GS_BASE, gs_area, gs_area >> 32);
+> +#endif
+> +
+>  	startup_64_load_idt(physbase);
+>  }
+> -- 
+> 2.17.1
+> 
 
 -- 
-Regards,
+Regards/Gruss,
+    Boris.
 
-Laurent Pinchart
+https://people.kernel.org/tglx/notes-about-netiquette
