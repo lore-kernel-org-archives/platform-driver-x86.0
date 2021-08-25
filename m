@@ -2,112 +2,86 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDD8C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157A9C4320E
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D017360FC1
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3963610E9
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238439AbhHYQ3r (ORCPT
+        id S241649AbhHYQdf (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 12:29:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55040 "EHLO mail.skyhub.de"
+        Wed, 25 Aug 2021 12:33:35 -0400
+Received: from mga11.intel.com ([192.55.52.93]:42301 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237216AbhHYQ3q (ORCPT
+        id S241680AbhHYQdZ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:29:46 -0400
-Received: from zn.tnic (p200300ec2f0ea700924cc147a25a6e09.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a700:924c:c147:a25a:6e09])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 05A8A1EC01FC;
-        Wed, 25 Aug 2021 18:28:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1629908935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=kXTBbKX0N8PVFTNyf4PA8VUf4fQWGNpL4TXA4DMB1bg=;
-        b=mRh7IF3B7odzldZV3V/mzJ72uHB8k0Pq9hyfRcu4jLE78QMHTDYO2Pe1ADumwvclqVsmRR
-        8dwOilrLxXRsANVS/QE7TJa1bSM9fXknzuzuyY0hgB+AWSo+/7CrTo4AlGzk7a5lEd6p0Q
-        7VBIyUc8virQJPI3RulnowUJ3yaHAlc=
-Date:   Wed, 25 Aug 2021 18:29:31 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Michael Roth <michael.roth@amd.com>
-Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 23/38] x86/head/64: set up a startup %gs for
- stack protector
-Message-ID: <YSZv632kJKPzpayk@zn.tnic>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-24-brijesh.singh@amd.com>
- <YSZTubkROktMMSba@zn.tnic>
- <20210825151835.wzgabnl7rbrge3a2@amd.com>
+        Wed, 25 Aug 2021 12:33:25 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10087"; a="214436722"
+X-IronPort-AV: E=Sophos;i="5.84,351,1620716400"; 
+   d="scan'208";a="214436722"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2021 09:32:38 -0700
+X-IronPort-AV: E=Sophos;i="5.84,351,1620716400"; 
+   d="scan'208";a="684573153"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2021 09:32:35 -0700
+Received: from andy by smile with local (Exim 4.94.2)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mIvpF-00DdMk-M1; Wed, 25 Aug 2021 19:32:29 +0300
+Date:   Wed, 25 Aug 2021 19:32:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Dell.Client.Kernel@dell.com,
+        platform-driver-x86@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][RFC] platform/x86: dell-smbios-wmi: Avoid false-positive
+ memcpy() warning
+Message-ID: <YSZwnXqIaIo+hG37@smile.fi.intel.com>
+References: <20210825160749.3891090-1-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210825151835.wzgabnl7rbrge3a2@amd.com>
+In-Reply-To: <20210825160749.3891090-1-keescook@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 10:18:35AM -0500, Michael Roth wrote:
-> On Wed, Aug 25, 2021 at 04:29:13PM +0200, Borislav Petkov wrote:
-> > On Fri, Aug 20, 2021 at 10:19:18AM -0500, Brijesh Singh wrote:
-> > > From: Michael Roth <michael.roth@amd.com>
-> > > 
-> > > As of commit 103a4908ad4d ("x86/head/64: Disable stack protection for
-> > > head$(BITS).o") kernel/head64.c is compiled with -fno-stack-protector
-> > > to allow a call to set_bringup_idt_handler(), which would otherwise
-> > > have stack protection enabled with CONFIG_STACKPROTECTOR_STRONG. While
-> > > sufficient for that case, this will still cause issues if we attempt to
-								^^^
+On Wed, Aug 25, 2021 at 09:07:49AM -0700, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Since all the size checking has already happened, use input.pointer
+> (void *) so memcpy() doesn't get confused about how much is being
+> written.
+> 
+> Avoids this false-positive warning when run-time memcpy() strict
+> bounds checking is enabled:
+> 
+> memcpy: detected field-spanning write (size 4096) of single field (size 36)
+> WARNING: CPU: 0 PID: 357 at drivers/platform/x86/dell/dell-smbios-wmi.c:74 run_smbios_call+0x110/0x1e0 [dell_smbios]
 
-I'm tired of repeating the same review comments with you guys:
+> Note: is there a missed kfree() in the marked error path?
 
-Who's "we"?
+Seems so.
 
-Please use passive voice in your text: no "we" or "I", etc.
-Personal pronouns are ambiguous in text, especially with so many
-parties/companies/etc developing the kernel so let's avoid them please.
+* Note: The caller should use acpi_os_free to free this
+* buffer created via ACPI_ALLOCATE_BUFFER.
 
-How about you pay more attention?
-
-> I didn't realize the the 32-bit path was something you were suggesting
-> to have added in this patch, but I'll take a look at that as well.
-
-If you're going to remove the -no-stack-protector thing for that file,
-then pls remove it for both 32- and 64-bit. I.e., the revert what
-103a4908ad4d did.
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
