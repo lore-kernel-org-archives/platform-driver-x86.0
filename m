@@ -2,100 +2,113 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A04C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C78C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D7BB610E5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5D96113C
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240080AbhHYLNM (ORCPT
+        id S237446AbhHYLb2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 07:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236783AbhHYLNL (ORCPT
+        Wed, 25 Aug 2021 07:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232304AbhHYLb1 (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 07:13:11 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F9CC061757;
-        Wed, 25 Aug 2021 04:12:26 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id t1so22736217pgv.3;
-        Wed, 25 Aug 2021 04:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e0F6iaDXcOKyU/pgsdS91D2Ie1N9JY978bJ/8n6uXIY=;
-        b=I1g2YLn/hnmv7T70rIzmVIGbBd63AuAPeXuL549CFaoX13s4es4rXLOqG2XTKcpuTR
-         aCAEqXBa2hX9csDMowkOsqT7XXe2KHtM6Q76wOSuLNivQmRb5i321Weu4d1DBjeJbrnT
-         QoM1BGjzr3uEdpdd7nYLYfS7V/h6oN0EWjFCHJHfgZLbH0co2upfemYy5sdSH7ePL0SW
-         IN+YONtfRhlPEVlfG4Q2Uccr3PL6bjgK2fPaIz5yexhlNuhpBxaxrh8WhdNK7FvrFPZI
-         QZ9cIjHbqaHizG2SgdeeT9S8H1aU9BaLuZOOkJYqi4Qn8fmJCpUnk1/huzJ61cwLlM7c
-         gW4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e0F6iaDXcOKyU/pgsdS91D2Ie1N9JY978bJ/8n6uXIY=;
-        b=jQT3K36ytZrZ5hrAU8sbvTwaxMwKm9MjSiNX+XmbQYKjM1eu8zVPPiX7JIgTac2ioH
-         SUenf0eDZ8qVd2VL74gFE823faK51iD+n59FFeyG1aqEVxjkzXtnJs0d/LDo5mNs3XQK
-         VLaHFMLl4OKGLDuxIN1nldoUgGSqetZLwtAlHqtY/HDv8zmDpH+feY7F+5mJO1A8KgYu
-         dqcRg6V+UuL2XzzTAU+LUp2IeZsydu2kCStO/PUPg+nTqqL9iLbUNcJgoJ0qa2SkG+XB
-         And6mxrqvFFwX9LmAHaBESuUFPCTPXgCgYALUshEs3kCmk27uSKu16s3IH+fk96eWu39
-         ivzA==
-X-Gm-Message-State: AOAM531WMAmfFUnf9GiaRl5dbRi7TRUsV8x217/3E0Qqsn7Y9Crm6K/5
-        q11YvtJ9iETSKNhg7I/JI1xpxPdHLWyQQxGS66k=
-X-Google-Smtp-Source: ABdhPJyeFx80oUz8NgoOS4scmsMrlTtxpkKj93s/4LfwYFNmg7EA3PITg+KB4O5JwDk2w04WALnpSPM1oBCqLL1QyBg=
-X-Received: by 2002:a62:6384:0:b0:3eb:13e7:18c with SMTP id
- x126-20020a626384000000b003eb13e7018cmr21415624pfb.73.1629889945850; Wed, 25
- Aug 2021 04:12:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210823093222.19544-1-andriy.shevchenko@linux.intel.com>
- <20210823093222.19544-3-andriy.shevchenko@linux.intel.com> <CAAd53p6pQcura_tejtW7osiHfSnn6pCcxfm1e13==qmQA8C1bw@mail.gmail.com>
-In-Reply-To: <CAAd53p6pQcura_tejtW7osiHfSnn6pCcxfm1e13==qmQA8C1bw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Aug 2021 14:11:46 +0300
-Message-ID: <CAHp75VfZaV6WAddmscgTkyfRoq9cvcvL2A6A1kA6uBvZ3F=dgg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/x86: hp_accel: Convert to be a platform driver
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Wed, 25 Aug 2021 07:31:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D0C1610E8;
+        Wed, 25 Aug 2021 11:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629891042;
+        bh=HNOC9P+m4Gc4SN5G4ASwhTGEIT9YqxP+5GJ2GfjgiTc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SylBGTbX+xaUeCoF0UKWy1aQZpWOZggEIiFw7BjEbmYZ4lT+zkUcXyPouEgvZ9K/I
+         WYhBJcRnrBG2klgW8shWz/yyOc2pjLItGKYqTOUtZ0NGmZsMkkDm5BqyQ9QmHuYrlC
+         YrIOPKHS/ICAih6i4CG8TPHUdcJh8VirmfQ6jvz88KIGVOoq880hqn9S9200dUwM6p
+         uJnkZ2y7Q2iwCShn51cGo55d1i6Hx+WqOTIlLLejGdr/lOOgrmoiyIy6bURyMYDlRA
+         SBYoIVIQLwecL5AJhfJscyrdrZHHbiXsWiLME4IqgNlzD7/Wua+TEfuN9tO/U9RFc7
+         D89SpM1hokvCQ==
+Date:   Wed, 25 Aug 2021 12:30:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Gross <mgross@linux.intel.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
+Message-ID: <20210825113013.GD5186@sirena.org.uk>
+References: <20210824230620.1003828-1-djrscally@gmail.com>
+ <20210824230620.1003828-2-djrscally@gmail.com>
+ <20210825103301.GC5186@sirena.org.uk>
+ <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
+X-Cookie: MY income is ALL disposable!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 1:42 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> On Mon, Aug 23, 2021 at 5:32 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > ACPI core in conjunction with platform driver core provides
-> > an infrastructure to enumerate ACPI devices. Use it in order
-> > to remove a lot of boilerplate code.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> The lis3lv02d still works with this patch.
->
-> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Thank you, Kai-Heng!
+--T7mxYSe680VjQnyC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hans, I think it's good to go.
+On Wed, Aug 25, 2021 at 02:10:05PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 25, 2021 at 1:34 PM Mark Brown <broonie@kernel.org> wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > DMI quirks throughout the drivers like we currently do then we should
+> > have a way for boards to just store generic platform data for a device
+> > and then have that platform data joined up with the device later.  This
+
+> What you are describing sounds similar to what we have, i.e. fwnode graph.
+> That's how v4l2 describes complex connections between devices in the
+> camera world.
+
+> But IIRC you don't like this idea to be present with regulators (as
+> per v1 of this series).
+
+No, what was proposed for regulator was to duplicate all the the DT
+binding code in the regulator framework so it parses fwnodes then have
+an API for encoding fwnodes from C data structures at runtime.  The bit
+where the data gets joined up with the devices isn't the problem, it's
+the duplication and fragility introduced by encoding everything into
+an intermediate representation that has no purpose and passing that
+around which is the problem.
+
+> So, what do you propose then?
+
+I propose what I suggested above, providing a way to attach platform
+data to firmware provided devices.  Don't bother with an intermediate
+encoding, just use platform data.  Or just put quirks in the drivers
+like all the other systems using ACPI for platforms where it's not a
+good fit.
+
+--T7mxYSe680VjQnyC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmKcUACgkQJNaLcl1U
+h9A7AggAgjXkogVPUZ2ElSP+d58XTGKHJDC/XysVmVQpiA6enh9IEz7N/rSdQBnK
+hrky5sFIGg0LEBGX3nkZZCeaIcCJ6NsYWrwNrDLJXDEMzTf40mxSRB2s2PUX2gV9
+HGsRx3p+ZY7su1y+8N5z2qX2bVbumVsx8mM0jqyZDB6ZrUwv9e/k68lavmV//TYv
+/IJ9wxso6OcCpyLIHHx55AZGVnqwe80/dokbWEBD7h9HNqfPWNXz9caSAUpTJEKi
+bHurxgMMBXjV56VKtKvK3VFQx5jsw3F3pg0njvWWqUXWKZMQ7DXLKDR+8dGEld6r
+1l0olltqQetl/zJuTL3xdXJgPL61cQ==
+=c2LJ
+-----END PGP SIGNATURE-----
+
+--T7mxYSe680VjQnyC--
