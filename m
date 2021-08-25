@@ -2,101 +2,112 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C31BC4320A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDD8C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 493BF6115A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D017360FC1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239820AbhHYQOX (ORCPT
+        id S238439AbhHYQ3r (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 12:14:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52238 "EHLO mail.kernel.org"
+        Wed, 25 Aug 2021 12:29:47 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55040 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235063AbhHYQOP (ORCPT
+        id S237216AbhHYQ3q (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:14:15 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A451861151;
-        Wed, 25 Aug 2021 16:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629908008;
-        bh=cuhbORo+vK72jskU92DnQpjj6jmqRv72esQDD/kdcWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FTjYXHamOsBAE+Rt++XP570MzJjAVn2JfZIBYqKeenTjzmoVniSk7GFAdgJYBIvVo
-         MdcdWTHIYVPeySUDPWzEXpPgMVVjsuMzOCvQWlKslGRNWzfNSX417lVNzatiEQRt9c
-         MUsa9G3oPSuAPCyt0G8t9oBa/S/iQI/BLooK/Pu1d5owHrtauUe2/fg0lFO5g9w1Ql
-         /HB2VlqlV9/PubmbzSD8TgeaSCOA9G/nf5ejLHj56a2uRoP1fG4QEguUxzwzUVvRau
-         GOqfx6Qu7abk79YG0hfc7tT0j43uJzMzZNw9cv0kBj8cnT4JnfGy2A5xEc1msnRThk
-         J42oiN+AHNzew==
-Date:   Wed, 25 Aug 2021 17:13:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Daniel Scally <djrscally@gmail.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Message-ID: <20210825161300.GL5186@sirena.org.uk>
-References: <20210824230620.1003828-1-djrscally@gmail.com>
- <20210824230620.1003828-2-djrscally@gmail.com>
- <20210825103301.GC5186@sirena.org.uk>
- <cc65098e-b459-b20a-f6e2-ee521fc20ca7@redhat.com>
- <20210825152735.GJ5186@sirena.org.uk>
- <YSZk5tyAxZoosXS3@pendragon.ideasonboard.com>
+        Wed, 25 Aug 2021 12:29:46 -0400
+Received: from zn.tnic (p200300ec2f0ea700924cc147a25a6e09.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:a700:924c:c147:a25a:6e09])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 05A8A1EC01FC;
+        Wed, 25 Aug 2021 18:28:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1629908935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=kXTBbKX0N8PVFTNyf4PA8VUf4fQWGNpL4TXA4DMB1bg=;
+        b=mRh7IF3B7odzldZV3V/mzJ72uHB8k0Pq9hyfRcu4jLE78QMHTDYO2Pe1ADumwvclqVsmRR
+        8dwOilrLxXRsANVS/QE7TJa1bSM9fXknzuzuyY0hgB+AWSo+/7CrTo4AlGzk7a5lEd6p0Q
+        7VBIyUc8virQJPI3RulnowUJ3yaHAlc=
+Date:   Wed, 25 Aug 2021 18:29:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Michael Roth <michael.roth@amd.com>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 23/38] x86/head/64: set up a startup %gs for
+ stack protector
+Message-ID: <YSZv632kJKPzpayk@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-24-brijesh.singh@amd.com>
+ <YSZTubkROktMMSba@zn.tnic>
+ <20210825151835.wzgabnl7rbrge3a2@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IuJpT0rwbUevm2bB"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YSZk5tyAxZoosXS3@pendragon.ideasonboard.com>
-X-Cookie: MY income is ALL disposable!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210825151835.wzgabnl7rbrge3a2@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Aug 25, 2021 at 10:18:35AM -0500, Michael Roth wrote:
+> On Wed, Aug 25, 2021 at 04:29:13PM +0200, Borislav Petkov wrote:
+> > On Fri, Aug 20, 2021 at 10:19:18AM -0500, Brijesh Singh wrote:
+> > > From: Michael Roth <michael.roth@amd.com>
+> > > 
+> > > As of commit 103a4908ad4d ("x86/head/64: Disable stack protection for
+> > > head$(BITS).o") kernel/head64.c is compiled with -fno-stack-protector
+> > > to allow a call to set_bringup_idt_handler(), which would otherwise
+> > > have stack protection enabled with CONFIG_STACKPROTECTOR_STRONG. While
+> > > sufficient for that case, this will still cause issues if we attempt to
+								^^^
 
---IuJpT0rwbUevm2bB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm tired of repeating the same review comments with you guys:
 
-On Wed, Aug 25, 2021 at 06:42:30PM +0300, Laurent Pinchart wrote:
-> On Wed, Aug 25, 2021 at 04:27:35PM +0100, Mark Brown wrote:
+Who's "we"?
 
-> > Yeah, that or something like a generalized version of it which lets a
-> > separate quirk file like they seem to have register the data to insert -
+Please use passive voice in your text: no "we" or "I", etc.
+Personal pronouns are ambiguous in text, especially with so many
+parties/companies/etc developing the kernel so let's avoid them please.
 
-> Let's also remember that we have to handle not just regulators, but also
-> GPIOs and clocks. And I'm pretty sure there will be more. We could have
-> a mechanism specific to the tps68470 driver to pass platform data from
-> the board file to the driver, and replicate that mechanism in different
-> drivers (for other regulators, clocks and GPIOs), but I really would
-> like to avoid splitting the DMI-conditioned platform data in those
-> drivers directly. I'd like to store all the init data for a given
-> platform in a single "board" file.
+How about you pay more attention?
 
-Right, that's the more general bit I'm suggesting.
+> I didn't realize the the 32-bit path was something you were suggesting
+> to have added in this patch, but I'll take a look at that as well.
 
---IuJpT0rwbUevm2bB
-Content-Type: application/pgp-signature; name="signature.asc"
+If you're going to remove the -no-stack-protector thing for that file,
+then pls remove it for both 32- and 64-bit. I.e., the revert what
+103a4908ad4d did.
 
------BEGIN PGP SIGNATURE-----
+-- 
+Regards/Gruss,
+    Boris.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmbAsACgkQJNaLcl1U
-h9BerQf/WuUAv3FHwUK4Y6sdfXg7P6fUoU41asYQRl/RONNF8MnduFGx70c5vqfs
-RAj6nnbeIdHjMXpgOncLBqeNzWFjrxk1VuVrmEIeeb0B5LfZ3s2/Tc3aSQ8Cop0n
-MPhBT9EhrWVQ/IM0O95xfa1u/zZIoZQovmLtSsQZ9D1QPA2gvoZhoAAO93ggRlps
-HmjiiWv06oiMFpODG14vqSpWcfNFbRsAhWXQqAuSFXPn+rrQkTKyPXODetiGnoT/
-gP/OdIseBdiSdIPgqSIdoDdwvK/+V+GTWkkVmaUelK+e1J2ixSQFNjWhIxKVPup4
-3YxfV/vow0/gm6HE8PTI67D0SYyv5A==
-=WWWK
------END PGP SIGNATURE-----
-
---IuJpT0rwbUevm2bB--
+https://people.kernel.org/tglx/notes-about-netiquette
