@@ -2,161 +2,114 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DE0C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74618C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C001E610CE
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5824D610E8
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241824AbhHYOtF (ORCPT
+        id S241881AbhHYOxr (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 10:49:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39029 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241823AbhHYOtF (ORCPT
+        Wed, 25 Aug 2021 10:53:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241879AbhHYOxq (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 10:49:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629902899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O84UPSzLyTlxpKY8kgA2dxz7W797Ma61Zj/oAUQaZog=;
-        b=UraUkJOXm/+2eeZFAAKzwoqTRGpj45jR5Ur9VoJ6nLezFOuUXkUKLG6Lq8TaR9HlgAIKsf
-        FegayT2i8gfe/BddLc8kf9p6s0MV0m7RfY12cfRE7bFZqj9+ShHQXpZLAyrwgs3WLKoaaO
-        tGo8erm7BQv9JV3O7kg42nl1XPJOpk8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-_KVIIunkOU6WgzBl6p1bWQ-1; Wed, 25 Aug 2021 10:48:17 -0400
-X-MC-Unique: _KVIIunkOU6WgzBl6p1bWQ-1
-Received: by mail-ed1-f72.google.com with SMTP id x24-20020aa7dad8000000b003bed477317eso12459557eds.18
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Aug 2021 07:48:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=O84UPSzLyTlxpKY8kgA2dxz7W797Ma61Zj/oAUQaZog=;
-        b=nTL7LplzHbp0x75KH2U6jWS8Pdi0zB09j6NQEqksgKGBR4QvZjWg0A36vdHZXEZ29K
-         lR9qGU8rSaxCWkQw39Dr6ZoXnrWxR+kFxRr2mc9+DG1nJ3Ty0g/HtLTIgOX5UrXq+1uE
-         ak6ITcRw6RZh3jDtW8C7vOvoSj2bzOiiz1ChjvROYpzV0Q3MknItLzjM/1WvN6BkroHS
-         kdWuZqtg5TLfVrK2uf87oC9mh5AewSxs28322qtl7A9SOH+MqrRZI6r5jEgXh1Ei6DCJ
-         rMKmZ3OKKNw9dmcUlEYdapAWPZEIx2gPKlR6nKxjxn7hTGKbL47rjYGzrepm0gHMG6KG
-         Zkew==
-X-Gm-Message-State: AOAM530JC+XVr0wA9dTnKmrBfrUaDEgVbsre8Ec/sbofLX+BMHo+iKnP
-        lB1qnycwiOBKzoKcLmaH23KRKpK3rup8hZZa0AA7z6KIBolDyeSK3QGwbLI9GdauGiCEokd/lUy
-        LrBYyokw/BPNpso+YYpvUo7usL5THQuUQqg==
-X-Received: by 2002:a17:906:8257:: with SMTP id f23mr15284103ejx.509.1629902896651;
-        Wed, 25 Aug 2021 07:48:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzg+YMXzP7rZDSk5lLyGAzNNAie8tuqLLPImw3zzrzt/HJXoa38SKWj/gfei0a8pgYgXHQrPg==
-X-Received: by 2002:a17:906:8257:: with SMTP id f23mr15284081ejx.509.1629902896417;
-        Wed, 25 Aug 2021 07:48:16 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id i19sm108277edx.54.2021.08.25.07.48.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Aug 2021 07:48:15 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-To:     Mark Brown <broonie@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        Wed, 25 Aug 2021 10:53:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A37A5610CE;
+        Wed, 25 Aug 2021 14:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629903180;
+        bh=Ny4c5rNADRMZ/j+L4vt+4ELwpZlSHorximr3vmfw2wk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pYDglXzkY2lrkunRtfOvEGBcpqs6i5OS9BTj8UvR1mf8i+Asjb4Ti5WS0YTgSMbgt
+         8+p6sdoarjPbT1ufltbw+qOc7Mq9gZqdaJ3cjC7BZBvpBKHUozbu+Jf9golVAZ6F9E
+         uMAKFsRgHLQlOXpjGrKnFdWJYE7BhiX63gIsr2gPuF5UmZxQfMFI9vB+5U0uENdzez
+         Bnjha1AYoLAZ9Z/o8ODkq8hJvPAM5wkTI03Td/7s0PwqF8ljpb1kxXLA4aszC0Nd3G
+         oeLAd8Qt9esTWNbSAtnSe8RkJIeK+iNP5nUanH6dNQyaCSXSZZY/tW72MQ+/4I3bAl
+         kfi39ymRsnqlg==
+Date:   Wed, 25 Aug 2021 15:52:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Daniel Scally <djrscally@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Mark Gross <mgross@linux.intel.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
+Message-ID: <20210825145232.GI5186@sirena.org.uk>
 References: <20210824230620.1003828-1-djrscally@gmail.com>
  <20210824230620.1003828-2-djrscally@gmail.com>
  <20210825103301.GC5186@sirena.org.uk>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <cc65098e-b459-b20a-f6e2-ee521fc20ca7@redhat.com>
-Date:   Wed, 25 Aug 2021 16:48:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
+ <20210825113013.GD5186@sirena.org.uk>
+ <CAHp75VfKJgux8k_mPauYB3MHcEOcnnzhSpoUDi4mVFDgtmNXeg@mail.gmail.com>
+ <20210825131139.GG5186@sirena.org.uk>
+ <YSZMxxJ76vF316Pi@pendragon.ideasonboard.com>
+ <4ac0acb9-83ea-7fcd-cde3-669ba3b699c6@gmail.com>
+ <YSZSOZXxSac307/A@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20210825103301.GC5186@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
+Content-Disposition: inline
+In-Reply-To: <YSZSOZXxSac307/A@pendragon.ideasonboard.com>
+X-Cookie: MY income is ALL disposable!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi all,
 
-On 8/25/21 12:33 PM, Mark Brown wrote:
-> On Wed, Aug 25, 2021 at 12:06:18AM +0100, Daniel Scally wrote:
->> In some situations regulator devices can be enumerated via either
->> devicetree or ACPI and bound to regulator drivers but without any
->> init data being provided in firmware. This leaves their consumers
->> unable to acquire them via regulator_get().
->>
->> To fix the issue, add the ability to register a lookup table to a
->> list within regulator core, which will allow board files to provide
->> init data via matching against the regulator name and device name in
->> the same fashion as the gpiod lookup table.
-> 
-> This is the wrong level to do this I think, this is a generic problem
-> that affects all kinds of platform data so if we're not going to scatter
-> DMI quirks throughout the drivers like we currently do then we should
-> have a way for boards to just store generic platform data for a device
-> and then have that platform data joined up with the device later.  This
-> could for example also be used by all the laptop audio subsystems which
-> need DMI quirk tables in drivers for their components to figure out how
-> they're wired up and avoids the need to go through subsystems adding new
-> APIs.
+--y96v7rNg6HAoELs5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Daniel, I believe that what Mark wants here is something similar to what
-we already do for the 5v boost converter regulator in the TI bq24190 charger
-chip used on some Cherry Trail devices.
+On Wed, Aug 25, 2021 at 05:22:49PM +0300, Laurent Pinchart wrote:
 
-There the entire i2c-client is instantiated by platform code here:
-drivers/i2c/busses/i2c-cht-wc.c
+> a very large number of regulators, it may not be too bad in practice. If
+> I were to maintain the regulator subsystem I'd probably want a
+> centralized implementation there, but that's certainly a personal
+> preference, at least partly.
 
-This attaches a struct bq24190_platform_data as platform data to
-the i2c-client, this struct contains a single 
+We already have some generic platform data for regulators so if it
+doesn't want to define anything custom all a driver has to do is forward
+that struct on to the core for handling, otherwise it just has to pick
+the generic struct out of whatever custom thing it defines.
 
-const struct regulator_init_data *regulator_init_data
+> On a side note, this RFC looks quite similar to what the GPIO subsystem
+> does, which I personally consider nice as differences between regulator
+> and GPIO in these areas are confusing for users.
 
-member which then gets consumed (if there is platform data set) by
-the regulator code in:
+My pushback here is that if all we're doing is providing a mechanism to
+match platform data with firmware provided devices we shouldn't be
+implementing it per API in the first place, we should have a generic
+mechanism for system level quirking to pass platform data to devices
+which works with anything - it could also absorb a lot of the DMI based
+quirking we have in drivers already which boil down to using a DMI match
+to pick some platform data.
 
-drivers/power/supply/bq24190_charger.c
+--y96v7rNg6HAoELs5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For the tps68470 regulator code the platform_data then would need to
-have 3 const struct regulator_init_data * members one for each of the
-3 regulators.
+-----BEGIN PGP SIGNATURE-----
 
-This platform_data could then be directly set (based on a DMI match table)
-from intel_skl_int3472_tps68470.c avoiding probe-ordering issues (1) with
-the lookup solution and will allow the code containing the DMI and
-regulator_init_data tables to be build as a module.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmWTAACgkQJNaLcl1U
+h9DKXwf/dMpnjpe16heUgEu/y6oLmyrmLPbFe/hEtser4kVWV55hAdmKootw15AR
+0LiCOkBmLTxd30GcAYCTgEsWOYOWDDZBITGDAgOiDNxSy0/lLGJm1FBOoo4H/Cx2
+9bGJgDJ3BXdL2wvyJQbACfQKXatkbygpDS0R6oWehA0pe882YULckV8U2EpdmXUJ
+G/yQA5TS5NAMok4ubxXoiW5Ey5ln5C/qgS/PEjnSj+XXLvYBMcgoW33jCstLEtfR
+lIKTaR3jU5LoawQTerJjjwlxC8YIkWT4FO8nYNH5NSjUYRi2kOgkuTHV/gMxTILW
+xmR40YYJ2abYC8Vs/BjaHfKw8fK6eA==
+=JpfI
+-----END PGP SIGNATURE-----
 
-So all in all I think that this will be a better solution.
-
-Regards,
-
-Hans
-
-
-1) You are forcing the DMI matching driver adding the lookups to be builtin
-but what if the tps68740-MFD + regulatorcode is also builtin, then there
-still is no guarantee the lookups will be added before the regulator drivers'
-probe function runs
-
-
-p.s.
-
-I see that you mention something similar later in the thread referring to
-the tps65023-regulator driver. I did not check, but assuming that uses what
-I describe above; then yes the idea would be to do something similar for
-the tps68740-code, setting the platform_data when (just before) the MFD-cells
-are instantiated from intel_skl_int3472_tps68470.c
-
-
-
+--y96v7rNg6HAoELs5--
