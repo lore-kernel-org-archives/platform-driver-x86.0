@@ -2,39 +2,68 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C78C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607EDC4320A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B5D96113C
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47A1A61139
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 12:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237446AbhHYLb2 (ORCPT
+        id S240227AbhHYM2D (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 07:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232304AbhHYLb1 (ORCPT
+        Wed, 25 Aug 2021 08:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238179AbhHYM2C (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 07:31:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D0C1610E8;
-        Wed, 25 Aug 2021 11:30:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629891042;
-        bh=HNOC9P+m4Gc4SN5G4ASwhTGEIT9YqxP+5GJ2GfjgiTc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SylBGTbX+xaUeCoF0UKWy1aQZpWOZggEIiFw7BjEbmYZ4lT+zkUcXyPouEgvZ9K/I
-         WYhBJcRnrBG2klgW8shWz/yyOc2pjLItGKYqTOUtZ0NGmZsMkkDm5BqyQ9QmHuYrlC
-         YrIOPKHS/ICAih6i4CG8TPHUdcJh8VirmfQ6jvz88KIGVOoq880hqn9S9200dUwM6p
-         uJnkZ2y7Q2iwCShn51cGo55d1i6Hx+WqOTIlLLejGdr/lOOgrmoiyIy6bURyMYDlRA
-         SBYoIVIQLwecL5AJhfJscyrdrZHHbiXsWiLME4IqgNlzD7/Wua+TEfuN9tO/U9RFc7
-         D89SpM1hokvCQ==
-Date:   Wed, 25 Aug 2021 12:30:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+        Wed, 25 Aug 2021 08:28:02 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C42C061757;
+        Wed, 25 Aug 2021 05:27:17 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id mw10-20020a17090b4d0a00b0017b59213831so4087328pjb.0;
+        Wed, 25 Aug 2021 05:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iNKX6kte1iNRhPEzpqLRtyhooTzsRJn7cqOtbK5zh1o=;
+        b=RrHIJG9yv2DEEvyh5gfGeLkFD8bxdojR0zv4glu2F3MiBzpcIyPeeO1G5FLpHQCAod
+         V0ELxjK+cQmjNz4oVzR1NUIjdWle+fR9z8z9vcJZbqbcQyaRB35vrpT3AJtqzbqbajOg
+         UDXq/8OkUn9UD2Fbt7VRwdbXQJFDg083KQEOUvHJzAkjEoaiES7drHAzd/wh53SqK/0g
+         9iJoDqukGQCOr3Bxx+4w3QatwzBqIT0jboklH0s/q76nTpxB66T58C/v/T4dLjB4ifmM
+         gpY+0dJNgWKIZuw2syQ1GmLq/vo7LnhX2aAc36M9prHFYbjMsh4Q0xpqc5ZxjcyW43JI
+         KQ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iNKX6kte1iNRhPEzpqLRtyhooTzsRJn7cqOtbK5zh1o=;
+        b=Mkb41DoiFFl5uKjAt+4N2Qdzc7yWSnv7iI1NxNIiRVmx8MLuhEykN7B8MfrtcZjY+5
+         NC+H3QZ4gkQUGGnM1TXs5dGHc8Np3AEt7ICRpj9pw72CGwuKqmsF1KVFWGJ45HJqRunD
+         bntoIr5u9tevtNQAX2azZABL2JMP8xaC9+z1TfQT6bXap76H3yylsfWZMGysVQz5GG/K
+         A2gy49csWaC9LUdbif9s7SAQv/7kZMMrL31QKi6JXJHkwaVsqMfAz4qwqm+Q6p4E+VMs
+         cDCn5/VH4K4AejLyxjoTL64gyecA9c/6M2Vhp6kdY01H9LNmy90gAi9W4I1bXfm9iDiy
+         tlZg==
+X-Gm-Message-State: AOAM531Q47+v0EvvGtmOp//I1VeI52eHjC8iC8ojkqGAqh+SAIEkj57W
+        K4Y52d5Gbfp+zf7N4a0CKJ1KRXBP2Y43A8o0RR0=
+X-Google-Smtp-Source: ABdhPJy+++7Qxj9HojT3j1mXVW91uKkfhtM0CxpsjyZwE6itRoElj7WqxGhQimB+XgdGNp1KvcGUJ1H3b2fk0E8Z5X4=
+X-Received: by 2002:a17:902:ced0:b029:12d:4ce1:ce3a with SMTP id
+ d16-20020a170902ced0b029012d4ce1ce3amr37854408plg.0.1629894436695; Wed, 25
+ Aug 2021 05:27:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210824230620.1003828-1-djrscally@gmail.com> <20210824230620.1003828-2-djrscally@gmail.com>
+ <20210825103301.GC5186@sirena.org.uk> <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
+ <20210825113013.GD5186@sirena.org.uk>
+In-Reply-To: <20210825113013.GD5186@sirena.org.uk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Aug 2021 15:26:37 +0300
+Message-ID: <CAHp75VfKJgux8k_mPauYB3MHcEOcnnzhSpoUDi4mVFDgtmNXeg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Daniel Scally <djrscally@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
@@ -44,71 +73,50 @@ Cc:     Daniel Scally <djrscally@gmail.com>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Kieran Bingham <kieran.bingham@ideasonboard.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Message-ID: <20210825113013.GD5186@sirena.org.uk>
-References: <20210824230620.1003828-1-djrscally@gmail.com>
- <20210824230620.1003828-2-djrscally@gmail.com>
- <20210825103301.GC5186@sirena.org.uk>
- <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
-X-Cookie: MY income is ALL disposable!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Wed, Aug 25, 2021 at 2:30 PM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Aug 25, 2021 at 02:10:05PM +0300, Andy Shevchenko wrote:
+> > On Wed, Aug 25, 2021 at 1:34 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > DMI quirks throughout the drivers like we currently do then we should
+> > > have a way for boards to just store generic platform data for a device
+> > > and then have that platform data joined up with the device later.  This
+>
+> > What you are describing sounds similar to what we have, i.e. fwnode graph.
+> > That's how v4l2 describes complex connections between devices in the
+> > camera world.
+>
+> > But IIRC you don't like this idea to be present with regulators (as
+> > per v1 of this series).
+>
+> No, what was proposed for regulator was to duplicate all the the DT
+> binding code in the regulator framework so it parses fwnodes then have
+> an API for encoding fwnodes from C data structures at runtime.  The bit
+> where the data gets joined up with the devices isn't the problem, it's
+> the duplication and fragility introduced by encoding everything into
+> an intermediate representation that has no purpose and passing that
+> around which is the problem.
 
---T7mxYSe680VjQnyC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The whole exercise with swnode is to minimize the driver intrusion and
+evolving a unified way for (some) of the device properties. V4L2 won't
+like what you are suggesting exactly because they don't like the idea
+of spreading the board code over the drivers. In some cases it might
+even be not so straightforward and easy.
 
-On Wed, Aug 25, 2021 at 02:10:05PM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 25, 2021 at 1:34 PM Mark Brown <broonie@kernel.org> wrote:
+Laurent, do I understand correctly the v4l2 expectations?
 
-> > DMI quirks throughout the drivers like we currently do then we should
-> > have a way for boards to just store generic platform data for a device
-> > and then have that platform data joined up with the device later.  This
+> > So, what do you propose then?
+>
+> I propose what I suggested above, providing a way to attach platform
+> data to firmware provided devices.  Don't bother with an intermediate
+> encoding, just use platform data.  Or just put quirks in the drivers
+> like all the other systems using ACPI for platforms where it's not a
+> good fit.
 
-> What you are describing sounds similar to what we have, i.e. fwnode graph.
-> That's how v4l2 describes complex connections between devices in the
-> camera world.
-
-> But IIRC you don't like this idea to be present with regulators (as
-> per v1 of this series).
-
-No, what was proposed for regulator was to duplicate all the the DT
-binding code in the regulator framework so it parses fwnodes then have
-an API for encoding fwnodes from C data structures at runtime.  The bit
-where the data gets joined up with the devices isn't the problem, it's
-the duplication and fragility introduced by encoding everything into
-an intermediate representation that has no purpose and passing that
-around which is the problem.
-
-> So, what do you propose then?
-
-I propose what I suggested above, providing a way to attach platform
-data to firmware provided devices.  Don't bother with an intermediate
-encoding, just use platform data.  Or just put quirks in the drivers
-like all the other systems using ACPI for platforms where it's not a
-good fit.
-
---T7mxYSe680VjQnyC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmKcUACgkQJNaLcl1U
-h9A7AggAgjXkogVPUZ2ElSP+d58XTGKHJDC/XysVmVQpiA6enh9IEz7N/rSdQBnK
-hrky5sFIGg0LEBGX3nkZZCeaIcCJ6NsYWrwNrDLJXDEMzTf40mxSRB2s2PUX2gV9
-HGsRx3p+ZY7su1y+8N5z2qX2bVbumVsx8mM0jqyZDB6ZrUwv9e/k68lavmV//TYv
-/IJ9wxso6OcCpyLIHHx55AZGVnqwe80/dokbWEBD7h9HNqfPWNXz9caSAUpTJEKi
-bHurxgMMBXjV56VKtKvK3VFQx5jsw3F3pg0njvWWqUXWKZMQ7DXLKDR+8dGEld6r
-1l0olltqQetl/zJuTL3xdXJgPL61cQ==
-=c2LJ
------END PGP SIGNATURE-----
-
---T7mxYSe680VjQnyC--
+-- 
+With Best Regards,
+Andy Shevchenko
