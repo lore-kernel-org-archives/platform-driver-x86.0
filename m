@@ -2,114 +2,135 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74618C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C43C4320A
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5824D610E8
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 14:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD869610D1
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 15:07:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241881AbhHYOxr (ORCPT
+        id S240609AbhHYPI2 (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 10:53:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241879AbhHYOxq (ORCPT
+        Wed, 25 Aug 2021 11:08:28 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:44856 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231995AbhHYPIR (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 10:53:46 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A37A5610CE;
-        Wed, 25 Aug 2021 14:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1629903180;
-        bh=Ny4c5rNADRMZ/j+L4vt+4ELwpZlSHorximr3vmfw2wk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pYDglXzkY2lrkunRtfOvEGBcpqs6i5OS9BTj8UvR1mf8i+Asjb4Ti5WS0YTgSMbgt
-         8+p6sdoarjPbT1ufltbw+qOc7Mq9gZqdaJ3cjC7BZBvpBKHUozbu+Jf9golVAZ6F9E
-         uMAKFsRgHLQlOXpjGrKnFdWJYE7BhiX63gIsr2gPuF5UmZxQfMFI9vB+5U0uENdzez
-         Bnjha1AYoLAZ9Z/o8ODkq8hJvPAM5wkTI03Td/7s0PwqF8ljpb1kxXLA4aszC0Nd3G
-         oeLAd8Qt9esTWNbSAtnSe8RkJIeK+iNP5nUanH6dNQyaCSXSZZY/tW72MQ+/4I3bAl
-         kfi39ymRsnqlg==
-Date:   Wed, 25 Aug 2021 15:52:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-Message-ID: <20210825145232.GI5186@sirena.org.uk>
-References: <20210824230620.1003828-1-djrscally@gmail.com>
- <20210824230620.1003828-2-djrscally@gmail.com>
- <20210825103301.GC5186@sirena.org.uk>
- <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
- <20210825113013.GD5186@sirena.org.uk>
- <CAHp75VfKJgux8k_mPauYB3MHcEOcnnzhSpoUDi4mVFDgtmNXeg@mail.gmail.com>
- <20210825131139.GG5186@sirena.org.uk>
- <YSZMxxJ76vF316Pi@pendragon.ideasonboard.com>
- <4ac0acb9-83ea-7fcd-cde3-669ba3b699c6@gmail.com>
- <YSZSOZXxSac307/A@pendragon.ideasonboard.com>
+        Wed, 25 Aug 2021 11:08:17 -0400
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BC62A2220A;
+        Wed, 25 Aug 2021 15:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1629904049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/d2RSJXoiYvwpdqa3PewAfBc2yP4smGwYb0V6Y+Upzo=;
+        b=TnJjPPz5sXKClNliDjj4T4y6yB7BO3Bnlji44QSDi6x9FmXeHnuOl2sw2OT7lHgAFFMR1H
+        nvXRGufQSECWgwOALkzxELpxvuYmk1PMMKiRVIWRU5rCa0ee71bnhrInvklZyqdKSMURhW
+        V138+hugf8845aj1TAlhbsJ2PIN3ja8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1629904049;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/d2RSJXoiYvwpdqa3PewAfBc2yP4smGwYb0V6Y+Upzo=;
+        b=oSObJPLqgQ8+K13tqXXWh+49QBGbp+vhvWoO7oX+EBb3fzHcO9HiouywQud9QIG8HYHAQu
+        mrZcEQgt8+sd4CDw==
+Received: from imap1.suse-dmz.suse.de (imap1.suse-dmz.suse.de [192.168.254.73])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap1.suse-dmz.suse.de (Postfix) with ESMTPS id 91F4113A85;
+        Wed, 25 Aug 2021 15:07:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap1.suse-dmz.suse.de with ESMTPSA
+        id xVtWIbBcJmGIVAAAGKfGzw
+        (envelope-from <jroedel@suse.de>); Wed, 25 Aug 2021 15:07:28 +0000
+Date:   Wed, 25 Aug 2021 17:07:26 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 23/38] x86/head/64: set up a startup %gs for
+ stack protector
+Message-ID: <YSZcrtqExehVwvhf@suse.de>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-24-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YSZSOZXxSac307/A@pendragon.ideasonboard.com>
-X-Cookie: MY income is ALL disposable!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20210820151933.22401-24-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+On Fri, Aug 20, 2021 at 10:19:18AM -0500, Brijesh Singh wrote:
+>  void __head startup_64_setup_env(unsigned long physbase)
+>  {
+> +	u64 gs_area = (u64)fixup_pointer(startup_gs_area, physbase);
+> +
 
---y96v7rNg6HAoELs5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This breaks as soon as the compiler decides that startup_64_setup_env()
+needs stack protection too.
 
-On Wed, Aug 25, 2021 at 05:22:49PM +0300, Laurent Pinchart wrote:
+And the startup_gs_area is also not needed, there is initial_gs for
+that. 
 
-> a very large number of regulators, it may not be too bad in practice. If
-> I were to maintain the regulator subsystem I'd probably want a
-> centralized implementation there, but that's certainly a personal
-> preference, at least partly.
+What you need is something along these lines (untested):
 
-We already have some generic platform data for regulators so if it
-doesn't want to define anything custom all a driver has to do is forward
-that struct on to the core for handling, otherwise it just has to pick
-the generic struct out of whatever custom thing it defines.
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index d8b3ebd2bb85..3c7c59bc9903 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -65,6 +65,16 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	leaq	(__end_init_task - FRAME_SIZE)(%rip), %rsp
+ 
+ 	leaq	_text(%rip), %rdi
++
++	movl	$MSR_GS_BASE, %ecx
++	movq	initial_gs(%rip), %rax
++	movq	$_text, %rdx
++	subq	%rdx, %rax
++	addq	%rdi, %rax
++	movq	%rax, %rdx
++	shrq	$32,  %rdx
++	wrmsr
++
+ 	pushq	%rsi
+ 	call	startup_64_setup_env
+ 	popq	%rsi
 
-> On a side note, this RFC looks quite similar to what the GPIO subsystem
-> does, which I personally consider nice as differences between regulator
-> and GPIO in these areas are confusing for users.
 
-My pushback here is that if all we're doing is providing a mechanism to
-match platform data with firmware provided devices we shouldn't be
-implementing it per API in the first place, we should have a generic
-mechanism for system level quirking to pass platform data to devices
-which works with anything - it could also absorb a lot of the DMI based
-quirking we have in drivers already which boil down to using a DMI match
-to pick some platform data.
-
---y96v7rNg6HAoELs5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmEmWTAACgkQJNaLcl1U
-h9DKXwf/dMpnjpe16heUgEu/y6oLmyrmLPbFe/hEtser4kVWV55hAdmKootw15AR
-0LiCOkBmLTxd30GcAYCTgEsWOYOWDDZBITGDAgOiDNxSy0/lLGJm1FBOoo4H/Cx2
-9bGJgDJ3BXdL2wvyJQbACfQKXatkbygpDS0R6oWehA0pe882YULckV8U2EpdmXUJ
-G/yQA5TS5NAMok4ubxXoiW5Ey5ln5C/qgS/PEjnSj+XXLvYBMcgoW33jCstLEtfR
-lIKTaR3jU5LoawQTerJjjwlxC8YIkWT4FO8nYNH5NSjUYRi2kOgkuTHV/gMxTILW
-xmR40YYJ2abYC8Vs/BjaHfKw8fK6eA==
-=JpfI
------END PGP SIGNATURE-----
-
---y96v7rNg6HAoELs5--
+It loads the initial_gs pointer, applies the fixup on it and loads it
+into MSR_GS_BASE. 
