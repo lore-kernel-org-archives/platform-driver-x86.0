@@ -2,543 +2,188 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F59C4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C07C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 17:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4854D61056
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 16:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7976109F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 17:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231985AbhHYQ7o (ORCPT
+        id S240947AbhHYRQA (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 12:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231916AbhHYQ7o (ORCPT
+        Wed, 25 Aug 2021 13:16:00 -0400
+Received: from mail-dm6nam10on2058.outbound.protection.outlook.com ([40.107.93.58]:20833
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233392AbhHYRQA (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:59:44 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC908C061757
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Aug 2021 09:58:57 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id u3so53001480ejz.1
-        for <platform-driver-x86@vger.kernel.org>; Wed, 25 Aug 2021 09:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ymkfSWQCyn1mF1d45rjzRG911hpzpjBjn0hgQd/KJa4=;
-        b=lcIEpUdN9W855O/pBdHqkmj3A1B5FSj9ySfkJmJd+KzZ4IHwesH82zzFX2cn9bSXYP
-         Cwh0/0EdfWrIl6PIY1ABikGd0uIH7Rq2OW2jJSpUCpU1gDv1h+thyt42nRPeeZrWu/BW
-         SwIhWhyrpRwLb4q7H1KpjjKFAlQq5DB+9vrZJAPKg2pp3G+9D/UQz6EHzGD/4n/oPeX8
-         a4w6d2lKk7JiydzJIMc//1P7Wa4CIZKz9BemdgD3gPBagd6vgp5/neY9FTCTybQmd2+e
-         ogujQrwMiyAD1t5dPqnAjj9i92uFmR+nUMbTYjQEPwnvDqL/JgQRmSsQXjgTzumpEcll
-         G0Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ymkfSWQCyn1mF1d45rjzRG911hpzpjBjn0hgQd/KJa4=;
-        b=EQG5oyvve29upz8B3K9TPXCp2LIvIPQpqHqxL6328rnAH4obpy/ZWHrwdeA4KCHJ8q
-         YZ9hcYbadV8E5vgczFvhK38FdZbrae0dC8w0g3v1AV/k0TKTxYmROPIYdS9xNUve4Zrs
-         lCi1lDY1VmD8NwOjrUomxZYfie2C2K2jpTs3LgHwaq7hbpioKDv6aJvarVzTGIpt48eK
-         cjRYzQBGnrs2RI6+3HySofe7VNy0y2xCrQo4zg9T2fPoqzck7f6GGPpZrf0aOkLf/WCm
-         kM6CDiqPmX0F5SprTZMtOmVQ3TmtYDcEyffk1P+4hied+zbPGLHWaIntdd6dtEfLbStP
-         fpmQ==
-X-Gm-Message-State: AOAM532wtRw/rVpTxhTcibUf4Wx3Fji4u4NQMvv5dWvjO4AS/ZPS5AJs
-        jyxVwXvKrn8zS+tUKHF3/n4=
-X-Google-Smtp-Source: ABdhPJxhtx04UOH1X3A5sQHwoOukd/3ykhJirNxXjNeqX/oPULOjFtsCF6qLFlLtGBnZyswDT4b8DQ==
-X-Received: by 2002:a17:907:ea1:: with SMTP id ho33mr6203953ejc.271.1629910736289;
-        Wed, 25 Aug 2021 09:58:56 -0700 (PDT)
-Received: from omen.localdomain ([109.175.38.255])
-        by smtp.gmail.com with ESMTPSA id u23sm315792edr.42.2021.08.25.09.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Aug 2021 09:58:55 -0700 (PDT)
-Date:   Wed, 25 Aug 2021 18:58:52 +0200
-From:   Enver Balalic <balalic.enver@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     hdegoede@redhat.com, mgross@linux.intel.com, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: add support for omen laptops
-Message-ID: <20210825165852.ga5r6arfow7xv4dl@omen.localdomain>
-References: <20210823185407.i7tk5bgofedqxfxf@omen.localdomain>
- <20210824173501.GA3402937@roeck-us.net>
- <20210824191132.o2eym6rq7pjgsxqy@omen.localdomain>
- <20210824193241.GA3414880@roeck-us.net>
-MIME-Version: 1.0
+        Wed, 25 Aug 2021 13:16:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g1EwZ1reRU5rF1YqtqesJx8DnN3Xnp2w1CTGNK8DMdsDkEJc9bhfuOvOI0LxE72tVX7KH9cBMV2N9hU4/BiRLnejRZSlZLdf+AE0v9732hpI2QxZm2kVUP1RvMUcLdGZNHhEnbEsYyyQSEVxYsSdmlQ06MUK5ADBpDBQe8kn0V6XBOHleVPu1WEzj+nvRloU+pMUHQ2sca2KdxPeC9H4TyhegOw5bfJXOjiVWZM2AcPp5HWXXemph/Oq+JZuWsySfyHc7+VeYjgMUw4V5xDWAwsnutzDFx/Etkh9q7PqJ6nKgo3v5vHLwz7SUpTX7stnaDK67VEWa6Z6vCKwVg03vQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9TNCBN9eVnSrNPIxe1AsrGA0cgt4fl+Sfainf4t/Df0=;
+ b=VSarmY9svIITTcBMg9M6QQTwC7Yki5CUkdbCQEJpn4HR4uczAnk1pllMTM+tnRYIko506PfzcLRtRz7Ng8MykEiy7OhH4MFLqiFpH0KghVxMLjeWwiqKHUHE7+m9wagZFfPfyDA/bn9+Vx2TJ4shJviFNDQTinTCj7brDwainsy69gqNAHo6lVT2xLfQ0wskGPgNPbemwxKKjJMFLzwaXwnq22OCjiiXnWUXexIVsE+ECBNvkjX9cIzN/eXVk7SKSz6q9LAaaY/e12ClxWK3L166yAFnN32QskW9dfVk71p7FlpMmsiypEl6kqcaNUo5qZlrtS59Dt9Bg3nmIddzjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9TNCBN9eVnSrNPIxe1AsrGA0cgt4fl+Sfainf4t/Df0=;
+ b=vxitHEBmPwhvOyRmzRU/HFjzQYnyJFqecIgtoVCHrsEuEOg6j1ZI6uc/PCiz+Ga7ptsImeutSuagnFl4lWN0M/3RA3nhsDKBXt92/pwHJcNQFSP63SDS7jGWMKH0N41zThOBzJD19qdTxNgpXUR5vLIYGSnQ96C1I1t3dZDURbE=
+Authentication-Results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=amd.com;
+Received: from CH2PR12MB4133.namprd12.prod.outlook.com (2603:10b6:610:7a::13)
+ by CH2PR12MB4923.namprd12.prod.outlook.com (2603:10b6:610:6a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Wed, 25 Aug
+ 2021 17:15:12 +0000
+Received: from CH2PR12MB4133.namprd12.prod.outlook.com
+ ([fe80::d19e:b657:5259:24d0]) by CH2PR12MB4133.namprd12.prod.outlook.com
+ ([fe80::d19e:b657:5259:24d0%8]) with mapi id 15.20.4436.019; Wed, 25 Aug 2021
+ 17:15:11 +0000
+Date:   Wed, 25 Aug 2021 12:07:19 -0500
+From:   Michael Roth <michael.roth@amd.com>
+To:     Joerg Roedel <jroedel@suse.de>
+Cc:     Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 23/38] x86/head/64: set up a startup %gs for
+ stack protector
+Message-ID: <20210825170719.lygfpbhyvmenohxq@amd.com>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-24-brijesh.singh@amd.com>
+ <YSZcrtqExehVwvhf@suse.de>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210824193241.GA3414880@roeck-us.net>
+In-Reply-To: <YSZcrtqExehVwvhf@suse.de>
+X-ClientProxiedBy: SN4PR0501CA0131.namprd05.prod.outlook.com
+ (2603:10b6:803:42::48) To CH2PR12MB4133.namprd12.prod.outlook.com
+ (2603:10b6:610:7a::13)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (165.204.77.11) by SN4PR0501CA0131.namprd05.prod.outlook.com (2603:10b6:803:42::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.8 via Frontend Transport; Wed, 25 Aug 2021 17:15:11 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f0d04090-f2ee-4652-d66c-08d967ebe572
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4923:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR12MB4923181EE528B6C3BA937A0295C69@CH2PR12MB4923.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Pirwj41rOafb/zeBF4zjtoWM6yqArALQb2hrR7e6rqfZXbAcO3Skl22D7Z44WnYjWXwmextMBC7rCrAF3Lj552oj03W8l9QrXYRhnp7sYhv5bsu7dQh9pGWD+ns/XiQh7nR5l46vsFQZOvDLyE/02pEnT6lJxkYjXtYwZ07R64x+h52t4je2gIIxyxSS0g34/fCdyUUUqzc+2EhAfzuBrPgvJJ3E6+JoAY1EhWryr+1Z0kRuheoYWBGAOANASL2VucogA6NVe5nzNyLsiFOhw+6qAJ8bhUOPykJQJfP/veDbotsCDA/BVMkNOstLY8M3Kbfl/9b7Pj8lkDEw8Xkchg1mwOpjFKhQzIdAmLg10DoeOzg/OAFFEYIX4YAz4GseuLbUDm3ZHnWD6kl7jzk6Ocaqk8mJGet1Ou0bWDOXzPTiuQ4Pk9Rc4uAztjK+Q9qNvX1Tvo9xeiNAApbl2XIUATPFTB8MkfIYndFT7p23641pR1FQJdz9pi3EdJd0nQeJC5xHf5V6KvBlhvUM7JF5c9ECf8wl/pF0b6NMpJJsZ/SAJYtZFC5AoxNplWbr/dmGWm7RxPvKFhmRJIkoTQeGZgMHNeD0r6XGX1gQxIV5Ck2wdtiZVGVGFm+R/lzpvNMhoai75FrR8gwmaiB9fOkJ8ZiJ7O+qvi8B1F6yH8HFbjKeD/m0y9zobU4cfc6GPq0inEXF1oc75thOiCx0UmUXJQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4133.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(3716004)(66476007)(4326008)(5660300002)(8676002)(2906002)(44832011)(1076003)(52116002)(6486002)(83380400001)(54906003)(8936002)(38100700002)(38350700002)(7406005)(66556008)(86362001)(478600001)(6916009)(2616005)(66946007)(36756003)(186003)(26005)(956004)(7416002)(316002)(6496006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2vnn0Wrcyxy8j/CpJEbJFs+hVzsE7iLtL9pKFLLmPVyCjA4O7SCWCtyw6cou?=
+ =?us-ascii?Q?Xev37/k2WRmlBVWWeIuDHdO2FqHg2TW2tz1318Gb5UQ3Ig/05SftKyZS3+JM?=
+ =?us-ascii?Q?L84TS2vmAWO4ZBRID8WSUPRifg43RH1pPKsqZ0CS1apz5gbzP9++hKeU65N3?=
+ =?us-ascii?Q?/ZfI+YwjS/TL8OINLuML/WsB4HsMY3R98cZ1geANcewEiLMhRvcTgRXKYH3k?=
+ =?us-ascii?Q?9CUuPf2sweDhjCfU/QAceu2LkcuD1encfRGp0D6pU37QYry8hc0AkCYyuFya?=
+ =?us-ascii?Q?8RZ+Az2c2RasT215P1Q9ATDI8jiyD7bzmRX7I8ldDabZOqEWcSfoTRON0SKy?=
+ =?us-ascii?Q?EY4ZpI+tD1hsfj11RU5Yw555LP1EZoCF88ge+E8VMTdT5phD0ClQW4R64s72?=
+ =?us-ascii?Q?RxDRiLcHGnfsG9VVKL4Ucbh/WOvKLF2Keulf5X59+Fb5ZJP4h463a3VbND8I?=
+ =?us-ascii?Q?HLB3SgrmxzrI5BS3uv10TK3hWkSYNEntwA8HFwwxBytTdsZ+x58bkWvD7JH/?=
+ =?us-ascii?Q?qqDnudU9ybWcIzJ/4064GncvR1REEP1E2N8FXcBWLFr6ybTOsDvwW8xfLTee?=
+ =?us-ascii?Q?dPOgUuSM1QhyKkSBQOl7TAQ5Mc00vOxtwRCjR5hEi3LXcuYV3Po+3PlYjD+F?=
+ =?us-ascii?Q?2E3HyJusTt5I0u1gRRmnPwyERudYkntDc98es5beVwp9M/7jSns6aUBrxf9k?=
+ =?us-ascii?Q?/xDJ6/35AAuobQpO1cfXulnw1ShbLnbH0TiADSsXkDYoRJy+2jgBW65CiNXf?=
+ =?us-ascii?Q?Z1vmUY9qPLENmv2nWcEFWJLiVNK5+llGuwIBwd7JY1a0n0gYKYkXQVwGILSG?=
+ =?us-ascii?Q?VBQdpiE87wBPVEG7Kyd+cT7R8pWXUN87StAxcvjQXllGr+af/kifEP+Q1vVH?=
+ =?us-ascii?Q?u5r1isB+b2wNNFQLGC8jxjK2XcT4e/ZxZJ1q9FaSRi4ENeXAsuKUaXgQQ5TL?=
+ =?us-ascii?Q?aCyK+JtmSSSaMiW5Har/y6dl+of7Vk8za9zNZ7qmOQojgmw11YDUMHabeIxF?=
+ =?us-ascii?Q?N1wt+Vv0lZbFCuZ19ze3SVcoe4XTM6B1TeSgTwuWMapOGQ3owPkXU4EEWt1U?=
+ =?us-ascii?Q?GplPl0kmxZ5kIKYxVvd4pPtgaUoe84dxFGBTsCLWwTWp0qxyOkV9b3t9f2Vy?=
+ =?us-ascii?Q?8lCvxB8pi2MZ+vkzvz0FOY3vt7nMct2NPN30dw0DFfjJ/tLA3cbmFcB+g5Yo?=
+ =?us-ascii?Q?a+a7kwm7qXSMu+4UI4NFaVg95ItVhhBVY6BmYfSS8IDMf8YptnOZYy4wd4mi?=
+ =?us-ascii?Q?oTxmw8PP1y+mg0NT8knZ1EN9jFvwM01HjLZUt58B9fd1bMfCHjm2qSTu/208?=
+ =?us-ascii?Q?HJULRbBtWyTczzjnJiE/uHWB?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0d04090-f2ee-4652-d66c-08d967ebe572
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4133.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2021 17:15:11.7504
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gv8YvDulgfxQJkSwqM0kjCtv5drPl+wpmMc4lsjqmml9rmKHxn6Z2SMNIctD8fBY6OwCd5OBcytoK6U0+1z9tA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4923
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi, 
+On Wed, Aug 25, 2021 at 05:07:26PM +0200, Joerg Roedel wrote:
+> On Fri, Aug 20, 2021 at 10:19:18AM -0500, Brijesh Singh wrote:
+> >  void __head startup_64_setup_env(unsigned long physbase)
+> >  {
+> > +	u64 gs_area = (u64)fixup_pointer(startup_gs_area, physbase);
+> > +
+> 
+> This breaks as soon as the compiler decides that startup_64_setup_env()
+> needs stack protection too.
 
-before I go out and send out a V4 of this, I wanted to check
-if you agree with the changes I plan on making
+Good point.
 
-On Tue, Aug 24, 2021 at 12:32:41PM -0700, Guenter Roeck wrote:
-> On Tue, Aug 24, 2021 at 09:11:32PM +0200, Enver Balalic wrote:
-> > On Tue, Aug 24, 2021 at 10:35:01AM -0700, Guenter Roeck wrote:
-> > > On Mon, Aug 23, 2021 at 08:54:07PM +0200, Enver Balalic wrote:
-> > > > This patch adds support for HP Omen laptops.
-> > > > It adds support for most things that can be controlled via the
-> > > > Windows Omen Command Center application.
-> > > > 
-> > > >  - Fan speed monitoring through hwmon
-> > > >  - Platform Profile support (cool, balanced, performance)
-> > > >  - Max fan speed function toggle
-> > > > 
-> > > > Also exposes the existing HDD temperature through hwmon since
-> > > > this driver didn't use hwmon before this patch.
-> > > > 
-> > > > This patch has been tested on a 2020 HP Omen 15 (AMD) 15-en0023dx.
-> > > > 
-> > > >  - V1
-> > > >    Initial Patch
-> > > >  - V2
-> > > >    Use standard hwmon ABI attributes
-> > > >    Add existing non-standard "hddtemp" to hwmon
-> > > >  - V3
-> > > >    Fix overflow issue in "hp_wmi_get_fan_speed"
-> > > >    Map max fan speed value back to hwmon values on read
-> > > >    Code style fixes
-> > > >    Fix issue with returning values from "hp_wmi_hwmon_read",
-> > > >    the value to return should be written to val and not just
-> > > >    returned from the function
-> > > > 
-> > > > Signed-off-by: Enver Balalic <balalic.enver@gmail.com>
-> > > > ---
-> > > >  drivers/platform/x86/Kconfig  |   1 +
-> > > >  drivers/platform/x86/hp-wmi.c | 320 ++++++++++++++++++++++++++++++++--
-> > > >  2 files changed, 310 insertions(+), 11 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> > > > index d12db6c316ea..f0b3d94e182b 100644
-> > > > --- a/drivers/platform/x86/Kconfig
-> > > > +++ b/drivers/platform/x86/Kconfig
-> > > > @@ -431,6 +431,7 @@ config HP_WMI
-> > > >  	tristate "HP WMI extras"
-> > > >  	depends on ACPI_WMI
-> > > >  	depends on INPUT
-> > > > +	depends on HWMON
-> > > >  	depends on RFKILL || RFKILL = n
-> > > >  	select INPUT_SPARSEKMAP
-> > > >  	select ACPI_PLATFORM_PROFILE
-> > > > diff --git a/drivers/platform/x86/hp-wmi.c b/drivers/platform/x86/hp-wmi.c
-> > > > index 027a1467d009..8c1fe1df6462 100644
-> > > > --- a/drivers/platform/x86/hp-wmi.c
-> > > > +++ b/drivers/platform/x86/hp-wmi.c
-> > > > @@ -22,6 +22,7 @@
-> > > >  #include <linux/input/sparse-keymap.h>
-> > > >  #include <linux/platform_device.h>
-> > > >  #include <linux/platform_profile.h>
-> > > > +#include <linux/hwmon.h>
-> > > >  #include <linux/acpi.h>
-> > > >  #include <linux/rfkill.h>
-> > > >  #include <linux/string.h>
-> > > > @@ -39,6 +40,7 @@ MODULE_PARM_DESC(enable_tablet_mode_sw, "Enable SW_TABLET_MODE reporting (-1=aut
-> > > >  
-> > > >  #define HPWMI_EVENT_GUID "95F24279-4D7B-4334-9387-ACCDC67EF61C"
-> > > >  #define HPWMI_BIOS_GUID "5FB7F034-2C63-45e9-BE91-3D44E2C707E4"
-> > > > +#define HP_OMEN_EC_THERMAL_PROFILE_OFFSET 0x95
-> > > >  
-> > > >  enum hp_wmi_radio {
-> > > >  	HPWMI_WIFI	= 0x0,
-> > > > @@ -89,10 +91,18 @@ enum hp_wmi_commandtype {
-> > > >  	HPWMI_THERMAL_PROFILE_QUERY	= 0x4c,
-> > > >  };
-> > > >  
-> > > > +enum hp_wmi_gm_commandtype {
-> > > > +	HPWMI_FAN_SPEED_GET_QUERY = 0x11,
-> > > > +	HPWMI_SET_PERFORMANCE_MODE = 0x1A,
-> > > > +	HPWMI_FAN_SPEED_MAX_GET_QUERY = 0x26,
-> > > > +	HPWMI_FAN_SPEED_MAX_SET_QUERY = 0x27,
-> > > > +};
-> > > > +
-> > > >  enum hp_wmi_command {
-> > > >  	HPWMI_READ	= 0x01,
-> > > >  	HPWMI_WRITE	= 0x02,
-> > > >  	HPWMI_ODM	= 0x03,
-> > > > +	HPWMI_GM	= 0x20008,
-> > > >  };
-> > > >  
-> > > >  enum hp_wmi_hardware_mask {
-> > > > @@ -120,12 +130,23 @@ enum hp_wireless2_bits {
-> > > >  	HPWMI_POWER_FW_OR_HW	= HPWMI_POWER_BIOS | HPWMI_POWER_HARD,
-> > > >  };
-> > > >  
-> > > > +
-> > > > +enum hp_thermal_profile_omen {
-> > > > +	HP_OMEN_THERMAL_PROFILE_DEFAULT     = 0x00,
-> > > > +	HP_OMEN_THERMAL_PROFILE_PERFORMANCE = 0x01,
-> > > > +	HP_OMEN_THERMAL_PROFILE_COOL        = 0x02,
-> > > > +};
-> > > > +
-> > > >  enum hp_thermal_profile {
-> > > >  	HP_THERMAL_PROFILE_PERFORMANCE	= 0x00,
-> > > >  	HP_THERMAL_PROFILE_DEFAULT		= 0x01,
-> > > >  	HP_THERMAL_PROFILE_COOL			= 0x02
-> > > >  };
-> > > >  
-> > > > +static const char *const hp_wmi_temp_label[] = {
-> > > > +	"HDD",
-> > > > +};
-> > > > +
-> > > >  #define IS_HWBLOCKED(x) ((x & HPWMI_POWER_FW_OR_HW) != HPWMI_POWER_FW_OR_HW)
-> > > >  #define IS_SWBLOCKED(x) !(x & HPWMI_POWER_SOFT)
-> > > >  
-> > > > @@ -279,6 +300,24 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
-> > > >  	return ret;
-> > > >  }
-> > > >  
-> > > > +static int hp_wmi_get_fan_speed(int fan)
-> > > > +{
-> > > > +	u8 fsh, fsl;
-> > > > +	char fan_data[4] = { fan, 0, 0, 0 };
-> > > > +
-> > > > +	int ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_GET_QUERY, HPWMI_GM,
-> > > > +				       &fan_data, sizeof(fan_data),
-> > > > +				       sizeof(fan_data));
-> > > > +
-> > > > +	if (ret != 0)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	fsh = fan_data[2];
-> > > > +	fsl = fan_data[3];
-> > > > +
-> > > > +	return (fsh << 8) | fsl;
-> > > > +}
-> > > > +
-> > > >  static int hp_wmi_read_int(int query)
-> > > >  {
-> > > >  	int val = 0, ret;
-> > > > @@ -302,6 +341,61 @@ static int hp_wmi_hw_state(int mask)
-> > > >  	return !!(state & mask);
-> > > >  }
-> > > >  
-> > > > +static int omen_thermal_profile_set(int mode)
-> > > > +{
-> > > > +	char buffer[2] = {0, mode};
-> > > > +	int ret;
-> > > > +
-> > > > +	if (mode < 0 || mode > 2)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	ret = hp_wmi_perform_query(HPWMI_SET_PERFORMANCE_MODE, HPWMI_GM,
-> > > > +				   &buffer, sizeof(buffer), sizeof(buffer));
-> > > > +
-> > > > +	if (ret)
-> > > > +		return ret < 0 ? ret : -EINVAL;
-> > > > +
-> > > > +	return mode;
-> > > > +}
-> > > > +
-> > > > +static int omen_thermal_profile_get(void)
-> > > > +{
-> > > > +	u8 data;
-> > > > +
-> > > > +	int ret = ec_read(HP_OMEN_EC_THERMAL_PROFILE_OFFSET, &data);
-> > > > +
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	return data;
-> > > > +}
-> > > > +
-> > > > +static int hp_wmi_fan_speed_max_set(int enabled)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_SET_QUERY, HPWMI_GM,
-> > > > +				   &enabled, sizeof(enabled), sizeof(enabled));
-> > > > +
-> > > > +	if (ret)
-> > > > +		return ret < 0 ? ret : -EINVAL;
-> > > > +
-> > > > +	return enabled;
-> > > > +}
-> > > > +
-> > > > +static int hp_wmi_fan_speed_max_get(void)
-> > > > +{
-> > > > +	int val = 0, ret;
-> > > > +
-> > > > +	ret = hp_wmi_perform_query(HPWMI_FAN_SPEED_MAX_GET_QUERY, HPWMI_GM,
-> > > > +				   &val, sizeof(val), sizeof(val));
-> > > > +
-> > > > +	if (ret)
-> > > > +		return ret < 0 ? ret : -EINVAL;
-> > > > +
-> > > > +	return val;
-> > > > +}
-> > > > +
-> > > >  static int __init hp_wmi_bios_2008_later(void)
-> > > >  {
-> > > >  	int state = 0;
-> > > > @@ -878,6 +972,58 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
-> > > >  	return err;
-> > > >  }
-> > > >  
-> > > > +static int platform_profile_omen_get(struct platform_profile_handler *pprof,
-> > > > +				enum platform_profile_option *profile)
-> > > > +{
-> > > > +	int tp;
-> > > > +
-> > > > +	tp = omen_thermal_profile_get();
-> > > > +	if (tp < 0)
-> > > > +		return tp;
-> > > > +
-> > > > +	switch (tp) {
-> > > > +	case HP_OMEN_THERMAL_PROFILE_PERFORMANCE:
-> > > > +		*profile = PLATFORM_PROFILE_PERFORMANCE;
-> > > > +		break;
-> > > > +	case HP_OMEN_THERMAL_PROFILE_DEFAULT:
-> > > > +		*profile = PLATFORM_PROFILE_BALANCED;
-> > > > +		break;
-> > > > +	case HP_OMEN_THERMAL_PROFILE_COOL:
-> > > > +		*profile = PLATFORM_PROFILE_COOL;
-> > > > +		break;
-> > > > +	default:
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int platform_profile_omen_set(struct platform_profile_handler *pprof,
-> > > > +				enum platform_profile_option profile)
-> > > > +{
-> > > > +	int err, tp;
-> > > > +
-> > > > +	switch (profile) {
-> > > > +	case PLATFORM_PROFILE_PERFORMANCE:
-> > > > +		tp = HP_OMEN_THERMAL_PROFILE_PERFORMANCE;
-> > > > +		break;
-> > > > +	case PLATFORM_PROFILE_BALANCED:
-> > > > +		tp = HP_OMEN_THERMAL_PROFILE_DEFAULT;
-> > > > +		break;
-> > > > +	case PLATFORM_PROFILE_COOL:
-> > > > +		tp = HP_OMEN_THERMAL_PROFILE_COOL;
-> > > > +		break;
-> > > > +	default:
-> > > > +		return -EOPNOTSUPP;
-> > > > +	}
-> > > > +
-> > > > +	err = omen_thermal_profile_set(tp);
-> > > > +	if (err < 0)
-> > > > +		return err;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int thermal_profile_get(void)
-> > > >  {
-> > > >  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
-> > > > @@ -946,19 +1092,34 @@ static int thermal_profile_setup(void)
-> > > >  	int err, tp;
-> > > >  
-> > > >  	tp = thermal_profile_get();
-> > > > -	if (tp < 0)
-> > > > -		return tp;
-> > > > +	if (tp >= 0) {
-> > > > +		/*
-> > > > +		* call thermal profile write command to ensure that the firmware correctly
-> > > > +		* sets the OEM variables for the DPTF
-> > > > +		*/
-> > > > +		err = thermal_profile_set(tp);
-> > > > +		if (err)
-> > > > +			return err;
-> > > >  
-> > > > -	/*
-> > > > -	 * call thermal profile write command to ensure that the firmware correctly
-> > > > -	 * sets the OEM variables for the DPTF
-> > > > -	 */
-> > > > -	err = thermal_profile_set(tp);
-> > > > -	if (err)
-> > > > -		return err;
-> > > > +		platform_profile_handler.profile_get = platform_profile_get;
-> > > > +		platform_profile_handler.profile_set = platform_profile_set;
-> > > > +	}
-> > > 
-> > > I don't really understand the above logic change. Why is
-> > > the error from thermal_profile_get() now ignored ?
-> > > 
-> > > >  
-> > > > -	platform_profile_handler.profile_get = platform_profile_get,
-> > > > -	platform_profile_handler.profile_set = platform_profile_set,
-> > > > +	tp = omen_thermal_profile_get();
-> > > > +	if (tp >= 0) {
-> > > > +		/*
-> > > > +		* call thermal profile write command to ensure that the firmware correctly
-> > > > +		* sets the OEM variables
-> > > > +		*/
-> > > > +		err = omen_thermal_profile_set(tp);
-> > > > +		if (err < 0)
-> > > > +			return err;
-> > > > +
-> > > > +		platform_profile_handler.profile_get = platform_profile_omen_get;
-> > > > +		platform_profile_handler.profile_set = platform_profile_omen_set;
-> > > 
-> > > It looks like omen_thermal_profile_get() has priority over
-> > > thermal_profile_get(). If so, it might make more sense to execute it first
-> > > and only call thermal_profile_get() if omen_thermal_profile_get() returned
-> > > an error. If ignoring the result from thermal_profile_get() is on purpose,
-> > > it might make sense to drop that code entirely.
-> > > 
-> > > I am not entirely sure I understand what this code is supposed to be doing,
-> > > though. Some comments might be useful.
-> > Looking at it again, as it stands this is wrong, the omen code should only
-> > run if the regular thermal_profile_get() returns an error, and not how it
-> > is now.
-> > 
-> > Background to this is that the thermal_profile_get() code doesn't work on
-> > the Omen, so the omen specific path is needed, but only in the case that
-> > the regular, non-omen code fails.
-> > 
-> > As for ignoring the errors, I guess that in the case that both the regular
-> > thermal_profile_get, and omen_thermal_profile_get fail, this function
-> > should just return -EOPNOTSUPP instead of returning the error code of the
-> > last function that ran (omen one) like it does now ?
 > 
-> I can't really say since I am not that involved in the driver.
-> All I noticed is that the code is odd and difficult to understand.
-> There should be a better means to determine if the system is an
-> "Omen" than trial and error, possibly from its DMI data or maybe
-> from its WMI GUIDs.
-I took a look at how the Windows Omen Command Center program detects what machine
-is an Omen, and I found they match the DMI Board Name against a list of Omen
-board names. I should do the same in this case.
+> And the startup_gs_area is also not needed, there is initial_gs for
+> that. 
 > 
-> > > 
-> > > > +	} else {
-> > > > +		return tp;
-> > > > +	}
-> > > 
-> > > 	if (tp < 0)
-> > > 		return tp;
-> > > 
-> > > followed by non-error code would be more common.
-> > > 
-> > > >  
-> > > >  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
-> > > >  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
-> > > > @@ -973,6 +1134,8 @@ static int thermal_profile_setup(void)
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static int hp_wmi_hwmon_init(void);
-> > > > +
-> > > >  static int __init hp_wmi_bios_setup(struct platform_device *device)
-> > > >  {
-> > > >  	/* clear detected rfkill devices */
-> > > > @@ -984,6 +1147,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
-> > > >  	if (hp_wmi_rfkill_setup(device))
-> > > >  		hp_wmi_rfkill2_setup(device);
-> > > >  
-> > > > +	hp_wmi_hwmon_init();
-> > > > +
-> > > This doesn't really make sense. If it is critical, it should abort here.
-> > > If it isn't, the function should not return an error only for it to be
-> > > ignored.
-> > > 
-> > > Also, if hwmon functionality isn't critical, the driver should not depend
-> > > on HWMON since it performs perfectly fine without it.
-> > Here if it's running on an omen and HWMON isn't there, there is no reporting
-> > of fan speeds and the max/auto toggle won't work. So I don't know if that is
-> > considered `critical`. I would guess not ?
+> What you need is something along these lines (untested):
 > 
-> The point I am trying to make is
+> diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+> index d8b3ebd2bb85..3c7c59bc9903 100644
+> --- a/arch/x86/kernel/head_64.S
+> +++ b/arch/x86/kernel/head_64.S
+> @@ -65,6 +65,16 @@ SYM_CODE_START_NOALIGN(startup_64)
+>  	leaq	(__end_init_task - FRAME_SIZE)(%rip), %rsp
+>  
+>  	leaq	_text(%rip), %rdi
+> +
+> +	movl	$MSR_GS_BASE, %ecx
+> +	movq	initial_gs(%rip), %rax
+> +	movq	$_text, %rdx
+> +	subq	%rdx, %rax
+> +	addq	%rdi, %rax
+> +	movq	%rax, %rdx
+> +	shrq	$32,  %rdx
+> +	wrmsr
+> +
+>  	pushq	%rsi
+>  	call	startup_64_setup_env
+>  	popq	%rsi
 > 
-> 1) If the return value from hp_wmi_hwmon_init() is ignored,
->    hp_wmi_hwmon_init() should not return a value.
 > 
-> 2) If the return value from hp_wmi_hwmon_init() is ignored, the hwmon
->    functionality is not critical, and the driver should not depend on HWMON.
-> 
-> "critical", in the sense I meant, means critical to system operation.
-> The meaning depends on the driver author, of course. I can not really say
-> if the driver should depend on HWMON or not. All I can say is that it is
-> inconsistent to make the driver depend on HWMON and then to ignore that
-> hwmon device instantiation failed.
-I took a look at how other vendor's WMI drivers handle this, and a couple of
-them depend on HWMON (asus, gigabyte), while the thinkpad and eeepc ones
-select HWMON instead of depending on it. Here I think I should just handle
-this error properly, and leave the HWMON dependency in this driver ?
-> 
-> > > 
-> > > >  	thermal_profile_setup();
-> > > >  
-> > > >  	return 0;
-> > > > @@ -1068,6 +1233,139 @@ static struct platform_driver hp_wmi_driver = {
-> > > >  	.remove = __exit_p(hp_wmi_bios_remove),
-> > > >  };
-> > > >  
-> > > > +static umode_t hp_wmi_hwmon_is_visible(const void *data,
-> > > > +					enum hwmon_sensor_types type,
-> > > > +					u32 attr, int channel)
-> > > > +{
-> > > > +	switch (type) {
-> > > > +	case hwmon_temp:
-> > > > +		if (hp_wmi_read_int(HPWMI_HDDTEMP_QUERY) >= 0)
-> > > > +			return 0444;
-> > > > +		else
-> > > 
-> > > else after return is unnecessary (static analyzers will complain).
-> > > 
-> > > > +			return 0;
-> > > > +	case hwmon_pwm:
-> > > > +		return 0644;
-> > > > +	case hwmon_fan:
-> > > > +		if (hp_wmi_get_fan_speed(channel) >= 0)
-> > > > +			return 0444;
-> > > > +		else
-> > > 
-> > > Same as above.
-> > > 
-> > > > +			return 0;
-> > > > +	default:
-> > > > +		return 0;
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > +static int hp_wmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > > > +			u32 attr, int channel, long *val)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	switch (type) {
-> > > > +	case hwmon_temp:
-> > > > +		ret = hp_wmi_read_int(HPWMI_HDDTEMP_QUERY);
-> > > > +
-> > > > +		if (ret < 0)
-> > > > +			return ret;
-> > > > +		*val = ret;
-> > > 
-> > > hddtemp is not documented, so the reported units are unknown.
-> > > Is this in milli-degrees C ? If yes, a comment might be useful.
-> > > If not, please adjust.
-> > The previous version of this patch added hwmon to this driver,
-> > before this value was exposed via a non-standard hddtemp param.
-> > That param didn't have a specified unit, so that's an unknown to
-> > me. It isn't documented anywhere in the driver.
-> > The old hddtemp param just printed out the integer value.
-> > Should this be removed then since it's an unknown ?
-> 
-> Question is what that integer value reflects. Presumably you have the
-> system, so you should be able to see the value. From there it should be
-> possible to determine the scale and if it is reported in degrees C or
-> in Kelvin.
-Actually, this functionality doesn't work on my system so I
-can't figure out what the unit it is that way. So maybe it would be best 
-to leave it out of HWMON and just let it be a non-standard sysfs attribute
-like it was before this patch ?
-> 
-> Guenter
+> It loads the initial_gs pointer, applies the fixup on it and loads it
+> into MSR_GS_BASE. 
 
-Thanks,
-Enver.
+This seems to do the trick, and is probably closer to what the 32-bit
+version would look like. Thanks for the suggestion!
