@@ -2,114 +2,100 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A5DC4338F
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A04C4338F
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 266FE60EB5
-	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7BB610E5
+	for <platform-driver-x86@archiver.kernel.org>; Wed, 25 Aug 2021 11:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240080AbhHYLLh (ORCPT
+        id S240080AbhHYLNM (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Wed, 25 Aug 2021 07:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51490 "EHLO
+        Wed, 25 Aug 2021 07:13:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240302AbhHYLLa (ORCPT
+        with ESMTP id S236783AbhHYLNL (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Wed, 25 Aug 2021 07:11:30 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4773AC061757;
-        Wed, 25 Aug 2021 04:10:45 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id h1so10452784pjs.2;
-        Wed, 25 Aug 2021 04:10:45 -0700 (PDT)
+        Wed, 25 Aug 2021 07:13:11 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48F9CC061757;
+        Wed, 25 Aug 2021 04:12:26 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id t1so22736217pgv.3;
+        Wed, 25 Aug 2021 04:12:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xFOdY54x9tfLOrJtRDg5gjIYTWc+65nd7R3WkTlezj0=;
-        b=B4bBmiBxo22NxX2ANJgtHy4UFOjAuQc6OnjiVL1myqZ6y+x76ZNoIU9fTmb9Vy3ZOL
-         3XHMtKA5pEhd9m+0KjtTViPA2dtg9BJvaPBsV46uoOkMsrsyTEPKgerzG0Qxpv+8AvXf
-         eh+o5yD9cHd7CN7GH/L/V49RjlXhf3b1RrNy8G6VcYzfq4oVK4f+FDI5t2XE5MMhb26b
-         o9juwo1J0VA+AZp+KAqBaVl4BlOm0UgBt4YlXgw1aJC3ADluKZknH0UOrbz6/9EAariw
-         EgaIaRmTWe6lu899d9/9L45jC+mx7T8bu55wNbJQGAD10s++MDJex7m4DcQDP5pgDaGC
-         zlcw==
+        bh=e0F6iaDXcOKyU/pgsdS91D2Ie1N9JY978bJ/8n6uXIY=;
+        b=I1g2YLn/hnmv7T70rIzmVIGbBd63AuAPeXuL549CFaoX13s4es4rXLOqG2XTKcpuTR
+         aCAEqXBa2hX9csDMowkOsqT7XXe2KHtM6Q76wOSuLNivQmRb5i321Weu4d1DBjeJbrnT
+         QoM1BGjzr3uEdpdd7nYLYfS7V/h6oN0EWjFCHJHfgZLbH0co2upfemYy5sdSH7ePL0SW
+         IN+YONtfRhlPEVlfG4Q2Uccr3PL6bjgK2fPaIz5yexhlNuhpBxaxrh8WhdNK7FvrFPZI
+         QZ9cIjHbqaHizG2SgdeeT9S8H1aU9BaLuZOOkJYqi4Qn8fmJCpUnk1/huzJ61cwLlM7c
+         gW4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xFOdY54x9tfLOrJtRDg5gjIYTWc+65nd7R3WkTlezj0=;
-        b=qZSDyyab7kykh6Vek8TZzg3hdo2LKMO+QHuZ+g0k5dYnSTBEONzUxIYyn3qRkRTaif
-         YvR/yPjxhdO49bdu7EgBibJ5GcQJE5Mh5g5PaXuebvtFnZYJPESQfKgMPyq05E7P4gpR
-         HKUxyHSSDNi9xXCDzZFTy/b4ryno0Sm5an01QfBbElW3eV0OoUxZ8squPT/WDfeElaV2
-         HtfvujILOCMpNb0hqkAaTJhMCX5mOl6Uie0k1aJT93NmGPoZCkvW6+7oV8WwwsgJG7VR
-         UJLJimkoeo3mnokqmcYeJyoqgtbKCsrLWBVZ+eQo86Yz/zFIBHgN6Y9plaiOckAoNrpl
-         +rKw==
-X-Gm-Message-State: AOAM530Y9UKkUjmp77rgLJPE/WZg21I7MtIDSk3z4Bz2og1DbAC/sD4s
-        E6A+Vq2lADkNTiTQ+WbVJj81LoI5cLoWeNgdyr8=
-X-Google-Smtp-Source: ABdhPJzD/6GI/xpfPndm8/qBnOFtNQbtysaJEiKOqJP2RlP583tz27xOO8AM/ZMbP/ejCGuyjO59crLQnccLjj22DFw=
-X-Received: by 2002:a17:902:d709:b0:130:6b05:be3e with SMTP id
- w9-20020a170902d70900b001306b05be3emr25879872ply.21.1629889844760; Wed, 25
- Aug 2021 04:10:44 -0700 (PDT)
+        bh=e0F6iaDXcOKyU/pgsdS91D2Ie1N9JY978bJ/8n6uXIY=;
+        b=jQT3K36ytZrZ5hrAU8sbvTwaxMwKm9MjSiNX+XmbQYKjM1eu8zVPPiX7JIgTac2ioH
+         SUenf0eDZ8qVd2VL74gFE823faK51iD+n59FFeyG1aqEVxjkzXtnJs0d/LDo5mNs3XQK
+         VLaHFMLl4OKGLDuxIN1nldoUgGSqetZLwtAlHqtY/HDv8zmDpH+feY7F+5mJO1A8KgYu
+         dqcRg6V+UuL2XzzTAU+LUp2IeZsydu2kCStO/PUPg+nTqqL9iLbUNcJgoJ0qa2SkG+XB
+         And6mxrqvFFwX9LmAHaBESuUFPCTPXgCgYALUshEs3kCmk27uSKu16s3IH+fk96eWu39
+         ivzA==
+X-Gm-Message-State: AOAM531WMAmfFUnf9GiaRl5dbRi7TRUsV8x217/3E0Qqsn7Y9Crm6K/5
+        q11YvtJ9iETSKNhg7I/JI1xpxPdHLWyQQxGS66k=
+X-Google-Smtp-Source: ABdhPJyeFx80oUz8NgoOS4scmsMrlTtxpkKj93s/4LfwYFNmg7EA3PITg+KB4O5JwDk2w04WALnpSPM1oBCqLL1QyBg=
+X-Received: by 2002:a62:6384:0:b0:3eb:13e7:18c with SMTP id
+ x126-20020a626384000000b003eb13e7018cmr21415624pfb.73.1629889945850; Wed, 25
+ Aug 2021 04:12:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210824230620.1003828-1-djrscally@gmail.com> <20210824230620.1003828-2-djrscally@gmail.com>
- <20210825103301.GC5186@sirena.org.uk>
-In-Reply-To: <20210825103301.GC5186@sirena.org.uk>
+References: <20210823093222.19544-1-andriy.shevchenko@linux.intel.com>
+ <20210823093222.19544-3-andriy.shevchenko@linux.intel.com> <CAAd53p6pQcura_tejtW7osiHfSnn6pCcxfm1e13==qmQA8C1bw@mail.gmail.com>
+In-Reply-To: <CAAd53p6pQcura_tejtW7osiHfSnn6pCcxfm1e13==qmQA8C1bw@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Aug 2021 14:10:05 +0300
-Message-ID: <CAHp75VdHpjbjz4biTP11TKT6J+7WQi-a1Ru3VLuSxM5tSLCB3Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 1/3] regulator: core: Add regulator_lookup_list
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Daniel Scally <djrscally@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Wed, 25 Aug 2021 14:11:46 +0300
+Message-ID: <CAHp75VfZaV6WAddmscgTkyfRoq9cvcvL2A6A1kA6uBvZ3F=dgg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] platform/x86: hp_accel: Convert to be a platform driver
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
         Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Mark Gross <mgross@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 1:34 PM Mark Brown <broonie@kernel.org> wrote:
+On Wed, Aug 25, 2021 at 1:42 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
 >
-> On Wed, Aug 25, 2021 at 12:06:18AM +0100, Daniel Scally wrote:
-> > In some situations regulator devices can be enumerated via either
-> > devicetree or ACPI and bound to regulator drivers but without any
-> > init data being provided in firmware. This leaves their consumers
-> > unable to acquire them via regulator_get().
+> On Mon, Aug 23, 2021 at 5:32 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > To fix the issue, add the ability to register a lookup table to a
-> > list within regulator core, which will allow board files to provide
-> > init data via matching against the regulator name and device name in
-> > the same fashion as the gpiod lookup table.
+> > ACPI core in conjunction with platform driver core provides
+> > an infrastructure to enumerate ACPI devices. Use it in order
+> > to remove a lot of boilerplate code.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 >
-> This is the wrong level to do this I think, this is a generic problem
-> that affects all kinds of platform data so if we're not going to scatter
-> DMI quirks throughout the drivers like we currently do then we should
-> have a way for boards to just store generic platform data for a device
-> and then have that platform data joined up with the device later.  This
-> could for example also be used by all the laptop audio subsystems which
-> need DMI quirk tables in drivers for their components to figure out how
-> they're wired up and avoids the need to go through subsystems adding new
-> APIs.
+> The lis3lv02d still works with this patch.
+>
+> Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-What you are describing sounds similar to what we have, i.e. fwnode graph.
-That's how v4l2 describes complex connections between devices in the
-camera world.
+Thank you, Kai-Heng!
 
-But IIRC you don't like this idea to be present with regulators (as
-per v1 of this series).
+Hans, I think it's good to go.
 
-So, what do you propose then?
-
-
---
+-- 
 With Best Regards,
 Andy Shevchenko
