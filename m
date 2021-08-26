@@ -2,115 +2,154 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4D1C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 13:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A863C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 13:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE15E608FE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 13:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E44860F35
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 13:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242620AbhHZNgf (ORCPT
+        id S242789AbhHZN6K (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Aug 2021 09:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242365AbhHZNge (ORCPT
+        Thu, 26 Aug 2021 09:58:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23128 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238124AbhHZN6D (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Aug 2021 09:36:34 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A95C061757
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 06:35:47 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id 18so2774426pfh.9
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 06:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7JWxSK3rJZPcK90pz+n7DII0TfHVc/yO72volx9irCM=;
-        b=jVy+UpQP9Dg7tMaSO4Fjjw4vM4pLTurHifk982CvdEZSM5WFUyn6PmEDqqrJq39efi
-         oymArMYa2yiaqXPOMW2+tXV0ZxjKv18k1Jn+29WyMuiRx49Fld3YG9vtm+eWpc7OuzB3
-         CvNDlezKTM9T9mzBNnVUL9eN2WDpIqJTshYA8wnyv9D03bcZ0ClYwButVUE0Low3LHJo
-         FuzJSGfM2ZcU4HazxpUfyhYxHqUR6YTz0Ttl83bTTRxkK8dIgObN0ugH61EFP+l1ZUgL
-         c/pXRMa3YOqzDlYB6gz/TLbEcynpUnD7IDtVBtIp5oidzhj7ahgartq97dZdIew7TFW/
-         SeZg==
+        Thu, 26 Aug 2021 09:58:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1629986235;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SB1xZS0lLb7+YD7d9V95k8rH91VhprXycgXNPBnXe0M=;
+        b=CXWwkhcvPCAHulTviKZSZ+IVulmj9Ee6YA5Pb2KryxUNhU26H6C5HYLLjs7AD3thgpUFGB
+        zr4klXor2FbjZY+EidIFb66lLukCC/SQsqOcl14tBjmVt0v//BbSP9pQGPkIV/VRZEcLuN
+        d5R4JnxAYgtQCvUKbwJn8JuuNqUsWXY=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-lg0Q2-SRM6KOnJWVcynVTg-1; Thu, 26 Aug 2021 09:57:14 -0400
+X-MC-Unique: lg0Q2-SRM6KOnJWVcynVTg-1
+Received: by mail-ej1-f69.google.com with SMTP id o7-20020a170906288700b005bb05cb6e25so1213076ejd.23
+        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 06:57:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7JWxSK3rJZPcK90pz+n7DII0TfHVc/yO72volx9irCM=;
-        b=Zu6UHL2Xzd3TvzL4Aoko4oOLSs6/cKUqIln+V1TzpfXSfefJYemWlL5AlvGksGu0iu
-         BwuL52+i7+37dVq/QNDo+mljnXg7DngNPWl6UO692Tva7cB8YaB9KhHTSaDFwy5eidbh
-         KdilU511goOmQMBQw791g0RK0L0Ll8K/OrZzvvAYeW8rkkENhL5w9Zy/nqOKlt4/MuuA
-         VdK5wWBr8pc3uBHYM5lKdKNoM0cLGbErVHLz/xZD+ybf6LAsAi0nGew/Qex/k3nS+Pjq
-         YsJqiSybKjPm/mQBKg50AyAZJMnpM5E1r1dR8Am/hLu5cRXf0wj+MCPyPDDIpszzzo71
-         uHMA==
-X-Gm-Message-State: AOAM532hLQvbCfo4tb59tI5hEqLS7qU/bhQrxe3RUp/niQq5ciGa4pIR
-        v6V78wT7P08/oMWeYebCc95E+cDOV50XNz+TsjY0H8ZJ5IM=
-X-Google-Smtp-Source: ABdhPJzg3wAhwD6bOsJwE8FomlBEmiNPnb7+/3w2j07TMuBrUFv0hBS6CIEe4IwYV2mN53h6w3CFF5a28rK982YIpIY=
-X-Received: by 2002:a62:8887:0:b0:3f1:c4c8:5f0d with SMTP id
- l129-20020a628887000000b003f1c4c85f0dmr3861709pfd.40.1629984946764; Thu, 26
- Aug 2021 06:35:46 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SB1xZS0lLb7+YD7d9V95k8rH91VhprXycgXNPBnXe0M=;
+        b=UVhmhw+HRt5ThlVRJRJH/NpoC58awEoQcvHjwZxUXCGxY0YHKJY7clSAwmyApK4fUs
+         BkTVL9DEXNa7LFZrwHVy2J68Qwf00RisLf7vHWw/YhFfFoI/2nWUkaFaes8M7un8t3b6
+         0nJwBF7QjRlDT1ybHAWVvIjq2bqNy2Kh1DIR/1V0ojS3fvcg8aB+MYSp3vod0Lvg36ts
+         vigSCalxkewpSA/p2+UzogosNEr+ciY8DeM7lWiyVyav7WQCxTFB3s6REetsg1v6hySC
+         X2aVi1HVc05cQuNss8fZXO1A1hHWxSj8cZfLytEenwXkPEEspNQANVeg7GzO2nE+vhOm
+         yUWA==
+X-Gm-Message-State: AOAM532bRZHrbDC5b+1hlY0/FkkDRFrFpiPIp5cGyXNzrYf7GgkF4814
+        QBsOk1n8aluT4/59AqAtv+hYmnCSEsh7tiG6VZRTSTnY3YySn00bAWqElymlY3Oxz/6zkYmerNH
+        exbZvhNWyJCXA5oaeaZdqkBrJ7TEkSYDe2g==
+X-Received: by 2002:a17:907:a06c:: with SMTP id ia12mr4422677ejc.377.1629986232956;
+        Thu, 26 Aug 2021 06:57:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyT4NK/3oTiPEdb8osu2jmYpLf8dXmFzeAQwv52kaLJG3MjwBm9TByAVPQ8dI3x4YaffBuL6Q==
+X-Received: by 2002:a17:907:a06c:: with SMTP id ia12mr4422660ejc.377.1629986232778;
+        Thu, 26 Aug 2021 06:57:12 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
+        by smtp.gmail.com with ESMTPSA id v1sm1544438ejd.31.2021.08.26.06.57.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Aug 2021 06:57:12 -0700 (PDT)
+Subject: Re: [PATCH][RFC] platform/x86: dell-smbios-wmi: Avoid false-positive
+ memcpy() warning
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Mark Gross <mgross@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20210825160749.3891090-1-keescook@chromium.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <7107d06d-784e-c643-c4eb-50e9f277bd38@redhat.com>
+Date:   Thu, 26 Aug 2021 15:57:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <877ae34b-dcbb-a0a4-7d76-d9d78d12fd00@redhat.com>
- <20210824220437.14175-1-ddadap@nvidia.com> <CAHp75VfjSrq7vF=ry1dTHJWbKLF9AqK8kZbddO-1A3FQ5pCvhQ@mail.gmail.com>
- <b22b0882-e54c-3168-2cbd-842f2ba51c90@nvidia.com>
-In-Reply-To: <b22b0882-e54c-3168-2cbd-842f2ba51c90@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 26 Aug 2021 16:35:07 +0300
-Message-ID: <CAHp75Vc91V=HU22cih_p3vy3o_2nbyrqQb25_TP5a+YigFsfbQ@mail.gmail.com>
-Subject: Re: [PATCH v3] platform/x86: Add driver for ACPI WMAA EC-based
- backlight control
-To:     Daniel Dadap <ddadap@nvidia.com>
-Cc:     Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        mario.limonciello@outlook.com, pobrn@protonmail.org,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Aaron Plattner <aplattner@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210825160749.3891090-1-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Wed, Aug 25, 2021 at 7:48 PM Daniel Dadap <ddadap@nvidia.com> wrote:
-> On 8/25/21 4:05 AM, Andy Shevchenko wrote:
-> > On Wed, Aug 25, 2021 at 1:09 AM Daniel Dadap <ddadap@nvidia.com> wrote:
+Hi,
 
-...
+On 8/25/21 6:07 PM, Kees Cook wrote:
+> In preparation for FORTIFY_SOURCE performing compile-time and run-time
+> field bounds checking for memcpy(), memmove(), and memset(), avoid
+> intentionally writing across neighboring fields.
+> 
+> Since all the size checking has already happened, use input.pointer
+> (void *) so memcpy() doesn't get confused about how much is being
+> written.
+> 
+> Avoids this false-positive warning when run-time memcpy() strict
+> bounds checking is enabled:
+> 
+> memcpy: detected field-spanning write (size 4096) of single field (size 36)
+> WARNING: CPU: 0 PID: 357 at drivers/platform/x86/dell/dell-smbios-wmi.c:74 run_smbios_call+0x110/0x1e0 [dell_smbios]
+> 
+> Note: is there a missed kfree() in the marked error path?
+> 
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Mark Gross <mgross@linux.intel.com>
+> Cc: Mario Limonciello <mario.limonciello@dell.com>
+> Cc: "Pali Rohár" <pali@kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "Uwe Kleine-König" <u.kleine-koenig@pengutronix.de>
+> Cc: Dell.Client.Kernel@dell.com
+> Cc: platform-driver-x86@vger.kernel.org
+> Reported-by: Andy Lavr <andy.lavr@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> >> +struct wmaa_args {
-> >> +       u32 set;
-> >> +       u32 val;
-> >> +       u32 ret;
-> >> +       u32 ignored[3];
-> >> +};
-> > I guess this structure deserves a kernel doc.
->
-> Do you have a recommended location? From a quick skim I didn't see any
-> document in Documentation/ that seemed most appropriate to add this to.
+Thank you, I've applied the patch, minus the:
 
-It's in a form of the comment on top of the data structure
+/* output.pointer memory allocation leak? */
 
-/**
- * struct wmaa_args ....
- * ...
- */
+Comment, instead I'll submit (and also apply right-away)
+a patch to add the missing kfree()
 
-...
+Regards,
 
-> >> +       WARN_ON(ret != 0);
-> > Why?
->
-> To differentiate a 0 because the level is actually 0 versus a 0 because
-> there was an error. The backlight device API doesn't seem to have a way
-> to report errors.
+Hans
 
-I meant why do you need WARN_ON() here? This kind of stuff must be justified.
 
---
-With Best Regards,
-Andy Shevchenko
+	
+> ---
+>  drivers/platform/x86/dell/dell-smbios-wmi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/dell/dell-smbios-wmi.c b/drivers/platform/x86/dell/dell-smbios-wmi.c
+> index 33f823772733..c410d6d920b8 100644
+> --- a/drivers/platform/x86/dell/dell-smbios-wmi.c
+> +++ b/drivers/platform/x86/dell/dell-smbios-wmi.c
+> @@ -69,9 +69,10 @@ static int run_smbios_call(struct wmi_device *wdev)
+>  		if (obj->type == ACPI_TYPE_INTEGER)
+>  			dev_dbg(&wdev->dev, "SMBIOS call failed: %llu\n",
+>  				obj->integer.value);
+> +		/* output.pointer memory allocation leak? */
+>  		return -EIO;
+>  	}
+> -	memcpy(&priv->buf->std, obj->buffer.pointer, obj->buffer.length);
+> +	memcpy(input.pointer, obj->buffer.pointer, obj->buffer.length);
+>  	dev_dbg(&wdev->dev, "result: [%08x,%08x,%08x,%08x]\n",
+>  		priv->buf->std.output[0], priv->buf->std.output[1],
+>  		priv->buf->std.output[2], priv->buf->std.output[3]);
+> 
+
