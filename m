@@ -2,249 +2,157 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BE6C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08CDC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 15:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346CC60F5C
-	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DEC60F4A
+	for <platform-driver-x86@archiver.kernel.org>; Thu, 26 Aug 2021 15:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbhHZOOc (ORCPT
+        id S240157AbhHZPkT (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Aug 2021 10:14:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35699 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230157AbhHZOOc (ORCPT
+        Thu, 26 Aug 2021 11:40:19 -0400
+Received: from mail-bn8nam11on2040.outbound.protection.outlook.com ([40.107.236.40]:63136
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230203AbhHZPkS (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Aug 2021 10:14:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629987224;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e3uC2EY1LceT6qW2aK6miw6pPA/JGb/zIDNGbteB/2Y=;
-        b=iUQBz6t83iQBbrqIkdfePkRWlyMqAECuKs8DrGqkoIONsXFACk7EAiOJMaVR36h58nft9c
-        k98z6irzKmLGfZPEcSgxEcBCagekFFyY+vZYPkjPbTdt9+yH/ChJtV2fS1xMm9EZYsT5mr
-        pHD/NqQbsPHIMomZsxB7Di9hC1Fh8Yg=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-sYp2F0_eN1OripNm7ghAvA-1; Thu, 26 Aug 2021 10:13:43 -0400
-X-MC-Unique: sYp2F0_eN1OripNm7ghAvA-1
-Received: by mail-ed1-f70.google.com with SMTP id e6-20020a056402088600b003c73100e376so1545768edy.17
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 07:13:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e3uC2EY1LceT6qW2aK6miw6pPA/JGb/zIDNGbteB/2Y=;
-        b=tQaD7iG6Ofm1jeBBZiaDwCBYn8O/BKvEKreSSVPBPyD1OuGXQStLuHhnaia2K6dA25
-         1r6T6deQubJfFCSjyVVfAwCc5Oy6s+N0fSP/FeEFubcnzFuek33UhUwYBj2BU/jQqaXm
-         GvUSmlCKG5No2BcV/hBrY1roKwgMMuYM35KjlVJDwuFjb13BAsV/VV6orjZTnDxAxOjd
-         XIXMwKtrSVHMytaoQQLC1kFU3Eb2zp2PV6FBV4XK1XbKLdN4c4sqnGFgJB9uteIu0+ni
-         DT9Kyjug3bfloV7DrVtA6mEalJvrRo3M5mDQRmNzlSl+DS54Migxa+z1gqvOmg0Za2r2
-         +5mg==
-X-Gm-Message-State: AOAM532WyLqx9sEGgBgnemojzLT1Rg04/vYel1qjxCk7Ki4S5J9nQOeJ
-        JJ8qaJerjrr87vZaJVMu840BamT2vHqPp7C++RQeFsIHh/0dvDbjfvjUezSUA1vlJNvU6CPaRIj
-        8h5WEDValci12ztIeADLtczznq1Fu0l8p8g==
-X-Received: by 2002:aa7:d1d3:: with SMTP id g19mr4407388edp.373.1629987222215;
-        Thu, 26 Aug 2021 07:13:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJytHQC8D2kcGsC1Rn47qA9Q+EHGZleoUlGt5F8nqQJ9Q0znQ7lAOtMhZF++LpN5nhC92m/Eqw==
-X-Received: by 2002:aa7:d1d3:: with SMTP id g19mr4407359edp.373.1629987221947;
-        Thu, 26 Aug 2021 07:13:41 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id r27sm1895335edb.66.2021.08.26.07.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Aug 2021 07:13:41 -0700 (PDT)
-Subject: Re: [PATCH v3] platform/x86: hp-wmi: add support for omen laptops
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Enver Balalic <balalic.enver@gmail.com>
-Cc:     mgross@linux.intel.com, jdelvare@suse.com,
-        platform-driver-x86@vger.kernel.org, pobrn@protonmail.com
-References: <20210823185407.i7tk5bgofedqxfxf@omen.localdomain>
- <20210824173501.GA3402937@roeck-us.net>
- <20210824191132.o2eym6rq7pjgsxqy@omen.localdomain>
- <20210824193241.GA3414880@roeck-us.net>
- <20210825165852.ga5r6arfow7xv4dl@omen.localdomain>
- <20210825203112.GH432917@roeck-us.net>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <fe0690da-459e-03af-995f-40d4005d6280@redhat.com>
-Date:   Thu, 26 Aug 2021 16:13:41 +0200
+        Thu, 26 Aug 2021 11:40:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cWhBw7ZtuV9uOwJz7+BfyasX0o3iMR1/qWlIrBJooSxEZN4vhmiAmVobcoNDNNBAYcjgfCZeKcLSWEv504rmP96cN9hM4ZZtW8O35cdjQFoRDiG7g0fz5ssIH/HIi+oHf2fuTUrmWMBcGa0cy6Zw1UBF0054UxOhz2Q82ooZ/E5FhfyMqHPELyo/AHe/xzy5CEJ0M2I69Wmq8urfNZ9nuEK4i2nRJbWj7rlNLHcnHqA4rrJI/X8Rc96zMblmbZyH84T4oVtglRfk9lXUpnezc4wGZz39baEN4HQ1ibMdpqFSxlcwEoobIaWzdbqpN6gG/uO9SSST2/mwWlGvaRCSVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vzYBTWUT4USGDjmAkFqJ73mV9h2qoXaWg3BCa7fjZdM=;
+ b=IK9rR271szsHXjJ+pJfsOGtNMMLHmxhAw2LNfzEAdkppR2+PL71VC+MGazVsACCYtxc7+3nJB5sTPgQ+hTKMjlWr3Ti0RvqV9XISY5oStcPMvljMB7/iyRtJZXFUaEa5N9WFYNHSe5elvAXN16RynRI5h2r+Wb4OKkKfJnW6rTxRaesWAaYI447bqfgZib90Vm4jWygWroybWg9KVLK2UKmBcF3BbKmmfFSQHj9i8U3jYe+yLzngwOYm1w5gJrt4Y2V1p4RJ/uqwaIJOyomkgAS0AfKB+wAE3H+fl8Xz8PHLoImGpDy6EYYHaRJL20Yu0alRV3CVDud8WCQkgRTreQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.36) smtp.rcpttodomain=infradead.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vzYBTWUT4USGDjmAkFqJ73mV9h2qoXaWg3BCa7fjZdM=;
+ b=FT/OdyhEylgbpX3hXTaFnch1O7NIQL9+FcidVHvjR3bgwCTqVRyZzNXqkUzjgG5FRYx92avWbx+RZMe6B6HpBwoc0rjHm9pQTuGMEF14LxRaWE9xcWtLQPr1D/Pvjk3UEyiNVsneXVIzwldG68mVgGxDDk0u1rI4xhHjUAQtWo1vEjbSNkFxuKg7T+TfGmVmYGch+kYAiUgF5IHeogqTvwFT4xD82fD2bM/aHrAv4103JRigV86JpNwN30BWgjy8eCcNTAeBhyLG3QEHh/JOEPY3QpZVqave0QcyzBdSyMstqUWjydDpmNY+Zq+Xdz1c6hWVUtqBeqg6ywd44DfEjA==
+Received: from CO2PR07CA0060.namprd07.prod.outlook.com (2603:10b6:100::28) by
+ BY5PR12MB3828.namprd12.prod.outlook.com (2603:10b6:a03:1a4::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.20; Thu, 26 Aug
+ 2021 15:39:22 +0000
+Received: from CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:100:0:cafe::cf) by CO2PR07CA0060.outlook.office365.com
+ (2603:10b6:100::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.18 via Frontend
+ Transport; Thu, 26 Aug 2021 15:39:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
+ smtp.mailfrom=nvidia.com; infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ CO1NAM11FT031.mail.protection.outlook.com (10.13.174.118) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4457.17 via Frontend Transport; Thu, 26 Aug 2021 15:39:21 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 26 Aug
+ 2021 15:39:21 +0000
+Received: from [10.20.22.154] (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 26 Aug
+ 2021 15:39:19 +0000
+Subject: Re: [PATCH v3] platform/x86: Add driver for ACPI WMAA EC-based
+ backlight control
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        <mario.limonciello@outlook.com>, <pobrn@protonmail.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Aaron Plattner <aplattner@nvidia.com>
+References: <877ae34b-dcbb-a0a4-7d76-d9d78d12fd00@redhat.com>
+ <20210824220437.14175-1-ddadap@nvidia.com>
+ <CAHp75VfjSrq7vF=ry1dTHJWbKLF9AqK8kZbddO-1A3FQ5pCvhQ@mail.gmail.com>
+ <b22b0882-e54c-3168-2cbd-842f2ba51c90@nvidia.com>
+ <CAHp75Vc91V=HU22cih_p3vy3o_2nbyrqQb25_TP5a+YigFsfbQ@mail.gmail.com>
+From:   Daniel Dadap <ddadap@nvidia.com>
+Message-ID: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
+Date:   Thu, 26 Aug 2021 10:39:17 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20210825203112.GH432917@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAHp75Vc91V=HU22cih_p3vy3o_2nbyrqQb25_TP5a+YigFsfbQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a62c8525-e7b4-4e28-4aba-08d968a7acfa
+X-MS-TrafficTypeDiagnostic: BY5PR12MB3828:
+X-Microsoft-Antispam-PRVS: <BY5PR12MB3828388C7CD824D34FA01D7FBCC79@BY5PR12MB3828.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: DEyJ2ORs7hu8DXuMovD88DOXDf+UaT8LJOzgCWzInEIkRWv68e0susJBi65KPwWrhi6IBI7gt/Z7fBQ9rPB9GJK8ayvzm8dR7PnpoGITqGJGFD0bZHFUQT07DctPvajR1bN1EW98qO79mPfflmtmvM7EePJDgG9nrRsuFk0fMacXhg2W0pE0VJpL9BZYEiwcALiKuvA1sjUUFXb87Lz0TGc7g25zRYKrBQBsznvSyWDpqiYCpaTh/HNcYdMW+ya0hyFLrD4IJqzCT3V1RpgQk0ZOGXs2lAL7wMZwF7s0Yec8IvuzHPSt94WdgH4ZIEBrtnMcNxt/dwF8vG6yWSQ/v6ONJvq1oiGC3cSiKDFAYq9XkQv2leo+/Kndx4AceMsKH3fEn0Yn7eCQ68ckKyVyNNqjGdrcjqArlRX/jwlPgUPJexDN8OVv6DZ+g39FnXwCt58ivm2fZvUw+u1O0utWSCjukmKu3tbALVc7snBY+XIyZhl2cFZtq/sbaxTqwLQ7iQDwG/XeuMQ4w8eZibclBfWo4vBYfXg+CzdpZ7E/cemJU+eFDSHa4lpp4tYHm624qjcK0dZbAVdBVn1bU++0PwObHfWKvZTBR61nmX+1H18Qps4KfacSsfu0VTcLqMicVrfS/LEREF4cbCsXwiT2au/EZTrZ3xoRNGgLU5y7+NtjNeuq1/EyDu4HJwrbYGFRlBb0RQy0W5cnFqa7q5UoRk7JpqbMEM2VJhorSuNbabA=
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(376002)(346002)(36840700001)(54906003)(16576012)(316002)(8936002)(107886003)(336012)(6916009)(5660300002)(2616005)(36906005)(16526019)(8676002)(86362001)(426003)(186003)(70206006)(70586007)(31696002)(26005)(83380400001)(36860700001)(36756003)(2906002)(82310400003)(32650700002)(82740400003)(53546011)(356005)(478600001)(4326008)(31686004)(7636003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2021 15:39:21.9347
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a62c8525-e7b4-4e28-4aba-08d968a7acfa
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3828
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-Hi,
 
-On 8/25/21 10:31 PM, Guenter Roeck wrote:
-> On Wed, Aug 25, 2021 at 06:58:52PM +0200, Enver Balalic wrote:
->> Hi, 
->>
->> before I go out and send out a V4 of this, I wanted to check
->> if you agree with the changes I plan on making
->>
-> [ ... ]
-> 
->>>>>>  static int thermal_profile_get(void)
->>>>>>  {
->>>>>>  	return hp_wmi_read_int(HPWMI_THERMAL_PROFILE_QUERY);
->>>>>> @@ -946,19 +1092,34 @@ static int thermal_profile_setup(void)
->>>>>>  	int err, tp;
->>>>>>  
->>>>>>  	tp = thermal_profile_get();
->>>>>> -	if (tp < 0)
->>>>>> -		return tp;
->>>>>> +	if (tp >= 0) {
->>>>>> +		/*
->>>>>> +		* call thermal profile write command to ensure that the firmware correctly
->>>>>> +		* sets the OEM variables for the DPTF
->>>>>> +		*/
->>>>>> +		err = thermal_profile_set(tp);
->>>>>> +		if (err)
->>>>>> +			return err;
->>>>>>  
->>>>>> -	/*
->>>>>> -	 * call thermal profile write command to ensure that the firmware correctly
->>>>>> -	 * sets the OEM variables for the DPTF
->>>>>> -	 */
->>>>>> -	err = thermal_profile_set(tp);
->>>>>> -	if (err)
->>>>>> -		return err;
->>>>>> +		platform_profile_handler.profile_get = platform_profile_get;
->>>>>> +		platform_profile_handler.profile_set = platform_profile_set;
->>>>>> +	}
->>>>>
->>>>> I don't really understand the above logic change. Why is
->>>>> the error from thermal_profile_get() now ignored ?
->>>>>
->>>>>>  
->>>>>> -	platform_profile_handler.profile_get = platform_profile_get,
->>>>>> -	platform_profile_handler.profile_set = platform_profile_set,
->>>>>> +	tp = omen_thermal_profile_get();
->>>>>> +	if (tp >= 0) {
->>>>>> +		/*
->>>>>> +		* call thermal profile write command to ensure that the firmware correctly
->>>>>> +		* sets the OEM variables
->>>>>> +		*/
->>>>>> +		err = omen_thermal_profile_set(tp);
->>>>>> +		if (err < 0)
->>>>>> +			return err;
->>>>>> +
->>>>>> +		platform_profile_handler.profile_get = platform_profile_omen_get;
->>>>>> +		platform_profile_handler.profile_set = platform_profile_omen_set;
->>>>>
->>>>> It looks like omen_thermal_profile_get() has priority over
->>>>> thermal_profile_get(). If so, it might make more sense to execute it first
->>>>> and only call thermal_profile_get() if omen_thermal_profile_get() returned
->>>>> an error. If ignoring the result from thermal_profile_get() is on purpose,
->>>>> it might make sense to drop that code entirely.
->>>>>
->>>>> I am not entirely sure I understand what this code is supposed to be doing,
->>>>> though. Some comments might be useful.
->>>> Looking at it again, as it stands this is wrong, the omen code should only
->>>> run if the regular thermal_profile_get() returns an error, and not how it
->>>> is now.
->>>>
->>>> Background to this is that the thermal_profile_get() code doesn't work on
->>>> the Omen, so the omen specific path is needed, but only in the case that
->>>> the regular, non-omen code fails.
->>>>
->>>> As for ignoring the errors, I guess that in the case that both the regular
->>>> thermal_profile_get, and omen_thermal_profile_get fail, this function
->>>> should just return -EOPNOTSUPP instead of returning the error code of the
->>>> last function that ran (omen one) like it does now ?
->>>
->>> I can't really say since I am not that involved in the driver.
->>> All I noticed is that the code is odd and difficult to understand.
->>> There should be a better means to determine if the system is an
->>> "Omen" than trial and error, possibly from its DMI data or maybe
->>> from its WMI GUIDs.
->> I took a look at how the Windows Omen Command Center program detects what machine
->> is an Omen, and I found they match the DMI Board Name against a list of Omen
->> board names. I should do the same in this case.
-> 
-> I would think so, but that is really a decision to be made by the driver
-> maintainer.
-
-If the Windows driver uses DMI matching to only use the Omen WMI API
-on certain devices, then yes please do the same in the Linux code.
+On 8/26/21 8:35 AM, Andy Shevchenko wrote:
+> On Wed, Aug 25, 2021 at 7:48 PM Daniel Dadap <ddadap@nvidia.com> wrote:
+>> On 8/25/21 4:05 AM, Andy Shevchenko wrote:
+>>> On Wed, Aug 25, 2021 at 1:09 AM Daniel Dadap <ddadap@nvidia.com> wrote:
+> ...
+>
+>>>> +struct wmaa_args {
+>>>> +       u32 set;
+>>>> +       u32 val;
+>>>> +       u32 ret;
+>>>> +       u32 ignored[3];
+>>>> +};
+>>> I guess this structure deserves a kernel doc.
+>> Do you have a recommended location? From a quick skim I didn't see any
+>> document in Documentation/ that seemed most appropriate to add this to.
+> It's in a form of the comment on top of the data structure
+>
+> /**
+>   * struct wmaa_args ....
+>   * ...
+>   */
+>
+> ...
 
 
+Ah, of course. Sorry for misunderstanding.
 
 
->>>>>> +	} else {
->>>>>> +		return tp;
->>>>>> +	}
->>>>>
->>>>> 	if (tp < 0)
->>>>> 		return tp;
->>>>>
->>>>> followed by non-error code would be more common.
->>>>>
->>>>>>  
->>>>>>  	set_bit(PLATFORM_PROFILE_COOL, platform_profile_handler.choices);
->>>>>>  	set_bit(PLATFORM_PROFILE_BALANCED, platform_profile_handler.choices);
->>>>>> @@ -973,6 +1134,8 @@ static int thermal_profile_setup(void)
->>>>>>  	return 0;
->>>>>>  }
->>>>>>  
->>>>>> +static int hp_wmi_hwmon_init(void);
->>>>>> +
->>>>>>  static int __init hp_wmi_bios_setup(struct platform_device *device)
->>>>>>  {
->>>>>>  	/* clear detected rfkill devices */
->>>>>> @@ -984,6 +1147,8 @@ static int __init hp_wmi_bios_setup(struct platform_device *device)
->>>>>>  	if (hp_wmi_rfkill_setup(device))
->>>>>>  		hp_wmi_rfkill2_setup(device);
->>>>>>  
->>>>>> +	hp_wmi_hwmon_init();
->>>>>> +
->>>>> This doesn't really make sense. If it is critical, it should abort here.
->>>>> If it isn't, the function should not return an error only for it to be
->>>>> ignored.
->>>>>
->>>>> Also, if hwmon functionality isn't critical, the driver should not depend
->>>>> on HWMON since it performs perfectly fine without it.
->>>> Here if it's running on an omen and HWMON isn't there, there is no reporting
->>>> of fan speeds and the max/auto toggle won't work. So I don't know if that is
->>>> considered `critical`. I would guess not ?
->>>
->>> The point I am trying to make is
->>>
->>> 1) If the return value from hp_wmi_hwmon_init() is ignored,
->>>    hp_wmi_hwmon_init() should not return a value.
->>>
->>> 2) If the return value from hp_wmi_hwmon_init() is ignored, the hwmon
->>>    functionality is not critical, and the driver should not depend on HWMON.
->>>
->>> "critical", in the sense I meant, means critical to system operation.
->>> The meaning depends on the driver author, of course. I can not really say
->>> if the driver should depend on HWMON or not. All I can say is that it is
->>> inconsistent to make the driver depend on HWMON and then to ignore that
->>> hwmon device instantiation failed.
->> I took a look at how other vendor's WMI drivers handle this, and a couple of
->> them depend on HWMON (asus, gigabyte), while the thinkpad and eeepc ones
->> select HWMON instead of depending on it. Here I think I should just handle
->> this error properly, and leave the HWMON dependency in this driver ?
-> 
-> Ok with me but, again, the maintainer should have an opinion about this.
+>>>> +       WARN_ON(ret != 0);
+>>> Why?
+>> To differentiate a 0 because the level is actually 0 versus a 0 because
+>> there was an error. The backlight device API doesn't seem to have a way
+>> to report errors.
+> I meant why do you need WARN_ON() here? This kind of stuff must be justified.
 
-I would prefer just selecting HWMON in Kconfig and keeping the code clean from
-any special handling which may be necessary when HWMON is unset.
 
-Regards,
-
-Hans
-
+Thanks, I see what you mean now. I'll change it to a dev_warn() or maybe 
+even a dev_err(), since if the ACPI call does fail there probably is 
+something quite amiss.
