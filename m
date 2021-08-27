@@ -2,88 +2,124 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58303C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 03:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546FAC4320A
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 06:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FDF060E99
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 03:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380CD60FD7
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 06:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244110AbhH0DUh (ORCPT
+        id S244287AbhH0G6g (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Thu, 26 Aug 2021 23:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38028 "EHLO
+        Fri, 27 Aug 2021 02:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243896AbhH0DUh (ORCPT
+        with ESMTP id S243036AbhH0G6g (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Thu, 26 Aug 2021 23:20:37 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E35EC061757
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 20:19:49 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id j2so3083891pll.1
-        for <platform-driver-x86@vger.kernel.org>; Thu, 26 Aug 2021 20:19:49 -0700 (PDT)
+        Fri, 27 Aug 2021 02:58:36 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB541C061757;
+        Thu, 26 Aug 2021 23:57:47 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id z4so8810161wrr.6;
+        Thu, 26 Aug 2021 23:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fgRr1n2bWwmrlGdoVERJOZuCIy6uB+l74pomUxYfsJU=;
-        b=h5S2TIXKgWFLVaI2gkK5xK1CH+IAORW2mf82fQZkLkUgD3fdZi2JrUPJB4MXEhK+dO
-         X5IkY9TB0rsupYN+qE5hUZdBNqi7ON1au0etojyeReRGpEfqr1nA2x1fNi+/BpH68Dof
-         PGICX0Pju4KlOXj6EXmtpiSWjaFfPN72GPITc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=La6yDI849v69vetT2DNyixIDuUna3JBK/IQZg7j2d2Q=;
+        b=njmcdUkEAWKr2M95rP8rNqdcuWKQLhqjTFkNpkzBysCWLPDGz7+5H/XWaZ1y6ajKeo
+         3Lhz1jj69/gHd/W5ByjQv1M8eq83BYVcOnD82ebvghvwdwWqRibItJ6rNq5188c2zoha
+         aoT1vOUTyvhjdmETLtklVO0EUuP+SUJgOVVzWAMExidfcUyQ5rjffbC1NLCXvedxrGMZ
+         Vo3w+EwgmO7AzwpckgZZ2Ef5+kuLL/kn95K9WW6JI1TpOnF3+1aplOxv6x0XZEMQhgNs
+         LNmD5mjO0UKvoJASqqs8dBqYfT1sG+9zp1IbKH7D1YkL2ZotdkMzGY0ADB23NgMYN2W2
+         mSQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fgRr1n2bWwmrlGdoVERJOZuCIy6uB+l74pomUxYfsJU=;
-        b=XFEQIp4PPynywp8m8GD6wwOtl45jasaJaoP7PvRnw/pYN7lsVOw04glOSlEfi42wC4
-         MdNGxA5RmJ6MJLs38hdOf72rs5Zb5/jIKsk6HwboM0xb9iApm9cNBu/1ZppTmJaBvLAQ
-         Xm7YF6qgx8fvaiwbsQxdQoVkFpb7Jw96ZCRQ/CBvlU4mL49euL5BIJWKaQra0xt8Xm6J
-         cG0JY5tMTeQkskdYJWquwvFH6hshBaP3g9LNEzottEjKOBtmVnbjeY+v8lSADDVyWA85
-         uSjdA+NzA2jYgeNKjWUA/INONk2Orj2Iz6vairu2agq/taCxxqgun2viEcPcMy8dhf6H
-         Zs0A==
-X-Gm-Message-State: AOAM5308A5twe5wkZ4Ibw9TeOrTInXNjlEJlgLhFo3TUAk4eCTWNXYZk
-        grfaBAo4N/1H0JV43hG3XQzW8w==
-X-Google-Smtp-Source: ABdhPJzZzzT0FSpA4AHwwsM0/9b1hfhSBcyloo8xsNWIjNLiTJTZ/9AUpRF9qUjLU8P8Bt43sBGdog==
-X-Received: by 2002:a17:90a:2e88:: with SMTP id r8mr20307820pjd.169.1630034388566;
-        Thu, 26 Aug 2021 20:19:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h4sm3389144pjs.2.2021.08.26.20.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Aug 2021 20:19:48 -0700 (PDT)
-Date:   Thu, 26 Aug 2021 20:19:47 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Dell.Client.Kernel@dell.com, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/x86: dell-smbios-wmi: Add missing kfree in
- error-exit from run_smbios_call
-Message-ID: <202108262019.F3C9681F91@keescook>
-References: <20210826140822.71198-1-hdegoede@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=La6yDI849v69vetT2DNyixIDuUna3JBK/IQZg7j2d2Q=;
+        b=O7LS15Q32K0qs8QFeOl/rGL7fcP6Ig5e4f8wqRiBkad3C1yiFSppuQSbk/1aEekJwM
+         rhbrAybKKBkkBAW8D2LL8kIyVkKbN2eUXS6NTtAV5n/cuUI1ngELx0wNW1nmH2PZgG5J
+         rZcxCghTc0e/QV/ozKlbV/tAvVLRzZ7Iip1/HcqWzBhyt1Y1IGUUe8bHPTS2YUu2l45K
+         J4KlMARSwnD0E1KG3LKiy1L4ybytCvsBm+oyLadEiik9F8L61sqJ1BX7UP3vE43COJn+
+         HQyRrGFQnWOc+B1qUH0uCi3i5biG+t3cWnRdGn5fAF2RCVKHTpNJP2MMDlUG83s+e0NE
+         igeQ==
+X-Gm-Message-State: AOAM533SYbLsQRoSSilncG7bmidvyc0pIIDbz7VKgtRs632uUPHGor2M
+        i9llu8Nq0azgaXLtIIjcLGiEmt7eHyUsHiCchSHMxbw8bLUde2xx
+X-Google-Smtp-Source: ABdhPJz8ItkNDXEzJgJ3TB4cfG53J9d6MELrDBe43+FrWBWEABYXAdiMj8PM9ljy/+Zfhr9Tpiobclt15BTOCHaUkZU=
+X-Received: by 2002:adf:c549:: with SMTP id s9mr8461986wrf.344.1630047466162;
+ Thu, 26 Aug 2021 23:57:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210826140822.71198-1-hdegoede@redhat.com>
+References: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+In-Reply-To: <CAGhUXvBw4rzCQrqttyyS=Psxmhppk79c6fDoxPbV91jE7fO_9A@mail.gmail.com>
+From:   Andrea Ippolito <andrea.ippo@gmail.com>
+Date:   Fri, 27 Aug 2021 08:57:10 +0200
+Message-ID: <CAGhUXvDNj2v3O==+wWWKPYVzej8Vq+WNiBtPwmYxSQ2dTuLb9Q@mail.gmail.com>
+Subject: Re: Touchpad stickiness on Dell Inspiron/XPS
+To:     dmitry.torokhov@gmail.com, alex.hung@canonical.com
+Cc:     linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 04:08:22PM +0200, Hans de Goede wrote:
-> As pointed out be Kees Cook if we return -EIO because the
-> obj->type != ACPI_TYPE_BUFFER, then we must kfree the
-> output buffer before the return.
-> 
-> Fixes: 1a258e670434 ("platform/x86: dell-smbios-wmi: Add new WMI dispatcher driver")
-> Reported-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+(resending as plain text)
 
-Excellent! Thanks for doing this. :)
+Hello everyone,
 
--Kees
+I hope I find you well.
 
--- 
-Kees Cook
+I am writing this to report a touchpad issue faced by me and several
+other DELL users across several different distros (HW defect has been
+ruled out by people unable to reproduce on Windows).
+
+First thing that came to mind was to report this to the libinput
+project, which I did here:
+
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/618
+
+A similar report by another user followed shortly after:
+
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/636 (will be
+closed as dupe eventually, so please keep #618 as reference)
+
+Issue has been also reported by yet another user on reddit:
+
+https://www.reddit.com/r/linuxhardware/comments/ofbzg3/dell_xps_15_9510_experience/h5ddy07/
+and https://www.reddit.com/r/linuxhardware/comments/ofbzg3/dell_xps_15_9510_experience/h5zjwc8/?utm_source=reddit&utm_medium=web2x&context=3
+
+And finally, I have reported it on the DELL user forums (no help
+whatsoever from DELL):
+
+https://www.dell.com/community/Inspiron/Tiger-Lake-DELL-Inspiron-Touchpad-Cursor-temporarily-drops/m-p/8021753#M126292
+
+The investigation on the libinput side appears to be complete, as
+maintainers didn't spot anything weird there (also, the issue is also
+reproducible with the synaptics lib, suggesting that this might be
+lower level).
+
+Robert Martin suggested to raise this to you now, as per comment:
+
+https://gitlab.freedesktop.org/libinput/libinput/-/issues/618#note_1042277
+
+I'm kind of new to Linux mailing lists and bug reporting, so please
+forgive me if I'm violating some rules or etiquette, I'd be glad to
+rectify if that's the case.
+
+I also don't know what is the best way to keep the conversation going,
+e.g. if there's an issue tracker or instead mailing lists are the
+preferred choice.
+
+You should find some interesting data in the above mentioned reports
+already, if not, please don't hesitate to let me know or chime in on
+libinput issue #618 directly.
+
+Thanks a lot in advance.
+
+Kind regards,
+Andrea IPPOLITO
