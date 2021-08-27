@@ -2,88 +2,121 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA4CC432BE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955A2C4320E
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 15:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A312260E8B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F70D60F35
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 15:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233702AbhH0OyF (ORCPT
+        id S245446AbhH0PTK (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Aug 2021 10:54:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:28975 "EHLO mga17.intel.com"
+        Fri, 27 Aug 2021 11:19:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49636 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231327AbhH0OyE (ORCPT
+        id S245404AbhH0PTJ (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Aug 2021 10:54:04 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="198209383"
-X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
-   d="scan'208";a="198209383"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 07:53:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
-   d="scan'208";a="427138314"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2021 07:53:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 14AF51ED; Fri, 27 Aug 2021 17:53:13 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Zha Qipeng <qipeng.zha@intel.com>,
-        Mark Gross <mgross@linux.intel.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] platform/x86/intel: punit_ipc: Drop wrong use of ACPI_PTR()
-Date:   Fri, 27 Aug 2021 17:53:10 +0300
-Message-Id: <20210827145310.76239-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+        Fri, 27 Aug 2021 11:19:09 -0400
+Received: from zn.tnic (p200300ec2f1117008c66b42124dc6a0e.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:1700:8c66:b421:24dc:6a0e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 661E41EC0493;
+        Fri, 27 Aug 2021 17:18:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1630077493;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=ZslriKHxbCHlChlqpQpN8Ct1kTFVcJmfBH1i2TOMis0=;
+        b=dS9d0tdMHelX7BeSkD5dirk3h3ErCw77WLAuqdv85ajmebrGqQhIMoW5u1vhc6oTuaqaKy
+        LjB5nMNTRp8Q3EzgAOD0U+X0ai7Hy9JvEQKMg2IlniiG9AWAWuejj0XN486YyVD21OT7fs
+        +wU9HdR9Y57TbcWeSNGREZ1ynEyPloE=
+Date:   Fri, 27 Aug 2021 17:18:49 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-coco@lists.linux.dev, linux-mm@kvack.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        David Rientjes <rientjes@google.com>,
+        Dov Murik <dovmurik@linux.ibm.com>,
+        Tobin Feldman-Fitzthum <tobin@ibm.com>,
+        Michael Roth <michael.roth@amd.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
+        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH Part1 v5 32/38] x86/sev: enable SEV-SNP-validated CPUID
+ in #VC handlers
+Message-ID: <YSkCWVTd0ZEvphlx@zn.tnic>
+References: <20210820151933.22401-1-brijesh.singh@amd.com>
+ <20210820151933.22401-33-brijesh.singh@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210820151933.22401-33-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-ACPI_PTR() is more harmful than helpful. For example, in this case
-if CONFIG_ACPI=n, the ID table left unused which is not what we want.
+On Fri, Aug 20, 2021 at 10:19:27AM -0500, Brijesh Singh wrote:
+> From: Michael Roth <michael.roth@amd.com>
+> 
+> This adds support for utilizing the SEV-SNP-validated CPUID table in
 
-Instead of adding ifdeffery here and there, drop ACPI_PTR()
-and unused acpi.h.
+s/This adds support for utilizing/Utilize/
 
-Fixes: fdca4f16f57d ("platform:x86: add Intel P-Unit mailbox IPC driver")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel/punit_ipc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Yap, it can really be that simple. :)
 
-diff --git a/drivers/platform/x86/intel/punit_ipc.c b/drivers/platform/x86/intel/punit_ipc.c
-index f58b8543f6ac..66bb39fd0ef9 100644
---- a/drivers/platform/x86/intel/punit_ipc.c
-+++ b/drivers/platform/x86/intel/punit_ipc.c
-@@ -8,7 +8,6 @@
-  * which provide mailbox interface for power management usage.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/bitops.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-@@ -319,7 +318,7 @@ static struct platform_driver intel_punit_ipc_driver = {
- 	.remove = intel_punit_ipc_remove,
- 	.driver = {
- 		.name = "intel_punit_ipc",
--		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
-+		.acpi_match_table = punit_ipc_acpi_ids,
- 	},
- };
- 
+> the various #VC handler routines used throughout boot/run-time. Mostly
+> this is handled by re-using the CPUID lookup code introduced earlier
+> for the boot/compressed kernel, but at various stages of boot some work
+> needs to be done to ensure the CPUID table is set up and remains
+> accessible throughout. The following init routines are introduced to
+> handle this:
+
+Do not talk about what your patch does - that should hopefully be
+visible in the diff itself. Rather, talk about *why* you're doing what
+you're doing.
+
+> sev_snp_cpuid_init():
+
+This one is not really introduced - it is already there.
+
+<snip all the complex rest>
+
+So this patch is making my head spin. It seems we're dancing a lot of
+dance just to have our CPUID page present at all times. Which begs the
+question: do we need it during the whole lifetime of the guest?
+
+Regardless, I think this can be simplified by orders of
+magnitude if we allocated statically 4K for that CPUID page in
+arch/x86/boot/compressed/mem_encrypt.S, copied the supplied CPUID page
+from the firmware to it and from now on, work with our own copy.
+
+You probably would need to still remap it for kernel proper but it would
+get rid of all that crazy in this patch here.
+
+Hmmm?
+
 -- 
-2.33.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
