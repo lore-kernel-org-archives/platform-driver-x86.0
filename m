@@ -7,35 +7,38 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDD8C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 13:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB48C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6BE860E0B
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 13:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C85260F45
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232884AbhH0Nvr (ORCPT
+        id S245263AbhH0OPc (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Aug 2021 09:51:47 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:37258 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232257AbhH0Nvq (ORCPT
+        Fri, 27 Aug 2021 10:15:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241260AbhH0OPb (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Aug 2021 09:51:46 -0400
+        Fri, 27 Aug 2021 10:15:31 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132D3C061757;
+        Fri, 27 Aug 2021 07:14:43 -0700 (PDT)
 Received: from zn.tnic (p200300ec2f1117006e0d6268a9fc7b3e.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:1700:6e0d:6268:a9fc:7b3e])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 59FAE1EC0537;
-        Fri, 27 Aug 2021 15:50:52 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2FD8E1EC0493;
+        Fri, 27 Aug 2021 16:14:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1630072252;
+        t=1630073677;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=MgcfjTqcSY9gu+zATu+viDfC+xRfq+ze2XUVEcy5kJQ=;
-        b=cO0UcApzABFyvPv+e6G4bGRLUXS/CNO2/DFEGytg7MS8u7V43idZQCwPExuB4RZ2dTpRkF
-        ZxrfGsWj2Lzr+LOSyR0G1Fy/jCw1vouDlF4GKT7VnZ9xWps8tPd6rZuQft0qi4nHtT/Sfa
-        fAPo0aIk+YOA4sfiUsRttbNgb58ivFI=
-Date:   Fri, 27 Aug 2021 15:51:29 +0200
+        bh=3hBv70kaJ7xEYPUSElnsV+8ktxYO20ij25UtBpP2GHs=;
+        b=RvUnxtHP5ZBZ7z5DJaIp60qjgWYo4OZEBia83SzIl3zY4GMzFkUSp0X8fXVP4csuFG9OL7
+        cwZQf9i50aJTbvYkf29NQruKb+VvUU37WJVWvPmbdC1X59BTOfEV0O0yIhxB0pnKNH23+N
+        bxOk1W2hd7hfH8IjKvYrjLnoIREET4E=
+Date:   Fri, 27 Aug 2021 16:15:14 +0200
 From:   Borislav Petkov <bp@alien8.de>
 To:     Brijesh Singh <brijesh.singh@amd.com>
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
@@ -63,89 +66,99 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
         marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 29/38] x86/boot: add a pointer to Confidential
- Computing blob in bootparams
-Message-ID: <YSjt4YDQR8vDeOdI@zn.tnic>
+Subject: Re: [PATCH Part1 v5 30/38] x86/compressed/64: store Confidential
+ Computing blob address in bootparams
+Message-ID: <YSjzcgQDubOY1pGI@zn.tnic>
 References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-30-brijesh.singh@amd.com>
+ <20210820151933.22401-31-brijesh.singh@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210820151933.22401-30-brijesh.singh@amd.com>
+In-Reply-To: <20210820151933.22401-31-brijesh.singh@amd.com>
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 10:19:24AM -0500, Brijesh Singh wrote:
+On Fri, Aug 20, 2021 at 10:19:25AM -0500, Brijesh Singh wrote:
 > From: Michael Roth <michael.roth@amd.com>
 > 
-> The previously defined Confidential Computing blob is provided to the
-> kernel via a setup_data structure or EFI config table entry. Currently
-> these are both checked for by boot/compressed kernel to access the
-> CPUID table address within it for use with SEV-SNP CPUID enforcement.
+> When the Confidential Computing blob is located by the boot/compressed
+> kernel, store a pointer to it in bootparams->cc_blob_address to avoid
+> the need for the run-time kernel to rescan the EFI config table to find
+> it again.
 > 
-> To also enable SEV-SNP CPUID enforcement for the run-time kernel,
-> similar early access to the CPUID table is needed early on while it's
-> still using the identity-mapped page table set up by boot/compressed,
-> where global pointers need to be accessed via fixup_pointer().
-> 
-> This is much of an issue for accessing setup_data, and the EFI config
-> table helper code currently used in boot/compressed *could* be used in
-> this case as well since they both rely on identity-mapping. However, it
-> has some reliance on EFI helpers/string constants that would need to be
-> accessed via fixup_pointer(), and fixing it up while making it
-> shareable between boot/compressed and run-time kernel is fragile and
-> introduces a good bit of uglyness.
-> 
-> Instead, this patch adds a boot_params->cc_blob_address pointer that
+> Since this function is also shared by the run-time kernel, this patch
 
-Avoid having "This patch" or "This commit" in the commit message. It is
-tautologically useless.
+Here's "this patch" again... but you know what to do.
 
-Also, do
-
-$ git grep 'This patch' Documentation/process
-
-for more details.
-
-> boot/compressed can initialize so that the run-time kernel can access
-> the prelocated CC blob that way instead.
+> also adds the logic to make use of bootparams->cc_blob_address when it
+> has been initialized.
 > 
 > Signed-off-by: Michael Roth <michael.roth@amd.com>
 > Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
 > ---
->  arch/x86/include/asm/bootparam_utils.h | 1 +
->  arch/x86/include/uapi/asm/bootparam.h  | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  arch/x86/kernel/sev-shared.c | 40 ++++++++++++++++++++++++++----------
+>  1 file changed, 29 insertions(+), 11 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/bootparam_utils.h
-> index 981fe923a59f..53e9b0620d96 100644
-> --- a/arch/x86/include/asm/bootparam_utils.h
-> +++ b/arch/x86/include/asm/bootparam_utils.h
-> @@ -74,6 +74,7 @@ static void sanitize_boot_params(struct boot_params *boot_params)
->  			BOOT_PARAM_PRESERVE(hdr),
->  			BOOT_PARAM_PRESERVE(e820_table),
->  			BOOT_PARAM_PRESERVE(eddbuf),
-> +			BOOT_PARAM_PRESERVE(cc_blob_address),
->  		};
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index 651980ddbd65..6f70ba293c5e 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -868,7 +868,6 @@ static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
+>  	return ES_OK;
+>  }
 >  
->  		memset(&scratch, 0, sizeof(scratch));
-> diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-> index 1ac5acca72ce..bea5cdcdf532 100644
-> --- a/arch/x86/include/uapi/asm/bootparam.h
-> +++ b/arch/x86/include/uapi/asm/bootparam.h
-> @@ -188,7 +188,8 @@ struct boot_params {
->  	__u32 ext_ramdisk_image;			/* 0x0c0 */
->  	__u32 ext_ramdisk_size;				/* 0x0c4 */
->  	__u32 ext_cmd_line_ptr;				/* 0x0c8 */
-> -	__u8  _pad4[116];				/* 0x0cc */
-> +	__u8  _pad4[112];				/* 0x0cc */
-> +	__u32 cc_blob_address;				/* 0x13c */
+> -#ifdef BOOT_COMPRESSED
+>  static struct setup_data *get_cc_setup_data(struct boot_params *bp)
+>  {
+>  	struct setup_data *hdr = (struct setup_data *)bp->hdr.setup_data;
+> @@ -888,6 +887,16 @@ static struct setup_data *get_cc_setup_data(struct boot_params *bp)
+>   *   1) Search for CC blob in the following order/precedence:
+>   *      - via linux boot protocol / setup_data entry
+>   *      - via EFI configuration table
+> + *   2) If found, initialize boot_params->cc_blob_address to point to the
+> + *      blob so that uncompressed kernel can easily access it during very
+> + *      early boot without the need to re-parse EFI config table
+> + *   3) Return a pointer to the CC blob, NULL otherwise.
+> + *
+> + * For run-time/uncompressed kernel:
+> + *
+> + *   1) Search for CC blob in the following order/precedence:
+> + *      - via linux boot protocol / setup_data entry
 
-So I know I've heard grub being mentioned in conjunction with this: if
-you are ever going to pass this through the boot loader, then you'd need
-to update Documentation/x86/zero-page.rst too to state that this field
-can be written by the boot loader too.
+Why would you do this again if the boot/compressed kernel has already
+searched for it?
+
+> + *      - via boot_params->cc_blob_address
+
+Yes, that is the only thing you need to do in the runtime kernel - see
+if cc_blob_address is not 0. And all the work has been done by the
+decompressor kernel already.
+
+>   *   2) Return a pointer to the CC blob, NULL otherwise.
+>   */
+>  static struct cc_blob_sev_info *sev_snp_probe_cc_blob(struct boot_params *bp)
+> @@ -897,9 +906,11 @@ static struct cc_blob_sev_info *sev_snp_probe_cc_blob(struct boot_params *bp)
+>  		struct setup_data header;
+>  		u32 cc_blob_address;
+>  	} *sd;
+> +#ifdef __BOOT_COMPRESSED
+>  	unsigned long conf_table_pa;
+>  	unsigned int conf_table_len;
+>  	bool efi_64;
+> +#endif
+
+That function turns into an unreadable mess with that #ifdef
+__BOOT_COMPRESSED slapped everywhere.
+
+It seems the cleanest thing to do is to do what we do with
+acpi_rsdp_addr: do all the parsing in boot/compressed/ and pass it on
+through boot_params. Kernel proper simply reads the pointer.
+
+Which means, you can stick all that cc_blob figuring out functionality
+in arch/x86/boot/compressed/sev.c instead.
+
+Thx.
 
 -- 
 Regards/Gruss,
