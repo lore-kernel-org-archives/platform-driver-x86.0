@@ -2,130 +2,88 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE92C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA4CC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A420B60F45
-	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A312260E8B
+	for <platform-driver-x86@archiver.kernel.org>; Fri, 27 Aug 2021 14:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233562AbhH0OoI (ORCPT
+        id S233702AbhH0OyF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Fri, 27 Aug 2021 10:44:08 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:44492 "EHLO mail.skyhub.de"
+        Fri, 27 Aug 2021 10:54:05 -0400
+Received: from mga17.intel.com ([192.55.52.151]:28975 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231327AbhH0OoI (ORCPT
+        id S231327AbhH0OyE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Fri, 27 Aug 2021 10:44:08 -0400
-Received: from zn.tnic (p200300ec2f1117006e0d6268a9fc7b3e.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:1700:6e0d:6268:a9fc:7b3e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D16451EC0493;
-        Fri, 27 Aug 2021 16:43:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1630075393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=JnpD/7q7WF7NuQTfcoCi3R50uMQ/1+7oFap3seyqFiU=;
-        b=e26r5thZw3XobM2ye3EddiEyjsURteB1VBnb9DqalDrz/BfqeAqavI3AfDm3wWbyRpHNYf
-        KaaDG9MPIkesEZZlZNR1sFhG8o8pPc4me7+aevWWCAlge78mDHfvYrrKAql2Ceq4wAet5Z
-        tCUyonEcyXAV+onAyLO+agfkeabOE2s=
-Date:   Fri, 27 Aug 2021 16:43:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Dov Murik <dovmurik@linux.ibm.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 31/38] x86/compressed/64: add identity mapping
- for Confidential Computing blob
-Message-ID: <YSj6J+TFnJzueCAQ@zn.tnic>
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-32-brijesh.singh@amd.com>
+        Fri, 27 Aug 2021 10:54:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10089"; a="198209383"
+X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
+   d="scan'208";a="198209383"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2021 07:53:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,356,1620716400"; 
+   d="scan'208";a="427138314"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2021 07:53:12 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 14AF51ED; Fri, 27 Aug 2021 17:53:13 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Zha Qipeng <qipeng.zha@intel.com>,
+        Mark Gross <mgross@linux.intel.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] platform/x86/intel: punit_ipc: Drop wrong use of ACPI_PTR()
+Date:   Fri, 27 Aug 2021 17:53:10 +0300
+Message-Id: <20210827145310.76239-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210820151933.22401-32-brijesh.singh@amd.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 10:19:26AM -0500, Brijesh Singh wrote:
-> diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-> index 3cf7a7575f5c..54374e0f0257 100644
-> --- a/arch/x86/boot/compressed/ident_map_64.c
-> +++ b/arch/x86/boot/compressed/ident_map_64.c
-> @@ -37,6 +37,9 @@
->  #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
->  #undef _SETUP
->  
-> +#define __BOOT_COMPRESSED
-> +#include <asm/sev.h> /* For sev_snp_active() + ConfidentialComputing blob */
-> +
+ACPI_PTR() is more harmful than helpful. For example, in this case
+if CONFIG_ACPI=n, the ID table left unused which is not what we want.
 
-When you move all the cc_blob parsing to the compressed kernel, all that
-ugly ifdeffery won't be needed.
+Instead of adding ifdeffery here and there, drop ACPI_PTR()
+and unused acpi.h.
 
->  extern unsigned long get_cmd_line_ptr(void);
->  
->  /* Used by PAGE_KERN* macros: */
-> @@ -163,6 +166,21 @@ void initialize_identity_maps(void *rmode)
->  	cmdline = get_cmd_line_ptr();
->  	add_identity_map(cmdline, cmdline + COMMAND_LINE_SIZE);
+Fixes: fdca4f16f57d ("platform:x86: add Intel P-Unit mailbox IPC driver")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel/punit_ipc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Carve that ...
-
-> +	/*
-> +	 * The ConfidentialComputing blob is used very early in uncompressed
-> +	 * kernel to find CPUID memory to handle cpuid instructions. Make sure
-> +	 * an identity-mapping exists so they can be accessed after switchover.
-> +	 */
-> +	if (sev_snp_enabled()) {
-> +		struct cc_blob_sev_info *cc_info =
-> +			(void *)(unsigned long)boot_params->cc_blob_address;
-> +
-> +		add_identity_map((unsigned long)cc_info,
-> +				 (unsigned long)cc_info + sizeof(*cc_info));
-> +		add_identity_map((unsigned long)cc_info->cpuid_phys,
-> +				 (unsigned long)cc_info->cpuid_phys + cc_info->cpuid_len);
-> +	}
-> +
->  	/* Load the new page-table. */
->  	sev_verify_cbit(top_level_pgt);
-
-... up to here into a separate function called sev_prep_identity_maps()
-so that SEV-specific code flow is not in the generic code path.
-
->  	write_cr3(top_level_pgt);
-
+diff --git a/drivers/platform/x86/intel/punit_ipc.c b/drivers/platform/x86/intel/punit_ipc.c
+index f58b8543f6ac..66bb39fd0ef9 100644
+--- a/drivers/platform/x86/intel/punit_ipc.c
++++ b/drivers/platform/x86/intel/punit_ipc.c
+@@ -8,7 +8,6 @@
+  * which provide mailbox interface for power management usage.
+  */
+ 
+-#include <linux/acpi.h>
+ #include <linux/bitops.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+@@ -319,7 +318,7 @@ static struct platform_driver intel_punit_ipc_driver = {
+ 	.remove = intel_punit_ipc_remove,
+ 	.driver = {
+ 		.name = "intel_punit_ipc",
+-		.acpi_match_table = ACPI_PTR(punit_ipc_acpi_ids),
++		.acpi_match_table = punit_ipc_acpi_ids,
+ 	},
+ };
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.33.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
