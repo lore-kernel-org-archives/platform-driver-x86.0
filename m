@@ -2,140 +2,184 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57C8C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 15:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D114DC432BE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 20:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838B7606A5
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 15:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B045B60F45
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 20:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235553AbhH2PS5 (ORCPT
+        id S234667AbhH2U4d (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Aug 2021 11:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231216AbhH2PS5 (ORCPT
+        Sun, 29 Aug 2021 16:56:33 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:42283 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232989AbhH2U4c (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Aug 2021 11:18:57 -0400
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B08CC061575;
-        Sun, 29 Aug 2021 08:18:05 -0700 (PDT)
-Received: by mail-oi1-x233.google.com with SMTP id n27so17017343oij.0;
-        Sun, 29 Aug 2021 08:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sbgY53rxu2C/Bzp1Fq3Hlx4nUgLjjGXWejXFRVYrqhw=;
-        b=P2xhmBc4+k9rU4F3yTt6/j1+VZCULGBkfOOtIKLdppfm3JBlItxbfq1uo0/4lXEj8b
-         6i9m8/8YEieVLDu/kxQ55blgNT+1wwFXF1EXvEmsjFGWKKnzvcnzw3uA8IeNeffzTs2E
-         h8KHudv9WasZlWYbxD5atF074Alcdo0qgf3utDOQvzQbRtjaMHmlfbxkh6sHX0w6Ctsi
-         6tjnpsDLHgipQP6YP2bSWfWa5U/uEryDTrAbnpSI39+opegZi1HP9qy1SlX9k63zOTqM
-         VWDZxxInySBOXe5iNlJlntUvae1GIqYWe9hb0lgFJSUEjZ5WFTd+TGUs47+tIn6pLF3c
-         51Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:to:cc:references:from:subject:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sbgY53rxu2C/Bzp1Fq3Hlx4nUgLjjGXWejXFRVYrqhw=;
-        b=DbK7s0tiKGI58zmiYXhyZhwkHAduZIo4g25ohgxMPhe4ZSpuBTGhFl/J7rS0ICDN49
-         nzFSpNqKeLPrsxU7XsLFK3NBa4ANe/IWAxScYq6cnIaf03PVhT3/6+o1uCZCkCFckfCg
-         ETaUJGYWjv641nlSItjBdtzbMlN/VMSNeeSsNqyxNg0ur3yttxDELpNFWbhoyK985MYe
-         NSjHMNJ3DrJ+q847MH0E8N5N3jqwzAyOJzVGbKrodlZn4W+3D0ALhOm/f4+hMl3sJu0j
-         aZk3mFwGL3IvSJfaKsYzpf79j2sOeEsjsH6HbExXSkb5F6Qa+Xg2sz10hyB+TO0p8K2O
-         GUyw==
-X-Gm-Message-State: AOAM533ayhEk96ahUuOveETtm1OSJ6U2Tnlw/6xjk/WcvtUw9/624Ehu
-        t2JeJVtQc22ih7hXUHOx0VGa/GwJOuM=
-X-Google-Smtp-Source: ABdhPJyb2Ut2IjTAb/bfrFeYaDBMs3C+cpNS7YKc2KKgmXQobV/OxuwwKTpZ0wTKs03x3O5EHD9nEQ==
-X-Received: by 2002:a54:4189:: with SMTP id 9mr20687971oiy.45.1630250284257;
-        Sun, 29 Aug 2021 08:18:04 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c7sm2622446otm.27.2021.08.29.08.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Aug 2021 08:18:03 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-To:     Luke Jones <luke@ljones.dev>, Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pobrn@protonmail.com,
-        platform-driver-x86@vger.kernel.org
-References: <20210829071402.576380-1-luke@ljones.dev>
- <cf42ddd7-29ed-ff8b-7d03-958187863b70@redhat.com>
- <RLILYQ.0GH3JY7UCTPI2@ljones.dev>
-From:   Guenter Roeck <linux@roeck-us.net>
+        Sun, 29 Aug 2021 16:56:32 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id EB63C5C00AD;
+        Sun, 29 Aug 2021 16:55:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 29 Aug 2021 16:55:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=NcQg4S
+        QF/ZIoqi7h9T6xv7ula+TxR9mC6WKm/upv5HE=; b=ntHKrdp64sQQKrIu1xmCla
+        z+E5Vb3mJDX1PsDuk9U/As/rL16YpXfAnGLlRwRPB1MzJjXZcj3iTHVoeNWgf9d9
+        tPBetAyCjBR2M0CZSRW2ljUzH1/vOrmaa8MEVUMQKfKwQgc6sZmco9VGd62PqTE7
+        Bs9N8hyQmCQiUcrtrIg6R25y7K3xBchRTcsXCJPmc+jps5N1hEJ9KKk8+gqYX5du
+        nSDNfsEzK+qMAo5AKIqNPOnjX/uGJW1nPr+q61vmbEHJRAyJkEIpetlf7XicVXDi
+        tnapZPdajA6AmnqGxbqHo2CYR9r4Kp2zsmNBfjDkP18aw3iEAUNKT4UMHjykqtjQ
+        ==
+X-ME-Sender: <xms:S_QrYS-ZMmziEytmMzzQ6rl6CF7hjN5nvjpx2U4v-X3ZeI3LO_l8jA>
+    <xme:S_QrYSuPdcic43SExEE59h9F50vuWSxMW8CayZpiXv7lzFVsUsX9_agWMjsRbug2O
+    p3w7DJk7IK4NpsVH-o>
+X-ME-Received: <xmr:S_QrYYDvsjWApgdJVI5UUESPcrbXU1QjzBmlonStLDXfRVDAgEgmyvRaKgsRqh5FIZSgZw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddujedgudehfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffuvffkjghfofggtgesthdtredtredtvdenucfhrhhomhepnfhukhgv
+    ucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnh
+    epgfeffedufffhgfeuheegffffgeegveeifeeutefhieejffetudfgueevteehtdetnecu
+    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvse
+    hljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:S_QrYadlQK8CNDSjq5jedkRPfIJ7FLe-ncmow5O9f_3-_l0iQtla5g>
+    <xmx:S_QrYXMW9z3m-86wVaOmh3Hr6TsTdOU3fgJqLypl68PsMFt1kkmUaw>
+    <xmx:S_QrYUl9Sk2ulEahl4qHniKRrA0pilf2sd7cebcR8Ol6_z64vNdzNQ>
+    <xmx:S_QrYQZfNdyioMrjUE2Bv5fqgxclr4Tg-z42CDGW2QdLtT8LRRvx2Q>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 29 Aug 2021 16:55:33 -0400 (EDT)
+Date:   Mon, 30 Aug 2021 08:55:17 +1200
+From:   Luke Jones <luke@ljones.dev>
 Subject: Re: [PATCH v6 0/1] asus-wmi: Add support for custom fan curves
-Message-ID: <2af6628e-118f-6a75-8074-2f4144c7f8e7@roeck-us.net>
-Date:   Sun, 29 Aug 2021 08:18:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        pobrn@protonmail.com, platform-driver-x86@vger.kernel.org
+Message-Id: <5SCMYQ.7F7995ZKI2HT3@ljones.dev>
+In-Reply-To: <2af6628e-118f-6a75-8074-2f4144c7f8e7@roeck-us.net>
+References: <20210829071402.576380-1-luke@ljones.dev>
+        <cf42ddd7-29ed-ff8b-7d03-958187863b70@redhat.com>
+        <RLILYQ.0GH3JY7UCTPI2@ljones.dev>
+        <2af6628e-118f-6a75-8074-2f4144c7f8e7@roeck-us.net>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-In-Reply-To: <RLILYQ.0GH3JY7UCTPI2@ljones.dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
-On 8/29/21 3:03 AM, Luke Jones wrote:
-> 
-> 
-> On Sun, Aug 29 2021 at 11:57:55 +0200, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi Luke,
->>
->> On 8/29/21 9:14 AM, Luke D. Jones wrote:
->>>  Add support for custom fan curves found on some ASUS ROG laptops.
->>>
->>>  - V1
->>>    + Initial patch work
->>>  - V2
->>>    + Don't fail and remove wmi driver if error from
->>>      asus_wmi_evaluate_method_buf() if error is -ENODEV
->>>  - V3
->>>    + Store the "default" fan curves
->>>    + Call throttle_thermal_policy_write() if a curve is erased to ensure
->>>      that the factory default for a profile is applied again
->>>  - V4
->>>    + Do not apply default curves by default. Testers have found that the
->>>      default curves don't quite match actual no-curve behaviours
->>>    + Add method to enable/disable curves for each profile
->>>  - V5
->>>    + Remove an unrequired function left over from previous iterations
->>>    + Ensure default curves are applied if user writes " " to a curve path
->>>    + Rename "active_fan_curve_profiles" to "enabled_fan_curve_profiles" to
->>>      better reflect the behavious of this setting
->>>    + Move throttle_thermal_policy_write_*pu_curves() and rename to
->>>      fan_curve_*pu_write()
->>>    + Merge fan_curve_check_valid() and fan_curve_write()
->>>    + Remove some leftover debug statements
->>>  - V6
->>>    + Refactor data structs to store  array or u8 instead of strings.
->>>      This affects the entire patch except the enabled_fan_curves block
->>>    + Use sysfs_match_string in enabled_fan_curve block
->>>    + Add some extra comments to describe things
->>>    + Allow some variation in how fan curve input can be formatted
->>>    + Use SENSOR_DEVICE_ATTR_2_RW() to reduce the amount of lines per
->>>      fan+profile combo drastically
->>
->> Thank you for your continued work on this. I read in the discussin of v5
->> that you discussed using the standard auto_point#_pwm, auto_point#_temp
->> pairs. I see here that you have decided to not go that route, may I ask
->> why ?
-> 
-> Sure, primary reason is because the RPM for the fans is in percentage so it didn't really make sense to me to use that format.
-> 
-> Also if the max for that is 255 then I'd need to introduce scaling to make match what the ACPI method expects (max 100). But yeah, auto_point#_pwm changes the meaning.
-> 
 
-Bad argument. That is true for other controllers as well. You could
-just scale it up and down as needed.
 
-The whole point of an ABI is that it is standardized.
-If others would [be permitted to] follow your line of argument,
-we would not have a useful ABI because "my chip provides/needs
-data in some other format".
+On Sun, Aug 29 2021 at 08:18:01 -0700, Guenter Roeck 
+<linux@roeck-us.net> wrote:
+> On 8/29/21 3:03 AM, Luke Jones wrote:
+>> 
+>> 
+>> On Sun, Aug 29 2021 at 11:57:55 +0200, Hans de Goede 
+>> <hdegoede@redhat.com> wrote:
+>>> Hi Luke,
+>>> 
+>>> On 8/29/21 9:14 AM, Luke D. Jones wrote:
+>>>>  Add support for custom fan curves found on some ASUS ROG laptops.
+>>>> 
+>>>>  - V1
+>>>>    + Initial patch work
+>>>>  - V2
+>>>>    + Don't fail and remove wmi driver if error from
+>>>>      asus_wmi_evaluate_method_buf() if error is -ENODEV
+>>>>  - V3
+>>>>    + Store the "default" fan curves
+>>>>    + Call throttle_thermal_policy_write() if a curve is erased to 
+>>>> ensure
+>>>>      that the factory default for a profile is applied again
+>>>>  - V4
+>>>>    + Do not apply default curves by default. Testers have found 
+>>>> that the
+>>>>      default curves don't quite match actual no-curve behaviours
+>>>>    + Add method to enable/disable curves for each profile
+>>>>  - V5
+>>>>    + Remove an unrequired function left over from previous 
+>>>> iterations
+>>>>    + Ensure default curves are applied if user writes " " to a 
+>>>> curve path
+>>>>    + Rename "active_fan_curve_profiles" to 
+>>>> "enabled_fan_curve_profiles" to
+>>>>      better reflect the behavious of this setting
+>>>>    + Move throttle_thermal_policy_write_*pu_curves() and rename to
+>>>>      fan_curve_*pu_write()
+>>>>    + Merge fan_curve_check_valid() and fan_curve_write()
+>>>>    + Remove some leftover debug statements
+>>>>  - V6
+>>>>    + Refactor data structs to store  array or u8 instead of 
+>>>> strings.
+>>>>      This affects the entire patch except the enabled_fan_curves 
+>>>> block
+>>>>    + Use sysfs_match_string in enabled_fan_curve block
+>>>>    + Add some extra comments to describe things
+>>>>    + Allow some variation in how fan curve input can be formatted
+>>>>    + Use SENSOR_DEVICE_ATTR_2_RW() to reduce the amount of lines 
+>>>> per
+>>>>      fan+profile combo drastically
+>>> 
+>>> Thank you for your continued work on this. I read in the discussin 
+>>> of v5
+>>> that you discussed using the standard auto_point#_pwm, 
+>>> auto_point#_temp
+>>> pairs. I see here that you have decided to not go that route, may I 
+>>> ask
+>>> why ?
+>> 
+>> Sure, primary reason is because the RPM for the fans is in 
+>> percentage so it didn't really make sense to me to use that format.
+>> 
+>> Also if the max for that is 255 then I'd need to introduce scaling 
+>> to make match what the ACPI method expects (max 100). But yeah, 
+>> auto_point#_pwm changes the meaning.
+>> 
+> 
+> Bad argument. That is true for other controllers as well. You could
+> just scale it up and down as needed.
+> 
+> The whole point of an ABI is that it is standardized.
+> If others would [be permitted to] follow your line of argument,
+> we would not have a useful ABI because "my chip provides/needs
+> data in some other format".
+> 
+> Guenter
 
-Guenter
+Understood. But lets see if I understand fully:
+
+The key part is "pwmX_auto_pointN_temp and pwmX_auto_pointN_pwm", with 
+X being a profile, and N the point in the curve graph. If I use this 
+format I have:
+
+- 3 profiles
+- each profile has two fans
+- each fan has 8 points on it
+- each point has 2 integers
+
+so that makes for a total of 96 individual sysfs paths. Is that really 
+okay? And where would the new paths god?
+- Under /sys/devices/platform/asus-nb-wmi/ still, or
+- /sys/devices/platform/asus-nb-wmi/hwmon/ ?
+
+I'm currently using SENSOR_DEVICE_ATTR_2_RW with index = profile, nr = 
+fan. If there weren't profiles involved then I could see it being 
+easily achieved with that.. Maybe I could use the index(profile) with a 
+mask to get the fan number.
+
+I've done all the groundwork for it at least, so it can certainly be 
+done. My only worry is that because of the sheer number of sysfs paths 
+being added (96) it could become unwieldy to use.
+
+Could I use the existing method + the above?
+
+Many thanks,
+Luke.
+
+
