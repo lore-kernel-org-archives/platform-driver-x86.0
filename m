@@ -2,139 +2,101 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDAA9C432BE
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 10:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FB4C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 12:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8A71604D7
-	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 10:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27561608FE
+	for <platform-driver-x86@archiver.kernel.org>; Sun, 29 Aug 2021 12:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235033AbhH2KEn (ORCPT
+        id S235267AbhH2MIF (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Sun, 29 Aug 2021 06:04:43 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:48485 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234925AbhH2KEn (ORCPT
+        Sun, 29 Aug 2021 08:08:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235256AbhH2MIE (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Sun, 29 Aug 2021 06:04:43 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id E46413200908;
-        Sun, 29 Aug 2021 06:03:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 29 Aug 2021 06:03:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=L7DHWc
-        GAuxWk0nS9qJh1MlT5GUJHq6Kbw4zUDG09KIY=; b=XPt4/gWU3NMqag1T1ZNr8X
-        bsFTLwpxxa1q6LJ4y/VBSQ5FC0TN9fl3FpYm0BzB6LhidLaIs24h6LYiYZDT09si
-        N5270fz2HDz7BPfuCHeB25X9Rv8nZVJi5+tys6N8KbkGSX/F3ax60K6DfDyJZu51
-        sCxRwCITAVFobFnTj5NH0nRYcT1m0V1itXZ+6YJZSQaSdAqBVIIb75hmRFT1aPO/
-        aHxWCceSy/yEQPIwYe1m8RXwr531aTA/pOxS3CJq5Ve7jlAHi7/2UwZ5dCqoHZRr
-        Fgo/kg6JBowDOO/siLhZJNpuhypHRx92nauOY6n8UP/8Cl2V8jIWmypQbMGVrWXw
-        ==
-X-ME-Sender: <xms:hVsrYZxYij8xtW_1qbmhojUWgW7Wpoyyh1ZaT54oXggWqhp2Fmhd_g>
-    <xme:hVsrYZT-SZmP2j0qmRQiLV9faif--wMaDAii0kpVXVFqqIYSiUw4IXHi9y074KhXw
-    KZ2HctDhKeoEjcQwcw>
-X-ME-Received: <xmr:hVsrYTW1Cr-dS3Db9MJY8p1TSdDgeFAaJvR8u6Vr6-qj3uAFSjLMPw-Ul8nELB7GlTZF_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddujedgvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhuffvkfgjfhfogggtsehttdertdertddvnecuhfhrohhmpefnuhhkvgcu
-    lfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpe
-    fgfeefudffhffgueehgeffffeggeevieefueethfeijefftedugfeuveethedtteenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslh
-    hjohhnvghsrdguvghv
-X-ME-Proxy: <xmx:hVsrYbgxHD7PwddCkT7Wmphr_I_kZ8Z72ZSsXB0RUYauImKRON8rxw>
-    <xmx:hVsrYbA_kGisPKs3yx5Xz9dJBc8lqd31bjT6oFglgvuzIjmvcuYtLQ>
-    <xmx:hVsrYULayfXN_3Swm1ZY7atEZrj5rU93oIym3XP67u52CB7ExuSCDQ>
-    <xmx:hlsrYeOSYVO48Mm-yxMr4u7Zfn5Df7-p2BvQrNqSt9hIhRiEAdzzaQ>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 29 Aug 2021 06:03:43 -0400 (EDT)
-Date:   Sun, 29 Aug 2021 22:03:27 +1200
-From:   Luke Jones <luke@ljones.dev>
-Subject: Re: [PATCH v6 0/1] asus-wmi: Add support for custom fan curves
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, pobrn@protonmail.com,
-        linux@roeck-us.net, platform-driver-x86@vger.kernel.org
-Message-Id: <RLILYQ.0GH3JY7UCTPI2@ljones.dev>
-In-Reply-To: <cf42ddd7-29ed-ff8b-7d03-958187863b70@redhat.com>
-References: <20210829071402.576380-1-luke@ljones.dev>
-        <cf42ddd7-29ed-ff8b-7d03-958187863b70@redhat.com>
-X-Mailer: geary/40.0
+        Sun, 29 Aug 2021 08:08:04 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7A2C061575
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Aug 2021 05:07:12 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id ia27so24601177ejc.10
+        for <platform-driver-x86@vger.kernel.org>; Sun, 29 Aug 2021 05:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=svgalib-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version;
+        bh=p12JvPtoyqfgUnbiVPzsEUxqo4CpfcVrsP8eawBm2Vc=;
+        b=gboa2+Ms1J5mbEFlhSxSRjNLf/EXLm7itQwjxtMdbu/qkb9VZ+0fcKdIWsaA5ukIXW
+         oykYEwVRiJSuQZdwp1ugYYrZ9CdAGLryYwcU0BDl3cxK8m5jE0Z8t1AWOtqll69ETW+J
+         Alkp2ixP99/fLWBrRMwILPLJeSSVbaiM04k8BRaDW/WfdLiKmUd0bpuHu87RCDpcnjM+
+         RNnvP93EVYqEUpGp/Rxvz9w2UuwO9CqPMYQc26TK+Agf8iiz4Bgh2SoB4LR2GerKIXkN
+         YYNMOFcdml0gDotSncTzcea1n3V0oRLUEQYSIfjvTmUhm2jVjfzGMgMauX+aAN1mdBXP
+         hZWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version;
+        bh=p12JvPtoyqfgUnbiVPzsEUxqo4CpfcVrsP8eawBm2Vc=;
+        b=REON198WJGbIG7lVIVdVNwTQkoTuaUv2B3JNJbHLt/RSDmEVp6v6kxsD2pQGnIPxq3
+         sjGTx89ntarQh0GIUls9xqlkrB1YcmhYnsF3Rvi/gxM1UuLbo1xCg21Z2vhGErfT+G88
+         Aw0eNIH9GrJxtB6QTJpwq4xYOTBkzqHH3IX2Qf+mZSnKvCo+RDoaW/mdZX2rMy8hMcDu
+         exxHf9ZQqpr723+DXp4yk00hcRYJz5yi1emRbzFSU8/Q9C8J33hfr6JyFMbxtE0/StWq
+         Ly+26aN15dbityhJuTDJGKQpZtygBZVBnF27m1LfNcX7+rC7iBBqlIJMAK8xPp4UKQqG
+         Mspw==
+X-Gm-Message-State: AOAM530YOAZkzUmmWbrq89PdFdUiRzgFIj+l52tAzPRbvmewh9mU/dUb
+        nVIbMvqCa+eeY3EgQbNGtKf5BJBgOzxRTCI=
+X-Google-Smtp-Source: ABdhPJyikCAdZKE15jMN7Ezt2IeDeH6TTujDh4KJVcD/H6UeE7EFeIhDt2K36Yi1mscwSZ8BQ3Kbqg==
+X-Received: by 2002:a17:906:3498:: with SMTP id g24mr20341289ejb.490.1630238830662;
+        Sun, 29 Aug 2021 05:07:10 -0700 (PDT)
+Received: from localhost ([2a00:a040:195:275f:a6c:9a74:aff1:31c5])
+        by smtp.gmail.com with ESMTPSA id p23sm6292383edw.94.2021.08.29.05.07.09
+        for <platform-driver-x86@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 29 Aug 2021 05:07:09 -0700 (PDT)
+Received: from 127.0.0.1 (ident=unknown) by matan.home with esmtp
+ (masqmail 0.2.21) id 1mKJae-7dK-00; Sun, 29 Aug 2021 15:07:08 +0300
+Date:   Sun, 29 Aug 2021 15:07:08 +0300 (IDT)
+From:   Matan Ziv-Av <matan@svgalib.org>
+To:     Platform Driver <platform-driver-x86@vger.kernel.org>
+cc:     Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] lg-laptop: Correctly handle dmi_get_system_info() returning
+ NULL
+Message-ID: <93ff3bb-503b-f73-bf18-87bae1699ed@svgalib.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
 
+The laptop model is identified by parsing the product name. If no 
+product name is available, do not try to parse it.
+Default model is 2017.
 
-On Sun, Aug 29 2021 at 11:57:55 +0200, Hans de Goede 
-<hdegoede@redhat.com> wrote:
-> Hi Luke,
-> 
-> On 8/29/21 9:14 AM, Luke D. Jones wrote:
->>  Add support for custom fan curves found on some ASUS ROG laptops.
->> 
->>  - V1
->>    + Initial patch work
->>  - V2
->>    + Don't fail and remove wmi driver if error from
->>      asus_wmi_evaluate_method_buf() if error is -ENODEV
->>  - V3
->>    + Store the "default" fan curves
->>    + Call throttle_thermal_policy_write() if a curve is erased to 
->> ensure
->>      that the factory default for a profile is applied again
->>  - V4
->>    + Do not apply default curves by default. Testers have found that 
->> the
->>      default curves don't quite match actual no-curve behaviours
->>    + Add method to enable/disable curves for each profile
->>  - V5
->>    + Remove an unrequired function left over from previous iterations
->>    + Ensure default curves are applied if user writes " " to a curve 
->> path
->>    + Rename "active_fan_curve_profiles" to 
->> "enabled_fan_curve_profiles" to
->>      better reflect the behavious of this setting
->>    + Move throttle_thermal_policy_write_*pu_curves() and rename to
->>      fan_curve_*pu_write()
->>    + Merge fan_curve_check_valid() and fan_curve_write()
->>    + Remove some leftover debug statements
->>  - V6
->>    + Refactor data structs to store  array or u8 instead of strings.
->>      This affects the entire patch except the enabled_fan_curves 
->> block
->>    + Use sysfs_match_string in enabled_fan_curve block
->>    + Add some extra comments to describe things
->>    + Allow some variation in how fan curve input can be formatted
->>    + Use SENSOR_DEVICE_ATTR_2_RW() to reduce the amount of lines per
->>      fan+profile combo drastically
-> 
-> Thank you for your continued work on this. I read in the discussin of 
-> v5
-> that you discussed using the standard auto_point#_pwm, 
-> auto_point#_temp
-> pairs. I see here that you have decided to not go that route, may I 
-> ask
-> why ?
+Signed-off-by: Matan Ziv-Av <matan@svgalib.org>
+---
+ drivers/platform/x86/lg-laptop.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sure, primary reason is because the RPM for the fans is in percentage 
-so it didn't really make sense to me to use that format.
+diff --git a/drivers/platform/x86/lg-laptop.c b/drivers/platform/x86/lg-laptop.c
+index 3e520d5bca07..88b551caeaaf 100644
+--- a/drivers/platform/x86/lg-laptop.c
++++ b/drivers/platform/x86/lg-laptop.c
+@@ -655,7 +655,7 @@ static int acpi_add(struct acpi_device *device)
+ 		goto out_platform_registered;
+ 	}
+ 	product = dmi_get_system_info(DMI_PRODUCT_NAME);
+-	if (strlen(product) > 4)
++	if (product && strlen(product) > 4)
+ 		switch (product[4]) {
+ 		case '5':
+ 		case '6':
+-- 
+2.31.1
 
-Also if the max for that is 255 then I'd need to introduce scaling to 
-make match what the ACPI method expects (max 100). But yeah, 
-auto_point#_pwm changes the meaning.
-
-> 
-> Regards,
-> 
-> Hans
-> 
-
+-- 
+Matan.
 
