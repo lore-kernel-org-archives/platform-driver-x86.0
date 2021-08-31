@@ -2,163 +2,394 @@ Return-Path: <platform-driver-x86-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6504C4320A
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Aug 2021 21:13:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE81C432BE
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Aug 2021 23:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82206108B
-	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Aug 2021 21:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B1360F92
+	for <platform-driver-x86@archiver.kernel.org>; Tue, 31 Aug 2021 23:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239384AbhHaVOE (ORCPT
+        id S240843AbhHaX2m (ORCPT
         <rfc822;platform-driver-x86@archiver.kernel.org>);
-        Tue, 31 Aug 2021 17:14:04 -0400
-Received: from mail-dm6nam10on2061.outbound.protection.outlook.com ([40.107.93.61]:49505
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        Tue, 31 Aug 2021 19:28:42 -0400
+Received: from mail-dm6nam12on2056.outbound.protection.outlook.com ([40.107.243.56]:53569
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S232930AbhHaVOD (ORCPT
+        id S234343AbhHaX2l (ORCPT
         <rfc822;platform-driver-x86@vger.kernel.org>);
-        Tue, 31 Aug 2021 17:14:03 -0400
+        Tue, 31 Aug 2021 19:28:41 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fOEELCKOIl6V0MR4F4vxBZsWnuH+Olf+zuc0JmhtYjPkm+qjPhBSlxWPVh4g/lHvmghecJ/hC8On7uX7VcGzOCIIxAjs3Hamjkg9HdA01236ISwMSxuaIrVF7aqfMiBwQtPVzDkN9wuMIUFCfnllriZ+uXcR8q2fIXqKY0pGSfDoREwxVAME4xXDHbAxToRTzMBgneQzLWV4LICZvUVm+5sIX0RBgeu4w2JwZDsCTx6DvlIsEwopNoFGeDFB5huSbuMXjFMurX+1pyUJVoYb6fp5OvXStSeKoFeAndmiKr+iW0Qs8Vp4IYg1mT//HQZ+2jh7FojtgiAw8HrawCfPmw==
+ b=c/V3eGJJeMejgAGoM1XDu3xXAxi9r4j6FQqjvUdTLtZpr8eBRl45OINwglh+4Ugww2rzal2kKO5cN0WHrU0rZev8JXEBdhiRBCYoApb2kRF9mXtARseVwwJM0BJXFmY4byZqBgN4QKFK+gm2QlCc5ieb9roiagM6NazdizHj8s1pf3YBDak9ATW/50HaJ4k3W48qxR8QtavpFejgXIQ30MI1+a87KtOsxeTbh8KdFuTWtEFFiYSom6umAus3bCRtwF2nllCniGbkcd4puUFzgs7dx9rcGP9M3MgOfv1EV+2ktR6TrZ4uUkRZUJd9LaJzAJysGfrcCSbqzn6MPWw6lg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UU8hJBDX4WOthZeN8f2Dh8svQETomHdVbUb7J/gTrvw=;
- b=WWRjs6y0JxPWIFsG2EsOr7/Wxl/kmhUPLqcRSogNoHVDPBdB6NOJ/tSb7+MnPXOW1+v/nSdwCxUGqP8u5DFZWjIdxPHedd3wSoajxTZ3IWvmYaT9uwRDnAig1VsMkKKXm/mQiUNsW3ffC1CEzvFNXHLl9fqG++pJPhPoND/3t2MtfHmQeCx45dRO1ylbP2zWY/Fj+VkQzDrecyOK3oIk0C42yNDUxFWohxZXtuROsiIWHiwURyROIcBwCv0SsDkVPy24sQ2jSHQHPaoDCtydYVob4KfDKOspst2nUojaYsLmpdcTOkojbDZ+IDlbBHN74sV9s8Q+vQ0cwDYzP7xkGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=Jiou1HDfWzNaKjv74ZtOHjuf1NJSMM+cv0agMl0EkSg=;
+ b=jnTkntkTOz5QmDRO6AJ7Zx6UJbmSxitKDX+hlxUAvRvEQNY/EbNvDZ2Jkuzff3cuRESVNoA7SvKwUzPzwTTd7s/xvdVYVn/uzmQhmBw9b1di1PK9S1MCYcYcmmu/DEveOI0kWFdr9YcoVTc8LvB6Fm7RWNGS+dvdaAqZNu91HAE3BHLuv9pv4clezfOS1Vmo1GGvjmKifZ78D0wvAdA7XXxyFFycL4MFV7YVXk4m5LStFRF/6sjOv2OWuj2bXifxtSNBGs4wZX9fx51URaXgPYLhw60bsevvh7diqtI3KAnu3jk9SxmVpt1P57VCOV+gNPlA1tqQoOz26pX9Xet5Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.35) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UU8hJBDX4WOthZeN8f2Dh8svQETomHdVbUb7J/gTrvw=;
- b=jrEwGdRQkTWvwDY9D+69ap0A8Rv0GAEEhzVWJEWOvsCfNvfXC53zWu6VumYLQILlmY1JFVuCRQvDS68Q5x7K0aNDLO58fjD+su87FX1UBWfLezsQHD7wKij9Z2CxTkQs5A/H3vdJA4RQhuCW63UhxNh7W/lCdnaJSJP7TMmRHdc=
-Authentication-Results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4365.namprd12.prod.outlook.com (2603:10b6:806:96::22) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=Jiou1HDfWzNaKjv74ZtOHjuf1NJSMM+cv0agMl0EkSg=;
+ b=eBLSgWQ+oDBzTYG1xYu8PhXpjNJyp8pNSn0s2O4NICdjtO6/lM4GOunlvOgNAuPn21b0kcjp8KFemntJVA7cuqfhNbriohkguHDoNxMJYNJGKyHGUODkbDumTbmhrg+ibjR8uzS/nC3YMZo95LALEtkz+8RKbIemwggqjaBtEsvFyAQ+PV77c5sDagtBZvw50ZCiUG7C0FekntUyGKhyNwed7CFoC+HDV42x6v2+0lgMYJWTUZotPx0ECwnvyRIaJ/wUn1y4aI7NMcyzlMg753RWNC9IHndoc+owvAzLuuATchZdz5P0I6Zah1NCnIJFob4GOVyw2LRxEVwHpfUH0Q==
+Received: from BN6PR1101CA0019.namprd11.prod.outlook.com
+ (2603:10b6:405:4a::29) by MWHPR12MB1438.namprd12.prod.outlook.com
+ (2603:10b6:300:14::16) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.20; Tue, 31 Aug
- 2021 21:13:06 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::78b7:7336:d363:9be3%6]) with mapi id 15.20.4457.024; Tue, 31 Aug 2021
- 21:13:06 +0000
-Cc:     brijesh.singh@amd.com, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Sergio Lopez <slp@redhat.com>, Peter Gonda <pgonda@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        David Rientjes <rientjes@google.com>,
-        Tobin Feldman-Fitzthum <tobin@ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Michael Roth <michael.roth@amd.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Andi Kleen <ak@linux.intel.com>, tony.luck@intel.com,
-        marcorr@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH Part1 v5 34/38] x86/sev: Add snp_msg_seqno() helper
-To:     Dov Murik <dovmurik@linux.ibm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-coco@lists.linux.dev, linux-mm@kvack.org
-References: <20210820151933.22401-1-brijesh.singh@amd.com>
- <20210820151933.22401-35-brijesh.singh@amd.com>
- <f68b77aa-3420-bb6a-712e-bf029bc727d6@linux.ibm.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <a82bb036-bb55-a1b7-f293-bcc584a77fad@amd.com>
-Date:   Tue, 31 Aug 2021 16:13:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-In-Reply-To: <f68b77aa-3420-bb6a-712e-bf029bc727d6@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR11CA0186.namprd11.prod.outlook.com
- (2603:10b6:806:1bc::11) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+ 2021 23:27:44 +0000
+Received: from BN8NAM11FT068.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:405:4a:cafe::eb) by BN6PR1101CA0019.outlook.office365.com
+ (2603:10b6:405:4a::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend
+ Transport; Tue, 31 Aug 2021 23:27:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
+ smtp.mailfrom=nvidia.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.35; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.35) by
+ BN8NAM11FT068.mail.protection.outlook.com (10.13.177.69) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4457.17 via Frontend Transport; Tue, 31 Aug 2021 23:27:43 +0000
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 31 Aug
+ 2021 23:27:42 +0000
+Received: from dude.nvidia.com (172.20.187.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 31 Aug
+ 2021 23:27:41 +0000
+From:   Daniel Dadap <ddadap@nvidia.com>
+To:     <platform-driver-x86@vger.kernel.org>
+CC:     <andy.shevchenko@gmail.com>, <hdegoede@redhat.com>,
+        <mario.limonciello@outlook.com>, <pobrn@protonmail.com>,
+        <dvhart@infradead.org>, <thomas@t-8ch.de>,
+        Daniel Dadap <ddadap@nvidia.com>,
+        Aaron Plattner <aplattner@nvidia.com>
+Subject: [PATCH v4] platform/x86: Add driver for ACPI WMAA EC-based backlight control
+Date:   Tue, 31 Aug 2021 17:49:07 -0500
+Message-ID: <20210831224906.1072-1-ddadap@nvidia.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
+References: <70b81e33-c769-4cb8-0bae-5ee10a209389@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.31.95] (165.204.77.1) by SA0PR11CA0186.namprd11.prod.outlook.com (2603:10b6:806:1bc::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.17 via Frontend Transport; Tue, 31 Aug 2021 21:13:04 +0000
+X-NVConfidentiality: public
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 316dee23-02a9-4296-fe3c-08d96cc4200d
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4365:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB43657A8DB1215597BBD4EEB5E5CC9@SA0PR12MB4365.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Office365-Filtering-Correlation-Id: 56837968-ee12-4248-2e37-08d96cd6ef09
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1438:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB143848DAE5E5248B7B90EDFFBCCC9@MWHPR12MB1438.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:238;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +NTQj340VZlwC6EXw6ziqAaGafTF1fd+oJoGbHkc1iRA/JM2E2mBE03u7/8vbQ7rt/umLEX/gDofcfkl3AJhmiWZLDRCeUXXSmO64ZiWADLyGk9LA3rqjoRNbqTvQDsT3rySYLW+0FDJ9hZy17jPxjlJ5oeOO1/rByyeC+7aZyIvqGw9eLzqrB+7t4LP1fyC7Dttd324sHoTlbK9FwBEtua/18ogXdClrwq7wWTlyBE0Uyn4i2LMDrGFHl0TUVj+vuMdBOlHXPXr7Jnm2towfjETpaMF6SBrhgfufwtTLRYXXuPfLg88fC6zOZjy4uZjqOmKM4ciB6dTSOxbYgQMWAcjbMBVgSBsYtxHBe83NaQZKSTW0fzgqjJjR/bB+4ky57UP8A/+Hc2zW9OSYn3tQYeUgxyV4wRfUS35jzIwrq304Nmdm5dXtGDqdwBXh3stQ4oVD2ehPPVyR1YUsbziVb1/EOfiKxhe+oEKQQO1hxNwcSgggyoOiqvZkZ+/8vNUm7HZ5kQG93ZGbuL3g/H4NbjLMS2+963hKPYGXZKmAUn4/ee2ITVFq7OFO4ffAmgaaBfyAQThuKwVTCy0Wfu/C938ej37RN1Ok6CeuLH6MjDoBc/YDjtkJ33jTprI8DKmxdvBhnfEkZAhBUBKcEcG7W6h92119O+LFPo1YosLVVDtcRZtxB8z9kA/OWYrwBP2pBgZxnWl9GVhHBAP9r0f6VS1/KkrpmFexPOQZIL7Fhsk3yauQ/7F4AjDlcQ0nQNU/Z/O/yM/tM1y/GWtauf+gA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(396003)(376002)(39860400002)(136003)(7416002)(38350700002)(16576012)(478600001)(36756003)(38100700002)(54906003)(8676002)(86362001)(7406005)(186003)(316002)(5660300002)(31696002)(2906002)(53546011)(6486002)(956004)(4326008)(4744005)(2616005)(66476007)(26005)(66556008)(31686004)(66946007)(44832011)(52116002)(8936002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VHdkQkFmRlhBV1FiWmIybnFsSm5DaVc0OFlsRXBxM1doR2NsdU5nWWVsUCt3?=
- =?utf-8?B?Q1FNeENaNlprR01uYnVDcDViNlFpNmY1NFJCc0I5ZU5oTTJNb0lhQ2VKd1Ju?=
- =?utf-8?B?dTNUYVRSVnRFcVNmTDFnK1hnN0k4cjljeWVPMGEzcjdyTExBakpYQUY3SDE4?=
- =?utf-8?B?aGEybTJJakp1cGVtb2N0VFJhY2lYZWtWNVNOZDdDRHI3WTJsWHRsQUNMY1Zh?=
- =?utf-8?B?WXRKYzJaSHFmTVZWeVpwdGUyRGtrdDFlUzhUejlZZjBua3AvWExCQXVzd0Yv?=
- =?utf-8?B?NVBHdThMZVF6a0hwK2FmaERYNWtuM2lHYkhuV0J0KzFxaXZNMjlRYkdSUXBH?=
- =?utf-8?B?d2VkN1crWTY3TG5WMTE3N21xL2JHWjhzS2VNT3FJRXpDU1hJMzBhTFdxbFNZ?=
- =?utf-8?B?Q0gvcFhkd2YxQzFRUDZQclUvMUU0SmZxbFFNbzFVVjBZTFNzekxEMjNJZXNP?=
- =?utf-8?B?dHNxK0NoYjJGU3Z0aTl5YTNGWmYrYVZrVjcyL25KQVFHRzhhSTNNRXpYbU5J?=
- =?utf-8?B?dHFJOTlvWmNSMDZJc0JNWHgySituQ1k4c0FKQUlmeWdKc3JTTmtkYlhST3VH?=
- =?utf-8?B?NytUbW5HTEhvdWhxTGJPbkxGdkx4UVpIbVZRK3MzWkszTUJ0ZXR3ZWo2S3dV?=
- =?utf-8?B?TE5nUVRrS0YxYmJHeDBxWHMwYy9nWXcrOHh0c0VGMFVVYzltRjlQUXhOcDNT?=
- =?utf-8?B?azFsdG5OeHZRenp2bzR1UHNCSTNNcDBBYTBhU3dQdDJ5RzdnYStZL2FMdVVK?=
- =?utf-8?B?cWVobFdVNTRHbzhzd0laVFJrSXJBVUY1RmJpZnk2QTlaMlE5UXV1V215UVlC?=
- =?utf-8?B?RnQ0WDJySERWN0pvaUl4WE42WnpzWS84eUlka3VnNlVVdDhXMXk2N0lzZlY5?=
- =?utf-8?B?U0h0MCt3ckFQeWNJQ3VrdDJOWmt1a2c4dkx4RDhvRjhGWlNpZjBOY3JFRUFq?=
- =?utf-8?B?d2tCRDdEL1lJRmJXYnczWjQ4cFlzUWk0eFN4WTBYaW1OZGNQdzlUMXIvM2Zo?=
- =?utf-8?B?SkpLcXExTzZKeUlRU0lBZVVoZ3R2VG55TW8xdUVUUU95WHJVRy9jekNEK25F?=
- =?utf-8?B?ZWVnZHBkc0dXandFV2F1SFNBeDl3RFV2OXFnekR6dEQ3M1l3cHl2dDhzU29i?=
- =?utf-8?B?QXJuWm0rRjdZMC9PVk5LL3cvSFcyMHlGaytSM0hsWWRlYml1bllzVWhBazU3?=
- =?utf-8?B?anc1dGpWWVRKMmd1TGFnK0VHcHFWbUppSXc0U2xTSU5zUm8vUHY1WFh3YXRG?=
- =?utf-8?B?cTRyd0JXcFVmRlR1b1FIdlQ1dDlRNlFMZUxEaTNZdjRvSGtHa2pGK1RxbERy?=
- =?utf-8?B?cVFpa29ydlVxM1hGNk1QaW13OG1LaTZSTE5mUXo4dDRqTVBKaWZkRHFnSStF?=
- =?utf-8?B?SDd6aTEra1FEWlJjR2lLcG9qWU1ORFZiNndlR2prRHVGSDlhWjdyUHBTU1Rz?=
- =?utf-8?B?REkzSDBWajluTmVFNE1IQklLUkw1T29zS1A5c0o2VEdZOXpGQ1kwTkVHS1pn?=
- =?utf-8?B?WXl0YlcvYkZKcTNnTzNOWkxqZ0hPQmhTNjVYSVBFdUI1WHFaejNIaE1GQzJI?=
- =?utf-8?B?bXFMMmxmMjJNMUl4QzFsVmpkQTVsM3h5aEFyWHBLN1RHNk9KaWFPMVkrTS9S?=
- =?utf-8?B?MkNNRGtjQ2RTS3RPWDdaSDYxVlRoZUxhOUM0aU9oS3dKeGo0SWFCV0gzZEJZ?=
- =?utf-8?B?Y3p1TEY2L2lNZW1uTkVNZ2FFUmttbUc0S1NaL0NnY2x2K1dxb3k1Q0NyODZY?=
- =?utf-8?Q?z5mtAK7mm3sXO0opKYwytPL2gcbg3i8m9k4ozxE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 316dee23-02a9-4296-fe3c-08d96cc4200d
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2021 21:13:05.9222
+X-Microsoft-Antispam-Message-Info: c1Jw0iIZq9plxfbNv1/0dg23UyCW4DSaZkOMnvBDDJo3a5/BPXxKeqOpuOsvIQL+YrNA1EiIFF2oFGkgyqJMed77i8Ma54YmNH1D53GVhGGAADqCqnad/cjMVxn5rFuX8KgYUWVM/7DDSsKwKPMhe/7y1y8+NUS14n4DIa507TkI3XVZLYca26W/HlG4U8drk89R6yVb0wMVaA1zNnccch9Kwh4JkHrqT+AoNleZLdUPG60VYl0uMLSFNCdObbjFsVs1I8lJfMhjR0aL2tqTILjqqC4sJ4xkyBTVT26UBcdMh3bQRoWhLOTXspofwMXIdftDyMncLnFfhjoRbDW7lJ70AlK5EhT231J8pz6AAZkooEUgoQklyuwAee5jKY7xSUHlc3SiliQtyf4WHHKSpfq1TZNDOwlhnWrnVMMGeacZz+LU3oOcV71ZZ8F9LWHO28aflgUjz38Wf919J1iL2o2eVnus8ia6luQOBuiMb0ovG6/5srYtA2fDs/Lj0bGNYlfEdQm6i0uS9zKCagPAdIwzJjdLVF8AnjWGt7N3tXpXXIVMh02820Nq9OtGH7wonfxQyfB2i26JCC0ozkloYph49voyrehoNdMJTPXeoQ+oDFgKpb3gNj/tdl3015EhUokLcsVfQ0hm9wGum5lLHbpNVvavuFstqSbHlipy0pOG9kBG2X9TlxKMcMLClRTR
+X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(396003)(136003)(36840700001)(186003)(70586007)(7696005)(16526019)(45080400002)(36756003)(1076003)(6916009)(336012)(2906002)(4326008)(83380400001)(316002)(107886003)(8936002)(54906003)(32650700002)(7636003)(426003)(86362001)(6666004)(36906005)(478600001)(26005)(356005)(36860700001)(70206006)(8676002)(5660300002)(82740400003)(66574015)(82310400003)(2616005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2021 23:27:43.6584
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cubsy44gkl6hhfLMRecooOxYFJNnhMXxY2fydaK4+5PxYEY7KV4wCoBGJQZc0e9qRXeLevuuN6Ct48qz3yrppA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4365
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56837968-ee12-4248-2e37-08d96cd6ef09
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT068.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1438
 Precedence: bulk
 List-ID: <platform-driver-x86.vger.kernel.org>
 X-Mailing-List: platform-driver-x86@vger.kernel.org
 
+A number of upcoming notebook computer designs drive the internal
+display panel's backlight PWM through the Embedded Controller (EC).
+This EC-based backlight control can be plumbed through to an ACPI
+"WMAA" method interface, which in turn can be wrapped by WMI with
+the GUID handle 603E9613-EF25-4338-A3D0-C46177516DB7.
 
+Add a new driver, aliased to the WMAA WMI GUID, to expose a sysfs
+backlight class driver to control backlight levels on systems with
+EC-driven backlights.
 
-On 8/31/21 3:46 PM, Dov Murik wrote:
+Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+Signed-off-by: Daniel Dadap <ddadap@nvidia.com>
+---
 
->> +
->> +	return count + 1;
-> 
-> As Borislav noted, you can remove the "if (!count) return 1" because in
-> that case (count==0) the "return count+1" will return exactly 1.
+v2: Convert to WMI subsystem driver, suggested by Mario Limonciello
+     <mario.limonciello@outlook.com>; various cleanups suggested by
+     Barnabás Pőcze <pobrn@protonmail.com>
+v3: Address assorted style nits raised by Andy Shevchenko
+     <andy.shevchenko@gmail.com> in response to a related patch; remove
+     additional behavior change to WMI subsystem from patch series as
+     recommended by Hans de Goede <hdegoede@redhat.com> 
+v4: Use MODULE_DEVICE_TABLE() (Thomas Weißschuh <thomas@t-8ch.de>)
+    Fix scope of internal driver state; various style fixes (Barnabás
+    Pőcze, Andy Shevchenko)
+    Use devm_backlight_device_register() (Barnabás Pőcze)
+    Add kerneldoc comments for enums and structs (Andy Shevchenko)
 
-Yep, I am working to simplify it based on the Boris feedback. I will 
-incorporate the feedback in v6. thanks
+ MAINTAINERS                               |   6 +
+ drivers/platform/x86/Kconfig              |  16 ++
+ drivers/platform/x86/Makefile             |   1 +
+ drivers/platform/x86/wmaa-backlight-wmi.c | 185 ++++++++++++++++++++++
+ 4 files changed, 208 insertions(+)
+ create mode 100644 drivers/platform/x86/wmaa-backlight-wmi.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bbaecde94aa0..fd7362a86c6d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20008,6 +20008,12 @@ L:	linux-wireless@vger.kernel.org
+ S:	Odd fixes
+ F:	drivers/net/wireless/wl3501*
+ 
++WMAA BACKLIGHT DRIVER
++M:	Daniel Dadap <ddadap@nvidia.com>
++L:	platform-driver-x86@vger.kernel.org
++S:	Supported
++F:	drivers/platform/x86/wmaa-backlight-wmi.c
++
+ WOLFSON MICROELECTRONICS DRIVERS
+ L:	patches@opensource.cirrus.com
+ S:	Supported
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index d12db6c316ea..0df908ef8d7c 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -113,6 +113,22 @@ config PEAQ_WMI
+ 	help
+ 	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
+ 
++config WMAA_BACKLIGHT_WMI
++	tristate "ACPI WMAA Backlight Driver"
++	depends on ACPI_WMI
++	depends on BACKLIGHT_CLASS_DEVICE
++	help
++	  This driver provides a sysfs backlight interface for notebook
++	  systems which expose the WMAA ACPI method and an associated WMI
++	  wrapper to drive LCD backlight levels through the system's
++	  Embedded Controller (EC).
++
++	  Say Y or M here if you want to control the backlight on a notebook
++	  system with an EC-driven backlight using the ACPI WMAA method.
++
++	  If you choose to compile this driver as a module the module will be
++	  called wmaa-backlight-wmi.
++
+ config XIAOMI_WMI
+ 	tristate "Xiaomi WMI key driver"
+ 	depends on ACPI_WMI
+diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
+index 7ee369aab10d..109c1714237d 100644
+--- a/drivers/platform/x86/Makefile
++++ b/drivers/platform/x86/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_INTEL_WMI_SBL_FW_UPDATE)	+= intel-wmi-sbl-fw-update.o
+ obj-$(CONFIG_INTEL_WMI_THUNDERBOLT)	+= intel-wmi-thunderbolt.o
+ obj-$(CONFIG_MXM_WMI)			+= mxm-wmi.o
+ obj-$(CONFIG_PEAQ_WMI)			+= peaq-wmi.o
++obj-$(CONFIG_WMAA_BACKLIGHT_WMI)	+= wmaa-backlight-wmi.o
+ obj-$(CONFIG_XIAOMI_WMI)		+= xiaomi-wmi.o
+ obj-$(CONFIG_GIGABYTE_WMI)		+= gigabyte-wmi.o
+ 
+diff --git a/drivers/platform/x86/wmaa-backlight-wmi.c b/drivers/platform/x86/wmaa-backlight-wmi.c
+new file mode 100644
+index 000000000000..cb1a973803b1
+--- /dev/null
++++ b/drivers/platform/x86/wmaa-backlight-wmi.c
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
++ */
++
++#include <linux/backlight.h>
++#include <linux/module.h>
++#include <linux/wmi.h>
++
++/**
++ * enum wmaa_method - WMI method IDs for ACPI WMAA
++ *
++ * @WMAA_LEVEL:  Get or set the brightness level,
++ *               or get the maximum brightness level.
++ * @WMAA_SOURCE: Get the source for backlight control.
++ */
++enum wmaa_method {
++	WMAA_LEVEL = 1,
++	WMAA_SOURCE = 2,
++};
++
++/**
++ * enum wmaa_get_or_set - Operation mode for ACPI WMAA method
++ *
++ * @WMAA_GET:     Get the current brightness level or backlight source.
++ * @WMAA_SET:     Set the brightness level.
++ * @WMAA_GET_MAX: Get the maximum brightness level. This is only valid when the
++ *                WMI method is %WMAA_LEVEL.
++ */
++enum wmaa_get_or_set {
++	WMAA_GET = 0,
++	WMAA_SET = 1,
++	WMAA_GET_MAX = 2
++};
++
++/**
++ * enum wmaa_source - Backlight brightness control source identification
++ *
++ * @WMAA_SOURCE_GPU:   Backlight brightness is controlled by the GPU.
++ * @WMAA_SOURCE_EC:    Backlight brightness is controlled by the system's
++ *                     Embedded Controller (EC).
++ * @WMAA_SOURCE_AUX:   Backlight brightness is controlled over the DisplayPort
++ *                     AUX channel.
++ */
++enum wmaa_source {
++	WMAA_SOURCE_GPU = 1,
++	WMAA_SOURCE_EC = 2,
++	WMAA_SOURCE_AUX = 3
++};
++
++/**
++ * struct wmaa_args - arguments for the ACPI WMAA method
++ *
++ * @set:     Pass in an &enum wmaa_get_or_set value to select between getting or
++ *           setting a value.
++ * @val:     In parameter for value to set when operating in %WMAA_SET mode. Not
++ *           used in %WMAA_GET or %WMAA_GET_MAX mode.
++ * @ret:     Out parameter returning retrieved value when operating in %WMAA_GET
++ *           or %WMAA_GET_MAX mode. Not used in %WMAA_SET mode.
++ * @ignored: Padding; not used. The ACPI method expects a 24 byte params struct.
++ *
++ * This is the parameters structure for the ACPI WMAA method as wrapped by WMI.
++ * The value passed in to @val or returned by @ret will be a brightness value
++ * when the WMI method ID is %WMAA_LEVEL, or an &enum wmaa_source value when
++ * the WMI method ID is %WMAA_SOURCE.
++ */
++struct wmaa_args {
++	u32 set;
++	u32 val;
++	u32 ret;
++	u32 ignored[3];
++};
++
++static int wmi_call_wmaa(struct wmi_device *w, enum wmaa_method method, enum wmaa_get_or_set set, u32 *val)
++{
++	struct wmaa_args args = {
++		.set = set,
++		.val = 0,
++		.ret = 0,
++	};
++	struct acpi_buffer buf = { (acpi_size)sizeof(args), &args };
++	acpi_status status;
++
++	if (set == WMAA_SET)
++		args.val = *val;
++
++	status = wmidev_evaluate_method(w, 0, method, &buf, &buf);
++	if (ACPI_FAILURE(status)) {
++		dev_err(&w->dev, "ACPI WMAA failed with %s\n",
++			acpi_format_exception(status));
++		return -EIO;
++	}
++
++	if (set != WMAA_SET)
++		*val = args.ret;
++
++	return 0;
++}
++
++static int wmaa_backlight_update_status(struct backlight_device *bd)
++{
++	struct wmi_device *wdev = bl_get_data(bd);
++
++	return wmi_call_wmaa(wdev, WMAA_LEVEL, WMAA_SET, &bd->props.brightness);
++}
++
++static int wmaa_backlight_get_brightness(struct backlight_device *bd)
++{
++	struct wmi_device *wdev = bl_get_data(bd);
++	u32 level = 0;
++	int ret;
++
++	ret = wmi_call_wmaa(wdev, WMAA_LEVEL, WMAA_GET, &level);
++
++	if (ret)
++		dev_err(&bd->dev, "ACPI WMAA failed to get backlight level.\n");
++
++	return level;
++}
++
++static const struct backlight_ops wmaa_backlight_ops = {
++	.update_status = wmaa_backlight_update_status,
++	.get_brightness = wmaa_backlight_get_brightness
++};
++
++static int wmaa_backlight_wmi_probe(struct wmi_device *w, const void *ctx)
++{
++	struct backlight_properties props = {};
++	struct backlight_device *backlight;
++	u32 source;
++	int ret;
++
++	ret = wmi_call_wmaa(w, WMAA_SOURCE, WMAA_GET, &source);
++	if (ret)
++		return ret;
++
++	if (source != WMAA_SOURCE_EC) {
++		/* This driver is only to be used when brightness control is
++		 * handled by the EC; otherwise, the GPU driver(s) should handle
++		 * brightness control. */
++		return -ENODEV;
++	}
++
++	/* Identify this backlight device as a platform device so that it can
++	 * be prioritized over any exposed GPU-driven raw device(s). */
++	props.type = BACKLIGHT_PLATFORM;
++
++	ret = wmi_call_wmaa(w, WMAA_LEVEL, WMAA_GET_MAX, &props.max_brightness);
++	if (ret)
++		return ret;
++
++	ret = wmi_call_wmaa(w, WMAA_LEVEL, WMAA_GET, &props.brightness);
++	if (ret)
++		return ret;
++
++	backlight = devm_backlight_device_register(
++		&w->dev, "wmaa_backlight",
++		&w->dev, w, &wmaa_backlight_ops, &props);
++	if (IS_ERR(backlight))
++		return PTR_ERR(backlight);
++
++	return 0;
++}
++
++#define WMAA_WMI_GUID "603E9613-EF25-4338-A3D0-C46177516DB7"
++
++static const struct wmi_device_id wmaa_backlight_wmi_id_table[] = {
++	{ .guid_string = WMAA_WMI_GUID },
++	{ }
++};
++MODULE_DEVICE_TABLE(wmi, wmaa_backlight_wmi_id_table);
++
++static struct wmi_driver wmaa_backlight_wmi_driver = {
++	.driver = {
++		.name = "wmaa-backlight"
++	},
++	.probe = wmaa_backlight_wmi_probe,
++	.id_table = wmaa_backlight_wmi_id_table
++};
++module_wmi_driver(wmaa_backlight_wmi_driver);
++
++MODULE_AUTHOR("Aaron Plattner <aplattner@nvidia.com>");
++MODULE_AUTHOR("Daniel Dadap <ddadap@nvidia.com>");
++MODULE_DESCRIPTION("WMAA Backlight WMI driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
 
